@@ -216,8 +216,8 @@ public class ArticleController extends CommonController {
 	public void insertArticleLongEvaluation(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) {
 		JSONObject jsonInput = getJson(data);
 		InsertArticleLongEvaluationParam param = new InsertArticleLongEvaluationParam().fromJson(jsonInput);
-		param.setEvaluationType(ArticleEvaluationType.articleLongEvaluation.getEvaluationCode());
-		CommonResult serviceResult = articleEvaluationService.insertArticleLongEvaluation(param, baseUtilCustom.getUserId());
+		param.setEvaluationType(ArticleEvaluationType.articleLongEvaluation.getCode());
+		CommonResult serviceResult = articleEvaluationService.insertArticleLongEvaluationRedis(param);
 		outputJson(response, JSONObject.fromObject(serviceResult));
 	}
 	
@@ -228,8 +228,8 @@ public class ArticleController extends CommonController {
 		 */
 		JSONObject jsonInput = getJson(data);
 		InsertArticleLongEvaluationParam param = new InsertArticleLongEvaluationParam().fromJson(jsonInput);
-		param.setEvaluationType(ArticleEvaluationType.articleCommentEvaluation.getEvaluationCode());
-		CommonResult serviceResult = articleEvaluationService.insertArticleLongEvaluation(param, baseUtilCustom.getUserId());
+		param.setEvaluationType(ArticleEvaluationType.articleCommentEvaluation.getCode());
+		CommonResult serviceResult = articleEvaluationService.insertArticleLongEvaluationRedis(param);
 		outputJson(response, JSONObject.fromObject(serviceResult));
 	}
 	

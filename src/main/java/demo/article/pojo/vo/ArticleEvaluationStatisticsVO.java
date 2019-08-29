@@ -35,7 +35,7 @@ public class ArticleEvaluationStatisticsVO {
 			if(evaluationType != null) {
 				ArticleEvaluationCounterVO vo = new ArticleEvaluationCounterVO();
 				vo.setEvaluationCode(evaluationCode);
-				vo.setEvaluationName(evaluationType.getEvaluationName());
+				vo.setEvaluationName(evaluationType.getName());
 				vo.setEvaluationCount(evaluationCount);
 				evaluationCodeAndCount.put(evaluationCode, vo);
 			}

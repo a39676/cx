@@ -13,7 +13,7 @@ public class ArticleEvaluationCache {
 
 	private Long userId;
 
-	private Boolean evaluationCode;
+	private Integer evaluationCode;
 
 	private Boolean isDelete;
 
@@ -43,11 +43,11 @@ public class ArticleEvaluationCache {
 		this.userId = userId;
 	}
 
-	public Boolean getEvaluationCode() {
+	public Integer getEvaluationCode() {
 		return evaluationCode;
 	}
 
-	public void setEvaluationCode(Boolean evaluationCode) {
+	public void setEvaluationCode(Integer evaluationCode) {
 		this.evaluationCode = evaluationCode;
 	}
 

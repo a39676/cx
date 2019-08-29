@@ -2,9 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="demo.base.user.mapper.UserRegistMapper">
 
-  <resultMap id="BaseResultMap" type="demo.base.user.pojo.po.Users" extends="demo.organizations.mapper.OrganizationsMapper.BaseResultMap">
-  </resultMap>
-
   <select id="isUserExists" parameterType="String" resultType="int">
     select exists(select * from users where user_name = #{userName})
   </select>

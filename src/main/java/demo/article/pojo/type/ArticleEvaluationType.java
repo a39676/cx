@@ -6,26 +6,26 @@ public enum ArticleEvaluationType {
 	articleCommentEvaluation("articleCommentEvaluation", 2),
 	;
 	
-	private String evaluationName;
-	private Integer evaluationCode;
+	private String name;
+	private Integer code;
 	
 	ArticleEvaluationType(String evaluationName, Integer evaluationCode) {
-		this.evaluationName = evaluationName;
-		this.evaluationCode = evaluationCode;
+		this.name = evaluationName;
+		this.code = evaluationCode;
 	}
 	
 
-	public String getEvaluationName() {
-		return evaluationName;
+	public String getName() {
+		return name;
 	}
 
-	public Integer getEvaluationCode() {
-		return evaluationCode;
+	public Integer getCode() {
+		return code;
 	}
 
 	public static ArticleEvaluationType getType(String typeName) {
 		for(ArticleEvaluationType t : ArticleEvaluationType.values()) {
-			if(t.getEvaluationName().equals(typeName)) {
+			if(t.getName().equals(typeName)) {
 				return t;
 			}
 		}
@@ -34,7 +34,7 @@ public enum ArticleEvaluationType {
 	
 	public static ArticleEvaluationType getType(Integer typeCode) {
 		for(ArticleEvaluationType t : ArticleEvaluationType.values()) {
-			if(t.getEvaluationCode().equals(typeCode)) {
+			if(t.getCode().equals(typeCode)) {
 				return t;
 			}
 		}

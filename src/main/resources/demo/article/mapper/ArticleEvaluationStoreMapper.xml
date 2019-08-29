@@ -3,7 +3,7 @@
 <mapper namespace="demo.article.mapper.ArticleEvaluationStoreMapper">
 
   <resultMap id="BaseResultMap" type="demo.article.pojo.po.ArticleEvaluationStore">
-    <result column="evaluation_cache_id" jdbcType="BIGINT" property="evaluationCacheId" />
+    <result column="evaluation_store_id" jdbcType="BIGINT" property="evaluationStoreId" />
     <result column="post_object_id" jdbcType="BIGINT" property="postObjectId" />
     <result column="evaluation_type" jdbcType="BIT" property="evaluationType" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -12,18 +12,29 @@
     <result column="evaluation_count" jdbcType="INTEGER" property="evaluationCount" />
   </resultMap>
 
+  <insert id="insertOrUpdateEvaluationCount">
+    insert into article_evaluation_store (
+      evaluation_store_id, evaluation_type, post_object_id, create_time, update_time,  evaluation_code, evaluation_count
+    )
+    values(
+      #{evaluationStoreId,jdbcType=BIGINT}, #{evaluationType,jdbcType=BIT}, #{postObjectId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{evaluationCode,jdbcType=BIT}, #{evaluationCount,jdbcType=INTEGER})
+    on duplicate key update
+      update_time = now(),
+      evaluation_count = evaluation_count + #{evaluationCount}
+  </insert>
+
   <insert id="insert" parameterType="demo.article.pojo.po.ArticleEvaluationStore">
-    insert into article_evaluation_store (evaluation_cache_id, evaluation_type, post_object_id, create_time, update_time, evaluation_code, 
+    insert into article_evaluation_store (evaluation_store_id, evaluation_type, post_object_id, create_time, update_time, evaluation_code, 
       evaluation_count)
-    values (#{evaluationCacheId,jdbcType=BIGINT}, #{evaluationType,jdbcType=BIT}, #{postObjectId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{evaluationCode,jdbcType=BIT}, 
+    values (#{evaluationStoreId,jdbcType=BIGINT}, #{evaluationType,jdbcType=BIT}, #{postObjectId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{evaluationCode,jdbcType=BIT}, 
       #{evaluationCount,jdbcType=INTEGER})
   </insert>
   
   <insert id="insertSelective" parameterType="demo.article.pojo.po.ArticleEvaluationStore">
     insert into article_evaluation_store
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="evaluationCacheId != null">
-        evaluation_cache_id,
+      <if test="evaluationStoreId != null">
+        evaluation_store_id,
       </if>
       <if test="evaluationType != null">
         evaluation_type,
@@ -45,8 +56,8 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="evaluationCacheId != null">
-        #{evaluationCacheId,jdbcType=BIGINT},
+      <if test="evaluationStoreId != null">
+        #{evaluationStoreId,jdbcType=BIGINT},
       </if>
       <if test="evaluationType != null">
         #{evaluationType,jdbcType=BIT},

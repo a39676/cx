@@ -76,8 +76,8 @@ public class FakePostServiceImpl extends CommonService implements FakePostServic
 		for(ArticleLong article : articleList) {
 			tmpStorePo = new ArticleEvaluationStore();
 			tmpStorePo.setPostObjectId(article.getArticleId());
-			tmpStorePo.setEvaluationType(ArticleEvaluationType.articleLongEvaluation.getEvaluationCode());
-			tmpStorePo.setEvaluationCode(ArticleEvaluationCodeType.up.getEvaluationCode());
+			tmpStorePo.setEvaluationType(ArticleEvaluationType.articleLongEvaluation.getCode());
+			tmpStorePo.setEvaluationCode(ArticleEvaluationCodeType.up.getCode());
 			dayDiff =  (System.currentTimeMillis() - article.getCreateTime().getTime()) / oneDayMilliSecond;
 			if(dayDiff > 8) {
 				tmpStorePo.setEvaluationCount(0);
@@ -93,8 +93,8 @@ public class FakePostServiceImpl extends CommonService implements FakePostServic
 			
 			tmpStorePo = new ArticleEvaluationStore();
 			tmpStorePo.setPostObjectId(article.getArticleId());
-			tmpStorePo.setEvaluationType(ArticleEvaluationType.articleLongEvaluation.getEvaluationCode());
-			tmpStorePo.setEvaluationCode(ArticleEvaluationCodeType.down.getEvaluationCode());
+			tmpStorePo.setEvaluationType(ArticleEvaluationType.articleLongEvaluation.getCode());
+			tmpStorePo.setEvaluationCode(ArticleEvaluationCodeType.down.getCode());
 			dayDiff =  (System.currentTimeMillis() - article.getCreateTime().getTime()) / oneDayMilliSecond;
 			if(dayDiff > 8) {
 				tmpStorePo.setEvaluationCount(0);

@@ -73,9 +73,9 @@ public class TaskToolServiceImpl implements TaskToolService {
 	}
 	
 	/**
-	 * 将指定日期前的评价缓存转存至历史表,仅记录数字,抹去原记录
+	 * 将评价缓存转存至历史表,仅记录数字,抹去原记录
 	 */
-	@Scheduled(cron="40 39 23 * * *") // 每天23:39:40执行
+	@Scheduled(cron="40 49 23 * * *") // 每天23:49:40执行
 	public void evaluationCacheToStore() {
 		articleEvaluationService.evaluationCacheToStore();
 	}
@@ -83,7 +83,7 @@ public class TaskToolServiceImpl implements TaskToolService {
 	/**
 	 * 将评价缓存表中的评价, 依据实际情况, 加减对应用户,频道的coefficient
 	 */
-	@Scheduled(cron="40 42 03 * * *") // 每天03:42:40执行
+	@Scheduled(cron="40 01 23 * * *") // 每天03:01:40执行
 	public void evaluationCacheStatistics() {
 		articleEvaluationService.evaluationCacheStatistics();
 	}

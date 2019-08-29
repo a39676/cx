@@ -13,4 +13,6 @@ public interface ArticleEvaluationStoreMapper {
     List<ArticleEvaluationStore> findEvaluationStatisticsByIdList(FindEvaluationStatisticsByIdListParam param);
     
     int batchInert(List<ArticleEvaluationStore> evakyatuibStoreList);
+
+	void insertOrUpdateEvaluationCount(ArticleEvaluationStore storePODown);
 }

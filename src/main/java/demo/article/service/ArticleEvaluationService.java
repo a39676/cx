@@ -1,6 +1,5 @@
 package demo.article.service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -11,13 +10,11 @@ import demo.baseCommon.pojo.result.CommonResult;
 
 public interface ArticleEvaluationService {
 
-	CommonResult insertArticleLongEvaluation(InsertArticleLongEvaluationParam inputParam, Long userId);
+	CommonResult insertArticleLongEvaluationRedis(InsertArticleLongEvaluationParam inputParam);
 
 	Map<Long, ArticleEvaluationStatisticsVO> findEvaluationStatisticsByArticleId(ArticleEvaluationType evaluationType, List<Long> articleIdList);
 
 	void evaluationCacheToStore();
-
-	void evaluationCacheToStore(Date startTime);
 
 	void evaluationCacheStatistics();
 

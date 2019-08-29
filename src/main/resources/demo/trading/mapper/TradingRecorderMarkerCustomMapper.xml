@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.trading.mapper.TradingRecorderMarkerCustomMapper">
+
+  <resultMap id="BaseResultMap" type="demo.trading.pojo.po.TradingRecorderMarker" extends="demo.trading.mapper.TradingRecorderMarkerMapper.BaseResultMap">
+  </resultMap>
+  
+  <select id="getTradingRecordMarkerByTradingId" parameterType="Integer" resultMap="BaseResultMap">
+  	select
+  	  *
+  	from
+  	  trading_recorder_marker
+  	where
+      trading_id = #{tradingId}
+  </select>
+  
+</mapper>

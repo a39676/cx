@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.trading.mapper.TradingRecorderMapper">
+
+  <resultMap id="BaseResultMap" type="demo.trading.pojo.po.TradingRecorder">
+    <result column="trading_id" jdbcType="BIGINT" property="tradingId" />
+    <result column="account_id" jdbcType="BIGINT" property="accountId" />
+    <result column="account_number" jdbcType="CHAR" property="accountNumber" />
+    <result column="amount" jdbcType="DECIMAL" property="amount" />
+    <result column="transation_date" jdbcType="DATE" property="transationDate" />
+    <result column="transation_parties" jdbcType="CHAR" property="transationParties" />
+    <result column="transation_account_id" jdbcType="BIGINT" property="transationAccountId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  
+  <insert id="insert" parameterType="demo.trading.pojo.po.TradingRecorder">
+    insert into trading_recorder (trading_id, account_id, account_number, 
+      amount, transation_date, transation_parties, 
+      transation_account_id, create_time, remark
+      )
+    values (#{tradingId,jdbcType=BIGINT}, #{accountId,jdbcType=BIGINT}, #{accountNumber,jdbcType=CHAR}, 
+      #{amount,jdbcType=DECIMAL}, #{transationDate,jdbcType=DATE}, #{transationParties,jdbcType=CHAR}, 
+      #{transationAccountId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <insert id="insertSelective" parameterType="demo.trading.pojo.po.TradingRecorder">
+    insert into trading_recorder
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tradingId != null">
+        trading_id,
+      </if>
+      <if test="accountId != null">
+        account_id,
+      </if>
+      <if test="accountNumber != null">
+        account_number,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="transationDate != null">
+        transation_date,
+      </if>
+      <if test="transationParties != null">
+        transation_parties,
+      </if>
+      <if test="transationAccountId != null">
+        transation_account_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tradingId != null">
+        #{tradingId,jdbcType=BIGINT},
+      </if>
+      <if test="accountId != null">
+        #{accountId,jdbcType=BIGINT},
+      </if>
+      <if test="accountNumber != null">
+        #{accountNumber,jdbcType=CHAR},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="transationDate != null">
+        #{transationDate,jdbcType=DATE},
+      </if>
+      <if test="transationParties != null">
+        #{transationParties,jdbcType=CHAR},
+      </if>
+      <if test="transationAccountId != null">
+        #{transationAccountId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+</mapper>

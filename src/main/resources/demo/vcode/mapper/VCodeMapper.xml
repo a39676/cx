@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.vcode.mapper.VCodeMapper">
+
+  <resultMap id="BaseResultMap" type="demo.vcode.pojo.po.VCode">
+    <result column="code_id" jdbcType="INTEGER" property="codeId" />
+    <result column="code_type" jdbcType="INTEGER" property="codeType" />
+    <result column="code_value" jdbcType="CHAR" property="codeValue" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="valid_time" jdbcType="TIMESTAMP" property="validTime" />
+    <result column="delete_time" jdbcType="TIMESTAMP" property="deleteTime" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+    <result column="remark" jdbcType="CHAR" property="remark" />
+    <result column="use_count" jdbcType="INTEGER" property="useCount" />
+  </resultMap>
+  
+  <insert id="insert" parameterType="demo.vcode.pojo.po.VCode">
+    insert into vcode (code_id, code_type, code_value, 
+      create_time, valid_time, delete_time, 
+      is_delete, remark, use_count
+      )
+    values (#{codeId,jdbcType=INTEGER}, #{codeType,jdbcType=INTEGER}, #{codeValue,jdbcType=CHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{validTime,jdbcType=TIMESTAMP}, #{deleteTime,jdbcType=TIMESTAMP}, 
+      #{isDelete,jdbcType=BIT}, #{remark,jdbcType=CHAR}, #{useCount,jdbcType=INTEGER}
+      )
+  </insert>
+  
+  <insert id="insertSelective" parameterType="demo.vcode.pojo.po.VCode">
+    insert into vcode
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="codeId != null">
+        code_id,
+      </if>
+      <if test="codeType != null">
+        code_type,
+      </if>
+      <if test="codeValue != null">
+        code_value,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="validTime != null">
+        valid_time,
+      </if>
+      <if test="deleteTime != null">
+        delete_time,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="useCount != null">
+        use_count,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="codeId != null">
+        #{codeId,jdbcType=INTEGER},
+      </if>
+      <if test="codeType != null">
+        #{codeType,jdbcType=INTEGER},
+      </if>
+      <if test="codeValue != null">
+        #{codeValue,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="validTime != null">
+        #{validTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteTime != null">
+        #{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=CHAR},
+      </if>
+      <if test="useCount != null">
+        #{useCount,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="getVCodeByValue" resultMap="BaseResultMap">
+    select
+      *
+    from
+      vcode
+    where
+      code_value = #{codeValue}
+  </select>
+
+  <delete id="deleteInvalidCode">
+    delete from 
+      vcode 
+    where 
+      valid_time &lt;= now() or is_delete = true
+    <if test="idList != null">
+      and code_id in
+      <foreach item="id" index="index" collection="idList"
+        open="(" separator="," close=")">
+        #{id}
+      </foreach>
+    </if>
+  </delete>
+
+  <update id="updateDeleteMark">
+    update 
+      vcode 
+    set 
+      is_delete = true, delete_time = now()
+    where
+      code_id in 
+    <foreach item="id" index="index" collection="idList"
+        open="(" separator="," close=")">
+        #{id}
+    </foreach>
+  </update>
+
+  <update id="updateUseCount">
+    update
+      vcode
+    set
+      use_count = use_count + 1
+    where
+      code_id = #{codeId}
+  </update>
+</mapper>

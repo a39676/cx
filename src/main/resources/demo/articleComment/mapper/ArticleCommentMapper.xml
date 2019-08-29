@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.articleComment.mapper.ArticleCommentMapper">
+
+  <resultMap id="BaseResultMap" type="demo.articleComment.pojo.po.ArticleComment">
+    <result column="article_comment_id" jdbcType="BIGINT" property="articleCommentId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="article_id" jdbcType="BIGINT" property="articleId" />
+    <result column="path" jdbcType="VARCHAR" property="path" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="reply_of" jdbcType="BIGINT" property="replyOf" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+    <result column="is_pass" jdbcType="BIT" property="isPass" />
+    <result column="is_reject" jdbcType="BIT" property="isReject" />
+    <result column="private_key" jdbcType="CHAR" property="privateKey" />
+  </resultMap>
+
+  <insert id="insert" parameterType="demo.articleComment.pojo.po.ArticleComment">
+    insert into article_comment (article_comment_id, user_id, article_id, 
+      path, create_time, reply_of, 
+      is_delete, is_pass, is_reject, private_key
+      )
+    values (#{articleCommentId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{articleId,jdbcType=BIGINT},  
+      #{path,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{replyOf,jdbcType=BIGINT}, 
+      #{isDelete,jdbcType=BIT}, #{isPass,jdbcType=BIT}, #{isReject,jdbcType=BIT}, #{privateKey,jdbcType=CHAR}
+      )
+  </insert>
+
+  <insert id="insertSelective" parameterType="demo.articleComment.pojo.po.ArticleComment">
+    insert into article_comment
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="articleCommentId != null">
+        article_comment_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="articleId != null">
+        article_id,
+      </if>
+      <if test="path != null">
+        path,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="replyOf != null">
+        reply_of,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="isPass != null">
+        is_pass,
+      </if>
+      <if test="isReject != null">
+        is_reject,
+      </if>
+      <if test="privateKey != null">
+        private_key,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="articleCommentId != null">
+        #{articleCommentId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="articleId != null">
+        #{articleId,jdbcType=BIGINT},
+      </if>
+      <if test="path != null">
+        #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="replyOf != null">
+        #{replyOf,jdbcType=BIGINT},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="isPass != null">
+        #{isPass,jdbcType=BIT},
+      </if>
+      <if test="isReject != null">
+        #{isReject,jdbcType=BIT},
+      </if>
+      <if test="privateKey != null">
+        #{privateKey,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <insert id="insertNew">
+    insert into
+      article_comment (user_id, article_id, path,)
+  </insert>
+
+  <select id="findCommentByArticleId" resultType="demo.articleComment.pojo.bo.FindCommentByArticleIdBO">
+    select
+      ac.article_comment_id as articleCommentId,
+      ac.private_key as commentPrivateKey,
+      ac.path,
+      ac.create_time as createTime,
+      ac.is_delete as isDelete,
+      ac.is_pass as isPass,
+      ac.is_reject as isReject,
+      ud.nick_name as nickName
+
+    from
+      article_long as al
+
+      left join article_comment as ac
+        on al.article_id = ac.article_id
+
+      left join users_detail as ud
+        on ac.user_id = ud.user_id
+
+    where
+      al.article_id = #{articleId}
+      <if test="startTime != null">
+        and ac.create_time &gt; #{startTime}
+      </if>
+      <if test="isDelete != null">
+        and ac.is_delete = #{isDelete}
+      </if>
+      <if test="isDelete == null">
+        and ac.is_delete = false
+      </if>
+      <if test="isPass != null">
+        and ac.is_pass = #{isPass}
+      </if>
+      <if test="isPass == null">
+        and ac.is_pass = true
+      </if>
+    order by ac.create_time
+    limit #{limit}
+  </select>
+
+  <select id="justComment" resultType="int">
+    select exists(
+      select 
+        1 
+      from 
+        article_comment
+      where
+        1=1
+        and user_id = #{userId}
+        and create_time &gt; #{startTime}
+    )
+  </select>
+
+  <update id="updatePrimaryKey">
+    update 
+      article_comment
+    set
+      private_key = #{privateKey}
+    where
+      article_comment_id = #{articleCommentId}
+  </update>
+
+  <update id="logicDelete">
+    update article_comment set is_delete = true where article_comment_id = #{id}
+  </update>
+
+  <update id="passComment">
+    update article_comment set is_pass = true where article_comment_id = #{id}
+  </update>
+
+  <select id="findArticleIdWithCommentWaitingForReview" resultType="Long">
+    select
+      ac.article_id
+        
+    from
+      article_comment as ac
+    
+    where
+      1=1
+      and ac.article_id in
+      <foreach item="articleId" index="index" collection="list"
+        open="(" separator="," close=")">
+        #{articleId}
+      </foreach>
+      and ac.is_pass = false
+      and ac.is_delete = false
+      and ac.is_reject = false
+    
+    group by article_id
+  </select>
+
+  <select id="findCommentCountByArticleId" resultType="demo.articleComment.pojo.bo.ArticleCommentCountByArticleIdBO">
+    select
+      ac.article_id as articleId,
+      count(*) as commentCount
+
+    from
+      article_comment as ac
+
+    where
+      1=1
+      and ac.article_id in 
+      <foreach item="articleId" index="index" collection="list"
+        open="(" separator="," close=")">
+        #{articleId}
+      </foreach>
+      and ac.is_pass = true
+      and ac.is_delete = false
+      and ac.is_reject = false
+    
+    group by article_id
+  </select>
+
+</mapper>

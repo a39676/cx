@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.article.mapper.ArticleLongMapper">
+
+  <resultMap id="BaseResultMap" type="demo.article.pojo.po.ArticleLong">
+    <result column="article_id" jdbcType="BIGINT" property="articleId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="channel_id" jdbcType="BIGINT" property="channelId" />
+    <result column="article_title" jdbcType="VARCHAR" property="articleTitle" />
+    <result column="path" jdbcType="VARCHAR" property="path" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="edit_time" jdbcType="TIMESTAMP" property="editTime" />
+    <result column="edit_of" jdbcType="BIGINT" property="editOf" />
+    <result column="edit_count" jdbcType="INTEGER" property="editCount" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+    <result column="is_pass" jdbcType="BIT" property="isPass" />
+    <result column="is_edited" jdbcType="BIT" property="isEdited" />
+    <result column="is_reject" jdbcType="BIT" property="isReject" />
+  </resultMap>
+
+  <resultMap id="ArticleLongVO" type="demo.article.pojo.vo.ArticleLongVO" extends="BaseResultMap">
+    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
+  </resultMap>
+
+  <insert id="insert" parameterType="demo.article.pojo.po.ArticleLong">
+    insert into article_long (article_id, user_id, channel_id article_title, 
+      path, create_time, edit_time, 
+      edit_of, edit_count, is_delete, 
+      is_pass, is_edited, is_reject)
+    values (#{articleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{channelId,jdbcType=BIGINT}, #{articleTitle,jdbcType=VARCHAR}, 
+      #{path,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{editTime,jdbcType=TIMESTAMP}, 
+      #{editOf,jdbcType=BIGINT}, #{editCount,jdbcType=INTEGER}, #{isDelete,jdbcType=BIT}, 
+      #{isPass,jdbcType=BIT}, #{isEdited,jdbcType=BIT}, #{isReject,jdbcType=BIT})
+  </insert>
+
+  <insert id="insertSelective">
+    insert into article_long
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="articleId != null">
+        article_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="channelId != null">
+        channel_id,
+      </if>
+      <if test="articleTitle != null">
+        article_title,
+      </if>
+      <if test="path != null">
+        path,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="editTime != null">
+        edit_time,
+      </if>
+      <if test="editOf != null">
+        edit_of,
+      </if>
+      <if test="editCount != null">
+        edit_count,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="isPass != null">
+        is_pass,
+      </if>
+      <if test="isEdited != null">
+        is_edited,
+      </if>
+      <if test="isReject != null">
+        is_reject,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="articleId != null">
+        #{articleId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="channelId != null">
+        #{channelId,jdbcType=BIGINT},
+      </if>
+      <if test="articleTitle != null">
+        #{articleTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null">
+        #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="editTime != null">
+        #{editTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="editOf != null">
+        #{editOf,jdbcType=BIGINT},
+      </if>
+      <if test="editCount != null">
+        #{editCount,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="isPass != null">
+        #{isPass,jdbcType=BIT},
+      </if>
+      <if test="isEdited != null">
+        #{isEdited,jdbcType=BIT},
+      </if>
+      <if test="isReject != null">
+        #{isReject,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="findArticleIds" resultType="Long">
+    select
+      article_id
+    from
+      article_long
+    <where>
+      <if test="isDelete != null">
+        and is_delete = #{isDelete}
+      </if>
+      <if test="isDelete == null">
+        and is_delete = false
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId}
+      </if>
+<!-- 
+      <if test="">
+      </if>
+       -->
+    </where>
+  </select>
+
+  <select id="findArticleLong" resultMap="BaseResultMap">
+    select
+      *
+    from
+      article_long
+    <where>
+      <if test="articleId != null">
+        and article_id = #{articleId}
+      </if>
+    </where>
+  </select>
+
+  <select id="findArticleLongList" resultMap="BaseResultMap">
+    select
+      *
+    from
+      article_long
+    where
+      article_id in
+      <foreach item="articleId" index="index" collection="list"
+        open="(" separator="," close=")">
+        #{articleId}
+      </foreach>
+  </select>
+
+  <select id="findArticleLongByDecryptId" resultMap="ArticleLongVO">
+    select
+      al.user_id,
+      al.article_title,
+      al.path,
+      al.create_time,
+      al.edit_time,
+      al.edit_of,
+      al.edit_count,
+      al.is_delete,
+      al.is_pass,
+      al.is_edited,
+      al.is_reject,
+      udt.nick_name
+
+    from
+      article_long as al
+
+      left join article_long_summary as als
+        on al.article_id = als.article_id
+
+      left join users_detail as udt
+        on al.user_id = udt.user_id
+
+    <where>
+      al.article_id = #{articleId}
+      <if test="isPass != null">
+        and al.is_pass = #{isPass}
+      </if>
+      <if test="isDelete != null">
+        and al.is_Delete = #{isDelete}
+      </if>
+      <if test="isEdited != null">
+        and al.is_edited = #{isEdited}
+      </if>
+      <if test="isReject != null">
+        and al.is_reject = #{isReject}
+      </if>
+    </where>
+  </select>
+
+  <update id="updateArticleLongReviewStatu">
+    update
+      article_long as al
+    set 
+      al.article_id = al.article_id
+      <if test="isPass != null">
+        , al.is_pass = #{isPass}
+      </if>
+      <if test="isDelete != null">
+        , al.is_Delete = #{isDelete}
+      </if>
+      <if test="isReject != null">
+        , al.is_reject = #{isReject}
+      </if>
+    where
+      al.article_id = #{articleId}
+  </update>
+
+  <select id="findArticleChannelIdByArticleId" resultType="int">
+    select
+      al.channel_id
+    from
+      article_long as al
+    where
+      al.article_id = #{articleId}
+  </select>
+
+  <select id="iWroteThis" resultType="int">
+    select exists(
+      select 1 from article_long where user_id = #{userId} and article_id = #{articleId}
+    )
+  </select>
+
+  <update id="changeChannel">
+    update 
+      article_long 
+    set
+      channel_id = #{channelId}, is_pass = false
+    where
+      article_id = #{articleId}
+  </update>
+</mapper>

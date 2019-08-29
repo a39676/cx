@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.article.mapper.ArticleLongReviewMapper">
+  <resultMap id="BaseResultMap" type="demo.article.pojo.po.ArticleLongReview">
+    <result column="article_id" jdbcType="BIGINT" property="articleId" />
+    <result column="article_creator_id" jdbcType="BIGINT" property="articleCreatorId" />
+    <result column="article_reviewer_id" jdbcType="BIGINT" property="articleReviewerId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="remark_id" jdbcType="BIGINT" property="remarkId" />
+    <result column="review_type_id" jdbcType="INTEGER" property="reviewTypeId" />
+  </resultMap>
+
+  <insert id="insert" parameterType="demo.article.pojo.po.ArticleLongReview">
+    insert into article_long_review (article_id, article_creator_id, article_reviewer_id, 
+      create_time, remark_id, review_type_id
+      )
+    values (#{articleId,jdbcType=BIGINT}, #{articleCreatorId,jdbcType=BIGINT}, #{articleReviewerId,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{remarkId,jdbcType=BIGINT}, #{reviewTypeId,jdbcType=INTEGER}
+      )
+  </insert>
+
+  <insert id="insertSelective" parameterType="demo.article.pojo.po.ArticleLongReview">
+    insert into article_long_review
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="articleId != null">
+        article_id,
+      </if>
+      <if test="articleCreatorId != null">
+        article_creator_id,
+      </if>
+      <if test="articleReviewerId != null">
+        article_reviewer_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="remarkId != null">
+        remark_id,
+      </if>
+      <if test="reviewTypeId != null">
+        review_type_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="articleId != null">
+        #{articleId,jdbcType=BIGINT},
+      </if>
+      <if test="articleCreatorId != null">
+        #{articleCreatorId,jdbcType=BIGINT},
+      </if>
+      <if test="articleReviewerId != null">
+        #{articleReviewerId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remarkId != null">
+        #{remarkId,jdbcType=BIGINT},
+      </if>
+      <if test="reviewTypeId != null">
+        #{reviewTypeId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <insert id="insertNewReviewRecord">
+    insert into 
+      article_long_review (
+        article_id, 
+        article_reviewer_id, 
+        review_type_id
+        <if test="articleCreatorId != null">
+          ,article_creator_id
+        </if>
+        <if test="remarkId != null">
+          ,remark_id
+        </if>
+      )
+      values(
+        #{articleId},
+        #{articleReviewerId},
+        #{reviewTypeId}
+        <if test="articleCreatorId != null">
+          ,#{articleCreatorId}
+        </if>
+        <if test="remarkId != null">
+          ,#{remarkId}
+        </if>
+      )
+  </insert>
+
+  <select id="findArticleReviewResultsByArticltIdAndReviewType" resultMap="BaseResultMap">
+    select
+      *
+    from
+      article_long_review as alr
+
+    <where>
+      alr.article_id = #{articleId}
+      <if test="articleCreatorId != null">
+        and article_creator_id = #{articleCreatorId}
+      </if>
+      <if test="articleReviewerId != null">
+        and article_reviewer_id = #{articleReviewerId}
+      </if>
+      <if test="startTime != null">
+        and create_time &gt;= #{startTime}
+      </if>
+      <if test="endTime != null">
+        and create_time &lt;= #{endTime}
+      </if>
+      <if test="remarkId != null">
+        and remark_id = #{remarkId}
+      </if>
+      <if test="reviewTypeId != null">
+        and review_type_id = #{reviewTypeId}
+      </if>
+    </where>
+  </select>
+
+  <select id="wasReview" resultType="int">
+    select exists (
+      select 1 from article_long_review where article_id = #{articleId} and review_type_id = #{reviewTypeId}
+    )
+  </select>
+
+  <select id="findArticleCreatorIdIsNull" resultMap="BaseResultMap">
+    select
+      alr.article_id
+    from
+      article_long_review as alr
+    where
+      alr.article_creator_id is null
+    limit 1000
+  </select>
+
+  <update id="batchUpdateFillCreatorId">
+    <foreach item="po" index="index" collection="list"
+        open="" separator=";" close="">
+        update 
+          article_long_review 
+        set
+          article_creator_id = #{po.articleCreatorId}
+        where
+          article_id = #{po.articleId}
+    </foreach>
+  </update>
+
+  <delete id="deleteReviewRecord">
+    delete from article_long_review where article_id = #{articleId}
+  </delete>
+</mapper>

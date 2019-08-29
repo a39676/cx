@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.article.mapper.ArticleEvaluationCacheMapper">
+
+  <resultMap id="BaseResultMap" type="demo.article.pojo.po.ArticleEvaluationCache">
+    <result column="evaluation_cache_id" jdbcType="BIGINT" property="evaluationCacheId" />
+    <result column="evaluation_type" jdbcType="BIT" property="evaluationType" />
+    <result column="post_object_id" jdbcType="BIGINT" property="postObjectId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="evaluation_code" jdbcType="BIT" property="evaluationCode" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+    <result column="was_statistics" jdbcType="BIT" property="wasStatistics" />
+  </resultMap>
+
+  <insert id="insert" parameterType="demo.article.pojo.po.ArticleEvaluationCache">
+    insert into article_evaluation_cache (evaluation_cache_id, evaluation_type, post_object_id, create_time, user_id, 
+      evaluation_code, is_delete, was_statistics)
+    values (#{evaluationCacheId,jdbcType=BIGINT}, #{evaluationType,jdbcType=BIGINT}, #{postObjectId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{userId,jdbcType=BIGINT}, 
+      #{evaluationCode,jdbcType=BIT}, #{isDelete,jdbcType=BIT}, #{wasStatistics,jdbcType=BIT})
+  </insert>
+
+  <insert id="insertSelective" parameterType="demo.article.pojo.po.ArticleEvaluationCache">
+    insert into article_evaluation_cache
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="evaluationCacheId != null">
+        evaluation_cache_id,
+      </if>
+      <if test="evaluationType != null">
+        evaluation_type,
+      </if>
+      <if test="postObjectId != null">
+        post_object_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="evaluationCode != null">
+        evaluation_code,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="wasStatistics != null">
+        was_statistics,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="evaluationCacheId != null">
+        #{evaluationCacheId,jdbcType=BIGINT},
+      </if>
+      <if test="evaluationType != null">
+        #{evaluationType,jdbcType=BIGINT},
+      </if>
+      <if test="postObjectId != null">
+        #{postObjectId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="evaluationCode != null">
+        #{evaluationCode,jdbcType=BIT},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="wasStatistics != null">
+        #{wasStatistics,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="findEvaluationStatisticsByIdList" 
+    resultType="demo.article.pojo.bo.ArticleEvaluationStatisticsByArticleIdBO">
+    select
+      aec.post_object_id as postObjectId,
+      aec.evaluation_code as evaluationCode,
+      count(*) as evaluationCount,
+      group_concat(user_id) as userIds
+
+    from
+      article_evaluation_cache as aec
+
+    <where>
+      aec.post_object_id in 
+      <foreach item="postObjectId" index="index" collection="postObjectIdList"
+        open="(" separator="," close=")">
+        #{postObjectId}
+      </foreach>
+      and evaluation_type = #{evaluationType}
+      group by aec.post_object_id, aec.evaluation_code
+    </where>
+  </select>
+
+  <insert id="insertEvaluation">
+    insert ignore into 
+      article_evaluation_cache(post_object_id, evaluation_type, user_id, evaluation_code)
+    values(
+      #{postObjectId}, #{evaluationType}, #{userId}, #{evaluationCode}
+    )
+  </insert>
+
+  <select id="hasOldEvaluation" resultType="int">
+    select exists (
+      select 
+        1 
+      from 
+        article_evaluation_cache
+      where
+        create_time &lt;= #{createTime}
+        and was_statistics = true
+    )
+  </select>
+
+  <select id="hasNotStatistics" resultType="int">
+    select exists (
+      select 
+        1 
+      from 
+        article_evaluation_cache
+      where
+        was_statistics = false
+    )
+  </select>
+
+  <select id="findEvaluationCacheStatisticsByCondition" 
+    resultType="demo.article.pojo.bo.ArticleEvaluationStatisticsBO">
+    select
+      aec.evaluation_type as evaluationType,
+      aec.post_object_id as postObjectId,
+      aec.evaluation_code as evaluationCode,
+      count(*) as evaluationCount,
+      group_concat(aec.evaluation_cache_id) as evaluationCacheIdStr
+
+    from
+      article_evaluation_cache as aec
+
+    <where>
+      aec.post_object_id is not null
+      <if test="evaluationType != null">
+        and aec.evaluation_type = #{evaluationType}
+      </if>
+      <if test="startTime != null">
+        and create_time &gt;= #{startTime}
+      </if>
+      <if test="endTime != null">
+        and create_time &lt;= #{endTime}
+      </if>
+      group by aec.evaluation_type, aec.post_object_id, aec.evaluation_code
+    </where>
+    <if test="limit != null">
+      limit #{limit}
+    </if>
+    <if test="limit == null">
+      limit 1000
+    </if>
+  </select>
+
+  <delete id="deleteById">
+    delete
+    from
+      article_evaluation_cache
+    where
+      evaluation_cache_id in 
+    <foreach item="id" index="index" collection="idList"
+        open="(" separator="," close=")">
+        #{id}
+    </foreach>
+    and is_delete = true
+  </delete>
+
+  <update id="updateIsDelete">
+    update
+      article_evaluation_cache
+    set
+      is_delete = #{isDelete}
+    where
+      evaluation_cache_id in
+    <foreach item="id" index="index" collection="idList"
+        open="(" separator="," close=")">
+        #{id}
+    </foreach>
+  </update>
+
+  <select id="findEvaluationStatisticsTaskList" resultType="demo.article.pojo.bo.ArticleEvaluationStatisticsTaskBO">
+    select
+      aec.post_object_id as postObjectId,
+      aec.evaluation_code as evaluationCode,
+      count(*) as evaluationCount,
+      group_concat(aec.user_id) as userIds,
+      group_concat(aec.evaluation_cache_id) as evaluationCacheIds,
+      al.channel_id as channelId
+
+    from
+      article_evaluation_cache as aec
+      
+      left join article_long as al
+      	on aec.post_object_id = al.post_object_id
+      	
+    <where>
+      aec.is_delete = false
+      <if test="startTime != null">
+        and al.create_time &gt;= #{startTime}
+      </if>
+      <if test="endTime != null">
+        and al.create_time &lt;= #{endTime}
+      </if>
+      <if test="wasStatistics != null">
+        and aec.was_statistics = #{wasStatistics}
+      </if>
+      <if test="wasStatistics == null">
+        and aec.was_statistics = false
+      </if>
+    </where>
+    group by aec.post_object_id, aec.evaluation_code
+    <if test="limit != null and limit &lt; 1000">
+      limit #{limit}
+    </if>
+    <if test="limit == null">
+      limit 1000
+    </if>
+  </select>
+
+  <update id="updateWasStatistics">
+    update 
+      article_evaluation_cache
+    set
+      was_statistics = true
+    where
+      evaluation_cache_id in 
+      <foreach item="id" index="index" collection="idList"
+        open="(" separator="," close=")">
+        #{id}
+      </foreach>
+  </update>
+
+</mapper>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.credit_bill.mapper.BillInfoMapper">
+
+  <resultMap id="BaseResultMap" type="demo.credit_bill.pojo.BillInfo">
+    <result column="bill_info_id" jdbcType="INTEGER" property="billInfoId" />
+    <result column="account_id" jdbcType="INTEGER" property="accountId" />
+    <result column="bill_date" jdbcType="INTEGER" property="billDate" />
+    <result column="free_days" jdbcType="INTEGER" property="freeDays" />
+    <result column="last_refund_date" jdbcType="INTEGER" property="lastRefundDate" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+
+  <insert id="insert" parameterType="demo.credit_bill.pojo.BillInfo">
+    insert into bill_info (bill_info_id, account_id, bill_date, 
+      free_days, last_refund_date, is_delete, 
+      create_time)
+    values (#{billInfoId,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, #{billDate,jdbcType=INTEGER}, 
+      #{freeDays,jdbcType=INTEGER}, #{lastRefundDate,jdbcType=INTEGER}, #{isDelete,jdbcType=BIT}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <insert id="insertSelective" parameterType="demo.credit_bill.pojo.BillInfo">
+    insert into bill_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="billInfoId != null">
+        bill_info_id,
+      </if>
+      <if test="accountId != null">
+        account_id,
+      </if>
+      <if test="billDate != null">
+        bill_date,
+      </if>
+      <if test="freeDays != null">
+        free_days,
+      </if>
+      <if test="lastRefundDate != null">
+        last_refund_date,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="billInfoId != null">
+        #{billInfoId,jdbcType=INTEGER},
+      </if>
+      <if test="accountId != null">
+        #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="billDate != null">
+        #{billDate,jdbcType=INTEGER},
+      </if>
+      <if test="freeDays != null">
+        #{freeDays,jdbcType=INTEGER},
+      </if>
+      <if test="lastRefundDate != null">
+        #{lastRefundDate,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+
+  <select id="getBillBaseInfoByAccountId" resultMap="BaseResultMap">
+    select 
+      *
+    from
+      bill_info as bi
+
+    <where>
+      1=1
+      
+      and bi.is_delete = 0
+
+      <if test="accountIds != null">
+        and bi.account_id in
+        <foreach close=")" collection="accountIds" index="accountIdIndex" item="account_id" open="(" separator=",">
+          #{account_id}
+        </foreach>
+      </if>
+
+    </where>
+  </select>
+</mapper>

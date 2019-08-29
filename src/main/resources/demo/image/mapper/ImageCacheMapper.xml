@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.image.mapper.ImageCacheMapper">
+  
+  <resultMap id="BaseResultMap" type="demo.image.pojo.ImageCache">
+    <result column="image_id" jdbcType="BIGINT" property="imageId" />
+    <result column="image_url" jdbcType="VARCHAR" property="imageUrl" />
+    <result column="image_name" jdbcType="CHAR" property="imageName" />
+    <result column="article_id" jdbcType="BIGINT" property="articleId" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="is_download" jdbcType="BIT" property="isDownload" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="download_time" jdbcType="TIMESTAMP" property="downloadTime" />
+  </resultMap>
+
+  <insert id="insert" parameterType="demo.image.pojo.ImageCache">
+    insert into image_cache (image_id, image_url, image_name, 
+      article_id, remark, is_download, 
+      create_time, download_time
+      )
+    values (#{imageId,jdbcType=BIGINT}, #{imageUrl,jdbcType=VARCHAR}, #{imageName,jdbcType=CHAR}, 
+      #{articleId,jdbcType=BIGINT}, #{remark,jdbcType=VARCHAR}, #{isDownload,jdbcType=BIT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{downloadTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+
+  <insert id="insertSelective" parameterType="demo.image.pojo.ImageCache">
+    insert into image_cache
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="imageId != null">
+        image_id,
+      </if>
+      <if test="imageUrl != null">
+        image_url,
+      </if>
+      <if test="imageName != null">
+        image_name,
+      </if>
+      <if test="articleId != null">
+        article_id,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="isDownload != null">
+        is_download,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="downloadTime != null">
+        download_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="imageId != null">
+        #{imageId,jdbcType=BIGINT},
+      </if>
+      <if test="imageUrl != null">
+        #{imageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="imageName != null">
+        #{imageName,jdbcType=CHAR},
+      </if>
+      <if test="articleId != null">
+        #{articleId,jdbcType=BIGINT},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDownload != null">
+        #{isDownload,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="downloadTime != null">
+        #{downloadTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="getImageCaches" resultMap="BaseResultMap">
+    select
+      *
+    from 
+      image_cache as i
+    <where>
+      is_delete = false
+    </where>
+    order by 
+      i.create_time, 
+      image_name
+    <choose>
+      <when test="limit != null">
+        limit #{limit}
+      </when>
+      <otherwise>
+        limit 10
+      </otherwise>
+    </choose>    
+  </select>
+
+  <update id="updateDownloadMark">
+    update 
+      image_cache
+    set 
+      is_download = 1,
+      download_time = now()
+    where
+      image_id in 
+    <foreach item="imageId" index="index" collection="list"
+      open="(" separator="," close=")">
+        #{imageId}
+    </foreach>
+  </update>
+
+  <delete id="deleteDownloadedCache">
+    delete from 
+      image_cache 
+    where 
+      image_id in
+    <foreach item="imageId" index="index" collection="list"
+      open="(" separator="," close=")">
+        #{imageId}
+    </foreach>
+      and is_download = 1
+  </delete>
+
+  <insert id="batchInsert">
+    insert into 
+      image_cache (image_url, image_name, article_id, is_download)
+    values
+    <foreach item="imageCache" index="index" collection="list"
+      open="" separator="," close="">
+      (#{imageCache.imageUrl}, #{imageCache.imageName}, #{imageCache.articleId}, false)
+    </foreach>
+  </insert>
+
+  <select id="findCacheByArticleId" resultMap="BaseResultMap">
+    select
+      *
+    from
+      image_cache
+    where
+      article_id = #{articleId}
+  </select>
+</mapper>

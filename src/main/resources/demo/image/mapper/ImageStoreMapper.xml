@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.image.mapper.ImageStoreMapper">
+
+  <resultMap id="BaseResultMap" type="demo.image.pojo.ImageStore">
+    <result column="image_id" jdbcType="BIGINT" property="imageId" />
+    <result column="image_url" jdbcType="VARCHAR" property="imageUrl" />
+    <result column="image_name" jdbcType="VARCHAR" property="imageName" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="backup_time" jdbcType="TIMESTAMP" property="backupTime" />
+    <result column="md5_mark" jdbcType="CHAR" property="md5Mark" />
+  </resultMap>
+  
+  <insert id="insert" parameterType="demo.image.pojo.ImageStore">
+    insert into image_store (image_id, article_id, image_url, 
+      image_name, remark, 
+      create_time, backup_time, md5_mark
+      )
+    values (#{imageId,jdbcType=BIGINT}, #{articleId,jdbcType=BIGINT}, #{imageUrl,jdbcType=VARCHAR}, 
+      #{imageName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{backupTime,jdbcType=TIMESTAMP}, #{md5Mark,jdbcType=CHAR}
+      )
+  </insert>
+  
+  <insert id="insertSelective" parameterType="demo.image.pojo.ImageStore">
+    insert into image_store
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="imageId != null">
+        image_id,
+      </if>
+      <if test="articleId != null">
+        article_id,
+      </if>
+      <if test="imageUrl != null">
+        image_url,
+      </if>
+      <if test="imageName != null">
+        image_name,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="backupTime != null">
+        backup_time,
+      </if>
+      <if test="md5Mark != null">
+        md5_mark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="imageId != null">
+        #{imageId,jdbcType=BIGINT},
+      </if>
+      <if test="articleId != null">
+        #{articleId,jdbcType=BIGINT},
+      </if>
+      <if test="imageUrl != null">
+        #{imageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="imageName != null">
+        #{imageName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="backupTime != null">
+        #{backupTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="md5Mark != null">
+        #{md5Mark,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="checkImageExistsByMD5" parameterType="String" resultType="Integer">
+    select exists(
+      select 1 from image_store where md5_mark = #{md5}
+    );
+  </select>
+  
+  <insert id="batchInsert">
+    insert ignore
+      image_store (
+        image_id,
+        image_url,
+        image_name,
+        create_time
+      )
+    values
+    <foreach item="imageStore" index="index" collection="list"
+      open="" separator="," close="">
+      (
+        #{imageStore.imageId}, 
+        #{imageStore.imageUrl}, 
+        #{imageStore.imageName}, 
+        #{imageStore.createTime}
+      )
+    </foreach>
+  </insert>
+
+  <select id="findImageIdByMd5Mark" resultMap="BaseResultMap">
+    select
+      image_id,
+      md5_mark
+    from
+      image_store
+    where
+      md5_mark in
+      <foreach item="md5" index="index" collection="md5s"
+        open="(" separator="," close=")">
+          #{md5}
+      </foreach>
+  </select>
+  
+
+
+</mapper>

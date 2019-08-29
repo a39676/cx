@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.woqu.mapper.WusersMapper">
+  <resultMap id="BaseResultMap" type="demo.woqu.pojo.po.Wusers">
+    <id column="mobile" jdbcType="BIGINT" property="mobile" />
+    <result column="nick_name" jdbcType="CHAR" property="nickName" />
+    <result column="cn_name" jdbcType="CHAR" property="cnName" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="score" jdbcType="INTEGER" property="score" />
+    <result column="gender" jdbcType="BIT" property="gender" />
+    <result column="geographical_id" jdbcType="INTEGER" property="geographicalId" />
+    <result column="job" jdbcType="CHAR" property="job" />
+    <result column="birth" jdbcType="TIMESTAMP" property="birth" />
+    <result column="belong_store" jdbcType="CHAR" property="belongStore" />
+    <result column="belong_staff" jdbcType="CHAR" property="belongStaff" />
+    <result column="source" jdbcType="CHAR" property="source" />
+    <result column="introduce_mobile" jdbcType="BIGINT" property="introduceMobile" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+  </resultMap>
+
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+
+  <sql id="Base_Column_List">
+    mobile, nick_name, cn_name, level, score, gender, geographical_id, job, birth, belong_store, 
+    belong_staff, source, introduce_mobile, create_date
+  </sql>
+  <select id="selectByExample" parameterType="demo.woqu.pojo.po.WusersExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from wusers
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from wusers
+    where mobile = #{mobile,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from wusers
+    where mobile = #{mobile,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.woqu.pojo.po.WusersExample">
+    delete from wusers
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="demo.woqu.pojo.po.Wusers">
+    insert into wusers (mobile, nick_name, cn_name, 
+      level, score, gender, geographical_id, 
+      job, birth, belong_store, 
+      belong_staff, source, introduce_mobile, 
+      create_date)
+    values (#{mobile,jdbcType=BIGINT}, #{nickName,jdbcType=CHAR}, #{cnName,jdbcType=CHAR}, 
+      #{level,jdbcType=INTEGER}, #{score,jdbcType=INTEGER}, #{gender,jdbcType=BIT}, #{geographicalId,jdbcType=INTEGER}, 
+      #{job,jdbcType=CHAR}, #{birth,jdbcType=TIMESTAMP}, #{belongStore,jdbcType=CHAR}, 
+      #{belongStaff,jdbcType=CHAR}, #{source,jdbcType=CHAR}, #{introduceMobile,jdbcType=BIGINT}, 
+      #{createDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="demo.woqu.pojo.po.Wusers">
+    insert into wusers
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="mobile != null">
+        mobile,
+      </if>
+      <if test="nickName != null">
+        nick_name,
+      </if>
+      <if test="cnName != null">
+        cn_name,
+      </if>
+      <if test="level != null">
+        level,
+      </if>
+      <if test="score != null">
+        score,
+      </if>
+      <if test="gender != null">
+        gender,
+      </if>
+      <if test="geographicalId != null">
+        geographical_id,
+      </if>
+      <if test="job != null">
+        job,
+      </if>
+      <if test="birth != null">
+        birth,
+      </if>
+      <if test="belongStore != null">
+        belong_store,
+      </if>
+      <if test="belongStaff != null">
+        belong_staff,
+      </if>
+      <if test="source != null">
+        source,
+      </if>
+      <if test="introduceMobile != null">
+        introduce_mobile,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="mobile != null">
+        #{mobile,jdbcType=BIGINT},
+      </if>
+      <if test="nickName != null">
+        #{nickName,jdbcType=CHAR},
+      </if>
+      <if test="cnName != null">
+        #{cnName,jdbcType=CHAR},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="score != null">
+        #{score,jdbcType=INTEGER},
+      </if>
+      <if test="gender != null">
+        #{gender,jdbcType=BIT},
+      </if>
+      <if test="geographicalId != null">
+        #{geographicalId,jdbcType=INTEGER},
+      </if>
+      <if test="job != null">
+        #{job,jdbcType=CHAR},
+      </if>
+      <if test="birth != null">
+        #{birth,jdbcType=TIMESTAMP},
+      </if>
+      <if test="belongStore != null">
+        #{belongStore,jdbcType=CHAR},
+      </if>
+      <if test="belongStaff != null">
+        #{belongStaff,jdbcType=CHAR},
+      </if>
+      <if test="source != null">
+        #{source,jdbcType=CHAR},
+      </if>
+      <if test="introduceMobile != null">
+        #{introduceMobile,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <insert id="insertSelectiveIgnore" parameterType="demo.woqu.pojo.po.Wusers">
+    insert ignore wusers
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="mobile != null">
+        mobile,
+      </if>
+      <if test="nickName != null">
+        nick_name,
+      </if>
+      <if test="cnName != null">
+        cn_name,
+      </if>
+      <if test="level != null">
+        level,
+      </if>
+      <if test="score != null">
+        score,
+      </if>
+      <if test="gender != null">
+        gender,
+      </if>
+      <if test="geographicalId != null">
+        geographical_id,
+      </if>
+      <if test="job != null">
+        job,
+      </if>
+      <if test="birth != null">
+        birth,
+      </if>
+      <if test="belongStore != null">
+        belong_store,
+      </if>
+      <if test="belongStaff != null">
+        belong_staff,
+      </if>
+      <if test="source != null">
+        source,
+      </if>
+      <if test="introduceMobile != null">
+        introduce_mobile,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="mobile != null">
+        #{mobile,jdbcType=BIGINT},
+      </if>
+      <if test="nickName != null">
+        #{nickName,jdbcType=CHAR},
+      </if>
+      <if test="cnName != null">
+        #{cnName,jdbcType=CHAR},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="score != null">
+        #{score,jdbcType=INTEGER},
+      </if>
+      <if test="gender != null">
+        #{gender,jdbcType=BIT},
+      </if>
+      <if test="geographicalId != null">
+        #{geographicalId,jdbcType=INTEGER},
+      </if>
+      <if test="job != null">
+        #{job,jdbcType=CHAR},
+      </if>
+      <if test="birth != null">
+        #{birth,jdbcType=TIMESTAMP},
+      </if>
+      <if test="belongStore != null">
+        #{belongStore,jdbcType=CHAR},
+      </if>
+      <if test="belongStaff != null">
+        #{belongStaff,jdbcType=CHAR},
+      </if>
+      <if test="source != null">
+        #{source,jdbcType=CHAR},
+      </if>
+      <if test="introduceMobile != null">
+        #{introduceMobile,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="countByExample" parameterType="demo.woqu.pojo.po.WusersExample" resultType="java.lang.Long">
+    select count(*) from wusers
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update wusers
+    <set>
+      <if test="record.mobile != null">
+        mobile = #{record.mobile,jdbcType=BIGINT},
+      </if>
+      <if test="record.nickName != null">
+        nick_name = #{record.nickName,jdbcType=CHAR},
+      </if>
+      <if test="record.cnName != null">
+        cn_name = #{record.cnName,jdbcType=CHAR},
+      </if>
+      <if test="record.level != null">
+        level = #{record.level,jdbcType=INTEGER},
+      </if>
+      <if test="record.score != null">
+        score = #{record.score,jdbcType=INTEGER},
+      </if>
+      <if test="record.gender != null">
+        gender = #{record.gender,jdbcType=BIT},
+      </if>
+      <if test="record.geographicalId != null">
+        geographical_id = #{record.geographicalId,jdbcType=INTEGER},
+      </if>
+      <if test="record.job != null">
+        job = #{record.job,jdbcType=CHAR},
+      </if>
+      <if test="record.birth != null">
+        birth = #{record.birth,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.belongStore != null">
+        belong_store = #{record.belongStore,jdbcType=CHAR},
+      </if>
+      <if test="record.belongStaff != null">
+        belong_staff = #{record.belongStaff,jdbcType=CHAR},
+      </if>
+      <if test="record.source != null">
+        source = #{record.source,jdbcType=CHAR},
+      </if>
+      <if test="record.introduceMobile != null">
+        introduce_mobile = #{record.introduceMobile,jdbcType=BIGINT},
+      </if>
+      <if test="record.createDate != null">
+        create_date = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update wusers
+    set mobile = #{record.mobile,jdbcType=BIGINT},
+      nick_name = #{record.nickName,jdbcType=CHAR},
+      cn_name = #{record.cnName,jdbcType=CHAR},
+      level = #{record.level,jdbcType=INTEGER},
+      score = #{record.score,jdbcType=INTEGER},
+      gender = #{record.gender,jdbcType=BIT},
+      geographical_id = #{record.geographicalId,jdbcType=INTEGER},
+      job = #{record.job,jdbcType=CHAR},
+      birth = #{record.birth,jdbcType=TIMESTAMP},
+      belong_store = #{record.belongStore,jdbcType=CHAR},
+      belong_staff = #{record.belongStaff,jdbcType=CHAR},
+      source = #{record.source,jdbcType=CHAR},
+      introduce_mobile = #{record.introduceMobile,jdbcType=BIGINT},
+      create_date = #{record.createDate,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.woqu.pojo.po.Wusers">
+    update wusers
+    <set>
+      <if test="nickName != null">
+        nick_name = #{nickName,jdbcType=CHAR},
+      </if>
+      <if test="cnName != null">
+        cn_name = #{cnName,jdbcType=CHAR},
+      </if>
+      <if test="level != null">
+        level = #{level,jdbcType=INTEGER},
+      </if>
+      <if test="score != null">
+        score = #{score,jdbcType=INTEGER},
+      </if>
+      <if test="gender != null">
+        gender = #{gender,jdbcType=BIT},
+      </if>
+      <if test="geographicalId != null">
+        geographical_id = #{geographicalId,jdbcType=INTEGER},
+      </if>
+      <if test="job != null">
+        job = #{job,jdbcType=CHAR},
+      </if>
+      <if test="birth != null">
+        birth = #{birth,jdbcType=TIMESTAMP},
+      </if>
+      <if test="belongStore != null">
+        belong_store = #{belongStore,jdbcType=CHAR},
+      </if>
+      <if test="belongStaff != null">
+        belong_staff = #{belongStaff,jdbcType=CHAR},
+      </if>
+      <if test="source != null">
+        source = #{source,jdbcType=CHAR},
+      </if>
+      <if test="introduceMobile != null">
+        introduce_mobile = #{introduceMobile,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where mobile = #{mobile,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="demo.woqu.pojo.po.Wusers">
+    update wusers
+    set nick_name = #{nickName,jdbcType=CHAR},
+      cn_name = #{cnName,jdbcType=CHAR},
+      level = #{level,jdbcType=INTEGER},
+      score = #{score,jdbcType=INTEGER},
+      gender = #{gender,jdbcType=BIT},
+      geographical_id = #{geographicalId,jdbcType=INTEGER},
+      job = #{job,jdbcType=CHAR},
+      birth = #{birth,jdbcType=TIMESTAMP},
+      belong_store = #{belongStore,jdbcType=CHAR},
+      belong_staff = #{belongStaff,jdbcType=CHAR},
+      source = #{source,jdbcType=CHAR},
+      introduce_mobile = #{introduceMobile,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP}
+    where mobile = #{mobile,jdbcType=BIGINT}
+  </update>
+</mapper>

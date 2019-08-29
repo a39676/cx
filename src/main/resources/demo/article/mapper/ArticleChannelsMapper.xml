@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.article.mapper.ArticleChannelsMapper">
+  
+  <resultMap id="BaseResultMap" type="demo.article.pojo.po.ArticleChannels">
+    <result column="channel_id" jdbcType="INTEGER" property="channelId" />
+    <result column="channel_name" jdbcType="VARCHAR" property="channelName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="channel_point" jdbcType="BIGINT" property="channelPoint" />
+    <result column="channel_flash_point" jdbcType="INTEGER" property="channelFlashPoint" />
+    <result column="channel_type" jdbcType="INTEGER" property="channelType" />
+    <result column="weights" jdbcType="INTEGER" property="weights" />
+    <result column="is_flash" jdbcType="BIT" property="isFlash" />
+    <result column="image" jdbcType="CHAR" property="image" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+  </resultMap>
+
+  <insert id="insert" parameterType="demo.article.pojo.po.ArticleChannels">
+    insert into article_channels (channel_id, channel_name, create_time, 
+      channel_point, channel_flash_point, weights, chanel_type, is_flash, iamge, is_delete)
+    values (#{channelId,jdbcType=INTEGER}, #{channelName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{channelPoint,jdbcType=BIGINT}, #{channelFlashPoint,jdbcType=INTEGER}, #{weights,jdbcType=INTEGER},  #{channelType,jdbcType=INTEGER}, #{isFlash,jdbcType=BIT}, #{image,jdbcType=CHAR}), #{isDelete,jdbcType=BIT)
+  </insert>
+
+  <insert id="insertSelective" parameterType="demo.article.pojo.po.ArticleChannels">
+    insert into article_channels
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="channelId != null">
+        channel_id,
+      </if>
+      <if test="channelName != null">
+        channel_name,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="channelPoint != null">
+        channel_point,
+      </if>
+      <if test="channelFlashPoint != null">
+        channel_flash_point,
+      </if>
+      <if test="weights != null">
+        weights,
+      </if>
+      <if test="channelType != null">
+        channel_type
+      </if>
+      <if test="isFlash != null">
+        is_flash
+      </if>
+      <if test="image != null">
+        image
+      </if>
+      <if test="isDelete != null">
+        is_delete
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="channelId != null">
+        #{channelId,jdbcType=INTEGER},
+      </if>
+      <if test="channelName != null">
+        #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="channelPoint != null">
+        #{channelPoint,jdbcType=BIGINT},
+      </if>
+      <if test="channelFlashPoint != null">
+        #{channelFlashPoint,jdbcType=INTEGER},
+      </if>
+      <if test="weights != null">
+        #{weights,jdbcType=INTEGER},
+      </if>
+      <if test="channelType != null">
+        #{channelType,jdbcType=INTEGER}
+      </if>
+      <if test="isFlash != null">
+        #{isFlash,jdbcType=BIT}
+      </if>
+      <if test="image != null">
+        #{image,jdbcType=CHAR}
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT}
+      </if>
+    </trim>
+  </insert>
+
+  <select id="findPublicChannels" resultMap="BaseResultMap">
+    select * from article_channels where channel_type = 0 and is_delete = false
+  </select>
+
+  <select id="findArticleChannels" resultMap="BaseResultMap">
+    select
+      *
+    from
+      article_channels
+    <where>
+      <if test="channelName != null">
+        and channel_name like concat('%', #{channelName}, '%')
+      </if>
+      <if test="channelId != null">
+        and channel_id = #{channelId}
+      </if>
+    </where>
+  </select>
+
+  <select id="findArticleChannelById" resultMap="BaseResultMap">
+    select
+      *
+    from
+      article_channels
+    <where>
+      <if test="channelId != null">
+        and channel_id = #{channelId}
+      </if>
+    </where>
+  </select>
+
+  <select id="findIsFlashChannels" resultMap="BaseResultMap">
+    select * from article_channels where channel_type = 1 and is_flash = true and is_delete = false
+  </select>
+
+  <select id="findFlashChannels" resultMap="BaseResultMap">
+    select * from article_channels where channel_type = 1 and is_delete = false
+  </select>
+
+  <update id="updateChannelPoint">
+    update 
+      article_channels 
+    set 
+      channel_point = channel_point + #{channelPoint} 
+    where 
+      channel_id = #{channelId}
+  </update>
+
+  <update id="updateChannelPointByArticleId">
+    update 
+      article_long as al
+      left join article_channels as acs
+        on al.channel_id = acs.channel_id
+    set 
+      acs.channel_point = acs.channel_point + #{channelPoint} 
+    where 
+      al.article_id = #{articleId}
+  </update>
+  
+  <update id="updateChannelIsFlash">
+    update 
+      article_channels 
+    set
+      is_flash = #{isFlash}
+    where
+      channel_id in
+      <foreach item="channelId" index="index" collection="channelIdList"
+        open="(" separator="," close=")">
+        #{channelId}
+      </foreach>
+  </update>
+</mapper>

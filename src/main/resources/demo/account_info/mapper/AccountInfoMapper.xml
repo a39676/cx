@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.account_info.mapper.AccountInfoMapper">
+
+  <resultMap id="BaseResultMap" type="demo.account_info.pojo.po.AccountInfo">
+    <result column="account_id" jdbcType="BIGINT" property="accountId" />
+    <result column="account_holder_id" jdbcType="BIGINT" property="accountHolderId" />
+    <result column="account_number" jdbcType="CHAR" property="accountNumber" />
+    <result column="account_alias" jdbcType="CHAR" property="accountAlias" />
+    <result column="account_type" jdbcType="INTEGER" property="accountType" />
+    <result column="account_affiliation" jdbcType="BIGINT" property="accountAffiliation" />
+    <result column="vaild_date" jdbcType="DATE" property="vaildDate" />
+    <result column="bank_id" jdbcType="BIGINT" property="bankId" />
+    <result column="bank_union_id" jdbcType="BIGINT" property="bankUnionId" />
+    <result column="account_balance" jdbcType="DECIMAL" property="accountBalance" />
+    <result column="credits_quota" jdbcType="DECIMAL" property="creditsQuota" />
+    <result column="temprorary_credits_quota" jdbcType="DECIMAL" property="temproraryCreditsQuota" />
+    <result column="temprorary_credits_vaild_date" jdbcType="DATE" property="temproraryCreditsVaildDate" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  
+  <insert id="insert" parameterType="demo.account_info.pojo.po.AccountInfo">
+    insert into account_info (account_id, account_holder_id, account_number, 
+      account_alias, account_type, account_affiliation, vaild_date, 
+      bank_id, bank_union_id, account_balance, 
+      credits_quota, temprorary_credits_quota, temprorary_credits_vaild_date, 
+      remark, is_delete, create_time
+      )
+    values (#{accountId,jdbcType=BIGINT}, #{accountHolderId,jdbcType=BIGINT}, #{accountNumber,jdbcType=CHAR}, 
+      #{accountAlias,jdbcType=CHAR}, #{accountType,jdbcType=INTEGER}, #{accountAffiliation,jdbcType=BIGINT}, #{vaildDate,jdbcType=DATE}, 
+      #{bankId,jdbcType=BIGINT}, #{bankUnionId,jdbcType=BIGINT}, #{accountBalance,jdbcType=DECIMAL}, 
+      #{creditsQuota,jdbcType=DECIMAL}, #{temproraryCreditsQuota,jdbcType=DECIMAL}, #{temproraryCreditsVaildDate,jdbcType=DATE}, 
+      #{remark,jdbcType=VARCHAR}, #{isDelete,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  
+  <insert id="insertSelective" parameterType="demo.account_info.pojo.po.AccountInfo">
+    insert into account_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="accountId != null">
+        account_id,
+      </if>
+      <if test="accountHolderId != null">
+        account_holder_id,
+      </if>
+      <if test="accountNumber != null">
+        account_number,
+      </if>
+      <if test="accountAlias != null">
+        account_alias,
+      </if>
+      <if test="accountType != null">
+        account_type,
+      </if>
+      <if test="accountAffiliation != null">
+        account_affiliation,
+      </if>
+      <if test="vaildDate != null">
+        vaild_date,
+      </if>
+      <if test="bankId != null">
+        bank_id,
+      </if>
+      <if test="bankUnionId != null">
+        bank_union_id,
+      </if>
+      <if test="accountBalance != null">
+        account_balance,
+      </if>
+      <if test="creditsQuota != null">
+        credits_quota,
+      </if>
+      <if test="temproraryCreditsQuota != null">
+        temprorary_credits_quota,
+      </if>
+      <if test="temproraryCreditsVaildDate != null">
+        temprorary_credits_vaild_date,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="accountId != null">
+        #{accountId,jdbcType=BIGINT},
+      </if>
+      <if test="accountHolderId != null">
+        #{accountHolderId,jdbcType=BIGINT},
+      </if>
+      <if test="accountNumber != null">
+        #{accountNumber,jdbcType=CHAR},
+      </if>
+      <if test="accountAlias != null">
+        #{accountAlias,jdbcType=CHAR},
+      </if>
+      <if test="accountType != null">
+        #{accountType,jdbcType=INTEGER},
+      </if>
+      <if test="accountAffiliation != null">
+        #{accountAffiliation,jdbcType=BIGINT},
+      </if>
+      <if test="vaildDate != null">
+        #{vaildDate,jdbcType=DATE},
+      </if>
+      <if test="bankId != null">
+        #{bankId,jdbcType=BIGINT},
+      </if>
+      <if test="bankUnionId != null">
+        #{bankUnionId,jdbcType=BIGINT},
+      </if>
+      <if test="accountBalance != null">
+        #{accountBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="creditsQuota != null">
+        #{creditsQuota,jdbcType=DECIMAL},
+      </if>
+      <if test="temproraryCreditsQuota != null">
+        #{temproraryCreditsQuota,jdbcType=DECIMAL},
+      </if>
+      <if test="temproraryCreditsVaildDate != null">
+        #{temproraryCreditsVaildDate,jdbcType=DATE},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+</mapper>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.image.mapper.ImageTagMapper">
+  
+  <resultMap id="BaseResultMap" type="demo.image.pojo.ImageTag">
+    <result column="tag_id" jdbcType="INTEGER" property="tagId" />
+    <result column="image_id" jdbcType="BIGINT" property="imageId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="md5_mark" jdbcType="CHAR" property="md5Mark" />
+  </resultMap>
+
+  <insert id="insert" parameterType="demo.image.pojo.ImageTag">
+    insert into image_tag (tag_id, image_id, create_time, md5_mark
+      )
+    values (#{tagId,jdbcType=INTEGER}, #{imageId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{md5Mark,jdbcType=CHAR}
+      )
+  </insert>
+  
+  <insert id="insertSelective" parameterType="demo.image.pojo.ImageTag">
+    insert into image_tag
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tagId != null">
+        tag_id,
+      </if>
+      <if test="imageId != null">
+        image_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="md5Mark != null">
+        md5_mark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tagId != null">
+        #{tagId,jdbcType=INTEGER},
+      </if>
+      <if test="imageId != null">
+        #{imageId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="md5Mark != null">
+        #{md5Mark,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <insert id="batchInsert">
+    insert ignore 
+      image_tag(tag_id, image_id)
+    values
+      <foreach item="imageTag" index="index" collection="list"
+        open="" separator="," close="">
+        (#{imageTag.tagId}, #{imageTag.imageId})
+      </foreach>
+  </insert>
+
+  <update id="fillImageId">
+    <foreach item="imageStore" index="index" collection="list"
+      open="" separator="" close="">
+      update 
+        image_tag
+      set
+        image_id = #{imageStore.imageId}
+      where
+        md5_mark = #{imageStore.md5Mark}
+      ;
+    </foreach>
+  </update>
+
+  <select id="findImageTagByEmptyImageId" resultType="String">
+    select
+      md5_mark
+    from
+      image_tag
+    where
+      image_id is null
+  </select>
+
+</mapper>

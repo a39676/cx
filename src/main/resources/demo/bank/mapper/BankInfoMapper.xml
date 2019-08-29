@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.bank.mapper.BankInfoMapper">
+
+  <resultMap id="BaseResultMap" type="demo.bank.pojo.po.BankInfo">
+    <result column="bank_id" jdbcType="BIGINT" property="bankId" />
+    <result column="bank_ename" jdbcType="CHAR" property="bankEname" />
+    <result column="bank_ename_short" jdbcType="CHAR" property="bankEnameShort" />
+    <result column="bank_chinese_name" jdbcType="CHAR" property="bankChineseName" />
+    <result column="bank_chinese_name_short" jdbcType="CHAR" property="bankChineseNameShort" />
+    <result column="bank_union_id" jdbcType="BIGINT" property="bankUnionId" />
+    <result column="common_bank" jdbcType="BIT" property="commonBank" />
+  </resultMap>
+
+  <insert id="insert" parameterType="demo.bank.pojo.po.BankInfo">
+    insert into bank_info (bank_id, bank_ename, bank_ename_short, 
+      bank_chinese_name, bank_chinese_name_short, bank_union_id, 
+      common_bank)
+    values (#{bankId,jdbcType=BIGINT}, #{bankEname,jdbcType=CHAR}, #{bankEnameShort,jdbcType=CHAR}, 
+      #{bankChineseName,jdbcType=CHAR}, #{bankChineseNameShort,jdbcType=CHAR}, #{bankUnionId,jdbcType=BIGINT}, 
+      #{commonBank,jdbcType=BIT})
+  </insert>
+
+  <insert id="insertSelective" parameterType="demo.bank.pojo.po.BankInfo">
+    insert into bank_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="bankId != null">
+        bank_id,
+      </if>
+      <if test="bankEname != null">
+        bank_ename,
+      </if>
+      <if test="bankEnameShort != null">
+        bank_ename_short,
+      </if>
+      <if test="bankChineseName != null">
+        bank_chinese_name,
+      </if>
+      <if test="bankChineseNameShort != null">
+        bank_chinese_name_short,
+      </if>
+      <if test="bankUnionId != null">
+        bank_union_id,
+      </if>
+      <if test="commonBank != null">
+        common_bank,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="bankId != null">
+        #{bankId,jdbcType=BIGINT},
+      </if>
+      <if test="bankEname != null">
+        #{bankEname,jdbcType=CHAR},
+      </if>
+      <if test="bankEnameShort != null">
+        #{bankEnameShort,jdbcType=CHAR},
+      </if>
+      <if test="bankChineseName != null">
+        #{bankChineseName,jdbcType=CHAR},
+      </if>
+      <if test="bankChineseNameShort != null">
+        #{bankChineseNameShort,jdbcType=CHAR},
+      </if>
+      <if test="bankUnionId != null">
+        #{bankUnionId,jdbcType=BIGINT},
+      </if>
+      <if test="commonBank != null">
+        #{commonBank,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="get8601BankList" resultMap="BaseResultMap">
+    select 
+      *
+    from
+      bank_info
+    where
+      bank_union_id = 8601
+      and common_bank = 1
+  </select>
+
+  <select id="getBankFullInfoById" parameterType="int" resultType="demo.bank.pojo.bo.BankInfoWithBankUnionBO">
+    select 
+      *
+    from
+      bank_info as bank
+      left join bank_union as Bunion
+        on bank.bank_union_id = Bunion.bank_union_id
+    where
+      bank.bank_id = #{id}
+  </select>
+
+  <select id="getBankInfoFullInfoByBankInfoQuery" resultMap="BaseResultMap">
+    select
+      *
+    from
+      bank_info as bank
+      left join bank_union as Bunion
+        on bank.bank_union_id = Bunion.bank_union_id
+
+    <where>
+      <if test="bankUnionId != null" >
+        and bank.bank_union_id = #{bankUnionId}
+      </if>
+      <if test="commonBank != null">
+        and bank.common_bank = #{commonBank}
+      </if>
+      <if test="bankChineseName != null">
+        and bank.bank_chinese_name like concat('%', #{bankChineseName}, '%' )
+      </if>
+      <if test="bankChineseNameShort != null">
+        and bank.bank_chinese_name_short like concat('%', #{bankChineseNameShort}, '%' )
+      </if>
+    </where>
+
+  </select>
+
+  <select id="loadBankList" resultMap="BaseResultMap">
+    select * from bank_info
+  </select>
+
+  <select id="findBankInfoByCondition" resultMap="BaseResultMap">
+    select
+      *
+    from
+      bank_info as bi
+
+    <where>
+      <if test="bankId != null">
+        and bank_id = #{bankId}
+      </if>
+      <if test="bankUnionId != null">
+        and bank_union_id = #{bankUnionId}
+      </if>
+      <if test="bankEname != null">
+        and bank_ename = #{bankEname}
+      </if>
+      <if test="bankEnameShort != null">
+        and bank_ename_short = #{bankEnameShort}
+      </if>
+      <if test="bankChineseName != null">
+        and bank_chinese_name = #{bankChineseName}
+      </if>
+      <if test="bankChineseNameShort != null">
+        and bank_chinese_name_short = #{bankChineseNameShort}
+      </if>
+      <if test="fuzzyBankName != null">
+        and (
+          bank_ename like concat('%', #{fuzzyBankName}, '%')
+          or bank_ename_short like concat('%', #{fuzzyBankName}, '%')
+          or bank_chinese_name like concat('%', #{fuzzyBankName}, '%')
+          or bank_chinese_name_short like concat('%', #{fuzzyBankName}, '%')
+        )
+      </if>
+      <if test="commonBank != null">
+        and common_bank = #{commonBank}
+      </if>
+    </where>
+  </select>
+
+</mapper>

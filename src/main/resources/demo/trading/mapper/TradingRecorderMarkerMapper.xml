@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.trading.mapper.TradingRecorderMarkerMapper">
+
+  <resultMap id="BaseResultMap" type="demo.trading.pojo.po.TradingRecorderMarker">
+    <result column="trading_id" jdbcType="BIGINT" property="tradingId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="marker" jdbcType="CHAR" property="marker" />
+  </resultMap>
+  
+  <insert id="insert" parameterType="demo.trading.pojo.po.TradingRecorderMarker">
+    insert into trading_recorder_marker (trading_id, create_time, marker)
+    values (#{tradingId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{marker,jdbcType=CHAR})
+  </insert>
+  
+  <insert id="insertSelective" parameterType="demo.trading.pojo.po.TradingRecorderMarker">
+    insert into trading_recorder_marker
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tradingId != null">
+        trading_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="marker != null">
+        marker,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tradingId != null">
+        #{tradingId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="marker != null">
+        #{marker,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  
+</mapper>

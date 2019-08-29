@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.article.mapper.ArticleLongComplaintMapper">
+
+  <resultMap id="BaseResultMap" type="demo.article.pojo.po.ArticleLongComplaint">
+    <result column="article_id" jdbcType="BIGINT" property="articleId" />
+    <result column="article_creator_id" jdbcType="BIGINT" property="articleCreatorId" />
+    <result column="complaint_user_id" jdbcType="BIGINT" property="complaintUserId" />
+    <result column="article_title" jdbcType="VARCHAR" property="articleTitle" />
+    <result column="complaint_reason" jdbcType="VARCHAR" property="complaintReason" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+
+  <insert id="insert" parameterType="demo.article.pojo.po.ArticleLongComplaint">
+    insert into article_long_complaint (article_id, article_creator_id, complaint_user_id, 
+      article_title, complaint_reason, create_time
+      )
+    values (#{articleId,jdbcType=BIGINT}, #{articleCreatorId,jdbcType=BIGINT}, #{complaintUserId,jdbcType=BIGINT}, 
+      #{articleTitle,jdbcType=VARCHAR}, #{complaintReason,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+
+  <insert id="insertSelective" parameterType="demo.article.pojo.po.ArticleLongComplaint">
+    insert into article_long_complaint
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="articleId != null">
+        article_id,
+      </if>
+      <if test="articleCreatorId != null">
+        article_creator_id,
+      </if>
+      <if test="complaintUserId != null">
+        complaint_user_id,
+      </if>
+      <if test="articleTitle != null">
+        article_title,
+      </if>
+      <if test="complaintReason != null">
+        complaint_reason,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="articleId != null">
+        #{articleId,jdbcType=BIGINT},
+      </if>
+      <if test="articleCreatorId != null">
+        #{articleCreatorId,jdbcType=BIGINT},
+      </if>
+      <if test="complaintUserId != null">
+        #{complaintUserId,jdbcType=BIGINT},
+      </if>
+      <if test="articleTitle != null">
+        #{articleTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="complaintReason != null">
+        #{complaintReason,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+</mapper>

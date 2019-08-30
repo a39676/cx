@@ -14,5 +14,5 @@ public interface ArticleEvaluationStoreMapper {
     
     int batchInert(List<ArticleEvaluationStore> evakyatuibStoreList);
 
-	void insertOrUpdateEvaluationCount(ArticleEvaluationStore storePODown);
+	void insertOrUpdateEvaluationCount(ArticleEvaluationStore po);
 }

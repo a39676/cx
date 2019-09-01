@@ -90,4 +90,10 @@ public class TestController extends CommonController {
 		testService.roleGetTest();
 	}
 	
+	@GetMapping(value = "/redisHashTest")
+	public void redisHashTest() { 
+		testService.redisHashTest();
+	}
+	
+
 }

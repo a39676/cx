@@ -3,6 +3,7 @@ package demo.config;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -38,6 +39,9 @@ import demo.weixin.pojo.constant.WXUrl;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+	
+	@Value("${envName}")
+	private String envName;
 	
 	@Autowired
 	private DataSource dataSource;
@@ -100,9 +104,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             	.access(hasAnyRole(RolesType.ROLE_SUPER_ADMIN, RolesType.ROLE_DBA)) 
             .antMatchers(ToolUrlConstant.root + "/**")
             	.access(hasRole(RolesType.ROLE_SUPER_ADMIN))
-//            	TODO dev mark
-            .antMatchers("/test/**")
-            	.access(hasRole(RolesType.ROLE_SUPER_ADMIN))
             .antMatchers(UploadUrlConstant.uploadPriRoot + "/**")
             	.access(hasAnyRole(RolesType.ROLE_SUPER_ADMIN, RolesType.ROLE_DEV))
             .antMatchers(WXUrl.root + "/**")
@@ -128,6 +129,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //		    .and()
 //		        .headers().frameOptions().sameOrigin()
 		    ;
+        if(!"dev".equals(envName)) {
+        	http.authorizeRequests()
+        	.antMatchers("/test/**")
+        	.access(hasRole(RolesType.ROLE_SUPER_ADMIN));
+        }
 	  
         /*
          * 增加filter在此  同样操作 但建议使用

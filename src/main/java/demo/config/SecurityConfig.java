@@ -1,5 +1,7 @@
 package demo.config;
 
+import java.nio.charset.StandardCharsets;
+
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,7 +142,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
          * http.addFilterAfter(newFilter,CsrfFilter.class); 
          */
         CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
-        encodingFilter.setEncoding("UTF-8");
+        encodingFilter.setEncoding(StandardCharsets.UTF_8.displayName());
         encodingFilter.setForceEncoding(true);
         http.addFilterBefore(encodingFilter, CsrfFilter.class);
         

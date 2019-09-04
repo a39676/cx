@@ -20,9 +20,11 @@ import demo.trading.mapper.HolderCommonTransationCustomMapper;
 import demo.trading.mapper.TradingRecorderCustomMapper;
 import demo.trading.mapper.TradingRecorderMarkerMapper;
 import demo.trading.pojo.CommonTransationParties;
+import demo.trading.pojo.dto.TradingRecorderDTO;
 import demo.trading.pojo.po.TradingRecorder;
 import demo.trading.pojo.po.TradingRecorderMarker;
 import demo.trading.pojo.result.InsertTradingRecorderResult;
+import demo.trading.pojo.result.TradingQueryResult;
 import demo.trading.service.TradingService;
 import ioHandle.FileUtilCustom;
 import numericHandel.NumericUtilCustom;
@@ -291,5 +293,14 @@ public class TradingServiceImpl extends CommonService implements TradingService 
 		}
 
 		return tradingRecorder;
+	}
+
+	public TradingQueryResult findTradingRecordByCondition(TradingRecorderDTO dto) {
+		/*
+		 * TODO
+		 * 
+		 */
+		TradingQueryResult r = new TradingQueryResult();
+		return r;
 	}
 }

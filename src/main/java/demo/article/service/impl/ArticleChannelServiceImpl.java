@@ -44,13 +44,12 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	
 	@Autowired
 	private SystemConstantService systemConstantService;
-	
 	@Autowired
 	private ArticleUserDetailMapper articleUserDetailMapper;
-	
-	
 	@Autowired
 	private ArticleChannelsMapper articleChannelsMapper;
+	@Autowired
+	private FileUtilCustom ioUtil;
 	
 	private static List<String> hostNameList = null;
 
@@ -515,11 +514,10 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	
 	@Override
 	public String loadChannelPrefix(Integer channelId) {
-		FileUtilCustom iou = new FileUtilCustom();
 		String mainFolderPath = systemConstantService.getValByName(SystemConstantStore.articleChannelPrefixStorePath);
 		String strContent = "";
 		if(new File(mainFolderPath + channelId + ".txt").exists()) {
-			 strContent = iou.getStringFromFile(mainFolderPath + channelId + ".txt");
+			 strContent = ioUtil.getStringFromFile(mainFolderPath + channelId + ".txt");
 		}
 		return strContent;
 	}

@@ -45,11 +45,12 @@ public class ExcelAnalysisServiceImpl extends CommonService implements ExcelAnal
 	
 	@Autowired
 	private ChartController chartController;
+	@Autowired
+	private FileUtilCustom ioUtil;
 
 	@Override
 	public UploadExcelResult uploadExcel(Map<String, MultipartFile> fileMap, String hostName) {
 		UploadExcelResult result = new UploadExcelResult();
-		FileUtilCustom io = new FileUtilCustom();
 		MultipartFile tmpFile = null;
 		String fileName = null;
 		String suffixFileName = null;
@@ -93,7 +94,7 @@ public class ExcelAnalysisServiceImpl extends CommonService implements ExcelAnal
 			tmpFile = entry.getValue();
 			fileName = tmpFile.getOriginalFilename();
 			try {
-				io.byteToFile(tmpFile.getBytes(), path);
+				ioUtil.byteToFile(tmpFile.getBytes(), path);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

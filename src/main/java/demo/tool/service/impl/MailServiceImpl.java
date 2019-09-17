@@ -57,6 +57,8 @@ public class MailServiceImpl extends CommonService implements MailService {
 	
 	@Autowired
 	private MailRecordMapper mailRecordMapper;
+	@Autowired
+	private FileUtilCustom ioUtil;
 	
 	
 	
@@ -85,7 +87,6 @@ public class MailServiceImpl extends CommonService implements MailService {
 			return result;
 		}
 		
-		FileUtilCustom ioUtil = new FileUtilCustom();
 		Resource resource = new ClassPathResource(ResourceConstant.mailSinaSmtpSslProperties);
 		Properties properties = null;
 		try {
@@ -159,7 +160,6 @@ public class MailServiceImpl extends CommonService implements MailService {
 		if(!isMailReady()) {
 			return;
 		}
-		FileUtilCustom ioUtil = new FileUtilCustom();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmmss");
 		String title = "日志,截止到( " + LocalDateTime.now().format(formatter) + ")";
 
@@ -187,7 +187,6 @@ public class MailServiceImpl extends CommonService implements MailService {
 		if(!isMailReady()) {
 			return;
 		}
-		FileUtilCustom ioUtil = new FileUtilCustom();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmmss");
 
 		File logsFolder = new File(ToolPathConstant.getTomcatLogsPath());
@@ -400,7 +399,6 @@ public class MailServiceImpl extends CommonService implements MailService {
 			return;
 		}
 		
-		FileUtilCustom ioUtil = new FileUtilCustom();
 		Resource resource = new ClassPathResource(ResourceConstant.mailSinaSmtpSslProperties);
 		Properties properties = null;
 		try {
@@ -431,7 +429,6 @@ public class MailServiceImpl extends CommonService implements MailService {
 		}
 		
 		MailHandle mailHandle = new MailHandle();
-		FileUtilCustom ioUtil = new FileUtilCustom();
 
 		Resource resourceSmtpProperties = new ClassPathResource(ResourceConstant.mailSinaSmtpSslProperties);
 		Resource resourceImapProperties = new ClassPathResource(ResourceConstant.mailSinaImapSslProperties);

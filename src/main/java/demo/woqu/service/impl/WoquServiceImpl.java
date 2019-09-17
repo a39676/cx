@@ -22,6 +22,8 @@ public class WoquServiceImpl extends CommonService implements WoquService {
 
 	@Autowired
 	private WusersMapper wusersMapper;
+	@Autowired
+	private FileUtilCustom ioUtil;
 
 	@Override
 	public void initInsert(String filePath) {
@@ -30,9 +32,7 @@ public class WoquServiceImpl extends CommonService implements WoquService {
 			return;
 		}
 
-		FileUtilCustom io = new FileUtilCustom();
-
-		String fileStr = io.getStringFromFile(filePath);
+		String fileStr = ioUtil.getStringFromFile(filePath);
 		List<String> lines = Arrays.asList(fileStr.split("\\n"));
 
 		String tmpLine = null;

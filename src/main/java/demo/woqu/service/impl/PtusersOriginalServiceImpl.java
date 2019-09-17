@@ -26,16 +26,17 @@ public class PtusersOriginalServiceImpl extends CommonService implements Ptusers
 
 	@Autowired
 	private PtusersOriginalMapper ptuserOriginalMapper;
+	@Autowired
+	private FileUtilCustom ioUtil;
 
 	@Override
 	public void createPtusers() {
-		FileUtilCustom io = new FileUtilCustom();
 		String mainFolderPath = "D:\\auxiliary\\tmp\\铂涛通讯录";
 		File mainFolder = new File(mainFolderPath);
 		File[] fileList = mainFolder.listFiles();
 		String fileStr = null;
 		for(File subFile : fileList) {
-			fileStr = io.getStringFromFile(subFile.getAbsolutePath());
+			fileStr = ioUtil.getStringFromFile(subFile.getAbsolutePath());
 			List<PtusersOriginal> ptuserList = createPtusersFromFile(fileStr);
 			ptuserList.stream().forEach(o -> ptuserOriginalMapper.insertSelective(o));
 		}
@@ -58,7 +59,6 @@ public class PtusersOriginalServiceImpl extends CommonService implements Ptusers
 	@Override
 	public void createVcf() {
 		List<PtusersOriginal> ptUserList = ptuserOriginalMapper.selectAllGroupByMobile();
-		FileUtilCustom io = new FileUtilCustom();
 		String outputVcfPath = "D:\\auxiliary\\tmp\\铂涛通讯录\\ptVcf.vcf";
 		ptUserList.stream().forEach(o -> {
 			if(StringUtils.isNotBlank(o.getMobile())) {
@@ -69,7 +69,7 @@ public class PtusersOriginalServiceImpl extends CommonService implements Ptusers
 						+ "TEL;CELL:" + o.getMobile() + "\r\n"
 						+ "END:VCARD" + "\r\n"
 						;
-				io.byteToFileAppendAtEnd(singleResult.getBytes(StandardCharsets.UTF_8), outputVcfPath);
+				ioUtil.byteToFileAppendAtEnd(singleResult.getBytes(StandardCharsets.UTF_8), outputVcfPath);
 			}
 		});
 	}

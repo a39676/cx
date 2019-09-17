@@ -106,6 +106,9 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	@Autowired
 	private ArticleLongComplaintMapper articleLongComplaintMapper;
 	
+	@Autowired
+	private FileUtilCustom ioUtil;
+	
 	private static String articleStorePrefixPath = "";
 	private static String articleSummaryStorePrefixPath = "";
 	private static Long maxArticleLength = 0L;
@@ -451,7 +454,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return result;
 		}
 
-		FileUtilCustom iou = new FileUtilCustom();
 		if (StringUtils.isBlank(content) || content.replaceAll("\\s", "").length() < 6) {
 			result.fillWithResult(ResultType.articleTooShort);
 			return result;
@@ -475,7 +477,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		String articleContentAfterTrim = sb.toString().trim();
 
 		try {
-			iou.byteToFile(articleContentAfterTrim.getBytes("utf8"), finalFilePath);
+			ioUtil.byteToFile(articleContentAfterTrim.getBytes("utf8"), finalFilePath);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			result.fillWithResult(ResultType.errorWhenArticleSave);
@@ -519,8 +521,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			}
 		}
 
-		FileUtilCustom iou = new FileUtilCustom();
-
 		if (firstLine.length() > 100) {
 			firstLine = firstLine.substring(0, 100) + "...";
 		}
@@ -534,7 +534,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		}
 
 		try {
-			iou.byteToFile(sb.toString().getBytes("utf8"), finalFilePath);
+			ioUtil.byteToFile(sb.toString().getBytes("utf8"), finalFilePath);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			result.fillWithResult(ResultType.errorWhenArticleSave);
@@ -577,9 +577,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 
 	private void fillArticleContent(ArticleLongVO articleLongVO, String pk, Long userId) {
-		FileUtilCustom iou = new FileUtilCustom();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String strContent = iou.getStringFromFile(articleLongVO.getPath());
+		String strContent = ioUtil.getStringFromFile(articleLongVO.getPath());
 		List<String> strLines = Arrays.asList(strContent.split("\n"));
 		StringBuffer outputLines = new StringBuffer();
 		String line = "";

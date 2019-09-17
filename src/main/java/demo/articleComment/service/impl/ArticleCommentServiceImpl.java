@@ -48,6 +48,9 @@ public class ArticleCommentServiceImpl extends CommonService implements ArticleC
 	@Autowired
 	private ArticleCommentMapper articleCommentMapper;
 	
+	@Autowired
+	private FileUtilCustom ioUtil;
+	
 	private String articleCommentStorePrefixPath;
 	private static Long maxArticleLength = 0L;
 	
@@ -181,8 +184,7 @@ public class ArticleCommentServiceImpl extends CommonService implements ArticleC
 	
 	private ArticleCommentVO fillArticleCommentFromBo(Map<Long, ArticleEvaluationStatisticsVO> evaluationStatisticsMap, FindCommentByArticleIdBO bo) {
 		ArticleCommentVO vo = new ArticleCommentVO();
-		FileUtilCustom iou = new FileUtilCustom();
-		String strContent = iou.getStringFromFile(bo.getPath());
+		String strContent = ioUtil.getStringFromFile(bo.getPath());
 		List<String> strLines = Arrays.asList(strContent.split("\n"));
 		List<String> outputLines = new ArrayList<String>();
 		String line = "";

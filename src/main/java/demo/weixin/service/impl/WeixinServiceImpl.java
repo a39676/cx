@@ -54,6 +54,8 @@ public class WeixinServiceImpl extends CommonService implements WeixinService {
 	private WeixinAccessTokenMapper weixinAccessTokenMapper;
 	@Autowired
 	private ArticleShortMapper articleShortMapper;
+	@Autowired
+	private FileUtilCustom ioUtil;
 
 	private static String token = "weixinTestToken";
 
@@ -299,7 +301,6 @@ public class WeixinServiceImpl extends CommonService implements WeixinService {
 			result.fillWithResult(ResultType.articleTooShort);
 			return result;
 		}
-		FileUtilCustom iou = new FileUtilCustom();
 
 		List<String> lines = Arrays.asList(content.split(System.lineSeparator()));
 		StringBuffer sb = new StringBuffer();
@@ -311,7 +312,7 @@ public class WeixinServiceImpl extends CommonService implements WeixinService {
 		String articleContentAfterTrim = sb.toString().trim();
 
 		try {
-			iou.byteToFile(articleContentAfterTrim.getBytes("utf8"), finalFilePath);
+			ioUtil.byteToFile(articleContentAfterTrim.getBytes("utf8"), finalFilePath);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			result.fillWithResult(ResultType.errorWhenArticleSave);

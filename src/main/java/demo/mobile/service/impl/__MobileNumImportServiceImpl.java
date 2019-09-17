@@ -31,6 +31,9 @@ public class __MobileNumImportServiceImpl extends CommonService implements __Mob
 	@Autowired
 	private MobileNumMapper mobileNumMapper;
 	
+	@Autowired
+	private FileUtilCustom ioUtil;
+	
 	private static HashMap<String, Integer> geoMap;
 	
 	static {
@@ -420,8 +423,7 @@ public class __MobileNumImportServiceImpl extends CommonService implements __Mob
 		if(!f.exists()) {
 			return boList;
 		}
-		FileUtilCustom io = new FileUtilCustom();
-		String str = io.getStringFromFile(filePath);
+		String str = ioUtil.getStringFromFile(filePath);
 		List<String> lines = Arrays.asList(str.split("\n"));
 		
 

@@ -34,15 +34,14 @@ public class TradingServiceImpl extends CommonService implements TradingService 
 
 	@Autowired
 	private AccountInfoController accountInfoController;
-
 	@Autowired
 	private TradingRecorderCustomMapper tradingRecorderCustomMapper;
-
 	@Autowired
 	private TradingRecorderMarkerMapper tradingRecorderMarkerMapper;
-
 	@Autowired
 	private HolderCommonTransationCustomMapper holderCommonTransationCustomMapper;
+	@Autowired
+	private FileUtilCustom ioUtil;
 
 	private boolean insertTradingRecorderMarker(TradingRecorder tradingRecorder) {
 		TradingRecorderMarker marker = new TradingRecorderMarker();
@@ -127,13 +126,12 @@ public class TradingServiceImpl extends CommonService implements TradingService 
 
 		StringBuffer result = new StringBuffer();
 
-		FileUtilCustom fileHandle = new FileUtilCustom();
 		File[] files = mainFolder.listFiles();
 //		List<File> fileList = new ArrayList<File>();
 		for (File tmpFile : files) {
 			if (tmpFile.isFile() && tmpFile.getName().endsWith(".csv")
 					&& tmpFile.getName().substring(0, tmpFile.getName().lastIndexOf(".")).matches("\\d{16,19}")) {
-				result.append(importTradingRecordFromFile(tmpFile, fileHandle));
+				result.append(importTradingRecordFromFile(tmpFile, ioUtil));
 			}
 		}
 

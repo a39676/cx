@@ -73,6 +73,9 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 	@Autowired
 	private ArticleCommentController articleCommentController;
 	
+	@Autowired
+	private FileUtilCustom ioUtil;
+	
 	@Override
 	public int insertArticleLongSummary(Long userId, Long articleId, String title, String finalFilePath) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException, InvalidAlgorithmParameterException {
 		List<List<Character>> keys = getCustomKey();
@@ -141,7 +144,6 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 	 * 此方法在V3落实后考虑保留 因其中的评价参数模块 
 	 * */
 	protected List<ArticleLongSummaryVO> fillArticleSummaryContent(boolean loadArticleHot, List<ArticleLongSummaryBO> summaryList, Map<Long, ArticleEvaluationStatisticsVO> articleEvaluationStatisticsMap, List<Long> articleHasCommentNotReviewIdList) {
-		FileUtilCustom iou = new FileUtilCustom();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String strContent = "";
 		StringBuffer voContentBuilder = new StringBuffer();
@@ -168,7 +170,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 				continue;
 			}
 			tmpVO = new ArticleLongSummaryVO();
-			strContent = iou.getStringFromFile(summaryBO.getPath());
+			strContent = ioUtil.getStringFromFile(summaryBO.getPath());
 			voContentBuilder.append(strContent);
 			List<String> lines = Arrays.asList(strContent.split("\n"));
 			List<String> imgUrls = new ArrayList<String>();
@@ -199,7 +201,6 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			List<Long> articleHasCommentNotReviewIdList,
 			List<ArticleCommentCountByArticleIdBO> commentCountList,
 			List<ArticleViewCount> viewCountList) {
-		FileUtilCustom iou = new FileUtilCustom();
 		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat sdfDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String strContent = "";
@@ -229,7 +230,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 				continue;
 			}
 			tmpVO = new ArticleLongSummaryVOV3();
-			strContent = iou.getStringFromFile(summaryBO.getPath());
+			strContent = ioUtil.getStringFromFile(summaryBO.getPath());
 			voContentBuilder.append(strContent);
 			List<String> lines = Arrays.asList(strContent.split("\n"));
 			String imgUrl = null;

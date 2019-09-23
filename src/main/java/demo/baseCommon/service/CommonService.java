@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import demo.baseCommon.pojo.param.PageParam;
 import demo.baseCommon.pojo.result.CommonResult;
 import demo.baseCommon.pojo.type.ResultType;
 import demo.config.costom_component.SnowFlake;
@@ -27,35 +26,7 @@ public abstract class CommonService {
 	@Autowired
 	protected RedisTemplate<String, String> redisTemplate;
 
-	private static final int normalPageSize = 10;
-	private static final int maxPageSize = 300;
 	protected static final long theStartTime = 946656000000L;
-
-	protected PageParam setPageFromPageNo(Integer pageNo) {
-		return setPageFromPageNo(pageNo, normalPageSize);
-	}
-
-	protected PageParam setPageFromPageNo(Integer pageNo, Integer pageSize) {
-		if (pageNo == null || pageNo <= 0) {
-			pageNo = 1;
-		}
-		if (pageSize == null || pageSize <= 0) {
-			pageSize = 1;
-		}
-		if (pageSize > maxPageSize) {
-			pageSize = maxPageSize;
-		}
-		PageParam pp = new PageParam();
-		if (pageNo == 1) {
-			pp.setPageStart(0);
-			pp.setPageEnd(pageSize);
-		} else if (pageNo > 1) {
-			pp.setPageStart(pageSize * (pageNo - 1) + 1);
-			pp.setPageEnd(pp.getPageStart() + pageSize);
-		}
-		pp.setPageSize(pageSize);
-		return pp;
-	}
 
 	protected String createDateDescription(Date inputDate) {
 		if (inputDate == null) {

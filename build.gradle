@@ -48,7 +48,8 @@ repositories {
 
 dependencies {
 	// tools
-	compile project(':toolPacksG') 
+	compile project(':toolPacksG')
+	compile project(':auxiliaryCommon')
 
 	// spring boot
     compile group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.1.5.RELEASE'

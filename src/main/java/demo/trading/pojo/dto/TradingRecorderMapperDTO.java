@@ -3,7 +3,7 @@ package demo.trading.pojo.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import demo.baseCommon.pojo.param.PageDTO;
+import auxiliaryCommon.pojo.dto.PageDTO;
 
 public class TradingRecorderMapperDTO extends PageDTO {
 

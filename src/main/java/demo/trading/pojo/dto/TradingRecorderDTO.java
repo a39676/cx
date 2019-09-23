@@ -2,9 +2,9 @@ package demo.trading.pojo.dto;
 
 import java.time.LocalDateTime;
 
-import demo.baseCommon.pojo.param.PageParam;
+import auxiliaryCommon.pojo.dto.PageDTO;
 
-public class TradingRecorderDTO extends PageParam {
+public class TradingRecorderDTO extends PageDTO {
 
 	private LocalDateTime startTime;
 

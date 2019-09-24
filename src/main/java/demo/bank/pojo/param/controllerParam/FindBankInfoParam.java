@@ -1,18 +1,12 @@
 package demo.bank.pojo.param.controllerParam;
 
-import java.io.IOException;
+import java.util.List;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import demo.baseCommon.pojo.param.CommonControllerParam;
-import net.sf.json.JSONObject;
-
-public class FindBankInfoParam implements CommonControllerParam {
+public class FindBankInfoParam {
 
 	private Long bankUnionId;
 	private Long bankId;
+	private List<Long> bankIdList;
 	private String bankEname;
 	private String bankEnameShort;
 	private String bankChineseName;
@@ -20,11 +14,6 @@ public class FindBankInfoParam implements CommonControllerParam {
 	private String fuzzyBankName;
 	/** 是否常用/常规银行 */
 	private Integer commonBank;
-
-	@Override
-	public FindBankInfoParam fromJson(JSONObject j) throws JsonParseException, JsonMappingException, IOException {
-		return new ObjectMapper().readValue(j.toString(), FindBankInfoParam.class);
-	}
 
 	public Long getBankId() {
 		return bankId;
@@ -90,12 +79,20 @@ public class FindBankInfoParam implements CommonControllerParam {
 		this.fuzzyBankName = fuzzyBankName;
 	}
 
+	public List<Long> getBankIdList() {
+		return bankIdList;
+	}
+
+	public void setBankIdList(List<Long> bankIdList) {
+		this.bankIdList = bankIdList;
+	}
+
 	@Override
 	public String toString() {
-		return "FindBankInfoParam [bankUnionId=" + bankUnionId + ", bankId=" + bankId + ", bankEname=" + bankEname
-				+ ", bankEnameShort=" + bankEnameShort + ", bankChineseName=" + bankChineseName
-				+ ", bankChineseNameShort=" + bankChineseNameShort + ", fuzzyBankName=" + fuzzyBankName
-				+ ", commonBank=" + commonBank + "]";
+		return "FindBankInfoParam [bankUnionId=" + bankUnionId + ", bankId=" + bankId + ", bankIdList=" + bankIdList
+				+ ", bankEname=" + bankEname + ", bankEnameShort=" + bankEnameShort + ", bankChineseName="
+				+ bankChineseName + ", bankChineseNameShort=" + bankChineseNameShort + ", fuzzyBankName="
+				+ fuzzyBankName + ", commonBank=" + commonBank + "]";
 	}
 
 }

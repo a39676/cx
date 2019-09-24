@@ -63,8 +63,6 @@ public class BankInfoController extends CommonController {
 		return result;
 	}
 	
-
-	
 	@PostMapping(value = BankUrl.bankSelectorV2)
 	public ModelAndView getBankButton() {
 		ModelAndView view = new ModelAndView(BankViews.bankSelectorV2);
@@ -101,9 +99,8 @@ public class BankInfoController extends CommonController {
 	}
 	
 	@PostMapping(value = BankUrl.bankSelectorV4)
-	public void getBankButtonV4(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws JsonParseException, JsonMappingException, IOException {
-		FindBankInfoParam param = new FindBankInfoParam().fromJson(getJson(data));
-		FindBankInfoResult result = bankInfoService.getBankInfoByCondition(param);
-		outputJson(response, JSONObject.fromObject(result));
+	@ResponseBody
+	public FindBankInfoResult getBankButtonV4(@RequestBody FindBankInfoParam param, HttpServletRequest request, HttpServletResponse response) throws JsonParseException, JsonMappingException, IOException {
+		return bankInfoService.getBankInfoByCondition(param);
 	}
 }

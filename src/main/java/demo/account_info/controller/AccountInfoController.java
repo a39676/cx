@@ -355,4 +355,8 @@ public class AccountInfoController extends CommonController {
 		ModelAndView view = new ModelAndView(AccountInfoViewConstants.accountSelectorV1);
 		return view;
 	}
+	
+	public List<AccountInfo> findAccountsByCondition(FindAccountInfoByConditionDTO dto) {
+		return accountInfoService.findAccountsByCondition(dto);
+	}
 }

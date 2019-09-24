@@ -87,4 +87,6 @@ public interface AccountInfoService {
 
 	List<AccountInfo> findCurrentAccountInfoListByCondition(FindAccountInfoByConditionDTO dto);
 
+	List<AccountInfo> findAccountsByCondition(FindAccountInfoByConditionDTO dto);
+
 }

@@ -217,6 +217,11 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	}
 	
 	@Override
+	public List<AccountInfo> findAccountsByCondition(FindAccountInfoByConditionDTO dto) {
+		return findByCondition(dto);
+	}
+	
+	@Override
 	public GetAccountNumberAndAliasListResult findCurrentAccountNumberListByCondition(FindAccountInfoByConditionDTO dto) {
 		GetAccountNumberAndAliasListResult result = new GetAccountNumberAndAliasListResult();
 		List<AccountInfo> accountList = findCurrentAccountInfoListByCondition(dto);

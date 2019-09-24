@@ -131,6 +131,12 @@
       <if test="bankId != null">
         and bank_id = #{bankId}
       </if>
+      <if test="bankIdList != null">
+        and bank_id in
+        <foreach item="subBankId" index="index" collection="bankIdList" open="(" separator="," close=")">
+          #{subBankId}
+        </foreach>
+      </if>
       <if test="bankUnionId != null">
         and bank_union_id = #{bankUnionId}
       </if>

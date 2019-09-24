@@ -1,5 +1,6 @@
 package demo.trading.pojo.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import auxiliaryCommon.pojo.dto.PageDTO;
@@ -10,9 +11,9 @@ public class TradingRecorderDTO extends PageDTO {
 
 	private LocalDateTime endTime;
 
-	private Double minAmount;
+	private BigDecimal minAmount;
 
-	private Double maxAmount;
+	private BigDecimal maxAmount;
 
 	private Boolean includeRedCancelOut = false;
 
@@ -44,19 +45,19 @@ public class TradingRecorderDTO extends PageDTO {
 		this.endTime = endTime;
 	}
 
-	public Double getMinAmount() {
+	public BigDecimal getMinAmount() {
 		return minAmount;
 	}
 
-	public void setMinAmount(Double minAmount) {
+	public void setMinAmount(BigDecimal minAmount) {
 		this.minAmount = minAmount;
 	}
 
-	public Double getMaxAmount() {
+	public BigDecimal getMaxAmount() {
 		return maxAmount;
 	}
 
-	public void setMaxAmount(Double maxAmount) {
+	public void setMaxAmount(BigDecimal maxAmount) {
 		this.maxAmount = maxAmount;
 	}
 

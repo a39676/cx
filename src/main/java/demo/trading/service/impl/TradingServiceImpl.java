@@ -308,6 +308,9 @@ public class TradingServiceImpl extends CommonService implements TradingService 
 
 	@Override
 	public TradingQueryResult findTradingRecordByCondition(TradingRecorderDTO dto) {
+		/*
+		 * should check account owner
+		 */
 		TradingQueryResult r = new TradingQueryResult();
 		List<AccountInfo> accounts = findAcconts(dto);
 		Map<Long, AccountInfo> accountMap = accounts.stream().collect(Collectors.toMap(AccountInfo::getAccountId, p -> p));

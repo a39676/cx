@@ -80,4 +80,6 @@ public class TradingController {
 		out.print(json);
 		return;
 	}
+	
+	
 }

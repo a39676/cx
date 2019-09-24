@@ -322,10 +322,21 @@ public class TradingServiceImpl extends CommonService implements TradingService 
 
 		List<TradingQuerySubResult> tradingRecordList = new ArrayList<TradingQuerySubResult>();
 		
+		BigDecimal totalIncome = BigDecimal.ZERO;
+		BigDecimal totalPay = BigDecimal.ZERO;
 		for(TradingRecorder i : recordList) {
 			tradingRecordList.add(buildTradingQuerySubResult(i, accountMap, bankMap));
+			if(i.getAmount().compareTo(BigDecimal.ZERO) > 0) {
+				totalIncome.add(i.getAmount());
+			} else {
+				totalPay.add(i.getAmount());
+			}
 		}
+		r.setTotalIncome(totalIncome);
+		r.setTotalPay(BigDecimal.ZERO.subtract(totalPay));
+		r.setTotalAmount(totalIncome.subtract(totalPay));
 		r.setTradingSubResultList(tradingRecordList);
+		
 		r.setIsSuccess();
 		
 		return r;

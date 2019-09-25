@@ -39,4 +39,13 @@
     </trim>
   </insert>
   
+  <select id="getTradingRecordMarkerByTradingId" parameterType="Integer" resultMap="BaseResultMap">
+  	select
+  	  *
+  	from
+  	  trading_recorder_marker
+  	where
+      trading_id = #{tradingId}
+  </select>
+  
 </mapper>

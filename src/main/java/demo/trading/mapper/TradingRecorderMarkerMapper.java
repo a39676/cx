@@ -6,4 +6,6 @@ public interface TradingRecorderMarkerMapper {
     int insert(TradingRecorderMarker record);
 
     int insertSelective(TradingRecorderMarker record);
+    
+    TradingRecorderMarker getTradingRecordMarkerByTradingId(Integer tradingRecorderId);
 }

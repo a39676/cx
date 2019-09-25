@@ -86,5 +86,122 @@
       </if>
     </trim>
   </insert>
+  
+  <select id="getTradingRecordById" parameterType="long" resultMap="BaseResultMap">
+    select * from trading_recorder where trading_id = #{id}
+  </select>
+
+  <insert id="isnertTradingRecorder">
+    insert into 
+      trading_recorder
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tradingId != null">
+        trading_id,
+      </if>
+      <if test="accountId != null">
+        account_id,
+      </if>
+      <if test="accountNumber != null">
+        account_number,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="transationDate != null">
+        transation_date,
+      </if>
+      <if test="transationParties != null">
+        transation_parties,
+      </if>
+      <if test="transationAccountId != null">
+        transation_account_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tradingId != null">
+        #{tradingId,jdbcType=INTEGER},
+      </if>
+      <if test="accountId != null">
+        #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="accountNumber != null">
+        #{accountNumber,jdbcType=CHAR},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="transationDate != null">
+        #{transationDate,jdbcType=DATE},
+      </if>
+      <if test="transationParties != null">
+        #{transationParties,jdbcType=CHAR},
+      </if>
+      <if test="transationAccountId != null">
+        #{transationAccountId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="selectTradingRecord" resultMap="BaseResultMap">
+    select
+      tr.*
+
+    from
+      trading_recorder as tr
+    
+    <where>
+      <if test="accountId != null">
+        and tr.account_id = #{accountId}
+      </if>
+      <if test="accountIdList != null">
+        and tr.account_id in
+        <foreach item="subAccountId" index="index" collection="accountIdList"
+          open="(" separator="," close=")">
+          ${subAccountId}
+        </foreach>
+      </if>
+      <if test="startTime != null">
+        and tr.transation_date &gt;= #{startTime}
+      </if>
+      <if test="endTime != null">
+        and tr.transation_date &lt;= #{endTime}
+      </if>
+      <if test="minAmount != null">
+        and tr.amount &gt;= #{minAmount}
+      </if>
+      <if test="maxAmount != null">
+        and tr.amount &lt; #{maxAmount}
+      </if>
+      <if test="includeRedCancelOut != null and includeRedCancelOut == true">
+        and tr.red_cancel_out in (0, 1)
+      </if>
+      <if test="includeRedCancelOut == null or includeRedCancelOut == false">
+        and tr.red_cancel_out = 0
+      </if>
+      <if test="transationParties != null">
+        and tr.transation_parties like concat('%', #{transationParties}, '%')
+      </if>
+      <if test="remark != null">
+        and tr.remark like concat('%', #{remark}, '%')
+      </if>
+    </where>
+
+    order by 
+      tr.transation_date desc
+
+    limit #{pageStart}, #{pageSize}
+  </select>
 
 </mapper>

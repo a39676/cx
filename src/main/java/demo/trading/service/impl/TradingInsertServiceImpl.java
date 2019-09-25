@@ -5,50 +5,35 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import dateTimeHandle.DateTimeHandle;
 import dateTimeHandle.DateUtilCustom;
 import demo.account_info.controller.AccountInfoController;
-import demo.account_info.pojo.dto.controllerDTO.FindAccountInfoByConditionDTO;
 import demo.account_info.pojo.po.AccountInfo;
-import demo.bank.controller.BankInfoController;
-import demo.bank.pojo.param.controllerParam.FindBankInfoParam;
-import demo.bank.pojo.po.BankInfo;
-import demo.bank.pojo.result.FindBankInfoResult;
 import demo.baseCommon.pojo.param.controllerParam.InsertNewTransationParam;
 import demo.baseCommon.pojo.type.TransationType;
 import demo.baseCommon.service.CommonService;
 import demo.trading.mapper.HolderCommonTransationCustomMapper;
-import demo.trading.mapper.TradingRecorderCustomMapper;
+import demo.trading.mapper.TradingRecorderMapper;
 import demo.trading.mapper.TradingRecorderMarkerMapper;
 import demo.trading.pojo.CommonTransationParties;
-import demo.trading.pojo.dto.SelectTradingRecordBO;
-import demo.trading.pojo.dto.TradingRecorderDTO;
 import demo.trading.pojo.po.TradingRecorder;
 import demo.trading.pojo.po.TradingRecorderMarker;
 import demo.trading.pojo.result.InsertTradingRecorderResult;
-import demo.trading.pojo.result.TradingQueryResult;
-import demo.trading.pojo.result.TradingQuerySubResult;
-import demo.trading.service.TradingService;
+import demo.trading.service.TradingInsertService;
 import ioHandle.FileUtilCustom;
 import numericHandel.NumericUtilCustom;
 
 @Service
-public class TradingServiceImpl extends CommonService implements TradingService {
+public class TradingInsertServiceImpl extends CommonService implements TradingInsertService {
 
 	@Autowired
 	private AccountInfoController accountInfoController;
 	@Autowired
-	private BankInfoController bankController;
-	@Autowired
-	private TradingRecorderCustomMapper tradingMapper;
+	private TradingRecorderMapper tradingMapper;
 	@Autowired
 	private TradingRecorderMarkerMapper tradingMarkerMapper;
 	@Autowired
@@ -306,97 +291,4 @@ public class TradingServiceImpl extends CommonService implements TradingService 
 		return tradingRecorder;
 	}
 
-	@Override
-	public TradingQueryResult findTradingRecordByCondition(TradingRecorderDTO dto) {
-		/*
-		 * should check account owner
-		 */
-		TradingQueryResult r = new TradingQueryResult();
-		List<AccountInfo> accounts = findAcconts(dto);
-		Map<Long, AccountInfo> accountMap = accounts.stream().collect(Collectors.toMap(AccountInfo::getAccountId, p -> p));
-		
-		Map<Long, BankInfo> bankMap = findBanks(accounts);
-		
-		SelectTradingRecordBO bo = buildTradingRecorderBO(dto, accounts);
-		List<TradingRecorder> recordList = tradingMapper.selectTradingRecord(bo);
-
-		List<TradingQuerySubResult> tradingRecordList = new ArrayList<TradingQuerySubResult>();
-		
-		BigDecimal totalIncome = BigDecimal.ZERO;
-		BigDecimal totalPay = BigDecimal.ZERO;
-		for(TradingRecorder i : recordList) {
-			tradingRecordList.add(buildTradingQuerySubResult(i, accountMap, bankMap));
-			if(i.getAmount().compareTo(BigDecimal.ZERO) > 0) {
-				totalIncome.add(i.getAmount());
-			} else {
-				totalPay.add(i.getAmount());
-			}
-		}
-		r.setTotalIncome(totalIncome);
-		r.setTotalPay(BigDecimal.ZERO.subtract(totalPay));
-		r.setTotalAmount(totalIncome.subtract(totalPay));
-		r.setTradingSubResultList(tradingRecordList);
-		
-		r.setIsSuccess();
-		
-		return r;
-	}
-	
-	private List<AccountInfo> findAcconts(TradingRecorderDTO dto) {
-		FindAccountInfoByConditionDTO findAccountDTO = new FindAccountInfoByConditionDTO();
-		if(dto.getAccountId() != null) {
-			findAccountDTO.setAccountId(dto.getAccountId());
-		} else if(StringUtils.isNotBlank(dto.getAccountNumber())) {
-			findAccountDTO.setAccountNumber(dto.getAccountNumber());
-			
-			findAccountDTO.setBankId(dto.getBankId());
-			findAccountDTO.setBankUnionId(dto.getBankUnionId());
-			
-		}
-		return accountInfoController.findAccountsByCondition(findAccountDTO);
-	}
-	
-	private SelectTradingRecordBO buildTradingRecorderBO(TradingRecorderDTO dto, List<AccountInfo> accounts) {
-		dto.setPageParam();
-		SelectTradingRecordBO bo = new SelectTradingRecordBO();
-		
-		if(accounts != null && accounts.size() > 0) {
-			if(accounts.size() == 1) {
-				bo.setAccountId(dto.getAccountId());
-			} else {
-				List<Long> accountIds = new ArrayList<Long>();
-				for(AccountInfo i : accounts) {
-					accountIds.add(i.getAccountId());
-				}
-				bo.setAccountIdList(accountIds);
-			}
-		}
-		
-		bo.setEndTime(dto.getEndTime());
-		bo.setStartTime(dto.getStartTime());
-		bo.setIncludeRedCancelOut(dto.getIncludeRedCancelOut());
-		bo.setMaxAmount(dto.getMaxAmount());
-		bo.setMinAmount(dto.getMinAmount());
-		return bo;
-	}
-
-	private TradingQuerySubResult buildTradingQuerySubResult(TradingRecorder po, Map<Long, AccountInfo> accountMap, Map<Long, BankInfo> bankMap) {
-		TradingQuerySubResult r = new TradingQuerySubResult();
-		AccountInfo account = accountMap.get(po.getAccountId());
-		r.setAccountAlias(account.getAccountAlias());
-		r.setAccountNumber(account.getAccountNumber());
-		r.setAmount(po.getAmount());
-		r.setBankName(bankMap.get(account.getBankId()).getBankChineseNameShort());
-		r.setTradingDate(DateTimeHandle.dateToLocalDateTime(po.getTransationDate()));
-		r.setTransationParties(po.getTransationParties());
-		
-		return r;
-	}
-	
-	private Map<Long, BankInfo> findBanks(List<AccountInfo> accounts) {
-		FindBankInfoParam cp = new FindBankInfoParam();
-		FindBankInfoResult banks = bankController.getBankInfoByCondition(cp);
-		Map<Long, BankInfo> bankMap = banks.getBankList().stream().collect(Collectors.toMap(BankInfo::getBankId, b -> b));
-		return bankMap;
-	}
 }

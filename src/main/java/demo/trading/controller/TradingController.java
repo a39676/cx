@@ -22,7 +22,7 @@ import demo.trading.pojo.constant.TradingUrl;
 import demo.trading.pojo.constant.TradingViews;
 import demo.trading.pojo.po.TradingRecorder;
 import demo.trading.pojo.result.InsertTradingRecorderResult;
-import demo.trading.service.TradingService;
+import demo.trading.service.TradingInsertService;
 import net.sf.json.JSONObject;
 
 @Controller
@@ -33,7 +33,7 @@ public class TradingController {
 	private AccountHolderController accountHolderController;
 	
 	@Autowired
-	private TradingService tradingService;
+	private TradingInsertService tradingService;
 	
 	
 	public InsertTradingRecorderResult insertTradingRecorderSelective(InsertNewTransationParam param, Long accountId){

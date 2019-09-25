@@ -47,6 +47,7 @@
 $("button[name='accountTypeButton']").click(function () {
   var $accountType = $(this).attr("accountType");
   $("button[name='accountTypeButton']").removeClass("btn-primary");
+  $(this).removeClass("btn-light");
   $(this).addClass("btn-primary");
   $("div[name='accountHiddenMessage']").attr("accountType", $accountType);
   accountListDynamic();

@@ -5,12 +5,10 @@ import java.util.List;
 import demo.account_info.pojo.po.AccountInfo;
 import demo.baseCommon.pojo.param.controllerParam.InsertNewTransationParam;
 import demo.trading.pojo.CommonTransationParties;
-import demo.trading.pojo.dto.TradingRecorderDTO;
 import demo.trading.pojo.po.TradingRecorder;
 import demo.trading.pojo.result.InsertTradingRecorderResult;
-import demo.trading.pojo.result.TradingQueryResult;
 
-public interface TradingService {
+public interface TradingInsertService {
 
 	InsertTradingRecorderResult insertTradingRecorder(InsertNewTransationParam p, Long accountId);
 
@@ -21,7 +19,5 @@ public interface TradingService {
 	List<CommonTransationParties> getCurrentCommonTransation(Long holderId, Integer limit);
 
 	String importTradingRecordFromFiles(String tradingRecordTxtPath);
-
-	TradingQueryResult findTradingRecordByCondition(TradingRecorderDTO dto);
 
 }

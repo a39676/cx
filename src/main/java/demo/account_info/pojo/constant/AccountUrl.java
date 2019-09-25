@@ -26,7 +26,6 @@ public class AccountUrl {
 	
 	/* 2019-06-11 远古遗留的设计造成目前  交易逻辑跟账户逻辑有耦合, 待解决后迁移 */
 	public static final String financeclear = "/financeclear";
-	public static final String transationHistoryQuery = "/transationHistoryQuery";
 	
 	public static final String insertNewTransationV4 = "/insertNewTransationV4";
 }

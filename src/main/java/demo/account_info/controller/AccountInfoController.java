@@ -170,15 +170,6 @@ public class AccountInfoController extends CommonController {
 		return view;
 	}
 	
-	// 交易记录查询条件输入 ??
-	@GetMapping(AccountUrl.transationHistoryQuery)
-	public ModelAndView transationHistoryQuery() {
-		ModelAndView view = new ModelAndView();
-		
-		view.setViewName(TradingViews.transationHistoryQuery);
-		return view;
-	}
-	
 	@PostMapping(value = AccountUrl.accountNumberDuplicateCheck)
 	@ResponseBody
 	public CommonResult accountNumberDuplicateCheck(

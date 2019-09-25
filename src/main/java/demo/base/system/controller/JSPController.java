@@ -28,7 +28,6 @@ public class JSPController extends CommonController {
 		
 		HashMap<String, String> accountInfoPart = new HashMap<String, String>();
 		accountInfoPart.put("accountInfoRoot", AccountUrl.accountInfoRoot);
-		accountInfoPart.put("transationHistoryQuery", AccountUrl.transationHistoryQuery);
 		accountInfoPart.put("transationHistory", TradingUrl.transationHistory);
 		accountInfoPart.put("accountInfo", AccountUrl.accountInfo);
 		accountInfoPart.put("accountRegist", AccountUrl.accountRegist);

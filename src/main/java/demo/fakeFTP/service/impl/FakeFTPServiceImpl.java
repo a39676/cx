@@ -125,17 +125,21 @@ public class FakeFTPServiceImpl extends CommonService implements FakeFTPServcie 
 		return result;
 	}
 	
-	private boolean validPath(String path) {
-		if(StringUtils.isBlank(path)) {
+	private boolean validPath(String targetPath) {
+		if(StringUtils.isBlank(targetPath)) {
 			return false;
 		}
 		
-		getFateFTPHome();
+		String pathsStr = getFateFTPHome();
+		String[] paths = pathsStr.split(";");
 		
-		if(!path.startsWith(getFateFTPHome()) || path.contains("..")) {
-			return false;
+		boolean flag = false;
+		for(String p : paths) {
+			if(targetPath.startsWith(p) && !targetPath.contains("..")) {
+				flag = true;
+			}
 		}
 		
-		return true;
+		return flag;
 	}
 }

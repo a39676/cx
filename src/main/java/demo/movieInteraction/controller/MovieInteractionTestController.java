@@ -10,7 +10,7 @@ import httpHandel.HttpUtil;
 import movie.pojo.constant.MovieInteractionUrl;
 
 @Controller
-@RequestMapping(value = "/mt")
+@RequestMapping(value = "/mt", produces = "text/plain;charset=UTF-8")
 public class MovieInteractionTestController {
 
 	@Autowired
@@ -21,7 +21,8 @@ public class MovieInteractionTestController {
 	public String test() {
 		try {
 			String url = "http://127.0.0.1:10002" + MovieInteractionUrl.root + MovieInteractionUrl.simpleList;
-			return String.valueOf(httpUtil.sendPost(url));
+			String response = String.valueOf(httpUtil.sendGet(url));
+			return response;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

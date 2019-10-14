@@ -1,10 +1,10 @@
 package demo.weixin.pojo.result;
 
-import demo.baseCommon.pojo.result.CommonResult;
+import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.weixin.pojo.type.WeixinResultType;
 import net.sf.json.JSONObject;
 
-public class WeixinCommonResult extends CommonResult {
+public class WeixinCommonResult extends CommonResultCX {
 
 	private JSONObject json;
 

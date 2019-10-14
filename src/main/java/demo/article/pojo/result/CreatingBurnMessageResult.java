@@ -1,9 +1,9 @@
 package demo.article.pojo.result;
 
 import demo.article.pojo.po.ArticleBurn;
-import demo.baseCommon.pojo.result.CommonResult;
+import demo.baseCommon.pojo.result.CommonResultCX;
 
-public class CreatingBurnMessageResult extends CommonResult {
+public class CreatingBurnMessageResult extends CommonResultCX {
 
 	private ArticleBurn articleBurn;
 

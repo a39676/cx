@@ -2,7 +2,7 @@ package demo.account_info.pojo.result;
 
 import java.math.BigDecimal;
 
-import demo.baseCommon.pojo.result.CommonResult;
+import auxiliaryCommon.pojo.result.CommonResult;
 
 public class InsertTransationResult extends CommonResult {
 

@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.pojo.type.ArticleEvaluationType;
 import demo.article.pojo.vo.ArticleCommentVO;
@@ -30,8 +31,7 @@ import demo.articleComment.pojo.result.FindArticleCommentPageResult;
 import demo.articleComment.service.ArticleCommentService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
-import demo.baseCommon.pojo.result.CommonResult;
-import demo.baseCommon.pojo.type.ResultType;
+import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
 import ioHandle.FileUtilCustom;
 
@@ -76,21 +76,21 @@ public class ArticleCommentServiceImpl extends CommonService implements ArticleC
 	public CommonResult creatingArticleComment(Long userId, CreateArticleCommentParam inputParam) throws IOException {
 		CommonResult result = new CommonResult();
 		if(!loadArticleCommontStorePath() || !loadMaxArticleLength()) {
-			result.fillWithResult(ResultType.serviceError);
+			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
 		}
 		if(userId == null || StringUtils.isBlank(inputParam.getContent())) {
-			result.fillWithResult(ResultType.nullParam);
+			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;
 		}
 		if(inputParam.getContent().replaceAll("\\s", "").length() < 6) {
-			result.fillWithResult(ResultType.articleTooShort);
+			result.fillWithResult(ResultTypeCX.articleTooShort);
 			return result;
 		}
 		Long articleId = articleService.decryptPrivateKey(inputParam.getPk());
 		
 		if(articleId == null) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		JustCommentParam justCommentParam = new JustCommentParam();
@@ -98,7 +98,7 @@ public class ArticleCommentServiceImpl extends CommonService implements ArticleC
 		justCommentParam.setStartTime(new Date(System.currentTimeMillis() - 1000L * 60));
 		int i = articleCommentMapper.justComment(justCommentParam);
 		if(i > 0) {
-			result.fillWithResult(ResultType.justComment);
+			result.fillWithResult(ResultTypeCX.justComment);
 			return result;
 		}
 		
@@ -130,7 +130,7 @@ public class ArticleCommentServiceImpl extends CommonService implements ArticleC
 		List<ArticleCommentVO> commentVOList = new ArrayList<ArticleCommentVO>();
 		
 		if(StringUtils.isBlank(controllerParam.getPk())) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		
@@ -143,7 +143,7 @@ public class ArticleCommentServiceImpl extends CommonService implements ArticleC
 		
 		Long articleId = articleService.decryptPrivateKey(controllerParam.getPk());
 		if(articleId == null) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		

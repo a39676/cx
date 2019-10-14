@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import dateTimeHandle.DateUtilCustom;
 import demo.account_holder.controller.AccountHolderController;
 import demo.account_holder.pojo.po.AccountHolder;
@@ -40,7 +41,6 @@ import demo.account_info.pojo.vo.SummaryAccountsByBankId;
 import demo.account_info.service.AccountInfoService;
 import demo.account_info.service.AccountInfoStatisticsService;
 import demo.baseCommon.pojo.param.controllerParam.InsertNewTransationParam;
-import demo.baseCommon.pojo.result.CommonResult;
 import demo.baseCommon.pojo.type.TransationType;
 import demo.baseCommon.service.CommonService;
 import demo.trading.controller.TradingController;

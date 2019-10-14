@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.account_info.pojo.bo.AccountInfoWithBankInfo;
 import demo.account_info.pojo.dto.controllerDTO.AccountInfoRegistDTO;
 import demo.account_info.pojo.dto.controllerDTO.AccountNumberDuplicateCheckDTO;
@@ -16,7 +17,6 @@ import demo.account_info.pojo.result.GetAccountNumberAndAliasListResult;
 import demo.account_info.pojo.result.InsertTransationResult;
 import demo.account_info.pojo.vo.SummaryAccountsByBankId;
 import demo.baseCommon.pojo.param.controllerParam.InsertNewTransationParam;
-import demo.baseCommon.pojo.result.CommonResult;
 
 public interface AccountInfoService {
 	

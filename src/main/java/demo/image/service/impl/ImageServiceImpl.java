@@ -15,8 +15,8 @@ import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.baseCommon.pojo.result.CommonResult;
-import demo.baseCommon.pojo.type.ResultType;
+import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.image.mapper.ImageCacheMapper;
 import demo.image.mapper.ImageStoreMapper;
 import demo.image.mapper.ImageTagMapper;
@@ -160,11 +160,11 @@ public class ImageServiceImpl implements ImageService {
 	}
 	
 	@Override
-	public CommonResult moveImageCacheToImageStore(Long articleId, Long channelId) {
-		CommonResult result = new CommonResult();
+	public CommonResultCX moveImageCacheToImageStore(Long articleId, Long channelId) {
+		CommonResultCX result = new CommonResultCX();
 		List<ImageCache> icList = getImageCacheListByArticleId(articleId);
 		if(icList == null || icList.size() < 1) {
-			result.fillWithResult(ResultType.success);
+			result.fillWithResult(ResultTypeCX.success);
 			return result;
 		}
 		ImageStore tmpIS = null;
@@ -193,7 +193,7 @@ public class ImageServiceImpl implements ImageService {
 		
 		imageCacheMapper.deleteDownloadedCache(icIdList);
 		
-		result.fillWithResult(ResultType.success);
+		result.fillWithResult(ResultTypeCX.success);
 		return result;
 	}
 }

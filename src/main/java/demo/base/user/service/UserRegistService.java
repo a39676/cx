@@ -1,8 +1,8 @@
 package demo.base.user.service;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.user.pojo.dto.UserRegistDTO;
 import demo.base.user.pojo.vo.__baseSuperAdminRegistVO;
-import demo.baseCommon.pojo.result.CommonResult;
 
 public interface UserRegistService {
 

@@ -1,6 +1,6 @@
 package demo.baseCommon.pojo.type;
 
-public enum ResultType {
+public enum ResultTypeCX {
 	
 	// controller层可以返回给外部的结果.
 	success	("success", "0"),
@@ -57,7 +57,7 @@ public enum ResultType {
 	private String resultName;
 	private String resultCode;
 	
-	ResultType(String name, String code) {
+	ResultTypeCX(String name, String code) {
 		this.resultName = name;
 		this.resultCode = code;
 	}

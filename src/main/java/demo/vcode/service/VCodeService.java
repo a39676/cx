@@ -1,6 +1,6 @@
 package demo.vcode.service;
 
-import demo.baseCommon.pojo.result.CommonResult;
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.vcode.pojo.param.DeleteInvalidCodeParam;
 import demo.vcode.pojo.param.GetVcodeByValueParam;
 import demo.vcode.pojo.param.UpdateDeleteMarkParam;

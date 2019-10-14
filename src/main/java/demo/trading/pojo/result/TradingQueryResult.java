@@ -3,7 +3,7 @@ package demo.trading.pojo.result;
 import java.math.BigDecimal;
 import java.util.List;
 
-import demo.baseCommon.pojo.result.CommonResult;
+import auxiliaryCommon.pojo.result.CommonResult;
 
 public class TradingQueryResult extends CommonResult {
 

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.pojo.constant.ArticleUrlConstant;
 import demo.article.pojo.constant.ArticleViewConstant;
 import demo.article.pojo.param.controllerParam.ArticleLongComplaintParam;
@@ -45,8 +46,8 @@ import demo.article.service.ArticleEvaluationService;
 import demo.article.service.ArticleService;
 import demo.article.service.ArticleSummaryService;
 import demo.baseCommon.controller.CommonController;
-import demo.baseCommon.pojo.result.CommonResult;
-import demo.baseCommon.pojo.type.ResultType;
+import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.util.BaseUtilCustom;
 import net.sf.json.JSONObject;
 
@@ -201,10 +202,10 @@ public class ArticleController extends CommonController {
 		ReviewArticleLongParam param = new ReviewArticleLongParam().fromJson(jsonInput);
 		param.setReviewCode(ArticleReviewType.delete.getReviewCode());
 		
-		CommonResult serviceResult = new CommonResult();
+		CommonResultCX serviceResult = new CommonResultCX();
 
 		if(!articleService.iWroteThis(baseUtilCustom.getUserId(), param.getPk())) {
-			serviceResult.fillWithResult(ResultType.notYourArticle);
+			serviceResult.fillWithResult(ResultTypeCX.notYourArticle);
 			outputJson(response, JSONObject.fromObject(serviceResult));
 			return;
 		}

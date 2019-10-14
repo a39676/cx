@@ -2,8 +2,8 @@ package demo.article.pojo.result;
 
 import java.util.List;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.pojo.vo.ArticleChannelVO;
-import demo.baseCommon.pojo.result.CommonResult;
 
 public class GetArticleChannelsResult extends CommonResult {
 

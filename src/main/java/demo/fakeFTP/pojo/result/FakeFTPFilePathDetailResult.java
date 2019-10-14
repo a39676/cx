@@ -2,9 +2,9 @@ package demo.fakeFTP.pojo.result;
 
 import java.util.List;
 
-import demo.baseCommon.pojo.result.CommonResult;
+import demo.baseCommon.pojo.result.CommonResultCX;
 
-public class FakeFTPFilePathDetailResult extends CommonResult {
+public class FakeFTPFilePathDetailResult extends CommonResultCX {
 
 	List<FakeFTPFileDetail> fileDetails;
 

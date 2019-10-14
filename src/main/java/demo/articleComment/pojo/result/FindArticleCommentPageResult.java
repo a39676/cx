@@ -2,8 +2,8 @@ package demo.articleComment.pojo.result;
 
 import java.util.List;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.pojo.vo.ArticleCommentVO;
-import demo.baseCommon.pojo.result.CommonResult;
 
 public class FindArticleCommentPageResult extends CommonResult {
 

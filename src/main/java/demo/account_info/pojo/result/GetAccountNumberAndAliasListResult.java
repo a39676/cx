@@ -2,8 +2,8 @@ package demo.account_info.pojo.result;
 
 import java.util.List;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.account_info.pojo.bo.AccountNumberWithAliasBO;
-import demo.baseCommon.pojo.result.CommonResult;
 
 public class GetAccountNumberAndAliasListResult extends CommonResult {
 

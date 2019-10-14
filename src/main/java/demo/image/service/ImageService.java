@@ -3,7 +3,7 @@ package demo.image.service;
 import java.io.File;
 import java.util.List;
 
-import demo.baseCommon.pojo.result.CommonResult;
+import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.image.pojo.ImageCache;
 import demo.image.pojo.ImageTags;
 
@@ -28,6 +28,6 @@ public interface ImageService {
 
 	List<ImageCache> getImageCacheListByArticleId(Long articleId);
 
-	CommonResult moveImageCacheToImageStore(Long articleId, Long channelId);
+	CommonResultCX moveImageCacheToImageStore(Long articleId, Long channelId);
 
 }

@@ -3,9 +3,9 @@ package demo.article.pojo.result.jsonRespon;
 import java.util.List;
 
 import demo.article.pojo.vo.ArticleLongSummaryVOV3;
-import demo.baseCommon.pojo.result.CommonResult;
+import demo.baseCommon.pojo.result.CommonResultCX;
 
-public class FindArticleLongSummaryListResultV3 extends CommonResult {
+public class FindArticleLongSummaryListResultV3 extends CommonResultCX {
 
 	private List<ArticleLongSummaryVOV3> articleLongSummaryVOList;
 

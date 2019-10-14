@@ -1,6 +1,6 @@
 package demo.trading.pojo.result;
 
-import demo.baseCommon.pojo.result.CommonResult;
+import auxiliaryCommon.pojo.result.CommonResult;
 
 public class InsertTradingRecorderResult extends CommonResult {
 

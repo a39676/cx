@@ -1,9 +1,9 @@
 package demo.article.pojo.result.jsonRespon;
 
 import demo.article.pojo.vo.ArticleLongVO;
-import demo.baseCommon.pojo.result.CommonResult;
+import demo.baseCommon.pojo.result.CommonResultCX;
 
-public class FindArticleLongResult extends CommonResult {
+public class FindArticleLongResult extends CommonResultCX {
 
 	private ArticleLongVO articleLongVO;
 

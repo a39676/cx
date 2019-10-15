@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import httpHandel.HttpUtil;
 import movie.pojo.constant.MovieInteractionUrl;
+import movie.pojo.dto.FindMovieDetailDTO;
 import movie.pojo.dto.FindMovieSummaryListDTO;
 import movie.pojo.type.MovieRegionType;
 import net.sf.json.JSONObject;
@@ -24,14 +25,29 @@ public class MovieInteractionTestController {
 	@Autowired
 	private HttpUtil httpUtil;
 	
-	@PostMapping(value = "/test")
+	@PostMapping(value = MovieInteractionUrl.simpleList)
 	@ResponseBody
-	public String test(@RequestBody FindMovieSummaryListDTO dto) {
+	public String simpleList(@RequestBody FindMovieSummaryListDTO dto) {
 		try {
 			dto.setPageParam();
 			JSONObject j = JSONObject.fromObject(dto);
 	        
 			String url = "http://127.0.0.1:10002" + MovieInteractionUrl.root + MovieInteractionUrl.simpleList;
+			String response = String.valueOf(httpUtil.sendPostRestful(url, j.toString()));
+			return response;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@PostMapping(value = MovieInteractionUrl.movieDetail)
+	@ResponseBody
+	public String findMovieDetail(@RequestBody FindMovieDetailDTO dto) {
+		try {
+			JSONObject j = JSONObject.fromObject(dto);
+	        
+			String url = "http://127.0.0.1:10002" + MovieInteractionUrl.root + MovieInteractionUrl.movieDetail;
 			String response = String.valueOf(httpUtil.sendPostRestful(url, j.toString()));
 			return response;
 		} catch (Exception e) {

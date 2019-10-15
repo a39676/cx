@@ -12,7 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.pojo.type.ArticleEvaluationType;
 import demo.article.pojo.vo.ArticleCommentVO;
@@ -31,6 +30,7 @@ import demo.articleComment.pojo.result.FindArticleCommentPageResult;
 import demo.articleComment.service.ArticleCommentService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
+import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
 import ioHandle.FileUtilCustom;
@@ -73,8 +73,8 @@ public class ArticleCommentServiceImpl extends CommonService implements ArticleC
 	}
 	
 	@Override
-	public CommonResult creatingArticleComment(Long userId, CreateArticleCommentParam inputParam) throws IOException {
-		CommonResult result = new CommonResult();
+	public CommonResultCX creatingArticleComment(Long userId, CreateArticleCommentParam inputParam) throws IOException {
+		CommonResultCX result = new CommonResultCX();
 		if(!loadArticleCommontStorePath() || !loadMaxArticleLength()) {
 			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;

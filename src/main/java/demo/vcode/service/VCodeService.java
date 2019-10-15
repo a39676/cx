@@ -1,6 +1,6 @@
 package demo.vcode.service;
 
-import auxiliaryCommon.pojo.result.CommonResult;
+import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.vcode.pojo.param.DeleteInvalidCodeParam;
 import demo.vcode.pojo.param.GetVcodeByValueParam;
 import demo.vcode.pojo.param.UpdateDeleteMarkParam;
@@ -14,8 +14,8 @@ public interface VCodeService {
 
 	int deleteInvalidCode(DeleteInvalidCodeParam param);
 
-	CommonResult insertVcode(VCode newVCode);
+	CommonResultCX insertVcode(VCode newVCode);
 
-	CommonResult updateUseCount(VCode vcode);
+	CommonResultCX updateUseCount(VCode vcode);
 
 }

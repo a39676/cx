@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import demo.baseCommon.pojo.result.CommonResult;
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.tool.pojo.constant.ToolPathConstant;
 import demo.tool.service.ComplexToolService;

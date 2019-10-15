@@ -1,11 +1,11 @@
 package demo.base.admin.service;
 
 import demo.base.user.pojo.dto.UserIpDeleteDTO;
-import demo.baseCommon.pojo.result.CommonResult;
+import demo.baseCommon.pojo.result.CommonResultCX;
 
 public interface AdminService {
 
-	CommonResult deleteUserIpRecord(UserIpDeleteDTO param);
+	CommonResultCX deleteUserIpRecord(UserIpDeleteDTO param);
 
 	void loadHomepageAnnouncementStr();
 

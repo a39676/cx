@@ -23,7 +23,7 @@ import demo.base.user.pojo.constant.UsersUrlConstant;
 import demo.base.user.pojo.dto.UserRegistDTO;
 import demo.base.user.service.UserRegistService;
 import demo.baseCommon.controller.CommonController;
-import demo.baseCommon.pojo.result.CommonResult;
+import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.util.BaseUtilCustom;
 import io.swagger.annotations.ApiImplicitParam;
@@ -68,7 +68,7 @@ public class UsersRegistController extends CommonController {
 	public void modifyRegistMail(@RequestBody String data, HttpServletResponse response) {
 		JSONObject jsonInput = getJson(data);
 		
-		CommonResult result = new CommonResult();
+		CommonResultCX result = new CommonResultCX();
 		JSONObject jsonOutput;
 		if(!baseUtilCustom.isLoginUser() || !jsonInput.containsKey("modifyRegistMail")) {
 			result.fillWithResult(ResultTypeCX.errorParam);
@@ -103,7 +103,7 @@ public class UsersRegistController extends CommonController {
 		insertVisitIp(request, "registPost");
 		String ip = request.getHeader("X-FORWARDED-FOR");
 		
-		CommonResult result = userRegistService.newUserRegist(param, ip);
+		CommonResultCX result = userRegistService.newUserRegist(param, ip);
 		
 		JSONObject jsonOutput = JSONObject.fromObject(result);
 		
@@ -167,7 +167,7 @@ public class UsersRegistController extends CommonController {
 	
 	@PostMapping(value = UsersUrlConstant.forgotPassword)
 	public void forgotPassword(@RequestBody String data, HttpServletResponse response, HttpServletRequest request) {
-		CommonResult result = new CommonResult();
+		CommonResultCX result = new CommonResultCX();
 		JSONObject jsonOutput;
 		JSONObject jsonInput = getJson(data);
 
@@ -191,7 +191,7 @@ public class UsersRegistController extends CommonController {
 	
 	@PostMapping(value = UsersUrlConstant.forgotUsername)
 	public void forgotUsername(@RequestBody String data, HttpServletResponse response, HttpServletRequest request) {
-		CommonResult result = new CommonResult();
+		CommonResultCX result = new CommonResultCX();
 		JSONObject jsonOutput;
 		JSONObject jsonInput = getJson(data);
 
@@ -234,7 +234,7 @@ public class UsersRegistController extends CommonController {
 	@PostMapping(value = UsersUrlConstant.resetPassword)
 	public void resetPassword(@RequestBody String data, HttpServletResponse response) {
 		JSONObject jsonInput = getJson(data);
-		CommonResult result = new CommonResult();
+		CommonResultCX result = new CommonResultCX();
 		
 		if(!jsonInput.containsKey("newPassword") || !jsonInput.containsKey("newPasswordRepeat")) {
 			result.fillWithResult(ResultTypeCX.nullParam);

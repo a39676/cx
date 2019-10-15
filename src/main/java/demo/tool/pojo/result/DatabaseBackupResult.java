@@ -1,8 +1,8 @@
 package demo.tool.pojo.result;
 
-import demo.baseCommon.pojo.result.CommonResult;
+import demo.baseCommon.pojo.result.CommonResultCX;
 
-public class DatabaseBackupResult extends CommonResult {
+public class DatabaseBackupResult extends CommonResultCX {
 
 	private String filePath;
 

@@ -1,27 +1,27 @@
 package demo.base.user.service;
 
-import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.user.pojo.dto.UserRegistDTO;
 import demo.base.user.pojo.vo.__baseSuperAdminRegistVO;
+import demo.baseCommon.pojo.result.CommonResultCX;
 
 public interface UserRegistService {
 
-	CommonResult newUserRegist(UserRegistDTO param, String ip);
+	CommonResultCX newUserRegist(UserRegistDTO param, String ip);
 
-	CommonResult modifyRegistEmail(Long userId, String email);
+	CommonResultCX modifyRegistEmail(Long userId, String email);
 
-	CommonResult sendForgotPasswordMail(String email, String hostName);
+	CommonResultCX sendForgotPasswordMail(String email, String hostName);
 
-	CommonResult sendForgotUsernameMail(String email, String hostName);
+	CommonResultCX sendForgotUsernameMail(String email, String hostName);
 
-	CommonResult resetPasswordByMailKey(String mailKey, String newPassword, String newPasswordRepeat);
+	CommonResultCX resetPasswordByMailKey(String mailKey, String newPassword, String newPasswordRepeat);
 
-	CommonResult resetPasswordByLoginUser(Long userId, String oldPassword, String newPassword,
+	CommonResultCX resetPasswordByLoginUser(Long userId, String oldPassword, String newPassword,
 			String newPasswordRepeat);
 
 	boolean isUserExists(String userName);
 
-	CommonResult registActivation(String mailKey, String activeEMail);
+	CommonResultCX registActivation(String mailKey, String activeEMail);
 
 	void handleMails();
 

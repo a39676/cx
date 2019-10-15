@@ -26,6 +26,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import dateTimeHandle.DateUtilCustom;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
@@ -33,7 +34,7 @@ import demo.base.user.pojo.bo.UserMailAndMailKeyBO;
 import demo.base.user.pojo.constant.UsersUrlConstant;
 import demo.base.user.service.UsersService;
 import demo.baseCommon.pojo.constant.ResourceConstant;
-import demo.baseCommon.pojo.result.CommonResult;
+import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
 import demo.tool.mapper.MailRecordMapper;
@@ -304,8 +305,8 @@ public class MailServiceImpl extends CommonService implements MailService {
 	}
 	
 	@Override
-	public CommonResult sendForgotPasswordMail(Long userId, String email, String hostName) {
-		CommonResult result = new CommonResult();
+	public CommonResultCX sendForgotPasswordMail(Long userId, String email, String hostName) {
+		CommonResultCX result = new CommonResultCX();
 		if(userId == null || StringUtils.isBlank(email)) {
 			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;
@@ -351,8 +352,8 @@ public class MailServiceImpl extends CommonService implements MailService {
 	}
 	
 	@Override
-	public CommonResult sendForgotUsernameMail(String userName, String email, String hostName) {
-		CommonResult result = new CommonResult();
+	public CommonResultCX sendForgotUsernameMail(String userName, String email, String hostName) {
+		CommonResultCX result = new CommonResultCX();
 		if(StringUtils.isBlank(userName) || StringUtils.isBlank(email)) {
 			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;

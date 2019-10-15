@@ -35,6 +35,7 @@ import demo.base.user.pojo.vo.__baseSuperAdminRegistVO;
 import demo.base.user.service.RoleService;
 import demo.base.user.service.UserAuthService;
 import demo.base.user.service.UserRegistService;
+import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.GenderType;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
@@ -73,8 +74,8 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	
 	@Override
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
-	public CommonResult newUserRegist(UserRegistDTO param, String ip) {
-		CommonResult result = new CommonResult();
+	public CommonResultCX newUserRegist(UserRegistDTO param, String ip) {
+		CommonResultCX result = new CommonResultCX();
 		UsersDetail userDetail = new UsersDetail();
 		JSONObject outputJson = new JSONObject();
 		boolean exceptionFlag = false;
@@ -378,7 +379,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	}
 
 	@Override
-	public CommonResult modifyRegistEmail(Long userId, String email) {
+	public CommonResultCX modifyRegistEmail(Long userId, String email) {
 		/*
 		 * 暂时不再主动发送激活邮件,改由用户发回激活邮件  2018-06-28
 		 */
@@ -397,7 +398,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 //		result = resendRegistMail(userId);
 //		return result;
 		
-		CommonResult result = new CommonResult();
+		CommonResultCX result = new CommonResultCX();
 		if(userId == null || !validEmail(email)) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -426,8 +427,8 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	}
 	
 	@Override
-	public CommonResult registActivation(String mailKey, String activeEMail) {
-		CommonResult result = new CommonResult();
+	public CommonResultCX registActivation(String mailKey, String activeEMail) {
+		CommonResultCX result = new CommonResultCX();
 		if(StringUtils.isBlank(mailKey)) {
 			result.fillWithResult(ResultTypeCX.linkExpired);
 			return result;
@@ -548,8 +549,8 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
  */
 	
 	@Override
-	public CommonResult sendForgotPasswordMail(String email, String hostName) {
-		CommonResult result = new CommonResult();
+	public CommonResultCX sendForgotPasswordMail(String email, String hostName) {
+		CommonResultCX result = new CommonResultCX();
 		if(StringUtils.isBlank(email)) {
 			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
@@ -584,8 +585,8 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	}
 	
 	@Override
-	public CommonResult sendForgotUsernameMail(String email, String hostName) {
-		CommonResult result = new CommonResult();
+	public CommonResultCX sendForgotUsernameMail(String email, String hostName) {
+		CommonResultCX result = new CommonResultCX();
 		if(StringUtils.isBlank(email)) {
 			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
@@ -620,8 +621,8 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		return result;
 	}
 	
-	private CommonResult resetPassword(Long userId, String newPassword, String newPasswordRepeat) {
-		CommonResult result = new CommonResult();
+	private CommonResultCX resetPassword(Long userId, String newPassword, String newPasswordRepeat) {
+		CommonResultCX result = new CommonResultCX();
 		if (!validPassword(newPassword)) {
 			result.fillWithResult(ResultTypeCX.invalidPassword);
 			return result;
@@ -649,8 +650,8 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	}
 	
 	@Override
-	public CommonResult resetPasswordByMailKey(String mailKey, String newPassword, String newPasswordRepeat) {
-		CommonResult result  = new CommonResult();
+	public CommonResultCX resetPasswordByMailKey(String mailKey, String newPassword, String newPasswordRepeat) {
+		CommonResultCX result  = new CommonResultCX();
 		if(StringUtils.isBlank(mailKey)) {
 			result.fillWithResult(ResultTypeCX.linkExpired);
 			return result;
@@ -682,8 +683,8 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	}
 
 	@Override
-	public CommonResult resetPasswordByLoginUser(Long userId, String oldPassword, String newPassword, String newPasswordRepeat) {
-		CommonResult result = new CommonResult();
+	public CommonResultCX resetPasswordByLoginUser(Long userId, String oldPassword, String newPassword, String newPasswordRepeat) {
+		CommonResultCX result = new CommonResultCX();
 		String encodePassword = passwordEncoder.encode(oldPassword);
 		if(usersMapper.matchUserPassword(userId, encodePassword) < 1) {
 			result.fillWithResult(ResultTypeCX.wrongOldPassword);

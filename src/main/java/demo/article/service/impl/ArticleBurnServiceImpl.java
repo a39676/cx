@@ -18,7 +18,7 @@ import demo.article.pojo.result.CreatingBurnMessageResult;
 import demo.article.service.ArticleBurnService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
-import demo.baseCommon.pojo.type.ResultType;
+import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
 import net.sf.json.JSONObject;
 import numericHandel.NumericUtilCustom;
@@ -45,7 +45,7 @@ public class ArticleBurnServiceImpl extends CommonService implements ArticleBurn
 		String contentAfterEscapeHtml = StringEscapeUtils.escapeHtml(jsonInput.getString("content"));
 		if (contentAfterEscapeHtml.length() > Integer
 				.parseInt(systemConstantService.getValByName(SystemConstantStore.articleShortMaxLength))) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		p.setContent(contentAfterEscapeHtml);

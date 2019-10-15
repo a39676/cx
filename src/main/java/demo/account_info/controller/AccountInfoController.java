@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.account_holder.AccountHolderViewConstants;
 import demo.account_holder.controller.AccountHolderController;
 import demo.account_holder.pojo.po.AccountHolder;
@@ -42,7 +43,6 @@ import demo.bank.pojo.bo.BankInfoCustomBO;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.baseCommon.controller.CommonController;
 import demo.baseCommon.pojo.param.controllerParam.InsertNewTransationParam;
-import demo.baseCommon.pojo.result.CommonResult;
 import demo.credit_bill.controller.CreditBillController;
 import demo.credit_bill.pojo.BillInfoCustomDetail;
 import demo.trading.pojo.constant.TradingViews;

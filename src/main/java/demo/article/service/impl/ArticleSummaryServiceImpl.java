@@ -44,7 +44,7 @@ import demo.articleComment.controller.ArticleCommentController;
 import demo.articleComment.pojo.bo.ArticleCommentCountByArticleIdBO;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
-import demo.baseCommon.pojo.type.ResultType;
+import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.vcode.pojo.param.GetVcodeByValueParam;
 import demo.vcode.pojo.po.VCode;
 import demo.vcode.service.VCodeService;
@@ -318,13 +318,13 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		
 		ArticleUUIDChannelStoreBO channelUUIDStore = channelService.getArticleUUIDChannelStore();
 		if(channelUUIDStore == null) {
-			result.fillWithResult(ResultType.channelUUIDError);
+			result.fillWithResult(ResultTypeCX.channelUUIDError);
 			return result;
 		}
 		
 		Long channelId = channelUUIDStore.getChannelId(controllerParam.getArticleChannelUUID());
 		if(channelId == null) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		
@@ -377,13 +377,13 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		
 		ArticleUUIDChannelStoreBO channelUUIDStore = channelService.getArticleUUIDChannelStore();
 		if(channelUUIDStore == null) {
-			result.fillWithResult(ResultType.channelUUIDError);
+			result.fillWithResult(ResultTypeCX.channelUUIDError);
 			return result;
 		}
 		
 		Long channelId = channelUUIDStore.getChannelId(controllerParam.getArticleChannelUUID());
 		if(channelId == null) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		

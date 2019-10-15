@@ -42,8 +42,8 @@ import demo.article.pojo.type.ArticleEvaluationType;
 import demo.article.pojo.vo.ArticleEvaluationCounterVO;
 import demo.article.pojo.vo.ArticleEvaluationStatisticsVO;
 import demo.article.service.ArticleEvaluationService;
-import demo.baseCommon.pojo.result.CommonResult;
-import demo.baseCommon.pojo.type.ResultType;
+import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.util.BaseUtilCustom;
 import net.sf.json.JSONObject;
 
@@ -151,17 +151,17 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 	/*
 	 * 2019-08-26 评价缓存已转移到redis, 此方法准备废弃
 	 */
-	public CommonResult insertArticleLongEvaluation(InsertArticleLongEvaluationParam inputParam) {
-		CommonResult result = new CommonResult();
+	public CommonResultCX insertArticleLongEvaluation(InsertArticleLongEvaluationParam inputParam) {
+		CommonResultCX result = new CommonResultCX();
 		Long evaluationVoterId = baseUtilCustom.getUserId();
 		if (evaluationVoterId == null) {
-			result.fillWithResult(ResultType.notLoginUser);
+			result.fillWithResult(ResultTypeCX.notLoginUser);
 			return result;
 		}
 
 		if (StringUtils.isBlank(inputParam.getPk()) || inputParam.getEvaluationCode() == null
 				|| inputParam.getEvaluationType() == null) {
-			result.fillWithResult(ResultType.nullParam);
+			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;
 		}
 
@@ -169,13 +169,13 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 
 		ArticleEvaluationCodeType evaluationType = ArticleEvaluationCodeType.getType(inputParam.getEvaluationCode());
 		if (evaluationType == null) {
-			result.fillWithResult(ResultType.nullParam);
+			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;
 		}
 
 		Long articleId = decryptArticlePrivateKey(inputParam.getPk());
 		if (articleId == null) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		InsertEvaluationDaoParam daoParam = new InsertEvaluationDaoParam();
@@ -186,43 +186,43 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 
 		int insertCount = articleEvaluationCacheMapper.insertEvaluation(daoParam);
 		if (insertCount != 1) {
-			result.fillWithResult(ResultType.hadEvaluationVoted);
+			result.fillWithResult(ResultTypeCX.hadEvaluationVoted);
 			return result;
 		}
 
-		CommonResult updateResult = updateChannelCoefficientByInsertEvaluation(articleId, evaluationVoterId,
+		CommonResultCX updateResult = updateChannelCoefficientByInsertEvaluation(articleId, evaluationVoterId,
 				evaluationType);
 		if (!updateResult.isSuccess()) {
 			return updateResult;
 		}
 
-		result.fillWithResult(ResultType.evaluationVoteSuccess);
+		result.fillWithResult(ResultTypeCX.evaluationVoteSuccess);
 		return result;
 	}
 
 	@Override
-	public CommonResult insertArticleLongEvaluationRedis(InsertArticleLongEvaluationParam inputParam) {
-		CommonResult result = new CommonResult();
+	public CommonResultCX insertArticleLongEvaluationRedis(InsertArticleLongEvaluationParam inputParam) {
+		CommonResultCX result = new CommonResultCX();
 		Long evaluationVoterId = baseUtilCustom.getUserId();
 		if (evaluationVoterId == null) {
-			result.fillWithResult(ResultType.notLoginUser);
+			result.fillWithResult(ResultTypeCX.notLoginUser);
 			return result;
 		}
 		if (StringUtils.isBlank(inputParam.getPk()) || inputParam.getEvaluationCode() == null
 				|| inputParam.getEvaluationType() == null) {
-			result.fillWithResult(ResultType.nullParam);
+			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;
 		}
 		inputParam.setEvaluationType(ArticleEvaluationType.articleLongEvaluation.getCode());
 		ArticleEvaluationCodeType evaluationType = ArticleEvaluationCodeType.getType(inputParam.getEvaluationCode());
 		if (evaluationType == null) {
-			result.fillWithResult(ResultType.nullParam);
+			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;
 		}
 
 		Long articleId = decryptArticlePrivateKey(inputParam.getPk());
 		if (articleId == null) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 
@@ -230,7 +230,7 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 				.range(ArticleEvaluationConstant.evaluationCacheRedisKeyNamePreffix + articleId, 0, -1);
 		for (String i : evaluationCacheList) {
 			if (StringUtils.isNotEmpty(i) && i.contains(evaluationVoterId.toString())) {
-				result.fillWithResult(ResultType.hadEvaluationVoted);
+				result.fillWithResult(ResultTypeCX.hadEvaluationVoted);
 				return result;
 			}
 		}
@@ -240,13 +240,13 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 				ArticleEvaluationConstant.evaluationCacheRedisKeyNamePreffix + articleId,
 				JSONObject.fromObject(cache).toString());
 
-		CommonResult updateResult = updateChannelCoefficientByInsertEvaluation(articleId, evaluationVoterId,
+		CommonResultCX updateResult = updateChannelCoefficientByInsertEvaluation(articleId, evaluationVoterId,
 				evaluationType);
 		if (!updateResult.isSuccess()) {
 			return updateResult;
 		}
 
-		result.fillWithResult(ResultType.evaluationVoteSuccess);
+		result.fillWithResult(ResultTypeCX.evaluationVoteSuccess);
 		return result;
 	}
 
@@ -266,29 +266,29 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 	/*
 	 * 从redis中查找
 	 */
-	public CommonResult insertArticleCommentEvaluation(InsertArticleCommentEvaluationParam inputParam,
+	public CommonResultCX insertArticleCommentEvaluation(InsertArticleCommentEvaluationParam inputParam,
 			Long evaluationVoterId) {
 //		TODO
-		CommonResult result = new CommonResult();
+		CommonResultCX result = new CommonResultCX();
 		if (evaluationVoterId == null) {
-			result.fillWithResult(ResultType.notLoginUser);
+			result.fillWithResult(ResultTypeCX.notLoginUser);
 			return result;
 		}
 
 		if (inputParam.getCommentId() == null || inputParam.getEvaluationCode() == null
 				|| inputParam.getEvaluationType() == null) {
-			result.fillWithResult(ResultType.nullParam);
+			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;
 		}
 
 		if (ArticleEvaluationType.getType(inputParam.getEvaluationType()) == null) {
-			result.fillWithResult(ResultType.nullParam);
+			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;
 		}
 
 		ArticleEvaluationCodeType evaluationType = ArticleEvaluationCodeType.getType(inputParam.getEvaluationCode());
 		if (evaluationType == null) {
-			result.fillWithResult(ResultType.nullParam);
+			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;
 		}
 
@@ -300,25 +300,25 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 
 		int insertCount = articleEvaluationCacheMapper.insertEvaluation(daoParam);
 		if (insertCount != 1) {
-			result.fillWithResult(ResultType.hadEvaluationVoted);
+			result.fillWithResult(ResultTypeCX.hadEvaluationVoted);
 			return result;
 		}
 
-		CommonResult updateResult = updateChannelCoefficientByInsertEvaluation(inputParam.getCommentId(),
+		CommonResultCX updateResult = updateChannelCoefficientByInsertEvaluation(inputParam.getCommentId(),
 				evaluationVoterId, evaluationType);
 		if (!updateResult.isSuccess()) {
 			return updateResult;
 		}
 
-		result.fillWithResult(ResultType.evaluationVoteSuccess);
+		result.fillWithResult(ResultTypeCX.evaluationVoteSuccess);
 		return result;
 	}
 
-	private CommonResult updateChannelCoefficientByInsertEvaluation(Long articleId, Long evaluationVoterId,
+	private CommonResultCX updateChannelCoefficientByInsertEvaluation(Long articleId, Long evaluationVoterId,
 			ArticleEvaluationCodeType evaluationType) {
-		CommonResult result = new CommonResult();
+		CommonResultCX result = new CommonResultCX();
 		if (articleId == null || evaluationVoterId == null || evaluationType == null) {
-			result.fillWithResult(ResultType.nullParam);
+			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;
 		}
 
@@ -328,7 +328,7 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 		param.setArticleId(articleId);
 		ArticleLong article = articleLongMapper.findArticleLong(param);
 		if (article == null || article.getChannelId() == null || article.getUserId() == null) {
-			result.fillWithResult(ResultType.serviceError);
+			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
 		}
 
@@ -373,11 +373,11 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 		}
 		updateCount = articleChannelsMapper.updateChannelPoint(updateChannelPointParam);
 		if (updateCount != 1) {
-			result.fillWithResult(ResultType.serviceError);
+			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
 		}
 
-		result.fillWithResult(ResultType.success);
+		result.fillWithResult(ResultTypeCX.success);
 		return result;
 	}
 

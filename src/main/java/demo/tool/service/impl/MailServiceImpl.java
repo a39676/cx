@@ -26,6 +26,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import dateTimeHandle.DateUtilCustom;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
@@ -33,8 +34,8 @@ import demo.base.user.pojo.bo.UserMailAndMailKeyBO;
 import demo.base.user.pojo.constant.UsersUrlConstant;
 import demo.base.user.service.UsersService;
 import demo.baseCommon.pojo.constant.ResourceConstant;
-import demo.baseCommon.pojo.result.CommonResult;
-import demo.baseCommon.pojo.type.ResultType;
+import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
 import demo.tool.mapper.MailRecordMapper;
 import demo.tool.pojo.MailRecord;
@@ -79,11 +80,11 @@ public class MailServiceImpl extends CommonService implements MailService {
 	public CommonResult sendSimpleMail(Long userId, String sendTo, String title, String content, String mailKey, MailType mailType) {
 		CommonResult result = new CommonResult();
 		if(userId == null || mailType == null || mailType.getCode() == null) {
-			result.failWithMessage(ResultType.nullParam.getName());
+			result.failWithMessage(ResultTypeCX.nullParam.getName());
 			return result;
 		}
 		if(!isMailReady()) {
-			result.failWithMessage(ResultType.mailBaseOptionError.getName());
+			result.failWithMessage(ResultTypeCX.mailBaseOptionError.getName());
 			return result;
 		}
 		
@@ -93,7 +94,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 			properties = ioUtil.getPropertiesFromFile(resource.getFile().getPath());
 		} catch (IOException e) {
 			e.printStackTrace();
-			result.failWithMessage(ResultType.mailPropertiesError.getName());
+			result.failWithMessage(ResultTypeCX.mailPropertiesError.getName());
 			return result;
 		}
 
@@ -304,14 +305,14 @@ public class MailServiceImpl extends CommonService implements MailService {
 	}
 	
 	@Override
-	public CommonResult sendForgotPasswordMail(Long userId, String email, String hostName) {
-		CommonResult result = new CommonResult();
+	public CommonResultCX sendForgotPasswordMail(Long userId, String email, String hostName) {
+		CommonResultCX result = new CommonResultCX();
 		if(userId == null || StringUtils.isBlank(email)) {
-			result.fillWithResult(ResultType.nullParam);
+			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;
 		}
 		if(!isMailReady()) {
-			result.failWithMessage(ResultType.mailBaseOptionError.getName());
+			result.failWithMessage(ResultTypeCX.mailBaseOptionError.getName());
 			return result;
 		}
 		
@@ -351,20 +352,20 @@ public class MailServiceImpl extends CommonService implements MailService {
 	}
 	
 	@Override
-	public CommonResult sendForgotUsernameMail(String userName, String email, String hostName) {
-		CommonResult result = new CommonResult();
+	public CommonResultCX sendForgotUsernameMail(String userName, String email, String hostName) {
+		CommonResultCX result = new CommonResultCX();
 		if(StringUtils.isBlank(userName) || StringUtils.isBlank(email)) {
-			result.fillWithResult(ResultType.nullParam);
+			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;
 		}
 		if(!isMailReady()) {
-			result.fillWithResult(ResultType.mailBaseOptionError);
+			result.fillWithResult(ResultTypeCX.mailBaseOptionError);
 			return result;
 		}
 		
 		Long userId = userService.getUserIdByUserName(userName);
 		if(userId == null) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		

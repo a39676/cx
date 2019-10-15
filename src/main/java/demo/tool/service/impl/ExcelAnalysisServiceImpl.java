@@ -19,7 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import demo.article.service.ArticleService;
 import demo.base.system.pojo.constant.BaseViewConstant;
-import demo.baseCommon.pojo.type.ResultType;
+import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
 import demo.chart.controller.ChartController;
 import demo.chart.pojo.constant.ChartUrl;
@@ -59,7 +59,7 @@ public class ExcelAnalysisServiceImpl extends CommonService implements ExcelAnal
 			tmpFile = entry.getValue();
 			fileName = tmpFile.getOriginalFilename();
 			if (!fileName.endsWith(".xls") && !fileName.endsWith(".xlsx")) {
-				result.fillWithResult(ResultType.errorParam);
+				result.fillWithResult(ResultTypeCX.errorParam);
 				return result;
 			}
 		}
@@ -76,7 +76,7 @@ public class ExcelAnalysisServiceImpl extends CommonService implements ExcelAnal
 		newRecord.setCreateTime(new Date());
 		excelAnalysisMapper.insertSelective(newRecord);
 		if (newRecord.getId() == null) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 
@@ -112,25 +112,25 @@ public class ExcelAnalysisServiceImpl extends CommonService implements ExcelAnal
 	public ModelAndView excelAnalysisByPk(ExcelAnalysisByPkParam param) {
 		ModelAndView view = new ModelAndView(BaseViewConstant.viewError);
 		if (StringUtils.isBlank(param.getPk()) || param.getChartType() == null) {
-			view.addObject("exception", ResultType.errorParam.getName());
+			view.addObject("exception", ResultTypeCX.errorParam.getName());
 			return view;
 		}
 
 		ChartType ct = ChartType.getType(param.getChartType());
 		if (ct == null) {
-			view.addObject("exception", ResultType.errorParam.getName());
+			view.addObject("exception", ResultTypeCX.errorParam.getName());
 			return view;
 		}
 
 		Long excelId = articleService.decryptPrivateKey(param.getPk());
 		if (excelId == null) {
-			view.addObject("exception", ResultType.errorParam.getName());
+			view.addObject("exception", ResultTypeCX.errorParam.getName());
 			return view;
 		}
 
 		ExcelAnalysis excelAnalysis = excelAnalysisMapper.findOne(excelId);
 		if (excelAnalysis == null || StringUtils.isBlank(excelAnalysis.getPath())) {
-			view.addObject("exception", ResultType.errorParam.getName());
+			view.addObject("exception", ResultTypeCX.errorParam.getName());
 			return view;
 		}
 
@@ -139,7 +139,7 @@ public class ExcelAnalysisServiceImpl extends CommonService implements ExcelAnal
 			workbook = WorkbookFactory.create(new File(excelAnalysis.getPath()));
 		} catch (EncryptedDocumentException | InvalidFormatException | IOException e) {
 			e.printStackTrace();
-			view.addObject("exception", ResultType.errorParam.getName());
+			view.addObject("exception", ResultTypeCX.errorParam.getName());
 			return view;
 		}
 

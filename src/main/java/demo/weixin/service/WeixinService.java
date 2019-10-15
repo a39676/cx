@@ -6,13 +6,13 @@ import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import demo.baseCommon.pojo.result.CommonResult;
+import demo.weixin.pojo.result.WeixinCommonResult;
 
 public interface WeixinService {
 
 	String weixinTokenTest(String signature, String timestamp, String nonce, String echostr);
 
-	CommonResult getNewToken() throws Exception;
+	WeixinCommonResult getNewToken() throws Exception;
 
 	void getNewWXMessage(HttpServletRequest request, HttpServletResponse response, PrintWriter op) throws IOException;
 

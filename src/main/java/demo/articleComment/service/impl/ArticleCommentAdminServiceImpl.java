@@ -14,8 +14,8 @@ import demo.articleComment.pojo.param.controllerParam.PassArticleCommentParam;
 import demo.articleComment.pojo.po.ArticleCommentReview;
 import demo.articleComment.pojo.type.ArticleCommentReviewType;
 import demo.articleComment.service.ArticleCommentAdminService;
-import demo.baseCommon.pojo.result.CommonResult;
-import demo.baseCommon.pojo.type.ResultType;
+import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
 import demo.util.BaseUtilCustom;
 
@@ -37,17 +37,17 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 	
 	@Override
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
-	public CommonResult deleteArticleComment(DeleteArticleCommentParam param) {
-		CommonResult result = new CommonResult();
+	public CommonResultCX deleteArticleComment(DeleteArticleCommentParam param) {
+		CommonResultCX result = new CommonResultCX();
 		
 		if(param.getCommentId() == null || param.getCommentId() < 0) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		
 		Long reviewerId = baseUtilCustom.getUserId();
 		if(reviewerId == null ) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		
@@ -58,24 +58,24 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 		articleCommentReviewMapper.insertNew(reviewRecord);
 		
 		articleCommentMapper.logicDelete(param.getCommentId());
-		result.fillWithResult(ResultType.articleCommentDeleteSuccess);
+		result.fillWithResult(ResultTypeCX.articleCommentDeleteSuccess);
 		
 		return result;
 	}
 	
 	@Override
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
-	public CommonResult passArticleComment(PassArticleCommentParam param) {
-		CommonResult result = new CommonResult();
+	public CommonResultCX passArticleComment(PassArticleCommentParam param) {
+		CommonResultCX result = new CommonResultCX();
 		
 		if(param.getCommentId() == null || param.getCommentId() < 0) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		
 		Long reviewerId = baseUtilCustom.getUserId();
 		if(reviewerId == null ) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		
@@ -86,7 +86,7 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 		articleCommentReviewMapper.insertNew(reviewRecord);
 		
 		articleCommentMapper.passComment(param.getCommentId());
-		result.fillWithResult(ResultType.articleCommentPassSuccess);
+		result.fillWithResult(ResultTypeCX.articleCommentPassSuccess);
 		
 		return result;
 	}

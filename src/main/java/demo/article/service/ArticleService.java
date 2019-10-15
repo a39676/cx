@@ -11,6 +11,7 @@ import javax.crypto.NoSuchPaddingException;
 
 import org.springframework.web.servlet.ModelAndView;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.pojo.param.controllerParam.ArticleLongComplaintParam;
 import demo.article.pojo.param.controllerParam.CreateArticleParam;
 import demo.article.pojo.param.controllerParam.CreatingArticleParam;
@@ -18,7 +19,7 @@ import demo.article.pojo.param.controllerParam.FindArticleLongByArticleSummaryPr
 import demo.article.pojo.param.controllerParam.LikeHateThisChannelParam;
 import demo.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.pojo.result.jsonRespon.FindArticleLongResult;
-import demo.baseCommon.pojo.result.CommonResult;
+import demo.baseCommon.pojo.result.CommonResultCX;
 
 public interface ArticleService {
 
@@ -45,7 +46,7 @@ public interface ArticleService {
 	 */
 	boolean iWroteThis(Long userId, String privateKey);
 
-	CommonResult likeOrHateThisChannel(LikeHateThisChannelParam inputParam);
+	CommonResultCX likeOrHateThisChannel(LikeHateThisChannelParam inputParam);
 
 	ArticleFileSaveResult saveArticleFile(String storePrefixPath, Long userId, String content) throws IOException;
 
@@ -54,7 +55,7 @@ public interface ArticleService {
 	 */
 	void refillArticleLongReviewCreatorId();
 
-	CommonResult articleLongComplaint(ArticleLongComplaintParam controllerParam);
+	CommonResultCX articleLongComplaint(ArticleLongComplaintParam controllerParam);
 
 	Long decryptPrivateKey(String pk);
 

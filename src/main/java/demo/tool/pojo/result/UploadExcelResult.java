@@ -1,8 +1,8 @@
 package demo.tool.pojo.result;
 
-import demo.baseCommon.pojo.result.CommonResult;
+import demo.baseCommon.pojo.result.CommonResultCX;
 
-public class UploadExcelResult extends CommonResult {
+public class UploadExcelResult extends CommonResultCX {
 
 	private String pk;
 

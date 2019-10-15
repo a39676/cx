@@ -3,9 +3,9 @@ package demo.tool.pojo.result;
 import java.util.Date;
 import java.util.List;
 
-import demo.baseCommon.pojo.result.CommonResult;
+import demo.baseCommon.pojo.result.CommonResultCX;
 
-public class UploadResult extends CommonResult {
+public class UploadResult extends CommonResultCX {
 
 	private List<String> uploadSuccessFileNameList;
 

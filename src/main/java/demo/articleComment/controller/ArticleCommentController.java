@@ -20,7 +20,7 @@ import demo.articleComment.pojo.param.controllerParam.FindArticleCommentPagePara
 import demo.articleComment.pojo.result.FindArticleCommentPageResult;
 import demo.articleComment.service.ArticleCommentService;
 import demo.baseCommon.controller.CommonController;
-import demo.baseCommon.pojo.result.CommonResult;
+import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.util.BaseUtilCustom;
 import net.sf.json.JSONObject;
 
@@ -37,7 +37,7 @@ public class ArticleCommentController extends CommonController {
 	public void createArticleComment(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws IOException {
 //		TODO
 		CreateArticleCommentParam param = new CreateArticleCommentParam().fromJson(getJson(data));
-		CommonResult result = articleCommentService.creatingArticleComment(baseUtilCustom.getUserId(), param);
+		CommonResultCX result = articleCommentService.creatingArticleComment(baseUtilCustom.getUserId(), param);
 		
 		outputJson(response, JSONObject.fromObject(result));
 	}

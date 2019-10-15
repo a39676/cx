@@ -1,6 +1,6 @@
 package demo.account_info.pojo.result;
 
-import demo.baseCommon.pojo.result.CommonResult;
+import auxiliaryCommon.pojo.result.CommonResult;
 
 public class AccountRegistResult extends CommonResult {
 

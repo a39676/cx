@@ -10,8 +10,8 @@ import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.base.user.mapper.UserIpMapper;
 import demo.base.user.pojo.dto.UserIpDeleteDTO;
-import demo.baseCommon.pojo.result.CommonResult;
-import demo.baseCommon.pojo.type.ResultType;
+import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.baseCommon.pojo.type.ResultTypeCX;
 import ioHandle.FileUtilCustom;
 
 @Service
@@ -25,15 +25,15 @@ public class AdminServiceImpl implements AdminService {
 	private FileUtilCustom ioUtil;
 	
 	@Override
-	public CommonResult deleteUserIpRecord(UserIpDeleteDTO param) {
-		CommonResult result = new CommonResult();
+	public CommonResultCX deleteUserIpRecord(UserIpDeleteDTO param) {
+		CommonResultCX result = new CommonResultCX();
 		if(param.getStartDate() == null || param.getEndDate() == null) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		
 		int deleteCount = userIpMapper.deleteRecord(param);
-		result.fillWithResult(ResultType.success);
+		result.fillWithResult(ResultTypeCX.success);
 		result.setMessage(String.valueOf(deleteCount));
 		return result;
 	}

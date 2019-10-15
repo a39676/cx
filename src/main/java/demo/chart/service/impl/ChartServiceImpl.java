@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.base.system.pojo.constant.BaseViewConstant;
-import demo.baseCommon.pojo.type.ResultType;
+import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
 import demo.chart.pojo.bo.ChartColorBO;
 import demo.chart.pojo.bo.ChartDataSetBO;
@@ -59,7 +59,7 @@ public class ChartServiceImpl extends CommonService implements ChartService {
 			view = dataToHorizontalBarChartView(bo);
 		} else {
 			view = new ModelAndView(BaseViewConstant.viewError);
-			view.addObject("exception", ResultType.errorParam.getName());
+			view.addObject("exception", ResultTypeCX.errorParam.getName());
 			return view;
 		}
 

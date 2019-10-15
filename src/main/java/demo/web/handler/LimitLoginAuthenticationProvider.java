@@ -19,7 +19,7 @@ import demo.base.system.service.impl.SystemConstantService;
 import demo.base.user.pojo.dto.UserAttemptQuerayDTO;
 import demo.base.user.pojo.po.UserAttempts;
 import demo.base.user.service.UsersService;
-import demo.baseCommon.pojo.type.ResultType;
+import demo.baseCommon.pojo.type.ResultTypeCX;
 import numericHandel.NumericUtilCustom;
 
 @Component("authenticationProvider")
@@ -44,7 +44,7 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
 
 		String error = "";
 		if(!NumericUtilCustom.matchInteger(systemConstantService.getValByName(SystemConstantStore.maxAttempts))) {
-			throw new BadCredentialsException(ResultType.serviceError.getName());
+			throw new BadCredentialsException(ResultTypeCX.serviceError.getName());
 		}
 		maxAttempts = Integer.parseInt(systemConstantService.getValByName(SystemConstantStore.maxAttempts));
 		

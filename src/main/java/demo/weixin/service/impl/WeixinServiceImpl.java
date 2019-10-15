@@ -22,8 +22,7 @@ import org.springframework.stereotype.Service;
 
 import demo.article.mapper.ArticleShortMapper;
 import demo.article.pojo.po.ArticleShort;
-import demo.baseCommon.pojo.result.CommonResult;
-import demo.baseCommon.pojo.type.ResultType;
+import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
 import demo.weixin.mapper.WeixinAccessTokenMapper;
 import demo.weixin.mapper.WeixinConstantMapper;
@@ -117,7 +116,7 @@ public class WeixinServiceImpl extends CommonService implements WeixinService {
 	}
 
 	@Override
-	public CommonResult getNewToken() throws Exception {
+	public WeixinCommonResult getNewToken() throws Exception {
 		WeixinCommonResult errorResult = new WeixinCommonResult();
 
 		StringBuffer urlStr = new StringBuffer(WXApiUrlConstant.getToken);
@@ -137,7 +136,7 @@ public class WeixinServiceImpl extends CommonService implements WeixinService {
 		}
 
 		if (StringUtils.isAnyBlank(appid, secret)) {
-			errorResult.fillWithResult(ResultType.serviceError);
+			errorResult.fillWithResult(ResultTypeCX.serviceError);
 			return errorResult;
 		}
 
@@ -160,7 +159,7 @@ public class WeixinServiceImpl extends CommonService implements WeixinService {
 		}
 
 		if (StringUtils.isBlank(accessToken)) {
-			errorResult.fillWithResult(ResultType.communicationError);
+			errorResult.fillWithResult(ResultTypeCX.communicationError);
 			return errorResult;
 		} else {
 			WeixinAccessToken accessTokenPO = new WeixinAccessToken();
@@ -176,7 +175,7 @@ public class WeixinServiceImpl extends CommonService implements WeixinService {
 		WeixinCommonResult result = new WeixinCommonResult();
 
 		if (StringUtils.isBlank(httpResult)) {
-			result.fillWithResult(ResultType.communicationError);
+			result.fillWithResult(ResultTypeCX.communicationError);
 			return result;
 		}
 
@@ -184,7 +183,7 @@ public class WeixinServiceImpl extends CommonService implements WeixinService {
 		try {
 			tmpJson = JSONObject.fromObject(httpResult);
 		} catch (Exception e) {
-			result.fillWithResult(ResultType.serviceError);
+			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
 		}
 		result.setJson(tmpJson);
@@ -282,7 +281,7 @@ public class WeixinServiceImpl extends CommonService implements WeixinService {
 
 		String storePrefixPath = weixinConstantMapper.getConstant(WXConstantName.messageStorePrefixPath);
 		if (StringUtils.isBlank(storePrefixPath)) {
-			result.fillWithResult(ResultType.serviceError);
+			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
 		}
 
@@ -292,13 +291,13 @@ public class WeixinServiceImpl extends CommonService implements WeixinService {
 
 		if (!mainFolder.exists()) {
 			if (!mainFolder.mkdirs()) {
-				result.fillWithResult(ResultType.serviceError);
+				result.fillWithResult(ResultTypeCX.serviceError);
 				return result;
 			}
 		}
 
 		if (StringUtils.isBlank(content) || content.replaceAll("\\s", "").length() < 6) {
-			result.fillWithResult(ResultType.articleTooShort);
+			result.fillWithResult(ResultTypeCX.articleTooShort);
 			return result;
 		}
 
@@ -315,7 +314,7 @@ public class WeixinServiceImpl extends CommonService implements WeixinService {
 			ioUtil.byteToFile(articleContentAfterTrim.getBytes("utf8"), finalFilePath);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-			result.fillWithResult(ResultType.errorWhenArticleSave);
+			result.fillWithResult(ResultTypeCX.errorWhenArticleSave);
 			return result;
 		}
 

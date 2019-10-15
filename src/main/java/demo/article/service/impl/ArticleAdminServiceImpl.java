@@ -35,8 +35,8 @@ import demo.article.pojo.type.ArticleReviewType;
 import demo.article.pojo.vo.ArticleChannelVO;
 import demo.article.service.ArticleAdminService;
 import demo.article.service.ArticleChannelService;
-import demo.baseCommon.pojo.result.CommonResult;
-import demo.baseCommon.pojo.type.ResultType;
+import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.image.service.ImageService;
 import demo.util.BaseUtilCustom;
 
@@ -70,10 +70,10 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	}}
 	
 	@Override
-	public CommonResult batchUpdatePrivateKey(BatchUpdatePrimaryKeyParam param) {
-		CommonResult result = new CommonResult();
+	public CommonResultCX batchUpdatePrivateKey(BatchUpdatePrimaryKeyParam param) {
+		CommonResultCX result = new CommonResultCX();
 		if(!loadCustomKey()) {
-			result.fillWithResult(ResultType.serviceError);
+			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
 		}
 		if (param.getStartTime() == null && param.getEndTime() == null) {
@@ -83,13 +83,13 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		if (param.getStartTime() != null && param.getEndTime() != null
 				&& (param.getStartTime().after(param.getEndTime())
 						|| param.getStartTime().equals(param.getEndTime()))) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		
 		List<Long> articleLongIds = articleLongSummaryMapper.findArticleLongSummaryListIds(param);
 		if(articleLongIds == null || articleLongIds.size() < 1) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		
@@ -110,7 +110,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		
 		Integer updateCount = articleLongSummaryMapper.batchUpdatePrivateKey(summarys);
 		if(updateCount == null || updateCount < 1) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		
@@ -120,8 +120,8 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	}
 	
 	@Override
-	public CommonResult handelReviewArticle(ReviewArticleLongParam param) throws Exception {
-		CommonResult result = null;
+	public CommonResultCX handelReviewArticle(ReviewArticleLongParam param) throws Exception {
+		CommonResultCX result = null;
 		if(param.getReviewCode().equals(ArticleReviewType.pass.getReviewCode())) {
 			result = passArticle(param.getPk());
 			return result;
@@ -132,23 +132,23 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			result = deleteArticle(param.getPk());
 			return result;
 		} else {
-			result = new CommonResult();
-			result.fillWithResult(ResultType.errorParam);
+			result = new CommonResultCX();
+			result.fillWithResult(ResultTypeCX.errorParam);
 		}
 		return result;
 	}
 	
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
-	private CommonResult passArticle(String privateKey) throws Exception {
-		CommonResult result = new CommonResult();
+	private CommonResultCX passArticle(String privateKey) throws Exception {
+		CommonResultCX result = new CommonResultCX();
 		Long articleId = decryptArticlePrivateKey(privateKey);
 		if(articleId == null) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		
 		if(articleLongReviewMapper.wasReview(articleId, ArticleReviewType.pass.getReviewCode()) == 1) {
-			result.fillWithResult(ResultType.articleWasPass);
+			result.fillWithResult(ResultTypeCX.articleWasPass);
 			return result;
 		}
 		
@@ -156,7 +156,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		param.setArticleId(articleId);
 		ArticleLong article = articleLongMapper.findArticleLong(param);
 		if(article == null) {
-			result.fillWithResult(ResultType.serviceError);
+			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
 		}
 		
@@ -196,22 +196,22 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		
 		imageService.moveImageCacheToImageStore(articleId, article.getChannelId());
 		
-		result.fillWithResult(ResultType.success);
+		result.fillWithResult(ResultTypeCX.success);
 		return result;
 	}
 	
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
-	private CommonResult rejectArticle(String privateKey) throws Exception {
-		CommonResult result = new CommonResult();
+	private CommonResultCX rejectArticle(String privateKey) throws Exception {
+		CommonResultCX result = new CommonResultCX();
 		
 		Long articleId = decryptArticlePrivateKey(privateKey);
 		if(articleId == null) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		
 		if(articleLongReviewMapper.wasReview(articleId, ArticleReviewType.pass.getReviewCode()) == 1) {
-			result.fillWithResult(ResultType.articleWasReject);
+			result.fillWithResult(ResultTypeCX.articleWasReject);
 			return result;
 		}
 		
@@ -219,7 +219,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		param.setArticleId(articleId);
 		ArticleLong article = articleLongMapper.findArticleLong(param);
 		if(article == null) {
-			result.fillWithResult(ResultType.serviceError);
+			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
 		}
 		
@@ -249,22 +249,22 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			throw new Exception();
 		}
 		
-		result.fillWithResult(ResultType.success);
+		result.fillWithResult(ResultTypeCX.success);
 		return result;
 	}
 	
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 	@Override
-	public CommonResult deleteArticle(String privateKey) throws Exception {
-		CommonResult result = new CommonResult();
+	public CommonResultCX deleteArticle(String privateKey) throws Exception {
+		CommonResultCX result = new CommonResultCX();
 		Long articleId = decryptArticlePrivateKey(privateKey);
 		if(articleId == null) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		
 		if(articleLongReviewMapper.wasReview(articleId, ArticleReviewType.delete.getReviewCode()) == 1) {
-			result.fillWithResult(ResultType.articleWasDelete);
+			result.fillWithResult(ResultTypeCX.articleWasDelete);
 			return result;
 		}
 		
@@ -272,7 +272,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		param.setArticleId(articleId);
 		ArticleLong article = articleLongMapper.findArticleLong(param);
 		if(article == null) {
-			result.fillWithResult(ResultType.serviceError);
+			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
 		}
 		
@@ -310,7 +310,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			throw new Exception();
 		}
 		
-		result.fillWithResult(ResultType.success);
+		result.fillWithResult(ResultTypeCX.success);
 		return result;
 	}
 	
@@ -333,10 +333,10 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	
 	@Override
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
-	public CommonResult changeChannel(ChangeChannelParam param) throws Exception {
-		CommonResult result = new CommonResult();
+	public CommonResultCX changeChannel(ChangeChannelParam param) throws Exception {
+		CommonResultCX result = new CommonResultCX();
 		if(StringUtils.isBlank(param.getPk()) || StringUtils.isBlank(param.getUuid()) || param.getArticleId() != null || param.getChannelId() != null) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		ArticleUUIDChannelStoreBO uuidChannelStore = channelService.getArticleUUIDChannelStore();
@@ -345,7 +345,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		
 		Long articleId = decryptArticlePrivateKey(param.getPk());
 		if(articleId == null) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		
@@ -370,27 +370,27 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			throw new Exception();
 		}
 		
-		result.fillWithResult(ResultType.success);
+		result.fillWithResult(ResultTypeCX.success);
 		return result;
 	}
 	
 	@Override
-	public CommonResult setArticleHot(SetArticleHotParam controllerParam) {
+	public CommonResultCX setArticleHot(SetArticleHotParam controllerParam) {
 //		TODO
-		CommonResult result = new CommonResult();
+		CommonResultCX result = new CommonResultCX();
 		if(StringUtils.isBlank(controllerParam.getPk()) || controllerParam.getHotMinutes() == null || controllerParam.getHotLevel() == null) {
-			result.fillWithResult(ResultType.nullParam);
+			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;
 		}
 		
 		if(controllerParam.getHotMinutes() < 0 || controllerParam.getHotMinutes() > (60L * 24 * 30) || controllerParam.getHotLevel() < 0 || controllerParam.getHotLevel() > 10) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		
 		Long articleId = decryptArticlePrivateKey(controllerParam.getPk());
 		if(articleId == null) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		
@@ -398,7 +398,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		findArticleParam.setArticleId(articleId);
 		ArticleLong oldArticleLong = articleLongMapper.findArticleLong(findArticleParam);
 		if(oldArticleLong == null || oldArticleLong.getIsPass() == false || oldArticleLong.getIsDelete() == true || oldArticleLong.getIsReject() == true || oldArticleLong.getIsEdited() == true) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		
@@ -412,7 +412,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		
 		articleHotMapper.insertNew(newArticleHot);
 		
-		result.fillWithResult(ResultType.setArticleHotSuccess);
+		result.fillWithResult(ResultTypeCX.setArticleHotSuccess);
 		return result;
 	}
 }

@@ -3,9 +3,9 @@ package demo.bank.pojo.result;
 import java.util.List;
 
 import demo.bank.pojo.po.BankInfo;
-import demo.baseCommon.pojo.result.CommonResult;
+import demo.baseCommon.pojo.result.CommonResultCX;
 
-public class FindBankInfoResult extends CommonResult {
+public class FindBankInfoResult extends CommonResultCX {
 	
 	private List<BankInfo> bankList;
 

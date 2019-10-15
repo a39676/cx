@@ -4,13 +4,13 @@ import java.util.List;
 
 import demo.articleComment.pojo.param.controllerParam.DeleteArticleCommentParam;
 import demo.articleComment.pojo.param.controllerParam.PassArticleCommentParam;
-import demo.baseCommon.pojo.result.CommonResult;
+import demo.baseCommon.pojo.result.CommonResultCX;
 
 public interface ArticleCommentAdminService {
 
-	CommonResult deleteArticleComment(DeleteArticleCommentParam param);
+	CommonResultCX deleteArticleComment(DeleteArticleCommentParam param);
 
-	CommonResult passArticleComment(PassArticleCommentParam param);
+	CommonResultCX passArticleComment(PassArticleCommentParam param);
 
 	List<Long> findArticleIdWithCommentWaitingForReview(List<Long> articleIdList);
 

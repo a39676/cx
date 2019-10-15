@@ -9,8 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import demo.baseCommon.pojo.result.CommonResult;
-import demo.baseCommon.pojo.type.ResultType;
+import auxiliaryCommon.pojo.result.CommonResult;
+import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.config.costom_component.SnowFlake;
 
 public abstract class CommonService {
@@ -53,21 +54,21 @@ public abstract class CommonService {
 		}
 	}
 
-	protected CommonResult nullParam() {
-		CommonResult result = new CommonResult();
-		result.fillWithResult(ResultType.nullParam);
+	protected CommonResultCX nullParam() {
+		CommonResultCX result = new CommonResultCX();
+		result.fillWithResult(ResultTypeCX.nullParam);
 		return result;
 	}
 	
-	protected CommonResult errorParam() {
-		CommonResult result = new CommonResult();
-		result.fillWithResult(ResultType.errorParam);
+	protected CommonResultCX errorParam() {
+		CommonResultCX result = new CommonResultCX();
+		result.fillWithResult(ResultTypeCX.errorParam);
 		return result;
 	}
 	
-	protected CommonResult serviceError() {
-		CommonResult result = new CommonResult();
-		result.fillWithResult(ResultType.serviceError);
+	protected CommonResultCX serviceError() {
+		CommonResultCX result = new CommonResultCX();
+		result.fillWithResult(ResultTypeCX.serviceError);
 		return result;
 	}
 	

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.pojo.constant.ArticleAdminUrlConstant;
 import demo.article.pojo.param.controllerParam.BatchUpdatePrimaryKeyParam;
 import demo.article.pojo.param.controllerParam.ChangeChannelParam;
@@ -22,8 +23,8 @@ import demo.article.pojo.vo.ArticleChannelVO;
 import demo.article.service.ArticleAdminService;
 import demo.article.service.ArticleChannelService;
 import demo.baseCommon.controller.CommonController;
-import demo.baseCommon.pojo.result.CommonResult;
-import demo.baseCommon.pojo.type.ResultType;
+import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.baseCommon.pojo.type.ResultTypeCX;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -45,11 +46,11 @@ public class ArticleAdminController extends CommonController {
 	@PostMapping(value = ArticleAdminUrlConstant.loadArticleUUIDChannel)
 	public void loadArticleUUIDChannel(HttpServletRequest request, HttpServletResponse response) {
 		boolean flag = channelService.loadArticleUUIDChannel(true);
-		CommonResult serviceResult = new CommonResult();
+		CommonResultCX serviceResult = new CommonResultCX();
 		if(!flag) {
-			serviceResult.fillWithResult(ResultType.serviceError);
+			serviceResult.fillWithResult(ResultTypeCX.serviceError);
 		} else {
-			serviceResult.fillWithResult(ResultType.success);
+			serviceResult.fillWithResult(ResultTypeCX.success);
 		}
 		outputJson(response, JSONObject.fromObject(serviceResult));
 		return;
@@ -67,12 +68,12 @@ public class ArticleAdminController extends CommonController {
 		JSONObject jsonInput = getJson(data);
 		ReviewArticleLongParam param = new ReviewArticleLongParam().fromJson(jsonInput);
 		param.setReviewCode(ArticleReviewType.pass.getReviewCode());
-		CommonResult serviceResult = new CommonResult();
+		CommonResultCX serviceResult = new CommonResultCX();
 		try {
 			serviceResult = articleAdminService.handelReviewArticle(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			serviceResult.fillWithResult(ResultType.serviceError);
+			serviceResult.fillWithResult(ResultTypeCX.serviceError);
 		}
 		outputJson(response, JSONObject.fromObject(serviceResult));
 	}
@@ -82,12 +83,12 @@ public class ArticleAdminController extends CommonController {
 		JSONObject jsonInput = getJson(data);
 		ReviewArticleLongParam param = new ReviewArticleLongParam().fromJson(jsonInput);
 		param.setReviewCode(ArticleReviewType.reject.getReviewCode());
-		CommonResult serviceResult = new CommonResult();
+		CommonResultCX serviceResult = new CommonResultCX();
 		try {
 			serviceResult = articleAdminService.handelReviewArticle(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			serviceResult.fillWithResult(ResultType.serviceError);
+			serviceResult.fillWithResult(ResultTypeCX.serviceError);
 		}
 		outputJson(response, JSONObject.fromObject(serviceResult));
 	}
@@ -97,12 +98,12 @@ public class ArticleAdminController extends CommonController {
 		JSONObject jsonInput = getJson(data);
 		ReviewArticleLongParam param = new ReviewArticleLongParam().fromJson(jsonInput);
 		param.setReviewCode(ArticleReviewType.delete.getReviewCode());
-		CommonResult serviceResult = new CommonResult();
+		CommonResultCX serviceResult = new CommonResultCX();
 		try {
 			serviceResult = articleAdminService.handelReviewArticle(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			serviceResult.fillWithResult(ResultType.serviceError);
+			serviceResult.fillWithResult(ResultTypeCX.serviceError);
 		}
 		outputJson(response, JSONObject.fromObject(serviceResult));
 	}

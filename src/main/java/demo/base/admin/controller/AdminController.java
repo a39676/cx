@@ -29,7 +29,7 @@ import demo.base.user.pojo.dto.UserIpDeleteDTO;
 import demo.base.user.pojo.po.Users;
 import demo.base.user.service.UsersService;
 import demo.baseCommon.controller.CommonController;
-import demo.baseCommon.pojo.result.CommonResult;
+import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.fakePost.service.FakePostService;
 import net.sf.json.JSONObject;
 
@@ -141,7 +141,7 @@ public class AdminController extends CommonController {
 	@PostMapping(value = AdminUrlConstant.deleteUserIpRecord)
 	public void deleteUserIpRecord(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) {
 		UserIpDeleteDTO param = new UserIpDeleteDTO().fromJson(getJson(data));
-		CommonResult result = adminService.deleteUserIpRecord(param);
+		CommonResultCX result = adminService.deleteUserIpRecord(param);
 		outputJson(response, JSONObject.fromObject(result));
 	}
 

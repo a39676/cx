@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
-import demo.baseCommon.pojo.type.ResultType;
+import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
 import demo.fakeFTP.pojo.param.controllerParam.DownloadTargetFileParam;
 import demo.fakeFTP.pojo.param.controllerParam.GetFilePathDetailParam;
@@ -51,14 +51,14 @@ public class FakeFTPServiceImpl extends CommonService implements FakeFTPServcie 
 	public FakeFTPFilePathDetailResult GetFilePathDetail(GetFilePathDetailParam param) {
 		FakeFTPFilePathDetailResult result = new FakeFTPFilePathDetailResult();
 		if(StringUtils.isBlank(param.getFilePath()) || !validPath(param.getFilePath())) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		
 		File targetFolder = new File(param.getFilePath());
 		
 		if(!targetFolder.exists() || !targetFolder.isDirectory()) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		
@@ -118,7 +118,7 @@ public class FakeFTPServiceImpl extends CommonService implements FakeFTPServcie 
 		UploadResult result = new UploadResult();
 		String savePath = request.getParameter("savePath");
 		if(!validPath(savePath)) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		result = uploadController.uploadFakeFTPHandle(request, response);

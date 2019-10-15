@@ -17,7 +17,7 @@ import demo.articleComment.pojo.param.controllerParam.DeleteArticleCommentParam;
 import demo.articleComment.pojo.param.controllerParam.PassArticleCommentParam;
 import demo.articleComment.service.ArticleCommentAdminService;
 import demo.baseCommon.controller.CommonController;
-import demo.baseCommon.pojo.result.CommonResult;
+import demo.baseCommon.pojo.result.CommonResultCX;
 import net.sf.json.JSONObject;
 
 @Controller
@@ -31,7 +31,7 @@ public class ArticleCommentAdminController extends CommonController {
 	public void deleteArticleComment(@RequestBody String data, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		DeleteArticleCommentParam param = new DeleteArticleCommentParam().fromJson(getJson(data));
-		CommonResult result = articleCommentAdminService.deleteArticleComment(param);
+		CommonResultCX result = articleCommentAdminService.deleteArticleComment(param);
 		outputJson(response, JSONObject.fromObject(result));
 	}
 	
@@ -39,7 +39,7 @@ public class ArticleCommentAdminController extends CommonController {
 	public void passArticleComment(@RequestBody String data, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		PassArticleCommentParam param = new PassArticleCommentParam().fromJson(getJson(data));
-		CommonResult result = articleCommentAdminService.passArticleComment(param);
+		CommonResultCX result = articleCommentAdminService.passArticleComment(param);
 		outputJson(response, JSONObject.fromObject(result));
 	}
 	

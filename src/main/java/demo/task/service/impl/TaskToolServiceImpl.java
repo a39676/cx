@@ -37,12 +37,15 @@ public class TaskToolServiceImpl implements TaskToolService {
 	@Autowired
 	private MailRecordMapper mailRecordMapper;
 	
-//	@Scheduled(cron="0 */60 * * * ?")   //每30分钟执行一次  
+//	@Scheduled(cron="0 */30 * * * ?")   //每30分钟执行一次
+//	@Scheduled(cron="40 49 23 * * *") // 每天23:49:40执行
+	
+//	@Scheduled(cron="0 */60 * * * ?")   //每30分钟执行一次
 //	public void sendTomcatOut() {
 //		mailService.sendTomcatOut();
 //	}
 	
-//	@Scheduled(cron="0 */60 * * * ?")
+//	@Scheduled(cron="0 */30 * * * ?")
 //	public void sendTomcatLogFolder() {
 //		mailService.sendTomcatLogFolder();
 //	}

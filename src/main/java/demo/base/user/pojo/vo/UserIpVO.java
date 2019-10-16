@@ -1,15 +1,14 @@
-package demo.base.user.pojo.po;
+package demo.base.user.pojo.vo;
 
 import java.time.LocalDateTime;
 
-public class UserIp {
-    private Long userId;
+public class UserIpVO {
 
-	private Long ip;
+	private Long userId;
 
-	private Long forwardIp;
+	private String ip;
 
-	private String serverName;
+	private String forwardIp;
 
 	private String uri;
 
@@ -23,28 +22,20 @@ public class UserIp {
 		this.userId = userId;
 	}
 
-	public Long getIp() {
+	public String getIp() {
 		return ip;
 	}
 
-	public void setIp(Long ip) {
+	public void setIp(String ip) {
 		this.ip = ip;
 	}
 
-	public Long getForwardIp() {
+	public String getForwardIp() {
 		return forwardIp;
 	}
 
-	public void setForwardIp(Long forwardIp) {
+	public void setForwardIp(String forwardIp) {
 		this.forwardIp = forwardIp;
-	}
-
-	public String getServerName() {
-		return serverName;
-	}
-
-	public void setServerName(String serverName) {
-		this.serverName = serverName == null ? null : serverName.trim();
 	}
 
 	public String getUri() {
@@ -52,7 +43,7 @@ public class UserIp {
 	}
 
 	public void setUri(String uri) {
-		this.uri = uri == null ? null : uri.trim();
+		this.uri = uri;
 	}
 
 	public LocalDateTime getCreateTime() {
@@ -61,6 +52,12 @@ public class UserIp {
 
 	public void setCreateTime(LocalDateTime createTime) {
 		this.createTime = createTime;
+	}
+
+	@Override
+	public String toString() {
+		return "UserIpVO [userId=" + userId + ", ip=" + ip + ", forwardIp=" + forwardIp + ", uri=" + uri
+				+ ", createTime=" + createTime + "]";
 	}
 
 }

@@ -110,4 +110,12 @@ public abstract class CommonService {
 		}
 		return str.substring(str.lastIndexOf("."));
 	}
+	
+	protected String pathChangeByDetectOS(String oldPath) {
+		if(isWindows()) {
+			return oldPath.replaceAll("/", "\\\\");
+		} else {
+			return oldPath.replaceAll("\\\\", "/");
+		}
+	}
 }

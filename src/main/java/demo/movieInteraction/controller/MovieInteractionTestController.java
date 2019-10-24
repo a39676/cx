@@ -19,7 +19,7 @@ import movie.pojo.type.MovieRegionType;
 import net.sf.json.JSONObject;
 
 @Controller
-@RequestMapping(value = "/mt", produces = "text/plain;charset=UTF-8")
+@RequestMapping(value = MovieInteractionUrl.root, produces = "text/plain;charset=UTF-8")
 public class MovieInteractionTestController {
 
 	@Autowired

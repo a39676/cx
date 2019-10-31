@@ -2,11 +2,22 @@
 账户注册逻辑改造中, 页面ajax 同时改造
 既然有随机生成评价数, 对应必须有随机生成浏览量
 
-上传excel 出 统计图
-/chart/simpleChart view,判断是否作为子模块存在-->是否展示chartType选择菜单
+不再往论坛模式发展了
 
-
-查看某用户所有articleLong
+CREATE TABLE `duralbe_recorder` (
+id bigint not null,
+   `trading_id` bigint default null,
+   `holder_id` bigint NOT NULL,
+   `amount` decimal(9,2) NOT NULL,
+   `transation_date` date NOT NULL,
+   `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
+   
+   `remark` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+   is_broken boolean default false,
+   
+   is_delete boolean default false,
+   PRIMARY KEY (`id`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='duralbe_recorder'
 
 评论模块
 --接入评价?

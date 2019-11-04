@@ -39,4 +39,6 @@ public class SystemConstantStore {
 	public static final String normalUserMaxReadingMonth = "normalUserMaxReadingMonth";
 	public static final String jobing = "jobing";
 	public static final String roleList = "roleList";
+	
+	public static final String envName = "envName";
 }

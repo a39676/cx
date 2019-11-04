@@ -37,6 +37,8 @@ public class HomePageServiceImpl extends CommonService implements HomePageServic
 
 		view.addObject("title", systemConstantService.getValByName(SystemConstantStore.webSiteTitle));
 
+		String envName = systemConstantService.getValByName(SystemConstantStore.envName, true);
+		
 		if(!"dev".equals(envName)) {
 			if (StringUtils.isBlank(hostName)) {
 				view.setViewName(BaseViewConstant.empty);

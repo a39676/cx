@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import demo.base.system.pojo.bo.IpRecordBO;
 import demo.base.user.mapper.UserIpMapper;
 import demo.base.user.pojo.po.UserIp;
 import demo.util.BaseUtilCustom;
@@ -63,19 +64,19 @@ public abstract class CommonController {
 		}
 	}
 	
-	protected tmpIpRecord getIp(HttpServletRequest request) {
-        tmpIpRecord record = new tmpIpRecord();
-        record.remoteAddr = request.getRemoteAddr();
-        record.forwardAddr = request.getHeader("X-FORWARDED-FOR");
+	protected IpRecordBO getIp(HttpServletRequest request) {
+		IpRecordBO record = new IpRecordBO();
+        record.setRemoteAddr(request.getRemoteAddr());
+        record.setForwardAddr(request.getHeader("X-FORWARDED-FOR"));
 
         return record;
 	}
 	
 	protected void insertVisitIp(HttpServletRequest request, String customInfo) {
-		tmpIpRecord record = getIp(request);
+		IpRecordBO record = getIp(request);
 		UserIp ui = new UserIp();
-		ui.setIp(NumericUtilCustom.ipToLong(record.remoteAddr));
-		ui.setForwardIp(NumericUtilCustom.ipToLong(record.forwardAddr));
+		ui.setIp(NumericUtilCustom.ipToLong(record.getRemoteAddr()));
+		ui.setForwardIp(NumericUtilCustom.ipToLong(record.getForwardAddr()));
 		ui.setServerName(request.getServerName());
 		ui.setUri(request.getRequestURI() + "/?customInfo=" + customInfo);
 		ui.setUserId(baseUtilCustom.getUserId());
@@ -84,10 +85,10 @@ public abstract class CommonController {
 	}
 	
 	protected void insertVisitIp(HttpServletRequest request) {
-		tmpIpRecord record = getIp(request);
+		IpRecordBO record = getIp(request);
 		UserIp ui = new UserIp();
-		ui.setIp(NumericUtilCustom.ipToLong(record.remoteAddr));
-		ui.setForwardIp(NumericUtilCustom.ipToLong(record.forwardAddr));
+		ui.setIp(NumericUtilCustom.ipToLong(record.getRemoteAddr()));
+		ui.setForwardIp(NumericUtilCustom.ipToLong(record.getForwardAddr()));
 		ui.setServerName(request.getServerName());
 		ui.setUri(request.getRequestURI());
 		ui.setUserId(baseUtilCustom.getUserId());
@@ -95,10 +96,6 @@ public abstract class CommonController {
 		userIpMapper.insertSelective(ui);
 	}
 	
-	class tmpIpRecord {
-		public String remoteAddr;
-		public String forwardAddr;
-	}
 	
 	protected String foundHostNameFromRequst(HttpServletRequest request) {
 		String url = request.getServerName();

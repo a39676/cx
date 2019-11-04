@@ -197,9 +197,7 @@ public class ArticleController extends CommonController {
 	}
 	
 	@PostMapping(value = ArticleUrlConstant.deleteArticle)
-	public void deleteArticle(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) {
-		JSONObject jsonInput = getJson(data);
-		ReviewArticleLongParam param = new ReviewArticleLongParam().fromJson(jsonInput);
+	public void deleteArticle(@RequestBody ReviewArticleLongParam param, HttpServletRequest request, HttpServletResponse response) {
 		param.setReviewCode(ArticleReviewType.delete.getReviewCode());
 		
 		CommonResultCX serviceResult = new CommonResultCX();
@@ -210,34 +208,29 @@ public class ArticleController extends CommonController {
 			return;
 		}
 		
-		articleAdminController.deleteArticle(data, request, response);
+		articleAdminController.deleteArticle(param, request, response);
 	}
 	
 	@PostMapping(value = ArticleUrlConstant.insertArticleLongEvaluation)
-	public void insertArticleLongEvaluation(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) {
-		JSONObject jsonInput = getJson(data);
-		InsertArticleLongEvaluationParam param = new InsertArticleLongEvaluationParam().fromJson(jsonInput);
+	public void insertArticleLongEvaluation(@RequestBody InsertArticleLongEvaluationParam param, HttpServletRequest request, HttpServletResponse response) {
 		param.setEvaluationType(ArticleEvaluationType.articleLongEvaluation.getCode());
 		CommonResult serviceResult = articleEvaluationService.insertArticleLongEvaluationRedis(param);
 		outputJson(response, JSONObject.fromObject(serviceResult));
 	}
 	
-	public void insertArticleLongCommentEvaluation(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) {
+	public void insertArticleLongCommentEvaluation(@RequestBody InsertArticleLongEvaluationParam param, HttpServletRequest request, HttpServletResponse response) {
 		/*
 		 * TODO
 		 * 2019-06-08 发现 未明用途  待确认
 		 */
-		JSONObject jsonInput = getJson(data);
-		InsertArticleLongEvaluationParam param = new InsertArticleLongEvaluationParam().fromJson(jsonInput);
 		param.setEvaluationType(ArticleEvaluationType.articleCommentEvaluation.getCode());
 		CommonResult serviceResult = articleEvaluationService.insertArticleLongEvaluationRedis(param);
 		outputJson(response, JSONObject.fromObject(serviceResult));
 	}
 	
 	@PostMapping(value = ArticleUrlConstant.likeOrHateThisChannel)
-	public void hateThisChannel(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) {
+	public void hateThisChannel(@RequestBody LikeHateThisChannelParam param, HttpServletRequest request, HttpServletResponse response) {
 		insertVisitIp(request);
-		LikeHateThisChannelParam param = new LikeHateThisChannelParam().fromJson(JSONObject.fromObject(data));
 		param.setUserId(baseUtilCustom.getUserId());
 		
 		CommonResult result = articleService.likeOrHateThisChannel(param);

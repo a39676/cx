@@ -1,5 +1,7 @@
 package demo.test.controller;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,4 +28,14 @@ public class TestController2 extends CommonController {
 		return String.valueOf(snowFlake.getNextId());
 	}
 
+	@GetMapping(value = "/redisTest")
+	@ResponseBody
+	public Set<String> redisTest() {
+		redisTemplate.opsForSet().add("s1", "i1");
+		redisTemplate.opsForSet().add("s1", "i2");
+		redisTemplate.opsForSet().add("s1", "i1");
+		redisTemplate.opsForSet().add("s1", "i3");
+		
+		return redisTemplate.opsForSet().members("s1");
+	}
 }

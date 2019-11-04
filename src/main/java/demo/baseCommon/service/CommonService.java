@@ -12,6 +12,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.config.costom_component.SnowFlake;
+import numericHandel.NumericUtilCustom;
 
 public abstract class CommonService {
 	
@@ -19,6 +20,8 @@ public abstract class CommonService {
 	
 	@Autowired
 	protected SnowFlake snowFlake;
+	@Autowired
+	protected NumericUtilCustom numberUtil;
 	
 	@Autowired
 	protected RedisTemplate<String, String> redisTemplate;

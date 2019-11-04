@@ -49,7 +49,6 @@ import demo.vcode.pojo.param.GetVcodeByValueParam;
 import demo.vcode.pojo.po.VCode;
 import demo.vcode.service.VCodeService;
 import ioHandle.FileUtilCustom;
-import numericHandel.NumericUtilCustom;
 
 @Service
 public class ArticleSummaryServiceImpl extends ArticleCommonService implements ArticleSummaryService {
@@ -307,7 +306,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		if(!controllerParam.getHasAdminRole()) {
 			String normalUserMaxReadingMonth = systemConstantService.getValByName(SystemConstantStore.normalUserMaxReadingMonth);
 			int maxReadingMonth = 0;
-			if(NumericUtilCustom.matchInteger(normalUserMaxReadingMonth)) {
+			if(numberUtil.matchInteger(normalUserMaxReadingMonth)) {
 				maxReadingMonth = Integer.parseInt(normalUserMaxReadingMonth);
 			}
 			LocalDateTime earliestStartTime = LocalDateTime.now().minusMonths(maxReadingMonth);

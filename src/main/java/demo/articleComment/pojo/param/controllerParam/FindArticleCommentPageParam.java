@@ -2,11 +2,7 @@ package demo.articleComment.pojo.param.controllerParam;
 
 import java.util.Date;
 
-import dateTimeHandle.DateUtilCustom;
-import demo.baseCommon.pojo.param.CommonControllerParam;
-import net.sf.json.JSONObject;
-
-public class FindArticleCommentPageParam implements CommonControllerParam {
+public class FindArticleCommentPageParam {
 
 	private String pk;
 	private Date startTime;
@@ -58,24 +54,6 @@ public class FindArticleCommentPageParam implements CommonControllerParam {
 	public String toString() {
 		return "FindArticleCommentPageParam [pk=" + pk + ", startTime=" + startTime + ", hasAdminRole=" + hasAdminRole
 				+ "]";
-	}
-
-	@Override
-	public FindArticleCommentPageParam fromJson(JSONObject json) {
-		FindArticleCommentPageParam param = new FindArticleCommentPageParam();
-		if (json.containsKey("pk")) {
-			param.setPk(json.getString("pk"));
-		}
-		if (json.containsKey("startTime") && DateUtilCustom.isDateValid(json.getString("startTime"))) {
-			param.setStartTime(DateUtilCustom.stringToDateUnkonwFormat(json.getString("startTime")));
-		}
-		if (json.containsKey("isPass") && "0".equals(json.getString("isPass"))) {
-			param.setIsPass(false);
-		}
-		if (json.containsKey("isDelete") && "1".equals(json.getString("isDelete"))) {
-			param.setIsDelete(true);
-		}
-		return param;
 	}
 
 }

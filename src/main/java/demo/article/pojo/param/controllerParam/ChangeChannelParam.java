@@ -1,15 +1,6 @@
 package demo.article.pojo.param.controllerParam;
 
-import java.io.IOException;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import demo.baseCommon.pojo.param.CommonControllerParam;
-import net.sf.json.JSONObject;
-
-public class ChangeChannelParam implements CommonControllerParam {
+public class ChangeChannelParam {
 
 	private String pk;
 	private String uuid;
@@ -52,11 +43,6 @@ public class ChangeChannelParam implements CommonControllerParam {
 	public String toString() {
 		return "ChangeChannelParam [pk=" + pk + ", uuid=" + uuid + ", channelId=" + channelId + ", articleId="
 				+ articleId + "]";
-	}
-
-	@Override
-	public ChangeChannelParam fromJson(JSONObject j) throws JsonParseException, JsonMappingException, IOException {
-		return new ObjectMapper().readValue(j.toString(), ChangeChannelParam.class);
 	}
 
 }

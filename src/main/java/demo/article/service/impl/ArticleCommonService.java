@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.service.CommonService;
 import demo.util.EncryptUtil;
-import numericHandel.NumericUtilCustom;
 
 public class ArticleCommonService extends CommonService{
 	
@@ -69,7 +68,7 @@ public class ArticleCommonService extends CommonService{
 	
 	public Long decryptArticlePrivateKey(String inputPk) {
 		String encryptId = EncryptUtil.customDecrypt(getCustomKey(), inputPk);
-		if(encryptId == null || !NumericUtilCustom.matchInteger(encryptId)) {
+		if(encryptId == null || !numberUtil.matchInteger(encryptId)) {
 			return null;
 		}
 		return Long.parseLong(encryptId);

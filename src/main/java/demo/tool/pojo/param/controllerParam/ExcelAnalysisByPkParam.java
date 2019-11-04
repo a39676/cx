@@ -1,10 +1,6 @@
 package demo.tool.pojo.param.controllerParam;
 
-import demo.baseCommon.pojo.param.CommonControllerParam;
-import net.sf.json.JSONObject;
-import numericHandel.NumericUtilCustom;
-
-public class ExcelAnalysisByPkParam implements CommonControllerParam {
+public class ExcelAnalysisByPkParam {
 
 	private Integer chartType;
 
@@ -15,22 +11,6 @@ public class ExcelAnalysisByPkParam implements CommonControllerParam {
 	 */
 	private boolean needColumnToRow = false;
 
-	@Override
-	public ExcelAnalysisByPkParam fromJson(JSONObject j) {
-		ExcelAnalysisByPkParam p = new ExcelAnalysisByPkParam();
-
-		if (j.containsKey("chartType") && NumericUtilCustom.matchInteger(j.getString("chartType"))) {
-			p.setChartType(j.getInt("chartType"));
-		}
-		if (j.containsKey("pk")) {
-			p.setPk(j.getString("pk"));
-		}
-		if (j.containsKey("needColumnToRow")
-				&& (j.getString("needColumnToRow").equals("1") || j.getString("needColumnToRow").equals("true"))) {
-			p.setNeedColumnToRow(true);
-		}
-		return p;
-	}
 
 	public Integer getChartType() {
 		return chartType;

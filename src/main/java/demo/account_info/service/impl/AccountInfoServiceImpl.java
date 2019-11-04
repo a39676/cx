@@ -48,7 +48,6 @@ import demo.trading.pojo.po.TradingRecorder;
 import demo.trading.pojo.result.InsertTradingRecorderResult;
 import demo.util.BaseUtilCustom;
 import demo.util.EncryptUtil;
-import numericHandel.NumericUtilCustom;
 
 @Service
 public class AccountInfoServiceImpl extends CommonService implements AccountInfoService {
@@ -623,7 +622,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	@Override
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 	public int modifyCreditsQuota(String newCreditsQuota, String accountNumber) {
-		if(!checkAccountNumberBelongUser(accountNumber) || !NumericUtilCustom.matchInteger(newCreditsQuota)){
+		if(!checkAccountNumberBelongUser(accountNumber) || !numberUtil.matchInteger(newCreditsQuota)){
 			return 0;
 		}
 		
@@ -649,7 +648,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	@Override
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 	public int modifyTemproraryCreditsQuota(String newTemproraryCreditsQuota, String accountNumber) {
-		if(!checkAccountNumberBelongUser(accountNumber) || !NumericUtilCustom.matchInteger(newTemproraryCreditsQuota)){
+		if(!checkAccountNumberBelongUser(accountNumber) || !numberUtil.matchInteger(newTemproraryCreditsQuota)){
 			return 0;
 		}
 		
@@ -716,7 +715,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	
 	@Override
 	public AccountInfo getAccountInfoByAccountNumber(String accountNumber) {
-		if(!NumericUtilCustom.matchPositiveInteger(accountNumber)) {
+		if(!numberUtil.matchPositiveInteger(accountNumber)) {
 			return null;
 		}
 		return accountInfoCustomMapper.getAccountInfoByAccountNumber(accountNumber);

@@ -44,7 +44,7 @@ public class SwaggerConfig {
 
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder().title("swagger title").description("swagger description")
-				.termsOfServiceUrl("http://www.seekingdreamwork.site").version("1.1")
+				.termsOfServiceUrl("http://www.seekingdreamwork.site").version("1.10")
 				.contact(new Contact("Acorn", "http://www.seekingdreamwork.site", "q39676@gmail.com")).build();
 	}
 

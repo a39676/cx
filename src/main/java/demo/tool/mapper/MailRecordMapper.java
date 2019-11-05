@@ -5,7 +5,7 @@ import java.util.Date;
 import org.apache.ibatis.annotations.Param;
 
 import demo.tool.pojo.MailRecord;
-import demo.tool.pojo.param.InsertNewMailRecordParam;
+import demo.tool.pojo.dto.InsertNewMailRecordParam;
 
 public interface MailRecordMapper {
     int insert(MailRecord record);

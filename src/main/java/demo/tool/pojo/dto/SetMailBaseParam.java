@@ -1,4 +1,4 @@
-package demo.tool.pojo.param;
+package demo.tool.pojo.dto;
 
 import net.sf.json.JSONObject;
 

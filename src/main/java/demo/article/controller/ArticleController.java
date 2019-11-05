@@ -74,7 +74,7 @@ public class ArticleController extends CommonController {
 	
 	@GetMapping(value = ArticleUrlConstant.createBurnMessage)
 	public ModelAndView createBurnMessage(HttpServletRequest request) {
-		insertVisitIp(request);
+		visitDataService.insertVisitData(request);
 		ModelAndView view = new ModelAndView(ArticleViewConstant.createBurnMessage);
 		return view;
 	}
@@ -178,7 +178,7 @@ public class ArticleController extends CommonController {
 		} else {
 			result = summaryService.articleLongSummaryListByChannelIdV3(param);
 		}
-		insertVisitIp(request, result.getChannelId().toString());
+		visitDataService.insertVisitData(request, result.getChannelId().toString());
 		outputJson(response, JSONObject.fromObject(result));
 	}
 	
@@ -192,7 +192,7 @@ public class ArticleController extends CommonController {
 		}
 		FindArticleLongResult result = articleService.findArticleLongByArticleSummaryPrivateKey(param);
 		view.addObject("articleLongVO", result.getArticleLongVO());
-		insertVisitIp(request, result.getArticleId().toString());
+		visitDataService.insertVisitData(request, result.getArticleId().toString());
 		return view;
 	}
 	
@@ -230,7 +230,7 @@ public class ArticleController extends CommonController {
 	
 	@PostMapping(value = ArticleUrlConstant.likeOrHateThisChannel)
 	public void hateThisChannel(@RequestBody LikeHateThisChannelParam param, HttpServletRequest request, HttpServletResponse response) {
-		insertVisitIp(request);
+		visitDataService.insertVisitData(request);
 		param.setUserId(baseUtilCustom.getUserId());
 		
 		CommonResult result = articleService.likeOrHateThisChannel(param);
@@ -239,7 +239,7 @@ public class ArticleController extends CommonController {
 	
 	@PostMapping(value = ArticleUrlConstant.articleLongComplaint)
 	public void articleLongComplaint(@RequestBody ArticleLongComplaintParam param, HttpServletRequest request, HttpServletResponse response) {
-		insertVisitIp(request);
+		visitDataService.insertVisitData(request);
 		param.setComplaintUserId(baseUtilCustom.getUserId());
 		CommonResult result = articleService.articleLongComplaint(param);
 		outputJson(response, JSONObject.fromObject(result));

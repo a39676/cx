@@ -7,33 +7,19 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 
-import demo.base.system.pojo.bo.IpRecordBO;
-import demo.base.user.mapper.UserIpMapper;
-import demo.base.user.pojo.po.UserIp;
-import demo.util.BaseUtilCustom;
+import demo.tool.service.VisitDataService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import numericHandel.NumericUtilCustom;
 
 public abstract class CommonController {
 	
 	@Autowired
-	protected RedisTemplate<String, String> redisTemplate;
+	protected VisitDataService visitDataService;
 	
-	@Autowired
-	private UserIpMapper userIpMapper;
-	
-	@Autowired
-	private BaseUtilCustom baseUtilCustom;
-	
-	@Autowired
-	private NumericUtilCustom numberUtil;
 	
 	protected final Logger log = LoggerFactory.getLogger(getClass());
 	
@@ -72,33 +58,6 @@ public abstract class CommonController {
 		}
 	}
 	
-	protected IpRecordBO getIp(HttpServletRequest request) {
-		IpRecordBO record = new IpRecordBO();
-        record.setRemoteAddr(request.getRemoteAddr());
-        record.setForwardAddr(request.getHeader("X-FORWARDED-FOR"));
-
-        return record;
-	}
-	
-	protected void insertVisitIp(HttpServletRequest request, String customInfo) {
-		IpRecordBO record = getIp(request);
-		UserIp ui = new UserIp();
-		ui.setIp(numberUtil.ipToLong(record.getRemoteAddr()));
-		ui.setForwardIp(numberUtil.ipToLong(record.getForwardAddr()));
-		ui.setServerName(request.getServerName());
-		if(StringUtils.isNotBlank(customInfo)) {
-			ui.setUri(request.getRequestURI());
-		} else {
-			ui.setUri(request.getRequestURI() + "/?customInfo=" + customInfo);
-		}
-		ui.setUserId(baseUtilCustom.getUserId());
-		
-		userIpMapper.insertSelective(ui);
-	}
-	
-	protected void insertVisitIp(HttpServletRequest request) {
-		insertVisitIp(request, null);
-	}
 	
 	
 	protected String foundHostNameFromRequst(HttpServletRequest request) {

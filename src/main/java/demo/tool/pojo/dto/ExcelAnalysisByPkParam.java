@@ -1,4 +1,4 @@
-package demo.tool.pojo.param.controllerParam;
+package demo.tool.pojo.dto;
 
 public class ExcelAnalysisByPkParam {
 

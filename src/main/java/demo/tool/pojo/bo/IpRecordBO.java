@@ -1,4 +1,4 @@
-package demo.base.system.pojo.bo;
+package demo.tool.pojo.bo;
 
 public class IpRecordBO {
 

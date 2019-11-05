@@ -111,4 +111,6 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		r.setIsSuccess();
 		return r;
 	}
+
+	
 }

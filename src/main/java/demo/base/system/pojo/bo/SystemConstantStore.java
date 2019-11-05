@@ -41,4 +41,5 @@ public class SystemConstantStore {
 	public static final String roleList = "roleList";
 	
 	public static final String envName = "envName";
+	
 }

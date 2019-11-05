@@ -34,9 +34,9 @@ public class HomePageController extends CommonController {
 	public ModelAndView welcomePageV2(@RequestParam(value = "vcode", defaultValue = "") String vcode,
 			HttpServletRequest request) {
 		if(StringUtils.isBlank(vcode)) {
-			insertVisitIp(request);
+			visitDataService.insertVisitData(request);
 		} else {
-			insertVisitIp(request, "?vcode=" + vcode);
+			visitDataService.insertVisitData(request, "?vcode=" + vcode);
 		}
 		
 		String hostName = foundHostNameFromRequst(request);

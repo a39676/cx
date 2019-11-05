@@ -2,7 +2,7 @@ package demo.tool.service;
 
 import javax.servlet.http.HttpServletRequest;
 
-import demo.tool.pojo.bo.IpRecordBO;
+import tool.pojo.bo.IpRecordBO;
 
 public interface VisitDataService {
 

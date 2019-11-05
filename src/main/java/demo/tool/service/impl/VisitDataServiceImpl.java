@@ -19,13 +19,13 @@ import demo.base.user.pojo.dto.BatchInsertUserIpDTO;
 import demo.base.user.pojo.po.UserIp;
 import demo.baseCommon.service.CommonService;
 import demo.tool.mapper.VisitCountMapper;
-import demo.tool.pojo.bo.IpRecordBO;
 import demo.tool.pojo.dto.GetVisitCountTotalDTO;
 import demo.tool.pojo.po.VisitCount;
 import demo.tool.service.VisitDataService;
 import demo.util.BaseUtilCustom;
 import net.sf.json.JSONObject;
 import numericHandel.NumericUtilCustom;
+import tool.pojo.bo.IpRecordBO;
 
 @Service
 public class VisitDataServiceImpl extends CommonService implements VisitDataService {

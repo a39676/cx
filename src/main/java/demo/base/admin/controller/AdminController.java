@@ -139,8 +139,7 @@ public class AdminController extends CommonController {
 	}
 
 	@PostMapping(value = AdminUrlConstant.deleteUserIpRecord)
-	public void deleteUserIpRecord(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) {
-		UserIpDeleteDTO param = new UserIpDeleteDTO().fromJson(getJson(data));
+	public void deleteUserIpRecord(@RequestBody UserIpDeleteDTO param, HttpServletRequest request, HttpServletResponse response) {
 		CommonResultCX result = adminService.deleteUserIpRecord(param);
 		outputJson(response, JSONObject.fromObject(result));
 	}

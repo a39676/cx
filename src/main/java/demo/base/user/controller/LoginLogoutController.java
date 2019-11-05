@@ -39,7 +39,7 @@ public class LoginLogoutController extends CommonController {
 		HttpServletRequest request,
 		HttpServletResponse response) {
 
-		insertVisitIp(request);
+		visitDataService.insertVisitData(request);
 		ModelAndView view = new ModelAndView();
 		CommonResult result = new CommonResult();
 		if (error != null) {

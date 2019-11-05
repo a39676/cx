@@ -159,6 +159,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authProvider());
     }
+	
 
 	@Bean
 	public PersistentTokenRepository persistentTokenRepository() {

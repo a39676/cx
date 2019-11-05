@@ -21,7 +21,6 @@ import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
 import net.sf.json.JSONObject;
-import numericHandel.NumericUtilCustom;
 
 @Service
 public class ArticleBurnServiceImpl extends CommonService implements ArticleBurnService {
@@ -59,7 +58,7 @@ public class ArticleBurnServiceImpl extends CommonService implements ArticleBurn
 		pb.setBurnKey(UUID.randomUUID().toString().replaceAll("-", ""));
 		pb.setReadKey(UUID.randomUUID().toString().replaceAll("-", ""));
 
-		if (NumericUtilCustom.matchInteger(jsonInput.getString("readLimit"))) {
+		if (numberUtil.matchInteger(jsonInput.getString("readLimit"))) {
 			if (jsonInput.getInt("readLimit") > 1) {
 				pb.setReadLimit(jsonInput.getInt("readLimit"));
 			}
@@ -72,7 +71,7 @@ public class ArticleBurnServiceImpl extends CommonService implements ArticleBurn
 
 		LocalDateTime now = LocalDateTime.now();
 		int validMinute = 30;
-		if (jsonInput.containsKey("validTime") && NumericUtilCustom.matchInteger(jsonInput.getString("validTime")) && jsonInput.getInt("validTime") > 30
+		if (jsonInput.containsKey("validTime") && numberUtil.matchInteger(jsonInput.getString("validTime")) && jsonInput.getInt("validTime") > 30
 				&& jsonInput.getInt("validTime") < 4320) {
 			validMinute = jsonInput.getInt("validTime");
 		}

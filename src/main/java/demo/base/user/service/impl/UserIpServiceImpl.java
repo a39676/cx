@@ -13,7 +13,6 @@ import demo.base.user.pojo.po.UserIpExample;
 import demo.base.user.pojo.vo.UserIpVO;
 import demo.base.user.service.UserIpService;
 import demo.baseCommon.service.CommonService;
-import numericHandel.NumericUtilCustom;
 
 @Service
 public class UserIpServiceImpl extends CommonService implements UserIpService {
@@ -40,8 +39,8 @@ public class UserIpServiceImpl extends CommonService implements UserIpService {
 		v.setCreateTime(po.getCreateTime());
 		v.setUri(po.getUri());
 		v.setUserId(po.getUserId());
-		v.setIp(NumericUtilCustom.longToIp2(po.getIp()));
-		v.setForwardIp(NumericUtilCustom.longToIp2(po.getForwardIp()));
+		v.setIp(numberUtil.longToIp2(po.getIp()));
+		v.setForwardIp(numberUtil.longToIp2(po.getForwardIp()));
 		return v;
 	}
 	

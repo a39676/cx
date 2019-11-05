@@ -40,7 +40,7 @@ import demo.baseCommon.service.CommonService;
 import demo.tool.mapper.MailRecordMapper;
 import demo.tool.pojo.MailRecord;
 import demo.tool.pojo.constant.ToolPathConstant;
-import demo.tool.pojo.param.InsertNewMailRecordParam;
+import demo.tool.pojo.dto.InsertNewMailRecordParam;
 import demo.tool.pojo.type.MailType;
 import demo.tool.service.MailService;
 import emailHandle.MailHandle;

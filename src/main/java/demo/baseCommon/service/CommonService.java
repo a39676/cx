@@ -6,23 +6,22 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.config.costom_component.SnowFlake;
+import numericHandel.NumericUtilCustom;
 
 public abstract class CommonService {
 	
 	protected final Logger log = LoggerFactory.getLogger(getClass());
 	
-	@Value("${envName}")
-	protected String envName;
-	
 	@Autowired
 	protected SnowFlake snowFlake;
+	@Autowired
+	protected NumericUtilCustom numberUtil;
 	
 	@Autowired
 	protected RedisTemplate<String, String> redisTemplate;
@@ -109,5 +108,13 @@ public abstract class CommonService {
 			return "";
 		}
 		return str.substring(str.lastIndexOf("."));
+	}
+	
+	protected String pathChangeByDetectOS(String oldPath) {
+		if(isWindows()) {
+			return oldPath.replaceAll("/", "\\\\");
+		} else {
+			return oldPath.replaceAll("\\\\", "/");
+		}
 	}
 }

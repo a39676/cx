@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.account_info.pojo.constant.AccountUrl;
@@ -34,23 +33,17 @@ public class HomePageController extends CommonController {
 	public ModelAndView welcomePageV2(@RequestParam(value = "vcode", defaultValue = "") String vcode,
 			HttpServletRequest request) {
 		if(StringUtils.isBlank(vcode)) {
-			insertVisitIp(request);
+			visitDataService.insertVisitData(request);
 		} else {
-			insertVisitIp(request, "?vcode=" + vcode);
+			visitDataService.insertVisitData(request, "?vcode=" + vcode);
 		}
+		visitDataService.addVisitCounting(request);
 		
 		String hostName = foundHostNameFromRequst(request);
 		ModelAndView view = baseService.baseRootHandlerV3(vcode, hostName);
 		return view;
-		
 	}
 	
-	@GetMapping(value = { "/2" })
-	@ResponseBody
-	public String test2() {
-		return "working";
-	}
-
 	@GetMapping(value = { AccountUrl.financeclear })
 	public ModelAndView financeclearHome() {
 		ModelAndView view = new ModelAndView();

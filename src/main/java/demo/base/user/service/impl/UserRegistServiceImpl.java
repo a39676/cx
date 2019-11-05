@@ -44,7 +44,6 @@ import demo.tool.pojo.MailRecord;
 import demo.tool.pojo.type.MailType;
 import demo.tool.service.impl.MailServiceImpl;
 import net.sf.json.JSONObject;
-import numericHandel.NumericUtilCustom;
 
 @Service
 public class UserRegistServiceImpl extends CommonService implements UserRegistService {
@@ -187,7 +186,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		userRegistMapper.insertNewUser(user);
 
 		userDetail.setUserId(newUserId);
-		userDetail.setRegistIp(NumericUtilCustom.ipToLong(ip));
+		userDetail.setRegistIp(numberUtil.ipToLong(ip));
 		usersDetailMapper.insertSelective(userDetail);
 		
 		String mailKey = mailService.insertNewRegistMailKey(newUserId);
@@ -270,7 +269,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		userRegistMapper.insertNewUser(user);
 
 		userDetail.setUserId(newUserId);
-		userDetail.setRegistIp(NumericUtilCustom.ipToLong("0.0.0.0"));
+		userDetail.setRegistIp(numberUtil.ipToLong("0.0.0.0"));
 		usersDetailMapper.insertSelective(userDetail);
 		
 		userAuthService.insertBaseUserAuth(newUserId, AuthType.SUPER_ADMIN);
@@ -345,7 +344,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
  */
 
 	private boolean validQQ(String qq) {
-		if (qq == null || !NumericUtilCustom.matchInteger(qq) || qq.length() < 5 || qq.length() > 11) {
+		if (qq == null || !numberUtil.matchInteger(qq) || qq.length() < 5 || qq.length() > 11) {
 			return false;
 		}
 		return true;
@@ -355,7 +354,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		if (mobile == null) {
 			return false;
 		}
-		return NumericUtilCustom.matchMobile(mobile);
+		return numberUtil.matchMobile(mobile);
 	}
 	
 	private Users createUserFromUserRegistParam(UserRegistDTO param) {

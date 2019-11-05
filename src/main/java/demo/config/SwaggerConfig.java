@@ -24,8 +24,8 @@ public class SwaggerConfig {
 	@Bean
 	public Docket api() {
 		Docket d = null;
-		String envName = constantService.getValByName("envName");
-		if ("dev".contentEquals(envName)) {
+		String envName = constantService.getValByName("envName", true);
+		if ("dev".equals(envName)) {
 			d = new Docket(DocumentationType.SWAGGER_2)
 					.apiInfo(apiInfo())
 					.select()
@@ -44,7 +44,7 @@ public class SwaggerConfig {
 
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder().title("swagger title").description("swagger description")
-				.termsOfServiceUrl("http://www.seekingdreamwork.site").version("1.1")
+				.termsOfServiceUrl("http://www.seekingdreamwork.site").version("1.10")
 				.contact(new Contact("Acorn", "http://www.seekingdreamwork.site", "q39676@gmail.com")).build();
 	}
 

@@ -15,7 +15,6 @@ import demo.woqu.mapper.WusersMapper;
 import demo.woqu.pojo.po.Wusers;
 import demo.woqu.service.WoquService;
 import ioHandle.FileUtilCustom;
-import numericHandel.NumericUtilCustom;
 
 @Service
 public class WoquServiceImpl extends CommonService implements WoquService {
@@ -61,14 +60,14 @@ public class WoquServiceImpl extends CommonService implements WoquService {
 		if (StringUtils.isNotBlank(line[2]) && !line[2].equals(line[3])) {
 			u.setCnName(line[2]);
 		}
-		if (NumericUtilCustom.matchMobile(line[3])) {
+		if (numberUtil.matchMobile(line[3])) {
 			u.setMobile(Long.parseLong(line[3]));
 		}
-		if(NumericUtilCustom.matchInteger(line[4].replaceAll("V", ""))) {
+		if(numberUtil.matchInteger(line[4].replaceAll("V", ""))) {
 			tmpLevel = Integer.parseInt(line[4].replaceAll("V", ""));
 		}
 		u.setLevel(tmpLevel);
-		if (NumericUtilCustom.matchInteger(line[5])) {
+		if (numberUtil.matchInteger(line[5])) {
 			u.setScore(Integer.parseInt(line[5]));
 		}
 

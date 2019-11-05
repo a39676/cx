@@ -34,8 +34,7 @@ public class BankUnionController extends CommonController {
 	}
 	
 	@PostMapping(value = BankUnionUrl.bankUnionSelectorV4)
-	public void searchBankUnionByCondition(@RequestBody String data, HttpServletResponse response) throws JsonParseException, JsonMappingException, IOException {
-		FindBankUnionParam param = new FindBankUnionParam().fromJson(JSONObject.fromObject(data));
+	public void searchBankUnionByCondition(@RequestBody FindBankUnionParam param, HttpServletResponse response) throws JsonParseException, JsonMappingException, IOException {
 		List<BankUnion> bankUnionList = bankUnionService.searchBankUnionByCondition(param);
 		FindBankUnionResult result = new FindBankUnionResult();
 		result.setBankUnionList(bankUnionList);

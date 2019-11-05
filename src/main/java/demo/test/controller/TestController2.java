@@ -1,6 +1,7 @@
 package demo.test.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,16 +15,15 @@ import demo.test.pojo.constant.TestUrl;
 @RequestMapping(value = { TestUrl.testRoot2 })
 public class TestController2 extends CommonController {
 
-//	@Autowired
-//	private TestService testService;
-
 	@Autowired
 	private SnowFlake snowFlake;
+	@Autowired
+	protected RedisTemplate<String, String> redisTemplate;
 
 	@GetMapping(value = "/snowFlake")
 	@ResponseBody
 	public String snowFlake() {
 		return String.valueOf(snowFlake.getNextId());
 	}
-
+	
 }

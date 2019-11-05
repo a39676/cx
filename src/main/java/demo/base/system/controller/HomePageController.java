@@ -37,6 +37,7 @@ public class HomePageController extends CommonController {
 		} else {
 			visitDataService.insertVisitData(request, "?vcode=" + vcode);
 		}
+		visitDataService.addVisitCounting(request);
 		
 		String hostName = foundHostNameFromRequst(request);
 		ModelAndView view = baseService.baseRootHandlerV3(vcode, hostName);

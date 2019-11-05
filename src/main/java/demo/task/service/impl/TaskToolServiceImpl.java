@@ -14,6 +14,7 @@ import demo.base.user.service.UserRegistService;
 import demo.fakePost.service.FakePostService;
 import demo.task.service.TaskToolService;
 import demo.tool.mapper.MailRecordMapper;
+import demo.tool.service.VisitDataService;
 
 @Component
 public class TaskToolServiceImpl implements TaskToolService {
@@ -30,6 +31,8 @@ public class TaskToolServiceImpl implements TaskToolService {
 	private ArticleChannelService articleChannelServcie;
 	@Autowired
 	private FakePostService fakePostService;
+	@Autowired
+	private VisitDataService visitDataService;
 	
 	@Autowired
 	private UsersMapper usersMapper;
@@ -123,4 +126,10 @@ public class TaskToolServiceImpl implements TaskToolService {
 		articleChannelServcie.refreshArticleChannelIsFlash();
 	}
 	
+	/** 将 redis 内的访问数, 持久化到数据库 */
+	@Scheduled(cron="01 02 00 * * *")
+	public String visitCountRedisToOrm() {
+		visitDataService.visitCountRedisToOrm();
+		return null;
+	}
 }

@@ -80,25 +80,25 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 	}
 	
 	@Override
-	public void insertVisitSet(HttpServletRequest request) {
+	public void addVisitCounting(HttpServletRequest request) {
 		IpRecordBO record = getIp(request);
 		Long l = numberUtil.ipToLong(record.getRemoteAddr());
 		if(l == 0) {
 			l = numberUtil.ipToLong(record.getForwardAddr());
 		}
-		redisTemplate.opsForSet().add(String.valueOf(l));
+		redisTemplate.opsForSet().add(SystemRedisKey.VISIT_COUNTING_REDIS_KEY, String.valueOf(l));
 	}
 	
 	@Override
 	public void visitCountRedisToOrm() {
-		Long visitSetSize = redisTemplate.opsForSet().size(SystemRedisKey.VISIT_SET_REDIS_KEY);
+		Long visitSetSize = redisTemplate.opsForSet().size(SystemRedisKey.VISIT_COUNTING_REDIS_KEY);
 		
 		VisitCount r = new VisitCount();
 		r.setId(snowFlake.getNextId());
 		r.setCounting(visitSetSize);
 		visitCountMapper.insertSelective(r);
 		
-		redisTemplate.opsForSet().pop(SystemRedisKey.VISIT_SET_REDIS_KEY, visitSetSize);
+		redisTemplate.opsForSet().pop(SystemRedisKey.VISIT_COUNTING_REDIS_KEY, visitSetSize);
 		
 	}
 	
@@ -146,7 +146,7 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 	}
 	
 	public Long getVisitCount(LocalDateTime startTime) {
-		Long visitSetSize = redisTemplate.opsForSet().size(SystemRedisKey.VISIT_SET_REDIS_KEY);
+		Long visitSetSize = redisTemplate.opsForSet().size(SystemRedisKey.VISIT_COUNTING_REDIS_KEY);
 		
 		GetVisitCountTotalDTO dto = new GetVisitCountTotalDTO();
 		dto.setStartTime(startTime);

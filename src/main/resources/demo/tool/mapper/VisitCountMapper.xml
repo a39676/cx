@@ -196,7 +196,7 @@
 
   <select id="getVisitCountTotal" resultType="Long">
     select 
-      count(*) 
+      ifnull(sum(counting), 0)
     from 
       visit_count 
     <where>

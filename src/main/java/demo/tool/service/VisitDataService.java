@@ -31,7 +31,7 @@ public interface VisitDataService {
 	 * 每个 IP 只记录一次
 	 * @param request
 	 */
-	void insertVisitSet(HttpServletRequest request);
+	void addVisitCounting(HttpServletRequest request);
 
 	/**
 	 * 用于定时任务, 将访问数据持久化到数据库

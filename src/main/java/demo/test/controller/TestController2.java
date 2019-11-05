@@ -19,12 +19,11 @@ public class TestController2 extends CommonController {
 	private SnowFlake snowFlake;
 	@Autowired
 	protected RedisTemplate<String, String> redisTemplate;
-	
 
 	@GetMapping(value = "/snowFlake")
 	@ResponseBody
 	public String snowFlake() {
 		return String.valueOf(snowFlake.getNextId());
 	}
-
+	
 }

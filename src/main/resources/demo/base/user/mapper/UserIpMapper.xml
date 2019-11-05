@@ -209,4 +209,49 @@
     </where>
   </delete>
 
+  <insert id="batchInsert">
+    insert ignore into user_ip(user_id, ip, forward_ip, server_name, uri, create_time)
+    values
+    <foreach item="ele" index="index" collection="poList" open="" separator="," close="">
+      (
+        <if test="ele.userId != null">
+          #{ele.userId},
+        </if>
+        <if test="ele.userId == null">
+          null,
+        </if>
+        <if test="ele.ip != null">
+          #{ele.ip},
+        </if>
+        <if test="ele.ip == null">
+          null,
+        </if>
+        <if test="ele.forwardIp != null">
+          #{ele.forwardIp},
+        </if>
+        <if test="ele.forwardIp == null">
+          null,
+        </if>
+        <if test="ele.serverName != null">
+          #{ele.serverName},
+        </if>
+        <if test="ele.serverName == null">
+          null,
+        </if>
+        <if test="ele.uri != null">
+          #{ele.uri},
+        </if>
+        <if test="ele.uri == null">
+          null,
+        </if>
+        <if test="ele.createTime != null">
+          #{ele.createTime}
+        </if>
+        <if test="ele.createTime == null">
+          now()
+        </if>
+        )
+    </foreach>
+  </insert>
+
 </mapper>

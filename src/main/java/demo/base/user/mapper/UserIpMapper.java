@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import demo.base.user.pojo.dto.BatchInsertUserIpDTO;
 import demo.base.user.pojo.dto.UserIpDeleteDTO;
 import demo.base.user.pojo.po.UserIp;
 import demo.base.user.pojo.po.UserIpExample;
@@ -26,4 +27,5 @@ public interface UserIpMapper {
     
     int deleteRecord(UserIpDeleteDTO param);
 	
+    int batchInsert(BatchInsertUserIpDTO dto);
 }

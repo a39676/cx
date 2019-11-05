@@ -82,8 +82,11 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 	@Override
 	public void insertVisitSet(HttpServletRequest request) {
 		IpRecordBO record = getIp(request);
-		redisTemplate.opsForSet().add(SystemRedisKey.VISIT_SET_REDIS_KEY, String.valueOf(numberUtil.ipToLong(record.getRemoteAddr())));
-		redisTemplate.opsForSet().add(SystemRedisKey.VISIT_SET_REDIS_KEY, String.valueOf(numberUtil.ipToLong(record.getForwardAddr())));
+		Long l = numberUtil.ipToLong(record.getRemoteAddr());
+		if(l == 0) {
+			l = numberUtil.ipToLong(record.getForwardAddr());
+		}
+		redisTemplate.opsForSet().add(String.valueOf(l));
 	}
 	
 	@Override

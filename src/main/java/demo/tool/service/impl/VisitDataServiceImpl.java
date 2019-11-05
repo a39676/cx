@@ -152,6 +152,7 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 		return visitSetSize + ormVisitCount;
 	}
 	
+	@Override
 	public Long getVisitCount() {
 		return getVisitCount(null);
 	}

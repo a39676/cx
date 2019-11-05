@@ -38,4 +38,10 @@ public interface VisitDataService {
 	 */
 	void visitDataRedisToOrm();
 
+	/**
+	 * 获取访问数
+	 * @return
+	 */
+	Long getVisitCount();
+
 }

@@ -1,18 +1,8 @@
 package demo.baseCommon.pojo.param.controllerParam;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 
-import org.apache.commons.lang3.StringUtils;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import demo.baseCommon.pojo.param.CommonControllerParam;
-import net.sf.json.JSONObject;
-
-public class InsertNewTransationParam implements CommonControllerParam {
+public class InsertNewTransationParam {
 
 	private String accountNumber;
 	private Integer transationType;
@@ -22,17 +12,6 @@ public class InsertNewTransationParam implements CommonControllerParam {
 	private String transationDate;
 	private String remark;
 
-	@Override
-	public InsertNewTransationParam fromJson(JSONObject j)
-			throws JsonParseException, JsonMappingException, IOException {
-		ObjectMapper mapper = new ObjectMapper();
-		InsertNewTransationParam p = mapper.readValue(j.toString(), InsertNewTransationParam.class);
-		if(StringUtils.isNotBlank(p.getTransationDate())) {
-			p.setTransationDate(p.getTransationDate().replaceAll("[^\\d-/:\\\\]", " "));
-		}
-		;
-		return p;
-	}
 
 	public String getAccountNumber() {
 		return accountNumber;

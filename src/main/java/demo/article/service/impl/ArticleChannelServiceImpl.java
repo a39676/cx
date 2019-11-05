@@ -37,7 +37,6 @@ import demo.article.service.ArticleChannelService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
 import ioHandle.FileUtilCustom;
-import numericHandel.NumericUtilCustom;
 
 @Service
 public class ArticleChannelServiceImpl extends ArticleCommonService implements ArticleChannelService {
@@ -141,7 +140,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	
 	private boolean loadArticleChannelRefreshMinute() {
 		String tmpStr = systemConstantService.getValByName(SystemConstantStore.articleChannelRefreshMinute);
-		if (NumericUtilCustom.matchInteger(tmpStr)) {
+		if (numberUtil.matchInteger(tmpStr)) {
 			articleChannelRefreshMinute = Long.parseLong(tmpStr);
 			return true;
 		} else {

@@ -25,7 +25,6 @@ import demo.trading.pojo.po.TradingRecorderMarker;
 import demo.trading.pojo.result.InsertTradingRecorderResult;
 import demo.trading.service.TradingInsertService;
 import ioHandle.FileUtilCustom;
-import numericHandel.NumericUtilCustom;
 
 @Service
 public class TradingInsertServiceImpl extends CommonService implements TradingInsertService {
@@ -179,7 +178,7 @@ public class TradingInsertServiceImpl extends CommonService implements TradingIn
 	 * String.valueOf(jsonInput.get("transationParties")); BigDecimal
 	 * transationAmount = null; String accountNumber =
 	 * String.valueOf(jsonInput.get("accountNumber"));
-	 * if(!NumericUtilCustom.matchPositiveInteger(accountNumber)) { return null; }
+	 * if(!numberUtil.matchPositiveInteger(accountNumber)) { return null; }
 	 * 
 	 * try {
 	 * if(jsonInput.get("transationType").equals(TransationType.transationTypePay.
@@ -219,7 +218,7 @@ public class TradingInsertServiceImpl extends CommonService implements TradingIn
 		String transationParties = p.getTransationParties();
 		BigDecimal transationAmount = null;
 		String accountNumber = p.getAccountNumber();
-		if (!NumericUtilCustom.matchPositiveInteger(accountNumber)) {
+		if (!numberUtil.matchPositiveInteger(accountNumber)) {
 			return null;
 		}
 

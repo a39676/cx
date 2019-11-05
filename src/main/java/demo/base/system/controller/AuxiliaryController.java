@@ -21,7 +21,7 @@ public class AuxiliaryController extends CommonController {
 	
 	@GetMapping(value = { BaseUrl.robot })
 	public void robots(HttpServletRequest request, HttpServletResponse response) {
-		insertVisitIp(request);
+		visitDataService.insertVisitData(request);
 		
 		Resource resource = new ClassPathResource("/static_resources/txt/robots.txt");
 		
@@ -41,7 +41,7 @@ public class AuxiliaryController extends CommonController {
 	
 	@GetMapping(value = { "/mp/MP_verify_rQHLtzQw6LZznCcT.txt" })
 	public void mpWeixinVerify(HttpServletRequest request, HttpServletResponse response) {
-		insertVisitIp(request);
+		visitDataService.insertVisitData(request);
 		
 		Resource resource = new ClassPathResource("/static_resources/txt/MP_verify_rQHLtzQw6LZznCcT.txt");
 		

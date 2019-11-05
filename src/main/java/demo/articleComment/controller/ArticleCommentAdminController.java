@@ -28,17 +28,15 @@ public class ArticleCommentAdminController extends CommonController {
 	private ArticleCommentAdminService articleCommentAdminService;
 
 	@PostMapping(value = ArticleAdminCommentUrlConstant.deleteArticleComment)
-	public void deleteArticleComment(@RequestBody String data, HttpServletRequest request, HttpServletResponse response)
+	public void deleteArticleComment(@RequestBody DeleteArticleCommentParam param, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		DeleteArticleCommentParam param = new DeleteArticleCommentParam().fromJson(getJson(data));
 		CommonResultCX result = articleCommentAdminService.deleteArticleComment(param);
 		outputJson(response, JSONObject.fromObject(result));
 	}
 	
 	@PostMapping(value = ArticleAdminCommentUrlConstant.passArticleComment)
-	public void passArticleComment(@RequestBody String data, HttpServletRequest request, HttpServletResponse response)
+	public void passArticleComment(@RequestBody PassArticleCommentParam param, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		PassArticleCommentParam param = new PassArticleCommentParam().fromJson(getJson(data));
 		CommonResultCX result = articleCommentAdminService.passArticleComment(param);
 		outputJson(response, JSONObject.fromObject(result));
 	}

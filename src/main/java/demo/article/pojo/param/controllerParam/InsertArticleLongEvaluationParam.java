@@ -1,10 +1,6 @@
 package demo.article.pojo.param.controllerParam;
 
-import demo.baseCommon.pojo.param.CommonControllerParam;
-import net.sf.json.JSONObject;
-import numericHandel.NumericUtilCustom;
-
-public class InsertArticleLongEvaluationParam implements CommonControllerParam {
+public class InsertArticleLongEvaluationParam {
 
 	private String pk;
 
@@ -42,15 +38,5 @@ public class InsertArticleLongEvaluationParam implements CommonControllerParam {
 				+ evaluationCode + "]";
 	}
 
-	@Override
-	public InsertArticleLongEvaluationParam fromJson(JSONObject json) {
-		if (json.containsKey("evaluationCode") && NumericUtilCustom.matchInteger(json.getString("evaluationCode"))) {
-			this.evaluationCode = json.getInt("evaluationCode");
-		}
-		if (json.containsKey("pk")) {
-			this.pk = json.getString("pk");
-		}
-		return this;
-	}
 
 }

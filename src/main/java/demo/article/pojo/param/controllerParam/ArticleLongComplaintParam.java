@@ -1,16 +1,8 @@
 package demo.article.pojo.param.controllerParam;
 
-import java.io.IOException;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import demo.baseCommon.pojo.param.CommonControllerParam;
 import io.swagger.annotations.ApiModelProperty;
-import net.sf.json.JSONObject;
 
-public class ArticleLongComplaintParam implements CommonControllerParam {
+public class ArticleLongComplaintParam {
 	
 	@ApiModelProperty(value = "文章id")
 	private String pk;
@@ -49,8 +41,4 @@ public class ArticleLongComplaintParam implements CommonControllerParam {
 				+ complaintReason + "]";
 	}
 
-	@Override
-	public ArticleLongComplaintParam fromJson(JSONObject j) throws JsonParseException, JsonMappingException, IOException {
-		return new ObjectMapper().readValue(j.toString(), ArticleLongComplaintParam.class);
-	}
 }

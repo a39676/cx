@@ -1,12 +1,11 @@
 package demo.article.pojo.param.controllerParam;
 
-import demo.baseCommon.pojo.param.CommonControllerParam;
-import net.sf.json.JSONObject;
-import numericHandel.NumericUtilCustom;
+import io.swagger.annotations.ApiModelProperty;
 
-public class ReviewArticleLongParam implements CommonControllerParam {
+public class ReviewArticleLongParam {
 
 	private String pk;
+	@ApiModelProperty(hidden = true)
 	private Integer reviewCode;
 
 	public String getPk() {
@@ -23,19 +22,6 @@ public class ReviewArticleLongParam implements CommonControllerParam {
 
 	public void setReviewCode(Integer reviewCode) {
 		this.reviewCode = reviewCode;
-	}
-
-	@Override
-	public ReviewArticleLongParam fromJson(JSONObject json) {
-		ReviewArticleLongParam param = new ReviewArticleLongParam();
-		if (json.containsKey("reviewCode") && NumericUtilCustom.matchInteger(json.getString("reviewCode"))) {
-			param.setReviewCode(json.getInt("reviewCode"));
-		}
-		if (json.containsKey("pk")) {
-			param.setPk(json.getString("pk"));
-		}
-		
-		return param;
 	}
 
 }

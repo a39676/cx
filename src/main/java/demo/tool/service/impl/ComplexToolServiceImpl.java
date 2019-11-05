@@ -17,13 +17,13 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import dateTimeHandle.DateTimeHandle;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.baseCommon.service.CommonService;
 import demo.tool.pojo.constant.ToolPathConstant;
 import demo.tool.service.ComplexToolService;
 import net.sf.json.JSONObject;
-import numericHandel.NumericUtilCustom;
 
 @Service
-public class ComplexToolServiceImpl implements ComplexToolService {
+public class ComplexToolServiceImpl extends CommonService implements ComplexToolService {
 	
 	@Override
 	public CommonResult cleanTmpFiles(JSONObject data) {
@@ -31,7 +31,7 @@ public class ComplexToolServiceImpl implements ComplexToolService {
 		CommonResult result = new CommonResult();
 		
 		if(data.containsKey("passTime") 
-				&& NumericUtilCustom.matchInteger(data.getString("passTime")) 
+				&& numberUtil.matchInteger(data.getString("passTime")) 
 				&& (data.getInt("passTime") > passTime)) {
 			passTime = data.getInt("passTime");
 		}
@@ -111,4 +111,6 @@ public class ComplexToolServiceImpl implements ComplexToolService {
 		r.setIsSuccess();
 		return r;
 	}
+
+	
 }

@@ -1,9 +1,6 @@
 package demo.base.user.pojo.dto;
 
-import demo.baseCommon.pojo.param.CommonControllerParam;
-import net.sf.json.JSONObject;
-
-public class OtherUserInfoDTO implements CommonControllerParam {
+public class OtherUserInfoDTO {
 
 	private String nickName;
 	
@@ -29,19 +26,6 @@ public class OtherUserInfoDTO implements CommonControllerParam {
 	@Override
 	public String toString() {
 		return "OtherUserInfoParam [nickName=" + nickName + ", pk=" + pk + "]";
-	}
-
-	@Override
-	public OtherUserInfoDTO fromJson(JSONObject json) {
-		OtherUserInfoDTO param = new OtherUserInfoDTO();
-		if(json.containsKey("nickName")) {
-			param.setNickName(json.getString("nickName").replaceAll("\\s", ""));
-		}
-		if(json.containsKey("pk")) {
-			param.setPk(json.getString("pk"));
-		}
-
-		return param;
 	}
 
 }

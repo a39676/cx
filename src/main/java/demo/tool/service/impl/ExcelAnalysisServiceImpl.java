@@ -25,7 +25,7 @@ import demo.chart.controller.ChartController;
 import demo.chart.pojo.constant.ChartUrl;
 import demo.tool.mapper.ExcelAnalysisMapper;
 import demo.tool.pojo.constant.ToolPathConstant;
-import demo.tool.pojo.param.controllerParam.ExcelAnalysisByPkParam;
+import demo.tool.pojo.dto.ExcelAnalysisByPkParam;
 import demo.tool.pojo.po.ExcelAnalysis;
 import demo.tool.pojo.po.example.ExcelAnalysisExample;
 import demo.tool.pojo.po.example.ExcelAnalysisExample.Criteria;

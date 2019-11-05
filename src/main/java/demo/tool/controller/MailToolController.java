@@ -13,7 +13,7 @@ import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.controller.CommonController;
 import demo.tool.pojo.constant.ToolUrlConstant;
-import demo.tool.pojo.param.SetMailBaseParam;
+import demo.tool.pojo.dto.SetMailBaseParam;
 import net.sf.json.JSONObject;
 
 @Controller

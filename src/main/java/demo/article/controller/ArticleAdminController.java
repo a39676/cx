@@ -64,9 +64,7 @@ public class ArticleAdminController extends CommonController {
 	}
 	
 	@PostMapping(value = ArticleAdminUrlConstant.passArticle)
-	public void passArticle(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) {
-		JSONObject jsonInput = getJson(data);
-		ReviewArticleLongParam param = new ReviewArticleLongParam().fromJson(jsonInput);
+	public void passArticle(@RequestBody ReviewArticleLongParam param, HttpServletRequest request, HttpServletResponse response) {
 		param.setReviewCode(ArticleReviewType.pass.getReviewCode());
 		CommonResultCX serviceResult = new CommonResultCX();
 		try {
@@ -79,9 +77,7 @@ public class ArticleAdminController extends CommonController {
 	}
 	
 	@PostMapping(value = ArticleAdminUrlConstant.rejectArticle)
-	public void rejectArticle(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) {
-		JSONObject jsonInput = getJson(data);
-		ReviewArticleLongParam param = new ReviewArticleLongParam().fromJson(jsonInput);
+	public void rejectArticle(@RequestBody ReviewArticleLongParam param, HttpServletRequest request, HttpServletResponse response) {
 		param.setReviewCode(ArticleReviewType.reject.getReviewCode());
 		CommonResultCX serviceResult = new CommonResultCX();
 		try {
@@ -94,9 +90,7 @@ public class ArticleAdminController extends CommonController {
 	}
 	
 	@PostMapping(value = ArticleAdminUrlConstant.deleteArticle)
-	public void deleteArticle(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) {
-		JSONObject jsonInput = getJson(data);
-		ReviewArticleLongParam param = new ReviewArticleLongParam().fromJson(jsonInput);
+	public void deleteArticle(@RequestBody ReviewArticleLongParam param, HttpServletRequest request, HttpServletResponse response) {
 		param.setReviewCode(ArticleReviewType.delete.getReviewCode());
 		CommonResultCX serviceResult = new CommonResultCX();
 		try {
@@ -122,8 +116,7 @@ public class ArticleAdminController extends CommonController {
 	}
 	
 	@PostMapping(value = ArticleAdminUrlConstant.setArticleHot)
-	public void setArticleHot(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) {
-		SetArticleHotParam param = new SetArticleHotParam().fromJson(getJson(data));
+	public void setArticleHot(@RequestBody SetArticleHotParam param, HttpServletRequest request, HttpServletResponse response) {
 		CommonResult serviceResult = articleAdminService.setArticleHot(param);
 		outputJson(response, JSONObject.fromObject(serviceResult));
 	}

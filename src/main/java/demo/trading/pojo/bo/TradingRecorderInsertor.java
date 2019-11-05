@@ -25,7 +25,8 @@ public class TradingRecorderInsertor extends TradingRecorder{
 	}
 
 	public void setTransationAmount(String transationAmount) {
-		if(StringUtils.isNotEmpty(transationAmount) && NumericUtilCustom.matchSimpleNumber(transationAmount)){
+		NumericUtilCustom n = new NumericUtilCustom();
+		if(StringUtils.isNotEmpty(transationAmount) && n.matchSimpleNumber(transationAmount)){
 			this.transationAmount = transationAmount;
 		} else {
 			throw new NumberFormatException();

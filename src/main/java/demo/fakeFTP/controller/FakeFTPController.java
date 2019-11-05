@@ -45,9 +45,8 @@ public class FakeFTPController extends CommonController {
 	}
 	
 	@PostMapping(value = FakeFTPUrlConstant.getFilePathDetail)
-	public ModelAndView getFilePathDetailPost(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView getFilePathDetailPost(@RequestBody GetFilePathDetailParam param, HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView view = new ModelAndView("fakeFTPJSP/fileListDetail");
-		GetFilePathDetailParam param = new GetFilePathDetailParam().fromJson(getJson(data));
 		FakeFTPFilePathDetailResult result = fakeFTPService.GetFilePathDetail(param);
 		if(!param.getFilePath().endsWith("/")) {
 			param.setFilePath(param.getFilePath() + "/");

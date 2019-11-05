@@ -11,20 +11,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import demo.base.user.mapper.UserIpMapper;
-import demo.base.user.pojo.po.UserIp;
-import demo.util.BaseUtilCustom;
+import demo.tool.service.VisitDataService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import numericHandel.NumericUtilCustom;
 
 public abstract class CommonController {
 	
 	@Autowired
-	private UserIpMapper userIpMapper;
+	protected VisitDataService visitDataService;
 	
-	@Autowired
-	private BaseUtilCustom baseUtilCustom;
 	
 	protected final Logger log = LoggerFactory.getLogger(getClass());
 	
@@ -63,42 +58,7 @@ public abstract class CommonController {
 		}
 	}
 	
-	protected tmpIpRecord getIp(HttpServletRequest request) {
-        tmpIpRecord record = new tmpIpRecord();
-        record.remoteAddr = request.getRemoteAddr();
-        record.forwardAddr = request.getHeader("X-FORWARDED-FOR");
-
-        return record;
-	}
 	
-	protected void insertVisitIp(HttpServletRequest request, String customInfo) {
-		tmpIpRecord record = getIp(request);
-		UserIp ui = new UserIp();
-		ui.setIp(NumericUtilCustom.ipToLong(record.remoteAddr));
-		ui.setForwardIp(NumericUtilCustom.ipToLong(record.forwardAddr));
-		ui.setServerName(request.getServerName());
-		ui.setUri(request.getRequestURI() + "/?customInfo=" + customInfo);
-		ui.setUserId(baseUtilCustom.getUserId());
-		
-		userIpMapper.insertSelective(ui);
-	}
-	
-	protected void insertVisitIp(HttpServletRequest request) {
-		tmpIpRecord record = getIp(request);
-		UserIp ui = new UserIp();
-		ui.setIp(NumericUtilCustom.ipToLong(record.remoteAddr));
-		ui.setForwardIp(NumericUtilCustom.ipToLong(record.forwardAddr));
-		ui.setServerName(request.getServerName());
-		ui.setUri(request.getRequestURI());
-		ui.setUserId(baseUtilCustom.getUserId());
-		
-		userIpMapper.insertSelective(ui);
-	}
-	
-	class tmpIpRecord {
-		public String remoteAddr;
-		public String forwardAddr;
-	}
 	
 	protected String foundHostNameFromRequst(HttpServletRequest request) {
 		String url = request.getServerName();

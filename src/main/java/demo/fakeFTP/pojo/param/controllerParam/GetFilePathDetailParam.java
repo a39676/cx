@@ -1,9 +1,6 @@
 package demo.fakeFTP.pojo.param.controllerParam;
 
-import demo.baseCommon.pojo.param.CommonControllerParam;
-import net.sf.json.JSONObject;
-
-public class GetFilePathDetailParam implements CommonControllerParam {
+public class GetFilePathDetailParam {
 
 	private String filePath;
 
@@ -18,15 +15,6 @@ public class GetFilePathDetailParam implements CommonControllerParam {
 	@Override
 	public String toString() {
 		return "GetFilePathDetailParam [filePath=" + filePath + "]";
-	}
-
-	@Override
-	public GetFilePathDetailParam fromJson(JSONObject json) {
-		GetFilePathDetailParam param = new GetFilePathDetailParam();
-		if (json.containsKey("filePath")) {
-			param.setFilePath(json.getString("filePath"));
-		}
-		return param;
 	}
 
 }

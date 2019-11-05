@@ -1,15 +1,6 @@
 package demo.account_info.pojo.dto.controllerDTO;
 
-import java.io.IOException;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import demo.baseCommon.pojo.param.CommonControllerParam;
-import net.sf.json.JSONObject;
-
-public class GetAccountListByConditionParam implements CommonControllerParam {
+public class GetAccountListByConditionParam {
 	
 	private Long bankId;
 	private Long bankUnionId;
@@ -37,11 +28,6 @@ public class GetAccountListByConditionParam implements CommonControllerParam {
 
 	public void setAccountType(Integer accountType) {
 		this.accountType = accountType;
-	}
-
-	@Override
-	public GetAccountListByConditionParam fromJson(JSONObject j) throws JsonParseException, JsonMappingException, IOException {
-		return new ObjectMapper().readValue(j.toString(), GetAccountListByConditionParam.class);
 	}
 
 	@Override

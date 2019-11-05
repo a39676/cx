@@ -34,19 +34,15 @@ public class ArticleCommentController extends CommonController {
 	private BaseUtilCustom baseUtilCustom;
 	
 	@PostMapping(value = ArticleCommentUrlConstant.createArticleComment)
-	public void createArticleComment(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws IOException {
-//		TODO
-		CreateArticleCommentParam param = new CreateArticleCommentParam().fromJson(getJson(data));
+	public void createArticleComment(CreateArticleCommentParam param, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		CommonResultCX result = articleCommentService.creatingArticleComment(baseUtilCustom.getUserId(), param);
 		
 		outputJson(response, JSONObject.fromObject(result));
 	}
 	
 	@PostMapping(value = ArticleCommentUrlConstant.findArticleCommentPage)
-	public ModelAndView findArticleCommentPage(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) {
-//		TODO
+	public ModelAndView findArticleCommentPage(@RequestBody FindArticleCommentPageParam param, HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView view = new ModelAndView("articleJSP/articleCommentList");
-		FindArticleCommentPageParam param = new FindArticleCommentPageParam().fromJson(getJson(data));
 		if(baseUtilCustom.hasAdminRole()) {
 			param.setHasAdminRole(true);
 		} else {
@@ -69,10 +65,9 @@ public class ArticleCommentController extends CommonController {
 	}
 	
 	@PostMapping(value = ArticleCommentUrlConstant.findArticleCommentSubPage)
-	public ModelAndView findArticleCommentSubPage(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView findArticleCommentSubPage(@RequestBody FindArticleCommentPageParam param, HttpServletRequest request, HttpServletResponse response) {
 //		TODO
 		ModelAndView view = new ModelAndView("articleJSP/articleCommentListSubList");
-		FindArticleCommentPageParam param = new FindArticleCommentPageParam().fromJson(getJson(data));
 		if(baseUtilCustom.hasAdminRole()) {
 			param.setHasAdminRole(true);
 		} else {

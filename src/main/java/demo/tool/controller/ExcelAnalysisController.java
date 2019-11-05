@@ -20,7 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import demo.chart.pojo.constant.ChartUrl;
 import demo.tool.ToolViewConstant;
 import demo.tool.pojo.constant.UploadUrlConstant;
-import demo.tool.pojo.param.controllerParam.ExcelAnalysisByPkParam;
+import demo.tool.pojo.dto.ExcelAnalysisByPkParam;
 import demo.tool.pojo.result.UploadExcelResult;
 import demo.tool.pojo.type.ChartType;
 import demo.tool.service.ExcelAnalysisService;

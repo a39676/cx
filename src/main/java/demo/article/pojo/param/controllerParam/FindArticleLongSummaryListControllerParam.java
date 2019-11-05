@@ -1,21 +1,15 @@
 package demo.article.pojo.param.controllerParam;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import demo.article.pojo.constant.ArticleConstant;
-import demo.baseCommon.pojo.param.CommonControllerParam;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import net.sf.json.JSONObject;
 
 @ApiModel(value="查询文章缩写标题参数", description="")
-public class FindArticleLongSummaryListControllerParam implements CommonControllerParam {
+public class FindArticleLongSummaryListControllerParam {
 
 	@ApiModelProperty(value = "频道名")
 	private String articleChannelName;
@@ -43,11 +37,6 @@ public class FindArticleLongSummaryListControllerParam implements CommonControll
 	private Integer pageNo = 1;
 	private Integer pageSize = 10;
 
-	@Override
-	public FindArticleLongSummaryListControllerParam fromJson(JSONObject j) throws JsonParseException, JsonMappingException, IOException {
-		return new ObjectMapper().readValue(j.toString(), FindArticleLongSummaryListControllerParam.class);
-	}
-	
 	public Boolean getIsHot() {
 		return isHot;
 	}

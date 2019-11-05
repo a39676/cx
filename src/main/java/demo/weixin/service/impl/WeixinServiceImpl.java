@@ -42,7 +42,6 @@ import ioHandle.FileUtilCustom;
 import net.sf.json.JSON;
 import net.sf.json.JSONObject;
 import net.sf.json.xml.XMLSerializer;
-import numericHandel.NumericUtilCustom;
 
 @Service
 public class WeixinServiceImpl extends CommonService implements WeixinService {
@@ -344,7 +343,7 @@ public class WeixinServiceImpl extends CommonService implements WeixinService {
 		bo.setToUserName(json.getString("ToUserName"));
 		bo.setFromUserName(json.getString("FromUserName"));
 		bo.setMsgId(json.getString("MsgId"));
-		if (json.containsKey("CreateTime") && NumericUtilCustom.matchInteger(json.getString("CreateTime"))) {
+		if (json.containsKey("CreateTime") && numberUtil.matchInteger(json.getString("CreateTime"))) {
 			bo.setCreateTime(json.getLong("CreateTime"));
 		}
 
@@ -365,14 +364,14 @@ public class WeixinServiceImpl extends CommonService implements WeixinService {
 				
 			} else if (msgType.equals(WXMsgType.location)) {
 				if (json.containsKey("Location_X")
-						&& NumericUtilCustom.matchSimpleNumber(json.getString("Location_X"))) {
+						&& numberUtil.matchSimpleNumber(json.getString("Location_X"))) {
 					bo.setLocation_X(new BigDecimal(json.getString("Location_X")));
 				}
 				if (json.containsKey("Location_Y")
-						&& NumericUtilCustom.matchSimpleNumber(json.getString("Location_Y"))) {
+						&& numberUtil.matchSimpleNumber(json.getString("Location_Y"))) {
 					bo.setLocation_Y(new BigDecimal(json.getString("Location_Y")));
 				}
-				if (json.containsKey("Scale") && NumericUtilCustom.matchSimpleNumber(json.getString("Scale"))) {
+				if (json.containsKey("Scale") && numberUtil.matchSimpleNumber(json.getString("Scale"))) {
 					bo.setScale(new BigDecimal(json.getString("Scale")));
 				}
 				bo.setLabel(json.getString("Label"));

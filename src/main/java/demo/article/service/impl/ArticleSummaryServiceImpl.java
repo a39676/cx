@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,7 @@ import demo.articleComment.pojo.bo.ArticleCommentCountByArticleIdBO;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.util.BaseUtilCustom;
 import demo.vcode.pojo.param.GetVcodeByValueParam;
 import demo.vcode.pojo.po.VCode;
 import demo.vcode.service.VCodeService;
@@ -74,6 +76,8 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 	
 	@Autowired
 	private FileUtilCustom ioUtil;
+	@Autowired
+	private BaseUtilCustom baseUtilCustom;
 	
 	@Override
 	public int insertArticleLongSummary(Long userId, Long articleId, String title, String finalFilePath) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException, InvalidAlgorithmParameterException {
@@ -289,7 +293,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 	}
 
 	@Override
-	public FindArticleLongSummaryListResultV3 articleLongSummaryListByChannelIdV3(FindArticleLongSummaryListControllerParam controllerParam) {
+	public FindArticleLongSummaryListResultV3 articleLongSummaryListByChannelIdV3(FindArticleLongSummaryListControllerParam controllerParam, HttpServletRequest request) {
 		/*
 		 * 此处为非置顶部分
 		 * 应该将置顶/非置顶文章分开处理
@@ -298,6 +302,8 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		 */
 		FindArticleLongSummaryListResultV3 result = new FindArticleLongSummaryListResultV3();
 
+		setFindArticleLongSummaryListParam(controllerParam, request);
+		
 		if(controllerParam.getEndTime() != null) {
 			controllerParam.setEndTime(controllerParam.getEndTime().minusSeconds(1L));
 		}
@@ -356,8 +362,29 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		return result;
 	}
 	
+	private void setFindArticleLongSummaryListParam(FindArticleLongSummaryListControllerParam controllerParam, HttpServletRequest request) {
+		if(baseUtilCustom.isLoginUser()) {
+			controllerParam.setUserId(baseUtilCustom.getUserId());
+		}
+		if(!baseUtilCustom.hasAdminRole()) {
+			controllerParam.setIsPass(true);
+			controllerParam.setIsDelete(false);
+			controllerParam.setIsEdited(false);
+		} else {
+			controllerParam.setHasAdminRole(true);
+		}
+		
+		if(findHostNameFromRequst(request).contains("site")) {
+			if(StringUtils.isBlank(controllerParam.getVcode())) {
+				controllerParam.setVcode("defaultVcode");
+			}
+		} else {
+			controllerParam.setVcode(null);
+		}
+	}
+	
 	@Override
-	public FindArticleLongSummaryListResultV3 articleLongSummaryHotListByChannelIdV3(FindArticleLongSummaryListControllerParam controllerParam) {
+	public FindArticleLongSummaryListResultV3 articleLongSummaryHotListByChannelIdV3(FindArticleLongSummaryListControllerParam controllerParam, HttpServletRequest request) {
 		/*
 		 * 此处为置顶部分
 		 * 应该将置顶/非置顶文章分开处理 
@@ -366,6 +393,8 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		 */
 		
 		FindArticleLongSummaryListResultV3 result = new FindArticleLongSummaryListResultV3();
+		
+		setFindArticleLongSummaryListParam(controllerParam, request);
 
 		if(controllerParam.getEndTime() == null) {
 			controllerParam.setEndTime(LocalDateTime.now());

@@ -11,7 +11,6 @@ import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,7 +47,6 @@ import demo.article.service.ArticleSummaryService;
 import demo.baseCommon.controller.CommonController;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
-import demo.util.BaseUtilCustom;
 import net.sf.json.JSONObject;
 
 @Controller
@@ -69,8 +67,8 @@ public class ArticleController extends CommonController {
 	@Autowired
 	private ArticleSummaryService summaryService;
 	
-	@Autowired
-	private BaseUtilCustom baseUtilCustom;
+//	@Autowired
+//	private BaseUtilCustom baseUtilCustom;
 	
 	@GetMapping(value = ArticleUrlConstant.createBurnMessage)
 	public ModelAndView createBurnMessage(HttpServletRequest request) {
@@ -81,9 +79,8 @@ public class ArticleController extends CommonController {
 	
 	@PostMapping(value = ArticleUrlConstant.creatingBurnMessage)
 	public void createBurnMessage(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) {
-		Long userId = baseUtilCustom.getUserId();
 		JSONObject jsonInput = getJson(data);
-		CreatingBurnMessageResult serviceResult = articleBurnService.creatingBurnMessage(userId, jsonInput);
+		CreatingBurnMessageResult serviceResult = articleBurnService.creatingBurnMessage(jsonInput);
 		if(!serviceResult.isSuccess()) {
 			outputJson(response, JSONObject.fromObject(serviceResult));
 			return;
@@ -125,12 +122,9 @@ public class ArticleController extends CommonController {
 	public ModelAndView creatingArticleLong(HttpServletRequest request) {
 //		TODO ???what to do?
 		CreatingArticleParam param = new CreatingArticleParam();
-		param.setUserId(baseUtilCustom.getUserId());
 		ModelAndView view = articleService.creatingArticleLong(param);
 		
-		String hostName = foundHostNameFromRequst(request);
-		
-		GetArticleChannelsResult channelsResult = getArticleChannelsDynamic(hostName);
+		GetArticleChannelsResult channelsResult = getArticleChannelsDynamic(request);
 		view.addObject("channelList", channelsResult.getChannelList());
 		
 		return view;
@@ -138,45 +132,23 @@ public class ArticleController extends CommonController {
 	
 	@PostMapping(value = ArticleUrlConstant.findChannels)
 	@ResponseBody
-	public GetArticleChannelsResult getArticleChannelsDynamic(HttpServletRequest request, HttpServletResponse response) {
-		String hostName = foundHostNameFromRequst(request);
-		Long userId = baseUtilCustom.getUserId();
-		GetArticleChannelsResult result = channelService.getArticleChannelsDynamic(hostName, userId);
-//		JSONObject json = JSONObject.fromObject(result);
+	public GetArticleChannelsResult getArticleChannelsDynamic(HttpServletRequest request) {
+		GetArticleChannelsResult result = channelService.getArticleChannelsDynamic(request);
 		return result;
 	}
 	
-	private GetArticleChannelsResult getArticleChannelsDynamic(String hostName) {
-		Long userId = baseUtilCustom.getUserId();
-		return channelService.getArticleChannelsDynamic(hostName, userId);
-	}
+//	private GetArticleChannelsResult getArticleChannelsDynamic(HttpServletRequest request) {
+//		Long userId = baseUtilCustom.getUserId();
+//		return channelService.getArticleChannelsDynamic(request, userId);
+//	}
 	
 	@PostMapping(value = ArticleUrlConstant.articleLongSummaryListByChannel)
 	public void articleLongSummaryListByChannel(@RequestBody FindArticleLongSummaryListControllerParam param, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if(baseUtilCustom.isLoginUser()) {
-			param.setUserId(baseUtilCustom.getUserId());
-		}
-		if(!baseUtilCustom.hasAdminRole()) {
-			param.setIsPass(true);
-			param.setIsDelete(false);
-			param.setIsEdited(false);
-		} else {
-			param.setHasAdminRole(true);
-		}
-		
-		if(foundHostNameFromRequst(request).contains("site")) {
-			if(StringUtils.isBlank(param.getVcode())) {
-				param.setVcode("defaultVcode");
-			}
-		} else {
-			param.setVcode(null);
-		}
-		
 		FindArticleLongSummaryListResultV3 result = null;
 		if(param.getIsHot()) {
-			result = summaryService.articleLongSummaryHotListByChannelIdV3(param);
+			result = summaryService.articleLongSummaryHotListByChannelIdV3(param, request);
 		} else {
-			result = summaryService.articleLongSummaryListByChannelIdV3(param);
+			result = summaryService.articleLongSummaryListByChannelIdV3(param, request);
 		}
 		visitDataService.insertVisitData(request, result.getChannelId().toString());
 		outputJson(response, JSONObject.fromObject(result));
@@ -187,9 +159,7 @@ public class ArticleController extends CommonController {
 		ModelAndView view = new ModelAndView(ArticleViewConstant.readArticleLongV3);
 		FindArticleLongByArticleSummaryPrivateKeyParam param = new FindArticleLongByArticleSummaryPrivateKeyParam();
 		param.setPrivateKey(pk);
-		if(baseUtilCustom.isLoginUser()) {
-			param.setUserId(baseUtilCustom.getUserId());
-		}
+		
 		FindArticleLongResult result = articleService.findArticleLongByArticleSummaryPrivateKey(param);
 		view.addObject("articleLongVO", result.getArticleLongVO());
 		visitDataService.insertVisitData(request, result.getArticleId().toString());
@@ -202,7 +172,7 @@ public class ArticleController extends CommonController {
 		
 		CommonResultCX serviceResult = new CommonResultCX();
 
-		if(!articleService.iWroteThis(baseUtilCustom.getUserId(), param.getPk())) {
+		if(!articleService.iWroteThis(param.getPk())) {
 			serviceResult.fillWithResult(ResultTypeCX.notYourArticle);
 			outputJson(response, JSONObject.fromObject(serviceResult));
 			return;
@@ -231,8 +201,6 @@ public class ArticleController extends CommonController {
 	@PostMapping(value = ArticleUrlConstant.likeOrHateThisChannel)
 	public void hateThisChannel(@RequestBody LikeHateThisChannelParam param, HttpServletRequest request, HttpServletResponse response) {
 		visitDataService.insertVisitData(request);
-		param.setUserId(baseUtilCustom.getUserId());
-		
 		CommonResult result = articleService.likeOrHateThisChannel(param);
 		outputJson(response, JSONObject.fromObject(result));
 	}
@@ -240,7 +208,6 @@ public class ArticleController extends CommonController {
 	@PostMapping(value = ArticleUrlConstant.articleLongComplaint)
 	public void articleLongComplaint(@RequestBody ArticleLongComplaintParam param, HttpServletRequest request, HttpServletResponse response) {
 		visitDataService.insertVisitData(request);
-		param.setComplaintUserId(baseUtilCustom.getUserId());
 		CommonResult result = articleService.articleLongComplaint(param);
 		outputJson(response, JSONObject.fromObject(result));
 	}

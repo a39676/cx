@@ -44,7 +44,7 @@ public interface ArticleService {
 	 * @param privateKey
 	 * @return
 	 */
-	boolean iWroteThis(Long userId, String privateKey);
+	boolean iWroteThis(String privateKey);
 
 	CommonResultCX likeOrHateThisChannel(LikeHateThisChannelParam inputParam);
 

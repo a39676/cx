@@ -20,6 +20,7 @@ import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
+import demo.util.BaseUtilCustom;
 import net.sf.json.JSONObject;
 
 @Service
@@ -33,9 +34,11 @@ public class ArticleBurnServiceImpl extends CommonService implements ArticleBurn
 	@Autowired
 	private ArticleBurnMapper articleBurnMapper;
 	
+	@Autowired
+	private BaseUtilCustom baseUtilCustom;
 	
 	@Override
-	public CreatingBurnMessageResult creatingBurnMessage(Long userId, JSONObject jsonInput) {
+	public CreatingBurnMessageResult creatingBurnMessage(JSONObject jsonInput) {
 		ArticleShort p = new ArticleShort();
 		CreatingBurnMessageResult result = new CreatingBurnMessageResult();
 		if (!jsonInput.containsKey("content")) {
@@ -48,6 +51,7 @@ public class ArticleBurnServiceImpl extends CommonService implements ArticleBurn
 			return result;
 		}
 		p.setContent(contentAfterEscapeHtml);
+		Long userId = baseUtilCustom.getUserId();
 		p.setUserId(userId);
 		Long newArticleId = snowFlake.getNextId();
 		p.setArticleId(newArticleId);

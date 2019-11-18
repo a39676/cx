@@ -20,11 +20,7 @@ public class ErrorController extends ExceptionController {
 	
 	@GetMapping(value = BaseUrl.error403)
 	public ModelAndView accesssDenied(HttpServletRequest request) {
-		ModelAndView view = new ModelAndView("baseJSP/errorCustom");
-		
-		view.addObject("message", "很抱歉,居然出现了" + description[getRan()] + "的异常");
-		view.addObject("urlRedirect", foundHostNameFromRequst(request));
-		return view;
+		return exceptionService.handleCommonException(request, findDebugStatus());
 	}
 	
 //	@RequestMapping(value = UrlConstant.error)

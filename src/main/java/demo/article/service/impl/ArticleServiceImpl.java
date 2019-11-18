@@ -235,6 +235,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	@Override
 	public ModelAndView creatingArticleLong(CreatingArticleParam controllerParam) {
 		ModelAndView view = null;
+		controllerParam.setUserId(baseUtilCustom.getUserId());
 		if(controllerParam.getUserId() == null) {
 			view = new ModelAndView(BaseViewConstant.viewError);
 			view.addObject("exception", ResultTypeCX.notLoginUser.getName());
@@ -549,6 +550,9 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 
 	@Override
 	public FindArticleLongResult findArticleLongByArticleSummaryPrivateKey(FindArticleLongByArticleSummaryPrivateKeyParam param) {
+		if(baseUtilCustom.isLoginUser()) {
+			param.setUserId(baseUtilCustom.getUserId());
+		}
 		FindArticleLongResult result = new FindArticleLongResult();
 		ArticleLongVO vo = null;
 		
@@ -608,7 +612,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 	
 	@Override
-	public boolean iWroteThis(Long userId, String privateKey) {
+	public boolean iWroteThis(String privateKey) {
+		Long userId = baseUtilCustom.getUserId();
 		if(userId == null || StringUtils.isBlank(privateKey)) {
 			return false;
 		}
@@ -627,6 +632,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	@Override
 	public CommonResultCX likeOrHateThisChannel(LikeHateThisChannelParam inputParam) {
 		CommonResultCX result = new CommonResultCX();
+		inputParam.setUserId(baseUtilCustom.getUserId());
+
 		if(inputParam.getUserId() == null 
 				|| inputParam.getLikeOrHate() == null 
 				|| (inputParam.getLikeOrHate() != 1 && inputParam.getLikeOrHate() != 0 && inputParam.getLikeOrHate() != -1)
@@ -712,6 +719,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	public CommonResultCX articleLongComplaint(ArticleLongComplaintParam controllerParam) {
 		CommonResultCX result = new CommonResultCX();
 		
+		controllerParam.setComplaintUserId(baseUtilCustom.getUserId());
 		if (StringUtils.isBlank(controllerParam.getPk()) || StringUtils.isBlank(controllerParam.getComplaintReason())) {
 			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;

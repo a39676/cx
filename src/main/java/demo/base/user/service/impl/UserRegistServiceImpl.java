@@ -8,6 +8,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.search.SearchTerm;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -548,7 +549,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
  */
 	
 	@Override
-	public CommonResultCX sendForgotPasswordMail(String email, String hostName) {
+	public CommonResultCX sendForgotPasswordMail(String email, HttpServletRequest request) {
 		CommonResultCX result = new CommonResultCX();
 		if(StringUtils.isBlank(email)) {
 			result.fillWithResult(ResultTypeCX.serviceError);
@@ -573,7 +574,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			return result;
 		}
 		
-		result = mailService.sendForgotPasswordMail(userId, email, hostName);
+		result = mailService.sendForgotPasswordMail(userId, email, findHostNameFromRequst(request));
 		
 		if(!result.isSuccess()) {
 			result.fillWithResult(ResultTypeCX.serviceError);
@@ -584,7 +585,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	}
 	
 	@Override
-	public CommonResultCX sendForgotUsernameMail(String email, String hostName) {
+	public CommonResultCX sendForgotUsernameMail(String email, HttpServletRequest request) {
 		CommonResultCX result = new CommonResultCX();
 		if(StringUtils.isBlank(email)) {
 			result.fillWithResult(ResultTypeCX.serviceError);
@@ -610,7 +611,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			return result;
 		}
 		
-		result = mailService.sendForgotUsernameMail(userName, email, hostName);
+		result = mailService.sendForgotUsernameMail(userName, email, findHostNameFromRequst(request));
 		
 		if(!result.isSuccess()) {
 			result.fillWithResult(ResultTypeCX.serviceError);
@@ -692,4 +693,5 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		
 		return resetPassword(userId, newPassword, newPasswordRepeat);
 	}
+
 }

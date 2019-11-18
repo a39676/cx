@@ -3,10 +3,11 @@ package demo.base.system.service.impl;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.base.system.pojo.bo.SystemConstantStore;
@@ -27,10 +28,10 @@ public class HomePageServiceImpl extends CommonService implements HomePageServic
 
 	
 	@Override
-	public ModelAndView baseRootHandlerV3(@RequestParam(value = "vcode", defaultValue = "") String vcode,
-			String hostName) {
+	public ModelAndView baseRootHandlerV3(String vcode, HttpServletRequest request) {
 
 		ModelAndView view = new ModelAndView();
+		String hostName = findHostNameFromRequst(request);
 //		TODO
 //		考虑随域名变更起始页面
 		view.setViewName(BaseViewConstant.homeV3);

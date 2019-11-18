@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import demo.baseCommon.controller.CommonController;
 import demo.config.costom_component.SnowFlake;
@@ -26,4 +27,8 @@ public class TestController2 extends CommonController {
 		return String.valueOf(snowFlake.getNextId());
 	}
 	
+	@GetMapping(value = "/about")
+	public ModelAndView about() {
+		return new ModelAndView("cleanBlogJSP/about");
+	}
 }

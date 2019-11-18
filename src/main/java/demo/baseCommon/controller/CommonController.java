@@ -1,10 +1,7 @@
 package demo.baseCommon.controller;
 
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -58,16 +55,4 @@ public abstract class CommonController {
 		}
 	}
 	
-	
-	
-	protected String foundHostNameFromRequst(HttpServletRequest request) {
-		String url = request.getServerName();
-		Pattern p = Pattern.compile("(?!:http://)(www\\.[0-9a-zA-Z_]+\\.[a-z]{1,8})(?!:/.*)");
-		Matcher m = p.matcher(url);
-		if(m.find()) {
-			return m.group(0);
-		} else {
-			return "";
-		}
-	}
 }

@@ -39,8 +39,7 @@ public class HomePageController extends CommonController {
 		}
 		visitDataService.addVisitCounting(request);
 		
-		String hostName = foundHostNameFromRequst(request);
-		ModelAndView view = baseService.baseRootHandlerV3(vcode, hostName);
+		ModelAndView view = baseService.baseRootHandlerV3(vcode, request);
 		return view;
 	}
 	

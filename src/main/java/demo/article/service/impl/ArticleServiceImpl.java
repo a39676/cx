@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -549,7 +550,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 
 	@Override
-	public FindArticleLongResult findArticleLongByArticleSummaryPrivateKey(FindArticleLongByArticleSummaryPrivateKeyParam param) {
+	public FindArticleLongResult findArticleLongByArticleSummaryPrivateKey(FindArticleLongByArticleSummaryPrivateKeyParam param, HttpServletRequest request) {
 		if(baseUtilCustom.isLoginUser()) {
 			param.setUserId(baseUtilCustom.getUserId());
 		}
@@ -563,6 +564,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			result.setArticleLongVO(vo);
 			return result;
 		}
+		visitDataService.insertVisitData(request, articleId.toString());
 		result.setArticleId(articleId);
 		param.setArticleId(articleId);
 		
@@ -630,7 +632,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 
 	@Override
-	public CommonResultCX likeOrHateThisChannel(LikeHateThisChannelParam inputParam) {
+	public CommonResultCX likeOrHateThisChannel(LikeHateThisChannelParam inputParam, HttpServletRequest request) {
+		visitDataService.insertVisitData(request);
 		CommonResultCX result = new CommonResultCX();
 		inputParam.setUserId(baseUtilCustom.getUserId());
 
@@ -716,7 +719,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 
 	@Override
-	public CommonResultCX articleLongComplaint(ArticleLongComplaintParam controllerParam) {
+	public CommonResultCX articleLongComplaint(ArticleLongComplaintParam controllerParam, HttpServletRequest request) {
+		visitDataService.insertVisitData(request);
 		CommonResultCX result = new CommonResultCX();
 		
 		controllerParam.setComplaintUserId(baseUtilCustom.getUserId());

@@ -12,13 +12,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.constant.BaseViewConstant;
-import demo.base.system.service.HomePageService;
+import demo.base.system.pojo.constant.BlogViewConstant;
+import demo.base.system.service.BasePageService;
 import demo.base.user.pojo.type.RolesType;
 import demo.baseCommon.service.CommonService;
 import demo.util.BaseUtilCustom;
 
 @Service
-public class HomePageServiceImpl extends CommonService implements HomePageService {
+public class BasePageServiceImpl extends CommonService implements BasePageService {
 
 	@Autowired
 	private BaseUtilCustom baseUtilCustom;
@@ -30,11 +31,16 @@ public class HomePageServiceImpl extends CommonService implements HomePageServic
 	@Override
 	public ModelAndView baseRootHandlerV3(String vcode, HttpServletRequest request) {
 
+		if(StringUtils.isBlank(vcode)) {
+			visitDataService.insertVisitData(request);
+		} else {
+			visitDataService.insertVisitData(request, "?vcode=" + vcode);
+		}
+		visitDataService.addVisitCounting(request);
+		
 		ModelAndView view = new ModelAndView();
 		String hostName = findHostNameFromRequst(request);
-//		TODO
-//		考虑随域名变更起始页面
-		view.setViewName(BaseViewConstant.homeV3);
+		view.setViewName(BlogViewConstant.home);
 
 		view.addObject("title", systemConstantService.getValByName(SystemConstantStore.webSiteTitle));
 
@@ -54,7 +60,6 @@ public class HomePageServiceImpl extends CommonService implements HomePageServic
 			}
 		}
 
-
 		List<String> roles = baseUtilCustom.getRoles();
 		if (roles != null && roles.size() > 0 && roles.contains(RolesType.ROLE_USER.getName())) {
 			HashMap<String, Object> authDetailMap = baseUtilCustom.getAuthDetail();
@@ -64,6 +69,11 @@ public class HomePageServiceImpl extends CommonService implements HomePageServic
 		} 
 
 		return view;
+	}
+	
+	@Override
+	public ModelAndView aboutMeHandler(String vcode, HttpServletRequest request) {
+		return new ModelAndView(BlogViewConstant.about);
 	}
 
 }

@@ -410,6 +410,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		}
 		
 		Long channelId = channelUUIDStore.getChannelId(controllerParam.getArticleChannelUUID());
+		visitDataService.insertVisitData(request, result.getChannelId().toString());
 		if(channelId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;

@@ -89,7 +89,6 @@ public class UsersRegistController extends CommonController {
 	@ApiOperation(value="创建用户页面", notes="返回创建用户页面")
 	@GetMapping(value = UsersUrlConstant.userRegist)
 	public ModelAndView userRegistView(HttpServletRequest request) {
-		visitDataService.insertVisitData(request, "registGet");
 		ModelAndView view = new ModelAndView();
 		view.setViewName(UserViewConstants.userRegist);
 		
@@ -100,7 +99,6 @@ public class UsersRegistController extends CommonController {
 	@ApiImplicitParam(name = "user", value = "用户注册UserRegistParam", required = true, dataType = "UserRegistParam")
 	@PostMapping(value = UsersUrlConstant.userRegist)
 	public void userRegistHandler(@RequestBody UserRegistDTO param, HttpServletResponse response, HttpServletRequest request) {
-		visitDataService.insertVisitData(request, "registPost");
 		String ip = request.getHeader("X-FORWARDED-FOR");
 		
 		CommonResultCX result = userRegistService.newUserRegist(param, ip);

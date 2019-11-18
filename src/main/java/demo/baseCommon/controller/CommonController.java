@@ -6,17 +6,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import demo.tool.service.VisitDataService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 public abstract class CommonController {
-	
-	@Autowired
-	protected VisitDataService visitDataService;
-	
 	
 	protected final Logger log = LoggerFactory.getLogger(getClass());
 	

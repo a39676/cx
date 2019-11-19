@@ -122,6 +122,7 @@ $(document).ready(function() {
     newRow += "</a>";
     newRow += "<p class='post-meta'>"+subArticleVO.createDateString+"</p>";
     newRow += "</div>";
+    newRow += "<hr>"
     return newRow;
   }
 });

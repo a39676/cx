@@ -37,6 +37,10 @@
     <div class="row">
       <!-- channels -->
       <div class="col-md-2 mx-auto">
+        <sec:authorize access="hasRole('ROLE_USER')">
+          <button class="btn btn-sm btn-warning" id="createNewArticle"><b>Create new</b></button>
+          <div class="row"><hr style="color: rgba(55, 66, 250,1.0)"></div>
+        </sec:authorize>
         <div class="btn-group-vertical" id="articleChannels"></div>
       </div>
       <div class="col-md-8 mx-auto">

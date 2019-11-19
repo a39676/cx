@@ -1,0 +1,13 @@
+package demo.base.system.service;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.web.servlet.ModelAndView;
+
+public interface ExceptionService {
+
+	ModelAndView handleCommonException(HttpServletRequest request, boolean debugStatus, Exception e);
+
+	ModelAndView handleCommonException(HttpServletRequest request, boolean debugStatus);
+
+}

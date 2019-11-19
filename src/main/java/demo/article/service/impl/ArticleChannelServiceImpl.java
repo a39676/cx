@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,7 @@ import demo.article.pojo.vo.ArticleChannelVO;
 import demo.article.service.ArticleChannelService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
+import demo.util.BaseUtilCustom;
 import ioHandle.FileUtilCustom;
 
 @Service
@@ -49,6 +52,8 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	private ArticleChannelsMapper articleChannelsMapper;
 	@Autowired
 	private FileUtilCustom ioUtil;
+	@Autowired
+	private BaseUtilCustom baseUtilCustom;
 	
 	private static List<String> hostNameList = null;
 
@@ -200,19 +205,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		return publicChannelVOList;
 	}
 	
-	@Override
-	public GetArticleChannelsResult getArticleChannelsDynamic(String hostName, Long userId) {
-		GetArticleChannelsBO bo = null;
-		if(userId == null) {
-			bo = getArticleChannelsForNotLogin(hostName);
-		} else {
-			bo = getArticleChannelsByUserId(hostName, userId);
-		}
-		
-		GetArticleChannelsResult result = buildGetArticleChannelsResult(bo);
-		result.setIsSuccess();
-		return result;
-	}
+
 	
 	private GetArticleChannelsResult buildGetArticleChannelsResult(GetArticleChannelsBO bo) {
 		GetArticleChannelsResult result = new GetArticleChannelsResult();
@@ -225,9 +218,19 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	}
 	
 	@Override
-	public GetArticleChannelsResult getArticleChannelsDynamic(String hostName) {
-		GetArticleChannelsBO bo = getArticleChannelsForNotLogin(hostName);
-		return buildGetArticleChannelsResult(bo);
+	public GetArticleChannelsResult getArticleChannelsDynamic(HttpServletRequest request) {
+		GetArticleChannelsBO bo = null;
+		Long userId = baseUtilCustom.getUserId();
+		
+		if(userId == null) {
+			bo = getArticleChannelsForNotLogin(findHostNameFromRequst(request));
+		} else {
+			bo = getArticleChannelsByUserId(findHostNameFromRequst(request), userId);
+		}
+		
+		GetArticleChannelsResult result = buildGetArticleChannelsResult(bo);
+		result.setIsSuccess();
+		return result;
 	}
 	
 	private GetArticleChannelsBO getArticleChannelsForNotLogin(String hostName) {

@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -235,6 +236,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	@Override
 	public ModelAndView creatingArticleLong(CreatingArticleParam controllerParam) {
 		ModelAndView view = null;
+		controllerParam.setUserId(baseUtilCustom.getUserId());
 		if(controllerParam.getUserId() == null) {
 			view = new ModelAndView(BaseViewConstant.viewError);
 			view.addObject("exception", ResultTypeCX.notLoginUser.getName());
@@ -548,7 +550,10 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 
 	@Override
-	public FindArticleLongResult findArticleLongByArticleSummaryPrivateKey(FindArticleLongByArticleSummaryPrivateKeyParam param) {
+	public FindArticleLongResult findArticleLongByArticleSummaryPrivateKey(FindArticleLongByArticleSummaryPrivateKeyParam param, HttpServletRequest request) {
+		if(baseUtilCustom.isLoginUser()) {
+			param.setUserId(baseUtilCustom.getUserId());
+		}
 		FindArticleLongResult result = new FindArticleLongResult();
 		ArticleLongVO vo = null;
 		
@@ -559,6 +564,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			result.setArticleLongVO(vo);
 			return result;
 		}
+		visitDataService.insertVisitData(request, articleId.toString());
 		result.setArticleId(articleId);
 		param.setArticleId(articleId);
 		
@@ -608,7 +614,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 	
 	@Override
-	public boolean iWroteThis(Long userId, String privateKey) {
+	public boolean iWroteThis(String privateKey) {
+		Long userId = baseUtilCustom.getUserId();
 		if(userId == null || StringUtils.isBlank(privateKey)) {
 			return false;
 		}
@@ -625,8 +632,11 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 
 	@Override
-	public CommonResultCX likeOrHateThisChannel(LikeHateThisChannelParam inputParam) {
+	public CommonResultCX likeOrHateThisChannel(LikeHateThisChannelParam inputParam, HttpServletRequest request) {
+		visitDataService.insertVisitData(request);
 		CommonResultCX result = new CommonResultCX();
+		inputParam.setUserId(baseUtilCustom.getUserId());
+
 		if(inputParam.getUserId() == null 
 				|| inputParam.getLikeOrHate() == null 
 				|| (inputParam.getLikeOrHate() != 1 && inputParam.getLikeOrHate() != 0 && inputParam.getLikeOrHate() != -1)
@@ -709,9 +719,11 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 
 	@Override
-	public CommonResultCX articleLongComplaint(ArticleLongComplaintParam controllerParam) {
+	public CommonResultCX articleLongComplaint(ArticleLongComplaintParam controllerParam, HttpServletRequest request) {
+		visitDataService.insertVisitData(request);
 		CommonResultCX result = new CommonResultCX();
 		
+		controllerParam.setComplaintUserId(baseUtilCustom.getUserId());
 		if (StringUtils.isBlank(controllerParam.getPk()) || StringUtils.isBlank(controllerParam.getComplaintReason())) {
 			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;

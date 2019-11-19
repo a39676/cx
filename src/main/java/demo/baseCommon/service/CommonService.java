@@ -1,6 +1,10 @@
 package demo.baseCommon.service;
 
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -12,6 +16,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.config.costom_component.SnowFlake;
+import demo.tool.service.VisitDataService;
 import numericHandel.NumericUtilCustom;
 
 public abstract class CommonService {
@@ -22,6 +27,8 @@ public abstract class CommonService {
 	protected SnowFlake snowFlake;
 	@Autowired
 	protected NumericUtilCustom numberUtil;
+	@Autowired
+	protected VisitDataService visitDataService;
 	
 	@Autowired
 	protected RedisTemplate<String, String> redisTemplate;
@@ -115,6 +122,17 @@ public abstract class CommonService {
 			return oldPath.replaceAll("/", "\\\\");
 		} else {
 			return oldPath.replaceAll("\\\\", "/");
+		}
+	}
+
+	protected String findHostNameFromRequst(HttpServletRequest request) {
+		String url = request.getServerName();
+		Pattern p = Pattern.compile("(?!:http://)(www\\.[0-9a-zA-Z_]+\\.[a-z]{1,8})(?!:/.*)");
+		Matcher m = p.matcher(url);
+		if(m.find()) {
+			return m.group(0);
+		} else {
+			return "";
 		}
 	}
 }

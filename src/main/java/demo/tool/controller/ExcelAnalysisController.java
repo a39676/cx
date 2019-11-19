@@ -1,7 +1,5 @@
 package demo.tool.controller;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,12 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import demo.chart.pojo.constant.ChartUrl;
-import demo.tool.ToolViewConstant;
 import demo.tool.pojo.constant.UploadUrlConstant;
 import demo.tool.pojo.dto.ExcelAnalysisByPkParam;
 import demo.tool.pojo.result.UploadExcelResult;
-import demo.tool.pojo.type.ChartType;
 import demo.tool.service.ExcelAnalysisService;
 import demo.tool.service.UploadService;
 import net.sf.json.JSONObject;
@@ -45,26 +40,13 @@ public class ExcelAnalysisController extends ComplexToolController {
 			HttpServletRequest request,
 			HttpServletResponse response
 			) {
-		ModelAndView view = new ModelAndView(ToolViewConstant.uploadExcel);
-		
-		view.addObject("pk", pk);
-		view.addObject("chartType", chartType);
-		view.addObject("columnToRow", columnToRow);
-		view.addObject("uploadUrl", UploadUrlConstant.uploadExcel);
-		view.addObject("chartViewUri", ChartUrl.root + ChartUrl.simpleChart);
-		view.addObject("chartViewUrl", foundHostNameFromRequst(request) + ChartUrl.root + ChartUrl.simpleChart);
-		List<ChartType> chartTypeList = new ArrayList<ChartType>();
-		for(ChartType subChartType : ChartType.values()) {
-			chartTypeList.add(subChartType);
-		}
-		view.addObject("chartTypeList", chartTypeList);
-		return view;
+		return excleAnalysisService.uploadTestView(pk, chartType, columnToRow, request);
 	}
 	
 	@PostMapping(value = UploadUrlConstant.uploadExcel)
 	public void uploadExcel(MultipartHttpServletRequest request, HttpServletResponse response) {
 		Map<String, MultipartFile> fileMap = uploadService.getFiles(request);
-		UploadExcelResult result = excleAnalysisService.uploadExcel(fileMap, foundHostNameFromRequst(request));
+		UploadExcelResult result = excleAnalysisService.uploadExcel(fileMap, request);
 		outputJson(response, JSONObject.fromObject(result));
 	}
 	

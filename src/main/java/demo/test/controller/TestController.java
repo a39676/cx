@@ -41,7 +41,6 @@ public class TestController extends CommonController {
 	@ApiOperation(value="测试", notes="测试notes")
 	@GetMapping(value = { "/test" })
 	public ModelAndView jspTest(HttpServletRequest request) throws Exception {
-		visitDataService.insertVisitData(request);
 		ModelAndView view = new ModelAndView();
 		String v = testService.redisGet();
 		view.addObject("message", v);

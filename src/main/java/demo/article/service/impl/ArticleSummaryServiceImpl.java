@@ -311,7 +311,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		/* 置限制只可浏览某时点之后的文章 */
 		if(!controllerParam.getHasAdminRole()) {
 			String normalUserMaxReadingMonth = systemConstantService.getValByName(SystemConstantStore.normalUserMaxReadingMonth);
-			int maxReadingMonth = 0;
+			int maxReadingMonth = 1;
 			if(numberUtil.matchInteger(normalUserMaxReadingMonth)) {
 				maxReadingMonth = Integer.parseInt(normalUserMaxReadingMonth);
 			}

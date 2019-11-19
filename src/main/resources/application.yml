@@ -21,6 +21,7 @@ spring:
     pool.max-idle: 8
     pool.min-idle: 0
     timeout: 2000
+    
   # mvc:
   #   view:
   #     prefix: /jsp/

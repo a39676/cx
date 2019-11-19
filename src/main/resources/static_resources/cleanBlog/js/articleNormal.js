@@ -56,24 +56,33 @@ function removeSummaryLineBackgroundColor(o) {
 
 function buildSummaryLine(subArticleVO) {
   var newRow = "";
+  // newRow += "<a href='/article/readArticleLong?pk="+subArticleVO.privateKey+"' target='_blank'>";
+  // newRow += "  <div class='post-preview summaryLine' pk='"+subArticleVO.privateKey+"'";
+  // newRow += "  onmouseover='addSummaryLineBackgroundColor(this)'";
+  // newRow += "  onmouseout='removeSummaryLineBackgroundColor(this)'";
+  // newRow += "  style='max-height:200px;'";
+  // newRow += "  >";
+  // newRow += "    <div class='col-md-2'><br><img src='"+subArticleVO.imgUrl+"' style='max-width:85%; max-height:150px;'></div>";
+  // newRow += "    <div class='col-md-4'><br><h3><span class='badge badge-info' style=''>"+subArticleVO.articleTitle+"</span></h3></div>";
+  // newRow += "    <div class='col-md-1'><br><img src='"+subArticleVO.headIamgeUrl+"' style='max-width:60px; max-height:60px;'></div>";
+  // newRow += "    <div class='col-md-2'>";
+  // newRow += "      <br>";
+  // newRow += "      <div>"+subArticleVO.createDateString+"</div><br>";
+  // newRow += "      <div><span class='badge badge-pill badge-success'>comment:"+subArticleVO.commentCount+"</span></div><br>";
+  // newRow += "      <div><span class='badge badge-pill badge-success'>view:"+subArticleVO.viewCount+"</span></div><br>";
+  // newRow += "    </div>";
+  // newRow += "  </div>";
+  // newRow += "</a>";
+
+  newRow += "<div class='post-preview'>";
   newRow += "<a href='/article/readArticleLong?pk="+subArticleVO.privateKey+"' target='_blank'>";
-  newRow += "  <div class='post-preview summaryLine' pk='"+subArticleVO.privateKey+"'";
-  newRow += "  onmouseover='addSummaryLineBackgroundColor(this)'";
-  newRow += "  onmouseout='removeSummaryLineBackgroundColor(this)'";
-  newRow += "  style='max-height:200px;'";
-  newRow += "  >";
-  newRow += "    <div class='col-md-2'><br><img src='"+subArticleVO.imgUrl+"' style='max-width:85%; max-height:150px;'></div>";
-  newRow += "    <div class='col-md-4'><br><h3><span class='badge badge-info' style=''>"+subArticleVO.articleTitle+"</span></h3></div>";
-  newRow += "    <div class='col-md-1'><br><img src='"+subArticleVO.headIamgeUrl+"' style='max-width:60px; max-height:60px;'></div>";
-  newRow += "    <div class='col-md-2'>";
-  newRow += "      <br>";
-  newRow += "      <div>"+subArticleVO.createDateString+"</div><br>";
-  newRow += "      <div><span class='badge badge-pill badge-success'>comment:"+subArticleVO.commentCount+"</span></div><br>";
-  newRow += "      <div><span class='badge badge-pill badge-success'>view:"+subArticleVO.viewCount+"</span></div><br>";
-  newRow += "    </div>";
-  newRow += "  </div>";
+  newRow += "<h2 class='post-title'>"+subArticleVO.articleTitle+"</h2>";
+  newRow += "<h3 class='post-subtitle'></h3>";
+  // newRow += "<img src='"+subArticleVO.imgUrl+"' style='max-width:85%; max-height:150px;'>";
   newRow += "</a>";
-  newRow += "<br>";
+  newRow += "<p class='post-meta'>"+subArticleVO.createDateString+"</p>";
+  newRow += "</div>";
+  newRow += "<hr>"
   return newRow;
 }
 

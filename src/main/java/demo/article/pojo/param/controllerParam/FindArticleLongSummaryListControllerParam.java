@@ -3,7 +3,10 @@ package demo.article.pojo.param.controllerParam;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 
+import dateTimeHandle.DateUtilCustom;
 import demo.article.pojo.constant.ArticleConstant;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -18,9 +21,11 @@ public class FindArticleLongSummaryListControllerParam {
 	@ApiModelProperty(value = "title")
 	private String title;
 	private Long userId;
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = DateUtilCustom.normalDateTimeFormat)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	private LocalDateTime startTime;
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = DateUtilCustom.normalDateTimeFormat)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	private LocalDateTime endTime;
 	private Boolean isDelete = false;
 	private Boolean isPass = true;

@@ -15,7 +15,8 @@
   <%@ include file="./nav.jsp" %>
 
   <!-- Page Header -->
-  <header class="masthead" style="background-image: url('/static_resources/cleanBlog/img/about-bg.jpg')">
+  <header class="masthead" style="background-image: url('/static_resources/cleanBlog/img/fox-4589927_1920.jpg')">
+  <!-- <header class="masthead" style="background-image: url('/static_resources/cleanBlog/img/cat-4481566_1920.jpg')"> -->
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
@@ -33,7 +34,8 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
-        <p>欢迎光临, 本站建设中, 敬请期待!</p>
+        <p>本站建设中, 还没有灵魂, 希望能收集您宝贵的意见!</p>
+        <p>欢迎联系 davenchan12546@gmail.com</p>
       </div>
     </div>
   </div>

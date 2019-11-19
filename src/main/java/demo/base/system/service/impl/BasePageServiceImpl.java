@@ -41,6 +41,7 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 		ModelAndView view = new ModelAndView();
 		String hostName = findHostNameFromRequst(request);
 		view.setViewName(BlogViewConstant.home);
+//		view.setViewName(BaseViewConstant.homeV3);
 
 		view.addObject("title", systemConstantService.getValByName(SystemConstantStore.webSiteTitle));
 

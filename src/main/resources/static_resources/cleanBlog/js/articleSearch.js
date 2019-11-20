@@ -116,8 +116,7 @@ $(document).ready(function() {
     newRow += "<div class='post-preview'>";
     newRow += "<a href='/article/readArticleLong?pk="+subArticleVO.privateKey+"' target='_blank'>";
     newRow += "<h2 class='post-title'>"+subArticleVO.articleTitle+"</h2>";
-    newRow += "<h3 class='post-subtitle'>";
-    newRow += "</h3>";
+    newRow += "<h3 class='post-subtitle'> views: "+subArticleVO.viewCount+"</h3>";
     // newRow += "<img src='"+subArticleVO.imgUrl+"' style='max-width:85%; max-height:150px;'>";
     newRow += "</a>";
     newRow += "<p class='post-meta'>"+subArticleVO.createDateString+"</p>";

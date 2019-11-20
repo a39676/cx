@@ -38,12 +38,15 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 		}
 		visitDataService.addVisitCounting(request);
 		
+		Long visitCount = visitDataService.getVisitCount();
+		
 		ModelAndView view = new ModelAndView();
 		String hostName = findHostNameFromRequst(request);
 		view.setViewName(BlogViewConstant.home);
 //		view.setViewName(BaseViewConstant.homeV3);
 
 		view.addObject("title", systemConstantService.getValByName(SystemConstantStore.webSiteTitle));
+		view.addObject("visitCount", visitCount);
 
 		String envName = systemConstantService.getValByName(SystemConstantStore.envName, true);
 		

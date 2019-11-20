@@ -4,10 +4,6 @@ package demo.article.pojo.type;
 public enum ArticlePublicChannelType {
 	
 	c1("公地", 1L),
-	c11("软广告", 11L),
-	c12("硬广", 12L),
-	c15("昆虫", 15L),
-	c16("其他宠物", 16L),
 	;
 	
 	private String channelName;

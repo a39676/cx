@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
@@ -60,9 +61,8 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	private List<String> loadHostNameList() {
 		if (hostNameList == null || hostNameList.size() != 3) {
 			hostNameList = new ArrayList<String>();
-			hostNameList.add(systemConstantService.getValByName(SystemConstantStore.hostName1));
-			hostNameList.add(systemConstantService.getValByName(SystemConstantStore.hostName2));
-			hostNameList.add(systemConstantService.getValByName(SystemConstantStore.hostName3));
+			HashMap<String, String> hostNameMap = systemConstantService.getValsByName(List.of(SystemConstantStore.hostName1, SystemConstantStore.hostName2, SystemConstantStore.hostName3));
+			hostNameList.addAll(hostNameMap.values());
 		}
 		return hostNameList;
 	}
@@ -555,7 +555,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		}
 
 		GetArticleChannelsBO newChannelList = removeChannels(channelList, uuidStore,
-				Arrays.asList(new Long[] { 9L, 10L }));
+				Arrays.asList(new Long[] { 2L, 3L, 4L }));
 
 		return newChannelList;
 	}
@@ -567,7 +567,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		}
 
 		GetArticleChannelsBO newChannelList = removeChannels(channelList, uuidStore,
-				Arrays.asList(new Long[] { 9L, 10L, 17L, 19L, 20L }));
+				Arrays.asList(new Long[] { 3L, 4L }));
 
 		return newChannelList;
 	}

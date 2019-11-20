@@ -8,9 +8,9 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -756,7 +756,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		
 		ArticleLongComplaint complaint = new ArticleLongComplaint();
 		
-		complaint.setCreateTime(new Date());
+		complaint.setId(snowFlake.getNextId());
+		complaint.setCreateTime(LocalDateTime.now());
 		complaint.setComplaintUserId(controllerParam.getComplaintUserId());
 		complaint.setArticleId(articleId);
 		complaint.setArticleCreatorId(article.getUserId());

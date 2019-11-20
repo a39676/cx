@@ -572,6 +572,11 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	private GetArticleChannelsBO removeChannelsForUnknow(
 			GetArticleChannelsBO channelList,
 			ArticleUUIDChannelStoreBO uuidStore) {
+		String envName = systemConstantService.getValByName(SystemConstantStore.envName, true);
+		if("dev".equals(envName)) {
+			return channelList;
+		}
+		
 		if (channelList == null) {
 			return channelList;
 		}

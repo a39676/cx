@@ -35,13 +35,9 @@ public class ArticleAdminController extends CommonController {
 	@Autowired
 	private ArticleAdminService articleAdminService;
 	
-//	@Autowired
-//	private ArticleService articleService;
 	@Autowired
 	private ArticleChannelService channelService;
 	
-//	@Autowired
-//	private BaseUtilCustom baseUtilCustom;
 	
 	@PostMapping(value = ArticleAdminUrlConstant.loadArticleUUIDChannel)
 	public void loadArticleUUIDChannel(HttpServletRequest request, HttpServletResponse response) {

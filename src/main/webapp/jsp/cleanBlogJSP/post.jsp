@@ -17,7 +17,6 @@
   <!-- Page Header -->
   <header class="masthead" style="background-image: url('/static_resources/cleanBlog/img/fog-4597348_1920.jpg')">
     <div class="overlay" id="readArticleLong" pk="${articleLongVO.privateKey}">
-      
     </div>
     <div class="container">
       <div class="row">
@@ -31,6 +30,11 @@
           </div>
         </div>
       </div>
+    </div>
+  </header>
+
+  <header class="masthead">
+    <div class="container">
       <div class="row">
         <div class="post-top-area">
           <c:if test="${articleLongVO.iWroteThis == true}">

@@ -3,6 +3,7 @@ package demo.article.service.impl;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -115,9 +116,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	private static String articleSummaryStorePrefixPath = "";
 	private static Long maxArticleLength = 0L;
 	
-	
-	static {{
-	}}
 	
 	private boolean loadArticleStorePath() {
 		articleStorePrefixPath = systemConstantService.getValByName(SystemConstantStore.articleStorePrefixPath);
@@ -261,6 +259,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	private CommonResultCX createArticleLong(Long userId, CreateArticleParam controllerParam) throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
 		CommonResultCX result = new CommonResultCX();
 		int insertCount = 0;
+
+		boolean isSpecificUser = itIsBigUser();
 		
 		String uuid = controllerParam.getUuid();
 		if(StringUtils.isBlank(uuid)) {
@@ -316,7 +316,12 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return result;
 		}
 		
-		String title = StringEscapeUtils.escapeHtml(String.valueOf(controllerParam.getTitle()));
+		String title = null;
+		if(isSpecificUser) {
+			title = controllerParam.getTitle();
+		} else {
+			title = StringEscapeUtils.escapeHtml(String.valueOf(controllerParam.getTitle()));
+		}
 
 		if (articleStorePrefixPath.length() < 1 || maxArticleLength < 1) {
 			if (!loadArticleStorePath() || !loadMaxArticleLength()) {
@@ -402,10 +407,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return serviceResult;
 		}
 		Long userId = baseUtilCustom.getUserId();
-		if(baseUtilCustom.hasAnyRole(
-				RolesType.ROLE_POSTER.getName(),
-				RolesType.ROLE_ADMIN.getName(),
-				RolesType.ROLE_SUPER_ADMIN.getName())) {
+		if(itIsBigUser()) {
 			cp.setQuickPass(true);
 		} else {
 			cp.setQuickPass(false);
@@ -467,8 +469,14 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		List<String> escapeLines = new ArrayList<String>();
 		StringBuffer sb = new StringBuffer();
 
-		for (String line : lines) {
-			escapeLines.add(StringEscapeUtils.escapeHtml(line));
+		if(itIsBigUser()) {
+			for (String line : lines) {
+				escapeLines.add(line);
+			}
+		} else {
+			for (String line : lines) {
+				escapeLines.add(StringEscapeUtils.escapeHtml(line));
+			}
 		}
 
 		for (String line : escapeLines) {
@@ -479,13 +487,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		
 		String articleContentAfterTrim = sb.toString().trim();
 
-		try {
-			ioUtil.byteToFile(articleContentAfterTrim.getBytes("utf8"), finalFilePath);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			result.fillWithResult(ResultTypeCX.errorWhenArticleSave);
-			return result;
-		}
+		ioUtil.byteToFile(articleContentAfterTrim.getBytes(StandardCharsets.UTF_8), finalFilePath);
 
 		result.setFilePath(finalFilePath);
 		result.setImageUrls(imageUrls);
@@ -768,5 +770,12 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		
 		result.fillWithResult(ResultTypeCX.complaintReciveSuccess);
 		return result;
+	}
+	
+	private boolean itIsBigUser() {
+		return baseUtilCustom.hasAnyRole(
+				RolesType.ROLE_POSTER.getName(),
+				RolesType.ROLE_ADMIN.getName(),
+				RolesType.ROLE_SUPER_ADMIN.getName());
 	}
 }

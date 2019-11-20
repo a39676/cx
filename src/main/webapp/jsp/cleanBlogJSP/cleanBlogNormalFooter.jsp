@@ -9,7 +9,7 @@
   var csrfToken = $("meta[name='_csrf']").attr("content");
 </script>
 
-<script type="text/javascript" src="<c:url value='/static_resources/js/home/cleanBlogHome.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/static_resources/cleanBlog/js/cleanBlogHome.js'/>"></script>
 <!-- Bootstrap core JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 <!-- Custom scripts for this template -->

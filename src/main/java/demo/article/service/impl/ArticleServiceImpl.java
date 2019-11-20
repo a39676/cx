@@ -3,14 +3,15 @@ package demo.article.service.impl;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -114,9 +116,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	private static String articleSummaryStorePrefixPath = "";
 	private static Long maxArticleLength = 0L;
 	
-	
-	static {{
-	}}
 	
 	private boolean loadArticleStorePath() {
 		articleStorePrefixPath = systemConstantService.getValByName(SystemConstantStore.articleStorePrefixPath);
@@ -235,6 +234,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	@Override
 	public ModelAndView creatingArticleLong(CreatingArticleParam controllerParam) {
 		ModelAndView view = null;
+		controllerParam.setUserId(baseUtilCustom.getUserId());
 		if(controllerParam.getUserId() == null) {
 			view = new ModelAndView(BaseViewConstant.viewError);
 			view.addObject("exception", ResultTypeCX.notLoginUser.getName());
@@ -259,6 +259,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	private CommonResultCX createArticleLong(Long userId, CreateArticleParam controllerParam) throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
 		CommonResultCX result = new CommonResultCX();
 		int insertCount = 0;
+
+		boolean isSpecificUser = itIsBigUser();
 		
 		String uuid = controllerParam.getUuid();
 		if(StringUtils.isBlank(uuid)) {
@@ -314,7 +316,12 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return result;
 		}
 		
-		String title = StringEscapeUtils.escapeHtml(String.valueOf(controllerParam.getTitle()));
+		String title = null;
+		if(isSpecificUser) {
+			title = controllerParam.getTitle();
+		} else {
+			title = StringEscapeUtils.escapeHtml(String.valueOf(controllerParam.getTitle()));
+		}
 
 		if (articleStorePrefixPath.length() < 1 || maxArticleLength < 1) {
 			if (!loadArticleStorePath() || !loadMaxArticleLength()) {
@@ -400,10 +407,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return serviceResult;
 		}
 		Long userId = baseUtilCustom.getUserId();
-		if(baseUtilCustom.hasAnyRole(
-				RolesType.ROLE_POSTER.getName(),
-				RolesType.ROLE_ADMIN.getName(),
-				RolesType.ROLE_SUPER_ADMIN.getName())) {
+		if(itIsBigUser()) {
 			cp.setQuickPass(true);
 		} else {
 			cp.setQuickPass(false);
@@ -465,8 +469,14 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		List<String> escapeLines = new ArrayList<String>();
 		StringBuffer sb = new StringBuffer();
 
-		for (String line : lines) {
-			escapeLines.add(StringEscapeUtils.escapeHtml(line));
+		if(itIsBigUser()) {
+			for (String line : lines) {
+				escapeLines.add(line);
+			}
+		} else {
+			for (String line : lines) {
+				escapeLines.add(StringEscapeUtils.escapeHtml(line));
+			}
 		}
 
 		for (String line : escapeLines) {
@@ -477,13 +487,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		
 		String articleContentAfterTrim = sb.toString().trim();
 
-		try {
-			ioUtil.byteToFile(articleContentAfterTrim.getBytes("utf8"), finalFilePath);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			result.fillWithResult(ResultTypeCX.errorWhenArticleSave);
-			return result;
-		}
+		ioUtil.byteToFile(articleContentAfterTrim.getBytes(StandardCharsets.UTF_8), finalFilePath);
 
 		result.setFilePath(finalFilePath);
 		result.setImageUrls(imageUrls);
@@ -548,7 +552,10 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 
 	@Override
-	public FindArticleLongResult findArticleLongByArticleSummaryPrivateKey(FindArticleLongByArticleSummaryPrivateKeyParam param) {
+	public FindArticleLongResult findArticleLongByArticleSummaryPrivateKey(FindArticleLongByArticleSummaryPrivateKeyParam param, HttpServletRequest request) {
+		if(baseUtilCustom.isLoginUser()) {
+			param.setUserId(baseUtilCustom.getUserId());
+		}
 		FindArticleLongResult result = new FindArticleLongResult();
 		ArticleLongVO vo = null;
 		
@@ -559,6 +566,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			result.setArticleLongVO(vo);
 			return result;
 		}
+		visitDataService.insertVisitData(request, articleId.toString());
 		result.setArticleId(articleId);
 		param.setArticleId(articleId);
 		
@@ -608,7 +616,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 	
 	@Override
-	public boolean iWroteThis(Long userId, String privateKey) {
+	public boolean iWroteThis(String privateKey) {
+		Long userId = baseUtilCustom.getUserId();
 		if(userId == null || StringUtils.isBlank(privateKey)) {
 			return false;
 		}
@@ -625,8 +634,11 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 
 	@Override
-	public CommonResultCX likeOrHateThisChannel(LikeHateThisChannelParam inputParam) {
+	public CommonResultCX likeOrHateThisChannel(LikeHateThisChannelParam inputParam, HttpServletRequest request) {
+		visitDataService.insertVisitData(request);
 		CommonResultCX result = new CommonResultCX();
+		inputParam.setUserId(baseUtilCustom.getUserId());
+
 		if(inputParam.getUserId() == null 
 				|| inputParam.getLikeOrHate() == null 
 				|| (inputParam.getLikeOrHate() != 1 && inputParam.getLikeOrHate() != 0 && inputParam.getLikeOrHate() != -1)
@@ -709,9 +721,11 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 
 	@Override
-	public CommonResultCX articleLongComplaint(ArticleLongComplaintParam controllerParam) {
+	public CommonResultCX articleLongComplaint(ArticleLongComplaintParam controllerParam, HttpServletRequest request) {
+		visitDataService.insertVisitData(request);
 		CommonResultCX result = new CommonResultCX();
 		
+		controllerParam.setComplaintUserId(baseUtilCustom.getUserId());
 		if (StringUtils.isBlank(controllerParam.getPk()) || StringUtils.isBlank(controllerParam.getComplaintReason())) {
 			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;
@@ -744,7 +758,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		
 		ArticleLongComplaint complaint = new ArticleLongComplaint();
 		
-		complaint.setCreateTime(new Date());
+		complaint.setId(snowFlake.getNextId());
+		complaint.setCreateTime(LocalDateTime.now());
 		complaint.setComplaintUserId(controllerParam.getComplaintUserId());
 		complaint.setArticleId(articleId);
 		complaint.setArticleCreatorId(article.getUserId());
@@ -755,5 +770,12 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		
 		result.fillWithResult(ResultTypeCX.complaintReciveSuccess);
 		return result;
+	}
+	
+	private boolean itIsBigUser() {
+		return baseUtilCustom.hasAnyRole(
+				RolesType.ROLE_POSTER.getName(),
+				RolesType.ROLE_ADMIN.getName(),
+				RolesType.ROLE_SUPER_ADMIN.getName());
 	}
 }

@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -23,8 +25,10 @@ import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
 import demo.chart.controller.ChartController;
 import demo.chart.pojo.constant.ChartUrl;
+import demo.tool.ToolViewConstant;
 import demo.tool.mapper.ExcelAnalysisMapper;
 import demo.tool.pojo.constant.ToolPathConstant;
+import demo.tool.pojo.constant.UploadUrlConstant;
 import demo.tool.pojo.dto.ExcelAnalysisByPkParam;
 import demo.tool.pojo.po.ExcelAnalysis;
 import demo.tool.pojo.po.example.ExcelAnalysisExample;
@@ -47,9 +51,28 @@ public class ExcelAnalysisServiceImpl extends CommonService implements ExcelAnal
 	private ChartController chartController;
 	@Autowired
 	private FileUtilCustom ioUtil;
+	
+	@Override
+	public ModelAndView uploadTestView(String pk, int chartType, String columnToRow,
+			HttpServletRequest request) {
+		ModelAndView view = new ModelAndView(ToolViewConstant.uploadExcel);
+		
+		view.addObject("pk", pk);
+		view.addObject("chartType", chartType);
+		view.addObject("columnToRow", columnToRow);
+		view.addObject("uploadUrl", UploadUrlConstant.uploadExcel);
+		view.addObject("chartViewUri", ChartUrl.root + ChartUrl.simpleChart);
+		view.addObject("chartViewUrl", findHostNameFromRequst(request) + ChartUrl.root + ChartUrl.simpleChart);
+		List<ChartType> chartTypeList = new ArrayList<ChartType>();
+		for(ChartType subChartType : ChartType.values()) {
+			chartTypeList.add(subChartType);
+		}
+		view.addObject("chartTypeList", chartTypeList);
+		return view;
+	}
 
 	@Override
-	public UploadExcelResult uploadExcel(Map<String, MultipartFile> fileMap, String hostName) {
+	public UploadExcelResult uploadExcel(Map<String, MultipartFile> fileMap, HttpServletRequest request) {
 		UploadExcelResult result = new UploadExcelResult();
 		MultipartFile tmpFile = null;
 		String fileName = null;
@@ -103,7 +126,7 @@ public class ExcelAnalysisServiceImpl extends CommonService implements ExcelAnal
 		result.setIsSuccess();
 		result.setPk(newRecord.getPrivateKey());
 		result.setUrl(
-				hostName + ChartUrl.root + ChartUrl.simpleChart);
+				findHostNameFromRequst(request) + ChartUrl.root + ChartUrl.simpleChart);
 		result.setUri(ChartUrl.root + ChartUrl.simpleChart);
 		return result;
 	}

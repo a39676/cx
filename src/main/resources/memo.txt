@@ -1,13 +1,3 @@
-正在重现交易记录展现
-账户注册逻辑改造中, 页面ajax 同时改造
-既然有随机生成评价数, 对应必须有随机生成浏览量
-
-不再往论坛模式发展了
-
-访问统计??
-	必须接入redis, 定时持久化
-	各个模块(电影/小说/文章) 独立统计???
-
 CREATE TABLE `duralbe_recorder` (
 id bigint not null,
    `trading_id` bigint default null,
@@ -24,14 +14,6 @@ id bigint not null,
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='duralbe_recorder'
 ;
 
-CREATE TABLE `visit_count` (
-   `id` bigint(20) NOT NULL,
-   `counting` bigint(20) NOT NULL,
-   `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
-   `is_delete` tinyint(1) DEFAULT '0',
-   PRIMARY KEY (`id`)
- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='visit_count'
-;
 -----------------
 考虑废止image部分代码
 需要为管理员增加屏蔽用户/ip

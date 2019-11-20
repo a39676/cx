@@ -89,7 +89,6 @@ public class UsersRegistController extends CommonController {
 	@ApiOperation(value="创建用户页面", notes="返回创建用户页面")
 	@GetMapping(value = UsersUrlConstant.userRegist)
 	public ModelAndView userRegistView(HttpServletRequest request) {
-		visitDataService.insertVisitData(request, "registGet");
 		ModelAndView view = new ModelAndView();
 		view.setViewName(UserViewConstants.userRegist);
 		
@@ -100,7 +99,6 @@ public class UsersRegistController extends CommonController {
 	@ApiImplicitParam(name = "user", value = "用户注册UserRegistParam", required = true, dataType = "UserRegistParam")
 	@PostMapping(value = UsersUrlConstant.userRegist)
 	public void userRegistHandler(@RequestBody UserRegistDTO param, HttpServletResponse response, HttpServletRequest request) {
-		visitDataService.insertVisitData(request, "registPost");
 		String ip = request.getHeader("X-FORWARDED-FOR");
 		
 		CommonResultCX result = userRegistService.newUserRegist(param, ip);
@@ -177,7 +175,7 @@ public class UsersRegistController extends CommonController {
 			return;
 		}
 		
-		result = userRegistService.sendForgotPasswordMail(jsonInput.getString("email"), foundHostNameFromRequst(request));
+		result = userRegistService.sendForgotPasswordMail(jsonInput.getString("email"), request);
 		if(result.isSuccess()) {
 			result.successWithMessage("邮件已发送,因网络原因,可能存在延迟,请稍后至邮箱查收.请留意邮箱拦截规则,如果邮件被拦截,可能存放于邮箱垃圾箱内...");
 			outputJson(response, JSONObject.fromObject(result));
@@ -201,7 +199,7 @@ public class UsersRegistController extends CommonController {
 			return;
 		}
 		
-		result = userRegistService.sendForgotUsernameMail(jsonInput.getString("email"), foundHostNameFromRequst(request));
+		result = userRegistService.sendForgotUsernameMail(jsonInput.getString("email"), request);
 		if(result.isSuccess()) {
 			result.successWithMessage("邮件已发送,因网络原因,可能存在延迟,请稍后至邮箱查收.请留意邮箱拦截规则,如果邮件被拦截,可能存放于邮箱垃圾箱内...");
 			outputJson(response, JSONObject.fromObject(result));

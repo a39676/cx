@@ -3,21 +3,23 @@ package demo.base.system.service.impl;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.constant.BaseViewConstant;
-import demo.base.system.service.HomePageService;
+import demo.base.system.pojo.constant.BlogViewConstant;
+import demo.base.system.service.BasePageService;
 import demo.base.user.pojo.type.RolesType;
 import demo.baseCommon.service.CommonService;
 import demo.util.BaseUtilCustom;
 
 @Service
-public class HomePageServiceImpl extends CommonService implements HomePageService {
+public class BasePageServiceImpl extends CommonService implements BasePageService {
 
 	@Autowired
 	private BaseUtilCustom baseUtilCustom;
@@ -27,15 +29,24 @@ public class HomePageServiceImpl extends CommonService implements HomePageServic
 
 	
 	@Override
-	public ModelAndView baseRootHandlerV3(@RequestParam(value = "vcode", defaultValue = "") String vcode,
-			String hostName) {
+	public ModelAndView baseRootHandlerV3(String vcode, HttpServletRequest request) {
 
+		if(StringUtils.isBlank(vcode)) {
+			visitDataService.insertVisitData(request);
+		} else {
+			visitDataService.insertVisitData(request, "?vcode=" + vcode);
+		}
+		visitDataService.addVisitCounting(request);
+		
+		Long visitCount = visitDataService.getVisitCount();
+		
 		ModelAndView view = new ModelAndView();
-//		TODO
-//		考虑随域名变更起始页面
-		view.setViewName(BaseViewConstant.homeV3);
+		String hostName = findHostNameFromRequst(request);
+		view.setViewName(BlogViewConstant.home);
+//		view.setViewName(BaseViewConstant.homeV3);
 
 		view.addObject("title", systemConstantService.getValByName(SystemConstantStore.webSiteTitle));
+		view.addObject("visitCount", visitCount);
 
 		String envName = systemConstantService.getValByName(SystemConstantStore.envName, true);
 		
@@ -53,7 +64,6 @@ public class HomePageServiceImpl extends CommonService implements HomePageServic
 			}
 		}
 
-
 		List<String> roles = baseUtilCustom.getRoles();
 		if (roles != null && roles.size() > 0 && roles.contains(RolesType.ROLE_USER.getName())) {
 			HashMap<String, Object> authDetailMap = baseUtilCustom.getAuthDetail();
@@ -63,6 +73,11 @@ public class HomePageServiceImpl extends CommonService implements HomePageServic
 		} 
 
 		return view;
+	}
+	
+	@Override
+	public ModelAndView aboutMeHandler(String vcode, HttpServletRequest request) {
+		return new ModelAndView(BlogViewConstant.about);
 	}
 
 }

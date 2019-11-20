@@ -3,6 +3,7 @@
 <mapper namespace="demo.article.mapper.ArticleLongComplaintMapper">
 
   <resultMap id="BaseResultMap" type="demo.article.pojo.po.ArticleLongComplaint">
+    <result column="id" jdbcType="BIGINT" property="id" />
     <result column="article_id" jdbcType="BIGINT" property="articleId" />
     <result column="article_creator_id" jdbcType="BIGINT" property="articleCreatorId" />
     <result column="complaint_user_id" jdbcType="BIGINT" property="complaintUserId" />
@@ -10,19 +11,102 @@
     <result column="complaint_reason" jdbcType="VARCHAR" property="complaintReason" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
-
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, article_id, article_creator_id, complaint_user_id, article_title, complaint_reason, 
+    create_time
+  </sql>
+  <select id="selectByExample" parameterType="demo.article.pojo.po.ArticleLongComplaintExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from article_long_complaint
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="demo.article.pojo.po.ArticleLongComplaintExample">
+    delete from article_long_complaint
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
   <insert id="insert" parameterType="demo.article.pojo.po.ArticleLongComplaint">
-    insert into article_long_complaint (article_id, article_creator_id, complaint_user_id, 
-      article_title, complaint_reason, create_time
-      )
-    values (#{articleId,jdbcType=BIGINT}, #{articleCreatorId,jdbcType=BIGINT}, #{complaintUserId,jdbcType=BIGINT}, 
-      #{articleTitle,jdbcType=VARCHAR}, #{complaintReason,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
-      )
+    insert into article_long_complaint (id, article_id, article_creator_id, 
+      complaint_user_id, article_title, complaint_reason, 
+      create_time)
+    values (#{id,jdbcType=BIGINT}, #{articleId,jdbcType=BIGINT}, #{articleCreatorId,jdbcType=BIGINT}, 
+      #{complaintUserId,jdbcType=BIGINT}, #{articleTitle,jdbcType=VARCHAR}, #{complaintReason,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP})
   </insert>
-
   <insert id="insertSelective" parameterType="demo.article.pojo.po.ArticleLongComplaint">
     insert into article_long_complaint
     <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
       <if test="articleId != null">
         article_id,
       </if>
@@ -43,6 +127,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
       <if test="articleId != null">
         #{articleId,jdbcType=BIGINT},
       </if>
@@ -63,5 +150,53 @@
       </if>
     </trim>
   </insert>
+  <select id="countByExample" parameterType="demo.article.pojo.po.ArticleLongComplaintExample" resultType="java.lang.Long">
+    select count(*) from article_long_complaint
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update article_long_complaint
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.articleId != null">
+        article_id = #{record.articleId,jdbcType=BIGINT},
+      </if>
+      <if test="record.articleCreatorId != null">
+        article_creator_id = #{record.articleCreatorId,jdbcType=BIGINT},
+      </if>
+      <if test="record.complaintUserId != null">
+        complaint_user_id = #{record.complaintUserId,jdbcType=BIGINT},
+      </if>
+      <if test="record.articleTitle != null">
+        article_title = #{record.articleTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.complaintReason != null">
+        complaint_reason = #{record.complaintReason,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update article_long_complaint
+    set id = #{record.id,jdbcType=BIGINT},
+      article_id = #{record.articleId,jdbcType=BIGINT},
+      article_creator_id = #{record.articleCreatorId,jdbcType=BIGINT},
+      complaint_user_id = #{record.complaintUserId,jdbcType=BIGINT},
+      article_title = #{record.articleTitle,jdbcType=VARCHAR},
+      complaint_reason = #{record.complaintReason,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
 
 </mapper>

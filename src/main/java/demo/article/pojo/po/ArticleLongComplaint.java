@@ -1,65 +1,76 @@
 package demo.article.pojo.po;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class ArticleLongComplaint {
-    private Long articleId;
+    private Long id;
 
-    private Long articleCreatorId;
+	private Long articleId;
 
-    private Long complaintUserId;
+	private Long articleCreatorId;
 
-    private String articleTitle;
+	private Long complaintUserId;
 
-    private String complaintReason;
+	private String articleTitle;
 
-    private Date createTime;
+	private String complaintReason;
 
-    public Long getArticleId() {
-        return articleId;
-    }
+	private LocalDateTime createTime;
 
-    public void setArticleId(Long articleId) {
-        this.articleId = articleId;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public Long getArticleCreatorId() {
-        return articleCreatorId;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setArticleCreatorId(Long articleCreatorId) {
-        this.articleCreatorId = articleCreatorId;
-    }
+	public Long getArticleId() {
+		return articleId;
+	}
 
-    public Long getComplaintUserId() {
-        return complaintUserId;
-    }
+	public void setArticleId(Long articleId) {
+		this.articleId = articleId;
+	}
 
-    public void setComplaintUserId(Long complaintUserId) {
-        this.complaintUserId = complaintUserId;
-    }
+	public Long getArticleCreatorId() {
+		return articleCreatorId;
+	}
 
-    public String getArticleTitle() {
-        return articleTitle;
-    }
+	public void setArticleCreatorId(Long articleCreatorId) {
+		this.articleCreatorId = articleCreatorId;
+	}
 
-    public void setArticleTitle(String articleTitle) {
-        this.articleTitle = articleTitle == null ? null : articleTitle.trim();
-    }
+	public Long getComplaintUserId() {
+		return complaintUserId;
+	}
 
-    public String getComplaintReason() {
-        return complaintReason;
-    }
+	public void setComplaintUserId(Long complaintUserId) {
+		this.complaintUserId = complaintUserId;
+	}
 
-    public void setComplaintReason(String complaintReason) {
-        this.complaintReason = complaintReason == null ? null : complaintReason.trim();
-    }
+	public String getArticleTitle() {
+		return articleTitle;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public void setArticleTitle(String articleTitle) {
+		this.articleTitle = articleTitle == null ? null : articleTitle.trim();
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public String getComplaintReason() {
+		return complaintReason;
+	}
+
+	public void setComplaintReason(String complaintReason) {
+		this.complaintReason = complaintReason == null ? null : complaintReason.trim();
+	}
+
+	public LocalDateTime getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(LocalDateTime createTime) {
+		this.createTime = createTime;
+	}
+
 }

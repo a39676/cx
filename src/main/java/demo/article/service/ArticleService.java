@@ -8,6 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.servlet.ModelAndView;
 
@@ -35,7 +36,7 @@ public interface ArticleService {
 	 * @return
 	 */
 	FindArticleLongResult findArticleLongByArticleSummaryPrivateKey(
-			FindArticleLongByArticleSummaryPrivateKeyParam param);
+			FindArticleLongByArticleSummaryPrivateKeyParam param, HttpServletRequest request);
 
 	/**
 	 * 以userId, 加密articleId验证是否对应作者
@@ -44,9 +45,9 @@ public interface ArticleService {
 	 * @param privateKey
 	 * @return
 	 */
-	boolean iWroteThis(Long userId, String privateKey);
+	boolean iWroteThis(String privateKey);
 
-	CommonResultCX likeOrHateThisChannel(LikeHateThisChannelParam inputParam);
+	CommonResultCX likeOrHateThisChannel(LikeHateThisChannelParam inputParam, HttpServletRequest request);
 
 	ArticleFileSaveResult saveArticleFile(String storePrefixPath, Long userId, String content) throws IOException;
 
@@ -55,7 +56,7 @@ public interface ArticleService {
 	 */
 	void refillArticleLongReviewCreatorId();
 
-	CommonResultCX articleLongComplaint(ArticleLongComplaintParam controllerParam);
+	CommonResultCX articleLongComplaint(ArticleLongComplaintParam controllerParam, HttpServletRequest request);
 
 	Long decryptPrivateKey(String pk);
 

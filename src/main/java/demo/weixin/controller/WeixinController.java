@@ -45,13 +45,11 @@ public class WeixinController extends CommonController {
 			@RequestParam(value = "echostr", defaultValue = "0") String echostr, 
 			HttpServletRequest request
 			) {
-		visitDataService.insertVisitData(request);
 		op.print(weixinService.weixinTokenTest(signature, timestamp, nonce, echostr));
 	}
 	
 //	@GetMapping(value = WXUrl.getNewToken)
 	public void getNewToken(HttpServletRequest request, PrintWriter op) throws Exception {
-		visitDataService.insertVisitData(request);
 		op.print(weixinService.getNewToken());
 	}
 	

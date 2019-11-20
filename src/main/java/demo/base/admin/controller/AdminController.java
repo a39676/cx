@@ -97,6 +97,11 @@ public class AdminController extends CommonController {
 
 		return view;
 	}
+	
+	@GetMapping(value = AdminUrlConstant.manager)
+	public ModelAndView manager() {
+		return new ModelAndView(AdminViewConstants.manager);
+	}
 
 	@GetMapping(value = AdminUrlConstant.updateAccountMarker, produces = "text/html;charset=UTF-8")
 	public ModelAndView updateAccountMarker() {

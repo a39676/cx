@@ -6,7 +6,7 @@ import net.sf.json.JSONObject;
 
 public interface ArticleBurnService {
 
-	CreatingBurnMessageResult creatingBurnMessage(Long userId, JSONObject jsonInput);
+	CreatingBurnMessageResult creatingBurnMessage(JSONObject jsonInput);
 
 	ArticleBurnResult findArticleByReadKey(String readKey);
 

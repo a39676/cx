@@ -2,6 +2,8 @@ package demo.article.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import demo.article.pojo.bo.ArticleUUIDChannelStoreBO;
 import demo.article.pojo.po.ArticleChannels;
 import demo.article.pojo.result.GetArticleChannelsResult;
@@ -21,8 +23,7 @@ public interface ArticleChannelService {
 	 * @param param
 	 * @return
 	 */
-	GetArticleChannelsResult getArticleChannelsDynamic(String hostName, Long userId);
-	GetArticleChannelsResult getArticleChannelsDynamic(String hostName);
+	GetArticleChannelsResult getArticleChannelsDynamic(HttpServletRequest request);
 
 	/**
 	 * 随机刷新闪现频道是否出现
@@ -41,10 +42,5 @@ public interface ArticleChannelService {
 
 	/** 以用户id查找当前其可以访问的频道ID列表 */
 	List<Integer> findChannelIdListByUserId(Long userId);
-
-
-
-
-	
 
 }

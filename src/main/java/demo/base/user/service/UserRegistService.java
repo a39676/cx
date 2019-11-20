@@ -1,5 +1,7 @@
 package demo.base.user.service;
 
+import javax.servlet.http.HttpServletRequest;
+
 import demo.base.user.pojo.dto.UserRegistDTO;
 import demo.base.user.pojo.vo.__baseSuperAdminRegistVO;
 import demo.baseCommon.pojo.result.CommonResultCX;
@@ -10,9 +12,9 @@ public interface UserRegistService {
 
 	CommonResultCX modifyRegistEmail(Long userId, String email);
 
-	CommonResultCX sendForgotPasswordMail(String email, String hostName);
+	CommonResultCX sendForgotUsernameMail(String email, HttpServletRequest request);
 
-	CommonResultCX sendForgotUsernameMail(String email, String hostName);
+	CommonResultCX sendForgotPasswordMail(String email, HttpServletRequest request);
 
 	CommonResultCX resetPasswordByMailKey(String mailKey, String newPassword, String newPasswordRepeat);
 
@@ -27,5 +29,8 @@ public interface UserRegistService {
 
 	__baseSuperAdminRegistVO __baseSuperAdminRegist();
 
+
+
 //	CommonResult resendRegistMail(Long userId); //2018-06-28 暂停向注册用户发送激活邮件,改由用户发回激活码.
+	
 }

@@ -2,12 +2,13 @@ package demo.article.service.impl;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ import demo.article.pojo.vo.ArticleChannelVO;
 import demo.article.service.ArticleChannelService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
+import demo.util.BaseUtilCustom;
 import ioHandle.FileUtilCustom;
 
 @Service
@@ -49,18 +51,9 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	private ArticleChannelsMapper articleChannelsMapper;
 	@Autowired
 	private FileUtilCustom ioUtil;
+	@Autowired
+	private BaseUtilCustom baseUtilCustom;
 	
-	private static List<String> hostNameList = null;
-
-	private List<String> loadHostNameList() {
-		if (hostNameList == null || hostNameList.size() != 3) {
-			hostNameList = new ArrayList<String>();
-			hostNameList.add(systemConstantService.getValByName(SystemConstantStore.hostName1));
-			hostNameList.add(systemConstantService.getValByName(SystemConstantStore.hostName2));
-			hostNameList.add(systemConstantService.getValByName(SystemConstantStore.hostName3));
-		}
-		return hostNameList;
-	}
 	
 	private static ArticleUUIDChannelStoreBO articleUUIDChannelStore = new ArticleUUIDChannelStoreBO();
 	private static Long articleChannelRefreshMinute = 0L;
@@ -200,19 +193,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		return publicChannelVOList;
 	}
 	
-	@Override
-	public GetArticleChannelsResult getArticleChannelsDynamic(String hostName, Long userId) {
-		GetArticleChannelsBO bo = null;
-		if(userId == null) {
-			bo = getArticleChannelsForNotLogin(hostName);
-		} else {
-			bo = getArticleChannelsByUserId(hostName, userId);
-		}
-		
-		GetArticleChannelsResult result = buildGetArticleChannelsResult(bo);
-		result.setIsSuccess();
-		return result;
-	}
+
 	
 	private GetArticleChannelsResult buildGetArticleChannelsResult(GetArticleChannelsBO bo) {
 		GetArticleChannelsResult result = new GetArticleChannelsResult();
@@ -225,9 +206,19 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	}
 	
 	@Override
-	public GetArticleChannelsResult getArticleChannelsDynamic(String hostName) {
-		GetArticleChannelsBO bo = getArticleChannelsForNotLogin(hostName);
-		return buildGetArticleChannelsResult(bo);
+	public GetArticleChannelsResult getArticleChannelsDynamic(HttpServletRequest request) {
+		GetArticleChannelsBO bo = null;
+		Long userId = baseUtilCustom.getUserId();
+		
+		if(userId == null) {
+			bo = getArticleChannelsForNotLogin(findHostNameFromRequst(request));
+		} else {
+			bo = getArticleChannelsByUserId(findHostNameFromRequst(request), userId);
+		}
+		
+		GetArticleChannelsResult result = buildGetArticleChannelsResult(bo);
+		result.setIsSuccess();
+		return result;
 	}
 	
 	private GetArticleChannelsBO getArticleChannelsForNotLogin(String hostName) {
@@ -526,17 +517,15 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 			return channelList;
 		}
 
-		List<String> hostNameList = loadHostNameList();
-
 		ArticleUUIDChannelStoreBO uuidStore = getArticleUUIDChannelStore();
 
 		if (StringUtils.isBlank(hostName) || uuidStore.getChannelList().size() < 1) {
 			channelList = removeChannelsForUnknow(channelList, uuidStore);
-		} else if (hostName.contains(hostNameList.get(0))) {
+		} else if (hostName.contains(systemConstantService.getValByName(SystemConstantStore.hostName1))) {
 			channelList = removeChannelsFor3310For(channelList, uuidStore);
-		} else if (hostName.contains(hostNameList.get(1))) {
+		} else if (hostName.contains(systemConstantService.getValByName(SystemConstantStore.hostName2))) {
 			channelList = removeChannelsForSDW(channelList, uuidStore);
-		} else if (hostName.contains(hostNameList.get(2))) {
+		} else if (hostName.contains(systemConstantService.getValByName(SystemConstantStore.hostName3))) {
 			channelList = removeChannelsForER(channelList, uuidStore);
 		} else {
 			channelList = removeChannelsForUnknow(channelList, uuidStore);
@@ -552,7 +541,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		}
 
 		GetArticleChannelsBO newChannelList = removeChannels(channelList, uuidStore,
-				Arrays.asList(new Long[] { 9L, 10L }));
+				List.of(2L, 3L, 4L));
 
 		return newChannelList;
 	}
@@ -564,7 +553,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		}
 
 		GetArticleChannelsBO newChannelList = removeChannels(channelList, uuidStore,
-				Arrays.asList(new Long[] { 9L, 10L, 17L, 19L, 20L }));
+				List.of(3L, 4L));
 
 		return newChannelList;
 	}
@@ -575,8 +564,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 			return channelList;
 		}
 
-		GetArticleChannelsBO newChannelList = removeChannels(channelList, uuidStore,
-				Arrays.asList(new Long[] { -1L }));
+		GetArticleChannelsBO newChannelList = removeChannels(channelList, uuidStore, null);
 
 		return newChannelList;
 	}
@@ -584,6 +572,11 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	private GetArticleChannelsBO removeChannelsForUnknow(
 			GetArticleChannelsBO channelList,
 			ArticleUUIDChannelStoreBO uuidStore) {
+		String envName = systemConstantService.getValByName(SystemConstantStore.envName, true);
+		if("dev".equals(envName)) {
+			return channelList;
+		}
+		
 		if (channelList == null) {
 			return channelList;
 		}
@@ -591,8 +584,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		channelList.getFlashChannels().clear();
 		channelList.getPrivateChannels().clear();
 		
-		GetArticleChannelsBO newChannelList = removeChannels(channelList, uuidStore,
-				Arrays.asList(new Long[] { 20L }));
+		GetArticleChannelsBO newChannelList = removeAllChannels(channelList);
 
 		return newChannelList;
 	}
@@ -609,6 +601,15 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 
 		tmpChannelList = removeChannels(channelList.getPrivateChannels(), uuidStore, targetChannelIds);
 		channelList.setPrivateChannels(tmpChannelList);
+
+		return channelList;
+	}
+	
+	private GetArticleChannelsBO removeAllChannels(GetArticleChannelsBO channelList) {
+		
+		channelList.setPublicChannels(new ArrayList<ArticleChannelVO>());
+		channelList.setFlashChannels(new ArrayList<ArticleChannelVO>());
+		channelList.setPrivateChannels(new ArrayList<ArticleChannelVO>());
 
 		return channelList;
 	}

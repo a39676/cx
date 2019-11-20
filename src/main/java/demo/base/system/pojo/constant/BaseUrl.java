@@ -4,6 +4,7 @@ public class BaseUrl {
 
 	public static final String baseRoot = "/";
 	public static final String welcome = "/welcome**";
+	public static final String aboutMe = "/aboutMe";
 
 	public static final String robot = "/robot";
 	public static final String favicon = "/favicon.ico";

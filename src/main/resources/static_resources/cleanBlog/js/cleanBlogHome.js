@@ -39,4 +39,18 @@ $(document).ready(function() {
     });  
   };
 
+  var getLocation = function(href) {
+      var location = document.createElement("a");
+      location.href = href;
+      return location;
+  };
+
+  function fillFootMarker() {
+    var location = getLocation(window.location.href);
+    var footMarker = document.getElementById("footMarker");
+    var visitCount = footMarker.getAttribute("visitCount");
+    footMarker.innerHTML = ('Copyright &copy; ' + location.hostname + ' 2019 | 访问统计: ' + visitCount);
+  };
+
+  fillFootMarker();
 });

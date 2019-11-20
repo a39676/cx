@@ -8,6 +8,9 @@
 <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
   <div class="container">
     <a class="navbar-brand" href="#">_</a>
+    <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
+      <a class="navbar-brand" href="/admin/manager" target="_blank">Admin</a>
+    </sec:authorize>
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">

@@ -1,5 +1,3 @@
-各页面, 返回首页按钮失效
-
 CREATE TABLE `duralbe_recorder` (
 id bigint not null,
    `trading_id` bigint default null,
@@ -16,14 +14,6 @@ id bigint not null,
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='duralbe_recorder'
 ;
 
-CREATE TABLE `visit_count` (
-   `id` bigint(20) NOT NULL,
-   `counting` bigint(20) NOT NULL,
-   `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
-   `is_delete` tinyint(1) DEFAULT '0',
-   PRIMARY KEY (`id`)
- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='visit_count'
-;
 -----------------
 考虑废止image部分代码
 需要为管理员增加屏蔽用户/ip

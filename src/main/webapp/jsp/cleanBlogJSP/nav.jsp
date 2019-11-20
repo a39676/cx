@@ -11,7 +11,7 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-          <a class="nav-link" href="${homeUrl}">首页</a>
+          <a class="nav-link" id="homePage" href="/">首页</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/aboutMe">关于我/联系方式</a>

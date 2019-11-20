@@ -25,7 +25,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
@@ -112,29 +112,27 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	@Autowired
 	private FileUtilCustom ioUtil;
 	
-	private static String articleStorePrefixPath = "";
-	private static String articleSummaryStorePrefixPath = "";
-	private static Long maxArticleLength = 0L;
+	private String getArticleStorePrefixPath() {
+		return systemConstantService.getValByName(SystemConstantStore.articleStorePrefixPath);
+	}
 	
-	
-	private boolean loadArticleStorePath() {
-		articleStorePrefixPath = systemConstantService.getValByName(SystemConstantStore.articleStorePrefixPath);
-		articleSummaryStorePrefixPath = systemConstantService
-				.getValByName(SystemConstantStore.articleSummaryStorePrefixPath);
-		if (articleStorePrefixPath.length() > 0 && articleSummaryStorePrefixPath.length() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+	private String getArticleSummaryStorePrefixPath() {
+		return systemConstantService.getValByName(SystemConstantStore.articleSummaryStorePrefixPath);
 	}
 
-	private boolean loadMaxArticleLength() {
-		maxArticleLength = Long.parseLong(systemConstantService.getValByName(SystemConstantStore.maxArticleLength));
-		if (maxArticleLength > 0) {
-			return true;
-		} else {
-			return false;
+	private Long loadMaxArticleLength() {
+		Long maxArticleLength = 0L;
+		try {
+			String maxLengthStr = systemConstantService.getValByName(SystemConstantStore.maxArticleLength);
+			if(maxLengthStr != null) {
+				maxArticleLength = Long.parseLong(maxLengthStr);
+			}
+		} catch (Exception e) {
+			return maxArticleLength;
 		}
+		
+		return maxArticleLength;
+		
 	}
 	
 	@Override
@@ -323,17 +321,18 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			title = StringEscapeUtils.escapeHtml(String.valueOf(controllerParam.getTitle()));
 		}
 
-		if (articleStorePrefixPath.length() < 1 || maxArticleLength < 1) {
-			if (!loadArticleStorePath() || !loadMaxArticleLength()) {
-				log.error("creating article serviceError  articleStorePrefixPath %s, maxArticleLength: %s, userId: %s", articleStorePrefixPath, maxArticleLength, userId);
-				result.fillWithResult(ResultTypeCX.serviceError);
-				return result;
-			}
+		Long maxArticleLength = loadMaxArticleLength();
+		String summaryStorePrefixPath = getArticleSummaryStorePrefixPath();
+		String storePrefixPath = getArticleStorePrefixPath();
+		if (StringUtils.isAnyBlank(summaryStorePrefixPath, storePrefixPath) || maxArticleLength < 1) {
+			log.error("creating article serviceError  articleStorePrefixPath %s, maxArticleLength: %s, userId: %s", storePrefixPath, maxArticleLength, userId);
+			result.fillWithResult(ResultTypeCX.serviceError);
+			return result;
 		}
 
 		ArticleLong newArticle = new ArticleLong();
 
-		ArticleFileSaveResult saveArticleResult = saveArticleFile(articleStorePrefixPath, userId, controllerParam.getContent());
+		ArticleFileSaveResult saveArticleResult = saveArticleFile(storePrefixPath, userId, controllerParam.getContent());
 		if (!saveArticleResult.isSuccess()) {
 			return saveArticleResult;
 		}
@@ -450,9 +449,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			}
 		}
 
-		if(maxArticleLength <= 0) {
-			loadMaxArticleLength();
-		}
+		Long maxArticleLength = loadMaxArticleLength();
 		
 		if (content.length() > maxArticleLength) {
 			result.fillWithResult(ResultTypeCX.articleTooLong);
@@ -516,8 +513,10 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		
 		String fileName = userId + "L" + UUID.randomUUID().toString().substring(0, 8) + ".txt";
 		String timeFolder = LocalDate.now().toString();
-		File mainFolder = new File(articleSummaryStorePrefixPath + timeFolder);
-		String finalFilePath = articleSummaryStorePrefixPath + timeFolder + "/" + fileName;
+		
+		String summaryStorePrefixPath = getArticleSummaryStorePrefixPath();
+		File mainFolder = new File(summaryStorePrefixPath + timeFolder);
+		String finalFilePath = summaryStorePrefixPath + timeFolder + "/" + fileName;
 
 		if (!mainFolder.exists()) {
 			if (!mainFolder.mkdirs()) {

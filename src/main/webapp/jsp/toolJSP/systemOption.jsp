@@ -41,7 +41,7 @@
 <hr>
 
 <div>
-  <input type="text" name="refreshSystemConstant" placeholder="变量名以空格分隔"><br>
+  <input type="text" name="refreshSystemConstant" placeholder="变量名"><br>
   <button id="refreshSystemConstant">refreshSystemConstant</button><br>
 </div>
 
@@ -178,9 +178,9 @@
     function refreshSystemConstant() {
       
       var url = "${pageContext.request.contextPath}/admin/refreshSystemConstant";
-      var keys = $("input[name='refreshSystemConstant']").val();
+      var key = $("input[name='refreshSystemConstant']").val();
       var jsonOutput = {
-        keys:keys
+        key:key
       };
 
       $.ajax({  

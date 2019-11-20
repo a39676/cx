@@ -1,9 +1,6 @@
 package demo.base.admin.controller;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,11 +13,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.account_info.controller.AccountInfoController;
 import demo.base.admin.pojo.constant.AdminUrlConstant;
 import demo.base.admin.pojo.constant.AdminViewConstants;
+import demo.base.admin.pojo.dto.RefreshSystemConstantDTO;
 import demo.base.admin.service.AdminService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.constant.BaseStatusCode;
@@ -150,11 +149,10 @@ public class AdminController extends CommonController {
 	}
 
 	@PostMapping(value = AdminUrlConstant.refreshSystemConstant)
-	public void refreshSystemConstant(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) {
-		JSONObject jsonInput = getJson(data);
-		List<String> keys = Arrays.asList(jsonInput.getString("keys").split(" "));
-		HashMap<String, String> result = systemConstantService.getValsByName(keys, true);
-		outputJson(response, JSONObject.fromObject(result));
+	@ResponseBody
+	public String refreshSystemConstant(@RequestBody RefreshSystemConstantDTO dto) {
+		String result = systemConstantService.getValByName(dto.getKey(), true);
+		return result;
 	}
 	
 	@PostMapping(value = AdminUrlConstant.loadHomepageAnnouncementStr)

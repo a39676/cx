@@ -65,7 +65,7 @@
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           
-          <PRE><p class="para">${articleLongVO.contentLines}</p></PRE>
+          <p class="para" style="word-break:break-word;">${articleLongVO.contentLines}</p>
 
           <button class="btn btn-warning btn-sm" name="showComplaint" pk="${articleLongVO.privateKey}">
             <span style="font-size: small;">需要反馈?</span>

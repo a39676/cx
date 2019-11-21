@@ -20,13 +20,6 @@ id bigint not null,
 考虑废止image部分代码
 需要为管理员增加屏蔽用户/ip
 
-流动公告
---搭建web socket
-
-权限
---频道管理员
-频道可扩展/继承？
-
 验证码模块
 
 maxAttempts user_attempts 增加时间列?

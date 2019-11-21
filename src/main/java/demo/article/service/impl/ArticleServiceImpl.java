@@ -472,7 +472,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 
 		if(itIsBigUser()) {
 			for (String line : lines) {
-				escapeLines.add(line);
+				sb.append(line + System.lineSeparator());
 			}
 		} else {
 			for (String line : lines) {
@@ -573,6 +573,10 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		result.setArticleId(articleId);
 		param.setArticleId(articleId);
 		
+		/*
+		 * TODO
+		 * 重复插入访问数据?
+		 */
 		articleViewService.insertOrUpdateViewCount(articleId);
 		
 		vo = articleLongMapper.findArticleLongByDecryptId(param);
@@ -591,19 +595,23 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	private void fillArticleContent(ArticleLongVO articleLongVO, String pk, Long userId) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String strContent = ioUtil.getStringFromFile(articleLongVO.getPath());
-		List<String> strLines = Arrays.asList(strContent.split("\n"));
-		StringBuffer outputLines = new StringBuffer();
-		String line = "";
-		for(int i = 0; i < strLines.size(); i++) {
-			line = strLines.get(i);
-			if(line.matches(imageHttpUrlPattern)) {
-				line = "<a target=\"_blank\" href=\"" + line + "\">查看原图</a><br>"
-						+ "<img name=\"articleImage\" pk=\""+ pk +"\" fold=\"1\" src=\"" + line + "\" style=\"width: 100px; height: 100px;\">"
-						+ "<br>";
-			}
-			outputLines.append(line + "<br>");
-		}
-		articleLongVO.setContentLines(outputLines.toString());
+		/*
+		 * 2019-11-21
+		 * 必须被富文本编辑器取代
+		 */
+//		List<String> strLines = Arrays.asList(strContent.split(System.lineSeparator()));
+//		StringBuffer outputLines = new StringBuffer();
+//		String line = "";
+//		for(int i = 0; i < strLines.size(); i++) {
+//			line = strLines.get(i);
+//			if(line.matches(imageHttpUrlPattern)) {
+//				line = "<a target=\"_blank\" href=\"" + line + "\">查看原图</a><br>"
+//						+ "<img name=\"articleImage\" pk=\""+ pk +"\" fold=\"1\" src=\"" + line + "\" style=\"width: 100px; height: 100px;\">"
+//						+ "<br>";
+//			}
+//			outputLines.append(line + "<br>");
+//		}
+		articleLongVO.setContentLines(strContent);
 		articleLongVO.setCreateDateString(sdf.format(articleLongVO.getCreateTime()));
 		if(articleLongVO.getEditTime() != null) {
 			articleLongVO.setEditDateString(sdf.format(articleLongVO.getEditTime()));

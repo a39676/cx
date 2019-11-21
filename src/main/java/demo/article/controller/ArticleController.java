@@ -24,7 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.pojo.constant.ArticleUrlConstant;
 import demo.article.pojo.constant.ArticleViewConstant;
-import demo.article.pojo.param.controllerParam.ArticleLongComplaintParam;
+import demo.article.pojo.dto.ArticleFeedbackDTO;
 import demo.article.pojo.param.controllerParam.CreateArticleParam;
 import demo.article.pojo.param.controllerParam.CreatingArticleParam;
 import demo.article.pojo.param.controllerParam.FindArticleLongByArticleSummaryPrivateKeyParam;
@@ -119,10 +119,8 @@ public class ArticleController extends CommonController {
 	
 	@GetMapping(value = ArticleUrlConstant.creatingArticleLong)
 	public ModelAndView creatingArticleLong(HttpServletRequest request) {
-//		TODO ???what to do?
 		CreatingArticleParam param = new CreatingArticleParam();
 		ModelAndView view = articleService.creatingArticleLong(param);
-		
 		GetArticleChannelsResult channelsResult = getArticleChannelsDynamic(request);
 		view.addObject("channelList", channelsResult.getChannelList());
 		
@@ -201,10 +199,11 @@ public class ArticleController extends CommonController {
 		outputJson(response, JSONObject.fromObject(result));
 	}
 	
-	@PostMapping(value = ArticleUrlConstant.articleLongComplaint)
-	public void articleLongComplaint(@RequestBody ArticleLongComplaintParam param, HttpServletRequest request, HttpServletResponse response) {
-		CommonResult result = articleService.articleLongComplaint(param, request);
-		outputJson(response, JSONObject.fromObject(result));
+	@PostMapping(value = ArticleUrlConstant.articleLongFeedback)
+	@ResponseBody
+	public CommonResultCX articleLongFeedback(@RequestBody ArticleFeedbackDTO dto, HttpServletRequest request) {
+		CommonResultCX result = articleService.articleLongFeedback(dto, request);
+		return result;
 	}
 
 }

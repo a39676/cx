@@ -1,5 +1,5 @@
 /**
- * for home.jsp
+ * for cleanBlogIndex.jsp
  */
 $(document).ready(function() {
 

@@ -67,21 +67,55 @@
           
           <p class="para" style="word-break:break-word;">${articleLongVO.contentLines}</p>
 
-          <button class="btn btn-warning btn-sm" name="showComplaint" pk="${articleLongVO.privateKey}">
-            <span style="font-size: small;">需要反馈?</span>
-          </button>
-          <div style="display: none;" pk="${articleLongVO.privateKey}" name="complaintDiv">
-            <input type="text" name="complaintReason" pk="${articleLongVO.privateKey}" placeholder="请输入">
-            <div class="btn-group">
-              <button class="btn btn-warning btn-sm" name="complaint" pk="${articleLongVO.privateKey}">
-                <span style="font-size: small;">确定</span>
-              </button>
-              <button class="btn btn-primary btn-sm" name="cancelComplaint" pk="${articleLongVO.privateKey}">
-                <span style="font-size: small;">取消</span>
-              </button>
-            </div>
-            <span class="badge badge-warning" pk="${articleLongVO.privateKey}" name="complaintResult"></span>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="page-heading">
+            <h1>需要反馈?</h1>
+            <span class="subheading">我将尽快给您回复</span>
           </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <form name="sentMessage" novalidate>
+            <div class="control-group">
+              <div class="form-group floating-label-form-group controls">
+                <label>您的称呼</label>
+                <input type="text" class="form-control" placeholder="您的称呼" id="nickname" required data-validation-required-message="Please enter your name.">
+                <p class="help-block text-danger"></p>
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="form-group floating-label-form-group controls">
+                <label>Email</label>
+              <input type="email" class="form-control" placeholder="Email Address" id="email" required data-validation-required-message="Please enter your  email address.">
+                <p class="help-block text-danger"></p>
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="form-group col-xs-12 floating-label-form-group controls">
+                <label>Phone Number</label>
+                <input type="tel" class="form-control" placeholder="Phone Number" id="mobile">
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="form-group floating-label-form-group controls">
+                <label>Message</label>
+              <textarea rows="5" class="form-control" placeholder="请输入您想说的" id="message" required data-validation-required-message="Please enter a message."> </textarea>
+                <p class="help-block text-danger"></p>
+              </div>
+            </div>
+            <br>
+            <div class="btn-group">
+              <span class="badge badge-warning" name="feedback" pk="${articleLongVO.privateKey}">
+                <span>确定</span>
+              </span>
+            </div>
+            <span class="badge badge-warning" pk="${articleLongVO.privateKey}" name="feedbackResult"></span>
+          </form>
         </div>
       </div>
     </div>
@@ -93,7 +127,7 @@
   <%@ include file="./footer.jsp" %>
 
   <%@ include file="./cleanBlogNormalFooter.jsp" %>
-  <script type="text/javascript" src="<c:url value='/static_resources/js/article/readArticleLongV3.js'/>"></script>
+  <script type="text/javascript" src="<c:url value='/static_resources/cleanBlog/js/readArticleLongV4.js'/>"></script>
   <sec:authorize access="hasRole('ROLE_ADMIN')">
   <script type="text/javascript" src="<c:url value='/static_resources/js/article/articleManager.js'/>"></script>
   </sec:authorize>

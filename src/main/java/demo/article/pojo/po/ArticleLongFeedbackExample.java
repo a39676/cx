@@ -4,14 +4,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArticleLongComplaintExample {
+public class ArticleLongFeedbackExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public ArticleLongComplaintExample() {
+    public ArticleLongFeedbackExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -285,63 +285,133 @@ public class ArticleLongComplaintExample {
             return (Criteria) this;
         }
 
-        public Criteria andComplaintUserIdIsNull() {
-            addCriterion("complaint_user_id is null");
+        public Criteria andFeedbackUserIdIsNull() {
+            addCriterion("feedback_user_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andComplaintUserIdIsNotNull() {
-            addCriterion("complaint_user_id is not null");
+        public Criteria andFeedbackUserIdIsNotNull() {
+            addCriterion("feedback_user_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andComplaintUserIdEqualTo(Long value) {
-            addCriterion("complaint_user_id =", value, "complaintUserId");
+        public Criteria andFeedbackUserIdEqualTo(Long value) {
+            addCriterion("feedback_user_id =", value, "feedbackUserId");
             return (Criteria) this;
         }
 
-        public Criteria andComplaintUserIdNotEqualTo(Long value) {
-            addCriterion("complaint_user_id <>", value, "complaintUserId");
+        public Criteria andFeedbackUserIdNotEqualTo(Long value) {
+            addCriterion("feedback_user_id <>", value, "feedbackUserId");
             return (Criteria) this;
         }
 
-        public Criteria andComplaintUserIdGreaterThan(Long value) {
-            addCriterion("complaint_user_id >", value, "complaintUserId");
+        public Criteria andFeedbackUserIdGreaterThan(Long value) {
+            addCriterion("feedback_user_id >", value, "feedbackUserId");
             return (Criteria) this;
         }
 
-        public Criteria andComplaintUserIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("complaint_user_id >=", value, "complaintUserId");
+        public Criteria andFeedbackUserIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("feedback_user_id >=", value, "feedbackUserId");
             return (Criteria) this;
         }
 
-        public Criteria andComplaintUserIdLessThan(Long value) {
-            addCriterion("complaint_user_id <", value, "complaintUserId");
+        public Criteria andFeedbackUserIdLessThan(Long value) {
+            addCriterion("feedback_user_id <", value, "feedbackUserId");
             return (Criteria) this;
         }
 
-        public Criteria andComplaintUserIdLessThanOrEqualTo(Long value) {
-            addCriterion("complaint_user_id <=", value, "complaintUserId");
+        public Criteria andFeedbackUserIdLessThanOrEqualTo(Long value) {
+            addCriterion("feedback_user_id <=", value, "feedbackUserId");
             return (Criteria) this;
         }
 
-        public Criteria andComplaintUserIdIn(List<Long> values) {
-            addCriterion("complaint_user_id in", values, "complaintUserId");
+        public Criteria andFeedbackUserIdIn(List<Long> values) {
+            addCriterion("feedback_user_id in", values, "feedbackUserId");
             return (Criteria) this;
         }
 
-        public Criteria andComplaintUserIdNotIn(List<Long> values) {
-            addCriterion("complaint_user_id not in", values, "complaintUserId");
+        public Criteria andFeedbackUserIdNotIn(List<Long> values) {
+            addCriterion("feedback_user_id not in", values, "feedbackUserId");
             return (Criteria) this;
         }
 
-        public Criteria andComplaintUserIdBetween(Long value1, Long value2) {
-            addCriterion("complaint_user_id between", value1, value2, "complaintUserId");
+        public Criteria andFeedbackUserIdBetween(Long value1, Long value2) {
+            addCriterion("feedback_user_id between", value1, value2, "feedbackUserId");
             return (Criteria) this;
         }
 
-        public Criteria andComplaintUserIdNotBetween(Long value1, Long value2) {
-            addCriterion("complaint_user_id not between", value1, value2, "complaintUserId");
+        public Criteria andFeedbackUserIdNotBetween(Long value1, Long value2) {
+            addCriterion("feedback_user_id not between", value1, value2, "feedbackUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackUserNicknameIsNull() {
+            addCriterion("feedback_user_nickname is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackUserNicknameIsNotNull() {
+            addCriterion("feedback_user_nickname is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackUserNicknameEqualTo(String value) {
+            addCriterion("feedback_user_nickname =", value, "feedbackUserNickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackUserNicknameNotEqualTo(String value) {
+            addCriterion("feedback_user_nickname <>", value, "feedbackUserNickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackUserNicknameGreaterThan(String value) {
+            addCriterion("feedback_user_nickname >", value, "feedbackUserNickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackUserNicknameGreaterThanOrEqualTo(String value) {
+            addCriterion("feedback_user_nickname >=", value, "feedbackUserNickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackUserNicknameLessThan(String value) {
+            addCriterion("feedback_user_nickname <", value, "feedbackUserNickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackUserNicknameLessThanOrEqualTo(String value) {
+            addCriterion("feedback_user_nickname <=", value, "feedbackUserNickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackUserNicknameLike(String value) {
+            addCriterion("feedback_user_nickname like", value, "feedbackUserNickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackUserNicknameNotLike(String value) {
+            addCriterion("feedback_user_nickname not like", value, "feedbackUserNickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackUserNicknameIn(List<String> values) {
+            addCriterion("feedback_user_nickname in", values, "feedbackUserNickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackUserNicknameNotIn(List<String> values) {
+            addCriterion("feedback_user_nickname not in", values, "feedbackUserNickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackUserNicknameBetween(String value1, String value2) {
+            addCriterion("feedback_user_nickname between", value1, value2, "feedbackUserNickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackUserNicknameNotBetween(String value1, String value2) {
+            addCriterion("feedback_user_nickname not between", value1, value2, "feedbackUserNickname");
             return (Criteria) this;
         }
 
@@ -415,73 +485,273 @@ public class ArticleLongComplaintExample {
             return (Criteria) this;
         }
 
-        public Criteria andComplaintReasonIsNull() {
-            addCriterion("complaint_reason is null");
+        public Criteria andEmailIsNull() {
+            addCriterion("email is null");
             return (Criteria) this;
         }
 
-        public Criteria andComplaintReasonIsNotNull() {
-            addCriterion("complaint_reason is not null");
+        public Criteria andEmailIsNotNull() {
+            addCriterion("email is not null");
             return (Criteria) this;
         }
 
-        public Criteria andComplaintReasonEqualTo(String value) {
-            addCriterion("complaint_reason =", value, "complaintReason");
+        public Criteria andEmailEqualTo(String value) {
+            addCriterion("email =", value, "email");
             return (Criteria) this;
         }
 
-        public Criteria andComplaintReasonNotEqualTo(String value) {
-            addCriterion("complaint_reason <>", value, "complaintReason");
+        public Criteria andEmailNotEqualTo(String value) {
+            addCriterion("email <>", value, "email");
             return (Criteria) this;
         }
 
-        public Criteria andComplaintReasonGreaterThan(String value) {
-            addCriterion("complaint_reason >", value, "complaintReason");
+        public Criteria andEmailGreaterThan(String value) {
+            addCriterion("email >", value, "email");
             return (Criteria) this;
         }
 
-        public Criteria andComplaintReasonGreaterThanOrEqualTo(String value) {
-            addCriterion("complaint_reason >=", value, "complaintReason");
+        public Criteria andEmailGreaterThanOrEqualTo(String value) {
+            addCriterion("email >=", value, "email");
             return (Criteria) this;
         }
 
-        public Criteria andComplaintReasonLessThan(String value) {
-            addCriterion("complaint_reason <", value, "complaintReason");
+        public Criteria andEmailLessThan(String value) {
+            addCriterion("email <", value, "email");
             return (Criteria) this;
         }
 
-        public Criteria andComplaintReasonLessThanOrEqualTo(String value) {
-            addCriterion("complaint_reason <=", value, "complaintReason");
+        public Criteria andEmailLessThanOrEqualTo(String value) {
+            addCriterion("email <=", value, "email");
             return (Criteria) this;
         }
 
-        public Criteria andComplaintReasonLike(String value) {
-            addCriterion("complaint_reason like", value, "complaintReason");
+        public Criteria andEmailLike(String value) {
+            addCriterion("email like", value, "email");
             return (Criteria) this;
         }
 
-        public Criteria andComplaintReasonNotLike(String value) {
-            addCriterion("complaint_reason not like", value, "complaintReason");
+        public Criteria andEmailNotLike(String value) {
+            addCriterion("email not like", value, "email");
             return (Criteria) this;
         }
 
-        public Criteria andComplaintReasonIn(List<String> values) {
-            addCriterion("complaint_reason in", values, "complaintReason");
+        public Criteria andEmailIn(List<String> values) {
+            addCriterion("email in", values, "email");
             return (Criteria) this;
         }
 
-        public Criteria andComplaintReasonNotIn(List<String> values) {
-            addCriterion("complaint_reason not in", values, "complaintReason");
+        public Criteria andEmailNotIn(List<String> values) {
+            addCriterion("email not in", values, "email");
             return (Criteria) this;
         }
 
-        public Criteria andComplaintReasonBetween(String value1, String value2) {
-            addCriterion("complaint_reason between", value1, value2, "complaintReason");
+        public Criteria andEmailBetween(String value1, String value2) {
+            addCriterion("email between", value1, value2, "email");
             return (Criteria) this;
         }
 
-        public Criteria andComplaintReasonNotBetween(String value1, String value2) {
-            addCriterion("complaint_reason not between", value1, value2, "complaintReason");
+        public Criteria andEmailNotBetween(String value1, String value2) {
+            addCriterion("email not between", value1, value2, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andMobileIsNull() {
+            addCriterion("mobile is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMobileIsNotNull() {
+            addCriterion("mobile is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMobileEqualTo(String value) {
+            addCriterion("mobile =", value, "mobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andMobileNotEqualTo(String value) {
+            addCriterion("mobile <>", value, "mobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andMobileGreaterThan(String value) {
+            addCriterion("mobile >", value, "mobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andMobileGreaterThanOrEqualTo(String value) {
+            addCriterion("mobile >=", value, "mobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andMobileLessThan(String value) {
+            addCriterion("mobile <", value, "mobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andMobileLessThanOrEqualTo(String value) {
+            addCriterion("mobile <=", value, "mobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andMobileLike(String value) {
+            addCriterion("mobile like", value, "mobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andMobileNotLike(String value) {
+            addCriterion("mobile not like", value, "mobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andMobileIn(List<String> values) {
+            addCriterion("mobile in", values, "mobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andMobileNotIn(List<String> values) {
+            addCriterion("mobile not in", values, "mobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andMobileBetween(String value1, String value2) {
+            addCriterion("mobile between", value1, value2, "mobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andMobileNotBetween(String value1, String value2) {
+            addCriterion("mobile not between", value1, value2, "mobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackTypeIsNull() {
+            addCriterion("feedback_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackTypeIsNotNull() {
+            addCriterion("feedback_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackTypeEqualTo(Integer value) {
+            addCriterion("feedback_type =", value, "feedbackType");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackTypeNotEqualTo(Integer value) {
+            addCriterion("feedback_type <>", value, "feedbackType");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackTypeGreaterThan(Integer value) {
+            addCriterion("feedback_type >", value, "feedbackType");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackTypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("feedback_type >=", value, "feedbackType");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackTypeLessThan(Integer value) {
+            addCriterion("feedback_type <", value, "feedbackType");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackTypeLessThanOrEqualTo(Integer value) {
+            addCriterion("feedback_type <=", value, "feedbackType");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackTypeIn(List<Integer> values) {
+            addCriterion("feedback_type in", values, "feedbackType");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackTypeNotIn(List<Integer> values) {
+            addCriterion("feedback_type not in", values, "feedbackType");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackTypeBetween(Integer value1, Integer value2) {
+            addCriterion("feedback_type between", value1, value2, "feedbackType");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackTypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("feedback_type not between", value1, value2, "feedbackType");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackIsNull() {
+            addCriterion("feedback is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackIsNotNull() {
+            addCriterion("feedback is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackEqualTo(String value) {
+            addCriterion("feedback =", value, "feedback");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackNotEqualTo(String value) {
+            addCriterion("feedback <>", value, "feedback");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackGreaterThan(String value) {
+            addCriterion("feedback >", value, "feedback");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackGreaterThanOrEqualTo(String value) {
+            addCriterion("feedback >=", value, "feedback");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackLessThan(String value) {
+            addCriterion("feedback <", value, "feedback");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackLessThanOrEqualTo(String value) {
+            addCriterion("feedback <=", value, "feedback");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackLike(String value) {
+            addCriterion("feedback like", value, "feedback");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackNotLike(String value) {
+            addCriterion("feedback not like", value, "feedback");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackIn(List<String> values) {
+            addCriterion("feedback in", values, "feedback");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackNotIn(List<String> values) {
+            addCriterion("feedback not in", values, "feedback");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackBetween(String value1, String value2) {
+            addCriterion("feedback between", value1, value2, "feedback");
+            return (Criteria) this;
+        }
+
+        public Criteria andFeedbackNotBetween(String value1, String value2) {
+            addCriterion("feedback not between", value1, value2, "feedback");
             return (Criteria) this;
         }
 

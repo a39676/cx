@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="demo.article.mapper.ArticleLongComplaintMapper">
-
-  <resultMap id="BaseResultMap" type="demo.article.pojo.po.ArticleLongComplaint">
+<mapper namespace="demo.article.mapper.ArticleLongFeedbackMapper">
+  <resultMap id="BaseResultMap" type="demo.article.pojo.po.ArticleLongFeedback">
     <result column="id" jdbcType="BIGINT" property="id" />
     <result column="article_id" jdbcType="BIGINT" property="articleId" />
     <result column="article_creator_id" jdbcType="BIGINT" property="articleCreatorId" />
-    <result column="complaint_user_id" jdbcType="BIGINT" property="complaintUserId" />
+    <result column="feedback_user_id" jdbcType="BIGINT" property="feedbackUserId" />
+    <result column="feedback_user_nickname" jdbcType="CHAR" property="feedbackUserNickname" />
     <result column="article_title" jdbcType="VARCHAR" property="articleTitle" />
-    <result column="complaint_reason" jdbcType="VARCHAR" property="complaintReason" />
+    <result column="email" jdbcType="CHAR" property="email" />
+    <result column="mobile" jdbcType="CHAR" property="mobile" />
+    <result column="feedback_type" jdbcType="TINYINT" property="feedbackType" />
+    <result column="feedback" jdbcType="VARCHAR" property="feedback" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -70,16 +73,16 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, article_id, article_creator_id, complaint_user_id, article_title, complaint_reason, 
-    create_time
+    id, article_id, article_creator_id, feedback_user_id, feedback_user_nickname, article_title, 
+    email, mobile, feedback_type, feedback, create_time
   </sql>
-  <select id="selectByExample" parameterType="demo.article.pojo.po.ArticleLongComplaintExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="demo.article.pojo.po.ArticleLongFeedbackExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from article_long_complaint
+    from article_long_feedback
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -87,22 +90,24 @@
       order by ${orderByClause}
     </if>
   </select>
-  <delete id="deleteByExample" parameterType="demo.article.pojo.po.ArticleLongComplaintExample">
-    delete from article_long_complaint
+  <delete id="deleteByExample" parameterType="demo.article.pojo.po.ArticleLongFeedbackExample">
+    delete from article_long_feedback
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="demo.article.pojo.po.ArticleLongComplaint">
-    insert into article_long_complaint (id, article_id, article_creator_id, 
-      complaint_user_id, article_title, complaint_reason, 
-      create_time)
+  <insert id="insert" parameterType="demo.article.pojo.po.ArticleLongFeedback">
+    insert into article_long_feedback (id, article_id, article_creator_id, 
+      feedback_user_id, feedback_user_nickname, article_title, 
+      email, mobile, feedback_type, 
+      feedback, create_time)
     values (#{id,jdbcType=BIGINT}, #{articleId,jdbcType=BIGINT}, #{articleCreatorId,jdbcType=BIGINT}, 
-      #{complaintUserId,jdbcType=BIGINT}, #{articleTitle,jdbcType=VARCHAR}, #{complaintReason,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP})
+      #{feedbackUserId,jdbcType=BIGINT}, #{feedbackUserNickname,jdbcType=CHAR}, #{articleTitle,jdbcType=VARCHAR}, 
+      #{email,jdbcType=CHAR}, #{mobile,jdbcType=CHAR}, #{feedbackType,jdbcType=TINYINT}, 
+      #{feedback,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="demo.article.pojo.po.ArticleLongComplaint">
-    insert into article_long_complaint
+  <insert id="insertSelective" parameterType="demo.article.pojo.po.ArticleLongFeedback">
+    insert into article_long_feedback
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -113,14 +118,26 @@
       <if test="articleCreatorId != null">
         article_creator_id,
       </if>
-      <if test="complaintUserId != null">
-        complaint_user_id,
+      <if test="feedbackUserId != null">
+        feedback_user_id,
+      </if>
+      <if test="feedbackUserNickname != null">
+        feedback_user_nickname,
       </if>
       <if test="articleTitle != null">
         article_title,
       </if>
-      <if test="complaintReason != null">
-        complaint_reason,
+      <if test="email != null">
+        email,
+      </if>
+      <if test="mobile != null">
+        mobile,
+      </if>
+      <if test="feedbackType != null">
+        feedback_type,
+      </if>
+      <if test="feedback != null">
+        feedback,
       </if>
       <if test="createTime != null">
         create_time,
@@ -136,28 +153,40 @@
       <if test="articleCreatorId != null">
         #{articleCreatorId,jdbcType=BIGINT},
       </if>
-      <if test="complaintUserId != null">
-        #{complaintUserId,jdbcType=BIGINT},
+      <if test="feedbackUserId != null">
+        #{feedbackUserId,jdbcType=BIGINT},
+      </if>
+      <if test="feedbackUserNickname != null">
+        #{feedbackUserNickname,jdbcType=CHAR},
       </if>
       <if test="articleTitle != null">
         #{articleTitle,jdbcType=VARCHAR},
       </if>
-      <if test="complaintReason != null">
-        #{complaintReason,jdbcType=VARCHAR},
+      <if test="email != null">
+        #{email,jdbcType=CHAR},
+      </if>
+      <if test="mobile != null">
+        #{mobile,jdbcType=CHAR},
+      </if>
+      <if test="feedbackType != null">
+        #{feedbackType,jdbcType=TINYINT},
+      </if>
+      <if test="feedback != null">
+        #{feedback,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="demo.article.pojo.po.ArticleLongComplaintExample" resultType="java.lang.Long">
-    select count(*) from article_long_complaint
+  <select id="countByExample" parameterType="demo.article.pojo.po.ArticleLongFeedbackExample" resultType="java.lang.Long">
+    select count(*) from article_long_feedback
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update article_long_complaint
+    update article_long_feedback
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
@@ -168,14 +197,26 @@
       <if test="record.articleCreatorId != null">
         article_creator_id = #{record.articleCreatorId,jdbcType=BIGINT},
       </if>
-      <if test="record.complaintUserId != null">
-        complaint_user_id = #{record.complaintUserId,jdbcType=BIGINT},
+      <if test="record.feedbackUserId != null">
+        feedback_user_id = #{record.feedbackUserId,jdbcType=BIGINT},
+      </if>
+      <if test="record.feedbackUserNickname != null">
+        feedback_user_nickname = #{record.feedbackUserNickname,jdbcType=CHAR},
       </if>
       <if test="record.articleTitle != null">
         article_title = #{record.articleTitle,jdbcType=VARCHAR},
       </if>
-      <if test="record.complaintReason != null">
-        complaint_reason = #{record.complaintReason,jdbcType=VARCHAR},
+      <if test="record.email != null">
+        email = #{record.email,jdbcType=CHAR},
+      </if>
+      <if test="record.mobile != null">
+        mobile = #{record.mobile,jdbcType=CHAR},
+      </if>
+      <if test="record.feedbackType != null">
+        feedback_type = #{record.feedbackType,jdbcType=TINYINT},
+      </if>
+      <if test="record.feedback != null">
+        feedback = #{record.feedback,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -186,17 +227,20 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update article_long_complaint
+    update article_long_feedback
     set id = #{record.id,jdbcType=BIGINT},
       article_id = #{record.articleId,jdbcType=BIGINT},
       article_creator_id = #{record.articleCreatorId,jdbcType=BIGINT},
-      complaint_user_id = #{record.complaintUserId,jdbcType=BIGINT},
+      feedback_user_id = #{record.feedbackUserId,jdbcType=BIGINT},
+      feedback_user_nickname = #{record.feedbackUserNickname,jdbcType=CHAR},
       article_title = #{record.articleTitle,jdbcType=VARCHAR},
-      complaint_reason = #{record.complaintReason,jdbcType=VARCHAR},
+      email = #{record.email,jdbcType=CHAR},
+      mobile = #{record.mobile,jdbcType=CHAR},
+      feedback_type = #{record.feedbackType,jdbcType=TINYINT},
+      feedback = #{record.feedback,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-
 </mapper>

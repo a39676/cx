@@ -32,14 +32,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import dateTimeHandle.DateUtilCustom;
-import demo.article.mapper.ArticleLongComplaintMapper;
+import demo.article.mapper.ArticleLongFeedbackMapper;
 import demo.article.mapper.ArticleLongMapper;
 import demo.article.mapper.ArticleLongReviewMapper;
 import demo.article.mapper.ArticleUserDetailMapper;
 import demo.article.pojo.bo.ArticleUUIDChannelStoreBO;
 import demo.article.pojo.constant.ArticleConstant;
 import demo.article.pojo.constant.ArticleViewConstant;
-import demo.article.pojo.param.controllerParam.ArticleLongComplaintParam;
+import demo.article.pojo.dto.ArticleFeedbackDTO;
 import demo.article.pojo.param.controllerParam.CreateArticleParam;
 import demo.article.pojo.param.controllerParam.CreatingArticleParam;
 import demo.article.pojo.param.controllerParam.FindArticleLongByArticleSummaryPrivateKeyParam;
@@ -51,13 +51,14 @@ import demo.article.pojo.param.mapperParam.UpdateArticleUserDetailParam;
 import demo.article.pojo.param.mapperParam.UpdateArticleUserPostLimitParam;
 import demo.article.pojo.po.ArticleChannels;
 import demo.article.pojo.po.ArticleLong;
-import demo.article.pojo.po.ArticleLongComplaint;
+import demo.article.pojo.po.ArticleLongFeedback;
 import demo.article.pojo.po.ArticleLongReview;
 import demo.article.pojo.po.ArticleUserDetail;
 import demo.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.pojo.result.jsonRespon.FindArticleLongResult;
 import demo.article.pojo.type.ArticleChannelLikeOrHateType;
 import demo.article.pojo.type.ArticleChannelType;
+import demo.article.pojo.type.ArticleFeedbackType;
 import demo.article.pojo.type.ArticleReviewType;
 import demo.article.pojo.vo.ArticleLongVO;
 import demo.article.service.ArticleAdminService;
@@ -73,6 +74,7 @@ import demo.base.user.pojo.type.RolesType;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.image.controller.ImageController;
+import demo.tool.service.ValidRegexToolService;
 import demo.util.BaseUtilCustom;
 import ioHandle.FileUtilCustom;
 import net.sf.json.JSONObject;
@@ -107,10 +109,12 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	@Autowired
 	private ArticleLongReviewMapper articleLongReviewMapper;
 	@Autowired
-	private ArticleLongComplaintMapper articleLongComplaintMapper;
+	private ArticleLongFeedbackMapper articleLongFeedbackMapper;
 	
 	@Autowired
 	private FileUtilCustom ioUtil;
+	@Autowired
+	private ValidRegexToolService validRegexToolService;
 	
 	private String getArticleStorePrefixPath() {
 		return systemConstantService.getValByName(SystemConstantStore.articleStorePrefixPath);
@@ -474,13 +478,13 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			for (String line : lines) {
 				escapeLines.add(StringEscapeUtils.escapeHtml(line));
 			}
-		}
-
-		for (String line : escapeLines) {
-			if(StringUtils.isNotBlank(line)) {
-				sb.append(imageUrlHandle(line, imageUrls) + System.lineSeparator());
+			for (String line : escapeLines) {
+				if(StringUtils.isNotBlank(line)) {
+					sb.append(imageUrlHandle(line, imageUrls) + System.lineSeparator());
+				}
 			}
 		}
+
 		
 		String articleContentAfterTrim = sb.toString().trim();
 
@@ -593,7 +597,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		for(int i = 0; i < strLines.size(); i++) {
 			line = strLines.get(i);
 			if(line.matches(imageHttpUrlPattern)) {
-				line = "<a target=\"_blank\" href=\"" + line + "\">想看原图</a><br>"
+				line = "<a target=\"_blank\" href=\"" + line + "\">查看原图</a><br>"
 						+ "<img name=\"articleImage\" pk=\""+ pk +"\" fold=\"1\" src=\"" + line + "\" style=\"width: 100px; height: 100px;\">"
 						+ "<br>";
 			}
@@ -720,27 +724,28 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 
 	@Override
-	public CommonResultCX articleLongComplaint(ArticleLongComplaintParam controllerParam, HttpServletRequest request) {
+	public CommonResultCX articleLongFeedback(ArticleFeedbackDTO dto, HttpServletRequest request) {
 		visitDataService.insertVisitData(request);
 		CommonResultCX result = new CommonResultCX();
 		
-		controllerParam.setComplaintUserId(baseUtilCustom.getUserId());
-		if (StringUtils.isBlank(controllerParam.getPk()) || StringUtils.isBlank(controllerParam.getComplaintReason())) {
+		Long userId = baseUtilCustom.getUserId();
+		if (StringUtils.isBlank(dto.getPk()) || StringUtils.isBlank(dto.getFeedback())) {
 			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;
 		}
-		String complaintReason = StringEscapeUtils.escapeHtml(controllerParam.getComplaintReason());
-		if(StringUtils.isBlank(complaintReason)) {
-			result.fillWithResult(ResultTypeCX.nullParam);
+		String feedback = StringEscapeUtils.escapeHtml(dto.getFeedback());
+		if(StringUtils.isBlank(feedback)) {
+			result.failWithMessage("期待您请填写反馈内容");
 			return result;
-		} else if (complaintReason.length() > 512) {
-			result.fillWithResult(ResultTypeCX.articleTooLong);
+		} else if (feedback.length() > 512) {
+			result.failWithMessage("反馈内容过长");
 			return result;
-		}
+		} else if (StringUtils.isBlank(dto.getEmail()) || !validRegexToolService.validEmail(dto.getEmail())) {
+			result.failWithMessage("请输入正确的email");
+			return result;
+		} 
 		
-
-			
-		Long articleId = decryptArticlePrivateKey(controllerParam.getPk());
+		Long articleId = decryptArticlePrivateKey(dto.getPk());
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;
@@ -750,24 +755,28 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		findArticleLongParam.setArticleId(articleId);
 		ArticleLong article = articleLongMapper.findArticleLong(findArticleLongParam);
 		if(article == null) {
-			result.fillWithResult(ResultTypeCX.nullParam);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		
+		ArticleLongFeedback feedbackPO = new ArticleLongFeedback();
 		
-		ArticleLongComplaint complaint = new ArticleLongComplaint();
-		
-		complaint.setId(snowFlake.getNextId());
-		complaint.setCreateTime(LocalDateTime.now());
-		complaint.setComplaintUserId(controllerParam.getComplaintUserId());
-		complaint.setArticleId(articleId);
-		complaint.setArticleCreatorId(article.getUserId());
-		complaint.setArticleTitle(article.getArticleTitle());
-		complaint.setComplaintReason(complaintReason);
+		feedbackPO.setId(snowFlake.getNextId());
+		feedbackPO.setCreateTime(LocalDateTime.now());
+		feedbackPO.setFeedbackUserId(userId);
+		feedbackPO.setArticleId(articleId);
+		feedbackPO.setArticleCreatorId(article.getUserId());
+		feedbackPO.setArticleTitle(article.getArticleTitle());
+		feedbackPO.setFeedback(feedback);
+		feedbackPO.setEmail(dto.getEmail());
+		feedbackPO.setMobile(dto.getMobile());
+		feedbackPO.setFeedbackUserNickname(dto.getNickname());
+		feedbackPO.setMobile(dto.getMobile());
+		feedbackPO.setFeedbackType(ArticleFeedbackType.normal.getCode());
 
-		articleLongComplaintMapper.insert(complaint);
+		articleLongFeedbackMapper.insert(feedbackPO);
 		
-		result.fillWithResult(ResultTypeCX.complaintReciveSuccess);
+		result.fillWithResult(ResultTypeCX.feedbackReciveSuccess);
 		return result;
 	}
 	

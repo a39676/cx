@@ -1,5 +1,9 @@
 相当一部分 service 里边存有 private static 开头的静态变量, 需要清除
 
+首页 选择频道 防止加载中重复点击
+
+redis 分库
+
 CREATE TABLE `duralbe_recorder` (
 id bigint not null,
    `trading_id` bigint default null,

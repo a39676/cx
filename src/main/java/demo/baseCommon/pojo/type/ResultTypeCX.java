@@ -8,7 +8,7 @@ public enum ResultTypeCX {
 	createArticleLongSuccess("已成功发送,可能稍后就会出现...", "0"),
 	evaluationVoteSuccess("已评~", "0"),
 	setArticleHotSuccess("文章已置顶", "0"),
-	complaintReciveSuccess("投诉已接收,我们将尽快处理,感谢您的反馈!", "0"),
+	feedbackReciveSuccess("感谢您的反馈!", "0"),
 	articleCommentDeleteSuccess("评论已删除", "0"),
 	articleCommentPassSuccess("评论已通过", "0"),
 	

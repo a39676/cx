@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.article.pojo.param.controllerParam.ArticleLongComplaintParam;
+import demo.article.pojo.dto.ArticleFeedbackDTO;
 import demo.article.pojo.param.controllerParam.CreateArticleParam;
 import demo.article.pojo.param.controllerParam.CreatingArticleParam;
 import demo.article.pojo.param.controllerParam.FindArticleLongByArticleSummaryPrivateKeyParam;
@@ -56,7 +56,7 @@ public interface ArticleService {
 	 */
 	void refillArticleLongReviewCreatorId();
 
-	CommonResultCX articleLongComplaint(ArticleLongComplaintParam controllerParam, HttpServletRequest request);
+	CommonResultCX articleLongFeedback(ArticleFeedbackDTO dto, HttpServletRequest request);
 
 	Long decryptPrivateKey(String pk);
 

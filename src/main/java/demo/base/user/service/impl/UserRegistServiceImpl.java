@@ -43,6 +43,7 @@ import demo.baseCommon.service.CommonService;
 import demo.config.costom_component.CustomPasswordEncoder;
 import demo.tool.pojo.MailRecord;
 import demo.tool.pojo.type.MailType;
+import demo.tool.service.ValidRegexToolService;
 import demo.tool.service.impl.MailServiceImpl;
 import net.sf.json.JSONObject;
 
@@ -68,6 +69,8 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	private RoleService roleService;
 	@Autowired
 	private UserAuthService userAuthService;
+	@Autowired
+	private ValidRegexToolService validRegexToolService;
 	
 	/* FIXME 2019-06-26 发现, 应改造, 至少迁移至redis */
 	private static List<UserMailAndMailKeyBO> mailRecordList = new ArrayList<UserMailAndMailKeyBO>();
@@ -80,7 +83,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		JSONObject outputJson = new JSONObject();
 		boolean exceptionFlag = false;
 
-		if (!validNormalUserName(param.getUserName())) {
+		if (!validRegexToolService.validNormalUserName(param.getUserName())) {
 			outputJson.put("userName", "\"" + param.getUserName() + "\" 账户名异常, 必须以英文字母开头,长度为6~16个字符.(只可输入英文字母及数字)");
 			exceptionFlag = true;
 		}
@@ -104,7 +107,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			userDetail.setNickName(nickNameAfterEscapeHtml);
 		}
 
-		if (!validPassword(param.getPwd())) {
+		if (!validRegexToolService.validPassword(param.getPwd())) {
 			outputJson.put("pwd", "密码长度不正确(8到16位)");
 			exceptionFlag = true;
 		}
@@ -114,7 +117,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			exceptionFlag = true;
 		}
 
-		if (!validEmail(param.getEmail())) {
+		if (!validRegexToolService.validEmail(param.getEmail())) {
 			outputJson.put("email", "请输入正确的邮箱");
 			exceptionFlag = true;
 		} else {
@@ -136,7 +139,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		}
 
 		if (StringUtils.isNotBlank(param.getMobile())) {
-			if (validMobile(param.getMobile())) {
+			if (validRegexToolService.validMobile(param.getMobile())) {
 				userDetail.setMobile(Long.parseLong(param.getMobile()));
 			} else {
 				outputJson.put("mobile", "请填入正确的手机号,或留空");
@@ -156,7 +159,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		}
 
 		if (StringUtils.isNotBlank(param.getQq())) {
-			if (validQQ(param.getQq())) {
+			if (validRegexToolService.validQQ(param.getQq())) {
 				userDetail.setQq(Long.parseLong(param.getQq()));
 			} else {
 				outputJson.put("qq", "QQ号格式异常...");
@@ -235,7 +238,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 
 		
 		param.setEmail("example@email.com");
-		if (!validEmail(param.getEmail())) {
+		if (!validRegexToolService.validEmail(param.getEmail())) {
 			result.failWithMessage("请输入正确的邮箱");
 			return result;
 		} else {
@@ -296,68 +299,6 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		return result;
 	}
 	
-	private boolean validNormalUserName(String userNameInput) {
-		if (userNameInput == null) {
-			return false;
-		}
-		return userNameInput.matches("[a-z][a-zA-Z0-9_]{5,15}");
-	}
-
-	private boolean validPassword(String passwordInput) {
-		if (passwordInput == null) {
-			return false;
-		}
-		return passwordInput.matches(".{8,16}");
-	}
-	
-	private boolean validEmail(String email) {
-		if (email == null) {
-			return false;
-		}
-		return email.matches("[a-zA-Z0-9][a-zA-Z0-9_-]*@[a-zA-Z0-9_-]+\\.[a-zA-Z0-9_-]{2,4}(\\.[a-z]{2,4})?");
-	}
-	
-	/*
-//	private boolean validMobileEmail(String email) {
-//		if(!validEmail(email)) {
-//			return false;
-//		}
-//		
-//		String[] emailPart = email.split("@");
-//		if(!validMobile(emailPart[0]) || !validMobileEmailHost(emailPart[1])) {
-//			return false;
-//		}
-//		
-//		return true;
-//	}
- */
-	
-	/*
-//	private boolean validMobileEmailHost(String hostName) {
-//		if(hostName == null) {
-//			return false;
-//		}
-//		if(hostName.matches("189.cn") || hostName.matches("139.com") || hostName.matches("wo.cn")) {
-//			return true;
-//		}
-//		return false;
-//	}
- */
-
-	private boolean validQQ(String qq) {
-		if (qq == null || !numberUtil.matchInteger(qq) || qq.length() < 5 || qq.length() > 11) {
-			return false;
-		}
-		return true;
-	}
-
-	private boolean validMobile(String mobile) {
-		if (mobile == null) {
-			return false;
-		}
-		return numberUtil.matchMobile(mobile);
-	}
-	
 	private Users createUserFromUserRegistParam(UserRegistDTO param) {
     	Users user = new Users();
     	user.setUserName(param.getUserName());
@@ -399,7 +340,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 //		return result;
 		
 		CommonResultCX result = new CommonResultCX();
-		if(userId == null || !validEmail(email)) {
+		if(userId == null || !validRegexToolService.validEmail(email)) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
@@ -556,7 +497,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			return result;
 		}
 		
-		if(!validEmail(email)) {
+		if(!validRegexToolService.validEmail(email)) {
 			result.fillWithResult(ResultTypeCX.mailNotActivation);
 			return result;
 		}
@@ -592,7 +533,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			return result;
 		}
 
-		if(!validEmail(email)) {
+		if(!validRegexToolService.validEmail(email)) {
 			result.fillWithResult(ResultTypeCX.mailNotActivation);
 			return result;
 		}
@@ -623,7 +564,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	
 	private CommonResultCX resetPassword(Long userId, String newPassword, String newPasswordRepeat) {
 		CommonResultCX result = new CommonResultCX();
-		if (!validPassword(newPassword)) {
+		if (!validRegexToolService.validPassword(newPassword)) {
 			result.fillWithResult(ResultTypeCX.invalidPassword);
 			return result;
 		}

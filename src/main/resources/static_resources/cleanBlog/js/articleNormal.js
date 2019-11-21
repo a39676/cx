@@ -46,20 +46,10 @@ function buildSubChannel(channel) {
   return channelButton;
 }
 
-function addSummaryLineBackgroundColor(o) {
-  o.style.backgroundColor = "#74b9ff";
-};
-
-function removeSummaryLineBackgroundColor(o) {
-  o.style.backgroundColor = "";
-};
-
 function buildSummaryLine(subArticleVO) {
   var newRow = "";
   // newRow += "<a href='/article/readArticleLong?pk="+subArticleVO.privateKey+"' target='_blank'>";
   // newRow += "  <div class='post-preview summaryLine' pk='"+subArticleVO.privateKey+"'";
-  // newRow += "  onmouseover='addSummaryLineBackgroundColor(this)'";
-  // newRow += "  onmouseout='removeSummaryLineBackgroundColor(this)'";
   // newRow += "  style='max-height:200px;'";
   // newRow += "  >";
   // newRow += "    <div class='col-md-2'><br><img src='"+subArticleVO.imgUrl+"' style='max-width:85%; max-height:150px;'></div>";
@@ -182,8 +172,10 @@ function loadArticleLongSummary(uuid) {
 
 function loadArticleLongSummaryFirstPage(uuid) {
   $("#blogArea").attr("markTime", "");
+  $(".channelButton").attr('disabled','disabled');
   loadArticleLongSummaryHot(uuid);
   loadArticleLongSummary(uuid);
+  $(".channelButton").removeAttr('disabled');
 }
 
 $("#loadMoreButton").click(function () {

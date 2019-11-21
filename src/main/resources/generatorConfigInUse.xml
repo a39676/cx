@@ -50,9 +50,9 @@
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="article_long_complaint">
-        	<property name="tableName" value="article_long_complaint"></property>
-        	<property name="domainObjectName" value="article_long_complaint" ></property>
+        <table tableName="article_long_feedback">
+        	<property name="tableName" value="article_long_feedback"></property>
+        	<property name="domainObjectName" value="article_long_feedback" ></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

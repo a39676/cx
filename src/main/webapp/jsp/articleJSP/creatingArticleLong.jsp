@@ -39,6 +39,12 @@
           <textarea class="input form-control" name="creatingArticleLong" rows="4" cols="50" placeholder="请输入内容, 图片请直接粘帖图片链接"></textarea> 
         </div>
       </div>
+
+      <div class="row">
+        <div class="col-sm-12" >
+          <textarea class="input form-control" id="editor" placeholder="富文本编辑器"></textarea> 
+        </div>
+      </div>
       
       <div class="row">
         <div class="col-sm-12" >
@@ -50,6 +56,10 @@
             <button class="btn  btn-primary btn-sm" 
               name="createArticleLong">
               <span class="badge badge-primary">提交</span>
+            </button>
+            <button class="btn  btn-primary btn-sm" 
+              name="createArticleLongEditor">
+              <span class="badge badge-primary">提交富文本</span>
             </button>
             <button class="btn  btn-primary btn-sm" 
               name="closeArticleCreator">
@@ -74,6 +84,7 @@
   <%@ include file="../baseElementJSP/normalFooter.jsp" %>
   <sec:authorize access="hasRole('ROLE_USER')">
   <script type="text/javascript" src="<c:url value='/static_resources/js/article/creatingArticleLongV3.js'/>"></script>
+  <script src="https://cdn.ckeditor.com/4.13.0/standard/ckeditor.js"></script>
   </sec:authorize>
 </footer>
 </html>

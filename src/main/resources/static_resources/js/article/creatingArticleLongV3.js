@@ -52,4 +52,11 @@ $(document).ready(function() {
     });  
   });
 
+  var editor = CKEDITOR.replace('#editor', { 
+    filebrowserImageUploadUrl :"/picture/editor/upload/1",
+    removePlugins:'elementspath,resize',
+    codeSnippet_theme: 'zenburn',
+    height:'600'
+  });
+
 });

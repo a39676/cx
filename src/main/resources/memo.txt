@@ -1,5 +1,7 @@
 相当一部分 service 里边存有 private static 开头的静态变量, 需要清除
 
+富文本编辑器  与 对应的防御 ueditor??
+
 CREATE TABLE `duralbe_recorder` (
 id bigint not null,
    `trading_id` bigint default null,

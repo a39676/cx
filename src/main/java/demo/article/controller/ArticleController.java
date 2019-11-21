@@ -47,6 +47,7 @@ import demo.article.service.ArticleSummaryService;
 import demo.baseCommon.controller.CommonController;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.tool.service.VisitDataService;
 import net.sf.json.JSONObject;
 
 @Controller
@@ -66,6 +67,8 @@ public class ArticleController extends CommonController {
 	private ArticleChannelService channelService;
 	@Autowired
 	private ArticleSummaryService summaryService;
+	@Autowired
+	private VisitDataService visitDataService;
 	
 //	@Autowired
 //	private BaseUtilCustom baseUtilCustom;
@@ -158,6 +161,7 @@ public class ArticleController extends CommonController {
 		
 		FindArticleLongResult result = articleService.findArticleLongByArticleSummaryPrivateKey(param, request);
 		view.addObject("articleLongVO", result.getArticleLongVO());
+		view.addObject("visitCount", visitDataService.getVisitCount());
 		return view;
 	}
 	

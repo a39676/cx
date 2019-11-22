@@ -8,7 +8,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<%@ include file="../baseElementJSP/normalHeader.jsp" %>
+<!-- 因需要使用富文本编辑器, 特别使用指定的库 -->
+<!-- <%@ include file="../baseElementJSP/normalHeader.jsp" %> -->
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<sec:csrfMetaTags />
+<title>${ title }</title>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.js"></script>
+
 </head>
 <body>
 <div class="container-fluid">
@@ -42,9 +53,17 @@
 
       <div class="row">
         <div class="col-sm-12" >
-          <textarea class="input form-control" id="editor" placeholder="富文本编辑器"></textarea> 
+          <div id="summernote"></div>
+          <script>
+            $('#summernote').summernote({
+              tabsize: 2,
+              height: 100
+            });
+          </script>
         </div>
       </div>
+
+      
       
       <div class="row">
         <div class="col-sm-12" >
@@ -81,10 +100,62 @@
 </body>
 
 <footer>
-  <%@ include file="../baseElementJSP/normalFooter.jsp" %>
-  <sec:authorize access="hasRole('ROLE_USER')">
+  <!-- 因需要使用富文本编辑器, 特别使用指定的库 -->
+  <!-- <%@ include file="../baseElementJSP/normalFooter.jsp" %> -->
+  
+  <script type="text/javascript">
+    var csrfParameter = $("meta[name='_csrf_parameter']").attr("content");
+    var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+    var csrfToken = $("meta[name='_csrf']").attr("content");
+  </script>
+
+<!--   <sec:authorize access="hasRole('ROLE_USER')">
   <script type="text/javascript" src="<c:url value='/static_resources/js/article/creatingArticleLongV3.js'/>"></script>
-  <script src="https://cdn.ckeditor.com/4.13.0/standard/ckeditor.js"></script>
-  </sec:authorize>
+  </sec:authorize> -->
+
+  <script type="text/javascript">
+    
+    $(document).ready(function() {
+      $("button[name='createArticleLongEditor']").click(function () {
+        var url = "/article/createArticleLong";
+        var title = $("textarea[name='articleTitle']").val();
+        var s = $('#summernote');
+        var content = s.summernote('code');
+        var uuid = $("select[name='channelList'] option:selected").val();
+    
+        var jsonOutput = {
+          uuid:uuid,
+          title:title,
+          content:content
+        };
+    
+        var resultSpan = $("span[name='createArticleResult']");
+        resultSpan.text("");
+    
+        $.ajax({  
+          type : "POST",  
+          async : true,
+          url : url,  
+          data: JSON.stringify(jsonOutput),
+          cache : false,
+          contentType: "application/json",
+          dataType: "json",
+          timeout:50000,  
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          success:function(datas){
+            resultSpan.text(datas.message);
+            if(datas.result == "0") {
+              $("textarea[name='articleTitle']").val("");
+              $("textarea[name='creatingArticleLong']").val("");
+            }
+          },  
+          error: function(datas) {              
+          }  
+        });  
+      });
+    });
+  </script>
 </footer>
 </html>

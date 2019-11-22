@@ -1,6 +1,7 @@
 相当一部分 service 里边存有 private static 开头的静态变量, 需要清除
 
-富文本编辑器  与 对应的防御 
+富文本编辑器  与 对应的防御
+https://stackoverflow.com/questions/3413297/how-to-sanitize-html-code-in-java-to-prevent-xss-attacks 
 
 CREATE TABLE `duralbe_recorder` (
 id bigint not null,

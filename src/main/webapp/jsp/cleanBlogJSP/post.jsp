@@ -73,7 +73,7 @@
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="page-heading">
-            <h1>需要反馈?</h1>
+            <h2>需要反馈?</h2>
             <span class="subheading">我将尽快给您回复</span>
           </div>
         </div>
@@ -102,9 +102,9 @@
               </div>
             </div>
             <div class="control-group">
-              <div class="form-group floating-label-form-group controls">
+              <div class="form-group col-xs-12 floating-label-form-group controls">
                 <label>Message</label>
-              <textarea rows="5" class="form-control" placeholder="请输入您想说的" id="message" required data-validation-required-message="Please enter a message."> </textarea>
+                <textarea rows="5" class="form-control" placeholder="请输入您想说的" id="message" required data-validation-required-message="Please enter a message."></textarea>
                 <p class="help-block text-danger"></p>
               </div>
             </div>

@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.owasp.html.PolicyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
@@ -74,6 +75,7 @@ import demo.base.user.pojo.type.RolesType;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.image.controller.ImageController;
+import demo.tool.service.TextFilter;
 import demo.tool.service.ValidRegexToolService;
 import demo.util.BaseUtilCustom;
 import ioHandle.FileUtilCustom;
@@ -97,13 +99,13 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	private ArticleViewService articleViewService;
 	@Autowired
 	private ArticleAdminService articleAdminService;
-	
 	@Autowired
 	private ArticleSummaryService summaryService;
+	@Autowired
+	private TextFilter textFilter;
 	
 	@Autowired
 	private ArticleLongMapper articleLongMapper;
-	
 	@Autowired
 	private ArticleUserDetailMapper articleUserDetailMapper;
 	@Autowired
@@ -322,7 +324,14 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		if(isSpecificUser) {
 			title = controllerParam.getTitle();
 		} else {
-			title = StringEscapeUtils.escapeHtml(String.valueOf(controllerParam.getTitle()));
+			PolicyFactory filter = textFilter.getFilter();
+			title = filter.sanitize(controllerParam.getTitle());
+			controllerParam.setContent(filter.sanitize(controllerParam.getContent()));
+		}
+		
+		if(StringUtils.isBlank(title)) {
+			result.failWithMessage("请输入标题");
+			return result;
 		}
 
 		Long maxArticleLength = loadMaxArticleLength();
@@ -470,6 +479,9 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		List<String> escapeLines = new ArrayList<String>();
 		StringBuffer sb = new StringBuffer();
 
+		/*
+		 * TODO
+		 */
 		if(itIsBigUser()) {
 			for (String line : lines) {
 				sb.append(line + System.lineSeparator());

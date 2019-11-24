@@ -148,14 +148,13 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 
 	/**
 	 * 将输入的 line 的所有 图片url 提取到 imageUrls,
-	 * 并将 line 中的 图片url 前后都加上"\n"换行符
 	 * @param line
 	 * @param imageUrls
 	 * @return
 	 */
-	private String imageUrlHandle(String line, List<String> imageUrls) {
+	private void imageUrlHandle(String line, List<String> imageUrls) {
 		if (StringUtils.isBlank(line)) {
-			return line;
+			return;
 		}
 
 		List<String> urls = new ArrayList<String>();
@@ -170,18 +169,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 				urls.add(matcher.group(1));
 			}
 		}
-
-		if (urls.size() < 1) {
-			return line;
-		}
-
 		imageUrls.addAll(urls);
-
-		for (String url : urls) {
-			line = line.replaceAll(url, "\n" + url + "\n");
-		}
-
-		return line;
 	}
 
 	@Override
@@ -263,8 +251,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	private CommonResultCX createArticleLong(Long userId, CreateArticleParam controllerParam) throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
 		CommonResultCX result = new CommonResultCX();
 		int insertCount = 0;
-
-		boolean isSpecificUser = itIsBigUser();
 		
 		String uuid = controllerParam.getUuid();
 		if(StringUtils.isBlank(uuid)) {
@@ -321,7 +307,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		}
 		
 		String title = null;
-		if(isSpecificUser) {
+		if(itIsBigUser()) {
 			title = controllerParam.getTitle();
 		} else {
 			PolicyFactory filter = textFilter.getFilter();
@@ -476,27 +462,13 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 
 		List<String> lines = Arrays.asList(content.split(System.lineSeparator()));
 		List<String> imageUrls = new ArrayList<String>();
-		List<String> escapeLines = new ArrayList<String>();
 		StringBuffer sb = new StringBuffer();
 
-		/*
-		 * TODO
-		 */
-		if(itIsBigUser()) {
-			for (String line : lines) {
-				sb.append(line + System.lineSeparator());
-			}
-		} else {
-			for (String line : lines) {
-				escapeLines.add(StringEscapeUtils.escapeHtml(line));
-			}
-			for (String line : escapeLines) {
-				if(StringUtils.isNotBlank(line)) {
-					sb.append(imageUrlHandle(line, imageUrls) + System.lineSeparator());
-				}
-			}
+		for (String line : lines) {
+			sb.append(line + System.lineSeparator());
+			imageUrlHandle(line, imageUrls);
 		}
-
+		
 		
 		String articleContentAfterTrim = sb.toString().trim();
 

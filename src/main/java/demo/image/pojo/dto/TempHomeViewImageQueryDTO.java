@@ -1,8 +1,8 @@
-package demo.image.pojo.param;
+package demo.image.pojo.dto;
 
 import java.time.LocalDateTime;
 
-public class TempHomeViewImageQueryParam {
+public class TempHomeViewImageQueryDTO {
 
 	private LocalDateTime p1Start;
 	private LocalDateTime p1End;

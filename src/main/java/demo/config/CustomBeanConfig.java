@@ -3,7 +3,6 @@ package demo.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
-import cloudinary.util.CloudinaryCore;
 import demo.config.costom_component.SnowFlake;
 import demo.util.BaseUtilCustom;
 import httpHandel.HttpUtil;
@@ -13,7 +12,7 @@ import stringHandle.StringUtilCustom;
 
 @Component
 public class CustomBeanConfig {
-
+	
 	@Bean
 	public BaseUtilCustom getBaseUtilCustom() {
 		return new BaseUtilCustom();
@@ -43,10 +42,4 @@ public class CustomBeanConfig {
 	public HttpUtil getHttpUtil() {
 		return new HttpUtil();
 	}
-	
-	@Bean
-	public CloudinaryCore getCloudinaryCore() {
-		return new CloudinaryCore();
-	}
-	
 }

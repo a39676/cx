@@ -13,8 +13,6 @@ public interface ImageService {
 
 	boolean checkImageExists(String md5);
 
-	void saveImage(ImageCache ic);
-
 	String getFileNameFromUrl(String urlStr);
 
 	List<ImageTags> getImageTags();

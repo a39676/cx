@@ -12,11 +12,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cloudinary.pojo.result.CloudinaryUploadResult;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.cloudinary.service.CloudinaryService;
 import demo.image.mapper.ImageCacheMapper;
 import demo.image.mapper.ImageStoreMapper;
 import demo.image.mapper.ImageTagMapper;
@@ -25,6 +28,7 @@ import demo.image.pojo.ImageCache;
 import demo.image.pojo.ImageStore;
 import demo.image.pojo.ImageTag;
 import demo.image.pojo.ImageTags;
+import demo.image.pojo.dto.UploadImageToCloudinaryDTO;
 import demo.image.service.ImageService;
 import demo.tool.pojo.constant.ToolPathConstant;
 import encodeHandle.EncodeUtil;
@@ -40,6 +44,9 @@ public class ImageServiceImpl implements ImageService {
 	private ImageTagMapper imageTagMapper;
 	@Autowired
 	private ImageTagsMapper imageTagsMapper;
+	
+	@Autowired
+	private CloudinaryService cloudinaryService;
 	
 	private static List<ImageTags> imageTags = new ArrayList<ImageTags>();
 
@@ -85,11 +92,6 @@ public class ImageServiceImpl implements ImageService {
 		} else {
 			return false;
 		}
-	}
-
-	@Override
-	public void saveImage(ImageCache ic) {
-		imageCacheMapper.insertSelective(ic);
 	}
 
 	public void imageCacheDownload() {
@@ -195,5 +197,32 @@ public class ImageServiceImpl implements ImageService {
 		
 		result.fillWithResult(ResultTypeCX.success);
 		return result;
+	}
+
+	public void uploadImageToCloudinary(UploadImageToCloudinaryDTO dto) {
+		/*
+		 * TODO
+		 */
+		if(StringUtils.isBlank(dto.getFilePath())) {
+			return;
+		}
+		
+		File imgFile = new File(dto.getFilePath());
+		if(!imgFile.exists()) {
+			return;
+		}
+		
+		CloudinaryUploadResult uploadResult = cloudinaryService.uploadCore(imgFile);
+		if(!uploadResult.isSuccess()) {
+			return;
+		}
+		
+//		TODO
+		/*
+		 * 还需要缓存表吗?
+		 */
+//		ImageCache imgCachePO = new ImageCache();
+//		imgCachePO
+//		imageCacheMapper.insertSelective(imgCachePO);
 	}
 }

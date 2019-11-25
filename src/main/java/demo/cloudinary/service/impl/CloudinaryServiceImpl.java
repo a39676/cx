@@ -10,6 +10,8 @@ import com.cloudinary.Cloudinary;
 import cloudinary.pojo.constant.CloudinaryConstant;
 import cloudinary.pojo.result.CloudinaryUploadResult;
 import cloudinary.service.CloudinaryFunction;
+import cloudinary.util.CloudinaryCore;
+import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.service.CommonService;
 import demo.cloudinary.service.CloudinaryService;
 
@@ -17,10 +19,19 @@ import demo.cloudinary.service.CloudinaryService;
 public class CloudinaryServiceImpl extends CommonService implements CloudinaryService {
 	
 	@Autowired
-	private Cloudinary cloudinary;
+	private SystemConstantService constantService;
+	
 	@Autowired
 	private CloudinaryFunction cloudinaryFunction;
 
+	protected Cloudinary buildCloudinary() {
+		Cloudinary cloudinary = new CloudinaryCore().buildCloudinary(
+				constantService.getValByName(CloudinaryConstant.cloudinaryNameStoreKey),
+				constantService.getValByName(CloudinaryConstant.cloudinaryApiKeyStoreKey), 
+				constantService.getValByName(CloudinaryConstant.cloudinaryApiSecretStoreKey));
+		return cloudinary;
+	}
+	
 	@Override
 	public CloudinaryUploadResult uploadCore(File f) {
 		CloudinaryUploadResult result = null;
@@ -31,10 +42,11 @@ public class CloudinaryServiceImpl extends CommonService implements CloudinarySe
 			return result;
 		}
 		
+		Cloudinary cloudinary = buildCloudinary();
+		
 		result = cloudinaryFunction.upload(cloudinary, f);
 		
 		return result;
 	}
-	
 	
 }

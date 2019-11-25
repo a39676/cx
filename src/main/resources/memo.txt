@@ -1,9 +1,6 @@
 相当一部分 service 里边存有 private static 开头的静态变量, 需要清除
-
+需要文章编辑功能, 尤其是针对富文本的
 需要随机生成浏览量
-
-富文本编辑器  与 对应的防御
-https://stackoverflow.com/questions/3413297/how-to-sanitize-html-code-in-java-to-prevent-xss-attacks 
 
 已删除文章, 非管理员不可查看
 

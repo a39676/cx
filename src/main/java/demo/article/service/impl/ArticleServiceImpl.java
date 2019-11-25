@@ -571,6 +571,14 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			result.setArticleLongVO(vo);
 			return result;
 		}
+		
+		if(vo.getIsDelete() && !baseUtilCustom.hasAdminRole()) {
+			vo = new ArticleLongVO();
+			vo.setContentLines("这篇文已经失踪了...请联系管理员...");
+			result.setArticleLongVO(vo);
+			return result;
+		}
+		
 		fillArticleContent(vo, param.getPrivateKey(), param.getUserId());
 		result.setArticleLongVO(vo);
 		return result;

@@ -113,7 +113,11 @@ public class ComplexToolController extends CommonController {
 	public void cleanTmpFiles(@RequestBody String data, HttpServletResponse response) {
 		JSONObject jsonInput = getJson(data);
 		
-		// TODO 已经有几个临时文件夹,请参照 ToolPathConstant
+		/*
+		 * TODO 已经有几个临时文件夹,请参照 ToolPathConstant
+		 * 2019-11-25
+		 * 未知最初使用时间, 需要规范化整理
+		 */
 		JSONObject jsonOutput = JSONObject.fromObject(complexToolServiceImpl.cleanTmpFiles(jsonInput));
 		try {
 			response.getWriter().print(jsonOutput);

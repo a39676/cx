@@ -4,13 +4,19 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.baseCommon.controller.CommonController;
+import demo.image.pojo.result.UploadImageToCloudinaryResult;
 import demo.image.service.ImageService;
+import image.pojo.constant.ImageUrl;
+import image.pojo.dto.UploadImageToCloudinaryDTO;
 
 @Controller
-@RequestMapping(value = "/tool/image")
+@RequestMapping(value = ImageUrl.root)
 public class ImageController extends CommonController {
 
 	@Autowired
@@ -20,4 +26,9 @@ public class ImageController extends CommonController {
 		return imageService.insertImageFromArticle(imageUrls, articleId);
 	}
 
+	@PostMapping(value = ImageUrl.uploadImageToCloudinary)
+	@ResponseBody
+	public UploadImageToCloudinaryResult uploadImageToCloudinary(@RequestBody UploadImageToCloudinaryDTO dto) {
+		return imageService.uploadImageToCloudinary(dto);
+	}
 }

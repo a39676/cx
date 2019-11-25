@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import cloudinary.pojo.result.CloudinaryUploadResult;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.baseCommon.service.CommonService;
 import demo.cloudinary.service.CloudinaryService;
 import demo.image.mapper.ImageCacheMapper;
 import demo.image.mapper.ImageStoreMapper;
@@ -29,12 +30,13 @@ import demo.image.pojo.ImageStore;
 import demo.image.pojo.ImageTag;
 import demo.image.pojo.ImageTags;
 import demo.image.pojo.dto.UploadImageToCloudinaryDTO;
+import demo.image.pojo.result.UploadImageToCloudinaryResult;
 import demo.image.service.ImageService;
 import demo.tool.pojo.constant.ToolPathConstant;
 import encodeHandle.EncodeUtil;
 
 @Service
-public class ImageServiceImpl implements ImageService {
+public class ImageServiceImpl extends CommonService implements ImageService {
 
 	@Autowired
 	private ImageCacheMapper imageCacheMapper;
@@ -199,30 +201,42 @@ public class ImageServiceImpl implements ImageService {
 		return result;
 	}
 
-	public void uploadImageToCloudinary(UploadImageToCloudinaryDTO dto) {
+	@Override
+	public UploadImageToCloudinaryResult uploadImageToCloudinary(UploadImageToCloudinaryDTO dto) {
 		/*
 		 * TODO
+		 * 需要存放 cloudinary 的 publicId
 		 */
+		UploadImageToCloudinaryResult r = new UploadImageToCloudinaryResult();
 		if(StringUtils.isBlank(dto.getFilePath())) {
-			return;
+			r.fillWithResult(ResultTypeCX.nullParam);
+			return r;
 		}
 		
 		File imgFile = new File(dto.getFilePath());
 		if(!imgFile.exists()) {
-			return;
+			r.failWithMessage("file not exists");
+			return r;
 		}
 		
 		CloudinaryUploadResult uploadResult = cloudinaryService.uploadCore(imgFile);
 		if(!uploadResult.isSuccess()) {
-			return;
+			r.failWithMessage("cloudinary upload fail");
+			return r;
 		}
 		
-//		TODO
-		/*
-		 * 还需要缓存表吗?
-		 */
-//		ImageCache imgCachePO = new ImageCache();
-//		imgCachePO
-//		imageCacheMapper.insertSelective(imgCachePO);
+		ImageStore imgPO = new ImageStore();
+		Long imgId = snowFlake.getNextId();
+		imgPO.setImageId(imgId);
+		imgPO.setImageName(imgFile.getName());
+		imgPO.setImageUrl(uploadResult.getSecureUrl());
+		imageStoreMapper.insertSelective(imgPO);
+		
+		r.setImgId(imgId);
+		r.setImgUrl(uploadResult.getSecureUrl());
+		r.setIsSuccess();
+		
+		return r;
 	}
+	
 }

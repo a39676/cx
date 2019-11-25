@@ -553,7 +553,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		}
 
 		GetArticleChannelsBO newChannelList = removeChannels(channelList, uuidStore,
-				List.of(3L, 4L));
+				List.of(4L));
 
 		return newChannelList;
 	}

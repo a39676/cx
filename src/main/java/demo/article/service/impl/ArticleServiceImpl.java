@@ -559,7 +559,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		
 		/*
 		 * TODO
-		 * 重复插入访问数据?
+		 * 2019-11-25
+		 * 准备废弃 articleViewService
 		 */
 		articleViewService.insertOrUpdateViewCount(articleId);
 		

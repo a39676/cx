@@ -1,17 +1,18 @@
-package demo.image.pojo;
+package demo.image.pojo.po;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class ImageStore {
-    private Long imageId;
+
+	private Long imageId;
 
     private String imageUrl;
 
     private String imageName;
 
-    private Date createTime;
+    private LocalDateTime createTime;
 
-    private Date backupTime;
+    private LocalDateTime backupTime;
 
     private String md5Mark;
 
@@ -23,7 +24,7 @@ public class ImageStore {
         this.imageId = imageId;
     }
 
-	public String getImageUrl() {
+    public String getImageUrl() {
         return imageUrl;
     }
 
@@ -39,19 +40,19 @@ public class ImageStore {
         this.imageName = imageName == null ? null : imageName.trim();
     }
 
-    public Date getCreateTime() {
+    public LocalDateTime getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
     }
 
-    public Date getBackupTime() {
+    public LocalDateTime getBackupTime() {
         return backupTime;
     }
 
-    public void setBackupTime(Date backupTime) {
+    public void setBackupTime(LocalDateTime backupTime) {
         this.backupTime = backupTime;
     }
 
@@ -62,15 +63,4 @@ public class ImageStore {
     public void setMd5Mark(String md5Mark) {
         this.md5Mark = md5Mark == null ? null : md5Mark.trim();
     }
-    
-    public ImageStore createImageStoreFromImageCache(ImageCache ic) {
-		ImageStore is = new ImageStore();
-		is.setImageId(ic.getImageId());
-		is.setCreateTime(ic.getCreateTime());
-		is.setImageName(ic.getImageName());
-		is.setImageUrl(ic.getImageUrl());
-		is.setMd5Mark(ic.getMd5Mark());
-		return is;
-	}
-    
 }

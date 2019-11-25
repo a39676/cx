@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="demo.image.mapper.ImageCloudinaryMapper">
   <resultMap id="BaseResultMap" type="demo.image.pojo.po.ImageCloudinary">
-    <id column="image_id" jdbcType="INTEGER" property="imageId" />
+    <id column="image_id" jdbcType="BIGINT" property="imageId" />
     <result column="cloudinary_public_id" jdbcType="VARCHAR" property="cloudinaryPublicId" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -82,15 +82,15 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from image_cloudinary
-    where image_id = #{imageId,jdbcType=INTEGER}
+    where image_id = #{imageId,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from image_cloudinary
-    where image_id = #{imageId,jdbcType=INTEGER}
+    where image_id = #{imageId,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="demo.image.pojo.po.ImageCloudinaryExample">
     delete from image_cloudinary
@@ -101,7 +101,7 @@
   <insert id="insert" parameterType="demo.image.pojo.po.ImageCloudinary">
     insert into image_cloudinary (image_id, cloudinary_public_id, is_delete, 
       create_time)
-    values (#{imageId,jdbcType=INTEGER}, #{cloudinaryPublicId,jdbcType=VARCHAR}, #{isDelete,jdbcType=BIT}, 
+    values (#{imageId,jdbcType=BIGINT}, #{cloudinaryPublicId,jdbcType=VARCHAR}, #{isDelete,jdbcType=BIT}, 
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="demo.image.pojo.po.ImageCloudinary">
@@ -122,7 +122,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="imageId != null">
-        #{imageId,jdbcType=INTEGER},
+        #{imageId,jdbcType=BIGINT},
       </if>
       <if test="cloudinaryPublicId != null">
         #{cloudinaryPublicId,jdbcType=VARCHAR},
@@ -145,7 +145,7 @@
     update image_cloudinary
     <set>
       <if test="record.imageId != null">
-        image_id = #{record.imageId,jdbcType=INTEGER},
+        image_id = #{record.imageId,jdbcType=BIGINT},
       </if>
       <if test="record.cloudinaryPublicId != null">
         cloudinary_public_id = #{record.cloudinaryPublicId,jdbcType=VARCHAR},
@@ -163,7 +163,7 @@
   </update>
   <update id="updateByExample" parameterType="map">
     update image_cloudinary
-    set image_id = #{record.imageId,jdbcType=INTEGER},
+    set image_id = #{record.imageId,jdbcType=BIGINT},
       cloudinary_public_id = #{record.cloudinaryPublicId,jdbcType=VARCHAR},
       is_delete = #{record.isDelete,jdbcType=BIT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP}
@@ -184,13 +184,13 @@
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where image_id = #{imageId,jdbcType=INTEGER}
+    where image_id = #{imageId,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="demo.image.pojo.po.ImageCloudinary">
     update image_cloudinary
     set cloudinary_public_id = #{cloudinaryPublicId,jdbcType=VARCHAR},
       is_delete = #{isDelete,jdbcType=BIT},
       create_time = #{createTime,jdbcType=TIMESTAMP}
-    where image_id = #{imageId,jdbcType=INTEGER}
+    where image_id = #{imageId,jdbcType=BIGINT}
   </update>
 </mapper>

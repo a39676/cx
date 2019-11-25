@@ -3,7 +3,7 @@ package demo.image.pojo.po;
 import java.time.LocalDateTime;
 
 public class ImageCloudinary {
-    private Integer imageId;
+    private Long imageId;
 
     private String cloudinaryPublicId;
 
@@ -11,11 +11,11 @@ public class ImageCloudinary {
 
     private LocalDateTime createTime;
 
-    public Integer getImageId() {
+    public Long getImageId() {
         return imageId;
     }
 
-    public void setImageId(Integer imageId) {
+    public void setImageId(Long imageId) {
         this.imageId = imageId;
     }
 

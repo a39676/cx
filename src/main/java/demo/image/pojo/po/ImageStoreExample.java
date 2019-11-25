@@ -4,14 +4,21 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageCloudinaryExample {
-    protected String orderByClause;
+public class ImageStoreExample {
+
+	public static class Criteria extends GeneratedCriteria {
+		protected Criteria() {
+			super();
+		}
+	}
+
+	protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public ImageCloudinaryExample() {
+    public ImageStoreExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -165,133 +172,143 @@ public class ImageCloudinaryExample {
             return (Criteria) this;
         }
 
-        public Criteria andCloudinaryPublicIdIsNull() {
-            addCriterion("cloudinary_public_id is null");
+        public Criteria andImageUrlIsNull() {
+            addCriterion("image_url is null");
             return (Criteria) this;
         }
 
-        public Criteria andCloudinaryPublicIdIsNotNull() {
-            addCriterion("cloudinary_public_id is not null");
+        public Criteria andImageUrlIsNotNull() {
+            addCriterion("image_url is not null");
             return (Criteria) this;
         }
 
-        public Criteria andCloudinaryPublicIdEqualTo(String value) {
-            addCriterion("cloudinary_public_id =", value, "cloudinaryPublicId");
+        public Criteria andImageUrlEqualTo(String value) {
+            addCriterion("image_url =", value, "imageUrl");
             return (Criteria) this;
         }
 
-        public Criteria andCloudinaryPublicIdNotEqualTo(String value) {
-            addCriterion("cloudinary_public_id <>", value, "cloudinaryPublicId");
+        public Criteria andImageUrlNotEqualTo(String value) {
+            addCriterion("image_url <>", value, "imageUrl");
             return (Criteria) this;
         }
 
-        public Criteria andCloudinaryPublicIdGreaterThan(String value) {
-            addCriterion("cloudinary_public_id >", value, "cloudinaryPublicId");
+        public Criteria andImageUrlGreaterThan(String value) {
+            addCriterion("image_url >", value, "imageUrl");
             return (Criteria) this;
         }
 
-        public Criteria andCloudinaryPublicIdGreaterThanOrEqualTo(String value) {
-            addCriterion("cloudinary_public_id >=", value, "cloudinaryPublicId");
+        public Criteria andImageUrlGreaterThanOrEqualTo(String value) {
+            addCriterion("image_url >=", value, "imageUrl");
             return (Criteria) this;
         }
 
-        public Criteria andCloudinaryPublicIdLessThan(String value) {
-            addCriterion("cloudinary_public_id <", value, "cloudinaryPublicId");
+        public Criteria andImageUrlLessThan(String value) {
+            addCriterion("image_url <", value, "imageUrl");
             return (Criteria) this;
         }
 
-        public Criteria andCloudinaryPublicIdLessThanOrEqualTo(String value) {
-            addCriterion("cloudinary_public_id <=", value, "cloudinaryPublicId");
+        public Criteria andImageUrlLessThanOrEqualTo(String value) {
+            addCriterion("image_url <=", value, "imageUrl");
             return (Criteria) this;
         }
 
-        public Criteria andCloudinaryPublicIdLike(String value) {
-            addCriterion("cloudinary_public_id like", value, "cloudinaryPublicId");
+        public Criteria andImageUrlLike(String value) {
+            addCriterion("image_url like", value, "imageUrl");
             return (Criteria) this;
         }
 
-        public Criteria andCloudinaryPublicIdNotLike(String value) {
-            addCriterion("cloudinary_public_id not like", value, "cloudinaryPublicId");
+        public Criteria andImageUrlNotLike(String value) {
+            addCriterion("image_url not like", value, "imageUrl");
             return (Criteria) this;
         }
 
-        public Criteria andCloudinaryPublicIdIn(List<String> values) {
-            addCriterion("cloudinary_public_id in", values, "cloudinaryPublicId");
+        public Criteria andImageUrlIn(List<String> values) {
+            addCriterion("image_url in", values, "imageUrl");
             return (Criteria) this;
         }
 
-        public Criteria andCloudinaryPublicIdNotIn(List<String> values) {
-            addCriterion("cloudinary_public_id not in", values, "cloudinaryPublicId");
+        public Criteria andImageUrlNotIn(List<String> values) {
+            addCriterion("image_url not in", values, "imageUrl");
             return (Criteria) this;
         }
 
-        public Criteria andCloudinaryPublicIdBetween(String value1, String value2) {
-            addCriterion("cloudinary_public_id between", value1, value2, "cloudinaryPublicId");
+        public Criteria andImageUrlBetween(String value1, String value2) {
+            addCriterion("image_url between", value1, value2, "imageUrl");
             return (Criteria) this;
         }
 
-        public Criteria andCloudinaryPublicIdNotBetween(String value1, String value2) {
-            addCriterion("cloudinary_public_id not between", value1, value2, "cloudinaryPublicId");
+        public Criteria andImageUrlNotBetween(String value1, String value2) {
+            addCriterion("image_url not between", value1, value2, "imageUrl");
             return (Criteria) this;
         }
 
-        public Criteria andIsDeleteIsNull() {
-            addCriterion("is_delete is null");
+        public Criteria andImageNameIsNull() {
+            addCriterion("image_name is null");
             return (Criteria) this;
         }
 
-        public Criteria andIsDeleteIsNotNull() {
-            addCriterion("is_delete is not null");
+        public Criteria andImageNameIsNotNull() {
+            addCriterion("image_name is not null");
             return (Criteria) this;
         }
 
-        public Criteria andIsDeleteEqualTo(Boolean value) {
-            addCriterion("is_delete =", value, "isDelete");
+        public Criteria andImageNameEqualTo(String value) {
+            addCriterion("image_name =", value, "imageName");
             return (Criteria) this;
         }
 
-        public Criteria andIsDeleteNotEqualTo(Boolean value) {
-            addCriterion("is_delete <>", value, "isDelete");
+        public Criteria andImageNameNotEqualTo(String value) {
+            addCriterion("image_name <>", value, "imageName");
             return (Criteria) this;
         }
 
-        public Criteria andIsDeleteGreaterThan(Boolean value) {
-            addCriterion("is_delete >", value, "isDelete");
+        public Criteria andImageNameGreaterThan(String value) {
+            addCriterion("image_name >", value, "imageName");
             return (Criteria) this;
         }
 
-        public Criteria andIsDeleteGreaterThanOrEqualTo(Boolean value) {
-            addCriterion("is_delete >=", value, "isDelete");
+        public Criteria andImageNameGreaterThanOrEqualTo(String value) {
+            addCriterion("image_name >=", value, "imageName");
             return (Criteria) this;
         }
 
-        public Criteria andIsDeleteLessThan(Boolean value) {
-            addCriterion("is_delete <", value, "isDelete");
+        public Criteria andImageNameLessThan(String value) {
+            addCriterion("image_name <", value, "imageName");
             return (Criteria) this;
         }
 
-        public Criteria andIsDeleteLessThanOrEqualTo(Boolean value) {
-            addCriterion("is_delete <=", value, "isDelete");
+        public Criteria andImageNameLessThanOrEqualTo(String value) {
+            addCriterion("image_name <=", value, "imageName");
             return (Criteria) this;
         }
 
-        public Criteria andIsDeleteIn(List<Boolean> values) {
-            addCriterion("is_delete in", values, "isDelete");
+        public Criteria andImageNameLike(String value) {
+            addCriterion("image_name like", value, "imageName");
             return (Criteria) this;
         }
 
-        public Criteria andIsDeleteNotIn(List<Boolean> values) {
-            addCriterion("is_delete not in", values, "isDelete");
+        public Criteria andImageNameNotLike(String value) {
+            addCriterion("image_name not like", value, "imageName");
             return (Criteria) this;
         }
 
-        public Criteria andIsDeleteBetween(Boolean value1, Boolean value2) {
-            addCriterion("is_delete between", value1, value2, "isDelete");
+        public Criteria andImageNameIn(List<String> values) {
+            addCriterion("image_name in", values, "imageName");
             return (Criteria) this;
         }
 
-        public Criteria andIsDeleteNotBetween(Boolean value1, Boolean value2) {
-            addCriterion("is_delete not between", value1, value2, "isDelete");
+        public Criteria andImageNameNotIn(List<String> values) {
+            addCriterion("image_name not in", values, "imageName");
+            return (Criteria) this;
+        }
+
+        public Criteria andImageNameBetween(String value1, String value2) {
+            addCriterion("image_name between", value1, value2, "imageName");
+            return (Criteria) this;
+        }
+
+        public Criteria andImageNameNotBetween(String value1, String value2) {
+            addCriterion("image_name not between", value1, value2, "imageName");
             return (Criteria) this;
         }
 
@@ -354,12 +371,135 @@ public class ImageCloudinaryExample {
             addCriterion("create_time not between", value1, value2, "createTime");
             return (Criteria) this;
         }
-    }
 
-    public static class Criteria extends GeneratedCriteria {
+        public Criteria andBackupTimeIsNull() {
+            addCriterion("backup_time is null");
+            return (Criteria) this;
+        }
 
-        protected Criteria() {
-            super();
+        public Criteria andBackupTimeIsNotNull() {
+            addCriterion("backup_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackupTimeEqualTo(LocalDateTime value) {
+            addCriterion("backup_time =", value, "backupTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackupTimeNotEqualTo(LocalDateTime value) {
+            addCriterion("backup_time <>", value, "backupTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackupTimeGreaterThan(LocalDateTime value) {
+            addCriterion("backup_time >", value, "backupTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackupTimeGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("backup_time >=", value, "backupTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackupTimeLessThan(LocalDateTime value) {
+            addCriterion("backup_time <", value, "backupTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackupTimeLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("backup_time <=", value, "backupTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackupTimeIn(List<LocalDateTime> values) {
+            addCriterion("backup_time in", values, "backupTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackupTimeNotIn(List<LocalDateTime> values) {
+            addCriterion("backup_time not in", values, "backupTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackupTimeBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("backup_time between", value1, value2, "backupTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackupTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("backup_time not between", value1, value2, "backupTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andMd5MarkIsNull() {
+            addCriterion("md5_mark is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMd5MarkIsNotNull() {
+            addCriterion("md5_mark is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMd5MarkEqualTo(String value) {
+            addCriterion("md5_mark =", value, "md5Mark");
+            return (Criteria) this;
+        }
+
+        public Criteria andMd5MarkNotEqualTo(String value) {
+            addCriterion("md5_mark <>", value, "md5Mark");
+            return (Criteria) this;
+        }
+
+        public Criteria andMd5MarkGreaterThan(String value) {
+            addCriterion("md5_mark >", value, "md5Mark");
+            return (Criteria) this;
+        }
+
+        public Criteria andMd5MarkGreaterThanOrEqualTo(String value) {
+            addCriterion("md5_mark >=", value, "md5Mark");
+            return (Criteria) this;
+        }
+
+        public Criteria andMd5MarkLessThan(String value) {
+            addCriterion("md5_mark <", value, "md5Mark");
+            return (Criteria) this;
+        }
+
+        public Criteria andMd5MarkLessThanOrEqualTo(String value) {
+            addCriterion("md5_mark <=", value, "md5Mark");
+            return (Criteria) this;
+        }
+
+        public Criteria andMd5MarkLike(String value) {
+            addCriterion("md5_mark like", value, "md5Mark");
+            return (Criteria) this;
+        }
+
+        public Criteria andMd5MarkNotLike(String value) {
+            addCriterion("md5_mark not like", value, "md5Mark");
+            return (Criteria) this;
+        }
+
+        public Criteria andMd5MarkIn(List<String> values) {
+            addCriterion("md5_mark in", values, "md5Mark");
+            return (Criteria) this;
+        }
+
+        public Criteria andMd5MarkNotIn(List<String> values) {
+            addCriterion("md5_mark not in", values, "md5Mark");
+            return (Criteria) this;
+        }
+
+        public Criteria andMd5MarkBetween(String value1, String value2) {
+            addCriterion("md5_mark between", value1, value2, "md5Mark");
+            return (Criteria) this;
+        }
+
+        public Criteria andMd5MarkNotBetween(String value1, String value2) {
+            addCriterion("md5_mark not between", value1, value2, "md5Mark");
+            return (Criteria) this;
         }
     }
 

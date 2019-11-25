@@ -10,7 +10,7 @@ public interface ImageCloudinaryMapper {
 
     int deleteByExample(ImageCloudinaryExample example);
 
-    int deleteByPrimaryKey(Integer imageId);
+    int deleteByPrimaryKey(Long imageId);
 
     int insert(ImageCloudinary record);
 
@@ -18,7 +18,7 @@ public interface ImageCloudinaryMapper {
 
     List<ImageCloudinary> selectByExample(ImageCloudinaryExample example);
 
-    ImageCloudinary selectByPrimaryKey(Integer imageId);
+    ImageCloudinary selectByPrimaryKey(Long imageId);
 
     int updateByExampleSelective(@Param("record") ImageCloudinary record, @Param("example") ImageCloudinaryExample example);
 

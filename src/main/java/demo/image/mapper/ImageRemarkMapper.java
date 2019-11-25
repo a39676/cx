@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import demo.image.pojo.ImageCache;
 import demo.image.pojo.ImageRemark;
-import demo.image.pojo.ImageStore;
+import demo.image.pojo.po.ImageStore;
 
 public interface ImageRemarkMapper {
     int insert(ImageRemark record);

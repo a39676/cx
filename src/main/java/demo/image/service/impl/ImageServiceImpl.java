@@ -17,19 +17,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cloudinary.pojo.result.CloudinaryUploadResult;
+import dateTimeHandle.DateTimeHandle;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
 import demo.cloudinary.service.CloudinaryService;
 import demo.image.mapper.ImageCacheMapper;
+import demo.image.mapper.ImageCloudinaryMapper;
 import demo.image.mapper.ImageStoreMapper;
 import demo.image.mapper.ImageTagMapper;
 import demo.image.mapper.ImageTagsMapper;
 import demo.image.pojo.ImageCache;
-import demo.image.pojo.ImageStore;
 import demo.image.pojo.ImageTag;
 import demo.image.pojo.ImageTags;
 import demo.image.pojo.dto.UploadImageToCloudinaryDTO;
+import demo.image.pojo.po.ImageCloudinary;
+import demo.image.pojo.po.ImageStore;
 import demo.image.pojo.result.UploadImageToCloudinaryResult;
 import demo.image.service.ImageService;
 import demo.tool.pojo.constant.ToolPathConstant;
@@ -46,6 +49,7 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 	private ImageTagMapper imageTagMapper;
 	@Autowired
 	private ImageTagsMapper imageTagsMapper;
+	private ImageCloudinaryMapper imageCloudinaryMapper;
 	
 	@Autowired
 	private CloudinaryService cloudinaryService;
@@ -180,7 +184,7 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 			tmpIS = new ImageStore();
 			tmpIT = new ImageTag();
 			tmpIS.setImageId(ic.getImageId());
-			tmpIS.setCreateTime(ic.getCreateTime());
+			tmpIS.setCreateTime(DateTimeHandle.dateToLocalDateTime(ic.getCreateTime()));
 			tmpIS.setImageName(ic.getImageName());
 			tmpIS.setImageUrl(ic.getImageUrl());
 			tmpIT.setImageId(ic.getImageId());
@@ -203,10 +207,6 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 
 	@Override
 	public UploadImageToCloudinaryResult uploadImageToCloudinary(UploadImageToCloudinaryDTO dto) {
-		/*
-		 * TODO
-		 * 需要存放 cloudinary 的 publicId
-		 */
 		UploadImageToCloudinaryResult r = new UploadImageToCloudinaryResult();
 		if(StringUtils.isBlank(dto.getFilePath())) {
 			r.fillWithResult(ResultTypeCX.nullParam);
@@ -231,6 +231,17 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 		imgPO.setImageName(imgFile.getName());
 		imgPO.setImageUrl(uploadResult.getSecureUrl());
 		imageStoreMapper.insertSelective(imgPO);
+		
+		ImageCloudinary imgCloudPO = new ImageCloudinary();
+		imgCloudPO.setImageId(imgId);
+		imgCloudPO.setCloudinaryPublicId(uploadResult.getPublicId());
+		imageCloudinaryMapper.insertSelective(imgCloudPO);
+		
+		/*
+		 * TODO
+		 * 2019-11-25
+		 * 是否需要加入  image_tag 数据
+		 */
 		
 		r.setImgId(imgId);
 		r.setImgUrl(uploadResult.getSecureUrl());

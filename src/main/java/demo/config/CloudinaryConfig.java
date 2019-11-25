@@ -8,20 +8,9 @@ import cloudinary.service.CloudinaryFunction;
 @Component
 public class CloudinaryConfig {
 	
-//	@Autowired
-//	private SystemConstantService constantService;
-
 	@Bean
 	public CloudinaryFunction getCloudinaryFunction() {
 		return new CloudinaryFunction();
 	}
-	
-//	@Bean
-//	public Cloudinary getCloudinaryCore() {
-//		return new CloudinaryCore().buildCloudinary(
-//				constantService.getValByName(CloudinaryConstant.cloudinaryNameStoreKey),
-//				constantService.getValByName(CloudinaryConstant.cloudinaryApiKeyStoreKey), 
-//				constantService.getValByName(CloudinaryConstant.cloudinaryApiSecretStoreKey));
-//	}
 	
 }

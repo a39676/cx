@@ -6,8 +6,8 @@ import java.util.List;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.image.pojo.ImageCache;
 import demo.image.pojo.ImageTags;
-import demo.image.pojo.result.UploadImageToCloudinaryResult;
 import image.pojo.dto.UploadImageToCloudinaryDTO;
+import image.pojo.result.UploadImageToCloudinaryResult;
 
 public interface ImageService {
 

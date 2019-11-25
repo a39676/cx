@@ -32,11 +32,11 @@ import demo.image.pojo.ImageTag;
 import demo.image.pojo.ImageTags;
 import demo.image.pojo.po.ImageCloudinary;
 import demo.image.pojo.po.ImageStore;
-import demo.image.pojo.result.UploadImageToCloudinaryResult;
 import demo.image.service.ImageService;
 import demo.tool.pojo.constant.ToolPathConstant;
 import encodeHandle.EncodeUtil;
 import image.pojo.dto.UploadImageToCloudinaryDTO;
+import image.pojo.result.UploadImageToCloudinaryResult;
 
 @Service
 public class ImageServiceImpl extends CommonService implements ImageService {
@@ -209,7 +209,7 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 	public UploadImageToCloudinaryResult uploadImageToCloudinary(UploadImageToCloudinaryDTO dto) {
 		UploadImageToCloudinaryResult r = new UploadImageToCloudinaryResult();
 		if(StringUtils.isBlank(dto.getFilePath())) {
-			r.fillWithResult(ResultTypeCX.nullParam);
+			r.failWithMessage("null param");
 			return r;
 		}
 		

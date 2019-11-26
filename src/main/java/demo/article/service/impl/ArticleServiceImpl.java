@@ -66,7 +66,6 @@ import demo.article.service.ArticleAdminService;
 import demo.article.service.ArticleChannelService;
 import demo.article.service.ArticleService;
 import demo.article.service.ArticleSummaryService;
-import demo.article.service.ArticleViewService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.system.service.impl.SystemConstantService;
@@ -95,8 +94,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	private SystemConstantService systemConstantService;
 	@Autowired
 	private ArticleChannelService channelService;
-	@Autowired
-	private ArticleViewService articleViewService;
+//	@Autowired
+//	private ArticleViewService articleViewService;
 	@Autowired
 	private ArticleAdminService articleAdminService;
 	@Autowired
@@ -562,7 +561,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		 * 2019-11-25
 		 * 准备废弃 articleViewService
 		 */
-		articleViewService.insertOrUpdateViewCount(articleId);
+//		articleViewService.insertOrUpdateViewCount(articleId);
 		
 		vo = articleLongMapper.findArticleLongByDecryptId(param);
 		if(vo == null) {

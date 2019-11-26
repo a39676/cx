@@ -14,20 +14,20 @@ public interface VisitDataService {
 	IpRecordBO getIp(HttpServletRequest request);
 
 	/**
-	 * 将访问数据放入到 Redis 缓存
+	 * 将访问数据(ip, url 记录)放入到 Redis 缓存
 	 * @param request
 	 * @param customInfo
 	 */
 	void insertVisitData(HttpServletRequest request, String customInfo);
 
 	/**
-	 * 将访问数据放入到 Redis 缓存
+	 * 将访问数据(ip, url 记录)放入到 Redis 缓存
 	 * @param request
 	 */
 	void insertVisitData(HttpServletRequest request);
 
 	/**
-	 * 将访问数量放入到 Redis 缓存
+	 * 将访问数量(仅记录访问数)放入到 Redis 缓存
 	 * 每个 IP 只记录一次
 	 * @param request
 	 */

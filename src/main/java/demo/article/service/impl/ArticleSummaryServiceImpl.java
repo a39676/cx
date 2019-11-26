@@ -39,6 +39,7 @@ import demo.article.pojo.vo.ArticleLongSummaryVOV3;
 import demo.article.service.ArticleCatchVCodeService;
 import demo.article.service.ArticleChannelService;
 import demo.article.service.ArticleSummaryService;
+import demo.article.service.ArticleViewService;
 import demo.articleComment.controller.ArticleCommentAdminController;
 import demo.articleComment.controller.ArticleCommentController;
 import demo.articleComment.pojo.bo.ArticleCommentCountByArticleIdBO;
@@ -62,7 +63,8 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 	private ArticleCatchVCodeService articleCatchVCodeService;
 	@Autowired
 	private SystemConstantService systemConstantService;
-	
+	@Autowired
+	private ArticleViewService articleViewService;
 	@Autowired
 	private ArticleLongSummaryMapper articleLongSummaryMapper;
 
@@ -339,11 +341,8 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		List<Long> articleHasCommentNotReviewIdList = null;
 		summaryBOList.stream().forEach(bo -> articleIdList.add(bo.getArticleId()));
 		List<ArticleCommentCountByArticleIdBO> commentCountList = articleCommentController.findCommentCountByArticleId(articleIdList);
-		/*
-		 * 2019-11-26
-		 * 如需在此重现点击数统计展现, 请引入 VisitDataService
-		 */
-//		List<ArticleViewCount> viewCountList = articleViewService.findArticleViewCountByArticleId(articleIdList);
+	
+		List<ArticleViewCount> viewCountList = articleViewService.findArticleViewCountByArticleId(articleIdList);
 		if(controllerParam.getHasAdminRole() && articleIdList.size() > 0) {
 			articleHasCommentNotReviewIdList = articleCommentAdminController.findArticleIdWithCommentWaitingForReview(articleIdList);
 		} else {
@@ -356,7 +355,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 					summaryBOList, 
 					articleHasCommentNotReviewIdList, 
 					commentCountList,
-					null);
+					viewCountList);
 		
 		result.setArticleLongSummaryVOList(summaryVOList);
 		
@@ -440,11 +439,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		List<Long> articleHasCommentNotReviewIdList = null;
 		hotSummaryBOList.stream().forEach(bo -> articleIdList.add(bo.getArticleId()));
 		List<ArticleCommentCountByArticleIdBO> commentCountList = articleCommentController.findCommentCountByArticleId(articleIdList);
-		/*
-		 * 2019-11-26
-		 * 如需在此重现点击数统计展现, 请引入 VisitDataService
-		 */
-//		List<ArticleViewCount> viewCountList = articleViewService.findArticleViewCountByArticleId(articleIdList);
+		List<ArticleViewCount> viewCountList = articleViewService.findArticleViewCountByArticleId(articleIdList);
 		if(controllerParam.getHasAdminRole() && articleIdList.size() > 0) {
 			articleHasCommentNotReviewIdList = articleCommentAdminController.findArticleIdWithCommentWaitingForReview(articleIdList);
 		} else {
@@ -457,7 +452,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 					hotSummaryBOList, 
 					articleHasCommentNotReviewIdList, 
 					commentCountList,
-					null);
+					viewCountList);
 		
 		result.setArticleLongSummaryVOList(hotSummaryVOList);
 		result.setIsSuccess();

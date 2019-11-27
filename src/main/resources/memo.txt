@@ -18,7 +18,7 @@ id bigint not null,
 ;
 
 -----------------
-考虑废止image部分代码
+考虑废止image cache部分代码
 需要为管理员增加屏蔽用户/ip
 
 验证码模块

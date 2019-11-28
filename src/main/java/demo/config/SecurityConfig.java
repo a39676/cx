@@ -37,6 +37,7 @@ import demo.tool.pojo.constant.ToolUrlConstant;
 import demo.tool.pojo.constant.UploadUrlConstant;
 import demo.web.handler.LimitLoginAuthenticationProvider;
 import demo.weixin.pojo.constant.WXUrl;
+import image.pojo.constant.ImageInteractionUrl;
 
 @Configuration
 @EnableWebSecurity
@@ -152,6 +153,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configure(WebSecurity web) throws Exception {
 	    web.ignoring()
 	    .antMatchers("/test/testIgnoring")
+	    .antMatchers(ImageInteractionUrl.root + ImageInteractionUrl.uploadImageToCloudinary)
 	    ;
 	}
 	

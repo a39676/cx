@@ -159,4 +159,5 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 	public Long getVisitCount() {
 		return getVisitCount(null);
 	}
+	
 }

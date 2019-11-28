@@ -254,4 +254,14 @@
     </foreach>
   </insert>
 
+  <select id="findLastUserIp" resultMap="BaseResultMap">
+    select
+      *
+    from
+      user_ip
+    where
+      create_time &lt;= #{startTime}
+    order by create_time desc 
+    limit 1000
+  </select>
 </mapper>

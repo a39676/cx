@@ -34,6 +34,7 @@ public class ImageInteractionController extends CommonController {
 		return imageService.uploadImageToCloudinary(dto);
 	}
 	
+	
 	@GetMapping(value = ImageInteractionUrl.uploadImageToCloudinary)
 	@ResponseBody
 	public UploadImageToCloudinaryResult uploadImageToCloudinary(@RequestParam(value = "filePath", defaultValue = "") String filePath) {

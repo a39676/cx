@@ -130,6 +130,7 @@ public class TaskToolServiceImpl implements TaskToolService {
 	@Scheduled(cron="01 02 00 * * *")
 	public String visitCountRedisToOrm() {
 		visitDataService.visitCountRedisToOrm();
+		visitDataService.visitDataRedisToOrm();
 		return null;
 	}
 }

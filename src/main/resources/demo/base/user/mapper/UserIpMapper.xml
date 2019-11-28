@@ -260,7 +260,7 @@
     from
       user_ip
     where
-      create_time &lt;= #{startTime}
+      create_time &gt;= #{startTime}
     order by create_time desc 
     limit 1000
   </select>

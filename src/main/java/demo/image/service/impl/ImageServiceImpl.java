@@ -49,6 +49,7 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 	private ImageTagMapper imageTagMapper;
 	@Autowired
 	private ImageTagsMapper imageTagsMapper;
+	@Autowired
 	private ImageCloudinaryMapper imageCloudinaryMapper;
 	
 	@Autowired

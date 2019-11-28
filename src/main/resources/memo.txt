@@ -1,6 +1,9 @@
 相当一部分 service 里边存有 private static 开头的静态变量, 需要清除
 需要文章编辑功能, 尤其是针对富文本的
 
+
+ImageInteractionController.insertImageFromArticle  需要另外迁移出去
+
 CREATE TABLE `duralbe_recorder` (
 id bigint not null,
    `trading_id` bigint default null,

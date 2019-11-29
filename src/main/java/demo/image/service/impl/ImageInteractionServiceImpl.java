@@ -92,6 +92,7 @@ public class ImageInteractionServiceImpl extends CommonService implements ImageI
 		return r;
 	}
 	
+	@Override
 	public void cleanOldAutoTestUploadImage() {
 		
 		LocalDateTime deadLine = LocalDateTime.now().minusDays(ImageConstant.autoTestUploadImageMaxLifeDays);

@@ -7,4 +7,6 @@ public interface ImageInteractionService {
 
 	UploadImageToCloudinaryResult uploadImageToCloudinary(UploadImageToCloudinaryDTO dto);
 
+	void cleanOldAutoTestUploadImage();
+
 }

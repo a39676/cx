@@ -74,7 +74,7 @@ import demo.base.user.controller.UsersController;
 import demo.base.user.pojo.type.RolesType;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
-import demo.image.controller.ImageInteractionController;
+import demo.image.controller.ImageController;
 import demo.tool.service.TextFilter;
 import demo.tool.service.ValidRegexToolService;
 import demo.util.BaseUtilCustom;
@@ -87,7 +87,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	@Autowired
 	private BaseUtilCustom baseUtilCustom;
 	@Autowired
-	private ImageInteractionController imageController;
+	private ImageController imageController;
 	@Autowired
 	private UsersController userController;
 	

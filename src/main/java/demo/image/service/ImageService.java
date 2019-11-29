@@ -6,8 +6,6 @@ import java.util.List;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.image.pojo.ImageCache;
 import demo.image.pojo.ImageTags;
-import image.pojo.dto.UploadImageToCloudinaryDTO;
-import image.pojo.result.UploadImageToCloudinaryResult;
 
 public interface ImageService {
 
@@ -29,7 +27,5 @@ public interface ImageService {
 	List<ImageCache> getImageCacheListByArticleId(Long articleId);
 
 	CommonResultCX moveImageCacheToImageStore(Long articleId, Long channelId);
-
-	UploadImageToCloudinaryResult uploadImageToCloudinary(UploadImageToCloudinaryDTO dto);
 
 }

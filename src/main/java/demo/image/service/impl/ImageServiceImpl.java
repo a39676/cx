@@ -12,31 +12,24 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cloudinary.pojo.result.CloudinaryUploadResult;
 import dateTimeHandle.DateTimeHandle;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
-import demo.cloudinary.service.CloudinaryService;
 import demo.image.mapper.ImageCacheMapper;
-import demo.image.mapper.ImageCloudinaryMapper;
 import demo.image.mapper.ImageStoreMapper;
 import demo.image.mapper.ImageTagMapper;
 import demo.image.mapper.ImageTagsMapper;
 import demo.image.pojo.ImageCache;
 import demo.image.pojo.ImageTag;
 import demo.image.pojo.ImageTags;
-import demo.image.pojo.po.ImageCloudinary;
 import demo.image.pojo.po.ImageStore;
 import demo.image.service.ImageService;
 import demo.tool.pojo.constant.ToolPathConstant;
 import encodeHandle.EncodeUtil;
-import image.pojo.dto.UploadImageToCloudinaryDTO;
-import image.pojo.result.UploadImageToCloudinaryResult;
 
 @Service
 public class ImageServiceImpl extends CommonService implements ImageService {
@@ -49,11 +42,6 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 	private ImageTagMapper imageTagMapper;
 	@Autowired
 	private ImageTagsMapper imageTagsMapper;
-	@Autowired
-	private ImageCloudinaryMapper imageCloudinaryMapper;
-	
-	@Autowired
-	private CloudinaryService cloudinaryService;
 	
 	private static List<ImageTags> imageTags = new ArrayList<ImageTags>();
 
@@ -206,49 +194,4 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 		return result;
 	}
 
-	@Override
-	public UploadImageToCloudinaryResult uploadImageToCloudinary(UploadImageToCloudinaryDTO dto) {
-		UploadImageToCloudinaryResult r = new UploadImageToCloudinaryResult();
-		if(StringUtils.isBlank(dto.getFilePath())) {
-			r.failWithMessage("null param");
-			return r;
-		}
-		
-		File imgFile = new File(dto.getFilePath());
-		if(!imgFile.exists()) {
-			r.failWithMessage("file not exists");
-			return r;
-		}
-		
-		CloudinaryUploadResult uploadResult = cloudinaryService.uploadCore(imgFile);
-		if(!uploadResult.isSuccess()) {
-			r.failWithMessage("cloudinary upload fail");
-			return r;
-		}
-		
-		ImageStore imgPO = new ImageStore();
-		Long imgId = snowFlake.getNextId();
-		imgPO.setImageId(imgId);
-		imgPO.setImageName(imgFile.getName());
-		imgPO.setImageUrl(uploadResult.getSecureUrl());
-		imageStoreMapper.insertSelective(imgPO);
-		
-		ImageCloudinary imgCloudPO = new ImageCloudinary();
-		imgCloudPO.setImageId(imgId);
-		imgCloudPO.setCloudinaryPublicId(uploadResult.getPublicId());
-		imageCloudinaryMapper.insertSelective(imgCloudPO);
-		
-		/*
-		 * TODO
-		 * 2019-11-25
-		 * 是否需要加入  image_tag 数据
-		 */
-		
-		r.setImgId(imgId);
-		r.setImgUrl(uploadResult.getSecureUrl());
-		r.setIsSuccess();
-		
-		return r;
-	}
-	
 }

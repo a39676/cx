@@ -11,8 +11,11 @@ import demo.baseCommon.service.CommonService;
 import demo.cloudinary.service.CloudinaryService;
 import demo.image.mapper.ImageCloudinaryMapper;
 import demo.image.mapper.ImageStoreMapper;
+import demo.image.mapper.ImageTagMapper;
+import demo.image.pojo.ImageTag;
 import demo.image.pojo.po.ImageCloudinary;
 import demo.image.pojo.po.ImageStore;
+import demo.image.pojo.type.ImageTagType;
 import demo.image.service.ImageInteractionService;
 import image.pojo.dto.UploadImageToCloudinaryDTO;
 import image.pojo.result.UploadImageToCloudinaryResult;
@@ -22,6 +25,8 @@ public class ImageInteractionServiceImpl extends CommonService implements ImageI
 
 	@Autowired
 	private ImageStoreMapper imageStoreMapper;
+	@Autowired
+	private ImageTagMapper imageTagMapper;
 	@Autowired
 	private ImageCloudinaryMapper imageCloudinaryMapper;
 	@Autowired
@@ -60,11 +65,10 @@ public class ImageInteractionServiceImpl extends CommonService implements ImageI
 		imgCloudPO.setCloudinaryPublicId(uploadResult.getPublicId());
 		imageCloudinaryMapper.insertSelective(imgCloudPO);
 		
-		/*
-		 * TODO
-		 * 2019-11-25
-		 * 是否需要加入  image_tag 数据
-		 */
+		ImageTag imgTagPO = new ImageTag();
+		imgTagPO.setImageId(imgId);
+		imgTagPO.setTagId(ImageTagType.autoTestImgToCloudinary.getCode().longValue());
+		imageTagMapper.insertSelective(imgTagPO);
 		
 		r.setImgId(imgId);
 		r.setImgUrl(uploadResult.getSecureUrl());
@@ -73,4 +77,7 @@ public class ImageInteractionServiceImpl extends CommonService implements ImageI
 		return r;
 	}
 	
+	public void cleanOldAutoTestUploadImage() {
+//		TODO
+	}
 }

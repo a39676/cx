@@ -2,27 +2,24 @@ package demo.image.pojo.type;
 
 public enum ImageTagType {
 	
-	Tag1("1", 1),
-	Tag9("9", 9),
-	Tag10("10", 10),
-	fromArticle("fromArticle", 11)
+	fromArticle("fromArticle", 11),
+	autoTestImgToCloudinary("autoTestImgToCloudinary", 12),
 	
 	;
 	
-	private String tagName;
-	private Integer tagId;
+	private String name;
+	private Integer code;
 	
-	ImageTagType(String tagName, Integer tagId) {
-		this.tagName = tagName;
-		this.tagId = tagId;
+	ImageTagType(String name, Integer code) {
+		this.name = name;
+		this.code = code;
 	}
 
-	
-	public String getTagName() {
-		return this.tagName;
+	public String getName() {
+		return this.name;
 	}
 	
-	public Integer getTagId() {
-		return this.tagId;
+	public Integer getCode() {
+		return this.code;
 	}
 }

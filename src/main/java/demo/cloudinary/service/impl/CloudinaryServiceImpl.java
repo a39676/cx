@@ -70,7 +70,7 @@ public class CloudinaryServiceImpl extends CommonService implements CloudinarySe
 	@Override
 	public CloudinaryDeleteResult delete(List<String> publicIds) {
 		CloudinaryDeleteResult r = null;
-		if(publicIds == null || publicIds.size() < 1) {
+		if(publicIds == null || publicIds.size() < 1 || publicIds.size() > CloudinaryConstant.deleteIdListMaxSize) {
 			r = new CloudinaryDeleteResult();
 			return r;
 		}

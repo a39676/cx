@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cloudinary.pojo.constant.CloudinaryConstant;
 import cloudinary.pojo.result.CloudinaryDeleteResult;
 import cloudinary.pojo.result.CloudinaryUploadResult;
 import demo.baseCommon.service.CommonService;
@@ -105,15 +106,32 @@ public class ImageInteractionServiceImpl extends CommonService implements ImageI
 		}
 		
 		List<String> sourceCloudinaryPublicIdList = new ArrayList<String>();
-		List<Long> sourceImgStoreIdList = new ArrayList<Long>();
 		Map<String, Long> cloudinaryPublicIdMapImgStoreId = new HashMap<String, Long>();
 		
 		for(ImageCloudinary po : imgCloudinaryPOList) {
 			sourceCloudinaryPublicIdList.add(po.getCloudinaryPublicId());
-			sourceImgStoreIdList.add(po.getImageId());
 			cloudinaryPublicIdMapImgStoreId.put(po.getCloudinaryPublicId(), po.getImageId());
 		}
 		
+		if(sourceCloudinaryPublicIdList.size() > 100) {
+			int step = CloudinaryConstant.deleteIdListMaxSize;
+			List<String> tmpList = null;
+			for(int i = 0; i < sourceCloudinaryPublicIdList.size(); i = i + step) {
+				tmpList = new ArrayList<String>();
+				if(i + step > sourceCloudinaryPublicIdList.size()) {
+					tmpList = sourceCloudinaryPublicIdList.subList(i, sourceCloudinaryPublicIdList.size());
+				} else {
+					tmpList = sourceCloudinaryPublicIdList.subList(i, i + step);
+				}
+				cleanOldAutoTestUploadImageSubHandle(tmpList, cloudinaryPublicIdMapImgStoreId);
+			}
+			
+		} else {
+			cleanOldAutoTestUploadImageSubHandle(sourceCloudinaryPublicIdList, cloudinaryPublicIdMapImgStoreId);
+		}
+	}
+	
+	private void cleanOldAutoTestUploadImageSubHandle(List<String> sourceCloudinaryPublicIdList, Map<String, Long> cloudinaryPublicIdMapImgStoreId) {
 		CloudinaryDeleteResult cloudinaryDeleteResult = cloudinaryService.delete(sourceCloudinaryPublicIdList);
 		
 		@SuppressWarnings("unchecked")
@@ -135,6 +153,5 @@ public class ImageInteractionServiceImpl extends CommonService implements ImageI
 		ImageStoreExample iamgeStoreDeleteExample = new ImageStoreExample();
 		iamgeStoreDeleteExample.createCriteria().andImageIdIn(targetImgStoreIdList);
 		imageStoreMapper.deleteByExample(iamgeStoreDeleteExample);
-		
 	}
 }

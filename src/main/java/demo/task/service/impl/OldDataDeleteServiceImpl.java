@@ -15,7 +15,7 @@ public class OldDataDeleteServiceImpl implements OldDataDeleteService {
 	
 	/** 清理时间过长的, cloudinary上的 自动测试报告图片. */
 	@Scheduled(cron="19 25 03 * * *")
-	public void cleanAttempts() {
+	public void cleanOldAutoTestUploadImage() {
 		imageInteractionService.cleanOldAutoTestUploadImage();
 	}
 	

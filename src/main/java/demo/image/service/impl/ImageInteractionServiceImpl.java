@@ -1,20 +1,32 @@
 package demo.image.service.impl;
 
 import java.io.File;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cloudinary.pojo.result.CloudinaryDeleteResult;
 import cloudinary.pojo.result.CloudinaryUploadResult;
 import demo.baseCommon.service.CommonService;
 import demo.cloudinary.service.CloudinaryService;
 import demo.image.mapper.ImageCloudinaryMapper;
+import demo.image.mapper.ImageComplexMapper;
 import demo.image.mapper.ImageStoreMapper;
 import demo.image.mapper.ImageTagMapper;
-import demo.image.pojo.ImageTag;
+import demo.image.pojo.constant.ImageConstant;
+import demo.image.pojo.dto.BatchUpdateDeleteFlagDTO;
+import demo.image.pojo.dto.FindOldAutoTestImageOnCloudinaryDTO;
 import demo.image.pojo.po.ImageCloudinary;
 import demo.image.pojo.po.ImageStore;
+import demo.image.pojo.po.ImageStoreExample;
+import demo.image.pojo.po.ImageTag;
 import demo.image.pojo.type.ImageTagType;
 import demo.image.service.ImageInteractionService;
 import image.pojo.dto.UploadImageToCloudinaryDTO;
@@ -29,6 +41,8 @@ public class ImageInteractionServiceImpl extends CommonService implements ImageI
 	private ImageTagMapper imageTagMapper;
 	@Autowired
 	private ImageCloudinaryMapper imageCloudinaryMapper;
+	@Autowired
+	private ImageComplexMapper imageComplexMapper;
 	@Autowired
 	private CloudinaryService cloudinaryService;
 	
@@ -78,6 +92,49 @@ public class ImageInteractionServiceImpl extends CommonService implements ImageI
 	}
 	
 	public void cleanOldAutoTestUploadImage() {
-//		TODO
+		
+		LocalDateTime deadLine = LocalDateTime.now().minusDays(ImageConstant.autoTestUploadImageMaxLifeDays);
+		
+		FindOldAutoTestImageOnCloudinaryDTO findOldAutoTestImageOnCloudinaryDTO = new FindOldAutoTestImageOnCloudinaryDTO();
+		findOldAutoTestImageOnCloudinaryDTO.setEndTime(deadLine);
+		findOldAutoTestImageOnCloudinaryDTO.setTagId(ImageTagType.autoTestImgToCloudinary.getCode().longValue());
+		List<ImageCloudinary> imgCloudinaryPOList = imageComplexMapper.findOldAutoTestImageOnCloudinary(findOldAutoTestImageOnCloudinaryDTO);
+		
+		if(imgCloudinaryPOList == null || imgCloudinaryPOList.size() < 1) {
+			return;
+		}
+		
+		List<String> sourceCloudinaryPublicIdList = new ArrayList<String>();
+		List<Long> sourceImgStoreIdList = new ArrayList<Long>();
+		Map<String, Long> cloudinaryPublicIdMapImgStoreId = new HashMap<String, Long>();
+		
+		for(ImageCloudinary po : imgCloudinaryPOList) {
+			sourceCloudinaryPublicIdList.add(po.getCloudinaryPublicId());
+			sourceImgStoreIdList.add(po.getImageId());
+			cloudinaryPublicIdMapImgStoreId.put(po.getCloudinaryPublicId(), po.getImageId());
+		}
+		
+		CloudinaryDeleteResult cloudinaryDeleteResult = cloudinaryService.delete(sourceCloudinaryPublicIdList);
+		
+		@SuppressWarnings("unchecked")
+		Set<String> keys = cloudinaryDeleteResult.getDeleted().keySet();
+		String tmpValue = null;
+		List<Long> targetImgStoreIdList = new ArrayList<Long>();
+		for(String key : keys) {
+			tmpValue = cloudinaryDeleteResult.getDeleted().getString(key);
+			if("deleted".equals(tmpValue)) {
+				targetImgStoreIdList.add(cloudinaryPublicIdMapImgStoreId.get(key));
+			}
+		}
+		
+		BatchUpdateDeleteFlagDTO imageCloudinaryBatchUpdateDeleteFlagDTO = new BatchUpdateDeleteFlagDTO();
+		imageCloudinaryBatchUpdateDeleteFlagDTO.setIsDelete(true);
+		imageCloudinaryBatchUpdateDeleteFlagDTO.setImageIdList(targetImgStoreIdList);
+		imageCloudinaryMapper.batchUpdateDeleteFlag(imageCloudinaryBatchUpdateDeleteFlagDTO);
+		
+		ImageStoreExample iamgeStoreDeleteExample = new ImageStoreExample();
+		iamgeStoreDeleteExample.createCriteria().andImageIdIn(targetImgStoreIdList);
+		imageStoreMapper.deleteByExample(iamgeStoreDeleteExample);
+		
 	}
 }

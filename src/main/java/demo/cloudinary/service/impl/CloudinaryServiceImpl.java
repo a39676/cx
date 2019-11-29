@@ -1,13 +1,16 @@
 package demo.cloudinary.service.impl;
 
 import java.io.File;
+import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cloudinary.Cloudinary;
 
 import cloudinary.pojo.constant.CloudinaryConstant;
+import cloudinary.pojo.result.CloudinaryDeleteResult;
 import cloudinary.pojo.result.CloudinaryUploadResult;
 import cloudinary.service.CloudinaryFunction;
 import cloudinary.util.CloudinaryCore;
@@ -47,6 +50,36 @@ public class CloudinaryServiceImpl extends CommonService implements CloudinarySe
 		result = cloudinaryFunction.upload(cloudinary, f);
 		
 		return result;
+	}
+	
+	@Override
+	public CloudinaryDeleteResult delete(String publicId) {
+		CloudinaryDeleteResult r = null;
+		if(StringUtils.isBlank(publicId)) {
+			r = new CloudinaryDeleteResult();
+			return r;
+		}
+		
+		Cloudinary cloudinary = buildCloudinary();
+		
+		r = cloudinaryFunction.delete(cloudinary, publicId);
+		
+		return r;
+	}
+	
+	@Override
+	public CloudinaryDeleteResult delete(List<String> publicIds) {
+		CloudinaryDeleteResult r = null;
+		if(publicIds == null || publicIds.size() < 1) {
+			r = new CloudinaryDeleteResult();
+			return r;
+		}
+		
+		Cloudinary cloudinary = buildCloudinary();
+		
+		r = cloudinaryFunction.delete(cloudinary, publicIds);
+		
+		return r;
 	}
 	
 }

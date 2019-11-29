@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.image.mapper.ImageComplexMapper">
+  <select id="findOldAutoTestImageOnCloudinary" resultType="demo.image.pojo.po.ImageCloudinary">
+    select
+      imgc.*
+    from
+      image_cloudinary as imgc
+
+      left join image_tag as imgt
+        on imgc.image_id = imgt.image_id
+    where
+      1=1
+      and imgc.create_time &lt;= #{endTime}
+      and imgc.is_delete = false
+      and imgt.tag_id = #{tagId}
+  </select>
+</mapper>

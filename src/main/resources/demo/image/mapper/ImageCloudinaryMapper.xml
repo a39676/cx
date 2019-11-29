@@ -193,4 +193,18 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where image_id = #{imageId,jdbcType=BIGINT}
   </update>
+
+  <update id="batchUpdateDeleteFlag">
+    update 
+      image_cloudinary
+    set 
+      is_delete = #{isDelete}
+      
+    where 
+      image_id in
+      <foreach item="imageId" index="index" collection="imageIdList" open="(" separator="," close=")">
+        #{imageId}
+      </foreach>
+  </update>
+
 </mapper>

@@ -2,15 +2,15 @@ package demo.image.pojo.type;
 
 public enum ImageTagType {
 	
-	fromArticle("fromArticle", 11),
-	autoTestImgToCloudinary("autoTestImgToCloudinary", 12),
+	fromArticle("fromArticle", 11L),
+	autoTestImgToCloudinary("autoTestImgToCloudinary", 12L),
 	
 	;
 	
 	private String name;
-	private Integer code;
+	private Long code;
 	
-	ImageTagType(String name, Integer code) {
+	ImageTagType(String name, Long code) {
 		this.name = name;
 		this.code = code;
 	}
@@ -19,7 +19,7 @@ public enum ImageTagType {
 		return this.name;
 	}
 	
-	public Integer getCode() {
+	public Long getCode() {
 		return this.code;
 	}
 }

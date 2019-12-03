@@ -4,4 +4,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
-<a class="nav-link" href="/atDemo/index">自动化测试示例</a>
+<%-- <li class="nav-item"> --%>
+  <a class="nav-link" href="/atDemo/index">自动化测试示例</a>
+<%-- </li> --%>

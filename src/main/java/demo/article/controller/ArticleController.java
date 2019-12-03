@@ -162,6 +162,7 @@ public class ArticleController extends CommonController {
 		FindArticleLongResult result = articleService.findArticleLongByArticleSummaryPrivateKey(param, request);
 		view.addObject("articleLongVO", result.getArticleLongVO());
 		view.addObject("visitCount", visitDataService.getVisitCount());
+		view.addObject("title", result.getArticleLongVO().getArticleTitle());
 		return view;
 	}
 	

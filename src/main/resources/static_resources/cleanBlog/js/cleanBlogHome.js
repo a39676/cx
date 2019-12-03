@@ -53,4 +53,6 @@ $(document).ready(function() {
   };
 
   fillFootMarker();
+
+
 });

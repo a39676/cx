@@ -62,7 +62,6 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 				view.setViewName(BaseViewConstant.empty);
 				return view;
 			}
-			view.addObject("isJobView", "true");
 		}
 
 		List<String> roles = baseUtilCustom.getRoles();
@@ -80,5 +79,5 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 	public ModelAndView aboutMeHandler(String vcode, HttpServletRequest request) {
 		return new ModelAndView(BlogViewConstant.about);
 	}
-
+	
 }

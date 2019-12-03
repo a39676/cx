@@ -76,12 +76,13 @@
   <!-- SCIPTS -->
   <%@ include file="./cleanBlogNormalFooter.jsp" %>
   <script type="text/javascript" src="/static_resources/cleanBlog/js/articleNormal.js"></script>
+  <script type="text/javascript" src="/static_resources/js/autotest/autotestLinkFillToBlogHome.js"></script>
   <sec:authorize access="hasRole('ROLE_ADMIN')">
   <script type="text/javascript" src="<c:url value='/static_resources/cleanBlog/js/articleSearch.js'/>"></script>
   </sec:authorize>
 
   <script type="text/javascript">
-    
+
   </script>
 </body>
 

@@ -80,6 +80,25 @@
   <script type="text/javascript" src="<c:url value='/static_resources/cleanBlog/js/articleSearch.js'/>"></script>
   </sec:authorize>
 
+  <script type="text/javascript">
+    function fillAT() {
+      $.ajax({  
+        type : "POST",  
+        async : true,
+        url : "/atDemo/linkToATHome",
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },  
+        success:function(datas){
+          $("#autoTestDemo").html(datas);
+        },  
+        error: function(datas) {                
+        }  
+      });
+    }
+
+    fillAT();
+  </script>
 </body>
 
 </html>

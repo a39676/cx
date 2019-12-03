@@ -19,11 +19,8 @@
         <li class="nav-item">
           <a class="nav-link" href="/aboutMe">关于我/联系方式</a>
         </li>
-        <c:if test="${isJobView == true}">
-          <li class="nav-item">
-            <a class="nav-link" href="/atDemo/index">自动化测试示例</a>
-          </li>
-        </c:if>
+        <li class="nav-item" id="autoTestDemo">
+        </li>
         <sec:authorize access="!hasRole('ROLE_USER')">
           <li class="nav-item" name="login">
             <a class="nav-link" href="#" id="loginTag">[登录]</a>

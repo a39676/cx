@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import auxiliaryCommon.pojo.constant.ServerHost;
 import httpHandel.HttpUtil;
 import movie.pojo.constant.MovieInteractionUrl;
 import movie.pojo.dto.FindMovieDetailDTO;
@@ -32,7 +33,7 @@ public class MovieInteractionTestController {
 			dto.setPageParam();
 			JSONObject j = JSONObject.fromObject(dto);
 	        
-			String url = "http://127.0.0.1:10002" + MovieInteractionUrl.root + MovieInteractionUrl.simpleList;
+			String url = ServerHost.host2 + MovieInteractionUrl.root + MovieInteractionUrl.simpleList;
 			String response = String.valueOf(httpUtil.sendPostRestful(url, j.toString()));
 			return response;
 		} catch (Exception e) {
@@ -47,7 +48,7 @@ public class MovieInteractionTestController {
 		try {
 			JSONObject j = JSONObject.fromObject(dto);
 	        
-			String url = "http://127.0.0.1:10002" + MovieInteractionUrl.root + MovieInteractionUrl.movieDetail;
+			String url = ServerHost.host2 + MovieInteractionUrl.root + MovieInteractionUrl.movieDetail;
 			String response = String.valueOf(httpUtil.sendPostRestful(url, j.toString()));
 			return response;
 		} catch (Exception e) {

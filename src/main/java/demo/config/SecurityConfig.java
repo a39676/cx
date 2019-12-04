@@ -5,7 +5,6 @@ import java.nio.charset.StandardCharsets;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -20,9 +19,9 @@ import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-import demo.article.pojo.constant.ArticleAdminUrlConstant;
-import demo.article.pojo.constant.ArticleUrlConstant;
-import demo.articleComment.pojo.constant.ArticleAdminCommentUrlConstant;
+import demo.article.article.pojo.constant.ArticleAdminUrlConstant;
+import demo.article.article.pojo.constant.ArticleUrlConstant;
+import demo.article.articleComment.pojo.constant.ArticleAdminCommentUrlConstant;
 import demo.base.admin.pojo.constant.AdminUrlConstant;
 import demo.base.user.pojo.constant.LoginUrlConstant;
 import demo.base.user.pojo.constant.UsersUrlConstant;
@@ -32,19 +31,17 @@ import demo.base.user.service.impl.CustomAuthenticationSuccessHandler;
 import demo.base.user.service.impl.CustomUserDetailsService;
 import demo.config.costom_component.CustomAuthenticationProvider;
 import demo.config.costom_component.CustomPasswordEncoder;
-import demo.fakeFTP.pojo.constant.FakeFTPUrlConstant;
+import demo.config.costom_component.LimitLoginAuthenticationProvider;
+import demo.test.pojo.constant.TestUrl;
+import demo.tool.fakeFTP.pojo.constant.FakeFTPUrlConstant;
 import demo.tool.pojo.constant.ToolUrlConstant;
 import demo.tool.pojo.constant.UploadUrlConstant;
-import demo.web.handler.LimitLoginAuthenticationProvider;
-import demo.weixin.pojo.constant.WXUrl;
+import demo.toyParts.weixin.pojo.constant.WXUrl;
 import image.pojo.constant.ImageInteractionUrl;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	
-	@Value("${envName}")
-	private String envName;
 	
 	@Autowired
 	private DataSource dataSource;
@@ -87,6 +84,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             // used to allow anonymous access 
             // .antMatchers("/welcome**").access("IS_AUTHENTICATED_ANONYMOUSLY")
 //            .antMatchers(ArticleUrlConstant.root + "/**").access("hasAnyRole('" + RolesType.ROLE_ADMIN.getRoleName() + "','" + RolesType.ROLE_USER.getRoleName() + "')")
+            .antMatchers(TestUrl.root + "/**")
+        		.access(hasRole(RolesType.ROLE_SUPER_ADMIN))
             .antMatchers("/holder/**")
             	.access(hasAnyRole(RolesType.ROLE_SUPER_ADMIN, RolesType.ROLE_USER))
             .antMatchers("/accountInfo/**")
@@ -132,11 +131,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //		    .and()
 //		        .headers().frameOptions().sameOrigin()
 		    ;
-        if(!"dev".equals(envName)) {
-        	http.authorizeRequests()
-        	.antMatchers("/test/**")
-        	.access(hasRole(RolesType.ROLE_SUPER_ADMIN));
-        }
 	  
         /*
          * 增加filter在此  同样操作 但建议使用

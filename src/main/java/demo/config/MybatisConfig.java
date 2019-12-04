@@ -22,10 +22,9 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
 	@PropertySource(value = "classpath:none.properties", ignoreResourceNotFound = true) 
 })
 @EnableTransactionManagement // <tx:annotation-driven />
-// multiple scan, 通配符的使用应放后边, 否则会被"覆盖?重写?"后失效
-@MapperScan({"demo.mapper", "demo.base.*.mapper", "demo.*.mapper"})
+// 2016 multiple scan, 通配符的使用应放后边, 否则会被"覆盖?重写?"后失效
+@MapperScan({"demo.mapper", "demo.base.*.mapper", "demo.finance.*.mapper", "demo.article.*.mapper", "demo.toyParts.*.mapper", "demo.*.mapper"})
 public class MybatisConfig implements TransactionManagementConfigurer {
-	
 	
 	// 直接写properties文件内的属性名
 	@Value("${DB_DRIVER_CLASS}")
@@ -59,6 +58,24 @@ public class MybatisConfig implements TransactionManagementConfigurer {
 		mybatisProperties.setProperty("cacheEnabled", "true");
 		sqlSessionFactoryBean.setConfigurationProperties(mybatisProperties);
 		sqlSessionFactoryBean.setDataSource(dataSource());
+		sqlSessionFactoryBean.setTypeAliasesPackage(""
+				+ "demo.base.admin.pojo, "
+				+ "demo.base.organizations.pojo, "
+				+ "demo.base.system.pojo, "
+				+ "demo.base.task.pojo, "
+				+ "demo.base.user.pojo, "
+				+ "demo.finance.account_holder.pojo, "
+				+ "demo.finance.account_info.pojo, "
+				+ "demo.finance.bank.pojo, "
+				+ "demo.finance.credit_bill.pojo, "
+				+ "demo.finance.trading.pojo, "
+				+ "demo.article.article.pojo, "
+				+ "demo.article.articleComment.pojo, "
+				+ "demo.toyParts.mobile.pojo, "
+				+ "demo.toyParts.vcode.pojo, "
+				+ "demo.toyParts.weixin.pojo, "
+				+ "demo.toyParts.woqu.pojo, "
+				);
 		
 		return sqlSessionFactoryBean;
 	}

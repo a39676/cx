@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.article.article.mapper.ArticleEvaluationStoreMapper">
+
+  <resultMap id="BaseResultMap" type="demo.article.article.pojo.po.ArticleEvaluationStore">
+    <result column="evaluation_store_id" jdbcType="BIGINT" property="evaluationStoreId" />
+    <result column="post_object_id" jdbcType="BIGINT" property="postObjectId" />
+    <result column="evaluation_type" jdbcType="BIT" property="evaluationType" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="evaluation_code" jdbcType="BIT" property="evaluationCode" />
+    <result column="evaluation_count" jdbcType="INTEGER" property="evaluationCount" />
+  </resultMap>
+
+  <insert id="insertOrUpdateEvaluationCount">
+    insert into article_evaluation_store (
+      evaluation_store_id, evaluation_type, post_object_id, create_time, update_time,  evaluation_code, evaluation_count
+    )
+    values(
+      #{evaluationStoreId,jdbcType=BIGINT}, #{evaluationType,jdbcType=BIT}, #{postObjectId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{evaluationCode,jdbcType=BIT}, #{evaluationCount,jdbcType=INTEGER})
+    on duplicate key update
+      update_time = now(),
+      evaluation_count = evaluation_count + #{evaluationCount}
+  </insert>
+
+  <insert id="insert" parameterType="demo.article.article.pojo.po.ArticleEvaluationStore">
+    insert into article_evaluation_store (evaluation_store_id, evaluation_type, post_object_id, create_time, update_time, evaluation_code, 
+      evaluation_count)
+    values (#{evaluationStoreId,jdbcType=BIGINT}, #{evaluationType,jdbcType=BIT}, #{postObjectId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{evaluationCode,jdbcType=BIT}, 
+      #{evaluationCount,jdbcType=INTEGER})
+  </insert>
+  
+  <insert id="insertSelective" parameterType="demo.article.article.pojo.po.ArticleEvaluationStore">
+    insert into article_evaluation_store
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="evaluationStoreId != null">
+        evaluation_store_id,
+      </if>
+      <if test="evaluationType != null">
+        evaluation_type,
+      </if>
+      <if test="postObjectId != null">
+        post_object_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="evaluationCode != null">
+        evaluation_code,
+      </if>
+      <if test="evaluationCount != null">
+        evaluation_count,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="evaluationStoreId != null">
+        #{evaluationStoreId,jdbcType=BIGINT},
+      </if>
+      <if test="evaluationType != null">
+        #{evaluationType,jdbcType=BIT},
+      </if>
+      <if test="postObjectId != null">
+        #{postObjectId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="evaluationCode != null">
+        #{evaluationCode,jdbcType=BIT},
+      </if>
+      <if test="evaluationCount != null">
+        #{evaluationCount,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="findEvaluationStatisticsByIdList" resultMap="BaseResultMap">
+    select
+      post_object_id,
+      evaluation_code,
+      evaluation_count
+    from
+      article_evaluation_store as aes
+    <where>
+      aes.post_object_id in
+      <foreach item="postObjectId" index="index" collection="postObjectIdList"
+        open="(" separator="," close=")">
+        #{postObjectId}
+      </foreach>
+      and evaluation_type = #{evaluationType}
+    </where>
+  </select>
+
+  <insert id="batchInert">
+    <foreach item="evaluation" index="index" collection="list"
+        open="" separator=";" close=";">
+      insert into 
+        article_evaluation_store(
+          evaluation_type, post_object_id, evaluation_code, evaluation_count
+        ) 
+        values(
+          #{evaluation.evaluationType}, #{evaluation.postObjectId}, #{evaluation.evaluationCode}, #{evaluation.evaluationCount}
+        )
+      on duplicate key update
+        evaluation_count = evaluation_count + #{evaluation.evaluationCount}, update_time = now()
+    </foreach>
+  </insert>
+</mapper>

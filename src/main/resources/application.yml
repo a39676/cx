@@ -27,11 +27,6 @@ spring:
   #     prefix: /jsp/
   #     suffix: .jsp
 
-#mybatis:
-  #typeAliasesPackage: demo.domain, demo.*.domain, demo.account_holder.domain, demo.account_info.domain, demo.bank.domain, demo.trading.domain, demo.base.user.domain, demo.base.base.domain, demo.article.domain, demo.articleComment.domain, demo.vcode.domain
-
-envName: prod
-
 logging:
   level:
     org.springframework.web: DEBUG

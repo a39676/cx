@@ -7,16 +7,16 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import demo.base.organizations.pojo.constant.OrgConstant;
+import demo.base.organizations.pojo.po.Organizations;
+import demo.base.organizations.service.OrganizationService;
+import demo.base.organizations.service.__SystemOrganizationService;
 import demo.base.user.pojo.constant.UserConstant;
 import demo.base.user.pojo.po.Auth;
 import demo.base.user.service.AuthService;
 import demo.base.user.service.RoleService;
 import demo.base.user.service.UserRegistService;
 import demo.base.user.service.UsersService;
-import demo.organizations.pojo.constant.OrgConstant;
-import demo.organizations.pojo.po.Organizations;
-import demo.organizations.service.OrganizationService;
-import demo.organizations.service.__SystemOrganizationService;
 
 @Component
 //public class DatabaseFillerOnStartup implements ApplicationListener<ContextStartedEvent> {

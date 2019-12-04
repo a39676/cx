@@ -19,12 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import demo.article.service.ArticleService;
+import demo.article.article.service.ArticleService;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
-import demo.chart.controller.ChartController;
-import demo.chart.pojo.constant.ChartUrl;
 import demo.tool.ToolViewConstant;
 import demo.tool.mapper.ExcelAnalysisMapper;
 import demo.tool.pojo.constant.ToolPathConstant;
@@ -36,6 +34,8 @@ import demo.tool.pojo.po.example.ExcelAnalysisExample.Criteria;
 import demo.tool.pojo.result.UploadExcelResult;
 import demo.tool.pojo.type.ChartType;
 import demo.tool.service.ExcelAnalysisService;
+import demo.toyParts.chart.controller.ChartController;
+import demo.toyParts.chart.pojo.constant.ChartUrl;
 import ioHandle.FileUtilCustom;
 
 @Service

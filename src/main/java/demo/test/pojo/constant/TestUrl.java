@@ -2,7 +2,7 @@ package demo.test.pojo.constant;
 
 public class TestUrl {
 	
-	public static final String testRoot = "/test";
-	public static final String testRoot2 = "/test2";
+	public static final String root = "/test";
+	public static final String root2 = "/test2";
 
 }

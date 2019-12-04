@@ -25,7 +25,7 @@
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="site-heading">
             <h2>${title}</h2>
-            <span class="subheading">Bugs forced the development in a certain sense</span>
+            <span class="subheading">可重复的事情, 让机器去做</span>
           </div>
         </div>
       </div>
@@ -37,28 +37,25 @@
     <div class="row">
       <!-- channels -->
       <div class="col-md-2 mx-auto">
-        <sec:authorize access="hasRole('ROLE_USER')">
-          <button class="btn btn-sm btn-warning" id="createNewArticle"><b>Create new</b></button>
-          <div class="row"><hr style="color: rgba(55, 66, 250,1.0)"></div>
-        </sec:authorize>
-        <div class="btn-group-vertical" id="articleChannels"></div>
+        <div class="btn-group-vertical" id="testCases">
+            <button class='btn btn-sm testCaseButton' onclick='loadCaseReport()'></button>
+        </div>
       </div>
       <div class="col-md-8 mx-auto">
         <div class="container-fluid">
-          <div class="row" id="blogArea" markTime="" loadingFlag="" articleChannel="">
+          <div class="row" id="searchConditionArea" markTime="" loadingFlag="" caseId="">
+            <div class="col-md-12 mx-auto" id="searchCondition"></div>
+          </div>
+          <div class="row" id="reportArea">
             <div class="col-md-12 mx-auto" id="blogRowArea"></div>
           </div>
           <div class="row">
             <div class="col-md-12 mx-auto">
-              <div class="spinner-border text-warning" role="status" id="articleAreaLoadingImg">
+              <div class="spinner-border text-warning" role="status" id="loadingImg">
                 <span class="sr-only">Loading...</span>
               </div>
               <button class="btn btn-sm btn-success" id="loadMoreButton"><b>LOAD MORE</b></button>
             </div>
-            <sec:authorize access="hasRole('ROLE_ADMIN')">
-            <%-- 管理员专用搜索框 --%>
-            <%@ include file="../articleJSP/articleSearchV3.jsp" %>
-            </sec:authorize>
           </div>
         </div>
       </div>
@@ -75,14 +72,37 @@
 
   <!-- SCIPTS -->
   <%@ include file="./cleanBlogNormalFooter.jsp" %>
-  <script type="text/javascript" src="/static_resources/cleanBlog/js/articleNormal.js"></script>
-  <sec:authorize access="hasRole('ROLE_ADMIN')">
-  <script type="text/javascript" src="<c:url value='/static_resources/cleanBlog/js/articleSearch.js'/>"></script>
-  
-  </sec:authorize>
 
   <script type="text/javascript">
-    
+    var getUrlParameter = function getUrlParameter(sParam) {
+      var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+      sURLVariables = sPageURL.split('&'),
+      sParameterName,
+      i;
+      for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] === sParam) {
+          return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+      }
+    };
+
+    function buildReportRow(subReportRowVO) {
+      var newReportRow = "";
+      newReportRow += "<div class='post-preview'>";
+      newReportRow += "<a href='/article/readArticleLong?pk="+subReportRowVO.privateKey+"' target='_blank'>";
+      newReportRow += "<h2 class='post-title'>"+subReportRowVO.articleTitle+"</h2>";
+      newReportRow += "<h3 class='post-subtitle'></h3>";
+      newReportRow += "</a>";
+      newReportRow += "<p class='post-meta'>";
+      newReportRow += "任务创建时间: "+subReportRowVO.createDateString;
+      newReportRow += "任务执行时间: "+subReportRowVO.createDateString;
+      newReportRow += "任务结束时间: "+subReportRowVO.createDateString;
+      newReportRow += "</p>";
+      newReportRow += "</div>";
+      newReportRow += "<hr>"
+      return newReportRow;
+    }
   </script>
 </body>
 

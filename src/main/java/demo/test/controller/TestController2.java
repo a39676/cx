@@ -13,7 +13,7 @@ import demo.config.costom_component.SnowFlake;
 import demo.test.pojo.constant.TestUrl;
 
 @Controller
-@RequestMapping(value = { TestUrl.testRoot2 })
+@RequestMapping(value = { TestUrl.root2 })
 public class TestController2 extends CommonController {
 
 	@Autowired

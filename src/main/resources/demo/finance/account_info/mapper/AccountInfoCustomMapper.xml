@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.finance.account_info.mapper.AccountInfoCustomMapper">
+
+  <resultMap id="BaseResultMap" type="AccountInfo" extends="demo.finance.account_info.mapper.AccountInfoMapper.BaseResultMap">
+  </resultMap>
+
+  <insert id="accountRegistration">
+    insert into account_info 
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="accountId != null">
+        account_id,
+      </if>
+      <if test="accountHolderId != null">
+        account_holder_id,
+      </if>
+      <if test="accountNumber != null">
+        account_number,
+      </if>
+      <if test="accountAlias != null">
+        account_alias,
+      </if>
+      <if test="accountType != null">
+        account_type,
+      </if>
+      <if test="accountAffiliation != null">
+        account_affiliation,
+      </if>
+      <if test="vaildDate != null">
+        vaild_date,
+      </if>
+      <if test="bankId != null">
+        bank_id,
+      </if>
+      <if test="bankUnionId != null">
+        bank_union_id,
+      </if>
+      <if test="accountBalance != null">
+        account_balance,
+      </if>
+      <if test="creditsQuota != null">
+        credits_quota,
+      </if>
+      <if test="temproraryCreditsQuota != null">
+        temprorary_credits_quota,
+      </if>
+      <if test="temproraryCreditsVaildDate != null">
+        temprorary_credits_vaild_date,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="accountId != null">
+        #{accountId},
+      </if>
+      <if test="accountHolderId != null">
+        #{accountHolderId},
+      </if>
+      <if test="accountNumber != null">
+        #{accountNumber},
+      </if>
+      <if test="accountAlias != null">
+        #{accountAlias},
+      </if>
+      <if test="accountType != null">
+        #{accountType},
+      </if>
+      <if test="accountAffiliation != null">
+        #{accountAffiliation},
+      </if>
+      <if test="vaildDate != null">
+        #{vaildDate},
+      </if>
+      <if test="bankId != null">
+        #{bankId},
+      </if>
+      <if test="bankUnionId != null">
+        #{bankUnionId},
+      </if>
+      <if test="accountBalance != null">
+        #{accountBalance},
+      </if>
+      <if test="creditsQuota != null">
+        #{creditsQuota},
+      </if>
+      <if test="temproraryCreditsQuota != null">
+        #{temproraryCreditsQuota},
+      </if>
+      <if test="temproraryCreditsVaildDate != null">
+        #{temproraryCreditsVaildDate},
+      </if>
+      <if test="remark != null">
+        #{remark},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="getAcountInfoById" resultMap="BaseResultMap">
+    select 
+      info.*
+    from 
+      account_info as info
+    where
+      info.account_id = #{id}
+  </select>
+  
+  <select id="accountNumberDuplicateCheck" parameterType="String" resultType="String" >
+    select 
+      account_number
+    from 
+      account_info
+    where
+      account_number = #{accountNumber}
+  </select>
+  
+  <!-- if exists return 1, else 0 -->
+  <select id="select_exists" parameterType="String" resultType="int">
+    select exists(
+      select
+        1
+      from
+        table_name
+      where
+        column = valueInput
+    )
+  </select>
+
+  <select id="accountNumberListByHolderId"  resultType="string">
+    select
+      account_number
+    from 
+      account_info 
+    <where>
+      account_holder_id = #{accountHolderId}
+      <if test="bankId != null">
+        and bank_id = #{bankId}
+      </if>
+    </where>
+  </select>
+
+  <select id="getAccountInfoIdListByHolderId" resultType="Integer">
+    select
+      ai.account_id
+    from
+      account_info as ai
+    where
+      ai.account_holder_id = #{holderId}
+  </select>
+
+  <select id="getMainAccountNum" resultType="String">
+    select
+      account_number
+    from 
+      account_info
+    where
+      account_id = #{id}
+  </select>
+  
+  <update id="accountAmountModify">
+    update 
+      account_info
+    set
+      account_balance = #{accountBalance}
+    where
+      account_id = #{accountId}
+  </update>
+
+  <select id="getAccountInfoByAccountNumber" resultMap="BaseResultMap">
+    select
+      *
+    from 
+      account_info
+    where
+      account_number = #{accountNumber}
+  </select>
+
+  <select id="getAccountInfoByHolderIds" resultMap="BaseResultMap">
+    select 
+      accounts.*
+        
+    from
+      account_holder as holder
+        
+      left join account_info as accounts
+        on holder.account_holder_id = accounts.account_holder_id
+            
+    where
+    
+      holder.account_holder_id in
+      <foreach item="holderId" index="holderIdIndex" collection="holderIds" open="(" separator="," close=")">
+        #{holderId}
+      </foreach>
+  </select>
+
+  <update id="modifyAccountInfoVaildDate">
+    UPDATE 
+      account_info 
+    SET 
+      vaild_date = #{vaildDate} 
+    WHERE 
+      account_number = #{accountNumber}
+  </update>
+
+  <update id="modifyAccountInfo">
+    UPDATE 
+      account_info 
+    SET 
+      <trim prefix="" suffix="" suffixOverrides=",">
+        <if test="creditsQuota != null">
+          credits_quota = #{creditsQuota} ,
+        </if>
+        <if test="vaildDate != null">
+          vaild_date = #{vaildDate} ,
+        </if>
+        <if test="temproraryCreditsQuota != null">
+          temprorary_credits_quota = #{temproraryCreditsQuota} ,
+        </if>
+        <if test="temproraryCreditsVaildDate != null">
+          temprorary_credits_vaild_date = #{temproraryCreditsVaildDate} ,
+        </if>
+      </trim>
+    WHERE 
+      account_number = #{accountNumber}
+  </update>
+  
+  <select id="getAccountInfoWithBankInfo" resultType="AccountInfoWithBankInfo">
+    select 
+      info.account_id as accountId,
+      info.account_holder_id as accountHolderId,
+      info.account_number as accountNumber,
+      info.account_alias as accountAlias,
+      info.account_type as accountType,
+      info.account_affiliation as accountAffiliation,
+      info.vaild_date as vaildDate,
+      info.bank_id as bankId,
+      bank.bank_union_id as bankUnionId,
+      info.account_balance as accountBalance,
+      info.credits_quota as creditsQuota,
+      info.temprorary_credits_quota as temproraryCreditsQuota,
+      info.temprorary_credits_vaild_date as temproraryCreditsVaildDate,
+      info.remark as remark,
+      info.is_delete as isDelete,
+      info.create_time as createTime,
+      bank.bank_ename as bankEname,
+      bank.bank_ename_short as bankEnameShort,
+      bank.bank_chinese_name as bankChineseName,
+      bank.bank_chinese_name_short as bankChineseNameShort,
+      bank.common_bank as commonBank
+    from 
+      account_info as info
+      
+      left join bank_info as bank
+        on info.bank_id = bank.bank_id
+    
+    <where>
+      <if test="null != holderId">
+        and account_holder_id = #{holderId}
+      </if>
+      <if test="null != accountNumber">
+        and account_number = #{accountNumber}
+      </if>
+      <if test="null != bankId">
+        and info.bank_id = #{bankId}
+      </if>
+      <if test="null != bankUnionId">
+        and bank.bank_union_id = #{bankUnionId}
+      </if>
+      <if test="null != accountType">
+        and info.account_type = #{accountType}
+      </if>
+      <if test="null != includeDeleted and includeDeleted == true">
+        and info.is_delete = 1
+      </if>
+      <if test="null == includeDeleted or includeDeleted == false">
+        and info.is_delete = 0
+      </if>
+    </where>
+  </select>
+
+  <select id="getAllAffiliatedAccountByAffiliationId" parameterType="Integer" resultMap="BaseResultMap">
+    select
+      *
+    from 
+      account_info
+    
+    <where>
+      is_delete = 0
+      <if test="accountAffiliation != null">
+        and account_affiliation = #{accountAffiliation}
+      </if>
+    </where>
+  </select>
+
+  <select id="checkAccountNumberBelongUser" resultType="Integer">
+    select exists (
+      select 
+        1 
+      from 
+        account_info 
+      <where>
+      	(#{accountId} is not null or #{accountNumber} is not null) and #{accountHolderId} is not null
+        <if test="accountId != null">
+          and account_id = #{accountId}
+        </if>
+        <if test="accountNumber != null">
+          and account_number = #{accountNumber}
+        </if>
+        <if test="accountTailNumber != null">
+          and account_number like concat ('%', #{accountTailNumber})
+        </if>
+        <if test="accountHolderId != null">
+          and account_holder_id = #{accountHolderId}
+        </if>
+      </where>
+    )
+  </select>
+
+  <select id="findByCondition" resultMap="BaseResultMap">
+    select
+      *
+    from
+      account_info
+    <where>
+      <if test="accountId != null">
+        and account_id = #{accountId}
+      </if>
+      <if test="accountIdList != null">
+        and account_id in
+        <foreach item="accountId" index="accountIdIndex" collection="accountIdList" open="(" separator="," close=")">
+          #{accountId}
+        </foreach>
+      </if>
+      <if test="accountHolderId != null">
+        and account_holder_id = #{accountHolderId}
+      </if>
+      <if test="accountNumber != null">
+        and account_number = #{accountNumber}
+      </if>
+      <if test="accountAlias != null">
+        and account_alias = #{accountAlias}
+      </if>
+      <if test="accountType != null">
+        and account_type = #{accountType}
+      </if>
+      <if test="accountAffiliation != null">
+        and account_affiliation = #{accountAffiliation}
+      </if>
+      <if test="vaildStartDate != null">
+        and vaild_date &gt;= #{vaildStartDate}
+      </if>
+      <if test="vaildEndDate != null">
+        and vaild_date &lt;= #{vaildEndDate}
+      </if>
+      <if test="bankId != null">
+        and bank_id = #{bankId}
+      </if>
+      <if test="bankUnionId != null">
+        and bank_union_id = #{bankUnionId}
+      </if>
+      <if test="minAccountBalance != null">
+        and account_balance &gt;= #{minAccountBalance}
+      </if>
+      <if test="maxAccountBalance != null">
+        and account_balance &lt;= #{maxAccountBalance}
+      </if>
+      <if test="minCreditsQuota != null">
+        and credits_quota &gt;= #{minCreditsQuota}
+      </if>
+      <if test="maxCreditsQuota != null">
+        and credits_quota &lt;= #{maxCreditsQuota}
+      </if>
+      <if test="minTemproraryCreditsQuota != null">
+        and temprorary_credits_quota &gt;= #{minTemproraryCreditsQuota}
+      </if>
+      <if test="maxTemproraryCreditsQuota != null">
+        and temprorary_credits_quota &lt;= #{maxTemproraryCreditsQuota}
+      </if>
+      <if test="minTemproraryCreditsVaildDate != null">
+        and temprorary_credits_vaild_date &gt;= #{minTemproraryCreditsVaildDate}
+      </if>
+      <if test="maxTemproraryCreditsVaildDate != null">
+        and temprorary_credits_vaild_date &lt;= #{maxTemproraryCreditsVaildDate}
+      </if>
+      <if test="remark != null">
+        and remark = #{remark}
+      </if>
+      <if test="isDelete != null">
+        and is_delete = #{isDelete}
+      </if>
+      <if test="createStartTime != null">
+        and create_time &gt;= #{createStartTime}
+      </if>
+      <if test="createEndTime != null">
+        and create_time &lt;= #{createEndTime}
+      </if>
+    </where>
+  </select>
+
+</mapper>

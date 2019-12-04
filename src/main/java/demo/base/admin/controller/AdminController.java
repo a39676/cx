@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import demo.account_info.controller.AccountInfoController;
+import demo.article.fakePost.service.FakePostService;
 import demo.base.admin.pojo.constant.AdminUrlConstant;
 import demo.base.admin.pojo.constant.AdminViewConstants;
 import demo.base.admin.pojo.dto.RefreshSystemConstantDTO;
@@ -29,7 +29,7 @@ import demo.base.user.pojo.po.Users;
 import demo.base.user.service.UsersService;
 import demo.baseCommon.controller.CommonController;
 import demo.baseCommon.pojo.result.CommonResultCX;
-import demo.fakePost.service.FakePostService;
+import demo.finance.account_info.controller.AccountInfoController;
 import net.sf.json.JSONObject;
 
 /**

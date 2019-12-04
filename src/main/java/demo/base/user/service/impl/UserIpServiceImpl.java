@@ -13,7 +13,7 @@ import demo.base.user.pojo.po.UserIp;
 import demo.base.user.pojo.vo.UserIpVO;
 import demo.base.user.service.UserIpService;
 import demo.baseCommon.service.CommonService;
-import demo.util.BaseUtilCustom;
+import demo.config.costom_component.BaseUtilCustom;
 
 @Service
 public class UserIpServiceImpl extends CommonService implements UserIpService {

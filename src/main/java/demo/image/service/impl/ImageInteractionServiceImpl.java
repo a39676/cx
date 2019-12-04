@@ -16,7 +16,6 @@ import cloudinary.pojo.constant.CloudinaryConstant;
 import cloudinary.pojo.result.CloudinaryDeleteResult;
 import cloudinary.pojo.result.CloudinaryUploadResult;
 import demo.baseCommon.service.CommonService;
-import demo.cloudinary.service.CloudinaryService;
 import demo.image.mapper.ImageCloudinaryMapper;
 import demo.image.mapper.ImageComplexMapper;
 import demo.image.mapper.ImageStoreMapper;
@@ -30,6 +29,7 @@ import demo.image.pojo.po.ImageStoreExample;
 import demo.image.pojo.po.ImageTag;
 import demo.image.pojo.type.ImageTagType;
 import demo.image.service.ImageInteractionService;
+import demo.thirdPartyAPI.cloudinary.service.CloudinaryService;
 import image.pojo.dto.UploadImageToCloudinaryDTO;
 import image.pojo.result.UploadImageToCloudinaryResult;
 

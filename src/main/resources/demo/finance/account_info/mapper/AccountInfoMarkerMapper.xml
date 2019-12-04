@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.finance.account_info.mapper.AccountInfoMarkerMapper">
+  <resultMap id="BaseResultMap" type="demo.finance.account_info.pojo.po.AccountInfoMarker">
+    <result column="account_id" jdbcType="BIGINT" property="accountId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_count" jdbcType="INTEGER" property="updateCount" />
+    <result column="marker" jdbcType="CHAR" property="marker" />
+  </resultMap>
+  <insert id="insert" parameterType="demo.finance.account_info.pojo.po.AccountInfoMarker">
+    insert into account_info_marker (account_id, create_time, update_time, 
+      update_count, marker)
+    values (#{accountId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateCount,jdbcType=INTEGER}, #{marker,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="demo.finance.account_info.pojo.po.AccountInfoMarker">
+    insert into account_info_marker
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="accountId != null">
+        account_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateCount != null">
+        update_count,
+      </if>
+      <if test="marker != null">
+        marker,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="accountId != null">
+        #{accountId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateCount != null">
+        #{updateCount,jdbcType=INTEGER},
+      </if>
+      <if test="marker != null">
+        #{marker,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

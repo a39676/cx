@@ -15,14 +15,14 @@ import demo.baseCommon.controller.CommonController;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.constant.TestViewConstants;
 import demo.test.service.TestService;
-import demo.weka.pojo.result.WekaCommonResult;
-import demo.weka.service.WekaCluster;
-import demo.woqu.service.PtusersOriginalService;
-import demo.woqu.service.WoquService;
+import demo.toyParts.weka.pojo.result.WekaCommonResult;
+import demo.toyParts.weka.service.WekaCluster;
+import demo.toyParts.woqu.service.PtusersOriginalService;
+import demo.toyParts.woqu.service.WoquService;
 import io.swagger.annotations.ApiOperation;
 
 @Controller
-@RequestMapping(value = { TestUrl.testRoot })
+@RequestMapping(value = { TestUrl.root })
 public class TestController extends CommonController {
 	
 //	@Autowired

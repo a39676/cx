@@ -8,4 +8,6 @@ public interface AutoTestDemoPageService {
 
 	ModelAndView linkToATHome(HttpServletRequest request);
 
+	ModelAndView index();
+
 }

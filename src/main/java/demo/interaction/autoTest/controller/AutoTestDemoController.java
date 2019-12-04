@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +33,11 @@ public class AutoTestDemoController extends CommonController {
 	@PostMapping(value = AutoTestUrl.linkToATHome)
 	public ModelAndView linkToATHome(HttpServletRequest request) {
 		return pageService.linkToATHome(request);
+	}
+	
+	@GetMapping(value = AutoTestUrl.index)
+	public ModelAndView index() {
+		return pageService.index();
 	}
 	
 	@PostMapping(value = JsonReportInteractionUrl.findReportsByCondition)

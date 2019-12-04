@@ -32,4 +32,11 @@ public class AutoTestDemoPageServiceImpl extends CommonService implements AutoTe
 		
 		return null;
 	}
+	
+	@Override
+	public ModelAndView index() {
+		ModelAndView v = new ModelAndView("ATDemoJSP/atDemoIndex");
+		v.addObject("title", "自动化测试");
+		return v;
+	}
 }

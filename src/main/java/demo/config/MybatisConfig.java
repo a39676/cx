@@ -64,13 +64,16 @@ public class MybatisConfig implements TransactionManagementConfigurer {
 				+ "demo.base.system.pojo, "
 				+ "demo.base.task.pojo, "
 				+ "demo.base.user.pojo, "
+				
 				+ "demo.finance.account_holder.pojo, "
 				+ "demo.finance.account_info.pojo, "
 				+ "demo.finance.bank.pojo, "
 				+ "demo.finance.credit_bill.pojo, "
 				+ "demo.finance.trading.pojo, "
+				
 				+ "demo.article.article.pojo, "
 				+ "demo.article.articleComment.pojo, "
+				
 				+ "demo.toyParts.mobile.pojo, "
 				+ "demo.toyParts.vcode.pojo, "
 				+ "demo.toyParts.weixin.pojo, "

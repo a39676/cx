@@ -38,16 +38,25 @@
       <!-- channels -->
       <div class="col-md-2 mx-auto">
         <div class="btn-group-vertical" id="testCases">
-            <button class='btn btn-sm testCaseButton' onclick='loadCaseReport()'></button>
+          <button class='btn btn-sm testCaseButton' onclick='loadReportSummary(3)'>bing 搜索样例</button>
         </div>
       </div>
       <div class="col-md-8 mx-auto">
         <div class="container-fluid">
-          <div class="row" id="searchConditionArea" markTime="" loadingFlag="" caseId="">
-            <div class="col-md-12 mx-auto" id="searchCondition"></div>
+          <div class="row">
+            <div class="col-md-12 mx-auto">
+              <form id="searchConditionArea" markTime="" loadingFlag="" moduleId="">
+                <input type="Date" id="createStartTime">
+                <input type="Date" id="createEndTime">
+                <input type="Date" id="runTimeStartTime">
+                <input type="Date" id="runTimeEndTime">
+                <input type="number" min="0" step="1" id="moduleId">
+                <input type="number" min="0" step="1" id="id">
+              </form>
+            </div>
           </div>
           <div class="row" id="reportArea">
-            <div class="col-md-12 mx-auto" id="blogRowArea"></div>
+            <div class="col-md-12 mx-auto" id="reportRowArea"></div>
           </div>
           <div class="row">
             <div class="col-md-12 mx-auto">
@@ -90,19 +99,90 @@
     function buildReportRow(subReportRowVO) {
       var newReportRow = "";
       newReportRow += "<div class='post-preview'>";
-      newReportRow += "<a href='/article/readArticleLong?pk="+subReportRowVO.privateKey+"' target='_blank'>";
+      newReportRow += "<a href='/atDemo/findReportByTestEventId?pk="+subReportRowVO.privateKey+"' target='_blank'>";
       newReportRow += "<h2 class='post-title'>"+subReportRowVO.articleTitle+"</h2>";
       newReportRow += "<h3 class='post-subtitle'></h3>";
       newReportRow += "</a>";
       newReportRow += "<p class='post-meta'>";
-      newReportRow += "任务创建时间: "+subReportRowVO.createDateString;
-      newReportRow += "任务执行时间: "+subReportRowVO.createDateString;
-      newReportRow += "任务结束时间: "+subReportRowVO.createDateString;
+      newReportRow += "任务创建时间: "+subReportRowVO.createTimeStr;
+      newReportRow += "任务执行时间: "+subReportRowVO.startTimeStr;
+      newReportRow += "任务结束时间: "+subReportRowVO.endTimeStr;
       newReportRow += "</p>";
       newReportRow += "</div>";
       newReportRow += "<hr>"
       return newReportRow;
     }
+
+    function loadReportSummary(moduleId) {
+      var reportRowArea = $("#reportRowArea");
+      var searchConditionArea = $("#searchConditionArea");
+      
+      reportRowArea.attr("moduleId", moduleId);
+      var id = document.getElementById("id").value;
+      var moduleId = document.getElementById("moduleId").value;
+      var markTime = searchConditionArea.attr("markTime");
+      var createStartTime = document.getElementById("createStartTime").value;
+      var createEndTime = document.getElementById("createEndTime").value;
+      var runTimeStartTime = document.getElementById("runTimeStartTime").value;
+      var runTimeEndTime = document.getElementById("runTimeEndTime").value;
+      $("#loadingImg").fadeIn(150);    
+      if(searchConditionArea.attr("loadingFlag") == "1") {
+        $("#loadingImg").fadeOut(150);
+        return;
+      }
+      searchConditionArea.attr("loadingFlag", "1");
+      var jsonOutput = {
+        id:id,
+        moduleId:moduleId,
+        endTime:markTime,
+        createStartTime: createStartTime,
+        createEndTime: createEndTime,
+        runTimeStartTime: runTimeStartTime,
+        runTimeEndTime: runTimeEndTime
+      };
+      var url = "/atDemo/findReportsByCondition";
+      $.ajax({
+        type : "POST",  
+        async : true,
+        url : url,  
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,  
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          // var json = JSON.parse(datas);
+          var reportRowArea = $("#reportRowArea");
+          var newRow = "";
+          datas.forEach(function(subReportVO) {
+            newRow = buildReportRow(subReportVO);
+            reportRowArea.append(newRow);
+            reportRowArea.attr("markTime", subReportVO.createTimeStr);
+          });
+          $("#loadingImg").fadeOut(150);
+        },  
+        error: function(datas) {  
+          $("#loadingImg").fadeOut(150);
+        }
+      }); 
+      searchConditionArea.attr("loadingFlag", "0");
+    };
+    
+    function loadArticleLongSummaryFirstPage(moduleId) {
+      $("#reportRowArea").attr("markTime", "");
+      $(".testCaseButton").attr('disabled','disabled');
+      loadReportSummary(moduleId);
+      $(".testCaseButton").removeAttr('disabled');
+    }
+    
+    $("#loadMoreButton").click(function () {
+      var moduleId = $("#reportRowArea").attr("moduleId");
+      loadReportSummary(moduleId);
+    });
+    
   </script>
 </body>
 

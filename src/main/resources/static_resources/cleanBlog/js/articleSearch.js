@@ -83,7 +83,7 @@ $(document).ready(function() {
         xhr.setRequestHeader(csrfHeader, csrfToken);
       },
       success:function(datas){
-        // var json = JSON.parse(datas);
+        // var json = JSON.parse(datas);  // data to json
         var articleLongSummaryVOList = datas.articleLongSummaryVOList;
         var blogRowArea = $("#blogRowArea");
         var newRow = "";

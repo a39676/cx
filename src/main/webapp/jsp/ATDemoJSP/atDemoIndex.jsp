@@ -71,7 +71,7 @@
               <div class="spinner-border text-warning" role="status" id="loadingImg">
                 <span class="sr-only">Loading...</span>
               </div>
-              <button class="btn btn-sm btn-success" id="loadMoreButton"><b>LOAD MORE 3</b></button>
+              <button class="btn btn-sm btn-success" id="loadMoreButton"><b>LOAD MORE</b></button>
             </div>
           </div>
         </div>
@@ -123,7 +123,6 @@
     }
 
     $("#loadMoreButton").click(function () {
-      console.log("click");
       loadReportSummary();
     });
 
@@ -179,8 +178,6 @@
         moduleId:moduleId
       };
 
-      console.log(jsonOutput);
-
       var url = "/atDemo/findReportsByCondition";
       $.ajax({
         type : "POST",  
@@ -195,9 +192,7 @@
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          console.log(datas);
           var jsonResponse = JSON.parse(datas);
-          console.log(jsonResponse);
           var reportRowArea = $("#reportRowArea");
           var newRow = "";
           jsonResponse.forEach(function(subReportVO) {
@@ -231,17 +226,7 @@
       refreshReportRowArea();
     }); 
     
-    // function loadArticleLongSummaryFirstPage() {
-    //   $("#reportRowArea").attr("markTime", "");
-    //   $(".testCaseButton").attr('disabled','disabled');
-    //   loadReportSummary();
-    //   $(".testCaseButton").removeAttr('disabled');
-    // }
-    
-    // $("#loadMoreButton").click(function () {
-    //   var moduleId = $("#reportRowArea").attr("moduleId");
-    //   loadReportSummary();
-    // });
+    loadReportSummary();
   });
   </script>
 </body>

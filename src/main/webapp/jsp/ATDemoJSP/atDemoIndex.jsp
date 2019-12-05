@@ -46,18 +46,22 @@
           <div class="row">
             <div class="col-md-12 mx-auto">
               <form id="searchConditionArea" markTime="" loadingFlag="">
-                <span>任务创建时间范围</span><input type="date" id="createStartDate"> <input type="time" time="HH:mm:ss" id="createStartTime" step="1" value="00:00:00">
+                <span class="badge badge-warning">任务创建时间范围</span><input type="date" id="createStartDate"> <input type="time" time="HH:mm:ss" id="createStartTime" step="1" value="00:00:00">
                 <span>~</span><input type="date" id="createEndDate" value="${createEndTime}"> <input type="time" time="HH:mm:ss" id="createEndTime" step="1" value="23:59:59">
                 <br>
                 <br>
-                <span>任务启动时间范围</span><input type="date" id="runTimeStartDate"> <input type="time" time="HH:mm:ss" id="runTimeStartTime"step="1" value="00:00:00">
+                <span class="badge badge-warning">任务启动时间范围</span><input type="date" id="runTimeStartDate"> <input type="time" time="HH:mm:ss" id="runTimeStartTime"step="1" value="00:00:00">
                 <span>~</span><input type="date" id="runTimeEndDate" value="${runTimeEndTime}"> <input type="time" time="HH:mm:ss" id="runTimeEndTime" step="1" value="23:59:59">
                 <br>
                 <br>
+                <span class="badge badge-warning">请选择案例</span>
                 <select id="moduleIdSelector">
+                  <option value="">All</option>
                   <option value="3">bing搜索 Demo</option>
                 </select>
-                <input type="number" min="0" step="1" id="id" placeholder="任务ID(可选)">
+                <br>
+                <br>
+                <span class="badge badge-warning">具体任务ID(可选)</span><input type="number" min="0" step="1" id="id" placeholder="具体任务ID(可选)">
               </form>
             </div>
           </div>
@@ -109,7 +113,7 @@
       var newReportRow = "";
       newReportRow += "<div class='post-preview'>";
       newReportRow += "<a href='/atDemo/findReportByTestEventId?testEventId="+subReportRowVO.id+"' target='_blank'>";
-      newReportRow += "<h2 class='post-title'>"+subReportRowVO.eventName+"</h2>";
+      newReportRow += "<h2 class='post-title'>"+subReportRowVO.eventName+" -- ID: "+subReportRowVO.id+"</h2>";
       newReportRow += "<h3 class='post-subtitle'></h3>";
       newReportRow += "</a>";
       newReportRow += "<p class='post-meta'>";

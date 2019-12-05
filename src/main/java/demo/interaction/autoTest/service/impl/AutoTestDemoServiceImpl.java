@@ -67,7 +67,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 		 * 目前只为 bing 搜索作为样例展示, 估 hard code 此id
 		 */
 //		ATDemo(3L, "ATDemo")
-//		dto.setModuleId(3L);
+		dto.setModuleId(3L);
 //		bingDemo(1L, "bingDemo")
 		dto.setCaseId(1L);
 		try {

@@ -38,32 +38,40 @@
       <!-- channels -->
       <div class="col-md-2 mx-auto">
         <div class="btn-group-vertical" id="testCases">
-          <button class='btn btn-sm testCaseButton' onclick='loadReportSummary(3)'>bing 搜索样例</button>
+          <button class='btn btn-sm testCaseButton'>bing 搜索样例</button>
         </div>
       </div>
       <div class="col-md-8 mx-auto">
         <div class="container-fluid">
           <div class="row">
             <div class="col-md-12 mx-auto">
-              <form id="searchConditionArea" markTime="" loadingFlag="" moduleId="">
-                <input type="Date" id="createStartTime">
-                <input type="Date" id="createEndTime">
-                <input type="Date" id="runTimeStartTime">
-                <input type="Date" id="runTimeEndTime">
-                <input type="number" min="0" step="1" id="moduleId">
-                <input type="number" min="0" step="1" id="id">
+              <form id="searchConditionArea" markTime="" loadingFlag="">
+                <span>任务创建时间范围</span><input type="date" id="createStartDate"> <input type="time" time="HH:mm:ss" id="createStartTime" step="1" value="00:00:00">
+                <span>~</span><input type="date" id="createEndDate" value="${createEndTime}"> <input type="time" time="HH:mm:ss" id="createEndTime" step="1" value="23:59:59">
+                <br>
+                <br>
+                <span>任务启动时间范围</span><input type="date" id="runTimeStartDate"> <input type="time" time="HH:mm:ss" id="runTimeStartTime"step="1" value="00:00:00">
+                <span>~</span><input type="date" id="runTimeEndDate" value="${runTimeEndTime}"> <input type="time" time="HH:mm:ss" id="runTimeEndTime" step="1" value="23:59:59">
+                <br>
+                <br>
+                <select id="moduleIdSelector">
+                  <option value="3">bing搜索 Demo</option>
+                </select>
+                <input type="number" min="0" step="1" id="id" placeholder="任务ID(可选)">
               </form>
             </div>
           </div>
+          <hr>
           <div class="row" id="reportArea">
             <div class="col-md-12 mx-auto" id="reportRowArea"></div>
           </div>
+          <hr>
           <div class="row">
             <div class="col-md-12 mx-auto">
               <div class="spinner-border text-warning" role="status" id="loadingImg">
                 <span class="sr-only">Loading...</span>
               </div>
-              <button class="btn btn-sm btn-success" id="loadMoreButton"><b>LOAD MORE</b></button>
+              <button class="btn btn-sm btn-success" id="loadMoreButton"><b>LOAD MORE 3</b></button>
             </div>
           </div>
         </div>
@@ -83,6 +91,7 @@
   <%@ include file="../cleanBlogJSP/cleanBlogNormalFooter.jsp" %>
 
   <script type="text/javascript">
+  $(document).ready(function() {
     var getUrlParameter = function getUrlParameter(sParam) {
       var sPageURL = decodeURIComponent(window.location.search.substring(1)),
       sURLVariables = sPageURL.split('&'),
@@ -99,32 +108,61 @@
     function buildReportRow(subReportRowVO) {
       var newReportRow = "";
       newReportRow += "<div class='post-preview'>";
-      newReportRow += "<a href='/atDemo/findReportByTestEventId?pk="+subReportRowVO.privateKey+"' target='_blank'>";
-      newReportRow += "<h2 class='post-title'>"+subReportRowVO.articleTitle+"</h2>";
+      newReportRow += "<a href='/atDemo/findReportByTestEventId?testEventId="+subReportRowVO.id+"' target='_blank'>";
+      newReportRow += "<h2 class='post-title'>"+subReportRowVO.eventName+"</h2>";
       newReportRow += "<h3 class='post-subtitle'></h3>";
       newReportRow += "</a>";
       newReportRow += "<p class='post-meta'>";
-      newReportRow += "任务创建时间: "+subReportRowVO.createTimeStr;
-      newReportRow += "任务执行时间: "+subReportRowVO.startTimeStr;
-      newReportRow += "任务结束时间: "+subReportRowVO.endTimeStr;
+      newReportRow += "任务创建时间: "+subReportRowVO.createTimeStr + "; ";
+      newReportRow += "任务执行时间: "+subReportRowVO.startTimeStr + "; ";
+      newReportRow += "任务结束时间: "+subReportRowVO.endTimeStr + "; ";
       newReportRow += "</p>";
       newReportRow += "</div>";
       newReportRow += "<hr>"
       return newReportRow;
     }
 
-    function loadReportSummary(moduleId) {
+    $("#loadMoreButton").click(function () {
+      console.log("click");
+      loadReportSummary();
+    });
+
+    function loadReportSummary() {
       var reportRowArea = $("#reportRowArea");
       var searchConditionArea = $("#searchConditionArea");
       
-      reportRowArea.attr("moduleId", moduleId);
       var id = document.getElementById("id").value;
-      var moduleId = document.getElementById("moduleId").value;
+      var moduleIdSelector = document.getElementById("moduleIdSelector");
+      var moduleId = moduleIdSelector.options[moduleIdSelector.selectedIndex].value;
       var markTime = searchConditionArea.attr("markTime");
-      var createStartTime = document.getElementById("createStartTime").value;
-      var createEndTime = document.getElementById("createEndTime").value;
-      var runTimeStartTime = document.getElementById("runTimeStartTime").value;
-      var runTimeEndTime = document.getElementById("runTimeEndTime").value;
+
+      var sourceCreateStartDate = document.getElementById("createStartDate").value;
+      var sourceCreateStartTime = document.getElementById("createStartTime").value;
+      var sourceCreateEndDate = document.getElementById("createEndDate").value;
+      var sourceCreateEndTime = document.getElementById("createEndTime").value;
+      var sourceRunTimeStartDate = document.getElementById("runTimeStartDate").value;
+      var sourceRunTimeStartTime = document.getElementById("runTimeStartTime").value;
+      var sourceRunTimeEndDate = document.getElementById("runTimeEndDate").value;
+      var sourceRunTimeEndTime = document.getElementById("runTimeEndTime").value;
+
+      var createStartTime = null;
+      var createEndTime = null;
+      var runTimeStartTime = null;
+      var runTimeEndTime = null;
+
+      if(sourceCreateStartDate.length) {
+        createStartTime = "" + sourceCreateStartDate + " " + timeFormat(sourceCreateStartTime);
+      }
+      if(sourceCreateEndDate.length) {
+        createEndTime = "" + sourceCreateEndDate + " " + timeFormat(sourceCreateEndTime);
+      }
+      if(sourceRunTimeStartDate.length) {
+        runTimeStartTime = "" + sourceRunTimeStartDate + " " + timeFormat(sourceRunTimeStartTime);
+      }
+      if(sourceRunTimeEndDate.length) {
+        runTimeEndTime = "" + sourceRunTimeEndDate + " " + timeFormat(sourceRunTimeEndTime);
+      }
+
       $("#loadingImg").fadeIn(150);    
       if(searchConditionArea.attr("loadingFlag") == "1") {
         $("#loadingImg").fadeOut(150);
@@ -132,14 +170,17 @@
       }
       searchConditionArea.attr("loadingFlag", "1");
       var jsonOutput = {
-        id:id,
-        moduleId:moduleId,
         endTime:markTime,
         createStartTime: createStartTime,
         createEndTime: createEndTime,
         runTimeStartTime: runTimeStartTime,
-        runTimeEndTime: runTimeEndTime
+        runTimeEndTime: runTimeEndTime,
+        id:id,
+        moduleId:moduleId
       };
+
+      console.log(jsonOutput);
+
       var url = "/atDemo/findReportsByCondition";
       $.ajax({
         type : "POST",  
@@ -154,10 +195,12 @@
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          // var json = JSON.parse(datas);
+          console.log(datas);
+          var jsonResponse = JSON.parse(datas);
+          console.log(jsonResponse);
           var reportRowArea = $("#reportRowArea");
           var newRow = "";
-          datas.forEach(function(subReportVO) {
+          jsonResponse.forEach(function(subReportVO) {
             newRow = buildReportRow(subReportVO);
             reportRowArea.append(newRow);
             reportRowArea.attr("markTime", subReportVO.createTimeStr);
@@ -170,19 +213,36 @@
       }); 
       searchConditionArea.attr("loadingFlag", "0");
     };
-    
-    function loadArticleLongSummaryFirstPage(moduleId) {
-      $("#reportRowArea").attr("markTime", "");
-      $(".testCaseButton").attr('disabled','disabled');
-      loadReportSummary(moduleId);
-      $(".testCaseButton").removeAttr('disabled');
+
+    function timeFormat(timeStr) {
+      if(timeStr.length < 8) {
+        timeStr = timeStr + ":00";
+      }
+      return timeStr;
     }
+
+    function refreshReportRowArea() {
+      var reportRowArea = $("#reportRowArea");
+      reportRowArea.html("");
+      loadReportSummary();
+    }
+
+    $("#searchConditionArea").change(function () {
+      refreshReportRowArea();
+    }); 
     
-    $("#loadMoreButton").click(function () {
-      var moduleId = $("#reportRowArea").attr("moduleId");
-      loadReportSummary(moduleId);
-    });
+    // function loadArticleLongSummaryFirstPage() {
+    //   $("#reportRowArea").attr("markTime", "");
+    //   $(".testCaseButton").attr('disabled','disabled');
+    //   loadReportSummary();
+    //   $(".testCaseButton").removeAttr('disabled');
+    // }
     
+    // $("#loadMoreButton").click(function () {
+    //   var moduleId = $("#reportRowArea").attr("moduleId");
+    //   loadReportSummary();
+    // });
+  });
   </script>
 </body>
 

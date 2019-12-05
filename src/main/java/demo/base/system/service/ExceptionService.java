@@ -6,8 +6,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 public interface ExceptionService {
 
-	ModelAndView handleCommonException(HttpServletRequest request, boolean debugStatus, Exception e);
+	ModelAndView handleCommonException(HttpServletRequest request, Exception e);
 
-	ModelAndView handleCommonException(HttpServletRequest request, boolean debugStatus);
+	ModelAndView handleCommonException(HttpServletRequest request);
 
 }

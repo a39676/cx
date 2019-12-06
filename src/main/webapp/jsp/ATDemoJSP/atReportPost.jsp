@@ -55,13 +55,12 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          
-          <c:forEach items="${reportVO.contentLines}" var="subLine" varStatus="" begin="" end="">
+          <c:forEach items="${reportVO.contentLines}" var="subLine">
             <c:if test="${subLine.lineArrtibute == 'strKey'}">
               <p class="para" style="word-break:break-word;">${subLine.content}</p>
             </c:if>
             <c:if test="${subLine.lineArrtibute == 'imgKey'}">
-              <img src="${subLine.content}">
+              <img class="img-fluid" src="${subLine.content}">
             </c:if>
           </c:forEach>
 

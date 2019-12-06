@@ -45,7 +45,6 @@ public class AutoTestDemoController extends CommonController {
 	@GetMapping(value = JsonReportInteractionUrl.findReportByTestEventId)
 	@ResponseBody
 	public ModelAndView findReportByTestEventId(@RequestParam(value = "testEventId", defaultValue = "0", required = false) Long testEventId) {
-		
 		FindReportByTestEventIdDTO dto = new FindReportByTestEventIdDTO();
 		dto.setTestEventId(testEventId);
 		return atDemoService.findReportByTestEventId(dto);

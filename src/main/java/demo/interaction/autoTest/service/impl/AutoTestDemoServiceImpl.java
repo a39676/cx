@@ -135,21 +135,20 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 			String url = ServerHost.host2 + JsonReportInteractionUrl.root + JsonReportInteractionUrl.findReportByTestEventId;
 			String responseStr = String.valueOf(httpUtil.sendPostRestful(url, requestJson.toString()));
 			
-			JSONObject rj = JSONObject.fromObject(responseStr);
+			JSONObject responseJson = JSONObject.fromObject(responseStr);
 			
-//			responseResult = new ObjectMapper().readValue(responseJson.toString(), FindReportByTestEventIdResult.class);
-			FindReportByTestEventIdResult rr = new FindReportByTestEventIdResult();
-//			BeanUtils.copyProperties(responseJson, responseResult);
-			rr.setId(rj.getLong("id"));
-			rr.setCode(rj.getString("code"));
-			rr.setTitle(rj.getString("title"));
+			FindReportByTestEventIdResult responseResult = new FindReportByTestEventIdResult();
+			responseResult.setId(responseJson.getLong("id"));
+			responseResult.setCode(responseJson.getString("code"));
+			responseResult.setTitle(responseJson.getString("title"));
 			
-			rr.setCreateTime(localDateTimeHandler.dateToLocalDateTime(dateHandler.stringToDateUnkonwFormat(rj.getString("createTime"))));
-			rr.setStartTime(localDateTimeHandler.dateToLocalDateTime(dateHandler.stringToDateUnkonwFormat(rj.getString("startTime"))));
-			rr.setEndTime(localDateTimeHandler.dateToLocalDateTime(dateHandler.stringToDateUnkonwFormat(rj.getString("endTime"))));
+			responseResult.setCreateTime(localDateTimeHandler.localDateTimeStrToLocalDateTime(responseJson.getString("createTime")));
+			responseResult.setStartTime(localDateTimeHandler.localDateTimeStrToLocalDateTime(responseJson.getString("startTime")));
+			responseResult.setEndTime(localDateTimeHandler.localDateTimeStrToLocalDateTime(responseJson.getString("endTime")));
 			
+			responseResult.setReportStr(responseJson.getString("reportStr"));
 			
-			vo = buildReportVOByFindReportByTestEventIdResult(rr);
+			vo = buildReportVOByFindReportByTestEventIdResult(responseResult);
 		} catch (Exception e) {
 			e.printStackTrace();
 			vo = buildErrorReportVO();
@@ -175,10 +174,21 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 		if(r == null || StringUtils.isBlank(r.getReportStr())) {
 			return buildErrorReportVO();
 		}
+
+		AutoTestJsonReportVO vo = new AutoTestJsonReportVO();
+		vo.setId(r.getId());
+		vo.setTitle(r.getTitle());
+		
+		vo.setCreateTime(r.getCreateTime());
+		vo.setStartTime(r.getStartTime());
+		vo.setEndTime(r.getEndTime());
+		
+		vo.setCreateTimeStr(localDateTimeHandler.dateToStr(r.getCreateTime()));
+		vo.setStartTimeStr(localDateTimeHandler.dateToStr(r.getStartTime()));
+		vo.setEndTimeStr(localDateTimeHandler.dateToStr(r.getEndTime()));
 		
 		try {
 			JSONArray ja = JSONArray.fromObject(r.getReportStr());
-			AutoTestJsonReportVO vo = new AutoTestJsonReportVO();
 			List<AutoTestJsonReportLineVO> contentLines = new ArrayList<AutoTestJsonReportLineVO>();
 			AutoTestJsonReportLineVO lineVO = null;
 			
@@ -187,21 +197,23 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 			for(int i = 0; i < ja.size(); i++) {
 				j = ja.getJSONObject(i);
 				lineVO = new AutoTestJsonReportLineVO();
-				line = j.getString(AutoTestJsonReportKeyConstant.strKey);
-				if(StringUtils.isNotBlank(line)) {
+				
+				if(j.containsKey(AutoTestJsonReportKeyConstant.strKey)) {
 					lineVO.setLineArrtibute(AutoTestJsonReportKeyConstant.strKey);
+					line = j.getString(AutoTestJsonReportKeyConstant.strKey);
 				} else {
 					lineVO.setLineArrtibute(AutoTestJsonReportKeyConstant.imgKey);
+					line = j.getString(AutoTestJsonReportKeyConstant.imgKey);
 				}
 				lineVO.setContent(line);
 				contentLines.add(lineVO);
 			}
 			
-			vo.setId(r.getId());
 			vo.setContentLines(contentLines);
 			
 			return vo;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return buildErrorReportVO();
 		}
 		

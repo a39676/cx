@@ -75,7 +75,6 @@ import demo.base.user.pojo.type.RolesType;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.config.costom_component.BaseUtilCustom;
-import demo.image.controller.ImageController;
 import demo.tool.service.TextFilter;
 import demo.tool.service.ValidRegexToolService;
 import ioHandle.FileUtilCustom;
@@ -86,8 +85,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 
 	@Autowired
 	private BaseUtilCustom baseUtilCustom;
-	@Autowired
-	private ImageController imageController;
 	@Autowired
 	private UsersController userController;
 	
@@ -151,6 +148,10 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	 * @param line
 	 * @param imageUrls
 	 * @return
+	 * 
+	 * 2019-12-06
+	 * 采用富文本编辑器后, 可能废弃,
+	 * 以后文章上传, 如果允许指定标题附图, 则绝对废弃
 	 */
 	private void imageUrlHandle(String line, List<String> imageUrls) {
 		if (StringUtils.isBlank(line)) {
@@ -358,7 +359,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		}
 		
 		if (saveArticleResult.getImageUrls().size() > 0) {
-			imageController.insertImageFromArticle(saveArticleResult.getImageUrls(), newArticle.getArticleId());
+//			imageController.insertImageFromArticle(saveArticleResult.getImageUrls(), newArticle.getArticleId());
 		}
 
 		saveArticleResult.setArticleId(newArticleId);

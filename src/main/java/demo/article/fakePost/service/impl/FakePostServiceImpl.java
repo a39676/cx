@@ -31,7 +31,6 @@ import demo.article.fakePost.service.FakePostService;
 import demo.base.user.pojo.type.AuthType;
 import demo.base.user.service.UsersService;
 import demo.baseCommon.service.CommonService;
-import demo.image.service.ImageService;
 
 @Service
 public class FakePostServiceImpl extends CommonService implements FakePostService {
@@ -50,9 +49,6 @@ public class FakePostServiceImpl extends CommonService implements FakePostServic
 	private ArticleLongReviewMapper articleLongReviewMapper;
 	@Autowired
 	private ArticleChannelsMapper articleChannelsMapper;
-	
-	@Autowired
-	private ImageService imageService;
 	
 	@Override
 	public int createFakeEvaluationStore() {
@@ -186,6 +182,5 @@ public class FakePostServiceImpl extends CommonService implements FakePostServic
 		
 		fakePostMapper.modifyArticleInfo(modifyArticleInfoParam);
 		
-		imageService.moveImageCacheToImageStore(article.getArticleId(), article.getChannelId());
 	}
 }

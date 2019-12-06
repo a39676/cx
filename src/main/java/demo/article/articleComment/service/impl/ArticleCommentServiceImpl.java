@@ -182,6 +182,14 @@ public class ArticleCommentServiceImpl extends CommonService implements ArticleC
 		return result;
 	}
 	
+	/**
+	 * 2019-12-06
+	 * 原始方法 当时未采用富文本编辑器
+	 * 现已准备废弃
+	 * @param evaluationStatisticsMap
+	 * @param bo
+	 * @return
+	 */
 	private ArticleCommentVO fillArticleCommentFromBo(Map<Long, ArticleEvaluationStatisticsVO> evaluationStatisticsMap, FindCommentByArticleIdBO bo) {
 		ArticleCommentVO vo = new ArticleCommentVO();
 		String strContent = ioUtil.getStringFromFile(bo.getPath());

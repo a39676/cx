@@ -38,7 +38,6 @@ import demo.article.article.service.ArticleChannelService;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.config.costom_component.BaseUtilCustom;
-import demo.image.service.ImageService;
 
 @Service
 public class ArticleAdminServiceImpl extends ArticleCommonService implements ArticleAdminService {
@@ -58,8 +57,6 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	@Autowired
 	private ArticleHotMapper articleHotMapper;
 	
-	@Autowired
-	private ImageService imageService;
 	@Autowired
 	private ArticleChannelService channelService;
 	
@@ -193,8 +190,6 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		if(updateCount == 0) {
 			throw new Exception();
 		}
-		
-		imageService.moveImageCacheToImageStore(articleId, article.getChannelId());
 		
 		result.fillWithResult(ResultTypeCX.success);
 		return result;

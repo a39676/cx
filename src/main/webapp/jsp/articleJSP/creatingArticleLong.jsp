@@ -41,13 +41,7 @@
 
       <div class="row">
         <div class="col-sm-12" >
-          <textarea class="input form-control" name="articleTitle" rows="1" cols="50" placeholder="请输入标题~"></textarea>
-        </div>
-      </div>
-      
-      <div class="row">
-        <div class="col-sm-12" >
-          <textarea class="input form-control" name="creatingArticleLong" rows="4" cols="50" placeholder="请输入内容, 图片请直接粘帖图片链接"></textarea> 
+          <textarea class="input form-control" id="articleTitle" rows="1" cols="50" placeholder="请输入标题~"></textarea>
         </div>
       </div>
 
@@ -73,16 +67,12 @@
               name="superAdminKey" placeholder="please insert key"></textarea>
             </sec:authorize>
             <button class="btn  btn-primary btn-sm" 
-              name="createArticleLong">
+              id="submitArticleLong">
               <span class="badge badge-primary">提交</span>
             </button>
             <button class="btn  btn-primary btn-sm" 
-              name="createArticleLongEditor">
-              <span class="badge badge-primary">提交富文本</span>
-            </button>
-            <button class="btn  btn-primary btn-sm" 
-              name="closeArticleCreator">
-              <span class="badge badge-primary">不想说了...</span>
+              id="editorAgain">
+              <span class="badge badge-primary">继续编辑</span>
             </button>
           </div>
         </div>
@@ -116,9 +106,9 @@
   <script type="text/javascript">
     
     $(document).ready(function() {
-      $("button[name='createArticleLongEditor']").click(function () {
+      $("#submitArticleLong").click(function () {
         var url = "/article/createArticleLong";
-        var title = $("textarea[name='articleTitle']").val();
+        var title = $("#articleTitle").val();
         var s = $('#summernote');
         var content = s.summernote('code');
         var uuid = $("select[name='channelList'] option:selected").val();
@@ -147,13 +137,20 @@
           success:function(datas){
             resultSpan.text(datas.message);
             if(datas.result == "0") {
-              $("textarea[name='articleTitle']").val("");
-              $("textarea[name='creatingArticleLong']").val("");
+              document.getElementById("articleTitle").disabled = true;
+              document.getElementById("summernote").disabled = true;
+              document.getElementById("submitArticleLong").disabled = true;
             }
           },  
           error: function(datas) {              
           }  
         });  
+      });
+
+      $("#submitArticleLong").click(function () {
+        document.getElementById("articleTitle").disabled = false;
+        document.getElementById("summernote").disabled = false;
+        document.getElementById("submitArticleLong").disabled = false;
       });
     });
   </script>

@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dateTimeHandle.DateTimeHandle;
 import demo.baseCommon.service.CommonService;
 import demo.finance.account_info.controller.AccountInfoController;
 import demo.finance.account_info.pojo.dto.controllerDTO.FindAccountInfoByConditionDTO;
@@ -118,7 +117,7 @@ public class TradingQueryServiceImpl extends CommonService implements TradingQue
 		r.setAccountNumber(account.getAccountNumber());
 		r.setAmount(po.getAmount());
 		r.setBankName(bankMap.get(account.getBankId()).getBankChineseNameShort());
-		r.setTradingDate(DateTimeHandle.dateToLocalDateTime(po.getTransationDate()));
+		r.setTradingDate(localDateTimeHandler.dateToLocalDateTime(po.getTransationDate()));
 		r.setTransationParties(po.getTransationParties());
 		
 		return r;

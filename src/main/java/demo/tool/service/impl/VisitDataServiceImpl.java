@@ -11,8 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dateTimeHandle.DateTimeHandle;
-import dateTimeHandle.DateUtilCustom;
 import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.user.mapper.UserIpMapper;
 import demo.base.user.pojo.dto.BatchInsertUserIpDTO;
@@ -66,7 +64,7 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 		ui.setUserId(baseUtilCustom.getUserId());
 		
 		j = JSONObject.fromObject(ui);
-		j.put("createTime", DateTimeHandle.dateToStr(ui.getCreateTime()));
+		j.put("createTime", localDateTimeHandler.dateToStr(ui.getCreateTime()));
 		if(ui.getUserId() == null) {
 			j.put("userId", "null");
 		}
@@ -124,8 +122,8 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 			j = JSONObject.fromObject(str);
 			ui = new UserIp();
 			String cdStr = j.getString("createTime");
-			Date createDate = DateUtilCustom.stringToDateUnkonwFormat(cdStr);
-			ui.setCreateTime(DateTimeHandle.dateToLocalDateTime(createDate));
+			Date createDate = dateHandler.stringToDateUnkonwFormat(cdStr);
+			ui.setCreateTime(localDateTimeHandler.dateToLocalDateTime(createDate));
 			if(numberUtil.matchInteger(j.getString("forwardIp"))) {
 				ui.setForwardIp(j.getLong("forwardIp"));
 			}

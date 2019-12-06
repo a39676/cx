@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import dateTimeHandle.DateUtilCustom;
 import demo.baseCommon.pojo.param.controllerParam.InsertNewTransationParam;
 import demo.baseCommon.pojo.type.TransationType;
 import demo.baseCommon.service.CommonService;
@@ -119,7 +118,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 					tmpBuffer.append("Vaild Date could not be empty \n");
 					statusFlag = false;
 				} else {
-					newAccount.setVaildDate(DateUtilCustom.dateDiffMonths(12));
+					newAccount.setVaildDate(dateHandler.dateDiffMonths(12));
 				}
 			}
 
@@ -577,11 +576,11 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	@Override
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 	public int modifyAccountInfoVaildDate(String vaildDateString, String accountNumber, boolean isAdmin) {
-		if(!checkAccountNumberBelongUser(accountNumber) || !DateUtilCustom.isDateValid(vaildDateString)){
+		if(!checkAccountNumberBelongUser(accountNumber) || !dateHandler.isDateValid(vaildDateString)){
 			return 0;
 		}
 		
-		Date newVaildDate = DateUtilCustom.stringToDateUnkonwFormat(vaildDateString);
+		Date newVaildDate = dateHandler.stringToDateUnkonwFormat(vaildDateString);
 		if(newVaildDate.before(new Date()) && !isAdmin) {
 			return 0;
 		}
@@ -598,11 +597,11 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	@Override
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 	public int modifyAccountInfoTemproraryCreditsVaildDate(String temproraryCreditsVaildDate, String accountNumber, boolean isAdmin) {
-		if(!checkAccountNumberBelongUser(accountNumber) || !DateUtilCustom.isDateValid(temproraryCreditsVaildDate)){
+		if(!checkAccountNumberBelongUser(accountNumber) || !dateHandler.isDateValid(temproraryCreditsVaildDate)){
 			return 0;
 		}
 		
-		Date newTemproraryCreditsVaildDate = DateUtilCustom.stringToDateUnkonwFormat(temproraryCreditsVaildDate);
+		Date newTemproraryCreditsVaildDate = dateHandler.stringToDateUnkonwFormat(temproraryCreditsVaildDate);
 		if(newTemproraryCreditsVaildDate.before(new Date()) && !isAdmin) {
 			return 0;
 		}

@@ -6,9 +6,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dateTimeHandle.DateUtilCustom;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.baseCommon.service.CommonService;
 import demo.toyParts.vcode.mapper.VCodeMapper;
 import demo.toyParts.vcode.pojo.param.DeleteInvalidCodeParam;
 import demo.toyParts.vcode.pojo.param.GetVcodeByValueParam;
@@ -18,7 +18,7 @@ import demo.toyParts.vcode.pojo.po.VCode;
 import demo.toyParts.vcode.service.VCodeService;
 
 @Service
-public class VCodeServiceImpl implements VCodeService {
+public class VCodeServiceImpl extends CommonService implements VCodeService {
 	
 	@Autowired
 	private VCodeMapper vCodeMapper;
@@ -60,7 +60,7 @@ public class VCodeServiceImpl implements VCodeService {
 		}
 		
 		if(newVCode.getValidTime() == null) {
-			newVCode.setValidTime(DateUtilCustom.dateDiffDays(3));
+			newVCode.setValidTime(dateHandler.dateDiffDays(3));
 		}
 		if(newVCode.getCreateTime() == null) {
 			newVCode.setCreateTime(new Date());

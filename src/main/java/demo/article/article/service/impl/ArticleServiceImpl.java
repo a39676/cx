@@ -32,7 +32,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import dateTimeHandle.DateUtilCustom;
 import demo.article.article.mapper.ArticleLongFeedbackMapper;
 import demo.article.article.mapper.ArticleLongMapper;
 import demo.article.article.mapper.ArticleLongReviewMapper;
@@ -678,7 +677,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		} else if(inputParam.getLikeOrHate() == -1){
 			param.setIsFlash(false);
 			param.setHateCount(1);
-			param.setIsFlashUpdateTime(DateUtilCustom.dateDiffDays(likeOrHateType.getDelayDays()));
+			param.setIsFlashUpdateTime(dateHandler.dateDiffDays(likeOrHateType.getDelayDays()));
 		}
 		
 		articleUserDetailMapper.updateArticleUserDetail(param);

@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dateTimeHandle.DateTimeHandle;
 import demo.base.user.mapper.UserIpMapper;
 import demo.base.user.pojo.dto.FindLastUserIpDTO;
 import demo.base.user.pojo.po.UserIp;
@@ -39,7 +38,7 @@ public class UserIpServiceImpl extends CommonService implements UserIpService {
 	
 	private UserIpVO buildUserIpVOFromPO(UserIp po, boolean isAdmin) {
 		UserIpVO v = new UserIpVO();
-		v.setVisitTime(DateTimeHandle.dateToStr(po.getCreateTime()));
+		v.setVisitTime(localDateTimeHandler.dateToStr(po.getCreateTime()));
 		v.setUri(po.getUri());
 		v.setUserId(po.getUserId());
 		v.setIp(numberUtil.longToIp2(po.getIp()));

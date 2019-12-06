@@ -14,7 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dateTimeHandle.DateUtilCustom;
 import demo.article.article.mapper.ArticleChannelsMapper;
 import demo.article.article.mapper.ArticleUserDetailMapper;
 import demo.article.article.pojo.bo.ArticleChannelLastLikeOrHateBO;
@@ -493,7 +492,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 				lastLikeOrHate.setLikeOrHateLevel(0 - articleUserDetail.getHateChannelCount());
 			}
 			if(lastLikeOrHate.getIsLike() == null 
-					||new Date().after(DateUtilCustom.dateDiffDays(lastLikeOrHate.getLastChooseDate(), ArticleChannelLikeOrHateType.getType(lastLikeOrHate.getLikeOrHateLevel()).getDelayDays()))) {
+					||new Date().after(dateHandler.dateDiffDays(lastLikeOrHate.getLastChooseDate(), ArticleChannelLikeOrHateType.getType(lastLikeOrHate.getLikeOrHateLevel()).getDelayDays()))) {
 				return true;
 			}
 		} else {

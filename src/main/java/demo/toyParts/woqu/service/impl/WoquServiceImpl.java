@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dateTimeHandle.DateUtilCustom;
 import demo.baseCommon.pojo.type.GenderType;
 import demo.baseCommon.service.CommonService;
 import demo.toyParts.woqu.mapper.WusersMapper;
@@ -84,8 +83,8 @@ public class WoquServiceImpl extends CommonService implements WoquService {
 		if (StringUtils.isNotBlank(line[8])) {
 			u.setJob(line[8]);
 		}
-		if (StringUtils.isNotBlank(line[9]) && DateUtilCustom.isDateValid(line[9])) {
-			u.setBirth(DateUtilCustom.stringToDateUnkonwFormat(line[9]));
+		if (StringUtils.isNotBlank(line[9]) && dateHandler.isDateValid(line[9])) {
+			u.setBirth(dateHandler.stringToDateUnkonwFormat(line[9]));
 		}
 		if (StringUtils.isNotBlank(line[10])) {
 			u.setBelongStore(line[10]);
@@ -99,8 +98,8 @@ public class WoquServiceImpl extends CommonService implements WoquService {
 		if (StringUtils.isNotBlank(line[14])) {
 			u.setIntroduceMobile(Long.parseLong(line[14]));
 		}
-		if (StringUtils.isNotBlank(line[15]) && DateUtilCustom.isDateValid(line[15])) {
-			u.setCreateDate(DateUtilCustom.stringToDateUnkonwFormat(line[15]));
+		if (StringUtils.isNotBlank(line[15]) && dateHandler.isDateValid(line[15])) {
+			u.setCreateDate(dateHandler.stringToDateUnkonwFormat(line[15]));
 		}
 		return u;
 	}

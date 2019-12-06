@@ -8,7 +8,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dateTimeHandle.DateUtilCustom;
 import demo.article.article.mapper.ArticleBurnMapper;
 import demo.article.article.mapper.ArticleShortMapper;
 import demo.article.article.pojo.po.ArticleBurn;
@@ -79,7 +78,7 @@ public class ArticleBurnServiceImpl extends CommonService implements ArticleBurn
 				&& jsonInput.getInt("validTime") < 4320) {
 			validMinute = jsonInput.getInt("validTime");
 		}
-		pb.setValidTime(DateUtilCustom.localDateTimeToDate(now.plusMinutes(validMinute)));
+		pb.setValidTime(dateHandler.localDateTimeToDate(now.plusMinutes(validMinute)));
 		articleBurnMapper.insertSelective(pb);
 		result.normalSuccess();
 		return result;

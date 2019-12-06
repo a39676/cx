@@ -154,7 +154,7 @@ public class ArticleController extends CommonController {
 	}
 	
 	@GetMapping(value = ArticleUrlConstant.readArticleLong)
-	public ModelAndView readArticleLong(@RequestParam(value = "", required = false) String pk, HttpServletRequest request) {
+	public ModelAndView readArticleLong(@RequestParam(value = "pk", required = false) String pk, HttpServletRequest request) {
 		ModelAndView view = new ModelAndView(ArticleViewConstant.readArticleLongCleanBlog);
 		FindArticleLongByArticleSummaryPrivateKeyParam param = new FindArticleLongByArticleSummaryPrivateKeyParam();
 		param.setPrivateKey(pk);

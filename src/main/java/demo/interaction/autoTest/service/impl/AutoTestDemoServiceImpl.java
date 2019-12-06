@@ -11,15 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import autoTest.jsonReport.pojo.constant.AutoTestJsonReportKeyConstant;
 import autoTest.jsonReport.pojo.constant.JsonReportInteractionUrl;
 import autoTest.jsonReport.pojo.dto.FindReportByTestEventIdDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
 import autoTest.jsonReport.pojo.result.FindReportByTestEventIdResult;
 import auxiliaryCommon.pojo.constant.ServerHost;
-import dateTimeHandle.DateTimeHandle;
 import dateTimeHandle.DateTimeUtilCommon;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
@@ -60,7 +57,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	public ModelAndView index() {
 		ModelAndView v = new ModelAndView("ATDemoJSP/atDemoIndex");
 		v.addObject("title", "自动化测试");
-		String dateNow = DateTimeHandle.dateToStr(LocalDateTime.now(), DateTimeUtilCommon.normalDateFormat);
+		String dateNow = localDateTimeHandler.dateToStr(LocalDateTime.now(), DateTimeUtilCommon.normalDateFormat);
 		v.addObject("createEndTime", dateNow);
 		v.addObject("runTimeEndTime", dateNow);
 		return v;
@@ -79,19 +76,19 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 		try {
 			JSONObject j = new JSONObject();
 			if(dto.getCreateStartTime() != null) {
-				j.put("createStartTime", DateTimeHandle.dateToStr(dto.getCreateStartTime()));
+				j.put("createStartTime", localDateTimeHandler.dateToStr(dto.getCreateStartTime()));
 			}
 			if(dto.getCreateEndTime() != null) {
-				j.put("createEndTime", DateTimeHandle.dateToStr(dto.getCreateEndTime()));
+				j.put("createEndTime", localDateTimeHandler.dateToStr(dto.getCreateEndTime()));
 			}
 			if(dto.getRunTimeStartTime() != null) {
-				j.put("runTimeStartTime", DateTimeHandle.dateToStr(dto.getRunTimeStartTime()));
+				j.put("runTimeStartTime", localDateTimeHandler.dateToStr(dto.getRunTimeStartTime()));
 			}
 			if(dto.getRunTimeEndTime() != null) {
-				j.put("runTimeEndTime", DateTimeHandle.dateToStr(dto.getRunTimeEndTime()));
+				j.put("runTimeEndTime", localDateTimeHandler.dateToStr(dto.getRunTimeEndTime()));
 			}
 			if(dto.getEndTime() != null) {
-				j.put("endTime", DateTimeHandle.dateToStr(dto.getEndTime()));
+				j.put("endTime", localDateTimeHandler.dateToStr(dto.getEndTime()));
 			}
 			if(StringUtils.isNotBlank(dto.getEventName())) {
 				j.put("eventName", dto.getEventName());
@@ -124,24 +121,35 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	@Override
 	public ModelAndView findReportByTestEventId(FindReportByTestEventIdDTO dto) {
 		ModelAndView v = new ModelAndView("ATDemoJSP/atReportPost");
+		AutoTestJsonReportVO vo = null;
 		
 		if(dto.getTestEventId() == null || dto.getTestEventId() <= 0) {
+			vo = buildErrorReportVO();
+			v.addObject("reportVO", vo);
 			return v;
 		}
 		
-		FindReportByTestEventIdResult responseResult = null;
-		AutoTestJsonReportVO vo = null;
 		try {
 			JSONObject requestJson = JSONObject.fromObject(dto);
 	        
 			String url = ServerHost.host2 + JsonReportInteractionUrl.root + JsonReportInteractionUrl.findReportByTestEventId;
 			String responseStr = String.valueOf(httpUtil.sendPostRestful(url, requestJson.toString()));
 			
-			JSONObject responseJson = JSONObject.fromObject(responseStr);
+			JSONObject rj = JSONObject.fromObject(responseStr);
 			
-			responseResult = new ObjectMapper().readValue(responseJson.toString(), FindReportByTestEventIdResult.class);
+//			responseResult = new ObjectMapper().readValue(responseJson.toString(), FindReportByTestEventIdResult.class);
+			FindReportByTestEventIdResult rr = new FindReportByTestEventIdResult();
+//			BeanUtils.copyProperties(responseJson, responseResult);
+			rr.setId(rj.getLong("id"));
+			rr.setCode(rj.getString("code"));
+			rr.setTitle(rj.getString("title"));
 			
-			vo = buildReportVOByFindReportByTestEventIdResult(responseResult);
+			rr.setCreateTime(localDateTimeHandler.dateToLocalDateTime(dateHandler.stringToDateUnkonwFormat(rj.getString("createTime"))));
+			rr.setStartTime(localDateTimeHandler.dateToLocalDateTime(dateHandler.stringToDateUnkonwFormat(rj.getString("startTime"))));
+			rr.setEndTime(localDateTimeHandler.dateToLocalDateTime(dateHandler.stringToDateUnkonwFormat(rj.getString("endTime"))));
+			
+			
+			vo = buildReportVOByFindReportByTestEventIdResult(rr);
 		} catch (Exception e) {
 			e.printStackTrace();
 			vo = buildErrorReportVO();
@@ -189,6 +197,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 				contentLines.add(lineVO);
 			}
 			
+			vo.setId(r.getId());
 			vo.setContentLines(contentLines);
 			
 			return vo;

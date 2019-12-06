@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
-import dateTimeHandle.DateUtilCustom;
 import demo.article.article.mapper.ArticleChannelsMapper;
 import demo.article.article.mapper.ArticleEvaluationCacheMapper;
 import demo.article.article.mapper.ArticleEvaluationStoreMapper;
@@ -455,7 +454,7 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 
 		FindArticleEvaluationCacheListParam findArticleEvaluationCacheListParam = new FindArticleEvaluationCacheListParam();
 		// 未满3天的不归入统计
-		findArticleEvaluationCacheListParam.setEndTime(DateUtilCustom.dateDiffDays(-3));
+		findArticleEvaluationCacheListParam.setEndTime(dateHandler.dateDiffDays(-3));
 		List<ArticleEvaluationStatisticsTaskBO> evaluationStatisticsList = articleEvaluationCacheMapper
 				.findEvaluationStatisticsTaskList(findArticleEvaluationCacheListParam);
 		if (evaluationStatisticsList == null || evaluationStatisticsList.size() < 1) {

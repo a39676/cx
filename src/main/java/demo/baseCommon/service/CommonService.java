@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import auxiliaryCommon.pojo.result.CommonResult;
+import dateTimeHandle.DateHandler;
+import dateTimeHandle.LocalDateTimeHandler;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.config.costom_component.SnowFlake;
@@ -29,6 +31,10 @@ public abstract class CommonService {
 	protected NumericUtilCustom numberUtil;
 	@Autowired
 	protected VisitDataService visitDataService;
+	@Autowired
+	protected LocalDateTimeHandler localDateTimeHandler;
+	@Autowired
+	protected DateHandler dateHandler;
 	
 	@Autowired
 	protected RedisTemplate<String, String> redisTemplate;

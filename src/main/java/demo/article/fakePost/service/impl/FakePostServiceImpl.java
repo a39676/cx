@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import dateTimeHandle.DateUtilCustom;
 import demo.article.article.mapper.ArticleChannelsMapper;
 import demo.article.article.mapper.ArticleLongMapper;
 import demo.article.article.mapper.ArticleLongReviewMapper;
@@ -52,7 +51,7 @@ public class FakePostServiceImpl extends CommonService implements FakePostServic
 	
 	@Override
 	public int createFakeEvaluationStore() {
-		Date startTime = DateUtilCustom.dateDiffDays(-8);
+		Date startTime = dateHandler.dateDiffDays(-8);
 		Date endTime = new Date();
 		
 		List<ArticleLong> articleList = fakePostMapper.findPassedArticleIdListByPeriod(startTime, endTime);

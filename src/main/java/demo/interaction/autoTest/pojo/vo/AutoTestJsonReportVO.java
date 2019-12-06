@@ -5,6 +5,7 @@ import java.util.List;
 
 public class AutoTestJsonReportVO {
 
+	private Long id;
 	private String title;
 
 	private List<AutoTestJsonReportLineVO> contentLines;
@@ -16,6 +17,14 @@ public class AutoTestJsonReportVO {
 	private String createTimeStr;
 	private String startTimeStr;
 	private String endTimeStr;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getTitle() {
 		return title;
@@ -83,9 +92,10 @@ public class AutoTestJsonReportVO {
 
 	@Override
 	public String toString() {
-		return "AutoTestJsonReportVO [title=" + title + ", contentLines=" + contentLines + ", createTime=" + createTime
-				+ ", startTime=" + startTime + ", endTime=" + endTime + ", createTimeStr=" + createTimeStr
-				+ ", startTimeStr=" + startTimeStr + ", endTimeStr=" + endTimeStr + "]";
+		return "AutoTestJsonReportVO [id=" + id + ", title=" + title + ", contentLines=" + contentLines
+				+ ", createTime=" + createTime + ", startTime=" + startTime + ", endTime=" + endTime
+				+ ", createTimeStr=" + createTimeStr + ", startTimeStr=" + startTimeStr + ", endTimeStr=" + endTimeStr
+				+ "]";
 	}
 
 }

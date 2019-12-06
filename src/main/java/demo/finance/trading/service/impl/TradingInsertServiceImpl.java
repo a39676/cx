@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import dateTimeHandle.DateUtilCustom;
 import demo.baseCommon.pojo.param.controllerParam.InsertNewTransationParam;
 import demo.baseCommon.pojo.type.TransationType;
 import demo.baseCommon.service.CommonService;
@@ -214,7 +213,7 @@ public class TradingInsertServiceImpl extends CommonService implements TradingIn
 		}
 
 		Date now = new Date();
-		Date transationDate = DateUtilCustom.stringToDateUnkonwFormat(p.getTransationDate());
+		Date transationDate = dateHandler.stringToDateUnkonwFormat(p.getTransationDate());
 		String transationParties = p.getTransationParties();
 		BigDecimal transationAmount = null;
 		String accountNumber = p.getAccountNumber();
@@ -260,7 +259,7 @@ public class TradingInsertServiceImpl extends CommonService implements TradingIn
 			return null;
 		}
 
-		Date transationDate = DateUtilCustom.stringToDateUnkonwFormat(String.valueOf(line[0]));
+		Date transationDate = dateHandler.stringToDateUnkonwFormat(String.valueOf(line[0]));
 		if (transationDate == null) {
 			return null;
 		}

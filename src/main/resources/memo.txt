@@ -20,6 +20,8 @@ id bigint not null,
 ;
 
 -----------------
+article channel 需要动态管理?
+	channel uuid 相关功能 引入 redis
 需要为管理员增加屏蔽用户/ip
 
 验证码模块

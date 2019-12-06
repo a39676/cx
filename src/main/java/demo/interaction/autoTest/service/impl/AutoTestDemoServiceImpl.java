@@ -1,6 +1,8 @@
 package demo.interaction.autoTest.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import autoTest.jsonReport.pojo.constant.AutoTestJsonReportKeyConstant;
 import autoTest.jsonReport.pojo.constant.JsonReportInteractionUrl;
 import autoTest.jsonReport.pojo.dto.FindReportByTestEventIdDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
@@ -21,8 +24,11 @@ import dateTimeHandle.DateTimeUtilCommon;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.service.CommonService;
+import demo.interaction.autoTest.pojo.vo.AutoTestJsonReportLineVO;
+import demo.interaction.autoTest.pojo.vo.AutoTestJsonReportVO;
 import demo.interaction.autoTest.service.AutoTestDemoService;
 import httpHandel.HttpUtil;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Service
@@ -117,14 +123,14 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	
 	@Override
 	public ModelAndView findReportByTestEventId(FindReportByTestEventIdDTO dto) {
-//		TODO
-//		未有报告页面
-		ModelAndView v = new ModelAndView("");
+		ModelAndView v = new ModelAndView("ATDemoJSP/atReportPost");
 		
 		if(dto.getTestEventId() == null || dto.getTestEventId() <= 0) {
 			return v;
 		}
 		
+		FindReportByTestEventIdResult responseResult = null;
+		AutoTestJsonReportVO vo = null;
 		try {
 			JSONObject requestJson = JSONObject.fromObject(dto);
 	        
@@ -133,14 +139,63 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 			
 			JSONObject responseJson = JSONObject.fromObject(responseStr);
 			
-			FindReportByTestEventIdResult responseResult = new ObjectMapper().readValue(responseJson.toString(), FindReportByTestEventIdResult.class);
+			responseResult = new ObjectMapper().readValue(responseJson.toString(), FindReportByTestEventIdResult.class);
 			
-			v.addObject("reportVO", responseResult);
-//			TODO
+			vo = buildReportVOByFindReportByTestEventIdResult(responseResult);
 		} catch (Exception e) {
 			e.printStackTrace();
+			vo = buildErrorReportVO();
 		}
 		
+		v.addObject("reportVO", vo);
 		return v;
+	}
+	
+	private AutoTestJsonReportVO buildErrorReportVO() {
+		AutoTestJsonReportVO vo = new AutoTestJsonReportVO();
+		List<AutoTestJsonReportLineVO> contentLines = new ArrayList<AutoTestJsonReportLineVO>();
+		AutoTestJsonReportLineVO lineVO = null;
+		lineVO = new AutoTestJsonReportLineVO();
+		lineVO.setLineArrtibute(AutoTestJsonReportKeyConstant.strKey);
+		lineVO.setContent("报告不存在, 可能是以下情况(测试任务未运行或运行中, 此报告已过期删除, 报告读取异常)");
+		contentLines.add(lineVO);
+		vo.setContentLines(contentLines);
+		return vo;
+	}
+
+	private AutoTestJsonReportVO buildReportVOByFindReportByTestEventIdResult(FindReportByTestEventIdResult r) {
+		if(r == null || StringUtils.isBlank(r.getReportStr())) {
+			return buildErrorReportVO();
+		}
+		
+		try {
+			JSONArray ja = JSONArray.fromObject(r.getReportStr());
+			AutoTestJsonReportVO vo = new AutoTestJsonReportVO();
+			List<AutoTestJsonReportLineVO> contentLines = new ArrayList<AutoTestJsonReportLineVO>();
+			AutoTestJsonReportLineVO lineVO = null;
+			
+			JSONObject j = null;
+			String line = null;
+			for(int i = 0; i < ja.size(); i++) {
+				j = ja.getJSONObject(i);
+				lineVO = new AutoTestJsonReportLineVO();
+				line = j.getString(AutoTestJsonReportKeyConstant.strKey);
+				if(StringUtils.isNotBlank(line)) {
+					lineVO.setLineArrtibute(AutoTestJsonReportKeyConstant.strKey);
+				} else {
+					lineVO.setLineArrtibute(AutoTestJsonReportKeyConstant.imgKey);
+				}
+				lineVO.setContent(line);
+				contentLines.add(lineVO);
+			}
+			
+			vo.setContentLines(contentLines);
+			
+			return vo;
+		} catch (Exception e) {
+			return buildErrorReportVO();
+		}
+		
+		
 	}
 }

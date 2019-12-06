@@ -113,8 +113,8 @@
       var newReportRow = "";
       newReportRow += "<div class='post-preview'>";
       newReportRow += "<a href='/atDemo/findReportByTestEventId?testEventId="+subReportRowVO.id+"' target='_blank'>";
-      newReportRow += "<h2 class='post-title'>"+subReportRowVO.eventName+" -- ID: "+subReportRowVO.id+"</h2>";
-      newReportRow += "<h3 class='post-subtitle'></h3>";
+      newReportRow += "<h2 class='post-title'>"+subReportRowVO.eventName+"</h2>";
+      newReportRow += "<h3 class='post-subtitle'>ID: "+subReportRowVO.id+"</h3>";
       newReportRow += "</a>";
       newReportRow += "<p class='post-meta'>";
       newReportRow += "任务创建时间: "+subReportRowVO.createTimeStr + "; ";

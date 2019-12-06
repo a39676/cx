@@ -80,7 +80,7 @@
       
       <div class="row">
         <div class="col-sm-12" >
-          <span name="createArticleResult" badge badge-primary></span>
+          <span id="createArticleResult" badge badge-primary></span>
         </div>
       </div>
       </sec:authorize>
@@ -119,7 +119,7 @@
           content:content
         };
     
-        var resultSpan = $("span[name='createArticleResult']");
+        var resultSpan = document.getElementById("#createArticleResult");
         resultSpan.text("");
     
         $.ajax({  

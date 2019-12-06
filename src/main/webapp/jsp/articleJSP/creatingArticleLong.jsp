@@ -9,7 +9,6 @@
 <html>
 <head>
 <!-- 因需要使用富文本编辑器, 特别使用指定的库 -->
-<!-- <%@ include file="../baseElementJSP/normalHeader.jsp" %> -->
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <sec:csrfMetaTags />
 <title>${ title }</title>
@@ -78,7 +77,7 @@
       
       <div class="row">
         <div class="col-sm-12" >
-          <span name="createArticleResult" badge badge-primary></span>
+          <span id="createArticleResult" badge badge-primary></span>
         </div>
       </div>
       </sec:authorize>
@@ -88,18 +87,12 @@
 </body>
 
 <footer>
-  <!-- 因需要使用富文本编辑器, 特别使用指定的库 -->
-  <!-- <%@ include file="../baseElementJSP/normalFooter.jsp" %> -->
   
   <script type="text/javascript">
     var csrfParameter = $("meta[name='_csrf_parameter']").attr("content");
     var csrfHeader = $("meta[name='_csrf_header']").attr("content");
     var csrfToken = $("meta[name='_csrf']").attr("content");
   </script>
-
-<!--   <sec:authorize access="hasRole('ROLE_USER')">
-  <script type="text/javascript" src="<c:url value='/static_resources/js/article/creatingArticleLongV3.js'/>"></script>
-  </sec:authorize> -->
 
   <script type="text/javascript">
     
@@ -117,7 +110,7 @@
           content:content
         };
     
-        var resultSpan = $("span[name='createArticleResult']");
+        var resultSpan = document.getElementById("createArticleResult");
         resultSpan.text("");
     
         $.ajax({  

@@ -1,4 +1,4 @@
-package demo.image.service.impl;
+package demo.interaction.image.service.impl;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -28,7 +28,7 @@ import demo.image.pojo.po.ImageStore;
 import demo.image.pojo.po.ImageStoreExample;
 import demo.image.pojo.po.ImageTag;
 import demo.image.pojo.type.ImageTagType;
-import demo.image.service.ImageInteractionService;
+import demo.interaction.image.service.ImageInteractionService;
 import demo.thirdPartyAPI.cloudinary.service.CloudinaryService;
 import image.pojo.dto.UploadImageToCloudinaryDTO;
 import image.pojo.result.UploadImageToCloudinaryResult;

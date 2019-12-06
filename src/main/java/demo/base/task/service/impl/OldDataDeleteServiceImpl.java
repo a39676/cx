@@ -5,7 +5,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import demo.base.task.service.OldDataDeleteService;
-import demo.image.service.ImageInteractionService;
+import demo.interaction.image.service.ImageInteractionService;
 
 @Component
 public class OldDataDeleteServiceImpl implements OldDataDeleteService {

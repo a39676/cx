@@ -6,4 +6,5 @@ public class SystemRedisKey {
 	
 	public static final String VISIT_DATA_REDIS_KEY = "visitData";
 	
+	public static final String bingDemoInsertCountingKeyPrefix = "bingDemo";
 }

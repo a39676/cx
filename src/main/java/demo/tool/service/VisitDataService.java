@@ -44,4 +44,23 @@ public interface VisitDataService {
 	 */
 	Long getVisitCount();
 
+	/**
+	 * 2019-12-06
+	 * 因允许未知用户输入bing 测试案例
+	 * 需要限制时间段内 IP 的输入次数
+	 * 此处以redis key 生存时间作为动态保存
+	 * @param request
+	 */
+	void insertATDemoVisitData(HttpServletRequest request);
+
+	/**
+	 * 2019-12-06
+	 * 因允许未知用户输入bing 测试案例
+	 * 需要限制时间段内 IP 的输入次数
+	 * 此处作为查询
+	 * @param request
+	 * @return
+	 */
+	int checkATDemoVisitData(HttpServletRequest request);
+
 }

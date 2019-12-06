@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -158,4 +160,25 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 		return getVisitCount(null);
 	}
 	
+	@Override
+	public void insertATDemoVisitData(HttpServletRequest request) {
+		IpRecordBO record = getIp(request);
+		
+		String key = buildBingDemoInsertCountingKeyPrefix(record) + "_" + snowFlake.getNextId();
+		redisTemplate.opsForValue().set(key, "", 30, TimeUnit.MINUTES);
+	}
+	
+	@Override
+	public int checkATDemoVisitData(HttpServletRequest request) {
+		IpRecordBO record = getIp(request);
+		
+		String keyPrefix = buildBingDemoInsertCountingKeyPrefix(record) + "*";
+		Set<String> keys = redisTemplate.keys(keyPrefix);
+		
+		return keys.size();
+	}
+	
+	private String buildBingDemoInsertCountingKeyPrefix(IpRecordBO record) {
+		return SystemRedisKey.bingDemoInsertCountingKeyPrefix + "_" + record.getForwardAddr() + "_" + record.getRemoteAddr();
+	}
 }

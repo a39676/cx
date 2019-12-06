@@ -16,6 +16,7 @@ import autoTest.jsonReport.pojo.constant.JsonReportInteractionUrl;
 import autoTest.jsonReport.pojo.dto.FindReportByTestEventIdDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
 import autoTest.jsonReport.pojo.result.FindReportByTestEventIdResult;
+import autoTest.testEvent.pojo.dto.InsertBingDemoTestEventDTO;
 import auxiliaryCommon.pojo.constant.ServerHost;
 import dateTimeHandle.DateTimeUtilCommon;
 import demo.base.system.pojo.bo.SystemConstantStore;
@@ -204,6 +205,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 				} else {
 					lineVO.setLineArrtibute(AutoTestJsonReportKeyConstant.imgKey);
 					line = j.getString(AutoTestJsonReportKeyConstant.imgKey);
+					line = line.replaceAll("upload/", "upload/c_scale,h_347/");
 				}
 				lineVO.setContent(line);
 				contentLines.add(lineVO);
@@ -217,6 +219,23 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 			return buildErrorReportVO();
 		}
 		
+		
+	}
+
+	public void insertBingDemoTestEvent(InsertBingDemoTestEventDTO dto, HttpServletRequest request) {
+		/*
+		 * TODO
+		 * 2019-12-06
+		 * 
+		 */
+		int maxCountIn30Min = 6;
+		int count = visitDataService.checkATDemoVisitData(request);
+		if(count > maxCountIn30Min) {
+//			TODO
+		}
+		
+		visitDataService.insertATDemoVisitData(request);
+//		TODO
 		
 	}
 }

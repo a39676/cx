@@ -2,7 +2,9 @@ package demo.interaction.autoTest.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,7 +18,9 @@ import autoTest.jsonReport.pojo.constant.JsonReportInteractionUrl;
 import autoTest.jsonReport.pojo.dto.FindReportByTestEventIdDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
 import autoTest.jsonReport.pojo.result.FindReportByTestEventIdResult;
+import autoTest.testEvent.pojo.constant.BingDemoUrl;
 import autoTest.testEvent.pojo.dto.InsertBingDemoTestEventDTO;
+import autoTest.testEvent.pojo.result.InsertBingDemoEventResult;
 import auxiliaryCommon.pojo.constant.ServerHost;
 import dateTimeHandle.DateTimeUtilCommon;
 import demo.base.system.pojo.bo.SystemConstantStore;
@@ -222,20 +226,44 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 		
 	}
 
-	public void insertBingDemoTestEvent(InsertBingDemoTestEventDTO dto, HttpServletRequest request) {
-		/*
-		 * TODO
-		 * 2019-12-06
-		 * 
-		 */
+	@Override
+	public InsertBingDemoEventResult insertBingDemoTestEvent(InsertBingDemoTestEventDTO dto, HttpServletRequest request) {
+		InsertBingDemoEventResult r = new InsertBingDemoEventResult();
 		int maxCountIn30Min = 6;
 		int count = visitDataService.checkATDemoVisitData(request);
 		if(count > maxCountIn30Min) {
-//			TODO
+			r.failWithMessage("30分钟内可加入6次任务, 请稍后再试");
+			return r;
 		}
 		
-		visitDataService.insertATDemoVisitData(request);
-//		TODO
+		try {
+			Map<String, String> m = new HashMap<String, String>();
+			if(dto.getAppointment() != null) {
+				m.put("appointment", localDateTimeHandler.dateToStr(dto.getAppointment()));
+			}
+			m.put("searchKeyWord", dto.getSearchKeyWord());
+	        
+			String url = ServerHost.host2 + BingDemoUrl.root + BingDemoUrl.insert;
+			String response = String.valueOf(httpUtil.sendGet(url, m));
+
+			JSONObject responseJson = JSONObject.fromObject(response);
+			
+			r.setCode(responseJson.getString("code"));
+			r.setEventId(responseJson.getLong("eventId"));
+			r.setMessage(responseJson.getString("message"));
+			r.setResult(responseJson.getString("result"));
+			r.setWaitingEventCount(responseJson.getInt("waigingEventCount"));
+			if(r.getResult() != null && r.getResult() == "0") {
+				r.setIsSuccess();
+				visitDataService.insertATDemoVisitData(request);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.failWithMessage("通讯异常, 请稍后再试, 或联系管理员");
+		}
 		
+		return r;
 	}
+
 }

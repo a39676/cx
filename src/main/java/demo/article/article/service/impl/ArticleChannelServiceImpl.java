@@ -53,7 +53,9 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	@Autowired
 	private BaseUtilCustom baseUtilCustom;
 	
-	
+	/*
+	 * FIXME
+	 */
 	private static ArticleUUIDChannelStoreBO articleUUIDChannelStore = new ArticleUUIDChannelStoreBO();
 	private static Long articleChannelRefreshMinute = 0L;
 	

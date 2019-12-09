@@ -2,9 +2,7 @@ package demo.interaction.autoTest.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
-import autoTest.jsonReport.pojo.constant.AutoTestJsonReportKeyConstant;
 import autoTest.jsonReport.pojo.constant.AutoTestInteractionUrl;
+import autoTest.jsonReport.pojo.constant.AutoTestJsonReportKeyConstant;
 import autoTest.jsonReport.pojo.dto.FindReportByTestEventIdDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
 import autoTest.jsonReport.pojo.result.FindReportByTestEventIdResult;
@@ -238,14 +236,14 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 		}
 		
 		try {
-			Map<String, String> m = new HashMap<String, String>();
+			JSONObject json = new JSONObject();
 			if(dto.getAppointment() != null) {
-				m.put("appointment", localDateTimeHandler.dateToStr(dto.getAppointment()));
+				json.put("appointment", localDateTimeHandler.dateToStr(dto.getAppointment()));
 			}
-			m.put("searchKeyWord", dto.getSearchKeyWord());
+			json.put("searchKeyWord", dto.getSearchKeyWord());
 	        
 			String url = ServerHost.host2 + BingDemoUrl.root + BingDemoUrl.insert;
-			String response = String.valueOf(httpUtil.sendGet(url, m));
+			String response = String.valueOf(httpUtil.sendPostRestful(url, json.toString()));
 
 			JSONObject responseJson = JSONObject.fromObject(response);
 			

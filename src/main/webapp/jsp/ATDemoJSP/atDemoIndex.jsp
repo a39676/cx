@@ -93,6 +93,7 @@
                   </select>
                 </div>
                 <div class="control-group">
+                  <span class="badge badge-warning">搜索关键字</span>
                   <input type="text" size="35" id="searchKeyWord" placeholder="请输入搜索关键字, 若空, 默认为 testDemo">
                 </div>
                 <div class="control-group">

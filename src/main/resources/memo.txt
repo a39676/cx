@@ -1,9 +1,3 @@
-需要尽快加入 自动化测试的自主输入
-
-因允许为止用户增加bing demo
-所以增加前需要查询操作次数
-AutoTestDemoServiceImpl.insertBingDemoTestEvent
-
 相当一部分 service 里边存有 private static 开头的静态变量, 需要清除
 需要文章编辑功能, 尤其是针对富文本的
 

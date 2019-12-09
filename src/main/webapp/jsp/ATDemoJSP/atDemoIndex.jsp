@@ -292,6 +292,8 @@
     }
 
     $("#searchConditionArea").change(function () {
+      var searchConditionArea = $("#searchConditionArea");
+      searchConditionArea.attr("markTime", "");
       refreshReportRowArea();
     }); 
     

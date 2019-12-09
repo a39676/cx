@@ -48,7 +48,7 @@ repositories {
 
 dependencies {
 	// tools
-	compile project(':toolPacksG')
+	// compile project(':toolPacksG')
 	compile project(':auxiliaryCommon')
 
 	// spring boot

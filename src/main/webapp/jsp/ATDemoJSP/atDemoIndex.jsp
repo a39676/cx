@@ -309,6 +309,7 @@
 
     $("#insertTestEventButton").click(function () {
       var reportRowArea = $("#reportRowArea");
+      var insertTestEventResult = $("#insertTestEventResult");
       var searchKeyWord = $("#searchKeyWord").val();
 
       var sourceAppointmentDate = document.getElementById("appointmentDate").value;
@@ -346,15 +347,15 @@
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          console.log(datas);
-          var jsonResponse = JSON.parse(datas);
-          var insertTestEventResult = $("#insertTestEventResult");
+          // var jsonResponse = JSON.parse(datas);
+          
           if (datas.code == 0) {
             var eventId = datas.eventId;
             var waitingEventCount = datas.waitingEventCount;
             var r = "";
-            r += "已经新增任务, 前面还有: "+waitingEventCount+"个任务在队列, 预计将于 "+appointment+" 运行;"
+            r += "已经新增任务, 前面还有: "+waitingEventCount+"个任务在队列, 预计最快将于 "+appointment+" 运行。"
             r += "<br>";
+            r += "30分钟内可加入"+datas.maxInsertCount+"个任务, 现已加入"+datas.hasInsertCount+"个";
             r += "";
             insertTestEventResult.html(r);
           } else {
@@ -362,7 +363,8 @@
           }
 
         },  
-        error: function(datas) {  
+        error: function(datas) {
+          insertTestEventResult.html(datas.message);  
         }
       }); 
     })

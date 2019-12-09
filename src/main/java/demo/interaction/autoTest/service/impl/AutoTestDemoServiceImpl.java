@@ -18,6 +18,7 @@ import autoTest.jsonReport.pojo.constant.AutoTestInteractionUrl;
 import autoTest.jsonReport.pojo.dto.FindReportByTestEventIdDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
 import autoTest.jsonReport.pojo.result.FindReportByTestEventIdResult;
+import autoTest.testEvent.pojo.constant.BingDemoConstant;
 import autoTest.testEvent.pojo.constant.BingDemoUrl;
 import autoTest.testEvent.pojo.dto.InsertBingDemoTestEventDTO;
 import autoTest.testEvent.pojo.result.InsertBingDemoEventResult;
@@ -230,10 +231,9 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	public InsertBingDemoEventResult insertBingDemoTestEvent(InsertBingDemoTestEventDTO dto, HttpServletRequest request) {
 		InsertBingDemoEventResult r = new InsertBingDemoEventResult();
 		
-		int maxCountIn30Min = 6;
 		int count = visitDataService.checkATDemoVisitData(request);
-		if(count > maxCountIn30Min) {
-			r.failWithMessage("30分钟内可加入6次任务, 请稍后再试");
+		if(count > BingDemoConstant.maxInsertCountIn30Minutes) {
+			r.failWithMessage("30分钟内可加入"+BingDemoConstant.maxInsertCountIn30Minutes+"次任务, 请稍后再试");
 			return r;
 		}
 		
@@ -257,7 +257,10 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 			if(r.getResult() != null && "0".equals(r.getResult())) {
 				r.setIsSuccess();
 				visitDataService.insertATDemoVisitData(request);
+				r.setHasInsertCount(count + 1);
+				r.setMaxInsertCount(BingDemoConstant.maxInsertCountIn30Minutes);
 			}
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();

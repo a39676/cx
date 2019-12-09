@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import autoTest.jsonReport.pojo.constant.JsonReportInteractionUrl;
+import autoTest.jsonReport.pojo.constant.AutoTestInteractionUrl;
 import autoTest.jsonReport.pojo.dto.FindReportByTestEventIdDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
+import autoTest.testEvent.pojo.dto.InsertBingDemoTestEventDTO;
+import autoTest.testEvent.pojo.result.InsertBingDemoEventResult;
 import demo.baseCommon.controller.CommonController;
 import demo.interaction.autoTest.pojo.constant.AutoTestUrl;
 import demo.interaction.autoTest.service.AutoTestDemoService;
@@ -36,17 +38,23 @@ public class AutoTestDemoController extends CommonController {
 		return atDemoService.index();
 	}
 	
-	@PostMapping(value = JsonReportInteractionUrl.findReportsByCondition)
+	@PostMapping(value = AutoTestInteractionUrl.findReportsByCondition)
 	@ResponseBody
 	public String findReportsByCondition(@RequestBody FindTestEventPageByConditionDTO dto) {
 		return atDemoService.findReportsByCondition(dto);
 	}
 	
-	@GetMapping(value = JsonReportInteractionUrl.findReportByTestEventId)
+	@GetMapping(value = AutoTestInteractionUrl.findReportByTestEventId)
 	@ResponseBody
 	public ModelAndView findReportByTestEventId(@RequestParam(value = "testEventId", defaultValue = "0", required = false) Long testEventId) {
 		FindReportByTestEventIdDTO dto = new FindReportByTestEventIdDTO();
 		dto.setTestEventId(testEventId);
 		return atDemoService.findReportByTestEventId(dto);
+	}
+	
+	@PostMapping(value = AutoTestInteractionUrl.insertBingDemoTestEvent)
+	@ResponseBody
+	public InsertBingDemoEventResult insertBingDemoTestEvent(@RequestBody InsertBingDemoTestEventDTO dto, HttpServletRequest request) {
+		return atDemoService.insertBingDemoTestEvent(dto, request);
 	}
 }

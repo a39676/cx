@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import autoTest.jsonReport.pojo.constant.AutoTestJsonReportKeyConstant;
-import autoTest.jsonReport.pojo.constant.JsonReportInteractionUrl;
+import autoTest.jsonReport.pojo.constant.AutoTestInteractionUrl;
 import autoTest.jsonReport.pojo.dto.FindReportByTestEventIdDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
 import autoTest.jsonReport.pojo.result.FindReportByTestEventIdResult;
@@ -114,7 +114,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 				j.put("limit", dto.getLimit());
 			}
 	        
-			String url = ServerHost.host2 + JsonReportInteractionUrl.root + JsonReportInteractionUrl.findReportsByCondition;
+			String url = ServerHost.host2 + AutoTestInteractionUrl.root + AutoTestInteractionUrl.findReportsByCondition;
 			String response = String.valueOf(httpUtil.sendPostRestful(url, j.toString()));
 			return response;
 		} catch (Exception e) {
@@ -137,7 +137,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 		try {
 			JSONObject requestJson = JSONObject.fromObject(dto);
 	        
-			String url = ServerHost.host2 + JsonReportInteractionUrl.root + JsonReportInteractionUrl.findReportByTestEventId;
+			String url = ServerHost.host2 + AutoTestInteractionUrl.root + AutoTestInteractionUrl.findReportByTestEventId;
 			String responseStr = String.valueOf(httpUtil.sendPostRestful(url, requestJson.toString()));
 			
 			JSONObject responseJson = JSONObject.fromObject(responseStr);
@@ -229,6 +229,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	@Override
 	public InsertBingDemoEventResult insertBingDemoTestEvent(InsertBingDemoTestEventDTO dto, HttpServletRequest request) {
 		InsertBingDemoEventResult r = new InsertBingDemoEventResult();
+		
 		int maxCountIn30Min = 6;
 		int count = visitDataService.checkATDemoVisitData(request);
 		if(count > maxCountIn30Min) {
@@ -252,8 +253,8 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 			r.setEventId(responseJson.getLong("eventId"));
 			r.setMessage(responseJson.getString("message"));
 			r.setResult(responseJson.getString("result"));
-			r.setWaitingEventCount(responseJson.getInt("waigingEventCount"));
-			if(r.getResult() != null && r.getResult() == "0") {
+			r.setWaitingEventCount(responseJson.getInt("waitingEventCount"));
+			if(r.getResult() != null && "0".equals(r.getResult())) {
 				r.setIsSuccess();
 				visitDataService.insertATDemoVisitData(request);
 			}

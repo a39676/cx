@@ -44,24 +44,64 @@
       <div class="col-md-8 mx-auto">
         <div class="container-fluid">
           <div class="row">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" id="searchReportRadio" name="rowType" checked="checked" value="查询日志报告">
+              <label class="form-check-label badge badge-primary" for="searchReportRadio">查询日志报告</label>
+            </div>
+          </div>
+          <div class="row" id="searchReportRow">
             <div class="col-md-12 mx-auto">
               <form id="searchConditionArea" markTime="" loadingFlag="">
-                <span class="badge badge-warning">任务创建时间范围</span><input type="date" id="createStartDate"> <input type="time" time="HH:mm:ss" id="createStartTime" step="1" value="00:00:00">
-                <span>~</span><input type="date" id="createEndDate" value="${createEndTime}"> <input type="time" time="HH:mm:ss" id="createEndTime" step="1" value="23:59:59">
-                <br>
-                <br>
-                <span class="badge badge-warning">任务启动时间范围</span><input type="date" id="runTimeStartDate"> <input type="time" time="HH:mm:ss" id="runTimeStartTime"step="1" value="00:00:00">
-                <span>~</span><input type="date" id="runTimeEndDate" value="${runTimeEndTime}"> <input type="time" time="HH:mm:ss" id="runTimeEndTime" step="1" value="23:59:59">
-                <br>
-                <br>
-                <span class="badge badge-warning">请选择案例</span>
-                <select id="moduleIdSelector">
-                  <option value="">All</option>
-                  <option value="3">bing搜索 Demo</option>
-                </select>
-                <br>
-                <br>
-                <span class="badge badge-warning">具体任务ID(可选)</span><input type="number" min="0" step="1" id="id" placeholder="具体任务ID(可选)">
+                <div class="control-group">
+                  <span class="badge badge-warning">任务创建时间范围</span><input type="date" id="createStartDate"> 
+                  <input type="time" time="HH:mm:ss" id="createStartTime" step="1" value="00:00:00">
+                  <span>~</span>
+                  <input type="date" id="createEndDate" value="${createEndTime}"> <input type="time" time="HH:mm:ss" id="createEndTime" step="1" value="23:59:59">
+                </div>
+                <div class="control-group">
+                  <span class="badge badge-warning">任务启动时间范围</span><input type="date" id="runTimeStartDate"> 
+                  <input type="time" time="HH:mm:ss" id="runTimeStartTime"step="1" value="00:00:00">
+                  <span>~</span>
+                  <input type="date" id="runTimeEndDate" value="${runTimeEndTime}"> <input type="time" time="HH:mm:ss" id="runTimeEndTime" step="1" value="23:59:59">
+                </div>                
+                <div class="control-group">
+                  <span class="badge badge-warning">请选择案例</span>
+                  <select id="moduleIdSelector">
+                    <option value="">All</option>
+                    <option value="3">bing搜索 Demo</option>
+                  </select>
+                </div>
+                <div class="control-group">
+                  <span class="badge badge-warning">具体任务ID(可选)</span><input type="number" min="0" step="1" id="id" placeholder="具体任务ID(可选)">
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" id="insertTestEventRadio" name="rowType" value="新增测试任务">
+              <label class="form-check-label badge badge-primary" for="insertTestEventRadio">新增测试任务</label>
+            </div>
+          </div>
+          <div class="row" id="insertTestEventRow" style="display: none;">
+            <div class="col-md-12 mx-auto">
+              <form id="insertTestEventForm">
+                <div class="control-group">
+                  <span class="badge badge-warning">请选择案例</span>
+                  <select id="">
+                    <option value="3">bing搜索 Demo</option>
+                  </select>
+                </div>
+                <div class="control-group">
+                  <input type="text" size="35" id="searchKeyWord" placeholder="请输入搜索关键字, 若空, 默认为 testDemo">
+                </div>
+                <div class="control-group">
+                  <span class="badge badge-warning">预约运行时间(可空)</span>
+                  <input type="date" id="appointmentDate">
+                  <input type="time" time="HH:mm:ss" id="appointmentTime" step="1">
+                </div>
+                <span class="btn btn-sm btn-primary" id="insertTestEventButton">加入本次任务</span>
+                <label id="insertTestEventResult"></label>
               </form>
             </div>
           </div>
@@ -202,7 +242,7 @@
           jsonResponse.forEach(function(subReportVO) {
             newRow = buildReportRow(subReportVO);
             reportRowArea.append(newRow);
-            reportRowArea.attr("markTime", subReportVO.createTimeStr);
+            searchConditionArea.attr("markTime", subReportVO.createTimeStr);
           });
           $("#loadingImg").fadeOut(150);
         },  
@@ -214,10 +254,34 @@
     };
 
     function timeFormat(timeStr) {
-      if(timeStr.length < 8) {
+      if(timeStr.length == 5) {
         timeStr = timeStr + ":00";
       }
       return timeStr;
+    }
+
+    function getDateNow() {
+      var dt = new Date(); 
+      var year = dt.getFullYear();
+      var month = (dt.getMonth() + 1);
+      if(month < 10) { month = "0" + month; }
+      var date = dt.getDate();
+      if (date < 10) { date = "0" + date; }
+      var dtStr = year + "-" + month + "-" + date; 
+      return dtStr;
+    }
+
+    function getTimeNow() {
+      var dt = new Date(); 
+      
+      var hours = dt.getHours();
+      if (hours < 10) { hours = "0" + hours; }
+      var minutes = dt.getMinutes();
+      if (minutes < 10) { minutes = "0" + minutes; }
+      var seconds = dt.getSeconds();
+      if (seconds < 10) { seconds = "0" + seconds; }
+      var dtStr = hours + ":" + minutes + ":" + seconds;
+      return dtStr;
     }
 
     function refreshReportRowArea() {
@@ -231,6 +295,77 @@
     }); 
     
     loadReportSummary();
+
+    $("input[name='rowType']").click(function () {
+      var tmpv = $("#searchReportRadio:checked").val();
+      if(tmpv != null && tmpv.length) {
+        document.getElementById("insertTestEventRow").style.display = "none";
+        document.getElementById("searchReportRow").style.display = "";
+      } else {
+        document.getElementById("insertTestEventRow").style.display = "";
+        document.getElementById("searchReportRow").style.display = "none";
+      }
+    })
+
+    $("#insertTestEventButton").click(function () {
+      var reportRowArea = $("#reportRowArea");
+      var searchKeyWord = $("#searchKeyWord").val();
+
+      var sourceAppointmentDate = document.getElementById("appointmentDate").value;
+      var sourceAppointmentTime = document.getElementById("appointmentTime").value;
+      
+      var appointment = null;
+
+      if(sourceAppointmentDate.length > 2 && sourceAppointmentTime.length < 2) {
+        sourceAppointmentTime = "00:00:00";
+      } else if (sourceAppointmentDate.length < 2 && sourceAppointmentTime.length > 2) {
+        sourceAppointmentDate = getDateNow();
+      } else if (sourceAppointmentDate.length < 2 && sourceAppointmentTime.length < 2) {
+        sourceAppointmentDate = getDateNow();
+        sourceAppointmentTime = getTimeNow();
+      }
+
+      appointment = "" + sourceAppointmentDate + " " + timeFormat(sourceAppointmentTime);
+
+      var jsonOutput = {
+        appointment: appointment,
+        searchKeyWord:searchKeyWord
+      };
+
+      var url = "/atDemo/insertBingDemoTestEvent";
+      $.ajax({
+        type : "POST",  
+        async : true,
+        url : url,  
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,  
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          console.log(datas);
+          var jsonResponse = JSON.parse(datas);
+          var insertTestEventResult = $("#insertTestEventResult");
+          if (datas.code == 0) {
+            var eventId = datas.eventId;
+            var waitingEventCount = datas.waitingEventCount;
+            var r = "";
+            r += "已经新增任务, 前面还有: "+waitingEventCount+"个任务在队列, 预计将于 "+appointment+" 运行;"
+            r += "<br>";
+            r += "";
+            insertTestEventResult.html(r);
+          } else {
+            insertTestEventResult.html(datas.message);
+          }
+
+        },  
+        error: function(datas) {  
+        }
+      }); 
+    })
   });
   </script>
 </body>

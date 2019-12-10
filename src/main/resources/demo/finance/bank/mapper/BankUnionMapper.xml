@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="demo.finance.bank.mapper.BankUnionMapper">
 
-  <resultMap id="BaseResultMap" type="BankUnion">
+  <resultMap id="BaseResultMap" type="demo.finance.bank.pojo.po.BankUnion">
     <result column="bank_union_id" jdbcType="BIGINT" property="bankUnionId" />
     <result column="bank_union_ename" jdbcType="CHAR" property="bankUnionEname" />
     <result column="bank_union_ename_short" jdbcType="CHAR" property="bankUnionEnameShort" />

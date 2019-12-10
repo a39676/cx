@@ -111,7 +111,7 @@
         };
     
         var resultSpan = document.getElementById("createArticleResult");
-        resultSpan.text("");
+        resultSpan.innerHTML = "";
     
         $.ajax({  
           type : "POST",  
@@ -126,7 +126,7 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-            resultSpan.text(datas.message);
+            resultSpan.innerHTML = datas.message;
             if(datas.result == "0") {
               document.getElementById("articleTitle").disabled = true;
               document.getElementById("summernote").disabled = true;

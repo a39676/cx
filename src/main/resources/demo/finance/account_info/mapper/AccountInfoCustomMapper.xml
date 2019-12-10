@@ -225,7 +225,7 @@
       account_number = #{accountNumber}
   </update>
   
-  <select id="getAccountInfoWithBankInfo" resultType="AccountInfoWithBankInfo">
+  <select id="getAccountInfoWithBankInfo" resultType="demo.finance.account_info.pojo.bo.AccountInfoWithBankInfo">
     select 
       info.account_id as accountId,
       info.account_holder_id as accountHolderId,

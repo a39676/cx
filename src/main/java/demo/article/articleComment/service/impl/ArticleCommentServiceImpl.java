@@ -33,7 +33,7 @@ import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
-import ioHandle.FileUtilCustom;
+import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class ArticleCommentServiceImpl extends CommonService implements ArticleCommentService {

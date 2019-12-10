@@ -9,14 +9,14 @@ import org.springframework.stereotype.Service;
 
 import com.cloudinary.Cloudinary;
 
-import cloudinary.pojo.constant.CloudinaryConstant;
-import cloudinary.pojo.result.CloudinaryDeleteResult;
-import cloudinary.pojo.result.CloudinaryUploadResult;
-import cloudinary.service.CloudinaryFunction;
-import cloudinary.util.CloudinaryCore;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.service.CommonService;
 import demo.thirdPartyAPI.cloudinary.service.CloudinaryService;
+import toolPack.cloudinary.pojo.constant.CloudinaryConstant;
+import toolPack.cloudinary.pojo.result.CloudinaryDeleteResult;
+import toolPack.cloudinary.pojo.result.CloudinaryUploadResult;
+import toolPack.cloudinary.service.CloudinaryFunction;
+import toolPack.cloudinary.util.CloudinaryCore;
 
 @Service
 public class CloudinaryServiceImpl extends CommonService implements CloudinaryService {

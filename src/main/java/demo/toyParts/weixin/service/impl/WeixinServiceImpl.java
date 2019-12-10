@@ -37,11 +37,11 @@ import demo.toyParts.weixin.pojo.type.WXAppSwitchType;
 import demo.toyParts.weixin.pojo.type.WXMsgType;
 import demo.toyParts.weixin.pojo.type.WeixinResultType;
 import demo.toyParts.weixin.service.WeixinService;
-import httpHandel.HttpUtil;
-import ioHandle.FileUtilCustom;
 import net.sf.json.JSON;
 import net.sf.json.JSONObject;
 import net.sf.json.xml.XMLSerializer;
+import toolPack.httpHandel.HttpUtil;
+import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class WeixinServiceImpl extends CommonService implements WeixinService {

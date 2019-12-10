@@ -12,7 +12,7 @@ import demo.base.user.mapper.UserIpMapper;
 import demo.base.user.pojo.dto.UserIpDeleteDTO;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
-import ioHandle.FileUtilCustom;
+import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class AdminServiceImpl implements AdminService {

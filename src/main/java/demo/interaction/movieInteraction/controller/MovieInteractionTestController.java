@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import auxiliaryCommon.pojo.constant.ServerHost;
-import httpHandel.HttpUtil;
 import movie.pojo.constant.MovieInteractionUrl;
 import movie.pojo.dto.FindMovieDetailDTO;
 import movie.pojo.dto.FindMovieSummaryListDTO;
 import movie.pojo.type.MovieRegionType;
 import net.sf.json.JSONObject;
+import toolPack.httpHandel.HttpUtil;
 
 @Controller
 @RequestMapping(value = MovieInteractionUrl.root, produces = "text/plain;charset=UTF-8")

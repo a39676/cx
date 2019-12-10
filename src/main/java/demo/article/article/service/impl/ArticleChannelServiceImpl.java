@@ -37,7 +37,7 @@ import demo.article.article.service.ArticleChannelService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.config.costom_component.BaseUtilCustom;
-import ioHandle.FileUtilCustom;
+import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class ArticleChannelServiceImpl extends ArticleCommonService implements ArticleChannelService {

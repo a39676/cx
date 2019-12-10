@@ -3,9 +3,9 @@ package demo.thirdPartyAPI.cloudinary.service;
 import java.io.File;
 import java.util.List;
 
-import cloudinary.pojo.constant.CloudinaryConstant;
-import cloudinary.pojo.result.CloudinaryDeleteResult;
-import cloudinary.pojo.result.CloudinaryUploadResult;
+import toolPack.cloudinary.pojo.constant.CloudinaryConstant;
+import toolPack.cloudinary.pojo.result.CloudinaryDeleteResult;
+import toolPack.cloudinary.pojo.result.CloudinaryUploadResult;
 
 public interface CloudinaryService {
 

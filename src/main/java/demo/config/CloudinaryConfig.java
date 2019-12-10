@@ -3,7 +3,7 @@ package demo.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
-import cloudinary.service.CloudinaryFunction;
+import toolPack.cloudinary.service.CloudinaryFunction;
 
 @Component
 public class CloudinaryConfig {

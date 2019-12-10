@@ -20,7 +20,7 @@ import demo.base.user.pojo.dto.UserAttemptQuerayDTO;
 import demo.base.user.pojo.po.UserAttempts;
 import demo.base.user.service.UsersService;
 import demo.baseCommon.pojo.type.ResultTypeCX;
-import numericHandel.NumericUtilCustom;
+import toolPack.numericHandel.NumericUtilCustom;
 
 @Component("authenticationProvider")
 public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider {

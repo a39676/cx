@@ -1,2 +1,2 @@
 rootProject.name = 'cx'
-includeFlat 'auxiliaryCommon'
+includeFlat 'toolPacksG', 'auxiliaryCommon'

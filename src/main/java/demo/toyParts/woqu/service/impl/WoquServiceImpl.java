@@ -13,7 +13,7 @@ import demo.baseCommon.service.CommonService;
 import demo.toyParts.woqu.mapper.WusersMapper;
 import demo.toyParts.woqu.pojo.po.Wusers;
 import demo.toyParts.woqu.service.WoquService;
-import ioHandle.FileUtilCustom;
+import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class WoquServiceImpl extends CommonService implements WoquService {

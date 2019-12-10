@@ -194,20 +194,6 @@
       var runTimeStartTime = null;
       var runTimeEndTime = null;
 
-      // if(sourceCreateStartDate.length) {
-      //   createStartTime = "" + sourceCreateStartDate + " " + timeFormat(sourceCreateStartTime);
-      // }
-      // if(sourceCreateEndDate.length) {
-      //   createEndTime = "" + sourceCreateEndDate + " " + timeFormat(sourceCreateEndTime);
-      // }
-      // if(sourceRunTimeStartDate.length) {
-      //   runTimeStartTime = "" + sourceRunTimeStartDate + " " + timeFormat(sourceRunTimeStartTime);
-      // }
-      // if(sourceRunTimeEndDate.length) {
-      //   runTimeEndTime = "" + sourceRunTimeEndDate + " " + timeFormat(sourceRunTimeEndTime);
-      // }
-
-
       if(sourceCreateStartDate.length > 2 && sourceCreateStartTime.length < 2) {
         sourceCreateStartTime = "00:00:00";
       } else if (sourceCreateStartDate.length < 2 && sourceCreateStartTime.length > 2) {
@@ -402,8 +388,7 @@
             var r = "";
             r += "已经新增任务, 前面还有: "+waitingEventCount+"个任务在队列, 预计最快将于 "+appointment+" 运行。"
             r += "<br>";
-            r += "30分钟内可加入"+datas.maxInsertCount+"个任务, 现已加入"+datas.hasInsertCount+"个";
-            r += "";
+            r += "<a href='"+datas.message+"' target='_blank'> _>>>预生成报告地址<<<_ </a>";
             insertTestEventResult.html(r);
           } else {
             insertTestEventResult.html(datas.message);

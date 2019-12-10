@@ -33,7 +33,7 @@ public class MovieInteractionTestController {
 			dto.setPageParam();
 			JSONObject j = JSONObject.fromObject(dto);
 	        
-			String url = ServerHost.host2 + MovieInteractionUrl.root + MovieInteractionUrl.simpleList;
+			String url = ServerHost.localHost10002 + MovieInteractionUrl.root + MovieInteractionUrl.simpleList;
 			String response = String.valueOf(httpUtil.sendPostRestful(url, j.toString()));
 			return response;
 		} catch (Exception e) {
@@ -48,7 +48,7 @@ public class MovieInteractionTestController {
 		try {
 			JSONObject j = JSONObject.fromObject(dto);
 	        
-			String url = ServerHost.host2 + MovieInteractionUrl.root + MovieInteractionUrl.movieDetail;
+			String url = ServerHost.localHost10002 + MovieInteractionUrl.root + MovieInteractionUrl.movieDetail;
 			String response = String.valueOf(httpUtil.sendPostRestful(url, j.toString()));
 			return response;
 		} catch (Exception e) {

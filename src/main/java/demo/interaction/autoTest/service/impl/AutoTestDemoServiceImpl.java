@@ -113,7 +113,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 				j.put("limit", dto.getLimit());
 			}
 	        
-			String url = ServerHost.host2 + AutoTestInteractionUrl.root + AutoTestInteractionUrl.findReportsByCondition;
+			String url = ServerHost.localHost10002 + AutoTestInteractionUrl.root + AutoTestInteractionUrl.findReportsByCondition;
 			String response = String.valueOf(httpUtil.sendPostRestful(url, j.toString()));
 			return response;
 		} catch (Exception e) {
@@ -136,7 +136,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 		try {
 			JSONObject requestJson = JSONObject.fromObject(dto);
 	        
-			String url = ServerHost.host2 + AutoTestInteractionUrl.root + AutoTestInteractionUrl.findReportByTestEventId;
+			String url = ServerHost.localHost10002 + AutoTestInteractionUrl.root + AutoTestInteractionUrl.findReportByTestEventId;
 			String responseStr = String.valueOf(httpUtil.sendPostRestful(url, requestJson.toString()));
 			
 			JSONObject responseJson = JSONObject.fromObject(responseStr);
@@ -242,21 +242,24 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 			}
 			json.put("searchKeyWord", dto.getSearchKeyWord());
 	        
-			String url = ServerHost.host2 + BingDemoUrl.root + BingDemoUrl.insert;
+			String url = ServerHost.localHost10002 + BingDemoUrl.root + BingDemoUrl.insert;
 			String response = String.valueOf(httpUtil.sendPostRestful(url, json.toString()));
 
 			JSONObject responseJson = JSONObject.fromObject(response);
 			
 			r.setCode(responseJson.getString("code"));
 			r.setEventId(responseJson.getLong("eventId"));
-			r.setMessage(responseJson.getString("message"));
 			r.setResult(responseJson.getString("result"));
 			r.setWaitingEventCount(responseJson.getInt("waitingEventCount"));
+			r.setEventId(responseJson.getLong("eventId"));
 			if(r.getResult() != null && "0".equals(r.getResult())) {
 				r.setIsSuccess();
 				visitDataService.insertATDemoVisitData(request);
 				r.setHasInsertCount(count + 1);
 				r.setMaxInsertCount(BingDemoConstant.maxInsertCountIn30Minutes);
+				r.setMessage("/atDemo/findReportByTestEventId?testEventId=" + r.getEventId());
+			} else {
+				r.setMessage(responseJson.getString("message"));
 			}
 			
 			

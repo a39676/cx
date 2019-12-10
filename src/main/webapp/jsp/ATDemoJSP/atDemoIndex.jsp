@@ -53,13 +53,13 @@
             <div class="col-md-12 mx-auto">
               <form id="searchConditionArea" markTime="" loadingFlag="">
                 <div class="control-group">
-                  <span class="badge badge-warning">任务创建时间范围</span><input type="date" id="createStartDate"> 
+                  <span class="badge badge-warning">任务创建时间范围</span><input type="date" id="createStartDate" value="2019-01-01"> 
                   <input type="time" time="HH:mm:ss" id="createStartTime" step="1" value="00:00:00">
                   <span>~</span>
                   <input type="date" id="createEndDate" value="${createEndTime}"> <input type="time" time="HH:mm:ss" id="createEndTime" step="1" value="23:59:59">
                 </div>
                 <div class="control-group">
-                  <span class="badge badge-warning">任务启动时间范围</span><input type="date" id="runTimeStartDate"> 
+                  <span class="badge badge-warning">任务启动时间范围</span><input type="date" id="runTimeStartDate" value="2019-01-01"> 
                   <input type="time" time="HH:mm:ss" id="runTimeStartTime"step="1" value="00:00:00">
                   <span>~</span>
                   <input type="date" id="runTimeEndDate" value="${runTimeEndTime}"> <input type="time" time="HH:mm:ss" id="runTimeEndTime" step="1" value="23:59:59">
@@ -194,18 +194,60 @@
       var runTimeStartTime = null;
       var runTimeEndTime = null;
 
-      if(sourceCreateStartDate.length) {
-        createStartTime = "" + sourceCreateStartDate + " " + timeFormat(sourceCreateStartTime);
+      // if(sourceCreateStartDate.length) {
+      //   createStartTime = "" + sourceCreateStartDate + " " + timeFormat(sourceCreateStartTime);
+      // }
+      // if(sourceCreateEndDate.length) {
+      //   createEndTime = "" + sourceCreateEndDate + " " + timeFormat(sourceCreateEndTime);
+      // }
+      // if(sourceRunTimeStartDate.length) {
+      //   runTimeStartTime = "" + sourceRunTimeStartDate + " " + timeFormat(sourceRunTimeStartTime);
+      // }
+      // if(sourceRunTimeEndDate.length) {
+      //   runTimeEndTime = "" + sourceRunTimeEndDate + " " + timeFormat(sourceRunTimeEndTime);
+      // }
+
+
+      if(sourceCreateStartDate.length > 2 && sourceCreateStartTime.length < 2) {
+        sourceCreateStartTime = "00:00:00";
+      } else if (sourceCreateStartDate.length < 2 && sourceCreateStartTime.length > 2) {
+        sourceCreateStartDate = getDateNow();
+      } else if (sourceCreateStartDate.length < 2 && sourceCreateStartTime.length < 2) {
+        sourceCreateStartDate = getDateNow();
+        sourceCreateStartTime = getTimeNow();
       }
-      if(sourceCreateEndDate.length) {
-        createEndTime = "" + sourceCreateEndDate + " " + timeFormat(sourceCreateEndTime);
+      createStartTime = "" + sourceCreateStartDate + " " + timeFormat(sourceCreateStartTime);
+
+      if(sourceCreateEndDate.length > 2 && sourceCreateEndTime.length < 2) {
+        sourceCreateEndTime = "00:00:00";
+      } else if (sourceCreateEndDate.length < 2 && sourceCreateEndTime.length > 2) {
+        sourceCreateEndDate = getDateNow();
+      } else if (sourceCreateEndDate.length < 2 && sourceCreateEndTime.length < 2) {
+        sourceCreateEndDate = getDateNow();
+        sourceCreateEndTime = getTimeNow();
       }
-      if(sourceRunTimeStartDate.length) {
-        runTimeStartTime = "" + sourceRunTimeStartDate + " " + timeFormat(sourceRunTimeStartTime);
+      createEndTime = "" + sourceCreateEndDate + " " + timeFormat(sourceCreateEndTime);
+
+      if(sourceRunTimeStartDate.length > 2 && sourceRunTimeStartTime.length < 2) {
+        sourceRunTimeStartTime = "00:00:00";
+      } else if (sourceRunTimeStartDate.length < 2 && sourceRunTimeStartTime.length > 2) {
+        sourceRunTimeStartDate = getDateNow();
+      } else if (sourceRunTimeStartDate.length < 2 && sourceRunTimeStartTime.length < 2) {
+        sourceRunTimeStartDate = getDateNow();
+        sourceRunTimeStartTime = getTimeNow();
       }
-      if(sourceRunTimeEndDate.length) {
-        runTimeEndTime = "" + sourceRunTimeEndDate + " " + timeFormat(sourceRunTimeEndTime);
+      runTimeStartTime = "" + sourceRunTimeStartDate + " " + timeFormat(sourceRunTimeStartTime);
+
+      if(sourceRunTimeEndDate.length > 2 && sourceRunTimeEndTime.length < 2) {
+        sourceRunTimeEndTime = "00:00:00";
+      } else if (sourceRunTimeEndDate.length < 2 && sourceRunTimeEndTime.length > 2) {
+        sourceRunTimeEndDate = getDateNow();
+      } else if (sourceRunTimeEndDate.length < 2 && sourceRunTimeEndTime.length < 2) {
+        sourceRunTimeEndDate = getDateNow();
+        sourceRunTimeEndTime = getTimeNow();
       }
+      runTimeEndTime = "" + sourceRunTimeEndDate + " " + timeFormat(sourceRunTimeEndTime);
+
 
       $("#loadingImg").fadeIn(150);    
       if(searchConditionArea.attr("loadingFlag") == "1") {
@@ -257,6 +299,8 @@
     function timeFormat(timeStr) {
       if(timeStr.length == 5) {
         timeStr = timeStr + ":00";
+      } else if (timeStr.length < 5) {
+        timeStr = "00:00:00";
       }
       return timeStr;
     }

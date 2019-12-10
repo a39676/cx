@@ -163,19 +163,28 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	}
 	
 	private AutoTestJsonReportVO buildErrorReportVO() {
+		return buildNormalErrorReportVO("报告不存在, 可能是以下情况(测试任务未运行或运行中, 此报告已过期删除, 报告读取异常)");
+	}
+	
+	/**
+	 * 输出异常原因报告
+	 * @param errorMsg
+	 * @return
+	 */
+	private AutoTestJsonReportVO buildNormalErrorReportVO(String errorMsg) {
 		AutoTestJsonReportVO vo = new AutoTestJsonReportVO();
 		List<AutoTestJsonReportLineVO> contentLines = new ArrayList<AutoTestJsonReportLineVO>();
 		AutoTestJsonReportLineVO lineVO = null;
 		lineVO = new AutoTestJsonReportLineVO();
 		lineVO.setLineArrtibute(AutoTestJsonReportKeyConstant.strKey);
-		lineVO.setContent("报告不存在, 可能是以下情况(测试任务未运行或运行中, 此报告已过期删除, 报告读取异常)");
+		lineVO.setContent(errorMsg);
 		contentLines.add(lineVO);
 		vo.setContentLines(contentLines);
 		return vo;
 	}
 
 	private AutoTestJsonReportVO buildReportVOByFindReportByTestEventIdResult(FindReportByTestEventIdResult r) {
-		if(r == null || StringUtils.isBlank(r.getReportStr())) {
+		if(r == null) {
 			return buildErrorReportVO();
 		}
 
@@ -191,38 +200,47 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 		vo.setStartTimeStr(localDateTimeHandler.dateToStr(r.getStartTime()));
 		vo.setEndTimeStr(localDateTimeHandler.dateToStr(r.getEndTime()));
 		
-		try {
-			JSONArray ja = JSONArray.fromObject(r.getReportStr());
-			List<AutoTestJsonReportLineVO> contentLines = new ArrayList<AutoTestJsonReportLineVO>();
-			AutoTestJsonReportLineVO lineVO = null;
+		String line = null;
+		AutoTestJsonReportLineVO lineVO = null;
+		List<AutoTestJsonReportLineVO> contentLines = new ArrayList<AutoTestJsonReportLineVO>();
+		
+		if(r.getStartTime() == null) {
+			return buildNormalErrorReportVO("任务尚未开始执行, 请耐心等待");
 			
-			JSONObject j = null;
-			String line = null;
-			for(int i = 0; i < ja.size(); i++) {
-				j = ja.getJSONObject(i);
-				lineVO = new AutoTestJsonReportLineVO();
+		} else if(r.getEndTime() == null) {
+			return buildNormalErrorReportVO("任务正在执行, 执行完成后将输出报告, 请耐心等待");
+			
+		} else {
+			try {
 				
-				if(j.containsKey(AutoTestJsonReportKeyConstant.strKey)) {
-					lineVO.setLineArrtibute(AutoTestJsonReportKeyConstant.strKey);
-					line = j.getString(AutoTestJsonReportKeyConstant.strKey);
-				} else {
-					lineVO.setLineArrtibute(AutoTestJsonReportKeyConstant.imgKey);
-					line = j.getString(AutoTestJsonReportKeyConstant.imgKey);
-					line = line.replaceAll("upload/", "upload/c_scale,h_347/");
+				JSONArray ja = JSONArray.fromObject(r.getReportStr());
+				
+				JSONObject j = null;
+				for(int i = 0; i < ja.size(); i++) {
+					j = ja.getJSONObject(i);
+					lineVO = new AutoTestJsonReportLineVO();
+					
+					if(j.containsKey(AutoTestJsonReportKeyConstant.strKey)) {
+						lineVO.setLineArrtibute(AutoTestJsonReportKeyConstant.strKey);
+						line = j.getString(AutoTestJsonReportKeyConstant.strKey);
+					} else {
+						lineVO.setLineArrtibute(AutoTestJsonReportKeyConstant.imgKey);
+						line = j.getString(AutoTestJsonReportKeyConstant.imgKey);
+						line = line.replaceAll("upload/", "upload/c_scale,h_347/");
+					}
+					lineVO.setContent(line);
+					contentLines.add(lineVO);
 				}
-				lineVO.setContent(line);
-				contentLines.add(lineVO);
+				
+				vo.setContentLines(contentLines);
+				
+				return vo;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return buildErrorReportVO();
 			}
-			
-			vo.setContentLines(contentLines);
-			
-			return vo;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return buildErrorReportVO();
 		}
-		
-		
+
 	}
 
 	@Override

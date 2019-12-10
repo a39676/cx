@@ -93,7 +93,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="BankUnion">
+  <insert id="insert" parameterType="demo.finance.bank.pojo.po.BankUnion">
     insert into bank_union (bank_union_id, bank_union_ename, bank_union_ename_short, 
       bank_union_chinese_name, bank_union_chinese_name_short, 
       common_bank_union)
@@ -101,7 +101,7 @@
       #{bankUnionChineseName,jdbcType=CHAR}, #{bankUnionChineseNameShort,jdbcType=CHAR}, 
       #{commonBankUnion,jdbcType=BIT})
   </insert>
-  <insert id="insertSelective" parameterType="BankUnion">
+  <insert id="insertSelective" parameterType="demo.finance.bank.pojo.po.BankUnion">
     insert into bank_union
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="bankUnionId != null">

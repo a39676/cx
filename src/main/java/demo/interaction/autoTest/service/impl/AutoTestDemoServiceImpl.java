@@ -231,7 +231,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 		
 		int count = visitDataService.checkATDemoVisitData(request);
 		if(count >= BingDemoConstant.maxInsertCountIn30Minutes) {
-			r.failWithMessage("30分钟内可加入" + BingDemoConstant.maxInsertCountIn30Minutes + "次任务, 请稍后再试");
+			r.failWithMessage("短时间内加入的任务太多了, 请稍后再试");
 			return r;
 		}
 		

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="demo.finance.bank.mapper.BankInfoMapper">
 
-  <resultMap id="BaseResultMap" type="BankInfo">
+  <resultMap id="BaseResultMap" type="demo.finance.bank.pojo.po.BankInfo">
     <result column="bank_id" jdbcType="BIGINT" property="bankId" />
     <result column="bank_ename" jdbcType="CHAR" property="bankEname" />
     <result column="bank_ename_short" jdbcType="CHAR" property="bankEnameShort" />
@@ -12,7 +12,7 @@
     <result column="common_bank" jdbcType="BIT" property="commonBank" />
   </resultMap>
 
-  <insert id="insert" parameterType="BankInfo">
+  <insert id="insert" parameterType="demo.finance.bank.pojo.po.BankInfo">
     insert into bank_info (bank_id, bank_ename, bank_ename_short, 
       bank_chinese_name, bank_chinese_name_short, bank_union_id, 
       common_bank)
@@ -21,7 +21,7 @@
       #{commonBank,jdbcType=BIT})
   </insert>
 
-  <insert id="insertSelective" parameterType="BankInfo">
+  <insert id="insertSelective" parameterType="demo.finance.bank.pojo.po.BankInfo">
     insert into bank_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="bankId != null">

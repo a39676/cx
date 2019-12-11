@@ -38,7 +38,7 @@
       <!-- channels -->
       <div class="col-md-2 mx-auto">
         <div class="btn-group-vertical" id="testCases">
-          <button class='btn btn-sm testCaseButton'>bing 搜索样例</button>
+          <button class='btn btn-sm testCaseButton'>搜索样例</button>
         </div>
       </div>
       <div class="col-md-8 mx-auto">

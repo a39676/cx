@@ -189,7 +189,10 @@
       var id = document.getElementById("id").value;
       var moduleIdSelector = document.getElementById("moduleIdSelector");
       var moduleId = moduleIdSelector.options[moduleIdSelector.selectedIndex].value;
-      var caseId = document.getElementById("caseId").value;
+      var caseId = "";
+      if(document.getElementById("caseId") != null) {
+        caseId = document.getElementById("caseId").value;
+      }
       var markTime = searchConditionArea.attr("markTime");
 
       var sourceCreateStartDate = document.getElementById("createStartDate").value;

@@ -68,9 +68,20 @@
                   <span class="badge badge-warning">请选择案例</span>
                   <select id="moduleIdSelector">
                     <option value="">All</option>
+                    <sec:authorize access="hasRole('ROLE_ADMIN')">
+                      <c:forEach items="${modules}" var="module" >
+                        <option value="${module.key}">${module.value}</option>
+                      </c:forEach>
+                    </sec:authorize>
                     <option value="3">bing搜索 Demo</option>
                   </select>
                 </div>
+                <sec:authorize access="hasRole('ROLE_ADMIN')">
+                  <div class="control-group">
+                    <span class="badge badge-warning">caseId</span>
+                    <input type="text" name="" id="caseId" placeholder="caseId">
+                  </div>
+                </sec:authorize>
                 <div class="control-group">
                   <span class="badge badge-warning">具体任务ID(可选)</span><input type="number" min="0" step="1" id="id" placeholder="具体任务ID(可选)">
                 </div>
@@ -178,6 +189,7 @@
       var id = document.getElementById("id").value;
       var moduleIdSelector = document.getElementById("moduleIdSelector");
       var moduleId = moduleIdSelector.options[moduleIdSelector.selectedIndex].value;
+      var caseId = document.getElementById("caseId").value;
       var markTime = searchConditionArea.attr("markTime");
 
       var sourceCreateStartDate = document.getElementById("createStartDate").value;
@@ -248,7 +260,8 @@
         runTimeStartTime: runTimeStartTime,
         runTimeEndTime: runTimeEndTime,
         id:id,
-        moduleId:moduleId
+        moduleId:moduleId,
+        caseId:caseId
       };
 
       var url = "/atDemo/findReportsByCondition";

@@ -121,6 +121,9 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 			if(dto.getLimit() != null) {
 				j.put("limit", dto.getLimit());
 			}
+			if(!dto.getRunFlag()) {
+				j.put("runFlag", "false");
+			}
 	        
 			String url = ServerHost.localHost10002 + AutoTestInteractionUrl.root + AutoTestInteractionUrl.findReportsByCondition;
 			String response = String.valueOf(httpUtil.sendPostRestful(url, j.toString()));
@@ -167,7 +170,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 			vo = buildReportVOByFindReportByTestEventIdResult(responseResult);
 		} catch (Exception e) {
 			e.printStackTrace();
-			vo = buildErrorReportVO();
+			vo = reportContentReplaceWithErrorMsg(vo, "报告读取异常");
 		}
 		
 		v.addObject("reportVO", vo);
@@ -175,7 +178,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	}
 	
 	private AutoTestJsonReportVO buildErrorReportVO() {
-		return buildNormalErrorReportVO("报告不存在, 可能是以下情况(测试任务未运行或运行中, 此报告已过期删除, 报告读取异常)");
+		return reportVOFillErrorMsg("报告不存在");
 	}
 	
 	/**
@@ -183,8 +186,10 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	 * @param errorMsg
 	 * @return
 	 */
-	private AutoTestJsonReportVO buildNormalErrorReportVO(String errorMsg) {
-		AutoTestJsonReportVO vo = new AutoTestJsonReportVO();
+	private AutoTestJsonReportVO reportContentReplaceWithErrorMsg(AutoTestJsonReportVO vo, String errorMsg) {
+		if(vo == null) {
+			vo = new AutoTestJsonReportVO();
+		}
 		List<AutoTestJsonReportLineVO> contentLines = new ArrayList<AutoTestJsonReportLineVO>();
 		AutoTestJsonReportLineVO lineVO = null;
 		lineVO = new AutoTestJsonReportLineVO();
@@ -194,13 +199,15 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 		vo.setContentLines(contentLines);
 		return vo;
 	}
-
-	private AutoTestJsonReportVO buildReportVOByFindReportByTestEventIdResult(FindReportByTestEventIdResult r) {
-		if(r == null) {
-			return buildErrorReportVO();
+	
+	private AutoTestJsonReportVO reportVOFillErrorMsg(String errorMsg) {
+		return reportContentReplaceWithErrorMsg(null, errorMsg);
+	}
+	
+	private AutoTestJsonReportVO reportVOFillCommonData(AutoTestJsonReportVO vo, FindReportByTestEventIdResult r) {
+		if(vo == null) {
+			vo = new AutoTestJsonReportVO();
 		}
-
-		AutoTestJsonReportVO vo = new AutoTestJsonReportVO();
 		vo.setId(r.getId());
 		vo.setTitle(r.getTitle());
 		
@@ -211,16 +218,26 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 		vo.setCreateTimeStr(localDateTimeHandler.dateToStr(r.getCreateTime()));
 		vo.setStartTimeStr(localDateTimeHandler.dateToStr(r.getStartTime()));
 		vo.setEndTimeStr(localDateTimeHandler.dateToStr(r.getEndTime()));
+		return vo;
+	}
+
+	private AutoTestJsonReportVO buildReportVOByFindReportByTestEventIdResult(FindReportByTestEventIdResult r) {
+		if(r == null) {
+			return buildErrorReportVO();
+		}
+
+		AutoTestJsonReportVO vo = new AutoTestJsonReportVO();
+		reportVOFillCommonData(vo, r);
 		
 		String line = null;
 		AutoTestJsonReportLineVO lineVO = null;
 		List<AutoTestJsonReportLineVO> contentLines = new ArrayList<AutoTestJsonReportLineVO>();
 		
 		if(r.getStartTime() == null) {
-			return buildNormalErrorReportVO("任务尚未开始执行, 请耐心等待");
+			return reportContentReplaceWithErrorMsg(vo, "任务尚未开始执行, 请耐心等待");
 			
 		} else if(r.getEndTime() == null) {
-			return buildNormalErrorReportVO("任务正在执行, 执行完成后将输出报告, 请耐心等待");
+			return reportContentReplaceWithErrorMsg(vo, "任务正在执行, 执行完成后将输出报告, 请耐心等待");
 			
 		} else {
 			try {

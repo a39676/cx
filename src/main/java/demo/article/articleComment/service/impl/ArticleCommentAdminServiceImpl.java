@@ -17,13 +17,10 @@ import demo.article.articleComment.service.ArticleCommentAdminService;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
-import demo.config.costom_component.BaseUtilCustom;
 
 @Service
 public class ArticleCommentAdminServiceImpl extends CommonService implements ArticleCommentAdminService {
 	
-//	@Autowired
-//	private SystemConstantService systemConstantService;
 //	@Autowired
 //	private ArticleEvaluationService articleEvaluationService;
 	
@@ -32,8 +29,6 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 	@Autowired
 	private ArticleCommentReviewMapper articleCommentReviewMapper;
 	
-	@Autowired
-	private BaseUtilCustom baseUtilCustom;
 	
 	@Override
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)

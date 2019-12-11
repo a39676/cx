@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.base.system.pojo.bo.SystemConstantStore;
-import demo.base.system.service.impl.SystemConstantService;
 import demo.base.user.mapper.AuthMapper;
 import demo.base.user.mapper.RolesMapper;
 import demo.base.user.mapper.UsersDetailMapper;
@@ -28,15 +27,14 @@ import demo.base.user.pojo.type.UserPrivateLevelType;
 import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.UsersService;
 import demo.baseCommon.pojo.type.GenderType;
+import demo.baseCommon.service.CommonService;
 
 /**
  * @author Acorn 2017年4月13日
  */
 @Service
-public class UsersServiceImpl implements UsersService {
+public class UsersServiceImpl extends CommonService implements UsersService {
 
-	@Autowired
-	private SystemConstantService systemConstantService;
 	@Autowired
 	private UsersMapper usersMapper;
 	@Autowired
@@ -54,7 +52,7 @@ public class UsersServiceImpl implements UsersService {
 		}
 		UserAttemptQuerayDTO param = new UserAttemptQuerayDTO();
 		param.setUserName(userName);
-		int maxAttempts = Integer.parseInt(systemConstantService.getValByName(SystemConstantStore.maxAttempts));
+		int maxAttempts = Integer.parseInt(constantService.getValByName(SystemConstantStore.maxAttempts));
 		if (getUserAttempts(param).size() >= maxAttempts) {
 			usersMapper.lockUserWithAttempts(userName);
 		} 

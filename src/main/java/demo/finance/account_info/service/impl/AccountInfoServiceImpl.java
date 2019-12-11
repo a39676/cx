@@ -19,7 +19,6 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.baseCommon.pojo.param.controllerParam.InsertNewTransationParam;
 import demo.baseCommon.pojo.type.TransationType;
 import demo.baseCommon.service.CommonService;
-import demo.config.costom_component.BaseUtilCustom;
 import demo.config.costom_component.EncryptUtil;
 import demo.finance.account_holder.controller.AccountHolderController;
 import demo.finance.account_holder.pojo.po.AccountHolder;
@@ -66,8 +65,6 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	@Autowired
 	private AccountInfoStatisticsService accountInfoStatisticsService;
 	
-	@Autowired
-	private BaseUtilCustom baseUtilCustom;
 	
 	@Override
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)

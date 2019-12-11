@@ -2,17 +2,11 @@ package demo.article.article.service.impl;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.service.CommonService;
 import demo.config.costom_component.EncryptUtil;
 
 public class ArticleCommonService extends CommonService{
 	
-	@Autowired
-	private SystemConstantService systemConstantService;
-
 	protected static String imageHttpUrlPattern;
 	private static final String[] imageSuffix = { "jpg", "jpeg", "bmp", "tiff", "png", "gif", "webp" };
 	
@@ -39,7 +33,7 @@ public class ArticleCommonService extends CommonService{
 	
 	public boolean loadCustomKey() {
 		if(customKey == null) {
-			customKey = systemConstantService.getCustomKeys();
+			customKey = constantService.getCustomKeys();
 		}
 		if (customKey.size() == 10) {
 			for(List<Character> l : customKey) {

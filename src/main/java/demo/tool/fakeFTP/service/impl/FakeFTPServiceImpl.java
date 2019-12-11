@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import demo.base.system.pojo.bo.SystemConstantStore;
-import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
 import demo.tool.controller.UploadPriController;
@@ -40,11 +39,9 @@ public class FakeFTPServiceImpl extends CommonService implements FakeFTPServcie 
 	
 	@Autowired
 	private DownloadService downloadService;
-	@Autowired
-	private SystemConstantService systemConstantService;
 	
 	private String getFateFTPHome() {
-		return systemConstantService.getValByName(SystemConstantStore.fakeFTPHome);
+		return constantService.getValByName(SystemConstantStore.fakeFTPHome);
 	}
 	
 	@Override

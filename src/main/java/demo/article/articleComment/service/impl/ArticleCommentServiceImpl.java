@@ -29,7 +29,6 @@ import demo.article.articleComment.pojo.po.ArticleComment;
 import demo.article.articleComment.pojo.result.FindArticleCommentPageResult;
 import demo.article.articleComment.service.ArticleCommentService;
 import demo.base.system.pojo.bo.SystemConstantStore;
-import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
@@ -38,8 +37,6 @@ import toolPack.ioHandle.FileUtilCustom;
 @Service
 public class ArticleCommentServiceImpl extends CommonService implements ArticleCommentService {
 	
-	@Autowired
-	private SystemConstantService systemConstantService;
 	@Autowired
 	private ArticleService articleService;
 	@Autowired
@@ -55,7 +52,7 @@ public class ArticleCommentServiceImpl extends CommonService implements ArticleC
 	private static Long maxArticleLength = 0L;
 	
 	private boolean loadArticleCommontStorePath() {
-		articleCommentStorePrefixPath = systemConstantService.getValByName(SystemConstantStore.articleCommentStorePrefixPath);
+		articleCommentStorePrefixPath = constantService.getValByName(SystemConstantStore.articleCommentStorePrefixPath);
 		if (articleCommentStorePrefixPath.length() > 0) {
 			return true;
 		} else {
@@ -64,7 +61,7 @@ public class ArticleCommentServiceImpl extends CommonService implements ArticleC
 	}
 	
 	private boolean loadMaxArticleLength() {
-		maxArticleLength = Long.parseLong(systemConstantService.getValByName(SystemConstantStore.maxArticleLength));
+		maxArticleLength = Long.parseLong(constantService.getValByName(SystemConstantStore.maxArticleLength));
 		if (maxArticleLength > 0) {
 			return true;
 		} else {

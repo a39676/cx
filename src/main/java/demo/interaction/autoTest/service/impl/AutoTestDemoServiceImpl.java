@@ -2,7 +2,9 @@ package demo.interaction.autoTest.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,9 +22,9 @@ import autoTest.testEvent.pojo.constant.BingDemoConstant;
 import autoTest.testEvent.pojo.constant.BingDemoUrl;
 import autoTest.testEvent.pojo.dto.InsertBingDemoTestEventDTO;
 import autoTest.testEvent.pojo.result.InsertBingDemoEventResult;
+import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.constant.ServerHost;
 import demo.base.system.pojo.bo.SystemConstantStore;
-import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.service.CommonService;
 import demo.interaction.autoTest.pojo.vo.AutoTestJsonReportLineVO;
 import demo.interaction.autoTest.pojo.vo.AutoTestJsonReportVO;
@@ -38,18 +40,16 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	@Autowired
 	private HttpUtil httpUtil;
 	
-	@Autowired
-	private SystemConstantService systemConstantService;
 	
 	@Override
 	public ModelAndView linkToATHome(HttpServletRequest request) {
 		String hostName = findHostNameFromRequst(request);
 		
-		if (hostName.contains(systemConstantService.getValByName(SystemConstantStore.hostName2))) {
+		if (hostName.contains(constantService.getValByName(SystemConstantStore.hostName2))) {
 			return new ModelAndView("ATDemoJSP/atDemoLink");
 		}
 
-		String envName = systemConstantService.getValByName(SystemConstantStore.envName, true);
+		String envName = constantService.getValByName(SystemConstantStore.envName, true);
 		if("dev".equals(envName)) {
 			return new ModelAndView("ATDemoJSP/atDemoLink");
 		}
@@ -62,21 +62,30 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 		ModelAndView v = new ModelAndView("ATDemoJSP/atDemoIndex");
 		v.addObject("title", "自动化测试");
 		String dateNow = localDateTimeHandler.dateToStr(LocalDateTime.now(), DateTimeUtilCommon.normalDateFormat);
+		Long visitCount = visitDataService.getVisitCount();
+		v.addObject("visitCount", visitCount);
 		v.addObject("createEndTime", dateNow);
 		v.addObject("runTimeEndTime", dateNow);
+		if(baseUtilCustom.hasAdminRole()) {
+			Map<Long, String> modules = new HashMap<Long, String>();
+			for(TestModuleType i : TestModuleType.values()) {
+				modules.put(i.getId(), i.getEventName());
+			}
+			v.addObject("modules", modules);
+		}
+		
 		return v;
 	}
 	
 	@Override
 	public String findReportsByCondition(FindTestEventPageByConditionDTO dto) {
-		/*
-		 * 2019-12-04 
-		 * 目前只为 bing 搜索作为样例展示, 估 hard code 此id
-		 */
-//		ATDemo(3L, "ATDemo")
-		dto.setModuleId(3L);
-//		bingDemo(1L, "bingDemo")
-		dto.setCaseId(1L);
+
+		if(!baseUtilCustom.hasAdminRole()) {
+//			ATDemo(3L, "ATDemo")
+			dto.setModuleId(3L);
+//			bingDemo(1L, "bingDemo")
+			dto.setCaseId(1L);
+		}
 		try {
 			JSONObject j = new JSONObject();
 			if(dto.getCreateStartTime() != null) {
@@ -126,6 +135,9 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	public ModelAndView findReportByTestEventId(FindReportByTestEventIdDTO dto) {
 		ModelAndView v = new ModelAndView("ATDemoJSP/atReportPost");
 		AutoTestJsonReportVO vo = null;
+		
+		Long visitCount = visitDataService.getVisitCount();
+		v.addObject("visitCount", visitCount);
 		
 		if(dto.getTestEventId() == null || dto.getTestEventId() <= 0) {
 			vo = buildErrorReportVO();

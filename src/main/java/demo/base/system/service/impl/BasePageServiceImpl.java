@@ -6,7 +6,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -16,16 +15,9 @@ import demo.base.system.pojo.constant.BlogViewConstant;
 import demo.base.system.service.BasePageService;
 import demo.base.user.pojo.type.RolesType;
 import demo.baseCommon.service.CommonService;
-import demo.config.costom_component.BaseUtilCustom;
 
 @Service
 public class BasePageServiceImpl extends CommonService implements BasePageService {
-
-	@Autowired
-	private BaseUtilCustom baseUtilCustom;
-
-	@Autowired
-	private SystemConstantService systemConstantService;
 
 	
 	@Override
@@ -45,10 +37,10 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 		view.setViewName(BlogViewConstant.home);
 //		view.setViewName(BaseViewConstant.homeV3);
 
-		view.addObject("title", systemConstantService.getValByName(SystemConstantStore.webSiteTitle));
+		view.addObject("title", constantService.getValByName(SystemConstantStore.webSiteTitle));
 		view.addObject("visitCount", visitCount);
 
-		String envName = systemConstantService.getValByName(SystemConstantStore.envName, true);
+		String envName = constantService.getValByName(SystemConstantStore.envName, true);
 		
 		if(!"dev".equals(envName)) {
 			if (StringUtils.isBlank(hostName)) {
@@ -57,8 +49,8 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 			}
 		}
 
-		if (hostName.contains(systemConstantService.getValByName(SystemConstantStore.hostName2))) {
-			if(!"1".contentEquals(systemConstantService.getValByName(SystemConstantStore.jobing))) {
+		if (hostName.contains(constantService.getValByName(SystemConstantStore.hostName2))) {
+			if(!"1".contentEquals(constantService.getValByName(SystemConstantStore.jobing))) {
 				view.setViewName(BaseViewConstant.empty);
 				return view;
 			}

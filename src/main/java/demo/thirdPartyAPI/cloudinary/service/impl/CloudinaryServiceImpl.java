@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.cloudinary.Cloudinary;
 
-import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.service.CommonService;
 import demo.thirdPartyAPI.cloudinary.service.CloudinaryService;
 import toolPack.cloudinary.pojo.constant.CloudinaryConstant;
@@ -20,9 +19,6 @@ import toolPack.cloudinary.util.CloudinaryCore;
 
 @Service
 public class CloudinaryServiceImpl extends CommonService implements CloudinaryService {
-	
-	@Autowired
-	private SystemConstantService constantService;
 	
 	@Autowired
 	private CloudinaryFunction cloudinaryFunction;

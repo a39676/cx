@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 
 import demo.base.system.pojo.bo.SystemConstantStore;
-import demo.base.system.service.impl.SystemConstantService;
 import demo.base.user.mapper.RolesMapper;
 import demo.base.user.pojo.po.Roles;
 import demo.base.user.pojo.type.RolesType;
@@ -23,8 +22,6 @@ public class RoleServiceImpl extends CommonService implements RoleService {
 
 	@Autowired
 	private RolesMapper roleMapper;
-	@Autowired
-	private SystemConstantService constantService;
 	
 	@Override
 	public void __initBaseRole() {

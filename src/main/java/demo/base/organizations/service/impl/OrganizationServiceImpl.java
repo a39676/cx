@@ -14,15 +14,12 @@ import demo.base.organizations.pojo.po.Organizations;
 import demo.base.organizations.pojo.result.OrgRegistResult;
 import demo.base.organizations.service.OrganizationService;
 import demo.baseCommon.service.CommonService;
-import demo.config.costom_component.BaseUtilCustom;
 
 @Service
 public class OrganizationServiceImpl extends CommonService implements OrganizationService {
 
 	private static final Logger log = LoggerFactory.getLogger(OrganizationServiceImpl.class);
 
-	@Autowired
-	private BaseUtilCustom baseUtil;
 
 	@Autowired
 	private OrganizationsMapper orgMapper;
@@ -37,7 +34,7 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 		Organizations po = new Organizations();
 		Long newId = snowFlake.getNextId();
 		po.setId(newId);
-		po.setCreateBy(baseUtil.getUserId());
+		po.setCreateBy(baseUtilCustom.getUserId());
 		po.setCreateTime(LocalDateTime.now());
 		po.setOrgName(dto.getOrgName());
 		po.setTopOrg(newId);
@@ -64,7 +61,7 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 		Organizations po = new Organizations();
 		Long newId = snowFlake.getNextId();
 		po.setId(newId);
-		po.setCreateBy(baseUtil.getUserId());
+		po.setCreateBy(baseUtilCustom.getUserId());
 		po.setCreateTime(LocalDateTime.now());
 		po.setOrgName(dto.getOrgName());
 		po.setTopOrg(dto.getTopOrg());

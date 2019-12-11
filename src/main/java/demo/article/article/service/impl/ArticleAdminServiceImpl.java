@@ -37,13 +37,10 @@ import demo.article.article.service.ArticleAdminService;
 import demo.article.article.service.ArticleChannelService;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
-import demo.config.costom_component.BaseUtilCustom;
 
 @Service
 public class ArticleAdminServiceImpl extends ArticleCommonService implements ArticleAdminService {
 
-	@Autowired
-	private BaseUtilCustom baseUtilCustom;
 	@Autowired
 	private ArticleLongMapper articleLongMapper;
 	@Autowired

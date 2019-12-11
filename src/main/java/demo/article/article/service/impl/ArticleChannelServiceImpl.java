@@ -35,23 +35,17 @@ import demo.article.article.pojo.type.ArticleChannelType;
 import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.article.article.service.ArticleChannelService;
 import demo.base.system.pojo.bo.SystemConstantStore;
-import demo.base.system.service.impl.SystemConstantService;
-import demo.config.costom_component.BaseUtilCustom;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class ArticleChannelServiceImpl extends ArticleCommonService implements ArticleChannelService {
 	
 	@Autowired
-	private SystemConstantService systemConstantService;
-	@Autowired
 	private ArticleUserDetailMapper articleUserDetailMapper;
 	@Autowired
 	private ArticleChannelsMapper articleChannelsMapper;
 	@Autowired
 	private FileUtilCustom ioUtil;
-	@Autowired
-	private BaseUtilCustom baseUtilCustom;
 	
 	/*
 	 * FIXME
@@ -65,7 +59,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		if (!loadArticleChannelRefreshMinute()) {
 			return false;
 		}
-		String uuidModeValue = systemConstantService.getValByName(SystemConstantStore.articleChannelUUIDMode);
+		String uuidModeValue = constantService.getValByName(SystemConstantStore.articleChannelUUIDMode);
 		boolean uuidMode = true;
 		if("0".equals(uuidModeValue)) {
 			uuidMode = false;
@@ -133,7 +127,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	}
 	
 	private boolean loadArticleChannelRefreshMinute() {
-		String tmpStr = systemConstantService.getValByName(SystemConstantStore.articleChannelRefreshMinute);
+		String tmpStr = constantService.getValByName(SystemConstantStore.articleChannelRefreshMinute);
 		if (numberUtil.matchInteger(tmpStr)) {
 			articleChannelRefreshMinute = Long.parseLong(tmpStr);
 			return true;
@@ -505,7 +499,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	
 	@Override
 	public String loadChannelPrefix(Integer channelId) {
-		String mainFolderPath = systemConstantService.getValByName(SystemConstantStore.articleChannelPrefixStorePath);
+		String mainFolderPath = constantService.getValByName(SystemConstantStore.articleChannelPrefixStorePath);
 		String strContent = "";
 		if(new File(mainFolderPath + channelId + ".txt").exists()) {
 			 strContent = ioUtil.getStringFromFile(mainFolderPath + channelId + ".txt");
@@ -522,11 +516,11 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 
 		if (StringUtils.isBlank(hostName) || uuidStore.getChannelList().size() < 1) {
 			channelList = removeChannelsForUnknow(channelList, uuidStore);
-		} else if (hostName.contains(systemConstantService.getValByName(SystemConstantStore.hostName1))) {
+		} else if (hostName.contains(constantService.getValByName(SystemConstantStore.hostName1))) {
 			channelList = removeChannelsFor3310For(channelList, uuidStore);
-		} else if (hostName.contains(systemConstantService.getValByName(SystemConstantStore.hostName2))) {
+		} else if (hostName.contains(constantService.getValByName(SystemConstantStore.hostName2))) {
 			channelList = removeChannelsForSDW(channelList, uuidStore);
-		} else if (hostName.contains(systemConstantService.getValByName(SystemConstantStore.hostName3))) {
+		} else if (hostName.contains(constantService.getValByName(SystemConstantStore.hostName3))) {
 			channelList = removeChannelsForER(channelList, uuidStore);
 		} else {
 			channelList = removeChannelsForUnknow(channelList, uuidStore);
@@ -573,7 +567,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	private GetArticleChannelsBO removeChannelsForUnknow(
 			GetArticleChannelsBO channelList,
 			ArticleUUIDChannelStoreBO uuidStore) {
-		String envName = systemConstantService.getValByName(SystemConstantStore.envName, true);
+		String envName = constantService.getValByName(SystemConstantStore.envName, true);
 		if("dev".equals(envName)) {
 			return channelList;
 		}

@@ -4,7 +4,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -16,9 +15,6 @@ import demo.baseCommon.service.CommonService;
 @Service
 public class ExceptionServiceImpl extends CommonService implements ExceptionService {
 
-	@Autowired
-	private SystemConstantService systemConstantService;
-	
 	private static final String[] description = { "神奇", "野生", "迷幻", "抽象", "清奇", "脱俗", "清新", "艳丽"};
 
 	private int getRan() {
@@ -51,7 +47,7 @@ public class ExceptionServiceImpl extends CommonService implements ExceptionServ
 	}
 	
 	private boolean findDebugStatus() {
-		String debugStatusStr = systemConstantService.getValByName(SystemConstantStore.debugStatus);
+		String debugStatusStr = constantService.getValByName(SystemConstantStore.debugStatus);
 		if(DebugStatusConstant.debuging.equals(debugStatusStr)) {
 			return true;
 		} else {

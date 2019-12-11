@@ -18,7 +18,6 @@ import demo.base.user.mapper.UserIpMapper;
 import demo.base.user.pojo.dto.BatchInsertUserIpDTO;
 import demo.base.user.pojo.po.UserIp;
 import demo.baseCommon.service.CommonService;
-import demo.config.costom_component.BaseUtilCustom;
 import demo.tool.mapper.VisitCountMapper;
 import demo.tool.pojo.dto.GetVisitCountTotalDTO;
 import demo.tool.pojo.po.VisitCount;
@@ -34,8 +33,6 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 	private VisitCountMapper visitCountMapper;
 	@Autowired
 	private UserIpMapper userIpMapper;
-	@Autowired
-	private BaseUtilCustom baseUtilCustom;
 	@Autowired
 	private NumericUtilCustom numberUtil;
 	

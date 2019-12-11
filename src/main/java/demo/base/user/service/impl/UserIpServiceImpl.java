@@ -12,15 +12,12 @@ import demo.base.user.pojo.po.UserIp;
 import demo.base.user.pojo.vo.UserIpVO;
 import demo.base.user.service.UserIpService;
 import demo.baseCommon.service.CommonService;
-import demo.config.costom_component.BaseUtilCustom;
 
 @Service
 public class UserIpServiceImpl extends CommonService implements UserIpService {
 
 	@Autowired
 	private UserIpMapper ipMapper;
-	@Autowired
-	private BaseUtilCustom baseUtilCustom;
 	
 	@Override
 	public List<UserIpVO> findIpRecordLastMonth() {

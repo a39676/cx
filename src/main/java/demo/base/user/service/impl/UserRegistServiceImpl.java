@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.pojo.bo.SystemConstantStore;
-import demo.base.system.service.impl.SystemConstantService;
 import demo.base.user.mapper.UserRegistMapper;
 import demo.base.user.mapper.UsersDetailMapper;
 import demo.base.user.mapper.UsersMapper;
@@ -59,8 +58,6 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	@Autowired
 	private UsersDetailMapper usersDetailMapper;
 	
-	@Autowired
-	private SystemConstantService systemConstantService;
 	@Autowired
 	private CustomPasswordEncoder passwordEncoder;
 	@Autowired
@@ -202,7 +199,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		userAuthService.insertBaseUserAuth(newUserId, AuthType.USER);
 		
 		result.normalSuccess();
-		result.setMessage("\"" + StringEscapeUtils.unescapeHtml(nickNameAfterEscapeHtml) + "\" 已成功注册,谢谢您的关注! 如需激活邮箱,请使用注册邮箱: " + param.getEmail() + ",发送: "+ mailKey + " 到" + systemConstantService.getValByName(SystemConstantStore.adminMailName));
+		result.setMessage("\"" + StringEscapeUtils.unescapeHtml(nickNameAfterEscapeHtml) + "\" 已成功注册,谢谢您的关注! 如需激活邮箱,请使用注册邮箱: " + param.getEmail() + ",发送: "+ mailKey + " 到" + constantService.getValByName(SystemConstantStore.adminMailName));
 
 		/*
 		 * 暂时停止主动发送激活邮件,改为用户发送激活邮件 2018-06-28

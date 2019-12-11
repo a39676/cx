@@ -7,20 +7,18 @@ import org.springframework.stereotype.Service;
 
 import demo.base.admin.service.AdminService;
 import demo.base.system.pojo.bo.SystemConstantStore;
-import demo.base.system.service.impl.SystemConstantService;
 import demo.base.user.mapper.UserIpMapper;
 import demo.base.user.pojo.dto.UserIpDeleteDTO;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.baseCommon.service.CommonService;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
-public class AdminServiceImpl implements AdminService {
+public class AdminServiceImpl extends CommonService implements AdminService {
 	
 	@Autowired
 	private UserIpMapper userIpMapper;
-	@Autowired
-	private SystemConstantService systemConstantService;
 	@Autowired
 	private FileUtilCustom ioUtil;
 	
@@ -40,16 +38,16 @@ public class AdminServiceImpl implements AdminService {
 	
 	@Override
 	public void loadHomepageAnnouncementStr() {
-		String filePath = systemConstantService.getValByName(SystemConstantStore.homepageAnnouncement);
+		String filePath = constantService.getValByName(SystemConstantStore.homepageAnnouncement);
 		File f = new File(filePath);
 		if(f.exists()) {
 			String strContent = ioUtil.getStringFromFile(filePath);
-			systemConstantService.setValByName(SystemConstantStore.homepageAnnouncementStr, strContent);
+			constantService.setValByName(SystemConstantStore.homepageAnnouncementStr, strContent);
 		}
 	}
 	
 	@Override
 	public void loadHomepageAnnouncementStr(String strContent) {
-		systemConstantService.setValByName(SystemConstantStore.homepageAnnouncementStr, strContent);
+		constantService.setValByName(SystemConstantStore.homepageAnnouncementStr, strContent);
 	}
 }

@@ -16,25 +16,17 @@ import demo.article.article.pojo.result.ArticleBurnResult;
 import demo.article.article.pojo.result.CreatingBurnMessageResult;
 import demo.article.article.service.ArticleBurnService;
 import demo.base.system.pojo.bo.SystemConstantStore;
-import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
-import demo.config.costom_component.BaseUtilCustom;
 import net.sf.json.JSONObject;
 
 @Service
 public class ArticleBurnServiceImpl extends CommonService implements ArticleBurnService {
 
 	@Autowired
-	private SystemConstantService systemConstantService;
-	
-	@Autowired
 	private ArticleShortMapper articleShortMapper;
 	@Autowired
 	private ArticleBurnMapper articleBurnMapper;
-	
-	@Autowired
-	private BaseUtilCustom baseUtilCustom;
 	
 	@Override
 	public CreatingBurnMessageResult creatingBurnMessage(JSONObject jsonInput) {
@@ -45,7 +37,7 @@ public class ArticleBurnServiceImpl extends CommonService implements ArticleBurn
 		}
 		String contentAfterEscapeHtml = StringEscapeUtils.escapeHtml(jsonInput.getString("content"));
 		if (contentAfterEscapeHtml.length() > Integer
-				.parseInt(systemConstantService.getValByName(SystemConstantStore.articleShortMaxLength))) {
+				.parseInt(constantService.getValByName(SystemConstantStore.articleShortMaxLength))) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}

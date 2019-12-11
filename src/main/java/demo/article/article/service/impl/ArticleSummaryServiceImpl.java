@@ -44,9 +44,7 @@ import demo.article.articleComment.controller.ArticleCommentAdminController;
 import demo.article.articleComment.controller.ArticleCommentController;
 import demo.article.articleComment.pojo.bo.ArticleCommentCountByArticleIdBO;
 import demo.base.system.pojo.bo.SystemConstantStore;
-import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.type.ResultTypeCX;
-import demo.config.costom_component.BaseUtilCustom;
 import demo.toyParts.vcode.pojo.param.GetVcodeByValueParam;
 import demo.toyParts.vcode.pojo.po.VCode;
 import demo.toyParts.vcode.service.VCodeService;
@@ -62,8 +60,6 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 	@Autowired
 	private ArticleCatchVCodeService articleCatchVCodeService;
 	@Autowired
-	private SystemConstantService systemConstantService;
-	@Autowired
 	private ArticleViewService articleViewService;
 	@Autowired
 	private ArticleLongSummaryMapper articleLongSummaryMapper;
@@ -75,8 +71,6 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 	
 	@Autowired
 	private FileUtilCustom ioUtil;
-	@Autowired
-	private BaseUtilCustom baseUtilCustom;
 	
 	@Override
 	public int insertArticleLongSummary(Long userId, Long articleId, String title, String finalFilePath) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException, InvalidAlgorithmParameterException {
@@ -309,7 +303,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		
 		/* 置限制只可浏览某时点之后的文章 */
 		if(!controllerParam.getHasAdminRole()) {
-			String normalUserMaxReadingMonth = systemConstantService.getValByName(SystemConstantStore.normalUserMaxReadingMonth);
+			String normalUserMaxReadingMonth = constantService.getValByName(SystemConstantStore.normalUserMaxReadingMonth);
 			int maxReadingMonth = 1;
 			if(numberUtil.matchInteger(normalUserMaxReadingMonth)) {
 				maxReadingMonth = Integer.parseInt(normalUserMaxReadingMonth);

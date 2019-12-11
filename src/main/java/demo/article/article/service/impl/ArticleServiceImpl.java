@@ -68,12 +68,10 @@ import demo.article.article.service.ArticleSummaryService;
 import demo.article.article.service.ArticleViewService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.constant.BaseViewConstant;
-import demo.base.system.service.impl.SystemConstantService;
 import demo.base.user.controller.UsersController;
 import demo.base.user.pojo.type.RolesType;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
-import demo.config.costom_component.BaseUtilCustom;
 import demo.tool.service.TextFilter;
 import demo.tool.service.ValidRegexToolService;
 import net.sf.json.JSONObject;
@@ -83,12 +81,8 @@ import toolPack.ioHandle.FileUtilCustom;
 public class ArticleServiceImpl extends ArticleCommonService implements ArticleService {
 
 	@Autowired
-	private BaseUtilCustom baseUtilCustom;
-	@Autowired
 	private UsersController userController;
 	
-	@Autowired
-	private SystemConstantService systemConstantService;
 	@Autowired
 	private ArticleChannelService channelService;
 	@Autowired
@@ -115,17 +109,17 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	private ValidRegexToolService validRegexToolService;
 	
 	private String getArticleStorePrefixPath() {
-		return systemConstantService.getValByName(SystemConstantStore.articleStorePrefixPath);
+		return constantService.getValByName(SystemConstantStore.articleStorePrefixPath);
 	}
 	
 	private String getArticleSummaryStorePrefixPath() {
-		return systemConstantService.getValByName(SystemConstantStore.articleSummaryStorePrefixPath);
+		return constantService.getValByName(SystemConstantStore.articleSummaryStorePrefixPath);
 	}
 
 	private Long loadMaxArticleLength() {
 		Long maxArticleLength = 0L;
 		try {
-			String maxLengthStr = systemConstantService.getValByName(SystemConstantStore.maxArticleLength);
+			String maxLengthStr = constantService.getValByName(SystemConstantStore.maxArticleLength);
 			if(maxLengthStr != null) {
 				maxArticleLength = Long.parseLong(maxLengthStr);
 			}
@@ -184,7 +178,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	
 	private CommonResultCX batchCreateArticleLong(Long userId, CreateArticleParam controllerParam) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, IOException {
 		CommonResultCX result = new CommonResultCX();
-		String superAdminKey = systemConstantService.getValByName(SystemConstantStore.superAdminKey);
+		String superAdminKey = constantService.getValByName(SystemConstantStore.superAdminKey);
 		if(StringUtils.isBlank(superAdminKey) 
 				|| StringUtils.isBlank(controllerParam.getSuperAdminKey()) 
 				|| !superAdminKey.equals(controllerParam.getSuperAdminKey())) {

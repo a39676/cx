@@ -43,14 +43,11 @@ import demo.article.article.pojo.vo.ArticleEvaluationStatisticsVO;
 import demo.article.article.service.ArticleEvaluationService;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
-import demo.config.costom_component.BaseUtilCustom;
 import net.sf.json.JSONObject;
 
 @Service
 public class ArticleEvaluationServiceImpl extends ArticleCommonService implements ArticleEvaluationService {
 
-	@Autowired
-	private BaseUtilCustom baseUtilCustom;
 	@Autowired
 	private ArticleLongMapper articleLongMapper;
 	@Autowired

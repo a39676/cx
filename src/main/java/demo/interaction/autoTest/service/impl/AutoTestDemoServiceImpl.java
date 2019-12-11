@@ -18,10 +18,10 @@ import autoTest.jsonReport.pojo.constant.AutoTestJsonReportKeyConstant;
 import autoTest.jsonReport.pojo.dto.FindReportByTestEventIdDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
 import autoTest.jsonReport.pojo.result.FindReportByTestEventIdResult;
-import autoTest.testEvent.pojo.constant.BingDemoConstant;
-import autoTest.testEvent.pojo.constant.BingDemoUrl;
-import autoTest.testEvent.pojo.dto.InsertBingDemoTestEventDTO;
-import autoTest.testEvent.pojo.result.InsertBingDemoEventResult;
+import autoTest.testEvent.pojo.constant.SearchingDemoConstant;
+import autoTest.testEvent.pojo.constant.SearchingDemoUrl;
+import autoTest.testEvent.pojo.dto.InsertSearchingDemoTestEventDTO;
+import autoTest.testEvent.pojo.result.InsertSearchingDemoEventResult;
 import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.constant.ServerHost;
 import demo.base.system.pojo.bo.SystemConstantStore;
@@ -83,8 +83,6 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 		if(!baseUtilCustom.hasAdminRole()) {
 //			ATDemo(3L, "ATDemo")
 			dto.setModuleId(3L);
-//			bingDemo(1L, "bingDemo")
-			dto.setCaseId(1L);
 		}
 		try {
 			JSONObject j = new JSONObject();
@@ -273,24 +271,27 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	}
 
 	@Override
-	public InsertBingDemoEventResult insertBingDemoTestEvent(InsertBingDemoTestEventDTO dto, HttpServletRequest request) {
-		InsertBingDemoEventResult r = new InsertBingDemoEventResult();
+	public InsertSearchingDemoEventResult insertSearchingDemoTestEvent(InsertSearchingDemoTestEventDTO dto, HttpServletRequest request) {
+		InsertSearchingDemoEventResult r = new InsertSearchingDemoEventResult();
 		
 		int count = visitDataService.checkATDemoVisitData(request);
-		if(count >= BingDemoConstant.maxInsertCountIn30Minutes) {
-			r.failWithMessage("短时间内加入的任务太多了, 请稍后再试");
-			return r;
+		if(!"dev".equals(constantService.getValByName(SystemConstantStore.envName))) {
+			if(count >= SearchingDemoConstant.maxInsertCountIn30Minutes) {
+				r.failWithMessage("短时间内加入的任务太多了, 请稍后再试");
+				return r;
+			}
 		}
 		
 		try {
-			JSONObject json = new JSONObject();
+			JSONObject requestJson = new JSONObject();
 			if(dto.getAppointment() != null) {
-				json.put("appointment", localDateTimeHandler.dateToStr(dto.getAppointment()));
+				requestJson.put("appointment", localDateTimeHandler.dateToStr(dto.getAppointment()));
 			}
-			json.put("searchKeyWord", dto.getSearchKeyWord());
+			requestJson.put("searchKeyWord", dto.getSearchKeyWord());
+			requestJson.put("caseId", dto.getCaseId());
 	        
-			String url = ServerHost.localHost10002 + BingDemoUrl.root + BingDemoUrl.insert;
-			String response = String.valueOf(httpUtil.sendPostRestful(url, json.toString()));
+			String url = ServerHost.localHost10002 + SearchingDemoUrl.root + SearchingDemoUrl.insert;
+			String response = String.valueOf(httpUtil.sendPostRestful(url, requestJson.toString()));
 
 			JSONObject responseJson = JSONObject.fromObject(response);
 			
@@ -298,12 +299,11 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 			r.setEventId(responseJson.getLong("eventId"));
 			r.setResult(responseJson.getString("result"));
 			r.setWaitingEventCount(responseJson.getInt("waitingEventCount"));
-			r.setEventId(responseJson.getLong("eventId"));
 			if(r.getResult() != null && "0".equals(r.getResult())) {
 				r.setIsSuccess();
 				visitDataService.insertATDemoVisitData(request);
 				r.setHasInsertCount(count + 1);
-				r.setMaxInsertCount(BingDemoConstant.maxInsertCountIn30Minutes);
+				r.setMaxInsertCount(SearchingDemoConstant.maxInsertCountIn30Minutes);
 				r.setMessage("/atDemo/findReportByTestEventId?testEventId=" + r.getEventId());
 			} else {
 				r.setMessage(responseJson.getString("message"));

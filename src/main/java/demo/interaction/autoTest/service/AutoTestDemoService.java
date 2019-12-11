@@ -6,8 +6,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import autoTest.jsonReport.pojo.dto.FindReportByTestEventIdDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
-import autoTest.testEvent.pojo.dto.InsertBingDemoTestEventDTO;
-import autoTest.testEvent.pojo.result.InsertBingDemoEventResult;
+import autoTest.testEvent.pojo.dto.InsertSearchingDemoTestEventDTO;
+import autoTest.testEvent.pojo.result.InsertSearchingDemoEventResult;
 
 public interface AutoTestDemoService {
 
@@ -35,6 +35,6 @@ public interface AutoTestDemoService {
 	 * @param request
 	 * @return
 	 */
-	InsertBingDemoEventResult insertBingDemoTestEvent(InsertBingDemoTestEventDTO dto, HttpServletRequest request);
+	InsertSearchingDemoEventResult insertSearchingDemoTestEvent(InsertSearchingDemoTestEventDTO dto, HttpServletRequest request);
 
 }

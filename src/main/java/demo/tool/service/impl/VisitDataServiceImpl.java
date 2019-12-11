@@ -176,6 +176,6 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 	}
 	
 	private String buildBingDemoInsertCountingKeyPrefix(IpRecordBO record) {
-		return SystemRedisKey.bingDemoInsertCountingKeyPrefix + "_" + record.getForwardAddr() + "_" + record.getRemoteAddr();
+		return SystemRedisKey.searchingDemoInsertCountingKeyPrefix + "_" + record.getForwardAddr() + "_" + record.getRemoteAddr();
 	}
 }

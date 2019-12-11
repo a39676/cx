@@ -46,14 +46,14 @@
           <div class="row">
             <div class="form-check">
               <input class="form-check-input" type="radio" id="searchReportRadio" name="rowType" checked="checked" value="查询日志报告">
-              <label class="form-check-label badge badge-primary" for="searchReportRadio">查询日志报告</label>
+              <label class="form-check-label badge badge-success" for="searchReportRadio">查询日志报告</label>
             </div>
           </div>
           <div class="row" id="searchReportRow">
             <div class="col-md-12 mx-auto">
               <form id="searchConditionArea" markTime="" loadingFlag="">
                 <div class="control-group">
-                  <span class="badge badge-warning">任务创建时间范围</span>
+                  <span class="badge badge-info">任务创建时间范围</span>
                   <input type="date" id="createStartDate" value="2019-01-01"> 
                   <input type="time" time="HH:mm:ss" id="createStartTime" step="1" value="00:00:00">
                   <span>~</span>
@@ -63,15 +63,15 @@
                 <div class="control-group">
                   <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" id="taskHadRun" name="taskRunType" checked="checked" value="true">
-                    <label class="form-check-label badge badge-primary" for="searchReportRadio">任务已启动</label>
+                    <label class="form-check-label badge badge-success" for="taskHadRun">任务已启动</label>
                   </div>
                   <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" id="taskNotRun" name="taskRunType" value="false">
-                    <label class="form-check-label badge badge-primary" for="searchReportRadio">任务未启动</label>
+                    <label class="form-check-label badge badge-secondary" for="taskNotRun">任务未启动</label>
                   </div>
                 </div>
                 <div class="control-group">
-                  <span class="badge badge-warning">任务启动时间范围</span>
+                  <span class="badge badge-info">任务启动时间范围</span>
                   <input type="date" id="runTimeStartDate" value="2019-01-01"> 
                   <input type="time" time="HH:mm:ss" id="runTimeStartTime"step="1" value="00:00:00">
                   <span>~</span>
@@ -79,54 +79,62 @@
                   <input type="time" time="HH:mm:ss" id="runTimeEndTime" step="1" value="23:59:59">
                 </div>                
                 <div class="control-group">
-                  <span class="badge badge-warning">请选择案例</span>
-                  <select id="moduleIdSelector">
-                    <option value="">All</option>
-                    <sec:authorize access="hasRole('ROLE_ADMIN')">
+                  <span class="badge badge-info">请选择案例</span>
+                  <sec:authorize access="hasRole('ROLE_ADMIN')">
+                    <select id="moduleIdSelector">
+                      <option value="">All</option>
                       <c:forEach items="${modules}" var="module" >
                         <option value="${module.key}">${module.value}</option>
                       </c:forEach>
-                    </sec:authorize>
-                    <option value="3">bing搜索 Demo</option>
-                  </select>
+                    </select>
+                  </sec:authorize>
+                  <sec:authorize access="hasRole('ROLE_ADMIN')">
+                    <div class="control-group">
+                      <span class="badge badge-info">caseId</span>
+                      <input type="text" name="" id="caseId" placeholder="caseId">
+                    </div>
+                  </sec:authorize>
+                  <sec:authorize access="!hasRole('ROLE_ADMIN')">
+                    <select id="caseIdSelector">
+                      <option value="">All</option>
+                      <option value="1">Bing 搜索 demo</option>
+                      <option value="2">Baidu 搜索 demo</option>
+                    </select>
+                  </sec:authorize>
                 </div>
-                <sec:authorize access="hasRole('ROLE_ADMIN')">
-                  <div class="control-group">
-                    <span class="badge badge-warning">caseId</span>
-                    <input type="text" name="" id="caseId" placeholder="caseId">
-                  </div>
-                </sec:authorize>
                 <div class="control-group">
-                  <span class="badge badge-warning">具体任务ID(可选)</span><input type="number" min="0" step="1" id="id" placeholder="具体任务ID(可选)">
+                  <span class="badge badge-info">具体任务ID(可选)</span><input type="number" min="0" step="1" id="id" placeholder="具体任务ID(可选)">
                 </div>
               </form>
             </div>
           </div>
+          <hr>
           <div class="row">
             <div class="form-check">
               <input class="form-check-input" type="radio" id="insertTestEventRadio" name="rowType" value="新增测试任务">
-              <label class="form-check-label badge badge-primary" for="insertTestEventRadio">新增测试任务</label>
+              <label class="form-check-label badge badge-secondary" for="insertTestEventRadio">新增测试任务</label>
             </div>
           </div>
           <div class="row" id="insertTestEventRow" style="display: none;">
             <div class="col-md-12 mx-auto">
               <form id="insertTestEventForm">
                 <div class="control-group">
-                  <span class="badge badge-warning">请选择案例</span>
-                  <select id="">
-                    <option value="3">bing搜索 Demo</option>
+                  <span class="badge badge-info">请选择案例</span>
+                  <select id="insertNewTestEventCaseIdSelector">
+                    <option value="1">Bing 搜索 demo</option>
+                    <option value="2">Baidu 搜索 demo</option>
                   </select>
                 </div>
                 <div class="control-group">
-                  <span class="badge badge-warning">搜索关键字</span>
+                  <span class="badge badge-info">搜索关键字</span>
                   <input type="text" size="35" id="searchKeyWord" placeholder="请输入搜索关键字, 若空, 默认为 testDemo">
                 </div>
                 <div class="control-group">
-                  <span class="badge badge-warning">预约运行时间(可空)</span>
+                  <span class="badge badge-info">预约运行时间(可空)</span>
                   <input type="date" id="appointmentDate">
                   <input type="time" time="HH:mm:ss" id="appointmentTime" step="1">
                 </div>
-                <span class="btn btn-sm btn-primary" id="insertTestEventButton">加入本次任务</span>
+                <span class="btn btn-sm btn-warning" id="insertTestEventButton">加入本次任务</span>
                 <label id="insertTestEventResult"></label>
               </form>
             </div>
@@ -138,7 +146,7 @@
           <hr>
           <div class="row">
             <div class="col-md-12 mx-auto">
-              <div class="spinner-border text-warning" role="status" id="loadingImg">
+              <div class="spinner-border text-info" role="status" id="loadingImg">
                 <span class="sr-only">Loading...</span>
               </div>
               <button class="btn btn-sm btn-success" id="loadMoreButton"><b>LOAD MORE</b></button>
@@ -201,11 +209,17 @@
       var searchConditionArea = $("#searchConditionArea");
       
       var id = document.getElementById("id").value;
-      var moduleIdSelector = document.getElementById("moduleIdSelector");
-      var moduleId = moduleIdSelector.options[moduleIdSelector.selectedIndex].value;
+      var moduleId = "";
+      if(document.getElementById("moduleIdSelector") != null) {
+        var moduleIdSelector = document.getElementById("moduleIdSelector");
+        moduleId = moduleIdSelector.options[moduleIdSelector.selectedIndex].value;
+      }
       var caseId = "";
       if(document.getElementById("caseId") != null) {
         caseId = document.getElementById("caseId").value;
+      } else {
+        var caseIdSelector = document.getElementById("caseIdSelector");
+        caseId = caseIdSelector.options[caseIdSelector.selectedIndex].value;
       }
       var markTime = searchConditionArea.attr("markTime");
 
@@ -231,48 +245,6 @@
       } else {
         runFlag = false;
       }
-
-      // if(sourceCreateStartDate.length > 2 && sourceCreateStartTime.length < 2) {
-      //   sourceCreateStartTime = "00:00:00";
-      // } else if (sourceCreateStartDate.length < 2 && sourceCreateStartTime.length > 2) {
-      //   sourceCreateStartDate = getDateNow();
-      // } else if (sourceCreateStartDate.length < 2 && sourceCreateStartTime.length < 2) {
-      //   sourceCreateStartDate = getDateNow();
-      //   sourceCreateStartTime = getTimeNow();
-      // }
-      // createStartTime = "" + sourceCreateStartDate + " " + timeFormat(sourceCreateStartTime);
-
-      // if(sourceCreateEndDate.length > 2 && sourceCreateEndTime.length < 2) {
-      //   sourceCreateEndTime = "00:00:00";
-      // } else if (sourceCreateEndDate.length < 2 && sourceCreateEndTime.length > 2) {
-      //   sourceCreateEndDate = getDateNow();
-      // } else if (sourceCreateEndDate.length < 2 && sourceCreateEndTime.length < 2) {
-      //   sourceCreateEndDate = getDateNow();
-      //   sourceCreateEndTime = getTimeNow();
-      // }
-      // createEndTime = "" + sourceCreateEndDate + " " + timeFormat(sourceCreateEndTime);
-
-      // if(sourceRunTimeStartDate.length > 2 && sourceRunTimeStartTime.length < 2) {
-      //   sourceRunTimeStartTime = "00:00:00";
-      // } else if (sourceRunTimeStartDate.length < 2 && sourceRunTimeStartTime.length > 2) {
-      //   sourceRunTimeStartDate = getDateNow();
-      // } else if (sourceRunTimeStartDate.length < 2 && sourceRunTimeStartTime.length < 2) {
-      //   sourceRunTimeStartDate = getDateNow();
-      //   sourceRunTimeStartTime = getTimeNow();
-      // }
-      // runTimeStartTime = "" + sourceRunTimeStartDate + " " + timeFormat(sourceRunTimeStartTime);
-
-      // if(sourceRunTimeEndDate.length > 2 && sourceRunTimeEndTime.length < 2) {
-      //   sourceRunTimeEndTime = "00:00:00";
-      // } else if (sourceRunTimeEndDate.length < 2 && sourceRunTimeEndTime.length > 2) {
-      //   sourceRunTimeEndDate = getDateNow();
-      // } else if (sourceRunTimeEndDate.length < 2 && sourceRunTimeEndTime.length < 2) {
-      //   sourceRunTimeEndDate = getDateNow();
-      //   sourceRunTimeEndTime = getTimeNow();
-      // }
-      // runTimeEndTime = "" + sourceRunTimeEndDate + " " + timeFormat(sourceRunTimeEndTime);
-
-
 
       $("#loadingImg").fadeIn(150);    
       if(searchConditionArea.attr("loadingFlag") == "1") {
@@ -384,13 +356,23 @@
     loadReportSummary();
 
     $("input[name='rowType']").click(function () {
+      // searchReportRadio
+      // insertTestEventRadio
       var tmpv = $("#searchReportRadio:checked").val();
       if(tmpv != null && tmpv.length) {
         document.getElementById("insertTestEventRow").style.display = "none";
         document.getElementById("searchReportRow").style.display = "";
+        $("label[for='searchReportRadio']").addClass("badge-success");
+        $("label[for='searchReportRadio']").removeClass("badge-secondary");
+        $("label[for='insertTestEventRadio']").addClass("badge-secondary");
+        $("label[for='insertTestEventRadio']").removeClass("badge-success");
       } else {
         document.getElementById("insertTestEventRow").style.display = "";
         document.getElementById("searchReportRow").style.display = "none";
+        $("label[for='searchReportRadio']").removeClass("badge-success");
+        $("label[for='searchReportRadio']").addClass("badge-secondary");
+        $("label[for='insertTestEventRadio']").removeClass("badge-secondary");
+        $("label[for='insertTestEventRadio']").addClass("badge-success");
       }
     })
 
@@ -402,25 +384,18 @@
       var sourceAppointmentDate = document.getElementById("appointmentDate").value;
       var sourceAppointmentTime = document.getElementById("appointmentTime").value;
       
-      var appointment = null;
+      var appointment = buildDateTime(sourceAppointmentDate, sourceAppointmentTime);
 
-      if(sourceAppointmentDate.length > 2 && sourceAppointmentTime.length < 2) {
-        sourceAppointmentTime = "00:00:00";
-      } else if (sourceAppointmentDate.length < 2 && sourceAppointmentTime.length > 2) {
-        sourceAppointmentDate = getDateNow();
-      } else if (sourceAppointmentDate.length < 2 && sourceAppointmentTime.length < 2) {
-        sourceAppointmentDate = getDateNow();
-        sourceAppointmentTime = getTimeNow();
-      }
-
-      appointment = "" + sourceAppointmentDate + " " + timeFormat(sourceAppointmentTime);
+      var insertNewTestEventCaseIdSelector = document.getElementById("insertNewTestEventCaseIdSelector");
+      var caseId = insertNewTestEventCaseIdSelector.options[insertNewTestEventCaseIdSelector.selectedIndex].value;
 
       var jsonOutput = {
-        appointment: appointment,
-        searchKeyWord:searchKeyWord
+        appointment:appointment,
+        searchKeyWord:searchKeyWord,
+        caseId:caseId
       };
 
-      var url = "/atDemo/insertBingDemoTestEvent";
+      var url = "/atDemo/insertSearchingDemoTestEvent";
       $.ajax({
         type : "POST",  
         async : true,
@@ -460,6 +435,10 @@
       document.getElementById("runTimeStartTime").disabled = true;
       document.getElementById("runTimeEndDate").disabled = true;
       document.getElementById("runTimeEndTime").disabled = true;
+      $("label[for='taskHadRun']").removeClass("badge-success");
+      $("label[for='taskHadRun']").addClass("badge-secondary");
+      $("label[for='taskNotRun']").removeClass("badge-secondary");
+      $("label[for='taskNotRun']").addClass("badge-success");
     })
 
     $("#taskHadRun").click(function () {
@@ -467,6 +446,10 @@
       document.getElementById("runTimeStartTime").disabled = false;
       document.getElementById("runTimeEndDate").disabled = false;
       document.getElementById("runTimeEndTime").disabled = false;
+      $("label[for='taskHadRun']").addClass("badge-success");
+      $("label[for='taskHadRun']").removeClass("badge-secondary");
+      $("label[for='taskNotRun']").addClass("badge-secondary");
+      $("label[for='taskNotRun']").removeClass("badge-success");
     })
   });
   </script>

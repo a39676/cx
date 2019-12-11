@@ -15,8 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 import autoTest.jsonReport.pojo.constant.AutoTestInteractionUrl;
 import autoTest.jsonReport.pojo.dto.FindReportByTestEventIdDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
-import autoTest.testEvent.pojo.dto.InsertBingDemoTestEventDTO;
-import autoTest.testEvent.pojo.result.InsertBingDemoEventResult;
+import autoTest.testEvent.pojo.dto.InsertSearchingDemoTestEventDTO;
+import autoTest.testEvent.pojo.result.InsertSearchingDemoEventResult;
 import demo.baseCommon.controller.CommonController;
 import demo.interaction.autoTest.pojo.constant.AutoTestUrl;
 import demo.interaction.autoTest.service.AutoTestDemoService;
@@ -52,9 +52,9 @@ public class AutoTestDemoController extends CommonController {
 		return atDemoService.findReportByTestEventId(dto);
 	}
 	
-	@PostMapping(value = AutoTestInteractionUrl.insertBingDemoTestEvent)
+	@PostMapping(value = AutoTestInteractionUrl.insertSearchingDemoTestEvent)
 	@ResponseBody
-	public InsertBingDemoEventResult insertBingDemoTestEvent(@RequestBody InsertBingDemoTestEventDTO dto, HttpServletRequest request) {
-		return atDemoService.insertBingDemoTestEvent(dto, request);
+	public InsertSearchingDemoEventResult insertSearchingDemoTestEvent(@RequestBody InsertSearchingDemoTestEventDTO dto, HttpServletRequest request) {
+		return atDemoService.insertSearchingDemoTestEvent(dto, request);
 	}
 }

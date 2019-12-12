@@ -2,19 +2,19 @@ package demo.article.article.pojo.dto;
 
 public class EditArticleLongDTO {
 
-	private Long articleId;
+	private String privateKey;
 
-	public Long getArticleId() {
-		return articleId;
+	public String getPrivateKey() {
+		return privateKey;
 	}
 
-	public void setArticleId(Long articleId) {
-		this.articleId = articleId;
+	public void setPrivateKey(String privateKey) {
+		this.privateKey = privateKey;
 	}
 
 	@Override
 	public String toString() {
-		return "EditArticleLongDTO [articleId=" + articleId + "]";
+		return "EditArticleLongDTO [privateKey=" + privateKey + "]";
 	}
 
 }

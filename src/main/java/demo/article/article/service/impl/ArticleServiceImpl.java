@@ -582,22 +582,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	private void fillArticleContent(ArticleLongVO articleLongVO, String pk, Long userId) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String strContent = ioUtil.getStringFromFile(articleLongVO.getPath());
-		/*
-		 * 2019-11-21
-		 * 必须被富文本编辑器取代
-		 */
-//		List<String> strLines = Arrays.asList(strContent.split(System.lineSeparator()));
-//		StringBuffer outputLines = new StringBuffer();
-//		String line = "";
-//		for(int i = 0; i < strLines.size(); i++) {
-//			line = strLines.get(i);
-//			if(line.matches(imageHttpUrlPattern)) {
-//				line = "<a target=\"_blank\" href=\"" + line + "\">查看原图</a><br>"
-//						+ "<img name=\"articleImage\" pk=\""+ pk +"\" fold=\"1\" src=\"" + line + "\" style=\"width: 100px; height: 100px;\">"
-//						+ "<br>";
-//			}
-//			outputLines.append(line + "<br>");
-//		}
 		articleLongVO.setContentLines(strContent);
 		articleLongVO.setCreateDateString(sdf.format(articleLongVO.getCreateTime()));
 		if(articleLongVO.getEditTime() != null) {
@@ -782,17 +766,55 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 				RolesType.ROLE_SUPER_ADMIN.getName());
 	}
 
-	public void readyToEditArticleLong(EditArticleLongDTO dto) {
+	public ModelAndView readyToEditArticleLong(EditArticleLongDTO dto) {
 		/*
 		 * TODO
 		 * 返回编辑文章的页面
 		 * 准备复用 createArticleLong?
 		 */
+		ModelAndView view = null;
+		Long userId = baseUtilCustom.getUserId();
 		
-		if(dto.getArticleId() == null) {
+		if(StringUtils.isBlank(dto.getPrivateKey())) {
 //			TODO
 		}
 		
-		ModelAndView view = new ModelAndView(ArticleViewConstant.creatingArticleLong);
+		ArticleLongVO vo = null;
+		
+		Long articleId = decryptArticlePrivateKey(dto.getPrivateKey());
+		if(articleId == null) {
+//			TODO
+			vo = new ArticleLongVO();
+			vo.setContentLines(ResultTypeCX.errorParam.getName());
+		}
+		
+		articleViewService.insertOrUpdateViewCount(articleId);
+		
+		FindArticleLongByConditionDTO mapperDTO = new FindArticleLongByConditionDTO();
+		BeanUtils.copyProperties(dto, mapperDTO);
+		mapperDTO.setArticleId(articleId);
+		vo = articleLongMapper.findArticleLongByDecryptId(mapperDTO);
+		
+		if(vo == null) {
+//			TODO
+			vo = new ArticleLongVO();
+			vo.setContentLines(ResultTypeCX.errorWhenArticleLoad.getName());
+		}
+		
+		if(vo.getUserId() != userId) {
+//			TODO
+		}
+		
+		if(vo.getIsDelete() && !baseUtilCustom.hasAdminRole()) {
+			vo = new ArticleLongVO();
+			vo.setContentLines("这篇文已经失踪了...请联系管理员...");
+//			TODO
+		}
+		
+		fillArticleContent(vo, dto.getPrivateKey(), userId);
+		
+		view = new ModelAndView(ArticleViewConstant.creatingArticleLong);
+		
+		return view;
 	}
 }

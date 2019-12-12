@@ -1,8 +1,6 @@
 package demo.article.article.pojo.param.controllerParam;
 
-public class FindArticleLongByArticleSummaryPrivateKeyParam {
-
-	private Long articleId;
+public class FindArticleLongByArticleSummaryPrivateKeyDTO {
 
 	private String privateKey;
 
@@ -13,16 +11,6 @@ public class FindArticleLongByArticleSummaryPrivateKeyParam {
 	private Boolean isEdited;
 
 	private Boolean isReject;
-
-	private Long userId;
-
-	public Long getArticleId() {
-		return articleId;
-	}
-
-	public void setArticleId(Long articleId) {
-		this.articleId = articleId;
-	}
 
 	public String getPrivateKey() {
 		return privateKey;
@@ -64,19 +52,10 @@ public class FindArticleLongByArticleSummaryPrivateKeyParam {
 		this.isReject = isReject;
 	}
 
-	public Long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
-
 	@Override
 	public String toString() {
-		return "FindArticleLongByArticleSummaryPrivateKeyParam [articleId=" + articleId + ", privateKey=" + privateKey
-				+ ", isDelete=" + isDelete + ", isPass=" + isPass + ", isEdited=" + isEdited + ", isReject=" + isReject
-				+ ", userId=" + userId + "]";
+		return "FindArticleLongByArticleSummaryPrivateKeyDTO [privateKey=" + privateKey + ", isDelete=" + isDelete
+				+ ", isPass=" + isPass + ", isEdited=" + isEdited + ", isReject=" + isReject + "]";
 	}
 
 }

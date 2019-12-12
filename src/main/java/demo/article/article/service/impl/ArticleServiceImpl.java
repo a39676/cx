@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.owasp.html.PolicyFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
@@ -40,9 +41,11 @@ import demo.article.article.pojo.bo.ArticleUUIDChannelStoreBO;
 import demo.article.article.pojo.constant.ArticleConstant;
 import demo.article.article.pojo.constant.ArticleViewConstant;
 import demo.article.article.pojo.dto.ArticleFeedbackDTO;
+import demo.article.article.pojo.dto.EditArticleLongDTO;
+import demo.article.article.pojo.dto.FindArticleLongByConditionDTO;
 import demo.article.article.pojo.param.controllerParam.CreateArticleParam;
 import demo.article.article.pojo.param.controllerParam.CreatingArticleParam;
-import demo.article.article.pojo.param.controllerParam.FindArticleLongByArticleSummaryPrivateKeyParam;
+import demo.article.article.pojo.param.controllerParam.FindArticleLongByArticleSummaryPrivateKeyDTO;
 import demo.article.article.pojo.param.controllerParam.LikeHateThisChannelParam;
 import demo.article.article.pojo.param.controllerParam.ReviewArticleLongParam;
 import demo.article.article.pojo.param.mapperParam.FindArticleLongParam;
@@ -533,10 +536,9 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 
 	@Override
-	public FindArticleLongResult findArticleLongByArticleSummaryPrivateKey(FindArticleLongByArticleSummaryPrivateKeyParam param, HttpServletRequest request) {
-		if(baseUtilCustom.isLoginUser()) {
-			param.setUserId(baseUtilCustom.getUserId());
-		}
+	public FindArticleLongResult findArticleLongByArticleSummaryPrivateKey(FindArticleLongByArticleSummaryPrivateKeyDTO param, HttpServletRequest request) {
+		Long userId = baseUtilCustom.getUserId();
+
 		FindArticleLongResult result = new FindArticleLongResult();
 		ArticleLongVO vo = null;
 		
@@ -549,11 +551,14 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		}
 		visitDataService.insertVisitData(request, articleId.toString());
 		result.setArticleId(articleId);
-		param.setArticleId(articleId);
 		
 		articleViewService.insertOrUpdateViewCount(articleId);
 		
-		vo = articleLongMapper.findArticleLongByDecryptId(param);
+		FindArticleLongByConditionDTO mapperDTO = new FindArticleLongByConditionDTO();
+		BeanUtils.copyProperties(param, mapperDTO);
+		mapperDTO.setArticleId(articleId);
+		vo = articleLongMapper.findArticleLongByDecryptId(mapperDTO);
+		
 		if(vo == null) {
 			result.fillWithResult(ResultTypeCX.errorWhenArticleLoad);
 			vo = new ArticleLongVO();
@@ -569,7 +574,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return result;
 		}
 		
-		fillArticleContent(vo, param.getPrivateKey(), param.getUserId());
+		fillArticleContent(vo, param.getPrivateKey(), userId);
 		result.setArticleLongVO(vo);
 		return result;
 	}
@@ -775,5 +780,19 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 				RolesType.ROLE_POSTER.getName(),
 				RolesType.ROLE_ADMIN.getName(),
 				RolesType.ROLE_SUPER_ADMIN.getName());
+	}
+
+	public void readyToEditArticleLong(EditArticleLongDTO dto) {
+		/*
+		 * TODO
+		 * 返回编辑文章的页面
+		 * 准备复用 createArticleLong?
+		 */
+		
+		if(dto.getArticleId() == null) {
+//			TODO
+		}
+		
+		ModelAndView view = new ModelAndView(ArticleViewConstant.creatingArticleLong);
 	}
 }

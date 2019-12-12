@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import demo.article.article.pojo.dto.FindArticleLongByConditionDTO;
 import demo.article.article.pojo.param.controllerParam.ChangeChannelParam;
-import demo.article.article.pojo.param.controllerParam.FindArticleLongByArticleSummaryPrivateKeyParam;
 import demo.article.article.pojo.param.mapperParam.FindArticleIdsParam;
 import demo.article.article.pojo.param.mapperParam.FindArticleLongParam;
 import demo.article.article.pojo.param.mapperParam.UpdateArticleLongReviewStatuParam;
@@ -21,7 +21,7 @@ public interface ArticleLongMapper {
     
     ArticleLong findArticleLong(FindArticleLongParam param);
 
-    ArticleLongVO findArticleLongByDecryptId(FindArticleLongByArticleSummaryPrivateKeyParam param);
+    ArticleLongVO findArticleLongByDecryptId(FindArticleLongByConditionDTO dto);
     
     int updateArticleLongReviewStatu(UpdateArticleLongReviewStatuParam param);
     

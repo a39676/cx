@@ -16,7 +16,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.pojo.dto.ArticleFeedbackDTO;
 import demo.article.article.pojo.param.controllerParam.CreateArticleParam;
 import demo.article.article.pojo.param.controllerParam.CreatingArticleParam;
-import demo.article.article.pojo.param.controllerParam.FindArticleLongByArticleSummaryPrivateKeyParam;
+import demo.article.article.pojo.param.controllerParam.FindArticleLongByArticleSummaryPrivateKeyDTO;
 import demo.article.article.pojo.param.controllerParam.LikeHateThisChannelParam;
 import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.article.pojo.result.jsonRespon.FindArticleLongResult;
@@ -36,7 +36,7 @@ public interface ArticleService {
 	 * @return
 	 */
 	FindArticleLongResult findArticleLongByArticleSummaryPrivateKey(
-			FindArticleLongByArticleSummaryPrivateKeyParam param, HttpServletRequest request);
+			FindArticleLongByArticleSummaryPrivateKeyDTO param, HttpServletRequest request);
 
 	/**
 	 * 以userId, 加密articleId验证是否对应作者

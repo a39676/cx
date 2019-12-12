@@ -27,7 +27,7 @@ import demo.article.article.pojo.constant.ArticleViewConstant;
 import demo.article.article.pojo.dto.ArticleFeedbackDTO;
 import demo.article.article.pojo.param.controllerParam.CreateArticleParam;
 import demo.article.article.pojo.param.controllerParam.CreatingArticleParam;
-import demo.article.article.pojo.param.controllerParam.FindArticleLongByArticleSummaryPrivateKeyParam;
+import demo.article.article.pojo.param.controllerParam.FindArticleLongByArticleSummaryPrivateKeyDTO;
 import demo.article.article.pojo.param.controllerParam.FindArticleLongSummaryListControllerParam;
 import demo.article.article.pojo.param.controllerParam.InsertArticleLongEvaluationParam;
 import demo.article.article.pojo.param.controllerParam.LikeHateThisChannelParam;
@@ -156,7 +156,7 @@ public class ArticleController extends CommonController {
 	@GetMapping(value = ArticleUrlConstant.readArticleLong)
 	public ModelAndView readArticleLong(@RequestParam(value = "pk", required = false) String pk, HttpServletRequest request) {
 		ModelAndView view = new ModelAndView(ArticleViewConstant.readArticleLongCleanBlog);
-		FindArticleLongByArticleSummaryPrivateKeyParam param = new FindArticleLongByArticleSummaryPrivateKeyParam();
+		FindArticleLongByArticleSummaryPrivateKeyDTO param = new FindArticleLongByArticleSummaryPrivateKeyDTO();
 		param.setPrivateKey(pk);
 		
 		FindArticleLongResult result = articleService.findArticleLongByArticleSummaryPrivateKey(param, request);

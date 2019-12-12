@@ -46,7 +46,6 @@ import demo.article.article.pojo.param.controllerParam.CreatingArticleParam;
 import demo.article.article.pojo.param.controllerParam.FindArticleLongByArticleSummaryPrivateKeyDTO;
 import demo.article.article.pojo.param.controllerParam.LikeHateThisChannelParam;
 import demo.article.article.pojo.param.controllerParam.ReviewArticleLongParam;
-import demo.article.article.pojo.param.mapperParam.FindArticleLongParam;
 import demo.article.article.pojo.param.mapperParam.FindArticleUserDetailByUserIdChannelIdParam;
 import demo.article.article.pojo.param.mapperParam.UpdateArticleUserDetailParam;
 import demo.article.article.pojo.param.mapperParam.UpdateArticleUserPostLimitParam;
@@ -712,9 +711,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return result;
 		}
 		
-		FindArticleLongParam findArticleLongParam = new FindArticleLongParam();
-		findArticleLongParam.setArticleId(articleId);
-		ArticleLong article = articleLongMapper.findArticleLong(findArticleLongParam);
+		ArticleLong article = articleLongMapper.selectByPrimaryKey(articleId);
 		if(article == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -823,21 +820,31 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 //			TODO
 		}
 		
-		FindArticleLongParam param = new FindArticleLongParam();
-		param.setArticleId(articleId);
-		ArticleLong po = articleLongMapper.findArticleLong(param);
+		ArticleLong sourcePO = articleLongMapper.selectByPrimaryKey(articleId);
 		
 		boolean adminFlag = baseUtilCustom.hasAdminRole();
 		Long userId = baseUtilCustom.getUserId();
-		if(!po.getUserId().equals(userId) || !adminFlag) {
+		if(!sourcePO.getUserId().equals(userId) || !adminFlag) {
 //			TODO
 		}
 		
-		po.setIsEdited(true);
-		po.setEditTime(LocalDateTime.now());
-		po.setEditCount(po.getEditCount() + 1);
-		po.setEditOf(userId);
+		ArticleLong newPO = new ArticleLong();
+		BeanUtils.copyProperties(sourcePO, newPO);
 		
+		sourcePO.setIsEdited(true);
+		sourcePO.setEditTime(LocalDateTime.now());
+		sourcePO.setEditCount(sourcePO.getEditCount() + 1);
+		sourcePO.setEditOf(userId);
+		
+		articleLongMapper.updateByPrimaryKey(sourcePO);
+		
+//		newPO.setEditOf(sourcePO);
+		/*
+		 * TODO
+		 * 需要改字段
+		 * 明确 editOf ---> 来源文章的id? 编辑者id??
+		 * 需要记录 编辑者id  +  来源文章id
+		 */
 		
 	}
 }

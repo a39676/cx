@@ -7,11 +7,10 @@ import org.apache.ibatis.annotations.Param;
 import demo.article.article.pojo.dto.FindArticleLongByConditionDTO;
 import demo.article.article.pojo.param.controllerParam.ChangeChannelParam;
 import demo.article.article.pojo.param.mapperParam.FindArticleIdsParam;
-import demo.article.article.pojo.param.mapperParam.FindArticleLongParam;
 import demo.article.article.pojo.param.mapperParam.UpdateArticleLongReviewStatuParam;
 import demo.article.article.pojo.po.ArticleLong;
-import demo.article.article.pojo.vo.ArticleLongVO;
 import demo.article.article.pojo.po.ArticleLongExample;
+import demo.article.article.pojo.vo.ArticleLongVO;
 
 public interface ArticleLongMapper {
     long countByExample(ArticleLongExample example);
@@ -38,8 +37,6 @@ public interface ArticleLongMapper {
     
     List<Long> findArticleIds(FindArticleIdsParam param);
     
-    ArticleLong findArticleLong(FindArticleLongParam param);
-
     ArticleLongVO findArticleLongByDecryptId(FindArticleLongByConditionDTO dto);
     
     int updateArticleLongReviewStatu(UpdateArticleLongReviewStatuParam param);

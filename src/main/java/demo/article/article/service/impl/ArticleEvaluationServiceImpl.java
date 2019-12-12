@@ -28,7 +28,6 @@ import demo.article.article.pojo.param.controllerParam.InsertArticleCommentEvalu
 import demo.article.article.pojo.param.controllerParam.InsertArticleLongEvaluationParam;
 import demo.article.article.pojo.param.mapperParam.ArticleEvaluationCacheUpdateWasStatisticsByIdParam;
 import demo.article.article.pojo.param.mapperParam.FindArticleEvaluationCacheListParam;
-import demo.article.article.pojo.param.mapperParam.FindArticleLongParam;
 import demo.article.article.pojo.param.mapperParam.FindEvaluationStatisticsByIdListParam;
 import demo.article.article.pojo.param.mapperParam.InsertEvaluationDaoParam;
 import demo.article.article.pojo.param.mapperParam.UpdateArticleUserCoefficientParam;
@@ -320,9 +319,7 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 
 		int updateCount = 0;
 
-		FindArticleLongParam param = new FindArticleLongParam();
-		param.setArticleId(articleId);
-		ArticleLong article = articleLongMapper.findArticleLong(param);
+		ArticleLong article = articleLongMapper.selectByPrimaryKey(articleId);
 		if (article == null || article.getChannelId() == null || article.getUserId() == null) {
 			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;

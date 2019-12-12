@@ -23,7 +23,6 @@ import demo.article.article.pojo.param.controllerParam.InsertNewReviewRecordPara
 import demo.article.article.pojo.param.controllerParam.ReviewArticleLongParam;
 import demo.article.article.pojo.param.controllerParam.SetArticleHotParam;
 import demo.article.article.pojo.param.mapperParam.FindArticleChannelsParam;
-import demo.article.article.pojo.param.mapperParam.FindArticleLongParam;
 import demo.article.article.pojo.param.mapperParam.UpdateArticleLongReviewStatuParam;
 import demo.article.article.pojo.param.mapperParam.UpdateArticleUserCoefficientParam;
 import demo.article.article.pojo.param.mapperParam.UpdateChannelPointByArticleIdParam;
@@ -146,9 +145,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			return result;
 		}
 		
-		FindArticleLongParam param = new FindArticleLongParam();
-		param.setArticleId(articleId);
-		ArticleLong article = articleLongMapper.findArticleLong(param);
+		ArticleLong article = articleLongMapper.selectByPrimaryKey(articleId);
 		if(article == null) {
 			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
@@ -207,9 +204,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			return result;
 		}
 		
-		FindArticleLongParam param = new FindArticleLongParam();
-		param.setArticleId(articleId);
-		ArticleLong article = articleLongMapper.findArticleLong(param);
+		ArticleLong article = articleLongMapper.selectByPrimaryKey(articleId);
 		if(article == null) {
 			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
@@ -260,9 +255,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			return result;
 		}
 		
-		FindArticleLongParam param = new FindArticleLongParam();
-		param.setArticleId(articleId);
-		ArticleLong article = articleLongMapper.findArticleLong(param);
+		ArticleLong article = articleLongMapper.selectByPrimaryKey(articleId);
 		if(article == null) {
 			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
@@ -346,9 +339,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		param.setPk(null);
 		param.setUuid(null);
 		
-		FindArticleLongParam findArticleParam = new FindArticleLongParam();
-		findArticleParam.setArticleId(articleId);
-		ArticleLong article = articleLongMapper.findArticleLong(findArticleParam);
+		ArticleLong article = articleLongMapper.selectByPrimaryKey(articleId);
 		int deleteReviewRecordCount = 0;
 		if(!article.getIsEdited()) {
 			if(article.getIsPass() || article.getIsDelete() || article.getIsReject()) {
@@ -386,9 +377,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			return result;
 		}
 		
-		FindArticleLongParam findArticleParam = new FindArticleLongParam();
-		findArticleParam.setArticleId(articleId);
-		ArticleLong oldArticleLong = articleLongMapper.findArticleLong(findArticleParam);
+		ArticleLong oldArticleLong = articleLongMapper.selectByPrimaryKey(articleId);
 		if(oldArticleLong == null || oldArticleLong.getIsPass() == false || oldArticleLong.getIsDelete() == true || oldArticleLong.getIsReject() == true || oldArticleLong.getIsEdited() == true) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;

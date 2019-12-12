@@ -1,21 +1,21 @@
 package demo.article.article.pojo.po;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class ArticleLong {
 	private Long articleId;
 
-	private Long channelId;
-
 	private Long userId;
+
+	private Long channelId;
 
 	private String articleTitle;
 
 	private String path;
 
-	private Date createTime;
+	private LocalDateTime createTime;
 
-	private Date editTime;
+	private LocalDateTime editTime;
 
 	private Long editOf;
 
@@ -45,6 +45,14 @@ public class ArticleLong {
 		this.userId = userId;
 	}
 
+	public Long getChannelId() {
+		return channelId;
+	}
+
+	public void setChannelId(Long channelId) {
+		this.channelId = channelId;
+	}
+
 	public String getArticleTitle() {
 		return articleTitle;
 	}
@@ -61,19 +69,19 @@ public class ArticleLong {
 		this.path = path == null ? null : path.trim();
 	}
 
-	public Date getCreateTime() {
+	public LocalDateTime getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(Date createTime) {
+	public void setCreateTime(LocalDateTime createTime) {
 		this.createTime = createTime;
 	}
 
-	public Date getEditTime() {
+	public LocalDateTime getEditTime() {
 		return editTime;
 	}
 
-	public void setEditTime(Date editTime) {
+	public void setEditTime(LocalDateTime editTime) {
 		this.editTime = editTime;
 	}
 
@@ -125,17 +133,9 @@ public class ArticleLong {
 		this.isReject = isReject;
 	}
 
-	public Long getChannelId() {
-		return channelId;
-	}
-
-	public void setChannelId(Long channelId) {
-		this.channelId = channelId;
-	}
-
 	@Override
 	public String toString() {
-		return "ArticleLong [articleId=" + articleId + ", channelId=" + channelId + ", userId=" + userId
+		return "ArticleLong [articleId=" + articleId + ", userId=" + userId + ", channelId=" + channelId
 				+ ", articleTitle=" + articleTitle + ", path=" + path + ", createTime=" + createTime + ", editTime="
 				+ editTime + ", editOf=" + editOf + ", editCount=" + editCount + ", isDelete=" + isDelete + ", isPass="
 				+ isPass + ", isEdited=" + isEdited + ", isReject=" + isReject + "]";

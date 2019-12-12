@@ -10,13 +10,10 @@ import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.crypto.BadPaddingException;
@@ -43,6 +40,7 @@ import demo.article.article.pojo.constant.ArticleViewConstant;
 import demo.article.article.pojo.dto.ArticleFeedbackDTO;
 import demo.article.article.pojo.dto.EditArticleLongDTO;
 import demo.article.article.pojo.dto.FindArticleLongByConditionDTO;
+import demo.article.article.pojo.dto.ReadyToEditArticleLongDTO;
 import demo.article.article.pojo.param.controllerParam.CreateArticleParam;
 import demo.article.article.pojo.param.controllerParam.CreatingArticleParam;
 import demo.article.article.pojo.param.controllerParam.FindArticleLongByArticleSummaryPrivateKeyDTO;
@@ -149,25 +147,25 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	 * 采用富文本编辑器后, 可能废弃,
 	 * 以后文章上传, 如果允许指定标题附图, 则绝对废弃
 	 */
-	private void imageUrlHandle(String line, List<String> imageUrls) {
-		if (StringUtils.isBlank(line)) {
-			return;
-		}
-
-		List<String> urls = new ArrayList<String>();
-		Pattern imageUrlPattern = Pattern.compile(imageHttpUrlPattern);
-		Matcher matcher;
-
-		String[] parts = line.split("http");
-		for (String p : parts) {
-			p = "http" + p;
-			matcher = imageUrlPattern.matcher(p);
-			if (matcher.find() && !urls.contains(matcher.group(1))) {
-				urls.add(matcher.group(1));
-			}
-		}
-		imageUrls.addAll(urls);
-	}
+//	private void imageUrlHandle(String line, List<String> imageUrls) {
+//		if (StringUtils.isBlank(line)) {
+//			return;
+//		}
+//
+//		List<String> urls = new ArrayList<String>();
+//		Pattern imageUrlPattern = Pattern.compile(imageHttpUrlPattern);
+//		Matcher matcher;
+//
+//		String[] parts = line.split("http");
+//		for (String p : parts) {
+//			p = "http" + p;
+//			matcher = imageUrlPattern.matcher(p);
+//			if (matcher.find() && !urls.contains(matcher.group(1))) {
+//				urls.add(matcher.group(1));
+//			}
+//		}
+//		imageUrls.addAll(urls);
+//	}
 
 	@Override
 	public Long decryptPrivateKey(String pk) {
@@ -241,7 +239,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 //		}
 		
 		view = new ModelAndView(ArticleViewConstant.creatingArticleLong);
-		
+		view.addObject("createNew", "true");
 		return view;
 	}
 	
@@ -354,7 +352,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return result;
 		}
 		
-		if (saveArticleResult.getImageUrls().size() > 0) {
+		if (saveArticleResult.getImageUrls() != null && saveArticleResult.getImageUrls().size() > 0) {
 //			imageController.insertImageFromArticle(saveArticleResult.getImageUrls(), newArticle.getArticleId());
 		}
 
@@ -457,29 +455,13 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return result;
 		}
 
-		List<String> lines = Arrays.asList(content.split(System.lineSeparator()));
-		List<String> imageUrls = new ArrayList<String>();
 		StringBuffer sb = new StringBuffer();
-
-		for (String line : lines) {
-			sb.append(line + System.lineSeparator());
-			imageUrlHandle(line, imageUrls);
-		}
 		
-		
-		String articleContentAfterTrim = sb.toString().trim();
+		sb.append(content);
 
-		ioUtil.byteToFile(articleContentAfterTrim.getBytes(StandardCharsets.UTF_8), finalFilePath);
+		ioUtil.byteToFile(sb.toString().getBytes(StandardCharsets.UTF_8), finalFilePath);
 
 		result.setFilePath(finalFilePath);
-		result.setImageUrls(imageUrls);
-		lines = Arrays.asList(articleContentAfterTrim.split("\n"));
-		for(int i = 0; i < lines.size(); i++) {
-			if(!lines.get(i).matches(imageHttpUrlPattern)) {
-				result.setFirstLine(lines.get(i));
-				i = lines.size();
-			}
-		}
 
 		result.setIsSuccess();
 		return result;
@@ -766,29 +748,34 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 				RolesType.ROLE_SUPER_ADMIN.getName());
 	}
 
-	public ModelAndView readyToEditArticleLong(EditArticleLongDTO dto) {
-		/*
-		 * TODO
-		 * 返回编辑文章的页面
-		 * 准备复用 createArticleLong?
-		 */
-		ModelAndView view = null;
-		Long userId = baseUtilCustom.getUserId();
+	@Override
+	public ModelAndView readyToEditArticleLong(ReadyToEditArticleLongDTO dto) {
+		ModelAndView view = new ModelAndView(ArticleViewConstant.creatingArticleLong);;
+		
+		ArticleLongVO vo = findArticleLongVOForEdit(dto);
+		
+		view.addObject("articleVO", vo);
+		view.addObject("edit", "true");
+		
+		return view;
+	}
+	
+	private ArticleLongVO findArticleLongVOForEdit(ReadyToEditArticleLongDTO dto) {
+		ArticleLongVO vo;
 		
 		if(StringUtils.isBlank(dto.getPrivateKey())) {
-//			TODO
-		}
-		
-		ArticleLongVO vo = null;
-		
-		Long articleId = decryptArticlePrivateKey(dto.getPrivateKey());
-		if(articleId == null) {
-//			TODO
 			vo = new ArticleLongVO();
 			vo.setContentLines(ResultTypeCX.errorParam.getName());
+			return vo;
 		}
 		
-		articleViewService.insertOrUpdateViewCount(articleId);
+		Long articleId = decryptArticlePrivateKey(dto.getPrivateKey());
+		
+		if(articleId == null) {
+			vo = new ArticleLongVO();
+			vo.setContentLines(ResultTypeCX.errorParam.getName());
+			return vo;
+		}
 		
 		FindArticleLongByConditionDTO mapperDTO = new FindArticleLongByConditionDTO();
 		BeanUtils.copyProperties(dto, mapperDTO);
@@ -796,25 +783,61 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		vo = articleLongMapper.findArticleLongByDecryptId(mapperDTO);
 		
 		if(vo == null) {
-//			TODO
 			vo = new ArticleLongVO();
 			vo.setContentLines(ResultTypeCX.errorWhenArticleLoad.getName());
+			return vo;
 		}
 		
-		if(vo.getUserId() != userId) {
-//			TODO
+		Long userId = baseUtilCustom.getUserId();
+		boolean adminFlag = baseUtilCustom.hasAdminRole();
+		if(vo.getUserId() != userId && !adminFlag) {
+			vo = new ArticleLongVO();
+			vo.setContentLines("没有编辑其他用户的文章的权限");
+			return vo;
 		}
 		
-		if(vo.getIsDelete() && !baseUtilCustom.hasAdminRole()) {
+		if(vo.getIsDelete() && !adminFlag) {
 			vo = new ArticleLongVO();
 			vo.setContentLines("这篇文已经失踪了...请联系管理员...");
-//			TODO
+			return vo;
 		}
 		
 		fillArticleContent(vo, dto.getPrivateKey(), userId);
 		
-		view = new ModelAndView(ArticleViewConstant.creatingArticleLong);
+		return vo;
+	}
+	
+	public void editArticleLongHandler(EditArticleLongDTO dto) {
+		/*
+		 * TODO
+		 * 编辑文章时, 还需要鉴定一次权限 ---> (管理员, 本人?)
+		 * 记录编辑历史 ---> 次数, 最后编辑时间, 原文上直接修改???? 新建并保留原文?
+		 */
+		if(StringUtils.isBlank(dto.getPrivateKey())) {
+//			TODO
+		}
 		
-		return view;
+		Long articleId = decryptArticlePrivateKey(dto.getPrivateKey());
+		
+		if(articleId == null) {
+//			TODO
+		}
+		
+		FindArticleLongParam param = new FindArticleLongParam();
+		param.setArticleId(articleId);
+		ArticleLong po = articleLongMapper.findArticleLong(param);
+		
+		boolean adminFlag = baseUtilCustom.hasAdminRole();
+		Long userId = baseUtilCustom.getUserId();
+		if(!po.getUserId().equals(userId) || !adminFlag) {
+//			TODO
+		}
+		
+		po.setIsEdited(true);
+		po.setEditTime(LocalDateTime.now());
+		po.setEditCount(po.getEditCount() + 1);
+		po.setEditOf(userId);
+		
+		
 	}
 }

@@ -16,6 +16,7 @@ public class ArticleUrlConstant {
 	public static final String articleLongSummaryListByChannel = "/articleLongSummaryListByChannel";
 //	public static final String articleLongSummarySubListByChannel = "/articleLongSummarySubListByChannel";
 	public static final String readArticleLong = "/readArticleLong";
+	public static final String editArticleLong = "/editArticleLong";
 	public static final String deleteArticle = "/deleteArticle";
 	public static final String findEvaluationStatisticsByArticleId = "/findEvaluationStatisticsByArticleId";
 	public static final String insertArticleLongEvaluation = "/insertArticleLongEvaluation";

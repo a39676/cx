@@ -40,7 +40,7 @@
 
       <div class="row">
         <div class="col-sm-12" >
-          <textarea class="input form-control" id="articleTitle" rows="1" cols="50" placeholder="请输入标题~"></textarea>
+          <textarea class="input form-control" id="articleTitle" rows="1" cols="50" placeholder="请输入标题~">${articleVO.articleTitle}</textarea>
         </div>
       </div>
 
@@ -63,18 +63,28 @@
               <textarea class="input form-control" type="text" 
               name="superAdminKey" placeholder="please insert key"></textarea>
             </sec:authorize>
-            <button class="btn  btn-primary btn-sm" 
-              id="submitArticleLong">
-              <span class="badge badge-primary">提交</span>
-            </button>
-            <button class="btn  btn-primary btn-sm" 
-              id="editorAgain">
-              <span class="badge badge-primary">继续编辑</span>
-            </button>
+            <c:if test="${createNew == true}">
+              <button class="btn  btn-primary btn-sm" 
+                id="createNew">
+                <span class="badge badge-primary">提交</span>
+              </button>
+              <button class="btn  btn-primary btn-sm" 
+                id="editorAgain">
+                <span class="badge badge-primary">继续编辑</span>
+              </button>
+            </c:if>
+            <c:if test="${edit == true}">
+              <button class="btn  btn-primary btn-sm" 
+                id="edit">
+                <span class="badge badge-primary">提交编辑</span>
+              </button>
+            </c:if>
           </div>
         </div>
       </div>
-      
+
+      <input type="text" id="sourceArticleVO" contentLines='${articleVO.contentLines}' pk="${articleVO.privateKey}" disabled="disabled" style="display: none;">
+
       <div class="row">
         <div class="col-sm-12" >
           <span id="createArticleResult" badge badge-primary></span>
@@ -96,8 +106,11 @@
 
   <script type="text/javascript">
     
+
     $(document).ready(function() {
-      $("#submitArticleLong").click(function () {
+      
+      // <c:if test="${createNew == true}">
+      $("#createNew").click(function () {
         var url = "/article/createArticleLong";
         var title = $("#articleTitle").val();
         var s = $('#summernote');
@@ -130,7 +143,7 @@
             if(datas.result == "0") {
               document.getElementById("articleTitle").disabled = true;
               document.getElementById("summernote").disabled = true;
-              document.getElementById("submitArticleLong").disabled = true;
+              document.getElementById("createNew").disabled = true;
             }
           },  
           error: function(datas) {              
@@ -138,11 +151,62 @@
         });  
       });
 
-      $("#submitArticleLong").click(function () {
+      $("#createNew").click(function () {
         document.getElementById("articleTitle").disabled = false;
         document.getElementById("summernote").disabled = false;
-        document.getElementById("submitArticleLong").disabled = false;
+        document.getElementById("createNew").disabled = false;
       });
+      // </c:if>
+      
+      // <c:if test="${edit == true}">
+      var contentLines = $("#sourceArticleVO").attr("contentLines");
+      $("#summernote").summernote("code", contentLines);
+
+      $("#edit").click(function () {
+        var url = "/article/editArticleLong";
+        var title = $("#articleTitle").val();
+        var s = $('#summernote');
+        var content = s.summernote('code');
+        var uuid = $("select[name='channelList'] option:selected").val();
+        var pk = $("#sourceArticleVO").attr("pk");
+
+        var jsonOutput = {
+          uuid:uuid,
+          title:title,
+          content:content,
+          pk:pk
+        };
+    
+        var resultSpan = document.getElementById("createArticleResult");
+        resultSpan.innerHTML = "";
+    
+        $.ajax({  
+          type : "POST",  
+          async : true,
+          url : url,  
+          data: JSON.stringify(jsonOutput),
+          cache : false,
+          contentType: "application/json",
+          dataType: "json",
+          timeout:50000,  
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          success:function(datas){
+            resultSpan.innerHTML = datas.message;
+            if(datas.result == "0") {
+              document.getElementById("articleTitle").disabled = true;
+              document.getElementById("summernote").disabled = true;
+              document.getElementById("edit").disabled = true;
+            }
+          },  
+          error: function(datas) {              
+          }  
+        });  
+      });
+
+      // </c:if>
+
     });
   </script>
 </footer>

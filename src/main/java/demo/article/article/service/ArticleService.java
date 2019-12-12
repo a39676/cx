@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.pojo.dto.ArticleFeedbackDTO;
+import demo.article.article.pojo.dto.ReadyToEditArticleLongDTO;
 import demo.article.article.pojo.param.controllerParam.CreateArticleParam;
 import demo.article.article.pojo.param.controllerParam.CreatingArticleParam;
 import demo.article.article.pojo.param.controllerParam.FindArticleLongByArticleSummaryPrivateKeyDTO;
@@ -66,5 +67,8 @@ public interface ArticleService {
 	CommonResult crateArticleLongPrefixServcie(CreateArticleParam cp)
 			throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
 			BadPaddingException, InvalidAlgorithmParameterException, IOException;
+
+	/** 编辑文章 */
+	ModelAndView readyToEditArticleLong(ReadyToEditArticleLongDTO dto);
 
 }

@@ -1,5 +1,7 @@
 package demo.article.fakePost.service.impl;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -62,7 +64,7 @@ public class FakePostServiceImpl extends CommonService implements FakePostServic
 		
 		int evaluationUpMax = 6;
 		int evaluationDownMax = 3;
-		Long oneDayMilliSecond = 1000L * 60 * 60 * 24;
+//		Long oneDayMilliSecond = 1000L * 60 * 60 * 24;
 		long dayDiff = 0;
 		
 		ArticleEvaluationStore tmpStorePo = null;
@@ -73,7 +75,7 @@ public class FakePostServiceImpl extends CommonService implements FakePostServic
 			tmpStorePo.setPostObjectId(article.getArticleId());
 			tmpStorePo.setEvaluationType(ArticleEvaluationType.articleLongEvaluation.getCode());
 			tmpStorePo.setEvaluationCode(ArticleEvaluationCodeType.up.getCode());
-			dayDiff =  (System.currentTimeMillis() - article.getCreateTime().getTime()) / oneDayMilliSecond;
+			dayDiff = ChronoUnit.DAYS.between(article.getCreateTime(), LocalDateTime.now());
 			if(dayDiff > 8) {
 				tmpStorePo.setEvaluationCount(0);
 			} else if(dayDiff >= 5) {
@@ -90,7 +92,7 @@ public class FakePostServiceImpl extends CommonService implements FakePostServic
 			tmpStorePo.setPostObjectId(article.getArticleId());
 			tmpStorePo.setEvaluationType(ArticleEvaluationType.articleLongEvaluation.getCode());
 			tmpStorePo.setEvaluationCode(ArticleEvaluationCodeType.down.getCode());
-			dayDiff =  (System.currentTimeMillis() - article.getCreateTime().getTime()) / oneDayMilliSecond;
+			dayDiff = ChronoUnit.DAYS.between(article.getCreateTime(), LocalDateTime.now());
 			if(dayDiff > 8) {
 				tmpStorePo.setEvaluationCount(0);
 			} else if(dayDiff >= 5) {

@@ -47,12 +47,15 @@
               <button class="btn btn-danger btn-sm" name="delete" pk="${articleLongVO.privateKey}">
                 <span style="font-size: small;">删除</span>
               </button>
+              <a href="/article/editArticleLong?pk=${articleLongVO.privateKey}" target="_blank"><span class="badge badge-info">编辑</span></a>
             </c:if>
             <span pk="${articleLongVO.privateKey}" name="reviewResult"></span>
           </c:if>              
           <sec:authorize access="hasRole('ROLE_ADMIN')">
           <%@ include file="../articleJSP/articleReview.jsp" %>
           <%@ include file="../articleJSP/articleManager.jsp" %>
+          </sec:authorize>
+          <sec:authorize access="hasRole('ROLE_ADMIN')">
           </sec:authorize>
         </div><!-- post-top-area -->
       </div>

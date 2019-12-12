@@ -20,8 +20,6 @@ public class ArticleLongVO {
 
 	private String path;
 
-	private String imageHttpUrlPattern;
-
 	private boolean isPass;
 
 	private boolean isDelete;
@@ -39,7 +37,6 @@ public class ArticleLongVO {
 	private Integer editCount;
 
 	private boolean iWroteThis = false;
-	// private List<String> imgChannels;
 	
 	public String getHeadIamgeUrl() {
 		return headIamgeUrl;
@@ -111,14 +108,6 @@ public class ArticleLongVO {
 
 	public void setContentLines(String contentLines) {
 		this.contentLines = contentLines;
-	}
-
-	public String getImageHttpUrlPattern() {
-		return imageHttpUrlPattern;
-	}
-
-	public void setImageHttpUrlPattern(String imageHttpUrlPattern) {
-		this.imageHttpUrlPattern = imageHttpUrlPattern;
 	}
 
 	public boolean getIsPass() {
@@ -193,10 +182,10 @@ public class ArticleLongVO {
 	public String toString() {
 		return "ArticleLongVO [articleTitle=" + articleTitle + ", nickName=" + nickName + ", headIamgeUrl="
 				+ headIamgeUrl + ", contentLines=" + contentLines + ", createDateString=" + createDateString
-				+ ", editDateString=" + editDateString + ", privateKey=" + privateKey + ", path=" + path
-				+ ", imageHttpUrlPattern=" + imageHttpUrlPattern + ", isPass=" + isPass + ", isDelete=" + isDelete
-				+ ", isEdited=" + isEdited + ", isReject=" + isReject + ", createTime=" + createTime + ", editTime="
-				+ editTime + ", userId=" + userId + ", editCount=" + editCount + ", iWroteThis=" + iWroteThis + "]";
+				+ ", editDateString=" + editDateString + ", privateKey=" + privateKey + ", path=" + path + ", isPass="
+				+ isPass + ", isDelete=" + isDelete + ", isEdited=" + isEdited + ", isReject=" + isReject
+				+ ", createTime=" + createTime + ", editTime=" + editTime + ", userId=" + userId + ", editCount="
+				+ editCount + ", iWroteThis=" + iWroteThis + "]";
 	}
 
 }

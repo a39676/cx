@@ -25,6 +25,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.pojo.constant.ArticleUrlConstant;
 import demo.article.article.pojo.constant.ArticleViewConstant;
 import demo.article.article.pojo.dto.ArticleFeedbackDTO;
+import demo.article.article.pojo.dto.ReadyToEditArticleLongDTO;
 import demo.article.article.pojo.param.controllerParam.CreateArticleParam;
 import demo.article.article.pojo.param.controllerParam.CreatingArticleParam;
 import demo.article.article.pojo.param.controllerParam.FindArticleLongByArticleSummaryPrivateKeyDTO;
@@ -209,6 +210,16 @@ public class ArticleController extends CommonController {
 	public CommonResultCX articleLongFeedback(@RequestBody ArticleFeedbackDTO dto, HttpServletRequest request) {
 		CommonResultCX result = articleService.articleLongFeedback(dto, request);
 		return result;
+	}
+	
+	@GetMapping(value = ArticleUrlConstant.editArticleLong)
+	public ModelAndView editArticleLong(@RequestParam(value = "pk", required = false) String pk, HttpServletRequest request) {
+		ReadyToEditArticleLongDTO dto = new ReadyToEditArticleLongDTO();
+		dto.setPrivateKey(pk);
+		ModelAndView view = articleService.readyToEditArticleLong(dto);
+		GetArticleChannelsResult channelsResult = getArticleChannelsDynamic(request);
+		view.addObject("channelList", channelsResult.getChannelList());
+		return view;
 	}
 
 }

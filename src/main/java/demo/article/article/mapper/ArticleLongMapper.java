@@ -11,9 +11,28 @@ import demo.article.article.pojo.param.mapperParam.FindArticleLongParam;
 import demo.article.article.pojo.param.mapperParam.UpdateArticleLongReviewStatuParam;
 import demo.article.article.pojo.po.ArticleLong;
 import demo.article.article.pojo.vo.ArticleLongVO;
+import demo.article.article.pojo.po.ArticleLongExample;
 
 public interface ArticleLongMapper {
-    int insert(ArticleLong record);
+    long countByExample(ArticleLongExample example);
+
+	int deleteByExample(ArticleLongExample example);
+
+	int deleteByPrimaryKey(Long articleId);
+
+	List<ArticleLong> selectByExample(ArticleLongExample example);
+
+	ArticleLong selectByPrimaryKey(Long articleId);
+
+	int updateByExampleSelective(@Param("record") ArticleLong record, @Param("example") ArticleLongExample example);
+
+	int updateByExample(@Param("record") ArticleLong record, @Param("example") ArticleLongExample example);
+
+	int updateByPrimaryKeySelective(ArticleLong record);
+
+	int updateByPrimaryKey(ArticleLong record);
+
+	int insert(ArticleLong record);
 
     int insertSelective(ArticleLong record);
     

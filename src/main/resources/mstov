@@ -1,0 +1,8 @@
+drop table article_long_complaint;
+alter table article_long modify `edit_of` bigint(9) DEFAULT NULL comment '编辑来源的文章ID';
+alter table article_long add column `edit_by` bigint(9) DEFAULT NULL comment '编辑者ID' after edit_count;
+alter table article_long modify `article_id` bigint(9) NOT NULL;
+alter table article_long modify `channel_id` bigint not NULL;
+alter table article_long modify `article_id` bigint NOT NULL;
+alter table article_long modify `edit_of` bigint DEFAULT NULL comment '编辑来源的文章ID';
+alter table article_long modify `edit_by` bigint DEFAULT NULL comment '编辑者ID';

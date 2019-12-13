@@ -28,7 +28,7 @@ public interface ArticleService {
 	String getImageHttpUrlPattern();
 
 	/** 返回创建文章编辑页面 */
-	ModelAndView creatingArticleLong(CreatingArticleParam controllerParam);
+	ModelAndView buildCreatingArticleLongView(CreatingArticleParam controllerParam);
 
 	/**
 	 * 通过摘要的加密key 获取指定的文章

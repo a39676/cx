@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="demo.article.article.mapper.ArticleLongMapper">
-
   <resultMap id="BaseResultMap" type="demo.article.article.pojo.po.ArticleLong">
     <id column="article_id" jdbcType="BIGINT" property="articleId" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
@@ -12,6 +11,7 @@
     <result column="edit_time" jdbcType="TIMESTAMP" property="editTime" />
     <result column="edit_of" jdbcType="BIGINT" property="editOf" />
     <result column="edit_count" jdbcType="INTEGER" property="editCount" />
+    <result column="edit_by" jdbcType="BIGINT" property="editBy" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
     <result column="is_pass" jdbcType="BIT" property="isPass" />
     <result column="is_edited" jdbcType="BIT" property="isEdited" />
@@ -77,7 +77,7 @@
   </sql>
   <sql id="Base_Column_List">
     article_id, user_id, channel_id, article_title, path, create_time, edit_time, edit_of, 
-    edit_count, is_delete, is_pass, is_edited, is_reject
+    edit_count, edit_by, is_delete, is_pass, is_edited, is_reject
   </sql>
   <select id="selectByExample" parameterType="demo.article.article.pojo.po.ArticleLongExample" resultMap="BaseResultMap">
     select
@@ -113,13 +113,13 @@
     insert into article_long (article_id, user_id, channel_id, 
       article_title, path, create_time, 
       edit_time, edit_of, edit_count, 
-      is_delete, is_pass, is_edited, is_reject
-      )
+      edit_by, is_delete, is_pass, is_edited, 
+      is_reject)
     values (#{articleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{channelId,jdbcType=INTEGER}, 
       #{articleTitle,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{editTime,jdbcType=TIMESTAMP}, #{editOf,jdbcType=BIGINT}, #{editCount,jdbcType=INTEGER}, 
-      #{isDelete,jdbcType=BIT}, #{isPass,jdbcType=BIT}, #{isEdited,jdbcType=BIT}, #{isReject,jdbcType=BIT}
-      )
+      #{editBy,jdbcType=BIGINT}, #{isDelete,jdbcType=BIT}, #{isPass,jdbcType=BIT}, #{isEdited,jdbcType=BIT}, 
+      #{isReject,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="demo.article.article.pojo.po.ArticleLong">
     insert into article_long
@@ -150,6 +150,9 @@
       </if>
       <if test="editCount != null">
         edit_count,
+      </if>
+      <if test="editBy != null">
+        edit_by,
       </if>
       <if test="isDelete != null">
         is_delete,
@@ -191,6 +194,9 @@
       </if>
       <if test="editCount != null">
         #{editCount,jdbcType=INTEGER},
+      </if>
+      <if test="editBy != null">
+        #{editBy,jdbcType=BIGINT},
       </if>
       <if test="isDelete != null">
         #{isDelete,jdbcType=BIT},
@@ -242,6 +248,9 @@
       <if test="record.editCount != null">
         edit_count = #{record.editCount,jdbcType=INTEGER},
       </if>
+      <if test="record.editBy != null">
+        edit_by = #{record.editBy,jdbcType=BIGINT},
+      </if>
       <if test="record.isDelete != null">
         is_delete = #{record.isDelete,jdbcType=BIT},
       </if>
@@ -270,6 +279,7 @@
       edit_time = #{record.editTime,jdbcType=TIMESTAMP},
       edit_of = #{record.editOf,jdbcType=BIGINT},
       edit_count = #{record.editCount,jdbcType=INTEGER},
+      edit_by = #{record.editBy,jdbcType=BIGINT},
       is_delete = #{record.isDelete,jdbcType=BIT},
       is_pass = #{record.isPass,jdbcType=BIT},
       is_edited = #{record.isEdited,jdbcType=BIT},
@@ -305,6 +315,9 @@
       <if test="editCount != null">
         edit_count = #{editCount,jdbcType=INTEGER},
       </if>
+      <if test="editBy != null">
+        edit_by = #{editBy,jdbcType=BIGINT},
+      </if>
       <if test="isDelete != null">
         is_delete = #{isDelete,jdbcType=BIT},
       </if>
@@ -330,6 +343,7 @@
       edit_time = #{editTime,jdbcType=TIMESTAMP},
       edit_of = #{editOf,jdbcType=BIGINT},
       edit_count = #{editCount,jdbcType=INTEGER},
+      edit_by = #{editBy,jdbcType=BIGINT},
       is_delete = #{isDelete,jdbcType=BIT},
       is_pass = #{isPass,jdbcType=BIT},
       is_edited = #{isEdited,jdbcType=BIT},

@@ -205,7 +205,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 				tmpJson.put("title", title);
 				tmpJson.put("uuid", uuid);
 				tmpJson.put("content", "http" + line);
-				tmpResult = createArticleLong(userId, controllerParam);
+				tmpResult = createNewArticleLong(userId, controllerParam);
 				if(tmpResult.isSuccess()) {
 					successCount = successCount + 1;
 				}
@@ -218,7 +218,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 	
 	@Override
-	public ModelAndView creatingArticleLong(CreatingArticleParam controllerParam) {
+	public ModelAndView buildCreatingArticleLongView(CreatingArticleParam controllerParam) {
 		ModelAndView view = null;
 		controllerParam.setUserId(baseUtilCustom.getUserId());
 		if(controllerParam.getUserId() == null) {
@@ -242,7 +242,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		return view;
 	}
 	
-	private CommonResultCX createArticleLong(Long userId, CreateArticleParam controllerParam) throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
+	private CommonResultCX createNewArticleLong(Long userId, CreateArticleParam controllerParam) throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
 		CommonResultCX result = new CommonResultCX();
 		int insertCount = 0;
 		
@@ -408,7 +408,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		if(StringUtils.isNotBlank(cp.getSuperAdminKey())) {
 			serviceResult = batchCreateArticleLong(userId, cp);
 		} else {
-			serviceResult = createArticleLong(userId, cp);
+			serviceResult = createNewArticleLong(userId, cp);
 		}
 		return serviceResult;
 	}
@@ -804,7 +804,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		return vo;
 	}
 	
-	public void editArticleLongHandler(EditArticleLongDTO dto) {
+	public void editArticleLongHandler(EditArticleLongDTO dto) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, IOException {
 		/*
 		 * TODO
 		 * 编辑文章时, 还需要鉴定一次权限 ---> (管理员, 本人?)
@@ -829,22 +829,33 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		}
 		
 		ArticleLong newPO = new ArticleLong();
-		BeanUtils.copyProperties(sourcePO, newPO);
-		
 		sourcePO.setIsEdited(true);
-		sourcePO.setEditTime(LocalDateTime.now());
-		sourcePO.setEditCount(sourcePO.getEditCount() + 1);
-		sourcePO.setEditOf(userId);
+		BeanUtils.copyProperties(sourcePO, newPO);
 		
 		articleLongMapper.updateByPrimaryKey(sourcePO);
 		
-//		newPO.setEditOf(sourcePO);
+		newPO.setEditOf(sourcePO.getArticleId());
+		newPO.setEditBy(userId);
+		if(sourcePO.getEditCount() == null) {
+			newPO.setEditCount(1);
+		} else {
+			newPO.setEditCount(sourcePO.getEditCount() + 1);
+		}
+		newPO.setEditTime(LocalDateTime.now());
+
+		CreateArticleParam p = new CreateArticleParam();
+		p.setContent(dto.getContent());
+		p.setTitle(dto.getTitle());
+		p.setUuid(dto.getUuid());
+		if(itIsBigUser()) {
+			p.setQuickPass(true);
+		}
+		createNewArticleLong(userId, p);
+		
+		
 		/*
 		 * TODO
-		 * 需要改字段
-		 * 明确 editOf ---> 来源文章的id? 编辑者id??
-		 * 需要记录 编辑者id  +  来源文章id
 		 */
-		
+//		articleLongMapper.insertSelective(newPO);
 	}
 }

@@ -21,6 +21,8 @@ public class ArticleLong {
 
 	private Integer editCount;
 
+	private Long editBy;
+
 	private Boolean isDelete;
 
 	private Boolean isPass;
@@ -101,6 +103,14 @@ public class ArticleLong {
 		this.editCount = editCount;
 	}
 
+	public Long getEditBy() {
+		return editBy;
+	}
+
+	public void setEditBy(Long editBy) {
+		this.editBy = editBy;
+	}
+
 	public Boolean getIsDelete() {
 		return isDelete;
 	}
@@ -137,8 +147,8 @@ public class ArticleLong {
 	public String toString() {
 		return "ArticleLong [articleId=" + articleId + ", userId=" + userId + ", channelId=" + channelId
 				+ ", articleTitle=" + articleTitle + ", path=" + path + ", createTime=" + createTime + ", editTime="
-				+ editTime + ", editOf=" + editOf + ", editCount=" + editCount + ", isDelete=" + isDelete + ", isPass="
-				+ isPass + ", isEdited=" + isEdited + ", isReject=" + isReject + "]";
+				+ editTime + ", editOf=" + editOf + ", editCount=" + editCount + ", editBy=" + editBy + ", isDelete="
+				+ isDelete + ", isPass=" + isPass + ", isEdited=" + isEdited + ", isReject=" + isReject + "]";
 	}
 
 }

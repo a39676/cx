@@ -13,7 +13,7 @@ import demo.article.article.pojo.po.ArticleLongExample;
 import demo.article.article.pojo.vo.ArticleLongVO;
 
 public interface ArticleLongMapper {
-    long countByExample(ArticleLongExample example);
+	long countByExample(ArticleLongExample example);
 
 	int deleteByExample(ArticleLongExample example);
 

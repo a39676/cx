@@ -124,7 +124,7 @@ public class ArticleController extends CommonController {
 	@GetMapping(value = ArticleUrlConstant.creatingArticleLong)
 	public ModelAndView creatingArticleLong(HttpServletRequest request) {
 		CreatingArticleParam param = new CreatingArticleParam();
-		ModelAndView view = articleService.creatingArticleLong(param);
+		ModelAndView view = articleService.buildCreatingArticleLongView(param);
 		GetArticleChannelsResult channelsResult = getArticleChannelsDynamic(request);
 		view.addObject("channelList", channelsResult.getChannelList());
 		

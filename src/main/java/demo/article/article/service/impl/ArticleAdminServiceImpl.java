@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import demo.article.article.mapper.ArticleChannelsMapper;
 import demo.article.article.mapper.ArticleHotMapper;
 import demo.article.article.mapper.ArticleLongMapper;
 import demo.article.article.mapper.ArticleLongReviewMapper;
@@ -19,10 +20,13 @@ import demo.article.article.pojo.param.controllerParam.InsertNewReviewRecordPara
 import demo.article.article.pojo.param.controllerParam.ReviewArticleLongParam;
 import demo.article.article.pojo.param.controllerParam.SetArticleHotParam;
 import demo.article.article.pojo.param.mapperParam.UpdateArticleLongReviewStatuParam;
+import demo.article.article.pojo.po.ArticleChannels;
+import demo.article.article.pojo.po.ArticleChannelsExample;
 import demo.article.article.pojo.po.ArticleHot;
 import demo.article.article.pojo.po.ArticleLong;
 import demo.article.article.pojo.po.ArticleLongSummary;
 import demo.article.article.pojo.type.ArticleReviewType;
+import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.article.article.service.ArticleAdminService;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
@@ -33,12 +37,31 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	@Autowired
 	private ArticleLongMapper articleLongMapper;
 	@Autowired
+	private ArticleChannelsMapper articleChannelsMapper;
+	@Autowired
 	private ArticleLongSummaryMapper articleLongSummaryMapper;
 	@Autowired
 	private ArticleLongReviewMapper articleLongReviewMapper;
 	@Autowired
 	private ArticleHotMapper articleHotMapper;
 	
+	@Override
+	public List<ArticleChannelVO> findArticleChannel() {
+		List<ArticleChannelVO> channelVOList = new ArrayList<ArticleChannelVO>();
+		ArticleChannelsExample example = new ArticleChannelsExample();
+		example.createCriteria().andIsDeleteEqualTo(false);
+		List<ArticleChannels> channelPOList = articleChannelsMapper.selectByExample(example);
+		ArticleChannelVO tmpChannelVO = null;
+		
+		for(ArticleChannels channel : channelPOList) {
+			tmpChannelVO = new ArticleChannelVO();
+			tmpChannelVO.setChannelName(channel.getChannelName());
+			tmpChannelVO.setChannelId(String.valueOf(channel.getChannelId()));
+			channelVOList.add(tmpChannelVO);
+		}
+		
+		return channelVOList;
+	}
 	
 	@Override
 	public CommonResultCX batchUpdatePrivateKey(BatchUpdatePrimaryKeyParam param) {
@@ -238,7 +261,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 	public CommonResultCX changeChannel(ChangeChannelParam param) throws Exception {
 		CommonResultCX result = new CommonResultCX();
-		if(StringUtils.isBlank(param.getPk()) || param.getArticleId() != null || param.getChannelId() != null) {
+		if(StringUtils.isBlank(param.getPk()) || param.getArticleId() != null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}

@@ -5,7 +5,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <div class="row border border-danger rounded">
-  <div class="col-sm-2 trySetArticleHot" pk="${articleLongVO.privateKey}">
+  <div class="col-lg-3 trySetArticleHot" pk="${articleLongVO.privateKey}">
     <button class="btn btn-primary btn-sm" name="trySetArticleHot" pk="${articleLongVO.privateKey}" 
       <c:if test="${articleLongVO.isPass == false or articleLongVO.isReject == true or articleLongVO.isDelete == true}">
       style="display : none;" 
@@ -15,7 +15,7 @@
     </button>
   </div>
 
-  <div class="col-sm-2 form-group setArticleHotOption" pk="${articleLongVO.privateKey}" style="display: none;">
+  <div class="col-lg-3 form-group setArticleHotOption" pk="${articleLongVO.privateKey}" style="display: none;">
     <span class="badge badge-primary">置顶时长</span>
     <select class="form-control form-control-sm" name="setArticleHotMinutes" pk="${articleLongVO.privateKey}">
       <option value="1440"><span class="badge badge-light">1天</span></option>
@@ -25,12 +25,12 @@
     </select>
   </div>
 
-  <div class="col-sm-2 form-group setArticleHotOption" pk="${articleLongVO.privateKey}" style="display: none;">
+  <div class="col-lg-3 form-group setArticleHotOption" pk="${articleLongVO.privateKey}" style="display: none;">
     <span class="badge badge-primary">置顶等级</span>
     <input class="form-control" type="number" name="setArticleHotLevel" pk="${articleLongVO.privateKey}" min="0" max="10" value="0">
   </div>
 
-  <div class="col-sm-2 form-group setArticleHotOption" pk="${articleLongVO.privateKey}" style="display: none;">
+  <div class="col-lg-3 form-group setArticleHotOption" pk="${articleLongVO.privateKey}" style="display: none;">
     <button class="btn btn-primary" name="setArticleHot" pk="${articleLongVO.privateKey}">
       <span class="badge badge-primary">确定置顶</span>
     </button>

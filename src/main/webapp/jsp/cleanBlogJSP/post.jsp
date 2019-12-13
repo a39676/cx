@@ -36,28 +36,30 @@
   <header class="masthead">
     <div class="container">
       <div class="row">
-        <div class="post-top-area">
-          <c:if test="${articleLongVO.iWroteThis == true}">
-            <c:if test="${articleLongVO.isDelete == true}">
-              <button class="btn btn-danger btn-sm" disabled="disabled">
-                <span class="badge badge-danger">已删除.</span>
-              </button>
-            </c:if>
-            <c:if test="${articleLongVO.isDelete == false}">
-              <button class="btn btn-danger btn-sm" name="delete" pk="${articleLongVO.privateKey}">
-                <span style="font-size: small;">删除</span>
-              </button>
-              <a href="/article/editArticleLong?pk=${articleLongVO.privateKey}" target="_blank"><span class="badge badge-info">编辑</span></a>
-            </c:if>
-            <span pk="${articleLongVO.privateKey}" name="reviewResult"></span>
-          </c:if>              
-          <sec:authorize access="hasRole('ROLE_ADMIN')">
-          <%@ include file="../articleJSP/articleReview.jsp" %>
-          <%@ include file="../articleJSP/articleManager.jsp" %>
-          </sec:authorize>
-          <sec:authorize access="hasRole('ROLE_ADMIN')">
-          </sec:authorize>
-        </div><!-- post-top-area -->
+        <div class="col-md-12">
+          <div class="post-top-area">
+            <c:if test="${articleLongVO.iWroteThis == true}">
+              <c:if test="${articleLongVO.isDelete == true}">
+                <button class="btn btn-danger btn-sm" disabled="disabled">
+                  <span class="badge badge-danger">已删除.</span>
+                </button>
+              </c:if>
+              <c:if test="${articleLongVO.isDelete == false}">
+                <button class="btn btn-danger btn-sm" name="delete" pk="${articleLongVO.privateKey}">
+                  <span style="font-size: small;">删除</span>
+                </button>
+              <a href="/article/editArticleLong?pk=${articleLongVO.privateKey}" target="_blank"><span class=" badge badge-info">编辑</span></a>
+              </c:if>
+              <span pk="${articleLongVO.privateKey}" name="reviewResult"></span>
+            </c:if>              
+            <sec:authorize access="hasRole('ROLE_ADMIN')">
+            <%@ include file="../articleJSP/articleReview.jsp" %>
+            <%@ include file="../articleJSP/articleManager.jsp" %>
+            </sec:authorize>
+            <sec:authorize access="hasRole('ROLE_ADMIN')">
+            </sec:authorize>
+          </div><!-- post-top-area -->
+        </div>
       </div>
     </div>
   </header>

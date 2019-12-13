@@ -8,7 +8,7 @@
 <div class="container-fluid">
 
 <div class="row">
-  <div class="col-sm-4">
+  <div class="col-lg-6">
     <div class="input-group">
       <div class="input-group-prepend">
         <button class="btn btn-outline-secondary">
@@ -36,7 +36,7 @@
     </div>
   </div>
 
-  <div class="col-sm-4">
+  <div class="col-lg-4">
     <div class="btn-group">
       <span class="btn btn-success" style="font-size: small">选择已通过
         <input type="checkbox" class="form-control" name="isPass">
@@ -54,7 +54,7 @@
 </div>
 
 <div class="row">
-  <div class="col-sm-4">
+  <div class="col-lg-4">
     <button class="btn  btn-info btn-sm" name="adminButtomMark">
       <span style="font-size: small;" name="bottomMarkSpan">审核更多</span>
     </button>

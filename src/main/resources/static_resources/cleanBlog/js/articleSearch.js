@@ -34,14 +34,14 @@ $(document).ready(function() {
 
   $("button[name='adminButtomMark']").on('click', function() {
     var blogArea = $("#blogArea");
-    var uuid = blogArea.attr("articleChannel");
-    adminLoadArticleLongSummaryList(uuid);
+    var articleChannelId = blogArea.attr("articleChannel");
+    adminLoadArticleLongSummaryList(articleChannelId);
   });
 
   // need admin role
-  function adminLoadArticleLongSummaryList(uuid) {
+  function adminLoadArticleLongSummaryList(articleChannelId) {
     var blogArea = $("#blogArea");
-    blogArea.attr("articleChannel", uuid);
+    blogArea.attr("articleChannel", articleChannelId);
     var url = "/article/articleLongSummaryListByChannel";
     var isDelete = false;
     if($("input[name='isDelete']").is(":checked")) {
@@ -58,7 +58,7 @@ $(document).ready(function() {
     var jsonOutput = {
       endTime:$("input[name='endTime']").val(),
       startTime:$("input[name='startTime']").val(),
-      articleChannelUUID:uuid,
+      articleChannelId:articleChannelId,
       isDelete:isDelete,
       isPass:isPass,
       isEdited:isEdited

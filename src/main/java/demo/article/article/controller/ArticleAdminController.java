@@ -1,5 +1,7 @@
 package demo.article.article.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.pojo.constant.ArticleAdminUrlConstant;
@@ -16,6 +19,7 @@ import demo.article.article.pojo.param.controllerParam.ChangeChannelParam;
 import demo.article.article.pojo.param.controllerParam.ReviewArticleLongParam;
 import demo.article.article.pojo.param.controllerParam.SetArticleHotParam;
 import demo.article.article.pojo.type.ArticleReviewType;
+import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.article.article.service.ArticleAdminService;
 import demo.baseCommon.controller.CommonController;
 import demo.baseCommon.pojo.result.CommonResultCX;
@@ -28,6 +32,12 @@ public class ArticleAdminController extends CommonController {
 	
 	@Autowired
 	private ArticleAdminService articleAdminService;
+	
+	@PostMapping(value = ArticleAdminUrlConstant.findArticleChannel)
+	@ResponseBody
+	public List<ArticleChannelVO> findArticleChannel() {
+		return articleAdminService.findArticleChannel();
+	}
 	
 	@PostMapping(value = ArticleAdminUrlConstant.batchUpdatePrivateKey)
 	public void batchUpdatePrivateKey(@RequestBody BatchUpdatePrimaryKeyParam param, HttpServletRequest request, HttpServletResponse response) {

@@ -246,25 +246,14 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		CommonResultCX result = new CommonResultCX();
 		int insertCount = 0;
 		
-		String uuid = controllerParam.getUuid();
-		if(StringUtils.isBlank(uuid)) {
+		String channelIdStr = controllerParam.getChannelId();
+		if(StringUtils.isBlank(channelIdStr) || !numberUtil.matchInteger(channelIdStr)) {
 			log.error("creating article errorParam %s, userId: %s", controllerParam.toString(), userId);
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
-		ArticleUUIDChannelStoreBO channelUUIDStore = channelService.getArticleUUIDChannelStore();
-		if(channelUUIDStore == null) {
-			log.error("creating article channelUUIDError %s, userId: %s", controllerParam.toString(), userId);
-			result.fillWithResult(ResultTypeCX.channelUUIDError);
-			return result;
-		}
 		
-		Long channelId = channelUUIDStore.getChannelId(uuid);
-		if(channelId == null) {
-			log.error("creating article channelUUIDError %s, userId: %s", controllerParam.toString(), userId);
-			result.fillWithResult(ResultTypeCX.channelUUIDError);
-			return result;
-		}
+		Long channelId = Long.parseLong(channelIdStr);
 		
 		Integer postLimit = articleUserDetailMapper.findArticleUserPostLimit(userId, channelId);
 		if(postLimit == null) {
@@ -338,7 +327,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		newArticle.setPath(filePath);
 		newArticle.setUserId(userId);
 		newArticle.setChannelId(channelId);
-
 		
 		try {
 			insertCount = articleLongMapper.insertSelective(newArticle);
@@ -607,12 +595,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 				|| (inputParam.getLikeOrHate() != 1 && inputParam.getLikeOrHate() != 0 && inputParam.getLikeOrHate() != -1)
 				|| StringUtils.isBlank(inputParam.getUuid())) {
 			result.fillWithResult(ResultTypeCX.nullParam);
-			return result;
-		}
-		
-		ArticleUUIDChannelStoreBO channelUUIDStore = channelService.getArticleUUIDChannelStore();
-		if(channelUUIDStore == null) {
-			result.fillWithResult(ResultTypeCX.channelUUIDError);
 			return result;
 		}
 		

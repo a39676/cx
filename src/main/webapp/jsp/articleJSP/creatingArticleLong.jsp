@@ -31,7 +31,7 @@
           <span class="badge badge-primary">请选择提交频道</span>
           <select class="" name="channelList" style="">
             <c:forEach items="${channelList}" var="subChannel">
-              <option value="${subChannel.uuid}">${subChannel.channelName}</option>
+              <option value="${subChannel.channelId}">${subChannel.channelName}</option>
             </c:forEach>
           </select>
         </div>
@@ -115,10 +115,10 @@
         var title = $("#articleTitle").val();
         var s = $('#summernote');
         var content = s.summernote('code');
-        var uuid = $("select[name='channelList'] option:selected").val();
+        var channelId = $("select[name='channelList'] option:selected").val();
     
         var jsonOutput = {
-          uuid:uuid,
+          channelId:channelId,
           title:title,
           content:content
         };
@@ -167,11 +167,11 @@
         var title = $("#articleTitle").val();
         var s = $('#summernote');
         var content = s.summernote('code');
-        var uuid = $("select[name='channelList'] option:selected").val();
+        var channelId = $("select[name='channelList'] option:selected").val();
         var pk = $("#sourceArticleVO").attr("pk");
 
         var jsonOutput = {
-          uuid:uuid,
+          channelId:channelId,
           title:title,
           content:content,
           pk:pk

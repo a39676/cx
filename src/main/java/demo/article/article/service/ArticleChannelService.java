@@ -1,20 +1,11 @@
 package demo.article.article.service;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
-import demo.article.article.pojo.bo.ArticleUUIDChannelStoreBO;
 import demo.article.article.pojo.po.ArticleChannels;
 import demo.article.article.pojo.result.GetArticleChannelsResult;
 
 public interface ArticleChannelService {
-
-	boolean loadArticleUUIDChannel(boolean mustRefresh);
-
-	boolean loadArticleUUIDChannel();
-
-	ArticleUUIDChannelStoreBO getArticleUUIDChannelStore();
 
 	ArticleChannels findArticleChannelById(Long channelId);
 
@@ -33,14 +24,5 @@ public interface ArticleChannelService {
 	boolean showLikeOrHate(Long channelId, Long userId);
 
 	String loadChannelPrefix(Integer channelId);
-
-	/** 以频道uuid获取对应频道id */
-	Long getChannelIdByUUID(String uuid);
-
-	/** 以频道id获取对应频道uuid */
-	String getChannelUUIDById(Long channelId);
-
-	/** 以用户id查找当前其可以访问的频道ID列表 */
-	List<Integer> findChannelIdListByUserId(Long userId);
 
 }

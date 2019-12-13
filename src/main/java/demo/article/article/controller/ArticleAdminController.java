@@ -21,7 +21,6 @@ import demo.article.article.pojo.param.mapperParam.FindArticleChannelsParam;
 import demo.article.article.pojo.type.ArticleReviewType;
 import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.article.article.service.ArticleAdminService;
-import demo.article.article.service.ArticleChannelService;
 import demo.baseCommon.controller.CommonController;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
@@ -35,23 +34,6 @@ public class ArticleAdminController extends CommonController {
 	@Autowired
 	private ArticleAdminService articleAdminService;
 	
-	@Autowired
-	private ArticleChannelService channelService;
-	
-	
-	@PostMapping(value = ArticleAdminUrlConstant.loadArticleUUIDChannel)
-	public void loadArticleUUIDChannel(HttpServletRequest request, HttpServletResponse response) {
-		boolean flag = channelService.loadArticleUUIDChannel(true);
-		CommonResultCX serviceResult = new CommonResultCX();
-		if(!flag) {
-			serviceResult.fillWithResult(ResultTypeCX.serviceError);
-		} else {
-			serviceResult.fillWithResult(ResultTypeCX.success);
-		}
-		outputJson(response, JSONObject.fromObject(serviceResult));
-		return;
-	}
-
 	@PostMapping(value = ArticleAdminUrlConstant.batchUpdatePrivateKey)
 	public void batchUpdatePrivateKey(@RequestBody BatchUpdatePrimaryKeyParam param, HttpServletRequest request, HttpServletResponse response) {
 		CommonResult serviceResult = articleAdminService.batchUpdatePrivateKey(param);

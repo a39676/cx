@@ -1,11 +1,9 @@
 package demo.article.article.pojo.vo;
 
-import demo.article.article.pojo.bo.ArticleChannelUUIDBO;
-
 public class ArticleChannelVO implements Comparable<ArticleChannelVO> {
 
 	private String channelName;
-	private String uuid;
+	private String channelId;
 	private String channelImage;
 	private Integer weights;
 
@@ -25,12 +23,12 @@ public class ArticleChannelVO implements Comparable<ArticleChannelVO> {
 		this.channelName = channelName;
 	}
 
-	public String getUuid() {
-		return uuid;
+	public String getChannelId() {
+		return channelId;
 	}
 
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
+	public void setChannelId(String channelId) {
+		this.channelId = channelId;
 	}
 
 	public Integer getWeights() {
@@ -43,15 +41,16 @@ public class ArticleChannelVO implements Comparable<ArticleChannelVO> {
 
 	@Override
 	public String toString() {
-		return "ArticleChannelVO [channelName=" + channelName + ", uuid=" + uuid + ", weights=" + weights + "]";
+		return "ArticleChannelVO [channelName=" + channelName + ", channelId=" + channelId + ", channelImage="
+				+ channelImage + ", weights=" + weights + "]";
 	}
 
-	public ArticleChannelVO buildByArticleUUIDChannelBO(ArticleChannelUUIDBO bo) {
+	public ArticleChannelVO buildByArticleUUIDChannelBO(ArticleChannelVO bo) {
 		ArticleChannelVO vo = new ArticleChannelVO();
 		vo.setChannelName(bo.getChannelName());
-		vo.setUuid(bo.getUuid());
+		vo.setChannelId(bo.getChannelId().toString());
 		vo.setWeights(bo.getWeights());
-		vo.setChannelImage(bo.getImage());
+		vo.setChannelImage(bo.getChannelImage());
 		return vo;
 	}
 

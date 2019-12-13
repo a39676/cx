@@ -21,6 +21,5 @@ public class ArticleUrlConstant {
 	public static final String findEvaluationStatisticsByArticleId = "/findEvaluationStatisticsByArticleId";
 	public static final String insertArticleLongEvaluation = "/insertArticleLongEvaluation";
 	public static final String insertArticleLongCommentEvaluation = "/insertArticleLongCommentEvaluation";
-	public static final String likeOrHateThisChannel = "/likeOrHateThisChannel";
 	public static final String articleLongFeedback = "/articleLongFeedback";
 }

@@ -169,7 +169,7 @@ $(document).ready(function() {
         channelSelector.show();
         $("button[name='changeChannel'][pk='"+pk+"']").show();
         $.each(datas, function(index, channel) {
-          channelSelector.append($("<option></option>").attr("value", channel.uuid).text(channel.channelName));
+          channelSelector.append($("<option></option>").attr("value", channel.channelId).text(channel.channelName));
         });
         $("button[name='findChannel']").hide();
       },  
@@ -180,12 +180,12 @@ $(document).ready(function() {
   });
 
   $("button[name='changeChannel']").click(function () {
-    var uuid = $("select[name='findChannel'][pk='"+pk+"'] option:selected").val();
+    var channelId = $("select[name='findChannel'][pk='"+pk+"'] option:selected").val();
 
     var url = "/articleAdmin/changeChannel";
     var jsonOutput = {
       pk:pk,
-      uuid:uuid
+      channelId:channelId
     };
 
     $.ajax({  

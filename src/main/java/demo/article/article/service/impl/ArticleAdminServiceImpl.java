@@ -15,7 +15,6 @@ import demo.article.article.mapper.ArticleLongMapper;
 import demo.article.article.mapper.ArticleLongReviewMapper;
 import demo.article.article.mapper.ArticleLongSummaryMapper;
 import demo.article.article.mapper.ArticleUserDetailMapper;
-import demo.article.article.pojo.bo.ArticleUUIDChannelStoreBO;
 import demo.article.article.pojo.constant.ArticleConstant;
 import demo.article.article.pojo.param.controllerParam.BatchUpdatePrimaryKeyParam;
 import demo.article.article.pojo.param.controllerParam.ChangeChannelParam;
@@ -33,7 +32,6 @@ import demo.article.article.pojo.po.ArticleLongSummary;
 import demo.article.article.pojo.type.ArticleReviewType;
 import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.article.article.service.ArticleAdminService;
-import demo.article.article.service.ArticleChannelService;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 
@@ -53,14 +51,6 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	@Autowired
 	private ArticleHotMapper articleHotMapper;
 	
-	@Autowired
-	private ArticleChannelService channelService;
-	
-	
-	
-	static {{
-
-	}}
 	
 	@Override
 	public CommonResultCX batchUpdatePrivateKey(BatchUpdatePrimaryKeyParam param) {
@@ -304,12 +294,11 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		List<ArticleChannelVO> channelVOList = new ArrayList<ArticleChannelVO>();
 		List<ArticleChannels> channelPOList = articleChannelsMapper.findArticleChannels(param);
 		ArticleChannelVO tmpChannelVO = null;
-		ArticleUUIDChannelStoreBO uuidChannelStore = channelService.getArticleUUIDChannelStore();
 		
 		for(ArticleChannels channel : channelPOList) {
 			tmpChannelVO = new ArticleChannelVO();
 			tmpChannelVO.setChannelName(channel.getChannelName());
-			tmpChannelVO.setUuid(uuidChannelStore.getUUID(channel.getChannelId()));
+			tmpChannelVO.setChannelId(String.valueOf(channel.getChannelId()));
 			channelVOList.add(tmpChannelVO);
 		}
 		
@@ -320,13 +309,10 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 	public CommonResultCX changeChannel(ChangeChannelParam param) throws Exception {
 		CommonResultCX result = new CommonResultCX();
-		if(StringUtils.isBlank(param.getPk()) || StringUtils.isBlank(param.getUuid()) || param.getArticleId() != null || param.getChannelId() != null) {
+		if(StringUtils.isBlank(param.getPk()) || param.getArticleId() != null || param.getChannelId() != null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
-		ArticleUUIDChannelStoreBO uuidChannelStore = channelService.getArticleUUIDChannelStore();
-		
-		Long channelId = uuidChannelStore.getChannelId(param.getUuid());
 		
 		Long articleId = decryptArticlePrivateKey(param.getPk());
 		if(articleId == null) {
@@ -335,9 +321,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		}
 		
 		param.setArticleId(articleId);
-		param.setChannelId(channelId);
 		param.setPk(null);
-		param.setUuid(null);
 		
 		ArticleLong article = articleLongMapper.selectByPrimaryKey(articleId);
 		int deleteReviewRecordCount = 0;

@@ -27,7 +27,6 @@ public enum ResultTypeCX {
 	wrongOldPassword("原密码错误", "-3-3"),
 	articleTooLong("内容过长", "-3-4"),
 	articleTooShort("内容过短", "-3-5"),
-	channelUUIDError("发现了一个奇怪的异常,请刷新页面后重试..", "-3-6"),
 	articleWasPass("文章已通过", "-3-7"),
 	articleWasReject("文章已拒绝", "-3-8"),
 	articleWasDelete("文章已删除", "-3-9"),

@@ -1,9 +1,9 @@
 package demo.article.article.pojo.param.controllerParam;
 
-public class CreateArticleParam  {
+public class CreateArticleParam {
 
 	private String superAdminKey;
-	private String uuid;
+	private String channelId;
 	private String title;
 	private String content;
 	private boolean quickPass = false;
@@ -16,12 +16,12 @@ public class CreateArticleParam  {
 		this.superAdminKey = superAdminKey;
 	}
 
-	public String getUuid() {
-		return uuid;
+	public String getChannelId() {
+		return channelId;
 	}
 
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
+	public void setChannelId(String channelId) {
+		this.channelId = channelId;
 	}
 
 	public String getTitle() {
@@ -50,7 +50,7 @@ public class CreateArticleParam  {
 
 	@Override
 	public String toString() {
-		return "CreateArticleParam [superAdminKey=" + superAdminKey + ", uuid=" + uuid + ", title=" + title
+		return "CreateArticleParam [superAdminKey=" + superAdminKey + ", channelId=" + channelId + ", title=" + title
 				+ ", content=" + content + ", quickPass=" + quickPass + "]";
 	}
 

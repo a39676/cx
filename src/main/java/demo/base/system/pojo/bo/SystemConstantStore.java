@@ -33,7 +33,6 @@ public class SystemConstantStore {
 	public static final String hostName3 = "hostName3";
 	public static final String debugStatus = "debugStatus";
 	public static final String fakeFTPHome = "fakeFTPHome";
-	public static final String articleChannelUUIDMode = "articleChannelUUIDMode";
 	public static final String superAdminKey = "superAdminKey";
 	/** 一般用户可以浏览 * 个月内的非置顶内容- */
 	public static final String normalUserMaxReadingMonth = "normalUserMaxReadingMonth";

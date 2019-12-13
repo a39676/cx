@@ -46,14 +46,6 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		return publicChannelVOList;
 	}
 
-	private List<ArticleChannelVO> getFlashChannels() {
-		ArticleChannelsExample example = new ArticleChannelsExample();
-		example.createCriteria().andChannelTypeEqualTo(ArticleChannelType.flashChannel.getCode()).andIsDeleteEqualTo(false);
-		List<ArticleChannels> flashChannels = articleChannelsMapper.selectByExample(example);
-		List<ArticleChannelVO> flashChannelVOList = buildChannelVOByPO(flashChannels);
-		return flashChannelVOList;
-	}
-
 	private ArticleChannelVO buildChannelVOByPO(ArticleChannels channel) {
 		ArticleChannelVO vo = new ArticleChannelVO();
 		if (channel == null) {
@@ -106,7 +98,6 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	private GetArticleChannelsBO getArticleChannelsForNotLogin(String hostName) {
 		GetArticleChannelsBO channelListBO = new GetArticleChannelsBO();
 		channelListBO.setPublicChannels(getPublicChannels());
-		channelListBO.setFlashChannels(getFlashChannels());
 		fillChannels(channelListBO);
 
 		channelListBO = removeChannelsByHostName(hostName, channelListBO);

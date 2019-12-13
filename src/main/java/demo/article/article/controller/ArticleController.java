@@ -70,9 +70,6 @@ public class ArticleController extends CommonController {
 	@Autowired
 	private VisitDataService visitDataService;
 	
-//	@Autowired
-//	private BaseUtilCustom baseUtilCustom;
-	
 	@GetMapping(value = ArticleUrlConstant.createBurnMessage)
 	public ModelAndView createBurnMessage(HttpServletRequest request) {
 		ModelAndView view = new ModelAndView(ArticleViewConstant.createBurnMessage);
@@ -136,11 +133,6 @@ public class ArticleController extends CommonController {
 		GetArticleChannelsResult result = channelService.getArticleChannelsDynamic(request);
 		return result;
 	}
-	
-//	private GetArticleChannelsResult getArticleChannelsDynamic(HttpServletRequest request) {
-//		Long userId = baseUtilCustom.getUserId();
-//		return channelService.getArticleChannelsDynamic(request, userId);
-//	}
 	
 	@PostMapping(value = ArticleUrlConstant.articleLongSummaryListByChannel)
 	public void articleLongSummaryListByChannel(@RequestBody FindArticleLongSummaryListControllerParam param, HttpServletRequest request, HttpServletResponse response) throws Exception {

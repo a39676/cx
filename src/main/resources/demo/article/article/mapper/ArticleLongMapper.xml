@@ -394,20 +394,20 @@
       </foreach>
   </select>
 
-  <select id="findArticleLongByDecryptId" resultMap="ArticleLongVO">
+  <select id="findArticleLongByDecryptId" resultType="demo.article.article.pojo.vo.ArticleLongVO">
     select
-      al.user_id,
-      al.article_title,
-      al.path,
-      al.create_time,
-      al.edit_time,
-      al.edit_of,
-      al.edit_count,
-      al.is_delete,
-      al.is_pass,
-      al.is_edited,
-      al.is_reject,
-      udt.nick_name
+      al.user_id as userId,
+      al.article_title as articleTitle,
+      al.path as path,
+      al.create_time as createTime,
+      al.edit_time as editTime,
+      al.edit_of as editOf,
+      al.edit_count as editCount,
+      al.is_delete as isDelete,
+      al.is_pass as isPass,
+      al.is_edited as isEdited,
+      al.is_reject as isReject,
+      udt.nick_name as nickName
 
     from
       article_long as al

@@ -30,8 +30,8 @@ function loadArticleChannels() {
       datas.channelList.forEach(function(channel) {
         $("#articleChannels").append(buildSubChannel(channel));
       });
-      var uuid = datas.channelList[0].uuid;
-      loadArticleLongSummaryFirstPage(uuid);
+      var channelId = datas.channelList[0].channelId;
+      loadArticleLongSummaryFirstPage(channelId);
     },  
     error: function(datas) {
     }  
@@ -40,7 +40,7 @@ function loadArticleChannels() {
 
 function buildSubChannel(channel) {
   var channelButton = "";
-  channelButton += "<button class='btn btn-sm channelButton' uuid='" + channel.uuid + "' onclick='loadArticleLongSummaryFirstPage("+channel.uuid+")'>";
+  channelButton += "<button class='btn btn-sm channelButton' channelId='" + channel.channelId + "' onclick='loadArticleLongSummaryFirstPage("+channel.channelId+")'>";
   channelButton += channel.channelName;
   channelButton += "</button>";
   return channelButton;
@@ -76,9 +76,9 @@ function buildSummaryLine(subArticleVO) {
   return newRow;
 }
 
-function loadArticleLongSummaryHot(uuid) {
+function loadArticleLongSummaryHot(channelId) {
   var blogArea = $("#blogArea");
-  blogArea.attr("articleChannel", uuid);
+  blogArea.attr("articleChannel", channelId);
   $("#articleAreaLoadingImg").fadeIn(150);    
   if(blogArea.attr("loadingFlag") == "1") {
     $("#articleAreaLoadingImg").fadeOut(150);
@@ -86,7 +86,7 @@ function loadArticleLongSummaryHot(uuid) {
   }
   blogArea.attr("loadingFlag", "1");
   var jsonOutput = {
-    articleChannelUUID:uuid,
+    articleChannelId:channelId,
     vcode:getUrlParameter('vcode'),
     isHot:"true",
   };
@@ -123,9 +123,9 @@ function loadArticleLongSummaryHot(uuid) {
   blogArea.attr("loadingFlag", "0");
 };
 
-function loadArticleLongSummary(uuid) {
+function loadArticleLongSummary(channelId) {
   var blogArea = $("#blogArea");
-  blogArea.attr("articleChannel", uuid);
+  blogArea.attr("articleChannel", channelId);
   var markTime = blogArea.attr("markTime");
   $("#articleAreaLoadingImg").fadeIn(150);    
   if(blogArea.attr("loadingFlag") == "1") {
@@ -134,7 +134,7 @@ function loadArticleLongSummary(uuid) {
   }
   blogArea.attr("loadingFlag", "1");
   var jsonOutput = {
-    articleChannelUUID:uuid,
+    articleChannelId:channelId,
     endTime:markTime,
     isHot:"false",
   };
@@ -170,17 +170,17 @@ function loadArticleLongSummary(uuid) {
   blogArea.attr("loadingFlag", "0");
 };
 
-function loadArticleLongSummaryFirstPage(uuid) {
+function loadArticleLongSummaryFirstPage(channelId) {
   $("#blogArea").attr("markTime", "");
   $(".channelButton").attr('disabled','disabled');
-  loadArticleLongSummaryHot(uuid);
-  loadArticleLongSummary(uuid);
+  loadArticleLongSummaryHot(channelId);
+  loadArticleLongSummary(channelId);
   $(".channelButton").removeAttr('disabled');
 }
 
 $("#loadMoreButton").click(function () {
-  var uuid = $("#blogArea").attr("articleChannel");
-  loadArticleLongSummary(uuid);
+  var channelId = $("#blogArea").attr("articleChannel");
+  loadArticleLongSummary(channelId);
 });
 
 $("#createNewArticle").click(function () {

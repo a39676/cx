@@ -37,33 +37,12 @@ public class FindArticleLongSummaryListControllerParam {
 	private Boolean isHot = false;
 	private String vcode;
 
-	// 以下参数将在V3版本固定后废弃
-	// 2018-12-21
-	private Integer pageNo = 1;
-	private Integer pageSize = 10;
-
 	public Boolean getIsHot() {
 		return isHot;
 	}
 
 	public void setIsHot(Boolean isHot) {
 		this.isHot = isHot;
-	}
-
-	public Integer getPageNo() {
-		return pageNo;
-	}
-
-	public void setPageNo(Integer pageNo) {
-		this.pageNo = pageNo;
-	}
-
-	public Integer getPageSize() {
-		return pageSize;
-	}
-
-	public void setPageSize(Integer pageSize) {
-		this.pageSize = pageSize;
 	}
 
 	public Long getUserId() {
@@ -138,16 +117,6 @@ public class FindArticleLongSummaryListControllerParam {
 		this.articleChannelName = articleChannelName;
 	}
 
-	@Override
-	public String toString() {
-		return "FindArticleLongSummaryListControllerParam [articleChannelName=" + articleChannelName
-				+ ", articleChannelId=" + articleChannelId + ", title=" + title + ", userId=" + userId + ", startTime="
-				+ startTime + ", endTime=" + endTime + ", isDelete=" + isDelete + ", isPass=" + isPass + ", isEdited="
-				+ isEdited + ", isReject=" + isReject + ", limit=" + limit + ", desc=" + desc + ", hasAdminRole="
-				+ hasAdminRole + ", isHot=" + isHot + ", vcode=" + vcode + ", pageNo=" + pageNo + ", pageSize="
-				+ pageSize + "]";
-	}
-
 	public Long getArticleChannelId() {
 		return articleChannelId;
 	}
@@ -186,6 +155,15 @@ public class FindArticleLongSummaryListControllerParam {
 
 	public void setHasAdminRole(Boolean hasAdminRole) {
 		this.hasAdminRole = hasAdminRole;
+	}
+
+	@Override
+	public String toString() {
+		return "FindArticleLongSummaryListControllerParam [articleChannelName=" + articleChannelName
+				+ ", articleChannelId=" + articleChannelId + ", title=" + title + ", userId=" + userId + ", startTime="
+				+ startTime + ", endTime=" + endTime + ", isDelete=" + isDelete + ", isPass=" + isPass + ", isEdited="
+				+ isEdited + ", isReject=" + isReject + ", limit=" + limit + ", desc=" + desc + ", hasAdminRole="
+				+ hasAdminRole + ", isHot=" + isHot + ", vcode=" + vcode + "]";
 	}
 
 }

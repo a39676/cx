@@ -1,115 +1,105 @@
 package demo.article.article.pojo.po;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class ArticleChannels {
+    private Long channelId;
 
-	private Long channelId;
+    private String channelName;
 
-	private String channelName;
+    private LocalDateTime createTime;
 
-	private Date createTime;
+    private Long channelPoint;
 
-	private Long channelPoint;
+    private Integer channelFlashPoint;
 
-	private Integer channelFlashPoint;
+    private Integer weights;
 
-	private Integer weights;
+    private Integer channelType;
 
-	private Integer channelType;
+    private Boolean isFlash;
 
-	private Boolean isFlash;
+    private String image;
 
-	private String image;
-	
-	private Boolean isDelete;
+    private Boolean isDelete;
 
-	public String getImage() {
-		return image;
-	}
+    public Long getChannelId() {
+        return channelId;
+    }
 
-	public void setImage(String image) {
-		this.image = image;
-	}
+    public void setChannelId(Long channelId) {
+        this.channelId = channelId;
+    }
 
-	public String getChannelName() {
-		return channelName;
-	}
+    public String getChannelName() {
+        return channelName;
+    }
 
-	public void setChannelName(String channelName) {
-		this.channelName = channelName == null ? null : channelName.trim();
-	}
+    public void setChannelName(String channelName) {
+        this.channelName = channelName == null ? null : channelName.trim();
+    }
 
-	public Date getCreateTime() {
-		return createTime;
-	}
+    public LocalDateTime getCreateTime() {
+        return createTime;
+    }
 
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
+    }
 
-	public Long getChannelPoint() {
-		return channelPoint;
-	}
+    public Long getChannelPoint() {
+        return channelPoint;
+    }
 
-	public void setChannelPoint(Long channelPoint) {
-		this.channelPoint = channelPoint;
-	}
+    public void setChannelPoint(Long channelPoint) {
+        this.channelPoint = channelPoint;
+    }
 
-	public Integer getChannelFlashPoint() {
-		return channelFlashPoint;
-	}
+    public Integer getChannelFlashPoint() {
+        return channelFlashPoint;
+    }
 
-	public void setChannelFlashPoint(Integer channelFlashPoint) {
-		this.channelFlashPoint = channelFlashPoint;
-	}
+    public void setChannelFlashPoint(Integer channelFlashPoint) {
+        this.channelFlashPoint = channelFlashPoint;
+    }
 
-	public Long getChannelId() {
-		return channelId;
-	}
+    public Integer getWeights() {
+        return weights;
+    }
 
-	public void setChannelId(Long channelId) {
-		this.channelId = channelId;
-	}
+    public void setWeights(Integer weights) {
+        this.weights = weights;
+    }
 
-	public Integer getWeights() {
-		return weights;
-	}
+    public Integer getChannelType() {
+        return channelType;
+    }
 
-	public void setWeights(Integer weights) {
-		this.weights = weights;
-	}
+    public void setChannelType(Integer channelType) {
+        this.channelType = channelType;
+    }
 
-	public Integer getChannelType() {
-		return channelType;
-	}
+    public Boolean getIsFlash() {
+        return isFlash;
+    }
 
-	public void setChannelType(Integer channelType) {
-		this.channelType = channelType;
-	}
+    public void setIsFlash(Boolean isFlash) {
+        this.isFlash = isFlash;
+    }
 
-	public Boolean getIsFlash() {
-		return isFlash;
-	}
+    public String getImage() {
+        return image;
+    }
 
-	public void setIsFlash(Boolean isFlash) {
-		this.isFlash = isFlash;
-	}
-	
-	public Boolean getIsDelete() {
-		return isDelete;
-	}
+    public void setImage(String image) {
+        this.image = image == null ? null : image.trim();
+    }
 
-	public void setIsDelete(Boolean isDelete) {
-		this.isDelete = isDelete;
-	}
+    public Boolean getIsDelete() {
+        return isDelete;
+    }
 
-	@Override
-	public String toString() {
-		return "ArticleChannels [channelId=" + channelId + ", channelName=" + channelName + ", createTime=" + createTime
-				+ ", channelPoint=" + channelPoint + ", channelFlashPoint=" + channelFlashPoint + ", weights=" + weights
-				+ ", channelType=" + channelType + ", isFlash=" + isFlash + ", image=" + image + ", isDelete="
-				+ isDelete + "]";
-	}
-
+    public void setIsDelete(Boolean isDelete) {
+        this.isDelete = isDelete;
+    }
 }

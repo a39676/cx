@@ -11,13 +11,13 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import toolPack.dateTimeHandle.DateHandler;
 
-@ApiModel(value="查询文章缩写标题参数", description="")
+@ApiModel(value = "查询文章缩写标题参数", description = "")
 public class FindArticleLongSummaryListControllerParam {
 
 	@ApiModelProperty(value = "频道名")
 	private String articleChannelName;
-	@ApiModelProperty(value = "频道uuid")
-	private String articleChannelUUID;
+	@ApiModelProperty(value = "频道id")
+	private Long articleChannelId;
 	@ApiModelProperty(value = "title")
 	private String title;
 	private Long userId;
@@ -36,7 +36,7 @@ public class FindArticleLongSummaryListControllerParam {
 	private Boolean hasAdminRole = false;
 	private Boolean isHot = false;
 	private String vcode;
-	
+
 	// 以下参数将在V3版本固定后废弃
 	// 2018-12-21
 	private Integer pageNo = 1;
@@ -138,12 +138,22 @@ public class FindArticleLongSummaryListControllerParam {
 		this.articleChannelName = articleChannelName;
 	}
 
-	public String getArticleChannelUUID() {
-		return articleChannelUUID;
+	@Override
+	public String toString() {
+		return "FindArticleLongSummaryListControllerParam [articleChannelName=" + articleChannelName
+				+ ", articleChannelId=" + articleChannelId + ", title=" + title + ", userId=" + userId + ", startTime="
+				+ startTime + ", endTime=" + endTime + ", isDelete=" + isDelete + ", isPass=" + isPass + ", isEdited="
+				+ isEdited + ", isReject=" + isReject + ", limit=" + limit + ", desc=" + desc + ", hasAdminRole="
+				+ hasAdminRole + ", isHot=" + isHot + ", vcode=" + vcode + ", pageNo=" + pageNo + ", pageSize="
+				+ pageSize + "]";
 	}
 
-	public void setArticleChannelUUID(String articleChannelUUID) {
-		this.articleChannelUUID = articleChannelUUID;
+	public Long getArticleChannelId() {
+		return articleChannelId;
+	}
+
+	public void setArticleChannelId(Long articleChannelId) {
+		this.articleChannelId = articleChannelId;
 	}
 
 	public Boolean getIsReject() {

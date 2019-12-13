@@ -33,9 +33,6 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.mapper.ArticleLongFeedbackMapper;
 import demo.article.article.mapper.ArticleLongMapper;
 import demo.article.article.mapper.ArticleLongReviewMapper;
-import demo.article.article.mapper.ArticleUserDetailMapper;
-import demo.article.article.pojo.bo.ArticleUUIDChannelStoreBO;
-import demo.article.article.pojo.constant.ArticleConstant;
 import demo.article.article.pojo.constant.ArticleViewConstant;
 import demo.article.article.pojo.dto.ArticleFeedbackDTO;
 import demo.article.article.pojo.dto.EditArticleLongDTO;
@@ -44,19 +41,13 @@ import demo.article.article.pojo.dto.ReadyToEditArticleLongDTO;
 import demo.article.article.pojo.param.controllerParam.CreateArticleParam;
 import demo.article.article.pojo.param.controllerParam.CreatingArticleParam;
 import demo.article.article.pojo.param.controllerParam.FindArticleLongByArticleSummaryPrivateKeyDTO;
-import demo.article.article.pojo.param.controllerParam.LikeHateThisChannelParam;
 import demo.article.article.pojo.param.controllerParam.ReviewArticleLongParam;
-import demo.article.article.pojo.param.mapperParam.FindArticleUserDetailByUserIdChannelIdParam;
-import demo.article.article.pojo.param.mapperParam.UpdateArticleUserDetailParam;
-import demo.article.article.pojo.param.mapperParam.UpdateArticleUserPostLimitParam;
 import demo.article.article.pojo.po.ArticleChannels;
 import demo.article.article.pojo.po.ArticleLong;
 import demo.article.article.pojo.po.ArticleLongFeedback;
 import demo.article.article.pojo.po.ArticleLongReview;
-import demo.article.article.pojo.po.ArticleUserDetail;
 import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.article.pojo.result.jsonRespon.FindArticleLongResult;
-import demo.article.article.pojo.type.ArticleChannelLikeOrHateType;
 import demo.article.article.pojo.type.ArticleChannelType;
 import demo.article.article.pojo.type.ArticleFeedbackType;
 import demo.article.article.pojo.type.ArticleReviewType;
@@ -74,7 +65,6 @@ import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.tool.service.TextFilter;
 import demo.tool.service.ValidRegexToolService;
-import net.sf.json.JSONObject;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -96,8 +86,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	
 	@Autowired
 	private ArticleLongMapper articleLongMapper;
-	@Autowired
-	private ArticleUserDetailMapper articleUserDetailMapper;
 	@Autowired
 	private ArticleLongReviewMapper articleLongReviewMapper;
 	@Autowired
@@ -136,36 +124,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		return imageHttpUrlPattern;
 	}
 
-	/**
-	 * 将输入的 line 的所有 图片url 提取到 imageUrls,
-	 * @param line
-	 * @param imageUrls
-	 * @return
-	 * 
-	 * 2019-12-06
-	 * 采用富文本编辑器后, 可能废弃,
-	 * 以后文章上传, 如果允许指定标题附图, 则绝对废弃
-	 */
-//	private void imageUrlHandle(String line, List<String> imageUrls) {
-//		if (StringUtils.isBlank(line)) {
-//			return;
-//		}
-//
-//		List<String> urls = new ArrayList<String>();
-//		Pattern imageUrlPattern = Pattern.compile(imageHttpUrlPattern);
-//		Matcher matcher;
-//
-//		String[] parts = line.split("http");
-//		for (String p : parts) {
-//			p = "http" + p;
-//			matcher = imageUrlPattern.matcher(p);
-//			if (matcher.find() && !urls.contains(matcher.group(1))) {
-//				urls.add(matcher.group(1));
-//			}
-//		}
-//		imageUrls.addAll(urls);
-//	}
-
 	@Override
 	public Long decryptPrivateKey(String pk) {
 		return decryptArticlePrivateKey(pk);
@@ -193,18 +151,10 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return result;
 		}
 		
-		String title = controllerParam.getTitle();
-		String uuid = controllerParam.getUuid();
-		
-		JSONObject tmpJson = null;
 		CommonResult tmpResult = null;
 		int successCount = 0;
 		for(String line : lines) {
 			if(!StringUtils.isBlank(line)) {
-				tmpJson = new JSONObject();
-				tmpJson.put("title", title);
-				tmpJson.put("uuid", uuid);
-				tmpJson.put("content", "http" + line);
 				tmpResult = createNewArticleLong(userId, controllerParam);
 				if(tmpResult.isSuccess()) {
 					successCount = successCount + 1;
@@ -255,37 +205,10 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		
 		Long channelId = Long.parseLong(channelIdStr);
 		
-		Integer postLimit = articleUserDetailMapper.findArticleUserPostLimit(userId, channelId);
-		if(postLimit == null) {
-			ArticleChannels channel = channelService.findArticleChannelById(channelId);
-			if(channel == null || !ArticleChannelType.publicChannel.getCode().equals(channel.getChannelType())) {
-				log.error("creating article checkPostLimitError %s, userId: %s", controllerParam.toString(), userId);
-				result.fillWithResult(ResultTypeCX.errorParam);
-				return result;
-			}
-			
-			FindArticleUserDetailByUserIdChannelIdParam findUserChannelParam = new FindArticleUserDetailByUserIdChannelIdParam();
-			findUserChannelParam.setUserId(userId);
-			findUserChannelParam.setChannelId(channelId);
-			ArticleUserDetail userChannel = articleUserDetailMapper.findArticleUserDetailByUserIdChannelId(findUserChannelParam);
-			if(userChannel == null) {
-				ArticleUserDetail newArticleUserDetail = new ArticleUserDetail();
-				newArticleUserDetail.setUserId(userId);
-				newArticleUserDetail.setArticleChannelId(channelId);
-				newArticleUserDetail.setDailyChannelPostLimit(ArticleConstant.firstVisitDailyPostLimit);
-				insertCount = articleUserDetailMapper.insertSelective(newArticleUserDetail);
-				
-				if(insertCount < 1) {
-					log.error("creating article insertCountError %s, userId: %s", controllerParam.toString(), userId);
-					result.fillWithResult(ResultTypeCX.errorParam);
-					return result;
-				} else {
-					postLimit = ArticleConstant.firstVisitDailyPostLimit;
-				}
-			}
-		}
-		if(postLimit < 1) {
-			result.fillWithResult(ResultTypeCX.articleChannelPostLimit);
+		ArticleChannels channel = channelService.findArticleChannelById(channelId);
+		if(channel == null || !ArticleChannelType.publicChannel.getCode().equals(channel.getChannelType())) {
+			log.error("creating article checkPostLimitError %s, userId: %s", controllerParam.toString(), userId);
+			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		
@@ -355,17 +278,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 				saveArtieleSummaryResult.getMessage());
 		if (insertCount < 1) {
 			log.error("creating article insertArticleSummaryError %s, userId: %s", controllerParam.toString(), userId);
-			result.fillWithResult(ResultTypeCX.serviceError);
-			return result;
-		}
-		
-		UpdateArticleUserPostLimitParam updateArticleUserPostLimitParam = new UpdateArticleUserPostLimitParam();
-		updateArticleUserPostLimitParam.setChannelId(channelId);
-		updateArticleUserPostLimitParam.setUserId(userId);
-		updateArticleUserPostLimitParam.setNewPostLimit(postLimit - 1);
-		insertCount = articleUserDetailMapper.updateArticleUserPostLimit(updateArticleUserPostLimitParam);
-		if (insertCount < 1) {
-			log.error("creating article updateArticleUserPostLimitError %s, userId: %s", controllerParam.toString(), userId);
 			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
 		}
@@ -585,65 +497,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 
 	@Override
-	public CommonResultCX likeOrHateThisChannel(LikeHateThisChannelParam inputParam, HttpServletRequest request) {
-		visitDataService.insertVisitData(request);
-		CommonResultCX result = new CommonResultCX();
-		inputParam.setUserId(baseUtilCustom.getUserId());
-
-		if(inputParam.getUserId() == null 
-				|| inputParam.getLikeOrHate() == null 
-				|| (inputParam.getLikeOrHate() != 1 && inputParam.getLikeOrHate() != 0 && inputParam.getLikeOrHate() != -1)
-				|| StringUtils.isBlank(inputParam.getUuid())) {
-			result.fillWithResult(ResultTypeCX.nullParam);
-			return result;
-		}
-		
-		Long channelId = channelUUIDStore.getChannelId(inputParam.getUuid());
-		if(channelId == null) {
-			result.fillWithResult(ResultTypeCX.errorParam);
-			return result;
-		}
-		
-		FindArticleUserDetailByUserIdChannelIdParam findChannelParam = new FindArticleUserDetailByUserIdChannelIdParam();
-		findChannelParam.setUserId(inputParam.getUserId());
-		findChannelParam.setChannelId(channelId);
-		ArticleUserDetail articleUserDetail = articleUserDetailMapper.findArticleUserDetailByUserIdChannelId(findChannelParam);
-		if(articleUserDetail == null || !articleUserDetail.getIsFlash()) {
-			result.fillWithResult(ResultTypeCX.errorParam);
-			return result;
-		}
-		ArticleChannelLikeOrHateType likeOrHateType = getArticleChannelLikeOrHateType(articleUserDetail);
-		
-		UpdateArticleUserDetailParam param = new UpdateArticleUserDetailParam();
-		param.setUserId(inputParam.getUserId());
-		param.setArticleChannelId(channelId);
-		param.setCoefficient(likeOrHateType.getCode() + (inputParam.getLikeOrHate() * 10));
-		if(inputParam.getLikeOrHate() == 1) {
-			param.setLikeCount(1);
-		} else if(inputParam.getLikeOrHate() == -1){
-			param.setIsFlash(false);
-			param.setHateCount(1);
-			param.setIsFlashUpdateTime(dateHandler.dateDiffDays(likeOrHateType.getDelayDays()));
-		}
-		
-		articleUserDetailMapper.updateArticleUserDetail(param);
-		
-		result.fillWithResult(ResultTypeCX.success);
-		return result;
-	}
-	
-	private ArticleChannelLikeOrHateType getArticleChannelLikeOrHateType(ArticleUserDetail articleUserDetail) {
-		if(articleUserDetail.getHateChannelCount() == null) {
-			articleUserDetail.setHateChannelCount(0);
-		}
-		if(articleUserDetail.getLikeChannelCount() == null) {
-			articleUserDetail.setLikeChannelCount(0);
-		}
-		int likeOrHateLevel = articleUserDetail.getHateChannelCount() + articleUserDetail.getLikeChannelCount();
-		return ArticleChannelLikeOrHateType.getType(likeOrHateLevel);
-	}
-
-	@Override
 	public void refillArticleLongReviewCreatorId() {
 		
 		List<ArticleLongReview> reviewResultList = articleLongReviewMapper.findArticleCreatorIdIsNull();
@@ -828,7 +681,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		CreateArticleParam p = new CreateArticleParam();
 		p.setContent(dto.getContent());
 		p.setTitle(dto.getTitle());
-		p.setUuid(dto.getUuid());
+		p.setChannelId(dto.getChannelId());
 		if(itIsBigUser()) {
 			p.setQuickPass(true);
 		}

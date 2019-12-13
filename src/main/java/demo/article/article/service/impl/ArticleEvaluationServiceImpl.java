@@ -14,15 +14,12 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
-import demo.article.article.mapper.ArticleChannelsMapper;
 import demo.article.article.mapper.ArticleEvaluationCacheMapper;
 import demo.article.article.mapper.ArticleEvaluationStoreMapper;
 import demo.article.article.mapper.ArticleLongMapper;
-import demo.article.article.mapper.ArticleUserDetailMapper;
 import demo.article.article.pojo.bo.ArticleEvaluationEstimateBO;
 import demo.article.article.pojo.bo.ArticleEvaluationStatisticsByArticleIdBO;
 import demo.article.article.pojo.bo.ArticleEvaluationStatisticsTaskBO;
-import demo.article.article.pojo.constant.ArticleConstant;
 import demo.article.article.pojo.constant.ArticleEvaluationConstant;
 import demo.article.article.pojo.param.controllerParam.InsertArticleCommentEvaluationParam;
 import demo.article.article.pojo.param.controllerParam.InsertArticleLongEvaluationParam;
@@ -30,8 +27,6 @@ import demo.article.article.pojo.param.mapperParam.ArticleEvaluationCacheUpdateW
 import demo.article.article.pojo.param.mapperParam.FindArticleEvaluationCacheListParam;
 import demo.article.article.pojo.param.mapperParam.FindEvaluationStatisticsByIdListParam;
 import demo.article.article.pojo.param.mapperParam.InsertEvaluationDaoParam;
-import demo.article.article.pojo.param.mapperParam.UpdateArticleUserCoefficientParam;
-import demo.article.article.pojo.param.mapperParam.UpdateChannelPointParam;
 import demo.article.article.pojo.po.ArticleEvaluationCache;
 import demo.article.article.pojo.po.ArticleEvaluationStore;
 import demo.article.article.pojo.po.ArticleLong;
@@ -49,10 +44,6 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 
 	@Autowired
 	private ArticleLongMapper articleLongMapper;
-	@Autowired
-	private ArticleChannelsMapper articleChannelsMapper;
-	@Autowired
-	private ArticleUserDetailMapper articleUserDetailMapper;
 	@Autowired
 	private ArticleEvaluationCacheMapper articleEvaluationCacheMapper;
 	@Autowired
@@ -317,55 +308,8 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 			return result;
 		}
 
-		int updateCount = 0;
-
 		ArticleLong article = articleLongMapper.selectByPrimaryKey(articleId);
 		if (article == null || article.getChannelId() == null || article.getUserId() == null) {
-			result.fillWithResult(ResultTypeCX.serviceError);
-			return result;
-		}
-
-//		// update article creator coe
-//		UpdateArticleUserCoefficientParam updateUserCoefficientParam = new UpdateArticleUserCoefficientParam();
-//		updateUserCoefficientParam.setChannelId(article.getChannelId());
-//		updateUserCoefficientParam.setUserId(article.getUserId());
-//		if(evaluationType.equals(ArticleEvaluationType.up)) {
-//			updateUserCoefficientParam.setCoefficient(ArticleConstant.clickUpCoefficient);
-//		} else {
-//			updateUserCoefficientParam.setCoefficient(ArticleConstant.clickDownCoefficient);
-//		}
-//		updateCount = articleUserDetailMapper.updateArticleUserCoefficient(updateUserCoefficientParam);
-//		if(updateCount != 1) {
-//			result.fillWithResult(ResultType.serviceError);
-//			return result;
-//		}
-
-		// if not old article, update voter coefficient
-//		if(System.currentTimeMillis() - article.getCreateTime().getTime() < ArticleConstant.evaluationCacheLivingTime) {
-//			updateUserCoefficientParam = new UpdateArticleUserCoefficientParam();
-//			updateUserCoefficientParam.setChannelId(article.getChannelId());
-//			updateUserCoefficientParam.setUserId(evaluationVoterId);
-//			if(evaluationType.equals(ArticleEvaluationType.up)) {
-//				updateUserCoefficientParam.setCoefficient(ArticleConstant.clickUpCoefficient);
-//			} else {
-//				updateUserCoefficientParam.setCoefficient(ArticleConstant.clickDownCoefficient);
-//			}
-//			updateCount = articleUserDetailMapper.updateArticleUserCoefficient(updateUserCoefficientParam);
-//			if(updateCount != 1) {
-//				result.fillWithResult(ResultType.serviceError);
-//				return result;
-//			}
-//		}
-
-		UpdateChannelPointParam updateChannelPointParam = new UpdateChannelPointParam();
-		updateChannelPointParam.setChannelId(article.getChannelId());
-		if (evaluationType.equals(ArticleEvaluationCodeType.up)) {
-			updateChannelPointParam.setChannelPoint(ArticleConstant.clickUpCoefficient);
-		} else {
-			updateChannelPointParam.setChannelPoint(ArticleConstant.clickDownCoefficient);
-		}
-		updateCount = articleChannelsMapper.updateChannelPoint(updateChannelPointParam);
-		if (updateCount != 1) {
 			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
 		}
@@ -478,20 +422,7 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 		List<Long> badArticleIdList = new ArrayList<Long>();
 		goodEvaluationBOList.stream().forEach(bo -> goodArticleIdList.add(bo.getPostObjectId()));
 		badEvaluationBOList.stream().forEach(bo -> badArticleIdList.add(bo.getPostObjectId()));
-		updateArticleCreatorChannelCoefficient(ArticleEvaluationCodeType.up, goodArticleIdList);
-		updateArticleCreatorChannelCoefficient(ArticleEvaluationCodeType.down, badArticleIdList);
 
-		List<UpdateArticleUserCoefficientParam> goodEvaluationUpdateParamList = new ArrayList<UpdateArticleUserCoefficientParam>();
-		List<UpdateArticleUserCoefficientParam> badEvaluationUpdateParamList = new ArrayList<UpdateArticleUserCoefficientParam>();
-		fillEvaluationUpdateParam(ArticleEvaluationCodeType.up, goodEvaluationBOList, goodEvaluationUpdateParamList);
-		fillEvaluationUpdateParam(ArticleEvaluationCodeType.down, badEvaluationBOList, badEvaluationUpdateParamList);
-
-		if (goodEvaluationUpdateParamList.size() > 0) {
-			articleUserDetailMapper.batchUpdateArticleUserCoefficient(goodEvaluationUpdateParamList);
-		}
-		if (badEvaluationUpdateParamList.size() > 0) {
-			articleUserDetailMapper.batchUpdateArticleUserCoefficient(badEvaluationUpdateParamList);
-		}
 		articleEvaluationCacheMapper.updateWasStatistics(updateWasStatisticsParam);
 
 		return;
@@ -593,59 +524,4 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 		}
 	}
 
-	private void fillEvaluationUpdateParam(ArticleEvaluationCodeType evaluationType,
-			List<ArticleEvaluationStatisticsTaskBO> evaluationBOList,
-			List<UpdateArticleUserCoefficientParam> evaluationUpdateParamList) {
-		if (evaluationBOList == null || evaluationBOList.size() < 1) {
-			return;
-		}
-
-		UpdateArticleUserCoefficientParam tmpParam = null;
-		int coefficient = 0;
-		for (ArticleEvaluationStatisticsTaskBO bo : evaluationBOList) {
-			if (ArticleEvaluationCodeType.up.equals(evaluationType)) {
-				coefficient = ArticleConstant.clickUpCoefficient;
-			} else if (ArticleEvaluationCodeType.down.equals(evaluationType)) {
-				coefficient = ArticleConstant.clickDownCoefficient;
-			}
-
-			for (Long userId : bo.getUserIdList()) {
-				tmpParam = new UpdateArticleUserCoefficientParam();
-				tmpParam.setUserId(userId);
-				tmpParam.setChannelId(bo.getChannelId());
-				tmpParam.setCoefficient(coefficient);
-				evaluationUpdateParamList.add(tmpParam);
-			}
-		}
-	}
-
-	private void updateArticleCreatorChannelCoefficient(ArticleEvaluationCodeType evaluationType,
-			List<Long> articleIdList) {
-		if (evaluationType == null || articleIdList == null || articleIdList.size() < 1) {
-			return;
-		}
-		List<ArticleLong> articleList = articleLongMapper.findArticleLongList(articleIdList);
-		if (articleList == null || articleList.size() < 1) {
-			return;
-		}
-
-		int changeCoefficient = 0;
-		if (evaluationType.equals(ArticleEvaluationCodeType.up)) {
-			changeCoefficient = ArticleConstant.clickUpCoefficient;
-		} else if (evaluationType.equals(ArticleEvaluationCodeType.down)) {
-			changeCoefficient = ArticleConstant.clickDownCoefficient;
-		}
-
-		UpdateArticleUserCoefficientParam tmpUpdateCoefficientParam = null;
-		List<UpdateArticleUserCoefficientParam> updateCoefficientParamList = new ArrayList<UpdateArticleUserCoefficientParam>();
-		for (ArticleLong article : articleList) {
-			tmpUpdateCoefficientParam = new UpdateArticleUserCoefficientParam();
-			tmpUpdateCoefficientParam.setCoefficient(changeCoefficient);
-			tmpUpdateCoefficientParam.setChannelId(article.getChannelId());
-			tmpUpdateCoefficientParam.setUserId(article.getUserId());
-			updateCoefficientParamList.add(tmpUpdateCoefficientParam);
-		}
-
-		articleUserDetailMapper.batchUpdateArticleUserCoefficient(updateCoefficientParamList);
-	}
 }

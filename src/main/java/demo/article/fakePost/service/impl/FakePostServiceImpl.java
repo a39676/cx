@@ -11,15 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import demo.article.article.mapper.ArticleChannelsMapper;
 import demo.article.article.mapper.ArticleLongMapper;
 import demo.article.article.mapper.ArticleLongReviewMapper;
-import demo.article.article.mapper.ArticleUserDetailMapper;
-import demo.article.article.pojo.constant.ArticleConstant;
 import demo.article.article.pojo.param.controllerParam.InsertNewReviewRecordParam;
 import demo.article.article.pojo.param.mapperParam.UpdateArticleLongReviewStatuParam;
-import demo.article.article.pojo.param.mapperParam.UpdateArticleUserCoefficientParam;
-import demo.article.article.pojo.param.mapperParam.UpdateChannelPointByArticleIdParam;
 import demo.article.article.pojo.po.ArticleEvaluationStore;
 import demo.article.article.pojo.po.ArticleLong;
 import demo.article.article.pojo.type.ArticleEvaluationCodeType;
@@ -45,11 +40,7 @@ public class FakePostServiceImpl extends CommonService implements FakePostServic
 	@Autowired
 	private ArticleLongMapper articleLongMapper;
 	@Autowired
-	private ArticleUserDetailMapper articleUserDetailMapper;
-	@Autowired
 	private ArticleLongReviewMapper articleLongReviewMapper;
-	@Autowired
-	private ArticleChannelsMapper articleChannelsMapper;
 	
 	@Override
 	public int createFakeEvaluationStore() {
@@ -143,23 +134,6 @@ public class FakePostServiceImpl extends CommonService implements FakePostServic
 		updateArticleReviewStatuParam.setArticleId(article.getArticleId());
 		updateArticleReviewStatuParam.setPass(true);
 		int updateCount = articleLongMapper.updateArticleLongReviewStatu(updateArticleReviewStatuParam);
-		if(updateCount == 0) {
-			throw new Exception();
-		}
-		
-		UpdateArticleUserCoefficientParam updateUserCoefficientParam = new UpdateArticleUserCoefficientParam();
-		updateUserCoefficientParam.setChannelId(article.getChannelId());
-		updateUserCoefficientParam.setCoefficient(ArticleConstant.passArticleCoefficient);
-		updateUserCoefficientParam.setUserId(article.getUserId());
-		updateCount = articleUserDetailMapper.updateArticleUserCoefficient(updateUserCoefficientParam);
-		if(updateCount != 1) {
-			throw new Exception();
-		}
-		
-		UpdateChannelPointByArticleIdParam updateChannelPointParam = new UpdateChannelPointByArticleIdParam();
-		updateChannelPointParam.setArticleId(article.getArticleId());
-		updateChannelPointParam.setChannelPoint(ArticleConstant.passArticleCoefficient);
-		updateCount = articleChannelsMapper.updateChannelPointByArticleId(updateChannelPointParam);
 		if(updateCount == 0) {
 			throw new Exception();
 		}

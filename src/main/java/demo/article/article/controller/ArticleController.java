@@ -31,7 +31,6 @@ import demo.article.article.pojo.param.controllerParam.CreatingArticleParam;
 import demo.article.article.pojo.param.controllerParam.FindArticleLongByArticleSummaryPrivateKeyDTO;
 import demo.article.article.pojo.param.controllerParam.FindArticleLongSummaryListControllerParam;
 import demo.article.article.pojo.param.controllerParam.InsertArticleLongEvaluationParam;
-import demo.article.article.pojo.param.controllerParam.LikeHateThisChannelParam;
 import demo.article.article.pojo.param.controllerParam.ReviewArticleLongParam;
 import demo.article.article.pojo.result.ArticleBurnResult;
 import demo.article.article.pojo.result.CreatingBurnMessageResult;
@@ -197,12 +196,6 @@ public class ArticleController extends CommonController {
 		param.setEvaluationType(ArticleEvaluationType.articleCommentEvaluation.getCode());
 		CommonResult serviceResult = articleEvaluationService.insertArticleLongEvaluationRedis(param);
 		outputJson(response, JSONObject.fromObject(serviceResult));
-	}
-	
-	@PostMapping(value = ArticleUrlConstant.likeOrHateThisChannel)
-	public void hateThisChannel(@RequestBody LikeHateThisChannelParam param, HttpServletRequest request, HttpServletResponse response) {
-		CommonResult result = articleService.likeOrHateThisChannel(param, request);
-		outputJson(response, JSONObject.fromObject(result));
 	}
 	
 	@PostMapping(value = ArticleUrlConstant.articleLongFeedback)

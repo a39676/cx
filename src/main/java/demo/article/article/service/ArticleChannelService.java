@@ -16,13 +16,6 @@ public interface ArticleChannelService {
 	 */
 	GetArticleChannelsResult getArticleChannelsDynamic(HttpServletRequest request);
 
-	/**
-	 * 随机刷新闪现频道是否出现
-	 */
-	void refreshArticleChannelIsFlash();
-
-	boolean showLikeOrHate(Long channelId, Long userId);
-
 	String loadChannelPrefix(Integer channelId);
 
 }

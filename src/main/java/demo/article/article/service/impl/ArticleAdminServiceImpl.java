@@ -9,28 +9,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import demo.article.article.mapper.ArticleChannelsMapper;
 import demo.article.article.mapper.ArticleHotMapper;
 import demo.article.article.mapper.ArticleLongMapper;
 import demo.article.article.mapper.ArticleLongReviewMapper;
 import demo.article.article.mapper.ArticleLongSummaryMapper;
-import demo.article.article.mapper.ArticleUserDetailMapper;
-import demo.article.article.pojo.constant.ArticleConstant;
 import demo.article.article.pojo.param.controllerParam.BatchUpdatePrimaryKeyParam;
 import demo.article.article.pojo.param.controllerParam.ChangeChannelParam;
 import demo.article.article.pojo.param.controllerParam.InsertNewReviewRecordParam;
 import demo.article.article.pojo.param.controllerParam.ReviewArticleLongParam;
 import demo.article.article.pojo.param.controllerParam.SetArticleHotParam;
-import demo.article.article.pojo.param.mapperParam.FindArticleChannelsParam;
 import demo.article.article.pojo.param.mapperParam.UpdateArticleLongReviewStatuParam;
-import demo.article.article.pojo.param.mapperParam.UpdateArticleUserCoefficientParam;
-import demo.article.article.pojo.param.mapperParam.UpdateChannelPointByArticleIdParam;
-import demo.article.article.pojo.po.ArticleChannels;
 import demo.article.article.pojo.po.ArticleHot;
 import demo.article.article.pojo.po.ArticleLong;
 import demo.article.article.pojo.po.ArticleLongSummary;
 import demo.article.article.pojo.type.ArticleReviewType;
-import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.article.article.service.ArticleAdminService;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
@@ -41,11 +33,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	@Autowired
 	private ArticleLongMapper articleLongMapper;
 	@Autowired
-	private ArticleChannelsMapper articleChannelsMapper;
-	@Autowired
 	private ArticleLongSummaryMapper articleLongSummaryMapper;
-	@Autowired
-	private ArticleUserDetailMapper articleUserDetailMapper;
 	@Autowired
 	private ArticleLongReviewMapper articleLongReviewMapper;
 	@Autowired
@@ -149,23 +137,6 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			throw new Exception();
 		}
 		
-		UpdateArticleUserCoefficientParam updateUserCoefficientParam = new UpdateArticleUserCoefficientParam();
-		updateUserCoefficientParam.setChannelId(article.getChannelId());
-		updateUserCoefficientParam.setCoefficient(ArticleConstant.passArticleCoefficient);
-		updateUserCoefficientParam.setUserId(article.getUserId());
-		updateCount = articleUserDetailMapper.updateArticleUserCoefficient(updateUserCoefficientParam);
-		if(updateCount != 1) {
-			throw new Exception();
-		}
-		
-		UpdateChannelPointByArticleIdParam updateChannelPointParam = new UpdateChannelPointByArticleIdParam();
-		updateChannelPointParam.setArticleId(articleId);
-		updateChannelPointParam.setChannelPoint(ArticleConstant.passArticleCoefficient);
-		updateCount = articleChannelsMapper.updateChannelPointByArticleId(updateChannelPointParam);
-		if(updateCount == 0) {
-			throw new Exception();
-		}
-		
 		InsertNewReviewRecordParam insertNewReviewRecordParam = new InsertNewReviewRecordParam();
 		insertNewReviewRecordParam.setArticleId(articleId);
 		insertNewReviewRecordParam.setArticleReviewerId(baseUtilCustom.getUserId());
@@ -205,15 +176,6 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		updateArticleReviewStatuParam.setReject(true);
 		int updateCount = articleLongMapper.updateArticleLongReviewStatu(updateArticleReviewStatuParam);
 		if(updateCount == 0) {
-			throw new Exception();
-		}
-		
-		UpdateArticleUserCoefficientParam updateUserCoefficientParam = new UpdateArticleUserCoefficientParam();
-		updateUserCoefficientParam.setChannelId(article.getChannelId());
-		updateUserCoefficientParam.setCoefficient(ArticleConstant.rejectArticleCoefficient);
-		updateUserCoefficientParam.setUserId(article.getUserId());
-		updateCount = articleUserDetailMapper.updateArticleUserCoefficient(updateUserCoefficientParam);
-		if(updateCount != 1) {
 			throw new Exception();
 		}
 		
@@ -259,23 +221,6 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			throw new Exception();
 		}
 		
-		UpdateArticleUserCoefficientParam updateUserCoefficientParam = new UpdateArticleUserCoefficientParam();
-		updateUserCoefficientParam.setChannelId(article.getChannelId());
-		updateUserCoefficientParam.setCoefficient(0 - ArticleConstant.passArticleCoefficient);
-		updateUserCoefficientParam.setUserId(article.getUserId());
-		updateCount = articleUserDetailMapper.updateArticleUserCoefficient(updateUserCoefficientParam);
-		if(updateCount != 1) {
-			throw new Exception();
-		}
-		
-		UpdateChannelPointByArticleIdParam updateChannelPointParam = new UpdateChannelPointByArticleIdParam();
-		updateChannelPointParam.setArticleId(articleId);
-		updateChannelPointParam.setChannelPoint(0 - ArticleConstant.passArticleCoefficient);
-		updateCount = articleChannelsMapper.updateChannelPointByArticleId(updateChannelPointParam);
-		if(updateCount == 0) {
-			throw new Exception();
-		}
-		
 		InsertNewReviewRecordParam insertNewReviewRecordParam = new InsertNewReviewRecordParam();
 		insertNewReviewRecordParam.setArticleId(articleId);
 		insertNewReviewRecordParam.setArticleReviewerId(baseUtilCustom.getUserId());
@@ -287,22 +232,6 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		
 		result.fillWithResult(ResultTypeCX.success);
 		return result;
-	}
-	
-	@Override
-	public List<ArticleChannelVO> findChannel(FindArticleChannelsParam param) {
-		List<ArticleChannelVO> channelVOList = new ArrayList<ArticleChannelVO>();
-		List<ArticleChannels> channelPOList = articleChannelsMapper.findArticleChannels(param);
-		ArticleChannelVO tmpChannelVO = null;
-		
-		for(ArticleChannels channel : channelPOList) {
-			tmpChannelVO = new ArticleChannelVO();
-			tmpChannelVO.setChannelName(channel.getChannelName());
-			tmpChannelVO.setChannelId(String.valueOf(channel.getChannelId()));
-			channelVOList.add(tmpChannelVO);
-		}
-		
-		return channelVOList;
 	}
 	
 	@Override
@@ -380,4 +309,5 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		result.fillWithResult(ResultTypeCX.setArticleHotSuccess);
 		return result;
 	}
+
 }

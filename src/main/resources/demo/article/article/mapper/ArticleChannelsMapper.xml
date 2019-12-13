@@ -1,27 +1,120 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="demo.article.article.mapper.ArticleChannelsMapper">
-  
   <resultMap id="BaseResultMap" type="demo.article.article.pojo.po.ArticleChannels">
-    <result column="channel_id" jdbcType="INTEGER" property="channelId" />
+    <id column="channel_id" jdbcType="BIGINT" property="channelId" />
     <result column="channel_name" jdbcType="VARCHAR" property="channelName" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="channel_point" jdbcType="BIGINT" property="channelPoint" />
     <result column="channel_flash_point" jdbcType="INTEGER" property="channelFlashPoint" />
-    <result column="channel_type" jdbcType="INTEGER" property="channelType" />
     <result column="weights" jdbcType="INTEGER" property="weights" />
+    <result column="channel_type" jdbcType="INTEGER" property="channelType" />
     <result column="is_flash" jdbcType="BIT" property="isFlash" />
     <result column="image" jdbcType="CHAR" property="image" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
   </resultMap>
-
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    channel_id, channel_name, create_time, channel_point, channel_flash_point, weights, 
+    channel_type, is_flash, image, is_delete
+  </sql>
+  <select id="selectByExample" parameterType="demo.article.article.pojo.po.ArticleChannelsExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from article_channels
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from article_channels
+    where channel_id = #{channelId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from article_channels
+    where channel_id = #{channelId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.article.article.pojo.po.ArticleChannelsExample">
+    delete from article_channels
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
   <insert id="insert" parameterType="demo.article.article.pojo.po.ArticleChannels">
     insert into article_channels (channel_id, channel_name, create_time, 
-      channel_point, channel_flash_point, weights, chanel_type, is_flash, iamge, is_delete)
-    values (#{channelId,jdbcType=INTEGER}, #{channelName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{channelPoint,jdbcType=BIGINT}, #{channelFlashPoint,jdbcType=INTEGER}, #{weights,jdbcType=INTEGER},  #{channelType,jdbcType=INTEGER}, #{isFlash,jdbcType=BIT}, #{image,jdbcType=CHAR}), #{isDelete,jdbcType=BIT)
+      channel_point, channel_flash_point, weights, 
+      channel_type, is_flash, image, 
+      is_delete)
+    values (#{channelId,jdbcType=BIGINT}, #{channelName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{channelPoint,jdbcType=BIGINT}, #{channelFlashPoint,jdbcType=INTEGER}, #{weights,jdbcType=INTEGER}, 
+      #{channelType,jdbcType=INTEGER}, #{isFlash,jdbcType=BIT}, #{image,jdbcType=CHAR}, 
+      #{isDelete,jdbcType=BIT})
   </insert>
-
   <insert id="insertSelective" parameterType="demo.article.article.pojo.po.ArticleChannels">
     insert into article_channels
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -44,21 +137,21 @@
         weights,
       </if>
       <if test="channelType != null">
-        channel_type
+        channel_type,
       </if>
       <if test="isFlash != null">
-        is_flash
+        is_flash,
       </if>
       <if test="image != null">
-        image
+        image,
       </if>
       <if test="isDelete != null">
-        is_delete
+        is_delete,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="channelId != null">
-        #{channelId,jdbcType=INTEGER},
+        #{channelId,jdbcType=BIGINT},
       </if>
       <if test="channelName != null">
         #{channelName,jdbcType=VARCHAR},
@@ -76,89 +169,123 @@
         #{weights,jdbcType=INTEGER},
       </if>
       <if test="channelType != null">
-        #{channelType,jdbcType=INTEGER}
+        #{channelType,jdbcType=INTEGER},
       </if>
       <if test="isFlash != null">
-        #{isFlash,jdbcType=BIT}
+        #{isFlash,jdbcType=BIT},
       </if>
       <if test="image != null">
-        #{image,jdbcType=CHAR}
+        #{image,jdbcType=CHAR},
       </if>
       <if test="isDelete != null">
-        #{isDelete,jdbcType=BIT}
+        #{isDelete,jdbcType=BIT},
       </if>
     </trim>
   </insert>
-
-  <select id="findPublicChannels" resultMap="BaseResultMap">
-    select * from article_channels where channel_type = 0 and is_delete = false
+  <select id="countByExample" parameterType="demo.article.article.pojo.po.ArticleChannelsExample" resultType="java.lang.Long">
+    select count(*) from article_channels
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
   </select>
-
-  <select id="findArticleChannels" resultMap="BaseResultMap">
-    select
-      *
-    from
-      article_channels
-    <where>
+  <update id="updateByExampleSelective" parameterType="map">
+    update article_channels
+    <set>
+      <if test="record.channelId != null">
+        channel_id = #{record.channelId,jdbcType=BIGINT},
+      </if>
+      <if test="record.channelName != null">
+        channel_name = #{record.channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.channelPoint != null">
+        channel_point = #{record.channelPoint,jdbcType=BIGINT},
+      </if>
+      <if test="record.channelFlashPoint != null">
+        channel_flash_point = #{record.channelFlashPoint,jdbcType=INTEGER},
+      </if>
+      <if test="record.weights != null">
+        weights = #{record.weights,jdbcType=INTEGER},
+      </if>
+      <if test="record.channelType != null">
+        channel_type = #{record.channelType,jdbcType=INTEGER},
+      </if>
+      <if test="record.isFlash != null">
+        is_flash = #{record.isFlash,jdbcType=BIT},
+      </if>
+      <if test="record.image != null">
+        image = #{record.image,jdbcType=CHAR},
+      </if>
+      <if test="record.isDelete != null">
+        is_delete = #{record.isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update article_channels
+    set channel_id = #{record.channelId,jdbcType=BIGINT},
+      channel_name = #{record.channelName,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      channel_point = #{record.channelPoint,jdbcType=BIGINT},
+      channel_flash_point = #{record.channelFlashPoint,jdbcType=INTEGER},
+      weights = #{record.weights,jdbcType=INTEGER},
+      channel_type = #{record.channelType,jdbcType=INTEGER},
+      is_flash = #{record.isFlash,jdbcType=BIT},
+      image = #{record.image,jdbcType=CHAR},
+      is_delete = #{record.isDelete,jdbcType=BIT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.article.article.pojo.po.ArticleChannels">
+    update article_channels
+    <set>
       <if test="channelName != null">
-        and channel_name like concat('%', #{channelName}, '%')
+        channel_name = #{channelName,jdbcType=VARCHAR},
       </if>
-      <if test="channelId != null">
-        and channel_id = #{channelId}
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-    </where>
-  </select>
-
-  <select id="findArticleChannelById" resultMap="BaseResultMap">
-    select
-      *
-    from
-      article_channels
-    <where>
-      <if test="channelId != null">
-        and channel_id = #{channelId}
+      <if test="channelPoint != null">
+        channel_point = #{channelPoint,jdbcType=BIGINT},
       </if>
-    </where>
-  </select>
-
-  <select id="findIsFlashChannels" resultMap="BaseResultMap">
-    select * from article_channels where channel_type = 1 and is_flash = true and is_delete = false
-  </select>
-
-  <select id="findFlashChannels" resultMap="BaseResultMap">
-    select * from article_channels where channel_type = 1 and is_delete = false
-  </select>
-
-  <update id="updateChannelPoint">
-    update 
-      article_channels 
-    set 
-      channel_point = channel_point + #{channelPoint} 
-    where 
-      channel_id = #{channelId}
+      <if test="channelFlashPoint != null">
+        channel_flash_point = #{channelFlashPoint,jdbcType=INTEGER},
+      </if>
+      <if test="weights != null">
+        weights = #{weights,jdbcType=INTEGER},
+      </if>
+      <if test="channelType != null">
+        channel_type = #{channelType,jdbcType=INTEGER},
+      </if>
+      <if test="isFlash != null">
+        is_flash = #{isFlash,jdbcType=BIT},
+      </if>
+      <if test="image != null">
+        image = #{image,jdbcType=CHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    where channel_id = #{channelId,jdbcType=BIGINT}
   </update>
-
-  <update id="updateChannelPointByArticleId">
-    update 
-      article_long as al
-      left join article_channels as acs
-        on al.channel_id = acs.channel_id
-    set 
-      acs.channel_point = acs.channel_point + #{channelPoint} 
-    where 
-      al.article_id = #{articleId}
-  </update>
-  
-  <update id="updateChannelIsFlash">
-    update 
-      article_channels 
-    set
-      is_flash = #{isFlash}
-    where
-      channel_id in
-      <foreach item="channelId" index="index" collection="channelIdList"
-        open="(" separator="," close=")">
-        #{channelId}
-      </foreach>
+  <update id="updateByPrimaryKey" parameterType="demo.article.article.pojo.po.ArticleChannels">
+    update article_channels
+    set channel_name = #{channelName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      channel_point = #{channelPoint,jdbcType=BIGINT},
+      channel_flash_point = #{channelFlashPoint,jdbcType=INTEGER},
+      weights = #{weights,jdbcType=INTEGER},
+      channel_type = #{channelType,jdbcType=INTEGER},
+      is_flash = #{isFlash,jdbcType=BIT},
+      image = #{image,jdbcType=CHAR},
+      is_delete = #{isDelete,jdbcType=BIT}
+    where channel_id = #{channelId,jdbcType=BIGINT}
   </update>
 </mapper>

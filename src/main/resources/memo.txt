@@ -1,3 +1,5 @@
+删除article channel uuid 相关逻辑之后, 可能ID过长, 大部分相关功能需要重新校验
+
 相当一部分 service 里边存有 private static 开头的静态变量, 需要清除
 需要文章编辑功能, 尤其是针对富文本的
 

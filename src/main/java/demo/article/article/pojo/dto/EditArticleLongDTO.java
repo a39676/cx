@@ -3,7 +3,7 @@ package demo.article.article.pojo.dto;
 public class EditArticleLongDTO {
 
 	private String privateKey;
-	private String uuid;
+	private String channelId;
 	private String title;
 	private String content;
 
@@ -15,12 +15,12 @@ public class EditArticleLongDTO {
 		this.privateKey = privateKey;
 	}
 
-	public String getUuid() {
-		return uuid;
+	public String getChannelId() {
+		return channelId;
 	}
 
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
+	public void setChannelId(String channelId) {
+		this.channelId = channelId;
 	}
 
 	public String getTitle() {
@@ -41,8 +41,8 @@ public class EditArticleLongDTO {
 
 	@Override
 	public String toString() {
-		return "EditArticleLongDTO [privateKey=" + privateKey + ", uuid=" + uuid + ", title=" + title + ", content="
-				+ content + "]";
+		return "EditArticleLongDTO [privateKey=" + privateKey + ", channelId=" + channelId + ", title=" + title
+				+ ", content=" + content + "]";
 	}
 
 }

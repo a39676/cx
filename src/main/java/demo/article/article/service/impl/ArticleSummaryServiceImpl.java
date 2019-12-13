@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 
 import demo.article.article.mapper.ArticleLongSummaryMapper;
 import demo.article.article.pojo.bo.ArticleLongSummaryBO;
-import demo.article.article.pojo.bo.ArticleUUIDChannelStoreBO;
 import demo.article.article.pojo.constant.ArticleConstant;
 import demo.article.article.pojo.param.controllerParam.FindArticleLongSummaryListControllerParam;
 import demo.article.article.pojo.param.mapperParam.FindArticleHotSummaryListMapperParam;
@@ -37,7 +36,6 @@ import demo.article.article.pojo.vo.ArticleEvaluationStatisticsVO;
 import demo.article.article.pojo.vo.ArticleLongSummaryVO;
 import demo.article.article.pojo.vo.ArticleLongSummaryVOV3;
 import demo.article.article.service.ArticleCatchVCodeService;
-import demo.article.article.service.ArticleChannelService;
 import demo.article.article.service.ArticleSummaryService;
 import demo.article.article.service.ArticleViewService;
 import demo.article.articleComment.controller.ArticleCommentAdminController;
@@ -53,8 +51,6 @@ import toolPack.ioHandle.FileUtilCustom;
 @Service
 public class ArticleSummaryServiceImpl extends ArticleCommonService implements ArticleSummaryService {
 
-	@Autowired
-	private ArticleChannelService channelService;
 	@Autowired
 	private VCodeService vCodeService;
 	@Autowired
@@ -229,14 +225,11 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			strContent = ioUtil.getStringFromFile(summaryBO.getPath());
 			voContentBuilder.append(strContent);
 			List<String> lines = Arrays.asList(strContent.split("\n"));
-			String imgUrl = null;
+			String imgUrl = "";
 			for(int i = 0; i < lines.size() && imgUrl == null; i++) {
 				if(lines.get(i).matches(imageHttpUrlPattern)) {
 					imgUrl = lines.get(i);
 				}
-			}
-			if(imgUrl == null) {
-				imgUrl = ArticleConstant.insteadOfNullImage;
 			}
 			tmpVO.setArticleTitle(summaryBO.getArticleTitle());
 			tmpVO.setNickName(summaryBO.getNickName());
@@ -314,13 +307,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			}
 		}
 		
-		ArticleUUIDChannelStoreBO channelUUIDStore = channelService.getArticleUUIDChannelStore();
-		if(channelUUIDStore == null) {
-			result.fillWithResult(ResultTypeCX.channelUUIDError);
-			return result;
-		}
-		
-		Long channelId = channelUUIDStore.getChannelId(controllerParam.getArticleChannelUUID());
+		Long channelId = controllerParam.getArticleChannelId();
 		if(channelId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -397,13 +384,8 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			controllerParam.setStartTime(LocalDateTime.MIN);
 		}
 		
-		ArticleUUIDChannelStoreBO channelUUIDStore = channelService.getArticleUUIDChannelStore();
-		if(channelUUIDStore == null) {
-			result.fillWithResult(ResultTypeCX.channelUUIDError);
-			return result;
-		}
 		
-		Long channelId = channelUUIDStore.getChannelId(controllerParam.getArticleChannelUUID());
+		Long channelId = controllerParam.getArticleChannelId();
 		visitDataService.insertVisitData(request, result.getChannelId().toString());
 		if(channelId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);

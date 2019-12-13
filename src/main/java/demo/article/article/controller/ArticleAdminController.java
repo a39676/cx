@@ -1,7 +1,5 @@
 package demo.article.article.controller;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,14 +15,11 @@ import demo.article.article.pojo.param.controllerParam.BatchUpdatePrimaryKeyPara
 import demo.article.article.pojo.param.controllerParam.ChangeChannelParam;
 import demo.article.article.pojo.param.controllerParam.ReviewArticleLongParam;
 import demo.article.article.pojo.param.controllerParam.SetArticleHotParam;
-import demo.article.article.pojo.param.mapperParam.FindArticleChannelsParam;
 import demo.article.article.pojo.type.ArticleReviewType;
-import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.article.article.service.ArticleAdminService;
 import demo.baseCommon.controller.CommonController;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Controller
@@ -78,13 +73,6 @@ public class ArticleAdminController extends CommonController {
 			serviceResult.fillWithResult(ResultTypeCX.serviceError);
 		}
 		outputJson(response, JSONObject.fromObject(serviceResult));
-	}
-	
-	@PostMapping(value = ArticleAdminUrlConstant.findArticleChannel)
-	public void findAllChannel(HttpServletRequest request, HttpServletResponse response) {
-		FindArticleChannelsParam param = new FindArticleChannelsParam();
-		List<ArticleChannelVO> channelList = articleAdminService.findChannel(param);
-		outputJson(response, JSONArray.fromObject(channelList));
 	}
 	
 	@PostMapping(value = ArticleAdminUrlConstant.changeChannel)

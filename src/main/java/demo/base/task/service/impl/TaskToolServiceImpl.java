@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import demo.article.article.service.ArticleChannelService;
 import demo.article.article.service.ArticleEvaluationService;
 import demo.article.article.service.ArticleService;
 import demo.article.fakePost.service.FakePostService;
 import demo.base.task.service.TaskToolService;
 import demo.base.user.mapper.UsersMapper;
+import demo.base.user.pojo.type.RolesType;
 import demo.base.user.service.UserRegistService;
 import demo.tool.mapper.MailRecordMapper;
 import demo.tool.service.VisitDataService;
@@ -27,8 +27,6 @@ public class TaskToolServiceImpl implements TaskToolService {
 	private ArticleEvaluationService articleEvaluationService;
 	@Autowired
 	private ArticleService articleServcie;
-	@Autowired
-	private ArticleChannelService articleChannelServcie;
 	@Autowired
 	private FakePostService fakePostService;
 	@Autowired
@@ -120,12 +118,6 @@ public class TaskToolServiceImpl implements TaskToolService {
 	@Scheduled(cron="0 */267 * * * ?")
 	public void autoPass() throws Exception {
 		fakePostService.autoPass();
-	}
-	
-	/** 随机刷新闪现频道是否出现. */
-	@Scheduled(cron="0 */68 * * * ?")
-	public void refreshArticleChannelIsFlash() {
-		articleChannelServcie.refreshArticleChannelIsFlash();
 	}
 	
 	/** 将 redis 内的访问数, 持久化到数据库 */

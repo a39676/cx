@@ -18,7 +18,6 @@ import demo.article.article.pojo.dto.ReadyToEditArticleLongDTO;
 import demo.article.article.pojo.param.controllerParam.CreateArticleParam;
 import demo.article.article.pojo.param.controllerParam.CreatingArticleParam;
 import demo.article.article.pojo.param.controllerParam.FindArticleLongByArticleSummaryPrivateKeyDTO;
-import demo.article.article.pojo.param.controllerParam.LikeHateThisChannelParam;
 import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.article.pojo.result.jsonRespon.FindArticleLongResult;
 import demo.baseCommon.pojo.result.CommonResultCX;
@@ -47,8 +46,6 @@ public interface ArticleService {
 	 * @return
 	 */
 	boolean iWroteThis(String privateKey);
-
-	CommonResultCX likeOrHateThisChannel(LikeHateThisChannelParam inputParam, HttpServletRequest request);
 
 	ArticleFileSaveResult saveArticleFile(String storePrefixPath, Long userId, String content) throws IOException;
 

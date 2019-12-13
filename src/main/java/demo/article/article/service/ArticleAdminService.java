@@ -1,14 +1,10 @@
 package demo.article.article.service;
 
-import java.util.List;
-
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.pojo.param.controllerParam.BatchUpdatePrimaryKeyParam;
 import demo.article.article.pojo.param.controllerParam.ChangeChannelParam;
 import demo.article.article.pojo.param.controllerParam.ReviewArticleLongParam;
 import demo.article.article.pojo.param.controllerParam.SetArticleHotParam;
-import demo.article.article.pojo.param.mapperParam.FindArticleChannelsParam;
-import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.baseCommon.pojo.result.CommonResultCX;
 
 public interface ArticleAdminService {
@@ -30,8 +26,6 @@ public interface ArticleAdminService {
 	 * @throws Exception
 	 */
 	CommonResult deleteArticle(String privateKey) throws Exception;
-
-	List<ArticleChannelVO> findChannel(FindArticleChannelsParam param);
 
 	CommonResultCX changeChannel(ChangeChannelParam param) throws Exception;
 

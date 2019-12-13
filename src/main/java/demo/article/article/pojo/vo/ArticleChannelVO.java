@@ -45,15 +45,6 @@ public class ArticleChannelVO implements Comparable<ArticleChannelVO> {
 				+ channelImage + ", weights=" + weights + "]";
 	}
 
-	public ArticleChannelVO buildByArticleUUIDChannelBO(ArticleChannelVO bo) {
-		ArticleChannelVO vo = new ArticleChannelVO();
-		vo.setChannelName(bo.getChannelName());
-		vo.setChannelId(bo.getChannelId().toString());
-		vo.setWeights(bo.getWeights());
-		vo.setChannelImage(bo.getChannelImage());
-		return vo;
-	}
-
 	@Override
 	public int compareTo(ArticleChannelVO o) {
 		if (o.weights == null || this.weights == null) {

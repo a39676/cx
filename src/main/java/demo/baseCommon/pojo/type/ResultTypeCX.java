@@ -5,7 +5,7 @@ public enum ResultTypeCX {
 	// controller层可以返回给外部的结果.
 	success	("success", "0"),
 	resetPassword("已成功重置密码", "0"),
-	createArticleLongSuccess("已成功发送,可能稍后就会出现...", "0"),
+	editArticleLongSuccess("已成功编辑,可能稍后就会出现...", "0"),
 	evaluationVoteSuccess("已评~", "0"),
 	setArticleHotSuccess("文章已置顶", "0"),
 	feedbackReciveSuccess("感谢您的反馈!", "0"),

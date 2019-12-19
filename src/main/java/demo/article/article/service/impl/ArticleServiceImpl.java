@@ -45,6 +45,7 @@ import demo.article.article.pojo.po.ArticleChannels;
 import demo.article.article.pojo.po.ArticleLong;
 import demo.article.article.pojo.po.ArticleLongFeedback;
 import demo.article.article.pojo.po.ArticleLongReview;
+import demo.article.article.pojo.result.CheckParamBeforeEditArticleResult;
 import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.article.pojo.result.jsonRespon.FindArticleLongResult;
 import demo.article.article.pojo.type.ArticleChannelType;
@@ -159,100 +160,102 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 	
 	private CommonResultCX createNewArticleLong(Long userId, CreateArticleParam controllerParam) throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
+		return editArticleLong(userId, controllerParam, null);
+	}
+	
+	private CommonResultCX editArticleLong(Long editorId, CreateArticleParam controllerParam, Long editedArticleId) throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
 		CommonResultCX result = new CommonResultCX();
-		int insertCount = 0;
+		boolean editFlag = (editedArticleId == null || editorId == null);
 		
-		String channelIdStr = controllerParam.getChannelId();
-		if(StringUtils.isBlank(channelIdStr) || !numberUtil.matchInteger(channelIdStr)) {
-			log.error("creating article errorParam %s, userId: %s", controllerParam.toString(), userId);
-			result.fillWithResult(ResultTypeCX.errorParam);
+		CheckParamBeforeEditArticleResult checkResult = checkParamBeforeEditArticle(editorId, controllerParam);
+		if(!checkResult.isSuccess()) {
+			result.failWithMessage(checkResult.getMessage());
 			return result;
 		}
 		
-		Long channelId = Long.parseLong(channelIdStr);
+		String summaryStorePrefixPath = checkResult.getSummaryStorePrefixPath();
+		String storePrefixPath = checkResult.getStorePrefixPath();
+		String title = checkResult.getTitle();
+		Long channelId = checkResult.getChannelId();
 		
-		ArticleChannels channel = channelService.findArticleChannelById(channelId);
-		if(channel == null || !ArticleChannelType.publicChannel.getCode().equals(channel.getChannelType())) {
-			log.error("creating article checkPostLimitError %s, userId: %s", controllerParam.toString(), userId);
-			result.fillWithResult(ResultTypeCX.errorParam);
+		ArticleLong editedArticlePO = null;
+		if(editFlag) {
+			editedArticlePO = articleLongMapper.selectByPrimaryKey(editedArticleId);
+			if(editedArticlePO == null) {
+				result.failWithMessage("参数异常");
+				return result;
+			}
+			boolean adminFlag = baseUtilCustom.hasAdminRole();
+			if(!editedArticlePO.getUserId().equals(editorId) || !adminFlag) {
+				result.failWithMessage("无权编辑");
+				return result;
+			}
+		}
+		
+		ArticleFileSaveResult saveArticleResult = saveArticleFile(storePrefixPath, editorId, controllerParam.getContent());
+		if (!saveArticleResult.isSuccess()) {
+			result.failWithMessage(saveArticleResult.getMessage());
 			return result;
 		}
 		
-		String title = null;
-		if(itIsBigUser()) {
-			title = controllerParam.getTitle();
-		} else {
-			PolicyFactory filter = textFilter.getFilter();
-			title = filter.sanitize(controllerParam.getTitle());
-			controllerParam.setContent(filter.sanitize(controllerParam.getContent()));
-		}
-		
-		if(StringUtils.isBlank(title)) {
-			result.failWithMessage("请输入标题");
-			return result;
-		}
-
-		Long maxArticleLength = loadMaxArticleLength();
-		String summaryStorePrefixPath = getArticleSummaryStorePrefixPath();
-		String storePrefixPath = getArticleStorePrefixPath();
-		if (StringUtils.isAnyBlank(summaryStorePrefixPath, storePrefixPath) || maxArticleLength < 1) {
-			log.error("creating article serviceError  articleStorePrefixPath %s, maxArticleLength: %s, userId: %s", storePrefixPath, maxArticleLength, userId);
-			result.fillWithResult(ResultTypeCX.serviceError);
-			return result;
-		}
+		String newFilePath = saveArticleResult.getFilePath();
 
 		ArticleLong newArticle = new ArticleLong();
-
-		ArticleFileSaveResult saveArticleResult = saveArticleFile(storePrefixPath, userId, controllerParam.getContent());
-		if (!saveArticleResult.isSuccess()) {
-			return saveArticleResult;
-		}
-		
-		String filePath = saveArticleResult.getFilePath();
-
 		Long newArticleId = snowFlake.getNextId();
 		newArticle.setArticleId(newArticleId);
 		newArticle.setArticleTitle(title);
-		newArticle.setPath(filePath);
-		newArticle.setUserId(userId);
+		newArticle.setPath(newFilePath);
 		newArticle.setChannelId(channelId);
+		if(editFlag) {
+			newArticle.setIsEdited(true);
+			newArticle.setPath(editedArticlePO.getPath());
+			newArticle.setUserId(editedArticlePO.getUserId());
+			result = updateEditedArticleLong(editedArticlePO, newArticleId, editorId, newFilePath);
+			if(!result.isSuccess()) {
+				return result;
+			}
+		} else {
+			newArticle.setUserId(editorId);
+		}
 		
+		int insertCount = 0;
 		try {
 			insertCount = articleLongMapper.insertSelective(newArticle);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		if (insertCount < 1) {
-			log.error("creating article insertArticleLongError %s, userId: %s", controllerParam.toString(), userId);
+			log.error("creating article insertArticleLongError %s, userId: %s", controllerParam.toString(), editorId);
 			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
 		}
 		
-		if (saveArticleResult.getImageUrls() != null && saveArticleResult.getImageUrls().size() > 0) {
-//			imageController.insertImageFromArticle(saveArticleResult.getImageUrls(), newArticle.getArticleId());
-		}
-
 		saveArticleResult.setArticleId(newArticleId);
 
-		CommonResultCX saveArtieleSummaryResult = saveArticleSummaryFile(userId, newArticle.getArticleId(), title,
-				saveArticleResult.getFirstLine(), saveArticleResult.getImageUrls());
+		CommonResultCX saveArtieleSummaryResult = saveArticleSummaryFile(editorId, newArticle.getArticleId(), title,
+				saveArticleResult.getFirstLine(), saveArticleResult.getImageUrls(), summaryStorePrefixPath);
 		if (!saveArtieleSummaryResult.isSuccess()) {
-			return saveArtieleSummaryResult;
+			result.failWithMessage(saveArtieleSummaryResult.getMessage());
+			return result;
 		}
 
-		insertCount = summaryService.insertArticleLongSummary(userId, newArticle.getArticleId(), title,
+		insertCount = summaryService.insertArticleLongSummary(newArticle.getUserId(), newArticle.getArticleId(), title,
 				saveArtieleSummaryResult.getMessage());
 		if (insertCount < 1) {
-			log.error("creating article insertArticleSummaryError %s, userId: %s", controllerParam.toString(), userId);
+			log.error("creating article insertArticleSummaryError %s, userId: %s", controllerParam.toString(), editorId);
 			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
 		}
 		
 		if(controllerParam.getQuickPass()) {
-			quickPass(newArticle.getArticleId());
+			if(editFlag) {
+				quickPass(editedArticleId);
+			} else {
+				quickPass(newArticle.getArticleId());
+			}
 		}
 		
-		result.fillWithResult(ResultTypeCX.createArticleLongSuccess);
+		result.fillWithResult(ResultTypeCX.editArticleLongSuccess);
 		return result;
 	}
 	
@@ -290,8 +293,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 	
 	@Override
-	public ArticleFileSaveResult saveArticleFile(String storePrefixPath, Long userId, String content) throws IOException {
-		String fileName = userId + "L" + UUID.randomUUID().toString().substring(0, 8) + ".txt";
+	public ArticleFileSaveResult saveArticleFile(String storePrefixPath, Long creatorId, String content) throws IOException {
+		String fileName = creatorId + "L" + UUID.randomUUID().toString().substring(0, 8) + ".txt";
 		String timeFolder = LocalDate.now().toString();
 		File mainFolder = new File(storePrefixPath + timeFolder);
 		String finalFilePath = storePrefixPath + timeFolder + "/" + fileName;
@@ -328,8 +331,19 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		return result;
 	}
 
+	/**
+	 * 用于保存新建/编辑的摘要文档
+	 * 在编辑情况下, userID 是编辑者ID, 不一定是原作者ID, 用于命名文件名
+	 * @param userId
+	 * @param articleId
+	 * @param title
+	 * @param firstLine
+	 * @param imageUrls
+	 * @param summaryStorePrefixPath
+	 * @return
+	 */
 	private CommonResultCX saveArticleSummaryFile(Long userId, Long articleId, String title, String firstLine,
-			List<String> imageUrls) {
+			List<String> imageUrls, String summaryStorePrefixPath) {
 		if(StringUtils.isBlank(firstLine)) {
 			firstLine = "";
 		}
@@ -342,7 +356,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		String fileName = userId + "L" + UUID.randomUUID().toString().substring(0, 8) + ".txt";
 		String timeFolder = LocalDate.now().toString();
 		
-		String summaryStorePrefixPath = getArticleSummaryStorePrefixPath();
 		File mainFolder = new File(summaryStorePrefixPath + timeFolder);
 		String finalFilePath = summaryStorePrefixPath + timeFolder + "/" + fileName;
 
@@ -601,58 +614,123 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		return vo;
 	}
 	
-	public void editArticleLongHandler(EditArticleLongDTO dto) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, IOException {
-		/*
-		 * TODO
-		 * 编辑文章时, 还需要鉴定一次权限 ---> (管理员, 本人?)
-		 * 记录编辑历史 ---> 次数, 最后编辑时间, 原文上直接修改???? 新建并保留原文?
-		 */
+	@Override
+	public CommonResultCX editArticleLongHandler(EditArticleLongDTO dto) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, IOException {
+		
+		CommonResultCX result = new CommonResultCX();
 		if(StringUtils.isBlank(dto.getPrivateKey())) {
-//			TODO
+			result.failWithMessage("参数缺失");
+			return result;
 		}
 		
-		Long articleId = decryptArticlePrivateKey(dto.getPrivateKey());
+		Long targetArticleId = decryptArticlePrivateKey(dto.getPrivateKey());
 		
-		if(articleId == null) {
-//			TODO
+		if(targetArticleId == null) {
+			result.failWithMessage("参数错误");
+			return result;
 		}
 		
-		ArticleLong sourcePO = articleLongMapper.selectByPrimaryKey(articleId);
-		
-		boolean adminFlag = baseUtilCustom.hasAdminRole();
 		Long userId = baseUtilCustom.getUserId();
-		if(!sourcePO.getUserId().equals(userId) || !adminFlag) {
-//			TODO
-		}
-		
-		ArticleLong newPO = new ArticleLong();
-		sourcePO.setIsEdited(true);
-		BeanUtils.copyProperties(sourcePO, newPO);
-		
-		articleLongMapper.updateByPrimaryKey(sourcePO);
-		
-		newPO.setEditOf(sourcePO.getArticleId());
-		newPO.setEditBy(userId);
-		if(sourcePO.getEditCount() == null) {
-			newPO.setEditCount(1);
-		} else {
-			newPO.setEditCount(sourcePO.getEditCount() + 1);
-		}
-		newPO.setEditTime(LocalDateTime.now());
 
-		CreateArticleParam p = new CreateArticleParam();
-		p.setContent(dto.getContent());
-		p.setTitle(dto.getTitle());
-		p.setChannelId(dto.getChannelId());
+		CreateArticleParam param = new CreateArticleParam();
+		param.setContent(dto.getContent());
+		param.setTitle(dto.getTitle());
+		param.setChannelId(dto.getChannelId());
 		if(itIsBigUser()) {
-			p.setQuickPass(true);
+			param.setQuickPass(true);
 		}
-		createNewArticleLong(userId, p);
 		
+		result = editArticleLong(userId, param, targetArticleId); 
 		
-		/*
-		 * TODO
-		 */
-//		articleLongMapper.insertSelective(newPO);
+		return result;
+	}
+
+	private CheckParamBeforeEditArticleResult checkParamBeforeEditArticle(Long userId, CreateArticleParam controllerParam) {
+		CheckParamBeforeEditArticleResult result = new CheckParamBeforeEditArticleResult();
+
+		String channelIdStr = controllerParam.getChannelId();
+		if(StringUtils.isBlank(channelIdStr) || !numberUtil.matchInteger(channelIdStr)) {
+			log.error("creating article errorParam %s, userId: %s", controllerParam.toString(), userId);
+			result.fillWithResult(ResultTypeCX.errorParam);
+			return result;
+		}
+		
+		Long channelId = Long.parseLong(channelIdStr);
+		
+		ArticleChannels channel = channelService.findArticleChannelById(channelId);
+		if(channel == null || !ArticleChannelType.publicChannel.getCode().equals(channel.getChannelType())) {
+			log.error("creating article checkPostLimitError %s, userId: %s", controllerParam.toString(), userId);
+			result.fillWithResult(ResultTypeCX.errorParam);
+			return result;
+		}
+		result.setChannelId(channelId);
+		
+		String title = null;
+		if(itIsBigUser()) {
+			title = controllerParam.getTitle();
+		} else {
+			PolicyFactory filter = textFilter.getFilter();
+			title = filter.sanitize(controllerParam.getTitle());
+			controllerParam.setContent(filter.sanitize(controllerParam.getContent()));
+		}
+		
+		if(StringUtils.isBlank(title)) {
+			result.failWithMessage("请输入标题");
+			return result;
+		}
+		result.setTitle(title);
+
+		Long maxArticleLength = loadMaxArticleLength();
+		String summaryStorePrefixPath = getArticleSummaryStorePrefixPath();
+		String storePrefixPath = getArticleStorePrefixPath();
+		if (StringUtils.isAnyBlank(summaryStorePrefixPath, storePrefixPath) || maxArticleLength < 1) {
+			log.error("creating article serviceError  articleStorePrefixPath %s, maxArticleLength: %s, userId: %s", storePrefixPath, maxArticleLength, userId);
+			result.fillWithResult(ResultTypeCX.serviceError);
+			return result;
+		}
+		result.setStorePrefixPath(storePrefixPath);
+		result.setSummaryStorePrefixPath(summaryStorePrefixPath);
+		result.setIsSuccess();
+		
+		return result;
+	}
+
+	
+	/**
+	 * 
+	 * 更新被编辑文档的信息
+	 * @param targetArticleId
+	 * @param backupArticleId
+	 * @param editorId
+	 * @param newFilePath
+	 * @param po 
+	 * @return
+	 */
+	private CommonResultCX updateEditedArticleLong(ArticleLong po, Long backupArticleId, Long editorId, String newFilePath) {
+		CommonResultCX result = new CommonResultCX();
+		if(po == null || editorId == null) {
+			result.failWithMessage("参数缺失");
+			return result;
+		}
+		
+		Integer editCount = po.getEditCount();
+		if(editCount == null) {
+			editCount = 0;
+		}
+		
+		po.setEditOf(backupArticleId);
+		po.setEditCount(editCount + 1);
+		po.setPath(newFilePath);
+		po.setEditTime(LocalDateTime.now());
+		po.setIsPass(false);
+		
+		int updateCount = articleLongMapper.updateByPrimaryKeySelective(po);
+		if(updateCount < 1) {
+			result.failWithMessage("更新数据异常");
+			return result;
+		}
+		
+		result.setIsSuccess();
+		return result;
 	}
 }

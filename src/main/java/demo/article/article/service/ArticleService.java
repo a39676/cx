@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.pojo.dto.ArticleFeedbackDTO;
+import demo.article.article.pojo.dto.EditArticleLongDTO;
 import demo.article.article.pojo.dto.ReadyToEditArticleLongDTO;
 import demo.article.article.pojo.param.controllerParam.CreateArticleParam;
 import demo.article.article.pojo.param.controllerParam.CreatingArticleParam;
@@ -47,8 +48,6 @@ public interface ArticleService {
 	 */
 	boolean iWroteThis(String privateKey);
 
-	ArticleFileSaveResult saveArticleFile(String storePrefixPath, Long userId, String content) throws IOException;
-
 	/**
 	 * 定时任务逻辑, 拉取article_long_review中  缺失作者ID的数据, 补填
 	 */
@@ -67,5 +66,18 @@ public interface ArticleService {
 
 	/** 编辑文章 */
 	ModelAndView readyToEditArticleLong(ReadyToEditArticleLongDTO dto);
+
+	/**
+	 * 用于保存新建/编辑的文章,
+	 * 在编辑情况下, creatorId 是编辑者ID, 不一定是原作者ID, 用于命名文件名
+	 * @param storePrefixPath
+	 * @param creatorId
+	 * @param content
+	 * @return
+	 * @throws IOException
+	 */
+	ArticleFileSaveResult saveArticleFile(String storePrefixPath, Long creatorId, String content) throws IOException;
+
+	CommonResultCX editArticleLongHandler(EditArticleLongDTO dto) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, IOException;
 
 }

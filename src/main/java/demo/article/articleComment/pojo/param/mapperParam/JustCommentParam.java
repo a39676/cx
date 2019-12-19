@@ -2,6 +2,14 @@ package demo.article.articleComment.pojo.param.mapperParam;
 
 import java.util.Date;
 
+/**
+ * 
+ * 查询是否刚刚评论过
+ * TODO
+ * 2019-12-19 
+ * 发现, 应该转移到 redis
+ *
+ */
 public class JustCommentParam {
 
 	private Long userId;

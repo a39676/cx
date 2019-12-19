@@ -10,7 +10,6 @@ import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -132,39 +131,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	@Override
 	public String encryptId(Long id) {
 		return encryptArticleId(id, getCustomKey());
-	}
-	
-	private CommonResultCX batchCreateArticleLong(Long userId, CreateArticleParam controllerParam) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, IOException {
-		CommonResultCX result = new CommonResultCX();
-		String superAdminKey = constantService.getValByName(SystemConstantStore.superAdminKey);
-		if(StringUtils.isBlank(superAdminKey) 
-				|| StringUtils.isBlank(controllerParam.getSuperAdminKey()) 
-				|| !superAdminKey.equals(controllerParam.getSuperAdminKey())) {
-			result.fillWithResult(ResultTypeCX.errorParam);
-			return result;
-		}
-		
-		String oldContent = controllerParam.getContent();
-		List<String> lines = Arrays.asList(oldContent.split("http"));
-		if(lines.size() < 1) {
-			result.fillWithResult(ResultTypeCX.nullParam);
-			return result;
-		}
-		
-		CommonResult tmpResult = null;
-		int successCount = 0;
-		for(String line : lines) {
-			if(!StringUtils.isBlank(line)) {
-				tmpResult = createNewArticleLong(userId, controllerParam);
-				if(tmpResult.isSuccess()) {
-					successCount = successCount + 1;
-				}
-			}
-		}
-		
-		result.setIsSuccess();
-		result.setMessage("成功分拆发表" + successCount + "份；失败" + (lines.size() - successCount) + "份");
-		return result;
 	}
 	
 	@Override
@@ -305,11 +271,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			cp.setQuickPass(false);
 		}
 		
-		if(StringUtils.isNotBlank(cp.getSuperAdminKey())) {
-			serviceResult = batchCreateArticleLong(userId, cp);
-		} else {
-			serviceResult = createNewArticleLong(userId, cp);
-		}
+		serviceResult = createNewArticleLong(userId, cp);
 		return serviceResult;
 	}
 	

@@ -207,7 +207,14 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		if(editFlag) {
 			BeanUtils.copyProperties(editedArticlePO, newArticle);
 			newArticle.setIsEdited(true);
-			result = updateEditedArticleLong(editedArticlePO, newArticleId, editorId, newFilePath, title);
+			UpdateEditedArticleLongBO bo = new UpdateEditedArticleLongBO();
+			bo.setBackupArticleId(newArticleId);
+			bo.setChannelId(channelId);
+			bo.setEditedArticlePO(editedArticlePO);
+			bo.setEditorId(editorId);
+			bo.setNewFilePath(newFilePath);
+			bo.setTitle(title);
+			result = updateEditedArticleLong(bo);
 			if(!result.isSuccess()) {
 				return result;
 			}
@@ -689,23 +696,26 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	 * @param po 
 	 * @return
 	 */
-	private CommonResultCX updateEditedArticleLong(ArticleLong po, Long backupArticleId, Long editorId, String newFilePath, String title) {
+	private CommonResultCX updateEditedArticleLong(UpdateEditedArticleLongBO bo) {
 		CommonResultCX result = new CommonResultCX();
-		if(po == null || editorId == null) {
+		if(bo.getEditedArticlePO() == null || bo.getEditorId() == null) {
 			result.failWithMessage("参数缺失");
 			return result;
 		}
+		
+		ArticleLong po = bo.getEditedArticlePO();
 		
 		Integer editCount = po.getEditCount();
 		if(editCount == null) {
 			editCount = 0;
 		}
 		
-		po.setArticleTitle(title);
-		po.setEditOf(backupArticleId);
+		po.setArticleTitle(bo.getTitle());
+		po.setEditOf(bo.getBackupArticleId());
 		po.setEditCount(editCount + 1);
-		po.setPath(newFilePath);
+		po.setPath(bo.getNewFilePath());
 		po.setEditTime(LocalDateTime.now());
+		po.setChannelId(bo.getChannelId());
 		po.setIsPass(false);
 		
 		int updateCount = articleLongMapper.updateByPrimaryKeySelective(po);

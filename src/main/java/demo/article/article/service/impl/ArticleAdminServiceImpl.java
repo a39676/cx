@@ -275,17 +275,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		param.setArticleId(articleId);
 		param.setPk(null);
 		
-		ArticleLong article = articleLongMapper.selectByPrimaryKey(articleId);
-		int deleteReviewRecordCount = 0;
-		if(!article.getIsEdited()) {
-			if(article.getIsPass() || article.getIsDelete() || article.getIsReject()) {
-				deleteReviewRecordCount = articleLongReviewMapper.deleteReviewRecord(articleId);
-			} else {
-				deleteReviewRecordCount = 1;
-			}
-		}
-		
-		if(deleteReviewRecordCount < 1 || articleLongMapper.changeChannel(param) < 1) {
+		if(articleLongMapper.changeChannel(param) < 1) {
 			throw new Exception();
 		}
 		
@@ -295,7 +285,11 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	
 	@Override
 	public CommonResultCX setArticleHot(SetArticleHotParam controllerParam) {
-//		TODO
+		/*
+		 * TODO
+		 * 2019-12-20 发现
+		 * what to do?
+		 */
 		CommonResultCX result = new CommonResultCX();
 		if(StringUtils.isBlank(controllerParam.getPk()) || controllerParam.getHotMinutes() == null || controllerParam.getHotLevel() == null) {
 			result.fillWithResult(ResultTypeCX.nullParam);

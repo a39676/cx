@@ -25,6 +25,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.pojo.constant.ArticleUrlConstant;
 import demo.article.article.pojo.constant.ArticleViewConstant;
 import demo.article.article.pojo.dto.ArticleFeedbackDTO;
+import demo.article.article.pojo.dto.EditArticleLongDTO;
 import demo.article.article.pojo.dto.ReadyToEditArticleLongDTO;
 import demo.article.article.pojo.param.controllerParam.CreateArticleParam;
 import demo.article.article.pojo.param.controllerParam.CreatingArticleParam;
@@ -198,13 +199,19 @@ public class ArticleController extends CommonController {
 	}
 	
 	@GetMapping(value = ArticleUrlConstant.editArticleLong)
-	public ModelAndView editArticleLong(@RequestParam(value = "pk", required = false) String pk, HttpServletRequest request) {
+	public ModelAndView editArticleLongView(@RequestParam(value = "pk", required = false) String pk, HttpServletRequest request) {
 		ReadyToEditArticleLongDTO dto = new ReadyToEditArticleLongDTO();
 		dto.setPrivateKey(pk);
 		ModelAndView view = articleService.readyToEditArticleLong(dto);
 		GetArticleChannelsResult channelsResult = getArticleChannelsDynamic(request);
 		view.addObject("channelList", channelsResult.getChannelList());
 		return view;
+	}
+	
+	@PostMapping(value = ArticleUrlConstant.editArticleLong)
+	@ResponseBody
+	public CommonResultCX editArticleLong(@RequestBody EditArticleLongDTO dto) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, IOException {
+		return articleService.editArticleLongHandler(dto);
 	}
 
 }

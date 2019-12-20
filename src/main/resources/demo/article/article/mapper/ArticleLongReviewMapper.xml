@@ -118,12 +118,6 @@
     </where>
   </select>
 
-  <select id="wasReview" resultType="int">
-    select exists (
-      select 1 from article_long_review where article_id = #{articleId} and review_type_id = #{reviewTypeId}
-    )
-  </select>
-
   <select id="findArticleCreatorIdIsNull" resultMap="BaseResultMap">
     select
       alr.article_id

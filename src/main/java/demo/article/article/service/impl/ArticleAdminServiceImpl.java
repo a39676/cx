@@ -141,14 +141,14 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			return result;
 		}
 		
-		if(articleLongReviewMapper.wasReview(articleId, ArticleReviewType.pass.getReviewCode()) == 1) {
-			result.fillWithResult(ResultTypeCX.articleWasPass);
-			return result;
-		}
-		
 		ArticleLong article = articleLongMapper.selectByPrimaryKey(articleId);
 		if(article == null) {
 			result.fillWithResult(ResultTypeCX.serviceError);
+			return result;
+		}
+		
+		if(article.getIsPass()) {
+			result.fillWithResult(ResultTypeCX.articleWasPass);
 			return result;
 		}
 		
@@ -183,14 +183,14 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			return result;
 		}
 		
-		if(articleLongReviewMapper.wasReview(articleId, ArticleReviewType.pass.getReviewCode()) == 1) {
-			result.fillWithResult(ResultTypeCX.articleWasReject);
-			return result;
-		}
-		
 		ArticleLong article = articleLongMapper.selectByPrimaryKey(articleId);
 		if(article == null) {
 			result.fillWithResult(ResultTypeCX.serviceError);
+			return result;
+		}
+		
+		if(article.getIsReject()) {
+			result.fillWithResult(ResultTypeCX.articleWasReject);
 			return result;
 		}
 		
@@ -225,14 +225,14 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			return result;
 		}
 		
-		if(articleLongReviewMapper.wasReview(articleId, ArticleReviewType.delete.getReviewCode()) == 1) {
-			result.fillWithResult(ResultTypeCX.articleWasDelete);
-			return result;
-		}
-		
 		ArticleLong article = articleLongMapper.selectByPrimaryKey(articleId);
 		if(article == null) {
 			result.fillWithResult(ResultTypeCX.serviceError);
+			return result;
+		}
+		
+		if(article.getIsDelete()) {
+			result.fillWithResult(ResultTypeCX.articleWasDelete);
 			return result;
 		}
 		

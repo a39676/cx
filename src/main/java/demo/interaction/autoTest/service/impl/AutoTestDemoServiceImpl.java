@@ -40,7 +40,6 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	@Autowired
 	private HttpUtil httpUtil;
 	
-	
 	@Override
 	public ModelAndView linkToATHome(HttpServletRequest request) {
 		String hostName = findHostNameFromRequst(request);

@@ -24,9 +24,10 @@
           <div class="post-heading">
             <h1>${articleLongVO.articleTitle}</h1>
             <h2 class="subheading"></h2>
-            <span class="meta">Posted by
-              <a href="#">${articleLongVO.nickName}</a>
-              on ${articleLongVO.createDateString}</span>
+            <span class="meta">
+              Posted by <a href="#">${articleLongVO.nickName}</a>
+              on ${articleLongVO.createDateString}
+            </span>
           </div>
         </div>
       </div>
@@ -69,7 +70,11 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          
+          <sec:authorize access="hasRole('ROLE_ADMIN')">
+          <c:if test="${articleLongVO.editDateString != null}">
+            <span style="text-transform: capitalize">Last edited time: ${articleLongVO.editDateString}</span>
+          </c:if>
+          </sec:authorize>
           <p class="para" style="word-break:break-word;">${articleLongVO.contentLines}</p>
 
         </div>

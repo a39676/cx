@@ -140,16 +140,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return view;
 		}
 		
-//		String uuid = controllerParam.getUuid();
-//		Integer channelId = channelService.getChannelIdByUUID(uuid);
-//		if(channelId == null) {
-//			return new ModelAndView(BaseViewConstant.viewError);
-//		}
-//		List<Integer> channelIdList = channelService.findChannelIdListByUserId(controllerParam.getUserId());
-//		if(!channelIdList.contains(channelId)) {
-//			return new ModelAndView(BaseViewConstant.viewError);
-//		}
-		
 		view = new ModelAndView(ArticleViewConstant.creatingArticleLong);
 		view.addObject("createNew", "true");
 		return view;

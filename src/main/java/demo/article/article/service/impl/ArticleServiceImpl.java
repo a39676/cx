@@ -60,10 +60,8 @@ import demo.article.article.service.ArticleViewService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.user.controller.UsersController;
-import demo.base.user.pojo.type.RolesType;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
-import demo.tool.service.TextFilter;
 import demo.tool.service.ValidRegexToolService;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -81,8 +79,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	private ArticleAdminService articleAdminService;
 	@Autowired
 	private ArticleSummaryService summaryService;
-	@Autowired
-	private TextFilter textFilter;
 	
 	@Autowired
 	private ArticleLongMapper articleLongMapper;
@@ -548,13 +544,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		return result;
 	}
 	
-	private boolean itIsBigUser() {
-		return baseUtilCustom.hasAnyRole(
-				RolesType.ROLE_POSTER.getName(),
-				RolesType.ROLE_ADMIN.getName(),
-				RolesType.ROLE_SUPER_ADMIN.getName());
-	}
-
 	@Override
 	public ModelAndView readyToEditArticleLong(ReadyToEditArticleLongDTO dto) {
 		ModelAndView view = new ModelAndView(ArticleViewConstant.creatingArticleLong);;

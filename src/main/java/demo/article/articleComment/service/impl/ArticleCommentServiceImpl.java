@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.owasp.html.PolicyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import demo.article.article.pojo.vo.ArticleCommentVO;
 import demo.article.article.pojo.vo.ArticleEvaluationStatisticsVO;
 import demo.article.article.service.ArticleEvaluationService;
 import demo.article.article.service.ArticleService;
+import demo.article.article.service.impl.ArticleCommonService;
 import demo.article.articleComment.mapper.ArticleCommentMapper;
 import demo.article.articleComment.pojo.bo.ArticleCommentCountByArticleIdBO;
 import demo.article.articleComment.pojo.bo.FindCommentByArticleIdBO;
@@ -31,11 +33,10 @@ import demo.article.articleComment.service.ArticleCommentService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
-import demo.baseCommon.service.CommonService;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
-public class ArticleCommentServiceImpl extends CommonService implements ArticleCommentService {
+public class ArticleCommentServiceImpl extends ArticleCommonService implements ArticleCommentService {
 	
 	@Autowired
 	private ArticleService articleService;
@@ -99,6 +100,11 @@ public class ArticleCommentServiceImpl extends CommonService implements ArticleC
 			return result;
 		}
 		
+		if(!itIsBigUser()) {
+			PolicyFactory filter = textFilter.getFilter();
+			inputParam.setContent(filter.sanitize(inputParam.getContent()));
+		}
+
 		ArticleFileSaveResult saveFileResult = saveArticleCommentFile(articleCommentStorePrefixPath, userId, inputParam.getContent());
 		if(!saveFileResult.isSuccess()) {
 			return saveFileResult;

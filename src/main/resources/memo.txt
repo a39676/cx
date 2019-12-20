@@ -6,7 +6,14 @@ ArticleServiceImpl.findArticleLongByArticleSummaryPrivateKey
 	articleLongMapper.findArticleLongByDecryptId 返回的vo类  待解耦
 	视实际情况, 可能要展示:  编辑过n次, 最后经过 xxx 于 yyyy-MM-dd... 编辑
 
-文章编辑后, 另新建一个文件存放原内容, 原ID关联关系不变 
+文章编辑后, 另新建一个文件存放原内容, 原ID关联关系不变
+
+ArticleServiceImpl.saveArticleFile
+未使用
+PolicyFactory filter = textFilter.getFilter();
+			title = filter.sanitize(controllerParam.getTitle());
+			controllerParam.setContent(filter.sanitize(controllerParam.getContent()));
+			过滤内容 
 
 	
 

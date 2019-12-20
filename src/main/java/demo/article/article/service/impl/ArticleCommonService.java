@@ -2,10 +2,17 @@ package demo.article.article.service.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import demo.base.user.pojo.type.RolesType;
 import demo.baseCommon.service.CommonService;
 import demo.config.costom_component.EncryptUtil;
+import demo.tool.service.TextFilter;
 
 public class ArticleCommonService extends CommonService{
+	
+	@Autowired
+	protected TextFilter textFilter;
 	
 	protected static String imageHttpUrlPattern;
 	private static final String[] imageSuffix = { "jpg", "jpeg", "bmp", "tiff", "png", "gif", "webp" };
@@ -66,5 +73,12 @@ public class ArticleCommonService extends CommonService{
 			return null;
 		}
 		return Long.parseLong(encryptId);
+	}
+	
+	protected boolean itIsBigUser() {
+		return baseUtilCustom.hasAnyRole(
+				RolesType.ROLE_POSTER.getName(),
+				RolesType.ROLE_ADMIN.getName(),
+				RolesType.ROLE_SUPER_ADMIN.getName());
 	}
 }

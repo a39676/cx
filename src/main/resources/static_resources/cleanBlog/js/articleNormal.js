@@ -30,6 +30,7 @@ function loadArticleChannels() {
       datas.channelList.forEach(function(channel) {
         $("#articleChannels").append(buildSubChannel(channel));
       });
+
       var channelId = datas.channelList[0].channelId;
 
       setTimeout(function(){}, 300);
@@ -160,9 +161,9 @@ function loadArticleLongSummaryFirstPage(channelId) {
   $("#blogArea").attr("markTime", "");
   $(".channelButton").attr('disabled','disabled');
   loadArticleLongSummaryHot(channelId);
-  setTimeout(function(){}, 300);
+  setTimeout(function(){}, 1000);
   loadArticleLongSummary(channelId);
-  setTimeout(function(){}, 300);
+  setTimeout(function(){}, 1000);
   $(".channelButton").removeAttr('disabled');
 }
 

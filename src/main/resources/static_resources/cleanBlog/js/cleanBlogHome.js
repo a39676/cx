@@ -25,6 +25,7 @@ $(document).ready(function() {
   document.getElementById("loginTag").onclick = function () {
     showLogin()
   };
+  
   function showLogin(){ 
     var url = "/login/login";
     $.ajax({  

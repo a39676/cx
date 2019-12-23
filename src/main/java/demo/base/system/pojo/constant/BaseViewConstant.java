@@ -10,6 +10,7 @@ public class BaseViewConstant {
 	public static final String loginCustom = "baseJSP/loginCustom";
 	public static final String loginCustomV2 = "baseJSP/loginCustomV2";
 	public static final String loginCustomV3 = "baseJSP/loginCustomV3";
+	public static final String loginSingle = "baseJSP/loginSingle";
 	public static final String view403 = "baseJSP/403";
 	public static final String viewError = "baseJSP/error";
 	

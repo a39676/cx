@@ -6,6 +6,25 @@ public class ArticleChannelVO implements Comparable<ArticleChannelVO> {
 	private String channelId;
 	private String channelImage;
 	private Integer weights;
+	private boolean isDelete = false;
+	/** ArticleChannelType */
+	private Integer channelType;
+
+	public boolean getIsDelete() {
+		return isDelete;
+	}
+
+	public void setIsDelete(boolean isDelete) {
+		this.isDelete = isDelete;
+	}
+
+	public Integer getChannelType() {
+		return channelType;
+	}
+
+	public void setChannelType(Integer channelType) {
+		this.channelType = channelType;
+	}
 
 	public String getChannelImage() {
 		return channelImage;
@@ -42,7 +61,8 @@ public class ArticleChannelVO implements Comparable<ArticleChannelVO> {
 	@Override
 	public String toString() {
 		return "ArticleChannelVO [channelName=" + channelName + ", channelId=" + channelId + ", channelImage="
-				+ channelImage + ", weights=" + weights + "]";
+				+ channelImage + ", weights=" + weights + ", isDelete=" + isDelete + ", channelType=" + channelType
+				+ "]";
 	}
 
 	@Override

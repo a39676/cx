@@ -15,6 +15,9 @@
         <li>
           <a href="/fakeFTP/getFilePathDetail" target="_blank">fakeFTP</a>
         </li>
+        <li>
+          <a href="/articleAdmin/articleChannelManager" target="_blank">article channel manager</a>
+        </li>
     </ul><!-- main-menu -->
   </div><!-- conatiner -->
 </header>

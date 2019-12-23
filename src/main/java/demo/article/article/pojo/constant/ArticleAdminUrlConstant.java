@@ -10,4 +10,6 @@ public class ArticleAdminUrlConstant {
 	public static final String changeChannel = "/changeChannel";
 	public static final String setArticleHot = "/setArticleHot";
 	public static final String findArticleChannel = "/findArticleChannel";
+	
+	public static final String articleChannelManager = "/articleChannelManager";
 }

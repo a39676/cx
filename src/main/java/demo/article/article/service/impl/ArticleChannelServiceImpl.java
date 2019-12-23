@@ -10,16 +10,20 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 import demo.article.article.mapper.ArticleChannelsMapper;
 import demo.article.article.pojo.bo.GetArticleChannelsBO;
+import demo.article.article.pojo.dto.ArticleChannelManagerDTO;
 import demo.article.article.pojo.po.ArticleChannels;
 import demo.article.article.pojo.po.ArticleChannelsExample;
 import demo.article.article.pojo.result.GetArticleChannelsResult;
+import demo.article.article.pojo.type.ArticleChannelOperationalType;
 import demo.article.article.pojo.type.ArticleChannelType;
 import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.article.article.service.ArticleChannelService;
 import demo.base.system.pojo.bo.SystemConstantStore;
+import demo.baseCommon.pojo.result.CommonResultCX;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -276,4 +280,156 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		return newChannelList;
 	}
 
+	@Override
+	public List<ArticleChannelVO> findArticleChannel() {
+		List<ArticleChannelVO> channelVOList = new ArrayList<ArticleChannelVO>();
+		ArticleChannelsExample example = new ArticleChannelsExample();
+//		example.createCriteria().andIsDeleteEqualTo(false);
+		List<ArticleChannels> channelPOList = articleChannelsMapper.selectByExample(example);
+		ArticleChannelVO tmpChannelVO = null;
+		
+		for(ArticleChannels channel : channelPOList) {
+			tmpChannelVO = new ArticleChannelVO();
+			tmpChannelVO.setChannelName(channel.getChannelName());
+			tmpChannelVO.setChannelId(String.valueOf(channel.getChannelId()));
+			tmpChannelVO.setWeights(channel.getWeights());
+			tmpChannelVO.setIsDelete(channel.getIsDelete());
+			tmpChannelVO.setChannelType(channel.getChannelType());
+			channelVOList.add(tmpChannelVO);
+		}
+		
+		return channelVOList;
+	}
+
+	@Override
+	public ModelAndView articleChannelManagerView() {
+		ModelAndView v = new ModelAndView();
+		v.setViewName("articleJSP/articleChannelManager");
+		v.addObject("channelList", findArticleChannel());
+		return v;
+	}
+	
+	@Override
+	public CommonResultCX articleChannelManager(ArticleChannelManagerDTO dto) {
+		CommonResultCX result = new CommonResultCX();
+		if(dto.getOperationalType() == null) {
+			result.failWithMessage("参数为空");
+			return result;
+		}
+		
+		ArticleChannelOperationalType operationalType = ArticleChannelOperationalType.getType(dto.getOperationalType());
+		if(operationalType == null) {
+			result.failWithMessage("参数异常");
+			return result;
+		}
+		
+		if(!baseUtilCustom.hasAdminRole()) {
+			result.failWithMessage("无操作权限");
+			return result;
+		}
+		
+		if(operationalType.equals(ArticleChannelOperationalType.add)) {
+			result = addNewChannel(dto);
+		} else if(operationalType.equals(ArticleChannelOperationalType.updateDelete)) {
+			result = updateDeleteChannel(dto);
+		} else if(operationalType.equals(ArticleChannelOperationalType.modify)) {
+			result = modifyChannel(dto);
+		}
+		
+		return result;
+	}
+	
+	private CommonResultCX addNewChannel(ArticleChannelManagerDTO dto) {
+		CommonResultCX r = new CommonResultCX();
+		if(StringUtils.isBlank(dto.getChannelName())) {
+			r.failWithMessage("不能设置空白名称");
+			return r;
+		}
+		
+		ArticleChannelType channelType = ArticleChannelType.getType(dto.getChannelType());
+		if(channelType == null) {
+			r.failWithMessage("参数异常");
+			return r;
+		}
+		
+		if(dto.getWeights() == null) {
+			dto.setWeights(0);
+		}
+		
+		ArticleChannels newChannel = new ArticleChannels();
+		newChannel.setChannelId(snowFlake.getNextId());
+		newChannel.setChannelName(dto.getChannelName());
+		newChannel.setChannelType(dto.getChannelType());
+		newChannel.setWeights(dto.getWeights());
+		
+		int count = articleChannelsMapper.insertSelective(newChannel);
+		if(count < 1) {
+			r.failWithMessage("新加入异常");
+			return r;
+		}
+		
+		r.successWithMessage("新加入成功");
+		return r;
+	}
+	
+	private CommonResultCX updateDeleteChannel(ArticleChannelManagerDTO dto) {
+		CommonResultCX r = new CommonResultCX();
+		if(dto.getChannelId() == null) {
+			return r;
+		}
+		
+		ArticleChannels channel = articleChannelsMapper.selectByPrimaryKey(dto.getChannelId());
+		if(channel == null) {
+			r.failWithMessage("不存在此频道");
+			return r;
+		}
+		
+		channel.setIsDelete(dto.getIsDelete());
+		int count = articleChannelsMapper.updateByPrimaryKeySelective(channel);
+		if(count < 1) {
+			r.failWithMessage("更新失败");
+			return r;
+		}
+		
+		r.successWithMessage("成功更新");
+		return r;
+	}
+	
+	private CommonResultCX modifyChannel(ArticleChannelManagerDTO dto) {
+		CommonResultCX r = new CommonResultCX();
+		if(dto.getChannelId() == null) {
+			r.failWithMessage("参数为空");
+			return r;
+		}
+		
+		ArticleChannels channel = articleChannelsMapper.selectByPrimaryKey(dto.getChannelId());
+		if(channel == null) {
+			r.failWithMessage("参数异常");
+			return r;
+		}
+		if(dto.getChannelType() != null) {
+			ArticleChannelType channelType = ArticleChannelType.getType(dto.getChannelType());
+			if(channelType == null) {
+				r.failWithMessage("参数异常");
+				return r;
+			}
+			channel.setChannelType(channelType.getCode());
+		}
+		
+		if(StringUtils.isNotBlank(dto.getChannelName())) {
+			channel.setChannelName(dto.getChannelName());
+		}
+		if(dto.getWeights() != null) {
+			channel.setWeights(dto.getWeights());
+		}
+		
+		int count = articleChannelsMapper.updateByPrimaryKeySelective(channel);
+		if(count < 1) {
+			r.failWithMessage("更新失败");
+			return r;
+		}
+		
+		r.successWithMessage("成功更新");
+		return r;
+	}
 }

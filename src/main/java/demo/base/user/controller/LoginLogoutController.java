@@ -71,6 +71,11 @@ public class LoginLogoutController extends CommonController {
 
 	}
 	
+	@GetMapping(value = LoginUrlConstant.loginSingle)
+	public ModelAndView loginSingle() {
+		return new ModelAndView(BaseViewConstant.loginSingle);
+	}
+	
 	@GetMapping(value = LoginUrlConstant.logout)
 	public void logout (HttpServletRequest request, HttpServletResponse response) {
 	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();

@@ -7,13 +7,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.pojo.constant.ArticleAdminUrlConstant;
+import demo.article.article.pojo.dto.ArticleChannelManagerDTO;
 import demo.article.article.pojo.param.controllerParam.BatchUpdatePrimaryKeyParam;
 import demo.article.article.pojo.param.controllerParam.ChangeChannelParam;
 import demo.article.article.pojo.param.controllerParam.ReviewArticleLongParam;
@@ -21,6 +24,7 @@ import demo.article.article.pojo.param.controllerParam.SetArticleHotParam;
 import demo.article.article.pojo.type.ArticleReviewType;
 import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.article.article.service.ArticleAdminService;
+import demo.article.article.service.ArticleChannelService;
 import demo.baseCommon.controller.CommonController;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
@@ -32,11 +36,13 @@ public class ArticleAdminController extends CommonController {
 	
 	@Autowired
 	private ArticleAdminService articleAdminService;
+	@Autowired
+	private ArticleChannelService channelService;
 	
 	@PostMapping(value = ArticleAdminUrlConstant.findArticleChannel)
 	@ResponseBody
 	public List<ArticleChannelVO> findArticleChannel() {
-		return articleAdminService.findArticleChannel();
+		return channelService.findArticleChannel();
 	}
 	
 	@PostMapping(value = ArticleAdminUrlConstant.batchUpdatePrivateKey)
@@ -95,5 +101,16 @@ public class ArticleAdminController extends CommonController {
 	public void setArticleHot(@RequestBody SetArticleHotParam param, HttpServletRequest request, HttpServletResponse response) {
 		CommonResult serviceResult = articleAdminService.setArticleHot(param);
 		outputJson(response, JSONObject.fromObject(serviceResult));
+	}
+	
+	@GetMapping(value = ArticleAdminUrlConstant.articleChannelManager)
+	public ModelAndView articleChannelManager() {
+		return channelService.articleChannelManagerView();
+	}
+	
+	@PostMapping(value = ArticleAdminUrlConstant.articleChannelManager)
+	@ResponseBody
+	public CommonResultCX articleChannelManager(@RequestBody ArticleChannelManagerDTO dto) {
+		return channelService.articleChannelManager(dto);
 	}
 }

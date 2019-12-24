@@ -22,12 +22,6 @@ spring:
     pool.min-idle: 0
     timeout: 2000
 
-    
-  # mvc:
-  #   view:
-  #     prefix: /jsp/
-  #     suffix: .jsp
-
 logging:
   level:
     org.springframework.web: DEBUG

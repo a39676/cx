@@ -66,9 +66,9 @@ function buildSummaryLine(subArticleVO) {
 function loadArticleLongSummaryHot(channelId) {
   var blogArea = $("#blogArea");
   blogArea.attr("articleChannel", channelId);
-  $("#articleAreaLoadingImg").fadeIn(150);    
+  $("#articleAreaLoadingImg").fadeIn(3000);    
   if(blogArea.attr("loadingFlag") == "1") {
-    $("#articleAreaLoadingImg").fadeOut(150);
+    $("#articleAreaLoadingImg").fadeOut(3000);
     return;
   }
   blogArea.attr("loadingFlag", "1");
@@ -101,12 +101,11 @@ function loadArticleLongSummaryHot(channelId) {
         blogRowArea.append(newRow);
         blogArea.attr("markTime", subArticleVO.createDateTimeString);
       });
-      $("#articleAreaLoadingImg").fadeOut(150);
     },  
     error: function(datas) {  
-      $("#articleAreaLoadingImg").fadeOut(150);
     }
   }); 
+  $("#articleAreaLoadingImg").fadeOut(3000);
   blogArea.attr("loadingFlag", "0");
 };
 
@@ -114,9 +113,9 @@ function loadArticleLongSummary(channelId) {
   var blogArea = $("#blogArea");
   blogArea.attr("articleChannel", channelId);
   var markTime = blogArea.attr("markTime");
-  $("#articleAreaLoadingImg").fadeIn(150);    
+  $("#articleAreaLoadingImg").fadeIn(3000);    
   if(blogArea.attr("loadingFlag") == "1") {
-    $("#articleAreaLoadingImg").fadeOut(150);
+    $("#articleAreaLoadingImg").fadeOut(3000);
     return;
   }
   blogArea.attr("loadingFlag", "1");
@@ -148,12 +147,11 @@ function loadArticleLongSummary(channelId) {
         blogRowArea.append(newRow);
         blogArea.attr("markTime", subArticleVO.createDateTimeString);
       });
-      $("#articleAreaLoadingImg").fadeOut(150);
     },  
     error: function(datas) {  
-      $("#articleAreaLoadingImg").fadeOut(150);
     }
   }); 
+  $("#articleAreaLoadingImg").fadeOut(3000);
   blogArea.attr("loadingFlag", "0");
 };
 

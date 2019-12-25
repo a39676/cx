@@ -33,7 +33,7 @@ function loadArticleChannels() {
 
       var channelId = datas.channelList[0].channelId;
 
-      setTimeout(function(){}, 300);
+      setTimeout(function(){}, 800);
 
       loadArticleLongSummaryFirstPage(channelId);
     },  
@@ -72,7 +72,7 @@ function loadArticleLongSummaryHot(channelId) {
   if(blogArea.attr("loadingFlag") == "1") {
     return;
   }
-  $("#articleAreaLoadingImg").fadeIn(1200);    
+  $("#articleAreaLoadingImg").fadeIn(100);
   blogArea.attr("loadingFlag", "1");
   var jsonOutput = {
     articleChannelId:channelId,
@@ -80,8 +80,6 @@ function loadArticleLongSummaryHot(channelId) {
     isHot:"true",
   };
 
-  console.log(jsonOutput);
-  
   var url = "/article/articleLongSummaryListByChannel";
   $.ajax({
     type : "POST",  
@@ -110,7 +108,8 @@ function loadArticleLongSummaryHot(channelId) {
     error: function(datas) {  
     }
   }); 
-  $("#articleAreaLoadingImg").fadeOut(1200);
+  $("#articleAreaLoadingImg").fadeOut(100);
+  setTimeout(function(){}, 1200);
   blogArea.attr("loadingFlag", "0");
 };
 
@@ -121,7 +120,7 @@ function loadArticleLongSummary(channelId) {
   if(blogArea.attr("loadingFlag") == "1") {
     return;
   }
-  $("#articleAreaLoadingImg").fadeIn(1200);    
+  $("#articleAreaLoadingImg").fadeIn(100);    
   blogArea.attr("loadingFlag", "1");
   var jsonOutput = {
     articleChannelId:channelId,
@@ -155,7 +154,8 @@ function loadArticleLongSummary(channelId) {
     error: function(datas) {  
     }
   }); 
-  $("#articleAreaLoadingImg").fadeOut(1200);
+  $("#articleAreaLoadingImg").fadeOut(100);
+  setTimeout(function(){}, 800);
   blogArea.attr("loadingFlag", "0");
 };
 
@@ -164,7 +164,9 @@ function loadArticleLongSummaryFirstPage(channelId) {
   $("#blogArea").attr("markTime", "");
   $(".channelButton").attr('disabled','disabled');
   loadArticleLongSummaryHot(channelId);
+  setTimeout(function(){}, 800);
   loadArticleLongSummary(channelId);
+  setTimeout(function(){}, 800);
   $(".channelButton").removeAttr('disabled');
 }
 

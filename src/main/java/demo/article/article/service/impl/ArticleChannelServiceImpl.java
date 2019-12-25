@@ -297,7 +297,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 			tmpChannelVO.setChannelType(channel.getChannelType());
 			channelVOList.add(tmpChannelVO);
 		}
-		
+		Collections.sort(channelVOList);
 		return channelVOList;
 	}
 

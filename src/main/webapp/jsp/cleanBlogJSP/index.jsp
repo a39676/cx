@@ -128,7 +128,10 @@ function loadArticleChannels() {
 
 function buildSubChannel(channel) {
   var channelButton = "";
-  channelButton += "<button class='btn btn-sm channelButton' channelId='" + channel.channelId + "' onclick='loadArticleLongSummaryFirstPage("+channel.channelId+")'>";
+  channelButton += "<button class='btn btn-sm channelButton'";
+  channelButton += " channelId='"+channel.channelId+"'";
+  channelButton += " ";
+  channelButton += "onclick='loadArticleLongSummaryFirstPage(\""+channel.channelId+"\")'>";
   channelButton += channel.channelName;
   channelButton += "</button>";
   return channelButton;

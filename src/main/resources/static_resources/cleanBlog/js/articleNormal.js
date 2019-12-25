@@ -44,7 +44,10 @@ function loadArticleChannels() {
 
 function buildSubChannel(channel) {
   var channelButton = "";
-  channelButton += "<button class='btn btn-sm channelButton' channelId='" + channel.channelId + "' onclick='loadArticleLongSummaryFirstPage("+channel.channelId+")'>";
+  channelButton += "<button class='btn btn-sm channelButton'";
+  channelButton += " channelId='"+channel.channelId+"'";
+  channelButton += " ";
+  channelButton += "onclick='loadArticleLongSummaryFirstPage(\""+channel.channelId+"\")'>";
   channelButton += channel.channelName;
   channelButton += "</button>";
   return channelButton;
@@ -66,17 +69,19 @@ function buildSummaryLine(subArticleVO) {
 function loadArticleLongSummaryHot(channelId) {
   var blogArea = $("#blogArea");
   blogArea.attr("articleChannel", channelId);
-  $("#articleAreaLoadingImg").fadeIn(3000);    
   if(blogArea.attr("loadingFlag") == "1") {
-    $("#articleAreaLoadingImg").fadeOut(3000);
     return;
   }
+  $("#articleAreaLoadingImg").fadeIn(1200);    
   blogArea.attr("loadingFlag", "1");
   var jsonOutput = {
     articleChannelId:channelId,
     vcode:getUrlParameter('vcode'),
     isHot:"true",
   };
+
+  console.log(jsonOutput);
+  
   var url = "/article/articleLongSummaryListByChannel";
   $.ajax({
     type : "POST",  
@@ -105,7 +110,7 @@ function loadArticleLongSummaryHot(channelId) {
     error: function(datas) {  
     }
   }); 
-  $("#articleAreaLoadingImg").fadeOut(3000);
+  $("#articleAreaLoadingImg").fadeOut(1200);
   blogArea.attr("loadingFlag", "0");
 };
 
@@ -113,11 +118,10 @@ function loadArticleLongSummary(channelId) {
   var blogArea = $("#blogArea");
   blogArea.attr("articleChannel", channelId);
   var markTime = blogArea.attr("markTime");
-  $("#articleAreaLoadingImg").fadeIn(3000);    
   if(blogArea.attr("loadingFlag") == "1") {
-    $("#articleAreaLoadingImg").fadeOut(3000);
     return;
   }
+  $("#articleAreaLoadingImg").fadeIn(1200);    
   blogArea.attr("loadingFlag", "1");
   var jsonOutput = {
     articleChannelId:channelId,
@@ -151,17 +155,16 @@ function loadArticleLongSummary(channelId) {
     error: function(datas) {  
     }
   }); 
-  $("#articleAreaLoadingImg").fadeOut(3000);
+  $("#articleAreaLoadingImg").fadeOut(1200);
   blogArea.attr("loadingFlag", "0");
 };
 
 function loadArticleLongSummaryFirstPage(channelId) {
+
   $("#blogArea").attr("markTime", "");
   $(".channelButton").attr('disabled','disabled');
   loadArticleLongSummaryHot(channelId);
-  setTimeout(function(){}, 1000);
   loadArticleLongSummary(channelId);
-  setTimeout(function(){}, 1000);
   $(".channelButton").removeAttr('disabled');
 }
 

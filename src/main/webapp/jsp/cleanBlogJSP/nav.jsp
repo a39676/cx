@@ -11,6 +11,7 @@
     <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
       <a class="navbar-brand" href="/admin/manager" target="_blank">Admin</a>
     </sec:authorize>
+    
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
@@ -20,6 +21,14 @@
           <a class="nav-link" href="/aboutMe">关于我/联系方式</a>
         </li>
         <li class="nav-item" id="autoTestDemo">
+        </li>
+        <li class="nav-item">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+              <button class="input-group-text" id="basic-addon2">search</button>
+            </div>
+          </div>
         </li>
         <sec:authorize access="!hasRole('ROLE_USER')">
           <li class="nav-item" name="login">
@@ -44,14 +53,14 @@
         </sec:authorize>
       </ul>
       <!-- main-menu -->
-      <!-- 
+      <%-- 
       <div class="src-area">
         <form>
           <button class="src-btn" type="submit"><i class="ion-ios-search-strong"></i></button>
           <input class="src-input" type="text" placeholder="Type of search">
         </form>
-      </div>
-        -->
+      </div> 
+      --%>
       <div id="dynamicLoginDiv"></div>
     </div>
     <!-- conatiner -->

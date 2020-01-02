@@ -1,5 +1,6 @@
-相当一部分 service 里边存有 private static 开头的静态变量, 需要清除
-需要文章编辑功能, 尤其是针对富文本的
+页面需要改动, 
+	增加"搜索" 功能?
+		暂时只按文章标题搜索
 
 CREATE TABLE `duralbe_recorder` (
 id bigint not null,

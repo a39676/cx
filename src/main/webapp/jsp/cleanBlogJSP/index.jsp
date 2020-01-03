@@ -7,6 +7,7 @@
 <html>
 <head>
   <%@ include file="./cleanBlogNormalHeader.jsp" %>
+  <script type="text/javascript" async="" src="https://ssl.google-analytics.com/ga.js"></script>
 </head>
 
 <body>
@@ -45,7 +46,7 @@
       </div>
       <div class="col-md-8 mx-auto">
         <div class="container-fluid">
-          <div class="row" id="blogArea" markTime="" loadingFlag="" articleChannel="">
+          <div class="row" id="blogArea" markTime="" loadingFlag="" articleChannel="" keyword="">
             <div class="col-md-12 mx-auto" id="blogRowArea"></div>
           </div>
           <div class="row">

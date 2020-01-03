@@ -1,12 +1,14 @@
 package demo.article.article.pojo.param.mapperParam;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FindArticleLongSummaryListMapperParam {
 
 	private String title;
 	private Long userId;
-	private Long articleChannelId;
+	private List<Long> channelIdList;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
 	private Boolean isDelete = false;
@@ -16,35 +18,13 @@ public class FindArticleLongSummaryListMapperParam {
 	private Boolean desc = true;
 	private Integer limit;
 	private Boolean isHot = false;
-	
-	// 以下属性,考虑在V3版本落实后移除
-	private Integer pageStart;
-	private Integer pageSize;
 
-	
-	
 	public Boolean getIsHot() {
 		return isHot;
 	}
 
 	public void setIsHot(Boolean isHot) {
 		this.isHot = isHot;
-	}
-
-	public Integer getPageStart() {
-		return pageStart;
-	}
-
-	public void setPageStart(Integer pageStart) {
-		this.pageStart = pageStart;
-	}
-
-	public Integer getPageSize() {
-		return pageSize;
-	}
-
-	public void setPageSize(Integer pageSize) {
-		this.pageSize = pageSize;
 	}
 
 	public Long getUserId() {
@@ -111,12 +91,19 @@ public class FindArticleLongSummaryListMapperParam {
 		this.limit = limit;
 	}
 
-	public Long getArticleChannelId() {
-		return articleChannelId;
+	public List<Long> getChannelIdList() {
+		return channelIdList;
 	}
 
-	public void setArticleChannelId(Long articleChannelId) {
-		this.articleChannelId = articleChannelId;
+	public void setChannelIdList(List<Long> channelIdList) {
+		this.channelIdList = channelIdList;
+	}
+	
+	public void addChannelId(Long channelId) {
+		if(this.channelIdList == null) {
+			this.channelIdList = new ArrayList<Long>();
+		}
+		this.channelIdList.add(channelId);
 	}
 
 	public Boolean getIsReject() {
@@ -133,6 +120,14 @@ public class FindArticleLongSummaryListMapperParam {
 
 	public void setDesc(Boolean desc) {
 		this.desc = desc;
+	}
+
+	@Override
+	public String toString() {
+		return "FindArticleLongSummaryListMapperParam [title=" + title + ", userId=" + userId + ", channelIdList="
+				+ channelIdList + ", startTime=" + startTime + ", endTime=" + endTime + ", isDelete=" + isDelete
+				+ ", isPass=" + isPass + ", isEdited=" + isEdited + ", isReject=" + isReject + ", desc=" + desc
+				+ ", limit=" + limit + ", isHot=" + isHot + "]";
 	}
 
 }

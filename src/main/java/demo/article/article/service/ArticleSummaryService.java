@@ -21,7 +21,7 @@ public interface ArticleSummaryService {
 	
 	
 	/**
-	 * 查找指定频道的--置顶--文章摘要列表,直接投放页面显示.
+	 * 查找指定频道的文章摘要列表,直接投放页面显示.
 	 * 
 	 * @param param
 	 * @return
@@ -29,7 +29,7 @@ public interface ArticleSummaryService {
 	FindArticleLongSummaryListResultV3 articleLongSummaryListByChannelIdV3(
 			FindArticleLongSummaryListControllerParam controllerParam, HttpServletRequest request);
 	/**
-	 * 查找指定频道的文章摘要列表,直接投放页面显示.
+	 * 查找指定频道的--置顶--文章摘要列表,直接投放页面显示.
 	 * 
 	 * @param param
 	 * @return

@@ -54,15 +54,15 @@ function buildSubChannel(channel) {
 }
 
 function buildSummaryLine(subArticleVO) {
-  var newRow = "";
-  newRow += "<div class='post-preview'>";
-  newRow += "<a href='/article/readArticleLong?pk="+subArticleVO.privateKey+"' target='_blank'>";
-  newRow += "<h2 class='post-title'>"+subArticleVO.articleTitle+"</h2>";
-  newRow += "<h3 class='post-subtitle'></h3>";
-  newRow += "</a>";
-  newRow += "<p class='post-meta'>Post by: "+subArticleVO.nickName+" on: "+subArticleVO.createDateString+", views: "+subArticleVO.viewCount+"</p>";
-  newRow += "</div>";
-  newRow += "<hr>"
+  var newRow = " ";
+  newRow += " <div class='post-preview'> ";
+  newRow += " <a href='/article/readArticleLong?pk="+subArticleVO.privateKey+"' target='_blank'> ";
+  newRow += " <h2 class='post-title'>"+subArticleVO.articleTitle+"</h2> ";
+  newRow += " <h3 class='post-subtitle'></h3> ";
+  newRow += " </a> ";
+  newRow += " <p class='post-meta'>Post by: "+subArticleVO.nickName+" on: "+subArticleVO.createDateString+", views: "+subArticleVO.viewCount+"</p> ";
+  newRow += " </div> ";
+  newRow += " <hr >"
   return newRow;
 }
 
@@ -97,7 +97,6 @@ function loadArticleLongSummaryHot(channelId) {
       // var json = JSON.parse(datas);
       var articleLongSummaryVOList = datas.articleLongSummaryVOList;
       var blogRowArea = $("#blogRowArea");
-      blogRowArea.html("");
       var newRow = "";
       articleLongSummaryVOList.forEach(function(subArticleVO) {
         newRow = buildSummaryLine(subArticleVO);
@@ -162,20 +161,110 @@ function loadArticleLongSummary(channelId) {
 function loadArticleLongSummaryFirstPage(channelId) {
 
   $("#blogArea").attr("markTime", "");
-  $(".channelButton").attr('disabled','disabled');
+  $(".channelButton").prop('disabled', true);
+  $("#searchByTitle").prop('disabled', true);
+
+  var blogRowArea = $("#blogRowArea");
+  blogRowArea.html("");
   loadArticleLongSummaryHot(channelId);
-  setTimeout(function(){}, 800);
-  loadArticleLongSummary(channelId);
-  setTimeout(function(){}, 800);
-  $(".channelButton").removeAttr('disabled');
+  setTimeout(function(){
+    loadArticleLongSummary(channelId);
+    setTimeout(function(){
+      $(".channelButton").prop('disabled', false);
+      $("#searchByTitle").prop('disabled', false);
+    }, 1000);
+  }, 500);
+    
 }
 
 $("#loadMoreButton").click(function () {
   var channelId = $("#blogArea").attr("articleChannel");
-  loadArticleLongSummary(channelId);
+  if(channelId != null && channelId.length > 0) {
+    loadArticleLongSummary(channelId);
+  } else {
+    searchArticleLongSummary(false);
+  }
 });
 
 $("#createNewArticle").click(function () {
   var win = window.open("/article/creatingArticleLong", '_blank');
   win.focus();
 });
+
+$("#searchByTitle").click(function () {
+  searchArticleLongSummary(true);
+});
+
+function searchArticleLongSummary(firstSearchFlag) {
+  $(".channelButton").prop('disabled', true);
+  $("#searchByTitle").prop('disabled', true);
+
+  var newKeyword = $("#searchKeyWord").val();
+  var blogArea = $("#blogArea");
+  var blogRowArea = $("#blogRowArea");
+  var channelId = blogArea.attr("articleChannel");
+
+  if (firstSearchFlag) {
+    blogArea.attr("articleChannel", "");
+    blogArea.attr("markTime", "");
+    blogRowArea.html("");
+  } else {
+  }
+
+  var markTime = blogArea.attr("markTime");
+  var oldKeyword = blogArea.attr("keyword");
+
+  if(blogArea.attr("loadingFlag") == "1") {
+    return;
+  }
+  $("#articleAreaLoadingImg").fadeIn(100);    
+  blogArea.attr("loadingFlag", "1");
+
+  var jsonOutput = {
+    endTime:markTime,
+    isHot:"false",
+  };
+
+  if (firstSearchFlag) {
+    jsonOutput["title"] = newKeyword;
+  } else {
+    jsonOutput["title"] = oldKeyword;
+  }
+
+  
+  var url = "/article/articleLongSummaryListByChannel";
+  $.ajax({
+    type : "POST",  
+    async : true,
+    url : url,  
+    data: JSON.stringify(jsonOutput),
+    cache : false,
+    contentType: "application/json",
+    dataType: "json",
+    timeout:50000,  
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader(csrfHeader, csrfToken);
+    },
+    success:function(datas){
+      var articleLongSummaryVOList = datas.articleLongSummaryVOList;
+      blogArea.attr("keyword", newKeyword);
+      var blogRowArea = $("#blogRowArea");
+      var newRow = "";
+      articleLongSummaryVOList.forEach(function(subArticleVO) {
+        newRow = buildSummaryLine(subArticleVO);
+        blogRowArea.append(newRow);
+        blogArea.attr("markTime", subArticleVO.createDateTimeString);
+      });
+    },  
+    error: function(datas) {  
+    }
+  }); 
+  $("#articleAreaLoadingImg").fadeOut(100);
+  setTimeout(function(){}, 800);
+  blogArea.attr("loadingFlag", "0");
+  
+  setTimeout(function(){
+    $(".channelButton").prop('disabled', false);
+    $("#searchByTitle").prop('disabled', false);
+  }, 1000);
+}

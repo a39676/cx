@@ -30,12 +30,15 @@ import demo.article.article.pojo.param.mapperParam.FindArticleLongSummaryListMap
 import demo.article.article.pojo.po.ArticleLongSummary;
 import demo.article.article.pojo.po.ArticleSummaryVCode;
 import demo.article.article.pojo.po.ArticleViewCount;
+import demo.article.article.pojo.result.GetArticleChannelsResult;
 import demo.article.article.pojo.result.jsonRespon.FindArticleLongSummaryListResultV3;
 import demo.article.article.pojo.type.ArticlePublicChannelType;
+import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.article.article.pojo.vo.ArticleEvaluationStatisticsVO;
 import demo.article.article.pojo.vo.ArticleLongSummaryVO;
 import demo.article.article.pojo.vo.ArticleLongSummaryVOV3;
 import demo.article.article.service.ArticleCatchVCodeService;
+import demo.article.article.service.ArticleChannelService;
 import demo.article.article.service.ArticleSummaryService;
 import demo.article.article.service.ArticleViewService;
 import demo.article.articleComment.controller.ArticleCommentAdminController;
@@ -64,6 +67,9 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 	private ArticleCommentAdminController articleCommentAdminController;
 	@Autowired
 	private ArticleCommentController articleCommentController;
+	
+	@Autowired
+	private ArticleChannelService channelService;
 	
 	@Autowired
 	private FileUtilCustom ioUtil;
@@ -95,9 +101,22 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		return boList;
 	}
 	
-	private FindArticleLongSummaryListMapperParam buildFindArticleLongSummaryListMapperParam(FindArticleLongSummaryListControllerParam cp, Long channelId) {
+	private FindArticleLongSummaryListMapperParam buildFindArticleLongSummaryListMapperParam(FindArticleLongSummaryListControllerParam cp, HttpServletRequest request) {
 		FindArticleLongSummaryListMapperParam mp = new FindArticleLongSummaryListMapperParam();
-		mp.setArticleChannelId(channelId);
+		
+		if(StringUtils.isNotBlank(cp.getTitle())) {
+			GetArticleChannelsResult getChannelResult = channelService.getArticleChannelsDynamic(request);
+			List<Long> channelIdList = new ArrayList<Long>();
+			for(ArticleChannelVO i : getChannelResult.getChannelList()) {
+				if(numberUtil.matchInteger(i.getChannelId())) {
+					channelIdList.add(Long.parseLong(i.getChannelId()));
+				}
+			}
+			mp.setChannelIdList(channelIdList);
+		} else {
+			mp.addChannelId(cp.getArticleChannelId());
+		}
+		
 		if(cp.getIsDelete() != null) {
 			mp.setIsDelete(cp.getIsDelete());
 		}
@@ -264,7 +283,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			return new ArrayList<ArticleLongSummaryBO>();
 		}
 
-		if (param.getArticleChannelId() == null) {
+		if (param.getChannelIdList() == null || param.getChannelIdList().size() < 1) {
 			return new ArrayList<ArticleLongSummaryBO>();
 		}
 
@@ -273,6 +292,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		}
 		Long userId = param.getUserId();
 		param.setUserId(null);
+		
 		List<ArticleLongSummaryBO> boList = articleLongSummaryMapper.findArticleLongSummaryList(param);
 		param.setUserId(userId);
 		return boList;
@@ -308,14 +328,14 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		}
 		
 		Long channelId = controllerParam.getArticleChannelId();
-		if(channelId == null) {
+		if(channelId == null && StringUtils.isBlank(controllerParam.getTitle())) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		
 		result.setChannelId(channelId);
 		
-		FindArticleLongSummaryListMapperParam findSummaryBOListParam = buildFindArticleLongSummaryListMapperParam(controllerParam, channelId);
+		FindArticleLongSummaryListMapperParam findSummaryBOListParam = buildFindArticleLongSummaryListMapperParam(controllerParam, request);
 		List<ArticleLongSummaryBO> summaryBOList = findArticleLongSummaryList(findSummaryBOListParam);
 		
 		List<Long> articleIdList = new ArrayList<Long>();

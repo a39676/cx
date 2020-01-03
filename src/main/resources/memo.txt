@@ -1,13 +1,3 @@
-页面需要改动, 
-	增加"搜索" 功能?
-		暂时只按文章标题搜索
-		限制可搜索时间范围
-		限制搜索频率
-		依域名限制频道
-		待测试 
-			搜索情况下的 load more 按钮
-			空搜索关键词
-
 CREATE TABLE `duralbe_recorder` (
 id bigint not null,
    `trading_id` bigint default null,

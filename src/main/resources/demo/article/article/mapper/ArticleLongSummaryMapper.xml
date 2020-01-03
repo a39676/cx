@@ -110,8 +110,11 @@
       <if test="isHot != null and isHot == true">
         and (ah.hot_level is not null and ah.valid_time &lt; now())
       </if>
-      <if test="articleChannelId != null">
-        and al.channel_id = #{articleChannelId}
+      <if test="channelIdList != null">
+        and al.channel_id in
+        <foreach item="channelId" index="index" collection="channelIdList" open="(" separator="," close=")">
+          #{channelId}
+        </foreach>
       </if>
       <if test="userId != null">
         and al.user_id = #{userId}

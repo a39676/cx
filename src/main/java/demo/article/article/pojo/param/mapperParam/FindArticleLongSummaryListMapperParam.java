@@ -1,12 +1,14 @@
 package demo.article.article.pojo.param.mapperParam;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FindArticleLongSummaryListMapperParam {
 
 	private String title;
 	private Long userId;
-	private Long articleChannelId;
+	private List<Long> channelIdList;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
 	private Boolean isDelete = false;
@@ -89,12 +91,19 @@ public class FindArticleLongSummaryListMapperParam {
 		this.limit = limit;
 	}
 
-	public Long getArticleChannelId() {
-		return articleChannelId;
+	public List<Long> getChannelIdList() {
+		return channelIdList;
 	}
 
-	public void setArticleChannelId(Long articleChannelId) {
-		this.articleChannelId = articleChannelId;
+	public void setChannelIdList(List<Long> channelIdList) {
+		this.channelIdList = channelIdList;
+	}
+	
+	public void addChannelId(Long channelId) {
+		if(this.channelIdList == null) {
+			this.channelIdList = new ArrayList<Long>();
+		}
+		this.channelIdList.add(channelId);
 	}
 
 	public Boolean getIsReject() {
@@ -115,8 +124,8 @@ public class FindArticleLongSummaryListMapperParam {
 
 	@Override
 	public String toString() {
-		return "FindArticleLongSummaryListMapperParam [title=" + title + ", userId=" + userId + ", articleChannelId="
-				+ articleChannelId + ", startTime=" + startTime + ", endTime=" + endTime + ", isDelete=" + isDelete
+		return "FindArticleLongSummaryListMapperParam [title=" + title + ", userId=" + userId + ", channelIdList="
+				+ channelIdList + ", startTime=" + startTime + ", endTime=" + endTime + ", isDelete=" + isDelete
 				+ ", isPass=" + isPass + ", isEdited=" + isEdited + ", isReject=" + isReject + ", desc=" + desc
 				+ ", limit=" + limit + ", isHot=" + isHot + "]";
 	}

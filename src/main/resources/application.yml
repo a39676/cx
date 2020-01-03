@@ -29,8 +29,6 @@ logging:
     demo.test.mapper: DEBUG
     demo.tool.mapper: DEBUG
     # demo.mapper: DEBUG
-    # demo.account_holder.mapper: DEBUG
-    # demo.account_DEBUG.mapper: DEBUG
     # demo.bank.mapper: DEBUG
     # demo.credit_bill.mapper: DEBUG
     # demo.trading.mapper: DEBUG
@@ -39,7 +37,7 @@ logging:
     demo.base.user.mapper: DEBUG
     # demo.organizations.mapper: DEBUG
     # demo.image.mapper: DEBUG
-    # demo.article.mapper: DEBUG
+    # demo.article.article.mapper: DEBUG
     # demo.articleComment.mapper: DEBUG
     # demo.fakePost.mapper: DEBUG
     # demo.mobile.mapper: DEBUG

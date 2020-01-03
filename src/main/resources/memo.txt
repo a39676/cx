@@ -4,6 +4,9 @@
 		限制可搜索时间范围
 		限制搜索频率
 		依域名限制频道
+		待测试 
+			搜索情况下的 load more 按钮
+			空搜索关键词
 
 CREATE TABLE `duralbe_recorder` (
 id bigint not null,

@@ -162,11 +162,8 @@
     <if test="limit != null">
       limit #{limit}
     </if>
-    <if test="limit == null and pageStart == null">
+    <if test="limit == null">
       limit 5
-    </if>
-    <if test="pageStart != null and pageSize != null">
-      limit #{pageStart}, #{pageSize}
     </if>
   </select>
 

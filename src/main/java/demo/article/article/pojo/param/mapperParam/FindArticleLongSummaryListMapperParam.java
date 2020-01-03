@@ -16,35 +16,13 @@ public class FindArticleLongSummaryListMapperParam {
 	private Boolean desc = true;
 	private Integer limit;
 	private Boolean isHot = false;
-	
-	// 以下属性,考虑在V3版本落实后移除
-	private Integer pageStart;
-	private Integer pageSize;
 
-	
-	
 	public Boolean getIsHot() {
 		return isHot;
 	}
 
 	public void setIsHot(Boolean isHot) {
 		this.isHot = isHot;
-	}
-
-	public Integer getPageStart() {
-		return pageStart;
-	}
-
-	public void setPageStart(Integer pageStart) {
-		this.pageStart = pageStart;
-	}
-
-	public Integer getPageSize() {
-		return pageSize;
-	}
-
-	public void setPageSize(Integer pageSize) {
-		this.pageSize = pageSize;
 	}
 
 	public Long getUserId() {
@@ -133,6 +111,14 @@ public class FindArticleLongSummaryListMapperParam {
 
 	public void setDesc(Boolean desc) {
 		this.desc = desc;
+	}
+
+	@Override
+	public String toString() {
+		return "FindArticleLongSummaryListMapperParam [title=" + title + ", userId=" + userId + ", articleChannelId="
+				+ articleChannelId + ", startTime=" + startTime + ", endTime=" + endTime + ", isDelete=" + isDelete
+				+ ", isPass=" + isPass + ", isEdited=" + isEdited + ", isReject=" + isReject + ", desc=" + desc
+				+ ", limit=" + limit + ", isHot=" + isHot + "]";
 	}
 
 }

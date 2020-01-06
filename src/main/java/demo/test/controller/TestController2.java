@@ -32,4 +32,11 @@ public class TestController2 extends CommonController {
 		return new ModelAndView("cleanBlogJSP/about");
 	}
 	
+	@GetMapping(value = "/tw")
+	public ModelAndView tw() throws Exception {
+		ModelAndView v = new ModelAndView("testJSP/test01");
+		v.addObject("message", "<img src=\"http://wttr.in/Guangzhou.png\">");
+		return v;
+	}
+	
 }

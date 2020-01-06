@@ -88,7 +88,7 @@
         </div>
       </div>
 
-      <input type="text" id="sourceArticleVO" contentLines='${articleVO.contentLines}' pk="${articleVO.privateKey}" disabled="disabled" style="display: none;">
+      <div id="sourceArticleVO" pk="${articleVO.privateKey}" disabled="disabled" style="display: none;" contentLines='${articleVO.contentLines}'></div>
 
       <div class="row">
         <div class="col-sm-12" >

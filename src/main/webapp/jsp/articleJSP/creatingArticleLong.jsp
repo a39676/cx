@@ -31,6 +31,11 @@
           <span class="badge badge-primary">请选择提交频道</span>
           <select class="" name="channelList" style="">
             <c:forEach items="${channelList}" var="subChannel">
+              <c:if test="${articleVO.channelId != null && articleVO.channelId == subChannel.channelId}">
+                <option value="${subChannel.channelId}">${subChannel.channelName}</option>  
+              </c:if>
+            </c:forEach>
+            <c:forEach items="${channelList}" var="subChannel">
               <option value="${subChannel.channelId}">${subChannel.channelName}</option>
             </c:forEach>
           </select>

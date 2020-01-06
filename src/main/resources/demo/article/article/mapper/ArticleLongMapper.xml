@@ -407,6 +407,7 @@
       al.is_pass as isPass,
       al.is_edited as isEdited,
       al.is_reject as isReject,
+      al.channel_id as channelId,
       udt.nick_name as nickName
 
     from

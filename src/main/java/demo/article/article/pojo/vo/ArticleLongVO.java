@@ -7,6 +7,8 @@ public class ArticleLongVO {
 	private String articleTitle;
 
 	private String nickName;
+	
+	private Long channelId;
 
 	private String headIamgeUrl;
 
@@ -177,15 +179,23 @@ public class ArticleLongVO {
 	public void setEditCount(Integer editCount) {
 		this.editCount = editCount;
 	}
+	
+	public Long getChannelId() {
+		return channelId;
+	}
+
+	public void setChannelId(Long channelId) {
+		this.channelId = channelId;
+	}
 
 	@Override
 	public String toString() {
-		return "ArticleLongVO [articleTitle=" + articleTitle + ", nickName=" + nickName + ", headIamgeUrl="
-				+ headIamgeUrl + ", contentLines=" + contentLines + ", createDateString=" + createDateString
-				+ ", editDateString=" + editDateString + ", privateKey=" + privateKey + ", path=" + path + ", isPass="
-				+ isPass + ", isDelete=" + isDelete + ", isEdited=" + isEdited + ", isReject=" + isReject
-				+ ", createTime=" + createTime + ", editTime=" + editTime + ", userId=" + userId + ", editCount="
-				+ editCount + ", iWroteThis=" + iWroteThis + "]";
+		return "ArticleLongVO [articleTitle=" + articleTitle + ", nickName=" + nickName + ", channelId=" + channelId
+				+ ", headIamgeUrl=" + headIamgeUrl + ", contentLines=" + contentLines + ", createDateString="
+				+ createDateString + ", editDateString=" + editDateString + ", privateKey=" + privateKey + ", path="
+				+ path + ", isPass=" + isPass + ", isDelete=" + isDelete + ", isEdited=" + isEdited + ", isReject="
+				+ isReject + ", createTime=" + createTime + ", editTime=" + editTime + ", userId=" + userId
+				+ ", editCount=" + editCount + ", iWroteThis=" + iWroteThis + "]";
 	}
 
 }

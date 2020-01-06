@@ -158,9 +158,9 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 			responseResult.setCode(responseJson.getString("code"));
 			responseResult.setTitle(responseJson.getString("title"));
 			
-			responseResult.setCreateTime(localDateTimeHandler.localDateTimeStrToLocalDateTime(responseJson.getString("createTime")));
-			responseResult.setStartTime(localDateTimeHandler.localDateTimeStrToLocalDateTime(responseJson.getString("startTime")));
-			responseResult.setEndTime(localDateTimeHandler.localDateTimeStrToLocalDateTime(responseJson.getString("endTime")));
+			responseResult.setCreateTime(localDateTimeHandler.localDateTimeJsonStrToLocalDateTime(responseJson.getString("createTime")));
+			responseResult.setStartTime(localDateTimeHandler.localDateTimeJsonStrToLocalDateTime(responseJson.getString("startTime")));
+			responseResult.setEndTime(localDateTimeHandler.localDateTimeJsonStrToLocalDateTime(responseJson.getString("endTime")));
 			
 			responseResult.setReportStr(responseJson.getString("reportStr"));
 			

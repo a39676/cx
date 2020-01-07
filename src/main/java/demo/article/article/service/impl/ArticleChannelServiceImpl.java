@@ -12,17 +12,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import demo.article.article.mapper.ArticleChannelKeyHostnameMapper;
 import demo.article.article.mapper.ArticleChannelsMapper;
 import demo.article.article.pojo.bo.GetArticleChannelsBO;
 import demo.article.article.pojo.dto.ArticleChannelManagerDTO;
+import demo.article.article.pojo.po.ArticleChannelKeyHostname;
+import demo.article.article.pojo.po.ArticleChannelKeyHostnameExample;
 import demo.article.article.pojo.po.ArticleChannels;
 import demo.article.article.pojo.po.ArticleChannelsExample;
 import demo.article.article.pojo.result.GetArticleChannelsResult;
+import demo.article.article.pojo.type.ArticleChannelKeyHostnameType;
 import demo.article.article.pojo.type.ArticleChannelOperationalType;
 import demo.article.article.pojo.type.ArticleChannelType;
 import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.article.article.service.ArticleChannelService;
 import demo.base.system.pojo.bo.SystemConstantStore;
+import demo.base.system.pojo.po.Hostname;
+import demo.base.system.service.HostnameService;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -30,7 +36,11 @@ import toolPack.ioHandle.FileUtilCustom;
 public class ArticleChannelServiceImpl extends ArticleCommonService implements ArticleChannelService {
 
 	@Autowired
+	private HostnameService hostnameService;
+	@Autowired
 	private ArticleChannelsMapper articleChannelsMapper;
+	@Autowired
+	private ArticleChannelKeyHostnameMapper articleChannelKeyHostnameMapper;
 	@Autowired
 	private FileUtilCustom ioUtil;
 
@@ -83,6 +93,27 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		return result;
 	}
 
+	@Override
+	public boolean containThisChannel(HttpServletRequest request, Long channelId) {
+		if(channelId == null) {
+			return false;
+		}
+		GetArticleChannelsResult channelResult = getArticleChannelsDynamic(request);
+		if(!channelResult.isSuccess()) {
+			return false;
+		}
+		if(channelResult.getChannelList() == null || channelResult.getChannelList().size() < 1) {
+			return false;
+		}
+		List<ArticleChannelVO> channelList = channelResult.getChannelList();
+		for(ArticleChannelVO i : channelList) {
+			if(channelId.toString().equals(i.getChannelId())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	@Override
 	public GetArticleChannelsResult getArticleChannelsDynamic(HttpServletRequest request) {
 		GetArticleChannelsBO bo = null;
@@ -169,48 +200,14 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 
 		if (StringUtils.isBlank(hostName)) {
 			channelList = removeChannelsForUnknow(channelList);
-		} else if (hostName.contains(constantService.getValByName(SystemConstantStore.hostName1))) {
-			channelList = removeChannelsFor3310For(channelList);
-		} else if (hostName.contains(constantService.getValByName(SystemConstantStore.hostName2))) {
-			channelList = removeChannelsForSDW(channelList);
-		} else if (hostName.contains(constantService.getValByName(SystemConstantStore.hostName3))) {
-			channelList = removeChannelsForER(channelList);
 		} else {
-			channelList = removeChannelsForUnknow(channelList);
+			filterChannelDynamic(channelList, hostName);
 		}
 
 		return channelList;
 	}
 
-	private GetArticleChannelsBO removeChannelsFor3310For(GetArticleChannelsBO channelList) {
-		if (channelList == null) {
-			return channelList;
-		}
-
-		GetArticleChannelsBO newChannelList = removeChannels(channelList, List.of(2L, 3L, 4L));
-
-		return newChannelList;
-	}
-
-	private GetArticleChannelsBO removeChannelsForSDW(GetArticleChannelsBO channelList) {
-		if (channelList == null) {
-			return channelList;
-		}
-
-		GetArticleChannelsBO newChannelList = removeChannels(channelList, List.of(4L));
-
-		return newChannelList;
-	}
-
-	private GetArticleChannelsBO removeChannelsForER(GetArticleChannelsBO channelList) {
-		if (channelList == null) {
-			return channelList;
-		}
-
-		GetArticleChannelsBO newChannelList = removeChannels(channelList, null);
-
-		return newChannelList;
-	}
+	
 
 	private GetArticleChannelsBO removeChannelsForUnknow(GetArticleChannelsBO channelList) {
 		String envName = constantService.getValByName(SystemConstantStore.envName, true);
@@ -230,16 +227,16 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		return newChannelList;
 	}
 
-	private GetArticleChannelsBO removeChannels(GetArticleChannelsBO channelList, List<Long> targetChannelIds) {
+	private GetArticleChannelsBO removeChannels(GetArticleChannelsBO channelList, List<Long> banChannelIds, List<Long> passChannelIds) {
 		List<ArticleChannelVO> tmpChannelList = null;
 
-		tmpChannelList = removeChannels(channelList.getPublicChannels(), targetChannelIds);
+		tmpChannelList = removeChannels(channelList.getPublicChannels(), banChannelIds, passChannelIds);
 		channelList.setPublicChannels(tmpChannelList);
 
-		tmpChannelList = removeChannels(channelList.getFlashChannels(), targetChannelIds);
+		tmpChannelList = removeChannels(channelList.getFlashChannels(), banChannelIds, passChannelIds);
 		channelList.setFlashChannels(tmpChannelList);
 
-		tmpChannelList = removeChannels(channelList.getPrivateChannels(), targetChannelIds);
+		tmpChannelList = removeChannels(channelList.getPrivateChannels(), banChannelIds, passChannelIds);
 		channelList.setPrivateChannels(tmpChannelList);
 
 		return channelList;
@@ -254,11 +251,11 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		return channelList;
 	}
 
-	private List<ArticleChannelVO> removeChannels(List<ArticleChannelVO> channelList, List<Long> targetChannelIds) {
-		if (channelList == null || channelList.size() < 1) {
+	private List<ArticleChannelVO> removeChannels(List<ArticleChannelVO> channelList, List<Long> banChannelIds, List<Long> passChannelIds) {
+		if (channelList == null || channelList.size() < 1 || passChannelIds == null || passChannelIds.size() < 1) {
 			return new ArrayList<ArticleChannelVO>();
 		}
-		if (targetChannelIds == null || targetChannelIds.size() < 1) {
+		if (banChannelIds == null || banChannelIds.size() < 1) {
 			return channelList;
 		}
 		Long tmpChannelId = null;
@@ -271,10 +268,12 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 				tmpChannelId = null;
 				continue;
 			}
-			if (targetChannelIds.contains(tmpChannelId)) {
+			if (banChannelIds.contains(tmpChannelId)) {
 				continue;
 			}
-			newChannelList.add(channel);
+			if (passChannelIds.contains(tmpChannelId)) {
+				newChannelList.add(channel);
+			}
 		}
 
 		return newChannelList;
@@ -431,5 +430,37 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		
 		r.successWithMessage("成功更新");
 		return r;
+	}
+
+	public GetArticleChannelsBO filterChannelDynamic(GetArticleChannelsBO channelList, String hostname) {
+		List<Hostname> hostnameList = hostnameService.findHonstnames();
+		Integer hostnameId = null;
+		for(Hostname i : hostnameList) {
+			if(hostname.equals(i.getHostname())) {
+				hostnameId = i.getId();
+			}
+		}
+		
+		if(hostnameId == null) {
+			return removeChannelsForUnknow(channelList);
+		}
+		
+		ArticleChannelKeyHostnameExample channelKeyHostnameExample = new ArticleChannelKeyHostnameExample();
+		channelKeyHostnameExample.createCriteria().andIsDeleteEqualTo(false).andHostIdEqualTo(hostnameId);
+		List<ArticleChannelKeyHostname> channelKeyHostnameList = articleChannelKeyHostnameMapper.selectByExample(channelKeyHostnameExample);
+		List<Long> channelPassList = new ArrayList<Long>();
+		List<Long> channelBanList = new ArrayList<Long>();
+		
+		for(ArticleChannelKeyHostname i : channelKeyHostnameList) {
+			if(ArticleChannelKeyHostnameType.pass.getCode().equals(i.getKeyType())) {
+				channelPassList.add(i.getChannelId());
+			} else {
+				channelBanList.add(i.getChannelId());
+			}
+		}
+		
+		GetArticleChannelsBO newChannelList = removeChannels(channelList, channelBanList, channelPassList);
+		
+		return newChannelList;
 	}
 }

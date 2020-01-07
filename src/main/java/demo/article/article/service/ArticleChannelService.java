@@ -31,4 +31,6 @@ public interface ArticleChannelService {
 
 	ModelAndView articleChannelManagerView();
 
+	boolean containThisChannel(HttpServletRequest request, Long channelId);
+
 }

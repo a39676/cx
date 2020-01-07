@@ -423,9 +423,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		mapperDTO.setArticleId(articleId);
 		articleVO = articleLongMapper.findArticleLongByDecryptId(mapperDTO);
 		
-//		TODO
-		findHostNameFromRequst(request);
-		
 		if(articleVO == null) {
 			result.fillWithResult(ResultTypeCX.errorWhenArticleLoad);
 			articleVO = new ArticleLongVO();
@@ -434,7 +431,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return result;
 		}
 		
-		if(articleVO.getIsDelete() && !baseUtilCustom.hasAdminRole()) {
+		if((articleVO.getIsDelete() && !baseUtilCustom.hasAdminRole()) || !channelService.containThisChannel(request, articleVO.getChannelId())) {
 			articleVO = new ArticleLongVO();
 			articleVO.setContentLines("这篇文已经失踪了...请联系管理员...");
 			result.setArticleLongVO(articleVO);

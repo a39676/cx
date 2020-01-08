@@ -524,8 +524,4 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		return ArticleChannelKeyHostnameType.ban;
 	}
 
-	@Override
-	public String testFindHostNameFromRequst(HttpServletRequest request) {
-		return findHostNameFromRequst(request);
-	}
 }

@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -85,6 +87,10 @@ public class TestService extends CommonService {
 		} catch (TesseractException e) {
 			System.err.println(e.getMessage());
 		}
+	}
+	
+	public String testMyFindHostNameFromRequst(HttpServletRequest request) {
+		return testFindHostNameFromRequst(request);
 	}
 	
 	public static void main(String[] args) {

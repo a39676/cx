@@ -1,6 +1,8 @@
 package demo.baseCommon.service;
 
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -149,5 +151,17 @@ public abstract class CommonService {
 //				return "";
 //			}
 //		}
+	}
+	
+	protected String testFindHostNameFromRequst(HttpServletRequest request) {
+		String r = "from getServerName: " + request.getServerName();
+		String url = request.getServerName();
+		Pattern p = Pattern.compile("(?!:http://)(www\\.[0-9a-zA-Z_]+\\.[a-z]{1,8})(?!:/.*)");
+		Matcher m = p.matcher(url);
+		if(m.find()) {
+			r = r + " from pattern: " + m.group(0);
+		}
+		
+		return r;
 	}
 }

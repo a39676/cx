@@ -28,4 +28,6 @@ public interface ArticleChannelKeyHostnameMapper {
     int updateByPrimaryKeySelective(ArticleChannelKeyHostname record);
 
     int updateByPrimaryKey(ArticleChannelKeyHostname record);
+    
+    int insertOrUpdate(ArticleChannelKeyHostname po);
 }

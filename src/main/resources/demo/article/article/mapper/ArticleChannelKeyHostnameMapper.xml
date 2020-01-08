@@ -208,4 +208,51 @@
     where channel_id = #{channelId,jdbcType=BIGINT}
       and host_id = #{hostId,jdbcType=INTEGER}
   </update>
+
+  <insert id="insertOrUpdate">
+    insert into article_channel_key_hostname 
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="channelId != null">
+        channel_id,
+      </if>
+      <if test="hostId != null">
+        host_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="keyType != null">
+        key_type,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="channelId != null">
+        #{channelId,jdbcType=BIGINT},
+      </if>
+      <if test="hostId != null">
+        #{hostId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="keyType != null">
+        #{keyType,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+    </trim>
+    on duplicate key update
+    <trim prefix="" suffix="" suffixOverrides=",">
+      <if test="keyType != null">
+        key_type = #{keyType},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete},
+      </if>
+    </trim>
+  </insert>
 </mapper>

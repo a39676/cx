@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.servlet.ModelAndView;
 
+import demo.article.article.pojo.dto.ArticleChannelKeyHostnameIdDTO;
 import demo.article.article.pojo.dto.ArticleChannelManagerDTO;
 import demo.article.article.pojo.po.ArticleChannels;
 import demo.article.article.pojo.result.GetArticleChannelsResult;
@@ -32,5 +33,7 @@ public interface ArticleChannelService {
 	ModelAndView articleChannelManagerView();
 
 	boolean containThisChannel(HttpServletRequest request, Long channelId);
+
+	CommonResultCX editChannelKeyHostname(ArticleChannelKeyHostnameIdDTO dto);
 
 }

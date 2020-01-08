@@ -19,59 +19,121 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
-      <table>
-        <sec:authorize access="hasRole('ROLE_ADMIN')">
-          <c:forEach items="${channelList}" var="channel">
+      <table class="table table-striped">
+        <tbody>
+          <sec:authorize access="hasRole('ROLE_ADMIN')">
+            <c:forEach items="${channelList}" var="channel">
+              <tr>
+                <td>
+                  <c:if test="${channel.isDelete == true}">
+                    <span class="badge badge-secondary">${channel.channelName}</span>
+                  </c:if>
+                  <c:if test="${channel.isDelete == false}">
+                    <span class="badge badge-primary">${channel.channelName}</span>
+                  </c:if>
+                </td>
+                <td>
+                  <c:if test="${channel.isDelete == true}">
+                    <button class="badge badge-danger" name="reuseChannel" channelId="${channel.channelId}">reuse</button>  
+                  </c:if>
+                  <c:if test="${channel.isDelete == false}">
+                    <button class="badge badge-danger" name="deleteChannel" channelId="${channel.channelId}">delete</button>  
+                  </c:if>
+                </td>
+                <td>
+                  <span class="badge badge-primary">weights</span>
+                  <input type="text" name="channelWeight" channelId="${channel.channelId}" style="width: 50px;" value="${channel.weights}">
+                </td>
+                <td>
+                  <span class="badge badge-primary">channel name</span>
+                  <input type="text" name="channelNewName" style="width: 100px;" channelId="${channel.channelId}" value="${channel.channelName}">
+                </td>
+                <td>
+                  <table class="table table-striped">
+                    <c:forEach items="${channel.channelIdKeyHostnameId}" var="channelKeyHostnameIdDTO">
+                      <tr>
+                        <td>
+                          <span class="badge badge-light">${channelKeyHostnameIdDTO.hostname}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div class="form-check form-check-inline">
+                            <c:if test="${channelKeyHostnameIdDTO.articleChannelKeyHostnameType == 1}">
+                              <input class="form-check-input channelKeyHostnameRadio" type="radio" 
+                                id="${channel.channelId}_${channelKeyHostnameIdDTO.hostnameId}_pass"
+                                channelId="${channel.channelId}" 
+                                hostnameId="${channelKeyHostnameIdDTO.hostnameId}" 
+                                name="${channel.channelId}_${channelKeyHostnameIdDTO.hostnameId}"
+                                checked="checked"
+                                value="1">
+                            </c:if>
+                            <c:if test="${channelKeyHostnameIdDTO.articleChannelKeyHostnameType == 2}">
+                              <input class="form-check-input channelKeyHostnameRadio" type="radio" 
+                                id="${channel.channelId}_${channelKeyHostnameIdDTO.hostnameId}_pass"
+                                channelId="${channel.channelId}" 
+                                hostnameId="${channelKeyHostnameIdDTO.hostnameId}" 
+                                name="${channel.channelId}_${channelKeyHostnameIdDTO.hostnameId}"
+                                value="1">
+                            </c:if>
+                            <label class="form-check-label badge badge-success" for="${channel.channelId}_${channelKeyHostnameIdDTO.hostnameId}_pass">pass</label>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="form-check form-check-inline">
+                            <c:if test="${channelKeyHostnameIdDTO.articleChannelKeyHostnameType == 2}">
+                              <input class="form-check-input channelKeyHostnameRadio" type="radio" 
+                                id="${channel.channelId}_${channelKeyHostnameIdDTO.hostnameId}_ban"
+                                channelId="${channel.channelId}" 
+                                hostnameId="${channelKeyHostnameIdDTO.hostnameId}" 
+                                name="${channel.channelId}_${channelKeyHostnameIdDTO.hostnameId}"
+                                checked="checked"
+                                value="2">
+                            </c:if>
+                            <c:if test="${channelKeyHostnameIdDTO.articleChannelKeyHostnameType == 1}">
+                              <input class="form-check-input channelKeyHostnameRadio" type="radio" 
+                                id="${channel.channelId}_${channelKeyHostnameIdDTO.hostnameId}_ban"
+                                channelId="${channel.channelId}" 
+                                hostnameId="${channelKeyHostnameIdDTO.hostnameId}" 
+                                name="${channel.channelId}_${channelKeyHostnameIdDTO.hostnameId}"
+                                value="2">
+                            </c:if>
+                            <label class="form-check-label badge badge-danger" for="${channel.channelId}_${channelKeyHostnameIdDTO.hostnameId}_ban">ban</label>
+                          </div>
+                        </td>
+                        <td>
+                          <textarea id="${channel.channelId}_${channelKeyHostnameIdDTO.hostnameId}_editResult" ></textarea>
+                        </td>
+                      </tr>
+                    </c:forEach>
+                  </table>
+                </td>
+                <td>
+                  <button class="btn btn-sm btn-warning" name="modifyChannel" channelId="${channel.channelId}">modify</button>
+                </td>
+              </tr>
+            </c:forEach>
             <tr>
               <td>
-                <c:if test="${channel.isDelete == true}">
-                  <span class="badge badge-secondary">${channel.channelName}</span>
-                </c:if>
-                <c:if test="${channel.isDelete == false}">
-                  <span class="badge badge-primary">${channel.channelName}</span>
-                </c:if>
+                <span>add new channel</span>
               </td>
               <td>
-                <c:if test="${channel.isDelete == true}">
-                  <button class="badge badge-danger" name="reuseChannel" channelId="${channel.channelId}">reuse</button>  
-                </c:if>
-                <c:if test="${channel.isDelete == false}">
-                  <button class="badge badge-danger" name="deleteChannel" channelId="${channel.channelId}">delete</button>  
-                </c:if>
+                <button class="badge badge-danger">------</button>
               </td>
               <td>
-                <span class="badge badge-primary">weights</span>
-                <input type="text" name="channelWeight" channelId="${channel.channelId}" style="width: 50px;" value="${channel.weights}">
+                <span class="badge badge-primary" id="newChannelWeights">weights</span>
+                <input type="text" name="" style="width: 50px;" value="0">
               </td>
               <td>
                 <span class="badge badge-primary">channel name</span>
-                <input type="text" name="channelNewName" style="width: 100px;" channelId="${channel.channelId}" value="${channel.channelName}">
+                <input type="text" name="" style="width: 100px;" id="newChannelNameInput" placeholder="newChannelName">
               </td>
               <td>
-                <button class="btn btn-sm btn-warning" name="modifyChannel" channelId="${channel.channelId}">modify</button>
+                <button class="btn btn-sm btn-warning" id="addNewChannel">add new channel</button>
               </td>
             </tr>
-          </c:forEach>
-          <tr>
-            <td>
-              <span>add new channel</span>
-            </td>
-            <td>
-              <button class="badge badge-danger">------</button>
-            </td>
-            <td>
-              <span class="badge badge-primary" id="newChannelWeights">weights</span>
-              <input type="text" name="" style="width: 50px;" value="0">
-            </td>
-            <td>
-              <span class="badge badge-primary">channel name</span>
-              <input type="text" name="" style="width: 100px;" id="newChannelNameInput" placeholder="newChannelName">
-            </td>
-            <td>
-              <button class="btn btn-sm btn-warning" id="addNewChannel">add new channel</button>
-            </td>
-          </tr>
-        </sec:authorize>
+          </sec:authorize>
+        </tbody>
       </table>
     </div>
   </div>
@@ -203,6 +265,44 @@
         }  
       });  
     };
+
+    $(".channelKeyHostnameRadio").click(function () {
+      var channelId = $(this).attr("channelId");
+      var hostnameId = $(this).attr("hostnameId");
+      var keyType = $(this).attr("value");
+      updateKeyHostname(channelId, hostnameId, keyType);
+    });
+
+    function updateKeyHostname(channelId, hostnameId, keyType) {
+      var url = "/articleAdmin/editChannelKeyHostname";
+
+      var jsonOutput = {
+        channelId:channelId,
+        hostnameId:hostnameId,
+        articleChannelKeyHostnameType:keyType
+      };
+
+      $.ajax({  
+        type : "POST",  
+        async : true,
+        url : url,  
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,  
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          JSON.stringify(datas);
+          $("#"+channelId+"_"+hostnameId+"_editResult").val("" + datas.code + ":" + datas.message + ":" + new Date().toLocaleString());
+        },  
+        error: function(datas) {
+  
+        }  
+      });  
+    }
 
   });
 

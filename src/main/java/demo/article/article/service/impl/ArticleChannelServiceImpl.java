@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import demo.article.article.mapper.ArticleChannelKeyHostnameMapper;
 import demo.article.article.mapper.ArticleChannelsMapper;
 import demo.article.article.pojo.bo.GetArticleChannelsBO;
+import demo.article.article.pojo.dto.ArticleChannelKeyHostnameIdDTO;
 import demo.article.article.pojo.dto.ArticleChannelManagerDTO;
 import demo.article.article.pojo.po.ArticleChannelKeyHostname;
 import demo.article.article.pojo.po.ArticleChannelKeyHostnameExample;
@@ -207,8 +208,6 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		return channelList;
 	}
 
-	
-
 	private GetArticleChannelsBO removeChannelsForUnknow(GetArticleChannelsBO channelList) {
 		String envName = constantService.getValByName(SystemConstantStore.envName, true);
 		if ("dev".equals(envName)) {
@@ -282,11 +281,19 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	@Override
 	public List<ArticleChannelVO> findArticleChannel() {
 		List<ArticleChannelVO> channelVOList = new ArrayList<ArticleChannelVO>();
-		ArticleChannelsExample example = new ArticleChannelsExample();
+		ArticleChannelsExample channelExample = new ArticleChannelsExample();
 //		example.createCriteria().andIsDeleteEqualTo(false);
-		List<ArticleChannels> channelPOList = articleChannelsMapper.selectByExample(example);
+		List<ArticleChannels> channelPOList = articleChannelsMapper.selectByExample(channelExample);
 		ArticleChannelVO tmpChannelVO = null;
+//		TODO
+//		未填充域名关联信息
 		
+		List<Hostname> hostnamePOList = hostnameService.findHonstnames();
+		ArticleChannelKeyHostnameExample channelKeyHostnameExample = new ArticleChannelKeyHostnameExample();
+		List<ArticleChannelKeyHostname> channelKeyHostnamePOList = articleChannelKeyHostnameMapper.selectByExample(channelKeyHostnameExample);
+		
+		List<ArticleChannelKeyHostnameIdDTO> channelKeyHostTmpList = null;
+		ArticleChannelKeyHostnameIdDTO tmpChannelKeyHostnameDTO = null;
 		for(ArticleChannels channel : channelPOList) {
 			tmpChannelVO = new ArticleChannelVO();
 			tmpChannelVO.setChannelName(channel.getChannelName());
@@ -294,6 +301,16 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 			tmpChannelVO.setWeights(channel.getWeights());
 			tmpChannelVO.setIsDelete(channel.getIsDelete());
 			tmpChannelVO.setChannelType(channel.getChannelType());
+			channelKeyHostTmpList = new ArrayList<ArticleChannelKeyHostnameIdDTO>();
+			for(Hostname i : hostnamePOList) {
+				tmpChannelKeyHostnameDTO = new ArticleChannelKeyHostnameIdDTO();
+				tmpChannelKeyHostnameDTO.setChannelId(channel.getChannelId());
+				tmpChannelKeyHostnameDTO.setHostname(i.getHostname());
+				tmpChannelKeyHostnameDTO.setHostnameId(i.getId());
+				tmpChannelKeyHostnameDTO.setArticleChannelKeyHostnameType(findChannelKeyHostnameTypeByChannelIdAndHostnameId(channelKeyHostnamePOList, channel.getChannelId(), i.getId()).getCode());
+				channelKeyHostTmpList.add(tmpChannelKeyHostnameDTO);
+			}
+			tmpChannelVO.setChannelIdKeyHostnameId(channelKeyHostTmpList);
 			channelVOList.add(tmpChannelVO);
 		}
 		Collections.sort(channelVOList);
@@ -462,5 +479,48 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		GetArticleChannelsBO newChannelList = removeChannels(channelList, channelBanList, channelPassList);
 		
 		return newChannelList;
+	}
+
+	@Override
+	public CommonResultCX editChannelKeyHostname(ArticleChannelKeyHostnameIdDTO dto) {
+		CommonResultCX r = new CommonResultCX();
+		if(dto.getChannelId() == null || dto.getHostnameId() == null || dto.getArticleChannelKeyHostnameType() == null) {
+			r.failWithMessage("参数异常");
+			return r;
+		}
+		
+		ArticleChannelKeyHostnameType channelKeyHostnameType = ArticleChannelKeyHostnameType.getType(dto.getArticleChannelKeyHostnameType());
+		if(channelKeyHostnameType == null) {
+			r.failWithMessage("参数异常");
+			return r;
+		}
+		
+		ArticleChannelKeyHostname channelKeyHostnamePO = null;
+		channelKeyHostnamePO = new ArticleChannelKeyHostname();
+		channelKeyHostnamePO.setChannelId(dto.getChannelId());
+		channelKeyHostnamePO.setHostId(dto.getHostnameId());
+		channelKeyHostnamePO.setKeyType(dto.getArticleChannelKeyHostnameType());
+		int count = articleChannelKeyHostnameMapper.insertOrUpdate(channelKeyHostnamePO);
+		if(count < 1) {
+			r.failWithMessage("修改异常");
+			return r;
+		}
+		
+		r.setIsSuccess();
+		return r;
+	}
+	
+	private ArticleChannelKeyHostnameType findChannelKeyHostnameTypeByChannelIdAndHostnameId(List<ArticleChannelKeyHostname> channelKeyHostnamePOList, Long channelId, Integer hostnameId) {
+		if(channelKeyHostnamePOList == null || channelKeyHostnamePOList.size() < 1 || channelId == null || hostnameId == null) {
+			return ArticleChannelKeyHostnameType.ban;
+		}
+		
+		for(ArticleChannelKeyHostname i : channelKeyHostnamePOList) {
+			if(channelId.equals(i.getChannelId()) && hostnameId.equals(i.getHostId())) {
+				return ArticleChannelKeyHostnameType.getType(i.getKeyType());
+			}
+		}
+		
+		return ArticleChannelKeyHostnameType.ban;
 	}
 }

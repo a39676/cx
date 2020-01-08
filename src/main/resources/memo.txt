@@ -1,5 +1,3 @@
-所有文章给阅读前需要检验域名与频道，考虑放入redis，频道管理应该动态绑定域名
-频道管理页面  未加入对应的域名绑定管理
 
 CREATE TABLE `duralbe_recorder` (
 id bigint not null,

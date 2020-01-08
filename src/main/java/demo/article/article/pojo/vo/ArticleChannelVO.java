@@ -1,5 +1,9 @@
 package demo.article.article.pojo.vo;
 
+import java.util.List;
+
+import demo.article.article.pojo.dto.ArticleChannelKeyHostnameIdDTO;
+
 public class ArticleChannelVO implements Comparable<ArticleChannelVO> {
 
 	private String channelName;
@@ -9,6 +13,7 @@ public class ArticleChannelVO implements Comparable<ArticleChannelVO> {
 	private boolean isDelete = false;
 	/** ArticleChannelType */
 	private Integer channelType;
+	private List<ArticleChannelKeyHostnameIdDTO> channelIdKeyHostnameId;
 
 	public boolean getIsDelete() {
 		return isDelete;
@@ -57,12 +62,20 @@ public class ArticleChannelVO implements Comparable<ArticleChannelVO> {
 	public void setWeights(Integer weights) {
 		this.weights = weights;
 	}
+	
+	public List<ArticleChannelKeyHostnameIdDTO> getChannelIdKeyHostnameId() {
+		return channelIdKeyHostnameId;
+	}
+
+	public void setChannelIdKeyHostnameId(List<ArticleChannelKeyHostnameIdDTO> channelIdKeyHostnameId) {
+		this.channelIdKeyHostnameId = channelIdKeyHostnameId;
+	}
 
 	@Override
 	public String toString() {
 		return "ArticleChannelVO [channelName=" + channelName + ", channelId=" + channelId + ", channelImage="
 				+ channelImage + ", weights=" + weights + ", isDelete=" + isDelete + ", channelType=" + channelType
-				+ "]";
+				+ ", channelIdKeyHostnameId=" + channelIdKeyHostnameId + "]";
 	}
 
 	@Override

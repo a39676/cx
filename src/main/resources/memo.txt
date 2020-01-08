@@ -1,3 +1,4 @@
+try fix CommonService.findHostNameFromRequst
 
 CREATE TABLE `duralbe_recorder` (
 id bigint not null,

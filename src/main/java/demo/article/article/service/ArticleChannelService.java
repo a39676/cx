@@ -36,4 +36,6 @@ public interface ArticleChannelService {
 
 	CommonResultCX editChannelKeyHostname(ArticleChannelKeyHostnameIdDTO dto);
 
+	String testFindHostNameFromRequst(HttpServletRequest request);
+
 }

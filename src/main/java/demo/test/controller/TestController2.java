@@ -1,7 +1,5 @@
 package demo.test.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
@@ -10,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import demo.article.article.service.ArticleChannelService;
 import demo.baseCommon.controller.CommonController;
 import demo.config.costom_component.SnowFlake;
 import demo.test.pojo.constant.TestUrl;
@@ -42,12 +39,5 @@ public class TestController2 extends CommonController {
 		return v;
 	}
 	
-	@Autowired
-	private ArticleChannelService channelService;
-	@GetMapping(value = "/findHostNameFromRequst")
-	@ResponseBody
-	public String findHostNameFromRequst(HttpServletRequest request) {
-		return channelService.testFindHostNameFromRequst(request);
-	}
 	
 }

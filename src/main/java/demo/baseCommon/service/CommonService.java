@@ -138,13 +138,17 @@ public abstract class CommonService {
 	}
 
 	protected String findHostNameFromRequst(HttpServletRequest request) {
-		String url = request.getServerName();
-		Pattern p = Pattern.compile("(?!:http://)(www\\.[0-9a-zA-Z_]+\\.[a-z]{1,8})(?!:/.*)");
-		Matcher m = p.matcher(url);
-		if(m.find()) {
-			return m.group(0);
+		if("dev".equals(constantService.getValByName("envName"))) {
+			return request.getServerName();
 		} else {
-			return "";
+			String url = request.getServerName();
+			Pattern p = Pattern.compile("(?!:http://)(www\\.[0-9a-zA-Z_]+\\.[a-z]{1,8})(?!:/.*)");
+			Matcher m = p.matcher(url);
+			if(m.find()) {
+				return m.group(0);
+			} else {
+				return "";
+			}
 		}
 	}
 }

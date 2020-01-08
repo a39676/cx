@@ -404,13 +404,13 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		Long userId = baseUtilCustom.getUserId();
 
 		FindArticleLongResult result = new FindArticleLongResult();
-		ArticleLongVO vo = null;
+		ArticleLongVO articleVO = null;
 		
 		Long articleId = decryptArticlePrivateKey(param.getPrivateKey());
 		if(articleId == null) {
-			vo = new ArticleLongVO();
-			vo.setContentLines(ResultTypeCX.errorParam.getName());
-			result.setArticleLongVO(vo);
+			articleVO = new ArticleLongVO();
+			articleVO.setContentLines(ResultTypeCX.errorParam.getName());
+			result.setArticleLongVO(articleVO);
 			return result;
 		}
 		visitDataService.insertVisitData(request, articleId.toString());
@@ -421,25 +421,25 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		FindArticleLongByConditionDTO mapperDTO = new FindArticleLongByConditionDTO();
 		BeanUtils.copyProperties(param, mapperDTO);
 		mapperDTO.setArticleId(articleId);
-		vo = articleLongMapper.findArticleLongByDecryptId(mapperDTO);
+		articleVO = articleLongMapper.findArticleLongByDecryptId(mapperDTO);
 		
-		if(vo == null) {
+		if(articleVO == null) {
 			result.fillWithResult(ResultTypeCX.errorWhenArticleLoad);
-			vo = new ArticleLongVO();
-			vo.setContentLines(ResultTypeCX.errorWhenArticleLoad.getName());
-			result.setArticleLongVO(vo);
+			articleVO = new ArticleLongVO();
+			articleVO.setContentLines(ResultTypeCX.errorWhenArticleLoad.getName());
+			result.setArticleLongVO(articleVO);
 			return result;
 		}
 		
-		if(vo.getIsDelete() && !baseUtilCustom.hasAdminRole()) {
-			vo = new ArticleLongVO();
-			vo.setContentLines("这篇文已经失踪了...请联系管理员...");
-			result.setArticleLongVO(vo);
+		if((articleVO.getIsDelete() && !baseUtilCustom.hasAdminRole()) || !channelService.containThisChannel(request, articleVO.getChannelId())) {
+			articleVO = new ArticleLongVO();
+			articleVO.setContentLines("这篇文已经失踪了...请联系管理员...");
+			result.setArticleLongVO(articleVO);
 			return result;
 		}
 		
-		fillArticleContent(vo, param.getPrivateKey(), userId);
-		result.setArticleLongVO(vo);
+		fillArticleContent(articleVO, param.getPrivateKey(), userId);
+		result.setArticleLongVO(articleVO);
 		return result;
 	}
 

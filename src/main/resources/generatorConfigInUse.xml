@@ -50,9 +50,9 @@
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="article_channels">
-        	<property name="tableName" value="article_channels"></property>
-        	<property name="domainObjectName" value="article_channels" ></property>
+        <table tableName="article_channel_key_hostname">
+        	<property name="tableName" value="article_channel_key_hostname"></property>
+        	<property name="domainObjectName" value="article_channel_key_hostname" ></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

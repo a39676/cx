@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.pojo.constant.ArticleAdminUrlConstant;
+import demo.article.article.pojo.dto.ArticleChannelKeyHostnameIdDTO;
 import demo.article.article.pojo.dto.ArticleChannelManagerDTO;
 import demo.article.article.pojo.param.controllerParam.BatchUpdatePrimaryKeyParam;
 import demo.article.article.pojo.param.controllerParam.ChangeChannelParam;
@@ -113,4 +114,11 @@ public class ArticleAdminController extends CommonController {
 	public CommonResultCX articleChannelManager(@RequestBody ArticleChannelManagerDTO dto) {
 		return channelService.articleChannelManager(dto);
 	}
+
+	@PostMapping(value = ArticleAdminUrlConstant.editChannelKeyHostname)
+	@ResponseBody
+	public CommonResultCX editChannelKeyHostname(@RequestBody ArticleChannelKeyHostnameIdDTO dto) {
+		return channelService.editChannelKeyHostname(dto);
+	}
+	
 }

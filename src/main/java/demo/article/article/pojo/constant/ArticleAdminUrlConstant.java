@@ -12,4 +12,5 @@ public class ArticleAdminUrlConstant {
 	public static final String findArticleChannel = "/findArticleChannel";
 	
 	public static final String articleChannelManager = "/articleChannelManager";
+	public static final String editChannelKeyHostname = "/editChannelKeyHostname";
 }

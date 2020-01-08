@@ -1,3 +1,4 @@
+
 CREATE TABLE `duralbe_recorder` (
 id bigint not null,
    `trading_id` bigint default null,

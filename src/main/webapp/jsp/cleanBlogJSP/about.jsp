@@ -35,7 +35,7 @@
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
         <p>本站建设中, 还没有灵魂, 希望能收集您宝贵的意见!</p>
-        <p>欢迎联系 davenchan12546@gmail.com</p>
+        <p>欢迎联系 ${email} </p>
       </div>
     </div>
   </div>

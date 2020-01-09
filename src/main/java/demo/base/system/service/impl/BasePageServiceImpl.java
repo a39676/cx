@@ -6,19 +6,24 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.system.pojo.constant.BlogViewConstant;
+import demo.base.system.pojo.po.Hostname;
 import demo.base.system.service.BasePageService;
+import demo.base.system.service.HostnameService;
 import demo.base.user.pojo.type.RolesType;
 import demo.baseCommon.service.CommonService;
 
 @Service
 public class BasePageServiceImpl extends CommonService implements BasePageService {
 
+	@Autowired
+	private HostnameService hostnameService;
 	
 	@Override
 	public ModelAndView baseRootHandlerV3(String vcode, HttpServletRequest request) {
@@ -69,7 +74,20 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 	
 	@Override
 	public ModelAndView aboutMeHandler(String vcode, HttpServletRequest request) {
-		return new ModelAndView(BlogViewConstant.about);
+		ModelAndView v = new ModelAndView(BlogViewConstant.about);
+		
+		String hostname = findHostNameFromRequst(request);
+		
+		List<Hostname> hostnameList = hostnameService.findHonstnames();
+		for(int i = 0; i < hostnameList.size(); i++) {
+			if(hostnameList.get(i).getId() == 1 && hostnameList.get(i).getHostname().equals(hostname)) {
+				v.addObject("email", "davenchan12546@gmail.com");
+			} else if(hostnameList.get(i).getId() == 2 && hostnameList.get(i).getHostname().equals(hostname)) {
+				v.addObject("email", "chan189@aliyun.com");
+			}
+		}
+		
+		return v;
 	}
 	
 }

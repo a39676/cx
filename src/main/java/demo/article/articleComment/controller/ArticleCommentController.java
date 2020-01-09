@@ -15,8 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import demo.article.articleComment.pojo.bo.ArticleCommentCountByArticleIdBO;
 import demo.article.articleComment.pojo.constant.ArticleCommentUrlConstant;
-import demo.article.articleComment.pojo.dto.controllerParam.CreateArticleCommentDTO;
-import demo.article.articleComment.pojo.dto.controllerParam.FindArticleCommentPageParam;
+import demo.article.articleComment.pojo.dto.CreateArticleCommentDTO;
+import demo.article.articleComment.pojo.dto.FindArticleCommentPageDTO;
 import demo.article.articleComment.pojo.result.FindArticleCommentPageResult;
 import demo.article.articleComment.service.ArticleCommentService;
 import demo.baseCommon.controller.CommonController;
@@ -41,7 +41,7 @@ public class ArticleCommentController extends CommonController {
 	}
 	
 	@PostMapping(value = ArticleCommentUrlConstant.findArticleCommentPage)
-	public ModelAndView findArticleCommentPage(@RequestBody FindArticleCommentPageParam param, HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView findArticleCommentPage(@RequestBody FindArticleCommentPageDTO param, HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView view = new ModelAndView("articleJSP/articleCommentList");
 		if(baseUtilCustom.hasAdminRole()) {
 			param.setHasAdminRole(true);
@@ -65,7 +65,7 @@ public class ArticleCommentController extends CommonController {
 	}
 	
 	@PostMapping(value = ArticleCommentUrlConstant.findArticleCommentSubPage)
-	public ModelAndView findArticleCommentSubPage(@RequestBody FindArticleCommentPageParam param, HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView findArticleCommentSubPage(@RequestBody FindArticleCommentPageDTO param, HttpServletRequest request, HttpServletResponse response) {
 //		TODO
 		ModelAndView view = new ModelAndView("articleJSP/articleCommentListSubList");
 		if(baseUtilCustom.hasAdminRole()) {

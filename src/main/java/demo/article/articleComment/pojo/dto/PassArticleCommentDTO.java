@@ -1,6 +1,6 @@
-package demo.article.articleComment.pojo.dto.controllerParam;
+package demo.article.articleComment.pojo.dto;
 
-public class DeleteArticleCommentParam  {
+public class PassArticleCommentDTO  {
 
 	private Long commentId;
 
@@ -14,7 +14,7 @@ public class DeleteArticleCommentParam  {
 
 	@Override
 	public String toString() {
-		return "DeleteArticleCommentParam [commentId=" + commentId + "]";
+		return "PassArticleCommentParam [commentId=" + commentId + "]";
 	}
 
 }

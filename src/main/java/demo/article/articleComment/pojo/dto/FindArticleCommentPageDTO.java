@@ -1,8 +1,8 @@
-package demo.article.articleComment.pojo.dto.controllerParam;
+package demo.article.articleComment.pojo.dto;
 
 import java.util.Date;
 
-public class FindArticleCommentPageParam {
+public class FindArticleCommentPageDTO {
 
 	private String pk;
 	private Date startTime;

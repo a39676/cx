@@ -9,8 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import demo.article.articleComment.mapper.ArticleCommentMapper;
 import demo.article.articleComment.mapper.ArticleCommentReviewMapper;
-import demo.article.articleComment.pojo.dto.controllerParam.DeleteArticleCommentParam;
-import demo.article.articleComment.pojo.dto.controllerParam.PassArticleCommentParam;
+import demo.article.articleComment.pojo.dto.DeleteArticleCommentDTO;
+import demo.article.articleComment.pojo.dto.PassArticleCommentDTO;
 import demo.article.articleComment.pojo.po.ArticleCommentReview;
 import demo.article.articleComment.pojo.type.ArticleCommentReviewType;
 import demo.article.articleComment.service.ArticleCommentAdminService;
@@ -32,7 +32,7 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 	
 	@Override
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
-	public CommonResultCX deleteArticleComment(DeleteArticleCommentParam param) {
+	public CommonResultCX deleteArticleComment(DeleteArticleCommentDTO param) {
 		CommonResultCX result = new CommonResultCX();
 		
 		if(param.getCommentId() == null || param.getCommentId() < 0) {
@@ -60,7 +60,7 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 	
 	@Override
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
-	public CommonResultCX passArticleComment(PassArticleCommentParam param) {
+	public CommonResultCX passArticleComment(PassArticleCommentDTO param) {
 		CommonResultCX result = new CommonResultCX();
 		
 		if(param.getCommentId() == null || param.getCommentId() < 0) {

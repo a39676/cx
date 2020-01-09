@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import demo.article.articleComment.pojo.constant.ArticleAdminCommentUrlConstant;
-import demo.article.articleComment.pojo.dto.controllerParam.DeleteArticleCommentParam;
-import demo.article.articleComment.pojo.dto.controllerParam.PassArticleCommentParam;
+import demo.article.articleComment.pojo.dto.DeleteArticleCommentDTO;
+import demo.article.articleComment.pojo.dto.PassArticleCommentDTO;
 import demo.article.articleComment.service.ArticleCommentAdminService;
 import demo.baseCommon.controller.CommonController;
 import demo.baseCommon.pojo.result.CommonResultCX;
@@ -28,14 +28,14 @@ public class ArticleCommentAdminController extends CommonController {
 	private ArticleCommentAdminService articleCommentAdminService;
 
 	@PostMapping(value = ArticleAdminCommentUrlConstant.deleteArticleComment)
-	public void deleteArticleComment(@RequestBody DeleteArticleCommentParam param, HttpServletRequest request, HttpServletResponse response)
+	public void deleteArticleComment(@RequestBody DeleteArticleCommentDTO param, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		CommonResultCX result = articleCommentAdminService.deleteArticleComment(param);
 		outputJson(response, JSONObject.fromObject(result));
 	}
 	
 	@PostMapping(value = ArticleAdminCommentUrlConstant.passArticleComment)
-	public void passArticleComment(@RequestBody PassArticleCommentParam param, HttpServletRequest request, HttpServletResponse response)
+	public void passArticleComment(@RequestBody PassArticleCommentDTO param, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		CommonResultCX result = articleCommentAdminService.passArticleComment(param);
 		outputJson(response, JSONObject.fromObject(result));

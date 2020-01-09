@@ -1,4 +1,4 @@
-package demo.article.articleComment.pojo.dto.controllerParam;
+package demo.article.articleComment.pojo.dto;
 
 public class CreateArticleCommentDTO {
 

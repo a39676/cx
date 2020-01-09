@@ -23,12 +23,14 @@ import demo.article.article.service.impl.ArticleCommonService;
 import demo.article.articleComment.mapper.ArticleCommentMapper;
 import demo.article.articleComment.pojo.bo.ArticleCommentCountByArticleIdBO;
 import demo.article.articleComment.pojo.bo.FindCommentByArticleIdBO;
-import demo.article.articleComment.pojo.dto.controllerParam.CreateArticleCommentDTO;
-import demo.article.articleComment.pojo.dto.controllerParam.FindArticleCommentPageParam;
+import demo.article.articleComment.pojo.dto.CreateArticleCommentDTO;
+import demo.article.articleComment.pojo.dto.FindArticleCommentPageDTO;
+import demo.article.articleComment.pojo.dto.PassArticleCommentDTO;
 import demo.article.articleComment.pojo.dto.mapperParam.FindCommentByArticleIdParam;
 import demo.article.articleComment.pojo.dto.mapperParam.JustCommentParam;
 import demo.article.articleComment.pojo.po.ArticleComment;
 import demo.article.articleComment.pojo.result.FindArticleCommentPageResult;
+import demo.article.articleComment.service.ArticleCommentAdminService;
 import demo.article.articleComment.service.ArticleCommentService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.baseCommon.pojo.result.CommonResultCX;
@@ -42,7 +44,8 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	private ArticleService articleService;
 	@Autowired
 	private ArticleEvaluationService articleEvaluationService;
-	
+	@Autowired
+	private ArticleCommentAdminService articleCommentAdminService;
 	@Autowired
 	private ArticleCommentMapper articleCommentMapper;
 	
@@ -101,10 +104,11 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			return result;
 		}
 		
-		if(!itIsBigUser()) {
+		boolean bigUserFlag = itIsBigUser();
+		if(!bigUserFlag) {
 			PolicyFactory filter = textFilter.getFilter();
 			inputParam.setContent(filter.sanitize(inputParam.getContent()));
-		}
+		} 
 
 		ArticleFileSaveResult saveFileResult = saveArticleCommentFile(articleCommentStorePrefixPath, userId, inputParam.getContent());
 		if(!saveFileResult.isSuccess()) {
@@ -112,11 +116,18 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		}
 		
 		ArticleComment newComment = new ArticleComment();
+		Long newCommonId = snowFlake.getNextId();
+		newComment.setArticleCommentId(newCommonId);
 		newComment.setArticleId(articleId);
 		newComment.setPath(saveFileResult.getFilePath());
 		newComment.setUserId(userId);
 		articleCommentMapper.insertSelective(newComment);
 		
+		if(bigUserFlag) {
+			PassArticleCommentDTO param = new PassArticleCommentDTO();
+			param.setCommentId(newCommonId);
+			articleCommentAdminService.passArticleComment(param );
+		}
 		
 		result.setIsSuccess();
 		
@@ -128,7 +139,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	}
 	
 	@Override
-	public FindArticleCommentPageResult findArticleCommentPage(FindArticleCommentPageParam controllerParam) {
+	public FindArticleCommentPageResult findArticleCommentPage(FindArticleCommentPageDTO controllerParam) {
 //		TODO
 		FindArticleCommentPageResult result = new FindArticleCommentPageResult();
 		List<ArticleCommentVO> commentVOList = new ArrayList<ArticleCommentVO>();

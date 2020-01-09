@@ -15,8 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import demo.article.articleComment.pojo.bo.ArticleCommentCountByArticleIdBO;
 import demo.article.articleComment.pojo.constant.ArticleCommentUrlConstant;
-import demo.article.articleComment.pojo.param.controllerParam.CreateArticleCommentParam;
-import demo.article.articleComment.pojo.param.controllerParam.FindArticleCommentPageParam;
+import demo.article.articleComment.pojo.dto.controllerParam.CreateArticleCommentDTO;
+import demo.article.articleComment.pojo.dto.controllerParam.FindArticleCommentPageParam;
 import demo.article.articleComment.pojo.result.FindArticleCommentPageResult;
 import demo.article.articleComment.service.ArticleCommentService;
 import demo.baseCommon.controller.CommonController;
@@ -34,7 +34,7 @@ public class ArticleCommentController extends CommonController {
 	private BaseUtilCustom baseUtilCustom;
 	
 	@PostMapping(value = ArticleCommentUrlConstant.createArticleComment)
-	public void createArticleComment(CreateArticleCommentParam param, HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void createArticleComment(CreateArticleCommentDTO param, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		CommonResultCX result = articleCommentService.creatingArticleComment(baseUtilCustom.getUserId(), param);
 		
 		outputJson(response, JSONObject.fromObject(result));

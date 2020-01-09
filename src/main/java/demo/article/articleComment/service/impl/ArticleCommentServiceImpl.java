@@ -23,10 +23,10 @@ import demo.article.article.service.impl.ArticleCommonService;
 import demo.article.articleComment.mapper.ArticleCommentMapper;
 import demo.article.articleComment.pojo.bo.ArticleCommentCountByArticleIdBO;
 import demo.article.articleComment.pojo.bo.FindCommentByArticleIdBO;
-import demo.article.articleComment.pojo.param.controllerParam.CreateArticleCommentParam;
-import demo.article.articleComment.pojo.param.controllerParam.FindArticleCommentPageParam;
-import demo.article.articleComment.pojo.param.mapperParam.FindCommentByArticleIdParam;
-import demo.article.articleComment.pojo.param.mapperParam.JustCommentParam;
+import demo.article.articleComment.pojo.dto.controllerParam.CreateArticleCommentDTO;
+import demo.article.articleComment.pojo.dto.controllerParam.FindArticleCommentPageParam;
+import demo.article.articleComment.pojo.dto.mapperParam.FindCommentByArticleIdParam;
+import demo.article.articleComment.pojo.dto.mapperParam.JustCommentParam;
 import demo.article.articleComment.pojo.po.ArticleComment;
 import demo.article.articleComment.pojo.result.FindArticleCommentPageResult;
 import demo.article.articleComment.service.ArticleCommentService;
@@ -50,7 +50,6 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	private FileUtilCustom ioUtil;
 	
 	private String articleCommentStorePrefixPath;
-	private static Long maxArticleLength = 0L;
 	
 	private boolean loadArticleCommontStorePath() {
 		articleCommentStorePrefixPath = constantService.getValByName(SystemConstantStore.articleCommentStorePrefixPath);
@@ -61,19 +60,21 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		}
 	}
 	
-	private boolean loadMaxArticleLength() {
-		maxArticleLength = Long.parseLong(constantService.getValByName(SystemConstantStore.maxArticleLength));
-		if (maxArticleLength > 0) {
-			return true;
-		} else {
-			return false;
+	private Long loadMaxArticleLength() {
+		String maxCommentLengthStr = constantService.getValByName(SystemConstantStore.maxArticleLength);
+		Long maxCommentLength = null;
+		try {
+			maxCommentLength = Long.parseLong(maxCommentLengthStr);
+		} catch (Exception e) {
+			maxCommentLength = 0L;
 		}
+		return maxCommentLength;
 	}
 	
 	@Override
-	public CommonResultCX creatingArticleComment(Long userId, CreateArticleCommentParam inputParam) throws IOException {
+	public CommonResultCX creatingArticleComment(Long userId, CreateArticleCommentDTO inputParam) throws IOException {
 		CommonResultCX result = new CommonResultCX();
-		if(!loadArticleCommontStorePath() || !loadMaxArticleLength()) {
+		if(!loadArticleCommontStorePath() || loadMaxArticleLength() <= 0) {
 			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
 		}

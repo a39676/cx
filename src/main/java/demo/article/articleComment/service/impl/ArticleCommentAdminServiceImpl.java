@@ -9,8 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import demo.article.articleComment.mapper.ArticleCommentMapper;
 import demo.article.articleComment.mapper.ArticleCommentReviewMapper;
-import demo.article.articleComment.pojo.param.controllerParam.DeleteArticleCommentParam;
-import demo.article.articleComment.pojo.param.controllerParam.PassArticleCommentParam;
+import demo.article.articleComment.pojo.dto.controllerParam.DeleteArticleCommentParam;
+import demo.article.articleComment.pojo.dto.controllerParam.PassArticleCommentParam;
 import demo.article.articleComment.pojo.po.ArticleCommentReview;
 import demo.article.articleComment.pojo.type.ArticleCommentReviewType;
 import demo.article.articleComment.service.ArticleCommentAdminService;

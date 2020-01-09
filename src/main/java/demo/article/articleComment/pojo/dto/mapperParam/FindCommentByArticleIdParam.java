@@ -1,4 +1,4 @@
-package demo.article.articleComment.pojo.param.mapperParam;
+package demo.article.articleComment.pojo.dto.mapperParam;
 
 import java.util.Date;
 

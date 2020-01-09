@@ -1,4 +1,4 @@
-package demo.article.articleComment.pojo.param.controllerParam;
+package demo.article.articleComment.pojo.dto.controllerParam;
 
 import java.util.Date;
 

@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import demo.article.articleComment.pojo.constant.ArticleAdminCommentUrlConstant;
-import demo.article.articleComment.pojo.param.controllerParam.DeleteArticleCommentParam;
-import demo.article.articleComment.pojo.param.controllerParam.PassArticleCommentParam;
+import demo.article.articleComment.pojo.dto.controllerParam.DeleteArticleCommentParam;
+import demo.article.articleComment.pojo.dto.controllerParam.PassArticleCommentParam;
 import demo.article.articleComment.service.ArticleCommentAdminService;
 import demo.baseCommon.controller.CommonController;
 import demo.baseCommon.pojo.result.CommonResultCX;

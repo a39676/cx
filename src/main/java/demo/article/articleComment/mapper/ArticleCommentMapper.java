@@ -4,8 +4,8 @@ import java.util.List;
 
 import demo.article.articleComment.pojo.bo.ArticleCommentCountByArticleIdBO;
 import demo.article.articleComment.pojo.bo.FindCommentByArticleIdBO;
-import demo.article.articleComment.pojo.param.mapperParam.FindCommentByArticleIdParam;
-import demo.article.articleComment.pojo.param.mapperParam.JustCommentParam;
+import demo.article.articleComment.pojo.dto.mapperParam.FindCommentByArticleIdParam;
+import demo.article.articleComment.pojo.dto.mapperParam.JustCommentParam;
 import demo.article.articleComment.pojo.po.ArticleComment;
 
 public interface ArticleCommentMapper {

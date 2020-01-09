@@ -1,6 +1,6 @@
-package demo.article.articleComment.pojo.param.controllerParam;
+package demo.article.articleComment.pojo.dto.controllerParam;
 
-public class CreateArticleCommentParam {
+public class CreateArticleCommentDTO {
 
 	private String pk;
 

@@ -13,21 +13,22 @@ public interface AutoTestDemoService {
 
 	ModelAndView linkToATHome(HttpServletRequest request);
 
-	ModelAndView index();
+	ModelAndView index(HttpServletRequest request);
 
 	/**
 	 * 查找报告列表
+	 * @param request 
 	 * @param dto
 	 * @return
 	 */
-	String findReportsByCondition(FindTestEventPageByConditionDTO dto);
+	String findReportsByCondition(HttpServletRequest request, FindTestEventPageByConditionDTO dto);
 
 	/**
 	 * 查找报告
 	 * @param dto
 	 * @return
 	 */
-	ModelAndView findReportByTestEventId(FindReportByTestEventIdDTO dto);
+	ModelAndView findReportByTestEventId(HttpServletRequest request, FindReportByTestEventIdDTO dto);
 
 	/**
 	 * 新加 bing demo 

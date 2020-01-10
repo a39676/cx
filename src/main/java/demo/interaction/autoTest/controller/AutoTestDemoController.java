@@ -34,22 +34,22 @@ public class AutoTestDemoController extends CommonController {
 	}
 	
 	@GetMapping(value = AutoTestUrl.index)
-	public ModelAndView index() {
-		return atDemoService.index();
+	public ModelAndView index(HttpServletRequest request) {
+		return atDemoService.index(request);
 	}
 	
 	@PostMapping(value = AutoTestInteractionUrl.findReportsByCondition)
 	@ResponseBody
-	public String findReportsByCondition(@RequestBody FindTestEventPageByConditionDTO dto) {
-		return atDemoService.findReportsByCondition(dto);
+	public String findReportsByCondition(HttpServletRequest request, @RequestBody FindTestEventPageByConditionDTO dto) {
+		return atDemoService.findReportsByCondition(request, dto);
 	}
 	
 	@GetMapping(value = AutoTestInteractionUrl.findReportByTestEventId)
 	@ResponseBody
-	public ModelAndView findReportByTestEventId(@RequestParam(value = "testEventId", defaultValue = "0", required = false) Long testEventId) {
+	public ModelAndView findReportByTestEventId(HttpServletRequest request, @RequestParam(value = "testEventId", defaultValue = "0", required = false) Long testEventId) {
 		FindReportByTestEventIdDTO dto = new FindReportByTestEventIdDTO();
 		dto.setTestEventId(testEventId);
-		return atDemoService.findReportByTestEventId(dto);
+		return atDemoService.findReportByTestEventId(request, dto);
 	}
 	
 	@PostMapping(value = AutoTestInteractionUrl.insertSearchingDemoTestEvent)

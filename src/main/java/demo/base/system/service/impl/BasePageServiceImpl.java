@@ -13,7 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.system.pojo.constant.BlogViewConstant;
-import demo.base.system.pojo.po.Hostname;
+import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.BasePageService;
 import demo.base.system.service.HostnameService;
 import demo.base.user.pojo.type.RolesType;
@@ -24,7 +24,7 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 
 	@Autowired
 	private HostnameService hostnameService;
-	
+
 	@Override
 	public ModelAndView baseRootHandlerV3(String vcode, HttpServletRequest request) {
 
@@ -35,29 +35,26 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 		}
 		visitDataService.addVisitCounting(request);
 		
-		Long visitCount = visitDataService.getVisitCount();
+		HostnameType hostnameType = hostnameService.findHostname(request);
 		
 		ModelAndView view = new ModelAndView();
-		String hostName = findHostNameFromRequst(request);
-		view.setViewName(BlogViewConstant.home);
-//		view.setViewName(BaseViewConstant.homeV3);
-
-		view.addObject("title", constantService.getValByName(SystemConstantStore.webSiteTitle));
-		view.addObject("visitCount", visitCount);
 
 		String envName = constantService.getValByName(SystemConstantStore.envName, true);
 		
 		if(!"dev".equals(envName)) {
-			if (StringUtils.isBlank(hostName)) {
+			if(hostnameType == null) {
 				view.setViewName(BaseViewConstant.empty);
 				return view;
 			}
+		} else {
+			view = buildHomeViewForEA();
 		}
-
-		if (hostName.contains(constantService.getValByName(SystemConstantStore.hostName2))) {
-			if(!"1".contentEquals(constantService.getValByName(SystemConstantStore.jobing))) {
-				view.setViewName(BaseViewConstant.empty);
-				return view;
+		
+		if (hostnameType != null) {
+			if (HostnameType.ea.equals(hostnameType)) {
+				view = buildHomeViewForEA();
+			} else if (HostnameType.seek.equals(hostnameType)) {
+				view = buildHomeViewForSeek();
 			}
 		}
 
@@ -67,27 +64,51 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 			if (authDetailMap != null && authDetailMap.containsKey("nickName")) {
 				view.addObject("nickName", authDetailMap.get("nickName"));
 			}
-		} 
-
+		}
+		
 		return view;
 	}
 	
+	private ModelAndView buildHomeViewForEA() {
+		ModelAndView view = new ModelAndView(BlogViewConstant.home);
+		view.addObject("title", constantService.getValByName(SystemConstantStore.eaWebSiteTitle));
+		view.addObject("headerImg", "/static_resources/cleanBlog/img/nature-4607496_1920.jpg");
+		view.addObject("subheading", constantService.getValByName(SystemConstantStore.eaSubheading));
+		Long visitCount = visitDataService.getVisitCount();
+		view.addObject("visitCount", visitCount);
+		
+		return view;
+	}
+	
+	private ModelAndView buildHomeViewForSeek() {
+		ModelAndView view = new ModelAndView();
+		if(!"1".contentEquals(constantService.getValByName(SystemConstantStore.jobing))) {
+			view.setViewName(BaseViewConstant.empty);
+			return view;
+		}
+		
+		view.setViewName(BlogViewConstant.home);
+		view.addObject("title", constantService.getValByName(SystemConstantStore.seekWebSiteTitle));
+		view.addObject("headerImg", "/static_resources/cleanBlog/img/post-sample-image.jpg");
+		view.addObject("subheading", "Bugs forced the development in a certain sense");
+		
+		return view;
+	}
+
 	@Override
 	public ModelAndView aboutMeHandler(String vcode, HttpServletRequest request) {
 		ModelAndView v = new ModelAndView(BlogViewConstant.about);
-		
-		String hostname = findHostNameFromRequst(request);
-		
-		List<Hostname> hostnameList = hostnameService.findHonstnames();
-		for(int i = 0; i < hostnameList.size(); i++) {
-			if(hostnameList.get(i).getId() == 1 && hostnameList.get(i).getHostname().equals(hostname)) {
+
+		HostnameType hostnameType = hostnameService.findHostname(request);
+		if (hostnameType != null) {
+			if (HostnameType.ea.equals(hostnameType)) {
 				v.addObject("email", "davenchan12546@gmail.com");
-			} else if(hostnameList.get(i).getId() == 2 && hostnameList.get(i).getHostname().equals(hostname)) {
+			} else if (HostnameType.seek.equals(hostnameType)) {
 				v.addObject("email", "chan189@aliyun.com");
 			}
 		}
-		
+
 		return v;
 	}
-	
+
 }

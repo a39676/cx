@@ -10,4 +10,6 @@ public interface ExceptionService {
 
 	ModelAndView handleCommonException(HttpServletRequest request);
 
+	ModelAndView handle404Exception(HttpServletRequest request);
+
 }

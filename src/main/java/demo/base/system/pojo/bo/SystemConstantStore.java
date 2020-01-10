@@ -27,10 +27,10 @@ public class SystemConstantStore {
 	public static final String customKeys = "customKeys";
 	public static final String homepageAnnouncement = "homepageAnnouncement";
 	public static final String homepageAnnouncementStr = "homepageAnnouncementStr";
-	public static final String webSiteTitle = "webSiteTitle";
-	public static final String hostName1 = "hostName1";
-	public static final String hostName2 = "hostName2";
-	public static final String hostName3 = "hostName3";
+	public static final String eaWebSiteTitle = "eaWebSiteTitle";
+	public static final String seekWebSiteTitle = "seekWebSiteTitle";
+	public static final String eaSubheading = "eaSubheading";
+	public static final String seekSubheading = "seekSubheading";
 	public static final String debugStatus = "debugStatus";
 	public static final String fakeFTPHome = "fakeFTPHome";
 	public static final String superAdminKey = "superAdminKey";

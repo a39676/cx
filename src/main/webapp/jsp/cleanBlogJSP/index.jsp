@@ -16,17 +16,14 @@
   <%@ include file="./nav.jsp" %>
 
   <!-- Page Header -->
-  <!-- 
-  <header class="masthead" style="background-image: url('/static_resources/cleanBlog/img/fog-4597348_1920.jpg')">
-  -->
-  <header class="masthead" style="background-image: url('/static_resources/cleanBlog/img/nature-4607496_1920.jpg')"> 
+  <header class="masthead" style="background-image: url('${headerImg}')"> 
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="site-heading">
             <h2>${title}</h2>
-            <span class="subheading">Bugs forced the development in a certain sense</span>
+            <span class="subheading">${subheading}</span>
           </div>
         </div>
       </div>

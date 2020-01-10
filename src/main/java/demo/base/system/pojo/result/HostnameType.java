@@ -33,6 +33,17 @@ public enum HostnameType {
 		return null;
 	}
 	
+	public static HostnameType getTypeCustom(String typeName) {
+		if(typeName.contains("ea")) {
+			return ea;
+		} else if(typeName.contains("seek")) {
+			return seek;
+		} else if(typeName.contains("3310")) {
+			return three;
+		}
+		return null;
+	}
+	
 	public static HostnameType getType(Integer typeCode) {
 		for(HostnameType t : HostnameType.values()) {
 			if(t.getCode().equals(typeCode)) {

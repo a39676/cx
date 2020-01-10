@@ -29,6 +29,6 @@ public class HostnameServiceImpl extends CommonService implements HostnameServic
 	
 	@Override
 	public HostnameType findHostname(HttpServletRequest request) {
-		return HostnameType.getType(findHostNameFromRequst(request));
+		return HostnameType.getTypeCustom(findHostNameFromRequst(request));
 	}
 }

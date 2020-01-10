@@ -44,8 +44,11 @@ public class SwaggerConfig {
 	}
 
 	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("swagger title").description("swagger description")
-				.termsOfServiceUrl("").version("1.10")
+//		return new ApiInfoBuilder().title("swagger title").description("swagger description")
+//				.termsOfServiceUrl("url").version("1.10")
+//				.contact(new Contact("auth name", "url", "email")).build();
+		return new ApiInfoBuilder().title("").description("")
+				.termsOfServiceUrl("").version("")
 				.contact(new Contact("", "", "")).build();
 	}
 

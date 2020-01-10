@@ -34,11 +34,11 @@ public enum HostnameType {
 	}
 	
 	public static HostnameType getTypeCustom(String typeName) {
-		if(typeName.startsWith("ea")) {
+		if(typeName.contains("easy")) {
 			return ea;
-		} else if(typeName.startsWith("seek")) {
+		} else if(typeName.contains("seek")) {
 			return seek;
-		} else if(typeName.startsWith("3310")) {
+		} else if(typeName.contains("3310")) {
 			return three;
 		}
 		return null;

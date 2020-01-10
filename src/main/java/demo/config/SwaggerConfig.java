@@ -36,7 +36,7 @@ public class SwaggerConfig {
 					.apiInfo(apiInfo())
 					.select()
 //					.apis(RequestHandlerSelectors.basePackage("demo.interaction.movieInteraction.controller"))
-					.apis(RequestHandlerSelectors.basePackage(""))
+					.apis(RequestHandlerSelectors.basePackage("not exists"))
 					.paths(PathSelectors.any())
 					.build();
 		}

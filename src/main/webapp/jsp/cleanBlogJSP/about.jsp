@@ -15,7 +15,7 @@
   <%@ include file="./nav.jsp" %>
 
   <!-- Page Header -->
-  <header class="masthead" style="background-image: url('/static_resources/cleanBlog/img/fox-4589927_1920.jpg')">
+  <header class="masthead" style="background-image: url('${headerImg}')"> 
   <!-- <header class="masthead" style="background-image: url('/static_resources/cleanBlog/img/cat-4481566_1920.jpg')"> -->
     <div class="overlay"></div>
     <div class="container">

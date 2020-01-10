@@ -103,8 +103,10 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 		if (hostnameType != null) {
 			if (HostnameType.ea.equals(hostnameType)) {
 				v.addObject("email", "davenchan12546@gmail.com");
+				v.addObject("headerImg", "/static_resources/cleanBlog/img/nature-4607496_1920.jpg");
 			} else if (HostnameType.seek.equals(hostnameType)) {
 				v.addObject("email", "chan189@aliyun.com");
+				v.addObject("headerImg", "/static_resources/cleanBlog/img/post-sample-image.jpg");
 			}
 		}
 

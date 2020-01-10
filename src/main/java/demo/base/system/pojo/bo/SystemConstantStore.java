@@ -41,4 +41,7 @@ public class SystemConstantStore {
 	
 	public static final String envName = "envName";
 	
+	public static final String emaild = "emaild";
+	public static final String emailc = "emailc";
+	
 }

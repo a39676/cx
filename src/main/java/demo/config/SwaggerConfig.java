@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -36,7 +35,8 @@ public class SwaggerConfig {
 			d = new Docket(DocumentationType.SWAGGER_2)
 					.apiInfo(apiInfo())
 					.select()
-					.apis(RequestHandlerSelectors.basePackage("demo.interaction.movieInteraction.controller"))
+//					.apis(RequestHandlerSelectors.basePackage("demo.interaction.movieInteraction.controller"))
+					.apis(RequestHandlerSelectors.basePackage(""))
 					.paths(PathSelectors.any())
 					.build();
 		}
@@ -45,8 +45,8 @@ public class SwaggerConfig {
 
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder().title("swagger title").description("swagger description")
-				.termsOfServiceUrl("http://www.seekingdreamwork.site").version("1.10")
-				.contact(new Contact("Acorn", "http://www.seekingdreamwork.site", constantService.getValByName(SystemConstantStore.emaild))).build();
+				.termsOfServiceUrl("").version("1.10")
+				.contact(new Contact("", "", "")).build();
 	}
 
 }

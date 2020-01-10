@@ -13,4 +13,10 @@ public interface HostnameService {
 
 	HostnameType findHostname(HttpServletRequest request);
 
+	String findEasy();
+
+	String findSeek();
+
+	String find3310();
+
 }

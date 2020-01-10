@@ -31,4 +31,34 @@ public class HostnameServiceImpl extends CommonService implements HostnameServic
 	public HostnameType findHostname(HttpServletRequest request) {
 		return HostnameType.getTypeCustom(findHostNameFromRequst(request));
 	}
+	
+	@Override
+	public String findEasy() {
+		Hostname po = hostnameMapper.selectByPrimaryKey(1);
+		if(po == null) {
+			return null;
+		} else {
+			return po.getHostname();
+		}
+	}
+	
+	@Override
+	public String findSeek() {
+		Hostname po = hostnameMapper.selectByPrimaryKey(2);
+		if(po == null) {
+			return null;
+		} else {
+			return po.getHostname();
+		}
+	}
+	
+	@Override
+	public String find3310() {
+		Hostname po = hostnameMapper.selectByPrimaryKey(3);
+		if(po == null) {
+			return null;
+		} else {
+			return po.getHostname();
+		}
+	}
 }

@@ -41,16 +41,16 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 
 		String envName = constantService.getValByName(SystemConstantStore.envName, true);
 		
-		if(!"dev".equals(envName)) {
-			if(hostnameType == null) {
-				view.setViewName(BaseViewConstant.empty);
-				return view;
+		if (hostnameType == null) {
+			if(!"dev".equals(envName)) {
+				if(hostnameType == null) {
+					view.setViewName(BaseViewConstant.empty);
+					return view;
+				}
+			} else {
+				view = buildHomeViewForEA();
 			}
 		} else {
-			view = buildHomeViewForEA();
-		}
-		
-		if (hostnameType != null) {
 			if (HostnameType.ea.equals(hostnameType)) {
 				view = buildHomeViewForEA();
 			} else if (HostnameType.seek.equals(hostnameType)) {

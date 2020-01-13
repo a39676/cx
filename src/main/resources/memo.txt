@@ -1,5 +1,3 @@
-atDemo 仍有访问次数统计. headImg 未统一为 forSale
-
 CREATE TABLE `duralbe_recorder` (
 id bigint not null,
    `trading_id` bigint default null,

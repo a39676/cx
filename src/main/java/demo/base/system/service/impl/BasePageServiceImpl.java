@@ -22,6 +22,8 @@ import demo.baseCommon.service.CommonService;
 @Service
 public class BasePageServiceImpl extends CommonService implements BasePageService {
 
+	private static String atDemoHeadImg = "/static_resources/cleanBlog/img/post-sample-image.jpg";
+	
 	@Autowired
 	private HostnameService hostnameService;
 
@@ -89,7 +91,7 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 		
 		view.setViewName(BlogViewConstant.home);
 		view.addObject("title", constantService.getValByName(SystemConstantStore.seekWebSiteTitle));
-		view.addObject("headerImg", "/static_resources/cleanBlog/img/post-sample-image.jpg");
+		view.addObject("headerImg", atDemoHeadImg);
 		view.addObject("subheading", "Bugs forced the development in a certain sense");
 		
 		return view;
@@ -106,7 +108,7 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 				v.addObject("headerImg", "/static_resources/cleanBlog/img/nature-4607496_1920.jpg");
 			} else if (HostnameType.seek.equals(hostnameType)) {
 				v.addObject("email", constantService.getValByName(SystemConstantStore.emailc));
-				v.addObject("headerImg", "/static_resources/cleanBlog/img/post-sample-image.jpg");
+				v.addObject("headerImg", atDemoHeadImg);
 			}
 		}
 

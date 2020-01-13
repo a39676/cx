@@ -18,7 +18,7 @@
   <!-- 
   <header class="masthead" style="background-image: url('/static_resources/cleanBlog/img/fog-4597348_1920.jpg')">
   -->
-  <header class="masthead" style="background-image: url('/static_resources/cleanBlog/img/nature-4607496_1920.jpg')"> 
+  <header class="masthead" style="background-image: url('/static_resources/cleanBlog/img/post-sample-image.jpg')"> 
     <div class="overlay"></div>
     <div class="container">
       <div class="row">

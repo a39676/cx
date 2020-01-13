@@ -66,8 +66,6 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 		ModelAndView v = new ModelAndView("ATDemoJSP/atDemoIndex");
 		v.addObject("title", "自动化测试");
 		String dateNow = localDateTimeHandler.dateToStr(LocalDateTime.now(), DateTimeUtilCommon.normalDateFormat);
-		Long visitCount = visitDataService.getVisitCount();
-		v.addObject("visitCount", visitCount);
 		v.addObject("createEndTime", dateNow);
 		v.addObject("runTimeEndTime", dateNow);
 		if (baseUtilCustom.hasAdminRole()) {

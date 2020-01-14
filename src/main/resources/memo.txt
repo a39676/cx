@@ -1,6 +1,7 @@
 article 置顶相关逻辑需修缮
 	频道ID过长, 提交置顶时精度丢失
-	出现置顶文章后, 其他文章排序异常
+	出现置顶文章后, 其他文章排序异常 ----> 页面 end time 问题
+		考虑改造列表接口, 不再区分isHot
 
 调整频道管理页面  
 CREATE TABLE `duralbe_recorder` (

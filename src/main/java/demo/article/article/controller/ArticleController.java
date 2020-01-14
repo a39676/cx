@@ -26,11 +26,11 @@ import demo.article.article.pojo.constant.ArticleUrlConstant;
 import demo.article.article.pojo.constant.ArticleViewConstant;
 import demo.article.article.pojo.dto.ArticleFeedbackDTO;
 import demo.article.article.pojo.dto.EditArticleLongDTO;
+import demo.article.article.pojo.dto.FindArticleLongSummaryListDTO;
 import demo.article.article.pojo.dto.ReadyToEditArticleLongDTO;
 import demo.article.article.pojo.param.controllerParam.CreateArticleParam;
 import demo.article.article.pojo.param.controllerParam.CreatingArticleParam;
 import demo.article.article.pojo.param.controllerParam.FindArticleLongByArticleSummaryPrivateKeyDTO;
-import demo.article.article.pojo.param.controllerParam.FindArticleLongSummaryListControllerParam;
 import demo.article.article.pojo.param.controllerParam.InsertArticleLongEvaluationParam;
 import demo.article.article.pojo.param.controllerParam.ReviewArticleLongParam;
 import demo.article.article.pojo.result.ArticleBurnResult;
@@ -136,7 +136,7 @@ public class ArticleController extends CommonController {
 	}
 	
 	@PostMapping(value = ArticleUrlConstant.articleLongSummaryListByChannel)
-	public void articleLongSummaryListByChannel(@RequestBody FindArticleLongSummaryListControllerParam param, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void articleLongSummaryListByChannel(@RequestBody FindArticleLongSummaryListDTO param, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		FindArticleLongSummaryListResultV3 result = null;
 		if(param.getIsHot()) {
 			result = summaryService.articleLongSummaryHotListByChannelIdV3(param, request);

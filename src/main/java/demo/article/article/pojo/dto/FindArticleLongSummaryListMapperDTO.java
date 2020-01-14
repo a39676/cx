@@ -1,10 +1,10 @@
-package demo.article.article.pojo.param.mapperParam;
+package demo.article.article.pojo.dto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FindArticleLongSummaryListMapperParam {
+public class FindArticleLongSummaryListMapperDTO {
 
 	private String title;
 	private Long userId;

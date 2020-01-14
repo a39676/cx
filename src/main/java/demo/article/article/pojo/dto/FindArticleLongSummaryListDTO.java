@@ -1,4 +1,4 @@
-package demo.article.article.pojo.param.controllerParam;
+package demo.article.article.pojo.dto;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +12,7 @@ import io.swagger.annotations.ApiModelProperty;
 import toolPack.dateTimeHandle.DateHandler;
 
 @ApiModel(value = "查询文章缩写标题参数", description = "")
-public class FindArticleLongSummaryListControllerParam {
+public class FindArticleLongSummaryListDTO {
 
 	@ApiModelProperty(value = "频道名")
 	private String articleChannelName;

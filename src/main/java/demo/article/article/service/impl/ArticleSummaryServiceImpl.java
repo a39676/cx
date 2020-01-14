@@ -24,9 +24,9 @@ import org.springframework.stereotype.Service;
 import demo.article.article.mapper.ArticleLongSummaryMapper;
 import demo.article.article.pojo.bo.ArticleLongSummaryBO;
 import demo.article.article.pojo.constant.ArticleConstant;
-import demo.article.article.pojo.param.controllerParam.FindArticleLongSummaryListControllerParam;
+import demo.article.article.pojo.dto.FindArticleLongSummaryListDTO;
+import demo.article.article.pojo.dto.FindArticleLongSummaryListMapperDTO;
 import demo.article.article.pojo.param.mapperParam.FindArticleHotSummaryListMapperParam;
-import demo.article.article.pojo.param.mapperParam.FindArticleLongSummaryListMapperParam;
 import demo.article.article.pojo.po.ArticleLongSummary;
 import demo.article.article.pojo.po.ArticleSummaryVCode;
 import demo.article.article.pojo.po.ArticleViewCount;
@@ -101,8 +101,8 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		return boList;
 	}
 	
-	private FindArticleLongSummaryListMapperParam buildFindArticleLongSummaryListMapperParam(FindArticleLongSummaryListControllerParam cp, HttpServletRequest request) {
-		FindArticleLongSummaryListMapperParam mp = new FindArticleLongSummaryListMapperParam();
+	private FindArticleLongSummaryListMapperDTO buildFindArticleLongSummaryListMapperDTO(FindArticleLongSummaryListDTO cp, HttpServletRequest request) {
+		FindArticleLongSummaryListMapperDTO mp = new FindArticleLongSummaryListMapperDTO();
 		
 		if(StringUtils.isNotBlank(cp.getTitle())) {
 			GetArticleChannelsResult getChannelResult = channelService.getArticleChannelsDynamic(request);
@@ -271,35 +271,35 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		return outputList;
 	}
 
-	private List<ArticleLongSummaryBO> findArticleLongSummaryList(FindArticleLongSummaryListMapperParam param) {
+	private List<ArticleLongSummaryBO> findArticleLongSummaryList(FindArticleLongSummaryListMapperDTO dto) {
 
-		if (param.getStartTime() == null && param.getEndTime() == null) {
-			param.setEndTime(LocalDateTime.now());
+		if (dto.getStartTime() == null && dto.getEndTime() == null) {
+			dto.setEndTime(LocalDateTime.now());
 		}
 
-		if (param.getStartTime() != null && param.getEndTime() != null
-				&& (param.getStartTime().isAfter(param.getEndTime())
-						|| param.getStartTime().equals(param.getEndTime()))) {
+		if (dto.getStartTime() != null && dto.getEndTime() != null
+				&& (dto.getStartTime().isAfter(dto.getEndTime())
+						|| dto.getStartTime().equals(dto.getEndTime()))) {
 			return new ArrayList<ArticleLongSummaryBO>();
 		}
 
-		if (param.getChannelIdList() == null || param.getChannelIdList().size() < 1) {
+		if (dto.getChannelIdList() == null || dto.getChannelIdList().size() < 1) {
 			return new ArrayList<ArticleLongSummaryBO>();
 		}
 
-		if (param.getLimit() != null && param.getLimit() > ArticleConstant.maxPageSize) {
-			param.setLimit(ArticleConstant.defaultPageSize);
+		if (dto.getLimit() != null && dto.getLimit() > ArticleConstant.maxPageSize) {
+			dto.setLimit(ArticleConstant.defaultPageSize);
 		}
-		Long userId = param.getUserId();
-		param.setUserId(null);
+		Long userId = dto.getUserId();
+		dto.setUserId(null);
 		
-		List<ArticleLongSummaryBO> boList = articleLongSummaryMapper.findArticleLongSummaryList(param);
-		param.setUserId(userId);
+		List<ArticleLongSummaryBO> boList = articleLongSummaryMapper.findArticleLongSummaryList(dto);
+		dto.setUserId(userId);
 		return boList;
 	}
 
 	@Override
-	public FindArticleLongSummaryListResultV3 articleLongSummaryListByChannelIdV3(FindArticleLongSummaryListControllerParam controllerParam, HttpServletRequest request) {
+	public FindArticleLongSummaryListResultV3 articleLongSummaryListByChannelIdV3(FindArticleLongSummaryListDTO dto, HttpServletRequest request) {
 		/*
 		 * 此处为非置顶部分
 		 * 应该将置顶/非置顶文章分开处理
@@ -308,35 +308,35 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		 */
 		FindArticleLongSummaryListResultV3 result = new FindArticleLongSummaryListResultV3();
 
-		setFindArticleLongSummaryListParam(controllerParam, request);
+		setFindArticleLongSummaryListParam(dto, request);
 		
-		if(controllerParam.getEndTime() != null) {
-			controllerParam.setEndTime(controllerParam.getEndTime().minusSeconds(1L));
+		if(dto.getEndTime() != null) {
+			dto.setEndTime(dto.getEndTime().minusSeconds(1L));
 		}
 		
 		/* 置限制只可浏览某时点之后的文章 */
-		if(!controllerParam.getHasAdminRole()) {
+		if(!dto.getHasAdminRole()) {
 			String normalUserMaxReadingMonth = constantService.getValByName(SystemConstantStore.normalUserMaxReadingMonth);
 			int maxReadingMonth = 1;
 			if(numberUtil.matchInteger(normalUserMaxReadingMonth)) {
 				maxReadingMonth = Integer.parseInt(normalUserMaxReadingMonth);
 			}
 			LocalDateTime earliestStartTime = LocalDateTime.now().minusMonths(maxReadingMonth);
-			if(controllerParam.getStartTime() == null || controllerParam.getStartTime().isBefore(earliestStartTime)) {
-				controllerParam.setStartTime(earliestStartTime);
+			if(dto.getStartTime() == null || dto.getStartTime().isBefore(earliestStartTime)) {
+				dto.setStartTime(earliestStartTime);
 			}
 		}
 		
-		Long channelId = controllerParam.getArticleChannelId();
-		if(channelId == null && StringUtils.isBlank(controllerParam.getTitle())) {
+		Long channelId = dto.getArticleChannelId();
+		if(channelId == null && StringUtils.isBlank(dto.getTitle())) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		
 		result.setChannelId(channelId);
 		
-		FindArticleLongSummaryListMapperParam findSummaryBOListParam = buildFindArticleLongSummaryListMapperParam(controllerParam, request);
-		List<ArticleLongSummaryBO> summaryBOList = findArticleLongSummaryList(findSummaryBOListParam);
+		FindArticleLongSummaryListMapperDTO findSummaryBOListDTO = buildFindArticleLongSummaryListMapperDTO(dto, request);
+		List<ArticleLongSummaryBO> summaryBOList = findArticleLongSummaryList(findSummaryBOListDTO);
 		
 		List<Long> articleIdList = new ArrayList<Long>();
 		List<Long> articleHasCommentNotReviewIdList = null;
@@ -344,7 +344,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		List<ArticleCommentCountByArticleIdBO> commentCountList = articleCommentController.findCommentCountByArticleId(articleIdList);
 	
 		List<ArticleViewCount> viewCountList = articleViewService.findArticleViewCountByArticleId(articleIdList);
-		if(controllerParam.getHasAdminRole() && articleIdList.size() > 0) {
+		if(dto.getHasAdminRole() && articleIdList.size() > 0) {
 			articleHasCommentNotReviewIdList = articleCommentAdminController.findArticleIdWithCommentWaitingForReview(articleIdList);
 		} else {
 			articleHasCommentNotReviewIdList = new ArrayList<Long>();
@@ -352,7 +352,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		
 		List<ArticleLongSummaryVOV3> summaryVOList 
 			= fillArticleSummaryContentV3(
-					controllerParam.getIsHot(), 
+					dto.getIsHot(), 
 					summaryBOList, 
 					articleHasCommentNotReviewIdList, 
 					commentCountList,
@@ -363,7 +363,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		return result;
 	}
 	
-	private void setFindArticleLongSummaryListParam(FindArticleLongSummaryListControllerParam controllerParam, HttpServletRequest request) {
+	private void setFindArticleLongSummaryListParam(FindArticleLongSummaryListDTO controllerParam, HttpServletRequest request) {
 		if(baseUtilCustom.isLoginUser()) {
 			controllerParam.setUserId(baseUtilCustom.getUserId());
 		}
@@ -385,7 +385,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 	}
 	
 	@Override
-	public FindArticleLongSummaryListResultV3 articleLongSummaryHotListByChannelIdV3(FindArticleLongSummaryListControllerParam controllerParam, HttpServletRequest request) {
+	public FindArticleLongSummaryListResultV3 articleLongSummaryHotListByChannelIdV3(FindArticleLongSummaryListDTO controllerParam, HttpServletRequest request) {
 		/*
 		 * 此处为置顶部分
 		 * 应该将置顶/非置顶文章分开处理 

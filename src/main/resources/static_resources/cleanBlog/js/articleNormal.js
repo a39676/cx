@@ -66,53 +66,7 @@ function buildSummaryLine(subArticleVO) {
   return newRow;
 }
 
-function loadArticleLongSummaryHot(channelId) {
-  var blogArea = $("#blogArea");
-  blogArea.attr("articleChannel", channelId);
-  if(blogArea.attr("loadingFlag") == "1") {
-    return;
-  }
-  $("#articleAreaLoadingImg").fadeIn(100);
-  blogArea.attr("loadingFlag", "1");
-  var jsonOutput = {
-    articleChannelId:channelId,
-    vcode:getUrlParameter('vcode'),
-    isHot:"true",
-  };
-
-  var url = "/article/articleLongSummaryListByChannel";
-  $.ajax({
-    type : "POST",  
-    async : true,
-    url : url,  
-    data: JSON.stringify(jsonOutput),
-    cache : false,
-    contentType: "application/json",
-    dataType: "json",
-    timeout:50000,  
-    beforeSend: function(xhr) {
-      xhr.setRequestHeader(csrfHeader, csrfToken);
-    },
-    success:function(datas){
-      // var json = JSON.parse(datas);
-      var articleLongSummaryVOList = datas.articleLongSummaryVOList;
-      var blogRowArea = $("#blogRowArea");
-      var newRow = "";
-      articleLongSummaryVOList.forEach(function(subArticleVO) {
-        newRow = buildSummaryLine(subArticleVO);
-        blogRowArea.append(newRow);
-        blogArea.attr("markTime", subArticleVO.createDateTimeString);
-      });
-    },  
-    error: function(datas) {  
-    }
-  }); 
-  $("#articleAreaLoadingImg").fadeOut(100);
-  setTimeout(function(){}, 1200);
-  blogArea.attr("loadingFlag", "0");
-};
-
-function loadArticleLongSummary(channelId) {
+function loadArticleLongSummary(channelId, withHot) {
   var blogArea = $("#blogArea");
   blogArea.attr("articleChannel", channelId);
   var markTime = blogArea.attr("markTime");
@@ -123,9 +77,14 @@ function loadArticleLongSummary(channelId) {
   blogArea.attr("loadingFlag", "1");
   var jsonOutput = {
     articleChannelId:channelId,
-    endTime:markTime,
-    isHot:"false",
+    isHot:withHot,
   };
+
+  if(withHot == "true") {
+    jsonOutput['vcode'] = getUrlParameter('vcode');
+  } else {
+    jsonOutput['endTime'] = markTime;
+  }
   var url = "/article/articleLongSummaryListByChannel";
   $.ajax({
     type : "POST",  
@@ -154,8 +113,9 @@ function loadArticleLongSummary(channelId) {
     }
   }); 
   $("#articleAreaLoadingImg").fadeOut(100);
-  setTimeout(function(){}, 800);
-  blogArea.attr("loadingFlag", "0");
+  setTimeout(function(){
+    blogArea.attr("loadingFlag", "0");
+  }, 500);
 };
 
 function loadArticleLongSummaryFirstPage(channelId) {
@@ -166,9 +126,8 @@ function loadArticleLongSummaryFirstPage(channelId) {
 
   var blogRowArea = $("#blogRowArea");
   blogRowArea.html("");
-  loadArticleLongSummaryHot(channelId);
   setTimeout(function(){
-    loadArticleLongSummary(channelId);
+    loadArticleLongSummary(channelId, "true");
     setTimeout(function(){
       $(".channelButton").prop('disabled', false);
       $("#searchByTitle").prop('disabled', false);
@@ -180,7 +139,7 @@ function loadArticleLongSummaryFirstPage(channelId) {
 $("#loadMoreButton").click(function () {
   var channelId = $("#blogArea").attr("articleChannel");
   if(channelId != null && channelId.length > 0) {
-    loadArticleLongSummary(channelId);
+    loadArticleLongSummary(channelId, "false");
   } else {
     searchArticleLongSummary(false);
   }

@@ -250,6 +250,9 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 					imgUrl = lines.get(i);
 				}
 			}
+			if(loadArticleHot) {
+				tmpVO.setIsHot(loadArticleHot);
+			}
 			tmpVO.setArticleTitle(summaryBO.getArticleTitle());
 			tmpVO.setNickName(summaryBO.getNickName());
 			tmpVO.setImgUrl(imgUrl);
@@ -306,7 +309,6 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		 * 有设置限制只可浏览某时点之后的文章
 		 */
 		FindArticleLongSummaryListResultV3 result = new FindArticleLongSummaryListResultV3();
-
 		setFindArticleLongSummaryListParam(dto, request);
 		
 		if(dto.getEndTime() != null) {
@@ -351,7 +353,8 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		
 		List<ArticleLongSummaryVOV3> summaryVOList 
 			= fillArticleSummaryContentV3(
-					dto.getIsHot(), 
+//					dto.getIsHot(),
+					false,
 					summaryBOList, 
 					articleHasCommentNotReviewIdList, 
 					commentCountList,

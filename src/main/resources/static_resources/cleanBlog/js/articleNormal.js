@@ -57,7 +57,13 @@ function buildSummaryLine(subArticleVO) {
   var newRow = " ";
   newRow += " <div class='post-preview'> ";
   newRow += " <a href='/article/readArticleLong?pk="+subArticleVO.privateKey+"' target='_blank'> ";
-  newRow += " <h2 class='post-title'>"+subArticleVO.articleTitle+"</h2> ";
+  newRow += " <h2 class='post-title'>";
+  if (subArticleVO.isHot) { 
+    newRow += " <span style='text-decoration-line: underline; color: rgb(255, 156, 0); background-color: rgb(255, 255, 255);'>"+subArticleVO.articleTitle+"</span> ";
+  } else {
+    newRow += subArticleVO.articleTitle;
+  }
+  newRow += " </h2> ";
   newRow += " <h3 class='post-subtitle'></h3> ";
   newRow += " </a> ";
   newRow += " <p class='post-meta'>Post by: "+subArticleVO.nickName+" on: "+subArticleVO.createDateString+", views: "+subArticleVO.viewCount+"</p> ";

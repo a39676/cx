@@ -20,6 +20,8 @@ public class ArticleLongSummaryVOV3 {
 	private Integer viewCount = 0;
 
 	private Integer commentCount = 0;
+	
+	private Boolean isHot = false;
 
 	public Integer getCommentCount() {
 		return commentCount;
@@ -100,6 +102,14 @@ public class ArticleLongSummaryVOV3 {
 	public void setCreateDateTimeString(String createDateTimeString) {
 		this.createDateTimeString = createDateTimeString;
 	}
+	
+	public Boolean getIsHot() {
+		return isHot;
+	}
+
+	public void setIsHot(Boolean isHot) {
+		this.isHot = isHot;
+	}
 
 	@Override
 	public String toString() {
@@ -107,7 +117,7 @@ public class ArticleLongSummaryVOV3 {
 				+ headIamgeUrl + ", imgUrl=" + imgUrl + ", createDateString=" + createDateString
 				+ ", createDateTimeString=" + createDateTimeString + ", privateKey=" + privateKey
 				+ ", hasCommentNotReview=" + hasCommentNotReview + ", viewCount=" + viewCount + ", commentCount="
-				+ commentCount + "]";
+				+ commentCount + ", isHot=" + isHot + "]";
 	}
 
 }

@@ -462,8 +462,8 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			List<ArticleLongSummaryVOV3> tmpVOList = hotResult.getArticleLongSummaryVOList();
 			if(tmpVOList != null && tmpVOList.size() > 0) {
 				tmpVOList.addAll(result.getArticleLongSummaryVOList());
+				result.setArticleLongSummaryVOList(tmpVOList);
 			}
-			result.setArticleLongSummaryVOList(tmpVOList);
 		}
 		return result;
 	}

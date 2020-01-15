@@ -19,25 +19,7 @@ public interface ArticleSummaryService {
 			throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
 			BadPaddingException, UnsupportedEncodingException, InvalidAlgorithmParameterException;
 	
-	
-	/**
-	 * 查找指定频道的文章摘要列表,直接投放页面显示.
-	 * 
-	 * @param param
-	 * @return
-	 */
-	FindArticleLongSummaryListResultV3 articleLongSummaryListByChannelIdV3(
-			FindArticleLongSummaryListDTO controllerParam, HttpServletRequest request);
-	/**
-	 * 查找指定频道的--置顶--文章摘要列表,直接投放页面显示.
-	 * 
-	 * @param param
-	 * @return
-	 */
-	FindArticleLongSummaryListResultV3 articleLongSummaryHotListByChannelIdV3(
-			FindArticleLongSummaryListDTO controllerParam, HttpServletRequest request);
-
-
-
+	FindArticleLongSummaryListResultV3 summaryListByChannelIdV4(FindArticleLongSummaryListDTO param,
+			HttpServletRequest request);
 
 }

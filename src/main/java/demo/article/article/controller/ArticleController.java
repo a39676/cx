@@ -136,14 +136,9 @@ public class ArticleController extends CommonController {
 	}
 	
 	@PostMapping(value = ArticleUrlConstant.articleLongSummaryListByChannel)
-	public void articleLongSummaryListByChannel(@RequestBody FindArticleLongSummaryListDTO param, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		FindArticleLongSummaryListResultV3 result = null;
-		if(param.getIsHot()) {
-			result = summaryService.articleLongSummaryHotListByChannelIdV3(param, request);
-		} else {
-			result = summaryService.articleLongSummaryListByChannelIdV3(param, request);
-		}
-		outputJson(response, JSONObject.fromObject(result));
+	@ResponseBody
+	public FindArticleLongSummaryListResultV3 articleLongSummaryListByChannel(@RequestBody FindArticleLongSummaryListDTO param, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		return summaryService.summaryListByChannelIdV4(param, request);
 	}
 	
 	@GetMapping(value = ArticleUrlConstant.readArticleLong)

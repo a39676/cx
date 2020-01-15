@@ -298,8 +298,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		return boList;
 	}
 
-	@Override
-	public FindArticleLongSummaryListResultV3 articleLongSummaryListByChannelIdV3(FindArticleLongSummaryListDTO dto, HttpServletRequest request) {
+	private FindArticleLongSummaryListResultV3 articleLongSummaryListByChannelIdV3(FindArticleLongSummaryListDTO dto, HttpServletRequest request) {
 		/*
 		 * 此处为非置顶部分
 		 * 应该将置顶/非置顶文章分开处理
@@ -384,8 +383,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		}
 	}
 	
-	@Override
-	public FindArticleLongSummaryListResultV3 articleLongSummaryHotListByChannelIdV3(FindArticleLongSummaryListDTO controllerParam, HttpServletRequest request) {
+	private FindArticleLongSummaryListResultV3 articleLongSummaryHotListByChannelIdV3(FindArticleLongSummaryListDTO controllerParam, HttpServletRequest request) {
 		/*
 		 * 此处为置顶部分
 		 * 应该将置顶/非置顶文章分开处理 
@@ -456,4 +454,17 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		return result;
 	}
 	
+	@Override
+	public FindArticleLongSummaryListResultV3 summaryListByChannelIdV4(FindArticleLongSummaryListDTO param, HttpServletRequest request) {
+		FindArticleLongSummaryListResultV3 result = articleLongSummaryListByChannelIdV3(param, request);
+		if(param.getIsHot()) {
+			FindArticleLongSummaryListResultV3 hotResult = articleLongSummaryHotListByChannelIdV3(param, request);
+			List<ArticleLongSummaryVOV3> tmpVOList = hotResult.getArticleLongSummaryVOList();
+			if(tmpVOList != null && tmpVOList.size() > 0) {
+				tmpVOList.addAll(result.getArticleLongSummaryVOList());
+			}
+			result.setArticleLongSummaryVOList(tmpVOList);
+		}
+		return result;
+	}
 }

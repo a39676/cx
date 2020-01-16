@@ -1,4 +1,4 @@
-
+将 article 的 pk 加密独立抽出, 可能交给 article burn 或其他模块
 
 调整频道管理页面  
 CREATE TABLE `duralbe_recorder` (

@@ -1,25 +1,58 @@
 package demo.article.article.pojo.result;
 
-import demo.article.article.pojo.po.ArticleBurn;
 import demo.baseCommon.pojo.result.CommonResultCX;
 
 public class CreatingBurnMessageResult extends CommonResultCX {
+	
+	private String readKey;
 
-	private ArticleBurn articleBurn;
+	private String burnKey;
+	
+	private String readUri;
 
-	public ArticleBurn getArticleBurn() {
-		return articleBurn;
+	private String burnUri;
+
+	public String getReadKey() {
+		return readKey;
 	}
 
-	public void setArticleBurn(ArticleBurn articleBurn) {
-		this.articleBurn = articleBurn;
+	public CreatingBurnMessageResult setReadKey(String readKey) {
+		this.readKey = readKey;
+		return this;
+	}
+
+	public String getBurnKey() {
+		return burnKey;
+	}
+
+	public CreatingBurnMessageResult setBurnKey(String burnKey) {
+		this.burnKey = burnKey;
+		return this;
+	}
+
+	public String getReadUri() {
+		return readUri;
+	}
+
+	public CreatingBurnMessageResult setReadUri(String readUri) {
+		this.readUri = readUri;
+		return this;
+	}
+
+	public String getBurnUri() {
+		return burnUri;
+	}
+
+	public CreatingBurnMessageResult setBurnUri(String burnUri) {
+		this.burnUri = burnUri;
+		return this;
 	}
 
 	@Override
 	public String toString() {
-		return "CreatingBurnMessageResult [articleBurn=" + articleBurn + ", getCode()=" + getCode() + ", getResult()="
-				+ getResult() + ", getMessage()=" + getMessage() + ", isSuccess()=" + isSuccess() + ", toString()="
-				+ super.toString() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + "]";
+		return "CreatingBurnMessageResult [readKey=" + readKey + ", burnKey=" + burnKey + ", readUri=" + readUri
+				+ ", burnUri=" + burnUri + "]";
 	}
+
 
 }

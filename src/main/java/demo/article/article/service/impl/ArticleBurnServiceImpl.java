@@ -3,13 +3,15 @@ package demo.article.article.service.impl;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+import org.owasp.html.PolicyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.article.article.mapper.ArticleBurnMapper;
 import demo.article.article.mapper.ArticleShortMapper;
+import demo.article.article.pojo.constant.ArticleUrlConstant;
+import demo.article.article.pojo.dto.CreatingBurnMessageDTO;
 import demo.article.article.pojo.po.ArticleBurn;
 import demo.article.article.pojo.po.ArticleShort;
 import demo.article.article.pojo.result.ArticleBurnResult;
@@ -17,11 +19,9 @@ import demo.article.article.pojo.result.CreatingBurnMessageResult;
 import demo.article.article.service.ArticleBurnService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.baseCommon.pojo.type.ResultTypeCX;
-import demo.baseCommon.service.CommonService;
-import net.sf.json.JSONObject;
 
 @Service
-public class ArticleBurnServiceImpl extends CommonService implements ArticleBurnService {
+public class ArticleBurnServiceImpl extends ArticleCommonService implements ArticleBurnService {
 
 	@Autowired
 	private ArticleShortMapper articleShortMapper;
@@ -29,51 +29,54 @@ public class ArticleBurnServiceImpl extends CommonService implements ArticleBurn
 	private ArticleBurnMapper articleBurnMapper;
 	
 	@Override
-	public CreatingBurnMessageResult creatingBurnMessage(JSONObject jsonInput) {
+	public CreatingBurnMessageResult creatingBurnMessage(CreatingBurnMessageDTO dto) {
 		ArticleShort p = new ArticleShort();
-		CreatingBurnMessageResult result = new CreatingBurnMessageResult();
-		if (!jsonInput.containsKey("content")) {
-			p.setContent("");
-		}
-		String contentAfterEscapeHtml = StringEscapeUtils.escapeHtml(jsonInput.getString("content"));
-		if (contentAfterEscapeHtml.length() > Integer
+		CreatingBurnMessageResult r = new CreatingBurnMessageResult();
+		PolicyFactory filter = textFilter.getFilter();
+		String contentAfterSanitize = filter.sanitize(dto.getContent());
+		if (contentAfterSanitize.length() > Integer
 				.parseInt(constantService.getValByName(SystemConstantStore.articleShortMaxLength))) {
-			result.fillWithResult(ResultTypeCX.errorParam);
-			return result;
+			r.fillWithResult(ResultTypeCX.errorParam);
+			return r;
 		}
-		p.setContent(contentAfterEscapeHtml);
+		p.setContent(contentAfterSanitize);
 		Long userId = baseUtilCustom.getUserId();
 		p.setUserId(userId);
 		Long newArticleId = snowFlake.getNextId();
 		p.setArticleId(newArticleId);
 		articleShortMapper.insertSelective(p);
 
-		ArticleBurn pb = new ArticleBurn();
-		pb.setArticleId(newArticleId);
-		pb.setBurnKey(UUID.randomUUID().toString().replaceAll("-", ""));
-		pb.setReadKey(UUID.randomUUID().toString().replaceAll("-", ""));
+		ArticleBurn po = new ArticleBurn();
+		po.setArticleId(newArticleId);
+		po.setBurnKey(UUID.randomUUID().toString().replaceAll("-", ""));
+		po.setReadKey(UUID.randomUUID().toString().replaceAll("-", ""));
 
-		if (numberUtil.matchInteger(jsonInput.getString("readLimit"))) {
-			if (jsonInput.getInt("readLimit") > 1) {
-				pb.setReadLimit(jsonInput.getInt("readLimit"));
+		if (dto.getReadLimit() != null) {
+			if (dto.getReadLimit() > 1) {
+				po.setReadLimit(dto.getReadLimit());
 			}
-			if (jsonInput.getInt("readLimit") > 10) { // 暂定最多阅读10次
-				pb.setReadLimit(10);
+			if (dto.getReadLimit() > 10) { // 暂定最多阅读10次
+				po.setReadLimit(10);
 			}
 		} else {
-			pb.setReadLimit(3);
+			po.setReadLimit(3);
 		}
 
 		LocalDateTime now = LocalDateTime.now();
 		int validMinute = 30;
-		if (jsonInput.containsKey("validTime") && numberUtil.matchInteger(jsonInput.getString("validTime")) && jsonInput.getInt("validTime") > 30
-				&& jsonInput.getInt("validTime") < 4320) {
-			validMinute = jsonInput.getInt("validTime");
+		if (dto.getValidTime() != null && dto.getValidTime() > 30 && dto.getValidTime() < 4320) {
+			validMinute = dto.getValidTime();
 		}
-		pb.setValidTime(dateHandler.localDateTimeToDate(now.plusMinutes(validMinute)));
-		articleBurnMapper.insertSelective(pb);
-		result.normalSuccess();
-		return result;
+		po.setValidTime(dateHandler.localDateTimeToDate(now.plusMinutes(validMinute)));
+		articleBurnMapper.insertSelective(po);
+		
+		r.setReadKey(po.getReadKey());
+		r.setBurnKey(po.getBurnKey());
+		r.setReadUri(ArticleUrlConstant.root + ArticleUrlConstant.readBurningMessage + "?readKey=" + r.getReadKey());
+		r.setBurnUri(ArticleUrlConstant.root + ArticleUrlConstant.burnMessage + "?burnKey=" + r.getBurnKey());
+		r.setIsSuccess();
+		
+		return r;
 	}
 
 	@Override

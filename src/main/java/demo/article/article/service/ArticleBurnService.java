@@ -1,12 +1,12 @@
 package demo.article.article.service;
 
+import demo.article.article.pojo.dto.CreatingBurnMessageDTO;
 import demo.article.article.pojo.result.ArticleBurnResult;
 import demo.article.article.pojo.result.CreatingBurnMessageResult;
-import net.sf.json.JSONObject;
 
 public interface ArticleBurnService {
 
-	CreatingBurnMessageResult creatingBurnMessage(JSONObject jsonInput);
+	CreatingBurnMessageResult creatingBurnMessage(CreatingBurnMessageDTO dto);
 
 	ArticleBurnResult findArticleByReadKey(String readKey);
 

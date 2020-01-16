@@ -126,11 +126,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 	
 	@Override
-	public String encryptId(Long id) {
-		return encryptArticleId(id, getCustomKey());
-	}
-	
-	@Override
 	public ModelAndView buildCreatingArticleLongView(CreatingArticleParam controllerParam) {
 		ModelAndView view = null;
 		controllerParam.setUserId(baseUtilCustom.getUserId());
@@ -287,7 +282,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 	
 	private void quickPass(Long articleId) {
-		String pk = encryptId(articleId);
+		String pk = encryptArticleId(articleId);
 		if(pk != null) {
 			ReviewArticleLongParam passArticleParam = new ReviewArticleLongParam();
 			passArticleParam.setPk(pk);

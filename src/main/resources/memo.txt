@@ -1,4 +1,6 @@
-将 article 的 pk 加密独立抽出, 可能交给 article burn 或其他模块
+将 article 的 pk 加密独立抽出, 
+ArticleBurnServiceImpl 
+阅读/焚毁 信息 需要升级, readKey / burnKey 现在改存数字ID, 表字段需改变
 
 调整频道管理页面  
 CREATE TABLE `duralbe_recorder` (

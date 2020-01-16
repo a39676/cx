@@ -56,6 +56,10 @@ public class ArticleCommonService extends CommonService{
 		}
 	}
 	
+	public String encryptArticleId(Long id) {
+		return encryptArticleId(id, getCustomKey());
+	}
+	
 	public String encryptArticleId(Long articleId, List<List<Character>> keys) {
 		if(articleId == null) {
 			return null;

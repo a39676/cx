@@ -57,8 +57,6 @@ public interface ArticleService {
 
 	Long decryptPrivateKey(String pk);
 
-	String encryptId(Long id);
-
 	/** 发布文章, 根据条件选择是普通单文章发布 or 批量发布 */
 	CommonResult crateArticleLongPrefixServcie(CreateArticleParam cp)
 			throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,

@@ -1,7 +1,6 @@
 package demo.article.article.service.impl;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 import org.owasp.html.PolicyFactory;
@@ -48,8 +47,10 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 
 		ArticleBurn po = new ArticleBurn();
 		po.setArticleId(newArticleId);
-		po.setBurnKey(UUID.randomUUID().toString().replaceAll("-", ""));
-		po.setReadKey(UUID.randomUUID().toString().replaceAll("-", ""));
+		Long readId = snowFlake.getNextId();
+		Long burnId = snowFlake.getNextId();
+		po.setReadKey(encryptArticleId(readId));
+		po.setBurnKey(encryptArticleId(burnId));
 
 		if (dto.getReadLimit() != null) {
 			if (dto.getReadLimit() > 1) {

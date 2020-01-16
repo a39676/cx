@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.baseCommon.pojo.param.controllerParam.InsertNewTransationParam;
+import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.TransationType;
 import demo.baseCommon.service.CommonService;
 import demo.config.costom_component.EncryptUtil;
@@ -31,6 +32,7 @@ import demo.finance.account_info.pojo.dto.controllerDTO.AccountInfoRegistDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.AccountNumberDuplicateCheckDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.FindAccountInfoByConditionDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.GetAccountListByConditionParam;
+import demo.finance.account_info.pojo.dto.controllerDTO.ModifyCreditsQuotaDTO;
 import demo.finance.account_info.pojo.dto.mapperDTO.GetAccountInfoWithConditionParam;
 import demo.finance.account_info.pojo.po.AccountInfo;
 import demo.finance.account_info.pojo.po.AccountInfoMarker;
@@ -617,28 +619,30 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	
 	@Override
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
-	public int modifyCreditsQuota(String newCreditsQuota, String accountNumber) {
-		if(!checkAccountNumberBelongUser(accountNumber) || !numberUtil.matchInteger(newCreditsQuota)){
-			return 0;
+	public CommonResultCX modifyCreditsQuota(ModifyCreditsQuotaDTO dto) {
+		CommonResultCX r = new CommonResultCX();
+		if(dto.getAccountNumber() == null || dto.getNewCreditsQuota() == null || !checkAccountNumberBelongUser(dto.getAccountNumber())){
+			return r;
 		}
 		
-		AccountInfo targetAccount = getAccountInfoByAccountNumber(accountNumber);
+		AccountInfo targetAccount = getAccountInfoByAccountNumber(dto.getAccountNumber());
 		if(!accountMarkerVerify(targetAccount)) {
-			return 0;
+			return r;
 		}
-		targetAccount.setCreditsQuota(new BigDecimal(newCreditsQuota).setScale(2, RoundingMode.HALF_UP));
+		targetAccount.setCreditsQuota(dto.getNewCreditsQuota().setScale(2, RoundingMode.HALF_UP));
 		
 		int modifyCount = accountInfoCustomMapper.modifyAccountInfo(targetAccount);
 		
 		if(modifyCount == 1) {
 			if(updateAccountInfoMarker(targetAccount)) {
-				return modifyCount;
+				r.setMessage("modify credits quota to: " + dto.getNewCreditsQuota());
+				r.setIsSuccess();
 			} else {
-				return 0;
+				return r;
 			}
 		}
 		
-		return modifyCount;
+		return r;
 	}
 	
 	@Override

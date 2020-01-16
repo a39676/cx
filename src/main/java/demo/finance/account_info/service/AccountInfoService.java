@@ -6,11 +6,13 @@ import java.util.List;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.baseCommon.pojo.param.controllerParam.InsertNewTransationParam;
+import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.finance.account_info.pojo.bo.AccountInfoWithBankInfo;
 import demo.finance.account_info.pojo.dto.controllerDTO.AccountInfoRegistDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.AccountNumberDuplicateCheckDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.FindAccountInfoByConditionDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.GetAccountListByConditionParam;
+import demo.finance.account_info.pojo.dto.controllerDTO.ModifyCreditsQuotaDTO;
 import demo.finance.account_info.pojo.po.AccountInfo;
 import demo.finance.account_info.pojo.result.AccountRegistResult;
 import demo.finance.account_info.pojo.result.GetAccountListResult;
@@ -47,8 +49,6 @@ public interface AccountInfoService {
 	List<AccountInfo> getAllAffiliatedAccountByAffiliationId(Long accountAffiliatioId);
 
 	HashMap<String, String> sumAffiliatedAccountInfo(List<AccountInfo> affiliatedAccounts);
-
-	int modifyCreditsQuota(String newCreditsQuota, String accountNumber);
 
 	int modifyTemproraryCreditsQuota(String newTemproraryCreditsQuota, String accountNumber);
 
@@ -88,5 +88,7 @@ public interface AccountInfoService {
 	List<AccountInfo> findCurrentAccountInfoListByCondition(FindAccountInfoByConditionDTO dto);
 
 	List<AccountInfo> findAccountsByCondition(FindAccountInfoByConditionDTO dto);
+
+	CommonResultCX modifyCreditsQuota(ModifyCreditsQuotaDTO dto);
 
 }

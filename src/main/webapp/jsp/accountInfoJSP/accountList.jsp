@@ -82,17 +82,18 @@
   $(document).ready(function() {
       
     $("label[name='accountNumber']").click(function(){
-      var $accountNumber = {
-        accountNumber:$(this).attr("accountNumber")
+
+      var jsonOutput = {
+        accountNumber:$(this).attr("accountNumber"),
       };
-      // console.log($accountNumber);
+      console.log(jsonOutput);
       
 
       $.ajax({               
         type: "POST", 
         async : true,
         url: "/accountInfo/accountDetail",   
-        data: JSON.stringify($accountNumber),
+        data: JSON.stringify(jsonOutput),
         // dataType: 'json',
         contentType: "application/json",
         timeout: 15000,
@@ -101,11 +102,8 @@
         },
         success:function(data){ 
           $("#subBody").html(data); 
-          
         }, 
         error:function(e){
-          // console.log("error");
-          // console.log(e);
         }
       });
     });

@@ -9,7 +9,7 @@
 <div><label>${account.accountAlias}</label></div>
 <div>
   <label name="accountNumber" accountNumber="${account.accountNumber}">
-    ${account.bankInfo.bankEnameShort} : ${account.accountNumber}
+    ${account.bankEnameShort} : ${account.accountNumber}
   </label>
 </div>
 <div><label>${account.vaildDate}</label></div>

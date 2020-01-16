@@ -1,9 +1,6 @@
 package demo.finance.bank.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,17 +17,16 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import demo.base.system.pojo.constant.BaseStatusCode;
 import demo.baseCommon.controller.CommonController;
 import demo.finance.bank.pojo.bo.BankInfoCustomBO;
 import demo.finance.bank.pojo.bo.BankInfoWithBankUnionBO;
 import demo.finance.bank.pojo.constant.BankUrl;
 import demo.finance.bank.pojo.constant.BankViews;
+import demo.finance.bank.pojo.dto.BankButtonListQueryDTO;
 import demo.finance.bank.pojo.param.controllerParam.FindBankInfoParam;
-import demo.finance.bank.pojo.po.BankInfo;
 import demo.finance.bank.pojo.result.FindBankInfoResult;
+import demo.finance.bank.pojo.result.SearchBankListByNameResult;
 import demo.finance.bank.service.BankInfoService;
-import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping(value = BankUrl.root)
@@ -70,26 +66,9 @@ public class BankInfoController extends CommonController {
 	}
 	
 	@PostMapping(value = BankUrl.bankButtonList)
-	public void getBankButton(
-			@RequestBody String jsonStrInput,
-			HttpServletResponse response) throws IOException {
-		
-		List<BankInfo> bankList;
-		if(jsonStrInput == null || !(jsonStrInput.length() > 0)) {
-			bankList = new ArrayList<BankInfo>();
-		} else {
-			bankList = bankInfoService.searchBankListByName(jsonStrInput);
-		}
-		
-		HashMap<String, Object> resultMap = new HashMap<String, Object>();
-		JSONObject jsonOutput = null;
-		
-		resultMap.put("result", BaseStatusCode.success);
-		resultMap.put("bankList", bankList);
-
-		jsonOutput = JSONObject.fromObject(resultMap);
-		
-		response.getWriter().println(jsonOutput);
+	@ResponseBody
+	public SearchBankListByNameResult getBankButton(@RequestBody BankButtonListQueryDTO dto) {
+		return bankInfoService.searchBankListByName(dto);
 	}
 	
 	@GetMapping(value = BankUrl.bankSelectorV4)

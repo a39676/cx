@@ -24,6 +24,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.baseCommon.controller.CommonController;
 import demo.baseCommon.pojo.param.controllerParam.InsertNewTransationParam;
+import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.config.costom_component.BaseUtilCustom;
 import demo.finance.account_holder.AccountHolderViewConstants;
 import demo.finance.account_holder.controller.AccountHolderController;
@@ -31,10 +32,12 @@ import demo.finance.account_holder.pojo.po.AccountHolder;
 import demo.finance.account_info.pojo.bo.AccountInfoWithBankInfo;
 import demo.finance.account_info.pojo.constant.AccountInfoViewConstants;
 import demo.finance.account_info.pojo.constant.AccountUrl;
+import demo.finance.account_info.pojo.dto.controllerDTO.AccountInfoDetailQueryDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.AccountInfoRegistDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.AccountNumberDuplicateCheckDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.FindAccountInfoByConditionDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.GetAccountListByConditionParam;
+import demo.finance.account_info.pojo.dto.controllerDTO.ModifyCreditsQuotaDTO;
 import demo.finance.account_info.pojo.po.AccountInfo;
 import demo.finance.account_info.pojo.result.AccountRegistResult;
 import demo.finance.account_info.pojo.result.GetAccountListResult;
@@ -68,16 +71,14 @@ public class AccountInfoController extends CommonController {
 	@Autowired
 	private AccountInfoService accountInfoService;
 	
-	@PostMapping(value = AccountUrl.accountDetail, produces = "text/html;charset=UTF-8")
-	public ModelAndView accountDetail(@RequestBody String data) {
+	@PostMapping(value = AccountUrl.accountDetail)
+	public ModelAndView accountDetail(@RequestBody AccountInfoDetailQueryDTO dto) {
 		ModelAndView view = new ModelAndView();
 
-		JSONObject jsonInput = JSONObject.fromObject(data);
-		
 		try{
 			view.setViewName(AccountInfoViewConstants.accountDetail);
 			
-			AccountInfoWithBankInfo accountInfoWithBankInfo = accountInfoService.getAccountInfoWithBankInfoByAccountNumber((String) jsonInput.get("accountNumber"));
+			AccountInfoWithBankInfo accountInfoWithBankInfo = accountInfoService.getAccountInfoWithBankInfoByAccountNumber(dto.getAccountNumber());
 			view.addObject("account", accountInfoWithBankInfo);
 			
 			List<AccountInfo> affiliationAccounts = accountInfoService.getAllAffiliatedAccountByAffiliationId(accountInfoWithBankInfo.getAccountId());
@@ -123,8 +124,6 @@ public class AccountInfoController extends CommonController {
 		
 		return view;
 	}
-	
-	
 	
 	@PostMapping(AccountUrl.accountList)
 	@ResponseBody
@@ -215,7 +214,6 @@ public class AccountInfoController extends CommonController {
 		return view;
 	}
 	
-	
 	@PostMapping(value= AccountUrl.accountRegist)
 	@ResponseBody
 	public AccountRegistResult accountRegistrationResult(@RequestBody AccountInfoRegistDTO dto){
@@ -279,36 +277,9 @@ public class AccountInfoController extends CommonController {
 	}
 	
 	@PostMapping(value = AccountUrl.modifyCreditsQuota)
-	public void modifyCreditsQuota(@RequestBody String data, HttpServletResponse response) throws IOException {
-		JSONObject jsonInput = null;
-		JSONObject jsonOutput = new JSONObject();
-		
-		String newCreditsQuota = null;
-		String accountNumber = null;
-		
-		try {
-			jsonInput = JSONObject.fromObject(data);
-			newCreditsQuota = jsonInput.getString("newCreditsQuota");
-			accountNumber = jsonInput.getString("accountNumber");
-		} catch (Exception e) {
-			jsonOutput.put("result", "-1");
-			jsonOutput.put("message", "something wrong");
-			response.getWriter().print(jsonOutput);
-			return ;
-		}
-		
-		int modifyCount = accountInfoService.modifyCreditsQuota(newCreditsQuota, accountNumber);
-		
-		if (modifyCount == 1) {
-			jsonOutput.put("result", "0");
-			jsonOutput.put("message", "modify credits quota to: " + newCreditsQuota);
-		} else {
-			jsonOutput.put("result", "-1");
-			jsonOutput.put("message", "something wrong");
-		}
-		
-		response.getWriter().print(jsonOutput);
-		return;
+	@ResponseBody
+	public CommonResultCX modifyCreditsQuota(@RequestBody ModifyCreditsQuotaDTO dto, HttpServletResponse response) throws IOException {
+		return accountInfoService.modifyCreditsQuota(dto);
 	}
 	
 	private List<AccountInfoWithBankInfo> getCurrentAccountInfoWithBankInfo() {

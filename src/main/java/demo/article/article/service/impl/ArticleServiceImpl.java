@@ -116,11 +116,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 	
 	@Override
-	public Long decryptPrivateKey(String pk) {
-		return decryptPrivateKey(pk);
-	}
-	
-	@Override
 	public ModelAndView buildCreatingArticleLongView(CreatingArticleParam controllerParam) {
 		ModelAndView view = null;
 		controllerParam.setUserId(baseUtilCustom.getUserId());

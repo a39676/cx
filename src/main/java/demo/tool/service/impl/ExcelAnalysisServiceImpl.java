@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import demo.article.article.service.ArticleService;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
@@ -44,9 +43,6 @@ public class ExcelAnalysisServiceImpl extends CommonService implements ExcelAnal
 	@Autowired
 	private ExcelAnalysisMapper excelAnalysisMapper;
 
-	@Autowired
-	private ArticleService articleService;
-	
 	@Autowired
 	private ChartController chartController;
 	@Autowired
@@ -145,7 +141,7 @@ public class ExcelAnalysisServiceImpl extends CommonService implements ExcelAnal
 			return view;
 		}
 
-		Long excelId = articleService.decryptPrivateKey(param.getPk());
+		Long excelId = decryptPrivateKey(param.getPk());
 		if (excelId == null) {
 			view.addObject("exception", ResultTypeCX.errorParam.getName());
 			return view;

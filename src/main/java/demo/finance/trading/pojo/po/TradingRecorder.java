@@ -96,10 +96,4 @@ public class TradingRecorder {
 		this.remark = remark == null ? null : remark.trim();
 	}
 
-	public String getInfos() {
-		return "" + tradingId + accountId 
-				+ accountNumber + amount + transationDate 
-				+ transationParties + transationAccountId + createTime + remark;
-	}
-
 }

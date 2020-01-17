@@ -3,9 +3,11 @@ package demo.finance.credit_bill.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import demo.baseCommon.service.CommonService;
 import demo.finance.account_info.pojo.bo.AccountInfoWithBankInfo;
 import demo.finance.account_info.pojo.po.AccountInfo;
 import demo.finance.credit_bill.mapper.BillInfoMapper;
@@ -17,19 +19,36 @@ import demo.finance.credit_bill.pojo.CreditBills;
 import demo.finance.credit_bill.service.CreditBillsService;
 
 @Service
-public class CreditBillsServiceImpl implements CreditBillsService{
+public class CreditBillsServiceImpl extends CommonService implements CreditBillsService{
 
 	@Autowired
-	CreditBillsMapper creditBillsMapper;
+	private CreditBillsMapper creditBillsMapper;
 	
 	@Autowired
-	BillInfoMapper billInfoMapper;
+	private BillInfoMapper billInfoMapper;
+	
+	
+	
+	private String getCreditBillInfos(CreditBills po) {
+		return "" + po.getBillId() + po.getAccountId() + po.getLastRefundDate() + po.getBillAmount() + po.getMinRefundAmount()
+				+ po.getCreateTime() + po.getRemark();
+	}
 	
 	public int insertCreditBill(CreditBills creditBill) {
-		
-		creditBill.setMarker();
+		String marker = encryptUtil.Sha1(encryptUtil.ToMd5String(getCreditBillInfos(creditBill)));
+		creditBill.setMarker(marker);
 		
 		return creditBillsMapper.insert(creditBill);
+	}
+	
+	public boolean checkRemark(CreditBills creditBill) {
+
+		if (StringUtils.isBlank(creditBill.getMarker())) {
+			return false;
+		}
+
+		return creditBill.getMarker()
+				.equals(encryptUtil.Sha1(encryptUtil.ToMd5String(getCreditBillInfos(creditBill))));
 	}
 	
 	@Override

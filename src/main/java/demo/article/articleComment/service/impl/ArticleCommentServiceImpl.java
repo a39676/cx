@@ -104,7 +104,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			return result;
 		}
 		
-		boolean bigUserFlag = itIsBigUser();
+		boolean bigUserFlag = isBigUser();
 		if(!bigUserFlag) {
 			PolicyFactory filter = textFilter.getFilter();
 			inputParam.setContent(filter.sanitize(inputParam.getContent()));
@@ -213,10 +213,6 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		String line = "";
 		for(int i = 0; i < strLines.size(); i++) {
 			line = strLines.get(i);
-			if(line.matches(articleService.getImageHttpUrlPattern())) {
-				line = "<a target=\"_blank\" href=\"" + line + "\">想看原图</a><br>"
-						+ "<img style=\"width: 150px; height: 150px;\" name=\"articleImage\" fold=\"0\" src=\"" + line + "\">";
-			} 
 			outputLines.add(line);
 		}
 		vo.setContentLines(outputLines);

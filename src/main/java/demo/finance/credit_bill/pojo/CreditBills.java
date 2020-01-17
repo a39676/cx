@@ -3,8 +3,6 @@ package demo.finance.credit_bill.pojo;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import demo.config.costom_component.EncryptUtil;
-
 public class CreditBills {
     private Integer billId;
 
@@ -23,16 +21,15 @@ public class CreditBills {
     private String marker;
     
     
+	public void setMarker(String marker) {
+		this.marker = marker;
+	}
+
 	@Override
 	public String toString() {
 		return "CreditBills [billId=" + billId + ", accountId=" + accountId + ", lastRefundDate=" + lastRefundDate
 				+ ", billAmount=" + billAmount + ", minRefundAmount=" + minRefundAmount + ", createTime=" + createTime
 				+ ", remark=" + remark + ", marker=" + marker + "]";
-	}
-
-	public String getInfos() {
-		return "" + billId + accountId + lastRefundDate + billAmount + minRefundAmount
-				+ createTime + remark;
 	}
 
 	public Integer getBillId() {
@@ -95,7 +92,4 @@ public class CreditBills {
         return marker;
     }
 
-    public void setMarker() {
-        this.marker = EncryptUtil.Sha1(EncryptUtil.ToMd5String(getInfos()));
-    }
 }

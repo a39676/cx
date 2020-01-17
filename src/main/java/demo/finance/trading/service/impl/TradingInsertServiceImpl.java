@@ -43,12 +43,22 @@ public class TradingInsertServiceImpl extends CommonService implements TradingIn
 		TradingRecorderMarker marker = new TradingRecorderMarker();
 		marker.setTradingId(tradingRecorder.getTradingId());
 		marker.setCreateTime(tradingRecorder.getCreateTime());
-		marker.setMarker(tradingRecorder.getInfos());
+		marker.setMarker(getTradingRecorderMarker(tradingRecorder));
 
 		if (tradingMarkerMapper.insert(marker) == 1) {
 			return true;
 		}
 		return false;
+	}
+	
+	private String getTradingRecorderMarker(TradingRecorder po) {
+		return encryptUtil.Sha1(encryptUtil.ToMd5String(getTradingRecorderInfos(po)));
+	}
+	
+	private String getTradingRecorderInfos(TradingRecorder po) {
+		return "" + po.getTradingId() + po.getAccountId() 
+				+ po.getAccountNumber() + po.getAmount() + po.getTransationDate() 
+				+ po.getTransationParties() + po.getTransationAccountId() + po.getCreateTime() + po.getRemark();
 	}
 
 	@Override

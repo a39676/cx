@@ -116,13 +116,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 	
 	@Override
-	public String getImageHttpUrlPattern() {
-		return imageHttpUrlPattern;
-	}
-
-	@Override
 	public Long decryptPrivateKey(String pk) {
-		return decryptArticlePrivateKey(pk);
+		return decryptPrivateKey(pk);
 	}
 	
 	@Override
@@ -271,7 +266,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return serviceResult;
 		}
 		Long userId = baseUtilCustom.getUserId();
-		if(itIsBigUser()) {
+		if(isBigUser()) {
 			cp.setQuickPass(true);
 		} else {
 			cp.setQuickPass(false);
@@ -282,7 +277,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 	
 	private void quickPass(Long articleId) {
-		String pk = encryptArticleId(articleId);
+		String pk = encryptId(articleId);
 		if(pk != null) {
 			ReviewArticleLongParam passArticleParam = new ReviewArticleLongParam();
 			passArticleParam.setPk(pk);
@@ -351,10 +346,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			firstLine = "";
 		}
 		CommonResultCX result = new CommonResultCX();
-		if(!loadCustomKey()) {
-			result.fillWithResult(ResultTypeCX.serviceError);
-			return result;
-		}
 		
 		String fileName = userId + "L" + UUID.randomUUID().toString().substring(0, 8) + ".txt";
 		String timeFolder = LocalDate.now().toString();
@@ -401,7 +392,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		FindArticleLongResult result = new FindArticleLongResult();
 		ArticleLongVO articleVO = null;
 		
-		Long articleId = decryptArticlePrivateKey(param.getPrivateKey());
+		Long articleId = decryptPrivateKey(param.getPrivateKey());
 		if(articleId == null) {
 			articleVO = new ArticleLongVO();
 			articleVO.setContentLines(ResultTypeCX.errorParam.getName());
@@ -463,7 +454,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return false;
 		}
 		
-		Long articleId = decryptArticlePrivateKey(privateKey);
+		Long articleId = decryptPrivateKey(privateKey);
 		if(articleId == null) {
 			return false;
 		}
@@ -518,7 +509,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return result;
 		} 
 		
-		Long articleId = decryptArticlePrivateKey(dto.getPk());
+		Long articleId = decryptPrivateKey(dto.getPk());
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;
@@ -572,7 +563,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return vo;
 		}
 		
-		Long articleId = decryptArticlePrivateKey(dto.getPrivateKey());
+		Long articleId = decryptPrivateKey(dto.getPrivateKey());
 		
 		if(articleId == null) {
 			vo = new ArticleLongVO();
@@ -619,7 +610,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return result;
 		}
 		
-		Long targetArticleId = decryptArticlePrivateKey(dto.getPk());
+		Long targetArticleId = decryptPrivateKey(dto.getPk());
 		
 		if(targetArticleId == null) {
 			result.failWithMessage("参数错误");
@@ -632,7 +623,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		param.setContent(dto.getContent());
 		param.setTitle(dto.getTitle());
 		param.setChannelId(dto.getChannelId());
-		if(itIsBigUser()) {
+		if(isBigUser()) {
 			param.setQuickPass(true);
 		}
 		
@@ -662,7 +653,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		result.setChannelId(channelId);
 		
 		String title = null;
-		if(itIsBigUser()) {
+		if(isBigUser()) {
 			title = controllerParam.getTitle();
 		} else {
 			PolicyFactory filter = textFilter.getFilter();

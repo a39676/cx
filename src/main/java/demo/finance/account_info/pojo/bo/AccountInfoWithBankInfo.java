@@ -35,16 +35,16 @@ public class AccountInfoWithBankInfo extends AccountInfo {
 		return "AccountInfoWithBankInfo [bankId=" + bankId + ", bankEname=" + bankEname + ", bankEnameShort="
 				+ bankEnameShort + ", bankChineseName=" + bankChineseName + ", bankChineseNameShort="
 				+ bankChineseNameShort + ", bankUnionId=" + bankUnionId + ", commonBank=" + commonBank
-				+ ", avaliableQuota=" + avaliableQuota + ", toString()=" + super.toString() + ", getInfos()="
-				+ getInfos() + ", getAccountId()=" + getAccountId() + ", getAccountHolderId()=" + getAccountHolderId()
-				+ ", getAccountNumber()=" + getAccountNumber() + ", getAccountAlias()=" + getAccountAlias()
-				+ ", getAccountType()=" + getAccountType() + ", getAccountAffiliation()=" + getAccountAffiliation()
-				+ ", getVaildDate()=" + getVaildDate() + ", getAccountBalance()=" + getAccountBalance()
-				+ ", getCreditsQuota()=" + getCreditsQuota() + ", getTemproraryCreditsQuota()="
-				+ getTemproraryCreditsQuota() + ", getTemproraryCreditsVaildDate()=" + getTemproraryCreditsVaildDate()
-				+ ", getRemark()=" + getRemark() + ", getIsDelete()=" + getIsDelete() + ", getCreateTime()="
-				+ getCreateTime() + ", getTotalCreditQuota()=" + getTotalCreditQuota() + ", getClass()=" + getClass()
-				+ ", hashCode()=" + hashCode() + "]";
+				+ ", avaliableQuota=" + avaliableQuota + ", getAccountId()=" + getAccountId()
+				+ ", getAccountHolderId()=" + getAccountHolderId() + ", getAccountNumber()=" + getAccountNumber()
+				+ ", getAccountAlias()=" + getAccountAlias() + ", getAccountType()=" + getAccountType()
+				+ ", getAccountAffiliation()=" + getAccountAffiliation() + ", getVaildDate()=" + getVaildDate()
+				+ ", getAccountBalance()=" + getAccountBalance() + ", getCreditsQuota()=" + getCreditsQuota()
+				+ ", getTemproraryCreditsQuota()=" + getTemproraryCreditsQuota() + ", getTemproraryCreditsVaildDate()="
+				+ getTemproraryCreditsVaildDate() + ", getRemark()=" + getRemark() + ", getIsDelete()=" + getIsDelete()
+				+ ", getCreateTime()=" + getCreateTime() + ", getTotalCreditQuota()=" + getTotalCreditQuota()
+				+ ", toString()=" + super.toString() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode()
+				+ "]";
 	}
 
 	public Long getBankId() {

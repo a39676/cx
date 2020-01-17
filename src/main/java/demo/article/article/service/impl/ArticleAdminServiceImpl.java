@@ -42,10 +42,6 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	@Override
 	public CommonResultCX batchUpdatePrivateKey(BatchUpdatePrimaryKeyParam param) {
 		CommonResultCX result = new CommonResultCX();
-		if(!loadCustomKey()) {
-			result.fillWithResult(ResultTypeCX.serviceError);
-			return result;
-		}
 		if (param.getStartTime() == null && param.getEndTime() == null) {
 			param.setEndTime(new Date());
 		}
@@ -66,9 +62,8 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		ArticleLongSummary tmpPo = null;
 		List<ArticleLongSummary> summarys = new ArrayList<ArticleLongSummary>();
 		String tmpPrivateKey = null;
-		List<List<Character>> keys = getCustomKey();
 		for(Long id : articleLongIds) {
-			tmpPrivateKey = encryptArticleId(id, keys);
+			tmpPrivateKey = encryptId(id);
 			if(tmpPrivateKey == null) {
 				continue;
 			}
@@ -111,7 +106,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 	private CommonResultCX passArticle(String privateKey) throws Exception {
 		CommonResultCX result = new CommonResultCX();
-		Long articleId = decryptArticlePrivateKey(privateKey);
+		Long articleId = decryptPrivateKey(privateKey);
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -153,7 +148,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	private CommonResultCX rejectArticle(String privateKey) throws Exception {
 		CommonResultCX result = new CommonResultCX();
 		
-		Long articleId = decryptArticlePrivateKey(privateKey);
+		Long articleId = decryptPrivateKey(privateKey);
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -195,7 +190,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	@Override
 	public CommonResultCX deleteArticle(String privateKey) throws Exception {
 		CommonResultCX result = new CommonResultCX();
-		Long articleId = decryptArticlePrivateKey(privateKey);
+		Long articleId = decryptPrivateKey(privateKey);
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -242,7 +237,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			return result;
 		}
 		
-		Long articleId = decryptArticlePrivateKey(param.getPk());
+		Long articleId = decryptPrivateKey(param.getPk());
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -277,7 +272,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			return result;
 		}
 		
-		Long articleId = decryptArticlePrivateKey(controllerParam.getPk());
+		Long articleId = decryptPrivateKey(controllerParam.getPk());
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;

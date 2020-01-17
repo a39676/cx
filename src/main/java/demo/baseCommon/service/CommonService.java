@@ -1,6 +1,7 @@
 package demo.baseCommon.service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,6 +18,7 @@ import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.config.costom_component.BaseUtilCustom;
+import demo.config.costom_component.EncryptUtil;
 import demo.config.costom_component.SnowFlake;
 import demo.tool.service.VisitDataService;
 import toolPack.dateTimeHandle.DateHandler;
@@ -26,6 +28,9 @@ import toolPack.numericHandel.NumericUtilCustom;
 public abstract class CommonService {
 	
 	protected final Logger log = LoggerFactory.getLogger(getClass());
+	
+	@Autowired
+	protected EncryptUtil encryptUtil;
 	
 	@Autowired
 	protected SnowFlake snowFlake;
@@ -164,4 +169,32 @@ public abstract class CommonService {
 		
 		return r;
 	}
+	
+	private List<List<Character>> getCustomKey() {
+		return constantService.getCustomKey();
+	}
+	
+	public String encryptId(Long id) {
+		return encryptId(id, getCustomKey());
+	}
+	
+	public String encryptId(Long articleId, List<List<Character>> keys) {
+		if(articleId == null) {
+			return null;
+		}
+		
+		if(keys == null || keys.size() < 1) {
+			return null;
+		}
+		return encryptUtil.customEncrypt(keys, articleId.toString());
+	}
+	
+	public Long decryptPrivateKey(String inputPk) {
+		String encryptId = encryptUtil.customDecrypt(getCustomKey(), inputPk);
+		if(encryptId == null || !numberUtil.matchInteger(encryptId)) {
+			return null;
+		}
+		return Long.parseLong(encryptId);
+	}
+	
 }

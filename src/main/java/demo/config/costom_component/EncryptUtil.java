@@ -18,14 +18,16 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
-public abstract class EncryptUtil {
+@Component
+public class EncryptUtil {
 	
-	public static String Sha1(String str) {
+	public String Sha1(String str) {
 		return DigestUtils.sha1Hex(str);
 	}
 	
-	public static byte[] ToMd5ByteArray(String str) {
+	public byte[] ToMd5ByteArray(String str) {
 		
 		try {
 			byte[] bytesOfMessage = str.getBytes("UTF-8");
@@ -37,7 +39,7 @@ public abstract class EncryptUtil {
 		}
 	}
 	
-	public static String ToMd5String(String str) { 
+	public String ToMd5String(String str) { 
 		if(ToMd5ByteArray(str) == null || ToMd5ByteArray(str).length == 0 ) {
 			return null;
 		}
@@ -49,7 +51,7 @@ public abstract class EncryptUtil {
 		}
 	}
 	
-	public static String aesEncrypt(String key, String initVector, String value) throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException, InvalidKeyException, InvalidAlgorithmParameterException {
+	public String aesEncrypt(String key, String initVector, String value) throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException, InvalidKeyException, InvalidAlgorithmParameterException {
 		IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
 		SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
 		
@@ -61,7 +63,7 @@ public abstract class EncryptUtil {
 		return Base64.getEncoder().encodeToString(encrypted);
 	}
 
-	public static String aesDecrypt(String key, String initVector, String encrypted) throws NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+	public String aesDecrypt(String key, String initVector, String encrypted) throws NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
 		IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
 		SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
 		
@@ -73,7 +75,7 @@ public abstract class EncryptUtil {
 		return new String(original);
 	}
 	
-	public static String customEncrypt(List<List<Character>> keys, String inputStr) {
+	public String customEncrypt(List<List<Character>> keys, String inputStr) {
 		StringBuffer builder = new StringBuffer();
 		int keyIndex = 0;
 		for(int i = 0; i < inputStr.length(); i++) {
@@ -95,7 +97,7 @@ public abstract class EncryptUtil {
 		return builder.toString();
 	}
 	
-	public static String customDecrypt(List<List<Character>> keys, String inputStr) {
+	public String customDecrypt(List<List<Character>> keys, String inputStr) {
 		if(keys == null || keys.size() < 1 || StringUtils.isBlank(inputStr) || inputStr.length() % 2 != 0) {
 			return null;
 		}
@@ -121,7 +123,7 @@ public abstract class EncryptUtil {
 		return resultBuilder.toString();
 	}
 	
-	private static boolean allInKeys(List<List<Character>> keys, String inputStr) {
+	private boolean allInKeys(List<List<Character>> keys, String inputStr) {
 		if(keys == null || keys.size() < 1 || StringUtils.isBlank(inputStr)) {
 			return false;
 		}

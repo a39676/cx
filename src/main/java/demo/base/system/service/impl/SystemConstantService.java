@@ -88,7 +88,23 @@ public class SystemConstantService extends CommonService {
 		redisTemplate.opsForValue().multiSet(values);
 	}
 	
-	public List<List<Character>> getCustomKeys() {
+	public List<List<Character>> getCustomKey() {
+		String sourceK = constantService.getValByName(SystemConstantStore.customKeys);
+		List<List<Character>> customKey = strToCustomKey(sourceK);
+		
+		if(!detectCustomKeyCorrect(customKey)) {
+			customKey = getCustomKeysFromDatabase();
+		} else {
+			return customKey;
+		}
+		
+		if(!detectCustomKeyCorrect(customKey)) {
+			return null;
+		}
+		return customKey;
+	}
+	
+	private List<List<Character>> getCustomKeysFromDatabase() {
 		List<String> constantNames = new ArrayList<String>();
 		constantNames.add(SystemConstantStore.ckey0);
 		constantNames.add(SystemConstantStore.ckey1);
@@ -117,6 +133,34 @@ public class SystemConstantService extends CommonService {
 		
 		return keys;
 	}
-
-
+	
+	private boolean detectCustomKeyCorrect(List<List<Character>> keys) {
+		if(keys.size() != 10) {
+			return false;
+		}
+		for(List<Character> k : keys) {
+			if(k.size() != 10) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	private List<List<Character>> strToCustomKey(String str) {
+		List<Character> tmpCL = null;
+		List<List<Character>> customKey = new ArrayList<List<Character>>();
+		
+		char[] keyCharAry = str.replaceAll("[^0-9A-Za-z_]", "").toCharArray();
+		
+		for(int i = 0; i < keyCharAry.length; i++) {
+			if(i % 10 == 0) {
+				tmpCL = new ArrayList<Character>();
+				customKey.add(tmpCL);
+			}
+			tmpCL.add(keyCharAry[i]);
+		}
+		
+		return customKey;
+	}
 }

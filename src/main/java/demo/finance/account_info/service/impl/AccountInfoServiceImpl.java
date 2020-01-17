@@ -20,7 +20,6 @@ import demo.baseCommon.pojo.param.controllerParam.InsertNewTransationParam;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.TransationType;
 import demo.baseCommon.service.CommonService;
-import demo.config.costom_component.EncryptUtil;
 import demo.finance.account_holder.controller.AccountHolderController;
 import demo.finance.account_holder.pojo.po.AccountHolder;
 import demo.finance.account_info.mapper.AccountInfoCustomMapper;
@@ -54,13 +53,11 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	
 	@Autowired
 	private AccountInfoCustomMapper accountInfoCustomMapper;
-	
 	@Autowired
 	private AccountInfoMarkerCustomMapper accountInfoMarkerCustomMapper;
 
 	@Autowired
 	private TradingController tradingController;
-	
 	@Autowired
 	private AccountHolderController accountHolderController;
 	
@@ -761,8 +758,16 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	
 	
 	private String createAccountInfoMarker(AccountInfo accountInfo) {
-        return EncryptUtil.Sha1(EncryptUtil.Sha1(EncryptUtil.ToMd5String(accountInfo.getInfos())));
+        return encryptUtil.Sha1(encryptUtil.Sha1(encryptUtil.ToMd5String(getAccountInfoInfos(accountInfo))));
     }
+	
+	private String getAccountInfoInfos(AccountInfo po) {
+		return "" + po.getAccountId() + po.getAccountHolderId() 
+				+ po.getAccountNumber() + po.getAccountAlias() + po.getAccountType() + po.getAccountAffiliation()
+				+ po.getVaildDate() + po.getBankId() + po.getBankUnionId()
+				+ po.getAccountBalance() + po.getCreditsQuota() + po.getTemproraryCreditsQuota() + po.getTemproraryCreditsVaildDate() 
+				+ po.getRemark() + po.getIsDelete() + po.getCreateTime();
+	}
     
     private boolean checkMarker(AccountInfoMarker marker, AccountInfo accountInfo) {
         

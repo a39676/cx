@@ -25,8 +25,6 @@ import demo.baseCommon.pojo.result.CommonResultCX;
 
 public interface ArticleService {
 
-	String getImageHttpUrlPattern();
-
 	/** 返回创建文章编辑页面 */
 	ModelAndView buildCreatingArticleLongView(CreatingArticleParam controllerParam);
 

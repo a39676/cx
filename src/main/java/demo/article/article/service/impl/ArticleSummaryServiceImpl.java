@@ -76,8 +76,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 	
 	@Override
 	public int insertArticleLongSummary(Long userId, Long articleId, String title, String finalFilePath) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException, InvalidAlgorithmParameterException {
-		List<List<Character>> keys = getCustomKey();
-		String privateKey = encryptArticleId(articleId, keys);
+		String privateKey = encryptId(articleId);
 		if(privateKey == null) {
 			return 0;
 		}
@@ -184,16 +183,9 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			strContent = ioUtil.getStringFromFile(summaryBO.getPath());
 			voContentBuilder.append(strContent);
 			List<String> lines = Arrays.asList(strContent.split("\n"));
-			List<String> imgUrls = new ArrayList<String>();
-			lines.stream().forEach(l -> {
-				if(l.matches(imageHttpUrlPattern)) {
-					imgUrls.add(l);
-				}
-			});
 			tmpVO.setArticleTitle(summaryBO.getArticleTitle());
 			tmpVO.setNickName(summaryBO.getNickName());
 			tmpVO.setFirstLine(lines.get(0));
-			tmpVO.setImgUrls(imgUrls);
 			tmpVO.setCreateDateString(sdf.format(summaryBO.getCreateTime()));
 			tmpVO.setCreateDateDescription(createDateDescription(summaryBO.getCreateTime()));
 			tmpVO.setPrivateKey(summaryBO.getPrivateKey());
@@ -243,19 +235,11 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			tmpVO = new ArticleLongSummaryVOV3();
 			strContent = ioUtil.getStringFromFile(summaryBO.getPath());
 			voContentBuilder.append(strContent);
-			List<String> lines = Arrays.asList(strContent.split("\n"));
-			String imgUrl = "";
-			for(int i = 0; i < lines.size() && imgUrl == null; i++) {
-				if(lines.get(i).matches(imageHttpUrlPattern)) {
-					imgUrl = lines.get(i);
-				}
-			}
 			if(loadArticleHot) {
 				tmpVO.setIsHot(loadArticleHot);
 			}
 			tmpVO.setArticleTitle(summaryBO.getArticleTitle());
 			tmpVO.setNickName(summaryBO.getNickName());
-			tmpVO.setImgUrl(imgUrl);
 			tmpVO.setCreateDateString(sdfDate.format(summaryBO.getCreateTime()));
 			tmpVO.setCreateDateTimeString(sdfDateTime.format(summaryBO.getCreateTime()));
 			tmpVO.setPrivateKey(summaryBO.getPrivateKey());

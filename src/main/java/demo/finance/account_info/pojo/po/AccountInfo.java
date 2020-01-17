@@ -40,17 +40,6 @@ public class AccountInfo implements Serializable{
 
     private Date createTime;
     
-    
-
-    
-    public String getInfos() {
-		return "" + accountId + accountHolderId 
-				+ accountNumber + accountAlias + accountType + accountAffiliation
-				+ vaildDate + bankId + bankUnionId
-				+ accountBalance + creditsQuota + temproraryCreditsQuota + temproraryCreditsVaildDate 
-				+ remark + isDelete + createTime;
-	}
-
 	public Long getAccountId() {
         return accountId;
     }

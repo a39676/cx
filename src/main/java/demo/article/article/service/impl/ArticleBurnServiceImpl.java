@@ -49,8 +49,8 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		po.setArticleId(newArticleId);
 		Long readId = snowFlake.getNextId();
 		Long burnId = snowFlake.getNextId();
-		po.setReadKey(encryptArticleId(readId));
-		po.setBurnKey(encryptArticleId(burnId));
+		po.setReadKey(encryptId(readId));
+		po.setBurnKey(encryptId(burnId));
 
 		if (dto.getReadLimit() != null) {
 			if (dto.getReadLimit() > 1) {

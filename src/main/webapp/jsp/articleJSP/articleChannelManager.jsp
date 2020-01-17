@@ -22,6 +22,11 @@
       <table class="table table-striped">
         <tbody>
           <sec:authorize access="hasRole('ROLE_ADMIN')">
+              <tr>
+                <td>
+                  <span class="btn btn-sm btn-warning" id="showAllChannelKeyHostnameTable" showFlag="0">展开/折叠所有域名挂靠</span>
+                </td>
+              </tr>
             <c:forEach items="${channelList}" var="channel">
               <tr>
                 <td>
@@ -49,7 +54,18 @@
                   <input type="text" name="channelNewName" style="width: 100px;" channelId="${channel.channelId}" value="${channel.channelName}">
                 </td>
                 <td>
-                  <table class="table table-striped">
+                  <button class="btn btn-sm btn-warning" name="modifyChannel" channelId="${channel.channelId}">modify</button>
+                </td>
+                <td>
+                  <textarea id="${channel.channelId}_editResult"></textarea>
+                </td>
+                <td>
+                  <span class="channelKeyHostnameBtn btn btn-sm btn-warning" channelId="${channel.channelId}">域名挂靠</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <table class="table table-striped channelKeyHostnameTable" channelId="${channel.channelId}" style="display: none;">
                     <c:forEach items="${channel.channelIdKeyHostnameId}" var="channelKeyHostnameIdDTO">
                       <tr>
                         <td>
@@ -102,14 +118,11 @@
                           </div>
                         </td>
                         <td>
-                          <textarea id="${channel.channelId}_${channelKeyHostnameIdDTO.hostnameId}_editResult" ></textarea>
+                          <textarea id="${channel.channelId}_${channelKeyHostnameIdDTO.hostnameId}_editResult"></textarea>
                         </td>
                       </tr>
                     </c:forEach>
                   </table>
-                </td>
-                <td>
-                  <button class="btn btn-sm btn-warning" name="modifyChannel" channelId="${channel.channelId}">modify</button>
                 </td>
               </tr>
             </c:forEach>
@@ -181,7 +194,7 @@
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          $("#resultSpan").text("" + datas.code + " : " + datas.message + " : " + new Date().toLocaleString());
+          $("#"+channelId+"_editResult").val("" + datas.code + ":" + datas.message + ":" + new Date().toLocaleString());
         },  
         error: function(datas) {
   
@@ -258,7 +271,7 @@
         },
         success:function(datas){
           JSON.stringify(datas);
-          $("#resultSpan").text("" + datas.code + " : " + datas.message + " : " + new Date().toLocaleString());
+          $("#"+channelId+"_editResult").val("" + datas.code + ":" + datas.message + ":" + new Date().toLocaleString());
         },  
         error: function(datas) {
   
@@ -304,6 +317,28 @@
       });  
     }
 
+    $(".channelKeyHostnameBtn").click(function () {
+      var channelId = $(this).attr("channelId");
+      var thisTable = $(".channelKeyHostnameTable[channelId='"+channelId+"']");
+      if(!thisTable.is(':visible')) {
+        thisTable.show();
+      } else {
+        thisTable.hide();
+      }
+    });
+
+    $("#showAllChannelKeyHostnameTable").click(function () {
+      var showFlag = $(this).attr("showFlag");
+      if(showFlag == "0") {
+        $(".channelKeyHostnameTable").show();
+        $(this).attr("showFlag", "1");
+      } else {
+        $(".channelKeyHostnameTable").hide();
+        $(this).attr("showFlag", "0");
+      }
+    });
+
+    
   });
 
 </script>

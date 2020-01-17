@@ -3,10 +3,6 @@ package demo.article.article.pojo.constant;
 public class ArticleUrlConstant {
 	
 	public static final String root = "/article";
-	public static final String createBurnMessage = "/createBurnMessage";
-	public static final String creatingBurnMessage = "/creatingBurnMessage";
-	public static final String readBurningMessage = "/readBurningMessage";
-	public static final String burnMessage = "/burnMessage";
 	public static final String findChannels = "/findChannels";
 	/** 创建文章数据接口 */
 	public static final String createArticleLong = "/createArticleLong";

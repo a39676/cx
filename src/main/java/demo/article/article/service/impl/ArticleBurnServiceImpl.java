@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import demo.article.article.mapper.ArticleBurnMapper;
 import demo.article.article.mapper.ArticleShortMapper;
+import demo.article.article.pojo.constant.ArticleBurnUrlConstant;
 import demo.article.article.pojo.constant.ArticleUrlConstant;
 import demo.article.article.pojo.dto.CreatingBurnMessageDTO;
 import demo.article.article.pojo.po.ArticleBurn;
@@ -49,8 +50,8 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		po.setArticleId(newArticleId);
 		Long readId = snowFlake.getNextId();
 		Long burnId = snowFlake.getNextId();
-		po.setReadKey(encryptId(readId));
-		po.setBurnKey(encryptId(burnId));
+		po.setReadKey(readId);
+		po.setBurnKey(burnId);
 
 		if (dto.getReadLimit() != null) {
 			if (dto.getReadLimit() > 1) {
@@ -68,13 +69,13 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		if (dto.getValidTime() != null && dto.getValidTime() > 30 && dto.getValidTime() < 4320) {
 			validMinute = dto.getValidTime();
 		}
-		po.setValidTime(dateHandler.localDateTimeToDate(now.plusMinutes(validMinute)));
+		po.setValidTime(now.plusMinutes(validMinute));
 		articleBurnMapper.insertSelective(po);
 		
-		r.setReadKey(po.getReadKey());
-		r.setBurnKey(po.getBurnKey());
-		r.setReadUri(ArticleUrlConstant.root + ArticleUrlConstant.readBurningMessage + "?readKey=" + r.getReadKey());
-		r.setBurnUri(ArticleUrlConstant.root + ArticleUrlConstant.burnMessage + "?burnKey=" + r.getBurnKey());
+		r.setReadKey(encryptId(po.getReadKey()));
+		r.setBurnKey(encryptId(po.getBurnKey()));
+		r.setReadUri(ArticleUrlConstant.root + ArticleBurnUrlConstant.readBurningMessage + "?readKey=" + r.getReadKey());
+		r.setBurnUri(ArticleUrlConstant.root + ArticleBurnUrlConstant.burnMessage + "?burnKey=" + r.getBurnKey());
 		r.setIsSuccess();
 		
 		return r;
@@ -89,7 +90,8 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 			return p;
 		}
 
-		p = articleBurnMapper.findArticleByReadKey(readKey);
+		Long readKeyId = decryptPrivateKey(readKey);
+		p = articleBurnMapper.findArticleByReadKey(readKeyId);
 
 		if (p == null) {
 			p = new ArticleBurnResult();
@@ -100,16 +102,17 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		}
 
 		if (p.getReadLimit() <= p.getReadCount()) {
-			articleBurnMapper.burnArticleByBurnKey(p.getBurnKey());
+			Long burnKeyId = decryptPrivateKey(p.getBurnKey());
+			articleBurnMapper.burnArticleByBurnKey(burnKeyId);
 			p.setContent("信息已过期.");
 			return p;
 		}
 
 		if (p.getReadCount() < p.getReadLimit() - 1) {
-			articleBurnMapper.readCountPlus(p.getReadKey());
+			articleBurnMapper.readCountPlus(readKeyId);
 			return p;
 		} else if (p.getReadCount() == p.getReadLimit() - 1) {
-			articleBurnMapper.lastRead(p.getReadKey());
+			articleBurnMapper.lastRead(readKeyId);
 			return p;
 		}
 
@@ -123,7 +126,11 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		if (StringUtils.isBlank(burnKey)) {
 			return;
 		}
-		articleBurnMapper.burnArticleByBurnKey(burnKey);
+		
+		Long burnId = decryptPrivateKey(burnKey);
+		if(burnId != null) {
+			articleBurnMapper.burnArticleByBurnKey(burnId);
+		}
 	}
 
 }

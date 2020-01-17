@@ -25,7 +25,6 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.pojo.constant.ArticleUrlConstant;
 import demo.article.article.pojo.constant.ArticleViewConstant;
 import demo.article.article.pojo.dto.ArticleFeedbackDTO;
-import demo.article.article.pojo.dto.CreatingBurnMessageDTO;
 import demo.article.article.pojo.dto.EditArticleLongDTO;
 import demo.article.article.pojo.dto.FindArticleLongSummaryListDTO;
 import demo.article.article.pojo.dto.ReadyToEditArticleLongDTO;
@@ -34,14 +33,11 @@ import demo.article.article.pojo.param.controllerParam.CreatingArticleParam;
 import demo.article.article.pojo.param.controllerParam.FindArticleLongByArticleSummaryPrivateKeyDTO;
 import demo.article.article.pojo.param.controllerParam.InsertArticleLongEvaluationParam;
 import demo.article.article.pojo.param.controllerParam.ReviewArticleLongParam;
-import demo.article.article.pojo.result.ArticleBurnResult;
-import demo.article.article.pojo.result.CreatingBurnMessageResult;
 import demo.article.article.pojo.result.GetArticleChannelsResult;
 import demo.article.article.pojo.result.jsonRespon.FindArticleLongResult;
 import demo.article.article.pojo.result.jsonRespon.FindArticleLongSummaryListResultV3;
 import demo.article.article.pojo.type.ArticleEvaluationType;
 import demo.article.article.pojo.type.ArticleReviewType;
-import demo.article.article.service.ArticleBurnService;
 import demo.article.article.service.ArticleChannelService;
 import demo.article.article.service.ArticleEvaluationService;
 import demo.article.article.service.ArticleService;
@@ -62,8 +58,6 @@ public class ArticleController extends CommonController {
 	@Autowired
 	private ArticleService articleService;
 	@Autowired
-	private ArticleBurnService articleBurnService;
-	@Autowired
 	private ArticleEvaluationService articleEvaluationService;
 	@Autowired
 	private ArticleChannelService channelService;
@@ -71,34 +65,6 @@ public class ArticleController extends CommonController {
 	private ArticleSummaryService summaryService;
 	@Autowired
 	private VisitDataService visitDataService;
-	
-	@GetMapping(value = ArticleUrlConstant.createBurnMessage)
-	public ModelAndView createBurnMessage(HttpServletRequest request) {
-		ModelAndView view = new ModelAndView(ArticleViewConstant.createBurnMessage);
-		return view;
-	}
-	
-	@PostMapping(value = ArticleUrlConstant.creatingBurnMessage)
-	@ResponseBody
-	public CreatingBurnMessageResult createBurnMessage(@RequestBody CreatingBurnMessageDTO dto) {
-		return articleBurnService.creatingBurnMessage(dto);
-	}
-	
-	@GetMapping(value = ArticleUrlConstant.readBurningMessage)
-	public ModelAndView readBurningMessage(@RequestParam(value = "readKey", defaultValue = "" ) String readKey) {
-		ModelAndView view = new ModelAndView(ArticleViewConstant.readBurningMessage);
-		ArticleBurnResult pbr = articleBurnService.findArticleByReadKey(readKey);
-		view.addObject("content", pbr.getContent());
-		view.addObject("remainingReadCount", pbr.getReadLimit() - pbr.getReadCount() - 1);
-		view.addObject("burnUri", ArticleUrlConstant.root + ArticleUrlConstant.burnMessage + "?burnKey=" + pbr.getBurnKey());
-		return view;
-	}
-	
-	@GetMapping(value = ArticleUrlConstant.burnMessage)
-	public ModelAndView burnMessage(@RequestParam(value = "burnKey", defaultValue = "" ) String burnKey) {
-		articleBurnService.burnArticleByBurnKey(burnKey);
-		return new ModelAndView(ArticleViewConstant.burnMessage);
-	}
 	
 	@PostMapping(value = ArticleUrlConstant.createArticleLong)
 	@ResponseBody

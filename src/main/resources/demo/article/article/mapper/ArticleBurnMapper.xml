@@ -3,25 +3,114 @@
 <mapper namespace="demo.article.article.mapper.ArticleBurnMapper">
 
   <resultMap id="BaseResultMap" type="demo.article.article.pojo.po.ArticleBurn">
-    <result column="article_id" jdbcType="BIGINT" property="articleId" />
+    <id column="article_id" jdbcType="BIGINT" property="articleId" />
     <result column="read_count" jdbcType="INTEGER" property="readCount" />
     <result column="read_limit" jdbcType="INTEGER" property="readLimit" />
     <result column="valid_time" jdbcType="TIMESTAMP" property="validTime" />
-    <result column="read_key" jdbcType="CHAR" property="readKey" />
-    <result column="burn_key" jdbcType="CHAR" property="burnKey" />
+    <result column="read_key" jdbcType="BIGINT" property="readKey" />
+    <result column="burn_key" jdbcType="BIGINT" property="burnKey" />
     <result column="is_burned" jdbcType="BIT" property="isBurned" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
-
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    article_id, read_count, read_limit, valid_time, read_key, burn_key, is_burned, create_time
+  </sql>
+  <select id="selectByExample" parameterType="demo.article.article.pojo.po.ArticleBurnExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from article_burn
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from article_burn
+    where article_id = #{articleId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from article_burn
+    where article_id = #{articleId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.article.article.pojo.po.ArticleBurnExample">
+    delete from article_burn
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
   <insert id="insert" parameterType="demo.article.article.pojo.po.ArticleBurn">
     insert into article_burn (article_id, read_count, read_limit, 
       valid_time, read_key, burn_key, 
       is_burned, create_time)
     values (#{articleId,jdbcType=BIGINT}, #{readCount,jdbcType=INTEGER}, #{readLimit,jdbcType=INTEGER}, 
-      #{validTime,jdbcType=TIMESTAMP}, #{readKey,jdbcType=CHAR}, #{burnKey,jdbcType=CHAR}, 
+      #{validTime,jdbcType=TIMESTAMP}, #{readKey,jdbcType=BIGINT}, #{burnKey,jdbcType=BIGINT}, 
       #{isBurned,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
-
   <insert id="insertSelective" parameterType="demo.article.article.pojo.po.ArticleBurn">
     insert into article_burn
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -64,10 +153,10 @@
         #{validTime,jdbcType=TIMESTAMP},
       </if>
       <if test="readKey != null">
-        #{readKey,jdbcType=CHAR},
+        #{readKey,jdbcType=BIGINT},
       </if>
       <if test="burnKey != null">
-        #{burnKey,jdbcType=CHAR},
+        #{burnKey,jdbcType=BIGINT},
       </if>
       <if test="isBurned != null">
         #{isBurned,jdbcType=BIT},
@@ -77,6 +166,96 @@
       </if>
     </trim>
   </insert>
+  <select id="countByExample" parameterType="demo.article.article.pojo.po.ArticleBurnExample" resultType="java.lang.Long">
+    select count(*) from article_burn
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update article_burn
+    <set>
+      <if test="record.articleId != null">
+        article_id = #{record.articleId,jdbcType=BIGINT},
+      </if>
+      <if test="record.readCount != null">
+        read_count = #{record.readCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.readLimit != null">
+        read_limit = #{record.readLimit,jdbcType=INTEGER},
+      </if>
+      <if test="record.validTime != null">
+        valid_time = #{record.validTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.readKey != null">
+        read_key = #{record.readKey,jdbcType=BIGINT},
+      </if>
+      <if test="record.burnKey != null">
+        burn_key = #{record.burnKey,jdbcType=BIGINT},
+      </if>
+      <if test="record.isBurned != null">
+        is_burned = #{record.isBurned,jdbcType=BIT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update article_burn
+    set article_id = #{record.articleId,jdbcType=BIGINT},
+      read_count = #{record.readCount,jdbcType=INTEGER},
+      read_limit = #{record.readLimit,jdbcType=INTEGER},
+      valid_time = #{record.validTime,jdbcType=TIMESTAMP},
+      read_key = #{record.readKey,jdbcType=BIGINT},
+      burn_key = #{record.burnKey,jdbcType=BIGINT},
+      is_burned = #{record.isBurned,jdbcType=BIT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.article.article.pojo.po.ArticleBurn">
+    update article_burn
+    <set>
+      <if test="readCount != null">
+        read_count = #{readCount,jdbcType=INTEGER},
+      </if>
+      <if test="readLimit != null">
+        read_limit = #{readLimit,jdbcType=INTEGER},
+      </if>
+      <if test="validTime != null">
+        valid_time = #{validTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="readKey != null">
+        read_key = #{readKey,jdbcType=BIGINT},
+      </if>
+      <if test="burnKey != null">
+        burn_key = #{burnKey,jdbcType=BIGINT},
+      </if>
+      <if test="isBurned != null">
+        is_burned = #{isBurned,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where article_id = #{articleId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="demo.article.article.pojo.po.ArticleBurn">
+    update article_burn
+    set read_count = #{readCount,jdbcType=INTEGER},
+      read_limit = #{readLimit,jdbcType=INTEGER},
+      valid_time = #{validTime,jdbcType=TIMESTAMP},
+      read_key = #{readKey,jdbcType=BIGINT},
+      burn_key = #{burnKey,jdbcType=BIGINT},
+      is_burned = #{isBurned,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where article_id = #{articleId,jdbcType=BIGINT}
+  </update>
 
   <select id="findArticleByReadKey" resultType="demo.article.article.pojo.result.ArticleBurnResult">
     select

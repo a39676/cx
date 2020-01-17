@@ -89,7 +89,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			result.fillWithResult(ResultTypeCX.articleTooShort);
 			return result;
 		}
-		Long articleId = articleService.decryptPrivateKey(inputParam.getPk());
+		Long articleId = decryptPrivateKey(inputParam.getPk());
 		
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
@@ -156,7 +156,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			controllerParam.setStartTime(new Date(controllerParam.getStartTime().getTime() + 1));
 		}
 		
-		Long articleId = articleService.decryptPrivateKey(controllerParam.getPk());
+		Long articleId = decryptPrivateKey(controllerParam.getPk());
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;

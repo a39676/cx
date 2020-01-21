@@ -1,4 +1,6 @@
-调整频道管理页面  
+aboutMe 页面
+	应该根据域名完全独立 
+	copyright 年份, 动态化  
 CREATE TABLE `duralbe_recorder` (
 id bigint not null,
    `trading_id` bigint default null,

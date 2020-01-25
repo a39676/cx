@@ -60,8 +60,8 @@ public class AFKServiceImpl extends CommonService implements AFKService {
 		
 		// 皇家犒赏令
 		Double rewardCardCostUSD = 25D;
-		Double rewardCardDiamond = 6100D;
-		Double rewardCardPurpleStone = 610D;
+		Double rewardCardDiamond = 5500D;
+		Double rewardCardPurpleStone = 550D;
 		Double rewardTotalDimaond = rewardCardDiamond + rewardCardPurpleStone * purpleStoneCostDiamond;
 		v.addObject("rewardCardCostUSD", rewardCardCostUSD);
 		v.addObject("rewardCardDiamond", rewardCardDiamond);

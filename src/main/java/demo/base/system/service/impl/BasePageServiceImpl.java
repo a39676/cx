@@ -99,14 +99,16 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 
 	@Override
 	public ModelAndView aboutMeHandler(String vcode, HttpServletRequest request) {
-		ModelAndView v = new ModelAndView(BlogViewConstant.about);
+		ModelAndView v = null;
 
 		HostnameType hostnameType = hostnameService.findHostname(request);
 		if (hostnameType != null) {
 			if (HostnameType.ea.equals(hostnameType)) {
+				v = new ModelAndView(BlogViewConstant.aboutEasy);
 				v.addObject("email", constantService.getValByName(SystemConstantStore.emaild));
 				v.addObject("headerImg", "/static_resources/cleanBlog/img/nature-4607496_1920.jpg");
 			} else if (HostnameType.seek.equals(hostnameType)) {
+				v = new ModelAndView(BlogViewConstant.aboutSeek);
 				v.addObject("email", constantService.getValByName(SystemConstantStore.emailc));
 				v.addObject("headerImg", atDemoHeadImg);
 			}

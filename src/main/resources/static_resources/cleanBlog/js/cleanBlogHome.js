@@ -50,7 +50,9 @@ $(document).ready(function() {
     var location = getLocation(window.location.href);
     var footMarker = document.getElementById("footMarker");
     var visitCount = footMarker.getAttribute("visitCount");
-    footMarker.innerHTML = ('Copyright &copy; ' + location.hostname + ' 2019 | 访问统计: ' + visitCount);
+    var now = new Date();
+    var year = now.getFullYear()
+    footMarker.innerHTML = ('Copyright &copy; ' + location.hostname + ' ' + year + ' | 访问统计: ' + visitCount);
   };
 
   fillFootMarker();

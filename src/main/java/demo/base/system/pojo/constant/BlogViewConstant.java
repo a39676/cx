@@ -6,7 +6,8 @@ public class BlogViewConstant {
 	public static final String root = "cleanBlogJSP";
 	
 	public static final String home = root + "/index";
-	public static final String about = root + "/about";
+	public static final String aboutEasy = root + "/aboutEasy";
+	public static final String aboutSeek = root + "/aboutSeek";
 	public static final String post = root + "/post";
 	
 }

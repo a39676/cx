@@ -15,10 +15,10 @@ import org.springframework.web.servlet.ModelAndView;
 import autoTest.jsonReport.pojo.constant.AutoTestInteractionUrl;
 import autoTest.jsonReport.pojo.dto.FindReportByTestEventIdDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
+import autoTest.pojo.constant.AutoTestUrl;
 import autoTest.testEvent.pojo.dto.InsertSearchingDemoTestEventDTO;
 import autoTest.testEvent.pojo.result.InsertSearchingDemoEventResult;
 import demo.baseCommon.controller.CommonController;
-import demo.interaction.autoTest.pojo.constant.AutoTestUrl;
 import demo.interaction.autoTest.service.AutoTestDemoService;
 
 @Controller

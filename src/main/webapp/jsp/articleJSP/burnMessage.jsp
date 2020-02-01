@@ -44,7 +44,7 @@
     $(document).ready(function() {
 
       $("button[name='createBurnMessage']").click(function() {
-        var url="${pageContext.request.contextPath}/article/createBurnMessage"
+        var url="${pageContext.request.contextPath}/articleBurn/createBurnMessage"
         $.ajax({  
           type : "GET",  
           async : true,

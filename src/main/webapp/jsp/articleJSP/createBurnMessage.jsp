@@ -84,7 +84,7 @@
   
       function createBurnArticle() {
         
-        var url = "${pageContext.request.contextPath}/article/creatingBurnMessage";
+        var url = "${pageContext.request.contextPath}/articleBurn/creatingBurnMessage";
         var readLimit = $("input[name='readLimit']").val();
         var validTime = $("select[name='validTime'] option:selected").val();
         var content = $("input[name='creatingBurnArticle']").val();
@@ -117,8 +117,9 @@
 
             $("#resultView").show();
             if(datas.result == 0) {
-              $("span[name='readUrl']").text(urlPrefix + datas.readUri);
-              $("span[name='burnUrl']").text(urlPrefix + datas.burnUri);
+
+              $("span[name='readUrl']").html('<a href='+datas.readUri+' target="_blank" >'+urlPrefix + datas.readUri+'</a>');
+              $("span[name='burnUrl']").html('<a href='+datas.burnUri+' target="_blank" >'+urlPrefix + datas.burnUri+'</a>');
             } else {
               $("span[name='createArticleResult']").text(datas.message);
             }

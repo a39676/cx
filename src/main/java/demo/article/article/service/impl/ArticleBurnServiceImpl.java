@@ -6,11 +6,12 @@ import org.apache.commons.lang.StringUtils;
 import org.owasp.html.PolicyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 import demo.article.article.mapper.ArticleBurnMapper;
 import demo.article.article.mapper.ArticleShortMapper;
 import demo.article.article.pojo.constant.ArticleBurnUrlConstant;
-import demo.article.article.pojo.constant.ArticleUrlConstant;
+import demo.article.article.pojo.constant.ArticleViewConstant;
 import demo.article.article.pojo.dto.CreatingBurnMessageDTO;
 import demo.article.article.pojo.po.ArticleBurn;
 import demo.article.article.pojo.po.ArticleShort;
@@ -74,15 +75,24 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		
 		r.setReadKey(encryptId(po.getReadKey()));
 		r.setBurnKey(encryptId(po.getBurnKey()));
-		r.setReadUri(ArticleUrlConstant.root + ArticleBurnUrlConstant.readBurningMessage + "?readKey=" + r.getReadKey());
-		r.setBurnUri(ArticleUrlConstant.root + ArticleBurnUrlConstant.burnMessage + "?burnKey=" + r.getBurnKey());
+		r.setReadUri(ArticleBurnUrlConstant.root + ArticleBurnUrlConstant.readBurningMessage + "?readKey=" + r.getReadKey());
+		r.setBurnUri(ArticleBurnUrlConstant.root + ArticleBurnUrlConstant.burnMessage + "?burnKey=" + r.getBurnKey());
 		r.setIsSuccess();
 		
 		return r;
 	}
 
 	@Override
-	public ArticleBurnResult findArticleByReadKey(String readKey) {
+	public ModelAndView readBurningMessage(String readKey) {
+		ModelAndView view = new ModelAndView(ArticleViewConstant.readBurningMessage);
+		ArticleBurnResult pbr = findArticleByReadKey(readKey);
+		view.addObject("content", pbr.getContent());
+		view.addObject("remainingReadCount", pbr.getReadLimit() - pbr.getReadCount() - 1);
+		view.addObject("burnUri", ArticleBurnUrlConstant.root + ArticleBurnUrlConstant.burnMessage + "?burnKey=" + pbr.getBurnKey());
+		return view;
+	}
+	
+	private ArticleBurnResult findArticleByReadKey(String readKey) {
 		ArticleBurnResult p;
 		if (StringUtils.isBlank(readKey)) {
 			p = new ArticleBurnResult();
@@ -108,11 +118,18 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 			return p;
 		}
 
+		/*
+		 * 2020-02-01
+		 * 古老的字段设计问题, 
+		 * 后来 readKey burnKey 在数据库改存数字, 本处代码需要重新将数字 加密成字符串
+		 */
 		if (p.getReadCount() < p.getReadLimit() - 1) {
 			articleBurnMapper.readCountPlus(readKeyId);
+			p.setBurnKey(encryptId(Long.parseLong(p.getBurnKey())));
 			return p;
 		} else if (p.getReadCount() == p.getReadLimit() - 1) {
 			articleBurnMapper.lastRead(readKeyId);
+			p.setBurnKey(encryptId(Long.parseLong(p.getBurnKey())));
 			return p;
 		}
 

@@ -11,10 +11,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.article.article.pojo.constant.ArticleBurnUrlConstant;
-import demo.article.article.pojo.constant.ArticleUrlConstant;
 import demo.article.article.pojo.constant.ArticleViewConstant;
 import demo.article.article.pojo.dto.CreatingBurnMessageDTO;
-import demo.article.article.pojo.result.ArticleBurnResult;
 import demo.article.article.pojo.result.CreatingBurnMessageResult;
 import demo.article.article.service.ArticleBurnService;
 import demo.baseCommon.controller.CommonController;
@@ -40,12 +38,7 @@ public class ArticleBurnController extends CommonController {
 	
 	@GetMapping(value = ArticleBurnUrlConstant.readBurningMessage)
 	public ModelAndView readBurningMessage(@RequestParam(value = "readKey", defaultValue = "" ) String readKey) {
-		ModelAndView view = new ModelAndView(ArticleViewConstant.readBurningMessage);
-		ArticleBurnResult pbr = articleBurnService.findArticleByReadKey(readKey);
-		view.addObject("content", pbr.getContent());
-		view.addObject("remainingReadCount", pbr.getReadLimit() - pbr.getReadCount() - 1);
-		view.addObject("burnUri", ArticleUrlConstant.root + ArticleBurnUrlConstant.burnMessage + "?burnKey=" + pbr.getBurnKey());
-		return view;
+		return articleBurnService.readBurningMessage(readKey);
 	}
 	
 	@GetMapping(value = ArticleBurnUrlConstant.burnMessage)

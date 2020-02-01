@@ -1,3 +1,6 @@
+阅后即焚需要改动
+主表字段 新增? 改字段名?
+文字内容需要另存文件, 铲除 article_short 表
 CREATE TABLE `duralbe_recorder` (
 id bigint not null,
    `trading_id` bigint default null,

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import demo.config.costom_component.BaseUtilCustom;
 import demo.config.costom_component.SnowFlake;
+import mail.service.MailToolService;
 import toolPack.dateTimeHandle.DateHandler;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
 import toolPack.httpHandel.HttpUtil;
@@ -53,5 +54,10 @@ public class CustomToolBeanConfig {
 	@Bean
 	public LocalDateTimeHandler getLocalDateTimeHandler() {
 		return new LocalDateTimeHandler();
+	}
+	
+	@Bean 
+	public MailToolService getMailToolService() {
+		return new MailToolService();
 	}
 }

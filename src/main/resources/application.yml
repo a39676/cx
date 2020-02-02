@@ -36,7 +36,7 @@ logging:
     # demo.trading.mapper: DEBUG
     # demo.base.account_DEBUG.mapper: DEBUG
     # demo.base.system.mapper: DEBUG
-    demo.base.user.mapper: DEBUG
+    # demo.base.user.mapper: DEBUG
     # demo.organizations.mapper: DEBUG
     # demo.image.mapper: DEBUG
     # demo.article.article.mapper: DEBUG

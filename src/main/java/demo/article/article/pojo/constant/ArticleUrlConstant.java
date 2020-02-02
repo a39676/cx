@@ -8,7 +8,6 @@ public class ArticleUrlConstant {
 	public static final String createArticleLong = "/createArticleLong";
 	/** 打开创建文章的界面 */
 	public static final String creatingArticleLong = "/creatingArticleLong";
-	/** 以频道uuid获取文章缩略列表 */
 	public static final String articleLongSummaryListByChannel = "/articleLongSummaryListByChannel";
 //	public static final String articleLongSummarySubListByChannel = "/articleLongSummarySubListByChannel";
 	public static final String readArticleLong = "/readArticleLong";

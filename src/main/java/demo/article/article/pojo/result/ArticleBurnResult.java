@@ -2,7 +2,9 @@ package demo.article.article.pojo.result;
 
 import java.time.LocalDateTime;
 
-public class ArticleBurnResult {
+import demo.baseCommon.pojo.result.CommonResultCX;
+
+public class ArticleBurnResult extends CommonResultCX {
 
 	private String content;
 	private Integer readCount;

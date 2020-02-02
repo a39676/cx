@@ -7,8 +7,9 @@
     <result column="read_count" jdbcType="INTEGER" property="readCount" />
     <result column="read_limit" jdbcType="INTEGER" property="readLimit" />
     <result column="valid_time" jdbcType="TIMESTAMP" property="validTime" />
-    <result column="read_key" jdbcType="BIGINT" property="readKey" />
-    <result column="burn_key" jdbcType="BIGINT" property="burnKey" />
+    <result column="read_id" jdbcType="BIGINT" property="readId" />
+    <result column="burn_id" jdbcType="BIGINT" property="burnId" />
+    <result column="file_path" jdbcType="VARCHAR" property="filePath" />
     <result column="is_burned" jdbcType="BIT" property="isBurned" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
@@ -71,7 +72,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    article_id, read_count, read_limit, valid_time, read_key, burn_key, is_burned, create_time
+    article_id, read_count, read_limit, valid_time, read_id, burn_id, file_path, is_burned, 
+    create_time
   </sql>
   <select id="selectByExample" parameterType="demo.article.article.pojo.po.ArticleBurnExample" resultMap="BaseResultMap">
     select
@@ -105,11 +107,13 @@
   </delete>
   <insert id="insert" parameterType="demo.article.article.pojo.po.ArticleBurn">
     insert into article_burn (article_id, read_count, read_limit, 
-      valid_time, read_key, burn_key, 
-      is_burned, create_time)
+      valid_time, read_id, burn_id, 
+      file_path, is_burned, create_time
+      )
     values (#{articleId,jdbcType=BIGINT}, #{readCount,jdbcType=INTEGER}, #{readLimit,jdbcType=INTEGER}, 
-      #{validTime,jdbcType=TIMESTAMP}, #{readKey,jdbcType=BIGINT}, #{burnKey,jdbcType=BIGINT}, 
-      #{isBurned,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP})
+      #{validTime,jdbcType=TIMESTAMP}, #{readId,jdbcType=BIGINT}, #{burnId,jdbcType=BIGINT}, 
+      #{filePath,jdbcType=VARCHAR}, #{isBurned,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="demo.article.article.pojo.po.ArticleBurn">
     insert into article_burn
@@ -126,11 +130,14 @@
       <if test="validTime != null">
         valid_time,
       </if>
-      <if test="readKey != null">
-        read_key,
+      <if test="readId != null">
+        read_id,
       </if>
-      <if test="burnKey != null">
-        burn_key,
+      <if test="burnId != null">
+        burn_id,
+      </if>
+      <if test="filePath != null">
+        file_path,
       </if>
       <if test="isBurned != null">
         is_burned,
@@ -152,11 +159,14 @@
       <if test="validTime != null">
         #{validTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="readKey != null">
-        #{readKey,jdbcType=BIGINT},
+      <if test="readId != null">
+        #{readId,jdbcType=BIGINT},
       </if>
-      <if test="burnKey != null">
-        #{burnKey,jdbcType=BIGINT},
+      <if test="burnId != null">
+        #{burnId,jdbcType=BIGINT},
+      </if>
+      <if test="filePath != null">
+        #{filePath,jdbcType=VARCHAR},
       </if>
       <if test="isBurned != null">
         #{isBurned,jdbcType=BIT},
@@ -187,11 +197,14 @@
       <if test="record.validTime != null">
         valid_time = #{record.validTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.readKey != null">
-        read_key = #{record.readKey,jdbcType=BIGINT},
+      <if test="record.readId != null">
+        read_id = #{record.readId,jdbcType=BIGINT},
       </if>
-      <if test="record.burnKey != null">
-        burn_key = #{record.burnKey,jdbcType=BIGINT},
+      <if test="record.burnId != null">
+        burn_id = #{record.burnId,jdbcType=BIGINT},
+      </if>
+      <if test="record.filePath != null">
+        file_path = #{record.filePath,jdbcType=VARCHAR},
       </if>
       <if test="record.isBurned != null">
         is_burned = #{record.isBurned,jdbcType=BIT},
@@ -210,8 +223,9 @@
       read_count = #{record.readCount,jdbcType=INTEGER},
       read_limit = #{record.readLimit,jdbcType=INTEGER},
       valid_time = #{record.validTime,jdbcType=TIMESTAMP},
-      read_key = #{record.readKey,jdbcType=BIGINT},
-      burn_key = #{record.burnKey,jdbcType=BIGINT},
+      read_id = #{record.readId,jdbcType=BIGINT},
+      burn_id = #{record.burnId,jdbcType=BIGINT},
+      file_path = #{record.filePath,jdbcType=VARCHAR},
       is_burned = #{record.isBurned,jdbcType=BIT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
@@ -230,11 +244,14 @@
       <if test="validTime != null">
         valid_time = #{validTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="readKey != null">
-        read_key = #{readKey,jdbcType=BIGINT},
+      <if test="readId != null">
+        read_id = #{readId,jdbcType=BIGINT},
       </if>
-      <if test="burnKey != null">
-        burn_key = #{burnKey,jdbcType=BIGINT},
+      <if test="burnId != null">
+        burn_id = #{burnId,jdbcType=BIGINT},
+      </if>
+      <if test="filePath != null">
+        file_path = #{filePath,jdbcType=VARCHAR},
       </if>
       <if test="isBurned != null">
         is_burned = #{isBurned,jdbcType=BIT},
@@ -250,45 +267,28 @@
     set read_count = #{readCount,jdbcType=INTEGER},
       read_limit = #{readLimit,jdbcType=INTEGER},
       valid_time = #{validTime,jdbcType=TIMESTAMP},
-      read_key = #{readKey,jdbcType=BIGINT},
-      burn_key = #{burnKey,jdbcType=BIGINT},
+      read_id = #{readId,jdbcType=BIGINT},
+      burn_id = #{burnId,jdbcType=BIGINT},
+      file_path = #{filePath,jdbcType=VARCHAR},
       is_burned = #{isBurned,jdbcType=BIT},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where article_id = #{articleId,jdbcType=BIGINT}
   </update>
 
-  <select id="findArticleByReadKey" resultType="demo.article.article.pojo.result.ArticleBurnResult">
-    select
-      ars.content,
-      arb.read_count as readCount,
-      arb.read_limit as readLimit,
-      arb.valid_time as validTime,
-      arb.read_key as readKey,
-      arb.burn_key as burnKey,
-      arb.is_burned as isBurned
-
-    from
-      article_short as ars
-
-      left join article_burn as arb
-        on ars.article_id = arb.article_id
-
-    where
-      is_burned = 0
-      and arb.valid_time > now()
-      and arb.read_key = #{readKey}
-  </select>
-
-  <update id="burnArticleByBurnKey">
-    update article_burn set is_burned = true where burn_key = #{burnKey}
+  <update id="burnArticleByBurnId">
+    update article_burn set is_burned = true where burn_id = #{burnId}
+  </update>
+  
+  <update id="burnArticleById">
+    update article_burn set is_burned = true where article_id = #{id}
   </update>
 
   <update id="readCountPlus">
-    update article_burn set read_count = read_count + 1 where read_key = #{readKey}
+    update article_burn set read_count = read_count + 1 where article_id = #{id}
   </update>
 
   <update id="lastRead">
-    update article_burn set read_count = read_count + 1 , is_burned = true where read_key = #{readkey}
+    update article_burn set read_count = read_count + 1 , is_burned = true where article_id = #{id}
   </update>
 
 </mapper>

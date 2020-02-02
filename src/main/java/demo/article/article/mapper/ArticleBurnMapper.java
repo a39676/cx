@@ -1,10 +1,11 @@
 package demo.article.article.mapper;
 
-import demo.article.article.pojo.po.ArticleBurn;
-import demo.article.article.pojo.result.ArticleBurnResult;
-import demo.article.article.pojo.po.ArticleBurnExample;
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
+
+import demo.article.article.pojo.po.ArticleBurn;
+import demo.article.article.pojo.po.ArticleBurnExample;
 
 public interface ArticleBurnMapper {
     long countByExample(ArticleBurnExample example);
@@ -12,6 +13,10 @@ public interface ArticleBurnMapper {
 	int deleteByExample(ArticleBurnExample example);
 
 	int deleteByPrimaryKey(Long articleId);
+
+	int insert(ArticleBurn record);
+
+	int insertSelective(ArticleBurn record);
 
 	List<ArticleBurn> selectByExample(ArticleBurnExample example);
 
@@ -25,15 +30,11 @@ public interface ArticleBurnMapper {
 
 	int updateByPrimaryKey(ArticleBurn record);
 
-	int insert(ArticleBurn record);
-
-    int insertSelective(ArticleBurn record);
+    void burnArticleByBurnId(Long burnId);
     
-    ArticleBurnResult findArticleByReadKey(Long readId);
+    void burnArticleById(Long id);
     
-    void burnArticleByBurnKey(Long burnId);
-    
-    void readCountPlus(Long readId);
+    void readCountPlus(Long id);
     
     void lastRead(Long readId);
 }

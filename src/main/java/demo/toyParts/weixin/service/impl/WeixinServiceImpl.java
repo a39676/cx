@@ -20,8 +20,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.article.article.mapper.ArticleShortMapper;
-import demo.article.article.pojo.po.ArticleShort;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
 import demo.toyParts.weixin.mapper.WeixinAccessTokenMapper;
@@ -50,8 +48,6 @@ public class WeixinServiceImpl extends CommonService implements WeixinService {
 	private WeixinConstantMapper weixinConstantMapper;
 	@Autowired
 	private WeixinAccessTokenMapper weixinAccessTokenMapper;
-	@Autowired
-	private ArticleShortMapper articleShortMapper;
 	@Autowired
 	private FileUtilCustom ioUtil;
 
@@ -219,11 +215,15 @@ public class WeixinServiceImpl extends CommonService implements WeixinService {
 			reader.close();
 		}
 
-		ArticleShort s = new ArticleShort();
-		s.setContent(sb.toString());
-		s.setUserId(8L);
-		s.setArticleId(snowFlake.getNextId());
-		articleShortMapper.insertSelective(s);
+		/*
+		 * 2020-02-02
+		 * 实体类废弃, 微信模块逻辑搁置已久, 暂不作完善
+		 */
+//		ArticleShort s = new ArticleShort();
+//		s.setContent(sb.toString());
+//		s.setUserId(8L);
+//		s.setArticleId(snowFlake.getNextId());
+//		articleShortMapper.insertSelective(s);
 
 		JSONObject jsonInput = null;
 		if (sb.toString().trim().startsWith("{")) {

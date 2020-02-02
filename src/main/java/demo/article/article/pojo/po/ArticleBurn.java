@@ -5,81 +5,92 @@ import java.time.LocalDateTime;
 public class ArticleBurn {
     private Long articleId;
 
-    private Integer readCount;
+	private Integer readCount;
 
-    private Integer readLimit;
+	private Integer readLimit;
 
-    private LocalDateTime validTime;
+	private LocalDateTime validTime;
 
-    private Long readKey;
+	private Long readId;
 
-    private Long burnKey;
+	private Long burnId;
 
-    private Boolean isBurned;
+	private String filePath;
 
-    private LocalDateTime createTime;
+	private Boolean isBurned;
 
-    public Long getArticleId() {
-        return articleId;
-    }
+	private LocalDateTime createTime;
 
-    public void setArticleId(Long articleId) {
-        this.articleId = articleId;
-    }
+	public Long getArticleId() {
+		return articleId;
+	}
 
-    public Integer getReadCount() {
-        return readCount;
-    }
+	public void setArticleId(Long articleId) {
+		this.articleId = articleId;
+	}
 
-    public void setReadCount(Integer readCount) {
-        this.readCount = readCount;
-    }
+	public Integer getReadCount() {
+		return readCount;
+	}
 
-    public Integer getReadLimit() {
-        return readLimit;
-    }
+	public void setReadCount(Integer readCount) {
+		this.readCount = readCount;
+	}
 
-    public void setReadLimit(Integer readLimit) {
-        this.readLimit = readLimit;
-    }
+	public Integer getReadLimit() {
+		return readLimit;
+	}
 
-    public LocalDateTime getValidTime() {
-        return validTime;
-    }
+	public void setReadLimit(Integer readLimit) {
+		this.readLimit = readLimit;
+	}
 
-    public void setValidTime(LocalDateTime validTime) {
-        this.validTime = validTime;
-    }
+	public LocalDateTime getValidTime() {
+		return validTime;
+	}
 
-    public Long getReadKey() {
-        return readKey;
-    }
+	public void setValidTime(LocalDateTime validTime) {
+		this.validTime = validTime;
+	}
 
-    public void setReadKey(Long readKey) {
-        this.readKey = readKey;
-    }
+	public Long getReadId() {
+		return readId;
+	}
 
-    public Long getBurnKey() {
-        return burnKey;
-    }
+	public void setReadId(Long readId) {
+		this.readId = readId;
+	}
 
-    public void setBurnKey(Long burnKey) {
-        this.burnKey = burnKey;
-    }
+	public Long getBurnId() {
+		return burnId;
+	}
 
-    public Boolean getIsBurned() {
-        return isBurned;
-    }
+	public void setBurnId(Long burnId) {
+		this.burnId = burnId;
+	}
 
-    public void setIsBurned(Boolean isBurned) {
-        this.isBurned = isBurned;
-    }
+	public String getFilePath() {
+		return filePath;
+	}
 
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
+	public void setFilePath(String filePath) {
+		this.filePath = filePath == null ? null : filePath.trim();
+	}
 
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
+	public Boolean getIsBurned() {
+		return isBurned;
+	}
+
+	public void setIsBurned(Boolean isBurned) {
+		this.isBurned = isBurned;
+	}
+
+	public LocalDateTime getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(LocalDateTime createTime) {
+		this.createTime = createTime;
+	}
+
 }

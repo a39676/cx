@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.UUID;
 
 import javax.mail.Address;
 import javax.mail.Folder;
@@ -155,7 +154,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 //			return result;
 //		}
 //		
-//		String mailKey = UUID.randomUUID().toString().replaceAll("-", "");
+//		String mailKey = String.valueOf(snowFlake.getNextId());
 //		String mailUrl = hostName + UsersUrlConstant.root + UsersUrlConstant.registActivation + "?mailKey=" + mailKey;
 //		
 //		sendSimpleMail(userId, sendTo, "欢迎注册", createRegistMailContent(nickName, mailUrl), mailKey, MailType.registActivation);
@@ -248,7 +247,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 			mailKey = oldMails.getMailKey();
 			hasOldMail = true;
 		} else {
-			mailKey = UUID.randomUUID().toString().replaceAll("-", "");
+			mailKey = String.valueOf(snowFlake.getNextId());
 		}
 		
 		mailUrl = hostName + UsersUrlConstant.root + UsersUrlConstant.resetPassword + "?mailKey=" + mailKey;
@@ -472,7 +471,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 
 	@Override
 	public String insertNewRegistMailKey(Long userId) {
-		String mailKey = UUID.randomUUID().toString().replaceAll("-", "");
+		String mailKey = String.valueOf(snowFlake.getNextId());
 		InsertNewMailRecordParam p = new InsertNewMailRecordParam();
 		p.setMailType(MailType.registActivation.getCode());
 		p.setValidTime(dateHandler.localDateTimeToDate(LocalDateTime.now().plusDays(3L)));

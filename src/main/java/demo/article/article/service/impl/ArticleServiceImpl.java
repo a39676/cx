@@ -12,7 +12,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.crypto.BadPaddingException;
@@ -287,7 +286,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	
 	@Override
 	public ArticleFileSaveResult saveArticleFile(String storePrefixPath, Long creatorId, String content) throws IOException {
-		String fileName = creatorId + "L" + UUID.randomUUID().toString().substring(0, 8) + ".txt";
+		String fileName = creatorId + "L" + snowFlake.getNextId() + ".txt";
 		String timeFolder = LocalDate.now().toString();
 		File mainFolder = new File(storePrefixPath + timeFolder);
 		String finalFilePath = storePrefixPath + timeFolder + "/" + fileName;
@@ -342,7 +341,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		}
 		CommonResultCX result = new CommonResultCX();
 		
-		String fileName = userId + "L" + UUID.randomUUID().toString().substring(0, 8) + ".txt";
+		String fileName = userId + "L" + snowFlake.getNextId() + ".txt";
 		String timeFolder = LocalDate.now().toString();
 		
 		File mainFolder = new File(summaryStorePrefixPath + timeFolder);

@@ -169,7 +169,7 @@
         and tr.account_id in
         <foreach item="subAccountId" index="index" collection="accountIdList"
           open="(" separator="," close=")">
-          ${subAccountId}
+          #{subAccountId}
         </foreach>
       </if>
       <if test="startTime != null">

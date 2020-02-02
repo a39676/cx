@@ -72,6 +72,14 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 	}
 	
 	@Override
+	public ModelAndView articleBurnLink(HttpServletRequest request) {
+		if(isInEasyOrDev(request)) {
+			return new ModelAndView(ArticleViewConstant.articleBurnLink);
+		}
+		return null;
+	}
+	
+	@Override
 	public CreatingBurnMessageResult creatingBurnMessage(CreatingBurnMessageDTO dto, HttpServletRequest request) {
 		CreatingBurnMessageResult r = new CreatingBurnMessageResult();
 		

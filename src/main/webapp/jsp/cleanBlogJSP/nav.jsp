@@ -22,6 +22,8 @@
         </li>
         <li class="nav-item" id="autoTestDemo">
         </li>
+        <li class="nav-item" id="articleBurn">
+        </li>
         <sec:authorize access="!hasRole('ROLE_USER')">
           <li class="nav-item" name="login">
             <a class="nav-link" href="#" id="loginTag">[登录]</a>

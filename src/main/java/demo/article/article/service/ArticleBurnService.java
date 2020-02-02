@@ -8,6 +8,8 @@ import demo.article.article.pojo.dto.CreatingBurnMessageDTO;
 import demo.article.article.pojo.result.CreatingBurnMessageResult;
 
 public interface ArticleBurnService {
+	
+	ModelAndView articleBurnLink(HttpServletRequest request);
 
 	CreatingBurnMessageResult creatingBurnMessage(CreatingBurnMessageDTO dto, HttpServletRequest request);
 

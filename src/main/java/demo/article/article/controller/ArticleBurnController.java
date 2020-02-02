@@ -26,6 +26,11 @@ public class ArticleBurnController extends CommonController {
 	@Autowired
 	private ArticleBurnService articleBurnService;
 	
+	@PostMapping(value = ArticleBurnUrlConstant.articleBurnLink)
+	public ModelAndView articleBurnLink(HttpServletRequest request) {
+		return articleBurnService.articleBurnLink(request);
+	}
+	
 	@GetMapping(value = ArticleBurnUrlConstant.createBurnMessage)
 	public ModelAndView createBurnMessage() {
 		ModelAndView view = new ModelAndView(ArticleViewConstant.createBurnMessage);

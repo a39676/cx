@@ -2,6 +2,7 @@ package demo.article.article.pojo.constant;
 
 public class ArticleViewConstant {
 
+	public static final String articleBurnLink = "articleJSP/articleBurnLink";
 	public static final String createBurnMessage = "articleJSP/createBurnMessage";
 	public static final String readBurningMessage = "articleJSP/readBurningMessage";
 	public static final String burnMessage = "articleJSP/burnMessage";

@@ -8,23 +8,29 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<%@ include file="../baseElementJSP/normalHeader.jsp" %>
+<!-- 因需要使用富文本编辑器, 特别使用指定的库 -->
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<sec:csrfMetaTags />
+<title>${ title }</title>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.js"></script>
+
 </head>
 <body>
 <div class="container-fluid">
 
   <div class="row">
-    <div class="input-group col-sm-2">
-      <div class="input-group-prepend">
-        <span class="input-group-text" style="font-size: small;">最大阅读次数</span>
-      </div>
-      <input type="number" class="form-control" name="readLimit" min="0" max="10" value="3">
+    <div class="input-group col-sm-3">
+      <span class="input-group-text" style="font-size: small;">最大阅读次数</span>
+      <input type="number" class="form-control" name="readLimit" min="1" max="10" value="3">
     </div>
   
-    <div class="form-control col-sm-2" >
-      <div class="">
-        <span class="input-group-text" style="font-size: small;">有效时间</span>
-      </div>
+    <div class="input-group col-sm-3" >
+      <span class="input-group-text" style="font-size: small;">有效时间</span>
       <select class="form-control" name="validTime">
         <option value="30">30分钟</option>
         <option value="60">60分钟</option>
@@ -38,16 +44,33 @@
     </div>
 </div>
 
+<hr>
+
+<div class="row">
+  <div class="col-sm-12">
+    <span class="input-group-text" style="font-size: small;">
+      阅后即焚,顾名思义,您输入的消息会有固定的被读次数,超出阅读次数后即销毁."
+    </span>
+  </div>
+</div>
+
+<hr>
+
 <div class="row">
   <div class="col-sm-12" >
-    <input class="input form-control" type="text" name="creatingBurnArticle" style="width: 100%; height: 50px" 
-      placeholder="阅后即焚,顾名思义,您输入的消息会有固定的被读次数,超出阅读次数后即销毁." >
+    <div id="summernote"></div>
+    <script>
+      $('#summernote').summernote({
+        tabsize: 2,
+        height: 100
+      });
+    </script>
   </div>
 </div>
 
 <div class="row">
   <div class="col-sm-12" >
-    <button class="btn  btn-primary btn-sm" name="createBurnArticle"><span style="font-size: small;">提交</span></button>
+    <button class="btn  btn-primary btn-sm" name="createNewBurnArticle"><span style="font-size: small;">提交</span></button>
   </div>
 </div>
 
@@ -66,7 +89,13 @@
 </body>
 
 <footer>
-  <%@ include file="../baseElementJSP/normalFooter.jsp" %>
+  
+  <script type="text/javascript">
+    var csrfParameter = $("meta[name='_csrf_parameter']").attr("content");
+    var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+    var csrfToken = $("meta[name='_csrf']").attr("content");
+  </script>
+
   <script type="text/javascript">
 
     $(document).ready(function() {
@@ -78,16 +107,17 @@
         }
       });
       
-      $("button[name='createBurnArticle']").click( function() {
-        createBurnArticle();
+      $("button[name='createNewBurnArticle']").click( function() {
+        createNewBurnArticle();
       });
   
-      function createBurnArticle() {
+      function createNewBurnArticle() {
         
         var url = "${pageContext.request.contextPath}/articleBurn/creatingBurnMessage";
         var readLimit = $("input[name='readLimit']").val();
         var validTime = $("select[name='validTime'] option:selected").val();
-        var content = $("input[name='creatingBurnArticle']").val();
+        var s = $('#summernote');
+        var content = s.summernote('code');
 
         var urlPrefix = window.location.host;
 

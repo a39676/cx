@@ -22,15 +22,7 @@
 
 <div class="row">
   <div class="col-md-2">
-    <button class="btn btn-primary  btn-sm" name="createBurnMessage">
-      <span style="font-size: small;" >点此新建另一条信息</span>
-    </button>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-md-12">
-    <div id="createBurnMessage"></div>
+    <a href="/articleBurn/createBurnMessage">点此新建另一条信息</a>
   </div>
 </div>
 
@@ -42,21 +34,6 @@
   <script type="text/javascript">
 
     $(document).ready(function() {
-
-      $("button[name='createBurnMessage']").click(function() {
-        var url="${pageContext.request.contextPath}/articleBurn/createBurnMessage"
-        $.ajax({  
-          type : "GET",  
-          async : true,
-          url : url,  
-          success:function(datas){  
-              $("#createBurnMessage").html(datas);
-          },  
-          error: function(datas) {  
-              
-          }  
-        });  
-      });
       
     });
 

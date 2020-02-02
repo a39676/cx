@@ -19,12 +19,15 @@
   </div>
 </div>
 
+<hr>
+
 <div class="row">
   <div class="col-md-12" >
-    <%-- <span style="font-size: small;" name="content">${content}</span> --%>
-    <input type="text" name="content" style="font-size: small" disabled="disabled" value="${content}">
+    ${content}
   </div>
 </div>
+
+<hr>
 
 <div class="row">
   <div class="col-md-12" >
@@ -35,22 +38,24 @@
 <hr>
 
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-md-12">
     <span style="font-size: small;" name="burnUri"></span>
   </div>
 </div>
 
 <div class="row">
   <div class="col-md-2">
-    <button class="btn  btn-danger btn-sm" name="destoryButton" style="display: none">
-      <span style="font-size: small;" >点此销毁本信息</span>
+    <button class="btn btn-danger btn-sm" name="destoryButton" style="display: none">
+      <span style="font-size: small;" >马上销毁本信息</span>
     </button>
   </div>
+</div>
 
+<hr>
+
+<div class="row">
   <div class="col-md-2">
-    <button class="btn  btn-primary btn-sm" name="createBurnMessage">
-      <span style="font-size: small;" >点此新建另一条信息</span>
-    </button>
+    <a href="/articleBurn/createBurnMessage">点此新建另一条信息</a>
   </div>
 </div>
 
@@ -78,7 +83,8 @@
       var remainingReadCount = ${remainingReadCount};
       if(remainingReadCount > 0) {
         $("span[name='comment']").text("再读( " + remainingReadCount + " )次后销毁");
-        $("span[name='burnUri']").append("销毁地址: ");
+        $("span[name='burnUri']").append("访问此地址销毁信息: ");
+        $("span[name='burnUri']").append("<br>");
         $("span[name='burnUri']").append(urlPerfix);
         $("span[name='burnUri']").append(burnUri);
         $("button[name='destoryButton']").show();
@@ -110,21 +116,6 @@
           }  
         });  
       };
-
-      $("button[name='createBurnMessage']").click(function() {
-        var url="${pageContext.request.contextPath}/articleBurn/createBurnMessage"
-        $.ajax({  
-          type : "GET",  
-          async : true,
-          url : url,  
-          success:function(datas){  
-              $("#createBurnMessage").html(datas);
-          },  
-          error: function(datas) {  
-              
-          }  
-        });  
-      });
 
     });
 

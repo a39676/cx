@@ -2,7 +2,6 @@ package demo.article.article.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import demo.base.user.pojo.type.RolesType;
 import demo.baseCommon.service.CommonService;
 import demo.tool.service.TextFilter;
 
@@ -28,10 +27,4 @@ public class ArticleCommonService extends CommonService {
 //		imageHttpUrlPattern = "(https?://(?:.*)(/\\S+\\." + imageSuffixPattern + "))";
 //	}}
 
-	protected boolean isBigUser() {
-		return baseUtilCustom.hasAnyRole(
-				RolesType.ROLE_POSTER.getName(),
-				RolesType.ROLE_ADMIN.getName(),
-				RolesType.ROLE_SUPER_ADMIN.getName());
-	}
 }

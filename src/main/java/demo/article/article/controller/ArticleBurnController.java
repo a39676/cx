@@ -1,5 +1,7 @@
 package demo.article.article.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,8 +34,8 @@ public class ArticleBurnController extends CommonController {
 	
 	@PostMapping(value = ArticleBurnUrlConstant.creatingBurnMessage)
 	@ResponseBody
-	public CreatingBurnMessageResult createBurnMessage(@RequestBody CreatingBurnMessageDTO dto) {
-		return articleBurnService.creatingBurnMessage(dto);
+	public CreatingBurnMessageResult createBurnMessage(@RequestBody CreatingBurnMessageDTO dto, HttpServletRequest request) {
+		return articleBurnService.creatingBurnMessage(dto, request);
 	}
 	
 	@GetMapping(value = ArticleBurnUrlConstant.readBurningMessage)

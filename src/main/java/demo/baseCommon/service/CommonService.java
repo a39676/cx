@@ -15,6 +15,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.service.impl.SystemConstantService;
+import demo.base.user.pojo.type.RolesType;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.config.costom_component.BaseUtilCustom;
@@ -197,4 +198,10 @@ public abstract class CommonService {
 		return Long.parseLong(encryptId);
 	}
 	
+	protected boolean isBigUser() {
+		return baseUtilCustom.hasAnyRole(
+				RolesType.ROLE_POSTER.getName(),
+				RolesType.ROLE_ADMIN.getName(),
+				RolesType.ROLE_SUPER_ADMIN.getName());
+	}
 }

@@ -3,12 +3,15 @@ package demo.article.article.service.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.owasp.html.PolicyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import autoTest.testEvent.pojo.constant.SearchingDemoConstant;
 import demo.article.article.mapper.ArticleBurnMapper;
 import demo.article.article.pojo.constant.ArticleBurnUrlConstant;
 import demo.article.article.pojo.constant.ArticleViewConstant;
@@ -21,6 +24,9 @@ import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.article.service.ArticleBurnService;
 import demo.article.article.service.ArticleService;
 import demo.base.system.pojo.bo.SystemConstantStore;
+import demo.base.system.pojo.constant.SystemRedisKey;
+import demo.base.system.pojo.result.HostnameType;
+import demo.base.system.service.HostnameService;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -31,6 +37,8 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 	private FileUtilCustom ioUtil;
 	@Autowired
 	private ArticleService articleService;
+	@Autowired
+	private HostnameService hostnameService;
 	@Autowired
 	private ArticleBurnMapper articleBurnMapper;
 	
@@ -53,13 +61,40 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		
 	}
 	
+	private boolean isInEasyOrDev(HttpServletRequest request) {
+		HostnameType hostnameType = hostnameService.findHostname(request);
+		if (HostnameType.seek.equals(hostnameType)) {
+			return true;
+		} else {
+			String envName = constantService.getValByName(SystemConstantStore.envName);
+			return "dev".equals(envName);
+		}
+	}
+	
 	@Override
-	public CreatingBurnMessageResult creatingBurnMessage(CreatingBurnMessageDTO dto) {
+	public CreatingBurnMessageResult creatingBurnMessage(CreatingBurnMessageDTO dto, HttpServletRequest request) {
 		CreatingBurnMessageResult r = new CreatingBurnMessageResult();
+		
+		if(!isInEasyOrDev(request)) {
+			return null;
+		}
+
 		if(StringUtils.isBlank(dto.getContent()) || dto.getContent().length() > loadMaxArticleLength()) {
 			r.fillWithResult(ResultTypeCX.errorParam);
 			return r;
 		}
+		
+		int count = 0;
+		if(!isBigUser()) {
+			count = visitDataService.checkFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
+		}
+		if (!"dev".equals(constantService.getValByName(SystemConstantStore.envName))) {
+			if (count >= SearchingDemoConstant.maxInsertCountIn30Minutes) {
+				r.failWithMessage("短时间内加入的任务太多了, 请稍后再试");
+				return r;
+			}
+		}
+		
 		PolicyFactory filter = textFilter.getFilter();
 		String contentAfterSanitize = filter.sanitize(dto.getContent());
 		Long userId = baseUtilCustom.getUserId();
@@ -70,6 +105,11 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 			saveArticleFileResult = articleService.saveArticleFile(getArticleBurnStorePrefixPath(), userId, contentAfterSanitize);
 		} catch (Exception e) {
 			r.failWithMessage("保存信息异常");
+			return r;
+		}
+		
+		if(!saveArticleFileResult.isSuccess()) {
+			r.setMessage(saveArticleFileResult.getMessage());
 			return r;
 		}
 
@@ -105,6 +145,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		r.setReadUri(ArticleBurnUrlConstant.root + ArticleBurnUrlConstant.readBurningMessage + "?readKey=" + r.getReadKey());
 		r.setBurnUri(ArticleBurnUrlConstant.root + ArticleBurnUrlConstant.burnMessage + "?burnKey=" + r.getBurnKey());
 		r.setIsSuccess();
+		visitDataService.insertFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
 		
 		return r;
 	}

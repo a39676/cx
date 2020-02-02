@@ -2,11 +2,6 @@
 
 nginx 未良好处理 非 www. 跳转
 
-阅后即焚需要改动
-新增定时任务 定时删除 阅后即焚信息相关
-	数据表
-	另存的文件 
-
 MailRecord mailKey 字段, 以前使用 uuid , 现更改为 Long ; 有时间需改变字段类型;
 
 CREATE TABLE `duralbe_recorder` (

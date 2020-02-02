@@ -291,4 +291,19 @@
     update article_burn set read_count = read_count + 1 , is_burned = true where article_id = #{id}
   </update>
 
+  <select id="findExpiredArticleBurn" resultMap="BaseResultMap">
+    select
+      *
+    from
+      article_burn
+    where
+      is_burned = true or valid_time &lt; #{validTime}
+  </select>
+
+  <delete id="batchDeleteById">
+    delete from article_burn where id in
+    <foreach open="(" separator="," close=")" collection="idList" item="id">
+      #{id}
+    </foreach>
+  </delete>
 </mapper>

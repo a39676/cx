@@ -1,6 +1,8 @@
 package demo.article.article.service.impl;
 
+import java.io.File;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -241,4 +243,30 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		}
 	}
 
+	@Override
+	public void cleanExpiredArticleBurn() {
+		List<ArticleBurn> poList = articleBurnMapper.findExpiredArticleBurn(LocalDateTime.now().plusMinutes(20));
+		if(poList == null || poList.size() < 1) {
+			return;
+		}
+		
+		File tmpFile = null;
+		List<Long> poIdList = new ArrayList<Long>();
+		for(ArticleBurn po : poList) {
+			tmpFile = new File(po.getFilePath());
+			if(tmpFile.exists()) {
+				try {
+					tmpFile.deleteOnExit();
+				} catch (Exception e) {
+					
+				}
+				if(!tmpFile.exists()) {
+					poIdList.add(po.getArticleId());
+				}
+			}
+		}
+		
+		articleBurnMapper.batchDeleteById(poIdList);
+		
+	}
 }

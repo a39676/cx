@@ -16,4 +16,7 @@ public interface ArticleBurnService {
 	void burnArticleByBurnKey(String burnKey);
 
 	ModelAndView readBurningMessage(String readKey);
+
+	/** 清理时间过长的阅后即焚信息. */
+	void cleanExpiredArticleBurn();
 }

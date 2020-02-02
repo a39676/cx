@@ -1,5 +1,6 @@
 package demo.article.article.mapper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -37,4 +38,8 @@ public interface ArticleBurnMapper {
     void readCountPlus(Long id);
     
     void lastRead(Long readId);
+
+    List<ArticleBurn> findExpiredArticleBurn(LocalDateTime validTime);
+    
+    int batchDeleteById(@Param("idList") List<Long> idList);
 }

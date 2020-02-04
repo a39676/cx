@@ -139,12 +139,10 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 			if (!dto.getRunFlag()) {
 				j.put("runFlag", "false");
 			}
-			if(dto.getIsSuccess() != null) {
-				if(dto.getIsSuccess()) {
-					j.put("isSuccess", "true");
-				} else {
-					j.put("isSuccess", "false");
-				}
+			if(dto.getIsSuccess() == null || dto.getIsSuccess()) {
+				j.put("isSuccess", "true");
+			} else {
+				j.put("isSuccess", "false");
 			}
 
 			String url = ServerHost.localHost10002 + AutoTestInteractionUrl.root

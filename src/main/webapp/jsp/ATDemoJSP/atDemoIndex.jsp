@@ -70,6 +70,18 @@
                     <label class="form-check-label badge badge-secondary" for="taskNotRun">任务未启动</label>
                   </div>
                 </div>
+                <sec:authorize access="hasRole('ROLE_ADMIN')">
+                  <div class="control-group">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="taskRunSuccess" name="taskSuccessType" checked="checked" value="true">
+                    <label class="form-check-label badge badge-secondary" for="taskRunSuccess">任务成功</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="taskRunFail" name="taskSuccessType" value="false">
+                    <label class="form-check-label badge badge-secondary" for="taskRunFail">任务失败</label>
+                  </div>
+                </div>
+                </sec:authorize>
                 <div class="control-group">
                   <span class="badge badge-info">任务启动时间范围</span>
                   <input type="date" id="runTimeStartDate" value="2019-01-01"> 
@@ -170,6 +182,7 @@
 
   <script type="text/javascript">
   $(document).ready(function() {
+
     var getUrlParameter = function getUrlParameter(sParam) {
       var sPageURL = decodeURIComponent(window.location.search.substring(1)),
       sURLVariables = sPageURL.split('&'),
@@ -237,6 +250,7 @@
       var runTimeStartTime = null;
       var runTimeEndTime = null;
       var runFlag = true;
+      var runSuccessFlag = $("#taskRunSuccess:checked").val();
 
       var runFlag = $("#taskHadRun:checked").val();
       if(runFlag != null && runFlag.length) {
@@ -244,6 +258,11 @@
         runTimeEndTime = buildDateTime(sourceRunTimeEndDate, sourceRunTimeEndTime);
       } else {
         runFlag = false;
+      }
+      
+      if(runSuccessFlag != null && runSuccessFlag.length) {
+      } else {
+        runSuccessFlag = false;
       }
 
       $("#loadingImg").fadeIn(150);    
@@ -261,8 +280,11 @@
         id:id,
         moduleId:moduleId,
         caseId:caseId,
-        runFlag:runFlag
+        runFlag:runFlag,
+        isSuccess:runSuccessFlag
       };
+
+      console.log(jsonOutput);
 
       var url = "/atDemo/findReportsByCondition";
       $.ajax({

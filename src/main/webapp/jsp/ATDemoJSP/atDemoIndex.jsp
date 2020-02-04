@@ -250,7 +250,7 @@
       var runTimeStartTime = null;
       var runTimeEndTime = null;
       var runFlag = true;
-      var runSuccessFlag = $("#taskRunSuccess:checked").val();
+      var runSuccessFlag = null;
 
       var runFlag = $("#taskHadRun:checked").val();
       if(runFlag != null && runFlag.length) {
@@ -260,9 +260,12 @@
         runFlag = false;
       }
       
-      if(runSuccessFlag != null && runSuccessFlag.length) {
-      } else {
+      var taskRunSuccessVal = $("#taskRunSuccess:checked").val();
+      var taskRunFailVal = $("#taskRunFail:checked").val();
+      if(taskRunSuccessVal != null && taskRunSuccessVal.length) {
         runSuccessFlag = false;
+      } else if(taskRunFailVal != null && taskRunFailVal.length) {
+        runSuccessFlag = true;
       }
 
       $("#loadingImg").fadeIn(150);    

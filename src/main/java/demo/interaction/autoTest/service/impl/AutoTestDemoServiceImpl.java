@@ -76,6 +76,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 			}
 			v.addObject("modules", modules);
 		}
+		v.addObject("defaultStartTime", localDateTimeHandler.dateToStr(LocalDateTime.now().withMonth(1).withDayOfMonth(1), DateTimeUtilCommon.normalDateFormat));
 
 		return v;
 	}
@@ -88,9 +89,21 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 		}
 		
 		if (!baseUtilCustom.hasAdminRole()) {
-//			ATDemo(3L, "ATDemo")
-			dto.setModuleId(3L);
+			dto.setModuleId(TestModuleType.ATDemo.getId());
 		}
+		
+		
+		if(dto.getEndTime() != null) {
+			if(dto.getCreateEndTime() != null) {
+				if(dto.getEndTime().isBefore(dto.getCreateEndTime())) {
+					dto.setCreateEndTime(dto.getEndTime());
+				}
+			} else {
+				dto.setCreateEndTime(dto.getEndTime());
+			}
+			dto.setEndTime(null);
+		}
+		
 		try {
 			JSONObject j = new JSONObject();
 			if (dto.getCreateStartTime() != null) {
@@ -104,9 +117,6 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 			}
 			if (dto.getRunTimeEndTime() != null) {
 				j.put("runTimeEndTime", localDateTimeHandler.dateToStr(dto.getRunTimeEndTime()));
-			}
-			if (dto.getEndTime() != null) {
-				j.put("endTime", localDateTimeHandler.dateToStr(dto.getEndTime()));
 			}
 			if (StringUtils.isNotBlank(dto.getEventName())) {
 				j.put("eventName", dto.getEventName());
@@ -129,10 +139,12 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 			if (!dto.getRunFlag()) {
 				j.put("runFlag", "false");
 			}
-			if(dto.getIsSuccess()) {
-				j.put("isSuccess", "true");
-			} else {
-				j.put("isSuccess", "false");
+			if(dto.getIsSuccess() != null) {
+				if(dto.getIsSuccess()) {
+					j.put("isSuccess", "true");
+				} else {
+					j.put("isSuccess", "false");
+				}
 			}
 
 			String url = ServerHost.localHost10002 + AutoTestInteractionUrl.root

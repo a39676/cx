@@ -54,7 +54,7 @@
               <form id="searchConditionArea" markTime="" loadingFlag="">
                 <div class="control-group">
                   <span class="badge badge-info">任务创建时间范围</span>
-                  <input type="date" id="createStartDate" value="2019-01-01"> 
+                  <input type="date" id="createStartDate" value="${defaultStartTime}"> 
                   <input type="time" time="HH:mm:ss" id="createStartTime" step="1" value="00:00:00">
                   <span>~</span>
                   <input type="date" id="createEndDate" value="${createEndTime}">
@@ -84,7 +84,7 @@
                 </sec:authorize>
                 <div class="control-group">
                   <span class="badge badge-info">任务启动时间范围</span>
-                  <input type="date" id="runTimeStartDate" value="2019-01-01"> 
+                  <input type="date" id="runTimeStartDate" value="${defaultStartTime}"> 
                   <input type="time" time="HH:mm:ss" id="runTimeStartTime"step="1" value="00:00:00">
                   <span>~</span>
                   <input type="date" id="runTimeEndDate" value="${runTimeEndTime}">

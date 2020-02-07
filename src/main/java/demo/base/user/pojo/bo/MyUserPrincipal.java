@@ -130,7 +130,7 @@ public class MyUserPrincipal implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		if (user != null) {
-			return user.getEnable();
+			return user.getEnabled();
 		} else {
 			return false;
 		}

@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +14,7 @@ import demo.base.user.mapper.RolesMapper;
 import demo.base.user.mapper.UsersDetailMapper;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.bo.MyUserPrincipal;
+import demo.base.user.pojo.dto.FindUserByConditionDTO;
 import demo.base.user.pojo.dto.OtherUserInfoDTO;
 import demo.base.user.pojo.dto.ResetFailAttemptDTO;
 import demo.base.user.pojo.dto.UserAttemptQuerayDTO;
@@ -23,6 +23,10 @@ import demo.base.user.pojo.po.Roles;
 import demo.base.user.pojo.po.UserAttempts;
 import demo.base.user.pojo.po.Users;
 import demo.base.user.pojo.po.UsersDetail;
+import demo.base.user.pojo.po.UsersDetailExample;
+import demo.base.user.pojo.po.UsersExample;
+import demo.base.user.pojo.po.UsersExample.Criteria;
+import demo.base.user.pojo.result.FindUserByConditionResult;
 import demo.base.user.pojo.type.UserPrivateLevelType;
 import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.UsersService;
@@ -132,7 +136,7 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 			return new UsersDetailVO();
 		}
 		
-		return buildUserDetailVOByPo(usersDetailMapper.findUserDetail(userId), true);
+		return buildUserDetailVOByPo(usersDetailMapper.selectByPrimaryKey(userId), true);
 	}
 	
 	@Override
@@ -148,9 +152,13 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 		if(StringUtils.isBlank(param.getNickName()) || StringUtils.isBlank(param.getPk())) {
 			return new UsersDetailVO();
 		}
-		String nickNameAfterEscapeHtml = StringEscapeUtils.escapeHtml(param.getNickName());
-		
-		return buildUserDetailVOByPo(usersDetailMapper.findUserDetailByNickName(nickNameAfterEscapeHtml), false);
+		UsersDetailExample example = new UsersDetailExample();
+		example.createCriteria().andNickNameEqualTo(param.getNickName());
+		List<UsersDetail> udList = usersDetailMapper.selectByExample(example);
+		if(udList == null || udList.size() < 1) {
+			return new UsersDetailVO();
+		}
+ 		return buildUserDetailVOByPo(udList.get(0), false);
 	}
 	
 	private UsersDetailVO buildUserDetailVOByPo(UsersDetail ud, boolean myDetail) {
@@ -175,7 +183,7 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 			} else {
 				vo.setGender(GenderType.unknow.getName());
 			}
-			vo.setLastLoginTime(ud.getLastLoginTime());
+			vo.setLastLoginTime(localDateTimeHandler.localDateTimeToDate(ud.getLastLoginTime()));
 			vo.setMobile(ud.getMobile());
 			vo.setQq(ud.getQq());
 			if(myDetail) {
@@ -189,17 +197,6 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 		return vo;
 	}
 
-//	/** 查找持有某种权限的用户ID 2019-06-24 增加角色/机构逻辑后,将完全删除此逻辑 */
-	/*
-//	public List<Long> findUserIdListByRoleId(Integer roleId) {
-//		if(roleId == null) {
-//			return new ArrayList<Long>();
-//		}
-//		
-//		return userRolesMapper.findUserIdListByRoleId(roleId);
-//	}
- */
-	
 	@Override
 	public List<Long> findUserIdListByAuthId(Long authId) {
 		if (authId == null) {
@@ -227,4 +224,55 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 		return roleMapper.findRolesByAuthIdList(authIdList);
 	}
 
+	@Override
+	public FindUserByConditionResult findUserByCondition(FindUserByConditionDTO dto) {
+		FindUserByConditionResult r = new FindUserByConditionResult();
+		List<Users> userList = new ArrayList<Users>();
+		if(dto.getUserId() == null && StringUtils.isAllBlank(dto.getUserName(), dto.getUserNickName())) {
+			r.setUserList(userList);
+			return r;
+		}
+		
+		UsersExample userExample = new UsersExample();
+		Criteria userC = userExample.createCriteria();
+		if(dto.getAccountNonExpired() != null) {
+			userC.andAccountNonExpiredEqualTo(dto.getAccountNonExpired());
+		}
+		if(dto.getAccountNonLocked() != null) {
+			userC.andAccountNonLockedEqualTo(dto.getAccountNonExpired());
+		}
+		if(dto.getCredentialsNonExpired() != null) {
+			userC.andCredentialsNonExpiredEqualTo(dto.getAccountNonExpired());
+		}
+		if(dto.getUserId() != null) {
+			userC.andUserIdEqualTo(dto.getUserId());
+		}
+		if(StringUtils.isNotBlank(dto.getUserName())) {
+			userC.andUserNameLike(dto.getUserName());
+		}
+		
+		userList = usersMapper.selectByExample(userExample);
+		
+		List<UsersDetail> userDetailList = null;
+		if(StringUtils.isNotBlank(dto.getUserNickName())) {
+			UsersDetailExample userDetailExample = new UsersDetailExample();
+			userDetailExample.createCriteria().andNickNameEqualTo(dto.getUserNickName());
+			userDetailList = usersDetailMapper.selectByExample(userDetailExample);
+		}
+		
+		if(StringUtils.isBlank(dto.getUserNickName())) {
+			r.setUserList(userList);
+			return r;
+		}
+		
+		List<Users> resultUserList = new ArrayList<Users>();
+		List<Long> userDetailIdList = userDetailList.stream().map(UsersDetail::getUserId).collect(Collectors.toList());
+		for(Users u : userList) {
+			if(userDetailIdList.contains(u.getUserId())) {
+				resultUserList.add(u);
+			}
+		}
+		r.setUserList(resultUserList);
+		return r;
+	}
 }

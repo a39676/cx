@@ -1,6 +1,6 @@
 package demo.base.user.pojo.po;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import demo.base.user.pojo.type.UserPrivateLevelType;
 
@@ -19,9 +19,9 @@ public class UsersDetail {
 
 	private Long mobile;
 
-	private Date lastLoginTime;
+	private LocalDateTime lastLoginTime;
 
-	private Date modifyTime;
+	private LocalDateTime modifyTime;
 
 	private Integer modifyCount;
 
@@ -33,14 +33,6 @@ public class UsersDetail {
 	private Integer privateLevel;
 
 	private String headImage;
-
-	public String getHeadImage() {
-		return headImage;
-	}
-
-	public void setHeadImage(String headImage) {
-		this.headImage = headImage;
-	}
 
 	public Long getUserId() {
 		return userId;
@@ -98,19 +90,19 @@ public class UsersDetail {
 		this.mobile = mobile;
 	}
 
-	public Date getLastLoginTime() {
+	public LocalDateTime getLastLoginTime() {
 		return lastLoginTime;
 	}
 
-	public void setLastLoginTime(Date lastLoginTime) {
+	public void setLastLoginTime(LocalDateTime lastLoginTime) {
 		this.lastLoginTime = lastLoginTime;
 	}
 
-	public Date getModifyTime() {
+	public LocalDateTime getModifyTime() {
 		return modifyTime;
 	}
 
-	public void setModifyTime(Date modifyTime) {
+	public void setModifyTime(LocalDateTime modifyTime) {
 		this.modifyTime = modifyTime;
 	}
 
@@ -145,6 +137,15 @@ public class UsersDetail {
 	public void setPrivateLevel(Integer privateLevel) {
 		this.privateLevel = privateLevel;
 	}
+
+	public String getHeadImage() {
+		return headImage;
+	}
+
+	public void setHeadImage(String headImage) {
+		this.headImage = headImage == null ? null : headImage.trim();
+	}
+
 
 	@Override
 	public String toString() {

@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import demo.base.user.pojo.bo.MyUserPrincipal;
+import demo.base.user.pojo.dto.FindUserByConditionDTO;
 import demo.base.user.pojo.dto.OtherUserInfoDTO;
 import demo.base.user.pojo.dto.UserAttemptQuerayDTO;
 import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.po.Roles;
 import demo.base.user.pojo.po.UserAttempts;
 import demo.base.user.pojo.po.Users;
+import demo.base.user.pojo.result.FindUserByConditionResult;
 import demo.base.user.pojo.vo.UsersDetailVO;
 
 
@@ -60,5 +62,6 @@ public interface UsersService {
 
 	List<Roles> findRolesByAuthIdList(List<Long> authIdList);
 
+	FindUserByConditionResult findUserByCondition(FindUserByConditionDTO dto);
 
 }

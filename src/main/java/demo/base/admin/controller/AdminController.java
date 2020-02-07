@@ -84,7 +84,7 @@ public class AdminController extends CommonController {
 
 		Users tmpUser = new Users();
 		tmpUser.setUserName(formData.get("userName").get(0));
-		tmpUser.setEnable(Boolean.parseBoolean(formData.get("enable").get(0)));
+		tmpUser.setEnabled(Boolean.parseBoolean(formData.get("enable").get(0)));
 		tmpUser.setAccountNonLocked(Boolean.parseBoolean(formData.get("accountNonLocked").get(0)));
 		tmpUser.setAccountNonExpired(Boolean.parseBoolean(formData.get("accountNonExpired").get(0)));
 		tmpUser.setCredentialsNonExpired(Boolean.parseBoolean(formData.get("credentialsNonExpired").get(0)));

@@ -10,8 +10,28 @@ import demo.base.user.pojo.dto.UserAttemptQuerayDTO;
 import demo.base.user.pojo.po.UserAttempts;
 import demo.base.user.pojo.po.Users;
 import demo.base.user.pojo.po.UsersDetail;
+import demo.base.user.pojo.po.UsersExample;
+import java.util.List;
 
 public interface UsersMapper {
+
+	long countByExample(UsersExample example);
+
+	int deleteByExample(UsersExample example);
+
+	int deleteByPrimaryKey(Long userId);
+
+	List<Users> selectByExample(UsersExample example);
+
+	Users selectByPrimaryKey(Long userId);
+
+	int updateByExampleSelective(@Param("record") Users record, @Param("example") UsersExample example);
+
+	int updateByExample(@Param("record") Users record, @Param("example") UsersExample example);
+
+	int updateByPrimaryKeySelective(Users record);
+
+	int updateByPrimaryKey(Users record);
 
 	int insert(Users record);
 

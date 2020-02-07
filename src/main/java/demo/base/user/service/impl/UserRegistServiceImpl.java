@@ -304,7 +304,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
     	user.setAccountNonExpired(true);
 		user.setAccountNonLocked(true);
 		user.setCredentialsNonExpired(true);
-		user.setEnable(true);
+		user.setEnabled(true);
     	return user;
     }
 	
@@ -613,7 +613,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		usersMapper.resetFailAttempts(resetFailAttemptParam);
 		
 		Users tmpUser = new Users();
-		tmpUser.setEnable(true);
+		tmpUser.setEnabled(true);
 		userService.setLockeds(tmpUser);
 		
 		result.successWithMessage("已成功重置密码");

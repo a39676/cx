@@ -161,9 +161,10 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		}
 
 		/*
-		 * TODO 2019-12-13 
-		 * 频道逻辑将重构.
-		 * 重构完成前, 对非管理员只开放公共频道
+		 * TODO 
+		 * 2020-02-06
+		 * 暂时不开放闪现频道
+		 * 考虑废除闪现频道?
 		 */
 		
 		ArticleChannelsExample example = new ArticleChannelsExample();

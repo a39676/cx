@@ -32,6 +32,7 @@ import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.UsersService;
 import demo.baseCommon.pojo.type.GenderType;
 import demo.baseCommon.service.CommonService;
+import demo.tool.service.ValidRegexToolService;
 
 /**
  * @author Acorn 2017年4月13日
@@ -47,6 +48,8 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 	private RolesMapper roleMapper;
 	@Autowired
 	private UsersDetailMapper usersDetailMapper;
+	@Autowired
+	private ValidRegexToolService validRegexToolService;
 
 	@Override
 	public int insertFailAttempts(String userName) {
@@ -136,7 +139,7 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 			return new UsersDetailVO();
 		}
 		
-		return buildUserDetailVOByPo(usersDetailMapper.selectByPrimaryKey(userId), true);
+		return buildUserDetailVOByPO(usersDetailMapper.selectByPrimaryKey(userId), true);
 	}
 	
 	@Override
@@ -158,10 +161,14 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 		if(udList == null || udList.size() < 1) {
 			return new UsersDetailVO();
 		}
- 		return buildUserDetailVOByPo(udList.get(0), false);
+ 		return buildUserDetailVOByPO(udList.get(0), false);
 	}
 	
-	private UsersDetailVO buildUserDetailVOByPo(UsersDetail ud, boolean myDetail) {
+	private UsersDetailVO buildUserDetailVOByPO(UsersDetail ud) {
+		return buildUserDetailVOByPO(ud, false);
+	}
+	
+	private UsersDetailVO buildUserDetailVOByPO(UsersDetail ud, boolean myDetail) {
 		UsersDetailVO vo = new UsersDetailVO();
 		if(ud == null) {
 		    return vo;
@@ -227,52 +234,62 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 	@Override
 	public FindUserByConditionResult findUserByCondition(FindUserByConditionDTO dto) {
 		FindUserByConditionResult r = new FindUserByConditionResult();
-		List<Users> userList = new ArrayList<Users>();
-		if(dto.getUserId() == null && StringUtils.isAllBlank(dto.getUserName(), dto.getUserNickName())) {
-			r.setUserList(userList);
+		List<UsersDetailVO> userVOList = new ArrayList<UsersDetailVO>();
+		List<Long> userIdList = new ArrayList<Long>();
+		String validUserName = null;
+		
+		if(validRegexToolService.validNormalUserName(dto.getUserName())) {
+			validUserName = dto.getUserName();
+		}
+		
+		if(dto.getUserId() == null && validUserName == null && StringUtils.isBlank(dto.getUserNickName())) {
+			r.setUserList(userVOList);
 			return r;
 		}
 		
-		UsersExample userExample = new UsersExample();
-		Criteria userC = userExample.createCriteria();
-		if(dto.getAccountNonExpired() != null) {
-			userC.andAccountNonExpiredEqualTo(dto.getAccountNonExpired());
-		}
-		if(dto.getAccountNonLocked() != null) {
-			userC.andAccountNonLockedEqualTo(dto.getAccountNonExpired());
-		}
-		if(dto.getCredentialsNonExpired() != null) {
-			userC.andCredentialsNonExpiredEqualTo(dto.getAccountNonExpired());
-		}
 		if(dto.getUserId() != null) {
-			userC.andUserIdEqualTo(dto.getUserId());
-		}
-		if(StringUtils.isNotBlank(dto.getUserName())) {
-			userC.andUserNameLike(dto.getUserName());
+			userIdList.add(dto.getUserId());
+			
+		} else if (validUserName != null) {
+			UsersExample userExample = new UsersExample();
+			Criteria userCriteria = userExample.createCriteria();
+			if(dto.getAccountNonExpired() != null) {
+				userCriteria.andAccountNonExpiredEqualTo(dto.getAccountNonExpired());
+			}
+			if(dto.getAccountNonLocked() != null) {
+				userCriteria.andAccountNonLockedEqualTo(dto.getAccountNonExpired());
+			}
+			if(dto.getCredentialsNonExpired() != null) {
+				userCriteria.andCredentialsNonExpiredEqualTo(dto.getAccountNonExpired());
+			}
+			if(dto.getUserId() != null) {
+				userCriteria.andUserIdEqualTo(dto.getUserId());
+			}
+			if(validUserName != null) {
+				userCriteria.andUserNameLike("%" + validUserName + "%");
+			}
+			
+			List<Users> userList = usersMapper.selectByExample(userExample);
+			userIdList.addAll(userList.stream().map(Users::getUserId).collect(Collectors.toList()));
 		}
 		
-		userList = usersMapper.selectByExample(userExample);
 		
 		List<UsersDetail> userDetailList = null;
+		UsersDetailExample userDetailExample = new UsersDetailExample();
+		demo.base.user.pojo.po.UsersDetailExample.Criteria userDetailCriteria = userDetailExample.createCriteria();
 		if(StringUtils.isNotBlank(dto.getUserNickName())) {
-			UsersDetailExample userDetailExample = new UsersDetailExample();
-			userDetailExample.createCriteria().andNickNameEqualTo(dto.getUserNickName());
-			userDetailList = usersDetailMapper.selectByExample(userDetailExample);
+			userDetailCriteria.andNickNameLike("%" + dto.getUserNickName() + "%");
 		}
+		if(userIdList.size() > 0) {
+			userDetailCriteria.andUserIdIn(userIdList);
+		}
+		userDetailList = usersDetailMapper.selectByExample(userDetailExample);
 		
-		if(StringUtils.isBlank(dto.getUserNickName())) {
-			r.setUserList(userList);
-			return r;
+		for(UsersDetail u : userDetailList) {
+			userVOList.add(buildUserDetailVOByPO(u));
 		}
-		
-		List<Users> resultUserList = new ArrayList<Users>();
-		List<Long> userDetailIdList = userDetailList.stream().map(UsersDetail::getUserId).collect(Collectors.toList());
-		for(Users u : userList) {
-			if(userDetailIdList.contains(u.getUserId())) {
-				resultUserList.add(u);
-			}
-		}
-		r.setUserList(resultUserList);
+		r.setUserList(userVOList);
+		r.setIsSuccess();
 		return r;
 	}
 }

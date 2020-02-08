@@ -50,4 +50,5 @@ public class TestController2 extends CommonController {
 		return testService.testMyFindHostNameFromRequst(request);
 	}
 	
+	
 }

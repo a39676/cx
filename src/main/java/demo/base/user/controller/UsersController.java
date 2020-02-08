@@ -5,9 +5,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
@@ -15,8 +17,10 @@ import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.base.user.pojo.constant.LoginUrlConstant;
 import demo.base.user.pojo.constant.UsersUrlConstant;
+import demo.base.user.pojo.dto.FindUserByConditionDTO;
 import demo.base.user.pojo.dto.OtherUserInfoDTO;
 import demo.base.user.pojo.po.Users;
+import demo.base.user.pojo.result.FindUserByConditionResult;
 import demo.base.user.pojo.type.RolesType;
 import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.UsersService;
@@ -110,4 +114,10 @@ public class UsersController extends CommonController {
 		return usersService.findHeadImageUrl(userId);
 	}
 
+	@PostMapping(value = UsersUrlConstant.findUserByCondition)
+	@GetMapping(value = UsersUrlConstant.findUserByCondition)
+	@ResponseBody
+	public FindUserByConditionResult findUserByCondition(@RequestBody FindUserByConditionDTO dto) {
+		return usersService.findUserByCondition(dto);
+	}
 }

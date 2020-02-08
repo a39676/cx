@@ -1,10 +1,5 @@
 package demo.finance.bank.controller;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,9 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 
 import demo.baseCommon.controller.CommonController;
 import demo.finance.bank.pojo.bo.BankInfoCustomBO;
@@ -79,7 +71,7 @@ public class BankInfoController extends CommonController {
 	
 	@PostMapping(value = BankUrl.bankSelectorV4)
 	@ResponseBody
-	public FindBankInfoResult getBankButtonV4(@RequestBody FindBankInfoParam param, HttpServletRequest request, HttpServletResponse response) throws JsonParseException, JsonMappingException, IOException {
+	public FindBankInfoResult getBankButtonV4(@RequestBody FindBankInfoParam param) {
 		return bankInfoService.getBankInfoByCondition(param);
 	}
 }

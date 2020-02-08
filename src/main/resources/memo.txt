@@ -1,3 +1,6 @@
+cloudinary 可用图片url 上传图片
+https://cloudinary.com/documentation/image_upload_api_reference
+
 富文本编辑器, 未处理上传图片的情况 
 	暂时不缓存图片, 禁止编辑器的图片输入按钮?
 

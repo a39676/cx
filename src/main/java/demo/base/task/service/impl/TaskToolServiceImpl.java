@@ -70,13 +70,13 @@ public class TaskToolServiceImpl implements TaskToolService {
 		mailRecordMapper.cleanMailRecord(null);
 	}
 	
-	/** 查看是否有邮件任务未完成(用户注册后/换邮箱后,未发送激活邮件) */
-	@Scheduled(cron="0 */10 * * * ?")
-	public void hasMailTask() {
-		if(mailRecordMapper.hasMailTask() > 0) {
-			userRegistService.handleMails();
-		}
-	}
+//	/** 查看是否有邮件任务未完成(用户注册后/换邮箱后,未发送激活邮件) */
+//	@Scheduled(cron="0 */10 * * * ?")
+//	public void hasMailTask() {
+//		if(mailRecordMapper.hasMailTask() > 0) {
+//			userRegistService.handleMails();
+//		}
+//	}
 	
 	/**
 	 * 将评价缓存转存至历史表,仅记录数字,抹去原记录

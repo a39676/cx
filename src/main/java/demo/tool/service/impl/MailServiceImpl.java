@@ -1,7 +1,6 @@
 package demo.tool.service.impl;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
@@ -16,21 +15,23 @@ import javax.mail.Store;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.search.SearchTerm;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.pojo.bo.SystemConstantStore;
-import demo.base.user.pojo.bo.UserMailAndMailKeyBO;
 import demo.base.user.pojo.constant.UsersUrlConstant;
 import demo.base.user.service.UsersService;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
 import demo.tool.mapper.MailRecordMapper;
-import demo.tool.pojo.MailRecord;
-import demo.tool.pojo.dto.InsertNewMailRecordParam;
+import demo.tool.pojo.dto.ResendMailDTO;
+import demo.tool.pojo.dto.SendMailDTO;
+import demo.tool.pojo.po.MailRecord;
+import demo.tool.pojo.po.MailRecordExample;
+import demo.tool.pojo.result.SendRegistMailResult;
 import demo.tool.pojo.type.MailType;
 import demo.tool.service.MailService;
 import mail.service.MailToolService;
@@ -135,78 +136,76 @@ public class MailServiceImpl extends CommonService implements MailService {
 				);
 	}
 
-	// 暂时不再主动发送注册验证邮件,改为验证用户发送的邮件. 2018-06-28
-//	@Override
-//	public CommonResult sendRegistMail(Long userId, String sendTo, String nickName) {
-//		CommonResult result = new CommonResult();
-//		if(userId == null) {
-//			result.failWithMessage(ResultType.nullParam.getName());
-//			return result;
-//		}
-//		if(!isMailReady()) {
-//			result.failWithMessage(ResultType.mailBaseOptionError.getName());
-//			return result;
-//		}
-//		
-//		String hostName = systemConstantService.getValByName(SystemConstantStore.hostName);
-//		if(StringUtils.isBlank(hostName)) {
-//			result.failWithMessage(ResultType.serviceError.getName());
-//			return result;
-//		}
-//		
-//		String mailKey = String.valueOf(snowFlake.getNextId());
-//		String mailUrl = hostName + UsersUrlConstant.root + UsersUrlConstant.registActivation + "?mailKey=" + mailKey;
-//		
-//		sendSimpleMail(userId, sendTo, "欢迎注册", createRegistMailContent(nickName, mailUrl), mailKey, MailType.registActivation);
-//		
-//		MailRecord mr = new MailRecord();
-//		mr.setMailType(MailType.registActivation.getValue());
-//		mr.setValidTime(DateUtilCustom.localDateTimeToDate(LocalDateTime.now().plusDays(3L)));
-//		mr.setMailKey(mailKey);
-//		mr.setUserId(userId);
-//		mailRecordMapper.insertSelective(mr);
-//		
-//		result.successWithMessage(mailKey);
-//		return result;
-//		return null;
-//	}
+	@Override
+	public SendRegistMailResult sendRegistMail(SendMailDTO dto) {
+		SendRegistMailResult result = new SendRegistMailResult();
+		if(dto.getUserId() == null || StringUtils.isAnyBlank(dto.getHostName(), dto.getSendTo(), dto.getNickName())) {
+			result.failWithMessage(ResultTypeCX.nullParam.getName());
+			return result;
+		}
+		if(!isMailReady()) {
+			result.failWithMessage(ResultTypeCX.mailBaseOptionError.getName());
+			return result;
+		}
+		
+		String mailKey = encryptId(snowFlake.getNextId());
+		String mailUrl = dto.getHostName() + UsersUrlConstant.root + UsersUrlConstant.registActivation + "?mailKey=" + mailKey;
+		
+		sendSimpleMail(dto.getUserId(), dto.getSendTo(), "欢迎注册", createRegistMailContent(dto.getNickName(), mailUrl), mailKey, MailType.registActivation);
+		
+		MailRecord mr = new MailRecord();
+		mr.setId(snowFlake.getNextId());
+		mr.setMailType(MailType.registActivation.getCode());
+		mr.setValidTime(LocalDateTime.now().plusDays(3L));
+		mr.setUserId(dto.getUserId());
+		mailRecordMapper.insertSelective(mr);
+		
+		result.setIsSuccess();
+		result.setMailKey(mailKey);
+		return result;
+	}
 	
-	// 暂时不再主动发送注册验证邮件,改为验证用户发送的邮件. 2018-06-28
-//	@Override
-//	public CommonResult resendRegistMail(Long userId, String sendTo, String nickName, String mailKey, String hostName) {
-//		CommonResult result = new CommonResult();
-//		if(userId == null) {
-//			result.failWithMessage(ResultType.nullParam.getName());
-//			return result;
-//		}
-//		if(!isMailReady()) {
-//			result.failWithMessage(ResultType.mailBaseOptionError.getName());
-//			return result;
-//		}
-//		
-//		if(StringUtils.isBlank(hostName)) {
-//			result.failWithMessage(ResultType.serviceError.getName());
-//			return result;
-//		}
-//		
-//		String mailUrl = hostName + UsersUrlConstant.root + UsersUrlConstant.registActivation + "?mailKey=" + mailKey;
-//		
-//		sendSimpleMail(userId, sendTo, "欢迎注册" + hostName, createRegistMailContent(nickName, mailUrl), mailKey, MailType.registActivation);
-//		
-//		Date tmpDate = DateUtilCustom.dateDiffDays(1);
-//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//		mailRecordMapper.updateResend(mailKey, sdf.format(tmpDate));
-//		
-//		result.successWithMessage(mailKey);
-//		return result;
-//	}
+	@Override
+	public SendRegistMailResult resendRegistMail(ResendMailDTO dto) {
+		
+		SendRegistMailResult result = sendRegistMail(dto);
+		
+		Long mailId = decryptPrivateKey(dto.getMailKey());
+		MailRecord oldMail = mailRecordMapper.selectByPrimaryKey(mailId);
+		if(oldMail == null) {
+			result.failWithMessage(ResultTypeCX.errorParam.getName());
+			return result;
+		}
+		oldMail.setValidTime(oldMail.getValidTime().plusDays(1));
+		mailRecordMapper.updateByPrimaryKeySelective(oldMail);
+		
+		String mailUrl = dto.getHostName() + UsersUrlConstant.root + UsersUrlConstant.registActivation + "?mailKey=" + dto.getMailKey();
+		sendSimpleMail(dto.getUserId(), dto.getSendTo(), "欢迎注册" + dto.getHostName(), createRegistMailContent(dto.getNickName(), mailUrl), dto.getMailKey(), MailType.registActivation);
+		
+		result.setMailKey(dto.getMailKey());
+		return result;
+	}
 
 	@Override
 	public MailRecord findMailByMailKeyMailType(String mailKey, MailType mailType) {
 		if(StringUtils.isBlank(mailKey) || mailType == null) {
 			return new MailRecord();
 		}
-		return mailRecordMapper.findMailByMailKeyMailType(mailKey, mailType.getCode());
+		
+		Long id = decryptPrivateKey(mailKey);
+		if(id == null) {
+			return new MailRecord();
+		}
+		
+		MailRecordExample example = new MailRecordExample();
+		example.createCriteria().andIdEqualTo(id).andMailTypeEqualTo(mailType.getCode());
+		List<MailRecord> mailList = mailRecordMapper.selectByExample(example);
+		
+		if(mailList == null || mailList.size() != 1) {
+			return new MailRecord();
+		}
+		
+		return mailList.get(0);
 	}
 
 	@Override
@@ -214,21 +213,46 @@ public class MailServiceImpl extends CommonService implements MailService {
 		if(userId == null) {
 			return new MailRecord();
 		}
-		return mailRecordMapper.findUnusedByUserId(userId, MailType.registActivation.getCode());
+		
+		MailRecordExample example = new MailRecordExample();
+		example.createCriteria()
+		.andUserIdEqualTo(userId)
+		.andMailTypeEqualTo(MailType.registActivation.getCode())
+		.andWasUsedEqualTo(false)
+		;
+		List<MailRecord> mailList = mailRecordMapper.selectByExample(example);
+		if(mailList == null || mailList.size() != 1) {
+			return new MailRecord();
+		}
+		return mailList.get(0);
 	}
 
 	@Override
-	public int updateWasUsed(Integer mailId) {
+	public CommonResultCX updateWasUsed(Long mailId) {
+		/*
+		 * TODO
+		 * delete??
+		 */
+		CommonResultCX result = new CommonResultCX();
 		if(mailId == null) {
-			return 0;
+			return result;
 		}
-		return mailRecordMapper.updateWasUsed(mailId);
+		MailRecord record = new MailRecord();
+		record.setId(mailId);
+		record.setWasUsed(true);
+		int count =  mailRecordMapper.updateByPrimaryKeySelective(record);
+		if(count > 0) {
+			result.normalSuccess();
+			return result;
+		} else {
+			return result;
+		}
 	}
 	
 	@Override
-	public CommonResultCX sendForgotPasswordMail(Long userId, String email, String hostName) {
+	public CommonResultCX sendForgotPasswordMail(SendMailDTO dto) {
 		CommonResultCX result = new CommonResultCX();
-		if(userId == null || StringUtils.isBlank(email)) {
+		if(dto.getUserId() == null || StringUtils.isBlank(dto.getSendTo())) {
 			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;
 		}
@@ -237,39 +261,46 @@ public class MailServiceImpl extends CommonService implements MailService {
 			return result;
 		}
 		
-		MailRecord oldMails = mailRecordMapper.findUnusedByUserId(userId, MailType.forgotPassword.getCode());
+		MailRecordExample example = new MailRecordExample();
+		example.createCriteria()
+		.andUserIdEqualTo(dto.getUserId())
+		.andMailTypeEqualTo(MailType.forgotPassword.getCode())
+		.andWasUsedEqualTo(false)
+		.andValidTimeGreaterThan(LocalDateTime.now())
+		;
+		List<MailRecord> oldMails = mailRecordMapper.selectByExample(example);
+		
+		if(oldMails == null || oldMails.size() < 1) {
+			result = sendNewForgotPasswordMail(dto);
+		} else {
+			result = resendForgotPasswordMail(dto, oldMails.get(0));
+		}
 
-		String mailKey;
-		String mailUrl;
-		boolean hasOldMail = false;
-		
-		if(oldMails != null ) {
-			mailKey = oldMails.getMailKey();
-			hasOldMail = true;
-		} else {
-			mailKey = String.valueOf(snowFlake.getNextId());
-		}
-		
-		mailUrl = hostName + UsersUrlConstant.root + UsersUrlConstant.resetPassword + "?mailKey=" + mailKey;
-		sendSimpleMail(userId, email, ("重置您在" + hostName + "的密码"), createForgotPasswordMailContent(mailUrl), mailKey, MailType.forgotPassword);
-		
-		MailRecord mr = new MailRecord();
-		if(hasOldMail) {
-			Date tmpDate = dateHandler.dateDiffDays(1);
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			mailRecordMapper.updateResend(mailKey, sdf.format(tmpDate));
-		} else {
-			mr.setMailType(MailType.forgotPassword.getCode());
-			mr.setValidTime(dateHandler.localDateTimeToDate(LocalDateTime.now().plusDays(3L)));
-			mr.setMailKey(mailKey);
-			mr.setUserId(userId);
-			
-			mailRecordMapper.insertSelective(mr);
-		}
-		
-		result.successWithMessage(mailKey);
-		
 		return result;
+	}
+	
+	private CommonResultCX sendNewForgotPasswordMail(SendMailDTO dto) {
+		MailRecord mr = new MailRecord();
+		Long mailId = snowFlake.getNextId();
+		mr.setId(mailId);
+		mr.setMailType(MailType.forgotPassword.getCode());
+		mr.setValidTime(LocalDateTime.now().plusDays(3L));
+		mr.setUserId(dto.getUserId());
+		
+		mailRecordMapper.insertSelective(mr);
+		
+		String mailKey = encryptId(mailId); 
+		String mailUrl = dto.getHostName() + UsersUrlConstant.root + UsersUrlConstant.resetPassword + "?mailKey=" + mailKey;
+		return (CommonResultCX) sendSimpleMail(dto.getUserId(), dto.getSendTo(), ("重置您在" + dto.getHostName() + "的密码"), createForgotPasswordMailContent(mailUrl), mailKey, MailType.forgotPassword);
+	}
+	
+	private CommonResultCX resendForgotPasswordMail(SendMailDTO dto, MailRecord oldMail) {
+		oldMail.setValidTime(oldMail.getValidTime().plusDays(1));
+		mailRecordMapper.updateByPrimaryKeySelective(oldMail);
+		
+		String mailKey = encryptId(oldMail.getId());
+		String mailUrl = dto.getHostName() + UsersUrlConstant.root + UsersUrlConstant.resetPassword + "?mailKey=" + mailKey;
+		return (CommonResultCX) sendSimpleMail(dto.getUserId(), dto.getSendTo(), ("重置您在" + dto.getHostName() + "的密码"), createForgotPasswordMailContent(mailUrl), mailKey, MailType.forgotPassword);
 	}
 	
 	@Override
@@ -297,15 +328,15 @@ public class MailServiceImpl extends CommonService implements MailService {
 		return result;
 	}
 	
-//	private String createRegistMailContent(String nickName, String mailUrl) {
-//		StringBuffer content = new StringBuffer();
-//		content.append("感谢注册! " + nickName + "\n");
-//		content.append("十分惊喜!还在建站就遇到了您...很多功能尚在建造,招呼不周,请见谅...如果有什么建议,请联系  \n");
-//		content.append("如非本人注册,请忽略此邮件 \n");
-//		content.append(mailUrl + "  点击此处激活账户  或复制此链接到浏览器访问. \n");
-//		content.append("再次感谢您的注册! 祝生活愉快!");
-//		return content.toString();
-//	}
+	private String createRegistMailContent(String nickName, String mailUrl) {
+		StringBuffer content = new StringBuffer();
+		content.append("感谢注册! " + nickName + "\n");
+		content.append("十分惊喜!还在建站就遇到了您...很多功能尚在建造,招呼不周,请见谅...如果有什么建议,请联系  \n");
+		content.append("如非本人注册,请忽略此邮件 \n");
+		content.append(mailUrl + "  点击此处激活账户  或复制此链接到浏览器访问. \n");
+		content.append("再次感谢您的注册! 祝生活愉快!");
+		return content.toString();
+	}
 	
 	private String createForgotPasswordMailContent(String mailUrl) {
 		StringBuffer content = new StringBuffer();
@@ -416,70 +447,59 @@ public class MailServiceImpl extends CommonService implements MailService {
 		return searchTerm;
 	}
 	
-	@Override
-	public SearchTerm searchByTargetContents(List<UserMailAndMailKeyBO> userMailAndMailKeyBOList) {
-		SearchTerm searchTerm = new SearchTerm() {
+	/*
+//	@Override
+//	public SearchTerm searchByTargetContents(List<UserMailAndMailKeyBO> userMailAndMailKeyBOList) {
+//		SearchTerm searchTerm = new SearchTerm() {
+//
+//			private static final long serialVersionUID = -4492471468971682840L;
+//
+//			@Override
+//			public boolean match(Message message) {
+//				UserMailAndMailKeyBO bo = null;
+//				boolean flag = false;
+//				for(int i = 0; i < userMailAndMailKeyBOList.size(); i ++) {
+//					bo = userMailAndMailKeyBOList.get(i);
+//					try {
+//						if(message.getReceivedDate() == null) {
+//							continue;
+//						}
+//						LocalDateTime receivedDate = dateHandler.dateToLocalDateTime(message.getReceivedDate());
+//						if(receivedDate == null || receivedDate.isAfter(bo.getValidTime())) {
+//							continue;
+//						}
+//						String content = "";
+//						MimeMultipart mimeMultipart = null;
+//						if(message.getContent().getClass().equals(String.class)) {
+//							content = (String) message.getContent();
+//						} else if(message.getContent().getClass().equals(MimeMultipart.class)) {
+//							mimeMultipart = (MimeMultipart) message.getContent();
+//							content = mimeMultipart.getBodyPart(0).getContent().toString();
+//						}
+//						if(!content.contains(bo.getMailKey())) {
+//							continue;
+//						}
+//						
+//						Address[] from = message.getFrom();
+//						for(Address f : from) {
+//							if(f.toString().equals(bo.getEmail())) {
+//								flag = true;
+//							}
+//						}
+//						return flag;
+//					} catch (MessagingException e1) {
+//						e1.printStackTrace();
+//						continue;
+//					} catch (IOException e) {
+//						e.printStackTrace();
+//						continue;
+//					}
+//				}
+//				return false;
+//			}
+//		};
+//		return searchTerm;
+//	}
+	 */
 
-			private static final long serialVersionUID = -4492471468971682840L;
-
-			@Override
-			public boolean match(Message message) {
-				UserMailAndMailKeyBO bo = null;
-				boolean flag = false;
-				for(int i = 0; i < userMailAndMailKeyBOList.size(); i ++) {
-					bo = userMailAndMailKeyBOList.get(i);
-					try {
-						if(message.getReceivedDate() == null) {
-							continue;
-						}
-						LocalDateTime receivedDate = dateHandler.dateToLocalDateTime(message.getReceivedDate());
-						if(receivedDate == null || receivedDate.isAfter(bo.getValidTime())) {
-							continue;
-						}
-						String content = "";
-						MimeMultipart mimeMultipart = null;
-						if(message.getContent().getClass().equals(String.class)) {
-							content = (String) message.getContent();
-						} else if(message.getContent().getClass().equals(MimeMultipart.class)) {
-							mimeMultipart = (MimeMultipart) message.getContent();
-							content = mimeMultipart.getBodyPart(0).getContent().toString();
-						}
-						if(!content.contains(bo.getMailKey())) {
-							continue;
-						}
-						
-						Address[] from = message.getFrom();
-						for(Address f : from) {
-							if(f.toString().equals(bo.getEmail())) {
-								flag = true;
-							}
-						}
-						return flag;
-					} catch (MessagingException e1) {
-						e1.printStackTrace();
-						continue;
-					} catch (IOException e) {
-						e.printStackTrace();
-						continue;
-					}
-				}
-				return false;
-			}
-		};
-		return searchTerm;
-	}
-
-	@Override
-	public String insertNewRegistMailKey(Long userId) {
-		String mailKey = String.valueOf(snowFlake.getNextId());
-		InsertNewMailRecordParam p = new InsertNewMailRecordParam();
-		p.setMailType(MailType.registActivation.getCode());
-		p.setValidTime(dateHandler.localDateTimeToDate(LocalDateTime.now().plusDays(3L)));
-		p.setMailKey(mailKey);
-		p.setUserId(userId);
-		if(mailRecordMapper.insertNewMailRecord(p) > 0) {
-			return mailKey;
-		}
-		return null;
-	}
 }

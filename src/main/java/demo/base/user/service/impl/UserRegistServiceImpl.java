@@ -1,13 +1,8 @@
 package demo.base.user.service.impl;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.search.SearchTerm;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -16,19 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import auxiliaryCommon.pojo.result.CommonResult;
-import demo.base.system.pojo.bo.SystemConstantStore;
+import demo.base.system.pojo.result.HostnameType;
+import demo.base.system.service.HostnameService;
 import demo.base.user.mapper.UserRegistMapper;
 import demo.base.user.mapper.UsersDetailMapper;
 import demo.base.user.mapper.UsersMapper;
-import demo.base.user.pojo.bo.UserMailAndMailKeyBO;
-import demo.base.user.pojo.dto.FindActiveEmailDTO;
 import demo.base.user.pojo.dto.ResetFailAttemptDTO;
 import demo.base.user.pojo.dto.UpdateDuplicateEmailDTO;
 import demo.base.user.pojo.dto.UserRegistDTO;
 import demo.base.user.pojo.po.Roles;
 import demo.base.user.pojo.po.Users;
 import demo.base.user.pojo.po.UsersDetail;
+import demo.base.user.pojo.po.UsersDetailExample;
 import demo.base.user.pojo.type.AuthType;
 import demo.base.user.pojo.type.RolesType;
 import demo.base.user.pojo.vo.__baseSuperAdminRegistVO;
@@ -40,10 +34,12 @@ import demo.baseCommon.pojo.type.GenderType;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
 import demo.config.costom_component.CustomPasswordEncoder;
-import demo.tool.pojo.MailRecord;
+import demo.tool.pojo.dto.SendMailDTO;
+import demo.tool.pojo.po.MailRecord;
+import demo.tool.pojo.result.SendRegistMailResult;
 import demo.tool.pojo.type.MailType;
+import demo.tool.service.MailService;
 import demo.tool.service.ValidRegexToolService;
-import demo.tool.service.impl.MailServiceImpl;
 import net.sf.json.JSONObject;
 
 @Service
@@ -52,7 +48,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	@Autowired
 	private UserRegistMapper userRegistMapper;
 	@Autowired
-	private MailServiceImpl mailService;
+	private MailService mailService;
 	@Autowired
 	private UsersMapper usersMapper;
 	@Autowired
@@ -68,30 +64,30 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	private UserAuthService userAuthService;
 	@Autowired
 	private ValidRegexToolService validRegexToolService;
+	@Autowired
+	private HostnameService hostnameService;
 	
-	/* FIXME 2019-06-26 发现, 应改造, 至少迁移至redis */
-	private static List<UserMailAndMailKeyBO> mailRecordList = new ArrayList<UserMailAndMailKeyBO>();
 	
 	@Override
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
-	public CommonResultCX newUserRegist(UserRegistDTO param, String ip) {
+	public CommonResultCX newUserRegist(UserRegistDTO registDTO, String ip, HttpServletRequest request) {
 		CommonResultCX result = new CommonResultCX();
 		UsersDetail userDetail = new UsersDetail();
 		JSONObject outputJson = new JSONObject();
 		boolean exceptionFlag = false;
 
-		if (!validRegexToolService.validNormalUserName(param.getUserName())) {
-			outputJson.put("userName", "\"" + param.getUserName() + "\" 账户名异常, 必须以英文字母开头,长度为6~16个字符.(只可输入英文字母及数字)");
+		if (!validRegexToolService.validNormalUserName(registDTO.getUserName())) {
+			outputJson.put("userName", "\"" + registDTO.getUserName() + "\" 账户名异常, 必须以英文字母开头,长度为6~16个字符.(只可输入英文字母及数字)");
 			exceptionFlag = true;
 		}
 
-		if (userRegistMapper.isUserExists(param.getUserName()) > 0) {
+		if (userRegistMapper.isUserExists(registDTO.getUserName()) > 0) {
 			outputJson.put("userName", "账户名已存在");
 			exceptionFlag = true;
 		}
 
-		String nickNameAfterEscapeHtml = StringEscapeUtils.escapeHtml(param.getNickName());
-		if(StringUtils.isBlank(param.getNickName())) {
+		String nickNameAfterEscapeHtml = StringEscapeUtils.escapeHtml(registDTO.getNickName());
+		if(StringUtils.isBlank(registDTO.getNickName())) {
 			outputJson.put("nickName", "请您一定要起给昵称...");
 			exceptionFlag = true;
 		} else if (nickNameAfterEscapeHtml.length() > 32) {
@@ -104,22 +100,26 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			userDetail.setNickName(nickNameAfterEscapeHtml);
 		}
 
-		if (!validRegexToolService.validPassword(param.getPwd())) {
+		if (!validRegexToolService.validPassword(registDTO.getPwd())) {
 			outputJson.put("pwd", "密码长度不正确(8到16位)");
 			exceptionFlag = true;
 		}
 
-		if (!param.getPwd().equals(param.getPwdRepeat())) {
+		if (!registDTO.getPwd().equals(registDTO.getPwdRepeat())) {
 			outputJson.put("pwdRepeat", "两次输入的密码不一致");
 			exceptionFlag = true;
 		}
 
-		if (!validRegexToolService.validEmail(param.getEmail())) {
+		if (!validRegexToolService.validEmail(registDTO.getEmail())) {
 			outputJson.put("email", "请输入正确的邮箱");
 			exceptionFlag = true;
 		} else {
-			FindActiveEmailDTO findActiveEmailParam = new FindActiveEmailDTO();
-			findActiveEmailParam.setEmail(param.getEmail());
+			/*
+			 * TODO
+			 * 为何此处有权限相关逻辑?
+			 */
+			EnsureActiveEmailDTO findActiveEmailParam = new EnsureActiveEmailDTO();
+			findActiveEmailParam.setEmail(registDTO.getEmail());
 			Roles r = roleService.getRoleByNameFromRedis(RolesType.ROLE_USER_ACTIVE.getName());
 			if(r == null) {
 				outputJson.put("email", "系统繁忙中");
@@ -127,26 +127,26 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			} else {
 				findActiveEmailParam.setRoleId(r.getRoleId());
 			}
-			if (usersDetailMapper.isActiveEmailExists(findActiveEmailParam) > 0) {
+			if (!ensureActiveEmail(registDTO.getEmail()).isSuccess()) {
 				outputJson.put("email", "邮箱已注册(忘记密码或用户名?可尝试找回)");
 				exceptionFlag = true;
 			} else {
-				userDetail.setEmail(param.getEmail());
+				userDetail.setEmail(registDTO.getEmail());
 			}
 		}
 
-		if (StringUtils.isNotBlank(param.getMobile())) {
-			if (validRegexToolService.validMobile(param.getMobile())) {
-				userDetail.setMobile(Long.parseLong(param.getMobile()));
+		if (StringUtils.isNotBlank(registDTO.getMobile())) {
+			if (validRegexToolService.validMobile(registDTO.getMobile())) {
+				userDetail.setMobile(Long.parseLong(registDTO.getMobile()));
 			} else {
 				outputJson.put("mobile", "请填入正确的手机号,或留空");
 				exceptionFlag = true;
 			}
 		}
 
-		String reservationInfomationAfterEscapeHtml = StringEscapeUtils.escapeHtml(param.getReservationInformation());
-		if (param.getReservationInformation() != null
-				&& param.getReservationInformation().replaceAll("\\s", "").length() > 0) {
+		String reservationInfomationAfterEscapeHtml = StringEscapeUtils.escapeHtml(registDTO.getReservationInformation());
+		if (registDTO.getReservationInformation() != null
+				&& registDTO.getReservationInformation().replaceAll("\\s", "").length() > 0) {
 			if (reservationInfomationAfterEscapeHtml.length() > 32) {
 				outputJson.put("reservationInformation", "预留信息过长...32个字符以内..(中文算2个字符)");
 				exceptionFlag = true;
@@ -155,9 +155,9 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			}
 		}
 
-		if (StringUtils.isNotBlank(param.getQq())) {
-			if (validRegexToolService.validQQ(param.getQq())) {
-				userDetail.setQq(Long.parseLong(param.getQq()));
+		if (StringUtils.isNotBlank(registDTO.getQq())) {
+			if (validRegexToolService.validQQ(registDTO.getQq())) {
+				userDetail.setQq(Long.parseLong(registDTO.getQq()));
 			} else {
 				outputJson.put("qq", "QQ号格式异常...");
 				exceptionFlag = true;
@@ -170,17 +170,17 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			return result;
 		}
 
-		if (param.getGender() == null || GenderType.unknow.getCode().equals(param.getGender())) {
+		if (registDTO.getGender() == null || GenderType.unknow.getCode().equals(registDTO.getGender())) {
 			userDetail.setGender(GenderType.unknow.getCode());
-		} else if (GenderType.unknow.getCode().equals(param.getGender())) {
+		} else if (GenderType.unknow.getCode().equals(registDTO.getGender())) {
 			userDetail.setGender(GenderType.male.getCode());
 		} else {
 			userDetail.setGender(GenderType.female.getCode());
 		}
 
-		param.setPwdd(param.getPwd());
-		param.setPwd(passwordEncoder.encode(param.getPwd()));
-		Users user = createUserFromUserRegistParam(param);
+		registDTO.setPwdd(registDTO.getPwd());
+		registDTO.setPwd(passwordEncoder.encode(registDTO.getPwd()));
+		Users user = createUserFromUserRegistParam(registDTO);
 		Long newUserId = snowFlake.getNextId();
 		user.setUserId(newUserId);
 		
@@ -190,24 +190,20 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		userDetail.setRegistIp(numberUtil.ipToLong(ip));
 		usersDetailMapper.insertSelective(userDetail);
 		
-		String mailKey = mailService.insertNewRegistMailKey(newUserId);
-		if(StringUtils.isBlank(mailKey)) {
-			result.fillWithResult(ResultTypeCX.serviceError);
-			return result;
+		HostnameType hostnameType = hostnameService.findHostname(request);
+		SendMailDTO sendRegistMailDTO = new SendMailDTO();
+		sendRegistMailDTO.setHostName(hostnameType.getName());
+		sendRegistMailDTO.setNickName(registDTO.getNickName());
+		sendRegistMailDTO.setSendTo(registDTO.getEmail());
+		sendRegistMailDTO.setUserId(newUserId);
+		SendRegistMailResult sendRegistMailResult = mailService.sendRegistMail(sendRegistMailDTO);
+		if(!sendRegistMailResult.isSuccess()) {
+			return sendRegistMailResult;
 		}
 		
 		userAuthService.insertBaseUserAuth(newUserId, AuthType.USER);
 		
 		result.normalSuccess();
-		result.setMessage("\"" + StringEscapeUtils.unescapeHtml(nickNameAfterEscapeHtml) + "\" 已成功注册,谢谢您的关注! 如需激活邮箱,请使用注册邮箱: " + param.getEmail() + ",发送: "+ mailKey + " 到" + constantService.getValByName(SystemConstantStore.adminMailName));
-
-		/*
-		 * 暂时停止主动发送激活邮件,改为用户发送激活邮件 2018-06-28
-		 */
-//		CommonResult serviceResult = sendRegistMail(user.getUserId(), userDetail.getEmail(), userDetail.getNickName());
-//		if(!serviceResult.getResult().equals(ResultType.success.getCode())) {
-//			logger.debug(LocalDateTime.now() + " : " + serviceResult.message + " : " + user.getUserId());
-//		}
 		return result;
 	}
 	
@@ -239,7 +235,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			result.failWithMessage("请输入正确的邮箱");
 			return result;
 		} else {
-			FindActiveEmailDTO findActiveEmailParam = new FindActiveEmailDTO();
+			EnsureActiveEmailDTO findActiveEmailParam = new EnsureActiveEmailDTO();
 			findActiveEmailParam.setEmail(param.getEmail());
 			Roles r = roleService.getRoleByNameFromRedis(RolesType.ROLE_USER_ACTIVE.getName());
 			if(r == null) {
@@ -280,7 +276,6 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 
 		return result;
 	}
-	
 
 	@Override
 	public boolean isUserExists(String userName) {
@@ -308,14 +303,6 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
     	return user;
     }
 	
-	public CommonResult sendRegistMail(Long userId, String sendTo, String nickName) {
-		/*
-		 * 暂时不再主动发送激活邮件,改由用户发回激活邮件  2018-06-28
-		 */
-//		return mailServiceImpl.sendRegistMail(userId, sendTo, nickName);
-		return null;
-	}
-
 	@Override
 	public CommonResultCX modifyRegistEmail(Long userId, String email) {
 		/*
@@ -342,7 +329,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			return result;
 		}
 		
-		FindActiveEmailDTO p = new FindActiveEmailDTO();
+		EnsureActiveEmailDTO p = new EnsureActiveEmailDTO();
 		p.setEmail(email);
 		Roles r = roleService.getRoleByNameFromRedis(RolesType.ROLE_USER_ACTIVE.getName());
 		if(r == null) {
@@ -382,7 +369,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		userAuthService.deleteUserAuth(mr.getUserId(), AuthType.USER);
 		userAuthService.insertBaseUserAuth(mr.getUserId(), AuthType.USER_ACTIVE);
 		
-		mailService.updateWasUsed(mr.getMailId());
+		mailService.updateWasUsed(mr.getId());
 		UpdateDuplicateEmailDTO updateEmailParam = new UpdateDuplicateEmailDTO();
 		updateEmailParam.setNewEmail("");
 		updateEmailParam.setUserId(mr.getUserId());
@@ -393,98 +380,38 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	}
 	
 	@Override
-	public void handleMails() {
-		Message[] mails = searchMailInbox();
-		if(mails.length < 1) {
-			return;
+	public CommonResultCX resendRegistMail(Long userId) {
+		CommonResultCX result = new CommonResultCX();
+		if(userId == null) {
+			result.fillWithResult(ResultTypeCX.nullParam);
 		}
 		
-		List<UserMailAndMailKeyBO> targetBoList = matchMails(mails);
+		UsersDetail ud = usersDetailMapper.selectByPrimaryKey(userId);
 		
-		for(UserMailAndMailKeyBO bo : targetBoList) {
-			if(bo.getMailType().equals(MailType.registActivation.getCode())) {
-				registActivation(bo.getMailKey(), bo.getEmail());
-			}
+		if(ud == null || !validRegexToolService.validEmail(ud.getEmail())) {
+			result.fillWithResult(ResultTypeCX.nullParam);
 		}
-	}
-	
-	private Message[] searchMailInbox() {
-		findUserEmailAndKey();
-		if(mailRecordList.size() < 1) {
-			return new Message[] {};
-		}
-		SearchTerm st = mailService.searchByTargetContents(mailRecordList);
-		return mailService.searchInbox(st);
-	}
-	
-	private List<UserMailAndMailKeyBO> matchMails(Message[] mails) {
-		List<UserMailAndMailKeyBO> targetBo = new ArrayList<UserMailAndMailKeyBO>();
-		UserMailAndMailKeyBO tmpBo = null;
-		for(Message mail : mails) {
-			tmpBo = new UserMailAndMailKeyBO();
-			try {
-				for(UserMailAndMailKeyBO m : mailRecordList) {
-					if(((MimeMultipart) mail.getContent()).getBodyPart(0).getContent().toString().contains(m.getMailKey())) {
-						tmpBo.setMailKey(m.getMailKey());
-						tmpBo.setMailType(m.getMailType());
-						tmpBo.setUserId(m.getUserId());
-						tmpBo.setMailId(m.getMailId());
-					}
-				}
-				if(tmpBo.getMailId() != null) {
-					targetBo.add(tmpBo);
-				}
-			} catch (MessagingException e) {
-				e.printStackTrace();
-				continue;
-			} catch (IOException e) {
-				e.printStackTrace();
-				continue;
-			}
+		
+		MailRecord mail = mailService.findRegistActivationUnusedByUserId(userId);
+		
+		if(mail == null || mail.getId() == null) {
+			SendMailDTO dto = new SendMailDTO();
+			dto.setHostName(hostName);
+			result = mailService.sendRegistMail(userId, ud.getEmail(), ud.getNickName());
 			
+		} else {
+			MailRecord oldMail = mail.get(0);
+			if(System.currentTimeMillis() - oldMail.getCreateTime().getTime() < 1000L * 60 
+					|| (oldMail.getResendTime() != null && System.currentTimeMillis() - oldMail.getResendTime().getTime() < 1000L * 60)) {
+				result.successWithMessage(oldMail.getMailKey());
+				return result;
+			}
+			result = mailService.resendRegistMail(userId, ud.getEmail(), ud.getNickName(), oldMail.getMailKey());
 		}
-		return targetBo;
+		
+		return result;
+		return null;
 	}
-	
-	private void findUserEmailAndKey() {
-		mailRecordList = usersDetailMapper.findUserEmailAndKey();
-	}
-	/*
-	 * 2018-06-28 暂停向注册用户发送激活邮件,改由用户发回激活码.
-	 */
-/*
-	//	@Override
-//	public CommonResult resendRegistMail(Long userId) {
-//		CommonResult result = new CommonResult();
-//		if(userId == null) {
-//			result.fillWithResult(ResultType.nullParam);
-//		}
-//		
-//		UsersDetail ud = usersDetailMapper.findUserDetail(userId);
-//		
-//		if(ud == null || StringUtils.isBlank(ud.getEmail()) || !validEmail(ud.getEmail())) {
-//			result.fillWithResult(ResultType.nullParam);
-//		}
-//		
-//		List<MailRecord> mails = mailService.findRegistActivationUnusedByUserId(userId);
-//		
-//		if(mails == null || mails.size() == 0) {
-//			result = sendRegistMail(userId, ud.getEmail(), ud.getNickName());
-//			
-//		} else {
-//			MailRecord oldMail = mails.get(0);
-//			if(System.currentTimeMillis() - oldMail.getCreateTime().getTime() < 1000L * 60 
-//					|| (oldMail.getResendTime() != null && System.currentTimeMillis() - oldMail.getResendTime().getTime() < 1000L * 60)) {
-//				result.successWithMessage(oldMail.getMailKey());
-//				return result;
-//			}
-//			result = mailService.resendRegistMail(userId, ud.getEmail(), ud.getNickName(), oldMail.getMailKey());
-//		}
-//		
-//		return result;
-//		return null;
-//	}
- */
 	
 	@Override
 	public CommonResultCX sendForgotPasswordMail(String email, HttpServletRequest request) {
@@ -498,7 +425,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			result.fillWithResult(ResultTypeCX.mailNotActivation);
 			return result;
 		}
-		FindActiveEmailDTO findActiveEmailParam = new FindActiveEmailDTO();
+		EnsureActiveEmailDTO findActiveEmailParam = new EnsureActiveEmailDTO();
 		findActiveEmailParam.setEmail(email);
 		Roles r = roleService.getRoleByNameFromRedis(RolesType.ROLE_USER_ACTIVE.getName());
 		if(r == null) {
@@ -535,7 +462,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			return result;
 		}
 		
-		FindActiveEmailDTO findActiveEmailParam = new FindActiveEmailDTO();
+		EnsureActiveEmailDTO findActiveEmailParam = new EnsureActiveEmailDTO();
 		findActiveEmailParam.setEmail(email.replaceAll("\\s", ""));
 		Roles r = roleService.getRoleByNameFromRedis(RolesType.ROLE_USER_ACTIVE.getName());
 		if(r == null) {
@@ -606,7 +533,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			return result;
 		}
 		
-		mailService.updateWasUsed(mr.getMailId());
+		mailService.updateWasUsed(mr.getId());
 		
 		ResetFailAttemptDTO resetFailAttemptParam = new ResetFailAttemptDTO();
 		resetFailAttemptParam.setUserId(mr.getUserId());
@@ -630,6 +557,25 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		}
 		
 		return resetPassword(userId, newPassword, newPasswordRepeat);
+	}
+	
+	/**
+	 * 查找此 email 是否属于已激活用户
+	 * @param email
+	 * @return
+	 */
+	private CommonResultCX ensureActiveEmail(String email) {
+		CommonResultCX r = new CommonResultCX();
+		
+		UsersDetailExample userDetailExample = new UsersDetailExample();
+		userDetailExample.createCriteria().andEmailEqualTo(email);
+		List<UsersDetail> userDetailList = usersDetailMapper.selectByExample(userDetailExample);
+		if(userDetailList == null || userDetailList.size() < 1) {
+			return r;
+		}
+		
+		List<Long> userIdList = userDetailList.stream().map(UsersDetail::getUserId).collect(Collectors.toList());
+		return userAuthService.hasActiveUser(userIdList);
 	}
 
 }

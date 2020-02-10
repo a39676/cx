@@ -14,6 +14,7 @@ import demo.base.user.pojo.po.UserAuthExample;
 import demo.base.user.pojo.type.AuthType;
 import demo.base.user.service.AuthService;
 import demo.base.user.service.UserAuthService;
+import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.service.CommonService;
 
 @Service
@@ -86,6 +87,30 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 		Auth auth = authList.get(0);
 		
 		return deleteUserAuth(userId, auth.getId());
+	}
+	
+	@Override
+	public CommonResultCX isActiveUser(Long userId) {
+		CommonResultCX r = new CommonResultCX();
+		UserAuthExample example = new UserAuthExample();
+		example.createCriteria().andUserIdEqualTo(userId).andAuthIdEqualTo(AuthType.USER_ACTIVE.getCode());
+		List<UserAuth> userAuthList = userAuthMapper.selectByExample(example);
+		if(userAuthList != null && userAuthList.size() > 1) {
+			r.setIsSuccess();
+		}
+		return r;
+	}
+	
+	@Override
+	public CommonResultCX hasActiveUser(List<Long> userIdList) {
+		CommonResultCX r = new CommonResultCX();
+		UserAuthExample example = new UserAuthExample();
+		example.createCriteria().andUserIdIn(userIdList).andAuthIdEqualTo(AuthType.USER_ACTIVE.getCode());
+		List<UserAuth> userAuthList = userAuthMapper.selectByExample(example);
+		if(userAuthList != null && userAuthList.size() > 1) {
+			r.setIsSuccess();
+		}
+		return r;
 	}
 
 }

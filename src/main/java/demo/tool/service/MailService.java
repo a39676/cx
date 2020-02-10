@@ -7,9 +7,11 @@ import java.util.Properties;
 import javax.mail.Message;
 import javax.mail.search.SearchTerm;
 
-import demo.base.user.pojo.bo.UserMailAndMailKeyBO;
 import demo.baseCommon.pojo.result.CommonResultCX;
-import demo.tool.pojo.MailRecord;
+import demo.tool.pojo.dto.ResendMailDTO;
+import demo.tool.pojo.dto.SendMailDTO;
+import demo.tool.pojo.po.MailRecord;
+import demo.tool.pojo.result.SendRegistMailResult;
 import demo.tool.pojo.type.MailType;
 
 public interface MailService {
@@ -19,29 +21,26 @@ public interface MailService {
 	void sendMailWithAttachment(String sendTo, String title, String context, String attachmentPath,
 			Properties properties);
 
-//	CommonResult sendRegistMail(Long userId, String email, String nickName); // 暂时不再主动发送注册验证邮件,改为验证用户发送的邮件. 2018-06-28
+	SendRegistMailResult sendRegistMail(SendMailDTO dto);
 
 	public MailRecord findMailByMailKeyMailType(String mailKey, MailType mailType);
 
-	int updateWasUsed(Integer mailId);
+	CommonResultCX updateWasUsed(Long mailId);
 
-	CommonResultCX sendForgotPasswordMail(Long userId, String email, String hostName);
+	CommonResultCX sendForgotPasswordMail(SendMailDTO dto);
 	
 	CommonResultCX sendForgotUsernameMail(String userName, String email, String hostName);
 
 	MailRecord findRegistActivationUnusedByUserId(Long userId);
 
-//	CommonResult resendRegistMail(Long userId, String sendTo, String nickName, String mailKey, String hostName); // 暂时不再主动发送注册验证邮件,改为验证用户发送的邮件. 2018-06-28
+	SendRegistMailResult resendRegistMail(ResendMailDTO dto);
 	
 	void sendErrorMail(String errorMessage);
 
 	Message[] searchInbox(SearchTerm st);
 
-	String insertNewRegistMailKey(Long userId);
-
 	SearchTerm singleSearchTerm(String targetSendFrom, String targetContent, Date startDate);
 
-	SearchTerm searchByTargetContents(List<UserMailAndMailKeyBO> userMailAndMailKeyBOList);
-
+//	SearchTerm searchByTargetContents(List<UserMailAndMailKeyBO> userMailAndMailKeyBOList);
 
 }

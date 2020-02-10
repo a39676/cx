@@ -356,25 +356,6 @@
     select exists(select * from users_detail where nick_name = #{nickName})
   </select>
 
-  <select id="isActiveEmailExists" resultType="int">
-    select exists(
-      select 
-        1 
-      from 
-        user_roles as urs 
-        
-        left join users as u 
-          on urs.user_id = u.user_id
-          and urs.role_id = #{roleId}
-          
-        left join users_detail as ud
-          on u.user_id = ud.user_id
-
-      where 
-        ud.email = #{email}
-    )
-  </select>
-
   <select id="findUserIdByActivationEmail" resultType="Long">
     select
       ud.user_id

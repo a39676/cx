@@ -1,30 +1,37 @@
 package demo.tool.mapper;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import demo.tool.pojo.MailRecord;
-import demo.tool.pojo.dto.InsertNewMailRecordParam;
+import demo.tool.pojo.po.MailRecord;
+import demo.tool.pojo.po.MailRecordExample;
 
 public interface MailRecordMapper {
-    int insert(MailRecord record);
+    long countByExample(MailRecordExample example);
+
+	int deleteByExample(MailRecordExample example);
+
+	int deleteByPrimaryKey(Long mailId);
+
+	List<MailRecord> selectByExample(MailRecordExample example);
+
+	MailRecord selectByPrimaryKey(Long mailId);
+
+	int updateByExampleSelective(@Param("record") MailRecord record, @Param("example") MailRecordExample example);
+
+	int updateByExample(@Param("record") MailRecord record, @Param("example") MailRecordExample example);
+
+	int updateByPrimaryKeySelective(MailRecord record);
+
+	int updateByPrimaryKey(MailRecord record);
+
+	int insert(MailRecord record);
 
     int insertSelective(MailRecord record);
     
-    MailRecord findMailByMailKeyMailType(@Param("mailKey")String mailKey, @Param("mailType")Integer mailType);
-    
-    int updateWasUsed(Integer mailId);
-    
-    MailRecord findUnusedByUserId(@Param("userId")Long userId, @Param("mailType")Integer mailType);
-    
-    int updateResend(String mailKey);
-    
-    int updateResend(@Param("mailKey")String mailKey, @Param("newValidTime")String newValidTime);
-    
-    int cleanMailRecord(@Param("validTime")Date validTime);
-    
-    int insertNewMailRecord(InsertNewMailRecordParam param);
+    int cleanMailRecord(@Param("validTime")LocalDateTime validTime);
     
     int hasMailTask();
 }

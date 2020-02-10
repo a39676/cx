@@ -4,8 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import demo.base.user.pojo.bo.UserMailAndMailKeyBO;
-import demo.base.user.pojo.dto.FindActiveEmailDTO;
+import demo.base.user.pojo.dto.EnsureActiveEmailDTO;
 import demo.base.user.pojo.dto.UpdateDuplicateEmailDTO;
 import demo.base.user.pojo.po.UsersDetail;
 import demo.base.user.pojo.po.UsersDetailExample;
@@ -35,22 +34,14 @@ public interface UsersDetailMapper {
 
     int isNickNameExists(String nickName);
     
-    int isActiveEmailExists(FindActiveEmailDTO param);
+    Long findUserIdByActivationEmail(EnsureActiveEmailDTO param);
     
-    Long findUserIdByActivationEmail(FindActiveEmailDTO param);
-    
-    String findUserNameByActivationEmail(FindActiveEmailDTO param);
+    String findUserNameByActivationEmail(EnsureActiveEmailDTO param);
     
     String findEmailByUserId(Long userId);
 
-//	UsersDetail findUserDetail(Long userId);
-//	
-//	UsersDetail findUserDetailByNickName(String userName);
-	
 	int modifyRegistEmail(@Param("email")String email, @Param("userId")Long userId);
 	
-	List<UserMailAndMailKeyBO> findUserEmailAndKey();
-
 	int updateDuplicateEmail(UpdateDuplicateEmailDTO param);
 	
 	String findHeadImage(@Param("userId")Long userId);

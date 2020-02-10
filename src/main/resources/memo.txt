@@ -1,3 +1,5 @@
+用户注册 转用邮件激活, redis控制短时间内注册数量(每日? 每N小时?)
+
 cloudinary 可用图片url 上传图片
 https://cloudinary.com/documentation/image_upload_api_reference
 
@@ -5,8 +7,6 @@ https://cloudinary.com/documentation/image_upload_api_reference
 	暂时不缓存图片, 禁止编辑器的图片输入按钮?
 
 nginx 未良好处理 非 www. 跳转
-
-MailRecord mailKey 字段, 以前使用 uuid , 现更改为 Long ; 有时间需改变字段类型;
 
 CREATE TABLE `duralbe_recorder` (
 id bigint not null,

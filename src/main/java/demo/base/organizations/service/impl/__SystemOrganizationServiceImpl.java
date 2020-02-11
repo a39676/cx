@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.base.organizations.mapper.OrganizationsMapper;
-import demo.base.organizations.pojo.constant.OrgConstant;
 import demo.base.organizations.pojo.po.Organizations;
 import demo.base.organizations.pojo.result.OrgRegistResult;
 import demo.base.organizations.service.__SystemOrganizationService;
+import demo.base.system.pojo.constant.InitSystemConstant;
 import demo.baseCommon.service.CommonService;
 
 @Service
@@ -26,15 +26,15 @@ public class __SystemOrganizationServiceImpl extends CommonService implements __
 	public OrgRegistResult __initBaseOrg(Long superAdminId) {
 		OrgRegistResult result = new OrgRegistResult();
 
-		Organizations po = orgMapper.selectByPrimaryKey(OrgConstant.baseOrgId);
+		Organizations po = orgMapper.selectByPrimaryKey(InitSystemConstant.BASE_ORG_ID);
 		if (po == null) {
 			po = new Organizations();
-			po.setId(OrgConstant.baseOrgId);
+			po.setId(InitSystemConstant.BASE_ORG_ID);
 			po.setCreateBy(superAdminId);
 			po.setCreateTime(LocalDateTime.now());
-			po.setOrgName(OrgConstant.baseOrgName);
-			po.setTopOrg(OrgConstant.baseOrgId);
-			po.setBelongTo(OrgConstant.baseOrgId);
+			po.setOrgName(InitSystemConstant.BASE_ORG_NAME);
+			po.setTopOrg(InitSystemConstant.BASE_ORG_ID);
+			po.setBelongTo(InitSystemConstant.BASE_ORG_ID);
 
 			int count = orgMapper.insertSelective(po);
 			if (count < 1) {

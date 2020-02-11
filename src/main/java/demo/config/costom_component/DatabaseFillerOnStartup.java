@@ -7,12 +7,13 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import demo.base.organizations.pojo.constant.OrgConstant;
 import demo.base.organizations.pojo.po.Organizations;
 import demo.base.organizations.service.OrganizationService;
 import demo.base.organizations.service.__SystemOrganizationService;
+import demo.base.system.pojo.constant.InitSystemConstant;
 import demo.base.user.pojo.constant.UserConstant;
 import demo.base.user.pojo.po.Auth;
+import demo.base.user.pojo.result.FindAuthsResult;
 import demo.base.user.service.AuthService;
 import demo.base.user.service.RoleService;
 import demo.base.user.service.UserRegistService;
@@ -61,7 +62,8 @@ public class DatabaseFillerOnStartup implements ApplicationListener<ApplicationR
 			roleService.__initBaseRole();
 			
 			/* 如无超级管理员角色, 初始化 */
-			List<Auth> superAdminAuthList = authService.findSuperAdministratorAuth();
+			FindAuthsResult authsResult = authService.findSuperAdministratorAuth();
+			List<Auth> superAdminAuthList = authsResult.getAuthList();
 			Long superAdminAuthId = null;
 			if(superAdminAuthList.size() < 1) {
 				superAdminAuthId = authService.__createBaseSuperAdminAuth(UserConstant.noneUserId);
@@ -78,9 +80,8 @@ public class DatabaseFillerOnStartup implements ApplicationListener<ApplicationR
 			}
 			
 			/* 如果需要初始化系统管理机构, 需要超级管理员id */
-			Organizations baseOrg = orgService.getOrgById(OrgConstant.baseOrgId);
+			Organizations baseOrg = orgService.getOrgById(InitSystemConstant.BASE_ORG_ID);
 			if(baseOrg == null || baseOrg.getIsDelete()) {
-//				TODO FIXME 此行不应该写死id
 				__systemOrgService.__initBaseOrg(superAdminId);
 			}
 		}

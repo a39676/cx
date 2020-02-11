@@ -16,6 +16,7 @@ import demo.base.user.mapper.UsersDetailMapper;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.bo.MyUserPrincipal;
 import demo.base.user.pojo.constant.LoginUrlConstant;
+import demo.base.user.pojo.dto.FindUserAuthDTO;
 import demo.base.user.pojo.dto.FindUserByConditionDTO;
 import demo.base.user.pojo.dto.OtherUserInfoDTO;
 import demo.base.user.pojo.dto.ResetFailAttemptDTO;
@@ -28,10 +29,12 @@ import demo.base.user.pojo.po.UsersDetail;
 import demo.base.user.pojo.po.UsersDetailExample;
 import demo.base.user.pojo.po.UsersExample;
 import demo.base.user.pojo.po.UsersExample.Criteria;
+import demo.base.user.pojo.result.FindUserAuthResult;
 import demo.base.user.pojo.result.FindUserByConditionResult;
 import demo.base.user.pojo.type.RolesType;
 import demo.base.user.pojo.type.UserPrivateLevelType;
 import demo.base.user.pojo.vo.UsersDetailVO;
+import demo.base.user.service.UserAuthService;
 import demo.base.user.service.UsersService;
 import demo.baseCommon.pojo.type.GenderType;
 import demo.baseCommon.service.CommonService;
@@ -53,6 +56,8 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 	private UsersDetailMapper usersDetailMapper;
 	@Autowired
 	private ValidRegexToolService validRegexToolService;
+	@Autowired
+	private UserAuthService userAuthService;
 	
 	@Override
 	public int insertFailAttempts(String userName) {
@@ -123,7 +128,13 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 		
 		myUserDetail.setUser(user);
 		
-		List<Auth> auths = findAuthsByUserId(user.getUserId());
+		FindUserAuthDTO findUserAuthDTO = new FindUserAuthDTO();
+		findUserAuthDTO.setUserId(user.getUserId());
+		FindUserAuthResult authResult = userAuthService.findUserAuth(findUserAuthDTO);
+		if(!authResult.isSuccess()) {
+			return myUserDetail;
+		}
+		List<Auth> auths = authResult.getAuthList();
 		List<Long> authIdList = auths.stream().map(Auth::getId).collect(Collectors.toList());
 		List<Roles> roles = findRolesByAuthIdList(authIdList);
 		
@@ -216,10 +227,6 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 		return authMapper.findUserIdByAuthId(authId);
 	}
 	
-	@Override
-	public List<Auth> findAuthsByUserId(Long userId) {
-		return authMapper.findAuthsByUserId(userId);
-	}
 	
 	@Override
 	public List<Roles> findRolesByAuthId(Long authId) {

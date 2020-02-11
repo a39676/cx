@@ -4,12 +4,12 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import demo.base.user.pojo.dto.FindAuthsConditionDTO;
 import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.po.AuthExample;
 
 public interface AuthMapper {
-    long countByExample(AuthExample example);
+
+	long countByExample(AuthExample example);
 
     int deleteByExample(AuthExample example);
 
@@ -31,10 +31,6 @@ public interface AuthMapper {
 
     int updateByPrimaryKey(Auth record);
 
-    List<Auth> findAuthsByUserId(Long userId);
-    
     List<Long> findUserIdByAuthId(Long authId);
-    
-    List<Auth> findAuthsByCondition(FindAuthsConditionDTO dto);
     
 }

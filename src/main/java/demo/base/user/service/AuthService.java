@@ -1,9 +1,7 @@
 package demo.base.user.service;
 
-import java.util.List;
-
 import demo.base.user.pojo.dto.FindAuthsConditionDTO;
-import demo.base.user.pojo.po.Auth;
+import demo.base.user.pojo.result.FindAuthsResult;
 import demo.base.user.pojo.type.AuthType;
 
 public interface AuthService {
@@ -20,10 +18,10 @@ public interface AuthService {
 
 	Long __createBaseDelayPosterAuth(Long supserAdminUserId);
 
-	List<Auth> findSuperAdministratorAuth();
+	FindAuthsResult findSuperAdministratorAuth();
 
-	List<Auth> findAuthsByCondition(FindAuthsConditionDTO dto);
+	FindAuthsResult findAuthsByCondition(FindAuthsConditionDTO dto);
 
-	List<Auth> findAuthsByCondition(AuthType authType);
+	FindAuthsResult findAuthsByCondition(AuthType authType);
 
 }

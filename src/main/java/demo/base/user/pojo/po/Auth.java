@@ -5,81 +5,92 @@ import java.time.LocalDateTime;
 public class Auth {
     private Long id;
 
-    private String authName;
+	private String authName;
 
-    private Integer authType;
+	private Integer authType;
 
-    private Long createBy;
+	private Long createBy;
 
-    private LocalDateTime createTime;
+	private Long belongOrg;
 
-    private Long updateBy;
+	private LocalDateTime createTime;
 
-    private LocalDateTime updateTime;
+	private Long updateBy;
 
-    private Boolean isDelete;
+	private LocalDateTime updateTime;
 
-    public Long getId() {
-        return id;
-    }
+	private Boolean isDelete;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public String getAuthName() {
-        return authName;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setAuthName(String authName) {
-        this.authName = authName == null ? null : authName.trim();
-    }
+	public String getAuthName() {
+		return authName;
+	}
 
-    public Integer getAuthType() {
-        return authType;
-    }
+	public void setAuthName(String authName) {
+		this.authName = authName == null ? null : authName.trim();
+	}
 
-    public void setAuthType(Integer authType) {
-        this.authType = authType;
-    }
+	public Integer getAuthType() {
+		return authType;
+	}
 
-    public Long getCreateBy() {
-        return createBy;
-    }
+	public void setAuthType(Integer authType) {
+		this.authType = authType;
+	}
 
-    public void setCreateBy(Long createBy) {
-        this.createBy = createBy;
-    }
+	public Long getCreateBy() {
+		return createBy;
+	}
 
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
+	public void setCreateBy(Long createBy) {
+		this.createBy = createBy;
+	}
 
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
+	public Long getBelongOrg() {
+		return belongOrg;
+	}
 
-    public Long getUpdateBy() {
-        return updateBy;
-    }
+	public void setBelongOrg(Long belongOrg) {
+		this.belongOrg = belongOrg;
+	}
 
-    public void setUpdateBy(Long updateBy) {
-        this.updateBy = updateBy;
-    }
+	public LocalDateTime getCreateTime() {
+		return createTime;
+	}
 
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
+	public void setCreateTime(LocalDateTime createTime) {
+		this.createTime = createTime;
+	}
 
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
-    }
+	public Long getUpdateBy() {
+		return updateBy;
+	}
 
-    public Boolean getIsDelete() {
-        return isDelete;
-    }
+	public void setUpdateBy(Long updateBy) {
+		this.updateBy = updateBy;
+	}
 
-    public void setIsDelete(Boolean isDelete) {
-        this.isDelete = isDelete;
-    }
+	public LocalDateTime getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(LocalDateTime updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	public Boolean getIsDelete() {
+		return isDelete;
+	}
+
+	public void setIsDelete(Boolean isDelete) {
+		this.isDelete = isDelete;
+	}
+
 }

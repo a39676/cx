@@ -223,6 +223,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		userRegistDTO.setPwd("defaultPWD");
 		userRegistDTO.setPwd(passwordEncoder.encode(userRegistDTO.getPwd()));
 		userRegistDTO.setGender(GenderType.unknow.getCode());
+		userRegistDTO.setMobile("13800138000");
 		
 		Long newUserId = snowFlake.getNextId();
 		

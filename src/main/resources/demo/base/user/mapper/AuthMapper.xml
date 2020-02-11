@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="demo.base.user.mapper.AuthMapper">
+  
   <resultMap id="BaseResultMap" type="demo.base.user.pojo.po.Auth">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="auth_name" jdbcType="CHAR" property="authName" />
     <result column="auth_type" jdbcType="TINYINT" property="authType" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
+    <result column="belong_org" jdbcType="BIGINT" property="belongOrg" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
@@ -70,7 +72,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, auth_name, auth_type, create_by, create_time, update_by, update_time, is_delete
+    id, auth_name, auth_type, create_by, belong_org, create_time, update_by, update_time, 
+    is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.base.user.pojo.po.AuthExample" resultMap="BaseResultMap">
     select
@@ -104,11 +107,13 @@
   </delete>
   <insert id="insert" parameterType="demo.base.user.pojo.po.Auth">
     insert into auth (id, auth_name, auth_type, 
-      create_by, create_time, update_by, 
-      update_time, is_delete)
+      create_by, belong_org, create_time, 
+      update_by, update_time, is_delete
+      )
     values (#{id,jdbcType=BIGINT}, #{authName,jdbcType=CHAR}, #{authType,jdbcType=TINYINT}, 
-      #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
+      #{createBy,jdbcType=BIGINT}, #{belongOrg,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="demo.base.user.pojo.po.Auth">
     insert into auth
@@ -124,6 +129,9 @@
       </if>
       <if test="createBy != null">
         create_by,
+      </if>
+      <if test="belongOrg != null">
+        belong_org,
       </if>
       <if test="createTime != null">
         create_time,
@@ -150,6 +158,9 @@
       </if>
       <if test="createBy != null">
         #{createBy,jdbcType=BIGINT},
+      </if>
+      <if test="belongOrg != null">
+        #{belongOrg,jdbcType=BIGINT},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -186,6 +197,9 @@
       <if test="record.createBy != null">
         create_by = #{record.createBy,jdbcType=BIGINT},
       </if>
+      <if test="record.belongOrg != null">
+        belong_org = #{record.belongOrg,jdbcType=BIGINT},
+      </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -209,6 +223,7 @@
       auth_name = #{record.authName,jdbcType=CHAR},
       auth_type = #{record.authType,jdbcType=TINYINT},
       create_by = #{record.createBy,jdbcType=BIGINT},
+      belong_org = #{record.belongOrg,jdbcType=BIGINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_by = #{record.updateBy,jdbcType=BIGINT},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
@@ -228,6 +243,9 @@
       </if>
       <if test="createBy != null">
         create_by = #{createBy,jdbcType=BIGINT},
+      </if>
+      <if test="belongOrg != null">
+        belong_org = #{belongOrg,jdbcType=BIGINT},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -249,6 +267,7 @@
     set auth_name = #{authName,jdbcType=CHAR},
       auth_type = #{authType,jdbcType=TINYINT},
       create_by = #{createBy,jdbcType=BIGINT},
+      belong_org = #{belongOrg,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=BIGINT},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -256,24 +275,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   
-  <select id="findAuthsByUserId" resultMap="BaseResultMap">
-    select
-      a.*
-
-    from
-      users 
-      left join user_auth as ua
-        on users.user_id = ua.user_id
-
-      left join auth as a
-        on ua.auth_id = a.id
-
-    where
-      ua.is_delete = false
-      and a.is_delete = false
-      and users.user_id = #{userId}
-  </select>
-
+  
   <select id="findUserIdByAuthId" resultType="Long">
     select
       users.user_id
@@ -292,39 +294,4 @@
       and a.id = #{authId}
   </select>
 
-  <select id="findAuthsByCondition" resultMap="BaseResultMap">
-    select 
-      a.*
-    from
-      auth as a
-
-      left join auth_role as ar
-        on a.id = ar.auth_id
-
-      left join roles as r
-        on ar.role_id = r.role_id
-    <where>
-      <if test="authIsDelete != null">
-        and a.is_delete = #{authIsDelete}
-      </if>
-      <if test="authRoleIsDelete != null">
-        and ar.is_delete = #{authRoleIsDelete}
-      </if>
-      <if test="roleIsDelete != null">
-        and r.is_delete = #{roleIsDelete}
-      </if>
-      <if test="authType != null">
-        and a.auth_type = #{authType}
-      </if>
-      <if test="authName != null">
-        and a.auth_name = #{authName}
-      </if>
-      <if test="roleName != null">
-        and r.role = #{roleName}
-      </if>
-      <if test="roleId != null">
-        and r.role_id = #{roleId}
-      </if>
-    </where>
-  </select>
 </mapper>

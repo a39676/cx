@@ -1,17 +1,26 @@
 package demo.base.user.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import demo.base.system.pojo.constant.InitSystemConstant;
 import demo.base.user.mapper.AuthMapper;
+import demo.base.user.pojo.dto.FindAuthRoleDTO;
 import demo.base.user.pojo.dto.FindAuthsConditionDTO;
 import demo.base.user.pojo.po.Auth;
+import demo.base.user.pojo.po.AuthExample;
+import demo.base.user.pojo.po.AuthExample.Criteria;
+import demo.base.user.pojo.po.AuthRole;
 import demo.base.user.pojo.po.Roles;
+import demo.base.user.pojo.result.FindAuthRoleResult;
+import demo.base.user.pojo.result.FindAuthsResult;
 import demo.base.user.pojo.type.AuthType;
 import demo.base.user.pojo.type.AuthTypeType;
 import demo.base.user.pojo.type.RolesType;
@@ -76,6 +85,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		newBaseAuth.setAuthName(authType.getName());
 		newBaseAuth.setAuthType(AuthTypeType.SYS_AUTH.getCode());
 		newBaseAuth.setCreateBy(newAuthID);
+		newBaseAuth.setBelongOrg(InitSystemConstant.BASE_ORG_ID);
 		
 		int count = authMapper.insertSelective(newBaseAuth);
 		if(count < 1) {
@@ -103,36 +113,67 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 	}
 	
 	@Override
-	public List<Auth> findSuperAdministratorAuth() {
-		Roles r = roleService.getRoleByNameFromRedis(RolesType.ROLE_SUPER_ADMIN.getName());
-		if(r == null) {
-			return new ArrayList<Auth>();
+	public FindAuthsResult findSuperAdministratorAuth() {
+		FindAuthsResult r = new FindAuthsResult();
+		Roles role = roleService.getRoleByNameFromRedis(RolesType.ROLE_SUPER_ADMIN.getName());
+		if(role == null) {
+			return r;
 		}
 		
 		FindAuthsConditionDTO dto = new FindAuthsConditionDTO();
 		dto.setAuthName(AuthType.SUPER_ADMIN.getName());
 		dto.setAuthType(AuthTypeType.SYS_AUTH.getCode());
-		dto.setRoleId(r.getRoleId());
+		dto.setRoleIdList(role.getRoleId());
 		
-		List<Auth> authList = findAuthsByCondition(dto);
-		if(authList == null) {
-			return new ArrayList<Auth>();
+		return findAuthsByCondition(dto);
+	}
+	
+	@Override
+	public FindAuthsResult findAuthsByCondition(FindAuthsConditionDTO dto) {
+		FindAuthsResult result = new FindAuthsResult();
+		AuthExample e = new AuthExample();
+		Criteria c = e.createCriteria();
+		
+		if(dto.getAuthIdList() != null && dto.getAuthIdList() .size() > 0) {
+			c.andIdIn(dto.getAuthIdList());
 		}
-		return authList;
-	}
-	
-	@Override
-	public List<Auth> findAuthsByCondition(FindAuthsConditionDTO dto) {
-		List<Auth> result = authMapper.findAuthsByCondition(dto);
+		if(StringUtils.isNotBlank(dto.getAuthName())) {
+			c.andAuthNameLike("%" + dto.getAuthName() + "%");
+		}
+		if(dto.getAuthType() != null) {
+			c.andAuthTypeEqualTo(dto.getAuthType());
+		}
+		if((dto.getRoleIdList() != null && dto.getRoleIdList().size() > 0) 
+				||(dto.getRoleNameList() != null && dto.getRoleNameList().size() > 0)) {
+			FindAuthRoleDTO findAuthRoleDTO = new FindAuthRoleDTO();
+			findAuthRoleDTO.setRoleIdList(dto.getAuthIdList());
+			findAuthRoleDTO.setRoleNameList(dto.getRoleNameList());
+			FindAuthRoleResult authRoleResult = authRoleService.findAuthRole(findAuthRoleDTO);
+			if(!authRoleResult.isSuccess()) {
+				result.setMessage(authRoleResult.getMessage());
+				return result;
+			}
+			
+			Set<Long> authIdSet = authRoleResult.getAuthRoleList().stream().map(AuthRole::getAuthId).collect(Collectors.toSet());
+			if(authIdSet.size() > 0) {
+				c.andIdIn(List.copyOf(authIdSet));
+			}
+		}
+		
+		List<Auth> auths = authMapper.selectByExample(e);
+
+		result.setAuthList(auths);
+		result.setIsSuccess();
 		return result;
 	}
 	
 	@Override
-	public List<Auth> findAuthsByCondition(AuthType authType) {
-		FindAuthsConditionDTO dto = new FindAuthsConditionDTO();
-		dto.setAuthName(authType.getName());
-		dto.setAuthType(AuthTypeType.SYS_AUTH.getCode());
-		List<Auth> result = authMapper.findAuthsByCondition(dto);
-		return result;
+	public FindAuthsResult findAuthsByCondition(AuthType authType) {
+		FindAuthsResult r = new FindAuthsResult();
+		AuthExample example = new AuthExample();
+		example.createCriteria().andAuthTypeEqualTo(authType.getCode().intValue());
+		List<Auth> auths = authMapper.selectByExample(example);
+		r.setAuthList(auths);
+		return r;
 	}
 }

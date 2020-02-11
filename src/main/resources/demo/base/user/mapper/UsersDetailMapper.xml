@@ -387,26 +387,6 @@
       user_id = #{userId}
   </update>
 
-  <select id="findUserEmailAndKey" resultType="demo.base.user.pojo.bo.UserMailAndMailKeyBO">
-    select
-      ud.user_id as userId,
-      ud.email,
-      mr.mail_id as mailId,
-      mr.mail_key as mailKey,
-      mr.mail_type as mailType,
-      mr.valid_time as validTime
-
-    from
-      users_detail as ud
-
-      left join mail_record as mr
-        on ud.user_id = mr.user_id
-
-    where
-      mr.was_used = false
-      and mr.valid_time &gt;= now()
-  </select>
-
   <update id="updateDuplicateEmail">
     update 
       user_detail

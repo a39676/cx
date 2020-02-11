@@ -18,4 +18,12 @@ public interface RoleService {
 
 	Roles getRoleByNameFromRedis(String roleName);
 
+	List<Roles> getRolesByFuzzyNameFromRedis(String roleName, boolean refresh);
+
+	List<Roles> getRolesByFuzzyNameFromRedis(String roleName);
+
+	List<Roles> getRolesByFuzzyNameFromRedis(List<String> sourceRoleNameList, boolean refresh);
+
+	List<Roles> getRolesByFuzzyNameFromRedis(List<String> sourceRoleNameList);
+
 }

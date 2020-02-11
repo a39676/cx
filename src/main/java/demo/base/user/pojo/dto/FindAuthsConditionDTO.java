@@ -1,14 +1,18 @@
 package demo.base.user.pojo.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FindAuthsConditionDTO {
 
 	private Integer authType;
 	private String authName;
-	private Long roleId;
-	private String roleName;
 	private boolean authIsDelete = false;
 	private boolean authRoleIsDelete = false;
 	private boolean roleIsDelete = false;
+	private List<Long> authIdList;
+	private List<Long> roleIdList;
+	private List<String> roleNameList;
 
 	public boolean isAuthRoleIsDelete() {
 		return authRoleIsDelete;
@@ -50,27 +54,41 @@ public class FindAuthsConditionDTO {
 		this.authName = authName;
 	}
 
-	public Long getRoleId() {
-		return roleId;
+	public List<Long> getRoleIdList() {
+		return roleIdList;
 	}
 
-	public void setRoleId(Long roleId) {
-		this.roleId = roleId;
+	public void setRoleIdList(List<Long> roleIdList) {
+		this.roleIdList = roleIdList;
 	}
 
-	public String getRoleName() {
-		return roleName;
+	public void setRoleIdList(Long roleId) {
+		List<Long> roleIdList = new ArrayList<Long>();
+		roleIdList.add(roleId);
+		this.roleIdList = roleIdList;
 	}
 
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
+	public List<String> getRoleNameList() {
+		return roleNameList;
+	}
+
+	public void setRoleNameList(List<String> roleNameList) {
+		this.roleNameList = roleNameList;
+	}
+
+	public List<Long> getAuthIdList() {
+		return authIdList;
+	}
+
+	public void setAuthIdList(List<Long> authIdList) {
+		this.authIdList = authIdList;
 	}
 
 	@Override
 	public String toString() {
-		return "FindAuthsConditionDTO [authType=" + authType + ", authName=" + authName + ", roleId=" + roleId
-				+ ", roleName=" + roleName + ", authIsDelete=" + authIsDelete + ", authRoleIsDelete=" + authRoleIsDelete
-				+ ", roleIsDelete=" + roleIsDelete + "]";
+		return "FindAuthsConditionDTO [authType=" + authType + ", authName=" + authName + ", authIsDelete="
+				+ authIsDelete + ", authRoleIsDelete=" + authRoleIsDelete + ", roleIsDelete=" + roleIsDelete
+				+ ", authIdList=" + authIdList + ", roleIdList=" + roleIdList + ", roleNameList=" + roleNameList + "]";
 	}
 
 }

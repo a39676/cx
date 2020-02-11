@@ -61,6 +61,53 @@ public class RoleServiceImpl extends CommonService implements RoleService {
 	}
 	
 	@Override
+	public List<Roles> getRolesByFuzzyNameFromRedis(String roleName, boolean refresh) {
+		List<String> l = List.of(roleName);
+		return getRolesByFuzzyNameFromRedis(l, refresh);
+	}
+	
+	@Override
+	public List<Roles> getRolesByFuzzyNameFromRedis(String roleName) {
+		return getRolesByFuzzyNameFromRedis(roleName, false);
+	}
+	
+	@Override
+	public List<Roles> getRolesByFuzzyNameFromRedis(List<String> sourceRoleNameList, boolean refresh) {
+		List<Roles> resultList = new ArrayList<Roles>();
+		if(sourceRoleNameList == null || sourceRoleNameList.size() < 1) {
+			return resultList;
+		}
+		
+		List<String> targetRoleNameList = new ArrayList<String>();
+		for(String roleName : sourceRoleNameList) {
+			if(StringUtils.isNotBlank(roleName)) {
+				targetRoleNameList.add(roleName);
+			}
+		}
+		
+		List<Roles> roleList = getRoleListFromRedis(refresh);
+		if(roleList.size() < 1) {
+			return resultList;
+		}
+		
+		for(Roles tmpRole : roleList) {
+			if(StringUtils.isNotBlank(tmpRole.getRole())) {
+				for(String tmpRoleName : targetRoleNameList) {
+					if (tmpRole.getRole().contains(tmpRoleName) && !resultList.contains(tmpRole)) {
+						resultList.add(tmpRole);
+					}
+				}
+			}
+		}
+		return resultList;
+	}
+	
+	@Override
+	public List<Roles> getRolesByFuzzyNameFromRedis(List<String> sourceRoleNameList) {
+		return getRolesByFuzzyNameFromRedis(sourceRoleNameList, false);
+	}
+	
+	@Override
 	public List<Roles> getRoleListFromDB() {
 		
 		List<Roles> roleList = roleMapper.getRoleList();

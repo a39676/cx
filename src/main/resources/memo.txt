@@ -1,3 +1,15 @@
+文章发布异常
+
+建立用户-角色-权限 分配页面
+	role
+		提供查询权限接口 (根据条件? 所有?)
+	auth
+		提供查询所有 auth 接口 (根据条件? 所有?)
+		提供编辑 auth 接口
+	user
+		提供查询拥有 auth 接口 (根据条件? 所有?)
+		提供 编辑 auth 接口
+
 用户注册 转用邮件激活, 
 	redis控制短时间内注册数量
 		每日? 每N小时?
@@ -8,8 +20,6 @@ https://cloudinary.com/documentation/image_upload_api_reference
 
 富文本编辑器, 未处理上传图片的情况 
 	暂时不缓存图片, 禁止编辑器的图片输入按钮?
-
-nginx 未良好处理 非 www. 跳转
 
 CREATE TABLE `duralbe_recorder` (
 id bigint not null,

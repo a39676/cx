@@ -9,6 +9,8 @@
 	user
 		提供查询拥有 auth 接口 (根据条件? 所有?)
 		提供 编辑 auth 接口
+		
+			UserAuthServiceImpl.editUserAuth  正在编辑
 
 用户注册 转用邮件激活, 
 	redis控制短时间内注册数量

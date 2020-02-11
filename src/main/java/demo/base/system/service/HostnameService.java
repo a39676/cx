@@ -11,7 +11,7 @@ public interface HostnameService {
 
 	List<Hostname> findHonstnames();
 
-	HostnameType findHostname(HttpServletRequest request);
+	HostnameType findHostnameType(HttpServletRequest request);
 
 	String findEasy();
 

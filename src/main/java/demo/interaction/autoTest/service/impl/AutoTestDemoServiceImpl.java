@@ -360,7 +360,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	}
 
 	private boolean isInSeekOrDev(HttpServletRequest request) {
-		HostnameType hostnameType = hostnameService.findHostname(request);
+		HostnameType hostnameType = hostnameService.findHostnameType(request);
 		if (HostnameType.seek.equals(hostnameType)) {
 			return true;
 		} else {

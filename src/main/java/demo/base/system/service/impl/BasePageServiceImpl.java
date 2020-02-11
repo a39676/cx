@@ -37,7 +37,7 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 		}
 		visitDataService.addVisitCounting(request);
 		
-		HostnameType hostnameType = hostnameService.findHostname(request);
+		HostnameType hostnameType = hostnameService.findHostnameType(request);
 		
 		ModelAndView view = new ModelAndView();
 
@@ -101,7 +101,7 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 	public ModelAndView aboutMeHandler(String vcode, HttpServletRequest request) {
 		ModelAndView v = null;
 
-		HostnameType hostnameType = hostnameService.findHostname(request);
+		HostnameType hostnameType = hostnameService.findHostnameType(request);
 		if (hostnameType != null) {
 			if (HostnameType.ea.equals(hostnameType)) {
 				v = new ModelAndView(BlogViewConstant.aboutEasy);

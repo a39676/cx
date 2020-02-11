@@ -3,14 +3,16 @@ package demo.base.user.service;
 import javax.servlet.http.HttpServletRequest;
 
 import demo.base.user.pojo.dto.UserRegistDTO;
+import demo.base.user.pojo.result.ModifyRegistEmailResult;
+import demo.base.user.pojo.result.NewUserRegistResult;
 import demo.base.user.pojo.vo.__baseSuperAdminRegistVO;
 import demo.baseCommon.pojo.result.CommonResultCX;
 
 public interface UserRegistService {
 
-	CommonResultCX newUserRegist(UserRegistDTO param, String ip, HttpServletRequest request);
+	NewUserRegistResult newUserRegist(UserRegistDTO param, String ip, HttpServletRequest request);
 
-	CommonResultCX modifyRegistEmail(Long userId, String email);
+	ModifyRegistEmailResult modifyRegistEmail(Long userId, String email);
 
 	CommonResultCX sendForgotUsernameMail(String email, HttpServletRequest request);
 
@@ -27,7 +29,6 @@ public interface UserRegistService {
 
 	__baseSuperAdminRegistVO __baseSuperAdminRegist();
 
-	CommonResultCX resendRegistMail(Long userId); //2018-06-28 暂停向注册用户发送激活邮件,改由用户发回激活码.
-
+	CommonResultCX resendRegistMail(Long userId, HttpServletRequest request);
 	
 }

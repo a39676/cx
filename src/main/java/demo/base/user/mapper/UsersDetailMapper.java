@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import demo.base.user.pojo.dto.EnsureActiveEmailDTO;
 import demo.base.user.pojo.dto.UpdateDuplicateEmailDTO;
 import demo.base.user.pojo.po.UsersDetail;
 import demo.base.user.pojo.po.UsersDetailExample;
@@ -33,10 +32,6 @@ public interface UsersDetailMapper {
 	int updateByPrimaryKey(UsersDetail record);
 
     int isNickNameExists(String nickName);
-    
-    Long findUserIdByActivationEmail(EnsureActiveEmailDTO param);
-    
-    String findUserNameByActivationEmail(EnsureActiveEmailDTO param);
     
     String findEmailByUserId(Long userId);
 

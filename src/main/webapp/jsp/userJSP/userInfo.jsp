@@ -44,7 +44,7 @@
       <span name="email" >email<i class="fa fa-envelope-o fa-lg" style="color: rgb(0, 0, 0);" ></i></span>
       <input disabled="disabled" id="email" class="form-control" placeholder="${email}" />
       <c:if test="${not empty notActive}">
-        <input  class="form-control" type="text" disabled="disabled" name="mailKey" value="请使用注册邮箱发送 激活码: ${mailKey} 至: ${adminMail}">
+        <input  class="form-control" type="text" disabled="disabled" name="" value="请留意注册邮箱中的激活邮件(可能被误判至垃圾邮件)">
         <button class="btn btn-default" name="modifyRegistMailApply">更换注册邮箱</button>
       </c:if>
       <span name="resendRegistMailResult"></span>

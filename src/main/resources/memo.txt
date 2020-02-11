@@ -1,4 +1,7 @@
-用户注册 转用邮件激活, redis控制短时间内注册数量(每日? 每N小时?)
+用户注册 转用邮件激活, 
+	redis控制短时间内注册数量
+		每日? 每N小时?
+		改变邮箱也列入限制
 
 cloudinary 可用图片url 上传图片
 https://cloudinary.com/documentation/image_upload_api_reference

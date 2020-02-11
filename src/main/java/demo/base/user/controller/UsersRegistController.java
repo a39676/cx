@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -21,6 +22,7 @@ import demo.base.system.pojo.constant.BaseStatusCode;
 import demo.base.user.UserViewConstants;
 import demo.base.user.pojo.constant.UsersUrlConstant;
 import demo.base.user.pojo.dto.UserRegistDTO;
+import demo.base.user.pojo.result.NewUserRegistResult;
 import demo.base.user.service.UserRegistService;
 import demo.baseCommon.controller.CommonController;
 import demo.baseCommon.pojo.result.CommonResultCX;
@@ -98,19 +100,11 @@ public class UsersRegistController extends CommonController {
 	@ApiOperation(value="用户注册", notes="用户注册请求")
 	@ApiImplicitParam(name = "user", value = "用户注册UserRegistParam", required = true, dataType = "UserRegistParam")
 	@PostMapping(value = UsersUrlConstant.userRegist)
-	public void userRegistHandler(@RequestBody UserRegistDTO param, HttpServletResponse response, HttpServletRequest request) {
+	@ResponseBody
+	public NewUserRegistResult userRegistHandler(@RequestBody UserRegistDTO param, HttpServletResponse response, HttpServletRequest request) {
 		String ip = request.getHeader("X-FORWARDED-FOR");
 		
-		CommonResultCX result = userRegistService.newUserRegist(param, ip);
-		
-		JSONObject jsonOutput = JSONObject.fromObject(result);
-		
-		try {
-			response.getWriter().println(jsonOutput);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
+		return userRegistService.newUserRegist(param, ip, request);
 	}
 	
 	/*

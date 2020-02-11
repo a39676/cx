@@ -12,17 +12,12 @@ import demo.article.fakePost.service.FakePostService;
 import demo.base.task.service.TaskToolService;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.type.RolesType;
-import demo.base.user.service.UserRegistService;
 import demo.tool.mapper.MailRecordMapper;
 import demo.tool.service.VisitDataService;
 
 @Component
 public class TaskToolServiceImpl implements TaskToolService {
 
-//	@Autowired
-//	private UsersService usersService;
-	@Autowired
-	private UserRegistService userRegistService;
 	@Autowired
 	private ArticleEvaluationService articleEvaluationService;
 	@Autowired

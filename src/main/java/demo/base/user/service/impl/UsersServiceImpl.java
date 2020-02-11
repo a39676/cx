@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.user.mapper.AuthMapper;
@@ -14,6 +15,7 @@ import demo.base.user.mapper.RolesMapper;
 import demo.base.user.mapper.UsersDetailMapper;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.bo.MyUserPrincipal;
+import demo.base.user.pojo.constant.LoginUrlConstant;
 import demo.base.user.pojo.dto.FindUserByConditionDTO;
 import demo.base.user.pojo.dto.OtherUserInfoDTO;
 import demo.base.user.pojo.dto.ResetFailAttemptDTO;
@@ -27,6 +29,7 @@ import demo.base.user.pojo.po.UsersDetailExample;
 import demo.base.user.pojo.po.UsersExample;
 import demo.base.user.pojo.po.UsersExample.Criteria;
 import demo.base.user.pojo.result.FindUserByConditionResult;
+import demo.base.user.pojo.type.RolesType;
 import demo.base.user.pojo.type.UserPrivateLevelType;
 import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.UsersService;
@@ -50,7 +53,7 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 	private UsersDetailMapper usersDetailMapper;
 	@Autowired
 	private ValidRegexToolService validRegexToolService;
-
+	
 	@Override
 	public int insertFailAttempts(String userName) {
 		int insertCount = usersMapper.insertFailAttempts(userName);
@@ -291,5 +294,33 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 		r.setUserList(userVOList);
 		r.setIsSuccess();
 		return r;
+	}
+
+	@Override
+	public ModelAndView findUserInfo() {
+		ModelAndView view = new ModelAndView("userJSP/userInfo");
+		
+		if(!baseUtilCustom.isLoginUser()) {
+			view.setViewName(LoginUrlConstant.login);
+			return view;
+		}
+		
+		Long userId = baseUtilCustom.getUserId();
+		UsersDetailVO ud = findUserDetail(userId);
+		
+		view.addObject("nickName", ud.getNickName());
+		view.addObject("email", ud.getEmail());
+		view.addObject("qq", ud.getQq());
+		view.addObject("gender", ud.getGender());
+		view.addObject("mobile", ud.getMobile());
+		view.addObject("reservationInformation", ud.getReservationInformation());
+		
+		if(!baseUtilCustom.getRoles().contains(RolesType.ROLE_USER_ACTIVE.getName())) {
+			if(!baseUtilCustom.getAuthDetail().containsKey("modifyRegistMail")) {
+				view.addObject("notActive", "notActive");
+			}
+		}
+		
+		return view;
 	}
 }

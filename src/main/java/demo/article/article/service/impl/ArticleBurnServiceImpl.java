@@ -64,7 +64,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 	}
 	
 	private boolean isInEasyOrDev(HttpServletRequest request) {
-		HostnameType hostnameType = hostnameService.findHostname(request);
+		HostnameType hostnameType = hostnameService.findHostnameType(request);
 		if (HostnameType.ea.equals(hostnameType)) {
 			return true;
 		} else {

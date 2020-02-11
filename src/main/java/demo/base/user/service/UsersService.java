@@ -3,6 +3,8 @@ package demo.base.user.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.web.servlet.ModelAndView;
+
 import demo.base.user.pojo.bo.MyUserPrincipal;
 import demo.base.user.pojo.dto.FindUserByConditionDTO;
 import demo.base.user.pojo.dto.OtherUserInfoDTO;
@@ -63,5 +65,7 @@ public interface UsersService {
 	List<Roles> findRolesByAuthIdList(List<Long> authIdList);
 
 	FindUserByConditionResult findUserByCondition(FindUserByConditionDTO dto);
+
+	ModelAndView findUserInfo();
 
 }

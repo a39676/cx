@@ -47,7 +47,7 @@ public class ExceptionServiceImpl extends CommonService implements ExceptionServ
 	public ModelAndView handle404Exception(HttpServletRequest request) {
 		ModelAndView view = new ModelAndView();
 		
-		HostnameType hostnameType = hostnameService.findHostname(request);
+		HostnameType hostnameType = hostnameService.findHostnameType(request);
 		if(HostnameType.ea.equals(hostnameType)) {
 			view.setViewName(BaseViewConstant.ea404);
 		} else if(HostnameType.seek.equals(hostnameType)) {

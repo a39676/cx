@@ -3,9 +3,9 @@ package demo.tool.pojo.dto;
 public class SendMailDTO {
 
 	private String hostName;
-	private Long userId;
 	private String sendTo;
 	private String nickName;
+	private Long userId;
 
 	public String getHostName() {
 		return hostName;
@@ -13,14 +13,6 @@ public class SendMailDTO {
 
 	public void setHostName(String hostName) {
 		this.hostName = hostName;
-	}
-
-	public Long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
 	}
 
 	public String getSendTo() {
@@ -39,10 +31,18 @@ public class SendMailDTO {
 		this.nickName = nickName;
 	}
 
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
 	@Override
 	public String toString() {
-		return "SendRegistMailDTO [hostName=" + hostName + ", userId=" + userId + ", sendTo=" + sendTo + ", nickName="
-				+ nickName + "]";
+		return "SendMailDTO [hostName=" + hostName + ", sendTo=" + sendTo + ", nickName=" + nickName + ", userId="
+				+ userId + "]";
 	}
 
 }

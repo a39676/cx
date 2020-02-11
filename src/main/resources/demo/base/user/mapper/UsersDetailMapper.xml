@@ -356,39 +356,6 @@
     select exists(select * from users_detail where nick_name = #{nickName})
   </select>
 
-  <select id="findUserIdByActivationEmail" resultType="Long">
-    select
-      ud.user_id
-    
-    from 
-      users_detail as ud
-
-      right join user_roles as urs
-        on ud.user_id = urs.user_id
-        and urs.role_id = #{roleId}
-    
-    where
-      ud.email = #{email}
-  </select>
-
-  <select id="findUserNameByActivationEmail" resultType="String">
-    select
-      ud.user_id
-    
-    from 
-      users_detail as ud
-
-      right join user_roles as urs
-        on ud.user_id = urs.user_id
-        and urs.role_id = #{roleId}
-
-      left join users as u
-        on u.user_id = ud.user_id
-    
-    where
-      ud.email = #{email}
-  </select>
-
   <select id="findEmailByUserId" resultType="String">
     select email from users_detail where user_id = #{userId}
   </select>

@@ -53,6 +53,7 @@
 
       $("#usernameDiv").click(function () {
         var userId = $("#usernameDiv").attr("selectedUserId");
+        $("#resultMsg").val("");
 
         var url = "/userauth/findUserAuth";
 
@@ -123,7 +124,10 @@
       }
       
       function userAuthEdit() {
+        $("#resultMsg").val("");
         var thisAuthButton = $(this);
+        var modifyAuthId = $(this).attr("authId");
+
         var userId = $("#usernameDiv").attr("selectedUserId");
         var authIdList = [];
         var authButtons = $(".authButton");
@@ -132,6 +136,12 @@
             authIdList.push($(this).attr("authId"));
           }
         });
+
+        if(thisAuthButton.hasClass("btn-primary")) {
+          authIdList.pop(modifyAuthId);
+        } else {
+          authIdList.push(modifyAuthId);
+        }
 
         var url = "/userauth/editUserAuth";
 

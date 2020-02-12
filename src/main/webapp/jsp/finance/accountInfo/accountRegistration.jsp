@@ -6,7 +6,7 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <head>
-  <%@ include file="../baseElementJSP/normalHeader.jsp" %>
+  <%@ include file="../../../baseElementJSP/normalHeader.jsp" %>
   <title>${title}</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -48,7 +48,7 @@
       </select>
     </div>
 
-    <%@ include file="../bankInfoJSP/bankSelectorV4.jsp" %>
+    <%@ include file="../bank/bankSelectorV4.jsp" %>
     
     <div class="form-group">
       <label class="form-check-label">
@@ -96,7 +96,7 @@
   </div>
 </body>
 <footer>
-  <%@ include file="../baseElementJSP/normalFooter.jsp" %>
+  <%@ include file="../../../baseElementJSP/normalFooter.jsp" %>
   <script type="text/javascript">
       // account number type number only
       $("#accountNumber").keyup(function () { 

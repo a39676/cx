@@ -5,9 +5,9 @@ public class FindUserByConditionDTO {
 	private Long userId;
 	private String userName;
 	private String userNickName;
-	private Boolean accountNonLocked = false;
-	private Boolean accountNonExpired = false;
-	private Boolean credentialsNonExpired = false;
+	private Boolean accountNonLocked = true;
+	private Boolean accountNonExpired = true;
+	private Boolean credentialsNonExpired = true;
 
 	public Long getUserId() {
 		return userId;

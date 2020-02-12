@@ -160,14 +160,39 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 		return r;
 	}
 	
+	@Override
 	public CommonResultCX editUserAuth(EditUserAuthDTO dto) {
-//		TODO
 		CommonResultCX r = new CommonResultCX();
 		if(dto.getUserId() == null) {
 			return r;
 		}
 		
+		FindUserAuthDTO findUserAuthDTO = new FindUserAuthDTO();
+		findUserAuthDTO.setUserId(dto.getUserId());
+		FindUserAuthResult userAuthResult = findUserAuth(findUserAuthDTO);
 		
+		if(!userAuthResult.isSuccess()) {
+			r.addMessage(userAuthResult.getMessage());
+			return r;
+		}
+		
+		if(userAuthResult.getAuthList() != null || userAuthResult.getAuthList().size() > 0) {
+			for(Auth auth : userAuthResult.getAuthList()) {
+				r = deleteUserAuth(dto.getUserId(), auth.getId());
+				if(!r.isSuccess()) {
+					return r;
+				}
+			}
+		}
+		
+		if(dto.getNewAuthIdList() != null && dto.getNewAuthIdList().size() > 0) {
+			for(Long authId : dto.getNewAuthIdList()) {
+				r = insertUserAuth(dto.getUserId(), authId);
+				if(!r.isSuccess()) {
+					return r;
+				}
+			}
+		}
 		
 		r.setIsSuccess();
 		return r;

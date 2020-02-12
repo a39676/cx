@@ -41,7 +41,7 @@ public class TestController2 extends CommonController {
 	
 	@GetMapping(value = "/userSearch")
 	public ModelAndView userSearch() {
-		return new ModelAndView("adminJSP/userSearch");
+		return new ModelAndView("adminJSP/userAuthManager");
 	}
 	
 }

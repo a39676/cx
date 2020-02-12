@@ -1,6 +1,8 @@
 package demo.base.user.service.impl;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -8,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import demo.base.system.pojo.constant.InitSystemConstant;
 import demo.base.user.mapper.UserAuthMapper;
 import demo.base.user.pojo.dto.EditUserAuthDTO;
 import demo.base.user.pojo.dto.FindAuthsConditionDTO;
@@ -142,7 +145,7 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 		}
 		
 		UserAuthExample example = new UserAuthExample();
-		example.createCriteria().andUserIdEqualTo(dto.getUserId());
+		example.createCriteria().andUserIdEqualTo(dto.getUserId()).andIsDeleteEqualTo(false);
 		List<UserAuth> userAuthList = userAuthMapper.selectByExample(example);
 		
 		if(userAuthList != null && userAuthList.size() > 0) {
@@ -150,14 +153,29 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 			List<Long> authIdList = userAuthList.stream().map(UserAuth::getAuthId).collect(Collectors.toList());
 			findAuthDTO.setAuthIdList(authIdList);
 			FindAuthsResult authListResult = authService.findAuthsByCondition(findAuthDTO);
-			if(!authListResult.isSuccess()) {
+			if(!authListResult.isSuccess() || authListResult.getAuthList() == null || authListResult.getAuthList().size() < 1) {
 				r.addMessage(authListResult.getMessage());
 				return r;
 			}
+			
+			r.setUserAuthList(userAuthList);
+			r.setAuthList(authListResult.getAuthList());
 		}
 		
 		r.setIsSuccess();
 		return r;
+	}
+	
+	@Override
+	public FindAuthsResult findAuth() {
+		/*
+		 * 按条件搜 角色
+		 * 暂用于用户编辑角色时, 查找所有角色 所以 hardcode 机构 ID
+		 * 
+		 */
+		FindAuthsConditionDTO dto = new FindAuthsConditionDTO();
+		dto.setBelongOrgIdList(InitSystemConstant.BASE_ORG_ID);
+		return authService.findAuthsByCondition(dto);
 	}
 	
 	@Override
@@ -176,20 +194,28 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 			return r;
 		}
 		
-		if(userAuthResult.getAuthList() != null || userAuthResult.getAuthList().size() > 0) {
-			for(Auth auth : userAuthResult.getAuthList()) {
-				r = deleteUserAuth(dto.getUserId(), auth.getId());
-				if(!r.isSuccess()) {
-					return r;
+		Set<Long> oldAuthIdSet = null;
+		if(userAuthResult.getAuthList() != null && userAuthResult.getAuthList().size() > 0) {
+			oldAuthIdSet = userAuthResult.getUserAuthList().stream().map(UserAuth::getAuthId).collect(Collectors.toSet());
+			for(Auth oldAuth : userAuthResult.getAuthList()) {
+				if(!dto.getNewAuthIdList().contains(oldAuth.getId())) {
+					r = deleteUserAuth(dto.getUserId(), oldAuth.getId());
+					if(!r.isSuccess()) {
+						return r;
+					}
 				}
 			}
+		} else {
+			oldAuthIdSet = new HashSet<Long>();
 		}
 		
 		if(dto.getNewAuthIdList() != null && dto.getNewAuthIdList().size() > 0) {
 			for(Long authId : dto.getNewAuthIdList()) {
-				r = insertUserAuth(dto.getUserId(), authId);
-				if(!r.isSuccess()) {
-					return r;
+				if(!oldAuthIdSet.contains(authId)) {
+					r = insertUserAuth(dto.getUserId(), authId);
+					if(!r.isSuccess()) {
+						return r;
+					}
 				}
 			}
 		}

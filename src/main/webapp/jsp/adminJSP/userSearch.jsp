@@ -70,7 +70,7 @@
   
   <div class="row">
     <div class="col-md-12">
-      <div id="usernameDiv"></div>
+      <div id="usernameDiv" selectedUserId=""></div>
     </div>
   </div>
 
@@ -105,6 +105,8 @@
       }
 
       $(".conditionInput").change(function () {
+        $("#usernameDiv").attr("selectedUserId", "");
+
         var UserName = $("#UserName").val();
         var UserNickName = $("#UserNickName").val();
         var userId = $("#userId").val();
@@ -123,8 +125,6 @@
           credentialsNonExpired:credentialsNonExpired
         };
 
-        console.log(jsonOutput);
-
         $.ajax({               
           type: "POST",  
           url: url,
@@ -136,21 +136,29 @@
           },
           timeout: 15000,
           success:function(data){
-            console.log(data);
-            console.log(data.userList);
             var userList = data.userList;
             var usernameDiv = $("#usernameDiv");
             usernameDiv.empty();
             $.each(userList, function(index, userInfo) {
               usernameDiv.append($("<button class='btn btn-sm btn-light'></button>").attr("userId", userInfo.userId).text(userInfo.nickName));
               usernameDiv.append($("<label>&nbsp;&nbsp;|&nbsp;&nbsp;</label>"));
-              $("button[userId='"+userInfo.userId+"']").addClass("bankButton");
+              $("button[userId='"+userInfo.userId+"']").addClass("userButton");
+              $("button[userId='"+userInfo.userId+"']").bind("click", userButtonClick);
             });
           }, 
           error:function(e){
           }
         });  
       });
+
+      function userButtonClick() {
+        var userId = $(this).attr("userId");
+        $(".userButton").addClass("btn-light")
+        $(".userButton").removeClass("btn-primary")
+        $(this).removeClass("btn-light")
+        $(this).addClass("btn-primary")
+        $("#usernameDiv").attr("selectedUserId", userId);
+      };
 
     });
 

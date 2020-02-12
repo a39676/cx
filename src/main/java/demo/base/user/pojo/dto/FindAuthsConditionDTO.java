@@ -13,6 +13,7 @@ public class FindAuthsConditionDTO {
 	private List<Long> authIdList;
 	private List<Long> roleIdList;
 	private List<String> roleNameList;
+	private List<Long> belongOrgIdList;
 
 	public boolean isAuthRoleIsDelete() {
 		return authRoleIsDelete;
@@ -84,11 +85,26 @@ public class FindAuthsConditionDTO {
 		this.authIdList = authIdList;
 	}
 
+	public List<Long> getBelongOrgIdList() {
+		return belongOrgIdList;
+	}
+
+	public void setBelongOrgIdList(List<Long> belongOrgIdList) {
+		this.belongOrgIdList = belongOrgIdList;
+	}
+	
+	public void setBelongOrgIdList(Long belongOrgId) {
+		List<Long> belongOrgIdList = new ArrayList<Long>();
+		belongOrgIdList.add(belongOrgId);
+		this.belongOrgIdList = belongOrgIdList;
+	}
+
 	@Override
 	public String toString() {
 		return "FindAuthsConditionDTO [authType=" + authType + ", authName=" + authName + ", authIsDelete="
 				+ authIsDelete + ", authRoleIsDelete=" + authRoleIsDelete + ", roleIsDelete=" + roleIsDelete
-				+ ", authIdList=" + authIdList + ", roleIdList=" + roleIdList + ", roleNameList=" + roleNameList + "]";
+				+ ", authIdList=" + authIdList + ", roleIdList=" + roleIdList + ", roleNameList=" + roleNameList
+				+ ", belongOrgIdList=" + belongOrgIdList + "]";
 	}
 
 }

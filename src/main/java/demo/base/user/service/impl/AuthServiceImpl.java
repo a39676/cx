@@ -143,6 +143,9 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		if(dto.getAuthType() != null) {
 			c.andAuthTypeEqualTo(dto.getAuthType());
 		}
+		if(dto.getBelongOrgIdList() != null && dto.getBelongOrgIdList().size() > 0) {
+			c.andBelongOrgIn(dto.getBelongOrgIdList());
+		}
 		if((dto.getRoleIdList() != null && dto.getRoleIdList().size() > 0) 
 				||(dto.getRoleNameList() != null && dto.getRoleNameList().size() > 0)) {
 			FindAuthRoleDTO findAuthRoleDTO = new FindAuthRoleDTO();

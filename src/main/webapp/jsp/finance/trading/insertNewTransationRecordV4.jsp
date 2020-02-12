@@ -7,7 +7,7 @@
 
   <div class="row">
   <div class="col-md-12">
-    <%@ include file="../accountInfoJSP/accountSelectorV1.jsp" %>
+    <%@ include file="../accountInfo/accountSelectorV1.jsp" %>
   </div>
   </div>
 

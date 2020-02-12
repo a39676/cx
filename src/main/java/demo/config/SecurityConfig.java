@@ -24,6 +24,7 @@ import demo.article.article.pojo.constant.ArticleUrlConstant;
 import demo.article.articleComment.pojo.constant.ArticleAdminCommentUrlConstant;
 import demo.base.admin.pojo.constant.AdminUrlConstant;
 import demo.base.user.pojo.constant.LoginUrlConstant;
+import demo.base.user.pojo.constant.UserAuthUrl;
 import demo.base.user.pojo.constant.UsersUrlConstant;
 import demo.base.user.pojo.type.RolesType;
 import demo.base.user.service.impl.CustomAuthenticationFailHandler;
@@ -95,7 +96,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(FakeFTPUrlConstant.root + "/**")
             	.access(hasRole(RolesType.ROLE_SUPER_ADMIN))
             .antMatchers(ArticleAdminUrlConstant.root + "/**")
-            	.access(hasAnyRole(RolesType.ROLE_ADMIN, RolesType.ROLE_SUPER_ADMIN)) 
+            	.access(hasAnyRole(RolesType.ROLE_ADMIN, RolesType.ROLE_SUPER_ADMIN))
+            .antMatchers(UserAuthUrl.root + "/**")
+            	.access(hasRole(RolesType.ROLE_SUPER_ADMIN))
             .antMatchers(ArticleUrlConstant.root + ArticleUrlConstant.createArticleLong)
             	.access(hasAnyRole(RolesType.ROLE_SUPER_ADMIN, RolesType.ROLE_ADMIN, RolesType.ROLE_DEV, RolesType.ROLE_USER))
             .antMatchers(ArticleUrlConstant.root + ArticleUrlConstant.creatingArticleLong)

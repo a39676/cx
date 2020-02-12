@@ -30,7 +30,7 @@ a {
   <thead>
     <tr>
       <td class="fakePanel" name="basePart">
-        <a href="${pageContext.request.contextPath}/">回到主页</a>
+        <a href="/">回到主页</a>
       </td>
     </tr>
     <tr>
@@ -41,7 +41,7 @@ a {
       
         </c:if>
     
-        <a href="${pageContext.request.contextPath}/login/logout"/>Logout</a>
+        <a href="/login/logout"/>Logout</a>
       </td>
     </tr>
   </thead>
@@ -53,37 +53,37 @@ a {
   <tbody style="display: none" name="accountInfoPart">
     <tr><td>
           <label class="fakeButton" 
-            data-url="${pageContext.request.contextPath}/accountInfo/accountStatistics">
+            data-url="/accountInfo/accountStatistics">
             所有卡 
           </label>
     </td></tr>
     <tr><td>
           <label class="fakeButton" 
-            data-url="${pageContext.request.contextPath}/accountInfo/insertNewTransationV4">
+            data-url="/accountInfo/insertNewTransationV4">
             新加交易记录V4
           </label>
     </td></tr>
     <tr><td>
           <label class="fakeButton" 
-            data-url="${pageContext.request.contextPath}/accountInfo/transationHistory">
+            data-url="/accountInfo/transationHistory">
             临时交易记录展示
           </label>
     </td></tr>
     <tr><td>
           <label class="fakeButton" 
-            data-url="${pageContext.request.contextPath}/trading/importTradingRecordFromFiles">
+            data-url="/trading/importTradingRecordFromFiles">
             从文件导入交易记录
           </label>
     </td></tr>
     <tr><td>
           <label class="fakeButton" 
-            data-url="${pageContext.request.contextPath}/accountInfo/transationHistoryQuery">
+            data-url="/accountInfo/transationHistoryQuery">
             交易记录查询
           </label>
     </td></tr>
     <tr><td>
           <label class="fakeButton" 
-            data-url="${pageContext.request.contextPath}/accountInfo/accountRegist">
+            data-url="/accountInfo/accountRegist">
             新增卡号
           </label>
     </td></tr>
@@ -96,7 +96,7 @@ a {
     <tr><td>
 <%-- 
           <label class="fakeButton" 
-            data-url="${pageContext.request.contextPath}tool/image/imageSave">
+            data-url="tool/image/imageSave">
             imageSave
           </label>
            --%>
@@ -122,19 +122,19 @@ a {
   <tbody style="display: none" name="testing">
     <tr><td>
           <label class="fakeButton" 
-            data-url="${pageContext.request.contextPath}/accountInfo/insertNewTransationV4">
+            data-url="/accountInfo/insertNewTransationV4">
             新加交易记录V4
           </label>
     </td></tr>
     <tr><td>
           <label class="fakeButton" 
-            data-url="${pageContext.request.contextPath}/bankInfo/bankSelectorV4">
+            data-url="/bankInfo/bankSelectorV4">
             银行选择器V4
           </label>
     </td></tr>
     <tr><td>
           <label class="fakeButton" 
-            data-url="${pageContext.request.contextPath}/accountInfo/accountSelectorV1">
+            data-url="/accountInfo/accountSelectorV1">
             账户选择器V4
           </label>
     </td></tr>

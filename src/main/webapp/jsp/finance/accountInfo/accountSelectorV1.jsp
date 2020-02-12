@@ -6,7 +6,7 @@
 
 <div>
   <div id="bankIdSelector">
-    <%@ include file="../bankInfoJSP/bankSelectorV4.jsp" %>
+    <%@ include file="../bank/bankSelectorV4.jsp" %>
   </div>
 </div>
 

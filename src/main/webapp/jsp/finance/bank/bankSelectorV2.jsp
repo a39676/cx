@@ -10,7 +10,7 @@
 
 <div>
   <div id="bankIdSelector">
-    <%@ include file="../bankInfoJSP/bankButtons.jsp" %>
+    <%@ include file="./bankButtons.jsp" %>
   </div>
 </div>
 

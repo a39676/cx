@@ -30,7 +30,7 @@ import demo.finance.account_holder.AccountHolderViewConstants;
 import demo.finance.account_holder.controller.AccountHolderController;
 import demo.finance.account_holder.pojo.po.AccountHolder;
 import demo.finance.account_info.pojo.bo.AccountInfoWithBankInfo;
-import demo.finance.account_info.pojo.constant.AccountInfoViewConstants;
+import demo.finance.account_info.pojo.constant.AccountInfoView;
 import demo.finance.account_info.pojo.constant.AccountUrl;
 import demo.finance.account_info.pojo.dto.controllerDTO.AccountInfoDetailQueryDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.AccountInfoRegistDTO;
@@ -76,7 +76,7 @@ public class AccountInfoController extends CommonController {
 		ModelAndView view = new ModelAndView();
 
 		try{
-			view.setViewName(AccountInfoViewConstants.accountDetail);
+			view.setViewName(AccountInfoView.accountDetail);
 			
 			AccountInfoWithBankInfo accountInfoWithBankInfo = accountInfoService.getAccountInfoWithBankInfoByAccountNumber(dto.getAccountNumber());
 			view.addObject("account", accountInfoWithBankInfo);
@@ -104,14 +104,14 @@ public class AccountInfoController extends CommonController {
 	
 	@GetMapping(AccountUrl.accountListView)
 	public ModelAndView accountList() {
-		ModelAndView view = new ModelAndView(AccountInfoViewConstants.accountList);
+		ModelAndView view = new ModelAndView(AccountInfoView.accountList);
 
 		return view;
 	}
 	
 	@PostMapping(AccountUrl.accountListView)
 	public ModelAndView accountListView(@RequestBody GetAccountListByConditionParam param) {
-		ModelAndView view = new ModelAndView(AccountInfoViewConstants.accountList);
+		ModelAndView view = new ModelAndView(AccountInfoView.accountList);
 		
 		GetAccountListResult result = accountInfoService.accountInfoWithBankInfoList(param);
 		
@@ -137,7 +137,7 @@ public class AccountInfoController extends CommonController {
 		/*
 		 * 2019-07-04 准备将逻辑转移至service
 		 */
-		ModelAndView view = new ModelAndView(AccountInfoViewConstants.accountStatistics);
+		ModelAndView view = new ModelAndView(AccountInfoView.accountStatistics);
 		
 		List<AccountHolder> holderList = accountHolderController.getCurrentHolders();
 
@@ -192,7 +192,7 @@ public class AccountInfoController extends CommonController {
 		ModelAndView view = new ModelAndView();
 		
 		if (baseUtilCustom.isLoginUser()) {
-			view.setViewName(AccountInfoViewConstants.accountRegistration);
+			view.setViewName(AccountInfoView.accountRegistration);
 		} else { 
 			view.setViewName(BaseViewConstant.view403);
 			return view;
@@ -314,7 +314,7 @@ public class AccountInfoController extends CommonController {
 
 	@GetMapping(AccountUrl.accountSelectorV1)
 	public ModelAndView accountSelectorV1() {
-		ModelAndView view = new ModelAndView(AccountInfoViewConstants.accountSelectorV1);
+		ModelAndView view = new ModelAndView(AccountInfoView.accountSelectorV1);
 		return view;
 	}
 	

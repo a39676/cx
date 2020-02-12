@@ -18,12 +18,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import demo.article.fakePost.service.FakePostService;
 import demo.base.admin.pojo.constant.AdminUrlConstant;
-import demo.base.admin.pojo.constant.AdminViewConstants;
+import demo.base.admin.pojo.constant.AdminView;
 import demo.base.admin.pojo.dto.RefreshSystemConstantDTO;
 import demo.base.admin.service.AdminService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.constant.BaseStatusCode;
 import demo.base.system.service.impl.SystemConstantService;
+import demo.base.user.pojo.constant.UserManagerView;
 import demo.base.user.pojo.dto.UserIpDeleteDTO;
 import demo.base.user.pojo.po.Users;
 import demo.base.user.service.UsersService;
@@ -67,7 +68,7 @@ public class AdminController extends CommonController {
 
 		view.addObject("title", "User manger site");
 		view.addObject("message", "Nothing yet");
-		view.setViewName(AdminViewConstants.userManager);
+		view.setViewName(UserManagerView.userManager);
 
 		return view;
 	}
@@ -92,20 +93,20 @@ public class AdminController extends CommonController {
 
 		view.addObject("message", tmpUser.getUserName());
 
-		view.setViewName(AdminViewConstants.userManager);
+		view.setViewName(UserManagerView.userManager);
 
 		return view;
 	}
 	
 	@GetMapping(value = AdminUrlConstant.manager)
 	public ModelAndView manager() {
-		return new ModelAndView(AdminViewConstants.manager);
+		return new ModelAndView(AdminView.manager);
 	}
 
 	@GetMapping(value = AdminUrlConstant.updateAccountMarker, produces = "text/html;charset=UTF-8")
 	public ModelAndView updateAccountMarker() {
 
-		return new ModelAndView(AdminViewConstants.updateAccountMarker);
+		return new ModelAndView(AdminView.updateAccountMarker);
 
 	}
 
@@ -137,7 +138,7 @@ public class AdminController extends CommonController {
 		ModelAndView view = new ModelAndView();
 		view.addObject("title", "Spring Security Hello World");
 		view.addObject("message", "This is protected page - Database Page!");
-		view.setViewName(AdminViewConstants.adminView);
+		view.setViewName(AdminView.adminView);
 
 		return view;
 	}

@@ -7,7 +7,7 @@
 <%@page session="true"%>
 <html>
 <head>
-<%@ include file="../baseElementJSP/normalHeader.jsp" %>
+<%@ include file="../../../baseElementJSP/normalHeader.jsp" %>
 </head>
 <body>
   <h1>Message : ${message}</h1>
@@ -50,7 +50,7 @@
 </body>
 
 <footer>
-  <%@ include file="../baseElementJSP/normalFooter.jsp" %>
+  <%@ include file="../../../baseElementJSP/normalFooter.jsp" %>
   <script type="text/javascript">
 
     var csrfHeader = '${_csrf.headerName}';

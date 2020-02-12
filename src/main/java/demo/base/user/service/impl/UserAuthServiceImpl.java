@@ -1,5 +1,6 @@
 package demo.base.user.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -90,10 +91,11 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 			return r;
 		}
 		
-		UserAuth bo = new UserAuth();
-		bo.setId(userAuthList.get(0).getId());
+		UserAuth bo = userAuthList.get(0);
 		bo.setIsDelete(true);
-		int count = userAuthMapper.updateByPrimaryKeySelective(bo);
+		bo.setUpdateTime(LocalDateTime.now());
+		bo.setUpdateBy(baseUtilCustom.getUserId());
+		int count = userAuthMapper.updateByPrimaryKey(bo);
 		if(count > 0) {
 			r.setIsSuccess();
 		}

@@ -30,18 +30,18 @@
       <button class="btn btn-warning btn-sm" name="loginSubmit">
         <span class="badge badge-warning">[登录]</span>
       </button>
+      <!-- 
+      <button class="loginCustomButton btn btn-warning btn-sm" name="userRegist" url="/user/userRegist">
+        <span class="badge badge-warning">[注册]</span>
+      </button>
+       -->
+      <button class="loginCustomButton btn btn-warning btn-sm" name="forgotPassword" url="/user/forgotPasswordOrUsername">
+        <span class="badge badge-warning">[忘记密码/用户名]</span>
+      </button>
       <button class="btn btn-warning btn-sm" id="cancelLogin">
         <span class="badge badge-warning">[取消]</span>
       </button>
     </div>
-    <%--       
-    <button class="loginCustomButton btn btn-warning btn-sm" name="userRegist" url="/user/userRegist">
-      <span class="badge badge-warning">[注册]</span>
-    </button>
-    <button class="loginCustomButton btn btn-warning btn-sm" name="forgotPassword" url="/user/forgotPasswordOrUsername">
-      <span class="badge badge-warning">[忘记密码/用户名]</span>
-    </button>
-     --%>
     <div>
       <span name="loginMessage" style="font-size: small;"></span>
     </div>
@@ -93,23 +93,14 @@ $(document).ready(function() {
     document.getElementById("loginBox").style.display = "none";
   };
 
-  // $(".loginCustomButton").click(function () {
-  //   loginCustomButtonClick($(this).attr("url")); 
-  // });
+  $(".loginCustomButton").click(function () {
+    loginCustomButtonClick($(this).attr("url")); 
+  });
 
-  // function loginCustomButtonClick(buttonUrl){
-  //   $.ajax({  
-  //     type : "GET",  
-  //     async : true,
-  //     url : buttonUrl,  
-  //     success:function(datas){  
-  //         $("div[name='subBodyRow']").html(datas);
-  //         $("div[name='subBodyRow']").show(); 
-  //     },  
-  //     error: function(datas) {                
-  //     }  
-  //   });  
-  // }
+  function loginCustomButtonClick(buttonUrl){
+    var win = window.open(buttonUrl, '_blank');
+    win.focus();
+  }
 
 });
 

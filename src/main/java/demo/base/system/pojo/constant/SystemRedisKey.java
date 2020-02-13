@@ -9,4 +9,6 @@ public class SystemRedisKey {
 	public static final String searchingDemoInsertCountingKeyPrefix = "bingDemo";
 	
 	public static final String articleBurnInsertCountingKeyPrefix = "articleBurn";
+	
+	public static final String userRegistCountingKeyPrefix = "userRegist";
 }

@@ -25,7 +25,7 @@ public interface UserRegistService {
 
 	boolean isUserExists(String userName);
 
-	CommonResultCX registActivation(String mailKey, String activeEMail);
+	CommonResultCX registActivation(String mailKey);
 
 	__baseSuperAdminRegistVO __baseSuperAdminRegist();
 

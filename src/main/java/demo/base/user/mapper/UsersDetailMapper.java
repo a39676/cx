@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import demo.base.user.pojo.dto.UpdateDuplicateEmailDTO;
 import demo.base.user.pojo.po.UsersDetail;
 import demo.base.user.pojo.po.UsersDetailExample;
 
@@ -36,8 +35,6 @@ public interface UsersDetailMapper {
     String findEmailByUserId(Long userId);
 
 	int modifyRegistEmail(@Param("email")String email, @Param("userId")Long userId);
-	
-	int updateDuplicateEmail(UpdateDuplicateEmailDTO param);
 	
 	String findHeadImage(@Param("userId")Long userId);
 }

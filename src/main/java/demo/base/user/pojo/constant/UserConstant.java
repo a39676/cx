@@ -8,4 +8,6 @@ public class UserConstant {
 	 * user regist/init should not process with bind auth
 	 * when there is no user(ex: run application first time) fill the create by field */
 	public static final long noneUserId = 0L;
+	
+	public static final int oneDayRegistCount = 2;
 }

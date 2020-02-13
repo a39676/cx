@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.pojo.bo.SystemConstantStore;
-import demo.base.user.pojo.constant.UsersUrlConstant;
+import demo.base.user.pojo.constant.UsersUrl;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
@@ -145,13 +145,14 @@ public class MailServiceImpl extends CommonService implements MailService {
 			return result;
 		}
 		
-		String mailKey = encryptId(snowFlake.getNextId());
-		String mailUrl = dto.getHostName() + UsersUrlConstant.root + UsersUrlConstant.registActivation + "?mailKey=" + mailKey;
+		Long newMailId = snowFlake.getNextId();
+		String mailKey = encryptId(newMailId);
+		String mailUrl = dto.getHostName() + UsersUrl.root + UsersUrl.registActivation + "?mailKey=" + mailKey;
 		
 		sendSimpleMail(dto.getSendTo(), "欢迎注册", createRegistMailContent(dto.getNickName(), mailUrl), mailKey, MailType.registActivation);
 		
 		MailRecord mr = new MailRecord();
-		mr.setId(snowFlake.getNextId());
+		mr.setId(newMailId);
 		mr.setMailType(MailType.registActivation.getCode());
 		mr.setValidTime(LocalDateTime.now().plusDays(3L));
 		mr.setUserId(dto.getUserId());
@@ -176,7 +177,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 		oldMail.setValidTime(oldMail.getValidTime().plusDays(1));
 		mailRecordMapper.updateByPrimaryKeySelective(oldMail);
 		
-		String mailUrl = dto.getHostName() + UsersUrlConstant.root + UsersUrlConstant.registActivation + "?mailKey=" + dto.getMailKey();
+		String mailUrl = dto.getHostName() + UsersUrl.root + UsersUrl.registActivation + "?mailKey=" + dto.getMailKey();
 		sendSimpleMail(dto.getSendTo(), "欢迎注册" + dto.getHostName(), createRegistMailContent(dto.getNickName(), mailUrl), dto.getMailKey(), MailType.registActivation);
 		
 		result.setMailKey(dto.getMailKey());
@@ -287,7 +288,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 		mailRecordMapper.insertSelective(mr);
 		
 		String mailKey = encryptId(mailId); 
-		String mailUrl = dto.getHostName() + UsersUrlConstant.root + UsersUrlConstant.resetPassword + "?mailKey=" + mailKey;
+		String mailUrl = dto.getHostName() + UsersUrl.root + UsersUrl.resetPassword + "?mailKey=" + mailKey;
 		return (CommonResultCX) sendSimpleMail(dto.getSendTo(), ("重置您在" + dto.getHostName() + "的密码"), createForgotPasswordMailContent(mailUrl), mailKey, MailType.forgotPassword);
 	}
 	
@@ -296,7 +297,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 		mailRecordMapper.updateByPrimaryKeySelective(oldMail);
 		
 		String mailKey = encryptId(oldMail.getId());
-		String mailUrl = dto.getHostName() + UsersUrlConstant.root + UsersUrlConstant.resetPassword + "?mailKey=" + mailKey;
+		String mailUrl = dto.getHostName() + UsersUrl.root + UsersUrl.resetPassword + "?mailKey=" + mailKey;
 		return (CommonResultCX) sendSimpleMail(dto.getSendTo(), ("重置您在" + dto.getHostName() + "的密码"), createForgotPasswordMailContent(mailUrl), mailKey, MailType.forgotPassword);
 	}
 	

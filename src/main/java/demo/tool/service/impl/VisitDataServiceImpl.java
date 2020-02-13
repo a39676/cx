@@ -159,10 +159,15 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 	
 	@Override
 	public void insertFunctionalModuleVisitData(HttpServletRequest request, String redisKeyPrefix) {
+		insertFunctionalModuleVisitData(request, redisKeyPrefix, 30, TimeUnit.MINUTES);
+	}
+	
+	@Override
+	public void insertFunctionalModuleVisitData(HttpServletRequest request, String redisKeyPrefix, long timeout, TimeUnit unit) {
 		IpRecordBO record = getIp(request);
 		
 		String key = buildRedisKeyPrefix(record, redisKeyPrefix) + "_" + snowFlake.getNextId();
-		redisTemplate.opsForValue().set(key, "", 30, TimeUnit.MINUTES);
+		redisTemplate.opsForValue().set(key, "", timeout, unit);
 	}
 	
 	@Override

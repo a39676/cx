@@ -1,5 +1,7 @@
 package demo.tool.service;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.servlet.http.HttpServletRequest;
 
 import tool.pojo.bo.IpRecordBO;
@@ -52,6 +54,8 @@ public interface VisitDataService {
 	 * @param request
 	 */
 	void insertFunctionalModuleVisitData(HttpServletRequest request, String redisKeyPrefix);
+	void insertFunctionalModuleVisitData(HttpServletRequest request, String redisKeyPrefix, long timeout,
+			TimeUnit unit);
 
 	int checkFunctionalModuleVisitData(HttpServletRequest request, String redisKeyPrefix);
 

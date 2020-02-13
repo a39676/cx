@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.base.user.pojo.constant.UsersUrlConstant;
+import demo.base.user.pojo.constant.UsersUrl;
 import demo.base.user.pojo.dto.FindUserByConditionDTO;
 import demo.base.user.pojo.dto.OtherUserInfoDTO;
 import demo.base.user.pojo.po.Users;
@@ -25,7 +25,7 @@ import demo.config.costom_component.BaseUtilCustom;
 import net.sf.json.JSONObject;
 
 @Controller
-@RequestMapping(value = UsersUrlConstant.root)
+@RequestMapping(value = UsersUrl.root)
 public class UsersController extends CommonController {
 	
 	@Autowired
@@ -33,12 +33,12 @@ public class UsersController extends CommonController {
 	@Autowired
 	private BaseUtilCustom baseUtilCustom;
 	
-	@PostMapping(value = UsersUrlConstant.userInfo)
+	@PostMapping(value = UsersUrl.userInfo)
 	public ModelAndView userInfo() {
 		return usersService.findUserInfo();
 	}
 	
-	@PostMapping(value = UsersUrlConstant.otherUserInfo)
+	@PostMapping(value = UsersUrl.otherUserInfo)
 	public ModelAndView otherUserInfo(@RequestBody OtherUserInfoDTO param, HttpServletRequest request, HttpServletResponse response) {
 //		TODO
 		ModelAndView view = new ModelAndView("userJSP/otherUserInfo");
@@ -64,7 +64,7 @@ public class UsersController extends CommonController {
 		return currentUser.getUserId();
 	}
 	
-	@PostMapping(value = UsersUrlConstant.isLogin)
+	@PostMapping(value = UsersUrl.isLogin)
 	public void isLogin(HttpServletResponse response) {
 		CommonResult result = new CommonResult();
 		if(baseUtilCustom.isLoginUser()) {
@@ -77,8 +77,8 @@ public class UsersController extends CommonController {
 		return usersService.findHeadImageUrl(userId);
 	}
 
-	@PostMapping(value = UsersUrlConstant.findUserByCondition)
-	@GetMapping(value = UsersUrlConstant.findUserByCondition)
+	@PostMapping(value = UsersUrl.findUserByCondition)
+	@GetMapping(value = UsersUrl.findUserByCondition)
 	@ResponseBody
 	public FindUserByConditionResult findUserByCondition(@RequestBody FindUserByConditionDTO dto) {
 		return usersService.findUserByCondition(dto);

@@ -13,7 +13,6 @@ public class UserRegistDTO {
 	private String email;
 	private String pwd;
 	private String pwdRepeat;
-	private String pwdd;
 	private Integer gender;
 	private String qq;
 	private String mobile;
@@ -89,14 +88,6 @@ public class UserRegistDTO {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public String getPwdd() {
-		return pwdd;
-	}
-
-	public void setPwdd(String pwdd) {
-		this.pwdd = pwdd;
 	}
 
 }

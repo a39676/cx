@@ -28,11 +28,9 @@
           <li class="nav-item" name="login">
             <a class="nav-link" href="#" id="loginTag">[登录]</a>
           </li>
-          <%-- 
-          <li class="btn btn-sm btn-default" name="userRegist" url="/user/userRegist">
-            <a href="">[注册]</a>
+          <li class="nav-item" name="userRegist">
+            <a href="/user/userRegist">[注册]</a>
           </li>
-            --%>
         </sec:authorize>
         <sec:authorize access="hasRole('ROLE_USER')">
           <li class="nav-item" name="login" style="display: none;">

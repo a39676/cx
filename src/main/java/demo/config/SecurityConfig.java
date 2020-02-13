@@ -25,7 +25,7 @@ import demo.article.articleComment.pojo.constant.ArticleAdminCommentUrlConstant;
 import demo.base.admin.pojo.constant.AdminUrlConstant;
 import demo.base.user.pojo.constant.LoginUrlConstant;
 import demo.base.user.pojo.constant.UserAuthUrl;
-import demo.base.user.pojo.constant.UsersUrlConstant;
+import demo.base.user.pojo.constant.UsersUrl;
 import demo.base.user.pojo.type.RolesType;
 import demo.base.user.service.impl.CustomAuthenticationFailHandler;
 import demo.base.user.service.impl.CustomAuthenticationSuccessHandler;
@@ -77,7 +77,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
             .antMatchers("/welcome**").permitAll()
             .antMatchers(LoginUrlConstant.login + "/**").permitAll()
-            .antMatchers(UsersUrlConstant.root + "/**").permitAll()
+            .antMatchers(UsersUrl.root + "/**").permitAll()
             .antMatchers("/static_resources/**").permitAll()
             .antMatchers("/tHome/**").permitAll()
             .antMatchers(WXUrl.root + WXUrl.weixin).permitAll()

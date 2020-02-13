@@ -387,16 +387,6 @@
       user_id = #{userId}
   </update>
 
-  <update id="updateDuplicateEmail">
-    update 
-      user_detail
-    set
-      email = #{newEmail}
-    where
-      user_id != #{userId} 
-      and email = #{oldEmail}
-  </update>
-
   <select id="findHeadImage" resultType="String">
     select head_image from users_detail where user_id = #{userId}
   </select>

@@ -1,6 +1,6 @@
 package demo.base.user.pojo.constant;
 
-public class UsersUrlConstant {
+public class UsersUrl {
 	
 	public static final String root = "/user";
 	public static final String userNameExistCheck = "/userNameExistCheck";

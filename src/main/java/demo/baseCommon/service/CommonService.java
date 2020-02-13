@@ -144,6 +144,9 @@ public abstract class CommonService {
 	}
 
 	protected String findHostNameFromRequst(HttpServletRequest request) {
+		if("dev".equals(constantService.getValByName("envName"))) {
+			return "easy";
+		}
 		return request.getServerName();
 //		if("dev".equals(constantService.getValByName("envName"))) {
 //			return request.getServerName();

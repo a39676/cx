@@ -5,6 +5,7 @@ public enum HostnameType {
 	ea("ea", 1),
 	seek("seek", 2),
 	three("three", 3),
+	haven("haven", 4)
 	;
 	
 	private String name;
@@ -40,6 +41,8 @@ public enum HostnameType {
 			return seek;
 		} else if(typeName.contains("3310")) {
 			return three;
+		} else if(typeName.contains("haven")) {
+			return haven;
 		}
 		return null;
 	}

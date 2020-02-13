@@ -53,7 +53,7 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 				view = buildHomeViewForEA();
 			}
 		} else {
-			if (HostnameType.ea.equals(hostnameType)) {
+			if (HostnameType.ea.equals(hostnameType) || HostnameType.haven.equals(hostnameType)) {
 				view = buildHomeViewForEA();
 			} else if (HostnameType.seek.equals(hostnameType)) {
 				view = buildHomeViewForSeek();

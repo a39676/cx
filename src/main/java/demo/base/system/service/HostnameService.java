@@ -19,4 +19,6 @@ public interface HostnameService {
 
 	String find3310();
 
+	String findHaven();
+
 }

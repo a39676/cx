@@ -61,4 +61,14 @@ public class HostnameServiceImpl extends CommonService implements HostnameServic
 			return po.getHostname();
 		}
 	}
+	
+	@Override
+	public String findHaven() {
+		Hostname po = hostnameMapper.selectByPrimaryKey(4);
+		if(po == null) {
+			return null;
+		} else {
+			return po.getHostname();
+		}
+	}
 }

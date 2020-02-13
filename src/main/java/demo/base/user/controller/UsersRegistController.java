@@ -38,10 +38,6 @@ public class UsersRegistController extends CommonController {
 
 	@Autowired
 	private UserRegistService userRegistService;
-//	@Autowired
-//	private MailService mailService;
-//	@Autowired
-//	private SystemConstantService systemConstantService;
 	@Autowired
 	private BaseUtilCustom baseUtilCustom;
 

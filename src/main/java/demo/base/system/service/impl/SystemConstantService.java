@@ -163,4 +163,52 @@ public class SystemConstantService extends CommonService {
 		
 		return customKey;
 	}
+	
+	/**
+	 * 保留作为用例
+	 */
+//	private void setRoleListFromDBToRedis() {
+//		List<Roles> roleList = getRoleListFromDB();
+//		
+//		JSONArray ja = JSONArray.fromObject(roleList);
+//		constantService.setValByName(SystemConstantStore.roleList, ja.toString());
+//	}
+//	
+//	public List<Roles> getRoleListFromDB() {
+//		
+//		List<Roles> roleList = roleMapper.getRoleList();
+//		
+//		if(roleList == null || roleList.isEmpty()) {
+//			roleList = new ArrayList<Roles>();
+//		}
+//		
+//		return roleList;
+//		
+//	}
+//	
+//	public List<Roles> getRoleListFromRedis(boolean refresh) {
+//		if(refresh) {
+//			setRoleListFromDBToRedis();
+//		}
+//		
+//		String roleListStr = constantService.getValByName(SystemConstantStore.roleList);
+//		if(StringUtils.isBlank(roleListStr)) {
+//			return new ArrayList<Roles>();
+//		}
+//		
+//		JSONArray ja = JSONArray.fromObject(roleListStr);
+//		if(ja.size() < 1) {
+//			return new ArrayList<Roles>();
+//		}
+//		
+//		Gson g = new Gson();
+//		Roles r = null;
+//		List<Roles> roleList = new ArrayList<Roles>();
+//		for(int i = 0; i < ja.size(); i++) {
+//			r = g.fromJson(ja.getString(i), Roles.class);
+//			roleList.add(r);
+//		}
+//		
+//		return roleList;
+//	}
 }

@@ -37,7 +37,6 @@ public class SystemConstantStore {
 	/** 一般用户可以浏览 * 个月内的非置顶内容- */
 	public static final String normalUserMaxReadingMonth = "normalUserMaxReadingMonth";
 	public static final String jobing = "jobing";
-	public static final String roleList = "roleList";
 	
 	public static final String envName = "envName";
 	

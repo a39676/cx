@@ -4,7 +4,6 @@ import java.util.List;
 
 import demo.base.user.pojo.dto.EditUserAuthDTO;
 import demo.base.user.pojo.dto.FindUserAuthDTO;
-import demo.base.user.pojo.result.FindAuthsResult;
 import demo.base.user.pojo.result.FindUserAuthResult;
 import demo.base.user.pojo.type.AuthType;
 import demo.baseCommon.pojo.result.CommonResultCX;
@@ -26,7 +25,5 @@ public interface UserAuthService {
 	FindUserAuthResult findUserAuth(FindUserAuthDTO dto);
 
 	CommonResultCX editUserAuth(EditUserAuthDTO dto);
-
-	FindAuthsResult findAuth();
 
 }

@@ -4,12 +4,8 @@ public class Roles {
 
 	private Long roleId;
 	private String role;
+	private Long belongOrg;
 	private Boolean isDelete;
-
-	@Override
-	public String toString() {
-		return "Roles [roleId=" + roleId + ", role=" + role + ", isDelete=" + isDelete + "]";
-	}
 
 	public Long getRoleId() {
 		return roleId;
@@ -25,6 +21,14 @@ public class Roles {
 
 	public void setRole(String role) {
 		this.role = role == null ? null : role.trim();
+	}
+
+	public Long getBelongOrg() {
+		return belongOrg;
+	}
+
+	public void setBelongOrg(Long belongOrg) {
+		this.belongOrg = belongOrg;
 	}
 
 	public Boolean getIsDelete() {

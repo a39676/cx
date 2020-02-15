@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.base.system.pojo.constant.InitSystemConstant;
 import demo.base.user.mapper.UserAuthMapper;
 import demo.base.user.pojo.dto.EditUserAuthDTO;
 import demo.base.user.pojo.dto.FindAuthsConditionDTO;
@@ -166,18 +165,6 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 		
 		r.setIsSuccess();
 		return r;
-	}
-	
-	@Override
-	public FindAuthsResult findAuth() {
-		/*
-		 * 按条件搜 角色
-		 * 暂用于用户编辑角色时, 查找所有角色 所以 hardcode 机构 ID
-		 * 
-		 */
-		FindAuthsConditionDTO dto = new FindAuthsConditionDTO();
-		dto.setBelongOrgIdList(InitSystemConstant.BASE_ORG_ID);
-		return authService.findAuthsByCondition(dto);
 	}
 	
 	@Override

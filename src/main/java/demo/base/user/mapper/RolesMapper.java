@@ -5,19 +5,29 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import demo.base.user.pojo.po.Roles;
+import demo.base.user.pojo.po.RolesExample;
 
 public interface RolesMapper {
-    int insert(Roles record);
+    long countByExample(RolesExample example);
 
-    int insertSelective(Roles record);
-    
-    int insertOrUpdate(Roles role);
+	int deleteByExample(RolesExample example);
 
-    Roles getRoleByName(String roleName);
-    
-	List<Roles> getRoleList();
-	
-	List<Roles> findRolesByAuthId(Long authId);
-	
-	List<Roles> findRolesByAuthIdList(@Param("authIdList")List<Long> authIdList);
+	int deleteByPrimaryKey(Long roleId);
+
+	int insert(Roles record);
+
+	int insertSelective(Roles record);
+
+	List<Roles> selectByExample(RolesExample example);
+
+	Roles selectByPrimaryKey(Long roleId);
+
+	int updateByExampleSelective(@Param("record") Roles record, @Param("example") RolesExample example);
+
+	int updateByExample(@Param("record") Roles record, @Param("example") RolesExample example);
+
+	int updateByPrimaryKeySelective(Roles record);
+
+	int updateByPrimaryKey(Roles record);
+
 }

@@ -2,20 +2,21 @@ package demo.base.user.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.Gson;
-
-import demo.base.system.pojo.bo.SystemConstantStore;
+import demo.base.system.pojo.constant.InitSystemConstant;
 import demo.base.user.mapper.RolesMapper;
+import demo.base.user.pojo.dto.FindRolesDTO;
 import demo.base.user.pojo.po.Roles;
+import demo.base.user.pojo.po.RolesExample;
+import demo.base.user.pojo.po.RolesExample.Criteria;
 import demo.base.user.pojo.type.RolesType;
 import demo.base.user.service.RoleService;
 import demo.baseCommon.service.CommonService;
-import net.sf.json.JSONArray;
 
 @Service
 public class RoleServiceImpl extends CommonService implements RoleService {
@@ -25,137 +26,67 @@ public class RoleServiceImpl extends CommonService implements RoleService {
 	
 	@Override
 	public void __initBaseRole() {
+		RolesExample example = new RolesExample();
+		example.createCriteria().andBelongOrgEqualTo(InitSystemConstant.BASE_ORG_ID).andIsDeleteEqualTo(false);
+		List<Roles> hadBaseRoleList = roleMapper.selectByExample(example);
+		List<String> hadRoleNameList = hadBaseRoleList.stream().map(Roles::getRole).collect(Collectors.toList());
 		Roles r = null;
 		for(RolesType rt : RolesType.values()) {
-			r = new Roles();
-			r.setIsDelete(false);
-			r.setRole(rt.getName());
-			r.setRoleId(snowFlake.getNextId());
-			roleMapper.insertOrUpdate(r);
+			if(!hadRoleNameList.contains(rt.getName())) {
+				r = new Roles();
+				r.setRoleId(snowFlake.getNextId());
+				r.setRole(rt.getName());
+				r.setBelongOrg(InitSystemConstant.BASE_ORG_ID);
+				r.setIsDelete(false);
+				roleMapper.insertSelective(r);
+			}
 		}
-		setRoleListFromDBToRedis();
+	}
+
+	@Override
+	public List<Roles> getRolesByOrgId(Long orgId) {
+		if(orgId == null) {
+			return new ArrayList<Roles>();
+		}
+		RolesExample example = new RolesExample();
+		example.createCriteria().andBelongOrgEqualTo(orgId);
+		return roleMapper.selectByExample(example);
 	}
 	
 	@Override
-	public Roles getRoleByNameFromRedis(String roleName) {
-		return getRoleByNameFromRedis(roleName, false);
-	}
-	
-	@Override
-	public Roles getRoleByNameFromRedis(String roleName, boolean refresh) {
+	public Roles getBaseRoleByName(String roleName) {
 		if(StringUtils.isBlank(roleName)) {
 			return null;
 		}
-		List<Roles> roleList = getRoleListFromRedis(refresh);
-		if(roleList.size() < 1) {
+		RolesType t = RolesType.getRole(roleName);
+		if(t == null ) {
 			return null;
 		}
-		Roles r = null;
-		for(int i = 0; i < roleList.size() && r == null; i++) {
-			if(roleName.equals(roleList.get(i).getRole())) {
-				r = roleList.get(i);
-				return r;
-			}
+		
+		RolesExample example = new RolesExample();
+		example.createCriteria().andBelongOrgEqualTo(InitSystemConstant.BASE_ORG_ID).andIsDeleteEqualTo(false).andRoleEqualTo(roleName);
+		List<Roles> roles = roleMapper.selectByExample(example);
+		if(roles != null && roles.size() > 0) {
+			return roles.get(0);
 		}
 		return null;
 	}
-	
+
 	@Override
-	public List<Roles> getRolesByFuzzyNameFromRedis(String roleName, boolean refresh) {
-		List<String> l = List.of(roleName);
-		return getRolesByFuzzyNameFromRedis(l, refresh);
-	}
-	
-	@Override
-	public List<Roles> getRolesByFuzzyNameFromRedis(String roleName) {
-		return getRolesByFuzzyNameFromRedis(roleName, false);
-	}
-	
-	@Override
-	public List<Roles> getRolesByFuzzyNameFromRedis(List<String> sourceRoleNameList, boolean refresh) {
-		List<Roles> resultList = new ArrayList<Roles>();
-		if(sourceRoleNameList == null || sourceRoleNameList.size() < 1) {
-			return resultList;
+	public List<Roles> getRolesByCondition(FindRolesDTO dto) {
+		RolesExample example = new RolesExample();
+		Criteria c = example.createCriteria();
+		
+		if(dto.getBelongOrgIdList() != null && dto.getBelongOrgIdList().size() > 0) {
+			c.andBelongOrgIn(dto.getBelongOrgIdList());
+		}
+		if(dto.getRoleNameList() != null && dto.getRoleNameList().size() > 0) {
+			c.andRoleIn(dto.getRoleNameList());
+		}
+		if(dto.getRolesIdList() != null && dto.getRolesIdList().size() > 0) {
+			c.andRoleIdIn(dto.getRolesIdList());
 		}
 		
-		List<String> targetRoleNameList = new ArrayList<String>();
-		for(String roleName : sourceRoleNameList) {
-			if(StringUtils.isNotBlank(roleName)) {
-				targetRoleNameList.add(roleName);
-			}
-		}
-		
-		List<Roles> roleList = getRoleListFromRedis(refresh);
-		if(roleList.size() < 1) {
-			return resultList;
-		}
-		
-		for(Roles tmpRole : roleList) {
-			if(StringUtils.isNotBlank(tmpRole.getRole())) {
-				for(String tmpRoleName : targetRoleNameList) {
-					if (tmpRole.getRole().contains(tmpRoleName) && !resultList.contains(tmpRole)) {
-						resultList.add(tmpRole);
-					}
-				}
-			}
-		}
-		return resultList;
-	}
-	
-	@Override
-	public List<Roles> getRolesByFuzzyNameFromRedis(List<String> sourceRoleNameList) {
-		return getRolesByFuzzyNameFromRedis(sourceRoleNameList, false);
-	}
-	
-	@Override
-	public List<Roles> getRoleListFromDB() {
-		
-		List<Roles> roleList = roleMapper.getRoleList();
-		
-		if(roleList == null || roleList.isEmpty()) {
-			roleList = new ArrayList<Roles>();
-		}
-		
-		return roleList;
-		
-	}
-	
-	private void setRoleListFromDBToRedis() {
-		List<Roles> roleList = getRoleListFromDB();
-		
-		JSONArray ja = JSONArray.fromObject(roleList);
-		constantService.setValByName(SystemConstantStore.roleList, ja.toString());
-	}
-	
-	@Override
-	public List<Roles> getRoleListFromRedis() {
-		return getRoleListFromRedis(false);
-	}
-	
-	@Override
-	public List<Roles> getRoleListFromRedis(boolean refresh) {
-		if(refresh) {
-			setRoleListFromDBToRedis();
-		}
-		
-		String roleListStr = constantService.getValByName(SystemConstantStore.roleList);
-		if(StringUtils.isBlank(roleListStr)) {
-			return new ArrayList<Roles>();
-		}
-		
-		JSONArray ja = JSONArray.fromObject(roleListStr);
-		if(ja.size() < 1) {
-			return new ArrayList<Roles>();
-		}
-		
-		Gson g = new Gson();
-		Roles r = null;
-		List<Roles> roleList = new ArrayList<Roles>();
-		for(int i = 0; i < ja.size(); i++) {
-			r = g.fromJson(ja.getString(i), Roles.class);
-			roleList.add(r);
-		}
-		
-		return roleList;
+		return roleMapper.selectByExample(example);
 	}
 }

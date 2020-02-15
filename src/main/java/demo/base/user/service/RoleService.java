@@ -2,28 +2,17 @@ package demo.base.user.service;
 
 import java.util.List;
 
+import demo.base.user.pojo.dto.FindRolesDTO;
 import demo.base.user.pojo.po.Roles;
 
 public interface RoleService {
 
-	List<Roles> getRoleListFromDB();
-
 	void __initBaseRole();
 
-	List<Roles> getRoleListFromRedis();
+	List<Roles> getRolesByOrgId(Long orgId);
 
-	List<Roles> getRoleListFromRedis(boolean refresh);
+	Roles getBaseRoleByName(String roleName);
 
-	Roles getRoleByNameFromRedis(String roleName, boolean refresh);
-
-	Roles getRoleByNameFromRedis(String roleName);
-
-	List<Roles> getRolesByFuzzyNameFromRedis(String roleName, boolean refresh);
-
-	List<Roles> getRolesByFuzzyNameFromRedis(String roleName);
-
-	List<Roles> getRolesByFuzzyNameFromRedis(List<String> sourceRoleNameList, boolean refresh);
-
-	List<Roles> getRolesByFuzzyNameFromRedis(List<String> sourceRoleNameList);
+	List<Roles> getRolesByCondition(FindRolesDTO dto);
 
 }

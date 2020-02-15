@@ -50,9 +50,9 @@
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="auth">
-        	<property name="tableName" value="auth"></property>
-        	<property name="domainObjectName" value="auth" ></property>
+        <table tableName="roles">
+        	<property name="tableName" value="roles"></property>
+        	<property name="domainObjectName" value="roles" ></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

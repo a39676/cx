@@ -12,9 +12,11 @@ import org.springframework.web.servlet.ModelAndView;
 import demo.base.user.pojo.constant.UserAuthUrl;
 import demo.base.user.pojo.constant.UserAuthView;
 import demo.base.user.pojo.dto.EditUserAuthDTO;
+import demo.base.user.pojo.dto.FindAuthsConditionDTO;
 import demo.base.user.pojo.dto.FindUserAuthDTO;
 import demo.base.user.pojo.result.FindAuthsResult;
 import demo.base.user.pojo.result.FindUserAuthResult;
+import demo.base.user.service.AuthService;
 import demo.base.user.service.UserAuthService;
 import demo.baseCommon.controller.CommonController;
 import demo.baseCommon.pojo.result.CommonResultCX;
@@ -25,6 +27,8 @@ public class UserAuthController extends CommonController {
 
 	@Autowired
 	private UserAuthService userAuthService;
+	@Autowired
+	private AuthService authService;
 	
 	@GetMapping(value = UserAuthUrl.userAuthManager)
 	public ModelAndView userAuthManager() {
@@ -46,6 +50,6 @@ public class UserAuthController extends CommonController {
 	@PostMapping(value = UserAuthUrl.findAuth)
 	@ResponseBody
 	public FindAuthsResult findAuth() {
-		return userAuthService.findAuth();
+		return authService.findAuthsByCondition(new FindAuthsConditionDTO());
 	}
 }

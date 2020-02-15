@@ -1,5 +1,6 @@
 package demo.base.user.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -94,14 +95,16 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		} 
 		
 		Long newAuthRoleId = null;
-		Roles role = null;
 		
-		for(RolesType roleType : roleTypes) {
-			role = roleService.getRoleByNameFromRedis(roleType.getName());
-			if(role == null) {
-				log.error("bind base %s auth role error, role %s not exists", authType.getName(), roleType.getName());
-				return null;
-			}
+		List<Roles> baseRoleList = new ArrayList<Roles>();
+		for(RolesType rt : roleTypes) {
+			baseRoleList.add(roleService.getBaseRoleByName(rt.getName()));
+		}
+		if(baseRoleList == null || baseRoleList.size() < 1) {
+			log.error("There is no base roles, please init base role;");
+			return null;
+		}
+		for(Roles role : baseRoleList) {
 			newAuthRoleId = authRoleService.insertAuthRole(newAuthID, role.getRoleId(), supserAdminUserId);
 			if(newAuthRoleId == null) {
 				log.error("bind base %s auth role error", authType.getName());
@@ -114,25 +117,29 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 	
 	@Override
 	public FindAuthsResult findSuperAdministratorAuth() {
-		FindAuthsResult r = new FindAuthsResult();
-		Roles role = roleService.getRoleByNameFromRedis(RolesType.ROLE_SUPER_ADMIN.getName());
-		if(role == null) {
-			return r;
-		}
 		
 		FindAuthsConditionDTO dto = new FindAuthsConditionDTO();
 		dto.setAuthName(AuthType.SUPER_ADMIN.getName());
 		dto.setAuthType(AuthTypeType.SYS_AUTH.getCode());
-		dto.setRoleIdList(role.getRoleId());
+		dto.setBelongOrgIdList(InitSystemConstant.BASE_ORG_ID);
 		
 		return findAuthsByCondition(dto);
 	}
 	
+	
 	@Override
 	public FindAuthsResult findAuthsByCondition(FindAuthsConditionDTO dto) {
 		FindAuthsResult result = new FindAuthsResult();
-		AuthExample e = new AuthExample();
-		Criteria c = e.createCriteria();
+		AuthExample example = new AuthExample();
+		Criteria c = example.createCriteria();
+
+		if(dto.getBelongOrgIdList() == null || dto.getBelongOrgIdList().size() < 1) {
+			if(isBigUser()) {
+				dto.setBelongOrgIdList(InitSystemConstant.BASE_ORG_ID);
+			} else {
+				result.failWithMessage("必须指定所属机构");
+			}
+		}
 		
 		if(dto.getAuthIdList() != null && dto.getAuthIdList() .size() > 0) {
 			c.andIdIn(dto.getAuthIdList());
@@ -151,6 +158,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 			FindAuthRoleDTO findAuthRoleDTO = new FindAuthRoleDTO();
 			findAuthRoleDTO.setRoleIdList(dto.getRoleIdList());
 			findAuthRoleDTO.setRoleNameList(dto.getRoleNameList());
+			findAuthRoleDTO.setOrgIdList(dto.getBelongOrgIdList());
 			FindAuthRoleResult authRoleResult = authRoleService.findAuthRole(findAuthRoleDTO);
 			if(!authRoleResult.isSuccess()) {
 				result.setMessage(authRoleResult.getMessage());
@@ -163,7 +171,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 			}
 		}
 		
-		List<Auth> auths = authMapper.selectByExample(e);
+		List<Auth> auths = authMapper.selectByExample(example);
 
 		result.setAuthList(auths);
 		result.setIsSuccess();

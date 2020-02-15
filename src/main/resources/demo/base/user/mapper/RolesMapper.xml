@@ -3,18 +3,108 @@
 <mapper namespace="demo.base.user.mapper.RolesMapper">
 
   <resultMap id="BaseResultMap" type="demo.base.user.pojo.po.Roles">
-    <result column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
     <result column="role" jdbcType="CHAR" property="role" />
+    <result column="belong_org" jdbcType="BIGINT" property="belongOrg" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
   </resultMap>
-  
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    role_id, role, belong_org, is_delete
+  </sql>
+  <select id="selectByExample" parameterType="demo.base.user.pojo.po.RolesExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from roles
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.base.user.pojo.po.RolesExample">
+    delete from roles
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
   <insert id="insert" parameterType="demo.base.user.pojo.po.Roles">
-    insert into roles (role_id, role, is_delete
-      )
-    values (#{roleId,jdbcType=BIGINT}, #{role,jdbcType=CHAR}, #{isDelete,jdbcType=BIT}
-      )
+    insert into roles (role_id, role, belong_org, 
+      is_delete)
+    values (#{roleId,jdbcType=BIGINT}, #{role,jdbcType=CHAR}, #{belongOrg,jdbcType=BIGINT}, 
+      #{isDelete,jdbcType=BIT})
   </insert>
-  
   <insert id="insertSelective" parameterType="demo.base.user.pojo.po.Roles">
     insert into roles
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -23,6 +113,9 @@
       </if>
       <if test="role != null">
         role,
+      </if>
+      <if test="belongOrg != null">
+        belong_org,
       </if>
       <if test="isDelete != null">
         is_delete,
@@ -35,82 +128,72 @@
       <if test="role != null">
         #{role,jdbcType=CHAR},
       </if>
+      <if test="belongOrg != null">
+        #{belongOrg,jdbcType=BIGINT},
+      </if>
       <if test="isDelete != null">
         #{isDelete,jdbcType=BIT},
       </if>
     </trim>
   </insert>
+  <select id="countByExample" parameterType="demo.base.user.pojo.po.RolesExample" resultType="java.lang.Long">
+    select count(*) from roles
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update roles
+    <set>
+      <if test="record.roleId != null">
+        role_id = #{record.roleId,jdbcType=BIGINT},
+      </if>
+      <if test="record.role != null">
+        role = #{record.role,jdbcType=CHAR},
+      </if>
+      <if test="record.belongOrg != null">
+        belong_org = #{record.belongOrg,jdbcType=BIGINT},
+      </if>
+      <if test="record.isDelete != null">
+        is_delete = #{record.isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update roles
+    set role_id = #{record.roleId,jdbcType=BIGINT},
+      role = #{record.role,jdbcType=CHAR},
+      belong_org = #{record.belongOrg,jdbcType=BIGINT},
+      is_delete = #{record.isDelete,jdbcType=BIT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.base.user.pojo.po.Roles">
+    update roles
+    <set>
+      <if test="role != null">
+        role = #{role,jdbcType=CHAR},
+      </if>
+      <if test="belongOrg != null">
+        belong_org = #{belongOrg,jdbcType=BIGINT},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    where role_id = #{roleId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="demo.base.user.pojo.po.Roles">
+    update roles
+    set role = #{role,jdbcType=CHAR},
+      belong_org = #{belongOrg,jdbcType=BIGINT},
+      is_delete = #{isDelete,jdbcType=BIT}
+    where role_id = #{roleId,jdbcType=BIGINT}
+  </update>
   
-  <insert id="insertOrUpdate">
-    insert into 
-      roles (
-        role_id, 
-        role, 
-        is_delete
-      )
-    values 
-    (
-      #{roleId},
-      #{role},
-      #{isDelete}
-    )
-    on duplicate key
-      update
-        role = #{role}, is_delete = #{isDelete}
-  </insert>
-
-  <select id="getRoleByName" resultMap="BaseResultMap">
-    select * from roles where role = #{roleName} and is_delete = false
-  </select>
-  
-  <select id="getRoleList" resultMap="BaseResultMap">
-    select
-      *
-    from
-      roles
-    where 
-      is_delete = 0
-  </select>
-
-  <select id="findRolesByAuthId" resultMap="BaseResultMap">
-    select
-      r.*
-    from
-      auth
-
-      left join auth_role as ar
-        on auth.id = ar.auth_id
-      left join roles as r
-        on ar.role_id = r.role_id
-
-    where
-      auth.is_delete = false
-      and ar.is_delete = false
-      and a.is_delete = false
-      and a.id = #{authId}
-  </select>
-
-  <select id="findRolesByAuthIdList" resultMap="BaseResultMap">
-    select
-      r.*
-    from
-      auth as a
-
-      left join auth_role as ar
-        on a.id = ar.auth_id
-      left join roles as r
-        on ar.role_id = r.role_id
-
-    where
-      ar.is_delete = false
-      and a.is_delete = false
-      and r.is_delete = false
-      and a.id in 
-      <foreach item="authId" index="index" collection="authIdList"
-        open="(" separator="," close=")">
-        #{authId}
-      </foreach>
-  </select>
-
   
 </mapper>

@@ -204,7 +204,6 @@ public abstract class CommonService {
 	protected boolean isBigUser() {
 		return baseUtilCustom.hasAnyRole(
 				RolesType.ROLE_POSTER.getName(),
-				RolesType.ROLE_ADMIN.getName(),
 				RolesType.ROLE_SUPER_ADMIN.getName());
 	}
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import demo.base.user.pojo.dto.FindRolesDTO;
 import demo.base.user.pojo.po.Roles;
+import demo.base.user.pojo.result.FindRolesResult;
 
 public interface RoleService {
 
@@ -13,6 +14,6 @@ public interface RoleService {
 
 	Roles getBaseRoleByName(String roleName);
 
-	List<Roles> getRolesByCondition(FindRolesDTO dto);
+	FindRolesResult getRolesByCondition(FindRolesDTO dto);
 
 }

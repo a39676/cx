@@ -11,11 +11,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.user.mapper.AuthMapper;
-import demo.base.user.mapper.RolesMapper;
 import demo.base.user.mapper.UsersDetailMapper;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.bo.MyUserPrincipal;
 import demo.base.user.pojo.constant.LoginUrlConstant;
+import demo.base.user.pojo.dto.FindRolesDTO;
 import demo.base.user.pojo.dto.FindUserAuthDTO;
 import demo.base.user.pojo.dto.FindUserByConditionDTO;
 import demo.base.user.pojo.dto.OtherUserInfoDTO;
@@ -29,12 +29,14 @@ import demo.base.user.pojo.po.UsersDetail;
 import demo.base.user.pojo.po.UsersDetailExample;
 import demo.base.user.pojo.po.UsersExample;
 import demo.base.user.pojo.po.UsersExample.Criteria;
+import demo.base.user.pojo.result.FindRolesResult;
 import demo.base.user.pojo.result.FindUserAuthResult;
 import demo.base.user.pojo.result.FindUserByConditionResult;
 import demo.base.user.pojo.type.RolesType;
 import demo.base.user.pojo.type.UserPrivateLevelType;
 import demo.base.user.pojo.vo.UsersDetailForAdminVO;
 import demo.base.user.pojo.vo.UsersDetailVO;
+import demo.base.user.service.AuthRoleService;
 import demo.base.user.service.UserAuthService;
 import demo.base.user.service.UsersService;
 import demo.baseCommon.pojo.type.GenderType;
@@ -52,7 +54,7 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 	@Autowired
 	private AuthMapper authMapper;
 	@Autowired
-	private RolesMapper roleMapper;
+	private AuthRoleService authRoleService;
 	@Autowired
 	private UsersDetailMapper usersDetailMapper;
 	@Autowired
@@ -137,7 +139,13 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 		}
 		List<Auth> auths = authResult.getAuthList();
 		List<Long> authIdList = auths.stream().map(Auth::getId).collect(Collectors.toList());
-		List<Roles> roles = findRolesByAuthIdList(authIdList);
+		FindRolesDTO findRolesDTO = new FindRolesDTO();
+		findRolesDTO.setAuthIdList(authIdList);
+		FindRolesResult rolesResult = authRoleService.findRolesByCondition(findRolesDTO );
+		if(!rolesResult.isSuccess()) {
+			return myUserDetail;
+		}
+		List<Roles> roles = rolesResult.getRoleList();
 		
 		List<String> rolesStr = roles.stream().map(Roles::getRole).collect(Collectors.toList());
 		myUserDetail.setRoles(rolesStr);
@@ -247,19 +255,6 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 		return authMapper.findUserIdByAuthId(authId);
 	}
 	
-	@Override
-	public List<Roles> findRolesByAuthId(Long authId) {
-		return roleMapper.findRolesByAuthId(authId);
-	}
-	
-	@Override
-	public List<Roles> findRolesByAuthIdList(List<Long> authIdList) {
-		if(authIdList == null || authIdList.size() < 1) {
-			return new ArrayList<Roles>();
-		}
-		return roleMapper.findRolesByAuthIdList(authIdList);
-	}
-
 	@Override
 	public FindUserByConditionResult findUserByCondition(FindUserByConditionDTO dto) {
 		FindUserByConditionResult r = new FindUserByConditionResult();

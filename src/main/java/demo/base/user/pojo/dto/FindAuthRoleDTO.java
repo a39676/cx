@@ -10,6 +10,22 @@ public class FindAuthRoleDTO {
 	private List<String> roleNameList;
 	
 	private List<Long> orgIdList;
+	
+	private List<Long> authIdList;
+	
+	
+
+	public List<Long> getAuthIdList() {
+		return authIdList;
+	}
+
+	public void setAuthIdList(List<Long> authIdList) {
+		this.authIdList = authIdList;
+	}
+	
+	public void setAuthIdList(Long authId) {
+		this.authIdList = Arrays.asList(authId);
+	}
 
 	public List<Long> getOrgIdList() {
 		return orgIdList;
@@ -46,7 +62,7 @@ public class FindAuthRoleDTO {
 	@Override
 	public String toString() {
 		return "FindAuthRoleDTO [roleIdList=" + roleIdList + ", roleNameList=" + roleNameList + ", orgIdList="
-				+ orgIdList + "]";
+				+ orgIdList + ", authIdList=" + authIdList + "]";
 	}
 
 }

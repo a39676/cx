@@ -14,6 +14,7 @@ import demo.base.user.pojo.dto.FindRolesDTO;
 import demo.base.user.pojo.po.Roles;
 import demo.base.user.pojo.po.RolesExample;
 import demo.base.user.pojo.po.RolesExample.Criteria;
+import demo.base.user.pojo.result.FindRolesResult;
 import demo.base.user.pojo.type.RolesType;
 import demo.base.user.service.RoleService;
 import demo.baseCommon.service.CommonService;
@@ -73,13 +74,17 @@ public class RoleServiceImpl extends CommonService implements RoleService {
 	}
 
 	@Override
-	public List<Roles> getRolesByCondition(FindRolesDTO dto) {
+	public FindRolesResult getRolesByCondition(FindRolesDTO dto) {
+		FindRolesResult r = new FindRolesResult();
+		if(dto.getBelongOrgIdList() == null || dto.getBelongOrgIdList().isEmpty()) {
+			r.failWithMessage("必须指定所属机构");
+			return r;
+		}
+		
 		RolesExample example = new RolesExample();
 		Criteria c = example.createCriteria();
 		
-		if(dto.getBelongOrgIdList() != null && dto.getBelongOrgIdList().size() > 0) {
-			c.andBelongOrgIn(dto.getBelongOrgIdList());
-		}
+		c.andBelongOrgIn(dto.getBelongOrgIdList());
 		if(dto.getRoleNameList() != null && dto.getRoleNameList().size() > 0) {
 			c.andRoleIn(dto.getRoleNameList());
 		}
@@ -87,6 +92,8 @@ public class RoleServiceImpl extends CommonService implements RoleService {
 			c.andRoleIdIn(dto.getRolesIdList());
 		}
 		
-		return roleMapper.selectByExample(example);
+		r.setRoleList(roleMapper.selectByExample(example));
+		r.setIsSuccess();
+		return r;
 	}
 }

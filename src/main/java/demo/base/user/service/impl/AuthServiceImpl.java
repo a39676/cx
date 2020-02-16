@@ -133,6 +133,12 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		AuthExample example = new AuthExample();
 		Criteria c = example.createCriteria();
 
+		/*
+		 * 只能查找本机构角色
+		 * 管理员能查找下级机构的管理员角色?
+		 * 非管理员可否查找角色?
+		 * 
+		 */
 		if(dto.getBelongOrgIdList() == null || dto.getBelongOrgIdList().size() < 1) {
 			if(isBigUser()) {
 				dto.setBelongOrgIdList(InitSystemConstant.BASE_ORG_ID);

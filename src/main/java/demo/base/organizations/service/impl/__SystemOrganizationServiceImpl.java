@@ -24,17 +24,21 @@ public class __SystemOrganizationServiceImpl extends CommonService implements __
 	
 	@Override
 	public OrgRegistResult __initBaseOrg(Long superAdminId) {
+		if(superAdminId == null) {
+			superAdminId = 0L;
+		}
+		
 		OrgRegistResult result = new OrgRegistResult();
 
-		Organizations po = orgMapper.selectByPrimaryKey(InitSystemConstant.BASE_ORG_ID);
+		Organizations po = orgMapper.selectByPrimaryKey(InitSystemConstant.ORIGINAL_BASE_ORG_ID);
 		if (po == null) {
 			po = new Organizations();
-			po.setId(InitSystemConstant.BASE_ORG_ID);
+			po.setId(InitSystemConstant.ORIGINAL_BASE_ORG_ID);
 			po.setCreateBy(superAdminId);
 			po.setCreateTime(LocalDateTime.now());
 			po.setOrgName(InitSystemConstant.BASE_ORG_NAME);
-			po.setTopOrg(InitSystemConstant.BASE_ORG_ID);
-			po.setBelongTo(InitSystemConstant.BASE_ORG_ID);
+			po.setTopOrg(InitSystemConstant.ORIGINAL_BASE_ORG_ID);
+			po.setBelongTo(InitSystemConstant.ORIGINAL_BASE_ORG_ID);
 
 			int count = orgMapper.insertSelective(po);
 			if (count < 1) {
@@ -42,6 +46,7 @@ public class __SystemOrganizationServiceImpl extends CommonService implements __
 				result.failWithMessage("base org save error");
 				return result;
 			}
+			result.setBaseOrg(po);
 		} else if (po.getIsDelete()) {
 			po.setIsDelete(false);
 			int count = orgMapper.updateByPrimaryKeySelective(po);
@@ -50,6 +55,7 @@ public class __SystemOrganizationServiceImpl extends CommonService implements __
 				result.failWithMessage("base org update error");
 				return result;
 			}
+			result.setBaseOrg(po);
 		}
 		
 		result.normalSuccess();

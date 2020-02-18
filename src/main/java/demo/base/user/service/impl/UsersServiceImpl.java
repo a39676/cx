@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.base.system.pojo.bo.SystemConstantStore;
-import demo.base.user.mapper.AuthMapper;
 import demo.base.user.mapper.UsersDetailMapper;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.bo.MyUserPrincipal;
@@ -24,6 +23,7 @@ import demo.base.user.pojo.dto.UserAttemptQuerayDTO;
 import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.po.Roles;
 import demo.base.user.pojo.po.UserAttempts;
+import demo.base.user.pojo.po.UserAuth;
 import demo.base.user.pojo.po.Users;
 import demo.base.user.pojo.po.UsersDetail;
 import demo.base.user.pojo.po.UsersDetailExample;
@@ -52,15 +52,13 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 	@Autowired
 	private UsersMapper usersMapper;
 	@Autowired
-	private AuthMapper authMapper;
-	@Autowired
-	private AuthRoleService authRoleService;
-	@Autowired
 	private UsersDetailMapper usersDetailMapper;
 	@Autowired
 	private ValidRegexToolService validRegexToolService;
 	@Autowired
 	private UserAuthService userAuthService;
+	@Autowired
+	private AuthRoleService authRoleService;
 	
 	@Override
 	public int insertFailAttempts(String userName) {
@@ -247,12 +245,27 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 	}
 
 	@Override
-	public List<Long> findUserIdListByAuthId(Long authId) {
+	public List<Users> findUserListByAuthId(Long authId) {
 		if (authId == null) {
-			return new ArrayList<Long>();
+			return new ArrayList<Users>();
 		}
+		
+		FindUserAuthDTO findUserAuthDTO = new FindUserAuthDTO();
+		findUserAuthDTO.setAuthId(authId);
+		FindUserAuthResult userAuthResult = userAuthService.findUserAuth(findUserAuthDTO );
+		if(!userAuthResult.isSuccess()) {
+			return new ArrayList<Users>();
+		}
+		List<UserAuth> userAuthList = userAuthResult.getUserAuthList();
+		if(userAuthList == null || userAuthList.isEmpty()) {
+			return new ArrayList<Users>();
+		}
+		
+		List<Long> userIdList = userAuthList.stream().map(UserAuth::getUserId).collect(Collectors.toList());
 
-		return authMapper.findUserIdByAuthId(authId);
+		UsersExample userExample = new UsersExample();
+		userExample.createCriteria().andUserIdIn(userIdList);
+		return usersMapper.selectByExample(userExample);
 	}
 	
 	@Override

@@ -28,7 +28,7 @@ public class RoleServiceImpl extends CommonService implements RoleService {
 	@Override
 	public void __initBaseRole() {
 		RolesExample example = new RolesExample();
-		example.createCriteria().andBelongOrgEqualTo(InitSystemConstant.BASE_ORG_ID).andIsDeleteEqualTo(false);
+		example.createCriteria().andBelongOrgEqualTo(InitSystemConstant.ORIGINAL_BASE_ORG_ID).andIsDeleteEqualTo(false);
 		List<Roles> hadBaseRoleList = roleMapper.selectByExample(example);
 		List<String> hadRoleNameList = hadBaseRoleList.stream().map(Roles::getRole).collect(Collectors.toList());
 		Roles r = null;
@@ -37,7 +37,7 @@ public class RoleServiceImpl extends CommonService implements RoleService {
 				r = new Roles();
 				r.setRoleId(snowFlake.getNextId());
 				r.setRole(rt.getName());
-				r.setBelongOrg(InitSystemConstant.BASE_ORG_ID);
+				r.setBelongOrg(InitSystemConstant.ORIGINAL_BASE_ORG_ID);
 				r.setIsDelete(false);
 				roleMapper.insertSelective(r);
 			}
@@ -65,7 +65,7 @@ public class RoleServiceImpl extends CommonService implements RoleService {
 		}
 		
 		RolesExample example = new RolesExample();
-		example.createCriteria().andBelongOrgEqualTo(InitSystemConstant.BASE_ORG_ID).andIsDeleteEqualTo(false).andRoleEqualTo(roleName);
+		example.createCriteria().andBelongOrgEqualTo(InitSystemConstant.ORIGINAL_BASE_ORG_ID).andIsDeleteEqualTo(false).andRoleEqualTo(roleName);
 		List<Roles> roles = roleMapper.selectByExample(example);
 		if(roles != null && roles.size() > 0) {
 			return roles.get(0);

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import demo.article.fakePost.mapper.FakePostMapper;
 import demo.article.fakePost.pojo.param.mapperParam.FindArticleIdNotPassAndPostByShadowParam;
 import demo.article.fakePost.pojo.param.mapperParam.ModifyArticleInfoParam;
 import demo.article.fakePost.service.FakePostService;
+import demo.base.user.pojo.po.Users;
 import demo.base.user.pojo.type.AuthType;
 import demo.base.user.service.UsersService;
 import demo.baseCommon.service.CommonService;
@@ -102,11 +104,16 @@ public class FakePostServiceImpl extends CommonService implements FakePostServic
 	@Override
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 	public void autoPass() throws Exception {
-		List<Long> userIdList = usersService.findUserIdListByAuthId(AuthType.DELAY_POSTER.getCode());
-		if(userIdList == null || userIdList.size() < 1) {
+		List<Users> userList = usersService.findUserListByAuthId(AuthType.DELAY_POSTER.getCode());
+		if(userList == null || userList.isEmpty()) {
 			return;
 		}
-
+		
+		List<Long> userIdList = userList.stream().map(Users::getUserId).collect(Collectors.toList());
+		if(userIdList == null || userIdList.isEmpty()) {
+			return;
+		}
+		
 		int max = 0;
 		FindArticleIdNotPassAndPostByShadowParam findShadowPostParam = new FindArticleIdNotPassAndPostByShadowParam();
 		findShadowPostParam.setUserIdList(userIdList);

@@ -13,6 +13,7 @@ import demo.base.organizations.service.__SystemOrganizationService;
 import demo.base.system.pojo.constant.InitSystemConstant;
 import demo.base.user.pojo.constant.UserConstant;
 import demo.base.user.pojo.po.Auth;
+import demo.base.user.pojo.po.Users;
 import demo.base.user.pojo.result.FindAuthsResult;
 import demo.base.user.service.AuthService;
 import demo.base.user.service.RoleService;
@@ -65,22 +66,21 @@ public class DatabaseFillerOnStartup implements ApplicationListener<ApplicationR
 			FindAuthsResult authsResult = authService.findSuperAdministratorAuth();
 			List<Auth> superAdminAuthList = authsResult.getAuthList();
 			Long superAdminAuthId = null;
-			if(superAdminAuthList.size() < 1) {
+			if(superAdminAuthList == null || superAdminAuthList.size() < 1) {
 				superAdminAuthId = authService.__createBaseSuperAdminAuth(UserConstant.noneUserId);
 			} else {
 				superAdminAuthId = superAdminAuthList.get(0).getId();
 			}
 			
-			List<Long> superAdminUserIdList = userService.findUserIdListByAuthId(superAdminAuthId);
+			List<Users> superAdminUserList = userService.findUserListByAuthId(superAdminAuthId);
 			Long superAdminId = null;
-			if(superAdminUserIdList.size() < 1) {
+			if(superAdminUserList.size() < 1) {
 				superAdminId = userRegistService.__baseSuperAdminRegist().getNewSuperAdminId();
 			} else {
-				superAdminId = superAdminUserIdList.get(0);
+				superAdminId = superAdminUserList.get(0).getUserId();
 			}
 			
-			/* 如果需要初始化系统管理机构, 需要超级管理员id */
-			Organizations baseOrg = orgService.getOrgById(InitSystemConstant.BASE_ORG_ID);
+			Organizations baseOrg = orgService.getOrgById(InitSystemConstant.ORIGINAL_BASE_ORG_ID);
 			if(baseOrg == null || baseOrg.getIsDelete()) {
 				__systemOrgService.__initBaseOrg(superAdminId);
 			}

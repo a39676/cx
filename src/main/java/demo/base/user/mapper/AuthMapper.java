@@ -31,6 +31,4 @@ public interface AuthMapper {
 
     int updateByPrimaryKey(Auth record);
 
-    List<Long> findUserIdByAuthId(Long authId);
-    
 }

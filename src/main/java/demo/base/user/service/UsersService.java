@@ -52,7 +52,7 @@ public interface UsersService {
 //	List<Long> findUserIdListByRoleId(Integer roleId);
 	
 	/** 查找某种角色的所有userId */
-	List<Long> findUserIdListByAuthId(Long authId);
+	List<Users> findUserListByAuthId(Long authId);
 
 	MyUserPrincipal buildMyUserPrincipalByUserName(String userName);
 

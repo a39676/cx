@@ -287,8 +287,6 @@
         isSuccess:runSuccessFlag
       };
 
-      console.log(jsonOutput);
-
       var url = "/atDemo/findReportsByCondition";
       $.ajax({
         type : "POST",  

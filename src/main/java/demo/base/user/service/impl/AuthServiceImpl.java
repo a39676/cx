@@ -86,7 +86,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		newBaseAuth.setAuthName(authType.getName());
 		newBaseAuth.setAuthType(AuthTypeType.SYS_AUTH.getCode());
 		newBaseAuth.setCreateBy(newAuthID);
-		newBaseAuth.setBelongOrg(InitSystemConstant.BASE_ORG_ID);
+		newBaseAuth.setBelongOrg(InitSystemConstant.ORIGINAL_BASE_ORG_ID);
 		
 		int count = authMapper.insertSelective(newBaseAuth);
 		if(count < 1) {
@@ -121,7 +121,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		FindAuthsConditionDTO dto = new FindAuthsConditionDTO();
 		dto.setAuthName(AuthType.SUPER_ADMIN.getName());
 		dto.setAuthType(AuthTypeType.SYS_AUTH.getCode());
-		dto.setBelongOrgIdList(InitSystemConstant.BASE_ORG_ID);
+		dto.setBelongOrgIdList(InitSystemConstant.ORIGINAL_BASE_ORG_ID);
 		
 		return findAuthsByCondition(dto);
 	}
@@ -141,7 +141,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		 */
 		if(dto.getBelongOrgIdList() == null || dto.getBelongOrgIdList().size() < 1) {
 			if(isBigUser()) {
-				dto.setBelongOrgIdList(InitSystemConstant.BASE_ORG_ID);
+				dto.setBelongOrgIdList(InitSystemConstant.ORIGINAL_BASE_ORG_ID);
 			} else {
 				result.failWithMessage("必须指定所属机构");
 			}

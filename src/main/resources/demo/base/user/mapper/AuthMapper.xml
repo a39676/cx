@@ -276,22 +276,4 @@
   </update>
   
   
-  <select id="findUserIdByAuthId" resultType="Long">
-    select
-      users.user_id
-
-    from
-      users 
-      left join user_auth as ua
-        on users.user_id = ua.user_id
-
-      left join auth as a
-        on ua.auth_id = a.id
-
-    where
-      ua.is_delete = false
-      and a.is_delete = false
-      and a.id = #{authId}
-  </select>
-
 </mapper>

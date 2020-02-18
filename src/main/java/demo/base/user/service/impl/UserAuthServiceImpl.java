@@ -18,6 +18,7 @@ import demo.base.user.pojo.dto.FindUserAuthDTO;
 import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.po.UserAuth;
 import demo.base.user.pojo.po.UserAuthExample;
+import demo.base.user.pojo.po.UserAuthExample.Criteria;
 import demo.base.user.pojo.result.FindAuthsResult;
 import demo.base.user.pojo.result.FindUserAuthResult;
 import demo.base.user.pojo.type.AuthType;
@@ -141,12 +142,19 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 	@Override
 	public FindUserAuthResult findUserAuth(FindUserAuthDTO dto) {
 		FindUserAuthResult r = new FindUserAuthResult();
-		if(dto.getUserId() == null) {
+		if(dto.getUserId() == null && dto.getAuthId() == null) {
 			return r;
 		}
 		
 		UserAuthExample example = new UserAuthExample();
-		example.createCriteria().andUserIdEqualTo(dto.getUserId()).andIsDeleteEqualTo(false);
+		Criteria criteria = example.createCriteria();
+		criteria.andIsDeleteEqualTo(false);
+		if(dto.getUserId() != null) {
+			criteria.andUserIdEqualTo(dto.getUserId());
+		}
+		if(dto.getAuthId() != null) {
+			criteria.andAuthIdEqualTo(dto.getAuthId());
+		}
 		List<UserAuth> userAuthList = userAuthMapper.selectByExample(example);
 		
 		if(userAuthList != null && userAuthList.size() > 0) {

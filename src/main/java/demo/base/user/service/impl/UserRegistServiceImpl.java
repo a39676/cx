@@ -20,16 +20,24 @@ import demo.base.user.mapper.UserRegistMapper;
 import demo.base.user.mapper.UsersDetailMapper;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.constant.UserConstant;
+import demo.base.user.pojo.dto.EditUserAuthDTO;
+import demo.base.user.pojo.dto.FindAuthsConditionDTO;
+import demo.base.user.pojo.dto.FindUserAuthDTO;
 import demo.base.user.pojo.dto.ResetFailAttemptDTO;
 import demo.base.user.pojo.dto.UserRegistDTO;
+import demo.base.user.pojo.po.Auth;
+import demo.base.user.pojo.po.UserAuth;
 import demo.base.user.pojo.po.Users;
 import demo.base.user.pojo.po.UsersDetail;
 import demo.base.user.pojo.po.UsersDetailExample;
+import demo.base.user.pojo.result.FindAuthsResult;
+import demo.base.user.pojo.result.FindUserAuthResult;
 import demo.base.user.pojo.result.ModifyRegistEmailResult;
 import demo.base.user.pojo.result.NewUserRegistResult;
 import demo.base.user.pojo.result.ValidUserRegistResult;
 import demo.base.user.pojo.type.AuthType;
 import demo.base.user.pojo.vo.__baseSuperAdminRegistVO;
+import demo.base.user.service.AuthService;
 import demo.base.user.service.UserAuthService;
 import demo.base.user.service.UserRegistService;
 import demo.baseCommon.pojo.result.CommonResultCX;
@@ -65,6 +73,8 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	private UsersServiceImpl userService;
 	@Autowired
 	private UserAuthService userAuthService;
+	@Autowired
+	private AuthService authService;
 	@Autowired
 	private ValidRegexToolService validRegexToolService;
 	@Autowired
@@ -348,8 +358,36 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			return result;
 		}
 		
-		userAuthService.deleteUserAuth(mr.getUserId(), AuthType.USER);
-		userAuthService.insertBaseUserAuth(mr.getUserId(), AuthType.USER_ACTIVE);
+		FindUserAuthDTO findUserAuthDTO = new FindUserAuthDTO();
+		findUserAuthDTO.setUserId(mr.getUserId());
+		FindUserAuthResult findUserAuthResult = userAuthService.findUserAuth(findUserAuthDTO );
+		if(!findUserAuthResult.isSuccess()) {
+			result.addMessage(findUserAuthResult.getMessage());
+			return result;
+		}
+		
+		List<UserAuth> userAuthList = findUserAuthResult.getUserAuthList();
+		
+		FindAuthsConditionDTO findAuthDTO = new FindAuthsConditionDTO();
+		findAuthDTO.setAuthType(AuthType.USER_ACTIVE.getCode().intValue());
+		FindAuthsResult activeUserAuthResult = authService.findAuthsByCondition(findAuthDTO);
+		if(!activeUserAuthResult.isSuccess()) {
+			result.addMessage(activeUserAuthResult.getMessage());
+			return result;
+		}
+		Auth activeUserAuth = activeUserAuthResult.getAuthList().get(0);
+		
+		List<Long> authIdList = userAuthList.stream().map(UserAuth::getAuthId).collect(Collectors.toList());
+		authIdList.add(activeUserAuth.getId());
+		
+		EditUserAuthDTO editUserAuthDTO = new EditUserAuthDTO();
+		editUserAuthDTO.setUserId(mr.getUserId());
+		editUserAuthDTO.setNewAuthIdList(authIdList);
+		CommonResultCX editUserAuthResult = userAuthService.editUserAuth(editUserAuthDTO);
+		if(!editUserAuthResult.isSuccess()) {
+			result.addMessage(editUserAuthResult.getMessage());
+			return result;
+		}
 		
 		mailService.updateWasUsed(mr.getId());
 		result.successWithMessage("账号已激活");

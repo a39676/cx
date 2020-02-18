@@ -10,13 +10,7 @@ import demo.baseCommon.pojo.result.CommonResultCX;
 
 public interface UserAuthService {
 
-	CommonResultCX insertUserAuth(Long userId, Long authId);
-
 	CommonResultCX insertBaseUserAuth(Long userId, AuthType authType);
-
-	CommonResultCX deleteUserAuth(Long userId, Long authId);
-
-	CommonResultCX deleteUserAuth(Long userId, AuthType authType);
 
 	CommonResultCX isActiveUser(Long userId);
 

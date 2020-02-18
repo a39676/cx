@@ -37,8 +37,7 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 	@Autowired
 	private AuthService authService;
 
-	@Override
-	public CommonResultCX insertUserAuth(Long userId, Long authId) {
+	private CommonResultCX insertUserAuth(Long userId, Long authId) {
 		CommonResultCX r = new CommonResultCX();
 		
 		UserAuth po = new UserAuth();
@@ -81,8 +80,7 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 		return insertUserAuth(userId, auth.getId());
 	}
 	
-	@Override
-	public CommonResultCX deleteUserAuth(Long userId, Long authId) {
+	private CommonResultCX deleteUserAuth(Long userId, Long authId) {
 		CommonResultCX r = new CommonResultCX();
 		UserAuthExample example = new UserAuthExample();
 		example.createCriteria().andUserIdEqualTo(userId).andAuthIdEqualTo(authId).andIsDeleteEqualTo(false);
@@ -100,19 +98,6 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 			r.setIsSuccess();
 		}
 		return r;
-	}
-	
-	@Override
-	public CommonResultCX deleteUserAuth(Long userId, AuthType authType) {
-		FindAuthsResult authListResult = authService.findAuthsByCondition(authType);
-		
-		if (!authListResult.isSuccess()) {
-			return authListResult;
-		}
-		
-		Auth auth = authListResult.getAuthList().get(0);
-		
-		return deleteUserAuth(userId, auth.getId());
 	}
 	
 	@Override

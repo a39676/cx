@@ -5,6 +5,14 @@ common result
 	严格完善
 		如何封装 对应角色 / 可执行逻辑?
 		
+		UserAuthServiceImpl.editUserAuth
+			除超管/对应机构管理员/注册激活
+			如何限制操作
+			
+			关闭对外开放的 editUserAuth
+			转为开放 addAuth / deleteAuth
+			将变动的 authId 连带当前 userId 作判断
+		
 		当用户进入 用户-角色分配 / 角色-权限分配 先读取当前角色所在机构, 有否管理员权限
 			创建机构时, 需要生成机构管理员权限
 			

@@ -15,10 +15,10 @@ import demo.base.organizations.service.OrganizationService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.user.mapper.UsersDetailMapper;
 import demo.base.user.mapper.UsersMapper;
+import demo.base.user.pojo.bo.FindUserAuthBO;
 import demo.base.user.pojo.bo.MyUserPrincipal;
 import demo.base.user.pojo.constant.LoginUrlConstant;
 import demo.base.user.pojo.dto.FindRolesDTO;
-import demo.base.user.pojo.dto.FindUserAuthDTO;
 import demo.base.user.pojo.dto.FindUserByConditionDTO;
 import demo.base.user.pojo.dto.OtherUserInfoDTO;
 import demo.base.user.pojo.dto.ResetFailAttemptDTO;
@@ -36,7 +36,6 @@ import demo.base.user.pojo.result.FindRolesResult;
 import demo.base.user.pojo.result.FindUserAuthResult;
 import demo.base.user.pojo.result.FindUserByConditionResult;
 import demo.base.user.pojo.type.UserPrivateLevelType;
-import demo.base.user.pojo.vo.UsersDetailForAdminVO;
 import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.AuthRoleService;
 import demo.base.user.service.UserAuthService;
@@ -139,9 +138,9 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 			myUserPrincipal.setEmail(userDetail.getEmail());
 		}
 		
-		FindUserAuthDTO findUserAuthDTO = new FindUserAuthDTO();
-		findUserAuthDTO.setUserId(user.getUserId());
-		FindUserAuthResult authResult = userAuthService.findUserAuth(findUserAuthDTO);
+		FindUserAuthBO findUserAuthBO = new FindUserAuthBO();
+		findUserAuthBO.setUserId(user.getUserId());
+		FindUserAuthResult authResult = userAuthService.findUserAuth(findUserAuthBO);
 		if(!authResult.isSuccess()) {
 			return myUserPrincipal;
 		}
@@ -200,34 +199,35 @@ public class UsersServiceImpl extends CommonService implements UsersService {
  		return buildUserDetailVOByPO(udList.get(0), false);
 	}
 	
-	private UsersDetailVO buildUserDetailVOByPO(UsersDetail ud, boolean myDetail) {
+	private UsersDetailVO buildUserDetailVOByPO(UsersDetail po, boolean allDetail) {
 		UsersDetailVO vo = new UsersDetailVO();
-		if(ud == null) {
+		if(po == null) {
 		    return vo;
 		}
 		
-		vo.setNickName(ud.getNickName());
+		vo.setUserPk(encryptId(po.getUserId()));
+		vo.setNickName(po.getNickName());
 
 		UserPrivateLevelType privateLevel = UserPrivateLevelType.p1;
-		if(ud.getPrivateLevel() != null && UserPrivateLevelType.getType(ud.getPrivateLevel()) != null) {
-			privateLevel = UserPrivateLevelType.getType(ud.getPrivateLevel());
+		if(po.getPrivateLevel() != null && UserPrivateLevelType.getType(po.getPrivateLevel()) != null) {
+			privateLevel = UserPrivateLevelType.getType(po.getPrivateLevel());
 		}
 		
-		if(myDetail || privateLevel.equals(UserPrivateLevelType.p3)) {
-			vo.setEmail(ud.getEmail());
-			if(GenderType.male.getCode().equals(ud.getGender())) {
+		if(allDetail || privateLevel.equals(UserPrivateLevelType.p3)) {
+			vo.setEmail(po.getEmail());
+			if(GenderType.male.getCode().equals(po.getGender())) {
 				vo.setGender(GenderType.male.getName());
-			} else if(GenderType.female.getCode().equals(ud.getGender())) {
+			} else if(GenderType.female.getCode().equals(po.getGender())) {
 				vo.setGender(GenderType.female.getName());
 			} else {
 				vo.setGender(GenderType.unknow.getName());
 			}
-			vo.setLastLoginTime(localDateTimeHandler.localDateTimeToDate(ud.getLastLoginTime()));
-			vo.setMobile(ud.getMobile());
-			vo.setQq(ud.getQq());
-			if(myDetail) {
-				vo.setPrivateLevel(ud.getPrivateLevel());
-				vo.setReservationInformation(ud.getReservationInformation());
+			vo.setLastLoginTime(localDateTimeHandler.localDateTimeToDate(po.getLastLoginTime()));
+			vo.setMobile(po.getMobile());
+			vo.setQq(po.getQq());
+			if(allDetail) {
+				vo.setPrivateLevel(po.getPrivateLevel());
+				vo.setReservationInformation(po.getReservationInformation());
 			}
 		} else {
 			vo.setPrivateMessage("用户比较害羞,不想让别人看见.");
@@ -236,38 +236,15 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 		return vo;
 	}
 	
-	private UsersDetailForAdminVO buildUserDetailForAdminVOByPO(UsersDetail po) {
-		UsersDetailForAdminVO vo = new UsersDetailForAdminVO();
-		if(po == null) {
-		    return vo;
-		}
-		
-		vo.setUserId(po.getUserId());
-		vo.setNickName(po.getNickName());
-		vo.setEmail(po.getEmail());
-		if(GenderType.male.getCode().equals(po.getGender())) {
-			vo.setGender(GenderType.male.getName());
-		} else if(GenderType.female.getCode().equals(po.getGender())) {
-			vo.setGender(GenderType.female.getName());
-		} else {
-			vo.setGender(GenderType.unknow.getName());
-		}
-		vo.setLastLoginTime(localDateTimeHandler.localDateTimeToDate(po.getLastLoginTime()));
-		vo.setMobile(po.getMobile());
-		vo.setQq(po.getQq());
-		
-		return vo;
-	}
-
 	@Override
 	public List<Users> findUserListByAuthId(Long authId) {
 		if (authId == null) {
 			return new ArrayList<Users>();
 		}
 		
-		FindUserAuthDTO findUserAuthDTO = new FindUserAuthDTO();
-		findUserAuthDTO.setAuthId(authId);
-		FindUserAuthResult userAuthResult = userAuthService.findUserAuth(findUserAuthDTO );
+		FindUserAuthBO findUserAuthBO = new FindUserAuthBO();
+		findUserAuthBO.setAuthId(authId);
+		FindUserAuthResult userAuthResult = userAuthService.findUserAuth(findUserAuthBO );
 		if(!userAuthResult.isSuccess()) {
 			return new ArrayList<Users>();
 		}
@@ -286,7 +263,7 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 	@Override
 	public FindUserByConditionResult findUserByCondition(FindUserByConditionDTO dto) {
 		FindUserByConditionResult r = new FindUserByConditionResult();
-		List<UsersDetailForAdminVO> userVOList = new ArrayList<UsersDetailForAdminVO>();
+		List<UsersDetailVO> userVOList = new ArrayList<UsersDetailVO>();
 		List<Long> userIdList = new ArrayList<Long>();
 		String validUserName = null;
 		
@@ -295,7 +272,7 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 		}
 		
 		if(dto.getUserId() == null && validUserName == null && StringUtils.isBlank(dto.getUserNickName())) {
-			r.setUserList(userVOList);
+			r.setUserVOList(userVOList);
 			return r;
 		}
 		
@@ -340,10 +317,10 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 		}
 		
 		for(UsersDetail u : userDetailList) {
-			userVOList.add(buildUserDetailForAdminVOByPO(u));
+			userVOList.add(buildUserDetailVOByPO(u, true));
 		}
 		
-		r.setUserList(userVOList);
+		r.setUserVOList(userVOList);
 		r.setIsSuccess();
 		return r;
 	}

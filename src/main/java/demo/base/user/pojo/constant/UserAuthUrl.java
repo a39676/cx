@@ -6,6 +6,7 @@ public class UserAuthUrl {
 	public static final String userAuthManager = "/userAuthManager";
 	public static final String findAuth = "/findAuth";
 	public static final String findUserAuth = "/findUserAuth"; 
-	public static final String editUserAuth = "/editUserAuth";
+	public static final String insertUserAuth = "/insertUserAuth";
+	public static final String deleteUserAuth = "/deleteUserAuth";
 	
 }

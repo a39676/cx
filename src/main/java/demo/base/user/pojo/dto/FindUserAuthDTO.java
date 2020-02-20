@@ -6,26 +6,26 @@ import demo.base.user.pojo.type.RolesType;
 
 public class FindUserAuthDTO {
 
-	private Long userId;
+	private String userPk;
 
-	private Long authId;
+	private String authPk;
 
 	private List<RolesType> roleTypeList;
 
-	public Long getAuthId() {
-		return authId;
+	public String getUserPk() {
+		return userPk;
 	}
 
-	public void setAuthId(Long authId) {
-		this.authId = authId;
+	public void setUserPk(String userPk) {
+		this.userPk = userPk;
 	}
 
-	public Long getUserId() {
-		return userId;
+	public String getAuthPk() {
+		return authPk;
 	}
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
+	public void setAuthPk(String authPk) {
+		this.authPk = authPk;
 	}
 
 	public List<RolesType> getRoleTypeList() {
@@ -38,7 +38,7 @@ public class FindUserAuthDTO {
 
 	@Override
 	public String toString() {
-		return "FindUserAuthDTO [userId=" + userId + ", authId=" + authId + ", roleTypeList=" + roleTypeList + "]";
+		return "FindUserAuthDTO [userPk=" + userPk + ", authPk=" + authPk + ", roleTypeList=" + roleTypeList + "]";
 	}
 
 }

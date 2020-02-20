@@ -215,7 +215,8 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		return r;
 	}
 	
-	private AuthVO buildAuthVOByPO(Auth po) {
+	@Override
+	public AuthVO buildAuthVOByPO(Auth po) {
 		AuthVO vo = new AuthVO();
 		vo.setPk(encryptId(po.getId()));
 		vo.setAuthName(po.getAuthName());

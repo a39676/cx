@@ -11,13 +11,15 @@ import org.springframework.web.servlet.ModelAndView;
 
 import demo.base.user.pojo.constant.UserAuthUrl;
 import demo.base.user.pojo.constant.UserAuthView;
+import demo.base.user.pojo.dto.EditUserAuthDTO;
 import demo.base.user.pojo.dto.FindAuthsDTO;
 import demo.base.user.pojo.dto.FindUserAuthDTO;
 import demo.base.user.pojo.result.FindAuthsVOResult;
-import demo.base.user.pojo.result.FindUserAuthResult;
+import demo.base.user.pojo.result.FindUserAuthVOResult;
 import demo.base.user.service.AuthService;
 import demo.base.user.service.UserAuthService;
 import demo.baseCommon.controller.CommonController;
+import demo.baseCommon.pojo.result.CommonResultCX;
 
 @Controller
 @RequestMapping(value = UserAuthUrl.root)
@@ -33,22 +35,23 @@ public class UserAuthController extends CommonController {
 		return new ModelAndView(UserAuthView.userAuthManager);
 	}
 	
-//	@PostMapping(value = UserAuthUrl.editUserAuth)
-//	@ResponseBody
-//	public CommonResultCX editUserAuth(@RequestBody EditUserAuthDTO dto) {
-//		return userAuthService.editUserAuth(dto);
-//	}
+	@PostMapping(value = UserAuthUrl.insertUserAuth)
+	@ResponseBody
+	public CommonResultCX insertUserAuth(@RequestBody EditUserAuthDTO dto) {
+		return userAuthService.insertUserAuth(dto);
+	}
+	
+	@PostMapping(value = UserAuthUrl.deleteUserAuth)
+	@ResponseBody
+	public CommonResultCX deleteUserAuth(@RequestBody EditUserAuthDTO dto) {
+		return userAuthService.deleteUserAuth(dto);
+	}
 	
 	@PostMapping(value = UserAuthUrl.findUserAuth)
 	@ResponseBody
-	public FindUserAuthResult findUserAuth(@RequestBody FindUserAuthDTO dto) {
-		// FIXME 
-		/*
-		 * result 中不适宜使用 PO
-		 */
-		return userAuthService.findUserAuth(dto);
+	public FindUserAuthVOResult findUserAuth(@RequestBody FindUserAuthDTO dto) {
+		return userAuthService.findUserAuthVO(dto);
 	}
-	
 	
 	@PostMapping(value = UserAuthUrl.findAuth)
 	@ResponseBody

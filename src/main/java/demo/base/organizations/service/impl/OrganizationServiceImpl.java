@@ -19,7 +19,7 @@ import demo.base.organizations.pojo.po.OrganizationsExample;
 import demo.base.organizations.pojo.result.FindUserControlOrgResult;
 import demo.base.organizations.pojo.result.OrgRegistResult;
 import demo.base.organizations.service.OrganizationService;
-import demo.base.user.pojo.dto.FindUserAuthDTO;
+import demo.base.user.pojo.bo.FindUserAuthBO;
 import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.result.FindUserAuthResult;
 import demo.base.user.pojo.type.RolesType;
@@ -136,10 +136,10 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 			return r;
 		}
 		
-		FindUserAuthDTO findUserAuthDTO = new FindUserAuthDTO();
-		findUserAuthDTO.setUserId(dto.getUserId());
-		findUserAuthDTO.setRoleTypeList(Arrays.asList(RolesType.ROLE_ADMIN));
-		FindUserAuthResult adminUserAuthListResult = userAuthService.findUserAuth(findUserAuthDTO);
+		FindUserAuthBO findUserAuthBO = new FindUserAuthBO();
+		findUserAuthBO.setUserId(dto.getUserId());
+		findUserAuthBO.setRoleTypeList(Arrays.asList(RolesType.ROLE_ADMIN));
+		FindUserAuthResult adminUserAuthListResult = userAuthService.findUserAuth(findUserAuthBO);
 		if(!adminUserAuthListResult.isSuccess()) {
 			r.addMessage(adminUserAuthListResult.getMessage());
 			return r;

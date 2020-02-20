@@ -63,7 +63,6 @@ $(document).ready(function() {
       isPass:isPass,
       isEdited:isEdited
     };
-    console.log(jsonOutput);
     $("#articleAreaLoadingImg").fadeIn(150);    
     if(blogArea.attr("loadingFlag") == "1") {
       $("#articleAreaLoadingImg").fadeOut(150);

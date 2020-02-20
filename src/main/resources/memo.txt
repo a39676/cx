@@ -1,7 +1,5 @@
 处理 jsp 的  HAS_ADMIN_ROLE
 
-FindUserAuthResult 中不适宜使用PO
-
 权限模块
 	改变思路
 		role 为系统管理 hardcode 不允许用户自定义更改

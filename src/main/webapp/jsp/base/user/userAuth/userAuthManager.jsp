@@ -52,13 +52,13 @@
       });
 
       $("#usernameDiv").click(function () {
-        var userId = $("#usernameDiv").attr("selectedUserId");
+        var userPk = $("#usernameDiv").attr("selectedUserPk");
         $("#resultMsg").val("");
 
         var url = "/userauth/findUserAuth";
 
         var jsonOutput = {
-          userId:userId
+          userPk:userPk
         };
 
         $.ajax({               
@@ -72,11 +72,11 @@
           },
           timeout: 15000,
           success:function(data){
-            var hasAuthList = data.authList;
+            var hasAuthList = data.authVOList;
             authButtonReCSS();
             $.each(hasAuthList, function(index, authDetail) {
-              $(".authButton[authid='"+authDetail.id+"']").addClass("btn-primary");
-              $(".authButton[authid='"+authDetail.id+"']").removeClass("btn-light");
+              $(".authButton[authPk='"+authDetail.pk+"']").addClass("btn-primary");
+              $(".authButton[authPk='"+authDetail.pk+"']").removeClass("btn-light");
             });
           }, 
           error:function(e){
@@ -103,14 +103,14 @@
           },
           timeout: 15000,
           success:function(data){
-            var authList = data.authList;
+            var authList = data.authVOList;
             var authsDiv = $("#authsDiv");
             authsDiv.empty();
             $.each(authList, function(index, authDetail) {
-              authsDiv.append($("<button class='btn btn-sm btn-light'></button>").attr("authId", authDetail.id).text(authDetail.authName));
+              authsDiv.append($("<button class='btn btn-sm btn-light'></button>").attr("authPk", authDetail.pk).text(authDetail.authName));
               authsDiv.append($("<label>&nbsp;&nbsp;|&nbsp;&nbsp;</label>"));
-              $("button[authId='"+authDetail.id+"']").addClass("authButton");
-              $("button[authId='"+authDetail.id+"']").bind("click", userAuthEdit);
+              $("button[authPk='"+authDetail.pk+"']").addClass("authButton");
+              $("button[authPk='"+authDetail.pk+"']").bind("click", userAuthEdit);
             });
           }, 
           error:function(e){
@@ -126,28 +126,21 @@
       function userAuthEdit() {
         $("#resultMsg").val("");
         var thisAuthButton = $(this);
-        var modifyAuthId = $(this).attr("authId");
+        var modifyAuthPk = $(this).attr("authPk");
+        var authName = $(this).text();
 
-        var userId = $("#usernameDiv").attr("selectedUserId");
-        var authIdList = [];
-        var authButtons = $(".authButton");
-        authButtons.each(function (index, value) {
-          if ($(this).hasClass("btn-primary")) {
-            authIdList.push($(this).attr("authId"));
-          }
-        });
+        var userPk = $("#usernameDiv").attr("selectedUserPk");
+        var url;
 
         if(thisAuthButton.hasClass("btn-primary")) {
-          authIdList.pop(modifyAuthId);
+          url = "/userauth/deleteUserAuth"
         } else {
-          authIdList.push(modifyAuthId);
+          url = "/userauth/insertUserAuth"
         }
 
-        var url = "/userauth/editUserAuth";
-
         var jsonOutput = {
-          userId:userId,
-          newAuthIdList:authIdList
+          userPk:userPk,
+          newAuthPk:modifyAuthPk
         };
 
         $.ajax({               
@@ -161,7 +154,6 @@
           },
           timeout: 15000,
           success:function(data){
-            console.log(data);
             if(data.code == "0") {
               if (thisAuthButton.hasClass("btn-primary")) {
                 thisAuthButton.removeClass("btn-primary");
@@ -170,7 +162,7 @@
                 thisAuthButton.addClass("btn-primary");
                 thisAuthButton.removeClass("btn-light");
               }
-              $("#resultMsg").val("edit success");
+              $("#resultMsg").val("edit success: " + authName);
             } else {
               $("#resultMsg").val("edit fail: " + data.message);
             }

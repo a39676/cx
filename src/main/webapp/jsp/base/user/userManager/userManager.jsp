@@ -12,7 +12,7 @@
 <body>
   <h1>Message : ${message}</h1>
   <div class="testArea">${testArea}</div>
-  <form class="col-md-8" method="post" action="${pageContext.request.contextPath}/admin/userManager"  >
+  <form class="col-md-8" method="post" action="/admin/userManager"  >
 
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
   
@@ -53,10 +53,6 @@
   <%@ include file="../../../baseElementJSP/normalFooter.jsp" %>
   <script type="text/javascript">
 
-    var csrfHeader = '${_csrf.headerName}';
-    var csrfParameter = '${_csrf.parameterName}';
-    var csrfToken = '${_csrf.token}';
-
     $(document).ready(function() {
 
       // userName exist check
@@ -66,17 +62,14 @@
           //$(this).css("background-color","red");
 
           var userName = $(this).val();
-          var jsonParams = {};
+          var jsonOutput = {};
           
-          jsonParams['userName'] = userName;
-          jsonParams[csrfParameter] = csrfToken; 
-
-          // console.log(jsonParams);
+          jsonOutput['userName'] = userName;
 
           $.ajax({               
             type: "POST",  
-            url: "${pageContext.request.contextPath}/user/userNameExistCheck",   
-            data: JSON.stringify(jsonParams), 
+            url: "/user/userNameExistCheck",   
+            data: JSON.stringify(jsonOutput), 
             dataType: 'json',
             beforeSend: function(xhr) {
               xhr.setRequestHeader(csrfHeader, csrfToken);
@@ -94,8 +87,6 @@
               }
             }, 
             error:function(e){
-              // console.log("error");
-              // console.log(e);
             }
           });
         });  
@@ -106,20 +97,15 @@
       $(function(){  
         $("input[name='userName']").blur(function(){ 
 
-          //$(this).css("background-color","red");
-
           var userName = $(this).val();
-          var jsonParams = {};
+          var jsonOutput = {};
           
-          jsonParams['userName'] = userName;
-          jsonParams[csrfParameter] = csrfToken; 
-
-          // console.log(jsonParams);
+          jsonOutput['userName'] = userName;
 
           $.ajax({               
             type: "POST",  
-            url: "${pageContext.request.contextPath}/admin/userEraser",   
-            data: JSON.stringify(jsonParams), 
+            url: "/admin/userEraser",   
+            data: JSON.stringify(jsonOutput), 
             dataType: 'json',
             beforeSend: function(xhr) {
               xhr.setRequestHeader(csrfHeader, csrfToken);
@@ -137,8 +123,6 @@
               }
             }, 
             error:function(e){
-              // console.log("error");
-              // console.log(e);
             }
           });
         });  

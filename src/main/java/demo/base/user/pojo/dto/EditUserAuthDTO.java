@@ -1,32 +1,30 @@
 package demo.base.user.pojo.dto;
 
-import java.util.List;
-
 public class EditUserAuthDTO {
 
-	private Long userId;
+	private String userPk;
 
-	private List<Long> newAuthIdList;
+	private String newAuthPk;
 
-	public Long getUserId() {
-		return userId;
+	public String getUserPk() {
+		return userPk;
 	}
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
+	public void setUserPk(String userPk) {
+		this.userPk = userPk;
 	}
 
-	public List<Long> getNewAuthIdList() {
-		return newAuthIdList;
+	public String getNewAuthPk() {
+		return newAuthPk;
 	}
 
-	public void setNewAuthIdList(List<Long> newAuthIdList) {
-		this.newAuthIdList = newAuthIdList;
+	public void setNewAuthPk(String newAuthPk) {
+		this.newAuthPk = newAuthPk;
 	}
 
 	@Override
 	public String toString() {
-		return "EditUserAuthDTO [userId=" + userId + ", newAuthIdList=" + newAuthIdList + "]";
+		return "InsertUserAuthDTO [userPk=" + userPk + ", newAuthPk=" + newAuthPk + "]";
 	}
 
 }

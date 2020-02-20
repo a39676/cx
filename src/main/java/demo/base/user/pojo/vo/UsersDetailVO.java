@@ -4,6 +4,8 @@ import java.util.Date;
 
 public class UsersDetailVO {
 
+	private String userPk;
+
 	private String nickName;
 
 	private String gender;
@@ -23,6 +25,14 @@ public class UsersDetailVO {
 	private String privateMessage;
 
 	private String headImage;
+
+	public String getUserPk() {
+		return userPk;
+	}
+
+	public void setUserPk(String userPk) {
+		this.userPk = userPk;
+	}
 
 	public String getHeadImage() {
 		return headImage;
@@ -106,10 +116,10 @@ public class UsersDetailVO {
 
 	@Override
 	public String toString() {
-		return "UsersDetailVO [nickName=" + nickName + ", gender=" + gender + ", qq=" + qq + ", email=" + email
-				+ ", mobile=" + mobile + ", lastLoginTime=" + lastLoginTime + ", privateLevel=" + privateLevel
-				+ ", reservationInformation=" + reservationInformation + ", privateMessage=" + privateMessage
-				+ ", headImage=" + headImage + "]";
+		return "UsersDetailVO [userPk=" + userPk + ", nickName=" + nickName + ", gender=" + gender + ", qq=" + qq
+				+ ", email=" + email + ", mobile=" + mobile + ", lastLoginTime=" + lastLoginTime + ", privateLevel="
+				+ privateLevel + ", reservationInformation=" + reservationInformation + ", privateMessage="
+				+ privateMessage + ", headImage=" + headImage + "]";
 	}
 
 }

@@ -70,7 +70,7 @@
   
   <div class="row">
     <div class="col-md-12">
-      <div id="usernameDiv" selectedUserId=""></div>
+      <div id="usernameDiv" selectedUserPk=""></div>
     </div>
   </div>
 
@@ -105,7 +105,7 @@
       }
 
       $(".conditionInput").change(function () {
-        $("#usernameDiv").attr("selectedUserId", "");
+        $("#usernameDiv").attr("selectedUserPk", "");
 
         var UserName = $("#UserName").val();
         var UserNickName = $("#UserNickName").val();
@@ -136,14 +136,14 @@
           },
           timeout: 15000,
           success:function(data){
-            var userList = data.userList;
+            var userVOList = data.userVOList;
             var usernameDiv = $("#usernameDiv");
             usernameDiv.empty();
-            $.each(userList, function(index, userInfo) {
-              usernameDiv.append($("<button class='btn btn-sm btn-light'></button>").attr("userId", userInfo.userId).text(userInfo.nickName));
+            $.each(userVOList, function(index, userInfo) {
+              usernameDiv.append($("<button class='btn btn-sm btn-light'></button>").attr("userPk", userInfo.userPk).text(userInfo.nickName));
               usernameDiv.append($("<label>&nbsp;&nbsp;|&nbsp;&nbsp;</label>"));
-              $("button[userId='"+userInfo.userId+"']").addClass("userButton");
-              $("button[userId='"+userInfo.userId+"']").bind("click", userButtonClick);
+              $("button[userPk='"+userInfo.userPk+"']").addClass("userButton");
+              $("button[userPk='"+userInfo.userPk+"']").bind("click", userButtonClick);
             });
           }, 
           error:function(e){
@@ -152,12 +152,12 @@
       });
 
       function userButtonClick() {
-        var userId = $(this).attr("userId");
+        var userPk = $(this).attr("userPk");
         $(".userButton").addClass("btn-light")
         $(".userButton").removeClass("btn-primary")
         $(this).removeClass("btn-light")
         $(this).addClass("btn-primary")
-        $("#usernameDiv").attr("selectedUserId", userId);
+        $("#usernameDiv").attr("selectedUserPk", userPk);
       };
 
     });

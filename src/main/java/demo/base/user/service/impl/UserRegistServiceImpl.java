@@ -19,14 +19,13 @@ import demo.base.system.service.HostnameService;
 import demo.base.user.mapper.UserRegistMapper;
 import demo.base.user.mapper.UsersDetailMapper;
 import demo.base.user.mapper.UsersMapper;
+import demo.base.user.pojo.bo.EditUserAuthBO;
+import demo.base.user.pojo.bo.FindUserAuthBO;
 import demo.base.user.pojo.constant.UserConstant;
-import demo.base.user.pojo.dto.EditUserAuthDTO;
 import demo.base.user.pojo.dto.FindAuthsDTO;
-import demo.base.user.pojo.dto.FindUserAuthDTO;
 import demo.base.user.pojo.dto.ResetFailAttemptDTO;
 import demo.base.user.pojo.dto.UserRegistDTO;
 import demo.base.user.pojo.po.Auth;
-import demo.base.user.pojo.po.UserAuth;
 import demo.base.user.pojo.po.Users;
 import demo.base.user.pojo.po.UsersDetail;
 import demo.base.user.pojo.po.UsersDetailExample;
@@ -358,15 +357,13 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			return result;
 		}
 		
-		FindUserAuthDTO findUserAuthDTO = new FindUserAuthDTO();
-		findUserAuthDTO.setUserId(mr.getUserId());
-		FindUserAuthResult findUserAuthResult = userAuthService.findUserAuth(findUserAuthDTO );
+		FindUserAuthBO findUserAuthBO = new FindUserAuthBO();
+		findUserAuthBO.setUserId(mr.getUserId());
+		FindUserAuthResult findUserAuthResult = userAuthService.findUserAuth(findUserAuthBO );
 		if(!findUserAuthResult.isSuccess()) {
 			result.addMessage(findUserAuthResult.getMessage());
 			return result;
 		}
-		
-		List<UserAuth> userAuthList = findUserAuthResult.getUserAuthList();
 		
 		FindAuthsDTO findAuthDTO = new FindAuthsDTO();
 		findAuthDTO.setAuthType(AuthType.USER_ACTIVE.getCode().intValue());
@@ -377,18 +374,14 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		}
 		Auth activeUserAuth = activeUserAuthResult.getAuthList().get(0);
 		
-		List<Long> authIdList = userAuthList.stream().map(UserAuth::getAuthId).collect(Collectors.toList());
-		authIdList.add(activeUserAuth.getId());
-		
-		EditUserAuthDTO editUserAuthDTO = new EditUserAuthDTO();
-		editUserAuthDTO.setUserId(mr.getUserId());
-		editUserAuthDTO.setNewAuthIdList(authIdList);
-//		TODO FIXME
-//		CommonResultCX editUserAuthResult = userAuthService.editUserAuth(editUserAuthDTO);
-//		if(!editUserAuthResult.isSuccess()) {
-//			result.addMessage(editUserAuthResult.getMessage());
-//			return result;
-//		}
+		EditUserAuthBO editUserAuthBO = new EditUserAuthBO();
+		editUserAuthBO.setUserId(mr.getUserId());
+		editUserAuthBO.setNewAuthId(activeUserAuth.getId());
+		CommonResultCX editUserAuthResult = userAuthService.insertUserAuth(editUserAuthBO);
+		if(!editUserAuthResult.isSuccess()) {
+			result.addMessage(editUserAuthResult.getMessage());
+			return result;
+		}
 		
 		mailService.updateWasUsed(mr.getId());
 		result.successWithMessage("账号已激活");

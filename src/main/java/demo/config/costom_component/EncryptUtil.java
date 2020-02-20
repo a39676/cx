@@ -1,6 +1,6 @@
 package demo.config.costom_component;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
@@ -30,7 +30,7 @@ public class EncryptUtil {
 	public byte[] ToMd5ByteArray(String str) {
 		
 		try {
-			byte[] bytesOfMessage = str.getBytes("UTF-8");
+			byte[] bytesOfMessage = str.getBytes(StandardCharsets.UTF_8);
 			MessageDigest md = MessageDigest.getInstance("MD5");
 			return md.digest(bytesOfMessage);
 		} catch (Exception e) {
@@ -51,9 +51,9 @@ public class EncryptUtil {
 		}
 	}
 	
-	public String aesEncrypt(String key, String initVector, String value) throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException, InvalidKeyException, InvalidAlgorithmParameterException {
-		IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
-		SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+	public String aesEncrypt(String key, String initVector, String value) throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
+		IvParameterSpec iv = new IvParameterSpec(initVector.getBytes(StandardCharsets.UTF_8));
+		SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES");
 		
 		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
 		cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
@@ -63,9 +63,9 @@ public class EncryptUtil {
 		return Base64.getEncoder().encodeToString(encrypted);
 	}
 
-	public String aesDecrypt(String key, String initVector, String encrypted) throws NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
-		IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
-		SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+	public String aesDecrypt(String key, String initVector, String encrypted) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+		IvParameterSpec iv = new IvParameterSpec(initVector.getBytes(StandardCharsets.UTF_8));
+		SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES");
 		
 		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
 		cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);

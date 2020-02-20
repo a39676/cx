@@ -1,7 +1,8 @@
 package demo.base.user.service;
 
-import demo.base.user.pojo.dto.FindAuthsConditionDTO;
+import demo.base.user.pojo.dto.FindAuthsDTO;
 import demo.base.user.pojo.result.FindAuthsResult;
+import demo.base.user.pojo.result.FindAuthsVOResult;
 import demo.base.user.pojo.type.AuthType;
 
 public interface AuthService {
@@ -20,8 +21,10 @@ public interface AuthService {
 
 	FindAuthsResult findSuperAdministratorAuth();
 
-	FindAuthsResult findAuthsByCondition(FindAuthsConditionDTO dto);
-
+	FindAuthsResult findAuthsByCondition(FindAuthsDTO dto);
 	FindAuthsResult findAuthsByCondition(AuthType authType);
+	FindAuthsResult findAuthsByCondition(Long authId);
+
+	FindAuthsVOResult findAuthVOListByCondition(FindAuthsDTO dto);
 
 }

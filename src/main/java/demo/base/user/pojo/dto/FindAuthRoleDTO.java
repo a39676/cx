@@ -3,17 +3,15 @@ package demo.base.user.pojo.dto;
 import java.util.Arrays;
 import java.util.List;
 
+import demo.base.user.pojo.type.RolesType;
+
 public class FindAuthRoleDTO {
 
-	private List<Long> roleIdList;
+	private List<RolesType> roleTypeList;
 
-	private List<String> roleNameList;
-	
 	private List<Long> orgIdList;
-	
+
 	private List<Long> authIdList;
-	
-	
 
 	public List<Long> getAuthIdList() {
 		return authIdList;
@@ -22,7 +20,7 @@ public class FindAuthRoleDTO {
 	public void setAuthIdList(List<Long> authIdList) {
 		this.authIdList = authIdList;
 	}
-	
+
 	public void setAuthIdList(Long authId) {
 		this.authIdList = Arrays.asList(authId);
 	}
@@ -34,35 +32,23 @@ public class FindAuthRoleDTO {
 	public void setOrgIdList(List<Long> orgIdList) {
 		this.orgIdList = orgIdList;
 	}
-	
+
 	public void setOrgIdList(Long orgId) {
 		this.orgIdList = Arrays.asList(orgId);
 	}
 
-	public List<Long> getRoleIdList() {
-		return roleIdList;
+	public List<RolesType> getRoleTypeList() {
+		return roleTypeList;
 	}
 
-	public void setRoleIdList(List<Long> roleIdList) {
-		this.roleIdList = roleIdList;
-	}
-	
-	public void setRoleIdList(Long roleId) {
-		this.roleIdList = Arrays.asList(roleId);
-	}
-
-	public List<String> getRoleNameList() {
-		return roleNameList;
-	}
-
-	public void setRoleNameList(List<String> roleNameList) {
-		this.roleNameList = roleNameList;
+	public void setRoleTypeList(List<RolesType> roleTypeList) {
+		this.roleTypeList = roleTypeList;
 	}
 
 	@Override
 	public String toString() {
-		return "FindAuthRoleDTO [roleIdList=" + roleIdList + ", roleNameList=" + roleNameList + ", orgIdList="
-				+ orgIdList + ", authIdList=" + authIdList + "]";
+		return "FindAuthRoleDTO [roleTypeList=" + roleTypeList + ", orgIdList=" + orgIdList + ", authIdList="
+				+ authIdList + "]";
 	}
 
 }

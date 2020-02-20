@@ -1,7 +1,6 @@
 package demo.base.user.service.impl;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -10,7 +9,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
@@ -19,23 +17,11 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.base.user.mapper.UsersMapper;
-import demo.base.user.pojo.po.UsersDetail;
-import demo.config.costom_component.BaseUtilCustom;
 import net.sf.json.JSONObject;
 
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-	@Autowired
-	private BaseUtilCustom baseUtilCustom;
-
-	@Autowired
-	private UsersMapper usersMapper;
-	
-//	@Autowired
-//	private UserIpMapper userIpMapper;
-	
 	protected Log logger = LogFactory.getLog(this.getClass());
 	 
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
@@ -43,12 +29,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication auth)
 			throws IOException, ServletException {
-		HashMap<String, Object> detailMap = new HashMap<String, Object>();
-		UsersDetail userDetail = usersMapper.getUserDetailByUserName(auth.getName());
-		detailMap.put("userId", userDetail.getUserId());
-		detailMap.put("email", userDetail.getEmail());
-		detailMap.put("nickName", userDetail.getNickName());
-		baseUtilCustom.setAuthDetail(detailMap);
 		
 //		String remoteAddr = null;
 //		if (request != null) {

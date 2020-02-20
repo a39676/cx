@@ -19,9 +19,7 @@ public class FindAuthsResult extends CommonResultCX {
 
 	@Override
 	public String toString() {
-		return "FindUserIdListByAuthIdResult [authList=" + authList + ", getCode()=" + getCode() + ", getResult()="
-				+ getResult() + ", getMessage()=" + getMessage() + ", isSuccess()=" + isSuccess() + ", toString()="
-				+ super.toString() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + "]";
+		return "FindAuthsResult [authList=" + authList + "]";
 	}
 
 }

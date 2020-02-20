@@ -2,7 +2,6 @@ package demo.base.user.service;
 
 import java.util.List;
 
-import demo.base.user.pojo.dto.EditUserAuthDTO;
 import demo.base.user.pojo.dto.FindUserAuthDTO;
 import demo.base.user.pojo.result.FindUserAuthResult;
 import demo.base.user.pojo.type.AuthType;
@@ -18,6 +17,8 @@ public interface UserAuthService {
 
 	FindUserAuthResult findUserAuth(FindUserAuthDTO dto);
 
-	CommonResultCX editUserAuth(EditUserAuthDTO dto);
+	CommonResultCX insertUserAuth(Long userId, Long authId);
+
+	CommonResultCX deleteUserAuth(Long userId, Long authId);
 
 }

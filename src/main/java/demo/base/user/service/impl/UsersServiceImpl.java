@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import demo.base.organizations.pojo.dto.FindUserControlOrgDTO;
+import demo.base.organizations.pojo.result.FindUserControlOrgResult;
+import demo.base.organizations.service.OrganizationService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.user.mapper.UsersDetailMapper;
 import demo.base.user.mapper.UsersMapper;
@@ -32,7 +35,6 @@ import demo.base.user.pojo.po.UsersExample.Criteria;
 import demo.base.user.pojo.result.FindRolesResult;
 import demo.base.user.pojo.result.FindUserAuthResult;
 import demo.base.user.pojo.result.FindUserByConditionResult;
-import demo.base.user.pojo.type.RolesType;
 import demo.base.user.pojo.type.UserPrivateLevelType;
 import demo.base.user.pojo.vo.UsersDetailForAdminVO;
 import demo.base.user.pojo.vo.UsersDetailVO;
@@ -59,6 +61,8 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 	private UserAuthService userAuthService;
 	@Autowired
 	private AuthRoleService authRoleService;
+	@Autowired
+	private OrganizationService orgService;
 	
 	@Override
 	public int insertFailAttempts(String userName) {
@@ -121,37 +125,48 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 	
 	@Override
 	public MyUserPrincipal buildMyUserPrincipalByUserName(String userName) {
-		MyUserPrincipal myUserDetail = new MyUserPrincipal();
+		MyUserPrincipal myUserPrincipal = new MyUserPrincipal();
 		Users user = usersMapper.findUserByUserName(userName);
 		if(user == null) {
-			return myUserDetail;
+			return myUserPrincipal;
 		}
 		
-		myUserDetail.setUser(user);
+		myUserPrincipal.setUser(user);
+		
+		UsersDetail userDetail = usersDetailMapper.selectByPrimaryKey(user.getUserId());
+		if(userDetail != null) {
+			myUserPrincipal.setNickName(userDetail.getNickName());
+			myUserPrincipal.setEmail(userDetail.getEmail());
+		}
 		
 		FindUserAuthDTO findUserAuthDTO = new FindUserAuthDTO();
 		findUserAuthDTO.setUserId(user.getUserId());
 		FindUserAuthResult authResult = userAuthService.findUserAuth(findUserAuthDTO);
 		if(!authResult.isSuccess()) {
-			return myUserDetail;
+			return myUserPrincipal;
 		}
 		List<Auth> auths = authResult.getAuthList();
+		myUserPrincipal.setAuths(auths);
+		
+		FindUserControlOrgDTO findUserControlOrgDTO = new FindUserControlOrgDTO();
+		findUserControlOrgDTO.setUserId(user.getUserId());
+		FindUserControlOrgResult findUserControllOrgResult = orgService.findUserControlOrg(findUserControlOrgDTO);
+		if(findUserControllOrgResult.isSuccess()) {
+			myUserPrincipal.setControllerOrganizations(findUserControllOrgResult.getControllOrgList());
+			myUserPrincipal.setSubOrganizations(findUserControllOrgResult.getSubOrgList());
+		}
+		
 		List<Long> authIdList = auths.stream().map(Auth::getId).collect(Collectors.toList());
 		FindRolesDTO findRolesDTO = new FindRolesDTO();
 		findRolesDTO.setAuthIdList(authIdList);
 		FindRolesResult rolesResult = authRoleService.findRolesByCondition(findRolesDTO );
-		if(!rolesResult.isSuccess()) {
-			return myUserDetail;
+		if(rolesResult.isSuccess()) {
+			List<Roles> roles = rolesResult.getRoleList();
+			List<String> rolesStr = roles.stream().map(Roles::getRole).collect(Collectors.toList());
+			myUserPrincipal.setRoles(rolesStr);
 		}
-		List<Roles> roles = rolesResult.getRoleList();
 		
-		List<String> rolesStr = roles.stream().map(Roles::getRole).collect(Collectors.toList());
-		myUserDetail.setRoles(rolesStr);
-		
-		List<String> authStr = auths.stream().map(Auth::getAuthName).collect(Collectors.toList());
-		myUserDetail.setAuths(authStr);
-		
-		return myUserDetail;
+		return myUserPrincipal;
 	}
 
 	@Override
@@ -352,11 +367,6 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 		view.addObject("mobile", ud.getMobile());
 		view.addObject("reservationInformation", ud.getReservationInformation());
 		
-		if(!baseUtilCustom.getRoles().contains(RolesType.ROLE_USER_ACTIVE.getName())) {
-			if(!baseUtilCustom.getAuthDetail().containsKey("modifyRegistMail")) {
-				view.addObject("notActive", "notActive");
-			}
-		}
 		
 		return view;
 	}

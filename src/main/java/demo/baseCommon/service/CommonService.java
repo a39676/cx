@@ -1,7 +1,6 @@
 package demo.baseCommon.service;
 
 import java.util.Date;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
-import demo.base.user.pojo.type.RolesType;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.config.costom_component.BaseUtilCustom;
@@ -174,36 +173,89 @@ public abstract class CommonService {
 		return r;
 	}
 	
-	private List<List<Character>> getCustomKey() {
-		return constantService.getCustomKey();
-	}
+//	private List<List<Character>> getCustomKey() {
+//		return constantService.getCustomKey();
+//	}
+//	
+//	public String encryptId(Long articleId, List<List<Character>> keys) {
+//		if(articleId == null) {
+//			return null;
+//		}
+//		
+//		if(keys == null || keys.size() < 1) {
+//			return null;
+//		}
+//		return encryptUtil.customEncrypt(keys, articleId.toString());
+//	}
+//	
+//	public Long decryptPrivateKey(String inputPk) {
+//		String encryptId = encryptUtil.customDecrypt(getCustomKey(), inputPk);
+//		if(encryptId == null || !numberUtil.matchInteger(encryptId)) {
+//			return null;
+//		}
+//		return Long.parseLong(encryptId);
+//	}
 	
 	public String encryptId(Long id) {
-		return encryptId(id, getCustomKey());
-	}
-	
-	public String encryptId(Long articleId, List<List<Character>> keys) {
-		if(articleId == null) {
+		if(id == null) {
 			return null;
 		}
 		
-		if(keys == null || keys.size() < 1) {
-			return null;
+		String keys = constantService.getValByName(SystemConstantStore.aesKey);
+		if(StringUtils.isBlank(keys)) {
+			keys = constantService.getValByName(SystemConstantStore.aesKey, true);
+			if(StringUtils.isBlank(keys)) {
+				return null;
+			}
 		}
-		return encryptUtil.customEncrypt(keys, articleId.toString());
+		
+		String initVector = constantService.getValByName(SystemConstantStore.aesInitVector);
+		if(StringUtils.isBlank(initVector)) {
+			initVector = constantService.getValByName(SystemConstantStore.aesKey, true);
+			if(StringUtils.isBlank(initVector)) {
+				return null;
+			}
+		}
+		
+		String encryptResult = null;
+		try {
+			encryptResult = encryptUtil.aesEncrypt(keys, initVector, id.toString());
+		} catch (Exception e) {
+			
+		}
+		return encryptResult;
 	}
 	
 	public Long decryptPrivateKey(String inputPk) {
-		String encryptId = encryptUtil.customDecrypt(getCustomKey(), inputPk);
-		if(encryptId == null || !numberUtil.matchInteger(encryptId)) {
+		if(StringUtils.isBlank(inputPk)) {
 			return null;
 		}
-		return Long.parseLong(encryptId);
+		
+		String keys = constantService.getValByName(SystemConstantStore.aesKey);
+		if(StringUtils.isBlank(keys)) {
+			keys = constantService.getValByName(SystemConstantStore.aesKey, true);
+			if(StringUtils.isBlank(keys)) {
+				return null;
+			}
+		}
+		
+		String initVector = constantService.getValByName(SystemConstantStore.aesInitVector);
+		if(StringUtils.isBlank(initVector)) {
+			initVector = constantService.getValByName(SystemConstantStore.aesKey, true);
+			if(StringUtils.isBlank(initVector)) {
+				return null;
+			}
+		}
+		
+		Long id = null;
+		try {
+			id = Long.parseLong(encryptUtil.aesDecrypt(keys, initVector, inputPk));
+		} catch (Exception e) {
+		}
+		return id;
 	}
 	
 	protected boolean isBigUser() {
-		return baseUtilCustom.hasAnyRole(
-				RolesType.ROLE_POSTER.getName(),
-				RolesType.ROLE_SUPER_ADMIN.getName());
+		return baseUtilCustom.hasSuperAdminRole();
 	}
 }

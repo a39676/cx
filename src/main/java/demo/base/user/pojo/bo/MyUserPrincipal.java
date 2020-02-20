@@ -9,6 +9,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import demo.base.organizations.pojo.po.Organizations;
+import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.po.Users;
 
 public class MyUserPrincipal implements UserDetails {
@@ -16,43 +18,51 @@ public class MyUserPrincipal implements UserDetails {
 	private static final long serialVersionUID = 3333800775540529992L;
 
 	private Users user;
-
+	private String email;
+	private String nickName;
 	private List<String> roles;
+	private List<Auth> auths;
+	private List<Organizations> controllerOrganizations;
+	private List<Organizations> subOrganizations;
 
-	private List<String> auths;
-
-	private List<String> departments;
-
-	private List<String> organizations;
-
-	@Override
-	public String toString() {
-		return "MyUserPrincipal [user=" + user + ", roles=" + roles + ", auths=" + auths + ", departments="
-				+ departments + ", organizations=" + organizations + "]";
+	public String getEmail() {
+		return email;
 	}
 
-	public List<String> getAuths() {
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getNickName() {
+		return nickName;
+	}
+
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
+
+	public List<Organizations> getControllerOrganizations() {
+		return controllerOrganizations;
+	}
+
+	public void setControllerOrganizations(List<Organizations> controllerOrganizations) {
+		this.controllerOrganizations = controllerOrganizations;
+	}
+
+	public List<Organizations> getSubOrganizations() {
+		return subOrganizations;
+	}
+
+	public void setSubOrganizations(List<Organizations> subOrganizations) {
+		this.subOrganizations = subOrganizations;
+	}
+
+	public List<Auth> getAuths() {
 		return auths;
 	}
 
-	public void setAuths(List<String> auths) {
+	public void setAuths(List<Auth> auths) {
 		this.auths = auths;
-	}
-
-	public List<String> getDepartments() {
-		return departments;
-	}
-
-	public void setDepartments(List<String> departments) {
-		this.departments = departments;
-	}
-
-	public List<String> getOrganizations() {
-		return organizations;
-	}
-
-	public void setOrganizations(List<String> organizations) {
-		this.organizations = organizations;
 	}
 
 	public Users getUser() {
@@ -69,6 +79,16 @@ public class MyUserPrincipal implements UserDetails {
 
 	public void setRoles(List<String> roles) {
 		this.roles = roles;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	@Override
+	public String toString() {
+		return "MyUserPrincipal [user=" + user + ", roles=" + roles + ", auths=" + auths + ", controllerOrganizations="
+				+ controllerOrganizations + ", subOrganizations=" + subOrganizations + "]";
 	}
 
 	@Override

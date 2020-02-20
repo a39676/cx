@@ -5,7 +5,6 @@
   <resultMap id="BaseResultMap" type="demo.base.user.pojo.po.Roles">
     <id column="role_id" jdbcType="BIGINT" property="roleId" />
     <result column="role" jdbcType="CHAR" property="role" />
-    <result column="belong_org" jdbcType="BIGINT" property="belongOrg" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -67,7 +66,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    role_id, role, belong_org, is_delete
+    role_id, role, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.base.user.pojo.po.RolesExample" resultMap="BaseResultMap">
     select
@@ -100,10 +99,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="demo.base.user.pojo.po.Roles">
-    insert into roles (role_id, role, belong_org, 
-      is_delete)
-    values (#{roleId,jdbcType=BIGINT}, #{role,jdbcType=CHAR}, #{belongOrg,jdbcType=BIGINT}, 
-      #{isDelete,jdbcType=BIT})
+    insert into roles (role_id, role, is_delete
+      )
+    values (#{roleId,jdbcType=BIGINT}, #{role,jdbcType=CHAR}, #{isDelete,jdbcType=BIT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="demo.base.user.pojo.po.Roles">
     insert into roles
@@ -113,9 +112,6 @@
       </if>
       <if test="role != null">
         role,
-      </if>
-      <if test="belongOrg != null">
-        belong_org,
       </if>
       <if test="isDelete != null">
         is_delete,
@@ -127,9 +123,6 @@
       </if>
       <if test="role != null">
         #{role,jdbcType=CHAR},
-      </if>
-      <if test="belongOrg != null">
-        #{belongOrg,jdbcType=BIGINT},
       </if>
       <if test="isDelete != null">
         #{isDelete,jdbcType=BIT},
@@ -151,9 +144,6 @@
       <if test="record.role != null">
         role = #{record.role,jdbcType=CHAR},
       </if>
-      <if test="record.belongOrg != null">
-        belong_org = #{record.belongOrg,jdbcType=BIGINT},
-      </if>
       <if test="record.isDelete != null">
         is_delete = #{record.isDelete,jdbcType=BIT},
       </if>
@@ -166,7 +156,6 @@
     update roles
     set role_id = #{record.roleId,jdbcType=BIGINT},
       role = #{record.role,jdbcType=CHAR},
-      belong_org = #{record.belongOrg,jdbcType=BIGINT},
       is_delete = #{record.isDelete,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -178,9 +167,6 @@
       <if test="role != null">
         role = #{role,jdbcType=CHAR},
       </if>
-      <if test="belongOrg != null">
-        belong_org = #{belongOrg,jdbcType=BIGINT},
-      </if>
       <if test="isDelete != null">
         is_delete = #{isDelete,jdbcType=BIT},
       </if>
@@ -190,7 +176,6 @@
   <update id="updateByPrimaryKey" parameterType="demo.base.user.pojo.po.Roles">
     update roles
     set role = #{role,jdbcType=CHAR},
-      belong_org = #{belongOrg,jdbcType=BIGINT},
       is_delete = #{isDelete,jdbcType=BIT}
     where role_id = #{roleId,jdbcType=BIGINT}
   </update>

@@ -1,6 +1,5 @@
 package demo.base.system.service.impl;
 
-import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -62,10 +61,7 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 
 		List<String> roles = baseUtilCustom.getRoles();
 		if (roles != null && roles.size() > 0 && roles.contains(RolesType.ROLE_USER.getName())) {
-			HashMap<String, Object> authDetailMap = baseUtilCustom.getAuthDetail();
-			if (authDetailMap != null && authDetailMap.containsKey("nickName")) {
-				view.addObject("nickName", authDetailMap.get("nickName"));
-			}
+			view.addObject("nickName", baseUtilCustom.getUserPrincipal().getNickName());
 		}
 		
 		return view;

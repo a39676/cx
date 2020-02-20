@@ -1,7 +1,15 @@
-common result
-	加一个公共方法, 方便error msg 传递?
+处理 jsp 的  HAS_ADMIN_ROLE
 
-建立用户-角色-权限 分配页面
+FindUserAuthResult 中不适宜使用PO
+
+权限模块
+	改变思路
+		role 为系统管理 hardcode 不允许用户自定义更改
+		auth 允许拥有 admin_role? 的用户自定义, 并允许用户创建下一层的机构的 auth?
+		
+	增加 机构-用户 表后, DatabaseFiller 初始化时需要多捆绑数据;
+		登录时应该将所属机构, 角色 放入 内存数据, like role
+
 	严格完善
 		如何封装 对应角色 / 可执行逻辑?
 		
@@ -39,8 +47,6 @@ common result
 	考虑增加机构类型字段???
 		后台系统机构会否多?  并有分支?
 		若不增加, 系统初始启动阶段, 需要 从超管的归属机构ID 查找最终的系统机构
-		
-	后台系统机构 以及 初始超管ID 不可写死
 		
 
 用户注册 转用邮件激活, 

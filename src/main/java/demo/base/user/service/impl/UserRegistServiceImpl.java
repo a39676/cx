@@ -21,7 +21,7 @@ import demo.base.user.mapper.UsersDetailMapper;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.constant.UserConstant;
 import demo.base.user.pojo.dto.EditUserAuthDTO;
-import demo.base.user.pojo.dto.FindAuthsConditionDTO;
+import demo.base.user.pojo.dto.FindAuthsDTO;
 import demo.base.user.pojo.dto.FindUserAuthDTO;
 import demo.base.user.pojo.dto.ResetFailAttemptDTO;
 import demo.base.user.pojo.dto.UserRegistDTO;
@@ -368,7 +368,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		
 		List<UserAuth> userAuthList = findUserAuthResult.getUserAuthList();
 		
-		FindAuthsConditionDTO findAuthDTO = new FindAuthsConditionDTO();
+		FindAuthsDTO findAuthDTO = new FindAuthsDTO();
 		findAuthDTO.setAuthType(AuthType.USER_ACTIVE.getCode().intValue());
 		FindAuthsResult activeUserAuthResult = authService.findAuthsByCondition(findAuthDTO);
 		if(!activeUserAuthResult.isSuccess()) {
@@ -383,11 +383,12 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		EditUserAuthDTO editUserAuthDTO = new EditUserAuthDTO();
 		editUserAuthDTO.setUserId(mr.getUserId());
 		editUserAuthDTO.setNewAuthIdList(authIdList);
-		CommonResultCX editUserAuthResult = userAuthService.editUserAuth(editUserAuthDTO);
-		if(!editUserAuthResult.isSuccess()) {
-			result.addMessage(editUserAuthResult.getMessage());
-			return result;
-		}
+//		TODO FIXME
+//		CommonResultCX editUserAuthResult = userAuthService.editUserAuth(editUserAuthDTO);
+//		if(!editUserAuthResult.isSuccess()) {
+//			result.addMessage(editUserAuthResult.getMessage());
+//			return result;
+//		}
 		
 		mailService.updateWasUsed(mr.getId());
 		result.successWithMessage("账号已激活");

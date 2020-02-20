@@ -46,23 +46,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private DataSource dataSource;
-
 	@Autowired
 	private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
-	
 	@Autowired
 	private CustomAuthenticationFailHandler customAuthenticationFailHandler;
-
 	@Autowired
     private CustomAuthenticationProvider authProvider;
-	
+	@Autowired
+	private CustomUserDetailsService customUserDetailsService;
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(authProvider);
 	}
-	
-	@Autowired
-	private CustomUserDetailsService customUserDetailsService;
 	
 	@Bean
 	public DaoAuthenticationProvider authProvider() {
@@ -158,7 +153,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authProvider());
     }
-	
 
 	@Bean
 	public PersistentTokenRepository persistentTokenRepository() {

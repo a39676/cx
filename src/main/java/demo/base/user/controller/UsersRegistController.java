@@ -76,7 +76,6 @@ public class UsersRegistController extends CommonController {
 				jsonInput.getString("modifyRegistMail"));
 		if (result.isSuccess()) {
 			result.successWithMessage("邮件已发送,因网络原因,可能存在延迟,请稍后至邮箱查收.请留意邮箱拦截规则,如果邮件被拦截,可能存放于邮箱垃圾箱内...");
-			baseUtilCustom.modifyAuthDetail("modifyRegistMail", "modifyRegistMail");
 		}
 		jsonOutput = JSONObject.fromObject(result);
 		outputJson(response, jsonOutput);
@@ -124,7 +123,6 @@ public class UsersRegistController extends CommonController {
 			return result;
 		}
 		result.successWithMessage("邮件已发送,因网络原因,可能存在延迟,请稍后至邮箱查收.请留意邮箱拦截规则,如果邮件被拦截,可能存放于邮箱垃圾箱内...");
-		baseUtilCustom.modifyAuthDetail("modifyRegistMail", "modifyRegistMail");
 		return result;
 	}
 

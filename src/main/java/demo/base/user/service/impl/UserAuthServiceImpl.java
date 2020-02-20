@@ -13,15 +13,19 @@ import org.springframework.stereotype.Service;
 
 import demo.base.user.mapper.UserAuthMapper;
 import demo.base.user.pojo.dto.EditUserAuthDTO;
-import demo.base.user.pojo.dto.FindAuthsConditionDTO;
+import demo.base.user.pojo.dto.FindAuthRoleDTO;
+import demo.base.user.pojo.dto.FindAuthsDTO;
 import demo.base.user.pojo.dto.FindUserAuthDTO;
 import demo.base.user.pojo.po.Auth;
+import demo.base.user.pojo.po.AuthRole;
 import demo.base.user.pojo.po.UserAuth;
 import demo.base.user.pojo.po.UserAuthExample;
 import demo.base.user.pojo.po.UserAuthExample.Criteria;
+import demo.base.user.pojo.result.FindAuthRoleResult;
 import demo.base.user.pojo.result.FindAuthsResult;
 import demo.base.user.pojo.result.FindUserAuthResult;
 import demo.base.user.pojo.type.AuthType;
+import demo.base.user.service.AuthRoleService;
 import demo.base.user.service.AuthService;
 import demo.base.user.service.UserAuthService;
 import demo.baseCommon.pojo.result.CommonResultCX;
@@ -36,9 +40,25 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 	private UserAuthMapper userAuthMapper;
 	@Autowired
 	private AuthService authService;
-
-	private CommonResultCX insertUserAuth(Long userId, Long authId) {
+	@Autowired
+	private AuthRoleService authRoleService;
+	
+	@Override
+	public CommonResultCX insertUserAuth(Long userId, Long authId) {
 		CommonResultCX r = new CommonResultCX();
+		
+		if(userId == null || authId == null) {
+			r.failWithMessage("参数异常");
+			return r;
+		}
+//		TODO
+		
+		
+		/*
+		 * TODO
+		 * 鉴定指定角色, 当前用户可否更改操作的逻辑
+		 * 放在???
+		 */
 		
 		UserAuth po = new UserAuth();
 		Long creatorId = baseUtilCustom.getUserId();
@@ -80,7 +100,12 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 		return insertUserAuth(userId, auth.getId());
 	}
 	
-	private CommonResultCX deleteUserAuth(Long userId, Long authId) {
+	@Override
+	public CommonResultCX deleteUserAuth(Long userId, Long authId) {
+//		TODO
+		/*
+		 * 未做权限鉴定
+		 */
 		CommonResultCX r = new CommonResultCX();
 		UserAuthExample example = new UserAuthExample();
 		example.createCriteria().andUserIdEqualTo(userId).andAuthIdEqualTo(authId).andIsDeleteEqualTo(false);
@@ -126,6 +151,7 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 
 	@Override
 	public FindUserAuthResult findUserAuth(FindUserAuthDTO dto) {
+		
 		FindUserAuthResult r = new FindUserAuthResult();
 		if(dto.getUserId() == null && dto.getAuthId() == null) {
 			return r;
@@ -142,25 +168,60 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 		}
 		List<UserAuth> userAuthList = userAuthMapper.selectByExample(example);
 		
-		if(userAuthList != null && userAuthList.size() > 0) {
-			FindAuthsConditionDTO findAuthDTO = new FindAuthsConditionDTO();
-			List<Long> authIdList = userAuthList.stream().map(UserAuth::getAuthId).collect(Collectors.toList());
-			findAuthDTO.setAuthIdList(authIdList);
-			FindAuthsResult authListResult = authService.findAuthsByCondition(findAuthDTO);
-			if(!authListResult.isSuccess() || authListResult.getAuthList() == null || authListResult.getAuthList().size() < 1) {
-				r.addMessage(authListResult.getMessage());
+		if(userAuthList == null || userAuthList.isEmpty()) {
+			return r;
+		}
+		
+		FindAuthsDTO findAuthDTO = new FindAuthsDTO();
+		List<Long> authIdList = userAuthList.stream().map(UserAuth::getAuthId).collect(Collectors.toList());
+		findAuthDTO.setAuthIdList(authIdList);
+		FindAuthsResult authListResult = authService.findAuthsByCondition(findAuthDTO);
+		if(!authListResult.isSuccess() || authListResult.getAuthList() == null || authListResult.getAuthList().size() < 1) {
+			r.addMessage(authListResult.getMessage());
+			return r;
+		}
+		
+		List<Auth> authList = authListResult.getAuthList();
+		
+		List<Long> orgIdList = authList.stream().map(Auth::getBelongOrg).collect(Collectors.toList());
+		
+		if(dto.getRoleTypeList() != null && !dto.getRoleTypeList().isEmpty()) {
+			FindAuthRoleDTO findAuthRoleDTO = new FindAuthRoleDTO();
+			findAuthRoleDTO.setAuthIdList(authIdList);
+			findAuthRoleDTO.setRoleTypeList(dto.getRoleTypeList());
+			findAuthRoleDTO.setOrgIdList(orgIdList);
+			FindAuthRoleResult authRoleResult = authRoleService.findAuthRole(findAuthRoleDTO);
+			if(!authRoleResult.isSuccess()) {
+				r.addMessage(authRoleResult.getMessage());
 				return r;
 			}
 			
-			r.setUserAuthList(userAuthList);
-			r.setAuthList(authListResult.getAuthList());
+			List<AuthRole> authRoleList = authRoleResult.getAuthRoleList();
+			List<Long> filterAuthIdList = authRoleList.stream().map(AuthRole::getAuthId).collect(Collectors.toList());
+			
+			for(int i = 0; i < authList.size(); i++) {
+				if(!filterAuthIdList.contains(authList.get(i).getId())) {
+					authList.remove(i);
+					i--;
+				}
+			}
+			
+			for(int i = 0; i < userAuthList.size(); i++) {
+				if(!filterAuthIdList.contains(userAuthList.get(i).getAuthId())) {
+					userAuthList.remove(i);
+					i--;
+				}
+			}
+			
 		}
+		
+		r.setUserAuthList(userAuthList);
+		r.setAuthList(authList);
 		
 		r.setIsSuccess();
 		return r;
 	}
 	
-	@Override
 	public CommonResultCX editUserAuth(EditUserAuthDTO dto) {
 		CommonResultCX r = new CommonResultCX();
 		if(dto.getUserId() == null) {
@@ -205,4 +266,30 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 		r.setIsSuccess();
 		return r;
 	}
+
+	/**
+	 * 
+	 * @param operatorId 当前操作者用户ID
+	 * @param authId 拟加入 / 删除的角色 ID (可能为自己增删角色, 可能为其他用户增删角色)
+	 * @return
+	 */
+//	public CommonResultCX canEditUserAuth(Long operatorId, Long authId) {
+////		TODO
+//		
+//		CommonResultCX r = new CommonResultCX();
+//		if(operatorId == null || authId == null) {
+//			r.failWithMessage("参数为空");
+//			return r;
+//		}
+//		
+//		FindAuthsResult findAuthResult = authService.findAuthsByCondition(authId);
+//		if(!findAuthResult.isSuccess() || findAuthResult.getAuthList() == null || findAuthResult.getAuthList().isEmpty()) {
+//			r.addMessage(findAuthResult.getMessage());
+//			return r;
+//		}
+//		
+//		Auth auth = findAuthResult.getAuthList().get(0);
+//		
+//		Organizations authOrg = orgService.getOrgById(auth.getBelongOrg());
+//	}
 }

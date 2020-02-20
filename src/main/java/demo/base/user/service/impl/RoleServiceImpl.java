@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.base.system.pojo.constant.InitSystemConstant;
 import demo.base.user.mapper.RolesMapper;
 import demo.base.user.pojo.dto.FindRolesDTO;
 import demo.base.user.pojo.po.Roles;
@@ -28,7 +27,7 @@ public class RoleServiceImpl extends CommonService implements RoleService {
 	@Override
 	public void __initBaseRole() {
 		RolesExample example = new RolesExample();
-		example.createCriteria().andBelongOrgEqualTo(InitSystemConstant.ORIGINAL_BASE_ORG_ID).andIsDeleteEqualTo(false);
+		example.createCriteria().andIsDeleteEqualTo(false);
 		List<Roles> hadBaseRoleList = roleMapper.selectByExample(example);
 		List<String> hadRoleNameList = hadBaseRoleList.stream().map(Roles::getRole).collect(Collectors.toList());
 		Roles r = null;
@@ -37,23 +36,12 @@ public class RoleServiceImpl extends CommonService implements RoleService {
 				r = new Roles();
 				r.setRoleId(snowFlake.getNextId());
 				r.setRole(rt.getName());
-				r.setBelongOrg(InitSystemConstant.ORIGINAL_BASE_ORG_ID);
 				r.setIsDelete(false);
 				roleMapper.insertSelective(r);
 			}
 		}
 	}
 
-	@Override
-	public List<Roles> getRolesByOrgId(Long orgId) {
-		if(orgId == null) {
-			return new ArrayList<Roles>();
-		}
-		RolesExample example = new RolesExample();
-		example.createCriteria().andBelongOrgEqualTo(orgId);
-		return roleMapper.selectByExample(example);
-	}
-	
 	@Override
 	public Roles getBaseRoleByName(String roleName) {
 		if(StringUtils.isBlank(roleName)) {
@@ -65,7 +53,7 @@ public class RoleServiceImpl extends CommonService implements RoleService {
 		}
 		
 		RolesExample example = new RolesExample();
-		example.createCriteria().andBelongOrgEqualTo(InitSystemConstant.ORIGINAL_BASE_ORG_ID).andIsDeleteEqualTo(false).andRoleEqualTo(roleName);
+		example.createCriteria().andIsDeleteEqualTo(false).andRoleEqualTo(roleName);
 		List<Roles> roles = roleMapper.selectByExample(example);
 		if(roles != null && roles.size() > 0) {
 			return roles.get(0);
@@ -76,17 +64,16 @@ public class RoleServiceImpl extends CommonService implements RoleService {
 	@Override
 	public FindRolesResult getRolesByCondition(FindRolesDTO dto) {
 		FindRolesResult r = new FindRolesResult();
-		if(dto.getBelongOrgIdList() == null || dto.getBelongOrgIdList().isEmpty()) {
-			r.failWithMessage("必须指定所属机构");
-			return r;
-		}
 		
 		RolesExample example = new RolesExample();
 		Criteria c = example.createCriteria();
 		
-		c.andBelongOrgIn(dto.getBelongOrgIdList());
-		if(dto.getRoleNameList() != null && dto.getRoleNameList().size() > 0) {
-			c.andRoleIn(dto.getRoleNameList());
+		if(dto.getRoleTypeList() != null && dto.getRoleTypeList().size() > 0) {
+			List<String> roleNameList = new ArrayList<String>();
+			for(RolesType roltType : dto.getRoleTypeList()) {
+				roleNameList.add(roltType.getName());
+			}
+			c.andRoleIn(roleNameList);
 		}
 		if(dto.getRolesIdList() != null && dto.getRolesIdList().size() > 0) {
 			c.andRoleIdIn(dto.getRolesIdList());

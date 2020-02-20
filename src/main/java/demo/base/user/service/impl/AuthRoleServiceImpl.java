@@ -56,38 +56,34 @@ public class AuthRoleServiceImpl extends CommonService implements AuthRoleServic
 	public FindAuthRoleResult findAuthRole(FindAuthRoleDTO dto) {
 		FindAuthRoleResult r = new FindAuthRoleResult();
 		
-		if(dto.getOrgIdList() == null || dto.getOrgIdList().size() < 1) {
-			r.failWithMessage("请指定所属机构");
+		if((dto.getOrgIdList() == null || dto.getOrgIdList().isEmpty())
+				&& (dto.getAuthIdList() == null || dto.getAuthIdList().isEmpty())
+				&& (dto.getRoleTypeList() == null || dto.getRoleTypeList().isEmpty())
+				) {
+			r.failWithMessage("不可输入空参数");
 			return r;
 		}
 		
-		AuthRoleExample example = new AuthRoleExample();
-		Criteria criteria = example.createCriteria();
+		AuthRoleExample authRoleExample = new AuthRoleExample();
+		Criteria authRoleCriteria = authRoleExample.createCriteria();
 		
 		if(dto.getAuthIdList() != null && dto.getAuthIdList().size() > 0) {
-			criteria.andAuthIdIn(dto.getAuthIdList());
+			authRoleCriteria.andAuthIdIn(dto.getAuthIdList());
 		}
 		
-		if((dto.getRoleNameList() != null && !dto.getRoleNameList().isEmpty()) 
-				|| dto.getRoleIdList() != null && !dto.getRoleIdList().isEmpty()) {
+		if(dto.getRoleTypeList() != null && !dto.getRoleTypeList().isEmpty()) {
 			FindRolesDTO getRolesDTO = new FindRolesDTO();
-			getRolesDTO.setBelongOrgIdList(dto.getOrgIdList());
-			if(dto.getRoleNameList() != null && !dto.getRoleNameList().isEmpty()) {
-				getRolesDTO.setRoleNameList(dto.getRoleNameList());
-			}
-			if(dto.getRoleIdList() != null && !dto.getRoleIdList().isEmpty()) {
-				getRolesDTO.setRolesIdList(dto.getRoleIdList());
-			}
+			getRolesDTO.setRoleTypeList(dto.getRoleTypeList());
 			FindRolesResult findRolesResult = roleService.getRolesByCondition(getRolesDTO);
 			if(!findRolesResult.isSuccess()) {
 				r.addMessage(findRolesResult.getMessage());
 				return r;
 			}
 			List<Roles> roleList = findRolesResult.getRoleList();
-			criteria.andRoleIdIn(roleList.stream().map(Roles::getRoleId).collect(Collectors.toList()));
+			authRoleCriteria.andRoleIdIn(roleList.stream().map(Roles::getRoleId).collect(Collectors.toList()));
 		}
 		
-		List<AuthRole> authRoleList = authRoleMapper.selectByExample(example);
+		List<AuthRole> authRoleList = authRoleMapper.selectByExample(authRoleExample);
 		r.setAuthRoleList(authRoleList);
 		r.setIsSuccess();
 		return r;
@@ -105,21 +101,13 @@ public class AuthRoleServiceImpl extends CommonService implements AuthRoleServic
 	public FindRolesResult findRolesByCondition(FindRolesDTO dto) {
 		FindRolesResult r = new FindRolesResult();
 		
-		if(dto.getBelongOrgIdList() == null || dto.getBelongOrgIdList().isEmpty()) {
-			r.failWithMessage("请指定所属机构");
-			return r;
-		}
-		
 		FindAuthRoleDTO findAuthRoleDTO = new FindAuthRoleDTO();
 		findAuthRoleDTO.setOrgIdList(dto.getBelongOrgIdList());
 		if(dto.getAuthIdList() != null && !dto.getAuthIdList().isEmpty()) {
 			findAuthRoleDTO.setAuthIdList(dto.getAuthIdList());
 		}
-		if(dto.getRolesIdList() != null && !dto.getRolesIdList().isEmpty()) {
-			findAuthRoleDTO.setRoleIdList(dto.getRolesIdList());
-		}
-		if(dto.getRoleNameList() != null && !dto.getRoleNameList().isEmpty()) {
-			findAuthRoleDTO.setRoleNameList(dto.getRoleNameList());
+		if(dto.getRoleTypeList() != null && !dto.getRoleTypeList().isEmpty()) {
+			findAuthRoleDTO.setRoleTypeList(dto.getRoleTypeList());
 		}
 		FindAuthRoleResult authRoleResult = findAuthRole(findAuthRoleDTO);
 		
@@ -139,6 +127,7 @@ public class AuthRoleServiceImpl extends CommonService implements AuthRoleServic
 		}
 		
 		r.setRoleList(getRolesResult.getRoleList());
+		r.setIsSuccess();
 		return r;
 		
 	}

@@ -1,6 +1,7 @@
 package demo.base.user.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 import demo.base.system.pojo.constant.InitSystemConstant;
 import demo.base.user.mapper.AuthMapper;
 import demo.base.user.pojo.dto.FindAuthRoleDTO;
-import demo.base.user.pojo.dto.FindAuthsConditionDTO;
+import demo.base.user.pojo.dto.FindAuthsDTO;
 import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.po.AuthExample;
 import demo.base.user.pojo.po.AuthExample.Criteria;
@@ -22,9 +23,11 @@ import demo.base.user.pojo.po.AuthRole;
 import demo.base.user.pojo.po.Roles;
 import demo.base.user.pojo.result.FindAuthRoleResult;
 import demo.base.user.pojo.result.FindAuthsResult;
+import demo.base.user.pojo.result.FindAuthsVOResult;
 import demo.base.user.pojo.type.AuthType;
 import demo.base.user.pojo.type.AuthTypeType;
 import demo.base.user.pojo.type.RolesType;
+import demo.base.user.pojo.vo.AuthVO;
 import demo.base.user.service.AuthRoleService;
 import demo.base.user.service.AuthService;
 import demo.base.user.service.RoleService;
@@ -118,7 +121,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 	@Override
 	public FindAuthsResult findSuperAdministratorAuth() {
 		
-		FindAuthsConditionDTO dto = new FindAuthsConditionDTO();
+		FindAuthsDTO dto = new FindAuthsDTO();
 		dto.setAuthName(AuthType.SUPER_ADMIN.getName());
 		dto.setAuthType(AuthTypeType.SYS_AUTH.getCode());
 		dto.setBelongOrgIdList(InitSystemConstant.ORIGINAL_BASE_ORG_ID);
@@ -126,24 +129,32 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		return findAuthsByCondition(dto);
 	}
 	
-	
 	@Override
-	public FindAuthsResult findAuthsByCondition(FindAuthsConditionDTO dto) {
+	public FindAuthsResult findAuthsByCondition(FindAuthsDTO dto) {
 		FindAuthsResult result = new FindAuthsResult();
 		AuthExample example = new AuthExample();
 		Criteria c = example.createCriteria();
 
 		/*
-		 * 只能查找本机构角色
-		 * 管理员能查找下级机构的管理员角色?
-		 * 非管理员可否查找角色?
+		 * 
+		 * TODO
+		 * 如何限制 只能查找本机构角色
+		 * 管理员能查找下级机构的管理员角色
 		 * 
 		 */
-		if(dto.getBelongOrgIdList() == null || dto.getBelongOrgIdList().size() < 1) {
+		
+		// 非管理员 禁止参数全空
+		if((dto.getBelongOrgIdList() == null || dto.getBelongOrgIdList().isEmpty())
+				&& (dto.getAuthIdList() == null || dto.getAuthIdList().isEmpty())
+				&& (StringUtils.isBlank(dto.getAuthName()))
+				&& dto.getAuthType() == null
+				&& (dto.getRoleTypeList() == null || dto.getRoleTypeList().isEmpty())
+				) {
 			if(isBigUser()) {
 				dto.setBelongOrgIdList(InitSystemConstant.ORIGINAL_BASE_ORG_ID);
 			} else {
-				result.failWithMessage("必须指定所属机构");
+				result.failWithMessage("至少输入一个参数");
+				return result;
 			}
 		}
 		
@@ -159,11 +170,9 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		if(dto.getBelongOrgIdList() != null && dto.getBelongOrgIdList().size() > 0) {
 			c.andBelongOrgIn(dto.getBelongOrgIdList());
 		}
-		if((dto.getRoleIdList() != null && dto.getRoleIdList().size() > 0) 
-				||(dto.getRoleNameList() != null && dto.getRoleNameList().size() > 0)) {
+		if(dto.getRoleTypeList() != null && !dto.getRoleTypeList().isEmpty()) {
 			FindAuthRoleDTO findAuthRoleDTO = new FindAuthRoleDTO();
-			findAuthRoleDTO.setRoleIdList(dto.getRoleIdList());
-			findAuthRoleDTO.setRoleNameList(dto.getRoleNameList());
+			findAuthRoleDTO.setRoleTypeList(dto.getRoleTypeList());
 			findAuthRoleDTO.setOrgIdList(dto.getBelongOrgIdList());
 			FindAuthRoleResult authRoleResult = authRoleService.findAuthRole(findAuthRoleDTO);
 			if(!authRoleResult.isSuccess()) {
@@ -182,6 +191,45 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		result.setAuthList(auths);
 		result.setIsSuccess();
 		return result;
+	}
+	
+	@Override
+	public FindAuthsVOResult findAuthVOListByCondition(FindAuthsDTO dto) {
+		FindAuthsVOResult r = new FindAuthsVOResult();
+		
+		FindAuthsResult poResult = findAuthsByCondition(dto);
+		if(!poResult.isSuccess()) {
+			r.addMessage(poResult.getMessage());
+			return r;
+		}
+		
+		List<Auth> auths = poResult.getAuthList();
+		
+		List<AuthVO> authVOList = new ArrayList<AuthVO>();
+		for(Auth po : auths) {
+			authVOList.add(buildAuthVOByPO(po));
+		}
+		
+		r.setAuthVOList(authVOList);
+		r.setIsSuccess();
+		return r;
+	}
+	
+	private AuthVO buildAuthVOByPO(Auth po) {
+		AuthVO vo = new AuthVO();
+		vo.setPk(encryptId(po.getId()));
+		vo.setAuthName(po.getAuthName());
+		vo.setAuthType(po.getAuthType());
+		vo.setBelongOrg(po.getBelongOrg());
+		vo.setIsDelete(po.getIsDelete());
+		return vo;
+	}
+	
+	@Override
+	public FindAuthsResult findAuthsByCondition(Long authId) {
+		FindAuthsDTO dto = new FindAuthsDTO();
+		dto.setAuthIdList(Arrays.asList(authId));
+		return findAuthsByCondition(dto);
 	}
 	
 	@Override

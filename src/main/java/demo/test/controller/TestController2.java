@@ -38,5 +38,5 @@ public class TestController2 extends CommonController {
 		v.addObject("message", "<img src=\"http://wttr.in/Guangzhou.png\">");
 		return v;
 	}
-	
+
 }

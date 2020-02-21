@@ -1,5 +1,3 @@
-处理 jsp 的  HAS_ADMIN_ROLE
-
 权限模块
 	改变思路
 		auth 允许拥有 admin_role? 的用户自定义, 并允许用户创建下一层的机构的 auth?

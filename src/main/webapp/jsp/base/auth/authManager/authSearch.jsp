@@ -15,44 +15,14 @@
 
   <div class="row">
     <div class="col-md-4" >
-      <label>orgName</label>
-      <input class="conditionInput" type="text" name="orgName" id="orgName" placeholder="orgName">
+      <label>authName</label>
+      <input class="conditionInput" type="text" name="authName" id="authName" placeholder="authName">
     </div>
     <div class="col-md-4" >
-      <label>orgPk</label>
-      <input class="conditionInput" type="text" name="orgPk" id="orgPk" placeholder="orgPk">
-    </div>
-    <div class="col-md-4" >
-      <label>creatorPk</label>
-      <input class="conditionInput" type="text" name="creatorPk" id="creatorPk" placeholder="creatorPk">
+      <label>authPk</label>
+      <input class="conditionInput" type="text" name="authPk" id="authPk" placeholder="authPk">
     </div>
   </div>
-
-  <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
-    <div class="row">
-      <div class="col-md-4" >
-        <label>orgId</label>
-        <input class="conditionInput" type="text" name="orgId" id="orgId" placeholder="orgId">
-      </div>
-      <div class="col-md-4" >
-        <label>belongTo</label>
-        <input class="conditionInput" type="text" name="belongTo" id="belongTo" placeholder="belongTo">
-      </div>
-      <div class="col-md-4" >
-        <label>topOrg</label>
-        <input class="conditionInput" type="text" name="topOrg" id="topOrg" placeholder="topOrg">
-      </div>
-    </div>
-  </sec:authorize>
-
-  <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
-    <div class="row">
-      <div class="col-md-4" >
-        <label>creatorName</label>
-      <input class="conditionInput" type="text" name="creatorName" id="creatorName" placeholder="creatorName  ">
-      </div>
-    </div>
-  </sec:authorize>
 
   <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
     <div class="row" id="conditionValue2" isDelete="false">

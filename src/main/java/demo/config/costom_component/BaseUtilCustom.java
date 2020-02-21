@@ -138,6 +138,29 @@ public class BaseUtilCustom {
 		
 		return false;
 	}
+	
+	public MyUserPrincipal getUserPrincipal() {
+		SecurityContext securityContext = SecurityContextHolder.getContext();
+		if(securityContext == null || securityContext.getAuthentication() == null || securityContext.getAuthentication().getPrincipal() == null) {
+			return new MyUserPrincipal();
+		}
+		
+		Object obj = securityContext.getAuthentication().getPrincipal();
+		if(obj instanceof MyUserPrincipal) {
+			return (MyUserPrincipal) obj;
+		} else {
+			return new MyUserPrincipal();
+		}
+	}
+	
+	public Long getUserId() {
+		MyUserPrincipal principal = getUserPrincipal();
+		if(principal.getUser() != null) {
+			return principal.getUser().getUserId();
+		} else {
+			return null;
+		}
+	}
 
 //	public boolean setAuthDetail(HashMap<String, Object> detailMap) {
 //		try {
@@ -165,27 +188,4 @@ public class BaseUtilCustom {
 //			return new HashMap<String, Object>();
 //		}
 //	}
-	
-	public MyUserPrincipal getUserPrincipal() {
-		SecurityContext securityContext = SecurityContextHolder.getContext();
-		if(securityContext == null || securityContext.getAuthentication() == null || securityContext.getAuthentication().getPrincipal() == null) {
-			return new MyUserPrincipal();
-		}
-		
-		Object obj = securityContext.getAuthentication().getPrincipal();
-		if(obj instanceof MyUserPrincipal) {
-			return (MyUserPrincipal) obj;
-		} else {
-			return new MyUserPrincipal();
-		}
-	}
-	
-	public Long getUserId() {
-		MyUserPrincipal principal = getUserPrincipal();
-		if(principal.getUser() != null) {
-			return principal.getUser().getUserId();
-		} else {
-			return null;
-		}
-	}
 }

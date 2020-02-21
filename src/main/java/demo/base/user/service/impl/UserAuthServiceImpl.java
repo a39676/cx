@@ -333,6 +333,40 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 			return r;
 		}
 		
+	}
+	
+	private CommonResultCX validUserOrg(Long orgId) {
+		CommonResultCX r = new CommonResultCX();
+		if(authId == null) {
+			r.failWithMessage("参数为空");
+			return r;
+		}
+		
+		MyUserPrincipal principal = baseUtilCustom.getUserPrincipal();
+		if(principal.getControllerOrganizations() == null || principal.getControllerOrganizations().isEmpty()) {
+			r.failWithMessage("无权操作该角色");
+			return r;
+		}
+
+		FindAuthsResult findAuthResult = authService.findAuthsByCondition(authId);
+		if(!findAuthResult.isSuccess() || findAuthResult.getAuthList() == null || findAuthResult.getAuthList().isEmpty()) {
+			r.addMessage(findAuthResult.getMessage());
+			return r;
+		}
+		
+		Auth auth = findAuthResult.getAuthList().get(0);
+		
+		List<Long> orgIdList = principal.getControllerOrganizations().stream().map(Organizations::getId).collect(Collectors.toList());
+		
+		orgIdList.addAll(principal.getSubOrganizations().stream().map(Organizations::getId).collect(Collectors.toList()));
+		if(orgIdList.contains(auth.getBelongOrg())) {
+			r.setIsSuccess();
+			return r;
+		} else {
+			r.failWithMessage("无权操作该角色");
+			return r;
+		}
+		
 		
 	}
 

@@ -16,6 +16,7 @@ import demo.base.system.pojo.constant.InitSystemConstant;
 import demo.base.user.mapper.AuthMapper;
 import demo.base.user.pojo.dto.FindAuthRoleDTO;
 import demo.base.user.pojo.dto.FindAuthsDTO;
+import demo.base.user.pojo.dto.InsertNewAuthDTO;
 import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.po.AuthExample;
 import demo.base.user.pojo.po.AuthExample.Criteria;
@@ -241,5 +242,45 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		List<Auth> auths = authMapper.selectByExample(example);
 		r.setAuthList(auths);
 		return r;
+	}
+
+	public void insertNewAuth(InsertNewAuthDTO dto) {
+		Auth newAuth = new Auth();
+		Long newAuthID = snowFlake.getNextId();
+		newAuth.setId(newAuthID);
+		newAuth.setAuthName(authType.getName());
+		newAuth.setAuthType(AuthTypeType.SYS_AUTH.getCode());
+		newAuth.setCreateBy(newAuthID);
+		newAuth.setBelongOrg(InitSystemConstant.ORIGINAL_BASE_ORG_ID);
+		
+		int count = authMapper.insertSelective(newAuth);
+		if(count < 1) {
+			log.error("create base %s auth error", authType.getName());
+			return null;
+		} 
+		
+		Long newAuthRoleId = null;
+		
+		List<Roles> baseRoleList = new ArrayList<Roles>();
+		for(RolesType rt : roleTypes) {
+			baseRoleList.add(roleService.getBaseRoleByName(rt.getName()));
+		}
+		if(baseRoleList == null || baseRoleList.size() < 1) {
+			log.error("There is no base roles, please init base role;");
+			return null;
+		}
+		for(Roles role : baseRoleList) {
+			newAuthRoleId = authRoleService.insertAuthRole(newAuthID, role.getRoleId(), supserAdminUserId);
+			if(newAuthRoleId == null) {
+				log.error("bind base %s auth role error", authType.getName());
+				return null;
+			}
+		}
+		
+		return newAuthID;
+	}
+	
+	public void vaildAndEditInsertNewAuth(InsertNewAuthDTO dto) {
+		
 	}
 }

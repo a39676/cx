@@ -22,6 +22,7 @@ public class MyUserPrincipal implements UserDetails {
 	private String nickName;
 	private List<String> roles;
 	private List<Auth> auths;
+	private List<Organizations> superManagerOrgList;
 	private List<Organizations> controllerOrganizations;
 	private List<Organizations> subOrganizations;
 
@@ -80,6 +81,14 @@ public class MyUserPrincipal implements UserDetails {
 	public void setRoles(List<String> roles) {
 		this.roles = roles;
 	}
+	
+	public List<Organizations> getSuperManagerOrgList() {
+		return superManagerOrgList;
+	}
+
+	public void setSuperManagerOrgList(List<Organizations> superManagerOrgList) {
+		this.superManagerOrgList = superManagerOrgList;
+	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
@@ -87,7 +96,8 @@ public class MyUserPrincipal implements UserDetails {
 
 	@Override
 	public String toString() {
-		return "MyUserPrincipal [user=" + user + ", roles=" + roles + ", auths=" + auths + ", controllerOrganizations="
+		return "MyUserPrincipal [user=" + user + ", email=" + email + ", nickName=" + nickName + ", roles=" + roles
+				+ ", auths=" + auths + ", superManagerOrgList=" + superManagerOrgList + ", controllerOrganizations="
 				+ controllerOrganizations + ", subOrganizations=" + subOrganizations + "]";
 	}
 

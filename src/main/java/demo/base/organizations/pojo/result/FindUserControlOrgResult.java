@@ -7,9 +7,17 @@ import demo.baseCommon.pojo.result.CommonResultCX;
 
 public class FindUserControlOrgResult extends CommonResultCX {
 
+	private List<Organizations> superManagerOrgList;
 	private List<Organizations> controllOrgList;
-
 	private List<Organizations> subOrgList;
+
+	public List<Organizations> getSuperManagerOrgList() {
+		return superManagerOrgList;
+	}
+
+	public void setSuperManagerOrgList(List<Organizations> superManagerOrgList) {
+		this.superManagerOrgList = superManagerOrgList;
+	}
 
 	public List<Organizations> getControllOrgList() {
 		return controllOrgList;
@@ -29,7 +37,8 @@ public class FindUserControlOrgResult extends CommonResultCX {
 
 	@Override
 	public String toString() {
-		return "FindUserControlOrgResult [controllOrgList=" + controllOrgList + ", subOrgList=" + subOrgList + "]";
+		return "FindUserControlOrgResult [superManagerOrgList=" + superManagerOrgList + ", controllOrgList="
+				+ controllOrgList + ", subOrgList=" + subOrgList + "]";
 	}
 
 }

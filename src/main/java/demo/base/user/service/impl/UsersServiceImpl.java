@@ -151,6 +151,7 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 		findUserControlOrgDTO.setUserId(user.getUserId());
 		FindUserControlOrgResult findUserControllOrgResult = orgService.findUserControlOrg(findUserControlOrgDTO);
 		if(findUserControllOrgResult.isSuccess()) {
+			myUserPrincipal.setSuperManagerOrgList(findUserControllOrgResult.getSuperManagerOrgList());
 			myUserPrincipal.setControllerOrganizations(findUserControllOrgResult.getControllOrgList());
 			myUserPrincipal.setSubOrganizations(findUserControllOrgResult.getSubOrgList());
 		}

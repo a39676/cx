@@ -148,18 +148,29 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 		
 		FindUserAuthBO findUserAuthBO = new FindUserAuthBO();
 		findUserAuthBO.setUserId(dto.getUserId());
-		findUserAuthBO.setRoleTypeList(Arrays.asList(RolesType.ROLE_ADMIN));
-		FindUserAuthResult adminUserAuthListResult = userAuthService.findUserAuth(findUserAuthBO);
-		if(!adminUserAuthListResult.isSuccess()) {
-			r.addMessage(adminUserAuthListResult.getMessage());
+		findUserAuthBO.setRoleTypeList(Arrays.asList(RolesType.ROLE_ORG_SUPER_ADMIN));
+		FindUserAuthResult orgSuperAdminUserAuthListResult = userAuthService.findUserAuth(findUserAuthBO);
+		if(!orgSuperAdminUserAuthListResult.isSuccess()) {
+			r.addMessage(orgSuperAdminUserAuthListResult.getMessage());
 			return r;
 		}
+		List<Auth> orgSuperAdminAuthList = orgSuperAdminUserAuthListResult.getAuthList();
+		List<Long> superManagerOrgIdList = orgSuperAdminAuthList.stream().map(Auth::getBelongOrg).collect(Collectors.toList());
 		
-		List<Auth> adminAuthList = adminUserAuthListResult.getAuthList();
+		findUserAuthBO = new FindUserAuthBO();
+		findUserAuthBO.setUserId(dto.getUserId());
+		findUserAuthBO.setRoleTypeList(Arrays.asList(RolesType.ROLE_SUB_ORG_ADMIN));
+		FindUserAuthResult orgAdminUserAuthListResult = userAuthService.findUserAuth(findUserAuthBO);
+		if(!orgAdminUserAuthListResult.isSuccess()) {
+			r.addMessage(orgAdminUserAuthListResult.getMessage());
+			return r;
+		}
+		List<Auth> orgAdminAuthList = orgAdminUserAuthListResult.getAuthList();
+		List<Long> controllOrgIdList = orgAdminAuthList.stream().map(Auth::getBelongOrg).collect(Collectors.toList());
 		
-		List<Long> controllOrgIdList = adminAuthList.stream().map(Auth::getBelongOrg).collect(Collectors.toList());
-		
-		if(controllOrgIdList == null || controllOrgIdList.isEmpty()) {
+		if((controllOrgIdList == null || controllOrgIdList.isEmpty())
+				&& (superManagerOrgIdList == null || superManagerOrgIdList.isEmpty())
+				) {
 			r.isSuccess();
 			return r;
 		}
@@ -172,6 +183,11 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 		orgExample.createCriteria().andIsDeleteEqualTo(false).andIdIn(controllOrgIdList);
 		List<Organizations> controllOrgList = orgMapper.selectByExample(orgExample);
 		
+		orgExample = new OrganizationsExample();
+		orgExample.createCriteria().andIsDeleteEqualTo(false).andTopOrgIn(superManagerOrgIdList);
+		List<Organizations> superManagerOrgList = orgMapper.selectByExample(orgExample);
+		
+		r.setSuperManagerOrgList(superManagerOrgList);
 		r.setControllOrgList(controllOrgList);
 		r.setSubOrgList(subOrgList);
 		r.setIsSuccess();
@@ -302,4 +318,5 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 		vo.setIsDelete(po.getIsDelete());
 		return vo;
 	}
+
 }

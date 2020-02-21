@@ -78,7 +78,7 @@
   <!-- <script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script> -->
   <script type="text/javascript" src="<c:url value='/static_resources/js/home/homeV3.js'/>"></script>
   <script type="text/javascript" src="/static_resources/js/article/articleMainFrame.js"></script>
-  <sec:authorize access="hasRole('ROLE_ADMIN')">
+  <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
   <script type="text/javascript" src="<c:url value='/static_resources/js/article/articleSearch.js'/>"></script>
   </sec:authorize>
 

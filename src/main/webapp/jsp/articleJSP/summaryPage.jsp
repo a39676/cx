@@ -28,7 +28,7 @@
         <label style="color: #1ce2bf">${articleLongSummaryVO.articleTitle}: </label>  
       </c:if>
       <span style="font-size: small;color: gray">${articleLongSummaryVO.firstLine}</span>
-      <sec:authorize access="hasRole('ROLE_ADMIN')">
+      <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
         <c:if test="${articleLongSummaryVO.hasCommentNotReview == true}">
           <span class="badge badge-danger">有待审核评论</span>
         </c:if>

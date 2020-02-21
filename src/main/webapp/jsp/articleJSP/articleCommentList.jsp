@@ -6,7 +6,7 @@
 
 <span>${message}</span>
 <div class="container-fluid" pk="${pk}">
-<sec:authorize access="hasRole('ROLE_ADMIN')">
+<sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
 <div class="row" pk=${pk} name="commentSearchDiv">
   <%@ include file="../articleJSP/articleCommentSearch.jsp" %>
 </div>
@@ -129,7 +129,7 @@ $(document).ready(function() {
     });  
   });
 
-  <sec:authorize access="hasRole('ROLE_ADMIN')">
+  <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
     $("button[name='reviewMoreComment'][pk='${pk}']").click(function () {
     var pk = '${pk}';
     var startTime = $("button[name='showMoreArticleComment'][pk='${pk}']").attr("startTime");

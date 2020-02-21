@@ -119,7 +119,7 @@
 
       <button class="load-more-btn" id="loadMoreButton"><b>LOAD MORE</b></button>
 
-      <sec:authorize access="hasRole('ROLE_ADMIN')">
+      <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
       <%-- 管理员专用搜索框 --%>
       <%@ include file="../articleJSP/articleSearchV3.jsp" %>
       </sec:authorize>
@@ -138,7 +138,7 @@
   <script src="common-js/scripts.js"></script>
   <script type="text/javascript" src="/static_resources/js/summaryListFrame/summaryListFrame.js"></script>
   <script type="text/javascript" src="<c:url value='/static_resources/js/home/homeV3.js'/>"></script>
-  <sec:authorize access="hasRole('ROLE_ADMIN')">
+  <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
   <script type="text/javascript" src="<c:url value='/static_resources/js/home/homeV3_admin.js'/>"></script>
   <script type="text/javascript" src="<c:url value='/static_resources/js/article/articleSearch.js'/>"></script>
   </sec:authorize>

@@ -41,7 +41,7 @@
                 <span pk="${articleLongVO.privateKey}" name="reviewResult"></span>
               </c:if>
               
-              <sec:authorize access="hasRole('ROLE_ADMIN')">
+              <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
               <%@ include file="../articleJSP/articleReview.jsp" %>
               <%@ include file="../articleJSP/articleManager.jsp" %>
               </sec:authorize>
@@ -125,7 +125,7 @@
 
 <%@ include file="../baseElementJSP/normalFooter.jsp" %>
 <script type="text/javascript" src="<c:url value='/static_resources/js/article/readArticleLongV3.js'/>"></script>
-<sec:authorize access="hasRole('ROLE_ADMIN')">
+<sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
 <script type="text/javascript" src="<c:url value='/static_resources/js/article/articleManager.js'/>"></script>
 </sec:authorize>
 <sec:authorize access="hasRole('ROLE_USER')">

@@ -30,7 +30,7 @@
       </div>
       </c:if>
       <div class="col-sm-9">
-        <sec:authorize access="hasRole('ROLE_ADMIN')">
+        <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
         <div class="btn-group">
         <c:choose>
           <c:when test="${commentVO.isPass == false && commentVO.isDelete == false}">
@@ -135,7 +135,7 @@ $(document).ready(function() {
     $(".articleCommentCreatingSubArea[pk='${pk}']").hide();
   });
   
-  <sec:authorize access="hasRole('ROLE_ADMIN')">
+  <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
   $("input[name='commentStartTime'][pk='${pk}']").val("${startTime}");
   $("input[name='commentStartTime'][pk='${pk}']").keyup(function () {
     $("button[name='showMoreArticleComment'][pk='${pk}']").attr("startTime", $(this).val());

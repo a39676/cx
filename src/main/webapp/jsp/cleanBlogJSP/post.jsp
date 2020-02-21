@@ -53,11 +53,11 @@
               </c:if>
               <span pk="${articleLongVO.privateKey}" name="reviewResult"></span>
             </c:if>              
-            <sec:authorize access="hasRole('ROLE_ADMIN')">
+            <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
             <%@ include file="../articleJSP/articleReview.jsp" %>
             <%@ include file="../articleJSP/articleManager.jsp" %>
             </sec:authorize>
-            <sec:authorize access="hasRole('ROLE_ADMIN')">
+            <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
             </sec:authorize>
           </div><!-- post-top-area -->
         </div>
@@ -70,7 +70,7 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <sec:authorize access="hasRole('ROLE_ADMIN')">
+          <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
           <c:if test="${articleLongVO.editDateString != null}">
             <span style="text-transform: capitalize">Last edited time: ${articleLongVO.editDateString}</span>
           </c:if>
@@ -138,7 +138,7 @@
 
   <%@ include file="./cleanBlogNormalFooter.jsp" %>
   <script type="text/javascript" src="<c:url value='/static_resources/cleanBlog/js/readArticleLongV4.js'/>"></script>
-  <sec:authorize access="hasRole('ROLE_ADMIN')">
+  <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
   <script type="text/javascript" src="<c:url value='/static_resources/js/article/articleManager.js'/>"></script>
   </sec:authorize>
   <sec:authorize access="hasRole('ROLE_USER')">

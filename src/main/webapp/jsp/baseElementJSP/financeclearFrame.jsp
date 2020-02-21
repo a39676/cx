@@ -26,7 +26,7 @@
   </div>
   </sec:authorize>
 
-  <sec:authorize access="hasRole('ROLE_ADMIN')">
+  <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
 <!--   <div class="col-md-1">
   </div> -->
   </sec:authorize>

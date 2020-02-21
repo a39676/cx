@@ -50,7 +50,7 @@
 </div>
 
 
-<sec:authorize access="hasRole('ROLE_ADMIN')">
+<sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
 <%@ include file="../articleJSP/articleReview.jsp" %>
 <%@ include file="../articleJSP/articleManager.jsp" %>
 </sec:authorize>
@@ -66,7 +66,7 @@
 
 <br>
 
-<sec:authorize access="hasRole('ROLE_ADMIN')">
+<sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
 <%@ include file="../articleJSP/articleReview.jsp" %>
 <%@ include file="../articleJSP/articleManager.jsp" %>
 </sec:authorize>
@@ -364,7 +364,7 @@ $(document).ready(function() {
 
   
 
-  <sec:authorize access="hasRole('ROLE_ADMIN')">
+  <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
 
   $("button[name='trySetArticleHot'][pk='${articleLongVO.privateKey}']").click(function () {
     var pk = $(this).attr("pk");

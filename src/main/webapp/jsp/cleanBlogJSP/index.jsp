@@ -53,7 +53,7 @@
               </div>
               <button class="btn btn-sm btn-success" id="loadMoreButton"><b>LOAD MORE</b></button>
             </div>
-            <sec:authorize access="hasRole('ROLE_ADMIN')">
+            <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
             <%-- 管理员专用搜索框 --%>
             <%@ include file="../articleJSP/articleSearchV3.jsp" %>
             </sec:authorize>
@@ -76,7 +76,7 @@
   <script type="text/javascript" src="/static_resources/cleanBlog/js/articleNormal.js"></script>
   <script type="text/javascript" src="/static_resources/js/autotest/autotestLinkFillToBlogHome.js"></script>
   <script type="text/javascript" src="/static_resources/js/article/articleBurnLinkFillToBlogHome.js"></script>
-  <sec:authorize access="hasRole('ROLE_ADMIN')">
+  <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
   <script type="text/javascript" src="<c:url value='/static_resources/cleanBlog/js/articleSearch.js'/>"></script>
   </sec:authorize>
 

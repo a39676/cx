@@ -70,7 +70,7 @@
                     <label class="form-check-label badge badge-secondary" for="taskNotRun">任务未启动</label>
                   </div>
                 </div>
-                <sec:authorize access="hasRole('ROLE_ADMIN')">
+                <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
                   <div class="control-group">
                   <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" id="taskRunSuccess" name="taskSuccessType" checked="checked" value="true">
@@ -92,7 +92,7 @@
                 </div>                
                 <div class="control-group">
                   <span class="badge badge-info">请选择案例</span>
-                  <sec:authorize access="hasRole('ROLE_ADMIN')">
+                  <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
                     <select id="moduleIdSelector">
                       <option value="">All</option>
                       <c:forEach items="${modules}" var="module" >
@@ -100,13 +100,13 @@
                       </c:forEach>
                     </select>
                   </sec:authorize>
-                  <sec:authorize access="hasRole('ROLE_ADMIN')">
+                  <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
                     <div class="control-group">
                       <span class="badge badge-info">caseId</span>
                       <input type="text" name="" id="caseId" placeholder="caseId">
                     </div>
                   </sec:authorize>
-                  <sec:authorize access="!hasRole('ROLE_ADMIN')">
+                  <sec:authorize access="!hasRole('ROLE_SUPER_ADMIN')">
                     <select id="caseIdSelector">
                       <option value="">All</option>
                       <option value="1">Bing 搜索 demo</option>

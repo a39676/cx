@@ -21,7 +21,7 @@
     <div class="col-md-12">
       <table class="table table-striped">
         <tbody>
-          <sec:authorize access="hasRole('ROLE_ADMIN')">
+          <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
               <tr>
                 <td>
                   <span class="btn btn-sm btn-warning" id="showAllChannelKeyHostnameTable" showFlag="0">展开/折叠所有域名挂靠</span>

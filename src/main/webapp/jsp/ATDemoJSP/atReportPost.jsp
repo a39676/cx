@@ -76,7 +76,7 @@
 
   <%@ include file="../cleanBlogJSP/cleanBlogNormalFooter.jsp" %>
   <script type="text/javascript" src="<c:url value='/static_resources/cleanBlog/js/readArticleLongV4.js'/>"></script>
-  <sec:authorize access="hasRole('ROLE_ADMIN')">
+  <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
   <%-- <script type="text/javascript" src="<c:url value='/static_resources/js/article/articleManager.js'/>"></script> --%>
   </sec:authorize>
 

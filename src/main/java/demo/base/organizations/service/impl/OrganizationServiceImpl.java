@@ -22,17 +22,21 @@ import demo.base.organizations.pojo.po.OrganizationsExample.Criteria;
 import demo.base.organizations.pojo.result.FindOrgListResult;
 import demo.base.organizations.pojo.result.FindUserControlOrgResult;
 import demo.base.organizations.pojo.result.OrgRegistResult;
+import demo.base.organizations.pojo.result.VerifyAffiliatesOrgRegistDTOResult;
 import demo.base.organizations.pojo.vo.OrganizationVO;
 import demo.base.organizations.service.OrganizationService;
 import demo.base.user.pojo.bo.FindUserAuthBO;
 import demo.base.user.pojo.bo.MyUserPrincipal;
 import demo.base.user.pojo.dto.FindOrgByConditionDTO;
 import demo.base.user.pojo.dto.FindUserByConditionDTO;
+import demo.base.user.pojo.dto.InsertNewAuthDTO;
 import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.result.FindUserAuthResult;
 import demo.base.user.pojo.result.FindUserByConditionResult;
+import demo.base.user.pojo.result.InsertNewAuthResult;
 import demo.base.user.pojo.type.OrganzationRolesType;
 import demo.base.user.pojo.vo.UsersDetailVO;
+import demo.base.user.service.AuthService;
 import demo.base.user.service.UserAuthService;
 import demo.base.user.service.UsersService;
 import demo.baseCommon.pojo.result.CommonResultCX;
@@ -49,63 +53,98 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 	private UserAuthService userAuthService;
 	@Autowired
 	private UsersService userService;
+	@Autowired
+	private AuthService authService;
 	
 	@Override
 	public OrgRegistResult topOrgRegist(OrgRegistDTO dto) {
-		OrgRegistResult result = verifyTopOrgRegistDTO(dto);
-		if (!result.isSuccess()) {
+		OrgRegistResult result = new OrgRegistResult();
+		if(!isBigUser()) {
+			result.failWithMessage("没有权限操作");
+			return result;
+		}
+		
+		CommonResultCX verifyTopOrgRegistDTOResult = verifyTopOrgRegistDTO(dto);
+		if (!verifyTopOrgRegistDTOResult.isSuccess()) {
+			result.addMessage(verifyTopOrgRegistDTOResult.getMessage());
 			return result;
 		}
 
 		Organizations po = new Organizations();
-		Long newId = snowFlake.getNextId();
-		po.setId(newId);
+		Long newOrgId = snowFlake.getNextId();
+		po.setId(newOrgId);
 		po.setCreateBy(baseUtilCustom.getUserId());
 		po.setCreateTime(LocalDateTime.now());
 		po.setOrgName(dto.getOrgName());
-		po.setTopOrg(newId);
-		po.setBelongTo(newId);
+		po.setTopOrg(newOrgId);
+		po.setBelongTo(newOrgId);
 
 		int i = orgMapper.insertSelective(po);
 		if (i < 1) {
 			log.error("top org save error");
 			result.failWithMessage("top org save error");
-		} else {
-			result.normalSuccess();
+			return result;
 		}
-
+		
+		InsertNewAuthDTO insertNewAuthDTO = new InsertNewAuthDTO();
+		insertNewAuthDTO.setAuthName(dto.getOrgName() + "_Admin");
+		insertNewAuthDTO.setBelongOrgId(newOrgId);
+		insertNewAuthDTO.setOrgRoles(Arrays.asList(OrganzationRolesType.ROLE_ORG_SUPER_ADMIN));
+		InsertNewAuthResult insertOrgAuthResult = authService.insertOrgAuth(insertNewAuthDTO);
+		if(!insertOrgAuthResult.isSuccess()) {
+			result.addMessage(insertOrgAuthResult.getMessage());
+			return result;
+		}
+		
+		result.setIsSuccess();
 		return result;
 	}
 
 	@Override
 	public OrgRegistResult affiliatesOrgRegist(OrgRegistDTO dto) {
-		OrgRegistResult result = verifyAffiliatesOrgRegistDTO(dto);
+		OrgRegistResult result = new OrgRegistResult();
+		VerifyAffiliatesOrgRegistDTOResult verifyAffiliatesOrgRegistDTOResult = verifyAffiliatesOrgRegistDTO(dto);
 		if (!result.isSuccess()) {
+			return result;
+		}
+		
+		CommonResultCX validUserOrgResult = validUserOrg(verifyAffiliatesOrgRegistDTOResult.getBelongToOrgId());
+		if(!validUserOrgResult.isSuccess()) {
+			result.addMessage(validUserOrgResult.getMessage());
 			return result;
 		}
 
 		Organizations po = new Organizations();
-		Long newId = snowFlake.getNextId();
-		po.setId(newId);
+		Long newOrgId = snowFlake.getNextId();
+		po.setId(newOrgId);
 		po.setCreateBy(baseUtilCustom.getUserId());
 		po.setCreateTime(LocalDateTime.now());
 		po.setOrgName(dto.getOrgName());
-		po.setTopOrg(dto.getTopOrg());
-		po.setBelongTo(dto.getBelongTo());
+		po.setTopOrg(verifyAffiliatesOrgRegistDTOResult.getTopOrgId());
+		po.setBelongTo(verifyAffiliatesOrgRegistDTOResult.getBelongToOrgId());
 
 		int i = orgMapper.insertSelective(po);
 		if (i < 1) {
-			log.error("affiliates org save error");
 			result.failWithMessage("affiliates org save error");
-		} else {
-			result.normalSuccess();
+			return result;
 		}
-
+		
+		InsertNewAuthDTO insertNewAuthDTO = new InsertNewAuthDTO();
+		insertNewAuthDTO.setAuthName(dto.getOrgName() + "_admin_affiliate");
+		insertNewAuthDTO.setBelongOrgId(newOrgId);
+		insertNewAuthDTO.setOrgRoles(Arrays.asList(OrganzationRolesType.ROLE_SUB_ORG_ADMIN));
+		InsertNewAuthResult insertOrgAuthResult = authService.insertOrgAuth(insertNewAuthDTO);
+		if(!insertOrgAuthResult.isSuccess()) {
+			result.addMessage(insertOrgAuthResult.getMessage());
+			return result;
+		}
+		
+		result.setIsSuccess();
 		return result;
 	}
 
-	private OrgRegistResult verifyTopOrgRegistDTO(OrgRegistDTO dto) {
-		OrgRegistResult result = new OrgRegistResult();
+	private CommonResultCX verifyTopOrgRegistDTO(OrgRegistDTO dto) {
+		CommonResultCX result = new CommonResultCX();
 		if (StringUtils.isBlank(dto.getOrgName()) || dto.getOrgName().length() > 16) {
 			result.failWithMessage("机构名称长度为1~16位");
 			return result;
@@ -115,19 +154,33 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 		return result;
 	}
 
-	private OrgRegistResult verifyAffiliatesOrgRegistDTO(OrgRegistDTO dto) {
-		OrgRegistResult result = verifyTopOrgRegistDTO(dto);
-		if (!result.isSuccess()) {
-			return result;
+	private VerifyAffiliatesOrgRegistDTOResult verifyAffiliatesOrgRegistDTO(OrgRegistDTO dto) {
+		VerifyAffiliatesOrgRegistDTOResult r = new VerifyAffiliatesOrgRegistDTOResult();
+		CommonResultCX verifyTopOrgRegistDTOResult = verifyTopOrgRegistDTO(dto);
+		if (!verifyTopOrgRegistDTOResult.isSuccess()) {
+			r.addMessage(verifyTopOrgRegistDTOResult.getMessage());
+			return r;
 		}
 
-		if (dto.getBelongTo() == null || dto.getTopOrg() == null) {
-			result.failWithMessage("请选择归属机构");
-			return result;
+		if (StringUtils.isAnyBlank(dto.getBelongTo(), dto.getTopOrg())) {
+			r.failWithMessage("请选择归属机构");
+			return r;
+		}
+		
+		Long topOrgId = decryptPrivateKey(dto.getTopOrg());
+		Long belongToOrgId = decryptPrivateKey(dto.getBelongTo());
+		OrganizationsExample example = new OrganizationsExample();
+		example.createCriteria().andIsDeleteEqualTo(false).andIdIn(Arrays.asList(topOrgId, belongToOrgId));
+		List<Organizations> belongOrgList = orgMapper.selectByExample(example);
+		if(belongOrgList == null || belongOrgList.isEmpty()) {
+			r.failWithMessage("参数异常");
+			return r;
 		}
 
-		result.normalSuccess();
-		return result;
+		r.setTopOrgId(topOrgId);
+		r.setBelongToOrgId(belongToOrgId);
+		r.normalSuccess();
+		return r;
 	}
 
 	@Override

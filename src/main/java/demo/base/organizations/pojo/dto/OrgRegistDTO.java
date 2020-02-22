@@ -6,10 +6,10 @@ public class OrgRegistDTO {
 
 	@ApiModelProperty(value = "机构名称")
 	private String orgName;
-	@ApiModelProperty(value = "直属机构id")
-	private Long belongTo;
-	@ApiModelProperty(value = "顶级机构id")
-	private Long topOrg;
+	@ApiModelProperty(value = "直属机构Pk")
+	private String belongTo;
+	@ApiModelProperty(value = "顶级机构Pk")
+	private String topOrg;
 
 	public String getOrgName() {
 		return orgName;
@@ -19,19 +19,19 @@ public class OrgRegistDTO {
 		this.orgName = orgName;
 	}
 
-	public Long getBelongTo() {
+	public String getBelongTo() {
 		return belongTo;
 	}
 
-	public void setBelongTo(Long belongTo) {
+	public void setBelongTo(String belongTo) {
 		this.belongTo = belongTo;
 	}
 
-	public Long getTopOrg() {
+	public String getTopOrg() {
 		return topOrg;
 	}
 
-	public void setTopOrg(Long topOrg) {
+	public void setTopOrg(String topOrg) {
 		this.topOrg = topOrg;
 	}
 

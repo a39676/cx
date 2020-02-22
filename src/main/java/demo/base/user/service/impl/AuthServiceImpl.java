@@ -13,11 +13,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.base.organizations.pojo.po.Organizations;
+import demo.base.organizations.service.OrganizationService;
 import demo.base.system.pojo.constant.InitSystemConstant;
 import demo.base.user.mapper.AuthMapper;
 import demo.base.user.pojo.bo.InsertNewAuthBO;
-import demo.base.user.pojo.bo.MyUserPrincipal;
 import demo.base.user.pojo.dto.FindAuthRoleDTO;
 import demo.base.user.pojo.dto.FindAuthsDTO;
 import demo.base.user.pojo.dto.FindRolesDTO;
@@ -40,6 +39,7 @@ import demo.base.user.pojo.vo.AuthVO;
 import demo.base.user.service.AuthRoleService;
 import demo.base.user.service.AuthService;
 import demo.base.user.service.RoleService;
+import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.service.CommonService;
 
 @Service
@@ -49,11 +49,12 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 	
 	@Autowired
 	private AuthMapper authMapper;
-	
 	@Autowired
 	private AuthRoleService authRoleService;
 	@Autowired
 	private RoleService roleService;
+	@Autowired
+	private OrganizationService orgService;
 	
 	@Override
 	public Long __createBaseSuperAdminAuth(Long supserAdminUserId) {
@@ -348,35 +349,8 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 			return false;
 		}
 		
-		MyUserPrincipal pricipal = baseUtilCustom.getUserPrincipal();
-		List<Organizations> superManagerOrgList = pricipal.getSuperManagerOrgList();
-		if(superManagerOrgList != null) {
-			for(Organizations org : superManagerOrgList) {
-				if(org.getId().equals(dto.getBelongOrgId())) {
-					return true;
-				}
-			}
-		}
-		
-		List<Organizations> controllerOrgList = pricipal.getControllerOrganizations();
-		if(controllerOrgList != null) {
-			for(Organizations org : controllerOrgList) {
-				if(org.getId().equals(dto.getBelongOrgId())) {
-					return true;
-				}
-			}
-		}
-		
-		List<Organizations> subOrgList = pricipal.getSubOrganizations();
-		if(subOrgList != null) {
-			for(Organizations org : subOrgList) {
-				if(org.getId().equals(dto.getBelongOrgId())) {
-					return true;
-				}
-			}
-		}
-		
-		return false;
+		CommonResultCX validUserOrgResult = orgService.validUserOrg(dto.getBelongOrgId());
+		return validUserOrgResult.isSuccess();
 	}
 	
 }

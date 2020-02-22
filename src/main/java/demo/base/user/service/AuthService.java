@@ -1,9 +1,11 @@
 package demo.base.user.service;
 
 import demo.base.user.pojo.dto.FindAuthsDTO;
+import demo.base.user.pojo.dto.InsertNewAuthDTO;
 import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.result.FindAuthsResult;
 import demo.base.user.pojo.result.FindAuthsVOResult;
+import demo.base.user.pojo.result.InsertNewAuthResult;
 import demo.base.user.pojo.type.AuthType;
 import demo.base.user.pojo.vo.AuthVO;
 
@@ -30,5 +32,9 @@ public interface AuthService {
 	FindAuthsVOResult findAuthVOListByCondition(FindAuthsDTO dto);
 
 	AuthVO buildAuthVOByPO(Auth po);
+
+	InsertNewAuthResult insertOrgAuth(InsertNewAuthDTO dto);
+
+	InsertNewAuthResult insertSysAuth(InsertNewAuthDTO dto);
 
 }

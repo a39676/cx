@@ -1,9 +1,9 @@
 package demo.base.user.pojo.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import demo.base.user.pojo.type.RolesType;
+import demo.base.user.pojo.type.OrganzationRolesType;
+import demo.base.user.pojo.type.SystemRolesType;
 
 public class FindAuthsDTO {
 
@@ -13,32 +13,9 @@ public class FindAuthsDTO {
 	private boolean authRoleIsDelete = false;
 	private boolean roleIsDelete = false;
 	private List<Long> authIdList;
-	private List<RolesType> roleTypeList;
+	private List<SystemRolesType> sysRoleTypeList;
+	private List<OrganzationRolesType> orgRoleTypeList;
 	private List<Long> belongOrgIdList;
-
-	public boolean isAuthRoleIsDelete() {
-		return authRoleIsDelete;
-	}
-
-	public void setAuthRoleIsDelete(boolean authRoleIsDelete) {
-		this.authRoleIsDelete = authRoleIsDelete;
-	}
-
-	public boolean isAuthIsDelete() {
-		return authIsDelete;
-	}
-
-	public void setAuthIsDelete(boolean authIsDelete) {
-		this.authIsDelete = authIsDelete;
-	}
-
-	public boolean isRoleIsDelete() {
-		return roleIsDelete;
-	}
-
-	public void setRoleIsDelete(boolean roleIsDelete) {
-		this.roleIsDelete = roleIsDelete;
-	}
 
 	public Integer getAuthType() {
 		return authType;
@@ -56,12 +33,28 @@ public class FindAuthsDTO {
 		this.authName = authName;
 	}
 
-	public List<RolesType> getRoleTypeList() {
-		return roleTypeList;
+	public boolean isAuthIsDelete() {
+		return authIsDelete;
 	}
 
-	public void setRoleTypeList(List<RolesType> roleTypeList) {
-		this.roleTypeList = roleTypeList;
+	public void setAuthIsDelete(boolean authIsDelete) {
+		this.authIsDelete = authIsDelete;
+	}
+
+	public boolean isAuthRoleIsDelete() {
+		return authRoleIsDelete;
+	}
+
+	public void setAuthRoleIsDelete(boolean authRoleIsDelete) {
+		this.authRoleIsDelete = authRoleIsDelete;
+	}
+
+	public boolean isRoleIsDelete() {
+		return roleIsDelete;
+	}
+
+	public void setRoleIsDelete(boolean roleIsDelete) {
+		this.roleIsDelete = roleIsDelete;
 	}
 
 	public List<Long> getAuthIdList() {
@@ -72,6 +65,22 @@ public class FindAuthsDTO {
 		this.authIdList = authIdList;
 	}
 
+	public List<SystemRolesType> getSysRoleTypeList() {
+		return sysRoleTypeList;
+	}
+
+	public void setSysRoleTypeList(List<SystemRolesType> sysRoleTypeList) {
+		this.sysRoleTypeList = sysRoleTypeList;
+	}
+
+	public List<OrganzationRolesType> getOrgRoleTypeList() {
+		return orgRoleTypeList;
+	}
+
+	public void setOrgRoleTypeList(List<OrganzationRolesType> orgRoleTypeList) {
+		this.orgRoleTypeList = orgRoleTypeList;
+	}
+
 	public List<Long> getBelongOrgIdList() {
 		return belongOrgIdList;
 	}
@@ -80,17 +89,12 @@ public class FindAuthsDTO {
 		this.belongOrgIdList = belongOrgIdList;
 	}
 
-	public void setBelongOrgIdList(Long belongOrgId) {
-		List<Long> belongOrgIdList = new ArrayList<Long>();
-		belongOrgIdList.add(belongOrgId);
-		this.belongOrgIdList = belongOrgIdList;
-	}
-
 	@Override
 	public String toString() {
 		return "FindAuthsDTO [authType=" + authType + ", authName=" + authName + ", authIsDelete=" + authIsDelete
 				+ ", authRoleIsDelete=" + authRoleIsDelete + ", roleIsDelete=" + roleIsDelete + ", authIdList="
-				+ authIdList + ", roleTypeList=" + roleTypeList + ", belongOrgIdList=" + belongOrgIdList + "]";
+				+ authIdList + ", sysRoleTypeList=" + sysRoleTypeList + ", orgRoleTypeList=" + orgRoleTypeList
+				+ ", belongOrgIdList=" + belongOrgIdList + "]";
 	}
 
 }

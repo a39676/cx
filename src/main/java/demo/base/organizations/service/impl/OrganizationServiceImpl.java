@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import demo.base.organizations.mapper.OrganizationsMapper;
 import demo.base.organizations.pojo.bo.FindOrgByConditionBO;
-import demo.base.organizations.pojo.dto.FindOrgByConditionDTO;
 import demo.base.organizations.pojo.dto.FindUserControlOrgDTO;
 import demo.base.organizations.pojo.dto.OrgRegistDTO;
 import demo.base.organizations.pojo.po.Organizations;
@@ -26,14 +25,17 @@ import demo.base.organizations.pojo.result.OrgRegistResult;
 import demo.base.organizations.pojo.vo.OrganizationVO;
 import demo.base.organizations.service.OrganizationService;
 import demo.base.user.pojo.bo.FindUserAuthBO;
+import demo.base.user.pojo.bo.MyUserPrincipal;
+import demo.base.user.pojo.dto.FindOrgByConditionDTO;
 import demo.base.user.pojo.dto.FindUserByConditionDTO;
 import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.result.FindUserAuthResult;
 import demo.base.user.pojo.result.FindUserByConditionResult;
-import demo.base.user.pojo.type.RolesType;
+import demo.base.user.pojo.type.OrganzationRolesType;
 import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.UserAuthService;
 import demo.base.user.service.UsersService;
+import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.service.CommonService;
 
 @Service
@@ -148,7 +150,7 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 		
 		FindUserAuthBO findUserAuthBO = new FindUserAuthBO();
 		findUserAuthBO.setUserId(dto.getUserId());
-		findUserAuthBO.setRoleTypeList(Arrays.asList(RolesType.ROLE_ORG_SUPER_ADMIN));
+		findUserAuthBO.setOrgRoleTypeList(Arrays.asList(OrganzationRolesType.ROLE_ORG_SUPER_ADMIN));
 		FindUserAuthResult orgSuperAdminUserAuthListResult = userAuthService.findUserAuth(findUserAuthBO);
 		if(!orgSuperAdminUserAuthListResult.isSuccess()) {
 			r.addMessage(orgSuperAdminUserAuthListResult.getMessage());
@@ -159,7 +161,7 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 		
 		findUserAuthBO = new FindUserAuthBO();
 		findUserAuthBO.setUserId(dto.getUserId());
-		findUserAuthBO.setRoleTypeList(Arrays.asList(RolesType.ROLE_SUB_ORG_ADMIN));
+		findUserAuthBO.setOrgRoleTypeList(Arrays.asList(OrganzationRolesType.ROLE_SUB_ORG_ADMIN));
 		FindUserAuthResult orgAdminUserAuthListResult = userAuthService.findUserAuth(findUserAuthBO);
 		if(!orgAdminUserAuthListResult.isSuccess()) {
 			r.addMessage(orgAdminUserAuthListResult.getMessage());
@@ -319,4 +321,40 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 		return vo;
 	}
 
+	@Override
+	public CommonResultCX validUserOrg(Long orgId) {
+		CommonResultCX r = new CommonResultCX();
+		if(orgId == null) {
+			r.failWithMessage("参数为空");
+			return r;
+		}
+		
+		MyUserPrincipal principal = baseUtilCustom.getUserPrincipal();
+		if(principal.getControllerOrganizations() == null || principal.getControllerOrganizations().isEmpty()) {
+			r.failWithMessage("该角色无权操作");
+			return r;
+		}
+
+		List<Long> orgIdList = principal.getSuperManagerOrgList().stream().map(Organizations::getId).collect(Collectors.toList());
+		if(orgIdList.contains(orgId)) {
+			r.setIsSuccess();
+			return r;
+		}
+		
+		orgIdList = principal.getControllerOrganizations().stream().map(Organizations::getId).collect(Collectors.toList());
+		if(orgIdList.contains(orgId)) {
+			r.setIsSuccess();
+			return r;
+		}
+		
+		orgIdList = principal.getSubOrganizations().stream().map(Organizations::getId).collect(Collectors.toList());
+		if(orgIdList.contains(orgId)) {
+			r.setIsSuccess();
+			return r;
+		}
+		
+		r.failWithMessage("该角色无权操作");
+		return r;
+		
+	}
 }

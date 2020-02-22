@@ -15,7 +15,7 @@ import demo.base.system.pojo.constant.BlogViewConstant;
 import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.BasePageService;
 import demo.base.system.service.HostnameService;
-import demo.base.user.pojo.type.RolesType;
+import demo.base.user.pojo.type.SystemRolesType;
 import demo.baseCommon.service.CommonService;
 
 @Service
@@ -60,7 +60,7 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 		}
 
 		List<String> roles = baseUtilCustom.getRoles();
-		if (roles != null && roles.size() > 0 && roles.contains(RolesType.ROLE_USER.getName())) {
+		if (roles != null && roles.size() > 0 && roles.contains(SystemRolesType.ROLE_USER.getName())) {
 			view.addObject("nickName", baseUtilCustom.getUserPrincipal().getNickName());
 		}
 		

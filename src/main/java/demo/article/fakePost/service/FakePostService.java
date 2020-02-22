@@ -1,6 +1,6 @@
 package demo.article.fakePost.service;
 
-import demo.base.user.pojo.type.RolesType;
+import demo.base.user.pojo.type.SystemRolesType;
 
 public interface FakePostService {
 
@@ -8,7 +8,7 @@ public interface FakePostService {
 
 	/**
 	 * -查找具有DELAY_POSTER权限的用户的N篇随机文章, 处理为通过
-	 *  {@link RolesType}
+	 *  {@link SystemRolesType}
 	 * @throws Exception
 	 */
 	void autoPass() throws Exception;

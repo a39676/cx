@@ -9,13 +9,18 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import demo.base.organizations.pojo.po.Organizations;
 import demo.base.system.pojo.constant.InitSystemConstant;
 import demo.base.user.mapper.AuthMapper;
+import demo.base.user.pojo.bo.InsertNewAuthBO;
+import demo.base.user.pojo.bo.MyUserPrincipal;
 import demo.base.user.pojo.dto.FindAuthRoleDTO;
 import demo.base.user.pojo.dto.FindAuthsDTO;
+import demo.base.user.pojo.dto.FindRolesDTO;
 import demo.base.user.pojo.dto.InsertNewAuthDTO;
 import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.po.AuthExample;
@@ -25,9 +30,12 @@ import demo.base.user.pojo.po.Roles;
 import demo.base.user.pojo.result.FindAuthRoleResult;
 import demo.base.user.pojo.result.FindAuthsResult;
 import demo.base.user.pojo.result.FindAuthsVOResult;
+import demo.base.user.pojo.result.FindRolesResult;
+import demo.base.user.pojo.result.InsertNewAuthResult;
 import demo.base.user.pojo.type.AuthType;
 import demo.base.user.pojo.type.AuthTypeType;
-import demo.base.user.pojo.type.RolesType;
+import demo.base.user.pojo.type.OrganzationRolesType;
+import demo.base.user.pojo.type.SystemRolesType;
 import demo.base.user.pojo.vo.AuthVO;
 import demo.base.user.service.AuthRoleService;
 import demo.base.user.service.AuthService;
@@ -49,41 +57,41 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 	
 	@Override
 	public Long __createBaseSuperAdminAuth(Long supserAdminUserId) {
-		Long newAuthID = __createBaseAuth(supserAdminUserId, AuthType.SUPER_ADMIN, RolesType.ROLE_SUPER_ADMIN, RolesType.ROLE_ADMIN);
+		Long newAuthID = __createBaseAuth(supserAdminUserId, AuthType.SUPER_ADMIN, SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN);
 		return newAuthID;
 	}
 	
 	@Override
 	public Long __createBaseAdminAuth(Long supserAdminUserId) {
-		Long newAuthID = __createBaseAuth(supserAdminUserId, AuthType.ADMIN, RolesType.ROLE_ADMIN);
+		Long newAuthID = __createBaseAuth(supserAdminUserId, AuthType.ADMIN, SystemRolesType.ROLE_ADMIN);
 		return newAuthID;
 	}
 	
 	@Override
 	public Long __createBaseUserActiveAuth(Long supserAdminUserId) {
-		Long newAuthID = __createBaseAuth(supserAdminUserId, AuthType.USER, RolesType.ROLE_USER, RolesType.ROLE_USER_ACTIVE);
+		Long newAuthID = __createBaseAuth(supserAdminUserId, AuthType.USER, SystemRolesType.ROLE_USER, SystemRolesType.ROLE_USER_ACTIVE);
 		return newAuthID;
 	}
 	
 	@Override
 	public Long __createBaseUserAuth(Long supserAdminUserId) {
-		Long newAuthID = __createBaseAuth(supserAdminUserId, AuthType.USER, RolesType.ROLE_USER);
+		Long newAuthID = __createBaseAuth(supserAdminUserId, AuthType.USER, SystemRolesType.ROLE_USER);
 		return newAuthID;
 	}
 	
 	@Override
 	public Long __createBasePosterAuth(Long supserAdminUserId) {
-		Long newAuthID = __createBaseAuth(supserAdminUserId, AuthType.POSTER, RolesType.ROLE_USER, RolesType.ROLE_POSTER);
+		Long newAuthID = __createBaseAuth(supserAdminUserId, AuthType.POSTER, SystemRolesType.ROLE_USER, SystemRolesType.ROLE_POSTER);
 		return newAuthID;
 	}
 	
 	@Override
 	public Long __createBaseDelayPosterAuth(Long supserAdminUserId) {
-		Long newAuthID = __createBaseAuth(supserAdminUserId, AuthType.DELAY_POSTER, RolesType.ROLE_USER, RolesType.ROLE_POSTER, RolesType.ROLE_DELAY_POSTER);
+		Long newAuthID = __createBaseAuth(supserAdminUserId, AuthType.DELAY_POSTER, SystemRolesType.ROLE_USER, SystemRolesType.ROLE_POSTER, SystemRolesType.ROLE_DELAY_POSTER);
 		return newAuthID;
 	}
 	
-	private Long __createBaseAuth(Long supserAdminUserId, AuthType authType, RolesType... roleTypes) {
+	private Long __createBaseAuth(Long supserAdminUserId, AuthType authType, SystemRolesType... roleTypes) {
 		Auth newBaseAuth = new Auth();
 		Long newAuthID = snowFlake.getNextId();
 		newBaseAuth.setId(newAuthID);
@@ -101,7 +109,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		Long newAuthRoleId = null;
 		
 		List<Roles> baseRoleList = new ArrayList<Roles>();
-		for(RolesType rt : roleTypes) {
+		for(SystemRolesType rt : roleTypes) {
 			baseRoleList.add(roleService.getBaseRoleByName(rt.getName()));
 		}
 		if(baseRoleList == null || baseRoleList.size() < 1) {
@@ -125,7 +133,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		FindAuthsDTO dto = new FindAuthsDTO();
 		dto.setAuthName(AuthType.SUPER_ADMIN.getName());
 		dto.setAuthType(AuthTypeType.SYS_AUTH.getCode());
-		dto.setBelongOrgIdList(InitSystemConstant.ORIGINAL_BASE_ORG_ID);
+		dto.setBelongOrgIdList(Arrays.asList(InitSystemConstant.ORIGINAL_BASE_ORG_ID));
 		
 		return findAuthsByCondition(dto);
 	}
@@ -149,10 +157,11 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 				&& (dto.getAuthIdList() == null || dto.getAuthIdList().isEmpty())
 				&& (StringUtils.isBlank(dto.getAuthName()))
 				&& dto.getAuthType() == null
-				&& (dto.getRoleTypeList() == null || dto.getRoleTypeList().isEmpty())
+				&& (dto.getSysRoleTypeList() == null || dto.getSysRoleTypeList().isEmpty())
+				&& (dto.getOrgRoleTypeList() == null || dto.getOrgRoleTypeList().isEmpty())
 				) {
 			if(isBigUser()) {
-				dto.setBelongOrgIdList(InitSystemConstant.ORIGINAL_BASE_ORG_ID);
+				dto.setBelongOrgIdList(Arrays.asList(InitSystemConstant.ORIGINAL_BASE_ORG_ID));
 			} else {
 				result.failWithMessage("至少输入一个参数");
 				return result;
@@ -171,9 +180,12 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		if(dto.getBelongOrgIdList() != null && dto.getBelongOrgIdList().size() > 0) {
 			c.andBelongOrgIn(dto.getBelongOrgIdList());
 		}
-		if(dto.getRoleTypeList() != null && !dto.getRoleTypeList().isEmpty()) {
+		if((dto.getSysRoleTypeList() != null && !dto.getSysRoleTypeList().isEmpty())
+				|| (dto.getOrgRoleTypeList() != null && !dto.getOrgRoleTypeList().isEmpty())
+				) {
 			FindAuthRoleDTO findAuthRoleDTO = new FindAuthRoleDTO();
-			findAuthRoleDTO.setRoleTypeList(dto.getRoleTypeList());
+			findAuthRoleDTO.setSysRoleTypeList(dto.getSysRoleTypeList());
+			findAuthRoleDTO.setOrgRoleTypeList(dto.getOrgRoleTypeList());
 			findAuthRoleDTO.setOrgIdList(dto.getBelongOrgIdList());
 			FindAuthRoleResult authRoleResult = authRoleService.findAuthRole(findAuthRoleDTO);
 			if(!authRoleResult.isSuccess()) {
@@ -243,44 +255,128 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		r.setAuthList(auths);
 		return r;
 	}
-
-	public void insertNewAuth(InsertNewAuthDTO dto) {
+	
+	@Override
+	public InsertNewAuthResult insertOrgAuth(InsertNewAuthDTO dto) {
+		if(!vaildAndEditInsertNewOrgAuth(dto)) {
+			InsertNewAuthResult r = new InsertNewAuthResult();
+			r.failWithMessage("无权编辑");
+			return r;
+		}
+		
+		dto.setSysRoles(null);
+		InsertNewAuthBO bo = new InsertNewAuthBO();
+		BeanUtils.copyProperties(dto, bo);
+		bo.setCreatorId(baseUtilCustom.getUserId());
+		
+		return insertNewAuth(bo);
+	}
+	
+	@Override
+	public InsertNewAuthResult insertSysAuth(InsertNewAuthDTO dto) {
+		if(!baseUtilCustom.hasSuperAdminRole()) {
+			InsertNewAuthResult r = new InsertNewAuthResult();
+			r.failWithMessage("无权编辑");
+			return r;
+		}
+		
+		dto.setOrgRoles(null);
+		InsertNewAuthBO bo = new InsertNewAuthBO();
+		BeanUtils.copyProperties(dto, bo);
+		bo.setCreatorId(baseUtilCustom.getUserId());
+		
+		return insertNewAuth(bo);
+	}
+	
+	private InsertNewAuthResult insertNewAuth(InsertNewAuthBO bo) {
+		InsertNewAuthResult r = new InsertNewAuthResult();
 		Auth newAuth = new Auth();
+		if((bo.getOrgRoles() != null && !bo.getOrgRoles().isEmpty())
+				&& (bo.getSysRoles() != null && !bo.getSysRoles().isEmpty())) {
+			r.failWithMessage("参数异常");
+			return r;
+		} else if ((bo.getOrgRoles() == null || bo.getOrgRoles().isEmpty())
+				&& (bo.getSysRoles() == null || bo.getSysRoles().isEmpty())){
+			r.failWithMessage("null param");
+			return r;
+		}
+		newAuth.setCreateBy(bo.getCreatorId());
 		Long newAuthID = snowFlake.getNextId();
 		newAuth.setId(newAuthID);
-		newAuth.setAuthName(authType.getName());
-		newAuth.setAuthType(AuthTypeType.SYS_AUTH.getCode());
-		newAuth.setCreateBy(newAuthID);
-		newAuth.setBelongOrg(InitSystemConstant.ORIGINAL_BASE_ORG_ID);
+		newAuth.setAuthName(bo.getAuthName());
+		newAuth.setBelongOrg(bo.getBelongOrgId());
 		
 		int count = authMapper.insertSelective(newAuth);
 		if(count < 1) {
-			log.error("create base %s auth error", authType.getName());
-			return null;
+			r.failWithMessage("database error");
+			return r;
 		} 
 		
 		Long newAuthRoleId = null;
 		
-		List<Roles> baseRoleList = new ArrayList<Roles>();
-		for(RolesType rt : roleTypes) {
-			baseRoleList.add(roleService.getBaseRoleByName(rt.getName()));
+		List<String> roleNameList = new ArrayList<String>();
+		for(OrganzationRolesType orgRole : bo.getOrgRoles()) {
+			roleNameList.add(orgRole.getName());
 		}
-		if(baseRoleList == null || baseRoleList.size() < 1) {
-			log.error("There is no base roles, please init base role;");
-			return null;
+		for(SystemRolesType sysRole : bo.getSysRoles()) {
+			roleNameList.add(sysRole.getName());
 		}
-		for(Roles role : baseRoleList) {
-			newAuthRoleId = authRoleService.insertAuthRole(newAuthID, role.getRoleId(), supserAdminUserId);
+		
+		FindRolesDTO findRolesDTO = new FindRolesDTO();
+		findRolesDTO.setRoleNameList(roleNameList);
+		FindRolesResult getRoleResult = roleService.getRolesByCondition(findRolesDTO );
+		if(!getRoleResult.isSuccess()) {
+			r.addMessage(getRoleResult.getMessage());
+			return r;
+		}
+		
+		List<Roles> roleList = getRoleResult.getRoleList();
+		for(Roles role : roleList) {
+			newAuthRoleId = authRoleService.insertAuthRole(newAuthID, role.getRoleId(), bo.getCreatorId());
 			if(newAuthRoleId == null) {
-				log.error("bind base %s auth role error", authType.getName());
-				return null;
+				r.failWithMessage("insert auth role service error");
+				return r;
 			}
 		}
 		
-		return newAuthID;
+		r.setIsSuccess();
+		return r;
 	}
 	
-	public void vaildAndEditInsertNewAuth(InsertNewAuthDTO dto) {
+	private boolean vaildAndEditInsertNewOrgAuth(InsertNewAuthDTO dto) {
+		if(dto.getBelongOrgId() == null || !baseUtilCustom.isLoginUser()) {
+			return false;
+		}
 		
+		MyUserPrincipal pricipal = baseUtilCustom.getUserPrincipal();
+		List<Organizations> superManagerOrgList = pricipal.getSuperManagerOrgList();
+		if(superManagerOrgList != null) {
+			for(Organizations org : superManagerOrgList) {
+				if(org.getId().equals(dto.getBelongOrgId())) {
+					return true;
+				}
+			}
+		}
+		
+		List<Organizations> controllerOrgList = pricipal.getControllerOrganizations();
+		if(controllerOrgList != null) {
+			for(Organizations org : controllerOrgList) {
+				if(org.getId().equals(dto.getBelongOrgId())) {
+					return true;
+				}
+			}
+		}
+		
+		List<Organizations> subOrgList = pricipal.getSubOrganizations();
+		if(subOrgList != null) {
+			for(Organizations org : subOrgList) {
+				if(org.getId().equals(dto.getBelongOrgId())) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
+	
 }

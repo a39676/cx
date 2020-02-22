@@ -245,7 +245,7 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 		
 		FindUserAuthBO findUserAuthBO = new FindUserAuthBO();
 		findUserAuthBO.setAuthId(authId);
-		FindUserAuthResult userAuthResult = userAuthService.findUserAuth(findUserAuthBO );
+		FindUserAuthResult userAuthResult = userAuthService.findUserAuth(findUserAuthBO);
 		if(!userAuthResult.isSuccess()) {
 			return new ArrayList<Users>();
 		}

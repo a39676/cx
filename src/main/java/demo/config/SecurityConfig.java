@@ -26,7 +26,7 @@ import demo.base.admin.pojo.constant.AdminUrlConstant;
 import demo.base.user.pojo.constant.LoginUrlConstant;
 import demo.base.user.pojo.constant.UserAuthUrl;
 import demo.base.user.pojo.constant.UsersUrl;
-import demo.base.user.pojo.type.RolesType;
+import demo.base.user.pojo.type.SystemRolesType;
 import demo.base.user.service.impl.CustomAuthenticationFailHandler;
 import demo.base.user.service.impl.CustomAuthenticationSuccessHandler;
 import demo.base.user.service.impl.CustomUserDetailsService;
@@ -81,33 +81,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             // .antMatchers("/welcome**").access("IS_AUTHENTICATED_ANONYMOUSLY")
 //            .antMatchers(ArticleUrlConstant.root + "/**").access("hasAnyRole('" + RolesType.ROLE_ADMIN.getRoleName() + "','" + RolesType.ROLE_USER.getRoleName() + "')")
             .antMatchers(TestUrl.root + "/**")
-        		.access(hasRole(RolesType.ROLE_SUPER_ADMIN))
+        		.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers("/holder/**")
-            	.access(hasAnyRole(RolesType.ROLE_SUPER_ADMIN, RolesType.ROLE_USER))
+            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_USER))
             .antMatchers("/accountInfo/**")
-            	.access(hasAnyRole(RolesType.ROLE_ADMIN, RolesType.ROLE_USER))
+            	.access(hasAnyRole(SystemRolesType.ROLE_ADMIN, SystemRolesType.ROLE_USER))
             .antMatchers(AdminUrlConstant.root + "/**")
-            	.access(hasAnyRole(RolesType.ROLE_SUPER_ADMIN))
+            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers(FakeFTPUrlConstant.root + "/**")
-            	.access(hasRole(RolesType.ROLE_SUPER_ADMIN))
+            	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers(ArticleAdminUrlConstant.root + "/**")
-            	.access(hasAnyRole(RolesType.ROLE_ADMIN, RolesType.ROLE_SUPER_ADMIN))
+            	.access(hasAnyRole(SystemRolesType.ROLE_ADMIN, SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers(UserAuthUrl.root + "/**")
-            	.access(hasRole(RolesType.ROLE_SUPER_ADMIN))
+            	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers(ArticleUrlConstant.root + ArticleUrlConstant.createArticleLong)
-            	.access(hasAnyRole(RolesType.ROLE_SUPER_ADMIN, RolesType.ROLE_ADMIN, RolesType.ROLE_DEV, RolesType.ROLE_USER))
+            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN, SystemRolesType.ROLE_DEV, SystemRolesType.ROLE_USER))
             .antMatchers(ArticleUrlConstant.root + ArticleUrlConstant.creatingArticleLong)
-            	.access(hasAnyRole(RolesType.ROLE_SUPER_ADMIN, RolesType.ROLE_ADMIN, RolesType.ROLE_DEV, RolesType.ROLE_USER))
+            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN, SystemRolesType.ROLE_DEV, SystemRolesType.ROLE_USER))
             .antMatchers(ArticleAdminCommentUrlConstant.root + "/**")
-            	.access(hasAnyRole(RolesType.ROLE_SUPER_ADMIN, RolesType.ROLE_ADMIN)) 
+            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN)) 
             .antMatchers("/dba/**")
-            	.access(hasAnyRole(RolesType.ROLE_SUPER_ADMIN, RolesType.ROLE_DBA)) 
+            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DBA)) 
             .antMatchers(ToolUrlConstant.root + "/**")
-            	.access(hasRole(RolesType.ROLE_SUPER_ADMIN))
+            	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers(UploadUrlConstant.uploadPriRoot + "/**")
-            	.access(hasAnyRole(RolesType.ROLE_SUPER_ADMIN, RolesType.ROLE_DEV))
+            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DEV))
             .antMatchers(WXUrl.root + "/**")
-            	.access(hasAnyRole(RolesType.ROLE_SUPER_ADMIN, RolesType.ROLE_DEV))
+            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DEV))
             .and()
 				.formLogin().loginPage("/login/login").failureUrl("/login/login?error")
 				.loginProcessingUrl("/auth/login_check")
@@ -166,7 +166,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return new CustomPasswordEncoder();
 	}
 	
-	private String hasRole(RolesType roleType) {
+	private String hasRole(SystemRolesType roleType) {
 		if(roleType == null) {
 			return "hasRole('')";
 		}
@@ -174,14 +174,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return "hasRole('"+ roleType.getName() +"')";
 	}
 	
-	private String hasAnyRole(RolesType... roleTypes) {
+	private String hasAnyRole(SystemRolesType... roleTypes) {
 		if(roleTypes == null) {
 			return "hasRole('')";
 		}
 		
 		StringBuffer roleExpressionBuilder = new StringBuffer("hasAnyRole(");
 		
-		for(RolesType roleType : roleTypes) {
+		for(SystemRolesType roleType : roleTypes) {
 			if(roleType != null) {
 				roleExpressionBuilder.append("'" + roleType.getName() + "',");
 			}

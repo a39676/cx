@@ -11,7 +11,7 @@ import demo.article.article.service.ArticleService;
 import demo.article.fakePost.service.FakePostService;
 import demo.base.task.service.TaskToolService;
 import demo.base.user.mapper.UsersMapper;
-import demo.base.user.pojo.type.RolesType;
+import demo.base.user.pojo.type.SystemRolesType;
 import demo.tool.mapper.MailRecordMapper;
 import demo.tool.service.VisitDataService;
 
@@ -106,7 +106,7 @@ public class TaskToolServiceImpl implements TaskToolService {
 	
 	/**
 	 * -查找具有DELAY_POSTER权限的用户的N篇随机文章, 处理为通过
-	 *  {@link RolesType}
+	 *  {@link SystemRolesType}
 	 * @throws Exception
 	 * TODO dev mark
 	 */

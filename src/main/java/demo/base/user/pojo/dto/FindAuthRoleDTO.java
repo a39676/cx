@@ -3,15 +3,24 @@ package demo.base.user.pojo.dto;
 import java.util.Arrays;
 import java.util.List;
 
-import demo.base.user.pojo.type.RolesType;
+import demo.base.user.pojo.type.OrganzationRolesType;
+import demo.base.user.pojo.type.SystemRolesType;
 
 public class FindAuthRoleDTO {
 
-	private List<RolesType> roleTypeList;
-
+	private List<SystemRolesType> sysRoleTypeList;
+	private List<OrganzationRolesType> orgRoleTypeList;
 	private List<Long> orgIdList;
-
 	private List<Long> authIdList;
+	private List<String> roleNameList;
+
+	public List<String> getRoleNameList() {
+		return roleNameList;
+	}
+
+	public void setRoleNameList(List<String> roleNameList) {
+		this.roleNameList = roleNameList;
+	}
 
 	public List<Long> getAuthIdList() {
 		return authIdList;
@@ -37,18 +46,26 @@ public class FindAuthRoleDTO {
 		this.orgIdList = Arrays.asList(orgId);
 	}
 
-	public List<RolesType> getRoleTypeList() {
-		return roleTypeList;
+	public List<SystemRolesType> getSysRoleTypeList() {
+		return sysRoleTypeList;
 	}
 
-	public void setRoleTypeList(List<RolesType> roleTypeList) {
-		this.roleTypeList = roleTypeList;
+	public void setSysRoleTypeList(List<SystemRolesType> sysRoleTypeList) {
+		this.sysRoleTypeList = sysRoleTypeList;
+	}
+
+	public List<OrganzationRolesType> getOrgRoleTypeList() {
+		return orgRoleTypeList;
+	}
+
+	public void setOrgRoleTypeList(List<OrganzationRolesType> orgRoleTypeList) {
+		this.orgRoleTypeList = orgRoleTypeList;
 	}
 
 	@Override
 	public String toString() {
-		return "FindAuthRoleDTO [roleTypeList=" + roleTypeList + ", orgIdList=" + orgIdList + ", authIdList="
-				+ authIdList + "]";
+		return "FindAuthRoleDTO [sysRoleTypeList=" + sysRoleTypeList + ", orgRoleTypeList=" + orgRoleTypeList
+				+ ", orgIdList=" + orgIdList + ", authIdList=" + authIdList + ", roleNameList=" + roleNameList + "]";
 	}
 
 }

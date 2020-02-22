@@ -14,7 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import demo.base.user.pojo.bo.MyUserPrincipal;
-import demo.base.user.pojo.type.RolesType;
+import demo.base.user.pojo.type.SystemRolesType;
 
 public class BaseUtilCustom {
 	
@@ -71,8 +71,8 @@ public class BaseUtilCustom {
 	public boolean hasAdminRole() {
 		List<String> roleList = getRoles();
 		for(int i = 0; i < roleList.size(); i++) {
-			if(RolesType.ROLE_ADMIN.getName().equals(roleList.get(i))
-					|| RolesType.ROLE_SUPER_ADMIN.getName().equals(roleList.get(i))
+			if(SystemRolesType.ROLE_ADMIN.getName().equals(roleList.get(i))
+					|| SystemRolesType.ROLE_SUPER_ADMIN.getName().equals(roleList.get(i))
 					) {
 				return true;
 			}
@@ -84,7 +84,7 @@ public class BaseUtilCustom {
 	public boolean hasSuperAdminRole() {
 		List<String> roleList = getRoles();
 		for(int i = 0; i < roleList.size(); i++) {
-			if(RolesType.ROLE_SUPER_ADMIN.getName().equals(roleList.get(i))) {
+			if(SystemRolesType.ROLE_SUPER_ADMIN.getName().equals(roleList.get(i))) {
 				return true;
 			}
 		}

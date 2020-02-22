@@ -29,7 +29,6 @@ import demo.base.user.pojo.result.FindAuthsResult;
 import demo.base.user.pojo.result.FindUserAuthResult;
 import demo.base.user.pojo.result.FindUserAuthVOResult;
 import demo.base.user.pojo.type.AuthType;
-import demo.base.user.pojo.type.RolesType;
 import demo.base.user.pojo.vo.AuthVO;
 import demo.base.user.pojo.vo.UserAuthVO;
 import demo.base.user.service.AuthRoleService;
@@ -204,31 +203,29 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 	
 	@Override
 	public FindUserAuthResult findUserAuth(FindUserAuthDTO dto) {
-		Long userId = decryptPrivateKey(dto.getUserPk());
-		Long authId = decryptPrivateKey(dto.getAuthPk());
-		
-		return findUserAuth(userId, authId, dto.getRoleTypeList());
+		FindUserAuthBO bo = new FindUserAuthBO();
+		bo.setAuthId(decryptPrivateKey(dto.getAuthPk()));
+		bo.setUserId(decryptPrivateKey(dto.getUserPk()));
+		bo.setSysRoleTypeList(dto.getSysRoleTypeList());
+		bo.setOrgRoleTypeList(dto.getOrgRoleTypeList());
+		return findUserAuth(bo);
 	}
 	
 	@Override
 	public FindUserAuthResult findUserAuth(FindUserAuthBO bo) {
-		return findUserAuth(bo.getUserId(), bo.getAuthId(), bo.getRoleTypeList());
-	}
-	
-	private FindUserAuthResult findUserAuth(Long userId, Long authId, List<RolesType> roleTypeList) {
 		FindUserAuthResult r = new FindUserAuthResult();
-		if(userId == null && authId == null) {
+		if(bo.getUserId() == null && bo.getAuthId() == null) {
 			return r;
 		}
 		
 		UserAuthExample example = new UserAuthExample();
 		Criteria criteria = example.createCriteria();
 		criteria.andIsDeleteEqualTo(false);
-		if(userId != null) {
-			criteria.andUserIdEqualTo(userId);
+		if(bo.getUserId() != null) {
+			criteria.andUserIdEqualTo(bo.getUserId());
 		}
-		if(authId != null) {
-			criteria.andAuthIdEqualTo(authId);
+		if(bo.getAuthId() != null) {
+			criteria.andAuthIdEqualTo(bo.getAuthId());
 		}
 		List<UserAuth> userAuthList = userAuthMapper.selectByExample(example);
 		
@@ -249,10 +246,13 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 		
 		List<Long> orgIdList = authList.stream().map(Auth::getBelongOrg).collect(Collectors.toList());
 		
-		if(roleTypeList != null && !roleTypeList.isEmpty()) {
+		if((bo.getSysRoleTypeList() != null && !bo.getSysRoleTypeList().isEmpty())
+				|| bo.getOrgRoleTypeList() != null && !bo.getOrgRoleTypeList().isEmpty()
+				) {
 			FindAuthRoleDTO findAuthRoleDTO = new FindAuthRoleDTO();
 			findAuthRoleDTO.setAuthIdList(authIdList);
-			findAuthRoleDTO.setRoleTypeList(roleTypeList);
+			findAuthRoleDTO.setSysRoleTypeList(bo.getSysRoleTypeList());
+			findAuthRoleDTO.setOrgRoleTypeList(bo.getOrgRoleTypeList());
 			findAuthRoleDTO.setOrgIdList(orgIdList);
 			FindAuthRoleResult authRoleResult = authRoleService.findAuthRole(findAuthRoleDTO);
 			if(!authRoleResult.isSuccess()) {
@@ -320,55 +320,31 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 			return r;
 		}
 		
-		Auth auth = findAuthResult.getAuthList().get(0);
+		Auth targetAuth = findAuthResult.getAuthList().get(0);
 		
-		List<Long> orgIdList = principal.getControllerOrganizations().stream().map(Organizations::getId).collect(Collectors.toList());
-		
-		orgIdList.addAll(principal.getSubOrganizations().stream().map(Organizations::getId).collect(Collectors.toList()));
-		if(orgIdList.contains(auth.getBelongOrg())) {
+		List<Long> orgIdList = principal.getSuperManagerOrgList().stream().map(Organizations::getId).collect(Collectors.toList());
+		if(orgIdList.contains(targetAuth.getBelongOrg())) {
 			r.setIsSuccess();
-			return r;
-		} else {
-			r.failWithMessage("无权操作该角色");
-			return r;
-		}
-		
-	}
-	
-	private CommonResultCX validUserOrg(Long orgId) {
-		CommonResultCX r = new CommonResultCX();
-		if(authId == null) {
-			r.failWithMessage("参数为空");
-			return r;
-		}
-		
-		MyUserPrincipal principal = baseUtilCustom.getUserPrincipal();
-		if(principal.getControllerOrganizations() == null || principal.getControllerOrganizations().isEmpty()) {
-			r.failWithMessage("无权操作该角色");
 			return r;
 		}
 
-		FindAuthsResult findAuthResult = authService.findAuthsByCondition(authId);
-		if(!findAuthResult.isSuccess() || findAuthResult.getAuthList() == null || findAuthResult.getAuthList().isEmpty()) {
-			r.addMessage(findAuthResult.getMessage());
-			return r;
-		}
-		
-		Auth auth = findAuthResult.getAuthList().get(0);
-		
-		List<Long> orgIdList = principal.getControllerOrganizations().stream().map(Organizations::getId).collect(Collectors.toList());
-		
-		orgIdList.addAll(principal.getSubOrganizations().stream().map(Organizations::getId).collect(Collectors.toList()));
-		if(orgIdList.contains(auth.getBelongOrg())) {
+		orgIdList = principal.getControllerOrganizations().stream().map(Organizations::getId).collect(Collectors.toList());
+		if(orgIdList.contains(targetAuth.getBelongOrg())) {
 			r.setIsSuccess();
 			return r;
-		} else {
-			r.failWithMessage("无权操作该角色");
+		}
+		
+		orgIdList = principal.getSubOrganizations().stream().map(Organizations::getId).collect(Collectors.toList());
+		if(orgIdList.contains(targetAuth.getBelongOrg())) {
+			r.setIsSuccess();
 			return r;
 		}
 		
+		r.failWithMessage("无权操作该角色");
+		return r;
 		
 	}
+	
 
 	/*
 	 * 批量编辑角色的逻辑

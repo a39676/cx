@@ -11,9 +11,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import demo.base.organizations.po.constant.OrgManagerView;
 import demo.base.organizations.po.constant.OrgUrl;
-import demo.base.organizations.pojo.dto.FindOrgByConditionDTO;
 import demo.base.organizations.pojo.result.FindOrgListResult;
 import demo.base.organizations.service.OrganizationService;
+import demo.base.user.pojo.dto.FindOrgByConditionDTO;
 
 @Controller
 @RequestMapping(value = OrgUrl.root)

@@ -1,4 +1,4 @@
-package demo.base.organizations.pojo.dto;
+package demo.base.user.pojo.dto;
 
 public class FindOrgByConditionDTO {
 

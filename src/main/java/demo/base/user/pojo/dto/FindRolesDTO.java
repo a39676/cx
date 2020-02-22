@@ -1,38 +1,18 @@
 package demo.base.user.pojo.dto;
 
-import java.util.Arrays;
 import java.util.List;
 
-import demo.base.user.pojo.type.RolesType;
+import demo.base.user.pojo.type.OrganzationRolesType;
+import demo.base.user.pojo.type.SystemRolesType;
 
 public class FindRolesDTO {
 
 	private List<Long> authIdList;
 	private List<Long> rolesIdList;
-	private List<RolesType> roleTypeList;
+	private List<SystemRolesType> sysRoleTypeList;
+	private List<OrganzationRolesType> orgRoleTypeList;
 	private List<Long> belongOrgIdList;
-
-	public List<Long> getBelongOrgIdList() {
-		return belongOrgIdList;
-	}
-
-	public void setBelongOrgIdList(List<Long> belongOrgIdList) {
-		this.belongOrgIdList = belongOrgIdList;
-	}
-
-	public List<RolesType> getRoleTypeList() {
-		return roleTypeList;
-	}
-
-	public void setRoleTypeList(List<RolesType> roleTypeList) {
-		this.roleTypeList = roleTypeList;
-	}
-
-	@Override
-	public String toString() {
-		return "FindRolesDTO [authIdList=" + authIdList + ", rolesIdList=" + rolesIdList + ", roleTypeList="
-				+ roleTypeList + ", belongOrgIdList=" + belongOrgIdList + "]";
-	}
+	private List<String> roleNameList;
 
 	public List<Long> getAuthIdList() {
 		return authIdList;
@@ -42,16 +22,51 @@ public class FindRolesDTO {
 		this.authIdList = authIdList;
 	}
 
-	public void setRolesIdList(Long roleId) {
-		this.rolesIdList = Arrays.asList(roleId);
-	}
-
 	public List<Long> getRolesIdList() {
 		return rolesIdList;
 	}
 
 	public void setRolesIdList(List<Long> rolesIdList) {
 		this.rolesIdList = rolesIdList;
+	}
+
+	public List<SystemRolesType> getSysRoleTypeList() {
+		return sysRoleTypeList;
+	}
+
+	public void setSysRoleTypeList(List<SystemRolesType> sysRoleTypeList) {
+		this.sysRoleTypeList = sysRoleTypeList;
+	}
+
+	public List<OrganzationRolesType> getOrgRoleTypeList() {
+		return orgRoleTypeList;
+	}
+
+	public void setOrgRoleTypeList(List<OrganzationRolesType> orgRoleTypeList) {
+		this.orgRoleTypeList = orgRoleTypeList;
+	}
+
+	public List<Long> getBelongOrgIdList() {
+		return belongOrgIdList;
+	}
+
+	public void setBelongOrgIdList(List<Long> belongOrgIdList) {
+		this.belongOrgIdList = belongOrgIdList;
+	}
+
+	public List<String> getRoleNameList() {
+		return roleNameList;
+	}
+
+	public void setRoleNameList(List<String> roleNameList) {
+		this.roleNameList = roleNameList;
+	}
+
+	@Override
+	public String toString() {
+		return "FindRolesDTO [authIdList=" + authIdList + ", rolesIdList=" + rolesIdList + ", sysRoleTypeList="
+				+ sysRoleTypeList + ", orgRoleTypeList=" + orgRoleTypeList + ", belongOrgIdList=" + belongOrgIdList
+				+ ", roleNameList=" + roleNameList + "]";
 	}
 
 }

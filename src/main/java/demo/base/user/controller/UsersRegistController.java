@@ -23,7 +23,7 @@ import demo.base.user.pojo.constant.UserRegistView;
 import demo.base.user.pojo.constant.UsersUrl;
 import demo.base.user.pojo.dto.UserRegistDTO;
 import demo.base.user.pojo.result.NewUserRegistResult;
-import demo.base.user.pojo.type.RolesType;
+import demo.base.user.pojo.type.SystemRolesType;
 import demo.base.user.service.UserRegistService;
 import demo.baseCommon.controller.CommonController;
 import demo.baseCommon.pojo.result.CommonResultCX;
@@ -112,7 +112,7 @@ public class UsersRegistController extends CommonController {
 	public CommonResultCX resendRegistMail(HttpServletRequest request) {
 		CommonResultCX result = new CommonResultCX();
 		if (!baseUtilCustom.isLoginUser()
-				|| baseUtilCustom.getRoles().contains(RolesType.ROLE_USER_ACTIVE.getName())) {
+				|| baseUtilCustom.getRoles().contains(SystemRolesType.ROLE_USER_ACTIVE.getName())) {
 			result.fillWithResult(ResultTypeCX.notLoginUser);
 			return result;
 		}

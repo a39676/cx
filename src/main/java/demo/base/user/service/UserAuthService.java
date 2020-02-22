@@ -27,5 +27,5 @@ public interface UserAuthService {
 	FindUserAuthResult findUserAuth(FindUserAuthBO bo);
 
 	FindUserAuthVOResult findUserAuthVO(FindUserAuthDTO dto);
-
+	
 }

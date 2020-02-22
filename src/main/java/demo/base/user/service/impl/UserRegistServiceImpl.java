@@ -359,7 +359,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		
 		FindUserAuthBO findUserAuthBO = new FindUserAuthBO();
 		findUserAuthBO.setUserId(mr.getUserId());
-		FindUserAuthResult findUserAuthResult = userAuthService.findUserAuth(findUserAuthBO );
+		FindUserAuthResult findUserAuthResult = userAuthService.findUserAuth(findUserAuthBO);
 		if(!findUserAuthResult.isSuccess()) {
 			result.addMessage(findUserAuthResult.getMessage());
 			return result;

@@ -58,7 +58,9 @@ public class AuthRoleServiceImpl extends CommonService implements AuthRoleServic
 		
 		if((dto.getOrgIdList() == null || dto.getOrgIdList().isEmpty())
 				&& (dto.getAuthIdList() == null || dto.getAuthIdList().isEmpty())
-				&& (dto.getRoleTypeList() == null || dto.getRoleTypeList().isEmpty())
+				&& (dto.getSysRoleTypeList() == null || dto.getSysRoleTypeList().isEmpty())
+				&& (dto.getOrgRoleTypeList() == null || dto.getOrgRoleTypeList().isEmpty())
+				&& (dto.getRoleNameList() == null || dto.getRoleNameList().isEmpty())
 				) {
 			r.failWithMessage("不可输入空参数");
 			return r;
@@ -71,9 +73,20 @@ public class AuthRoleServiceImpl extends CommonService implements AuthRoleServic
 			authRoleCriteria.andAuthIdIn(dto.getAuthIdList());
 		}
 		
-		if(dto.getRoleTypeList() != null && !dto.getRoleTypeList().isEmpty()) {
+		if((dto.getSysRoleTypeList() != null && !dto.getSysRoleTypeList().isEmpty())
+				|| (dto.getOrgRoleTypeList() != null && !dto.getOrgRoleTypeList().isEmpty())
+				|| (dto.getRoleNameList() != null && !dto.getRoleNameList().isEmpty())
+				) {
 			FindRolesDTO getRolesDTO = new FindRolesDTO();
-			getRolesDTO.setRoleTypeList(dto.getRoleTypeList());
+			if(dto.getRoleNameList() != null && !dto.getRoleNameList().isEmpty()) {
+				getRolesDTO.setRoleNameList(dto.getRoleNameList());
+			}
+			if(dto.getSysRoleTypeList() != null && !dto.getSysRoleTypeList().isEmpty()) {
+				getRolesDTO.setSysRoleTypeList(dto.getSysRoleTypeList());
+			}
+			if(dto.getOrgRoleTypeList() != null && !dto.getOrgRoleTypeList().isEmpty()) {
+				getRolesDTO.setOrgRoleTypeList(dto.getOrgRoleTypeList());
+			}
 			FindRolesResult findRolesResult = roleService.getRolesByCondition(getRolesDTO);
 			if(!findRolesResult.isSuccess()) {
 				r.addMessage(findRolesResult.getMessage());
@@ -106,8 +119,11 @@ public class AuthRoleServiceImpl extends CommonService implements AuthRoleServic
 		if(dto.getAuthIdList() != null && !dto.getAuthIdList().isEmpty()) {
 			findAuthRoleDTO.setAuthIdList(dto.getAuthIdList());
 		}
-		if(dto.getRoleTypeList() != null && !dto.getRoleTypeList().isEmpty()) {
-			findAuthRoleDTO.setRoleTypeList(dto.getRoleTypeList());
+		if(dto.getSysRoleTypeList() != null && !dto.getSysRoleTypeList().isEmpty()) {
+			findAuthRoleDTO.setSysRoleTypeList(dto.getSysRoleTypeList());
+		}
+		if(dto.getOrgRoleTypeList() != null && !dto.getOrgRoleTypeList().isEmpty()) {
+			findAuthRoleDTO.setOrgRoleTypeList(dto.getOrgRoleTypeList());
 		}
 		FindAuthRoleResult authRoleResult = findAuthRole(findAuthRoleDTO);
 		
@@ -119,7 +135,7 @@ public class AuthRoleServiceImpl extends CommonService implements AuthRoleServic
 		
 		FindRolesDTO getRoleDTO = new FindRolesDTO();
 		getRoleDTO.setRolesIdList(tmpRoleIdList);
-		FindRolesResult getRolesResult = roleService.getRolesByCondition(getRoleDTO );
+		FindRolesResult getRolesResult = roleService.getRolesByCondition(getRoleDTO);
 		
 		if(!getRolesResult.isSuccess()) {
 			r.addMessage(getRolesResult.getMessage());

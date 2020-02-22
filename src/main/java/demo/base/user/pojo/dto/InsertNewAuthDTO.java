@@ -2,13 +2,15 @@ package demo.base.user.pojo.dto;
 
 import java.util.List;
 
-import demo.base.user.pojo.type.RolesType;
+import demo.base.user.pojo.type.OrganzationRolesType;
+import demo.base.user.pojo.type.SystemRolesType;
 
 public class InsertNewAuthDTO {
 
 	private Long belongOrgId;
 	private String authName;
-	private List<RolesType> roles;
+	private List<SystemRolesType> sysRoles;
+	private List<OrganzationRolesType> orgRoles;
 
 	public Long getBelongOrgId() {
 		return belongOrgId;
@@ -26,17 +28,26 @@ public class InsertNewAuthDTO {
 		this.authName = authName;
 	}
 
-	public List<RolesType> getRoles() {
-		return roles;
+	public List<SystemRolesType> getSysRoles() {
+		return sysRoles;
 	}
 
-	public void setRoles(List<RolesType> roles) {
-		this.roles = roles;
+	public void setSysRoles(List<SystemRolesType> sysRoles) {
+		this.sysRoles = sysRoles;
+	}
+
+	public List<OrganzationRolesType> getOrgRoles() {
+		return orgRoles;
+	}
+
+	public void setOrgRoles(List<OrganzationRolesType> orgRoles) {
+		this.orgRoles = orgRoles;
 	}
 
 	@Override
 	public String toString() {
-		return "InsertNewAuthDTO [belongOrgId=" + belongOrgId + ", authName=" + authName + ", roles=" + roles + "]";
+		return "InsertNewAuthDTO [belongOrgId=" + belongOrgId + ", authName=" + authName + ", sysRoles=" + sysRoles
+				+ ", orgRoles=" + orgRoles + "]";
 	}
 
 }

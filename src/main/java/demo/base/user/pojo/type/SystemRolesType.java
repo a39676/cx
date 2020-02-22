@@ -1,6 +1,6 @@
 package demo.base.user.pojo.type;
 
-public enum RolesType {
+public enum SystemRolesType {
 
 	ROLE_ADMIN("ROLE_ADMIN", -4),
 	ROLE_DEV("ROLE_DEV", -3),
@@ -12,16 +12,12 @@ public enum RolesType {
 	ROLE_POSTER("ROLE_POSTER", 3),
 	ROLE_DELAY_POSTER("ROLE_DELAY_POSTER", 4),
 	
-	ROLE_ORG_SUPER_ADMIN("ROLE_ORG_SUPER_ADMIN", 5),
-	ROLE_SUB_ORG_ADMIN("ROLE_SUB_ORG_ADMIN", 6),
-	ROLE_ORG_MEMBER("ROLE_ORG_MEMBER", 7),
-	
 	;
 	
 	private String name;
 	private Integer code;
 	
-	RolesType(String name, Integer code) {
+	SystemRolesType(String name, Integer code) {
 		this.name = name;
 		this.code = code;
 	}
@@ -33,8 +29,8 @@ public enum RolesType {
 		return code;
 	}
 	
-	public static RolesType getRole(Integer code) {
-		for(RolesType role : RolesType.values()) {
+	public static SystemRolesType getRole(Integer code) {
+		for(SystemRolesType role : SystemRolesType.values()) {
 			if(role.getCode() == code) {
 				return role;
 			}
@@ -42,8 +38,8 @@ public enum RolesType {
 		return null;
 	}
 	
-	public static RolesType getRole(String name) {
-		for(RolesType role : RolesType.values()) {
+	public static SystemRolesType getRole(String name) {
+		for(SystemRolesType role : SystemRolesType.values()) {
 			if(role.getName().equals(name)) {
 				return role;
 			}

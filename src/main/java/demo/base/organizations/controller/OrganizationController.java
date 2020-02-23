@@ -17,7 +17,7 @@ import demo.base.user.pojo.dto.FindOrgByConditionDTO;
 
 @Controller
 @RequestMapping(value = OrgUrl.root)
-public class OrganzationController {
+public class OrganizationController {
 
 	@Autowired
 	private OrganizationService orgService;

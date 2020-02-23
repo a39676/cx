@@ -4,10 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import demo.base.organizations.pojo.dto.OrgRegistDTO;
+import demo.base.organizations.pojo.result.OrgRegistResult;
+import demo.base.organizations.service.OrganizationService;
 import demo.baseCommon.controller.CommonController;
 import demo.config.costom_component.SnowFlake;
 import demo.test.pojo.constant.TestUrl;
@@ -31,12 +36,14 @@ public class TestController2 extends CommonController {
 	public ModelAndView about() {
 		return new ModelAndView("cleanBlogJSP/about");
 	}
+
+	@Autowired
+	private OrganizationService orgService;
 	
-	@GetMapping(value = "/tw")
-	public ModelAndView tw() throws Exception {
-		ModelAndView v = new ModelAndView("testJSP/test01");
-		v.addObject("message", "<img src=\"http://wttr.in/Guangzhou.png\">");
-		return v;
+	@PostMapping(value = "/topOrgRegist")
+	@ResponseBody
+	public OrgRegistResult topOrgRegist(@RequestBody OrgRegistDTO dto) {
+		return orgService.topOrgRegist(dto);
 	}
 
 }

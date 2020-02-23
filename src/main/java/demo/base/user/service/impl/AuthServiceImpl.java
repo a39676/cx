@@ -269,6 +269,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		InsertNewAuthBO bo = new InsertNewAuthBO();
 		BeanUtils.copyProperties(dto, bo);
 		bo.setCreatorId(baseUtilCustom.getUserId());
+		bo.setAuthTypeType(AuthTypeType.ORG_AUTH);
 		
 		return insertNewAuth(bo);
 	}
@@ -285,6 +286,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		InsertNewAuthBO bo = new InsertNewAuthBO();
 		BeanUtils.copyProperties(dto, bo);
 		bo.setCreatorId(baseUtilCustom.getUserId());
+		bo.setAuthTypeType(AuthTypeType.ORG_AUTH);
 		
 		return insertNewAuth(bo);
 	}
@@ -306,6 +308,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		newAuth.setId(newAuthID);
 		newAuth.setAuthName(bo.getAuthName());
 		newAuth.setBelongOrg(bo.getBelongOrgId());
+		newAuth.setAuthType(bo.getAuthTypeType().getCode());
 		
 		int count = authMapper.insertSelective(newAuth);
 		if(count < 1) {
@@ -316,16 +319,20 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		Long newAuthRoleId = null;
 		
 		List<String> roleNameList = new ArrayList<String>();
-		for(OrganzationRolesType orgRole : bo.getOrgRoles()) {
-			roleNameList.add(orgRole.getName());
+		if(bo.getOrgRoles() != null) {
+			for(OrganzationRolesType orgRole : bo.getOrgRoles()) {
+				roleNameList.add(orgRole.getName());
+			}
 		}
-		for(SystemRolesType sysRole : bo.getSysRoles()) {
-			roleNameList.add(sysRole.getName());
+		if(bo.getSysRoles() != null) {
+			for(SystemRolesType sysRole : bo.getSysRoles()) {
+				roleNameList.add(sysRole.getName());
+			}
 		}
 		
 		FindRolesDTO findRolesDTO = new FindRolesDTO();
 		findRolesDTO.setRoleNameList(roleNameList);
-		FindRolesResult getRoleResult = roleService.getRolesByCondition(findRolesDTO );
+		FindRolesResult getRoleResult = roleService.getRolesByCondition(findRolesDTO);
 		if(!getRoleResult.isSuccess()) {
 			r.addMessage(getRoleResult.getMessage());
 			return r;
@@ -347,6 +354,10 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 	private boolean vaildAndEditInsertNewOrgAuth(InsertNewAuthDTO dto) {
 		if(dto.getBelongOrgId() == null || !baseUtilCustom.isLoginUser()) {
 			return false;
+		}
+		
+		if(isBigUser()) {
+			return true;
 		}
 		
 		CommonResultCX validUserOrgResult = orgService.validUserOrg(dto.getBelongOrgId());

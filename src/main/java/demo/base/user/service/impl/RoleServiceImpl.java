@@ -90,14 +90,16 @@ public class RoleServiceImpl extends CommonService implements RoleService {
 				roleNameList.add(roltType.getName());
 			}
 		}
+		if(dto.getRoleNameList() != null && !dto.getRoleNameList().isEmpty()) {
+			for(String roleName : dto.getRoleNameList()) {
+				roleNameList.add(roleName);
+			}
+		}
 		if(!roleNameList.isEmpty()) {
 			c.andRoleIn(roleNameList);
 		}
 		if(dto.getRolesIdList() != null && !dto.getRolesIdList().isEmpty()) {
 			c.andRoleIdIn(dto.getRolesIdList());
-		}
-		if(dto.getRoleNameList() != null && !dto.getRoleNameList().isEmpty()) {
-			c.andRoleNotIn(dto.getRoleNameList());
 		}
 		
 		r.setRoleList(roleMapper.selectByExample(example));

@@ -16,15 +16,15 @@
   <div class="row">
     <div class="col-md-4" >
       <label>orgName</label>
-      <input class="conditionInput" type="text" name="orgName" id="orgName" placeholder="orgName">
+      <input class="orgSearchConditionInput" type="text" name="orgName" id="orgName" placeholder="orgName">
     </div>
     <div class="col-md-4" >
       <label>orgPk</label>
-      <input class="conditionInput" type="text" name="orgPk" id="orgPk" placeholder="orgPk">
+      <input class="orgSearchConditionInput" type="text" name="orgPk" id="orgPk" placeholder="orgPk">
     </div>
     <div class="col-md-4" >
       <label>creatorPk</label>
-      <input class="conditionInput" type="text" name="creatorPk" id="creatorPk" placeholder="creatorPk">
+      <input class="orgSearchConditionInput" type="text" name="creatorPk" id="creatorPk" placeholder="creatorPk">
     </div>
   </div>
 
@@ -32,15 +32,15 @@
     <div class="row">
       <div class="col-md-4" >
         <label>orgId</label>
-        <input class="conditionInput" type="text" name="orgId" id="orgId" placeholder="orgId">
+        <input class="orgSearchConditionInput" type="text" name="orgId" id="orgId" placeholder="orgId">
       </div>
       <div class="col-md-4" >
         <label>belongTo</label>
-        <input class="conditionInput" type="text" name="belongTo" id="belongTo" placeholder="belongTo">
+        <input class="orgSearchConditionInput" type="text" name="belongTo" id="belongTo" placeholder="belongTo">
       </div>
       <div class="col-md-4" >
         <label>topOrg</label>
-        <input class="conditionInput" type="text" name="topOrg" id="topOrg" placeholder="topOrg">
+        <input class="orgSearchConditionInput" type="text" name="topOrg" id="topOrg" placeholder="topOrg">
       </div>
     </div>
   </sec:authorize>
@@ -49,34 +49,42 @@
     <div class="row">
       <div class="col-md-4" >
         <label>creatorName</label>
-      <input class="conditionInput" type="text" name="creatorName" id="creatorName" placeholder="creatorName  ">
+      <input class="orgSearchConditionInput" type="text" name="creatorName" id="creatorName" placeholder="creatorName  ">
       </div>
     </div>
   </sec:authorize>
 
   <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
-    <div class="row" id="conditionValue2" isDelete="false">
+    <div class="row" id="orgConditionValue2" isDelete="false">
       <div class="col-md-4" >
         <label class="badge">isDelete</label>
         <div class="form-check form-check-inline">
-          <input class="form-check-input conditionInput" type="radio" id="isDeleteTrue" name="isDeleteType" value="true">
-          <label class="form-check-label badge" for="isDeleteTrue" name="isDeleteValue" value="true">True</label>
+          <input class="form-check-input orgSearchConditionInput" type="radio" id="orgIsDeleteTrue" name="orgIsDeleteType" value="true">
+          <label class="form-check-label badge" for="orgIsDeleteTrue" name="orgIsDeleteValue" value="true">True</label>
         </div>
         <div class="form-check form-check-inline">
-          <input class="form-check-input conditionInput" type="radio" id="isDeleteFalse" name="isDeleteType" checked="checked" value="false">
-          <label class="form-check-label badge" for="isDeleteFalse" name="isDeleteValue" value="false">False</label>
+          <input class="form-check-input orgSearchConditionInput" type="radio" id="orgIsDeleteFalse" name="orgIsDeleteType"  checked="checked" value="false">
+          <label class="form-check-label badge" for="orgIsDeleteFalse" name="orgIsDeleteValue" value="false">False</label>
         </div>
       </div>
     </div>
   </sec:authorize>
   
   <hr>
+
+  <div class="row">
+    <div class="col-md-4" >
+      <button id="cleanOrgCondition" class="btn btn-sm btn-warning">clean org search condition</button>
+    </div>
+  </div>
   
   <div class="row">
     <div class="col-md-12">
       <div id="orgNameDiv" selectedOrgPk=""></div>
     </div>
   </div>
+
+  <hr>
 
 </div>
 </body>
@@ -87,14 +95,38 @@
 
     $(document).ready(function() {
 
-      $("input[name='isDeleteType']").click(function () {
-        isDeleteValue($(this).val());
+      var orgIsDelete = false;
+      $("input[name='orgIsDeleteType']").click(function () {
+        orgIsDeleteValue($(this).val());
       });
-      function isDeleteValue(e) {
-        $("#conditionValue2").attr("isDelete", e);
+      function orgIsDeleteValue(e) {
+        $("#orgConditionValue2").attr("isDelete", e);
+        orgIsDelete = $("#orgConditionValue2").attr("isDelete");
       }
 
-      $(".conditionInput").change(function () {
+      $("#cleanOrgCondition").click(function () {
+        cleanOrgCondition();
+      });
+
+      function cleanOrgCondition() {
+        $("#orgName").val("");
+        $("#orgPk").val("");
+        $("#creatorPk").val("");
+        $("#orgId").val("");
+        $("#belongTo").val("");
+        $("#topOrg").val("");
+        $("#creatorName").val("");
+        $("#orgIsDeleteTrue").prop("checked", false);
+        $("#orgIsDeleteFalse").prop("checked", true);
+        orgIsDeleteValue("false");
+
+        var orgNameDiv = $("#orgNameDiv");
+        orgNameDiv.empty();
+
+        $("#orgNameDiv").attr("selectedOrgPk", "");
+      }
+
+      $(".orgSearchConditionInput").change(function () {
         $("#orgNameDiv").attr("selectedOrgPk", "");
 
         var orgName = $("#orgName").val();
@@ -104,7 +136,7 @@
         var belongTo = $("#belongTo").val();
         var topOrg = $("#topOrg").val();
         var creatorName = $("#creatorName").val();
-        var isDelete = $("#conditionValue2").attr("isDelete");
+        var isDelete = orgIsDelete;
 
         var url = "/org/findOrgList";
 

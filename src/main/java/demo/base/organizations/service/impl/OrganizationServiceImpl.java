@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import demo.base.organizations.mapper.OrganizationsMapper;
 import demo.base.organizations.pojo.bo.FindOrgByConditionBO;
+import demo.base.organizations.pojo.dto.DeleteOrgDTO;
 import demo.base.organizations.pojo.dto.FindUserControlOrgDTO;
 import demo.base.organizations.pojo.dto.OrgRegistDTO;
 import demo.base.organizations.pojo.po.Organizations;
@@ -25,6 +26,7 @@ import demo.base.organizations.pojo.result.OrgRegistResult;
 import demo.base.organizations.pojo.result.VerifyAffiliatesOrgRegistDTOResult;
 import demo.base.organizations.pojo.vo.OrganizationVO;
 import demo.base.organizations.service.OrganizationService;
+import demo.base.user.pojo.bo.DeleteAuthRoleBO;
 import demo.base.user.pojo.bo.FindUserAuthBO;
 import demo.base.user.pojo.bo.MyUserPrincipal;
 import demo.base.user.pojo.dto.FindOrgByConditionDTO;
@@ -223,28 +225,26 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 		List<Auth> orgAdminAuthList = orgAdminUserAuthListResult.getAuthList();
 		List<Long> controllOrgIdList = orgAdminAuthList.stream().map(Auth::getBelongOrg).collect(Collectors.toList());
 		
-		if((controllOrgIdList == null || controllOrgIdList.isEmpty())
-				&& (superManagerOrgIdList == null || superManagerOrgIdList.isEmpty())
-				) {
-			r.isSuccess();
-			return r;
+		OrganizationsExample orgExample = new OrganizationsExample();
+		if(controllOrgIdList != null && !controllOrgIdList.isEmpty()) {
+			orgExample.createCriteria().andIsDeleteEqualTo(false).andBelongToIn(controllOrgIdList).andIdNotIn(controllOrgIdList);
+			List<Organizations> subOrgList = orgMapper.selectByExample(orgExample);
+
+			orgExample = new OrganizationsExample();
+			orgExample.createCriteria().andIsDeleteEqualTo(false).andIdIn(controllOrgIdList);
+			List<Organizations> controllOrgList = orgMapper.selectByExample(orgExample);
+			
+			r.setControllOrgList(controllOrgList);
+			r.setSubOrgList(subOrgList);
 		}
 		
-		OrganizationsExample orgExample = new OrganizationsExample();
-		orgExample.createCriteria().andIsDeleteEqualTo(false).andBelongToIn(controllOrgIdList).andIdNotIn(controllOrgIdList);
-		List<Organizations> subOrgList = orgMapper.selectByExample(orgExample);
+		if(superManagerOrgIdList != null && !superManagerOrgIdList.isEmpty()) {
+			orgExample = new OrganizationsExample();
+			orgExample.createCriteria().andIsDeleteEqualTo(false).andTopOrgIn(superManagerOrgIdList);
+			List<Organizations> superManagerOrgList = orgMapper.selectByExample(orgExample);
+			r.setSuperManagerOrgList(superManagerOrgList);
+		}
 		
-		orgExample = new OrganizationsExample();
-		orgExample.createCriteria().andIsDeleteEqualTo(false).andIdIn(controllOrgIdList);
-		List<Organizations> controllOrgList = orgMapper.selectByExample(orgExample);
-		
-		orgExample = new OrganizationsExample();
-		orgExample.createCriteria().andIsDeleteEqualTo(false).andTopOrgIn(superManagerOrgIdList);
-		List<Organizations> superManagerOrgList = orgMapper.selectByExample(orgExample);
-		
-		r.setSuperManagerOrgList(superManagerOrgList);
-		r.setControllOrgList(controllOrgList);
-		r.setSubOrgList(subOrgList);
 		r.setIsSuccess();
 		return r;
 	}
@@ -383,31 +383,93 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 		}
 		
 		MyUserPrincipal principal = baseUtilCustom.getUserPrincipal();
-		if(principal.getControllerOrganizations() == null || principal.getControllerOrganizations().isEmpty()) {
-			r.failWithMessage("该角色无权操作");
+		if((principal.getSuperManagerOrgList() == null || principal.getSuperManagerOrgList().isEmpty())
+				&& (principal.getControllerOrganizations() == null || principal.getControllerOrganizations().isEmpty())
+				&& (principal.getSubOrganizations() == null || principal.getSubOrganizations().isEmpty())
+				&& !isBigUser()
+				) {
+			r.failWithMessage("该账号无权操作此机构内容");
 			return r;
 		}
 
-		List<Long> orgIdList = principal.getSuperManagerOrgList().stream().map(Organizations::getId).collect(Collectors.toList());
-		if(orgIdList.contains(orgId)) {
-			r.setIsSuccess();
-			return r;
+		List<Long> orgIdList = null;
+		if(principal.getSuperManagerOrgList() != null) {
+			orgIdList = principal.getSuperManagerOrgList().stream().map(Organizations::getId).collect(Collectors.toList());
+			if(orgIdList.contains(orgId)) {
+				r.setIsSuccess();
+				return r;
+			}
 		}
 		
-		orgIdList = principal.getControllerOrganizations().stream().map(Organizations::getId).collect(Collectors.toList());
-		if(orgIdList.contains(orgId)) {
-			r.setIsSuccess();
-			return r;
+		if(principal.getControllerOrganizations() != null) {
+			orgIdList = principal.getControllerOrganizations().stream().map(Organizations::getId).collect(Collectors.toList());
+			if(orgIdList.contains(orgId)) {
+				r.setIsSuccess();
+				return r;
+			}
 		}
 		
-		orgIdList = principal.getSubOrganizations().stream().map(Organizations::getId).collect(Collectors.toList());
-		if(orgIdList.contains(orgId)) {
-			r.setIsSuccess();
-			return r;
+		if(principal.getSubOrganizations() != null) {
+			orgIdList = principal.getSubOrganizations().stream().map(Organizations::getId).collect(Collectors.toList());
+			if(orgIdList.contains(orgId)) {
+				r.setIsSuccess();
+				return r;
+			}
 		}
 		
-		r.failWithMessage("该角色无权操作");
+		if(isBigUser()) {
+			Organizations org = orgMapper.selectByPrimaryKey(orgId);
+			if(org.getId().equals(org.getTopOrg())) {
+				r.setIsSuccess();
+				return r;
+			}
+		}
+		
+		r.failWithMessage("该账号无权操作此机构内容");
 		return r;
 		
+	}
+
+	@Override
+	public CommonResultCX deleteOrg(DeleteOrgDTO dto) {
+		CommonResultCX r = new CommonResultCX();
+		if(StringUtils.isBlank(dto.getOrgPk())) {
+			return r;
+		}
+		
+		Long orgId = decryptPrivateKey(dto.getOrgPk());
+		if(orgId == null) {
+			return r;
+		}
+		
+		if(!isBigUser()) {
+			CommonResultCX validUserOrgResult = validUserOrg(orgId);
+			if(!validUserOrgResult.isSuccess()) {
+				r.addMessage(validUserOrgResult.getMessage());
+				return r;
+			}
+		}
+		
+		Long operator = baseUtilCustom.getUserId();
+		Organizations po = new Organizations();
+		po.setId(orgId);
+		po.setIsDelete(true);
+		po.setUpdateBy(operator);
+		po.setUpdateTime(LocalDateTime.now());
+		int upcateCount = orgMapper.updateByPrimaryKeySelective(po);
+		if(upcateCount < 1) {
+			return r;
+		}
+		
+		DeleteAuthRoleBO bo = new DeleteAuthRoleBO();
+		bo.setOrgId(orgId);
+		CommonResultCX deleteAuthResult = authService.deleteAuth(bo);
+		if(deleteAuthResult.isFail()) {
+			r.addMessage(deleteAuthResult.getMessage());
+			return r;
+		}
+		
+		r.setIsSuccess();
+		return r;
 	}
 }

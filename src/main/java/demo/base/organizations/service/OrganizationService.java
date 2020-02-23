@@ -1,5 +1,6 @@
 package demo.base.organizations.service;
 
+import demo.base.organizations.pojo.dto.DeleteOrgDTO;
 import demo.base.organizations.pojo.dto.FindUserControlOrgDTO;
 import demo.base.organizations.pojo.dto.OrgRegistDTO;
 import demo.base.organizations.pojo.po.Organizations;
@@ -17,10 +18,15 @@ public interface OrganizationService {
 
 	Organizations getOrgById(Long orgId);
 
+	/**
+	 * 用于 用户登录时 构建 MyUserPrincipal 数据, 故不可直接使用 MyUserPrincipal , 构成死循环
+	 */
 	FindUserControlOrgResult findUserControlOrg(FindUserControlOrgDTO dto);
 
 	FindOrgListResult findOrgList(FindOrgByConditionDTO dto);
 
 	CommonResultCX validUserOrg(Long orgId);
+
+	CommonResultCX deleteOrg(DeleteOrgDTO dto);
 
 }

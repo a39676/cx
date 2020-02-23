@@ -13,28 +13,40 @@
 <body>
 <div class="container-fluid">
 
+  <!-- org search start -->
+  <div class="row">
+    <div class="col-md-12">      
+      <%@ include file="../../org/orgManager/orgSearch.jsp" %>
+    </div>
+  </div>
+  <!-- org search end -->  
+
+  <hr>
+  
   <div class="row">
     <div class="col-md-4" >
       <label>authName</label>
-      <input class="conditionInput" type="text" name="authName" id="authName" placeholder="authName">
+      <input class="authSearchConditionInput" type="text" name="authName" id="authName" placeholder="authName">
     </div>
     <div class="col-md-4" >
       <label>authPk</label>
-      <input class="conditionInput" type="text" name="authPk" id="authPk" placeholder="authPk">
+      <input class="authSearchConditionInput" type="text" name="authPk" id="authPk" placeholder="authPk">
     </div>
   </div>
 
+  <hr>
+  
   <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
-    <div class="row" id="conditionValue2" isDelete="false">
+    <div class="row" id="authConditionValue2" isDelete="false">
       <div class="col-md-4" >
         <label class="badge">isDelete</label>
         <div class="form-check form-check-inline">
-          <input class="form-check-input conditionInput" type="radio" id="isDeleteTrue" name="isDeleteType" value="true">
-          <label class="form-check-label badge" for="isDeleteTrue" name="isDeleteValue" value="true">True</label>
+          <input class="form-check-input authSearchConditionInput" type="radio" id="authIsDeleteTrue" name="authIsDeleteType" value="true">
+          <label class="form-check-label badge" for="authIsDeleteTrue" name="authIsDeleteValue" value="true">True</label>
         </div>
         <div class="form-check form-check-inline">
-          <input class="form-check-input conditionInput" type="radio" id="isDeleteFalse" name="isDeleteType" checked="checked" value="false">
-          <label class="form-check-label badge" for="isDeleteFalse" name="isDeleteValue" value="false">False</label>
+          <input class="form-check-input authSearchConditionInput" type="radio" id="authIsDeleteFalse" name="authIsDeleteType" checked="checked" value="false">
+          <label class="form-check-label badge" for="authIsDeleteFalse" name="authIsDeleteValue" value="false">False</label>
         </div>
       </div>
     </div>
@@ -44,9 +56,11 @@
   
   <div class="row">
     <div class="col-md-12">
-      <div id="orgNameDiv" selectedOrgPk=""></div>
+      <div id="authNameDiv" selectedAuthPk="" operatorType=""></div>
     </div>
   </div>
+
+  <hr>
 
 </div>
 </body>
@@ -57,35 +71,59 @@
 
     $(document).ready(function() {
 
-      $("input[name='isDeleteType']").click(function () {
-        isDeleteValue($(this).val());
-      });
-      function isDeleteValue(e) {
-        $("#conditionValue2").attr("isDelete", e);
+      function cleanAuthNameDiv() {
+        var authNameDiv = $("#authNameDiv");
+        authNameDiv.empty();
+        authNameDiv.attr("selectedAuthPk", "");
+        authNameDiv.attr("operatorType", "");
       }
 
-      $(".conditionInput").change(function () {
-        $("#orgNameDiv").attr("selectedOrgPk", "");
+      $(".orgSearchConditionInput").change(function () {
+        cleanAuthNameDiv();
+        authSearch();
+      });
+      $("#orgNameDiv").click(function () {
+        cleanAuthNameDiv();
+        authSearch();
+      });
 
-        var orgName = $("#orgName").val();
-        var orgPk = $("#orgPk").val();
-        var creatorPk = $("#creatorPk").val();
-        var orgId = $("#orgId").val();
-        var belongTo = $("#belongTo").val();
-        var topOrg = $("#topOrg").val();
-        var creatorName = $("#creatorName").val();
-        var isDelete = $("#conditionValue2").attr("isDelete");
+      var authIsDelete = false;
+      $("input[name='authIsDeleteType']").click(function () {
+        authIsDeleteValue($(this).val());
+      });
+      function authIsDeleteValue(e) {
+        $("#authConditionValue2").attr("isDelete", e);
+        authIsDelete = $("#authConditionValue2").attr("isDelete");
+      }
 
-        var url = "/org/findOrgList";
+      $(".authSearchConditionInput").change(function () {
+        authSearch();
+      });
+
+      function authSearch() {
+        $("#authNameDiv").attr("selectedAuthPk", "");
+
+        var belongOrgPkList = [];
+        var orgPk = $("#orgNameDiv").attr("selectedOrgPk");
+        if(orgPk != null && orgPk.length > 0) {
+          belongOrgPkList.push(orgPk);
+        }
+
+        var authPkList = [];
+        var authPk = $("#authPk").val();
+        if(authPk != null && authPk.length > 0) {
+          authPkList.push(authPk);
+        }
+
+        var authName = $("#authName").val();
+        var isDelete = authIsDelete;
+
+        var url = "/userauth/findAuth";
 
         var jsonOutput = {
-          orgName : orgName,
-          orgPk : orgPk,
-          orgId : creatorPk,
-          belongTo : orgId,
-          topOrg : belongTo,
-          creatorName : topOrg,
-          creatorPk : creatorName,
+          belongOrgPkList : belongOrgPkList,
+          authPkList : authPkList,
+          authName : authName,
           isDelete : isDelete
         };
 
@@ -100,28 +138,36 @@
           },
           timeout: 15000,
           success:function(data){
-            var orgVOList = data.orgVOList;
-            var orgNameDiv = $("#orgNameDiv");
-            orgNameDiv.empty();
-            $.each(orgVOList, function(index, orgVOInfo) {
-              orgNameDiv.append($("<button class='btn btn-sm btn-light'></button>").attr("pk", orgVOInfo.pk).text(orgVOInfo.orgName));
-              orgNameDiv.append($("<label>&nbsp;&nbsp;|&nbsp;&nbsp;</label>"));
-              $("button[pk='"+orgVOInfo.pk+"']").addClass("orgButton");
-              $("button[pk='"+orgVOInfo.pk+"']").bind("click", orgButtonClick);
+            var authVOList = data.authVOList;
+            var authNameDiv = $("#authNameDiv");
+            authNameDiv.empty();
+            var usernameDiv = $("#usernameDiv");
+            var userAuthPkList = usernameDiv.attr("userAuthPkList").split(",");
+            $.each(authVOList, function(index, authVOInfo) {
+              authNameDiv.append($("<button class='btn btn-sm btn-light'></button>").attr("pk", authVOInfo.pk).text(authVOInfo.authName));
+              authNameDiv.append($("<label>&nbsp;&nbsp;|&nbsp;&nbsp;</label>"));
+              $("button[pk='"+authVOInfo.pk+"']").addClass("authButton");
+              if((jQuery.inArray(authVOInfo.pk, userAuthPkList)) >= 0) {
+                $("button[pk='"+authVOInfo.pk+"']").addClass("btn-primary");
+                $("button[pk='"+authVOInfo.pk+"']").removeClass("btn-light");
+              }
+              $("button[pk='"+authVOInfo.pk+"']").bind("click", authButtonClick);
             });
           }, 
           error:function(e){
           }
-        });  
-      });
+        });
+      }
 
-      function orgButtonClick() {
+      function authButtonClick() {
         var pk = $(this).attr("pk");
-        $(".orgButton").addClass("btn-light")
-        $(".orgButton").removeClass("btn-primary")
-        $(this).removeClass("btn-light")
-        $(this).addClass("btn-primary")
-        $("#orgNameDiv").attr("selectedOrgPk", pk);
+        var authNameDiv = $("#authNameDiv");
+        authNameDiv.attr("selectedAuthPk", pk);
+        if($(this).hasClass("btn-primary")) {
+          authNameDiv.attr("operatorType", "delete");
+        } else {
+          authNameDiv.attr("operatorType", "insert");
+        }
       };
 
     });

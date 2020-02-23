@@ -6,9 +6,11 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@page session="true"%>
 <html>
+
 <head>
-<%@ include file="../../../baseElementJSP/normalHeader.jsp" %>
+  <%@ include file="../../../baseElementJSP/normalHeader.jsp" %>
 </head>
+
 <body>
   <h1>Message : ${message}</h1>
   <div class="testArea">${testArea}</div>

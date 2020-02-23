@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.base.user.mapper.AuthRoleMapper;
+import demo.base.user.pojo.bo.DeleteAuthRoleBO;
 import demo.base.user.pojo.dto.FindAuthRoleDTO;
 import demo.base.user.pojo.dto.FindRolesDTO;
 import demo.base.user.pojo.po.AuthRole;
@@ -20,6 +21,7 @@ import demo.base.user.pojo.result.FindAuthRoleResult;
 import demo.base.user.pojo.result.FindRolesResult;
 import demo.base.user.service.AuthRoleService;
 import demo.base.user.service.RoleService;
+import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.service.CommonService;
 
 @Service
@@ -101,13 +103,28 @@ public class AuthRoleServiceImpl extends CommonService implements AuthRoleServic
 		r.setIsSuccess();
 		return r;
 	}
-	
+
 	@Override
-	public int deleteById(Long id) {
+	public CommonResultCX deleteAuthRole(DeleteAuthRoleBO bo) {
+		CommonResultCX r = new CommonResultCX();
+		
+		if(bo.getAuthIdList() == null || bo.getAuthIdList().isEmpty()) {
+			return r;
+		}
+		
+		Long operatorId = baseUtilCustom.getUserId();
+		AuthRoleExample example = new AuthRoleExample();
+		example.createCriteria().andAuthIdIn(bo.getAuthIdList()).andIsDeleteEqualTo(false);
 		AuthRole record = new AuthRole();
-		record.setId(id);
 		record.setIsDelete(true);
-		return authRoleMapper.updateByPrimaryKeySelective(record);
+		record.setUpdateBy(operatorId);
+		record.setUpdateTime(LocalDateTime.now());
+		int updateCount = authRoleMapper.updateByExampleSelective(record, example);
+		if(updateCount > 0) {
+			r.setIsSuccess();
+		}
+		
+		return r;
 	}
 	
 	@Override

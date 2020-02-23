@@ -1,21 +1,21 @@
-package demo.base.user.pojo.dto;
+package demo.base.user.pojo.bo;
 
 import java.util.List;
 
 import demo.base.user.pojo.type.OrganzationRolesType;
 import demo.base.user.pojo.type.SystemRolesType;
 
-public class FindAuthsDTO {
+public class FindAuthsBO {
 
 	private Integer authType;
 	private String authName;
 	private boolean authIsDelete = false;
 	private boolean authRoleIsDelete = false;
 	private boolean roleIsDelete = false;
-	private List<String> authPkList;
+	private List<Long> authIdList;
 	private List<SystemRolesType> sysRoleTypeList;
 	private List<OrganzationRolesType> orgRoleTypeList;
-	private List<String> belongOrgPkList;
+	private List<Long> belongOrgIdList;
 	private boolean isDelete = false;
 
 	public Integer getAuthType() {
@@ -34,7 +34,7 @@ public class FindAuthsDTO {
 		this.authName = authName;
 	}
 
-	public boolean getAuthIsDelete() {
+	public boolean isAuthIsDelete() {
 		return authIsDelete;
 	}
 
@@ -42,7 +42,7 @@ public class FindAuthsDTO {
 		this.authIsDelete = authIsDelete;
 	}
 
-	public boolean getAuthRoleIsDelete() {
+	public boolean isAuthRoleIsDelete() {
 		return authRoleIsDelete;
 	}
 
@@ -50,7 +50,7 @@ public class FindAuthsDTO {
 		this.authRoleIsDelete = authRoleIsDelete;
 	}
 
-	public boolean getRoleIsDelete() {
+	public boolean isRoleIsDelete() {
 		return roleIsDelete;
 	}
 
@@ -58,12 +58,12 @@ public class FindAuthsDTO {
 		this.roleIsDelete = roleIsDelete;
 	}
 
-	public List<String> getAuthPkList() {
-		return authPkList;
+	public List<Long> getAuthIdList() {
+		return authIdList;
 	}
 
-	public void setAuthPkList(List<String> authPkList) {
-		this.authPkList = authPkList;
+	public void setAuthIdList(List<Long> authIdList) {
+		this.authIdList = authIdList;
 	}
 
 	public List<SystemRolesType> getSysRoleTypeList() {
@@ -82,12 +82,12 @@ public class FindAuthsDTO {
 		this.orgRoleTypeList = orgRoleTypeList;
 	}
 
-	public List<String> getBelongOrgPkList() {
-		return belongOrgPkList;
+	public List<Long> getBelongOrgIdList() {
+		return belongOrgIdList;
 	}
 
-	public void setBelongOrgPkList(List<String> belongOrgPkList) {
-		this.belongOrgPkList = belongOrgPkList;
+	public void setBelongOrgIdList(List<Long> belongOrgIdList) {
+		this.belongOrgIdList = belongOrgIdList;
 	}
 
 	public boolean getIsDelete() {
@@ -100,10 +100,10 @@ public class FindAuthsDTO {
 
 	@Override
 	public String toString() {
-		return "FindAuthsDTO [authType=" + authType + ", authName=" + authName + ", authIsDelete=" + authIsDelete
-				+ ", authRoleIsDelete=" + authRoleIsDelete + ", roleIsDelete=" + roleIsDelete + ", authPkList="
-				+ authPkList + ", sysRoleTypeList=" + sysRoleTypeList + ", orgRoleTypeList=" + orgRoleTypeList
-				+ ", belongOrgPkList=" + belongOrgPkList + ", isDelete=" + isDelete + "]";
+		return "FindAuthsBO [authType=" + authType + ", authName=" + authName + ", authIsDelete=" + authIsDelete
+				+ ", authRoleIsDelete=" + authRoleIsDelete + ", roleIsDelete=" + roleIsDelete + ", authIdList="
+				+ authIdList + ", sysRoleTypeList=" + sysRoleTypeList + ", orgRoleTypeList=" + orgRoleTypeList
+				+ ", belongOrgIdList=" + belongOrgIdList + ", isDelete=" + isDelete + "]";
 	}
 
 }

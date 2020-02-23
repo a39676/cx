@@ -15,25 +15,28 @@
 
   <!-- user search start -->
   <div class="row">
-    <%@ include file="../userManager/userSearch.jsp" %>
+    <div class="col-md-12">      
+      <%@ include file="../userManager/userSearch.jsp" %>
+    </div>
   </div>
   <!-- user search end -->
 
   <hr>
 
-  <!-- auth row start-->
+  <!-- auth search start-->
   <div class="row">
-    <div class="col-md-12" id="authsDiv">
+    <div class="col-md-12">
+      <%@ include file="../../auth/authManager/authSearch.jsp" %>
     </div>
   </div>
-  <!-- auth row end-->
+  <!-- auth search end-->
 
   <hr>
 
   <!-- result row start-->
   <div class="row">
     <div class="col-md-12">
-      <input type="" name="" id="resultMsg" disabled="disabled">
+      <input type="" name="" id="userAuthOperatorResultMsg" disabled="disabled" style="width: 800px;">
     </div>
   </div>
   <!-- result row end-->
@@ -47,13 +50,9 @@
 
     $(document).ready(function() {
 
-      $(".conditionInput").change(function () {
-        authButtonReCSS();
-      });
-
       $("#usernameDiv").click(function () {
         var userPk = $("#usernameDiv").attr("selectedUserPk");
-        $("#resultMsg").val("");
+        $("#userAuthOperatorResultMsg").val("");
 
         var url = "/userauth/findUserAuth";
 
@@ -72,70 +71,42 @@
           },
           timeout: 15000,
           success:function(data){
-            var hasAuthList = data.authVOList;
-            authButtonReCSS();
-            $.each(hasAuthList, function(index, authDetail) {
-              $(".authButton[authPk='"+authDetail.pk+"']").addClass("btn-primary");
-              $(".authButton[authPk='"+authDetail.pk+"']").removeClass("btn-light");
+            var authVOList = data.authVOList;
+            var authPkList = [];
+            $.each(authVOList, function(index, authVO) {
+              authPkList.push(authVO.pk);
             });
+            $("#usernameDiv").attr("userAuthPkList", authPkList);
           }, 
           error:function(e){
           }
         });  
       });
 
-      findAuth();
-
-      function findAuth() {
-        var url = "/userauth/findAuth";
-
-        var jsonOutput = {
-        };
-
-        $.ajax({               
-          type: "POST",  
-          url: url,
-          data: JSON.stringify(jsonOutput),
-          dataType: 'json',
-          contentType: "application/json",
-          beforeSend: function(xhr) {
-            xhr.setRequestHeader(csrfHeader, csrfToken);
-          },
-          timeout: 15000,
-          success:function(data){
-            var authList = data.authVOList;
-            var authsDiv = $("#authsDiv");
-            authsDiv.empty();
-            $.each(authList, function(index, authDetail) {
-              authsDiv.append($("<button class='btn btn-sm btn-light'></button>").attr("authPk", authDetail.pk).text(authDetail.authName));
-              authsDiv.append($("<label>&nbsp;&nbsp;|&nbsp;&nbsp;</label>"));
-              $("button[authPk='"+authDetail.pk+"']").addClass("authButton");
-              $("button[authPk='"+authDetail.pk+"']").bind("click", userAuthEdit);
-            });
-          }, 
-          error:function(e){
-          }
-        });  
-      }
-
-      function authButtonReCSS() {
-        $(".authButton").addClass("btn-light");
-        $(".authButton").removeClass("btn-primary");
-      }
-      
-      function userAuthEdit() {
-        $("#resultMsg").val("");
-        var thisAuthButton = $(this);
-        var modifyAuthPk = $(this).attr("authPk");
-        var authName = $(this).text();
-
+    
+      $("#authNameDiv").click(function () {
         var userPk = $("#usernameDiv").attr("selectedUserPk");
-        var url;
+        var authPk = $("#authNameDiv").attr("selectedAuthPk");
+        var operatorType = $("#authNameDiv").attr("operatorType");
 
-        if(thisAuthButton.hasClass("btn-primary")) {
+        if (userPk != null && authPk != null && operatorType != null) {
+          userAuthEdit(userPk, authPk, operatorType);
+          $("#authNameDiv").attr("selectedAuthPk", "");
+          $("#authNameDiv").attr("operatorType", "");
+        }
+
+
+      });
+
+      function userAuthEdit(userPk, modifyAuthPk, operatorType) {
+        $("#userAuthOperatorResultMsg").val("");
+        var url;
+        if(operatorType == "delete") {
           url = "/userauth/deleteUserAuth"
-        } else {
+        } else if (operatorType == "insert") {
           url = "/userauth/insertUserAuth"
+        } else {
+          return;
         }
 
         var jsonOutput = {
@@ -155,23 +126,28 @@
           timeout: 15000,
           success:function(data){
             if(data.code == "0") {
-              if (thisAuthButton.hasClass("btn-primary")) {
-                thisAuthButton.removeClass("btn-primary");
-                thisAuthButton.addClass("btn-light");
-              } else {
-                thisAuthButton.addClass("btn-primary");
-                thisAuthButton.removeClass("btn-light");
+              $("#userAuthOperatorResultMsg").val("edit success: " + $(".authButton[pk='"+modifyAuthPk+"']").text());
+              var authPkList = $("#usernameDiv").attr("userAuthPkList").split(",");
+              if(operatorType == "delete") {
+                $(".authButton[pk='"+modifyAuthPk+"']").addClass("btn-light");
+                $(".authButton[pk='"+modifyAuthPk+"']").removeClass("btn-primary");
+                authPkList.pop(modifyAuthPk);
+              } else if (operatorType == "insert") {
+                url = "/userauth/insertUserAuth"
+                $(".authButton[pk='"+modifyAuthPk+"']").addClass("btn-primary");
+                $(".authButton[pk='"+modifyAuthPk+"']").removeClass("btn-light");
+                authPkList.push(modifyAuthPk);
               }
-              $("#resultMsg").val("edit success: " + authName);
+              $("#usernameDiv").attr("userAuthPkList", authPkList);
             } else {
-              $("#resultMsg").val("edit fail: " + data.message);
+              $("#userAuthOperatorResultMsg").val("edit fail: " + data.message);
             }
           }, 
           error:function(e){
           }
         });  
       }
-      
+
     });
 
   </script>

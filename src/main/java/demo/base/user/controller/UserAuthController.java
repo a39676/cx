@@ -55,7 +55,7 @@ public class UserAuthController extends CommonController {
 	
 	@PostMapping(value = UserAuthUrl.findAuth)
 	@ResponseBody
-	public FindAuthsVOResult findAuth() {
-		return authService.findAuthVOListByCondition(new FindAuthsDTO());
+	public FindAuthsVOResult findAuth(@RequestBody FindAuthsDTO dto) {
+		return authService.findAuthVOListByCondition(dto);
 	}
 }

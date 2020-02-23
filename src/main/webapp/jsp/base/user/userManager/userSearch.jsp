@@ -16,27 +16,27 @@
   <div class="row">
     <div class="col-md-4" >
       <label>UserName</label>
-      <input class="conditionInput" type="text" name="UserName" id="UserName" placeholder="UserName">
+      <input class="userSearchConditionInput" type="text" name="UserName" id="UserName" placeholder="UserName">
     </div>
     <div class="col-md-4" >
       <label>UserNickName</label>
-      <input class="conditionInput" type="text" name="UserNickName" id="UserNickName" placeholder="UserNickName">
+      <input class="userSearchConditionInput" type="text" name="UserNickName" id="UserNickName" placeholder="UserNickName">
     </div>
     <div class="col-md-4" >
       <label>userId</label>
-      <input class="conditionInput" type="text" name="userId" id="userId" placeholder="userId">
+      <input class="userSearchConditionInput" type="text" name="userId" id="userId" placeholder="userId">
     </div>
   </div>
 
-  <div class="row" id="conditionValue2" accountNonLocked="true" accountNonExpired="true" credentialsNonExpired="true">
+  <div class="row" id="userSearchConditionValue2" accountNonLocked="true" accountNonExpired="true" credentialsNonExpired="true">
     <div class="col-md-4" >
       <label class="badge">accountNonLocked</label>
       <div class="form-check form-check-inline">
-        <input class="form-check-input conditionInput" type="radio" id="accountNonLockedTrue" name="accountNonLockedType" checked="checked" value="true">
+        <input class="form-check-input userSearchConditionInput" type="radio" id="accountNonLockedTrue" name="accountNonLockedType" checked="checked" value="true">
         <label class="form-check-label badge" for="accountNonLockedTrue" name="accountNonLockedValue" value="true">True</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input conditionInput" type="radio" id="accountNonLockedFalse" name="accountNonLockedType" value="false">
+        <input class="form-check-input userSearchConditionInput" type="radio" id="accountNonLockedFalse" name="accountNonLockedType" value="false">
         <label class="form-check-label badge" for="accountNonLockedFalse" name="accountNonLockedValue" value="false">False</label>
       </div>
     </div>
@@ -44,11 +44,11 @@
     <div class="col-md-4" >
       <label class="badge">accountNonExpired</label>
       <div class="form-check form-check-inline">
-        <input class="form-check-input conditionInput" type="radio" id="accountNonExpiredTrue" name="accountNonExpiredType" checked="checked" value="true">
+        <input class="form-check-input userSearchConditionInput" type="radio" id="accountNonExpiredTrue" name="accountNonExpiredType" checked="checked" value="true">
         <label class="form-check-label badge" for="accountNonExpiredTrue">True</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input conditionInput" type="radio" id="accountNonExpiredFalse" name="accountNonExpiredType" value="false">
+        <input class="form-check-input userSearchConditionInput" type="radio" id="accountNonExpiredFalse" name="accountNonExpiredType" value="false">
         <label class="form-check-label badge" for="accountNonExpiredFalse">False</label>
       </div>
     </div>
@@ -56,13 +56,19 @@
     <div class="col-md-4" >
       <label class="badge">credentialsNonExpired</label>
       <div class="form-check form-check-inline">
-        <input class="form-check-input conditionInput" type="radio" id="credentialsNonExpiredTrue" name="credentialsNonExpiredType" checked="checked" value="true">
+        <input class="form-check-input userSearchConditionInput" type="radio" id="credentialsNonExpiredTrue" name="credentialsNonExpiredType" checked="checked" value="true">
         <label class="form-check-label badge" for="credentialsNonExpiredTrue">True</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input conditionInput" type="radio" id="credentialsNonExpiredFalse" name="credentialsNonExpiredType" value="false">
+        <input class="form-check-input userSearchConditionInput" type="radio" id="credentialsNonExpiredFalse" name="credentialsNonExpiredType" value="false">
         <label class="form-check-label badge" for="credentialsNonExpiredFalse">False</label>
       </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4" >
+      <button id="cleanUserSearchCondition" class="btn btn-sm btn-warning">clean user search condition</button>
     </div>
   </div>
   
@@ -70,7 +76,7 @@
   
   <div class="row">
     <div class="col-md-12">
-      <div id="usernameDiv" selectedUserPk=""></div>
+      <div id="usernameDiv" selectedUserPk="" userAuthPkList=""></div>
     </div>
   </div>
 
@@ -87,32 +93,32 @@
         accountNonLockedValue($(this).val());
       });
       function accountNonLockedValue(e) {
-        $("#conditionValue2").attr("accountNonLocked", e);
+        $("#userSearchConditionValue2").attr("accountNonLocked", e);
       }
 
       $("input[name='accountNonExpiredType']").click(function () {
         accountNonExpiredValue($(this).val());
       });
       function accountNonExpiredValue(e) {
-        $("#conditionValue2").attr("accountNonExpired", e);
+        $("#userSearchConditionValue2").attr("accountNonExpired", e);
       }
 
       $("input[name='credentialsNonExpiredType']").click(function () {
         credentialsNonExpiredValue($(this).val());
       });
       function credentialsNonExpiredValue(e) {
-        $("#conditionValue2").attr("credentialsNonExpired", e);
+        $("#userSearchConditionValue2").attr("credentialsNonExpired", e);
       }
 
-      $(".conditionInput").change(function () {
+      $(".userSearchConditionInput").change(function () {
         $("#usernameDiv").attr("selectedUserPk", "");
 
         var UserName = $("#UserName").val();
         var UserNickName = $("#UserNickName").val();
         var userId = $("#userId").val();
-        var accountNonLocked = $("#conditionValue2").attr("accountNonLocked");
-        var accountNonExpired = $("#conditionValue2").attr("accountNonExpired");
-        var credentialsNonExpired = $("#conditionValue2").attr("credentialsNonExpired");
+        var accountNonLocked = $("#userSearchConditionValue2").attr("accountNonLocked");
+        var accountNonExpired = $("#userSearchConditionValue2").attr("accountNonExpired");
+        var credentialsNonExpired = $("#userSearchConditionValue2").attr("credentialsNonExpired");
 
         var url = "/user/findUserByCondition";
 
@@ -159,6 +165,28 @@
         $(this).addClass("btn-primary")
         $("#usernameDiv").attr("selectedUserPk", userPk);
       };
+
+      $("#cleanUserSearchCondition").click(function () {
+        cleanUserSearchCondition();
+      });
+      function cleanUserSearchCondition() {
+        var usernameDiv = $("#usernameDiv");
+        usernameDiv.empty();
+        usernameDiv.attr("selectedUserPk", "");
+        usernameDiv.attr("userAuthPkList", "");
+        $("#UserName").val("");
+        $("#UserNickName").val("");
+        $("#userId").val("");
+        $("#accountNonLockedTrue").prop("checked", true);
+        $("#accountNonLockedFalse").prop("checked", false);
+        $("#accountNonExpiredTrue").prop("checked", true);
+        $("#accountNonExpiredFalse").prop("checked", false);
+        $("#credentialsNonExpiredTrue").prop("checked", true);
+        $("#credentialsNonExpiredFalse").prop("checked", false);
+        accountNonLockedValue("true");
+        accountNonExpiredValue("true");
+        credentialsNonExpiredValue("true");
+      }
 
     });
 

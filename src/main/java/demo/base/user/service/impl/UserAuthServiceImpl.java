@@ -10,14 +10,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.base.organizations.pojo.po.Organizations;
 import demo.base.user.mapper.UserAuthMapper;
 import demo.base.user.pojo.bo.EditUserAuthBO;
+import demo.base.user.pojo.bo.FindAuthsBO;
 import demo.base.user.pojo.bo.FindUserAuthBO;
-import demo.base.user.pojo.bo.MyUserPrincipal;
 import demo.base.user.pojo.dto.EditUserAuthDTO;
 import demo.base.user.pojo.dto.FindAuthRoleDTO;
-import demo.base.user.pojo.dto.FindAuthsDTO;
 import demo.base.user.pojo.dto.FindUserAuthDTO;
 import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.po.AuthRole;
@@ -69,7 +67,7 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 			return r;
 		}
 
-		CommonResultCX canEditResult = canEditUserAuth(authId);
+		CommonResultCX canEditResult = authService.canEditUserAuth(authId);
 		if(!canEditResult.isSuccess()) {
 			r.addMessage(canEditResult.getMessage());
 			return r;
@@ -127,7 +125,7 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 			return r;
 		}
 		
-		CommonResultCX canEditResult = canEditUserAuth(authId);
+		CommonResultCX canEditResult = authService.canEditUserAuth(authId);
 		if(!canEditResult.isSuccess()) {
 			r.addMessage(canEditResult.getMessage());
 			return r;
@@ -233,10 +231,10 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 			return r;
 		}
 		
-		FindAuthsDTO findAuthDTO = new FindAuthsDTO();
+		FindAuthsBO findAuthBO = new FindAuthsBO();
 		List<Long> authIdList = userAuthList.stream().map(UserAuth::getAuthId).collect(Collectors.toList());
-		findAuthDTO.setAuthIdList(authIdList);
-		FindAuthsResult authListResult = authService.findAuthsByCondition(findAuthDTO);
+		findAuthBO.setAuthIdList(authIdList);
+		FindAuthsResult authListResult = authService.findAuthsByCondition(findAuthBO);
 		if(!authListResult.isSuccess() || authListResult.getAuthList() == null || authListResult.getAuthList().size() < 1) {
 			r.addMessage(authListResult.getMessage());
 			return r;
@@ -293,56 +291,6 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 		vo.setPk(encryptId(po.getId()));
 		vo.setUserPk(encryptId(po.getUserId()));
 		return vo;
-	}
-	
-	/**
-	 * 
-	 * @param operatorId 当前操作者用户ID
-	 * @param authId 拟加入 / 删除的角色 ID (可能为自己增删角色, 可能为其他用户增删角色)
-	 * @return
-	 */
-	private CommonResultCX canEditUserAuth(Long authId) {
-		CommonResultCX r = new CommonResultCX();
-		if(authId == null) {
-			r.failWithMessage("参数为空");
-			return r;
-		}
-		
-		MyUserPrincipal principal = baseUtilCustom.getUserPrincipal();
-		if(principal.getControllerOrganizations() == null || principal.getControllerOrganizations().isEmpty()) {
-			r.failWithMessage("无权操作该角色");
-			return r;
-		}
-
-		FindAuthsResult findAuthResult = authService.findAuthsByCondition(authId);
-		if(!findAuthResult.isSuccess() || findAuthResult.getAuthList() == null || findAuthResult.getAuthList().isEmpty()) {
-			r.addMessage(findAuthResult.getMessage());
-			return r;
-		}
-		
-		Auth targetAuth = findAuthResult.getAuthList().get(0);
-		
-		List<Long> orgIdList = principal.getSuperManagerOrgList().stream().map(Organizations::getId).collect(Collectors.toList());
-		if(orgIdList.contains(targetAuth.getBelongOrg())) {
-			r.setIsSuccess();
-			return r;
-		}
-
-		orgIdList = principal.getControllerOrganizations().stream().map(Organizations::getId).collect(Collectors.toList());
-		if(orgIdList.contains(targetAuth.getBelongOrg())) {
-			r.setIsSuccess();
-			return r;
-		}
-		
-		orgIdList = principal.getSubOrganizations().stream().map(Organizations::getId).collect(Collectors.toList());
-		if(orgIdList.contains(targetAuth.getBelongOrg())) {
-			r.setIsSuccess();
-			return r;
-		}
-		
-		r.failWithMessage("无权操作该角色");
-		return r;
-		
 	}
 	
 

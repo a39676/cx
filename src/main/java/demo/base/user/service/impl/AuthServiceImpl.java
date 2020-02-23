@@ -1,5 +1,6 @@
 package demo.base.user.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,12 +14,18 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import demo.base.organizations.pojo.po.Organizations;
+import demo.base.organizations.pojo.result.FindOrgListResult;
 import demo.base.organizations.service.OrganizationService;
 import demo.base.system.pojo.constant.InitSystemConstant;
 import demo.base.user.mapper.AuthMapper;
+import demo.base.user.pojo.bo.DeleteAuthRoleBO;
+import demo.base.user.pojo.bo.FindAuthsBO;
 import demo.base.user.pojo.bo.InsertNewAuthBO;
+import demo.base.user.pojo.bo.MyUserPrincipal;
 import demo.base.user.pojo.dto.FindAuthRoleDTO;
 import demo.base.user.pojo.dto.FindAuthsDTO;
+import demo.base.user.pojo.dto.FindOrgByConditionDTO;
 import demo.base.user.pojo.dto.FindRolesDTO;
 import demo.base.user.pojo.dto.InsertNewAuthDTO;
 import demo.base.user.pojo.po.Auth;
@@ -130,64 +137,127 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 	
 	@Override
 	public FindAuthsResult findSuperAdministratorAuth() {
+		FindAuthsResult r = new FindAuthsResult();
 		
-		FindAuthsDTO dto = new FindAuthsDTO();
-		dto.setAuthName(AuthType.SUPER_ADMIN.getName());
-		dto.setAuthType(AuthTypeType.SYS_AUTH.getCode());
-		dto.setBelongOrgIdList(Arrays.asList(InitSystemConstant.ORIGINAL_BASE_ORG_ID));
+		AuthExample example = new AuthExample();
+		example.createCriteria()
+		.andIsDeleteEqualTo(false)
+		.andBelongOrgEqualTo(InitSystemConstant.ORIGINAL_BASE_ORG_ID)
+		.andAuthTypeEqualTo(AuthTypeType.SYS_AUTH.getCode())
+		.andAuthNameEqualTo(AuthType.SUPER_ADMIN.getName());
+		List<Auth> authList = authMapper.selectByExample(example);
 		
-		return findAuthsByCondition(dto);
+		r.setAuthList(authList);
+		r.setIsSuccess();
+		return r;
 	}
 	
 	@Override
 	public FindAuthsResult findAuthsByCondition(FindAuthsDTO dto) {
+		FindAuthsResult r = new FindAuthsResult();
+		FindAuthsBO bo = new FindAuthsBO();
+		
+		if(dto.getAuthPkList() != null && !dto.getAuthPkList().isEmpty()) {
+			List<Long> authIdList = new ArrayList<Long>();
+			Long authId = null;
+			for(String authPk : dto.getAuthPkList()) {
+				authId = decryptPrivateKey(authPk);
+				if(authId == null) {
+					r.failWithMessage("error param");
+					return r;
+				}
+				authIdList.add(authId);
+			}
+			bo.setAuthIdList(authIdList);
+		}
+		
+		if(dto.getBelongOrgPkList() != null && !dto.getBelongOrgPkList().isEmpty()) {
+			List<Long> orgIdList = new ArrayList<Long>();
+			Long orgId = null;
+			for(String orgPk : dto.getBelongOrgPkList()) {
+				orgId = decryptPrivateKey(orgPk);
+				if(orgId == null) {
+					r.failWithMessage("error param");
+					return r;
+				}
+				orgIdList.add(orgId);
+			}
+			bo.setBelongOrgIdList(orgIdList);
+		}
+		
+		if(isBigUser()) {
+			bo.setIsDelete(dto.getIsDelete());
+		} else {
+			bo.setIsDelete(false);
+		}
+		
+		bo.setAuthIsDelete(dto.getAuthIsDelete());
+		bo.setAuthRoleIsDelete(dto.getAuthRoleIsDelete());
+		bo.setRoleIsDelete(dto.getRoleIsDelete());
+
+		bo.setAuthName(dto.getAuthName());
+		bo.setAuthType(dto.getAuthType());
+		bo.setOrgRoleTypeList(dto.getOrgRoleTypeList());
+		bo.setSysRoleTypeList(dto.getSysRoleTypeList());
+		
+		return findAuthsByCondition(bo);
+	}
+	
+	@Override
+	public FindAuthsResult findAuthsByCondition(FindAuthsBO bo) {
 		FindAuthsResult result = new FindAuthsResult();
 		AuthExample example = new AuthExample();
 		Criteria c = example.createCriteria();
 
-		/*
-		 * 
-		 * TODO
-		 * 如何限制 只能查找本机构角色
-		 * 管理员能查找下级机构的管理员角色
-		 * 
-		 */
-		
 		// 非管理员 禁止参数全空
-		if((dto.getBelongOrgIdList() == null || dto.getBelongOrgIdList().isEmpty())
-				&& (dto.getAuthIdList() == null || dto.getAuthIdList().isEmpty())
-				&& (StringUtils.isBlank(dto.getAuthName()))
-				&& dto.getAuthType() == null
-				&& (dto.getSysRoleTypeList() == null || dto.getSysRoleTypeList().isEmpty())
-				&& (dto.getOrgRoleTypeList() == null || dto.getOrgRoleTypeList().isEmpty())
+		if((bo.getBelongOrgIdList() == null || bo.getBelongOrgIdList().isEmpty())
+				&& (bo.getAuthIdList() == null || bo.getAuthIdList().isEmpty())
+				&& (StringUtils.isBlank(bo.getAuthName()))
+				&& bo.getAuthType() == null
+				&& (bo.getSysRoleTypeList() == null || bo.getSysRoleTypeList().isEmpty())
+				&& (bo.getOrgRoleTypeList() == null || bo.getOrgRoleTypeList().isEmpty())
 				) {
 			if(isBigUser()) {
-				dto.setBelongOrgIdList(Arrays.asList(InitSystemConstant.ORIGINAL_BASE_ORG_ID));
+				bo.setBelongOrgIdList(Arrays.asList(InitSystemConstant.ORIGINAL_BASE_ORG_ID));
 			} else {
 				result.failWithMessage("至少输入一个参数");
 				return result;
 			}
 		}
 		
-		if(dto.getAuthIdList() != null && dto.getAuthIdList() .size() > 0) {
-			c.andIdIn(dto.getAuthIdList());
+		if(bo.getAuthType() != null) {
+			if(!isBigUser() && bo.getAuthType().equals(AuthTypeType.SYS_AUTH.getCode())) {
+				result.failWithMessage("无权操作");
+				return result;
+			}
+			c.andAuthTypeEqualTo(bo.getAuthType());
 		}
-		if(StringUtils.isNotBlank(dto.getAuthName())) {
-			c.andAuthNameLike("%" + dto.getAuthName() + "%");
+		if(bo.getBelongOrgIdList() != null && bo.getBelongOrgIdList().size() > 0) {
+			CommonResultCX validUserOrgIdResult = null;
+			for(Long orgId : bo.getBelongOrgIdList()) {
+				validUserOrgIdResult = orgService.validUserOrg(orgId);
+				if(validUserOrgIdResult.isFail()) {
+					result.addMessage(validUserOrgIdResult.getMessage());
+					return result;
+				}
+			}
+			c.andBelongOrgIn(bo.getBelongOrgIdList());
 		}
-		if(dto.getAuthType() != null) {
-			c.andAuthTypeEqualTo(dto.getAuthType());
+		if(bo.getAuthIdList() != null && !bo.getAuthIdList().isEmpty()) {
+			c.andIdIn(bo.getAuthIdList());
 		}
-		if(dto.getBelongOrgIdList() != null && dto.getBelongOrgIdList().size() > 0) {
-			c.andBelongOrgIn(dto.getBelongOrgIdList());
+		if(StringUtils.isNotBlank(bo.getAuthName())) {
+			c.andAuthNameLike("%" + bo.getAuthName() + "%");
 		}
-		if((dto.getSysRoleTypeList() != null && !dto.getSysRoleTypeList().isEmpty())
-				|| (dto.getOrgRoleTypeList() != null && !dto.getOrgRoleTypeList().isEmpty())
+		
+		if((bo.getSysRoleTypeList() != null && !bo.getSysRoleTypeList().isEmpty())
+				|| (bo.getOrgRoleTypeList() != null && !bo.getOrgRoleTypeList().isEmpty())
 				) {
 			FindAuthRoleDTO findAuthRoleDTO = new FindAuthRoleDTO();
-			findAuthRoleDTO.setSysRoleTypeList(dto.getSysRoleTypeList());
-			findAuthRoleDTO.setOrgRoleTypeList(dto.getOrgRoleTypeList());
-			findAuthRoleDTO.setOrgIdList(dto.getBelongOrgIdList());
+			findAuthRoleDTO.setSysRoleTypeList(bo.getSysRoleTypeList());
+			findAuthRoleDTO.setOrgRoleTypeList(bo.getOrgRoleTypeList());
+			findAuthRoleDTO.setOrgIdList(bo.getBelongOrgIdList());
+			findAuthRoleDTO.setAuthIdList(bo.getAuthIdList());
 			FindAuthRoleResult authRoleResult = authRoleService.findAuthRole(findAuthRoleDTO);
 			if(!authRoleResult.isSuccess()) {
 				result.setMessage(authRoleResult.getMessage());
@@ -242,9 +312,14 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 	
 	@Override
 	public FindAuthsResult findAuthsByCondition(Long authId) {
-		FindAuthsDTO dto = new FindAuthsDTO();
-		dto.setAuthIdList(Arrays.asList(authId));
-		return findAuthsByCondition(dto);
+		FindAuthsResult r = new FindAuthsResult();
+		if(authId == null) {
+			return r;
+		}
+		Auth auth = authMapper.selectByPrimaryKey(authId);
+		r.setAuthList(Arrays.asList(auth));
+		r.setIsSuccess();
+		return r;
 	}
 	
 	@Override
@@ -364,4 +439,130 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		return validUserOrgResult.isSuccess();
 	}
 	
+	@Override
+	public CommonResultCX deleteAuth(DeleteAuthRoleBO bo) {
+		CommonResultCX r = new CommonResultCX();
+		if((bo.getAuthIdList() == null || bo.getAuthIdList().isEmpty())
+				&& (bo.getOrgId() == null)
+				) {
+			r.failWithMessage("参数为空");
+			return r;
+		}
+		
+		CommonResultCX canEditUserAuthResult = null;
+		List<Long> deleteAuthIdList = new ArrayList<Long>();
+		
+		AuthExample authExample = new AuthExample();
+		Criteria authCriteria = authExample.createCriteria();
+		if(bo.getOrgId() != null) {
+			authCriteria.andBelongOrgEqualTo(bo.getOrgId());
+		}
+		if(bo.getAuthIdList() != null && !bo.getAuthIdList().isEmpty()) {
+			authCriteria.andIdIn(bo.getAuthIdList());
+		}
+		
+		List<Auth> targetAuthList = authMapper.selectByExample(authExample);
+		
+		for(Auth auth : targetAuthList) {
+			canEditUserAuthResult = canEditUserAuth(auth.getId());
+			if(!canEditUserAuthResult.isSuccess()) {
+				r.addMessage(canEditUserAuthResult.getMessage());
+				return r;
+			}
+			deleteAuthIdList.add(auth.getId());
+		}
+		
+		Long operatorId = baseUtilCustom.getUserId();
+		AuthExample example = new AuthExample();
+		example.createCriteria().andIdIn(deleteAuthIdList);
+		Auth record = new Auth();
+		record.setIsDelete(true);
+		record.setUpdateBy(operatorId);
+		record.setUpdateTime(LocalDateTime.now());
+		int updateCount = authMapper.updateByExample(record, example);
+		if(updateCount < 1) {
+			return r;
+		}
+		
+		bo.setOrgId(null);
+		bo.setAuthIdList(deleteAuthIdList);
+		CommonResultCX deleteAuthRoleResult = authRoleService.deleteAuthRole(bo);
+		if(!deleteAuthRoleResult.isSuccess()) {
+			r.addMessage(deleteAuthRoleResult.getMessage());
+			return r;
+		}
+		
+		r.setIsSuccess();
+		return r;
+	}
+	
+	@Override
+	public CommonResultCX canEditUserAuth(Long authId) {
+		CommonResultCX r = new CommonResultCX();
+		if(authId == null) {
+			r.failWithMessage("参数为空");
+			return r;
+		}
+		
+		MyUserPrincipal principal = baseUtilCustom.getUserPrincipal();
+		if((principal.getSuperManagerOrgList() == null || principal.getSuperManagerOrgList().isEmpty())
+				&& (principal.getControllerOrganizations() == null || principal.getControllerOrganizations().isEmpty())
+				&& (principal.getSubOrganizations() == null || principal.getSubOrganizations().isEmpty())
+				&& !isBigUser()
+				) {
+			r.failWithMessage("无权操作该角色");
+			return r;
+		}
+
+		FindAuthsResult findAuthResult = findAuthsByCondition(authId);
+		if(!findAuthResult.isSuccess() || findAuthResult.getAuthList() == null || findAuthResult.getAuthList().isEmpty()) {
+			r.addMessage(findAuthResult.getMessage());
+			return r;
+		}
+		
+		Auth targetAuth = findAuthResult.getAuthList().get(0);
+		
+		List<Long> orgIdList = null;
+		if(principal.getSuperManagerOrgList() != null && !principal.getSuperManagerOrgList().isEmpty()) {
+			orgIdList = principal.getSuperManagerOrgList().stream().map(Organizations::getId).collect(Collectors.toList());
+			if(orgIdList.contains(targetAuth.getBelongOrg())) {
+				r.setIsSuccess();
+				return r;
+			}
+		}
+
+		if(principal.getControllerOrganizations() != null && !principal.getControllerOrganizations().isEmpty()) {
+			orgIdList = principal.getControllerOrganizations().stream().map(Organizations::getId).collect(Collectors.toList());
+			if(orgIdList.contains(targetAuth.getBelongOrg())) {
+				r.setIsSuccess();
+				return r;
+			}
+		}
+		
+		if(principal.getSubOrganizations() != null && !principal.getSubOrganizations().isEmpty()) {
+			orgIdList = principal.getSubOrganizations().stream().map(Organizations::getId).collect(Collectors.toList());
+			if(orgIdList.contains(targetAuth.getBelongOrg())) {
+				r.setIsSuccess();
+				return r;
+			}
+		}
+		
+		FindOrgByConditionDTO findOrgDTO = new FindOrgByConditionDTO();
+		findOrgDTO.setTopOrg(targetAuth.getBelongOrg());
+		findOrgDTO.setOrgId(targetAuth.getBelongOrg());
+		FindOrgListResult findOrgResult = orgService.findOrgList(findOrgDTO);
+		if(findOrgResult.isFail()) {
+			r.addMessage(findOrgResult.getMessage());
+			return r;
+		}
+		
+		if(findOrgResult.getOrgVOList() != null && !findOrgResult.getOrgVOList().isEmpty()) {
+			r.setIsSuccess();
+			return r;
+		}
+		
+		r.failWithMessage("无权操作该角色");
+		return r;
+		
+	}
 }

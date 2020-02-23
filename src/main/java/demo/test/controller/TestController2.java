@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import demo.base.organizations.pojo.dto.DeleteOrgDTO;
 import demo.base.organizations.pojo.dto.OrgRegistDTO;
 import demo.base.organizations.pojo.result.OrgRegistResult;
 import demo.base.organizations.service.OrganizationService;
 import demo.baseCommon.controller.CommonController;
+import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.config.costom_component.SnowFlake;
 import demo.test.pojo.constant.TestUrl;
 
@@ -46,4 +48,9 @@ public class TestController2 extends CommonController {
 		return orgService.topOrgRegist(dto);
 	}
 
+	@PostMapping(value = "/deleteOrg")
+	@ResponseBody
+	public CommonResultCX deleteOrg(@RequestBody DeleteOrgDTO dto) {
+		return orgService.deleteOrg(dto);
+	}
 }

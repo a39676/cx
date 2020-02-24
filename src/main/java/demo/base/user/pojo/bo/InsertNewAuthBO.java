@@ -1,9 +1,9 @@
 package demo.base.user.pojo.bo;
 
-import demo.base.user.pojo.dto.InsertNewAuthDTO;
+import demo.base.user.pojo.dto.InsertAuthDTO;
 import demo.base.user.pojo.type.AuthTypeType;
 
-public class InsertNewAuthBO extends InsertNewAuthDTO {
+public class InsertNewAuthBO extends InsertAuthDTO {
 
 	private Long creatorId;
 	private AuthTypeType authTypeType;

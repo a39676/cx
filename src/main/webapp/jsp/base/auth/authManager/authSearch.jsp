@@ -142,12 +142,15 @@
             var authNameDiv = $("#authNameDiv");
             authNameDiv.empty();
             var usernameDiv = $("#usernameDiv");
-            var userAuthPkList = usernameDiv.attr("userAuthPkList").split(",");
+            var userAuthPkList = null;
+            if(usernameDiv != null && usernameDiv.attr("userAuthPkList") != null) {
+              userAuthPkList = usernameDiv.attr("userAuthPkList").split(",");
+            }
             $.each(authVOList, function(index, authVOInfo) {
               authNameDiv.append($("<button class='btn btn-sm btn-light'></button>").attr("pk", authVOInfo.pk).text(authVOInfo.authName));
               authNameDiv.append($("<label>&nbsp;&nbsp;|&nbsp;&nbsp;</label>"));
               $("button[pk='"+authVOInfo.pk+"']").addClass("authButton");
-              if((jQuery.inArray(authVOInfo.pk, userAuthPkList)) >= 0) {
+              if(userAuthPkList != null && (jQuery.inArray(authVOInfo.pk, userAuthPkList)) >= 0) {
                 $("button[pk='"+authVOInfo.pk+"']").addClass("btn-primary");
                 $("button[pk='"+authVOInfo.pk+"']").removeClass("btn-light");
               }

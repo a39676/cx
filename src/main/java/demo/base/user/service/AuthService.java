@@ -1,9 +1,10 @@
 package demo.base.user.service;
 
-import demo.base.user.pojo.bo.DeleteAuthRoleBO;
+import demo.base.user.pojo.bo.DeleteAuthBO;
 import demo.base.user.pojo.bo.FindAuthsBO;
+import demo.base.user.pojo.dto.DeleteAuthDTO;
 import demo.base.user.pojo.dto.FindAuthsDTO;
-import demo.base.user.pojo.dto.InsertNewAuthDTO;
+import demo.base.user.pojo.dto.InsertAuthDTO;
 import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.result.FindAuthsResult;
 import demo.base.user.pojo.result.FindAuthsVOResult;
@@ -37,9 +38,9 @@ public interface AuthService {
 
 	AuthVO buildAuthVOByPO(Auth po);
 
-	InsertNewAuthResult insertOrgAuth(InsertNewAuthDTO dto);
+	InsertNewAuthResult insertOrgAuth(InsertAuthDTO dto);
 
-	InsertNewAuthResult insertSysAuth(InsertNewAuthDTO dto);
+	InsertNewAuthResult insertSysAuth(InsertAuthDTO dto);
 
 	/**
 	 * 
@@ -49,7 +50,7 @@ public interface AuthService {
 	 */
 	CommonResultCX canEditUserAuth(Long authId);
 
-	CommonResultCX deleteAuth(DeleteAuthRoleBO bo);
-
+	CommonResultCX deleteAuth(DeleteAuthDTO dto);
+	CommonResultCX deleteAuth(DeleteAuthBO bo);
 
 }

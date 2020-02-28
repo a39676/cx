@@ -4,6 +4,7 @@ public enum ImageTagType {
 	
 	fromArticle("fromArticle", 11L),
 	autoTestImgToCloudinary("autoTestImgToCloudinary", 12L),
+	imageSaving("imageSaving", 13L),
 	
 	;
 	

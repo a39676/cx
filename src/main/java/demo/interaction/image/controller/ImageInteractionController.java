@@ -7,9 +7,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.baseCommon.controller.CommonController;
+import demo.image.service.ImageService;
 import demo.interaction.image.service.ImageInteractionService;
 import image.pojo.constant.ImageInteractionUrl;
+import image.pojo.dto.ImageSavingDTO;
 import image.pojo.dto.UploadImageToCloudinaryDTO;
 import image.pojo.result.UploadImageToCloudinaryResult;
 
@@ -19,6 +22,8 @@ public class ImageInteractionController extends CommonController {
 
 	@Autowired
 	private ImageInteractionService imageInteractionService;
+	@Autowired
+	private ImageService imgService;
 	
 	@PostMapping(value = ImageInteractionUrl.uploadImageToCloudinary)
 	@ResponseBody
@@ -26,4 +31,8 @@ public class ImageInteractionController extends CommonController {
 		return imageInteractionService.uploadImageToCloudinary(dto);
 	}
 	
+	@PostMapping(value = ImageInteractionUrl.imageSaving)
+	public CommonResult imageSaving(ImageSavingDTO dto) {
+		return imgService.imageSaving(dto);
+	}
 }

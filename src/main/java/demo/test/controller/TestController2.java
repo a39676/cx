@@ -1,7 +1,16 @@
 package demo.test.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.compress.utils.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,5 +61,13 @@ public class TestController2 extends CommonController {
 	@ResponseBody
 	public CommonResultCX deleteOrg(@RequestBody DeleteOrgDTO dto) {
 		return orgService.deleteOrg(dto);
+	}
+	
+	@GetMapping(value = "/img")
+	public void getImageWithMediaType(HttpServletResponse response) throws IOException {
+		File f = new File("D:/auxiliary/tmp/01/007Xv5XOgy1gbeaa1c55sj30gs0a0wgx.jpg");
+	    InputStream in = new FileInputStream(f);
+	    response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+	    IOUtils.copy(in, response.getOutputStream());
 	}
 }

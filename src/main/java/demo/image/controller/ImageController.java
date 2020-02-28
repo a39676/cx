@@ -10,4 +10,5 @@ import demo.image.pojo.constant.ImageUrl;
 @RequestMapping(value = ImageUrl.root)
 public class ImageController extends CommonController {
 
+	
 }

@@ -5,14 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImageStoreExample {
-
-	public static class Criteria extends GeneratedCriteria {
-		protected Criteria() {
-			super();
-		}
-	}
-
-	protected String orderByClause;
+    protected String orderByClause;
 
     protected boolean distinct;
 
@@ -500,6 +493,73 @@ public class ImageStoreExample {
         public Criteria andMd5MarkNotBetween(String value1, String value2) {
             addCriterion("md5_mark not between", value1, value2, "md5Mark");
             return (Criteria) this;
+        }
+
+        public Criteria andValidTimeIsNull() {
+            addCriterion("valid_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andValidTimeIsNotNull() {
+            addCriterion("valid_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andValidTimeEqualTo(LocalDateTime value) {
+            addCriterion("valid_time =", value, "validTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andValidTimeNotEqualTo(LocalDateTime value) {
+            addCriterion("valid_time <>", value, "validTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andValidTimeGreaterThan(LocalDateTime value) {
+            addCriterion("valid_time >", value, "validTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andValidTimeGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("valid_time >=", value, "validTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andValidTimeLessThan(LocalDateTime value) {
+            addCriterion("valid_time <", value, "validTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andValidTimeLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("valid_time <=", value, "validTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andValidTimeIn(List<LocalDateTime> values) {
+            addCriterion("valid_time in", values, "validTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andValidTimeNotIn(List<LocalDateTime> values) {
+            addCriterion("valid_time not in", values, "validTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andValidTimeBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("valid_time between", value1, value2, "validTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andValidTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("valid_time not between", value1, value2, "validTime");
+            return (Criteria) this;
+        }
+    }
+
+    public static class Criteria extends GeneratedCriteria {
+
+        protected Criteria() {
+            super();
         }
     }
 

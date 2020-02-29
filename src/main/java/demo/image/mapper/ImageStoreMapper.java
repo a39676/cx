@@ -6,8 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface ImageStoreMapper {
-
-	long countByExample(ImageStoreExample example);
+    long countByExample(ImageStoreExample example);
 
     int deleteByExample(ImageStoreExample example);
 
@@ -28,10 +27,4 @@ public interface ImageStoreMapper {
     int updateByPrimaryKeySelective(ImageStore record);
 
     int updateByPrimaryKey(ImageStore record);
-    
-    Integer checkImageExistsByMD5(String md5);
-    
-    int batchInsert(List<ImageStore> imageStoreList);
-    
-    List<ImageStore> findImageIdByMd5Mark(@Param("md5s")List<String> md5s);
 }

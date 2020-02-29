@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import demo.article.article.service.ArticleBurnService;
 import demo.base.task.service.OldDataDeleteService;
+import demo.image.service.ImageService;
 import demo.interaction.image.service.ImageInteractionService;
 
 @Component
@@ -15,6 +16,8 @@ public class OldDataDeleteServiceImpl implements OldDataDeleteService {
 	private ImageInteractionService imageInteractionService;
 	@Autowired
 	private ArticleBurnService articleBurnService;
+	@Autowired
+	private ImageService imgService;
 	
 	
 	/** 清理时间过长的, cloudinary上的 自动测试报告图片. */
@@ -27,6 +30,12 @@ public class OldDataDeleteServiceImpl implements OldDataDeleteService {
 	@Scheduled(cron="36 24 04 * * *")
 	public void cleanExpiredArticleBurn() {
 		articleBurnService.cleanExpiredArticleBurn();
+	}
+	
+	/** 清理过期的图片 */
+	@Scheduled(cron="24 19 05 * * *")
+	public void imageClean() {
+		imgService.imageClean();
 	}
 	
 }

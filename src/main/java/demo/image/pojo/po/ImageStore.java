@@ -3,8 +3,7 @@ package demo.image.pojo.po;
 import java.time.LocalDateTime;
 
 public class ImageStore {
-
-	private Long imageId;
+    private Long imageId;
 
     private String imageUrl;
 
@@ -15,6 +14,8 @@ public class ImageStore {
     private LocalDateTime backupTime;
 
     private String md5Mark;
+
+    private LocalDateTime validTime;
 
     public Long getImageId() {
         return imageId;
@@ -62,5 +63,13 @@ public class ImageStore {
 
     public void setMd5Mark(String md5Mark) {
         this.md5Mark = md5Mark == null ? null : md5Mark.trim();
+    }
+
+    public LocalDateTime getValidTime() {
+        return validTime;
+    }
+
+    public void setValidTime(LocalDateTime validTime) {
+        this.validTime = validTime;
     }
 }

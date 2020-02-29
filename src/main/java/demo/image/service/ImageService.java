@@ -11,4 +11,6 @@ public interface ImageService {
 
 	ImageSavingResult imageSaving(ImageSavingTransDTO dto);
 
+	void imageClean();
+
 }

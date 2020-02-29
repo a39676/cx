@@ -8,6 +8,11 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,10 +27,11 @@ import demo.image.mapper.ImageStoreMapper;
 import demo.image.mapper.ImageTagMapper;
 import demo.image.pojo.constant.ImageUrl;
 import demo.image.pojo.po.ImageStore;
+import demo.image.pojo.po.ImageStoreExample;
 import demo.image.pojo.po.ImageTag;
+import demo.image.pojo.po.ImageTagExample;
 import demo.image.pojo.type.ImageTagType;
 import demo.image.service.ImageService;
-import image.pojo.constant.ImageSavingConstant;
 import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.result.ImageSavingResult;
 
@@ -85,7 +91,11 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 			return r;
 		}
 		
-		if(dto.getValidTime() != null) {
+		if(dto.getValidTime() == null) {
+			if(!isBigUser()) {
+				dto.setValidTime(LocalDateTime.now().plusMonths(1));
+			}
+		} else {
 			if(dto.getValidTime().isBefore(LocalDateTime.now())) {
 				r.failWithMessage("error data");
 				return r;
@@ -145,23 +155,37 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 		return r;
 	}
 
-	public void imageTransTask() {
-		/*
-		 * TODO
-		 * 根据图片保存有效时间
-		 * 转移 / 清理
-		 */
-		
-		File targetFolder = new File(ImageSavingConstant.imgSavingPath);
-		if(!targetFolder.exists()) {
-			targetFolder.mkdirs();
-		}
-	}
-	
+	@Override
 	public void imageClean() {
-		/*
-		 * TODO
-		 * 定期清理过期图片
-		 */
+		ImageStoreExample imgStoreExample = new ImageStoreExample();
+		imgStoreExample.createCriteria().andValidTimeLessThan(LocalDateTime.now());
+		List<ImageStore> targetImgList = imgMapper.selectByExample(imgStoreExample);
+		if(targetImgList == null || targetImgList.isEmpty()) {
+			return;
+		}
+		
+		Map<String, Long> imgPathMap = new HashMap<String, Long>();
+		for(ImageStore po : targetImgList) {
+			if(!po.getImageUrl().startsWith("http")) {
+				imgPathMap.put(po.getImageUrl(), po.getImageId());
+			}
+		}
+		
+		File tmpFile = null;
+		List<Long> targetImgIdList = new ArrayList<Long>();
+		for(Entry<String, Long> m : imgPathMap.entrySet()) {
+			tmpFile = new File(m.getKey());
+			if(tmpFile.exists()) {
+				if(tmpFile.delete()) {
+					targetImgIdList.add(m.getValue());
+					imgMapper.deleteByPrimaryKey(m.getValue());
+				}
+			}
+		}
+		
+		ImageTagExample imgTagExample = new ImageTagExample();
+		imgTagExample.createCriteria().andImageIdIn(targetImgIdList);
+		imageTagMapper.deleteByExample(imgTagExample);
+		
 	}
 }

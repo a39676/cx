@@ -1,6 +1,9 @@
 package demo.article.article.service.impl;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -150,8 +153,12 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		po.setValidTime(now.plusMinutes(validMinute));
 		articleBurnMapper.insertSelective(po);
 		
-		r.setReadKey(encryptId(po.getReadId()));
-		r.setBurnKey(encryptId(po.getBurnId()));
+		try {
+			r.setReadKey(URLEncoder.encode(encryptId(po.getReadId()), StandardCharsets.UTF_8.toString()));
+			r.setBurnKey(URLEncoder.encode(encryptId(po.getBurnId()), StandardCharsets.UTF_8.toString()));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		r.setReadUri(ArticleBurnUrlConstant.root + ArticleBurnUrlConstant.readBurningMessage + "?readKey=" + r.getReadKey());
 		r.setBurnUri(ArticleBurnUrlConstant.root + ArticleBurnUrlConstant.burnMessage + "?burnKey=" + r.getBurnKey());
 		r.setIsSuccess();
@@ -209,7 +216,11 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 	
 	private ArticleBurnResult fillArticleBurnResultWithPO(ArticleBurn po) {
 		ArticleBurnResult r = new ArticleBurnResult();
-		r.setBurnKey(encryptId(po.getBurnId()));
+		try {
+			r.setBurnKey(URLEncoder.encode(encryptId(po.getBurnId()), StandardCharsets.UTF_8.toString()));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		r.setContent(ioUtil.getStringFromFile(po.getFilePath()));
 		r.setReadCount(po.getReadCount());
 		r.setReadLimit(po.getReadLimit());

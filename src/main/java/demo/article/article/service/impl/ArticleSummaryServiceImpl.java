@@ -245,7 +245,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			tmpVO.setCreateDateString(sdfDate.format(summaryBO.getCreateTime()));
 			tmpVO.setCreateDateTimeString(sdfDateTime.format(summaryBO.getCreateTime()));
 			try {
-				tmpVO.setPrivateKey(URLEncoder.encode(summaryBO.getPrivateKey(), StandardCharsets.UTF_8.toString()));
+				tmpVO.setPrivateKey(URLEncoder.encode(encryptId(summaryBO.getArticleId()), StandardCharsets.UTF_8.toString()));
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}

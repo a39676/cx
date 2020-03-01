@@ -1,6 +1,9 @@
 package demo.tool.service.impl;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
@@ -146,7 +149,12 @@ public class MailServiceImpl extends CommonService implements MailService {
 		}
 		
 		Long newMailId = snowFlake.getNextId();
-		String mailKey = encryptId(newMailId);
+		String mailKey = null;
+		try {
+			mailKey = URLEncoder.encode(encryptId(newMailId), StandardCharsets.UTF_8.toString());
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		String mailUrl = dto.getHostName() + UsersUrl.root + UsersUrl.registActivation + "?mailKey=" + mailKey;
 		
 		sendSimpleMail(dto.getSendTo(), "欢迎注册", createRegistMailContent(dto.getNickName(), mailUrl), mailKey, MailType.registActivation);
@@ -287,7 +295,13 @@ public class MailServiceImpl extends CommonService implements MailService {
 		
 		mailRecordMapper.insertSelective(mr);
 		
-		String mailKey = encryptId(mailId); 
+		String mailKey = null;
+		try {
+			mailKey = URLEncoder.encode(encryptId(mailId), StandardCharsets.UTF_8.toString());
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 		String mailUrl = dto.getHostName() + UsersUrl.root + UsersUrl.resetPassword + "?mailKey=" + mailKey;
 		return (CommonResultCX) sendSimpleMail(dto.getSendTo(), ("重置您在" + dto.getHostName() + "的密码"), createForgotPasswordMailContent(mailUrl), mailKey, MailType.forgotPassword);
 	}
@@ -296,7 +310,13 @@ public class MailServiceImpl extends CommonService implements MailService {
 		oldMail.setValidTime(oldMail.getValidTime().plusDays(1));
 		mailRecordMapper.updateByPrimaryKeySelective(oldMail);
 		
-		String mailKey = encryptId(oldMail.getId());
+		String mailKey = null;
+		try {
+			mailKey = URLEncoder.encode(encryptId(oldMail.getId()), StandardCharsets.UTF_8.toString());
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		String mailUrl = dto.getHostName() + UsersUrl.root + UsersUrl.resetPassword + "?mailKey=" + mailKey;
 		return (CommonResultCX) sendSimpleMail(dto.getSendTo(), ("重置您在" + dto.getHostName() + "的密码"), createForgotPasswordMailContent(mailUrl), mailKey, MailType.forgotPassword);
 	}

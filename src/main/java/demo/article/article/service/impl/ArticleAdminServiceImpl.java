@@ -1,5 +1,8 @@
 package demo.article.article.service.impl;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -63,7 +66,11 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		List<ArticleLongSummary> summarys = new ArrayList<ArticleLongSummary>();
 		String tmpPrivateKey = null;
 		for(Long id : articleLongIds) {
-			tmpPrivateKey = encryptId(id);
+			try {
+				tmpPrivateKey = URLEncoder.encode(encryptId(id), StandardCharsets.UTF_8.toString());
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 			if(tmpPrivateKey == null) {
 				continue;
 			}

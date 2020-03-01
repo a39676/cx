@@ -101,7 +101,7 @@ public class ExcelAnalysisServiceImpl extends CommonService implements ExcelAnal
 
 		String pk = encryptId(newRecord.getId());
 		newRecord.setPrivateKey(pk);
-		String path = ToolPathConstant.getExcelAnalysisStorePath() + pk + suffixFileName;
+		String path = ToolPathConstant.getExcelAnalysisStorePath() + newRecord.getId().toString() + suffixFileName;
 		newRecord.setPath(path);
 
 		ExcelAnalysisExample excelAnalysisExample = new ExcelAnalysisExample();

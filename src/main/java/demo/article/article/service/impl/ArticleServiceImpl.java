@@ -3,6 +3,8 @@ package demo.article.article.service.impl;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -423,6 +425,20 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		return result;
 	}
 
+	@Override
+	public ModelAndView readArticleLong(String pk, HttpServletRequest request) {
+		ModelAndView view = new ModelAndView(ArticleViewConstant.readArticleLongCleanBlog);
+		FindArticleLongByArticleSummaryPrivateKeyDTO param = new FindArticleLongByArticleSummaryPrivateKeyDTO();
+		param.setPrivateKey(pk);
+		
+		FindArticleLongResult result = findArticleLongByArticleSummaryPrivateKey(param, request);
+		view.addObject("articleLongVO", result.getArticleLongVO());
+		view.addObject("visitCount", visitDataService.getVisitCount());
+		view.addObject("title", result.getArticleLongVO().getArticleTitle());
+		
+		return view;
+	}
+	
 	private void fillArticleContent(ArticleLongVO articleLongVO, String pk, Long userId) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String strContent = ioUtil.getStringFromFile(articleLongVO.getPath());
@@ -438,7 +454,11 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		if(articleLongVO.getUserId() != null) {
 			articleLongVO.setHeadIamgeUrl(userController.findHeadImageUrl(articleLongVO.getUserId()));
 		}
-		articleLongVO.setPrivateKey(pk);
+		try {
+			articleLongVO.setPrivateKey(URLEncoder.encode(pk, StandardCharsets.UTF_8.toString()));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -604,6 +624,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return result;
 		}
 		
+		dto.setPk(URLDecoder.decode(dto.getPk(), StandardCharsets.UTF_8));
 		Long targetArticleId = decryptPrivateKey(dto.getPk());
 		
 		if(targetArticleId == null) {

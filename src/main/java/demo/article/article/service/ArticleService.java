@@ -74,4 +74,6 @@ public interface ArticleService {
 
 	CommonResultCX editArticleLongHandler(EditArticleLongDTO dto) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, IOException;
 
+	ModelAndView readArticleLong(String pk, HttpServletRequest request);
+
 }

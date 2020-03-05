@@ -114,7 +114,7 @@
 
     $(document).ready(function() {
       
-      // <c:if test="${createNew == true}">
+      <c:if test="${createNew == true}">
       $("#createNew").click(function () {
         var url = "/article/createArticleLong";
         var title = $("#articleTitle").val();
@@ -161,9 +161,9 @@
         document.getElementById("summernote").disabled = false;
         document.getElementById("createNew").disabled = false;
       });
-      // </c:if>
+      </c:if>
       
-      // <c:if test="${edit == true}">
+      <c:if test="${edit == true}">
       var contentLines = $("#sourceArticleVO").attr("contentLines");
       $("#summernote").summernote("code", contentLines);
 
@@ -210,7 +210,7 @@
         });  
       });
 
-      // </c:if>
+      </c:if>
 
     });
   </script>

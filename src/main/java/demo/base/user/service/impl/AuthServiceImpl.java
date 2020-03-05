@@ -32,7 +32,6 @@ import demo.base.user.pojo.dto.FindAuthRoleDTO;
 import demo.base.user.pojo.dto.FindAuthsDTO;
 import demo.base.user.pojo.dto.FindOrgByConditionDTO;
 import demo.base.user.pojo.dto.FindRolesDTO;
-import demo.base.user.pojo.dto.GetAuthManagerViewDTO;
 import demo.base.user.pojo.dto.InsertAuthDTO;
 import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.po.AuthExample;
@@ -146,19 +145,19 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 	
 	
 	@Override
-	public ModelAndView authManagerView(GetAuthManagerViewDTO dto) {
+	public ModelAndView authManagerView(String orgPK) {
 		ModelAndView view = new ModelAndView(AuthManagerView.authManager);
 		
-		if(StringUtils.isBlank(dto.getOrgPK())) {
+		if(StringUtils.isBlank(orgPK)) {
 			return view;
 		}
 		
 		if(isBigUser()) {
-			view.addObject("orgPk", dto.getOrgPK());
+			view.addObject("orgPk", orgPK);
 			return view;
 		}
 
-		Long orgId = decryptPrivateKey(dto.getOrgPK());
+		Long orgId = decryptPrivateKey(orgPK);
 		if(orgId == null) {
 			return view;
 		}
@@ -167,7 +166,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		if(validUserOrgResult.isFail()) {
 			return view;
 		} else {
-			view.addObject("orgPk", dto.getOrgPK());
+			view.addObject("orgPk", orgPK);
 		}
 		
 		return view;

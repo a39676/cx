@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
-import demo.base.user.pojo.dto.GetAuthManagerViewDTO;
 import demo.base.user.pojo.po.Users;
 import demo.base.user.service.AuthService;
 import demo.baseCommon.service.CommonService;
@@ -100,9 +99,7 @@ public class TestService extends CommonService {
 	private AuthService authService;
 	
 	public ModelAndView testAuthManagerView() {
-		GetAuthManagerViewDTO dto = new GetAuthManagerViewDTO();
-		dto.setOrgPK(encryptId(10001L));
-		return authService.authManagerView(dto);
+		return authService.authManagerView(encryptId(10001L));
 	}
 	
 	public static void main(String[] args) {

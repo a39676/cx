@@ -56,7 +56,7 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 	
 	@Override
 	public CommonResultCX insertUserAuth(EditUserAuthBO bo) {
-		return insertUserAuth(bo.getUserId(), bo.getNewAuthId());
+		return insertUserAuth(bo.getUserId(), bo.getAuthId());
 	}
 	
 	private CommonResultCX insertUserAuth(Long userId, Long authId) {
@@ -115,34 +115,47 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 	
 	@Override
 	public CommonResultCX deleteUserAuth(EditUserAuthDTO dto) {
+		EditUserAuthBO bo = new EditUserAuthBO();
+		bo.setAuthId(decryptPrivateKey(dto.getNewAuthPk()));
+		bo.setUserId(decryptPrivateKey(dto.getUserPk()));
+		
+		return deleteUserAuth(bo);
+	}
+	
+	@Override
+	public CommonResultCX deleteUserAuth(EditUserAuthBO bo) {
 		CommonResultCX r = new CommonResultCX();
 		
-		Long authId = decryptPrivateKey(dto.getNewAuthPk());
-		Long userId = decryptPrivateKey(dto.getUserPk());
-		
-		if(authId == null || userId == null) {
+		if(bo.getAuthId() == null && bo.getUserId() == null) {
 			r.failWithMessage("error param");
 			return r;
 		}
 		
-		CommonResultCX canEditResult = authService.canEditUserAuth(authId);
+		CommonResultCX canEditResult = authService.canEditUserAuth(bo.getAuthId());
 		if(!canEditResult.isSuccess()) {
 			r.addMessage(canEditResult.getMessage());
 			return r;
 		}
 		
 		UserAuthExample example = new UserAuthExample();
-		example.createCriteria().andUserIdEqualTo(userId).andAuthIdEqualTo(authId).andIsDeleteEqualTo(false);
+		Criteria userAuthCriteria = example.createCriteria();
+		if(bo.getAuthId() != null) {
+			userAuthCriteria.andAuthIdEqualTo(bo.getAuthId());
+		}
+		if(bo.getUserId() != null) {
+			userAuthCriteria.andUserIdEqualTo(bo.getUserId());
+		}
+		userAuthCriteria.andIsDeleteEqualTo(false);
 		List<UserAuth> userAuthList = userAuthMapper.selectByExample(example);
 		if(userAuthList == null || userAuthList.size() < 1) {
 			return r;
 		}
 		
-		UserAuth bo = userAuthList.get(0);
-		bo.setIsDelete(true);
-		bo.setUpdateTime(LocalDateTime.now());
-		bo.setUpdateBy(baseUtilCustom.getUserId());
-		int count = userAuthMapper.updateByPrimaryKey(bo);
+		UserAuth po = userAuthList.get(0);
+		po.setIsDelete(true);
+		po.setUpdateTime(LocalDateTime.now());
+		po.setUpdateBy(baseUtilCustom.getUserId());
+		int count = userAuthMapper.updateByPrimaryKey(po);
 		if(count > 0) {
 			r.setIsSuccess();
 		}

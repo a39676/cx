@@ -1,16 +1,7 @@
 package demo.test.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.compress.utils.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +18,7 @@ import demo.baseCommon.controller.CommonController;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.config.costom_component.SnowFlake;
 import demo.test.pojo.constant.TestUrl;
+import demo.test.service.TestService;
 
 @Controller
 @RequestMapping(value = { TestUrl.root2 })
@@ -62,12 +54,12 @@ public class TestController2 extends CommonController {
 	public CommonResultCX deleteOrg(@RequestBody DeleteOrgDTO dto) {
 		return orgService.deleteOrg(dto);
 	}
+
+	@Autowired
+	private TestService testService;
 	
-	@GetMapping(value = "/img")
-	public void getImageWithMediaType(HttpServletResponse response) throws IOException {
-		File f = new File("D:/auxiliary/tmp/01/007Xv5XOgy1gbeaa1c55sj30gs0a0wgx.jpg");
-	    InputStream in = new FileInputStream(f);
-	    response.setContentType(MediaType.IMAGE_JPEG_VALUE);
-	    IOUtils.copy(in, response.getOutputStream());
+	@GetMapping(value = "/testAuthManager")
+	public ModelAndView testAuthManager() {
+		return testService.testAuthManagerView();
 	}
 }

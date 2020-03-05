@@ -376,7 +376,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		
 		EditUserAuthBO editUserAuthBO = new EditUserAuthBO();
 		editUserAuthBO.setUserId(mr.getUserId());
-		editUserAuthBO.setNewAuthId(activeUserAuth.getId());
+		editUserAuthBO.setAuthId(activeUserAuth.getId());
 		CommonResultCX editUserAuthResult = userAuthService.insertUserAuth(editUserAuthBO);
 		if(!editUserAuthResult.isSuccess()) {
 			result.addMessage(editUserAuthResult.getMessage());

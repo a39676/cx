@@ -12,16 +12,6 @@
 </head>
 <body>
 <div class="container-fluid">
-
-  <!-- org search start -->
-  <div class="row">
-    <div class="col-md-12">      
-      <%@ include file="../../org/orgManager/orgSearch.jsp" %>
-    </div>
-  </div>
-  <!-- org search end -->  
-
-  <hr>
   
   <div class="row">
     <div class="col-md-4" >
@@ -56,7 +46,7 @@
   
   <div class="row">
     <div class="col-md-12">
-      <div id="authNameDiv" selectedAuthPk="" operatorType=""></div>
+      <div id="authNameDiv"></div>
     </div>
   </div>
 
@@ -74,18 +64,7 @@
       function cleanAuthNameDiv() {
         var authNameDiv = $("#authNameDiv");
         authNameDiv.empty();
-        authNameDiv.attr("selectedAuthPk", "");
-        authNameDiv.attr("operatorType", "");
       }
-
-      $(".orgSearchConditionInput").change(function () {
-        cleanAuthNameDiv();
-        authSearch();
-      });
-      $("#orgNameDiv").click(function () {
-        cleanAuthNameDiv();
-        authSearch();
-      });
 
       var authIsDelete = false;
       $("input[name='authIsDeleteType']").click(function () {
@@ -101,10 +80,8 @@
       });
 
       function authSearch() {
-        $("#authNameDiv").attr("selectedAuthPk", "");
-
         var belongOrgPkList = [];
-        var orgPk = $("#orgNameDiv").attr("selectedOrgPk");
+        var orgPk = "${orgPk}";
         if(orgPk != null && orgPk.length > 0) {
           belongOrgPkList.push(orgPk);
         }
@@ -163,13 +140,12 @@
       }
 
       function authButtonClick() {
-        var pk = $(this).attr("pk");
-        var authNameDiv = $("#authNameDiv");
-        authNameDiv.attr("selectedAuthPk", pk);
         if($(this).hasClass("btn-primary")) {
-          authNameDiv.attr("operatorType", "delete");
+          $(this).removeClass("btn-primary");
+          $(this).addClass("btn-light");
         } else {
-          authNameDiv.attr("operatorType", "insert");
+          $(this).removeClass("btn-light");
+          $(this).addClass("btn-primary");
         }
       };
 

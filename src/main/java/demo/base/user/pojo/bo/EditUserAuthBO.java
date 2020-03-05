@@ -14,11 +14,11 @@ public class EditUserAuthBO {
 		this.userId = userId;
 	}
 
-	public Long getNewAuthId() {
+	public Long getAuthId() {
 		return newAuthId;
 	}
 
-	public void setNewAuthId(Long newAuthId) {
+	public void setAuthId(Long newAuthId) {
 		this.newAuthId = newAuthId;
 	}
 

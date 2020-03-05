@@ -18,6 +18,7 @@ public interface UserAuthService {
 	CommonResultCX insertUserAuth(EditUserAuthBO bo);
 
 	CommonResultCX deleteUserAuth(EditUserAuthDTO dto);
+	CommonResultCX deleteUserAuth(EditUserAuthBO bo);
 
 	CommonResultCX isActiveUser(Long userId);
 

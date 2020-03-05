@@ -8,8 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
+import demo.base.user.pojo.dto.GetAuthManagerViewDTO;
 import demo.base.user.pojo.po.Users;
+import demo.base.user.service.AuthService;
 import demo.baseCommon.service.CommonService;
 import demo.config.costom_component.BaseUtilCustom;
 import net.sf.json.JSONObject;
@@ -91,6 +94,15 @@ public class TestService extends CommonService {
 	
 	public String testMyFindHostNameFromRequst(HttpServletRequest request) {
 		return testFindHostNameFromRequst(request);
+	}
+	
+	@Autowired
+	private AuthService authService;
+	
+	public ModelAndView testAuthManagerView() {
+		GetAuthManagerViewDTO dto = new GetAuthManagerViewDTO();
+		dto.setOrgPK(encryptId(10001L));
+		return authService.authManagerView(dto);
 	}
 	
 	public static void main(String[] args) {

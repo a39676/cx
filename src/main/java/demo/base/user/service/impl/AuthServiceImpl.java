@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 import demo.base.organizations.pojo.po.Organizations;
 import demo.base.organizations.pojo.result.FindOrgListResult;
@@ -21,14 +22,17 @@ import demo.base.system.pojo.constant.InitSystemConstant;
 import demo.base.user.mapper.AuthMapper;
 import demo.base.user.pojo.bo.DeleteAuthBO;
 import demo.base.user.pojo.bo.DeleteAuthRoleBO;
+import demo.base.user.pojo.bo.EditUserAuthBO;
 import demo.base.user.pojo.bo.FindAuthsBO;
 import demo.base.user.pojo.bo.InsertNewAuthBO;
 import demo.base.user.pojo.bo.MyUserPrincipal;
+import demo.base.user.pojo.constant.AuthManagerView;
 import demo.base.user.pojo.dto.DeleteAuthDTO;
 import demo.base.user.pojo.dto.FindAuthRoleDTO;
 import demo.base.user.pojo.dto.FindAuthsDTO;
 import demo.base.user.pojo.dto.FindOrgByConditionDTO;
 import demo.base.user.pojo.dto.FindRolesDTO;
+import demo.base.user.pojo.dto.GetAuthManagerViewDTO;
 import demo.base.user.pojo.dto.InsertAuthDTO;
 import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.po.AuthExample;
@@ -48,6 +52,7 @@ import demo.base.user.pojo.vo.AuthVO;
 import demo.base.user.service.AuthRoleService;
 import demo.base.user.service.AuthService;
 import demo.base.user.service.RoleService;
+import demo.base.user.service.UserAuthService;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.service.CommonService;
 
@@ -60,6 +65,8 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 	private AuthMapper authMapper;
 	@Autowired
 	private AuthRoleService authRoleService;
+	@Autowired
+	private UserAuthService userAuthService;
 	@Autowired
 	private RoleService roleService;
 	@Autowired
@@ -135,6 +142,35 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		}
 		
 		return newAuthID;
+	}
+	
+	
+	@Override
+	public ModelAndView authManagerView(GetAuthManagerViewDTO dto) {
+		ModelAndView view = new ModelAndView(AuthManagerView.authManager);
+		
+		if(StringUtils.isBlank(dto.getOrgPK())) {
+			return view;
+		}
+		
+		if(isBigUser()) {
+			view.addObject("orgPk", dto.getOrgPK());
+			return view;
+		}
+
+		Long orgId = decryptPrivateKey(dto.getOrgPK());
+		if(orgId == null) {
+			return view;
+		}
+		
+		CommonResultCX validUserOrgResult = orgService.validUserOrg(orgId);
+		if(validUserOrgResult.isFail()) {
+			return view;
+		} else {
+			view.addObject("orgPk", dto.getOrgPK());
+		}
+		
+		return view;
 	}
 	
 	@Override
@@ -227,6 +263,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 			}
 		}
 		
+		c.andIsDeleteEqualTo(bo.getIsDelete());
 		if(bo.getAuthType() != null) {
 			if(!isBigUser() && bo.getAuthType().equals(AuthTypeType.SYS_AUTH.getCode())) {
 				result.failWithMessage("无权操作");
@@ -480,6 +517,17 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 				return r;
 			}
 			deleteAuthIdList.add(auth.getId());
+		}
+		
+		EditUserAuthBO deleteUserAuthBO = null;
+		for(Long authId : deleteAuthIdList) {
+			deleteUserAuthBO = new EditUserAuthBO();
+			deleteUserAuthBO.setAuthId(authId);
+			canEditUserAuthResult = userAuthService.deleteUserAuth(deleteUserAuthBO);
+			if(canEditUserAuthResult.isFail()) {
+				r.addMessage(canEditUserAuthResult.getMessage());
+				return r;
+			}
 		}
 		
 		Long operatorId = baseUtilCustom.getUserId();

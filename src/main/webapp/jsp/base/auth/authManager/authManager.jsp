@@ -23,6 +23,16 @@
 
   <hr>
 
+  <div class="row">
+    <div class="col-md-12">
+      <button class="btn btn-sm btn-success" id="addAuth">add new auth</button>
+      <button class="btn btn-sm btn-primary" id="editAuth">edit this auth</button>
+      <button class="btn btn-sm btn-danger" id="delAuth">delete auth</button>
+    </div>
+  </div>
+
+  <hr>
+
   <!-- result row start-->
   <div class="row">
     <div class="col-md-12">
@@ -40,19 +50,68 @@
 
     $(document).ready(function() {
 
-      $("#authNameDiv").click(function () {
-        var userPk = $("#usernameDiv").attr("selectedUserPk");
-        var authPk = $("#authNameDiv").attr("selectedAuthPk");
-        var operatorType = $("#authNameDiv").attr("operatorType");
+      $("#delAuth").click(function () {
+        var url = "/auth/deleteAuth";
+        var orgPk = "${orgPk}";
+        
+        var authPkList = [];
 
-        if (userPk != null && authPk != null && operatorType != null) {
-          userAuthEdit(userPk, authPk, operatorType);
-          $("#authNameDiv").attr("selectedAuthPk", "");
-          $("#authNameDiv").attr("operatorType", "");
+        var targetAuthEleList = document.querySelectorAll('.authButton.btn-primary');
+        for (var i = targetAuthEleList.length - 1; i >= 0; i--) {
+          authPkList.push(targetAuthEleList[i].getAttribute("pk"));
         }
-      });
 
-      
+        var jsonOutput = {
+          orgPk : orgPk,
+          authPkList : authPkList
+        };
+
+        var userAuthOperatorResultMsg = $("#userAuthOperatorResultMsg");
+    
+        $.each(authPkList, function(index, authPk) {
+          var targetAuthList = document.querySelectorAll('.authButton[pk="'+authPk+'"]');
+          if(targetAuthList != null) {
+            var targetAuth = targetAuthList[0];
+            if(targetAuth != null) {
+              targetAuth.parentNode.removeChild(targetAuth);
+            }
+          }
+          userAuthOperatorResultMsg.val("edit success: ");  
+        });
+        $.ajax({  
+          type : "POST",  
+          async : true,
+          url : url,  
+          data: JSON.stringify(jsonOutput),
+          cache : false,
+          contentType: "application/json",
+          dataType: "json",
+          timeout:50000,  
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          success:function(datas){
+            resultSpan.innerHTML = datas.message;
+            if(datas.result == "0") {
+              
+              $.each(authPkList, function(index, authPk) {
+                var targetAuthList = document.querySelectorAll('.authButton[pk="'+authPk+'"]');
+                if(targetAuthList != null) {
+                  var targetAuth = targetAuthList[0];
+                  if(targetAuth != null) {
+                    targetAuth.parentNode.removeChild(targetAuth);
+                  }
+                }
+                userAuthOperatorResultMsg.val("edit success: ");  
+              });
+            } else {
+              userAuthOperatorResultMsg.val("edit fail: " + data.message);
+            }
+          },  
+          error: function(datas) {              
+          }  
+        });  
+      });
 
     });
 

@@ -151,7 +151,7 @@
           isDelete : isDelete
         };
 
-        $.ajax({               
+        $.ajax({
           type: "POST",  
           url: url,
           data: JSON.stringify(jsonOutput),

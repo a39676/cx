@@ -1,9 +1,12 @@
 package demo.base.user.service;
 
+import org.springframework.web.servlet.ModelAndView;
+
 import demo.base.user.pojo.bo.DeleteAuthBO;
 import demo.base.user.pojo.bo.FindAuthsBO;
 import demo.base.user.pojo.dto.DeleteAuthDTO;
 import demo.base.user.pojo.dto.FindAuthsDTO;
+import demo.base.user.pojo.dto.GetAuthManagerViewDTO;
 import demo.base.user.pojo.dto.InsertAuthDTO;
 import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.result.FindAuthsResult;
@@ -52,5 +55,7 @@ public interface AuthService {
 
 	CommonResultCX deleteAuth(DeleteAuthDTO dto);
 	CommonResultCX deleteAuth(DeleteAuthBO bo);
+
+	ModelAndView authManagerView(GetAuthManagerViewDTO dto);
 
 }

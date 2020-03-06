@@ -26,8 +26,10 @@ import demo.base.user.pojo.bo.EditUserAuthBO;
 import demo.base.user.pojo.bo.FindAuthsBO;
 import demo.base.user.pojo.bo.InsertNewAuthBO;
 import demo.base.user.pojo.bo.MyUserPrincipal;
+import demo.base.user.pojo.constant.AuthConstant;
 import demo.base.user.pojo.constant.AuthManagerView;
 import demo.base.user.pojo.dto.DeleteAuthDTO;
+import demo.base.user.pojo.dto.EditAuthDTO;
 import demo.base.user.pojo.dto.FindAuthRoleDTO;
 import demo.base.user.pojo.dto.FindAuthsDTO;
 import demo.base.user.pojo.dto.FindOrgByConditionDTO;
@@ -670,6 +672,48 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		}
 		
 		r.failWithMessage("无权操作该角色");
+		return r;
+		
+	}
+
+	@Override
+	public CommonResultCX editAuth(EditAuthDTO dto) {
+		CommonResultCX r = new CommonResultCX();
+		if(StringUtils.isAnyBlank(dto.getAuthPK(), dto.getAuthName())) {
+			r.failWithMessage("null param");
+			return r;
+		}
+		
+		if(dto.getAuthName().length() > AuthConstant.authNameMaxLength) {
+			r.failWithMessage("角色名过长");
+			return r;
+		}
+		
+		Long authId = decryptPrivateKey(dto.getAuthPK());
+		if(authId == null) {
+			r.failWithMessage("error param");
+			return r;
+		}
+		
+		r = canEditUserAuth(authId);
+		if(r.isFail()) {
+			return r;
+		}
+		
+		Auth auth = authMapper.selectByPrimaryKey(authId);
+		if(auth == null) {
+			r.failWithMessage("error param");
+			return r;
+		}
+		
+		auth.setAuthName(dto.getAuthName());
+		auth.setUpdateBy(baseUtilCustom.getUserId());
+		auth.setUpdateTime(LocalDateTime.now());
+		int updateCount = authMapper.updateByPrimaryKey(auth);
+		if(updateCount > 0) {
+			r.setIsSuccess();
+		}
+		
 		return r;
 		
 	}

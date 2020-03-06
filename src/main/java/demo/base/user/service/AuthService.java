@@ -5,6 +5,7 @@ import org.springframework.web.servlet.ModelAndView;
 import demo.base.user.pojo.bo.DeleteAuthBO;
 import demo.base.user.pojo.bo.FindAuthsBO;
 import demo.base.user.pojo.dto.DeleteAuthDTO;
+import demo.base.user.pojo.dto.EditAuthDTO;
 import demo.base.user.pojo.dto.FindAuthsDTO;
 import demo.base.user.pojo.dto.InsertAuthDTO;
 import demo.base.user.pojo.po.Auth;
@@ -58,5 +59,7 @@ public interface AuthService {
 	ModelAndView authManagerView(String orgPK);
 
 	ModelAndView authEditView(String authPK);
+
+	CommonResultCX editAuth(EditAuthDTO dto);
 
 }

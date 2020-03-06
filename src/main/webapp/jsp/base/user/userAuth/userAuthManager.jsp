@@ -94,8 +94,6 @@
           $("#authNameDiv").attr("selectedAuthPk", "");
           $("#authNameDiv").attr("operatorType", "");
         }
-
-
       });
 
       function userAuthEdit(userPk, modifyAuthPk, operatorType) {

@@ -200,7 +200,16 @@ public abstract class CommonService {
 //	}
 	
 	public String encryptId(Long id) {
-		if(id == null) {
+		List<String> encryptIdList = encryptId(Arrays.asList(id));
+		if(encryptIdList == null || encryptIdList.isEmpty()) {
+			return null;
+		} else {
+			return encryptIdList.get(0);
+		}
+	}
+	
+	public List<String> encryptId(List<Long> idList) {
+		if(idList == null || idList.isEmpty()) {
 			return null;
 		}
 		
@@ -220,9 +229,11 @@ public abstract class CommonService {
 			}
 		}
 		
-		String encryptResult = null;
+		List<String> encryptResult = new ArrayList<String>();
 		try {
-			encryptResult = encryptUtil.aesEncrypt(keys, initVector, id.toString());
+			for(Long id : idList) {
+				encryptResult.add(encryptUtil.aesEncrypt(keys, initVector, String.valueOf(id)));
+			}
 		} catch (Exception e) {
 			
 		}

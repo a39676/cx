@@ -32,4 +32,9 @@ public class OrganizationController {
 	public ModelAndView findOrgList() {
 		return new ModelAndView(OrgManagerView.orgSearch);
 	}
+	
+	@GetMapping(value = OrgUrl.orgManager)
+	public ModelAndView orgManager() {
+		return new ModelAndView(OrgManagerView.orgManager);
+	}
 }

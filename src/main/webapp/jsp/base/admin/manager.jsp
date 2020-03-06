@@ -19,6 +19,9 @@
           <a href="/articleAdmin/articleChannelManager" target="_blank">article channel manager</a>
         </li>
         <li>
+          <a href="/org/orgManager" target="_blank">orgManager</a>
+        </li>
+        <li>
           <a href="/userauth/userAuthManager" target="_blank">userAuthManager</a>
         </li>
     </ul><!-- main-menu -->

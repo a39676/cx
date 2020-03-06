@@ -1,25 +1,34 @@
 package demo.base.user.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import demo.base.organizations.service.OrganizationService;
 import demo.base.user.mapper.AuthRoleMapper;
-import demo.base.user.pojo.bo.DeleteAuthRoleBO;
+import demo.base.user.pojo.bo.BatchDeleteAuthRoleBO;
+import demo.base.user.pojo.dto.EditAuthRoleDTO;
 import demo.base.user.pojo.dto.FindAuthRoleDTO;
 import demo.base.user.pojo.dto.FindRolesDTO;
+import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.po.AuthRole;
 import demo.base.user.pojo.po.AuthRoleExample;
 import demo.base.user.pojo.po.AuthRoleExample.Criteria;
 import demo.base.user.pojo.po.Roles;
 import demo.base.user.pojo.result.FindAuthRoleResult;
+import demo.base.user.pojo.result.FindAuthsResult;
 import demo.base.user.pojo.result.FindRolesResult;
+import demo.base.user.pojo.type.AuthTypeType;
+import demo.base.user.pojo.type.RolesType;
 import demo.base.user.service.AuthRoleService;
+import demo.base.user.service.AuthService;
 import demo.base.user.service.RoleService;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.service.CommonService;
@@ -33,7 +42,11 @@ public class AuthRoleServiceImpl extends CommonService implements AuthRoleServic
 	private AuthRoleMapper authRoleMapper;
 	@Autowired
 	private RoleService roleService;
-
+	@Autowired
+	private AuthService authService;
+	@Autowired
+	private OrganizationService orgService;
+	
 	@Override
 	public Long insertAuthRole(Long authId, Long roleId, Long creatorId) {
 		if(authId == null || roleId == null || creatorId == null) {
@@ -70,6 +83,7 @@ public class AuthRoleServiceImpl extends CommonService implements AuthRoleServic
 		
 		AuthRoleExample authRoleExample = new AuthRoleExample();
 		Criteria authRoleCriteria = authRoleExample.createCriteria();
+		authRoleCriteria.andIsDeleteEqualTo(false);
 		
 		if(dto.getAuthIdList() != null && dto.getAuthIdList().size() > 0) {
 			authRoleCriteria.andAuthIdIn(dto.getAuthIdList());
@@ -105,7 +119,7 @@ public class AuthRoleServiceImpl extends CommonService implements AuthRoleServic
 	}
 
 	@Override
-	public CommonResultCX deleteAuthRole(DeleteAuthRoleBO bo) {
+	public CommonResultCX batchDeleteAuthRole(BatchDeleteAuthRoleBO bo) {
 		CommonResultCX r = new CommonResultCX();
 		
 		if(bo.getAuthIdList() == null || bo.getAuthIdList().isEmpty()) {
@@ -124,6 +138,149 @@ public class AuthRoleServiceImpl extends CommonService implements AuthRoleServic
 			r.setIsSuccess();
 		}
 		
+		return r;
+	}
+	
+	@Override
+	public CommonResultCX deleteAuthRole(EditAuthRoleDTO dto) {
+		CommonResultCX r = new CommonResultCX();
+		
+		if(StringUtils.isAnyBlank(dto.getAuthPK(), dto.getRolePK())) {
+			r.failWithMessage("null param");
+			return r;
+		}
+		
+		Long authId = decryptPrivateKey(dto.getAuthPK());
+		Long roleId = decryptPrivateKey(dto.getRolePK());
+		if(authId == null || roleId == null) {
+			r.failWithMessage("null param");
+			return r;
+		}
+		
+		Long operatorId = baseUtilCustom.getUserId();
+		AuthRoleExample example = new AuthRoleExample();
+		example.createCriteria().andAuthIdEqualTo(authId).andRoleIdEqualTo(roleId).andIsDeleteEqualTo(false);
+		AuthRole record = new AuthRole();
+		record.setIsDelete(true);
+		record.setUpdateBy(operatorId);
+		record.setUpdateTime(LocalDateTime.now());
+		int updateCount = authRoleMapper.updateByExampleSelective(record, example);
+		if(updateCount > 0) {
+			r.setIsSuccess();
+		}
+		
+		return r;
+	}
+	
+	@Override
+	public CommonResultCX insertAuthRole(EditAuthRoleDTO dto) {
+		CommonResultCX r = new CommonResultCX();
+		
+		if(StringUtils.isAnyBlank(dto.getAuthPK(), dto.getRolePK())) {
+			r.failWithMessage("null param");
+			return r;
+		}
+		
+		Long authId = decryptPrivateKey(dto.getAuthPK());
+		Long roleId = decryptPrivateKey(dto.getRolePK());
+		if(authId == null || roleId == null) {
+			r.failWithMessage("null param");
+			return r;
+		}
+		
+		CommonResultCX canEditResult = canEditAuthRole(authId, roleId);
+		if(canEditResult.isFail()) {
+			r.failWithMessage(canEditResult.getMessage());
+			return r;
+		}
+		
+		AuthRoleExample example = new AuthRoleExample();
+		example.createCriteria().andAuthIdEqualTo(authId).andRoleIdEqualTo(roleId);
+		List<AuthRole> authList = authRoleMapper.selectByExample(example);
+		if(authList != null && !authList.isEmpty()) {
+			AuthRole auth = authList.get(0);
+			if(auth.getIsDelete()) {
+				auth.setIsDelete(false);
+				auth.setUpdateTime(LocalDateTime.now());
+				auth.setUpdateBy(baseUtilCustom.getUserId());
+				int updateCount = authRoleMapper.updateByPrimaryKey(auth);
+				if(updateCount > 0) {
+					r.setIsSuccess();
+				}
+			} else {
+				r.setIsSuccess();
+			}
+			return r;
+		}
+		
+		Long operatorId = baseUtilCustom.getUserId();
+		AuthRole newPO = new AuthRole();
+		newPO.setId(snowFlake.getNextId());
+		newPO.setCreateBy(operatorId);
+		newPO.setAuthId(authId);
+		newPO.setRoleId(roleId);
+		int insertCount = authRoleMapper.insertSelective(newPO);
+		if(insertCount > 0) {
+			r.setIsSuccess();
+		}
+		
+		return r;
+	}
+	
+	private CommonResultCX canEditAuthRole(Long authId, Long roleId) {
+		CommonResultCX r = authService.canEditUserAuth(authId);
+		if(r.isFail()) {
+			return r;
+		}
+		
+		FindRolesDTO getRolsDTO = new FindRolesDTO();
+		getRolsDTO.setRolesIdList(Arrays.asList(roleId));
+		FindRolesResult getRoleResult = roleService.getRolesByCondition(getRolsDTO);
+		if(getRoleResult.isFail() || getRoleResult.getRoleList() == null || getRoleResult.getRoleList().isEmpty()) {
+			r.failWithMessage(getRoleResult.getMessage());
+			return r;
+		}
+		
+		Roles role = getRoleResult.getRoleList().get(0);
+		RolesType roleType = roleService.findRolesType(role);
+		if(roleType == null) {
+			r.failWithMessage("error param");
+			return r;
+		}
+		
+		boolean bigUserFlag = isBigUser();
+		if(RolesType.SYS_ROLE.equals(roleType)) {
+			if(!bigUserFlag) {
+				r.failWithMessage("无权操作");
+				return r;
+			} else {
+				r.setIsSuccess();
+				return r;
+			}
+		}
+		
+		FindAuthsResult findAuthResult = authService.findAuthsByCondition(authId);
+		if(findAuthResult.isFail() || findAuthResult.getAuthList() == null || findAuthResult.getAuthList().isEmpty()) {
+			r.failWithMessage(findAuthResult.getMessage());
+			return r;
+		}
+		Auth auth = findAuthResult.getAuthList().get(0);
+		
+		AuthTypeType authType = AuthTypeType.getType(auth.getAuthType());
+		if(AuthTypeType.SYS_AUTH.equals(authType)) {
+			if(!bigUserFlag) {
+				r.failWithMessage("无权操作");
+				return r;
+			}
+		}
+		
+		CommonResultCX validUserOrgResult = orgService.validUserOrg(auth.getBelongOrg());
+		if(validUserOrgResult.isFail()) {
+			r.failWithMessage(validUserOrgResult.getMessage());
+			return r;
+		}
+		
+		r.setIsSuccess();
 		return r;
 	}
 	

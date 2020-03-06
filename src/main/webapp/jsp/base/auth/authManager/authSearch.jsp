@@ -79,6 +79,8 @@
         authSearch();
       });
 
+      authSearch();
+
       function authSearch() {
         var belongOrgPkList = [];
         var orgPk = "${orgPk}";

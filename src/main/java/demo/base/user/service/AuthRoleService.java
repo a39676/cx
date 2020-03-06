@@ -1,6 +1,7 @@
 package demo.base.user.service;
 
-import demo.base.user.pojo.bo.DeleteAuthRoleBO;
+import demo.base.user.pojo.bo.BatchDeleteAuthRoleBO;
+import demo.base.user.pojo.dto.EditAuthRoleDTO;
 import demo.base.user.pojo.dto.FindAuthRoleDTO;
 import demo.base.user.pojo.dto.FindRolesDTO;
 import demo.base.user.pojo.result.FindAuthRoleResult;
@@ -20,6 +21,10 @@ public interface AuthRoleService {
 	 * @param dto
 	 * @return
 	 */
-	CommonResultCX deleteAuthRole(DeleteAuthRoleBO bo);
+	CommonResultCX batchDeleteAuthRole(BatchDeleteAuthRoleBO bo);
+
+	CommonResultCX insertAuthRole(EditAuthRoleDTO dto);
+
+	CommonResultCX deleteAuthRole(EditAuthRoleDTO dto);
 
 }

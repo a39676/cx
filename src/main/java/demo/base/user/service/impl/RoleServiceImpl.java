@@ -14,8 +14,11 @@ import demo.base.user.pojo.po.Roles;
 import demo.base.user.pojo.po.RolesExample;
 import demo.base.user.pojo.po.RolesExample.Criteria;
 import demo.base.user.pojo.result.FindRolesResult;
+import demo.base.user.pojo.result.FindRolesVOResult;
 import demo.base.user.pojo.type.OrganzationRolesType;
+import demo.base.user.pojo.type.RolesType;
 import demo.base.user.pojo.type.SystemRolesType;
+import demo.base.user.pojo.vo.RoleVO;
 import demo.base.user.service.RoleService;
 import demo.baseCommon.service.CommonService;
 
@@ -105,5 +108,81 @@ public class RoleServiceImpl extends CommonService implements RoleService {
 		r.setRoleList(roleMapper.selectByExample(example));
 		r.setIsSuccess();
 		return r;
+	}
+
+	@Override
+	public FindRolesVOResult findRolesVO(FindRolesDTO dto) {
+		FindRolesVOResult r = new FindRolesVOResult();
+		
+		FindRolesResult poResult = getRolesByCondition(dto);
+		if(poResult.isFail()) {
+			r.addMessage(poResult.getMessage());
+			return r;
+		}
+		
+		List<Roles> poList = poResult.getRoleList();
+		if(poList == null || poList.isEmpty()) {
+			r.setIsSuccess();
+			return r;
+		}
+		
+		List<RoleVO> voList = new ArrayList<RoleVO>();
+		for(Roles role : poList) {
+			voList.add(buildVO(role));
+		}
+		r.setRoleVOList(voList);
+		r.setIsSuccess();
+		
+		return r;
+	}
+	
+	private RoleVO buildVO(Roles po) {
+		RoleVO vo = new RoleVO();
+		vo.setPk(encryptId(po.getRoleId()));
+		vo.setRoleName(po.getRole());
+		return vo;
+	}
+
+	@Override
+	public FindRolesVOResult findSysRoles() {
+		FindRolesDTO dto = new FindRolesDTO();
+		List<String> sysRoleNameList = new ArrayList<String>();
+		for(SystemRolesType r : SystemRolesType.values()) {
+			sysRoleNameList.add(r.getName());
+		}
+		dto.setRoleNameList(sysRoleNameList);
+		
+		return findRolesVO(dto);
+	}
+	
+	@Override
+	public FindRolesVOResult findOrgRoles() {
+		FindRolesDTO dto = new FindRolesDTO();
+		List<String> orgRoleNameList = new ArrayList<String>();
+		for(OrganzationRolesType r : OrganzationRolesType.values()) {
+			orgRoleNameList.add(r.getName());
+		}
+		dto.setRoleNameList(orgRoleNameList);
+		
+		return findRolesVO(dto);
+	}
+
+	@Override
+	public RolesType findRolesType(Roles role) {
+		if(role == null || StringUtils.isBlank(role.getRole())) {
+			return null;
+		}
+		
+		SystemRolesType sysRoleType = SystemRolesType.getRole(role.getRole());
+		if(sysRoleType != null) {
+			return RolesType.SYS_ROLE;
+		}
+		
+		OrganzationRolesType orgRoleType = OrganzationRolesType.getRole(role.getRole());
+		if(orgRoleType != null) {
+			return RolesType.ORG_ROLE;
+		}
+		
+		return null;
 	}
 }

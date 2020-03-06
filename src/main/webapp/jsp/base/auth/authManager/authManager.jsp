@@ -113,6 +113,21 @@
         });  
       });
 
+      $("#editAuth").click(function () {
+
+        var authPkList = [];
+
+        var targetAuthEleList = document.querySelectorAll('.authButton.btn-primary');
+        for (var i = targetAuthEleList.length - 1; i >= 0; i--) {
+          authPkList.push(targetAuthEleList[i].getAttribute("pk"));
+        }
+
+        var authPK = authPkList[0];
+        
+        var url = "/auth/authEdit?authPK=" + encodeURIComponent(authPK);
+        window.open(url, '_blank');
+      });
+
     });
 
   </script>

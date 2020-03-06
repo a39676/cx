@@ -26,7 +26,7 @@ public enum AuthTypeType {
 		return code;
 	}
 	
-	public static AuthTypeType getRole(Integer id) {
+	public static AuthTypeType getType(Integer id) {
 		for(AuthTypeType role : AuthTypeType.values()) {
 			if(role.getCode() == id) {
 				return role;
@@ -35,7 +35,7 @@ public enum AuthTypeType {
 		return null;
 	}
 	
-	public static AuthTypeType getRole(String roleName) {
+	public static AuthTypeType getType(String roleName) {
 		for(AuthTypeType role : AuthTypeType.values()) {
 			if(role.getName().equals(roleName)) {
 				return role;

@@ -44,7 +44,7 @@
   <!-- result row start-->
   <div class="row">
     <div class="col-md-12">
-      <input type="" name="" id="userAuthOperatorResultMsg" disabled="disabled" style="width: 800px;">
+      <input type="" name="" id="orgOperatorResultMsg" disabled="disabled" style="width: 800px;">
     </div>
   </div>
   <!-- result row end-->
@@ -59,8 +59,8 @@
     $(document).ready(function() {
 
       $("#editOrgAuth").click(function () {
-        var orgPk = $("#orgNameDiv").attr("selectedOrgPk");
-        var url = "/auth/authManager?orgPK=" + orgPK;
+        var orgPK = $("#orgNameDiv").attr("selectedOrgPk");
+        var url = "/auth/authManager?orgPK=" + encodeURIComponent(orgPK);
         window.open(url, '_blank');
       });
 

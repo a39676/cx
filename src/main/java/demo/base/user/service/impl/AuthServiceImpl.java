@@ -21,7 +21,7 @@ import demo.base.organizations.service.OrganizationService;
 import demo.base.system.pojo.constant.InitSystemConstant;
 import demo.base.user.mapper.AuthMapper;
 import demo.base.user.pojo.bo.DeleteAuthBO;
-import demo.base.user.pojo.bo.DeleteAuthRoleBO;
+import demo.base.user.pojo.bo.BatchDeleteAuthRoleBO;
 import demo.base.user.pojo.bo.EditUserAuthBO;
 import demo.base.user.pojo.bo.FindAuthsBO;
 import demo.base.user.pojo.bo.InsertNewAuthBO;
@@ -42,6 +42,7 @@ import demo.base.user.pojo.result.FindAuthRoleResult;
 import demo.base.user.pojo.result.FindAuthsResult;
 import demo.base.user.pojo.result.FindAuthsVOResult;
 import demo.base.user.pojo.result.FindRolesResult;
+import demo.base.user.pojo.result.FindRolesVOResult;
 import demo.base.user.pojo.result.InsertNewAuthResult;
 import demo.base.user.pojo.type.AuthType;
 import demo.base.user.pojo.type.AuthTypeType;
@@ -167,6 +168,56 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 			return view;
 		} else {
 			view.addObject("orgPk", orgPK);
+		}
+		
+		return view;
+	}
+	
+	@Override
+	public ModelAndView authEditView(String authPK) {
+		ModelAndView view = new ModelAndView(AuthManagerView.authEdit);
+		
+		if(StringUtils.isBlank(authPK)) {
+			return view;
+		}
+		
+		Long authId = decryptPrivateKey(authPK);
+		
+		CommonResultCX canEditUserAuthResult = canEditUserAuth(authId);
+		if(canEditUserAuthResult.isFail()) {
+			return view;
+		}
+		
+		FindAuthsResult findAuthResult = findAuthsByCondition(authId);
+		if(findAuthResult.isFail() || findAuthResult.getAuthList() == null || findAuthResult.getAuthList().isEmpty()) {
+			return view;
+		}
+		Auth auth = findAuthResult.getAuthList().get(0);
+		view.addObject("authName", auth.getAuthName());
+		view.addObject("authPK", authPK);
+		
+		AuthTypeType authTypeType = AuthTypeType.getType(auth.getAuthType());
+		if(AuthTypeType.SYS_AUTH.equals(authTypeType) && isBigUser()) {
+			FindRolesVOResult findSysRoleResult = roleService.findSysRoles();
+			view.addObject("sysRoleList", findSysRoleResult.getRoleVOList());
+		}
+		
+		if(AuthTypeType.ORG_AUTH.equals(authTypeType)) {
+			FindRolesVOResult findOrgRoleResult = roleService.findOrgRoles();
+			view.addObject("orgRoleList", findOrgRoleResult.getRoleVOList());
+		}
+		
+		FindAuthRoleDTO findAuthRoleDTO = new FindAuthRoleDTO();
+		findAuthRoleDTO.setAuthIdList(authId);
+		FindAuthRoleResult findAuthRoleResult = authRoleService.findAuthRole(findAuthRoleDTO);
+		List<AuthRole> authRoleList = findAuthRoleResult.getAuthRoleList();
+		if(authRoleList != null) {
+			List<String> hasRolePK = new ArrayList<String>();
+			List<Long> roleIdList = authRoleList.stream().map(AuthRole::getRoleId).collect(Collectors.toList());
+			if(roleIdList != null && !roleIdList.isEmpty()) {
+				hasRolePK.addAll(encryptId(roleIdList));
+				view.addObject("hasRolePK", hasRolePK);
+			}
 		}
 		
 		return view;
@@ -541,9 +592,9 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 			return r;
 		}
 		
-		DeleteAuthRoleBO deleteAuthRoleBO = new DeleteAuthRoleBO();
+		BatchDeleteAuthRoleBO deleteAuthRoleBO = new BatchDeleteAuthRoleBO();
 		deleteAuthRoleBO.setAuthIdList(deleteAuthIdList);
-		CommonResultCX deleteAuthRoleResult = authRoleService.deleteAuthRole(deleteAuthRoleBO);
+		CommonResultCX deleteAuthRoleResult = authRoleService.batchDeleteAuthRole(deleteAuthRoleBO);
 		if(!deleteAuthRoleResult.isSuccess()) {
 			r.addMessage(deleteAuthRoleResult.getMessage());
 			return r;

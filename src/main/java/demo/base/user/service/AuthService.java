@@ -57,4 +57,6 @@ public interface AuthService {
 
 	ModelAndView authManagerView(String orgPK);
 
+	ModelAndView authEditView(String authPK);
+
 }

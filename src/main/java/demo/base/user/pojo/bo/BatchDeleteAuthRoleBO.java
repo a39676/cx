@@ -2,7 +2,7 @@ package demo.base.user.pojo.bo;
 
 import java.util.List;
 
-public class DeleteAuthRoleBO {
+public class BatchDeleteAuthRoleBO {
 
 	private Long orgId;
 	private List<Long> authIdList;

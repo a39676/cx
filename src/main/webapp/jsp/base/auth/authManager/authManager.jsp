@@ -101,7 +101,6 @@
           success:function(datas){
             resultSpan.innerHTML = datas.message;
             if(datas.result == "0") {
-              
               $.each(authPkList, function(index, authPk) {
                 var targetAuthList = document.querySelectorAll('.authButton[pk="'+authPk+'"]');
                 if(targetAuthList != null) {
@@ -133,6 +132,11 @@
         var authPK = authPkList[0];
         
         var url = "/auth/authEdit?authPK=" + encodeURIComponent(authPK);
+        window.open(url, '_blank');
+      });
+
+      $("#addAuth").click(function () {
+        var url = "/auth/insertAuth?orgPK=" + encodeURIComponent("${orgPk}");
         window.open(url, '_blank');
       });
 

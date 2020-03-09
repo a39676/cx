@@ -41,8 +41,7 @@ public interface AuthService {
 
 	AuthVO buildAuthVOByPO(Auth po);
 
-	InsertNewAuthResult insertOrgAuth(InsertAuthDTO dto);
-	InsertNewAuthResult insertSysAuth(InsertAuthDTO dto);
+	InsertNewAuthResult insertAuth(InsertAuthDTO dto);
 
 	/**
 	 * 
@@ -54,12 +53,16 @@ public interface AuthService {
 
 	CommonResultCX deleteAuth(DeleteAuthDTO dto);
 	CommonResultCX deleteAuth(DeleteAuthBO bo);
+	CommonResultCX deleteAllAuthByOrgId(DeleteAuthBO bo);
 
 	ModelAndView authManagerView(String orgPK);
 
 	ModelAndView authEditView(String authPK);
 
 	CommonResultCX editAuth(EditAuthDTO dto);
+
+	ModelAndView insertAuthView(String belongOrgPK);
+
 
 
 }

@@ -671,7 +671,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		if(isBigUser()) {
 			title = controllerParam.getTitle();
 		} else {
-			PolicyFactory filter = textFilter.getFilter();
+			PolicyFactory filter = textFilter.getArticleFilter();
 			title = filter.sanitize(controllerParam.getTitle());
 			controllerParam.setContent(filter.sanitize(controllerParam.getContent()));
 		}

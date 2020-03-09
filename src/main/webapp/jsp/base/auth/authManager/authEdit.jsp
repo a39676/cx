@@ -28,7 +28,7 @@
 
   <hr>
   
-  <div class="row" id="sysRoleList" >
+  <div class="row" id="sysRoleList">
     <div class="col-md-12 btn-group">
       <c:forEach items="${sysRoleList}" var="sysRole">
         <button class="btn btn-sm btn-light roleButton" pk="${sysRole.pk}">${sysRole.roleName}</button>
@@ -36,7 +36,7 @@
     </div>
   </div>
 
-  <div class="row" id="orgRoleList" >
+  <div class="row" id="orgRoleList">
     <div class="col-md-12 btn-group">
       <c:forEach items="${orgRoleList}" var="orgRole">
         <button class="btn btn-sm btn-light roleButton" pk="${orgRole.pk}">${orgRole.roleName}</button>

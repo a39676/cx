@@ -112,9 +112,9 @@
         $("#orgName").val("");
         $("#orgPk").val("");
         $("#creatorPk").val("");
-        $("#orgId").val("");
-        $("#belongTo").val("");
-        $("#topOrg").val("");
+        // $("#orgId").val("");
+        // $("#belongTo").val("");
+        // $("#topOrg").val("");
         $("#creatorName").val("");
         $("#orgIsDeleteTrue").prop("checked", false);
         $("#orgIsDeleteFalse").prop("checked", true);
@@ -132,9 +132,9 @@
         var orgName = $("#orgName").val();
         var orgPk = $("#orgPk").val();
         var creatorPk = $("#creatorPk").val();
-        var orgId = $("#orgId").val();
-        var belongTo = $("#belongTo").val();
-        var topOrg = $("#topOrg").val();
+        // var orgId = $("#orgId").val();
+        // var belongTo = $("#belongTo").val();
+        // var topOrg = $("#topOrg").val();
         var creatorName = $("#creatorName").val();
         var isDelete = orgIsDelete;
 
@@ -143,11 +143,11 @@
         var jsonOutput = {
           orgName : orgName,
           orgPk : orgPk,
-          orgId : creatorPk,
-          belongTo : orgId,
-          topOrg : belongTo,
-          creatorName : topOrg,
-          creatorPk : creatorName,
+          // orgId : orgId,
+          // belongTo : belongTo,
+          // topOrg : topOrg,
+          creatorName : creatorName,
+          creatorPk : creatorPk,
           isDelete : isDelete
         };
 

@@ -37,8 +37,8 @@ public class InsertNewAuthBO extends InsertAuthDTO {
 	public String toString() {
 		return "InsertNewAuthBO [belongOrgId=" + belongOrgId + ", creatorId=" + creatorId + ", authTypeType="
 				+ authTypeType + ", getBelongOrgPK()=" + getBelongOrgPK() + ", getAuthName()=" + getAuthName()
-				+ ", getSysRoles()=" + getSysRoles() + ", getOrgRoles()=" + getOrgRoles() + ", toString()="
-				+ super.toString() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + "]";
+				+ ", toString()=" + super.toString() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode()
+				+ "]";
 	}
 
 }

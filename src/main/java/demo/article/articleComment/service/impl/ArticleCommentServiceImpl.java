@@ -106,7 +106,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		
 		boolean bigUserFlag = isBigUser();
 		if(!bigUserFlag) {
-			PolicyFactory filter = textFilter.getFilter();
+			PolicyFactory filter = textFilter.getArticleFilter();
 			inputParam.setContent(filter.sanitize(inputParam.getContent()));
 		} 
 

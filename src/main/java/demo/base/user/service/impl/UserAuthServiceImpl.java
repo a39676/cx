@@ -148,17 +148,18 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 		userAuthCriteria.andIsDeleteEqualTo(false);
 		List<UserAuth> userAuthList = userAuthMapper.selectByExample(example);
 		if(userAuthList == null || userAuthList.size() < 1) {
-			return r;
+			r.setIsSuccess();
+		} else {
+			UserAuth po = new UserAuth();
+			po.setIsDelete(true);
+			po.setUpdateTime(LocalDateTime.now());
+			po.setUpdateBy(baseUtilCustom.getUserId());
+			int count = userAuthMapper.updateByExampleSelective(po, example);
+			if(count == userAuthList.size()) {
+				r.setIsSuccess();
+			}
 		}
 		
-		UserAuth po = userAuthList.get(0);
-		po.setIsDelete(true);
-		po.setUpdateTime(LocalDateTime.now());
-		po.setUpdateBy(baseUtilCustom.getUserId());
-		int count = userAuthMapper.updateByPrimaryKey(po);
-		if(count > 0) {
-			r.setIsSuccess();
-		}
 		return r;
 	}
 	

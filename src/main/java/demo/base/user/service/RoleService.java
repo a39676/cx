@@ -22,4 +22,6 @@ public interface RoleService {
 
 	RolesType findRolesType(Roles role);
 
+	Roles findRoleByName(String roleName);
+
 }

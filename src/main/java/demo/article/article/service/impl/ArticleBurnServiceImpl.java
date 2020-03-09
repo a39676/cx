@@ -108,7 +108,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 			}
 		}
 		
-		PolicyFactory filter = textFilter.getFilter();
+		PolicyFactory filter = textFilter.getArticleFilter();
 		String contentAfterSanitize = filter.sanitize(dto.getContent());
 		Long userId = baseUtilCustom.getUserId();
 		Long newArticleId = snowFlake.getNextId();

@@ -134,7 +134,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	private ValidUserRegistResult validAndSanitizeUserRegistDTO(UserRegistDTO dto) {
 		ValidUserRegistResult r = new ValidUserRegistResult();
 		
-		PolicyFactory filter = textFilter.getFilter();
+		PolicyFactory filter = textFilter.getArticleFilter();
 		
 		if (!validRegexToolService.validNormalUserName(dto.getUserName())) {
 			dto.setUserName(filter.sanitize(dto.getUserName()));

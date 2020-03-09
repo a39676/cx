@@ -4,6 +4,8 @@ import org.owasp.html.PolicyFactory;
 
 public interface TextFilter {
 
-	PolicyFactory getFilter();
+	PolicyFactory getArticleFilter();
+
+	PolicyFactory getAllFilter();
 
 }

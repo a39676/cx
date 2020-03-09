@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.owasp.html.PolicyFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import demo.base.organizations.mapper.OrganizationsMapper;
 import demo.base.organizations.pojo.bo.FindOrgByConditionBO;
+import demo.base.organizations.pojo.constant.OrganizationConstant;
 import demo.base.organizations.pojo.dto.DeleteOrgDTO;
 import demo.base.organizations.pojo.dto.FindUserControlOrgDTO;
 import demo.base.organizations.pojo.dto.OrgRegistDTO;
@@ -29,6 +31,7 @@ import demo.base.organizations.service.OrganizationService;
 import demo.base.user.pojo.bo.DeleteAuthBO;
 import demo.base.user.pojo.bo.FindUserAuthBO;
 import demo.base.user.pojo.bo.MyUserPrincipal;
+import demo.base.user.pojo.dto.EditAuthRoleByRoleNameDTO;
 import demo.base.user.pojo.dto.FindOrgByConditionDTO;
 import demo.base.user.pojo.dto.FindUserByConditionDTO;
 import demo.base.user.pojo.dto.InsertAuthDTO;
@@ -38,11 +41,13 @@ import demo.base.user.pojo.result.FindUserByConditionResult;
 import demo.base.user.pojo.result.InsertNewAuthResult;
 import demo.base.user.pojo.type.OrganzationRolesType;
 import demo.base.user.pojo.vo.UsersDetailVO;
+import demo.base.user.service.AuthRoleService;
 import demo.base.user.service.AuthService;
 import demo.base.user.service.UserAuthService;
 import demo.base.user.service.UsersService;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.service.CommonService;
+import demo.tool.service.TextFilter;
 
 @Service
 public class OrganizationServiceImpl extends CommonService implements OrganizationService {
@@ -50,9 +55,14 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 	private static final Logger log = LoggerFactory.getLogger(OrganizationServiceImpl.class);
 
 	@Autowired
+	protected TextFilter textFilter;
+	
+	@Autowired
 	private OrganizationsMapper orgMapper;
 	@Autowired
 	private UserAuthService userAuthService;
+	@Autowired
+	private AuthRoleService authRoleService;
 	@Autowired
 	private UsersService userService;
 	@Autowired
@@ -71,6 +81,9 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 			result.addMessage(verifyTopOrgRegistDTOResult.getMessage());
 			return result;
 		}
+		
+		PolicyFactory filter = textFilter.getAllFilter();
+		dto.setOrgName(filter.sanitize(dto.getOrgName()));
 
 		Organizations po = new Organizations();
 		Long newOrgId = snowFlake.getNextId();
@@ -91,10 +104,18 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 		InsertAuthDTO insertNewAuthDTO = new InsertAuthDTO();
 		insertNewAuthDTO.setAuthName(dto.getOrgName() + "_Admin");
 		insertNewAuthDTO.setBelongOrgPK(encryptId(newOrgId));
-		insertNewAuthDTO.setOrgRoles(Arrays.asList(OrganzationRolesType.ROLE_ORG_SUPER_ADMIN));
-		InsertNewAuthResult insertOrgAuthResult = authService.insertOrgAuth(insertNewAuthDTO);
+		InsertNewAuthResult insertOrgAuthResult = authService.insertAuth(insertNewAuthDTO);
 		if(!insertOrgAuthResult.isSuccess()) {
 			result.addMessage(insertOrgAuthResult.getMessage());
+			return result;
+		}
+		
+		EditAuthRoleByRoleNameDTO insertAuthRoleDTO = new EditAuthRoleByRoleNameDTO();
+		insertAuthRoleDTO.setAuthPK(insertOrgAuthResult.getAuthPK());
+		insertAuthRoleDTO.setRoleName(OrganzationRolesType.ROLE_ORG_SUPER_ADMIN.getName());
+		CommonResultCX insertAuthRoleResult = authRoleService.insertAuthRole(insertAuthRoleDTO);
+		if(insertAuthRoleResult.isFail()) {
+			result.failWithMessage(insertAuthRoleResult.getMessage());
 			return result;
 		}
 		
@@ -115,6 +136,9 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 			result.addMessage(validUserOrgResult.getMessage());
 			return result;
 		}
+		
+		PolicyFactory filter = textFilter.getAllFilter();
+		dto.setOrgName(filter.sanitize(dto.getOrgName()));
 
 		Organizations po = new Organizations();
 		Long newOrgId = snowFlake.getNextId();
@@ -134,10 +158,18 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 		InsertAuthDTO insertNewAuthDTO = new InsertAuthDTO();
 		insertNewAuthDTO.setAuthName(dto.getOrgName() + "_admin_affiliate");
 		insertNewAuthDTO.setBelongOrgPK(encryptId(newOrgId));
-		insertNewAuthDTO.setOrgRoles(Arrays.asList(OrganzationRolesType.ROLE_SUB_ORG_ADMIN));
-		InsertNewAuthResult insertOrgAuthResult = authService.insertOrgAuth(insertNewAuthDTO);
+		InsertNewAuthResult insertOrgAuthResult = authService.insertAuth(insertNewAuthDTO);
 		if(!insertOrgAuthResult.isSuccess()) {
 			result.addMessage(insertOrgAuthResult.getMessage());
+			return result;
+		}
+		
+		EditAuthRoleByRoleNameDTO insertAuthRoleDTO = new EditAuthRoleByRoleNameDTO();
+		insertAuthRoleDTO.setAuthPK(insertOrgAuthResult.getAuthPK());
+		insertAuthRoleDTO.setRoleName(OrganzationRolesType.ROLE_SUB_ORG_ADMIN.getName());
+		CommonResultCX insertAuthRoleResult = authRoleService.insertAuthRole(insertAuthRoleDTO);
+		if(insertAuthRoleResult.isFail()) {
+			result.failWithMessage(insertAuthRoleResult.getMessage());
 			return result;
 		}
 		
@@ -147,8 +179,8 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 
 	private CommonResultCX verifyTopOrgRegistDTO(OrgRegistDTO dto) {
 		CommonResultCX result = new CommonResultCX();
-		if (StringUtils.isBlank(dto.getOrgName()) || dto.getOrgName().length() > 16) {
-			result.failWithMessage("机构名称长度为1~16位");
+		if (StringUtils.isBlank(dto.getOrgName()) || dto.getOrgName().length() > OrganizationConstant.orgNameMaxLength) {
+			result.failWithMessage("机构名异常, 最长不得超过: " + OrganizationConstant.orgNameMaxLength + " 个字符, 汉字占用两个字符.");
 			return result;
 		}
 
@@ -166,6 +198,11 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 
 		if (StringUtils.isAnyBlank(dto.getBelongTo(), dto.getTopOrg())) {
 			r.failWithMessage("请选择归属机构");
+			return r;
+		}
+		
+		if(StringUtils.isBlank(dto.getOrgName()) || OrganizationConstant.orgNameMaxLength < dto.getOrgName().length()) {
+			r.failWithMessage("机构名异常, 最长不得超过: " + OrganizationConstant.orgNameMaxLength + " 个字符, 汉字占用两个字符.");
 			return r;
 		}
 		
@@ -454,7 +491,7 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 		
 		DeleteAuthBO bo = new DeleteAuthBO();
 		bo.setOrgId(orgId);
-		CommonResultCX deleteAuthResult = authService.deleteAuth(bo);
+		CommonResultCX deleteAuthResult = authService.deleteAllAuthByOrgId(bo);
 		if(deleteAuthResult.isFail()) {
 			r.addMessage(deleteAuthResult.getMessage());
 			return r;

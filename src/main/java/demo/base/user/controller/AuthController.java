@@ -45,16 +45,15 @@ public class AuthController {
 		return authService.editAuth(dto);
 	}
 	
-	@PostMapping(value = AuthUrl.insertSysAuth)
-	@ResponseBody
-	public InsertNewAuthResult insertSysAuth(@RequestBody InsertAuthDTO dto) {
-		return authService.insertSysAuth(dto);
+	@GetMapping(value = AuthUrl.insertAuth)
+	public ModelAndView insertAuth(@RequestParam(value = "orgPK", defaultValue = "" ) String orgPK) {
+		return authService.insertAuthView(orgPK);
 	}
 	
-	@PostMapping(value = AuthUrl.insertOrgAuth)
+	@PostMapping(value = AuthUrl.insertAuth)
 	@ResponseBody
-	public InsertNewAuthResult insertOrgAuth(@RequestBody InsertAuthDTO dto) {
-		return authService.insertOrgAuth(dto);
+	public InsertNewAuthResult insertAuth(@RequestBody InsertAuthDTO dto) {
+		return authService.insertAuth(dto);
 	}
 	
 	@PostMapping(value = AuthUrl.deleteAuth)

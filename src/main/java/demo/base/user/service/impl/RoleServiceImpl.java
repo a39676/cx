@@ -136,6 +136,22 @@ public class RoleServiceImpl extends CommonService implements RoleService {
 		return r;
 	}
 	
+	@Override
+	public Roles findRoleByName(String roleName) {
+		if(StringUtils.isBlank(roleName)) {
+			return null;
+		}
+		
+		RolesExample example = new RolesExample();
+		example.createCriteria().andIsDeleteEqualTo(false).andRoleEqualTo(roleName);
+		List<Roles> roleList = roleMapper.selectByExample(example);
+		if(roleList == null || roleList.isEmpty()) {
+			return null;
+		}
+		
+		return roleList.get(0);
+	}
+	
 	private RoleVO buildVO(Roles po) {
 		RoleVO vo = new RoleVO();
 		vo.setPk(encryptId(po.getRoleId()));

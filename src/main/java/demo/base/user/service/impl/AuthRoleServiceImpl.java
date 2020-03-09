@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import demo.base.organizations.service.OrganizationService;
 import demo.base.user.mapper.AuthRoleMapper;
 import demo.base.user.pojo.bo.BatchDeleteAuthRoleBO;
+import demo.base.user.pojo.dto.EditAuthRoleByRoleNameDTO;
 import demo.base.user.pojo.dto.EditAuthRoleDTO;
 import demo.base.user.pojo.dto.FindAuthRoleDTO;
 import demo.base.user.pojo.dto.FindRolesDTO;
@@ -37,7 +38,7 @@ import demo.baseCommon.service.CommonService;
 public class AuthRoleServiceImpl extends CommonService implements AuthRoleService {
 	
 	private static final Logger log = LoggerFactory.getLogger(AuthRoleServiceImpl.class);
-
+	
 	@Autowired
 	private AuthRoleMapper authRoleMapper;
 	@Autowired
@@ -190,6 +191,31 @@ public class AuthRoleServiceImpl extends CommonService implements AuthRoleServic
 		
 		Long authId = decryptPrivateKey(dto.getAuthPK());
 		Long roleId = decryptPrivateKey(dto.getRolePK());
+		return insertAuthRole(authId, roleId);
+	}
+	
+	@Override
+	public CommonResultCX insertAuthRole(EditAuthRoleByRoleNameDTO dto) {
+		CommonResultCX r = new CommonResultCX();
+		
+		if(StringUtils.isAnyBlank(dto.getAuthPK(), dto.getRoleName())) {
+			r.failWithMessage("null param");
+			return r;
+		}
+		
+		Long authId = decryptPrivateKey(dto.getAuthPK());
+		Roles role = roleService.findRoleByName(dto.getRoleName());
+		
+		if(role == null) {
+			r.failWithMessage("error param");
+			return r;
+		}
+		return insertAuthRole(authId, role.getRoleId());
+	}
+	
+	private CommonResultCX insertAuthRole(Long authId, Long roleId) {
+		CommonResultCX r = new CommonResultCX();
+		
 		if(authId == null || roleId == null) {
 			r.failWithMessage("null param");
 			return r;
@@ -275,7 +301,12 @@ public class AuthRoleServiceImpl extends CommonService implements AuthRoleServic
 		
 		AuthTypeType authType = AuthTypeType.getType(auth.getAuthType());
 		if(AuthTypeType.SYS_AUTH.equals(authType)) {
-			if(!bigUserFlag) {
+			if(!bigUserFlag || RolesType.ORG_ROLE.equals(roleType)) {
+				r.failWithMessage("无权操作");
+				return r;
+			}
+		} else if(AuthTypeType.ORG_AUTH.equals(authType)) {
+			if(RolesType.SYS_ROLE.equals(roleType)) {
 				r.failWithMessage("无权操作");
 				return r;
 			}

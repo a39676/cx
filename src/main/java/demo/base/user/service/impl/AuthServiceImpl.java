@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.owasp.html.PolicyFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -33,7 +34,6 @@ import demo.base.user.pojo.dto.DeleteAuthDTO;
 import demo.base.user.pojo.dto.EditAuthDTO;
 import demo.base.user.pojo.dto.FindAuthRoleDTO;
 import demo.base.user.pojo.dto.FindAuthsDTO;
-import demo.base.user.pojo.dto.FindRolesDTO;
 import demo.base.user.pojo.dto.InsertAuthDTO;
 import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.po.AuthExample;
@@ -43,12 +43,10 @@ import demo.base.user.pojo.po.Roles;
 import demo.base.user.pojo.result.FindAuthRoleResult;
 import demo.base.user.pojo.result.FindAuthsResult;
 import demo.base.user.pojo.result.FindAuthsVOResult;
-import demo.base.user.pojo.result.FindRolesResult;
 import demo.base.user.pojo.result.FindRolesVOResult;
 import demo.base.user.pojo.result.InsertNewAuthResult;
 import demo.base.user.pojo.type.AuthType;
 import demo.base.user.pojo.type.AuthTypeType;
-import demo.base.user.pojo.type.OrganzationRolesType;
 import demo.base.user.pojo.type.SystemRolesType;
 import demo.base.user.pojo.vo.AuthVO;
 import demo.base.user.service.AuthRoleService;
@@ -57,11 +55,15 @@ import demo.base.user.service.RoleService;
 import demo.base.user.service.UserAuthService;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.service.CommonService;
+import demo.tool.service.TextFilter;
 
 @Service
 public class AuthServiceImpl extends CommonService implements AuthService {
 
 	private static final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
+
+	@Autowired
+	protected TextFilter textFilter;
 	
 	@Autowired
 	private AuthMapper authMapper;
@@ -145,7 +147,6 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		
 		return newAuthID;
 	}
-	
 	
 	@Override
 	public ModelAndView authManagerView(String orgPK) {
@@ -425,37 +426,74 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 	}
 	
 	@Override
-	public InsertNewAuthResult insertOrgAuth(InsertAuthDTO dto) {
-		if(!vaildAndEditInsertNewOrgAuth(dto)) {
-			InsertNewAuthResult r = new InsertNewAuthResult();
-			r.failWithMessage("无权编辑");
-			return r;
+	public ModelAndView insertAuthView(String belongOrgPK) {
+		ModelAndView view = new ModelAndView(AuthManagerView.authInsert);
+		if(StringUtils.isBlank(belongOrgPK)) {
+			return view;
 		}
 		
-		dto.setSysRoles(null);
-		InsertNewAuthBO bo = new InsertNewAuthBO();
-		BeanUtils.copyProperties(dto, bo);
-		bo.setCreatorId(baseUtilCustom.getUserId());
-		bo.setAuthTypeType(AuthTypeType.ORG_AUTH);
-		bo.setBelongOrgId(decryptPrivateKey(dto.getBelongOrgPK()));
+		Long belongOrgId = decryptPrivateKey(belongOrgPK);
+		if(belongOrgId == null) {
+			return view;
+		}
 		
-		return insertNewAuth(bo);
+		Organizations org = orgService.getOrgById(belongOrgId);
+		if(org == null) {
+			return view;
+		}
+		
+		view.addObject("orgPK", belongOrgPK);
+		view.addObject("orgName", org.getOrgName());
+		
+		return view;
 	}
 	
 	@Override
-	public InsertNewAuthResult insertSysAuth(InsertAuthDTO dto) {
+	public InsertNewAuthResult insertAuth(InsertAuthDTO dto) {
 		InsertNewAuthResult r = new InsertNewAuthResult();
-		if(!baseUtilCustom.hasSuperAdminRole() || StringUtils.isBlank(dto.getBelongOrgPK())) {
+		
+		if(StringUtils.isAnyBlank(dto.getAuthName(), dto.getBelongOrgPK())) {
+			r.failWithMessage("null param");
+			return r;
+		}
+		
+		if(AuthConstant.authNameMaxLength < dto.getAuthName().length()) {
+			r.failWithMessage("角色名过长, 最长不得超过: " + AuthConstant.authNameMaxLength + " 个字符, 汉字占用两个字符.");
+			return r;
+		}
+		
+		PolicyFactory filter = textFilter.getAllFilter();
+		dto.setAuthName(filter.sanitize(dto.getAuthName()));
+
+		Long orgId = decryptPrivateKey(dto.getBelongOrgPK());
+		if(orgId == null) {
+			r.failWithMessage("error param");
+			return r;
+		}
+		
+		CommonResultCX validUserOrgResult = orgService.validUserOrg(orgId);
+		
+		if(validUserOrgResult.isFail()) {
 			r.failWithMessage("无权编辑");
 			return r;
 		}
 		
-		dto.setOrgRoles(null);
+		Organizations org = orgService.getOrgById(orgId);
+		if(org == null) {
+			r.failWithMessage("error param");
+			return r;
+		}
+		
 		InsertNewAuthBO bo = new InsertNewAuthBO();
 		BeanUtils.copyProperties(dto, bo);
 		bo.setCreatorId(baseUtilCustom.getUserId());
-		bo.setAuthTypeType(AuthTypeType.ORG_AUTH);
-		bo.setBelongOrgId(decryptPrivateKey(dto.getBelongOrgPK()));
+		bo.setBelongOrgId(orgId);
+		
+		if(InitSystemConstant.ORIGINAL_BASE_ORG_ID.equals(org.getTopOrg())) {
+			bo.setAuthTypeType(AuthTypeType.SYS_AUTH);
+		} else {
+			bo.setAuthTypeType(AuthTypeType.ORG_AUTH);
+		}
 		
 		return insertNewAuth(bo);
 	}
@@ -463,17 +501,8 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 	private InsertNewAuthResult insertNewAuth(InsertNewAuthBO bo) {
 		InsertNewAuthResult r = new InsertNewAuthResult();
 		Auth newAuth = new Auth();
-		if((bo.getOrgRoles() != null && !bo.getOrgRoles().isEmpty())
-				&& (bo.getSysRoles() != null && !bo.getSysRoles().isEmpty())) {
-			r.failWithMessage("参数异常");
-			return r;
-		} else if ((bo.getOrgRoles() == null || bo.getOrgRoles().isEmpty())
-				&& (bo.getSysRoles() == null || bo.getSysRoles().isEmpty())){
-			r.failWithMessage("null param");
-			return r;
-		}
-		newAuth.setCreateBy(bo.getCreatorId());
 		Long newAuthID = snowFlake.getNextId();
+		newAuth.setCreateBy(bo.getCreatorId());
 		newAuth.setId(newAuthID);
 		newAuth.setAuthName(bo.getAuthName());
 		newAuth.setBelongOrg(bo.getBelongOrgId());
@@ -485,54 +514,9 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 			return r;
 		} 
 		
-		Long newAuthRoleId = null;
-		
-		List<String> roleNameList = new ArrayList<String>();
-		if(bo.getOrgRoles() != null) {
-			for(OrganzationRolesType orgRole : bo.getOrgRoles()) {
-				roleNameList.add(orgRole.getName());
-			}
-		}
-		if(bo.getSysRoles() != null) {
-			for(SystemRolesType sysRole : bo.getSysRoles()) {
-				roleNameList.add(sysRole.getName());
-			}
-		}
-		
-		FindRolesDTO findRolesDTO = new FindRolesDTO();
-		findRolesDTO.setRoleNameList(roleNameList);
-		FindRolesResult getRoleResult = roleService.getRolesByCondition(findRolesDTO);
-		if(!getRoleResult.isSuccess()) {
-			r.addMessage(getRoleResult.getMessage());
-			return r;
-		}
-		
-		List<Roles> roleList = getRoleResult.getRoleList();
-		for(Roles role : roleList) {
-			newAuthRoleId = authRoleService.__insertAuthRole(newAuthID, role.getRoleId(), bo.getCreatorId());
-			if(newAuthRoleId == null) {
-				r.failWithMessage("insert auth role service error");
-				return r;
-			}
-		}
-		
+		r.setAuthPK(encryptId(newAuthID));
 		r.setIsSuccess();
 		return r;
-	}
-	
-	private boolean vaildAndEditInsertNewOrgAuth(InsertAuthDTO dto) {
-		if(StringUtils.isBlank(dto.getBelongOrgPK()) || !baseUtilCustom.isLoginUser()) {
-			return false;
-		}
-		
-		if(isBigUser()) {
-			return true;
-		}
-		
-		Long orgId = decryptPrivateKey(dto.getBelongOrgPK());
-		
-		CommonResultCX validUserOrgResult = orgService.validUserOrg(orgId);
-		return validUserOrgResult.isSuccess();
 	}
 	
 	@Override
@@ -544,16 +528,14 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 	}
 	
 	@Override
-	public CommonResultCX deleteAuth(DeleteAuthBO bo) {
+	public CommonResultCX deleteAllAuthByOrgId(DeleteAuthBO bo) {
 		CommonResultCX r = new CommonResultCX();
-		if((bo.getAuthIdList() == null || bo.getAuthIdList().isEmpty())
-				&& (bo.getOrgId() == null)
-				) {
-			r.failWithMessage("参数为空");
+		if(bo.getOrgId() == null) {
+			r.failWithMessage("null param");
 			return r;
 		}
 		
-		CommonResultCX canEditUserAuthResult = null;
+		CommonResultCX result = null;
 		List<Long> deleteAuthIdList = new ArrayList<Long>();
 		
 		AuthExample authExample = new AuthExample();
@@ -561,16 +543,13 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		if(bo.getOrgId() != null) {
 			authCriteria.andBelongOrgEqualTo(bo.getOrgId());
 		}
-		if(bo.getAuthIdList() != null && !bo.getAuthIdList().isEmpty()) {
-			authCriteria.andIdIn(bo.getAuthIdList());
-		}
 		
 		List<Auth> targetAuthList = authMapper.selectByExample(authExample);
 		
 		for(Auth auth : targetAuthList) {
-			canEditUserAuthResult = canEditUserAuth(auth.getId());
-			if(!canEditUserAuthResult.isSuccess()) {
-				r.addMessage(canEditUserAuthResult.getMessage());
+			result = canEditUserAuth(auth.getId());
+			if(!result.isSuccess()) {
+				r.addMessage(result.getMessage());
 				return r;
 			}
 			deleteAuthIdList.add(auth.getId());
@@ -580,9 +559,9 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		for(Long authId : deleteAuthIdList) {
 			deleteUserAuthBO = new EditUserAuthBO();
 			deleteUserAuthBO.setAuthId(authId);
-			canEditUserAuthResult = userAuthService.deleteUserAuth(deleteUserAuthBO);
-			if(canEditUserAuthResult.isFail()) {
-				r.addMessage(canEditUserAuthResult.getMessage());
+			result = userAuthService.deleteUserAuth(deleteUserAuthBO);
+			if(result.isFail()) {
+				r.addMessage(result.getMessage());
 				return r;
 			}
 		}
@@ -594,7 +573,71 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		record.setIsDelete(true);
 		record.setUpdateBy(operatorId);
 		record.setUpdateTime(LocalDateTime.now());
-		int updateCount = authMapper.updateByExample(record, example);
+		int updateCount = authMapper.updateByExampleSelective(record, example);
+		if(updateCount < 1) {
+			return r;
+		}
+		
+		BatchDeleteAuthRoleBO deleteAuthRoleBO = new BatchDeleteAuthRoleBO();
+		deleteAuthRoleBO.setAuthIdList(deleteAuthIdList);
+		CommonResultCX deleteAuthRoleResult = authRoleService.batchDeleteAuthRole(deleteAuthRoleBO);
+		if(!deleteAuthRoleResult.isSuccess()) {
+			r.addMessage(deleteAuthRoleResult.getMessage());
+			return r;
+		}
+		
+		r.setIsSuccess();
+		return r;
+	}
+	
+	@Override
+	public CommonResultCX deleteAuth(DeleteAuthBO bo) {
+		CommonResultCX r = new CommonResultCX();
+		if((bo.getAuthIdList() == null || bo.getAuthIdList().isEmpty())
+				|| (bo.getOrgId() == null)
+				) {
+			r.failWithMessage("null param");
+			return r;
+		}
+		
+		CommonResultCX result = null;
+		List<Long> deleteAuthIdList = new ArrayList<Long>();
+		
+		AuthExample authExample = new AuthExample();
+		Criteria authCriteria = authExample.createCriteria();
+		authCriteria.andBelongOrgEqualTo(bo.getOrgId());
+		authCriteria.andIdIn(bo.getAuthIdList());
+		
+		List<Auth> targetAuthList = authMapper.selectByExample(authExample);
+		
+		for(Auth auth : targetAuthList) {
+			result = canEditUserAuth(auth.getId());
+			if(!result.isSuccess()) {
+				r.addMessage(result.getMessage());
+				return r;
+			}
+			deleteAuthIdList.add(auth.getId());
+		}
+		
+		EditUserAuthBO deleteUserAuthBO = null;
+		for(Long authId : deleteAuthIdList) {
+			deleteUserAuthBO = new EditUserAuthBO();
+			deleteUserAuthBO.setAuthId(authId);
+			result = userAuthService.deleteUserAuth(deleteUserAuthBO);
+			if(result.isFail()) {
+				r.addMessage(result.getMessage());
+				return r;
+			}
+		}
+		
+		Long operatorId = baseUtilCustom.getUserId();
+		AuthExample example = new AuthExample();
+		example.createCriteria().andIdIn(deleteAuthIdList);
+		Auth record = new Auth();
+		record.setIsDelete(true);
+		record.setUpdateBy(operatorId);
+		record.setUpdateTime(LocalDateTime.now());
+		int updateCount = authMapper.updateByExampleSelective(record, example);
 		if(updateCount < 1) {
 			return r;
 		}
@@ -686,7 +729,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		return r;
 		
 	}
-
+	
 	@Override
 	public CommonResultCX editAuth(EditAuthDTO dto) {
 		CommonResultCX r = new CommonResultCX();
@@ -696,9 +739,12 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		}
 		
 		if(dto.getAuthName().length() > AuthConstant.authNameMaxLength) {
-			r.failWithMessage("角色名过长");
+			r.failWithMessage("角色名过长, 最长不得超过: " + AuthConstant.authNameMaxLength + " 个字符, 汉字占用两个字符.");
 			return r;
 		}
+		
+		PolicyFactory filter = textFilter.getAllFilter();
+		dto.setAuthName(filter.sanitize(dto.getAuthName()));
 		
 		Long authId = decryptPrivateKey(dto.getAuthPK());
 		if(authId == null) {

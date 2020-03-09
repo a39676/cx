@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import demo.base.user.pojo.constant.AuthUrl;
 import demo.base.user.pojo.dto.DeleteAuthDTO;
+import demo.base.user.pojo.dto.EditAuthDTO;
 import demo.base.user.pojo.dto.EditAuthRoleDTO;
 import demo.base.user.pojo.dto.InsertAuthDTO;
 import demo.base.user.pojo.result.InsertNewAuthResult;
@@ -36,6 +37,12 @@ public class AuthController {
 	@GetMapping(value = AuthUrl.authEdit)
 	public ModelAndView editAuth(@RequestParam(value = "authPK", defaultValue = "" ) String authPK) {
 		return authService.authEditView(authPK);
+	}
+	
+	@PostMapping(value = AuthUrl.authEdit)
+	@ResponseBody
+	public CommonResultCX editAuth(@RequestBody EditAuthDTO dto) {
+		return authService.editAuth(dto);
 	}
 	
 	@PostMapping(value = AuthUrl.insertSysAuth)

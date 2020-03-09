@@ -15,7 +15,14 @@
   
   <div class="row">
     <div class="col-md-4" >
-      <button class="btn btn-sm btn-primary" id="authInfo" pk="${authPK}">${authName}</button>
+      <button class="btn btn-sm btn-secondary" id="authInfo" pk="${authPK}">${authName}</button>
+      <br>
+      <button class="btn btn-sm btn-primary" id="editAuthName">edit auth name</button>
+      <input type="text" style="display: none;" id="newAuthName" placeholder="new auth name">
+      <div class="btn-group" style="display: none;" id="submitNewAuthNameBtnGroup">        
+        <button class="btn btn-sm btn-primary" id="submitNewAuthName">submit</button>
+        <button class="btn btn-sm btn-secondary" id="cancelSubmitNewAuthName">cancel</button>
+      </div>
     </div>
   </div>
 
@@ -59,13 +66,10 @@
       var hasRolePKStr = "${hasRolePK}";
       hasRolePKStr = hasRolePKStr.substr(1, hasRolePKStr.length-2);
       var hasRolePK = hasRolePKStr.split(', ');
-      console.log(hasRolePK);
 
       var roleButton = document.querySelectorAll('.roleButton');
-      console.log("roleButton.length: " + roleButton.length);
       for (var i = 0; i < roleButton.length; i++) {
         var pk = roleButton[i].getAttribute("pk");
-        console.log("pk: " + pk);
         if (hasRolePK.includes(pk)) {
           var targetRoleButton = $(".roleButton[pk='"+pk+"']");
           targetRoleButton.removeClass("btn-light");
@@ -105,8 +109,6 @@
           authPK:authPk
         };
 
-        console.log(jsonOutput);
-
         $.ajax({               
           type: "POST",  
           url: url,
@@ -137,6 +139,60 @@
         });  
       }
 
+      $("#editAuthName").click(function () {
+        $(this).hide();
+        $("#newAuthName").show();
+        $("#submitNewAuthNameBtnGroup").show();
+      });
+
+      $("#cancelSubmitNewAuthName").click(function () {
+        cancelEditAuthName();
+      });
+
+      function cancelEditAuthName() {
+        $("#submitNewAuthNameBtnGroup").hide();
+        $("#newAuthName").hide();
+        $("#editAuthName").show();
+        $("#editAuthName").val("");
+      }
+
+      $("#submitNewAuthName").click(function () {
+        authNameEdit();
+      });
+
+      function authNameEdit() {
+        var url = "/auth/authEdit"
+        var authPK = $("#authInfo").attr("pk");
+        var authName = $("#newAuthName").val();
+
+        var jsonOutput = {
+          authName:authName,
+          authPK:authPK
+        };
+
+        $.ajax({               
+          type: "POST",  
+          url: url,
+          data: JSON.stringify(jsonOutput),
+          dataType: 'json',
+          contentType: "application/json",
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          timeout: 15000,
+          success:function(data){
+            if(data.code == "0") {
+              $("#authOperatorResultMsg").val("auth name edit success ");
+              $("#authInfo").text(authName);
+              cancelEditAuthName();
+            } else {
+              $("#authOperatorResultMsg").val("edit fail: " + data.message);
+            }
+          }, 
+          error:function(e){
+          }
+        });  
+      }
     });
 
   </script>

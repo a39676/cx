@@ -21,9 +21,6 @@
         <li>
           <a href="/org/orgManager" target="_blank">orgManager</a>
         </li>
-        <li>
-          <a href="/userauth/userAuthManager" target="_blank">userAuthManager</a>
-        </li>
     </ul><!-- main-menu -->
   </div><!-- conatiner -->
 </header>

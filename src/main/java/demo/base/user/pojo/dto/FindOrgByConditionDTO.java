@@ -4,9 +4,8 @@ public class FindOrgByConditionDTO {
 
 	private String orgName;
 	private String orgPk;
-	private Long orgId;
-	private Long belongTo;
-	private Long topOrg;
+	private String belongTo;
+	private String topOrg;
 	private String creatorName;
 	private String creatorPk;
 	private Boolean isDelete = false;
@@ -43,30 +42,6 @@ public class FindOrgByConditionDTO {
 		this.orgName = orgName;
 	}
 
-	public Long getOrgId() {
-		return orgId;
-	}
-
-	public void setOrgId(Long orgId) {
-		this.orgId = orgId;
-	}
-
-	public Long getBelongTo() {
-		return belongTo;
-	}
-
-	public void setBelongTo(Long belongTo) {
-		this.belongTo = belongTo;
-	}
-
-	public Long getTopOrg() {
-		return topOrg;
-	}
-
-	public void setTopOrg(Long topOrg) {
-		this.topOrg = topOrg;
-	}
-
 	public String getCreatorName() {
 		return creatorName;
 	}
@@ -75,11 +50,26 @@ public class FindOrgByConditionDTO {
 		this.creatorName = creatorName;
 	}
 
+	public String getBelongTo() {
+		return belongTo;
+	}
+
+	public void setBelongTo(String belongTo) {
+		this.belongTo = belongTo;
+	}
+
+	public String getTopOrg() {
+		return topOrg;
+	}
+
+	public void setTopOrg(String topOrg) {
+		this.topOrg = topOrg;
+	}
+
 	@Override
 	public String toString() {
-		return "FindOrgByConditionDTO [orgName=" + orgName + ", orgPk=" + orgPk + ", orgId=" + orgId + ", belongTo="
-				+ belongTo + ", topOrg=" + topOrg + ", creatorName=" + creatorName + ", creatorPk=" + creatorPk
-				+ ", isDelete=" + isDelete + "]";
+		return "FindOrgByConditionDTO [orgName=" + orgName + ", orgPk=" + orgPk + ", belongTo=" + belongTo + ", topOrg="
+				+ topOrg + ", creatorName=" + creatorName + ", creatorPk=" + creatorPk + ", isDelete=" + isDelete + "]";
 	}
 
 }

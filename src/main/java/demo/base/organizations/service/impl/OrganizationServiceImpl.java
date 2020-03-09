@@ -90,7 +90,7 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 		
 		InsertAuthDTO insertNewAuthDTO = new InsertAuthDTO();
 		insertNewAuthDTO.setAuthName(dto.getOrgName() + "_Admin");
-		insertNewAuthDTO.setBelongOrgId(newOrgId);
+		insertNewAuthDTO.setBelongOrgPK(encryptId(newOrgId));
 		insertNewAuthDTO.setOrgRoles(Arrays.asList(OrganzationRolesType.ROLE_ORG_SUPER_ADMIN));
 		InsertNewAuthResult insertOrgAuthResult = authService.insertOrgAuth(insertNewAuthDTO);
 		if(!insertOrgAuthResult.isSuccess()) {
@@ -133,7 +133,7 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 		
 		InsertAuthDTO insertNewAuthDTO = new InsertAuthDTO();
 		insertNewAuthDTO.setAuthName(dto.getOrgName() + "_admin_affiliate");
-		insertNewAuthDTO.setBelongOrgId(newOrgId);
+		insertNewAuthDTO.setBelongOrgPK(encryptId(newOrgId));
 		insertNewAuthDTO.setOrgRoles(Arrays.asList(OrganzationRolesType.ROLE_SUB_ORG_ADMIN));
 		InsertNewAuthResult insertOrgAuthResult = authService.insertOrgAuth(insertNewAuthDTO);
 		if(!insertOrgAuthResult.isSuccess()) {
@@ -251,41 +251,32 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 
 	@Override
 	public FindOrgListResult findOrgList(FindOrgByConditionDTO dto) {
-		FindOrgByConditionBO bo = null;
-		
-		if(!baseUtilCustom.isLoginUser()) {
-			return findOrgList(bo);
-		}
-		
-		if(isBigUser()) {
-			bo = buildFindOrgBOAdmin(dto);
-		} else {
-			bo = buildFindOrgBO(dto);
-		}
-		
+		FindOrgByConditionBO bo = buildFindOrgBO(dto);
 		return findOrgList(bo);
 	}
 
 	private FindOrgByConditionBO buildFindOrgBO(FindOrgByConditionDTO dto) {
 		FindOrgByConditionBO bo = new FindOrgByConditionBO();
-		bo.setIsDelete(false);
-		bo.setOrgName(dto.getOrgName());
-		return bo;
-	}
-	
-	private FindOrgByConditionBO buildFindOrgBOAdmin(FindOrgByConditionDTO dto) {
-		FindOrgByConditionBO bo = new FindOrgByConditionBO();
 		bo.setIsDelete(dto.getIsDelete());
 		bo.setOrgName(dto.getOrgName());
-		bo.setOrgId(decryptPrivateKey(dto.getOrgPk()));
-		bo.setBelongTo(dto.getBelongTo());
-		bo.setTopOrg(dto.getTopOrg());
-		bo.setCreatorId(decryptPrivateKey(dto.getCreatorPk()));
+		if(StringUtils.isNotBlank(dto.getOrgPk())) {
+			bo.setOrgId(decryptPrivateKey(dto.getOrgPk()));
+		}
+		if(StringUtils.isNotBlank(dto.getBelongTo())) {
+			bo.setBelongTo(decryptPrivateKey(dto.getBelongTo()));
+		}
+		if(StringUtils.isNotBlank(dto.getTopOrg())) {
+			bo.setTopOrg(decryptPrivateKey(dto.getTopOrg()));
+		}
+		if(StringUtils.isNotBlank(dto.getCreatorPk())) {
+			bo.setCreatorId(decryptPrivateKey(dto.getCreatorPk()));
+		}
 		bo.setCreatorName(dto.getCreatorName());
 		return bo;
 	}
 	
-	private FindOrgListResult findOrgList(FindOrgByConditionBO bo) {
+	@Override
+	public FindOrgListResult findOrgList(FindOrgByConditionBO bo) {
 		FindOrgListResult r = new FindOrgListResult();
 		
 		if(bo == null) {

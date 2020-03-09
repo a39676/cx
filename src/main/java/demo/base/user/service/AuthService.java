@@ -42,7 +42,6 @@ public interface AuthService {
 	AuthVO buildAuthVOByPO(Auth po);
 
 	InsertNewAuthResult insertOrgAuth(InsertAuthDTO dto);
-
 	InsertNewAuthResult insertSysAuth(InsertAuthDTO dto);
 
 	/**
@@ -61,5 +60,6 @@ public interface AuthService {
 	ModelAndView authEditView(String authPK);
 
 	CommonResultCX editAuth(EditAuthDTO dto);
+
 
 }

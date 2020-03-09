@@ -15,13 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import demo.base.organizations.pojo.bo.FindOrgByConditionBO;
 import demo.base.organizations.pojo.po.Organizations;
 import demo.base.organizations.pojo.result.FindOrgListResult;
 import demo.base.organizations.service.OrganizationService;
 import demo.base.system.pojo.constant.InitSystemConstant;
 import demo.base.user.mapper.AuthMapper;
-import demo.base.user.pojo.bo.DeleteAuthBO;
 import demo.base.user.pojo.bo.BatchDeleteAuthRoleBO;
+import demo.base.user.pojo.bo.DeleteAuthBO;
 import demo.base.user.pojo.bo.EditUserAuthBO;
 import demo.base.user.pojo.bo.FindAuthsBO;
 import demo.base.user.pojo.bo.InsertNewAuthBO;
@@ -32,7 +33,6 @@ import demo.base.user.pojo.dto.DeleteAuthDTO;
 import demo.base.user.pojo.dto.EditAuthDTO;
 import demo.base.user.pojo.dto.FindAuthRoleDTO;
 import demo.base.user.pojo.dto.FindAuthsDTO;
-import demo.base.user.pojo.dto.FindOrgByConditionDTO;
 import demo.base.user.pojo.dto.FindRolesDTO;
 import demo.base.user.pojo.dto.InsertAuthDTO;
 import demo.base.user.pojo.po.Auth;
@@ -136,7 +136,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 			return null;
 		}
 		for(Roles role : baseRoleList) {
-			newAuthRoleId = authRoleService.insertAuthRole(newAuthID, role.getRoleId(), supserAdminUserId);
+			newAuthRoleId = authRoleService.__insertAuthRole(newAuthID, role.getRoleId(), supserAdminUserId);
 			if(newAuthRoleId == null) {
 				log.error("bind base %s auth role error", authType.getName());
 				return null;
@@ -155,22 +155,23 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 			return view;
 		}
 		
-		if(isBigUser()) {
-			view.addObject("orgPk", orgPK);
-			return view;
-		}
-
 		Long orgId = decryptPrivateKey(orgPK);
 		if(orgId == null) {
 			return view;
 		}
 		
-		CommonResultCX validUserOrgResult = orgService.validUserOrg(orgId);
-		if(validUserOrgResult.isFail()) {
-			return view;
-		} else {
-			view.addObject("orgPk", orgPK);
+		if(!isBigUser()) {
+			CommonResultCX validUserOrgResult = orgService.validUserOrg(orgId);
+			if(validUserOrgResult.isFail()) {
+				return view;
+			}
 		}
+
+		view.addObject("orgPk", orgPK);
+		FindOrgByConditionBO findOrgDTO = new FindOrgByConditionBO();
+		findOrgDTO.setOrgId(orgId);
+		FindOrgListResult findOrgResult = orgService.findOrgList(findOrgDTO);
+		view.addObject("orgVO", findOrgResult.getOrgVOList().get(0));
 		
 		return view;
 	}
@@ -436,14 +437,15 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		BeanUtils.copyProperties(dto, bo);
 		bo.setCreatorId(baseUtilCustom.getUserId());
 		bo.setAuthTypeType(AuthTypeType.ORG_AUTH);
+		bo.setBelongOrgId(decryptPrivateKey(dto.getBelongOrgPK()));
 		
 		return insertNewAuth(bo);
 	}
 	
 	@Override
 	public InsertNewAuthResult insertSysAuth(InsertAuthDTO dto) {
-		if(!baseUtilCustom.hasSuperAdminRole()) {
-			InsertNewAuthResult r = new InsertNewAuthResult();
+		InsertNewAuthResult r = new InsertNewAuthResult();
+		if(!baseUtilCustom.hasSuperAdminRole() || StringUtils.isBlank(dto.getBelongOrgPK())) {
 			r.failWithMessage("无权编辑");
 			return r;
 		}
@@ -453,6 +455,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		BeanUtils.copyProperties(dto, bo);
 		bo.setCreatorId(baseUtilCustom.getUserId());
 		bo.setAuthTypeType(AuthTypeType.ORG_AUTH);
+		bo.setBelongOrgId(decryptPrivateKey(dto.getBelongOrgPK()));
 		
 		return insertNewAuth(bo);
 	}
@@ -506,7 +509,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		
 		List<Roles> roleList = getRoleResult.getRoleList();
 		for(Roles role : roleList) {
-			newAuthRoleId = authRoleService.insertAuthRole(newAuthID, role.getRoleId(), bo.getCreatorId());
+			newAuthRoleId = authRoleService.__insertAuthRole(newAuthID, role.getRoleId(), bo.getCreatorId());
 			if(newAuthRoleId == null) {
 				r.failWithMessage("insert auth role service error");
 				return r;
@@ -518,7 +521,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 	}
 	
 	private boolean vaildAndEditInsertNewOrgAuth(InsertAuthDTO dto) {
-		if(dto.getBelongOrgId() == null || !baseUtilCustom.isLoginUser()) {
+		if(StringUtils.isBlank(dto.getBelongOrgPK()) || !baseUtilCustom.isLoginUser()) {
 			return false;
 		}
 		
@@ -526,7 +529,9 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 			return true;
 		}
 		
-		CommonResultCX validUserOrgResult = orgService.validUserOrg(dto.getBelongOrgId());
+		Long orgId = decryptPrivateKey(dto.getBelongOrgPK());
+		
+		CommonResultCX validUserOrgResult = orgService.validUserOrg(orgId);
 		return validUserOrgResult.isSuccess();
 	}
 	
@@ -632,6 +637,12 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		
 		Auth targetAuth = findAuthResult.getAuthList().get(0);
 		
+		AuthTypeType authTypeType = AuthTypeType.getType(targetAuth.getAuthType());
+		if(AuthTypeType.SYS_AUTH.equals(authTypeType) && !isBigUser()) {
+			r.failWithMessage("无权编辑");
+			return r;
+		}
+		
 		List<Long> orgIdList = null;
 		if(principal.getSuperManagerOrgList() != null && !principal.getSuperManagerOrgList().isEmpty()) {
 			orgIdList = principal.getSuperManagerOrgList().stream().map(Organizations::getId).collect(Collectors.toList());
@@ -657,10 +668,10 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 			}
 		}
 		
-		FindOrgByConditionDTO findOrgDTO = new FindOrgByConditionDTO();
-		findOrgDTO.setTopOrg(targetAuth.getBelongOrg());
-		findOrgDTO.setOrgId(targetAuth.getBelongOrg());
-		FindOrgListResult findOrgResult = orgService.findOrgList(findOrgDTO);
+		FindOrgByConditionBO findOrgBO = new FindOrgByConditionBO();
+		findOrgBO.setTopOrg(targetAuth.getBelongOrg());
+		findOrgBO.setOrgId(targetAuth.getBelongOrg());
+		FindOrgListResult findOrgResult = orgService.findOrgList(findOrgBO);
 		if(findOrgResult.isFail()) {
 			r.addMessage(findOrgResult.getMessage());
 			return r;

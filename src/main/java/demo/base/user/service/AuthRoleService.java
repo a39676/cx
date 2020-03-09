@@ -10,7 +10,7 @@ import demo.baseCommon.pojo.result.CommonResultCX;
 
 public interface AuthRoleService {
 
-	Long insertAuthRole(Long authId, Long roleId, Long creatorId);
+	Long __insertAuthRole(Long authId, Long roleId, Long creatorId);
 
 	FindAuthRoleResult findAuthRole(FindAuthRoleDTO dto);
 

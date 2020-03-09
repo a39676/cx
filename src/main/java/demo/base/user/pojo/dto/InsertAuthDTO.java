@@ -7,17 +7,17 @@ import demo.base.user.pojo.type.SystemRolesType;
 
 public class InsertAuthDTO {
 
-	private Long belongOrgId;
+	private String belongOrgPK;
 	private String authName;
 	private List<SystemRolesType> sysRoles;
 	private List<OrganzationRolesType> orgRoles;
 
-	public Long getBelongOrgId() {
-		return belongOrgId;
+	public String getBelongOrgPK() {
+		return belongOrgPK;
 	}
 
-	public void setBelongOrgId(Long belongOrgId) {
-		this.belongOrgId = belongOrgId;
+	public void setBelongOrgPK(String belongOrgPK) {
+		this.belongOrgPK = belongOrgPK;
 	}
 
 	public String getAuthName() {
@@ -46,7 +46,7 @@ public class InsertAuthDTO {
 
 	@Override
 	public String toString() {
-		return "InsertNewAuthDTO [belongOrgId=" + belongOrgId + ", authName=" + authName + ", sysRoles=" + sysRoles
+		return "InsertAuthDTO [belongOrgPK=" + belongOrgPK + ", authName=" + authName + ", sysRoles=" + sysRoles
 				+ ", orgRoles=" + orgRoles + "]";
 	}
 

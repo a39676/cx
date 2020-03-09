@@ -48,7 +48,7 @@ public class AuthRoleServiceImpl extends CommonService implements AuthRoleServic
 	private OrganizationService orgService;
 	
 	@Override
-	public Long insertAuthRole(Long authId, Long roleId, Long creatorId) {
+	public Long __insertAuthRole(Long authId, Long roleId, Long creatorId) {
 		if(authId == null || roleId == null || creatorId == null) {
 			return null;
 		}
@@ -158,6 +158,13 @@ public class AuthRoleServiceImpl extends CommonService implements AuthRoleServic
 		}
 		
 		Long operatorId = baseUtilCustom.getUserId();
+		
+		CommonResultCX canEditResult = canEditAuthRole(authId, roleId);
+		if(canEditResult.isFail()) {
+			r.failWithMessage(canEditResult.getMessage());
+			return r;
+		}
+		
 		AuthRoleExample example = new AuthRoleExample();
 		example.createCriteria().andAuthIdEqualTo(authId).andRoleIdEqualTo(roleId).andIsDeleteEqualTo(false);
 		AuthRole record = new AuthRole();

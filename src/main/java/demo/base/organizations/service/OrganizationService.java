@@ -1,5 +1,6 @@
 package demo.base.organizations.service;
 
+import demo.base.organizations.pojo.bo.FindOrgByConditionBO;
 import demo.base.organizations.pojo.dto.DeleteOrgDTO;
 import demo.base.organizations.pojo.dto.FindUserControlOrgDTO;
 import demo.base.organizations.pojo.dto.OrgRegistDTO;
@@ -24,6 +25,7 @@ public interface OrganizationService {
 	FindUserControlOrgResult findUserControlOrg(FindUserControlOrgDTO dto);
 
 	FindOrgListResult findOrgList(FindOrgByConditionDTO dto);
+	FindOrgListResult findOrgList(FindOrgByConditionBO bo);
 
 	CommonResultCX validUserOrg(Long orgId);
 

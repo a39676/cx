@@ -5,6 +5,7 @@ import demo.base.user.pojo.type.AuthTypeType;
 
 public class InsertNewAuthBO extends InsertAuthDTO {
 
+	private Long belongOrgId;
 	private Long creatorId;
 	private AuthTypeType authTypeType;
 
@@ -24,12 +25,20 @@ public class InsertNewAuthBO extends InsertAuthDTO {
 		this.authTypeType = authTypeType;
 	}
 
+	public Long getBelongOrgId() {
+		return belongOrgId;
+	}
+
+	public void setBelongOrgId(Long belongOrgId) {
+		this.belongOrgId = belongOrgId;
+	}
+
 	@Override
 	public String toString() {
-		return "InsertNewAuthBO [creatorId=" + creatorId + ", authTypeType=" + authTypeType + ", getBelongOrgId()="
-				+ getBelongOrgId() + ", getAuthName()=" + getAuthName() + ", getSysRoles()=" + getSysRoles()
-				+ ", getOrgRoles()=" + getOrgRoles() + ", toString()=" + super.toString() + ", getClass()=" + getClass()
-				+ ", hashCode()=" + hashCode() + "]";
+		return "InsertNewAuthBO [belongOrgId=" + belongOrgId + ", creatorId=" + creatorId + ", authTypeType="
+				+ authTypeType + ", getBelongOrgPK()=" + getBelongOrgPK() + ", getAuthName()=" + getAuthName()
+				+ ", getSysRoles()=" + getSysRoles() + ", getOrgRoles()=" + getOrgRoles() + ", toString()="
+				+ super.toString() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + "]";
 	}
 
 }

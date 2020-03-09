@@ -13,6 +13,14 @@
 <body>
 <div class="container-fluid">
 
+  <div class="row">
+    <div class="col-md-12">
+      <span class="badge">机构名称:</span><span class="badge badge-primary">${orgVO.orgName}</span>
+    </div>
+  </div>
+
+  <hr>
+
   <!-- auth search start-->
   <div class="row">
     <div class="col-md-12">

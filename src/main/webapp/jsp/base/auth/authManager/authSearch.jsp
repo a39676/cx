@@ -46,7 +46,7 @@
   
   <div class="row">
     <div class="col-md-12">
-      <div id="authNameDiv"></div>
+      <div id="authNameDiv" class="btn-group btn-group-toggle"></div>
     </div>
   </div>
 
@@ -127,7 +127,6 @@
             }
             $.each(authVOList, function(index, authVOInfo) {
               authNameDiv.append($("<button class='btn btn-sm btn-light'></button>").attr("pk", authVOInfo.pk).text(authVOInfo.authName));
-              authNameDiv.append($("<label>&nbsp;&nbsp;|&nbsp;&nbsp;</label>"));
               $("button[pk='"+authVOInfo.pk+"']").addClass("authButton");
               if(userAuthPkList != null && (jQuery.inArray(authVOInfo.pk, userAuthPkList)) >= 0) {
                 $("button[pk='"+authVOInfo.pk+"']").addClass("btn-primary");
@@ -142,13 +141,10 @@
       }
 
       function authButtonClick() {
-        if($(this).hasClass("btn-primary")) {
-          $(this).removeClass("btn-primary");
-          $(this).addClass("btn-light");
-        } else {
-          $(this).removeClass("btn-light");
-          $(this).addClass("btn-primary");
-        }
+        $(".authButton").removeClass("btn-primary");
+        $(".authButton").addClass("btn-light");
+        $(this).addClass("btn-primary");
+        $(this).removeClass("btn-light");
       };
 
     });

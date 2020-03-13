@@ -52,7 +52,6 @@ public interface AuthService {
 	CommonResultCX canEditUserAuth(Long authId);
 
 	CommonResultCX deleteAuth(DeleteAuthDTO dto);
-	CommonResultCX deleteAuth(DeleteAuthBO bo);
 	CommonResultCX deleteAllAuthByOrgId(DeleteAuthBO bo);
 
 	ModelAndView authManagerView(String orgPK);

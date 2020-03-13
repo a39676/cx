@@ -484,6 +484,12 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 			return r;
 		}
 		
+		boolean authNameFlag = validAuthNameDuplicate(org.getId(), dto.getAuthName());
+		if(!authNameFlag) {
+			r.failWithMessage("角色名重复, 请另外设定");
+			return r;
+		}
+		
 		InsertNewAuthBO bo = new InsertNewAuthBO();
 		BeanUtils.copyProperties(dto, bo);
 		bo.setCreatorId(baseUtilCustom.getUserId());
@@ -496,6 +502,18 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		}
 		
 		return insertNewAuth(bo);
+	}
+	
+	private boolean validAuthNameDuplicate(Long orgId, String authName) {
+		AuthExample example = new AuthExample();
+		example.createCriteria().andIsDeleteEqualTo(false).andBelongOrgEqualTo(orgId).andAuthNameEqualTo(authName);
+		List<Auth> authList = authMapper.selectByExample(example);
+		
+		if(authList == null || authList.isEmpty()) {
+			return true;
+		}
+		
+		return false;
 	}
 	
 	private InsertNewAuthResult insertNewAuth(InsertNewAuthBO bo) {
@@ -590,8 +608,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		return r;
 	}
 	
-	@Override
-	public CommonResultCX deleteAuth(DeleteAuthBO bo) {
+	private CommonResultCX deleteAuth(DeleteAuthBO bo) {
 		CommonResultCX r = new CommonResultCX();
 		if((bo.getAuthIdList() == null || bo.getAuthIdList().isEmpty())
 				|| (bo.getOrgId() == null)

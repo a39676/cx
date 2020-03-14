@@ -183,6 +183,12 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 			result.failWithMessage("机构名异常, 最长不得超过: " + OrganizationConstant.orgNameMaxLength + " 个字符, 汉字占用两个字符.");
 			return result;
 		}
+		
+		boolean validOrgNameDuplicate = validOrgNameDuplicate(dto.getOrgName());
+		if(!validOrgNameDuplicate) {
+			result.failWithMessage("重复机构名");
+			return result;
+		}
 
 		result.normalSuccess();
 		return result;
@@ -206,6 +212,12 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 			return r;
 		}
 		
+		boolean validOrgNameDuplicate = validOrgNameDuplicate(dto.getOrgName());
+		if(!validOrgNameDuplicate) {
+			r.failWithMessage("重复机构名");
+			return r;
+		}
+		
 		Long topOrgId = decryptPrivateKey(dto.getTopOrg());
 		Long belongToOrgId = decryptPrivateKey(dto.getBelongTo());
 		OrganizationsExample example = new OrganizationsExample();
@@ -220,6 +232,17 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 		r.setBelongToOrgId(belongToOrgId);
 		r.normalSuccess();
 		return r;
+	}
+	
+	private boolean validOrgNameDuplicate(String orgName) {
+		OrganizationsExample example = new OrganizationsExample();
+		example.createCriteria().andIsDeleteEqualTo(false).andOrgNameEqualTo(orgName);
+		List<Organizations> orgList = orgMapper.selectByExample(example);
+		if(orgList != null && !orgList.isEmpty()) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	@Override

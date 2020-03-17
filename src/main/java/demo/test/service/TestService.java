@@ -1,6 +1,5 @@
 package demo.test.service;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,9 +14,6 @@ import demo.base.user.service.AuthService;
 import demo.baseCommon.service.CommonService;
 import demo.config.costom_component.BaseUtilCustom;
 import net.sf.json.JSONObject;
-import net.sourceforge.tess4j.ITesseract;
-import net.sourceforge.tess4j.Tesseract;
-import net.sourceforge.tess4j.TesseractException;
 
 @Service
 public class TestService extends CommonService {
@@ -66,31 +62,6 @@ public class TestService extends CommonService {
 		System.out.println(r);
 	}
 
-	public void tess4jTest() {
-		String testImgPath = "D:/auxiliary/tmp/01.gif";
-		String dataPath = "D:/auxiliary/tmp/";
-		
-		File imageFile = new File(testImgPath);
-		/**
-		 * JNA Interface Mapping
-		**/
-		ITesseract instance = new Tesseract();
-		
-		/**
-		 * You either set your own tessdata folder with your custom language pack or
-		 * use LoadLibs to load the default tessdata folder for you.
-		 **/
-//		instance.setDatapath(LoadLibs.extractTessResources(dataPath).getParent());
-		instance.setDatapath(dataPath);
-
-		try {
-			String result = instance.doOCR(imageFile);
-			System.out.println(result);
-		} catch (TesseractException e) {
-			System.err.println(e.getMessage());
-		}
-	}
-	
 	public String testMyFindHostNameFromRequst(HttpServletRequest request) {
 		return testFindHostNameFromRequst(request);
 	}
@@ -100,11 +71,6 @@ public class TestService extends CommonService {
 	
 	public ModelAndView testAuthManagerView() {
 		return authService.authManagerView(encryptId(10001L));
-	}
-	
-	public static void main(String[] args) {
-		TestService t = new TestService();
-		t.tess4jTest();
 	}
 	
 }

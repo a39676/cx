@@ -53,7 +53,6 @@ dependencies {
 
 	// spring boot
     compile group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.1.5.RELEASE'
-	// compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
     compile("org.springframework.boot:spring-boot-starter-web"){
     	exclude module: "spring-boot-starter-logging"
     }
@@ -91,7 +90,6 @@ dependencies {
 	compile group: 'org.mybatis', name: 'mybatis-typehandlers-jsr310', version: '1.0.2'
 	
 	// mysql
-	// compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.4'
 	compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.16'
 	
 	// redis
@@ -116,15 +114,10 @@ dependencies {
 	compile group: 'javax.servlet.jsp', name: 'jsp-api', version: '2.2'
 	compile group: 'javax.servlet', name: 'jstl', version: '1.2'
 	
-	compile group: 'junit', name: 'junit', version: '4.12'
 	compile group: 'org.apache.maven.plugins', name: 'maven-resources-plugin', version: '3.1.0'
 	
 	// weka
 	compile group: 'weka', name: 'weka', version: '3.6.2'
-	
-	// tess4j
-	compile group: 'net.sourceforge.tess4j', name: 'tess4j', version: '4.4.0'
-	compile group: 'net.java.dev.jna', name: 'jna', version: '5.4.0'
 	
 	// 富文本输入内容过滤/防御
 	compile group: 'com.googlecode.owasp-java-html-sanitizer', name: 'owasp-java-html-sanitizer', version: '20191001.1'

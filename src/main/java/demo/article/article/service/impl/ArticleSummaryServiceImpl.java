@@ -1,6 +1,8 @@
 package demo.article.article.service.impl;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -242,7 +244,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			tmpVO.setNickName(summaryBO.getNickName());
 			tmpVO.setCreateDateString(sdfDate.format(summaryBO.getCreateTime()));
 			tmpVO.setCreateDateTimeString(sdfDateTime.format(summaryBO.getCreateTime()));
-			tmpVO.setPrivateKey(summaryBO.getPrivateKey());
+			tmpVO.setPrivateKey(URLEncoder.encode(summaryBO.getPrivateKey(), StandardCharsets.UTF_8));
 			tmpVO.setHeadIamgeUrl(summaryBO.getHeadImage());
 			if(commentCountMap.get(summaryBO.getArticleId()) != null) {
 				tmpVO.setCommentCount(commentCountMap.get(summaryBO.getArticleId()));

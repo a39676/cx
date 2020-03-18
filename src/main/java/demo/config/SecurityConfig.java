@@ -1,6 +1,5 @@
 package demo.config;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,9 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
-import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
 import demo.article.article.pojo.constant.ArticleAdminUrlConstant;
 import demo.article.articleComment.pojo.constant.ArticleAdminCommentUrlConstant;
@@ -134,11 +131,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         /*
          * 增加filter在此  同样操作 但建议使用
          * http.addFilterAfter(newFilter,CsrfFilter.class); 
+         * 2020-03-18 
+         * 编码过滤拟转移到 application.yml
          */
-        CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
-        encodingFilter.setEncoding(StandardCharsets.UTF_8.displayName());
-        encodingFilter.setForceEncoding(true);
-        http.addFilterBefore(encodingFilter, CsrfFilter.class);
+//        CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
+//        encodingFilter.setEncoding(StandardCharsets.UTF_8.displayName());
+//        encodingFilter.setForceEncoding(true);
+//        http.addFilterBefore(encodingFilter, CsrfFilter.class);
         
 	}
 	

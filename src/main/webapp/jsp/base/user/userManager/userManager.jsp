@@ -16,8 +16,6 @@
   <div class="testArea">${testArea}</div>
   <form class="col-md-8" method="post" action="/admin/userManager"  >
 
-    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-  
     <div class="form-group row">
       <label class="control-label col-md-1" for="userName">user name:</label>
       <div class="col-md-6">

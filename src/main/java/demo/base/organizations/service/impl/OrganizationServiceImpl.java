@@ -26,12 +26,12 @@ import demo.base.organizations.pojo.result.OrgRegistResult;
 import demo.base.organizations.pojo.result.VerifyAffiliatesOrgRegistDTOResult;
 import demo.base.organizations.pojo.vo.OrganizationVO;
 import demo.base.organizations.service.OrganizationService;
-import demo.base.user.pojo.bo.DeleteAuthRoleBO;
+import demo.base.user.pojo.bo.DeleteAuthBO;
 import demo.base.user.pojo.bo.FindUserAuthBO;
 import demo.base.user.pojo.bo.MyUserPrincipal;
 import demo.base.user.pojo.dto.FindOrgByConditionDTO;
 import demo.base.user.pojo.dto.FindUserByConditionDTO;
-import demo.base.user.pojo.dto.InsertNewAuthDTO;
+import demo.base.user.pojo.dto.InsertAuthDTO;
 import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.result.FindUserAuthResult;
 import demo.base.user.pojo.result.FindUserByConditionResult;
@@ -88,7 +88,7 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 			return result;
 		}
 		
-		InsertNewAuthDTO insertNewAuthDTO = new InsertNewAuthDTO();
+		InsertAuthDTO insertNewAuthDTO = new InsertAuthDTO();
 		insertNewAuthDTO.setAuthName(dto.getOrgName() + "_Admin");
 		insertNewAuthDTO.setBelongOrgId(newOrgId);
 		insertNewAuthDTO.setOrgRoles(Arrays.asList(OrganzationRolesType.ROLE_ORG_SUPER_ADMIN));
@@ -131,7 +131,7 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 			return result;
 		}
 		
-		InsertNewAuthDTO insertNewAuthDTO = new InsertNewAuthDTO();
+		InsertAuthDTO insertNewAuthDTO = new InsertAuthDTO();
 		insertNewAuthDTO.setAuthName(dto.getOrgName() + "_admin_affiliate");
 		insertNewAuthDTO.setBelongOrgId(newOrgId);
 		insertNewAuthDTO.setOrgRoles(Arrays.asList(OrganzationRolesType.ROLE_SUB_ORG_ADMIN));
@@ -461,7 +461,7 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 			return r;
 		}
 		
-		DeleteAuthRoleBO bo = new DeleteAuthRoleBO();
+		DeleteAuthBO bo = new DeleteAuthBO();
 		bo.setOrgId(orgId);
 		CommonResultCX deleteAuthResult = authService.deleteAuth(bo);
 		if(deleteAuthResult.isFail()) {

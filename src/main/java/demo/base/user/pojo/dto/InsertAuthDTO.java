@@ -5,7 +5,7 @@ import java.util.List;
 import demo.base.user.pojo.type.OrganzationRolesType;
 import demo.base.user.pojo.type.SystemRolesType;
 
-public class InsertNewAuthDTO {
+public class InsertAuthDTO {
 
 	private Long belongOrgId;
 	private String authName;

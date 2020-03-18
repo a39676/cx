@@ -1,6 +1,9 @@
 package demo.baseCommon.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -227,7 +230,16 @@ public abstract class CommonService {
 	}
 	
 	public Long decryptPrivateKey(String inputPk) {
-		if(StringUtils.isBlank(inputPk)) {
+		List<Long> idList = decryptPrivateKey(Arrays.asList(inputPk));
+		if(idList == null || idList.isEmpty()) {
+			return null;
+		} else {
+			return idList.get(0);
+		}
+	}
+	
+	public List<Long> decryptPrivateKey(List<String> inputPkList) {
+		if(inputPkList == null || inputPkList.isEmpty()) {
 			return null;
 		}
 		
@@ -248,11 +260,16 @@ public abstract class CommonService {
 		}
 		
 		Long id = null;
-		try {
-			id = Long.parseLong(encryptUtil.aesDecrypt(keys, initVector, inputPk));
-		} catch (Exception e) {
+		List<Long> idList = new ArrayList<Long>();
+		for(String pk : inputPkList) {
+			try {
+				id = Long.parseLong(encryptUtil.aesDecrypt(keys, initVector, pk));
+				idList.add(id);
+			} catch (Exception e) {
+				idList.add(null);
+			}
 		}
-		return id;
+		return idList;
 	}
 	
 	protected boolean isBigUser() {

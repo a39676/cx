@@ -244,7 +244,11 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			tmpVO.setNickName(summaryBO.getNickName());
 			tmpVO.setCreateDateString(sdfDate.format(summaryBO.getCreateTime()));
 			tmpVO.setCreateDateTimeString(sdfDateTime.format(summaryBO.getCreateTime()));
-			tmpVO.setPrivateKey(URLEncoder.encode(summaryBO.getPrivateKey(), StandardCharsets.UTF_8));
+			try {
+				tmpVO.setPrivateKey(URLEncoder.encode(encryptId(summaryBO.getArticleId()), StandardCharsets.UTF_8.toString()));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 			tmpVO.setHeadIamgeUrl(summaryBO.getHeadImage());
 			if(commentCountMap.get(summaryBO.getArticleId()) != null) {
 				tmpVO.setCommentCount(commentCountMap.get(summaryBO.getArticleId()));

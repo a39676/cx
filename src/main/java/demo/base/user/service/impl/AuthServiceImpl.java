@@ -19,15 +19,17 @@ import demo.base.organizations.pojo.result.FindOrgListResult;
 import demo.base.organizations.service.OrganizationService;
 import demo.base.system.pojo.constant.InitSystemConstant;
 import demo.base.user.mapper.AuthMapper;
+import demo.base.user.pojo.bo.DeleteAuthBO;
 import demo.base.user.pojo.bo.DeleteAuthRoleBO;
 import demo.base.user.pojo.bo.FindAuthsBO;
 import demo.base.user.pojo.bo.InsertNewAuthBO;
 import demo.base.user.pojo.bo.MyUserPrincipal;
+import demo.base.user.pojo.dto.DeleteAuthDTO;
 import demo.base.user.pojo.dto.FindAuthRoleDTO;
 import demo.base.user.pojo.dto.FindAuthsDTO;
 import demo.base.user.pojo.dto.FindOrgByConditionDTO;
 import demo.base.user.pojo.dto.FindRolesDTO;
-import demo.base.user.pojo.dto.InsertNewAuthDTO;
+import demo.base.user.pojo.dto.InsertAuthDTO;
 import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.po.AuthExample;
 import demo.base.user.pojo.po.AuthExample.Criteria;
@@ -333,7 +335,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 	}
 	
 	@Override
-	public InsertNewAuthResult insertOrgAuth(InsertNewAuthDTO dto) {
+	public InsertNewAuthResult insertOrgAuth(InsertAuthDTO dto) {
 		if(!vaildAndEditInsertNewOrgAuth(dto)) {
 			InsertNewAuthResult r = new InsertNewAuthResult();
 			r.failWithMessage("无权编辑");
@@ -350,7 +352,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 	}
 	
 	@Override
-	public InsertNewAuthResult insertSysAuth(InsertNewAuthDTO dto) {
+	public InsertNewAuthResult insertSysAuth(InsertAuthDTO dto) {
 		if(!baseUtilCustom.hasSuperAdminRole()) {
 			InsertNewAuthResult r = new InsertNewAuthResult();
 			r.failWithMessage("无权编辑");
@@ -426,7 +428,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		return r;
 	}
 	
-	private boolean vaildAndEditInsertNewOrgAuth(InsertNewAuthDTO dto) {
+	private boolean vaildAndEditInsertNewOrgAuth(InsertAuthDTO dto) {
 		if(dto.getBelongOrgId() == null || !baseUtilCustom.isLoginUser()) {
 			return false;
 		}
@@ -440,7 +442,15 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 	}
 	
 	@Override
-	public CommonResultCX deleteAuth(DeleteAuthRoleBO bo) {
+	public CommonResultCX deleteAuth(DeleteAuthDTO dto) {
+		DeleteAuthBO bo = new DeleteAuthBO();
+		bo.setOrgId(decryptPrivateKey(dto.getOrgPk()));
+		bo.setAuthIdList(decryptPrivateKey(dto.getAuthPkList()));
+		return deleteAuth(bo);
+	}
+	
+	@Override
+	public CommonResultCX deleteAuth(DeleteAuthBO bo) {
 		CommonResultCX r = new CommonResultCX();
 		if((bo.getAuthIdList() == null || bo.getAuthIdList().isEmpty())
 				&& (bo.getOrgId() == null)
@@ -484,9 +494,9 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 			return r;
 		}
 		
-		bo.setOrgId(null);
-		bo.setAuthIdList(deleteAuthIdList);
-		CommonResultCX deleteAuthRoleResult = authRoleService.deleteAuthRole(bo);
+		DeleteAuthRoleBO deleteAuthRoleBO = new DeleteAuthRoleBO();
+		deleteAuthRoleBO.setAuthIdList(deleteAuthIdList);
+		CommonResultCX deleteAuthRoleResult = authRoleService.deleteAuthRole(deleteAuthRoleBO);
 		if(!deleteAuthRoleResult.isSuccess()) {
 			r.addMessage(deleteAuthRoleResult.getMessage());
 			return r;

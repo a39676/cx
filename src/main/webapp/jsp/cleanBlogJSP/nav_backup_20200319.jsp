@@ -24,6 +24,25 @@
         </li>
         <li class="nav-item" id="articleBurn">
         </li>
+        <sec:authorize access="!hasRole('ROLE_USER')">
+          <li class="nav-item" name="login">
+            <a class="nav-link" href="#" id="loginTag">[登录]</a>
+          </li>
+          <li class="nav-item" name="userRegist">
+            <a href="/user/userRegist">[注册]</a>
+          </li>
+        </sec:authorize>
+        <sec:authorize access="hasRole('ROLE_USER')">
+          <li class="nav-item" name="login" style="display: none;">
+            <a class="nav-link" href="#" id="loginTag">[登录]</a>
+          </li>
+          <li class="nav-item" name="logout">
+            <a class="nav-link" href="/login/logout">[登出]</a>
+          </li>
+          <li class="nav-item" name="userInfo" url="/user/userInfo">
+            <a class="nav-link" href="">[个人中心]</a>
+          </li>
+        </sec:authorize>
         <li class="nav-item">
           <div id="dynamicLoginDiv"></div>
         </li>

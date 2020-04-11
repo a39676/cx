@@ -64,6 +64,8 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 			view.addObject("nickName", baseUtilCustom.getUserPrincipal().getNickName());
 		}
 		
+		view.addObject("isHomePage", "true");
+		
 		return view;
 	}
 	

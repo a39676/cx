@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
@@ -77,6 +78,10 @@ public class SystemConstantService extends CommonService {
 
 	public void setValByName(String cosntantName, String constantValue) {
 		redisTemplate.opsForValue().set(cosntantName, constantValue);
+	}
+	
+	public void setValByName(String cosntantName, String constantValue, Long validTime, TimeUnit timeUnit) {
+		redisTemplate.opsForValue().set(cosntantName, constantValue, validTime, timeUnit);
 	}
 	
 	public void setValByName(SystemConstant systemConstant) {

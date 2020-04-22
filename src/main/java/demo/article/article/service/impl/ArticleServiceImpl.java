@@ -33,6 +33,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.mapper.ArticleLongFeedbackMapper;
 import demo.article.article.mapper.ArticleLongMapper;
 import demo.article.article.mapper.ArticleLongReviewMapper;
+import demo.article.article.pojo.bo.UpdateEditedArticleLongBO;
 import demo.article.article.pojo.constant.ArticleViewConstant;
 import demo.article.article.pojo.dto.ArticleFeedbackDTO;
 import demo.article.article.pojo.dto.EditArticleLongDTO;

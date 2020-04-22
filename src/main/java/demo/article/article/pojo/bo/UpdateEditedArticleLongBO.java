@@ -1,4 +1,4 @@
-package demo.article.article.service.impl;
+package demo.article.article.pojo.bo;
 
 import demo.article.article.pojo.po.ArticleLong;
 

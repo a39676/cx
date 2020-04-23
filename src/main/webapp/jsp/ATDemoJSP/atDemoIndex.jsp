@@ -263,9 +263,9 @@
       var taskRunSuccessVal = $("#taskRunSuccess:checked").val();
       var taskRunFailVal = $("#taskRunFail:checked").val();
       if(taskRunSuccessVal != null && taskRunSuccessVal.length) {
-        runSuccessFlag = false;
-      } else if(taskRunFailVal != null && taskRunFailVal.length) {
         runSuccessFlag = true;
+      } else if(taskRunFailVal != null && taskRunFailVal.length) {
+        runSuccessFlag = false;
       }
 
       $("#loadingImg").fadeIn(150);    

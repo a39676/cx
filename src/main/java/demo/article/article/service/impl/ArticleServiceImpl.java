@@ -144,9 +144,10 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	 *     并更新 isEdit = true;
 	 *     将原对象 更新 editTime = now(), editCount + 1, editOf = (旧对象ID), editBy(编辑者ID), title = newTitle, filePath = newFilePath
 	 * }
+	 * @throws IOException 
 	 *  
 	 * */
-	private CommonResultCX editArticleLong(Long editorId, CreateArticleParam controllerParam, Long editedArticleId) throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
+	private CommonResultCX editArticleLong(Long editorId, CreateArticleParam controllerParam, Long editedArticleId) throws IOException {
 		CommonResultCX result = new CommonResultCX();
 		boolean editFlag = (editedArticleId != null && editorId != null);
 		

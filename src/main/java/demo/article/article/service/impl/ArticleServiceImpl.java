@@ -1,5 +1,6 @@
 package demo.article.article.service.impl;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -23,6 +24,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.owasp.html.PolicyFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +38,7 @@ import demo.article.article.mapper.ArticleLongFeedbackMapper;
 import demo.article.article.mapper.ArticleLongMapper;
 import demo.article.article.mapper.ArticleLongReviewMapper;
 import demo.article.article.pojo.bo.UpdateEditedArticleLongBO;
+import demo.article.article.pojo.constant.ArticleConstant;
 import demo.article.article.pojo.constant.ArticleViewConstant;
 import demo.article.article.pojo.dto.ArticleFeedbackDTO;
 import demo.article.article.pojo.dto.EditArticleLongDTO;
@@ -64,7 +69,12 @@ import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.user.controller.UsersController;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.image.pojo.type.ImageTagType;
+import demo.image.service.ImageService;
 import demo.tool.service.ValidRegexToolService;
+import image.pojo.dto.ImageSavingTransDTO;
+import image.pojo.result.ImageSavingResult;
+import toolPack.constant.FileSuffixNameConstant;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -72,6 +82,9 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 
 	@Autowired
 	private UsersController userController;
+	
+	@Autowired
+	private ImageService imgService;
 	
 	@Autowired
 	private ArticleChannelService channelService;
@@ -303,6 +316,15 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			}
 		}
 
+		Element doc = Jsoup.parse(content);
+        Elements pngs = doc.select("img[src]");
+        /* 解决如果文章内有本地上传的图片, 转到服务器硬盘保存, 并提供 url 访问, */
+        for(Element s : pngs) {
+        	s.attr("src", imgSrcHandler(s.attr("src")));
+        }
+        
+        content = doc.toString();
+        
 		Long maxArticleLength = loadMaxArticleLength();
 		
 		if (content.length() > maxArticleLength) {
@@ -325,6 +347,59 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 
 		result.setIsSuccess();
 		return result;
+	}
+	
+	private String imgSrcHandler(String src) {
+		if(src == null) {
+			return src;
+		} else if(src.startsWith("http")) {
+			return src;
+		} else if(src.startsWith("data")) {
+			return imgBase64ToImageStore(src);
+		}
+		return src;
+	}
+	
+	private String imgBase64ToImageStore(String src) {
+		int slashIndex = src.indexOf("/");
+		int semicolonIndex = src.indexOf(";");
+		int commaIndex = src.indexOf(",");
+		
+		if(semicolonIndex < 0 || slashIndex < 0 || commaIndex < 0) {
+			return "";
+		}
+		String fileType = src.substring(slashIndex + 1, semicolonIndex);
+		if(!FileSuffixNameConstant.imageSuffix.contains(fileType)) {
+			return "";
+		}
+		
+		String filename = String.valueOf(snowFlake.getNextId()) + "." + fileType;
+		String dateStr = localDateTimeHandler.dateToStr(LocalDateTime.now(), "yyyyMM");
+		
+		
+		BufferedImage image = imgService.base64ToImg(src.split(",")[1]);
+		if(image == null) {
+			return "";
+		}
+		
+		String saveingFolderPath = null;
+		if(isLinux()) {
+			saveingFolderPath = ArticleConstant.articleImgSavingFolder + "/" + dateStr;
+		} else if(isWindows()) {
+			saveingFolderPath = "d:/" + ArticleConstant.articleImgSavingFolder + "/" + dateStr;
+		}
+		String imgSavingPath = saveingFolderPath + "/" + filename;
+		boolean saveFlag = imgService.imgSaveAsFile(image, imgSavingPath, fileType);
+		if(!saveFlag) {
+			return "";
+		}
+		
+		ImageSavingTransDTO dto = new ImageSavingTransDTO();
+		dto.setImgName(filename);
+		dto.setImgPath(imgSavingPath);
+		dto.setImgTagCode(ImageTagType.fromArticle.getCode());
+		ImageSavingResult result = imgService.imageSaving(dto);
+		return result.getImgUrl();
 	}
 
 	/**

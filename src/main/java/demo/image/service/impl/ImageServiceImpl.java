@@ -1,7 +1,10 @@
 package demo.image.service.impl;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -9,11 +12,13 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.compress.utils.IOUtils;
@@ -25,6 +30,7 @@ import org.springframework.stereotype.Service;
 import demo.baseCommon.service.CommonService;
 import demo.image.mapper.ImageStoreMapper;
 import demo.image.mapper.ImageTagMapper;
+import demo.image.pojo.constant.ImageConstant;
 import demo.image.pojo.constant.ImageUrl;
 import demo.image.pojo.po.ImageStore;
 import demo.image.pojo.po.ImageStoreExample;
@@ -76,7 +82,20 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 			return r;
 		}
 		
-		r = imageStoreSaving(dto);
+		r = saveImgHandler(dto);
+		
+		return r;
+	}
+	
+	@Override
+	public ImageSavingResult __saveImgFromBBT(ImageSavingTransDTO dto) {
+		dto.setImgTagCode(ImageTagType.imageSaving.getCode());
+		ImageSavingResult r = validImageSavingTransDTO(dto);
+		if(r.isFail()) {
+			return r;
+		}
+		
+		r = __saveImgFromBBTHandler(dto);
 		
 		return r;
 	}
@@ -86,7 +105,14 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 		if(dto == null 
 				|| StringUtils.isAnyBlank(dto.getImgPath(), dto.getImgName()) 
 				|| !dto.getImgPath().endsWith(dto.getImgName())
+				|| dto.getImgTagCode() == null
 				) {
+			r.failWithMessage("error data");
+			return r;
+		}
+		
+		ImageTagType tagType = ImageTagType.getType(dto.getImgTagCode());
+		if(tagType == null) {
 			r.failWithMessage("error data");
 			return r;
 		}
@@ -106,10 +132,19 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 		return r;
 	}
 
-	private ImageSavingResult imageStoreSaving(ImageSavingTransDTO dto) {
+	private ImageSavingResult __saveImgFromBBTHandler(ImageSavingTransDTO dto) {
+		return saveImgHandler(dto);
+	}
+	
+	private ImageSavingResult saveImgHandler(ImageSavingTransDTO dto) {
 		ImageSavingResult r = new ImageSavingResult();
-		
+		ImageTagType imgTagType = ImageTagType.getType(dto.getImgTagCode());
 		try {
+			if(imgTagType == null) {
+				r.failWithMessage("error data");
+				return r;
+			}
+			
 			Paths.get(dto.getImgPath());
 			File imgFile = new File(dto.getImgPath());
 			if(!imgFile.exists()) {
@@ -135,7 +170,7 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 		
 		ImageTag imgTagPO = new ImageTag();
 		imgTagPO.setImageId(newImgId);
-		imgTagPO.setTagId(ImageTagType.imageSaving.getCode().longValue());
+		imgTagPO.setTagId(imgTagType.getCode().longValue());
 		insertCount = imageTagMapper.insertSelective(imgTagPO);
 		if(insertCount < 1) {
 			r.failWithMessage("service error");
@@ -187,5 +222,42 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 		imgTagExample.createCriteria().andImageIdIn(targetImgIdList);
 		imageTagMapper.deleteByExample(imgTagExample);
 		
+	}
+
+	@Override
+	public BufferedImage base64ToImg(String base64) {
+		if(base64 == null || base64.length() > ImageConstant.imgBase64MaxSize) {
+			return null;
+		}
+		
+		BufferedImage image = null;
+		byte[] imageByte;
+
+		imageByte = Base64.getDecoder().decode(base64);
+		ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
+		try {
+			image = ImageIO.read(bis);
+			bis.close();
+		} catch (Exception e) {
+		}
+		return image;
+	}
+	
+	@Override
+	public boolean imgSaveAsFile(BufferedImage image, String filePath, String fileType) {
+		File outputfile = new File(filePath);
+		if(!outputfile.exists()) {
+			try {
+				outputfile.mkdirs();
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		try {
+			ImageIO.write(image, fileType, outputfile);
+			return true;
+		} catch (IOException e) {
+			return false;
+		}
 	}
 }

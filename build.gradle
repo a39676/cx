@@ -108,6 +108,8 @@ dependencies {
 	// swagger
 	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
 	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+	// 解析富文本中的 img 标签, 多数用于文章模块
+	compile group: 'org.jsoup', name: 'jsoup', version: '1.13.1'
 	
 	// for jsp
 	compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '9.0.20'

@@ -31,9 +31,9 @@ public class ImageInteractionController extends CommonController {
 		return imageInteractionService.uploadImageToCloudinary(dto);
 	}
 	
-	@PostMapping(value = ImageInteractionUrl.imageSaving)
+	@PostMapping(value = ImageInteractionUrl.imageSavingFromBBT)
 	@ResponseBody
 	public ImageSavingResult imageSaving(@RequestBody ImageSavingTransDTO dto) {
-		return imgService.imageSaving(dto);
+		return imgService.__saveImgFromBBT(dto);
 	}
 }

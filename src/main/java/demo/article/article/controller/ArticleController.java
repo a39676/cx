@@ -62,8 +62,8 @@ public class ArticleController extends CommonController {
 	
 	@PostMapping(value = ArticleUrlConstant.createArticleLong)
 	@ResponseBody
-	public CommonResult createArticleLong(@RequestBody CreateArticleParam param) throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
-		CommonResult serviceResult = articleService.crateArticleLongPrefixServcie(param);
+	public CommonResult createArticleLong(@RequestBody CreateArticleParam dto) throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
+		CommonResult serviceResult = articleService.crateArticleLongPrefixServcie(dto);
 		return serviceResult;
 	}
 	

@@ -23,4 +23,22 @@ public enum ImageTagType {
 	public Long getCode() {
 		return this.code;
 	}
+	
+	public static ImageTagType getType(String typeName) {
+		for(ImageTagType t : ImageTagType.values()) {
+			if(t.getName().equals(typeName)) {
+				return t;
+			}
+		}
+		return null;
+	}
+	
+	public static ImageTagType getType(Long typeCode) {
+		for(ImageTagType t : ImageTagType.values()) {
+			if(t.getCode().equals(typeCode)) {
+				return t;
+			}
+		}
+		return null;
+	}
 }

@@ -11,4 +11,5 @@ public class ArticleConstant {
 	/** 评价平衡比例 */
 	public static final double balanceEvaluationRatio = 1.1;
 	
+	public static final String articleImgSavingFolder = "/home/u2/articleImg";
 }

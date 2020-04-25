@@ -236,6 +236,13 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 		imageByte = Base64.getDecoder().decode(base64);
 		ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
 		try {
+			/*
+			 *  FIXME
+			 *  2020-04-26
+			 *  暂时未有合适的 webp webm 支持库
+			 *  上传 webp / webm 时, 会返回异常.
+			 *  考虑将此类小体积文件转交给 cloudinary 处理?
+			 */
 			image = ImageIO.read(bis);
 			bis.close();
 		} catch (Exception e) {

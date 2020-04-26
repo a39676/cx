@@ -62,7 +62,7 @@ dependencies {
 	// spring security 
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-security'
 	compile group: 'org.springframework.security', name: 'spring-security-taglibs'
-	
+
     // commons
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.7'
 	compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.2'

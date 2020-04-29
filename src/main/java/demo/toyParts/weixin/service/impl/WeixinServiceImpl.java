@@ -15,13 +15,14 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.owasp.html.PolicyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
+import demo.tool.service.TextFilter;
 import demo.toyParts.weixin.mapper.WeixinAccessTokenMapper;
 import demo.toyParts.weixin.mapper.WeixinConstantMapper;
 import demo.toyParts.weixin.pojo.bo.WXMessageBO;
@@ -50,6 +51,8 @@ public class WeixinServiceImpl extends CommonService implements WeixinService {
 	private WeixinAccessTokenMapper weixinAccessTokenMapper;
 	@Autowired
 	private FileUtilCustom ioUtil;
+	@Autowired
+	private TextFilter textFilter;
 
 	private static String token = "weixinTestToken";
 
@@ -303,8 +306,9 @@ public class WeixinServiceImpl extends CommonService implements WeixinService {
 		List<String> lines = Arrays.asList(content.split(System.lineSeparator()));
 		StringBuffer sb = new StringBuffer();
 
+		PolicyFactory filter = textFilter.getArticleFilter();
 		for (String line : lines) {
-			sb.append(StringEscapeUtils.escapeHtml(line));
+			sb.append(filter.sanitize(line));
 		}
 
 		String articleContentAfterTrim = sb.toString().trim();

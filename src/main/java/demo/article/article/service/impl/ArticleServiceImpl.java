@@ -22,7 +22,6 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -582,9 +581,11 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;
 		}
-		String feedback = StringEscapeUtils.escapeHtml(dto.getFeedback());
+		PolicyFactory filter = textFilter.getArticleFilter();
+		String feedback = filter.sanitize(dto.getFeedback());
+		
 		if(StringUtils.isBlank(feedback)) {
-			result.failWithMessage("期待您请填写反馈内容");
+			result.failWithMessage("期待您填写反馈内容");
 			return result;
 		} else if (feedback.length() > 512) {
 			result.failWithMessage("反馈内容过长");

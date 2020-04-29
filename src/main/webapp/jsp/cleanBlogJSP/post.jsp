@@ -145,6 +145,10 @@
   <script type="text/javascript" src="<c:url value='/static_resources/js/article/articleLongUserV3.js'/>"></script>
   </sec:authorize>
 
+  <script type="text/javascript">
+    
+  </script>
+
 </body>
 
 </html>

@@ -445,13 +445,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			}
 		}
 
-		try {
-			ioUtil.byteToFile(sb.toString().getBytes("utf8"), finalFilePath);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			result.fillWithResult(ResultTypeCX.errorWhenArticleSave);
-			return result;
-		}
+		ioUtil.byteToFile(sb.toString().getBytes(StandardCharsets.UTF_8), finalFilePath);
 
 		result.successWithMessage(finalFilePath);
 
@@ -600,6 +594,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return result;
 		} 
 		
+		dto.setPk(URLDecoder.decode(dto.getPk(), StandardCharsets.UTF_8));
 		Long articleId = decryptPrivateKey(dto.getPk());
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.nullParam);

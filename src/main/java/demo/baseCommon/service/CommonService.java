@@ -1,5 +1,6 @@
 package demo.baseCommon.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -53,7 +54,7 @@ public abstract class CommonService {
 	@Autowired
 	protected RedisTemplate<String, String> redisTemplate;
 
-	protected static final long theStartTime = 946656000000L;
+	protected static final LocalDateTime theStartTime = LocalDateTime.of(2020, 5, 1, 0, 0, 0);
 
 	protected String createDateDescription(Date inputDate) {
 		if (inputDate == null) {

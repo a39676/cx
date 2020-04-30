@@ -1,11 +1,11 @@
 package demo.article.articleComment.pojo.dto;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class FindArticleCommentPageDTO {
 
 	private String pk;
-	private Date startTime;
+	private LocalDateTime startTime;
 	private Boolean hasAdminRole = false;
 	private Boolean isPass = true;
 	private Boolean isDelete = false;
@@ -18,14 +18,14 @@ public class FindArticleCommentPageDTO {
 		this.pk = pk;
 	}
 
-	public Date getStartTime() {
+	public LocalDateTime getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(Date startTime) {
+	public void setStartTime(LocalDateTime startTime) {
 		this.startTime = startTime;
 	}
-	
+
 	public Boolean getHasAdminRole() {
 		return hasAdminRole;
 	}
@@ -33,7 +33,7 @@ public class FindArticleCommentPageDTO {
 	public void setHasAdminRole(Boolean hasAdminRole) {
 		this.hasAdminRole = hasAdminRole;
 	}
-	
+
 	public Boolean getIsPass() {
 		return isPass;
 	}
@@ -52,8 +52,8 @@ public class FindArticleCommentPageDTO {
 
 	@Override
 	public String toString() {
-		return "FindArticleCommentPageParam [pk=" + pk + ", startTime=" + startTime + ", hasAdminRole=" + hasAdminRole
-				+ "]";
+		return "FindArticleCommentPageDTO [pk=" + pk + ", startTime=" + startTime + ", hasAdminRole=" + hasAdminRole
+				+ ", isPass=" + isPass + ", isDelete=" + isDelete + "]";
 	}
 
 }

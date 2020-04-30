@@ -1,6 +1,6 @@
 package demo.article.articleComment.pojo.dto.mapperParam;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class FindCommentByArticleIdParam {
 
@@ -8,7 +8,7 @@ public class FindCommentByArticleIdParam {
 	private Boolean isDelete = false;
 	private Boolean isPass = true;
 	private Integer limit = 10;
-	private Date startTime;
+	private LocalDateTime startTime;
 
 	public Long getArticleId() {
 		return articleId;
@@ -42,11 +42,11 @@ public class FindCommentByArticleIdParam {
 		this.limit = limit;
 	}
 
-	public Date getStartTime() {
+	public LocalDateTime getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(Date startTime) {
+	public void setStartTime(LocalDateTime startTime) {
 		this.startTime = startTime;
 	}
 

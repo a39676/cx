@@ -1,113 +1,115 @@
 package demo.article.articleComment.pojo.po;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class ArticleComment {
-	private Long articleCommentId;
+    private Long id;
 
-	private Long userId;
+    private Long userId;
 
-	private Long articleId;
+    private String tmpNickName;
 
-	private String path;
+    private String tmpEmail;
 
-	private Date createTime;
+    private Long articleId;
 
-	private Long replyOf;
+    private String path;
 
-	private Boolean isDelete;
+    private LocalDateTime createTime;
 
-	private Boolean isPass;
+    private Long replyOf;
 
-	private Boolean isReject;
+    private Boolean isDelete;
 
-	private String privateKey;
+    private Boolean isPass;
 
-	public Long getArticleCommentId() {
-		return articleCommentId;
-	}
+    private Boolean isReject;
 
-	public void setArticleCommentId(Long articleCommentId) {
-		this.articleCommentId = articleCommentId;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Long getUserId() {
-		return userId;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
+    public Long getUserId() {
+        return userId;
+    }
 
-	public String getPath() {
-		return path;
-	}
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
-	public void setPath(String path) {
-		this.path = path == null ? null : path.trim();
-	}
+    public String getTmpNickName() {
+        return tmpNickName;
+    }
 
-	public Date getCreateTime() {
-		return createTime;
-	}
+    public void setTmpNickName(String tmpNickName) {
+        this.tmpNickName = tmpNickName == null ? null : tmpNickName.trim();
+    }
 
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
+    public String getTmpEmail() {
+        return tmpEmail;
+    }
 
-	public Long getReplyOf() {
-		return replyOf;
-	}
+    public void setTmpEmail(String tmpEmail) {
+        this.tmpEmail = tmpEmail == null ? null : tmpEmail.trim();
+    }
 
-	public void setReplyOf(Long replyOf) {
-		this.replyOf = replyOf;
-	}
+    public Long getArticleId() {
+        return articleId;
+    }
 
-	public Boolean getIsDelete() {
-		return isDelete;
-	}
+    public void setArticleId(Long articleId) {
+        this.articleId = articleId;
+    }
 
-	public void setIsDelete(Boolean isDelete) {
-		this.isDelete = isDelete;
-	}
+    public String getPath() {
+        return path;
+    }
 
-	public Boolean getIsPass() {
-		return isPass;
-	}
+    public void setPath(String path) {
+        this.path = path == null ? null : path.trim();
+    }
 
-	public void setIsPass(Boolean isPass) {
-		this.isPass = isPass;
-	}
+    public LocalDateTime getCreateTime() {
+        return createTime;
+    }
 
-	public Boolean getIsReject() {
-		return isReject;
-	}
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
+    }
 
-	public void setIsReject(Boolean isReject) {
-		this.isReject = isReject;
-	}
+    public Long getReplyOf() {
+        return replyOf;
+    }
 
-	public String getPrivateKey() {
-		return privateKey;
-	}
+    public void setReplyOf(Long replyOf) {
+        this.replyOf = replyOf;
+    }
 
-	public void setPrivateKey(String privateKey) {
-		this.privateKey = privateKey == null ? null : privateKey.trim();
-	}
+    public Boolean getIsDelete() {
+        return isDelete;
+    }
 
-	public Long getArticleId() {
-		return articleId;
-	}
+    public void setIsDelete(Boolean isDelete) {
+        this.isDelete = isDelete;
+    }
 
-	public void setArticleId(Long articleId) {
-		this.articleId = articleId;
-	}
+    public Boolean getIsPass() {
+        return isPass;
+    }
 
-	@Override
-	public String toString() {
-		return "ArticleComment [articleCommentId=" + articleCommentId + ", userId=" + userId + ", articleId="
-				+ articleId + ", path=" + path + ", createTime=" + createTime + ", replyOf=" + replyOf + ", isDelete="
-				+ isDelete + ", isPass=" + isPass + ", isReject=" + isReject + ", privateKey=" + privateKey + "]";
-	}
+    public void setIsPass(Boolean isPass) {
+        this.isPass = isPass;
+    }
 
+    public Boolean getIsReject() {
+        return isReject;
+    }
+
+    public void setIsReject(Boolean isReject) {
+        this.isReject = isReject;
+    }
 }

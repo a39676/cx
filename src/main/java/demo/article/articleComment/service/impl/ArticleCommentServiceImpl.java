@@ -29,6 +29,8 @@ import demo.article.articleComment.pojo.dto.PassArticleCommentDTO;
 import demo.article.articleComment.pojo.dto.mapperParam.FindCommentByArticleIdParam;
 import demo.article.articleComment.pojo.dto.mapperParam.JustCommentParam;
 import demo.article.articleComment.pojo.po.ArticleComment;
+import demo.article.articleComment.pojo.po.ArticleCommentExample;
+import demo.article.articleComment.pojo.po.ArticleCommentExample.Criteria;
 import demo.article.articleComment.pojo.result.FindArticleCommentPageResult;
 import demo.article.articleComment.service.ArticleCommentAdminService;
 import demo.article.articleComment.service.ArticleCommentService;
@@ -76,6 +78,13 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	
 	@Override
 	public CommonResultCX creatingArticleComment(Long userId, CreateArticleCommentDTO inputParam) throws IOException {
+		/* 
+		 * TODO 准备放开未登录留言
+		 * ArticleComment 需要重新生成
+		 */
+		/*
+		 * if (userId == null) 
+		 */
 		CommonResultCX result = new CommonResultCX();
 		if(!loadArticleCommontStorePath() || loadMaxArticleLength() <= 0) {
 			result.fillWithResult(ResultTypeCX.serviceError);
@@ -95,11 +104,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
-		JustCommentParam justCommentParam = new JustCommentParam();
-		justCommentParam.setUserId(userId);
-		justCommentParam.setStartTime(new Date(System.currentTimeMillis() - 1000L * 60));
-		int i = articleCommentMapper.justComment(justCommentParam);
-		if(i > 0) {
+		if(justComment()) {
 			result.fillWithResult(ResultTypeCX.justComment);
 			return result;
 		}
@@ -117,7 +122,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		
 		ArticleComment newComment = new ArticleComment();
 		Long newCommonId = snowFlake.getNextId();
-		newComment.setArticleCommentId(newCommonId);
+		newComment.setId(newCommonId);
 		newComment.setArticleId(articleId);
 		newComment.setPath(saveFileResult.getFilePath());
 		newComment.setUserId(userId);
@@ -149,11 +154,11 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			return result;
 		}
 		
-		if(controllerParam.getStartTime() != null && controllerParam.getStartTime().getTime() < theStartTime) {
-			controllerParam.setStartTime(new Date(theStartTime));
+		if(controllerParam.getStartTime() != null && controllerParam.getStartTime().isBefore(theStartTime)) {
+			controllerParam.setStartTime(theStartTime);
 		}
 		if(controllerParam.getStartTime() != null) {
-			controllerParam.setStartTime(new Date(controllerParam.getStartTime().getTime() + 1));
+			controllerParam.setStartTime(controllerParam.getStartTime().plusSeconds(1L));
 		}
 		
 		Long articleId = decryptPrivateKey(controllerParam.getPk());
@@ -172,6 +177,18 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			findCommentByArticleIdParam.setIsPass(controllerParam.getIsPass());
 			findCommentByArticleIdParam.setIsDelete(controllerParam.getIsDelete());
 		}
+		/*
+		 * TODO
+		 * 可能都是要写 sql
+		 */
+		ArticleCommentExample example = new ArticleCommentExample();
+		Criteria criteria = example.createCriteria();
+		criteria
+		.andArticleIdEqualTo(articleId)
+		.andCreateTimeGreaterThanOrEqualTo(controllerParam.getStartTime())
+		;
+		
+		articleCommentMapper.selectByExample(example);
 		List<FindCommentByArticleIdBO> commentBOList = articleCommentMapper.findCommentByArticleId(findCommentByArticleIdParam);
 		if(commentBOList == null || commentBOList.size() < 1) {
 			result.setIsSuccess();
@@ -234,5 +251,13 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		}
 		
 		return articleCommentMapper.findCommentCountByArticleId(articleIdList);
+	}
+
+	private boolean justComment(Long ip, Long userId, Long articleId) {
+		/*
+		 * TODO
+		 * 结合 redis 操作
+		 */
+		return true;
 	}
 } 

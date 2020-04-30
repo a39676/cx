@@ -11,7 +11,7 @@ import demo.baseCommon.pojo.result.CommonResultCX;
 
 public interface ArticleCommentService {
 
-	CommonResultCX creatingArticleComment(Long userId, CreateArticleCommentDTO inputParam) throws IOException;
+	CommonResultCX creatingArticleComment(CreateArticleCommentDTO inputParam) throws IOException;
 
 	FindArticleCommentPageResult findArticleCommentPage(FindArticleCommentPageDTO controllerParam);
 

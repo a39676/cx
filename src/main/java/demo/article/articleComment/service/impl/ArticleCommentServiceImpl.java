@@ -77,7 +77,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	}
 	
 	@Override
-	public CommonResultCX creatingArticleComment(Long userId, CreateArticleCommentDTO inputParam) throws IOException {
+	public CommonResultCX creatingArticleComment(CreateArticleCommentDTO inputParam) throws IOException {
 		/* 
 		 * TODO 准备放开未登录留言
 		 * ArticleComment 需要重新生成
@@ -85,6 +85,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		/*
 		 * if (userId == null) 
 		 */
+		Long userId = baseUtilCustom.getUserId();
 		CommonResultCX result = new CommonResultCX();
 		if(!loadArticleCommontStorePath() || loadMaxArticleLength() <= 0) {
 			result.fillWithResult(ResultTypeCX.serviceError);
@@ -188,9 +189,8 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		.andCreateTimeGreaterThanOrEqualTo(controllerParam.getStartTime())
 		;
 		
-		articleCommentMapper.selectByExample(example);
-		List<FindCommentByArticleIdBO> commentBOList = articleCommentMapper.findCommentByArticleId(findCommentByArticleIdParam);
-		if(commentBOList == null || commentBOList.size() < 1) {
+		List<ArticleComment> commentPOList = articleCommentMapper.selectByExample(example);
+		if(commentPOList == null || commentPOList.isEmpty()) {
 			result.setIsSuccess();
 			ArticleCommentVO vo = new ArticleCommentVO();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -202,10 +202,10 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		}
 		
 		List<Long> commentIdList = new ArrayList<Long>();
-		commentBOList.stream().forEach(bo -> commentIdList.add(bo.getArticleCommentId()));
+		commentPOList.stream().forEach(bo -> commentIdList.add(bo.getId()));
 		
 		Map<Long, ArticleEvaluationStatisticsVO> evaluationStatisticsMap = articleEvaluationService.findEvaluationStatisticsByArticleId(ArticleEvaluationType.articleCommentEvaluation, commentIdList);
-		commentBOList.stream().forEach(bo -> commentVOList.add(fillArticleCommentFromBo(evaluationStatisticsMap, bo)));
+		commentPOList.stream().forEach(bo -> commentVOList.add(fillArticleCommentFromBo(evaluationStatisticsMap, bo)));
 		
 		result.setIsSuccess();
 		result.setCommentList(commentVOList);

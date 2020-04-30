@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.article.articleComment.pojo.bo.ArticleCommentCountByArticleIdBO;
@@ -30,14 +31,11 @@ public class ArticleCommentController extends CommonController {
 	
 	@Autowired
 	private ArticleCommentService articleCommentService;
-	@Autowired
-	private BaseUtilCustom baseUtilCustom;
 	
 	@PostMapping(value = ArticleCommentUrlConstant.createArticleComment)
-	public void createArticleComment(CreateArticleCommentDTO param, HttpServletRequest request, HttpServletResponse response) throws IOException {
-		CommonResultCX result = articleCommentService.creatingArticleComment(baseUtilCustom.getUserId(), param);
-		
-		outputJson(response, JSONObject.fromObject(result));
+	@ResponseBody
+	public CommonResultCX createArticleComment(@RequestBody CreateArticleCommentDTO param) throws IOException {
+		return articleCommentService.creatingArticleComment(param);
 	}
 	
 	@PostMapping(value = ArticleCommentUrlConstant.findArticleCommentPage)

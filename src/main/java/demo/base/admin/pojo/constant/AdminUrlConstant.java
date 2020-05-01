@@ -12,6 +12,7 @@ public class AdminUrlConstant {
 	public static final String dba = "/dba**";
 	public static final String updateAccountMarker = "/updateAccountMarker";
 	public static final String refreshSystemConstant = "/refreshSystemConstant";
+	public static final String setSystemConstant = "/setSystemConstant";
 	public static final String loadHomepageAnnouncementStr = "/loadHomepageAnnouncementStr";
 	public static final String createFakeEvaluationStore = "/createFakeEvaluationStore";
 	

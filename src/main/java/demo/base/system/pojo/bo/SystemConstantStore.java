@@ -14,17 +14,6 @@ public class SystemConstantStore {
 	public static final String aesKey = "aesKey";
 	public static final String aesInitVector = "aesInitVector";
 	public static final String articleChannelPrefixStorePath = "articleChannelPrefixStorePath";
-	public static final String ckey0 = "ckey0";
-	public static final String ckey1 = "ckey1";
-	public static final String ckey2 = "ckey2";
-	public static final String ckey3 = "ckey3";
-	public static final String ckey4 = "ckey4";
-	public static final String ckey5 = "ckey5";
-	public static final String ckey6 = "ckey6";
-	public static final String ckey7 = "ckey7";
-	public static final String ckey8 = "ckey8";
-	public static final String ckey9 = "ckey9";
-	public static final String customKeys = "customKeys";
 	public static final String homepageAnnouncement = "homepageAnnouncement";
 	public static final String homepageAnnouncementStr = "homepageAnnouncementStr";
 	public static final String eaWebSiteTitle = "eaWebSiteTitle";

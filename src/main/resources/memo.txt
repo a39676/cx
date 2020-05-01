@@ -1,7 +1,8 @@
 每个模块, 各自都可能有独立的动态参数,
 	全部存放 systemConstant 已不合适
-	考虑公共服务类设计一个从 "指定路径"(hard code?) 读取/刷新 指定变量的方法
-		提供每个模块的独自redis 参数刷新
+	提供管理员身份, 逐个执行的通道
+		/admin/refreshSystemConstant
+		未设置前端页面
 	
 
 评论模块

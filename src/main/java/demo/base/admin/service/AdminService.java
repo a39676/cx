@@ -1,5 +1,6 @@
 package demo.base.admin.service;
 
+import demo.base.admin.pojo.dto.SetSystemConstantDTO;
 import demo.base.user.pojo.dto.UserIpDeleteDTO;
 import demo.baseCommon.pojo.result.CommonResultCX;
 
@@ -10,5 +11,7 @@ public interface AdminService {
 	void loadHomepageAnnouncementStr();
 
 	void loadHomepageAnnouncementStr(String strContent);
+
+	CommonResultCX setSystemConstant(SetSystemConstantDTO dto);
 
 }

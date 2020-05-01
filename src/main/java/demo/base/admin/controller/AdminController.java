@@ -20,6 +20,7 @@ import demo.article.fakePost.service.FakePostService;
 import demo.base.admin.pojo.constant.AdminUrlConstant;
 import demo.base.admin.pojo.constant.AdminView;
 import demo.base.admin.pojo.dto.RefreshSystemConstantDTO;
+import demo.base.admin.pojo.dto.SetSystemConstantDTO;
 import demo.base.admin.service.AdminService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.constant.BaseStatusCode;
@@ -154,6 +155,12 @@ public class AdminController extends CommonController {
 	public String refreshSystemConstant(@RequestBody RefreshSystemConstantDTO dto) {
 		String result = systemConstantService.getValByName(dto.getKey(), true);
 		return result;
+	}
+	
+	@PostMapping(value = AdminUrlConstant.setSystemConstant)
+	@ResponseBody
+	public CommonResultCX setSystemConstant(@RequestBody SetSystemConstantDTO dto) {
+		return adminService.setSystemConstant(dto);
 	}
 	
 	@PostMapping(value = AdminUrlConstant.loadHomepageAnnouncementStr)

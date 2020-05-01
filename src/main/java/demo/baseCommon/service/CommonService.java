@@ -1,10 +1,12 @@
 package demo.baseCommon.service;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,8 +27,10 @@ import demo.config.costom_component.BaseUtilCustom;
 import demo.config.costom_component.EncryptUtil;
 import demo.config.costom_component.SnowFlake;
 import demo.tool.service.VisitDataService;
+import net.sf.json.JSONObject;
 import toolPack.dateTimeHandle.DateHandler;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
+import toolPack.ioHandle.FileUtilCustom;
 import toolPack.numericHandel.NumericUtilCustom;
 
 public abstract class CommonService {
@@ -177,29 +181,6 @@ public abstract class CommonService {
 		return r;
 	}
 	
-//	private List<List<Character>> getCustomKey() {
-//		return constantService.getCustomKey();
-//	}
-//	
-//	public String encryptId(Long articleId, List<List<Character>> keys) {
-//		if(articleId == null) {
-//			return null;
-//		}
-//		
-//		if(keys == null || keys.size() < 1) {
-//			return null;
-//		}
-//		return encryptUtil.customEncrypt(keys, articleId.toString());
-//	}
-//	
-//	public Long decryptPrivateKey(String inputPk) {
-//		String encryptId = encryptUtil.customDecrypt(getCustomKey(), inputPk);
-//		if(encryptId == null || !numberUtil.matchInteger(encryptId)) {
-//			return null;
-//		}
-//		return Long.parseLong(encryptId);
-//	}
-	
 	public String encryptId(Long id) {
 		List<String> encryptIdList = encryptId(Arrays.asList(id));
 		if(encryptIdList == null || encryptIdList.isEmpty()) {
@@ -286,5 +267,49 @@ public abstract class CommonService {
 	
 	protected boolean isBigUser() {
 		return baseUtilCustom.hasSuperAdminRole();
+	}
+
+	protected CommonResultCX refreshRedisValueFromFile(String filePath) {
+		CommonResultCX result = new CommonResultCX();
+		try {
+			if(StringUtils.isBlank(filePath)) {
+				result.failWithMessage("path error");
+				return result;
+			}
+			
+			File file = new File(filePath);
+			if(!file.exists()) {
+				result.failWithMessage("file not exists");
+				return result;
+			}
+			
+			FileUtilCustom ioUtil = new FileUtilCustom();
+			String fileStr = ioUtil.getStringFromFile(filePath);
+			JSONObject json = JSONObject.fromObject(fileStr);
+			@SuppressWarnings("rawtypes")
+			Set keys = json.keySet();
+			String tmpKey = null;
+			String tmpValue = null;
+			for(Object key : keys) {
+				tmpKey = String.valueOf(key);
+				tmpValue = json.getString(tmpKey);
+				if(StringUtils.isNotBlank(tmpKey)) {
+					if(redisTemplate.hasKey(tmpKey)) {
+						result.addMessage("refresh key:" + tmpKey + " , set: " + tmpValue + "\n");
+					} else {
+						result.addMessage("add key:" + tmpKey + " , set: " + tmpValue + "\n");
+					}
+					constantService.setValByName(tmpKey, tmpValue);
+				} else {
+					result.addMessage("detect an empty key, has value: " + tmpValue + "\n");
+				}
+			}
+			
+			result.setIsSuccess();
+			return result;
+		} catch (Exception e) {
+			result.failWithMessage(e.getMessage());
+			return result;
+		}
 	}
 }

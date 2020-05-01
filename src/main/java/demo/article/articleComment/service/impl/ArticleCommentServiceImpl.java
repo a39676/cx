@@ -22,12 +22,10 @@ import demo.article.article.service.ArticleService;
 import demo.article.article.service.impl.ArticleCommonService;
 import demo.article.articleComment.mapper.ArticleCommentMapper;
 import demo.article.articleComment.pojo.bo.ArticleCommentCountByArticleIdBO;
-import demo.article.articleComment.pojo.bo.FindCommentByArticleIdBO;
 import demo.article.articleComment.pojo.dto.CreateArticleCommentDTO;
 import demo.article.articleComment.pojo.dto.FindArticleCommentPageDTO;
 import demo.article.articleComment.pojo.dto.PassArticleCommentDTO;
 import demo.article.articleComment.pojo.dto.mapperParam.FindCommentByArticleIdParam;
-import demo.article.articleComment.pojo.dto.mapperParam.JustCommentParam;
 import demo.article.articleComment.pojo.po.ArticleComment;
 import demo.article.articleComment.pojo.po.ArticleCommentExample;
 import demo.article.articleComment.pojo.po.ArticleCommentExample.Criteria;
@@ -54,15 +52,8 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	@Autowired
 	private FileUtilCustom ioUtil;
 	
-	private String articleCommentStorePrefixPath;
-	
-	private boolean loadArticleCommontStorePath() {
-		articleCommentStorePrefixPath = constantService.getValByName(SystemConstantStore.articleCommentStorePrefixPath);
-		if (articleCommentStorePrefixPath.length() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+	private String loadArticleCommentStorePath() {
+		return constantService.getValByName(SystemConstantStore.articleCommentStorePrefixPath);
 	}
 	
 	private Long loadMaxArticleLength() {
@@ -87,7 +78,8 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		 */
 		Long userId = baseUtilCustom.getUserId();
 		CommonResultCX result = new CommonResultCX();
-		if(!loadArticleCommontStorePath() || loadMaxArticleLength() <= 0) {
+		String articleCommentStorePath = loadArticleCommentStorePath();
+		if(StringUtils.isBlank(articleCommentStorePath) || loadMaxArticleLength() <= 0) {
 			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
 		}

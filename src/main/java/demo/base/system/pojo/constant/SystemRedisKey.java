@@ -11,4 +11,6 @@ public class SystemRedisKey {
 	public static final String articleBurnInsertCountingKeyPrefix = "articleBurn";
 	
 	public static final String userRegistCountingKeyPrefix = "userRegist";
+	
+	public static final String articleCommentKeyPrefix = "articleComment";
 }

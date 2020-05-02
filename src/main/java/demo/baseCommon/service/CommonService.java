@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,6 +29,7 @@ import demo.config.costom_component.EncryptUtil;
 import demo.config.costom_component.SnowFlake;
 import demo.tool.service.VisitDataService;
 import net.sf.json.JSONObject;
+import tool.pojo.bo.IpRecordBO;
 import toolPack.dateTimeHandle.DateHandler;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
 import toolPack.ioHandle.FileUtilCustom;
@@ -268,6 +270,14 @@ public abstract class CommonService {
 	protected boolean isBigUser() {
 		return baseUtilCustom.hasSuperAdminRole();
 	}
+	
+	protected IpRecordBO getIp(HttpServletRequest request) {
+		IpRecordBO record = new IpRecordBO();
+        record.setRemoteAddr(request.getRemoteAddr());
+        record.setForwardAddr(request.getHeader("X-FORWARDED-FOR"));
+
+        return record;
+	}
 
 	protected CommonResultCX refreshRedisValueFromFile(String filePath) {
 		CommonResultCX result = new CommonResultCX();
@@ -311,5 +321,29 @@ public abstract class CommonService {
 			result.failWithMessage(e.getMessage());
 			return result;
 		}
+	}
+	
+	protected void insertFunctionalModuleVisitData(HttpServletRequest request, String redisKeyPrefix) {
+		insertFunctionalModuleVisitData(request, redisKeyPrefix, 30, TimeUnit.MINUTES);
+	}
+	
+	protected void insertFunctionalModuleVisitData(HttpServletRequest request, String redisKeyPrefix, long timeout, TimeUnit unit) {
+		IpRecordBO record = getIp(request);
+		
+		String key = buildRedisKeyPrefix(record, redisKeyPrefix) + "_" + snowFlake.getNextId();
+		redisTemplate.opsForValue().set(key, "", timeout, unit);
+	}
+	
+	protected int checkFunctionalModuleVisitData(HttpServletRequest request, String redisKeyPrefix) {
+		IpRecordBO record = getIp(request);
+		
+		String keyPrefix = buildRedisKeyPrefix(record, redisKeyPrefix) + "*";
+		Set<String> keys = redisTemplate.keys(keyPrefix);
+		
+		return keys.size();
+	}
+	
+	private String buildRedisKeyPrefix(IpRecordBO record, String redisKeyPrefix) {
+		return redisKeyPrefix + "_" + record.getForwardAddr() + "_" + record.getRemoteAddr();
 	}
 }

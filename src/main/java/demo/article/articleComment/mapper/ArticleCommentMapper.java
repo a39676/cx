@@ -1,5 +1,6 @@
 package demo.article.articleComment.mapper;
 
+import demo.article.articleComment.pojo.bo.ArticleCommentCountByArticleIdBO;
 import demo.article.articleComment.pojo.po.ArticleComment;
 import demo.article.articleComment.pojo.po.ArticleCommentExample;
 import java.util.List;
@@ -27,4 +28,5 @@ public interface ArticleCommentMapper {
     int updateByPrimaryKeySelective(ArticleComment record);
 
     int updateByPrimaryKey(ArticleComment record);
+
 }

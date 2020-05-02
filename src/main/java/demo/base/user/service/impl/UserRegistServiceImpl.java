@@ -87,7 +87,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		
 		int ipRegistCount = 0;
 		if(!isBigUser()) {
-			ipRegistCount = visitDataService.checkFunctionalModuleVisitData(request, SystemRedisKey.userRegistCountingKeyPrefix);
+			ipRegistCount = checkFunctionalModuleVisitData(request, SystemRedisKey.userRegistCountingKeyPrefix);
 		}
 		if(ipRegistCount > UserConstant.oneDayRegistCount) {
 			result.failWithMessage("最近已经注册过了,请不要重复注册");
@@ -119,7 +119,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		}
 		
 		result.normalSuccess();
-		visitDataService.insertFunctionalModuleVisitData(request, SystemRedisKey.userRegistCountingKeyPrefix, 1, TimeUnit.DAYS);
+		insertFunctionalModuleVisitData(request, SystemRedisKey.userRegistCountingKeyPrefix, 1, TimeUnit.DAYS);
 		
 		return result;
 	}

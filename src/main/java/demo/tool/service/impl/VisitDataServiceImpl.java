@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -35,15 +33,6 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 	private UserIpMapper userIpMapper;
 	@Autowired
 	private NumericUtilCustom numberUtil;
-	
-	@Override
-	public IpRecordBO getIp(HttpServletRequest request) {
-		IpRecordBO record = new IpRecordBO();
-        record.setRemoteAddr(request.getRemoteAddr());
-        record.setForwardAddr(request.getHeader("X-FORWARDED-FOR"));
-
-        return record;
-	}
 	
 	@Override
 	public void insertVisitData(HttpServletRequest request, String customInfo) {
@@ -157,30 +146,4 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 		return getVisitCount(null);
 	}
 	
-	@Override
-	public void insertFunctionalModuleVisitData(HttpServletRequest request, String redisKeyPrefix) {
-		insertFunctionalModuleVisitData(request, redisKeyPrefix, 30, TimeUnit.MINUTES);
-	}
-	
-	@Override
-	public void insertFunctionalModuleVisitData(HttpServletRequest request, String redisKeyPrefix, long timeout, TimeUnit unit) {
-		IpRecordBO record = getIp(request);
-		
-		String key = buildRedisKeyPrefix(record, redisKeyPrefix) + "_" + snowFlake.getNextId();
-		redisTemplate.opsForValue().set(key, "", timeout, unit);
-	}
-	
-	@Override
-	public int checkFunctionalModuleVisitData(HttpServletRequest request, String redisKeyPrefix) {
-		IpRecordBO record = getIp(request);
-		
-		String keyPrefix = buildRedisKeyPrefix(record, redisKeyPrefix) + "*";
-		Set<String> keys = redisTemplate.keys(keyPrefix);
-		
-		return keys.size();
-	}
-	
-	private String buildRedisKeyPrefix(IpRecordBO record, String redisKeyPrefix) {
-		return redisKeyPrefix + "_" + record.getForwardAddr() + "_" + record.getRemoteAddr();
-	}
 }

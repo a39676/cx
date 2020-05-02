@@ -99,7 +99,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		
 		int count = 0;
 		if(!isBigUser()) {
-			count = visitDataService.checkFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
+			count = checkFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
 		}
 		if (!"dev".equals(constantService.getValByName(SystemConstantStore.envName))) {
 			if (count >= SearchingDemoConstant.maxInsertCountIn30Minutes) {
@@ -162,7 +162,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		r.setReadUri(ArticleBurnUrlConstant.root + ArticleBurnUrlConstant.readBurningMessage + "?readKey=" + r.getReadKey());
 		r.setBurnUri(ArticleBurnUrlConstant.root + ArticleBurnUrlConstant.burnMessage + "?burnKey=" + r.getBurnKey());
 		r.setIsSuccess();
-		visitDataService.insertFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
+		insertFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
 		
 		return r;
 	}

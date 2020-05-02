@@ -303,4 +303,22 @@
       is_reject = #{isReject,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select 
+    id="findCommentCountByArticleId" 
+    resultType="demo.article.articleComment.pojo.bo.ArticleCommentCountByArticleIdBO">
+    select
+      count(*) as commentCount,
+      article_id as articleId
+    from
+      article_comment
+    <where>
+      1=1
+      and article_id in
+      <foreach collection="articleIdList" item="articleId" open="(" close=")" separator=",">
+        #{articleId}
+      </foreach>
+    </where>
+    group by article_id
+  </select>
 </mapper>

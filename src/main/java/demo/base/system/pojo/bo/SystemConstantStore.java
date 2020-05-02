@@ -7,7 +7,6 @@ public class SystemConstantStore {
 	public static final String maxAttempts = "maxAttempts";
 	public static final String articleStorePrefixPath = "articleStorePrefixPath";
 	public static final String articleSummaryStorePrefixPath = "articleSummaryStorePrefixPath";
-	public static final String articleCommentStorePrefixPath = "articleCommentStorePrefixPath";
 	public static final String articleBurnStorePrefixPath = "articleBurnStorePrefixPath";
 	public static final String maxArticleLength = "maxArticleLength";
 	public static final String articleChannelRefreshMinute = "articleChannelRefreshMinute";

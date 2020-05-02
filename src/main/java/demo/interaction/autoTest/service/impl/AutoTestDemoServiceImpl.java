@@ -315,7 +315,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 
 		int count = 0;
 		if(!isBigUser()) {
-			count = visitDataService.checkFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
+			count = checkFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
 		}
 		if (!"dev".equals(constantService.getValByName(SystemConstantStore.envName))) {
 			if (count >= SearchingDemoConstant.maxInsertCountIn30Minutes) {
@@ -343,7 +343,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 			r.setWaitingEventCount(responseJson.getInt("waitingEventCount"));
 			if (r.getResult() != null && "0".equals(r.getResult())) {
 				r.setIsSuccess();
-				visitDataService.insertFunctionalModuleVisitData(request, SystemRedisKey.searchingDemoInsertCountingKeyPrefix);
+				insertFunctionalModuleVisitData(request, SystemRedisKey.searchingDemoInsertCountingKeyPrefix);
 				r.setHasInsertCount(count + 1);
 				r.setMaxInsertCount(SearchingDemoConstant.maxInsertCountIn30Minutes);
 				r.setMessage("/atDemo/findReportByTestEventId?testEventId=" + r.getEventId());

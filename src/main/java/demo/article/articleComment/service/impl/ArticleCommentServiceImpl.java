@@ -40,8 +40,12 @@ import demo.article.articleComment.service.ArticleCommentAdminService;
 import demo.article.articleComment.service.ArticleCommentService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.constant.SystemRedisKey;
+import demo.base.user.pojo.vo.UsersDetailVO;
+import demo.base.user.service.UserDetailService;
+import demo.base.user.service.UsersService;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.tool.service.ValidRegexToolService;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -53,6 +57,13 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	private ArticleEvaluationService articleEvaluationService;
 	@Autowired
 	private ArticleCommentAdminService articleCommentAdminService;
+	@Autowired
+	private UsersService usersService;
+	@Autowired
+	private UserDetailService userDetailService;
+	@Autowired
+	private ValidRegexToolService validRegexToolService;
+	
 	@Autowired
 	private ArticleCommentMapper articleCommentMapper;
 	@Autowired
@@ -102,19 +113,19 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		
 		
 		
-		Long userId = baseUtilCustom.getUserId();
+		
 		CommonResultCX result = new CommonResultCX();
-		String articleCommentStorePrefixPath = loadArticleCommentStorePath();
-		if(StringUtils.isBlank(articleCommentStorePrefixPath) || loadMaxArticleLength() <= 0) {
-			result.fillWithResult(ResultTypeCX.serviceError);
-			return result;
-		}
 		if(StringUtils.isBlank(inputParam.getContent())) {
 			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;
 		}
 		if(inputParam.getContent().replaceAll("\\s", "").length() < 6) {
 			result.fillWithResult(ResultTypeCX.articleTooShort);
+			return result;
+		}
+		String articleCommentStorePrefixPath = loadArticleCommentStorePath();
+		if(StringUtils.isBlank(articleCommentStorePrefixPath) || loadMaxArticleLength() <= 0) {
+			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
 		}
 		Long articleId = decryptPrivateKey(inputParam.getPk());
@@ -125,13 +136,34 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		}
 		
 		boolean bigUserFlag = isBigUser();
+		Long userId = baseUtilCustom.getUserId();
+		PolicyFactory filter = textFilter.getArticleFilter();
+		
+		String nickname = null;
+		String email = null;
+		if(userId == null) {
+			nickname = filter.sanitize(inputParam.getNickname());
+			email = filter.sanitize(inputParam.getEmail());
+			if(userDetailService.isNicknameExists(nickname)) {
+				result.failWithMessage("此昵称已注册...如需使用此昵称..请登录");
+				return result;
+			}
+			
+			if(!validRegexToolService.validEmail(email) || userDetailService.ensureActiveEmail(email).isSuccess()) {
+				result.failWithMessage("此邮箱已注册...如需使用此邮箱..请登录");
+				return result;
+			}
+		} else {
+			UsersDetailVO userDetailVO = usersService.findUserDetail(userId);
+			nickname = userDetailVO.getNickName();
+			email = userDetailVO.getEmail();
+		}
+		
 		if(!bigUserFlag) {
 			if(justComment(request, userId, articleId)) {
 				result.fillWithResult(ResultTypeCX.justComment);
 				return result;
 			}
-			
-			PolicyFactory filter = textFilter.getArticleFilter();
 			inputParam.setContent(filter.sanitize(inputParam.getContent()));
 		} 
 

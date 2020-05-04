@@ -6,6 +6,10 @@ public class CreateArticleCommentDTO {
 
 	private String content;
 
+	private String nickname;
+
+	private String email;
+
 	public String getPk() {
 		return pk;
 	}
@@ -22,9 +26,26 @@ public class CreateArticleCommentDTO {
 		this.content = content;
 	}
 
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	@Override
 	public String toString() {
-		return "CreateArticleCommentParam [pk=" + pk + ", content=" + content + "]";
+		return "CreateArticleCommentDTO [pk=" + pk + ", content=" + content + ", nickname=" + nickname + ", email="
+				+ email + "]";
 	}
 
 }

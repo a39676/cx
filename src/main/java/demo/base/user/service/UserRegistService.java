@@ -30,5 +30,5 @@ public interface UserRegistService {
 	__baseSuperAdminRegistVO __baseSuperAdminRegist();
 
 	CommonResultCX resendRegistMail(Long userId, HttpServletRequest request);
-	
+
 }

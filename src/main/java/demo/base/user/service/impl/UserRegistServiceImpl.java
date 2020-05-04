@@ -3,7 +3,6 @@ package demo.base.user.service.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,7 +16,6 @@ import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.HostnameService;
 import demo.base.user.mapper.UserRegistMapper;
-import demo.base.user.mapper.UsersDetailMapper;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.bo.EditUserAuthBO;
 import demo.base.user.pojo.bo.FindUserAuthBO;
@@ -28,7 +26,6 @@ import demo.base.user.pojo.dto.UserRegistDTO;
 import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.po.Users;
 import demo.base.user.pojo.po.UsersDetail;
-import demo.base.user.pojo.po.UsersDetailExample;
 import demo.base.user.pojo.result.FindAuthsResult;
 import demo.base.user.pojo.result.FindUserAuthResult;
 import demo.base.user.pojo.result.ModifyRegistEmailResult;
@@ -38,6 +35,7 @@ import demo.base.user.pojo.type.AuthType;
 import demo.base.user.pojo.vo.__baseSuperAdminRegistVO;
 import demo.base.user.service.AuthService;
 import demo.base.user.service.UserAuthService;
+import demo.base.user.service.UserDetailService;
 import demo.base.user.service.UserRegistService;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.GenderType;
@@ -63,13 +61,13 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	private MailService mailService;
 	@Autowired
 	private UsersMapper usersMapper;
-	@Autowired
-	private UsersDetailMapper usersDetailMapper;
 	
 	@Autowired
 	private CustomPasswordEncoder passwordEncoder;
 	@Autowired
 	private UsersServiceImpl userService;
+	@Autowired
+	private UserDetailService userDetailService;
 	@Autowired
 	private UserAuthService userAuthService;
 	@Autowired
@@ -127,7 +125,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 	private void insertNewUserData(Users newUser, UsersDetail newUserDetail) {
 		userRegistMapper.insertNewUser(newUser);
-		usersDetailMapper.insertSelective(newUserDetail);
+		userDetailService.insertSelective(newUserDetail);
 		userAuthService.insertBaseUserAuth(newUser.getUserId(), AuthType.USER);
 	}
 	
@@ -150,7 +148,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			r.setNickname("请您一定要起给昵称...");
 		} else if (dto.getNickName().length() > 32) {
 			r.setNickname("昵称太长了...");
-		} else if (usersDetailMapper.isNickNameExists(dto.getNickName()) > 0) {
+		} else if (userDetailService.isNicknameExists(dto.getNickName())) {
 			r.setNickname("昵称重复了...");
 		}
 
@@ -165,7 +163,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		if (!validRegexToolService.validEmail(dto.getEmail())) {
 			r.setEmail("请输入正确的邮箱");
 		} else {
-			if (ensureActiveEmail(dto.getEmail()).isSuccess()) {
+			if (userDetailService.ensureActiveEmail(dto.getEmail()).isSuccess()) {
 				r.setEmail("邮箱已注册(忘记密码或用户名?可尝试找回)");
 			}
 		}
@@ -276,7 +274,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		Users user = buildUserFromRegistDTO(userRegistDTO, newUserId);
 		
 		userRegistMapper.insertNewUser(user);
-		usersDetailMapper.insertSelective(userDetail);
+		userDetailService.insertSelective(userDetail);
 		userAuthService.insertBaseUserAuth(newUserId, AuthType.SUPER_ADMIN);
 		
 		result.normalSuccess();
@@ -322,12 +320,12 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			return r;
 		}
 		
-		if (ensureActiveEmail(email).isSuccess()) {
+		if (userDetailService.ensureActiveEmail(email).isSuccess()) {
 			r.failWithMessage("邮箱已注册(忘记密码或用户名?可尝试找回)");
 			return r;
 		}
 		
-		int updateCount = usersDetailMapper.modifyRegistEmail(email, userId);
+		int updateCount = userDetailService.modifyRegistEmail(email, userId);
 		if(updateCount < 1) {
 			r.fillWithResult(ResultTypeCX.serviceError);
 			return r;
@@ -395,7 +393,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			result.fillWithResult(ResultTypeCX.nullParam);
 		}
 		
-		UsersDetail ud = usersDetailMapper.selectByPrimaryKey(userId);
+		UsersDetail ud = userDetailService.findById(userId);
 		
 		if(ud == null || !validRegexToolService.validEmail(ud.getEmail())) {
 			result.fillWithResult(ResultTypeCX.nullParam);
@@ -444,16 +442,14 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			r.fillWithResult(ResultTypeCX.mailNotActivation);
 			return r;
 		}
-		if (!ensureActiveEmail(email).isSuccess()) {
+		if (!userDetailService.ensureActiveEmail(email).isSuccess()) {
 			r.failWithMessage("邮箱未被绑定, 无法用于找回密码");
 			return r;
 		}
 		
-		UsersDetailExample example = new UsersDetailExample();
-		example.createCriteria().andEmailEqualTo(email);
-		List<UsersDetail> userDetailList = usersDetailMapper.selectByExample(example);
+		List<UsersDetail> userDetailList = userDetailService.findByEmail(email);
 		
-		if(userDetailList == null || userDetailList.size() < 1) {
+		if(userDetailList == null || userDetailList.isEmpty()) {
 			r.fillWithResult(ResultTypeCX.mailNotActivation);
 			return r;
 		}
@@ -487,16 +483,14 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			result.fillWithResult(ResultTypeCX.mailNotActivation);
 			return result;
 		}
-		if (!ensureActiveEmail(email).isSuccess()) {
+		if (!userDetailService.ensureActiveEmail(email).isSuccess()) {
 			result.fillWithResult(ResultTypeCX.mailNotActivation);
 			return result;
 		}
 		
-		UsersDetailExample example = new UsersDetailExample();
-		example.createCriteria().andEmailEqualTo(email);
-		List<UsersDetail> userDetailList = usersDetailMapper.selectByExample(example);
+		List<UsersDetail> userDetailList = userDetailService.findByEmail(email);
 		
-		if(userDetailList == null || userDetailList.size() < 1) {
+		if(userDetailList == null || userDetailList.isEmpty()) {
 			result.fillWithResult(ResultTypeCX.mailNotActivation);
 			return result;
 		}
@@ -602,23 +596,5 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		return resetPassword(userId, newPassword, newPasswordRepeat);
 	}
 	
-	/**
-	 * 查找此 email 是否属于已激活用户
-	 * @param email
-	 * @return
-	 */
-	private CommonResultCX ensureActiveEmail(String email) {
-		CommonResultCX r = new CommonResultCX();
-		
-		UsersDetailExample userDetailExample = new UsersDetailExample();
-		userDetailExample.createCriteria().andEmailEqualTo(email);
-		List<UsersDetail> userDetailList = usersDetailMapper.selectByExample(userDetailExample);
-		if(userDetailList == null || userDetailList.size() < 1) {
-			return r;
-		}
-		
-		List<Long> userIdList = userDetailList.stream().map(UsersDetail::getUserId).collect(Collectors.toList());
-		return userAuthService.hasActiveUser(userIdList);
-	}
 
 }

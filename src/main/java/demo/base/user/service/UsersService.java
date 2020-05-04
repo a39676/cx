@@ -48,9 +48,6 @@ public interface UsersService {
 
 	UsersDetailVO findOtherUserDetail(OtherUserInfoDTO param);
 
-//	/** 查找持有某种权限的用户ID 2019-06-24 增加角色/机构逻辑后,将完全删除此逻辑 */
-//	List<Long> findUserIdListByRoleId(Integer roleId);
-	
 	/** 查找某种角色的所有userId */
 	List<Users> findUserListByAuthId(Long authId);
 

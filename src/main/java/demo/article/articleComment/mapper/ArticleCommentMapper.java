@@ -1,10 +1,11 @@
 package demo.article.articleComment.mapper;
 
-import demo.article.articleComment.pojo.bo.ArticleCommentCountByArticleIdBO;
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import demo.article.articleComment.pojo.po.ArticleComment;
 import demo.article.articleComment.pojo.po.ArticleCommentExample;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
 public interface ArticleCommentMapper {
     long countByExample(ArticleCommentExample example);

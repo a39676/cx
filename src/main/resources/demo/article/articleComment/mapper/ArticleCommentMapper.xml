@@ -308,7 +308,7 @@
     id="findCommentCountByArticleId" 
     resultType="demo.article.articleComment.pojo.bo.ArticleCommentCountByArticleIdBO">
     select
-      count(*) as commentCount,
+      count(*) as findCommentCountByArticleId,
       article_id as articleId
     from
       article_comment
@@ -320,5 +320,48 @@
       </foreach>
     </where>
     group by article_id
+  </select>
+
+  <select
+    id="findCommentPage"
+    resultMap="BaseResultMap">
+    select
+      *
+    from
+      article_comment
+    <where>
+      <if test="articleId != null">
+        and article_id = #{articleId}
+      </if>
+      <if test="id != null">
+        and id = #{id}
+      </if>
+      <if test="isDelete != null">
+        and is_delete = #{isDelete}
+      </if>
+      <if test="isPass != null">
+        and is_pass = #{isPass}
+      </if>
+      <if test="isReject != null">
+        and is_reject = #{isReject}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId}
+      </if>
+      <if test="replyOf != null">
+        and reply_of = #{replyOf}
+      </if>
+      <if test="startTime != null">
+        and create_time &gt;= #{startTime}
+      </if>
+    </where>
+    order by create_time desc
+    <if test="limit != null">
+      limit #{limit}
+    </if>
+    <if test="limit == null">
+      limit 5
+    </if>
+    
   </select>
 </mapper>

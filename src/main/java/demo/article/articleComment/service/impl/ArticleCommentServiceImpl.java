@@ -3,7 +3,6 @@ package demo.article.articleComment.service.impl;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -28,13 +27,11 @@ import demo.article.articleComment.mapper.ArticleCommentMapper;
 import demo.article.articleComment.pojo.constant.ArticleCommentConstant;
 import demo.article.articleComment.pojo.dto.CreateArticleCommentDTO;
 import demo.article.articleComment.pojo.dto.FindArticleCommentPageDTO;
+import demo.article.articleComment.pojo.dto.FindCommentPageDTO;
 import demo.article.articleComment.pojo.dto.PassArticleCommentDTO;
-import demo.article.articleComment.pojo.dto.mapperParam.FindCommentByArticleIdParam;
 import demo.article.articleComment.pojo.po.ArticleComment;
 import demo.article.articleComment.pojo.po.ArticleCommentCount;
 import demo.article.articleComment.pojo.po.ArticleCommentCountExample;
-import demo.article.articleComment.pojo.po.ArticleCommentExample;
-import demo.article.articleComment.pojo.po.ArticleCommentExample.Criteria;
 import demo.article.articleComment.pojo.result.FindArticleCommentPageResult;
 import demo.article.articleComment.service.ArticleCommentAdminService;
 import demo.article.articleComment.service.ArticleCommentService;
@@ -105,14 +102,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	public CommonResultCX creatingArticleComment(HttpServletRequest request, CreateArticleCommentDTO inputParam) throws IOException {
 		/* 
 		 * TODO 准备放开未登录留言
-		 * ArticleComment 需要重新生成
 		 */
-		/*
-		 * if (userId == null) 
-		 */
-		
-		
-		
 		
 		CommonResultCX result = new CommonResultCX();
 		if(StringUtils.isBlank(inputParam.getContent())) {
@@ -200,7 +190,6 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	
 	@Override
 	public FindArticleCommentPageResult findArticleCommentPage(FindArticleCommentPageDTO controllerParam) {
-//		TODO
 		FindArticleCommentPageResult result = new FindArticleCommentPageResult();
 		List<ArticleCommentVO> commentVOList = new ArrayList<ArticleCommentVO>();
 		
@@ -221,34 +210,26 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
-		
 		result.setPk(controllerParam.getPk());
 		
-		FindCommentByArticleIdParam findCommentByArticleIdParam = new FindCommentByArticleIdParam();
-		findCommentByArticleIdParam.setArticleId(articleId);
-		findCommentByArticleIdParam.setStartTime(controllerParam.getStartTime());
-		findCommentByArticleIdParam.setLimit(5);
-		if(controllerParam.getHasAdminRole()) {
-			findCommentByArticleIdParam.setIsPass(controllerParam.getIsPass());
-			findCommentByArticleIdParam.setIsDelete(controllerParam.getIsDelete());
+
+		if(!isBigUser()) {
+			controllerParam.setIsDelete(false);
+			controllerParam.setIsPass(true);
 		}
-		/*
-		 * TODO
-		 * 可能都是要写 sql
-		 */
-		ArticleCommentExample example = new ArticleCommentExample();
-		Criteria criteria = example.createCriteria();
-		criteria
-		.andArticleIdEqualTo(articleId)
-		.andCreateTimeGreaterThanOrEqualTo(controllerParam.getStartTime())
-		;
 		
-		List<ArticleComment> commentPOList = articleCommentMapper.selectByExample(example);
+		FindCommentPageDTO mapperDTO = new FindCommentPageDTO();
+		mapperDTO.setArticleId(articleId);
+		mapperDTO.setStartTime(controllerParam.getStartTime());
+		mapperDTO.setIsDelete(controllerParam.getIsDelete());
+		mapperDTO.setIsPass(controllerParam.getIsPass());
+		
+		List<ArticleComment> commentPOList = articleCommentMapper.findCommentPage(mapperDTO);
 		if(commentPOList == null || commentPOList.isEmpty()) {
 			result.setIsSuccess();
 			ArticleCommentVO vo = new ArticleCommentVO();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			vo.setContentLines(Arrays.asList(new String[] {"暂时还没有更多评论"}));
+			vo.setContent("暂时还没有更多评论");
 			vo.setCreateTimeStr(sdf.format(new Date()));
 			commentVOList.add(vo);
 			result.setCommentList(commentVOList);
@@ -259,7 +240,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		commentPOList.stream().forEach(bo -> commentIdList.add(bo.getId()));
 		
 		Map<Long, ArticleEvaluationStatisticsVO> evaluationStatisticsMap = articleEvaluationService.findEvaluationStatisticsByArticleId(ArticleEvaluationType.articleCommentEvaluation, commentIdList);
-		commentPOList.stream().forEach(bo -> commentVOList.add(fillArticleCommentFromBo(evaluationStatisticsMap, bo)));
+		commentPOList.stream().forEach(po -> commentVOList.add(fillArticleCommentFromBo(evaluationStatisticsMap, po)));
 		
 		result.setIsSuccess();
 		result.setCommentList(commentVOList);
@@ -268,32 +249,17 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		return result;
 	}
 	
-	/**
-	 * 2019-12-06
-	 * 原始方法 当时未采用富文本编辑器
-	 * 现已准备废弃
-	 * @param evaluationStatisticsMap
-	 * @param bo
-	 * @return
-	 */
-	private ArticleCommentVO fillArticleCommentFromBo(Map<Long, ArticleEvaluationStatisticsVO> evaluationStatisticsMap, FindCommentByArticleIdBO bo) {
+	private ArticleCommentVO fillArticleCommentFromBo(Map<Long, ArticleEvaluationStatisticsVO> evaluationStatisticsMap, ArticleComment po) {
 		ArticleCommentVO vo = new ArticleCommentVO();
-		String strContent = ioUtil.getStringFromFile(bo.getPath());
-		List<String> strLines = Arrays.asList(strContent.split("\n"));
-		List<String> outputLines = new ArrayList<String>();
-		String line = "";
-		for(int i = 0; i < strLines.size(); i++) {
-			line = strLines.get(i);
-			outputLines.add(line);
-		}
-		vo.setContentLines(outputLines);
-		vo.setEvaluationCodeAndCount(evaluationStatisticsMap.get(bo.getArticleCommentId()).getEvaluationCodeAndCount());
-		vo.setNickName(bo.getNickName());
-		vo.setCreateTimeStr(createDateDescription(bo.getCreateTime()));
-		vo.setArticleCommentId(bo.getArticleCommentId());
-		vo.setIsPass(bo.getIsPass());
-		vo.setIsDelete(bo.getIsDelete());
-		vo.setIsReject(bo.getIsReject());
+		String content = ioUtil.getStringFromFile(po.getPath());
+		vo.setContent(content);
+		vo.setEvaluationCodeAndCount(evaluationStatisticsMap.get(po.getId()).getEvaluationCodeAndCount());
+		vo.setNickName(po.getTmpNickName());
+		vo.setCreateTimeStr(localDateTimeHandler.dateToStr(po.getCreateTime()));
+		vo.setArticleCommentId(po.getId());
+		vo.setIsPass(po.getIsPass());
+		vo.setIsDelete(po.getIsDelete());
+		vo.setIsReject(po.getIsReject());
 		
 		return vo;
 	}
@@ -324,6 +290,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			}
 			idExistsFlag = false;
 		}
+		return resultList;
 	}
 
 	private boolean justComment(HttpServletRequest request, Long userId, Long articleId) {

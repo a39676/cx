@@ -6,7 +6,6 @@ public class FindArticleCommentPageDTO {
 
 	private String pk;
 	private LocalDateTime startTime;
-	private Boolean hasAdminRole = false;
 	private Boolean isPass = true;
 	private Boolean isDelete = false;
 
@@ -24,14 +23,6 @@ public class FindArticleCommentPageDTO {
 
 	public void setStartTime(LocalDateTime startTime) {
 		this.startTime = startTime;
-	}
-
-	public Boolean getHasAdminRole() {
-		return hasAdminRole;
-	}
-
-	public void setHasAdminRole(Boolean hasAdminRole) {
-		this.hasAdminRole = hasAdminRole;
 	}
 
 	public Boolean getIsPass() {
@@ -52,8 +43,8 @@ public class FindArticleCommentPageDTO {
 
 	@Override
 	public String toString() {
-		return "FindArticleCommentPageDTO [pk=" + pk + ", startTime=" + startTime + ", hasAdminRole=" + hasAdminRole
-				+ ", isPass=" + isPass + ", isDelete=" + isDelete + "]";
+		return "FindArticleCommentPageDTO [pk=" + pk + ", startTime=" + startTime + ", isPass=" + isPass + ", isDelete="
+				+ isDelete + "]";
 	}
 
 }

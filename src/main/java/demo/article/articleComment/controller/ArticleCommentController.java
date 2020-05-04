@@ -14,16 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import demo.article.articleComment.pojo.bo.ArticleCommentCountByArticleIdBO;
 import demo.article.articleComment.pojo.constant.ArticleCommentUrlConstant;
 import demo.article.articleComment.pojo.dto.CreateArticleCommentDTO;
 import demo.article.articleComment.pojo.dto.FindArticleCommentPageDTO;
+import demo.article.articleComment.pojo.po.ArticleCommentCount;
 import demo.article.articleComment.pojo.result.FindArticleCommentPageResult;
 import demo.article.articleComment.service.ArticleCommentService;
 import demo.baseCommon.controller.CommonController;
 import demo.baseCommon.pojo.result.CommonResultCX;
-import demo.config.costom_component.BaseUtilCustom;
-import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping( value = ArticleCommentUrlConstant.root)
@@ -34,19 +32,13 @@ public class ArticleCommentController extends CommonController {
 	
 	@PostMapping(value = ArticleCommentUrlConstant.createArticleComment)
 	@ResponseBody
-	public CommonResultCX createArticleComment(@RequestBody CreateArticleCommentDTO param) throws IOException {
-		return articleCommentService.creatingArticleComment(param);
+	public CommonResultCX createArticleComment(@RequestBody CreateArticleCommentDTO param, HttpServletRequest request) throws IOException {
+		return articleCommentService.creatingArticleComment(request, param);
 	}
 	
 	@PostMapping(value = ArticleCommentUrlConstant.findArticleCommentPage)
 	public ModelAndView findArticleCommentPage(@RequestBody FindArticleCommentPageDTO param, HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView view = new ModelAndView("articleJSP/articleCommentList");
-		if(baseUtilCustom.hasAdminRole()) {
-			param.setHasAdminRole(true);
-		} else {
-			param.setIsDelete(false);
-			param.setIsPass(true);
-		}
 		FindArticleCommentPageResult result = articleCommentService.findArticleCommentPage(param);
 		if(!result.isSuccess()) {
 			view.addObject("message", result.getMessage());
@@ -66,12 +58,6 @@ public class ArticleCommentController extends CommonController {
 	public ModelAndView findArticleCommentSubPage(@RequestBody FindArticleCommentPageDTO param, HttpServletRequest request, HttpServletResponse response) {
 //		TODO
 		ModelAndView view = new ModelAndView("articleJSP/articleCommentListSubList");
-		if(baseUtilCustom.hasAdminRole()) {
-			param.setHasAdminRole(true);
-		} else {
-			param.setIsDelete(false);
-			param.setIsPass(true);
-		}
 		FindArticleCommentPageResult result = articleCommentService.findArticleCommentPage(param);
 		if(!result.isSuccess()) {
 			view.addObject("message", result.getMessage());
@@ -87,7 +73,7 @@ public class ArticleCommentController extends CommonController {
 		return view;
 	}
 
-	public List<ArticleCommentCountByArticleIdBO> findCommentCountByArticleId(List<Long> articleIdList) {
+	public List<ArticleCommentCount> findCommentCountByArticleId(List<Long> articleIdList) {
 		return articleCommentService.findCommentCountByArticleId(articleIdList);
 	}
 }

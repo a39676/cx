@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import demo.article.articleComment.pojo.dto.FindCommentPageDTO;
 import demo.article.articleComment.pojo.po.ArticleComment;
 import demo.article.articleComment.pojo.po.ArticleCommentExample;
 
@@ -30,4 +31,5 @@ public interface ArticleCommentMapper {
 
     int updateByPrimaryKey(ArticleComment record);
 
+    List<ArticleComment> findCommentPage(FindCommentPageDTO dto);
 }

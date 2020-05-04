@@ -19,15 +19,15 @@ public class ArticleLongSummaryVOV3 {
 
 	private Integer viewCount = 0;
 
-	private Integer commentCount = 0;
+	private Long commentCount = 0L;
 	
 	private Boolean isHot = false;
 
-	public Integer getCommentCount() {
+	public Long getCommentCount() {
 		return commentCount;
 	}
 
-	public void setCommentCount(Integer commentCount) {
+	public void setCommentCount(Long commentCount) {
 		this.commentCount = commentCount;
 	}
 

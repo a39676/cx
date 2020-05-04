@@ -39,7 +39,7 @@ import demo.article.article.service.ArticleSummaryService;
 import demo.article.article.service.ArticleViewService;
 import demo.article.articleComment.controller.ArticleCommentAdminController;
 import demo.article.articleComment.controller.ArticleCommentController;
-import demo.article.articleComment.pojo.bo.ArticleCommentCountByArticleIdBO;
+import demo.article.articleComment.pojo.po.ArticleCommentCount;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.toyParts.vcode.pojo.param.GetVcodeByValueParam;
@@ -198,7 +198,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			boolean loadArticleHot, 
 			List<ArticleLongSummaryBO> summaryList, 
 			List<Long> articleHasCommentNotReviewIdList,
-			List<ArticleCommentCountByArticleIdBO> commentCountList,
+			List<ArticleCommentCount> commentCountList,
 			List<ArticleViewCount> viewCountList) {
 		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat sdfDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -214,9 +214,9 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			outputList = new ArrayList<ArticleLongSummaryVOV3>();
 			return outputList;
 		}
-		HashMap<Long, Integer> commentCountMap = new HashMap<Long, Integer>();
+		HashMap<Long, Long> commentCountMap = new HashMap<Long, Long>();
 		if(commentCountList != null && commentCountList.size() > 0) {
-			commentCountList.stream().forEach(bo -> commentCountMap.put(bo.getArticleId(), bo.getCommentCount()));
+			commentCountList.stream().forEach(po -> commentCountMap.put(po.getArticleId(), po.getCounting()));
 		}
 		HashMap<Long, Integer> viewCountMap = new HashMap<Long, Integer>();
 		if(viewCountList != null && viewCountList.size() > 0) {
@@ -326,7 +326,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		List<Long> articleIdList = new ArrayList<Long>();
 		List<Long> articleHasCommentNotReviewIdList = null;
 		summaryBOList.stream().forEach(bo -> articleIdList.add(bo.getArticleId()));
-		List<ArticleCommentCountByArticleIdBO> commentCountList = articleCommentController.findCommentCountByArticleId(articleIdList);
+		List<ArticleCommentCount> commentCountList = articleCommentController.findCommentCountByArticleId(articleIdList);
 	
 		List<ArticleViewCount> viewCountList = articleViewService.findArticleViewCountByArticleId(articleIdList);
 		if(dto.getHasAdminRole() && articleIdList.size() > 0) {
@@ -419,7 +419,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		List<Long> articleIdList = new ArrayList<Long>();
 		List<Long> articleHasCommentNotReviewIdList = null;
 		hotSummaryBOList.stream().forEach(bo -> articleIdList.add(bo.getArticleId()));
-		List<ArticleCommentCountByArticleIdBO> commentCountList = articleCommentController.findCommentCountByArticleId(articleIdList);
+		List<ArticleCommentCount> commentCountList = articleCommentController.findCommentCountByArticleId(articleIdList);
 		List<ArticleViewCount> viewCountList = articleViewService.findArticleViewCountByArticleId(articleIdList);
 		if(controllerParam.getHasAdminRole() && articleIdList.size() > 0) {
 			articleHasCommentNotReviewIdList = articleCommentAdminController.findArticleIdWithCommentWaitingForReview(articleIdList);

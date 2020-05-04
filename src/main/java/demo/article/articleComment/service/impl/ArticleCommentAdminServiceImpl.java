@@ -2,6 +2,7 @@ package demo.article.articleComment.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,8 @@ import demo.article.articleComment.mapper.ArticleCommentMapper;
 import demo.article.articleComment.mapper.ArticleCommentReviewMapper;
 import demo.article.articleComment.pojo.dto.DeleteArticleCommentDTO;
 import demo.article.articleComment.pojo.dto.PassArticleCommentDTO;
+import demo.article.articleComment.pojo.po.ArticleComment;
+import demo.article.articleComment.pojo.po.ArticleCommentExample;
 import demo.article.articleComment.pojo.po.ArticleCommentReview;
 import demo.article.articleComment.pojo.type.ArticleCommentReviewType;
 import demo.article.articleComment.service.ArticleCommentAdminService;
@@ -52,7 +55,11 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 		reviewRecord.setArticleReviewerId(reviewerId);
 		articleCommentReviewMapper.insertNew(reviewRecord);
 		
-		articleCommentMapper.logicDelete(param.getCommentId());
+		
+		ArticleComment record = new ArticleComment();
+		record.setId(param.getCommentId());
+		record.setIsDelete(true);
+		articleCommentMapper.updateByPrimaryKeySelective(record);
 		result.fillWithResult(ResultTypeCX.articleCommentDeleteSuccess);
 		
 		return result;
@@ -80,7 +87,10 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 		reviewRecord.setArticleReviewerId(reviewerId);
 		articleCommentReviewMapper.insertNew(reviewRecord);
 		
-		articleCommentMapper.passComment(param.getCommentId());
+		ArticleComment record = new ArticleComment();
+		record.setId(param.getCommentId());
+		record.setIsPass(true);
+		articleCommentMapper.updateByPrimaryKeySelective(record);
 		result.fillWithResult(ResultTypeCX.articleCommentPassSuccess);
 		
 		return result;
@@ -91,6 +101,16 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 		if(articleIdList == null || articleIdList.size() < 1) {
 			return new ArrayList<Long>();
 		}
-		return articleCommentMapper.findArticleIdWithCommentWaitingForReview(articleIdList);
+		
+		ArticleCommentExample example = new ArticleCommentExample();
+		example.createCriteria().andArticleIdIn(articleIdList).andIsDeleteEqualTo(false).andIsPassEqualTo(false).andIsRejectEqualTo(false);
+		List<ArticleComment> commentPOList = articleCommentMapper.selectByExample(example);
+		
+		if(commentPOList == null || commentPOList.isEmpty()) {
+			return new ArrayList<Long>();
+		}
+		
+		List<Long> idList = commentPOList.stream().map(po -> po.getArticleId()).collect(Collectors.toList());
+		return idList;
 	}
 }

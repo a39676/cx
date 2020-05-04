@@ -1,14 +1,13 @@
 package demo.article.article.pojo.vo;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class ArticleCommentVO {
 
 	private Long articleCommentId;
 	private String createTimeStr;
 	private String nickName;
-	private List<String> contentLines;
+	private String content;
 	private Boolean isDelete;
 	private Boolean isPass;
 	private Boolean isReject;
@@ -38,12 +37,12 @@ public class ArticleCommentVO {
 		this.nickName = nickName;
 	}
 
-	public List<String> getContentLines() {
-		return contentLines;
+	public String getContent() {
+		return content;
 	}
 
-	public void setContentLines(List<String> contentLines) {
-		this.contentLines = contentLines;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 	public HashMap<Integer, ArticleEvaluationCounterVO> getEvaluationCodeAndCount() {
@@ -81,8 +80,8 @@ public class ArticleCommentVO {
 	@Override
 	public String toString() {
 		return "ArticleCommentVO [articleCommentId=" + articleCommentId + ", createTimeStr=" + createTimeStr
-				+ ", nickName=" + nickName + ", contentLines=" + contentLines + ", isDelete=" + isDelete + ", isPass="
-				+ isPass + ", isReject=" + isReject + ", evaluationCodeAndCount=" + evaluationCodeAndCount + "]";
+				+ ", nickName=" + nickName + ", content=" + content + ", isDelete=" + isDelete + ", isPass=" + isPass
+				+ ", isReject=" + isReject + ", evaluationCodeAndCount=" + evaluationCodeAndCount + "]";
 	}
 
 }

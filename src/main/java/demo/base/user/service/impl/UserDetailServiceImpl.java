@@ -49,6 +49,21 @@ public class UserDetailServiceImpl extends CommonService implements UserDetailSe
 	}
 	
 	@Override
+	public CommonResultCX ensureActiveMobile(Long mobile) {
+		CommonResultCX r = new CommonResultCX();
+		
+		UsersDetailExample userDetailExample = new UsersDetailExample();
+		userDetailExample.createCriteria().andMobileEqualTo(mobile);
+		List<UsersDetail> userDetailList = userDetailMapper.selectByExample(userDetailExample);
+		if(userDetailList == null || userDetailList.size() < 1) {
+			return r;
+		}
+		
+		List<Long> userIdList = userDetailList.stream().map(UsersDetail::getUserId).collect(Collectors.toList());
+		return userAuthService.hasActiveUser(userIdList);
+	}
+	
+	@Override
 	public List<UsersDetail> findByEmail(String email) {
 		if(StringUtils.isBlank(email)) {
 			return new ArrayList<UsersDetail>();

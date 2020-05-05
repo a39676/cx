@@ -168,8 +168,14 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			}
 		}
 
-		if (StringUtils.isNotBlank(dto.getMobile()) && !numberUtil.matchMobile(dto.getMobile())) {
-			r.setMobile("请填入正确的手机号,或留空");
+		if (StringUtils.isNotBlank(dto.getMobile())) {
+			if(!numberUtil.matchMobile(dto.getMobile())) {
+				r.setMobile("请填入正确的手机号,或留空");
+			}
+			
+			if(userDetailService.ensureActiveMobile(Long.parseLong(dto.getMobile())).isSuccess()) {
+				r.setMobile("手机号已经被占用, 若需要转移到当前帐号, 请联系管理员, 请参见网站上方\"联系方式\"");
+			}
 		}
 
 		dto.setReservationInformation(filter.sanitize(dto.getReservationInformation()));

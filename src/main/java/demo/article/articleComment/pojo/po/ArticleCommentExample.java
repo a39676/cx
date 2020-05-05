@@ -365,6 +365,66 @@ public class ArticleCommentExample {
             return (Criteria) this;
         }
 
+        public Criteria andTmpMobileIsNull() {
+            addCriterion("tmp_mobile is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTmpMobileIsNotNull() {
+            addCriterion("tmp_mobile is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTmpMobileEqualTo(Long value) {
+            addCriterion("tmp_mobile =", value, "tmpMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andTmpMobileNotEqualTo(Long value) {
+            addCriterion("tmp_mobile <>", value, "tmpMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andTmpMobileGreaterThan(Long value) {
+            addCriterion("tmp_mobile >", value, "tmpMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andTmpMobileGreaterThanOrEqualTo(Long value) {
+            addCriterion("tmp_mobile >=", value, "tmpMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andTmpMobileLessThan(Long value) {
+            addCriterion("tmp_mobile <", value, "tmpMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andTmpMobileLessThanOrEqualTo(Long value) {
+            addCriterion("tmp_mobile <=", value, "tmpMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andTmpMobileIn(List<Long> values) {
+            addCriterion("tmp_mobile in", values, "tmpMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andTmpMobileNotIn(List<Long> values) {
+            addCriterion("tmp_mobile not in", values, "tmpMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andTmpMobileBetween(Long value1, Long value2) {
+            addCriterion("tmp_mobile between", value1, value2, "tmpMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andTmpMobileNotBetween(Long value1, Long value2) {
+            addCriterion("tmp_mobile not between", value1, value2, "tmpMobile");
+            return (Criteria) this;
+        }
+
         public Criteria andArticleIdIsNull() {
             addCriterion("article_id is null");
             return (Criteria) this;
@@ -612,6 +672,126 @@ public class ArticleCommentExample {
 
         public Criteria andReplyOfNotBetween(Long value1, Long value2) {
             addCriterion("reply_of not between", value1, value2, "replyOf");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemoteIpIsNull() {
+            addCriterion("remote_ip is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemoteIpIsNotNull() {
+            addCriterion("remote_ip is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemoteIpEqualTo(Long value) {
+            addCriterion("remote_ip =", value, "remoteIp");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemoteIpNotEqualTo(Long value) {
+            addCriterion("remote_ip <>", value, "remoteIp");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemoteIpGreaterThan(Long value) {
+            addCriterion("remote_ip >", value, "remoteIp");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemoteIpGreaterThanOrEqualTo(Long value) {
+            addCriterion("remote_ip >=", value, "remoteIp");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemoteIpLessThan(Long value) {
+            addCriterion("remote_ip <", value, "remoteIp");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemoteIpLessThanOrEqualTo(Long value) {
+            addCriterion("remote_ip <=", value, "remoteIp");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemoteIpIn(List<Long> values) {
+            addCriterion("remote_ip in", values, "remoteIp");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemoteIpNotIn(List<Long> values) {
+            addCriterion("remote_ip not in", values, "remoteIp");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemoteIpBetween(Long value1, Long value2) {
+            addCriterion("remote_ip between", value1, value2, "remoteIp");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemoteIpNotBetween(Long value1, Long value2) {
+            addCriterion("remote_ip not between", value1, value2, "remoteIp");
+            return (Criteria) this;
+        }
+
+        public Criteria andForwardIpIsNull() {
+            addCriterion("forward_ip is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andForwardIpIsNotNull() {
+            addCriterion("forward_ip is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andForwardIpEqualTo(Long value) {
+            addCriterion("forward_ip =", value, "forwardIp");
+            return (Criteria) this;
+        }
+
+        public Criteria andForwardIpNotEqualTo(Long value) {
+            addCriterion("forward_ip <>", value, "forwardIp");
+            return (Criteria) this;
+        }
+
+        public Criteria andForwardIpGreaterThan(Long value) {
+            addCriterion("forward_ip >", value, "forwardIp");
+            return (Criteria) this;
+        }
+
+        public Criteria andForwardIpGreaterThanOrEqualTo(Long value) {
+            addCriterion("forward_ip >=", value, "forwardIp");
+            return (Criteria) this;
+        }
+
+        public Criteria andForwardIpLessThan(Long value) {
+            addCriterion("forward_ip <", value, "forwardIp");
+            return (Criteria) this;
+        }
+
+        public Criteria andForwardIpLessThanOrEqualTo(Long value) {
+            addCriterion("forward_ip <=", value, "forwardIp");
+            return (Criteria) this;
+        }
+
+        public Criteria andForwardIpIn(List<Long> values) {
+            addCriterion("forward_ip in", values, "forwardIp");
+            return (Criteria) this;
+        }
+
+        public Criteria andForwardIpNotIn(List<Long> values) {
+            addCriterion("forward_ip not in", values, "forwardIp");
+            return (Criteria) this;
+        }
+
+        public Criteria andForwardIpBetween(Long value1, Long value2) {
+            addCriterion("forward_ip between", value1, value2, "forwardIp");
+            return (Criteria) this;
+        }
+
+        public Criteria andForwardIpNotBetween(Long value1, Long value2) {
+            addCriterion("forward_ip not between", value1, value2, "forwardIp");
             return (Criteria) this;
         }
 

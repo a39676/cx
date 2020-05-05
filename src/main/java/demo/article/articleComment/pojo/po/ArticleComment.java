@@ -11,6 +11,8 @@ public class ArticleComment {
 
     private String tmpEmail;
 
+    private Long tmpMobile;
+
     private Long articleId;
 
     private String path;
@@ -18,6 +20,10 @@ public class ArticleComment {
     private LocalDateTime createTime;
 
     private Long replyOf;
+
+    private Long remoteIp;
+
+    private Long forwardIp;
 
     private Boolean isDelete;
 
@@ -57,6 +63,14 @@ public class ArticleComment {
         this.tmpEmail = tmpEmail == null ? null : tmpEmail.trim();
     }
 
+    public Long getTmpMobile() {
+        return tmpMobile;
+    }
+
+    public void setTmpMobile(Long tmpMobile) {
+        this.tmpMobile = tmpMobile;
+    }
+
     public Long getArticleId() {
         return articleId;
     }
@@ -87,6 +101,22 @@ public class ArticleComment {
 
     public void setReplyOf(Long replyOf) {
         this.replyOf = replyOf;
+    }
+
+    public Long getRemoteIp() {
+        return remoteIp;
+    }
+
+    public void setRemoteIp(Long remoteIp) {
+        this.remoteIp = remoteIp;
+    }
+
+    public Long getForwardIp() {
+        return forwardIp;
+    }
+
+    public void setForwardIp(Long forwardIp) {
+        this.forwardIp = forwardIp;
     }
 
     public Boolean getIsDelete() {

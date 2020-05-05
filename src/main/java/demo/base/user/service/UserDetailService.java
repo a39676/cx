@@ -16,6 +16,8 @@ public interface UserDetailService {
 	 */
 	CommonResultCX ensureActiveEmail(String email);
 
+	CommonResultCX ensureActiveMobile(Long mobile);
+	
 	List<UsersDetail> findByEmail(String email);
 
 	UsersDetail findById(Long id);

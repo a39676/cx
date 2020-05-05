@@ -6,10 +6,13 @@
     <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="tmp_nick_name" jdbcType="VARCHAR" property="tmpNickName" />
     <result column="tmp_email" jdbcType="VARCHAR" property="tmpEmail" />
+    <result column="tmp_mobile" jdbcType="BIGINT" property="tmpMobile" />
     <result column="article_id" jdbcType="BIGINT" property="articleId" />
     <result column="path" jdbcType="VARCHAR" property="path" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="reply_of" jdbcType="BIGINT" property="replyOf" />
+    <result column="remote_ip" jdbcType="BIGINT" property="remoteIp" />
+    <result column="forward_ip" jdbcType="BIGINT" property="forwardIp" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
     <result column="is_pass" jdbcType="BIT" property="isPass" />
     <result column="is_reject" jdbcType="BIT" property="isReject" />
@@ -73,8 +76,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, tmp_nick_name, tmp_email, article_id, path, create_time, reply_of, is_delete, 
-    is_pass, is_reject
+    id, user_id, tmp_nick_name, tmp_email, tmp_mobile, article_id, path, create_time, 
+    reply_of, remote_ip, forward_ip, is_delete, is_pass, is_reject
   </sql>
   <select id="selectByExample" parameterType="demo.article.articleComment.pojo.po.ArticleCommentExample" resultMap="BaseResultMap">
     select
@@ -108,12 +111,14 @@
   </delete>
   <insert id="insert" parameterType="demo.article.articleComment.pojo.po.ArticleComment">
     insert into article_comment (id, user_id, tmp_nick_name, 
-      tmp_email, article_id, path, 
-      create_time, reply_of, is_delete, 
+      tmp_email, tmp_mobile, article_id, 
+      path, create_time, reply_of, 
+      remote_ip, forward_ip, is_delete, 
       is_pass, is_reject)
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{tmpNickName,jdbcType=VARCHAR}, 
-      #{tmpEmail,jdbcType=VARCHAR}, #{articleId,jdbcType=BIGINT}, #{path,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{replyOf,jdbcType=BIGINT}, #{isDelete,jdbcType=BIT}, 
+      #{tmpEmail,jdbcType=VARCHAR}, #{tmpMobile,jdbcType=BIGINT}, #{articleId,jdbcType=BIGINT}, 
+      #{path,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{replyOf,jdbcType=BIGINT}, 
+      #{remoteIp,jdbcType=BIGINT}, #{forwardIp,jdbcType=BIGINT}, #{isDelete,jdbcType=BIT}, 
       #{isPass,jdbcType=BIT}, #{isReject,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="demo.article.articleComment.pojo.po.ArticleComment">
@@ -131,6 +136,9 @@
       <if test="tmpEmail != null">
         tmp_email,
       </if>
+      <if test="tmpMobile != null">
+        tmp_mobile,
+      </if>
       <if test="articleId != null">
         article_id,
       </if>
@@ -142,6 +150,12 @@
       </if>
       <if test="replyOf != null">
         reply_of,
+      </if>
+      <if test="remoteIp != null">
+        remote_ip,
+      </if>
+      <if test="forwardIp != null">
+        forward_ip,
       </if>
       <if test="isDelete != null">
         is_delete,
@@ -166,6 +180,9 @@
       <if test="tmpEmail != null">
         #{tmpEmail,jdbcType=VARCHAR},
       </if>
+      <if test="tmpMobile != null">
+        #{tmpMobile,jdbcType=BIGINT},
+      </if>
       <if test="articleId != null">
         #{articleId,jdbcType=BIGINT},
       </if>
@@ -177,6 +194,12 @@
       </if>
       <if test="replyOf != null">
         #{replyOf,jdbcType=BIGINT},
+      </if>
+      <if test="remoteIp != null">
+        #{remoteIp,jdbcType=BIGINT},
+      </if>
+      <if test="forwardIp != null">
+        #{forwardIp,jdbcType=BIGINT},
       </if>
       <if test="isDelete != null">
         #{isDelete,jdbcType=BIT},
@@ -210,6 +233,9 @@
       <if test="record.tmpEmail != null">
         tmp_email = #{record.tmpEmail,jdbcType=VARCHAR},
       </if>
+      <if test="record.tmpMobile != null">
+        tmp_mobile = #{record.tmpMobile,jdbcType=BIGINT},
+      </if>
       <if test="record.articleId != null">
         article_id = #{record.articleId,jdbcType=BIGINT},
       </if>
@@ -221,6 +247,12 @@
       </if>
       <if test="record.replyOf != null">
         reply_of = #{record.replyOf,jdbcType=BIGINT},
+      </if>
+      <if test="record.remoteIp != null">
+        remote_ip = #{record.remoteIp,jdbcType=BIGINT},
+      </if>
+      <if test="record.forwardIp != null">
+        forward_ip = #{record.forwardIp,jdbcType=BIGINT},
       </if>
       <if test="record.isDelete != null">
         is_delete = #{record.isDelete,jdbcType=BIT},
@@ -242,10 +274,13 @@
       user_id = #{record.userId,jdbcType=BIGINT},
       tmp_nick_name = #{record.tmpNickName,jdbcType=VARCHAR},
       tmp_email = #{record.tmpEmail,jdbcType=VARCHAR},
+      tmp_mobile = #{record.tmpMobile,jdbcType=BIGINT},
       article_id = #{record.articleId,jdbcType=BIGINT},
       path = #{record.path,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       reply_of = #{record.replyOf,jdbcType=BIGINT},
+      remote_ip = #{record.remoteIp,jdbcType=BIGINT},
+      forward_ip = #{record.forwardIp,jdbcType=BIGINT},
       is_delete = #{record.isDelete,jdbcType=BIT},
       is_pass = #{record.isPass,jdbcType=BIT},
       is_reject = #{record.isReject,jdbcType=BIT}
@@ -265,6 +300,9 @@
       <if test="tmpEmail != null">
         tmp_email = #{tmpEmail,jdbcType=VARCHAR},
       </if>
+      <if test="tmpMobile != null">
+        tmp_mobile = #{tmpMobile,jdbcType=BIGINT},
+      </if>
       <if test="articleId != null">
         article_id = #{articleId,jdbcType=BIGINT},
       </if>
@@ -276,6 +314,12 @@
       </if>
       <if test="replyOf != null">
         reply_of = #{replyOf,jdbcType=BIGINT},
+      </if>
+      <if test="remoteIp != null">
+        remote_ip = #{remoteIp,jdbcType=BIGINT},
+      </if>
+      <if test="forwardIp != null">
+        forward_ip = #{forwardIp,jdbcType=BIGINT},
       </if>
       <if test="isDelete != null">
         is_delete = #{isDelete,jdbcType=BIT},
@@ -294,34 +338,19 @@
     set user_id = #{userId,jdbcType=BIGINT},
       tmp_nick_name = #{tmpNickName,jdbcType=VARCHAR},
       tmp_email = #{tmpEmail,jdbcType=VARCHAR},
+      tmp_mobile = #{tmpMobile,jdbcType=BIGINT},
       article_id = #{articleId,jdbcType=BIGINT},
       path = #{path,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       reply_of = #{replyOf,jdbcType=BIGINT},
+      remote_ip = #{remoteIp,jdbcType=BIGINT},
+      forward_ip = #{forwardIp,jdbcType=BIGINT},
       is_delete = #{isDelete,jdbcType=BIT},
       is_pass = #{isPass,jdbcType=BIT},
       is_reject = #{isReject,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
-
-  <select 
-    id="findCommentCountByArticleId" 
-    resultType="demo.article.articleComment.pojo.bo.ArticleCommentCountByArticleIdBO">
-    select
-      count(*) as findCommentCountByArticleId,
-      article_id as articleId
-    from
-      article_comment
-    <where>
-      1=1
-      and article_id in
-      <foreach collection="articleIdList" item="articleId" open="(" close=")" separator=",">
-        #{articleId}
-      </foreach>
-    </where>
-    group by article_id
-  </select>
-
+  
   <select
     id="findCommentPage"
     resultMap="BaseResultMap">
@@ -362,6 +391,6 @@
     <if test="limit == null">
       limit 5
     </if>
-    
   </select>
+  
 </mapper>

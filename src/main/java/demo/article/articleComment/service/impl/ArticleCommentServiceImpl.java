@@ -102,6 +102,9 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	public CommonResultCX creatingArticleComment(HttpServletRequest request, CreateArticleCommentDTO inputParam) throws IOException {
 		/* 
 		 * TODO 准备放开未登录留言
+		 * 未对 inputParam 内手机号进行处理
+		 * 评论PO 应记录 ip 万一需要按 IP 进行屏蔽
+		 * 另外需要新建 黑白名单 IP 记录表???
 		 */
 		
 		CommonResultCX result = new CommonResultCX();
@@ -131,23 +134,62 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		
 		String nickname = null;
 		String email = null;
+		Long mobile = null;
 		if(userId == null) {
 			nickname = filter.sanitize(inputParam.getNickname());
 			email = filter.sanitize(inputParam.getEmail());
-			if(userDetailService.isNicknameExists(nickname)) {
-				result.failWithMessage("此昵称已注册...如需使用此昵称..请登录");
+			if(!validRegexToolService.validEmail(email)) {
+				result.failWithMessage("请输入正确的邮箱格式");
 				return result;
 			}
 			
-			if(!validRegexToolService.validEmail(email) || userDetailService.ensureActiveEmail(email).isSuccess()) {
-				result.failWithMessage("此邮箱已注册...如需使用此邮箱..请登录");
+			if(userDetailService.isNicknameExists(nickname)) {
+				result.failWithMessage("此昵称已注册, 如需使用此昵称, 请登录");
 				return result;
 			}
+			
+			if(userDetailService.ensureActiveEmail(email).isSuccess()) {
+				result.failWithMessage("此邮箱已注册, 如需使用此邮箱, 请登录");
+				return result;
+			}
+			
+			if(!validRegexToolService.validMobile(inputParam.getMobile())) {
+				result.failWithMessage("请输入11位数字手机号, 或留空");
+				return result;
+			} else if(userDetailService.ensureActiveMobile(Long.parseLong(inputParam.getMobile())).isSuccess()) {
+				result.failWithMessage("此手机号已注册, 如需使用此手机号, 请登录, 或留空此输入框");
+				return result;
+			} else {
+				mobile = Long.parseLong(inputParam.getMobile());
+			}
+			
+			/*
+			 * TODO
+			 * ip处理
+			 */
+			
 		} else {
 			UsersDetailVO userDetailVO = usersService.findUserDetail(userId);
 			nickname = userDetailVO.getNickName();
 			email = userDetailVO.getEmail();
+			if(userDetailVO.getMobile() != null) {
+				mobile = userDetailVO.getMobile();
+			}
 		}
+		
+		/*
+		 * TODO
+		 * 即使黑名单, 亦保留记录并正常反馈发送成功, 但后台截留
+		 * 
+		 */
+		Long remoteIp = numberUtil.ipToLong(request.getRemoteAddr());
+		Long forwardIp = numberUtil.ipToLong(request.getHeader("X-FORWARDED-FOR"));
+		boolean inBlackList = false;
+		
+		/*
+		 * TODO
+		 * if in black list
+		 */
 		
 		if(!bigUserFlag) {
 			if(justComment(request, userId, articleId)) {
@@ -168,6 +210,14 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		newComment.setArticleId(articleId);
 		newComment.setPath(saveFileResult.getFilePath());
 		newComment.setUserId(userId);
+		newComment.setTmpNickName(nickname);
+		newComment.setTmpEmail(email);
+		newComment.setTmpMobile(mobile);
+		newComment.setForwardIp(forwardIp);
+		newComment.setRemoteIp(remoteIp);
+		if(inBlackList) {
+			newComment.setIsReject(true);
+		}
 		articleCommentMapper.insertSelective(newComment);
 		
 		if(bigUserFlag) {

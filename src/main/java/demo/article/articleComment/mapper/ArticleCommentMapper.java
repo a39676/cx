@@ -30,6 +30,6 @@ public interface ArticleCommentMapper {
     int updateByPrimaryKeySelective(ArticleComment record);
 
     int updateByPrimaryKey(ArticleComment record);
-
+    
     List<ArticleComment> findCommentPage(FindCommentPageDTO dto);
 }

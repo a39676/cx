@@ -10,6 +10,8 @@ public class CreateArticleCommentDTO {
 
 	private String email;
 
+	private String mobile;
+
 	public String getPk() {
 		return pk;
 	}
@@ -42,10 +44,18 @@ public class CreateArticleCommentDTO {
 		this.email = email;
 	}
 
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
 	@Override
 	public String toString() {
 		return "CreateArticleCommentDTO [pk=" + pk + ", content=" + content + ", nickname=" + nickname + ", email="
-				+ email + "]";
+				+ email + ", mobile=" + mobile + "]";
 	}
 
 }

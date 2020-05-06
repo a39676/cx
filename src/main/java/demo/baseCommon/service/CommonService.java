@@ -21,6 +21,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.pojo.bo.SystemConstantStore;
+import demo.base.system.service.IpRecordService;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
@@ -56,6 +57,8 @@ public abstract class CommonService {
 	protected SystemConstantService constantService;
 	@Autowired
 	protected BaseUtilCustom baseUtilCustom;
+	@Autowired
+	protected IpRecordService ipRecordService;
 	
 	@Autowired
 	protected RedisTemplate<String, String> redisTemplate;

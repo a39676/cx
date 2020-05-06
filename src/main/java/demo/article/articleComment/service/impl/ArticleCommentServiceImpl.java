@@ -177,19 +177,9 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			}
 		}
 		
-		/*
-		 * TODO
-		 * 即使黑名单, 亦保留记录并正常反馈发送成功, 但后台截留
-		 * 
-		 */
 		Long remoteIp = numberUtil.ipToLong(request.getRemoteAddr());
 		Long forwardIp = numberUtil.ipToLong(request.getHeader("X-FORWARDED-FOR"));
-		boolean inBlackList = false;
-		
-		/*
-		 * TODO
-		 * if in black list
-		 */
+		boolean inBlackList = (ipRecordService.isDeny(remoteIp) || ipRecordService.isDeny(forwardIp));
 		
 		if(!bigUserFlag) {
 			if(justComment(request, userId, articleId)) {

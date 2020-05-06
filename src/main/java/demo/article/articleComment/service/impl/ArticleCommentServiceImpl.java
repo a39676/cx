@@ -32,6 +32,8 @@ import demo.article.articleComment.pojo.dto.PassArticleCommentDTO;
 import demo.article.articleComment.pojo.po.ArticleComment;
 import demo.article.articleComment.pojo.po.ArticleCommentCount;
 import demo.article.articleComment.pojo.po.ArticleCommentCountExample;
+import demo.article.articleComment.pojo.po.ArticleCommentExample;
+import demo.article.articleComment.pojo.po.ArticleCommentExample.Criteria;
 import demo.article.articleComment.pojo.result.FindArticleCommentPageResult;
 import demo.article.articleComment.service.ArticleCommentAdminService;
 import demo.article.articleComment.service.ArticleCommentService;
@@ -100,12 +102,6 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	
 	@Override
 	public CommonResultCX creatingArticleComment(HttpServletRequest request, CreateArticleCommentDTO inputParam) throws IOException {
-		/* 
-		 * TODO 准备放开未登录留言
-		 * 未对 inputParam 内手机号进行处理
-		 * 评论PO 应记录 ip 万一需要按 IP 进行屏蔽
-		 * 另外需要新建 黑白名单 IP 记录表???
-		 */
 		
 		CommonResultCX result = new CommonResultCX();
 		if(StringUtils.isBlank(inputParam.getContent())) {
@@ -163,11 +159,6 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 				mobile = Long.parseLong(inputParam.getMobile());
 			}
 			
-			/*
-			 * TODO
-			 * ip处理
-			 */
-			
 		} else {
 			UsersDetailVO userDetailVO = usersService.findUserDetail(userId);
 			nickname = userDetailVO.getNickName();
@@ -224,6 +215,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		return result;
 	}
 	
+	
 	private ArticleFileSaveResult saveArticleCommentFile(String storePrefixPath, Long userId, String content) throws IOException {
 		return articleService.saveArticleFile(storePrefixPath, userId, content);
 	}
@@ -256,6 +248,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		if(!isBigUser()) {
 			controllerParam.setIsDelete(false);
 			controllerParam.setIsPass(true);
+			controllerParam.setIsReject(false);
 		}
 		
 		FindCommentPageDTO mapperDTO = new FindCommentPageDTO();
@@ -263,6 +256,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		mapperDTO.setStartTime(controllerParam.getStartTime());
 		mapperDTO.setIsDelete(controllerParam.getIsDelete());
 		mapperDTO.setIsPass(controllerParam.getIsPass());
+		mapperDTO.setIsReject(controllerParam.getIsReject());
 		
 		List<ArticleComment> commentPOList = articleCommentMapper.findCommentPage(mapperDTO);
 		if(commentPOList == null || commentPOList.isEmpty()) {
@@ -362,4 +356,21 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		}
 		
 	}
-} 
+
+	@Override
+	public void batchRejectComment() {
+		List<Long> ipList = ipRecordService.getAllDenyList();
+		if(ipList.isEmpty()) {
+			return;
+		}
+		
+		ArticleCommentExample example = new ArticleCommentExample();
+		Criteria criteriaForwardIp = example.createCriteria();
+		criteriaForwardIp.andIsDeleteEqualTo(false).andForwardIpIn(ipList);
+		Criteria criteriaRemoteIp = example.or();
+		criteriaRemoteIp.andIsDeleteEqualTo(false).andRemoteIpIn(ipList);
+		ArticleComment record = new ArticleComment();
+		record.setIsReject(true);
+		articleCommentMapper.updateByExampleSelective(record, example);
+	}
+}

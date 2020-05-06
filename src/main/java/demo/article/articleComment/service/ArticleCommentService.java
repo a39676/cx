@@ -19,4 +19,10 @@ public interface ArticleCommentService {
 
 	List<ArticleCommentCount> findCommentCountByArticleId(List<Long> articleIdList);
 
+	/**
+	 * 供手动调用
+	 * 根据当前黑名单ip, 将关联评论 isReject = true
+	 */
+	void batchRejectComment();
+
 }

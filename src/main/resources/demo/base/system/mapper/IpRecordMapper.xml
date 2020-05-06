@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="demo.base.system.pojo.po.IpRecord">
     <id column="ip" jdbcType="BIGINT" property="ip" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="valid_time" jdbcType="TIMESTAMP" property="validTime" />
     <result column="record_type" jdbcType="INTEGER" property="recordType" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
@@ -68,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    ip, create_time, valid_time, record_type, is_delete, is_valid
+    ip, create_time, update_time, valid_time, record_type, is_delete, is_valid
   </sql>
   <select id="selectByExample" parameterType="demo.base.system.pojo.po.IpRecordExample" resultMap="BaseResultMap">
     select
@@ -101,12 +102,12 @@
     </if>
   </delete>
   <insert id="insert" parameterType="demo.base.system.pojo.po.IpRecord">
-    insert into ip_record (ip, create_time, valid_time, 
-      record_type, is_delete, is_valid
-      )
-    values (#{ip,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{validTime,jdbcType=TIMESTAMP}, 
-      #{recordType,jdbcType=INTEGER}, #{isDelete,jdbcType=BIT}, #{isValid,jdbcType=BIT}
-      )
+    insert into ip_record (ip, create_time, update_time, 
+      valid_time, record_type, is_delete, 
+      is_valid)
+    values (#{ip,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{validTime,jdbcType=TIMESTAMP}, #{recordType,jdbcType=INTEGER}, #{isDelete,jdbcType=BIT}, 
+      #{isValid,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="demo.base.system.pojo.po.IpRecord">
     insert into ip_record
@@ -116,6 +117,9 @@
       </if>
       <if test="createTime != null">
         create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
       </if>
       <if test="validTime != null">
         valid_time,
@@ -136,6 +140,9 @@
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="validTime != null">
         #{validTime,jdbcType=TIMESTAMP},
@@ -166,6 +173,9 @@
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="record.validTime != null">
         valid_time = #{record.validTime,jdbcType=TIMESTAMP},
       </if>
@@ -187,6 +197,7 @@
     update ip_record
     set ip = #{record.ip,jdbcType=BIGINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       valid_time = #{record.validTime,jdbcType=TIMESTAMP},
       record_type = #{record.recordType,jdbcType=INTEGER},
       is_delete = #{record.isDelete,jdbcType=BIT},
@@ -200,6 +211,9 @@
     <set>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="validTime != null">
         valid_time = #{validTime,jdbcType=TIMESTAMP},
@@ -219,6 +233,7 @@
   <update id="updateByPrimaryKey" parameterType="demo.base.system.pojo.po.IpRecord">
     update ip_record
     set create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
       valid_time = #{validTime,jdbcType=TIMESTAMP},
       record_type = #{recordType,jdbcType=INTEGER},
       is_delete = #{isDelete,jdbcType=BIT},

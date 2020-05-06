@@ -7,6 +7,8 @@ public class IpRecord {
 
     private LocalDateTime createTime;
 
+    private LocalDateTime updateTime;
+
     private LocalDateTime validTime;
 
     private Integer recordType;
@@ -29,6 +31,14 @@ public class IpRecord {
 
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
+    }
+
+    public LocalDateTime getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(LocalDateTime updateTime) {
+        this.updateTime = updateTime;
     }
 
     public LocalDateTime getValidTime() {

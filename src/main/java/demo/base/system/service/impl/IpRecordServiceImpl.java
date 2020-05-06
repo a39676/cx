@@ -1,7 +1,9 @@
 package demo.base.system.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,8 @@ public class IpRecordServiceImpl extends CommonService implements IpRecordServic
 			insertFlag = true;
 			po = new IpRecord();
 			po.setIp(ipNum);
+		} else {
+			po.setUpdateTime(LocalDateTime.now());
 		}
 		
 		po.setIsValid(true);
@@ -62,6 +66,8 @@ public class IpRecordServiceImpl extends CommonService implements IpRecordServic
 			insertFlag = true;
 			po = new IpRecord();
 			po.setIp(ipNum);
+		} else {
+			po.setUpdateTime(LocalDateTime.now());
 		}
 		
 		po.setIsValid(true);
@@ -89,6 +95,7 @@ public class IpRecordServiceImpl extends CommonService implements IpRecordServic
 		}
 		IpRecord record = new IpRecord();
 		record.setIsValid(false);
+		record.setUpdateTime(LocalDateTime.now());
 		ipRecordMapper.updateByExample(record, example);
 	}
 	
@@ -112,5 +119,19 @@ public class IpRecordServiceImpl extends CommonService implements IpRecordServic
 		example.createCriteria().andIpEqualTo(ipNum).andRecordTypeEqualTo(IpReocrdType.allow.getCode()).andIsDeleteEqualTo(false).andIsValidEqualTo(true).andValidTimeGreaterThan(LocalDateTime.now());
 		List<IpRecord> poList = ipRecordMapper.selectByExample(example);
 		return (poList != null && !poList.isEmpty());
+	}
+	
+	@Override
+	public List<Long> getAllDenyList() {
+		List<Long> result = new ArrayList<Long>();
+		IpRecordExample example = new IpRecordExample();
+		example.createCriteria().andRecordTypeEqualTo(IpReocrdType.deny.getCode()).andValidTimeGreaterThan(LocalDateTime.now()).andIsDeleteEqualTo(false);
+		List<IpRecord> poList = ipRecordMapper.selectByExample(example);
+		if(poList == null || poList.isEmpty()) {
+			return result;
+		}
+		
+		result.addAll(poList.stream().map(IpRecord::getIp).collect(Collectors.toList()));
+		return result;
 	}
 }

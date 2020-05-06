@@ -8,6 +8,7 @@ public class FindArticleCommentPageDTO {
 	private LocalDateTime startTime;
 	private Boolean isPass = true;
 	private Boolean isDelete = false;
+	private Boolean isReject = false;
 
 	public String getPk() {
 		return pk;
@@ -41,10 +42,18 @@ public class FindArticleCommentPageDTO {
 		this.isDelete = isDelete;
 	}
 
+	public Boolean getIsReject() {
+		return isReject;
+	}
+
+	public void setIsReject(Boolean isReject) {
+		this.isReject = isReject;
+	}
+
 	@Override
 	public String toString() {
 		return "FindArticleCommentPageDTO [pk=" + pk + ", startTime=" + startTime + ", isPass=" + isPass + ", isDelete="
-				+ isDelete + "]";
+				+ isDelete + ", isReject=" + isReject + "]";
 	}
 
 }

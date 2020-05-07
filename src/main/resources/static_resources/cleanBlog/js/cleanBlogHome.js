@@ -16,11 +16,6 @@ $(document).ready(function() {
     }
   };
 
-  $(".slider-category").click(function () {
-    var uuid = $(this).attr("uuid");
-    loadArticleLongSummaryFirstPage(uuid);
-  });
-
   var getLocation = function(href) {
       var location = document.createElement("a");
       location.href = href;

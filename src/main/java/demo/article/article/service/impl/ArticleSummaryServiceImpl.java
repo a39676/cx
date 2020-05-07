@@ -229,7 +229,11 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 				continue;
 			}
 			tmpVO = new ArticleLongSummaryVOV3();
-			strContent = ioUtil.getStringFromFile(summaryBO.getPath());
+			try {
+				strContent = ioUtil.getStringFromFile(summaryBO.getPath());
+			} catch (Exception e) {
+				strContent = "";
+			}
 			voContentBuilder.append(strContent);
 			if(loadArticleHot) {
 				tmpVO.setIsHot(loadArticleHot);

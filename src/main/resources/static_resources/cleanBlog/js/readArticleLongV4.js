@@ -1,6 +1,3 @@
-/**
- * for readArticleLongV3.jsp
- */
 $(document).ready(function() {
 
   var pk=$("#readArticleLong").attr("pk");
@@ -9,16 +6,16 @@ $(document).ready(function() {
     $(this).css('cursor','pointer');
   });
 
-  $("span[name='feedback']").click(function () {
-    var feedback = $("#message").val();
+  $("span[name='comment']").click(function () {
+    var content = $("#message").val();
     var nickname = $("#nickname").val();
     var email = $("#email").val();
     var mobile = $("#mobile").val();
 
-    var url = "/article/articleLongFeedback";
+    var url = "/articleComment/createArticleComment";
     var jsonOutput = {
       pk:pk,
-      feedback:feedback,
+      content:content,
       nickname: nickname,
       email: email,
       mobile: mobile
@@ -38,10 +35,10 @@ $(document).ready(function() {
       },
       success:function(datas){
         if(datas.result == "0") {
-          $("span[name='feedback']").prop("disabled",true);
-          $("span[name='feedbackResult']").text(datas.message);
+          $("span[name='comment']").prop("disabled",true);
+          $("span[name='commentResult']").text(datas.message);
         } else {
-          $("span[name='feedbackResult']").text(datas.message);
+          $("span[name='commentResult']").text(datas.message);
         }
 
       },  

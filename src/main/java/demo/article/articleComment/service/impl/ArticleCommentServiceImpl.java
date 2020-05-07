@@ -218,7 +218,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		}
 		
 		articleCommentCountingUp(articleId);
-		result.setIsSuccess();
+		result.successWithMessage("评论已发送.");
 		
 		return result;
 	}

@@ -1,6 +1,7 @@
 package demo.article.article.service.impl;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -244,6 +245,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			return result;
 		}
 		
+		param.setPk(URLDecoder.decode(param.getPk(), StandardCharsets.UTF_8));
 		Long articleId = decryptPrivateKey(param.getPk());
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);

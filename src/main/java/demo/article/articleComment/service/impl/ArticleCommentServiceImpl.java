@@ -1,6 +1,8 @@
 package demo.article.articleComment.service.impl;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -117,6 +119,8 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
 		}
+		
+		inputParam.setPk(URLDecoder.decode(inputParam.getPk(), StandardCharsets.UTF_8));
 		Long articleId = decryptPrivateKey(inputParam.getPk());
 		
 		if(articleId == null) {
@@ -133,7 +137,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		Long mobile = null;
 		if(userId == null) {
 			nickname = filter.sanitize(inputParam.getNickname());
-			email = filter.sanitize(inputParam.getEmail());
+			email = inputParam.getEmail();
 			if(!validRegexToolService.validEmail(email)) {
 				result.failWithMessage("请输入正确的邮箱格式");
 				return result;
@@ -149,14 +153,18 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 				return result;
 			}
 			
-			if(!validRegexToolService.validMobile(inputParam.getMobile())) {
-				result.failWithMessage("请输入11位数字手机号, 或留空");
-				return result;
-			} else if(userDetailService.ensureActiveMobile(Long.parseLong(inputParam.getMobile())).isSuccess()) {
-				result.failWithMessage("此手机号已注册, 如需使用此手机号, 请登录, 或留空此输入框");
-				return result;
-			} else {
-				mobile = Long.parseLong(inputParam.getMobile());
+			if(StringUtils.isNotBlank(inputParam.getMobile())) {				
+				if(!validRegexToolService.validMobile(inputParam.getMobile())) {
+					result.failWithMessage("请输入11位数字手机号, 或留空");
+					return result;
+				} else {
+					if(userDetailService.ensureActiveMobile(Long.parseLong(inputParam.getMobile())).isSuccess()) {
+						result.failWithMessage("此手机号已注册, 如需使用此手机号, 请登录, 或留空此输入框");
+						return result;
+					} else {
+						mobile = Long.parseLong(inputParam.getMobile());
+					}
+				}
 			}
 			
 		} else {

@@ -155,7 +155,7 @@ $(document).ready(function() {
   });
 
   $("span[name='comment']").click(function () {
-    var comment = $("#message").val();
+    var content = $("#message").val();
     var nickname = $("#nickname").val();
     var email = $("#email").val();
     var mobile = $("#mobile").val();
@@ -163,7 +163,7 @@ $(document).ready(function() {
     var url = "/articleComment/createArticleComment";
     var jsonOutput = {
       pk:pk,
-      comment:comment,
+      content:content,
       nickname: nickname,
       email: email,
       mobile: mobile

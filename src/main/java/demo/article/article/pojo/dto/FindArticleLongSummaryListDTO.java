@@ -33,7 +33,6 @@ public class FindArticleLongSummaryListDTO {
 	private Boolean isReject = false;
 	private Integer limit = ArticleConstant.defaultPageSize;
 	private Boolean desc = true;
-	private Boolean hasAdminRole = false;
 	private Boolean isHot = false;
 	private String vcode;
 
@@ -149,21 +148,13 @@ public class FindArticleLongSummaryListDTO {
 		this.desc = desc;
 	}
 
-	public Boolean getHasAdminRole() {
-		return hasAdminRole;
-	}
-
-	public void setHasAdminRole(Boolean hasAdminRole) {
-		this.hasAdminRole = hasAdminRole;
-	}
-
 	@Override
 	public String toString() {
-		return "FindArticleLongSummaryListControllerParam [articleChannelName=" + articleChannelName
-				+ ", articleChannelId=" + articleChannelId + ", title=" + title + ", userId=" + userId + ", startTime="
-				+ startTime + ", endTime=" + endTime + ", isDelete=" + isDelete + ", isPass=" + isPass + ", isEdited="
-				+ isEdited + ", isReject=" + isReject + ", limit=" + limit + ", desc=" + desc + ", hasAdminRole="
-				+ hasAdminRole + ", isHot=" + isHot + ", vcode=" + vcode + "]";
+		return "FindArticleLongSummaryListDTO [articleChannelName=" + articleChannelName + ", articleChannelId="
+				+ articleChannelId + ", title=" + title + ", userId=" + userId + ", startTime=" + startTime
+				+ ", endTime=" + endTime + ", isDelete=" + isDelete + ", isPass=" + isPass + ", isEdited=" + isEdited
+				+ ", isReject=" + isReject + ", limit=" + limit + ", desc=" + desc + ", isHot=" + isHot + ", vcode="
+				+ vcode + "]";
 	}
 
 }

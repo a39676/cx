@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.owasp.html.PolicyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.article.pojo.type.ArticleEvaluationType;
@@ -227,45 +228,65 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	private ArticleFileSaveResult saveArticleCommentFile(String storePrefixPath, Long userId, String content) throws IOException {
 		return articleService.saveArticleFile(storePrefixPath, userId, content);
 	}
-	
+
 	@Override
-	public FindArticleCommentPageResult findArticleCommentPage(FindArticleCommentPageDTO controllerParam) {
+	public ModelAndView findArticleCommentPage(FindArticleCommentPageDTO dto) {
+		ModelAndView view = new ModelAndView("articleJSP/articleCommentListSubList");
+		FindArticleCommentPageResult result = handleFindArticleCommentPage(dto);
+		if(!result.isSuccess()) {
+			view.addObject("message", result.getMessage());
+			return view;
+		}
+		
+		view.addObject("commentList", result.getCommentList());
+		view.addObject("pk", result.getPk());
+		if(result.getCommentList() != null && result.getCommentList().size() > 0) {
+			view.addObject("startTime", result.getCommentList().get(result.getCommentList().size() - 1).getCreateTimeStr());
+		}
+		
+		return view;
+	}
+	
+	private FindArticleCommentPageResult handleFindArticleCommentPage(FindArticleCommentPageDTO dto) {
 		FindArticleCommentPageResult result = new FindArticleCommentPageResult();
 		List<ArticleCommentVO> commentVOList = new ArrayList<ArticleCommentVO>();
 		
-		if(StringUtils.isBlank(controllerParam.getPk())) {
+		if(StringUtils.isBlank(dto.getPk())) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
 		
-		if(controllerParam.getStartTime() != null && controllerParam.getStartTime().isBefore(theStartTime)) {
-			controllerParam.setStartTime(theStartTime);
+		if(dto.getStartTime() != null && dto.getStartTime().isBefore(theStartTime)) {
+			dto.setStartTime(theStartTime);
 		}
-		if(controllerParam.getStartTime() != null) {
-			controllerParam.setStartTime(controllerParam.getStartTime().plusSeconds(1L));
+		if(dto.getStartTime() != null) {
+			dto.setStartTime(dto.getStartTime().plusSeconds(1L));
 		}
 		
-		Long articleId = decryptPrivateKey(controllerParam.getPk());
+		Long articleId = decryptPrivateKey(dto.getPk());
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
-		result.setPk(controllerParam.getPk());
+		result.setPk(dto.getPk());
 		
 
 		if(!isBigUser()) {
-			controllerParam.setIsDelete(false);
-			controllerParam.setIsPass(true);
-			controllerParam.setIsReject(false);
+			dto.setIsDelete(false);
+			dto.setIsPass(true);
+			dto.setIsReject(false);
+			if(dto.getLimit() != null && dto.getLimit() > ArticleCommentConstant.commentPageMaxSize) {
+				dto.setLimit(ArticleCommentConstant.commentPageMaxSize);
+			}
 		}
 		
 		FindCommentPageDTO mapperDTO = new FindCommentPageDTO();
 		mapperDTO.setArticleId(articleId);
-		mapperDTO.setStartTime(controllerParam.getStartTime());
-		mapperDTO.setIsDelete(controllerParam.getIsDelete());
-		mapperDTO.setIsPass(controllerParam.getIsPass());
-		mapperDTO.setIsReject(controllerParam.getIsReject());
-		
+		mapperDTO.setStartTime(dto.getStartTime());
+		mapperDTO.setIsDelete(dto.getIsDelete());
+		mapperDTO.setIsPass(dto.getIsPass());
+		mapperDTO.setIsReject(dto.getIsReject());
+		mapperDTO.setLimit(dto.getLimit().intValue());
 		List<ArticleComment> commentPOList = articleCommentMapper.findCommentPage(mapperDTO);
 		if(commentPOList == null || commentPOList.isEmpty()) {
 			result.setIsSuccess();

@@ -304,7 +304,8 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		}
 		
 		/* 置限制只可浏览某时点之后的文章 */
-		if(!dto.getHasAdminRole()) {
+		boolean isBigUser = isBigUser();
+		if(!isBigUser) {
 			String normalUserMaxReadingMonth = constantService.getValByName(SystemConstantStore.normalUserMaxReadingMonth);
 			int maxReadingMonth = 1;
 			if(numberUtil.matchInteger(normalUserMaxReadingMonth)) {
@@ -333,7 +334,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		List<ArticleCommentCount> commentCountList = articleCommentController.findCommentCountByArticleId(articleIdList);
 	
 		List<ArticleViewCount> viewCountList = articleViewService.findArticleViewCountByArticleId(articleIdList);
-		if(dto.getHasAdminRole() && articleIdList.size() > 0) {
+		if(isBigUser && articleIdList.size() > 0) {
 			articleHasCommentNotReviewIdList = articleCommentAdminController.findArticleIdWithCommentWaitingForReview(articleIdList);
 		} else {
 			articleHasCommentNotReviewIdList = new ArrayList<Long>();
@@ -361,8 +362,6 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			controllerParam.setIsPass(true);
 			controllerParam.setIsDelete(false);
 			controllerParam.setIsEdited(false);
-		} else {
-			controllerParam.setHasAdminRole(true);
 		}
 		
 		if(findHostNameFromRequst(request).contains("site")) {
@@ -425,7 +424,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		hotSummaryBOList.stream().forEach(bo -> articleIdList.add(bo.getArticleId()));
 		List<ArticleCommentCount> commentCountList = articleCommentController.findCommentCountByArticleId(articleIdList);
 		List<ArticleViewCount> viewCountList = articleViewService.findArticleViewCountByArticleId(articleIdList);
-		if(controllerParam.getHasAdminRole() && articleIdList.size() > 0) {
+		if(baseUtilCustom.hasAdminRole() && articleIdList.size() > 0) {
 			articleHasCommentNotReviewIdList = articleCommentAdminController.findArticleIdWithCommentWaitingForReview(articleIdList);
 		} else {
 			articleHasCommentNotReviewIdList = new ArrayList<Long>();

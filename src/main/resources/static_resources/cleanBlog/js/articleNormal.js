@@ -1,4 +1,3 @@
-
 loadArticleChannels();
 var getUrlParameter = function getUrlParameter(sParam) {
   var sPageURL = decodeURIComponent(window.location.search.substring(1)),
@@ -60,7 +59,12 @@ function buildSummaryLine(subArticleVO) {
   newRow += " </h2> ";
   newRow += " <h3 class='post-subtitle'></h3> ";
   newRow += " </a> ";
-  newRow += " <p class='post-meta'>Post by: "+subArticleVO.nickName+" on: "+subArticleVO.createDateString+", views: "+subArticleVO.viewCount+", comments: "+subArticleVO.commentCount+"</p> ";
+  newRow += " <p class='post-meta'>"
+  newRow += "Post by: "+subArticleVO.nickName+" on: "+subArticleVO.createDateString+", views: "+subArticleVO.viewCount+", comments: "+subArticleVO.commentCount;
+  if (subArticleVO.hasCommentNotReview) {
+    newRow += " <br>CommentReviewWaiting ";
+  }
+  newRow += " </p>";
   newRow += " </div> ";
   newRow += " <hr >"
   return newRow;

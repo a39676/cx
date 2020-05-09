@@ -32,4 +32,6 @@ public interface ArticleCommentMapper {
     int updateByPrimaryKey(ArticleComment record);
     
     List<ArticleComment> findCommentPage(FindCommentPageDTO dto);
+    
+    List<Long> findArticleIdWithCommentWaitingForReview(@Param("isReject") Boolean isReject, @Param("articleIdList")List<Long> articleIdList);
 }

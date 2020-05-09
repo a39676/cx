@@ -1,16 +1,13 @@
 package demo.article.articleComment.controller;
 
-import java.io.IOException;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.article.articleComment.pojo.constant.ArticleAdminCommentUrlConstant;
 import demo.article.articleComment.pojo.dto.DeleteArticleCommentDTO;
@@ -18,7 +15,6 @@ import demo.article.articleComment.pojo.dto.PassArticleCommentDTO;
 import demo.article.articleComment.service.ArticleCommentAdminService;
 import demo.baseCommon.controller.CommonController;
 import demo.baseCommon.pojo.result.CommonResultCX;
-import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping(value = ArticleAdminCommentUrlConstant.root)
@@ -28,17 +24,16 @@ public class ArticleCommentAdminController extends CommonController {
 	private ArticleCommentAdminService articleCommentAdminService;
 
 	@PostMapping(value = ArticleAdminCommentUrlConstant.deleteArticleComment)
-	public void deleteArticleComment(@RequestBody DeleteArticleCommentDTO param, HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	@ResponseBody
+	public CommonResultCX deleteArticleComment(@RequestBody DeleteArticleCommentDTO param) {
 		CommonResultCX result = articleCommentAdminService.deleteArticleComment(param);
-		outputJson(response, JSONObject.fromObject(result));
+		return result;
 	}
 	
 	@PostMapping(value = ArticleAdminCommentUrlConstant.passArticleComment)
-	public void passArticleComment(@RequestBody PassArticleCommentDTO param, HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
-		CommonResultCX result = articleCommentAdminService.passArticleComment(param);
-		outputJson(response, JSONObject.fromObject(result));
+	@ResponseBody
+	public CommonResultCX passArticleComment(@RequestBody PassArticleCommentDTO param) {
+		return articleCommentAdminService.passArticleComment(param);
 	}
 	
 	public List<Long> findArticleIdWithCommentWaitingForReview(List<Long> articleIdList) {

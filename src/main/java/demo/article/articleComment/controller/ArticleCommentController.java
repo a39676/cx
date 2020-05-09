@@ -18,7 +18,6 @@ import demo.article.articleComment.pojo.constant.ArticleCommentUrlConstant;
 import demo.article.articleComment.pojo.dto.CreateArticleCommentDTO;
 import demo.article.articleComment.pojo.dto.FindArticleCommentPageDTO;
 import demo.article.articleComment.pojo.po.ArticleCommentCount;
-import demo.article.articleComment.pojo.result.FindArticleCommentPageResult;
 import demo.article.articleComment.service.ArticleCommentService;
 import demo.baseCommon.controller.CommonController;
 import demo.baseCommon.pojo.result.CommonResultCX;
@@ -38,39 +37,12 @@ public class ArticleCommentController extends CommonController {
 	
 	@PostMapping(value = ArticleCommentUrlConstant.findArticleCommentPage)
 	public ModelAndView findArticleCommentPage(@RequestBody FindArticleCommentPageDTO param, HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView view = new ModelAndView("articleJSP/articleCommentList");
-		FindArticleCommentPageResult result = articleCommentService.findArticleCommentPage(param);
-		if(!result.isSuccess()) {
-			view.addObject("message", result.getMessage());
-			return view;
-		}
-		
-		view.addObject("commentList", result.getCommentList());
-		view.addObject("pk", result.getPk());
-		if(result.getCommentList() != null && result.getCommentList().size() > 0) {
-			view.addObject("startTime", result.getCommentList().get(result.getCommentList().size() - 1).getCreateTimeStr());
-		}
-		
-		return view;
+		return articleCommentService.findArticleCommentPage(param);
 	}
 	
 	@PostMapping(value = ArticleCommentUrlConstant.findArticleCommentSubPage)
 	public ModelAndView findArticleCommentSubPage(@RequestBody FindArticleCommentPageDTO param, HttpServletRequest request, HttpServletResponse response) {
-//		TODO
-		ModelAndView view = new ModelAndView("articleJSP/articleCommentListSubList");
-		FindArticleCommentPageResult result = articleCommentService.findArticleCommentPage(param);
-		if(!result.isSuccess()) {
-			view.addObject("message", result.getMessage());
-			return view;
-		}
-		
-		view.addObject("commentList", result.getCommentList());
-		view.addObject("pk", result.getPk());
-		if(result.getCommentList() != null && result.getCommentList().size() > 0) {
-			view.addObject("startTime", result.getCommentList().get(result.getCommentList().size() - 1).getCreateTimeStr());
-		}
-		
-		return view;
+		return articleCommentService.findArticleCommentPage(param);
 	}
 
 	public List<ArticleCommentCount> findCommentCountByArticleId(List<Long> articleIdList) {

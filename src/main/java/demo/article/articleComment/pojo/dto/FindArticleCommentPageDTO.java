@@ -9,6 +9,7 @@ public class FindArticleCommentPageDTO {
 	private Boolean isPass = true;
 	private Boolean isDelete = false;
 	private Boolean isReject = false;
+	private Short limit = 5;
 
 	public String getPk() {
 		return pk;
@@ -50,10 +51,18 @@ public class FindArticleCommentPageDTO {
 		this.isReject = isReject;
 	}
 
+	public Short getLimit() {
+		return limit;
+	}
+	
+	public void setLimit(Short limit) {
+		this.limit = limit;
+	}
+	
 	@Override
 	public String toString() {
 		return "FindArticleCommentPageDTO [pk=" + pk + ", startTime=" + startTime + ", isPass=" + isPass + ", isDelete="
-				+ isDelete + ", isReject=" + isReject + "]";
+				+ isDelete + ", isReject=" + isReject + ", limit=" + limit + "]";
 	}
 
 }

@@ -393,4 +393,24 @@
     </if>
   </select>
   
+  <select id="findArticleIdWithCommentWaitingForReview" resultType="Long">
+    select
+      article_id
+    from
+      article_comment
+    <where>
+      is_pass = false
+      and is_delete = false
+      <if test="isReject != null">
+        and is_reject = #{isReject}
+      </if>
+      <if test="isReject == null">
+        and is_reject = false
+      </if>
+      and article_id in
+      <foreach close=")" collection="articleIdList" item="articleId" open="(" separator=",">
+        #{articleId}
+      </foreach>
+    </where>
+  </select>
 </mapper>

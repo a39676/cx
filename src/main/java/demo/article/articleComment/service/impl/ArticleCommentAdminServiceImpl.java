@@ -2,7 +2,6 @@ package demo.article.articleComment.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +12,6 @@ import demo.article.articleComment.mapper.ArticleCommentReviewMapper;
 import demo.article.articleComment.pojo.dto.DeleteArticleCommentDTO;
 import demo.article.articleComment.pojo.dto.PassArticleCommentDTO;
 import demo.article.articleComment.pojo.po.ArticleComment;
-import demo.article.articleComment.pojo.po.ArticleCommentExample;
 import demo.article.articleComment.pojo.po.ArticleCommentReview;
 import demo.article.articleComment.pojo.type.ArticleCommentReviewType;
 import demo.article.articleComment.service.ArticleCommentAdminService;
@@ -98,19 +96,10 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 	
 	@Override
 	public List<Long> findArticleIdWithCommentWaitingForReview(List<Long> articleIdList) {
-		if(articleIdList == null || articleIdList.size() < 1) {
+		if(articleIdList == null || articleIdList.isEmpty()) {
 			return new ArrayList<Long>();
 		}
 		
-		ArticleCommentExample example = new ArticleCommentExample();
-		example.createCriteria().andArticleIdIn(articleIdList).andIsDeleteEqualTo(false).andIsPassEqualTo(false).andIsRejectEqualTo(false);
-		List<ArticleComment> commentPOList = articleCommentMapper.selectByExample(example);
-		
-		if(commentPOList == null || commentPOList.isEmpty()) {
-			return new ArrayList<Long>();
-		}
-		
-		List<Long> idList = commentPOList.stream().map(po -> po.getArticleId()).collect(Collectors.toList());
-		return idList;
+		return 	articleCommentMapper.findArticleIdWithCommentWaitingForReview(false, articleIdList);
 	}
 }

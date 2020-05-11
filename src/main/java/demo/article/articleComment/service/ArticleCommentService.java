@@ -10,13 +10,16 @@ import org.springframework.web.servlet.ModelAndView;
 import demo.article.articleComment.pojo.dto.CreateArticleCommentDTO;
 import demo.article.articleComment.pojo.dto.FindArticleCommentPageDTO;
 import demo.article.articleComment.pojo.po.ArticleCommentCount;
+import demo.article.articleComment.pojo.result.FindArticleCommentPageResult;
 import demo.baseCommon.pojo.result.CommonResultCX;
 
 public interface ArticleCommentService {
 
 	CommonResultCX creatingArticleComment(HttpServletRequest request, CreateArticleCommentDTO inputParam) throws IOException;
 
-	ModelAndView findArticleCommentPage(FindArticleCommentPageDTO controllerParam);
+	ModelAndView findArticleCommentPageView(FindArticleCommentPageDTO controllerParam);
+
+	FindArticleCommentPageResult findArticleCommentVOPage(FindArticleCommentPageDTO dto);
 
 	List<ArticleCommentCount> findCommentCountByArticleId(List<Long> articleIdList);
 
@@ -25,5 +28,4 @@ public interface ArticleCommentService {
 	 * 根据当前黑名单ip, 将关联评论 isReject = true
 	 */
 	void batchRejectComment();
-
 }

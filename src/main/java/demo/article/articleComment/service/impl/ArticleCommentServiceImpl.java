@@ -3,9 +3,8 @@ package demo.article.articleComment.service.impl;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -20,7 +19,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.article.pojo.type.ArticleEvaluationType;
-import demo.article.article.pojo.vo.ArticleCommentVO;
 import demo.article.article.pojo.vo.ArticleEvaluationStatisticsVO;
 import demo.article.article.service.ArticleEvaluationService;
 import demo.article.article.service.ArticleService;
@@ -38,6 +36,7 @@ import demo.article.articleComment.pojo.po.ArticleCommentCountExample;
 import demo.article.articleComment.pojo.po.ArticleCommentExample;
 import demo.article.articleComment.pojo.po.ArticleCommentExample.Criteria;
 import demo.article.articleComment.pojo.result.FindArticleCommentPageResult;
+import demo.article.articleComment.pojo.vo.ArticleCommentVO;
 import demo.article.articleComment.service.ArticleCommentAdminService;
 import demo.article.articleComment.service.ArticleCommentService;
 import demo.base.system.pojo.bo.SystemConstantStore;
@@ -230,9 +229,9 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	}
 
 	@Override
-	public ModelAndView findArticleCommentPage(FindArticleCommentPageDTO dto) {
+	public ModelAndView findArticleCommentPageView(FindArticleCommentPageDTO dto) {
 		ModelAndView view = new ModelAndView("articleJSP/articleCommentListSubList");
-		FindArticleCommentPageResult result = handleFindArticleCommentPage(dto);
+		FindArticleCommentPageResult result = findArticleCommentVOPage(dto);
 		if(!result.isSuccess()) {
 			view.addObject("message", result.getMessage());
 			return view;
@@ -247,7 +246,8 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		return view;
 	}
 	
-	private FindArticleCommentPageResult handleFindArticleCommentPage(FindArticleCommentPageDTO dto) {
+	@Override
+	public FindArticleCommentPageResult findArticleCommentVOPage(FindArticleCommentPageDTO dto) {
 		FindArticleCommentPageResult result = new FindArticleCommentPageResult();
 		List<ArticleCommentVO> commentVOList = new ArrayList<ArticleCommentVO>();
 		
@@ -263,6 +263,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			dto.setStartTime(dto.getStartTime().plusSeconds(1L));
 		}
 		
+		dto.setPk(URLDecoder.decode(dto.getPk(), StandardCharsets.UTF_8));
 		Long articleId = decryptPrivateKey(dto.getPk());
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
@@ -291,9 +292,9 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		if(commentPOList == null || commentPOList.isEmpty()) {
 			result.setIsSuccess();
 			ArticleCommentVO vo = new ArticleCommentVO();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			vo.setNickName("-");
 			vo.setContent("暂时还没有更多评论");
-			vo.setCreateTimeStr(sdf.format(new Date()));
+			vo.setCreateTimeStr(localDateTimeHandler.dateToStr(LocalDateTime.now()));
 			commentVOList.add(vo);
 			result.setCommentList(commentVOList);
 			return result;
@@ -319,7 +320,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		vo.setEvaluationCodeAndCount(evaluationStatisticsMap.get(po.getId()).getEvaluationCodeAndCount());
 		vo.setNickName(po.getTmpNickName());
 		vo.setCreateTimeStr(localDateTimeHandler.dateToStr(po.getCreateTime()));
-		vo.setArticleCommentId(po.getId());
+		vo.setPk(encryptId(po.getId()));
 		vo.setIsPass(po.getIsPass());
 		vo.setIsDelete(po.getIsDelete());
 		vo.setIsReject(po.getIsReject());

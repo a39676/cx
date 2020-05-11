@@ -2,14 +2,22 @@ package demo.article.articleComment.pojo.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+
+import toolPack.dateTimeHandle.DateHandler;
+
 public class FindArticleCommentPageDTO {
 
 	private String pk;
+	@JsonFormat(pattern = DateHandler.normalDateTimeFormat)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	private LocalDateTime startTime;
 	private Boolean isPass = true;
 	private Boolean isDelete = false;
 	private Boolean isReject = false;
-	private Short limit = 5;
+	private Short limit = 10;
 
 	public String getPk() {
 		return pk;

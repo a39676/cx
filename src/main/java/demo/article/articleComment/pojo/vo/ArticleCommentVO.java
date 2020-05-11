@@ -1,10 +1,12 @@
-package demo.article.article.pojo.vo;
+package demo.article.articleComment.pojo.vo;
 
 import java.util.HashMap;
 
+import demo.article.article.pojo.vo.ArticleEvaluationCounterVO;
+
 public class ArticleCommentVO {
 
-	private Long articleCommentId;
+	private String pk;
 	private String createTimeStr;
 	private String nickName;
 	private String content;
@@ -13,12 +15,12 @@ public class ArticleCommentVO {
 	private Boolean isReject;
 	private HashMap<Integer, ArticleEvaluationCounterVO> evaluationCodeAndCount = new HashMap<Integer, ArticleEvaluationCounterVO>();
 
-	public Long getArticleCommentId() {
-		return articleCommentId;
+	public String getPk() {
+		return pk;
 	}
 
-	public void setArticleCommentId(Long articleCommentId) {
-		this.articleCommentId = articleCommentId;
+	public void setPk(String pk) {
+		this.pk = pk;
 	}
 
 	public String getCreateTimeStr() {
@@ -79,9 +81,9 @@ public class ArticleCommentVO {
 
 	@Override
 	public String toString() {
-		return "ArticleCommentVO [articleCommentId=" + articleCommentId + ", createTimeStr=" + createTimeStr
-				+ ", nickName=" + nickName + ", content=" + content + ", isDelete=" + isDelete + ", isPass=" + isPass
-				+ ", isReject=" + isReject + ", evaluationCodeAndCount=" + evaluationCodeAndCount + "]";
+		return "ArticleCommentVO [pk=" + pk + ", createTimeStr=" + createTimeStr + ", nickName=" + nickName
+				+ ", content=" + content + ", isDelete=" + isDelete + ", isPass=" + isPass + ", isReject=" + isReject
+				+ ", evaluationCodeAndCount=" + evaluationCodeAndCount + "]";
 	}
 
 }

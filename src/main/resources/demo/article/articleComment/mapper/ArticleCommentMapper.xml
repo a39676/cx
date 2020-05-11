@@ -384,7 +384,7 @@
         and create_time &gt;= #{startTime}
       </if>
     </where>
-    order by create_time desc
+    order by create_time
     <if test="limit != null">
       limit #{limit}
     </if>

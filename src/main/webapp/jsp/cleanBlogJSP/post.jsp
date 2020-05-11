@@ -68,6 +68,7 @@
   <!-- Post Content -->
   <article>
     <div class="container">
+      <%-- content --%>
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
@@ -80,54 +81,74 @@
         </div>
       </div>
       <hr>
-      <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="page-heading">
-            <h2>这是一个传说的...</h2>
-            <span class="subheading">留言区</span>
+      <%-- comment list start --%>
+      <div class="container" id="commentArea">
+        <div class="row">
+          <div class="container" pk="${articleLongVO.privateKey}" id="commentList" 
+          markTime="${articleLongVO.createDateString}" loadingFlag="">
+            
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-          <form name="sentMessage" novalidate>
-            <div class="control-group">
-              <div class="form-group floating-label-form-group controls">
-                <label>您的称呼</label>
-                <input type="text" class="form-control" placeholder="您的称呼" id="nickname" required data-validation-required-message="Please enter your name.">
-                <p class="help-block text-danger"></p>
-              </div>
-            </div>
-            <div class="control-group">
-              <div class="form-group floating-label-form-group controls">
-                <label>Email (不会展示给其他用户)</label>
-              <input type="email" class="form-control" placeholder="Email Address (不会展示给其他用户)" id="email" required data-validation-required-message="Please enter your  email address.">
-                <p class="help-block text-danger"></p>
-              </div>
-            </div>
-            <div class="control-group">
-              <div class="form-group col-xs-12 floating-label-form-group controls">
-                <label>Phone Number (可选, 不会展示给其他用户)</label>
-                <input type="tel" class="form-control" placeholder="Phone Number (可选, 不会展示给其他用户)" id="mobile">
-              </div>
-            </div>
-            <div class="control-group">
-              <div class="form-group col-xs-12 floating-label-form-group controls">
-                <label>Message</label>
-                <textarea rows="5" class="form-control" placeholder="请输入您想说的" id="message" required data-validation-required-message="Please enter a message."></textarea>
-                <p class="help-block text-danger"></p>
-              </div>
-            </div>
-            <br>
-            <div class="btn-group">
-              <span class="badge badge-warning" name="comment" pk="${articleLongVO.privateKey}">
-                <span style="cursor:pointer;"><提交留言></span>
-              </span>
-            </div>
-            <span class="badge badge-warning" pk="${articleLongVO.privateKey}" name="commentResult"></span>
-          </form>
+        <div class="row">
+          <div class="spinner-border text-warning" role="status" id="articleAreaLoadingImg">
+            <span class="sr-only">Loading...</span>
+          </div>
+          <button class="btn btn-sm btn-primary" id="loadMoreButton"><b>Load more comment</b></button>
         </div>
+        <%-- create comment start --%>
+        <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="page-heading">
+              <h2>这是一个传说的...</h2>
+              <span class="subheading">留言区</span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            <form name="sentMessage" novalidate>
+              <div class="control-group">
+                <div class="form-group floating-label-form-group controls">
+                  <label>您的称呼</label>
+                <input type="text" class="form-control" placeholder="您的称呼" id="nickname" required   data-validation-required-message="Please enter your name.">
+                  <p class="help-block text-danger"></p>
+                </div>
+              </div>
+              <div class="control-group">
+                <div class="form-group floating-label-form-group controls">
+                  <label>Email (不会展示给其他用户)</label>
+                  <input type="email" class="form-control" placeholder="Email Address (不会展示给其他用户)" id="email" required data-validation-required-message="Please enter your  email address.  ">
+                  <p class="help-block text-danger"></p>
+                </div>
+              </div>
+              <div class="control-group">
+                <div class="form-group col-xs-12 floating-label-form-group controls">
+                  <label>Phone Number (可选, 不会展示给其他用户)</label>
+                  <input type="tel" class="form-control" placeholder="Phone Number (可选,   不会展示给其他用户)" id="mobile">
+                </div>
+              </div>
+              <div class="control-group">
+                <div class="form-group col-xs-12 floating-label-form-group controls">
+                  <label>Message</label>
+                  <textarea rows="5" class="form-control" placeholder="请输入您想说的" id="message"  required data-validation-required-message="Please enter a message."></textarea>
+                  <p class="help-block text-danger"></p>
+                </div>
+              </div>
+              <br>
+              <div class="btn-group">
+                <span class="badge badge-warning" name="comment" pk="${articleLongVO.privateKey}">
+                  <span style="cursor:pointer;"><提交留言></span>
+                </span>
+              </div>
+              <span class="badge badge-warning" pk="${articleLongVO.privateKey}" name="commentResult">
+              </span>
+            </form>
+          </div>
+        </div>
+        <%-- create comment end --%>
       </div>
+      <%-- comment list end --%>
+      
     </div>
   </article>
 
@@ -146,7 +167,81 @@
   </sec:authorize>
 
   <script type="text/javascript">
+$(document).ready(function() {
 
+  $("#loadMoreButton").click(function () {
+    loadCommentPage();
+  });
+
+  loadCommentPage();
+
+  function loadCommentPage() {
+    var commentList = $("#commentList");
+    var pk = commentList.attr("pk");
+    var markTime = commentList.attr("markTime");
+
+    if(commentList.attr("loadingFlag") == "1") {
+      return;
+    }
+    $("#articleAreaLoadingImg").fadeIn(100);    
+    commentList.attr("loadingFlag", "1");
+    var jsonOutput = {
+      pk:pk,
+      startTime:markTime,
+    };
+    var url = "/articleComment/findArticleCommentPage";
+    $.ajax({
+      type : "POST",  
+      async : true,
+      url : url,  
+      data: JSON.stringify(jsonOutput),
+      cache : false,
+      contentType: "application/json",
+      dataType: "json",
+      timeout:50000,  
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader(csrfHeader, csrfToken);
+      },
+      success:function(datas){
+        // var json = JSON.parse(datas);
+        var commentVOList = datas.commentList;
+        var commentList = $("#commentList");
+        var newRow = "";
+        commentVOList.forEach(function(commentVO) {
+          newRow = buildComment(commentVO);
+          commentList.append(newRow);
+          commentList.attr("markTime", commentVO.createTimeStr);
+        });
+      },  
+      error: function(datas) {  
+      }
+    }); 
+    $("#articleAreaLoadingImg").fadeOut(100);
+    setTimeout(function(){
+      commentList.attr("loadingFlag", "0");
+    }, 500);
+  };
+
+  function buildComment(commentVO) {
+    var commentRow = "";
+    commentRow += "<div class='row'>";
+    commentRow += "  <div class='col-lg-8 col-md-10 mx-auto'>";
+    commentRow += "    <p class='post-meta'>";
+    commentRow += "      Post by: "+commentVO.nickName+" on: "+commentVO.createTimeStr;
+    commentRow += "    </p>";
+    commentRow += "  </div>";
+    commentRow += "</div>";
+    commentRow += "<div class='row'>";
+    commentRow += "  <div class='col-lg-8 col-md-10 mx-auto'>";
+    commentRow += "    <p class='para' style=;word-break:break-word;'>"
+    commentRow +=        commentVO.content;
+    commentRow += "    </p>";
+    commentRow += "  </div>";
+    commentRow += "</div>";
+    commentRow += "<hr>";
+    return commentRow;
+  }
+})
   </script>
 
 </body>

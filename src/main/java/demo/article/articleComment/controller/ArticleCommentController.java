@@ -18,6 +18,7 @@ import demo.article.articleComment.pojo.constant.ArticleCommentUrlConstant;
 import demo.article.articleComment.pojo.dto.CreateArticleCommentDTO;
 import demo.article.articleComment.pojo.dto.FindArticleCommentPageDTO;
 import demo.article.articleComment.pojo.po.ArticleCommentCount;
+import demo.article.articleComment.pojo.result.FindArticleCommentPageResult;
 import demo.article.articleComment.service.ArticleCommentService;
 import demo.baseCommon.controller.CommonController;
 import demo.baseCommon.pojo.result.CommonResultCX;
@@ -36,13 +37,21 @@ public class ArticleCommentController extends CommonController {
 	}
 	
 	@PostMapping(value = ArticleCommentUrlConstant.findArticleCommentPage)
-	public ModelAndView findArticleCommentPage(@RequestBody FindArticleCommentPageDTO param, HttpServletRequest request, HttpServletResponse response) {
-		return articleCommentService.findArticleCommentPage(param);
+	@ResponseBody
+	public FindArticleCommentPageResult findArticleCommentPage(@RequestBody FindArticleCommentPageDTO param) {
+		return articleCommentService.findArticleCommentVOPage(param);
 	}
 	
+	/**
+	 * 2020-05-10 发现, 应该是旧式页面使用, 准备删除此链接
+	 * @param param
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@PostMapping(value = ArticleCommentUrlConstant.findArticleCommentSubPage)
 	public ModelAndView findArticleCommentSubPage(@RequestBody FindArticleCommentPageDTO param, HttpServletRequest request, HttpServletResponse response) {
-		return articleCommentService.findArticleCommentPage(param);
+		return articleCommentService.findArticleCommentPageView(param);
 	}
 
 	public List<ArticleCommentCount> findCommentCountByArticleId(List<Long> articleIdList) {

@@ -90,10 +90,12 @@
           </div>
         </div>
         <div class="row">
-          <div class="spinner-border text-warning" role="status" id="articleAreaLoadingImg">
-            <span class="sr-only">Loading...</span>
+          <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="spinner-border text-warning" role="status" id="articleAreaLoadingImg">
+              <span class="sr-only">Loading...</span>
+            </div>
+            <button class="btn btn-sm btn-primary" id="loadMoreButton"><b>Load more comment</b></button>
           </div>
-          <button class="btn btn-sm btn-primary" id="loadMoreButton"><b>Load more comment</b></button>
         </div>
         <%-- create comment start --%>
         <div class="row">
@@ -203,7 +205,6 @@ $(document).ready(function() {
         xhr.setRequestHeader(csrfHeader, csrfToken);
       },
       success:function(datas){
-        // var json = JSON.parse(datas);
         var commentVOList = datas.commentList;
         var commentList = $("#commentList");
         var newRow = "";

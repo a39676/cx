@@ -95,6 +95,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	@Override
 	public CommonResultCX handelReviewArticle(ReviewArticleLongParam param) throws Exception {
 		CommonResultCX result = null;
+		param.setPk(URLDecoder.decode(param.getPk(), StandardCharsets.UTF_8));
 		if(param.getReviewCode().equals(ArticleReviewType.pass.getReviewCode())) {
 			result = passArticle(param.getPk());
 			return result;

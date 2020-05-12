@@ -273,8 +273,8 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		
 
 		if(!isBigUser()) {
-			dto.setIsDelete(false);
 			dto.setIsPass(true);
+			dto.setIsDelete(false);
 			dto.setIsReject(false);
 			if(dto.getLimit() != null && dto.getLimit() > ArticleCommentConstant.commentPageMaxSize) {
 				dto.setLimit(ArticleCommentConstant.commentPageMaxSize);

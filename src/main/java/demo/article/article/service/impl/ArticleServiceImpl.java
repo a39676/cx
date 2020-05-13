@@ -538,6 +538,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return false;
 		}
 		
+		privateKey = URLDecoder.decode(privateKey, StandardCharsets.UTF_8);
 		Long articleId = decryptPrivateKey(privateKey);
 		if(articleId == null) {
 			return false;

@@ -47,42 +47,7 @@ $(document).ready(function() {
       }  
     });  
   });
-
-  $("button[name='findComment']").click(function () {
-    if($("div[name='commentDetailList']").length) {
-      $("div[name='commentDiv']").show();
-      $("div[name='commentDetailList']").show();
-      $("button[name='findComment']").fadeOut(150);
-      return;
-    }
-
-    var url = "/articleComment/findArticleCommentPage";
-    var jsonOutput = {
-      pk:pk
-    };
-
-    $.ajax({  
-      type : "POST",  
-      async : true,
-      url : url,  
-      data: JSON.stringify(jsonOutput),
-      cache : false,
-      contentType: "application/json",
-      // dataType: "json",
-      timeout:50000,  
-      beforeSend: function(xhr) {
-        xhr.setRequestHeader(csrfHeader, csrfToken);
-      },
-      success:function(datas){
-        $("div[name='commentDiv']").append(datas);
-        $("button[name='findComment']").fadeOut(150);
-      },  
-      error: function(datas) {
-
-      }  
-    });  
-  });
-
+  
   $("span[name='evaluation']").click(function() {
     if($("span[name='evaluation']").attr("voted") == "1") {
       $("span[name='evaluationResult']").text("已评...请勿重复操作...");
@@ -122,5 +87,5 @@ $(document).ready(function() {
       }  
     }); 
   });
-
+  
 });

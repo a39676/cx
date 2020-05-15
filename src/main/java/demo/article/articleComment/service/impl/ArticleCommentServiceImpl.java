@@ -223,7 +223,6 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		return result;
 	}
 	
-	
 	private ArticleFileSaveResult saveArticleCommentFile(String storePrefixPath, Long userId, String content) throws IOException {
 		return articleService.saveArticleFile(storePrefixPath, userId, content);
 	}
@@ -403,4 +402,5 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		record.setIsReject(true);
 		articleCommentMapper.updateByExampleSelective(record, example);
 	}
+
 }

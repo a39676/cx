@@ -465,7 +465,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			result.setArticleLongVO(articleVO);
 			return result;
 		}
-		visitDataService.insertVisitData(request, articleId.toString());
 		result.setArticleId(articleId);
 		
 		articleViewService.insertOrUpdateViewCount(articleId);
@@ -495,6 +494,10 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		return result;
 	}
 
+	private void insertArticleVisitData(HttpServletRequest request, Long articleId) {
+		visitDataService.insertVisitData(request, articleId.toString());
+	}
+	
 	@Override
 	public ModelAndView readArticleLong(String pk, HttpServletRequest request) {
 		ModelAndView view = new ModelAndView(ArticleViewConstant.readArticleLongCleanBlog);
@@ -505,6 +508,9 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		view.addObject("articleLongVO", result.getArticleLongVO());
 		view.addObject("visitCount", visitDataService.getVisitCount());
 		view.addObject("title", result.getArticleLongVO().getArticleTitle());
+		if(result.isSuccess()) {
+			insertArticleVisitData(request, result.getArticleId());
+		}
 		
 		return view;
 	}

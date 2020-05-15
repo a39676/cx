@@ -102,4 +102,5 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 		
 		return 	articleCommentMapper.findArticleIdWithCommentWaitingForReview(false, articleIdList);
 	}
+	
 }

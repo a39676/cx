@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.baseCommon.controller.CommonController;
 import demo.pmemo.pojo.constant.PMemoUrl;
+import demo.pmemo.pojo.constant.PMemoView;
 import demo.pmemo.pojo.dto.SetPMemoDTO;
 import demo.pmemo.service.PMemoService;
 
@@ -30,8 +31,7 @@ public class PMemoController extends CommonController {
 	
 	@GetMapping(value = PMemoUrl.set)
 	public ModelAndView set() {
-//		TODO
-		return null;
+		return new ModelAndView(PMemoView.createPMemo);
 	}
 	
 	@PostMapping(value = PMemoUrl.set)

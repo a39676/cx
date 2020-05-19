@@ -162,10 +162,18 @@
   <%@ include file="./cleanBlogNormalFooter.jsp" %>
   <script type="text/javascript" src="<c:url value='/static_resources/cleanBlog/js/readArticleLongV4.js'/>"></script>
   <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
-  <script type="text/javascript" src="<c:url value='/static_resources/js/article/articleManager.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/static_resources/js/article/articleManager.js'/>">
+    </script>
+    <script type="text/javascript" src="<c:url value='/static_resources/cleanBlog/js/loadArticleCommentForAdmin.js'/>">
+    </script>
   </sec:authorize>
   <sec:authorize access="hasRole('ROLE_USER')">
-  <script type="text/javascript" src="<c:url value='/static_resources/js/article/articleLongUserV3.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/static_resources/js/article/articleLongUserV3.js'/>">
+    </script>
+    <sec:authorize access="!hasRole('ROLE_SUPER_ADMIN')">
+      <script type="text/javascript" src="<c:url value='/static_resources/cleanBlog/js/loadArticleCommentForUser.js'/>">
+      </script>
+    </sec:authorize>
   </sec:authorize>
 
   <script type="text/javascript">

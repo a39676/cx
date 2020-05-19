@@ -56,7 +56,7 @@ $(document).ready(function() {
 
   function buildComment(commentVO) {
     var commentRow = "";
-    commentRow += "<div class='row'>";
+    commentRow += "<div class='row commentInfoRow' pk='"+commentVO.pk+"'>";
     commentRow += "  <div class='col-lg-8 col-md-10 mx-auto'>";
     commentRow += "    <p class='post-meta'>";
     commentRow += "      Post by: "+commentVO.nickName+" on: "+commentVO.createTimeStr;
@@ -70,7 +70,69 @@ $(document).ready(function() {
     commentRow += "    </p>";
     commentRow += "  </div>";
     commentRow += "</div>";
+    commentRow += "<div class='row'>";
+    commentRow += "  <div class='col-lg-8 col-md-10 mx-auto'>";
+    if (commentVO.isPass) {
+      commentRow += "    <button class='badge badge-success' disabled='disabled'>已通过</button>";
+    } else {
+      commentRow += "    <button class='commentReviewButton badge badge-success' name='passComment' pk='"+commentVO.pk+"'>通过</button>";
+    }
+    if (commentVO.isDelete) {
+      commentRow += "    <button class='badge badge-danger' disabled='disabled'>已删除</button>";
+    } else {
+      commentRow += "    <button class='commentReviewButton badge badge-danger' name='deleteComment' pk='"+commentVO.pk+"'>删除</button>";
+    }
+    if (commentVO.isReject) {
+      commentRow += "    <button class='badge badge-danger' disabled='disabled'>已拒绝</button>";
+    } else {
+      commentRow += "    <button class='commentReviewButton badge badge-danger' name='rejectComment' pk='"+commentVO.pk+"'>拒绝</button>";
+    }
+    commentRow += "  </div>";
+    commentRow += "  <div class='col-lg-4 col-md-10 mx-auto'>";
+    
+    commentRow += "  </div>";
+    commentRow += "</div>";
     commentRow += "<hr>";
     return commentRow;
   }
+
+  function reviewComment(thisButton) {
+    var pk = thisButton.attr("pk");
+    var operatorType = thisButton.attr("name");
+    var url = "";
+
+    if(operatorType == passComment) {
+      url = "/articleAdminComment/passArticleComment";
+    } else if(operatorType == rejectComment) {
+      url = "/articleAdminComment/rejectArticleComment";
+    } else if(operatorType == deleteComment) {
+      url = "/articleAdminComment/deleteArticleComment";
+    }
+
+    var jsonOutput = {
+      pk:pk,
+    };
+    
+    $.ajax({
+      type : "POST",  
+      async : true,
+      url : url,  
+      data: JSON.stringify(jsonOutput),
+      cache : false,
+      contentType: "application/json",
+      dataType: "json",
+      timeout:50000,  
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader(csrfHeader, csrfToken);
+      },
+      success:function(datas){
+        var commentVOList = datas.commentList;
+        var commentList = $("#commentList");
+      },  
+      error: function(datas) {
+
+      }
+    }); 
+  };
+
 });

@@ -3,7 +3,7 @@ package demo.article.articleComment.pojo.type;
 public enum ArticleCommentReviewType {
 	
 	pass("pass", 0),
-//	reject("reject", 1),
+	reject("reject", 1),
 	delete("delete", 2),
 	;
 	

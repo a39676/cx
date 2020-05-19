@@ -1,16 +1,21 @@
 package demo.article.articleComment.service.impl;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import demo.article.articleComment.mapper.ArticleCommentMapper;
 import demo.article.articleComment.mapper.ArticleCommentReviewMapper;
+import demo.article.articleComment.pojo.dto.ArticleCommentReviewCommonDTO;
 import demo.article.articleComment.pojo.dto.DeleteArticleCommentDTO;
 import demo.article.articleComment.pojo.dto.PassArticleCommentDTO;
+import demo.article.articleComment.pojo.dto.RejectArticleCommentDTO;
 import demo.article.articleComment.pojo.po.ArticleComment;
 import demo.article.articleComment.pojo.po.ArticleCommentReview;
 import demo.article.articleComment.pojo.type.ArticleCommentReviewType;
@@ -30,14 +35,23 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 	@Autowired
 	private ArticleCommentReviewMapper articleCommentReviewMapper;
 	
+	private CommonResultCX ArticleCommentReviewDTOValider(ArticleCommentReviewCommonDTO dto) {
+		CommonResultCX result = new CommonResultCX();
+		
+		if(StringUtils.isBlank(dto.getPk())) {
+			result.fillWithResult(ResultTypeCX.errorParam);
+			return result;
+		}
+		
+		result.setIsSuccess();
+		return result;
+	}
 	
 	@Override
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 	public CommonResultCX deleteArticleComment(DeleteArticleCommentDTO param) {
-		CommonResultCX result = new CommonResultCX();
-		
-		if(param.getCommentId() == null || param.getCommentId() < 0) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+		CommonResultCX result = ArticleCommentReviewDTOValider(param);
+		if(result.isFail()) {
 			return result;
 		}
 		
@@ -47,15 +61,21 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 			return result;
 		}
 		
+		Long commentId = decryptPrivateKey(URLDecoder.decode(param.getPk(), StandardCharsets.UTF_8));
+		if(commentId == null) {
+			result.fillWithResult(ResultTypeCX.errorParam);
+			return result;
+		}
+		
 		ArticleCommentReview reviewRecord = new ArticleCommentReview();
-		reviewRecord.setCommentId(param.getCommentId());
+		reviewRecord.setCommentId(commentId);
 		reviewRecord.setReviewTypeId(ArticleCommentReviewType.delete.getReviewCode());
 		reviewRecord.setArticleReviewerId(reviewerId);
 		articleCommentReviewMapper.insertNew(reviewRecord);
 		
 		
 		ArticleComment record = new ArticleComment();
-		record.setId(param.getCommentId());
+		record.setId(commentId);
 		record.setIsDelete(true);
 		articleCommentMapper.updateByPrimaryKeySelective(record);
 		result.fillWithResult(ResultTypeCX.articleCommentDeleteSuccess);
@@ -66,10 +86,8 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 	@Override
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 	public CommonResultCX passArticleComment(PassArticleCommentDTO param) {
-		CommonResultCX result = new CommonResultCX();
-		
-		if(param.getCommentId() == null || param.getCommentId() < 0) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+		CommonResultCX result = ArticleCommentReviewDTOValider(param);
+		if(result.isFail()) {
 			return result;
 		}
 		
@@ -79,14 +97,55 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 			return result;
 		}
 		
+		Long commentId = decryptPrivateKey(URLDecoder.decode(param.getPk(), StandardCharsets.UTF_8));
+		if(commentId == null) {
+			result.fillWithResult(ResultTypeCX.errorParam);
+			return result;
+		}
+		
 		ArticleCommentReview reviewRecord = new ArticleCommentReview();
-		reviewRecord.setCommentId(param.getCommentId());
+		reviewRecord.setCommentId(commentId);
 		reviewRecord.setReviewTypeId(ArticleCommentReviewType.pass.getReviewCode());
 		reviewRecord.setArticleReviewerId(reviewerId);
 		articleCommentReviewMapper.insertNew(reviewRecord);
 		
 		ArticleComment record = new ArticleComment();
-		record.setId(param.getCommentId());
+		record.setId(commentId);
+		record.setIsPass(true);
+		articleCommentMapper.updateByPrimaryKeySelective(record);
+		result.fillWithResult(ResultTypeCX.articleCommentPassSuccess);
+		
+		return result;
+	}
+	
+	@Override
+	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
+	public CommonResultCX rejectArticleComment(RejectArticleCommentDTO param) {
+		CommonResultCX result = ArticleCommentReviewDTOValider(param);
+		if(result.isFail()) {
+			return result;
+		}
+		
+		Long reviewerId = baseUtilCustom.getUserId();
+		if(reviewerId == null ) {
+			result.fillWithResult(ResultTypeCX.errorParam);
+			return result;
+		}
+		
+		Long commentId = decryptPrivateKey(URLDecoder.decode(param.getPk(), StandardCharsets.UTF_8));
+		if(commentId == null) {
+			result.fillWithResult(ResultTypeCX.errorParam);
+			return result;
+		}
+		
+		ArticleCommentReview reviewRecord = new ArticleCommentReview();
+		reviewRecord.setCommentId(commentId);
+		reviewRecord.setReviewTypeId(ArticleCommentReviewType.reject.getReviewCode());
+		reviewRecord.setArticleReviewerId(reviewerId);
+		articleCommentReviewMapper.insertNew(reviewRecord);
+		
+		ArticleComment record = new ArticleComment();
+		record.setId(commentId);
 		record.setIsPass(true);
 		articleCommentMapper.updateByPrimaryKeySelective(record);
 		result.fillWithResult(ResultTypeCX.articleCommentPassSuccess);

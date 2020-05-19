@@ -211,8 +211,8 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		
 		if(bigUserFlag) {
 			PassArticleCommentDTO param = new PassArticleCommentDTO();
-			param.setCommentId(newCommonId);
-			articleCommentAdminService.passArticleComment(param );
+			param.setPk(encryptId(newCommonId));
+			articleCommentAdminService.passArticleComment(param);
 		} else {
 			insertCommentRedisMark(request, userId, articleId);
 		}

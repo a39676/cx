@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import demo.article.articleComment.pojo.constant.ArticleAdminCommentUrlConstant;
 import demo.article.articleComment.pojo.dto.DeleteArticleCommentDTO;
 import demo.article.articleComment.pojo.dto.PassArticleCommentDTO;
+import demo.article.articleComment.pojo.dto.RejectArticleCommentDTO;
 import demo.article.articleComment.service.ArticleCommentAdminService;
 import demo.baseCommon.controller.CommonController;
 import demo.baseCommon.pojo.result.CommonResultCX;
@@ -34,6 +35,12 @@ public class ArticleCommentAdminController extends CommonController {
 	@ResponseBody
 	public CommonResultCX passArticleComment(@RequestBody PassArticleCommentDTO param) {
 		return articleCommentAdminService.passArticleComment(param);
+	}
+	
+	@PostMapping(value = ArticleAdminCommentUrlConstant.rejectArticleComment)
+	@ResponseBody
+	public CommonResultCX rejectArticleComment(@RequestBody RejectArticleCommentDTO param) {
+		return articleCommentAdminService.rejectArticleComment(param);
 	}
 	
 	public List<Long> findArticleIdWithCommentWaitingForReview(List<Long> articleIdList) {

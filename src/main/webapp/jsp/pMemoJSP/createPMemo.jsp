@@ -23,39 +23,6 @@
 <body>
 <div class="container-fluid">
 
-  <div class="row">
-    <div class="input-group col-sm-3">
-      <span class="input-group-text" style="font-size: small;">最大阅读次数</span>
-      <input type="number" class="form-control" name="readLimit" min="1" max="10" value="3">
-    </div>
-  
-    <div class="input-group col-sm-3" >
-      <span class="input-group-text" style="font-size: small;">有效时间</span>
-      <select class="form-control" name="validTime">
-        <option value="30">30分钟</option>
-        <option value="60">60分钟</option>
-        <option value="120">2小时</option>
-        <option value="480">4小时</option>
-        <option value="720">6小时</option>
-        <option value="1440">1天</option>
-        <option value="2880">2天</option>
-        <option value="4320">3天</option>
-      </select>
-    </div>
-</div>
-
-<hr>
-
-<div class="row">
-  <div class="col-sm-12">
-    <span class="input-group-text" style="font-size: small;">
-      阅后即焚,顾名思义,您输入的消息会有固定的被读次数,超出阅读次数后即销毁."
-    </span>
-  </div>
-</div>
-
-<hr>
-
 <div class="row">
   <div class="col-sm-12" >
     <div id="summernote"></div>
@@ -70,7 +37,7 @@
 
 <div class="row">
   <div class="col-sm-12" >
-    <button class="btn  btn-primary btn-sm" name="createNewBurnArticle"><span style="font-size: small;">提交</span></button>
+    <button class="btn  btn-primary btn-sm" id="createPMemo"><span style="font-size: small;">提交</span></button>
   </div>
 </div>
 
@@ -100,31 +67,21 @@
 
     $(document).ready(function() {
 
-      $("input[name='readLimit']").keyup(function () { 
-        var $readLimit = $(this).val();
-        if($readLimit > 10) {
-          $(this).val("10");
-        }
-      });
-      
-      $("button[name='createNewBurnArticle']").click( function() {
-        createNewBurnArticle();
+      $("#createPMemo").click( function() {
+        createPMemo();
       });
   
-      function createNewBurnArticle() {
+      function createPMemo() {
         
-        var url = "${pageContext.request.contextPath}/articleBurn/creatingBurnMessage";
-        var readLimit = $("input[name='readLimit']").val();
+        var url = "/pMemo/set";
         var validTime = $("select[name='validTime'] option:selected").val();
         var s = $('#summernote');
         var content = s.summernote('code');
 
-        var urlPrefix = window.location.host;
-
         var jsonOutput = {
-          readLimit : readLimit,
-          validTime : validTime,
-          content : content
+          content : content,
+          validDateStr : validDateStr,
+          redisKeyValue : redisKeyValue
         };
 
         $("span[name='readUrl']").text("");

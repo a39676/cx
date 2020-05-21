@@ -36,6 +36,13 @@
 </div>
 
 <div class="row">
+  <div class="col-sm-12">
+    <input type="text" name="" id="validDateStr" placeholder="validDateStr"><br>
+    <input type="text" name="" id="redisKeyValue" placeholder="redisKeyValue">
+  </div>
+</div>
+
+<div class="row">
   <div class="col-sm-12" >
     <button class="btn  btn-primary btn-sm" id="createPMemo"><span style="font-size: small;">提交</span></button>
   </div>
@@ -43,9 +50,7 @@
 
 <div class="row">
   <div class="col-sm-12" >
-    <div id="resultView" style="display: none">
-      <div><span style="font-size: small;">查阅地址: </span><span name="readUrl"></span></div>
-      <div><span style="font-size: small;">销毁地址: </span><span name="burnUrl"></span></div>
+    <div id="resultView">
       <div><span style="font-size: small;color: red" name="createArticleResult"></span></div>
     </div>
   </div>
@@ -74,7 +79,8 @@
       function createPMemo() {
         
         var url = "/pMemo/set";
-        var validTime = $("select[name='validTime'] option:selected").val();
+        var validDateStr = $("#validDateStr").val();
+        var redisKeyValue = $("#redisKeyValue").val();
         var s = $('#summernote');
         var content = s.summernote('code');
 
@@ -84,8 +90,8 @@
           redisKeyValue : redisKeyValue
         };
 
-        $("span[name='readUrl']").text("");
-        $("span[name='burnUrl']").text("");
+        console.log(jsonOutput);
+
         $("span[name='createArticleResult']").text("");
   
         $.ajax({  
@@ -101,18 +107,10 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-
-            $("#resultView").show();
-            if(datas.result == 0) {
-
-              $("span[name='readUrl']").html('<a href='+datas.readUri+' target="_blank" >'+urlPrefix + datas.readUri+'</a>');
-              $("span[name='burnUrl']").html('<a href='+datas.burnUri+' target="_blank" >'+urlPrefix + datas.burnUri+'</a>');
-            } else {
-              $("span[name='createArticleResult']").text(datas.message);
-            }
+            $("span[name='createArticleResult']").text(datas.message);
           },  
-          error: function(datas) {  
-            $("#resultView").html(datas.responseText);
+          error: function(datas) {
+            $("span[name='createArticleResult']").text(datas);
           }  
         });  
       };

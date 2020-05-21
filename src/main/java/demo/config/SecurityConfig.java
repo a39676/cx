@@ -33,6 +33,7 @@ import demo.base.user.service.impl.CustomUserDetailsService;
 import demo.config.costom_component.CustomAuthenticationProvider;
 import demo.config.costom_component.CustomPasswordEncoder;
 import demo.config.costom_component.LimitLoginAuthenticationProvider;
+import demo.pmemo.pojo.constant.PMemoUrl;
 import demo.test.pojo.constant.TestUrl;
 import demo.tool.fakeFTP.pojo.constant.FakeFTPUrlConstant;
 import demo.tool.pojo.constant.ToolUrlConstant;
@@ -104,6 +105,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DEV))
             .antMatchers(AuthUrl.root + "/**")
             	.access(hasAnyRole(Arrays.asList(SystemRolesType.ROLE_SUPER_ADMIN), Arrays.asList(OrganzationRolesType.ROLE_ORG_SUPER_ADMIN)))
+            .antMatchers(PMemoUrl.root + PMemoUrl.set)
+            	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers(WXUrl.root + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DEV))
             .and()

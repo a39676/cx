@@ -1,7 +1,5 @@
 package demo.article.articleComment.service.impl;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +59,7 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 			return result;
 		}
 		
-		Long commentId = decryptPrivateKey(URLDecoder.decode(param.getPk(), StandardCharsets.UTF_8));
+		Long commentId = decryptPrivateKey(param.getPk());
 		if(commentId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -97,7 +95,7 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 			return result;
 		}
 		
-		Long commentId = decryptPrivateKey(URLDecoder.decode(param.getPk(), StandardCharsets.UTF_8));
+		Long commentId = decryptPrivateKey(param.getPk());
 		if(commentId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -132,7 +130,7 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 			return result;
 		}
 		
-		Long commentId = decryptPrivateKey(URLDecoder.decode(param.getPk(), StandardCharsets.UTF_8));
+		Long commentId = decryptPrivateKey(param.getPk());
 		if(commentId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;

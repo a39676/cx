@@ -359,8 +359,9 @@
     from
       article_comment
     <where>
-      <if test="articleId != null">
-        and article_id = #{articleId}
+      article_id = #{articleId}
+      <if test="startTime != null">
+        and create_time &gt;= #{startTime}
       </if>
       <if test="id != null">
         and id = #{id}
@@ -379,9 +380,6 @@
       </if>
       <if test="replyOf != null">
         and reply_of = #{replyOf}
-      </if>
-      <if test="startTime != null">
-        and create_time &gt;= #{startTime}
       </if>
     </where>
     order by create_time

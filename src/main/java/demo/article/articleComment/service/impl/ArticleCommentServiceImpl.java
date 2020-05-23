@@ -283,8 +283,8 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		FindCommentPageDTO mapperDTO = new FindCommentPageDTO();
 		mapperDTO.setArticleId(articleId);
 		mapperDTO.setStartTime(dto.getStartTime());
-		mapperDTO.setIsDelete(dto.getIsDelete());
 		mapperDTO.setIsPass(dto.getIsPass());
+		mapperDTO.setIsDelete(dto.getIsDelete());
 		mapperDTO.setIsReject(dto.getIsReject());
 		mapperDTO.setLimit(dto.getLimit().intValue());
 		List<ArticleComment> commentPOList = articleCommentMapper.findCommentPage(mapperDTO);
@@ -357,6 +357,10 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	}
 
 	private boolean justComment(HttpServletRequest request, Long userId, Long articleId) {
+		if("dev".equals(constantService.getValByName("envName"))) {
+			return false;
+		}
+		
 		String keyPrefix = SystemRedisKey.articleCommentKeyPrefix + "_" + userId + "_" + articleId;
 		
 		int counting = checkFunctionalModuleVisitData(request, keyPrefix);

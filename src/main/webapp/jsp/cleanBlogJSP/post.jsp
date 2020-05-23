@@ -89,14 +89,28 @@
             
           </div>
         </div>
-        <div class="row">
-          <div class="col-lg-8 col-md-10 mx-auto">
-            <div class="spinner-border text-warning" role="status" id="articleAreaLoadingImg">
-              <span class="sr-only">Loading...</span>
+
+        <%-- search comment start --%>
+        <sec:authorize access="!hasRole('ROLE_SUPER_ADMIN')">
+          <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+              <div class="spinner-border text-warning" role="status" id="articleAreaLoadingImg">
+                <span class="sr-only">Loading...</span>
+              </div>
+              <button class="btn btn-sm btn-primary" id="loadMoreButton"><b>Load more comment</b></button>
             </div>
-            <button class="btn btn-sm btn-primary" id="loadMoreButton"><b>Load more comment</b></button>
           </div>
-        </div>
+        </sec:authorize>
+
+        <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
+          <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+              <%@ include file="../articleJSP/articleCommentSearchV2.jsp" %>
+            </div>
+          </div>
+        </sec:authorize>
+        <%-- search comment end --%>
+
         <%-- create comment start --%>
         <div class="row">
           <div class="col-lg-8 col-md-10 mx-auto">
@@ -170,17 +184,14 @@
   <sec:authorize access="hasRole('ROLE_USER')">
     <script type="text/javascript" src="<c:url value='/static_resources/js/article/articleLongUserV3.js'/>">
     </script>
-    <sec:authorize access="!hasRole('ROLE_SUPER_ADMIN')">
-      <script type="text/javascript" src="<c:url value='/static_resources/cleanBlog/js/loadArticleCommentForUser.js'/>">
-      </script>
-    </sec:authorize>
+  </sec:authorize>
+  <sec:authorize access="!hasRole('ROLE_SUPER_ADMIN')">
+    <%-- 搜索栏脚本冲突 --%>
+    <script type="text/javascript" src="<c:url value='/static_resources/cleanBlog/js/loadArticleCommentForUser.js'/>">
+    </script>
   </sec:authorize>
 
   <script type="text/javascript">
-$(document).ready(function() {
-
-  
-})
   </script>
 
 </body>

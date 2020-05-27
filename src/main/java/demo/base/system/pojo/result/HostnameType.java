@@ -2,10 +2,11 @@ package demo.base.system.pojo.result;
 
 public enum HostnameType {
 	
-	ea("ea", 1),
-	seek("seek", 2),
-	three("three", 3),
-	haven("haven", 4)
+//	ea("ea", 1), /* 2020-05-27 不再续期 */
+//	seek("seek", 2), /* 2020-05-27 即将过期 */
+	three("three", 3), /* 2020-05-27 考虑不再续期 */
+//	haven("haven", 4), /* 2020-05-27 即将过期 */
+	zhang3("zhang3", 5),
 	;
 	
 	private String name;
@@ -35,14 +36,10 @@ public enum HostnameType {
 	}
 	
 	public static HostnameType getTypeCustom(String typeName) {
-		if(typeName.contains("easy")) {
-			return ea;
-		} else if(typeName.contains("seek")) {
-			return seek;
-		} else if(typeName.contains("3310")) {
+		if(typeName.contains("3310")) {
 			return three;
-		} else if(typeName.contains("haven")) {
-			return haven;
+		} else if(typeName.contains("zhang3")) {
+			return zhang3;
 		}
 		return null;
 	}

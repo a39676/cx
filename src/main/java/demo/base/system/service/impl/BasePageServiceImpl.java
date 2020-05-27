@@ -49,13 +49,13 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 					return view;
 				}
 			} else {
-				view = buildHomeViewForEA();
+				view = buildHomeViewForNormal();
 			}
 		} else {
-			if (HostnameType.ea.equals(hostnameType) || HostnameType.haven.equals(hostnameType)) {
-				view = buildHomeViewForEA();
-			} else if (HostnameType.seek.equals(hostnameType)) {
-				view = buildHomeViewForSeek();
+			if (HostnameType.zhang3.equals(hostnameType)) {
+				view = buildHomeViewForNormal();
+			} else if (HostnameType.three.equals(hostnameType)) {
+				view = buildHomeViewForSeekingWork();
 			}
 		}
 
@@ -69,7 +69,7 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 		return view;
 	}
 	
-	private ModelAndView buildHomeViewForEA() {
+	private ModelAndView buildHomeViewForNormal() {
 		ModelAndView view = new ModelAndView(BlogViewConstant.home);
 		view.addObject("title", constantService.getValByName(SystemConstantStore.eaWebSiteTitle));
 		view.addObject("headerImg", "/static_resources/cleanBlog/img/nature-4607496_1920.jpg");
@@ -80,7 +80,7 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 		return view;
 	}
 	
-	private ModelAndView buildHomeViewForSeek() {
+	private ModelAndView buildHomeViewForSeekingWork() {
 		ModelAndView view = new ModelAndView();
 		if(!"1".contentEquals(constantService.getValByName(SystemConstantStore.jobing))) {
 			view.setViewName(BaseViewConstant.empty);

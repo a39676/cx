@@ -53,11 +53,11 @@ public class BasePageController extends CommonController {
 	
 	@GetMapping(value = "/ea404")
 	public ModelAndView ea404() {
-		return new ModelAndView(BaseViewConstant.ea404);
+		return new ModelAndView(BaseViewConstant.normal404);
 	}
 	
 	@GetMapping(value = "/seek404")
 	public ModelAndView seek404() {
-		return new ModelAndView(BaseViewConstant.seek404);
+		return new ModelAndView(BaseViewConstant.seekingJob404);
 	}
 }

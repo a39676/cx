@@ -33,38 +33,8 @@ public class HostnameServiceImpl extends CommonService implements HostnameServic
 	}
 	
 	@Override
-	public String findEasy() {
-		Hostname po = hostnameMapper.selectByPrimaryKey(1);
-		if(po == null) {
-			return null;
-		} else {
-			return po.getHostname();
-		}
-	}
-	
-	@Override
-	public String findSeek() {
-		Hostname po = hostnameMapper.selectByPrimaryKey(2);
-		if(po == null) {
-			return null;
-		} else {
-			return po.getHostname();
-		}
-	}
-	
-	@Override
-	public String find3310() {
-		Hostname po = hostnameMapper.selectByPrimaryKey(3);
-		if(po == null) {
-			return null;
-		} else {
-			return po.getHostname();
-		}
-	}
-	
-	@Override
-	public String findHaven() {
-		Hostname po = hostnameMapper.selectByPrimaryKey(4);
+	public String findZhang() {
+		Hostname po = hostnameMapper.selectByPrimaryKey(5);
 		if(po == null) {
 			return null;
 		} else {

@@ -15,9 +15,9 @@ public class SystemConstantStore {
 	public static final String articleChannelPrefixStorePath = "articleChannelPrefixStorePath";
 	public static final String homepageAnnouncement = "homepageAnnouncement";
 	public static final String homepageAnnouncementStr = "homepageAnnouncementStr";
-	public static final String eaWebSiteTitle = "eaWebSiteTitle";
+	public static final String normalWebSiteTitle = "eaWebSiteTitle";
 	public static final String seekWebSiteTitle = "seekWebSiteTitle";
-	public static final String eaSubheading = "eaSubheading";
+	public static final String normalSubheading = "eaSubheading";
 	public static final String seekSubheading = "seekSubheading";
 	public static final String debugStatus = "debugStatus";
 	public static final String fakeFTPHome = "fakeFTPHome";

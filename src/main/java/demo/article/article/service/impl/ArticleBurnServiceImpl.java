@@ -68,7 +68,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 	
 	private boolean isInEasyOrDev(HttpServletRequest request) {
 		HostnameType hostnameType = hostnameService.findHostnameType(request);
-		if (HostnameType.ea.equals(hostnameType)) {
+		if (HostnameType.zhang3.equals(hostnameType)) {
 			return true;
 		} else {
 			String envName = constantService.getValByName(SystemConstantStore.envName);

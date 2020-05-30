@@ -26,9 +26,7 @@ import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.constant.ServerHost;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.constant.SystemRedisKey;
-import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.ExceptionService;
-import demo.base.system.service.HostnameService;
 import demo.baseCommon.service.CommonService;
 import demo.interaction.autoTest.pojo.vo.AutoTestJsonReportLineVO;
 import demo.interaction.autoTest.pojo.vo.AutoTestJsonReportVO;
@@ -43,8 +41,6 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 
 	@Autowired
 	private HttpUtil httpUtil;
-	@Autowired
-	private HostnameService hostnameService;
 	@Autowired
 	protected ExceptionService exceptionService;
 
@@ -360,12 +356,12 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	}
 
 	private boolean isInSeekOrDev(HttpServletRequest request) {
-		HostnameType hostnameType = hostnameService.findHostnameType(request);
-		if (HostnameType.seek.equals(hostnameType)) {
-			return true;
-		} else {
-			String envName = constantService.getValByName(SystemConstantStore.envName);
-			return "dev".equals(envName);
-		}
+//		HostnameType hostnameType = hostnameService.findHostnameType(request);
+//		if (HostnameType.seek.equals(hostnameType)) {
+//			return true;
+//		} else {
+//		}
+		String envName = constantService.getValByName(SystemConstantStore.envName);
+		return "dev".equals(envName);
 	}
 }

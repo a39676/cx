@@ -48,12 +48,12 @@ public class ExceptionServiceImpl extends CommonService implements ExceptionServ
 		ModelAndView view = new ModelAndView();
 		
 		HostnameType hostnameType = hostnameService.findHostnameType(request);
-		if(HostnameType.ea.equals(hostnameType)) {
-			view.setViewName(BaseViewConstant.ea404);
-		} else if(HostnameType.seek.equals(hostnameType)) {
-			view.setViewName(BaseViewConstant.seek404);
+		if(HostnameType.zhang3.equals(hostnameType)) {
+			view.setViewName(BaseViewConstant.normal404);
+//		} else if(HostnameType.three.equals(hostnameType)) {
+//			view.setViewName(BaseViewConstant.seekingJob404);
 		} else if("dev".equals(constantService.getValByName(SystemConstantStore.envName, true))){
-			view.setViewName(BaseViewConstant.ea404);
+			view.setViewName(BaseViewConstant.normal404);
 		} else {
 			view.setViewName(BaseViewConstant.empty);
 		}

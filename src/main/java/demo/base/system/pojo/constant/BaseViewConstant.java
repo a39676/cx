@@ -12,8 +12,8 @@ public class BaseViewConstant {
 	public static final String loginCustomV3 = "baseJSP/loginCustomV3";
 	public static final String loginSingle = "baseJSP/loginSingle";
 	public static final String view403 = "baseJSP/403";
-	public static final String ea404 = "baseElementJSP/ea404";
-	public static final String seek404 = "baseElementJSP/seek404";
+	public static final String normal404 = "baseElementJSP/normal404";
+	public static final String seekingJob404 = "baseElementJSP/seek404";
 	public static final String viewError = "baseJSP/error";
 	
 	

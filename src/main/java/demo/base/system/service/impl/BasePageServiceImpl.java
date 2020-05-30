@@ -54,8 +54,8 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 		} else {
 			if (HostnameType.zhang3.equals(hostnameType)) {
 				view = buildHomeViewForNormal();
-			} else if (HostnameType.three.equals(hostnameType)) {
-				view = buildHomeViewForSeekingWork();
+//			} else if (HostnameType.three.equals(hostnameType)) {
+//				view = buildHomeViewForSeekingWork();
 			}
 		}
 
@@ -71,15 +71,16 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 	
 	private ModelAndView buildHomeViewForNormal() {
 		ModelAndView view = new ModelAndView(BlogViewConstant.home);
-		view.addObject("title", constantService.getValByName(SystemConstantStore.eaWebSiteTitle));
+		view.addObject("title", constantService.getValByName(SystemConstantStore.normalWebSiteTitle));
 		view.addObject("headerImg", "/static_resources/cleanBlog/img/nature-4607496_1920.jpg");
-		view.addObject("subheading", constantService.getValByName(SystemConstantStore.eaSubheading));
+		view.addObject("subheading", constantService.getValByName(SystemConstantStore.normalSubheading));
 		Long visitCount = visitDataService.getVisitCount();
 		view.addObject("visitCount", visitCount);
 		
 		return view;
 	}
 	
+	@SuppressWarnings("unused")
 	private ModelAndView buildHomeViewForSeekingWork() {
 		ModelAndView view = new ModelAndView();
 		if(!"1".contentEquals(constantService.getValByName(SystemConstantStore.jobing))) {
@@ -101,14 +102,14 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 
 		HostnameType hostnameType = hostnameService.findHostnameType(request);
 		if (hostnameType != null) {
-			if (HostnameType.ea.equals(hostnameType)) {
+			if (HostnameType.zhang3.equals(hostnameType)) {
 				v = new ModelAndView(BlogViewConstant.aboutEasy);
 				v.addObject("email", constantService.getValByName(SystemConstantStore.emaild));
 				v.addObject("headerImg", "/static_resources/cleanBlog/img/nature-4607496_1920.jpg");
-			} else if (HostnameType.seek.equals(hostnameType)) {
-				v = new ModelAndView(BlogViewConstant.aboutSeek);
-				v.addObject("email", constantService.getValByName(SystemConstantStore.emailc));
-				v.addObject("headerImg", atDemoHeadImg);
+//			} else if (HostnameType.seek.equals(hostnameType)) {
+//				v = new ModelAndView(BlogViewConstant.aboutSeek);
+//				v.addObject("email", constantService.getValByName(SystemConstantStore.emailc));
+//				v.addObject("headerImg", atDemoHeadImg);
 			}
 		}
 

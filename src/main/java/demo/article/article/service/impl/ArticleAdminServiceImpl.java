@@ -266,11 +266,6 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	
 	@Override
 	public CommonResultCX setArticleHot(SetArticleHotParam controllerParam) {
-		/*
-		 * TODO
-		 * 2019-12-20 发现
-		 * what to do?
-		 */
 		CommonResultCX result = new CommonResultCX();
 		if(StringUtils.isBlank(controllerParam.getPk()) || controllerParam.getHotMinutes() == null || controllerParam.getHotLevel() == null) {
 			result.fillWithResult(ResultTypeCX.nullParam);
@@ -282,6 +277,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			return result;
 		}
 		
+		controllerParam.setPk(URLDecoder.decode(controllerParam.getPk(), StandardCharsets.UTF_8));
 		Long articleId = decryptPrivateKey(controllerParam.getPk());
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);

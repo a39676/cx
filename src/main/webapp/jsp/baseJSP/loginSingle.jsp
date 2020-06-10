@@ -78,7 +78,8 @@ $(document).ready(function() {
       timeout: 30000,
       success:function(data){  
         if(data.code == 0) {
-          location.reload();
+          // location.reload();
+          window.location.href = "/";
         } else {
           if(data.message.length < 1) {
             $("span[name='loginMessage']").text("账户名或密码错误");

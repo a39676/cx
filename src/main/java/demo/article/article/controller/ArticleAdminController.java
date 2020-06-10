@@ -99,9 +99,9 @@ public class ArticleAdminController extends CommonController {
 	}
 	
 	@PostMapping(value = ArticleAdminUrlConstant.setArticleHot)
-	public void setArticleHot(@RequestBody SetArticleHotParam param, HttpServletRequest request, HttpServletResponse response) {
-		CommonResult serviceResult = articleAdminService.setArticleHot(param);
-		outputJson(response, JSONObject.fromObject(serviceResult));
+	@ResponseBody
+	public CommonResultCX setArticleHot(@RequestBody SetArticleHotParam param, HttpServletRequest request, HttpServletResponse response) {
+		return articleAdminService.setArticleHot(param);
 	}
 	
 	@GetMapping(value = ArticleAdminUrlConstant.articleChannelManager)

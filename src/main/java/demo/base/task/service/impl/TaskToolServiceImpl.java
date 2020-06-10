@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import demo.article.article.service.ArticleEvaluationService;
 import demo.article.article.service.ArticleService;
 import demo.article.fakePost.service.FakePostService;
+import demo.base.system.service.IpRecordService;
 import demo.base.task.service.TaskToolService;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.type.SystemRolesType;
@@ -26,6 +27,8 @@ public class TaskToolServiceImpl implements TaskToolService {
 	private FakePostService fakePostService;
 	@Autowired
 	private VisitDataService visitDataService;
+	@Autowired
+	private IpRecordService ipRecordService;
 	
 	@Autowired
 	private UsersMapper usersMapper;
@@ -121,5 +124,13 @@ public class TaskToolServiceImpl implements TaskToolService {
 		visitDataService.visitCountRedisToOrm();
 		visitDataService.visitDataRedisToOrm();
 		return null;
+	}
+	
+	/**
+	 * 将Ip记录(黑白名单)中, 过期/逻辑删除的记录, 进行物理删除.
+	 */
+	@Scheduled(cron="40 01 12 * * *") // 每天01:12:40执行
+	public void deleteExpiredDenyRecord() {
+		ipRecordService.deleteExpiredDenyRecord();
 	}
 }

@@ -134,4 +134,25 @@ public class IpRecordServiceImpl extends CommonService implements IpRecordServic
 		result.addAll(poList.stream().map(IpRecord::getIp).collect(Collectors.toList()));
 		return result;
 	}
+
+	@Override
+	public void deleteExpiredDenyRecord() {
+		IpRecordExample example = new IpRecordExample();
+		
+		example.createCriteria().andIsDeleteEqualTo(true);
+		example.or().andValidTimeLessThan(LocalDateTime.now());
+		
+		List<IpRecord> poList = ipRecordMapper.selectByExample(example);
+		
+		if(poList == null || poList.isEmpty()) {
+			return;
+		}
+		
+		List<Long> deleteIpList = poList.stream().map(po -> po.getIp()).collect(Collectors.toList());
+		
+		IpRecordExample deleteExample = new IpRecordExample();
+		deleteExample.createCriteria().andIpIn(deleteIpList);
+		ipRecordMapper.deleteByExample(deleteExample);
+	}
+		
 }

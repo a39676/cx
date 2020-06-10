@@ -16,4 +16,6 @@ public interface IpRecordService {
 
 	List<Long> getAllDenyList();
 
+	void deleteExpiredDenyRecord();
+
 }

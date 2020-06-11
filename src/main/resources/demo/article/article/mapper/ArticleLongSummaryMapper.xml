@@ -180,6 +180,7 @@
     <where>
       and ah.hot_level is not null
       and ah.valid_time &gt; now()
+      and al.is_delete = false
       <if test="channelId != null">
         and al.channel_id = #{channelId}
       </if>

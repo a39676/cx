@@ -6,5 +6,4 @@ public class ArticleEvaluationConstant {
 	
 	public static final Integer miniEvaluationCount = 10;
 	
-	public static final Integer balanceEvaluationRatio = 10;
 }

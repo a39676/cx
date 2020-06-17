@@ -85,14 +85,6 @@ public class TaskToolServiceImpl implements TaskToolService {
 	}
 	
 	/**
-	 * 将评价缓存表中的评价, 依据实际情况, 加减对应用户,频道的coefficient
-	 */
-	@Scheduled(cron="40 01 23 * * *") // 每天03:01:40执行
-	public void evaluationCacheStatistics() {
-		articleEvaluationService.evaluationCacheStatistics();
-	}
-	
-	/**
 	 * 定时任务逻辑, 拉取article_long_review中  缺失作者ID的数据, 补填
 	 */
 	@Scheduled(cron="12 03 02 * * *") 

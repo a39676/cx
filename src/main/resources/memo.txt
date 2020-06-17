@@ -1,3 +1,8 @@
+重构 评价
+	删除 cache 表
+	缓存数据交给 redis
+	drop table article_evaluation_cache ; 
+
 文章另立附表，记载"有效期"
 
 评论模块

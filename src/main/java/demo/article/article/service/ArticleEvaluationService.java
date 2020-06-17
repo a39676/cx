@@ -16,6 +16,4 @@ public interface ArticleEvaluationService {
 
 	void evaluationCacheToStore();
 
-	void evaluationCacheStatistics();
-
 }

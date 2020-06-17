@@ -45,8 +45,6 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 	@Autowired
 	private ArticleLongMapper articleLongMapper;
 	@Autowired
-	private ArticleEvaluationCacheMapper articleEvaluationCacheMapper;
-	@Autowired
 	private ArticleEvaluationStoreMapper articleEvaluationStoreMapper;
 
 	@Autowired
@@ -163,11 +161,6 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
-		InsertEvaluationDaoParam daoParam = new InsertEvaluationDaoParam();
-		daoParam.setPostObjectId(articleId);
-		daoParam.setEvaluationType(inputParam.getEvaluationType());
-		daoParam.setUserId(evaluationVoterId);
-		daoParam.setEvaluationCode(inputParam.getEvaluationCode());
 
 		int insertCount = articleEvaluationCacheMapper.insertEvaluation(daoParam);
 		if (insertCount != 1) {
@@ -186,26 +179,26 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 	}
 
 	@Override
-	public CommonResultCX insertArticleLongEvaluationRedis(InsertArticleLongEvaluationParam inputParam) {
+	public CommonResultCX insertArticleLongEvaluationRedis(InsertArticleLongEvaluationParam dto) {
 		CommonResultCX result = new CommonResultCX();
 		Long evaluationVoterId = baseUtilCustom.getUserId();
 		if (evaluationVoterId == null) {
 			result.fillWithResult(ResultTypeCX.notLoginUser);
 			return result;
 		}
-		if (StringUtils.isBlank(inputParam.getPk()) || inputParam.getEvaluationCode() == null
-				|| inputParam.getEvaluationType() == null) {
+		if (StringUtils.isBlank(dto.getPk()) || dto.getEvaluationCode() == null
+				|| dto.getEvaluationType() == null) {
 			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;
 		}
-		inputParam.setEvaluationType(ArticleEvaluationType.articleLongEvaluation.getCode());
-		ArticleEvaluationCodeType evaluationType = ArticleEvaluationCodeType.getType(inputParam.getEvaluationCode());
+		dto.setEvaluationType(ArticleEvaluationType.articleLongEvaluation.getCode());
+		ArticleEvaluationCodeType evaluationType = ArticleEvaluationCodeType.getType(dto.getEvaluationCode());
 		if (evaluationType == null) {
 			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;
 		}
 
-		Long articleId = decryptPrivateKey(inputParam.getPk());
+		Long articleId = decryptPrivateKey(dto.getPk());
 		if (articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -220,7 +213,7 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 			}
 		}
 
-		ArticleEvaluationCache cache = createArticlEvaluationCacheFrom(inputParam, articleId, evaluationVoterId);
+		ArticleEvaluationCache cache = createArticlEvaluationCacheFrom(dto, articleId, evaluationVoterId);
 		articleEvaluationCacheRedisTemplate.opsForList().leftPush(
 				ArticleEvaluationConstant.evaluationCacheRedisKeyNamePreffix + articleId,
 				JSONObject.fromObject(cache).toString());

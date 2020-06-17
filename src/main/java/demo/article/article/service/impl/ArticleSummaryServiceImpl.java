@@ -303,7 +303,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			dto.setEndTime(dto.getEndTime().minusSeconds(1L));
 		}
 		
-		/* 置限制只可浏览某时点之后的文章 */
+		/* 限制只可浏览某时点之后的文章 */
 		boolean isBigUser = isBigUser();
 		if(!isBigUser) {
 			String normalUserMaxReadingMonth = constantService.getValByName(SystemConstantStore.normalUserMaxReadingMonth);

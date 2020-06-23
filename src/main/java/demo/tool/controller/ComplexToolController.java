@@ -128,7 +128,7 @@ public class ComplexToolController extends CommonController {
 	
 	@PostMapping(value = "/getTomcatOut")
 	public void getTomcatOut(HttpServletResponse response) throws IOException {
-		downloadService.downloadFile(response, ToolPathConstant.getTomcatOutPath());
+		downloadService.downloadFileWithZip(response, ToolPathConstant.getTomcatOutPath());
 	}
 	
 	@GetMapping(value = "/systemOption")

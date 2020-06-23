@@ -24,7 +24,7 @@ public class DownloadServiceImpl implements DownloadService {
 	private FileUtilCustom ioUtil;
 
 	@Override
-	public void downloadFile(HttpServletResponse response, String filePath) throws IOException {
+	public void downloadFileWithZip(HttpServletResponse response, String filePath) throws IOException {
 		File inputFile = new File(filePath);
 		
 		if(!inputFile.exists()) {

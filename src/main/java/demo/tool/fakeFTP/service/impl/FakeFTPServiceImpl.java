@@ -104,10 +104,10 @@ public class FakeFTPServiceImpl extends CommonService implements FakeFTPServcie 
 	@Override
 	public void downloadTargetFile(HttpServletResponse response, DownloadTargetFileParam param) throws IOException {
 		if(StringUtils.isBlank(param.getFilePath()) || !validPath(param.getFilePath())) {
-			downloadService.downloadFile(response, "");
+			downloadService.downloadFileWithZip(response, "");
 			return;
 		}
-		downloadService.downloadFile(response, param.getFilePath());
+		downloadService.downloadFileWithZip(response, param.getFilePath());
 	}
 
 	@Override

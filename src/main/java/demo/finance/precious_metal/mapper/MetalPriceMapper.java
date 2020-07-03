@@ -1,9 +1,10 @@
-package demo.finance.metal.mapper;
+package demo.finance.precious_metal.mapper;
 
-import demo.finance.metal.pojo.po.MetalPrice;
-import demo.finance.metal.pojo.po.MetalPriceExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import demo.finance.precious_metal.pojo.po.MetalPrice;
+import demo.finance.precious_metal.pojo.po.MetalPriceExample;
 
 public interface MetalPriceMapper {
     long countByExample(MetalPriceExample example);

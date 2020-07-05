@@ -56,8 +56,4 @@ public class BasePageController extends CommonController {
 		return new ModelAndView(BaseViewConstant.normal404);
 	}
 	
-	@GetMapping(value = "/seek404")
-	public ModelAndView seek404() {
-		return new ModelAndView(BaseViewConstant.seekingJob404);
-	}
 }

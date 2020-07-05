@@ -1,4 +1,4 @@
-package demo.finance.precious_metal.pojo.po;
+package demo.finance.metal.pojo.po;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

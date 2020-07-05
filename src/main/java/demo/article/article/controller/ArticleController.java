@@ -86,7 +86,7 @@ public class ArticleController extends CommonController {
 	
 	@PostMapping(value = ArticleUrlConstant.articleLongSummaryListByChannel)
 	@ResponseBody
-	public FindArticleLongSummaryListResultV3 articleLongSummaryListByChannel(@RequestBody FindArticleLongSummaryListDTO param, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public FindArticleLongSummaryListResultV3 articleLongSummaryListByChannel(@RequestBody FindArticleLongSummaryListDTO param, HttpServletRequest request) {
 		return summaryService.summaryListByChannelIdV4(param, request);
 	}
 	

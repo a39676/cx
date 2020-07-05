@@ -1,4 +1,4 @@
-package demo.finance.precious_metal.service.impl;
+package demo.finance.metal.service.impl;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.baseCommon.service.CommonService;
-import demo.finance.precious_metal.mapper.MetalPriceMapper;
-import demo.finance.precious_metal.pojo.po.MetalPrice;
-import demo.finance.precious_metal.service.PreciousMetalService;
+import demo.finance.metal.mapper.MetalPriceMapper;
+import demo.finance.metal.pojo.po.MetalPrice;
+import demo.finance.metal.service.PreciousMetalService;
 import precious_metal.pojo.dto.PreciousMetailPriceDTO;
 import precious_metal.pojo.dto.TransPreciousMetalPriceDTO;
 import precious_metal.pojo.type.MetalType;

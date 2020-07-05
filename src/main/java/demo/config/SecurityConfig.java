@@ -40,6 +40,7 @@ import demo.tool.pojo.constant.ToolUrlConstant;
 import demo.tool.pojo.constant.UploadUrlConstant;
 import demo.toyParts.weixin.pojo.constant.WXUrl;
 import image.pojo.constant.ImageInteractionUrl;
+import precious_metal.pojo.constant.PreciousMetalPriceUrl;
 
 @Configuration
 @EnableWebSecurity
@@ -77,6 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/static_resources/**").permitAll()
             .antMatchers("/tHome/**").permitAll()
             .antMatchers(WXUrl.root + WXUrl.weixin).permitAll()
+            .antMatchers(PreciousMetalPriceUrl.root + PreciousMetalPriceUrl.transPreciousMetalPrice).permitAll()
 //            .anyRequest().authenticated() 
             // used to allow anonymous access 
             // .antMatchers("/welcome**").access("IS_AUTHENTICATED_ANONYMOUSLY")

@@ -70,6 +70,7 @@ public class MybatisConfig implements TransactionManagementConfigurer {
 				+ "demo.finance.bank.pojo, "
 				+ "demo.finance.credit_bill.pojo, "
 				+ "demo.finance.trading.pojo, "
+				+ "demo.finance.metal.pojo, "
 				
 				+ "demo.article.article.pojo, "
 				+ "demo.article.articleComment.pojo, "

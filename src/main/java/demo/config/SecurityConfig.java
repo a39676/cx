@@ -78,7 +78,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/static_resources/**").permitAll()
             .antMatchers("/tHome/**").permitAll()
             .antMatchers(WXUrl.root + WXUrl.weixin).permitAll()
-            .antMatchers(PreciousMetalPriceUrl.root + PreciousMetalPriceUrl.transPreciousMetalPrice).permitAll()
 //            .anyRequest().authenticated() 
             // used to allow anonymous access 
             // .antMatchers("/welcome**").access("IS_AUTHENTICATED_ANONYMOUSLY")
@@ -151,6 +150,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	    web.ignoring()
 	    .antMatchers("/test/testIgnoring")
 	    .antMatchers(ImageInteractionUrl.root + "/**")
+	    .antMatchers(PreciousMetalPriceUrl.root + PreciousMetalPriceUrl.transPreciousMetalPrice)
 	    ;
 	}
 	

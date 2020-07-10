@@ -7,6 +7,7 @@ import java.util.Properties;
 import javax.mail.Message;
 import javax.mail.search.SearchTerm;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.tool.pojo.dto.ResendMailDTO;
 import demo.tool.pojo.dto.SendForgotUsernameMailDTO;
@@ -16,6 +17,8 @@ import demo.tool.pojo.result.SendRegistMailResult;
 import demo.tool.pojo.type.MailType;
 
 public interface MailService {
+	
+	CommonResult sendSimpleMail(String sendTo, String title, String content, String mailKey, MailType mailType);
 
 	void sendMailWithAttachment(String sendTo, String title, String context, List<String> attachmentPathList, Properties properties);
 

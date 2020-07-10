@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="demo.finance.metal.mapper.MetalPriceMapper">
-  <resultMap id="BaseResultMap" type="demo.finance.metal.pojo.po.MetalPrice">
+<mapper namespace="demo.finance.metal.mapper.MetalPriceNoticeMapper">
+  <resultMap id="BaseResultMap" type="demo.finance.metal.pojo.po.MetalPriceNotice">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="metal_type" jdbcType="INTEGER" property="metalType" />
-    <result column="weight_type" jdbcType="INTEGER" property="weightType" />
-    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="max_gram_price" jdbcType="DECIMAL" property="maxGramPrice" />
+    <result column="min_gram_price" jdbcType="DECIMAL" property="minGramPrice" />
+    <result column="email" jdbcType="CHAR" property="email" />
+    <result column="valid_time" jdbcType="TIMESTAMP" property="validTime" />
+    <result column="notice_time" jdbcType="TIMESTAMP" property="noticeTime" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
   </resultMap>
@@ -68,15 +71,16 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, metal_type, weight_type, price, create_time, is_delete
+    id, metal_type, max_gram_price, min_gram_price, email, valid_time, notice_time, create_time, 
+    is_delete
   </sql>
-  <select id="selectByExample" parameterType="demo.finance.metal.pojo.po.MetalPriceExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="demo.finance.metal.pojo.po.MetalPriceNoticeExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from metal_price
+    from metal_price_notice
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -87,29 +91,31 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from metal_price
+    from metal_price_notice
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from metal_price
+    delete from metal_price_notice
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="demo.finance.metal.pojo.po.MetalPriceExample">
-    delete from metal_price
+  <delete id="deleteByExample" parameterType="demo.finance.metal.pojo.po.MetalPriceNoticeExample">
+    delete from metal_price_notice
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="demo.finance.metal.pojo.po.MetalPrice">
-    insert into metal_price (id, metal_type, weight_type, 
-      price, create_time, is_delete
+  <insert id="insert" parameterType="demo.finance.metal.pojo.po.MetalPriceNotice">
+    insert into metal_price_notice (id, metal_type, max_gram_price, 
+      min_gram_price, email, valid_time, 
+      notice_time, create_time, is_delete
       )
-    values (#{id,jdbcType=BIGINT}, #{metalType,jdbcType=INTEGER}, #{weightType,jdbcType=INTEGER}, 
-      #{price,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
+    values (#{id,jdbcType=BIGINT}, #{metalType,jdbcType=INTEGER}, #{maxGramPrice,jdbcType=DECIMAL}, 
+      #{minGramPrice,jdbcType=DECIMAL}, #{email,jdbcType=CHAR}, #{validTime,jdbcType=TIMESTAMP}, 
+      #{noticeTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="demo.finance.metal.pojo.po.MetalPrice">
-    insert into metal_price
+  <insert id="insertSelective" parameterType="demo.finance.metal.pojo.po.MetalPriceNotice">
+    insert into metal_price_notice
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -117,11 +123,20 @@
       <if test="metalType != null">
         metal_type,
       </if>
-      <if test="weightType != null">
-        weight_type,
+      <if test="maxGramPrice != null">
+        max_gram_price,
       </if>
-      <if test="price != null">
-        price,
+      <if test="minGramPrice != null">
+        min_gram_price,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="validTime != null">
+        valid_time,
+      </if>
+      <if test="noticeTime != null">
+        notice_time,
       </if>
       <if test="createTime != null">
         create_time,
@@ -137,11 +152,20 @@
       <if test="metalType != null">
         #{metalType,jdbcType=INTEGER},
       </if>
-      <if test="weightType != null">
-        #{weightType,jdbcType=INTEGER},
+      <if test="maxGramPrice != null">
+        #{maxGramPrice,jdbcType=DECIMAL},
       </if>
-      <if test="price != null">
-        #{price,jdbcType=DECIMAL},
+      <if test="minGramPrice != null">
+        #{minGramPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=CHAR},
+      </if>
+      <if test="validTime != null">
+        #{validTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="noticeTime != null">
+        #{noticeTime,jdbcType=TIMESTAMP},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -151,14 +175,14 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="demo.finance.metal.pojo.po.MetalPriceExample" resultType="java.lang.Long">
-    select count(*) from metal_price
+  <select id="countByExample" parameterType="demo.finance.metal.pojo.po.MetalPriceNoticeExample" resultType="java.lang.Long">
+    select count(*) from metal_price_notice
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update metal_price
+    update metal_price_notice
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
@@ -166,11 +190,20 @@
       <if test="record.metalType != null">
         metal_type = #{record.metalType,jdbcType=INTEGER},
       </if>
-      <if test="record.weightType != null">
-        weight_type = #{record.weightType,jdbcType=INTEGER},
+      <if test="record.maxGramPrice != null">
+        max_gram_price = #{record.maxGramPrice,jdbcType=DECIMAL},
       </if>
-      <if test="record.price != null">
-        price = #{record.price,jdbcType=DECIMAL},
+      <if test="record.minGramPrice != null">
+        min_gram_price = #{record.minGramPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.email != null">
+        email = #{record.email,jdbcType=CHAR},
+      </if>
+      <if test="record.validTime != null">
+        valid_time = #{record.validTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.noticeTime != null">
+        notice_time = #{record.noticeTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -184,28 +217,40 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update metal_price
+    update metal_price_notice
     set id = #{record.id,jdbcType=BIGINT},
       metal_type = #{record.metalType,jdbcType=INTEGER},
-      weight_type = #{record.weightType,jdbcType=INTEGER},
-      price = #{record.price,jdbcType=DECIMAL},
+      max_gram_price = #{record.maxGramPrice,jdbcType=DECIMAL},
+      min_gram_price = #{record.minGramPrice,jdbcType=DECIMAL},
+      email = #{record.email,jdbcType=CHAR},
+      valid_time = #{record.validTime,jdbcType=TIMESTAMP},
+      notice_time = #{record.noticeTime,jdbcType=TIMESTAMP},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       is_delete = #{record.isDelete,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="demo.finance.metal.pojo.po.MetalPrice">
-    update metal_price
+  <update id="updateByPrimaryKeySelective" parameterType="demo.finance.metal.pojo.po.MetalPriceNotice">
+    update metal_price_notice
     <set>
       <if test="metalType != null">
         metal_type = #{metalType,jdbcType=INTEGER},
       </if>
-      <if test="weightType != null">
-        weight_type = #{weightType,jdbcType=INTEGER},
+      <if test="maxGramPrice != null">
+        max_gram_price = #{maxGramPrice,jdbcType=DECIMAL},
       </if>
-      <if test="price != null">
-        price = #{price,jdbcType=DECIMAL},
+      <if test="minGramPrice != null">
+        min_gram_price = #{minGramPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=CHAR},
+      </if>
+      <if test="validTime != null">
+        valid_time = #{validTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="noticeTime != null">
+        notice_time = #{noticeTime,jdbcType=TIMESTAMP},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -216,27 +261,43 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="demo.finance.metal.pojo.po.MetalPrice">
-    update metal_price
+  <update id="updateByPrimaryKey" parameterType="demo.finance.metal.pojo.po.MetalPriceNotice">
+    update metal_price_notice
     set metal_type = #{metalType,jdbcType=INTEGER},
-      weight_type = #{weightType,jdbcType=INTEGER},
-      price = #{price,jdbcType=DECIMAL},
+      max_gram_price = #{maxGramPrice,jdbcType=DECIMAL},
+      min_gram_price = #{minGramPrice,jdbcType=DECIMAL},
+      email = #{email,jdbcType=CHAR},
+      valid_time = #{validTime,jdbcType=TIMESTAMP},
+      notice_time = #{noticeTime,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       is_delete = #{isDelete,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectByExampleWithRowbounds" parameterType="demo.finance.metal.pojo.po.MetalPriceExample" resultMap="BaseResultMap">
+  <select id="selectByExampleWithRowbounds" parameterType="demo.finance.metal.pojo.po.MetalPriceNoticeExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from metal_price
+    from metal_price_notice
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
     <if test="orderByClause != null">
       order by ${orderByClause}
     </if>
+  </select>
+  
+  <select id="selectValidNoticeSetting" resultMap="BaseResultMap">
+    select
+      *
+    from
+      metal_price_notice
+    <where>
+      1=1
+      and is_delete = false
+      and notice_time is null
+      and (valid_time is not null or valid_time &gt;= #{now})
+    </where>
   </select>
 </mapper>

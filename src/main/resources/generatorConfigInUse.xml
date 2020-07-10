@@ -6,7 +6,10 @@
 <generatorConfiguration>    
 	<!-- 数据库驱动-->    
     <classPathEntry  location="D:/jar/sql/mysql-connector-java-8.0.17.jar"/>    
-    <context id="DB2Tables"  targetRuntime="MyBatis3">    
+    <context id="DB2Tables"  targetRuntime="MyBatis3">
+    
+    	<plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"></plugin>
+        
         <commentGenerator>    
             <property name="suppressDate" value="true"/>    
             <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
@@ -50,9 +53,9 @@
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="metal_price">
-        	<property name="tableName" value="metal_price"></property>
-        	<property name="domainObjectName" value="metal_price" ></property>
+        <table tableName="metal_price_notice">
+        	<property name="tableName" value="metal_price_notice"></property>
+        	<property name="domainObjectName" value="metal_price_notice" ></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

@@ -40,7 +40,7 @@ import demo.tool.pojo.constant.ToolUrlConstant;
 import demo.tool.pojo.constant.UploadUrlConstant;
 import demo.toyParts.weixin.pojo.constant.WXUrl;
 import image.pojo.constant.ImageInteractionUrl;
-import precious_metal.pojo.constant.PreciousMetalPriceUrl;
+import precious_metal.pojo.constant.PreciousMetalPriceCommonUrl;
 
 @Configuration
 @EnableWebSecurity
@@ -150,7 +150,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	    web.ignoring()
 	    .antMatchers("/test/testIgnoring")
 	    .antMatchers(ImageInteractionUrl.root + "/**")
-	    .antMatchers(PreciousMetalPriceUrl.root + PreciousMetalPriceUrl.transPreciousMetalPrice)
+	    .antMatchers(PreciousMetalPriceCommonUrl.root + PreciousMetalPriceCommonUrl.transPreciousMetalPrice)
 	    ;
 	}
 	

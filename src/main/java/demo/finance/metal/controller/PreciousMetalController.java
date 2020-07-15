@@ -16,7 +16,7 @@ import demo.finance.metal.pojo.constant.PreciousMetalPriceUrl;
 import demo.finance.metal.pojo.dto.InsertNewMetalPriceNoticeSettingDTO;
 import demo.finance.metal.service.PreciousMetalService;
 import precious_metal.pojo.constant.PreciousMetalPriceCommonUrl;
-import precious_metal.pojo.dto.TransPreciousMetalPriceDTO;
+import precious_metal.pojo.dto.TransmissionPreciousMetalPriceDTO;
 
 @Controller
 @RequestMapping(value = PreciousMetalPriceCommonUrl.root)
@@ -27,7 +27,7 @@ public class PreciousMetalController extends CommonController {
 	
 	@PostMapping(value = PreciousMetalPriceCommonUrl.transPreciousMetalPrice)
 	@ResponseBody
-	public CommonResult reciveMetalPrice(@RequestBody TransPreciousMetalPriceDTO dto) {
+	public CommonResult reciveMetalPrice(@RequestBody TransmissionPreciousMetalPriceDTO dto) {
 		return preciousMetalService.reciveMetalPrice(dto);
 	}
 	

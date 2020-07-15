@@ -8,6 +8,7 @@
     <classPathEntry  location="D:/jar/sql/mysql-connector-java-8.0.17.jar"/>    
     <context id="DB2Tables"  targetRuntime="MyBatis3">
     
+        <!-- 生成 mapper 中添加 limit 用法 -->
     	<plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"></plugin>
         
         <commentGenerator>    
@@ -53,9 +54,9 @@
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="metal_price_notice">
-        	<property name="tableName" value="metal_price_notice"></property>
-        	<property name="domainObjectName" value="metal_price_notice" ></property>
+        <table tableName="metal_price_1month">
+        	<property name="tableName" value="metal_price_1month"></property>
+        	<property name="domainObjectName" value="metal_price_1month" ></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

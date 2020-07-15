@@ -28,6 +28,11 @@ spring:
     timeout: 2000
   mvc:
     throw-exception-if-no-handler-found: true
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: u1
+    password: something
     
 logging:
   level:

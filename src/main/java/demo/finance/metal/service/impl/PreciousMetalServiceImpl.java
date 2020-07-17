@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,7 +63,12 @@ public class PreciousMetalServiceImpl extends PreciousMetalCommonService impleme
 		tmpPO.setMetalType(dto.getMetalType());
 		tmpPO.setPrice(new BigDecimal(dto.getPrice()));
 		tmpPO.setWeightType(dto.getWeightUtilType());
-		tmpPO.setCreateTime(LocalDateTime.now());
+		if(StringUtils.isNotBlank(dto.getTransactionDateTime())) {
+			tmpPO.setCreateTime(localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getTransactionDateTime()));
+		}
+		if(tmpPO.getCreateTime() == null) {
+			tmpPO.setCreateTime(LocalDateTime.now());
+		}
 		
 		insertCount += metalPriceMapper.insertSelective(tmpPO);
 		

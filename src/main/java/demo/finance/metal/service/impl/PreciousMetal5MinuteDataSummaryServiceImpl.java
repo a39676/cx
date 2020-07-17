@@ -21,6 +21,16 @@ public class PreciousMetal5MinuteDataSummaryServiceImpl extends PreciousMetalCom
 	private MetalPrice5minuteMapper metalPrice5minuteMapper;
 	
 	@Override
+	public void cacheDataTo5Minute() {
+		int minuteStep = 5;
+		LocalDateTime endTime = nextStepTime(LocalDateTime.now(), minuteStep);
+		LocalDateTime startTime = endTime.minusMinutes(minuteStep);
+		for(MetalType metalType : MetalType.values()) {
+			cacheDataTo5Minute(metalType, startTime, endTime);
+		}
+	}
+	
+	@Override
 	public CommonResultCX cacheDataTo5Minute(MetalType metalType, LocalDateTime startTime, LocalDateTime endTime) {
 		
 		CommonResultCX r = new CommonResultCX();
@@ -69,7 +79,7 @@ public class PreciousMetal5MinuteDataSummaryServiceImpl extends PreciousMetalCom
 		.andEndTimeLessThanOrEqualTo(endTime)
 		;
 		List<MetalPrice5minute> summaryPOList = metalPrice5minuteMapper.selectByExample(example);
-		if(summaryPOList != null) {
+		if(summaryPOList != null && !summaryPOList.isEmpty()) {
 			return summaryPOList.get(0);
 		}
 		return null;
@@ -94,6 +104,8 @@ public class PreciousMetal5MinuteDataSummaryServiceImpl extends PreciousMetalCom
 			if(po.getStartPrice() == null) {
 				po.setStartPrice(tmpCachePO.getPrice());
 				po.setMetalType(tmpCachePO.getMetalType());
+				po.setWeightType(tmpCachePO.getWeightType());
+				po.setStartTime(tmpCachePO.getCreateTime());
 			}
 			if(po.getHighPrice() == null || po.getHighPrice().compareTo(tmpCachePO.getPrice()) == -1) {
 				po.setHighPrice(tmpCachePO.getPrice());
@@ -102,6 +114,7 @@ public class PreciousMetal5MinuteDataSummaryServiceImpl extends PreciousMetalCom
 				po.setLowPrice(tmpCachePO.getPrice());
 			}
 			po.setEndPrice(tmpCachePO.getPrice());
+			po.setEndTime(tmpCachePO.getCreateTime());
 		}
 		
 		return po;

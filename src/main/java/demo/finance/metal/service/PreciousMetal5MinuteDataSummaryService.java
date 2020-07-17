@@ -9,4 +9,6 @@ public interface PreciousMetal5MinuteDataSummaryService {
 
 	CommonResultCX cacheDataTo5Minute(MetalType metalType, LocalDateTime startTime, LocalDateTime endTime);
 
+	void cacheDataTo5Minute();
+
 }

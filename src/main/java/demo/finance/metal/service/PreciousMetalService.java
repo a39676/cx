@@ -17,4 +17,6 @@ public interface PreciousMetalService {
 
 	CommonResult reciveMetalPrice(PreciousMetailPriceDTO dto);
 
+	CommonResultCX deleteExpiredCacheData();
+
 }

@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.finance.metal.mapper.MetalPriceNoticeMapper;
+import demo.finance.metal.pojo.constant.MetalConstant;
 import demo.finance.metal.pojo.dto.InsertNewMetalPriceNoticeSettingDTO;
 import demo.finance.metal.pojo.po.MetalPrice;
 import demo.finance.metal.pojo.po.MetalPriceExample;
@@ -208,4 +209,18 @@ public class PreciousMetalServiceImpl extends PreciousMetalCommonService impleme
 		view.addObject("metalType", MetalType.values());
 		return view;
 	}
+
+	@Override
+	public CommonResultCX deleteExpiredCacheData() {
+		CommonResultCX r = new CommonResultCX();
+		
+		LocalDateTime expriedTime = LocalDateTime.now().minusHours(MetalConstant.metalPrice10MinuteDateLiveHours);
+		
+		MetalPriceExample example = new MetalPriceExample();
+		example.createCriteria().andCreateTimeLessThan(expriedTime);
+		metalPriceMapper.deleteByExample(example);
+		r.setIsSuccess();
+		return r;
+	}
+
 }

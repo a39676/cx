@@ -34,122 +34,123 @@ public class PreciousMetalServiceImpl extends PreciousMetalCommonService impleme
 	private MailService mailService;
 	@Autowired
 	private ValidRegexToolService validRegexToolService;
-	
+
 	@Autowired
 	private MetalPriceNoticeMapper metalPriceNoticeMapper;
-	
+
 	@Override
 	public CommonResult reciveMetalPrice(PreciousMetailPriceDTO dto) {
 		CommonResult result = new CommonResult();
-		
+
 		MetalPrice tmpPO = null;
 		int insertCount = 0;
-		if(dto.getPrice() == null || dto.getWeightUtilType() == null) {
+		if (dto.getPrice() == null || dto.getWeightUtilType() == null) {
 			return result;
 		}
-		
+
 		UtilOfWeightType weightType = UtilOfWeightType.getType(dto.getWeightUtilType());
-		if(weightType == null) {
+		if (weightType == null) {
 			return result;
 		}
-		
+
 		MetalType metalType = MetalType.getType(dto.getMetalType());
-		if(metalType == null) {
+		if (metalType == null) {
 			return result;
 		}
-		
+
 		tmpPO = new MetalPrice();
 		tmpPO.setId(snowFlake.getNextId());
 		tmpPO.setMetalType(dto.getMetalType());
 		tmpPO.setPrice(new BigDecimal(dto.getPrice()));
 		tmpPO.setWeightType(dto.getWeightUtilType());
-		if(StringUtils.isNotBlank(dto.getTransactionDateTime())) {
+		if (StringUtils.isNotBlank(dto.getTransactionDateTime())) {
 			tmpPO.setCreateTime(localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getTransactionDateTime()));
 		}
-		if(tmpPO.getCreateTime() == null) {
+		if (tmpPO.getCreateTime() == null) {
 			tmpPO.setCreateTime(LocalDateTime.now());
 		}
-		
+
 		insertCount += metalPriceMapper.insertSelective(tmpPO);
-		
-		if(insertCount > 0) {
+
+		if (insertCount > 0) {
 			result.setIsSuccess();
 		}
-		
+
 		return result;
 	}
-	
+
 	@Override
 	public void noticeHandler() {
 		List<MetalPriceNotice> noticeList = metalPriceNoticeMapper.selectValidNoticeSetting(LocalDateTime.now());
-		if(noticeList == null || noticeList.isEmpty()) {
+		if (noticeList == null || noticeList.isEmpty()) {
 			return;
 		}
-		
-		for(MetalPriceNotice notice: noticeList) {
+
+		for (MetalPriceNotice notice : noticeList) {
 			subNoticeHandler(notice);
 		}
-		
+
 	}
-	
+
 	private void subNoticeHandler(MetalPriceNotice noticeSetting) {
 		MetalType metalType = MetalType.getType(noticeSetting.getMetalType());
-		if(metalType == null) {
+		if (metalType == null) {
 			return;
 		}
-		
+
 		MetalPriceExample example = new MetalPriceExample();
 		Criteria criteria = example.createCriteria();
 		criteria.andMetalTypeEqualTo(metalType.getCode());
 		example.setOrderByClause("create_time desc");
 		RowBounds r = new RowBounds(0, 1);
-		
+
 		List<MetalPrice> lastPOList = metalPriceMapper.selectByExampleWithRowbounds(example, r);
-		if(lastPOList == null || lastPOList.isEmpty()) {
+		if (lastPOList == null || lastPOList.isEmpty()) {
 			return;
 		}
-		
+
 		MetalPrice lastPO = lastPOList.get(0);
-		if(lastPO == null) {
+		if (lastPO == null) {
 			return;
 		}
-		
+
 		boolean noticeFlag = false;
-		
-		if(noticeSetting.getMaxGramPrice() != null) {
+
+		if (noticeSetting.getMaxGramPrice() != null) {
 			BigDecimal kgMaxPrice = noticeSetting.getMaxGramPrice().multiply(new BigDecimal(1000));
 			BigDecimal lastPrice = lastPO.getPrice();
-			if(UtilOfWeightType.gram.getCode().equals(lastPO.getWeightType())) {
+			if (UtilOfWeightType.gram.getCode().equals(lastPO.getWeightType())) {
 				lastPrice = lastPrice.multiply(new BigDecimal(1000));
 			}
-			
-			if(lastPrice.compareTo(kgMaxPrice) >= 1) {
+
+			if (lastPrice.compareTo(kgMaxPrice) >= 1) {
 				noticeFlag = true;
-				
+
 			}
-			
-		} else if(noticeSetting.getMinGramPrice() != null) {
+
+		} else if (noticeSetting.getMinGramPrice() != null) {
 			BigDecimal kgMinPrice = noticeSetting.getMinGramPrice().multiply(new BigDecimal(1000));
 			BigDecimal lastPrice = lastPO.getPrice();
-			if(UtilOfWeightType.gram.getCode().equals(lastPO.getWeightType())) {
+			if (UtilOfWeightType.gram.getCode().equals(lastPO.getWeightType())) {
 				lastPrice = lastPrice.multiply(new BigDecimal(1000));
 			}
-			
-			if(lastPrice.compareTo(kgMinPrice) <= -1) {
+
+			if (lastPrice.compareTo(kgMinPrice) <= -1) {
 				noticeFlag = true;
 			}
 		}
-		
-		if(noticeFlag) {
-			if(!validRegexToolService.validEmail(noticeSetting.getEmail())) {
+
+		if (noticeFlag) {
+			if (!validRegexToolService.validEmail(noticeSetting.getEmail())) {
 				return;
 			}
-			
+
 			String content = metalType.getName() + " price had reach " + lastPO.getPrice().divide(new BigDecimal(1000));
-			if(!"dev".equals(constantService.getValByName("envName"))) {
-				mailService.sendSimpleMail(noticeSetting.getEmail(), "价格提示", content, null, MailType.preciousMetalsNotice);
+			if (!"dev".equals(constantService.getValByName("envName"))) {
+				mailService.sendSimpleMail(noticeSetting.getEmail(), "价格提示", content, null,
+						MailType.preciousMetalsNotice);
 			}
-			
+
 			noticeSetting.setNoticeTime(LocalDateTime.now());
 			noticeSetting.setIsDelete(true);
 			metalPriceNoticeMapper.updateByPrimaryKeySelective(noticeSetting);
@@ -159,51 +160,51 @@ public class PreciousMetalServiceImpl extends PreciousMetalCommonService impleme
 	@Override
 	public CommonResultCX insertNewMetalPriceNoticeSetting(InsertNewMetalPriceNoticeSettingDTO dto) {
 		CommonResultCX r = new CommonResultCX();
-		
+
 		MetalPriceNotice newPO = new MetalPriceNotice();
 		MetalType metalType = MetalType.getType(dto.getMetalType());
-		if(metalType == null) {
+		if (metalType == null) {
 			r.failWithMessage("error param");
 			return r;
 		}
 		newPO.setMetalType(metalType.getCode());
-		
-		if(!validRegexToolService.validEmail(dto.getEmail())) {
+
+		if (!validRegexToolService.validEmail(dto.getEmail())) {
 			r.failWithMessage("error email");
 			return r;
 		}
 		newPO.setEmail(dto.getEmail());
-		
-		if(dto.getMaxGramPrice() == null && dto.getMinGramPrice() == null) {
+
+		if (dto.getMaxGramPrice() == null && dto.getMinGramPrice() == null) {
 			r.failWithMessage("please set max / min price");
 			return r;
 		}
-		if(dto.getMaxGramPrice() != null) {
+		if (dto.getMaxGramPrice() != null) {
 			newPO.setMaxGramPrice(dto.getMaxGramPrice());
 		}
-		if(dto.getMinGramPrice() != null) {
+		if (dto.getMinGramPrice() != null) {
 			newPO.setMinGramPrice(dto.getMinGramPrice());
 		}
-		
-		if(dto.getValidTime() == null) {
+
+		if (dto.getValidTime() == null) {
 			newPO.setValidTime(LocalDateTime.now().plusMonths(6));
-		} else if(!dateHandler.isDateValid(dto.getValidTime())) {
+		} else if (!dateHandler.isDateValid(dto.getValidTime())) {
 			r.failWithMessage("please select a valid date");
 			return r;
-		} 
-		
+		}
+
 		LocalDateTime validDate = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getValidTime());
-		if(validDate.isBefore(LocalDateTime.now())) {
+		if (validDate.isBefore(LocalDateTime.now())) {
 			r.failWithMessage("please select a valid date");
 			return r;
 		}
 		newPO.setValidTime(validDate);
-		
+
 		newPO.setId(snowFlake.getNextId());
 		newPO.setCreateTime(LocalDateTime.now());
 		int count = metalPriceNoticeMapper.insertSelective(newPO);
-		
-		if(count > 0) {
+
+		if (count > 0) {
 			r.successWithMessage("insert notice setting: " + dto.toString());
 		}
 		return r;
@@ -219,9 +220,9 @@ public class PreciousMetalServiceImpl extends PreciousMetalCommonService impleme
 	@Override
 	public CommonResultCX deleteExpiredCacheData() {
 		CommonResultCX r = new CommonResultCX();
-		
+
 		LocalDateTime expriedTime = LocalDateTime.now().minusHours(MetalConstant.metalPrice10MinuteDateLiveHours);
-		
+
 		MetalPriceExample example = new MetalPriceExample();
 		example.createCriteria().andCreateTimeLessThan(expriedTime);
 		metalPriceMapper.deleteByExample(example);

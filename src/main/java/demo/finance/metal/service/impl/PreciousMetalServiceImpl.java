@@ -193,6 +193,10 @@ public class PreciousMetalServiceImpl extends PreciousMetalCommonService impleme
 		} 
 		
 		LocalDateTime validDate = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getValidTime());
+		/*
+		 * FIXME 输入框未有精确到时分秒的, 权宜之计
+		 */
+		validDate = validDate.withHour(23).withMinute(59).withSecond(59);
 		if(validDate.isBefore(LocalDateTime.now())) {
 			r.failWithMessage("please select a valid date");
 			return r;

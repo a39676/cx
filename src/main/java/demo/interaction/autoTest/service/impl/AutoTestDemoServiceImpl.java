@@ -56,7 +56,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	@Override
 	public ModelAndView index(HttpServletRequest request) {
 
-		if(!isInSeekOrDev(request)) {
+		if(!baseUtilCustom.hasAdminRole() && !isInSeekOrDev(request)) {
 			return exceptionService.handle404Exception(request);
 		}
 

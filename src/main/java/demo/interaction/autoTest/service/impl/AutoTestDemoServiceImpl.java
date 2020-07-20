@@ -46,7 +46,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 
 	@Override
 	public ModelAndView linkToATHome(HttpServletRequest request) {
-		if(isInSeekOrDev(request)) {
+		if(baseUtilCustom.hasAdminRole() || isInSeekOrDev(request)) {
 			return new ModelAndView("ATDemoJSP/atDemoLink");
 		}
 

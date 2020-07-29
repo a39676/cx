@@ -2,9 +2,9 @@ package demo.test.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.baseCommon.controller.CommonController;
 import demo.test.pojo.constant.TestUrl;
@@ -17,9 +17,9 @@ public class TestController2 extends CommonController {
 	@Autowired
 	private TestService testService;
 	
-	@PostMapping(value = "/ackSenderTest")
-	public String ackSenderTest(@RequestBody String content) {
-		testService.ackProducer(content);
-		return "done";
+	@GetMapping(value = "/test")
+	@ResponseBody
+	public String cacheDataTo5Minute() {
+		return testService.cacheDataTo5Minute();
 	}
 }

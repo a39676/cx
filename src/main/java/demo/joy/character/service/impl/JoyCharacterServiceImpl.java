@@ -51,9 +51,10 @@ public class JoyCharacterServiceImpl extends CommonService implements JoyCharact
 		if (StringUtils.isBlank(dto.getCharacterName())) {
 			r.failWithMessage("角色名不能为空");
 			return r;
-		}
-
-		if (dto.getCharacterName().length() > JoyCharacterConstant.MAX_CHARACTER_NAME_LENGTH) {
+		} else if (dto.getCharacterName().length() > JoyCharacterConstant.MAX_CHARACTER_NAME_LENGTH) {
+			r.failWithMessage("角色名过长");
+			return r;
+		} else if (dto.getCharacterName().length() < JoyCharacterConstant.MIN_CHARACTER_NAME_LENGTH) {
 			r.failWithMessage("角色名过长");
 			return r;
 		}

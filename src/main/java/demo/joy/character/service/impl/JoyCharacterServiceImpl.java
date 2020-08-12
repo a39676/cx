@@ -55,9 +55,14 @@ public class JoyCharacterServiceImpl extends CommonService implements JoyCharact
 			r.failWithMessage("角色名过长");
 			return r;
 		} else if (dto.getCharacterName().length() < JoyCharacterConstant.MIN_CHARACTER_NAME_LENGTH) {
-			r.failWithMessage("角色名过长");
+			r.failWithMessage("角色名过短");
 			return r;
 		}
+		
+		/*
+		 * TODO
+		 * 未校验生僻字,特殊字符
+		 */
 
 		GenderType genderType = GenderType.getType(dto.getGender());
 		if (genderType == null || genderType.equals(GenderType.unknow)) {
@@ -99,7 +104,7 @@ public class JoyCharacterServiceImpl extends CommonService implements JoyCharact
 		
 		JoyCharacter po = characterPOList.get(0);
 		
-		JoyCharacterVO vo = buildVO(po);
+		JoyCharacterVO vo = buildCharacterVOByPO(po);
 		
 		r.setCharacterVO(vo);
 		r.setIsSuccess();
@@ -107,7 +112,7 @@ public class JoyCharacterServiceImpl extends CommonService implements JoyCharact
 		return r;
 	}
 	
-	private JoyCharacterVO buildVO(JoyCharacter po) {
+	private JoyCharacterVO buildCharacterVOByPO(JoyCharacter po) {
 		JoyCharacterVO vo = new JoyCharacterVO();
 		vo.setGender(po.getGender());
 		vo.setName(po.getCharacterName());

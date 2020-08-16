@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.GenderType;
-import demo.baseCommon.service.CommonService;
 import demo.joy.character.mapper.JoyCharacterMapper;
 import demo.joy.character.pojo.constant.JoyCharacterConstant;
 import demo.joy.character.pojo.dto.CreateJoyCharacterCharacterDTO;
@@ -17,9 +16,10 @@ import demo.joy.character.pojo.po.JoyCharacterExample;
 import demo.joy.character.pojo.result.GetCharacterDetailResult;
 import demo.joy.character.pojo.vo.JoyCharacterVO;
 import demo.joy.character.service.JoyCharacterService;
+import demo.joy.common.service.JoyCommonService;
 
 @Service
-public class JoyCharacterServiceImpl extends CommonService implements JoyCharacterService {
+public class JoyCharacterServiceImpl extends JoyCommonService implements JoyCharacterService {
 
 	@Autowired
 	private JoyCharacterMapper joyCharacterMapper;

@@ -5,6 +5,9 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="scene_name" jdbcType="CHAR" property="sceneName" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_by" jdbcType="BIGINT" property="createBy" />
+    <result column="edit_time" jdbcType="TIMESTAMP" property="editTime" />
+    <result column="edit_by" jdbcType="BIGINT" property="editBy" />
     <result column="is_open" jdbcType="BIT" property="isOpen" />
     <result column="is_private" jdbcType="BIT" property="isPrivate" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
@@ -68,7 +71,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, scene_name, create_time, is_open, is_private, is_delete
+    id, scene_name, create_time, create_by, edit_time, edit_by, is_open, is_private, 
+    is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.joy.scene.pojo.po.JoySceneExample" resultMap="BaseResultMap">
     select
@@ -102,8 +106,10 @@
   </delete>
   <insert id="insert" parameterType="demo.joy.scene.pojo.po.JoyScene">
     insert into joy_scene (id, scene_name, create_time, 
+      create_by, edit_time, edit_by, 
       is_open, is_private, is_delete)
     values (#{id,jdbcType=BIGINT}, #{sceneName,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createBy,jdbcType=BIGINT}, #{editTime,jdbcType=TIMESTAMP}, #{editBy,jdbcType=BIGINT}, 
       #{isOpen,jdbcType=BIT}, #{isPrivate,jdbcType=BIT}, #{isDelete,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="demo.joy.scene.pojo.po.JoyScene">
@@ -117,6 +123,15 @@
       </if>
       <if test="createTime != null">
         create_time,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="editTime != null">
+        edit_time,
+      </if>
+      <if test="editBy != null">
+        edit_by,
       </if>
       <if test="isOpen != null">
         is_open,
@@ -137,6 +152,15 @@
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=BIGINT},
+      </if>
+      <if test="editTime != null">
+        #{editTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="editBy != null">
+        #{editBy,jdbcType=BIGINT},
       </if>
       <if test="isOpen != null">
         #{isOpen,jdbcType=BIT},
@@ -167,6 +191,15 @@
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.createBy != null">
+        create_by = #{record.createBy,jdbcType=BIGINT},
+      </if>
+      <if test="record.editTime != null">
+        edit_time = #{record.editTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.editBy != null">
+        edit_by = #{record.editBy,jdbcType=BIGINT},
+      </if>
       <if test="record.isOpen != null">
         is_open = #{record.isOpen,jdbcType=BIT},
       </if>
@@ -186,6 +219,9 @@
     set id = #{record.id,jdbcType=BIGINT},
       scene_name = #{record.sceneName,jdbcType=CHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_by = #{record.createBy,jdbcType=BIGINT},
+      edit_time = #{record.editTime,jdbcType=TIMESTAMP},
+      edit_by = #{record.editBy,jdbcType=BIGINT},
       is_open = #{record.isOpen,jdbcType=BIT},
       is_private = #{record.isPrivate,jdbcType=BIT},
       is_delete = #{record.isDelete,jdbcType=BIT}
@@ -201,6 +237,15 @@
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=BIGINT},
+      </if>
+      <if test="editTime != null">
+        edit_time = #{editTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="editBy != null">
+        edit_by = #{editBy,jdbcType=BIGINT},
       </if>
       <if test="isOpen != null">
         is_open = #{isOpen,jdbcType=BIT},
@@ -218,6 +263,9 @@
     update joy_scene
     set scene_name = #{sceneName,jdbcType=CHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=BIGINT},
+      edit_time = #{editTime,jdbcType=TIMESTAMP},
+      edit_by = #{editBy,jdbcType=BIGINT},
       is_open = #{isOpen,jdbcType=BIT},
       is_private = #{isPrivate,jdbcType=BIT},
       is_delete = #{isDelete,jdbcType=BIT}

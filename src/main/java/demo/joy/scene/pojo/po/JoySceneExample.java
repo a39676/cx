@@ -295,6 +295,186 @@ public class JoySceneExample {
             return (Criteria) this;
         }
 
+        public Criteria andCreateByIsNull() {
+            addCriterion("create_by is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateByIsNotNull() {
+            addCriterion("create_by is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateByEqualTo(Long value) {
+            addCriterion("create_by =", value, "createBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateByNotEqualTo(Long value) {
+            addCriterion("create_by <>", value, "createBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateByGreaterThan(Long value) {
+            addCriterion("create_by >", value, "createBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateByGreaterThanOrEqualTo(Long value) {
+            addCriterion("create_by >=", value, "createBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateByLessThan(Long value) {
+            addCriterion("create_by <", value, "createBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateByLessThanOrEqualTo(Long value) {
+            addCriterion("create_by <=", value, "createBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateByIn(List<Long> values) {
+            addCriterion("create_by in", values, "createBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateByNotIn(List<Long> values) {
+            addCriterion("create_by not in", values, "createBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateByBetween(Long value1, Long value2) {
+            addCriterion("create_by between", value1, value2, "createBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateByNotBetween(Long value1, Long value2) {
+            addCriterion("create_by not between", value1, value2, "createBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andEditTimeIsNull() {
+            addCriterion("edit_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEditTimeIsNotNull() {
+            addCriterion("edit_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEditTimeEqualTo(LocalDateTime value) {
+            addCriterion("edit_time =", value, "editTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEditTimeNotEqualTo(LocalDateTime value) {
+            addCriterion("edit_time <>", value, "editTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEditTimeGreaterThan(LocalDateTime value) {
+            addCriterion("edit_time >", value, "editTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEditTimeGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("edit_time >=", value, "editTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEditTimeLessThan(LocalDateTime value) {
+            addCriterion("edit_time <", value, "editTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEditTimeLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("edit_time <=", value, "editTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEditTimeIn(List<LocalDateTime> values) {
+            addCriterion("edit_time in", values, "editTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEditTimeNotIn(List<LocalDateTime> values) {
+            addCriterion("edit_time not in", values, "editTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEditTimeBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("edit_time between", value1, value2, "editTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEditTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("edit_time not between", value1, value2, "editTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEditByIsNull() {
+            addCriterion("edit_by is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEditByIsNotNull() {
+            addCriterion("edit_by is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEditByEqualTo(Long value) {
+            addCriterion("edit_by =", value, "editBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andEditByNotEqualTo(Long value) {
+            addCriterion("edit_by <>", value, "editBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andEditByGreaterThan(Long value) {
+            addCriterion("edit_by >", value, "editBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andEditByGreaterThanOrEqualTo(Long value) {
+            addCriterion("edit_by >=", value, "editBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andEditByLessThan(Long value) {
+            addCriterion("edit_by <", value, "editBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andEditByLessThanOrEqualTo(Long value) {
+            addCriterion("edit_by <=", value, "editBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andEditByIn(List<Long> values) {
+            addCriterion("edit_by in", values, "editBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andEditByNotIn(List<Long> values) {
+            addCriterion("edit_by not in", values, "editBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andEditByBetween(Long value1, Long value2) {
+            addCriterion("edit_by between", value1, value2, "editBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andEditByNotBetween(Long value1, Long value2) {
+            addCriterion("edit_by not between", value1, value2, "editBy");
+            return (Criteria) this;
+        }
+
         public Criteria andIsOpenIsNull() {
             addCriterion("is_open is null");
             return (Criteria) this;

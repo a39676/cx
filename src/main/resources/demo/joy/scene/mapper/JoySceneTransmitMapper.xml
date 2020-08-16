@@ -7,6 +7,9 @@
     <result column="to_scene_id" jdbcType="BIGINT" property="toSceneId" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_by" jdbcType="BIGINT" property="createBy" />
+    <result column="edit_time" jdbcType="TIMESTAMP" property="editTime" />
+    <result column="edit_by" jdbcType="BIGINT" property="editBy" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -68,7 +71,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, from_scene_id, to_scene_id, remark, create_time, is_delete
+    id, from_scene_id, to_scene_id, remark, create_time, create_by, edit_time, edit_by, 
+    is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.joy.scene.pojo.po.JoySceneTransmitExample" resultMap="BaseResultMap">
     select
@@ -102,10 +106,12 @@
   </delete>
   <insert id="insert" parameterType="demo.joy.scene.pojo.po.JoySceneTransmit">
     insert into joy_scene_transmit (id, from_scene_id, to_scene_id, 
-      remark, create_time, is_delete
+      remark, create_time, create_by, 
+      edit_time, edit_by, is_delete
       )
     values (#{id,jdbcType=BIGINT}, #{fromSceneId,jdbcType=BIGINT}, #{toSceneId,jdbcType=BIGINT}, 
-      #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
+      #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=BIGINT}, 
+      #{editTime,jdbcType=TIMESTAMP}, #{editBy,jdbcType=BIGINT}, #{isDelete,jdbcType=BIT}
       )
   </insert>
   <insert id="insertSelective" parameterType="demo.joy.scene.pojo.po.JoySceneTransmit">
@@ -126,6 +132,15 @@
       <if test="createTime != null">
         create_time,
       </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="editTime != null">
+        edit_time,
+      </if>
+      <if test="editBy != null">
+        edit_by,
+      </if>
       <if test="isDelete != null">
         is_delete,
       </if>
@@ -145,6 +160,15 @@
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=BIGINT},
+      </if>
+      <if test="editTime != null">
+        #{editTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="editBy != null">
+        #{editBy,jdbcType=BIGINT},
       </if>
       <if test="isDelete != null">
         #{isDelete,jdbcType=BIT},
@@ -175,6 +199,15 @@
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.createBy != null">
+        create_by = #{record.createBy,jdbcType=BIGINT},
+      </if>
+      <if test="record.editTime != null">
+        edit_time = #{record.editTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.editBy != null">
+        edit_by = #{record.editBy,jdbcType=BIGINT},
+      </if>
       <if test="record.isDelete != null">
         is_delete = #{record.isDelete,jdbcType=BIT},
       </if>
@@ -190,6 +223,9 @@
       to_scene_id = #{record.toSceneId,jdbcType=BIGINT},
       remark = #{record.remark,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_by = #{record.createBy,jdbcType=BIGINT},
+      edit_time = #{record.editTime,jdbcType=TIMESTAMP},
+      edit_by = #{record.editBy,jdbcType=BIGINT},
       is_delete = #{record.isDelete,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -210,6 +246,15 @@
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=BIGINT},
+      </if>
+      <if test="editTime != null">
+        edit_time = #{editTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="editBy != null">
+        edit_by = #{editBy,jdbcType=BIGINT},
+      </if>
       <if test="isDelete != null">
         is_delete = #{isDelete,jdbcType=BIT},
       </if>
@@ -222,6 +267,9 @@
       to_scene_id = #{toSceneId,jdbcType=BIGINT},
       remark = #{remark,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=BIGINT},
+      edit_time = #{editTime,jdbcType=TIMESTAMP},
+      edit_by = #{editBy,jdbcType=BIGINT},
       is_delete = #{isDelete,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>

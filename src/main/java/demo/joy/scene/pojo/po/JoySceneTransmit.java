@@ -13,6 +13,12 @@ public class JoySceneTransmit {
 
     private LocalDateTime createTime;
 
+    private Long createBy;
+
+    private LocalDateTime editTime;
+
+    private Long editBy;
+
     private Boolean isDelete;
 
     public Long getId() {
@@ -53,6 +59,30 @@ public class JoySceneTransmit {
 
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
+    }
+
+    public Long getCreateBy() {
+        return createBy;
+    }
+
+    public void setCreateBy(Long createBy) {
+        this.createBy = createBy;
+    }
+
+    public LocalDateTime getEditTime() {
+        return editTime;
+    }
+
+    public void setEditTime(LocalDateTime editTime) {
+        this.editTime = editTime;
+    }
+
+    public Long getEditBy() {
+        return editBy;
+    }
+
+    public void setEditBy(Long editBy) {
+        this.editBy = editBy;
     }
 
     public Boolean getIsDelete() {

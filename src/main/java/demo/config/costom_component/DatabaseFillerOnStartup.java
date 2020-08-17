@@ -19,6 +19,7 @@ import demo.base.user.service.AuthService;
 import demo.base.user.service.RoleService;
 import demo.base.user.service.UserRegistService;
 import demo.base.user.service.UsersService;
+import demo.joy.scene.service.JoySceneOperationService;
 
 @Component
 //public class DatabaseFillerOnStartup implements ApplicationListener<ContextStartedEvent> {
@@ -37,6 +38,8 @@ public class DatabaseFillerOnStartup implements ApplicationListener<ApplicationR
 	@Autowired
 	private __SystemOrganizationService __systemOrgService;
 	
+	@Autowired
+	private JoySceneOperationService joySceneOperationService;
 /*
  * ContextStartedEvent
  * ContextStoppedEvent
@@ -75,6 +78,8 @@ public class DatabaseFillerOnStartup implements ApplicationListener<ApplicationR
 			if(baseOrg == null || baseOrg.getIsDelete()) {
 				__systemOrgService.__initBaseOrg(superAdminId);
 			}
+			
+			joySceneOperationService.defaultSceneInit();
 		}
 	}
 

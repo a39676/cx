@@ -1,4 +1,4 @@
-package demo.joy.character.pojo.type;
+package demo.joy.scene.pojo.type;
 
 public enum JoySceneOperationType {
 	

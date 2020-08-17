@@ -54,9 +54,9 @@
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="joy_scene_transmit">
-        	<property name="tableName" value="joy_scene_transmit"></property>
-        	<property name="domainObjectName" value="joy_scene_transmit" ></property>
+        <table tableName="joy_scene_group_relation">
+        	<property name="tableName" value="joy_scene_group_relation"></property>
+        	<property name="domainObjectName" value="joy_scene_group_relation" ></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

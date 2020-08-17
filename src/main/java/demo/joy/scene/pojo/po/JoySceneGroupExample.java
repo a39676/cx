@@ -4,14 +4,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JoySceneTransmitExample {
+public class JoySceneGroupExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public JoySceneTransmitExample() {
+    public JoySceneGroupExample() {
         oredCriteria = new ArrayList<>();
     }
 
@@ -165,123 +165,73 @@ public class JoySceneTransmitExample {
             return (Criteria) this;
         }
 
-        public Criteria andFromSceneIdIsNull() {
-            addCriterion("from_scene_id is null");
+        public Criteria andSceneGroupNameIsNull() {
+            addCriterion("scene_group_name is null");
             return (Criteria) this;
         }
 
-        public Criteria andFromSceneIdIsNotNull() {
-            addCriterion("from_scene_id is not null");
+        public Criteria andSceneGroupNameIsNotNull() {
+            addCriterion("scene_group_name is not null");
             return (Criteria) this;
         }
 
-        public Criteria andFromSceneIdEqualTo(Long value) {
-            addCriterion("from_scene_id =", value, "fromSceneId");
+        public Criteria andSceneGroupNameEqualTo(String value) {
+            addCriterion("scene_group_name =", value, "sceneGroupName");
             return (Criteria) this;
         }
 
-        public Criteria andFromSceneIdNotEqualTo(Long value) {
-            addCriterion("from_scene_id <>", value, "fromSceneId");
+        public Criteria andSceneGroupNameNotEqualTo(String value) {
+            addCriterion("scene_group_name <>", value, "sceneGroupName");
             return (Criteria) this;
         }
 
-        public Criteria andFromSceneIdGreaterThan(Long value) {
-            addCriterion("from_scene_id >", value, "fromSceneId");
+        public Criteria andSceneGroupNameGreaterThan(String value) {
+            addCriterion("scene_group_name >", value, "sceneGroupName");
             return (Criteria) this;
         }
 
-        public Criteria andFromSceneIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("from_scene_id >=", value, "fromSceneId");
+        public Criteria andSceneGroupNameGreaterThanOrEqualTo(String value) {
+            addCriterion("scene_group_name >=", value, "sceneGroupName");
             return (Criteria) this;
         }
 
-        public Criteria andFromSceneIdLessThan(Long value) {
-            addCriterion("from_scene_id <", value, "fromSceneId");
+        public Criteria andSceneGroupNameLessThan(String value) {
+            addCriterion("scene_group_name <", value, "sceneGroupName");
             return (Criteria) this;
         }
 
-        public Criteria andFromSceneIdLessThanOrEqualTo(Long value) {
-            addCriterion("from_scene_id <=", value, "fromSceneId");
+        public Criteria andSceneGroupNameLessThanOrEqualTo(String value) {
+            addCriterion("scene_group_name <=", value, "sceneGroupName");
             return (Criteria) this;
         }
 
-        public Criteria andFromSceneIdIn(List<Long> values) {
-            addCriterion("from_scene_id in", values, "fromSceneId");
+        public Criteria andSceneGroupNameLike(String value) {
+            addCriterion("scene_group_name like", value, "sceneGroupName");
             return (Criteria) this;
         }
 
-        public Criteria andFromSceneIdNotIn(List<Long> values) {
-            addCriterion("from_scene_id not in", values, "fromSceneId");
+        public Criteria andSceneGroupNameNotLike(String value) {
+            addCriterion("scene_group_name not like", value, "sceneGroupName");
             return (Criteria) this;
         }
 
-        public Criteria andFromSceneIdBetween(Long value1, Long value2) {
-            addCriterion("from_scene_id between", value1, value2, "fromSceneId");
+        public Criteria andSceneGroupNameIn(List<String> values) {
+            addCriterion("scene_group_name in", values, "sceneGroupName");
             return (Criteria) this;
         }
 
-        public Criteria andFromSceneIdNotBetween(Long value1, Long value2) {
-            addCriterion("from_scene_id not between", value1, value2, "fromSceneId");
+        public Criteria andSceneGroupNameNotIn(List<String> values) {
+            addCriterion("scene_group_name not in", values, "sceneGroupName");
             return (Criteria) this;
         }
 
-        public Criteria andToSceneIdIsNull() {
-            addCriterion("to_scene_id is null");
+        public Criteria andSceneGroupNameBetween(String value1, String value2) {
+            addCriterion("scene_group_name between", value1, value2, "sceneGroupName");
             return (Criteria) this;
         }
 
-        public Criteria andToSceneIdIsNotNull() {
-            addCriterion("to_scene_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andToSceneIdEqualTo(Long value) {
-            addCriterion("to_scene_id =", value, "toSceneId");
-            return (Criteria) this;
-        }
-
-        public Criteria andToSceneIdNotEqualTo(Long value) {
-            addCriterion("to_scene_id <>", value, "toSceneId");
-            return (Criteria) this;
-        }
-
-        public Criteria andToSceneIdGreaterThan(Long value) {
-            addCriterion("to_scene_id >", value, "toSceneId");
-            return (Criteria) this;
-        }
-
-        public Criteria andToSceneIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("to_scene_id >=", value, "toSceneId");
-            return (Criteria) this;
-        }
-
-        public Criteria andToSceneIdLessThan(Long value) {
-            addCriterion("to_scene_id <", value, "toSceneId");
-            return (Criteria) this;
-        }
-
-        public Criteria andToSceneIdLessThanOrEqualTo(Long value) {
-            addCriterion("to_scene_id <=", value, "toSceneId");
-            return (Criteria) this;
-        }
-
-        public Criteria andToSceneIdIn(List<Long> values) {
-            addCriterion("to_scene_id in", values, "toSceneId");
-            return (Criteria) this;
-        }
-
-        public Criteria andToSceneIdNotIn(List<Long> values) {
-            addCriterion("to_scene_id not in", values, "toSceneId");
-            return (Criteria) this;
-        }
-
-        public Criteria andToSceneIdBetween(Long value1, Long value2) {
-            addCriterion("to_scene_id between", value1, value2, "toSceneId");
-            return (Criteria) this;
-        }
-
-        public Criteria andToSceneIdNotBetween(Long value1, Long value2) {
-            addCriterion("to_scene_id not between", value1, value2, "toSceneId");
+        public Criteria andSceneGroupNameNotBetween(String value1, String value2) {
+            addCriterion("scene_group_name not between", value1, value2, "sceneGroupName");
             return (Criteria) this;
         }
 
@@ -472,186 +422,6 @@ public class JoySceneTransmitExample {
 
         public Criteria andCreateByNotBetween(Long value1, Long value2) {
             addCriterion("create_by not between", value1, value2, "createBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andEditTimeIsNull() {
-            addCriterion("edit_time is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andEditTimeIsNotNull() {
-            addCriterion("edit_time is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andEditTimeEqualTo(LocalDateTime value) {
-            addCriterion("edit_time =", value, "editTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andEditTimeNotEqualTo(LocalDateTime value) {
-            addCriterion("edit_time <>", value, "editTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andEditTimeGreaterThan(LocalDateTime value) {
-            addCriterion("edit_time >", value, "editTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andEditTimeGreaterThanOrEqualTo(LocalDateTime value) {
-            addCriterion("edit_time >=", value, "editTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andEditTimeLessThan(LocalDateTime value) {
-            addCriterion("edit_time <", value, "editTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andEditTimeLessThanOrEqualTo(LocalDateTime value) {
-            addCriterion("edit_time <=", value, "editTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andEditTimeIn(List<LocalDateTime> values) {
-            addCriterion("edit_time in", values, "editTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andEditTimeNotIn(List<LocalDateTime> values) {
-            addCriterion("edit_time not in", values, "editTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andEditTimeBetween(LocalDateTime value1, LocalDateTime value2) {
-            addCriterion("edit_time between", value1, value2, "editTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andEditTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
-            addCriterion("edit_time not between", value1, value2, "editTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andEditByIsNull() {
-            addCriterion("edit_by is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andEditByIsNotNull() {
-            addCriterion("edit_by is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andEditByEqualTo(Long value) {
-            addCriterion("edit_by =", value, "editBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andEditByNotEqualTo(Long value) {
-            addCriterion("edit_by <>", value, "editBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andEditByGreaterThan(Long value) {
-            addCriterion("edit_by >", value, "editBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andEditByGreaterThanOrEqualTo(Long value) {
-            addCriterion("edit_by >=", value, "editBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andEditByLessThan(Long value) {
-            addCriterion("edit_by <", value, "editBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andEditByLessThanOrEqualTo(Long value) {
-            addCriterion("edit_by <=", value, "editBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andEditByIn(List<Long> values) {
-            addCriterion("edit_by in", values, "editBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andEditByNotIn(List<Long> values) {
-            addCriterion("edit_by not in", values, "editBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andEditByBetween(Long value1, Long value2) {
-            addCriterion("edit_by between", value1, value2, "editBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andEditByNotBetween(Long value1, Long value2) {
-            addCriterion("edit_by not between", value1, value2, "editBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDeleteIsNull() {
-            addCriterion("is_delete is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDeleteIsNotNull() {
-            addCriterion("is_delete is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDeleteEqualTo(Boolean value) {
-            addCriterion("is_delete =", value, "isDelete");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDeleteNotEqualTo(Boolean value) {
-            addCriterion("is_delete <>", value, "isDelete");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDeleteGreaterThan(Boolean value) {
-            addCriterion("is_delete >", value, "isDelete");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDeleteGreaterThanOrEqualTo(Boolean value) {
-            addCriterion("is_delete >=", value, "isDelete");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDeleteLessThan(Boolean value) {
-            addCriterion("is_delete <", value, "isDelete");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDeleteLessThanOrEqualTo(Boolean value) {
-            addCriterion("is_delete <=", value, "isDelete");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDeleteIn(List<Boolean> values) {
-            addCriterion("is_delete in", values, "isDelete");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDeleteNotIn(List<Boolean> values) {
-            addCriterion("is_delete not in", values, "isDelete");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDeleteBetween(Boolean value1, Boolean value2) {
-            addCriterion("is_delete between", value1, value2, "isDelete");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDeleteNotBetween(Boolean value1, Boolean value2) {
-            addCriterion("is_delete not between", value1, value2, "isDelete");
             return (Criteria) this;
         }
     }

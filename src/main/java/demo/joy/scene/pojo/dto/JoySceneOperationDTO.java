@@ -1,6 +1,6 @@
 package demo.joy.scene.pojo.dto;
 
-import demo.joy.character.pojo.type.JoySceneOperationType;
+import demo.joy.scene.pojo.type.JoySceneOperationType;
 
 public class JoySceneOperationDTO {
 

@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="demo.joy.scene.mapper.JoySceneTransmitMapper">
-  <resultMap id="BaseResultMap" type="demo.joy.scene.pojo.po.JoySceneTransmit">
+<mapper namespace="demo.joy.scene.mapper.JoySceneGroupMapper">
+  <resultMap id="BaseResultMap" type="demo.joy.scene.pojo.po.JoySceneGroup">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="from_scene_id" jdbcType="BIGINT" property="fromSceneId" />
-    <result column="to_scene_id" jdbcType="BIGINT" property="toSceneId" />
+    <result column="scene_group_name" jdbcType="VARCHAR" property="sceneGroupName" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
-    <result column="edit_time" jdbcType="TIMESTAMP" property="editTime" />
-    <result column="edit_by" jdbcType="BIGINT" property="editBy" />
-    <result column="is_delete" jdbcType="BIT" property="isDelete" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -71,16 +67,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, from_scene_id, to_scene_id, remark, create_time, create_by, edit_time, edit_by, 
-    is_delete
+    id, scene_group_name, remark, create_time, create_by
   </sql>
-  <select id="selectByExample" parameterType="demo.joy.scene.pojo.po.JoySceneTransmitExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="demo.joy.scene.pojo.po.JoySceneGroupExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from joy_scene_transmit
+    from joy_scene_group
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -91,40 +86,33 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from joy_scene_transmit
+    from joy_scene_group
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from joy_scene_transmit
+    delete from joy_scene_group
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="demo.joy.scene.pojo.po.JoySceneTransmitExample">
-    delete from joy_scene_transmit
+  <delete id="deleteByExample" parameterType="demo.joy.scene.pojo.po.JoySceneGroupExample">
+    delete from joy_scene_group
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="demo.joy.scene.pojo.po.JoySceneTransmit">
-    insert into joy_scene_transmit (id, from_scene_id, to_scene_id, 
-      remark, create_time, create_by, 
-      edit_time, edit_by, is_delete
-      )
-    values (#{id,jdbcType=BIGINT}, #{fromSceneId,jdbcType=BIGINT}, #{toSceneId,jdbcType=BIGINT}, 
-      #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=BIGINT}, 
-      #{editTime,jdbcType=TIMESTAMP}, #{editBy,jdbcType=BIGINT}, #{isDelete,jdbcType=BIT}
-      )
+  <insert id="insert" parameterType="demo.joy.scene.pojo.po.JoySceneGroup">
+    insert into joy_scene_group (id, scene_group_name, remark, 
+      create_time, create_by)
+    values (#{id,jdbcType=BIGINT}, #{sceneGroupName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="demo.joy.scene.pojo.po.JoySceneTransmit">
-    insert into joy_scene_transmit
+  <insert id="insertSelective" parameterType="demo.joy.scene.pojo.po.JoySceneGroup">
+    insert into joy_scene_group
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
       </if>
-      <if test="fromSceneId != null">
-        from_scene_id,
-      </if>
-      <if test="toSceneId != null">
-        to_scene_id,
+      <if test="sceneGroupName != null">
+        scene_group_name,
       </if>
       <if test="remark != null">
         remark,
@@ -135,25 +123,13 @@
       <if test="createBy != null">
         create_by,
       </if>
-      <if test="editTime != null">
-        edit_time,
-      </if>
-      <if test="editBy != null">
-        edit_by,
-      </if>
-      <if test="isDelete != null">
-        is_delete,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="fromSceneId != null">
-        #{fromSceneId,jdbcType=BIGINT},
-      </if>
-      <if test="toSceneId != null">
-        #{toSceneId,jdbcType=BIGINT},
+      <if test="sceneGroupName != null">
+        #{sceneGroupName,jdbcType=VARCHAR},
       </if>
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
@@ -164,34 +140,22 @@
       <if test="createBy != null">
         #{createBy,jdbcType=BIGINT},
       </if>
-      <if test="editTime != null">
-        #{editTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="editBy != null">
-        #{editBy,jdbcType=BIGINT},
-      </if>
-      <if test="isDelete != null">
-        #{isDelete,jdbcType=BIT},
-      </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="demo.joy.scene.pojo.po.JoySceneTransmitExample" resultType="java.lang.Long">
-    select count(*) from joy_scene_transmit
+  <select id="countByExample" parameterType="demo.joy.scene.pojo.po.JoySceneGroupExample" resultType="java.lang.Long">
+    select count(*) from joy_scene_group
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update joy_scene_transmit
+    update joy_scene_group
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.fromSceneId != null">
-        from_scene_id = #{record.fromSceneId,jdbcType=BIGINT},
-      </if>
-      <if test="record.toSceneId != null">
-        to_scene_id = #{record.toSceneId,jdbcType=BIGINT},
+      <if test="record.sceneGroupName != null">
+        scene_group_name = #{record.sceneGroupName,jdbcType=VARCHAR},
       </if>
       <if test="record.remark != null">
         remark = #{record.remark,jdbcType=VARCHAR},
@@ -202,43 +166,27 @@
       <if test="record.createBy != null">
         create_by = #{record.createBy,jdbcType=BIGINT},
       </if>
-      <if test="record.editTime != null">
-        edit_time = #{record.editTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.editBy != null">
-        edit_by = #{record.editBy,jdbcType=BIGINT},
-      </if>
-      <if test="record.isDelete != null">
-        is_delete = #{record.isDelete,jdbcType=BIT},
-      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update joy_scene_transmit
+    update joy_scene_group
     set id = #{record.id,jdbcType=BIGINT},
-      from_scene_id = #{record.fromSceneId,jdbcType=BIGINT},
-      to_scene_id = #{record.toSceneId,jdbcType=BIGINT},
+      scene_group_name = #{record.sceneGroupName,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      create_by = #{record.createBy,jdbcType=BIGINT},
-      edit_time = #{record.editTime,jdbcType=TIMESTAMP},
-      edit_by = #{record.editBy,jdbcType=BIGINT},
-      is_delete = #{record.isDelete,jdbcType=BIT}
+      create_by = #{record.createBy,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="demo.joy.scene.pojo.po.JoySceneTransmit">
-    update joy_scene_transmit
+  <update id="updateByPrimaryKeySelective" parameterType="demo.joy.scene.pojo.po.JoySceneGroup">
+    update joy_scene_group
     <set>
-      <if test="fromSceneId != null">
-        from_scene_id = #{fromSceneId,jdbcType=BIGINT},
-      </if>
-      <if test="toSceneId != null">
-        to_scene_id = #{toSceneId,jdbcType=BIGINT},
+      <if test="sceneGroupName != null">
+        scene_group_name = #{sceneGroupName,jdbcType=VARCHAR},
       </if>
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
@@ -249,37 +197,24 @@
       <if test="createBy != null">
         create_by = #{createBy,jdbcType=BIGINT},
       </if>
-      <if test="editTime != null">
-        edit_time = #{editTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="editBy != null">
-        edit_by = #{editBy,jdbcType=BIGINT},
-      </if>
-      <if test="isDelete != null">
-        is_delete = #{isDelete,jdbcType=BIT},
-      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="demo.joy.scene.pojo.po.JoySceneTransmit">
-    update joy_scene_transmit
-    set from_scene_id = #{fromSceneId,jdbcType=BIGINT},
-      to_scene_id = #{toSceneId,jdbcType=BIGINT},
+  <update id="updateByPrimaryKey" parameterType="demo.joy.scene.pojo.po.JoySceneGroup">
+    update joy_scene_group
+    set scene_group_name = #{sceneGroupName,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      create_by = #{createBy,jdbcType=BIGINT},
-      edit_time = #{editTime,jdbcType=TIMESTAMP},
-      edit_by = #{editBy,jdbcType=BIGINT},
-      is_delete = #{isDelete,jdbcType=BIT}
+      create_by = #{createBy,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectByExampleWithRowbounds" parameterType="demo.joy.scene.pojo.po.JoySceneTransmitExample" resultMap="BaseResultMap">
+  <select id="selectByExampleWithRowbounds" parameterType="demo.joy.scene.pojo.po.JoySceneGroupExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from joy_scene_transmit
+    from joy_scene_group
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>

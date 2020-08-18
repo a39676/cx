@@ -11,12 +11,11 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.joy.common.controller.JoyCommonController;
 import demo.joy.common.pojo.constant.JoyUrl;
 import demo.joy.scene.pojo.constant.JoySceneOperationUrl;
-import demo.joy.scene.pojo.constant.JoySceneUrl;
 import demo.joy.scene.pojo.dto.JoySceneOperationDTO;
 import demo.joy.scene.service.JoySceneOperationService;
 
 @Controller
-@RequestMapping(value = JoyUrl.ROOT + JoySceneUrl.ROOT + JoySceneOperationUrl.ROOT)
+@RequestMapping(value = JoyUrl.ROOT + JoySceneOperationUrl.ROOT)
 public class JoySceneOperationController extends JoyCommonController {
 
 	@Autowired

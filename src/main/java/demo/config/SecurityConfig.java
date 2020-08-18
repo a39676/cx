@@ -34,8 +34,9 @@ import demo.config.costom_component.CustomAuthenticationProvider;
 import demo.config.costom_component.CustomPasswordEncoder;
 import demo.config.costom_component.LimitLoginAuthenticationProvider;
 import demo.joy.common.pojo.constant.JoyUrl;
+import demo.joy.scene.pojo.constant.JoySceneGroupOperationUrl;
+import demo.joy.scene.pojo.constant.JoySceneGroupRelationOperationUrl;
 import demo.joy.scene.pojo.constant.JoySceneOperationUrl;
-import demo.joy.scene.pojo.constant.JoySceneUrl;
 import demo.pmemo.pojo.constant.PMemoUrl;
 import demo.test.pojo.constant.TestUrl;
 import demo.tool.fakeFTP.pojo.constant.FakeFTPUrlConstant;
@@ -114,10 +115,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DEV))
             	
             // joy url start
-            .antMatchers(JoySceneUrl.ROOT + JoySceneOperationUrl.ROOT + "/**")
-            	.access(hasAnyRole(SystemRolesType.ROLE_ADMIN, SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers(JoyUrl.ROOT + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_USER_ACTIVE))
+            .antMatchers(JoySceneOperationUrl.ROOT + "/**")
+            	.access(hasAnyRole(SystemRolesType.ROLE_ADMIN, SystemRolesType.ROLE_SUPER_ADMIN))
+            .antMatchers(JoySceneGroupOperationUrl.ROOT + "/**")
+            	.access(hasAnyRole(SystemRolesType.ROLE_ADMIN, SystemRolesType.ROLE_SUPER_ADMIN))
+            .antMatchers(JoySceneGroupRelationOperationUrl.ROOT + "/**")
+            	.access(hasAnyRole(SystemRolesType.ROLE_ADMIN, SystemRolesType.ROLE_SUPER_ADMIN))
             // joy url end
             	
             .and()

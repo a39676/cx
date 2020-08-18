@@ -10,10 +10,10 @@ import demo.joy.scene.mapper.JoySceneGroupRelationMapper;
 import demo.joy.scene.pojo.dto.EditJoySceneGroupRelationDTO;
 import demo.joy.scene.pojo.po.JoySceneGroupRelation;
 import demo.joy.scene.pojo.po.JoySceneGroupRelationExample;
-import demo.joy.scene.service.JoySceneGroupRelationService;
+import demo.joy.scene.service.JoySceneGroupRelationOperationService;
 
 @Service
-public class JoySceneGroupRelationServiceImpl extends JoyCommonService implements JoySceneGroupRelationService {
+public class JoySceneGroupRelationOperationServiceImpl extends JoyCommonService implements JoySceneGroupRelationOperationService {
 
 	@Autowired
 	private JoySceneGroupRelationMapper sceneGroupRelationMapper;
@@ -57,10 +57,13 @@ public class JoySceneGroupRelationServiceImpl extends JoyCommonService implement
 		po.setId(snowFlake.getNextId());
 		po.setSceneGroupId(sceneGroupId);
 		po.setSceneId(sceneId);
-		int insertCount = sceneGroupRelationMapper.insertSelective(po);
-		
-		if(insertCount > 0) {
-			r.setIsSuccess();
+		try {
+			int insertCount = sceneGroupRelationMapper.insertSelective(po);
+			
+			if(insertCount > 0) {
+				r.setIsSuccess();
+			}
+		} catch (Exception e) {
 		}
 		return r;
 	}

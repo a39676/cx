@@ -13,7 +13,7 @@ import demo.joy.scene.pojo.po.JoyScene;
 import demo.joy.scene.pojo.po.JoySceneExample;
 import demo.joy.scene.pojo.po.JoySceneGroupRelation;
 import demo.joy.scene.pojo.po.JoySceneGroupRelationExample;
-import demo.joy.scene.pojo.result.FindSceneVOListBySceneGroupIdResult;
+import demo.joy.scene.pojo.result.FindSceneVOListResult;
 import demo.joy.scene.pojo.vo.JoySceneVO;
 import demo.joy.scene.service.JoySceneService;
 
@@ -26,8 +26,8 @@ public class JoySceneServiceImpl extends JoyCommonService implements JoySceneSer
 	private JoySceneGroupRelationMapper sceneGroupRelationMapper;
 
 	@Override
-	public FindSceneVOListBySceneGroupIdResult findSceneVOListBySceneGroupId(Long sceneGroupId) {
-		FindSceneVOListBySceneGroupIdResult r = new FindSceneVOListBySceneGroupIdResult();
+	public FindSceneVOListResult findSceneVOListBySceneGroupId(Long sceneGroupId) {
+		FindSceneVOListResult r = new FindSceneVOListResult();
 
 		JoySceneGroupRelationExample sceneGroupRelationExample = new JoySceneGroupRelationExample();
 		sceneGroupRelationExample.createCriteria().andSceneGroupIdEqualTo(sceneGroupId);
@@ -51,11 +51,13 @@ public class JoySceneServiceImpl extends JoyCommonService implements JoySceneSer
 		return r;
 	}
 
-	private JoySceneVO scenePOToVO(JoyScene po) {
+	@Override
+	public JoySceneVO scenePOToVO(JoyScene po) {
 		JoySceneVO vo = new JoySceneVO();
 		vo.setPk(encryptId(po.getId()));
 		vo.setSceneName(po.getSceneName());
 		return vo;
 	}
 
+	
 }

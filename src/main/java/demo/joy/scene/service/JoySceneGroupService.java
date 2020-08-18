@@ -1,12 +1,10 @@
 package demo.joy.scene.service;
 
-import demo.joy.common.pojo.result.JoyCommonResult;
-import demo.joy.scene.pojo.dto.CreateJoySceneGroupDTO;
+import demo.joy.scene.pojo.po.JoySceneGroup;
+import demo.joy.scene.pojo.vo.JoySceneGroupVO;
 
 public interface JoySceneGroupService {
 
-	JoyCommonResult createJoySceneGroup(CreateJoySceneGroupDTO dto);
-
-	JoyCommonResult deleteJoySceneGroup(String sceneGroupPK);
+	JoySceneGroupVO buildVOByPO(JoySceneGroup po);
 
 }

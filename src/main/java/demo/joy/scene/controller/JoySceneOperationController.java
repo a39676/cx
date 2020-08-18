@@ -9,13 +9,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.joy.common.controller.JoyCommonController;
-import demo.joy.common.pojo.constant.JoyUrl;
+import demo.joy.common.pojo.constant.JoyAdminUrl;
 import demo.joy.scene.pojo.constant.JoySceneOperationUrl;
+import demo.joy.scene.pojo.dto.FindSceneByConditionDTO;
 import demo.joy.scene.pojo.dto.JoySceneOperationDTO;
+import demo.joy.scene.pojo.result.FindSceneVOListResult;
 import demo.joy.scene.service.JoySceneOperationService;
 
 @Controller
-@RequestMapping(value = JoyUrl.ROOT + JoySceneOperationUrl.ROOT)
+@RequestMapping(value = JoyAdminUrl.ROOT + JoySceneOperationUrl.ROOT)
 public class JoySceneOperationController extends JoyCommonController {
 
 	@Autowired
@@ -43,5 +45,11 @@ public class JoySceneOperationController extends JoyCommonController {
 	@ResponseBody
 	public CommonResult restoreScene(@RequestBody JoySceneOperationDTO dto) {
 		return joySceneOperationService.restoreScene(dto);
+	}
+	
+	@PostMapping(value = JoySceneOperationUrl.FIND_BY_CONDITION)
+	@ResponseBody
+	public FindSceneVOListResult findSceneByCondition(@RequestBody FindSceneByConditionDTO dto) {
+		return joySceneOperationService.findSceneByCondition(dto);
 	}
 }

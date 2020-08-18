@@ -5,7 +5,7 @@ import java.util.List;
 import demo.joy.common.pojo.result.JoyCommonResult;
 import demo.joy.scene.pojo.vo.JoySceneVO;
 
-public class FindSceneVOListBySceneGroupIdResult extends JoyCommonResult {
+public class FindSceneVOListResult extends JoyCommonResult {
 
 	private List<JoySceneVO> sceneVOList;
 

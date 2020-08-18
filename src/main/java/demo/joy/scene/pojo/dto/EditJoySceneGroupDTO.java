@@ -1,9 +1,18 @@
 package demo.joy.scene.pojo.dto;
 
-public class CreateJoySceneGroupDTO {
+public class EditJoySceneGroupDTO {
 
+	private String sceneGroupPK;
 	private String sceneGroupName;
 	private String remark;
+
+	public String getSceneGroupPK() {
+		return sceneGroupPK;
+	}
+
+	public void setSceneGroupPK(String sceneGroupPK) {
+		this.sceneGroupPK = sceneGroupPK;
+	}
 
 	public String getSceneGroupName() {
 		return sceneGroupName;
@@ -23,7 +32,8 @@ public class CreateJoySceneGroupDTO {
 
 	@Override
 	public String toString() {
-		return "CreateJoySceneGroupDTO [sceneGroupName=" + sceneGroupName + ", remark=" + remark + "]";
+		return "EditJoySceneGroupDTO [sceneGroupPK=" + sceneGroupPK + ", sceneGroupName=" + sceneGroupName + ", remark="
+				+ remark + "]";
 	}
 
 }

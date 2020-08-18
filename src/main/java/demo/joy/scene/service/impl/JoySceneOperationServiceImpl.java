@@ -2,6 +2,7 @@ package demo.joy.scene.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,25 +12,29 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.joy.common.service.JoyCommonService;
 import demo.joy.scene.mapper.JoySceneMapper;
 import demo.joy.scene.pojo.constant.SceneConstant;
+import demo.joy.scene.pojo.dto.FindSceneByConditionDTO;
 import demo.joy.scene.pojo.dto.JoySceneOperationDTO;
 import demo.joy.scene.pojo.po.JoyScene;
 import demo.joy.scene.pojo.po.JoySceneExample;
 import demo.joy.scene.pojo.po.JoySceneExample.Criteria;
+import demo.joy.scene.pojo.result.FindSceneVOListResult;
 import demo.joy.scene.pojo.result.JoySceneOperationDTOValidResult;
 import demo.joy.scene.pojo.type.JoyDeafultSceneType;
-import demo.joy.scene.pojo.type.JoySceneOperationType;
+import demo.joy.scene.pojo.vo.JoySceneVO;
 import demo.joy.scene.service.JoySceneOperationService;
+import demo.joy.scene.service.JoySceneService;
 
 @Service
 public class JoySceneOperationServiceImpl extends JoyCommonService implements JoySceneOperationService {
 
 	@Autowired
 	private JoySceneMapper joySceneMapper;
-	
+	@Autowired
+	private JoySceneService sceneService;
 
 	@Override
 	public CommonResult createScene(JoySceneOperationDTO dto) {
-		CommonResult r = validJoySceneOperationDTO(dto);
+		CommonResult r = validCreateSceneDTO(dto);
 		if (r.isFail()) {
 			return r;
 		}
@@ -47,30 +52,6 @@ public class JoySceneOperationServiceImpl extends JoyCommonService implements Jo
 		} else {
 			r.failWithMessage("插入场景异常");
 		}
-		return r;
-	}
-
-	private JoySceneOperationDTOValidResult validJoySceneOperationDTO(JoySceneOperationDTO dto) {
-		JoySceneOperationDTOValidResult r = new JoySceneOperationDTOValidResult();
-
-		JoySceneOperationType operationType = JoySceneOperationType.getType(dto.getOperationType());
-		if (operationType == null) {
-			r.failWithMessage("未指定操作类型");
-			return r;
-		}
-
-		if (JoySceneOperationType.create.equals(operationType)) {
-			return validCreateSceneDTO(dto);
-
-		} else if (JoySceneOperationType.edit.equals(operationType)) {
-			return validEditSceneDTO(dto);
-
-		} else if (JoySceneOperationType.delete.equals(operationType)
-				|| JoySceneOperationType.restore.equals(operationType)) {
-			return validDeleteSceneDTO(dto);
-		}
-
-		r.isSuccess();
 		return r;
 	}
 
@@ -168,7 +149,7 @@ public class JoySceneOperationServiceImpl extends JoyCommonService implements Jo
 
 	@Override
 	public CommonResult editScene(JoySceneOperationDTO dto) {
-		JoySceneOperationDTOValidResult validResult = validJoySceneOperationDTO(dto);
+		JoySceneOperationDTOValidResult validResult = validEditSceneDTO(dto);
 		if (validResult.isFail()) {
 			return validResult;
 		}
@@ -194,7 +175,7 @@ public class JoySceneOperationServiceImpl extends JoyCommonService implements Jo
 
 	@Override
 	public CommonResult deleteScene(JoySceneOperationDTO dto) {
-		JoySceneOperationDTOValidResult validResult = validJoySceneOperationDTO(dto);
+		JoySceneOperationDTOValidResult validResult = validDeleteSceneDTO(dto);
 		if (validResult.isFail()) {
 			return validResult;
 		}
@@ -223,7 +204,7 @@ public class JoySceneOperationServiceImpl extends JoyCommonService implements Jo
 
 	@Override
 	public CommonResult restoreScene(JoySceneOperationDTO dto) {
-		JoySceneOperationDTOValidResult validResult = validJoySceneOperationDTO(dto);
+		JoySceneOperationDTOValidResult validResult = validDeleteSceneDTO(dto);
 		if (validResult.isFail()) {
 			return validResult;
 		}
@@ -277,5 +258,20 @@ public class JoySceneOperationServiceImpl extends JoyCommonService implements Jo
 		} catch (Exception e) {
 			joySceneMapper.updateByPrimaryKeySelective(po);
 		}
+	}
+
+	@Override
+	public FindSceneVOListResult findSceneByCondition(FindSceneByConditionDTO dto) {
+		FindSceneVOListResult r = new FindSceneVOListResult();
+		
+		JoySceneExample example = new JoySceneExample();
+		example.createCriteria().andSceneNameLike("%" + dto.getSceneName() + "%");
+		List<JoyScene> scenePOList = joySceneMapper.selectByExample(example);
+		
+		List<JoySceneVO> voList = scenePOList.stream().map(po -> sceneService.scenePOToVO(po)).collect(Collectors.toList());
+		r.setSceneVOList(voList);
+		r.setIsSuccess();
+		
+		return r;
 	}
 }

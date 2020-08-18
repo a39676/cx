@@ -1,25 +1,11 @@
 package demo.joy.scene.pojo.dto;
 
-import demo.joy.scene.pojo.type.JoySceneOperationType;
-
 public class JoySceneOperationDTO {
 
-	/**
-	 * {@link JoySceneOperationType}
-	 */
-	private Integer operationType;
 	private String scenePK;
 	private String sceneName;
 	private Boolean isOpen = false;
 	private Boolean isPrivate = false;
-
-	public Integer getOperationType() {
-		return operationType;
-	}
-
-	public void setOperationType(Integer operationType) {
-		this.operationType = operationType;
-	}
 
 	public String getScenePK() {
 		return scenePK;
@@ -55,8 +41,8 @@ public class JoySceneOperationDTO {
 
 	@Override
 	public String toString() {
-		return "EditJoySceneDTO [operationType=" + operationType + ", scenePK=" + scenePK + ", sceneName=" + sceneName
-				+ ", isOpen=" + isOpen + ", isPrivate=" + isPrivate + "]";
+		return "JoySceneOperationDTO [scenePK=" + scenePK + ", sceneName=" + sceneName + ", isOpen=" + isOpen
+				+ ", isPrivate=" + isPrivate + "]";
 	}
 
 }

@@ -7,4 +7,6 @@ public interface JoySceneGroupService {
 
 	JoyCommonResult createJoySceneGroup(CreateJoySceneGroupDTO dto);
 
+	JoyCommonResult deleteJoySceneGroup(String sceneGroupPK);
+
 }

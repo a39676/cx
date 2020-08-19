@@ -45,7 +45,8 @@ public class JoySceneOperationServiceImpl extends JoyCommonService implements Jo
 		po.setIsOpen(dto.getIsOpen());
 		po.setIsPrivate(dto.getIsPrivate());
 		po.setCreateBy(baseUtilCustom.getUserId());
-
+		po.setWeight(dto.getWeight());
+		
 		int insertCount = joySceneMapper.insertSelective(po);
 		if (insertCount > 0) {
 			r.setIsSuccess();
@@ -63,6 +64,10 @@ public class JoySceneOperationServiceImpl extends JoyCommonService implements Jo
 		r = validDuplicateSceneName(dto.getSceneName());
 		if (r.isFail()) {
 			return r;
+		}
+		
+		if(dto.getWeight() == null) {
+			dto.setWeight(0);
 		}
 
 		r.setIsSuccess();
@@ -84,6 +89,10 @@ public class JoySceneOperationServiceImpl extends JoyCommonService implements Jo
 		r = validDuplicateSceneName(dto.getSceneName(), sceneId);
 		if (r.isFail()) {
 			return r;
+		}
+		
+		if(dto.getWeight() == null) {
+			dto.setWeight(0);
 		}
 
 		r.setIsSuccess();
@@ -161,7 +170,8 @@ public class JoySceneOperationServiceImpl extends JoyCommonService implements Jo
 		po.setIsPrivate(dto.getIsPrivate());
 		po.setEditTime(LocalDateTime.now());
 		po.setEditBy(baseUtilCustom.getUserId());
-
+		po.setWeight(dto.getWeight());
+		
 		int updateCount = joySceneMapper.updateByPrimaryKeySelective(po);
 		CommonResult updateResult = new CommonResult();
 		if (updateCount > 0) {
@@ -249,6 +259,19 @@ public class JoySceneOperationServiceImpl extends JoyCommonService implements Jo
 		po = new JoyScene();
 		po.setId(JoyDeafultSceneType.home.getCode());
 		po.setSceneName(JoyDeafultSceneType.home.getName());
+		po.setIsDelete(false);
+		po.setIsOpen(true);
+		po.setIsPrivate(true);
+		po.setCreateBy(0L);
+		try {
+			joySceneMapper.insertSelective(po);	
+		} catch (Exception e) {
+			joySceneMapper.updateByPrimaryKeySelective(po);
+		}
+		
+		po = new JoyScene();
+		po.setId(JoyDeafultSceneType.farm.getCode());
+		po.setSceneName(JoyDeafultSceneType.farm.getName());
 		po.setIsDelete(false);
 		po.setIsOpen(true);
 		po.setIsPrivate(true);

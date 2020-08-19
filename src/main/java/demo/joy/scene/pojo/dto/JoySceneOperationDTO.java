@@ -4,6 +4,7 @@ public class JoySceneOperationDTO {
 
 	private String scenePK;
 	private String sceneName;
+	private Integer weight = 0;
 	private Boolean isOpen = false;
 	private Boolean isPrivate = false;
 
@@ -21,6 +22,14 @@ public class JoySceneOperationDTO {
 
 	public void setSceneName(String sceneName) {
 		this.sceneName = sceneName;
+	}
+
+	public Integer getWeight() {
+		return weight;
+	}
+
+	public void setWeight(Integer weight) {
+		this.weight = weight;
 	}
 
 	public Boolean getIsOpen() {
@@ -41,8 +50,8 @@ public class JoySceneOperationDTO {
 
 	@Override
 	public String toString() {
-		return "JoySceneOperationDTO [scenePK=" + scenePK + ", sceneName=" + sceneName + ", isOpen=" + isOpen
-				+ ", isPrivate=" + isPrivate + "]";
+		return "JoySceneOperationDTO [scenePK=" + scenePK + ", sceneName=" + sceneName + ", weight=" + weight
+				+ ", isOpen=" + isOpen + ", isPrivate=" + isPrivate + "]";
 	}
 
 }

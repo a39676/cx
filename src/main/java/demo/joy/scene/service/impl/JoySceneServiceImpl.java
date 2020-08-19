@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import demo.joy.common.service.JoyCommonService;
 import demo.joy.scene.mapper.JoySceneGroupRelationMapper;
 import demo.joy.scene.mapper.JoySceneMapper;
+import demo.joy.scene.pojo.dto.FindSceneVOListBySceneGroupPKDTO;
 import demo.joy.scene.pojo.po.JoyScene;
 import demo.joy.scene.pojo.po.JoySceneExample;
 import demo.joy.scene.pojo.po.JoySceneGroupRelation;
@@ -26,8 +27,14 @@ public class JoySceneServiceImpl extends JoyCommonService implements JoySceneSer
 	private JoySceneGroupRelationMapper sceneGroupRelationMapper;
 
 	@Override
-	public FindSceneVOListResult findSceneVOListBySceneGroupId(Long sceneGroupId) {
+	public FindSceneVOListResult findSceneVOListBySceneGroupPK(FindSceneVOListBySceneGroupPKDTO dto) {
 		FindSceneVOListResult r = new FindSceneVOListResult();
+		
+		Long sceneGroupId = decryptPrivateKey(dto.getSceneGroupPK());
+		if(sceneGroupId == null) {
+			r.addMessage("error param");
+			return r;
+		}
 
 		JoySceneGroupRelationExample sceneGroupRelationExample = new JoySceneGroupRelationExample();
 		sceneGroupRelationExample.createCriteria().andSceneGroupIdEqualTo(sceneGroupId);
@@ -42,6 +49,7 @@ public class JoySceneServiceImpl extends JoyCommonService implements JoySceneSer
 
 		JoySceneExample sceneExample = new JoySceneExample();
 		sceneExample.createCriteria().andIsDeleteEqualTo(false).andIdIn(toSceneIdList);
+		sceneExample.setOrderByClause(" weight desc ");
 		List<JoyScene> scenePOList = joySceneMapper.selectByExample(sceneExample);
 
 		List<JoySceneVO> voList = scenePOList.stream().map(po -> scenePOToVO(po)).collect(Collectors.toList());

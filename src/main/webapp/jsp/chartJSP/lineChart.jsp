@@ -16,7 +16,7 @@
 </body>
 
 <footer>
-<%@ include file="../baseElementJSP/normalFooter.jsp" %>
+<%@ include file="../baseElementJSP/normalJSPart.jsp" %>
 <c:set var="lineNames" value="${lineNames}" />
 <c:set var="dataLists" value="${dataLists}" />
 <c:set var="lineNames" value="${lineNames}" />

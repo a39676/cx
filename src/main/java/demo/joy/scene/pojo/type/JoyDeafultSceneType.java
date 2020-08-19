@@ -4,6 +4,7 @@ public enum JoyDeafultSceneType {
 	
 	newBorn("newBorn", 1L),
 	home("home", 2L),
+	farm("farm", 3L),
 	;
 	
 	private String name;

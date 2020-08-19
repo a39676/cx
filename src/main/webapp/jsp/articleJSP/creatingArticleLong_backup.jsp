@@ -91,7 +91,7 @@
 
 <footer>
   <!-- 因需要使用富文本编辑器, 特别使用指定的库 -->
-  <!-- <%@ include file="../baseElementJSP/normalFooter.jsp" %> -->
+  <!-- <%@ include file="../baseElementJSP/normalJSPart.jsp" %> -->
   
   <script type="text/javascript">
     var csrfParameter = $("meta[name='_csrf_parameter']").attr("content");

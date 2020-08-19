@@ -51,6 +51,10 @@ public class JoySceneGroupOperationServiceImpl extends JoyCommonService implemen
 			r.failWithMessage("场景备注过长(可不填写场景备注)");
 			return r;
 		}
+		
+		if(dto.getWeight() == null) {
+			dto.setWeight(0);
+		}
 
 		JoySceneGroupExample example = new JoySceneGroupExample();
 		example.createCriteria().andSceneGroupNameEqualTo(dto.getSceneGroupName());
@@ -66,6 +70,7 @@ public class JoySceneGroupOperationServiceImpl extends JoyCommonService implemen
 		po.setCreateBy(baseUtilCustom.getUserId());
 		po.setSceneGroupName(dto.getSceneGroupName());
 		po.setRemark(dto.getRemark());
+		po.setWeight(dto.getWeight());
 
 		int insertCount = sceneGroupMapper.insertSelective(po);
 		if (insertCount > 0) {
@@ -93,6 +98,11 @@ public class JoySceneGroupOperationServiceImpl extends JoyCommonService implemen
 		return r;
 	}
 
+	/*
+	 * TODO 
+	 * edit
+	 */
+	
 	@Override
 	public FindSceneGroupVOResult findSceneGroupVOListByCondition(FindSceneGroupByConditionDTO dto) {
 		FindSceneGroupVOResult r = new FindSceneGroupVOResult();
@@ -115,6 +125,7 @@ public class JoySceneGroupOperationServiceImpl extends JoyCommonService implemen
 			}
 		}
 		
+		example.setOrderByClause(" weight desc ");
 		List<JoySceneGroup> poList = sceneGroupMapper.selectByExample(example);
 		
 		if(poList != null && !poList.isEmpty()) {

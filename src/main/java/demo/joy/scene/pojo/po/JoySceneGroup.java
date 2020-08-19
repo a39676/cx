@@ -9,6 +9,8 @@ public class JoySceneGroup {
 
     private String remark;
 
+    private Integer weight;
+
     private LocalDateTime createTime;
 
     private Long createBy;
@@ -35,6 +37,14 @@ public class JoySceneGroup {
 
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    public Integer getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Integer weight) {
+        this.weight = weight;
     }
 
     public LocalDateTime getCreateTime() {

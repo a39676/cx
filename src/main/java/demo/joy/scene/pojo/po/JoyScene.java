@@ -7,6 +7,8 @@ public class JoyScene {
 
     private String sceneName;
 
+    private Integer weight;
+
     private LocalDateTime createTime;
 
     private Long createBy;
@@ -35,6 +37,14 @@ public class JoyScene {
 
     public void setSceneName(String sceneName) {
         this.sceneName = sceneName == null ? null : sceneName.trim();
+    }
+
+    public Integer getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Integer weight) {
+        this.weight = weight;
     }
 
     public LocalDateTime getCreateTime() {

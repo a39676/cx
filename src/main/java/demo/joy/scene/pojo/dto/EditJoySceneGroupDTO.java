@@ -5,6 +5,7 @@ public class EditJoySceneGroupDTO {
 	private String sceneGroupPK;
 	private String sceneGroupName;
 	private String remark;
+	private Integer weight = 0;
 
 	public String getSceneGroupPK() {
 		return sceneGroupPK;
@@ -30,10 +31,18 @@ public class EditJoySceneGroupDTO {
 		this.remark = remark;
 	}
 
+	public Integer getWeight() {
+		return weight;
+	}
+
+	public void setWeight(Integer weight) {
+		this.weight = weight;
+	}
+
 	@Override
 	public String toString() {
 		return "EditJoySceneGroupDTO [sceneGroupPK=" + sceneGroupPK + ", sceneGroupName=" + sceneGroupName + ", remark="
-				+ remark + "]";
+				+ remark + ", weight=" + weight + "]";
 	}
 
 }

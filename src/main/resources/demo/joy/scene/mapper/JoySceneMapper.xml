@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="demo.joy.scene.pojo.po.JoyScene">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="scene_name" jdbcType="CHAR" property="sceneName" />
+    <result column="weight" jdbcType="INTEGER" property="weight" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="edit_time" jdbcType="TIMESTAMP" property="editTime" />
@@ -71,7 +72,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, scene_name, create_time, create_by, edit_time, edit_by, is_open, is_private, 
+    id, scene_name, weight, create_time, create_by, edit_time, edit_by, is_open, is_private, 
     is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.joy.scene.pojo.po.JoySceneExample" resultMap="BaseResultMap">
@@ -105,12 +106,14 @@
     </if>
   </delete>
   <insert id="insert" parameterType="demo.joy.scene.pojo.po.JoyScene">
-    insert into joy_scene (id, scene_name, create_time, 
-      create_by, edit_time, edit_by, 
-      is_open, is_private, is_delete)
-    values (#{id,jdbcType=BIGINT}, #{sceneName,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{createBy,jdbcType=BIGINT}, #{editTime,jdbcType=TIMESTAMP}, #{editBy,jdbcType=BIGINT}, 
-      #{isOpen,jdbcType=BIT}, #{isPrivate,jdbcType=BIT}, #{isDelete,jdbcType=BIT})
+    insert into joy_scene (id, scene_name, weight, 
+      create_time, create_by, edit_time, 
+      edit_by, is_open, is_private, is_delete
+      )
+    values (#{id,jdbcType=BIGINT}, #{sceneName,jdbcType=CHAR}, #{weight,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=BIGINT}, #{editTime,jdbcType=TIMESTAMP}, 
+      #{editBy,jdbcType=BIGINT}, #{isOpen,jdbcType=BIT}, #{isPrivate,jdbcType=BIT}, #{isDelete,jdbcType=BIT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="demo.joy.scene.pojo.po.JoyScene">
     insert into joy_scene
@@ -120,6 +123,9 @@
       </if>
       <if test="sceneName != null">
         scene_name,
+      </if>
+      <if test="weight != null">
+        weight,
       </if>
       <if test="createTime != null">
         create_time,
@@ -149,6 +155,9 @@
       </if>
       <if test="sceneName != null">
         #{sceneName,jdbcType=CHAR},
+      </if>
+      <if test="weight != null">
+        #{weight,jdbcType=INTEGER},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -188,6 +197,9 @@
       <if test="record.sceneName != null">
         scene_name = #{record.sceneName,jdbcType=CHAR},
       </if>
+      <if test="record.weight != null">
+        weight = #{record.weight,jdbcType=INTEGER},
+      </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -218,6 +230,7 @@
     update joy_scene
     set id = #{record.id,jdbcType=BIGINT},
       scene_name = #{record.sceneName,jdbcType=CHAR},
+      weight = #{record.weight,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       create_by = #{record.createBy,jdbcType=BIGINT},
       edit_time = #{record.editTime,jdbcType=TIMESTAMP},
@@ -234,6 +247,9 @@
     <set>
       <if test="sceneName != null">
         scene_name = #{sceneName,jdbcType=CHAR},
+      </if>
+      <if test="weight != null">
+        weight = #{weight,jdbcType=INTEGER},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -262,6 +278,7 @@
   <update id="updateByPrimaryKey" parameterType="demo.joy.scene.pojo.po.JoyScene">
     update joy_scene
     set scene_name = #{sceneName,jdbcType=CHAR},
+      weight = #{weight,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=BIGINT},
       edit_time = #{editTime,jdbcType=TIMESTAMP},

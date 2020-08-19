@@ -2,38 +2,37 @@ package demo.joy.scene.pojo.vo;
 
 public class JoySceneGroupVO {
 
-	private String sceneGroupPK;
-	private String sceneGroupName;
-	private String sceneGroupRemark;
+	private String pk;
+	private String name;
+	private String remark;
 
-	public String getSceneGroupPK() {
-		return sceneGroupPK;
+	public String getPk() {
+		return pk;
 	}
 
-	public void setSceneGroupPK(String sceneGroupPK) {
-		this.sceneGroupPK = sceneGroupPK;
+	public void setPk(String pk) {
+		this.pk = pk;
 	}
 
-	public String getSceneGroupName() {
-		return sceneGroupName;
+	public String getName() {
+		return name;
 	}
 
-	public void setSceneGroupName(String sceneGroupName) {
-		this.sceneGroupName = sceneGroupName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getSceneGroupRemark() {
-		return sceneGroupRemark;
+	public String getRemark() {
+		return remark;
 	}
 
-	public void setSceneGroupRemark(String sceneGroupRemark) {
-		this.sceneGroupRemark = sceneGroupRemark;
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 
 	@Override
 	public String toString() {
-		return "JoySceneGroupVO [sceneGroupPK=" + sceneGroupPK + ", sceneGroupName=" + sceneGroupName
-				+ ", sceneGroupRemark=" + sceneGroupRemark + "]";
+		return "JoySceneGroupVO [pk=" + pk + ", name=" + name + ", remark=" + remark + "]";
 	}
 
 }

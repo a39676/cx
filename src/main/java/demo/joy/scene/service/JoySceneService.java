@@ -11,4 +11,8 @@ public interface JoySceneService {
 
 	FindSceneVOListResult findSceneVOListBySceneGroupPK(FindSceneVOListBySceneGroupPKDTO dto);
 
+	JoyScene findByPk(String pk);
+
+	JoyScene findById(Long id);
+
 }

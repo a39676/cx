@@ -66,6 +66,15 @@ public class JoySceneServiceImpl extends JoyCommonService implements JoySceneSer
 		vo.setSceneName(po.getSceneName());
 		return vo;
 	}
-
 	
+	@Override
+	public JoyScene findByPk(String pk) {
+		Long id = decryptPrivateKey(pk);
+		return findById(id);
+	}
+	
+	@Override
+	public JoyScene findById(Long id) {
+		return joySceneMapper.selectByPrimaryKey(id);
+	}
 }

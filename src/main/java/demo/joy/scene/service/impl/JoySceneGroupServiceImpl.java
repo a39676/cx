@@ -31,4 +31,5 @@ public class JoySceneGroupServiceImpl extends JoyCommonService implements JoySce
 		FindSceneGroupByConditionDTO dto = new FindSceneGroupByConditionDTO();
 		return sceneGroupOperationService.findSceneGroupVOListByCondition(dto);
 	}
+
 }

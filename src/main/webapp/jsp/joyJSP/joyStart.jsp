@@ -17,20 +17,26 @@
     </div>
 
     <div class="row" id="sceneGroupRow">
-      <div class="col-sm-12">
-        <table>
-          <tr>
-            <td>场景组</td>
-          </tr>
-          <tr>
-            <c:forEach items="${sceneGroupVOList}" var="sceneGroupVO">
-              <td pk="${sceneGroupVO.pk}">
-                <%-- <p>pk: ${sceneGroupVO.pk}</p> --%>
-                <p>groupName: ${sceneGroupVO.name}</p>
-                <p>remark: ${sceneGroupVO.remark}</p>
-              </td>
-            </c:forEach>
-          </tr>
+      <div class="col-sm-3">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <td>场景组</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <c:forEach items="${sceneGroupVOList}" var="sceneGroupVO">
+                <td class="sceneGroupVO" pk="${sceneGroupVO.pk}">
+                  <label class="badge badge-primary">${sceneGroupVO.name}</label>
+                  <label class="badge badge-light">${sceneGroupVO.remark}</label>
+                </td>
+              </c:forEach>
+            </tr>
+            <tr>
+              
+            </tr>
+          </tbody>
         </table>
       </div>
     </div>
@@ -55,7 +61,6 @@
   $(document).ready(function() {
 
     function getCharacterDetail() {
-      console.log("in getCharacterDetail");
       var url = "/joy/character/getCharacterDetail";
       var jsonOutput = {
       };
@@ -72,7 +77,6 @@
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          console.log(datas);
           var characterDetailVO = datas.characterVO;
 
           $("#getCharacterDetail").val(

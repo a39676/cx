@@ -17,27 +17,44 @@
     </div>
 
     <div class="row" id="sceneGroupRow">
-      <div class="col-sm-3">
+      <div class="col-sm-12">
         <table class="table table-hover">
           <thead>
             <tr>
-              <td>场景组</td>
+              <th>场景组</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <c:forEach items="${sceneGroupVOList}" var="sceneGroupVO">
                 <td class="sceneGroupVO" pk="${sceneGroupVO.pk}">
-                  <label class="badge badge-primary">${sceneGroupVO.name}</label>
-                  <label class="badge badge-light">${sceneGroupVO.remark}</label>
+                  <button class="btn btn-sm btn-primary sceneGroupButton">
+                    <div class="badge badge-primary">${sceneGroupVO.name}</div>
+                  </button>
                 </td>
               </c:forEach>
             </tr>
             <tr>
-              
+              <c:forEach items="${sceneGroupVOList}" var="sceneGroupVO">
+                <td class="sceneGroupVO" pk="${sceneGroupVO.pk}">
+                  <div class="badge badge-light sceneGroupVORemark" 
+                    style="display: none" pk="${sceneGroupVO.pk}">
+                    ${sceneGroupVO.remark}
+                  </div>
+                </td>
+              </c:forEach>
             </tr>
           </tbody>
         </table>
+
+        <table class="table table-hover">
+          <thead>
+            <tr id="sceneListTR">
+              
+            </tr>
+          </thead>
+        </table>
+
       </div>
     </div>
 
@@ -48,17 +65,76 @@
         <p>name: ${characterDetailVO.name}</p>
         <p>gender: ${characterDetailVO.gender}</p>
       </div>
+
+      <div class="col-sm-6" id="mainDynamicDIV">
+        
+      </div>
+
+      <div class="col-sm-3" id="sideDynamicDIV">
+        
+      </div>
     </div>
     
+    <div class="row" id="footRow">
+      <div class="col-sm-3">
+        <p>foot row</p>
+      </div>
+
+      <div class="col-sm-6">
+        <p id="resultView"></p>
+      </div>
+    </div>
+
   </div>
   
-  <p id="resultView"></p>
 </body>
 <footer>
 </footer>
 <%@ include file="../baseElementJSP/normalJSPart.jsp" %>
 <script type="text/javascript">
   $(document).ready(function() {
+
+    $(".sceneGroupVO").click(function () {
+      sceneGroupVOClick($(this).attr("pk"));  
+    });
+
+    function sceneGroupVOClick(sceneGroupPK) {
+      var url = "/joy/joyScene/findSceneVOListBySceneGroupPK";
+      var sceneListTR = $("#sceneListTR");
+      var jsonOutput = {
+        sceneGroupPK:sceneGroupPK,
+      };
+
+      $(".sceneGroupVORemark").hide();
+      $(".sceneGroupVORemark[pk='"+sceneGroupPK+"']").show();
+
+      $.ajax({  
+        type : "POST",  
+        async : true,
+        url : url,  
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,  
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          console.log(datas);
+          var sceneVOList = datas.sceneVOList;
+          sceneListTR.empty();
+          $.each(sceneVOList, function(index, sceneVO) {
+            sceneListTR.append($("<button class='btn btn-sm btn-success'></button>").attr("pk", sceneVO.pk).text(sceneVO.sceneName));
+            // $("button[pk='"+sceneVO.pk+"']").addClass("bankButton");
+            // $("button[pk='"+sceneVO.pk+"']").bind("click", bankButtonClick);
+          });
+        },  
+        error: function(datas) {
+          console.log("error: " + datas);
+        }  
+      });  
+    }
 
     function getCharacterDetail() {
       var url = "/joy/character/getCharacterDetail";

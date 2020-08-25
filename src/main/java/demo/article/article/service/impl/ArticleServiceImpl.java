@@ -68,12 +68,12 @@ import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.user.controller.UsersController;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.image.pojo.result.ImgHandleSrcDataResult;
 import demo.image.pojo.type.ImageTagType;
 import demo.image.service.ImageService;
 import demo.tool.service.ValidRegexToolService;
 import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.result.ImageSavingResult;
-import toolPack.constant.FileSuffixNameConstant;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -316,9 +316,9 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		}
 
 		Element doc = Jsoup.parse(content);
-        Elements pngs = doc.select("img[src]");
+        Elements imgs = doc.select("img[src]");
         /* 解决如果文章内有本地上传的图片, 转到服务器硬盘保存, 并提供 url 访问, */
-        for(Element s : pngs) {
+        for(Element s : imgs) {
         	s.attr("src", imgSrcHandler(s.attr("src")));
         }
         
@@ -360,24 +360,16 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 	
 	private String imgBase64ToImageStore(String src) {
-		int slashIndex = src.indexOf("/");
-		int semicolonIndex = src.indexOf(";");
-		int commaIndex = src.indexOf(",");
-		
-		if(semicolonIndex < 0 || slashIndex < 0 || commaIndex < 0) {
-			return "";
-		}
-		String fileType = src.substring(slashIndex + 1, semicolonIndex);
-		if(!FileSuffixNameConstant.imageSuffix.contains(fileType)) {
+		ImgHandleSrcDataResult srcHandleResult = imgService.imgHandleSrcData(src);
+		if(srcHandleResult.isFail()) {
 			return "";
 		}
 		
-		String filename = String.valueOf(snowFlake.getNextId()) + "." + fileType;
+		String filename = String.valueOf(snowFlake.getNextId()) + "." + srcHandleResult.getImgFileType();
 		String dateStr = localDateTimeHandler.dateToStr(LocalDateTime.now(), "yyyyMM");
 		
-		
-		BufferedImage image = imgService.base64ToImg(src.split(",")[1]);
-		if(image == null) {
+		BufferedImage bufferedImage = imgService.base64ToBufferedImg(srcHandleResult.getBase64Str());
+		if(bufferedImage == null) {
 			return "";
 		}
 		
@@ -388,7 +380,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			saveingFolderPath = "d:/" + ArticleConstant.articleImgSavingFolder + "/" + dateStr;
 		}
 		String imgSavingPath = saveingFolderPath + "/" + filename;
-		boolean saveFlag = imgService.imgSaveAsFile(image, imgSavingPath, fileType);
+		boolean saveFlag = imgService.imgSaveAsFile(bufferedImage, imgSavingPath, srcHandleResult.getImgFileType());
 		if(!saveFlag) {
 			return "";
 		}

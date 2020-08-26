@@ -25,31 +25,31 @@ public class SystemConstantService extends CommonService {
 			return "";
 		}
 		
-		if(redisStringTemplate.hasKey(constantName)) {
-			return String.valueOf(redisStringTemplate.opsForValue().get(constantName));
+		if(redisTemplate.hasKey(constantName)) {
+			return String.valueOf(redisTemplate.opsForValue().get(constantName));
 		} else {
 			SystemConstant tmpConstant = systemConstantMapper.getValByName(constantName);
 			if(tmpConstant == null || StringUtils.isBlank(tmpConstant.getConstantValue())) {
 				return "";
 			}
-			redisStringTemplate.opsForValue().set(tmpConstant.getConstantName(), tmpConstant.getConstantValue());
+			redisTemplate.opsForValue().set(tmpConstant.getConstantName(), tmpConstant.getConstantValue());
 			return tmpConstant.getConstantValue();
 		}
 	}
 	
 	public String getValByName(String constantName, boolean refreshFlag) {
 		if(refreshFlag) {
-			redisStringTemplate.delete(constantName);
+			redisTemplate.delete(constantName);
 		}
 		return getValByName(constantName);
 	}
 	
 	public HashMap<String, String> getValsByName(List<String> constantNames, boolean refreshFlag) {
 		if(refreshFlag) {
-			redisStringTemplate.delete(constantNames);
+			redisTemplate.delete(constantNames);
 			return getValsByName(constantNames);
 		} else {
-			List<String> realConstantNames = constantNames.stream().filter(name -> !redisStringTemplate.hasKey(name)).collect(Collectors.toList());
+			List<String> realConstantNames = constantNames.stream().filter(name -> !redisTemplate.hasKey(name)).collect(Collectors.toList());
 			return getValsByName(realConstantNames);
 		}
 		
@@ -69,30 +69,30 @@ public class SystemConstantService extends CommonService {
 				result.put(tmpConstant.getConstantName(), tmpConstant.getConstantValue());
 			});
 		}
-		redisStringTemplate.opsForValue().multiSet(result);
+		redisTemplate.opsForValue().multiSet(result);
 		
 		return result;
 	}
 
 	public void setValByName(String cosntantName, String constantValue) {
-		redisStringTemplate.opsForValue().set(cosntantName, constantValue);
+		redisTemplate.opsForValue().set(cosntantName, constantValue);
 	}
 	
 	public void setValByName(String cosntantName, String constantValue, Long validTime, TimeUnit timeUnit) {
-		redisStringTemplate.opsForValue().set(cosntantName, constantValue, validTime, timeUnit);
+		redisTemplate.opsForValue().set(cosntantName, constantValue, validTime, timeUnit);
 	}
 	
 	public void setValByName(SystemConstant systemConstant) {
-		redisStringTemplate.opsForValue().set(systemConstant.getConstantName(), systemConstant.getConstantValue());
+		redisTemplate.opsForValue().set(systemConstant.getConstantName(), systemConstant.getConstantValue());
 	}
 	
 	public void setValsByName(List<SystemConstant> systemConstants) {
 		Map<String, String> values = systemConstants.stream().collect(Collectors.toMap(SystemConstant::getConstantName, SystemConstant::getConstantValue));
-		redisStringTemplate.opsForValue().multiSet(values);
+		redisTemplate.opsForValue().multiSet(values);
 	}
 	
 	public Boolean hasKey(String key) {
-		return redisStringTemplate.hasKey(key);
+		return redisTemplate.hasKey(key);
 	}
 	/**
 	 * 保留作为用例

@@ -57,7 +57,7 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 			j.put("userId", "null");
 		}
 		
-		redisStringTemplate.opsForList().leftPush(SystemRedisKey.VISIT_DATA_REDIS_KEY, j.toString());
+		redisTemplate.opsForList().leftPush(SystemRedisKey.VISIT_DATA_REDIS_KEY, j.toString());
 	}
 	
 	@Override
@@ -72,25 +72,25 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 		if(l == 0) {
 			l = numberUtil.ipToLong(record.getForwardAddr());
 		}
-		redisStringTemplate.opsForSet().add(SystemRedisKey.VISIT_COUNTING_REDIS_KEY, String.valueOf(l));
+		redisTemplate.opsForSet().add(SystemRedisKey.VISIT_COUNTING_REDIS_KEY, String.valueOf(l));
 	}
 	
 	@Override
 	public void visitCountRedisToOrm() {
-		Long visitSetSize = redisStringTemplate.opsForSet().size(SystemRedisKey.VISIT_COUNTING_REDIS_KEY);
+		Long visitSetSize = redisTemplate.opsForSet().size(SystemRedisKey.VISIT_COUNTING_REDIS_KEY);
 		
 		VisitCount r = new VisitCount();
 		r.setId(snowFlake.getNextId());
 		r.setCounting(visitSetSize);
 		visitCountMapper.insertSelective(r);
 		
-		redisStringTemplate.opsForSet().pop(SystemRedisKey.VISIT_COUNTING_REDIS_KEY, visitSetSize);
+		redisTemplate.opsForSet().pop(SystemRedisKey.VISIT_COUNTING_REDIS_KEY, visitSetSize);
 		
 	}
 	
 	@Override
 	public void visitDataRedisToOrm() {
-		long size = redisStringTemplate.opsForList().size(SystemRedisKey.VISIT_DATA_REDIS_KEY);
+		long size = redisTemplate.opsForList().size(SystemRedisKey.VISIT_DATA_REDIS_KEY);
 		if(size < 1) {
 			return;
 		}
@@ -106,7 +106,7 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 		UserIp ui = null;
 		
 		for(int i = 0; i < size; i++) {
-			str = redisStringTemplate.opsForList().rightPop(SystemRedisKey.VISIT_DATA_REDIS_KEY);
+			str = (String) redisTemplate.opsForList().rightPop(SystemRedisKey.VISIT_DATA_REDIS_KEY);
 			j = JSONObject.fromObject(str);
 			ui = new UserIp();
 			String cdStr = j.getString("createTime");
@@ -132,7 +132,7 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 	}
 	
 	public Long getVisitCount(LocalDateTime startTime) {
-		Long visitSetSize = redisStringTemplate.opsForSet().size(SystemRedisKey.VISIT_COUNTING_REDIS_KEY);
+		Long visitSetSize = redisTemplate.opsForSet().size(SystemRedisKey.VISIT_COUNTING_REDIS_KEY);
 		
 		GetVisitCountTotalDTO dto = new GetVisitCountTotalDTO();
 		dto.setStartTime(startTime);

@@ -31,6 +31,7 @@ public class JoyIconServiceImpl extends JoyCommonService implements JoyIconServi
 	@Autowired
 	private ImageService imgService;
 	
+	
 	public JoyCommonResult batchUploadIcon(BatchUploadIconDTO dto) {
 		JoyCommonResult r = new JoyCommonResult();
 		
@@ -96,7 +97,7 @@ public class JoyIconServiceImpl extends JoyCommonService implements JoyIconServi
 		byte[] imageByte = null;
 		try {
 			imageByte = ioUtil.getByteFromFile(po.getImgPath());
-			redisByteTemplate.opsForValue().set(IconConstant.ICON_REDIS_PREFIX + String.valueOf(po.getId()), imageByte);
+			redisTemplate.opsForValue().set(IconConstant.ICON_REDIS_PREFIX + String.valueOf(po.getId()), imageByte);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -110,8 +111,8 @@ public class JoyIconServiceImpl extends JoyCommonService implements JoyIconServi
 		
 		String keyName = IconConstant.ICON_REDIS_PREFIX + String.valueOf(id);
 		
-		if(redisByteTemplate.hasKey(keyName)) {
-			return redisByteTemplate.opsForValue().get(keyName);
+		if(redisTemplate.hasKey(keyName)) {
+			return (byte[]) redisTemplate.opsForValue().get(keyName);
 		} else {
 			JoyImageIcon po = iconMapper.selectByPrimaryKey(id);
 			if(po == null || StringUtils.isBlank(po.getImgPath())) {
@@ -140,7 +141,7 @@ public class JoyIconServiceImpl extends JoyCommonService implements JoyIconServi
 		for(JoyImageIcon po : poList) {
 			try {
 				imageByte = ioUtil.getByteFromFile(po.getImgPath());
-				redisByteTemplate.opsForValue().set(IconConstant.ICON_REDIS_PREFIX + String.valueOf(po.getId()), imageByte);
+				redisTemplate.opsForValue().set(IconConstant.ICON_REDIS_PREFIX + String.valueOf(po.getId()), imageByte);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

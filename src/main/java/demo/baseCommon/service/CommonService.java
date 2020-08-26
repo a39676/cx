@@ -61,7 +61,10 @@ public abstract class CommonService {
 	protected IpRecordService ipRecordService;
 	
 	@Autowired
-	protected RedisTemplate<String, String> redisTemplate;
+	protected RedisTemplate<String, String> redisStringTemplate;
+	
+	@Autowired
+	protected RedisTemplate<String, byte[]> redisByteTemplate;
 
 	protected static final LocalDateTime theStartTime = LocalDateTime.of(2020, 5, 1, 0, 0, 0);
 
@@ -251,7 +254,7 @@ public abstract class CommonService {
 		
 		String initVector = constantService.getValByName(SystemConstantStore.aesInitVector);
 		if(StringUtils.isBlank(initVector)) {
-			initVector = constantService.getValByName(SystemConstantStore.aesKey, true);
+			initVector = constantService.getValByName(SystemConstantStore.aesInitVector, true);
 			if(StringUtils.isBlank(initVector)) {
 				return null;
 			}
@@ -307,7 +310,7 @@ public abstract class CommonService {
 				tmpKey = String.valueOf(key);
 				tmpValue = json.getString(tmpKey);
 				if(StringUtils.isNotBlank(tmpKey)) {
-					if(redisTemplate.hasKey(tmpKey)) {
+					if(redisStringTemplate.hasKey(tmpKey)) {
 						result.addMessage("refresh key:" + tmpKey + " , set: " + tmpValue + "\n");
 					} else {
 						result.addMessage("add key:" + tmpKey + " , set: " + tmpValue + "\n");
@@ -334,14 +337,14 @@ public abstract class CommonService {
 		IpRecordBO record = getIp(request);
 		
 		String key = buildRedisKeyPrefix(record, redisKeyPrefix) + "_" + snowFlake.getNextId();
-		redisTemplate.opsForValue().set(key, "", timeout, unit);
+		redisStringTemplate.opsForValue().set(key, "", timeout, unit);
 	}
 	
 	protected int checkFunctionalModuleVisitData(HttpServletRequest request, String redisKeyPrefix) {
 		IpRecordBO record = getIp(request);
 		
 		String keyPrefix = buildRedisKeyPrefix(record, redisKeyPrefix) + "*";
-		Set<String> keys = redisTemplate.keys(keyPrefix);
+		Set<String> keys = redisStringTemplate.keys(keyPrefix);
 		
 		return keys.size();
 	}

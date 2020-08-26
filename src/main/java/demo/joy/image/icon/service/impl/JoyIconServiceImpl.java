@@ -1,6 +1,7 @@
 package demo.joy.image.icon.service.impl;
 
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
@@ -16,12 +17,14 @@ import demo.joy.common.service.JoyCommonService;
 import demo.joy.image.icon.mapper.JoyImageIconMapper;
 import demo.joy.image.icon.pojo.constant.IconConstant;
 import demo.joy.image.icon.pojo.dto.BatchUploadIconDTO;
+import demo.joy.image.icon.pojo.po.JoyImageIcon;
+import demo.joy.image.icon.pojo.po.JoyImageIconExample;
 import demo.joy.image.icon.service.JoyIconService;
+import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class JoyIconServiceImpl extends JoyCommonService implements JoyIconService {
 
-	@SuppressWarnings("unused")
 	@Autowired
 	private JoyImageIconMapper iconMapper;
 	
@@ -29,10 +32,6 @@ public class JoyIconServiceImpl extends JoyCommonService implements JoyIconServi
 	private ImageService imgService;
 	
 	public JoyCommonResult batchUploadIcon(BatchUploadIconDTO dto) {
-		/*
-		 * TODO
-		 * upload 同时加入 redis??
-		 */
 		JoyCommonResult r = new JoyCommonResult();
 		
 		if(StringUtils.isAnyBlank(dto.getContent(), dto.getRemark())) {
@@ -41,29 +40,42 @@ public class JoyIconServiceImpl extends JoyCommonService implements JoyIconServi
 		
 		Element doc = Jsoup.parse(dto.getContent());
         Elements imgs = doc.select("img[src]");
-        /* 解决如果文章内有本地上传的图片, 转到服务器硬盘保存, 并提供 url 访问, */
         for(Element s : imgs) {
-        	imgBase64ToIconStore(s.attr("src"));
+        	imgBase64ToIconStore(s.attr("src"), dto.getRemark());
         }
         
-//		TODO
 		return r;
 	}
 	
-	private void imgBase64ToIconStore(String src) {
-//		TODO
+	private void imgBase64ToIconStore(String src, String remark) {
 		ImgHandleSrcDataResult srcHandleResult = imgService.imgHandleSrcData(src);
 		if(srcHandleResult.isFail()) {
-//			TODO
+			return;
 		}
-		
-		String filename = String.valueOf(snowFlake.getNextId()) + "." + srcHandleResult.getImgFileType();
 		
 		BufferedImage bufferedImage = imgService.base64ToBufferedImg(srcHandleResult.getBase64Str());
 		if(bufferedImage == null) {
-//			TODO
+			return;
 		}
 		
+		String imgSavingPath = saveBufferedImgAsFile(bufferedImage, srcHandleResult.getImgFileType());
+		if(imgSavingPath == null) {
+			return;
+		}
+		
+		JoyImageIcon po = new JoyImageIcon();
+		po.setId(snowFlake.getNextId());
+		po.setImgPath(imgSavingPath);
+		po.setRemark(remark);
+		
+		if(iconMapper.insertSelective(po) > 0) {
+			loadToRedis(po);
+		}
+		
+	}
+	
+	private String saveBufferedImgAsFile(BufferedImage bufferedImage, String fileType) {
+		String filename = String.valueOf(snowFlake.getNextId()) + "." + fileType;
 		String saveingFolderPath = null;
 		if(isLinux()) {
 			saveingFolderPath = IconConstant.ICON_LOCAL_STORE ;
@@ -71,10 +83,67 @@ public class JoyIconServiceImpl extends JoyCommonService implements JoyIconServi
 			saveingFolderPath = "d:/" + IconConstant.ICON_LOCAL_STORE;
 		}
 		String imgSavingPath = saveingFolderPath + "/" + filename;
-		boolean saveFlag = imgService.imgSaveAsFile(bufferedImage, imgSavingPath, srcHandleResult.getImgFileType());
-		if(!saveFlag) {
-//			TODO
+		
+		if(imgService.imgSaveAsFile(bufferedImage, imgSavingPath, fileType)) {
+			return imgSavingPath;
+		} else {
+			return null;
+		}
+	}
+
+	private void loadToRedis(JoyImageIcon po) {
+		FileUtilCustom ioUtil = new FileUtilCustom();
+		byte[] imageByte = null;
+		try {
+			imageByte = ioUtil.getByteFromFile(po.getImgPath());
+			redisByteTemplate.opsForValue().set(IconConstant.ICON_REDIS_PREFIX + String.valueOf(po.getId()), imageByte);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public byte[] getIcon(Long id) {
+		if(id == null) {
+			return null;
 		}
 		
+		String keyName = IconConstant.ICON_REDIS_PREFIX + String.valueOf(id);
+		
+		if(redisByteTemplate.hasKey(keyName)) {
+			return redisByteTemplate.opsForValue().get(keyName);
+		} else {
+			JoyImageIcon po = iconMapper.selectByPrimaryKey(id);
+			if(po == null || StringUtils.isBlank(po.getImgPath())) {
+				return null;
+			}
+			loadToRedis(po);
+			
+			FileUtilCustom ioUtil = new FileUtilCustom();
+			
+			try {
+				return ioUtil.getByteFromFile(po.getImgPath());
+			} catch (Exception e) {
+				return null;
+			}
+		}
+	}
+	
+	@Override
+	public void loadAllIconToRedis() {
+		FileUtilCustom ioUtil = new FileUtilCustom();
+		byte[] imageByte = null;
+		
+		JoyImageIconExample example = new JoyImageIconExample();
+		example.createCriteria();
+		List<JoyImageIcon> poList = iconMapper.selectByExample(example);
+		for(JoyImageIcon po : poList) {
+			try {
+				imageByte = ioUtil.getByteFromFile(po.getImgPath());
+				redisByteTemplate.opsForValue().set(IconConstant.ICON_REDIS_PREFIX + String.valueOf(po.getId()), imageByte);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

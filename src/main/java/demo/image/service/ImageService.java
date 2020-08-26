@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import javax.servlet.http.HttpServletResponse;
 
 import demo.image.pojo.result.ImgHandleSrcDataResult;
+import demo.joy.image.icon.service.JoyIconService;
 import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.result.ImageSavingResult;
 
@@ -20,6 +21,14 @@ public interface ImageService {
 	
 	BufferedImage base64ToBufferedImg(String base64);
 
+	/**
+	 * 可能会有其他模块的图片服务会使用此功能
+	 * 如{@link JoyIconService }
+	 * @param image
+	 * @param filePath
+	 * @param fileType
+	 * @return
+	 */
 	boolean imgSaveAsFile(BufferedImage image, String filePath, String fileType);
 
 	/**

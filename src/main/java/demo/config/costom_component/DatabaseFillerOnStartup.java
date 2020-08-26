@@ -19,6 +19,7 @@ import demo.base.user.service.AuthService;
 import demo.base.user.service.RoleService;
 import demo.base.user.service.UserRegistService;
 import demo.base.user.service.UsersService;
+import demo.joy.image.icon.service.JoyIconService;
 import demo.joy.scene.service.JoySceneOperationService;
 
 @Component
@@ -40,6 +41,8 @@ public class DatabaseFillerOnStartup implements ApplicationListener<ApplicationR
 	
 	@Autowired
 	private JoySceneOperationService joySceneOperationService;
+	@Autowired
+	private JoyIconService joyIconService;
 /*
  * ContextStartedEvent
  * ContextStoppedEvent
@@ -80,6 +83,7 @@ public class DatabaseFillerOnStartup implements ApplicationListener<ApplicationR
 			}
 			
 			joySceneOperationService.defaultSceneInit();
+			joyIconService.loadAllIconToRedis();
 		}
 	}
 

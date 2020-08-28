@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import demo.baseCommon.pojo.param.controllerParam.InsertNewTransationParam;
 import demo.finance.account_holder.controller.AccountHolderController;
 import demo.finance.account_holder.pojo.po.AccountHolder;
+import demo.finance.account_info.pojo.dto.controllerDTO.InsertNewTransationDTO;
 import demo.finance.trading.pojo.CommonTransationParties;
 import demo.finance.trading.pojo.constant.TradingUrl;
 import demo.finance.trading.pojo.constant.TradingViews;
@@ -36,7 +36,7 @@ public class TradingController {
 	private TradingInsertService tradingService;
 	
 	
-	public InsertTradingRecorderResult insertTradingRecorderSelective(InsertNewTransationParam param, Long accountId){
+	public InsertTradingRecorderResult insertTradingRecorderSelective(InsertNewTransationDTO param, Long accountId){
 		return tradingService.insertTradingRecorder(param, accountId);
 	}
 	

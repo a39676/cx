@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.baseCommon.pojo.param.controllerParam.InsertNewTransationParam;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.TransationType;
 import demo.baseCommon.service.CommonService;
@@ -31,6 +30,7 @@ import demo.finance.account_info.pojo.dto.controllerDTO.AccountInfoRegistDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.AccountNumberDuplicateCheckDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.FindAccountInfoByConditionDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.GetAccountListByConditionParam;
+import demo.finance.account_info.pojo.dto.controllerDTO.InsertNewTransationDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.ModifyCreditsQuotaDTO;
 import demo.finance.account_info.pojo.dto.mapperDTO.GetAccountInfoWithConditionParam;
 import demo.finance.account_info.pojo.po.AccountInfo;
@@ -335,7 +335,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 
 	@Override
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
-	public InsertTransationResult insertTradingRecorderSelective(InsertNewTransationParam p) throws Exception {
+	public InsertTransationResult insertTradingRecorderSelective(InsertNewTransationDTO p) throws Exception {
 		InsertTransationResult result = new InsertTransationResult();
 		
 		String accountNumber = p.getAccountNumber();

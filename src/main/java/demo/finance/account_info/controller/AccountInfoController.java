@@ -23,7 +23,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.baseCommon.controller.CommonController;
-import demo.baseCommon.pojo.param.controllerParam.InsertNewTransationParam;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.config.costom_component.BaseUtilCustom;
 import demo.finance.account_holder.AccountHolderViewConstants;
@@ -37,6 +36,7 @@ import demo.finance.account_info.pojo.dto.controllerDTO.AccountInfoRegistDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.AccountNumberDuplicateCheckDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.FindAccountInfoByConditionDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.GetAccountListByConditionParam;
+import demo.finance.account_info.pojo.dto.controllerDTO.InsertNewTransationDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.ModifyCreditsQuotaDTO;
 import demo.finance.account_info.pojo.po.AccountInfo;
 import demo.finance.account_info.pojo.result.AccountRegistResult;
@@ -235,7 +235,7 @@ public class AccountInfoController extends CommonController {
 	
 	@PostMapping(value = AccountUrl.insertNewTransationV4)
 	@ResponseBody
-	public InsertTransationResult insertNewTransationV4(@RequestBody InsertNewTransationParam p) throws Exception {
+	public InsertTransationResult insertNewTransationV4(@RequestBody InsertNewTransationDTO p) throws Exception {
 		return accountInfoService.insertTradingRecorderSelective(p);
 	}
 

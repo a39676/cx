@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import demo.baseCommon.pojo.param.controllerParam.InsertNewTransationParam;
 import demo.baseCommon.pojo.type.TransationType;
 import demo.baseCommon.service.CommonService;
 import demo.finance.account_info.controller.AccountInfoController;
+import demo.finance.account_info.pojo.dto.controllerDTO.InsertNewTransationDTO;
 import demo.finance.account_info.pojo.po.AccountInfo;
 import demo.finance.trading.mapper.HolderCommonTransationCustomMapper;
 import demo.finance.trading.mapper.TradingRecorderMapper;
@@ -63,7 +63,7 @@ public class TradingInsertServiceImpl extends CommonService implements TradingIn
 
 	@Override
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
-	public InsertTradingRecorderResult insertTradingRecorder(InsertNewTransationParam p, Long accountId) {
+	public InsertTradingRecorderResult insertTradingRecorder(InsertNewTransationDTO p, Long accountId) {
 		InsertTradingRecorderResult result = new InsertTradingRecorderResult();
 		if (p == null || accountId == null) {
 			result.normalFail();
@@ -215,7 +215,7 @@ public class TradingInsertServiceImpl extends CommonService implements TradingIn
 	 * return tradingRecorder; }
 	 */
 
-	private TradingRecorder buildTradingRecorderFrom(Long newTradingRecordId, InsertNewTransationParam p,
+	private TradingRecorder buildTradingRecorderFrom(Long newTradingRecordId, InsertNewTransationDTO p,
 			Long accountId) {
 
 		if (p.getTransationAmount() == null) {

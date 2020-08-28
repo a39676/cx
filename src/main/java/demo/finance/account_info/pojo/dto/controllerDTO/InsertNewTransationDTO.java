@@ -1,8 +1,8 @@
-package demo.baseCommon.pojo.param.controllerParam;
+package demo.finance.account_info.pojo.dto.controllerDTO;
 
 import java.math.BigDecimal;
 
-public class InsertNewTransationParam {
+public class InsertNewTransationDTO {
 
 	private String accountNumber;
 	private Integer transationType;

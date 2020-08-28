@@ -9,19 +9,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.joy.common.controller.JoyCommonController;
-import demo.joy.common.pojo.constant.JoyAdminUrl;
+import demo.joy.common.pojo.constant.JoyManagerUrl;
 import demo.joy.scene.pojo.constant.JoySceneOperationUrl;
 import demo.joy.scene.pojo.dto.FindSceneByConditionDTO;
 import demo.joy.scene.pojo.dto.JoySceneOperationDTO;
 import demo.joy.scene.pojo.result.FindSceneVOListResult;
-import demo.joy.scene.service.JoySceneOperationService;
+import demo.joy.scene.service.JoySceneManagerService;
 
 @Controller
-@RequestMapping(value = JoyAdminUrl.ROOT + JoySceneOperationUrl.ROOT)
-public class JoySceneOperationController extends JoyCommonController {
+@RequestMapping(value = JoyManagerUrl.ROOT + JoySceneOperationUrl.ROOT)
+public class JoySceneManagerController extends JoyCommonController {
 
 	@Autowired
-	private JoySceneOperationService joySceneOperationService;
+	private JoySceneManagerService joySceneOperationService;
 	
 	@PostMapping(value = JoySceneOperationUrl.CREATE)
 	@ResponseBody

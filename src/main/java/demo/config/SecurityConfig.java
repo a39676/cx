@@ -33,7 +33,7 @@ import demo.base.user.service.impl.CustomUserDetailsService;
 import demo.config.costom_component.CustomAuthenticationProvider;
 import demo.config.costom_component.CustomPasswordEncoder;
 import demo.config.costom_component.LimitLoginAuthenticationProvider;
-import demo.joy.common.pojo.constant.JoyAdminUrl;
+import demo.joy.common.pojo.constant.JoyManagerUrl;
 import demo.joy.common.pojo.constant.JoyUrl;
 import demo.pmemo.pojo.constant.PMemoUrl;
 import demo.test.pojo.constant.TestUrl;
@@ -116,7 +116,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             
             .antMatchers(JoyUrl.ROOT + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_USER_ACTIVE))
-            .antMatchers(JoyAdminUrl.ROOT + "/**")
+            .antMatchers(JoyManagerUrl.ROOT + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_ADMIN, SystemRolesType.ROLE_SUPER_ADMIN))
             // joy url end
             	

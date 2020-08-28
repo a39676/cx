@@ -13,7 +13,7 @@ import demo.joy.scene.pojo.po.JoySceneGroupRelationExample;
 import demo.joy.scene.service.JoySceneGroupRelationOperationService;
 
 @Service
-public class JoySceneGroupRelationOperationServiceImpl extends JoyCommonService implements JoySceneGroupRelationOperationService {
+public class JoySceneGroupRelationManagerServiceImpl extends JoyCommonService implements JoySceneGroupRelationOperationService {
 
 	@Autowired
 	private JoySceneGroupRelationMapper sceneGroupRelationMapper;

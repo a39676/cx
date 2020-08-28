@@ -8,14 +8,14 @@ import demo.joy.scene.pojo.dto.FindSceneGroupByConditionDTO;
 import demo.joy.scene.pojo.po.JoySceneGroup;
 import demo.joy.scene.pojo.result.FindSceneGroupVOResult;
 import demo.joy.scene.pojo.vo.JoySceneGroupVO;
-import demo.joy.scene.service.JoySceneGroupOperationService;
+import demo.joy.scene.service.JoySceneGroupManagerService;
 import demo.joy.scene.service.JoySceneGroupService;
 
 @Service
 public class JoySceneGroupServiceImpl extends JoyCommonService implements JoySceneGroupService {
 
 	@Autowired
-	private JoySceneGroupOperationService sceneGroupOperationService;
+	private JoySceneGroupManagerService sceneGroupOperationService;
 	
 	@Override
 	public JoySceneGroupVO buildVOByPO(JoySceneGroup po) {

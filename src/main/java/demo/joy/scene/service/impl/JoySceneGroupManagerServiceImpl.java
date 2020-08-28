@@ -18,12 +18,12 @@ import demo.joy.scene.pojo.po.JoySceneGroupExample;
 import demo.joy.scene.pojo.po.JoySceneGroupExample.Criteria;
 import demo.joy.scene.pojo.result.FindSceneGroupVOResult;
 import demo.joy.scene.pojo.vo.JoySceneGroupVO;
-import demo.joy.scene.service.JoySceneGroupOperationService;
+import demo.joy.scene.service.JoySceneGroupManagerService;
 import demo.joy.scene.service.JoySceneGroupRelationOperationService;
 import demo.joy.scene.service.JoySceneGroupService;
 
 @Service
-public class JoySceneGroupOperationServiceImpl extends JoyCommonService implements JoySceneGroupOperationService {
+public class JoySceneGroupManagerServiceImpl extends JoyCommonService implements JoySceneGroupManagerService {
 
 	@Autowired
 	private JoySceneGroupMapper sceneGroupMapper;

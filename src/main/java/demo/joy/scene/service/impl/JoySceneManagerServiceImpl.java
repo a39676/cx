@@ -21,11 +21,11 @@ import demo.joy.scene.pojo.result.FindSceneVOListResult;
 import demo.joy.scene.pojo.result.JoySceneOperationDTOValidResult;
 import demo.joy.scene.pojo.type.JoyDeafultSceneType;
 import demo.joy.scene.pojo.vo.JoySceneVO;
-import demo.joy.scene.service.JoySceneOperationService;
+import demo.joy.scene.service.JoySceneManagerService;
 import demo.joy.scene.service.JoySceneService;
 
 @Service
-public class JoySceneOperationServiceImpl extends JoyCommonService implements JoySceneOperationService {
+public class JoySceneManagerServiceImpl extends JoyCommonService implements JoySceneManagerService {
 
 	@Autowired
 	private JoySceneMapper joySceneMapper;

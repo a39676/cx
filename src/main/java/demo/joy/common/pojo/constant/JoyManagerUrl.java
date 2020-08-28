@@ -1,6 +1,6 @@
 package demo.joy.common.pojo.constant;
 
-public class JoyAdminUrl {
+public class JoyManagerUrl {
 
 	public static final String ROOT = "/joyOperation";
 	

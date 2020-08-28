@@ -8,20 +8,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.joy.common.controller.JoyCommonController;
-import demo.joy.common.pojo.constant.JoyAdminUrl;
+import demo.joy.common.pojo.constant.JoyManagerUrl;
 import demo.joy.common.pojo.result.JoyCommonResult;
 import demo.joy.scene.pojo.constant.JoySceneGroupOperationUrl;
 import demo.joy.scene.pojo.dto.EditJoySceneGroupDTO;
 import demo.joy.scene.pojo.dto.FindSceneGroupByConditionDTO;
 import demo.joy.scene.pojo.result.FindSceneGroupVOResult;
-import demo.joy.scene.service.JoySceneGroupOperationService;
+import demo.joy.scene.service.JoySceneGroupManagerService;
 
 @Controller
-@RequestMapping(value = JoyAdminUrl.ROOT + JoySceneGroupOperationUrl.ROOT)
-public class JoySceneGroupOperationController extends JoyCommonController {
+@RequestMapping(value = JoyManagerUrl.ROOT + JoySceneGroupOperationUrl.ROOT)
+public class JoySceneGroupManagerController extends JoyCommonController {
 
 	@Autowired
-	private JoySceneGroupOperationService secneGroupService;
+	private JoySceneGroupManagerService secneGroupService;
 	
 	@PostMapping(value = JoySceneGroupOperationUrl.CREATE)
 	@ResponseBody

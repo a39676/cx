@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.joy.common.controller.JoyCommonController;
-import demo.joy.common.pojo.constant.JoyAdminUrl;
+import demo.joy.common.pojo.constant.JoyManagerUrl;
 import demo.joy.common.pojo.result.JoyCommonResult;
 import demo.joy.scene.pojo.constant.JoySceneGroupRelationOperationUrl;
 import demo.joy.scene.pojo.dto.EditJoySceneGroupRelationDTO;
 import demo.joy.scene.service.JoySceneGroupRelationOperationService;
 
 @Controller
-@RequestMapping(value = JoyAdminUrl.ROOT + JoySceneGroupRelationOperationUrl.ROOT)
+@RequestMapping(value = JoyManagerUrl.ROOT + JoySceneGroupRelationOperationUrl.ROOT)
 public class JoySceneGroupRelationOperationController extends JoyCommonController {
 
 	@Autowired

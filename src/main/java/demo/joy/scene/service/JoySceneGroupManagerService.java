@@ -5,7 +5,7 @@ import demo.joy.scene.pojo.dto.EditJoySceneGroupDTO;
 import demo.joy.scene.pojo.dto.FindSceneGroupByConditionDTO;
 import demo.joy.scene.pojo.result.FindSceneGroupVOResult;
 
-public interface JoySceneGroupOperationService {
+public interface JoySceneGroupManagerService {
 
 	JoyCommonResult createJoySceneGroup(EditJoySceneGroupDTO dto);
 

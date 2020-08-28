@@ -20,7 +20,7 @@ import demo.base.user.service.RoleService;
 import demo.base.user.service.UserRegistService;
 import demo.base.user.service.UsersService;
 import demo.joy.image.icon.service.JoyIconService;
-import demo.joy.scene.service.JoySceneOperationService;
+import demo.joy.scene.service.JoySceneManagerService;
 
 @Component
 //public class DatabaseFillerOnStartup implements ApplicationListener<ContextStartedEvent> {
@@ -40,7 +40,7 @@ public class DatabaseFillerOnStartup implements ApplicationListener<ApplicationR
 	private __SystemOrganizationService __systemOrgService;
 	
 	@Autowired
-	private JoySceneOperationService joySceneOperationService;
+	private JoySceneManagerService joySceneOperationService;
 	@Autowired
 	private JoyIconService joyIconService;
 /*

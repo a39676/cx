@@ -5,7 +5,7 @@ import demo.joy.scene.pojo.dto.FindSceneByConditionDTO;
 import demo.joy.scene.pojo.dto.JoySceneOperationDTO;
 import demo.joy.scene.pojo.result.FindSceneVOListResult;
 
-public interface JoySceneOperationService {
+public interface JoySceneManagerService {
 
 	CommonResult createScene(JoySceneOperationDTO dto);
 

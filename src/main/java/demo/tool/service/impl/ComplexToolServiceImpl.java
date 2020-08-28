@@ -18,21 +18,19 @@ import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
 import demo.tool.pojo.constant.ToolPathConstant;
+import demo.tool.pojo.dto.CleanTmpFilesDTO;
 import demo.tool.service.ComplexToolService;
-import net.sf.json.JSONObject;
 
 @Service
 public class ComplexToolServiceImpl extends CommonService implements ComplexToolService {
 	
 	@Override
-	public CommonResult cleanTmpFiles(JSONObject data) {
+	public CommonResult cleanTmpFiles(CleanTmpFilesDTO dto) {
 		Integer passTime = 30; // minute
 		CommonResult result = new CommonResult();
 		
-		if(data.containsKey("passTime") 
-				&& numberUtil.matchInteger(data.getString("passTime")) 
-				&& (data.getInt("passTime") > passTime)) {
-			passTime = data.getInt("passTime");
+		if(dto.getPassTime() == null || dto.getPassTime() > passTime) {
+			passTime = dto.getPassTime();
 		}
 		
 		File mainFolder = new File(ToolPathConstant.getTmpStorePath());

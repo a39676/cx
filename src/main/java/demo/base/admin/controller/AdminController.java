@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import demo.article.fakePost.service.FakePostService;
 import demo.base.admin.pojo.constant.AdminUrlConstant;
 import demo.base.admin.pojo.constant.AdminView;
+import demo.base.admin.pojo.dto.LoadHomepageAnnouncementStrDTO;
 import demo.base.admin.pojo.dto.RefreshSystemConstantDTO;
 import demo.base.admin.pojo.dto.SetSystemConstantDTO;
 import demo.base.admin.service.AdminService;
@@ -164,9 +165,8 @@ public class AdminController extends CommonController {
 	}
 	
 	@PostMapping(value = AdminUrlConstant.loadHomepageAnnouncementStr)
-	public void loadHomepageAnnouncementStr(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) {
-		JSONObject jsonInput = getJson(data);
-		String strContent = jsonInput.getString("homepageAnnouncementStr");
+	public void loadHomepageAnnouncementStr(@RequestBody LoadHomepageAnnouncementStrDTO dto, HttpServletRequest request, HttpServletResponse response) {
+		String strContent = dto.getHomepageAnnouncementStr();
 		if(StringUtils.isBlank(strContent) || "null".equals(strContent)) {
 			adminService.loadHomepageAnnouncementStr();
 		} else {

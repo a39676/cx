@@ -1,12 +1,8 @@
 package demo.base.user.controller;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +14,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import demo.base.system.pojo.constant.BaseStatusCode;
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.user.pojo.constant.UserRegistView;
 import demo.base.user.pojo.constant.UsersUrl;
+import demo.base.user.pojo.dto.ForgotPasswordDTO;
+import demo.base.user.pojo.dto.ForgotUsernameDTO;
+import demo.base.user.pojo.dto.ModifyRegistMailDTO;
+import demo.base.user.pojo.dto.ResetPasswordDTO;
+import demo.base.user.pojo.dto.UserNameExistCheckDTO;
 import demo.base.user.pojo.dto.UserRegistDTO;
 import demo.base.user.pojo.result.NewUserRegistResult;
 import demo.base.user.pojo.type.SystemRolesType;
@@ -30,7 +31,6 @@ import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.config.costom_component.BaseUtilCustom;
 import io.swagger.annotations.ApiOperation;
-import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping(value = UsersUrl.root)
@@ -42,43 +42,33 @@ public class UsersRegistController extends CommonController {
 	private BaseUtilCustom baseUtilCustom;
 
 	@GetMapping(value = { UsersUrl.userNameExistCheck })
-	public void userNameExistCheck(@RequestBody String jsonStrInput, HttpServletResponse response) throws IOException {
-		// 建输出流
-		PrintWriter out = response.getWriter();
+	@ResponseBody
+	public CommonResult userNameExistCheck(@RequestBody UserNameExistCheckDTO dto) {
+		CommonResult r = new CommonResult();
 
-		JSONObject jsonInput = JSONObject.fromObject(jsonStrInput);
-		String userName = jsonInput.getString("userName");
-		JSONObject json = new JSONObject();
-		boolean result = userRegistService.isUserExists(userName);
-		if (result) {
-			json.put("result", BaseStatusCode.fail);
-		} else {
-			json.put("exception", "user name not exist");
+		boolean checkExistResult = userRegistService.isUserExists(dto.getUserName());
+		if (!checkExistResult) {
+			r.addMessage("user name not exist");
 		}
 
-		out.print(json);
+		return r;
 	}
 
 	@PostMapping(value = UsersUrl.modifyRegistMail)
-	public void modifyRegistMail(@RequestBody String data, HttpServletResponse response) {
-		JSONObject jsonInput = getJson(data);
+	@ResponseBody
+	public CommonResultCX modifyRegistMail(@RequestBody ModifyRegistMailDTO dto) {
 
 		CommonResultCX result = new CommonResultCX();
-		JSONObject jsonOutput;
-		if (!baseUtilCustom.isLoginUser() || !jsonInput.containsKey("modifyRegistMail")) {
+		if (!baseUtilCustom.isLoginUser() || StringUtils.isBlank(dto.getModifyRegistMail())) {
 			result.fillWithResult(ResultTypeCX.errorParam);
-			jsonOutput = JSONObject.fromObject(result);
-			outputJson(response, jsonOutput);
-			return;
+			return result;
 		}
 
-		result = userRegistService.modifyRegistEmail(baseUtilCustom.getUserId(),
-				jsonInput.getString("modifyRegistMail"));
+		result = userRegistService.modifyRegistEmail(baseUtilCustom.getUserId(), dto.getModifyRegistMail());
 		if (result.isSuccess()) {
 			result.successWithMessage("邮件已发送,因网络原因,可能存在延迟,请稍后至邮箱查收.请留意邮箱拦截规则,如果邮件被拦截,可能存放于邮箱垃圾箱内...");
 		}
-		jsonOutput = JSONObject.fromObject(result);
-		outputJson(response, jsonOutput);
+		return result;
 	}
 
 	@ApiOperation(value = "创建用户页面", notes = "返回创建用户页面")
@@ -132,51 +122,41 @@ public class UsersRegistController extends CommonController {
 	}
 
 	@PostMapping(value = UsersUrl.forgotPassword)
-	public void forgotPassword(@RequestBody String data, HttpServletResponse response, HttpServletRequest request) {
+	@ResponseBody
+	public CommonResultCX forgotPassword(@RequestBody ForgotPasswordDTO dto, HttpServletRequest request) {
 		CommonResultCX result = new CommonResultCX();
-		JSONObject jsonOutput;
-		JSONObject jsonInput = getJson(data);
 
-		if (!jsonInput.containsKey("email")) {
+		if (StringUtils.isBlank(dto.getEmail())) {
 			result.fillWithResult(ResultTypeCX.errorParam);
-			outputJson(response, JSONObject.fromObject(result));
-			return;
+			return result;
 		}
 
-		result = userRegistService.sendForgotPasswordMail(jsonInput.getString("email"), request);
+		result = userRegistService.sendForgotPasswordMail(dto.getEmail(), request);
 		if (result.isSuccess()) {
 			result.successWithMessage("邮件已发送,因网络原因,可能存在延迟,请稍后至邮箱查收.请留意邮箱拦截规则,如果邮件被拦截,可能存放于邮箱垃圾箱内...");
-			outputJson(response, JSONObject.fromObject(result));
-			return;
+			return result;
 		}
 
-		jsonOutput = JSONObject.fromObject(result);
-		outputJson(response, jsonOutput);
-		return;
+		return result;
 	}
 
 	@PostMapping(value = UsersUrl.forgotUsername)
-	public void forgotUsername(@RequestBody String data, HttpServletResponse response, HttpServletRequest request) {
+	@ResponseBody
+	public CommonResultCX forgotUsername(@RequestBody ForgotUsernameDTO dto, HttpServletRequest request) {
 		CommonResultCX result = new CommonResultCX();
-		JSONObject jsonOutput;
-		JSONObject jsonInput = getJson(data);
 
-		if (!jsonInput.containsKey("email")) {
+		if (StringUtils.isBlank(dto.getEmail())) {
 			result.fillWithResult(ResultTypeCX.errorParam);
-			outputJson(response, JSONObject.fromObject(result));
-			return;
+			return result;
 		}
 
-		result = userRegistService.sendForgotUsernameMail(jsonInput.getString("email"), request);
+		result = userRegistService.sendForgotUsernameMail(dto.getEmail(), request);
 		if (result.isSuccess()) {
 			result.successWithMessage("邮件已发送,因网络原因,可能存在延迟,请稍后至邮箱查收.请留意邮箱拦截规则,如果邮件被拦截,可能存放于邮箱垃圾箱内...");
-			outputJson(response, JSONObject.fromObject(result));
-			return;
+			return result;
 		}
 
-		jsonOutput = JSONObject.fromObject(result);
-		outputJson(response, jsonOutput);
-		return;
+		return result;
 	}
 
 	@GetMapping(value = UsersUrl.resetPassword)
@@ -198,36 +178,30 @@ public class UsersRegistController extends CommonController {
 	}
 
 	@PostMapping(value = UsersUrl.resetPassword)
-	public void resetPassword(@RequestBody String data, HttpServletResponse response) {
-		JSONObject jsonInput = getJson(data);
-		CommonResultCX result = new CommonResultCX();
+	@ResponseBody
+	public CommonResultCX resetPassword(@RequestBody ResetPasswordDTO dto) {
+		CommonResultCX r = new CommonResultCX();
 
-		if (!jsonInput.containsKey("newPassword") || !jsonInput.containsKey("newPasswordRepeat")) {
-			result.fillWithResult(ResultTypeCX.nullParam);
-			outputJson(response, JSONObject.fromObject(result));
-			return;
+		if (StringUtils.isAnyBlank(dto.getNewPassword(), dto.getNewPasswordRepeat())) {
+			r.fillWithResult(ResultTypeCX.nullParam);
+			return r;
 		}
 
-		if (jsonInput.containsKey("mailKey")
-				&& StringUtils.isNotBlank(String.valueOf(jsonInput.getString("mailKey")))) {
-			result = userRegistService.resetPasswordByMailKey(jsonInput.getString("mailKey"),
-					jsonInput.getString("newPassword"), jsonInput.getString("newPasswordRepeat"));
+		if (StringUtils.isNotBlank(dto.getMailKey())) {
+			r = userRegistService.resetPasswordByMailKey(dto.getMailKey(), dto.getNewPassword(),
+					dto.getNewPasswordRepeat());
 		} else if (baseUtilCustom.isLoginUser()) {
-			if (!jsonInput.containsKey("oldPassword")) {
-				result.fillWithResult(ResultTypeCX.nullParam);
-				outputJson(response, JSONObject.fromObject(result));
-				return;
+			if (StringUtils.isBlank(dto.getOldPassword())) {
+				r.fillWithResult(ResultTypeCX.nullParam);
+				return r;
 			}
-			result = userRegistService.resetPasswordByLoginUser(baseUtilCustom.getUserId(),
-					jsonInput.getString("oldPassword"), jsonInput.getString("newPassword"),
-					jsonInput.getString("newPasswordRepeat"));
+			r = userRegistService.resetPasswordByLoginUser(baseUtilCustom.getUserId(), dto.getOldPassword(),
+					dto.getNewPassword(), dto.getNewPasswordRepeat());
 		} else {
-			result.successWithMessage("");
-			outputJson(response, JSONObject.fromObject(result));
-			return;
+			r.successWithMessage("");
+			return r;
 		}
-
-		outputJson(response, JSONObject.fromObject(result));
+		return r;
 	}
 
 }

@@ -14,25 +14,13 @@ public abstract class CommonController {
 	
 	protected final Logger log = LoggerFactory.getLogger(getClass());
 	
-	protected JSONObject getJson(String data) {
-		JSONObject json;
-		try {
-			json = JSONObject.fromObject(data);
-		} catch (Exception e) {
-			e.printStackTrace();
-			json = JSONObject.fromObject("{\"data\":\"wrong data\"}");
-		}
-		return json;
-	}
-	
-	protected void outputStr(HttpServletResponse response, String str) {
-		try {
-			response.getWriter().println(str);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
+	/**
+	 * FIXME
+	 * 2020-08-28
+	 * should delete
+	 * @param response
+	 * @param json
+	 */
 	protected void outputJson(HttpServletResponse response, JSONObject json) {
 		try {
 			response.getWriter().println(json.toString());
@@ -41,6 +29,13 @@ public abstract class CommonController {
 		}
 	}
 	
+	/**
+	 * FIXME
+	 * 2020-08-28
+	 * should delete
+	 * @param response
+	 * @param jsonArray
+	 */
 	protected void outputJson(HttpServletResponse response, JSONArray jsonArray) {
 		try {
 			response.getWriter().println(jsonArray.toString());

@@ -15,15 +15,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.baseCommon.controller.CommonController;
 import demo.tool.mapper.ToolMapper;
 import demo.tool.pojo.constant.ToolPathConstant;
 import demo.tool.pojo.constant.ToolUrlConstant;
+import demo.tool.pojo.dto.CleanTmpFilesDTO;
 import demo.tool.service.DownloadService;
 import demo.tool.service.impl.ComplexToolServiceImpl;
-import net.sf.json.JSONObject;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Controller
@@ -110,20 +112,14 @@ public class ComplexToolController extends CommonController {
 
 	
 	@PostMapping(value = "/cleanTmpFiles")
-	public void cleanTmpFiles(@RequestBody String data, HttpServletResponse response) {
-		JSONObject jsonInput = getJson(data);
-		
+	@ResponseBody
+	public CommonResult cleanTmpFiles(@RequestBody CleanTmpFilesDTO dto, HttpServletResponse response) {
 		/*
 		 * TODO 已经有几个临时文件夹,请参照 ToolPathConstant
 		 * 2019-11-25
 		 * 未知最初使用时间, 需要规范化整理
 		 */
-		JSONObject jsonOutput = JSONObject.fromObject(complexToolServiceImpl.cleanTmpFiles(jsonInput));
-		try {
-			response.getWriter().print(jsonOutput);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		return complexToolServiceImpl.cleanTmpFiles(dto);
 	}
 	
 	@PostMapping(value = "/getTomcatOut")

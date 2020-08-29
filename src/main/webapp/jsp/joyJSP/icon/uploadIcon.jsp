@@ -33,7 +33,10 @@
       <sec:authorize access="hasRole('ROLE_USER')">
       <div class="row">
         <div class="col-sm-12" >
-          <textarea class="input form-control" id="articleTitle" rows="1" cols="50" placeholder="请输入标题~">${articleVO.articleTitle}</textarea>
+          <textarea class="input form-control" id="remark" rows="1" cols="50" 
+          placeholder="请输入icon tags, 多个 tags, 请以 ',' 分割 ">
+            
+          </textarea>
         </div>
       </div>
 
@@ -56,22 +59,10 @@
               <textarea class="input form-control" type="text" 
               name="superAdminKey" placeholder="please insert key"></textarea>
             </sec:authorize>
-            <c:if test="${createNew == true}">
-              <button class="btn  btn-primary btn-sm" 
-                id="createNew">
-                <span class="badge badge-primary">提交</span>
-              </button>
-              <button class="btn  btn-primary btn-sm" 
-                id="editorAgain">
-                <span class="badge badge-primary">继续编辑</span>
-              </button>
-            </c:if>
-            <c:if test="${edit == true}">
-              <button class="btn  btn-primary btn-sm" 
-                id="edit">
-                <span class="badge badge-primary">提交编辑</span>
-              </button>
-            </c:if>
+            <button class="btn  btn-primary btn-sm" 
+              id="upload">
+              <span class="badge badge-primary">提交</span>
+            </button>
           </div>
         </div>
       </div>
@@ -102,16 +93,14 @@
 
     $(document).ready(function() {
       
-      $("#createNew").click(function () {
-        var url = "/article/createArticleLong";
-        var title = $("#articleTitle").val();
+      $("#upload").click(function () {
+        var url = "/joyManager/icon/upload";
+        var remark = $("#remark").val();
         var s = $('#summernote');
         var content = s.summernote('code');
-        var channelId = $("select[name='channelList'] option:selected").val();
     
         var jsonOutput = {
-          channelId:channelId,
-          title:title,
+          remark:remark,
           content:content
         };
     
@@ -133,9 +122,9 @@
           success:function(datas){
             resultSpan.innerHTML = datas.message;
             if(datas.result == "0") {
-              document.getElementById("articleTitle").disabled = true;
+              document.getElementById("remark").disabled = true;
               document.getElementById("summernote").disabled = true;
-              document.getElementById("createNew").disabled = true;
+              document.getElementById("upload").disabled = true;
             }
           },  
           error: function(datas) {              
@@ -143,10 +132,10 @@
         });  
       });
 
-      $("#createNew").click(function () {
-        document.getElementById("articleTitle").disabled = false;
+      $("#upload").click(function () {
+        document.getElementById("remark").disabled = false;
         document.getElementById("summernote").disabled = false;
-        document.getElementById("createNew").disabled = false;
+        document.getElementById("upload").disabled = false;
       });
 
     });

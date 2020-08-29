@@ -78,6 +78,22 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 	}
 	
 	@Override
+	public void getImageByPath(HttpServletResponse response, String path) {
+		if(StringUtils.isBlank(path)) {
+			return;
+		}
+		
+		try {
+			File f = new File(path);
+			InputStream in = new FileInputStream(f);
+			response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+			IOUtils.copy(in, response.getOutputStream());
+		} catch (Exception e) {
+			return;
+		}
+	}
+	
+	@Override
 	public ImageSavingResult imageSaving(ImageSavingTransDTO dto) {
 		ImageSavingResult r = validImageSavingTransDTO(dto);
 		if(r.isFail()) {
@@ -281,7 +297,7 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 			return r;
 		}
 		String fileType = src.substring(slashIndex + 1, semicolonIndex);
-		if(!FileSuffixNameConstant.imageSuffix.contains(fileType)) {
+		if(!FileSuffixNameConstant.IMAGE_SUFFIX.contains(fileType)) {
 			return r;
 		}
 		

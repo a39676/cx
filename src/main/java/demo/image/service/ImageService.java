@@ -12,6 +12,8 @@ public interface ImageService {
 	
 	void getImage(HttpServletResponse response, String imgPK);
 	
+	void getImageByPath(HttpServletResponse response, String path);
+	
 	ImageSavingResult imageSaving(ImageSavingTransDTO dto);
 
 	ImageSavingResult __saveImgFromBBT(ImageSavingTransDTO dto);

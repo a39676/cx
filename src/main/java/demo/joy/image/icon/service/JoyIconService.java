@@ -1,5 +1,10 @@
 package demo.joy.image.icon.service;
 
+import javax.servlet.http.HttpServletResponse;
+
+import demo.joy.common.pojo.result.JoyCommonResult;
+import demo.joy.image.icon.pojo.dto.BatchUploadIconDTO;
+
 public interface JoyIconService {
 
 	/**
@@ -10,6 +15,8 @@ public interface JoyIconService {
 	 */
 	void loadAllIconToRedis();
 
-	byte[] getIcon(Long id);
+	JoyCommonResult batchUploadIcon(BatchUploadIconDTO dto);
+
+	void getIcon(Long id, HttpServletResponse response);
 
 }

@@ -61,7 +61,7 @@
             </sec:authorize>
             <button class="btn  btn-primary btn-sm" 
               id="upload">
-              <span class="badge badge-primary">提交</span>
+              <span class="badge badge-primary">提交 image npc</span>
             </button>
           </div>
         </div>
@@ -92,7 +92,7 @@
     $(document).ready(function() {
       
       $("#upload").click(function () {
-        var url = "/joyManager/icon/upload";
+        var url = "/joyManager/npcImage/upload";
         var remark = $("#remark").val();
         var s = $('#summernote');
         var content = s.summernote('code');

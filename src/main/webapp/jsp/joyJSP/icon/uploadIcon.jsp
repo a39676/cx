@@ -61,7 +61,7 @@
             </sec:authorize>
             <button class="btn  btn-primary btn-sm" 
               id="upload">
-              <span class="badge badge-primary">提交</span>
+              <span class="badge badge-primary">提交 icon</span>
             </button>
           </div>
         </div>

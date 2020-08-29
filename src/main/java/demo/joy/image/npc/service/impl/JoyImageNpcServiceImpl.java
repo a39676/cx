@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.image.service.ImageService;
-import demo.joy.image.icon.pojo.constant.IconConstant;
 import demo.joy.image.npc.mapper.JoyImageNpcMapper;
+import demo.joy.image.npc.pojo.constant.ImageNpcConstant;
 import demo.joy.image.npc.pojo.po.JoyImageNpc;
 import demo.joy.image.npc.pojo.po.JoyImageNpcExample;
 import demo.joy.image.npc.service.JoyImageNpcService;
@@ -30,7 +30,7 @@ public class JoyImageNpcServiceImpl extends JoyImageNpcCommonService implements 
 			return;
 		}
 
-		String keyName = IconConstant.ICON_REDIS_PREFIX + String.valueOf(id);
+		String keyName = ImageNpcConstant.NPC_REDIS_PREFIX + String.valueOf(id);
 
 		if (redisTemplate.hasKey(keyName)) {
 			String imgPath = String.valueOf(redisTemplate.opsForValue().get(keyName));

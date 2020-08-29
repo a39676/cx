@@ -22,4 +22,5 @@ public class TestController2 extends CommonController {
 	public String cacheDataTo5Minute() {
 		return testService.cacheDataTo5Minute();
 	}
+	
 }

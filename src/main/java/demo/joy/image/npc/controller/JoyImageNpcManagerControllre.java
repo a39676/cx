@@ -11,16 +11,16 @@ import org.springframework.web.servlet.ModelAndView;
 
 import demo.joy.common.pojo.constant.JoyManagerUrl;
 import demo.joy.common.pojo.result.JoyCommonResult;
-import demo.joy.image.icon.pojo.dto.BatchUploadIconDTO;
-import demo.joy.image.icon.service.JoyIconManagerService;
 import demo.joy.image.npc.pojo.constant.JoyImageNpcUrl;
+import demo.joy.image.npc.pojo.dto.BatchUploadNpcImageDTO;
+import demo.joy.image.npc.service.JoyImageNpcManagerService;
 
 @Controller
 @RequestMapping(value = JoyManagerUrl.ROOT + JoyImageNpcUrl.ROOT)
 public class JoyImageNpcManagerControllre {
 
 	@Autowired
-	private JoyIconManagerService iconManagerService;
+	private JoyImageNpcManagerService iconManagerService;
 
 	@GetMapping(value = JoyImageNpcUrl.UPLOAD)
 	public ModelAndView uploadIcon() {
@@ -29,8 +29,8 @@ public class JoyImageNpcManagerControllre {
 
 	@PostMapping(value = JoyImageNpcUrl.UPLOAD)
 	@ResponseBody
-	public JoyCommonResult uploadIcon(@RequestBody BatchUploadIconDTO dto) {
-		return iconManagerService.batchUploadIcon(dto);
+	public JoyCommonResult uploadIcon(@RequestBody BatchUploadNpcImageDTO dto) {
+		return iconManagerService.batchUploadImageNpc(dto);
 	}
 
 }

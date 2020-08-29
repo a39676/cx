@@ -7,4 +7,6 @@ public interface JoyIconManagerService {
 
 	JoyCommonResult batchUploadIcon(BatchUploadIconDTO dto);
 
+	JoyCommonResult delete(Long id);
+
 }

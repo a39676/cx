@@ -7,4 +7,6 @@ public interface JoyImageNpcManagerService {
 
 	JoyCommonResult batchUploadImageNpc(BatchUploadNpcImageDTO dto);
 
+	JoyCommonResult delete(Long id);
+
 }

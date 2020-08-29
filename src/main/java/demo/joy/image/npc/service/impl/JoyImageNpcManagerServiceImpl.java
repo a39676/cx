@@ -1,5 +1,7 @@
 package demo.joy.image.npc.service.impl;
 
+import java.io.File;
+
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -59,6 +61,35 @@ public class JoyImageNpcManagerServiceImpl extends JoyImageNpcCommonService impl
 			}
 		}
 
+		return r;
+	}
+	
+	@Override
+	public JoyCommonResult delete(Long id) {
+		JoyCommonResult r = new JoyCommonResult();
+		if(id == null) {
+			return r;
+		}
+		
+		JoyImageNpc po = imageNpcMapper.selectByPrimaryKey(id);
+		if(po == null || StringUtils.isBlank(po.getImgPath())) {
+			r.failWithMessage("data error");
+			return r;
+		}
+		
+		File f = new File(po.getImgPath());
+		if(!f.delete()) {
+			r.addMessage("file delete error");
+			return r;
+		}
+		int delCount = imageNpcMapper.deleteByPrimaryKey(id);
+		
+		if(delCount != 1) {
+			r.addMessage("file deleted, but database error");
+			return r;
+		}
+
+		r.setIsSuccess();
 		return r;
 	}
 

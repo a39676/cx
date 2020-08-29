@@ -34,7 +34,7 @@
       <div class="row">
         <div class="col-sm-12" >
           <textarea class="input form-control" id="remark" rows="1" cols="50" 
-          placeholder="请输入icon tags, 多个 tags, 请以 ',' 分割 ">
+          placeholder="请输入npc tags, 多个 tags, 请以 ',' 分割 ">
             
           </textarea>
         </div>

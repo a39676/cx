@@ -1,4 +1,4 @@
-package demo.joy.image.icon.service.impl;
+package demo.joy.image.npc.service.impl;
 
 import java.util.List;
 
@@ -9,23 +9,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.image.service.ImageService;
-import demo.joy.image.icon.mapper.JoyImageIconMapper;
 import demo.joy.image.icon.pojo.constant.IconConstant;
-import demo.joy.image.icon.pojo.po.JoyImageIcon;
-import demo.joy.image.icon.pojo.po.JoyImageIconExample;
-import demo.joy.image.icon.service.JoyIconService;
+import demo.joy.image.npc.mapper.JoyImageNpcMapper;
+import demo.joy.image.npc.pojo.po.JoyImageNpc;
+import demo.joy.image.npc.pojo.po.JoyImageNpcExample;
+import demo.joy.image.npc.service.JoyImageNpcService;
 
 @Service
-public class JoyIconServiceImpl extends JoyIconCommonService implements JoyIconService {
+public class JoyImageNpcServiceImpl extends JoyImageNpcCommonService implements JoyImageNpcService {
 
 	@Autowired
-	private JoyImageIconMapper iconMapper;
+	private JoyImageNpcMapper imageNpcMapper;
 
 	@Autowired
 	private ImageService imgService;
 
 	@Override
-	public void getIcon(Long id, HttpServletResponse response) {
+	public void getImageNpc(Long id, HttpServletResponse response) {
 		if (id == null) {
 			return;
 		}
@@ -36,7 +36,7 @@ public class JoyIconServiceImpl extends JoyIconCommonService implements JoyIconS
 			String imgPath = String.valueOf(redisTemplate.opsForValue().get(keyName));
 			imgService.getImageByPath(response, imgPath);
 		} else {
-			JoyImageIcon po = iconMapper.selectByPrimaryKey(id);
+			JoyImageNpc po = imageNpcMapper.selectByPrimaryKey(id);
 			if (po == null || StringUtils.isBlank(po.getImgPath())) {
 				return;
 			}
@@ -48,11 +48,11 @@ public class JoyIconServiceImpl extends JoyIconCommonService implements JoyIconS
 	}
 
 	@Override
-	public void loadAllIconToRedis() {
-		JoyImageIconExample example = new JoyImageIconExample();
+	public void loadAllImageNpcToRedis() {
+		JoyImageNpcExample example = new JoyImageNpcExample();
 		example.createCriteria();
-		List<JoyImageIcon> poList = iconMapper.selectByExample(example);
-		for (JoyImageIcon po : poList) {
+		List<JoyImageNpc> poList = imageNpcMapper.selectByExample(example);
+		for (JoyImageNpc po : poList) {
 			loadToRedis(po);
 		}
 	}

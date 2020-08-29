@@ -24,7 +24,7 @@ public interface ImageService {
 
 	/**
 	 * 可能会有其他模块的图片服务会使用此功能
-	 * 如{@link JoyIconService }
+	 * 如{@link JoyImageNpcService }
 	 * @param image
 	 * @param filePath
 	 * @param fileType

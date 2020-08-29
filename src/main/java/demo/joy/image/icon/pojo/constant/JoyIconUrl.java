@@ -1,4 +1,4 @@
-package demo.joy.image.icon.pojo.constanto;
+package demo.joy.image.icon.pojo.constant;
 
 public class JoyIconUrl {
 

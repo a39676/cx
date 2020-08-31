@@ -10,5 +10,5 @@ public class PMemoConstant {
 	/** 暂定最大5m */
 	public static final Long MEMO_MAX_SIZE = 1024L * 1024 * 5;
 	
-	public static final String P_NOTE_STORE_PREFIX_PATH = "pNoteStorePrefixPath";
+	public static final String P_NOTE_SAVING_FOLDER = "/home/u2/pNote";
 }

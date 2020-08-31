@@ -26,7 +26,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.owasp.html.PolicyFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -371,9 +370,9 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		
 		String saveingFolderPath = null;
 		if(isLinux()) {
-			saveingFolderPath = ArticleConstant.articleImgSavingFolder + "/" + dateStr;
+			saveingFolderPath = ArticleConstant.ARTICLE_IMG_SAVING_FOLDER + "/" + dateStr;
 		} else if(isWindows()) {
-			saveingFolderPath = "d:/" + ArticleConstant.articleImgSavingFolder + "/" + dateStr;
+			saveingFolderPath = "d:/" + ArticleConstant.ARTICLE_IMG_SAVING_FOLDER + "/" + dateStr;
 		}
 		String imgSavingPath = saveingFolderPath + "/" + filename;
 		boolean saveFlag = imgService.imgSaveAsFile(bufferedImage, imgSavingPath, srcHandleResult.getImgFileType());
@@ -576,8 +575,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;
 		}
-		PolicyFactory filter = textFilter.getArticleFilter();
-		String feedback = filter.sanitize(dto.getFeedback());
+		String feedback = sanitize(dto.getFeedback());
 		
 		if(StringUtils.isBlank(feedback)) {
 			result.failWithMessage("期待您填写反馈内容");
@@ -739,9 +737,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		if(isBigUser()) {
 			title = controllerParam.getTitle();
 		} else {
-			PolicyFactory filter = textFilter.getArticleFilter();
-			title = filter.sanitize(controllerParam.getTitle());
-			controllerParam.setContent(filter.sanitize(controllerParam.getContent()));
+			title = sanitize(controllerParam.getTitle());
+			controllerParam.setContent(sanitize(controllerParam.getContent()));
 		}
 		
 		if(StringUtils.isBlank(title)) {

@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.owasp.html.PolicyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
@@ -130,13 +129,12 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		
 		boolean bigUserFlag = isBigUser();
 		Long userId = baseUtilCustom.getUserId();
-		PolicyFactory filter = textFilter.getArticleFilter();
 		
 		String nickname = null;
 		String email = null;
 		Long mobile = null;
 		if(userId == null) {
-			nickname = filter.sanitize(inputParam.getNickname());
+			nickname = sanitize(inputParam.getNickname());
 			email = inputParam.getEmail();
 			if(!validRegexToolService.validEmail(email)) {
 				result.failWithMessage("请输入正确的邮箱格式");
@@ -185,7 +183,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 				result.fillWithResult(ResultTypeCX.justComment);
 				return result;
 			}
-			inputParam.setContent(filter.sanitize(inputParam.getContent()));
+			inputParam.setContent(sanitize(inputParam.getContent()));
 		} 
 
 		ArticleFileSaveResult saveFileResult = saveArticleCommentFile(articleCommentStorePrefixPath, userId, inputParam.getContent());

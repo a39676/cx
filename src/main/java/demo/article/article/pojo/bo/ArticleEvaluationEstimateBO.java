@@ -52,7 +52,7 @@ public class ArticleEvaluationEstimateBO {
 	public void initIsGoodResult() {
 		// 如果评价过于接近. 不作coefficient变动
 		
-		if(goodEvaluationCounter + badEvaluationCounter < ArticleConstant.miniEvaluationCount) {
+		if(goodEvaluationCounter + badEvaluationCounter < ArticleConstant.MINI_EVALUATION_COUNT) {
 			if(goodEvaluationCounter > badEvaluationCounter) {
 				isGoodResult = true;
 			} else {
@@ -63,9 +63,9 @@ public class ArticleEvaluationEstimateBO {
 				isGoodResult = false;
 			} else if(badEvaluationCounter == 0 && goodEvaluationCounter > 0) {
 				isGoodResult = true;
-			} else if(goodEvaluationCounter > badEvaluationCounter && ((goodEvaluationCounter + 0D) / badEvaluationCounter > ArticleConstant.balanceEvaluationRatio)) {
+			} else if(goodEvaluationCounter > badEvaluationCounter && ((goodEvaluationCounter + 0D) / badEvaluationCounter > ArticleConstant.BALANCE_EVALUATION_RATIO)) {
 				isGoodResult = true;
-			} else if(badEvaluationCounter > goodEvaluationCounter && ((badEvaluationCounter + 0D) / goodEvaluationCounter > ArticleConstant.balanceEvaluationRatio)) {
+			} else if(badEvaluationCounter > goodEvaluationCounter && ((badEvaluationCounter + 0D) / goodEvaluationCounter > ArticleConstant.BALANCE_EVALUATION_RATIO)) {
 				isGoodResult = false;
 			}
 		}

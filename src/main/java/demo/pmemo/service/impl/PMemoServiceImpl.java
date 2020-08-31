@@ -2,20 +2,29 @@ package demo.pmemo.service.impl;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.baseCommon.service.CommonService;
+import demo.article.article.service.impl.ArticleCommonService;
+import demo.pmemo.mapper.PNoteMapper;
 import demo.pmemo.pojo.constant.PMemoConstant;
+import demo.pmemo.pojo.dto.EditPNoteDTO;
 import demo.pmemo.pojo.dto.SetPMemoDTO;
+import demo.pmemo.pojo.po.PNote;
+import demo.pmemo.pojo.po.PNoteExample;
 import demo.pmemo.service.PMemoService;
 
 @Service
-public class PMemoServiceImpl extends CommonService implements PMemoService {
+public class PMemoServiceImpl extends ArticleCommonService implements PMemoService {
 
+	@Autowired
+	private PNoteMapper noteMapper;
+	
 	@Override
 	public String getMemo(String key) {
 		if(StringUtils.isBlank(key)) {
@@ -67,7 +76,37 @@ public class PMemoServiceImpl extends CommonService implements PMemoService {
 		 */
 	}
 
-	public void editPNote() {
+	public CommonResult editPNote(EditPNoteDTO dto) {
+		CommonResult r = new CommonResult();
 		
+		String pNoteStorePrefixPath = getPNoteStorePrefixPath();
+		
+		PNote po = findPNote(baseUtilCustom.getUserId());
+		
+//		TODO
+		return r;
 	}
+	
+	private String getPNoteStorePrefixPath() {
+		if(isWindows()) {
+			return PMemoConstant.P_NOTE_SAVING_FOLDER;
+		} else {
+			return "d:/" + PMemoConstant.P_NOTE_SAVING_FOLDER;
+		}
+	}
+	
+	private PNote findPNote(Long userId) {
+		PNoteExample example = new PNoteExample();
+		example.createCriteria().andUserIdEqualTo(userId);
+		List<PNote> poList = noteMapper.selectByExample(example);
+		if(poList == null || poList.isEmpty()) {
+			return poList.get(0);
+		} else {
+			PNote po = new PNote();
+			po.setId(snowFlake.getNextId());
+			po.setUserId(userId);
+			return po;
+		}
+	}
+	
 }

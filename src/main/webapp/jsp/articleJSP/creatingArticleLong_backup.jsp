@@ -9,16 +9,20 @@
 <html>
 <head>
 <!-- 因需要使用富文本编辑器, 特别使用指定的库 -->
-<!-- <%@ include file="../baseElementJSP/normalHeader.jsp" %> -->
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <sec:csrfMetaTags />
 <title>${ title }</title>
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.js"></script>
+<script type="text/javascript" src="/static_resources/js/jquery/v3_2_1/jquery.min.js"></script>
+
+<link rel="stylesheet" href="/static_resources/css/bootstrap/v4_0_0_beta/bootstrap.min.css">
+
+<script type="text/javascript" src="/static_resources/js/popper/v1_11_0/popper.min.js"></script>
+
+<script type="text/javascript" src="/static_resources/js/bootstrap/v4_0_0_beta/bootstrap.min.js"></script>
+
+<link href="/static_resources/css/summernote/v0_8_12/summernote-bs4.css" rel="stylesheet" type="text/css">
+
+<script src="/static_resources/js/summernote/v0_8_12/summernote-bs4.min.js"></script>
 
 </head>
 <body>
@@ -32,7 +36,12 @@
           <span class="badge badge-primary">请选择提交频道</span>
           <select class="" name="channelList" style="">
             <c:forEach items="${channelList}" var="subChannel">
-              <option value="${subChannel.uuid}">${subChannel.channelName}</option>
+              <c:if test="${articleVO.channelId != null && articleVO.channelId == subChannel.channelId}">
+                <option value="${subChannel.channelId}">${subChannel.channelName}</option>  
+              </c:if>
+            </c:forEach>
+            <c:forEach items="${channelList}" var="subChannel">
+              <option value="${subChannel.channelId}">${subChannel.channelName}</option>
             </c:forEach>
           </select>
         </div>
@@ -41,7 +50,7 @@
 
       <div class="row">
         <div class="col-sm-12" >
-          <textarea class="input form-control" id="articleTitle" rows="1" cols="50" placeholder="请输入标题~"></textarea>
+          <textarea class="input form-control" id="articleTitle" rows="1" cols="50" placeholder="请输入标题~">${articleVO.articleTitle}</textarea>
         </div>
       </div>
 
@@ -56,8 +65,6 @@
           </script>
         </div>
       </div>
-
-      
       
       <div class="row">
         <div class="col-sm-12" >
@@ -66,18 +73,28 @@
               <textarea class="input form-control" type="text" 
               name="superAdminKey" placeholder="please insert key"></textarea>
             </sec:authorize>
-            <button class="btn  btn-primary btn-sm" 
-              id="submitArticleLong">
-              <span class="badge badge-primary">提交</span>
-            </button>
-            <button class="btn  btn-primary btn-sm" 
-              id="editorAgain">
-              <span class="badge badge-primary">继续编辑</span>
-            </button>
+            <c:if test="${createNew == true}">
+              <button class="btn  btn-primary btn-sm" 
+                id="createNew">
+                <span class="badge badge-primary">提交</span>
+              </button>
+              <button class="btn  btn-primary btn-sm" 
+                id="editorAgain">
+                <span class="badge badge-primary">继续编辑</span>
+              </button>
+            </c:if>
+            <c:if test="${edit == true}">
+              <button class="btn  btn-primary btn-sm" 
+                id="edit">
+                <span class="badge badge-primary">提交编辑</span>
+              </button>
+            </c:if>
           </div>
         </div>
       </div>
-      
+
+      <div id="sourceArticleVO" pk="${articleVO.privateKey}" disabled="disabled" style="display: none;" contentLines='${articleVO.contentLines}'></div>
+
       <div class="row">
         <div class="col-sm-12" >
           <span id="createArticleResult" badge badge-primary></span>
@@ -90,8 +107,6 @@
 </body>
 
 <footer>
-  <!-- 因需要使用富文本编辑器, 特别使用指定的库 -->
-  <!-- <%@ include file="../baseElementJSP/normalJSPart.jsp" %> -->
   
   <script type="text/javascript">
     var csrfParameter = $("meta[name='_csrf_parameter']").attr("content");
@@ -99,28 +114,27 @@
     var csrfToken = $("meta[name='_csrf']").attr("content");
   </script>
 
-<!--   <sec:authorize access="hasRole('ROLE_USER')">
-  <script type="text/javascript" src="<c:url value='/static_resources/js/article/creatingArticleLongV3.js'/>"></script>
-  </sec:authorize> -->
-
   <script type="text/javascript">
     
+
     $(document).ready(function() {
-      $("#submitArticleLong").click(function () {
+      
+      <c:if test="${createNew == true}">
+      $("#createNew").click(function () {
         var url = "/article/createArticleLong";
         var title = $("#articleTitle").val();
         var s = $('#summernote');
         var content = s.summernote('code');
-        var uuid = $("select[name='channelList'] option:selected").val();
+        var channelId = $("select[name='channelList'] option:selected").val();
     
         var jsonOutput = {
-          uuid:uuid,
+          channelId:channelId,
           title:title,
           content:content
         };
     
-        var resultSpan = document.getElementById("#createArticleResult");
-        resultSpan.text("");
+        var resultSpan = document.getElementById("createArticleResult");
+        resultSpan.innerHTML = "";
     
         $.ajax({  
           type : "POST",  
@@ -135,11 +149,11 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-            resultSpan.text(datas.message);
+            resultSpan.innerHTML = datas.message;
             if(datas.result == "0") {
               document.getElementById("articleTitle").disabled = true;
               document.getElementById("summernote").disabled = true;
-              document.getElementById("submitArticleLong").disabled = true;
+              document.getElementById("createNew").disabled = true;
             }
           },  
           error: function(datas) {              
@@ -147,11 +161,62 @@
         });  
       });
 
-      $("#submitArticleLong").click(function () {
+      $("#createNew").click(function () {
         document.getElementById("articleTitle").disabled = false;
         document.getElementById("summernote").disabled = false;
-        document.getElementById("submitArticleLong").disabled = false;
+        document.getElementById("createNew").disabled = false;
       });
+      </c:if>
+      
+      <c:if test="${edit == true}">
+      var contentLines = $("#sourceArticleVO").attr("contentLines");
+      $("#summernote").summernote("code", contentLines);
+
+      $("#edit").click(function () {
+        var url = "/article/editArticleLong";
+        var title = $("#articleTitle").val();
+        var s = $('#summernote');
+        var content = s.summernote('code');
+        var channelId = $("select[name='channelList'] option:selected").val();
+        var pk = $("#sourceArticleVO").attr("pk");
+
+        var jsonOutput = {
+          channelId:channelId,
+          title:title,
+          content:content,
+          pk:pk
+        };
+    
+        var resultSpan = document.getElementById("createArticleResult");
+        resultSpan.innerHTML = "";
+    
+        $.ajax({  
+          type : "POST",  
+          async : true,
+          url : url,  
+          data: JSON.stringify(jsonOutput),
+          cache : false,
+          contentType: "application/json",
+          dataType: "json",
+          timeout:50000,  
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          success:function(datas){
+            resultSpan.innerHTML = datas.message;
+            if(datas.result == "0") {
+              document.getElementById("articleTitle").disabled = true;
+              document.getElementById("summernote").disabled = true;
+              document.getElementById("edit").disabled = true;
+            }
+          },  
+          error: function(datas) {              
+          }  
+        });  
+      });
+
+      </c:if>
+
     });
   </script>
 </footer>

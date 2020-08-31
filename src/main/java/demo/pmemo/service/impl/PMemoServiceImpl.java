@@ -22,7 +22,7 @@ public class PMemoServiceImpl extends CommonService implements PMemoService {
 			return "";
 		}
 		
-		return constantService.getValByName(PMemoConstant.PMemoRedisKey + key);
+		return constantService.getValByName(PMemoConstant.P_MEMO_REDIS_KEY + key);
 	}
 	
 	@Override
@@ -37,7 +37,7 @@ public class PMemoServiceImpl extends CommonService implements PMemoService {
 			return r;
 		}
 		
-		if(dto.getContent().length() > PMemoConstant.memoMaxSize) {
+		if(dto.getContent().length() > PMemoConstant.MEMO_MAX_SIZE) {
 			r.failWithMessage("too large");
 			return r;
 		}
@@ -50,10 +50,10 @@ public class PMemoServiceImpl extends CommonService implements PMemoService {
 				throw new Exception();
 			}
 		} catch (Exception e) {
-			validSeconds = PMemoConstant.defaultValidSeconds;
+			validSeconds = PMemoConstant.DEFAULT_VALID_SECONDS;
 		}
 		
-		constantService.setValByName(PMemoConstant.PMemoRedisKey + dto.getRedisKeyValue(), dto.getContent(), validSeconds, TimeUnit.SECONDS);
+		constantService.setValByName(PMemoConstant.P_MEMO_REDIS_KEY + dto.getRedisKeyValue(), dto.getContent(), validSeconds, TimeUnit.SECONDS);
 		
 		r.setIsSuccess();
 		return r;
@@ -65,5 +65,9 @@ public class PMemoServiceImpl extends CommonService implements PMemoService {
 		 *  未加入 security url 鉴定权限
 		 *  提供删除其他 memo? 
 		 */
+	}
+
+	public void editPNote() {
+		
 	}
 }

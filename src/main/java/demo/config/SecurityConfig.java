@@ -107,7 +107,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DEV))
             .antMatchers(AuthUrl.root + "/**")
             	.access(hasAnyRole(Arrays.asList(SystemRolesType.ROLE_SUPER_ADMIN), Arrays.asList(OrganzationRolesType.ROLE_ORG_SUPER_ADMIN)))
-            .antMatchers(PMemoUrl.root + PMemoUrl.set)
+            .antMatchers(PMemoUrl.ROOT + PMemoUrl.SET)
             	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers(WXUrl.root + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DEV))

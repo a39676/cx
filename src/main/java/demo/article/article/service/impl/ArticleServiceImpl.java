@@ -144,10 +144,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		return view;
 	}
 	
-	private CommonResultCX createNewArticleLong(Long userId, CreateArticleParam controllerParam) throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
-		return editArticleLong(userId, controllerParam, null);
-	}
-	
 	/** 
 	 * 新建/编辑文章
 	 * if(编辑文章) {
@@ -159,7 +155,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	 * @throws IOException 
 	 *  
 	 * */
-	private CommonResultCX editArticleLong(Long editorId, CreateArticleParam controllerParam, Long editedArticleId) throws IOException {
+	private CommonResultCX editOrCreateArticleLong(Long editorId, CreateArticleParam controllerParam, Long editedArticleId) throws IOException {
 		CommonResultCX result = new CommonResultCX();
 		boolean editFlag = (editedArticleId != null && editorId != null);
 		
@@ -282,7 +278,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			cp.setQuickPass(false);
 		}
 		
-		serviceResult = createNewArticleLong(userId, cp);
+		serviceResult = editOrCreateArticleLong(userId, cp, null);
 		return serviceResult;
 	}
 	
@@ -714,7 +710,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			param.setQuickPass(true);
 		}
 		
-		result = editArticleLong(userId, param, targetArticleId); 
+		result = editOrCreateArticleLong(userId, param, targetArticleId); 
 		
 		return result;
 	}

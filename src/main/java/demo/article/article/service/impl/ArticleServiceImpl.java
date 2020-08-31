@@ -343,7 +343,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		return result;
 	}
 	
-	private String imgSrcHandler(String src) {
+	@Override
+	public String imgSrcHandler(String src) {
 		if(src == null) {
 			return src;
 		} else if(src.startsWith("http")) {

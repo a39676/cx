@@ -136,8 +136,8 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		if(cp.getLimit() != null ) {
 			mp.setLimit(mp.getLimit());
 		}
-		if(mp.getLimit() == null || mp.getLimit() > ArticleConstant.maxPageSize) {
-			mp.setLimit(ArticleConstant.defaultPageSize);
+		if(mp.getLimit() == null || mp.getLimit() > ArticleConstant.MAX_PAGE_SIZE) {
+			mp.setLimit(ArticleConstant.DEFAULT_PAGE_SIZE);
 		}
 		if(cp.getDesc() != null && !cp.getDesc()) {
 			mp.setDesc(false);
@@ -278,8 +278,8 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			return new ArrayList<ArticleLongSummaryBO>();
 		}
 
-		if (dto.getLimit() != null && dto.getLimit() > ArticleConstant.maxPageSize) {
-			dto.setLimit(ArticleConstant.defaultPageSize);
+		if (dto.getLimit() != null && dto.getLimit() > ArticleConstant.MAX_PAGE_SIZE) {
+			dto.setLimit(ArticleConstant.DEFAULT_PAGE_SIZE);
 		}
 		Long userId = dto.getUserId();
 		dto.setUserId(null);

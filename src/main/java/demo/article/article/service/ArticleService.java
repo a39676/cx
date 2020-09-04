@@ -76,4 +76,6 @@ public interface ArticleService {
 
 	ModelAndView readArticleLong(String pk, HttpServletRequest request);
 
+	String imgSrcHandler(String src);
+
 }

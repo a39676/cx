@@ -8,13 +8,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.baseCommon.service.CommonService;
+import demo.article.article.service.impl.ArticleCommonService;
 import demo.pmemo.pojo.constant.PMemoConstant;
 import demo.pmemo.pojo.dto.SetPMemoDTO;
 import demo.pmemo.service.PMemoService;
 
 @Service
-public class PMemoServiceImpl extends CommonService implements PMemoService {
+public class PMemoServiceImpl extends ArticleCommonService implements PMemoService {
 
 	@Override
 	public String getMemo(String key) {
@@ -22,7 +22,7 @@ public class PMemoServiceImpl extends CommonService implements PMemoService {
 			return "";
 		}
 		
-		return constantService.getValByName(PMemoConstant.PMemoRedisKey + key);
+		return constantService.getValByName(PMemoConstant.P_MEMO_REDIS_KEY + key);
 	}
 	
 	@Override
@@ -37,7 +37,7 @@ public class PMemoServiceImpl extends CommonService implements PMemoService {
 			return r;
 		}
 		
-		if(dto.getContent().length() > PMemoConstant.memoMaxSize) {
+		if(dto.getContent().length() > PMemoConstant.MEMO_MAX_SIZE) {
 			r.failWithMessage("too large");
 			return r;
 		}
@@ -50,10 +50,10 @@ public class PMemoServiceImpl extends CommonService implements PMemoService {
 				throw new Exception();
 			}
 		} catch (Exception e) {
-			validSeconds = PMemoConstant.defaultValidSeconds;
+			validSeconds = PMemoConstant.DEFAULT_VALID_SECONDS;
 		}
 		
-		constantService.setValByName(PMemoConstant.PMemoRedisKey + dto.getRedisKeyValue(), dto.getContent(), validSeconds, TimeUnit.SECONDS);
+		constantService.setValByName(PMemoConstant.P_MEMO_REDIS_KEY + dto.getRedisKeyValue(), dto.getContent(), validSeconds, TimeUnit.SECONDS);
 		
 		r.setIsSuccess();
 		return r;
@@ -66,4 +66,5 @@ public class PMemoServiceImpl extends CommonService implements PMemoService {
 		 *  提供删除其他 memo? 
 		 */
 	}
+
 }

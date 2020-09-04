@@ -11,7 +11,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.owasp.html.PolicyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
@@ -108,8 +107,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 			}
 		}
 		
-		PolicyFactory filter = textFilter.getArticleFilter();
-		String contentAfterSanitize = filter.sanitize(dto.getContent());
+		String contentAfterSanitize = sanitize(dto.getContent());
 		Long userId = baseUtilCustom.getUserId();
 		Long newArticleId = snowFlake.getNextId();
 		

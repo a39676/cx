@@ -26,7 +26,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.owasp.html.PolicyFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -144,10 +143,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		return view;
 	}
 	
-	private CommonResultCX createNewArticleLong(Long userId, CreateArticleParam controllerParam) throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
-		return editArticleLong(userId, controllerParam, null);
-	}
-	
 	/** 
 	 * 新建/编辑文章
 	 * if(编辑文章) {
@@ -159,7 +154,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	 * @throws IOException 
 	 *  
 	 * */
-	private CommonResultCX editArticleLong(Long editorId, CreateArticleParam controllerParam, Long editedArticleId) throws IOException {
+	private CommonResultCX editOrCreateArticleLong(Long editorId, CreateArticleParam controllerParam, Long editedArticleId) throws IOException {
 		CommonResultCX result = new CommonResultCX();
 		boolean editFlag = (editedArticleId != null && editorId != null);
 		
@@ -282,7 +277,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			cp.setQuickPass(false);
 		}
 		
-		serviceResult = createNewArticleLong(userId, cp);
+		serviceResult = editOrCreateArticleLong(userId, cp, null);
 		return serviceResult;
 	}
 	
@@ -348,7 +343,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		return result;
 	}
 	
-	private String imgSrcHandler(String src) {
+	@Override
+	public String imgSrcHandler(String src) {
 		if(src == null) {
 			return src;
 		} else if(src.startsWith("http")) {
@@ -375,9 +371,9 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		
 		String saveingFolderPath = null;
 		if(isLinux()) {
-			saveingFolderPath = ArticleConstant.articleImgSavingFolder + "/" + dateStr;
+			saveingFolderPath = ArticleConstant.ARTICLE_IMG_SAVING_FOLDER + "/" + dateStr;
 		} else if(isWindows()) {
-			saveingFolderPath = "d:/" + ArticleConstant.articleImgSavingFolder + "/" + dateStr;
+			saveingFolderPath = "d:/" + ArticleConstant.ARTICLE_IMG_SAVING_FOLDER + "/" + dateStr;
 		}
 		String imgSavingPath = saveingFolderPath + "/" + filename;
 		boolean saveFlag = imgService.imgSaveAsFile(bufferedImage, imgSavingPath, srcHandleResult.getImgFileType());
@@ -580,8 +576,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;
 		}
-		PolicyFactory filter = textFilter.getArticleFilter();
-		String feedback = filter.sanitize(dto.getFeedback());
+		String feedback = sanitize(dto.getFeedback());
 		
 		if(StringUtils.isBlank(feedback)) {
 			result.failWithMessage("期待您填写反馈内容");
@@ -714,7 +709,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			param.setQuickPass(true);
 		}
 		
-		result = editArticleLong(userId, param, targetArticleId); 
+		result = editOrCreateArticleLong(userId, param, targetArticleId); 
 		
 		return result;
 	}
@@ -743,9 +738,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		if(isBigUser()) {
 			title = controllerParam.getTitle();
 		} else {
-			PolicyFactory filter = textFilter.getArticleFilter();
-			title = filter.sanitize(controllerParam.getTitle());
-			controllerParam.setContent(filter.sanitize(controllerParam.getContent()));
+			title = sanitize(controllerParam.getTitle());
+			controllerParam.setContent(sanitize(controllerParam.getContent()));
 		}
 		
 		if(StringUtils.isBlank(title)) {

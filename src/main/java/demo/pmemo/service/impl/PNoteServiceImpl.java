@@ -42,7 +42,7 @@ public class PNoteServiceImpl extends ArticleCommonService implements PNoteServi
 	public CommonResult editPNote(EditPNoteDTO dto) {
 		CommonResult r = new CommonResult();
 
-		if (StringUtils.isNotBlank(dto.getContent())) {
+		if (StringUtils.isNotBlank(dto.getContent()) && !isBigUser()) {
 			dto.setContent(sanitize(dto.getContent()));
 		}
 
@@ -147,24 +147,15 @@ public class PNoteServiceImpl extends ArticleCommonService implements PNoteServi
 	@Override
 	public ModelAndView readNote() {
 		ModelAndView v = new ModelAndView("pNoteJSP/createPNote");
+		PNoteVO vo = new PNoteVO();
 
 		Long userId = baseUtilCustom.getUserId();
-
-		PNoteExample example = new PNoteExample();
-		example.createCriteria().andUserIdEqualTo(userId);
-		List<PNote> poList = noteMapper.selectByExample(example);
-		if (poList == null || poList.isEmpty()) {
-			return v;
-		}
-
-		PNote po = poList.get(0);
-		if (po == null || StringUtils.isBlank(po.getPath())) {
-			return v;
-		}
+		PNote po = findPNote(userId);
 		
-		String content = ioUtil.getStringFromFile(po.getPath());
-		PNoteVO vo = new PNoteVO();
-		vo.setContent(content);
+		if(!StringUtils.isBlank(po.getPath())) {
+			String content = ioUtil.getStringFromFile(po.getPath());
+			vo.setContent(content);
+		}
 		
 		v.addObject("noteVO", vo);
 		

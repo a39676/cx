@@ -16,6 +16,7 @@ public class TextFilterImpl extends CommonService implements TextFilter {
 			    .allowElements("a").allowUrlProtocols("https").allowAttributes("href").onElements("a").requireRelNofollowOnLinks()
 			    .allowElements("img").allowAttributes("src").onElements("img")
 			    .allowElements("span").allowStyling()
+			    .allowElements("p").allowStyling()
 			    .toFactory();
 		return policy;
 	}

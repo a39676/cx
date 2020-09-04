@@ -12,6 +12,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
@@ -23,6 +24,7 @@ import demo.pmemo.pojo.constant.PMemoConstant;
 import demo.pmemo.pojo.dto.EditPNoteDTO;
 import demo.pmemo.pojo.po.PNote;
 import demo.pmemo.pojo.po.PNoteExample;
+import demo.pmemo.pojo.vo.PNoteVO;
 import demo.pmemo.service.PNoteService;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -39,32 +41,32 @@ public class PNoteServiceImpl extends ArticleCommonService implements PNoteServi
 	@Override
 	public CommonResult editPNote(EditPNoteDTO dto) {
 		CommonResult r = new CommonResult();
-		
-		if(StringUtils.isNotBlank(dto.getContent())) {
+
+		if (StringUtils.isNotBlank(dto.getContent())) {
 			dto.setContent(sanitize(dto.getContent()));
 		}
-		
+
 		Long userId = baseUtilCustom.getUserId();
 		PNote po = findPNote(userId);
-		
+
 		boolean createNewFlag = (po.getPath() == null);
-		if(createNewFlag) {
+		if (createNewFlag) {
 			po.setPath(getPNoteStorePrefixPath() + "/" + snowFlake.getNextId());
 		}
-		
+
 		try {
 			ArticleFileSaveResult pNoteSaveResult = editPNote(po.getPath(), sanitize(dto.getContent()));
-			if(pNoteSaveResult.isFail()) {
+			if (pNoteSaveResult.isFail()) {
 				r.addMessage(pNoteSaveResult.getMessage());
 				return r;
 			}
-			
+
 		} catch (IOException e) {
 			r.addMessage("pNote save error");
 			return r;
 		}
-		
-		if(createNewFlag) {
+
+		if (createNewFlag) {
 			po.setEditCount(0);
 			noteMapper.insertSelective(po);
 		} else {
@@ -73,10 +75,11 @@ public class PNoteServiceImpl extends ArticleCommonService implements PNoteServi
 			noteMapper.updateByPrimaryKeySelective(po);
 		}
 		
+		r.setMessage("note updated");
 		r.setIsSuccess();
 		return r;
 	}
-	
+
 	private ArticleFileSaveResult editPNote(String finalFilePath, String content) throws IOException {
 		content = sanitize(content);
 		String storePrefixPath = getPNoteStorePrefixPath();
@@ -89,25 +92,25 @@ public class PNoteServiceImpl extends ArticleCommonService implements PNoteServi
 				return result;
 			}
 		}
-		
+
 		Element doc = Jsoup.parse(content);
-        Elements imgs = doc.select("img[src]");
-        /* 解决如果文章内有本地上传的图片, 转到服务器硬盘保存, 并提供 url 访问, */
-        for(Element s : imgs) {
-        	s.attr("src", articleService.imgSrcHandler(s.attr("src")));
-        }
-        
-        content = doc.toString();
-        
+		Elements imgs = doc.select("img[src]");
+		/* 解决如果文章内有本地上传的图片, 转到服务器硬盘保存, 并提供 url 访问, */
+		for (Element s : imgs) {
+			s.attr("src", articleService.imgSrcHandler(s.attr("src")));
+		}
+
+		content = doc.toString();
+
 		Long maxNoteLength = PMemoConstant.MEMO_MAX_SIZE;
-		
+
 		if (content.length() > maxNoteLength) {
 			result.failWithMessage("note too long");
 			return result;
 		}
 
 		StringBuffer sb = new StringBuffer();
-		
+
 		sb.append(content);
 
 		ioUtil.byteToFile(sb.toString().getBytes(StandardCharsets.UTF_8), finalFilePath);
@@ -117,28 +120,55 @@ public class PNoteServiceImpl extends ArticleCommonService implements PNoteServi
 		result.setIsSuccess();
 		return result;
 	}
-	
+
 	private String getPNoteStorePrefixPath() {
-		if(isWindows()) {
+		if (isWindows()) {
 			return PMemoConstant.P_NOTE_SAVING_FOLDER;
 		} else {
 			return "d:/" + PMemoConstant.P_NOTE_SAVING_FOLDER;
 		}
 	}
-	
+
 	private PNote findPNote(Long userId) {
 		PNoteExample example = new PNoteExample();
 		example.createCriteria().andUserIdEqualTo(userId);
 		List<PNote> poList = noteMapper.selectByExample(example);
-		if(poList == null || poList.isEmpty()) {
-			return poList.get(0);
-		} else {
+		if (poList == null || poList.isEmpty()) {
 			PNote po = new PNote();
 			po.setId(snowFlake.getNextId());
 			po.setUserId(userId);
 			
 			return po;
+		} else {
+			return poList.get(0);
 		}
 	}
-	
+
+	@Override
+	public ModelAndView readNote() {
+		ModelAndView v = new ModelAndView("pNoteJSP/createPNote");
+
+		Long userId = baseUtilCustom.getUserId();
+
+		PNoteExample example = new PNoteExample();
+		example.createCriteria().andUserIdEqualTo(userId);
+		List<PNote> poList = noteMapper.selectByExample(example);
+		if (poList == null || poList.isEmpty()) {
+			return v;
+		}
+
+		PNote po = poList.get(0);
+		if (po == null || StringUtils.isBlank(po.getPath())) {
+			return v;
+		}
+		
+		String content = ioUtil.getStringFromFile(po.getPath());
+		PNoteVO vo = new PNoteVO();
+		vo.setContent(content);
+		
+		v.addObject("noteVO", vo);
+		
+		return v;
+
+	}
 }

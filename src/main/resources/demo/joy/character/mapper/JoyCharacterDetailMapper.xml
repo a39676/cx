@@ -3,8 +3,6 @@
 <mapper namespace="demo.joy.character.mapper.JoyCharacterDetailMapper">
   <resultMap id="BaseResultMap" type="demo.joy.character.pojo.po.JoyCharacterDetail">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="scene_id" jdbcType="BIGINT" property="sceneId" />
-    <result column="scene_owner_id" jdbcType="BIGINT" property="sceneOwnerId" />
     <result column="character_level" jdbcType="INTEGER" property="characterLevel" />
     <result column="character_exp" jdbcType="INTEGER" property="characterExp" />
     <result column="character_img_path" jdbcType="CHAR" property="characterImgPath" />
@@ -71,8 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, scene_id, scene_owner_id, character_level, character_exp, character_img_path, 
-    edit_time, create_time, is_delete
+    id, character_level, character_exp, character_img_path, edit_time, create_time, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.joy.character.pojo.po.JoyCharacterDetailExample" resultMap="BaseResultMap">
     select
@@ -105,26 +102,18 @@
     </if>
   </delete>
   <insert id="insert" parameterType="demo.joy.character.pojo.po.JoyCharacterDetail">
-    insert into joy_character_detail (id, scene_id, scene_owner_id, 
-      character_level, character_exp, character_img_path, 
-      edit_time, create_time, is_delete
-      )
-    values (#{id,jdbcType=BIGINT}, #{sceneId,jdbcType=BIGINT}, #{sceneOwnerId,jdbcType=BIGINT}, 
-      #{characterLevel,jdbcType=INTEGER}, #{characterExp,jdbcType=INTEGER}, #{characterImgPath,jdbcType=CHAR}, 
-      #{editTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
-      )
+    insert into joy_character_detail (id, character_level, character_exp, 
+      character_img_path, edit_time, create_time, 
+      is_delete)
+    values (#{id,jdbcType=BIGINT}, #{characterLevel,jdbcType=INTEGER}, #{characterExp,jdbcType=INTEGER}, 
+      #{characterImgPath,jdbcType=CHAR}, #{editTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{isDelete,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="demo.joy.character.pojo.po.JoyCharacterDetail">
     insert into joy_character_detail
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
-      </if>
-      <if test="sceneId != null">
-        scene_id,
-      </if>
-      <if test="sceneOwnerId != null">
-        scene_owner_id,
       </if>
       <if test="characterLevel != null">
         character_level,
@@ -148,12 +137,6 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=BIGINT},
-      </if>
-      <if test="sceneId != null">
-        #{sceneId,jdbcType=BIGINT},
-      </if>
-      <if test="sceneOwnerId != null">
-        #{sceneOwnerId,jdbcType=BIGINT},
       </if>
       <if test="characterLevel != null">
         #{characterLevel,jdbcType=INTEGER},
@@ -187,12 +170,6 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.sceneId != null">
-        scene_id = #{record.sceneId,jdbcType=BIGINT},
-      </if>
-      <if test="record.sceneOwnerId != null">
-        scene_owner_id = #{record.sceneOwnerId,jdbcType=BIGINT},
-      </if>
       <if test="record.characterLevel != null">
         character_level = #{record.characterLevel,jdbcType=INTEGER},
       </if>
@@ -219,8 +196,6 @@
   <update id="updateByExample" parameterType="map">
     update joy_character_detail
     set id = #{record.id,jdbcType=BIGINT},
-      scene_id = #{record.sceneId,jdbcType=BIGINT},
-      scene_owner_id = #{record.sceneOwnerId,jdbcType=BIGINT},
       character_level = #{record.characterLevel,jdbcType=INTEGER},
       character_exp = #{record.characterExp,jdbcType=INTEGER},
       character_img_path = #{record.characterImgPath,jdbcType=CHAR},
@@ -234,12 +209,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="demo.joy.character.pojo.po.JoyCharacterDetail">
     update joy_character_detail
     <set>
-      <if test="sceneId != null">
-        scene_id = #{sceneId,jdbcType=BIGINT},
-      </if>
-      <if test="sceneOwnerId != null">
-        scene_owner_id = #{sceneOwnerId,jdbcType=BIGINT},
-      </if>
       <if test="characterLevel != null">
         character_level = #{characterLevel,jdbcType=INTEGER},
       </if>
@@ -263,9 +232,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="demo.joy.character.pojo.po.JoyCharacterDetail">
     update joy_character_detail
-    set scene_id = #{sceneId,jdbcType=BIGINT},
-      scene_owner_id = #{sceneOwnerId,jdbcType=BIGINT},
-      character_level = #{characterLevel,jdbcType=INTEGER},
+    set character_level = #{characterLevel,jdbcType=INTEGER},
       character_exp = #{characterExp,jdbcType=INTEGER},
       character_img_path = #{characterImgPath,jdbcType=CHAR},
       edit_time = #{editTime,jdbcType=TIMESTAMP},

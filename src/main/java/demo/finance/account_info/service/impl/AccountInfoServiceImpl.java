@@ -769,7 +769,8 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 				+ po.getRemark() + po.getIsDelete() + po.getCreateTime();
 	}
     
-    private boolean checkMarker(AccountInfoMarker marker, AccountInfo accountInfo) {
+    @SuppressWarnings("unused")
+	private boolean checkMarker(AccountInfoMarker marker, AccountInfo accountInfo) {
         
         if(StringUtils.isBlank(marker.getMarker())) {
             return false;
@@ -778,7 +779,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
         return marker.getMarker().equals(createAccountInfoMarker(accountInfo));
     }
     
-    private boolean checkVaildDate(AccountInfo accountInfo) {
+	private boolean checkVaildDate(AccountInfo accountInfo) {
         
         if(accountInfo.getVaildDate() == null) {
             return false;
@@ -792,6 +793,11 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
     }
     
     private boolean accountInfoBaseVerifier(AccountInfoMarker marker, AccountInfo accountInfo) {
-        return checkVaildDate(accountInfo) && checkMarker(marker, accountInfo);
+    	/*
+    	 * 2020-09-07
+    	 * 基本上只有私用 暂时搁置账户验证
+    	 */
+//        return checkVaildDate(accountInfo) && checkMarker(marker, accountInfo);
+    	return checkVaildDate(accountInfo);
     }
 }

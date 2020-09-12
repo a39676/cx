@@ -5,10 +5,6 @@ import java.time.LocalDateTime;
 public class JoyCharacterDetail {
     private Long id;
 
-    private Long sceneId;
-
-    private Long sceneOwnerId;
-
     private Integer characterLevel;
 
     private Integer characterExp;
@@ -27,22 +23,6 @@ public class JoyCharacterDetail {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getSceneId() {
-        return sceneId;
-    }
-
-    public void setSceneId(Long sceneId) {
-        this.sceneId = sceneId;
-    }
-
-    public Long getSceneOwnerId() {
-        return sceneOwnerId;
-    }
-
-    public void setSceneOwnerId(Long sceneOwnerId) {
-        this.sceneOwnerId = sceneOwnerId;
     }
 
     public Integer getCharacterLevel() {

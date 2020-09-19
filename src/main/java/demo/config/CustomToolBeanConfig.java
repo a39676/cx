@@ -67,7 +67,6 @@ public class CustomToolBeanConfig {
 	@Scope("singleton")
 	public Tess getTess() {
 		Tess t = new Tess();
-		t.initITesseract(false);
 		return t;
 	}
 }

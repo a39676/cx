@@ -34,5 +34,4 @@ public class OcrController extends CommonController {
 		return ocrService.ocrImg(file);
 	}
 	
-//	TODO  reInitCore
 }

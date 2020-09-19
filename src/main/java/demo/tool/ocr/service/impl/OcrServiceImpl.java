@@ -87,8 +87,4 @@ public class OcrServiceImpl extends CommonService implements OcrService {
 		return r;
 	}
 	
-	@Override
-	public void reInitCore() {
-		tess.initITesseract(true);
-	}
 }

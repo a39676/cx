@@ -12,4 +12,6 @@ public interface OcrService {
 
 	CommonResult ocrImg(MultipartFile file);
 
+	void reInitCore();
+
 }

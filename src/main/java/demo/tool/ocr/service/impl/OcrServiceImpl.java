@@ -86,4 +86,9 @@ public class OcrServiceImpl extends CommonService implements OcrService {
 		r.setIsSuccess();
 		return r;
 	}
+	
+	@Override
+	public void reInitCore() {
+		tess.initITesseract(true);
+	}
 }

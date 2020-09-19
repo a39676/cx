@@ -16,7 +16,10 @@ public class Tess {
 
 	private ITesseract instance = null;
 
-	public void initITesseract() {
+	public void initITesseract(boolean reInit) {
+		if(!reInit || instance != null) {
+			return;
+		}
 		String dataPath = null;
 		String osName = System.getProperty("os.name");
 		if (osName != null && osName.toLowerCase().contains("linux")) {
@@ -39,7 +42,7 @@ public class Tess {
 
 	public ITesseract getITesseract() {
 		if (instance == null) {
-			initITesseract();
+			initITesseract(false);
 			if (instance == null) {
 				throw new RuntimeException("please initITesseract before use");
 			}
@@ -53,7 +56,7 @@ public class Tess {
 		try {
 			result = getITesseract().doOCR(imageFile);
 		} catch (TesseractException e) {
-			System.err.println(e.getMessage());
+//			System.err.println(e.getMessage());
 		}
 		return result;
 	}

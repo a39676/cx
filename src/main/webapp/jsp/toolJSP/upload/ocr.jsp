@@ -12,11 +12,8 @@
 <body>
   <table>
     <tr>
-      <td><label>最大上传5m</label></td>
+      <td><label>最大上传30m</label></td>
       <td><input type="file" id="fileUpload" /></td>
-    </tr>
-    <tr>
-      <td><label>存放路径 : ${storePath}</label></td>
     </tr>
     <tr>
       <td><button id="uploadButton">上传</button></td>
@@ -39,7 +36,7 @@
       var uploadFile = new FormData();
       uploadFile.append("file", fileUpload.files[0]);
       
-      var url = "/uploadPri/${uploadUrl}";
+      var url = "/ocr/uploadImg";
 
       $.ajax({  
         type : "POST",  
@@ -53,11 +50,12 @@
         beforeSend: function(xhr) {
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
-        success:function(datas){  
-          $("#uploadResultMessage").html(datas)
+        success:function(datas){
+          console.log(datas);
+          $("#uploadResultMessage").html(datas.message);
         },  
         error: function(datas) {  
-          $("#uploadResultMessage").html(datas.responseText)
+          $("#uploadResultMessage").html(datas.message);
         }  
       });  
     };

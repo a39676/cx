@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.baseCommon.controller.CommonController;
 import demo.tool.ocr.pojo.constant.OcrUrl;
+import demo.tool.ocr.pojo.constant.OcrView;
 import demo.tool.ocr.service.OcrService;
 
 @Controller
@@ -24,8 +25,7 @@ public class OcrController extends CommonController {
 
 	@GetMapping(value = OcrUrl.UPLOAD_IMG)
 	public ModelAndView ocrView() {
-//		TODO
-		return new ModelAndView("");
+		return new ModelAndView(OcrView.OCR_VIEW);
 	}
 
 	@PostMapping(value = OcrUrl.UPLOAD_IMG)
@@ -33,4 +33,6 @@ public class OcrController extends CommonController {
 	public CommonResult ocr(@RequestParam("file") MultipartFile file) {
 		return ocrService.ocrImg(file);
 	}
+	
+//	TODO  reInitCore
 }

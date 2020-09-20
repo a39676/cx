@@ -11,10 +11,13 @@ import java.time.ZoneId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.baseCommon.service.CommonService;
 import demo.config.costom_component.Tess;
+import demo.tool.ocr.pojo.constant.OcrView;
+import demo.tool.ocr.pojo.type.TessLanguageType;
 import demo.tool.ocr.service.OcrService;
 import demo.tool.pojo.result.UploadResult;
 import demo.tool.service.UploadService;
@@ -35,6 +38,13 @@ public class OcrServiceImpl extends CommonService implements OcrService {
 		} else {
 			return "d:/home/u2/ocrImg";
 		}
+	}
+	
+	@Override
+	public ModelAndView ocrView() {
+		ModelAndView view = new ModelAndView(OcrView.OCR_VIEW);
+		view.addObject("languageTypeList", TessLanguageType.values());
+		return view;
 	}
 
 	@Override
@@ -60,7 +70,7 @@ public class OcrServiceImpl extends CommonService implements OcrService {
 	}
 
 	@Override
-	public CommonResult ocrImg(MultipartFile file) {
+	public CommonResult ocrImg(MultipartFile file, String language) {
 		CommonResult r = new CommonResult();
 
 		StringUtilCustom stringUtil = new StringUtilCustom();
@@ -80,7 +90,8 @@ public class OcrServiceImpl extends CommonService implements OcrService {
 
 		String imgPath = uploadResult.getUploadSuccessFileNameList().get(0);
 
-		String ocrResultStr = tess.ocr(imgPath);
+		TessLanguageType languageType = TessLanguageType.getType(language);
+		String ocrResultStr = tess.ocr(imgPath, languageType);
 
 		r.setMessage(ocrResultStr);
 		r.setIsSuccess();

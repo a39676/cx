@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.baseCommon.service.CommonService;
 import demo.tool.pojo.constant.ToolPathConstant;
 import demo.tool.pojo.result.UploadResult;
 import demo.tool.service.UploadService;
@@ -26,7 +27,7 @@ import toolPack.ioHandle.FileUtilCustom;
 import toolPack.stringHandle.StringUtilCustom;
 
 @Service
-public class UploadServiceImpl implements UploadService {
+public class UploadServiceImpl extends CommonService implements UploadService {
 
 	@Autowired
 	private FileUtilCustom ioUtil;
@@ -149,7 +150,8 @@ public class UploadServiceImpl implements UploadService {
 		}
 
 		try {
-			Path copyLocation = Paths.get(storeFolder + File.separator + file.getOriginalFilename());
+			String fileSuffixName = stringUtil.getFileSuffixName(file.getOriginalFilename());
+			Path copyLocation = Paths.get(storeFolder + File.separator + String.valueOf(snowFlake.getNextId()) + "." + fileSuffixName);
 			Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
 			r.addUploadSuccessFileName(copyLocation.toString());
 			r.setIsSuccess();

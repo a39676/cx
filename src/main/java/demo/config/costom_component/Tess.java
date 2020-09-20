@@ -37,15 +37,13 @@ public class Tess {
 		return instance;
 	}
 	
-	@SuppressWarnings("unused")
 	public ITesseract getITesseractV2(boolean reInit, TessLanguageType languageType) {
 		if (languageType == null) {
 			languageType = TessLanguageType.ENG;
 		}
 		
 		ITesseract result = tesseractInstanceMap.get(languageType);
-//		TODO need test
-		if(reInit = true || result == null) {
+		if(reInit == true || result == null) {
 			result = initITesseract(languageType);
 			tesseractInstanceMap.put(languageType, result);
 		}

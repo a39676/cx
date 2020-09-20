@@ -46,7 +46,7 @@
 
     function getFilePathDetail() {
       
-      var url = "${pageContext.request.contextPath}/fakeFTP/getFilePathDetail";
+      var url = "/fakeFTP/getFilePathDetail";
       var filePath = $("input[name='folderPathInput']").val();
       var jsonOutput = {
         filePath:filePath
@@ -83,7 +83,7 @@
       uploadForm.append("file", fileUpload.files[0]);
       uploadForm.append("savePath", $("input[name='folderPathInput']").val());
       
-      var url = "${pageContext.request.contextPath}/fakeFTP/fakeFTPUpload";
+      var url = "/fakeFTP/fakeFTPUpload";
 
       $.ajax({  
         type : "POST",  

@@ -123,9 +123,9 @@ public class PNoteServiceImpl extends ArticleCommonService implements PNoteServi
 
 	private String getPNoteStorePrefixPath() {
 		if (isWindows()) {
-			return PMemoConstant.P_NOTE_SAVING_FOLDER;
-		} else {
 			return "d:/" + PMemoConstant.P_NOTE_SAVING_FOLDER;
+		} else {
+			return PMemoConstant.P_NOTE_SAVING_FOLDER;
 		}
 	}
 

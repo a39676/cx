@@ -1,5 +1,5 @@
 ocr
-	待增加上传图片 + 指定语言
+	待增加定时删除过期图片
 
 贵金属价格爬取任务
 	PreciousMetalCommonService.isPreciousMetalsTransactionTime

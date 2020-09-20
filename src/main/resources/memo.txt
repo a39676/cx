@@ -1,3 +1,6 @@
+ocr
+	待增加上传图片 + 指定语言
+
 贵金属价格爬取任务
 	PreciousMetalCommonService.isPreciousMetalsTransactionTime
 		未加入美国节假日

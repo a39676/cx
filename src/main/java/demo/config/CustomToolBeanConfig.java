@@ -1,10 +1,12 @@
 package demo.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import demo.config.costom_component.BaseUtilCustom;
 import demo.config.costom_component.SnowFlake;
+import demo.config.costom_component.Tess;
 import mail.service.MailToolService;
 import toolPack.dateTimeHandle.DateHandler;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
@@ -59,5 +61,12 @@ public class CustomToolBeanConfig {
 	@Bean 
 	public MailToolService getMailToolService() {
 		return new MailToolService();
+	}
+	
+	@Bean
+	@Scope("singleton")
+	public Tess getTess() {
+		Tess t = new Tess();
+		return t;
 	}
 }

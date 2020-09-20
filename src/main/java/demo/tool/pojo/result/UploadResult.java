@@ -1,5 +1,6 @@
 package demo.tool.pojo.result;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,6 +30,13 @@ public class UploadResult extends CommonResultCX {
 		this.uploadSuccessFileNameList = uploadSuccessFileNameList;
 	}
 
+	public void addUploadSuccessFileName(String uploadSuccessFilename) {
+		if(this.uploadSuccessFileNameList == null) {
+			this.uploadSuccessFileNameList = new ArrayList<>();
+		}
+		this.uploadSuccessFileNameList.add(uploadSuccessFilename);
+	}
+	
 	public List<String> getUploadFailFileNameList() {
 		return uploadFailFileNameList;
 	}

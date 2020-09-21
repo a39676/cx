@@ -48,7 +48,7 @@ public class OcrServiceImpl extends CommonService implements OcrService {
 	}
 
 	@Override
-	public void cleanOldOcrImg() throws IOException {
+	public void cleanOldOcrImg() {
 		File storeFolder = new File(getOcrImgTmpStorePath());
 		if (!storeFolder.exists()) {
 			return;
@@ -60,7 +60,11 @@ public class OcrServiceImpl extends CommonService implements OcrService {
 		for (File f : storeFolder.listFiles()) {
 			if(f.isFile()) {
 				p = Path.of(f.getAbsolutePath());
-				attr = Files.readAttributes(p, BasicFileAttributes.class);
+				try {
+					attr = Files.readAttributes(p, BasicFileAttributes.class);
+				} catch (IOException e) {
+					continue;
+				}
 				fileCreatetime = LocalDateTime.ofInstant(attr.creationTime().toInstant(), ZoneId.systemDefault());
 				if (thirtyMinsAgo.isAfter(fileCreatetime)) {
 					f.deleteOnExit();

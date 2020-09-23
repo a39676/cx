@@ -31,6 +31,7 @@ import demo.finance.account_holder.pojo.po.AccountHolder;
 import demo.finance.account_info.pojo.bo.AccountInfoWithBankInfo;
 import demo.finance.account_info.pojo.constant.AccountInfoView;
 import demo.finance.account_info.pojo.constant.AccountUrl;
+import demo.finance.account_info.pojo.dto.ModifyValidDateDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.AccountInfoDetailQueryDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.AccountInfoRegistDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.AccountNumberDuplicateCheckDTO;
@@ -50,7 +51,6 @@ import demo.finance.bank.pojo.bo.BankInfoCustomBO;
 import demo.finance.credit_bill.controller.CreditBillController;
 import demo.finance.credit_bill.pojo.BillInfoCustomDetail;
 import demo.finance.trading.pojo.constant.TradingViews;
-import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping(value = AccountUrl.accountInfoRoot)
@@ -244,36 +244,9 @@ public class AccountInfoController extends CommonController {
 	}
 	
 	@PostMapping(value = AccountUrl.modifyVaildDate)
-	public void modifyVaildDate(@RequestBody String data, HttpServletResponse response) throws IOException {
-		JSONObject jsonInput = null;
-		JSONObject jsonOutput;
-		
-		String newVaildDate = null;
-		String accountNumber = null;
-		CommonResult result = new CommonResult();
-		
-		try {
-			jsonInput = JSONObject.fromObject(data);
-			newVaildDate = jsonInput.getString("newVaildDate");
-			accountNumber = jsonInput.getString("accountNumber");
-		} catch (Exception e) {
-			result.failWithMessage("something wrong");
-			jsonOutput = JSONObject.fromObject(result);
-			response.getWriter().print(jsonOutput);
-			return ;
-		}
-		
-		int modifyCount = accountInfoService.modifyAccountInfoVaildDate(newVaildDate, accountNumber, baseUtilCustom.hasAdminRole());
-		
-		if (modifyCount == 1) {
-			result.successWithMessage("modify vaild date to: " + newVaildDate);
-		} else {
-			result.failWithMessage("something wrong");
-		}
-		
-		jsonOutput = JSONObject.fromObject(result);
-		response.getWriter().print(jsonOutput);
-		return;
+	@ResponseBody
+	public CommonResult modifyVaildDate(@RequestBody ModifyValidDateDTO dto) throws Exception {
+		return accountInfoService.modifyAccountInfoVaildDate(dto);
 	}
 	
 	@PostMapping(value = AccountUrl.modifyCreditsQuota)

@@ -8,7 +8,7 @@
 <%@page session="true"%>
 <html>
 <head>
-<%@ include file="../baseElementJSP/normalHeader.jsp" %>
+<%@ include file="../../baseElementJSP/normalHeader.jsp" %>
 </head>
 <body>
   <h1>Message : ${message}</h1>
@@ -31,7 +31,7 @@
 </body>
 
 <footer>
-  <%@ include file="../baseElementJSP/normalJSPart.jsp" %>
+  <%@ include file="../../baseElementJSP/normalJSPart.jsp" %>
   <script type="text/javascript">
 
     $(document).ready(function() {

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +26,7 @@ import demo.finance.account_info.mapper.AccountInfoMarkerCustomMapper;
 import demo.finance.account_info.pojo.bo.AccountInfoWithBankInfo;
 import demo.finance.account_info.pojo.bo.AccountNumberWithAliasBO;
 import demo.finance.account_info.pojo.constant.AccountInfoConstant;
+import demo.finance.account_info.pojo.dto.ModifyValidDateDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.AccountInfoRegistDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.AccountNumberDuplicateCheckDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.FindAccountInfoByConditionDTO;
@@ -571,27 +572,6 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	
 	@Override
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
-	public int modifyAccountInfoVaildDate(String vaildDateString, String accountNumber, boolean isAdmin) {
-		if(!checkAccountNumberBelongUser(accountNumber) || !dateHandler.isDateValid(vaildDateString)){
-			return 0;
-		}
-		
-		Date newVaildDate = dateHandler.stringToDateUnkonwFormat(vaildDateString);
-		if(newVaildDate.before(new Date()) && !isAdmin) {
-			return 0;
-		}
-		
-		
-		int modifyCount = accountInfoCustomMapper.modifyAccountInfoVaildDate(newVaildDate, accountNumber);
-		if(modifyCount == 1) {
-			updateAccountMarker(accountNumber);
-		}
-		
-		return modifyCount;
-	}
-	
-	@Override
-	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 	public int modifyAccountInfoTemproraryCreditsVaildDate(String temproraryCreditsVaildDate, String accountNumber, boolean isAdmin) {
 		if(!checkAccountNumberBelongUser(accountNumber) || !dateHandler.isDateValid(temproraryCreditsVaildDate)){
 			return 0;
@@ -799,5 +779,39 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
     	 */
 //        return checkVaildDate(accountInfo) && checkMarker(marker, accountInfo);
     	return checkVaildDate(accountInfo);
+    }
+    
+    @Override
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public CommonResult modifyAccountInfoVaildDate(ModifyValidDateDTO dto) throws Exception {
+		CommonResult r = new CommonResult();
+		
+		if(StringUtils.isAnyBlank(dto.getAccountNumber(), dto.getNewVaildDate())) {
+			r.failWithMessage("null param");
+			return r;
+		}
+		
+		if(!checkAccountNumberBelongUser(dto.getAccountNumber()) || !dateHandler.isDateValid(dto.getNewVaildDate())){
+			r.failWithMessage("param error");
+			return r;
+		}
+		
+		Date newVaildDate = dateHandler.stringToDateUnkonwFormat(dto.getNewVaildDate());
+		if(newVaildDate.before(new Date()) && !isBigUser()) {
+			r.failWithMessage("date error");
+			return r;
+		}
+		
+		
+		int modifyCount = accountInfoCustomMapper.modifyAccountInfoVaildDate(newVaildDate, dto.getAccountNumber());
+		if(modifyCount == 1) {
+			updateAccountMarker(dto.getAccountNumber());
+			r.successWithMessage("modify vaild date to: " + dto.getNewVaildDate());
+		} else {
+			throw new Exception("");
+		}
+		
+		return r;
+		
     }
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.baseCommon.pojo.result.CommonResultCX;
 import demo.finance.account_info.pojo.bo.AccountInfoWithBankInfo;
+import demo.finance.account_info.pojo.dto.ModifyValidDateDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.AccountInfoRegistDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.AccountNumberDuplicateCheckDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.FindAccountInfoByConditionDTO;
@@ -41,8 +42,6 @@ public interface AccountInfoService {
 	List<AccountInfoWithBankInfo> getAccountInfoWithBankInfoByHolderId(Long holderId);
 
 	List<AccountInfoWithBankInfo> getAccountInfoWithBankInfoByCondition(Long holderId, GetAccountListByConditionParam controllerParam);
-
-	int modifyAccountInfoVaildDate(String vaildDateString, String accountNumber, boolean isAdmin);
 
 	List<AccountInfo> getAllAffiliatedAccountByAffiliationId(String accountNumber);
 
@@ -90,5 +89,7 @@ public interface AccountInfoService {
 	List<AccountInfo> findAccountsByCondition(FindAccountInfoByConditionDTO dto);
 
 	CommonResultCX modifyCreditsQuota(ModifyCreditsQuotaDTO dto);
+
+	CommonResult modifyAccountInfoVaildDate(ModifyValidDateDTO dto) throws Exception;
 
 }

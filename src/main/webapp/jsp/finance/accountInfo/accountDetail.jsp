@@ -98,6 +98,7 @@
 
 
   function modifyVaildDate() {
+    console.log("modifyVaildDate");
     var $accountNumber = $("label[name='accountNumber']").attr("accountNumber");
     var $newVaildDate = $("input[name='modifyVaildDate']").val();
 
@@ -108,7 +109,7 @@
 
     $.ajax({               
       type: "POST",  
-      url: "${pageContext.request.contextPath}/accountInfo/modifyVaildDate",   
+      url: "/accountInfo/modifyVaildDate",   
       data: JSON.stringify(jsonOutput),
       dataType: 'json',
       contentType: "application/json",
@@ -125,8 +126,6 @@
         }
       }, 
       error:function(e){
-        // console.log("error");
-        // console.log(e);
       }
     });
 
@@ -165,8 +164,6 @@
         }
       }, 
       error:function(e){
-        // console.log("error");
-        // console.log(e);
       }
     });
 

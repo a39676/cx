@@ -141,8 +141,8 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 				j.put("isSuccess", "false");
 			}
 
-			String url = ServerHost.localHost10002 + AutoTestInteractionUrl.root
-					+ AutoTestInteractionUrl.findReportsByCondition;
+			String url = ServerHost.localHost10002 + AutoTestInteractionUrl.ROOT
+					+ AutoTestInteractionUrl.FIND_REPORTS_BY_CONDITION;
 			String response = String.valueOf(httpUtil.sendPostRestful(url, j.toString()));
 			return response;
 		} catch (Exception e) {
@@ -173,8 +173,8 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 		try {
 			JSONObject requestJson = JSONObject.fromObject(dto);
 
-			String url = ServerHost.localHost10002 + AutoTestInteractionUrl.root
-					+ AutoTestInteractionUrl.findReportByTestEventId;
+			String url = ServerHost.localHost10002 + AutoTestInteractionUrl.ROOT
+					+ AutoTestInteractionUrl.FIND_REPORT_BY_TEST_EVENT_ID;
 			String responseStr = String.valueOf(httpUtil.sendPostRestful(url, requestJson.toString()));
 
 			JSONObject responseJson = JSONObject.fromObject(responseStr);

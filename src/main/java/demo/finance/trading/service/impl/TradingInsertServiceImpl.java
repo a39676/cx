@@ -2,9 +2,7 @@ package demo.finance.trading.service.impl;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +13,8 @@ import demo.baseCommon.service.CommonService;
 import demo.finance.account_info.controller.AccountInfoController;
 import demo.finance.account_info.pojo.dto.controllerDTO.InsertNewTransationDTO;
 import demo.finance.account_info.pojo.po.AccountInfo;
-import demo.finance.trading.mapper.HolderCommonTransationCustomMapper;
 import demo.finance.trading.mapper.TradingRecorderMapper;
 import demo.finance.trading.mapper.TradingRecorderMarkerMapper;
-import demo.finance.trading.pojo.CommonTransationParties;
 import demo.finance.trading.pojo.po.TradingRecorder;
 import demo.finance.trading.pojo.po.TradingRecorderMarker;
 import demo.finance.trading.pojo.result.InsertTradingRecorderResult;
@@ -34,8 +30,6 @@ public class TradingInsertServiceImpl extends CommonService implements TradingIn
 	private TradingRecorderMapper tradingMapper;
 	@Autowired
 	private TradingRecorderMarkerMapper tradingMarkerMapper;
-	@Autowired
-	private HolderCommonTransationCustomMapper holderCommonTransationCustomMapper;
 	@Autowired
 	private FileUtilCustom ioUtil;
 
@@ -106,21 +100,6 @@ public class TradingInsertServiceImpl extends CommonService implements TradingIn
 		return tradingMapper.getTradingRecordById(tradingRecorderId);
 	}
 
-	@Override
-	public List<CommonTransationParties> getCurrentCommonTransation(Long holderId, Integer limit) {
-		if (limit == null) {
-			limit = 10;
-		}
-
-		List<CommonTransationParties> commonTransationList = holderCommonTransationCustomMapper
-				.getCurrentCommonTransation(holderId, limit);
-
-		if (commonTransationList == null) {
-			return new ArrayList<CommonTransationParties>();
-		} else {
-			return commonTransationList;
-		}
-	}
 
 	@Override
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)

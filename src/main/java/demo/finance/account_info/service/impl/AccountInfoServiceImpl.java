@@ -21,8 +21,8 @@ import demo.baseCommon.pojo.type.TransationType;
 import demo.baseCommon.service.CommonService;
 import demo.finance.account_holder.controller.AccountHolderController;
 import demo.finance.account_holder.pojo.po.AccountHolder;
-import demo.finance.account_info.mapper.AccountInfoCustomMapper;
-import demo.finance.account_info.mapper.AccountInfoMarkerCustomMapper;
+import demo.finance.account_info.mapper.AccountInfoMapper;
+import demo.finance.account_info.mapper.AccountInfoMarkerMapper;
 import demo.finance.account_info.pojo.bo.AccountInfoWithBankInfo;
 import demo.finance.account_info.pojo.bo.AccountNumberWithAliasBO;
 import demo.finance.account_info.pojo.constant.AccountInfoConstant;
@@ -53,9 +53,9 @@ import demo.finance.trading.pojo.result.InsertTradingRecorderResult;
 public class AccountInfoServiceImpl extends CommonService implements AccountInfoService {
 	
 	@Autowired
-	private AccountInfoCustomMapper accountInfoCustomMapper;
+	private AccountInfoMapper accountInfoMapper;
 	@Autowired
-	private AccountInfoMarkerCustomMapper accountInfoMarkerCustomMapper;
+	private AccountInfoMarkerMapper accountInfoMarkerMapper;
 
 	@Autowired
 	private TradingController tradingController;
@@ -132,12 +132,12 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 			if (statusFlag){
 				Long newAccountId = snowFlake.getNextId();
 				newAccount.setAccountId(newAccountId);
-				accountInfoCustomMapper.accountRegistration(newAccount);
+				accountInfoMapper.accountRegistration(newAccount);
 				
 				AccountInfoMarker marker = new AccountInfoMarker();
 				marker.setAccountId(newAccountId);
 				marker.setMarker(createAccountInfoMarker(newAccount));
-				accountInfoMarkerCustomMapper.insertCustom(marker);
+				accountInfoMarkerMapper.insertCustom(marker);
 				
 				result.setIsSuccess();
 				result.setAccountId(newAccountId);
@@ -161,7 +161,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	@Override
 	public AccountInfo getAccountInfoById(int id) {
 		try {
-			return accountInfoCustomMapper.getAcountInfoById(id);
+			return accountInfoMapper.getAcountInfoById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -183,7 +183,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 			
 		} else {
 			
-			List<String> accountNumberList = accountInfoCustomMapper.accountNumberDuplicateCheck(accountNumberInput);
+			List<String> accountNumberList = accountInfoMapper.accountNumberDuplicateCheck(accountNumberInput);
 			if (accountNumberList.isEmpty()) {
 				result.normalSuccess();
 			} else {
@@ -240,7 +240,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	
 	@Override
 	public List<AccountInfo> findByCondition(FindAccountInfoByConditionDTO dto) {
-		return accountInfoCustomMapper.findByCondition(dto);
+		return accountInfoMapper.findByCondition(dto);
 	}
 	
 	@Override
@@ -250,7 +250,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 			return new ArrayList<AccountInfo>();
 		}
 		dto.setAccountHolderId(holder.getAccountHolderId());
-		return accountInfoCustomMapper.findByCondition(dto);
+		return accountInfoMapper.findByCondition(dto);
 	}
 	
 	@Override
@@ -259,7 +259,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		mp.setHolderId(holderId);
 		mp.setBankId(cp.getBankId());
 		mp.setAccountType(cp.getAccountType());
-		List<AccountInfoWithBankInfo> accountInfoList = accountInfoCustomMapper.getAccountInfoWithBankInfo(mp);
+		List<AccountInfoWithBankInfo> accountInfoList = accountInfoMapper.getAccountInfoWithBankInfo(mp);
 		accountInfoList = accountUsedQuotaStatistics(accountInfoList);
 		return accountInfoList;
 	}
@@ -322,12 +322,12 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	
 	@Override
 	public String getMainAccountNum(int id) {
-		return accountInfoCustomMapper.getMainAccountNum(id);
+		return accountInfoMapper.getMainAccountNum(id);
 	}
 	
 	@Override
 	public boolean accountMarkerVerify(AccountInfo accountInfo) {
-		AccountInfoMarker marker = accountInfoMarkerCustomMapper.getMarkerByAccountId(accountInfo.getAccountId());
+		AccountInfoMarker marker = accountInfoMarkerMapper.getMarkerByAccountId(accountInfo.getAccountId());
 		if(marker == null) {
 			return false;
 		} 
@@ -349,7 +349,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 			return result;
 		}
 		
-		AccountInfo targetAccount = accountInfoCustomMapper.getAccountInfoByAccountNumber(accountNumber);
+		AccountInfo targetAccount = accountInfoMapper.getAccountInfoByAccountNumber(accountNumber);
 		if(null == targetAccount) {
 			result.failWithMessage("账号异常");
 			return result;
@@ -434,7 +434,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		conditionMap.put("accountNumber", accountNumber);
 		conditionMap.put("accountHolderId", String.valueOf(holderList.get(0).getAccountHolderId()));
 		
-		Integer result = accountInfoCustomMapper.checkAccountNumberBelongUser(conditionMap);
+		Integer result = accountInfoMapper.checkAccountNumberBelongUser(conditionMap);
 		if(result == 1) {
 			return true;
 		}
@@ -453,7 +453,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		conditionMap.put("accountTailNumber", accountTailNumber);
 		conditionMap.put("accountHolderId", String.valueOf(holderList.get(0).getAccountHolderId()));
 		
-		Integer result = accountInfoCustomMapper.checkAccountNumberBelongUser(conditionMap);
+		Integer result = accountInfoMapper.checkAccountNumberBelongUser(conditionMap);
 		if(result == 1) {
 			return true;
 		}
@@ -468,13 +468,13 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	@Override
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 	public int updateAccountMarker(String accountNumber) {
-		AccountInfo targetAccount = accountInfoCustomMapper.getAccountInfoByAccountNumber(accountNumber);
-		AccountInfoMarker marker = accountInfoMarkerCustomMapper.getMarkerByAccountId(targetAccount.getAccountId());
+		AccountInfo targetAccount = accountInfoMapper.getAccountInfoByAccountNumber(accountNumber);
+		AccountInfoMarker marker = accountInfoMarkerMapper.getMarkerByAccountId(targetAccount.getAccountId());
 		if(targetAccount == null || marker == null) {
 			return 0;
 		}
 		marker.setMarker(createAccountInfoMarker(targetAccount));
-		return accountInfoMarkerCustomMapper.updateAccountMarker(marker);
+		return accountInfoMarkerMapper.updateAccountMarker(marker);
 	}
 
 	@Override
@@ -484,7 +484,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		}
 		GetAccountInfoWithConditionParam mapperParam = new GetAccountInfoWithConditionParam();
 		mapperParam.setAccountNumber(accountNumber);
-		List<AccountInfoWithBankInfo> accountList = accountInfoCustomMapper.getAccountInfoWithBankInfo(mapperParam);
+		List<AccountInfoWithBankInfo> accountList = accountInfoMapper.getAccountInfoWithBankInfo(mapperParam);
 		
 		if(accountList != null && !accountList.isEmpty()) {
 			return accountList.get(0);
@@ -500,7 +500,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		}
 		GetAccountInfoWithConditionParam mapperParam = new GetAccountInfoWithConditionParam();
 		mapperParam.setHolderId(0L + holderId);
-		return accountInfoCustomMapper.getAccountInfoWithBankInfo(mapperParam);
+		return accountInfoMapper.getAccountInfoWithBankInfo(mapperParam);
 	}
 	
 	
@@ -586,7 +586,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		targetAccount.setTemproraryCreditsVaildDate(newTemproraryCreditsVaildDate);
 		targetAccount.setAccountNumber(accountNumber);
 		
-		int modifyCount = accountInfoCustomMapper.modifyAccountInfo(targetAccount);
+		int modifyCount = accountInfoMapper.modifyAccountInfo(targetAccount);
 		if(modifyCount == 1) {
 			updateAccountInfoMarker(targetAccount);
 		}
@@ -608,7 +608,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		}
 		targetAccount.setCreditsQuota(dto.getNewCreditsQuota().setScale(2, RoundingMode.HALF_UP));
 		
-		int modifyCount = accountInfoCustomMapper.modifyAccountInfo(targetAccount);
+		int modifyCount = accountInfoMapper.modifyAccountInfo(targetAccount);
 		
 		if(modifyCount == 1) {
 			if(updateAccountInfoMarker(targetAccount)) {
@@ -633,7 +633,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		targetAccount.setAccountNumber(accountNumber);
 		targetAccount.setTemproraryCreditsQuota(new BigDecimal(newTemproraryCreditsQuota));
 		
-		int modifyCount = accountInfoCustomMapper.modifyAccountInfo(targetAccount);
+		int modifyCount = accountInfoMapper.modifyAccountInfo(targetAccount);
 		if(modifyCount == 1) {
 			updateAccountInfoMarker(targetAccount);
 		}
@@ -648,12 +648,12 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 			return null;
 		} 
 		
-		AccountInfo masterAccount = accountInfoCustomMapper.getAccountInfoByAccountNumber(accountNumber);
+		AccountInfo masterAccount = accountInfoMapper.getAccountInfoByAccountNumber(accountNumber);
 		
 		if(masterAccount == null) {
 			return null;
 		} else {
-			return accountInfoCustomMapper.getAllAffiliatedAccountByAffiliationId(masterAccount.getAccountAffiliation());
+			return accountInfoMapper.getAllAffiliatedAccountByAffiliationId(masterAccount.getAccountAffiliation());
 		}
 		
 	}
@@ -661,7 +661,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	@Override
 	public List<AccountInfo> getAllAffiliatedAccountByAffiliationId(Long accountAffiliatioId) {
 		
-		AccountInfo masterAccount = accountInfoCustomMapper.getAcountInfoById(accountAffiliatioId);
+		AccountInfo masterAccount = accountInfoMapper.getAcountInfoById(accountAffiliatioId);
 		
 		if(masterAccount == null) {
 			return null;
@@ -671,7 +671,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 			return null;
 		}
 		
-		return accountInfoCustomMapper.getAllAffiliatedAccountByAffiliationId(accountAffiliatioId);
+		return accountInfoMapper.getAllAffiliatedAccountByAffiliationId(accountAffiliatioId);
 		
 	}
 	
@@ -695,7 +695,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		if(!numberUtil.matchPositiveInteger(accountNumber)) {
 			return null;
 		}
-		return accountInfoCustomMapper.getAccountInfoByAccountNumber(accountNumber);
+		return accountInfoMapper.getAccountInfoByAccountNumber(accountNumber);
 	}
 	
 	private boolean updateAccountInfoMarker(AccountInfo accountInfo) {
@@ -704,7 +704,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		newMarker.setMarker(createAccountInfoMarker(accountInfo));
 		
 		int accountMarkerModifyCount = 0;
-		accountMarkerModifyCount = accountInfoMarkerCustomMapper.updateAccountMarker(newMarker);
+		accountMarkerModifyCount = accountInfoMarkerMapper.updateAccountMarker(newMarker);
 		
 		if(accountMarkerModifyCount == 1) {
 			return true;
@@ -717,7 +717,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	public boolean updateAccountAmount(AccountInfo targetAccount, BigDecimal transationAmount) {
 		targetAccount.setAccountBalance(targetAccount.getAccountBalance().add(transationAmount));
 		
-		if (accountInfoCustomMapper.accountAmountModify(targetAccount) == 1 && updateAccountInfoMarker(targetAccount)) {
+		if (accountInfoMapper.accountAmountModify(targetAccount) == 1 && updateAccountInfoMarker(targetAccount)) {
 			return true ;
 		} else {
 			return false;
@@ -803,7 +803,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		}
 		
 		
-		int modifyCount = accountInfoCustomMapper.modifyAccountInfoVaildDate(newVaildDate, dto.getAccountNumber());
+		int modifyCount = accountInfoMapper.modifyAccountInfoVaildDate(newVaildDate, dto.getAccountNumber());
 		if(modifyCount == 1) {
 			updateAccountMarker(dto.getAccountNumber());
 			r.successWithMessage("modify vaild date to: " + dto.getNewVaildDate());

@@ -51,4 +51,39 @@
       </if>
     </trim>
   </insert>
+  
+  <update id="updateAccountMarker">
+    update 
+      account_info_marker
+    set
+      marker = #{marker},
+      update_time = now(),
+      update_count = (update_count + 1)
+    where
+      account_id = #{accountId}
+  </update>
+  
+  <select id="getMarkerByAccountId" resultMap="BaseResultMap">
+  	select
+      *
+    from
+      account_info_marker
+    where
+      account_id = #{accountId}
+  </select>
+
+  <insert id="insertCustom" parameterType="demo.finance.account_info.pojo.po.AccountInfoMarker">
+    insert into account_info_marker (
+      account_id, 
+      create_time, 
+      update_time, 
+      update_count, 
+      marker)
+    values (
+      #{accountId,jdbcType=INTEGER}, 
+      now(), 
+      now(), 
+      0, 
+      #{marker,jdbcType=CHAR})
+  </insert>
 </mapper>

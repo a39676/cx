@@ -2,8 +2,6 @@ package demo.finance.trading.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,10 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import demo.finance.account_holder.controller.AccountHolderController;
-import demo.finance.account_holder.pojo.po.AccountHolder;
 import demo.finance.account_info.pojo.dto.controllerDTO.InsertNewTransationDTO;
-import demo.finance.trading.pojo.CommonTransationParties;
 import demo.finance.trading.pojo.constant.TradingUrl;
 import demo.finance.trading.pojo.constant.TradingViews;
 import demo.finance.trading.pojo.po.TradingRecorder;
@@ -29,8 +24,6 @@ import net.sf.json.JSONObject;
 @RequestMapping(value = TradingUrl.tradingRoot)
 public class TradingController {
 	
-	@Autowired
-	private AccountHolderController accountHolderController;
 	
 	@Autowired
 	private TradingInsertService tradingService;
@@ -42,24 +35,6 @@ public class TradingController {
 	
 	public TradingRecorder getTradingRecorderById(Long tradingRecorderId) {
 		return tradingService.getTradingRecordById(tradingRecorderId);
-	}
-	
-	@GetMapping(value = TradingUrl.insertHolderCommonTransation)
-	public ModelAndView insertHolderCommonTransation() {
-		ModelAndView view = new ModelAndView(TradingViews.insertHolderCommonTransation);
-		return view;
-	}
-	
-	@PostMapping(value = TradingUrl.getHolderCommonTransation)
-	public List<CommonTransationParties> getCurrentCommonTransation() {
-		List<AccountHolder> holderList = accountHolderController.getCurrentHolders();
-		AccountHolder holder = null;
-		if(holderList != null && !holderList.isEmpty()) {
-			holder = holderList.get(0);
-			return tradingService.getCurrentCommonTransation(holder.getAccountHolderId(), null);
-		} else {
-			return new ArrayList<CommonTransationParties>();
-		}
 	}
 	
 	@GetMapping(value = TradingUrl.importTradingRecordFromFiles)

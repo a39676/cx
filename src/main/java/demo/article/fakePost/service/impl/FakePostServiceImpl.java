@@ -102,7 +102,7 @@ public class FakePostServiceImpl extends CommonService implements FakePostServic
 	}
 
 	@Override
-	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	public void autoPass() throws Exception {
 		List<Users> userList = usersService.findUserListByAuthId(AuthType.DELAY_POSTER.getCode());
 		if(userList == null || userList.isEmpty()) {

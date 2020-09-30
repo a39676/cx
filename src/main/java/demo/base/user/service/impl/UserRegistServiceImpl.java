@@ -122,7 +122,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		return result;
 	}
 	
-	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	private void insertNewUserData(Users newUser, UsersDetail newUserDetail) {
 		userRegistMapper.insertNewUser(newUser);
 		userDetailService.insertSelective(newUserDetail);
@@ -258,7 +258,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	}
 	
 	@Override
-	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	public __baseSuperAdminRegistVO __baseSuperAdminRegist() {
 		UserRegistDTO userRegistDTO = new UserRegistDTO();
 		userRegistDTO.setUserName("daven");

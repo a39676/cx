@@ -56,7 +56,7 @@ public class TradingInsertServiceImpl extends CommonService implements TradingIn
 	}
 
 	@Override
-	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	public InsertTradingRecorderResult insertTradingRecorder(InsertNewTransationDTO p, Long accountId) {
 		InsertTradingRecorderResult result = new InsertTradingRecorderResult();
 		if (p == null || accountId == null) {
@@ -79,7 +79,7 @@ public class TradingInsertServiceImpl extends CommonService implements TradingIn
 	}
 
 	@Override
-	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	public long insertTradingRecorderFromFileLine(String strLineInput, AccountInfo accountInfo) {
 
 		TradingRecorder tradingRecorder = stringLineToTradingRecorder(strLineInput, accountInfo);
@@ -102,7 +102,7 @@ public class TradingInsertServiceImpl extends CommonService implements TradingIn
 
 
 	@Override
-	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	public String importTradingRecordFromFiles(String tradingRecordTxtPath) {
 		File mainFolder = new File(tradingRecordTxtPath);
 		if (!mainFolder.isDirectory()) {

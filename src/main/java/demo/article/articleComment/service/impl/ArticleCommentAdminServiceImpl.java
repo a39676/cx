@@ -46,7 +46,7 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 	}
 	
 	@Override
-	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	public CommonResultCX deleteArticleComment(DeleteArticleCommentDTO param) {
 		CommonResultCX result = ArticleCommentReviewDTOValider(param);
 		if(result.isFail()) {
@@ -82,7 +82,7 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 	}
 	
 	@Override
-	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	public CommonResultCX passArticleComment(PassArticleCommentDTO param) {
 		CommonResultCX result = ArticleCommentReviewDTOValider(param);
 		if(result.isFail()) {
@@ -117,7 +117,7 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 	}
 	
 	@Override
-	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	public CommonResultCX rejectArticleComment(RejectArticleCommentDTO param) {
 		CommonResultCX result = ArticleCommentReviewDTOValider(param);
 		if(result.isFail()) {

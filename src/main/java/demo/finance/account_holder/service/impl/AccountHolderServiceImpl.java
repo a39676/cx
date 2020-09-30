@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.baseCommon.service.CommonService;
-import demo.finance.account_holder.mapper.AccountHolderCustomMapper;
+import demo.finance.account_holder.mapper.AccountHolderMapper;
 import demo.finance.account_holder.pojo.po.AccountHolder;
 import demo.finance.account_holder.service.AccountHolderService;
 
@@ -20,17 +20,17 @@ import demo.finance.account_holder.service.AccountHolderService;
 public class AccountHolderServiceImpl extends CommonService implements AccountHolderService {
 
 	@Autowired
-	private AccountHolderCustomMapper accountHolderCustomMapper;
+	private AccountHolderMapper accountHolderMapper;
 	
 	@Override
 	public AccountHolder getHolder(Long id) {
-		AccountHolder holder = accountHolderCustomMapper.findAccountHolderByID(id);
+		AccountHolder holder = accountHolderMapper.findAccountHolderByID(id);
 		return holder;
 	}
 
 	@Override
 	public List<AccountHolder> findHolder(String holderName) {
-		List<AccountHolder> holderList = accountHolderCustomMapper.findAccountHolderByName(holderName);
+		List<AccountHolder> holderList = accountHolderMapper.findAccountHolderByName(holderName);
 		return holderList;
 	}
 
@@ -55,7 +55,7 @@ public class AccountHolderServiceImpl extends CommonService implements AccountHo
 		
 		try {
 			Long newHolderId = snowFlake.getNextId();
-			accountHolderCustomMapper.addAccountHolder(holder);
+			accountHolderMapper.addAccountHolder(holder);
 			return newHolderId;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -68,7 +68,7 @@ public class AccountHolderServiceImpl extends CommonService implements AccountHo
 		if(StringUtils.isEmpty(userName)) {
 			return null;
 		} else {
-			return accountHolderCustomMapper.getCurrentHolders(userName);
+			return accountHolderMapper.getCurrentHolders(userName);
 		}
 	}
 	

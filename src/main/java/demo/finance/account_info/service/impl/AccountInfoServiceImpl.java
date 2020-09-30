@@ -67,7 +67,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	
 	
 	@Override
-	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	public AccountRegistResult accountRegistration(AccountInfoRegistDTO dto) {
 		AccountRegistResult result = new AccountRegistResult();
 		
@@ -335,7 +335,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	}
 
 	@Override
-	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	public InsertTransationResult insertTradingRecorderSelective(InsertNewTransationDTO p) throws Exception {
 		InsertTransationResult result = new InsertTransationResult();
 		
@@ -466,7 +466,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	}
 	
 	@Override
-	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	public int updateAccountMarker(String accountNumber) {
 		AccountInfo targetAccount = accountInfoMapper.getAccountInfoByAccountNumber(accountNumber);
 		AccountInfoMarker marker = accountInfoMarkerMapper.getMarkerByAccountId(targetAccount.getAccountId());
@@ -571,7 +571,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	}
 	
 	@Override
-	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	public int modifyAccountInfoTemproraryCreditsVaildDate(String temproraryCreditsVaildDate, String accountNumber, boolean isAdmin) {
 		if(!checkAccountNumberBelongUser(accountNumber) || !dateHandler.isDateValid(temproraryCreditsVaildDate)){
 			return 0;
@@ -595,7 +595,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	}
 	
 	@Override
-	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	public CommonResultCX modifyCreditsQuota(ModifyCreditsQuotaDTO dto) {
 		CommonResultCX r = new CommonResultCX();
 		if(dto.getAccountNumber() == null || dto.getNewCreditsQuota() == null || !checkAccountNumberBelongUser(dto.getAccountNumber())){
@@ -623,7 +623,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	}
 	
 	@Override
-	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	public int modifyTemproraryCreditsQuota(String newTemproraryCreditsQuota, String accountNumber) {
 		if(!checkAccountNumberBelongUser(accountNumber) || !numberUtil.matchInteger(newTemproraryCreditsQuota)){
 			return 0;
@@ -782,7 +782,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
     }
     
     @Override
-    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    @Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
     public CommonResult modifyAccountInfoVaildDate(ModifyValidDateDTO dto) throws Exception {
 		CommonResult r = new CommonResult();
 		

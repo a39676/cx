@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
-import demo.baseCommon.controller.CommonController;
+import demo.common.controller.CommonController;
 import demo.tool.pojo.constant.ToolUrlConstant;
 import demo.tool.pojo.dto.SetMailBaseParam;
 

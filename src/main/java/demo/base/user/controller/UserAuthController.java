@@ -18,8 +18,8 @@ import demo.base.user.pojo.result.FindAuthsVOResult;
 import demo.base.user.pojo.result.FindUserAuthVOResult;
 import demo.base.user.service.AuthService;
 import demo.base.user.service.UserAuthService;
-import demo.baseCommon.controller.CommonController;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.controller.CommonController;
+import demo.common.pojo.result.CommonResultCX;
 
 @Controller
 @RequestMapping(value = UserAuthUrl.root)

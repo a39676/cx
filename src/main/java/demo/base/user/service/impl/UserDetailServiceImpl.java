@@ -13,8 +13,8 @@ import demo.base.user.pojo.po.UsersDetail;
 import demo.base.user.pojo.po.UsersDetailExample;
 import demo.base.user.service.UserAuthService;
 import demo.base.user.service.UserDetailService;
-import demo.baseCommon.pojo.result.CommonResultCX;
-import demo.baseCommon.service.CommonService;
+import demo.common.pojo.result.CommonResultCX;
+import demo.common.service.CommonService;
 
 @Service
 public class UserDetailServiceImpl extends CommonService implements UserDetailService {

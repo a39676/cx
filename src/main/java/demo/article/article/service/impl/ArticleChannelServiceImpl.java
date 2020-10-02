@@ -30,7 +30,7 @@ import demo.article.article.service.ArticleChannelService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.po.Hostname;
 import demo.base.system.service.HostnameService;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service

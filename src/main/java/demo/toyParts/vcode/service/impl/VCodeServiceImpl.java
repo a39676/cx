@@ -6,9 +6,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.baseCommon.pojo.result.CommonResultCX;
-import demo.baseCommon.pojo.type.ResultTypeCX;
-import demo.baseCommon.service.CommonService;
+import demo.common.pojo.result.CommonResultCX;
+import demo.common.pojo.type.ResultTypeCX;
+import demo.common.service.CommonService;
 import demo.toyParts.vcode.mapper.VCodeMapper;
 import demo.toyParts.vcode.pojo.param.DeleteInvalidCodeParam;
 import demo.toyParts.vcode.pojo.param.GetVcodeByValueParam;

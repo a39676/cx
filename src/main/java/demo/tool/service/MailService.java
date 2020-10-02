@@ -8,7 +8,7 @@ import javax.mail.Message;
 import javax.mail.search.SearchTerm;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 import demo.tool.pojo.dto.ResendMailDTO;
 import demo.tool.pojo.dto.SendForgotUsernameMailDTO;
 import demo.tool.pojo.dto.SendMailDTO;

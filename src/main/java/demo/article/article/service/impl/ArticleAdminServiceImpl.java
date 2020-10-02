@@ -28,8 +28,8 @@ import demo.article.article.pojo.po.ArticleLong;
 import demo.article.article.pojo.po.ArticleLongSummary;
 import demo.article.article.pojo.type.ArticleReviewType;
 import demo.article.article.service.ArticleAdminService;
-import demo.baseCommon.pojo.result.CommonResultCX;
-import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.common.pojo.result.CommonResultCX;
+import demo.common.pojo.type.ResultTypeCX;
 
 @Service
 public class ArticleAdminServiceImpl extends ArticleCommonService implements ArticleAdminService {

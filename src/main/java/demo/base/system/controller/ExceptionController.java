@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import demo.base.system.service.ExceptionService;
-import demo.baseCommon.controller.CommonController;
+import demo.common.controller.CommonController;
 
 @ControllerAdvice
 public class ExceptionController extends CommonController {

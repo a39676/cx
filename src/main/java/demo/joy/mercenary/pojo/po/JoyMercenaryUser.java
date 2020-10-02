@@ -2,8 +2,10 @@ package demo.joy.mercenary.pojo.po;
 
 import java.time.LocalDateTime;
 
-public class JoyUserMercenary {
+public class JoyMercenaryUser {
     private Long id;
+
+    private Long imgId;
 
     private Long userId;
 
@@ -11,11 +13,13 @@ public class JoyUserMercenary {
 
     private String mercenaryName;
 
-    private String attributePath;
-
-    private String skillPath;
-
     private Boolean gender;
+
+    private Integer skillCount;
+
+    private String description;
+
+    private String attributePath;
 
     private LocalDateTime editTime;
 
@@ -29,6 +33,14 @@ public class JoyUserMercenary {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getImgId() {
+        return imgId;
+    }
+
+    public void setImgId(Long imgId) {
+        this.imgId = imgId;
     }
 
     public Long getUserId() {
@@ -55,28 +67,36 @@ public class JoyUserMercenary {
         this.mercenaryName = mercenaryName == null ? null : mercenaryName.trim();
     }
 
-    public String getAttributePath() {
-        return attributePath;
-    }
-
-    public void setAttributePath(String attributePath) {
-        this.attributePath = attributePath == null ? null : attributePath.trim();
-    }
-
-    public String getSkillPath() {
-        return skillPath;
-    }
-
-    public void setSkillPath(String skillPath) {
-        this.skillPath = skillPath == null ? null : skillPath.trim();
-    }
-
     public Boolean getGender() {
         return gender;
     }
 
     public void setGender(Boolean gender) {
         this.gender = gender;
+    }
+
+    public Integer getSkillCount() {
+        return skillCount;
+    }
+
+    public void setSkillCount(Integer skillCount) {
+        this.skillCount = skillCount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description == null ? null : description.trim();
+    }
+
+    public String getAttributePath() {
+        return attributePath;
+    }
+
+    public void setAttributePath(String attributePath) {
+        this.attributePath = attributePath == null ? null : attributePath.trim();
     }
 
     public LocalDateTime getEditTime() {

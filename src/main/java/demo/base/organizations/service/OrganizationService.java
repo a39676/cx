@@ -9,7 +9,7 @@ import demo.base.organizations.pojo.result.FindOrgListResult;
 import demo.base.organizations.pojo.result.FindUserControlOrgResult;
 import demo.base.organizations.pojo.result.OrgRegistResult;
 import demo.base.user.pojo.dto.FindOrgByConditionDTO;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 
 public interface OrganizationService {
 

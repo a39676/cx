@@ -165,6 +165,66 @@ public class JoyMercenaryStoreExample {
             return (Criteria) this;
         }
 
+        public Criteria andImgIdIsNull() {
+            addCriterion("img_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgIdIsNotNull() {
+            addCriterion("img_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgIdEqualTo(Long value) {
+            addCriterion("img_id =", value, "imgId");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgIdNotEqualTo(Long value) {
+            addCriterion("img_id <>", value, "imgId");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgIdGreaterThan(Long value) {
+            addCriterion("img_id >", value, "imgId");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("img_id >=", value, "imgId");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgIdLessThan(Long value) {
+            addCriterion("img_id <", value, "imgId");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgIdLessThanOrEqualTo(Long value) {
+            addCriterion("img_id <=", value, "imgId");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgIdIn(List<Long> values) {
+            addCriterion("img_id in", values, "imgId");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgIdNotIn(List<Long> values) {
+            addCriterion("img_id not in", values, "imgId");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgIdBetween(Long value1, Long value2) {
+            addCriterion("img_id between", value1, value2, "imgId");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgIdNotBetween(Long value1, Long value2) {
+            addCriterion("img_id not between", value1, value2, "imgId");
+            return (Criteria) this;
+        }
+
         public Criteria andMercenaryNameIsNull() {
             addCriterion("mercenary_name is null");
             return (Criteria) this;
@@ -355,6 +415,136 @@ public class JoyMercenaryStoreExample {
             return (Criteria) this;
         }
 
+        public Criteria andSkillCountIsNull() {
+            addCriterion("skill_count is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSkillCountIsNotNull() {
+            addCriterion("skill_count is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSkillCountEqualTo(Integer value) {
+            addCriterion("skill_count =", value, "skillCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSkillCountNotEqualTo(Integer value) {
+            addCriterion("skill_count <>", value, "skillCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSkillCountGreaterThan(Integer value) {
+            addCriterion("skill_count >", value, "skillCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSkillCountGreaterThanOrEqualTo(Integer value) {
+            addCriterion("skill_count >=", value, "skillCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSkillCountLessThan(Integer value) {
+            addCriterion("skill_count <", value, "skillCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSkillCountLessThanOrEqualTo(Integer value) {
+            addCriterion("skill_count <=", value, "skillCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSkillCountIn(List<Integer> values) {
+            addCriterion("skill_count in", values, "skillCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSkillCountNotIn(List<Integer> values) {
+            addCriterion("skill_count not in", values, "skillCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSkillCountBetween(Integer value1, Integer value2) {
+            addCriterion("skill_count between", value1, value2, "skillCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSkillCountNotBetween(Integer value1, Integer value2) {
+            addCriterion("skill_count not between", value1, value2, "skillCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionIsNull() {
+            addCriterion("description is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionIsNotNull() {
+            addCriterion("description is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionEqualTo(String value) {
+            addCriterion("description =", value, "description");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionNotEqualTo(String value) {
+            addCriterion("description <>", value, "description");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionGreaterThan(String value) {
+            addCriterion("description >", value, "description");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionGreaterThanOrEqualTo(String value) {
+            addCriterion("description >=", value, "description");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionLessThan(String value) {
+            addCriterion("description <", value, "description");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionLessThanOrEqualTo(String value) {
+            addCriterion("description <=", value, "description");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionLike(String value) {
+            addCriterion("description like", value, "description");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionNotLike(String value) {
+            addCriterion("description not like", value, "description");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionIn(List<String> values) {
+            addCriterion("description in", values, "description");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionNotIn(List<String> values) {
+            addCriterion("description not in", values, "description");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionBetween(String value1, String value2) {
+            addCriterion("description between", value1, value2, "description");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionNotBetween(String value1, String value2) {
+            addCriterion("description not between", value1, value2, "description");
+            return (Criteria) this;
+        }
+
         public Criteria andAttributePathIsNull() {
             addCriterion("attribute_path is null");
             return (Criteria) this;
@@ -422,76 +612,6 @@ public class JoyMercenaryStoreExample {
 
         public Criteria andAttributePathNotBetween(String value1, String value2) {
             addCriterion("attribute_path not between", value1, value2, "attributePath");
-            return (Criteria) this;
-        }
-
-        public Criteria andSkillPathIsNull() {
-            addCriterion("skill_path is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andSkillPathIsNotNull() {
-            addCriterion("skill_path is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andSkillPathEqualTo(String value) {
-            addCriterion("skill_path =", value, "skillPath");
-            return (Criteria) this;
-        }
-
-        public Criteria andSkillPathNotEqualTo(String value) {
-            addCriterion("skill_path <>", value, "skillPath");
-            return (Criteria) this;
-        }
-
-        public Criteria andSkillPathGreaterThan(String value) {
-            addCriterion("skill_path >", value, "skillPath");
-            return (Criteria) this;
-        }
-
-        public Criteria andSkillPathGreaterThanOrEqualTo(String value) {
-            addCriterion("skill_path >=", value, "skillPath");
-            return (Criteria) this;
-        }
-
-        public Criteria andSkillPathLessThan(String value) {
-            addCriterion("skill_path <", value, "skillPath");
-            return (Criteria) this;
-        }
-
-        public Criteria andSkillPathLessThanOrEqualTo(String value) {
-            addCriterion("skill_path <=", value, "skillPath");
-            return (Criteria) this;
-        }
-
-        public Criteria andSkillPathLike(String value) {
-            addCriterion("skill_path like", value, "skillPath");
-            return (Criteria) this;
-        }
-
-        public Criteria andSkillPathNotLike(String value) {
-            addCriterion("skill_path not like", value, "skillPath");
-            return (Criteria) this;
-        }
-
-        public Criteria andSkillPathIn(List<String> values) {
-            addCriterion("skill_path in", values, "skillPath");
-            return (Criteria) this;
-        }
-
-        public Criteria andSkillPathNotIn(List<String> values) {
-            addCriterion("skill_path not in", values, "skillPath");
-            return (Criteria) this;
-        }
-
-        public Criteria andSkillPathBetween(String value1, String value2) {
-            addCriterion("skill_path between", value1, value2, "skillPath");
-            return (Criteria) this;
-        }
-
-        public Criteria andSkillPathNotBetween(String value1, String value2) {
-            addCriterion("skill_path not between", value1, value2, "skillPath");
             return (Criteria) this;
         }
 

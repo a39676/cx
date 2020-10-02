@@ -1,4 +1,4 @@
-package demo.joy.character.pojo.bo;
+package demo.joy.common.pojo.bo;
 
 public class JoyAttributeBO {
 

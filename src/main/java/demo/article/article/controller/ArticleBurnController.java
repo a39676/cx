@@ -17,7 +17,7 @@ import demo.article.article.pojo.constant.ArticleViewConstant;
 import demo.article.article.pojo.dto.CreatingBurnMessageDTO;
 import demo.article.article.pojo.result.CreatingBurnMessageResult;
 import demo.article.article.service.ArticleBurnService;
-import demo.baseCommon.controller.CommonController;
+import demo.common.controller.CommonController;
 
 @Controller
 @RequestMapping( value = ArticleBurnUrlConstant.root)

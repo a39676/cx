@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 import demo.geographical.mapper.GeographicalAreaMapper;
 import demo.geographical.pojo.po.GeographicalArea;
 import demo.geographical.pojo.po.example.GeographicalAreaExample;

@@ -20,8 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.base.system.pojo.constant.BaseViewConstant;
-import demo.baseCommon.pojo.type.ResultTypeCX;
-import demo.baseCommon.service.CommonService;
+import demo.common.pojo.type.ResultTypeCX;
+import demo.common.service.CommonService;
 import demo.tool.ToolViewConstant;
 import demo.tool.mapper.ExcelAnalysisMapper;
 import demo.tool.pojo.constant.ToolPathConstant;

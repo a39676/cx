@@ -14,7 +14,7 @@ import demo.base.system.pojo.constant.DebugStatusConstant;
 import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.ExceptionService;
 import demo.base.system.service.HostnameService;
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 
 @Service
 public class ExceptionServiceImpl extends CommonService implements ExceptionService {

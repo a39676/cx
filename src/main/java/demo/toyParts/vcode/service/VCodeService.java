@@ -1,6 +1,6 @@
 package demo.toyParts.vcode.service;
 
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 import demo.toyParts.vcode.pojo.param.DeleteInvalidCodeParam;
 import demo.toyParts.vcode.pojo.param.GetVcodeByValueParam;
 import demo.toyParts.vcode.pojo.param.UpdateDeleteMarkParam;

@@ -1,6 +1,6 @@
-package demo.joy.character.pojo.bo;
+package demo.joy.common.pojo.bo;
 
-public class JoyBuffBO {
+public class JoyBuffInBattleBO {
 
 	/**
 	 * 被作用角色 ID

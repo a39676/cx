@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.baseCommon.controller.CommonController;
+import demo.common.controller.CommonController;
 import demo.tool.ocr.pojo.constant.OcrUrl;
 import demo.tool.ocr.service.OcrService;
 

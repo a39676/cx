@@ -1,4 +1,4 @@
-package demo.baseCommon.pojo.type;
+package demo.common.pojo.type;
 
 public enum TransationType {
 	

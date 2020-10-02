@@ -20,8 +20,8 @@ import demo.article.articleComment.pojo.dto.FindArticleCommentPageDTO;
 import demo.article.articleComment.pojo.po.ArticleCommentCount;
 import demo.article.articleComment.pojo.result.FindArticleCommentPageResult;
 import demo.article.articleComment.service.ArticleCommentService;
-import demo.baseCommon.controller.CommonController;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.controller.CommonController;
+import demo.common.pojo.result.CommonResultCX;
 
 @Controller
 @RequestMapping( value = ArticleCommentUrlConstant.root)

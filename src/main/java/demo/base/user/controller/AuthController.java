@@ -18,7 +18,7 @@ import demo.base.user.pojo.dto.InsertAuthDTO;
 import demo.base.user.pojo.result.InsertNewAuthResult;
 import demo.base.user.service.AuthRoleService;
 import demo.base.user.service.AuthService;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 
 @Controller
 @RequestMapping(value = AuthUrl.root)

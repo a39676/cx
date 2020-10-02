@@ -26,9 +26,9 @@ import demo.article.article.pojo.type.ArticleReviewType;
 import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.article.article.service.ArticleAdminService;
 import demo.article.article.service.ArticleChannelService;
-import demo.baseCommon.controller.CommonController;
-import demo.baseCommon.pojo.result.CommonResultCX;
-import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.common.controller.CommonController;
+import demo.common.pojo.result.CommonResultCX;
+import demo.common.pojo.type.ResultTypeCX;
 import net.sf.json.JSONObject;
 
 @Controller

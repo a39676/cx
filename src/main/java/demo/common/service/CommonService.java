@@ -1,4 +1,4 @@
-package demo.baseCommon.service;
+package demo.common.service;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -23,8 +23,8 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.IpRecordService;
 import demo.base.system.service.impl.SystemConstantService;
-import demo.baseCommon.pojo.result.CommonResultCX;
-import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.common.pojo.result.CommonResultCX;
+import demo.common.pojo.type.ResultTypeCX;
 import demo.config.costom_component.BaseUtilCustom;
 import demo.config.costom_component.EncryptUtil;
 import demo.config.costom_component.SnowFlake;

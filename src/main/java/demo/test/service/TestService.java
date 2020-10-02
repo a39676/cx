@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 import demo.finance.metal.service.PreciousMetal5MinuteDataSummaryService;
 import demo.finance.metal.service.PreciousMetalService;
 import precious_metal.pojo.dto.PreciousMetailPriceDTO;

@@ -3,7 +3,7 @@ package demo.article.article.pojo.result.jsonRespon;
 import java.util.List;
 
 import demo.article.article.pojo.vo.ArticleLongSummaryVOV3;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 
 public class FindArticleLongSummaryListResultV3 extends CommonResultCX {
 

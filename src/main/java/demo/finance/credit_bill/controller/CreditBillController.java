@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import demo.baseCommon.controller.CommonController;
+import demo.common.controller.CommonController;
 import demo.finance.account_info.pojo.bo.AccountInfoWithBankInfo;
 import demo.finance.account_info.pojo.po.AccountInfo;
 import demo.finance.credit_bill.pojo.BillInfo;

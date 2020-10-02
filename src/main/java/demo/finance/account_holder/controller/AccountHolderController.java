@@ -17,7 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.user.controller.UsersController;
-import demo.baseCommon.controller.CommonController;
+import demo.common.controller.CommonController;
 import demo.config.costom_component.BaseUtilCustom;
 import demo.finance.account_holder.AccountHolderViewConstants;
 import demo.finance.account_holder.pojo.HolderUrlConstant;

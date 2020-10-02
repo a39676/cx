@@ -5,15 +5,19 @@ import java.time.LocalDateTime;
 public class JoyMercenaryStore {
     private Long id;
 
+    private Long imgId;
+
     private String mercenaryName;
 
     private Boolean gender;
 
     private Integer maxSale;
 
-    private String attributePath;
+    private Integer skillCount;
 
-    private String skillPath;
+    private String description;
+
+    private String attributePath;
 
     private LocalDateTime editTime;
 
@@ -27,6 +31,14 @@ public class JoyMercenaryStore {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getImgId() {
+        return imgId;
+    }
+
+    public void setImgId(Long imgId) {
+        this.imgId = imgId;
     }
 
     public String getMercenaryName() {
@@ -53,20 +65,28 @@ public class JoyMercenaryStore {
         this.maxSale = maxSale;
     }
 
+    public Integer getSkillCount() {
+        return skillCount;
+    }
+
+    public void setSkillCount(Integer skillCount) {
+        this.skillCount = skillCount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description == null ? null : description.trim();
+    }
+
     public String getAttributePath() {
         return attributePath;
     }
 
     public void setAttributePath(String attributePath) {
         this.attributePath = attributePath == null ? null : attributePath.trim();
-    }
-
-    public String getSkillPath() {
-        return skillPath;
-    }
-
-    public void setSkillPath(String skillPath) {
-        this.skillPath = skillPath == null ? null : skillPath.trim();
     }
 
     public LocalDateTime getEditTime() {

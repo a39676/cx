@@ -2,7 +2,7 @@ package demo.article.article.pojo.result;
 
 import java.time.LocalDateTime;
 
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 
 public class ArticleBurnResult extends CommonResultCX {
 

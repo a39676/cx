@@ -43,8 +43,8 @@ import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.UserDetailService;
 import demo.base.user.service.UsersService;
-import demo.baseCommon.pojo.result.CommonResultCX;
-import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.common.pojo.result.CommonResultCX;
+import demo.common.pojo.type.ResultTypeCX;
 import demo.tool.service.ValidRegexToolService;
 import toolPack.ioHandle.FileUtilCustom;
 

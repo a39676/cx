@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.baseCommon.controller.CommonController;
+import demo.common.controller.CommonController;
 import demo.tool.mapper.ToolMapper;
 import demo.tool.pojo.constant.ToolPathConstant;
 import demo.tool.pojo.constant.ToolUrlConstant;

@@ -11,7 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 import demo.finance.account_holder.mapper.AccountHolderMapper;
 import demo.finance.account_holder.pojo.po.AccountHolder;
 import demo.finance.account_holder.service.AccountHolderService;

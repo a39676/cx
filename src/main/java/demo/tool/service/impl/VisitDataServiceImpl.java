@@ -15,7 +15,7 @@ import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.user.mapper.UserIpMapper;
 import demo.base.user.pojo.dto.BatchInsertUserIpDTO;
 import demo.base.user.pojo.po.UserIp;
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 import demo.tool.mapper.VisitCountMapper;
 import demo.tool.pojo.dto.GetVisitCountTotalDTO;
 import demo.tool.pojo.po.VisitCount;

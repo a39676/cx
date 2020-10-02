@@ -54,9 +54,9 @@
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="joy_mercenary_store">
-        	<property name="tableName" value="joy_mercenary_store"></property>
-        	<property name="domainObjectName" value="joy_mercenary_store" ></property>
+        <table tableName="joy_skill_user">
+        	<property name="tableName" value="joy_skill_user"></property>
+        	<property name="domainObjectName" value="joy_skill_user" ></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

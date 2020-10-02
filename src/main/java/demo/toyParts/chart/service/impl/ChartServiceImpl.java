@@ -17,8 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.base.system.pojo.constant.BaseViewConstant;
-import demo.baseCommon.pojo.type.ResultTypeCX;
-import demo.baseCommon.service.CommonService;
+import demo.common.pojo.type.ResultTypeCX;
+import demo.common.service.CommonService;
 import demo.tool.pojo.type.ChartType;
 import demo.toyParts.chart.pojo.bo.ChartColorBO;
 import demo.toyParts.chart.pojo.bo.ChartDataSetBO;

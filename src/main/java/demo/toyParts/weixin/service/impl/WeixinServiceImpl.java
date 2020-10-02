@@ -20,8 +20,8 @@ import org.owasp.html.PolicyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.baseCommon.pojo.type.ResultTypeCX;
-import demo.baseCommon.service.CommonService;
+import demo.common.pojo.type.ResultTypeCX;
+import demo.common.service.CommonService;
 import demo.tool.service.TextFilter;
 import demo.toyParts.weixin.mapper.WeixinAccessTokenMapper;
 import demo.toyParts.weixin.mapper.WeixinConstantMapper;

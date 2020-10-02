@@ -3,11 +3,13 @@
 <mapper namespace="demo.joy.mercenary.mapper.JoyMercenaryStoreMapper">
   <resultMap id="BaseResultMap" type="demo.joy.mercenary.pojo.po.JoyMercenaryStore">
     <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="img_id" jdbcType="BIGINT" property="imgId" />
     <result column="mercenary_name" jdbcType="CHAR" property="mercenaryName" />
     <result column="gender" jdbcType="BIT" property="gender" />
     <result column="max_sale" jdbcType="INTEGER" property="maxSale" />
+    <result column="skill_count" jdbcType="INTEGER" property="skillCount" />
+    <result column="description" jdbcType="CHAR" property="description" />
     <result column="attribute_path" jdbcType="CHAR" property="attributePath" />
-    <result column="skill_path" jdbcType="CHAR" property="skillPath" />
     <result column="edit_time" jdbcType="TIMESTAMP" property="editTime" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
@@ -71,8 +73,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, mercenary_name, gender, max_sale, attribute_path, skill_path, edit_time, create_time, 
-    is_delete
+    id, img_id, mercenary_name, gender, max_sale, skill_count, description, attribute_path, 
+    edit_time, create_time, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.joy.mercenary.pojo.po.JoyMercenaryStoreExample" resultMap="BaseResultMap">
     select
@@ -105,20 +107,23 @@
     </if>
   </delete>
   <insert id="insert" parameterType="demo.joy.mercenary.pojo.po.JoyMercenaryStore">
-    insert into joy_mercenary_store (id, mercenary_name, gender, 
-      max_sale, attribute_path, skill_path, 
-      edit_time, create_time, is_delete
-      )
-    values (#{id,jdbcType=BIGINT}, #{mercenaryName,jdbcType=CHAR}, #{gender,jdbcType=BIT}, 
-      #{maxSale,jdbcType=INTEGER}, #{attributePath,jdbcType=CHAR}, #{skillPath,jdbcType=CHAR}, 
-      #{editTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
-      )
+    insert into joy_mercenary_store (id, img_id, mercenary_name, 
+      gender, max_sale, skill_count, 
+      description, attribute_path, edit_time, 
+      create_time, is_delete)
+    values (#{id,jdbcType=BIGINT}, #{imgId,jdbcType=BIGINT}, #{mercenaryName,jdbcType=CHAR}, 
+      #{gender,jdbcType=BIT}, #{maxSale,jdbcType=INTEGER}, #{skillCount,jdbcType=INTEGER}, 
+      #{description,jdbcType=CHAR}, #{attributePath,jdbcType=CHAR}, #{editTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="demo.joy.mercenary.pojo.po.JoyMercenaryStore">
     insert into joy_mercenary_store
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
+      </if>
+      <if test="imgId != null">
+        img_id,
       </if>
       <if test="mercenaryName != null">
         mercenary_name,
@@ -129,11 +134,14 @@
       <if test="maxSale != null">
         max_sale,
       </if>
+      <if test="skillCount != null">
+        skill_count,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
       <if test="attributePath != null">
         attribute_path,
-      </if>
-      <if test="skillPath != null">
-        skill_path,
       </if>
       <if test="editTime != null">
         edit_time,
@@ -149,6 +157,9 @@
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
+      <if test="imgId != null">
+        #{imgId,jdbcType=BIGINT},
+      </if>
       <if test="mercenaryName != null">
         #{mercenaryName,jdbcType=CHAR},
       </if>
@@ -158,11 +169,14 @@
       <if test="maxSale != null">
         #{maxSale,jdbcType=INTEGER},
       </if>
+      <if test="skillCount != null">
+        #{skillCount,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=CHAR},
+      </if>
       <if test="attributePath != null">
         #{attributePath,jdbcType=CHAR},
-      </if>
-      <if test="skillPath != null">
-        #{skillPath,jdbcType=CHAR},
       </if>
       <if test="editTime != null">
         #{editTime,jdbcType=TIMESTAMP},
@@ -187,6 +201,9 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
+      <if test="record.imgId != null">
+        img_id = #{record.imgId,jdbcType=BIGINT},
+      </if>
       <if test="record.mercenaryName != null">
         mercenary_name = #{record.mercenaryName,jdbcType=CHAR},
       </if>
@@ -196,11 +213,14 @@
       <if test="record.maxSale != null">
         max_sale = #{record.maxSale,jdbcType=INTEGER},
       </if>
+      <if test="record.skillCount != null">
+        skill_count = #{record.skillCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.description != null">
+        description = #{record.description,jdbcType=CHAR},
+      </if>
       <if test="record.attributePath != null">
         attribute_path = #{record.attributePath,jdbcType=CHAR},
-      </if>
-      <if test="record.skillPath != null">
-        skill_path = #{record.skillPath,jdbcType=CHAR},
       </if>
       <if test="record.editTime != null">
         edit_time = #{record.editTime,jdbcType=TIMESTAMP},
@@ -219,11 +239,13 @@
   <update id="updateByExample" parameterType="map">
     update joy_mercenary_store
     set id = #{record.id,jdbcType=BIGINT},
+      img_id = #{record.imgId,jdbcType=BIGINT},
       mercenary_name = #{record.mercenaryName,jdbcType=CHAR},
       gender = #{record.gender,jdbcType=BIT},
       max_sale = #{record.maxSale,jdbcType=INTEGER},
+      skill_count = #{record.skillCount,jdbcType=INTEGER},
+      description = #{record.description,jdbcType=CHAR},
       attribute_path = #{record.attributePath,jdbcType=CHAR},
-      skill_path = #{record.skillPath,jdbcType=CHAR},
       edit_time = #{record.editTime,jdbcType=TIMESTAMP},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       is_delete = #{record.isDelete,jdbcType=BIT}
@@ -234,6 +256,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="demo.joy.mercenary.pojo.po.JoyMercenaryStore">
     update joy_mercenary_store
     <set>
+      <if test="imgId != null">
+        img_id = #{imgId,jdbcType=BIGINT},
+      </if>
       <if test="mercenaryName != null">
         mercenary_name = #{mercenaryName,jdbcType=CHAR},
       </if>
@@ -243,11 +268,14 @@
       <if test="maxSale != null">
         max_sale = #{maxSale,jdbcType=INTEGER},
       </if>
+      <if test="skillCount != null">
+        skill_count = #{skillCount,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=CHAR},
+      </if>
       <if test="attributePath != null">
         attribute_path = #{attributePath,jdbcType=CHAR},
-      </if>
-      <if test="skillPath != null">
-        skill_path = #{skillPath,jdbcType=CHAR},
       </if>
       <if test="editTime != null">
         edit_time = #{editTime,jdbcType=TIMESTAMP},
@@ -263,11 +291,13 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="demo.joy.mercenary.pojo.po.JoyMercenaryStore">
     update joy_mercenary_store
-    set mercenary_name = #{mercenaryName,jdbcType=CHAR},
+    set img_id = #{imgId,jdbcType=BIGINT},
+      mercenary_name = #{mercenaryName,jdbcType=CHAR},
       gender = #{gender,jdbcType=BIT},
       max_sale = #{maxSale,jdbcType=INTEGER},
+      skill_count = #{skillCount,jdbcType=INTEGER},
+      description = #{description,jdbcType=CHAR},
       attribute_path = #{attributePath,jdbcType=CHAR},
-      skill_path = #{skillPath,jdbcType=CHAR},
       edit_time = #{editTime,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       is_delete = #{isDelete,jdbcType=BIT}

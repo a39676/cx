@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import demo.baseCommon.controller.CommonController;
+import demo.common.controller.CommonController;
 import demo.toyParts.weixin.pojo.constant.WXUrl;
 import demo.toyParts.weixin.service.WeixinService;
 

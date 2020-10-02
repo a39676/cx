@@ -14,7 +14,7 @@ import demo.base.user.pojo.result.FindAuthsVOResult;
 import demo.base.user.pojo.result.InsertNewAuthResult;
 import demo.base.user.pojo.type.AuthType;
 import demo.base.user.pojo.vo.AuthVO;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 
 public interface AuthService {
 

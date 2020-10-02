@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 import demo.joy.character.pojo.constant.JoyCharacterUrl;
 import demo.joy.character.pojo.dto.CreateJoyCharacterCharacterDTO;
 import demo.joy.character.pojo.result.GetCharacterDetailResult;

@@ -1,4 +1,4 @@
-package demo.baseCommon.controller;
+package demo.common.controller;
 
 import java.io.IOException;
 

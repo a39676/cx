@@ -1,8 +1,8 @@
-package demo.baseCommon.pojo.result;
+package demo.common.pojo.result;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.BaseResultType;
-import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.common.pojo.type.ResultTypeCX;
 
 public class CommonResultCX extends CommonResult {
 

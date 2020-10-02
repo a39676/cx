@@ -22,8 +22,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.pojo.constant.BaseViewConstant;
-import demo.baseCommon.controller.CommonController;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.controller.CommonController;
+import demo.common.pojo.result.CommonResultCX;
 import demo.config.costom_component.BaseUtilCustom;
 import demo.finance.account_holder.AccountHolderViewConstants;
 import demo.finance.account_holder.controller.AccountHolderController;

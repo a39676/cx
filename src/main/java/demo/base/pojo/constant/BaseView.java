@@ -1,4 +1,4 @@
-package demo.base.common.pojo.constant;
+package demo.base.pojo.constant;
 
 public class BaseView {
 

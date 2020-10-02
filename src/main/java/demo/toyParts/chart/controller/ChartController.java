@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import demo.baseCommon.controller.CommonController;
+import demo.common.controller.CommonController;
 import demo.tool.controller.ExcelAnalysisController;
 import demo.tool.pojo.type.ChartType;
 import demo.toyParts.chart.pojo.constant.ChartUrl;

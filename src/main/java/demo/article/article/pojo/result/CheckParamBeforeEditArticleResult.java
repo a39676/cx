@@ -1,6 +1,6 @@
 package demo.article.article.pojo.result;
 
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 
 public class CheckParamBeforeEditArticleResult extends CommonResultCX {
 

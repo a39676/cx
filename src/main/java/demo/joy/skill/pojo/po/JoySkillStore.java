@@ -1,15 +1,13 @@
-package demo.joy.mercenary.pojo.po;
+package demo.joy.skill.pojo.po;
 
 import java.time.LocalDateTime;
 
-public class JoySkillUser {
+public class JoySkillStore {
     private Long id;
 
     private Long imgId;
 
-    private Long userId;
-
-    private Long mercenaryId;
+    private String skillName;
 
     private String description;
 
@@ -37,20 +35,12 @@ public class JoySkillUser {
         this.imgId = imgId;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getSkillName() {
+        return skillName;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getMercenaryId() {
-        return mercenaryId;
-    }
-
-    public void setMercenaryId(Long mercenaryId) {
-        this.mercenaryId = mercenaryId;
+    public void setSkillName(String skillName) {
+        this.skillName = skillName == null ? null : skillName.trim();
     }
 
     public String getDescription() {

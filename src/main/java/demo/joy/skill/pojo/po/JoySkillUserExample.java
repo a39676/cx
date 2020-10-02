@@ -1,17 +1,17 @@
-package demo.joy.mercenary.pojo.po;
+package demo.joy.skill.pojo.po;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JoySkillStoreExample {
+public class JoySkillUserExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public JoySkillStoreExample() {
+    public JoySkillUserExample() {
         oredCriteria = new ArrayList<>();
     }
 
@@ -225,73 +225,123 @@ public class JoySkillStoreExample {
             return (Criteria) this;
         }
 
-        public Criteria andSkillNameIsNull() {
-            addCriterion("skill_name is null");
+        public Criteria andUserIdIsNull() {
+            addCriterion("user_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andSkillNameIsNotNull() {
-            addCriterion("skill_name is not null");
+        public Criteria andUserIdIsNotNull() {
+            addCriterion("user_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andSkillNameEqualTo(String value) {
-            addCriterion("skill_name =", value, "skillName");
+        public Criteria andUserIdEqualTo(Long value) {
+            addCriterion("user_id =", value, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andSkillNameNotEqualTo(String value) {
-            addCriterion("skill_name <>", value, "skillName");
+        public Criteria andUserIdNotEqualTo(Long value) {
+            addCriterion("user_id <>", value, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andSkillNameGreaterThan(String value) {
-            addCriterion("skill_name >", value, "skillName");
+        public Criteria andUserIdGreaterThan(Long value) {
+            addCriterion("user_id >", value, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andSkillNameGreaterThanOrEqualTo(String value) {
-            addCriterion("skill_name >=", value, "skillName");
+        public Criteria andUserIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("user_id >=", value, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andSkillNameLessThan(String value) {
-            addCriterion("skill_name <", value, "skillName");
+        public Criteria andUserIdLessThan(Long value) {
+            addCriterion("user_id <", value, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andSkillNameLessThanOrEqualTo(String value) {
-            addCriterion("skill_name <=", value, "skillName");
+        public Criteria andUserIdLessThanOrEqualTo(Long value) {
+            addCriterion("user_id <=", value, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andSkillNameLike(String value) {
-            addCriterion("skill_name like", value, "skillName");
+        public Criteria andUserIdIn(List<Long> values) {
+            addCriterion("user_id in", values, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andSkillNameNotLike(String value) {
-            addCriterion("skill_name not like", value, "skillName");
+        public Criteria andUserIdNotIn(List<Long> values) {
+            addCriterion("user_id not in", values, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andSkillNameIn(List<String> values) {
-            addCriterion("skill_name in", values, "skillName");
+        public Criteria andUserIdBetween(Long value1, Long value2) {
+            addCriterion("user_id between", value1, value2, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andSkillNameNotIn(List<String> values) {
-            addCriterion("skill_name not in", values, "skillName");
+        public Criteria andUserIdNotBetween(Long value1, Long value2) {
+            addCriterion("user_id not between", value1, value2, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andSkillNameBetween(String value1, String value2) {
-            addCriterion("skill_name between", value1, value2, "skillName");
+        public Criteria andMercenaryIdIsNull() {
+            addCriterion("mercenary_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andSkillNameNotBetween(String value1, String value2) {
-            addCriterion("skill_name not between", value1, value2, "skillName");
+        public Criteria andMercenaryIdIsNotNull() {
+            addCriterion("mercenary_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMercenaryIdEqualTo(Long value) {
+            addCriterion("mercenary_id =", value, "mercenaryId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMercenaryIdNotEqualTo(Long value) {
+            addCriterion("mercenary_id <>", value, "mercenaryId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMercenaryIdGreaterThan(Long value) {
+            addCriterion("mercenary_id >", value, "mercenaryId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMercenaryIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("mercenary_id >=", value, "mercenaryId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMercenaryIdLessThan(Long value) {
+            addCriterion("mercenary_id <", value, "mercenaryId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMercenaryIdLessThanOrEqualTo(Long value) {
+            addCriterion("mercenary_id <=", value, "mercenaryId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMercenaryIdIn(List<Long> values) {
+            addCriterion("mercenary_id in", values, "mercenaryId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMercenaryIdNotIn(List<Long> values) {
+            addCriterion("mercenary_id not in", values, "mercenaryId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMercenaryIdBetween(Long value1, Long value2) {
+            addCriterion("mercenary_id between", value1, value2, "mercenaryId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMercenaryIdNotBetween(Long value1, Long value2) {
+            addCriterion("mercenary_id not between", value1, value2, "mercenaryId");
             return (Criteria) this;
         }
 

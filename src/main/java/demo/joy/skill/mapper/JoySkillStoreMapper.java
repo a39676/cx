@@ -1,7 +1,7 @@
-package demo.joy.mercenary.mapper;
+package demo.joy.skill.mapper;
 
-import demo.joy.mercenary.pojo.po.JoySkillStore;
-import demo.joy.mercenary.pojo.po.JoySkillStoreExample;
+import demo.joy.skill.pojo.po.JoySkillStore;
+import demo.joy.skill.pojo.po.JoySkillStoreExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;

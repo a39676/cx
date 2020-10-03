@@ -15,15 +15,17 @@ import demo.joy.mercenary.mapper.JoyMercenaryStoreMapper;
 import demo.joy.mercenary.pojo.dto.CreateNewMercenaryToStoreDTO;
 import demo.joy.mercenary.pojo.po.JoyMercenaryStore;
 import demo.joy.mercenary.service.JoyMercenaryService;
+import demo.joy.skill.service.JoySkillManagerService;
 import net.sf.json.JSONObject;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class JoyMercenaryServiceImpl extends JoyCommonService implements JoyMercenaryService {
 	
-	// TODO 增加描述字段
 	@Autowired
 	private JoyMercenaryStoreMapper mercenaryStoreMapper;
+	@Autowired
+	private JoySkillManagerService skillService;
 	
 	private String getMercenaryStoreAttributeSavePath() {
 		if(isLinux()) {
@@ -33,8 +35,8 @@ public class JoyMercenaryServiceImpl extends JoyCommonService implements JoyMerc
 		}
 	}
 
+	@Override
 	public CommonResult createNewMercenaryToStore(CreateNewMercenaryToStoreDTO dto) {
-//		TODO
 		CommonResult r = new CommonResult();
 		
 		if(StringUtils.isBlank(dto.getName())) {
@@ -47,27 +49,27 @@ public class JoyMercenaryServiceImpl extends JoyCommonService implements JoyMerc
 			return r;
 		}
 		
+		long newMercenaryId = snowFlake.getNextId();
+		
 		if(dto.getSkillIdList() != null && !dto.getSkillIdList().isEmpty()) {
 			if(dto.getSkillCount() < dto.getSkillIdList().size()) {
 				r.addMessage("技能配置过多");
 				return r;
 			}
 			
-			/*
-			 * TODO
-			 * 为原始角色库 配置自带技能, 逻辑迁移至 skill service
-			 */
+			CommonResult setDefaultSkillResult = skillService.setMercenaryDefaultSkill(newMercenaryId, dto.getSkillIdList());
+			if(setDefaultSkillResult.isFail()) {
+				return setDefaultSkillResult;
+			}
 		}
 		
-		long newId = snowFlake.getNextId();
-		
-		CommonResult saveAttributeResult = saveNewAttribute(newId, dto);
+		CommonResult saveAttributeResult = saveNewAttribute(newMercenaryId, dto);
 		if(saveAttributeResult.isFail()) {
 			return saveAttributeResult;
 		}
 		
 		JoyMercenaryStore po = new JoyMercenaryStore();
-		po.setId(newId);
+		po.setId(newMercenaryId);
 		po.setAttributePath(saveAttributeResult.getMessage());
 		po.setDescription(dto.getDescription());
 		po.setImgId(dto.getImgId());

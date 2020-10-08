@@ -1,4 +1,4 @@
-package demo.finance.account_holder;
+package demo.finance.account_holder.pojo.constant;
 
 public class AccountHolderViewConstants {
 

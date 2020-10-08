@@ -13,9 +13,9 @@ import demo.finance.account_info.pojo.po.AccountInfo;
 import demo.finance.credit_bill.mapper.BillInfoMapper;
 import demo.finance.credit_bill.mapper.CreditBillsMapper;
 import demo.finance.credit_bill.mapper.query.BillInfoQuery;
-import demo.finance.credit_bill.pojo.BillInfo;
 import demo.finance.credit_bill.pojo.BillInfoCustomDetail;
-import demo.finance.credit_bill.pojo.CreditBills;
+import demo.finance.credit_bill.pojo.po.BillInfo;
+import demo.finance.credit_bill.pojo.po.CreditBills;
 import demo.finance.credit_bill.service.CreditBillsService;
 
 @Service
@@ -101,6 +101,11 @@ public class CreditBillsServiceImpl extends CommonService implements CreditBills
 	
 	@Override
 	public List<BillInfoCustomDetail> getBillCustomDetailByAccountInfoWithBankInfo(List<AccountInfoWithBankInfo> accountInfos) {
+		/*
+		 * FIXME 
+		 * BillInfoCustomDetail --> vo
+		 * account id CAN NOT return to front end
+		 */
 		if(accountInfos == null || accountInfos.size() <= 0) {
 			return new ArrayList<BillInfoCustomDetail>();
 		}

@@ -3,9 +3,11 @@ package demo.finance.credit_bill.pojo;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
+import demo.finance.credit_bill.pojo.po.BillInfo;
+
 public class BillInfoCustomDetail {
 	
-	private Integer accountId;
+	private Long accountId;
 
 	private LocalDate lastBillDate;
 	private LocalDate nextBillDate;
@@ -18,11 +20,11 @@ public class BillInfoCustomDetail {
 	private LocalDate thisRefundDate;
 	private LocalDate nextRefundDate;
 	
-	public Integer getAccountId() {
+	public Long getAccountId() {
 		return accountId;
 	}
 
-	public void setAccountId(Integer accountId) {
+	public void setAccountId(Long accountId) {
 		this.accountId = accountId;
 	}
 
@@ -91,7 +93,7 @@ public class BillInfoCustomDetail {
 	}
 
 	public BillInfoCustomDetail(BillInfo billInfo) {
-		this.setAccountId(billInfo.getAccountId());
+		this.setAccountId(billInfo.getAccountId().longValue());
 
 		LocalDate now = LocalDate.now();
 		LocalDate thisBillDate;

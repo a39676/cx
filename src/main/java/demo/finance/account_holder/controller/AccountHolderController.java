@@ -19,7 +19,7 @@ import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.user.controller.UsersController;
 import demo.common.controller.CommonController;
 import demo.config.costom_component.BaseUtilCustom;
-import demo.finance.account_holder.AccountHolderViewConstants;
+import demo.finance.account_holder.pojo.constant.AccountHolderViewConstants;
 import demo.finance.account_holder.pojo.constant.HolderUrlConstant;
 import demo.finance.account_holder.pojo.po.AccountHolder;
 import demo.finance.account_holder.service.AccountHolderService;

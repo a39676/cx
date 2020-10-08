@@ -5,7 +5,7 @@ import demo.finance.common.pojo.constant.FinanceView;
 public class AccountInfoView {
 	
 	// accountInfoViews
-	public static final String ROOT = FinanceView.root + "/accountInfo";
+	public static final String ROOT = FinanceView.ROOT + "/accountInfo";
 	
 	public static final String ACCOUNT_INFO = ROOT + "/accountInfo";
 	public static final String ACCOUNT_DETAIL = ROOT + "/accountDetail";

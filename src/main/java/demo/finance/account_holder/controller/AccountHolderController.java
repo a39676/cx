@@ -20,12 +20,12 @@ import demo.base.user.controller.UsersController;
 import demo.common.controller.CommonController;
 import demo.config.costom_component.BaseUtilCustom;
 import demo.finance.account_holder.AccountHolderViewConstants;
-import demo.finance.account_holder.pojo.HolderUrlConstant;
+import demo.finance.account_holder.pojo.constant.HolderUrlConstant;
 import demo.finance.account_holder.pojo.po.AccountHolder;
 import demo.finance.account_holder.service.AccountHolderService;
 
 @Controller
-@RequestMapping(value = HolderUrlConstant.accountHolderRoot)
+@RequestMapping(value = HolderUrlConstant.ROOT)
 public class AccountHolderController extends CommonController {
 	
 	@Autowired
@@ -43,7 +43,7 @@ public class AccountHolderController extends CommonController {
 	 * @param holderName
 	 * @return
 	 */
-	@PostMapping(value = HolderUrlConstant.holderList, produces = "text/html;charset=UTF-8")
+	@PostMapping(value = HolderUrlConstant.HOLDER_LIST, produces = "text/html;charset=UTF-8")
 	@ResponseBody public ModelAndView holderList(
 		@RequestParam(value = "holderId", defaultValue = "0" ) Long id,
 		@RequestParam(value = "holderName") String holderName
@@ -84,7 +84,7 @@ public class AccountHolderController extends CommonController {
 	}
 	
 	
-	@PostMapping(value = HolderUrlConstant.holderRegister)
+	@PostMapping(value = HolderUrlConstant.HOLDER_REGISTER)
 	public ModelAndView holderRegister(
 		HttpServletRequest request, 
 		HttpServletResponse response

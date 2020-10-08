@@ -159,16 +159,6 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	}
 
 	@Override
-	public AccountInfo getAccountInfoById(int id) {
-		try {
-			return accountInfoMapper.getAcountInfoById(id);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	@Override
 	public CommonResult accountNumberDuplicateCheck(AccountNumberDuplicateCheckDTO dto) {
 		
 		// 后台过滤  仅保留输入字符串中的数字
@@ -238,8 +228,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		return result;
 	}
 	
-	@Override
-	public List<AccountInfo> findByCondition(FindAccountInfoByConditionDTO dto) {
+	private List<AccountInfo> findByCondition(FindAccountInfoByConditionDTO dto) {
 		return accountInfoMapper.findByCondition(dto);
 	}
 	
@@ -419,9 +408,6 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		}
 		
 	}
-	
-	// 多处逻辑未严谨,应再完善
-
 	
 	@Override
 	public boolean checkAccountNumberBelongUser(String accountNumber) {

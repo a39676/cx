@@ -176,8 +176,8 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		
 		CommonResult result = new CommonResult();
 		
-		if (accountNumberInput.length() > AccountInfoConstant.accountNumberLengthMax || 
-				accountNumberInput.length() < AccountInfoConstant.accountNumberLengthMin) {
+		if (accountNumberInput.length() > AccountInfoConstant.ACCOUNT_NUMBER_LENGTH_MAX || 
+				accountNumberInput.length() < AccountInfoConstant.ACCOUNT_NUMBER_LENGTH_MIN) {
 			
 			result.setMessage("Please fill in correct account number.");
 			

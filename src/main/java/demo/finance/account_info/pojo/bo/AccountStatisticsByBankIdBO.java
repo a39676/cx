@@ -1,11 +1,9 @@
-package demo.finance.account_info.pojo.statistics;
+package demo.finance.account_info.pojo.bo;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-import demo.finance.account_info.pojo.bo.AccountInfoWithBankInfo;
-
-public class AccountStatisticsByBankId {
+public class AccountStatisticsByBankIdBO {
 
 	private Long bankId;
 	

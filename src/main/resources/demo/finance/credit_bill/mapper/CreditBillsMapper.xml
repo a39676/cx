@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="demo.finance.credit_bill.mapper.CreditBillsMapper">
 
-  <resultMap id="BaseResultMap" type="demo.finance.credit_bill.pojo.CreditBills">
+  <resultMap id="BaseResultMap" type="demo.finance.credit_bill.pojo.po.CreditBills">
     <result column="bill_id" jdbcType="INTEGER" property="billId" />
     <result column="account_id" jdbcType="INTEGER" property="accountId" />
     <result column="last_refund_date" jdbcType="TIMESTAMP" property="lastRefundDate" />
@@ -13,7 +13,7 @@
     <result column="marker" jdbcType="CHAR" property="marker" />
   </resultMap>
   
-  <insert id="insert" parameterType="demo.finance.credit_bill.pojo.CreditBills">
+  <insert id="insert" parameterType="demo.finance.credit_bill.pojo.po.CreditBills">
     insert into credit_bills (bill_id, account_id, last_refund_date, 
       bill_amount, min_refund_amount, create_time, 
       remark, marker)
@@ -22,7 +22,7 @@
       #{remark,jdbcType=VARCHAR}, #{marker,jdbcType=CHAR})
   </insert>
   
-  <insert id="insertSelective" parameterType="demo.finance.credit_bill.pojo.CreditBills">
+  <insert id="insertSelective" parameterType="demo.finance.credit_bill.pojo.po.CreditBills">
     insert into credit_bills
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="billId != null">

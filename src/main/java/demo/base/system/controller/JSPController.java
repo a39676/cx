@@ -11,7 +11,7 @@ import demo.base.system.pojo.constant.BaseUrl;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.system.pojo.constant.JSPUrl;
 import demo.common.controller.CommonController;
-import demo.finance.account_holder.pojo.HolderUrlConstant;
+import demo.finance.account_holder.pojo.constant.HolderUrlConstant;
 import demo.finance.account_info.pojo.constant.AccountUrl;
 import demo.finance.trading.pojo.constant.TradingUrl;
 
@@ -37,7 +37,7 @@ public class JSPController extends CommonController {
 		
 		HashMap<String, String> accountHolderPart = new HashMap<String, String>();
 		accountHolderPart.put("accountList", AccountUrl.accountList);
-		accountHolderPart.put("holderRegister", HolderUrlConstant.holderRegister);
+		accountHolderPart.put("holderRegister", HolderUrlConstant.HOLDER_REGISTER);
 		
 		HashMap<String, Object> userPart = new HashMap<String, Object>();
 		HashMap<String, String> userOption = new HashMap<String, String>();

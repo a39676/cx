@@ -1,4 +1,4 @@
-package demo.finance.credit_bill.pojo;
+package demo.finance.credit_bill.pojo.po;
 
 import java.math.BigDecimal;
 import java.util.Date;

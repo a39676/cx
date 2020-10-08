@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="demo.finance.credit_bill.mapper.BillInfoMapper">
 
-  <resultMap id="BaseResultMap" type="demo.finance.credit_bill.pojo.BillInfo">
+  <resultMap id="BaseResultMap" type="demo.finance.credit_bill.pojo.po.BillInfo">
     <result column="bill_info_id" jdbcType="INTEGER" property="billInfoId" />
     <result column="account_id" jdbcType="INTEGER" property="accountId" />
     <result column="bill_date" jdbcType="INTEGER" property="billDate" />
@@ -12,7 +12,7 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
 
-  <insert id="insert" parameterType="demo.finance.credit_bill.pojo.BillInfo">
+  <insert id="insert" parameterType="demo.finance.credit_bill.pojo.po.BillInfo">
     insert into bill_info (bill_info_id, account_id, bill_date, 
       free_days, last_refund_date, is_delete, 
       create_time)
@@ -21,7 +21,7 @@
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
 
-  <insert id="insertSelective" parameterType="demo.finance.credit_bill.pojo.BillInfo">
+  <insert id="insertSelective" parameterType="demo.finance.credit_bill.pojo.po.BillInfo">
     insert into bill_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="billInfoId != null">

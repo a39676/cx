@@ -1,4 +1,4 @@
-package demo.finance.credit_bill;
+package demo.finance.credit_bill.pojo.constant;
 
 public class CreditBillViewConstants {
 

@@ -13,7 +13,7 @@ public class JoySkillBattleServiceImpl extends JoyCommonService implements JoySk
 	 * TODO
 	 * 需要双方所有数据
 	 * 双方人物id, 双方buff Map,  
-	 */
+	 */ 
 	public void skillHandler(JoySkillType skillType) {
 		if(JoySkillType.firstMiracle.equals(skillType)) {
 			firstMiracle();

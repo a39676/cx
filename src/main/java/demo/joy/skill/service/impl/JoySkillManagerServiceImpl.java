@@ -12,6 +12,7 @@ import demo.joy.skill.mapper.JoySkillUserMapper;
 import demo.joy.skill.pojo.po.JoySkillStore;
 import demo.joy.skill.pojo.po.JoySkillStoreExample;
 import demo.joy.skill.pojo.po.JoySkillUser;
+import demo.joy.skill.pojo.type.JoySkillType;
 import demo.joy.skill.service.JoySkillManagerService;
 
 @Service
@@ -59,5 +60,10 @@ public class JoySkillManagerServiceImpl extends JoyCommonService implements JoyS
 		r.setMessage(String.valueOf(insertCount));
 		
 		return r;
+	}
+	
+	@Override
+	public JoySkillType[] getAllSkill() {
+		return JoySkillType.values();
 	}
 }

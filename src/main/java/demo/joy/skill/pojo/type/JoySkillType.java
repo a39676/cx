@@ -3,6 +3,8 @@ package demo.joy.skill.pojo.type;
 public enum JoySkillType {
 	
 	firstMiracle("firstMiracle", 0),
+	normalA("normalA", 1),
+	
 	;
 	
 	private String name;

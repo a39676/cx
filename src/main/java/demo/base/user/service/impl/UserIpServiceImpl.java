@@ -11,7 +11,7 @@ import demo.base.user.pojo.dto.FindLastUserIpDTO;
 import demo.base.user.pojo.po.UserIp;
 import demo.base.user.pojo.vo.UserIpVO;
 import demo.base.user.service.UserIpService;
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 
 @Service
 public class UserIpServiceImpl extends CommonService implements UserIpService {

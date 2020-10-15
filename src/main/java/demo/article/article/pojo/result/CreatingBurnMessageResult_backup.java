@@ -1,7 +1,7 @@
 package demo.article.article.pojo.result;
 
 import demo.article.article.pojo.po.ArticleBurn;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 
 public class CreatingBurnMessageResult_backup extends CommonResultCX {
 

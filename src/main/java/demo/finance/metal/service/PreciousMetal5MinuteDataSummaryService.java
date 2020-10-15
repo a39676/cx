@@ -2,7 +2,7 @@ package demo.finance.metal.service;
 
 import java.time.LocalDateTime;
 
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 import precious_metal.pojo.type.MetalType;
 
 public interface PreciousMetal5MinuteDataSummaryService {

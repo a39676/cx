@@ -4,7 +4,7 @@ import demo.finance.common.pojo.constant.FinanceView;
 
 public class BankViews {
 	
-	public static final String root = FinanceView.root + "/bank";
+	public static final String root = FinanceView.ROOT + "/bank";
 	
 	public static final String bankUnionSelector = root + "/bankUnionSelector";
 	public static final String bankIdSelector = root + "/bankIdSelector";

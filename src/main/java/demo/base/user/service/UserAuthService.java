@@ -9,7 +9,7 @@ import demo.base.user.pojo.dto.FindUserAuthDTO;
 import demo.base.user.pojo.result.FindUserAuthResult;
 import demo.base.user.pojo.result.FindUserAuthVOResult;
 import demo.base.user.pojo.type.AuthType;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 
 public interface UserAuthService {
 

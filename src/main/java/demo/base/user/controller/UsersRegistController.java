@@ -26,9 +26,9 @@ import demo.base.user.pojo.dto.UserRegistDTO;
 import demo.base.user.pojo.result.NewUserRegistResult;
 import demo.base.user.pojo.type.SystemRolesType;
 import demo.base.user.service.UserRegistService;
-import demo.baseCommon.controller.CommonController;
-import demo.baseCommon.pojo.result.CommonResultCX;
-import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.common.controller.CommonController;
+import demo.common.pojo.result.CommonResultCX;
+import demo.common.pojo.type.ResultTypeCX;
 import demo.config.costom_component.BaseUtilCustom;
 import io.swagger.annotations.ApiOperation;
 

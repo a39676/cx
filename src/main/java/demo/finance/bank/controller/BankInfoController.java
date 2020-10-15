@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import demo.baseCommon.controller.CommonController;
+import demo.common.controller.CommonController;
 import demo.finance.bank.pojo.bo.BankInfoCustomBO;
 import demo.finance.bank.pojo.bo.BankInfoWithBankUnionBO;
 import demo.finance.bank.pojo.constant.BankUrl;

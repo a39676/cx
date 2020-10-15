@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import demo.finance.account_info.pojo.bo.AccountInfoWithBankInfo;
-import demo.finance.account_info.pojo.statistics.AccountStatisticsByBankId;
+import demo.finance.account_info.pojo.bo.AccountStatisticsByBankIdBO;
 import demo.finance.account_info.pojo.type.AccountType;
 import demo.finance.account_info.service.AccountInfoStatisticsService;
 
@@ -14,11 +14,11 @@ import demo.finance.account_info.service.AccountInfoStatisticsService;
 public class AccountInfoStatisticsServiceImpl implements AccountInfoStatisticsService{
 
 	@Override
-	public List<AccountStatisticsByBankId> accountStatisticsByBankId(List<AccountInfoWithBankInfo> accountInfoList) {
+	public List<AccountStatisticsByBankIdBO> accountStatisticsByBankId(List<AccountInfoWithBankInfo> accountInfoList) {
 		
-		List<AccountStatisticsByBankId> resultList = new ArrayList<AccountStatisticsByBankId>();
+		List<AccountStatisticsByBankIdBO> resultList = new ArrayList<AccountStatisticsByBankIdBO>();
 		
-		AccountStatisticsByBankId statistican;
+		AccountStatisticsByBankIdBO statistican;
 		
 		for(AccountInfoWithBankInfo account : accountInfoList) {
 			if(AccountType.creditAccount.getCode().equals(account.getAccountType())) {
@@ -26,7 +26,7 @@ public class AccountInfoStatisticsServiceImpl implements AccountInfoStatisticsSe
 					statistican.addLiability(account.getAccountBalance());
 					statistican.addSharingQuota(account);
 				} else {
-					statistican = new AccountStatisticsByBankId();
+					statistican = new AccountStatisticsByBankIdBO();
 					statistican.setBankId(account.getBankId());
 					statistican.addLiability(account.getAccountBalance());
 					statistican.addSharingQuota(account);
@@ -39,8 +39,8 @@ public class AccountInfoStatisticsServiceImpl implements AccountInfoStatisticsSe
 	}
 	
 	@Override
-	public AccountStatisticsByBankId getStatisticsByBankId(List<AccountStatisticsByBankId> accountList, Long bankId) {
-		for(AccountStatisticsByBankId account : accountList) {
+	public AccountStatisticsByBankIdBO getStatisticsByBankId(List<AccountStatisticsByBankIdBO> accountList, Long bankId) {
+		for(AccountStatisticsByBankIdBO account : accountList) {
 			if(account.getBankId().equals(bankId)) {
 				return account;
 			}

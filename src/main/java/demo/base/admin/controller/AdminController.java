@@ -30,8 +30,8 @@ import demo.base.user.pojo.constant.UserManagerView;
 import demo.base.user.pojo.dto.UserIpDeleteDTO;
 import demo.base.user.pojo.po.Users;
 import demo.base.user.service.UsersService;
-import demo.baseCommon.controller.CommonController;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.controller.CommonController;
+import demo.common.pojo.result.CommonResultCX;
 import demo.finance.account_info.controller.AccountInfoController;
 import net.sf.json.JSONObject;
 

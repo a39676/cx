@@ -16,7 +16,7 @@ import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.BasePageService;
 import demo.base.system.service.HostnameService;
 import demo.base.user.pojo.type.SystemRolesType;
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 
 @Service
 public class BasePageServiceImpl extends CommonService implements BasePageService {

@@ -3,7 +3,7 @@ package demo.base.user.service;
 import java.util.List;
 
 import demo.base.user.pojo.po.UsersDetail;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 
 public interface UserDetailService {
 

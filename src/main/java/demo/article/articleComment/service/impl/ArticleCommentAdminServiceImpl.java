@@ -18,9 +18,9 @@ import demo.article.articleComment.pojo.po.ArticleComment;
 import demo.article.articleComment.pojo.po.ArticleCommentReview;
 import demo.article.articleComment.pojo.type.ArticleCommentReviewType;
 import demo.article.articleComment.service.ArticleCommentAdminService;
-import demo.baseCommon.pojo.result.CommonResultCX;
-import demo.baseCommon.pojo.type.ResultTypeCX;
-import demo.baseCommon.service.CommonService;
+import demo.common.pojo.result.CommonResultCX;
+import demo.common.pojo.type.ResultTypeCX;
+import demo.common.service.CommonService;
 
 @Service
 public class ArticleCommentAdminServiceImpl extends CommonService implements ArticleCommentAdminService {

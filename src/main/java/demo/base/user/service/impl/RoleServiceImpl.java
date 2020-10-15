@@ -20,7 +20,7 @@ import demo.base.user.pojo.type.RolesType;
 import demo.base.user.pojo.type.SystemRolesType;
 import demo.base.user.pojo.vo.RoleVO;
 import demo.base.user.service.RoleService;
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 
 @Service
 public class RoleServiceImpl extends CommonService implements RoleService {

@@ -14,9 +14,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.baseCommon.pojo.result.CommonResultCX;
-import demo.baseCommon.pojo.type.ResultTypeCX;
-import demo.baseCommon.service.CommonService;
+import demo.common.pojo.result.CommonResultCX;
+import demo.common.pojo.type.ResultTypeCX;
+import demo.common.service.CommonService;
 import demo.tool.pojo.constant.ToolPathConstant;
 import demo.tool.pojo.dto.CleanTmpFilesDTO;
 import demo.tool.service.ComplexToolService;

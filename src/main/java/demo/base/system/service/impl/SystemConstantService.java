@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import demo.base.system.mapper.SystemConstantMapper;
 import demo.base.system.pojo.bo.SystemConstant;
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 
 @Service
 public class SystemConstantService extends CommonService {

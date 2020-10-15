@@ -3,7 +3,7 @@ package demo.base.organizations.pojo.result;
 import java.util.List;
 
 import demo.base.organizations.pojo.po.Organizations;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 
 public class FindUserControlOrgResult extends CommonResultCX {
 

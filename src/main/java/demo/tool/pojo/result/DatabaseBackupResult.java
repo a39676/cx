@@ -1,6 +1,6 @@
 package demo.tool.pojo.result;
 
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 
 public class DatabaseBackupResult extends CommonResultCX {
 

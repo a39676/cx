@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.base.system.pojo.bo.SystemConstantStore;
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 import demo.image.mapper.ImageCloudinaryMapper;
 import demo.image.mapper.ImageComplexMapper;
 import demo.image.mapper.ImageStoreMapper;

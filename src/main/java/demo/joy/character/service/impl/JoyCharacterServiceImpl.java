@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.type.GenderType;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 import demo.joy.character.mapper.JoyCharacterMapper;
 import demo.joy.character.pojo.constant.JoyCharacterConstant;
 import demo.joy.character.pojo.dto.CreateJoyCharacterCharacterDTO;

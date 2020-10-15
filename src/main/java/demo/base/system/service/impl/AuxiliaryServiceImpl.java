@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
 import demo.base.system.service.AuxiliaryService;
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 
 @Service
 public class AuxiliaryServiceImpl extends CommonService implements AuxiliaryService {

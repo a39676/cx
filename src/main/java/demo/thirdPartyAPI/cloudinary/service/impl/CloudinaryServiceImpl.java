@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.cloudinary.Cloudinary;
 
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 import demo.thirdPartyAPI.cloudinary.service.CloudinaryService;
 import toolPack.cloudinary.pojo.constant.CloudinaryConstant;
 import toolPack.cloudinary.pojo.result.CloudinaryDeleteResult;

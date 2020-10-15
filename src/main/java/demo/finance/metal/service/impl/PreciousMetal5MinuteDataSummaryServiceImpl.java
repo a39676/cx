@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 import demo.finance.metal.mapper.MetalPrice5minuteMapper;
 import demo.finance.metal.pojo.po.MetalPrice;
 import demo.finance.metal.pojo.po.MetalPrice5minute;

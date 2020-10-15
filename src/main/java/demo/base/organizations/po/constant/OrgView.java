@@ -1,6 +1,6 @@
 package demo.base.organizations.po.constant;
 
-import demo.base.common.pojo.constant.BaseView;
+import demo.base.pojo.constant.BaseView;
 
 public class OrgView {
 

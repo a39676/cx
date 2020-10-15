@@ -31,8 +31,8 @@ import demo.base.user.pojo.type.RolesType;
 import demo.base.user.service.AuthRoleService;
 import demo.base.user.service.AuthService;
 import demo.base.user.service.RoleService;
-import demo.baseCommon.pojo.result.CommonResultCX;
-import demo.baseCommon.service.CommonService;
+import demo.common.pojo.result.CommonResultCX;
+import demo.common.service.CommonService;
 
 @Service
 public class AuthRoleServiceImpl extends CommonService implements AuthRoleService {

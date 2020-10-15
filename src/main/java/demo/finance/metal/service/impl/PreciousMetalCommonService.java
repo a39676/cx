@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 import demo.finance.metal.mapper.MetalPriceMapper;
 import demo.finance.metal.pojo.po.MetalPrice;
 import demo.finance.metal.pojo.po.MetalPriceExample;

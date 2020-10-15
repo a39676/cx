@@ -2,7 +2,7 @@ package demo.article.article.pojo.result.jsonRespon;
 
 import java.util.List;
 
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 
 public class ArticleFileSaveResult extends CommonResultCX {
 

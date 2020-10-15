@@ -2,7 +2,7 @@ package demo.finance.bank.pojo.result;
 
 import java.util.List;
 
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 import demo.finance.bank.pojo.po.BankUnion;
 
 public class FindBankUnionResult extends CommonResultCX {

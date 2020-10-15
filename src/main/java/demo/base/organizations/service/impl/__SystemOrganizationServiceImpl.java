@@ -12,7 +12,7 @@ import demo.base.organizations.pojo.po.Organizations;
 import demo.base.organizations.pojo.result.OrgRegistResult;
 import demo.base.organizations.service.__SystemOrganizationService;
 import demo.base.system.pojo.constant.InitSystemConstant;
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 
 @Service
 public class __SystemOrganizationServiceImpl extends CommonService implements __SystemOrganizationService {

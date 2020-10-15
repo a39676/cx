@@ -5,7 +5,7 @@ import demo.article.article.pojo.param.controllerParam.BatchUpdatePrimaryKeyPara
 import demo.article.article.pojo.param.controllerParam.ChangeChannelParam;
 import demo.article.article.pojo.param.controllerParam.ReviewArticleLongParam;
 import demo.article.article.pojo.param.controllerParam.SetArticleHotParam;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 
 public interface ArticleAdminService {
 

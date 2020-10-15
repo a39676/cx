@@ -27,7 +27,7 @@ import auxiliaryCommon.pojo.constant.ServerHost;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.system.service.ExceptionService;
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 import demo.interaction.autoTest.pojo.vo.AutoTestJsonReportLineVO;
 import demo.interaction.autoTest.pojo.vo.AutoTestJsonReportVO;
 import demo.interaction.autoTest.service.AutoTestDemoService;

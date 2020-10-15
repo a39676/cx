@@ -4,7 +4,7 @@ import java.util.List;
 
 import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.po.UserAuth;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 
 public class FindUserAuthResult extends CommonResultCX {
 

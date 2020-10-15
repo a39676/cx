@@ -7,7 +7,7 @@ import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import demo.baseCommon.controller.CommonController;
+import demo.common.controller.CommonController;
 import net.sf.json.JSONObject;
 
 @Controller

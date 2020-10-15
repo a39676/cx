@@ -7,7 +7,7 @@ import demo.base.user.pojo.dto.FindAuthRoleDTO;
 import demo.base.user.pojo.dto.FindRolesDTO;
 import demo.base.user.pojo.result.FindAuthRoleResult;
 import demo.base.user.pojo.result.FindRolesResult;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 
 public interface AuthRoleService {
 

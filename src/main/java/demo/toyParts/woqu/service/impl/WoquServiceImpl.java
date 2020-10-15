@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.type.GenderType;
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 import demo.toyParts.woqu.mapper.WusersMapper;
 import demo.toyParts.woqu.pojo.po.Wusers;
 import demo.toyParts.woqu.service.WoquService;

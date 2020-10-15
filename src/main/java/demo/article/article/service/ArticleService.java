@@ -21,7 +21,7 @@ import demo.article.article.pojo.param.controllerParam.CreatingArticleParam;
 import demo.article.article.pojo.param.controllerParam.FindArticleLongByArticleSummaryPrivateKeyDTO;
 import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.article.pojo.result.jsonRespon.FindArticleLongResult;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 
 public interface ArticleService {
 

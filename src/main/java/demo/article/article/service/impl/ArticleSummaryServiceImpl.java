@@ -41,7 +41,7 @@ import demo.article.articleComment.controller.ArticleCommentAdminController;
 import demo.article.articleComment.controller.ArticleCommentController;
 import demo.article.articleComment.pojo.po.ArticleCommentCount;
 import demo.base.system.pojo.bo.SystemConstantStore;
-import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.common.pojo.type.ResultTypeCX;
 import demo.toyParts.vcode.pojo.param.GetVcodeByValueParam;
 import demo.toyParts.vcode.pojo.po.VCode;
 import demo.toyParts.vcode.service.VCodeService;

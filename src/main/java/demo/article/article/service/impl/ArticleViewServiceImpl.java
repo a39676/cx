@@ -11,7 +11,7 @@ import demo.article.article.pojo.po.ArticleViewCount;
 import demo.article.article.pojo.po.example.ArticleViewCountExample;
 import demo.article.article.pojo.po.example.ArticleViewCountExample.Criteria;
 import demo.article.article.service.ArticleViewService;
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 
 @Service
 public class ArticleViewServiceImpl extends CommonService implements ArticleViewService {

@@ -16,15 +16,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.baseCommon.pojo.result.CommonResultCX;
-import demo.baseCommon.pojo.type.TransationType;
-import demo.baseCommon.service.CommonService;
+import demo.common.pojo.result.CommonResultCX;
+import demo.common.pojo.type.TransationType;
+import demo.common.service.CommonService;
 import demo.finance.account_holder.controller.AccountHolderController;
 import demo.finance.account_holder.pojo.po.AccountHolder;
 import demo.finance.account_info.mapper.AccountInfoMapper;
 import demo.finance.account_info.mapper.AccountInfoMarkerMapper;
 import demo.finance.account_info.pojo.bo.AccountInfoWithBankInfo;
 import demo.finance.account_info.pojo.bo.AccountNumberWithAliasBO;
+import demo.finance.account_info.pojo.bo.AccountStatisticsByBankIdBO;
 import demo.finance.account_info.pojo.constant.AccountInfoConstant;
 import demo.finance.account_info.pojo.dto.ModifyValidDateDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.AccountInfoRegistDTO;
@@ -40,7 +41,6 @@ import demo.finance.account_info.pojo.result.AccountRegistResult;
 import demo.finance.account_info.pojo.result.GetAccountListResult;
 import demo.finance.account_info.pojo.result.GetAccountNumberAndAliasListResult;
 import demo.finance.account_info.pojo.result.InsertTransationResult;
-import demo.finance.account_info.pojo.statistics.AccountStatisticsByBankId;
 import demo.finance.account_info.pojo.type.AccountType;
 import demo.finance.account_info.pojo.vo.SummaryAccountsByBankId;
 import demo.finance.account_info.service.AccountInfoService;
@@ -159,16 +159,6 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	}
 
 	@Override
-	public AccountInfo getAccountInfoById(int id) {
-		try {
-			return accountInfoMapper.getAcountInfoById(id);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	@Override
 	public CommonResult accountNumberDuplicateCheck(AccountNumberDuplicateCheckDTO dto) {
 		
 		// 后台过滤  仅保留输入字符串中的数字
@@ -176,8 +166,8 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		
 		CommonResult result = new CommonResult();
 		
-		if (accountNumberInput.length() > AccountInfoConstant.accountNumberLengthMax || 
-				accountNumberInput.length() < AccountInfoConstant.accountNumberLengthMin) {
+		if (accountNumberInput.length() > AccountInfoConstant.ACCOUNT_NUMBER_LENGTH_MAX || 
+				accountNumberInput.length() < AccountInfoConstant.ACCOUNT_NUMBER_LENGTH_MIN) {
 			
 			result.setMessage("Please fill in correct account number.");
 			
@@ -238,8 +228,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		return result;
 	}
 	
-	@Override
-	public List<AccountInfo> findByCondition(FindAccountInfoByConditionDTO dto) {
+	private List<AccountInfo> findByCondition(FindAccountInfoByConditionDTO dto) {
 		return accountInfoMapper.findByCondition(dto);
 	}
 	
@@ -278,19 +267,19 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		}
 		
 		// 按银行ID 整理出负债汇总(不算溢存款),各自的最高授信额度
-		List<AccountStatisticsByBankId> statisticsList = accountInfoStatisticsService.accountStatisticsByBankId(accountInfoList);
+		List<AccountStatisticsByBankIdBO> statisticsList = accountInfoStatisticsService.accountStatisticsByBankId(accountInfoList);
 		
 		setAvaliableQuotaByStatisticResult(statisticsList, accountInfoList);
 		
 		return accountInfoList;
 	}
 	
-	private void setAvaliableQuotaByStatisticResult(List<AccountStatisticsByBankId> statisticsList, List<AccountInfoWithBankInfo> accountInfoList) {
+	private void setAvaliableQuotaByStatisticResult(List<AccountStatisticsByBankIdBO> statisticsList, List<AccountInfoWithBankInfo> accountInfoList) {
 		BigDecimal thisAccountAvaliableQuota;
 		BigDecimal thisCreditQuota;
 		BigDecimal thisBankRemainingQuota;
 		Long thisBankId;
-		AccountStatisticsByBankId thisStatisticsResult; 
+		AccountStatisticsByBankIdBO thisStatisticsResult; 
 		for(AccountInfoWithBankInfo account : accountInfoList) {
 			if(AccountType.creditAccount.getCode().equals(account.getAccountType())) {
 				thisBankId = account.getBankId();
@@ -419,9 +408,6 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		}
 		
 	}
-	
-	// 多处逻辑未严谨,应再完善
-
 	
 	@Override
 	public boolean checkAccountNumberBelongUser(String accountNumber) {

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import demo.baseCommon.controller.CommonController;
+import demo.common.controller.CommonController;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.service.TestService;
 

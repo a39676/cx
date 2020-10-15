@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import demo.baseCommon.pojo.type.TransationType;
-import demo.baseCommon.service.CommonService;
+import demo.common.pojo.type.TransationType;
+import demo.common.service.CommonService;
 import demo.finance.account_info.controller.AccountInfoController;
 import demo.finance.account_info.pojo.dto.controllerDTO.InsertNewTransationDTO;
 import demo.finance.account_info.pojo.po.AccountInfo;

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 import demo.finance.account_info.pojo.bo.AccountInfoWithBankInfo;
 import demo.finance.account_info.pojo.dto.ModifyValidDateDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.AccountInfoRegistDTO;
@@ -25,8 +25,6 @@ public interface AccountInfoService {
 	
 	AccountRegistResult accountRegistration(AccountInfoRegistDTO dto);
 
-	AccountInfo getAccountInfoById(int id);
-	
 	CommonResult accountNumberDuplicateCheck(AccountNumberDuplicateCheckDTO dto);
 	
 	String getMainAccountNum(int id);
@@ -81,8 +79,6 @@ public interface AccountInfoService {
 	List<String> findAccountNumberListByCondition(FindAccountInfoByConditionDTO dto);
 
 	GetAccountNumberAndAliasListResult findCurrentAccountNumberListByCondition(FindAccountInfoByConditionDTO dto);
-
-	List<AccountInfo> findByCondition(FindAccountInfoByConditionDTO dto);
 
 	List<AccountInfo> findCurrentAccountInfoListByCondition(FindAccountInfoByConditionDTO dto);
 

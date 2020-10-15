@@ -13,7 +13,7 @@ import demo.base.system.pojo.po.IpRecord;
 import demo.base.system.pojo.po.IpRecordExample;
 import demo.base.system.pojo.type.IpReocrdType;
 import demo.base.system.service.IpRecordService;
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 
 @Service
 public class IpRecordServiceImpl extends CommonService implements IpRecordService {

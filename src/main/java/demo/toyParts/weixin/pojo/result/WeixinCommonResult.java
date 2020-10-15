@@ -1,6 +1,6 @@
 package demo.toyParts.weixin.pojo.result;
 
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 import demo.toyParts.weixin.pojo.type.WeixinResultType;
 import net.sf.json.JSONObject;
 

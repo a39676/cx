@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import demo.baseCommon.controller.CommonController;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.controller.CommonController;
+import demo.common.pojo.result.CommonResultCX;
 import demo.finance.metal.pojo.constant.PreciousMetalPriceUrl;
 import demo.finance.metal.pojo.dto.InsertNewMetalPriceNoticeSettingDTO;
 import demo.finance.metal.service.PreciousMetalService;

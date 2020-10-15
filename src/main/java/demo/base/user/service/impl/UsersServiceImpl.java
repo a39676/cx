@@ -41,7 +41,7 @@ import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.AuthRoleService;
 import demo.base.user.service.UserAuthService;
 import demo.base.user.service.UsersService;
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 import demo.tool.service.ValidRegexToolService;
 
 /**

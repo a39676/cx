@@ -11,7 +11,7 @@ import demo.article.article.pojo.dto.ArticleChannelManagerDTO;
 import demo.article.article.pojo.po.ArticleChannels;
 import demo.article.article.pojo.result.GetArticleChannelsResult;
 import demo.article.article.pojo.vo.ArticleChannelVO;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 
 public interface ArticleChannelService {
 

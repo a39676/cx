@@ -18,7 +18,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.article.service.ArticleService;
 import demo.article.article.service.impl.ArticleCommonService;
-import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.common.pojo.type.ResultTypeCX;
 import demo.pmemo.mapper.PNoteMapper;
 import demo.pmemo.pojo.constant.PMemoConstant;
 import demo.pmemo.pojo.dto.EditPNoteDTO;

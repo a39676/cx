@@ -14,8 +14,8 @@ import demo.article.articleComment.pojo.dto.DeleteArticleCommentDTO;
 import demo.article.articleComment.pojo.dto.PassArticleCommentDTO;
 import demo.article.articleComment.pojo.dto.RejectArticleCommentDTO;
 import demo.article.articleComment.service.ArticleCommentAdminService;
-import demo.baseCommon.controller.CommonController;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.controller.CommonController;
+import demo.common.pojo.result.CommonResultCX;
 
 @Controller
 @RequestMapping(value = ArticleAdminCommentUrlConstant.root)

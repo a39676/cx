@@ -5,13 +5,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import demo.common.service.CommonService;
+import demo.finance.common.service.impl.FinanceCommonService;
 import demo.finance.metal.mapper.MetalPriceMapper;
 import demo.finance.metal.pojo.po.MetalPrice;
 import demo.finance.metal.pojo.po.MetalPriceExample;
 import precious_metal.pojo.type.MetalType;
 
-public abstract class PreciousMetalCommonService extends CommonService {
+public abstract class PreciousMetalCommonService extends FinanceCommonService {
 	
 	@Autowired
 	protected MetalPriceMapper metalPriceMapper;
@@ -27,15 +27,6 @@ public abstract class PreciousMetalCommonService extends CommonService {
 		return metalPriceMapper.selectByExample(cacheExample);
 	}
 	
-	protected LocalDateTime nextStepTime(LocalDateTime time, int minuteStepLong) {
-		int currentMinute = time.getMinute();
-		int addMinute = 1;
-		while((currentMinute + addMinute) % minuteStepLong != 0) {
-			addMinute += 1;
-		}
-		return time.plusMinutes(addMinute).withSecond(0).withNano(0);
-	}
-
 	protected boolean isPreciousMetalsTransactionTime(LocalDateTime beiJingDateTime) {
 		LocalDateTime washtonNow = beiJingDateTime.minusHours(12);
 		int dayOfWeek = beiJingDateTime.getDayOfWeek().getValue();

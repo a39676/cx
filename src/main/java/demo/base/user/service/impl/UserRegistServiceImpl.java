@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import auxiliaryCommon.pojo.type.GenderType;
 import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.HostnameService;
@@ -38,7 +39,6 @@ import demo.base.user.service.UserAuthService;
 import demo.base.user.service.UserDetailService;
 import demo.base.user.service.UserRegistService;
 import demo.baseCommon.pojo.result.CommonResultCX;
-import demo.baseCommon.pojo.type.GenderType;
 import demo.baseCommon.pojo.type.ResultTypeCX;
 import demo.baseCommon.service.CommonService;
 import demo.config.costom_component.CustomPasswordEncoder;

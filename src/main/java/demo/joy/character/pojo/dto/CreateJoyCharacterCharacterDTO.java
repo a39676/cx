@@ -1,6 +1,6 @@
 package demo.joy.character.pojo.dto;
 
-import demo.baseCommon.pojo.type.GenderType;
+import auxiliaryCommon.pojo.type.GenderType;
 
 public class CreateJoyCharacterCharacterDTO {
 

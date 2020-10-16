@@ -1,4 +1,4 @@
-package demo.finance.metal.mq.reciver;
+package demo.finance.cryptoCoin.mq.reciver;
 
 import java.io.IOException;
 
@@ -11,22 +11,22 @@ import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
 
-import demo.finance.metal.service.PreciousMetalService;
-import finance.precious_metal.pojo.constant.PreciousMetalMQConstant;
-import finance.precious_metal.pojo.dto.PreciousMetailPriceDTO;
+import demo.finance.cryptoCoin.service.CryptoCoinPriceService;
+import finance.cryptoCoin.pojo.constant.CryptoCoinMQConstant;
+import finance.cryptoCoin.pojo.dto.CryptoCoinPriceDTO;
 
 @Component
-@RabbitListener(queues = PreciousMetalMQConstant.transmissionMetalPriceData)
-public class MetalPriceTransmissionAckReceiver {
+@RabbitListener(queues = CryptoCoinMQConstant.CRYPTO_CONI_PRICE_DATA)
+public class CryptoCoinPriceTransmissionAckReceiver {
 
 	@Autowired
-	private PreciousMetalService preciousMetalService;
+	private CryptoCoinPriceService cryptoCoinService;
 
 	@RabbitHandler
 	public void process(String messageStr, Channel channel, Message message) throws IOException {
 		try {
-			PreciousMetailPriceDTO dto = new Gson().fromJson(messageStr, PreciousMetailPriceDTO.class);
-			preciousMetalService.reciveMetalPrice(dto);
+			CryptoCoinPriceDTO dto = new Gson().fromJson(messageStr, CryptoCoinPriceDTO.class);
+			cryptoCoinService.reciveCoinPrice(dto);
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 		} catch (IOException e) {
 			channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);

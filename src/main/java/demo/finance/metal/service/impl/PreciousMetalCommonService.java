@@ -9,7 +9,7 @@ import demo.finance.common.service.impl.FinanceCommonService;
 import demo.finance.metal.mapper.MetalPriceMapper;
 import demo.finance.metal.pojo.po.MetalPrice;
 import demo.finance.metal.pojo.po.MetalPriceExample;
-import precious_metal.pojo.type.MetalType;
+import finance.precious_metal.pojo.type.MetalType;
 
 public abstract class PreciousMetalCommonService extends FinanceCommonService {
 	

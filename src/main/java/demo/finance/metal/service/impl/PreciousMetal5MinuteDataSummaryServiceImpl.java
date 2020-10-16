@@ -12,7 +12,7 @@ import demo.finance.metal.pojo.po.MetalPrice;
 import demo.finance.metal.pojo.po.MetalPrice5minute;
 import demo.finance.metal.pojo.po.MetalPrice5minuteExample;
 import demo.finance.metal.service.PreciousMetal5MinuteDataSummaryService;
-import precious_metal.pojo.type.MetalType;
+import finance.precious_metal.pojo.type.MetalType;
 
 @Service
 public class PreciousMetal5MinuteDataSummaryServiceImpl extends PreciousMetalCommonService implements PreciousMetal5MinuteDataSummaryService {

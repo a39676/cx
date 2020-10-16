@@ -14,7 +14,7 @@ import demo.common.pojo.result.CommonResultCX;
 import demo.finance.metal.pojo.constant.PreciousMetalPriceUrl;
 import demo.finance.metal.pojo.dto.InsertNewMetalPriceNoticeSettingDTO;
 import demo.finance.metal.service.PreciousMetalService;
-import precious_metal.pojo.constant.PreciousMetalPriceCommonUrl;
+import finance.precious_metal.pojo.constant.PreciousMetalPriceCommonUrl;
 
 @Controller
 @RequestMapping(value = PreciousMetalPriceCommonUrl.root)

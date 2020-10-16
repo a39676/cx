@@ -2,9 +2,18 @@ package demo.finance.common.service.impl;
 
 import java.time.LocalDateTime;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import demo.common.service.CommonService;
+import demo.tool.service.MailService;
+import demo.tool.service.ValidRegexToolService;
 
 public abstract class FinanceCommonService extends CommonService {
+	
+	@Autowired
+	protected MailService mailService;
+	@Autowired
+	protected ValidRegexToolService validRegexToolService;
 
 	protected LocalDateTime nextStepTime(LocalDateTime time, int minuteStepLong) {
 		int currentMinute = time.getMinute();

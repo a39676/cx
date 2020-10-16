@@ -21,19 +21,12 @@ import demo.finance.metal.pojo.po.MetalPriceExample.Criteria;
 import demo.finance.metal.pojo.po.MetalPriceNotice;
 import demo.finance.metal.service.PreciousMetalService;
 import demo.tool.pojo.type.MailType;
-import demo.tool.service.MailService;
-import demo.tool.service.ValidRegexToolService;
-import precious_metal.pojo.dto.PreciousMetailPriceDTO;
-import precious_metal.pojo.type.MetalType;
+import finance.precious_metal.pojo.dto.PreciousMetailPriceDTO;
+import finance.precious_metal.pojo.type.MetalType;
 import tool.pojo.type.UtilOfWeightType;
 
 @Service
 public class PreciousMetalServiceImpl extends PreciousMetalCommonService implements PreciousMetalService {
-
-	@Autowired
-	private MailService mailService;
-	@Autowired
-	private ValidRegexToolService validRegexToolService;
 
 	@Autowired
 	private MetalPriceNoticeMapper metalPriceNoticeMapper;

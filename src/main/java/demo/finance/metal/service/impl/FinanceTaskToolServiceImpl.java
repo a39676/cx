@@ -5,11 +5,14 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import demo.finance.metal.service.PreciousMetal5MinuteDataSummaryService;
+import demo.finance.metal.service.PreciousMetalNoticeService;
 import demo.finance.metal.service.PreciousMetalService;
 
 @Component
 public class FinanceTaskToolServiceImpl extends PreciousMetalCommonService {
 
+	@Autowired
+	private PreciousMetalNoticeService preciousMetalNoticeService;
 	@Autowired
 	private PreciousMetalService preciousMetalService;
 	@Autowired
@@ -17,7 +20,7 @@ public class FinanceTaskToolServiceImpl extends PreciousMetalCommonService {
 
 	@Scheduled(cron = "0 */1 * * * ?")
 	public void preciousMetalPriceNoticeHandler() {
-		preciousMetalService.noticeHandler();
+		preciousMetalNoticeService.noticeHandler();
 	}
 
 	@Scheduled(cron = "0 */1 * * * ?")

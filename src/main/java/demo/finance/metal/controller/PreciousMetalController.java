@@ -13,7 +13,7 @@ import demo.common.controller.CommonController;
 import demo.common.pojo.result.CommonResultCX;
 import demo.finance.metal.pojo.constant.PreciousMetalPriceUrl;
 import demo.finance.metal.pojo.dto.InsertNewMetalPriceNoticeSettingDTO;
-import demo.finance.metal.service.PreciousMetalService;
+import demo.finance.metal.service.PreciousMetalNoticeService;
 import finance.precious_metal.pojo.constant.PreciousMetalPriceCommonUrl;
 
 @Controller
@@ -21,16 +21,16 @@ import finance.precious_metal.pojo.constant.PreciousMetalPriceCommonUrl;
 public class PreciousMetalController extends CommonController {
 
 	@Autowired
-	private PreciousMetalService preciousMetalService;
+	private PreciousMetalNoticeService preciousMetalNoticeService;
 	
 	@PostMapping(value = PreciousMetalPriceUrl.INSERT_METAL_NOTICE_SETTING)
 	@ResponseBody
 	public CommonResultCX insertNewMetalPriceNoticeSetting(@RequestBody InsertNewMetalPriceNoticeSettingDTO dto) {
-		return preciousMetalService.insertNewMetalPriceNoticeSetting(dto);
+		return preciousMetalNoticeService.insertNewMetalPriceNoticeSetting(dto);
 	}
 	
 	@GetMapping(value = PreciousMetalPriceUrl.INSERT_METAL_NOTICE_SETTING)
 	public ModelAndView insertNewMetalPriceNoticeSetting() {
-		return preciousMetalService.insertNewMetalPriceNoticeSetting();
+		return preciousMetalNoticeService.insertNewMetalPriceNoticeSetting();
 	}
 }

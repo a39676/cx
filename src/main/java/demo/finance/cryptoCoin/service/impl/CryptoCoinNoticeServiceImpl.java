@@ -27,7 +27,7 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 	private CryptoCoinPriceNoticeMapper noticeMapper;
 
 	@Override
-	public CommonResult insertNewMetalPriceNoticeSetting(InsertNewCryptoCoinPriceNoticeSettingDTO dto) {
+	public CommonResult insertNewCryptoCoinPriceNoticeSetting(InsertNewCryptoCoinPriceNoticeSettingDTO dto) {
 		CommonResult r = new CommonResult();
 		CryptoCoinNoticeDTOCheckResult checkResult = noticeDTOCheck(dto);
 		if (checkResult.isFail()) {
@@ -66,6 +66,11 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 		CurrencyType currencyTpye = CurrencyType.getType(dto.getCoinType());
 		if (coinType == null || currencyTpye == null) {
 			r.failWithMessage("error param");
+			return r;
+		}
+		
+		if(dto.getMinuteRange() != null && dto.getMinuteRange() > 120) {
+			r.failWithMessage("minute range max 120");
 			return r;
 		}
 
@@ -137,7 +142,8 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 	public ModelAndView insertNewCryptoCoinPriceNoticeSetting() {
 		ModelAndView view = new ModelAndView("finance/cryptoCoin/insertNewCryptoCoinPriceNoticeSetting");
 		view.addObject("cryptoCoinType", CryptoCoinType.values());
-		view.addObject("currencyType", CurrencyType.values());
+//		view.addObject("currencyType", CurrencyType.values());
+		view.addObject("currencyType", CurrencyType.USD);
 		return view;
 	}
 

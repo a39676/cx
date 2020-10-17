@@ -9,7 +9,7 @@ public interface CryptoCoinNoticeService {
 
 	ModelAndView insertNewCryptoCoinPriceNoticeSetting();
 
-	CommonResult insertNewMetalPriceNoticeSetting(InsertNewCryptoCoinPriceNoticeSettingDTO dto);
+	CommonResult insertNewCryptoCoinPriceNoticeSetting(InsertNewCryptoCoinPriceNoticeSettingDTO dto);
 
 	void noticeHandler();
 

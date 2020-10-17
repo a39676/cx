@@ -2,6 +2,8 @@ package demo.finance.cryptoCoin.mapper;
 
 import demo.finance.cryptoCoin.pojo.po.CryptoCoinPriceNotice;
 import demo.finance.cryptoCoin.pojo.po.CryptoCoinPriceNoticeExample;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
@@ -30,4 +32,6 @@ public interface CryptoCoinPriceNoticeMapper {
     int updateByPrimaryKeySelective(CryptoCoinPriceNotice record);
 
     int updateByPrimaryKey(CryptoCoinPriceNotice record);
+
+	List<CryptoCoinPriceNotice> selectValidNoticeSetting(LocalDateTime now);
 }

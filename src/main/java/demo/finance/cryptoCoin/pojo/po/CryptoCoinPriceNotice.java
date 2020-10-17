@@ -20,8 +20,6 @@ public class CryptoCoinPriceNotice {
 
     private Integer minuteRange;
 
-    private Boolean absoluteValueFalg;
-
     private String email;
 
     private LocalDateTime validTime;
@@ -94,14 +92,6 @@ public class CryptoCoinPriceNotice {
 
     public void setMinuteRange(Integer minuteRange) {
         this.minuteRange = minuteRange;
-    }
-
-    public Boolean getAbsoluteValueFalg() {
-        return absoluteValueFalg;
-    }
-
-    public void setAbsoluteValueFalg(Boolean absoluteValueFalg) {
-        this.absoluteValueFalg = absoluteValueFalg;
     }
 
     public String getEmail() {

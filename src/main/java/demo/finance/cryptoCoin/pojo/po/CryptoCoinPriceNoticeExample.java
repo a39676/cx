@@ -586,66 +586,6 @@ public class CryptoCoinPriceNoticeExample {
             return (Criteria) this;
         }
 
-        public Criteria andAbsoluteValueFalgIsNull() {
-            addCriterion("absolute_value_falg is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAbsoluteValueFalgIsNotNull() {
-            addCriterion("absolute_value_falg is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAbsoluteValueFalgEqualTo(Boolean value) {
-            addCriterion("absolute_value_falg =", value, "absoluteValueFalg");
-            return (Criteria) this;
-        }
-
-        public Criteria andAbsoluteValueFalgNotEqualTo(Boolean value) {
-            addCriterion("absolute_value_falg <>", value, "absoluteValueFalg");
-            return (Criteria) this;
-        }
-
-        public Criteria andAbsoluteValueFalgGreaterThan(Boolean value) {
-            addCriterion("absolute_value_falg >", value, "absoluteValueFalg");
-            return (Criteria) this;
-        }
-
-        public Criteria andAbsoluteValueFalgGreaterThanOrEqualTo(Boolean value) {
-            addCriterion("absolute_value_falg >=", value, "absoluteValueFalg");
-            return (Criteria) this;
-        }
-
-        public Criteria andAbsoluteValueFalgLessThan(Boolean value) {
-            addCriterion("absolute_value_falg <", value, "absoluteValueFalg");
-            return (Criteria) this;
-        }
-
-        public Criteria andAbsoluteValueFalgLessThanOrEqualTo(Boolean value) {
-            addCriterion("absolute_value_falg <=", value, "absoluteValueFalg");
-            return (Criteria) this;
-        }
-
-        public Criteria andAbsoluteValueFalgIn(List<Boolean> values) {
-            addCriterion("absolute_value_falg in", values, "absoluteValueFalg");
-            return (Criteria) this;
-        }
-
-        public Criteria andAbsoluteValueFalgNotIn(List<Boolean> values) {
-            addCriterion("absolute_value_falg not in", values, "absoluteValueFalg");
-            return (Criteria) this;
-        }
-
-        public Criteria andAbsoluteValueFalgBetween(Boolean value1, Boolean value2) {
-            addCriterion("absolute_value_falg between", value1, value2, "absoluteValueFalg");
-            return (Criteria) this;
-        }
-
-        public Criteria andAbsoluteValueFalgNotBetween(Boolean value1, Boolean value2) {
-            addCriterion("absolute_value_falg not between", value1, value2, "absoluteValueFalg");
-            return (Criteria) this;
-        }
-
         public Criteria andEmailIsNull() {
             addCriterion("email is null");
             return (Criteria) this;

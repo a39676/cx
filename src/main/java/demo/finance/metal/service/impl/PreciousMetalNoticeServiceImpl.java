@@ -71,7 +71,7 @@ public class PreciousMetalNoticeServiceImpl extends PreciousMetalCommonService i
 				lastPrice = lastPrice.multiply(new BigDecimal(1000));
 			}
 
-			if (lastPrice.compareTo(kgMaxPrice) >= 1) {
+			if (lastPrice.compareTo(kgMaxPrice) > 0) {
 				noticeFlag = true;
 
 			}
@@ -83,7 +83,7 @@ public class PreciousMetalNoticeServiceImpl extends PreciousMetalCommonService i
 				lastPrice = lastPrice.multiply(new BigDecimal(1000));
 			}
 
-			if (lastPrice.compareTo(kgMinPrice) <= -1) {
+			if (lastPrice.compareTo(kgMinPrice) < 0) {
 				noticeFlag = true;
 			}
 		}

@@ -11,4 +11,6 @@ public interface CryptoCoinNoticeService {
 
 	CommonResult insertNewMetalPriceNoticeSetting(InsertNewCryptoCoinPriceNoticeSettingDTO dto);
 
+	void noticeHandler();
+
 }

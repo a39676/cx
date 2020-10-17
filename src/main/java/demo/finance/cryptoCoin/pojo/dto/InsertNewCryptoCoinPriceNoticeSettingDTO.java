@@ -24,11 +24,6 @@ public class InsertNewCryptoCoinPriceNoticeSettingDTO {
 	 * 用于条件: n分钟内波动幅度超过 m%的条件设定
 	 */
 	private Integer minuteRange;
-	/**
-	 * 用于条件: 所有价格波动幅度条件设定 if(flag == true) { 同时判定涨跌幅 } else { 按照 percentage
-	 * 正负值只跟踪对应涨跌幅 }
-	 */
-	private Boolean absoluteValueFlag = false;
 
 	private String email;
 
@@ -98,14 +93,6 @@ public class InsertNewCryptoCoinPriceNoticeSettingDTO {
 		this.validTime = validTime;
 	}
 
-	public Boolean getAbsoluteValueFlag() {
-		return absoluteValueFlag;
-	}
-
-	public void setAbsoluteValueFlag(Boolean absoluteValueFlag) {
-		this.absoluteValueFlag = absoluteValueFlag;
-	}
-
 	public Double getOriginalPrice() {
 		return originalPrice;
 	}
@@ -118,8 +105,8 @@ public class InsertNewCryptoCoinPriceNoticeSettingDTO {
 	public String toString() {
 		return "InsertNewCryptoCoinPriceNoticeSettingDTO [coinType=" + coinType + ", currencyType=" + currencyType
 				+ ", maxPrice=" + maxPrice + ", minPrice=" + minPrice + ", originalPrice=" + originalPrice
-				+ ", percentage=" + percentage + ", minuteRange=" + minuteRange + ", absoluteValueFlag="
-				+ absoluteValueFlag + ", email=" + email + ", validTime=" + validTime + "]";
+				+ ", percentage=" + percentage + ", minuteRange=" + minuteRange + ", email=" + email + ", validTime="
+				+ validTime + "]";
 	}
 
 }

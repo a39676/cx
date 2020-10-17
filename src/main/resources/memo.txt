@@ -1,3 +1,7 @@
+crypto coin 
+	数据库表新增
+	mq新增
+
 DTO
 	测试 @NotNull @NotBlank @Size 等注解
 

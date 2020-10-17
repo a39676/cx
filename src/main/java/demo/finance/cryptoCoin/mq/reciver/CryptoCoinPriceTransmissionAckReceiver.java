@@ -13,10 +13,10 @@ import com.rabbitmq.client.Channel;
 
 import demo.finance.cryptoCoin.service.CryptoCoinPriceService;
 import finance.cryptoCoin.pojo.constant.CryptoCoinMQConstant;
-import finance.cryptoCoin.pojo.dto.CryptoCoinPriceDTO;
+import finance.cryptoCoin.pojo.dto.CryptoCoinNewPriceDTO;
 
 @Component
-@RabbitListener(queues = CryptoCoinMQConstant.CRYPTO_CONI_PRICE_DATA)
+@RabbitListener(queues = CryptoCoinMQConstant.CRYPTO_CONI_NEW_PRICE_DATA)
 public class CryptoCoinPriceTransmissionAckReceiver {
 
 	@Autowired
@@ -25,7 +25,7 @@ public class CryptoCoinPriceTransmissionAckReceiver {
 	@RabbitHandler
 	public void process(String messageStr, Channel channel, Message message) throws IOException {
 		try {
-			CryptoCoinPriceDTO dto = new Gson().fromJson(messageStr, CryptoCoinPriceDTO.class);
+			CryptoCoinNewPriceDTO dto = new Gson().fromJson(messageStr, CryptoCoinNewPriceDTO.class);
 			cryptoCoinService.reciveCoinPrice(dto);
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 		} catch (IOException e) {

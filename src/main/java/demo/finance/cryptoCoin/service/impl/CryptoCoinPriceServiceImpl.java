@@ -13,14 +13,14 @@ import demo.finance.cryptoCoin.pojo.constant.CryptoCoinConstant;
 import demo.finance.cryptoCoin.pojo.po.CryptoCoinPrice;
 import demo.finance.cryptoCoin.pojo.po.CryptoCoinPriceExample;
 import demo.finance.cryptoCoin.service.CryptoCoinPriceService;
-import finance.cryptoCoin.pojo.dto.CryptoCoinPriceDTO;
+import finance.cryptoCoin.pojo.dto.CryptoCoinNewPriceDTO;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
 @Service
 public class CryptoCoinPriceServiceImpl extends CryptoCoinCommonService implements CryptoCoinPriceService {
 
 	@Override
-	public CommonResult reciveCoinPrice(CryptoCoinPriceDTO dto) {
+	public CommonResult reciveCoinPrice(CryptoCoinNewPriceDTO dto) {
 		CommonResult result = new CommonResult();
 
 		CryptoCoinPrice tmpPO = null;

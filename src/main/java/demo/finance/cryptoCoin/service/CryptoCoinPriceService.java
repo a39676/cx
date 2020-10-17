@@ -2,11 +2,11 @@ package demo.finance.cryptoCoin.service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.pojo.result.CommonResultCX;
-import finance.cryptoCoin.pojo.dto.CryptoCoinPriceDTO;
+import finance.cryptoCoin.pojo.dto.CryptoCoinNewPriceDTO;
 
 public interface CryptoCoinPriceService {
 
-	CommonResult reciveCoinPrice(CryptoCoinPriceDTO dto);
+	CommonResult reciveCoinPrice(CryptoCoinNewPriceDTO dto);
 
 	CommonResultCX deleteExpiredCacheData();
 

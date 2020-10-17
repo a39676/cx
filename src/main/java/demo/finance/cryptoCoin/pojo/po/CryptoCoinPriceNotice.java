@@ -10,9 +10,17 @@ public class CryptoCoinPriceNotice {
 
     private Integer currencyType;
 
-    private BigDecimal maxGramPrice;
+    private BigDecimal maxPrice;
 
-    private BigDecimal minGramPrice;
+    private BigDecimal minPrice;
+
+    private BigDecimal originalPrice;
+
+    private BigDecimal percentage;
+
+    private Integer minuteRange;
+
+    private Boolean absoluteValueFalg;
 
     private String email;
 
@@ -48,20 +56,52 @@ public class CryptoCoinPriceNotice {
         this.currencyType = currencyType;
     }
 
-    public BigDecimal getMaxGramPrice() {
-        return maxGramPrice;
+    public BigDecimal getMaxPrice() {
+        return maxPrice;
     }
 
-    public void setMaxGramPrice(BigDecimal maxGramPrice) {
-        this.maxGramPrice = maxGramPrice;
+    public void setMaxPrice(BigDecimal maxPrice) {
+        this.maxPrice = maxPrice;
     }
 
-    public BigDecimal getMinGramPrice() {
-        return minGramPrice;
+    public BigDecimal getMinPrice() {
+        return minPrice;
     }
 
-    public void setMinGramPrice(BigDecimal minGramPrice) {
-        this.minGramPrice = minGramPrice;
+    public void setMinPrice(BigDecimal minPrice) {
+        this.minPrice = minPrice;
+    }
+
+    public BigDecimal getOriginalPrice() {
+        return originalPrice;
+    }
+
+    public void setOriginalPrice(BigDecimal originalPrice) {
+        this.originalPrice = originalPrice;
+    }
+
+    public BigDecimal getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(BigDecimal percentage) {
+        this.percentage = percentage;
+    }
+
+    public Integer getMinuteRange() {
+        return minuteRange;
+    }
+
+    public void setMinuteRange(Integer minuteRange) {
+        this.minuteRange = minuteRange;
+    }
+
+    public Boolean getAbsoluteValueFalg() {
+        return absoluteValueFalg;
+    }
+
+    public void setAbsoluteValueFalg(Boolean absoluteValueFalg) {
+        this.absoluteValueFalg = absoluteValueFalg;
     }
 
     public String getEmail() {

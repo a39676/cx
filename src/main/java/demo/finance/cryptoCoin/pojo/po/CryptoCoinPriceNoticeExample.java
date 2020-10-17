@@ -286,123 +286,363 @@ public class CryptoCoinPriceNoticeExample {
             return (Criteria) this;
         }
 
-        public Criteria andMaxGramPriceIsNull() {
-            addCriterion("max_gram_price is null");
+        public Criteria andMaxPriceIsNull() {
+            addCriterion("max_price is null");
             return (Criteria) this;
         }
 
-        public Criteria andMaxGramPriceIsNotNull() {
-            addCriterion("max_gram_price is not null");
+        public Criteria andMaxPriceIsNotNull() {
+            addCriterion("max_price is not null");
             return (Criteria) this;
         }
 
-        public Criteria andMaxGramPriceEqualTo(BigDecimal value) {
-            addCriterion("max_gram_price =", value, "maxGramPrice");
+        public Criteria andMaxPriceEqualTo(BigDecimal value) {
+            addCriterion("max_price =", value, "maxPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMaxGramPriceNotEqualTo(BigDecimal value) {
-            addCriterion("max_gram_price <>", value, "maxGramPrice");
+        public Criteria andMaxPriceNotEqualTo(BigDecimal value) {
+            addCriterion("max_price <>", value, "maxPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMaxGramPriceGreaterThan(BigDecimal value) {
-            addCriterion("max_gram_price >", value, "maxGramPrice");
+        public Criteria andMaxPriceGreaterThan(BigDecimal value) {
+            addCriterion("max_price >", value, "maxPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMaxGramPriceGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("max_gram_price >=", value, "maxGramPrice");
+        public Criteria andMaxPriceGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("max_price >=", value, "maxPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMaxGramPriceLessThan(BigDecimal value) {
-            addCriterion("max_gram_price <", value, "maxGramPrice");
+        public Criteria andMaxPriceLessThan(BigDecimal value) {
+            addCriterion("max_price <", value, "maxPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMaxGramPriceLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("max_gram_price <=", value, "maxGramPrice");
+        public Criteria andMaxPriceLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("max_price <=", value, "maxPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMaxGramPriceIn(List<BigDecimal> values) {
-            addCriterion("max_gram_price in", values, "maxGramPrice");
+        public Criteria andMaxPriceIn(List<BigDecimal> values) {
+            addCriterion("max_price in", values, "maxPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMaxGramPriceNotIn(List<BigDecimal> values) {
-            addCriterion("max_gram_price not in", values, "maxGramPrice");
+        public Criteria andMaxPriceNotIn(List<BigDecimal> values) {
+            addCriterion("max_price not in", values, "maxPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMaxGramPriceBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("max_gram_price between", value1, value2, "maxGramPrice");
+        public Criteria andMaxPriceBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("max_price between", value1, value2, "maxPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMaxGramPriceNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("max_gram_price not between", value1, value2, "maxGramPrice");
+        public Criteria andMaxPriceNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("max_price not between", value1, value2, "maxPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMinGramPriceIsNull() {
-            addCriterion("min_gram_price is null");
+        public Criteria andMinPriceIsNull() {
+            addCriterion("min_price is null");
             return (Criteria) this;
         }
 
-        public Criteria andMinGramPriceIsNotNull() {
-            addCriterion("min_gram_price is not null");
+        public Criteria andMinPriceIsNotNull() {
+            addCriterion("min_price is not null");
             return (Criteria) this;
         }
 
-        public Criteria andMinGramPriceEqualTo(BigDecimal value) {
-            addCriterion("min_gram_price =", value, "minGramPrice");
+        public Criteria andMinPriceEqualTo(BigDecimal value) {
+            addCriterion("min_price =", value, "minPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMinGramPriceNotEqualTo(BigDecimal value) {
-            addCriterion("min_gram_price <>", value, "minGramPrice");
+        public Criteria andMinPriceNotEqualTo(BigDecimal value) {
+            addCriterion("min_price <>", value, "minPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMinGramPriceGreaterThan(BigDecimal value) {
-            addCriterion("min_gram_price >", value, "minGramPrice");
+        public Criteria andMinPriceGreaterThan(BigDecimal value) {
+            addCriterion("min_price >", value, "minPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMinGramPriceGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("min_gram_price >=", value, "minGramPrice");
+        public Criteria andMinPriceGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("min_price >=", value, "minPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMinGramPriceLessThan(BigDecimal value) {
-            addCriterion("min_gram_price <", value, "minGramPrice");
+        public Criteria andMinPriceLessThan(BigDecimal value) {
+            addCriterion("min_price <", value, "minPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMinGramPriceLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("min_gram_price <=", value, "minGramPrice");
+        public Criteria andMinPriceLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("min_price <=", value, "minPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMinGramPriceIn(List<BigDecimal> values) {
-            addCriterion("min_gram_price in", values, "minGramPrice");
+        public Criteria andMinPriceIn(List<BigDecimal> values) {
+            addCriterion("min_price in", values, "minPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMinGramPriceNotIn(List<BigDecimal> values) {
-            addCriterion("min_gram_price not in", values, "minGramPrice");
+        public Criteria andMinPriceNotIn(List<BigDecimal> values) {
+            addCriterion("min_price not in", values, "minPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMinGramPriceBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("min_gram_price between", value1, value2, "minGramPrice");
+        public Criteria andMinPriceBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("min_price between", value1, value2, "minPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMinGramPriceNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("min_gram_price not between", value1, value2, "minGramPrice");
+        public Criteria andMinPriceNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("min_price not between", value1, value2, "minPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalPriceIsNull() {
+            addCriterion("original_price is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalPriceIsNotNull() {
+            addCriterion("original_price is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalPriceEqualTo(BigDecimal value) {
+            addCriterion("original_price =", value, "originalPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalPriceNotEqualTo(BigDecimal value) {
+            addCriterion("original_price <>", value, "originalPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalPriceGreaterThan(BigDecimal value) {
+            addCriterion("original_price >", value, "originalPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalPriceGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("original_price >=", value, "originalPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalPriceLessThan(BigDecimal value) {
+            addCriterion("original_price <", value, "originalPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalPriceLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("original_price <=", value, "originalPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalPriceIn(List<BigDecimal> values) {
+            addCriterion("original_price in", values, "originalPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalPriceNotIn(List<BigDecimal> values) {
+            addCriterion("original_price not in", values, "originalPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalPriceBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("original_price between", value1, value2, "originalPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalPriceNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("original_price not between", value1, value2, "originalPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andPercentageIsNull() {
+            addCriterion("percentage is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPercentageIsNotNull() {
+            addCriterion("percentage is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPercentageEqualTo(BigDecimal value) {
+            addCriterion("percentage =", value, "percentage");
+            return (Criteria) this;
+        }
+
+        public Criteria andPercentageNotEqualTo(BigDecimal value) {
+            addCriterion("percentage <>", value, "percentage");
+            return (Criteria) this;
+        }
+
+        public Criteria andPercentageGreaterThan(BigDecimal value) {
+            addCriterion("percentage >", value, "percentage");
+            return (Criteria) this;
+        }
+
+        public Criteria andPercentageGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("percentage >=", value, "percentage");
+            return (Criteria) this;
+        }
+
+        public Criteria andPercentageLessThan(BigDecimal value) {
+            addCriterion("percentage <", value, "percentage");
+            return (Criteria) this;
+        }
+
+        public Criteria andPercentageLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("percentage <=", value, "percentage");
+            return (Criteria) this;
+        }
+
+        public Criteria andPercentageIn(List<BigDecimal> values) {
+            addCriterion("percentage in", values, "percentage");
+            return (Criteria) this;
+        }
+
+        public Criteria andPercentageNotIn(List<BigDecimal> values) {
+            addCriterion("percentage not in", values, "percentage");
+            return (Criteria) this;
+        }
+
+        public Criteria andPercentageBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("percentage between", value1, value2, "percentage");
+            return (Criteria) this;
+        }
+
+        public Criteria andPercentageNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("percentage not between", value1, value2, "percentage");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinuteRangeIsNull() {
+            addCriterion("minute_range is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinuteRangeIsNotNull() {
+            addCriterion("minute_range is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinuteRangeEqualTo(Integer value) {
+            addCriterion("minute_range =", value, "minuteRange");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinuteRangeNotEqualTo(Integer value) {
+            addCriterion("minute_range <>", value, "minuteRange");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinuteRangeGreaterThan(Integer value) {
+            addCriterion("minute_range >", value, "minuteRange");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinuteRangeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("minute_range >=", value, "minuteRange");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinuteRangeLessThan(Integer value) {
+            addCriterion("minute_range <", value, "minuteRange");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinuteRangeLessThanOrEqualTo(Integer value) {
+            addCriterion("minute_range <=", value, "minuteRange");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinuteRangeIn(List<Integer> values) {
+            addCriterion("minute_range in", values, "minuteRange");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinuteRangeNotIn(List<Integer> values) {
+            addCriterion("minute_range not in", values, "minuteRange");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinuteRangeBetween(Integer value1, Integer value2) {
+            addCriterion("minute_range between", value1, value2, "minuteRange");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinuteRangeNotBetween(Integer value1, Integer value2) {
+            addCriterion("minute_range not between", value1, value2, "minuteRange");
+            return (Criteria) this;
+        }
+
+        public Criteria andAbsoluteValueFalgIsNull() {
+            addCriterion("absolute_value_falg is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAbsoluteValueFalgIsNotNull() {
+            addCriterion("absolute_value_falg is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAbsoluteValueFalgEqualTo(Boolean value) {
+            addCriterion("absolute_value_falg =", value, "absoluteValueFalg");
+            return (Criteria) this;
+        }
+
+        public Criteria andAbsoluteValueFalgNotEqualTo(Boolean value) {
+            addCriterion("absolute_value_falg <>", value, "absoluteValueFalg");
+            return (Criteria) this;
+        }
+
+        public Criteria andAbsoluteValueFalgGreaterThan(Boolean value) {
+            addCriterion("absolute_value_falg >", value, "absoluteValueFalg");
+            return (Criteria) this;
+        }
+
+        public Criteria andAbsoluteValueFalgGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("absolute_value_falg >=", value, "absoluteValueFalg");
+            return (Criteria) this;
+        }
+
+        public Criteria andAbsoluteValueFalgLessThan(Boolean value) {
+            addCriterion("absolute_value_falg <", value, "absoluteValueFalg");
+            return (Criteria) this;
+        }
+
+        public Criteria andAbsoluteValueFalgLessThanOrEqualTo(Boolean value) {
+            addCriterion("absolute_value_falg <=", value, "absoluteValueFalg");
+            return (Criteria) this;
+        }
+
+        public Criteria andAbsoluteValueFalgIn(List<Boolean> values) {
+            addCriterion("absolute_value_falg in", values, "absoluteValueFalg");
+            return (Criteria) this;
+        }
+
+        public Criteria andAbsoluteValueFalgNotIn(List<Boolean> values) {
+            addCriterion("absolute_value_falg not in", values, "absoluteValueFalg");
+            return (Criteria) this;
+        }
+
+        public Criteria andAbsoluteValueFalgBetween(Boolean value1, Boolean value2) {
+            addCriterion("absolute_value_falg between", value1, value2, "absoluteValueFalg");
+            return (Criteria) this;
+        }
+
+        public Criteria andAbsoluteValueFalgNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("absolute_value_falg not between", value1, value2, "absoluteValueFalg");
             return (Criteria) this;
         }
 

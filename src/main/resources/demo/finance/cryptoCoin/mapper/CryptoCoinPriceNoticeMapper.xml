@@ -5,8 +5,12 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="coin_type" jdbcType="INTEGER" property="coinType" />
     <result column="currency_type" jdbcType="INTEGER" property="currencyType" />
-    <result column="max_gram_price" jdbcType="DECIMAL" property="maxGramPrice" />
-    <result column="min_gram_price" jdbcType="DECIMAL" property="minGramPrice" />
+    <result column="max_price" jdbcType="DECIMAL" property="maxPrice" />
+    <result column="min_price" jdbcType="DECIMAL" property="minPrice" />
+    <result column="original_price" jdbcType="DECIMAL" property="originalPrice" />
+    <result column="percentage" jdbcType="DECIMAL" property="percentage" />
+    <result column="minute_range" jdbcType="INTEGER" property="minuteRange" />
+    <result column="absolute_value_falg" jdbcType="BIT" property="absoluteValueFalg" />
     <result column="email" jdbcType="CHAR" property="email" />
     <result column="valid_time" jdbcType="TIMESTAMP" property="validTime" />
     <result column="notice_time" jdbcType="TIMESTAMP" property="noticeTime" />
@@ -72,8 +76,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, coin_type, currency_type, max_gram_price, min_gram_price, email, valid_time, 
-    notice_time, create_time, is_delete
+    id, coin_type, currency_type, max_price, min_price, original_price, percentage, minute_range, 
+    absolute_value_falg, email, valid_time, notice_time, create_time, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.finance.cryptoCoin.pojo.po.CryptoCoinPriceNoticeExample" resultMap="BaseResultMap">
     select
@@ -107,13 +111,15 @@
   </delete>
   <insert id="insert" parameterType="demo.finance.cryptoCoin.pojo.po.CryptoCoinPriceNotice">
     insert into crypto_coin_price_notice (id, coin_type, currency_type, 
-      max_gram_price, min_gram_price, email, 
-      valid_time, notice_time, create_time, 
-      is_delete)
+      max_price, min_price, original_price, 
+      percentage, minute_range, absolute_value_falg, 
+      email, valid_time, notice_time, 
+      create_time, is_delete)
     values (#{id,jdbcType=BIGINT}, #{coinType,jdbcType=INTEGER}, #{currencyType,jdbcType=INTEGER}, 
-      #{maxGramPrice,jdbcType=DECIMAL}, #{minGramPrice,jdbcType=DECIMAL}, #{email,jdbcType=CHAR}, 
-      #{validTime,jdbcType=TIMESTAMP}, #{noticeTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{isDelete,jdbcType=BIT})
+      #{maxPrice,jdbcType=DECIMAL}, #{minPrice,jdbcType=DECIMAL}, #{originalPrice,jdbcType=DECIMAL}, 
+      #{percentage,jdbcType=DECIMAL}, #{minuteRange,jdbcType=INTEGER}, #{absoluteValueFalg,jdbcType=BIT}, 
+      #{email,jdbcType=CHAR}, #{validTime,jdbcType=TIMESTAMP}, #{noticeTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="demo.finance.cryptoCoin.pojo.po.CryptoCoinPriceNotice">
     insert into crypto_coin_price_notice
@@ -127,11 +133,23 @@
       <if test="currencyType != null">
         currency_type,
       </if>
-      <if test="maxGramPrice != null">
-        max_gram_price,
+      <if test="maxPrice != null">
+        max_price,
       </if>
-      <if test="minGramPrice != null">
-        min_gram_price,
+      <if test="minPrice != null">
+        min_price,
+      </if>
+      <if test="originalPrice != null">
+        original_price,
+      </if>
+      <if test="percentage != null">
+        percentage,
+      </if>
+      <if test="minuteRange != null">
+        minute_range,
+      </if>
+      <if test="absoluteValueFalg != null">
+        absolute_value_falg,
       </if>
       <if test="email != null">
         email,
@@ -159,11 +177,23 @@
       <if test="currencyType != null">
         #{currencyType,jdbcType=INTEGER},
       </if>
-      <if test="maxGramPrice != null">
-        #{maxGramPrice,jdbcType=DECIMAL},
+      <if test="maxPrice != null">
+        #{maxPrice,jdbcType=DECIMAL},
       </if>
-      <if test="minGramPrice != null">
-        #{minGramPrice,jdbcType=DECIMAL},
+      <if test="minPrice != null">
+        #{minPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="originalPrice != null">
+        #{originalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="percentage != null">
+        #{percentage,jdbcType=DECIMAL},
+      </if>
+      <if test="minuteRange != null">
+        #{minuteRange,jdbcType=INTEGER},
+      </if>
+      <if test="absoluteValueFalg != null">
+        #{absoluteValueFalg,jdbcType=BIT},
       </if>
       <if test="email != null">
         #{email,jdbcType=CHAR},
@@ -200,11 +230,23 @@
       <if test="record.currencyType != null">
         currency_type = #{record.currencyType,jdbcType=INTEGER},
       </if>
-      <if test="record.maxGramPrice != null">
-        max_gram_price = #{record.maxGramPrice,jdbcType=DECIMAL},
+      <if test="record.maxPrice != null">
+        max_price = #{record.maxPrice,jdbcType=DECIMAL},
       </if>
-      <if test="record.minGramPrice != null">
-        min_gram_price = #{record.minGramPrice,jdbcType=DECIMAL},
+      <if test="record.minPrice != null">
+        min_price = #{record.minPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.originalPrice != null">
+        original_price = #{record.originalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.percentage != null">
+        percentage = #{record.percentage,jdbcType=DECIMAL},
+      </if>
+      <if test="record.minuteRange != null">
+        minute_range = #{record.minuteRange,jdbcType=INTEGER},
+      </if>
+      <if test="record.absoluteValueFalg != null">
+        absolute_value_falg = #{record.absoluteValueFalg,jdbcType=BIT},
       </if>
       <if test="record.email != null">
         email = #{record.email,jdbcType=CHAR},
@@ -231,8 +273,12 @@
     set id = #{record.id,jdbcType=BIGINT},
       coin_type = #{record.coinType,jdbcType=INTEGER},
       currency_type = #{record.currencyType,jdbcType=INTEGER},
-      max_gram_price = #{record.maxGramPrice,jdbcType=DECIMAL},
-      min_gram_price = #{record.minGramPrice,jdbcType=DECIMAL},
+      max_price = #{record.maxPrice,jdbcType=DECIMAL},
+      min_price = #{record.minPrice,jdbcType=DECIMAL},
+      original_price = #{record.originalPrice,jdbcType=DECIMAL},
+      percentage = #{record.percentage,jdbcType=DECIMAL},
+      minute_range = #{record.minuteRange,jdbcType=INTEGER},
+      absolute_value_falg = #{record.absoluteValueFalg,jdbcType=BIT},
       email = #{record.email,jdbcType=CHAR},
       valid_time = #{record.validTime,jdbcType=TIMESTAMP},
       notice_time = #{record.noticeTime,jdbcType=TIMESTAMP},
@@ -251,11 +297,23 @@
       <if test="currencyType != null">
         currency_type = #{currencyType,jdbcType=INTEGER},
       </if>
-      <if test="maxGramPrice != null">
-        max_gram_price = #{maxGramPrice,jdbcType=DECIMAL},
+      <if test="maxPrice != null">
+        max_price = #{maxPrice,jdbcType=DECIMAL},
       </if>
-      <if test="minGramPrice != null">
-        min_gram_price = #{minGramPrice,jdbcType=DECIMAL},
+      <if test="minPrice != null">
+        min_price = #{minPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="originalPrice != null">
+        original_price = #{originalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="percentage != null">
+        percentage = #{percentage,jdbcType=DECIMAL},
+      </if>
+      <if test="minuteRange != null">
+        minute_range = #{minuteRange,jdbcType=INTEGER},
+      </if>
+      <if test="absoluteValueFalg != null">
+        absolute_value_falg = #{absoluteValueFalg,jdbcType=BIT},
       </if>
       <if test="email != null">
         email = #{email,jdbcType=CHAR},
@@ -279,8 +337,12 @@
     update crypto_coin_price_notice
     set coin_type = #{coinType,jdbcType=INTEGER},
       currency_type = #{currencyType,jdbcType=INTEGER},
-      max_gram_price = #{maxGramPrice,jdbcType=DECIMAL},
-      min_gram_price = #{minGramPrice,jdbcType=DECIMAL},
+      max_price = #{maxPrice,jdbcType=DECIMAL},
+      min_price = #{minPrice,jdbcType=DECIMAL},
+      original_price = #{originalPrice,jdbcType=DECIMAL},
+      percentage = #{percentage,jdbcType=DECIMAL},
+      minute_range = #{minuteRange,jdbcType=INTEGER},
+      absolute_value_falg = #{absoluteValueFalg,jdbcType=BIT},
       email = #{email,jdbcType=CHAR},
       valid_time = #{validTime,jdbcType=TIMESTAMP},
       notice_time = #{noticeTime,jdbcType=TIMESTAMP},

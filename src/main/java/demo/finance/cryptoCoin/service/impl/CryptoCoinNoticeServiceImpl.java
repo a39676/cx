@@ -67,7 +67,7 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 		CryptoCoinNoticeDTOCheckResult r = new CryptoCoinNoticeDTOCheckResult();
 
 		CryptoCoinType coinType = CryptoCoinType.getType(dto.getCoinType());
-		CurrencyType currencyTpye = CurrencyType.getType(dto.getCoinType());
+		CurrencyType currencyTpye = CurrencyType.getType(dto.getCurrencyType());
 		if (coinType == null || currencyTpye == null) {
 			r.failWithMessage("error param");
 			return r;

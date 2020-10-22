@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
@@ -45,8 +46,11 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 		if (dto.getOriginalPrice() != null) {
 			newPO.setOriginalPrice(new BigDecimal(dto.getOriginalPrice()));
 		}
-		if (dto.getPercentage() != null) {
-			newPO.setPercentage(new BigDecimal(dto.getPercentage()));
+		if (dto.getPricePercentage() != null) {
+			newPO.setPricePercentage(new BigDecimal(dto.getPricePercentage()));
+		}
+		if (dto.getFluctuationSpeedPercentage() != null) {
+			newPO.setFluctuationSpeedPercentage(new BigDecimal(dto.getFluctuationSpeedPercentage()));
 		}
 		newPO.setValidTime(checkResult.getValidTime());
 		newPO.setId(snowFlake.getNextId());
@@ -68,8 +72,8 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 			r.failWithMessage("error param");
 			return r;
 		}
-		
-		if(dto.getMinuteRange() != null && dto.getMinuteRange() > 120) {
+
+		if (dto.getMinuteRange() != null && dto.getMinuteRange() > 120) {
 			r.failWithMessage("minute range max 120");
 			return r;
 		}
@@ -79,13 +83,18 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 			return r;
 		}
 
-		if (dto.getPercentage() != null && dto.getPercentage() == 0) {
+		if (dto.getPricePercentage() != null && dto.getPricePercentage() == 0) {
 			r.failWithMessage("percent can not equals to 0");
 			return r;
 		}
 
-		if (!priceConditionHadSet(dto) || !priceRangeConditionHadSet(dto)
-				|| !priceFluctuationSpeedConditionHadSet(dto)) {
+		if (dto.getFluctuationSpeedPercentage() != null && dto.getFluctuationSpeedPercentage() == 0) {
+			r.failWithMessage("percent can not equals to 0");
+			return r;
+		}
+
+		if (!priceConditionHadSet(dto) && !priceRangeConditionHadSet(dto)
+				&& !priceFluctuationSpeedConditionHadSet(dto)) {
 			r.failWithMessage("please set a condition");
 			return r;
 		}
@@ -115,27 +124,31 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 	}
 
 	private boolean priceConditionHadSet(InsertNewCryptoCoinPriceNoticeSettingDTO dto) {
-		return dto.getMaxPrice() == null || dto.getMinPrice() == null;
+		return dto.getMaxPrice() != null || dto.getMinPrice() != null;
 	}
 
 	private boolean priceRangeConditionHadSet(InsertNewCryptoCoinPriceNoticeSettingDTO dto) {
-		return dto.getOriginalPrice() != null && dto.getPercentage() != null;
+		return dto.getOriginalPrice() != null && dto.getPricePercentage() != null;
 	}
 
 	private boolean priceFluctuationSpeedConditionHadSet(InsertNewCryptoCoinPriceNoticeSettingDTO dto) {
-		return dto.getPercentage() != null && dto.getMinuteRange() != null;
+		Double percentage = dto.getFluctuationSpeedPercentage();
+		return (percentage != null && (percentage > 0.01 || percentage < -0.01))
+				&& (dto.getMinuteRange() != null && dto.getMinuteRange() > 0);
 	}
 
 	private boolean priceConditionHadSet(CryptoCoinPriceNotice dto) {
-		return dto.getMaxPrice() == null || dto.getMinPrice() == null;
+		return dto.getMaxPrice() != null || dto.getMinPrice() != null;
 	}
 
 	private boolean priceRangeConditionHadSet(CryptoCoinPriceNotice dto) {
-		return dto.getOriginalPrice() != null && dto.getPercentage() != null;
+		return dto.getOriginalPrice() != null && dto.getPricePercentage() != null;
 	}
 
 	private boolean priceFluctuationSpeedConditionHadSet(CryptoCoinPriceNotice dto) {
-		return dto.getPercentage() != null && dto.getMinuteRange() != null;
+		return dto.getFluctuationSpeedPercentage() != null
+				&& dto.getFluctuationSpeedPercentage().compareTo(BigDecimal.ZERO) != 0 && dto.getMinuteRange() != null
+				&& dto.getMinuteRange() > 0;
 	}
 
 	@Override
@@ -143,7 +156,7 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 		ModelAndView view = new ModelAndView("finance/cryptoCoin/insertNewCryptoCoinPriceNoticeSetting");
 		view.addObject("cryptoCoinType", CryptoCoinType.values());
 //		view.addObject("currencyType", CurrencyType.values());
-		view.addObject("currencyType", CurrencyType.USD);
+		view.addObject("currencyType", CurrencyType.values());
 		return view;
 	}
 
@@ -172,23 +185,35 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 		}
 
 		String content = "";
+		CommonResult handleResult = null;
 		if (priceConditionHadSet(noticeSetting)) {
-			content += priceConditionNoticeHandle(noticeSetting, coinType, currencyType).getMessage();
+			handleResult = priceConditionNoticeHandle(noticeSetting, coinType, currencyType);
+			if (handleResult.isSuccess()) {
+				content += handleResult.getMessage();
+			}
 		}
 		if (priceRangeConditionHadSet(noticeSetting)) {
-			content += priceRangeNoticeHandle(noticeSetting, coinType, currencyType).getMessage();
+			handleResult = priceRangeNoticeHandle(noticeSetting, coinType, currencyType);
+			if (handleResult.isSuccess()) {
+				content += handleResult.getMessage();
+			}
 		}
 		if (priceFluctuationSpeedConditionHadSet(noticeSetting)) {
-			content += priceFluctuationSpeedNoticeHandle(noticeSetting, coinType, currencyType).getMessage();
+			handleResult = priceFluctuationSpeedNoticeHandle(noticeSetting, coinType, currencyType);
+			if (handleResult.isSuccess()) {
+				content += handleResult.getMessage();
+			}
 		}
 
-		if (content != null && !"dev".equals(constantService.getValByName("envName"))) {
+		if (StringUtils.isNotBlank(content)
+//				&& !"dev".equals(constantService.getValByName("envName"))
+		) {
 			mailService.sendSimpleMail(noticeSetting.getEmail(), "价格提示", content, null, MailType.preciousMetalsNotice);
+			noticeSetting.setNoticeTime(LocalDateTime.now());
+			noticeSetting.setIsDelete(true);
+			noticeMapper.updateByPrimaryKeySelective(noticeSetting);
 		}
 
-		noticeSetting.setNoticeTime(LocalDateTime.now());
-		noticeSetting.setIsDelete(true);
-		noticeMapper.updateByPrimaryKeySelective(noticeSetting);
 	}
 
 	private CommonResult priceConditionNoticeHandle(CryptoCoinPriceNotice noticeSetting, CryptoCoinType coinType,
@@ -212,14 +237,14 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 
 		if (noticeSetting.getMaxPrice() != null) {
 			if (lastMinuteMaxPrice.compareTo(noticeSetting.getMaxPrice()) >= 1) {
-				content = coinType.getName() + ", " + currencyType + ", " + " price had reach " + lastMinuteMaxPrice
-						+ " at: " + maxMinPriceResult.getMaxPriceDateTime() + ";";
+				content = coinType.getName() + ", " + currencyType + ", " + " price(range) had reach "
+						+ lastMinuteMaxPrice + " at: " + maxMinPriceResult.getMaxPriceDateTime() + ";";
 			}
 
 		} else if (noticeSetting.getMinPrice() != null) {
 			if (lastMinuteMinPrice.compareTo(noticeSetting.getMinPrice()) <= -1) {
-				content = coinType.getName() + ", " + currencyType + ", " + " price had reach " + lastMinuteMinPrice
-						+ " at: " + maxMinPriceResult.getMinPriceDateTime() + ";";
+				content = coinType.getName() + ", " + currencyType + ", " + " price(range) had reach "
+						+ lastMinuteMinPrice + " at: " + maxMinPriceResult.getMinPriceDateTime() + ";";
 			}
 		}
 
@@ -235,8 +260,7 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 
 		CommonResult r = new CommonResult();
 
-		List<CryptoCoinPrice> lastMinutePOList = findHistoryDateByLastMinutes(coinType, currencyType,
-				noticeSetting.getMinuteRange());
+		List<CryptoCoinPrice> lastMinutePOList = findHistoryDateByLastMinutes(coinType, currencyType, 5);
 
 		if (lastMinutePOList == null || lastMinutePOList.isEmpty()) {
 			return r;
@@ -252,16 +276,16 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 		BigDecimal lastMinuteMinPrice = maxMinPriceResult.getMinPrice();
 		BigDecimal settingOriginalPrice = noticeSetting.getOriginalPrice();
 		String content = null;
-		
-		if (noticeSetting.getPercentage().compareTo(BigDecimal.ZERO) > 0) {
-			BigDecimal noticeMaxRange = noticeSetting.getPercentage().add(BigDecimal.ONE);
+
+		if (noticeSetting.getPricePercentage().compareTo(BigDecimal.ZERO) > 0) {
+			BigDecimal noticeMaxRange = noticeSetting.getPricePercentage().add(BigDecimal.ONE);
 			BigDecimal noticeMaxPrice = settingOriginalPrice.multiply(noticeMaxRange);
 			if (lastMinuteMaxPrice.compareTo(noticeMaxPrice) > 0) {
 				content = coinType.getName() + ", " + currencyType + ", " + " had over range, trigger price: "
 						+ noticeMaxPrice + " at: " + maxMinPriceResult.getMaxPriceDateTime();
 			}
 		} else {
-			BigDecimal noticeMinRange = noticeSetting.getPercentage().add(BigDecimal.ONE);
+			BigDecimal noticeMinRange = noticeSetting.getPricePercentage().add(BigDecimal.ONE);
 			BigDecimal noticeMinPrice = settingOriginalPrice.multiply(noticeMinRange);
 			if (lastMinuteMinPrice.compareTo(noticeMinPrice) < 0) {
 				content = coinType.getName() + ", " + currencyType + ", " + " had over range, trigger price: "
@@ -280,43 +304,49 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 			CurrencyType currencyType) {
 		CommonResult r = new CommonResult();
 
-		List<CryptoCoinPrice> historyPOList = findHistoryDateByLastMinutes(coinType, currencyType, noticeSetting.getMinuteRange());
+		List<CryptoCoinPrice> historyPOList = findHistoryDateByLastMinutes(coinType, currencyType,
+				noticeSetting.getMinuteRange());
 		if (historyPOList == null || historyPOList.isEmpty()) {
-			r.setMessage("no history data");
 			return r;
 		}
-		
+
 		FindMaxMinPriceResult maxMinPriceResult = findMaxMinPrice(historyPOList);
-		if(maxMinPriceResult.isFail()) {
+		if (maxMinPriceResult.isFail()) {
 			r.addMessage(maxMinPriceResult.getMessage());
 			return r;
 		}
 
-		BigDecimal lastMax = maxMinPriceResult.getMaxPrice();
-		BigDecimal lastMin = maxMinPriceResult.getMinPrice();
-		
-		BigDecimal upApmlitude = null;
-		BigDecimal lowApmlitude = null;
-		if(maxMinPriceResult.getMaxPriceDateTime().isBefore(maxMinPriceResult.getMinPriceDateTime())) {
-			lowApmlitude = lastMin.divide(lastMax).subtract(BigDecimal.ONE);
+		double lastMax = maxMinPriceResult.getMaxPrice().doubleValue();
+		double lastMin = maxMinPriceResult.getMinPrice().doubleValue();
+
+		Double upApmlitude = null;
+		Double lowApmlitude = null;
+
+		if (maxMinPriceResult.getMaxPriceDateTime().isBefore(maxMinPriceResult.getMinPriceDateTime())) {
+			lowApmlitude = (lastMin / lastMax - 1) * 100;
 		} else {
-			upApmlitude = lastMax.divide(lastMin).subtract(BigDecimal.ONE);
+			upApmlitude = (lastMax / lastMin - 1) * 100;
 		}
-		
+//		涨跌幅计算, 可能超出精度范围
+
 		String content = null;
-		BigDecimal trigerPercentage = noticeSetting.getPercentage();
-		if (upApmlitude.compareTo(trigerPercentage) > 0) {
-			content = coinType.getName() + ", " + currencyType + ", " + " had reach highest amlitude, new price: "
-					+ historyPOList.get(0).getPrice();
-		} else if(lowApmlitude.compareTo(trigerPercentage) < 0) {
-			content = coinType.getName() + ", " + currencyType + ", " + " had reach lowest amlitude, new price: "
-					+ historyPOList.get(0).getPrice();
+		Double trigerPercentage = noticeSetting.getFluctuationSpeedPercentage().doubleValue();
+		if (trigerPercentage > 0) {
+			if (upApmlitude != null && upApmlitude > trigerPercentage) {
+				content = coinType.getName() + ", " + currencyType + ", " + " had reach highest amlitude, new price: "
+						+ historyPOList.get(0).getPrice();
+			}
+		} else {
+			if (lowApmlitude != null && lowApmlitude < trigerPercentage) {
+				content = coinType.getName() + ", " + currencyType + ", " + " had reach lowest amlitude, new price: "
+						+ historyPOList.get(0).getPrice();
+			}
 		}
 
-		if(content != null) {
-			r.setIsSuccess();
+		if (content != null) {
+			r.successWithMessage(content);
 		}
-		
+
 		return r;
 	}
 

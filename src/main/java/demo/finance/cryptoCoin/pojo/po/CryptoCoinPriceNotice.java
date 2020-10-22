@@ -16,9 +16,11 @@ public class CryptoCoinPriceNotice {
 
     private BigDecimal originalPrice;
 
-    private BigDecimal percentage;
+    private BigDecimal pricePercentage;
 
     private Integer minuteRange;
+
+    private BigDecimal fluctuationSpeedPercentage;
 
     private String email;
 
@@ -78,12 +80,12 @@ public class CryptoCoinPriceNotice {
         this.originalPrice = originalPrice;
     }
 
-    public BigDecimal getPercentage() {
-        return percentage;
+    public BigDecimal getPricePercentage() {
+        return pricePercentage;
     }
 
-    public void setPercentage(BigDecimal percentage) {
-        this.percentage = percentage;
+    public void setPricePercentage(BigDecimal pricePercentage) {
+        this.pricePercentage = pricePercentage;
     }
 
     public Integer getMinuteRange() {
@@ -92,6 +94,14 @@ public class CryptoCoinPriceNotice {
 
     public void setMinuteRange(Integer minuteRange) {
         this.minuteRange = minuteRange;
+    }
+
+    public BigDecimal getFluctuationSpeedPercentage() {
+        return fluctuationSpeedPercentage;
+    }
+
+    public void setFluctuationSpeedPercentage(BigDecimal fluctuationSpeedPercentage) {
+        this.fluctuationSpeedPercentage = fluctuationSpeedPercentage;
     }
 
     public String getEmail() {

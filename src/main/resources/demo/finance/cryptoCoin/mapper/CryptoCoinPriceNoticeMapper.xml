@@ -8,8 +8,9 @@
     <result column="max_price" jdbcType="DECIMAL" property="maxPrice" />
     <result column="min_price" jdbcType="DECIMAL" property="minPrice" />
     <result column="original_price" jdbcType="DECIMAL" property="originalPrice" />
-    <result column="percentage" jdbcType="DECIMAL" property="percentage" />
+    <result column="price_percentage" jdbcType="DECIMAL" property="pricePercentage" />
     <result column="minute_range" jdbcType="INTEGER" property="minuteRange" />
+    <result column="fluctuation_speed_percentage" jdbcType="DECIMAL" property="fluctuationSpeedPercentage" />
     <result column="email" jdbcType="CHAR" property="email" />
     <result column="valid_time" jdbcType="TIMESTAMP" property="validTime" />
     <result column="notice_time" jdbcType="TIMESTAMP" property="noticeTime" />
@@ -75,8 +76,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, coin_type, currency_type, max_price, min_price, original_price, percentage, minute_range, 
-    email, valid_time, notice_time, create_time, is_delete
+    id, coin_type, currency_type, max_price, min_price, original_price, price_percentage, 
+    minute_range, fluctuation_speed_percentage, email, valid_time, notice_time, create_time, 
+    is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.finance.cryptoCoin.pojo.po.CryptoCoinPriceNoticeExample" resultMap="BaseResultMap">
     select
@@ -111,14 +113,14 @@
   <insert id="insert" parameterType="demo.finance.cryptoCoin.pojo.po.CryptoCoinPriceNotice">
     insert into crypto_coin_price_notice (id, coin_type, currency_type, 
       max_price, min_price, original_price, 
-      percentage, minute_range, email, 
-      valid_time, notice_time, create_time, 
-      is_delete)
+      price_percentage, minute_range, fluctuation_speed_percentage, 
+      email, valid_time, notice_time, 
+      create_time, is_delete)
     values (#{id,jdbcType=BIGINT}, #{coinType,jdbcType=INTEGER}, #{currencyType,jdbcType=INTEGER}, 
       #{maxPrice,jdbcType=DECIMAL}, #{minPrice,jdbcType=DECIMAL}, #{originalPrice,jdbcType=DECIMAL}, 
-      #{percentage,jdbcType=DECIMAL}, #{minuteRange,jdbcType=INTEGER}, #{email,jdbcType=CHAR}, 
-      #{validTime,jdbcType=TIMESTAMP}, #{noticeTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{isDelete,jdbcType=BIT})
+      #{pricePercentage,jdbcType=DECIMAL}, #{minuteRange,jdbcType=INTEGER}, #{fluctuationSpeedPercentage,jdbcType=DECIMAL}, 
+      #{email,jdbcType=CHAR}, #{validTime,jdbcType=TIMESTAMP}, #{noticeTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="demo.finance.cryptoCoin.pojo.po.CryptoCoinPriceNotice">
     insert into crypto_coin_price_notice
@@ -141,11 +143,14 @@
       <if test="originalPrice != null">
         original_price,
       </if>
-      <if test="percentage != null">
-        percentage,
+      <if test="pricePercentage != null">
+        price_percentage,
       </if>
       <if test="minuteRange != null">
         minute_range,
+      </if>
+      <if test="fluctuationSpeedPercentage != null">
+        fluctuation_speed_percentage,
       </if>
       <if test="email != null">
         email,
@@ -182,11 +187,14 @@
       <if test="originalPrice != null">
         #{originalPrice,jdbcType=DECIMAL},
       </if>
-      <if test="percentage != null">
-        #{percentage,jdbcType=DECIMAL},
+      <if test="pricePercentage != null">
+        #{pricePercentage,jdbcType=DECIMAL},
       </if>
       <if test="minuteRange != null">
         #{minuteRange,jdbcType=INTEGER},
+      </if>
+      <if test="fluctuationSpeedPercentage != null">
+        #{fluctuationSpeedPercentage,jdbcType=DECIMAL},
       </if>
       <if test="email != null">
         #{email,jdbcType=CHAR},
@@ -232,11 +240,14 @@
       <if test="record.originalPrice != null">
         original_price = #{record.originalPrice,jdbcType=DECIMAL},
       </if>
-      <if test="record.percentage != null">
-        percentage = #{record.percentage,jdbcType=DECIMAL},
+      <if test="record.pricePercentage != null">
+        price_percentage = #{record.pricePercentage,jdbcType=DECIMAL},
       </if>
       <if test="record.minuteRange != null">
         minute_range = #{record.minuteRange,jdbcType=INTEGER},
+      </if>
+      <if test="record.fluctuationSpeedPercentage != null">
+        fluctuation_speed_percentage = #{record.fluctuationSpeedPercentage,jdbcType=DECIMAL},
       </if>
       <if test="record.email != null">
         email = #{record.email,jdbcType=CHAR},
@@ -266,8 +277,9 @@
       max_price = #{record.maxPrice,jdbcType=DECIMAL},
       min_price = #{record.minPrice,jdbcType=DECIMAL},
       original_price = #{record.originalPrice,jdbcType=DECIMAL},
-      percentage = #{record.percentage,jdbcType=DECIMAL},
+      price_percentage = #{record.pricePercentage,jdbcType=DECIMAL},
       minute_range = #{record.minuteRange,jdbcType=INTEGER},
+      fluctuation_speed_percentage = #{record.fluctuationSpeedPercentage,jdbcType=DECIMAL},
       email = #{record.email,jdbcType=CHAR},
       valid_time = #{record.validTime,jdbcType=TIMESTAMP},
       notice_time = #{record.noticeTime,jdbcType=TIMESTAMP},
@@ -295,11 +307,14 @@
       <if test="originalPrice != null">
         original_price = #{originalPrice,jdbcType=DECIMAL},
       </if>
-      <if test="percentage != null">
-        percentage = #{percentage,jdbcType=DECIMAL},
+      <if test="pricePercentage != null">
+        price_percentage = #{pricePercentage,jdbcType=DECIMAL},
       </if>
       <if test="minuteRange != null">
         minute_range = #{minuteRange,jdbcType=INTEGER},
+      </if>
+      <if test="fluctuationSpeedPercentage != null">
+        fluctuation_speed_percentage = #{fluctuationSpeedPercentage,jdbcType=DECIMAL},
       </if>
       <if test="email != null">
         email = #{email,jdbcType=CHAR},
@@ -326,8 +341,9 @@
       max_price = #{maxPrice,jdbcType=DECIMAL},
       min_price = #{minPrice,jdbcType=DECIMAL},
       original_price = #{originalPrice,jdbcType=DECIMAL},
-      percentage = #{percentage,jdbcType=DECIMAL},
+      price_percentage = #{pricePercentage,jdbcType=DECIMAL},
       minute_range = #{minuteRange,jdbcType=INTEGER},
+      fluctuation_speed_percentage = #{fluctuationSpeedPercentage,jdbcType=DECIMAL},
       email = #{email,jdbcType=CHAR},
       valid_time = #{validTime,jdbcType=TIMESTAMP},
       notice_time = #{noticeTime,jdbcType=TIMESTAMP},
@@ -349,7 +365,7 @@
       order by ${orderByClause}
     </if>
   </select>
-  
+    
   <select id="selectValidNoticeSetting" resultMap="BaseResultMap">
     select
       *

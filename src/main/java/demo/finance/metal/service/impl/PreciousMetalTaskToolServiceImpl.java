@@ -9,7 +9,7 @@ import demo.finance.metal.service.PreciousMetalNoticeService;
 import demo.finance.metal.service.PreciousMetalService;
 
 @Component
-public class FinanceTaskToolServiceImpl extends PreciousMetalCommonService {
+public class PreciousMetalTaskToolServiceImpl extends PreciousMetalCommonService {
 
 	@Autowired
 	private PreciousMetalNoticeService preciousMetalNoticeService;

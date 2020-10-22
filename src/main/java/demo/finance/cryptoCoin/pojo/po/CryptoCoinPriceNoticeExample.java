@@ -466,63 +466,63 @@ public class CryptoCoinPriceNoticeExample {
             return (Criteria) this;
         }
 
-        public Criteria andPercentageIsNull() {
-            addCriterion("percentage is null");
+        public Criteria andPricePercentageIsNull() {
+            addCriterion("price_percentage is null");
             return (Criteria) this;
         }
 
-        public Criteria andPercentageIsNotNull() {
-            addCriterion("percentage is not null");
+        public Criteria andPricePercentageIsNotNull() {
+            addCriterion("price_percentage is not null");
             return (Criteria) this;
         }
 
-        public Criteria andPercentageEqualTo(BigDecimal value) {
-            addCriterion("percentage =", value, "percentage");
+        public Criteria andPricePercentageEqualTo(BigDecimal value) {
+            addCriterion("price_percentage =", value, "pricePercentage");
             return (Criteria) this;
         }
 
-        public Criteria andPercentageNotEqualTo(BigDecimal value) {
-            addCriterion("percentage <>", value, "percentage");
+        public Criteria andPricePercentageNotEqualTo(BigDecimal value) {
+            addCriterion("price_percentage <>", value, "pricePercentage");
             return (Criteria) this;
         }
 
-        public Criteria andPercentageGreaterThan(BigDecimal value) {
-            addCriterion("percentage >", value, "percentage");
+        public Criteria andPricePercentageGreaterThan(BigDecimal value) {
+            addCriterion("price_percentage >", value, "pricePercentage");
             return (Criteria) this;
         }
 
-        public Criteria andPercentageGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("percentage >=", value, "percentage");
+        public Criteria andPricePercentageGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("price_percentage >=", value, "pricePercentage");
             return (Criteria) this;
         }
 
-        public Criteria andPercentageLessThan(BigDecimal value) {
-            addCriterion("percentage <", value, "percentage");
+        public Criteria andPricePercentageLessThan(BigDecimal value) {
+            addCriterion("price_percentage <", value, "pricePercentage");
             return (Criteria) this;
         }
 
-        public Criteria andPercentageLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("percentage <=", value, "percentage");
+        public Criteria andPricePercentageLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("price_percentage <=", value, "pricePercentage");
             return (Criteria) this;
         }
 
-        public Criteria andPercentageIn(List<BigDecimal> values) {
-            addCriterion("percentage in", values, "percentage");
+        public Criteria andPricePercentageIn(List<BigDecimal> values) {
+            addCriterion("price_percentage in", values, "pricePercentage");
             return (Criteria) this;
         }
 
-        public Criteria andPercentageNotIn(List<BigDecimal> values) {
-            addCriterion("percentage not in", values, "percentage");
+        public Criteria andPricePercentageNotIn(List<BigDecimal> values) {
+            addCriterion("price_percentage not in", values, "pricePercentage");
             return (Criteria) this;
         }
 
-        public Criteria andPercentageBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("percentage between", value1, value2, "percentage");
+        public Criteria andPricePercentageBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("price_percentage between", value1, value2, "pricePercentage");
             return (Criteria) this;
         }
 
-        public Criteria andPercentageNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("percentage not between", value1, value2, "percentage");
+        public Criteria andPricePercentageNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("price_percentage not between", value1, value2, "pricePercentage");
             return (Criteria) this;
         }
 
@@ -583,6 +583,66 @@ public class CryptoCoinPriceNoticeExample {
 
         public Criteria andMinuteRangeNotBetween(Integer value1, Integer value2) {
             addCriterion("minute_range not between", value1, value2, "minuteRange");
+            return (Criteria) this;
+        }
+
+        public Criteria andFluctuationSpeedPercentageIsNull() {
+            addCriterion("fluctuation_speed_percentage is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFluctuationSpeedPercentageIsNotNull() {
+            addCriterion("fluctuation_speed_percentage is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFluctuationSpeedPercentageEqualTo(BigDecimal value) {
+            addCriterion("fluctuation_speed_percentage =", value, "fluctuationSpeedPercentage");
+            return (Criteria) this;
+        }
+
+        public Criteria andFluctuationSpeedPercentageNotEqualTo(BigDecimal value) {
+            addCriterion("fluctuation_speed_percentage <>", value, "fluctuationSpeedPercentage");
+            return (Criteria) this;
+        }
+
+        public Criteria andFluctuationSpeedPercentageGreaterThan(BigDecimal value) {
+            addCriterion("fluctuation_speed_percentage >", value, "fluctuationSpeedPercentage");
+            return (Criteria) this;
+        }
+
+        public Criteria andFluctuationSpeedPercentageGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("fluctuation_speed_percentage >=", value, "fluctuationSpeedPercentage");
+            return (Criteria) this;
+        }
+
+        public Criteria andFluctuationSpeedPercentageLessThan(BigDecimal value) {
+            addCriterion("fluctuation_speed_percentage <", value, "fluctuationSpeedPercentage");
+            return (Criteria) this;
+        }
+
+        public Criteria andFluctuationSpeedPercentageLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("fluctuation_speed_percentage <=", value, "fluctuationSpeedPercentage");
+            return (Criteria) this;
+        }
+
+        public Criteria andFluctuationSpeedPercentageIn(List<BigDecimal> values) {
+            addCriterion("fluctuation_speed_percentage in", values, "fluctuationSpeedPercentage");
+            return (Criteria) this;
+        }
+
+        public Criteria andFluctuationSpeedPercentageNotIn(List<BigDecimal> values) {
+            addCriterion("fluctuation_speed_percentage not in", values, "fluctuationSpeedPercentage");
+            return (Criteria) this;
+        }
+
+        public Criteria andFluctuationSpeedPercentageBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("fluctuation_speed_percentage between", value1, value2, "fluctuationSpeedPercentage");
+            return (Criteria) this;
+        }
+
+        public Criteria andFluctuationSpeedPercentageNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("fluctuation_speed_percentage not between", value1, value2, "fluctuationSpeedPercentage");
             return (Criteria) this;
         }
 

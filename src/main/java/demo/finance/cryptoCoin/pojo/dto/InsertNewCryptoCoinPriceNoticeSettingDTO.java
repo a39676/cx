@@ -17,17 +17,31 @@ public class InsertNewCryptoCoinPriceNoticeSettingDTO {
 	 */
 	private Double originalPrice;
 	/**
-	 * 用于条件: n分钟内波动幅度超过 m%的条件设定
+	 * 用于条件: 价格波动幅度的条件设定
 	 */
-	private Double percentage;
+	private Double pricePercentage;
 	/**
 	 * 用于条件: n分钟内波动幅度超过 m%的条件设定
 	 */
 	private Integer minuteRange;
+	
+	/**
+	 * 用于条件: n分钟内波动幅度超过 m%的条件设定
+	 */
+	private Double fluctuationSpeedPercentage;
 
 	private String email;
 
 	private String validTime;
+
+	@Override
+	public String toString() {
+		return "InsertNewCryptoCoinPriceNoticeSettingDTO [coinType=" + coinType + ", currencyType=" + currencyType
+				+ ", maxPrice=" + maxPrice + ", minPrice=" + minPrice + ", originalPrice=" + originalPrice
+				+ ", pricePercentage=" + pricePercentage + ", minuteRange=" + minuteRange
+				+ ", fluctuationSpeedPercentage=" + fluctuationSpeedPercentage + ", email=" + email + ", validTime="
+				+ validTime + "]";
+	}
 
 	public Integer getCoinType() {
 		return coinType;
@@ -61,6 +75,22 @@ public class InsertNewCryptoCoinPriceNoticeSettingDTO {
 		this.minPrice = minPrice;
 	}
 
+	public Double getOriginalPrice() {
+		return originalPrice;
+	}
+
+	public void setOriginalPrice(Double originalPrice) {
+		this.originalPrice = originalPrice;
+	}
+
+	public Double getPricePercentage() {
+		return pricePercentage;
+	}
+
+	public void setPricePercentage(Double pricePercentage) {
+		this.pricePercentage = pricePercentage;
+	}
+
 	public Integer getMinuteRange() {
 		return minuteRange;
 	}
@@ -69,12 +99,12 @@ public class InsertNewCryptoCoinPriceNoticeSettingDTO {
 		this.minuteRange = minuteRange;
 	}
 
-	public Double getPercentage() {
-		return percentage;
+	public Double getFluctuationSpeedPercentage() {
+		return fluctuationSpeedPercentage;
 	}
 
-	public void setPercentage(Double percentage) {
-		this.percentage = percentage;
+	public void setFluctuationSpeedPercentage(Double fluctuationSpeedPercentage) {
+		this.fluctuationSpeedPercentage = fluctuationSpeedPercentage;
 	}
 
 	public String getEmail() {
@@ -91,22 +121,6 @@ public class InsertNewCryptoCoinPriceNoticeSettingDTO {
 
 	public void setValidTime(String validTime) {
 		this.validTime = validTime;
-	}
-
-	public Double getOriginalPrice() {
-		return originalPrice;
-	}
-
-	public void setOriginalPrice(Double originalPrice) {
-		this.originalPrice = originalPrice;
-	}
-
-	@Override
-	public String toString() {
-		return "InsertNewCryptoCoinPriceNoticeSettingDTO [coinType=" + coinType + ", currencyType=" + currencyType
-				+ ", maxPrice=" + maxPrice + ", minPrice=" + minPrice + ", originalPrice=" + originalPrice
-				+ ", percentage=" + percentage + ", minuteRange=" + minuteRange + ", email=" + email + ", validTime="
-				+ validTime + "]";
 	}
 
 }

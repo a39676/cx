@@ -64,7 +64,7 @@ public class PreciousMetalServiceImpl extends PreciousMetalCommonService impleme
 	public CommonResultCX deleteExpiredCacheData() {
 		CommonResultCX r = new CommonResultCX();
 
-		LocalDateTime expriedTime = LocalDateTime.now().minusHours(MetalConstant.METAL_PRICE_10Minute_DATA_LIVE_HOURS);
+		LocalDateTime expriedTime = LocalDateTime.now().minusHours(MetalConstant.METAL_PRICE_CACHE_DATA_LIVE_HOURS);
 
 		MetalPriceExample example = new MetalPriceExample();
 		example.createCriteria().andCreateTimeLessThan(expriedTime);

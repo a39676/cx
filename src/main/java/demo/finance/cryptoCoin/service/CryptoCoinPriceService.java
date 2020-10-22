@@ -6,7 +6,7 @@ import finance.cryptoCoin.pojo.dto.CryptoCoinNewPriceDTO;
 
 public interface CryptoCoinPriceService {
 
-	CommonResult reciveCoinPrice(CryptoCoinNewPriceDTO dto);
+	CommonResult reciveCoinNewPrice(CryptoCoinNewPriceDTO dto);
 
 	CommonResultCX deleteExpiredCacheData();
 

@@ -15,6 +15,14 @@ public abstract class FinanceCommonService extends CommonService {
 	@Autowired
 	protected ValidRegexToolService validRegexToolService;
 
+	/**
+	 * example: 
+	 * time = 14:03:05, minuteStepLong = 5, return 14:05:00
+	 * time = 14:13:00, minuteStepLong = 12, return 14:24:00 
+	 * @param time
+	 * @param minuteStepLong
+	 * @return
+	 */
 	protected LocalDateTime nextStepTime(LocalDateTime time, int minuteStepLong) {
 		int currentMinute = time.getMinute();
 		int addMinute = 1;

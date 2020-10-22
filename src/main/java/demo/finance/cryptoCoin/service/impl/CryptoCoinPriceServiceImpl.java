@@ -20,7 +20,7 @@ import finance.cryptoCoin.pojo.type.CryptoCoinType;
 public class CryptoCoinPriceServiceImpl extends CryptoCoinCommonService implements CryptoCoinPriceService {
 
 	@Override
-	public CommonResult reciveCoinPrice(CryptoCoinNewPriceDTO dto) {
+	public CommonResult reciveCoinNewPrice(CryptoCoinNewPriceDTO dto) {
 		CommonResult result = new CommonResult();
 
 		CryptoCoinPrice tmpPO = null;
@@ -58,7 +58,7 @@ public class CryptoCoinPriceServiceImpl extends CryptoCoinCommonService implemen
 	public CommonResultCX deleteExpiredCacheData() {
 		CommonResultCX r = new CommonResultCX();
 
-		LocalDateTime expriedTime = LocalDateTime.now().minusHours(CryptoCoinConstant.CRYPTO_COIN_10MINUTE_DATA_LIVE_HOURS);
+		LocalDateTime expriedTime = LocalDateTime.now().minusHours(CryptoCoinConstant.CRYPTO_COIN_CACHE_DATA_LIVE_HOURS);
 
 		CryptoCoinPriceExample example = new CryptoCoinPriceExample();
 		example.createCriteria().andCreateTimeLessThan(expriedTime);

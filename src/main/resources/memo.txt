@@ -1,3 +1,7 @@
+Cropty coin price
+	CryptoCoinNoticeServiceImpl.priceFluctuationSpeedNoticeHandle
+		涨跌幅度, 应该参考汇总数据, 考虑增设1分钟汇总数据?
+
 DTO
 	测试 @NotNull @NotBlank @Size 等注解
 

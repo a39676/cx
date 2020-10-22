@@ -1,3 +1,6 @@
+DTO
+	测试 @NotNull @NotBlank @Size 等注解
+
 ocr
 	linux 拉取依赖异常, 尝试更新版本号
 

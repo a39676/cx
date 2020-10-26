@@ -39,7 +39,7 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 			r.setMessage(checkResult.getMessage());
 			return r;
 		}
-		
+
 		dto = dtoPrefixHandle(dto);
 
 		CryptoCoinPriceNotice newPO = new CryptoCoinPriceNotice();
@@ -73,8 +73,8 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 			return r;
 		}
 
-		if (dto.getMinuteRange() != null && dto.getMinuteRange() > 120) {
-			r.failWithMessage("minute range max 120");
+		if (dto.getMinuteRange() != null && dto.getMinuteRange() > 300) {
+			r.failWithMessage("minute range max 300");
 			return r;
 		}
 
@@ -134,10 +134,10 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 
 		dto.setMaxPrice(new BigDecimal(dto.getOriginalPrice() * (1 + range)));
 		dto.setMinPrice(new BigDecimal(dto.getOriginalPrice() * (1 - range)));
-		
+
 		dto.setOriginalPrice(null);
 		dto.setPricePercentage(null);
-		
+
 		return dto;
 	}
 
@@ -285,28 +285,21 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 		Double upApmlitude = null;
 		Double lowApmlitude = null;
 
-		if (maxMinPriceResult.getMaxPriceDateTime().isBefore(maxMinPriceResult.getMinPriceDateTime())) {
-			lowApmlitude = (lastMin / lastMax - 1) * 100;
-		} else if (maxMinPriceResult.getMaxPriceDateTime().isAfter(maxMinPriceResult.getMinPriceDateTime())) {
-			upApmlitude = (lastMax / lastMin - 1) * 100;
-		} else {
-			lowApmlitude = (lastMin / lastMax - 1) * 100;
-			upApmlitude = (lastMax / lastMin - 1) * 100;
-		}
-//		涨跌幅计算, 可能超出精度范围
+		upApmlitude = (lastMax / lastMin - 1) * 100;
+		lowApmlitude = (lastMin / lastMax - 1) * 100;
 
 		String content = null;
 		Double trigerPercentage = noticeSetting.getFluctuationSpeedPercentage().doubleValue();
-		if (trigerPercentage > 0) {
-			if (upApmlitude != null && upApmlitude > trigerPercentage) {
-				content = coinType.getName() + ", " + currencyType + ", " + " had reach highest amlitude, new price: "
-						+ historyPOList.get(0).getEndPrice();
-			}
-		} else {
-			if (lowApmlitude != null && lowApmlitude < trigerPercentage) {
-				content = coinType.getName() + ", " + currencyType + ", " + " had reach lowest amlitude, new price: "
-						+ historyPOList.get(0).getEndPrice();
-			}
+		if (trigerPercentage < 0) {
+			trigerPercentage = 0 - trigerPercentage;
+		}
+
+		if (upApmlitude >= trigerPercentage) {
+			content = coinType.getName() + ", " + currencyType + ", " + " had reach highest amlitude, new price: "
+					+ historyPOList.get(0).getEndPrice();
+		} else if (lowApmlitude <= trigerPercentage) {
+			content = coinType.getName() + ", " + currencyType + ", " + " had reach lowest amlitude, new price: "
+					+ historyPOList.get(0).getEndPrice();
 		}
 
 		if (content != null) {

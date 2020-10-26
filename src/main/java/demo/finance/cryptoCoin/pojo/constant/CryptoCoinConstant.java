@@ -9,6 +9,12 @@ public class CryptoCoinConstant {
 	public static final int CRYPTO_COIN_CACHE_DATA_LIVE_HOURS = 8;
 	
 	/**
+	 * 2020-10-26
+	 * 1分钟的价格汇总, 保存5天
+	 */
+	public static final int CRYPTO_COIN_1MINUTE_DATA_LIVE_HOURS = 24 * 5;
+	
+	/**
 	 * 2020-07-15
 	 * 5分钟的价格汇总, 保存10天
 	 */

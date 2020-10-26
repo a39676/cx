@@ -1,8 +1,6 @@
 package demo.finance.cryptoCoin.service.impl;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,14 +8,14 @@ import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
+import demo.finance.cryptoCoin.mapper.CryptoCoinPrice1minuteMapper;
 import demo.finance.cryptoCoin.mapper.CryptoCoinPrice5minuteMapper;
-import demo.finance.cryptoCoin.pojo.bo.CryptoCoinPriceDataSummaryBO;
-import demo.finance.cryptoCoin.pojo.bo.StepTimeBO;
+import demo.finance.cryptoCoin.pojo.constant.CryptoCoinConstant;
+import demo.finance.cryptoCoin.pojo.po.CryptoCoinPrice1minute;
+import demo.finance.cryptoCoin.pojo.po.CryptoCoinPrice1minuteExample;
 import demo.finance.cryptoCoin.pojo.po.CryptoCoinPrice5minute;
 import demo.finance.cryptoCoin.pojo.po.CryptoCoinPrice5minuteExample;
 import demo.finance.cryptoCoin.service.CryptoCoin5MinuteDataSummaryService;
-import finance.cryptoCoin.pojo.dto.CryptoCoinHistoryPriceDTO;
-import finance.cryptoCoin.pojo.dto.CryptoCoinHistoryPriceSubDTO;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
 @Service
@@ -25,126 +23,98 @@ public class CryptoCoin5MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 		implements CryptoCoin5MinuteDataSummaryService {
 
 	@Autowired
+	private CryptoCoinPrice1minuteMapper cacheMapper;
+	@Autowired
 	private CryptoCoinPrice5minuteMapper summaryMapper;
-
+	
 	@Override
-	public CommonResult reciveCoinHistoryPrice(CryptoCoinHistoryPriceDTO dto) {
+	public CommonResult summaryHistoryData() {
 		CommonResult r = new CommonResult();
-
-		List<CryptoCoinPriceDataSummaryBO> boList = handleHistoryDataList(dto);
-		if (boList == null || boList.isEmpty()) {
-			return r;
-		}
-
-		for (CryptoCoinPriceDataSummaryBO bo : boList) {
-			updateSummaryData(bo);
-		}
-
-		return r;
-	}
-
-	private List<CryptoCoinPriceDataSummaryBO> handleHistoryDataList(CryptoCoinHistoryPriceDTO dto) {
-		List<CryptoCoinPriceDataSummaryBO> list = new ArrayList<>();
-
-		List<CryptoCoinHistoryPriceSubDTO> dataList = dto.getPriceHistoryData();
-
-		if (dataList == null || dataList.isEmpty()) {
-			return list;
-		}
-
-		CryptoCoinType coinType = CryptoCoinType.getType(dto.getCryptoCoinTypeName());
-		CurrencyType currencyType = CurrencyType.getType(dto.getCurrencyName());
-		if (coinType == null || currencyType == null) {
-			return list;
-		}
-
-		CryptoCoinPriceDataSummaryBO tmpSummaryDataBO = null;
-		int minuteStep = 5;
-		StepTimeBO stepTimeBO = null;
-		LocalDateTime tmpDataTime = null;
-		for (CryptoCoinHistoryPriceSubDTO tmpSubData : dataList) {
-			tmpDataTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(tmpSubData.getTime());
-
-			if (stepTimeBO == null) {
-				stepTimeBO = findStepTime(tmpSubData, minuteStep);
-				tmpSummaryDataBO = new CryptoCoinPriceDataSummaryBO();
-				tmpSummaryDataBO.setCurrencyCode(currencyType.getCode());
-				tmpSummaryDataBO.setCoinTypeCode(coinType.getCode());
-				tmpSummaryDataBO.setStartTime(stepTimeBO.getStepStartTime());
-				tmpSummaryDataBO.setEndTime(stepTimeBO.getStepEndTime());
-				tmpSummaryDataBO.setStart(tmpSubData.getStart());
-				tmpSummaryDataBO.setEnd(tmpSubData.getEnd());
-				tmpSummaryDataBO.setHigh(tmpSubData.getHigh());
-				tmpSummaryDataBO.setLow(tmpSubData.getLow());
-
-			} else {
-				if (!tmpDataTime.equals(stepTimeBO.getStepEndTime())) {
-
-					if (tmpSubData.getHigh() > tmpSummaryDataBO.getHigh()) {
-						tmpSummaryDataBO.setHigh(tmpSubData.getHigh());
-					}
-					if (tmpSubData.getLow() < tmpSummaryDataBO.getLow()) {
-						tmpSummaryDataBO.setLow(tmpSubData.getLow());
-					}
-
-				} else {
-					tmpSummaryDataBO.setEnd(tmpSubData.getEnd());
-					list.add(tmpSummaryDataBO);
-
-					stepTimeBO = null;
-					tmpSummaryDataBO = null;
+		
+		int minuteStepLong = 5;
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime thereStepBefore = nextStepTime(now, minuteStepLong).minusMinutes(minuteStepLong * 3);
+		
+		
+		for(CryptoCoinType coinType : CryptoCoinType.values()) {
+			for(CurrencyType currencyType : CurrencyType.values()) {
+				for(LocalDateTime i = thereStepBefore; i.isBefore(now); i = nextStepTime(i, minuteStepLong)) {
+					handleHistoryDataList(i, coinType, currencyType);
 				}
 			}
-
 		}
-
-		return list;
+		
+		return r;
 	}
-
-	private StepTimeBO findStepTime(CryptoCoinHistoryPriceSubDTO dto, int minuteStep) {
-		StepTimeBO bo = new StepTimeBO();
-		LocalDateTime tmpDataTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getTime());
-		LocalDateTime tmpStepEndTime = nextStepTime(tmpDataTime, minuteStep);
-		LocalDateTime tmpStepStartTime = tmpStepEndTime.minusMinutes(minuteStep);
-		bo.setStepStartTime(tmpStepStartTime);
-		bo.setStepEndTime(tmpStepEndTime);
-		return bo;
-	}
-
-	private void updateSummaryData(CryptoCoinPriceDataSummaryBO bo) {
+	
+	private void handleHistoryDataList(LocalDateTime startTime, CryptoCoinType coinType, CurrencyType currencyType) {
+		LocalDateTime endTime = startTime.plusMinutes(5);
+		
+		CryptoCoinPrice1minuteExample cacheExample = new CryptoCoinPrice1minuteExample();
+		cacheExample.createCriteria()
+		.andCoinTypeEqualTo(coinType.getCode())
+		.andCurrencyTypeEqualTo(currencyType.getCode())
+		.andStartTimeGreaterThanOrEqualTo(startTime)
+		.andStartTimeLessThan(endTime);
+		List<CryptoCoinPrice1minute> cacheList = cacheMapper.selectByExample(cacheExample);
+		if(cacheList == null || cacheList.isEmpty()) {
+			return;
+		}
+		
 		CryptoCoinPrice5minuteExample example = new CryptoCoinPrice5minuteExample();
-		example.createCriteria().andCoinTypeEqualTo(bo.getCoinTypeCode()).andCurrencyTypeEqualTo(bo.getCurrencyCode())
-				.andEndTimeEqualTo(bo.getEndTime());
+		example.createCriteria()
+		.andCoinTypeEqualTo(coinType.getCode())
+		.andCurrencyTypeEqualTo(currencyType.getCode())
+		.andStartTimeEqualTo(startTime)
+		;
 		List<CryptoCoinPrice5minute> poList = summaryMapper.selectByExample(example);
-
 		CryptoCoinPrice5minute po = null;
-		if (poList == null || poList.isEmpty()) {
+		boolean newPOFlag = false;
+		if(poList == null || poList.isEmpty()) {
+			newPOFlag = true;
 			po = new CryptoCoinPrice5minute();
 			po.setId(snowFlake.getNextId());
-			po.setCoinType(bo.getCoinTypeCode());
-			po.setCurrencyType(bo.getCurrencyCode());
-			po.setStartPrice(new BigDecimal(bo.getStart()));
-			po.setEndPrice(new BigDecimal(bo.getEnd()));
-			po.setHighPrice(new BigDecimal(bo.getHigh()));
-			po.setLowPrice(new BigDecimal(bo.getLow()));
-			po.setStartTime(bo.getStartTime());
-			po.setEndTime(bo.getEndTime());
-
-			summaryMapper.insertSelective(po);
-
+			po.setCoinType(coinType.getCode());
+			po.setCurrencyType(currencyType.getCode());
 		} else {
 			po = poList.get(0);
-
-			if (po.getHighPrice().doubleValue() < bo.getHigh()) {
-				po.setHighPrice(new BigDecimal(bo.getHigh()));
+		}
+		
+		for(CryptoCoinPrice1minute cache : cacheList) {
+			if(po.getStartTime() == null || cache.getStartTime().isBefore(po.getStartTime())) {
+				po.setStartTime(cache.getStartTime());
+				po.setStartPrice(cache.getStartPrice());
 			}
-			if (po.getLowPrice().doubleValue() > bo.getLow()) {
-				po.setLowPrice(new BigDecimal(bo.getLow()));
+			if(po.getEndTime() == null || cache.getStartTime().isAfter(po.getEndTime())) {
+				po.setEndTime(cache.getStartTime().plusMinutes(1));
+				po.setEndPrice(cache.getEndPrice());
 			}
-			po.setEndPrice(new BigDecimal(bo.getEnd()));
-
+			if(po.getHighPrice() == null || po.getHighPrice().compareTo(cache.getHighPrice()) < 0) {
+				po.setHighPrice(cache.getHighPrice());
+			}
+			if(po.getLowPrice() == null || po.getLowPrice().compareTo(cache.getLowPrice()) > 0) {
+				po.setLowPrice(cache.getLowPrice());
+			}
+		}
+		
+		if(newPOFlag) {
+			summaryMapper.insertSelective(po);
+		} else {
 			summaryMapper.updateByPrimaryKeySelective(po);
 		}
+	}
 
+	@Override
+	public CommonResult deleteExpiredCacheData() {
+		CommonResult r = new CommonResult();
+
+		LocalDateTime expriedTime = LocalDateTime.now()
+				.minusHours(CryptoCoinConstant.CRYPTO_COIN_5MINUTE_DATA_LIVE_HOURS);
+
+		CryptoCoinPrice5minuteExample example = new CryptoCoinPrice5minuteExample();
+		example.createCriteria().andCreateTimeLessThan(expriedTime);
+		summaryMapper.deleteByExample(example);
+		r.setIsSuccess();
+		return r;
 	}
 }

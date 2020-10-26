@@ -12,9 +12,11 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.finance.common.pojo.result.FindMaxMinPriceResult;
+import demo.finance.cryptoCoin.mapper.CryptoCoinPrice1minuteMapper;
 import demo.finance.cryptoCoin.mapper.CryptoCoinPriceNoticeMapper;
 import demo.finance.cryptoCoin.pojo.dto.InsertNewCryptoCoinPriceNoticeSettingDTO;
-import demo.finance.cryptoCoin.pojo.po.CryptoCoinPrice;
+import demo.finance.cryptoCoin.pojo.po.CryptoCoinPrice1minute;
+import demo.finance.cryptoCoin.pojo.po.CryptoCoinPrice1minuteExample;
 import demo.finance.cryptoCoin.pojo.po.CryptoCoinPriceNotice;
 import demo.finance.cryptoCoin.pojo.result.CryptoCoinNoticeDTOCheckResult;
 import demo.finance.cryptoCoin.service.CryptoCoinNoticeService;
@@ -26,7 +28,9 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 
 	@Autowired
 	private CryptoCoinPriceNoticeMapper noticeMapper;
-
+	@Autowired
+	private CryptoCoinPrice1minuteMapper cache1MinMapper;
+	
 	@Override
 	public CommonResult insertNewCryptoCoinPriceNoticeSetting(InsertNewCryptoCoinPriceNoticeSettingDTO dto) {
 		CommonResult r = new CommonResult();
@@ -219,7 +223,7 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 	private CommonResult priceConditionNoticeHandle(CryptoCoinPriceNotice noticeSetting, CryptoCoinType coinType,
 			CurrencyType currencyType) {
 		CommonResult r = new CommonResult();
-		List<CryptoCoinPrice> historyPOList = findHistoryDateByLastMinutes(coinType, currencyType, 1);
+		List<CryptoCoinPrice1minute> historyPOList = findHistoryDateByLastMinutes(coinType, currencyType, 1);
 
 		if (historyPOList == null || historyPOList.isEmpty()) {
 			return r;
@@ -231,20 +235,20 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 			return r;
 		}
 
-		BigDecimal lastMinuteMaxPrice = maxMinPriceResult.getMaxPrice();
-		BigDecimal lastMinuteMinPrice = maxMinPriceResult.getMinPrice();
+		BigDecimal lastMaxPrice = maxMinPriceResult.getMaxPrice();
+		BigDecimal lastMinPrice = maxMinPriceResult.getMinPrice();
 		String content = null;
 
 		if (noticeSetting.getMaxPrice() != null) {
-			if (lastMinuteMaxPrice.compareTo(noticeSetting.getMaxPrice()) >= 1) {
+			if (lastMaxPrice.compareTo(noticeSetting.getMaxPrice()) >= 1) {
 				content = coinType.getName() + ", " + currencyType + ", " + " price(range) had reach "
-						+ lastMinuteMaxPrice + " at: " + maxMinPriceResult.getMaxPriceDateTime() + ";";
+						+ lastMaxPrice + " at: " + maxMinPriceResult.getMaxPriceDateTime() + ";";
 			}
 
 		} else if (noticeSetting.getMinPrice() != null) {
-			if (lastMinuteMinPrice.compareTo(noticeSetting.getMinPrice()) <= -1) {
+			if (lastMinPrice.compareTo(noticeSetting.getMinPrice()) <= -1) {
 				content = coinType.getName() + ", " + currencyType + ", " + " price(range) had reach "
-						+ lastMinuteMinPrice + " at: " + maxMinPriceResult.getMinPriceDateTime() + ";";
+						+ lastMinPrice + " at: " + maxMinPriceResult.getMinPriceDateTime() + ";";
 			}
 		}
 
@@ -260,7 +264,7 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 
 		CommonResult r = new CommonResult();
 
-		List<CryptoCoinPrice> lastMinutePOList = findHistoryDateByLastMinutes(coinType, currencyType, 5);
+		List<CryptoCoinPrice1minute> lastMinutePOList = findHistoryDateByLastMinutes(coinType, currencyType, 5);
 
 		if (lastMinutePOList == null || lastMinutePOList.isEmpty()) {
 			return r;
@@ -272,22 +276,22 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 			return r;
 		}
 
-		BigDecimal lastMinuteMaxPrice = maxMinPriceResult.getMaxPrice();
-		BigDecimal lastMinuteMinPrice = maxMinPriceResult.getMinPrice();
+		BigDecimal lastMaxPrice = maxMinPriceResult.getMaxPrice();
+		BigDecimal lastMinPrice = maxMinPriceResult.getMinPrice();
 		BigDecimal settingOriginalPrice = noticeSetting.getOriginalPrice();
 		String content = null;
 
 		if (noticeSetting.getPricePercentage().compareTo(BigDecimal.ZERO) > 0) {
 			BigDecimal noticeMaxRange = noticeSetting.getPricePercentage().add(BigDecimal.ONE);
 			BigDecimal noticeMaxPrice = settingOriginalPrice.multiply(noticeMaxRange);
-			if (lastMinuteMaxPrice.compareTo(noticeMaxPrice) > 0) {
+			if (lastMaxPrice.compareTo(noticeMaxPrice) > 0) {
 				content = coinType.getName() + ", " + currencyType + ", " + " had over range, trigger price: "
 						+ noticeMaxPrice + " at: " + maxMinPriceResult.getMaxPriceDateTime();
 			}
 		} else {
 			BigDecimal noticeMinRange = noticeSetting.getPricePercentage().add(BigDecimal.ONE);
 			BigDecimal noticeMinPrice = settingOriginalPrice.multiply(noticeMinRange);
-			if (lastMinuteMinPrice.compareTo(noticeMinPrice) < 0) {
+			if (lastMinPrice.compareTo(noticeMinPrice) < 0) {
 				content = coinType.getName() + ", " + currencyType + ", " + " had over range, trigger price: "
 						+ noticeMinPrice + " at: " + maxMinPriceResult.getMinPriceDateTime();
 			}
@@ -304,7 +308,7 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 			CurrencyType currencyType) {
 		CommonResult r = new CommonResult();
 
-		List<CryptoCoinPrice> historyPOList = findHistoryDateByLastMinutes(coinType, currencyType,
+		List<CryptoCoinPrice1minute> historyPOList = findHistoryDateByLastMinutes(coinType, currencyType,
 				noticeSetting.getMinuteRange());
 		if (historyPOList == null || historyPOList.isEmpty()) {
 			return r;
@@ -324,7 +328,10 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 
 		if (maxMinPriceResult.getMaxPriceDateTime().isBefore(maxMinPriceResult.getMinPriceDateTime())) {
 			lowApmlitude = (lastMin / lastMax - 1) * 100;
+		} else if (maxMinPriceResult.getMaxPriceDateTime().isAfter(maxMinPriceResult.getMinPriceDateTime())){
+			upApmlitude = (lastMax / lastMin - 1) * 100;
 		} else {
+			lowApmlitude = (lastMin / lastMax - 1) * 100;
 			upApmlitude = (lastMax / lastMin - 1) * 100;
 		}
 //		涨跌幅计算, 可能超出精度范围
@@ -334,12 +341,12 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 		if (trigerPercentage > 0) {
 			if (upApmlitude != null && upApmlitude > trigerPercentage) {
 				content = coinType.getName() + ", " + currencyType + ", " + " had reach highest amlitude, new price: "
-						+ historyPOList.get(0).getPrice();
+						+ historyPOList.get(0).getEndPrice();
 			}
 		} else {
 			if (lowApmlitude != null && lowApmlitude < trigerPercentage) {
 				content = coinType.getName() + ", " + currencyType + ", " + " had reach lowest amlitude, new price: "
-						+ historyPOList.get(0).getPrice();
+						+ historyPOList.get(0).getEndPrice();
 			}
 		}
 
@@ -350,4 +357,47 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 		return r;
 	}
 
+	private List<CryptoCoinPrice1minute> findHistoryDateByLastMinutes(CryptoCoinType coinType,
+			CurrencyType currencyType, Integer minutes) {
+		CryptoCoinPrice1minuteExample example = new CryptoCoinPrice1minuteExample();
+		example.createCriteria()
+		.andCoinTypeEqualTo(coinType.getCode())
+		.andCurrencyTypeEqualTo(currencyType.getCode())
+		.andCreateTimeGreaterThanOrEqualTo(LocalDateTime.now().minusMinutes(minutes));
+		;
+		example.setOrderByClause("create_time desc");
+
+		return cache1MinMapper.selectByExample(example);
+	}
+	
+	protected FindMaxMinPriceResult findMaxMinPrice(List<CryptoCoinPrice1minute> list) {
+		FindMaxMinPriceResult r = new FindMaxMinPriceResult();
+		
+		if(list == null || list.isEmpty()) {
+			r.setMessage("empty history data");
+			return r;
+		}
+		
+		CryptoCoinPrice1minute defaultData = list.get(0);
+		BigDecimal maxPrice = defaultData.getHighPrice();
+		BigDecimal minPrice = defaultData.getLowPrice();
+		LocalDateTime maxPriceDateTime = defaultData.getCreateTime();
+		LocalDateTime minPriceDateTime = defaultData.getCreateTime();
+		for (CryptoCoinPrice1minute po : list) {
+			if (maxPrice.compareTo(po.getHighPrice()) < 0) {
+				maxPrice = po.getHighPrice();
+				maxPriceDateTime = po.getStartTime();
+			} else if (minPrice.compareTo(po.getLowPrice()) > 0) {
+				minPrice = po.getLowPrice();
+				minPriceDateTime = po.getStartTime();
+			}
+		}
+		
+		r.setMaxPrice(maxPrice);
+		r.setMinPrice(minPrice);
+		r.setMaxPriceDateTime(maxPriceDateTime);
+		r.setMinPriceDateTime(minPriceDateTime);
+		r.setIsSuccess();
+		return r;
+	}
 }

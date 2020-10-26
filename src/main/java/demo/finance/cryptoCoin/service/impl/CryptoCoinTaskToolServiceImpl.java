@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import demo.finance.cryptoCoin.service.CryptoCoin1MinuteDataSummaryService;
+import demo.finance.cryptoCoin.service.CryptoCoin5MinuteDataSummaryService;
 import demo.finance.cryptoCoin.service.CryptoCoinNoticeService;
 import demo.finance.cryptoCoin.service.CryptoCoinPriceService;
 
@@ -14,6 +16,11 @@ public class CryptoCoinTaskToolServiceImpl extends CryptoCoinCommonService {
 	private CryptoCoinNoticeService noticeService;
 	@Autowired
 	private CryptoCoinPriceService priceService;
+	@Autowired
+	private CryptoCoin1MinuteDataSummaryService cryptoCoin1MinuteDataSummaryService;
+	@Autowired
+	private CryptoCoin5MinuteDataSummaryService cryptoCoin5MinuteDataSummaryService;
+	
 
 	@Scheduled(cron = "0 */1 * * * ?")
 	public void cryptoCoinPriceNoticeHandler() {
@@ -23,5 +30,20 @@ public class CryptoCoinTaskToolServiceImpl extends CryptoCoinCommonService {
 	@Scheduled(cron = "* 2 */1 * * ?")
 	public void deleteExpiredCacheData() {
 		priceService.deleteExpiredCacheData();
+	}
+	
+	@Scheduled(cron="40 50 23 * * *")
+	public void deleteExpired1MinuteSummaryData() {
+		cryptoCoin1MinuteDataSummaryService.deleteExpiredCacheData();
+	}
+	
+	@Scheduled(cron="0 */30 * * * ?")
+	public void summary5MinHistoryData() {
+		cryptoCoin5MinuteDataSummaryService.summaryHistoryData();
+	}
+	
+	@Scheduled(cron="40 51 23 * * *")
+	public void deleteExpired5MinuteSummaryData() {
+		cryptoCoin5MinuteDataSummaryService.deleteExpiredCacheData();
 	}
 }

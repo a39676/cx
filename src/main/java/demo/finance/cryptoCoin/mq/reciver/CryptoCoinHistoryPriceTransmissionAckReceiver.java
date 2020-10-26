@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
 
-import demo.finance.cryptoCoin.service.CryptoCoin5MinuteDataSummaryService;
+import demo.finance.cryptoCoin.service.CryptoCoin1MinuteDataSummaryService;
 import finance.cryptoCoin.pojo.constant.CryptoCoinMQConstant;
 import finance.cryptoCoin.pojo.dto.CryptoCoinHistoryPriceDTO;
 
@@ -20,13 +20,13 @@ import finance.cryptoCoin.pojo.dto.CryptoCoinHistoryPriceDTO;
 public class CryptoCoinHistoryPriceTransmissionAckReceiver {
 
 	@Autowired
-	private CryptoCoin5MinuteDataSummaryService cryptoCoin5MinuteDataService;
+	private CryptoCoin1MinuteDataSummaryService cryptoCoin1MinuteDataService;
 
 	@RabbitHandler
 	public void process(String messageStr, Channel channel, Message message) throws IOException {
 		try {
 			CryptoCoinHistoryPriceDTO dto = new Gson().fromJson(messageStr, CryptoCoinHistoryPriceDTO.class);
-			cryptoCoin5MinuteDataService.reciveCoinHistoryPrice(dto);
+			cryptoCoin1MinuteDataService.reciveCoinHistoryPrice(dto);
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 		} catch (IOException e) {
 			channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);

@@ -43,7 +43,7 @@ public class TaskToolServiceImpl implements TaskToolService {
 //  @Scheduled(cron = "[Seconds] [Minutes] [Hours] [Day of month] [Month] [Day of week] [Year]")
 //	@Scheduled(fixedRate = 1000) // 上次任务结束后 1000 毫秒后再执行
 	
-//	@Scheduled(cron="0 */60 * * * ?")   //每30分钟执行一次
+//	@Scheduled(cron="0 */30 * * * ?")   //每30分钟执行一次
 //	public void sendTomcatOut() {
 //		mailService.sendTomcatOut();
 //	}

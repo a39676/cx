@@ -1,8 +1,6 @@
 Cropty coin price
 	CryptoCoinNoticeServiceImpl.priceFluctuationSpeedNoticeHandle
 		自动每日加入监视任务?
-		涨跌幅度, 应该参考汇总数据, 考虑增设1分钟汇总数据?
-			1分钟汇总 包括当前数据
 		删除过期提醒, 贵金属同理
 
 DTO

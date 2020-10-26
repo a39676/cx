@@ -14,10 +14,6 @@ public class CryptoCoinPriceNotice {
 
     private BigDecimal minPrice;
 
-    private BigDecimal originalPrice;
-
-    private BigDecimal pricePercentage;
-
     private Integer minuteRange;
 
     private BigDecimal fluctuationSpeedPercentage;
@@ -70,22 +66,6 @@ public class CryptoCoinPriceNotice {
 
     public void setMinPrice(BigDecimal minPrice) {
         this.minPrice = minPrice;
-    }
-
-    public BigDecimal getOriginalPrice() {
-        return originalPrice;
-    }
-
-    public void setOriginalPrice(BigDecimal originalPrice) {
-        this.originalPrice = originalPrice;
-    }
-
-    public BigDecimal getPricePercentage() {
-        return pricePercentage;
-    }
-
-    public void setPricePercentage(BigDecimal pricePercentage) {
-        this.pricePercentage = pricePercentage;
     }
 
     public Integer getMinuteRange() {

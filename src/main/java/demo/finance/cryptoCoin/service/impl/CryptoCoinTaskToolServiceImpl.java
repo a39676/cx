@@ -37,7 +37,7 @@ public class CryptoCoinTaskToolServiceImpl extends CryptoCoinCommonService {
 		cryptoCoin1MinuteDataSummaryService.deleteExpiredCacheData();
 	}
 	
-	@Scheduled(cron="0 */30 * * * ?")
+	@Scheduled(cron="0 */5 * * * ?")
 	public void summary5MinHistoryData() {
 		cryptoCoin5MinuteDataSummaryService.summaryHistoryData();
 	}

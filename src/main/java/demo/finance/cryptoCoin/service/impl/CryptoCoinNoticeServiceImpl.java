@@ -155,14 +155,14 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 				&& (dto.getMinuteRange() != null && dto.getMinuteRange() > 0);
 	}
 
-	private boolean priceConditionHadSet(CryptoCoinPriceNotice dto) {
-		return dto.getMaxPrice() != null || dto.getMinPrice() != null;
+	private boolean priceConditionHadSet(CryptoCoinPriceNotice po) {
+		return po.getMaxPrice() != null || po.getMinPrice() != null;
 	}
 
-	private boolean priceFluctuationSpeedConditionHadSet(CryptoCoinPriceNotice dto) {
-		return dto.getFluctuationSpeedPercentage() != null
-				&& dto.getFluctuationSpeedPercentage().compareTo(BigDecimal.ZERO) != 0 && dto.getMinuteRange() != null
-				&& dto.getMinuteRange() > 0;
+	private boolean priceFluctuationSpeedConditionHadSet(CryptoCoinPriceNotice po) {
+		return po.getFluctuationSpeedPercentage() != null
+				&& po.getFluctuationSpeedPercentage().compareTo(BigDecimal.ZERO) != 0 && po.getMinuteRange() != null
+				&& po.getMinuteRange() > 0;
 	}
 
 	@Override
@@ -244,13 +244,13 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 		String content = null;
 
 		if (noticeSetting.getMaxPrice() != null) {
-			if (lastMaxPrice.compareTo(noticeSetting.getMaxPrice()) >= 1) {
+			if (lastMaxPrice.compareTo(noticeSetting.getMaxPrice()) >= 0) {
 				content = coinType.getName() + ", " + currencyType + ", " + " price(range) had reach " + lastMaxPrice
 						+ " at: " + maxMinPriceResult.getMaxPriceDateTime() + ";";
 			}
 
 		} else if (noticeSetting.getMinPrice() != null) {
-			if (lastMinPrice.compareTo(noticeSetting.getMinPrice()) <= -1) {
+			if (lastMinPrice.compareTo(noticeSetting.getMinPrice()) <= 0) {
 				content = coinType.getName() + ", " + currencyType + ", " + " price(range) had reach " + lastMinPrice
 						+ " at: " + maxMinPriceResult.getMinPriceDateTime() + ";";
 			}

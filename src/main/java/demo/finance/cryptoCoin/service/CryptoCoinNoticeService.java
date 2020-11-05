@@ -13,4 +13,6 @@ public interface CryptoCoinNoticeService {
 
 	void noticeHandler();
 
+	void deleteOldNotice();
+
 }

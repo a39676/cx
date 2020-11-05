@@ -46,4 +46,10 @@ public class CryptoCoinTaskToolServiceImpl extends CryptoCoinCommonService {
 	public void deleteExpired5MinuteSummaryData() {
 		cryptoCoin5MinuteDataSummaryService.deleteExpiredCacheData();
 	}
+	
+	@Scheduled(cron="40 51 22 * * *")
+	public void deleteOldNotice() {
+		noticeService.deleteOldNotice();
+	}
+	
 }

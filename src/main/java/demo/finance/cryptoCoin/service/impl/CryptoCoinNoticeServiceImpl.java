@@ -18,6 +18,8 @@ import demo.finance.cryptoCoin.pojo.dto.InsertNewCryptoCoinPriceNoticeSettingDTO
 import demo.finance.cryptoCoin.pojo.po.CryptoCoinPrice1minute;
 import demo.finance.cryptoCoin.pojo.po.CryptoCoinPrice1minuteExample;
 import demo.finance.cryptoCoin.pojo.po.CryptoCoinPriceNotice;
+import demo.finance.cryptoCoin.pojo.po.CryptoCoinPriceNoticeExample;
+import demo.finance.cryptoCoin.pojo.po.CryptoCoinPriceNoticeExample.Criteria;
 import demo.finance.cryptoCoin.pojo.result.CryptoCoinNoticeDTOCheckResult;
 import demo.finance.cryptoCoin.service.CryptoCoinNoticeService;
 import demo.tool.pojo.type.MailType;
@@ -349,5 +351,16 @@ public class CryptoCoinNoticeServiceImpl extends CryptoCoinCommonService impleme
 		r.setMinPriceDateTime(minPriceDateTime);
 		r.setIsSuccess();
 		return r;
+	}
+
+	@Override
+	public void deleteOldNotice() {
+		CryptoCoinPriceNoticeExample example = new CryptoCoinPriceNoticeExample();
+		Criteria noticedCriteria = example.createCriteria();
+		noticedCriteria.andNoticeTimeIsNotNull();
+		Criteria validTimeCriteria = example.createCriteria();
+		validTimeCriteria.andValidTimeLessThan(LocalDateTime.now());
+		example.or(noticedCriteria);
+		noticeMapper.deleteByExample(example);
 	}
 }

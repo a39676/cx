@@ -18,6 +18,8 @@ public class CryptoCoinPrice5minute {
 
     private BigDecimal lowPrice;
 
+    private BigDecimal volume;
+
     private LocalDateTime startTime;
 
     private LocalDateTime endTime;
@@ -80,6 +82,14 @@ public class CryptoCoinPrice5minute {
 
     public void setLowPrice(BigDecimal lowPrice) {
         this.lowPrice = lowPrice;
+    }
+
+    public BigDecimal getVolume() {
+        return volume;
+    }
+
+    public void setVolume(BigDecimal volume) {
+        this.volume = volume;
     }
 
     public LocalDateTime getStartTime() {

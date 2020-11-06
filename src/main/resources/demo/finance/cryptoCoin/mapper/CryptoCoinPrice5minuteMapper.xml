@@ -9,6 +9,7 @@
     <result column="end_price" jdbcType="DECIMAL" property="endPrice" />
     <result column="high_price" jdbcType="DECIMAL" property="highPrice" />
     <result column="low_price" jdbcType="DECIMAL" property="lowPrice" />
+    <result column="volume" jdbcType="DECIMAL" property="volume" />
     <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -73,8 +74,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, coin_type, currency_type, start_price, end_price, high_price, low_price, start_time, 
-    end_time, create_time, is_delete
+    id, coin_type, currency_type, start_price, end_price, high_price, low_price, volume, 
+    start_time, end_time, create_time, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.finance.cryptoCoin.pojo.po.CryptoCoinPrice5minuteExample" resultMap="BaseResultMap">
     select
@@ -109,12 +110,14 @@
   <insert id="insert" parameterType="demo.finance.cryptoCoin.pojo.po.CryptoCoinPrice5minute">
     insert into crypto_coin_price_5minute (id, coin_type, currency_type, 
       start_price, end_price, high_price, 
-      low_price, start_time, end_time, 
-      create_time, is_delete)
+      low_price, volume, start_time, 
+      end_time, create_time, is_delete
+      )
     values (#{id,jdbcType=BIGINT}, #{coinType,jdbcType=INTEGER}, #{currencyType,jdbcType=INTEGER}, 
       #{startPrice,jdbcType=DECIMAL}, #{endPrice,jdbcType=DECIMAL}, #{highPrice,jdbcType=DECIMAL}, 
-      #{lowPrice,jdbcType=DECIMAL}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
+      #{lowPrice,jdbcType=DECIMAL}, #{volume,jdbcType=DECIMAL}, #{startTime,jdbcType=TIMESTAMP}, 
+      #{endTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="demo.finance.cryptoCoin.pojo.po.CryptoCoinPrice5minute">
     insert into crypto_coin_price_5minute
@@ -139,6 +142,9 @@
       </if>
       <if test="lowPrice != null">
         low_price,
+      </if>
+      <if test="volume != null">
+        volume,
       </if>
       <if test="startTime != null">
         start_time,
@@ -174,6 +180,9 @@
       </if>
       <if test="lowPrice != null">
         #{lowPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="volume != null">
+        #{volume,jdbcType=DECIMAL},
       </if>
       <if test="startTime != null">
         #{startTime,jdbcType=TIMESTAMP},
@@ -219,6 +228,9 @@
       <if test="record.lowPrice != null">
         low_price = #{record.lowPrice,jdbcType=DECIMAL},
       </if>
+      <if test="record.volume != null">
+        volume = #{record.volume,jdbcType=DECIMAL},
+      </if>
       <if test="record.startTime != null">
         start_time = #{record.startTime,jdbcType=TIMESTAMP},
       </if>
@@ -245,6 +257,7 @@
       end_price = #{record.endPrice,jdbcType=DECIMAL},
       high_price = #{record.highPrice,jdbcType=DECIMAL},
       low_price = #{record.lowPrice,jdbcType=DECIMAL},
+      volume = #{record.volume,jdbcType=DECIMAL},
       start_time = #{record.startTime,jdbcType=TIMESTAMP},
       end_time = #{record.endTime,jdbcType=TIMESTAMP},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -274,6 +287,9 @@
       <if test="lowPrice != null">
         low_price = #{lowPrice,jdbcType=DECIMAL},
       </if>
+      <if test="volume != null">
+        volume = #{volume,jdbcType=DECIMAL},
+      </if>
       <if test="startTime != null">
         start_time = #{startTime,jdbcType=TIMESTAMP},
       </if>
@@ -297,6 +313,7 @@
       end_price = #{endPrice,jdbcType=DECIMAL},
       high_price = #{highPrice,jdbcType=DECIMAL},
       low_price = #{lowPrice,jdbcType=DECIMAL},
+      volume = #{volume,jdbcType=DECIMAL},
       start_time = #{startTime,jdbcType=TIMESTAMP},
       end_time = #{endTime,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},

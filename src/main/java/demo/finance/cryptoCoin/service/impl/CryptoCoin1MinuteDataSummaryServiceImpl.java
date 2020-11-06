@@ -79,6 +79,7 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 				tmpPO.setEndPrice(new BigDecimal(data.getEnd()));
 				tmpPO.setHighPrice(new BigDecimal(data.getHigh()));
 				tmpPO.setLowPrice(new BigDecimal(data.getLow()));
+				tmpPO.setVolume(new BigDecimal(data.getVolume()));
 
 				summaryMapper.insertSelective(tmpPO);
 			} else {

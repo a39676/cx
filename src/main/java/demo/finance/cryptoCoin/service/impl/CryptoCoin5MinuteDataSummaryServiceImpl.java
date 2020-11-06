@@ -1,5 +1,6 @@
 package demo.finance.cryptoCoin.service.impl;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -80,6 +81,7 @@ public class CryptoCoin5MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 			po = poList.get(0);
 		}
 		
+		Double volumeSummary = 0D;
 		for(CryptoCoinPrice1minute cache : cacheList) {
 			if(po.getStartTime() == null || cache.getStartTime().isBefore(po.getStartTime())) {
 				po.setStartTime(cache.getStartTime());
@@ -95,7 +97,9 @@ public class CryptoCoin5MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 			if(po.getLowPrice() == null || po.getLowPrice().compareTo(cache.getLowPrice()) > 0) {
 				po.setLowPrice(cache.getLowPrice());
 			}
+			volumeSummary += cache.getVolume().doubleValue();
 		}
+		po.setVolume(new BigDecimal(volumeSummary));
 		
 		if(newPOFlag) {
 			summaryMapper.insertSelective(po);

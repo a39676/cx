@@ -30,7 +30,7 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 	@Override
 	public CommonResult reciveCoinHistoryPrice(CryptoCoinHistoryPriceDTO dto) {
 		CommonResult r = new CommonResult();
-
+		
 		List<CryptoCoinHistoryPriceSubDTO> dataList = dto.getPriceHistoryData();
 		if (dataList == null || dataList.isEmpty()) {
 			return r;
@@ -90,6 +90,7 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 					tmpPO.setLowPrice(new BigDecimal(data.getLow()));
 				}
 				tmpPO.setEndPrice(new BigDecimal(data.getEnd()));
+				tmpPO.setVolume(new BigDecimal(data.getVolume()));
 
 				summaryMapper.updateByPrimaryKeySelective(tmpPO);
 			}

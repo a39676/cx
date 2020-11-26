@@ -141,14 +141,9 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 				j.put("isSuccess", "false");
 			}
 
-			log.debug(j.toString());
-
 			String url = ServerHost.localHost10002 + AutoTestInteractionUrl.ROOT
 					+ AutoTestInteractionUrl.FIND_REPORTS_BY_CONDITION;
 			String response = String.valueOf(httpUtil.sendPostRestful(url, j.toString()));
-			
-			log.debug(response);
-			
 			return response;
 		} catch (Exception e) {
 			e.printStackTrace();

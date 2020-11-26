@@ -46,7 +46,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 
 	@Override
 	public ModelAndView linkToATHome(HttpServletRequest request) {
-		if(baseUtilCustom.hasAdminRole() || isInSeekOrDev(request)) {
+		if(baseUtilCustom.hasAdminRole() || isDev(request)) {
 			return new ModelAndView("ATDemoJSP/atDemoLink");
 		}
 
@@ -56,7 +56,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	@Override
 	public ModelAndView index(HttpServletRequest request) {
 
-		if(!baseUtilCustom.hasAdminRole() && !isInSeekOrDev(request)) {
+		if(!baseUtilCustom.hasAdminRole() && !isDev(request)) {
 			return exceptionService.handle404Exception(request);
 		}
 
@@ -80,7 +80,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	@Override
 	public String findReportsByCondition(HttpServletRequest request, FindTestEventPageByConditionDTO dto) {
 		
-		if(!isInSeekOrDev(request)) {
+		if(!isDev(request)) {
 			return null;
 		}
 		
@@ -141,9 +141,14 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 				j.put("isSuccess", "false");
 			}
 
+			log.debug(j.toString());
+
 			String url = ServerHost.localHost10002 + AutoTestInteractionUrl.ROOT
 					+ AutoTestInteractionUrl.FIND_REPORTS_BY_CONDITION;
 			String response = String.valueOf(httpUtil.sendPostRestful(url, j.toString()));
+			
+			log.debug(response);
+			
 			return response;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -154,7 +159,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	@Override
 	public ModelAndView findReportByTestEventId(HttpServletRequest request, FindReportByTestEventIdDTO dto) {
 		
-		if(!isInSeekOrDev(request)) {
+		if(!isDev(request)) {
 			return exceptionService.handle404Exception(request);
 		}
 		
@@ -303,7 +308,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	public InsertSearchingDemoEventResult insertSearchingDemoTestEvent(InsertSearchingDemoTestEventDTO dto,
 			HttpServletRequest request) {
 		
-		if(!isInSeekOrDev(request)) {
+		if(!isDev(request)) {
 			return null;
 		}
 		
@@ -355,12 +360,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 		return r;
 	}
 
-	private boolean isInSeekOrDev(HttpServletRequest request) {
-//		HostnameType hostnameType = hostnameService.findHostnameType(request);
-//		if (HostnameType.seek.equals(hostnameType)) {
-//			return true;
-//		} else {
-//		}
+	private boolean isDev(HttpServletRequest request) {
 		String envName = constantService.getValByName(SystemConstantStore.envName);
 		return "dev".equals(envName);
 	}

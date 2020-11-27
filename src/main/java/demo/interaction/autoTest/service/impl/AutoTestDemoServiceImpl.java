@@ -80,8 +80,8 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	@Override
 	public String findReportsByCondition(HttpServletRequest request, FindTestEventPageByConditionDTO dto) {
 		
-		if(!isDev(request)) {
-			return null;
+		if(isDev(request)) {
+			return constantService.getValByName(SystemConstantStore.envName);
 		}
 		
 		if (!baseUtilCustom.hasAdminRole()) {

@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -28,7 +28,7 @@ public class TestController2 extends CommonController {
 	@Autowired
 	private AutoTestDemoService atDemoService;
 	
-	@PostMapping(value = AutoTestInteractionUrl.FIND_REPORTS_BY_CONDITION)
+	@GetMapping(value = AutoTestInteractionUrl.FIND_REPORTS_BY_CONDITION)
 	@ResponseBody
 	public String findReportsByCondition(HttpServletRequest request) {
 		FindTestEventPageByConditionDTO dto = new FindTestEventPageByConditionDTO();

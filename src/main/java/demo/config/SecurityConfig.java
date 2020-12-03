@@ -21,6 +21,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import demo.article.article.pojo.constant.ArticleAdminUrlConstant;
 import demo.article.articleComment.pojo.constant.ArticleAdminCommentUrlConstant;
 import demo.base.admin.pojo.constant.AdminUrlConstant;
+import demo.base.system.pojo.constant.BaseUrl;
 import demo.base.user.pojo.constant.AuthUrl;
 import demo.base.user.pojo.constant.LoginUrlConstant;
 import demo.base.user.pojo.constant.UserAuthUrl;
@@ -83,6 +84,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             // used to allow anonymous access 
             // .antMatchers("/welcome**").access("IS_AUTHENTICATED_ANONYMOUSLY")
 //            .antMatchers(ArticleUrlConstant.root + "/**").access("hasAnyRole('" + RolesType.ROLE_ADMIN.getRoleName() + "','" + RolesType.ROLE_USER.getRoleName() + "')")
+            .antMatchers(BaseUrl.shutdown + "/**")
+            	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers(TestUrl.root + "/**")
         		.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers("/holder/**")

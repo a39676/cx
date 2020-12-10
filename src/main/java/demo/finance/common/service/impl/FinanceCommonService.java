@@ -23,7 +23,7 @@ public abstract class FinanceCommonService extends CommonService {
 	 * @param minuteStepLong
 	 * @return
 	 */
-	protected LocalDateTime nextStepTime(LocalDateTime time, int minuteStepLong) {
+	protected LocalDateTime nextStepTimeByMinute(LocalDateTime time, int minuteStepLong) {
 		int currentMinute = time.getMinute();
 		int addMinute = 1;
 		while ((currentMinute + addMinute) % minuteStepLong != 0) {

@@ -23,7 +23,7 @@ public class PreciousMetal5MinuteDataSummaryServiceImpl extends PreciousMetalCom
 	@Override
 	public void cacheDataTo5Minute() {
 		int minuteStep = 5;
-		LocalDateTime endTime = nextStepTime(LocalDateTime.now(), minuteStep);
+		LocalDateTime endTime = nextStepTimeByMinute(LocalDateTime.now(), minuteStep);
 		LocalDateTime startTime = endTime.minusMinutes(minuteStep);
 		for(MetalType metalType : MetalType.values()) {
 			cacheDataTo5Minute(metalType, startTime, endTime);

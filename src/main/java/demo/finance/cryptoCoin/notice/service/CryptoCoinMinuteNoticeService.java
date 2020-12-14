@@ -7,8 +7,4 @@ public interface CryptoCoinMinuteNoticeService {
 
 	CommonResult insertNewCryptoCoinPriceNoticeSetting(InsertMinuteCryptoCoinPriceNoticeSettingDTO dto);
 
-	void noticeHandler();
-
-	void deleteOldNotice();
-
 }

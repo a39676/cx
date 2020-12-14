@@ -3,6 +3,10 @@ Cropty coin price
 		自动每日加入监视任务?
 		删除过期提醒, 贵金属同理
 		
+	notice
+		notice 数据表, 需要改字段, 兼容分时数据 & 日数据提醒模式
+		notice 可以根据  notice 数据有效数据集合, 处理, 到数据源一次搜出数据, 减轻查询压力
+		
 DTO
 	测试 @NotNull @NotBlank @Size 等注解
 

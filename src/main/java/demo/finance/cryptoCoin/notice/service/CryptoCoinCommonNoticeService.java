@@ -6,4 +6,8 @@ public interface CryptoCoinCommonNoticeService {
 
 	ModelAndView insertNewCryptoCoinPriceNoticeSetting();
 
+	void noticeHandler();
+
+	void deleteOldNotice();
+
 }

@@ -334,4 +334,16 @@
       order by ${orderByClause}
     </if>
   </select>
+
+  <select id="selectValidNoticeSetting" resultMap="BaseResultMap">
+    select 
+      *
+    from
+      crypto_coin_price_notice
+    <where>
+      <if test="">
+        
+      </if>
+    </where>
+  </select>
 </mapper>

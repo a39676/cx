@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
 
-import demo.finance.cryptoCoin.service.CryptoCoinPriceService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinPriceService;
 import finance.cryptoCoin.pojo.constant.CryptoCoinMQConstant;
 import finance.cryptoCoin.pojo.dto.CryptoCoinNewPriceDTO;
 

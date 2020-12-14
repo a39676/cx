@@ -3,8 +3,6 @@ Cropty coin price
 		自动每日加入监视任务?
 		删除过期提醒, 贵金属同理
 		
-	周数据, 月数据, 定期汇总, 时间步长方法需要更新, 否则不能直接调用
-
 DTO
 	测试 @NotNull @NotBlank @Size 等注解
 

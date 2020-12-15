@@ -349,17 +349,4 @@
       order by ${orderByClause}
     </if>
   </select>
-
-  <select id="selectValidNoticeSetting" resultMap="BaseResultMap">
-    select
-      *
-    from
-      crypto_coin_price_notice
-    <where>
-      1=1
-      and is_delete = false
-      and notice_time is null
-      and (valid_time is not null or valid_time &gt;= #{now})
-    </where>
-  </select>
 </mapper>

@@ -14,7 +14,9 @@ public class CryptoCoinPriceNotice {
 
     private BigDecimal minPrice;
 
-    private Integer minuteRange;
+    private Integer timeUnit;
+
+    private Integer timeRange;
 
     private BigDecimal fluctuationSpeedPercentage;
 
@@ -68,12 +70,20 @@ public class CryptoCoinPriceNotice {
         this.minPrice = minPrice;
     }
 
-    public Integer getMinuteRange() {
-        return minuteRange;
+    public Integer getTimeUnit() {
+        return timeUnit;
     }
 
-    public void setMinuteRange(Integer minuteRange) {
-        this.minuteRange = minuteRange;
+    public void setTimeUnit(Integer timeUnit) {
+        this.timeUnit = timeUnit;
+    }
+
+    public Integer getTimeRange() {
+        return timeRange;
+    }
+
+    public void setTimeRange(Integer timeRange) {
+        this.timeRange = timeRange;
     }
 
     public BigDecimal getFluctuationSpeedPercentage() {

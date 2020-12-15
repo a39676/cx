@@ -47,8 +47,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 	private boolean priceFluctuationSpeedConditionHadSet(CryptoCoinPriceNotice po) {
 		return po.getFluctuationSpeedPercentage() != null
-				&& po.getFluctuationSpeedPercentage().compareTo(BigDecimal.ZERO) != 0 && po.getMinuteRange() != null
-				&& po.getMinuteRange() > 0;
+				&& po.getFluctuationSpeedPercentage().compareTo(BigDecimal.ZERO) != 0 && po.getTimeRange() != null
+				&& po.getTimeRange() > 0;
 	}
 
 
@@ -144,8 +144,12 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			CurrencyType currencyType) {
 		CommonResult r = new CommonResult();
 
-		List<CryptoCoinPrice1minute> historyPOList = findHistoryDateByLastMinutes(coinType, currencyType,
-				noticeSetting.getMinuteRange());
+		List<CryptoCoinPrice1minute> historyPOList 
+		/* 
+		 * TODO
+		 * 数据查找将按 分时数据 / 日数据, 交到对应的服务类
+		 */
+			= findHistoryDateByLastMinutes(coinType, currencyType, noticeSetting.getTimeRange());
 		if (historyPOList == null || historyPOList.isEmpty()) {
 			return r;
 		}

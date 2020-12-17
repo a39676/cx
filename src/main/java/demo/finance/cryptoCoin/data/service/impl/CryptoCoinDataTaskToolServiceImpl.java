@@ -12,13 +12,10 @@ import demo.finance.cryptoCoin.data.service.CryptoCoin1WeekDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin5MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin60MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceService;
-import demo.finance.cryptoCoin.notice.service.CryptoCoinMinuteNoticeService;
 
 @Component
-public class CryptoCoinTaskToolServiceImpl extends CryptoCoinCommonService {
+public class CryptoCoinDataTaskToolServiceImpl extends CryptoCoinCommonService {
 
-	@Autowired
-	private CryptoCoinMinuteNoticeService noticeService;
 	@Autowired
 	private CryptoCoinPriceService priceService;
 	@Autowired
@@ -33,14 +30,8 @@ public class CryptoCoinTaskToolServiceImpl extends CryptoCoinCommonService {
 	private CryptoCoin1WeekDataSummaryService cryptoCoin1WeekDataSummaryService;
 	@Autowired
 	private CryptoCoin1MonthDataSummaryService cryptoCoin1MonthDataSummaryService;
-	
 
-	@Scheduled(cron = "0 */1 * * * ?")
-	public void cryptoCoinPriceNoticeHandler() {
-		noticeService.noticeHandler();
-	}
-	
-	@Scheduled(cron="0 */5 * * * ?")
+	@Scheduled(cron = "0 */5 * * * ?")
 	public void summaryHistoryData() {
 		cryptoCoin5MinuteDataSummaryService.summaryHistoryData();
 		cryptoCoin60MinuteDataSummaryService.summaryHistoryData();
@@ -52,26 +43,9 @@ public class CryptoCoinTaskToolServiceImpl extends CryptoCoinCommonService {
 	@Scheduled(cron = "* 2 */1 * * ?")
 	public void deleteExpiredCacheData() {
 		priceService.deleteExpiredCacheData();
-	}
-	
-	@Scheduled(cron="40 50 23 * * *")
-	public void deleteExpired1MinuteSummaryData() {
 		cryptoCoin1MinuteDataSummaryService.deleteExpiredCacheData();
-	}
-	
-	@Scheduled(cron="40 50 23 * * *")
-	public void deleteExpired5MinuteSummaryData() {
 		cryptoCoin5MinuteDataSummaryService.deleteExpiredCacheData();
-	}
-	
-	@Scheduled(cron="40 55 23 * * *")
-	public void deleteExpired60MinuteSummaryData() {
 		cryptoCoin60MinuteDataSummaryService.deleteExpiredCacheData();
 	}
-	
-	@Scheduled(cron="40 51 22 * * *")
-	public void deleteOldNotice() {
-		noticeService.deleteOldNotice();
-	}
-	
+
 }

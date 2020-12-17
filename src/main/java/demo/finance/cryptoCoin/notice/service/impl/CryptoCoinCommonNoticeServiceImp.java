@@ -162,17 +162,13 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	private boolean priceFluctuationSpeedConditionHadSet(InsertCryptoCoinPriceNoticeSettingDTO dto) {
 		Double percentage = dto.getFluctuationSpeedPercentage();
 		return (percentage != null && (percentage > 0.01 || percentage < -0.01))
-				&& (dto.getMinuteRange() != null && dto.getMinuteRange() > 0);
+				&& (dto.getTimeUnit() != null && dto.getTimeRange() > 0);
 	}
 
 	private boolean priceConditionHadSet(CryptoCoinPriceNotice po) {
 		return po.getMaxPrice() != null || po.getMinPrice() != null;
 	}
 	
-	private boolean priceConditionHadSet(CryptoCoinPriceNotice po) {
-		return po.getMaxPrice() != null || po.getMinPrice() != null;
-	}
-
 	private boolean priceFluctuationSpeedConditionHadSet(CryptoCoinPriceNotice po) {
 		return po.getFluctuationSpeedPercentage() != null
 				&& po.getFluctuationSpeedPercentage().compareTo(BigDecimal.ZERO) != 0 && po.getTimeRange() != null
@@ -186,6 +182,12 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		}
 
 		for (CryptoCoinPriceNotice notice : noticeList) {
+			/*
+			 * TODO
+			 * 遍历所有有效通知, 一次获取需要判断的数据空间, 到对应service 调取
+			 */
+			
+			
 			subNoticeHandler(notice);
 		}
 
@@ -199,6 +201,11 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		CurrencyType currencyType = CurrencyType.getType(noticeSetting.getCurrencyType());
 		if (currencyType == null) {
+			return;
+		}
+		
+		TimeUnitType timeUnitType = TimeUnitType.getType(noticeSetting.getTimeUnit());
+		if(timeUnitType == null) {
 			return;
 		}
 

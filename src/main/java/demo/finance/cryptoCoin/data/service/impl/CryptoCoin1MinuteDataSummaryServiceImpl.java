@@ -116,4 +116,15 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 		r.setIsSuccess();
 		return r;
 	}
+
+	@Override
+	public List<CryptoCoinPrice1minute> getData(CryptoCoinType coinType, CurrencyType currencyType, Integer minutes) {
+		CryptoCoinPrice1minuteExample example = new CryptoCoinPrice1minuteExample();
+		example.createCriteria().andCoinTypeEqualTo(coinType.getCode()).andCurrencyTypeEqualTo(currencyType.getCode())
+				.andCreateTimeGreaterThanOrEqualTo(LocalDateTime.now().minusMinutes(minutes));
+		;
+		example.setOrderByClause("create_time desc");
+
+		return summaryMapper.selectByExample(example);
+	}
 }

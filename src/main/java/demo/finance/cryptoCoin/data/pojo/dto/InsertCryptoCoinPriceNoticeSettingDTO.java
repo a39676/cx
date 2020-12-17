@@ -2,7 +2,9 @@ package demo.finance.cryptoCoin.data.pojo.dto;
 
 import java.math.BigDecimal;
 
-public class InsertMinuteCryptoCoinPriceNoticeSettingDTO {
+import auxiliaryCommon.pojo.type.TimeUnitType;
+
+public class InsertCryptoCoinPriceNoticeSettingDTO {
 
 	private Integer coinType;
 
@@ -17,31 +19,32 @@ public class InsertMinuteCryptoCoinPriceNoticeSettingDTO {
 	 */
 	private Double originalPrice;
 	/**
-	 * 用于条件: 价格波动幅度的条件设定
+	 * 用于条件: 价格波动幅度%的条件设定
 	 */
 	private Double pricePercentage;
+
 	/**
-	 * 用于条件: n分钟内波动幅度超过 m%的条件设定
+	 * 时间单位设定 {@link TimeUnitType}
 	 */
-	private Integer minuteRange;
-	
+	private Integer timeUnit;
+
+	private Integer timeRange;
+
 	/**
-	 * 用于条件: n分钟内波动幅度超过 m%的条件设定
+	 * 用于条件: n个时间单位内波动幅度超过 m%的条件设定 触发例: 最新价 = x, n(分钟)前收盘价 = o, 如果 x > o * (1 + m%)
+	 * || x < o * (1 - m%),
+	 * 
+	 */
+	private Integer priceRange;
+
+	/**
+	 * 用于条件: n个时间单位内升降速度超过 m%的条件设定 触发例: n(分钟)内, 最高最低价差别超过 m%
 	 */
 	private Double fluctuationSpeedPercentage;
 
 	private String email;
 
 	private String validTime;
-
-	@Override
-	public String toString() {
-		return "InsertNewCryptoCoinPriceNoticeSettingDTO [coinType=" + coinType + ", currencyType=" + currencyType
-				+ ", maxPrice=" + maxPrice + ", minPrice=" + minPrice + ", originalPrice=" + originalPrice
-				+ ", pricePercentage=" + pricePercentage + ", minuteRange=" + minuteRange
-				+ ", fluctuationSpeedPercentage=" + fluctuationSpeedPercentage + ", email=" + email + ", validTime="
-				+ validTime + "]";
-	}
 
 	public Integer getCoinType() {
 		return coinType;
@@ -91,12 +94,20 @@ public class InsertMinuteCryptoCoinPriceNoticeSettingDTO {
 		this.pricePercentage = pricePercentage;
 	}
 
-	public Integer getMinuteRange() {
-		return minuteRange;
+	public Integer getTimeUnit() {
+		return timeUnit;
 	}
 
-	public void setMinuteRange(Integer minuteRange) {
-		this.minuteRange = minuteRange;
+	public void setTimeUnit(Integer timeUnit) {
+		this.timeUnit = timeUnit;
+	}
+
+	public Integer getPriceRange() {
+		return priceRange;
+	}
+
+	public void setPriceRange(Integer priceRange) {
+		this.priceRange = priceRange;
 	}
 
 	public Double getFluctuationSpeedPercentage() {
@@ -121,6 +132,23 @@ public class InsertMinuteCryptoCoinPriceNoticeSettingDTO {
 
 	public void setValidTime(String validTime) {
 		this.validTime = validTime;
+	}
+
+	public Integer getTimeRange() {
+		return timeRange;
+	}
+
+	public void setTimeRange(Integer timeRange) {
+		this.timeRange = timeRange;
+	}
+
+	@Override
+	public String toString() {
+		return "InsertCryptoCoinPriceNoticeSettingDTO [coinType=" + coinType + ", currencyType=" + currencyType
+				+ ", maxPrice=" + maxPrice + ", minPrice=" + minPrice + ", originalPrice=" + originalPrice
+				+ ", pricePercentage=" + pricePercentage + ", timeUnit=" + timeUnit + ", timeRange=" + timeRange
+				+ ", priceRange=" + priceRange + ", fluctuationSpeedPercentage=" + fluctuationSpeedPercentage
+				+ ", email=" + email + ", validTime=" + validTime + "]";
 	}
 
 }

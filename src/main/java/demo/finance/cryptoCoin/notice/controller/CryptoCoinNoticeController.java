@@ -10,10 +10,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.finance.cryptoCoin.data.pojo.dto.InsertMinuteCryptoCoinPriceNoticeSettingDTO;
+import demo.finance.cryptoCoin.data.pojo.dto.InsertCryptoCoinPriceNoticeSettingDTO;
 import demo.finance.cryptoCoin.notice.pojo.constant.CryptoCoinNoticeUrl;
 import demo.finance.cryptoCoin.notice.service.CryptoCoinCommonNoticeService;
-import demo.finance.cryptoCoin.notice.service.CryptoCoinMinuteNoticeService;
 import finance.cryptoCoin.pojo.constant.CryptoCoinPriceCommonUrl;
 
 @Controller
@@ -22,8 +21,6 @@ public class CryptoCoinNoticeController {
 
 	@Autowired
 	private CryptoCoinCommonNoticeService commonNoticeService;
-	@Autowired
-	private CryptoCoinMinuteNoticeService noticeService;
 	
 	@GetMapping(value = CryptoCoinNoticeUrl.INSERT_CRYPTO_COIN_NOTICE_SETTING)
 	public ModelAndView insertNewCryptoCoinPriceNoticeSetting() {
@@ -32,7 +29,7 @@ public class CryptoCoinNoticeController {
 	
 	@PostMapping(value = CryptoCoinNoticeUrl.INSERT_CRYPTO_COIN_NOTICE_SETTING)
 	@ResponseBody
-	public CommonResult insertNewCryptoCoinPriceNoticeSetting(@RequestBody InsertMinuteCryptoCoinPriceNoticeSettingDTO dto) {
-		return noticeService.insertNewCryptoCoinPriceNoticeSetting(dto);
+	public CommonResult insertNewCryptoCoinPriceNoticeSetting(@RequestBody InsertCryptoCoinPriceNoticeSettingDTO dto) {
+		return commonNoticeService.insertNewCryptoCoinPriceNoticeSetting(dto);
 	}
 }

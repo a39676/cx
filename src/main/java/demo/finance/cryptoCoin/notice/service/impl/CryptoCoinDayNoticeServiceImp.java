@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
-import demo.finance.cryptoCoin.data.pojo.dto.InsertMinuteCryptoCoinPriceNoticeSettingDTO;
+import demo.finance.cryptoCoin.data.pojo.dto.InsertCryptoCoinPriceNoticeSettingDTO;
 import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinNoticeDTOCheckResult;
 import demo.finance.cryptoCoin.notice.mapper.CryptoCoinPriceNoticeMapper;
 import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNotice;
@@ -23,7 +23,7 @@ public class CryptoCoinDayNoticeServiceImp extends CryptoCoinCommonService imple
 	private CryptoCoinPriceNoticeMapper noticeMapper;
 
 	@Override
-	public CommonResult insertNewCryptoCoinPriceNoticeSetting(InsertMinuteCryptoCoinPriceNoticeSettingDTO dto) {
+	public CommonResult insertNewCryptoCoinPriceNoticeSetting(InsertCryptoCoinPriceNoticeSettingDTO dto) {
 		CommonResult r = new CommonResult();
 		CryptoCoinNoticeDTOCheckResult checkResult = noticeDTOCheck(dto);
 		if (checkResult.isFail()) {
@@ -54,7 +54,7 @@ public class CryptoCoinDayNoticeServiceImp extends CryptoCoinCommonService imple
 		return r;
 	}
 
-	private CryptoCoinNoticeDTOCheckResult noticeDTOCheck(InsertMinuteCryptoCoinPriceNoticeSettingDTO dto) {
+	private CryptoCoinNoticeDTOCheckResult noticeDTOCheck(InsertCryptoCoinPriceNoticeSettingDTO dto) {
 		CryptoCoinNoticeDTOCheckResult r = new CryptoCoinNoticeDTOCheckResult();
 
 		CryptoCoinType coinType = CryptoCoinType.getType(dto.getCoinType());
@@ -114,7 +114,7 @@ public class CryptoCoinDayNoticeServiceImp extends CryptoCoinCommonService imple
 		return r;
 	}
 
-	private InsertMinuteCryptoCoinPriceNoticeSettingDTO dtoPrefixHandle(InsertMinuteCryptoCoinPriceNoticeSettingDTO dto) {
+	private InsertCryptoCoinPriceNoticeSettingDTO dtoPrefixHandle(InsertCryptoCoinPriceNoticeSettingDTO dto) {
 		if (!priceRangeConditionHadSet(dto)) {
 			return dto;
 		}
@@ -132,15 +132,15 @@ public class CryptoCoinDayNoticeServiceImp extends CryptoCoinCommonService imple
 		return dto;
 	}
 
-	private boolean priceConditionHadSet(InsertMinuteCryptoCoinPriceNoticeSettingDTO dto) {
+	private boolean priceConditionHadSet(InsertCryptoCoinPriceNoticeSettingDTO dto) {
 		return dto.getMaxPrice() != null || dto.getMinPrice() != null;
 	}
 
-	private boolean priceRangeConditionHadSet(InsertMinuteCryptoCoinPriceNoticeSettingDTO dto) {
+	private boolean priceRangeConditionHadSet(InsertCryptoCoinPriceNoticeSettingDTO dto) {
 		return dto.getOriginalPrice() != null && dto.getPricePercentage() != null;
 	}
 
-	private boolean priceFluctuationSpeedConditionHadSet(InsertMinuteCryptoCoinPriceNoticeSettingDTO dto) {
+	private boolean priceFluctuationSpeedConditionHadSet(InsertCryptoCoinPriceNoticeSettingDTO dto) {
 		Double percentage = dto.getFluctuationSpeedPercentage();
 		return (percentage != null && (percentage > 0.01 || percentage < -0.01))
 				&& (dto.getMinuteRange() != null && dto.getMinuteRange() > 0);

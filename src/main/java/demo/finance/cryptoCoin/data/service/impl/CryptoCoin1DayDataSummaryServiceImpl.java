@@ -2,8 +2,10 @@ package demo.finance.cryptoCoin.data.service.impl;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1day;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice60minute;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice60minuteExample;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPriceCommonData;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
@@ -35,7 +38,8 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		CommonResult r = new CommonResult();
 
 		LocalDateTime now = LocalDateTime.now();
-		LocalDateTime thereStepBefore = now.minusDays(dayStepLong * 3).withHour(0).withMinute(0).withSecond(0).withNano(0);
+		LocalDateTime thereStepBefore = now.minusDays(dayStepLong * 3).withHour(0).withMinute(0).withSecond(0)
+				.withNano(0);
 
 		for (CryptoCoinType coinType : CryptoCoinType.values()) {
 			for (CurrencyType currencyType : CurrencyType.values()) {
@@ -104,4 +108,30 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		}
 	}
 
+	@Override
+	public List<CryptoCoinPrice1day> getData(CryptoCoinType coinType, CurrencyType currencyType, Integer minutes) {
+		CryptoCoinPrice1dayExample example = new CryptoCoinPrice1dayExample();
+		example.createCriteria().andCoinTypeEqualTo(coinType.getCode()).andCurrencyTypeEqualTo(currencyType.getCode())
+				.andCreateTimeGreaterThanOrEqualTo(LocalDateTime.now().minusMinutes(minutes));
+		;
+		example.setOrderByClause("create_time desc");
+
+		return summaryMapper.selectByExample(example);
+	}
+
+	@Override
+	public List<CryptoCoinPriceCommonData> getCommonData(CryptoCoinType coinType, CurrencyType currencyType,
+			Integer minutes) {
+		List<CryptoCoinPrice1day> poList = getData(coinType, currencyType, minutes);
+
+		CryptoCoinPriceCommonData tmpCommonData = null;
+		List<CryptoCoinPriceCommonData> commonDataList = new ArrayList<>();
+		for (CryptoCoinPrice1day po : poList) {
+			tmpCommonData = new CryptoCoinPriceCommonData();
+			BeanUtils.copyProperties(po, tmpCommonData);
+			commonDataList.add(tmpCommonData);
+		}
+
+		return commonDataList;
+	}
 }

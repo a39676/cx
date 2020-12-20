@@ -2,6 +2,7 @@ package demo.finance.cryptoCoin.notice.service.impl;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -14,10 +15,9 @@ import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.common.pojo.result.FindMaxMinPriceResult;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
-import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1minuteMapper;
+import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinDataConstant;
 import demo.finance.cryptoCoin.data.pojo.dto.InsertCryptoCoinPriceNoticeSettingDTO;
-import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1minute;
-import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1minuteExample;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPriceCommonData;
 import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinNoticeDTOCheckResult;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
 import demo.finance.cryptoCoin.notice.mapper.CryptoCoinPriceNoticeMapper;
@@ -35,7 +35,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	protected CryptoCoinPriceNoticeMapper noticeMapper;
 	@Autowired
 	private CryptoCoin1MinuteDataSummaryService _1MinuteDataSummaryService;
-	
+
 	@Override
 	public ModelAndView insertNewCryptoCoinPriceNoticeSetting() {
 		ModelAndView view = new ModelAndView("finance/cryptoCoin/insertNewCryptoCoinPriceNoticeSetting");
@@ -43,7 +43,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		view.addObject("currencyType", CurrencyType.values());
 		return view;
 	}
-	
+
 	@Override
 	public CommonResult insertNewCryptoCoinPriceNoticeSetting(InsertCryptoCoinPriceNoticeSettingDTO dto) {
 		CommonResult r = new CommonResult();
@@ -83,7 +83,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		CryptoCoinType coinType = CryptoCoinType.getType(dto.getCoinType());
 		CurrencyType currencyType = CurrencyType.getType(dto.getCurrencyType());
 		TimeUnitType timeUnitType = TimeUnitType.getType(dto.getTimeUnit());
-		if (coinType == null || currencyType == null || timeUnitType == null || dto.getTimeRange() == null || dto.getTimeRange() < 0) {
+		if (coinType == null || currencyType == null || timeUnitType == null || dto.getTimeRange() == null
+				|| dto.getTimeRange() < 0) {
 			r.failWithMessage("error param");
 			return r;
 		}
@@ -133,8 +134,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		return r;
 	}
 
-	private InsertCryptoCoinPriceNoticeSettingDTO dtoPrefixHandle(
-			InsertCryptoCoinPriceNoticeSettingDTO dto) {
+	private InsertCryptoCoinPriceNoticeSettingDTO dtoPrefixHandle(InsertCryptoCoinPriceNoticeSettingDTO dto) {
 		if (!priceRangeConditionHadSet(dto)) {
 			return dto;
 		}
@@ -169,13 +169,11 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	private boolean priceConditionHadSet(CryptoCoinPriceNotice po) {
 		return po.getMaxPrice() != null || po.getMinPrice() != null;
 	}
-	
+
 	private boolean priceFluctuationSpeedConditionHadSet(CryptoCoinPriceNotice po) {
 		return po.getFluctuationSpeedPercentage() != null
-				&& po.getFluctuationSpeedPercentage().compareTo(BigDecimal.ZERO) != 0
-				&& po.getTimeUnit() != null
-				&& po.getTimeRange() != null
-				&& po.getTimeRange() > 0;
+				&& po.getFluctuationSpeedPercentage().compareTo(BigDecimal.ZERO) != 0 && po.getTimeUnit() != null
+				&& po.getTimeRange() != null && po.getTimeRange() > 0;
 	}
 
 	public void noticeHandler() {
@@ -200,9 +198,9 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		if (currencyType == null) {
 			return;
 		}
-		
+
 		TimeUnitType timeUnitType = TimeUnitType.getType(noticeSetting.getTimeUnit());
-		if(timeUnitType == null) {
+		if (timeUnitType == null) {
 			return;
 		}
 
@@ -235,7 +233,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	private CommonResult priceConditionNoticeHandle(CryptoCoinPriceNotice noticeSetting, CryptoCoinType coinType,
 			CurrencyType currencyType) {
 		CommonResult r = new CommonResult();
-		List<CryptoCoinPrice1minute> historyPOList = _1MinuteDataSummaryService.getData(coinType, currencyType, 1);
+		List<CryptoCoinPriceCommonData> historyPOList = _1MinuteDataSummaryService.getCommonData(coinType, currencyType, 1);
 
 		if (historyPOList == null || historyPOList.isEmpty()) {
 			return r;
@@ -275,12 +273,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			CurrencyType currencyType) {
 		CommonResult r = new CommonResult();
 
-		List<CryptoCoinPrice1minute> historyPOList 
-		/* 
-		 * TODO
-		 * 数据查找将按 分时数据 / 日数据, 交到对应的服务类
-		 */
-			= findHistoryDateByLastMinutes(coinType, currencyType, noticeSetting.getTimeRange());
+		List<CryptoCoinPriceCommonData> historyPOList = findHistoryDate(coinType, currencyType,
+				noticeSetting.getTimeUnit(), noticeSetting.getTimeRange());
 		if (historyPOList == null || historyPOList.isEmpty()) {
 			return r;
 		}
@@ -321,7 +315,30 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		return r;
 	}
 
-	protected FindMaxMinPriceResult findMaxMinPrice(List<CryptoCoinPrice1minute> list) {
+	private List<CryptoCoinPriceCommonData> findHistoryDate(CryptoCoinType coinType, CurrencyType currencyType,
+			Integer timeUnit, Integer timeRange) {
+		// TODO Auto-generated method stub
+
+		if (TimeUnitType.minute.getCode().equals(timeUnit)) {
+			if (CryptoCoinDataConstant.CRYPTO_COIN_1MINUTE_DATA_LIVE_HOURS * 60 > timeRange) {
+
+			} else if (CryptoCoinDataConstant.CRYPTO_COIN_5MINUTE_DATA_LIVE_HOURS * 60 > timeRange) {
+
+			} else if (CryptoCoinDataConstant.CRYPTO_COIN_60MINUTE_DATA_LIVE_HOURS * 60 > timeRange) {
+
+			}
+		} else if (TimeUnitType.day.getCode().equals(timeUnit)) {
+
+		} else if (TimeUnitType.week.getCode().equals(timeUnit)) {
+
+		} else if (TimeUnitType.month.getCode().equals(timeUnit)) {
+
+		}
+
+		return new ArrayList<CryptoCoinPriceCommonData>();
+	}
+
+	protected FindMaxMinPriceResult findMaxMinPrice(List<CryptoCoinPriceCommonData> list) {
 		FindMaxMinPriceResult r = new FindMaxMinPriceResult();
 
 		if (list == null || list.isEmpty()) {
@@ -329,12 +346,12 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			return r;
 		}
 
-		CryptoCoinPrice1minute defaultData = list.get(0);
+		CryptoCoinPriceCommonData defaultData = list.get(0);
 		BigDecimal maxPrice = defaultData.getHighPrice();
 		BigDecimal minPrice = defaultData.getLowPrice();
 		LocalDateTime maxPriceDateTime = defaultData.getCreateTime();
 		LocalDateTime minPriceDateTime = defaultData.getCreateTime();
-		for (CryptoCoinPrice1minute po : list) {
+		for (CryptoCoinPriceCommonData po : list) {
 			if (maxPrice.compareTo(po.getHighPrice()) < 0) {
 				maxPrice = po.getHighPrice();
 				maxPriceDateTime = po.getStartTime();

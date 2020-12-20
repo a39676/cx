@@ -3,8 +3,10 @@ package demo.finance.cryptoCoin.data.service.impl;
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +19,9 @@ import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1day;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1week;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1weekExample;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPriceCommonData;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1WeekDataSummaryService;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
-
 
 @Service
 public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonService
@@ -39,7 +41,8 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime lastSunday = localDateTimeHandler.findLastDayOfWeek(now, startDayOfWeek);
-		LocalDateTime thereStepBefore = lastSunday.minusDays(dayStepLong * 3).withHour(0).withMinute(0).withSecond(0).withNano(0);
+		LocalDateTime thereStepBefore = lastSunday.minusDays(dayStepLong * 3).withHour(0).withMinute(0).withSecond(0)
+				.withNano(0);
 
 		for (CryptoCoinType coinType : CryptoCoinType.values()) {
 			for (CurrencyType currencyType : CurrencyType.values()) {
@@ -52,7 +55,7 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 
 		return r;
 	}
-	
+
 	private void handleHistoryDataList(LocalDateTime startTime, CryptoCoinType coinType, CurrencyType currencyType) {
 		LocalDateTime endTime = startTime.plusDays(dayStepLong);
 
@@ -108,4 +111,30 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 		}
 	}
 
+	@Override
+	public List<CryptoCoinPrice1week> getData(CryptoCoinType coinType, CurrencyType currencyType, Integer minutes) {
+		CryptoCoinPrice1weekExample example = new CryptoCoinPrice1weekExample();
+		example.createCriteria().andCoinTypeEqualTo(coinType.getCode()).andCurrencyTypeEqualTo(currencyType.getCode())
+				.andCreateTimeGreaterThanOrEqualTo(LocalDateTime.now().minusMinutes(minutes));
+		;
+		example.setOrderByClause("create_time desc");
+
+		return summaryMapper.selectByExample(example);
+	}
+
+	@Override
+	public List<CryptoCoinPriceCommonData> getCommonData(CryptoCoinType coinType, CurrencyType currencyType,
+			Integer minutes) {
+		List<CryptoCoinPrice1week> poList = getData(coinType, currencyType, minutes);
+
+		CryptoCoinPriceCommonData tmpCommonData = null;
+		List<CryptoCoinPriceCommonData> commonDataList = new ArrayList<>();
+		for (CryptoCoinPrice1week po : poList) {
+			tmpCommonData = new CryptoCoinPriceCommonData();
+			BeanUtils.copyProperties(po, tmpCommonData);
+			commonDataList.add(tmpCommonData);
+		}
+
+		return commonDataList;
+	}
 }

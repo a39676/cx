@@ -2,10 +2,12 @@ package demo.finance.cryptoCoin.data.service.impl;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1minuteMapper;
 import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinDataConstant;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1minute;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1minuteExample;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPriceCommonData;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
 import finance.cryptoCoin.pojo.dto.CryptoCoinHistoryPriceDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinHistoryPriceSubDTO;
@@ -126,5 +129,20 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 		example.setOrderByClause("create_time desc");
 
 		return summaryMapper.selectByExample(example);
+	}
+	
+	@Override
+	public List<CryptoCoinPriceCommonData> getCommonData(CryptoCoinType coinType, CurrencyType currencyType, Integer minutes) {
+		List<CryptoCoinPrice1minute> poList = getData(coinType, currencyType, minutes);
+		
+		CryptoCoinPriceCommonData tmpCommonData = null;
+		List<CryptoCoinPriceCommonData> commonDataList = new ArrayList<>();
+		for(CryptoCoinPrice1minute po : poList) {
+			tmpCommonData = new CryptoCoinPriceCommonData();
+			BeanUtils.copyProperties(po, tmpCommonData);
+			commonDataList.add(tmpCommonData);
+		}
+		
+		return commonDataList;
 	}
 }

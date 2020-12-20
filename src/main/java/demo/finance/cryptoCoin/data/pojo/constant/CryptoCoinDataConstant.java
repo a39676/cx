@@ -10,31 +10,31 @@ public class CryptoCoinDataConstant {
 	
 	/**
 	 * 2020-10-26
-	 * 1分钟的价格汇总, 保存5天
+	 * 1分钟的价格汇总, 保存2天
 	 */
-	public static final int CRYPTO_COIN_1MINUTE_DATA_LIVE_HOURS = 24 * 5;
+	public static final int CRYPTO_COIN_1MINUTE_DATA_LIVE_HOURS = 24 * 2;
 	
 	/**
 	 * 2020-07-15
-	 * 5分钟的价格汇总, 保存10天
+	 * 5分钟的价格汇总, 保存3天
 	 */
-	public static final int CRYPTO_COIN_5MINUTE_DATA_LIVE_HOURS = 24 * 10;
+	public static final int CRYPTO_COIN_5MINUTE_DATA_LIVE_HOURS = 24 * 3;
 	
 	/**
 	 * 2020-07-15
-	 * 10分钟的价格汇总, 保存20天
+	 * 10分钟的价格汇总, 保存3天
 	 */
-	public static final int CRYPTO_COIN_10MINUTE_DATA_LIVE_HOURS = 24 * 20;
+	public static final int CRYPTO_COIN_10MINUTE_DATA_LIVE_HOURS = 24 * 3;
 	
 	/**
 	 * 2020-07-15
-	 * 30分钟的价格汇总, 保存30天
+	 * 30分钟的价格汇总, 保存3天
 	 */
-	public static final int CRYPTO_COIN_30MINUTE_DATA_LIVE_HOURS = 24 * 30;
+	public static final int CRYPTO_COIN_30MINUTE_DATA_LIVE_HOURS = 24 * 3;
 	
 	/**
 	 * 2020-07-15
-	 * 60分钟的价格汇总, 保存90天
+	 * 60分钟的价格汇总, 保存5天
 	 */
-	public static final int CRYPTO_COIN_60MINUTE_DATA_LIVE_HOURS = 24 * 90;
+	public static final int CRYPTO_COIN_60MINUTE_DATA_LIVE_HOURS = 24 * 5;
 }

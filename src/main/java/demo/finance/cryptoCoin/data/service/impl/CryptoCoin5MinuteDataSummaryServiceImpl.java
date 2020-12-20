@@ -2,8 +2,10 @@ package demo.finance.cryptoCoin.data.service.impl;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,7 @@ import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1minute;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1minuteExample;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice5minute;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice5minuteExample;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPriceCommonData;
 import demo.finance.cryptoCoin.data.service.CryptoCoin5MinuteDataSummaryService;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
@@ -122,5 +125,31 @@ public class CryptoCoin5MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 		summaryMapper.deleteByExample(example);
 		r.setIsSuccess();
 		return r;
+	}
+
+	@Override
+	public List<CryptoCoinPrice5minute> getData(CryptoCoinType coinType, CurrencyType currencyType, Integer minutes) {
+		CryptoCoinPrice5minuteExample example = new CryptoCoinPrice5minuteExample();
+		example.createCriteria().andCoinTypeEqualTo(coinType.getCode()).andCurrencyTypeEqualTo(currencyType.getCode())
+				.andCreateTimeGreaterThanOrEqualTo(LocalDateTime.now().minusMinutes(minutes));
+		;
+		example.setOrderByClause("create_time desc");
+
+		return summaryMapper.selectByExample(example);
+	}
+	
+	@Override
+	public List<CryptoCoinPriceCommonData> getCommonData(CryptoCoinType coinType, CurrencyType currencyType, Integer minutes) {
+		List<CryptoCoinPrice5minute> poList = getData(coinType, currencyType, minutes);
+		
+		CryptoCoinPriceCommonData tmpCommonData = null;
+		List<CryptoCoinPriceCommonData> commonDataList = new ArrayList<>();
+		for(CryptoCoinPrice5minute po : poList) {
+			tmpCommonData = new CryptoCoinPriceCommonData();
+			BeanUtils.copyProperties(po, tmpCommonData);
+			commonDataList.add(tmpCommonData);
+		}
+		
+		return commonDataList;
 	}
 }

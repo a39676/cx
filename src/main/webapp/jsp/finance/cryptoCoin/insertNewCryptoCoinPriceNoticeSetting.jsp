@@ -43,7 +43,12 @@
 </div>
 
 <div class="row">
-  <input type="text" id="minuteRange" placeholder="n分钟波幅">
+  <select id="timeUnit">
+    <c:forEach items="${timeUnitType}" var="timeUnitType">
+      <option value="${timeUnitType.code}">${timeUnitType.cnName}</option>
+    </c:forEach>
+  </select>
+  <input type="text" id="timeRange" placeholder="时间范围">
   <input type="text" id="fluctuationSpeedPercentage" placeholder="波幅范围(%)">
 </div>
 
@@ -82,7 +87,8 @@
         var originalPrice = $("#originalPrice").val();
         var pricePercentage = $("#pricePercentage").val();
 
-        var minuteRange = $("#minuteRange").val();
+        var timeUnit = $("#timeUnit option:selected").val();
+        var timeRange = $("#timeRange").val();
         var fluctuationSpeedPercentage = $("#fluctuationSpeedPercentage").val();
 
         var email = $("#email").val();
@@ -95,7 +101,8 @@
           minPrice : minPrice,
           originalPrice : originalPrice,
           pricePercentage : pricePercentage,
-          minuteRange : minuteRange,
+          timeUnit : timeUnit,
+          timeRange : timeRange,
           fluctuationSpeedPercentage : fluctuationSpeedPercentage,
           email : email,
           validTime : validTime,

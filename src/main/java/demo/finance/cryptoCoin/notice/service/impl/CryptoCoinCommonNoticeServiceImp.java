@@ -56,6 +56,9 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		ModelAndView view = new ModelAndView("finance/cryptoCoin/insertNewCryptoCoinPriceNoticeSetting");
 		view.addObject("cryptoCoinType", CryptoCoinType.values());
 		view.addObject("currencyType", CurrencyType.values());
+		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.minute, TimeUnitType.hour, TimeUnitType.day,
+				TimeUnitType.week, TimeUnitType.month };
+		view.addObject("timeUnitType", timeUnitTypes);
 		return view;
 	}
 
@@ -248,7 +251,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	private CommonResult priceConditionNoticeHandle(CryptoCoinPriceNotice noticeSetting, CryptoCoinType coinType,
 			CurrencyType currencyType) {
 		CommonResult r = new CommonResult();
-		List<CryptoCoinPriceCommonData> historyPOList = _1MinuteDataSummaryService.getCommonData(coinType, currencyType, 1);
+		List<CryptoCoinPriceCommonData> historyPOList = _1MinuteDataSummaryService.getCommonData(coinType, currencyType,
+				1);
 
 		if (historyPOList == null || historyPOList.isEmpty()) {
 			return r;
@@ -337,9 +341,9 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 				return _1MinuteDataSummaryService.getCommonData(coinType, currencyType, timeRange);
 			} else if (CryptoCoinDataConstant.CRYPTO_COIN_5MINUTE_DATA_LIVE_HOURS * 60 > timeRange) {
 				return _5MinuteDataSummaryService.getCommonData(coinType, currencyType, timeRange);
-			} else if (CryptoCoinDataConstant.CRYPTO_COIN_60MINUTE_DATA_LIVE_HOURS * 60 > timeRange) {
-				return hourDataSummaryService.getCommonData(coinType, currencyType, timeRange);
 			}
+		} else if (TimeUnitType.hour.getCode().equals(timeUnit)) {
+			return hourDataSummaryService.getCommonData(coinType, currencyType, timeRange);
 		} else if (TimeUnitType.day.getCode().equals(timeUnit)) {
 			return dailyDataSummaryService.getCommonData(coinType, currencyType, timeRange);
 		} else if (TimeUnitType.week.getCode().equals(timeUnit)) {

@@ -13,12 +13,12 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1dayMapper;
-import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1weekMapper;
+import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1monthMapper;
+import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinPriceCommonDataBO;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1day;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample;
-import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1week;
-import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1weekExample;
-import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPriceCommonData;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1month;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1monthExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MonthDataSummaryService;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
@@ -31,7 +31,7 @@ public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonServ
 	@Autowired
 	private CryptoCoinPrice1dayMapper cacheMapper;
 	@Autowired
-	private CryptoCoinPrice1weekMapper summaryMapper;
+	private CryptoCoinPrice1monthMapper summaryMapper;
 
 	@Override
 	public CommonResult summaryHistoryData() {
@@ -65,15 +65,15 @@ public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonServ
 			return;
 		}
 
-		CryptoCoinPrice1weekExample example = new CryptoCoinPrice1weekExample();
+		CryptoCoinPrice1monthExample example = new CryptoCoinPrice1monthExample();
 		example.createCriteria().andCoinTypeEqualTo(coinType.getCode()).andCurrencyTypeEqualTo(currencyType.getCode())
 				.andStartTimeEqualTo(startTime);
-		List<CryptoCoinPrice1week> poList = summaryMapper.selectByExample(example);
-		CryptoCoinPrice1week po = null;
+		List<CryptoCoinPrice1month> poList = summaryMapper.selectByExample(example);
+		CryptoCoinPrice1month po = null;
 		boolean newPOFlag = false;
 		if (poList == null || poList.isEmpty()) {
 			newPOFlag = true;
-			po = new CryptoCoinPrice1week();
+			po = new CryptoCoinPrice1month();
 			po.setId(snowFlake.getNextId());
 			po.setCoinType(coinType.getCode());
 			po.setCurrencyType(currencyType.getCode());
@@ -109,10 +109,11 @@ public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonServ
 	}
 
 	@Override
-	public List<CryptoCoinPrice1week> getData(CryptoCoinType coinType, CurrencyType currencyType, Integer minutes) {
-		CryptoCoinPrice1weekExample example = new CryptoCoinPrice1weekExample();
+	public List<CryptoCoinPrice1month> getData(CryptoCoinType coinType, CurrencyType currencyType,
+			LocalDateTime startTime) {
+		CryptoCoinPrice1monthExample example = new CryptoCoinPrice1monthExample();
 		example.createCriteria().andCoinTypeEqualTo(coinType.getCode()).andCurrencyTypeEqualTo(currencyType.getCode())
-				.andCreateTimeGreaterThanOrEqualTo(LocalDateTime.now().minusMinutes(minutes));
+				.andStartTimeGreaterThanOrEqualTo(startTime);
 		;
 		example.setOrderByClause("create_time desc");
 
@@ -120,14 +121,14 @@ public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonServ
 	}
 
 	@Override
-	public List<CryptoCoinPriceCommonData> getCommonData(CryptoCoinType coinType, CurrencyType currencyType,
-			Integer minutes) {
-		List<CryptoCoinPrice1week> poList = getData(coinType, currencyType, minutes);
+	public List<CryptoCoinPriceCommonDataBO> getCommonData(CryptoCoinType coinType, CurrencyType currencyType,
+			LocalDateTime startTime) {
+		List<CryptoCoinPrice1month> poList = getData(coinType, currencyType, startTime);
 
-		CryptoCoinPriceCommonData tmpCommonData = null;
-		List<CryptoCoinPriceCommonData> commonDataList = new ArrayList<>();
-		for (CryptoCoinPrice1week po : poList) {
-			tmpCommonData = new CryptoCoinPriceCommonData();
+		CryptoCoinPriceCommonDataBO tmpCommonData = null;
+		List<CryptoCoinPriceCommonDataBO> commonDataList = new ArrayList<>();
+		for (CryptoCoinPrice1month po : poList) {
+			tmpCommonData = new CryptoCoinPriceCommonDataBO();
 			BeanUtils.copyProperties(po, tmpCommonData);
 			commonDataList.add(tmpCommonData);
 		}

@@ -14,12 +14,12 @@ import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice5minuteMapper;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice60minuteMapper;
+import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinPriceCommonDataBO;
 import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinDataConstant;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice5minute;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice5minuteExample;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice60minute;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice60minuteExample;
-import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPriceCommonData;
 import demo.finance.cryptoCoin.data.service.CryptoCoin60MinuteDataSummaryService;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
@@ -121,10 +121,11 @@ public class CryptoCoin60MinuteDataSummaryServiceImpl extends CryptoCoinCommonSe
 	}
 
 	@Override
-	public List<CryptoCoinPrice60minute> getData(CryptoCoinType coinType, CurrencyType currencyType, Integer minutes) {
+	public List<CryptoCoinPrice60minute> getData(CryptoCoinType coinType, CurrencyType currencyType,
+			LocalDateTime startTime) {
 		CryptoCoinPrice60minuteExample example = new CryptoCoinPrice60minuteExample();
 		example.createCriteria().andCoinTypeEqualTo(coinType.getCode()).andCurrencyTypeEqualTo(currencyType.getCode())
-				.andCreateTimeGreaterThanOrEqualTo(LocalDateTime.now().minusMinutes(minutes));
+				.andStartTimeGreaterThanOrEqualTo(startTime);
 		;
 		example.setOrderByClause("create_time desc");
 
@@ -132,14 +133,14 @@ public class CryptoCoin60MinuteDataSummaryServiceImpl extends CryptoCoinCommonSe
 	}
 
 	@Override
-	public List<CryptoCoinPriceCommonData> getCommonData(CryptoCoinType coinType, CurrencyType currencyType,
-			Integer minutes) {
-		List<CryptoCoinPrice60minute> poList = getData(coinType, currencyType, minutes);
+	public List<CryptoCoinPriceCommonDataBO> getCommonData(CryptoCoinType coinType, CurrencyType currencyType,
+			LocalDateTime startTime) {
+		List<CryptoCoinPrice60minute> poList = getData(coinType, currencyType, startTime);
 
-		CryptoCoinPriceCommonData tmpCommonData = null;
-		List<CryptoCoinPriceCommonData> commonDataList = new ArrayList<>();
+		CryptoCoinPriceCommonDataBO tmpCommonData = null;
+		List<CryptoCoinPriceCommonDataBO> commonDataList = new ArrayList<>();
 		for (CryptoCoinPrice60minute po : poList) {
-			tmpCommonData = new CryptoCoinPriceCommonData();
+			tmpCommonData = new CryptoCoinPriceCommonDataBO();
 			BeanUtils.copyProperties(po, tmpCommonData);
 			commonDataList.add(tmpCommonData);
 		}

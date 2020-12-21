@@ -1,9 +1,9 @@
-package demo.finance.cryptoCoin.data.pojo.po;
+package demo.finance.cryptoCoin.data.pojo.bo;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class CryptoCoinPriceCommonData {
+public class CryptoCoinPriceCommonDataBO {
     private Long id;
 
     private Integer coinType;

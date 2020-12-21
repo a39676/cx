@@ -1,6 +1,7 @@
 package demo.finance.cryptoCoin.notice.service.impl;
 
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +16,9 @@ import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.common.pojo.result.FindMaxMinPriceResult;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
+import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinPriceCommonDataBO;
 import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinDataConstant;
 import demo.finance.cryptoCoin.data.pojo.dto.InsertCryptoCoinPriceNoticeSettingDTO;
-import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPriceCommonData;
 import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinNoticeDTOCheckResult;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
@@ -251,8 +252,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	private CommonResult priceConditionNoticeHandle(CryptoCoinPriceNotice noticeSetting, CryptoCoinType coinType,
 			CurrencyType currencyType) {
 		CommonResult r = new CommonResult();
-		List<CryptoCoinPriceCommonData> historyPOList = _1MinuteDataSummaryService.getCommonData(coinType, currencyType,
-				1);
+		List<CryptoCoinPriceCommonDataBO> historyPOList = _1MinuteDataSummaryService.getCommonData(coinType, currencyType,
+				LocalDateTime.now().minusMinutes(1));
 
 		if (historyPOList == null || historyPOList.isEmpty()) {
 			return r;
@@ -292,7 +293,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			CurrencyType currencyType) {
 		CommonResult r = new CommonResult();
 
-		List<CryptoCoinPriceCommonData> historyPOList = findHistoryData(coinType, currencyType,
+		List<CryptoCoinPriceCommonDataBO> historyPOList = findHistoryData(coinType, currencyType,
 				noticeSetting.getTimeUnit(), noticeSetting.getTimeRange());
 		if (historyPOList == null || historyPOList.isEmpty()) {
 			return r;
@@ -319,12 +320,12 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			trigerPercentage = 0 - trigerPercentage;
 		}
 
-		if (upApmlitude >= trigerPercentage) {
-			content = coinType.getName() + ", " + currencyType + ", " + " had reach highest amlitude, new price: "
-					+ historyPOList.get(0).getEndPrice();
-		} else if (lowApmlitude <= trigerPercentage) {
-			content = coinType.getName() + ", " + currencyType + ", " + " had reach lowest amlitude, new price: "
-					+ historyPOList.get(0).getEndPrice();
+		if ((upApmlitude >= trigerPercentage) || (trigerPercentage < 0 && lowApmlitude <= trigerPercentage)) {
+			String pattern = "%s, %s, highest price: %s, at %s, lowest price: %s, at: %s, now: %s";
+			content = String.format(pattern, coinType.getName(), currencyType,
+					lastMax, maxMinPriceResult.getMaxPriceDateTime(),
+					lastMin, maxMinPriceResult.getMinPriceDateTime(),
+					historyPOList.get(0).getEndPrice());
 		}
 
 		if (content != null) {
@@ -334,28 +335,35 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		return r;
 	}
 
-	private List<CryptoCoinPriceCommonData> findHistoryData(CryptoCoinType coinType, CurrencyType currencyType,
+	private List<CryptoCoinPriceCommonDataBO> findHistoryData(CryptoCoinType coinType, CurrencyType currencyType,
 			Integer timeUnit, Integer timeRange) {
+		LocalDateTime startTime = null;
 		if (TimeUnitType.minute.getCode().equals(timeUnit)) {
+			startTime = LocalDateTime.now().minusMinutes(timeRange);
 			if (CryptoCoinDataConstant.CRYPTO_COIN_1MINUTE_DATA_LIVE_HOURS * 60 > timeRange) {
-				return _1MinuteDataSummaryService.getCommonData(coinType, currencyType, timeRange);
+				return _1MinuteDataSummaryService.getCommonData(coinType, currencyType, startTime);
 			} else if (CryptoCoinDataConstant.CRYPTO_COIN_5MINUTE_DATA_LIVE_HOURS * 60 > timeRange) {
-				return _5MinuteDataSummaryService.getCommonData(coinType, currencyType, timeRange);
+				return _5MinuteDataSummaryService.getCommonData(coinType, currencyType, startTime);
 			}
 		} else if (TimeUnitType.hour.getCode().equals(timeUnit)) {
-			return hourDataSummaryService.getCommonData(coinType, currencyType, timeRange);
+			startTime = LocalDateTime.now().minusHours(timeRange);
+			return hourDataSummaryService.getCommonData(coinType, currencyType, startTime);
 		} else if (TimeUnitType.day.getCode().equals(timeUnit)) {
-			return dailyDataSummaryService.getCommonData(coinType, currencyType, timeRange);
+			startTime = LocalDateTime.now().minusDays(timeRange);
+			return dailyDataSummaryService.getCommonData(coinType, currencyType, startTime);
 		} else if (TimeUnitType.week.getCode().equals(timeUnit)) {
-			return weeklyDataSummaryService.getCommonData(coinType, currencyType, timeRange);
+			LocalDateTime lastSunday = localDateTimeHandler.findLastDayOfWeek(LocalDateTime.now(), DayOfWeek.SUNDAY);
+			startTime = lastSunday.minusDays((timeRange - 1) * 7);
+			return weeklyDataSummaryService.getCommonData(coinType, currencyType, startTime);
 		} else if (TimeUnitType.month.getCode().equals(timeUnit)) {
-			return monthlyDataSummaryService.getCommonData(coinType, currencyType, timeRange);
+			startTime = LocalDateTime.now().withDayOfMonth(1).minusMonths(timeRange - 1);
+			return monthlyDataSummaryService.getCommonData(coinType, currencyType, startTime);
 		}
 
-		return new ArrayList<CryptoCoinPriceCommonData>();
+		return new ArrayList<CryptoCoinPriceCommonDataBO>();
 	}
 
-	protected FindMaxMinPriceResult findMaxMinPrice(List<CryptoCoinPriceCommonData> list) {
+	protected FindMaxMinPriceResult findMaxMinPrice(List<CryptoCoinPriceCommonDataBO> list) {
 		FindMaxMinPriceResult r = new FindMaxMinPriceResult();
 
 		if (list == null || list.isEmpty()) {
@@ -363,12 +371,12 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			return r;
 		}
 
-		CryptoCoinPriceCommonData defaultData = list.get(0);
+		CryptoCoinPriceCommonDataBO defaultData = list.get(0);
 		BigDecimal maxPrice = defaultData.getHighPrice();
 		BigDecimal minPrice = defaultData.getLowPrice();
 		LocalDateTime maxPriceDateTime = defaultData.getCreateTime();
 		LocalDateTime minPriceDateTime = defaultData.getCreateTime();
-		for (CryptoCoinPriceCommonData po : list) {
+		for (CryptoCoinPriceCommonDataBO po : list) {
 			if (maxPrice.compareTo(po.getHighPrice()) < 0) {
 				maxPrice = po.getHighPrice();
 				maxPriceDateTime = po.getStartTime();

@@ -19,7 +19,12 @@ import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinDataConstant;
 import demo.finance.cryptoCoin.data.pojo.dto.InsertCryptoCoinPriceNoticeSettingDTO;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPriceCommonData;
 import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinNoticeDTOCheckResult;
+import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
+import demo.finance.cryptoCoin.data.service.CryptoCoin1MonthDataSummaryService;
+import demo.finance.cryptoCoin.data.service.CryptoCoin1WeekDataSummaryService;
+import demo.finance.cryptoCoin.data.service.CryptoCoin5MinuteDataSummaryService;
+import demo.finance.cryptoCoin.data.service.CryptoCoin60MinuteDataSummaryService;
 import demo.finance.cryptoCoin.notice.mapper.CryptoCoinPriceNoticeMapper;
 import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNotice;
 import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNoticeExample;
@@ -35,6 +40,16 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	protected CryptoCoinPriceNoticeMapper noticeMapper;
 	@Autowired
 	private CryptoCoin1MinuteDataSummaryService _1MinuteDataSummaryService;
+	@Autowired
+	private CryptoCoin5MinuteDataSummaryService _5MinuteDataSummaryService;
+	@Autowired
+	private CryptoCoin60MinuteDataSummaryService hourDataSummaryService;
+	@Autowired
+	private CryptoCoin1DayDataSummaryService dailyDataSummaryService;
+	@Autowired
+	private CryptoCoin1WeekDataSummaryService weeklyDataSummaryService;
+	@Autowired
+	private CryptoCoin1MonthDataSummaryService monthlyDataSummaryService;
 
 	@Override
 	public ModelAndView insertNewCryptoCoinPriceNoticeSetting() {
@@ -273,7 +288,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			CurrencyType currencyType) {
 		CommonResult r = new CommonResult();
 
-		List<CryptoCoinPriceCommonData> historyPOList = findHistoryDate(coinType, currencyType,
+		List<CryptoCoinPriceCommonData> historyPOList = findHistoryData(coinType, currencyType,
 				noticeSetting.getTimeUnit(), noticeSetting.getTimeRange());
 		if (historyPOList == null || historyPOList.isEmpty()) {
 			return r;
@@ -315,24 +330,22 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		return r;
 	}
 
-	private List<CryptoCoinPriceCommonData> findHistoryDate(CryptoCoinType coinType, CurrencyType currencyType,
+	private List<CryptoCoinPriceCommonData> findHistoryData(CryptoCoinType coinType, CurrencyType currencyType,
 			Integer timeUnit, Integer timeRange) {
-		// TODO Auto-generated method stub
-
 		if (TimeUnitType.minute.getCode().equals(timeUnit)) {
 			if (CryptoCoinDataConstant.CRYPTO_COIN_1MINUTE_DATA_LIVE_HOURS * 60 > timeRange) {
-
+				return _1MinuteDataSummaryService.getCommonData(coinType, currencyType, timeRange);
 			} else if (CryptoCoinDataConstant.CRYPTO_COIN_5MINUTE_DATA_LIVE_HOURS * 60 > timeRange) {
-
+				return _5MinuteDataSummaryService.getCommonData(coinType, currencyType, timeRange);
 			} else if (CryptoCoinDataConstant.CRYPTO_COIN_60MINUTE_DATA_LIVE_HOURS * 60 > timeRange) {
-
+				return hourDataSummaryService.getCommonData(coinType, currencyType, timeRange);
 			}
 		} else if (TimeUnitType.day.getCode().equals(timeUnit)) {
-
+			return dailyDataSummaryService.getCommonData(coinType, currencyType, timeRange);
 		} else if (TimeUnitType.week.getCode().equals(timeUnit)) {
-
+			return weeklyDataSummaryService.getCommonData(coinType, currencyType, timeRange);
 		} else if (TimeUnitType.month.getCode().equals(timeUnit)) {
-
+			return monthlyDataSummaryService.getCommonData(coinType, currencyType, timeRange);
 		}
 
 		return new ArrayList<CryptoCoinPriceCommonData>();

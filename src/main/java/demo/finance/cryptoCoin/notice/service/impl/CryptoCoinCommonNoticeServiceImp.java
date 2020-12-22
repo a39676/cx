@@ -103,8 +103,11 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		CryptoCoinType coinType = CryptoCoinType.getType(dto.getCoinType());
 		CurrencyType currencyType = CurrencyType.getType(dto.getCurrencyType());
 		TimeUnitType timeUnitType = TimeUnitType.getType(dto.getTimeUnit());
-		if (coinType == null || currencyType == null || timeUnitType == null || dto.getTimeRange() == null
-				|| dto.getTimeRange() < 0 || dto.getNoticeCount() == null || dto.getNoticeCount() < 0) {
+		if(dto.getNoticeCount() == null || dto.getNoticeCount() < 0) {
+			dto.setNoticeCount(1);
+		}
+		
+		if (coinType == null || currencyType == null) {
 			r.failWithMessage("error param");
 			return r;
 		}
@@ -119,7 +122,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			return r;
 		}
 
-		if (dto.getFluctuationSpeedPercentage() != null && dto.getFluctuationSpeedPercentage() == 0) {
+		if (dto.getFluctuationSpeedPercentage() != null && dto.getFluctuationSpeedPercentage() == 0
+				|| timeUnitType == null || dto.getTimeRange() == null || dto.getTimeRange() < 0) {
 			r.failWithMessage("percent can not equals to 0");
 			return r;
 		}
@@ -237,8 +241,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			} else if (timeUnitType.equals(TimeUnitType.month)) {
 				nextNoticeTime = noticeSetting.getNoticeTime().plusMonths(noticeSetting.getTimeRange());
 			}
-			
-			if(nextNoticeTime.isBefore(LocalDateTime.now())) {
+
+			if (nextNoticeTime.isBefore(LocalDateTime.now())) {
 				return;
 			}
 		}

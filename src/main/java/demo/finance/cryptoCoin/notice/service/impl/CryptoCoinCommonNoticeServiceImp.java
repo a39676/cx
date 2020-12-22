@@ -75,9 +75,11 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		dto = dtoPrefixHandle(dto);
 
 		CryptoCoinPriceNotice newPO = new CryptoCoinPriceNotice();
+		newPO.setId(snowFlake.getNextId());
 		newPO.setCoinType(dto.getCoinType());
 		newPO.setCurrencyType(dto.getCurrencyType());
 		newPO.setEmail(dto.getEmail());
+		newPO.setNoticeCount(dto.getNoticeCount());
 		newPO.setMaxPrice(dto.getMaxPrice());
 		newPO.setMinPrice(dto.getMinPrice());
 		newPO.setTimeUnit(dto.getTimeUnit());
@@ -86,7 +88,6 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			newPO.setFluctuationSpeedPercentage(new BigDecimal(dto.getFluctuationSpeedPercentage()));
 		}
 		newPO.setValidTime(checkResult.getValidTime());
-		newPO.setId(snowFlake.getNextId());
 		newPO.setCreateTime(LocalDateTime.now());
 		int count = noticeMapper.insertSelective(newPO);
 
@@ -103,7 +104,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		CurrencyType currencyType = CurrencyType.getType(dto.getCurrencyType());
 		TimeUnitType timeUnitType = TimeUnitType.getType(dto.getTimeUnit());
 		if (coinType == null || currencyType == null || timeUnitType == null || dto.getTimeRange() == null
-				|| dto.getTimeRange() < 0) {
+				|| dto.getTimeRange() < 0 || dto.getNoticeCount() == null || dto.getNoticeCount() < 0) {
 			r.failWithMessage("error param");
 			return r;
 		}
@@ -243,7 +244,10 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		) {
 			mailService.sendSimpleMail(noticeSetting.getEmail(), "价格提示", content, null, MailType.preciousMetalsNotice);
 			noticeSetting.setNoticeTime(LocalDateTime.now());
-			noticeSetting.setIsDelete(true);
+			noticeSetting.setNoticeCount(noticeSetting.getNoticeCount() - 1);
+			if(noticeSetting.getNoticeCount() < 1) {
+				noticeSetting.setIsDelete(true);
+			}
 			noticeMapper.updateByPrimaryKeySelective(noticeSetting);
 		}
 

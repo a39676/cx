@@ -22,6 +22,8 @@ public class CryptoCoinPriceNotice {
 
     private String email;
 
+    private Integer noticeCount;
+
     private LocalDateTime validTime;
 
     private LocalDateTime noticeTime;
@@ -100,6 +102,14 @@ public class CryptoCoinPriceNotice {
 
     public void setEmail(String email) {
         this.email = email == null ? null : email.trim();
+    }
+
+    public Integer getNoticeCount() {
+        return noticeCount;
+    }
+
+    public void setNoticeCount(Integer noticeCount) {
+        this.noticeCount = noticeCount;
     }
 
     public LocalDateTime getValidTime() {

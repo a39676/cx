@@ -44,6 +44,8 @@ public class InsertCryptoCoinPriceNoticeSettingDTO {
 
 	private String email;
 
+	private Integer noticeCount;
+
 	private String validTime;
 
 	public Integer getCoinType() {
@@ -142,13 +144,21 @@ public class InsertCryptoCoinPriceNoticeSettingDTO {
 		this.timeRange = timeRange;
 	}
 
+	public Integer getNoticeCount() {
+		return noticeCount;
+	}
+
+	public void setNoticeCount(Integer noticeCount) {
+		this.noticeCount = noticeCount;
+	}
+
 	@Override
 	public String toString() {
 		return "InsertCryptoCoinPriceNoticeSettingDTO [coinType=" + coinType + ", currencyType=" + currencyType
 				+ ", maxPrice=" + maxPrice + ", minPrice=" + minPrice + ", originalPrice=" + originalPrice
 				+ ", pricePercentage=" + pricePercentage + ", timeUnit=" + timeUnit + ", timeRange=" + timeRange
 				+ ", priceRange=" + priceRange + ", fluctuationSpeedPercentage=" + fluctuationSpeedPercentage
-				+ ", email=" + email + ", validTime=" + validTime + "]";
+				+ ", email=" + email + ", noticeCount=" + noticeCount + ", validTime=" + validTime + "]";
 	}
 
 }

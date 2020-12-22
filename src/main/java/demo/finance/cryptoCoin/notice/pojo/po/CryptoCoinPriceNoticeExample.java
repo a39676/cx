@@ -656,6 +656,66 @@ public class CryptoCoinPriceNoticeExample {
             return (Criteria) this;
         }
 
+        public Criteria andNoticeCountIsNull() {
+            addCriterion("notice_count is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andNoticeCountIsNotNull() {
+            addCriterion("notice_count is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andNoticeCountEqualTo(Integer value) {
+            addCriterion("notice_count =", value, "noticeCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andNoticeCountNotEqualTo(Integer value) {
+            addCriterion("notice_count <>", value, "noticeCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andNoticeCountGreaterThan(Integer value) {
+            addCriterion("notice_count >", value, "noticeCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andNoticeCountGreaterThanOrEqualTo(Integer value) {
+            addCriterion("notice_count >=", value, "noticeCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andNoticeCountLessThan(Integer value) {
+            addCriterion("notice_count <", value, "noticeCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andNoticeCountLessThanOrEqualTo(Integer value) {
+            addCriterion("notice_count <=", value, "noticeCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andNoticeCountIn(List<Integer> values) {
+            addCriterion("notice_count in", values, "noticeCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andNoticeCountNotIn(List<Integer> values) {
+            addCriterion("notice_count not in", values, "noticeCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andNoticeCountBetween(Integer value1, Integer value2) {
+            addCriterion("notice_count between", value1, value2, "noticeCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andNoticeCountNotBetween(Integer value1, Integer value2) {
+            addCriterion("notice_count not between", value1, value2, "noticeCount");
+            return (Criteria) this;
+        }
+
         public Criteria andValidTimeIsNull() {
             addCriterion("valid_time is null");
             return (Criteria) this;

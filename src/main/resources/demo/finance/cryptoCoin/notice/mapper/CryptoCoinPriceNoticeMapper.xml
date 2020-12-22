@@ -11,6 +11,7 @@
     <result column="time_range" jdbcType="INTEGER" property="timeRange" />
     <result column="fluctuation_speed_percentage" jdbcType="DECIMAL" property="fluctuationSpeedPercentage" />
     <result column="email" jdbcType="CHAR" property="email" />
+    <result column="notice_count" jdbcType="INTEGER" property="noticeCount" />
     <result column="valid_time" jdbcType="TIMESTAMP" property="validTime" />
     <result column="notice_time" jdbcType="TIMESTAMP" property="noticeTime" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -76,7 +77,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, coin_type, currency_type, max_price, min_price, time_unit, time_range, fluctuation_speed_percentage, 
-    email, valid_time, notice_time, create_time, is_delete
+    email, notice_count, valid_time, notice_time, create_time, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNoticeExample" resultMap="BaseResultMap">
     select
@@ -112,13 +113,15 @@
     insert into crypto_coin_price_notice (id, coin_type, currency_type, 
       max_price, min_price, time_unit, 
       time_range, fluctuation_speed_percentage, 
-      email, valid_time, notice_time, 
-      create_time, is_delete)
+      email, notice_count, valid_time, 
+      notice_time, create_time, is_delete
+      )
     values (#{id,jdbcType=BIGINT}, #{coinType,jdbcType=INTEGER}, #{currencyType,jdbcType=INTEGER}, 
       #{maxPrice,jdbcType=DECIMAL}, #{minPrice,jdbcType=DECIMAL}, #{timeUnit,jdbcType=INTEGER}, 
       #{timeRange,jdbcType=INTEGER}, #{fluctuationSpeedPercentage,jdbcType=DECIMAL}, 
-      #{email,jdbcType=CHAR}, #{validTime,jdbcType=TIMESTAMP}, #{noticeTime,jdbcType=TIMESTAMP}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
+      #{email,jdbcType=CHAR}, #{noticeCount,jdbcType=INTEGER}, #{validTime,jdbcType=TIMESTAMP}, 
+      #{noticeTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNotice">
     insert into crypto_coin_price_notice
@@ -149,6 +152,9 @@
       </if>
       <if test="email != null">
         email,
+      </if>
+      <if test="noticeCount != null">
+        notice_count,
       </if>
       <if test="validTime != null">
         valid_time,
@@ -190,6 +196,9 @@
       </if>
       <if test="email != null">
         #{email,jdbcType=CHAR},
+      </if>
+      <if test="noticeCount != null">
+        #{noticeCount,jdbcType=INTEGER},
       </if>
       <if test="validTime != null">
         #{validTime,jdbcType=TIMESTAMP},
@@ -241,6 +250,9 @@
       <if test="record.email != null">
         email = #{record.email,jdbcType=CHAR},
       </if>
+      <if test="record.noticeCount != null">
+        notice_count = #{record.noticeCount,jdbcType=INTEGER},
+      </if>
       <if test="record.validTime != null">
         valid_time = #{record.validTime,jdbcType=TIMESTAMP},
       </if>
@@ -269,6 +281,7 @@
       time_range = #{record.timeRange,jdbcType=INTEGER},
       fluctuation_speed_percentage = #{record.fluctuationSpeedPercentage,jdbcType=DECIMAL},
       email = #{record.email,jdbcType=CHAR},
+      notice_count = #{record.noticeCount,jdbcType=INTEGER},
       valid_time = #{record.validTime,jdbcType=TIMESTAMP},
       notice_time = #{record.noticeTime,jdbcType=TIMESTAMP},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -304,6 +317,9 @@
       <if test="email != null">
         email = #{email,jdbcType=CHAR},
       </if>
+      <if test="noticeCount != null">
+        notice_count = #{noticeCount,jdbcType=INTEGER},
+      </if>
       <if test="validTime != null">
         valid_time = #{validTime,jdbcType=TIMESTAMP},
       </if>
@@ -329,6 +345,7 @@
       time_range = #{timeRange,jdbcType=INTEGER},
       fluctuation_speed_percentage = #{fluctuationSpeedPercentage,jdbcType=DECIMAL},
       email = #{email,jdbcType=CHAR},
+      notice_count = #{noticeCount,jdbcType=INTEGER},
       valid_time = #{validTime,jdbcType=TIMESTAMP},
       notice_time = #{noticeTime,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -349,7 +366,6 @@
       order by ${orderByClause}
     </if>
   </select>
-
   <select id="selectValidNoticeSetting" resultMap="BaseResultMap">
     select
       *
@@ -358,8 +374,8 @@
     <where>
       1=1
       and is_delete = false
-      and notice_time is null
-      and (valid_time is not null or valid_time &gt;= #{now})
+      and notice_count %gt; 0
+      and valid_time &gt;= #{now}
     </where>
   </select>
 </mapper>

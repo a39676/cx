@@ -224,6 +224,25 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			return;
 		}
 
+		if (noticeSetting.getNoticeTime() != null) {
+			LocalDateTime nextNoticeTime = null;
+			if (timeUnitType.equals(TimeUnitType.minute)) {
+				nextNoticeTime = noticeSetting.getNoticeTime().plusMinutes(noticeSetting.getTimeRange());
+			} else if (timeUnitType.equals(TimeUnitType.hour)) {
+				nextNoticeTime = noticeSetting.getNoticeTime().plusHours(noticeSetting.getTimeRange());
+			} else if (timeUnitType.equals(TimeUnitType.day)) {
+				nextNoticeTime = noticeSetting.getNoticeTime().plusDays(noticeSetting.getTimeRange());
+			} else if (timeUnitType.equals(TimeUnitType.week)) {
+				nextNoticeTime = noticeSetting.getNoticeTime().plusDays(noticeSetting.getTimeRange() * 7);
+			} else if (timeUnitType.equals(TimeUnitType.month)) {
+				nextNoticeTime = noticeSetting.getNoticeTime().plusMonths(noticeSetting.getTimeRange());
+			}
+			
+			if(nextNoticeTime.isBefore(LocalDateTime.now())) {
+				return;
+			}
+		}
+
 		String content = "";
 		CommonResult handleResult = null;
 		if (priceConditionHadSet(noticeSetting)) {
@@ -245,7 +264,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			mailService.sendSimpleMail(noticeSetting.getEmail(), "价格提示", content, null, MailType.preciousMetalsNotice);
 			noticeSetting.setNoticeTime(LocalDateTime.now());
 			noticeSetting.setNoticeCount(noticeSetting.getNoticeCount() - 1);
-			if(noticeSetting.getNoticeCount() < 1) {
+			if (noticeSetting.getNoticeCount() < 1) {
 				noticeSetting.setIsDelete(true);
 			}
 			noticeMapper.updateByPrimaryKeySelective(noticeSetting);
@@ -256,8 +275,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	private CommonResult priceConditionNoticeHandle(CryptoCoinPriceNotice noticeSetting, CryptoCoinType coinType,
 			CurrencyType currencyType) {
 		CommonResult r = new CommonResult();
-		List<CryptoCoinPriceCommonDataBO> historyPOList = _1MinuteDataSummaryService.getCommonData(coinType, currencyType,
-				LocalDateTime.now().minusMinutes(1));
+		List<CryptoCoinPriceCommonDataBO> historyPOList = _1MinuteDataSummaryService.getCommonData(coinType,
+				currencyType, LocalDateTime.now().minusMinutes(1));
 
 		if (historyPOList == null || historyPOList.isEmpty()) {
 			return r;
@@ -326,9 +345,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		if ((upApmlitude >= trigerPercentage) || (trigerPercentage < 0 && lowApmlitude <= trigerPercentage)) {
 			String pattern = "%s, %s, highest price: %s, at %s, lowest price: %s, at: %s, now: %s";
-			content = String.format(pattern, coinType.getName(), currencyType,
-					lastMax, maxMinPriceResult.getMaxPriceDateTime(),
-					lastMin, maxMinPriceResult.getMinPriceDateTime(),
+			content = String.format(pattern, coinType.getName(), currencyType, lastMax,
+					maxMinPriceResult.getMaxPriceDateTime(), lastMin, maxMinPriceResult.getMinPriceDateTime(),
 					historyPOList.get(0).getEndPrice());
 		}
 

@@ -21,4 +21,10 @@ public interface CryptoCoin1MinuteDataSummaryService {
 	List<CryptoCoinPriceCommonDataBO> getCommonData(CryptoCoinType coinType, CurrencyType currencyType,
 			LocalDateTime startTime);
 
+	/**
+	 * 2020-12-24
+	 * 暂时只合并处理最近5分钟的数据
+	 */
+	void mergeDuplicateData();
+
 }

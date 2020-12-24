@@ -7,5 +7,4 @@ import demo.common.service.CommonService;
 @Service
 public class TestService extends CommonService {
 
-	
 }

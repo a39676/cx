@@ -14,12 +14,12 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
-import demo.finance.common.pojo.result.FindMaxMinPriceResult;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinPriceCommonDataBO;
 import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinDataConstant;
 import demo.finance.cryptoCoin.data.pojo.dto.InsertCryptoCoinPriceNoticeSettingDTO;
 import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinNoticeDTOCheckResult;
+import demo.finance.cryptoCoin.data.pojo.result.FilterBODataResult;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MonthDataSummaryService;
@@ -291,7 +291,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			return r;
 		}
 
-		FindMaxMinPriceResult maxMinPriceResult = findMaxMinPrice(historyPOList);
+		FilterBODataResult maxMinPriceResult = filterData(historyPOList);
 		if (maxMinPriceResult.isFail()) {
 			r.addMessage(maxMinPriceResult.getMessage());
 			return r;
@@ -331,7 +331,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			return r;
 		}
 
-		FindMaxMinPriceResult maxMinPriceResult = findMaxMinPrice(historyPOList);
+		FilterBODataResult maxMinPriceResult = filterData(historyPOList);
 		if (maxMinPriceResult.isFail()) {
 			r.addMessage(maxMinPriceResult.getMessage());
 			return r;
@@ -392,37 +392,6 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		}
 
 		return new ArrayList<CryptoCoinPriceCommonDataBO>();
-	}
-
-	protected FindMaxMinPriceResult findMaxMinPrice(List<CryptoCoinPriceCommonDataBO> list) {
-		FindMaxMinPriceResult r = new FindMaxMinPriceResult();
-
-		if (list == null || list.isEmpty()) {
-			r.setMessage("empty history data");
-			return r;
-		}
-
-		CryptoCoinPriceCommonDataBO defaultData = list.get(0);
-		BigDecimal maxPrice = defaultData.getHighPrice();
-		BigDecimal minPrice = defaultData.getLowPrice();
-		LocalDateTime maxPriceDateTime = defaultData.getCreateTime();
-		LocalDateTime minPriceDateTime = defaultData.getCreateTime();
-		for (CryptoCoinPriceCommonDataBO po : list) {
-			if (maxPrice.compareTo(po.getHighPrice()) < 0) {
-				maxPrice = po.getHighPrice();
-				maxPriceDateTime = po.getStartTime();
-			} else if (minPrice.compareTo(po.getLowPrice()) > 0) {
-				minPrice = po.getLowPrice();
-				minPriceDateTime = po.getStartTime();
-			}
-		}
-
-		r.setMaxPrice(maxPrice);
-		r.setMinPrice(minPrice);
-		r.setMaxPriceDateTime(maxPriceDateTime);
-		r.setMinPriceDateTime(minPriceDateTime);
-		r.setIsSuccess();
-		return r;
 	}
 
 	@Override

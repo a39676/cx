@@ -1,16 +1,19 @@
-package demo.finance.common.pojo.result;
+package demo.finance.cryptoCoin.data.pojo.result;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 
-public class FindMaxMinPriceResult extends CommonResult {
+public class FilterBODataResult extends CommonResult {
 	private BigDecimal maxPrice;
 	private BigDecimal minPrice;
 
 	private LocalDateTime maxPriceDateTime;
 	private LocalDateTime minPriceDateTime;
+
+	private LocalDateTime startTime;
+	private LocalDateTime endTime;
 
 	public LocalDateTime getMaxPriceDateTime() {
 		return maxPriceDateTime;
@@ -42,6 +45,22 @@ public class FindMaxMinPriceResult extends CommonResult {
 
 	public void setMinPrice(BigDecimal minPrice) {
 		this.minPrice = minPrice;
+	}
+
+	public LocalDateTime getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(LocalDateTime startTime) {
+		this.startTime = startTime;
+	}
+
+	public LocalDateTime getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(LocalDateTime endTime) {
+		this.endTime = endTime;
 	}
 
 	@Override

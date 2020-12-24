@@ -81,12 +81,12 @@ public class CryptoCoin60MinuteDataSummaryServiceImpl extends CryptoCoinCommonSe
 
 		Double volumeSummary = 0D;
 		for (CryptoCoinPrice5minute cache : cacheList) {
-			if (po.getStartTime() == null || cache.getStartTime().isBefore(po.getStartTime())) {
+			if (po.getStartTime() == null || cache.getStartTime().isBefore(po.getStartTime()) || cache.getStartTime().isEqual(po.getStartTime())) {
 				po.setStartTime(cache.getStartTime());
 				po.setStartPrice(cache.getStartPrice());
 			}
-			if (po.getEndTime() == null || cache.getStartTime().isAfter(po.getEndTime())) {
-				po.setEndTime(cache.getStartTime().plusMinutes(1));
+			if (po.getEndTime() == null || cache.getEndTime().isAfter(po.getEndTime()) || cache.getEndTime().isEqual(po.getEndTime())) {
+				po.setEndTime(cache.getEndTime());
 				po.setEndPrice(cache.getEndPrice());
 			}
 			if (po.getHighPrice() == null || po.getHighPrice().compareTo(cache.getHighPrice()) < 0) {

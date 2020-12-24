@@ -81,7 +81,7 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 				dataTimeMatchFlag = false;
 				continue;
 			} else {
-				insertNewData(data);
+				insertNewData(data, coinType, currencyType);
 			}
 		}
 		
@@ -214,13 +214,13 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 		return target;
 	}
 	
-	private void insertNewData(CryptoCoinHistoryPriceSubDTO data) {
+	private void insertNewData(CryptoCoinHistoryPriceSubDTO data, CryptoCoinType coinType, CurrencyType currencyType) {
 		CryptoCoinPrice1minute po = new CryptoCoinPrice1minute();
 		po.setId(snowFlake.getNextId());
 		po.setStartTime(localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(data.getTime()));
 		po.setEndTime(po.getStartTime().plusMinutes(minuteStepLong));
-		po.setCoinType(Integer.parseInt(data.getCoinType()));
-		po.setCurrencyType(Integer.parseInt(data.getCurrencyType()));
+		po.setCoinType(coinType.getCode());
+		po.setCurrencyType(currencyType.getCode());
 		po.setStartPrice(new BigDecimal(data.getStart()));
 		po.setEndPrice(new BigDecimal(data.getEnd()));
 		po.setHighPrice(new BigDecimal(data.getHigh()));

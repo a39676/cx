@@ -131,6 +131,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 				r.failWithMessage("time range setting error");
 				return r;
 			}
+		} else {
+			dto.setTimeUnit(null);
 		}
 
 		if (!priceConditionHadSet(dto) && !priceRangeConditionHadSet(dto)

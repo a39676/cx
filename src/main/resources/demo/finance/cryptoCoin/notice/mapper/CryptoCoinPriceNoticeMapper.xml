@@ -374,7 +374,7 @@
     <where>
       1=1
       and is_delete = false
-      and notice_count %gt; 0
+      and notice_count &gt; 0
       and valid_time &gt;= #{now}
     </where>
   </select>

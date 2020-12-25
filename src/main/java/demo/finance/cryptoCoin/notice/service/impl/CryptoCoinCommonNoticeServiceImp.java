@@ -306,7 +306,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 						+ " at: " + maxMinPriceResult.getMaxPriceDateTime() + ";";
 			}
 
-		} else if (noticeSetting.getMinPrice() != null) {
+		} 
+		if (noticeSetting.getMinPrice() != null) {
 			if (lastMinPrice.compareTo(noticeSetting.getMinPrice()) <= 0) {
 				content = coinType.getName() + ", " + currencyType + ", " + " price(range) had reach " + lastMinPrice
 						+ " at: " + maxMinPriceResult.getMinPriceDateTime() + ";";

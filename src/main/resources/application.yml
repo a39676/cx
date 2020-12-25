@@ -46,7 +46,7 @@ logging:
     # demo.test.controller: DEBUG
     demo.test.mapper: DEBUG
     demo.tool.mapper: DEBUG
-    demo.finance.cryptoCoin.notice.mapper: DEBUG
+    # demo.finance.cryptoCoin.notice.mapper: DEBUG
     # demo.mapper: DEBUG
     # demo.bank.mapper: DEBUG
     # demo.credit_bill.mapper: DEBUG

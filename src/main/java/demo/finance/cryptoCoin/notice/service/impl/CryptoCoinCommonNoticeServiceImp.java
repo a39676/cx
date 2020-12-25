@@ -231,11 +231,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		}
 
 		TimeUnitType timeUnitType = TimeUnitType.getType(noticeSetting.getTimeUnit());
-		if (timeUnitType == null) {
-			return;
-		}
-
-		if (noticeSetting.getNoticeTime() != null) {
+		if (timeUnitType != null && noticeSetting.getTimeRange() != null && noticeSetting.getNoticeTime() != null) {
 			LocalDateTime nextNoticeTime = null;
 			if (timeUnitType.equals(TimeUnitType.minute)) {
 				nextNoticeTime = noticeSetting.getNoticeTime().plusMinutes(noticeSetting.getTimeRange());
@@ -248,11 +244,12 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			} else if (timeUnitType.equals(TimeUnitType.month)) {
 				nextNoticeTime = noticeSetting.getNoticeTime().plusMonths(noticeSetting.getTimeRange());
 			}
-
+			
 			if (nextNoticeTime.isBefore(LocalDateTime.now())) {
 				return;
 			}
 		}
+
 
 		String content = "";
 		CommonResult handleResult = null;

@@ -52,16 +52,19 @@ public class MailServiceImpl extends CommonService implements MailService {
 	
 	
 	private boolean isMailReady() {
-		if(redisTemplate.hasKey(SystemConstantStore.adminMailName) && redisTemplate.hasKey(SystemConstantStore.adminMailPwd)) {
-			return true;
-		} else {
-			constantService.getValsByName(Arrays.asList(SystemConstantStore.adminMailName, SystemConstantStore.adminMailPwd));
-			if(redisTemplate.hasKey(SystemConstantStore.adminMailName) && redisTemplate.hasKey(SystemConstantStore.adminMailPwd)) {
-				return true;
-			} else {
-				return false;
-			}
+		String adminMailName = constantService.getValByName(SystemConstantStore.adminMailName);
+		String adminMailPwd = constantService.getValByName(SystemConstantStore.adminMailPwd);
+		
+		if(adminMailName == null) {
+			constantService.getValByName(SystemConstantStore.adminMailName, true);
 		}
+		
+		if(adminMailPwd == null) {
+			constantService.getValByName(SystemConstantStore.adminMailPwd, true);
+		}
+
+		return (adminMailName != null && adminMailPwd != null);
+		
 	}
 	
 	@Override

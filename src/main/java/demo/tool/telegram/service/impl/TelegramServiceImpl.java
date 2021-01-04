@@ -112,8 +112,8 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 		try {
 			httpUtil.sendGet(url);
 		} catch (Exception e) {
-			log.error(e.getLocalizedMessage());
-			log.error(e.getMessage());
+			log.error("telegram sending error" + e.getLocalizedMessage());
+			log.error("telegram sending error" + e.getMessage());
 			r.failWithMessage("net work error");
 			return r;
 		}
@@ -154,4 +154,5 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 		TelegramChatId po = chatIdMapper.selectByPrimaryKey(id);
 		return po != null;
 	}
+	
 }

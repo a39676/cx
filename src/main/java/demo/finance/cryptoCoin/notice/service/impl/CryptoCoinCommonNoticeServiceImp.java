@@ -270,7 +270,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 //				&& !"dev".equals(constantService.getValByName("envName"))
 		) {
 			CommonResult sendResult = telegramService.sendMessage(content, noticeSetting.getTelegramChatPk());
-			log.error(sendResult.getMessage());
+			log.error("telegram send result: " + sendResult.getMessage());
 			if(sendResult.isSuccess()) {
 				noticeSetting.setNoticeTime(LocalDateTime.now());
 				noticeSetting.setNoticeCount(noticeSetting.getNoticeCount() - 1);
@@ -278,6 +278,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 					noticeSetting.setIsDelete(true);
 				}
 				noticeMapper.updateByPrimaryKeySelective(noticeSetting);
+	
 			}
 		}
 

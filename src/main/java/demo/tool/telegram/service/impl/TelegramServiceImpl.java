@@ -1,5 +1,8 @@
 package demo.tool.telegram.service.impl;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,6 +77,11 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 			return r;
 		}
 		
+		try {
+			msg = URLEncoder.encode(msg, StandardCharsets.UTF_8.toString());
+		} catch (UnsupportedEncodingException e1) {
+			msg = "msg trans error";
+		}
 		if(msg.length() > 256) {
 			r.failWithMessage("msg too long");
 			return r;

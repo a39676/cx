@@ -21,8 +21,16 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement // <tx:annotation-driven />
 // 2016 multiple scan, 通配符的使用应放后边, 否则会被"覆盖?重写?"后失效
-@MapperScan(basePackages = { "demo.mapper", "demo.base.*.mapper", "demo.finance.cryptoCoin.*.mapper", "demo.finance.*.mapper", "demo.article.*.mapper",
-		"demo.toyParts.*.mapper", "demo.joy.*.*.mapper", "demo.joy.*.mapper",
+@MapperScan(basePackages = { 
+		"demo.mapper", 
+		"demo.base.*.mapper", 
+		"demo.finance.cryptoCoin.*.mapper", 
+		"demo.finance.*.mapper", 
+		"demo.article.*.mapper",
+		"demo.toyParts.*.mapper", 
+		"demo.joy.*.*.mapper", 
+		"demo.joy.*.mapper",
+		"demo.tool.*.mapper",
 		"demo.*.mapper" }, sqlSessionTemplateRef = "cxSqlSessionTemplate")
 public class DatabaseCXConfig {
 

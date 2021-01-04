@@ -8,9 +8,6 @@ public enum MailType {
 	/** 忘记用户名 */
 	forgotUsername("forgotUsername", 3),
 	
-	/** 贵金属价格提示 */
-	preciousMetalsNotice("preciousMetalsNotice", 4),
-	
 	;
 
 	private String name;

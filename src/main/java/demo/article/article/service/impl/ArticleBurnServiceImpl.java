@@ -65,7 +65,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		
 	}
 	
-	private boolean isInEasyOrDev(HttpServletRequest request) {
+	private boolean isInZhang3OrDev(HttpServletRequest request) {
 		HostnameType hostnameType = hostnameService.findHostnameType(request);
 		if (HostnameType.zhang3.equals(hostnameType)) {
 			return true;
@@ -77,7 +77,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 	
 	@Override
 	public ModelAndView articleBurnLink(HttpServletRequest request) {
-		if(isInEasyOrDev(request)) {
+		if(isInZhang3OrDev(request)) {
 			return new ModelAndView(ArticleViewConstant.articleBurnLink);
 		}
 		return null;
@@ -87,7 +87,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 	public CreatingBurnMessageResult creatingBurnMessage(CreatingBurnMessageDTO dto, HttpServletRequest request) {
 		CreatingBurnMessageResult r = new CreatingBurnMessageResult();
 		
-		if(!isInEasyOrDev(request)) {
+		if(!isInZhang3OrDev(request)) {
 			return null;
 		}
 
@@ -155,7 +155,6 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 			r.setReadKey(URLEncoder.encode(encryptId(po.getReadId()), StandardCharsets.UTF_8.toString()));
 			r.setBurnKey(URLEncoder.encode(encryptId(po.getBurnId()), StandardCharsets.UTF_8.toString()));
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
 		}
 		r.setReadUri(ArticleBurnUrlConstant.root + ArticleBurnUrlConstant.readBurningMessage + "?readKey=" + r.getReadKey());
 		r.setBurnUri(ArticleBurnUrlConstant.root + ArticleBurnUrlConstant.burnMessage + "?burnKey=" + r.getBurnKey());

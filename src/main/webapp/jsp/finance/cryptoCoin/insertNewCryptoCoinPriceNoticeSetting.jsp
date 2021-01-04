@@ -28,7 +28,11 @@
 </div>
 
 <div class="row">
-  <input type="text" id="email" placeholder="email">
+  <select id="telegramChatPK">
+    <c:forEach items="${chatVOList}" var="chatVO">
+      <option value="${chatVO.pk}">${chatVO.username}</option>
+    </c:forEach>
+  </select>
   <input type="Date" id="validTime">
 </div>
 
@@ -95,7 +99,7 @@
         var timeRange = $("#timeRange").val();
         var fluctuationSpeedPercentage = $("#fluctuationSpeedPercentage").val();
 
-        var email = $("#email").val();
+        var telegramChatPK = $("#telegramChatPK option:selected").val();
         var validTime = $("#validTime").val();
 
         var noticeCount = $("#noticeCount").val();
@@ -110,7 +114,7 @@
           timeUnit : timeUnit,
           timeRange : timeRange,
           fluctuationSpeedPercentage : fluctuationSpeedPercentage,
-          email : email,
+          telegramChatPK : telegramChatPK,
           noticeCount : noticeCount,
           validTime : validTime,
         };
@@ -127,6 +131,7 @@
           timeout: 15000,
           success:function(data){
             $("#result").text(data.message);
+            console.log(data);
           }, 
           error:function(e){
             $("#result").text(e);

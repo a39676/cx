@@ -42,7 +42,7 @@ public class InsertCryptoCoinPriceNoticeSettingDTO {
 	 */
 	private Double fluctuationSpeedPercentage;
 
-	private String email;
+	private String telegramChatPK;
 
 	private Integer noticeCount;
 
@@ -120,14 +120,6 @@ public class InsertCryptoCoinPriceNoticeSettingDTO {
 		this.fluctuationSpeedPercentage = fluctuationSpeedPercentage;
 	}
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
 	public String getValidTime() {
 		return validTime;
 	}
@@ -152,13 +144,22 @@ public class InsertCryptoCoinPriceNoticeSettingDTO {
 		this.noticeCount = noticeCount;
 	}
 
+	public String getTelegramChatPK() {
+		return telegramChatPK;
+	}
+
+	public void setTelegramChatPK(String telegramChatPK) {
+		this.telegramChatPK = telegramChatPK;
+	}
+
 	@Override
 	public String toString() {
 		return "InsertCryptoCoinPriceNoticeSettingDTO [coinType=" + coinType + ", currencyType=" + currencyType
 				+ ", maxPrice=" + maxPrice + ", minPrice=" + minPrice + ", originalPrice=" + originalPrice
 				+ ", pricePercentage=" + pricePercentage + ", timeUnit=" + timeUnit + ", timeRange=" + timeRange
 				+ ", priceRange=" + priceRange + ", fluctuationSpeedPercentage=" + fluctuationSpeedPercentage
-				+ ", email=" + email + ", noticeCount=" + noticeCount + ", validTime=" + validTime + "]";
+				+ ", telegramChatPK=" + telegramChatPK + ", noticeCount=" + noticeCount + ", validTime=" + validTime
+				+ "]";
 	}
 
 }

@@ -10,7 +10,7 @@
     <result column="time_unit" jdbcType="INTEGER" property="timeUnit" />
     <result column="time_range" jdbcType="INTEGER" property="timeRange" />
     <result column="fluctuation_speed_percentage" jdbcType="DECIMAL" property="fluctuationSpeedPercentage" />
-    <result column="email" jdbcType="CHAR" property="email" />
+    <result column="telegram_chat_pk" jdbcType="CHAR" property="telegramChatPk" />
     <result column="notice_count" jdbcType="INTEGER" property="noticeCount" />
     <result column="valid_time" jdbcType="TIMESTAMP" property="validTime" />
     <result column="notice_time" jdbcType="TIMESTAMP" property="noticeTime" />
@@ -77,7 +77,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, coin_type, currency_type, max_price, min_price, time_unit, time_range, fluctuation_speed_percentage, 
-    email, notice_count, valid_time, notice_time, create_time, is_delete
+    telegram_chat_pk, notice_count, valid_time, notice_time, create_time, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNoticeExample" resultMap="BaseResultMap">
     select
@@ -113,13 +113,13 @@
     insert into crypto_coin_price_notice (id, coin_type, currency_type, 
       max_price, min_price, time_unit, 
       time_range, fluctuation_speed_percentage, 
-      email, notice_count, valid_time, 
+      telegram_chat_pk, notice_count, valid_time, 
       notice_time, create_time, is_delete
       )
     values (#{id,jdbcType=BIGINT}, #{coinType,jdbcType=INTEGER}, #{currencyType,jdbcType=INTEGER}, 
       #{maxPrice,jdbcType=DECIMAL}, #{minPrice,jdbcType=DECIMAL}, #{timeUnit,jdbcType=INTEGER}, 
       #{timeRange,jdbcType=INTEGER}, #{fluctuationSpeedPercentage,jdbcType=DECIMAL}, 
-      #{email,jdbcType=CHAR}, #{noticeCount,jdbcType=INTEGER}, #{validTime,jdbcType=TIMESTAMP}, 
+      #{telegramChatPk,jdbcType=CHAR}, #{noticeCount,jdbcType=INTEGER}, #{validTime,jdbcType=TIMESTAMP}, 
       #{noticeTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
       )
   </insert>
@@ -150,8 +150,8 @@
       <if test="fluctuationSpeedPercentage != null">
         fluctuation_speed_percentage,
       </if>
-      <if test="email != null">
-        email,
+      <if test="telegramChatPk != null">
+        telegram_chat_pk,
       </if>
       <if test="noticeCount != null">
         notice_count,
@@ -194,8 +194,8 @@
       <if test="fluctuationSpeedPercentage != null">
         #{fluctuationSpeedPercentage,jdbcType=DECIMAL},
       </if>
-      <if test="email != null">
-        #{email,jdbcType=CHAR},
+      <if test="telegramChatPk != null">
+        #{telegramChatPk,jdbcType=CHAR},
       </if>
       <if test="noticeCount != null">
         #{noticeCount,jdbcType=INTEGER},
@@ -247,8 +247,8 @@
       <if test="record.fluctuationSpeedPercentage != null">
         fluctuation_speed_percentage = #{record.fluctuationSpeedPercentage,jdbcType=DECIMAL},
       </if>
-      <if test="record.email != null">
-        email = #{record.email,jdbcType=CHAR},
+      <if test="record.telegramChatPk != null">
+        telegram_chat_pk = #{record.telegramChatPk,jdbcType=CHAR},
       </if>
       <if test="record.noticeCount != null">
         notice_count = #{record.noticeCount,jdbcType=INTEGER},
@@ -280,7 +280,7 @@
       time_unit = #{record.timeUnit,jdbcType=INTEGER},
       time_range = #{record.timeRange,jdbcType=INTEGER},
       fluctuation_speed_percentage = #{record.fluctuationSpeedPercentage,jdbcType=DECIMAL},
-      email = #{record.email,jdbcType=CHAR},
+      telegram_chat_pk = #{record.telegramChatPk,jdbcType=CHAR},
       notice_count = #{record.noticeCount,jdbcType=INTEGER},
       valid_time = #{record.validTime,jdbcType=TIMESTAMP},
       notice_time = #{record.noticeTime,jdbcType=TIMESTAMP},
@@ -314,8 +314,8 @@
       <if test="fluctuationSpeedPercentage != null">
         fluctuation_speed_percentage = #{fluctuationSpeedPercentage,jdbcType=DECIMAL},
       </if>
-      <if test="email != null">
-        email = #{email,jdbcType=CHAR},
+      <if test="telegramChatPk != null">
+        telegram_chat_pk = #{telegramChatPk,jdbcType=CHAR},
       </if>
       <if test="noticeCount != null">
         notice_count = #{noticeCount,jdbcType=INTEGER},
@@ -344,7 +344,7 @@
       time_unit = #{timeUnit,jdbcType=INTEGER},
       time_range = #{timeRange,jdbcType=INTEGER},
       fluctuation_speed_percentage = #{fluctuationSpeedPercentage,jdbcType=DECIMAL},
-      email = #{email,jdbcType=CHAR},
+      telegram_chat_pk = #{telegramChatPk,jdbcType=CHAR},
       notice_count = #{noticeCount,jdbcType=INTEGER},
       valid_time = #{validTime,jdbcType=TIMESTAMP},
       notice_time = #{noticeTime,jdbcType=TIMESTAMP},

@@ -31,7 +31,6 @@ import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNotice;
 import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNoticeExample;
 import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNoticeExample.Criteria;
 import demo.finance.cryptoCoin.notice.service.CryptoCoinCommonNoticeService;
-import demo.tool.pojo.type.MailType;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
 @Service
@@ -60,6 +59,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.minute, TimeUnitType.hour, TimeUnitType.day,
 				TimeUnitType.week, TimeUnitType.month };
 		view.addObject("timeUnitType", timeUnitTypes);
+		view.addObject("chatVOList", telegramService.getChatIDList());
 		return view;
 	}
 
@@ -78,7 +78,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		newPO.setId(snowFlake.getNextId());
 		newPO.setCoinType(dto.getCoinType());
 		newPO.setCurrencyType(dto.getCurrencyType());
-		newPO.setEmail(dto.getEmail());
+		newPO.setTelegramChatPk(dto.getTelegramChatPK());
 		newPO.setNoticeCount(dto.getNoticeCount());
 		newPO.setMaxPrice(dto.getMaxPrice());
 		newPO.setMinPrice(dto.getMinPrice());
@@ -107,13 +107,13 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			dto.setNoticeCount(1);
 		}
 
-		if (coinType == null || currencyType == null) {
+		if (coinType == null || currencyType == null || dto.getTelegramChatPK() == null) {
 			r.failWithMessage("error param");
 			return r;
 		}
 
-		if (!validRegexToolService.validEmail(dto.getEmail())) {
-			r.failWithMessage("error email");
+		if(!telegramService.chatIdExists(dto.getTelegramChatPK())) {
+			r.failWithMessage("error chatPK");
 			return r;
 		}
 
@@ -269,13 +269,15 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		if (StringUtils.isNotBlank(content)
 //				&& !"dev".equals(constantService.getValByName("envName"))
 		) {
-			mailService.sendSimpleMail(noticeSetting.getEmail(), "价格提示", content, null, MailType.preciousMetalsNotice);
-			noticeSetting.setNoticeTime(LocalDateTime.now());
-			noticeSetting.setNoticeCount(noticeSetting.getNoticeCount() - 1);
-			if (noticeSetting.getNoticeCount() < 1) {
-				noticeSetting.setIsDelete(true);
+			CommonResult sendResult = telegramService.sendMessage(content, noticeSetting.getTelegramChatPk());
+			if(sendResult.isSuccess()) {
+				noticeSetting.setNoticeTime(LocalDateTime.now());
+				noticeSetting.setNoticeCount(noticeSetting.getNoticeCount() - 1);
+				if (noticeSetting.getNoticeCount() < 1) {
+					noticeSetting.setIsDelete(true);
+				}
+				noticeMapper.updateByPrimaryKeySelective(noticeSetting);
 			}
-			noticeMapper.updateByPrimaryKeySelective(noticeSetting);
 		}
 
 	}

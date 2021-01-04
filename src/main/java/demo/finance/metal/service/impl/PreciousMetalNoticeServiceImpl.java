@@ -14,10 +14,9 @@ import demo.finance.metal.mapper.MetalPriceNoticeMapper;
 import demo.finance.metal.pojo.dto.InsertNewMetalPriceNoticeSettingDTO;
 import demo.finance.metal.pojo.po.MetalPrice;
 import demo.finance.metal.pojo.po.MetalPriceExample;
-import demo.finance.metal.pojo.po.MetalPriceNotice;
 import demo.finance.metal.pojo.po.MetalPriceExample.Criteria;
+import demo.finance.metal.pojo.po.MetalPriceNotice;
 import demo.finance.metal.service.PreciousMetalNoticeService;
-import demo.tool.pojo.type.MailType;
 import finance.precious_metal.pojo.type.MetalType;
 import tool.pojo.type.UtilOfWeightType;
 
@@ -89,19 +88,25 @@ public class PreciousMetalNoticeServiceImpl extends PreciousMetalCommonService i
 		}
 
 		if (noticeFlag) {
-			if (!validRegexToolService.validEmail(noticeSetting.getEmail())) {
-				return;
-			}
-
-			String content = metalType.getName() + " price had reach " + lastPO.getPrice().divide(new BigDecimal(1000));
-			if (!"dev".equals(constantService.getValByName("envName"))) {
-				mailService.sendSimpleMail(noticeSetting.getEmail(), "价格提示", content, null,
-						MailType.preciousMetalsNotice);
-			}
-
-			noticeSetting.setNoticeTime(LocalDateTime.now());
-			noticeSetting.setIsDelete(true);
-			metalPriceNoticeMapper.updateByPrimaryKeySelective(noticeSetting);
+			/*
+			 * TODO
+			 * 2021-01-04
+			 * 准备迁移到 telegram 通知
+			 * 请参照 CryptoCoinCommonNoticeServiceImp.subNoticeHandler((CryptoCoinPriceNotice noticeSetting))
+			 */
+//			if (!validRegexToolService.validEmail(noticeSetting.getEmail())) {
+//				return;
+//			}
+//
+//			String content = metalType.getName() + " price had reach " + lastPO.getPrice().divide(new BigDecimal(1000));
+//			if (!"dev".equals(constantService.getValByName("envName"))) {
+//				mailService.sendSimpleMail(noticeSetting.getEmail(), "价格提示", content, null,
+//						MailType.preciousMetalsNotice);
+//			}
+//
+//			noticeSetting.setNoticeTime(LocalDateTime.now());
+//			noticeSetting.setIsDelete(true);
+//			metalPriceNoticeMapper.updateByPrimaryKeySelective(noticeSetting);
 		}
 	}
 

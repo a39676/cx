@@ -7,11 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import demo.common.service.CommonService;
 import demo.tool.service.MailService;
 import demo.tool.service.ValidRegexToolService;
+import demo.tool.telegram.service.TelegramService;
 
 public abstract class FinanceCommonService extends CommonService {
 	
 	@Autowired
 	protected MailService mailService;
+	@Autowired
+	protected TelegramService telegramService;
 	@Autowired
 	protected ValidRegexToolService validRegexToolService;
 

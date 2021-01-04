@@ -20,7 +20,7 @@ public class CryptoCoinPriceNotice {
 
     private BigDecimal fluctuationSpeedPercentage;
 
-    private String email;
+    private String telegramChatPk;
 
     private Integer noticeCount;
 
@@ -96,12 +96,12 @@ public class CryptoCoinPriceNotice {
         this.fluctuationSpeedPercentage = fluctuationSpeedPercentage;
     }
 
-    public String getEmail() {
-        return email;
+    public String getTelegramChatPk() {
+        return telegramChatPk;
     }
 
-    public void setEmail(String email) {
-        this.email = email == null ? null : email.trim();
+    public void setTelegramChatPk(String telegramChatPk) {
+        this.telegramChatPk = telegramChatPk == null ? null : telegramChatPk.trim();
     }
 
     public Integer getNoticeCount() {

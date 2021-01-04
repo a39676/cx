@@ -586,73 +586,73 @@ public class CryptoCoinPriceNoticeExample {
             return (Criteria) this;
         }
 
-        public Criteria andEmailIsNull() {
-            addCriterion("email is null");
+        public Criteria andTelegramChatPkIsNull() {
+            addCriterion("telegram_chat_pk is null");
             return (Criteria) this;
         }
 
-        public Criteria andEmailIsNotNull() {
-            addCriterion("email is not null");
+        public Criteria andTelegramChatPkIsNotNull() {
+            addCriterion("telegram_chat_pk is not null");
             return (Criteria) this;
         }
 
-        public Criteria andEmailEqualTo(String value) {
-            addCriterion("email =", value, "email");
+        public Criteria andTelegramChatPkEqualTo(String value) {
+            addCriterion("telegram_chat_pk =", value, "telegramChatPk");
             return (Criteria) this;
         }
 
-        public Criteria andEmailNotEqualTo(String value) {
-            addCriterion("email <>", value, "email");
+        public Criteria andTelegramChatPkNotEqualTo(String value) {
+            addCriterion("telegram_chat_pk <>", value, "telegramChatPk");
             return (Criteria) this;
         }
 
-        public Criteria andEmailGreaterThan(String value) {
-            addCriterion("email >", value, "email");
+        public Criteria andTelegramChatPkGreaterThan(String value) {
+            addCriterion("telegram_chat_pk >", value, "telegramChatPk");
             return (Criteria) this;
         }
 
-        public Criteria andEmailGreaterThanOrEqualTo(String value) {
-            addCriterion("email >=", value, "email");
+        public Criteria andTelegramChatPkGreaterThanOrEqualTo(String value) {
+            addCriterion("telegram_chat_pk >=", value, "telegramChatPk");
             return (Criteria) this;
         }
 
-        public Criteria andEmailLessThan(String value) {
-            addCriterion("email <", value, "email");
+        public Criteria andTelegramChatPkLessThan(String value) {
+            addCriterion("telegram_chat_pk <", value, "telegramChatPk");
             return (Criteria) this;
         }
 
-        public Criteria andEmailLessThanOrEqualTo(String value) {
-            addCriterion("email <=", value, "email");
+        public Criteria andTelegramChatPkLessThanOrEqualTo(String value) {
+            addCriterion("telegram_chat_pk <=", value, "telegramChatPk");
             return (Criteria) this;
         }
 
-        public Criteria andEmailLike(String value) {
-            addCriterion("email like", value, "email");
+        public Criteria andTelegramChatPkLike(String value) {
+            addCriterion("telegram_chat_pk like", value, "telegramChatPk");
             return (Criteria) this;
         }
 
-        public Criteria andEmailNotLike(String value) {
-            addCriterion("email not like", value, "email");
+        public Criteria andTelegramChatPkNotLike(String value) {
+            addCriterion("telegram_chat_pk not like", value, "telegramChatPk");
             return (Criteria) this;
         }
 
-        public Criteria andEmailIn(List<String> values) {
-            addCriterion("email in", values, "email");
+        public Criteria andTelegramChatPkIn(List<String> values) {
+            addCriterion("telegram_chat_pk in", values, "telegramChatPk");
             return (Criteria) this;
         }
 
-        public Criteria andEmailNotIn(List<String> values) {
-            addCriterion("email not in", values, "email");
+        public Criteria andTelegramChatPkNotIn(List<String> values) {
+            addCriterion("telegram_chat_pk not in", values, "telegramChatPk");
             return (Criteria) this;
         }
 
-        public Criteria andEmailBetween(String value1, String value2) {
-            addCriterion("email between", value1, value2, "email");
+        public Criteria andTelegramChatPkBetween(String value1, String value2) {
+            addCriterion("telegram_chat_pk between", value1, value2, "telegramChatPk");
             return (Criteria) this;
         }
 
-        public Criteria andEmailNotBetween(String value1, String value2) {
-            addCriterion("email not between", value1, value2, "email");
+        public Criteria andTelegramChatPkNotBetween(String value1, String value2) {
+            addCriterion("telegram_chat_pk not between", value1, value2, "telegramChatPk");
             return (Criteria) this;
         }
 

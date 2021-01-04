@@ -41,7 +41,7 @@ endpoints:
     enabled: true
     
 logging:
-  level:
+  level: 
     org.springframework.web: DEBUG
     # demo.test.controller: DEBUG
     demo.test.mapper: DEBUG

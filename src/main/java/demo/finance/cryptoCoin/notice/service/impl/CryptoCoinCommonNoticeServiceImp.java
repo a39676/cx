@@ -245,7 +245,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 				nextNoticeTime = noticeSetting.getNoticeTime().plusMonths(noticeSetting.getTimeRange());
 			}
 			
-			if (nextNoticeTime.isBefore(LocalDateTime.now())) {
+			if (nextNoticeTime.isAfter(LocalDateTime.now())) {
 				return;
 			}
 		}
@@ -270,7 +270,6 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 //				&& !"dev".equals(constantService.getValByName("envName"))
 		) {
 			CommonResult sendResult = telegramService.sendMessage(content, noticeSetting.getTelegramChatPk());
-			log.error("telegram send result: " + sendResult.getMessage());
 			if(sendResult.isSuccess()) {
 				noticeSetting.setNoticeTime(LocalDateTime.now());
 				noticeSetting.setNoticeCount(noticeSetting.getNoticeCount() - 1);

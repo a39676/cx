@@ -269,6 +269,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		if (StringUtils.isNotBlank(content)
 //				&& !"dev".equals(constantService.getValByName("envName"))
 		) {
+			log.debug("before telegram send");
 			CommonResult sendResult = telegramService.sendMessage(content, noticeSetting.getTelegramChatPk());
 			log.debug("telegram send result: " + sendResult.getMessage());
 			if(sendResult.isSuccess()) {

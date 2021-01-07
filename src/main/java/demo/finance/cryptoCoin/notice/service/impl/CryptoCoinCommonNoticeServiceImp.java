@@ -309,6 +309,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			r.addMessage(maxMinPriceResult.getMessage());
 			return r;
 		}
+		
+		log.error(maxMinPriceResult.toString());
 
 		BigDecimal lastMaxPrice = maxMinPriceResult.getMaxPrice();
 		BigDecimal lastMinPrice = maxMinPriceResult.getMinPrice();

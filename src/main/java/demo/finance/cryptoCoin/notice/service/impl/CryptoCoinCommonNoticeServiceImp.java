@@ -112,7 +112,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			return r;
 		}
 
-		if(!telegramService.chatIdExists(dto.getTelegramChatPK())) {
+		if (!telegramService.chatIdExists(dto.getTelegramChatPK())) {
 			r.failWithMessage("error chatPK");
 			return r;
 		}
@@ -220,6 +220,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	}
 
 	private void subNoticeHandler(CryptoCoinPriceNotice noticeSetting) {
+		log.error("crypto coin notice in sub handler: " + noticeSetting.getId());
 		CryptoCoinType coinType = CryptoCoinType.getType(noticeSetting.getCoinType());
 		if (coinType == null) {
 			return;
@@ -232,6 +233,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		TimeUnitType timeUnitType = TimeUnitType.getType(noticeSetting.getTimeUnit());
 		if (timeUnitType != null && noticeSetting.getTimeRange() != null && noticeSetting.getNoticeTime() != null) {
+			log.error("time unit type is not null");
 			LocalDateTime nextNoticeTime = null;
 			if (timeUnitType.equals(TimeUnitType.minute)) {
 				nextNoticeTime = noticeSetting.getNoticeTime().plusMinutes(noticeSetting.getTimeRange());
@@ -244,42 +246,49 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			} else if (timeUnitType.equals(TimeUnitType.month)) {
 				nextNoticeTime = noticeSetting.getNoticeTime().plusMonths(noticeSetting.getTimeRange());
 			}
-			
+
 			if (nextNoticeTime.isAfter(LocalDateTime.now())) {
+				log.error("未到下次提醒时间, " + noticeSetting.getNoticeTime() + ", " + noticeSetting.getId());
 				return;
 			}
 		}
 
-
 		String content = "";
 		CommonResult handleResult = null;
 		if (priceConditionHadSet(noticeSetting)) {
+			log.error("有设置价格上下限提醒: " + noticeSetting.getId());
 			handleResult = priceConditionNoticeHandle(noticeSetting, coinType, currencyType);
 			if (handleResult.isSuccess()) {
 				content += handleResult.getMessage();
 			}
 		}
 		if (priceFluctuationSpeedConditionHadSet(noticeSetting)) {
+			log.error("有设置价格幅度限提醒: " + noticeSetting.getId());
 			handleResult = priceFluctuationSpeedNoticeHandle(noticeSetting, coinType, currencyType);
 			if (handleResult.isSuccess()) {
 				content += handleResult.getMessage();
 			}
 		}
 
-		if (StringUtils.isNotBlank(content)
-//				&& !"dev".equals(constantService.getValByName("envName"))
-		) {
+		if(handleResult.isSuccess()) {
+			log.error("命中提醒条件" + noticeSetting.getId());
+			if(StringUtils.isBlank(handleResult.getMessage())) {
+				log.error("but content is null");
+			}
+		}
+		
+		if (StringUtils.isNotBlank(content)) {
 			log.debug("before telegram send");
 			CommonResult sendResult = telegramService.sendMessage(content, noticeSetting.getTelegramChatPk());
 			log.debug("telegram send result: " + sendResult.getMessage());
-			if(sendResult.isSuccess()) {
+			if (sendResult.isSuccess()) {
 				noticeSetting.setNoticeTime(LocalDateTime.now());
 				noticeSetting.setNoticeCount(noticeSetting.getNoticeCount() - 1);
 				if (noticeSetting.getNoticeCount() < 1) {
 					noticeSetting.setIsDelete(true);
 				}
 				noticeMapper.updateByPrimaryKeySelective(noticeSetting);
-	
+
 			}
 		}
 
@@ -311,7 +320,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 						+ " at: " + maxMinPriceResult.getMaxPriceDateTime() + ";";
 			}
 
-		} 
+		}
 		if (noticeSetting.getMinPrice() != null) {
 			if (lastMinPrice.compareTo(noticeSetting.getMinPrice()) <= 0) {
 				content = coinType.getName() + ", " + currencyType + ", " + " price(range) had reach " + lastMinPrice
@@ -361,17 +370,15 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 //			String pattern = "虚拟币名, 标价货币名, 最近 x 小时/分钟, 升幅达 %s, 
 //			%s时触及最低价 %s, %s时触及最高价 %s, 最新价为 %s";
 			String pattern = "%s, %s, 最近 %s %s, 升幅达 %s%, %s时触及低价 %s, %s时触及高价 %s, 最新价为 %s";
-			content = String.format(pattern, coinType.getName(), currencyType,
-					noticeSetting.getTimeRange(), TimeUnitType.getType(noticeSetting.getTimeUnit()).getCnName(), String.valueOf(trigerPercentage),
-					maxMinPriceResult.getMinPriceDateTime(), lastMin,
-					maxMinPriceResult.getMaxPriceDateTime(), lastMax, 
+			content = String.format(pattern, coinType.getName(), currencyType, noticeSetting.getTimeRange(),
+					TimeUnitType.getType(noticeSetting.getTimeUnit()).getCnName(), String.valueOf(trigerPercentage),
+					maxMinPriceResult.getMinPriceDateTime(), lastMin, maxMinPriceResult.getMaxPriceDateTime(), lastMax,
 					historyPOList.get(0).getEndPrice());
 		} else if (trigerPercentage < 0 && lowApmlitude <= trigerPercentage) {
 			String pattern = "%s, %s, 最近 %s %s, 跌幅达 %s%, %s时触及高价 %s, %s时触及低价 %s, 最新价为 %s";
-			content = String.format(pattern, coinType.getName(), currencyType,
-					noticeSetting.getTimeRange(), TimeUnitType.getType(noticeSetting.getTimeUnit()).getCnName(), String.valueOf(trigerPercentage),
-					maxMinPriceResult.getMaxPriceDateTime(), lastMax, 
-					maxMinPriceResult.getMinPriceDateTime(), lastMin,
+			content = String.format(pattern, coinType.getName(), currencyType, noticeSetting.getTimeRange(),
+					TimeUnitType.getType(noticeSetting.getTimeUnit()).getCnName(), String.valueOf(trigerPercentage),
+					maxMinPriceResult.getMaxPriceDateTime(), lastMax, maxMinPriceResult.getMinPriceDateTime(), lastMin,
 					historyPOList.get(0).getEndPrice());
 		}
 

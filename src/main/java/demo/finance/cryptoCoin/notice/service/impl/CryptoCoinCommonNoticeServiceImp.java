@@ -220,7 +220,6 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	}
 
 	private void subNoticeHandler(CryptoCoinPriceNotice noticeSetting) {
-		log.error("crypto coin notice in sub handler: " + noticeSetting.getId());
 		CryptoCoinType coinType = CryptoCoinType.getType(noticeSetting.getCoinType());
 		if (coinType == null) {
 			return;
@@ -233,7 +232,6 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		TimeUnitType timeUnitType = TimeUnitType.getType(noticeSetting.getTimeUnit());
 		if (timeUnitType != null && noticeSetting.getTimeRange() != null && noticeSetting.getNoticeTime() != null) {
-			log.error("time unit type is not null");
 			LocalDateTime nextNoticeTime = null;
 			if (timeUnitType.equals(TimeUnitType.minute)) {
 				nextNoticeTime = noticeSetting.getNoticeTime().plusMinutes(noticeSetting.getTimeRange());
@@ -248,7 +246,6 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			}
 
 			if (nextNoticeTime.isAfter(LocalDateTime.now())) {
-				log.error("未到下次提醒时间, " + noticeSetting.getNoticeTime() + ", " + noticeSetting.getId());
 				return;
 			}
 		}
@@ -256,31 +253,21 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		String content = "";
 		CommonResult handleResult = null;
 		if (priceConditionHadSet(noticeSetting)) {
-			log.error("有设置价格上下限提醒: " + noticeSetting.getId());
 			handleResult = priceConditionNoticeHandle(noticeSetting, coinType, currencyType);
 			if (handleResult.isSuccess()) {
 				content += handleResult.getMessage();
 			}
 		}
 		if (priceFluctuationSpeedConditionHadSet(noticeSetting)) {
-			log.error("有设置价格幅度限提醒: " + noticeSetting.getId());
 			handleResult = priceFluctuationSpeedNoticeHandle(noticeSetting, coinType, currencyType);
 			if (handleResult.isSuccess()) {
 				content += handleResult.getMessage();
 			}
 		}
 
-		if(handleResult.isSuccess()) {
-			log.error("命中提醒条件" + noticeSetting.getId());
-			if(StringUtils.isBlank(handleResult.getMessage())) {
-				log.error("but content is null");
-			}
-		}
 		
 		if (StringUtils.isNotBlank(content)) {
-			log.debug("before telegram send");
 			CommonResult sendResult = telegramService.sendMessage(content, noticeSetting.getTelegramChatPk());
-			log.debug("telegram send result: " + sendResult.getMessage());
 			if (sendResult.isSuccess()) {
 				noticeSetting.setNoticeTime(LocalDateTime.now());
 				noticeSetting.setNoticeCount(noticeSetting.getNoticeCount() - 1);
@@ -288,7 +275,6 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 					noticeSetting.setIsDelete(true);
 				}
 				noticeMapper.updateByPrimaryKeySelective(noticeSetting);
-
 			}
 		}
 
@@ -297,14 +283,10 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	private CommonResult priceConditionNoticeHandle(CryptoCoinPriceNotice noticeSetting, CryptoCoinType coinType,
 			CurrencyType currencyType) {
 		CommonResult r = new CommonResult();
-		
-		log.error(noticeSetting.getId() + ", handling notice");
-		
 		List<CryptoCoinPriceCommonDataBO> historyPOList = _1MinuteDataSummaryService.getCommonData(coinType,
-				currencyType, LocalDateTime.now().withSecond(0).withNano(0).minusMinutes(1));
+				currencyType, LocalDateTime.now().minusMinutes(2));
 
 		if (historyPOList == null || historyPOList.isEmpty()) {
-			log.error("can not find any data;");
 			return r;
 		}
 
@@ -314,8 +296,6 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			return r;
 		}
 		
-		log.error(maxMinPriceResult.toString());
-
 		BigDecimal lastMaxPrice = maxMinPriceResult.getMaxPrice();
 		BigDecimal lastMinPrice = maxMinPriceResult.getMinPrice();
 		String content = null;

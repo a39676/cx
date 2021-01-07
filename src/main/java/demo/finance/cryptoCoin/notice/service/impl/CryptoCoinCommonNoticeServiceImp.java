@@ -297,10 +297,14 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	private CommonResult priceConditionNoticeHandle(CryptoCoinPriceNotice noticeSetting, CryptoCoinType coinType,
 			CurrencyType currencyType) {
 		CommonResult r = new CommonResult();
+		
+		log.error(noticeSetting.getId() + ", handling notice");
+		
 		List<CryptoCoinPriceCommonDataBO> historyPOList = _1MinuteDataSummaryService.getCommonData(coinType,
-				currencyType, LocalDateTime.now().minusMinutes(1));
+				currencyType, LocalDateTime.now().withSecond(0).withNano(0).minusMinutes(1));
 
 		if (historyPOList == null || historyPOList.isEmpty()) {
+			log.error("can not find any data;");
 			return r;
 		}
 

@@ -82,7 +82,7 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 		} catch (UnsupportedEncodingException e1) {
 			msg = "msg trans error";
 		}
-		if(msg.length() > 256) {
+		if(msg.length() > 512) {
 			r.failWithMessage("msg too long");
 			return r;
 		}

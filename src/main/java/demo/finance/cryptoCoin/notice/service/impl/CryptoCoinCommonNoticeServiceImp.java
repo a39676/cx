@@ -357,7 +357,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 //			%s时触及最低价 %s, %s时触及最高价 %s, 最新价为 %s";
 			content = coinType.getName() + ", " + currencyType.getName() + ", "
 					+ "最近" + noticeSetting.getTimeRange() + TimeUnitType.getType(noticeSetting.getTimeUnit()).getCnName() + ", "
-					+ "升幅达 " + trigerPercentage + ", "
+					+ "升幅达 " + upApmlitude + ", "
 					+ maxMinPriceResult.getMinPriceDateTime() + " 时触及低价: " + lastMin + ", "
 					+ maxMinPriceResult.getMaxPriceDateTime() + " 时触及高价: " + lastMax + ", "
 					+ "最新价: " + historyPOList.get(0).getEndPrice()
@@ -365,7 +365,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		} else if (trigerPercentage < 0 && lowApmlitude <= trigerPercentage) {
 			content = coinType.getName() + ", " + currencyType.getName() + ", "
 					+ "最近" + noticeSetting.getTimeRange() + TimeUnitType.getType(noticeSetting.getTimeUnit()).getCnName() + ", "
-					+ "跌幅达 " + trigerPercentage + ", "
+					+ "跌幅达 " + lowApmlitude + ", "
 					+ maxMinPriceResult.getMaxPriceDateTime() + " 时触及高价: " + lastMax + ", "
 					+ maxMinPriceResult.getMinPriceDateTime() + " 时触及低价: " + lastMin + ", "
 					+ "最新价: " + historyPOList.get(0).getEndPrice()

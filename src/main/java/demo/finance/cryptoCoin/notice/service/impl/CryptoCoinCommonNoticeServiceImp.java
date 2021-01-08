@@ -355,13 +355,13 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		if (upApmlitude >= trigerPercentage) {
 //			String pattern = "虚拟币名, 标价货币名, 最近 x 小时/分钟, 升幅达 %s, 
 //			%s时触及最低价 %s, %s时触及最高价 %s, 最新价为 %s";
-			String pattern = "%s, %s, 最近 %s %s, 升幅达 %s%, %s时触及低价 %s, %s时触及高价 %s, 最新价为 %s";
+			String pattern = "%s, %s, 最近 %s %s, 升幅达 %s, %s时触及低价 %s, %s时触及高价 %s, 最新价为 %s";
 			content = String.format(pattern, coinType.getName(), currencyType.getName(), noticeSetting.getTimeRange(),
 					TimeUnitType.getType(noticeSetting.getTimeUnit()).getCnName(), String.valueOf(trigerPercentage),
 					maxMinPriceResult.getMinPriceDateTime(), lastMin, maxMinPriceResult.getMaxPriceDateTime(), lastMax,
 					historyPOList.get(0).getEndPrice());
 		} else if (trigerPercentage < 0 && lowApmlitude <= trigerPercentage) {
-			String pattern = "%s, %s, 最近 %s %s, 跌幅达 %s%, %s时触及高价 %s, %s时触及低价 %s, 最新价为 %s";
+			String pattern = "%s, %s, 最近 %s %s, 跌幅达 %s, %s时触及高价 %s, %s时触及低价 %s, 最新价为 %s";
 			content = String.format(pattern, coinType.getName(), currencyType.getName(), noticeSetting.getTimeRange(),
 					TimeUnitType.getType(noticeSetting.getTimeUnit()).getCnName(), String.valueOf(trigerPercentage),
 					maxMinPriceResult.getMaxPriceDateTime(), lastMax, maxMinPriceResult.getMinPriceDateTime(), lastMin,

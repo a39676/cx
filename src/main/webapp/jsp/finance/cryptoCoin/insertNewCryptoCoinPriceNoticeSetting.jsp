@@ -66,6 +66,10 @@
 </div>
 
 <div class="row">
+  <input type="Date" id="noticeStartDate"><input type="Time" id="noticeStartTime" value="00:00">
+</div>
+
+<div class="row">
   <input type="number" id="noticeCount" placeholder="提醒次数">
 </div>
 
@@ -86,6 +90,9 @@
   <script type="text/javascript">
 
     $(document).ready(function() {
+
+      document.getElementById('noticeStartDate').valueAsDate = new Date();
+      document.getElementById('validTime').valueAsDate = new Date();
 
       $("#insert").click(function () {
         insertCryptoCoinNoticeSetting();
@@ -114,6 +121,8 @@
         var telegramChatPK = $("#telegramChatPK option:selected").val();
         var validTime = $("#validTime").val();
 
+        var startNoticeTime = $("#noticeStartDate").val() + " " + $("#noticeStartTime").val();
+
         var noticeCount = $("#noticeCount").val();
 
         var jsonOutput = {
@@ -131,6 +140,7 @@
           telegramChatPK : telegramChatPK,
           noticeCount : noticeCount,
           validTime : validTime,
+          startNoticeTime : startNoticeTime,
         };
 
         $.ajax({  

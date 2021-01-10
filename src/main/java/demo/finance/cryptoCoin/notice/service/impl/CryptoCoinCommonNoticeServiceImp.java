@@ -91,6 +91,10 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		newPO.setTimeRangeOfNoticeInterval(dto.getTimeRangeOfNoticeInterval());
 		newPO.setValidTime(checkResult.getValidTime());
 		newPO.setCreateTime(LocalDateTime.now());
+		try {
+			newPO.setNextNoticeTime(localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getStartNoticeTime()));
+		} catch (Exception e) {
+		}
 		int count = noticeMapper.insertSelective(newPO);
 
 		if (count > 0) {
@@ -151,7 +155,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		}
 
 		LocalDateTime validDate = null;
-		if (dto.getValidTime() == null) {
+		if (StringUtils.isBlank(dto.getValidTime())) {
 			validDate = LocalDateTime.now().plusMonths(6);
 		} else {
 			if (!dateHandler.isDateValid(dto.getValidTime())) {
@@ -168,7 +172,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 				return r;
 			}
 		}
-
+		
 		r.setValidTime(validDate);
 		r.setIsSuccess();
 		return r;
@@ -246,9 +250,10 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		/*
 		 * if it is REUSE notice, notice count should > 1, event in last round, notice time will not be null
 		 */
+		LocalDateTime nextNoticeTime = null;
 		if(noticeSetting.getNoticeTime() != null && noticeSetting.getNoticeCount() > 1) {
 			TimeUnitType timeUnitTypeOfNoticeInterval = TimeUnitType.getType(noticeSetting.getTimeUnitOfNoticeInterval());
-			LocalDateTime nextNoticeTime = getNextSettingTime(noticeSetting.getNoticeTime(), timeUnitTypeOfNoticeInterval, noticeSetting.getTimeRangeOfNoticeInterval().longValue());
+			nextNoticeTime = getNextSettingTime(noticeSetting.getNoticeTime(), timeUnitTypeOfNoticeInterval, noticeSetting.getTimeRangeOfNoticeInterval().longValue());
 			if (nextNoticeTime == null || nextNoticeTime.isAfter(LocalDateTime.now())) {
 				r.failWithMessage("get next notice time error");
 				return r;
@@ -277,6 +282,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 				noticeSetting.setNoticeCount(noticeSetting.getNoticeCount() - 1);
 				if (noticeSetting.getNoticeCount() < 1) {
 					noticeSetting.setIsDelete(true);
+				} else {
+					noticeSetting.setNextNoticeTime(nextNoticeTime);
 				}
 				noticeMapper.updateByPrimaryKeySelective(noticeSetting);
 				r.successWithMessage("notice sended");

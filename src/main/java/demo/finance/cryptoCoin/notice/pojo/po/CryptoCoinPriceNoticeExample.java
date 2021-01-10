@@ -956,6 +956,66 @@ public class CryptoCoinPriceNoticeExample {
             return (Criteria) this;
         }
 
+        public Criteria andNextNoticeTimeIsNull() {
+            addCriterion("next_notice_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andNextNoticeTimeIsNotNull() {
+            addCriterion("next_notice_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andNextNoticeTimeEqualTo(LocalDateTime value) {
+            addCriterion("next_notice_time =", value, "nextNoticeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andNextNoticeTimeNotEqualTo(LocalDateTime value) {
+            addCriterion("next_notice_time <>", value, "nextNoticeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andNextNoticeTimeGreaterThan(LocalDateTime value) {
+            addCriterion("next_notice_time >", value, "nextNoticeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andNextNoticeTimeGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("next_notice_time >=", value, "nextNoticeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andNextNoticeTimeLessThan(LocalDateTime value) {
+            addCriterion("next_notice_time <", value, "nextNoticeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andNextNoticeTimeLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("next_notice_time <=", value, "nextNoticeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andNextNoticeTimeIn(List<LocalDateTime> values) {
+            addCriterion("next_notice_time in", values, "nextNoticeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andNextNoticeTimeNotIn(List<LocalDateTime> values) {
+            addCriterion("next_notice_time not in", values, "nextNoticeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andNextNoticeTimeBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("next_notice_time between", value1, value2, "nextNoticeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andNextNoticeTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("next_notice_time not between", value1, value2, "nextNoticeTime");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateTimeIsNull() {
             addCriterion("create_time is null");
             return (Criteria) this;

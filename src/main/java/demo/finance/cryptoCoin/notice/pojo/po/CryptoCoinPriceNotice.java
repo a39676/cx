@@ -32,6 +32,8 @@ public class CryptoCoinPriceNotice {
 
     private LocalDateTime noticeTime;
 
+    private LocalDateTime nextNoticeTime;
+
     private LocalDateTime createTime;
 
     private Boolean isDelete;
@@ -146,6 +148,14 @@ public class CryptoCoinPriceNotice {
 
     public void setNoticeTime(LocalDateTime noticeTime) {
         this.noticeTime = noticeTime;
+    }
+
+    public LocalDateTime getNextNoticeTime() {
+        return nextNoticeTime;
+    }
+
+    public void setNextNoticeTime(LocalDateTime nextNoticeTime) {
+        this.nextNoticeTime = nextNoticeTime;
     }
 
     public LocalDateTime getCreateTime() {

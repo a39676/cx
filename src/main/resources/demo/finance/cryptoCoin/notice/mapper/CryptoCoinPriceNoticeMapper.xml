@@ -16,6 +16,7 @@
     <result column="time_range_of_notice_interval" jdbcType="INTEGER" property="timeRangeOfNoticeInterval" />
     <result column="valid_time" jdbcType="TIMESTAMP" property="validTime" />
     <result column="notice_time" jdbcType="TIMESTAMP" property="noticeTime" />
+    <result column="next_notice_time" jdbcType="TIMESTAMP" property="nextNoticeTime" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
   </resultMap>
@@ -80,7 +81,8 @@
   <sql id="Base_Column_List">
     id, coin_type, currency_type, max_price, min_price, time_unit_of_data_watch, time_range_of_data_watch, 
     fluctuation_speed_percentage, telegram_chat_pk, notice_count, time_unit_of_notice_interval, 
-    time_range_of_notice_interval, valid_time, notice_time, create_time, is_delete
+    time_range_of_notice_interval, valid_time, notice_time, next_notice_time, create_time, 
+    is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNoticeExample" resultMap="BaseResultMap">
     select
@@ -118,15 +120,15 @@
       time_range_of_data_watch, fluctuation_speed_percentage, 
       telegram_chat_pk, notice_count, time_unit_of_notice_interval, 
       time_range_of_notice_interval, valid_time, 
-      notice_time, create_time, is_delete
-      )
+      notice_time, next_notice_time, create_time, 
+      is_delete)
     values (#{id,jdbcType=BIGINT}, #{coinType,jdbcType=INTEGER}, #{currencyType,jdbcType=INTEGER}, 
       #{maxPrice,jdbcType=DECIMAL}, #{minPrice,jdbcType=DECIMAL}, #{timeUnitOfDataWatch,jdbcType=INTEGER}, 
       #{timeRangeOfDataWatch,jdbcType=INTEGER}, #{fluctuationSpeedPercentage,jdbcType=DECIMAL}, 
       #{telegramChatPk,jdbcType=CHAR}, #{noticeCount,jdbcType=INTEGER}, #{timeUnitOfNoticeInterval,jdbcType=INTEGER}, 
       #{timeRangeOfNoticeInterval,jdbcType=INTEGER}, #{validTime,jdbcType=TIMESTAMP}, 
-      #{noticeTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
-      )
+      #{noticeTime,jdbcType=TIMESTAMP}, #{nextNoticeTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{isDelete,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNotice">
     insert into crypto_coin_price_notice
@@ -172,6 +174,9 @@
       </if>
       <if test="noticeTime != null">
         notice_time,
+      </if>
+      <if test="nextNoticeTime != null">
+        next_notice_time,
       </if>
       <if test="createTime != null">
         create_time,
@@ -222,6 +227,9 @@
       </if>
       <if test="noticeTime != null">
         #{noticeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="nextNoticeTime != null">
+        #{nextNoticeTime,jdbcType=TIMESTAMP},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -282,6 +290,9 @@
       <if test="record.noticeTime != null">
         notice_time = #{record.noticeTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.nextNoticeTime != null">
+        next_notice_time = #{record.nextNoticeTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -309,6 +320,7 @@
       time_range_of_notice_interval = #{record.timeRangeOfNoticeInterval,jdbcType=INTEGER},
       valid_time = #{record.validTime,jdbcType=TIMESTAMP},
       notice_time = #{record.noticeTime,jdbcType=TIMESTAMP},
+      next_notice_time = #{record.nextNoticeTime,jdbcType=TIMESTAMP},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       is_delete = #{record.isDelete,jdbcType=BIT}
     <if test="_parameter != null">
@@ -357,6 +369,9 @@
       <if test="noticeTime != null">
         notice_time = #{noticeTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="nextNoticeTime != null">
+        next_notice_time = #{nextNoticeTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -381,6 +396,7 @@
       time_range_of_notice_interval = #{timeRangeOfNoticeInterval,jdbcType=INTEGER},
       valid_time = #{validTime,jdbcType=TIMESTAMP},
       notice_time = #{noticeTime,jdbcType=TIMESTAMP},
+      next_notice_time = #{nextNoticeTime,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       is_delete = #{isDelete,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
@@ -399,7 +415,6 @@
       order by ${orderByClause}
     </if>
   </select>
-
   <select id="selectValidNoticeSetting" resultMap="BaseResultMap">
     select
       *
@@ -410,6 +425,7 @@
       and is_delete = false
       and notice_count &gt; 0
       and valid_time &gt;= #{now}
+      and next_notice_time &lt;= #{now} 
     </where>
   </select>
 </mapper>

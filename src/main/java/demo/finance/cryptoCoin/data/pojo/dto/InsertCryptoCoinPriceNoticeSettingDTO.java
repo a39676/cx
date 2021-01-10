@@ -55,6 +55,8 @@ public class InsertCryptoCoinPriceNoticeSettingDTO {
 
 	private String validTime;
 
+	private String startNoticeTime;
+
 	public Integer getCoinType() {
 		return coinType;
 	}
@@ -175,6 +177,14 @@ public class InsertCryptoCoinPriceNoticeSettingDTO {
 		this.timeRangeOfNoticeInterval = timeRangeOfNoticeInterval;
 	}
 
+	public String getStartNoticeTime() {
+		return startNoticeTime;
+	}
+
+	public void setStartNoticeTime(String startNoticeTime) {
+		this.startNoticeTime = startNoticeTime;
+	}
+
 	@Override
 	public String toString() {
 		return "InsertCryptoCoinPriceNoticeSettingDTO [coinType=" + coinType + ", currencyType=" + currencyType
@@ -184,7 +194,7 @@ public class InsertCryptoCoinPriceNoticeSettingDTO {
 				+ timeUnitOfNoticeInterval + ", timeRangeOfNoticeInterval=" + timeRangeOfNoticeInterval
 				+ ", priceRange=" + priceRange + ", fluctuationSpeedPercentage=" + fluctuationSpeedPercentage
 				+ ", telegramChatPK=" + telegramChatPK + ", noticeCount=" + noticeCount + ", validTime=" + validTime
-				+ "]";
+				+ ", startNoticeTime=" + startNoticeTime + "]";
 	}
 
 }

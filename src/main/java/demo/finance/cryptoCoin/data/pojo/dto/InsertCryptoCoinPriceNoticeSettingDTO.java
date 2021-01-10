@@ -26,9 +26,16 @@ public class InsertCryptoCoinPriceNoticeSettingDTO {
 	/**
 	 * 时间单位设定 {@link TimeUnitType}
 	 */
-	private Integer timeUnit;
+	private Integer timeUnitOfDataWatch;
 
-	private Integer timeRange;
+	private Integer timeRangeOfDataWatch;
+
+	/**
+	 * 时间单位设定 {@link TimeUnitType}
+	 */
+	private Integer timeUnitOfNoticeInterval;
+
+	private Integer timeRangeOfNoticeInterval;
 
 	/**
 	 * 用于条件: n个时间单位内波动幅度超过 m%的条件设定 触发例: 最新价 = x, n(分钟)前收盘价 = o, 如果 x > o * (1 + m%)
@@ -96,12 +103,12 @@ public class InsertCryptoCoinPriceNoticeSettingDTO {
 		this.pricePercentage = pricePercentage;
 	}
 
-	public Integer getTimeUnit() {
-		return timeUnit;
+	public Integer getTimeUnitOfDataWatch() {
+		return timeUnitOfDataWatch;
 	}
 
-	public void setTimeUnit(Integer timeUnit) {
-		this.timeUnit = timeUnit;
+	public void setTimeUnitOfDataWatch(Integer timeUnitOfDataWatch) {
+		this.timeUnitOfDataWatch = timeUnitOfDataWatch;
 	}
 
 	public Integer getPriceRange() {
@@ -128,12 +135,12 @@ public class InsertCryptoCoinPriceNoticeSettingDTO {
 		this.validTime = validTime;
 	}
 
-	public Integer getTimeRange() {
-		return timeRange;
+	public Integer getTimeRangeOfDataWatch() {
+		return timeRangeOfDataWatch;
 	}
 
-	public void setTimeRange(Integer timeRange) {
-		this.timeRange = timeRange;
+	public void setTimeRangeOfDataWatch(Integer timeRangeOfDataWatch) {
+		this.timeRangeOfDataWatch = timeRangeOfDataWatch;
 	}
 
 	public Integer getNoticeCount() {
@@ -152,11 +159,29 @@ public class InsertCryptoCoinPriceNoticeSettingDTO {
 		this.telegramChatPK = telegramChatPK;
 	}
 
+	public Integer getTimeUnitOfNoticeInterval() {
+		return timeUnitOfNoticeInterval;
+	}
+
+	public void setTimeUnitOfNoticeInterval(Integer timeUnitOfNoticeInterval) {
+		this.timeUnitOfNoticeInterval = timeUnitOfNoticeInterval;
+	}
+
+	public Integer getTimeRangeOfNoticeInterval() {
+		return timeRangeOfNoticeInterval;
+	}
+
+	public void setTimeRangeOfNoticeInterval(Integer timeRangeOfNoticeInterval) {
+		this.timeRangeOfNoticeInterval = timeRangeOfNoticeInterval;
+	}
+
 	@Override
 	public String toString() {
 		return "InsertCryptoCoinPriceNoticeSettingDTO [coinType=" + coinType + ", currencyType=" + currencyType
 				+ ", maxPrice=" + maxPrice + ", minPrice=" + minPrice + ", originalPrice=" + originalPrice
-				+ ", pricePercentage=" + pricePercentage + ", timeUnit=" + timeUnit + ", timeRange=" + timeRange
+				+ ", pricePercentage=" + pricePercentage + ", timeUnitOfDataWatch=" + timeUnitOfDataWatch
+				+ ", timeRangeOfDataWatch=" + timeRangeOfDataWatch + ", timeUnitOfNoticeInterval="
+				+ timeUnitOfNoticeInterval + ", timeRangeOfNoticeInterval=" + timeRangeOfNoticeInterval
 				+ ", priceRange=" + priceRange + ", fluctuationSpeedPercentage=" + fluctuationSpeedPercentage
 				+ ", telegramChatPK=" + telegramChatPK + ", noticeCount=" + noticeCount + ", validTime=" + validTime
 				+ "]";

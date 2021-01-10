@@ -1,5 +1,7 @@
 pmemo 移动到 article 底下
 
+telegram redis 变量key 参照 CommonServeice.buildRedisKeyPrefix ?
+
 DTO
 	测试 @NotNull @NotBlank @Size 等注解
 

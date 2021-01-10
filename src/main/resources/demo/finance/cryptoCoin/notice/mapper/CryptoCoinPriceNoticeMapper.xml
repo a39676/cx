@@ -7,11 +7,13 @@
     <result column="currency_type" jdbcType="INTEGER" property="currencyType" />
     <result column="max_price" jdbcType="DECIMAL" property="maxPrice" />
     <result column="min_price" jdbcType="DECIMAL" property="minPrice" />
-    <result column="time_unit" jdbcType="INTEGER" property="timeUnit" />
-    <result column="time_range" jdbcType="INTEGER" property="timeRange" />
+    <result column="time_unit_of_data_watch" jdbcType="INTEGER" property="timeUnitOfDataWatch" />
+    <result column="time_range_of_data_watch" jdbcType="INTEGER" property="timeRangeOfDataWatch" />
     <result column="fluctuation_speed_percentage" jdbcType="DECIMAL" property="fluctuationSpeedPercentage" />
     <result column="telegram_chat_pk" jdbcType="CHAR" property="telegramChatPk" />
     <result column="notice_count" jdbcType="INTEGER" property="noticeCount" />
+    <result column="time_unit_of_notice_interval" jdbcType="INTEGER" property="timeUnitOfNoticeInterval" />
+    <result column="time_range_of_notice_interval" jdbcType="INTEGER" property="timeRangeOfNoticeInterval" />
     <result column="valid_time" jdbcType="TIMESTAMP" property="validTime" />
     <result column="notice_time" jdbcType="TIMESTAMP" property="noticeTime" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -76,8 +78,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, coin_type, currency_type, max_price, min_price, time_unit, time_range, fluctuation_speed_percentage, 
-    telegram_chat_pk, notice_count, valid_time, notice_time, create_time, is_delete
+    id, coin_type, currency_type, max_price, min_price, time_unit_of_data_watch, time_range_of_data_watch, 
+    fluctuation_speed_percentage, telegram_chat_pk, notice_count, time_unit_of_notice_interval, 
+    time_range_of_notice_interval, valid_time, notice_time, create_time, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNoticeExample" resultMap="BaseResultMap">
     select
@@ -111,15 +114,17 @@
   </delete>
   <insert id="insert" parameterType="demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNotice">
     insert into crypto_coin_price_notice (id, coin_type, currency_type, 
-      max_price, min_price, time_unit, 
-      time_range, fluctuation_speed_percentage, 
-      telegram_chat_pk, notice_count, valid_time, 
+      max_price, min_price, time_unit_of_data_watch, 
+      time_range_of_data_watch, fluctuation_speed_percentage, 
+      telegram_chat_pk, notice_count, time_unit_of_notice_interval, 
+      time_range_of_notice_interval, valid_time, 
       notice_time, create_time, is_delete
       )
     values (#{id,jdbcType=BIGINT}, #{coinType,jdbcType=INTEGER}, #{currencyType,jdbcType=INTEGER}, 
-      #{maxPrice,jdbcType=DECIMAL}, #{minPrice,jdbcType=DECIMAL}, #{timeUnit,jdbcType=INTEGER}, 
-      #{timeRange,jdbcType=INTEGER}, #{fluctuationSpeedPercentage,jdbcType=DECIMAL}, 
-      #{telegramChatPk,jdbcType=CHAR}, #{noticeCount,jdbcType=INTEGER}, #{validTime,jdbcType=TIMESTAMP}, 
+      #{maxPrice,jdbcType=DECIMAL}, #{minPrice,jdbcType=DECIMAL}, #{timeUnitOfDataWatch,jdbcType=INTEGER}, 
+      #{timeRangeOfDataWatch,jdbcType=INTEGER}, #{fluctuationSpeedPercentage,jdbcType=DECIMAL}, 
+      #{telegramChatPk,jdbcType=CHAR}, #{noticeCount,jdbcType=INTEGER}, #{timeUnitOfNoticeInterval,jdbcType=INTEGER}, 
+      #{timeRangeOfNoticeInterval,jdbcType=INTEGER}, #{validTime,jdbcType=TIMESTAMP}, 
       #{noticeTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
       )
   </insert>
@@ -141,11 +146,11 @@
       <if test="minPrice != null">
         min_price,
       </if>
-      <if test="timeUnit != null">
-        time_unit,
+      <if test="timeUnitOfDataWatch != null">
+        time_unit_of_data_watch,
       </if>
-      <if test="timeRange != null">
-        time_range,
+      <if test="timeRangeOfDataWatch != null">
+        time_range_of_data_watch,
       </if>
       <if test="fluctuationSpeedPercentage != null">
         fluctuation_speed_percentage,
@@ -155,6 +160,12 @@
       </if>
       <if test="noticeCount != null">
         notice_count,
+      </if>
+      <if test="timeUnitOfNoticeInterval != null">
+        time_unit_of_notice_interval,
+      </if>
+      <if test="timeRangeOfNoticeInterval != null">
+        time_range_of_notice_interval,
       </if>
       <if test="validTime != null">
         valid_time,
@@ -185,11 +196,11 @@
       <if test="minPrice != null">
         #{minPrice,jdbcType=DECIMAL},
       </if>
-      <if test="timeUnit != null">
-        #{timeUnit,jdbcType=INTEGER},
+      <if test="timeUnitOfDataWatch != null">
+        #{timeUnitOfDataWatch,jdbcType=INTEGER},
       </if>
-      <if test="timeRange != null">
-        #{timeRange,jdbcType=INTEGER},
+      <if test="timeRangeOfDataWatch != null">
+        #{timeRangeOfDataWatch,jdbcType=INTEGER},
       </if>
       <if test="fluctuationSpeedPercentage != null">
         #{fluctuationSpeedPercentage,jdbcType=DECIMAL},
@@ -199,6 +210,12 @@
       </if>
       <if test="noticeCount != null">
         #{noticeCount,jdbcType=INTEGER},
+      </if>
+      <if test="timeUnitOfNoticeInterval != null">
+        #{timeUnitOfNoticeInterval,jdbcType=INTEGER},
+      </if>
+      <if test="timeRangeOfNoticeInterval != null">
+        #{timeRangeOfNoticeInterval,jdbcType=INTEGER},
       </if>
       <if test="validTime != null">
         #{validTime,jdbcType=TIMESTAMP},
@@ -238,11 +255,11 @@
       <if test="record.minPrice != null">
         min_price = #{record.minPrice,jdbcType=DECIMAL},
       </if>
-      <if test="record.timeUnit != null">
-        time_unit = #{record.timeUnit,jdbcType=INTEGER},
+      <if test="record.timeUnitOfDataWatch != null">
+        time_unit_of_data_watch = #{record.timeUnitOfDataWatch,jdbcType=INTEGER},
       </if>
-      <if test="record.timeRange != null">
-        time_range = #{record.timeRange,jdbcType=INTEGER},
+      <if test="record.timeRangeOfDataWatch != null">
+        time_range_of_data_watch = #{record.timeRangeOfDataWatch,jdbcType=INTEGER},
       </if>
       <if test="record.fluctuationSpeedPercentage != null">
         fluctuation_speed_percentage = #{record.fluctuationSpeedPercentage,jdbcType=DECIMAL},
@@ -252,6 +269,12 @@
       </if>
       <if test="record.noticeCount != null">
         notice_count = #{record.noticeCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.timeUnitOfNoticeInterval != null">
+        time_unit_of_notice_interval = #{record.timeUnitOfNoticeInterval,jdbcType=INTEGER},
+      </if>
+      <if test="record.timeRangeOfNoticeInterval != null">
+        time_range_of_notice_interval = #{record.timeRangeOfNoticeInterval,jdbcType=INTEGER},
       </if>
       <if test="record.validTime != null">
         valid_time = #{record.validTime,jdbcType=TIMESTAMP},
@@ -277,11 +300,13 @@
       currency_type = #{record.currencyType,jdbcType=INTEGER},
       max_price = #{record.maxPrice,jdbcType=DECIMAL},
       min_price = #{record.minPrice,jdbcType=DECIMAL},
-      time_unit = #{record.timeUnit,jdbcType=INTEGER},
-      time_range = #{record.timeRange,jdbcType=INTEGER},
+      time_unit_of_data_watch = #{record.timeUnitOfDataWatch,jdbcType=INTEGER},
+      time_range_of_data_watch = #{record.timeRangeOfDataWatch,jdbcType=INTEGER},
       fluctuation_speed_percentage = #{record.fluctuationSpeedPercentage,jdbcType=DECIMAL},
       telegram_chat_pk = #{record.telegramChatPk,jdbcType=CHAR},
       notice_count = #{record.noticeCount,jdbcType=INTEGER},
+      time_unit_of_notice_interval = #{record.timeUnitOfNoticeInterval,jdbcType=INTEGER},
+      time_range_of_notice_interval = #{record.timeRangeOfNoticeInterval,jdbcType=INTEGER},
       valid_time = #{record.validTime,jdbcType=TIMESTAMP},
       notice_time = #{record.noticeTime,jdbcType=TIMESTAMP},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -305,11 +330,11 @@
       <if test="minPrice != null">
         min_price = #{minPrice,jdbcType=DECIMAL},
       </if>
-      <if test="timeUnit != null">
-        time_unit = #{timeUnit,jdbcType=INTEGER},
+      <if test="timeUnitOfDataWatch != null">
+        time_unit_of_data_watch = #{timeUnitOfDataWatch,jdbcType=INTEGER},
       </if>
-      <if test="timeRange != null">
-        time_range = #{timeRange,jdbcType=INTEGER},
+      <if test="timeRangeOfDataWatch != null">
+        time_range_of_data_watch = #{timeRangeOfDataWatch,jdbcType=INTEGER},
       </if>
       <if test="fluctuationSpeedPercentage != null">
         fluctuation_speed_percentage = #{fluctuationSpeedPercentage,jdbcType=DECIMAL},
@@ -319,6 +344,12 @@
       </if>
       <if test="noticeCount != null">
         notice_count = #{noticeCount,jdbcType=INTEGER},
+      </if>
+      <if test="timeUnitOfNoticeInterval != null">
+        time_unit_of_notice_interval = #{timeUnitOfNoticeInterval,jdbcType=INTEGER},
+      </if>
+      <if test="timeRangeOfNoticeInterval != null">
+        time_range_of_notice_interval = #{timeRangeOfNoticeInterval,jdbcType=INTEGER},
       </if>
       <if test="validTime != null">
         valid_time = #{validTime,jdbcType=TIMESTAMP},
@@ -341,11 +372,13 @@
       currency_type = #{currencyType,jdbcType=INTEGER},
       max_price = #{maxPrice,jdbcType=DECIMAL},
       min_price = #{minPrice,jdbcType=DECIMAL},
-      time_unit = #{timeUnit,jdbcType=INTEGER},
-      time_range = #{timeRange,jdbcType=INTEGER},
+      time_unit_of_data_watch = #{timeUnitOfDataWatch,jdbcType=INTEGER},
+      time_range_of_data_watch = #{timeRangeOfDataWatch,jdbcType=INTEGER},
       fluctuation_speed_percentage = #{fluctuationSpeedPercentage,jdbcType=DECIMAL},
       telegram_chat_pk = #{telegramChatPk,jdbcType=CHAR},
       notice_count = #{noticeCount,jdbcType=INTEGER},
+      time_unit_of_notice_interval = #{timeUnitOfNoticeInterval,jdbcType=INTEGER},
+      time_range_of_notice_interval = #{timeRangeOfNoticeInterval,jdbcType=INTEGER},
       valid_time = #{validTime,jdbcType=TIMESTAMP},
       notice_time = #{noticeTime,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -366,6 +399,7 @@
       order by ${orderByClause}
     </if>
   </select>
+
   <select id="selectValidNoticeSetting" resultMap="BaseResultMap">
     select
       *

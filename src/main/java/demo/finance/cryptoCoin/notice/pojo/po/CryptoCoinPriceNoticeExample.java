@@ -406,123 +406,123 @@ public class CryptoCoinPriceNoticeExample {
             return (Criteria) this;
         }
 
-        public Criteria andTimeUnitIsNull() {
-            addCriterion("time_unit is null");
+        public Criteria andTimeUnitOfDataWatchIsNull() {
+            addCriterion("time_unit_of_data_watch is null");
             return (Criteria) this;
         }
 
-        public Criteria andTimeUnitIsNotNull() {
-            addCriterion("time_unit is not null");
+        public Criteria andTimeUnitOfDataWatchIsNotNull() {
+            addCriterion("time_unit_of_data_watch is not null");
             return (Criteria) this;
         }
 
-        public Criteria andTimeUnitEqualTo(Integer value) {
-            addCriterion("time_unit =", value, "timeUnit");
+        public Criteria andTimeUnitOfDataWatchEqualTo(Integer value) {
+            addCriterion("time_unit_of_data_watch =", value, "timeUnitOfDataWatch");
             return (Criteria) this;
         }
 
-        public Criteria andTimeUnitNotEqualTo(Integer value) {
-            addCriterion("time_unit <>", value, "timeUnit");
+        public Criteria andTimeUnitOfDataWatchNotEqualTo(Integer value) {
+            addCriterion("time_unit_of_data_watch <>", value, "timeUnitOfDataWatch");
             return (Criteria) this;
         }
 
-        public Criteria andTimeUnitGreaterThan(Integer value) {
-            addCriterion("time_unit >", value, "timeUnit");
+        public Criteria andTimeUnitOfDataWatchGreaterThan(Integer value) {
+            addCriterion("time_unit_of_data_watch >", value, "timeUnitOfDataWatch");
             return (Criteria) this;
         }
 
-        public Criteria andTimeUnitGreaterThanOrEqualTo(Integer value) {
-            addCriterion("time_unit >=", value, "timeUnit");
+        public Criteria andTimeUnitOfDataWatchGreaterThanOrEqualTo(Integer value) {
+            addCriterion("time_unit_of_data_watch >=", value, "timeUnitOfDataWatch");
             return (Criteria) this;
         }
 
-        public Criteria andTimeUnitLessThan(Integer value) {
-            addCriterion("time_unit <", value, "timeUnit");
+        public Criteria andTimeUnitOfDataWatchLessThan(Integer value) {
+            addCriterion("time_unit_of_data_watch <", value, "timeUnitOfDataWatch");
             return (Criteria) this;
         }
 
-        public Criteria andTimeUnitLessThanOrEqualTo(Integer value) {
-            addCriterion("time_unit <=", value, "timeUnit");
+        public Criteria andTimeUnitOfDataWatchLessThanOrEqualTo(Integer value) {
+            addCriterion("time_unit_of_data_watch <=", value, "timeUnitOfDataWatch");
             return (Criteria) this;
         }
 
-        public Criteria andTimeUnitIn(List<Integer> values) {
-            addCriterion("time_unit in", values, "timeUnit");
+        public Criteria andTimeUnitOfDataWatchIn(List<Integer> values) {
+            addCriterion("time_unit_of_data_watch in", values, "timeUnitOfDataWatch");
             return (Criteria) this;
         }
 
-        public Criteria andTimeUnitNotIn(List<Integer> values) {
-            addCriterion("time_unit not in", values, "timeUnit");
+        public Criteria andTimeUnitOfDataWatchNotIn(List<Integer> values) {
+            addCriterion("time_unit_of_data_watch not in", values, "timeUnitOfDataWatch");
             return (Criteria) this;
         }
 
-        public Criteria andTimeUnitBetween(Integer value1, Integer value2) {
-            addCriterion("time_unit between", value1, value2, "timeUnit");
+        public Criteria andTimeUnitOfDataWatchBetween(Integer value1, Integer value2) {
+            addCriterion("time_unit_of_data_watch between", value1, value2, "timeUnitOfDataWatch");
             return (Criteria) this;
         }
 
-        public Criteria andTimeUnitNotBetween(Integer value1, Integer value2) {
-            addCriterion("time_unit not between", value1, value2, "timeUnit");
+        public Criteria andTimeUnitOfDataWatchNotBetween(Integer value1, Integer value2) {
+            addCriterion("time_unit_of_data_watch not between", value1, value2, "timeUnitOfDataWatch");
             return (Criteria) this;
         }
 
-        public Criteria andTimeRangeIsNull() {
-            addCriterion("time_range is null");
+        public Criteria andTimeRangeOfDataWatchIsNull() {
+            addCriterion("time_range_of_data_watch is null");
             return (Criteria) this;
         }
 
-        public Criteria andTimeRangeIsNotNull() {
-            addCriterion("time_range is not null");
+        public Criteria andTimeRangeOfDataWatchIsNotNull() {
+            addCriterion("time_range_of_data_watch is not null");
             return (Criteria) this;
         }
 
-        public Criteria andTimeRangeEqualTo(Integer value) {
-            addCriterion("time_range =", value, "timeRange");
+        public Criteria andTimeRangeOfDataWatchEqualTo(Integer value) {
+            addCriterion("time_range_of_data_watch =", value, "timeRangeOfDataWatch");
             return (Criteria) this;
         }
 
-        public Criteria andTimeRangeNotEqualTo(Integer value) {
-            addCriterion("time_range <>", value, "timeRange");
+        public Criteria andTimeRangeOfDataWatchNotEqualTo(Integer value) {
+            addCriterion("time_range_of_data_watch <>", value, "timeRangeOfDataWatch");
             return (Criteria) this;
         }
 
-        public Criteria andTimeRangeGreaterThan(Integer value) {
-            addCriterion("time_range >", value, "timeRange");
+        public Criteria andTimeRangeOfDataWatchGreaterThan(Integer value) {
+            addCriterion("time_range_of_data_watch >", value, "timeRangeOfDataWatch");
             return (Criteria) this;
         }
 
-        public Criteria andTimeRangeGreaterThanOrEqualTo(Integer value) {
-            addCriterion("time_range >=", value, "timeRange");
+        public Criteria andTimeRangeOfDataWatchGreaterThanOrEqualTo(Integer value) {
+            addCriterion("time_range_of_data_watch >=", value, "timeRangeOfDataWatch");
             return (Criteria) this;
         }
 
-        public Criteria andTimeRangeLessThan(Integer value) {
-            addCriterion("time_range <", value, "timeRange");
+        public Criteria andTimeRangeOfDataWatchLessThan(Integer value) {
+            addCriterion("time_range_of_data_watch <", value, "timeRangeOfDataWatch");
             return (Criteria) this;
         }
 
-        public Criteria andTimeRangeLessThanOrEqualTo(Integer value) {
-            addCriterion("time_range <=", value, "timeRange");
+        public Criteria andTimeRangeOfDataWatchLessThanOrEqualTo(Integer value) {
+            addCriterion("time_range_of_data_watch <=", value, "timeRangeOfDataWatch");
             return (Criteria) this;
         }
 
-        public Criteria andTimeRangeIn(List<Integer> values) {
-            addCriterion("time_range in", values, "timeRange");
+        public Criteria andTimeRangeOfDataWatchIn(List<Integer> values) {
+            addCriterion("time_range_of_data_watch in", values, "timeRangeOfDataWatch");
             return (Criteria) this;
         }
 
-        public Criteria andTimeRangeNotIn(List<Integer> values) {
-            addCriterion("time_range not in", values, "timeRange");
+        public Criteria andTimeRangeOfDataWatchNotIn(List<Integer> values) {
+            addCriterion("time_range_of_data_watch not in", values, "timeRangeOfDataWatch");
             return (Criteria) this;
         }
 
-        public Criteria andTimeRangeBetween(Integer value1, Integer value2) {
-            addCriterion("time_range between", value1, value2, "timeRange");
+        public Criteria andTimeRangeOfDataWatchBetween(Integer value1, Integer value2) {
+            addCriterion("time_range_of_data_watch between", value1, value2, "timeRangeOfDataWatch");
             return (Criteria) this;
         }
 
-        public Criteria andTimeRangeNotBetween(Integer value1, Integer value2) {
-            addCriterion("time_range not between", value1, value2, "timeRange");
+        public Criteria andTimeRangeOfDataWatchNotBetween(Integer value1, Integer value2) {
+            addCriterion("time_range_of_data_watch not between", value1, value2, "timeRangeOfDataWatch");
             return (Criteria) this;
         }
 
@@ -713,6 +713,126 @@ public class CryptoCoinPriceNoticeExample {
 
         public Criteria andNoticeCountNotBetween(Integer value1, Integer value2) {
             addCriterion("notice_count not between", value1, value2, "noticeCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeUnitOfNoticeIntervalIsNull() {
+            addCriterion("time_unit_of_notice_interval is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeUnitOfNoticeIntervalIsNotNull() {
+            addCriterion("time_unit_of_notice_interval is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeUnitOfNoticeIntervalEqualTo(Integer value) {
+            addCriterion("time_unit_of_notice_interval =", value, "timeUnitOfNoticeInterval");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeUnitOfNoticeIntervalNotEqualTo(Integer value) {
+            addCriterion("time_unit_of_notice_interval <>", value, "timeUnitOfNoticeInterval");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeUnitOfNoticeIntervalGreaterThan(Integer value) {
+            addCriterion("time_unit_of_notice_interval >", value, "timeUnitOfNoticeInterval");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeUnitOfNoticeIntervalGreaterThanOrEqualTo(Integer value) {
+            addCriterion("time_unit_of_notice_interval >=", value, "timeUnitOfNoticeInterval");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeUnitOfNoticeIntervalLessThan(Integer value) {
+            addCriterion("time_unit_of_notice_interval <", value, "timeUnitOfNoticeInterval");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeUnitOfNoticeIntervalLessThanOrEqualTo(Integer value) {
+            addCriterion("time_unit_of_notice_interval <=", value, "timeUnitOfNoticeInterval");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeUnitOfNoticeIntervalIn(List<Integer> values) {
+            addCriterion("time_unit_of_notice_interval in", values, "timeUnitOfNoticeInterval");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeUnitOfNoticeIntervalNotIn(List<Integer> values) {
+            addCriterion("time_unit_of_notice_interval not in", values, "timeUnitOfNoticeInterval");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeUnitOfNoticeIntervalBetween(Integer value1, Integer value2) {
+            addCriterion("time_unit_of_notice_interval between", value1, value2, "timeUnitOfNoticeInterval");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeUnitOfNoticeIntervalNotBetween(Integer value1, Integer value2) {
+            addCriterion("time_unit_of_notice_interval not between", value1, value2, "timeUnitOfNoticeInterval");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeRangeOfNoticeIntervalIsNull() {
+            addCriterion("time_range_of_notice_interval is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeRangeOfNoticeIntervalIsNotNull() {
+            addCriterion("time_range_of_notice_interval is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeRangeOfNoticeIntervalEqualTo(Integer value) {
+            addCriterion("time_range_of_notice_interval =", value, "timeRangeOfNoticeInterval");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeRangeOfNoticeIntervalNotEqualTo(Integer value) {
+            addCriterion("time_range_of_notice_interval <>", value, "timeRangeOfNoticeInterval");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeRangeOfNoticeIntervalGreaterThan(Integer value) {
+            addCriterion("time_range_of_notice_interval >", value, "timeRangeOfNoticeInterval");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeRangeOfNoticeIntervalGreaterThanOrEqualTo(Integer value) {
+            addCriterion("time_range_of_notice_interval >=", value, "timeRangeOfNoticeInterval");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeRangeOfNoticeIntervalLessThan(Integer value) {
+            addCriterion("time_range_of_notice_interval <", value, "timeRangeOfNoticeInterval");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeRangeOfNoticeIntervalLessThanOrEqualTo(Integer value) {
+            addCriterion("time_range_of_notice_interval <=", value, "timeRangeOfNoticeInterval");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeRangeOfNoticeIntervalIn(List<Integer> values) {
+            addCriterion("time_range_of_notice_interval in", values, "timeRangeOfNoticeInterval");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeRangeOfNoticeIntervalNotIn(List<Integer> values) {
+            addCriterion("time_range_of_notice_interval not in", values, "timeRangeOfNoticeInterval");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeRangeOfNoticeIntervalBetween(Integer value1, Integer value2) {
+            addCriterion("time_range_of_notice_interval between", value1, value2, "timeRangeOfNoticeInterval");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeRangeOfNoticeIntervalNotBetween(Integer value1, Integer value2) {
+            addCriterion("time_range_of_notice_interval not between", value1, value2, "timeRangeOfNoticeInterval");
             return (Criteria) this;
         }
 

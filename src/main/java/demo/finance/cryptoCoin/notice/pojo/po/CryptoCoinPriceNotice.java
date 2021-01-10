@@ -14,15 +14,19 @@ public class CryptoCoinPriceNotice {
 
     private BigDecimal minPrice;
 
-    private Integer timeUnit;
+    private Integer timeUnitOfDataWatch;
 
-    private Integer timeRange;
+    private Integer timeRangeOfDataWatch;
 
     private BigDecimal fluctuationSpeedPercentage;
 
     private String telegramChatPk;
 
     private Integer noticeCount;
+
+    private Integer timeUnitOfNoticeInterval;
+
+    private Integer timeRangeOfNoticeInterval;
 
     private LocalDateTime validTime;
 
@@ -72,20 +76,20 @@ public class CryptoCoinPriceNotice {
         this.minPrice = minPrice;
     }
 
-    public Integer getTimeUnit() {
-        return timeUnit;
+    public Integer getTimeUnitOfDataWatch() {
+        return timeUnitOfDataWatch;
     }
 
-    public void setTimeUnit(Integer timeUnit) {
-        this.timeUnit = timeUnit;
+    public void setTimeUnitOfDataWatch(Integer timeUnitOfDataWatch) {
+        this.timeUnitOfDataWatch = timeUnitOfDataWatch;
     }
 
-    public Integer getTimeRange() {
-        return timeRange;
+    public Integer getTimeRangeOfDataWatch() {
+        return timeRangeOfDataWatch;
     }
 
-    public void setTimeRange(Integer timeRange) {
-        this.timeRange = timeRange;
+    public void setTimeRangeOfDataWatch(Integer timeRangeOfDataWatch) {
+        this.timeRangeOfDataWatch = timeRangeOfDataWatch;
     }
 
     public BigDecimal getFluctuationSpeedPercentage() {
@@ -110,6 +114,22 @@ public class CryptoCoinPriceNotice {
 
     public void setNoticeCount(Integer noticeCount) {
         this.noticeCount = noticeCount;
+    }
+
+    public Integer getTimeUnitOfNoticeInterval() {
+        return timeUnitOfNoticeInterval;
+    }
+
+    public void setTimeUnitOfNoticeInterval(Integer timeUnitOfNoticeInterval) {
+        this.timeUnitOfNoticeInterval = timeUnitOfNoticeInterval;
+    }
+
+    public Integer getTimeRangeOfNoticeInterval() {
+        return timeRangeOfNoticeInterval;
+    }
+
+    public void setTimeRangeOfNoticeInterval(Integer timeRangeOfNoticeInterval) {
+        this.timeRangeOfNoticeInterval = timeRangeOfNoticeInterval;
     }
 
     public LocalDateTime getValidTime() {

@@ -216,6 +216,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 				&& po.getTimeRangeOfDataWatch() != null && po.getTimeRangeOfDataWatch() > 0;
 	}
 
+	@Override
 	public void noticeHandler() {
 		List<CryptoCoinPriceNotice> noticeList = noticeMapper.selectValidNoticeSetting(LocalDateTime.now());
 		if (noticeList == null || noticeList.isEmpty()) {

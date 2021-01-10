@@ -47,13 +47,22 @@
 </div>
 
 <div class="row">
-  <input type="text" id="timeRange" placeholder="时间范围">
-  <select id="timeUnit">
+  <input type="text" id="timeRangeOfDataWatch" placeholder="监控数据时间范围">
+  <select id="timeUnitOfDataWatch">
     <c:forEach items="${timeUnitType}" var="timeUnitType">
       <option value="${timeUnitType.code}">${timeUnitType.cnName}</option>
     </c:forEach>
   </select>
   <input type="text" id="fluctuationSpeedPercentage" placeholder="升速/跌速范围(%)">
+</div>
+
+<div class="row">
+  <input type="text" id="timeRangeOfNoticeInterval" placeholder="提示时间间隔设置">
+  <select id="timeUnitOfNoticeInterval">
+    <c:forEach items="${timeUnitType}" var="timeUnitType">
+      <option value="${timeUnitType.code}">${timeUnitType.cnName}</option>
+    </c:forEach>
+  </select>
 </div>
 
 <div class="row">
@@ -95,9 +104,12 @@
         var originalPrice = $("#originalPrice").val();
         var pricePercentage = $("#pricePercentage").val();
 
-        var timeUnit = $("#timeUnit option:selected").val();
-        var timeRange = $("#timeRange").val();
+        var timeUnitOfDataWatch = $("#timeUnitOfDataWatch option:selected").val();
+        var timeRangeOfDataWatch = $("#timeRangeOfDataWatch").val();
         var fluctuationSpeedPercentage = $("#fluctuationSpeedPercentage").val();
+
+        var timeUnitOfNoticeInterval = $("#timeUnitOfNoticeInterval option:selected").val();
+        var timeRangeOfNoticeInterval = $("#timeRangeOfNoticeInterval").val();
 
         var telegramChatPK = $("#telegramChatPK option:selected").val();
         var validTime = $("#validTime").val();
@@ -111,9 +123,11 @@
           minPrice : minPrice,
           originalPrice : originalPrice,
           pricePercentage : pricePercentage,
-          timeUnit : timeUnit,
-          timeRange : timeRange,
+          timeUnitOfDataWatch : timeUnitOfDataWatch,
+          timeRangeOfDataWatch : timeRangeOfDataWatch,
           fluctuationSpeedPercentage : fluctuationSpeedPercentage,
+          timeUnitOfNoticeInterval : timeUnitOfNoticeInterval,
+          timeRangeOfNoticeInterval : timeRangeOfNoticeInterval,
           telegramChatPK : telegramChatPK,
           noticeCount : noticeCount,
           validTime : validTime,
@@ -131,7 +145,6 @@
           timeout: 15000,
           success:function(data){
             $("#result").text(data.message);
-            console.log(data);
           }, 
           error:function(e){
             $("#result").text(e);

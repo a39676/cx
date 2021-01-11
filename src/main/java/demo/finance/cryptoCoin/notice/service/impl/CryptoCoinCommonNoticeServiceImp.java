@@ -371,7 +371,9 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			trigerPercentage = 0 - trigerPercentage;
 		}
 
-		if (upApmlitude >= trigerPercentage) {
+		if ((maxMinPriceResult.getMinPriceDateTime().isBefore(maxMinPriceResult.getMaxPriceDateTime())
+				||maxMinPriceResult.getMinPriceDateTime().isEqual(maxMinPriceResult.getMaxPriceDateTime())) 
+				&& upApmlitude >= trigerPercentage) {
 //			String pattern = "虚拟币名, 标价货币名, 最近 x 小时/分钟, 升幅达 %s, 
 //			%s时触及最低价 %s, %s时触及最高价 %s, 最新价为 %s";
 			content = coinType.getName() + ", " + currencyType.getName() + ", "
@@ -381,7 +383,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 					+ maxMinPriceResult.getMaxPriceDateTime() + " 时触及高价: " + lastMax + ", "
 					+ "最新价: " + historyPOList.get(0).getEndPrice()
 					;
-		} else if (lowApmlitude < 0 && (0 - lowApmlitude) >= trigerPercentage) {
+		} else if (maxMinPriceResult.getMaxPriceDateTime().isBefore(maxMinPriceResult.getMinPriceDateTime()) && (0 - lowApmlitude) >= trigerPercentage) {
 			content = coinType.getName() + ", " + currencyType.getName() + ", "
 					+ "最近" + noticeSetting.getTimeRangeOfDataWatch() + TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch()).getCnName() + ", "
 					+ "跌幅达 " + lowApmlitude + ", "

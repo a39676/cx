@@ -381,7 +381,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 					+ maxMinPriceResult.getMaxPriceDateTime() + " 时触及高价: " + lastMax + ", "
 					+ "最新价: " + historyPOList.get(0).getEndPrice()
 					;
-		} else if (trigerPercentage < 0 && lowApmlitude <= trigerPercentage) {
+		} else if (lowApmlitude < 0 && (0 - lowApmlitude) >= trigerPercentage) {
 			content = coinType.getName() + ", " + currencyType.getName() + ", "
 					+ "最近" + noticeSetting.getTimeRangeOfDataWatch() + TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch()).getCnName() + ", "
 					+ "跌幅达 " + lowApmlitude + ", "

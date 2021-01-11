@@ -1,6 +1,7 @@
 pmemo 移动到 article 底下
+农历提醒
+图片信息传送
 
-telegram redis 变量key 参照 CommonServeice.buildRedisKeyPrefix ?
 
 DTO
 	测试 @NotNull @NotBlank @Size 等注解

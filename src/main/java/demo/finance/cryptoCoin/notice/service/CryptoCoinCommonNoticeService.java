@@ -4,6 +4,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.data.pojo.dto.InsertCryptoCoinPriceNoticeSettingDTO;
+import demo.finance.cryptoCoin.notice.pojo.dto.NoticeUpdateDTO;
 
 public interface CryptoCoinCommonNoticeService {
 
@@ -16,5 +17,7 @@ public interface CryptoCoinCommonNoticeService {
 	CommonResult insertNewCryptoCoinPriceNoticeSetting(InsertCryptoCoinPriceNoticeSettingDTO dto);
 
 	CommonResult deleteNotice(String pk);
+
+	CommonResult updateNotice(NoticeUpdateDTO dto);
 
 }

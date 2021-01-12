@@ -27,6 +27,7 @@ import demo.finance.cryptoCoin.data.service.CryptoCoin1WeekDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin5MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin60MinuteDataSummaryService;
 import demo.finance.cryptoCoin.notice.mapper.CryptoCoinPriceNoticeMapper;
+import demo.finance.cryptoCoin.notice.pojo.dto.NoticeUpdateDTO;
 import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNotice;
 import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNoticeExample;
 import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNoticeExample.Criteria;
@@ -199,8 +200,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			range = 1 - range;
 		}
 
-		dto.setMaxPrice(new BigDecimal(dto.getOriginalPrice() * (1 + range)));
-		dto.setMinPrice(new BigDecimal(dto.getOriginalPrice() * (1 - range)));
+		dto.setMaxPrice(new BigDecimal(dto.getOriginalPrice() * (1 + range / 100)));
+		dto.setMinPrice(new BigDecimal(dto.getOriginalPrice() * (1 - range / 100)));
 
 		dto.setOriginalPrice(null);
 		dto.setPricePercentage(null);
@@ -490,6 +491,9 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			vo.setTimeUnitOfNoticeIntervalName(TimeUnitType.getType(po.getTimeUnitOfNoticeInterval()).getCnName());
 			vo.setTimeRangeOfNoticeInterval(po.getTimeRangeOfNoticeInterval());
 		}
+		if(po.getFluctuationSpeedPercentage() != null) {
+			vo.setFluctuactionSpeedPercentage(po.getFluctuationSpeedPercentage().doubleValue());
+		}
 		vo.setNoticeCount(po.getNoticeCount());
 		vo.setValidTime(localDateTimeHandler.dateToStr(po.getValidTime()));
 		vo.setNoticeTime(localDateTimeHandler.dateToStr(po.getNoticeTime()));
@@ -522,5 +526,67 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			r.failWithMessage("update error");
 			return r;
 		}
+	}
+
+	@Override
+	public CommonResult updateNotice(NoticeUpdateDTO dto) {
+		CommonResult r = new CommonResult();
+		
+		Long id = decryptPrivateKey(dto.getPk());
+		if(id == null) {
+			r.failWithMessage("param error");
+			return r;
+		}
+		
+		CryptoCoinPriceNotice po = noticeMapper.selectByPrimaryKey(id);
+		if(po == null) {
+			return r;
+		}
+		
+		CryptoCoinType coinType = CryptoCoinType.getType(dto.getCryptoCoinCode());
+		CurrencyType currencyType = CurrencyType.getType(dto.getCurrencyCode());
+		if(coinType == null || currencyType == null) {
+			r.failWithMessage("param error");
+			return r;
+		}
+		po.setCoinType(coinType.getCode());
+		po.setCurrencyType(currencyType.getCode());
+		
+		if(dto.getMaxPrice() != null) {
+			po.setMaxPrice(new BigDecimal(dto.getMaxPrice()));
+		} else {
+			po.setMaxPrice(null);
+		}
+		if(dto.getMinPrice() != null) {
+			po.setMinPrice(new BigDecimal(dto.getMinPrice()));
+		} else {
+			po.setMinPrice(null);
+		}
+		
+		po.setTimeUnitOfDataWatch(dto.getTimeUnitOfDataWatch());
+		po.setTimeRangeOfDataWatch(dto.getTimeRangeOfDataWatch());
+		
+		po.setTimeUnitOfNoticeInterval(dto.getTimeUnitOfNoticeInterval());
+		po.setTimeRangeOfNoticeInterval(dto.getTimeRangeOfNoticeInterval());
+		
+		if(dto.getFluctuactionSpeedPercentage() != null) {
+			po.setFluctuationSpeedPercentage(new BigDecimal(dto.getFluctuactionSpeedPercentage()));
+		} else {
+			po.setFluctuationSpeedPercentage(null);
+		}
+		
+		po.setNoticeCount(dto.getNoticeCount());
+		
+		if(!priceConditionHadSet(po) && !priceFluctuationSpeedConditionHadSet(po)) {
+			r.failWithMessage("please check notice condition");
+			return r;
+		}
+		
+		int updateCount = noticeMapper.updateByPrimaryKey(po);
+		if(updateCount == 1) {
+			r.successWithMessage("udpate success");
+		}
+		
+		return r;
 	}
 }

@@ -108,7 +108,7 @@
           <td>
             <input type="number" noticePK="${noticeVO.pk}" name="timeRangeOfDataWatch" 
             value="${noticeVO.timeRangeOfDataWatch}" style="width: 80px;">
-            <select noticePK="${noticeVO.pk}" name="timeUnitOfDataWatchName">
+            <select noticePK="${noticeVO.pk}" name="timeUnitOfDataWatch">
               <option value="${noticeVO.timeUnitOfDataWatch}">${noticeVO.timeUnitOfDataWatchName}</option>
               <c:forEach items="${timeUnitType}" var="timeUnitType">
                 <option value="${timeUnitType.code}">${timeUnitType.cnName}</option>
@@ -116,9 +116,9 @@
             </select>
           </td>
           <td>
-            <input type="number" noticePK="${noticeVO.pk}" name="timeUnitOfNoticeInterval" 
-            value="${noticeVO.timeUnitOfNoticeInterval}" style="width: 80px;">
-            <select noticePK="${noticeVO.pk}" name="timeUnitOfNoticeIntervalName">
+            <input type="number" noticePK="${noticeVO.pk}" name="timeRangeOfNoticeInterval" 
+            value="${noticeVO.timeRangeOfNoticeInterval}" style="width: 80px;">
+            <select noticePK="${noticeVO.pk}" name="timeUnitOfNoticeInterval">
               <option value="${noticeVO.timeUnitOfNoticeInterval}">${noticeVO.timeUnitOfNoticeIntervalName}</option>
               <c:forEach items="${timeUnitType}" var="timeUnitType">
                 <option value="${timeUnitType.code}">${timeUnitType.cnName}</option>
@@ -188,8 +188,12 @@
 
       $("button[name='delete']").click(function () {
         var pk = $(this).attr("noticePK");
-        console.log(pk);
         deleteNotice(pk);
+      })
+
+      $("button[name='modify']").click(function () {
+        var pk = $(this).attr("noticePK");
+        updateNotice(pk);
       })
 
       function insertCryptoCoinNoticeSetting() {
@@ -262,6 +266,58 @@
           pk : pk,
         };
 
+
+        $.ajax({  
+          type : "POST", 
+          url : url,  
+          data: JSON.stringify(jsonOutput),
+          dataType: 'json',
+          contentType: "application/json",
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          timeout: 15000,
+          success:function(data){
+            $("#result").text(data.message);
+          }, 
+          error:function(e){
+            $("#result").text(e);
+          }
+        });
+      }
+
+      function updateNotice(pk) {
+        var url = "/cryptoCoin/updateNotice";
+
+        var cryptoCoinCode = $("select[noticePK='"+pk+"'][name='cryptoCoinCode'] option:selected").val();
+        var currencyCode = $("select[noticePK='"+pk+"'][name='currencyCode'] option:selected").val();
+
+        var timeRangeOfDataWatch = $("input[noticePK='"+pk+"'][name='timeRangeOfDataWatch']").val();
+        var timeUnitOfDataWatch = $("select[noticePK='"+pk+"'][name='timeUnitOfDataWatch'] option:selected").val();
+
+        var timeRangeOfNoticeInterval = $("input[noticePK='"+pk+"'][name='timeRangeOfNoticeInterval']").val();
+        var timeUnitOfNoticeInterval = $("select[noticePK='"+pk+"'][name='timeUnitOfNoticeInterval'] option:selected").val();
+
+        var maxPrice = $("input[noticePK='"+pk+"'][name='maxPrice']").val();
+        var minPrice = $("input[noticePK='"+pk+"'][name='minPrice']").val();
+        var fluctuactionSpeedPercentage = $("input[noticePK='"+pk+"'][name='fluctuactionSpeedPercentage']").val();
+        var noticeCount = $("input[noticePK='"+pk+"'][name='noticeCount']").val();
+
+        var jsonOutput = {
+          pk : pk,
+          cryptoCoinCode : cryptoCoinCode,
+          currencyCode : currencyCode,
+          maxPrice : maxPrice,
+          minPrice : minPrice,
+          timeRangeOfDataWatch : timeRangeOfDataWatch,
+          timeUnitOfDataWatch : timeUnitOfDataWatch,
+          timeRangeOfNoticeInterval : timeRangeOfNoticeInterval,
+          timeUnitOfNoticeInterval : timeUnitOfNoticeInterval,
+          fluctuactionSpeedPercentage : fluctuactionSpeedPercentage,
+          noticeCount : noticeCount,
+        };
+
+        console.log(jsonOutput);
 
         $.ajax({  
           type : "POST", 

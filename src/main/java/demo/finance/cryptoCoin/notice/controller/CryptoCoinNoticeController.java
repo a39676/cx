@@ -13,6 +13,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.data.pojo.dto.InsertCryptoCoinPriceNoticeSettingDTO;
 import demo.finance.cryptoCoin.notice.pojo.constant.CryptoCoinNoticeUrl;
 import demo.finance.cryptoCoin.notice.pojo.dto.DeleteNoticeDTO;
+import demo.finance.cryptoCoin.notice.pojo.dto.NoticeUpdateDTO;
 import demo.finance.cryptoCoin.notice.service.CryptoCoinCommonNoticeService;
 import finance.cryptoCoin.pojo.constant.CryptoCoinPriceCommonUrl;
 
@@ -38,5 +39,11 @@ public class CryptoCoinNoticeController {
 	@ResponseBody
 	public CommonResult deleteNotice(@RequestBody DeleteNoticeDTO dto) {
 		return commonNoticeService.deleteNotice(dto.getPk());
+	}
+	
+	@PostMapping(value = CryptoCoinNoticeUrl.UPDATE_NOTICE)
+	@ResponseBody
+	public CommonResult deleteNotice(@RequestBody NoticeUpdateDTO dto) {
+		return commonNoticeService.updateNotice(dto);
 	}
 }

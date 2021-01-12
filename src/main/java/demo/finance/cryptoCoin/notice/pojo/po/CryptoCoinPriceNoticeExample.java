@@ -586,73 +586,63 @@ public class CryptoCoinPriceNoticeExample {
             return (Criteria) this;
         }
 
-        public Criteria andTelegramChatPkIsNull() {
-            addCriterion("telegram_chat_pk is null");
+        public Criteria andTelegramChatIdIsNull() {
+            addCriterion("telegram_chat_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andTelegramChatPkIsNotNull() {
-            addCriterion("telegram_chat_pk is not null");
+        public Criteria andTelegramChatIdIsNotNull() {
+            addCriterion("telegram_chat_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andTelegramChatPkEqualTo(String value) {
-            addCriterion("telegram_chat_pk =", value, "telegramChatPk");
+        public Criteria andTelegramChatIdEqualTo(Long value) {
+            addCriterion("telegram_chat_id =", value, "telegramChatId");
             return (Criteria) this;
         }
 
-        public Criteria andTelegramChatPkNotEqualTo(String value) {
-            addCriterion("telegram_chat_pk <>", value, "telegramChatPk");
+        public Criteria andTelegramChatIdNotEqualTo(Long value) {
+            addCriterion("telegram_chat_id <>", value, "telegramChatId");
             return (Criteria) this;
         }
 
-        public Criteria andTelegramChatPkGreaterThan(String value) {
-            addCriterion("telegram_chat_pk >", value, "telegramChatPk");
+        public Criteria andTelegramChatIdGreaterThan(Long value) {
+            addCriterion("telegram_chat_id >", value, "telegramChatId");
             return (Criteria) this;
         }
 
-        public Criteria andTelegramChatPkGreaterThanOrEqualTo(String value) {
-            addCriterion("telegram_chat_pk >=", value, "telegramChatPk");
+        public Criteria andTelegramChatIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("telegram_chat_id >=", value, "telegramChatId");
             return (Criteria) this;
         }
 
-        public Criteria andTelegramChatPkLessThan(String value) {
-            addCriterion("telegram_chat_pk <", value, "telegramChatPk");
+        public Criteria andTelegramChatIdLessThan(Long value) {
+            addCriterion("telegram_chat_id <", value, "telegramChatId");
             return (Criteria) this;
         }
 
-        public Criteria andTelegramChatPkLessThanOrEqualTo(String value) {
-            addCriterion("telegram_chat_pk <=", value, "telegramChatPk");
+        public Criteria andTelegramChatIdLessThanOrEqualTo(Long value) {
+            addCriterion("telegram_chat_id <=", value, "telegramChatId");
             return (Criteria) this;
         }
 
-        public Criteria andTelegramChatPkLike(String value) {
-            addCriterion("telegram_chat_pk like", value, "telegramChatPk");
+        public Criteria andTelegramChatIdIn(List<Long> values) {
+            addCriterion("telegram_chat_id in", values, "telegramChatId");
             return (Criteria) this;
         }
 
-        public Criteria andTelegramChatPkNotLike(String value) {
-            addCriterion("telegram_chat_pk not like", value, "telegramChatPk");
+        public Criteria andTelegramChatIdNotIn(List<Long> values) {
+            addCriterion("telegram_chat_id not in", values, "telegramChatId");
             return (Criteria) this;
         }
 
-        public Criteria andTelegramChatPkIn(List<String> values) {
-            addCriterion("telegram_chat_pk in", values, "telegramChatPk");
+        public Criteria andTelegramChatIdBetween(Long value1, Long value2) {
+            addCriterion("telegram_chat_id between", value1, value2, "telegramChatId");
             return (Criteria) this;
         }
 
-        public Criteria andTelegramChatPkNotIn(List<String> values) {
-            addCriterion("telegram_chat_pk not in", values, "telegramChatPk");
-            return (Criteria) this;
-        }
-
-        public Criteria andTelegramChatPkBetween(String value1, String value2) {
-            addCriterion("telegram_chat_pk between", value1, value2, "telegramChatPk");
-            return (Criteria) this;
-        }
-
-        public Criteria andTelegramChatPkNotBetween(String value1, String value2) {
-            addCriterion("telegram_chat_pk not between", value1, value2, "telegramChatPk");
+        public Criteria andTelegramChatIdNotBetween(Long value1, Long value2) {
+            addCriterion("telegram_chat_id not between", value1, value2, "telegramChatId");
             return (Criteria) this;
         }
 

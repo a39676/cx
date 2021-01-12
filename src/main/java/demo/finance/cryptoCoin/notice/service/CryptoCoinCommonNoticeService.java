@@ -15,4 +15,6 @@ public interface CryptoCoinCommonNoticeService {
 
 	CommonResult insertNewCryptoCoinPriceNoticeSetting(InsertCryptoCoinPriceNoticeSettingDTO dto);
 
+	CommonResult deleteNotice(String pk);
+
 }

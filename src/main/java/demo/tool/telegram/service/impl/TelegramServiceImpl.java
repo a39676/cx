@@ -3,7 +3,6 @@ package demo.tool.telegram.service.impl;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -69,11 +68,16 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 	}
 	
 	@Override
-	public CommonResult sendMessage(String msg, String chatPK) {
+	public CommonResult sendMessage(String msg, Long id) {
 		CommonResult r = new CommonResult();
 		
-		if(StringUtils.isAnyBlank(msg, chatPK)) {
+		if(id == null) {
 			r.failWithMessage("param error");
+			return r;
+		}
+		
+		if(StringUtils.isBlank(msg)) {
+			r.failWithMessage("null msg");
 			return r;
 		}
 		
@@ -87,15 +91,9 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 			return r;
 		}
 		
-		Long chatPOId = decryptPrivateKey(chatPK);
-		if(chatPOId == null) {
-			r.failWithMessage("chatPK error");
-			return r;
-		}
-		
-		TelegramChatId po = chatIdMapper.selectByPrimaryKey(chatPOId);
+		TelegramChatId po = chatIdMapper.selectByPrimaryKey(id);
 		if(po == null) {
-			r.failWithMessage("chatPK error");
+			r.failWithMessage("param error");
 			return r;
 		}
 		
@@ -123,24 +121,22 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 	}
 
 	@Override
-	public List<TelegramChatIdVO> getChatIDList() {
+	public List<TelegramChatId> getChatIDList() {
 		TelegramChatIdExample example = new TelegramChatIdExample();
 		example.createCriteria().andIsdeleteEqualTo(false);
 		List<TelegramChatId> poList = chatIdMapper.selectByExample(example);
-		List<TelegramChatIdVO> voList = new ArrayList<>();
-		for(TelegramChatId po: poList) {
-			voList.add(buildChatIdVO(po));
-		}
-		return voList;
+		return poList;
 	}
 	
-	private TelegramChatIdVO buildChatIdVO(TelegramChatId po) {
+	@Override
+	public TelegramChatId getChatID(Long id) {
+		return chatIdMapper.selectByPrimaryKey(id);
+	}
+	
+	@Override
+	public TelegramChatIdVO buildChatIdVO(TelegramChatId po) {
 		TelegramChatIdVO vo = new TelegramChatIdVO();
 		vo.setPk(encryptId(po.getId().longValue()));
-//		try {
-//			vo.setPk(URLEncoder.encode(encryptId(po.getId()), StandardCharsets.UTF_8.toString()));
-//		} catch (UnsupportedEncodingException e) {
-//		}
 		vo.setUsername(po.getChatUserName());
 		return vo;
 	}

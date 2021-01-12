@@ -30,7 +30,10 @@ import demo.finance.cryptoCoin.notice.mapper.CryptoCoinPriceNoticeMapper;
 import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNotice;
 import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNoticeExample;
 import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNoticeExample.Criteria;
+import demo.finance.cryptoCoin.notice.pojo.vo.CryptoCoinNoticeVO;
 import demo.finance.cryptoCoin.notice.service.CryptoCoinCommonNoticeService;
+import demo.tool.telegram.pojo.po.TelegramChatId;
+import demo.tool.telegram.pojo.vo.TelegramChatIdVO;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
 @Service
@@ -59,7 +62,14 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.minute, TimeUnitType.hour, TimeUnitType.day,
 				TimeUnitType.week, TimeUnitType.month };
 		view.addObject("timeUnitType", timeUnitTypes);
-		view.addObject("chatVOList", telegramService.getChatIDList());
+		
+		List<TelegramChatId> chatIDPOList = telegramService.getChatIDList();
+		List<TelegramChatIdVO>chatIdVOList = new ArrayList<>();
+		for(TelegramChatId po : chatIDPOList) {
+			chatIdVOList.add(telegramService.buildChatIdVO(po));
+		}
+		view.addObject("chatVOList", chatIdVOList);
+		view.addObject("noticeVOList", getValidNotices());
 		return view;
 	}
 
@@ -78,7 +88,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		newPO.setId(snowFlake.getNextId());
 		newPO.setCoinType(dto.getCoinType());
 		newPO.setCurrencyType(dto.getCurrencyType());
-		newPO.setTelegramChatPk(dto.getTelegramChatPK());
+		newPO.setTelegramChatId(decryptPrivateKey(dto.getTelegramChatPK()));
 		newPO.setNoticeCount(dto.getNoticeCount());
 		newPO.setMaxPrice(dto.getMaxPrice());
 		newPO.setMinPrice(dto.getMinPrice());
@@ -282,7 +292,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		}
 
 		if (StringUtils.isNotBlank(content)) {
-			CommonResult sendResult = telegramService.sendMessage(content, noticeSetting.getTelegramChatPk());
+			CommonResult sendResult = telegramService.sendMessage(content, noticeSetting.getTelegramChatId());
 			if (sendResult.isSuccess()) {
 				noticeSetting.setNoticeTime(LocalDateTime.now());
 				noticeSetting.setNoticeCount(noticeSetting.getNoticeCount() - 1);
@@ -446,5 +456,71 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		CryptoCoinPriceNotice record = new CryptoCoinPriceNotice();
 		record.setIsDelete(true);
 		noticeMapper.updateByExampleSelective(record, example);
+	}
+
+	private List<CryptoCoinNoticeVO> getValidNotices() {
+		List<CryptoCoinPriceNotice> noticeList = noticeMapper.selectValidNoticeSetting(LocalDateTime.now());
+		List<CryptoCoinNoticeVO> noticeVOList = new ArrayList<>();
+		for(CryptoCoinPriceNotice po : noticeList) {
+			noticeVOList.add(poToVO(po));
+		}
+		return noticeVOList;
+	}
+	
+	private CryptoCoinNoticeVO poToVO(CryptoCoinPriceNotice po) {
+		CryptoCoinNoticeVO vo = new CryptoCoinNoticeVO();
+		vo.setPk(encryptId(po.getId()));
+		vo.setCryptoCoinCode(po.getCoinType());
+		vo.setCryptoCoinName(CryptoCoinType.getType(po.getCoinType()).getName());
+		vo.setCurrencyCode(po.getCurrencyType());
+		vo.setCurrencyName(CurrencyType.getType(po.getCurrencyType()).getName());
+		if(po.getMaxPrice() != null) {
+			vo.setMaxPrice(po.getMaxPrice().doubleValue());
+		}
+		if(po.getMinPrice() != null) {
+			vo.setMinPrice(po.getMinPrice().doubleValue());
+		}
+		if(po.getTimeUnitOfDataWatch() != null) {
+			vo.setTimeUnitOfDataWatch(po.getTimeUnitOfDataWatch());
+			vo.setTimeUnitOfDataWatchName(TimeUnitType.getType(po.getTimeUnitOfDataWatch()).getCnName());
+			vo.setTimeRangeOfDataWatch(po.getTimeRangeOfDataWatch());
+		}
+		if(po.getTimeUnitOfNoticeInterval() != null) {
+			vo.setTimeUnitOfNoticeInterval(po.getTimeUnitOfNoticeInterval());
+			vo.setTimeUnitOfNoticeIntervalName(TimeUnitType.getType(po.getTimeUnitOfNoticeInterval()).getCnName());
+			vo.setTimeRangeOfNoticeInterval(po.getTimeRangeOfNoticeInterval());
+		}
+		vo.setNoticeCount(po.getNoticeCount());
+		vo.setValidTime(localDateTimeHandler.dateToStr(po.getValidTime()));
+		vo.setNoticeTime(localDateTimeHandler.dateToStr(po.getNoticeTime()));
+		vo.setNextNoticeTime(localDateTimeHandler.dateToStr(po.getNextNoticeTime()));
+		TelegramChatId chatIdPO = telegramService.getChatID(po.getTelegramChatId());
+		TelegramChatIdVO chatIdVO = telegramService.buildChatIdVO(chatIdPO);
+		vo.setNoticeReciver(chatIdVO.getUsername());
+		vo.setNoticeReciverPK(chatIdVO.getPk());
+		return vo;
+	}
+
+	@Override
+	public CommonResult deleteNotice(String pk) {
+		CommonResult r = new CommonResult();
+		Long id = decryptPrivateKey(pk);
+		if(id == null) {
+			r.failWithMessage("param error");
+			return r;
+		}
+		
+		CryptoCoinPriceNotice po = noticeMapper.selectByPrimaryKey(id);
+		po.setIsDelete(true);
+		
+		int updateCount = noticeMapper.updateByPrimaryKeySelective(po);
+		
+		if(updateCount == 1) {
+			r.successWithMessage("delete success");
+			return r;
+		} else {
+			r.failWithMessage("update error");
+			return r;
+		}
 	}
 }

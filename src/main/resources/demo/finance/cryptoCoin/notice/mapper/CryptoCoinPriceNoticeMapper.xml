@@ -10,7 +10,7 @@
     <result column="time_unit_of_data_watch" jdbcType="INTEGER" property="timeUnitOfDataWatch" />
     <result column="time_range_of_data_watch" jdbcType="INTEGER" property="timeRangeOfDataWatch" />
     <result column="fluctuation_speed_percentage" jdbcType="DECIMAL" property="fluctuationSpeedPercentage" />
-    <result column="telegram_chat_pk" jdbcType="CHAR" property="telegramChatPk" />
+    <result column="telegram_chat_id" jdbcType="BIGINT" property="telegramChatId" />
     <result column="notice_count" jdbcType="INTEGER" property="noticeCount" />
     <result column="time_unit_of_notice_interval" jdbcType="INTEGER" property="timeUnitOfNoticeInterval" />
     <result column="time_range_of_notice_interval" jdbcType="INTEGER" property="timeRangeOfNoticeInterval" />
@@ -80,7 +80,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, coin_type, currency_type, max_price, min_price, time_unit_of_data_watch, time_range_of_data_watch, 
-    fluctuation_speed_percentage, telegram_chat_pk, notice_count, time_unit_of_notice_interval, 
+    fluctuation_speed_percentage, telegram_chat_id, notice_count, time_unit_of_notice_interval, 
     time_range_of_notice_interval, valid_time, notice_time, next_notice_time, create_time, 
     is_delete
   </sql>
@@ -118,14 +118,14 @@
     insert into crypto_coin_price_notice (id, coin_type, currency_type, 
       max_price, min_price, time_unit_of_data_watch, 
       time_range_of_data_watch, fluctuation_speed_percentage, 
-      telegram_chat_pk, notice_count, time_unit_of_notice_interval, 
+      telegram_chat_id, notice_count, time_unit_of_notice_interval, 
       time_range_of_notice_interval, valid_time, 
       notice_time, next_notice_time, create_time, 
       is_delete)
     values (#{id,jdbcType=BIGINT}, #{coinType,jdbcType=INTEGER}, #{currencyType,jdbcType=INTEGER}, 
       #{maxPrice,jdbcType=DECIMAL}, #{minPrice,jdbcType=DECIMAL}, #{timeUnitOfDataWatch,jdbcType=INTEGER}, 
       #{timeRangeOfDataWatch,jdbcType=INTEGER}, #{fluctuationSpeedPercentage,jdbcType=DECIMAL}, 
-      #{telegramChatPk,jdbcType=CHAR}, #{noticeCount,jdbcType=INTEGER}, #{timeUnitOfNoticeInterval,jdbcType=INTEGER}, 
+      #{telegramChatId,jdbcType=BIGINT}, #{noticeCount,jdbcType=INTEGER}, #{timeUnitOfNoticeInterval,jdbcType=INTEGER}, 
       #{timeRangeOfNoticeInterval,jdbcType=INTEGER}, #{validTime,jdbcType=TIMESTAMP}, 
       #{noticeTime,jdbcType=TIMESTAMP}, #{nextNoticeTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
       #{isDelete,jdbcType=BIT})
@@ -157,8 +157,8 @@
       <if test="fluctuationSpeedPercentage != null">
         fluctuation_speed_percentage,
       </if>
-      <if test="telegramChatPk != null">
-        telegram_chat_pk,
+      <if test="telegramChatId != null">
+        telegram_chat_id,
       </if>
       <if test="noticeCount != null">
         notice_count,
@@ -210,8 +210,8 @@
       <if test="fluctuationSpeedPercentage != null">
         #{fluctuationSpeedPercentage,jdbcType=DECIMAL},
       </if>
-      <if test="telegramChatPk != null">
-        #{telegramChatPk,jdbcType=CHAR},
+      <if test="telegramChatId != null">
+        #{telegramChatId,jdbcType=BIGINT},
       </if>
       <if test="noticeCount != null">
         #{noticeCount,jdbcType=INTEGER},
@@ -272,8 +272,8 @@
       <if test="record.fluctuationSpeedPercentage != null">
         fluctuation_speed_percentage = #{record.fluctuationSpeedPercentage,jdbcType=DECIMAL},
       </if>
-      <if test="record.telegramChatPk != null">
-        telegram_chat_pk = #{record.telegramChatPk,jdbcType=CHAR},
+      <if test="record.telegramChatId != null">
+        telegram_chat_id = #{record.telegramChatId,jdbcType=BIGINT},
       </if>
       <if test="record.noticeCount != null">
         notice_count = #{record.noticeCount,jdbcType=INTEGER},
@@ -314,7 +314,7 @@
       time_unit_of_data_watch = #{record.timeUnitOfDataWatch,jdbcType=INTEGER},
       time_range_of_data_watch = #{record.timeRangeOfDataWatch,jdbcType=INTEGER},
       fluctuation_speed_percentage = #{record.fluctuationSpeedPercentage,jdbcType=DECIMAL},
-      telegram_chat_pk = #{record.telegramChatPk,jdbcType=CHAR},
+      telegram_chat_id = #{record.telegramChatId,jdbcType=BIGINT},
       notice_count = #{record.noticeCount,jdbcType=INTEGER},
       time_unit_of_notice_interval = #{record.timeUnitOfNoticeInterval,jdbcType=INTEGER},
       time_range_of_notice_interval = #{record.timeRangeOfNoticeInterval,jdbcType=INTEGER},
@@ -351,8 +351,8 @@
       <if test="fluctuationSpeedPercentage != null">
         fluctuation_speed_percentage = #{fluctuationSpeedPercentage,jdbcType=DECIMAL},
       </if>
-      <if test="telegramChatPk != null">
-        telegram_chat_pk = #{telegramChatPk,jdbcType=CHAR},
+      <if test="telegramChatId != null">
+        telegram_chat_id = #{telegramChatId,jdbcType=BIGINT},
       </if>
       <if test="noticeCount != null">
         notice_count = #{noticeCount,jdbcType=INTEGER},
@@ -390,7 +390,7 @@
       time_unit_of_data_watch = #{timeUnitOfDataWatch,jdbcType=INTEGER},
       time_range_of_data_watch = #{timeRangeOfDataWatch,jdbcType=INTEGER},
       fluctuation_speed_percentage = #{fluctuationSpeedPercentage,jdbcType=DECIMAL},
-      telegram_chat_pk = #{telegramChatPk,jdbcType=CHAR},
+      telegram_chat_id = #{telegramChatId,jdbcType=BIGINT},
       notice_count = #{noticeCount,jdbcType=INTEGER},
       time_unit_of_notice_interval = #{timeUnitOfNoticeInterval,jdbcType=INTEGER},
       time_range_of_notice_interval = #{timeRangeOfNoticeInterval,jdbcType=INTEGER},

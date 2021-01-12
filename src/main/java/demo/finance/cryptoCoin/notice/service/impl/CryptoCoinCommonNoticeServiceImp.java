@@ -108,12 +108,13 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		CryptoCoinType coinType = CryptoCoinType.getType(dto.getCoinType());
 		CurrencyType currencyType = CurrencyType.getType(dto.getCurrencyType());
-		
+
 		if (dto.getNoticeCount() == null || dto.getNoticeCount() < 0) {
 			dto.setNoticeCount(1);
-		} else if (dto.getNoticeCount() > 1){
+		} else if (dto.getNoticeCount() > 1) {
 			TimeUnitType timeUnitTypeOfNoticeInterval = TimeUnitType.getType(dto.getTimeUnitOfNoticeInterval());
-			if(timeUnitTypeOfNoticeInterval == null || dto.getTimeRangeOfNoticeInterval() == null || dto.getTimeRangeOfNoticeInterval() < 1) {
+			if (timeUnitTypeOfNoticeInterval == null || dto.getTimeRangeOfNoticeInterval() == null
+					|| dto.getTimeRangeOfNoticeInterval() < 1) {
 				r.failWithMessage("please set notice interval");
 				return r;
 			}
@@ -140,7 +141,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 				return r;
 			}
 			TimeUnitType timeUnitTypeOfDataWatch = TimeUnitType.getType(dto.getTimeUnitOfDataWatch());
-			if (timeUnitTypeOfDataWatch == null || dto.getTimeRangeOfDataWatch() == null || dto.getTimeRangeOfDataWatch() < 0) {
+			if (timeUnitTypeOfDataWatch == null || dto.getTimeRangeOfDataWatch() == null
+					|| dto.getTimeRangeOfDataWatch() < 0) {
 				r.failWithMessage("data watch time range setting error");
 				return r;
 			}
@@ -172,7 +174,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 				return r;
 			}
 		}
-		
+
 		r.setValidTime(validDate);
 		r.setIsSuccess();
 		return r;
@@ -216,8 +218,9 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 	private boolean priceFluctuationSpeedConditionHadSet(CryptoCoinPriceNotice po) {
 		return po.getFluctuationSpeedPercentage() != null
-				&& po.getFluctuationSpeedPercentage().compareTo(BigDecimal.ZERO) != 0 && po.getTimeUnitOfDataWatch() != null
-				&& po.getTimeRangeOfDataWatch() != null && po.getTimeRangeOfDataWatch() > 0;
+				&& po.getFluctuationSpeedPercentage().compareTo(BigDecimal.ZERO) != 0
+				&& po.getTimeUnitOfDataWatch() != null && po.getTimeRangeOfDataWatch() != null
+				&& po.getTimeRangeOfDataWatch() > 0;
 	}
 
 	@Override
@@ -248,12 +251,15 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		}
 
 		/*
-		 * if it is REUSE notice, notice count should > 1, event in last round, notice time will not be null
+		 * if it is REUSE notice, notice count should > 1, event in last round, notice
+		 * time will not be null
 		 */
 		LocalDateTime nextNoticeTime = null;
-		if(noticeSetting.getNoticeTime() != null && noticeSetting.getNoticeCount() > 1) {
-			TimeUnitType timeUnitTypeOfNoticeInterval = TimeUnitType.getType(noticeSetting.getTimeUnitOfNoticeInterval());
-			nextNoticeTime = getNextSettingTime(noticeSetting.getNoticeTime(), timeUnitTypeOfNoticeInterval, noticeSetting.getTimeRangeOfNoticeInterval().longValue());
+		if (noticeSetting.getNoticeTime() != null && noticeSetting.getNoticeCount() > 1) {
+			TimeUnitType timeUnitTypeOfNoticeInterval = TimeUnitType
+					.getType(noticeSetting.getTimeUnitOfNoticeInterval());
+			nextNoticeTime = getNextSettingTime(noticeSetting.getNoticeTime(), timeUnitTypeOfNoticeInterval,
+					noticeSetting.getTimeRangeOfNoticeInterval().longValue());
 			if (nextNoticeTime == null || nextNoticeTime.isAfter(LocalDateTime.now())) {
 				r.failWithMessage("get next notice time error");
 				return r;
@@ -274,7 +280,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 				content += handleResult.getMessage();
 			}
 		}
-		
+
 		if (StringUtils.isNotBlank(content)) {
 			CommonResult sendResult = telegramService.sendMessage(content, noticeSetting.getTelegramChatPk());
 			if (sendResult.isSuccess()) {
@@ -314,7 +320,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			r.addMessage(maxMinPriceResult.getMessage());
 			return r;
 		}
-		
+
 		BigDecimal lastMaxPrice = maxMinPriceResult.getMaxPrice();
 		BigDecimal lastMinPrice = maxMinPriceResult.getMinPrice();
 		String content = null;
@@ -371,26 +377,27 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			trigerPercentage = 0 - trigerPercentage;
 		}
 
-		if ((maxMinPriceResult.getMinPriceDateTime().isBefore(maxMinPriceResult.getMaxPriceDateTime())
-				||maxMinPriceResult.getMinPriceDateTime().isEqual(maxMinPriceResult.getMaxPriceDateTime())) 
-				&& upApmlitude >= trigerPercentage) {
+		if (maxMinPriceResult.getMinPriceDateTime().isBefore(maxMinPriceResult.getMaxPriceDateTime())
+				|| maxMinPriceResult.getMinPriceDateTime().isEqual(maxMinPriceResult.getMaxPriceDateTime())) {
 //			String pattern = "虚拟币名, 标价货币名, 最近 x 小时/分钟, 升幅达 %s, 
 //			%s时触及最低价 %s, %s时触及最高价 %s, 最新价为 %s";
-			content = coinType.getName() + ", " + currencyType.getName() + ", "
-					+ "最近" + noticeSetting.getTimeRangeOfDataWatch() + TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch()).getCnName() + ", "
-					+ "升幅达 " + upApmlitude + ", "
-					+ maxMinPriceResult.getMinPriceDateTime() + " 时触及低价: " + lastMin + ", "
-					+ maxMinPriceResult.getMaxPriceDateTime() + " 时触及高价: " + lastMax + ", "
-					+ "最新价: " + historyPOList.get(0).getEndPrice()
-					;
-		} else if (maxMinPriceResult.getMaxPriceDateTime().isBefore(maxMinPriceResult.getMinPriceDateTime()) && (0 - lowApmlitude) >= trigerPercentage) {
-			content = coinType.getName() + ", " + currencyType.getName() + ", "
-					+ "最近" + noticeSetting.getTimeRangeOfDataWatch() + TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch()).getCnName() + ", "
-					+ "跌幅达 " + lowApmlitude + ", "
-					+ maxMinPriceResult.getMaxPriceDateTime() + " 时触及高价: " + lastMax + ", "
-					+ maxMinPriceResult.getMinPriceDateTime() + " 时触及低价: " + lastMin + ", "
-					+ "最新价: " + historyPOList.get(0).getEndPrice()
-					;
+			if (upApmlitude >= trigerPercentage) {
+				content = coinType.getName() + ", " + currencyType.getName() + ", " + "最近"
+						+ noticeSetting.getTimeRangeOfDataWatch()
+						+ TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch()).getCnName() + ", " + "升幅达 "
+						+ upApmlitude + ", " + maxMinPriceResult.getMinPriceDateTime() + " 时触及低价: " + lastMin + ", "
+						+ maxMinPriceResult.getMaxPriceDateTime() + " 时触及高价: " + lastMax + ", " + "最新价: "
+						+ historyPOList.get(0).getEndPrice();
+			}
+		} else {
+			if((0 - lowApmlitude) >= trigerPercentage) {
+				content = coinType.getName() + ", " + currencyType.getName() + ", " + "最近"
+						+ noticeSetting.getTimeRangeOfDataWatch()
+						+ TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch()).getCnName() + ", " + "跌幅达 "
+						+ lowApmlitude + ", " + maxMinPriceResult.getMaxPriceDateTime() + " 时触及高价: " + lastMax + ", "
+						+ maxMinPriceResult.getMinPriceDateTime() + " 时触及低价: " + lastMin + ", " + "最新价: "
+						+ historyPOList.get(0).getEndPrice();
+			}
 		}
 
 		if (content != null) {

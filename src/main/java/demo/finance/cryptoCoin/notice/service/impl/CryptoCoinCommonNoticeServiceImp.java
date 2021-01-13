@@ -26,6 +26,7 @@ import demo.finance.cryptoCoin.data.service.CryptoCoin1MonthDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1WeekDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin5MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin60MinuteDataSummaryService;
+import demo.finance.cryptoCoin.mq.producer.TelegramMessageAckProducer;
 import demo.finance.cryptoCoin.notice.mapper.CryptoCoinPriceNoticeMapper;
 import demo.finance.cryptoCoin.notice.pojo.dto.NoticeUpdateDTO;
 import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNotice;
@@ -36,6 +37,7 @@ import demo.finance.cryptoCoin.notice.service.CryptoCoinCommonNoticeService;
 import demo.tool.telegram.pojo.po.TelegramChatId;
 import demo.tool.telegram.pojo.vo.TelegramChatIdVO;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
+import telegram.pojo.dto.TelegramMessageDTO;
 
 @Service
 public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService implements CryptoCoinCommonNoticeService {
@@ -55,6 +57,9 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	@Autowired
 	private CryptoCoin1MonthDataSummaryService monthlyDataSummaryService;
 
+	@Autowired
+	private TelegramMessageAckProducer telegramMessageAckProducer;
+	
 	@Override
 	public ModelAndView insertNewCryptoCoinPriceNoticeSetting() {
 		ModelAndView view = new ModelAndView("finance/cryptoCoin/insertNewCryptoCoinPriceNoticeSetting");
@@ -293,22 +298,21 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		}
 
 		if (StringUtils.isNotBlank(content)) {
-			CommonResult sendResult = telegramService.sendMessage(content, noticeSetting.getTelegramChatId());
-			if (sendResult.isSuccess()) {
-				noticeSetting.setNoticeTime(LocalDateTime.now());
-				noticeSetting.setNoticeCount(noticeSetting.getNoticeCount() - 1);
-				if (noticeSetting.getNoticeCount() < 1) {
-					noticeSetting.setIsDelete(true);
-				} else {
-					noticeSetting.setNextNoticeTime(nextNoticeTime);
-				}
-				noticeMapper.updateByPrimaryKeySelective(noticeSetting);
-				r.successWithMessage("notice sended");
-				return r;
+			TelegramMessageDTO dto = new TelegramMessageDTO();
+			dto.setMsg(content);
+			dto.setId(noticeSetting.getId());
+			telegramMessageAckProducer.send(dto);
+			
+			noticeSetting.setNoticeTime(LocalDateTime.now());
+			noticeSetting.setNoticeCount(noticeSetting.getNoticeCount() - 1);
+			if (noticeSetting.getNoticeCount() < 1) {
+				noticeSetting.setIsDelete(true);
 			} else {
-				r.failWithMessage(sendResult.getMessage());
-				return r;
+				noticeSetting.setNextNoticeTime(nextNoticeTime);
 			}
+			noticeMapper.updateByPrimaryKeySelective(noticeSetting);
+			r.successWithMessage("notice sended");
+			return r;
 		} else {
 			r.failWithMessage("didn't hit any notice setting");
 			return r;

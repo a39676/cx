@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt"  prefix="fmt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
@@ -84,14 +85,45 @@
 
 <div class="row">
   <div class="col-md-12">
+    <table class="table table-striped" id="noticeSearchConditionTable">
+      <thead>
+        <tr>
+          <td>
+            <select id="telegramChatPKOfSearch">
+              <c:forEach items="${chatVOList}" var="chatVO">
+                <option value="${chatVO.pk}">${chatVO.username}</option>
+              </c:forEach>
+            </select>
+          </td>
+          <td>
+            <select id="coinTypeOfSearch">
+              <c:forEach items="${cryptoCoinType}" var="subCoinType">
+                <option value="${subCoinType.code}">${subCoinType.name}</option>
+              </c:forEach>
+            </select>
+          </td>
+          <td>
+            <select id="currencyOfSearch">
+              <c:forEach items="${currencyType}" var="subCurrencyType">
+                <option value="${subCurrencyType.code}">${subCurrencyType.name}</option>
+              </c:forEach>
+            </select>
+          </td>
+        </tr>
+      </thead>
+    </table>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
     <table class="table table-striped table-dark">
       <thead class="thead-dark">
         <tr>
           <td>接收人</td> <%-- noticeReciver --%>
           <td>数据时间范围</td> <%-- timeUnitOfDataWatch --%>
           <td>通知间隔</td> <%-- timeUnitOfNoticeInterval --%>
-          <td>加密币</td> <%-- cryptoCoinName --%>
-          <td>兑换币</td> <%-- currencyName --%>
+          <td>加密币 & 兑换币</td> <%-- cryptoCoin currency --%>
           <td>监控最高价</td> <%-- maxPrice --%>
           <td>监控最低价</td> <%-- minPrice --%>
           <td>监控涨跌速(%)</td> <%-- fluctuactionSpeedPercentage --%>
@@ -102,70 +134,82 @@
           <td></td>
         </tr>
       </thead>
-      <c:forEach items="${noticeVOList}" var="noticeVO">
-        <tr class="noticeVO" noticePK="${noticeVO.pk}">
-          <td noticePK="${noticeVO.pk}" name="noticeReciver">${noticeVO.noticeReciver}</td>
-          <td>
-            <input type="number" noticePK="${noticeVO.pk}" name="timeRangeOfDataWatch" 
-            value="${noticeVO.timeRangeOfDataWatch}" style="width: 80px;">
-            <select noticePK="${noticeVO.pk}" name="timeUnitOfDataWatch">
-              <option value="${noticeVO.timeUnitOfDataWatch}">${noticeVO.timeUnitOfDataWatchName}</option>
-              <c:forEach items="${timeUnitType}" var="timeUnitType">
-                <option value="${timeUnitType.code}">${timeUnitType.cnName}</option>
-              </c:forEach>
-            </select>
-          </td>
-          <td>
-            <input type="number" noticePK="${noticeVO.pk}" name="timeRangeOfNoticeInterval" 
-            value="${noticeVO.timeRangeOfNoticeInterval}" style="width: 80px;">
-            <select noticePK="${noticeVO.pk}" name="timeUnitOfNoticeInterval">
-              <option value="${noticeVO.timeUnitOfNoticeInterval}">${noticeVO.timeUnitOfNoticeIntervalName}</option>
-              <c:forEach items="${timeUnitType}" var="timeUnitType">
-                <option value="${timeUnitType.code}">${timeUnitType.cnName}</option>
-              </c:forEach>
-            </select>
-          </td>
-          <td>
-            <select noticePK="${noticeVO.pk}" name="cryptoCoinCode">
-              <option value="${noticeVO.cryptoCoinCode}">${noticeVO.cryptoCoinName}</option>
-              <c:forEach items="${cryptoCoinType}" var="subCoinType">
-                <option value="${subCoinType.code}">${subCoinType.name}</option>
-              </c:forEach>
-            </select>
-          </td>
-          <td>
-            <select noticePK="${noticeVO.pk}" name="currencyCode">
-              <option value="${noticeVO.currencyCode}">${noticeVO.currencyName}</option>
-              <c:forEach items="${currencyType}" var="subCurrencyType">
-                <option value="${subCurrencyType.code}">${subCurrencyType.name}</option>
-              </c:forEach>
-            </select>
-          </td>
-          <td>
-            <input type="" noticePK="${noticeVO.pk}" name="maxPrice" 
-            value="${noticeVO.maxPrice}" style="width: 80px;">
-          </td>
-          <td>
-            <input type="" noticePK="${noticeVO.pk}" name="minPrice" 
-            value="${noticeVO.minPrice}" style="width: 80px;">
-          </td>
-          <td>
-            <input type="number" noticePK="${noticeVO.pk}" name="fluctuactionSpeedPercentage" 
-            value="${noticeVO.fluctuactionSpeedPercentage}" style="width: 80px;">
-          </td>
-          <td>
-            <input type="number" noticePK="${noticeVO.pk}" name="noticeCount" 
-            value="${noticeVO.noticeCount}" style="width: 80px;">
-          </td>
-          <td>${noticeVO.noticeTime}</td>
-          <td>${noticeVO.nextNoticeTime}</td>
-          <td>${noticeVO.validTime}</td>
-          <td>
-            <button name="modify" noticePK="${noticeVO.pk}">修改</button>
-            <button name="delete" noticePK="${noticeVO.pk}">删除</button>
-          </td>
-        </tr>
-      </c:forEach>
+      <tbody>
+        <c:forEach items="${noticeVOList}" var="noticeVO">
+          <tr class="noticeVO" noticePK="${noticeVO.pk}">
+            <td noticePK="${noticeVO.pk}" name="noticeReciver">${noticeVO.noticeReciver}</td>
+            <td>
+              <input type="number" noticePK="${noticeVO.pk}" name="timeRangeOfDataWatch" 
+              value="${noticeVO.timeRangeOfDataWatch}" style="width: 80px;">
+              <select noticePK="${noticeVO.pk}" name="timeUnitOfDataWatch">
+                <option value="${noticeVO.timeUnitOfDataWatch}">${noticeVO.timeUnitOfDataWatchName}</option>
+                <c:forEach items="${timeUnitType}" var="timeUnitType">
+                  <option value="${timeUnitType.code}">${timeUnitType.cnName}</option>
+                </c:forEach>
+              </select>
+            </td>
+            <td>
+              <input type="number" noticePK="${noticeVO.pk}" name="timeRangeOfNoticeInterval" 
+              value="${noticeVO.timeRangeOfNoticeInterval}" style="width: 80px;">
+              <select noticePK="${noticeVO.pk}" name="timeUnitOfNoticeInterval">
+              <option value="${noticeVO.timeUnitOfNoticeInterval}">${noticeVO.timeUnitOfNoticeIntervalName} </option>
+                <c:forEach items="${timeUnitType}" var="timeUnitType">
+                  <option value="${timeUnitType.code}">${timeUnitType.cnName}</option>
+                </c:forEach>
+              </select>
+            </td>
+            <td>
+              <select noticePK="${noticeVO.pk}" name="cryptoCoinCode">
+                <option value="${noticeVO.cryptoCoinCode}">${noticeVO.cryptoCoinName}</option>
+                <c:forEach items="${cryptoCoinType}" var="subCoinType">
+                  <option value="${subCoinType.code}">${subCoinType.name}</option>
+                </c:forEach>
+              </select>
+              <select noticePK="${noticeVO.pk}" name="currencyCode">
+                <option value="${noticeVO.currencyCode}">${noticeVO.currencyName}</option>
+                <c:forEach items="${currencyType}" var="subCurrencyType">
+                  <option value="${subCurrencyType.code}">${subCurrencyType.name}</option>
+                </c:forEach>
+              </select>
+            </td>
+            <td>
+              <input type="" noticePK="${noticeVO.pk}" name="maxPrice" 
+              value="${noticeVO.maxPrice}" style="width: 80px;">
+            </td>
+            <td>
+              <input type="" noticePK="${noticeVO.pk}" name="minPrice" 
+              value="${noticeVO.minPrice}" style="width: 80px;">
+            </td>
+            <td>
+              <input type="number" noticePK="${noticeVO.pk}" name="fluctuactionSpeedPercentage" 
+              value="${noticeVO.fluctuactionSpeedPercentage}" style="width: 50px;">
+            </td>
+            <td>
+              <input type="number" noticePK="${noticeVO.pk}" name="noticeCount" 
+              value="${noticeVO.noticeCount}" style="width: 80px;">
+            </td>
+            <td>
+              ${noticeVO.noticeTime}
+            </td>
+            <td>
+              <c:set var = "tmpDate" value = "${fn:substring(noticeVO.nextNoticeTime, 0, 10)}" />
+              <c:set var = "tmpTime" value = "${fn:substring(noticeVO.nextNoticeTime, 11, 19)}" />
+              <input type="date" name="" value="${tmpDate}">
+              <input type="time" name="" value="${tmpTime}">
+            </td>
+            <td>
+              <c:set var = "tmpDate" value = "${fn:substring(noticeVO.validTime, 0, 10)}" />
+              <c:set var = "tmpTime" value = "${fn:substring(noticeVO.validTime, 11, 19)}" />
+              <input type="date" name="" value="${tmpDate}">
+              <input type="time" name="" value="${tmpTime}">
+            </td>
+            <td>
+              <button name="modify" noticePK="${noticeVO.pk}">修改</button>
+              <button name="delete" noticePK="${noticeVO.pk}">删除</button>
+            </td>
+          </tr>
+        </c:forEach>
+      </tbody>
     </table>
   </div>
 </div>
@@ -195,6 +239,8 @@
         var pk = $(this).attr("noticePK");
         updateNotice(pk);
       })
+
+      searchNotice();
 
       function insertCryptoCoinNoticeSetting() {
       
@@ -317,6 +363,39 @@
           noticeCount : noticeCount,
         };
 
+        $.ajax({  
+          type : "POST", 
+          url : url,  
+          data: JSON.stringify(jsonOutput),
+          dataType: 'json',
+          contentType: "application/json",
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          timeout: 15000,
+          success:function(data){
+            $("#result").text(data.message);
+          }, 
+          error:function(e){
+            $("#result").text(e);
+          }
+        });
+      }
+
+      function searchNotice() {
+        var url = "/cryptoCoin/searchNotice";
+
+        var reciverPK = $("#telegramChatPKOfSearch option:selected").val();
+        var cryptoCoinCode = $("#coinTypeOfSearch option:selected").val();
+        var currencyCode = $("#currencyOfSearch option:selected").val();
+        
+
+        var jsonOutput = {
+          reciverPK : reciverPK,
+          cryptoCoinCode : cryptoCoinCode,
+          currencyCode : currencyCode,
+        };
+
         console.log(jsonOutput);
 
         $.ajax({  
@@ -330,7 +409,8 @@
           },
           timeout: 15000,
           success:function(data){
-            $("#result").text(data.message);
+            // $("#result").text(data.message);
+            console.log(data);
           }, 
           error:function(e){
             $("#result").text(e);

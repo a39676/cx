@@ -29,9 +29,11 @@ import demo.finance.cryptoCoin.data.service.CryptoCoin60MinuteDataSummaryService
 import demo.finance.cryptoCoin.mq.producer.TelegramMessageAckProducer;
 import demo.finance.cryptoCoin.notice.mapper.CryptoCoinPriceNoticeMapper;
 import demo.finance.cryptoCoin.notice.pojo.dto.NoticeUpdateDTO;
+import demo.finance.cryptoCoin.notice.pojo.dto.SearchCryptoCoinConditionDTO;
 import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNotice;
 import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNoticeExample;
 import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNoticeExample.Criteria;
+import demo.finance.cryptoCoin.notice.pojo.result.CryptoCoinSearchResult;
 import demo.finance.cryptoCoin.notice.pojo.vo.CryptoCoinNoticeVO;
 import demo.finance.cryptoCoin.notice.service.CryptoCoinCommonNoticeService;
 import demo.tool.telegram.pojo.po.TelegramChatId;
@@ -75,7 +77,6 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			chatIdVOList.add(telegramService.buildChatIdVO(po));
 		}
 		view.addObject("chatVOList", chatIdVOList);
-		view.addObject("noticeVOList", getValidNotices());
 		return view;
 	}
 
@@ -460,13 +461,37 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		noticeMapper.updateByExampleSelective(record, example);
 	}
 
-	private List<CryptoCoinNoticeVO> getValidNotices() {
-		List<CryptoCoinPriceNotice> noticeList = noticeMapper.selectValidNoticeSetting(LocalDateTime.now());
+	@Override
+	public CryptoCoinSearchResult searchValidNotices(SearchCryptoCoinConditionDTO dto) {
+		CryptoCoinSearchResult r = new CryptoCoinSearchResult();
+		
+		Long chatId = decryptPrivateKey(dto.getReciverPK());
+		
+		CryptoCoinPriceNoticeExample example = new CryptoCoinPriceNoticeExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andIsDeleteEqualTo(false)
+		.andNoticeCountGreaterThan(0)
+		.andValidTimeGreaterThan(LocalDateTime.now())
+		.andNextNoticeTimeLessThan(LocalDateTime.now())
+		.andTelegramChatIdEqualTo(chatId);
+		if(chatId != null) {
+			criteria.andTelegramChatIdEqualTo(chatId);
+		}
+		if(dto.getCryptoCoinCode() != null) {
+			criteria.andCoinTypeEqualTo(dto.getCryptoCoinCode());
+		}
+		if(dto.getCurrencyCode() != null) {
+			criteria.andCurrencyTypeEqualTo(dto.getCurrencyCode());
+		}
+		
+		List<CryptoCoinPriceNotice> noticeList = noticeMapper.selectByExample(example);
 		List<CryptoCoinNoticeVO> noticeVOList = new ArrayList<>();
 		for (CryptoCoinPriceNotice po : noticeList) {
 			noticeVOList.add(poToVO(po));
 		}
-		return noticeVOList;
+		r.setVoList(noticeVOList);
+		r.setIsSuccess();
+		return r;
 	}
 
 	private CryptoCoinNoticeVO poToVO(CryptoCoinPriceNotice po) {

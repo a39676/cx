@@ -7,5 +7,7 @@ public class CryptoCoinNoticeUrl {
 	public static final String DELETE_NOTICE = "/deleteNotice";
 	
 	public static final String UPDATE_NOTICE = "/updateNotice";
+	
+	public static final String SEARCH_NOTICE = "/searchNotice";
 
 }

@@ -59,7 +59,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 	@Autowired
 	private TelegramMessageAckProducer telegramMessageAckProducer;
-	
+
 	@Override
 	public ModelAndView insertNewCryptoCoinPriceNoticeSetting() {
 		ModelAndView view = new ModelAndView("finance/cryptoCoin/insertNewCryptoCoinPriceNoticeSetting");
@@ -68,10 +68,10 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.minute, TimeUnitType.hour, TimeUnitType.day,
 				TimeUnitType.week, TimeUnitType.month };
 		view.addObject("timeUnitType", timeUnitTypes);
-		
+
 		List<TelegramChatId> chatIDPOList = telegramService.getChatIDList();
-		List<TelegramChatIdVO>chatIdVOList = new ArrayList<>();
-		for(TelegramChatId po : chatIDPOList) {
+		List<TelegramChatIdVO> chatIdVOList = new ArrayList<>();
+		for (TelegramChatId po : chatIDPOList) {
 			chatIdVOList.add(telegramService.buildChatIdVO(po));
 		}
 		view.addObject("chatVOList", chatIdVOList);
@@ -270,16 +270,9 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		 * if it is REUSE notice, notice count should > 1, event in last round, notice
 		 * time will not be null
 		 */
-		LocalDateTime nextNoticeTime = null;
-		if (noticeSetting.getNoticeTime() != null && noticeSetting.getNoticeCount() > 1) {
-			TimeUnitType timeUnitTypeOfNoticeInterval = TimeUnitType
-					.getType(noticeSetting.getTimeUnitOfNoticeInterval());
-			nextNoticeTime = getNextSettingTime(noticeSetting.getNoticeTime(), timeUnitTypeOfNoticeInterval,
-					noticeSetting.getTimeRangeOfNoticeInterval().longValue());
-			if (nextNoticeTime == null || nextNoticeTime.isAfter(LocalDateTime.now())) {
-				r.failWithMessage("get next notice time error");
-				return r;
-			}
+		LocalDateTime nextNoticeTime = noticeSetting.getNextNoticeTime();
+		if (nextNoticeTime == null || nextNoticeTime.isAfter(LocalDateTime.now())) {
+			return r;
 		}
 
 		String content = "";
@@ -302,12 +295,16 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			dto.setMsg(content);
 			dto.setId(noticeSetting.getId());
 			telegramMessageAckProducer.send(dto);
-			
+
 			noticeSetting.setNoticeTime(LocalDateTime.now());
 			noticeSetting.setNoticeCount(noticeSetting.getNoticeCount() - 1);
 			if (noticeSetting.getNoticeCount() < 1) {
 				noticeSetting.setIsDelete(true);
 			} else {
+				TimeUnitType timeUnitTypeOfNoticeInterval = TimeUnitType
+						.getType(noticeSetting.getTimeUnitOfNoticeInterval());
+				nextNoticeTime = getNextSettingTime(noticeSetting.getNoticeTime(), timeUnitTypeOfNoticeInterval,
+						noticeSetting.getTimeRangeOfNoticeInterval().longValue());
 				noticeSetting.setNextNoticeTime(nextNoticeTime);
 			}
 			noticeMapper.updateByPrimaryKeySelective(noticeSetting);
@@ -405,7 +402,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 						+ historyPOList.get(0).getEndPrice();
 			}
 		} else {
-			if((0 - lowApmlitude) >= trigerPercentage) {
+			if ((0 - lowApmlitude) >= trigerPercentage) {
 				content = coinType.getName() + ", " + currencyType.getName() + ", " + "最近"
 						+ noticeSetting.getTimeRangeOfDataWatch()
 						+ TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch()).getCnName() + ", " + "跌幅达 "
@@ -466,12 +463,12 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	private List<CryptoCoinNoticeVO> getValidNotices() {
 		List<CryptoCoinPriceNotice> noticeList = noticeMapper.selectValidNoticeSetting(LocalDateTime.now());
 		List<CryptoCoinNoticeVO> noticeVOList = new ArrayList<>();
-		for(CryptoCoinPriceNotice po : noticeList) {
+		for (CryptoCoinPriceNotice po : noticeList) {
 			noticeVOList.add(poToVO(po));
 		}
 		return noticeVOList;
 	}
-	
+
 	private CryptoCoinNoticeVO poToVO(CryptoCoinPriceNotice po) {
 		CryptoCoinNoticeVO vo = new CryptoCoinNoticeVO();
 		vo.setPk(encryptId(po.getId()));
@@ -479,23 +476,23 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		vo.setCryptoCoinName(CryptoCoinType.getType(po.getCoinType()).getName());
 		vo.setCurrencyCode(po.getCurrencyType());
 		vo.setCurrencyName(CurrencyType.getType(po.getCurrencyType()).getName());
-		if(po.getMaxPrice() != null) {
+		if (po.getMaxPrice() != null) {
 			vo.setMaxPrice(po.getMaxPrice().doubleValue());
 		}
-		if(po.getMinPrice() != null) {
+		if (po.getMinPrice() != null) {
 			vo.setMinPrice(po.getMinPrice().doubleValue());
 		}
-		if(po.getTimeUnitOfDataWatch() != null) {
+		if (po.getTimeUnitOfDataWatch() != null) {
 			vo.setTimeUnitOfDataWatch(po.getTimeUnitOfDataWatch());
 			vo.setTimeUnitOfDataWatchName(TimeUnitType.getType(po.getTimeUnitOfDataWatch()).getCnName());
 			vo.setTimeRangeOfDataWatch(po.getTimeRangeOfDataWatch());
 		}
-		if(po.getTimeUnitOfNoticeInterval() != null) {
+		if (po.getTimeUnitOfNoticeInterval() != null) {
 			vo.setTimeUnitOfNoticeInterval(po.getTimeUnitOfNoticeInterval());
 			vo.setTimeUnitOfNoticeIntervalName(TimeUnitType.getType(po.getTimeUnitOfNoticeInterval()).getCnName());
 			vo.setTimeRangeOfNoticeInterval(po.getTimeRangeOfNoticeInterval());
 		}
-		if(po.getFluctuationSpeedPercentage() != null) {
+		if (po.getFluctuationSpeedPercentage() != null) {
 			vo.setFluctuactionSpeedPercentage(po.getFluctuationSpeedPercentage().doubleValue());
 		}
 		vo.setNoticeCount(po.getNoticeCount());
@@ -513,17 +510,17 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	public CommonResult deleteNotice(String pk) {
 		CommonResult r = new CommonResult();
 		Long id = decryptPrivateKey(pk);
-		if(id == null) {
+		if (id == null) {
 			r.failWithMessage("param error");
 			return r;
 		}
-		
+
 		CryptoCoinPriceNotice po = noticeMapper.selectByPrimaryKey(id);
 		po.setIsDelete(true);
-		
+
 		int updateCount = noticeMapper.updateByPrimaryKeySelective(po);
-		
-		if(updateCount == 1) {
+
+		if (updateCount == 1) {
 			r.successWithMessage("delete success");
 			return r;
 		} else {
@@ -535,62 +532,62 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	@Override
 	public CommonResult updateNotice(NoticeUpdateDTO dto) {
 		CommonResult r = new CommonResult();
-		
+
 		Long id = decryptPrivateKey(dto.getPk());
-		if(id == null) {
+		if (id == null) {
 			r.failWithMessage("param error");
 			return r;
 		}
-		
+
 		CryptoCoinPriceNotice po = noticeMapper.selectByPrimaryKey(id);
-		if(po == null) {
+		if (po == null) {
 			return r;
 		}
-		
+
 		CryptoCoinType coinType = CryptoCoinType.getType(dto.getCryptoCoinCode());
 		CurrencyType currencyType = CurrencyType.getType(dto.getCurrencyCode());
-		if(coinType == null || currencyType == null) {
+		if (coinType == null || currencyType == null) {
 			r.failWithMessage("param error");
 			return r;
 		}
 		po.setCoinType(coinType.getCode());
 		po.setCurrencyType(currencyType.getCode());
-		
-		if(dto.getMaxPrice() != null) {
+
+		if (dto.getMaxPrice() != null) {
 			po.setMaxPrice(new BigDecimal(dto.getMaxPrice()));
 		} else {
 			po.setMaxPrice(null);
 		}
-		if(dto.getMinPrice() != null) {
+		if (dto.getMinPrice() != null) {
 			po.setMinPrice(new BigDecimal(dto.getMinPrice()));
 		} else {
 			po.setMinPrice(null);
 		}
-		
+
 		po.setTimeUnitOfDataWatch(dto.getTimeUnitOfDataWatch());
 		po.setTimeRangeOfDataWatch(dto.getTimeRangeOfDataWatch());
-		
+
 		po.setTimeUnitOfNoticeInterval(dto.getTimeUnitOfNoticeInterval());
 		po.setTimeRangeOfNoticeInterval(dto.getTimeRangeOfNoticeInterval());
-		
-		if(dto.getFluctuactionSpeedPercentage() != null) {
+
+		if (dto.getFluctuactionSpeedPercentage() != null) {
 			po.setFluctuationSpeedPercentage(new BigDecimal(dto.getFluctuactionSpeedPercentage()));
 		} else {
 			po.setFluctuationSpeedPercentage(null);
 		}
-		
+
 		po.setNoticeCount(dto.getNoticeCount());
-		
-		if(!priceConditionHadSet(po) && !priceFluctuationSpeedConditionHadSet(po)) {
+
+		if (!priceConditionHadSet(po) && !priceFluctuationSpeedConditionHadSet(po)) {
 			r.failWithMessage("please check notice condition");
 			return r;
 		}
-		
+
 		int updateCount = noticeMapper.updateByPrimaryKey(po);
-		if(updateCount == 1) {
+		if (updateCount == 1) {
 			r.successWithMessage("udpate success");
 		}
-		
+
 		return r;
 	}
 }

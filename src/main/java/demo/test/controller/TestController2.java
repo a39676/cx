@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.common.controller.CommonController;
 import demo.finance.cryptoCoin.mq.producer.TelegramMessageAckProducer;
@@ -24,10 +25,12 @@ public class TestController2 extends CommonController {
 	private TelegramMessageAckProducer telegramMessageAckProducer;
 	
 	@GetMapping(value = "/telTest")
-	public void telTest(@RequestParam(value = "msg") String msg, @RequestParam(value = "id") Long id) {
+	@ResponseBody
+	public String telTest(@RequestParam(value = "msg") String msg, @RequestParam(value = "id") Long id) {
 		TelegramMessageDTO dto = new TelegramMessageDTO();
 		dto.setMsg(msg);
 		dto.setId(id);
 		telegramMessageAckProducer.send(dto);
+		return "done";
 	}
 }

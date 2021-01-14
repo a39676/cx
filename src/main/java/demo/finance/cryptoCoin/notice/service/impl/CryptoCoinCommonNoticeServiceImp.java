@@ -464,6 +464,12 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	public ModelAndView searchValidNotices(SearchCryptoCoinConditionDTO dto) {
 		ModelAndView view = new ModelAndView("finance/cryptoCoin/CryptoCoinPriceNoticeSearchResult");
 		
+		view.addObject("cryptoCoinType", CryptoCoinType.values());
+		view.addObject("currencyType", CurrencyType.values());
+		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.minute, TimeUnitType.hour, TimeUnitType.day,
+				TimeUnitType.week, TimeUnitType.month };
+		view.addObject("timeUnitType", timeUnitTypes);
+		
 		Long chatId = decryptPrivateKey(dto.getReciverPK());
 		
 		CryptoCoinPriceNoticeExample example = new CryptoCoinPriceNoticeExample();

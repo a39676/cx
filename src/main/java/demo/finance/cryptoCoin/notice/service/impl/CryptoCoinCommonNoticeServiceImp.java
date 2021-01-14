@@ -477,7 +477,6 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		criteria.andIsDeleteEqualTo(false)
 		.andNoticeCountGreaterThan(0)
 		.andValidTimeGreaterThan(LocalDateTime.now())
-		.andNextNoticeTimeLessThan(LocalDateTime.now())
 		;
 		if(chatId != null) {
 			criteria.andTelegramChatIdEqualTo(chatId);

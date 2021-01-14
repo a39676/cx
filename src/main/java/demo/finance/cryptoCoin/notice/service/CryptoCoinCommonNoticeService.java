@@ -6,11 +6,10 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.data.pojo.dto.InsertCryptoCoinPriceNoticeSettingDTO;
 import demo.finance.cryptoCoin.notice.pojo.dto.NoticeUpdateDTO;
 import demo.finance.cryptoCoin.notice.pojo.dto.SearchCryptoCoinConditionDTO;
-import demo.finance.cryptoCoin.notice.pojo.result.CryptoCoinSearchResult;
 
 public interface CryptoCoinCommonNoticeService {
 
-	ModelAndView insertNewCryptoCoinPriceNoticeSetting();
+	ModelAndView cryptoCoinPriceNoticeSettingManager();
 
 	void noticeHandler();
 
@@ -22,6 +21,6 @@ public interface CryptoCoinCommonNoticeService {
 
 	CommonResult updateNotice(NoticeUpdateDTO dto);
 
-	CryptoCoinSearchResult searchValidNotices(SearchCryptoCoinConditionDTO dto);
+	ModelAndView searchValidNotices(SearchCryptoCoinConditionDTO dto);
 
 }

@@ -20,6 +20,9 @@ public class NoticeUpdateDTO {
 
 	private Integer noticeCount;
 
+	private String nextNoticeTime;
+	private String validTime;
+
 	public String getPk() {
 		return pk;
 	}
@@ -108,13 +111,30 @@ public class NoticeUpdateDTO {
 		this.fluctuactionSpeedPercentage = fluctuactionSpeedPercentage;
 	}
 
+	public String getNextNoticeTime() {
+		return nextNoticeTime;
+	}
+
+	public void setNextNoticeTime(String nextNoticeTime) {
+		this.nextNoticeTime = nextNoticeTime;
+	}
+
+	public String getValidTime() {
+		return validTime;
+	}
+
+	public void setValidTime(String validTime) {
+		this.validTime = validTime;
+	}
+
 	@Override
 	public String toString() {
 		return "NoticeUpdateDTO [pk=" + pk + ", cryptoCoinCode=" + cryptoCoinCode + ", currencyCode=" + currencyCode
 				+ ", maxPrice=" + maxPrice + ", minPrice=" + minPrice + ", timeRangeOfDataWatch=" + timeRangeOfDataWatch
 				+ ", timeUnitOfDataWatch=" + timeUnitOfDataWatch + ", timeRangeOfNoticeInterval="
 				+ timeRangeOfNoticeInterval + ", timeUnitOfNoticeInterval=" + timeUnitOfNoticeInterval
-				+ ", fluctuactionSpeedPercentage=" + fluctuactionSpeedPercentage + ", noticeCount=" + noticeCount + "]";
+				+ ", fluctuactionSpeedPercentage=" + fluctuactionSpeedPercentage + ", noticeCount=" + noticeCount
+				+ ", nextNoticeTime=" + nextNoticeTime + ", validTime=" + validTime + "]";
 	}
 
 }

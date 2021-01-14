@@ -33,7 +33,6 @@ import demo.finance.cryptoCoin.notice.pojo.dto.SearchCryptoCoinConditionDTO;
 import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNotice;
 import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNoticeExample;
 import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNoticeExample.Criteria;
-import demo.finance.cryptoCoin.notice.pojo.result.CryptoCoinSearchResult;
 import demo.finance.cryptoCoin.notice.pojo.vo.CryptoCoinNoticeVO;
 import demo.finance.cryptoCoin.notice.service.CryptoCoinCommonNoticeService;
 import demo.tool.telegram.pojo.po.TelegramChatId;
@@ -63,8 +62,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	private TelegramMessageAckProducer telegramMessageAckProducer;
 
 	@Override
-	public ModelAndView insertNewCryptoCoinPriceNoticeSetting() {
-		ModelAndView view = new ModelAndView("finance/cryptoCoin/insertNewCryptoCoinPriceNoticeSetting");
+	public ModelAndView cryptoCoinPriceNoticeSettingManager() {
+		ModelAndView view = new ModelAndView("finance/cryptoCoin/CryptoCoinPriceNoticeSettingManager");
 		view.addObject("cryptoCoinType", CryptoCoinType.values());
 		view.addObject("currencyType", CurrencyType.values());
 		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.minute, TimeUnitType.hour, TimeUnitType.day,
@@ -462,8 +461,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	}
 
 	@Override
-	public CryptoCoinSearchResult searchValidNotices(SearchCryptoCoinConditionDTO dto) {
-		CryptoCoinSearchResult r = new CryptoCoinSearchResult();
+	public ModelAndView searchValidNotices(SearchCryptoCoinConditionDTO dto) {
+		ModelAndView view = new ModelAndView("finance/cryptoCoin/CryptoCoinPriceNoticeSearchResult");
 		
 		Long chatId = decryptPrivateKey(dto.getReciverPK());
 		
@@ -473,7 +472,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		.andNoticeCountGreaterThan(0)
 		.andValidTimeGreaterThan(LocalDateTime.now())
 		.andNextNoticeTimeLessThan(LocalDateTime.now())
-		.andTelegramChatIdEqualTo(chatId);
+		;
 		if(chatId != null) {
 			criteria.andTelegramChatIdEqualTo(chatId);
 		}
@@ -489,9 +488,9 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		for (CryptoCoinPriceNotice po : noticeList) {
 			noticeVOList.add(poToVO(po));
 		}
-		r.setVoList(noticeVOList);
-		r.setIsSuccess();
-		return r;
+		
+		view.addObject("noticeVOList", noticeVOList);
+		return view;
 	}
 
 	private CryptoCoinNoticeVO poToVO(CryptoCoinPriceNotice po) {
@@ -577,6 +576,22 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		}
 		po.setCoinType(coinType.getCode());
 		po.setCurrencyType(currencyType.getCode());
+		
+		if(StringUtils.isNotBlank(dto.getNextNoticeTime())) {
+			LocalDateTime nextNoticeTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getNextNoticeTime());
+			if(nextNoticeTime == null) {
+				r.failWithMessage("next notice time setting error");
+			}
+			po.setNextNoticeTime(nextNoticeTime);
+		}
+		
+		if(StringUtils.isNotBlank(dto.getValidTime())) {
+			LocalDateTime validTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getValidTime());
+			if(validTime == null) {
+				r.failWithMessage("valid time setting error");
+			}
+			po.setValidTime(validTime);
+		}
 
 		if (dto.getMaxPrice() != null) {
 			po.setMaxPrice(new BigDecimal(dto.getMaxPrice()));

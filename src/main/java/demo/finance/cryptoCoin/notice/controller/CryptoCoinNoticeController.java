@@ -15,7 +15,6 @@ import demo.finance.cryptoCoin.notice.pojo.constant.CryptoCoinNoticeUrl;
 import demo.finance.cryptoCoin.notice.pojo.dto.DeleteNoticeDTO;
 import demo.finance.cryptoCoin.notice.pojo.dto.NoticeUpdateDTO;
 import demo.finance.cryptoCoin.notice.pojo.dto.SearchCryptoCoinConditionDTO;
-import demo.finance.cryptoCoin.notice.pojo.result.CryptoCoinSearchResult;
 import demo.finance.cryptoCoin.notice.service.CryptoCoinCommonNoticeService;
 import finance.cryptoCoin.pojo.constant.CryptoCoinPriceCommonUrl;
 
@@ -28,7 +27,7 @@ public class CryptoCoinNoticeController {
 	
 	@GetMapping(value = CryptoCoinNoticeUrl.INSERT_CRYPTO_COIN_NOTICE_SETTING)
 	public ModelAndView insertNewCryptoCoinPriceNoticeSetting() {
-		return commonNoticeService.insertNewCryptoCoinPriceNoticeSetting();
+		return commonNoticeService.cryptoCoinPriceNoticeSettingManager();
 	}
 	
 	@PostMapping(value = CryptoCoinNoticeUrl.INSERT_CRYPTO_COIN_NOTICE_SETTING)
@@ -50,8 +49,7 @@ public class CryptoCoinNoticeController {
 	}
 	
 	@PostMapping(value = CryptoCoinNoticeUrl.SEARCH_NOTICE)
-	@ResponseBody
-	public CryptoCoinSearchResult deleteNotice(@RequestBody SearchCryptoCoinConditionDTO dto) {
+	public ModelAndView searchValidNotices(@RequestBody SearchCryptoCoinConditionDTO dto) {
 		return commonNoticeService.searchValidNotices(dto);
 	}
 }

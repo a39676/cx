@@ -14,106 +14,6 @@
 <body>
 <div class="container-fluid">
 
-<div class="row">
-  <select id="coinType">
-    <c:forEach items="${cryptoCoinType}" var="subCoinType">
-      <option value="${subCoinType.code}">${subCoinType.name}</option>
-    </c:forEach>
-  </select>
-
-  <select id="currencyType">
-    <c:forEach items="${currencyType}" var="subCurrencyType">
-      <option value="${subCurrencyType.code}">${subCurrencyType.name}</option>
-    </c:forEach>
-  </select>
-</div>
-
-<div class="row">
-  <select id="telegramChatPK">
-    <c:forEach items="${chatVOList}" var="chatVO">
-      <option value="${chatVO.pk}">${chatVO.username}</option>
-    </c:forEach>
-  </select>
-  <input type="Date" id="validTime">
-</div>
-
-<div class="row">
-  <input type="text" id="maxPrice" placeholder="高位提示价">
-  <input type="text" id="minPrice" placeholder="低位提示价">
-</div>
-
-<div class="row">
-  <input type="text" id="originalPrice" placeholder="参考价">
-  <input type="text" id="pricePercentage" placeholder="价格波动范围(%)">
-</div>
-
-<div class="row">
-  <input type="text" id="timeRangeOfDataWatch" placeholder="监控数据时间范围">
-  <select id="timeUnitOfDataWatch">
-    <c:forEach items="${timeUnitType}" var="timeUnitType">
-      <option value="${timeUnitType.code}">${timeUnitType.cnName}</option>
-    </c:forEach>
-  </select>
-  <input type="text" id="fluctuationSpeedPercentage" placeholder="升速/跌速范围(%)">
-</div>
-
-<div class="row">
-  <input type="text" id="timeRangeOfNoticeInterval" placeholder="提示时间间隔设置">
-  <select id="timeUnitOfNoticeInterval">
-    <c:forEach items="${timeUnitType}" var="timeUnitType">
-      <option value="${timeUnitType.code}">${timeUnitType.cnName}</option>
-    </c:forEach>
-  </select>
-</div>
-
-<div class="row">
-  <input type="Date" id="noticeStartDate"><input type="Time" id="noticeStartTime" value="00:00">
-</div>
-
-<div class="row">
-  <input type="number" id="noticeCount" placeholder="提醒次数">
-</div>
-
-<hr>
-
-<button id="insert">insert</button>
-
-<hr>
-
-<p>insert result: </p>
-<p id="result"></p>
-
-<div class="row">
-  <div class="col-md-12">
-    <table class="table table-striped" id="noticeSearchConditionTable">
-      <thead>
-        <tr>
-          <td>
-            <select id="telegramChatPKOfSearch">
-              <c:forEach items="${chatVOList}" var="chatVO">
-                <option value="${chatVO.pk}">${chatVO.username}</option>
-              </c:forEach>
-            </select>
-          </td>
-          <td>
-            <select id="coinTypeOfSearch">
-              <c:forEach items="${cryptoCoinType}" var="subCoinType">
-                <option value="${subCoinType.code}">${subCoinType.name}</option>
-              </c:forEach>
-            </select>
-          </td>
-          <td>
-            <select id="currencyOfSearch">
-              <c:forEach items="${currencyType}" var="subCurrencyType">
-                <option value="${subCurrencyType.code}">${subCurrencyType.name}</option>
-              </c:forEach>
-            </select>
-          </td>
-        </tr>
-      </thead>
-    </table>
-  </div>
-</div>
 
 <div class="row">
   <div class="col-md-12">
@@ -134,7 +34,7 @@
           <td></td>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="noticeVOList">
         <c:forEach items="${noticeVOList}" var="noticeVO">
           <tr class="noticeVO" noticePK="${noticeVO.pk}">
             <td noticePK="${noticeVO.pk}" name="noticeReciver">${noticeVO.noticeReciver}</td>
@@ -194,14 +94,14 @@
             <td>
               <c:set var = "tmpDate" value = "${fn:substring(noticeVO.nextNoticeTime, 0, 10)}" />
               <c:set var = "tmpTime" value = "${fn:substring(noticeVO.nextNoticeTime, 11, 19)}" />
-              <input type="date" name="" value="${tmpDate}">
-              <input type="time" name="" value="${tmpTime}">
+              <input type="date" name="nextNoticeDate" noticePK="${noticeVO.pk}" value="${tmpDate}">
+              <input type="time" name="nextNoticeTime" noticePK="${noticeVO.pk}" value="${tmpTime}">
             </td>
             <td>
               <c:set var = "tmpDate" value = "${fn:substring(noticeVO.validTime, 0, 10)}" />
               <c:set var = "tmpTime" value = "${fn:substring(noticeVO.validTime, 11, 19)}" />
-              <input type="date" name="" value="${tmpDate}">
-              <input type="time" name="" value="${tmpTime}">
+              <input type="date" name="validDate" noticePK="${noticeVO.pk}" value="${tmpDate}">
+              <input type="time" name="validTime" noticePK="${noticeVO.pk}" value="${tmpTime}">
             </td>
             <td>
               <button name="modify" noticePK="${noticeVO.pk}">修改</button>
@@ -214,6 +114,7 @@
   </div>
 </div>
 
+
 </div>
 </body>
 
@@ -222,13 +123,6 @@
   <script type="text/javascript">
 
     $(document).ready(function() {
-
-      document.getElementById('noticeStartDate').valueAsDate = new Date();
-      document.getElementById('validTime').valueAsDate = new Date();
-
-      $("#insert").click(function () {
-        insertCryptoCoinNoticeSetting();
-      });
 
       $("button[name='delete']").click(function () {
         var pk = $(this).attr("noticePK");
@@ -239,72 +133,6 @@
         var pk = $(this).attr("noticePK");
         updateNotice(pk);
       })
-
-      searchNotice();
-
-      function insertCryptoCoinNoticeSetting() {
-      
-        var url = "/cryptoCoin/insertCryptoCoinNoticeSetting";
-
-        var coinType = $("#coinType option:selected").val();
-        var currencyType = $("#currencyType option:selected").val();
-
-        var maxPrice = $("#maxPrice").val();
-        var minPrice = $("#minPrice").val();
-        
-        var originalPrice = $("#originalPrice").val();
-        var pricePercentage = $("#pricePercentage").val();
-
-        var timeUnitOfDataWatch = $("#timeUnitOfDataWatch option:selected").val();
-        var timeRangeOfDataWatch = $("#timeRangeOfDataWatch").val();
-        var fluctuationSpeedPercentage = $("#fluctuationSpeedPercentage").val();
-
-        var timeUnitOfNoticeInterval = $("#timeUnitOfNoticeInterval option:selected").val();
-        var timeRangeOfNoticeInterval = $("#timeRangeOfNoticeInterval").val();
-
-        var telegramChatPK = $("#telegramChatPK option:selected").val();
-        var validTime = $("#validTime").val();
-
-        var startNoticeTime = $("#noticeStartDate").val() + " " + $("#noticeStartTime").val();
-
-        var noticeCount = $("#noticeCount").val();
-
-        var jsonOutput = {
-          coinType : coinType,
-          currencyType : currencyType,
-          maxPrice : maxPrice,
-          minPrice : minPrice,
-          originalPrice : originalPrice,
-          pricePercentage : pricePercentage,
-          timeUnitOfDataWatch : timeUnitOfDataWatch,
-          timeRangeOfDataWatch : timeRangeOfDataWatch,
-          fluctuationSpeedPercentage : fluctuationSpeedPercentage,
-          timeUnitOfNoticeInterval : timeUnitOfNoticeInterval,
-          timeRangeOfNoticeInterval : timeRangeOfNoticeInterval,
-          telegramChatPK : telegramChatPK,
-          noticeCount : noticeCount,
-          validTime : validTime,
-          startNoticeTime : startNoticeTime,
-        };
-
-        $.ajax({  
-          type : "POST", 
-          url : url,  
-          data: JSON.stringify(jsonOutput),
-          dataType: 'json',
-          contentType: "application/json",
-          beforeSend: function(xhr) {
-            xhr.setRequestHeader(csrfHeader, csrfToken);
-          },
-          timeout: 15000,
-          success:function(data){
-            $("#result").text(data.message);
-          }, 
-          error:function(e){
-            $("#result").text(e);
-          }
-        });
-      };
 
       function deleteNotice(pk) {
         var url = "/cryptoCoin/deleteNotice";
@@ -349,6 +177,11 @@
         var fluctuactionSpeedPercentage = $("input[noticePK='"+pk+"'][name='fluctuactionSpeedPercentage']").val();
         var noticeCount = $("input[noticePK='"+pk+"'][name='noticeCount']").val();
 
+        var nextNoticeDateTime = $("input[noticePK='"+pk+"'][name='nextNoticeDate']").val() 
+        + " " + $("input[noticePK='"+pk+"'][name='nextNoticeTime']").val();
+        var validDateTime = $("input[noticePK='"+pk+"'][name='validDate']").val() 
+        + " " + $("input[noticePK='"+pk+"'][name='validTime']").val();
+
         var jsonOutput = {
           pk : pk,
           cryptoCoinCode : cryptoCoinCode,
@@ -361,6 +194,8 @@
           timeUnitOfNoticeInterval : timeUnitOfNoticeInterval,
           fluctuactionSpeedPercentage : fluctuactionSpeedPercentage,
           noticeCount : noticeCount,
+          nextNoticeTime : nextNoticeDateTime,
+          validTime : validDateTime,
         };
 
         $.ajax({  
@@ -382,41 +217,6 @@
         });
       }
 
-      function searchNotice() {
-        var url = "/cryptoCoin/searchNotice";
-
-        var reciverPK = $("#telegramChatPKOfSearch option:selected").val();
-        var cryptoCoinCode = $("#coinTypeOfSearch option:selected").val();
-        var currencyCode = $("#currencyOfSearch option:selected").val();
-        
-
-        var jsonOutput = {
-          reciverPK : reciverPK,
-          cryptoCoinCode : cryptoCoinCode,
-          currencyCode : currencyCode,
-        };
-
-        console.log(jsonOutput);
-
-        $.ajax({  
-          type : "POST", 
-          url : url,  
-          data: JSON.stringify(jsonOutput),
-          dataType: 'json',
-          contentType: "application/json",
-          beforeSend: function(xhr) {
-            xhr.setRequestHeader(csrfHeader, csrfToken);
-          },
-          timeout: 15000,
-          success:function(data){
-            // $("#result").text(data.message);
-            console.log(data);
-          }, 
-          error:function(e){
-            $("#result").text(e);
-          }
-        });
-      }
     });
 
   </script>

@@ -129,4 +129,7 @@ dependencies {
 	
 	// rabbitMQ
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-amqp'
+    
+    // 公历 农历 转换
+	compile group: 'com.github.heqiao2010', name: 'lunar', version: '1.4'
 }

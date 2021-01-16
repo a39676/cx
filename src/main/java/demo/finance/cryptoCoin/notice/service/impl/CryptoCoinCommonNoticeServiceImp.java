@@ -1,6 +1,7 @@
 package demo.finance.cryptoCoin.notice.service.impl;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -394,19 +395,21 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 //			String pattern = "虚拟币名, 标价货币名, 最近 x 小时/分钟, 升幅达 %s, 
 //			%s时触及最低价 %s, %s时触及最高价 %s, 最新价为 %s";
 			if (upApmlitude >= trigerPercentage) {
+				BigDecimal bigDecimal = new BigDecimal(upApmlitude);
 				content = coinType.getName() + ", " + currencyType.getName() + ", " + "最近"
 						+ noticeSetting.getTimeRangeOfDataWatch()
 						+ TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch()).getCnName() + ", " + "升幅达 "
-						+ upApmlitude + ", " + maxMinPriceResult.getMinPriceDateTime() + " 时触及低价: " + lastMin + ", "
+						+ bigDecimal.setScale(2, RoundingMode.HALF_UP) + ", " + maxMinPriceResult.getMinPriceDateTime() + " 时触及低价: " + lastMin + ", "
 						+ maxMinPriceResult.getMaxPriceDateTime() + " 时触及高价: " + lastMax + ", " + "最新价: "
 						+ historyPOList.get(0).getEndPrice();
 			}
 		} else {
 			if ((0 - lowApmlitude) >= trigerPercentage) {
+				BigDecimal bigDecimal = new BigDecimal(lowApmlitude);
 				content = coinType.getName() + ", " + currencyType.getName() + ", " + "最近"
 						+ noticeSetting.getTimeRangeOfDataWatch()
 						+ TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch()).getCnName() + ", " + "跌幅达 "
-						+ lowApmlitude + ", " + maxMinPriceResult.getMaxPriceDateTime() + " 时触及高价: " + lastMax + ", "
+						+ bigDecimal.setScale(2, RoundingMode.HALF_UP) + ", " + maxMinPriceResult.getMaxPriceDateTime() + " 时触及高价: " + lastMax + ", "
 						+ maxMinPriceResult.getMinPriceDateTime() + " 时触及低价: " + lastMin + ", " + "最新价: "
 						+ historyPOList.get(0).getEndPrice();
 			}

@@ -1,10 +1,11 @@
 package demo.pmemo.mapper;
 
-import demo.pmemo.pojo.po.PNote;
-import demo.pmemo.pojo.po.PNoteExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
+
+import demo.pmemo.pojo.po.PNote;
+import demo.pmemo.pojo.po.PNoteExample;
 
 public interface PNoteMapper {
     long countByExample(PNoteExample example);

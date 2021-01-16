@@ -20,7 +20,7 @@ public class TelegramMessageAckProducer extends CommonService {
 			return;
 		}
 		JSONObject json = testEventPOToJSON(dto);
-		rabbitTemplate.convertAndSend(TelegramMessageMQConstant.TELEGRAM_MSG_QUEUE, json.toString());
+		rabbitTemplate.convertAndSend(TelegramMessageMQConstant.TELEGRAM_CRYPTO_COIN_MSG_QUEUE, json.toString());
 	}
 
 	private JSONObject testEventPOToJSON(TelegramMessageDTO te) {

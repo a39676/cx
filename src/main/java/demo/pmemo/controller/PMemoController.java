@@ -40,4 +40,5 @@ public class PMemoController extends CommonController {
 	public CommonResult set(@RequestBody SetPMemoDTO dto) {
 		return pMemoService.setMemo(dto);
 	}
+	
 }

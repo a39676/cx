@@ -1,4 +1,5 @@
-pmemo 移动到 article 底下
+mq queue delete
+
 农历提醒
 图片信息传送
 

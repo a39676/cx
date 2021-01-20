@@ -3,7 +3,7 @@ package demo.finance.cryptoCoin.data.pojo.bo;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class CryptoCoinPriceCommonDataBO {
+public class CryptoCoinPriceCommonDataBO implements Comparable<CryptoCoinPriceCommonDataBO>{
     private Long id;
 
     private Integer coinType;
@@ -123,4 +123,32 @@ public class CryptoCoinPriceCommonDataBO {
     public void setIsDelete(Boolean isDelete) {
         this.isDelete = isDelete;
     }
+
+	@Override
+	public int compareTo(CryptoCoinPriceCommonDataBO o) {
+		return compareStartTime(o, this);
+	}
+	
+	private int compareStartTime(CryptoCoinPriceCommonDataBO o, CryptoCoinPriceCommonDataBO t) {
+		if (o.getStartTime() == null || t.getStartTime() == null) {
+			if (o.getStartTime() == null && t.getStartTime() == null) {
+				return 0;
+			} else if (o.getStartTime() == null) {
+				return -1;
+			} else if (this.getStartTime() == null) {
+				return 1;
+			} else {
+				return 0;
+			}
+		} else {
+			if (t.getStartTime().isAfter(o.getStartTime())) {
+				return 1;
+			} else if (t.getStartTime().isBefore(o.getStartTime())) {
+				return -1;
+			} else {
+				return 0;
+			}
+		}
+	}
+	
 }

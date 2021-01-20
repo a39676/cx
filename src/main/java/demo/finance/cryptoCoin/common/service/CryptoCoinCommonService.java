@@ -4,36 +4,11 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.finance.common.service.impl.FinanceCommonService;
-import demo.finance.cryptoCoin.data.mapper.CryptoCoinPriceMapper;
 import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinPriceCommonDataBO;
-import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice;
-import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPriceExample;
-import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPriceExample.Criteria;
 import demo.finance.cryptoCoin.data.pojo.result.FilterBODataResult;
-import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
 public abstract class CryptoCoinCommonService extends FinanceCommonService {
-
-	@Autowired
-	protected CryptoCoinPriceMapper cryptoCoinPriceMapper;
-
-	protected List<CryptoCoinPrice> findCacheDataByTime(CryptoCoinType coinType, CurrencyType currencyType,
-			LocalDateTime startTime, LocalDateTime endTime) {
-		CryptoCoinPriceExample cacheExample = new CryptoCoinPriceExample();
-		Criteria c = cacheExample.createCriteria();
-		c.andIsDeleteEqualTo(false).andCoinTypeEqualTo(coinType.getCode()).andCreateTimeGreaterThanOrEqualTo(startTime)
-				.andCreateTimeLessThan(endTime);
-		if (coinType != null) {
-			c.andCurrencyTypeEqualTo(coinType.getCode());
-		}
-
-		cacheExample.setOrderByClause("create_time");
-		return cryptoCoinPriceMapper.selectByExample(cacheExample);
-	}
 
 	protected FilterBODataResult filterData(List<CryptoCoinPriceCommonDataBO> list) {
 		FilterBODataResult r = new FilterBODataResult();
@@ -58,14 +33,14 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 				minPrice = po.getLowPrice();
 				minPriceDateTime = po.getStartTime();
 			}
-			
-			if(startTime == null || startTime.isAfter(po.getStartTime())) {
+
+			if (startTime == null || startTime.isAfter(po.getStartTime())) {
 				startTime = po.getStartTime();
 			}
-			if(endTime == null || endTime.isBefore(po.getEndTime())) {
+			if (endTime == null || endTime.isBefore(po.getEndTime())) {
 				endTime = po.getEndTime();
 			}
-			
+
 		}
 
 		r.setMaxPrice(maxPrice);
@@ -75,5 +50,48 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 		r.setIsSuccess();
 		return r;
 	}
-	
+
+	protected CryptoCoinPriceCommonDataBO mergerData(CryptoCoinPriceCommonDataBO o, CryptoCoinPriceCommonDataBO t) {
+		if (o == null || t == null) {
+			return o;
+		}
+
+		try {
+			if (o.getStartTime().isAfter(t.getStartTime())) {
+				o.setStartTime(t.getStartTime());
+				if (t.getStartPrice() != null) {
+					o.setStartPrice(t.getStartPrice());
+				}
+			}
+		} catch (Exception e) {
+		}
+
+		try {
+			if (o.getEndTime().isBefore(t.getEndTime())) {
+				o.setEndTime(t.getEndTime());
+				if (t.getEndPrice() != null) {
+					o.setEndPrice(t.getEndPrice());
+				}
+			}
+		} catch (Exception e) {
+		}
+
+		if (t.getHighPrice() != null) {
+			if (o.getHighPrice() == null) {
+				o.setHighPrice(t.getHighPrice());
+			} else if (o.getHighPrice() != null && o.getHighPrice().doubleValue() < t.getHighPrice().doubleValue()) {
+				o.setHighPrice(t.getHighPrice());
+			}
+		}
+		
+		if(t.getLowPrice() != null) {
+			if(o.getLowPrice() == null) {
+				o.setLowPrice(t.getLowPrice());
+			} else if(o.getLowPrice() != null && o.getLowPrice().doubleValue() > t.getLowPrice().doubleValue()) {
+				o.setLowPrice(t.getLowPrice());
+			}
+		}
+		
+		return o;
+	}
 }

@@ -321,14 +321,14 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	private CommonResult priceConditionNoticeHandle(CryptoCoinPriceNotice noticeSetting, CryptoCoinType coinType,
 			CurrencyType currencyType) {
 		CommonResult r = new CommonResult();
-		List<CryptoCoinPriceCommonDataBO> historyPOList = _1MinuteDataSummaryService.getCommonData(coinType,
+		List<CryptoCoinPriceCommonDataBO> historyDataList = _1MinuteDataSummaryService.getCommonDataFillWithCache(coinType,
 				currencyType, LocalDateTime.now().minusMinutes(2));
 
-		if (historyPOList == null || historyPOList.isEmpty()) {
+		if (historyDataList == null || historyDataList.isEmpty()) {
 			return r;
 		}
 
-		FilterBODataResult maxMinPriceResult = filterData(historyPOList);
+		FilterBODataResult maxMinPriceResult = filterData(historyDataList);
 		if (maxMinPriceResult.isFail()) {
 			r.addMessage(maxMinPriceResult.getMessage());
 			return r;
@@ -428,9 +428,9 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		if (TimeUnitType.minute.getCode().equals(timeUnit)) {
 			startTime = LocalDateTime.now().minusMinutes(timeRange);
 			if (CryptoCoinDataConstant.CRYPTO_COIN_1MINUTE_DATA_LIVE_HOURS * 60 > timeRange) {
-				return _1MinuteDataSummaryService.getCommonData(coinType, currencyType, startTime);
+				return _1MinuteDataSummaryService.getCommonDataFillWithCache(coinType, currencyType, startTime);
 			} else if (CryptoCoinDataConstant.CRYPTO_COIN_5MINUTE_DATA_LIVE_HOURS * 60 > timeRange) {
-				return _5MinuteDataSummaryService.getCommonData(coinType, currencyType, startTime);
+				return _5MinuteDataSummaryService.getCommonDataFillWithCache(coinType, currencyType, startTime);
 			}
 		} else if (TimeUnitType.hour.getCode().equals(timeUnit)) {
 			startTime = LocalDateTime.now().minusHours(timeRange);

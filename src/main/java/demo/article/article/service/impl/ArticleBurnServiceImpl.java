@@ -47,13 +47,13 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 	private ArticleBurnMapper articleBurnMapper;
 	
 	private String getArticleBurnStorePrefixPath() {
-		return constantService.getValByName(SystemConstantStore.articleBurnStorePrefixPath);
+		return constantService.getSysValByName(SystemConstantStore.articleBurnStorePrefixPath);
 	}
 	
 	private Long loadMaxArticleLength() {
 		Long maxArticleLength = 0L;
 		try {
-			String maxLengthStr = constantService.getValByName(SystemConstantStore.maxArticleLength);
+			String maxLengthStr = constantService.getSysValByName(SystemConstantStore.maxArticleLength);
 			if(maxLengthStr != null) {
 				maxArticleLength = Long.parseLong(maxLengthStr);
 			}
@@ -70,7 +70,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		if (HostnameType.zhang3.equals(hostnameType)) {
 			return true;
 		} else {
-			String envName = constantService.getValByName(SystemConstantStore.envName);
+			String envName = constantService.getSysValByName(SystemConstantStore.envName);
 			return "dev".equals(envName);
 		}
 	}
@@ -100,7 +100,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		if(!isBigUser()) {
 			count = checkFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
 		}
-		if (!"dev".equals(constantService.getValByName(SystemConstantStore.envName))) {
+		if (!"dev".equals(constantService.getSysValByName(SystemConstantStore.envName))) {
 			if (count >= SearchingDemoConstant.maxInsertCountIn30Minutes) {
 				r.failWithMessage("短时间内加入的任务太多了, 请稍后再试");
 				return r;

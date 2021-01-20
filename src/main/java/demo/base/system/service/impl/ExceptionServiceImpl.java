@@ -52,7 +52,7 @@ public class ExceptionServiceImpl extends CommonService implements ExceptionServ
 			view.setViewName(BaseViewConstant.normal404);
 //		} else if(HostnameType.three.equals(hostnameType)) {
 //			view.setViewName(BaseViewConstant.seekingJob404);
-		} else if("dev".equals(constantService.getValByName(SystemConstantStore.envName, true))){
+		} else if("dev".equals(constantService.getSysValByName(SystemConstantStore.envName, true))){
 			view.setViewName(BaseViewConstant.normal404);
 		} else {
 			view.setViewName(BaseViewConstant.empty);
@@ -72,7 +72,7 @@ public class ExceptionServiceImpl extends CommonService implements ExceptionServ
 	}
 	
 	private boolean findDebugStatus() {
-		String debugStatusStr = constantService.getValByName(SystemConstantStore.debugStatus);
+		String debugStatusStr = constantService.getSysValByName(SystemConstantStore.debugStatus);
 		if(DebugStatusConstant.debuging.equals(debugStatusStr)) {
 			return true;
 		} else {

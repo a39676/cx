@@ -11,13 +11,10 @@ import demo.finance.cryptoCoin.data.service.CryptoCoin1MonthDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1WeekDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin5MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin60MinuteDataSummaryService;
-import demo.finance.cryptoCoin.data.service.CryptoCoinPriceService;
 
 @Component
 public class CryptoCoinDataTaskToolServiceImpl extends CryptoCoinCommonService {
 
-	@Autowired
-	private CryptoCoinPriceService priceService;
 	@Autowired
 	private CryptoCoin1MinuteDataSummaryService cryptoCoin1MinuteDataSummaryService;
 	@Autowired
@@ -42,7 +39,6 @@ public class CryptoCoinDataTaskToolServiceImpl extends CryptoCoinCommonService {
 
 	@Scheduled(cron = "* 2 */1 * * ?")
 	public void deleteExpiredCacheData() {
-		priceService.deleteExpiredCacheData();
 		cryptoCoin1MinuteDataSummaryService.deleteExpiredCacheData();
 		cryptoCoin5MinuteDataSummaryService.deleteExpiredCacheData();
 		cryptoCoin60MinuteDataSummaryService.deleteExpiredCacheData();

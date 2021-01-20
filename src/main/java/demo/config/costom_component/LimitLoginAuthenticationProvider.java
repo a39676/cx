@@ -46,10 +46,10 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
 		String error = "";
-		if(!numberUtil.matchInteger(systemConstantService.getValByName(SystemConstantStore.maxAttempts))) {
+		if(!numberUtil.matchInteger(systemConstantService.getSysValByName(SystemConstantStore.maxAttempts))) {
 			throw new BadCredentialsException(ResultTypeCX.serviceError.getName());
 		}
-		maxAttempts = Integer.parseInt(systemConstantService.getValByName(SystemConstantStore.maxAttempts));
+		maxAttempts = Integer.parseInt(systemConstantService.getSysValByName(SystemConstantStore.maxAttempts));
 		
 		try {
 

@@ -52,15 +52,15 @@ public class MailServiceImpl extends CommonService implements MailService {
 	
 	
 	private boolean isMailReady() {
-		String adminMailName = constantService.getValByName(SystemConstantStore.adminMailName);
-		String adminMailPwd = constantService.getValByName(SystemConstantStore.adminMailPwd);
+		String adminMailName = constantService.getSysValByName(SystemConstantStore.adminMailName);
+		String adminMailPwd = constantService.getSysValByName(SystemConstantStore.adminMailPwd);
 		
 		if(adminMailName == null) {
-			constantService.getValByName(SystemConstantStore.adminMailName, true);
+			constantService.getSysValByName(SystemConstantStore.adminMailName, true);
 		}
 		
 		if(adminMailPwd == null) {
-			constantService.getValByName(SystemConstantStore.adminMailPwd, true);
+			constantService.getSysValByName(SystemConstantStore.adminMailPwd, true);
 		}
 
 		return (adminMailName != null && adminMailPwd != null);
@@ -83,11 +83,11 @@ public class MailServiceImpl extends CommonService implements MailService {
 
 		SendEmail sm = new SendEmail();
 		sm.sendMail(
-				constantService.getValByName(SystemConstantStore.adminMailName), 
-				constantService.getValByName(SystemConstantStore.adminMailPwd), 
+				constantService.getSysValByName(SystemConstantStore.adminMailName), 
+				constantService.getSysValByName(SystemConstantStore.adminMailPwd), 
 				Arrays.asList(sendTo),
 				null,
-				Arrays.asList(constantService.getValByName(SystemConstantStore.adminMailName)),
+				Arrays.asList(constantService.getSysValByName(SystemConstantStore.adminMailName)),
 				title, 
 				content, 
 				null,
@@ -107,11 +107,11 @@ public class MailServiceImpl extends CommonService implements MailService {
 		}
 		SendEmail sm = new SendEmail();
 		sm.sendMail(
-				constantService.getValByName(SystemConstantStore.adminMailName), 
-				constantService.getValByName(SystemConstantStore.adminMailPwd), 
+				constantService.getSysValByName(SystemConstantStore.adminMailName), 
+				constantService.getSysValByName(SystemConstantStore.adminMailPwd), 
 				Arrays.asList(sendTo),
 				null,
-				Arrays.asList(constantService.getValByName(SystemConstantStore.adminMailName)),
+				Arrays.asList(constantService.getSysValByName(SystemConstantStore.adminMailName)),
 				title, 
 				content, 
 				attachmentPathList,
@@ -127,11 +127,11 @@ public class MailServiceImpl extends CommonService implements MailService {
 		}
 		SendEmail sm = new SendEmail();
 		sm.sendMail(
-				constantService.getValByName(SystemConstantStore.adminMailName), 
-				constantService.getValByName(SystemConstantStore.adminMailPwd), 
+				constantService.getSysValByName(SystemConstantStore.adminMailName), 
+				constantService.getSysValByName(SystemConstantStore.adminMailPwd), 
 				Arrays.asList(sendTo),
 				null,
-				Arrays.asList(constantService.getValByName(SystemConstantStore.adminMailName)),
+				Arrays.asList(constantService.getSysValByName(SystemConstantStore.adminMailName)),
 				title, 
 				content, 
 				Arrays.asList(attachmentPath),
@@ -370,9 +370,9 @@ public class MailServiceImpl extends CommonService implements MailService {
 		Properties properties = mailToolService.buildSinaSmtpSslProperties();
 		SendEmail sm = new SendEmail();
 		sm.sendMail(
-				constantService.getValByName(SystemConstantStore.adminMailName), 
-				constantService.getValByName(SystemConstantStore.adminMailPwd), 
-				Arrays.asList(constantService.getValByName(SystemConstantStore.adminMailName)),
+				constantService.getSysValByName(SystemConstantStore.adminMailName), 
+				constantService.getSysValByName(SystemConstantStore.adminMailPwd), 
+				Arrays.asList(constantService.getSysValByName(SystemConstantStore.adminMailName)),
 				null,
 				null,
 				("error : " + LocalDateTime.now().toString()), 
@@ -394,8 +394,8 @@ public class MailServiceImpl extends CommonService implements MailService {
 		Properties imapProperties = mailToolService.buildSinaImapSslProperties();
 		Properties smtpProperties = mailToolService.buildSinaSmtpSslProperties();
 		Store store = mailHandle.getMailStore(
-				constantService.getValByName(SystemConstantStore.adminMailName), 
-				constantService.getValByName(SystemConstantStore.adminMailPwd), 
+				constantService.getSysValByName(SystemConstantStore.adminMailName), 
+				constantService.getSysValByName(SystemConstantStore.adminMailPwd), 
 				smtpProperties, 
 				imapProperties
 				);

@@ -309,7 +309,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 		if(!isBigUser()) {
 			count = checkFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
 		}
-		if (!"dev".equals(constantService.getValByName(SystemConstantStore.envName))) {
+		if (!"dev".equals(constantService.getSysValByName(SystemConstantStore.envName))) {
 			if (count >= SearchingDemoConstant.maxInsertCountIn30Minutes) {
 				r.failWithMessage("短时间内加入的任务太多了, 请稍后再试");
 				return r;
@@ -352,7 +352,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	}
 
 	private boolean isDev(HttpServletRequest request) {
-		String envName = constantService.getValByName(SystemConstantStore.envName);
+		String envName = constantService.getSysValByName(SystemConstantStore.envName);
 		return "dev".equals(envName);
 	}
 }

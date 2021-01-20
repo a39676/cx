@@ -1,4 +1,12 @@
+crypto coin 
+	notice 有重复提醒, 手动执行一下sql , 查看数据?
+	socket 
+		检查
+			is live flag 是否妥善设置
+			有否自动重连
+
 mq queue delete
+linux 服务器上 /home/u2 底下 cx相关文件归整
 
 农历提醒
 图片信息传送

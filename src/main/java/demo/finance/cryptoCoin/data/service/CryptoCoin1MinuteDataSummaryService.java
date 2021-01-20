@@ -27,4 +27,7 @@ public interface CryptoCoin1MinuteDataSummaryService {
 	 */
 	void mergeDuplicateData();
 
+	List<CryptoCoinPriceCommonDataBO> getCommonDataFillWithCache(CryptoCoinType coinType, CurrencyType currencyType,
+			LocalDateTime startTime);
+
 }

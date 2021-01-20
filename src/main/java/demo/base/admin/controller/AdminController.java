@@ -153,7 +153,7 @@ public class AdminController extends CommonController {
 	@PostMapping(value = AdminUrlConstant.refreshSystemConstant)
 	@ResponseBody
 	public String refreshSystemConstant(@RequestBody RefreshSystemConstantDTO dto) {
-		String result = systemConstantService.getValByName(dto.getKey(), true);
+		String result = systemConstantService.getSysValByName(dto.getKey(), true);
 		return result;
 	}
 	
@@ -172,7 +172,7 @@ public class AdminController extends CommonController {
 			adminService.loadHomepageAnnouncementStr(strContent);
 		}
 		JSONObject jsonOutput = new JSONObject();
-		jsonOutput.put("homepageAnnouncementStr", systemConstantService.getValByName(SystemConstantStore.homepageAnnouncementStr));
+		jsonOutput.put("homepageAnnouncementStr", systemConstantService.getSysValByName(SystemConstantStore.homepageAnnouncementStr));
 		outputJson(response, jsonOutput);
 	}
 	

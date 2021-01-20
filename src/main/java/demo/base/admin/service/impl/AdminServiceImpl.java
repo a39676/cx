@@ -42,7 +42,7 @@ public class AdminServiceImpl extends CommonService implements AdminService {
 	
 	@Override
 	public void loadHomepageAnnouncementStr() {
-		String filePath = constantService.getValByName(SystemConstantStore.homepageAnnouncement);
+		String filePath = constantService.getSysValByName(SystemConstantStore.homepageAnnouncement);
 		File f = new File(filePath);
 		if(f.exists()) {
 			String strContent = ioUtil.getStringFromFile(filePath);

@@ -157,7 +157,7 @@ public abstract class CommonService {
 	}
 
 	protected String findHostNameFromRequst(HttpServletRequest request) {
-		if ("dev".equals(constantService.getValByName("envName"))) {
+		if ("dev".equals(constantService.getSysValByName("envName"))) {
 			return "easy";
 		}
 		return request.getServerName();
@@ -201,17 +201,17 @@ public abstract class CommonService {
 			return null;
 		}
 
-		String keys = constantService.getValByName(SystemConstantStore.aesKey);
+		String keys = constantService.getSysValByName(SystemConstantStore.aesKey);
 		if (StringUtils.isBlank(keys)) {
-			keys = constantService.getValByName(SystemConstantStore.aesKey, true);
+			keys = constantService.getSysValByName(SystemConstantStore.aesKey, true);
 			if (StringUtils.isBlank(keys)) {
 				return null;
 			}
 		}
 
-		String initVector = constantService.getValByName(SystemConstantStore.aesInitVector);
+		String initVector = constantService.getSysValByName(SystemConstantStore.aesInitVector);
 		if (StringUtils.isBlank(initVector)) {
-			initVector = constantService.getValByName(SystemConstantStore.aesKey, true);
+			initVector = constantService.getSysValByName(SystemConstantStore.aesKey, true);
 			if (StringUtils.isBlank(initVector)) {
 				return null;
 			}
@@ -242,17 +242,17 @@ public abstract class CommonService {
 			return null;
 		}
 
-		String keys = constantService.getValByName(SystemConstantStore.aesKey);
+		String keys = constantService.getSysValByName(SystemConstantStore.aesKey);
 		if (StringUtils.isBlank(keys)) {
-			keys = constantService.getValByName(SystemConstantStore.aesKey, true);
+			keys = constantService.getSysValByName(SystemConstantStore.aesKey, true);
 			if (StringUtils.isBlank(keys)) {
 				return null;
 			}
 		}
 
-		String initVector = constantService.getValByName(SystemConstantStore.aesInitVector);
+		String initVector = constantService.getSysValByName(SystemConstantStore.aesInitVector);
 		if (StringUtils.isBlank(initVector)) {
-			initVector = constantService.getValByName(SystemConstantStore.aesInitVector, true);
+			initVector = constantService.getSysValByName(SystemConstantStore.aesInitVector, true);
 			if (StringUtils.isBlank(initVector)) {
 				return null;
 			}

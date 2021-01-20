@@ -199,7 +199,7 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 
 			for (int i = 0; i < cacheDataList.size() && cacheDataExistsFlag == false; i++) {
 				tmpCacheData = cacheDataList.get(i);
-				if (tmpCacheData.getStartTime().equals(cacheStartTime)) {
+				if (tmpCacheData.getStartTime().withSecond(0).withNano(0).equals(cacheStartTime)) {
 					cacheDataExistsFlag = true;
 				}
 			}

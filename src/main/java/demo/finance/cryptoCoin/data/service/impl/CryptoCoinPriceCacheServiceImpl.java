@@ -30,7 +30,7 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 		String key = String.format(CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_FORMAT,
 				CryptoCoinType.getType(newBO.getCoinType()).getName(),
 				CurrencyType.getType(newBO.getCurrencyType()).getName(),
-				localDateTimeHandler.dateToStr(newBO.getStartTime().withSecond(0).withNano(0), (CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_DATETIME_FORMAT))
+				localDateTimeHandler.dateToStr(newBO.getStartTime(), (CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_DATETIME_FORMAT))
 				);
 		
 		String dataStr = constantService.getValByName(key);

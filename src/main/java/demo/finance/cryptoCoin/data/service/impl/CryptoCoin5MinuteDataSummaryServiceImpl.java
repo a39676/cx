@@ -194,10 +194,11 @@ public class CryptoCoin5MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 			if(poDataExistsFlag) {
 				cacheDataLimit: for(int i = 0; i < cacheDataList.size(); i++) {
 					tmpCacheData = cacheDataList.get(i);
-					if(!tmpCacheData.getStartTime().isBefore(cacheNextStepTime)) {
+					if(!tmpCacheData.getStartTime().isAfter(cacheNextStepTime) 
+							&& !tmpCacheData.getStartTime().isBefore(cacheStartTime)) {
+						tmpPOData = mergerData(tmpPOData, tmpCacheData);
 						break cacheDataLimit;
 					}
-					tmpPOData = mergerData(tmpPOData, tmpCacheData);
 				}
 			
 			} else {

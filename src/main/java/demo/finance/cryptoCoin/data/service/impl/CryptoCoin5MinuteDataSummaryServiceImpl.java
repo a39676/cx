@@ -170,19 +170,15 @@ public class CryptoCoin5MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 				minuteStepLong).minusMinutes(minuteStepLong * 2);
 
 		Collections.sort(cacheDataList);
-//		TODO
-		/*
-		 * cache data list 时间单位为1min, po时间单位为 5min, 需要另外的 merge 方法
-		 */
 
 		LocalDateTime endTimeNow = LocalDateTime.now().withSecond(0).withNano(0);
 		LocalDateTime cacheStartTime = twoStepBefore;
 
 		boolean poDataExistsFlag = false;
-		boolean cacheDataExistsFlag = false;
 		CryptoCoinPriceCommonDataBO tmpPOData = null;
 		CryptoCoinPriceCommonDataBO tmpCacheData = null;
-
+		LocalDateTime cacheNextStepTime = nextStepTimeByMinute(cacheStartTime, minuteStepLong);
+		
 		while (!cacheStartTime.isAfter(endTimeNow)) {
 			for (int i = 0; i < poDataList.size() && poDataExistsFlag == false; i++) {
 				tmpPOData = poDataList.get(i);
@@ -192,25 +188,37 @@ public class CryptoCoin5MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 			}
 			
 			if(poDataExistsFlag) {
+				cacheDataLimit: for(int i = 0; i < cacheDataList.size(); i++) {
+					tmpCacheData = cacheDataList.get(i);
+					if(!tmpCacheData.getStartTime().isBefore(cacheNextStepTime)) {
+						break cacheDataLimit;
+					}
+					tmpPOData = mergerData(tmpPOData, tmpCacheData);
+				}
+			
+			} else {
+				tmpPOData = new CryptoCoinPriceCommonDataBO();
+				tmpPOData.setCoinType(coinType.getCode());
+				tmpPOData.setCurrencyType(currencyType.getCode());
+				tmpPOData.setVolume(BigDecimal.ZERO);
 				
-			}
-
-			for (int i = 0; i < cacheDataList.size() && cacheDataExistsFlag == false; i++) {
-				tmpCacheData = cacheDataList.get(i);
-				if (tmpCacheData.getStartTime().equals(cacheStartTime)) {
-					cacheDataExistsFlag = true;
+				cacheDataLimit: for(int i = 0; i < cacheDataList.size(); i++) {
+					tmpCacheData = cacheDataList.get(i);
+					if(!tmpCacheData.getStartTime().isBefore(cacheNextStepTime)) {
+						break cacheDataLimit;
+					}
+					if(tmpCacheData.getStartTime().isBefore(cacheStartTime)) {
+						continue;
+					}
+					tmpPOData = mergerData(tmpPOData, tmpCacheData);
+					poDataList.add(tmpPOData);
 				}
 			}
 
-			if (!poDataExistsFlag && cacheDataExistsFlag) {
-				poDataList.add(tmpCacheData);
-			} else if (poDataExistsFlag && cacheDataExistsFlag) {
-				tmpPOData = mergerData(tmpPOData, tmpCacheData);
-			}
 
 			poDataExistsFlag = false;
-			cacheDataExistsFlag = false;
-			cacheStartTime = cacheStartTime.plusMinutes(1);
+			cacheStartTime = nextStepTimeByMinute(cacheStartTime, minuteStepLong);
+			cacheNextStepTime = nextStepTimeByMinute(cacheNextStepTime, minuteStepLong);
 		}
 
 		Collections.sort(poDataList);

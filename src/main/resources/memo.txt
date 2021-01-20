@@ -5,7 +5,7 @@ crypto coin
 			is live flag 是否妥善设置
 			有否自动重连
 
-mq queue delete
+mq queue delete(crypto coin new price)
 linux 服务器上 /home/u2 底下 cx相关文件归整
 
 农历提醒

@@ -92,6 +92,14 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 			}
 		}
 		
+		if(t.getVolume() != null) {
+			if(o.getVolume() == null) {
+				o.setVolume(t.getVolume());
+			} else {
+				o.setVolume(o.getVolume().add(t.getVolume()));
+			}
+		}
+		
 		return o;
 	}
 }

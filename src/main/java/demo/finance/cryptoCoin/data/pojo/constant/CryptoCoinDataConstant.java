@@ -6,16 +6,20 @@ public class CryptoCoinDataConstant {
 	/**
 	 * 2021-01-19
 	 * redis 价格缓存, key格式
-	 * crypto_coin_cache_%s_%s_%s ---> crypto_coin_cache_BTC_USD_2021-12-31_23:59
+	 * crypto_coin_cache_%s_%s_%s ---> crypto_coin_cache_BTC_USD_yyyyMMddHHmm
 	 */
 	public static final String CRYPTO_COIN_CACHE_REDIS_KEY_FORMAT = "crypto_coin_cache_%s_%s_%s";
+	
+	public static final String CRYPTO_COIN_CACHE_REDIS_KEY_DATETIME_FORMAT = "yyyyMMddHHmm";
+	
+//	yyyyMMddHHmmss
 	
 	/**
 	 * 2021-01-19
 	 * 从 crytpo compare web socket 实时获取数据, 最多保存10分钟
 	 * 并且每种虚拟币 兑 货币, 应只保存最新数值
 	 */
-	public static final int CRYPTO_COIN_CACHE_DATA_LIVE_MINUTES = 1;
+	public static final int CRYPTO_COIN_CACHE_DATA_LIVE_MINUTES = 10;
 	
 	/**
 	 * 2020-10-26

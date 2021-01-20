@@ -3,132 +3,140 @@ package demo.finance.cryptoCoin.data.pojo.bo;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class CryptoCoinPriceCommonDataBO implements Comparable<CryptoCoinPriceCommonDataBO>{
-    private Long id;
+public class CryptoCoinPriceCommonDataBO implements Comparable<CryptoCoinPriceCommonDataBO> {
+	private Long id;
 
-    private Integer coinType;
+	private Integer coinType;
 
-    private Integer currencyType;
+	private Integer currencyType;
 
-    private BigDecimal startPrice;
+	private BigDecimal startPrice;
 
-    private BigDecimal endPrice;
+	private BigDecimal endPrice;
 
-    private BigDecimal highPrice;
+	private BigDecimal highPrice;
 
-    private BigDecimal lowPrice;
+	private BigDecimal lowPrice;
 
-    private BigDecimal volume;
+	private BigDecimal volume;
 
-    private LocalDateTime startTime;
+	private LocalDateTime startTime;
 
-    private LocalDateTime endTime;
+	private LocalDateTime endTime;
 
-    private LocalDateTime createTime;
+	private LocalDateTime createTime;
 
-    private Boolean isDelete;
+	private Boolean isDelete;
 
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public Integer getCoinType() {
-        return coinType;
-    }
+	public Integer getCoinType() {
+		return coinType;
+	}
 
-    public void setCoinType(Integer coinType) {
-        this.coinType = coinType;
-    }
+	public void setCoinType(Integer coinType) {
+		this.coinType = coinType;
+	}
 
-    public Integer getCurrencyType() {
-        return currencyType;
-    }
+	public Integer getCurrencyType() {
+		return currencyType;
+	}
 
-    public void setCurrencyType(Integer currencyType) {
-        this.currencyType = currencyType;
-    }
+	public void setCurrencyType(Integer currencyType) {
+		this.currencyType = currencyType;
+	}
 
-    public BigDecimal getStartPrice() {
-        return startPrice;
-    }
+	public BigDecimal getStartPrice() {
+		return startPrice;
+	}
 
-    public void setStartPrice(BigDecimal startPrice) {
-        this.startPrice = startPrice;
-    }
+	public void setStartPrice(BigDecimal startPrice) {
+		this.startPrice = startPrice;
+	}
 
-    public BigDecimal getEndPrice() {
-        return endPrice;
-    }
+	public BigDecimal getEndPrice() {
+		return endPrice;
+	}
 
-    public void setEndPrice(BigDecimal endPrice) {
-        this.endPrice = endPrice;
-    }
+	public void setEndPrice(BigDecimal endPrice) {
+		this.endPrice = endPrice;
+	}
 
-    public BigDecimal getHighPrice() {
-        return highPrice;
-    }
+	public BigDecimal getHighPrice() {
+		return highPrice;
+	}
 
-    public void setHighPrice(BigDecimal highPrice) {
-        this.highPrice = highPrice;
-    }
+	public void setHighPrice(BigDecimal highPrice) {
+		this.highPrice = highPrice;
+	}
 
-    public BigDecimal getLowPrice() {
-        return lowPrice;
-    }
+	public BigDecimal getLowPrice() {
+		return lowPrice;
+	}
 
-    public void setLowPrice(BigDecimal lowPrice) {
-        this.lowPrice = lowPrice;
-    }
+	public void setLowPrice(BigDecimal lowPrice) {
+		this.lowPrice = lowPrice;
+	}
 
-    public BigDecimal getVolume() {
-        return volume;
-    }
+	public BigDecimal getVolume() {
+		return volume;
+	}
 
-    public void setVolume(BigDecimal volume) {
-        this.volume = volume;
-    }
+	public void setVolume(BigDecimal volume) {
+		this.volume = volume;
+	}
 
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
+	public LocalDateTime getStartTime() {
+		return startTime;
+	}
 
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
+	public void setStartTime(LocalDateTime startTime) {
+		this.startTime = startTime;
+	}
 
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
+	public LocalDateTime getEndTime() {
+		return endTime;
+	}
 
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
-    }
+	public void setEndTime(LocalDateTime endTime) {
+		this.endTime = endTime;
+	}
 
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
+	public LocalDateTime getCreateTime() {
+		return createTime;
+	}
 
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
+	public void setCreateTime(LocalDateTime createTime) {
+		this.createTime = createTime;
+	}
 
-    public Boolean getIsDelete() {
-        return isDelete;
-    }
+	public Boolean getIsDelete() {
+		return isDelete;
+	}
 
-    public void setIsDelete(Boolean isDelete) {
-        this.isDelete = isDelete;
-    }
+	public void setIsDelete(Boolean isDelete) {
+		this.isDelete = isDelete;
+	}
+
+	@Override
+	public String toString() {
+		return "CryptoCoinPriceCommonDataBO [id=" + id + ", coinType=" + coinType + ", currencyType=" + currencyType
+				+ ", startPrice=" + startPrice + ", endPrice=" + endPrice + ", highPrice=" + highPrice + ", lowPrice="
+				+ lowPrice + ", volume=" + volume + ", startTime=" + startTime + ", endTime=" + endTime
+				+ ", createTime=" + createTime + ", isDelete=" + isDelete + "]";
+	}
 
 	@Override
 	public int compareTo(CryptoCoinPriceCommonDataBO o) {
 		return compareStartTime(o, this);
 	}
-	
+
 	private int compareStartTime(CryptoCoinPriceCommonDataBO o, CryptoCoinPriceCommonDataBO t) {
 		if (o.getStartTime() == null || t.getStartTime() == null) {
 			if (o.getStartTime() == null && t.getStartTime() == null) {
@@ -150,5 +158,5 @@ public class CryptoCoinPriceCommonDataBO implements Comparable<CryptoCoinPriceCo
 			}
 		}
 	}
-	
+
 }

@@ -162,8 +162,12 @@ public class CryptoCoin5MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 		List<CryptoCoinPriceCommonDataBO> poDataList = getCommonData(coinType, currencyType, startTime);
 
 		List<CryptoCoinPriceCommonDataBO> cacheDataList = cacheService.getCommonData(coinType, currencyType);
-		if (cacheDataList.isEmpty()) {
+		if (poDataList.isEmpty() && cacheDataList.isEmpty()) {
 			return poDataList;
+		} else if (!poDataList.isEmpty() && cacheDataList.isEmpty()) {
+			return poDataList;
+		} else if (poDataList.isEmpty() && !cacheDataList.isEmpty()) {
+			return cacheDataList;
 		}
 
 		LocalDateTime twoStepBefore = nextStepTimeByMinute(LocalDateTime.now().withSecond(0).withNano(0),

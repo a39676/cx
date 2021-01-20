@@ -16,7 +16,6 @@ import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinDataConstant;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
 import net.sf.json.JSONObject;
-import toolPack.dateTimeHandle.DateTimeUtilCommon;
 
 @Service
 public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService implements CryptoCoinPriceCacheService {
@@ -31,7 +30,7 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 		String key = String.format(CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_FORMAT,
 				CryptoCoinType.getType(newBO.getCoinType()).getName(),
 				CurrencyType.getType(newBO.getCurrencyType()).getName(),
-				localDateTimeHandler.dateToStr(newBO.getStartTime(), DateTimeUtilCommon.localDateTimeFormatShort)
+				localDateTimeHandler.dateToStr(newBO.getStartTime().withSecond(0).withNano(0), (CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_DATETIME_FORMAT))
 				);
 		
 		String dataStr = constantService.getValByName(key);
@@ -96,7 +95,7 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 			tmpDataKey = String.format(CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_FORMAT,
 					coinType.getName(),
 					currencyType.getName(),
-					localDateTimeHandler.dateToStr(startTime, DateTimeUtilCommon.localDateTimeFormatShort)
+					localDateTimeHandler.dateToStr(startTime, CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_DATETIME_FORMAT)
 					);
 			
 			tmpDataStr = constantService.getValByName(tmpDataKey);
@@ -106,6 +105,8 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 			if(tmpCommonData != null) {
 				commonDataList.add(tmpCommonData);
 			}
+			
+			startTime = startTime.plusMinutes(1);
 		}
 
 		return commonDataList;

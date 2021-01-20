@@ -6,16 +6,8 @@ public class CryptoCompareSocketConfigBO {
 
 	private String apiKey;
 	private String uri;
-	private List<String> tragetCoins;
+	private List<String> targetCoins;
 	private List<String> targetCurrency;
-
-	public List<String> getTargetCurrency() {
-		return targetCurrency;
-	}
-
-	public void setTargetCurrency(List<String> targetCurrency) {
-		this.targetCurrency = targetCurrency;
-	}
 
 	public String getApiKey() {
 		return apiKey;
@@ -33,17 +25,25 @@ public class CryptoCompareSocketConfigBO {
 		this.uri = uri;
 	}
 
-	public List<String> getTragetCoins() {
-		return tragetCoins;
+	public List<String> getTargetCoins() {
+		return targetCoins;
 	}
 
-	public void setTragetCoins(List<String> tragetCoins) {
-		this.tragetCoins = tragetCoins;
+	public void setTargetCoins(List<String> targetCoins) {
+		this.targetCoins = targetCoins;
+	}
+
+	public List<String> getTargetCurrency() {
+		return targetCurrency;
+	}
+
+	public void setTargetCurrency(List<String> targetCurrency) {
+		this.targetCurrency = targetCurrency;
 	}
 
 	@Override
 	public String toString() {
-		return "CryptoCompareSocketConfigBO [apiKey=" + apiKey + ", uri=" + uri + ", tragetCoins=" + tragetCoins
+		return "CryptoCompareSocketConfigBO [apiKey=" + apiKey + ", uri=" + uri + ", targetCoins=" + targetCoins
 				+ ", targetCurrency=" + targetCurrency + "]";
 	}
 

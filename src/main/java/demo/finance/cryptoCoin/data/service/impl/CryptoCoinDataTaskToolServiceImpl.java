@@ -11,6 +11,7 @@ import demo.finance.cryptoCoin.data.service.CryptoCoin1MonthDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1WeekDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin5MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin60MinuteDataSummaryService;
+import demo.finance.cryptoCoin.webSocket.CryptoCompareWSClient;
 
 @Component
 public class CryptoCoinDataTaskToolServiceImpl extends CryptoCoinCommonService {
@@ -27,6 +28,8 @@ public class CryptoCoinDataTaskToolServiceImpl extends CryptoCoinCommonService {
 	private CryptoCoin1WeekDataSummaryService cryptoCoin1WeekDataSummaryService;
 	@Autowired
 	private CryptoCoin1MonthDataSummaryService cryptoCoin1MonthDataSummaryService;
+	@Autowired
+	private CryptoCompareWSClient cryptoCompareWSClient;
 
 	@Scheduled(cron = "0 */5 * * * ?")
 	public void summaryHistoryData() {
@@ -42,6 +45,13 @@ public class CryptoCoinDataTaskToolServiceImpl extends CryptoCoinCommonService {
 		cryptoCoin1MinuteDataSummaryService.deleteExpiredCacheData();
 		cryptoCoin5MinuteDataSummaryService.deleteExpiredCacheData();
 		cryptoCoin60MinuteDataSummaryService.deleteExpiredCacheData();
+	}
+	
+	@Scheduled(cron="*/31 * * * * ?")
+	public void checkCryptoCompareSocket() {
+		if(!cryptoCompareWSClient.getSocketLiveFlag()) {
+			cryptoCompareWSClient.startWebSocket();
+		}
 	}
 
 }

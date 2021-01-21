@@ -3,7 +3,7 @@ package demo.finance.cryptoCoin.data.service;
 import java.util.List;
 
 import auxiliaryCommon.pojo.type.CurrencyType;
-import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinPriceCommonDataBO;
+import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
 public interface CryptoCoinPriceCacheService {

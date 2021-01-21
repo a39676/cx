@@ -14,13 +14,13 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice5minuteMapper;
-import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinPriceCommonDataBO;
 import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinDataConstant;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice5minute;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice5minuteExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin5MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
+import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
 @Service
@@ -159,9 +159,11 @@ public class CryptoCoin5MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 	public List<CryptoCoinPriceCommonDataBO> getCommonDataFillWithCache(CryptoCoinType coinType,
 			CurrencyType currencyType, LocalDateTime startTime) {
 
-		List<CryptoCoinPriceCommonDataBO> poDataList = getCommonData(coinType, currencyType, startTime);
+//		List<CryptoCoinPriceCommonDataBO> poDataList = getCommonData(coinType, currencyType, startTime);
+		List<CryptoCoinPriceCommonDataBO> poDataList = buildFakeData(coinType, currencyType, startTime);
 
 		List<CryptoCoinPriceCommonDataBO> cacheDataList = cacheService.getCommonData(coinType, currencyType);
+
 		if (poDataList.isEmpty() && cacheDataList.isEmpty()) {
 			return poDataList;
 		} else if (!poDataList.isEmpty() && cacheDataList.isEmpty()) {
@@ -169,20 +171,21 @@ public class CryptoCoin5MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 		} else if (poDataList.isEmpty() && !cacheDataList.isEmpty()) {
 			return cacheDataList;
 		}
+		List<CryptoCoinPriceCommonDataBO> resultDataList = new ArrayList<>();
 
-		LocalDateTime twoStepBefore = nextStepTimeByMinute(LocalDateTime.now().withSecond(0).withNano(0),
-				minuteStepLong).minusMinutes(minuteStepLong * 2);
+		LocalDateTime twoStepBefore = nextStepTimeByMinute(LocalDateTime.now(), minuteStepLong)
+				.minusMinutes(minuteStepLong * 2);
 
 		Collections.sort(cacheDataList);
 
-		LocalDateTime endTimeNow = LocalDateTime.now().withSecond(0).withNano(0);
+		LocalDateTime endTimeNow = LocalDateTime.now();
 		LocalDateTime cacheStartTime = twoStepBefore;
 
 		boolean poDataExistsFlag = false;
 		CryptoCoinPriceCommonDataBO tmpPOData = null;
 		CryptoCoinPriceCommonDataBO tmpCacheData = null;
 		LocalDateTime cacheNextStepTime = nextStepTimeByMinute(cacheStartTime, minuteStepLong);
-		
+
 		while (!cacheStartTime.isAfter(endTimeNow)) {
 			for (int i = 0; i < poDataList.size() && poDataExistsFlag == false; i++) {
 				tmpPOData = poDataList.get(i);
@@ -190,44 +193,46 @@ public class CryptoCoin5MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 					poDataExistsFlag = true;
 				}
 			}
-			
-			if(poDataExistsFlag) {
-				cacheDataLimit: for(int i = 0; i < cacheDataList.size(); i++) {
+
+			if (poDataExistsFlag) {
+				// please sort(startTime early to later) cacheDataList before use
+				cacheDataLimited: for (int i = 0; i < cacheDataList.size(); i++) {
 					tmpCacheData = cacheDataList.get(i);
-					if(!tmpCacheData.getStartTime().isAfter(cacheNextStepTime) 
-							&& !tmpCacheData.getStartTime().isBefore(cacheStartTime)) {
+					if (!tmpCacheData.getStartTime().isAfter(cacheNextStepTime)) {
+						break cacheDataLimited;
+					}
+					if (!tmpCacheData.getStartTime().isBefore(cacheStartTime)) {
 						tmpPOData = mergerData(tmpPOData, tmpCacheData);
-						break cacheDataLimit;
 					}
 				}
-			
+			resultDataList.add(tmpPOData);
+
 			} else {
 				tmpPOData = new CryptoCoinPriceCommonDataBO();
 				tmpPOData.setCoinType(coinType.getCode());
 				tmpPOData.setCurrencyType(currencyType.getCode());
 				tmpPOData.setVolume(BigDecimal.ZERO);
-				
-				cacheDataLimit: for(int i = 0; i < cacheDataList.size(); i++) {
+
+				cacheDataLimit: for (int i = 0; i < cacheDataList.size(); i++) {
 					tmpCacheData = cacheDataList.get(i);
-					if(!tmpCacheData.getStartTime().isBefore(cacheNextStepTime)) {
+					if (!tmpCacheData.getStartTime().isBefore(cacheNextStepTime)) {
 						break cacheDataLimit;
 					}
-					if(tmpCacheData.getStartTime().isBefore(cacheStartTime)) {
+					if (tmpCacheData.getStartTime().isBefore(cacheStartTime)) {
 						continue;
 					}
 					tmpPOData = mergerData(tmpPOData, tmpCacheData);
-					poDataList.add(tmpPOData);
+					resultDataList.add(tmpPOData);
 				}
 			}
-
 
 			poDataExistsFlag = false;
 			cacheStartTime = nextStepTimeByMinute(cacheStartTime, minuteStepLong);
 			cacheNextStepTime = nextStepTimeByMinute(cacheNextStepTime, minuteStepLong);
 		}
 
-		Collections.sort(poDataList);
-		return poDataList;
+		Collections.sort(resultDataList);
+		return resultDataList;
 	}
 
 }

@@ -1,7 +1,6 @@
 package demo.base.system.service.impl;
 
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -9,14 +8,11 @@ import org.springframework.stereotype.Service;
 
 import demo.base.system.service.ShutdownService;
 import demo.common.service.CommonService;
-import demo.finance.cryptoCoin.webSocket.CryptoCompareWSClient;
 
 @Service
 public class ShutdownServiceImpl extends CommonService implements ShutdownService, ApplicationContextAware{
 
 	private ApplicationContext context;
-	@Autowired
-	private CryptoCompareWSClient cryptoCompareWSClient;
 	
 	@Override
     public void setApplicationContext(ApplicationContext ctx) throws BeansException {
@@ -29,8 +25,6 @@ public class ShutdownServiceImpl extends CommonService implements ShutdownServic
 		if(!baseUtilCustom.hasSuperAdminRole()) {
 			return "";
 		}
-		
-		cryptoCompareWSClient.setSocketLiveFlag("0");
 		
 		((ConfigurableApplicationContext) context).close();
 		// if context close success, will NOT return anything 

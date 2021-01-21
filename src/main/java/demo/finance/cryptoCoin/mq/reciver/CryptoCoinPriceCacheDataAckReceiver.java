@@ -11,22 +11,22 @@ import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
 
-import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
+import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinMQConstant;
-import finance.cryptoCoin.pojo.dto.CryptoCoinHistoryPriceDTO;
 
 @Component
-@RabbitListener(queues = CryptoCoinMQConstant.CRYPTO_CONI_HISTORY_PRICE_DATA)
-public class CryptoCoinHistoryPriceTransmissionAckReceiver {
+@RabbitListener(queues = CryptoCoinMQConstant.CRYPTO_COIN_PRICE_CACHE_QUEUE)
+public class CryptoCoinPriceCacheDataAckReceiver {
 
 	@Autowired
-	private CryptoCoin1MinuteDataSummaryService cryptoCoin1MinuteDataService;
+	private CryptoCoinPriceCacheService cryptoCoinPriceCacheService;
 
 	@RabbitHandler
 	public void process(String messageStr, Channel channel, Message message) throws IOException {
 		try {
-			CryptoCoinHistoryPriceDTO dto = new Gson().fromJson(messageStr, CryptoCoinHistoryPriceDTO.class);
-			cryptoCoin1MinuteDataService.reciveCoinHistoryPrice(dto);
+			CryptoCoinPriceCommonDataBO bo = new Gson().fromJson(messageStr, CryptoCoinPriceCommonDataBO.class);
+			cryptoCoinPriceCacheService.reciveData(bo);
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 		} catch (IOException e) {
 			channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);

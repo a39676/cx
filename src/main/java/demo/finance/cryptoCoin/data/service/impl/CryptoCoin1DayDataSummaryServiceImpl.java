@@ -14,12 +14,12 @@ import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1dayMapper;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice60minuteMapper;
-import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinPriceCommonDataBO;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1day;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice60minute;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice60minuteExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
+import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
 @Service

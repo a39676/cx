@@ -133,6 +133,4 @@ dependencies {
     // 公历 农历 转换
 	compile group: 'com.github.heqiao2010', name: 'lunar', version: '1.4'
 	
-	// web socket as client
-	compile group: 'com.neovisionaries', name: 'nv-websocket-client', version: '2.10'
 }

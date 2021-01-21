@@ -14,12 +14,12 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1minuteMapper;
-import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinPriceCommonDataBO;
 import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinDataConstant;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1minute;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1minuteExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
+import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinHistoryPriceDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinHistoryPriceSubDTO;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
@@ -168,8 +168,10 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 			CurrencyType currencyType, LocalDateTime startTime) {
 
 		List<CryptoCoinPriceCommonDataBO> poDataList = getCommonData(coinType, currencyType, startTime);
+//		List<CryptoCoinPriceCommonDataBO> poDataList = buildFakeData(coinType, currencyType, startTime);
 
 		List<CryptoCoinPriceCommonDataBO> cacheDataList = cacheService.getCommonData(coinType, currencyType);
+//		List<CryptoCoinPriceCommonDataBO> cacheDataList = buildFakeData(coinType, currencyType, startTime);
 
 		if (poDataList.isEmpty() && cacheDataList.isEmpty()) {
 			return poDataList;
@@ -178,6 +180,7 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 		} else if (poDataList.isEmpty() && !cacheDataList.isEmpty()) {
 			return cacheDataList;
 		}
+		List<CryptoCoinPriceCommonDataBO> resultDataList = new ArrayList<>();
 
 		Collections.sort(cacheDataList);
 
@@ -204,10 +207,13 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 				}
 			}
 
-			if (!poDataExistsFlag && cacheDataExistsFlag) {
-				poDataList.add(tmpCacheData);
+			if (poDataExistsFlag && !cacheDataExistsFlag) {
+				resultDataList.add(tmpPOData);
+			} else if (!poDataExistsFlag && cacheDataExistsFlag) {
+				resultDataList.add(tmpCacheData);
 			} else if (poDataExistsFlag && cacheDataExistsFlag) {
 				tmpPOData = mergerData(tmpPOData, tmpCacheData);
+				resultDataList.add(tmpPOData);
 			}
 
 			poDataExistsFlag = false;
@@ -215,8 +221,8 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 			cacheStartTime = cacheStartTime.plusMinutes(1);
 		}
 
-		Collections.sort(poDataList);
-		return poDataList;
+		Collections.sort(resultDataList);
+		return resultDataList;
 	}
 
 	private CryptoCoinPrice1minute mergeDataList(List<CryptoCoinPrice1minute> poList) {

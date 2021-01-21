@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
-import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinPriceCommonDataBO;
 import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinDataConstant;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
+import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
 import net.sf.json.JSONObject;
 
@@ -50,10 +50,17 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 	
 	private CryptoCoinPriceCommonDataBO dataStrToBO(String str) {
 		CryptoCoinPriceCommonDataBO bo = null;
+		/* 
+		 * TODO
+		 * 尽量填充所有字段
+		 */
 		try {
 			JSONObject j = JSONObject.fromObject(str);
 			bo = new CryptoCoinPriceCommonDataBO();
+			bo.setStartPrice(new BigDecimal(j.getDouble("startPrice")));
 			bo.setEndPrice(new BigDecimal(j.getDouble("endPrice")));
+			bo.setHighPrice(new BigDecimal(j.getDouble("highPrice")));
+			bo.setLowPrice(new BigDecimal(j.getDouble("lowPrice")));
 			bo.setStartTime(localDateTimeHandler.jsonStrToLocalDateTime(j.getString("startTime")));
 			bo.setCoinType(j.getInt("coinType"));
 			bo.setCurrencyType(j.getInt("currencyType"));

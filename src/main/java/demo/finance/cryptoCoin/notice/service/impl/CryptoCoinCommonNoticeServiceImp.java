@@ -16,7 +16,6 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
-import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinPriceCommonDataBO;
 import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinDataConstant;
 import demo.finance.cryptoCoin.data.pojo.dto.InsertCryptoCoinPriceNoticeSettingDTO;
 import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinNoticeDTOCheckResult;
@@ -38,6 +37,7 @@ import demo.finance.cryptoCoin.notice.pojo.vo.CryptoCoinNoticeVO;
 import demo.finance.cryptoCoin.notice.service.CryptoCoinCommonNoticeService;
 import demo.tool.telegram.pojo.po.TelegramChatId;
 import demo.tool.telegram.pojo.vo.TelegramChatIdVO;
+import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
 import telegram.pojo.dto.TelegramMessageDTO;
 

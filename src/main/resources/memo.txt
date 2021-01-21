@@ -4,6 +4,7 @@ crypto coin
 		检查
 			is live flag 是否妥善设置
 			有否自动重连
+			live flag redis key 应该改为存活时间, 无需检测值, key 存在即可
 
 mq queue delete(crypto coin new price)
 linux 服务器上 /home/u2 底下 cx相关文件归整

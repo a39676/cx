@@ -105,6 +105,10 @@ public class SystemConstantService extends CommonService {
 		redisTemplate.opsForValue().multiSet(values);
 	}
 	
+	public void deleteValByName(String constantName) {
+		redisTemplate.delete(constantName);
+	}
+	
 	public Boolean hasKey(String key) {
 		return redisTemplate.hasKey(key);
 	}

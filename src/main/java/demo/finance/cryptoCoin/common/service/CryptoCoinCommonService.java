@@ -2,11 +2,14 @@ package demo.finance.cryptoCoin.common.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.finance.common.service.impl.FinanceCommonService;
-import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinPriceCommonDataBO;
 import demo.finance.cryptoCoin.data.pojo.result.FilterBODataResult;
+import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
+import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
 public abstract class CryptoCoinCommonService extends FinanceCommonService {
 
@@ -101,5 +104,34 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 		}
 		
 		return o;
+	}
+
+	/**
+	 * for test use
+	 */
+	protected List<CryptoCoinPriceCommonDataBO> buildFakeData(CryptoCoinType coinType, CurrencyType currencyType,
+			LocalDateTime startTime) {
+		List<CryptoCoinPriceCommonDataBO> l = new ArrayList<>();
+
+		CryptoCoinPriceCommonDataBO bo = null;
+		startTime = startTime.withSecond(0).withNano(0);
+		while (!startTime.isAfter(LocalDateTime.now())) {
+			bo = new CryptoCoinPriceCommonDataBO();
+			bo.setId(snowFlake.getNextId());
+			bo.setStartTime(startTime);
+			bo.setEndTime(startTime.plusMinutes(1));
+			bo.setStartPrice(new BigDecimal("-99999"));
+			bo.setEndPrice(new BigDecimal("-99999"));
+			bo.setHighPrice(new BigDecimal("-99999"));
+			bo.setLowPrice(new BigDecimal("-99999"));
+			bo.setVolume(new BigDecimal("99999"));
+			bo.setCoinType(coinType.getCode());
+			bo.setCurrencyType(currencyType.getCode());
+
+			l.add(bo);
+			startTime = startTime.plusMinutes(1);
+		}
+
+		return l;
 	}
 }

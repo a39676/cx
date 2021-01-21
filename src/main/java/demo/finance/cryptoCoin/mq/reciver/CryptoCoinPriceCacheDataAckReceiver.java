@@ -8,16 +8,16 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
 
+import demo.common.service.CommonService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinMQConstant;
 
 @Component
 @RabbitListener(queues = CryptoCoinMQConstant.CRYPTO_COIN_PRICE_CACHE_QUEUE)
-public class CryptoCoinPriceCacheDataAckReceiver {
+public class CryptoCoinPriceCacheDataAckReceiver extends CommonService {
 
 	@Autowired
 	private CryptoCoinPriceCacheService cryptoCoinPriceCacheService;
@@ -25,12 +25,12 @@ public class CryptoCoinPriceCacheDataAckReceiver {
 	@RabbitHandler
 	public void process(String messageStr, Channel channel, Message message) throws IOException {
 		try {
-			CryptoCoinPriceCommonDataBO bo = new Gson().fromJson(messageStr, CryptoCoinPriceCommonDataBO.class);
+			CryptoCoinPriceCommonDataBO bo = cryptoCoinPriceCacheService.dataStrToBO(messageStr);
 			cryptoCoinPriceCacheService.reciveData(bo);
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 		} catch (IOException e) {
 			channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);
-			e.printStackTrace();
+			log.error("CryptoCoinPriceCacheQueue hit: " + e.getLocalizedMessage());
 		}
 	}
 }

@@ -12,4 +12,6 @@ public interface CryptoCoinPriceCacheService {
 
 	List<CryptoCoinPriceCommonDataBO> getCommonData(CryptoCoinType coinType, CurrencyType currencyType);
 
+	CryptoCoinPriceCommonDataBO dataStrToBO(String str);
+
 }

@@ -48,7 +48,8 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 		}
 	}
 	
-	private CryptoCoinPriceCommonDataBO dataStrToBO(String str) {
+	@Override
+	public CryptoCoinPriceCommonDataBO dataStrToBO(String str) {
 		CryptoCoinPriceCommonDataBO bo = null;
 		/* 
 		 * TODO
@@ -57,13 +58,14 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 		try {
 			JSONObject j = JSONObject.fromObject(str);
 			bo = new CryptoCoinPriceCommonDataBO();
+			bo.setCoinType(j.getInt("coinType"));
+			bo.setCurrencyType(j.getInt("currencyType"));
 			bo.setStartPrice(new BigDecimal(j.getDouble("startPrice")));
 			bo.setEndPrice(new BigDecimal(j.getDouble("endPrice")));
 			bo.setHighPrice(new BigDecimal(j.getDouble("highPrice")));
 			bo.setLowPrice(new BigDecimal(j.getDouble("lowPrice")));
 			bo.setStartTime(localDateTimeHandler.jsonStrToLocalDateTime(j.getString("startTime")));
-			bo.setCoinType(j.getInt("coinType"));
-			bo.setCurrencyType(j.getInt("currencyType"));
+			bo.setEndTime(localDateTimeHandler.jsonStrToLocalDateTime(j.getString("endTime")));
 		} catch (Exception e) {
 		}
 		return bo;

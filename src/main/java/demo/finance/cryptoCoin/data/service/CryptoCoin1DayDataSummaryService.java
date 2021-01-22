@@ -18,4 +18,7 @@ public interface CryptoCoin1DayDataSummaryService {
 	List<CryptoCoinPriceCommonDataBO> getCommonData(CryptoCoinType coinType, CurrencyType currencyType,
 			LocalDateTime startTime);
 
+	List<CryptoCoinPriceCommonDataBO> getCommonDataFillWithCache(CryptoCoinType coinType, CurrencyType currencyType,
+			LocalDateTime startTime);
+
 }

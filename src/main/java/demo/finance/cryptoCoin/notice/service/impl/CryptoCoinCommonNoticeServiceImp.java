@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -369,6 +370,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			return r;
 		}
 
+		Collections.sort(historyPOList);
+		
 		FilterBODataResult maxMinPriceResult = filterData(historyPOList);
 		if (maxMinPriceResult.isFail()) {
 			r.addMessage(maxMinPriceResult.getMessage());
@@ -394,23 +397,23 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 				|| maxMinPriceResult.getMinPriceDateTime().isEqual(maxMinPriceResult.getMaxPriceDateTime())) {
 
 			if (upApmlitude >= trigerPercentage) {
-				BigDecimal bigDecimal = new BigDecimal(upApmlitude);
+				BigDecimal upApmlitudeBigDecimal = new BigDecimal(upApmlitude);
 				content = coinType.getName() + ", " + currencyType.getName() 
-						+ ", " + "最新价: " + historyPOList.get(0).getEndPrice() 
+						+ ", " + "最新价: " + historyPOList.get(0).getEndPrice().setScale(2, RoundingMode.HALF_UP)
 						+ ", " + "最近" + noticeSetting.getTimeRangeOfDataWatch()
 						+ TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch()).getCnName() 
-						+ ", " + "波幅达 " + bigDecimal.setScale(2, RoundingMode.HALF_UP) + "%"
+						+ ", " + "波幅达 " + upApmlitudeBigDecimal.setScale(2, RoundingMode.HALF_UP) + "%"
 						+ ", " + maxMinPriceResult.getMinPriceDateTime() + " 时触及低价: " + lastMin + ", "
 						+ maxMinPriceResult.getMaxPriceDateTime() + " 时触及高价: " + lastMax ;
 			}
 		} else {
 			if ((0 - lowApmlitude) >= trigerPercentage) {
-				BigDecimal bigDecimal = new BigDecimal(lowApmlitude);
+				BigDecimal lowApmlitubeBigDecimal = new BigDecimal(lowApmlitude);
 				content = coinType.getName() + ", " + currencyType.getName() 
-						+ ", " + "最新价: " + historyPOList.get(0).getEndPrice()
+						+ ", " + "最新价: " + historyPOList.get(0).getEndPrice().setScale(2, RoundingMode.HALF_UP)
 						+ ", " + "最近" + noticeSetting.getTimeRangeOfDataWatch()
 						+ TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch()).getCnName() 
-						+ ", " + "波幅达 " + bigDecimal.setScale(2, RoundingMode.HALF_UP) + "%"
+						+ ", " + "波幅达 " + lowApmlitubeBigDecimal.setScale(2, RoundingMode.HALF_UP) + "%"
 						+ ", " + maxMinPriceResult.getMaxPriceDateTime() + " 时触及高价: " + lastMax + ", "
 						+ maxMinPriceResult.getMinPriceDateTime() + " 时触及低价: " + lastMin ;
 			}

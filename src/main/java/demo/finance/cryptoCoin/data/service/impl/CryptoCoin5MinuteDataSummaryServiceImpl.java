@@ -19,7 +19,6 @@ import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice5minute;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice5minuteExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin5MinuteDataSummaryService;
-import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
@@ -33,8 +32,6 @@ public class CryptoCoin5MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 	private CryptoCoin1MinuteDataSummaryService _1MinDataService;
 	@Autowired
 	private CryptoCoinPrice5minuteMapper _5MinDataMapper;
-	@Autowired
-	private CryptoCoinPriceCacheService cacheService;
 
 	@Override
 	public CommonResult summaryHistoryData() {
@@ -134,7 +131,6 @@ public class CryptoCoin5MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 		example.createCriteria().andCoinTypeEqualTo(coinType.getCode()).andCurrencyTypeEqualTo(currencyType.getCode())
 				.andStartTimeGreaterThanOrEqualTo(startTime);
 		;
-		example.setOrderByClause("create_time desc");
 
 		return _5MinDataMapper.selectByExample(example);
 	}
@@ -159,17 +155,13 @@ public class CryptoCoin5MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 	public List<CryptoCoinPriceCommonDataBO> getCommonDataFillWithCache(CryptoCoinType coinType,
 			CurrencyType currencyType, LocalDateTime startTime) {
 
-//		List<CryptoCoinPriceCommonDataBO> poDataList = getCommonData(coinType, currencyType, startTime);
-		List<CryptoCoinPriceCommonDataBO> poDataList = buildFakeData(coinType, currencyType, startTime);
+		List<CryptoCoinPriceCommonDataBO> poDataList = getCommonData(coinType, currencyType, startTime);
+//		List<CryptoCoinPriceCommonDataBO> poDataList = buildFakeData(coinType, currencyType, startTime);
 
 		List<CryptoCoinPriceCommonDataBO> cacheDataList = cacheService.getCommonData(coinType, currencyType);
 
-		if (poDataList.isEmpty() && cacheDataList.isEmpty()) {
+		if (cacheDataList.isEmpty()) {
 			return poDataList;
-		} else if (!poDataList.isEmpty() && cacheDataList.isEmpty()) {
-			return poDataList;
-		} else if (poDataList.isEmpty() && !cacheDataList.isEmpty()) {
-			return cacheDataList;
 		}
 		List<CryptoCoinPriceCommonDataBO> resultDataList = new ArrayList<>();
 
@@ -231,7 +223,6 @@ public class CryptoCoin5MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 			cacheNextStepTime = nextStepTimeByMinute(cacheNextStepTime, minuteStepLong);
 		}
 
-		Collections.sort(resultDataList);
 		return resultDataList;
 	}
 

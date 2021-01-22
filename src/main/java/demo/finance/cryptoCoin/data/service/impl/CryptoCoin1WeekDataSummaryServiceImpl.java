@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -118,7 +119,6 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 		example.createCriteria().andCoinTypeEqualTo(coinType.getCode()).andCurrencyTypeEqualTo(currencyType.getCode())
 				.andStartTimeGreaterThanOrEqualTo(startTime);
 		;
-		example.setOrderByClause("create_time desc");
 
 		return summaryMapper.selectByExample(example);
 	}
@@ -137,5 +137,46 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 		}
 
 		return commonDataList;
+	}
+
+	@Override
+	public List<CryptoCoinPriceCommonDataBO> getCommonDataFillWithCache(CryptoCoinType coinType,
+			CurrencyType currencyType, LocalDateTime startTime) {
+
+		List<CryptoCoinPriceCommonDataBO> poDataList = getCommonData(coinType, currencyType, startTime);
+//		List<CryptoCoinPriceCommonDataBO> poDataList = buildFakeData(coinType, currencyType, startTime);
+
+		List<CryptoCoinPriceCommonDataBO> cacheDataList = cacheService.getCommonData(coinType, currencyType);
+
+		if (cacheDataList.isEmpty()) {
+			return poDataList;
+		}
+
+		Collections.sort(cacheDataList);
+		Collections.sort(poDataList);
+		
+		CryptoCoinPriceCommonDataBO tmpPOData = null;
+		CryptoCoinPriceCommonDataBO tmpCacheData = null;
+		if(poDataList.isEmpty()) {
+			tmpPOData = new CryptoCoinPriceCommonDataBO();
+			tmpPOData.setCoinType(coinType.getCode());
+			tmpPOData.setCurrencyType(currencyType.getCode());
+			tmpPOData.setVolume(BigDecimal.ZERO);
+		} else {
+			tmpPOData = poDataList.get(poDataList.size() - 1);
+		}
+		
+		for (int i = 0; i < cacheDataList.size(); i++) {
+			tmpCacheData = cacheDataList.get(i);
+			tmpPOData = mergerData(tmpPOData, tmpCacheData);
+		}
+		
+		if(poDataList.isEmpty()) {
+			poDataList.add(tmpPOData);
+		} else {
+			poDataList.set(poDataList.size() - 1, tmpPOData);
+		}
+
+		return poDataList;
 	}
 }

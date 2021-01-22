@@ -51,10 +51,6 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 	@Override
 	public CryptoCoinPriceCommonDataBO dataStrToBO(String str) {
 		CryptoCoinPriceCommonDataBO bo = null;
-		/* 
-		 * TODO
-		 * 尽量填充所有字段
-		 */
 		try {
 			JSONObject j = JSONObject.fromObject(str);
 			bo = new CryptoCoinPriceCommonDataBO();

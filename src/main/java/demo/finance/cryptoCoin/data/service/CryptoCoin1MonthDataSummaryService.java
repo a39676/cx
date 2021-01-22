@@ -19,5 +19,8 @@ public interface CryptoCoin1MonthDataSummaryService {
 			CryptoCoinType coinType, CurrencyType currencyType,
 			LocalDateTime startTime);
 
+	List<CryptoCoinPriceCommonDataBO> getCommonDataFillWithCache(CryptoCoinType coinType, CurrencyType currencyType,
+			LocalDateTime startTime);
+
 
 }

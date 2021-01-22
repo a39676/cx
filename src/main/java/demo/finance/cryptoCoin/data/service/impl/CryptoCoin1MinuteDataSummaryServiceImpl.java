@@ -18,7 +18,6 @@ import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinDataConstant;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1minute;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1minuteExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
-import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinHistoryPriceDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinHistoryPriceSubDTO;
@@ -32,8 +31,6 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 
 	@Autowired
 	private CryptoCoinPrice1minuteMapper summaryMapper;
-	@Autowired
-	private CryptoCoinPriceCacheService cacheService;
 
 	@Override
 	public CommonResult reciveCoinHistoryPrice(CryptoCoinHistoryPriceDTO dto) {
@@ -142,7 +139,6 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 		example.createCriteria().andCoinTypeEqualTo(coinType.getCode()).andCurrencyTypeEqualTo(currencyType.getCode())
 				.andStartTimeGreaterThanOrEqualTo(startTime);
 		;
-		example.setOrderByClause("create_time desc");
 
 		return summaryMapper.selectByExample(example);
 	}
@@ -173,9 +169,7 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 		List<CryptoCoinPriceCommonDataBO> cacheDataList = cacheService.getCommonData(coinType, currencyType);
 //		List<CryptoCoinPriceCommonDataBO> cacheDataList = buildFakeData(coinType, currencyType, startTime);
 
-		if (poDataList.isEmpty() && cacheDataList.isEmpty()) {
-			return poDataList;
-		} else if (!poDataList.isEmpty() && cacheDataList.isEmpty()) {
+		if (cacheDataList.isEmpty()) {
 			return poDataList;
 		} else if (poDataList.isEmpty() && !cacheDataList.isEmpty()) {
 			return cacheDataList;
@@ -221,7 +215,6 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 			cacheStartTime = cacheStartTime.plusMinutes(1);
 		}
 
-		Collections.sort(resultDataList);
 		return resultDataList;
 	}
 

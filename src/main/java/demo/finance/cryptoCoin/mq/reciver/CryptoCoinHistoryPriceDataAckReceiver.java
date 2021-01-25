@@ -11,13 +11,14 @@ import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
 
+import demo.common.service.CommonService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
 import finance.cryptoCoin.pojo.constant.CryptoCoinMQConstant;
 import finance.cryptoCoin.pojo.dto.CryptoCoinHistoryPriceDTO;
 
 @Component
 @RabbitListener(queues = CryptoCoinMQConstant.CRYPTO_CONI_HISTORY_PRICE_DATA)
-public class CryptoCoinHistoryPriceDataAckReceiver {
+public class CryptoCoinHistoryPriceDataAckReceiver extends CommonService {
 
 	@Autowired
 	private CryptoCoin1MinuteDataSummaryService cryptoCoin1MinuteDataService;
@@ -29,6 +30,8 @@ public class CryptoCoinHistoryPriceDataAckReceiver {
 			cryptoCoin1MinuteDataService.reciveCoinHistoryPrice(dto);
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 		} catch (IOException e) {
+			log.error("mq error, " + CryptoCoinMQConstant.CRYPTO_CONI_HISTORY_PRICE_DATA + ", e:" + e.getLocalizedMessage());
+			log.error(messageStr);
 			channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);
 		}
 	}

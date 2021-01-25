@@ -40,7 +40,8 @@ public class TelegramCalendarNoticeMessageAckReceiver extends CommonService {
 
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 		} catch (IOException e) {
-
+			log.error("mq error, " + TelegramMessageMQConstant.TELEGRAM_CALENDAR_NOTICE_MSG_QUEUE + ", e:" + e.getLocalizedMessage());
+			log.error(messageStr);
 			channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);
 		}
 

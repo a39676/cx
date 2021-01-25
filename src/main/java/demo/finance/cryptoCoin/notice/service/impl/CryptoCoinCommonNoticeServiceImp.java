@@ -390,11 +390,15 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		if (historyPOList == null || historyPOList.isEmpty()) {
 			log.error(noticeSetting.getId() + ", can NOT find any history data");
 			return r;
+		} else {
+			log.error(noticeSetting.getId() + ", found " + historyPOList.size() + " datas");
 		}
 
 		Collections.sort(historyPOList);
+		log.error(noticeSetting.getId() + ", after sort");
 		
 		FilterBODataResult maxMinPriceResult = filterData(historyPOList);
+		log.error(noticeSetting.getId() + ", maxMinPriceResult: " + maxMinPriceResult.isSuccess());
 		if (maxMinPriceResult.isFail()) {
 			r.addMessage(maxMinPriceResult.getMessage());
 			return r;
@@ -443,6 +447,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		if (content != null) {
 			r.successWithMessage(content);
+		} else {
+			log.error(noticeSetting.getId() + ", not hit condition");
 		}
 
 		return r;

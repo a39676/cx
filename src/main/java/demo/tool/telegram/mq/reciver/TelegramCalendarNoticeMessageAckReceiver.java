@@ -27,10 +27,6 @@ public class TelegramCalendarNoticeMessageAckReceiver extends CommonService {
 	@RabbitHandler
 	public void process(String messageStr, Channel channel, Message message) throws IOException {
 		
-		/*
-		 * TODO
-		 */
-
 		try {
 			TelegramMessageDTO dto = msgToDTO(messageStr);
 
@@ -48,7 +44,6 @@ public class TelegramCalendarNoticeMessageAckReceiver extends CommonService {
 	}
 
 	private TelegramMessageDTO msgToDTO(String messageStr) {
-//		TODO
 		try {
 			JSONObject json = JSONObject.fromObject(messageStr);
 

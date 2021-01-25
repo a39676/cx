@@ -302,8 +302,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 		try {
 			mailKey = URLEncoder.encode(encryptId(mailId), StandardCharsets.UTF_8.toString());
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(mailId + ", trans mail key error");
 		} 
 		String mailUrl = dto.getHostName() + UsersUrl.root + UsersUrl.resetPassword + "?mailKey=" + mailKey;
 		return (CommonResultCX) sendSimpleMail(dto.getSendTo(), ("重置您在" + dto.getHostName() + "的密码"), createForgotPasswordMailContent(mailUrl), mailKey, MailType.forgotPassword);
@@ -317,8 +316,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 		try {
 			mailKey = URLEncoder.encode(encryptId(oldMail.getId()), StandardCharsets.UTF_8.toString());
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(oldMail.getId() + ", trans mail key error");
 		}
 		String mailUrl = dto.getHostName() + UsersUrl.root + UsersUrl.resetPassword + "?mailKey=" + mailKey;
 		return (CommonResultCX) sendSimpleMail(dto.getSendTo(), ("重置您在" + dto.getHostName() + "的密码"), createForgotPasswordMailContent(mailUrl), mailKey, MailType.forgotPassword);

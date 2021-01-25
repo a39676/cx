@@ -435,8 +435,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	}
 
 	/*
-	 * TODO
-	 * for debug
+	 * TODO for debug
 	 */
 	@Override
 	public List<CryptoCoinPriceCommonDataBO> findHistoryData(CryptoCoinType coinType, CurrencyType currencyType,

@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import demo.common.controller.CommonController;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
+import finance.cryptoCoin.pojo.constant.CryptoCoinPriceCommonUrl;
 
 @Controller
-@RequestMapping( value = "/cryptoCoin")
+@RequestMapping( value = CryptoCoinPriceCommonUrl.ROOT)
 public class CryptoCoinController extends CommonController {
 
 	@Autowired

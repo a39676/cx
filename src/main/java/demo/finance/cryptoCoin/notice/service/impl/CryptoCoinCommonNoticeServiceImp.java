@@ -305,6 +305,9 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			} else {
 				TimeUnitType timeUnitTypeOfNoticeInterval = TimeUnitType
 						.getType(noticeSetting.getTimeUnitOfNoticeInterval());
+				if(noticeSetting.getNoticeTime() == null) {
+					noticeSetting.setNoticeTime(LocalDateTime.now());
+				}
 				nextNoticeTime = getNextSettingTime(noticeSetting.getNoticeTime(), timeUnitTypeOfNoticeInterval,
 						noticeSetting.getTimeRangeOfNoticeInterval().longValue());
 				noticeSetting.setNextNoticeTime(nextNoticeTime);

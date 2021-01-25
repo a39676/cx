@@ -21,4 +21,6 @@ public interface TelegramService {
 
 	CommonResult sendMessage(String msg, Long id);
 
+	void telegramSendingCheck();
+
 }

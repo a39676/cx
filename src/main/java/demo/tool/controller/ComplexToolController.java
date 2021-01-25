@@ -110,7 +110,6 @@ public class ComplexToolController extends CommonController {
 		}
 	}
 
-	
 	@PostMapping(value = "/cleanTmpFiles")
 	@ResponseBody
 	public CommonResult cleanTmpFiles(@RequestBody CleanTmpFilesDTO dto, HttpServletResponse response) {
@@ -131,4 +130,5 @@ public class ComplexToolController extends CommonController {
 	public ModelAndView systemOption() {
 		return new ModelAndView("toolJSP/systemOption");
 	}
+
 }

@@ -13,13 +13,12 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
-import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1dayMapper;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1weekMapper;
-import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1day;
-import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1week;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1weekExample;
+import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1WeekDataSummaryService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
@@ -31,9 +30,11 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 	private final int dayStepLong = 7;
 
 	@Autowired
-	private CryptoCoinPrice1dayMapper cacheMapper;
+	private CryptoCoin1DayDataSummaryService _1DayDataService;
 	@Autowired
-	private CryptoCoinPrice1weekMapper summaryMapper;
+	private CryptoCoinPrice1weekMapper _1weekDataMapper;
+	@Autowired
+	private CryptoCoinPriceCacheService cacheService;
 
 	@Override
 	public CommonResult summaryHistoryData() {
@@ -57,21 +58,17 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 	}
 
 	private void handleHistoryDataList(LocalDateTime startTime, CryptoCoinType coinType, CurrencyType currencyType) {
-		LocalDateTime endTime = startTime.plusDays(dayStepLong);
 
-		CryptoCoinPrice1dayExample cacheExample = new CryptoCoinPrice1dayExample();
-		cacheExample.createCriteria().andCoinTypeEqualTo(coinType.getCode())
-				.andCurrencyTypeEqualTo(currencyType.getCode()).andStartTimeGreaterThanOrEqualTo(startTime)
-				.andStartTimeLessThan(endTime);
-		List<CryptoCoinPrice1day> cacheList = cacheMapper.selectByExample(cacheExample);
-		if (cacheList == null || cacheList.isEmpty()) {
+		List<CryptoCoinPriceCommonDataBO> cacheDataList = _1DayDataService.getCommonData(coinType, currencyType,
+				startTime);
+		if (cacheDataList == null || cacheDataList.isEmpty()) {
 			return;
 		}
 
 		CryptoCoinPrice1weekExample example = new CryptoCoinPrice1weekExample();
 		example.createCriteria().andCoinTypeEqualTo(coinType.getCode()).andCurrencyTypeEqualTo(currencyType.getCode())
 				.andStartTimeEqualTo(startTime);
-		List<CryptoCoinPrice1week> poList = summaryMapper.selectByExample(example);
+		List<CryptoCoinPrice1week> poList = _1weekDataMapper.selectByExample(example);
 		CryptoCoinPrice1week po = null;
 		boolean newPOFlag = false;
 		if (poList == null || poList.isEmpty()) {
@@ -85,7 +82,7 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 		}
 
 		Double volumeSummary = 0D;
-		for (CryptoCoinPrice1day cache : cacheList) {
+		for (CryptoCoinPriceCommonDataBO cache : cacheDataList) {
 			if (po.getStartTime() == null || cache.getStartTime().isBefore(po.getStartTime()) || cache.getStartTime().isEqual(po.getStartTime())) {
 				po.setStartTime(cache.getStartTime());
 				po.setStartPrice(cache.getStartPrice());
@@ -105,9 +102,9 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 		po.setVolume(new BigDecimal(volumeSummary));
 
 		if (newPOFlag) {
-			summaryMapper.insertSelective(po);
+			_1weekDataMapper.insertSelective(po);
 		} else {
-			summaryMapper.updateByPrimaryKeySelective(po);
+			_1weekDataMapper.updateByPrimaryKeySelective(po);
 		}
 	}
 
@@ -119,7 +116,7 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 				.andStartTimeGreaterThanOrEqualTo(startTime);
 		;
 
-		return summaryMapper.selectByExample(example);
+		return _1weekDataMapper.selectByExample(example);
 	}
 
 	@Override

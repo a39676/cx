@@ -43,5 +43,5 @@ public class CryptoCoinDataTaskToolServiceImpl extends CryptoCoinCommonService {
 		cryptoCoin5MinuteDataSummaryService.deleteExpiredCacheData();
 		cryptoCoin60MinuteDataSummaryService.deleteExpiredCacheData();
 	}
-	
+
 }

@@ -12,10 +12,12 @@ import org.springframework.stereotype.Service;
 import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
+import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
 import net.sf.json.JSONObject;
+import telegram.pojo.dto.TelegramMessageDTO;
 
 @Service
 public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService implements CryptoCoinPriceCacheService {
@@ -28,16 +30,16 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 				localDateTimeHandler.dateToStr(newBO.getStartTime(), (CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_DATETIME_FORMAT))
 				);
 		
-		String dataStr = constantService.getValByName(key);
+		String oldCacheDataStr = constantService.getValByName(key);
 		
-		if(StringUtils.isBlank(dataStr)) {
+		if(StringUtils.isBlank(oldCacheDataStr)) {
 			newBO.setStartPrice(newBO.getEndPrice());
 			newBO.setHighPrice(newBO.getEndPrice());
 			newBO.setLowPrice(newBO.getEndPrice());
 			constantService.setValByName(key, boToDataStr(newBO), CryptoCoinDataConstant.CRYPTO_COIN_CACHE_DATA_LIVE_MINUTES, TimeUnit.MINUTES);
 			
 		} else {
-			CryptoCoinPriceCommonDataBO oldBO = dataStrToBO(dataStr);
+			CryptoCoinPriceCommonDataBO oldBO = dataStrToBO(oldCacheDataStr);
 			oldBO = dataMerge(oldBO, newBO);
 			constantService.setValByName(key, boToDataStr(newBO), CryptoCoinDataConstant.CRYPTO_COIN_CACHE_DATA_LIVE_MINUTES, TimeUnit.MINUTES);
 		}
@@ -112,4 +114,31 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 		return commonDataList;
 	}
 
+	@Override
+	public boolean isSocketAlive() {
+		String key = String.format(CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_FORMAT,
+				CryptoCoinType.BTC.getName(),
+				CurrencyType.USD.getName(),
+				localDateTimeHandler.dateToStr(LocalDateTime.now(), (CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_DATETIME_FORMAT))
+				);
+		
+		Boolean flag = constantService.hasKey(key);
+		if(flag) {
+			return flag;
+		}
+		
+		key = String.format(CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_FORMAT,
+				CryptoCoinType.BTC.getName(),
+				CurrencyType.USD.getName(),
+				localDateTimeHandler.dateToStr(LocalDateTime.now().minusMinutes(1), (CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_DATETIME_FORMAT))
+				);
+		
+		if(!flag) {
+			TelegramMessageDTO dto = new TelegramMessageDTO();
+			dto.setId(TelegramStaticChatID.MY_ID);
+			dto.setMsg("crypto compare socket hit error");
+			telegramCryptoCoinMessageAckProducer.send(dto);
+		}
+		return flag;
+	}
 }

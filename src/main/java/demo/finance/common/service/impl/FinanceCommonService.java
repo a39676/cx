@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import demo.common.service.CommonService;
+import demo.finance.cryptoCoin.mq.producer.TelegramCryptoCoinMessageAckProducer;
 import demo.tool.service.MailService;
 import demo.tool.service.ValidRegexToolService;
 import demo.tool.telegram.service.TelegramService;
@@ -15,6 +16,8 @@ public abstract class FinanceCommonService extends CommonService {
 	protected MailService mailService;
 	@Autowired
 	protected TelegramService telegramService;
+	@Autowired
+	protected TelegramCryptoCoinMessageAckProducer telegramCryptoCoinMessageAckProducer;
 	@Autowired
 	protected ValidRegexToolService validRegexToolService;
 

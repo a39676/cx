@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +19,14 @@ import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1minuteMapper;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1minute;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1minuteExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
+import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import finance.cryptoCoin.pojo.dto.CryptoCoinHistoryPriceDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinHistoryPriceSubDTO;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
+import telegram.pojo.dto.TelegramMessageDTO;
 
 @Service
 public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonService
@@ -32,6 +36,8 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 
 	@Autowired
 	private CryptoCoinPrice1minuteMapper summaryMapper;
+	@Autowired
+	private CryptoCoinPriceCacheService cacheService;
 
 	@Override
 	public CommonResult reciveCoinHistoryPrice(CryptoCoinHistoryPriceDTO dto) {
@@ -49,6 +55,7 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 		}
 
 		updateSummaryData(dataList, coinType, currencyType);
+		constantService.setValByName(CryptoCoinDataConstant.LAST_HISTORY_DATA_ACTIVE_REDIS_KEY, "_", CryptoCoinDataConstant.LAST_HISTORY_DATA_INACTIVE_JUDGMENT_SECOND, TimeUnit.SECONDS);
 
 		return r;
 	}
@@ -79,12 +86,11 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 					break mergeLoop;
 				}
 			}
-			if (dataTimeMatchFlag) {
-				dataTimeMatchFlag = false;
-				continue;
-			} else {
+			if (!dataTimeMatchFlag) {
 				insertNewData(data, coinType, currencyType);
 			}
+			
+			dataTimeMatchFlag = false;
 		}
 
 	}
@@ -247,5 +253,21 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 		po.setVolume(new BigDecimal(data.getVolume()));
 
 		summaryMapper.insertSelective(po);
+	}
+
+	@Override
+	public CommonResult historyMQIsActive() {
+		CommonResult r = new CommonResult();
+		Boolean flag = constantService.hasKey(CryptoCoinDataConstant.LAST_HISTORY_DATA_ACTIVE_REDIS_KEY);
+		r.setSuccess(flag);
+		
+		if(!flag) {
+			TelegramMessageDTO dto = new TelegramMessageDTO();
+			dto.setId(TelegramStaticChatID.MY_ID);
+			dto.setMsg("crypto compare history API hit error");
+			telegramCryptoCoinMessageAckProducer.send(dto);
+		}
+		
+		return r;
 	}
 }

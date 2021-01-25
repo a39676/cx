@@ -10,7 +10,7 @@ import telegram.pojo.constant.TelegramMessageMQConstant;
 import telegram.pojo.dto.TelegramMessageDTO;
 
 @Component
-public class TelegramMessageAckProducer extends CommonService {
+public class TelegramCryptoCoinMessageAckProducer extends CommonService {
 
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
@@ -19,11 +19,11 @@ public class TelegramMessageAckProducer extends CommonService {
 		if (dto == null) {
 			return;
 		}
-		JSONObject json = testEventPOToJSON(dto);
+		JSONObject json = dtoToJSON(dto);
 		rabbitTemplate.convertAndSend(TelegramMessageMQConstant.TELEGRAM_CRYPTO_COIN_MSG_QUEUE, json.toString());
 	}
 
-	private JSONObject testEventPOToJSON(TelegramMessageDTO te) {
+	private JSONObject dtoToJSON(TelegramMessageDTO te) {
 		JSONObject json = new JSONObject();
 
 		if (te.getId() != null) {

@@ -26,7 +26,7 @@ import demo.finance.cryptoCoin.data.service.CryptoCoin1MonthDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1WeekDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin5MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin60MinuteDataSummaryService;
-import demo.finance.cryptoCoin.mq.producer.TelegramMessageAckProducer;
+import demo.finance.cryptoCoin.mq.producer.TelegramCryptoCoinMessageAckProducer;
 import demo.finance.cryptoCoin.notice.mapper.CryptoCoinPriceNoticeMapper;
 import demo.finance.cryptoCoin.notice.pojo.dto.NoticeUpdateDTO;
 import demo.finance.cryptoCoin.notice.pojo.dto.SearchCryptoCoinConditionDTO;
@@ -61,7 +61,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	private CryptoCoin1MonthDataSummaryService monthlyDataSummaryService;
 
 	@Autowired
-	private TelegramMessageAckProducer telegramMessageAckProducer;
+	private TelegramCryptoCoinMessageAckProducer telegramMessageAckProducer;
 
 	@Override
 	public ModelAndView cryptoCoinPriceNoticeSettingManager() {

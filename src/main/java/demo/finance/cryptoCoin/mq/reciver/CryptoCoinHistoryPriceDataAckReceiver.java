@@ -30,7 +30,6 @@ public class CryptoCoinHistoryPriceDataAckReceiver {
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 		} catch (IOException e) {
 			channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);
-			e.printStackTrace();
 		}
 	}
 }

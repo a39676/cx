@@ -26,6 +26,8 @@ import toolPack.httpHandel.HttpUtil;
 @Service
 public class TelegramServiceImpl extends CommonService implements TelegramService {
 
+	private static final Long adminChatId = 1000L;
+	
 	@Autowired
 	private TelegramConstantMapper telegramConstantMapper; 
 	@Autowired
@@ -155,4 +157,10 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 		return po != null;
 	}
 	
+	@Override
+	public void telegramSendingCheck() {
+		for(TelegramBotType botType : TelegramBotType.values()) {
+			sendMessage(botType, "testing msg", adminChatId);
+		}
+	}
 }

@@ -7,21 +7,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.common.service.impl.FinanceCommonService;
 import demo.finance.cryptoCoin.data.pojo.result.FilterBODataResult;
-import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
 public abstract class CryptoCoinCommonService extends FinanceCommonService {
-
-	@Autowired
-	protected CryptoCoinPriceCacheService cacheService;
 
 	protected FilterBODataResult filterData(List<CryptoCoinPriceCommonDataBO> list) {
 		FilterBODataResult r = new FilterBODataResult();

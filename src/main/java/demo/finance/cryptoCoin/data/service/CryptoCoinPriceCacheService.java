@@ -14,4 +14,6 @@ public interface CryptoCoinPriceCacheService {
 
 	CryptoCoinPriceCommonDataBO dataStrToBO(String str);
 
+	boolean isSocketAlive();
+
 }

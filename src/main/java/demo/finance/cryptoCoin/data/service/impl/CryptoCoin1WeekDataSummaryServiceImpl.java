@@ -1,10 +1,8 @@
 package demo.finance.cryptoCoin.data.service.impl;
 
 import java.math.BigDecimal;
-import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -13,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
+import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1dayMapper;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1weekMapper;
@@ -22,6 +21,7 @@ import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1week;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1weekExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1WeekDataSummaryService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
+import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
 @Service
@@ -29,7 +29,6 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 		implements CryptoCoin1WeekDataSummaryService {
 
 	private final int dayStepLong = 7;
-	private final DayOfWeek startDayOfWeek = DayOfWeek.SUNDAY;
 
 	@Autowired
 	private CryptoCoinPrice1dayMapper cacheMapper;
@@ -41,7 +40,7 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 		CommonResult r = new CommonResult();
 
 		LocalDateTime now = LocalDateTime.now();
-		LocalDateTime lastSunday = localDateTimeHandler.findLastDayOfWeek(now, startDayOfWeek);
+		LocalDateTime lastSunday = localDateTimeHandler.findLastDayOfWeek(now, CryptoCoinDataConstant.START_DAY_OF_WEEK);
 		LocalDateTime thereStepBefore = lastSunday.minusDays(dayStepLong * 3).withHour(0).withMinute(0).withSecond(0)
 				.withNano(0);
 
@@ -152,31 +151,8 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 			return poDataList;
 		}
 
-		Collections.sort(cacheDataList);
-		Collections.sort(poDataList);
-		
-		CryptoCoinPriceCommonDataBO tmpPOData = null;
-		CryptoCoinPriceCommonDataBO tmpCacheData = null;
-		if(poDataList.isEmpty()) {
-			tmpPOData = new CryptoCoinPriceCommonDataBO();
-			tmpPOData.setCoinType(coinType.getCode());
-			tmpPOData.setCurrencyType(currencyType.getCode());
-			tmpPOData.setVolume(BigDecimal.ZERO);
-		} else {
-			tmpPOData = poDataList.get(poDataList.size() - 1);
-		}
-		
-		for (int i = 0; i < cacheDataList.size(); i++) {
-			tmpCacheData = cacheDataList.get(i);
-			tmpPOData = mergerData(tmpPOData, tmpCacheData);
-		}
-		
-		if(poDataList.isEmpty()) {
-			poDataList.add(tmpPOData);
-		} else {
-			poDataList.set(poDataList.size() - 1, tmpPOData);
-		}
+		List<CryptoCoinPriceCommonDataBO> resultDataList = mergePODataWithCache(poDataList, cacheDataList, startTime, dayStepLong / 7, TimeUnitType.hour);
 
-		return poDataList;
+		return resultDataList;
 	}
 }

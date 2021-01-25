@@ -3,7 +3,6 @@ package demo.finance.cryptoCoin.data.service.impl;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
+import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1dayMapper;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice60minuteMapper;
@@ -149,31 +149,9 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 			return poDataList;
 		}
 
-		Collections.sort(cacheDataList);
-		Collections.sort(poDataList);
-		
-		CryptoCoinPriceCommonDataBO tmpPOData = null;
-		CryptoCoinPriceCommonDataBO tmpCacheData = null;
-		if(poDataList.isEmpty()) {
-			tmpPOData = new CryptoCoinPriceCommonDataBO();
-			tmpPOData.setCoinType(coinType.getCode());
-			tmpPOData.setCurrencyType(currencyType.getCode());
-			tmpPOData.setVolume(BigDecimal.ZERO);
-		} else {
-			tmpPOData = poDataList.get(poDataList.size() - 1);
-		}
-		
-		for (int i = 0; i < cacheDataList.size(); i++) {
-			tmpCacheData = cacheDataList.get(i);
-			tmpPOData = mergerData(tmpPOData, tmpCacheData);
-		}
-		
-		if(poDataList.isEmpty()) {
-			poDataList.add(tmpPOData);
-		} else {
-			poDataList.set(poDataList.size() - 1, tmpPOData);
-		}
+		List<CryptoCoinPriceCommonDataBO> resultDataList = mergePODataWithCache(poDataList, cacheDataList, startTime, dayStepLong, TimeUnitType.day);
 
-		return poDataList;
+		return resultDataList;
+
 	}
 }

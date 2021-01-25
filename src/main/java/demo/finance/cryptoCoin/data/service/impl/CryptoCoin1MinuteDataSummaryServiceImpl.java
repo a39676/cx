@@ -12,13 +12,14 @@ import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
+import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1minuteMapper;
-import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinDataConstant;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1minute;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1minuteExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
+import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import finance.cryptoCoin.pojo.dto.CryptoCoinHistoryPriceDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinHistoryPriceSubDTO;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
@@ -171,49 +172,11 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 
 		if (cacheDataList.isEmpty()) {
 			return poDataList;
-		} else if (poDataList.isEmpty() && !cacheDataList.isEmpty()) {
-			return cacheDataList;
 		}
-		List<CryptoCoinPriceCommonDataBO> resultDataList = new ArrayList<>();
 
 		Collections.sort(cacheDataList);
 
-		LocalDateTime endTime = LocalDateTime.now().withSecond(0).withNano(0);
-		LocalDateTime cacheStartTime = startTime.withSecond(0).withNano(0);
-
-		boolean poDataExistsFlag = false;
-		boolean cacheDataExistsFlag = false;
-		CryptoCoinPriceCommonDataBO tmpPOData = null;
-		CryptoCoinPriceCommonDataBO tmpCacheData = null;
-
-		while (!cacheStartTime.isAfter(endTime)) {
-			for (int i = 0; i < poDataList.size() && poDataExistsFlag == false; i++) {
-				tmpPOData = poDataList.get(i);
-				if (tmpPOData.getStartTime().equals(cacheStartTime)) {
-					poDataExistsFlag = true;
-				}
-			}
-
-			for (int i = 0; i < cacheDataList.size() && cacheDataExistsFlag == false; i++) {
-				tmpCacheData = cacheDataList.get(i);
-				if (tmpCacheData.getStartTime().withSecond(0).withNano(0).equals(cacheStartTime)) {
-					cacheDataExistsFlag = true;
-				}
-			}
-
-			if (poDataExistsFlag && !cacheDataExistsFlag) {
-				resultDataList.add(tmpPOData);
-			} else if (!poDataExistsFlag && cacheDataExistsFlag) {
-				resultDataList.add(tmpCacheData);
-			} else if (poDataExistsFlag && cacheDataExistsFlag) {
-				tmpPOData = mergerData(tmpPOData, tmpCacheData);
-				resultDataList.add(tmpPOData);
-			}
-
-			poDataExistsFlag = false;
-			cacheDataExistsFlag = false;
-			cacheStartTime = cacheStartTime.plusMinutes(1);
-		}
+		List<CryptoCoinPriceCommonDataBO> resultDataList = mergePODataWithCache(poDataList, cacheDataList, startTime, minuteStepLong, TimeUnitType.minute);
 
 		return resultDataList;
 	}

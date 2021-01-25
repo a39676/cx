@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
-import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinDataConstant;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
+import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
 import net.sf.json.JSONObject;
 
@@ -22,11 +22,6 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 
 	@Override
 	public void reciveData(CryptoCoinPriceCommonDataBO newBO) {
-//		TODO
-		/*
-		 * 需要统计最近10分钟
-		 * 提醒服务器中. 统计最近10分钟的逻辑需要更改
-		 */
 		String key = String.format(CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_FORMAT,
 				CryptoCoinType.getType(newBO.getCoinType()).getName(),
 				CurrencyType.getType(newBO.getCurrencyType()).getName(),

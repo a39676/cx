@@ -1,4 +1,5 @@
-linux 服务器上 /home/u2 底下 cx相关文件归整
+crypto coin summary datas 中仍然有重复数据
+	待加loger 追踪
 
 农历提醒
 图片信息传送

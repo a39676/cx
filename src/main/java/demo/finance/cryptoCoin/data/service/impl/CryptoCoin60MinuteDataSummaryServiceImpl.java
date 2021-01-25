@@ -3,7 +3,6 @@ package demo.finance.cryptoCoin.data.service.impl;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -12,15 +11,16 @@ import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
+import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice60minuteMapper;
-import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinDataConstant;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice60minute;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice60minuteExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin5MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin60MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
+import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
 @Service
@@ -40,11 +40,11 @@ public class CryptoCoin60MinuteDataSummaryServiceImpl extends CryptoCoinCommonSe
 		CommonResult r = new CommonResult();
 
 		LocalDateTime now = LocalDateTime.now();
-		LocalDateTime thereStepBefore = nextStepTimeByMinute(now, minuteStepLong).minusMinutes(minuteStepLong * 3);
+		LocalDateTime thereStepBefore = nextStepStartTimeByMinute(now, minuteStepLong).minusMinutes(minuteStepLong * 3);
 
 		for (CryptoCoinType coinType : CryptoCoinType.values()) {
 			for (CurrencyType currencyType : CurrencyType.values()) {
-				for (LocalDateTime i = thereStepBefore; i.isBefore(now); i = nextStepTimeByMinute(i, minuteStepLong)) {
+				for (LocalDateTime i = thereStepBefore; i.isBefore(now); i = nextStepStartTimeByMinute(i, minuteStepLong)) {
 					handleHistoryDataList(i, coinType, currencyType);
 				}
 			}
@@ -156,32 +156,8 @@ public class CryptoCoin60MinuteDataSummaryServiceImpl extends CryptoCoinCommonSe
 			return poDataList;
 		}
 
-		Collections.sort(cacheDataList);
-		Collections.sort(poDataList);
-		
-		CryptoCoinPriceCommonDataBO tmpPOData = null;
-		CryptoCoinPriceCommonDataBO tmpCacheData = null;
-		if(poDataList.isEmpty()) {
-			tmpPOData = new CryptoCoinPriceCommonDataBO();
-			tmpPOData.setCoinType(coinType.getCode());
-			tmpPOData.setCurrencyType(currencyType.getCode());
-			tmpPOData.setVolume(BigDecimal.ZERO);
-		} else {
-			tmpPOData = poDataList.get(poDataList.size() - 1);
-		}
-		
-		for (int i = 0; i < cacheDataList.size(); i++) {
-			tmpCacheData = cacheDataList.get(i);
-			tmpPOData = mergerData(tmpPOData, tmpCacheData);
-		}
-		
-		if(poDataList.isEmpty()) {
-			poDataList.add(tmpPOData);
-		} else {
-			poDataList.set(poDataList.size() - 1, tmpPOData);
-		}
-		
+		List<CryptoCoinPriceCommonDataBO> resultDataList = mergePODataWithCache(poDataList, cacheDataList, startTime, minuteStepLong / 60, TimeUnitType.hour);
 
-		return poDataList;
+		return resultDataList;
 	}
 }

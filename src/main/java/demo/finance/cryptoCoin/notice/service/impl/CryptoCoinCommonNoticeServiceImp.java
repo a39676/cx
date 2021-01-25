@@ -17,7 +17,6 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
-import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinDataConstant;
 import demo.finance.cryptoCoin.data.pojo.dto.InsertCryptoCoinPriceNoticeSettingDTO;
 import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinNoticeDTOCheckResult;
 import demo.finance.cryptoCoin.data.pojo.result.FilterBODataResult;
@@ -39,6 +38,7 @@ import demo.finance.cryptoCoin.notice.service.CryptoCoinCommonNoticeService;
 import demo.tool.telegram.pojo.po.TelegramChatId;
 import demo.tool.telegram.pojo.vo.TelegramChatIdVO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
+import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
 import telegram.pojo.dto.TelegramMessageDTO;
 
@@ -323,7 +323,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			CurrencyType currencyType) {
 		CommonResult r = new CommonResult();
 		List<CryptoCoinPriceCommonDataBO> historyDataList = _1MinuteDataSummaryService.getCommonDataFillWithCache(coinType,
-				currencyType, LocalDateTime.now().minusMinutes(2));
+				currencyType, LocalDateTime.now().minusMinutes(2).withSecond(0).withNano(0));
 
 		if (historyDataList == null || historyDataList.isEmpty()) {
 			return r;
@@ -430,24 +430,24 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			Integer timeUnit, Integer timeRange) {
 		LocalDateTime startTime = null;
 		if (TimeUnitType.minute.getCode().equals(timeUnit)) {
-			startTime = LocalDateTime.now().minusMinutes(timeRange);
+			startTime = LocalDateTime.now().minusMinutes(timeRange).withSecond(0).withNano(0);
 			if (CryptoCoinDataConstant.CRYPTO_COIN_1MINUTE_DATA_LIVE_HOURS * 60 > timeRange) {
 				return _1MinuteDataSummaryService.getCommonDataFillWithCache(coinType, currencyType, startTime);
 			} else if (CryptoCoinDataConstant.CRYPTO_COIN_5MINUTE_DATA_LIVE_HOURS * 60 > timeRange) {
 				return _5MinuteDataSummaryService.getCommonDataFillWithCache(coinType, currencyType, startTime);
 			}
 		} else if (TimeUnitType.hour.getCode().equals(timeUnit)) {
-			startTime = LocalDateTime.now().minusHours(timeRange);
+			startTime = LocalDateTime.now().minusHours(timeRange).withSecond(0).withNano(0);
 			return hourDataSummaryService.getCommonData(coinType, currencyType, startTime);
 		} else if (TimeUnitType.day.getCode().equals(timeUnit)) {
-			startTime = LocalDateTime.now().minusDays(timeRange);
+			startTime = LocalDateTime.now().minusDays(timeRange).withSecond(0).withNano(0);
 			return dailyDataSummaryService.getCommonData(coinType, currencyType, startTime);
 		} else if (TimeUnitType.week.getCode().equals(timeUnit)) {
 			LocalDateTime lastSunday = localDateTimeHandler.findLastDayOfWeek(LocalDateTime.now(), DayOfWeek.SUNDAY);
-			startTime = lastSunday.minusDays((timeRange - 1) * 7);
+			startTime = lastSunday.minusDays((timeRange - 1) * 7).withSecond(0).withNano(0);
 			return weeklyDataSummaryService.getCommonData(coinType, currencyType, startTime);
 		} else if (TimeUnitType.month.getCode().equals(timeUnit)) {
-			startTime = LocalDateTime.now().withDayOfMonth(1).minusMonths(timeRange - 1);
+			startTime = LocalDateTime.now().withDayOfMonth(1).minusMonths(timeRange - 1).withSecond(0).withNano(0);
 			return monthlyDataSummaryService.getCommonData(coinType, currencyType, startTime);
 		}
 

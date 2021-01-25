@@ -245,8 +245,10 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	public void noticeHandler() {
 		List<CryptoCoinPriceNotice> noticeList = noticeMapper.selectValidNoticeSetting(LocalDateTime.now());
 		if (noticeList == null || noticeList.isEmpty()) {
-			log.debug("can NOT found any crypto coin price notice PO");
+			log.error("can NOT found any crypto coin price notice PO");
 			return;
+		} else {
+			log.error("noticle handler found:" + noticeList.size() + " notice po");
 		}
 
 		for (CryptoCoinPriceNotice notice : noticeList) {
@@ -294,6 +296,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		}
 		boolean f2 = priceFluctuationSpeedConditionHadSet(noticeSetting);
 		if (f2) {
+			log.error("priceFluctuationSpeedConditionHadSet: " + noticeSetting.getId());
 			handleResult = priceFluctuationSpeedNoticeHandle(noticeSetting, coinType, currencyType);
 			if (handleResult.isSuccess()) {
 				content += handleResult.getMessage();

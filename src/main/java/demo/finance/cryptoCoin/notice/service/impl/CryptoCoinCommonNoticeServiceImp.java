@@ -321,6 +321,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			r.successWithMessage("notice sended");
 			return r;
 		} else {
+			log.error(noticeSetting.getId() + ", didn't hit any notice setting");
 			r.failWithMessage("didn't hit any notice setting");
 			return r;
 		}

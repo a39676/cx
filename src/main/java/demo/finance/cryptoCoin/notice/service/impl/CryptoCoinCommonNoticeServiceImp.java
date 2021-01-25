@@ -388,6 +388,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		List<CryptoCoinPriceCommonDataBO> historyPOList = findHistoryData(coinType, currencyType,
 				noticeSetting.getTimeUnitOfDataWatch(), noticeSetting.getTimeRangeOfDataWatch());
 		if (historyPOList == null || historyPOList.isEmpty()) {
+			log.error(noticeSetting.getId() + ", can NOT find any history data");
 			return r;
 		}
 
@@ -447,7 +448,12 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		return r;
 	}
 
-	private List<CryptoCoinPriceCommonDataBO> findHistoryData(CryptoCoinType coinType, CurrencyType currencyType,
+	/*
+	 * TODO
+	 * for debug
+	 */
+	@Override
+	public List<CryptoCoinPriceCommonDataBO> findHistoryData(CryptoCoinType coinType, CurrencyType currencyType,
 			Integer timeUnit, Integer timeRange) {
 		LocalDateTime startTime = null;
 		if (TimeUnitType.minute.getCode().equals(timeUnit)) {

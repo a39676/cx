@@ -245,10 +245,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	public void noticeHandler() {
 		List<CryptoCoinPriceNotice> noticeList = noticeMapper.selectValidNoticeSetting(LocalDateTime.now());
 		if (noticeList == null || noticeList.isEmpty()) {
-			log.error("can NOT found any crypto coin price notice PO");
 			return;
-		} else {
-			log.error("noticle handler found:" + noticeList.size() + " notice po");
 		}
 
 		for (CryptoCoinPriceNotice notice : noticeList) {
@@ -288,29 +285,19 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		String content = "";
 		CommonResult handleResult = null;
-//		TODO
-		boolean f1 = priceConditionHadSet(noticeSetting);
-		if (f1) {
-			log.error("priceConditionHadSet: " + noticeSetting.getId());
+		if (priceConditionHadSet(noticeSetting)) {
 			handleResult = priceConditionNoticeHandle(noticeSetting, coinType, currencyType);
-			log.error(noticeSetting.getId() + ", handel result: " + handleResult.getMessage());
 			if (handleResult.isSuccess()) {
 				content += handleResult.getMessage();
 			}
 		}
-		boolean f2 = priceFluctuationSpeedConditionHadSet(noticeSetting);
-		if (f2) {
-			log.error("priceFluctuationSpeedConditionHadSet: " + noticeSetting.getId());
+		if (priceFluctuationSpeedConditionHadSet(noticeSetting)) {
 			handleResult = priceFluctuationSpeedNoticeHandle(noticeSetting, coinType, currencyType);
 			if (handleResult.isSuccess()) {
 				content += handleResult.getMessage();
 			}
 		}
 		
-		if(!f1 && !f2) {
-			log.error(noticeSetting.getId() + ", not set any condition; " + noticeSetting.toString());
-		}
-
 		if (StringUtils.isNotBlank(content)) {
 			TelegramMessageDTO dto = new TelegramMessageDTO();
 			dto.setMsg(content);
@@ -335,7 +322,6 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			r.successWithMessage("notice sended");
 			return r;
 		} else {
-			log.error(noticeSetting.getId() + ", didn't hit any notice setting");
 			r.failWithMessage("didn't hit any notice setting");
 			return r;
 		}
@@ -349,13 +335,12 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 				currencyType, LocalDateTime.now().minusMinutes(2).withSecond(0).withNano(0));
 
 		if (historyDataList == null || historyDataList.isEmpty()) {
-			log.error(noticeSetting.getId() + ", coinType: " + noticeSetting.getCoinType() + ", currency: " + noticeSetting.getCurrencyType() + ", get null data");
+			log.error(noticeSetting.getId() + ", can NOT find any history data");
 			return r;
 		}
 
 		FilterBODataResult maxMinPriceResult = filterData(historyDataList);
 		if (maxMinPriceResult.isFail()) {
-			log.error(noticeSetting.getId() + ", coinType: " + noticeSetting.getCoinType() + ", currency: " + noticeSetting.getCurrencyType() + ", max min result error");
 			r.addMessage(maxMinPriceResult.getMessage());
 			return r;
 		}
@@ -394,15 +379,11 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		if (historyPOList == null || historyPOList.isEmpty()) {
 			log.error(noticeSetting.getId() + ", can NOT find any history data");
 			return r;
-		} else {
-			log.error(noticeSetting.getId() + ", found " + historyPOList.size() + " datas");
 		}
 
 		Collections.sort(historyPOList);
-		log.error(noticeSetting.getId() + ", after sort");
 		
 		FilterBODataResult maxMinPriceResult = filterData(historyPOList);
-		log.error(noticeSetting.getId() + ", maxMinPriceResult: " + maxMinPriceResult.toString());
 		if (maxMinPriceResult.isFail()) {
 			r.addMessage(maxMinPriceResult.getMessage());
 			return r;
@@ -414,9 +395,6 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		Double upApmlitude = (lastMax / lastMin - 1) * 100;
 		Double lowApmlitude = (lastMin / lastMax - 1) * 100;
 
-		log.error(noticeSetting.getId() + ", upApmlitude: " + upApmlitude);
-		log.error(noticeSetting.getId() + ", lowApmlitude: " + lowApmlitude);
-		
 		String content = null;
 		Double trigerPercentage = noticeSetting.getFluctuationSpeedPercentage().doubleValue();
 		if (trigerPercentage < 0) {
@@ -451,8 +429,6 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		if (content != null) {
 			r.successWithMessage(content);
-		} else {
-			log.error(noticeSetting.getId() + ", not hit condition");
 		}
 
 		return r;

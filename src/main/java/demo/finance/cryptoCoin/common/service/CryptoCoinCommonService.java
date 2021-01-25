@@ -28,24 +28,24 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 		CryptoCoinPriceCommonDataBO defaultData = list.get(0);
 		BigDecimal maxPrice = defaultData.getHighPrice();
 		BigDecimal minPrice = defaultData.getLowPrice();
-		LocalDateTime maxPriceDateTime = defaultData.getCreateTime();
-		LocalDateTime minPriceDateTime = defaultData.getCreateTime();
+		LocalDateTime maxPriceDateTime = defaultData.getStartTime();
+		LocalDateTime minPriceDateTime = defaultData.getStartTime();
 		LocalDateTime startTime = null;
 		LocalDateTime endTime = null;
-		for (CryptoCoinPriceCommonDataBO po : list) {
-			if (maxPrice.compareTo(po.getHighPrice()) < 0) {
-				maxPrice = po.getHighPrice();
-				maxPriceDateTime = po.getStartTime();
-			} else if (minPrice.compareTo(po.getLowPrice()) > 0) {
-				minPrice = po.getLowPrice();
-				minPriceDateTime = po.getStartTime();
+		for (CryptoCoinPriceCommonDataBO bo : list) {
+			if (maxPrice.compareTo(bo.getHighPrice()) < 0) {
+				maxPrice = bo.getHighPrice();
+				maxPriceDateTime = bo.getStartTime();
+			} else if (minPrice.compareTo(bo.getLowPrice()) > 0) {
+				minPrice = bo.getLowPrice();
+				minPriceDateTime = bo.getStartTime();
 			}
 
-			if (startTime == null || startTime.isAfter(po.getStartTime())) {
-				startTime = po.getStartTime();
+			if (startTime == null || startTime.isAfter(bo.getStartTime())) {
+				startTime = bo.getStartTime();
 			}
-			if (endTime == null || endTime.isBefore(po.getEndTime())) {
-				endTime = po.getEndTime();
+			if (endTime == null || endTime.isBefore(bo.getEndTime())) {
+				endTime = bo.getEndTime();
 			}
 
 		}

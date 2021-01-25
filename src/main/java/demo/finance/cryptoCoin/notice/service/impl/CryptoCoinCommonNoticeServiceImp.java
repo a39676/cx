@@ -245,6 +245,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	public void noticeHandler() {
 		List<CryptoCoinPriceNotice> noticeList = noticeMapper.selectValidNoticeSetting(LocalDateTime.now());
 		if (noticeList == null || noticeList.isEmpty()) {
+			log.debug("can NOT found any crypto coin price notice PO");
 			return;
 		}
 
@@ -258,12 +259,14 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		CommonResult r = new CommonResult();
 		CryptoCoinType coinType = CryptoCoinType.getType(noticeSetting.getCoinType());
 		if (coinType == null) {
+			log.error(noticeSetting.getId() + ", coin type setting error");
 			r.failWithMessage("coin type setting error");
 			return r;
 		}
 
 		CurrencyType currencyType = CurrencyType.getType(noticeSetting.getCurrencyType());
 		if (currencyType == null) {
+			log.error(noticeSetting.getId() + ", currencty type setting error");
 			r.failWithMessage("currencty type setting error");
 			return r;
 		}
@@ -282,6 +285,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		if (priceConditionHadSet(noticeSetting)) {
 			log.error("priceConditionHadSet: " + noticeSetting.getId());
 			handleResult = priceConditionNoticeHandle(noticeSetting, coinType, currencyType);
+			log.error(noticeSetting.getId() + ", handel result: " + handleResult.getMessage());
 			if (handleResult.isSuccess()) {
 				content += handleResult.getMessage();
 			}

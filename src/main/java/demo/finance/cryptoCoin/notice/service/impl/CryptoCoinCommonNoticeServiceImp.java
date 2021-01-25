@@ -282,7 +282,9 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		String content = "";
 		CommonResult handleResult = null;
-		if (priceConditionHadSet(noticeSetting)) {
+//		TODO
+		boolean f1 = priceConditionHadSet(noticeSetting);
+		if (f1) {
 			log.error("priceConditionHadSet: " + noticeSetting.getId());
 			handleResult = priceConditionNoticeHandle(noticeSetting, coinType, currencyType);
 			log.error(noticeSetting.getId() + ", handel result: " + handleResult.getMessage());
@@ -290,11 +292,16 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 				content += handleResult.getMessage();
 			}
 		}
-		if (priceFluctuationSpeedConditionHadSet(noticeSetting)) {
+		boolean f2 = priceFluctuationSpeedConditionHadSet(noticeSetting);
+		if (f2) {
 			handleResult = priceFluctuationSpeedNoticeHandle(noticeSetting, coinType, currencyType);
 			if (handleResult.isSuccess()) {
 				content += handleResult.getMessage();
 			}
+		}
+		
+		if(!f1 && !f2) {
+			log.error(noticeSetting.getId() + ", not set any condition; " + noticeSetting.toString());
 		}
 
 		if (StringUtils.isNotBlank(content)) {

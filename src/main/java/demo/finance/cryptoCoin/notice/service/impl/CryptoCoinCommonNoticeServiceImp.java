@@ -252,7 +252,11 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		}
 
 		for (CryptoCoinPriceNotice notice : noticeList) {
-			subNoticeHandler(notice);
+			try {
+				subNoticeHandler(notice);
+			} catch (Exception e) {
+				log.error(notice.getId() + ", hit error: " + e.getLocalizedMessage());
+			}
 		}
 
 	}

@@ -25,33 +25,38 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 			return r;
 		}
 
-		CryptoCoinPriceCommonDataBO defaultData = list.get(0);
-		BigDecimal maxPrice = defaultData.getHighPrice();
-		BigDecimal minPrice = defaultData.getLowPrice();
-		LocalDateTime maxPriceDateTime = defaultData.getStartTime();
-		LocalDateTime minPriceDateTime = defaultData.getStartTime();
+		double maxPrice = Double.MIN_VALUE;
+		double minPrice = Double.MAX_VALUE;
+		LocalDateTime maxPriceDateTime = null;
+		LocalDateTime minPriceDateTime = null;
 		LocalDateTime startTime = null;
 		LocalDateTime endTime = null;
 		for (CryptoCoinPriceCommonDataBO bo : list) {
-			if (maxPrice.compareTo(bo.getHighPrice()) < 0) {
-				maxPrice = bo.getHighPrice();
+			if(bo.getHighPrice() != null && bo.getHighPrice().doubleValue() > maxPrice) {
+				maxPrice = bo.getHighPrice().doubleValue();
 				maxPriceDateTime = bo.getStartTime();
-			} else if (minPrice.compareTo(bo.getLowPrice()) > 0) {
-				minPrice = bo.getLowPrice();
+			}
+			
+			if(bo.getLowPrice() != null && bo.getLowPrice().doubleValue() < minPrice) {
+				minPrice = bo.getLowPrice().doubleValue();
 				minPriceDateTime = bo.getStartTime();
 			}
 
-			if (startTime == null || startTime.isAfter(bo.getStartTime())) {
-				startTime = bo.getStartTime();
+			if(bo.getStartTime() != null) {
+				if (startTime == null || startTime.isAfter(bo.getStartTime())) {
+					startTime = bo.getStartTime();
+				}
 			}
-			if (endTime == null || endTime.isBefore(bo.getEndTime())) {
-				endTime = bo.getEndTime();
+			if(bo.getEndTime() != null) {
+				if (endTime == null || endTime.isBefore(bo.getEndTime())) {
+					endTime = bo.getEndTime();
+				}
 			}
 
 		}
 
-		r.setMaxPrice(maxPrice);
-		r.setMinPrice(minPrice);
+		r.setMaxPrice(new BigDecimal(maxPrice));
+		r.setMinPrice(new BigDecimal(minPrice));
 		r.setMaxPriceDateTime(maxPriceDateTime);
 		r.setMinPriceDateTime(minPriceDateTime);
 		r.setIsSuccess();

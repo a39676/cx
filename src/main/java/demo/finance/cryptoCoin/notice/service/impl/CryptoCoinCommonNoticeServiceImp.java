@@ -280,6 +280,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		String content = "";
 		CommonResult handleResult = null;
 		if (priceConditionHadSet(noticeSetting)) {
+			log.error("priceConditionHadSet: " + noticeSetting.getId());
 			handleResult = priceConditionNoticeHandle(noticeSetting, coinType, currencyType);
 			if (handleResult.isSuccess()) {
 				content += handleResult.getMessage();
@@ -329,11 +330,13 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 				currencyType, LocalDateTime.now().minusMinutes(2).withSecond(0).withNano(0));
 
 		if (historyDataList == null || historyDataList.isEmpty()) {
+			log.error(noticeSetting.getId() + ", coinType: " + noticeSetting.getCoinType() + ", currency: " + noticeSetting.getCurrencyType() + ", get null data");
 			return r;
 		}
 
 		FilterBODataResult maxMinPriceResult = filterData(historyDataList);
 		if (maxMinPriceResult.isFail()) {
+			log.error(noticeSetting.getId() + ", coinType: " + noticeSetting.getCoinType() + ", currency: " + noticeSetting.getCurrencyType() + ", max min result error");
 			r.addMessage(maxMinPriceResult.getMessage());
 			return r;
 		}

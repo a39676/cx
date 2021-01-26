@@ -21,7 +21,6 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 		FilterBODataResult r = new FilterBODataResult();
 
 		if (list == null || list.isEmpty()) {
-			log.error("empty list");
 			r.setMessage("empty history data");
 			return r;
 		}

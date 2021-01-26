@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -66,8 +67,16 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	@Override
 	public ModelAndView cryptoCoinPriceNoticeSettingManager() {
 		ModelAndView view = new ModelAndView("finance/cryptoCoin/CryptoCoinPriceNoticeSettingManager");
-		view.addObject("cryptoCoinType", CryptoCoinType.values());
-		view.addObject("currencyType", CurrencyType.values());
+		List<CryptoCoinType> coinTypeList = new ArrayList<>();
+		coinTypeList.add(CryptoCoinType.BTC);
+		coinTypeList.addAll(Arrays.asList(CryptoCoinType.values()));
+		view.addObject("cryptoCoinType", coinTypeList);
+		
+		List<CurrencyType> currencyTypeList = new ArrayList<>();
+		currencyTypeList.add(CurrencyType.USD);
+		currencyTypeList.addAll(Arrays.asList(CurrencyType.values()));
+		view.addObject("currencyType", currencyTypeList);
+		
 		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.minute, TimeUnitType.hour, TimeUnitType.day,
 				TimeUnitType.week, TimeUnitType.month };
 		view.addObject("timeUnitType", timeUnitTypes);

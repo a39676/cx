@@ -374,44 +374,46 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			CurrencyType currencyType) {
 		CommonResult r = new CommonResult();
 
-		List<CryptoCoinPriceCommonDataBO> historyPOList = findHistoryData(coinType, currencyType,
+		List<CryptoCoinPriceCommonDataBO> historyBOList = findHistoryData(coinType, currencyType,
 				noticeSetting.getTimeUnitOfDataWatch(), noticeSetting.getTimeRangeOfDataWatch());
-		if (historyPOList == null || historyPOList.isEmpty()) {
+		if (historyBOList == null || historyBOList.isEmpty()) {
 			log.error(noticeSetting.getId() + ", can NOT find any history data");
 			return r;
 		}
 
-		Collections.sort(historyPOList);
+		Collections.sort(historyBOList);
 		
-		FilterBODataResult maxMinPriceResult = filterData(historyPOList);
+		FilterBODataResult maxMinPriceResult = filterData(historyBOList);
 		if (maxMinPriceResult.isFail()) {
 			r.addMessage(maxMinPriceResult.getMessage());
 			return r;
 		}
 
-		log.error(noticeSetting.getId() + ", get price filter result");
 		double lastMax = maxMinPriceResult.getMaxPrice().doubleValue();
 		double lastMin = maxMinPriceResult.getMinPrice().doubleValue();
-		log.error(noticeSetting.getId() + ", get last max, last min");
+
 		Double upApmlitude = (lastMax / lastMin - 1) * 100;
 		Double lowApmlitude = (lastMin / lastMax - 1) * 100;
-		log.error(noticeSetting.getId() + ", get apmlitude");
+
 		String content = null;
 		Double trigerPercentage = noticeSetting.getFluctuationSpeedPercentage().doubleValue();
-		log.error(noticeSetting.getId() + ", get seting triger percentage: " + trigerPercentage);
 		if (trigerPercentage < 0) {
 			trigerPercentage = 0 - trigerPercentage;
 		}
-		
-		log.error(noticeSetting.getId() + ", fix triger percentage");
 
 		log.error(noticeSetting.getId() + ", filter result: " + maxMinPriceResult.toString());
 		if (!maxMinPriceResult.getMinPriceDateTime().isAfter(maxMinPriceResult.getMaxPriceDateTime())) {
-
 			if (upApmlitude >= trigerPercentage) {
 				BigDecimal upApmlitudeBigDecimal = new BigDecimal(upApmlitude);
+				log.error(noticeSetting.getId() + ", " + (historyBOList.size()));
+				log.error(noticeSetting.getId() + ", " + (historyBOList.get(historyBOList.size() - 1).toString()));
+				log.error(noticeSetting.getId() + ", lastMax: " + lastMax);
+				log.error(noticeSetting.getId() + ", lastMin: " + lastMin);
+				log.error(noticeSetting.getId() + ", upApmlitude: " + upApmlitude);
+				log.error(noticeSetting.getId() + ", lowApmlitude: " + lowApmlitude);
+				log.error(noticeSetting.getId() + ", upApmlitudeBigDecimal: " + upApmlitudeBigDecimal);
 				content = coinType.getName() + ", " + currencyType.getName() 
-						+ ", " + "最新价: " + historyPOList.get(historyPOList.size() - 1).getEndPrice().setScale(2, RoundingMode.HALF_UP)
+						+ ", " + "最新价: " + historyBOList.get(historyBOList.size() - 1).getEndPrice().setScale(2, RoundingMode.HALF_UP)
 						+ ", " + "最近" + noticeSetting.getTimeRangeOfDataWatch()
 						+ TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch()).getCnName() 
 						+ ", " + "波幅达 " + upApmlitudeBigDecimal.setScale(2, RoundingMode.HALF_UP) + "%"
@@ -422,7 +424,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			if ((0 - lowApmlitude) >= trigerPercentage) {
 				BigDecimal lowApmlitubeBigDecimal = new BigDecimal(lowApmlitude);
 				content = coinType.getName() + ", " + currencyType.getName() 
-						+ ", " + "最新价: " + historyPOList.get(historyPOList.size() - 1).getEndPrice().setScale(2, RoundingMode.HALF_UP)
+						+ ", " + "最新价: " + historyBOList.get(historyBOList.size() - 1).getEndPrice().setScale(2, RoundingMode.HALF_UP)
 						+ ", " + "最近" + noticeSetting.getTimeRangeOfDataWatch()
 						+ TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch()).getCnName() 
 						+ ", " + "波幅达 " + lowApmlitubeBigDecimal.setScale(2, RoundingMode.HALF_UP) + "%"

@@ -410,17 +410,9 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			trigerPercentage = 0 - trigerPercentage;
 		}
 
-		log.error(noticeSetting.getId() + ", filter result: " + maxMinPriceResult.toString());
 		if (!maxMinPriceResult.getMinPriceDateTime().isAfter(maxMinPriceResult.getMaxPriceDateTime())) {
 			if (upApmlitude >= trigerPercentage) {
 				BigDecimal upApmlitudeBigDecimal = new BigDecimal(upApmlitude);
-				log.error(noticeSetting.getId() + ", " + (historyBOList.size()));
-				log.error(noticeSetting.getId() + ", " + (historyBOList.get(historyBOList.size() - 1).toString()));
-				log.error(noticeSetting.getId() + ", lastMax: " + lastMax);
-				log.error(noticeSetting.getId() + ", lastMin: " + lastMin);
-				log.error(noticeSetting.getId() + ", upApmlitude: " + upApmlitude);
-				log.error(noticeSetting.getId() + ", lowApmlitude: " + lowApmlitude);
-				log.error(noticeSetting.getId() + ", upApmlitudeBigDecimal: " + upApmlitudeBigDecimal);
 				content = coinType.getName() + ", " + currencyType.getName() 
 						+ ", " + "最新价: " + historyBOList.get(historyBOList.size() - 1).getEndPrice().setScale(2, RoundingMode.HALF_UP)
 						+ ", " + "最近" + noticeSetting.getTimeRangeOfDataWatch()
@@ -442,7 +434,6 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			}
 		}
 
-		log.error(noticeSetting.getId() + ", after notice handle");
 		if (content != null) {
 			r.successWithMessage(content);
 		}
@@ -454,17 +445,18 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			Integer timeUnit, Integer timeRange) {
 		LocalDateTime startTime = null;
 		if (TimeUnitType.minute.getCode().equals(timeUnit)) {
-			startTime = LocalDateTime.now().minusMinutes(timeRange).withSecond(0).withNano(0);
 			if (CryptoCoinDataConstant.CRYPTO_COIN_1MINUTE_DATA_LIVE_HOURS * 60 > timeRange) {
+				startTime = LocalDateTime.now().minusMinutes(timeRange).withSecond(0).withNano(0);
 				return _1MinuteDataSummaryService.getCommonDataFillWithCache(coinType, currencyType, startTime);
 			} else if (CryptoCoinDataConstant.CRYPTO_COIN_5MINUTE_DATA_LIVE_HOURS * 60 > timeRange) {
+				startTime = nextStepStartTimeByMinute(LocalDateTime.now(), timeRange).minusMinutes(timeRange.longValue());
 				return _5MinuteDataSummaryService.getCommonDataFillWithCache(coinType, currencyType, startTime);
 			}
 		} else if (TimeUnitType.hour.getCode().equals(timeUnit)) {
-			startTime = LocalDateTime.now().minusHours(timeRange).withSecond(0).withNano(0);
+			startTime = LocalDateTime.now().minusHours(timeRange).withMinute(0).withSecond(0).withNano(0);
 			return hourDataSummaryService.getCommonData(coinType, currencyType, startTime);
 		} else if (TimeUnitType.day.getCode().equals(timeUnit)) {
-			startTime = LocalDateTime.now().minusDays(timeRange).withSecond(0).withNano(0);
+			startTime = LocalDateTime.now().minusDays(timeRange).withHour(0).withMinute(0).withSecond(0).withNano(0);
 			return dailyDataSummaryService.getCommonData(coinType, currencyType, startTime);
 		} else if (TimeUnitType.week.getCode().equals(timeUnit)) {
 			LocalDateTime lastSunday = localDateTimeHandler.findLastDayOfWeek(LocalDateTime.now(), DayOfWeek.SUNDAY);

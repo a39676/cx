@@ -143,7 +143,6 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 
 		return l;
 	}
-
 	
 	/**
 	 * 为各个 data summary service 提供 PO data & cache data 的通用合并逻辑
@@ -233,7 +232,7 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 			}
 			
 			poDataExists = false;
-			startTime = nextStepStartTimeByMinute(startTime, minuteStepLong);
+			stepStart = nextStepStartTimeByMinute(stepStart, minuteStepLong);
 			nextStepTime = nextStepStartTimeByMinute(nextStepTime, minuteStepLong);
 			
 		}
@@ -292,7 +291,7 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 		
 			
 			poDataExists = false;
-			startTime = startTime.plusHours(1);
+			stepStart = stepStart.plusHours(1);
 			nextStepTime = nextStepTime.plusHours(1);
 			
 		}
@@ -352,7 +351,7 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 			
 			
 			poDataExists = false;
-			startTime = startTime.plusDays(1);
+			stepStart = stepStart.plusDays(1);
 			nextStepTime = nextStepTime.plusDays(1);
 			
 		}
@@ -411,7 +410,7 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 			
 			
 			poDataExists = false;
-			startTime = startTime.plusDays(7);
+			stepStart = stepStart.plusDays(7);
 			nextStepTime = nextStepTime.plusDays(7);
 			
 		}
@@ -470,7 +469,7 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 			
 			
 			poDataExists = false;
-			startTime = startTime.plusMonths(1);
+			stepStart = stepStart.plusMonths(1);
 			nextStepTime = nextStepTime.plusMonths(1);
 			
 		}

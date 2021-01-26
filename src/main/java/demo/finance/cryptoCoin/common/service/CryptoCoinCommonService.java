@@ -288,8 +288,6 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 				}
 			}
 			
-		
-			
 			poDataExists = false;
 			stepStart = stepStart.plusHours(1);
 			nextStepTime = nextStepTime.plusHours(1);

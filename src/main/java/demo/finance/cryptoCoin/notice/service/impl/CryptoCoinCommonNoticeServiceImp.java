@@ -418,8 +418,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 						+ ", " + "最近" + noticeSetting.getTimeRangeOfDataWatch()
 						+ TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch()).getCnName() 
 						+ ", " + "波幅达 " + upApmlitudeBigDecimal.setScale(2, RoundingMode.HALF_UP) + "%" + "\n"
-						+ ", " + maxMinPriceResult.getMinPriceDateTime() + " 时触及低价: " + lastMin + ", " + "\n"
-						+ maxMinPriceResult.getMaxPriceDateTime() + " 时触及高价: " + lastMax ;
+						+ ", " + maxMinPriceResult.getMinPriceDateTime() + " 时触及低价: " + lastMin + "\n"
+						+ ", " + maxMinPriceResult.getMaxPriceDateTime() + " 时触及高价: " + lastMax ;
 			}
 		} else {
 			if ((0 - lowApmlitude) >= trigerPercentage) {
@@ -429,8 +429,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 						+ ", " + "最近" + noticeSetting.getTimeRangeOfDataWatch()
 						+ TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch()).getCnName() 
 						+ ", " + "波幅达 " + lowApmlitubeBigDecimal.setScale(2, RoundingMode.HALF_UP) + "%" + "\n"
-						+ ", " + maxMinPriceResult.getMaxPriceDateTime() + " 时触及高价: " + lastMax + ", " + "\n"
-						+ maxMinPriceResult.getMinPriceDateTime() + " 时触及低价: " + lastMin ;
+						+ ", " + maxMinPriceResult.getMaxPriceDateTime() + " 时触及高价: " + lastMax + "\n"
+						+ ", " + maxMinPriceResult.getMinPriceDateTime() + " 时触及低价: " + lastMin ;
 			}
 		}
 

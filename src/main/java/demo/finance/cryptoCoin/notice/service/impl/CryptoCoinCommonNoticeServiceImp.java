@@ -383,18 +383,14 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		Collections.sort(historyPOList);
 		
-		log.error(noticeSetting.getId() + "after sort");
-		FilterBODataResult maxMinPriceResult = null;
-		try {
-			maxMinPriceResult = filterData(historyPOList);
-		} catch (Exception e) {
-			log.error(noticeSetting.getId() + "sort error");
-		}
+		FilterBODataResult maxMinPriceResult = filterData(historyPOList);
+		log.error(noticeSetting.getId() + ", maxMinPriceResult: " + String.valueOf(maxMinPriceResult == null));
 		if (maxMinPriceResult.isFail()) {
 			r.addMessage(maxMinPriceResult.getMessage());
 			return r;
 		}
 
+		log.error(noticeSetting.getId() + "get price filter result");
 		double lastMax = maxMinPriceResult.getMaxPrice().doubleValue();
 		double lastMin = maxMinPriceResult.getMinPrice().doubleValue();
 

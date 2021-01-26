@@ -57,8 +57,8 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 			bo.setEndPrice(new BigDecimal(j.getDouble("endPrice")));
 			bo.setHighPrice(new BigDecimal(j.getDouble("highPrice")));
 			bo.setLowPrice(new BigDecimal(j.getDouble("lowPrice")));
-			bo.setStartTime(localDateTimeHandler.jsonStrToLocalDateTime(j.getString("startTime")));
-			bo.setEndTime(localDateTimeHandler.jsonStrToLocalDateTime(j.getString("endTime")));
+			bo.setStartTime(localDateTimeHandler.jsonStrToLocalDateTime(String.valueOf(j.getJSONObject("startTime"))));
+			bo.setEndTime(localDateTimeHandler.jsonStrToLocalDateTime(String.valueOf(j.getJSONObject("endTime"))));
 		} catch (Exception e) {
 		}
 		return bo;

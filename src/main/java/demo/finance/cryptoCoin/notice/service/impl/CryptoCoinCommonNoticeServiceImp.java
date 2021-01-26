@@ -383,7 +383,13 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		Collections.sort(historyPOList);
 		
-		FilterBODataResult maxMinPriceResult = filterData(historyPOList);
+		log.error(noticeSetting.getId() + "after sort");
+		FilterBODataResult maxMinPriceResult = null;
+		try {
+			maxMinPriceResult = filterData(historyPOList);
+		} catch (Exception e) {
+			log.error(noticeSetting.getId() + "sort error");
+		}
 		if (maxMinPriceResult.isFail()) {
 			r.addMessage(maxMinPriceResult.getMessage());
 			return r;
@@ -434,10 +440,6 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		return r;
 	}
 
-	/*
-	 * TODO for debug
-	 */
-	@Override
 	public List<CryptoCoinPriceCommonDataBO> findHistoryData(CryptoCoinType coinType, CurrencyType currencyType,
 			Integer timeUnit, Integer timeRange) {
 		LocalDateTime startTime = null;

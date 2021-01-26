@@ -398,13 +398,15 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		log.error(noticeSetting.getId() + ", get apmlitude");
 		String content = null;
 		Double trigerPercentage = noticeSetting.getFluctuationSpeedPercentage().doubleValue();
-		log.error(noticeSetting.getId() + ", get seting triger percentage");
+		log.error(noticeSetting.getId() + ", get seting triger percentage: " + trigerPercentage);
 		if (trigerPercentage < 0) {
 			trigerPercentage = 0 - trigerPercentage;
 		}
+		
+		log.error(noticeSetting.getId() + ", fix triger percentage");
 
-		if (maxMinPriceResult.getMinPriceDateTime().isBefore(maxMinPriceResult.getMaxPriceDateTime())
-				|| maxMinPriceResult.getMinPriceDateTime().isEqual(maxMinPriceResult.getMaxPriceDateTime())) {
+		log.error(noticeSetting.getId() + ", filter result: " + maxMinPriceResult.toString());
+		if (!maxMinPriceResult.getMinPriceDateTime().isAfter(maxMinPriceResult.getMaxPriceDateTime())) {
 
 			if (upApmlitude >= trigerPercentage) {
 				BigDecimal upApmlitudeBigDecimal = new BigDecimal(upApmlitude);

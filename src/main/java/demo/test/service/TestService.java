@@ -1,24 +1,12 @@
-//package demo.test.service;
-//
-//import java.math.BigDecimal;
-//import java.time.LocalDateTime;
-//import java.util.List;
-//
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Service;
-//
-//import auxiliaryCommon.pojo.type.CurrencyType;
-//import demo.common.service.CommonService;
-//import demo.finance.cryptoCoin.data.service.CryptoCoin5MinuteDataSummaryService;
-//import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
-//import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
-//import finance.cryptoCoin.pojo.type.CryptoCoinType;
-//import net.sf.json.JSONArray;
-//import net.sf.json.JSONObject;
-//
-//@Service
-//public class TestService extends CommonService {
-//	
+package demo.test.service;
+
+import org.springframework.stereotype.Service;
+
+import demo.common.service.CommonService;
+
+@Service
+public class TestService extends CommonService {
+	
 //	@Autowired
 //	private CryptoCoin5MinuteDataSummaryService _5minDataService;
 //	
@@ -55,4 +43,4 @@
 //			cacheService.reciveData(newBO);
 //		}
 //	}
-//}
+}

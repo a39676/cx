@@ -196,36 +196,42 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 		CryptoCoinPriceCommonDataBO tmpPOData = null;
 		CryptoCoinPriceCommonDataBO tmpCacheData = null;
 		while(!nextStepTime.isAfter(endTime)) {
-			for(int i = 0; poDataExists == false && i < poDataList.size(); i++) {
-				tmpPOData = poDataList.get(i);
+			for(int poDataIndex = 0; poDataExists == false && poDataIndex < poDataList.size(); poDataIndex++) {
+				tmpPOData = poDataList.get(poDataIndex);
 				poDataExists = (!tmpPOData.getStartTime().isBefore(stepStart) && !tmpPOData.getStartTime().isAfter(nextStepTime));
+
 			}
 			
 			if (poDataExists) {
 				// please sort(startTime early to later) cacheDataList before use
-				for (int i = 0; i < cacheDataList.size(); i++) {
-					tmpCacheData = cacheDataList.get(i);
+				for (int cacheDataIndex = 0; cacheDataIndex < cacheDataList.size(); cacheDataIndex++) {
+					tmpCacheData = cacheDataList.get(cacheDataIndex);
 					if (!tmpCacheData.getStartTime().isBefore(stepStart) && !tmpCacheData.getStartTime().isAfter(nextStepTime)) {
 						tmpPOData = mergerData(tmpPOData, tmpCacheData);
 					}
 				}
-
+				resultDataList.add(tmpPOData);
+				
 			} else {
 				tmpPOData = new CryptoCoinPriceCommonDataBO();
 				tmpCacheData = cacheDataList.get(0);
 				tmpPOData.setCoinType(tmpCacheData.getCoinType());
 				tmpPOData.setCurrencyType(tmpCacheData.getCurrencyType());
 				tmpPOData.setVolume(BigDecimal.ZERO);
-
+				
+				boolean hasMathcCache = false;
 				for (int i = 0; i < cacheDataList.size(); i++) {
 					tmpCacheData = cacheDataList.get(i);
 					if (!tmpCacheData.getStartTime().isBefore(stepStart) && !tmpCacheData.getStartTime().isAfter(nextStepTime)) {
 						tmpPOData = mergerData(tmpPOData, tmpCacheData);
+						hasMathcCache = true;
 					}
 				}
+				
+				if(hasMathcCache) {
+					resultDataList.add(tmpPOData);
+				}
 			}
-			
-			resultDataList.add(tmpPOData);
 			
 			poDataExists = false;
 			startTime = nextStepStartTimeByMinute(startTime, minuteStepLong);
@@ -261,7 +267,8 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 						tmpPOData = mergerData(tmpPOData, tmpCacheData);
 					}
 				}
-
+				resultDataList.add(tmpPOData);
+				
 			} else {
 				tmpPOData = new CryptoCoinPriceCommonDataBO();
 				tmpCacheData = cacheDataList.get(0);
@@ -269,15 +276,21 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 				tmpPOData.setCurrencyType(tmpCacheData.getCurrencyType());
 				tmpPOData.setVolume(BigDecimal.ZERO);
 
+				boolean hasMathcCache = false;
 				for (int i = 0; i < cacheDataList.size(); i++) {
 					tmpCacheData = cacheDataList.get(i);
 					if (!tmpCacheData.getStartTime().isBefore(stepStart) && !tmpCacheData.getStartTime().isAfter(nextStepTime)) {
 						tmpPOData = mergerData(tmpPOData, tmpCacheData);
+						hasMathcCache = true;
 					}
+				}
+				
+				if(hasMathcCache) {
+					resultDataList.add(tmpPOData);
 				}
 			}
 			
-			resultDataList.add(tmpPOData);
+		
 			
 			poDataExists = false;
 			startTime = startTime.plusHours(1);
@@ -314,6 +327,8 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 					}
 				}
 
+				resultDataList.add(tmpPOData);
+				
 			} else {
 				tmpPOData = new CryptoCoinPriceCommonDataBO();
 				tmpCacheData = cacheDataList.get(0);
@@ -321,15 +336,21 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 				tmpPOData.setCurrencyType(tmpCacheData.getCurrencyType());
 				tmpPOData.setVolume(BigDecimal.ZERO);
 
+				boolean hasMathcCache = false;
 				for (int i = 0; i < cacheDataList.size(); i++) {
 					tmpCacheData = cacheDataList.get(i);
 					if (!tmpCacheData.getStartTime().isBefore(stepStart) && !tmpCacheData.getStartTime().isAfter(nextStepTime)) {
 						tmpPOData = mergerData(tmpPOData, tmpCacheData);
+						hasMathcCache = true;
 					}
+				}
+				
+				if(hasMathcCache) {
+					resultDataList.add(tmpPOData);
 				}
 			}
 			
-			resultDataList.add(tmpPOData);
+			
 			
 			poDataExists = false;
 			startTime = startTime.plusDays(1);
@@ -366,6 +387,8 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 					}
 				}
 
+				resultDataList.add(tmpPOData);
+				
 			} else {
 				tmpPOData = new CryptoCoinPriceCommonDataBO();
 				tmpCacheData = cacheDataList.get(0);
@@ -373,15 +396,20 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 				tmpPOData.setCurrencyType(tmpCacheData.getCurrencyType());
 				tmpPOData.setVolume(BigDecimal.ZERO);
 
+				boolean hasMathcCache = false;
 				for (int i = 0; i < cacheDataList.size(); i++) {
 					tmpCacheData = cacheDataList.get(i);
 					if (!tmpCacheData.getStartTime().isBefore(stepStart) && !tmpCacheData.getStartTime().isAfter(nextStepTime)) {
 						tmpPOData = mergerData(tmpPOData, tmpCacheData);
+						hasMathcCache = true;
 					}
+				}
+				
+				if(hasMathcCache) {
+					resultDataList.add(tmpPOData);
 				}
 			}
 			
-			resultDataList.add(tmpPOData);
 			
 			poDataExists = false;
 			startTime = startTime.plusDays(7);
@@ -418,6 +446,8 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 					}
 				}
 
+				resultDataList.add(tmpPOData);
+				
 			} else {
 				tmpPOData = new CryptoCoinPriceCommonDataBO();
 				tmpCacheData = cacheDataList.get(0);
@@ -425,15 +455,20 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 				tmpPOData.setCurrencyType(tmpCacheData.getCurrencyType());
 				tmpPOData.setVolume(BigDecimal.ZERO);
 
+				boolean hasMathcCache = false;
 				for (int i = 0; i < cacheDataList.size(); i++) {
 					tmpCacheData = cacheDataList.get(i);
 					if (!tmpCacheData.getStartTime().isBefore(stepStart) && !tmpCacheData.getStartTime().isAfter(nextStepTime)) {
 						tmpPOData = mergerData(tmpPOData, tmpCacheData);
+						hasMathcCache = true;
 					}
+				}
+				
+				if(hasMathcCache) {
+					resultDataList.add(tmpPOData);
 				}
 			}
 			
-			resultDataList.add(tmpPOData);
 			
 			poDataExists = false;
 			startTime = startTime.plusMonths(1);

@@ -414,22 +414,22 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			if (upApmlitude >= trigerPercentage) {
 				BigDecimal upApmlitudeBigDecimal = new BigDecimal(upApmlitude);
 				content = coinType.getName() + ", " + currencyType.getName() 
-						+ ", " + "最新价: " + historyBOList.get(historyBOList.size() - 1).getEndPrice().setScale(2, RoundingMode.HALF_UP)
+						+ ", " + "最新价: " + historyBOList.get(historyBOList.size() - 1).getEndPrice().setScale(2, RoundingMode.HALF_UP) + "\n"
 						+ ", " + "最近" + noticeSetting.getTimeRangeOfDataWatch()
 						+ TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch()).getCnName() 
-						+ ", " + "波幅达 " + upApmlitudeBigDecimal.setScale(2, RoundingMode.HALF_UP) + "%"
-						+ ", " + maxMinPriceResult.getMinPriceDateTime() + " 时触及低价: " + lastMin + ", "
+						+ ", " + "波幅达 " + upApmlitudeBigDecimal.setScale(2, RoundingMode.HALF_UP) + "%" + "\n"
+						+ ", " + maxMinPriceResult.getMinPriceDateTime() + " 时触及低价: " + lastMin + ", " + "\n"
 						+ maxMinPriceResult.getMaxPriceDateTime() + " 时触及高价: " + lastMax ;
 			}
 		} else {
 			if ((0 - lowApmlitude) >= trigerPercentage) {
 				BigDecimal lowApmlitubeBigDecimal = new BigDecimal(lowApmlitude);
 				content = coinType.getName() + ", " + currencyType.getName() 
-						+ ", " + "最新价: " + historyBOList.get(historyBOList.size() - 1).getEndPrice().setScale(2, RoundingMode.HALF_UP)
+						+ ", " + "最新价: " + historyBOList.get(historyBOList.size() - 1).getEndPrice().setScale(2, RoundingMode.HALF_UP) + "\n"
 						+ ", " + "最近" + noticeSetting.getTimeRangeOfDataWatch()
 						+ TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch()).getCnName() 
-						+ ", " + "波幅达 " + lowApmlitubeBigDecimal.setScale(2, RoundingMode.HALF_UP) + "%"
-						+ ", " + maxMinPriceResult.getMaxPriceDateTime() + " 时触及高价: " + lastMax + ", "
+						+ ", " + "波幅达 " + lowApmlitubeBigDecimal.setScale(2, RoundingMode.HALF_UP) + "%" + "\n"
+						+ ", " + maxMinPriceResult.getMaxPriceDateTime() + " 时触及高价: " + lastMax + ", " + "\n"
 						+ maxMinPriceResult.getMinPriceDateTime() + " 时触及低价: " + lastMin ;
 			}
 		}

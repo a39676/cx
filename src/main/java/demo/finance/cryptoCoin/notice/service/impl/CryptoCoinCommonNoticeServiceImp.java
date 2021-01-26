@@ -384,21 +384,21 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		Collections.sort(historyPOList);
 		
 		FilterBODataResult maxMinPriceResult = filterData(historyPOList);
-		log.error(noticeSetting.getId() + ", maxMinPriceResult: " + String.valueOf(maxMinPriceResult == null));
 		if (maxMinPriceResult.isFail()) {
 			r.addMessage(maxMinPriceResult.getMessage());
 			return r;
 		}
 
-		log.error(noticeSetting.getId() + "get price filter result");
+		log.error(noticeSetting.getId() + ", get price filter result");
 		double lastMax = maxMinPriceResult.getMaxPrice().doubleValue();
 		double lastMin = maxMinPriceResult.getMinPrice().doubleValue();
-
+		log.error(noticeSetting.getId() + ", get last max, last min");
 		Double upApmlitude = (lastMax / lastMin - 1) * 100;
 		Double lowApmlitude = (lastMin / lastMax - 1) * 100;
-
+		log.error(noticeSetting.getId() + ", get apmlitude");
 		String content = null;
 		Double trigerPercentage = noticeSetting.getFluctuationSpeedPercentage().doubleValue();
+		log.error(noticeSetting.getId() + ", get seting triger percentage");
 		if (trigerPercentage < 0) {
 			trigerPercentage = 0 - trigerPercentage;
 		}
@@ -429,6 +429,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			}
 		}
 
+		log.error(noticeSetting.getId() + ", after notice handle");
 		if (content != null) {
 			r.successWithMessage(content);
 		}

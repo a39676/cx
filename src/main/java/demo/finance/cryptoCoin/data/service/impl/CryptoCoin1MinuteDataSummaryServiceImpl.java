@@ -111,9 +111,10 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 					example.createCriteria().andCoinTypeEqualTo(coinType.getCode())
 							.andCurrencyTypeEqualTo(currencyType.getCode()).andStartTimeBetween(startTime, endTime);
 					poList = summaryMapper.selectByExample(example);
-					if (poList == null || poList.isEmpty()) {
+					if (poList == null || poList.isEmpty() || poList.size() == 1) {
 						continue;
 					}
+					log.error("crypto coin 1min duplicate data: coinType: " + coinType.getName() + ", currencyType: " + currencyType.getName() + ", size: " + poList.size());
 					startTime = poList.get(0).getStartTime();
 					mergeDataList(poList);
 				}

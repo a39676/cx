@@ -63,56 +63,68 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 		return r;
 	}
 
-	protected CryptoCoinPriceCommonDataBO mergerData(CryptoCoinPriceCommonDataBO o, CryptoCoinPriceCommonDataBO t) {
-		if (o == null || t == null) {
-			return o;
+	protected CryptoCoinPriceCommonDataBO mergerData(CryptoCoinPriceCommonDataBO resultTarget, CryptoCoinPriceCommonDataBO otherData) {
+		if (resultTarget == null || otherData == null) {
+			return resultTarget;
 		}
 
 		try {
-			if (o.getStartTime().isAfter(t.getStartTime())) {
-				o.setStartTime(t.getStartTime());
-				if (t.getStartPrice() != null) {
-					o.setStartPrice(t.getStartPrice());
+			if (resultTarget.getStartTime().isAfter(otherData.getStartTime())) {
+				resultTarget.setStartTime(otherData.getStartTime());
+				if (otherData.getStartPrice() != null) {
+					resultTarget.setStartPrice(otherData.getStartPrice());
+				}
+			}
+		} catch (Exception e) {
+		}
+		
+		/*
+		 * resultTarget could be a new object
+		 * means start time & end time could be null
+		 */
+		if(resultTarget.getStartTime() == null && otherData.getStartTime() != null) {
+			resultTarget.setStartTime(otherData.getStartTime());
+		}
+
+		try {
+			if (resultTarget.getEndTime().isBefore(otherData.getEndTime())) {
+				resultTarget.setEndTime(otherData.getEndTime());
+				if (otherData.getEndPrice() != null) {
+					resultTarget.setEndPrice(otherData.getEndPrice());
 				}
 			}
 		} catch (Exception e) {
 		}
 
-		try {
-			if (o.getEndTime().isBefore(t.getEndTime())) {
-				o.setEndTime(t.getEndTime());
-				if (t.getEndPrice() != null) {
-					o.setEndPrice(t.getEndPrice());
-				}
-			}
-		} catch (Exception e) {
+		if(resultTarget.getEndTime() == null && otherData.getEndTime() != null) {
+			resultTarget.setEndTime(otherData.getEndTime());
 		}
-
-		if (t.getHighPrice() != null) {
-			if (o.getHighPrice() == null) {
-				o.setHighPrice(t.getHighPrice());
-			} else if (o.getHighPrice() != null && o.getHighPrice().doubleValue() < t.getHighPrice().doubleValue()) {
-				o.setHighPrice(t.getHighPrice());
+		
+		if (otherData.getHighPrice() != null) {
+			if (resultTarget.getHighPrice() == null) {
+				resultTarget.setHighPrice(otherData.getHighPrice());
+			} else if (resultTarget.getHighPrice() != null && resultTarget.getHighPrice().doubleValue() < otherData.getHighPrice().doubleValue()) {
+				resultTarget.setHighPrice(otherData.getHighPrice());
 			}
 		}
 
-		if (t.getLowPrice() != null) {
-			if (o.getLowPrice() == null) {
-				o.setLowPrice(t.getLowPrice());
-			} else if (o.getLowPrice() != null && o.getLowPrice().doubleValue() > t.getLowPrice().doubleValue()) {
-				o.setLowPrice(t.getLowPrice());
+		if (otherData.getLowPrice() != null) {
+			if (resultTarget.getLowPrice() == null) {
+				resultTarget.setLowPrice(otherData.getLowPrice());
+			} else if (resultTarget.getLowPrice() != null && resultTarget.getLowPrice().doubleValue() > otherData.getLowPrice().doubleValue()) {
+				resultTarget.setLowPrice(otherData.getLowPrice());
 			}
 		}
 
-		if (t.getVolume() != null) {
-			if (o.getVolume() == null) {
-				o.setVolume(t.getVolume());
+		if (otherData.getVolume() != null) {
+			if (resultTarget.getVolume() == null) {
+				resultTarget.setVolume(otherData.getVolume());
 			} else {
-				o.setVolume(o.getVolume().add(t.getVolume()));
+				resultTarget.setVolume(resultTarget.getVolume().add(otherData.getVolume()));
 			}
 		}
 
-		return o;
+		return resultTarget;
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package demo.finance.cryptoCoin.data.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import auxiliaryCommon.pojo.type.CurrencyType;
@@ -10,7 +11,8 @@ public interface CryptoCoinPriceCacheService {
 	
 	void reciveData(CryptoCoinPriceCommonDataBO newBO);
 
-	List<CryptoCoinPriceCommonDataBO> getCommonData(CryptoCoinType coinType, CurrencyType currencyType);
+	List<CryptoCoinPriceCommonDataBO> getCommonData(CryptoCoinType coinType, CurrencyType currencyType,
+			LocalDateTime startTime);
 
 	CryptoCoinPriceCommonDataBO dataStrToBO(String str);
 

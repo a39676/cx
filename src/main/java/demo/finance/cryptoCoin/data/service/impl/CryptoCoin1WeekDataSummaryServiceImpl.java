@@ -142,7 +142,7 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 		List<CryptoCoinPriceCommonDataBO> poDataList = getCommonData(coinType, currencyType, startTime);
 //		List<CryptoCoinPriceCommonDataBO> poDataList = buildFakeData(coinType, currencyType, startTime);
 
-		List<CryptoCoinPriceCommonDataBO> cacheDataList = cacheService.getCommonData(coinType, currencyType);
+		List<CryptoCoinPriceCommonDataBO> cacheDataList = cacheService.getCommonData(coinType, currencyType, startTime);
 
 		if (cacheDataList.isEmpty()) {
 			return poDataList;

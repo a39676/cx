@@ -36,13 +36,13 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 			newBO.setStartPrice(newBO.getEndPrice());
 			newBO.setHighPrice(newBO.getEndPrice());
 			newBO.setLowPrice(newBO.getEndPrice());
-			constantService.setValByName(key, boToDataStr(newBO), CryptoCoinDataConstant.CRYPTO_COIN_CACHE_DATA_LIVE_MINUTES, TimeUnit.MINUTES);
 			
 		} else {
 			CryptoCoinPriceCommonDataBO oldBO = dataStrToBO(oldCacheDataStr);
 			oldBO = dataMerge(oldBO, newBO);
-			constantService.setValByName(key, boToDataStr(newBO), CryptoCoinDataConstant.CRYPTO_COIN_CACHE_DATA_LIVE_MINUTES, TimeUnit.MINUTES);
 		}
+
+		constantService.setValByName(key, boToDataStr(newBO), CryptoCoinDataConstant.CRYPTO_COIN_CACHE_DATA_LIVE_MINUTES, TimeUnit.MINUTES);
 	}
 	
 	@Override
@@ -83,12 +83,14 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 	}
 	
 	@Override
-	public List<CryptoCoinPriceCommonDataBO> getCommonData(CryptoCoinType coinType, CurrencyType currencyType) {
+	public List<CryptoCoinPriceCommonDataBO> getCommonData(CryptoCoinType coinType, CurrencyType currencyType, LocalDateTime startTime) {
 		List<CryptoCoinPriceCommonDataBO> commonDataList = new ArrayList<>();
 		CryptoCoinPriceCommonDataBO tmpCommonData = null;
 		
 		LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
-		LocalDateTime startTime = now.minusMinutes(10);
+		if(startTime == null) {
+			startTime = now.minusMinutes(CryptoCoinDataConstant.CRYPTO_COIN_CACHE_DATA_LIVE_MINUTES);
+		}
 		String tmpDataKey = null;
 		String tmpDataStr = null;
 		
@@ -102,12 +104,14 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 			
 			tmpDataStr = constantService.getValByName(tmpDataKey);
 			
-			tmpCommonData = dataStrToBO(tmpDataStr);
-			
-			if(tmpCommonData != null) {
-				commonDataList.add(tmpCommonData);
+			try {
+				tmpCommonData = dataStrToBO(tmpDataStr);
+				
+				if(tmpCommonData != null) {
+					commonDataList.add(tmpCommonData);
+				}
+			} catch (Exception e) {
 			}
-			
 			startTime = startTime.plusMinutes(1);
 		}
 

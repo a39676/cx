@@ -26,5 +26,18 @@ public class TestController2 extends CommonController {
 //		testService.createCacheData();
 //		return "done";
 //	}
+	
+//	@Autowired
+//	private CryptoCoin1MinuteDataSummaryService _1MinuteDataService;
+//	
+//	@GetMapping(value = "/getNewData")
+//	@ResponseBody
+//	public String getNewData() {
+//		List<CryptoCoinPriceCommonDataBO> dataList = _1MinuteDataService.getCommonDataFillWithCache(CryptoCoinType.BTC, CurrencyType.USD, LocalDateTime.now().minusMinutes(2));
+//		for(CryptoCoinPriceCommonDataBO bo : dataList) {
+//			System.out.println(bo.toString());
+//		}
+//		return "done";
+//	}
 
 }

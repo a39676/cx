@@ -70,13 +70,23 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 	}
 	
 	private CryptoCoinPriceCommonDataBO dataMerge(CryptoCoinPriceCommonDataBO oldBO, CryptoCoinPriceCommonDataBO newBO) {
-		oldBO.setEndPrice(newBO.getEndPrice());
+		
 		if(oldBO.getHighPrice().doubleValue() < newBO.getEndPrice().doubleValue()) {
 			oldBO.setHighPrice(newBO.getHighPrice());
 		}
 		
 		if(oldBO.getLowPrice().doubleValue() > newBO.getEndPrice().doubleValue()) {
 			oldBO.setLowPrice(newBO.getEndPrice());
+		}
+		
+		if(oldBO.getEndTime() == null) {
+			oldBO.setEndTime(newBO.getEndTime());
+			oldBO.setEndPrice(newBO.getEndPrice());
+		} else {
+			if(oldBO.getEndTime().isBefore(newBO.getEndTime())) {
+				oldBO.setEndTime(newBO.getEndTime());
+				oldBO.setEndPrice(newBO.getEndPrice());
+			}
 		}
 		
 		return oldBO;

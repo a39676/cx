@@ -7,12 +7,12 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1minute;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
-import finance.cryptoCoin.pojo.dto.CryptoCoinHistoryPriceDTO;
+import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
 public interface CryptoCoin1MinuteDataSummaryService {
 
-	CommonResult reciveCoinHistoryPrice(CryptoCoinHistoryPriceDTO dto);
+	CommonResult reciveMinuteData(CryptoCoinDataDTO dto);
 
 	CommonResult deleteExpiredCacheData();
 

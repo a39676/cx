@@ -12,12 +12,6 @@ import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
 public interface CryptoCoin1DayDataSummaryService {
 
-	/**
-	 * 2021-02-26
-	 * 将停用, 改直接从api 获取日线数据
-	 */
-	CommonResult summaryHistoryData();
-
 	List<CryptoCoinPrice1day> getData(CryptoCoinType coinType, CurrencyType currencyType, LocalDateTime startTime);
 
 	List<CryptoCoinPriceCommonDataBO> getCommonData(CryptoCoinType coinType, CurrencyType currencyType,

@@ -69,7 +69,12 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		ModelAndView view = new ModelAndView("finance/cryptoCoin/CryptoCoinPriceNoticeSettingManager");
 		List<CryptoCoinType> coinTypeList = new ArrayList<>();
 		coinTypeList.add(CryptoCoinType.BTC);
-		coinTypeList.addAll(Arrays.asList(CryptoCoinType.values()));
+		coinTypeTag:for(CryptoCoinType coinType : CryptoCoinType.values()) {
+			if(coinType.getCode() > 10) {
+				break coinTypeTag;
+			}
+			coinTypeList.add(coinType);
+		}
 		view.addObject("cryptoCoinType", coinTypeList);
 		
 		List<CurrencyType> currencyTypeList = new ArrayList<>();

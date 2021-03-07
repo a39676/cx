@@ -7,16 +7,40 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.common.service.impl.FinanceCommonService;
 import demo.finance.cryptoCoin.data.pojo.result.FilterBODataResult;
+import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
+import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
+import demo.finance.cryptoCoin.data.service.CryptoCoin1MonthDataSummaryService;
+import demo.finance.cryptoCoin.data.service.CryptoCoin1WeekDataSummaryService;
+import demo.finance.cryptoCoin.data.service.CryptoCoin5MinuteDataSummaryService;
+import demo.finance.cryptoCoin.data.service.CryptoCoin60MinuteDataSummaryService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
 public abstract class CryptoCoinCommonService extends FinanceCommonService {
 
+	@Autowired
+	protected CryptoCoinPriceCacheService cacheService;
+	@Autowired
+	protected CryptoCoin1MinuteDataSummaryService _1MinDataService;
+	@Autowired
+	protected CryptoCoin5MinuteDataSummaryService _5MinDataService;
+	@Autowired
+	protected CryptoCoin60MinuteDataSummaryService hourDataService;
+	@Autowired
+	protected CryptoCoin1DayDataSummaryService dailyDataService;
+	@Autowired
+	protected CryptoCoin1WeekDataSummaryService weeklyDataService;
+	@Autowired
+	protected CryptoCoin1MonthDataSummaryService monthlyDataService;
+	
 	protected FilterBODataResult filterData(List<CryptoCoinPriceCommonDataBO> list) {
 		FilterBODataResult r = new FilterBODataResult();
 
@@ -486,5 +510,34 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 		
 		Collections.sort(resultDataList);
 		return resultDataList;
+	}
+
+	protected List<CryptoCoinPriceCommonDataBO> getHistoryData(CryptoCoinType coinType, CurrencyType currencyType,
+			TimeUnitType timeUnit, Integer timeRange) {
+		LocalDateTime startTime = null;
+		if (TimeUnitType.minute.equals(timeUnit)) {
+			if (CryptoCoinDataConstant.CRYPTO_COIN_1MINUTE_DATA_LIVE_HOURS * 60 > timeRange) {
+				startTime = LocalDateTime.now().minusMinutes(timeRange).withSecond(0).withNano(0);
+				return _1MinDataService.getCommonDataFillWithCache(coinType, currencyType, startTime);
+			} else if (CryptoCoinDataConstant.CRYPTO_COIN_5MINUTE_DATA_LIVE_HOURS * 60 > timeRange) {
+				startTime = nextStepStartTimeByMinute(LocalDateTime.now(), timeRange).minusMinutes(timeRange.longValue());
+				return _5MinDataService.getCommonDataFillWithCache(coinType, currencyType, startTime);
+			}
+		} else if (TimeUnitType.hour.equals(timeUnit)) {
+			startTime = LocalDateTime.now().minusHours(timeRange).withMinute(0).withSecond(0).withNano(0);
+			return hourDataService.getCommonData(coinType, currencyType, startTime);
+		} else if (TimeUnitType.day.equals(timeUnit)) {
+			startTime = LocalDateTime.now().minusDays(timeRange).withHour(0).withMinute(0).withSecond(0).withNano(0);
+			return dailyDataService.getCommonData(coinType, currencyType, startTime);
+		} else if (TimeUnitType.week.equals(timeUnit)) {
+			LocalDateTime lastSunday = localDateTimeHandler.findLastDayOfWeek(LocalDateTime.now(), DayOfWeek.SUNDAY);
+			startTime = lastSunday.minusDays((timeRange - 1) * 7).withSecond(0).withNano(0);
+			return weeklyDataService.getCommonData(coinType, currencyType, startTime);
+		} else if (TimeUnitType.month.equals(timeUnit)) {
+			startTime = LocalDateTime.now().withDayOfMonth(1).minusMonths(timeRange - 1).withSecond(0).withNano(0);
+			return monthlyDataService.getCommonData(coinType, currencyType, startTime);
+		}
+
+		return new ArrayList<CryptoCoinPriceCommonDataBO>();
 	}
 }

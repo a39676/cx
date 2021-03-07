@@ -16,9 +16,7 @@ import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1monthMapper;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1month;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1monthExample;
-import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MonthDataSummaryService;
-import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
@@ -29,11 +27,7 @@ public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonServ
 	private final int monthStepLong = 1;
 
 	@Autowired
-	private CryptoCoin1DayDataSummaryService _1DayDataService;
-	@Autowired
 	private CryptoCoinPrice1monthMapper summaryMapper;
-	@Autowired
-	private CryptoCoinPriceCacheService cacheService;
 
 	@Override
 	public CommonResult summaryHistoryData() {
@@ -56,7 +50,7 @@ public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonServ
 	}
 
 	private void handleHistoryDataList(LocalDateTime startTime, CryptoCoinType coinType, CurrencyType currencyType) {
-		List<CryptoCoinPriceCommonDataBO> cacheDataList = _1DayDataService.getCommonData(coinType, currencyType,
+		List<CryptoCoinPriceCommonDataBO> cacheDataList = dailyDataService.getCommonData(coinType, currencyType,
 				startTime);
 		if (cacheDataList == null || cacheDataList.isEmpty()) {
 			return;

@@ -17,7 +17,6 @@ import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1dayMapper;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1day;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
-import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataSubDTO;
@@ -31,9 +30,6 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 
 	@Autowired
 	private CryptoCoinPrice1dayMapper _1DayDataMapper;
-	@Autowired
-	private CryptoCoinPriceCacheService cacheService;
-
 
 	@Override
 	public CommonResult reciveDailyData(CryptoCoinDataDTO dto) {
@@ -84,12 +80,12 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 			if (!dataTimeMatchFlag) {
 				insertNewData(tmpNewData, coinType, currencyType);
 			}
-			
+
 			dataTimeMatchFlag = false;
 		}
 
 	}
-	
+
 	private CryptoCoinPrice1day mergeDataPair(CryptoCoinPrice1day target, CryptoCoinDataSubDTO data) {
 		target.setStartPrice(new BigDecimal(data.getStart()));
 		target.setEndPrice(new BigDecimal(data.getEnd()));
@@ -102,7 +98,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		_1DayDataMapper.updateByPrimaryKeySelective(target);
 		return target;
 	}
-	
+
 	private void insertNewData(CryptoCoinDataSubDTO data, CryptoCoinType coinType, CurrencyType currencyType) {
 		CryptoCoinPrice1day po = new CryptoCoinPrice1day();
 		po.setId(snowFlake.getNextId());
@@ -118,7 +114,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 
 		_1DayDataMapper.insertSelective(po);
 	}
-	
+
 	@Override
 	public List<CryptoCoinPrice1day> getData(CryptoCoinType coinType, CurrencyType currencyType,
 			LocalDateTime startTime) {
@@ -159,7 +155,8 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 			return poDataList;
 		}
 
-		List<CryptoCoinPriceCommonDataBO> resultDataList = mergePODataWithCache(poDataList, cacheDataList, startTime, dayStepLong, TimeUnitType.day);
+		List<CryptoCoinPriceCommonDataBO> resultDataList = mergePODataWithCache(poDataList, cacheDataList, startTime,
+				dayStepLong, TimeUnitType.day);
 
 		return resultDataList;
 

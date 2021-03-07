@@ -2,7 +2,6 @@ package demo.finance.cryptoCoin.notice.service.impl;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,12 +20,6 @@ import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.pojo.dto.InsertCryptoCoinPriceNoticeSettingDTO;
 import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinNoticeDTOCheckResult;
 import demo.finance.cryptoCoin.data.pojo.result.FilterBODataResult;
-import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
-import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
-import demo.finance.cryptoCoin.data.service.CryptoCoin1MonthDataSummaryService;
-import demo.finance.cryptoCoin.data.service.CryptoCoin1WeekDataSummaryService;
-import demo.finance.cryptoCoin.data.service.CryptoCoin5MinuteDataSummaryService;
-import demo.finance.cryptoCoin.data.service.CryptoCoin60MinuteDataSummaryService;
 import demo.finance.cryptoCoin.mq.producer.TelegramCryptoCoinMessageAckProducer;
 import demo.finance.cryptoCoin.notice.mapper.CryptoCoinPriceNoticeMapper;
 import demo.finance.cryptoCoin.notice.pojo.dto.NoticeUpdateDTO;
@@ -39,7 +32,6 @@ import demo.finance.cryptoCoin.notice.service.CryptoCoinCommonNoticeService;
 import demo.tool.telegram.pojo.po.TelegramChatId;
 import demo.tool.telegram.pojo.vo.TelegramChatIdVO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
-import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import finance.cryptoCoin.pojo.type.CryptoCoinType;
 import telegram.pojo.dto.TelegramMessageDTO;
 
@@ -48,18 +40,6 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 	@Autowired
 	protected CryptoCoinPriceNoticeMapper noticeMapper;
-	@Autowired
-	private CryptoCoin1MinuteDataSummaryService _1MinuteDataSummaryService;
-	@Autowired
-	private CryptoCoin5MinuteDataSummaryService _5MinuteDataSummaryService;
-	@Autowired
-	private CryptoCoin60MinuteDataSummaryService hourDataSummaryService;
-	@Autowired
-	private CryptoCoin1DayDataSummaryService dailyDataSummaryService;
-	@Autowired
-	private CryptoCoin1WeekDataSummaryService weeklyDataSummaryService;
-	@Autowired
-	private CryptoCoin1MonthDataSummaryService monthlyDataSummaryService;
 
 	@Autowired
 	private TelegramCryptoCoinMessageAckProducer telegramMessageAckProducer;
@@ -345,7 +325,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	private CommonResult priceConditionNoticeHandle(CryptoCoinPriceNotice noticeSetting, CryptoCoinType coinType,
 			CurrencyType currencyType) {
 		CommonResult r = new CommonResult();
-		List<CryptoCoinPriceCommonDataBO> historyDataList = _1MinuteDataSummaryService.getCommonDataFillWithCache(coinType,
+		List<CryptoCoinPriceCommonDataBO> historyDataList = _1MinDataService.getCommonDataFillWithCache(coinType,
 				currencyType, LocalDateTime.now().minusMinutes(2).withSecond(0).withNano(0));
 
 		if (historyDataList == null || historyDataList.isEmpty()) {
@@ -387,9 +367,11 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	private CommonResult priceFluctuationSpeedNoticeHandle(CryptoCoinPriceNotice noticeSetting, CryptoCoinType coinType,
 			CurrencyType currencyType) {
 		CommonResult r = new CommonResult();
+		
+		TimeUnitType timeUnit = TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch());
 
-		List<CryptoCoinPriceCommonDataBO> historyBOList = findHistoryData(coinType, currencyType,
-				noticeSetting.getTimeUnitOfDataWatch(), noticeSetting.getTimeRangeOfDataWatch());
+		List<CryptoCoinPriceCommonDataBO> historyBOList = getHistoryData(coinType, currencyType,
+				timeUnit, noticeSetting.getTimeRangeOfDataWatch());
 		if (historyBOList == null || historyBOList.isEmpty()) {
 			log.error(noticeSetting.getId() + ", can NOT find any history data");
 			return r;
@@ -444,35 +426,6 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		}
 
 		return r;
-	}
-
-	public List<CryptoCoinPriceCommonDataBO> findHistoryData(CryptoCoinType coinType, CurrencyType currencyType,
-			Integer timeUnit, Integer timeRange) {
-		LocalDateTime startTime = null;
-		if (TimeUnitType.minute.getCode().equals(timeUnit)) {
-			if (CryptoCoinDataConstant.CRYPTO_COIN_1MINUTE_DATA_LIVE_HOURS * 60 > timeRange) {
-				startTime = LocalDateTime.now().minusMinutes(timeRange).withSecond(0).withNano(0);
-				return _1MinuteDataSummaryService.getCommonDataFillWithCache(coinType, currencyType, startTime);
-			} else if (CryptoCoinDataConstant.CRYPTO_COIN_5MINUTE_DATA_LIVE_HOURS * 60 > timeRange) {
-				startTime = nextStepStartTimeByMinute(LocalDateTime.now(), timeRange).minusMinutes(timeRange.longValue());
-				return _5MinuteDataSummaryService.getCommonDataFillWithCache(coinType, currencyType, startTime);
-			}
-		} else if (TimeUnitType.hour.getCode().equals(timeUnit)) {
-			startTime = LocalDateTime.now().minusHours(timeRange).withMinute(0).withSecond(0).withNano(0);
-			return hourDataSummaryService.getCommonData(coinType, currencyType, startTime);
-		} else if (TimeUnitType.day.getCode().equals(timeUnit)) {
-			startTime = LocalDateTime.now().minusDays(timeRange).withHour(0).withMinute(0).withSecond(0).withNano(0);
-			return dailyDataSummaryService.getCommonData(coinType, currencyType, startTime);
-		} else if (TimeUnitType.week.getCode().equals(timeUnit)) {
-			LocalDateTime lastSunday = localDateTimeHandler.findLastDayOfWeek(LocalDateTime.now(), DayOfWeek.SUNDAY);
-			startTime = lastSunday.minusDays((timeRange - 1) * 7).withSecond(0).withNano(0);
-			return weeklyDataSummaryService.getCommonData(coinType, currencyType, startTime);
-		} else if (TimeUnitType.month.getCode().equals(timeUnit)) {
-			startTime = LocalDateTime.now().withDayOfMonth(1).minusMonths(timeRange - 1).withSecond(0).withNano(0);
-			return monthlyDataSummaryService.getCommonData(coinType, currencyType, startTime);
-		}
-
-		return new ArrayList<CryptoCoinPriceCommonDataBO>();
 	}
 
 	@Override

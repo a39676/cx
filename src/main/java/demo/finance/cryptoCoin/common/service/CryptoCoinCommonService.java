@@ -512,30 +512,30 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 		return resultDataList;
 	}
 
-	protected List<CryptoCoinPriceCommonDataBO> getHistoryData(CryptoCoinType coinType, CurrencyType currencyType,
+	protected List<CryptoCoinPriceCommonDataBO> getHistoryDataList(CryptoCoinType coinType, CurrencyType currencyType,
 			TimeUnitType timeUnit, Integer timeRange) {
 		LocalDateTime startTime = null;
 		if (TimeUnitType.minute.equals(timeUnit)) {
 			if (CryptoCoinDataConstant.CRYPTO_COIN_1MINUTE_DATA_LIVE_HOURS * 60 > timeRange) {
 				startTime = LocalDateTime.now().minusMinutes(timeRange).withSecond(0).withNano(0);
-				return _1MinDataService.getCommonDataFillWithCache(coinType, currencyType, startTime);
+				return _1MinDataService.getCommonDataListFillWithCache(coinType, currencyType, startTime);
 			} else if (CryptoCoinDataConstant.CRYPTO_COIN_5MINUTE_DATA_LIVE_HOURS * 60 > timeRange) {
 				startTime = nextStepStartTimeByMinute(LocalDateTime.now(), timeRange).minusMinutes(timeRange.longValue());
-				return _5MinDataService.getCommonDataFillWithCache(coinType, currencyType, startTime);
+				return _5MinDataService.getCommonDataListFillWithCache(coinType, currencyType, startTime);
 			}
 		} else if (TimeUnitType.hour.equals(timeUnit)) {
 			startTime = LocalDateTime.now().minusHours(timeRange).withMinute(0).withSecond(0).withNano(0);
-			return hourDataService.getCommonData(coinType, currencyType, startTime);
+			return hourDataService.getCommonDataList(coinType, currencyType, startTime);
 		} else if (TimeUnitType.day.equals(timeUnit)) {
 			startTime = LocalDateTime.now().minusDays(timeRange).withHour(0).withMinute(0).withSecond(0).withNano(0);
-			return dailyDataService.getCommonData(coinType, currencyType, startTime);
+			return dailyDataService.getCommonDataList(coinType, currencyType, startTime);
 		} else if (TimeUnitType.week.equals(timeUnit)) {
 			LocalDateTime lastSunday = localDateTimeHandler.findLastDayOfWeek(LocalDateTime.now(), DayOfWeek.SUNDAY);
 			startTime = lastSunday.minusDays((timeRange - 1) * 7).withSecond(0).withNano(0);
-			return weeklyDataService.getCommonData(coinType, currencyType, startTime);
+			return weeklyDataService.getCommonDataList(coinType, currencyType, startTime);
 		} else if (TimeUnitType.month.equals(timeUnit)) {
 			startTime = LocalDateTime.now().withDayOfMonth(1).minusMonths(timeRange - 1).withSecond(0).withNano(0);
-			return monthlyDataService.getCommonData(coinType, currencyType, startTime);
+			return monthlyDataService.getCommonDataList(coinType, currencyType, startTime);
 		}
 
 		return new ArrayList<CryptoCoinPriceCommonDataBO>();

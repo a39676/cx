@@ -11,11 +11,14 @@ public interface CryptoCoinPriceCacheService {
 	
 	void reciveData(CryptoCoinPriceCommonDataBO newBO);
 
-	List<CryptoCoinPriceCommonDataBO> getCommonData(CryptoCoinType coinType, CurrencyType currencyType,
+	List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinType coinType, CurrencyType currencyType,
 			LocalDateTime startTime);
 
 	CryptoCoinPriceCommonDataBO dataStrToBO(String str);
 
 	boolean isSocketAlive();
+
+	CryptoCoinPriceCommonDataBO getCommonData(CryptoCoinType coinType, CurrencyType currencyType,
+			LocalDateTime datetime);
 
 }

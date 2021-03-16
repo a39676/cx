@@ -15,12 +15,12 @@ public interface CryptoCoin5MinuteDataSummaryService {
 
 	CommonResult summaryHistoryData();
 
-	List<CryptoCoinPrice5minute> getData(CryptoCoinType coinType, CurrencyType currencyType, LocalDateTime startTime);
+	List<CryptoCoinPrice5minute> getDataList(CryptoCoinType coinType, CurrencyType currencyType, LocalDateTime startTime);
 
-	List<CryptoCoinPriceCommonDataBO> getCommonData(CryptoCoinType coinType, CurrencyType currencyType,
+	List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinType coinType, CurrencyType currencyType,
 			LocalDateTime startTime);
 
-	List<CryptoCoinPriceCommonDataBO> getCommonDataFillWithCache(CryptoCoinType coinType, CurrencyType currencyType,
+	List<CryptoCoinPriceCommonDataBO> getCommonDataListFillWithCache(CryptoCoinType coinType, CurrencyType currencyType,
 			LocalDateTime startTime);
 
 }

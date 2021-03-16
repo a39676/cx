@@ -50,7 +50,7 @@ public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonServ
 	}
 
 	private void handleHistoryDataList(LocalDateTime startTime, CryptoCoinType coinType, CurrencyType currencyType) {
-		List<CryptoCoinPriceCommonDataBO> cacheDataList = dailyDataService.getCommonData(coinType, currencyType,
+		List<CryptoCoinPriceCommonDataBO> cacheDataList = dailyDataService.getCommonDataList(coinType, currencyType,
 				startTime);
 		if (cacheDataList == null || cacheDataList.isEmpty()) {
 			return;
@@ -100,7 +100,7 @@ public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonServ
 	}
 
 	@Override
-	public List<CryptoCoinPrice1month> getData(CryptoCoinType coinType, CurrencyType currencyType,
+	public List<CryptoCoinPrice1month> getDataList(CryptoCoinType coinType, CurrencyType currencyType,
 			LocalDateTime startTime) {
 		CryptoCoinPrice1monthExample example = new CryptoCoinPrice1monthExample();
 		example.createCriteria().andCoinTypeEqualTo(coinType.getCode()).andCurrencyTypeEqualTo(currencyType.getCode())
@@ -111,9 +111,9 @@ public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonServ
 	}
 
 	@Override
-	public List<CryptoCoinPriceCommonDataBO> getCommonData(CryptoCoinType coinType, CurrencyType currencyType,
+	public List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinType coinType, CurrencyType currencyType,
 			LocalDateTime startTime) {
-		List<CryptoCoinPrice1month> poList = getData(coinType, currencyType, startTime);
+		List<CryptoCoinPrice1month> poList = getDataList(coinType, currencyType, startTime);
 
 		CryptoCoinPriceCommonDataBO tmpCommonData = null;
 		List<CryptoCoinPriceCommonDataBO> commonDataList = new ArrayList<>();
@@ -127,13 +127,13 @@ public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonServ
 	}
 	
 	@Override
-	public List<CryptoCoinPriceCommonDataBO> getCommonDataFillWithCache(CryptoCoinType coinType,
+	public List<CryptoCoinPriceCommonDataBO> getCommonDataListFillWithCache(CryptoCoinType coinType,
 			CurrencyType currencyType, LocalDateTime startTime) {
 
-		List<CryptoCoinPriceCommonDataBO> poDataList = getCommonData(coinType, currencyType, startTime);
+		List<CryptoCoinPriceCommonDataBO> poDataList = getCommonDataList(coinType, currencyType, startTime);
 //		List<CryptoCoinPriceCommonDataBO> poDataList = buildFakeData(coinType, currencyType, startTime);
 
-		List<CryptoCoinPriceCommonDataBO> cacheDataList = cacheService.getCommonData(coinType, currencyType, startTime);
+		List<CryptoCoinPriceCommonDataBO> cacheDataList = cacheService.getCommonDataList(coinType, currencyType, startTime);
 
 		if (cacheDataList.isEmpty()) {
 			return poDataList;

@@ -19,7 +19,7 @@ import finance.cryptoCoin.pojo.type.CryptoCoinType;
 public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implements CryptoDataCompareService {
 
 	@Override
-	public CryptoDataCompareResult cryptoCoinDataCompare(CryptoCoinDataCompareDTO dto) {
+	public CryptoDataCompareResult cryptoCoinDataCompareLine(CryptoCoinDataCompareDTO dto) {
 		CryptoDataCompareResult r = new CryptoDataCompareResult();
 		CommonResult checkDTOResult = checkDTO(dto);
 		if(checkDTOResult.isFail()) {
@@ -32,8 +32,8 @@ public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implem
 		CurrencyType currencyType = CurrencyType.getType(dto.getCurrencyType());
 		TimeUnitType timeUnitType = TimeUnitType.getType(dto.getTimeUnit());
 		
-		List<CryptoCoinPriceCommonDataBO> dataList1 = getHistoryData(coinType1, currencyType, timeUnitType, dto.getTimeRange());
-		List<CryptoCoinPriceCommonDataBO> dataList2 = getHistoryData(coinType2, currencyType, timeUnitType, dto.getTimeRange());
+		List<CryptoCoinPriceCommonDataBO> dataList1 = getHistoryDataList(coinType1, currencyType, timeUnitType, dto.getTimeRange());
+		List<CryptoCoinPriceCommonDataBO> dataList2 = getHistoryDataList(coinType2, currencyType, timeUnitType, dto.getTimeRange());
 		
 		if(dataList1.isEmpty() || dataList2.isEmpty()) {
 			r.setDataList1(dataList1);

@@ -13,12 +13,12 @@ public interface CryptoCoin1WeekDataSummaryService {
 
 	CommonResult summaryHistoryData();
 
-	List<CryptoCoinPrice1week> getData(CryptoCoinType coinType, CurrencyType currencyType, LocalDateTime startTime);
+	List<CryptoCoinPrice1week> getDataList(CryptoCoinType coinType, CurrencyType currencyType, LocalDateTime startTime);
 
-	List<CryptoCoinPriceCommonDataBO> getCommonData(CryptoCoinType coinType, CurrencyType currencyType,
+	List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinType coinType, CurrencyType currencyType,
 			LocalDateTime startTime);
 
-	List<CryptoCoinPriceCommonDataBO> getCommonDataFillWithCache(CryptoCoinType coinType, CurrencyType currencyType,
+	List<CryptoCoinPriceCommonDataBO> getCommonDataListFillWithCache(CryptoCoinType coinType, CurrencyType currencyType,
 			LocalDateTime startTime);
 
 

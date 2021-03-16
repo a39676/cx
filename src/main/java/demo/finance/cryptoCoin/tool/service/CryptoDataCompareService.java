@@ -5,6 +5,6 @@ import demo.finance.cryptoCoin.tool.pojo.result.CryptoDataCompareResult;
 
 public interface CryptoDataCompareService {
 
-	CryptoDataCompareResult cryptoCoinDataCompare(CryptoCoinDataCompareDTO dto);
+	CryptoDataCompareResult cryptoCoinDataCompareLine(CryptoCoinDataCompareDTO dto);
 
 }

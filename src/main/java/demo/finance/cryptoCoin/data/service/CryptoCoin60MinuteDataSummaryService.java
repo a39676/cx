@@ -15,12 +15,12 @@ public interface CryptoCoin60MinuteDataSummaryService {
 
 	CommonResult deleteExpiredCacheData();
 
-	List<CryptoCoinPrice60minute> getData(CryptoCoinType coinType, CurrencyType currencyType, LocalDateTime startTime);
+	List<CryptoCoinPrice60minute> getDataList(CryptoCoinType coinType, CurrencyType currencyType, LocalDateTime startTime);
 
-	List<CryptoCoinPriceCommonDataBO> getCommonData(CryptoCoinType coinType, CurrencyType currencyType,
+	List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinType coinType, CurrencyType currencyType,
 			LocalDateTime startTime);
 
-	List<CryptoCoinPriceCommonDataBO> getCommonDataFillWithCache(CryptoCoinType coinType, CurrencyType currencyType,
+	List<CryptoCoinPriceCommonDataBO> getCommonDataListFillWithCache(CryptoCoinType coinType, CurrencyType currencyType,
 			LocalDateTime startTime);
 
 }

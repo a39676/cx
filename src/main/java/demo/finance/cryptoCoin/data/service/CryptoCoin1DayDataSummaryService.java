@@ -12,14 +12,17 @@ import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
 public interface CryptoCoin1DayDataSummaryService {
 
-	List<CryptoCoinPrice1day> getData(CryptoCoinType coinType, CurrencyType currencyType, LocalDateTime startTime);
+	List<CryptoCoinPrice1day> getDataList(CryptoCoinType coinType, CurrencyType currencyType, LocalDateTime startTime);
 
-	List<CryptoCoinPriceCommonDataBO> getCommonData(CryptoCoinType coinType, CurrencyType currencyType,
+	List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinType coinType, CurrencyType currencyType,
 			LocalDateTime startTime);
 
-	List<CryptoCoinPriceCommonDataBO> getCommonDataFillWithCache(CryptoCoinType coinType, CurrencyType currencyType,
+	List<CryptoCoinPriceCommonDataBO> getCommonDataListFillWithCache(CryptoCoinType coinType, CurrencyType currencyType,
 			LocalDateTime startTime);
 
 	CommonResult reciveDailyData(CryptoCoinDataDTO dto);
+
+	CryptoCoinPriceCommonDataBO getCommonData(CryptoCoinType coinType, CurrencyType currencyType,
+			LocalDateTime datetime);
 
 }

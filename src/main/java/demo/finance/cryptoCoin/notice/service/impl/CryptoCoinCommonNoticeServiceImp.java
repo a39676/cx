@@ -325,7 +325,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	private CommonResult priceConditionNoticeHandle(CryptoCoinPriceNotice noticeSetting, CryptoCoinType coinType,
 			CurrencyType currencyType) {
 		CommonResult r = new CommonResult();
-		List<CryptoCoinPriceCommonDataBO> historyDataList = _1MinDataService.getCommonDataFillWithCache(coinType,
+		List<CryptoCoinPriceCommonDataBO> historyDataList = _1MinDataService.getCommonDataListFillWithCache(coinType,
 				currencyType, LocalDateTime.now().minusMinutes(2).withSecond(0).withNano(0));
 
 		if (historyDataList == null || historyDataList.isEmpty()) {
@@ -370,7 +370,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		
 		TimeUnitType timeUnit = TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch());
 
-		List<CryptoCoinPriceCommonDataBO> historyBOList = getHistoryData(coinType, currencyType,
+		List<CryptoCoinPriceCommonDataBO> historyBOList = getHistoryDataList(coinType, currencyType,
 				timeUnit, noticeSetting.getTimeRangeOfDataWatch());
 		if (historyBOList == null || historyBOList.isEmpty()) {
 			log.error(noticeSetting.getId() + ", can NOT find any history data");

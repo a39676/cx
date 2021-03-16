@@ -93,7 +93,19 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 	}
 	
 	@Override
-	public List<CryptoCoinPriceCommonDataBO> getCommonData(CryptoCoinType coinType, CurrencyType currencyType, LocalDateTime startTime) {
+	public CryptoCoinPriceCommonDataBO getCommonData(CryptoCoinType coinType, CurrencyType currencyType, LocalDateTime datetime) {
+		List<CryptoCoinPriceCommonDataBO> cacheDataList = cacheService.getCommonDataList(coinType, currencyType, datetime);
+		for(CryptoCoinPriceCommonDataBO bo : cacheDataList) {
+			if(!datetime.isBefore(bo.getStartTime()) && !datetime.isAfter(bo.getEndTime())) {
+				return bo;
+			}
+		}
+		
+		return null;
+	}
+	
+	@Override
+	public List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinType coinType, CurrencyType currencyType, LocalDateTime startTime) {
 		List<CryptoCoinPriceCommonDataBO> commonDataList = new ArrayList<>();
 		CryptoCoinPriceCommonDataBO tmpCommonData = null;
 		

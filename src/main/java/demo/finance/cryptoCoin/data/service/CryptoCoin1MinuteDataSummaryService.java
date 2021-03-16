@@ -16,9 +16,9 @@ public interface CryptoCoin1MinuteDataSummaryService {
 
 	CommonResult deleteExpiredCacheData();
 
-	List<CryptoCoinPrice1minute> getData(CryptoCoinType coinType, CurrencyType currencyType, LocalDateTime startTime);
+	List<CryptoCoinPrice1minute> getDataList(CryptoCoinType coinType, CurrencyType currencyType, LocalDateTime startTime);
 
-	List<CryptoCoinPriceCommonDataBO> getCommonData(CryptoCoinType coinType, CurrencyType currencyType,
+	List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinType coinType, CurrencyType currencyType,
 			LocalDateTime startTime);
 
 	/**
@@ -27,9 +27,12 @@ public interface CryptoCoin1MinuteDataSummaryService {
 	 */
 	void mergeDuplicateData();
 
-	List<CryptoCoinPriceCommonDataBO> getCommonDataFillWithCache(CryptoCoinType coinType, CurrencyType currencyType,
+	List<CryptoCoinPriceCommonDataBO> getCommonDataListFillWithCache(CryptoCoinType coinType, CurrencyType currencyType,
 			LocalDateTime startTime);
 
 	CommonResult historyMQIsActive();
+
+	CryptoCoinPriceCommonDataBO getCommonData(CryptoCoinType coinType, CurrencyType currencyType,
+			LocalDateTime datetime);
 
 }

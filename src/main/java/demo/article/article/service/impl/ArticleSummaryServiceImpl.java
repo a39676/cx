@@ -40,7 +40,6 @@ import demo.article.article.service.ArticleViewService;
 import demo.article.articleComment.controller.ArticleCommentAdminController;
 import demo.article.articleComment.controller.ArticleCommentController;
 import demo.article.articleComment.pojo.po.ArticleCommentCount;
-import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.common.pojo.type.ResultTypeCX;
 import demo.toyParts.vcode.pojo.param.GetVcodeByValueParam;
 import demo.toyParts.vcode.pojo.po.VCode;
@@ -306,7 +305,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		/* 置限制只可浏览某时点之后的文章 */
 		boolean isBigUser = isBigUser();
 		if(!isBigUser) {
-			String normalUserMaxReadingMonth = constantService.getSysValByName(SystemConstantStore.normalUserMaxReadingMonth);
+			String normalUserMaxReadingMonth = constantService.getSysValByName(ArticleConstant.NORMAL_USER_MAX_READING_MONTH);
 			int maxReadingMonth = 1;
 			if(numberUtil.matchInteger(normalUserMaxReadingMonth)) {
 				maxReadingMonth = Integer.parseInt(normalUserMaxReadingMonth);

@@ -7,6 +7,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import demo.article.article.service.ArticleOptionService;
 import demo.base.organizations.pojo.po.Organizations;
 import demo.base.organizations.service.OrganizationService;
 import demo.base.organizations.service.__SystemOrganizationService;
@@ -38,6 +39,8 @@ public class DatabaseFillerOnStartup implements ApplicationListener<ApplicationR
 	private OrganizationService orgService;
 	@Autowired
 	private __SystemOrganizationService __systemOrgService;
+	@Autowired
+	private ArticleOptionService articleOptionService;
 	
 	@Autowired
 	private JoySceneManagerService joySceneOperationService;
@@ -84,6 +87,8 @@ public class DatabaseFillerOnStartup implements ApplicationListener<ApplicationR
 			
 			joySceneOperationService.defaultSceneInit();
 			joyIconService.loadAllIconToRedis();
+			
+			articleOptionService.loadAllOption();
 		}
 	}
 

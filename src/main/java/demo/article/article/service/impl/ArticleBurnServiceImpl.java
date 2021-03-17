@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import autoTest.testEvent.pojo.constant.SearchingDemoConstant;
 import demo.article.article.mapper.ArticleBurnMapper;
 import demo.article.article.pojo.constant.ArticleBurnUrlConstant;
+import demo.article.article.pojo.constant.ArticleConstant;
 import demo.article.article.pojo.constant.ArticleViewConstant;
 import demo.article.article.pojo.dto.CreatingBurnMessageDTO;
 import demo.article.article.pojo.po.ArticleBurn;
@@ -47,13 +48,13 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 	private ArticleBurnMapper articleBurnMapper;
 	
 	private String getArticleBurnStorePrefixPath() {
-		return constantService.getSysValByName(SystemConstantStore.articleBurnStorePrefixPath);
+		return constantService.getSysValByName(ArticleConstant.ARTICLE_BURN_STORE_PRE_FIX_PATH);
 	}
 	
 	private Long loadMaxArticleLength() {
 		Long maxArticleLength = 0L;
 		try {
-			String maxLengthStr = constantService.getSysValByName(SystemConstantStore.maxArticleLength);
+			String maxLengthStr = constantService.getSysValByName(ArticleConstant.MAX_ARTICLE_LENGTH);
 			if(maxLengthStr != null) {
 				maxArticleLength = Long.parseLong(maxLengthStr);
 			}

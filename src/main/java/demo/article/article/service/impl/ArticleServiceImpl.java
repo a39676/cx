@@ -62,7 +62,6 @@ import demo.article.article.service.ArticleChannelService;
 import demo.article.article.service.ArticleService;
 import demo.article.article.service.ArticleSummaryService;
 import demo.article.article.service.ArticleViewService;
-import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.user.controller.UsersController;
 import demo.common.pojo.result.CommonResultCX;
@@ -106,17 +105,17 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	private ValidRegexToolService validRegexToolService;
 	
 	private String getArticleStorePrefixPath() {
-		return constantService.getSysValByName(SystemConstantStore.articleStorePrefixPath);
+		return constantService.getSysValByName(ArticleConstant.ARTICLE_STORE_PRE_FIX_PATH);
 	}
 	
 	private String getArticleSummaryStorePrefixPath() {
-		return constantService.getSysValByName(SystemConstantStore.articleSummaryStorePrefixPath);
+		return constantService.getSysValByName(ArticleConstant.ARTICLE_SUMMARY_STORE_PRE_FIX_PATH);
 	}
 
 	private Long loadMaxArticleLength() {
 		Long maxArticleLength = 0L;
 		try {
-			String maxLengthStr = constantService.getSysValByName(SystemConstantStore.maxArticleLength);
+			String maxLengthStr = constantService.getSysValByName(ArticleConstant.MAX_ARTICLE_LENGTH);
 			if(maxLengthStr != null) {
 				maxArticleLength = Long.parseLong(maxLengthStr);
 			}

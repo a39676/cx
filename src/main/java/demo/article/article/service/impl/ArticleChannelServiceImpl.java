@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import demo.article.article.mapper.ArticleChannelKeyHostnameMapper;
 import demo.article.article.mapper.ArticleChannelsMapper;
 import demo.article.article.pojo.bo.GetArticleChannelsBO;
+import demo.article.article.pojo.constant.ArticleConstant;
 import demo.article.article.pojo.dto.ArticleChannelKeyHostnameIdDTO;
 import demo.article.article.pojo.dto.ArticleChannelManagerDTO;
 import demo.article.article.pojo.po.ArticleChannelKeyHostname;
@@ -187,7 +188,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	
 	@Override
 	public String loadChannelPrefix(Integer channelId) {
-		String mainFolderPath = constantService.getSysValByName(SystemConstantStore.articleChannelPrefixStorePath);
+		String mainFolderPath = constantService.getSysValByName(ArticleConstant.ARTICLE_CHANNEL_PRE_FIX_STORE_PATH);
 		String strContent = "";
 		if (new File(mainFolderPath + channelId + ".txt").exists()) {
 			strContent = ioUtil.getStringFromFile(mainFolderPath + channelId + ".txt");

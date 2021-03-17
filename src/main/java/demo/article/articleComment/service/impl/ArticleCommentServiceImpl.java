@@ -253,8 +253,8 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			return result;
 		}
 		
-		if(dto.getStartTime() != null && dto.getStartTime().isBefore(theStartTime)) {
-			dto.setStartTime(theStartTime);
+		if(dto.getStartTime() != null && dto.getStartTime().isBefore(BLOG_ARTICLE_START_TIME)) {
+			dto.setStartTime(BLOG_ARTICLE_START_TIME);
 		}
 		if(dto.getStartTime() != null) {
 			dto.setStartTime(dto.getStartTime().plusSeconds(1L));

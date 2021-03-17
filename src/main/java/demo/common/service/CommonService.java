@@ -64,7 +64,7 @@ public abstract class CommonService {
 	@Autowired
 	protected RedisTemplate<String, Object> redisTemplate;
 
-	protected static final LocalDateTime theStartTime = LocalDateTime.of(2020, 5, 1, 0, 0, 0);
+	protected static final LocalDateTime BLOG_ARTICLE_START_TIME = LocalDateTime.of(2020, 5, 1, 0, 0, 0);
 
 	protected String createDateDescription(Date inputDate) {
 		if (inputDate == null) {

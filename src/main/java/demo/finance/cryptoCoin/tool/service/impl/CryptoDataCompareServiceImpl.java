@@ -1,5 +1,6 @@
 package demo.finance.cryptoCoin.tool.service.impl;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,6 +19,48 @@ import finance.cryptoCoin.pojo.type.CryptoCoinType;
 @Service
 public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implements CryptoDataCompareService {
 
+	@Override
+	public CryptoDataCompareResult cryptoCoinDailyDataComparePoint(CryptoCoinDataCompareDTO dto) {
+		CryptoDataCompareResult r = new CryptoDataCompareResult();
+		CommonResult checkDTOResult = checkDTO(dto);
+		if(checkDTOResult.isFail()) {
+			r.addMessage(checkDTOResult.getMessage());
+			return r;
+		}
+		
+		CryptoCoinType coinType1 = CryptoCoinType.getType(dto.getCoinType1());
+		CryptoCoinType coinType2 = CryptoCoinType.getType(dto.getCoinType2());
+		CurrencyType currencyType = CurrencyType.getType(dto.getCurrencyType());
+		
+		LocalDateTime startDateTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getStartDateTimeStr());
+		CryptoCoinPriceCommonDataBO data1Start = dailyDataService.getCommonData(coinType1, currencyType, startDateTime);
+		CryptoCoinPriceCommonDataBO data2Start = dailyDataService.getCommonData(coinType2, currencyType, startDateTime);
+		
+		if(data1Start == null || data2Start == null) {
+			r.failWithMessage("one compare data error");
+			return r;
+		}
+		
+		LocalDateTime now = LocalDateTime.now();
+		List<CryptoCoinPriceCommonDataBO> data1List = dailyDataService.getCommonDataListFillWithCache(coinType1, currencyType, now);
+		List<CryptoCoinPriceCommonDataBO> data2List = dailyDataService.getCommonDataListFillWithCache(coinType2, currencyType, now);
+		
+		if(data1List.isEmpty() || data2List.isEmpty()) {
+			r.failWithMessage("one compare data list error");
+			return r;
+		}
+		
+		CryptoCoinPriceCommonDataBO data1End = data1List.get(0);
+		CryptoCoinPriceCommonDataBO data2End = data2List.get(0);
+		
+		BigDecimal data1Rate = data1End.getEndPrice().divide(data1Start.getStartPrice());
+		BigDecimal data2Rate = data2End.getEndPrice().divide(data2Start.getStartPrice());
+		
+		r.setDifferentRate(data1Rate.subtract(data2Rate));
+		r.setIsSuccess();
+		return r;
+	}
+	
 	@Override
 	public CryptoDataCompareResult cryptoCoinDataCompareLine(CryptoCoinDataCompareDTO dto) {
 		CryptoDataCompareResult r = new CryptoDataCompareResult();

@@ -120,10 +120,9 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 	public CryptoCoinPriceCommonDataBO getCommonData(CryptoCoinType coinType, CurrencyType currencyType,
 			LocalDateTime datetime) {
 		CryptoCoinPriceCommonDataBO tmpCommonData = null;
-		if(datetime == null || !LocalDateTime.now().isAfter(datetime)) {
+		if(datetime == null || !LocalDate.now().isAfter(datetime.toLocalDate())) {
 			return tmpCommonData;
 		}
-		
 		
 		if(LocalDate.now().equals(datetime.toLocalDate())) {
 			tmpCommonData = cacheService.getCommonData(coinType, currencyType, datetime);

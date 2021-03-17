@@ -11,7 +11,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.owasp.html.PolicyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
@@ -32,7 +31,7 @@ import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.HostnameService;
-import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.common.pojo.type.ResultTypeCX;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -48,13 +47,13 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 	private ArticleBurnMapper articleBurnMapper;
 	
 	private String getArticleBurnStorePrefixPath() {
-		return constantService.getValByName(SystemConstantStore.articleBurnStorePrefixPath);
+		return constantService.getSysValByName(SystemConstantStore.articleBurnStorePrefixPath);
 	}
 	
 	private Long loadMaxArticleLength() {
 		Long maxArticleLength = 0L;
 		try {
-			String maxLengthStr = constantService.getValByName(SystemConstantStore.maxArticleLength);
+			String maxLengthStr = constantService.getSysValByName(SystemConstantStore.maxArticleLength);
 			if(maxLengthStr != null) {
 				maxArticleLength = Long.parseLong(maxLengthStr);
 			}
@@ -66,19 +65,19 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		
 	}
 	
-	private boolean isInEasyOrDev(HttpServletRequest request) {
+	private boolean isInZhang3OrDev(HttpServletRequest request) {
 		HostnameType hostnameType = hostnameService.findHostnameType(request);
 		if (HostnameType.zhang3.equals(hostnameType)) {
 			return true;
 		} else {
-			String envName = constantService.getValByName(SystemConstantStore.envName);
+			String envName = constantService.getSysValByName(SystemConstantStore.envName);
 			return "dev".equals(envName);
 		}
 	}
 	
 	@Override
 	public ModelAndView articleBurnLink(HttpServletRequest request) {
-		if(isInEasyOrDev(request)) {
+		if(isInZhang3OrDev(request)) {
 			return new ModelAndView(ArticleViewConstant.articleBurnLink);
 		}
 		return null;
@@ -88,7 +87,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 	public CreatingBurnMessageResult creatingBurnMessage(CreatingBurnMessageDTO dto, HttpServletRequest request) {
 		CreatingBurnMessageResult r = new CreatingBurnMessageResult();
 		
-		if(!isInEasyOrDev(request)) {
+		if(!isInZhang3OrDev(request)) {
 			return null;
 		}
 
@@ -101,15 +100,14 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		if(!isBigUser()) {
 			count = checkFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
 		}
-		if (!"dev".equals(constantService.getValByName(SystemConstantStore.envName))) {
+		if (!"dev".equals(constantService.getSysValByName(SystemConstantStore.envName))) {
 			if (count >= SearchingDemoConstant.maxInsertCountIn30Minutes) {
 				r.failWithMessage("短时间内加入的任务太多了, 请稍后再试");
 				return r;
 			}
 		}
 		
-		PolicyFactory filter = textFilter.getArticleFilter();
-		String contentAfterSanitize = filter.sanitize(dto.getContent());
+		String contentAfterSanitize = sanitize(dto.getContent());
 		Long userId = baseUtilCustom.getUserId();
 		Long newArticleId = snowFlake.getNextId();
 		
@@ -157,7 +155,6 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 			r.setReadKey(URLEncoder.encode(encryptId(po.getReadId()), StandardCharsets.UTF_8.toString()));
 			r.setBurnKey(URLEncoder.encode(encryptId(po.getBurnId()), StandardCharsets.UTF_8.toString()));
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
 		}
 		r.setReadUri(ArticleBurnUrlConstant.root + ArticleBurnUrlConstant.readBurningMessage + "?readKey=" + r.getReadKey());
 		r.setBurnUri(ArticleBurnUrlConstant.root + ArticleBurnUrlConstant.burnMessage + "?burnKey=" + r.getBurnKey());

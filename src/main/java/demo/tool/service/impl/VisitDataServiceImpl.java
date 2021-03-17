@@ -15,7 +15,7 @@ import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.user.mapper.UserIpMapper;
 import demo.base.user.pojo.dto.BatchInsertUserIpDTO;
 import demo.base.user.pojo.po.UserIp;
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 import demo.tool.mapper.VisitCountMapper;
 import demo.tool.pojo.dto.GetVisitCountTotalDTO;
 import demo.tool.pojo.po.VisitCount;
@@ -106,7 +106,7 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 		UserIp ui = null;
 		
 		for(int i = 0; i < size; i++) {
-			str = redisTemplate.opsForList().rightPop(SystemRedisKey.VISIT_DATA_REDIS_KEY);
+			str = (String) redisTemplate.opsForList().rightPop(SystemRedisKey.VISIT_DATA_REDIS_KEY);
 			j = JSONObject.fromObject(str);
 			ui = new UserIp();
 			String cdStr = j.getString("createTime");

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import auxiliaryCommon.pojo.type.GenderType;
 import demo.base.organizations.pojo.dto.FindUserControlOrgDTO;
 import demo.base.organizations.pojo.result.FindUserControlOrgResult;
 import demo.base.organizations.service.OrganizationService;
@@ -40,8 +41,7 @@ import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.AuthRoleService;
 import demo.base.user.service.UserAuthService;
 import demo.base.user.service.UsersService;
-import demo.baseCommon.pojo.type.GenderType;
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 import demo.tool.service.ValidRegexToolService;
 
 /**
@@ -71,7 +71,7 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 		}
 		UserAttemptQuerayDTO param = new UserAttemptQuerayDTO();
 		param.setUserName(userName);
-		int maxAttempts = Integer.parseInt(constantService.getValByName(SystemConstantStore.maxAttempts));
+		int maxAttempts = Integer.parseInt(constantService.getSysValByName(SystemConstantStore.maxAttempts));
 		if (getUserAttempts(param).size() >= maxAttempts) {
 			usersMapper.lockUserWithAttempts(userName);
 		} 

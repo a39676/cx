@@ -19,7 +19,7 @@ import demo.base.user.pojo.po.Users;
 import demo.base.user.pojo.result.FindUserByConditionResult;
 import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.UsersService;
-import demo.baseCommon.controller.CommonController;
+import demo.common.controller.CommonController;
 import demo.config.costom_component.BaseUtilCustom;
 import net.sf.json.JSONObject;
 

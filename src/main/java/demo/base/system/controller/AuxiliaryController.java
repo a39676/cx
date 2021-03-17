@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import demo.base.system.pojo.constant.BaseUrl;
 import demo.base.system.service.AuxiliaryService;
-import demo.baseCommon.controller.CommonController;
+import demo.common.controller.CommonController;
 
 @Controller
 public class AuxiliaryController extends CommonController {

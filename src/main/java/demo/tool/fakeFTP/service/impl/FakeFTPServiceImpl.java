@@ -20,8 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import demo.base.system.pojo.bo.SystemConstantStore;
-import demo.baseCommon.pojo.type.ResultTypeCX;
-import demo.baseCommon.service.CommonService;
+import demo.common.pojo.type.ResultTypeCX;
+import demo.common.service.CommonService;
 import demo.tool.controller.UploadPriController;
 import demo.tool.fakeFTP.pojo.param.controllerParam.DownloadTargetFileParam;
 import demo.tool.fakeFTP.pojo.param.controllerParam.GetFilePathDetailParam;
@@ -41,7 +41,7 @@ public class FakeFTPServiceImpl extends CommonService implements FakeFTPServcie 
 	private DownloadService downloadService;
 	
 	private String getFateFTPHome() {
-		return constantService.getValByName(SystemConstantStore.fakeFTPHome);
+		return constantService.getSysValByName(SystemConstantStore.fakeFTPHome);
 	}
 	
 	@Override
@@ -104,10 +104,10 @@ public class FakeFTPServiceImpl extends CommonService implements FakeFTPServcie 
 	@Override
 	public void downloadTargetFile(HttpServletResponse response, DownloadTargetFileParam param) throws IOException {
 		if(StringUtils.isBlank(param.getFilePath()) || !validPath(param.getFilePath())) {
-			downloadService.downloadFile(response, "");
+			downloadService.downloadFileWithZip(response, "");
 			return;
 		}
-		downloadService.downloadFile(response, param.getFilePath());
+		downloadService.downloadFileWithZip(response, param.getFilePath());
 	}
 
 	@Override

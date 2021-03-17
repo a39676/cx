@@ -32,8 +32,8 @@ import demo.base.user.pojo.vo.UserAuthVO;
 import demo.base.user.service.AuthRoleService;
 import demo.base.user.service.AuthService;
 import demo.base.user.service.UserAuthService;
-import demo.baseCommon.pojo.result.CommonResultCX;
-import demo.baseCommon.service.CommonService;
+import demo.common.pojo.result.CommonResultCX;
+import demo.common.service.CommonService;
 
 @Service
 public class UserAuthServiceImpl extends CommonService implements UserAuthService {

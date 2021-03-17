@@ -307,7 +307,7 @@
   </update>
 
   <select id="getUserAttempts"
-    resultMap="demo.base.user.mapper.UserAttemptsMapper.BaseResultMap">
+    resultType="demo.base.user.pojo.po.UserAttempts">
     select 
       ua.*
       

@@ -26,7 +26,7 @@
 <div id="uploadResultMessage"></div>
 </body>
 <footer>
-<%@ include file="../../baseElementJSP/normalFooter.jsp" %>
+<%@ include file="../../baseElementJSP/normalJSPart.jsp" %>
 <script type="text/javascript">
 
   $(document).ready(function() {
@@ -39,7 +39,7 @@
       var uploadFile = new FormData();
       uploadFile.append("file", fileUpload.files[0]);
       
-      var url = "${pageContext.request.contextPath}/uploadPri/${uploadUrl}";
+      var url = "/uploadPri/${uploadUrl}";
 
       $.ajax({  
         type : "POST",  

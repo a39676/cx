@@ -160,7 +160,7 @@
 
 
 <footer>
-<%@ include file="../baseElementJSP/normalFooter.jsp" %>
+<%@ include file="../baseElementJSP/normalJSPart.jsp" %>
 <script type="text/javascript">
   $(document).ready(function() {
 

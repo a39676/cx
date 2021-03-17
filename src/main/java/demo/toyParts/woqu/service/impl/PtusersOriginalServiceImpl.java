@@ -10,8 +10,8 @@ import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.baseCommon.pojo.type.GenderType;
-import demo.baseCommon.service.CommonService;
+import auxiliaryCommon.pojo.type.GenderType;
+import demo.common.service.CommonService;
 import demo.toyParts.woqu.mapper.PtusersOriginalMapper;
 import demo.toyParts.woqu.pojo.po.PtusersOriginal;
 import demo.toyParts.woqu.pojo.po.PtusersOriginalExample;

@@ -27,7 +27,7 @@ import auxiliaryCommon.pojo.constant.ServerHost;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.system.service.ExceptionService;
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 import demo.interaction.autoTest.pojo.vo.AutoTestJsonReportLineVO;
 import demo.interaction.autoTest.pojo.vo.AutoTestJsonReportVO;
 import demo.interaction.autoTest.service.AutoTestDemoService;
@@ -46,7 +46,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 
 	@Override
 	public ModelAndView linkToATHome(HttpServletRequest request) {
-		if(isInSeekOrDev(request)) {
+		if(baseUtilCustom.hasAdminRole() || isDev(request)) {
 			return new ModelAndView("ATDemoJSP/atDemoLink");
 		}
 
@@ -56,7 +56,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	@Override
 	public ModelAndView index(HttpServletRequest request) {
 
-		if(!isInSeekOrDev(request)) {
+		if(!baseUtilCustom.hasAdminRole() && !isDev(request)) {
 			return exceptionService.handle404Exception(request);
 		}
 
@@ -79,10 +79,6 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 
 	@Override
 	public String findReportsByCondition(HttpServletRequest request, FindTestEventPageByConditionDTO dto) {
-		
-		if(!isInSeekOrDev(request)) {
-			return null;
-		}
 		
 		if (!baseUtilCustom.hasAdminRole()) {
 			dto.setModuleId(TestModuleType.ATDemo.getId());
@@ -141,8 +137,8 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 				j.put("isSuccess", "false");
 			}
 
-			String url = ServerHost.localHost10002 + AutoTestInteractionUrl.root
-					+ AutoTestInteractionUrl.findReportsByCondition;
+			String url = ServerHost.localHost10002 + AutoTestInteractionUrl.ROOT
+					+ AutoTestInteractionUrl.FIND_REPORTS_BY_CONDITION;
 			String response = String.valueOf(httpUtil.sendPostRestful(url, j.toString()));
 			return response;
 		} catch (Exception e) {
@@ -154,7 +150,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	@Override
 	public ModelAndView findReportByTestEventId(HttpServletRequest request, FindReportByTestEventIdDTO dto) {
 		
-		if(!isInSeekOrDev(request)) {
+		if(!baseUtilCustom.hasAdminRole()) {
 			return exceptionService.handle404Exception(request);
 		}
 		
@@ -173,8 +169,8 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 		try {
 			JSONObject requestJson = JSONObject.fromObject(dto);
 
-			String url = ServerHost.localHost10002 + AutoTestInteractionUrl.root
-					+ AutoTestInteractionUrl.findReportByTestEventId;
+			String url = ServerHost.localHost10002 + AutoTestInteractionUrl.ROOT
+					+ AutoTestInteractionUrl.FIND_REPORT_BY_TEST_EVENT_ID;
 			String responseStr = String.valueOf(httpUtil.sendPostRestful(url, requestJson.toString()));
 
 			JSONObject responseJson = JSONObject.fromObject(responseStr);
@@ -303,7 +299,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	public InsertSearchingDemoEventResult insertSearchingDemoTestEvent(InsertSearchingDemoTestEventDTO dto,
 			HttpServletRequest request) {
 		
-		if(!isInSeekOrDev(request)) {
+		if(!isDev(request)) {
 			return null;
 		}
 		
@@ -313,7 +309,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 		if(!isBigUser()) {
 			count = checkFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
 		}
-		if (!"dev".equals(constantService.getValByName(SystemConstantStore.envName))) {
+		if (!"dev".equals(constantService.getSysValByName(SystemConstantStore.envName))) {
 			if (count >= SearchingDemoConstant.maxInsertCountIn30Minutes) {
 				r.failWithMessage("短时间内加入的任务太多了, 请稍后再试");
 				return r;
@@ -355,13 +351,8 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 		return r;
 	}
 
-	private boolean isInSeekOrDev(HttpServletRequest request) {
-//		HostnameType hostnameType = hostnameService.findHostnameType(request);
-//		if (HostnameType.seek.equals(hostnameType)) {
-//			return true;
-//		} else {
-//		}
-		String envName = constantService.getValByName(SystemConstantStore.envName);
+	private boolean isDev(HttpServletRequest request) {
+		String envName = constantService.getSysValByName(SystemConstantStore.envName);
 		return "dev".equals(envName);
 	}
 }

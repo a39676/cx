@@ -22,21 +22,22 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.pojo.constant.BaseViewConstant;
-import demo.baseCommon.controller.CommonController;
-import demo.baseCommon.pojo.param.controllerParam.InsertNewTransationParam;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.controller.CommonController;
+import demo.common.pojo.result.CommonResultCX;
 import demo.config.costom_component.BaseUtilCustom;
-import demo.finance.account_holder.AccountHolderViewConstants;
 import demo.finance.account_holder.controller.AccountHolderController;
+import demo.finance.account_holder.pojo.constant.AccountHolderViewConstants;
 import demo.finance.account_holder.pojo.po.AccountHolder;
 import demo.finance.account_info.pojo.bo.AccountInfoWithBankInfo;
 import demo.finance.account_info.pojo.constant.AccountInfoView;
 import demo.finance.account_info.pojo.constant.AccountUrl;
+import demo.finance.account_info.pojo.dto.ModifyValidDateDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.AccountInfoDetailQueryDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.AccountInfoRegistDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.AccountNumberDuplicateCheckDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.FindAccountInfoByConditionDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.GetAccountListByConditionParam;
+import demo.finance.account_info.pojo.dto.controllerDTO.InsertNewTransationDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.ModifyCreditsQuotaDTO;
 import demo.finance.account_info.pojo.po.AccountInfo;
 import demo.finance.account_info.pojo.result.AccountRegistResult;
@@ -50,7 +51,6 @@ import demo.finance.bank.pojo.bo.BankInfoCustomBO;
 import demo.finance.credit_bill.controller.CreditBillController;
 import demo.finance.credit_bill.pojo.BillInfoCustomDetail;
 import demo.finance.trading.pojo.constant.TradingViews;
-import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping(value = AccountUrl.accountInfoRoot)
@@ -76,7 +76,7 @@ public class AccountInfoController extends CommonController {
 		ModelAndView view = new ModelAndView();
 
 		try{
-			view.setViewName(AccountInfoView.accountDetail);
+			view.setViewName(AccountInfoView.ACCOUNT_DETAIL);
 			
 			AccountInfoWithBankInfo accountInfoWithBankInfo = accountInfoService.getAccountInfoWithBankInfoByAccountNumber(dto.getAccountNumber());
 			view.addObject("account", accountInfoWithBankInfo);
@@ -104,14 +104,14 @@ public class AccountInfoController extends CommonController {
 	
 	@GetMapping(AccountUrl.accountListView)
 	public ModelAndView accountList() {
-		ModelAndView view = new ModelAndView(AccountInfoView.accountList);
+		ModelAndView view = new ModelAndView(AccountInfoView.ACCOUNT_LIST);
 
 		return view;
 	}
 	
 	@PostMapping(AccountUrl.accountListView)
 	public ModelAndView accountListView(@RequestBody GetAccountListByConditionParam param) {
-		ModelAndView view = new ModelAndView(AccountInfoView.accountList);
+		ModelAndView view = new ModelAndView(AccountInfoView.ACCOUNT_LIST);
 		
 		GetAccountListResult result = accountInfoService.accountInfoWithBankInfoList(param);
 		
@@ -137,7 +137,7 @@ public class AccountInfoController extends CommonController {
 		/*
 		 * 2019-07-04 准备将逻辑转移至service
 		 */
-		ModelAndView view = new ModelAndView(AccountInfoView.accountStatistics);
+		ModelAndView view = new ModelAndView(AccountInfoView.ACCOUNT_STATISTICS);
 		
 		List<AccountHolder> holderList = accountHolderController.getCurrentHolders();
 
@@ -192,7 +192,7 @@ public class AccountInfoController extends CommonController {
 		ModelAndView view = new ModelAndView();
 		
 		if (baseUtilCustom.isLoginUser()) {
-			view.setViewName(AccountInfoView.accountRegistration);
+			view.setViewName(AccountInfoView.ACCOUNT_REGISTRATION);
 		} else { 
 			view.setViewName(BaseViewConstant.view403);
 			return view;
@@ -235,7 +235,7 @@ public class AccountInfoController extends CommonController {
 	
 	@PostMapping(value = AccountUrl.insertNewTransationV4)
 	@ResponseBody
-	public InsertTransationResult insertNewTransationV4(@RequestBody InsertNewTransationParam p) throws Exception {
+	public InsertTransationResult insertNewTransationV4(@RequestBody InsertNewTransationDTO p) throws Exception {
 		return accountInfoService.insertTradingRecorderSelective(p);
 	}
 
@@ -244,36 +244,9 @@ public class AccountInfoController extends CommonController {
 	}
 	
 	@PostMapping(value = AccountUrl.modifyVaildDate)
-	public void modifyVaildDate(@RequestBody String data, HttpServletResponse response) throws IOException {
-		JSONObject jsonInput = null;
-		JSONObject jsonOutput;
-		
-		String newVaildDate = null;
-		String accountNumber = null;
-		CommonResult result = new CommonResult();
-		
-		try {
-			jsonInput = JSONObject.fromObject(data);
-			newVaildDate = jsonInput.getString("newVaildDate");
-			accountNumber = jsonInput.getString("accountNumber");
-		} catch (Exception e) {
-			result.failWithMessage("something wrong");
-			jsonOutput = JSONObject.fromObject(result);
-			response.getWriter().print(jsonOutput);
-			return ;
-		}
-		
-		int modifyCount = accountInfoService.modifyAccountInfoVaildDate(newVaildDate, accountNumber, baseUtilCustom.hasAdminRole());
-		
-		if (modifyCount == 1) {
-			result.successWithMessage("modify vaild date to: " + newVaildDate);
-		} else {
-			result.failWithMessage("something wrong");
-		}
-		
-		jsonOutput = JSONObject.fromObject(result);
-		response.getWriter().print(jsonOutput);
-		return;
+	@ResponseBody
+	public CommonResult modifyVaildDate(@RequestBody ModifyValidDateDTO dto) throws Exception {
+		return accountInfoService.modifyAccountInfoVaildDate(dto);
 	}
 	
 	@PostMapping(value = AccountUrl.modifyCreditsQuota)
@@ -314,7 +287,7 @@ public class AccountInfoController extends CommonController {
 
 	@GetMapping(AccountUrl.accountSelectorV1)
 	public ModelAndView accountSelectorV1() {
-		ModelAndView view = new ModelAndView(AccountInfoView.accountSelectorV1);
+		ModelAndView view = new ModelAndView(AccountInfoView.ACCOUNT_SELECTOR_V1);
 		return view;
 	}
 	

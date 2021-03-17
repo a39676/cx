@@ -31,7 +31,7 @@ public class FindArticleLongSummaryListDTO {
 	private Boolean isPass = true;
 	private Boolean isEdited = false;
 	private Boolean isReject = false;
-	private Integer limit = ArticleConstant.defaultPageSize;
+	private Integer limit = ArticleConstant.DEFAULT_PAGE_SIZE;
 	private Boolean desc = true;
 	private Boolean isHot = false;
 	private String vcode;

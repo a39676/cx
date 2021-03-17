@@ -3,7 +3,7 @@ package demo.article.articleComment.pojo.result;
 import java.util.List;
 
 import demo.article.articleComment.pojo.vo.ArticleCommentVO;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 
 public class FindArticleCommentPageResult extends CommonResultCX {
 

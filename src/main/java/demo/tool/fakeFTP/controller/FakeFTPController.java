@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import demo.baseCommon.controller.CommonController;
+import demo.common.controller.CommonController;
 import demo.tool.fakeFTP.pojo.constant.FakeFTPUrlConstant;
 import demo.tool.fakeFTP.pojo.param.controllerParam.DownloadTargetFileParam;
 import demo.tool.fakeFTP.pojo.param.controllerParam.GetFilePathDetailParam;

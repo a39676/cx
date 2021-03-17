@@ -2,23 +2,19 @@ package demo.finance.trading.service.impl;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import demo.baseCommon.pojo.param.controllerParam.InsertNewTransationParam;
-import demo.baseCommon.pojo.type.TransationType;
-import demo.baseCommon.service.CommonService;
+import demo.common.pojo.type.TransationType;
+import demo.common.service.CommonService;
 import demo.finance.account_info.controller.AccountInfoController;
+import demo.finance.account_info.pojo.dto.controllerDTO.InsertNewTransationDTO;
 import demo.finance.account_info.pojo.po.AccountInfo;
-import demo.finance.trading.mapper.HolderCommonTransationCustomMapper;
 import demo.finance.trading.mapper.TradingRecorderMapper;
 import demo.finance.trading.mapper.TradingRecorderMarkerMapper;
-import demo.finance.trading.pojo.CommonTransationParties;
 import demo.finance.trading.pojo.po.TradingRecorder;
 import demo.finance.trading.pojo.po.TradingRecorderMarker;
 import demo.finance.trading.pojo.result.InsertTradingRecorderResult;
@@ -34,8 +30,6 @@ public class TradingInsertServiceImpl extends CommonService implements TradingIn
 	private TradingRecorderMapper tradingMapper;
 	@Autowired
 	private TradingRecorderMarkerMapper tradingMarkerMapper;
-	@Autowired
-	private HolderCommonTransationCustomMapper holderCommonTransationCustomMapper;
 	@Autowired
 	private FileUtilCustom ioUtil;
 
@@ -62,8 +56,8 @@ public class TradingInsertServiceImpl extends CommonService implements TradingIn
 	}
 
 	@Override
-	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
-	public InsertTradingRecorderResult insertTradingRecorder(InsertNewTransationParam p, Long accountId) {
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
+	public InsertTradingRecorderResult insertTradingRecorder(InsertNewTransationDTO p, Long accountId) {
 		InsertTradingRecorderResult result = new InsertTradingRecorderResult();
 		if (p == null || accountId == null) {
 			result.normalFail();
@@ -85,7 +79,7 @@ public class TradingInsertServiceImpl extends CommonService implements TradingIn
 	}
 
 	@Override
-	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	public long insertTradingRecorderFromFileLine(String strLineInput, AccountInfo accountInfo) {
 
 		TradingRecorder tradingRecorder = stringLineToTradingRecorder(strLineInput, accountInfo);
@@ -106,24 +100,9 @@ public class TradingInsertServiceImpl extends CommonService implements TradingIn
 		return tradingMapper.getTradingRecordById(tradingRecorderId);
 	}
 
-	@Override
-	public List<CommonTransationParties> getCurrentCommonTransation(Long holderId, Integer limit) {
-		if (limit == null) {
-			limit = 10;
-		}
-
-		List<CommonTransationParties> commonTransationList = holderCommonTransationCustomMapper
-				.getCurrentCommonTransation(holderId, limit);
-
-		if (commonTransationList == null) {
-			return new ArrayList<CommonTransationParties>();
-		} else {
-			return commonTransationList;
-		}
-	}
 
 	@Override
-	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	public String importTradingRecordFromFiles(String tradingRecordTxtPath) {
 		File mainFolder = new File(tradingRecordTxtPath);
 		if (!mainFolder.isDirectory()) {
@@ -215,7 +194,7 @@ public class TradingInsertServiceImpl extends CommonService implements TradingIn
 	 * return tradingRecorder; }
 	 */
 
-	private TradingRecorder buildTradingRecorderFrom(Long newTradingRecordId, InsertNewTransationParam p,
+	private TradingRecorder buildTradingRecorderFrom(Long newTradingRecordId, InsertNewTransationDTO p,
 			Long accountId) {
 
 		if (p.getTransationAmount() == null) {

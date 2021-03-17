@@ -17,7 +17,7 @@
 </body>
 
 <footer>
-<%@ include file="../baseElementJSP/normalFooter.jsp" %>
+<%@ include file="../baseElementJSP/normalJSPart.jsp" %>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 <script type="text/javascript" src="<c:url value="/static_resources/js/chart/chartCommon.js" />"></script>
 <script type="text/javascript">

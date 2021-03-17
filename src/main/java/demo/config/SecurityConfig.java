@@ -21,6 +21,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import demo.article.article.pojo.constant.ArticleAdminUrlConstant;
 import demo.article.articleComment.pojo.constant.ArticleAdminCommentUrlConstant;
 import demo.base.admin.pojo.constant.AdminUrlConstant;
+import demo.base.system.pojo.constant.BaseUrl;
 import demo.base.user.pojo.constant.AuthUrl;
 import demo.base.user.pojo.constant.LoginUrlConstant;
 import demo.base.user.pojo.constant.UserAuthUrl;
@@ -33,6 +34,8 @@ import demo.base.user.service.impl.CustomUserDetailsService;
 import demo.config.costom_component.CustomAuthenticationProvider;
 import demo.config.costom_component.CustomPasswordEncoder;
 import demo.config.costom_component.LimitLoginAuthenticationProvider;
+import demo.joy.common.pojo.constant.JoyManagerUrl;
+import demo.joy.common.pojo.constant.JoyUrl;
 import demo.pmemo.pojo.constant.PMemoUrl;
 import demo.test.pojo.constant.TestUrl;
 import demo.tool.fakeFTP.pojo.constant.FakeFTPUrlConstant;
@@ -81,6 +84,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             // used to allow anonymous access 
             // .antMatchers("/welcome**").access("IS_AUTHENTICATED_ANONYMOUSLY")
 //            .antMatchers(ArticleUrlConstant.root + "/**").access("hasAnyRole('" + RolesType.ROLE_ADMIN.getRoleName() + "','" + RolesType.ROLE_USER.getRoleName() + "')")
+            .antMatchers(BaseUrl.shutdown + "/**")
+            	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers(TestUrl.root + "/**")
         		.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers("/holder/**")
@@ -105,10 +110,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DEV))
             .antMatchers(AuthUrl.root + "/**")
             	.access(hasAnyRole(Arrays.asList(SystemRolesType.ROLE_SUPER_ADMIN), Arrays.asList(OrganzationRolesType.ROLE_ORG_SUPER_ADMIN)))
-            .antMatchers(PMemoUrl.root + PMemoUrl.set)
+            .antMatchers(PMemoUrl.ROOT + PMemoUrl.SET)
             	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers(WXUrl.root + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DEV))
+            	
+            // joy url start
+            
+            .antMatchers(JoyUrl.ROOT + "/**")
+            	.access(hasAnyRole(SystemRolesType.ROLE_USER_ACTIVE))
+            .antMatchers(JoyManagerUrl.ROOT + "/**")
+            	.access(hasAnyRole(SystemRolesType.ROLE_ADMIN, SystemRolesType.ROLE_SUPER_ADMIN))
+            // joy url end
+            	
             .and()
 				.formLogin().loginPage("/login/login").failureUrl("/login/login?error")
 				.loginProcessingUrl("/auth/login_check")

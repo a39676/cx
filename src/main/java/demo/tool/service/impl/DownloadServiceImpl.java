@@ -24,11 +24,11 @@ public class DownloadServiceImpl implements DownloadService {
 	private FileUtilCustom ioUtil;
 
 	@Override
-	public void downloadFile(HttpServletResponse response, String filePath) throws IOException {
+	public void downloadFileWithZip(HttpServletResponse response, String filePath) throws IOException {
 		File inputFile = new File(filePath);
 		
 		if(!inputFile.exists()) {
-			// TODO
+			// TODO 此方法可否使用 CommonRresult
 			return;
 		}
 		File outputZip = null;

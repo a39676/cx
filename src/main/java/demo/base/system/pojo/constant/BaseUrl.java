@@ -11,4 +11,6 @@ public class BaseUrl {
 	
 	public static final String base = "/base";
 	public static final String error403 = "/403";
+	
+	public static final String shutdown = "/shutdown";
 }

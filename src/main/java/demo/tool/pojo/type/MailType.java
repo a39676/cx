@@ -7,6 +7,7 @@ public enum MailType {
 	forgotPassword("forgotPassword", 2),
 	/** 忘记用户名 */
 	forgotUsername("forgotUsername", 3),
+	
 	;
 
 	private String name;

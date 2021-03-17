@@ -18,7 +18,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.pojo.constant.BaseUrl;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.user.pojo.constant.LoginUrlConstant;
-import demo.baseCommon.controller.CommonController;
+import demo.common.controller.CommonController;
 import net.sf.json.JSONObject;
 
 

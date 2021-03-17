@@ -6,6 +6,6 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface DownloadService {
 
-	void downloadFile(HttpServletResponse response, String filePath) throws IOException;
+	void downloadFileWithZip(HttpServletResponse response, String filePath) throws IOException;
 
 }

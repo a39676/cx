@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.owasp.html.PolicyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
@@ -44,8 +43,8 @@ import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.UserDetailService;
 import demo.base.user.service.UsersService;
-import demo.baseCommon.pojo.result.CommonResultCX;
-import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.common.pojo.result.CommonResultCX;
+import demo.common.pojo.type.ResultTypeCX;
 import demo.tool.service.ValidRegexToolService;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -74,7 +73,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	private FileUtilCustom ioUtil;
 	
 	private String loadArticleCommentStorePath() {
-		String path = constantService.getValByName(ArticleCommentConstant.commentStorePathRedisKey);
+		String path = constantService.getSysValByName(ArticleCommentConstant.commentStorePathRedisKey);
 		
 		if(StringUtils.isNotBlank(path)) {
 			return path;
@@ -92,7 +91,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	}
 	
 	private Long loadMaxArticleLength() {
-		String maxCommentLengthStr = constantService.getValByName(SystemConstantStore.maxArticleLength);
+		String maxCommentLengthStr = constantService.getSysValByName(SystemConstantStore.maxArticleLength);
 		Long maxCommentLength = null;
 		try {
 			maxCommentLength = Long.parseLong(maxCommentLengthStr);
@@ -130,13 +129,12 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		
 		boolean bigUserFlag = isBigUser();
 		Long userId = baseUtilCustom.getUserId();
-		PolicyFactory filter = textFilter.getArticleFilter();
 		
 		String nickname = null;
 		String email = null;
 		Long mobile = null;
 		if(userId == null) {
-			nickname = filter.sanitize(inputParam.getNickname());
+			nickname = sanitize(inputParam.getNickname());
 			email = inputParam.getEmail();
 			if(!validRegexToolService.validEmail(email)) {
 				result.failWithMessage("请输入正确的邮箱格式");
@@ -185,7 +183,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 				result.fillWithResult(ResultTypeCX.justComment);
 				return result;
 			}
-			inputParam.setContent(filter.sanitize(inputParam.getContent()));
+			inputParam.setContent(sanitize(inputParam.getContent()));
 		} 
 
 		ArticleFileSaveResult saveFileResult = saveArticleCommentFile(articleCommentStorePrefixPath, userId, inputParam.getContent());
@@ -357,7 +355,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	}
 
 	private boolean justComment(HttpServletRequest request, Long userId, Long articleId) {
-		if("dev".equals(constantService.getValByName("envName"))) {
+		if("dev".equals(constantService.getSysValByName("envName"))) {
 			return false;
 		}
 		

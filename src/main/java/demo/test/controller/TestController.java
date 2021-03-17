@@ -8,54 +8,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import demo.baseCommon.controller.CommonController;
+import demo.common.controller.CommonController;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.constant.TestViewConstants;
 import demo.test.service.TestService;
 import demo.toyParts.weka.pojo.result.WekaCommonResult;
 import demo.toyParts.weka.service.WekaCluster;
-import demo.toyParts.woqu.service.PtusersOriginalService;
-import demo.toyParts.woqu.service.WoquService;
 import io.swagger.annotations.ApiOperation;
 
 @Controller
 @RequestMapping(value = { TestUrl.root })
 public class TestController extends CommonController {
 	
-//	@Autowired
-//	private TestMapper testMapper;
-//	@Autowired
-//	private WeixinService weixinService;
+	@SuppressWarnings("unused")
 	@Autowired
 	private TestService testService;
 	@Autowired
 	private WekaCluster weka;
-	@Autowired
-	private WoquService woquService;
-	@Autowired
-	private PtusersOriginalService ptusersOriginalService;
 	
-	@ApiOperation(value="测试", notes="测试notes")
-	@GetMapping(value = { "/test" })
-	public ModelAndView jspTest(HttpServletRequest request) throws Exception {
-		ModelAndView view = new ModelAndView();
-		String v = testService.redisGet();
-		view.addObject("message", v);
-		view.addObject("title", "test title");
-		view.setViewName(TestViewConstants.test);
-		return view;
-	}
-
-	@GetMapping(value = { "/testWebSocket" })
-	public ModelAndView testWebSocket(HttpServletRequest request) throws Exception {
-		ModelAndView view = new ModelAndView();
-		view.setViewName("testJSP/testWebSocket");
-		return view;
-	}
-
 	@GetMapping(value = { "/testWeka1" })
 	public ModelAndView testWeka1(HttpServletRequest request) throws Exception {
 		ModelAndView view = new ModelAndView();
@@ -65,6 +37,7 @@ public class TestController extends CommonController {
 		return view;
 	}
 	
+	@ApiOperation(value="测试", notes="测试notes")
 	@GetMapping(value = { "/testException" })
 	public ModelAndView testException(HttpServletRequest request) {
 		log.debug("dateTime: {}", new Date());
@@ -74,25 +47,4 @@ public class TestController extends CommonController {
 		return v;
 	}
 	
-	@GetMapping(value = "/winsert")
-	public void winsert(@RequestParam("filePath")String filePath) {
-		woquService.initInsert(filePath);
-	}
-	
-	@GetMapping(value = "/pttest")
-	public void createPtusers() {
-		ptusersOriginalService.createVcf();
-	}
-	
-	@GetMapping(value = "/roleGetTest")
-	public void roleGetTest() { 
-		testService.roleGetTest();
-	}
-	
-	@GetMapping(value = "/redisHashTest")
-	public void redisHashTest() { 
-		testService.redisHashTest();
-	}
-	
-
 }

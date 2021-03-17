@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import demo.base.system.pojo.constant.BaseUrl;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.system.service.BasePageService;
-import demo.baseCommon.controller.CommonController;
+import demo.common.controller.CommonController;
 import demo.finance.account_info.pojo.constant.AccountUrl;
 
 @Controller
@@ -56,8 +56,4 @@ public class BasePageController extends CommonController {
 		return new ModelAndView(BaseViewConstant.normal404);
 	}
 	
-	@GetMapping(value = "/seek404")
-	public ModelAndView seek404() {
-		return new ModelAndView(BaseViewConstant.seekingJob404);
-	}
 }

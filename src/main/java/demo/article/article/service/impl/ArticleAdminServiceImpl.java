@@ -28,8 +28,8 @@ import demo.article.article.pojo.po.ArticleLong;
 import demo.article.article.pojo.po.ArticleLongSummary;
 import demo.article.article.pojo.type.ArticleReviewType;
 import demo.article.article.service.ArticleAdminService;
-import demo.baseCommon.pojo.result.CommonResultCX;
-import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.common.pojo.result.CommonResultCX;
+import demo.common.pojo.type.ResultTypeCX;
 
 @Service
 public class ArticleAdminServiceImpl extends ArticleCommonService implements ArticleAdminService {
@@ -112,7 +112,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		return result;
 	}
 	
-	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	private CommonResultCX passArticle(String privateKey) throws Exception {
 		CommonResultCX result = new CommonResultCX();
 		Long articleId = decryptPrivateKey(privateKey);
@@ -153,7 +153,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		return result;
 	}
 	
-	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	private CommonResultCX rejectArticle(String privateKey) throws Exception {
 		CommonResultCX result = new CommonResultCX();
 		
@@ -195,7 +195,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		return result;
 	}
 	
-	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	@Override
 	public CommonResultCX deleteArticle(String privateKey) throws Exception {
 		CommonResultCX result = new CommonResultCX();
@@ -238,7 +238,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	}
 	
 	@Override
-	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	public CommonResultCX changeChannel(ChangeChannelParam param) throws Exception {
 		CommonResultCX result = new CommonResultCX();
 		if(StringUtils.isBlank(param.getPk()) || param.getArticleId() != null) {

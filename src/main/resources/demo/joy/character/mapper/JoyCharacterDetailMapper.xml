@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.joy.character.mapper.JoyCharacterDetailMapper">
+  <resultMap id="BaseResultMap" type="demo.joy.character.pojo.po.JoyCharacterDetail">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="character_level" jdbcType="INTEGER" property="characterLevel" />
+    <result column="character_exp" jdbcType="INTEGER" property="characterExp" />
+    <result column="character_img_path" jdbcType="CHAR" property="characterImgPath" />
+    <result column="edit_time" jdbcType="TIMESTAMP" property="editTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, character_level, character_exp, character_img_path, edit_time, create_time, is_delete
+  </sql>
+  <select id="selectByExample" parameterType="demo.joy.character.pojo.po.JoyCharacterDetailExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from joy_character_detail
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from joy_character_detail
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from joy_character_detail
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.joy.character.pojo.po.JoyCharacterDetailExample">
+    delete from joy_character_detail
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="demo.joy.character.pojo.po.JoyCharacterDetail">
+    insert into joy_character_detail (id, character_level, character_exp, 
+      character_img_path, edit_time, create_time, 
+      is_delete)
+    values (#{id,jdbcType=BIGINT}, #{characterLevel,jdbcType=INTEGER}, #{characterExp,jdbcType=INTEGER}, 
+      #{characterImgPath,jdbcType=CHAR}, #{editTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{isDelete,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="demo.joy.character.pojo.po.JoyCharacterDetail">
+    insert into joy_character_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="characterLevel != null">
+        character_level,
+      </if>
+      <if test="characterExp != null">
+        character_exp,
+      </if>
+      <if test="characterImgPath != null">
+        character_img_path,
+      </if>
+      <if test="editTime != null">
+        edit_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="characterLevel != null">
+        #{characterLevel,jdbcType=INTEGER},
+      </if>
+      <if test="characterExp != null">
+        #{characterExp,jdbcType=INTEGER},
+      </if>
+      <if test="characterImgPath != null">
+        #{characterImgPath,jdbcType=CHAR},
+      </if>
+      <if test="editTime != null">
+        #{editTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="demo.joy.character.pojo.po.JoyCharacterDetailExample" resultType="java.lang.Long">
+    select count(*) from joy_character_detail
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update joy_character_detail
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.characterLevel != null">
+        character_level = #{record.characterLevel,jdbcType=INTEGER},
+      </if>
+      <if test="record.characterExp != null">
+        character_exp = #{record.characterExp,jdbcType=INTEGER},
+      </if>
+      <if test="record.characterImgPath != null">
+        character_img_path = #{record.characterImgPath,jdbcType=CHAR},
+      </if>
+      <if test="record.editTime != null">
+        edit_time = #{record.editTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isDelete != null">
+        is_delete = #{record.isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update joy_character_detail
+    set id = #{record.id,jdbcType=BIGINT},
+      character_level = #{record.characterLevel,jdbcType=INTEGER},
+      character_exp = #{record.characterExp,jdbcType=INTEGER},
+      character_img_path = #{record.characterImgPath,jdbcType=CHAR},
+      edit_time = #{record.editTime,jdbcType=TIMESTAMP},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      is_delete = #{record.isDelete,jdbcType=BIT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.joy.character.pojo.po.JoyCharacterDetail">
+    update joy_character_detail
+    <set>
+      <if test="characterLevel != null">
+        character_level = #{characterLevel,jdbcType=INTEGER},
+      </if>
+      <if test="characterExp != null">
+        character_exp = #{characterExp,jdbcType=INTEGER},
+      </if>
+      <if test="characterImgPath != null">
+        character_img_path = #{characterImgPath,jdbcType=CHAR},
+      </if>
+      <if test="editTime != null">
+        edit_time = #{editTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="demo.joy.character.pojo.po.JoyCharacterDetail">
+    update joy_character_detail
+    set character_level = #{characterLevel,jdbcType=INTEGER},
+      character_exp = #{characterExp,jdbcType=INTEGER},
+      character_img_path = #{characterImgPath,jdbcType=CHAR},
+      edit_time = #{editTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      is_delete = #{isDelete,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="demo.joy.character.pojo.po.JoyCharacterDetailExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from joy_character_detail
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

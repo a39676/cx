@@ -30,7 +30,7 @@ import demo.article.article.service.ArticleChannelService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.po.Hostname;
 import demo.base.system.service.HostnameService;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -187,7 +187,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	
 	@Override
 	public String loadChannelPrefix(Integer channelId) {
-		String mainFolderPath = constantService.getValByName(SystemConstantStore.articleChannelPrefixStorePath);
+		String mainFolderPath = constantService.getSysValByName(SystemConstantStore.articleChannelPrefixStorePath);
 		String strContent = "";
 		if (new File(mainFolderPath + channelId + ".txt").exists()) {
 			strContent = ioUtil.getStringFromFile(mainFolderPath + channelId + ".txt");
@@ -210,7 +210,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	}
 
 	private GetArticleChannelsBO removeChannelsForUnknow(GetArticleChannelsBO channelList) {
-		String envName = constantService.getValByName(SystemConstantStore.envName, true);
+		String envName = constantService.getSysValByName(SystemConstantStore.envName, true);
 		if ("dev".equals(envName)) {
 			return channelList;
 		}

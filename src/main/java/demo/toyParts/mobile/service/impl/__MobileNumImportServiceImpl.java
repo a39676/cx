@@ -11,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 import demo.toyParts.mobile.mapper.MobileNumMapper;
 import demo.toyParts.mobile.pojo.bo.MobileDataBO;
 import demo.toyParts.mobile.pojo.bo.MobileOperatorType;

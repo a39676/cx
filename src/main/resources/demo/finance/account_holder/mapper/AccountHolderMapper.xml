@@ -60,4 +60,65 @@
       </if>
     </trim>
   </insert>
+  
+  
+  <select id="findAccountHolderByID" parameterType="int" resultMap="BaseResultMap">
+    select * from account_holder where account_holder_id = #{id} 
+  </select>
+  
+  <select id="findAccountHolderByName" parameterType="String" resultMap="BaseResultMap" >
+    select * from account_holder where account_holder_name like concat('%', #{holderName}, '%')
+  </select>
+  
+  <insert id="addAccountHolder">
+    insert into account_holder 
+      
+      <trim prefix="(" suffix=")" suffixOverrides=",">
+      account_holder_name, 
+      gender,
+      user_id,
+      <if test="birth != null">
+      birth,
+      </if>
+      </trim>
+      
+    values 
+      (
+      #{accountHolderName}, 
+      #{gender},
+      #{userId}
+      <if test="birth != null">
+      , #{birth}
+      </if>
+      )
+  </insert>
+  
+  <delete id="deleteAccountHolderByID" parameterType="int">
+    delete from account_holder where account_holder_id = #{id}
+  </delete>
+  
+  <update id="updateHolder">
+    update account_holder 
+    set
+    account_holder_name = #{accountHolderName},
+    gender = #{gender},
+    birth = #{birth}
+    where
+    account_holder_id = #{accountHolderId} 
+  </update>
+
+  <select id="getCurrentHolders" resultMap="BaseResultMap">
+    select
+      holder.*
+        
+    from 
+      users 
+        
+      left join account_holder as holder
+        on users.user_id = holder.user_id
+    
+    where
+      users.user_name = #{userName}
+
+  </select>
 </mapper>

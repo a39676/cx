@@ -28,7 +28,7 @@ import demo.article.fakePost.service.FakePostService;
 import demo.base.user.pojo.po.Users;
 import demo.base.user.pojo.type.AuthType;
 import demo.base.user.service.UsersService;
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 
 @Service
 public class FakePostServiceImpl extends CommonService implements FakePostService {
@@ -102,7 +102,7 @@ public class FakePostServiceImpl extends CommonService implements FakePostServic
 	}
 
 	@Override
-	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	public void autoPass() throws Exception {
 		List<Users> userList = usersService.findUserListByAuthId(AuthType.DELAY_POSTER.getCode());
 		if(userList == null || userList.isEmpty()) {

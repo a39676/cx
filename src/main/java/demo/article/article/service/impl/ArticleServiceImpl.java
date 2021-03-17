@@ -26,7 +26,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.owasp.html.PolicyFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,14 +65,14 @@ import demo.article.article.service.ArticleViewService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.user.controller.UsersController;
-import demo.baseCommon.pojo.result.CommonResultCX;
-import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.common.pojo.result.CommonResultCX;
+import demo.common.pojo.type.ResultTypeCX;
+import demo.image.pojo.result.ImgHandleSrcDataResult;
 import demo.image.pojo.type.ImageTagType;
 import demo.image.service.ImageService;
 import demo.tool.service.ValidRegexToolService;
 import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.result.ImageSavingResult;
-import toolPack.constant.FileSuffixNameConstant;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -107,17 +106,17 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	private ValidRegexToolService validRegexToolService;
 	
 	private String getArticleStorePrefixPath() {
-		return constantService.getValByName(SystemConstantStore.articleStorePrefixPath);
+		return constantService.getSysValByName(SystemConstantStore.articleStorePrefixPath);
 	}
 	
 	private String getArticleSummaryStorePrefixPath() {
-		return constantService.getValByName(SystemConstantStore.articleSummaryStorePrefixPath);
+		return constantService.getSysValByName(SystemConstantStore.articleSummaryStorePrefixPath);
 	}
 
 	private Long loadMaxArticleLength() {
 		Long maxArticleLength = 0L;
 		try {
-			String maxLengthStr = constantService.getValByName(SystemConstantStore.maxArticleLength);
+			String maxLengthStr = constantService.getSysValByName(SystemConstantStore.maxArticleLength);
 			if(maxLengthStr != null) {
 				maxArticleLength = Long.parseLong(maxLengthStr);
 			}
@@ -144,10 +143,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		return view;
 	}
 	
-	private CommonResultCX createNewArticleLong(Long userId, CreateArticleParam controllerParam) throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
-		return editArticleLong(userId, controllerParam, null);
-	}
-	
 	/** 
 	 * 新建/编辑文章
 	 * if(编辑文章) {
@@ -159,7 +154,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	 * @throws IOException 
 	 *  
 	 * */
-	private CommonResultCX editArticleLong(Long editorId, CreateArticleParam controllerParam, Long editedArticleId) throws IOException {
+	private CommonResultCX editOrCreateArticleLong(Long editorId, CreateArticleParam controllerParam, Long editedArticleId) throws IOException {
 		CommonResultCX result = new CommonResultCX();
 		boolean editFlag = (editedArticleId != null && editorId != null);
 		
@@ -282,7 +277,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			cp.setQuickPass(false);
 		}
 		
-		serviceResult = createNewArticleLong(userId, cp);
+		serviceResult = editOrCreateArticleLong(userId, cp, null);
 		return serviceResult;
 	}
 	
@@ -316,9 +311,9 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		}
 
 		Element doc = Jsoup.parse(content);
-        Elements pngs = doc.select("img[src]");
+        Elements imgs = doc.select("img[src]");
         /* 解决如果文章内有本地上传的图片, 转到服务器硬盘保存, 并提供 url 访问, */
-        for(Element s : pngs) {
+        for(Element s : imgs) {
         	s.attr("src", imgSrcHandler(s.attr("src")));
         }
         
@@ -348,7 +343,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		return result;
 	}
 	
-	private String imgSrcHandler(String src) {
+	@Override
+	public String imgSrcHandler(String src) {
 		if(src == null) {
 			return src;
 		} else if(src.startsWith("http")) {
@@ -360,35 +356,27 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 	
 	private String imgBase64ToImageStore(String src) {
-		int slashIndex = src.indexOf("/");
-		int semicolonIndex = src.indexOf(";");
-		int commaIndex = src.indexOf(",");
-		
-		if(semicolonIndex < 0 || slashIndex < 0 || commaIndex < 0) {
-			return "";
-		}
-		String fileType = src.substring(slashIndex + 1, semicolonIndex);
-		if(!FileSuffixNameConstant.imageSuffix.contains(fileType)) {
+		ImgHandleSrcDataResult srcHandleResult = imgService.imgHandleSrcData(src);
+		if(srcHandleResult.isFail()) {
 			return "";
 		}
 		
-		String filename = String.valueOf(snowFlake.getNextId()) + "." + fileType;
+		String filename = String.valueOf(snowFlake.getNextId()) + "." + srcHandleResult.getImgFileType();
 		String dateStr = localDateTimeHandler.dateToStr(LocalDateTime.now(), "yyyyMM");
 		
-		
-		BufferedImage image = imgService.base64ToImg(src.split(",")[1]);
-		if(image == null) {
+		BufferedImage bufferedImage = imgService.base64ToBufferedImg(srcHandleResult.getBase64Str());
+		if(bufferedImage == null) {
 			return "";
 		}
 		
 		String saveingFolderPath = null;
 		if(isLinux()) {
-			saveingFolderPath = ArticleConstant.articleImgSavingFolder + "/" + dateStr;
+			saveingFolderPath = ArticleConstant.ARTICLE_IMG_SAVING_FOLDER + "/" + dateStr;
 		} else if(isWindows()) {
-			saveingFolderPath = "d:/" + ArticleConstant.articleImgSavingFolder + "/" + dateStr;
+			saveingFolderPath = "d:/" + ArticleConstant.ARTICLE_IMG_SAVING_FOLDER + "/" + dateStr;
 		}
 		String imgSavingPath = saveingFolderPath + "/" + filename;
-		boolean saveFlag = imgService.imgSaveAsFile(image, imgSavingPath, fileType);
+		boolean saveFlag = imgService.imgSaveAsFile(bufferedImage, imgSavingPath, srcHandleResult.getImgFileType());
 		if(!saveFlag) {
 			return "";
 		}
@@ -588,8 +576,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			result.fillWithResult(ResultTypeCX.nullParam);
 			return result;
 		}
-		PolicyFactory filter = textFilter.getArticleFilter();
-		String feedback = filter.sanitize(dto.getFeedback());
+		String feedback = sanitize(dto.getFeedback());
 		
 		if(StringUtils.isBlank(feedback)) {
 			result.failWithMessage("期待您填写反馈内容");
@@ -722,7 +709,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			param.setQuickPass(true);
 		}
 		
-		result = editArticleLong(userId, param, targetArticleId); 
+		result = editOrCreateArticleLong(userId, param, targetArticleId); 
 		
 		return result;
 	}
@@ -751,9 +738,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		if(isBigUser()) {
 			title = controllerParam.getTitle();
 		} else {
-			PolicyFactory filter = textFilter.getArticleFilter();
-			title = filter.sanitize(controllerParam.getTitle());
-			controllerParam.setContent(filter.sanitize(controllerParam.getContent()));
+			title = sanitize(controllerParam.getTitle());
+			controllerParam.setContent(sanitize(controllerParam.getContent()));
 		}
 		
 		if(StringUtils.isBlank(title)) {

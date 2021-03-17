@@ -34,6 +34,6 @@
    
 </body>
 <footer>
-<%@ include file="../../../baseElementJSP/normalFooter.jsp" %>
+<%@ include file="../../../baseElementJSP/normalJSPart.jsp" %>
 </footer>
 </html>

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import demo.baseCommon.controller.CommonController;
+import demo.common.controller.CommonController;
 import demo.finance.bank.pojo.constant.BankUnionUrl;
 import demo.finance.bank.pojo.param.controllerParam.FindBankUnionParam;
 import demo.finance.bank.pojo.po.BankUnion;

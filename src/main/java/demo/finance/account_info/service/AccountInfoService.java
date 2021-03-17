@@ -5,13 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.baseCommon.pojo.param.controllerParam.InsertNewTransationParam;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 import demo.finance.account_info.pojo.bo.AccountInfoWithBankInfo;
+import demo.finance.account_info.pojo.dto.ModifyValidDateDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.AccountInfoRegistDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.AccountNumberDuplicateCheckDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.FindAccountInfoByConditionDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.GetAccountListByConditionParam;
+import demo.finance.account_info.pojo.dto.controllerDTO.InsertNewTransationDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.ModifyCreditsQuotaDTO;
 import demo.finance.account_info.pojo.po.AccountInfo;
 import demo.finance.account_info.pojo.result.AccountRegistResult;
@@ -24,13 +25,11 @@ public interface AccountInfoService {
 	
 	AccountRegistResult accountRegistration(AccountInfoRegistDTO dto);
 
-	AccountInfo getAccountInfoById(int id);
-	
 	CommonResult accountNumberDuplicateCheck(AccountNumberDuplicateCheckDTO dto);
 	
 	String getMainAccountNum(int id);
 
-	InsertTransationResult insertTradingRecorderSelective(InsertNewTransationParam param) throws Exception;
+	InsertTransationResult insertTradingRecorderSelective(InsertNewTransationDTO param) throws Exception;
 
 	int updateAccountMarker(String accountNumber);
 
@@ -41,8 +40,6 @@ public interface AccountInfoService {
 	List<AccountInfoWithBankInfo> getAccountInfoWithBankInfoByHolderId(Long holderId);
 
 	List<AccountInfoWithBankInfo> getAccountInfoWithBankInfoByCondition(Long holderId, GetAccountListByConditionParam controllerParam);
-
-	int modifyAccountInfoVaildDate(String vaildDateString, String accountNumber, boolean isAdmin);
 
 	List<AccountInfo> getAllAffiliatedAccountByAffiliationId(String accountNumber);
 
@@ -83,12 +80,12 @@ public interface AccountInfoService {
 
 	GetAccountNumberAndAliasListResult findCurrentAccountNumberListByCondition(FindAccountInfoByConditionDTO dto);
 
-	List<AccountInfo> findByCondition(FindAccountInfoByConditionDTO dto);
-
 	List<AccountInfo> findCurrentAccountInfoListByCondition(FindAccountInfoByConditionDTO dto);
 
 	List<AccountInfo> findAccountsByCondition(FindAccountInfoByConditionDTO dto);
 
 	CommonResultCX modifyCreditsQuota(ModifyCreditsQuotaDTO dto);
+
+	CommonResult modifyAccountInfoVaildDate(ModifyValidDateDTO dto) throws Exception;
 
 }

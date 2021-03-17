@@ -2,7 +2,7 @@ package demo.tool.service.impl;
 
 import org.springframework.stereotype.Service;
 
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 import demo.tool.service.ValidRegexToolService;
 
 @Service

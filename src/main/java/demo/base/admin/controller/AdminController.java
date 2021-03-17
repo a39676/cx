@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import demo.article.fakePost.service.FakePostService;
 import demo.base.admin.pojo.constant.AdminUrlConstant;
 import demo.base.admin.pojo.constant.AdminView;
+import demo.base.admin.pojo.dto.LoadHomepageAnnouncementStrDTO;
 import demo.base.admin.pojo.dto.RefreshSystemConstantDTO;
 import demo.base.admin.pojo.dto.SetSystemConstantDTO;
 import demo.base.admin.service.AdminService;
@@ -29,8 +30,8 @@ import demo.base.user.pojo.constant.UserManagerView;
 import demo.base.user.pojo.dto.UserIpDeleteDTO;
 import demo.base.user.pojo.po.Users;
 import demo.base.user.service.UsersService;
-import demo.baseCommon.controller.CommonController;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.controller.CommonController;
+import demo.common.pojo.result.CommonResultCX;
 import demo.finance.account_info.controller.AccountInfoController;
 import net.sf.json.JSONObject;
 
@@ -104,9 +105,8 @@ public class AdminController extends CommonController {
 		return new ModelAndView(AdminView.manager);
 	}
 
-	@GetMapping(value = AdminUrlConstant.updateAccountMarker, produces = "text/html;charset=UTF-8")
+	@GetMapping(value = AdminUrlConstant.updateAccountMarker)
 	public ModelAndView updateAccountMarker() {
-
 		return new ModelAndView(AdminView.updateAccountMarker);
 
 	}
@@ -153,7 +153,7 @@ public class AdminController extends CommonController {
 	@PostMapping(value = AdminUrlConstant.refreshSystemConstant)
 	@ResponseBody
 	public String refreshSystemConstant(@RequestBody RefreshSystemConstantDTO dto) {
-		String result = systemConstantService.getValByName(dto.getKey(), true);
+		String result = systemConstantService.getSysValByName(dto.getKey(), true);
 		return result;
 	}
 	
@@ -164,16 +164,15 @@ public class AdminController extends CommonController {
 	}
 	
 	@PostMapping(value = AdminUrlConstant.loadHomepageAnnouncementStr)
-	public void loadHomepageAnnouncementStr(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) {
-		JSONObject jsonInput = getJson(data);
-		String strContent = jsonInput.getString("homepageAnnouncementStr");
+	public void loadHomepageAnnouncementStr(@RequestBody LoadHomepageAnnouncementStrDTO dto, HttpServletRequest request, HttpServletResponse response) {
+		String strContent = dto.getHomepageAnnouncementStr();
 		if(StringUtils.isBlank(strContent) || "null".equals(strContent)) {
 			adminService.loadHomepageAnnouncementStr();
 		} else {
 			adminService.loadHomepageAnnouncementStr(strContent);
 		}
 		JSONObject jsonOutput = new JSONObject();
-		jsonOutput.put("homepageAnnouncementStr", systemConstantService.getValByName(SystemConstantStore.homepageAnnouncementStr));
+		jsonOutput.put("homepageAnnouncementStr", systemConstantService.getSysValByName(SystemConstantStore.homepageAnnouncementStr));
 		outputJson(response, jsonOutput);
 	}
 	

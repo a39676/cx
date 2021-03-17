@@ -39,9 +39,9 @@ import demo.article.article.service.ArticleChannelService;
 import demo.article.article.service.ArticleEvaluationService;
 import demo.article.article.service.ArticleService;
 import demo.article.article.service.ArticleSummaryService;
-import demo.baseCommon.controller.CommonController;
-import demo.baseCommon.pojo.result.CommonResultCX;
-import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.common.controller.CommonController;
+import demo.common.pojo.result.CommonResultCX;
+import demo.common.pojo.type.ResultTypeCX;
 import net.sf.json.JSONObject;
 
 @Controller
@@ -86,7 +86,7 @@ public class ArticleController extends CommonController {
 	
 	@PostMapping(value = ArticleUrlConstant.articleLongSummaryListByChannel)
 	@ResponseBody
-	public FindArticleLongSummaryListResultV3 articleLongSummaryListByChannel(@RequestBody FindArticleLongSummaryListDTO param, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public FindArticleLongSummaryListResultV3 articleLongSummaryListByChannel(@RequestBody FindArticleLongSummaryListDTO param, HttpServletRequest request) {
 		return summaryService.summaryListByChannelIdV4(param, request);
 	}
 	

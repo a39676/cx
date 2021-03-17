@@ -25,9 +25,9 @@ import org.springframework.stereotype.Service;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.user.pojo.constant.UsersUrl;
-import demo.baseCommon.pojo.result.CommonResultCX;
-import demo.baseCommon.pojo.type.ResultTypeCX;
-import demo.baseCommon.service.CommonService;
+import demo.common.pojo.result.CommonResultCX;
+import demo.common.pojo.type.ResultTypeCX;
+import demo.common.service.CommonService;
 import demo.tool.mapper.MailRecordMapper;
 import demo.tool.pojo.dto.ResendMailDTO;
 import demo.tool.pojo.dto.SendForgotUsernameMailDTO;
@@ -52,19 +52,22 @@ public class MailServiceImpl extends CommonService implements MailService {
 	
 	
 	private boolean isMailReady() {
-		if(redisTemplate.hasKey(SystemConstantStore.adminMailName) && redisTemplate.hasKey(SystemConstantStore.adminMailPwd)) {
-			return true;
-		} else {
-			constantService.getValsByName(Arrays.asList(SystemConstantStore.adminMailName, SystemConstantStore.adminMailPwd));
-			if(redisTemplate.hasKey(SystemConstantStore.adminMailName) && redisTemplate.hasKey(SystemConstantStore.adminMailPwd)) {
-				return true;
-			} else {
-				return false;
-			}
+		String adminMailName = constantService.getSysValByName(SystemConstantStore.adminMailName);
+		String adminMailPwd = constantService.getSysValByName(SystemConstantStore.adminMailPwd);
+		
+		if(adminMailName == null) {
+			constantService.getSysValByName(SystemConstantStore.adminMailName, true);
 		}
+		
+		if(adminMailPwd == null) {
+			constantService.getSysValByName(SystemConstantStore.adminMailPwd, true);
+		}
+
+		return (adminMailName != null && adminMailPwd != null);
+		
 	}
 	
-	
+	@Override
 	public CommonResult sendSimpleMail(String sendTo, String title, String content, String mailKey, MailType mailType) {
 		CommonResult result = new CommonResult();
 		if(mailType == null || mailType.getCode() == null) {
@@ -80,11 +83,11 @@ public class MailServiceImpl extends CommonService implements MailService {
 
 		SendEmail sm = new SendEmail();
 		sm.sendMail(
-				constantService.getValByName(SystemConstantStore.adminMailName), 
-				constantService.getValByName(SystemConstantStore.adminMailPwd), 
+				constantService.getSysValByName(SystemConstantStore.adminMailName), 
+				constantService.getSysValByName(SystemConstantStore.adminMailPwd), 
 				Arrays.asList(sendTo),
 				null,
-				Arrays.asList(constantService.getValByName(SystemConstantStore.adminMailName)),
+				Arrays.asList(constantService.getSysValByName(SystemConstantStore.adminMailName)),
 				title, 
 				content, 
 				null,
@@ -104,11 +107,11 @@ public class MailServiceImpl extends CommonService implements MailService {
 		}
 		SendEmail sm = new SendEmail();
 		sm.sendMail(
-				constantService.getValByName(SystemConstantStore.adminMailName), 
-				constantService.getValByName(SystemConstantStore.adminMailPwd), 
+				constantService.getSysValByName(SystemConstantStore.adminMailName), 
+				constantService.getSysValByName(SystemConstantStore.adminMailPwd), 
 				Arrays.asList(sendTo),
 				null,
-				Arrays.asList(constantService.getValByName(SystemConstantStore.adminMailName)),
+				Arrays.asList(constantService.getSysValByName(SystemConstantStore.adminMailName)),
 				title, 
 				content, 
 				attachmentPathList,
@@ -124,11 +127,11 @@ public class MailServiceImpl extends CommonService implements MailService {
 		}
 		SendEmail sm = new SendEmail();
 		sm.sendMail(
-				constantService.getValByName(SystemConstantStore.adminMailName), 
-				constantService.getValByName(SystemConstantStore.adminMailPwd), 
+				constantService.getSysValByName(SystemConstantStore.adminMailName), 
+				constantService.getSysValByName(SystemConstantStore.adminMailPwd), 
 				Arrays.asList(sendTo),
 				null,
-				Arrays.asList(constantService.getValByName(SystemConstantStore.adminMailName)),
+				Arrays.asList(constantService.getSysValByName(SystemConstantStore.adminMailName)),
 				title, 
 				content, 
 				Arrays.asList(attachmentPath),
@@ -299,8 +302,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 		try {
 			mailKey = URLEncoder.encode(encryptId(mailId), StandardCharsets.UTF_8.toString());
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(mailId + ", trans mail key error");
 		} 
 		String mailUrl = dto.getHostName() + UsersUrl.root + UsersUrl.resetPassword + "?mailKey=" + mailKey;
 		return (CommonResultCX) sendSimpleMail(dto.getSendTo(), ("重置您在" + dto.getHostName() + "的密码"), createForgotPasswordMailContent(mailUrl), mailKey, MailType.forgotPassword);
@@ -314,8 +316,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 		try {
 			mailKey = URLEncoder.encode(encryptId(oldMail.getId()), StandardCharsets.UTF_8.toString());
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(oldMail.getId() + ", trans mail key error");
 		}
 		String mailUrl = dto.getHostName() + UsersUrl.root + UsersUrl.resetPassword + "?mailKey=" + mailKey;
 		return (CommonResultCX) sendSimpleMail(dto.getSendTo(), ("重置您在" + dto.getHostName() + "的密码"), createForgotPasswordMailContent(mailUrl), mailKey, MailType.forgotPassword);
@@ -367,9 +368,9 @@ public class MailServiceImpl extends CommonService implements MailService {
 		Properties properties = mailToolService.buildSinaSmtpSslProperties();
 		SendEmail sm = new SendEmail();
 		sm.sendMail(
-				constantService.getValByName(SystemConstantStore.adminMailName), 
-				constantService.getValByName(SystemConstantStore.adminMailPwd), 
-				Arrays.asList(constantService.getValByName(SystemConstantStore.adminMailName)),
+				constantService.getSysValByName(SystemConstantStore.adminMailName), 
+				constantService.getSysValByName(SystemConstantStore.adminMailPwd), 
+				Arrays.asList(constantService.getSysValByName(SystemConstantStore.adminMailName)),
 				null,
 				null,
 				("error : " + LocalDateTime.now().toString()), 
@@ -391,8 +392,8 @@ public class MailServiceImpl extends CommonService implements MailService {
 		Properties imapProperties = mailToolService.buildSinaImapSslProperties();
 		Properties smtpProperties = mailToolService.buildSinaSmtpSslProperties();
 		Store store = mailHandle.getMailStore(
-				constantService.getValByName(SystemConstantStore.adminMailName), 
-				constantService.getValByName(SystemConstantStore.adminMailPwd), 
+				constantService.getSysValByName(SystemConstantStore.adminMailName), 
+				constantService.getSysValByName(SystemConstantStore.adminMailPwd), 
 				smtpProperties, 
 				imapProperties
 				);

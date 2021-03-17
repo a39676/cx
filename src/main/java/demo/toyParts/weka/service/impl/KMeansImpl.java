@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import org.springframework.stereotype.Service;
 
-import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.common.pojo.type.ResultTypeCX;
 import demo.toyParts.weka.pojo.result.WekaCommonResult;
 import demo.toyParts.weka.service.KMeans;
 import weka.clusterers.SimpleKMeans;

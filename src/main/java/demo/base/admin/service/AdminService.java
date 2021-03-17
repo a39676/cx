@@ -2,7 +2,7 @@ package demo.base.admin.service;
 
 import demo.base.admin.pojo.dto.SetSystemConstantDTO;
 import demo.base.user.pojo.dto.UserIpDeleteDTO;
-import demo.baseCommon.pojo.result.CommonResultCX;
+import demo.common.pojo.result.CommonResultCX;
 
 public interface AdminService {
 

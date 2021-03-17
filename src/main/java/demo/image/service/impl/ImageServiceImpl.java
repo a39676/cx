@@ -27,7 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 import demo.image.mapper.ImageStoreMapper;
 import demo.image.mapper.ImageTagMapper;
 import demo.image.pojo.constant.ImageConstant;
@@ -36,10 +36,12 @@ import demo.image.pojo.po.ImageStore;
 import demo.image.pojo.po.ImageStoreExample;
 import demo.image.pojo.po.ImageTag;
 import demo.image.pojo.po.ImageTagExample;
+import demo.image.pojo.result.ImgHandleSrcDataResult;
 import demo.image.pojo.type.ImageTagType;
 import demo.image.service.ImageService;
 import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.result.ImageSavingResult;
+import toolPack.constant.FileSuffixNameConstant;
 
 @Service
 public class ImageServiceImpl extends CommonService implements ImageService {
@@ -67,6 +69,22 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 		
 		try {
 			File f = new File(imgPO.getImageUrl());
+			InputStream in = new FileInputStream(f);
+			response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+			IOUtils.copy(in, response.getOutputStream());
+		} catch (Exception e) {
+			return;
+		}
+	}
+	
+	@Override
+	public void getImageByPath(HttpServletResponse response, String path) {
+		if(StringUtils.isBlank(path)) {
+			return;
+		}
+		
+		try {
+			File f = new File(path);
 			InputStream in = new FileInputStream(f);
 			response.setContentType(MediaType.IMAGE_JPEG_VALUE);
 			IOUtils.copy(in, response.getOutputStream());
@@ -225,7 +243,7 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 	}
 
 	@Override
-	public BufferedImage base64ToImg(String base64) {
+	public BufferedImage base64ToBufferedImg(String base64) {
 		if(base64 == null || base64.length() > ImageConstant.imgBase64MaxSize) {
 			return null;
 		}
@@ -266,5 +284,26 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 		} catch (IOException e) {
 			return false;
 		}
+	}
+	
+	@Override
+	public ImgHandleSrcDataResult imgHandleSrcData(String src) {
+		ImgHandleSrcDataResult r = new ImgHandleSrcDataResult();
+		int slashIndex = src.indexOf("/");
+		int semicolonIndex = src.indexOf(";");
+		int commaIndex = src.indexOf(",");
+		
+		if(semicolonIndex < 0 || slashIndex < 0 || commaIndex < 0) {
+			return r;
+		}
+		String fileType = src.substring(slashIndex + 1, semicolonIndex);
+		if(!FileSuffixNameConstant.IMAGE_SUFFIX.contains(fileType)) {
+			return r;
+		}
+		
+		r.setImgFileType(fileType);
+		r.setBase64Str(src.split(",")[1]);
+		r.setIsSuccess();
+		return r;
 	}
 }

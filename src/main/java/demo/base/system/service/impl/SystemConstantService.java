@@ -12,13 +12,14 @@ import org.springframework.stereotype.Service;
 
 import demo.base.system.mapper.SystemConstantMapper;
 import demo.base.system.pojo.bo.SystemConstant;
-import demo.baseCommon.service.CommonService;
+import demo.common.service.CommonService;
 
 @Service
 public class SystemConstantService extends CommonService {
 
 	@Autowired
 	private SystemConstantMapper systemConstantMapper;
+	
 	
 	public String getValByName(String constantName) {
 		if(StringUtils.isBlank(constantName)) {
@@ -27,6 +28,16 @@ public class SystemConstantService extends CommonService {
 		
 		if(redisTemplate.hasKey(constantName)) {
 			return String.valueOf(redisTemplate.opsForValue().get(constantName));
+		} else {
+			return "";
+		}
+	}
+	
+	public String getSysValByName(String constantName) {
+		String val = getValByName(constantName);
+		
+		if(!val.equals("")) {
+			return val;
 		} else {
 			SystemConstant tmpConstant = systemConstantMapper.getValByName(constantName);
 			if(tmpConstant == null || StringUtils.isBlank(tmpConstant.getConstantValue())) {
@@ -37,31 +48,30 @@ public class SystemConstantService extends CommonService {
 		}
 	}
 	
-	public String getValByName(String constantName, boolean refreshFlag) {
+	public String getSysValByName(String constantName, boolean refreshFlag) {
 		if(refreshFlag) {
 			redisTemplate.delete(constantName);
 		}
-		return getValByName(constantName);
+		return getSysValByName(constantName);
 	}
 	
-	public HashMap<String, String> getValsByName(List<String> constantNames, boolean refreshFlag) {
+	public HashMap<String, String> getSysValsByName(List<String> constantNames, boolean refreshFlag) {
 		if(refreshFlag) {
 			redisTemplate.delete(constantNames);
-			return getValsByName(constantNames);
+			return getSysValsByName(constantNames);
 		} else {
 			List<String> realConstantNames = constantNames.stream().filter(name -> !redisTemplate.hasKey(name)).collect(Collectors.toList());
-			return getValsByName(realConstantNames);
+			return getSysValsByName(realConstantNames);
 		}
 		
 	}
 
-	public HashMap<String, String> getValsByName(List<String> constantNames) {
+	public HashMap<String, String> getSysValsByName(List<String> constantNames) {
 		if(constantNames == null || constantNames.isEmpty()) {
 			return new HashMap<String, String>();
 		}
 		List<SystemConstant> queryResult = systemConstantMapper.getValsByName(constantNames);
 
-		
 		HashMap<String, String> result = new HashMap<String, String>();
 		
 		if(queryResult != null && queryResult.size() > 0) {
@@ -82,6 +92,10 @@ public class SystemConstantService extends CommonService {
 		redisTemplate.opsForValue().set(cosntantName, constantValue, validTime, timeUnit);
 	}
 	
+	public void setValByName(String cosntantName, String constantValue, int validTime, TimeUnit timeUnit) {
+		redisTemplate.opsForValue().set(cosntantName, constantValue, validTime, timeUnit);
+	}
+	
 	public void setValByName(SystemConstant systemConstant) {
 		redisTemplate.opsForValue().set(systemConstant.getConstantName(), systemConstant.getConstantValue());
 	}
@@ -89,6 +103,10 @@ public class SystemConstantService extends CommonService {
 	public void setValsByName(List<SystemConstant> systemConstants) {
 		Map<String, String> values = systemConstants.stream().collect(Collectors.toMap(SystemConstant::getConstantName, SystemConstant::getConstantValue));
 		redisTemplate.opsForValue().multiSet(values);
+	}
+	
+	public void deleteValByName(String constantName) {
+		redisTemplate.delete(constantName);
 	}
 	
 	public Boolean hasKey(String key) {

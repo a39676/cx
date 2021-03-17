@@ -41,7 +41,7 @@ import demo.article.articleComment.controller.ArticleCommentAdminController;
 import demo.article.articleComment.controller.ArticleCommentController;
 import demo.article.articleComment.pojo.po.ArticleCommentCount;
 import demo.base.system.pojo.bo.SystemConstantStore;
-import demo.baseCommon.pojo.type.ResultTypeCX;
+import demo.common.pojo.type.ResultTypeCX;
 import demo.toyParts.vcode.pojo.param.GetVcodeByValueParam;
 import demo.toyParts.vcode.pojo.po.VCode;
 import demo.toyParts.vcode.service.VCodeService;
@@ -136,8 +136,8 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		if(cp.getLimit() != null ) {
 			mp.setLimit(mp.getLimit());
 		}
-		if(mp.getLimit() == null || mp.getLimit() > ArticleConstant.maxPageSize) {
-			mp.setLimit(ArticleConstant.defaultPageSize);
+		if(mp.getLimit() == null || mp.getLimit() > ArticleConstant.MAX_PAGE_SIZE) {
+			mp.setLimit(ArticleConstant.DEFAULT_PAGE_SIZE);
 		}
 		if(cp.getDesc() != null && !cp.getDesc()) {
 			mp.setDesc(false);
@@ -278,8 +278,8 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			return new ArrayList<ArticleLongSummaryBO>();
 		}
 
-		if (dto.getLimit() != null && dto.getLimit() > ArticleConstant.maxPageSize) {
-			dto.setLimit(ArticleConstant.defaultPageSize);
+		if (dto.getLimit() != null && dto.getLimit() > ArticleConstant.MAX_PAGE_SIZE) {
+			dto.setLimit(ArticleConstant.DEFAULT_PAGE_SIZE);
 		}
 		Long userId = dto.getUserId();
 		dto.setUserId(null);
@@ -306,7 +306,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		/* 置限制只可浏览某时点之后的文章 */
 		boolean isBigUser = isBigUser();
 		if(!isBigUser) {
-			String normalUserMaxReadingMonth = constantService.getValByName(SystemConstantStore.normalUserMaxReadingMonth);
+			String normalUserMaxReadingMonth = constantService.getSysValByName(SystemConstantStore.normalUserMaxReadingMonth);
 			int maxReadingMonth = 1;
 			if(numberUtil.matchInteger(normalUserMaxReadingMonth)) {
 				maxReadingMonth = Integer.parseInt(normalUserMaxReadingMonth);

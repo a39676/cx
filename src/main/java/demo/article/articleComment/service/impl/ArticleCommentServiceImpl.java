@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import demo.article.article.pojo.constant.ArticleConstant;
 import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.article.pojo.type.ArticleEvaluationType;
 import demo.article.article.pojo.vo.ArticleEvaluationStatisticsVO;
@@ -38,7 +39,6 @@ import demo.article.articleComment.pojo.result.FindArticleCommentPageResult;
 import demo.article.articleComment.pojo.vo.ArticleCommentVO;
 import demo.article.articleComment.service.ArticleCommentAdminService;
 import demo.article.articleComment.service.ArticleCommentService;
-import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.UserDetailService;
@@ -91,7 +91,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	}
 	
 	private Long loadMaxArticleLength() {
-		String maxCommentLengthStr = constantService.getSysValByName(SystemConstantStore.maxArticleLength);
+		String maxCommentLengthStr = constantService.getSysValByName(ArticleConstant.MAX_ARTICLE_LENGTH);
 		Long maxCommentLength = null;
 		try {
 			maxCommentLength = Long.parseLong(maxCommentLengthStr);

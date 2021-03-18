@@ -36,16 +36,16 @@ public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implem
 		
 		LocalDateTime startDateTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getStartDateTimeStr());
 		CryptoCoinPriceCommonDataBO data1Start = dailyDataService.getCommonData(coinType1, currencyType, startDateTime);
-		CryptoCoinPriceCommonDataBO data2Start = dailyDataService.getCommonData(coinType1, currencyType, startDateTime);
+		CryptoCoinPriceCommonDataBO data2Start = dailyDataService.getCommonData(coinType2, currencyType, startDateTime);
 		
 		if(data1Start == null || data2Start == null) {
 			r.failWithMessage("one compare data error");
 			return r;
 		}
 		
-		LocalDateTime now = LocalDateTime.now();
-		List<CryptoCoinPriceCommonDataBO> data1List = dailyDataService.getCommonDataListFillWithCache(coinType1, currencyType, now);
-		List<CryptoCoinPriceCommonDataBO> data2List = dailyDataService.getCommonDataListFillWithCache(coinType2, currencyType, now);
+		LocalDateTime today = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+		List<CryptoCoinPriceCommonDataBO> data1List = dailyDataService.getCommonDataListFillWithCache(coinType1, currencyType, today);
+		List<CryptoCoinPriceCommonDataBO> data2List = dailyDataService.getCommonDataListFillWithCache(coinType2, currencyType, today);
 		
 		if(data1List.isEmpty() || data2List.isEmpty()) {
 			r.failWithMessage("one compare data list error");
@@ -55,8 +55,8 @@ public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implem
 		CryptoCoinPriceCommonDataBO data1End = data1List.get(0);
 		CryptoCoinPriceCommonDataBO data2End = data2List.get(0);
 		
-		BigDecimal data1Rate = data1End.getEndPrice().divide(data1Start.getStartPrice());
-		BigDecimal data2Rate = data2End.getEndPrice().divide(data2Start.getStartPrice());
+		BigDecimal data1Rate = new BigDecimal(data1End.getEndPrice().doubleValue() / data1Start.getStartPrice().doubleValue());
+		BigDecimal data2Rate = new BigDecimal(data2End.getEndPrice().doubleValue() / data2Start.getStartPrice().doubleValue());
 		
 		r.setDifferentRate(data1Rate.subtract(data2Rate));
 		r.setIsSuccess();
@@ -112,8 +112,14 @@ public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implem
 		CommonResult r = new CommonResult();
 		TimeUnitType timeUnitType = TimeUnitType.getType(dto.getTimeUnit());
 		if (timeUnitType == null) {
-			r.failWithMessage("time unit error");
-			return r;
+			if(StringUtils.isBlank(dto.getStartDateTimeStr())) {
+				r.failWithMessage("time setting error");
+			}
+		} else {
+			if (dto.getTimeRange() == null || dto.getTimeRange() < 1) {
+				r.failWithMessage("time range error");
+				return r;
+			}
 		}
 		
 		CurrencyType currencyType = CurrencyType.getType(dto.getCurrencyType());
@@ -121,10 +127,7 @@ public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implem
 			dto.setCurrencyType(CurrencyType.USD.getCode());
 		}
 
-		if (dto.getTimeRange() < 1) {
-			r.failWithMessage("time range error");
-			return r;
-		}
+		
 
 		if (localDateTimeHandler.determineDateFormat(dto.getStartDateTimeStr()) == null) {
 			r.failWithMessage("date time format error");

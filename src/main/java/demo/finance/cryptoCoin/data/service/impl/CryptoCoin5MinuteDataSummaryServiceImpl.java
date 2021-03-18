@@ -14,12 +14,12 @@ import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice5minuteMapper;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice5minute;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice5minuteExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin5MinuteDataSummaryService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
-import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
 @Service
 public class CryptoCoin5MinuteDataSummaryServiceImpl extends CryptoCoinCommonService
@@ -36,8 +36,9 @@ public class CryptoCoin5MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime thereStepBefore = nextStepStartTimeByMinute(now, minuteStepLong).minusMinutes(minuteStepLong * 3);
-
-		for (CryptoCoinType coinType : CryptoCoinType.values()) {
+		
+		List<CryptoCoinCatalog> coinCatalogList = coinCatalogService.getAllCatalog();
+		for (CryptoCoinCatalog coinType : coinCatalogList) {
 			for (CurrencyType currencyType : CurrencyType.values()) {
 				for (LocalDateTime i = thereStepBefore; i
 						.isBefore(now); i = nextStepStartTimeByMinute(i, minuteStepLong)) {
@@ -49,7 +50,7 @@ public class CryptoCoin5MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 		return r;
 	}
 
-	private void handleHistoryDataList(LocalDateTime startTime, CryptoCoinType coinType, CurrencyType currencyType) {
+	private void handleHistoryDataList(LocalDateTime startTime, CryptoCoinCatalog coinType, CurrencyType currencyType) {
 
 		List<CryptoCoinPriceCommonDataBO> cacheDataList = _1MinDataService.getCommonDataList(coinType, currencyType,
 				startTime);
@@ -58,7 +59,7 @@ public class CryptoCoin5MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 		}
 
 		CryptoCoinPrice5minuteExample example = new CryptoCoinPrice5minuteExample();
-		example.createCriteria().andCoinTypeEqualTo(coinType.getCode()).andCurrencyTypeEqualTo(currencyType.getCode())
+		example.createCriteria().andCoinTypeEqualTo(coinType.getId()).andCurrencyTypeEqualTo(currencyType.getCode())
 				.andStartTimeEqualTo(startTime);
 		List<CryptoCoinPrice5minute> poList = _5MinDataMapper.selectByExample(example);
 		CryptoCoinPrice5minute po = null;
@@ -67,7 +68,7 @@ public class CryptoCoin5MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 			newPOFlag = true;
 			po = new CryptoCoinPrice5minute();
 			po.setId(snowFlake.getNextId());
-			po.setCoinType(coinType.getCode());
+			po.setCoinType(coinType.getId());
 			po.setCurrencyType(currencyType.getCode());
 			po.setVolume(BigDecimal.ZERO);
 		} else {
@@ -123,10 +124,10 @@ public class CryptoCoin5MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 	}
 
 	@Override
-	public List<CryptoCoinPrice5minute> getDataList(CryptoCoinType coinType, CurrencyType currencyType,
+	public List<CryptoCoinPrice5minute> getDataList(CryptoCoinCatalog coinType, CurrencyType currencyType,
 			LocalDateTime startTime) {
 		CryptoCoinPrice5minuteExample example = new CryptoCoinPrice5minuteExample();
-		example.createCriteria().andCoinTypeEqualTo(coinType.getCode()).andCurrencyTypeEqualTo(currencyType.getCode())
+		example.createCriteria().andCoinTypeEqualTo(coinType.getId()).andCurrencyTypeEqualTo(currencyType.getCode())
 				.andStartTimeGreaterThanOrEqualTo(startTime);
 		;
 
@@ -134,7 +135,7 @@ public class CryptoCoin5MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 	}
 
 	@Override
-	public List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinType coinType, CurrencyType currencyType,
+	public List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinCatalog coinType, CurrencyType currencyType,
 			LocalDateTime startTime) {
 		List<CryptoCoinPrice5minute> poList = getDataList(coinType, currencyType, startTime);
 
@@ -150,7 +151,7 @@ public class CryptoCoin5MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 	}
 
 	@Override
-	public List<CryptoCoinPriceCommonDataBO> getCommonDataListFillWithCache(CryptoCoinType coinType,
+	public List<CryptoCoinPriceCommonDataBO> getCommonDataListFillWithCache(CryptoCoinCatalog coinType,
 			CurrencyType currencyType, LocalDateTime startTime) {
 
 		List<CryptoCoinPriceCommonDataBO> poDataList = getCommonDataList(coinType, currencyType, startTime);

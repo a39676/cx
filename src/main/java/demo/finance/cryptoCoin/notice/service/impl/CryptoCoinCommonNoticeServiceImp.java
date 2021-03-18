@@ -18,6 +18,7 @@ import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.pojo.dto.InsertCryptoCoinPriceNoticeSettingDTO;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinNoticeDTOCheckResult;
 import demo.finance.cryptoCoin.data.pojo.result.FilterBODataResult;
 import demo.finance.cryptoCoin.mq.producer.TelegramCryptoCoinMessageAckProducer;
@@ -32,7 +33,6 @@ import demo.finance.cryptoCoin.notice.service.CryptoCoinCommonNoticeService;
 import demo.tool.telegram.pojo.po.TelegramChatId;
 import demo.tool.telegram.pojo.vo.TelegramChatIdVO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
-import finance.cryptoCoin.pojo.type.CryptoCoinType;
 import telegram.pojo.dto.TelegramMessageDTO;
 
 @Service
@@ -47,16 +47,6 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	@Override
 	public ModelAndView cryptoCoinPriceNoticeSettingManager() {
 		ModelAndView view = new ModelAndView("finance/cryptoCoin/CryptoCoinPriceNoticeSettingManager");
-		List<CryptoCoinType> coinTypeList = new ArrayList<>();
-		coinTypeList.add(CryptoCoinType.BTC);
-		coinTypeTag:for(CryptoCoinType coinType : CryptoCoinType.values()) {
-			if(coinType.getCode() > 10) {
-				break coinTypeTag;
-			}
-			coinTypeList.add(coinType);
-		}
-		view.addObject("cryptoCoinType", coinTypeList);
-		
 		List<CurrencyType> currencyTypeList = new ArrayList<>();
 		currencyTypeList.add(CurrencyType.USD);
 		currencyTypeList.addAll(Arrays.asList(CurrencyType.values()));
@@ -88,7 +78,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		CryptoCoinPriceNotice newPO = new CryptoCoinPriceNotice();
 		newPO.setId(snowFlake.getNextId());
-		newPO.setCoinType(dto.getCoinType());
+		newPO.setCoinType(dto.getCoinTypeCode());
 		newPO.setCurrencyType(dto.getCurrencyType());
 		newPO.setTelegramChatId(decryptPrivateKey(dto.getTelegramChatPK()));
 		newPO.setNoticeCount(dto.getNoticeCount());
@@ -118,7 +108,6 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	private CryptoCoinNoticeDTOCheckResult noticeDTOCheck(InsertCryptoCoinPriceNoticeSettingDTO dto) {
 		CryptoCoinNoticeDTOCheckResult r = new CryptoCoinNoticeDTOCheckResult();
 
-		CryptoCoinType coinType = CryptoCoinType.getType(dto.getCoinType());
 		CurrencyType currencyType = CurrencyType.getType(dto.getCurrencyType());
 
 		if (dto.getNoticeCount() == null || dto.getNoticeCount() < 0) {
@@ -132,10 +121,18 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			}
 		}
 
-		if (coinType == null || currencyType == null || dto.getTelegramChatPK() == null) {
+		if (StringUtils.isBlank(dto.getCoinType()) || currencyType == null || dto.getTelegramChatPK() == null) {
 			r.failWithMessage("error param");
 			return r;
 		}
+		
+		CryptoCoinCatalog coinCatalog = coinCatalogService.findCatalog(dto.getCoinType());
+		if(coinCatalog == null) {
+			r.failWithMessage("error param");
+			return r;
+		}
+		
+		dto.setCoinTypeCode(coinCatalog.getId());
 
 		if (!telegramService.chatIdExists(dto.getTelegramChatPK())) {
 			r.failWithMessage("error chatPK");
@@ -200,7 +197,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		if (range < 0) {
 			range = 1 - range;
 		}
-
+		
 		dto.setMaxPrice(new BigDecimal(dto.getOriginalPrice() * (1 + range / 100)));
 		dto.setMinPrice(new BigDecimal(dto.getOriginalPrice() * (1 - range / 100)));
 
@@ -254,8 +251,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 	private CommonResult subNoticeHandler(CryptoCoinPriceNotice noticeSetting) {
 		CommonResult r = new CommonResult();
-		CryptoCoinType coinType = CryptoCoinType.getType(noticeSetting.getCoinType());
-		if (coinType == null) {
+		if (noticeSetting.getCoinType() == null) {
 			log.error(noticeSetting.getId() + ", coin type setting error");
 			r.failWithMessage("coin type setting error");
 			return r;
@@ -279,6 +275,9 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		String content = "";
 		CommonResult handleResult = null;
+		
+		CryptoCoinCatalog coinType = coinCatalogService.findCatalog(noticeSetting.getCoinType());
+		
 		if (priceConditionHadSet(noticeSetting)) {
 			handleResult = priceConditionNoticeHandle(noticeSetting, coinType, currencyType);
 			if (handleResult.isSuccess()) {
@@ -322,7 +321,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 	}
 
-	private CommonResult priceConditionNoticeHandle(CryptoCoinPriceNotice noticeSetting, CryptoCoinType coinType,
+	private CommonResult priceConditionNoticeHandle(CryptoCoinPriceNotice noticeSetting, CryptoCoinCatalog coinType,
 			CurrencyType currencyType) {
 		CommonResult r = new CommonResult();
 		List<CryptoCoinPriceCommonDataBO> historyDataList = _1MinDataService.getCommonDataListFillWithCache(coinType,
@@ -345,14 +344,14 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		if (noticeSetting.getMaxPrice() != null) {
 			if (lastMaxPrice.doubleValue() >= noticeSetting.getMaxPrice().doubleValue()) {
-				content = coinType.getName() + ", " + currencyType + ", " + " price(range) had reach " + lastMaxPrice.setScale(2, RoundingMode.HALF_UP)
+				content = coinType.getCoinNameEnShort() + ", " + currencyType + ", " + " price(range) had reach " + lastMaxPrice.setScale(2, RoundingMode.HALF_UP)
 						+ " at: " + maxMinPriceResult.getMaxPriceDateTime() + ";";
 			}
 
 		}
 		if (noticeSetting.getMinPrice() != null) {
 			if (lastMinPrice.doubleValue() <= noticeSetting.getMinPrice().doubleValue()) {
-				content = coinType.getName() + ", " + currencyType + ", " + " price(range) had reach " + lastMinPrice.setScale(2, RoundingMode.HALF_UP)
+				content = coinType.getCoinNameEnShort() + ", " + currencyType + ", " + " price(range) had reach " + lastMinPrice.setScale(2, RoundingMode.HALF_UP)
 						+ " at: " + maxMinPriceResult.getMinPriceDateTime() + ";";
 			}
 		}
@@ -364,7 +363,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		return r;
 	}
 
-	private CommonResult priceFluctuationSpeedNoticeHandle(CryptoCoinPriceNotice noticeSetting, CryptoCoinType coinType,
+	private CommonResult priceFluctuationSpeedNoticeHandle(CryptoCoinPriceNotice noticeSetting, CryptoCoinCatalog coinType,
 			CurrencyType currencyType) {
 		CommonResult r = new CommonResult();
 		
@@ -400,7 +399,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		if (!maxMinPriceResult.getMinPriceDateTime().isAfter(maxMinPriceResult.getMaxPriceDateTime())) {
 			if (upApmlitude >= trigerPercentage) {
 				BigDecimal upApmlitudeBigDecimal = new BigDecimal(upApmlitude);
-				content = coinType.getName() + ", " + currencyType.getName() 
+				content = coinType.getCoinNameEnShort() + ", " + currencyType.getName() 
 						+ ", " + "最新价: " + historyBOList.get(historyBOList.size() - 1).getEndPrice().setScale(2, RoundingMode.HALF_UP) + "\n"
 						+ ", " + "最近" + noticeSetting.getTimeRangeOfDataWatch()
 						+ TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch()).getCnName() 
@@ -411,7 +410,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		} else {
 			if ((0 - lowApmlitude) >= trigerPercentage) {
 				BigDecimal lowApmlitubeBigDecimal = new BigDecimal(lowApmlitude);
-				content = coinType.getName() + ", " + currencyType.getName() 
+				content = coinType.getCoinNameEnShort() + ", " + currencyType.getName() 
 						+ ", " + "最新价: " + historyBOList.get(historyBOList.size() - 1).getEndPrice().setScale(2, RoundingMode.HALF_UP) + "\n"
 						+ ", " + "最近" + noticeSetting.getTimeRangeOfDataWatch()
 						+ TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch()).getCnName() 
@@ -445,7 +444,6 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	public ModelAndView searchValidNotices(SearchCryptoCoinConditionDTO dto) {
 		ModelAndView view = new ModelAndView("finance/cryptoCoin/CryptoCoinPriceNoticeSearchResult");
 		
-		view.addObject("cryptoCoinType", CryptoCoinType.values());
 		view.addObject("currencyType", CurrencyType.values());
 		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.minute, TimeUnitType.hour, TimeUnitType.day,
 				TimeUnitType.week, TimeUnitType.month };
@@ -483,7 +481,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		CryptoCoinNoticeVO vo = new CryptoCoinNoticeVO();
 		vo.setPk(encryptId(po.getId()));
 		vo.setCryptoCoinCode(po.getCoinType());
-		vo.setCryptoCoinName(CryptoCoinType.getType(po.getCoinType()).getName());
+		CryptoCoinCatalog coinType = coinCatalogService.findCatalog(po.getCoinType());
+		vo.setCryptoCoinName(coinType.getCoinNameEnShort());
 		vo.setCurrencyCode(po.getCurrencyType());
 		vo.setCurrencyName(CurrencyType.getType(po.getCurrencyType()).getName());
 		if (po.getMaxPrice() != null) {
@@ -554,13 +553,13 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			return r;
 		}
 
-		CryptoCoinType coinType = CryptoCoinType.getType(dto.getCryptoCoinCode());
+		CryptoCoinCatalog coinType = coinCatalogService.findCatalog(dto.getCryptoCoinCode());
 		CurrencyType currencyType = CurrencyType.getType(dto.getCurrencyCode());
 		if (coinType == null || currencyType == null) {
 			r.failWithMessage("param error");
 			return r;
 		}
-		po.setCoinType(coinType.getCode());
+		po.setCoinType(coinType.getId());
 		po.setCurrencyType(currencyType.getCode());
 		
 		if(StringUtils.isNotBlank(dto.getNextNoticeTime())) {

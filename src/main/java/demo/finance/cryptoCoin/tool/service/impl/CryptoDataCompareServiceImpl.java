@@ -4,17 +4,18 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.tool.pojo.dto.CryptoCoinDataCompareDTO;
 import demo.finance.cryptoCoin.tool.pojo.result.CryptoDataCompareResult;
 import demo.finance.cryptoCoin.tool.service.CryptoDataCompareService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
-import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
 @Service
 public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implements CryptoDataCompareService {
@@ -28,13 +29,14 @@ public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implem
 			return r;
 		}
 		
-		CryptoCoinType coinType1 = CryptoCoinType.getType(dto.getCoinType1());
-		CryptoCoinType coinType2 = CryptoCoinType.getType(dto.getCoinType2());
 		CurrencyType currencyType = CurrencyType.getType(dto.getCurrencyType());
+		
+		CryptoCoinCatalog coinType1 = coinCatalogService.findCatalog(dto.getCoinType1());
+		CryptoCoinCatalog coinType2 = coinCatalogService.findCatalog(dto.getCoinType2());
 		
 		LocalDateTime startDateTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getStartDateTimeStr());
 		CryptoCoinPriceCommonDataBO data1Start = dailyDataService.getCommonData(coinType1, currencyType, startDateTime);
-		CryptoCoinPriceCommonDataBO data2Start = dailyDataService.getCommonData(coinType2, currencyType, startDateTime);
+		CryptoCoinPriceCommonDataBO data2Start = dailyDataService.getCommonData(coinType1, currencyType, startDateTime);
 		
 		if(data1Start == null || data2Start == null) {
 			r.failWithMessage("one compare data error");
@@ -70,10 +72,11 @@ public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implem
 			return r;
 		}
 		
-		CryptoCoinType coinType1 = CryptoCoinType.getType(dto.getCoinType1());
-		CryptoCoinType coinType2 = CryptoCoinType.getType(dto.getCoinType2());
 		CurrencyType currencyType = CurrencyType.getType(dto.getCurrencyType());
 		TimeUnitType timeUnitType = TimeUnitType.getType(dto.getTimeUnit());
+		
+		CryptoCoinCatalog coinType1 = coinCatalogService.findCatalog(dto.getCoinType1());
+		CryptoCoinCatalog coinType2 = coinCatalogService.findCatalog(dto.getCoinType2());
 		
 		List<CryptoCoinPriceCommonDataBO> dataList1 = getHistoryDataList(coinType1, currencyType, timeUnitType, dto.getTimeRange());
 		List<CryptoCoinPriceCommonDataBO> dataList2 = getHistoryDataList(coinType2, currencyType, timeUnitType, dto.getTimeRange());
@@ -128,10 +131,7 @@ public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implem
 			return r;
 		}
 		
-		CryptoCoinType coinType1 = CryptoCoinType.getType(dto.getCoinType1());
-		CryptoCoinType coinType2 = CryptoCoinType.getType(dto.getCoinType1());
-		
-		if(coinType1 == null || coinType2 == null || coinType1.equals(coinType2)) {
+		if(StringUtils.isAnyBlank(dto.getCoinType1(), dto.getCoinType2()) || dto.getCoinType1().equals(dto.getCoinType2())) {
 			r.failWithMessage("coin type error");
 			return r;
 		}

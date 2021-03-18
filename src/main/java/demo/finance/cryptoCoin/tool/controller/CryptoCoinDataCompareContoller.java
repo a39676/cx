@@ -12,7 +12,6 @@ import demo.finance.cryptoCoin.tool.pojo.constant.CryptoCoinDataCompareUrl;
 import demo.finance.cryptoCoin.tool.pojo.dto.CryptoCoinDataCompareDTO;
 import demo.finance.cryptoCoin.tool.pojo.result.CryptoDataCompareResult;
 import demo.finance.cryptoCoin.tool.service.CryptoDataCompareService;
-import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
 @Controller
 @RequestMapping(value = CryptoCoinDataCompareUrl.ROOT)
@@ -25,8 +24,8 @@ public class CryptoCoinDataCompareContoller extends CommonController {
 	@ResponseBody
 	public CryptoDataCompareResult testing() {
 		CryptoCoinDataCompareDTO dto = new CryptoCoinDataCompareDTO();
-		dto.setCoinType1(CryptoCoinType.FIL.getCode());
-		dto.setCoinType2(CryptoCoinType.BTC.getCode());
+		dto.setCoinType1("FIL");
+		dto.setCoinType2("BTC");
 		dto.setCurrencyType(CurrencyType.USD.getCode());
 		dto.setStartDateTimeStr("2021-01-01 00:00:00");
 		return dataCompareService.cryptoCoinDailyDataComparePoint(dto);

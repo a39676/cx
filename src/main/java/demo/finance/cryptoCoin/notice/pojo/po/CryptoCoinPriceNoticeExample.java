@@ -176,52 +176,52 @@ public class CryptoCoinPriceNoticeExample {
             return (Criteria) this;
         }
 
-        public Criteria andCoinTypeEqualTo(Integer value) {
+        public Criteria andCoinTypeEqualTo(Long value) {
             addCriterion("coin_type =", value, "coinType");
             return (Criteria) this;
         }
 
-        public Criteria andCoinTypeNotEqualTo(Integer value) {
+        public Criteria andCoinTypeNotEqualTo(Long value) {
             addCriterion("coin_type <>", value, "coinType");
             return (Criteria) this;
         }
 
-        public Criteria andCoinTypeGreaterThan(Integer value) {
+        public Criteria andCoinTypeGreaterThan(Long value) {
             addCriterion("coin_type >", value, "coinType");
             return (Criteria) this;
         }
 
-        public Criteria andCoinTypeGreaterThanOrEqualTo(Integer value) {
+        public Criteria andCoinTypeGreaterThanOrEqualTo(Long value) {
             addCriterion("coin_type >=", value, "coinType");
             return (Criteria) this;
         }
 
-        public Criteria andCoinTypeLessThan(Integer value) {
+        public Criteria andCoinTypeLessThan(Long value) {
             addCriterion("coin_type <", value, "coinType");
             return (Criteria) this;
         }
 
-        public Criteria andCoinTypeLessThanOrEqualTo(Integer value) {
+        public Criteria andCoinTypeLessThanOrEqualTo(Long value) {
             addCriterion("coin_type <=", value, "coinType");
             return (Criteria) this;
         }
 
-        public Criteria andCoinTypeIn(List<Integer> values) {
+        public Criteria andCoinTypeIn(List<Long> values) {
             addCriterion("coin_type in", values, "coinType");
             return (Criteria) this;
         }
 
-        public Criteria andCoinTypeNotIn(List<Integer> values) {
+        public Criteria andCoinTypeNotIn(List<Long> values) {
             addCriterion("coin_type not in", values, "coinType");
             return (Criteria) this;
         }
 
-        public Criteria andCoinTypeBetween(Integer value1, Integer value2) {
+        public Criteria andCoinTypeBetween(Long value1, Long value2) {
             addCriterion("coin_type between", value1, value2, "coinType");
             return (Criteria) this;
         }
 
-        public Criteria andCoinTypeNotBetween(Integer value1, Integer value2) {
+        public Criteria andCoinTypeNotBetween(Long value1, Long value2) {
             addCriterion("coin_type not between", value1, value2, "coinType");
             return (Criteria) this;
         }

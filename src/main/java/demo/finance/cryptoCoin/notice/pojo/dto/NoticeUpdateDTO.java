@@ -4,7 +4,7 @@ public class NoticeUpdateDTO {
 
 	private String pk;
 
-	private Integer cryptoCoinCode;
+	private Long cryptoCoinCode;
 	private Integer currencyCode;
 
 	private Double maxPrice;
@@ -63,11 +63,11 @@ public class NoticeUpdateDTO {
 		this.timeUnitOfNoticeInterval = timeUnitOfNoticeInterval;
 	}
 
-	public Integer getCryptoCoinCode() {
+	public Long getCryptoCoinCode() {
 		return cryptoCoinCode;
 	}
 
-	public void setCryptoCoinCode(Integer cryptoCoinCode) {
+	public void setCryptoCoinCode(Long cryptoCoinCode) {
 		this.cryptoCoinCode = cryptoCoinCode;
 	}
 

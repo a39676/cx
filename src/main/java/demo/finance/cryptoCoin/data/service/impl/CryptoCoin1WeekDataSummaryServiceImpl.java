@@ -14,12 +14,12 @@ import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1weekMapper;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1week;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1weekExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1WeekDataSummaryService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
-import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
 @Service
 public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonService
@@ -40,7 +40,8 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 		LocalDateTime thereStepBefore = lastSunday.minusDays(dayStepLong * 3).withHour(0).withMinute(0).withSecond(0)
 				.withNano(0);
 
-		for (CryptoCoinType coinType : CryptoCoinType.values()) {
+		List<CryptoCoinCatalog> coinCatalogList = coinCatalogService.getAllCatalog();
+		for (CryptoCoinCatalog coinType : coinCatalogList) {
 			for (CurrencyType currencyType : CurrencyType.values()) {
 				for (LocalDateTime datetime = thereStepBefore; datetime
 						.isBefore(now); datetime = datetime.plusDays(dayStepLong)) {
@@ -52,7 +53,7 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 		return r;
 	}
 
-	private void handleHistoryDataList(LocalDateTime startTime, CryptoCoinType coinType, CurrencyType currencyType) {
+	private void handleHistoryDataList(LocalDateTime startTime, CryptoCoinCatalog coinType, CurrencyType currencyType) {
 
 		List<CryptoCoinPriceCommonDataBO> cacheDataList = dailyDataService.getCommonDataList(coinType, currencyType,
 				startTime);
@@ -61,7 +62,7 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 		}
 
 		CryptoCoinPrice1weekExample example = new CryptoCoinPrice1weekExample();
-		example.createCriteria().andCoinTypeEqualTo(coinType.getCode()).andCurrencyTypeEqualTo(currencyType.getCode())
+		example.createCriteria().andCoinTypeEqualTo(coinType.getId()).andCurrencyTypeEqualTo(currencyType.getCode())
 				.andStartTimeEqualTo(startTime);
 		List<CryptoCoinPrice1week> poList = _1weekDataMapper.selectByExample(example);
 		CryptoCoinPrice1week po = null;
@@ -70,7 +71,7 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 			newPOFlag = true;
 			po = new CryptoCoinPrice1week();
 			po.setId(snowFlake.getNextId());
-			po.setCoinType(coinType.getCode());
+			po.setCoinType(coinType.getId());
 			po.setCurrencyType(currencyType.getCode());
 		} else {
 			po = poList.get(0);
@@ -106,10 +107,10 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 	}
 
 	@Override
-	public List<CryptoCoinPrice1week> getDataList(CryptoCoinType coinType, CurrencyType currencyType,
+	public List<CryptoCoinPrice1week> getDataList(CryptoCoinCatalog coinType, CurrencyType currencyType,
 			LocalDateTime startTime) {
 		CryptoCoinPrice1weekExample example = new CryptoCoinPrice1weekExample();
-		example.createCriteria().andCoinTypeEqualTo(coinType.getCode()).andCurrencyTypeEqualTo(currencyType.getCode())
+		example.createCriteria().andCoinTypeEqualTo(coinType.getId()).andCurrencyTypeEqualTo(currencyType.getCode())
 				.andStartTimeGreaterThanOrEqualTo(startTime);
 		;
 
@@ -117,7 +118,7 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 	}
 
 	@Override
-	public List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinType coinType, CurrencyType currencyType,
+	public List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinCatalog coinType, CurrencyType currencyType,
 			LocalDateTime startTime) {
 		List<CryptoCoinPrice1week> poList = getDataList(coinType, currencyType, startTime);
 
@@ -133,7 +134,7 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 	}
 
 	@Override
-	public List<CryptoCoinPriceCommonDataBO> getCommonDataListFillWithCache(CryptoCoinType coinType,
+	public List<CryptoCoinPriceCommonDataBO> getCommonDataListFillWithCache(CryptoCoinCatalog coinType,
 			CurrencyType currencyType, LocalDateTime startTime) {
 
 		List<CryptoCoinPriceCommonDataBO> poDataList = getCommonDataList(coinType, currencyType, startTime);

@@ -11,11 +11,12 @@ import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
+import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinConstant;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
-import finance.cryptoCoin.pojo.type.CryptoCoinType;
 import net.sf.json.JSONObject;
 import telegram.pojo.dto.TelegramMessageDTO;
 
@@ -24,8 +25,9 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 
 	@Override
 	public void reciveData(CryptoCoinPriceCommonDataBO newBO) {
+		CryptoCoinCatalog coinType = coinCatalogService.findCatalog(newBO.getCoinType());
 		String key = String.format(CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_FORMAT,
-				CryptoCoinType.getType(newBO.getCoinType()).getName(),
+				coinType.getCoinNameEnShort(),
 				CurrencyType.getType(newBO.getCurrencyType()).getName(),
 				localDateTimeHandler.dateToStr(newBO.getStartTime(), (CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_DATETIME_FORMAT))
 				);
@@ -51,7 +53,7 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 		try {
 			JSONObject j = JSONObject.fromObject(str);
 			bo = new CryptoCoinPriceCommonDataBO();
-			bo.setCoinType(j.getInt("coinType"));
+			bo.setCoinType(j.getString("coinType"));
 			bo.setCurrencyType(j.getInt("currencyType"));
 			bo.setStartPrice(new BigDecimal(j.getDouble("startPrice")));
 			bo.setEndPrice(new BigDecimal(j.getDouble("endPrice")));
@@ -93,7 +95,7 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 	}
 	
 	@Override
-	public CryptoCoinPriceCommonDataBO getCommonData(CryptoCoinType coinType, CurrencyType currencyType, LocalDateTime datetime) {
+	public CryptoCoinPriceCommonDataBO getCommonData(CryptoCoinCatalog coinType, CurrencyType currencyType, LocalDateTime datetime) {
 		List<CryptoCoinPriceCommonDataBO> cacheDataList = cacheService.getCommonDataList(coinType, currencyType, datetime);
 		for(CryptoCoinPriceCommonDataBO bo : cacheDataList) {
 			if(!datetime.isBefore(bo.getStartTime()) && !datetime.isAfter(bo.getEndTime())) {
@@ -105,7 +107,7 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 	}
 	
 	@Override
-	public List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinType coinType, CurrencyType currencyType, LocalDateTime startTime) {
+	public List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinCatalog coinType, CurrencyType currencyType, LocalDateTime startTime) {
 		List<CryptoCoinPriceCommonDataBO> commonDataList = new ArrayList<>();
 		CryptoCoinPriceCommonDataBO tmpCommonData = null;
 		
@@ -119,7 +121,7 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 
 		while(!startTime.isAfter(now)) {
 			tmpDataKey = String.format(CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_FORMAT,
-					coinType.getName(),
+					coinType.getCoinNameEnShort(),
 					currencyType.getName(),
 					localDateTimeHandler.dateToStr(startTime, CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_DATETIME_FORMAT)
 					);
@@ -143,7 +145,7 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 	@Override
 	public boolean isSocketAlive() {
 		String key = String.format(CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_FORMAT,
-				CryptoCoinType.BTC.getName(),
+				CryptoCoinConstant.DEFAULT_COIN_CATALOG,
 				CurrencyType.USD.getName(),
 				localDateTimeHandler.dateToStr(LocalDateTime.now(), (CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_DATETIME_FORMAT))
 				);
@@ -154,7 +156,7 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 		}
 		
 		key = String.format(CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_FORMAT,
-				CryptoCoinType.BTC.getName(),
+				CryptoCoinConstant.DEFAULT_COIN_CATALOG,
 				CurrencyType.USD.getName(),
 				localDateTimeHandler.dateToStr(LocalDateTime.now().minusMinutes(1), (CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_DATETIME_FORMAT))
 				);

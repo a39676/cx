@@ -3,7 +3,7 @@ package demo.finance.cryptoCoin.notice.pojo.dto;
 public class SearchCryptoCoinConditionDTO {
 
 	private String reciverPK;
-	private Integer cryptoCoinCode;
+	private Long cryptoCoinCode;
 	private Integer currencyCode;
 
 	public String getReciverPK() {
@@ -14,11 +14,11 @@ public class SearchCryptoCoinConditionDTO {
 		this.reciverPK = reciverPK;
 	}
 
-	public Integer getCryptoCoinCode() {
+	public Long getCryptoCoinCode() {
 		return cryptoCoinCode;
 	}
 
-	public void setCryptoCoinCode(Integer cryptoCoinCode) {
+	public void setCryptoCoinCode(Long cryptoCoinCode) {
 		this.cryptoCoinCode = cryptoCoinCode;
 	}
 

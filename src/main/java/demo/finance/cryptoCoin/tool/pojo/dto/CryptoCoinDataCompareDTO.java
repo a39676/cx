@@ -12,8 +12,8 @@ public class CryptoCoinDataCompareDTO {
 
 	private Integer timeRange;
 
-	private Integer coinType1;
-	private Integer coinType2;
+	private String coinType1;
+	private String coinType2;
 
 	/** {@link CurrencyType} */
 	private Integer currencyType;
@@ -26,19 +26,19 @@ public class CryptoCoinDataCompareDTO {
 		this.currencyType = currencyType;
 	}
 
-	public Integer getCoinType1() {
+	public String getCoinType1() {
 		return coinType1;
 	}
 
-	public void setCoinType1(Integer coinType1) {
+	public void setCoinType1(String coinType1) {
 		this.coinType1 = coinType1;
 	}
 
-	public Integer getCoinType2() {
+	public String getCoinType2() {
 		return coinType2;
 	}
 
-	public void setCoinType2(Integer coinType2) {
+	public void setCoinType2(String coinType2) {
 		this.coinType2 = coinType2;
 	}
 

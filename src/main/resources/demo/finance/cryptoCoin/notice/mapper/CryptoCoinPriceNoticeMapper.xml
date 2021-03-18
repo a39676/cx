@@ -3,7 +3,7 @@
 <mapper namespace="demo.finance.cryptoCoin.notice.mapper.CryptoCoinPriceNoticeMapper">
   <resultMap id="BaseResultMap" type="demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNotice">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="coin_type" jdbcType="INTEGER" property="coinType" />
+    <result column="coin_type" jdbcType="BIGINT" property="coinType" />
     <result column="currency_type" jdbcType="INTEGER" property="currencyType" />
     <result column="max_price" jdbcType="DECIMAL" property="maxPrice" />
     <result column="min_price" jdbcType="DECIMAL" property="minPrice" />
@@ -122,7 +122,7 @@
       time_range_of_notice_interval, valid_time, 
       notice_time, next_notice_time, create_time, 
       is_delete)
-    values (#{id,jdbcType=BIGINT}, #{coinType,jdbcType=INTEGER}, #{currencyType,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=BIGINT}, #{coinType,jdbcType=BIGINT}, #{currencyType,jdbcType=INTEGER}, 
       #{maxPrice,jdbcType=DECIMAL}, #{minPrice,jdbcType=DECIMAL}, #{timeUnitOfDataWatch,jdbcType=INTEGER}, 
       #{timeRangeOfDataWatch,jdbcType=INTEGER}, #{fluctuationSpeedPercentage,jdbcType=DECIMAL}, 
       #{telegramChatId,jdbcType=BIGINT}, #{noticeCount,jdbcType=INTEGER}, #{timeUnitOfNoticeInterval,jdbcType=INTEGER}, 
@@ -190,7 +190,7 @@
         #{id,jdbcType=BIGINT},
       </if>
       <if test="coinType != null">
-        #{coinType,jdbcType=INTEGER},
+        #{coinType,jdbcType=BIGINT},
       </if>
       <if test="currencyType != null">
         #{currencyType,jdbcType=INTEGER},
@@ -252,7 +252,7 @@
         id = #{record.id,jdbcType=BIGINT},
       </if>
       <if test="record.coinType != null">
-        coin_type = #{record.coinType,jdbcType=INTEGER},
+        coin_type = #{record.coinType,jdbcType=BIGINT},
       </if>
       <if test="record.currencyType != null">
         currency_type = #{record.currencyType,jdbcType=INTEGER},
@@ -307,7 +307,7 @@
   <update id="updateByExample" parameterType="map">
     update crypto_coin_price_notice
     set id = #{record.id,jdbcType=BIGINT},
-      coin_type = #{record.coinType,jdbcType=INTEGER},
+      coin_type = #{record.coinType,jdbcType=BIGINT},
       currency_type = #{record.currencyType,jdbcType=INTEGER},
       max_price = #{record.maxPrice,jdbcType=DECIMAL},
       min_price = #{record.minPrice,jdbcType=DECIMAL},
@@ -331,7 +331,7 @@
     update crypto_coin_price_notice
     <set>
       <if test="coinType != null">
-        coin_type = #{coinType,jdbcType=INTEGER},
+        coin_type = #{coinType,jdbcType=BIGINT},
       </if>
       <if test="currencyType != null">
         currency_type = #{currencyType,jdbcType=INTEGER},
@@ -383,7 +383,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNotice">
     update crypto_coin_price_notice
-    set coin_type = #{coinType,jdbcType=INTEGER},
+    set coin_type = #{coinType,jdbcType=BIGINT},
       currency_type = #{currencyType,jdbcType=INTEGER},
       max_price = #{maxPrice,jdbcType=DECIMAL},
       min_price = #{minPrice,jdbcType=DECIMAL},

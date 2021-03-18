@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.common.service.impl.FinanceCommonService;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.result.FilterBODataResult;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
@@ -19,10 +20,10 @@ import demo.finance.cryptoCoin.data.service.CryptoCoin1MonthDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1WeekDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin5MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin60MinuteDataSummaryService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
-import finance.cryptoCoin.pojo.type.CryptoCoinType;
 
 public abstract class CryptoCoinCommonService extends FinanceCommonService {
 
@@ -40,6 +41,9 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 	protected CryptoCoin1WeekDataSummaryService weeklyDataService;
 	@Autowired
 	protected CryptoCoin1MonthDataSummaryService monthlyDataService;
+	
+	@Autowired
+	protected CryptoCoinCatalogService coinCatalogService;
 	
 	protected FilterBODataResult filterData(List<CryptoCoinPriceCommonDataBO> list) {
 		FilterBODataResult r = new FilterBODataResult();
@@ -154,7 +158,7 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 	/**
 	 * for test use
 	 */
-	protected List<CryptoCoinPriceCommonDataBO> buildFakeData(CryptoCoinType coinType, CurrencyType currencyType,
+	protected List<CryptoCoinPriceCommonDataBO> buildFakeData(String coinType, CurrencyType currencyType,
 			LocalDateTime startTime) {
 		List<CryptoCoinPriceCommonDataBO> l = new ArrayList<>();
 
@@ -170,7 +174,7 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 			bo.setHighPrice(new BigDecimal("-99999"));
 			bo.setLowPrice(new BigDecimal("-99999"));
 			bo.setVolume(new BigDecimal("99999"));
-			bo.setCoinType(coinType.getCode());
+			bo.setCoinType(coinType);
 			bo.setCurrencyType(currencyType.getCode());
 
 			l.add(bo);
@@ -512,7 +516,7 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 		return resultDataList;
 	}
 
-	protected List<CryptoCoinPriceCommonDataBO> getHistoryDataList(CryptoCoinType coinType, CurrencyType currencyType,
+	protected List<CryptoCoinPriceCommonDataBO> getHistoryDataList(CryptoCoinCatalog coinType, CurrencyType currencyType,
 			TimeUnitType timeUnit, Integer timeRange) {
 		LocalDateTime startTime = null;
 		if (TimeUnitType.minute.equals(timeUnit)) {

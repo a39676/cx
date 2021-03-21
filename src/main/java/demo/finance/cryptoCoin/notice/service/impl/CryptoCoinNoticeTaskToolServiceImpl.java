@@ -13,7 +13,7 @@ public class CryptoCoinNoticeTaskToolServiceImpl extends CryptoCoinCommonService
 	@Autowired
 	private CryptoCoinCommonNoticeService noticeService;
 
-	@Scheduled(fixedRate = 1000L * 30)
+	@Scheduled(fixedRate = 1000L * 10)
 	public void cryptoCoinPriceNoticeHandler() {
 		noticeService.noticeHandler();
 	}

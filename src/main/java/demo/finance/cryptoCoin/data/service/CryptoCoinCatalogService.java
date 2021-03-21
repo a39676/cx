@@ -4,6 +4,7 @@ import java.util.List;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
+import demo.finance.cryptoCoin.data.pojo.vo.CryptoCoinCatalogVO;
 
 public interface CryptoCoinCatalogService {
 
@@ -14,5 +15,7 @@ public interface CryptoCoinCatalogService {
 	List<CryptoCoinCatalog> getAllCatalog();
 
 	CommonResult addCatalog(String enShortName);
+
+	List<CryptoCoinCatalogVO> getAllCatalogVO();
 
 }

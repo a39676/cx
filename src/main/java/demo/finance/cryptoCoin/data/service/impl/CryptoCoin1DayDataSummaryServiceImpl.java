@@ -103,7 +103,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 	private void insertNewData(CryptoCoinDataSubDTO data, CryptoCoinCatalog coinType, CurrencyType currencyType) {
 		CryptoCoinPrice1day po = new CryptoCoinPrice1day();
 		po.setId(snowFlake.getNextId());
-		po.setStartTime(localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(data.getTime()));
+		po.setStartTime(localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(data.getTime()).withHour(0).withMinute(0).withSecond(0).withNano(0));
 		po.setEndTime(po.getStartTime().plusDays(dayStepLong));
 		po.setCoinType(coinType.getId());
 		po.setCurrencyType(currencyType.getCode());

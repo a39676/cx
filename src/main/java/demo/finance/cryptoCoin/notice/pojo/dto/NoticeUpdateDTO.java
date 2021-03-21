@@ -4,7 +4,7 @@ public class NoticeUpdateDTO {
 
 	private String pk;
 
-	private Long cryptoCoinCode;
+	private String cryptoCoinType;
 	private Integer currencyCode;
 
 	private Double maxPrice;
@@ -63,12 +63,12 @@ public class NoticeUpdateDTO {
 		this.timeUnitOfNoticeInterval = timeUnitOfNoticeInterval;
 	}
 
-	public Long getCryptoCoinCode() {
-		return cryptoCoinCode;
+	public String getCryptoCoinType() {
+		return cryptoCoinType;
 	}
 
-	public void setCryptoCoinCode(Long cryptoCoinCode) {
-		this.cryptoCoinCode = cryptoCoinCode;
+	public void setCryptoCoinType(String cryptoCoinType) {
+		this.cryptoCoinType = cryptoCoinType;
 	}
 
 	public Integer getCurrencyCode() {
@@ -129,7 +129,7 @@ public class NoticeUpdateDTO {
 
 	@Override
 	public String toString() {
-		return "NoticeUpdateDTO [pk=" + pk + ", cryptoCoinCode=" + cryptoCoinCode + ", currencyCode=" + currencyCode
+		return "NoticeUpdateDTO [pk=" + pk + ", cryptoCoinType=" + cryptoCoinType + ", currencyCode=" + currencyCode
 				+ ", maxPrice=" + maxPrice + ", minPrice=" + minPrice + ", timeRangeOfDataWatch=" + timeRangeOfDataWatch
 				+ ", timeUnitOfDataWatch=" + timeUnitOfDataWatch + ", timeRangeOfNoticeInterval="
 				+ timeRangeOfNoticeInterval + ", timeUnitOfNoticeInterval=" + timeUnitOfNoticeInterval

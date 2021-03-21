@@ -460,8 +460,13 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		if(chatId != null) {
 			criteria.andTelegramChatIdEqualTo(chatId);
 		}
-		if(dto.getCryptoCoinCode() != null) {
-			criteria.andCoinTypeEqualTo(dto.getCryptoCoinCode());
+		if(StringUtils.isNotBlank(dto.getCryptoCoinType())) {
+			CryptoCoinCatalog catalog = coinCatalogService.findCatalog(dto.getCryptoCoinType());
+			if(catalog != null) {
+				criteria.andCoinTypeEqualTo(catalog.getId());
+			} else {
+				return view;
+			}
 		}
 		if(dto.getCurrencyCode() != null) {
 			criteria.andCurrencyTypeEqualTo(dto.getCurrencyCode());
@@ -553,7 +558,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			return r;
 		}
 
-		CryptoCoinCatalog coinType = coinCatalogService.findCatalog(dto.getCryptoCoinCode());
+		CryptoCoinCatalog coinType = coinCatalogService.findCatalog(dto.getCryptoCoinType());
 		CurrencyType currencyType = CurrencyType.getType(dto.getCurrencyCode());
 		if (coinType == null || currencyType == null) {
 			r.failWithMessage("param error");

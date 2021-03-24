@@ -37,7 +37,9 @@
 <hr>
 
 <p>compare result: </p>
-<p id="result" updatingFlag="0"></p>
+<table id="result">
+  
+</table>
 
 
 </div>
@@ -83,8 +85,15 @@
           },
           timeout: 15000,
           success:function(data){
-            console.log(data);
-            $("#result").html(data.resultList);
+            console.log(data.resultList);
+            $("#result").html("");
+            var subData;
+            for(var i = 0; i < data.resultList.length; i++){
+              subData = data.resultList[i];
+              $("#result").append("<tr><td>" + subData.comparedCoinTypeName + "</td><td>" 
+                + subData.differentRate + "</td></tr>");  
+            }
+            
           }, 
           error:function(e){
             $("#result").text(e);

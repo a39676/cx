@@ -101,7 +101,7 @@ public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implem
 			if(coinTypeStr.toUpperCase().equals("ALL")) {
 				comparedCoinTypeList.addAll(coinCatalogService.getAllCatalog());
 			} else {
-				CryptoCoinCatalog coinType = coinCatalogService.findCatalog(coinTypeStr);
+				CryptoCoinCatalog coinType = coinCatalogService.findCatalog(coinTypeStr.trim());
 				if(coinType != null && !coinType.getCoinNameEnShort().equals(coinTypeOrigin.getCoinNameEnShort())) {
 					comparedCoinTypeList.add(coinType);
 				}
@@ -166,7 +166,16 @@ public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implem
 		
 		CryptoCoinPriceCommonDataBO dataComparedEnd = dataComparedList.get(0);
 		
-		BigDecimal dataComparedRate = new BigDecimal(dataComparedEnd.getEndPrice().doubleValue() / dataComparedStart.getStartPrice().doubleValue());
+		if(dataComparedStart.getStartPrice().compareTo(BigDecimal.ZERO) == 0) {
+			r.failWithMessage("start price = 0");
+			return r;
+		}
+		BigDecimal dataComparedRate = null;
+		try {
+			dataComparedRate = new BigDecimal(dataComparedEnd.getEndPrice().doubleValue() / dataComparedStart.getStartPrice().doubleValue());
+		} catch (Exception e) {
+			System.out.println(dataComparedEnd + ", " + dataComparedStart); 
+		}
 		
 		r.setOriginCoinTypeName(coinTypeOrigin.getCoinNameEnShort());
 		r.setComparedCoinTypeName(coinTypeCompared.getCoinNameEnShort());

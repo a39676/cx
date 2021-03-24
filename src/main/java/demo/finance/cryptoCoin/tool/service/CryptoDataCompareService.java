@@ -1,7 +1,11 @@
 package demo.finance.cryptoCoin.tool.service;
 
-import demo.finance.cryptoCoin.tool.pojo.dto.CryptoCoinDataCompareDTO;
-import demo.finance.cryptoCoin.tool.pojo.result.CryptoDataCompareResult;
+import org.springframework.web.servlet.ModelAndView;
+
+import demo.finance.cryptoCoin.tool.pojo.dto.CryptoCoinDataMutipleCompareDTO;
+import demo.finance.cryptoCoin.tool.pojo.dto.CryptoCoinDataSingleCompareDTO;
+import demo.finance.cryptoCoin.tool.pojo.result.CryptoDataCompareLineResult;
+import demo.finance.cryptoCoin.tool.pojo.result.CryptoDataCompareRateResult;
 
 public interface CryptoDataCompareService {
 
@@ -12,8 +16,12 @@ public interface CryptoDataCompareService {
 	 * @param dto
 	 * @return
 	 */
-	CryptoDataCompareResult cryptoCoinDataCompareLine(CryptoCoinDataCompareDTO dto);
+	CryptoDataCompareLineResult cryptoCoinDataSingleCompareLine(CryptoCoinDataSingleCompareDTO dto);
 
-	CryptoDataCompareResult cryptoCoinDailyDataComparePoint(CryptoCoinDataCompareDTO dto);
+	CryptoDataCompareRateResult cryptoCoinDailyDataSingleComparePoint(CryptoCoinDataSingleCompareDTO dto);
+
+	CryptoDataCompareRateResult cryptoCoinDailyDataMutipleComparePoint(CryptoCoinDataMutipleCompareDTO dto);
+
+	ModelAndView CryptoCoinDailyDataComparetor();
 
 }

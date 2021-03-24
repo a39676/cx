@@ -6,7 +6,7 @@ import java.util.List;
 import auxiliaryCommon.pojo.result.CommonResult;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 
-public class CryptoDataCompareResult extends CommonResult {
+public class CryptoDataCompareLineResult extends CommonResult implements Comparable<CryptoDataCompareLineResult> {
 
 	private List<CryptoCoinPriceCommonDataBO> dataList1;
 	private List<CryptoCoinPriceCommonDataBO> dataList2;
@@ -41,6 +41,23 @@ public class CryptoDataCompareResult extends CommonResult {
 	public String toString() {
 		return "CryptoDataCompareResult [dataList1=" + dataList1 + ", dataList2=" + dataList2 + ", differentRate="
 				+ differentRate + "]";
+	}
+
+	@Override
+	public int compareTo(CryptoDataCompareLineResult o) {
+		return compareStartTime(o, this);
+	}
+
+	private int compareStartTime(CryptoDataCompareLineResult o, CryptoDataCompareLineResult t) {
+		if (o.getDifferentRate() == null && t.getDifferentRate() == null) {
+			return 0;
+		} else if (o.getDifferentRate() == null) {
+			return -1;
+		} else if (this.getDifferentRate() == null) {
+			return 1;
+		} else {
+			return o.getDifferentRate().compareTo(this.getDifferentRate());
+		}
 	}
 
 }

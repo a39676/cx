@@ -3,17 +3,16 @@ package demo.finance.cryptoCoin.tool.pojo.dto;
 import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 
-public class CryptoCoinDataCompareDTO {
+public class CryptoCoinDataSingleCompareDTO {
 
 	private String startDateTimeStr;
 
+	private String coinTypeOrigin;
+	private String coinTypeCompared;
+
 	/** {@link TimeUnitType} */
 	private Integer timeUnit;
-
 	private Integer timeRange;
-
-	private String coinType1;
-	private String coinType2;
 
 	/** {@link CurrencyType} */
 	private Integer currencyType;
@@ -26,20 +25,20 @@ public class CryptoCoinDataCompareDTO {
 		this.currencyType = currencyType;
 	}
 
-	public String getCoinType1() {
-		return coinType1;
+	public String getCoinTypeOrigin() {
+		return coinTypeOrigin;
 	}
 
-	public void setCoinType1(String coinType1) {
-		this.coinType1 = coinType1;
+	public void setCoinTypeOrigin(String coinTypeSource) {
+		this.coinTypeOrigin = coinTypeSource;
 	}
 
-	public String getCoinType2() {
-		return coinType2;
+	public String getCoinTypeCompared() {
+		return coinTypeCompared;
 	}
 
-	public void setCoinType2(String coinType2) {
-		this.coinType2 = coinType2;
+	public void setCoinTypeCompared(String coinTypeCompared) {
+		this.coinTypeCompared = coinTypeCompared;
 	}
 
 	public String getStartDateTimeStr() {
@@ -68,8 +67,9 @@ public class CryptoCoinDataCompareDTO {
 
 	@Override
 	public String toString() {
-		return "CryptoCoinDataCompareDTO [startDateTimeStr=" + startDateTimeStr + ", timeUnit=" + timeUnit
-				+ ", timeRange=" + timeRange + ", coinType1=" + coinType1 + ", coinType2=" + coinType2 + "]";
+		return "CryptoCoinDataSingleCompareDTO [startDateTimeStr=" + startDateTimeStr + ", coinTypeOrigin="
+				+ coinTypeOrigin + ", coinTypeCompared=" + coinTypeCompared + ", timeUnit=" + timeUnit + ", timeRange="
+				+ timeRange + ", currencyType=" + currencyType + "]";
 	}
 
 }

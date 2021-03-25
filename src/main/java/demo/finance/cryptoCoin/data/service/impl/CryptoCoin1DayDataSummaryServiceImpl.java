@@ -35,9 +35,6 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 	@Override
 	public CommonResult reciveDailyData(CryptoCoinDataDTO dto) {
 		CommonResult r = new CommonResult();
-		
-		log.error("recive daily data");
-
 		List<CryptoCoinDataSubDTO> dataList = dto.getPriceHistoryData();
 		if (dataList == null || dataList.isEmpty()) {
 			return r;
@@ -215,7 +212,6 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 	}
 
 	private void mergeDuplicateData(CryptoCoinCatalog coinType) {
-		log.error("merge duplicate daily data: coin type = " + coinType.getCoinNameEnShort());
 		CryptoCoinPrice1dayExample example = null;
 		List<CryptoCoinPrice1day> poList = null;
 		LocalDateTime endTime = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);

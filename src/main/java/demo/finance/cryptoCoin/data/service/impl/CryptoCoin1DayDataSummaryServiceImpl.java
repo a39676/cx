@@ -226,12 +226,11 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 				example.createCriteria().andCoinTypeEqualTo(coinType.getId())
 						.andCurrencyTypeEqualTo(currencyType.getCode()).andStartTimeBetween(startTime, endTime);
 				poList = _1DayDataMapper.selectByExample(example);
-				if (poList == null || poList.isEmpty() || poList.size() == 1) {
+				if (poList == null || poList.size() <= 1) {
 					continue;
 				}
 				log.error("crypto coin 1day duplicate data: coinType: " + coinType.getCoinNameEnShort()
 						+ ", currencyType: " + currencyType.getName() + ", size: " + poList.size());
-				startTime = poList.get(0).getStartTime();
 				mergeDataList(poList);
 			}
 

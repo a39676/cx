@@ -77,7 +77,7 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 			tmpNewData = dataList.get(dataIndex);
 			tmpDataTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(tmpNewData.getTime());
 			mergeLoop: for (CryptoCoinPrice1minute po : poList) {
-				if (po.getStartTime().equals(tmpDataTime)) {
+				if (po.getStartTime().isEqual(tmpDataTime)) {
 					dataTimeMatchFlag = true;
 					mergeDataPair(po, tmpNewData);
 					break mergeLoop;

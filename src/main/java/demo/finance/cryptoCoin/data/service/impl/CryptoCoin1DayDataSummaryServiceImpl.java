@@ -74,7 +74,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 			tmpDataTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(tmpNewData.getTime());
 			for (int i = 0; i < poList.size() && !dataTimeMatchFlag; i++) {
 				CryptoCoinPrice1day po = poList.get(i);
-				if (po.getStartTime().equals(tmpDataTime)) {
+				if (po.getStartTime().isEqual(tmpDataTime)) {
 					dataTimeMatchFlag = true;
 					mergeDataPair(po, tmpNewData);
 				}

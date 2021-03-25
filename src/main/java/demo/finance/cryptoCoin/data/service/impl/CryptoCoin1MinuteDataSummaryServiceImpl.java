@@ -98,7 +98,7 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 		List<CryptoCoinPrice1minute> poList = null;
 		LocalDateTime endTime = LocalDateTime.now().withSecond(0).withNano(0).plusMinutes(1);
 		LocalDateTime startTime = endTime.minusMinutes(minuteStepLong);
-		// 只整理最近5分钟内的重复数据
+		// 只整理最近5分钟内的重复数据, 采用时间倒序
 		LocalDateTime finishTime = endTime.minusMinutes(5);
 
 		List<CryptoCoinCatalog> allCoinCatalogList = coinCatalogService.getAllCatalog();

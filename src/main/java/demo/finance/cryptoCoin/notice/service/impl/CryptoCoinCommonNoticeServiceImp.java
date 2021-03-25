@@ -330,7 +330,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 				currencyType, LocalDateTime.now().minusMinutes(2).withSecond(0).withNano(0));
 
 		if (historyDataList == null || historyDataList.isEmpty()) {
-			log.error(noticeSetting.getId() + ", can NOT find any history data");
+			log.error(noticeSetting.getId() + ", can NOT find any history data of: " + coinType.getCoinNameEnShort());
 			return r;
 		}
 
@@ -374,7 +374,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		List<CryptoCoinPriceCommonDataBO> historyBOList = getHistoryDataList(coinType, currencyType,
 				timeUnit, noticeSetting.getTimeRangeOfDataWatch());
 		if (historyBOList == null || historyBOList.isEmpty()) {
-			log.error(noticeSetting.getId() + ", can NOT find any history data");
+			log.error(noticeSetting.getId() + ", can NOT find any history data of: " + coinType.getCoinNameEnShort());
 			return r;
 		}
 

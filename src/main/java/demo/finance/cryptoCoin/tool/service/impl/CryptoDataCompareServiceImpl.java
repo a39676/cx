@@ -98,13 +98,9 @@ public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implem
 		CryptoCoinCatalog coinTypeOrigin = coinCatalogService.findCatalog(dto.getCoinTypeOrigin());
 		List<CryptoCoinCatalog> comparedCoinTypeList = new ArrayList<>();
 		for(String coinTypeStr : dto.getCoinTypeComparedList()) {
-			if(coinTypeStr.toUpperCase().equals("ALL")) {
-				comparedCoinTypeList.addAll(coinCatalogService.getAllCatalog());
-			} else {
-				CryptoCoinCatalog coinType = coinCatalogService.findCatalog(coinTypeStr.trim());
-				if(coinType != null && !coinType.getCoinNameEnShort().equals(coinTypeOrigin.getCoinNameEnShort())) {
-					comparedCoinTypeList.add(coinType);
-				}
+			CryptoCoinCatalog coinType = coinCatalogService.findCatalog(coinTypeStr.trim());
+			if(coinType != null && !coinType.getCoinNameEnShort().equals(coinTypeOrigin.getCoinNameEnShort())) {
+				comparedCoinTypeList.add(coinType);
 			}
 		}
 		if(comparedCoinTypeList.isEmpty()) {

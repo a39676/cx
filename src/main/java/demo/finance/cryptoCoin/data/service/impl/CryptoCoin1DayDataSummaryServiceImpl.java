@@ -237,8 +237,8 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 				mergeDataList(poList);
 			}
 
-			startTime = startTime.plusDays(dayStepLong);
-			endTime = endTime.plusDays(dayStepLong);
+			startTime = startTime.minusDays(dayStepLong);
+			endTime = endTime.minusDays(dayStepLong);
 		}
 
 	}

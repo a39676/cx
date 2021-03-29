@@ -346,14 +346,14 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		if (noticeSetting.getMaxPrice() != null) {
 			if (lastMaxPrice.doubleValue() >= noticeSetting.getMaxPrice().doubleValue()) {
-				content = coinType.getCoinNameEnShort() + ", " + currencyType + ", " + " price(range) had reach " + lastMaxPrice.setScale(2, RoundingMode.HALF_UP)
+				content = coinType.getCoinNameEnShort() + ", " + currencyType + ", " + " price(range) had reach " + numberSetScale(lastMaxPrice)
 						+ " at: " + maxMinPriceResult.getMaxPriceDateTime() + ";";
 			}
 
 		}
 		if (noticeSetting.getMinPrice() != null) {
 			if (lastMinPrice.doubleValue() <= noticeSetting.getMinPrice().doubleValue()) {
-				content = coinType.getCoinNameEnShort() + ", " + currencyType + ", " + " price(range) had reach " + lastMinPrice.setScale(2, RoundingMode.HALF_UP)
+				content = coinType.getCoinNameEnShort() + ", " + currencyType + ", " + " price(range) had reach " + numberSetScale(lastMinPrice)
 						+ " at: " + maxMinPriceResult.getMinPriceDateTime() + ";";
 			}
 		}
@@ -402,7 +402,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			if (upApmlitude >= trigerPercentage) {
 				BigDecimal upApmlitudeBigDecimal = new BigDecimal(upApmlitude);
 				content = coinType.getCoinNameEnShort() + ", " + currencyType.getName() 
-						+ ", " + "最新价: " + historyBOList.get(historyBOList.size() - 1).getEndPrice().setScale(2, RoundingMode.HALF_UP) + "\n"
+						+ ", " + "最新价: " + numberSetScale(historyBOList.get(historyBOList.size() - 1).getEndPrice()) + "\n"
 						+ ", " + "最近" + noticeSetting.getTimeRangeOfDataWatch()
 						+ TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch()).getCnName() 
 						+ ", " + "波幅达 " + upApmlitudeBigDecimal.setScale(2, RoundingMode.HALF_UP) + "%" + "\n"
@@ -413,7 +413,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			if ((0 - lowApmlitude) >= trigerPercentage) {
 				BigDecimal lowApmlitubeBigDecimal = new BigDecimal(lowApmlitude);
 				content = coinType.getCoinNameEnShort() + ", " + currencyType.getName() 
-						+ ", " + "最新价: " + historyBOList.get(historyBOList.size() - 1).getEndPrice().setScale(2, RoundingMode.HALF_UP) + "\n"
+						+ ", " + "最新价: " + numberSetScale(historyBOList.get(historyBOList.size() - 1).getEndPrice()) + "\n"
 						+ ", " + "最近" + noticeSetting.getTimeRangeOfDataWatch()
 						+ TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch()).getCnName() 
 						+ ", " + "波幅达 " + lowApmlitubeBigDecimal.setScale(2, RoundingMode.HALF_UP) + "%" + "\n"
@@ -621,5 +621,13 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		}
 
 		return r;
+	}
+	
+	private BigDecimal numberSetScale(BigDecimal num) {
+		if(num.compareTo(new BigDecimal(100)) >= 0) {
+			return num.setScale(2, RoundingMode.HALF_UP);
+		} else {
+			return num.setScale(6, RoundingMode.HALF_UP);
+		}
 	}
 }

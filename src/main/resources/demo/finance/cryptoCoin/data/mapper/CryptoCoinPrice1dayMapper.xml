@@ -334,4 +334,17 @@
       order by ${orderByClause}
     </if>
   </select>
+
+  <select id="findLastDailyData" resultMap="BaseResultMap">
+    select 
+      * 
+    from 
+      crypto_coin_price_1day 
+    where 
+      coin_type = #{coinType} 
+      and is_delete = false 
+    order by 
+      start_time desc 
+    limit 1
+  </select>
 </mapper>

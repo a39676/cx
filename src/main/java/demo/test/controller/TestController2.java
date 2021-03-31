@@ -1,9 +1,14 @@
 package demo.test.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.common.controller.CommonController;
+import demo.finance.cryptoCoin.tool.pojo.result.CryptoCoinLocalDataFinderResult;
+import demo.finance.cryptoCoin.tool.service.CryptoCoinLocalDataTool;
 import demo.test.pojo.constant.TestUrl;
 
 @Controller
@@ -40,4 +45,12 @@ public class TestController2 extends CommonController {
 //		return "done";
 //	}
 
+	@Autowired
+	private CryptoCoinLocalDataTool tool;
+	
+	@GetMapping("/test")
+	@ResponseBody
+	public CryptoCoinLocalDataFinderResult test() {
+		return tool.finder1();
+	}
 }

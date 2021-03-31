@@ -83,4 +83,9 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 		}
 		return r;
 	}
+
+	@Override
+	public CryptoCoinCatalog findLastCatalog() {
+		return mapper.findLastCatalog();
+	}
 }

@@ -21,6 +21,8 @@ public class CryptoCoinDataTaskToolServiceImpl extends CryptoCoinCommonService {
 	@Autowired
 	private CryptoCoin60MinuteDataSummaryService cryptoCoin60MinuteDataSummaryService;
 	@Autowired
+	private CryptoCoin1DayDataSummaryServiceImpl cryptoCoin1DayDataSummaryService;
+	@Autowired
 	private CryptoCoin1WeekDataSummaryService cryptoCoin1WeekDataSummaryService;
 	@Autowired
 	private CryptoCoin1MonthDataSummaryService cryptoCoin1MonthDataSummaryService;
@@ -40,4 +42,8 @@ public class CryptoCoinDataTaskToolServiceImpl extends CryptoCoinCommonService {
 		cryptoCoin60MinuteDataSummaryService.deleteExpiredCacheData();
 	}
 
+	@Scheduled(cron="12 3 0 * * *") // 每天0:3:12执行
+	public void getNewCryptoCoinDailyData() {
+		cryptoCoin1DayDataSummaryService.findMissingDailyData(null);
+	}
 }

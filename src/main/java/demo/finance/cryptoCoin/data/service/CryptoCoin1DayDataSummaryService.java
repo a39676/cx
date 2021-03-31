@@ -25,4 +25,6 @@ public interface CryptoCoin1DayDataSummaryService {
 	CryptoCoinPriceCommonDataBO getCommonData(CryptoCoinCatalog coinType, CurrencyType currencyType,
 			LocalDateTime datetime);
 
+	void findMissingDailyData(Long preCoinType);
+
 }

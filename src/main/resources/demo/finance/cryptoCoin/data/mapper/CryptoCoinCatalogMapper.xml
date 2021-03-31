@@ -239,4 +239,16 @@
       order by ${orderByClause}
     </if>
   </select>
+
+  <select id="findLastCatalog" resultMap="BaseResultMap">
+    select
+      *
+    from
+      crypto_coin_catalog
+    where
+      is_delete = false
+    order by 
+      id desc
+    limit 1
+  </select>
 </mapper>

@@ -30,4 +30,6 @@ public interface CryptoCoinCatalogMapper {
     int updateByPrimaryKeySelective(CryptoCoinCatalog record);
 
     int updateByPrimaryKey(CryptoCoinCatalog record);
+    
+    CryptoCoinCatalog findLastCatalog();
 }

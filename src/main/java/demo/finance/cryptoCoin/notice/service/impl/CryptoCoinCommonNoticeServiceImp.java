@@ -623,11 +623,4 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		return r;
 	}
 	
-	private BigDecimal numberSetScale(BigDecimal num) {
-		if(num.compareTo(new BigDecimal(100)) >= 0) {
-			return num.setScale(2, RoundingMode.HALF_UP);
-		} else {
-			return num.setScale(6, RoundingMode.HALF_UP);
-		}
-	}
 }

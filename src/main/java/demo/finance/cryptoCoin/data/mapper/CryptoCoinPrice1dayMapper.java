@@ -30,4 +30,6 @@ public interface CryptoCoinPrice1dayMapper {
     int updateByPrimaryKeySelective(CryptoCoinPrice1day record);
 
     int updateByPrimaryKey(CryptoCoinPrice1day record);
+
+    CryptoCoinPrice1day findLastDailyData(Long coinType);
 }

@@ -18,4 +18,6 @@ public interface CryptoCoinCatalogService {
 
 	List<CryptoCoinCatalogVO> getAllCatalogVO();
 
+	CryptoCoinCatalog findLastCatalog();
+
 }

@@ -3,6 +3,7 @@ package demo.finance.cryptoCoin.data.service.impl;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,11 +16,14 @@ import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1dayMapper;
+import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinConstant;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1day;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
+import demo.finance.cryptoCoin.mq.producer.CryptoCoinDailyDataQueryAckProducer;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
+import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataSubDTO;
 
@@ -31,6 +35,9 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 
 	@Autowired
 	private CryptoCoinPrice1dayMapper _1DayDataMapper;
+	
+	@Autowired
+	private CryptoCoinDailyDataQueryAckProducer cryptoCoinDailyDataQueryAckProducer;
 
 	@Override
 	public CommonResult reciveDailyData(CryptoCoinDataDTO dto) {
@@ -49,6 +56,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		mergeDuplicateData(coinType);
 		updateSummaryData(dataList, coinType, currencyType);
 
+		findMissingDailyData(coinType.getId());
 		return r;
 	}
 
@@ -255,5 +263,64 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 
 		_1DayDataMapper.updateByPrimaryKeySelective(firstPO);
 		return firstPO;
+	}
+
+	@Override
+	public void findMissingDailyData(Long preCoinType) {
+		CryptoCoinDailyDataQueryDTO dto = new CryptoCoinDailyDataQueryDTO();
+
+		CryptoCoinCatalog lastCatalog = coinCatalogService.findLastCatalog();
+		if (lastCatalog == null) {
+			log.error("crypto coin catalog service error, can NOT find any coin type");
+			return;
+		}
+
+		if (preCoinType >= lastCatalog.getId()) {
+			return;
+		}
+
+		CryptoCoinPrice1day data = findLastDailyData(preCoinType + 1);
+		CryptoCoinCatalog catalog = coinCatalogService.findCatalog(preCoinType + 1);
+		
+		if (data == null) {
+			// 新币, 未获取过数据/ 数据曾经清零
+			dto.setCoinName(catalog.getCoinNameEnShort());
+			dto.setCounting(CryptoCoinConstant.CRYPTO_COMPARE_API_DATA_MAX_LENGTH);
+			cryptoCoinDailyDataQueryAckProducer.send(dto);
+			
+		} else {
+			// 可能需要刷新数据
+			Long days = ChronoUnit.DAYS.between(data.getStartTime(), LocalDateTime.now());
+			if(days > 0) {
+				dto.setCounting(days.intValue());
+				cryptoCoinDailyDataQueryAckProducer.send(dto);
+			} else {
+				for(int i = 2; preCoinType + i <= lastCatalog.getId(); i++) {
+					data = findLastDailyData(preCoinType + i);
+					days = ChronoUnit.DAYS.between(data.getStartTime(), LocalDateTime.now());
+					if(days > 0) {
+						catalog = coinCatalogService.findCatalog(preCoinType + i);
+						dto.setCoinName(catalog.getCoinNameEnShort());
+						dto.setCounting(days.intValue());
+						cryptoCoinDailyDataQueryAckProducer.send(dto);
+						return;
+					}
+				}
+			}
+		}
+	}
+
+	private CryptoCoinPrice1day findLastDailyData(Long coinType) {
+		if (coinType == null) {
+			CryptoCoinCatalog defaultCoinCatalog = coinCatalogService
+					.findCatalog(CryptoCoinConstant.DEFAULT_COIN_CATALOG);
+			if (defaultCoinCatalog == null) {
+				log.error("crypto coin catalog service error, can NOT find default coin");
+				return null;
+			}
+			coinType = defaultCoinCatalog.getId();
+		}
+
+		return _1DayDataMapper.findLastDailyData(coinType);
 	}
 }

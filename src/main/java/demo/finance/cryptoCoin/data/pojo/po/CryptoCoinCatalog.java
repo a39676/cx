@@ -13,7 +13,7 @@ public class CryptoCoinCatalog {
 
     private LocalDateTime createtime;
 
-    private Boolean isdelete;
+    private Boolean isDelete;
 
     public Long getId() {
         return id;
@@ -55,11 +55,11 @@ public class CryptoCoinCatalog {
         this.createtime = createtime;
     }
 
-    public Boolean getIsdelete() {
-        return isdelete;
+    public Boolean getIsDelete() {
+        return isDelete;
     }
 
-    public void setIsdelete(Boolean isdelete) {
-        this.isdelete = isdelete;
+    public void setIsDelete(Boolean isDelete) {
+        this.isDelete = isDelete;
     }
 }

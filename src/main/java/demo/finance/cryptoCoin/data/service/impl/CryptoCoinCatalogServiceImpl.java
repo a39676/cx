@@ -27,7 +27,7 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 			return null;
 		}
 		CryptoCoinCatalogExample example = new CryptoCoinCatalogExample();
-		example.createCriteria().andCoinNameEnShortEqualTo(coinName.toUpperCase()).andIsdeleteEqualTo(false);
+		example.createCriteria().andCoinNameEnShortEqualTo(coinName.toUpperCase()).andIsDeleteEqualTo(false);
 		List<CryptoCoinCatalog> poList = mapper.selectByExample(example);
 		if (poList.isEmpty()) {
 			return null;
@@ -43,14 +43,14 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 	@Override
 	public List<CryptoCoinCatalog> getAllCatalog() {
 		CryptoCoinCatalogExample example = new CryptoCoinCatalogExample();
-		example.createCriteria().andIsdeleteEqualTo(false);
+		example.createCriteria().andIsDeleteEqualTo(false);
 		return mapper.selectByExample(example);
 	}
 	
 	@Override
 	public List<CryptoCoinCatalogVO> getAllCatalogVO() {
 		CryptoCoinCatalogExample example = new CryptoCoinCatalogExample();
-		example.createCriteria().andIsdeleteEqualTo(false);
+		example.createCriteria().andIsDeleteEqualTo(false);
 		List<CryptoCoinCatalog> poList = mapper.selectByExample(example);
 		List<CryptoCoinCatalogVO> voList = new ArrayList<>();
 		

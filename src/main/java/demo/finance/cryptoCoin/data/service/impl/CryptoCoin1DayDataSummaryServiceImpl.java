@@ -3,9 +3,11 @@ package demo.finance.cryptoCoin.data.service.impl;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +42,12 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 	private CryptoCoinDailyDataQueryAckProducer cryptoCoinDailyDataQueryAckProducer;
 
 	@Override
-	public CommonResult reciveDailyData(CryptoCoinDataDTO dto) {
+	public CommonResult receiveDailyData(CryptoCoinDataDTO dto) {
+		return receiveDailyData(dto, false);
+	}
+	
+	@Override
+	public CommonResult receiveDailyData(CryptoCoinDataDTO dto, Boolean updateOthers) {
 		CommonResult r = new CommonResult();
 		List<CryptoCoinDataSubDTO> dataList = dto.getPriceHistoryData();
 		if (dataList == null || dataList.isEmpty()) {
@@ -56,7 +63,16 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		mergeDuplicateData(coinType);
 		updateSummaryData(dataList, coinType, currencyType);
 
-		findMissingDailyData(coinType.getId());
+		if(updateOthers != null && updateOthers) {
+			Long currentTaskId = getDailyDataQueryIDCache();
+			if(currentTaskId != null) {
+				findMissingDailyData(currentTaskId);
+			} else {
+				log.error("crypto coin daily data task fail, hit null coin type ID");
+			}
+		}
+		
+		r.setIsSuccess();
 		return r;
 	}
 
@@ -64,6 +80,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 			CurrencyType currencyType) {
 
 		LocalDateTime dataStartTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dataList.get(0).getTime());
+		dataStartTime = dataStartTime.with(LocalTime.MIN);
 		LocalDateTime dataEndime = localDateTimeHandler
 				.stringToLocalDateTimeUnkonwFormat(dataList.get(dataList.size() - 1).getTime());
 
@@ -79,6 +96,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		for (int dataIndex = 0; dataIndex < dataList.size(); dataIndex++) {
 			tmpNewData = dataList.get(dataIndex);
 			tmpDataTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(tmpNewData.getTime());
+			tmpDataTime = tmpDataTime.with(LocalTime.MIN);
 			for (int i = 0; i < poList.size() && !dataTimeMatchFlag; i++) {
 				CryptoCoinPrice1day po = poList.get(i);
 				if (po.getStartTime().isEqual(tmpDataTime)) {
@@ -117,7 +135,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 			target.setEndTime(source.getEndTime());
 			target.setEndPrice(source.getEndPrice());
 		}
-		target.setVolume(target.getVolume().add(source.getVolume()));
+		target.setVolume(source.getVolume());
 		if (target.getHighPrice() == null || target.getHighPrice().doubleValue() < source.getHighPrice().byteValue()) {
 			target.setHighPrice(source.getHighPrice());
 		}
@@ -220,29 +238,37 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 	}
 
 	private void mergeDuplicateData(CryptoCoinCatalog coinType) {
-		CryptoCoinPrice1dayExample example = null;
-		List<CryptoCoinPrice1day> poList = null;
-		LocalDateTime endTime = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
-		LocalDateTime startTime = endTime.minusDays(dayStepLong);
+		LocalDateTime todayStart = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+		LocalDateTime indexTime = todayStart;
 		// 只整理最近一个月内的重复数据, 采用时间倒序
-		LocalDateTime finishTime = endTime.minusMonths(1);
+		LocalDateTime finishTime = todayStart.minusMonths(1);
 
-		while (startTime.isAfter(finishTime)) {
-			for (CurrencyType currencyType : CurrencyType.values()) {
-				example = new CryptoCoinPrice1dayExample();
-				example.createCriteria().andCoinTypeEqualTo(coinType.getId())
-						.andCurrencyTypeEqualTo(currencyType.getCode()).andStartTimeBetween(startTime, endTime);
-				poList = _1DayDataMapper.selectByExample(example);
-				if (poList == null || poList.size() <= 1) {
-					continue;
+		CryptoCoinPrice1dayExample example = new CryptoCoinPrice1dayExample();
+		example.createCriteria().andCoinTypeEqualTo(coinType.getId())
+		.andCurrencyTypeEqualTo(CurrencyType.USD.getCode()).andStartTimeBetween(finishTime, todayStart);
+		List<CryptoCoinPrice1day> poList = _1DayDataMapper.selectByExample(example);
+		
+		if (poList == null || poList.size() <= 1) {
+			return;
+		}
+		
+		List<CryptoCoinPrice1day> mergeDataList = null;
+		
+		while (indexTime.isAfter(finishTime)) {
+			mergeDataList = new ArrayList<>();
+			for(CryptoCoinPrice1day po : poList) {
+				if(po.getStartTime().isEqual(indexTime)) {
+					mergeDataList.add(po);
 				}
+			}
+			
+			if(mergeDataList.size() > 1) {
 				log.error("crypto coin 1day duplicate data: coinType: " + coinType.getCoinNameEnShort()
-						+ ", currencyType: " + currencyType.getName() + ", size: " + poList.size());
-				mergeDataList(poList);
+				+ ", currencyType: " + CurrencyType.USD.getName() + ", size: " + mergeDataList.size());
+				mergeDataList(mergeDataList);
 			}
 
-			startTime = startTime.minusDays(dayStepLong);
-			endTime = endTime.minusDays(dayStepLong);
+			indexTime = indexTime.minusDays(dayStepLong);
 		}
 
 	}
@@ -269,6 +295,17 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 	public void findMissingDailyData(Long preCoinType) {
 		CryptoCoinDailyDataQueryDTO dto = new CryptoCoinDailyDataQueryDTO();
 
+		if (preCoinType == null) {
+			CryptoCoinCatalog defaultCoinCatalog = coinCatalogService
+					.findCatalog(CryptoCoinConstant.DEFAULT_COIN_CATALOG);
+			if (defaultCoinCatalog == null) {
+				log.error("crypto coin catalog service error, can NOT find default coin");
+				return;
+			}
+			preCoinType = defaultCoinCatalog.getId();
+			setDailyDataQueryIDCache(preCoinType);
+		}
+		
 		CryptoCoinCatalog lastCatalog = coinCatalogService.findLastCatalog();
 		if (lastCatalog == null) {
 			log.error("crypto coin catalog service error, can NOT find any coin type");
@@ -287,23 +324,36 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 			dto.setCoinName(catalog.getCoinNameEnShort());
 			dto.setCounting(CryptoCoinConstant.CRYPTO_COMPARE_API_DATA_MAX_LENGTH);
 			cryptoCoinDailyDataQueryAckProducer.send(dto);
-			
+			setDailyDataQueryIDCache(catalog.getId());
+			return;
 		} else {
 			// 可能需要刷新数据
 			Long days = ChronoUnit.DAYS.between(data.getStartTime(), LocalDateTime.now());
 			if(days > 0) {
+				dto.setCoinName(catalog.getCoinNameEnShort());
 				dto.setCounting(days.intValue());
 				cryptoCoinDailyDataQueryAckProducer.send(dto);
+				setDailyDataQueryIDCache(catalog.getId());
 			} else {
 				for(int i = 2; preCoinType + i <= lastCatalog.getId(); i++) {
 					data = findLastDailyData(preCoinType + i);
-					days = ChronoUnit.DAYS.between(data.getStartTime(), LocalDateTime.now());
-					if(days > 0) {
+					if(data == null) {
 						catalog = coinCatalogService.findCatalog(preCoinType + i);
 						dto.setCoinName(catalog.getCoinNameEnShort());
-						dto.setCounting(days.intValue());
+						dto.setCounting(CryptoCoinConstant.CRYPTO_COMPARE_API_DATA_MAX_LENGTH);
 						cryptoCoinDailyDataQueryAckProducer.send(dto);
+						setDailyDataQueryIDCache(catalog.getId());
 						return;
+					} else {
+						days = ChronoUnit.DAYS.between(data.getStartTime(), LocalDateTime.now());
+						if(days > 0) {
+							catalog = coinCatalogService.findCatalog(preCoinType + i);
+							dto.setCoinName(catalog.getCoinNameEnShort());
+							dto.setCounting(days.intValue());
+							cryptoCoinDailyDataQueryAckProducer.send(dto);
+							setDailyDataQueryIDCache(catalog.getId());
+							return;
+						}
 					}
 				}
 			}
@@ -311,16 +361,19 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 	}
 
 	private CryptoCoinPrice1day findLastDailyData(Long coinType) {
-		if (coinType == null) {
-			CryptoCoinCatalog defaultCoinCatalog = coinCatalogService
-					.findCatalog(CryptoCoinConstant.DEFAULT_COIN_CATALOG);
-			if (defaultCoinCatalog == null) {
-				log.error("crypto coin catalog service error, can NOT find default coin");
-				return null;
-			}
-			coinType = defaultCoinCatalog.getId();
-		}
-
 		return _1DayDataMapper.findLastDailyData(coinType);
+	}
+	
+	private void setDailyDataQueryIDCache(Long coinType) {
+		constantService.setValByName(CryptoCoinConstant.CRYPTO_COIN_DAILY_DATA_QUERY_ID_CACHE_KEY, coinType.toString(), 30, TimeUnit.MINUTES);
+	}
+	
+	private Long getDailyDataQueryIDCache() {
+		String idStr = constantService.getValByName(CryptoCoinConstant.CRYPTO_COIN_DAILY_DATA_QUERY_ID_CACHE_KEY);
+		try {
+			return Long.parseLong(idStr);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 }

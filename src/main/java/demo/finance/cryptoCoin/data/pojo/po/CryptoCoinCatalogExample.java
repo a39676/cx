@@ -435,63 +435,63 @@ public class CryptoCoinCatalogExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsdeleteIsNull() {
-            addCriterion("isDelete is null");
+        public Criteria andIsDeleteIsNull() {
+            addCriterion("is_delete is null");
             return (Criteria) this;
         }
 
-        public Criteria andIsdeleteIsNotNull() {
-            addCriterion("isDelete is not null");
+        public Criteria andIsDeleteIsNotNull() {
+            addCriterion("is_delete is not null");
             return (Criteria) this;
         }
 
-        public Criteria andIsdeleteEqualTo(Boolean value) {
-            addCriterion("isDelete =", value, "isdelete");
+        public Criteria andIsDeleteEqualTo(Boolean value) {
+            addCriterion("is_delete =", value, "isDelete");
             return (Criteria) this;
         }
 
-        public Criteria andIsdeleteNotEqualTo(Boolean value) {
-            addCriterion("isDelete <>", value, "isdelete");
+        public Criteria andIsDeleteNotEqualTo(Boolean value) {
+            addCriterion("is_delete <>", value, "isDelete");
             return (Criteria) this;
         }
 
-        public Criteria andIsdeleteGreaterThan(Boolean value) {
-            addCriterion("isDelete >", value, "isdelete");
+        public Criteria andIsDeleteGreaterThan(Boolean value) {
+            addCriterion("is_delete >", value, "isDelete");
             return (Criteria) this;
         }
 
-        public Criteria andIsdeleteGreaterThanOrEqualTo(Boolean value) {
-            addCriterion("isDelete >=", value, "isdelete");
+        public Criteria andIsDeleteGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_delete >=", value, "isDelete");
             return (Criteria) this;
         }
 
-        public Criteria andIsdeleteLessThan(Boolean value) {
-            addCriterion("isDelete <", value, "isdelete");
+        public Criteria andIsDeleteLessThan(Boolean value) {
+            addCriterion("is_delete <", value, "isDelete");
             return (Criteria) this;
         }
 
-        public Criteria andIsdeleteLessThanOrEqualTo(Boolean value) {
-            addCriterion("isDelete <=", value, "isdelete");
+        public Criteria andIsDeleteLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_delete <=", value, "isDelete");
             return (Criteria) this;
         }
 
-        public Criteria andIsdeleteIn(List<Boolean> values) {
-            addCriterion("isDelete in", values, "isdelete");
+        public Criteria andIsDeleteIn(List<Boolean> values) {
+            addCriterion("is_delete in", values, "isDelete");
             return (Criteria) this;
         }
 
-        public Criteria andIsdeleteNotIn(List<Boolean> values) {
-            addCriterion("isDelete not in", values, "isdelete");
+        public Criteria andIsDeleteNotIn(List<Boolean> values) {
+            addCriterion("is_delete not in", values, "isDelete");
             return (Criteria) this;
         }
 
-        public Criteria andIsdeleteBetween(Boolean value1, Boolean value2) {
-            addCriterion("isDelete between", value1, value2, "isdelete");
+        public Criteria andIsDeleteBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_delete between", value1, value2, "isDelete");
             return (Criteria) this;
         }
 
-        public Criteria andIsdeleteNotBetween(Boolean value1, Boolean value2) {
-            addCriterion("isDelete not between", value1, value2, "isdelete");
+        public Criteria andIsDeleteNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_delete not between", value1, value2, "isDelete");
             return (Criteria) this;
         }
     }

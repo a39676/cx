@@ -7,7 +7,7 @@
     <result column="coin_name_en" jdbcType="CHAR" property="coinNameEn" />
     <result column="coin_name_cn" jdbcType="CHAR" property="coinNameCn" />
     <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
-    <result column="isDelete" jdbcType="BIT" property="isdelete" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -68,7 +68,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, coin_name_en_short, coin_name_en, coin_name_cn, createTime, isDelete
+    id, coin_name_en_short, coin_name_en, coin_name_cn, createTime, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalogExample" resultMap="BaseResultMap">
     select
@@ -102,10 +102,10 @@
   </delete>
   <insert id="insert" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog">
     insert into crypto_coin_catalog (id, coin_name_en_short, coin_name_en, 
-      coin_name_cn, createTime, isDelete
+      coin_name_cn, createTime, is_delete
       )
     values (#{id,jdbcType=BIGINT}, #{coinNameEnShort,jdbcType=CHAR}, #{coinNameEn,jdbcType=CHAR}, 
-      #{coinNameCn,jdbcType=CHAR}, #{createtime,jdbcType=TIMESTAMP}, #{isdelete,jdbcType=BIT}
+      #{coinNameCn,jdbcType=CHAR}, #{createtime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
       )
   </insert>
   <insert id="insertSelective" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog">
@@ -126,8 +126,8 @@
       <if test="createtime != null">
         createTime,
       </if>
-      <if test="isdelete != null">
-        isDelete,
+      <if test="isDelete != null">
+        is_delete,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -146,8 +146,8 @@
       <if test="createtime != null">
         #{createtime,jdbcType=TIMESTAMP},
       </if>
-      <if test="isdelete != null">
-        #{isdelete,jdbcType=BIT},
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -175,8 +175,8 @@
       <if test="record.createtime != null">
         createTime = #{record.createtime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.isdelete != null">
-        isDelete = #{record.isdelete,jdbcType=BIT},
+      <if test="record.isDelete != null">
+        is_delete = #{record.isDelete,jdbcType=BIT},
       </if>
     </set>
     <if test="_parameter != null">
@@ -190,7 +190,7 @@
       coin_name_en = #{record.coinNameEn,jdbcType=CHAR},
       coin_name_cn = #{record.coinNameCn,jdbcType=CHAR},
       createTime = #{record.createtime,jdbcType=TIMESTAMP},
-      isDelete = #{record.isdelete,jdbcType=BIT}
+      is_delete = #{record.isDelete,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -210,8 +210,8 @@
       <if test="createtime != null">
         createTime = #{createtime,jdbcType=TIMESTAMP},
       </if>
-      <if test="isdelete != null">
-        isDelete = #{isdelete,jdbcType=BIT},
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -222,7 +222,7 @@
       coin_name_en = #{coinNameEn,jdbcType=CHAR},
       coin_name_cn = #{coinNameCn,jdbcType=CHAR},
       createTime = #{createtime,jdbcType=TIMESTAMP},
-      isDelete = #{isdelete,jdbcType=BIT}
+      is_delete = #{isDelete,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByExampleWithRowbounds" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalogExample" resultMap="BaseResultMap">
@@ -239,7 +239,7 @@
       order by ${orderByClause}
     </if>
   </select>
-
+  
   <select id="findLastCatalog" resultMap="BaseResultMap">
     select
       *

@@ -4,12 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.common.controller.CommonController;
-import demo.finance.cryptoCoin.tool.pojo.result.CryptoCoinLocalDataFinderResult;
-import demo.finance.cryptoCoin.tool.service.CryptoCoinLocalDataTool;
+import demo.finance.cryptoCoin.mq.producer.CryptoCoinDailyDataQueryAckProducer;
 import demo.test.pojo.constant.TestUrl;
+import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
 
 @Controller
 @RequestMapping(value = { TestUrl.root2 })
@@ -46,11 +47,15 @@ public class TestController2 extends CommonController {
 //	}
 
 	@Autowired
-	private CryptoCoinLocalDataTool tool;
+	private CryptoCoinDailyDataQueryAckProducer producer;
 	
 	@GetMapping("/test")
 	@ResponseBody
-	public CryptoCoinLocalDataFinderResult test() {
-		return tool.finder1();
+	public String test(@RequestParam("coin") String coinName, @RequestParam("counting") Integer counting) {
+		CryptoCoinDailyDataQueryDTO dto = new CryptoCoinDailyDataQueryDTO();
+		dto.setCoinName(coinName);
+		dto.setCounting(counting);
+		producer.send(dto);
+		return "done";
 	}
 }

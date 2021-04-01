@@ -1,4 +1,4 @@
-package demo.finance.cryptoCoin.mq.reciver;
+package demo.finance.cryptoCoin.mq.receiver;
 
 import java.io.IOException;
 
@@ -12,25 +12,25 @@ import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
 
 import demo.common.service.CommonService;
-import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
+import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
 import finance.cryptoCoin.pojo.constant.CryptoCoinMQConstant;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
 
 @Component
-@RabbitListener(queues = CryptoCoinMQConstant.CRYPTO_COIN_MINUTE_DATA)
-public class CryptoCoinMinuteDataAckReceiver extends CommonService {
+@RabbitListener(queues = CryptoCoinMQConstant.CRYPTO_COIN_DAILY_DATA)
+public class CryptoCoinDailyDataAckReceiver extends CommonService {
 
 	@Autowired
-	private CryptoCoin1MinuteDataSummaryService cryptoCoin1MinuteDataService;
+	private CryptoCoin1DayDataSummaryService cryptoCoin1DayDataService;
 
 	@RabbitHandler
 	public void process(String messageStr, Channel channel, Message message) throws IOException {
 		try {
 			CryptoCoinDataDTO dto = new Gson().fromJson(messageStr, CryptoCoinDataDTO.class);
-			cryptoCoin1MinuteDataService.reciveMinuteData(dto);
+			cryptoCoin1DayDataService.receiveDailyData(dto, true);
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 		} catch (IOException e) {
-			log.error("mq error, " + CryptoCoinMQConstant.CRYPTO_COIN_MINUTE_DATA + ", e:" + e.getLocalizedMessage());
+			log.error("mq error, " + CryptoCoinMQConstant.CRYPTO_COIN_DAILY_DATA + ", e:" + e.getLocalizedMessage());
 			log.error(messageStr);
 			channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);
 		}

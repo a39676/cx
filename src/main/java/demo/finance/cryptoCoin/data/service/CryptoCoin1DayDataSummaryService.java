@@ -21,8 +21,10 @@ public interface CryptoCoin1DayDataSummaryService {
 	List<CryptoCoinPriceCommonDataBO> getCommonDataListFillWithCache(CryptoCoinCatalog coinType,
 			CurrencyType currencyType, LocalDateTime startTime);
 
+	/** 为单币种刷新数据 */
 	CommonResult receiveDailyData(CryptoCoinDataDTO dto);
 
+	/** 为后续币种刷新数据 */
 	CommonResult receiveDailyData(CryptoCoinDataDTO dto, Boolean updateOthers);
 
 	CryptoCoinPriceCommonDataBO getCommonData(CryptoCoinCatalog coinType, CurrencyType currencyType,

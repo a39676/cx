@@ -20,4 +20,12 @@ public interface CryptoCoinCatalogService {
 
 	CryptoCoinCatalog findLastCatalog();
 
+	List<CryptoCoinCatalogVO> getSubscriptionCatalog();
+
+	void addSubscriptionCatalog(String catalog);
+
+	void removeSubscriptionCatalog(String catalog);
+
+	void removeAllSubscriptionCatalog();
+
 }

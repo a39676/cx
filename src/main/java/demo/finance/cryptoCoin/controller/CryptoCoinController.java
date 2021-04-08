@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.common.controller.CommonController;
@@ -16,7 +17,7 @@ import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import finance.cryptoCoin.pojo.constant.CryptoCoinPriceCommonUrl;
 
 @Controller
-@RequestMapping( value = CryptoCoinPriceCommonUrl.ROOT)
+@RequestMapping(value = CryptoCoinPriceCommonUrl.ROOT)
 public class CryptoCoinController extends CommonController {
 
 	@Autowired
@@ -25,7 +26,7 @@ public class CryptoCoinController extends CommonController {
 	private CryptoCoin1MinuteDataSummaryService _1MinDataService;
 	@Autowired
 	private CryptoCoinCatalogService catalogService;
-	
+
 	@GetMapping(value = "/checkDataAPI")
 	@ResponseBody
 	public String checkDataAPI() {
@@ -33,10 +34,37 @@ public class CryptoCoinController extends CommonController {
 		priceCacheService.isSocketAlive();
 		return "check";
 	}
-	
+
 	@GetMapping(value = CryptoCoinPriceCommonUrl.GET_ALL_CATALOG)
 	@ResponseBody
 	public List<CryptoCoinCatalogVO> getAllCatalog() {
 		return catalogService.getAllCatalogVO();
+	}
+
+	@GetMapping(value = CryptoCoinPriceCommonUrl.GET_SUBSCRIPTION_CATALOG)
+	@ResponseBody
+	public List<CryptoCoinCatalogVO> getSubscriptionCatalog() {
+		return catalogService.getSubscriptionCatalog();
+	}
+
+	@GetMapping(value = "/addSubscriptionCatalog")
+	@ResponseBody
+	public String addSubscriptionCatalog(@RequestParam("coinName") String coinName) {
+		catalogService.addSubscriptionCatalog(coinName);
+		return "done";
+	}
+	
+	@GetMapping(value = "/removeSubscriptionCatalog")
+	@ResponseBody
+	public String removeSubscriptionCatalog(@RequestParam("coinName") String coinName) {
+		catalogService.removeSubscriptionCatalog(coinName);
+		return "done";
+	}
+	
+	@GetMapping(value = "/removeAllSubscriptionCatalog")
+	@ResponseBody
+	public String removeAllSubscriptionCatalog() {
+		catalogService.removeAllSubscriptionCatalog();
+		return "done";
 	}
 }

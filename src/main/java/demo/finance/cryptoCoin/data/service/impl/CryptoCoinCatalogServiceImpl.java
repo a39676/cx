@@ -1,6 +1,7 @@
 package demo.finance.cryptoCoin.data.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinCatalogMapper;
+import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinConstant;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalogExample;
 import demo.finance.cryptoCoin.data.pojo.vo.CryptoCoinCatalogVO;
@@ -46,21 +48,100 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 		example.createCriteria().andIsDeleteEqualTo(false);
 		return mapper.selectByExample(example);
 	}
-	
+
 	@Override
 	public List<CryptoCoinCatalogVO> getAllCatalogVO() {
 		CryptoCoinCatalogExample example = new CryptoCoinCatalogExample();
 		example.createCriteria().andIsDeleteEqualTo(false);
 		List<CryptoCoinCatalog> poList = mapper.selectByExample(example);
 		List<CryptoCoinCatalogVO> voList = new ArrayList<>();
-		
-		for(CryptoCoinCatalog po : poList) {
+
+		for (CryptoCoinCatalog po : poList) {
 			voList.add(poToVO(po));
 		}
-		
+
 		return voList;
 	}
-	
+
+	@Override
+	public List<CryptoCoinCatalogVO> getSubscriptionCatalog() {
+		List<CryptoCoinCatalogVO> voList = new ArrayList<>();
+		String catalogNameListStr = constantService.getValByName(CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY);
+		if (StringUtils.isBlank(catalogNameListStr)) {
+			return voList;
+		}
+
+		List<String> catalogList = Arrays.asList(catalogNameListStr.toUpperCase().split(","));
+
+		CryptoCoinCatalogExample example = new CryptoCoinCatalogExample();
+		example.createCriteria().andIsDeleteEqualTo(false).andCoinNameEnShortIn(catalogList);
+		List<CryptoCoinCatalog> poList = mapper.selectByExample(example);
+
+		for (CryptoCoinCatalog po : poList) {
+			voList.add(poToVO(po));
+		}
+
+		return voList;
+	}
+
+	@Override
+	public void addSubscriptionCatalog(String catalog) {
+		if (StringUtils.isBlank(catalog)) {
+			return;
+		}
+
+		CryptoCoinCatalogExample example = new CryptoCoinCatalogExample();
+		example.createCriteria().andIsDeleteEqualTo(false).andCoinNameEnShortEqualTo(catalog);
+		List<CryptoCoinCatalog> poList = mapper.selectByExample(example);
+
+		if (poList == null || poList.isEmpty()) {
+			return;
+		}
+
+		String recordsStr = constantService.getValByName(CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY);
+
+		if (StringUtils.isBlank(recordsStr)) {
+			recordsStr = poList.get(0).getCoinNameEnShort();
+		} else {
+			if (recordsStr.contains(catalog)) {
+				return;
+			} else {
+				recordsStr = recordsStr + "," + poList.get(0).getCoinNameEnShort();
+			}
+		}
+
+		constantService.setValByName(CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY, recordsStr);
+	}
+
+	@Override
+	public void removeSubscriptionCatalog(String catalog) {
+		if (StringUtils.isBlank(catalog)) {
+			return;
+		}
+
+		String recordsStr = constantService.getValByName(CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY);
+
+		if (StringUtils.isBlank(recordsStr)) {
+			return;
+		} else {
+			catalog = catalog.toUpperCase();
+			if(Arrays.asList(recordsStr.split(",")).contains(catalog)) {
+				if (recordsStr.contains(catalog + ",")) {
+					recordsStr = recordsStr.replaceAll(catalog + ",", "");
+				} else if (recordsStr.contains("," + catalog)) {
+					recordsStr = recordsStr.replaceAll("," + catalog, "");
+				}
+				constantService.setValByName(CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY, recordsStr);
+			};
+		}
+
+	}
+
+	@Override
+	public void removeAllSubscriptionCatalog() {
+		constantService.deleteValByName(CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY);
+	}
+
 	private CryptoCoinCatalogVO poToVO(CryptoCoinCatalog po) {
 		CryptoCoinCatalogVO vo = new CryptoCoinCatalogVO();
 		vo.setPk(encryptId(po.getId()));

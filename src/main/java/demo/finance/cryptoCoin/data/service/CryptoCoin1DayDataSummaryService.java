@@ -36,6 +36,11 @@ public interface CryptoCoin1DayDataSummaryService {
 	CryptoCoinPriceCommonDataBO getCommonData(CryptoCoinCatalog coinType, CurrencyType currencyType,
 			LocalDateTime datetime);
 
-	void findMissingDailyData(Long preCoinType);
+	void setWaitingUpdateCoinType();
+
+	void sendCryptoCoinDailyDataQueryMsg();
+
+	/** 留给手动启动 */
+	void sendCryptoCoinDailyDataQueryMsg(String coinName, Integer counting);
 
 }

@@ -9,6 +9,5 @@ public class CryptoCoinConstant {
 	public static final String CRYPTO_COIN_SUBSCRIPTION_LIST_KEY = "cryptoCoinSubscriptionList";
 	public static final String CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY = "cryptoCoinLowPriceSubscriptionList";
 	
-	public static final String CRYPTO_COIN_DAILY_DATA_QUERY_ID_CACHE_KEY = "cryptoCoinDailyDataQueryIDCache";
-	
+	public static final String CRYPTO_COIN_WAITING_UPDATE_DAILY_DATA_KEY_PREFIX = "cryptoCoinWaitingUpdateDailyData";
 }

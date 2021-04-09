@@ -45,6 +45,7 @@ public class CryptoCoinDataTaskToolServiceImpl extends CryptoCoinCommonService {
 
 	@Scheduled(cron="12 3 0 * * *") // 每天0:3:12执行
 	public void getNewCryptoCoinDailyData() {
-		cryptoCoin1DayDataSummaryService.findMissingDailyData(null);
+		cryptoCoin1DayDataSummaryService.setWaitingUpdateCoinType();
+		cryptoCoin1DayDataSummaryService.sendCryptoCoinDailyDataQueryMsg();
 	}
 }

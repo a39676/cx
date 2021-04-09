@@ -24,8 +24,11 @@ public interface CryptoCoinCatalogService {
 
 	void addSubscriptionCatalog(String catalog);
 
+	void addSubscriptionCatalog(String catalog, String redisKey);
+
 	void removeSubscriptionCatalog(String catalog);
 
 	void removeAllSubscriptionCatalog();
+
 
 }

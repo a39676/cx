@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.type.CurrencyType;
-import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
+import demo.finance.cryptoCoin.common.service.CryptoCoinAnalysisService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinCatalogMapper;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1dayMapper;
 import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinMABO;
@@ -25,7 +25,7 @@ import demo.finance.cryptoCoin.tool.service.CryptoCoinLocalDataTool;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 
 @Service
-public class CryptoCoinLocalDataToolImpl extends CryptoCoinCommonService implements CryptoCoinLocalDataTool {
+public class CryptoCoinLocalDataToolImpl extends CryptoCoinAnalysisService implements CryptoCoinLocalDataTool {
 
 	@Autowired
 	private CryptoCoinPrice1dayMapper _1DayDataMapper;

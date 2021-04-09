@@ -53,7 +53,7 @@ public class CryptoDataCompareLineResult extends CommonResult implements Compara
 			return 0;
 		} else if (o.getDifferentRate() == null) {
 			return -1;
-		} else if (this.getDifferentRate() == null) {
+		} else if (t.getDifferentRate() == null) {
 			return 1;
 		} else {
 			return o.getDifferentRate().compareTo(this.getDifferentRate());

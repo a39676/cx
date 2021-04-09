@@ -50,7 +50,7 @@ public class CryptoDataCompareRateSubResult extends CommonResult implements Comp
 			return 0;
 		} else if (o.getDifferentRate() == null) {
 			return -1;
-		} else if (this.getDifferentRate() == null) {
+		} else if (t.getDifferentRate() == null) {
 			return 1;
 		} else {
 			return o.getDifferentRate().compareTo(this.getDifferentRate());

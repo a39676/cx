@@ -2,7 +2,9 @@ package demo.finance.cryptoCoin.data.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +68,39 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 	@Override
 	public List<CryptoCoinCatalogVO> getSubscriptionCatalog() {
 		List<CryptoCoinCatalogVO> voList = new ArrayList<>();
+		Set<CryptoCoinCatalogVO> voSet = new HashSet<>();
+
+		voSet.addAll(getNormalSubscriptionCatalog());
+		voSet.addAll(getLowPriceSubscriptionCatalog());
+		
+		voList.addAll(voSet);
+
+		return voList;
+	}
+	
+	private List<CryptoCoinCatalogVO> getNormalSubscriptionCatalog() {
+		List<CryptoCoinCatalogVO> voList = new ArrayList<>();
 		String catalogNameListStr = constantService.getValByName(CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY);
+		if (StringUtils.isBlank(catalogNameListStr)) {
+			return voList;
+		}
+
+		List<String> catalogList = Arrays.asList(catalogNameListStr.toUpperCase().split(","));
+
+		CryptoCoinCatalogExample example = new CryptoCoinCatalogExample();
+		example.createCriteria().andIsDeleteEqualTo(false).andCoinNameEnShortIn(catalogList);
+		List<CryptoCoinCatalog> poList = mapper.selectByExample(example);
+
+		for (CryptoCoinCatalog po : poList) {
+			voList.add(poToVO(po));
+		}
+
+		return voList;
+	}
+	
+	private List<CryptoCoinCatalogVO> getLowPriceSubscriptionCatalog() {
+		List<CryptoCoinCatalogVO> voList = new ArrayList<>();
+		String catalogNameListStr = constantService.getValByName(CryptoCoinConstant.CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY);
 		if (StringUtils.isBlank(catalogNameListStr)) {
 			return voList;
 		}
@@ -86,7 +120,12 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 
 	@Override
 	public void addSubscriptionCatalog(String catalog) {
-		if (StringUtils.isBlank(catalog)) {
+		addSubscriptionCatalog(catalog, CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY);
+	}
+	
+	@Override
+	public void addSubscriptionCatalog(String catalog, String redisKey) {
+		if (StringUtils.isAnyBlank(catalog, redisKey)) {
 			return;
 		}
 
@@ -98,19 +137,19 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 			return;
 		}
 
-		String recordsStr = constantService.getValByName(CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY);
+		String recordsStr = constantService.getValByName(redisKey);
 
 		if (StringUtils.isBlank(recordsStr)) {
 			recordsStr = poList.get(0).getCoinNameEnShort();
 		} else {
-			if (recordsStr.contains(catalog)) {
+			if (Arrays.asList(recordsStr.split(",")).contains(catalog)) {
 				return;
 			} else {
 				recordsStr = recordsStr + "," + poList.get(0).getCoinNameEnShort();
 			}
 		}
 
-		constantService.setValByName(CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY, recordsStr);
+		constantService.setValByName(redisKey, recordsStr);
 	}
 
 	@Override
@@ -119,12 +158,12 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 			return;
 		}
 
+		catalog = catalog.toUpperCase();
 		String recordsStr = constantService.getValByName(CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY);
 
 		if (StringUtils.isBlank(recordsStr)) {
 			return;
 		} else {
-			catalog = catalog.toUpperCase();
 			if(Arrays.asList(recordsStr.split(",")).contains(catalog)) {
 				if (recordsStr.contains(catalog + ",")) {
 					recordsStr = recordsStr.replaceAll(catalog + ",", "");

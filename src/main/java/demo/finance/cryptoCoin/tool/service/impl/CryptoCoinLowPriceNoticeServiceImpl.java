@@ -14,12 +14,15 @@ import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinAnalysisService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinCatalogMapper;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1dayMapper;
+import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1minuteMapper;
 import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinMABO;
 import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinConstant;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalogExample;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1day;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1minute;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1minuteExample;
 import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinMAResult;
 import demo.finance.cryptoCoin.tool.service.CryptoCoinLowPriceNoticeService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
@@ -30,6 +33,8 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 
 	@Autowired
 	private CryptoCoinPrice1dayMapper dailyDataMaper;
+	@Autowired
+	private CryptoCoinPrice1minuteMapper minuteDataMaper;
 	@Autowired
 	private CryptoCoinCatalogMapper catalogMapper;
 
@@ -48,12 +53,12 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 	}
 
 	private List<CryptoCoinCatalog> findLowPriceCoinType() {
-		LocalDateTime yesterday = LocalDateTime.now().with(LocalTime.MIN).minusDays(1);
+		LocalDateTime _10minAgo = LocalDateTime.now().minusMinutes(10).withSecond(0).withNano(0);
 		BigDecimal lowPrice = new BigDecimal(0.5);
 
-		CryptoCoinPrice1dayExample example = new CryptoCoinPrice1dayExample();
-		example.createCriteria().andIsDeleteEqualTo(false).andStartTimeEqualTo(yesterday).andEndPriceLessThan(lowPrice);
-		List<CryptoCoinPrice1day> dataList = dailyDataMaper.selectByExample(example);
+		CryptoCoinPrice1minuteExample example = new CryptoCoinPrice1minuteExample();
+		example.createCriteria().andIsDeleteEqualTo(false).andStartTimeEqualTo(_10minAgo).andEndPriceLessThan(lowPrice);
+		List<CryptoCoinPrice1minute> dataList = minuteDataMaper.selectByExample(example);
 		List<Long> coinTypeIdList = dataList.stream().map(po -> po.getCoinType()).collect(Collectors.toList());
 
 		CryptoCoinCatalogExample catalogExample = new CryptoCoinCatalogExample();

@@ -11,6 +11,7 @@ import demo.finance.cryptoCoin.data.service.CryptoCoin1MonthDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1WeekDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin5MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin60MinuteDataSummaryService;
+import demo.finance.cryptoCoin.tool.service.CryptoCoinLowPriceNoticeService;
 
 @Component
 public class CryptoCoinDataTaskToolServiceImpl extends CryptoCoinCommonService {
@@ -27,6 +28,8 @@ public class CryptoCoinDataTaskToolServiceImpl extends CryptoCoinCommonService {
 	private CryptoCoin1WeekDataSummaryService cryptoCoin1WeekDataSummaryService;
 	@Autowired
 	private CryptoCoin1MonthDataSummaryService cryptoCoin1MonthDataSummaryService;
+	@Autowired
+	private CryptoCoinLowPriceNoticeService cryptoCoinLowPriceNoticeService;
 
 	@Scheduled(cron = "0 */5 * * * ?")
 	public void summaryHistoryData() {
@@ -47,5 +50,12 @@ public class CryptoCoinDataTaskToolServiceImpl extends CryptoCoinCommonService {
 	public void getNewCryptoCoinDailyData() {
 		cryptoCoin1DayDataSummaryService.setWaitingUpdateCoinType();
 		cryptoCoin1DayDataSummaryService.sendCryptoCoinDailyDataQueryMsg();
+	}
+	
+	@Scheduled(cron="56 45 7 * * *")
+	@Scheduled(cron="56 45 15 * * *")
+	@Scheduled(cron="56 45 23 * * *")
+	public void setNewLowPriceSubscription() {
+		cryptoCoinLowPriceNoticeService.setNewLowPriceSubscription();
 	}
 }

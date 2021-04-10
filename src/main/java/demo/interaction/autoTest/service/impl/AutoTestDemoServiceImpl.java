@@ -43,7 +43,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	private HttpUtil httpUtil;
 	@Autowired
 	protected ExceptionService exceptionService;
-
+	
 	@Override
 	public ModelAndView linkToATHome(HttpServletRequest request) {
 		if(baseUtilCustom.hasAdminRole() || isDev(request)) {
@@ -355,4 +355,5 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 		String envName = constantService.getSysValByName(SystemConstantStore.envName);
 		return "dev".equals(envName);
 	}
+
 }

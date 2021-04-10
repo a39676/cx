@@ -11,8 +11,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import auxiliaryCommon.pojo.constant.ServerHost;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.ResultTypeCX;
@@ -20,9 +22,18 @@ import demo.common.service.CommonService;
 import demo.tool.pojo.constant.ToolPathConstant;
 import demo.tool.pojo.dto.CleanTmpFilesDTO;
 import demo.tool.service.ComplexToolService;
+import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
+import demo.tool.telegram.service.TelegramService;
+import telegram.pojo.constant.TelegramBotType;
+import toolPack.httpHandel.HttpUtil;
 
 @Service
 public class ComplexToolServiceImpl extends CommonService implements ComplexToolService {
+	
+	@Autowired
+	private HttpUtil httpUtil;
+	@Autowired
+	private TelegramService telegramService;
 	
 	@Override
 	public CommonResult cleanTmpFiles(CleanTmpFilesDTO dto) {
@@ -109,5 +120,16 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		return r;
 	}
 
-	
+	@Override
+	public void pingBBT() {
+		String url = ServerHost.localHost10002 + "/ping/ping";
+		try {
+			String response = String.valueOf(httpUtil.sendGet(url));
+			if(response.contains("pong")) {
+				return;
+			}
+		} catch (Exception e) {
+		}
+		telegramService.sendMessage(TelegramBotType.BOT_2, "bbt down", TelegramStaticChatID.MY_ID);
+	}
 }

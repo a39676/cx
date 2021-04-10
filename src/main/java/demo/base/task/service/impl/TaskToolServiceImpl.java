@@ -14,6 +14,7 @@ import demo.base.task.service.TaskToolService;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.type.SystemRolesType;
 import demo.tool.mapper.MailRecordMapper;
+import demo.tool.service.ComplexToolService;
 import demo.tool.service.VisitDataService;
 
 @Component
@@ -29,6 +30,8 @@ public class TaskToolServiceImpl implements TaskToolService {
 	private VisitDataService visitDataService;
 	@Autowired
 	private IpRecordService ipRecordService;
+	@Autowired
+	private ComplexToolService complexToolService;
 	
 	@Autowired
 	private UsersMapper usersMapper;
@@ -134,5 +137,10 @@ public class TaskToolServiceImpl implements TaskToolService {
 	@Scheduled(cron="40 01 12 * * *") // 每天01:12:40执行
 	public void deleteExpiredDenyRecord() {
 		ipRecordService.deleteExpiredDenyRecord();
+	}
+	
+	@Scheduled(cron="0 */30 * * * ?")   //每30分钟执行一次
+	public void pingBBT() {
+		complexToolService.pingBBT();
 	}
 }

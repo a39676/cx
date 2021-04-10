@@ -12,4 +12,6 @@ public interface ComplexToolService {
 
 	CommonResultCX cleanTmpFiles(String targetFolder, String extensionName, LocalDateTime oldestCreateTime);
 
+	void pingBBT();
+
 }

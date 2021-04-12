@@ -30,5 +30,6 @@ public interface CryptoCoinCatalogService {
 
 	void removeAllSubscriptionCatalog();
 
+	List<CryptoCoinCatalog> findCatalog(List<String> coinNameList);
 
 }

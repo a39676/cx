@@ -4,19 +4,23 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.type.CurrencyType;
+import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinAnalysisService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinCatalogMapper;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1dayMapper;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1minuteMapper;
 import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinMABO;
 import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinConstant;
+import demo.finance.cryptoCoin.data.pojo.dto.InsertCryptoCoinPriceNoticeSettingDTO;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalogExample;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1day;
@@ -24,6 +28,8 @@ import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1minute;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1minuteExample;
 import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinMAResult;
+import demo.finance.cryptoCoin.data.pojo.vo.CryptoCoinCatalogVO;
+import demo.finance.cryptoCoin.notice.service.CryptoCoinCommonNoticeService;
 import demo.finance.cryptoCoin.tool.service.CryptoCoinLowPriceNoticeService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 
@@ -37,6 +43,9 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 	private CryptoCoinPrice1minuteMapper minuteDataMaper;
 	@Autowired
 	private CryptoCoinCatalogMapper catalogMapper;
+
+	@Autowired
+	private CryptoCoinCommonNoticeService noticeService;
 
 	@Override
 	public void setNewLowPriceSubscription() {
@@ -82,7 +91,8 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 
 		List<CryptoCoinPriceCommonDataBO> dataList = dailyDataService.getCommonDataList(catalog, CurrencyType.USD,
 				twoMonthAgo);
-		if (continuousRiseSixDay(dataList) || priceDoubledInTwoWeek(dataList) || rise30Percentage(dataList) || breakAwayMA(dataList)) {
+		if (continuousRiseSixDay(dataList) || priceDoubledInTwoWeek(dataList) || rise30Percentage(dataList)
+				|| breakAwayMA(dataList)) {
 			return true;
 		}
 
@@ -161,5 +171,77 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 		}
 
 		constantService.setValByName(CryptoCoinConstant.CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY, listStr);
+	}
+
+	@Override
+	public List<CryptoCoinCatalogVO> getLowPriceSubscriptionCatalog() {
+		List<CryptoCoinCatalogVO> voList = new ArrayList<>();
+		String catalogNameListStr = constantService
+				.getValByName(CryptoCoinConstant.CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY);
+		if (StringUtils.isBlank(catalogNameListStr)) {
+			return voList;
+		}
+
+		List<String> catalogList = Arrays.asList(catalogNameListStr.toUpperCase().split(","));
+
+		List<CryptoCoinCatalog> catalogPOList = coinCatalogService.findCatalog(catalogList);
+		if (catalogPOList.isEmpty()) {
+			return voList;
+		}
+
+		for (CryptoCoinCatalog po : catalogPOList) {
+			voList.add(cryptoCoinCatalogPOToVO(po));
+		}
+
+		return voList;
+	}
+
+	@Override
+	public void setLowPriceCoinWatching() {
+		List<CryptoCoinCatalogVO> lowPriceSubscriptionCatalogVOList = getLowPriceSubscriptionCatalog();
+		if (lowPriceSubscriptionCatalogVOList.isEmpty()) {
+			return;
+		}
+
+		InsertCryptoCoinPriceNoticeSettingDTO dto = null;
+		Long coinTypeID = null;
+		CryptoCoinCatalog coinCatalog = null;
+		CryptoCoinPriceCommonDataBO newPrice = null;
+		for (CryptoCoinCatalogVO vo : lowPriceSubscriptionCatalogVOList) {
+			coinTypeID = decryptPrivateKey(vo.getPk());
+			if (coinTypeID == null) {
+				continue;
+			}
+			coinCatalog = coinCatalogService.findCatalog(coinTypeID);
+			if(coinCatalog == null || coinCatalog.getId() == null) {
+				continue;
+			}
+			
+			dto = new InsertCryptoCoinPriceNoticeSettingDTO();
+			dto.setCoinType(vo.getEnShortname());
+			dto.setCurrencyType(CurrencyType.USD.getCode());
+			dto.setNoticeCount(999999);
+			dto.setFluctuationSpeedPercentage(1D);
+			dto.setTimeRangeOfDataWatch(3);
+			dto.setTimeUnitOfDataWatch(TimeUnitType.minute.getCode());
+			dto.setTimeRangeOfDataWatch(1);
+			dto.setTimeUnitOfDataWatch(TimeUnitType.minute.getCode());
+			dto.setStartNoticeTime(localDateTimeHandler.dateToStr(LocalDateTime.now()));
+			dto.setValidTime(localDateTimeHandler.dateToStr(LocalDateTime.now().plusHours(8)));
+			noticeService.insertNewCryptoCoinPriceNoticeSetting(dto);
+			
+			newPrice = cacheService.getNewPrice(coinCatalog, CurrencyType.USD);
+			if(newPrice != null) {
+				dto.setFluctuationSpeedPercentage(null);
+				dto.setTimeRangeOfDataWatch(null);
+				dto.setTimeUnitOfDataWatch(null);
+				dto.setNoticeCount(1);
+				dto.setMaxPrice(newPrice.getEndPrice().multiply(new BigDecimal(1.06)));
+				dto.setMinPrice(newPrice.getEndPrice().multiply(new BigDecimal(0.94)));
+				noticeService.insertNewCryptoCoinPriceNoticeSetting(dto);
+			}
+		}
+
+		
 	}
 }

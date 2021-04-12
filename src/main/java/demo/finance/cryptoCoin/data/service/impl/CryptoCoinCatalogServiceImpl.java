@@ -18,12 +18,15 @@ import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalogExample;
 import demo.finance.cryptoCoin.data.pojo.vo.CryptoCoinCatalogVO;
 import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
+import demo.finance.cryptoCoin.tool.service.CryptoCoinLowPriceNoticeService;
 
 @Service
 public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implements CryptoCoinCatalogService {
 
 	@Autowired
 	private CryptoCoinCatalogMapper mapper;
+	@Autowired
+	private CryptoCoinLowPriceNoticeService lowPriceNoticeService;
 
 	@Override
 	public CryptoCoinCatalog findCatalog(String coinName) {
@@ -37,6 +40,32 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 			return null;
 		}
 		return poList.get(0);
+	}
+	
+	@Override
+	public List<CryptoCoinCatalog> findCatalog(List<String> coinNameList) {
+		if (coinNameList == null || coinNameList.isEmpty()) {
+			return new ArrayList<>();
+		}
+		
+		Set<String> paramNameSet = new HashSet<>();
+		for(String coinName : coinNameList) {
+			if(StringUtils.isNotBlank(coinName)) {
+				paramNameSet.add(coinName.toUpperCase());
+			}
+		}
+		
+		if(paramNameSet.isEmpty()) {
+			return new ArrayList<>();
+		}
+		
+		coinNameList.clear();
+		coinNameList.addAll(paramNameSet);
+		
+		CryptoCoinCatalogExample example = new CryptoCoinCatalogExample();
+		example.createCriteria().andCoinNameEnShortIn(coinNameList).andIsDeleteEqualTo(false);
+		List<CryptoCoinCatalog> poList = mapper.selectByExample(example);
+		return poList;
 	}
 
 	@Override
@@ -59,7 +88,7 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 		List<CryptoCoinCatalogVO> voList = new ArrayList<>();
 
 		for (CryptoCoinCatalog po : poList) {
-			voList.add(poToVO(po));
+			voList.add(cryptoCoinCatalogPOToVO(po));
 		}
 
 		return voList;
@@ -71,7 +100,7 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 		Set<CryptoCoinCatalogVO> voSet = new HashSet<>();
 
 		voSet.addAll(getNormalSubscriptionCatalog());
-		voSet.addAll(getLowPriceSubscriptionCatalog());
+		voSet.addAll(lowPriceNoticeService.getLowPriceSubscriptionCatalog());
 		
 		voList.addAll(voSet);
 
@@ -92,32 +121,12 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 		List<CryptoCoinCatalog> poList = mapper.selectByExample(example);
 
 		for (CryptoCoinCatalog po : poList) {
-			voList.add(poToVO(po));
+			voList.add(cryptoCoinCatalogPOToVO(po));
 		}
 
 		return voList;
 	}
 	
-	private List<CryptoCoinCatalogVO> getLowPriceSubscriptionCatalog() {
-		List<CryptoCoinCatalogVO> voList = new ArrayList<>();
-		String catalogNameListStr = constantService.getValByName(CryptoCoinConstant.CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY);
-		if (StringUtils.isBlank(catalogNameListStr)) {
-			return voList;
-		}
-
-		List<String> catalogList = Arrays.asList(catalogNameListStr.toUpperCase().split(","));
-
-		CryptoCoinCatalogExample example = new CryptoCoinCatalogExample();
-		example.createCriteria().andIsDeleteEqualTo(false).andCoinNameEnShortIn(catalogList);
-		List<CryptoCoinCatalog> poList = mapper.selectByExample(example);
-
-		for (CryptoCoinCatalog po : poList) {
-			voList.add(poToVO(po));
-		}
-
-		return voList;
-	}
-
 	@Override
 	public void addSubscriptionCatalog(String catalog) {
 		addSubscriptionCatalog(catalog, CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY);
@@ -179,13 +188,6 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 	@Override
 	public void removeAllSubscriptionCatalog() {
 		constantService.deleteValByName(CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY);
-	}
-
-	private CryptoCoinCatalogVO poToVO(CryptoCoinCatalog po) {
-		CryptoCoinCatalogVO vo = new CryptoCoinCatalogVO();
-		vo.setPk(encryptId(po.getId()));
-		vo.setEnShortname(po.getCoinNameEnShort());
-		return vo;
 	}
 
 	@Override

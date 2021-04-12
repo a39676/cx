@@ -58,4 +58,11 @@ public class CryptoCoinDataTaskToolServiceImpl extends CryptoCoinCommonService {
 	public void setNewLowPriceSubscription() {
 		cryptoCoinLowPriceNoticeService.setNewLowPriceSubscription();
 	}
+	
+	@Scheduled(cron="56 05 8 * * *")
+	@Scheduled(cron="56 05 16 * * *")
+	@Scheduled(cron="56 05 0 * * *")
+	public void setLowPriceCoinWatching() {
+		cryptoCoinLowPriceNoticeService.setLowPriceCoinWatching();
+	}
 }

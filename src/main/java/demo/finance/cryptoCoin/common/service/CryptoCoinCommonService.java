@@ -15,6 +15,7 @@ import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.common.service.impl.FinanceCommonService;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.result.FilterBODataResult;
+import demo.finance.cryptoCoin.data.pojo.vo.CryptoCoinCatalogVO;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MonthDataSummaryService;
@@ -556,4 +557,10 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 		}
 	}
 
+	protected CryptoCoinCatalogVO cryptoCoinCatalogPOToVO(CryptoCoinCatalog po) {
+		CryptoCoinCatalogVO vo = new CryptoCoinCatalogVO();
+		vo.setPk(encryptId(po.getId()));
+		vo.setEnShortname(po.getCoinNameEnShort());
+		return vo;
+	}
 }

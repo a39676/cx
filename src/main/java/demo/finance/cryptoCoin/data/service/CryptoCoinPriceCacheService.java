@@ -21,4 +21,6 @@ public interface CryptoCoinPriceCacheService {
 	CryptoCoinPriceCommonDataBO getCommonData(CryptoCoinCatalog coinType, CurrencyType currencyType,
 			LocalDateTime datetime);
 
+	CryptoCoinPriceCommonDataBO getNewPrice(CryptoCoinCatalog coinType, CurrencyType currencyType);
+
 }

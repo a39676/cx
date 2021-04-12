@@ -116,9 +116,8 @@ public class TaskToolServiceImpl implements TaskToolService {
 	 * -查找具有DELAY_POSTER权限的用户的N篇随机文章, 处理为通过
 	 *  {@link SystemRolesType}
 	 * @throws Exception
-	 * TODO dev mark
 	 */
-	@Scheduled(cron="0 */267 * * * ?")
+	@Scheduled(cron="0 */26 * * * ?")
 	public void autoPass() throws Exception {
 		fakePostService.autoPass();
 	}

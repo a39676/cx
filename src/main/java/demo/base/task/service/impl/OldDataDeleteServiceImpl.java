@@ -5,14 +5,13 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import demo.article.article.service.ArticleBurnService;
-import demo.base.task.service.OldDataDeleteService;
 import demo.image.service.ImageService;
 import demo.interaction.image.service.ImageInteractionService;
 import demo.tool.ocr.service.OcrService;
 
 @Component
-public class OldDataDeleteServiceImpl implements OldDataDeleteService {
-	
+public class OldDataDeleteServiceImpl {
+
 	@Autowired
 	private ImageInteractionService imageInteractionService;
 	@Autowired
@@ -21,25 +20,24 @@ public class OldDataDeleteServiceImpl implements OldDataDeleteService {
 	private ImageService imgService;
 	@Autowired
 	private OcrService ocrService;
-	
-	
+
 	/** 清理时间过长的, cloudinary上的 自动测试报告图片. */
-	@Scheduled(cron="19 25 03 * * *")
+	@Scheduled(cron = "19 25 03 * * *")
 	public void cleanOldAutoTestUploadImage() {
 		imageInteractionService.cleanOldAutoTestUploadImage();
 	}
-	
+
 	/** 清理时间过长的阅后即焚信息. */
-	@Scheduled(cron="36 24 04 * * *")
+	@Scheduled(cron = "36 24 04 * * *")
 	public void cleanExpiredArticleBurn() {
 		articleBurnService.cleanExpiredArticleBurn();
 	}
-	
+
 	/** 清理过期的图片 */
-	@Scheduled(cron="24 19 05 * * *")
+	@Scheduled(cron = "24 19 05 * * *")
 	public void imageClean() {
 		imgService.imageClean();
 		ocrService.cleanOldOcrImg();
 	}
-	
+
 }

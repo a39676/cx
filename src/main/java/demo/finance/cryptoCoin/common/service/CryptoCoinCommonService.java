@@ -113,6 +113,7 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 		 */
 		if(resultTarget.getStartTime() == null && otherData.getStartTime() != null) {
 			resultTarget.setStartTime(otherData.getStartTime());
+			resultTarget.setStartPrice(otherData.getStartPrice());
 		}
 
 		try {
@@ -127,6 +128,7 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 
 		if(resultTarget.getEndTime() == null && otherData.getEndTime() != null) {
 			resultTarget.setEndTime(otherData.getEndTime());
+			resultTarget.setEndPrice(otherData.getEndPrice());
 		}
 		
 		if (otherData.getHighPrice() != null) {

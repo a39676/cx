@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -62,6 +63,8 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		if (coinType == null || currencyType == null) {
 			return r;
 		}
+		
+		constantService.setValByName(CryptoCoinConstant.RECEIVEING_CRYPTO_COIN_DAILY_DATA_KEY, "t", 3, TimeUnit.MINUTES);
 
 		mergeDuplicateData(coinType);
 		updateSummaryData(dataList, coinType, currencyType);
@@ -337,6 +340,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 			for(CryptoCoinCatalog catalog: allCatalogPOList) {
 				catalogSet.add(catalog.getCoinNameEnShort());
 			}
+			result.addAll(catalogSet);
 			return result;
 		}
 		
@@ -354,14 +358,21 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 	}
 
 	private void setWaitingUpdateCoinTypeList(List<String> coinTypeNameList) {
+		Long listSize = redisTemplate.opsForList().size(CryptoCoinConstant.CRYPTO_COIN_WAITING_UPDATE_DAILY_DATA_LIST_KEY);
+		if(listSize > 0) {
+			for(int i = 0; i < listSize; i++) {
+				redisTemplate.opsForList().rightPop(CryptoCoinConstant.CRYPTO_COIN_WAITING_UPDATE_DAILY_DATA_LIST_KEY);
+			}
+		}
+		
 		for(String coinType : coinTypeNameList) {
-			redisTemplate.opsForList().leftPush(CryptoCoinConstant.CRYPTO_COIN_WAITING_UPDATE_DAILY_DATA_KEY_PREFIX, coinType);
+			redisTemplate.opsForList().leftPush(CryptoCoinConstant.CRYPTO_COIN_WAITING_UPDATE_DAILY_DATA_LIST_KEY, coinType);
 		}
 //		redisTemplate.opsForList().leftPushAll(CryptoCoinConstant.CRYPTO_COIN_WAITING_UPDATE_DAILY_DATA_KEY_PREFIX, coinTypeNameList);
 	}
 	
 	private String getWatingUpdateCoinType() {
-		return String.valueOf(redisTemplate.opsForList().rightPop(CryptoCoinConstant.CRYPTO_COIN_WAITING_UPDATE_DAILY_DATA_KEY_PREFIX));
+		return String.valueOf(redisTemplate.opsForList().rightPop(CryptoCoinConstant.CRYPTO_COIN_WAITING_UPDATE_DAILY_DATA_LIST_KEY));
 	}
 
 	private CryptoCoinPrice1day findLastDailyData(Long coinType) {
@@ -370,6 +381,10 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 	
 	@Override
 	public void sendCryptoCoinDailyDataQueryMsg() {
+		if(constantService.hasKey(CryptoCoinConstant.RECEIVEING_CRYPTO_COIN_DAILY_DATA_KEY)) {
+			return;
+		}
+		
 		String coinName = getWatingUpdateCoinType();
 		if(StringUtils.isBlank(coinName) || "null".equals(coinName)) {
 			return;
@@ -382,6 +397,9 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 			dto.setCounting(CryptoCoinConstant.CRYPTO_COMPARE_API_DATA_MAX_LENGTH);
 		} else {
 			Long days = ChronoUnit.DAYS.between(lastData.getStartTime(), LocalDateTime.now());
+			if(days > CryptoCoinConstant.CRYPTO_COMPARE_API_DATA_MAX_LENGTH) {
+				days = CryptoCoinConstant.CRYPTO_COMPARE_API_DATA_MAX_LENGTH.longValue();
+			}
 			dto.setCounting(days.intValue());
 		}
 		

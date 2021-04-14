@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import demo.common.controller.CommonController;
 import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinManagerUrl;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
-import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 
@@ -21,8 +20,6 @@ public class CryptoCoinManagerController extends CommonController {
 	@Autowired
 	private CryptoCoinPriceCacheService priceCacheService;
 	@Autowired
-	private CryptoCoin1MinuteDataSummaryService _1MinDataService;
-	@Autowired
 	private CryptoCoinCatalogService catalogService;
 	@Autowired
 	private CryptoCoin1DayDataSummaryService dailyDataService;
@@ -30,7 +27,6 @@ public class CryptoCoinManagerController extends CommonController {
 	@GetMapping(value = CryptoCoinManagerUrl.CHECK_DATA_API)
 	@ResponseBody
 	public String checkDataAPI() {
-		_1MinDataService.historyMQIsActive();
 		priceCacheService.isSocketAlive();
 		return "check";
 	}

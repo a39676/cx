@@ -52,7 +52,7 @@ public class CryptoCoin5MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 
 	private void handleHistoryDataList(LocalDateTime startTime, CryptoCoinCatalog coinType, CurrencyType currencyType) {
 
-		List<CryptoCoinPriceCommonDataBO> cacheDataList = _1MinDataService.getCommonDataList(coinType, currencyType,
+		List<CryptoCoinPriceCommonDataBO> cacheDataList = minuteDataService.getCommonDataList(coinType, currencyType,
 				startTime);
 		if (cacheDataList == null || cacheDataList.isEmpty()) {
 			return;

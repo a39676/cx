@@ -100,7 +100,7 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 		Set<CryptoCoinCatalogVO> voSet = new HashSet<>();
 
 		voSet.addAll(getNormalSubscriptionCatalog());
-		voSet.addAll(lowPriceNoticeService.getLowPriceSubscriptionCatalog());
+		voSet.addAll(lowPriceNoticeService.getLowPriceSubscriptionCatalogVOList());
 		
 		voList.addAll(voSet);
 

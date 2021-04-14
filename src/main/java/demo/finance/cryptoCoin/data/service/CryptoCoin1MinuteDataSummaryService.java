@@ -30,9 +30,9 @@ public interface CryptoCoin1MinuteDataSummaryService {
 	List<CryptoCoinPriceCommonDataBO> getCommonDataListFillWithCache(CryptoCoinCatalog coinType, CurrencyType currencyType,
 			LocalDateTime startTime);
 
-	CommonResult historyMQIsActive();
-
 	CryptoCoinPriceCommonDataBO getCommonData(CryptoCoinCatalog coinType, CurrencyType currencyType,
 			LocalDateTime datetime);
+
+	void summaryLowPriceRedisData();
 
 }

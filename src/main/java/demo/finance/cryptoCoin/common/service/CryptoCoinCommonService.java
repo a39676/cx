@@ -32,7 +32,7 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 	@Autowired
 	protected CryptoCoinPriceCacheService cacheService;
 	@Autowired
-	protected CryptoCoin1MinuteDataSummaryService _1MinDataService;
+	protected CryptoCoin1MinuteDataSummaryService minuteDataService;
 	@Autowired
 	protected CryptoCoin5MinuteDataSummaryService _5MinDataService;
 	@Autowired
@@ -526,7 +526,7 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 		if (TimeUnitType.minute.equals(timeUnit)) {
 			if (CryptoCoinDataConstant.CRYPTO_COIN_1MINUTE_DATA_LIVE_HOURS * 60 > timeRange) {
 				startTime = LocalDateTime.now().minusMinutes(timeRange).withSecond(0).withNano(0);
-				return _1MinDataService.getCommonDataListFillWithCache(coinType, currencyType, startTime);
+				return minuteDataService.getCommonDataListFillWithCache(coinType, currencyType, startTime);
 			} else if (CryptoCoinDataConstant.CRYPTO_COIN_5MINUTE_DATA_LIVE_HOURS * 60 > timeRange) {
 				startTime = nextStepStartTimeByMinute(LocalDateTime.now(), timeRange).minusMinutes(timeRange.longValue());
 				return _5MinDataService.getCommonDataListFillWithCache(coinType, currencyType, startTime);

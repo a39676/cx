@@ -31,6 +31,11 @@ public class CryptoCoinDataTaskToolServiceImpl extends CryptoCoinCommonService {
 	@Autowired
 	private CryptoCoinLowPriceNoticeService cryptoCoinLowPriceNoticeService;
 
+	@Scheduled(cron = "0 */2 * * * ?")
+	public void summaryMinuteData() {
+		cryptoCoin1MinuteDataSummaryService.summaryLowPriceRedisData();
+	}
+	
 	@Scheduled(cron = "0 */5 * * * ?")
 	public void summaryHistoryData() {
 		cryptoCoin5MinuteDataSummaryService.summaryHistoryData();

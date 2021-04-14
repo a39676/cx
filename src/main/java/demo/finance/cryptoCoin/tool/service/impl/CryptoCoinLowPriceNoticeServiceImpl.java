@@ -174,17 +174,9 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 	}
 
 	@Override
-	public List<CryptoCoinCatalogVO> getLowPriceSubscriptionCatalog() {
+	public List<CryptoCoinCatalogVO> getLowPriceSubscriptionCatalogVOList() {
 		List<CryptoCoinCatalogVO> voList = new ArrayList<>();
-		String catalogNameListStr = constantService
-				.getValByName(CryptoCoinConstant.CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY);
-		if (StringUtils.isBlank(catalogNameListStr)) {
-			return voList;
-		}
-
-		List<String> catalogList = Arrays.asList(catalogNameListStr.toUpperCase().split(","));
-
-		List<CryptoCoinCatalog> catalogPOList = coinCatalogService.findCatalog(catalogList);
+		List<CryptoCoinCatalog> catalogPOList = getLowPriceSubscriptionCatalogList();
 		if (catalogPOList.isEmpty()) {
 			return voList;
 		}
@@ -195,30 +187,35 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 
 		return voList;
 	}
+	
+	@Override
+	public List<CryptoCoinCatalog> getLowPriceSubscriptionCatalogList() {
+		List<CryptoCoinCatalog> poList = new ArrayList<>();
+		String catalogNameListStr = constantService
+				.getValByName(CryptoCoinConstant.CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY);
+		if (StringUtils.isBlank(catalogNameListStr)) {
+			return poList;
+		}
+
+		List<String> catalogList = Arrays.asList(catalogNameListStr.toUpperCase().split(","));
+
+		return coinCatalogService.findCatalog(catalogList);
+	}
+	
+	
 
 	@Override
 	public void setLowPriceCoinWatching() {
-		List<CryptoCoinCatalogVO> lowPriceSubscriptionCatalogVOList = getLowPriceSubscriptionCatalog();
-		if (lowPriceSubscriptionCatalogVOList.isEmpty()) {
+		List<CryptoCoinCatalog> lowPriceSubscriptionCatalogPOList = getLowPriceSubscriptionCatalogList();
+		if (lowPriceSubscriptionCatalogPOList.isEmpty()) {
 			return;
 		}
 
 		InsertCryptoCoinPriceNoticeSettingDTO dto = null;
-		Long coinTypeID = null;
-		CryptoCoinCatalog coinCatalog = null;
 		CryptoCoinPriceCommonDataBO newPrice = null;
-		for (CryptoCoinCatalogVO vo : lowPriceSubscriptionCatalogVOList) {
-			coinTypeID = decryptPrivateKey(vo.getPk());
-			if (coinTypeID == null) {
-				continue;
-			}
-			coinCatalog = coinCatalogService.findCatalog(coinTypeID);
-			if(coinCatalog == null || coinCatalog.getId() == null) {
-				continue;
-			}
-			
+		for (CryptoCoinCatalog po : lowPriceSubscriptionCatalogPOList) {
 			dto = new InsertCryptoCoinPriceNoticeSettingDTO();
-			dto.setCoinType(vo.getEnShortname());
+			dto.setCoinType(po.getCoinNameEnShort());
 			dto.setCurrencyType(CurrencyType.USD.getCode());
 			dto.setNoticeCount(999999);
 			dto.setFluctuationSpeedPercentage(1D);
@@ -230,7 +227,7 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 			dto.setValidTime(localDateTimeHandler.dateToStr(LocalDateTime.now().plusHours(8)));
 			noticeService.insertNewCryptoCoinPriceNoticeSetting(dto);
 			
-			newPrice = cacheService.getNewPrice(coinCatalog, CurrencyType.USD);
+			newPrice = cacheService.getNewPrice(po, CurrencyType.USD);
 			if(newPrice != null) {
 				dto.setFluctuationSpeedPercentage(null);
 				dto.setTimeRangeOfDataWatch(null);

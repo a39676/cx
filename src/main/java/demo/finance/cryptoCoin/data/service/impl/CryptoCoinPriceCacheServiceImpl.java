@@ -37,14 +37,17 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 			newBO.setStartPrice(newBO.getEndPrice());
 			newBO.setHighPrice(newBO.getEndPrice());
 			newBO.setLowPrice(newBO.getEndPrice());
+			constantService.setValByName(key, boToDataStr(newBO),
+					CryptoCoinDataConstant.CRYPTO_COIN_CACHE_DATA_LIVE_MINUTES, TimeUnit.MINUTES);
 
 		} else {
 			CryptoCoinPriceCommonDataBO oldBO = dataStrToBO(oldCacheDataStr);
 			oldBO = dataMerge(oldBO, newBO);
+			constantService.setValByName(key, boToDataStr(oldBO),
+					CryptoCoinDataConstant.CRYPTO_COIN_CACHE_DATA_LIVE_MINUTES, TimeUnit.MINUTES);
+
 		}
 
-		constantService.setValByName(key, boToDataStr(newBO),
-				CryptoCoinDataConstant.CRYPTO_COIN_CACHE_DATA_LIVE_MINUTES, TimeUnit.MINUTES);
 	}
 
 	@Override

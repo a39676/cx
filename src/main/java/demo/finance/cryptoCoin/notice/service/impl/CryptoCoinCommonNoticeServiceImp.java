@@ -326,7 +326,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	private CommonResult priceConditionNoticeHandle(CryptoCoinPriceNotice noticeSetting, CryptoCoinCatalog coinType,
 			CurrencyType currencyType) {
 		CommonResult r = new CommonResult();
-		List<CryptoCoinPriceCommonDataBO> historyDataList = _1MinDataService.getCommonDataListFillWithCache(coinType,
+		List<CryptoCoinPriceCommonDataBO> historyDataList = minuteDataService.getCommonDataListFillWithCache(coinType,
 				currencyType, LocalDateTime.now().minusMinutes(2).withSecond(0).withNano(0));
 
 		if (historyDataList == null || historyDataList.isEmpty()) {

@@ -28,10 +28,12 @@ import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1day;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
 import demo.finance.cryptoCoin.mq.producer.CryptoCoinDailyDataQueryAckProducer;
+import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataSubDTO;
+import telegram.pojo.dto.TelegramMessageDTO;
 
 @Service
 public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonService
@@ -66,7 +68,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		
 		constantService.setValByName(CryptoCoinConstant.RECEIVEING_CRYPTO_COIN_DAILY_DATA_KEY, "t", 3, TimeUnit.MINUTES);
 
-		mergeDuplicateData(coinType);
+//		mergeDuplicateData(coinType);
 		updateSummaryData(dataList, coinType, currencyType);
 
 		if (updateOthers != null && updateOthers) {
@@ -263,6 +265,8 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 
 	}
 
+	/* trying */
+	@SuppressWarnings("unused")
 	private void mergeDuplicateData(CryptoCoinCatalog coinType) {
 		LocalDateTime todayStart = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
 		LocalDateTime indexTime = todayStart;
@@ -399,6 +403,12 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 			Long days = ChronoUnit.DAYS.between(lastData.getStartTime(), LocalDateTime.now());
 			if(days > CryptoCoinConstant.CRYPTO_COMPARE_API_DATA_MAX_LENGTH) {
 				days = CryptoCoinConstant.CRYPTO_COMPARE_API_DATA_MAX_LENGTH.longValue();
+			}
+			if(days == CryptoCoinConstant.CRYPTO_COMPARE_API_DATA_MAX_LENGTH.longValue()) {
+				TelegramMessageDTO msgDTO = new TelegramMessageDTO();
+				msgDTO.setId(TelegramStaticChatID.MY_ID);
+				msgDTO.setMsg(coinName + " query max data, need check");
+				telegramCryptoCoinMessageAckProducer.send(msgDTO);
 			}
 			dto.setCounting(days.intValue());
 		}

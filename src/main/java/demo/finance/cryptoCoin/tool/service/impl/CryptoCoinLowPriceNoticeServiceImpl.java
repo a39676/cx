@@ -4,11 +4,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -156,16 +154,21 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 
 	private void setLowPriceCatalogRedisList(List<String> list) {
 		if (list.isEmpty()) {
-			constantService.setValByName(CryptoCoinConstant.CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY, "");
+			cleanLowPriceCatalogRedisList();
 			return;
 		}
 
-		String listStr = list.get(0);
-		for (int i = 1; i < list.size(); i++) {
-			listStr += "," + list.get(i);
-		}
+		redisTemplate.opsForList().leftPushAll(CryptoCoinConstant.CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY, list);
+	}
 
-		constantService.setValByName(CryptoCoinConstant.CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY, listStr);
+	private void cleanLowPriceCatalogRedisList() {
+		Long size = redisTemplate.opsForList().size(CryptoCoinConstant.CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY);
+		if (size == 0) {
+			return;
+		}
+		for (int i = 0; i < size; i++) {
+			redisTemplate.opsForList().rightPop(CryptoCoinConstant.CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY);
+		}
 	}
 
 	@Override
@@ -182,21 +185,29 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 
 		return voList;
 	}
-	
+
 	@Override
 	public List<CryptoCoinCatalog> getLowPriceSubscriptionCatalogList() {
 		List<CryptoCoinCatalog> poList = new ArrayList<>();
-		String catalogNameListStr = constantService
-				.getValByName(CryptoCoinConstant.CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY);
-		if (StringUtils.isBlank(catalogNameListStr)) {
+		
+		Long size = redisTemplate.opsForList().size(CryptoCoinConstant.CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY);
+		if(size < 1) {
 			return poList;
 		}
+		
+		List<String> coinNameList = new ArrayList<>();
+		for(int i = 0; i < size; i++){
+			List<Object> l = redisTemplate.opsForList().range(CryptoCoinConstant.CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY, 0, size);
+			for(Object o : l) {
+				if(o instanceof String) {
+					coinNameList.add(String.valueOf(o));
+				}
+			}
+		}
 
-		List<String> catalogList = Arrays.asList(catalogNameListStr.toUpperCase().split(","));
-
-		return coinCatalogService.findCatalog(catalogList);
+		return coinCatalogService.findCatalog(coinNameList);
 	}
-	
+
 	@Override
 	public void setLowPriceCoinWatching() {
 		List<CryptoCoinCatalog> lowPriceSubscriptionCatalogPOList = getLowPriceSubscriptionCatalogList();
@@ -219,9 +230,9 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 			dto.setStartNoticeTime(localDateTimeHandler.dateToStr(LocalDateTime.now()));
 			dto.setValidTime(localDateTimeHandler.dateToStr(LocalDateTime.now().plusHours(8)));
 			noticeService.insertNewCryptoCoinPriceNoticeSetting(dto);
-			
+
 			newPrice = cacheService.getNewPrice(po, CurrencyType.USD);
-			if(newPrice != null) {
+			if (newPrice != null) {
 				dto.setFluctuationSpeedPercentage(null);
 				dto.setTimeRangeOfDataWatch(null);
 				dto.setTimeUnitOfDataWatch(null);
@@ -232,6 +243,5 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 			}
 		}
 
-		
 	}
 }

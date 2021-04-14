@@ -90,6 +90,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 
 	/*
 	 * 2021-04-14 crypto compare 有时会返回全0数据 暂不处理此类数据
+	 * dto 应该附带数据源
 	 */
 	private boolean isValidData(List<CryptoCoinDataSubDTO> dataList) {
 		if (dataList == null || dataList.isEmpty()) {

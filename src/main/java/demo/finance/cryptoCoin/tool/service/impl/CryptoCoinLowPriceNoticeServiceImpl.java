@@ -161,8 +161,15 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 			cleanLowPriceCatalogRedisList();
 			return;
 		}
-
-		redisTemplate.opsForList().leftPushAll(CryptoCoinConstant.CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY, list);
+		
+		Long size = redisTemplate.opsForList().size(CryptoCoinConstant.CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY);
+		for(int i = 0; i < size; i++) {
+			redisTemplate.opsForList().rightPop(CryptoCoinConstant.CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY);
+		}
+		
+		for(String subscription : list) {
+			redisTemplate.opsForList().leftPush(CryptoCoinConstant.CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY, subscription);
+		}
 	}
 
 	private void cleanLowPriceCatalogRedisList() {

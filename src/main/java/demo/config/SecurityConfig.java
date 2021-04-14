@@ -110,7 +110,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(UploadUrlConstant.uploadPriRoot + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DEV))
             .antMatchers(CryptoCoinManagerUrl.ROOT + "/**")
-            .access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
             .antMatchers(AuthUrl.root + "/**")
             	.access(hasAnyRole(Arrays.asList(SystemRolesType.ROLE_SUPER_ADMIN), Arrays.asList(OrganzationRolesType.ROLE_ORG_SUPER_ADMIN)))
             .antMatchers(PMemoUrl.ROOT + PMemoUrl.SET)

@@ -66,11 +66,12 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 			return r;
 		}
 		
-		constantService.setValByName(CryptoCoinConstant.RECEIVEING_CRYPTO_COIN_DAILY_DATA_KEY, "t", 3, TimeUnit.MINUTES);
+		constantService.setValByName(CryptoCoinConstant.RECEIVEING_CRYPTO_COIN_DAILY_DATA_KEY, "_", 3, TimeUnit.MINUTES);
 
 //		mergeDuplicateData(coinType);
 		updateSummaryData(dataList, coinType, currencyType);
 
+		constantService.deleteValByName(CryptoCoinConstant.RECEIVEING_CRYPTO_COIN_DAILY_DATA_KEY);
 		if (updateOthers != null && updateOthers) {
 			sendCryptoCoinDailyDataQueryMsg();
 		}

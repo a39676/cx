@@ -76,7 +76,7 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 
 		CryptoCoinPrice1dayExample example = new CryptoCoinPrice1dayExample();
 		example.createCriteria().andIsDeleteEqualTo(false).andCoinTypeEqualTo(catalog.getId())
-				.andStartTimeEqualTo(twoMonthAgo);
+				.andStartTimeGreaterThan(twoMonthAgo);
 		List<CryptoCoinPrice1day> oldData = dailyDataMaper.selectByExample(example);
 		if (oldData == null || oldData.isEmpty()) {
 			return false;
@@ -142,7 +142,11 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 		for (int i = 0; i < maList.getMaList().size() - 1; i++) {
 			tmpMA = maList.getMaList().get(i);
 			nextMA = maList.getMaList().get(i + 1);
-			if (tmpMA.getMaValue() == 0 || tmpMA.getMaValue() < nextMA.getMaValue()) {
+			try {
+				if (tmpMA == null || tmpMA.getMaValue() == null || tmpMA.getMaValue() == 0 || tmpMA.getMaValue() < nextMA.getMaValue()) {
+					return false;
+				}
+			} catch (Exception e) {
 				return false;
 			}
 		}

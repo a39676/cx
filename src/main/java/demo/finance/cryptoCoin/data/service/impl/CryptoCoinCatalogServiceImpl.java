@@ -1,7 +1,6 @@
 package demo.finance.cryptoCoin.data.service.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -41,27 +40,27 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 		}
 		return poList.get(0);
 	}
-	
+
 	@Override
 	public List<CryptoCoinCatalog> findCatalog(List<String> coinNameList) {
 		if (coinNameList == null || coinNameList.isEmpty()) {
 			return new ArrayList<>();
 		}
-		
+
 		Set<String> paramNameSet = new HashSet<>();
-		for(String coinName : coinNameList) {
-			if(StringUtils.isNotBlank(coinName)) {
+		for (String coinName : coinNameList) {
+			if (StringUtils.isNotBlank(coinName)) {
 				paramNameSet.add(coinName.toUpperCase());
 			}
 		}
-		
-		if(paramNameSet.isEmpty()) {
+
+		if (paramNameSet.isEmpty()) {
 			return new ArrayList<>();
 		}
-		
+
 		coinNameList.clear();
 		coinNameList.addAll(paramNameSet);
-		
+
 		CryptoCoinCatalogExample example = new CryptoCoinCatalogExample();
 		example.createCriteria().andCoinNameEnShortIn(coinNameList).andIsDeleteEqualTo(false);
 		List<CryptoCoinCatalog> poList = mapper.selectByExample(example);
@@ -101,20 +100,25 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 
 		voSet.addAll(getNormalSubscriptionCatalog());
 		voSet.addAll(lowPriceNoticeService.getLowPriceSubscriptionCatalogVOList());
-		
+
 		voList.addAll(voSet);
 
 		return voList;
 	}
-	
+
 	private List<CryptoCoinCatalogVO> getNormalSubscriptionCatalog() {
 		List<CryptoCoinCatalogVO> voList = new ArrayList<>();
-		String catalogNameListStr = constantService.getValByName(CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY);
-		if (StringUtils.isBlank(catalogNameListStr)) {
+		Long size = redisTemplate.opsForList().size(CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY);
+		if (size < 1) {
 			return voList;
 		}
 
-		List<String> catalogList = Arrays.asList(catalogNameListStr.toUpperCase().split(","));
+		List<Object> redisList = redisTemplate.opsForList().range(CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY,
+				0, size);
+		List<String> catalogList = new ArrayList<>();
+		for (Object value : redisList) {
+			catalogList.add(String.valueOf(value));
+		}
 
 		CryptoCoinCatalogExample example = new CryptoCoinCatalogExample();
 		example.createCriteria().andIsDeleteEqualTo(false).andCoinNameEnShortIn(catalogList);
@@ -126,18 +130,19 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 
 		return voList;
 	}
-	
+
 	@Override
 	public void addSubscriptionCatalog(String catalog) {
 		addSubscriptionCatalog(catalog, CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY);
 	}
-	
+
 	@Override
 	public void addSubscriptionCatalog(String catalog, String redisKey) {
 		if (StringUtils.isAnyBlank(catalog, redisKey)) {
 			return;
 		}
 
+		catalog = catalog.toUpperCase();
 		CryptoCoinCatalogExample example = new CryptoCoinCatalogExample();
 		example.createCriteria().andIsDeleteEqualTo(false).andCoinNameEnShortEqualTo(catalog);
 		List<CryptoCoinCatalog> poList = mapper.selectByExample(example);
@@ -146,19 +151,7 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 			return;
 		}
 
-		String recordsStr = constantService.getValByName(redisKey);
-
-		if (StringUtils.isBlank(recordsStr)) {
-			recordsStr = poList.get(0).getCoinNameEnShort();
-		} else {
-			if (Arrays.asList(recordsStr.split(",")).contains(catalog)) {
-				return;
-			} else {
-				recordsStr = recordsStr + "," + poList.get(0).getCoinNameEnShort();
-			}
-		}
-
-		constantService.setValByName(redisKey, recordsStr);
+		redisTemplate.opsForList().leftPush(redisKey, catalog);
 	}
 
 	@Override
@@ -168,26 +161,37 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 		}
 
 		catalog = catalog.toUpperCase();
-		String recordsStr = constantService.getValByName(CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY);
+		String redisKey = CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY;
 
-		if (StringUtils.isBlank(recordsStr)) {
+		Long size = redisTemplate.opsForList().size(redisKey);
+		if (size < 1) {
 			return;
-		} else {
-			if(Arrays.asList(recordsStr.split(",")).contains(catalog)) {
-				if (recordsStr.contains(catalog + ",")) {
-					recordsStr = recordsStr.replaceAll(catalog + ",", "");
-				} else if (recordsStr.contains("," + catalog)) {
-					recordsStr = recordsStr.replaceAll("," + catalog, "");
-				}
-				constantService.setValByName(CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY, recordsStr);
-			};
+		}
+
+		String tmpValue = null;
+		for (int i = 0; i < size; i++) {
+			tmpValue = String.valueOf(redisTemplate.opsForList().rightPop(redisKey));
+
+			if (tmpValue.equals(catalog)) {
+				return;
+			} else {
+				redisTemplate.opsForList().leftPush(redisKey, tmpValue);
+			}
 		}
 
 	}
 
 	@Override
 	public void removeAllSubscriptionCatalog() {
-		constantService.deleteValByName(CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY);
+		String redisKey = CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY;
+		Long size = redisTemplate.opsForList().size(redisKey);
+		if (size < 1) {
+			return;
+		}
+
+		for (int i = 0; i < size; i++) {
+			redisTemplate.opsForList().rightPop(redisKey);
+		}
 	}
 
 	@Override

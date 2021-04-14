@@ -57,11 +57,11 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 	}
 
 	private List<CryptoCoinCatalog> findLowPriceCoinType() {
-		LocalDateTime _10minAgo = LocalDateTime.now().minusMinutes(10).withSecond(0).withNano(0);
+		LocalDateTime yesterday = LocalDateTime.now().with(LocalTime.MIN).minusDays(1);
 		BigDecimal lowPrice = new BigDecimal(0.5);
 
 		CryptoCoinPrice1dayExample example = new CryptoCoinPrice1dayExample();
-		example.createCriteria().andIsDeleteEqualTo(false).andStartTimeEqualTo(_10minAgo).andEndPriceLessThan(lowPrice);
+		example.createCriteria().andIsDeleteEqualTo(false).andStartTimeEqualTo(yesterday).andEndPriceLessThan(lowPrice);
 		List<CryptoCoinPrice1day> dataList = dailyDataMaper.selectByExample(example);
 		List<Long> coinTypeIdList = dataList.stream().map(po -> po.getCoinType()).collect(Collectors.toList());
 

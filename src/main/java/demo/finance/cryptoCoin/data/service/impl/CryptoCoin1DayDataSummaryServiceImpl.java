@@ -95,10 +95,10 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		if (dataList == null || dataList.isEmpty()) {
 			return false;
 		}
-		int zeroDataCountDown = 1000;
+		int zeroDataCountDown = dataList.size();
 		CryptoCoinDataSubDTO tmpData = null;
 		for (int i = 0; i < dataList.size() && zeroDataCountDown > 0; i++) {
-			tmpData = dataList.get(0);
+			tmpData = dataList.get(i);
 			if (tmpData.getStart() == 0 && tmpData.getEnd() == 0 && tmpData.getHigh() == 0 && tmpData.getLow() == 0) {
 				zeroDataCountDown--;
 			}

@@ -26,6 +26,7 @@ import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinMAResult;
 import demo.finance.cryptoCoin.data.pojo.vo.CryptoCoinCatalogVO;
 import demo.finance.cryptoCoin.notice.service.CryptoCoinCommonNoticeService;
 import demo.finance.cryptoCoin.tool.service.CryptoCoinLowPriceNoticeService;
+import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 
 @Service
@@ -228,16 +229,18 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 
 		InsertCryptoCoinPriceNoticeSettingDTO dto = null;
 		CryptoCoinPriceCommonDataBO newPrice = null;
+		String telegramChatPK = encryptId(TelegramStaticChatID.MY_ID);
 		for (CryptoCoinCatalog po : lowPriceSubscriptionCatalogPOList) {
 			dto = new InsertCryptoCoinPriceNoticeSettingDTO();
+			dto.setTelegramChatPK(telegramChatPK);
 			dto.setCoinType(po.getCoinNameEnShort());
 			dto.setCurrencyType(CurrencyType.USD.getCode());
 			dto.setNoticeCount(999999);
 			dto.setFluctuationSpeedPercentage(1D);
 			dto.setTimeRangeOfDataWatch(3);
 			dto.setTimeUnitOfDataWatch(TimeUnitType.minute.getCode());
-			dto.setTimeRangeOfDataWatch(1);
-			dto.setTimeUnitOfDataWatch(TimeUnitType.minute.getCode());
+			dto.setTimeRangeOfNoticeInterval(1);
+			dto.setTimeUnitOfNoticeInterval(TimeUnitType.minute.getCode());
 			dto.setStartNoticeTime(localDateTimeHandler.dateToStr(LocalDateTime.now()));
 			dto.setValidTime(localDateTimeHandler.dateToStr(LocalDateTime.now().plusHours(8)));
 			noticeService.insertNewCryptoCoinPriceNoticeSetting(dto);

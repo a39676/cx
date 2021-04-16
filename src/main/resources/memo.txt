@@ -1,6 +1,7 @@
 crypto coin
 	crypto compare 更新 daily data 时 可能返回全0数据, 需要binance 协助
 	bbt 返回 daily data 时, 需要附带字段 声明来源(数据源)
+
 农历提醒
 图片信息传送
 

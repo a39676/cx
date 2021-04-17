@@ -236,7 +236,7 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 			dto.setCoinType(po.getCoinNameEnShort());
 			dto.setCurrencyType(CurrencyType.USD.getCode());
 			dto.setNoticeCount(999999);
-			dto.setFluctuationSpeedPercentage(1D);
+			dto.setFluctuationSpeedPercentage(1.2);
 			dto.setTimeRangeOfDataWatch(3);
 			dto.setTimeUnitOfDataWatch(TimeUnitType.minute.getCode());
 			dto.setTimeRangeOfNoticeInterval(10);

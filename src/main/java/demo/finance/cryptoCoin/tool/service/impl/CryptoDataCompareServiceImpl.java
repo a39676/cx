@@ -347,7 +347,7 @@ public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implem
 		CryptoCoinPriceCommonDataBO tmpCachePriceBO = null;
 		for (CryptoCoinCatalog catalog : lowPriceSubscriptionList) {
 			tmpCachePriceBO = cacheService.getNewPrice(catalog, CurrencyType.USD);
-			minuteDataMap.put(tmpCachePriceBO.getCurrencyType().longValue(), tmpCachePriceBO);
+			minuteDataMap.put(catalog.getId(), tmpCachePriceBO);
 		}
 		if (minuteDataMap.isEmpty()) {
 			r.setMessage("low price cache data NOT found");

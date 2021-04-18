@@ -3,6 +3,7 @@ package demo.finance.cryptoCoin.notice.service.impl;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -177,7 +178,9 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			/*
 			 * FIXME 输入框未有精确到时分秒的, 权宜之计
 			 */
-			validDate = validDate.withHour(23).withMinute(59).withSecond(59).withNano(999999);
+			if(validDate.getHour() == 0 || validDate.getMinute() == 0 || validDate.getSecond() == 0) {
+				validDate = validDate.with(LocalTime.MAX);
+			}
 			if (validDate.isBefore(LocalDateTime.now())) {
 				r.failWithMessage("please select a valid date");
 				return r;

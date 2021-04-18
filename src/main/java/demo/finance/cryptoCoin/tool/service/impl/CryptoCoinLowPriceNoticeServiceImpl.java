@@ -258,4 +258,5 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 		}
 
 	}
+
 }

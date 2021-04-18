@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import demo.common.controller.CommonController;
 import demo.finance.cryptoCoin.tool.pojo.constant.CryptoCoinDataCompareUrl;
 import demo.finance.cryptoCoin.tool.pojo.dto.CryptoCoinDataMutipleCompareDTO;
+import demo.finance.cryptoCoin.tool.pojo.result.CryptoCoinLowPriceCompareResult;
 import demo.finance.cryptoCoin.tool.pojo.result.CryptoDataCompareRateResult;
 import demo.finance.cryptoCoin.tool.service.CryptoDataCompareService;
 
@@ -32,5 +33,11 @@ public class CryptoCoinDataCompareContoller extends CommonController {
 	@ResponseBody
 	public CryptoDataCompareRateResult cryptoCoinDailyDataMutipleComparetor(@RequestBody CryptoCoinDataMutipleCompareDTO dto) {
 		return dataCompareService.cryptoCoinDailyDataMutipleComparePoint(dto);
+	}
+	
+	@GetMapping(value = CryptoCoinDataCompareUrl.CRYPTO_COIN_LOW_PRICE_COMPARE_TO_YESTERDAY)
+	@ResponseBody
+	public CryptoCoinLowPriceCompareResult lowPriceCompareToYesterday() {
+		return dataCompareService.lowPriceCompareToYesterday();
 	}
 }

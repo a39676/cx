@@ -62,6 +62,9 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 		CryptoCoinPrice1dayExample example = new CryptoCoinPrice1dayExample();
 		example.createCriteria().andIsDeleteEqualTo(false).andStartTimeEqualTo(yesterday).andEndPriceLessThan(lowPrice);
 		List<CryptoCoinPrice1day> dataList = dailyDataMaper.selectByExample(example);
+		if(dataList.isEmpty()) {
+			return new ArrayList<>();
+		}
 		List<Long> coinTypeIdList = dataList.stream().map(po -> po.getCoinType()).collect(Collectors.toList());
 
 		CryptoCoinCatalogExample catalogExample = new CryptoCoinCatalogExample();

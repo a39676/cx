@@ -28,6 +28,7 @@ import demo.finance.cryptoCoin.notice.service.CryptoCoinCommonNoticeService;
 import demo.finance.cryptoCoin.tool.service.CryptoCoinLowPriceNoticeService;
 import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
+import telegram.pojo.constant.TelegramBotType;
 
 @Service
 public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisService
@@ -236,6 +237,7 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 		for (CryptoCoinCatalog po : lowPriceSubscriptionCatalogPOList) {
 			dto = new InsertCryptoCoinLowPriceNoticeSettingDTO();
 			dto.setTelegramChatPK(telegramChatPK);
+			dto.setBotName(TelegramBotType.CRYPTO_COIN_LOW_PRICE_NOTICE_BOT.getName());
 			dto.setCoinType(po.getCoinNameEnShort());
 			dto.setCurrencyType(CurrencyType.USD.getCode());
 			dto.setNoticeCount(999999);

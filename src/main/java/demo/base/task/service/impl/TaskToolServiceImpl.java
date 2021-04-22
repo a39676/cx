@@ -136,7 +136,7 @@ public class TaskToolServiceImpl {
 		ipRecordService.deleteExpiredDenyRecord();
 	}
 
-	@Scheduled(cron = "0 */30 * * * ?") // 每30分钟执行一次
+	@Scheduled(fixedRate = 1000L * 60 * 10)
 	public void pingBBT() {
 		complexToolService.pingBBT();
 	}

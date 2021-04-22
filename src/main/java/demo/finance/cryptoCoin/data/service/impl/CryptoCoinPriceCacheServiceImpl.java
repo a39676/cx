@@ -18,6 +18,7 @@ import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import net.sf.json.JSONObject;
+import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.dto.TelegramMessageDTO;
 
 @Service
@@ -177,6 +178,7 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 			TelegramMessageDTO dto = new TelegramMessageDTO();
 			dto.setId(TelegramStaticChatID.MY_ID);
 			dto.setMsg("crypto compare socket hit error");
+			dto.setBotName(TelegramBotType.BOT_2.getName());
 			telegramCryptoCoinMessageAckProducer.send(dto);
 		}
 		return flag;

@@ -646,6 +646,76 @@ public class CryptoCoinPriceNoticeExample {
             return (Criteria) this;
         }
 
+        public Criteria andTelegramBotNameIsNull() {
+            addCriterion("telegram_bot_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameIsNotNull() {
+            addCriterion("telegram_bot_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameEqualTo(String value) {
+            addCriterion("telegram_bot_name =", value, "telegramBotName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameNotEqualTo(String value) {
+            addCriterion("telegram_bot_name <>", value, "telegramBotName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameGreaterThan(String value) {
+            addCriterion("telegram_bot_name >", value, "telegramBotName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameGreaterThanOrEqualTo(String value) {
+            addCriterion("telegram_bot_name >=", value, "telegramBotName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameLessThan(String value) {
+            addCriterion("telegram_bot_name <", value, "telegramBotName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameLessThanOrEqualTo(String value) {
+            addCriterion("telegram_bot_name <=", value, "telegramBotName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameLike(String value) {
+            addCriterion("telegram_bot_name like", value, "telegramBotName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameNotLike(String value) {
+            addCriterion("telegram_bot_name not like", value, "telegramBotName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameIn(List<String> values) {
+            addCriterion("telegram_bot_name in", values, "telegramBotName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameNotIn(List<String> values) {
+            addCriterion("telegram_bot_name not in", values, "telegramBotName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameBetween(String value1, String value2) {
+            addCriterion("telegram_bot_name between", value1, value2, "telegramBotName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameNotBetween(String value1, String value2) {
+            addCriterion("telegram_bot_name not between", value1, value2, "telegramBotName");
+            return (Criteria) this;
+        }
+
         public Criteria andNoticeCountIsNull() {
             addCriterion("notice_count is null");
             return (Criteria) this;

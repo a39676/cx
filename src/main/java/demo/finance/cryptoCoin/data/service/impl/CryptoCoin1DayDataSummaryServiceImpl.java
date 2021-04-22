@@ -33,6 +33,7 @@ import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataSubDTO;
+import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.dto.TelegramMessageDTO;
 
 @Service
@@ -60,6 +61,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 			TelegramMessageDTO msgDTO = new TelegramMessageDTO();
 			msgDTO.setId(TelegramStaticChatID.MY_ID);
 			msgDTO.setMsg(dto.getCryptoCoinTypeName() + ", get error data(all zero) from crypto compare");
+			msgDTO.setBotName(TelegramBotType.BOT_2.getName());
 			telegramCryptoCoinMessageAckProducer.send(msgDTO);
 			if (updateOthers != null && updateOthers) {
 				sendCryptoCoinDailyDataQueryMsg();
@@ -439,6 +441,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 				TelegramMessageDTO msgDTO = new TelegramMessageDTO();
 				msgDTO.setId(TelegramStaticChatID.MY_ID);
 				msgDTO.setMsg(coinName + " query max data, need check");
+				msgDTO.setBotName(TelegramBotType.BOT_2.getName());
 				telegramCryptoCoinMessageAckProducer.send(msgDTO);
 			}
 			dto.setCounting(days.intValue());

@@ -24,6 +24,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
+import demo.finance.cryptoCoin.data.pojo.dto.InsertCryptoCoinLowPriceNoticeSettingDTO;
 import demo.finance.cryptoCoin.data.pojo.dto.InsertCryptoCoinPriceNoticeSettingDTO;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinNoticeDTOCheckResult;
@@ -41,6 +42,7 @@ import demo.finance.cryptoCoin.notice.service.CryptoCoinCommonNoticeService;
 import demo.tool.telegram.pojo.po.TelegramChatId;
 import demo.tool.telegram.pojo.vo.TelegramChatIdVO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
+import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.dto.TelegramMessageDTO;
 
 @Service
@@ -86,6 +88,48 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		CryptoCoinPriceNotice newPO = new CryptoCoinPriceNotice();
 		newPO.setId(snowFlake.getNextId());
+		newPO.setTelegramBotName(TelegramBotType.BOT_2.getName());
+		newPO.setCoinType(dto.getCoinTypeCode());
+		newPO.setCurrencyType(dto.getCurrencyType());
+		newPO.setTelegramChatId(decryptPrivateKey(dto.getTelegramChatPK()));
+		newPO.setNoticeCount(dto.getNoticeCount());
+		newPO.setMaxPrice(dto.getMaxPrice());
+		newPO.setMinPrice(dto.getMinPrice());
+		newPO.setTimeUnitOfDataWatch(dto.getTimeUnitOfDataWatch());
+		newPO.setTimeRangeOfDataWatch(dto.getTimeRangeOfDataWatch());
+		if (dto.getFluctuationSpeedPercentage() != null) {
+			newPO.setFluctuationSpeedPercentage(new BigDecimal(dto.getFluctuationSpeedPercentage()));
+		}
+		newPO.setTimeUnitOfNoticeInterval(dto.getTimeUnitOfNoticeInterval());
+		newPO.setTimeRangeOfNoticeInterval(dto.getTimeRangeOfNoticeInterval());
+		newPO.setValidTime(checkResult.getValidTime());
+		newPO.setCreateTime(LocalDateTime.now());
+		try {
+			newPO.setNextNoticeTime(localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getStartNoticeTime()));
+		} catch (Exception e) {
+		}
+		int count = noticeMapper.insertSelective(newPO);
+
+		if (count > 0) {
+			r.successWithMessage("insert notice setting: " + dto.toString());
+		}
+		return r;
+	}
+	
+	@Override
+	public CommonResult insertNewCryptoCoinLowPriceNoticeSetting(InsertCryptoCoinLowPriceNoticeSettingDTO dto) {
+		CommonResult r = new CommonResult();
+		CryptoCoinNoticeDTOCheckResult checkResult = noticeDTOCheck(dto);
+		if (checkResult.isFail()) {
+			r.setMessage(checkResult.getMessage());
+			return r;
+		}
+
+		dto = dtoPrefixHandle(dto);
+
+		CryptoCoinPriceNotice newPO = new CryptoCoinPriceNotice();
+		newPO.setId(snowFlake.getNextId());
+		newPO.setTelegramBotName(TelegramBotType.CRYPTO_COIN_LOW_PRICE_NOTICE_BOT.getName());
 		newPO.setCoinType(dto.getCoinTypeCode());
 		newPO.setCurrencyType(dto.getCurrencyType());
 		newPO.setTelegramChatId(decryptPrivateKey(dto.getTelegramChatPK()));
@@ -216,6 +260,24 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		return dto;
 	}
+	
+	private InsertCryptoCoinLowPriceNoticeSettingDTO dtoPrefixHandle(InsertCryptoCoinLowPriceNoticeSettingDTO dto) {
+		if (!priceRangeConditionHadSet(dto)) {
+			return dto;
+		}
+		Double range = dto.getPricePercentage();
+		if (range < 0) {
+			range = 1 - range;
+		}
+
+		dto.setMaxPrice(new BigDecimal(dto.getOriginalPrice() * (1 + range / 100)));
+		dto.setMinPrice(new BigDecimal(dto.getOriginalPrice() * (1 - range / 100)));
+
+		dto.setOriginalPrice(null);
+		dto.setPricePercentage(null);
+
+		return dto;
+	}
 
 	private boolean priceConditionHadSet(InsertCryptoCoinPriceNoticeSettingDTO dto) {
 		return dto.getMaxPrice() != null || dto.getMinPrice() != null;
@@ -306,6 +368,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 				TelegramMessageDTO dto = new TelegramMessageDTO();
 				dto.setMsg(content);
 				dto.setId(noticeSetting.getTelegramChatId());
+				dto.setBotName(noticeSetting.getTelegramBotName());
 				telegramMessageAckProducer.send(dto);
 			}
 

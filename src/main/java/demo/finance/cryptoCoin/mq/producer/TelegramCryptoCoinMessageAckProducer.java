@@ -32,7 +32,9 @@ public class TelegramCryptoCoinMessageAckProducer extends CommonService {
 		if (te.getMsg() != null) {
 			json.put("msg", te.getMsg());
 		}
-		
+		if (te.getBotName() != null) {
+			json.put("botName", te.getBotName());
+		}
 
 		return json;
 	}

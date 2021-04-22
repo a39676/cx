@@ -22,6 +22,8 @@ public class CryptoCoinPriceNotice {
 
     private Long telegramChatId;
 
+    private String telegramBotName;
+
     private Integer noticeCount;
 
     private Integer timeUnitOfNoticeInterval;
@@ -108,6 +110,14 @@ public class CryptoCoinPriceNotice {
 
     public void setTelegramChatId(Long telegramChatId) {
         this.telegramChatId = telegramChatId;
+    }
+
+    public String getTelegramBotName() {
+        return telegramBotName;
+    }
+
+    public void setTelegramBotName(String telegramBotName) {
+        this.telegramBotName = telegramBotName == null ? null : telegramBotName.trim();
     }
 
     public Integer getNoticeCount() {

@@ -30,7 +30,7 @@ public class SystemConstantService extends CommonService {
 		if(redisTemplate.hasKey(constantName)) {
 			return String.valueOf(redisTemplate.opsForValue().get(constantName));
 		} else {
-			log.error("can NOT get constant: " + constantName);
+			log.error("redis can NOT find key: " + constantName);
 			return "";
 		}
 	}
@@ -43,10 +43,11 @@ public class SystemConstantService extends CommonService {
 		} else {
 			SystemConstant tmpConstant = systemConstantMapper.getValByName(constantName);
 			if(tmpConstant == null || StringUtils.isBlank(tmpConstant.getConstantValue())) {
-				log.error("can NOT get constant: " + constantName);
+				log.error("can NOT get constant: " + constantName + " from database");
 				return "";
 			}
 			redisTemplate.opsForValue().set(tmpConstant.getConstantName(), tmpConstant.getConstantValue());
+			log.error("refresh " + constantName + ", --->" + tmpConstant);
 			return tmpConstant.getConstantValue();
 		}
 	}

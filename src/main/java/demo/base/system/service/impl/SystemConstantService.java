@@ -47,7 +47,7 @@ public class SystemConstantService extends CommonService {
 				return "";
 			}
 			redisTemplate.opsForValue().set(tmpConstant.getConstantName(), tmpConstant.getConstantValue());
-			log.error("refresh " + constantName + ", --->" + tmpConstant);
+			log.error("refresh " + constantName + ", --->" + tmpConstant.getConstantValue());
 			return tmpConstant.getConstantValue();
 		}
 	}

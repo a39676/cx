@@ -57,7 +57,7 @@ dependencies {
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
 	implementation group: 'org.springframework.boot', name: 'spring-boot-devtools'
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
-	
+
 	// spring security 
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security'
 	implementation group: 'org.springframework.security', name: 'spring-security-taglibs'
@@ -93,6 +93,9 @@ dependencies {
 	// redis
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis'
 	// orms end
+	
+	// rabbitMQ
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-amqp'
 
 	// json
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.6'
@@ -103,8 +106,6 @@ dependencies {
 
 	// other
 	// swagger
-	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
-	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 	// 解析富文本中的 img 标签, 多数用于文章模块
 	implementation group: 'org.jsoup', name: 'jsoup', version: '1.13.1'
 	
@@ -125,9 +126,6 @@ dependencies {
 	// 富文本输入内容过滤/防御
 	implementation group: 'com.googlecode.owasp-java-html-sanitizer', name: 'owasp-java-html-sanitizer', version: '20200713.1'
 	
-	// rabbitMQ
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-amqp'
-    
     // 公历 农历 转换
 	implementation group: 'com.github.heqiao2010', name: 'lunar', version: '1.4'
 	

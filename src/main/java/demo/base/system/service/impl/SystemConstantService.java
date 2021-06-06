@@ -23,12 +23,14 @@ public class SystemConstantService extends CommonService {
 	
 	public String getValByName(String constantName) {
 		if(StringUtils.isBlank(constantName)) {
+			log.error("constant name was empty");
 			return "";
 		}
 		
 		if(redisTemplate.hasKey(constantName)) {
 			return String.valueOf(redisTemplate.opsForValue().get(constantName));
 		} else {
+			log.error("can NOT get constant: " + constantName);
 			return "";
 		}
 	}
@@ -41,6 +43,7 @@ public class SystemConstantService extends CommonService {
 		} else {
 			SystemConstant tmpConstant = systemConstantMapper.getValByName(constantName);
 			if(tmpConstant == null || StringUtils.isBlank(tmpConstant.getConstantValue())) {
+				log.error("can NOT get constant: " + constantName);
 				return "";
 			}
 			redisTemplate.opsForValue().set(tmpConstant.getConstantName(), tmpConstant.getConstantValue());

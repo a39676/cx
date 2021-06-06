@@ -72,31 +72,43 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 			log.error("after base role init");
 			
 			/* 如无超级管理员角色, 初始化 */
+			log.error("query auth auth");
 			FindAuthsResult authsResult = authService.findSuperAdministratorAuth();
+			log.error("auths result: " + authsResult.isSuccess());
 			List<Auth> superAdminAuthList = authsResult.getAuthList();
+			log.error("super admin auth list size: " + superAdminAuthList.size());
 			Long superAdminAuthId = null;
 			if(superAdminAuthList == null || superAdminAuthList.size() < 1) {
 				superAdminAuthId = authService.__createBaseSuperAdminAuth(UserConstant.noneUserId);
+				log.error("can NOT find super admin auth ID");
 			} else {
 				superAdminAuthId = superAdminAuthList.get(0).getId();
+				log.error("super admin auth id found");
 			}
 			
 			List<Users> superAdminUserList = userService.findUserListByAuthId(superAdminAuthId);
+			log.error("super admin user list size: " + superAdminUserList.size());
 			Long superAdminId = null;
 			if(superAdminUserList.size() < 1) {
 				superAdminId = userRegistService.__baseSuperAdminRegist().getNewSuperAdminId();
+				log.error("can NOT find super admin ID");
 			} else {
 				superAdminId = superAdminUserList.get(0).getUserId();
+				log.error("super admin ID found");
 			}
 			
 			Organizations baseOrg = orgService.getOrgById(InitSystemConstant.ORIGINAL_BASE_ORG_ID);
 			if(baseOrg == null || baseOrg.getIsDelete()) {
+				log.error("can NOT find base org, rebuild it");
 				__systemOrgService.__initBaseOrg(superAdminId);
 			}
 			
+			log.error("load joy option");
 			joySceneOperationService.defaultSceneInit();
 			joyIconService.loadAllIconToRedis();
+			log.error("after load joy option");
 			
+			log.error("load article option");
 			articleOptionService.loadAllOption();
 		}
 		

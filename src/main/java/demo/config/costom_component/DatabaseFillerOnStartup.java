@@ -69,6 +69,7 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 //		if (event.getApplicationContext().getDisplayName().equals("Root WebApplicationContext")) {}
 		if (event.getApplicationContext().getParent() == null) {
 			roleService.__initBaseRole();
+			log.error("after base role init");
 			
 			/* 如无超级管理员角色, 初始化 */
 			FindAuthsResult authsResult = authService.findSuperAdministratorAuth();
@@ -98,6 +99,8 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 			
 			articleOptionService.loadAllOption();
 		}
+		
+		log.error("data base filler end");
 	}
 
 

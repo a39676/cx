@@ -20,12 +20,14 @@ import demo.base.user.service.AuthService;
 import demo.base.user.service.RoleService;
 import demo.base.user.service.UserRegistService;
 import demo.base.user.service.UsersService;
+import demo.common.service.CommonService;
 import demo.joy.image.icon.service.JoyIconService;
 import demo.joy.scene.service.JoySceneManagerService;
+import demo.test.mp.producer.TestingQueueAckProducer;
 
 @Component
 //public class DatabaseFillerOnStartup implements ApplicationListener<ContextStartedEvent> {
-public class DatabaseFillerOnStartup implements ApplicationListener<ApplicationReadyEvent> {
+public class DatabaseFillerOnStartup extends CommonService implements ApplicationListener<ApplicationReadyEvent> {
 	
 	@Autowired
 	private AuthService authService;
@@ -46,6 +48,9 @@ public class DatabaseFillerOnStartup implements ApplicationListener<ApplicationR
 	private JoySceneManagerService joySceneOperationService;
 	@Autowired
 	private JoyIconService joyIconService;
+	
+	@Autowired
+	private TestingQueueAckProducer testingQueueAckProducer;
 /*
  * ContextStartedEvent
  * ContextStoppedEvent
@@ -57,6 +62,9 @@ public class DatabaseFillerOnStartup implements ApplicationListener<ApplicationR
 	@Override
 //	public void onApplicationEvent(ContextStartedEvent event) {
 	public void onApplicationEvent(ApplicationReadyEvent event) {
+		
+		log.error("starting database filler");
+		testingQueueAckProducer.send();
 		
 //		if (event.getApplicationContext().getDisplayName().equals("Root WebApplicationContext")) {}
 		if (event.getApplicationContext().getParent() == null) {

@@ -137,44 +137,55 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		if (!validRegexToolService.validNormalUserName(dto.getUserName())) {
 			dto.setUserName(filter.sanitize(dto.getUserName()));
 			r.setUsername("\"" + dto.getUserName() + "\" 账户名异常, 必须以英文字母开头,长度为6~16个字符.(只可输入英文字母及数字)");
+			log.error("user regist error, username: " + dto.getUserName());
 		}
 
 		if (userRegistMapper.isUserExists(dto.getUserName()) > 0) {
 			r.setUsername("账户名已存在");
+			log.error("user regist error, duplicate username: " + dto.getUserName());
 		}
 
 		dto.setNickName(filter.sanitize(dto.getNickName()));
 		if(StringUtils.isBlank(dto.getNickName())) {
 			r.setNickname("请您一定要起给昵称...");
+			log.error("user regist error, null nickname: " + dto.getNickName());
 		} else if (dto.getNickName().length() > 32) {
 			r.setNickname("昵称太长了...");
+			log.error("user regist error, nickname too long: " + dto.getNickName());
 		} else if (userDetailService.isNicknameExists(dto.getNickName())) {
 			r.setNickname("昵称重复了...");
+			log.error("user regist error, nickname duplicate: " + dto.getNickName());
 		}
 
 		if (!validRegexToolService.validPassword(dto.getPwd())) {
 			r.setPwd("密码长度不正确(8到16位)");
+			log.error("user regist error, pwd too short");
 		}
 
 		if (!dto.getPwd().equals(dto.getPwdRepeat())) {
 			r.setPwdRepeat("两次输入的密码不一致");
+			log.error("user regist error, pwd repeat error");
 		}
 
 		if (!validRegexToolService.validEmail(dto.getEmail())) {
 			r.setEmail("请输入正确的邮箱");
+			log.error("user regist error, email error: " + dto.getEmail());
 		} else {
 			if (userDetailService.ensureActiveEmail(dto.getEmail()).isSuccess()) {
 				r.setEmail("邮箱已注册(忘记密码或用户名?可尝试找回)");
+				log.error("user regist error, email duplicate: " + dto.getEmail());
 			}
 		}
 
 		if (StringUtils.isNotBlank(dto.getMobile())) {
 			if(!numberUtil.matchMobile(dto.getMobile())) {
 				r.setMobile("请填入正确的手机号,或留空");
+				log.error("user regist error, mobile error: " + dto.getMobile());
 			}
 			
 			if(userDetailService.ensureActiveMobile(Long.parseLong(dto.getMobile())).isSuccess()) {
 				r.setMobile("手机号已经被占用, 若需要转移到当前帐号, 请联系管理员, 请参见网站上方\"联系方式\"");
+				log.error("user regist error, mobile duplicate: " + dto.getMobile());
 			}
 		}
 
@@ -182,11 +193,13 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		if (StringUtils.isNotBlank(dto.getReservationInformation())) {
 			if (dto.getReservationInformation().length() > 32) {
 				r.setReservationInformation("预留信息过长...32个字符以内..(中文算2个字符)");
+				log.error("user regist error, reservation information too long");
 			}
 		}
 
 		if (StringUtils.isNotBlank(dto.getQq())) {
 			r.setQq("QQ号格式异常...");
+			log.error("user regist error, QQ num error, qq: " + dto.getQq());
 		}
 		
 		if(r.getUsername() == null 

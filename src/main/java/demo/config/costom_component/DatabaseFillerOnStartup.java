@@ -90,6 +90,7 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 			log.error("super admin user list size: " + superAdminUserList.size());
 			Long superAdminId = null;
 			if(superAdminUserList.size() < 1) {
+//				TODO FIXME bug here
 				superAdminId = userRegistService.__baseSuperAdminRegist().getNewSuperAdminId();
 				log.error("can NOT find super admin ID");
 			} else {

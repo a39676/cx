@@ -1,8 +1,8 @@
-package demo.base.user.pojo.vo;
+package demo.base.user.pojo.result;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 
-public class __baseSuperAdminRegistVO extends CommonResult {
+public class __baseSuperAdminRegistResult extends CommonResult {
 
 	private Long newSuperAdminId;
 

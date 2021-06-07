@@ -32,8 +32,8 @@ import demo.base.user.pojo.result.FindUserAuthResult;
 import demo.base.user.pojo.result.ModifyRegistEmailResult;
 import demo.base.user.pojo.result.NewUserRegistResult;
 import demo.base.user.pojo.result.ValidUserRegistResult;
+import demo.base.user.pojo.result.__baseSuperAdminRegistResult;
 import demo.base.user.pojo.type.AuthType;
-import demo.base.user.pojo.vo.__baseSuperAdminRegistVO;
 import demo.base.user.service.AuthService;
 import demo.base.user.service.UserAuthService;
 import demo.base.user.service.UserDetailService;
@@ -259,7 +259,8 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	
 	@Override
 	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
-	public __baseSuperAdminRegistVO __baseSuperAdminRegist() {
+	public __baseSuperAdminRegistResult __baseSuperAdminRegist() {
+		log.error("building base super admin");
 		UserRegistDTO userRegistDTO = new UserRegistDTO();
 		userRegistDTO.setUserName("daven");
 		userRegistDTO.setNickName("DavenC");
@@ -272,9 +273,13 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		
 		Long newUserId = snowFlake.getNextId();
 		
-		validAndSanitizeUserRegistDTO(userRegistDTO);
+		ValidUserRegistResult validAndSanitizeUserRegistResult = validAndSanitizeUserRegistDTO(userRegistDTO);
+		log.error("validAndSanitizeUserRegistResult: " + validAndSanitizeUserRegistResult.isSuccess());
+		if(validAndSanitizeUserRegistResult.isFail()) {
+			log.error(validAndSanitizeUserRegistResult.getMessage());
+		}
 		
-		__baseSuperAdminRegistVO result = new __baseSuperAdminRegistVO();
+		__baseSuperAdminRegistResult result = new __baseSuperAdminRegistResult();
 		
 		UsersDetail userDetail = buildUserDetailFromUserRegistDTO(userRegistDTO, "0.0.0.0", newUserId);
 		Users user = buildUserFromRegistDTO(userRegistDTO, newUserId);
@@ -282,6 +287,8 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		userRegistMapper.insertNewUser(user);
 		userDetailService.insertSelective(userDetail);
 		userAuthService.insertBaseUserAuth(newUserId, AuthType.SUPER_ADMIN);
+		
+		log.error("insert base super admin");
 		
 		result.normalSuccess();
 		result.setNewSuperAdminId(newUserId);

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import demo.article.article.service.ArticleEvaluationService;
 import demo.article.article.service.ArticleService;
 import demo.article.fakePost.service.FakePostService;
+import demo.base.system.mapper.BaseMapper;
 import demo.base.system.service.IpRecordService;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.type.SystemRolesType;
@@ -37,6 +38,9 @@ public class TaskToolServiceImpl {
 
 	@Autowired
 	private MailRecordMapper mailRecordMapper;
+	
+	@Autowired
+	private BaseMapper baseMapper;
 
 //	*/31 * * * * ? // 每31秒执行一次
 //	@Scheduled(cron="0 */30 * * * ?")   //每30分钟执行一次
@@ -59,6 +63,17 @@ public class TaskToolServiceImpl {
 //	public void imageShowReload() {
 //		imageService.imageShowReload();
 //	}
+	
+	/** 
+	 * 2021-06-17
+	 * keep database connection alive
+	 * after update JDK and update MySQL and SpringBoot
+	 * database connection will lose automation
+	 * */
+	@Scheduled(cron="*/31 * * * * ?")
+	public void keepDatabaseConnectionAlive() {
+		baseMapper.keepDatabaseAlive();
+	}
 
 	/** 清理无效的错误登录记录. */
 	@Scheduled(cron = "0 */63 * * * ?")

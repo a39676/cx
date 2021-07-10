@@ -33,6 +33,7 @@ import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataSubDTO;
+import finance.cryptoCoin.pojo.type.CryptoCoinDataSourceType;
 import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.dto.TelegramMessageDTO;
 
@@ -418,15 +419,23 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 
 	@Override
 	public void sendCryptoCoinDailyDataQueryMsg() {
+		sendCryptoCoinDailyDataQueryMsg(CryptoCoinDataSourceType.CRYPTO_COMPARE.getCode());
+	}
+	
+	public void sendCryptoCoinDailyDataQueryMsg(Integer queryCounting) {
 		if (constantService.hasKey(CryptoCoinConstant.RECEIVEING_CRYPTO_COIN_DAILY_DATA_KEY)) {
 			return;
 		}
-
 		String coinName = getWatingUpdateCoinType();
 		if (StringUtils.isBlank(coinName) || "null".equals(coinName)) {
 			return;
 		}
 		CryptoCoinDailyDataQueryDTO dto = new CryptoCoinDailyDataQueryDTO();
+		if(null == queryCounting || CryptoCoinDataSourceType.CRYPTO_COMPARE.getCode().equals(queryCounting)) {
+			dto.setDataSourceCode(CryptoCoinDataSourceType.CRYPTO_COMPARE.getCode());
+		} else if(CryptoCoinDataSourceType.BINANCE.getCode().equals(queryCounting)){
+			dto.setDataSourceCode(CryptoCoinDataSourceType.BINANCE.getCode());
+		}
 		dto.setCoinName(coinName);
 		CryptoCoinCatalog catalog = coinCatalogService.findCatalog(coinName);
 		CryptoCoinPrice1day lastData = findLastDailyData(catalog.getId());

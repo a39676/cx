@@ -42,17 +42,17 @@ public class AdminServiceImpl extends CommonService implements AdminService {
 	
 	@Override
 	public void loadHomepageAnnouncementStr() {
-		String filePath = constantService.getSysValByName(SystemConstantStore.homepageAnnouncement);
+		String filePath = systemConstantService.getSysValByName(SystemConstantStore.homepageAnnouncement);
 		File f = new File(filePath);
 		if(f.exists()) {
 			String strContent = ioUtil.getStringFromFile(filePath);
-			constantService.setValByName(SystemConstantStore.homepageAnnouncementStr, strContent);
+			redisConnectService.setValByName(SystemConstantStore.homepageAnnouncementStr, strContent);
 		}
 	}
 	
 	@Override
 	public void loadHomepageAnnouncementStr(String strContent) {
-		constantService.setValByName(SystemConstantStore.homepageAnnouncementStr, strContent);
+		redisConnectService.setValByName(SystemConstantStore.homepageAnnouncementStr, strContent);
 	}
 	
 	@Override
@@ -64,11 +64,11 @@ public class AdminServiceImpl extends CommonService implements AdminService {
 			return r;
 		}
 		
-		Boolean hasKeyFlag = constantService.hasKey(dto.getKey());
+		Boolean hasKeyFlag = redisConnectService.hasKey(dto.getKey());
 		if(dto.getValidTimeSeconds() != null && dto.getValidTimeSeconds() > 0) {
-			constantService.setValByName(dto.getKey(), dto.getValue(), dto.getValidTimeSeconds(), TimeUnit.SECONDS);
+			redisConnectService.setValByName(dto.getKey(), dto.getValue(), dto.getValidTimeSeconds(), TimeUnit.SECONDS);
 		} else {
-			constantService.setValByName(dto.getKey(), dto.getValue());
+			redisConnectService.setValByName(dto.getKey(), dto.getValue());
 		}
 		
 		if(hasKeyFlag) {

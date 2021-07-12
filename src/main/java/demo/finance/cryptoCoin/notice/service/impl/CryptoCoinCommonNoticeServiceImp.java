@@ -364,7 +364,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		}
 
 		if (StringUtils.isNotBlank(content)) {
-			if (!"dev".equals(constantService.getValByName("envName"))) {
+			if (!"dev".equals(systemConstantService.getSysValByName("envName"))) {
 				TelegramMessageDTO dto = new TelegramMessageDTO();
 				dto.setMsg(content);
 				dto.setId(noticeSetting.getTelegramChatId());

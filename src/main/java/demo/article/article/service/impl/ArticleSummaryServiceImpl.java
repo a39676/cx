@@ -305,7 +305,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		/* 置限制只可浏览某时点之后的文章 */
 		boolean isBigUser = isBigUser();
 		if(!isBigUser) {
-			String normalUserMaxReadingMonth = constantService.getSysValByName(ArticleConstant.NORMAL_USER_MAX_READING_MONTH);
+			String normalUserMaxReadingMonth = systemConstantService.getSysValByName(ArticleConstant.NORMAL_USER_MAX_READING_MONTH);
 			int maxReadingMonth = 1;
 			if(numberUtil.matchInteger(normalUserMaxReadingMonth)) {
 				maxReadingMonth = Integer.parseInt(normalUserMaxReadingMonth);

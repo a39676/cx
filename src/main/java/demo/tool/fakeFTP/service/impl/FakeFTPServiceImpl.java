@@ -41,7 +41,7 @@ public class FakeFTPServiceImpl extends CommonService implements FakeFTPServcie 
 	private DownloadService downloadService;
 	
 	private String getFateFTPHome() {
-		return constantService.getSysValByName(SystemConstantStore.fakeFTPHome);
+		return systemConstantService.getSysValByName(SystemConstantStore.fakeFTPHome);
 	}
 	
 	@Override

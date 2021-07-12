@@ -73,7 +73,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	private FileUtilCustom ioUtil;
 	
 	private String loadArticleCommentStorePath() {
-		String path = constantService.getSysValByName(ArticleCommentConstant.commentStorePathRedisKey);
+		String path = systemConstantService.getSysValByName(ArticleCommentConstant.commentStorePathRedisKey);
 		
 		if(StringUtils.isNotBlank(path)) {
 			return path;
@@ -85,13 +85,13 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			path = "d:/home/u2/articleComment";
 		}
 		
-		constantService.setValByName(ArticleCommentConstant.commentStorePathRedisKey, path);
+		redisConnectService.setValByName(ArticleCommentConstant.commentStorePathRedisKey, path);
 		
 		return path;
 	}
 	
 	private Long loadMaxArticleLength() {
-		String maxCommentLengthStr = constantService.getSysValByName(ArticleConstant.MAX_ARTICLE_LENGTH);
+		String maxCommentLengthStr = systemConstantService.getSysValByName(ArticleConstant.MAX_ARTICLE_LENGTH);
 		Long maxCommentLength = null;
 		try {
 			maxCommentLength = Long.parseLong(maxCommentLengthStr);
@@ -355,7 +355,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	}
 
 	private boolean justComment(HttpServletRequest request, Long userId, Long articleId) {
-		if("dev".equals(constantService.getSysValByName("envName"))) {
+		if("dev".equals(systemConstantService.getSysValByName("envName"))) {
 			return false;
 		}
 		

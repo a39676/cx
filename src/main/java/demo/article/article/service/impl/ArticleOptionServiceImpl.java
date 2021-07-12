@@ -30,7 +30,7 @@ public class ArticleOptionServiceImpl extends CommonService implements ArticleOp
 			bo = transToConstant(po);
 			boList.add(bo);
 		}
-		constantService.setValsByName(boList);
+		redisConnectService.setValsByName(boList);
 	}
 	
 	private SystemConstant transToConstant(ArticleOption option) {

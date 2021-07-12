@@ -27,24 +27,21 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 	@Override
 	public void reciveData(CryptoCoinPriceCommonDataBO newBO) {
 		CryptoCoinCatalog coinType = coinCatalogService.findCatalog(newBO.getCoinType());
-		String key = String.format(CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_FORMAT,
-				coinType.getCoinNameEnShort(), CurrencyType.getType(newBO.getCurrencyType()).getName(),
-				localDateTimeHandler.dateToStr(newBO.getStartTime(),
-						(CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_DATETIME_FORMAT)));
+		String key = buildCoinRedisKey(coinType, CurrencyType.getType(newBO.getCurrencyType()), newBO.getStartTime());
 
-		String oldCacheDataStr = constantService.getValByName(key);
+		String oldCacheDataStr = redisConnectService.getValByName(key);
 
 		if (StringUtils.isBlank(oldCacheDataStr)) {
 			newBO.setStartPrice(newBO.getEndPrice());
 			newBO.setHighPrice(newBO.getEndPrice());
 			newBO.setLowPrice(newBO.getEndPrice());
-			constantService.setValByName(key, boToDataStr(newBO),
+			redisConnectService.setValByName(key, boToDataStr(newBO),
 					CryptoCoinDataConstant.CRYPTO_COIN_CACHE_DATA_LIVE_MINUTES, TimeUnit.MINUTES);
 
 		} else {
 			CryptoCoinPriceCommonDataBO oldBO = dataStrToBO(oldCacheDataStr);
 			oldBO = dataMerge(oldBO, newBO);
-			constantService.setValByName(key, boToDataStr(oldBO),
+			redisConnectService.setValByName(key, boToDataStr(oldBO),
 					CryptoCoinDataConstant.CRYPTO_COIN_CACHE_DATA_LIVE_MINUTES, TimeUnit.MINUTES);
 
 		}
@@ -138,11 +135,9 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 		String tmpDataStr = null;
 
 		while (!startTime.isAfter(now)) {
-			tmpDataKey = String.format(CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_FORMAT,
-					coinType.getCoinNameEnShort(), currencyType.getName(), localDateTimeHandler.dateToStr(startTime,
-							CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_DATETIME_FORMAT));
+			tmpDataKey = buildCoinRedisKey(coinType, currencyType, startTime);
 
-			tmpDataStr = constantService.getValByName(tmpDataKey);
+			tmpDataStr = redisConnectService.getValByName(tmpDataKey);
 
 			try {
 				tmpCommonData = dataStrToBO(tmpDataStr);
@@ -160,19 +155,9 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 
 	@Override
 	public boolean isSocketAlive() {
-		String key = String.format(CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_FORMAT,
-				CryptoCoinConstant.DEFAULT_COIN_CATALOG, CurrencyType.USD.getName(), localDateTimeHandler.dateToStr(
-						LocalDateTime.now(), (CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_DATETIME_FORMAT)));
+		String key = buildCoinRedisKey(CryptoCoinConstant.DEFAULT_COIN_CATALOG, CurrencyType.USD, LocalDateTime.now());
 
-		Boolean flag = constantService.hasKey(key);
-		if (flag) {
-			return flag;
-		}
-
-		key = String.format(CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_FORMAT,
-				CryptoCoinConstant.DEFAULT_COIN_CATALOG, CurrencyType.USD.getName(),
-				localDateTimeHandler.dateToStr(LocalDateTime.now().minusMinutes(1),
-						(CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_DATETIME_FORMAT)));
+		Boolean flag = redisConnectService.hasKey(key);
 
 		if (!flag) {
 			TelegramMessageDTO dto = new TelegramMessageDTO();
@@ -183,5 +168,16 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 		}
 		return flag;
 	}
-	
+
+	private String buildCoinRedisKey(CryptoCoinCatalog coinType, CurrencyType currencyType, LocalDateTime datetime) {
+		return String.format(CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_FORMAT, coinType.getCoinNameEnShort(),
+				currencyType.getName(), localDateTimeHandler.dateToStr(datetime,
+						CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_DATETIME_FORMAT));
+	}
+
+	private String buildCoinRedisKey(String coinTypeEnShort, CurrencyType currencyType, LocalDateTime datetime) {
+		return String.format(CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_FORMAT, coinTypeEnShort,
+				currencyType.getName(), localDateTimeHandler.dateToStr(datetime,
+						CryptoCoinDataConstant.CRYPTO_COIN_CACHE_REDIS_KEY_DATETIME_FORMAT));
+	}
 }

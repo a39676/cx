@@ -52,7 +52,7 @@ public class ImageInteractionServiceImpl extends CommonService implements ImageI
 	public UploadImageToCloudinaryResult uploadImageToCloudinary(UploadImageToCloudinaryDTO dto) {
 		UploadImageToCloudinaryResult r = new UploadImageToCloudinaryResult();
 		
-		if("dev".equals(constantService.getSysValByName(SystemConstantStore.envName))) {
+		if("dev".equals(systemConstantService.getSysValByName(SystemConstantStore.envName))) {
 			return r;
 		}
 		

@@ -23,6 +23,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.IpRecordService;
+import demo.base.system.service.impl.RedisConnectService;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.ResultTypeCX;
@@ -55,7 +56,7 @@ public abstract class CommonService {
 	@Autowired
 	protected DateHandler dateHandler;
 	@Autowired
-	protected SystemConstantService constantService;
+	protected SystemConstantService systemConstantService;
 	@Autowired
 	protected BaseUtilCustom baseUtilCustom;
 	@Autowired
@@ -63,6 +64,8 @@ public abstract class CommonService {
 
 	@Autowired
 	protected RedisTemplate<String, Object> redisTemplate;
+	@Autowired
+	protected RedisConnectService redisConnectService;
 
 	protected static final LocalDateTime BLOG_ARTICLE_START_TIME = LocalDateTime.of(2020, 5, 1, 0, 0, 0);
 
@@ -157,7 +160,7 @@ public abstract class CommonService {
 	}
 
 	protected String findHostNameFromRequst(HttpServletRequest request) {
-		if ("dev".equals(constantService.getSysValByName("envName"))) {
+		if ("dev".equals(systemConstantService.getSysValByName("envName"))) {
 			return "easy";
 		}
 		return request.getServerName();
@@ -201,17 +204,17 @@ public abstract class CommonService {
 			return null;
 		}
 
-		String keys = constantService.getSysValByName(SystemConstantStore.aesKey);
+		String keys = systemConstantService.getSysValByName(SystemConstantStore.aesKey);
 		if (StringUtils.isBlank(keys)) {
-			keys = constantService.getSysValByName(SystemConstantStore.aesKey, true);
+			keys = systemConstantService.getSysValByName(SystemConstantStore.aesKey, true);
 			if (StringUtils.isBlank(keys)) {
 				return null;
 			}
 		}
 
-		String initVector = constantService.getSysValByName(SystemConstantStore.aesInitVector);
+		String initVector = systemConstantService.getSysValByName(SystemConstantStore.aesInitVector);
 		if (StringUtils.isBlank(initVector)) {
-			initVector = constantService.getSysValByName(SystemConstantStore.aesKey, true);
+			initVector = systemConstantService.getSysValByName(SystemConstantStore.aesKey, true);
 			if (StringUtils.isBlank(initVector)) {
 				return null;
 			}
@@ -242,17 +245,17 @@ public abstract class CommonService {
 			return null;
 		}
 
-		String keys = constantService.getSysValByName(SystemConstantStore.aesKey);
+		String keys = systemConstantService.getSysValByName(SystemConstantStore.aesKey);
 		if (StringUtils.isBlank(keys)) {
-			keys = constantService.getSysValByName(SystemConstantStore.aesKey, true);
+			keys = systemConstantService.getSysValByName(SystemConstantStore.aesKey, true);
 			if (StringUtils.isBlank(keys)) {
 				return null;
 			}
 		}
 
-		String initVector = constantService.getSysValByName(SystemConstantStore.aesInitVector);
+		String initVector = systemConstantService.getSysValByName(SystemConstantStore.aesInitVector);
 		if (StringUtils.isBlank(initVector)) {
-			initVector = constantService.getSysValByName(SystemConstantStore.aesInitVector, true);
+			initVector = systemConstantService.getSysValByName(SystemConstantStore.aesInitVector, true);
 			if (StringUtils.isBlank(initVector)) {
 				return null;
 			}
@@ -313,7 +316,7 @@ public abstract class CommonService {
 					} else {
 						result.addMessage("add key:" + tmpKey + " , set: " + tmpValue + "\n");
 					}
-					constantService.setValByName(tmpKey, tmpValue);
+					redisConnectService.setValByName(tmpKey, tmpValue);
 				} else {
 					result.addMessage("detect an empty key, has value: " + tmpValue + "\n");
 				}

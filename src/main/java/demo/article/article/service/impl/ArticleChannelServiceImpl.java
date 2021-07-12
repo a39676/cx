@@ -188,7 +188,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	
 	@Override
 	public String loadChannelPrefix(Integer channelId) {
-		String mainFolderPath = constantService.getSysValByName(ArticleConstant.ARTICLE_CHANNEL_PRE_FIX_STORE_PATH);
+		String mainFolderPath = systemConstantService.getSysValByName(ArticleConstant.ARTICLE_CHANNEL_PRE_FIX_STORE_PATH);
 		String strContent = "";
 		if (new File(mainFolderPath + channelId + ".txt").exists()) {
 			strContent = ioUtil.getStringFromFile(mainFolderPath + channelId + ".txt");
@@ -211,7 +211,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	}
 
 	private GetArticleChannelsBO removeChannelsForUnknow(GetArticleChannelsBO channelList) {
-		String envName = constantService.getSysValByName(SystemConstantStore.envName, true);
+		String envName = systemConstantService.getSysValByName(SystemConstantStore.envName, true);
 		if ("dev".equals(envName)) {
 			return channelList;
 		}

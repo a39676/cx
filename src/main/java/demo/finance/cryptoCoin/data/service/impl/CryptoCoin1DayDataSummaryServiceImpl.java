@@ -76,13 +76,13 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 			return r;
 		}
 
-		constantService.setValByName(CryptoCoinConstant.RECEIVEING_CRYPTO_COIN_DAILY_DATA_KEY, "_", 3,
+		redisConnectService.setValByName(CryptoCoinConstant.RECEIVEING_CRYPTO_COIN_DAILY_DATA_KEY, "_", 3,
 				TimeUnit.MINUTES);
 
 //		mergeDuplicateData(coinType);
 		updateSummaryData(dataList, coinType, currencyType);
 
-		constantService.deleteValByName(CryptoCoinConstant.RECEIVEING_CRYPTO_COIN_DAILY_DATA_KEY);
+		redisConnectService.deleteValByName(CryptoCoinConstant.RECEIVEING_CRYPTO_COIN_DAILY_DATA_KEY);
 		if (updateOthers != null && updateOthers) {
 			sendCryptoCoinDailyDataQueryMsg();
 		}
@@ -423,7 +423,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 	}
 	
 	public void sendCryptoCoinDailyDataQueryMsg(Integer queryCounting) {
-		if (constantService.hasKey(CryptoCoinConstant.RECEIVEING_CRYPTO_COIN_DAILY_DATA_KEY)) {
+		if (redisConnectService.hasKey(CryptoCoinConstant.RECEIVEING_CRYPTO_COIN_DAILY_DATA_KEY)) {
 			return;
 		}
 		String coinName = getWatingUpdateCoinType();

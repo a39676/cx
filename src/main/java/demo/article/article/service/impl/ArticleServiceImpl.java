@@ -105,7 +105,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	private ValidRegexToolService validRegexToolService;
 
 	private String getArticleStorePrefixPath() {
-		return constantService.getSysValByName(ArticleConstant.ARTICLE_STORE_PRE_FIX_PATH);
+		return systemConstantService.getSysValByName(ArticleConstant.ARTICLE_STORE_PRE_FIX_PATH);
 	}
 
 	private String getArticleImageStorePrefixPath() {
@@ -117,13 +117,13 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 
 	private String getArticleSummaryStorePrefixPath() {
-		return constantService.getSysValByName(ArticleConstant.ARTICLE_SUMMARY_STORE_PRE_FIX_PATH);
+		return systemConstantService.getSysValByName(ArticleConstant.ARTICLE_SUMMARY_STORE_PRE_FIX_PATH);
 	}
 
 	private Long loadMaxArticleLength() {
 		Long maxArticleLength = 0L;
 		try {
-			String maxLengthStr = constantService.getSysValByName(ArticleConstant.MAX_ARTICLE_LENGTH);
+			String maxLengthStr = systemConstantService.getSysValByName(ArticleConstant.MAX_ARTICLE_LENGTH);
 			if (maxLengthStr != null) {
 				maxArticleLength = Long.parseLong(maxLengthStr);
 			}

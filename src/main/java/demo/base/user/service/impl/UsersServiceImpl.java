@@ -71,7 +71,7 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 		}
 		UserAttemptQuerayDTO param = new UserAttemptQuerayDTO();
 		param.setUserName(userName);
-		int maxAttempts = Integer.parseInt(constantService.getSysValByName(SystemConstantStore.maxAttempts));
+		int maxAttempts = Integer.parseInt(systemConstantService.getSysValByName(SystemConstantStore.maxAttempts));
 		if (getUserAttempts(param).size() >= maxAttempts) {
 			usersMapper.lockUserWithAttempts(userName);
 		} 

@@ -1,13 +1,14 @@
 article
-	article img 文件存放路径error
-		仍放在 /home/u2/articleImg, 应存放在 /home/u2/cx/articleImg
 	转投频道error
 	admin 自动通过 error
+	需要解决, 如果作者ID为空时, 文件命名方式
+	需要增加, 从 页面UI 加密&解密 pk (需要管理员权限)
+	
 
 crypto coin
 	排查low price subscription 更新异常
 	crypto compare 更新 daily data 时 可能返回全0数据, 需要binance 协助
-	bbt 返回 daily data 时, 需要附带字段 声明来源(数据源)
+	
 
 农历提醒
 图片信息传送

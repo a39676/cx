@@ -40,7 +40,7 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 		
 		ModelAndView view = new ModelAndView();
 
-		String envName = constantService.getSysValByName(SystemConstantStore.envName, true);
+		String envName = systemConstantService.getSysValByName(SystemConstantStore.envName, true);
 		
 		if (hostnameType == null) {
 			if(!"dev".equals(envName)) {
@@ -71,9 +71,9 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 	
 	private ModelAndView buildHomeViewForNormal() {
 		ModelAndView view = new ModelAndView(BlogViewConstant.home);
-		view.addObject("title", constantService.getSysValByName(SystemConstantStore.normalWebSiteTitle));
+		view.addObject("title", systemConstantService.getSysValByName(SystemConstantStore.normalWebSiteTitle));
 		view.addObject("headerImg", "/static_resources/cleanBlog/img/nature-4607496_1920.jpg");
-		view.addObject("subheading", constantService.getSysValByName(SystemConstantStore.normalSubheading));
+		view.addObject("subheading", systemConstantService.getSysValByName(SystemConstantStore.normalSubheading));
 		Long visitCount = visitDataService.getVisitCount();
 		view.addObject("visitCount", visitCount);
 		
@@ -83,13 +83,13 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 	@SuppressWarnings("unused")
 	private ModelAndView buildHomeViewForSeekingWork() {
 		ModelAndView view = new ModelAndView();
-		if(!"1".contentEquals(constantService.getSysValByName(SystemConstantStore.jobing))) {
+		if(!"1".contentEquals(systemConstantService.getSysValByName(SystemConstantStore.jobing))) {
 			view.setViewName(BaseViewConstant.empty);
 			return view;
 		}
 		
 		view.setViewName(BlogViewConstant.home);
-		view.addObject("title", constantService.getSysValByName(SystemConstantStore.seekWebSiteTitle));
+		view.addObject("title", systemConstantService.getSysValByName(SystemConstantStore.seekWebSiteTitle));
 		view.addObject("headerImg", atDemoHeadImg);
 		view.addObject("subheading", "Bugs forced the development in a certain sense");
 		
@@ -104,7 +104,7 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 		if (hostnameType != null) {
 			if (HostnameType.zhang3.equals(hostnameType)) {
 				v = new ModelAndView(BlogViewConstant.aboutEasy);
-				v.addObject("email", constantService.getSysValByName(SystemConstantStore.emaild));
+				v.addObject("email", systemConstantService.getSysValByName(SystemConstantStore.emaild));
 				v.addObject("headerImg", "/static_resources/cleanBlog/img/nature-4607496_1920.jpg");
 //			} else if (HostnameType.seek.equals(hostnameType)) {
 //				v = new ModelAndView(BlogViewConstant.aboutSeek);

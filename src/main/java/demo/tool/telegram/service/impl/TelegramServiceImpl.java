@@ -36,7 +36,7 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 		if(botIDKey == null) {
 			botIDKey = TelegramBotType.BOT_1.getName();
 		}
-		String botID = constantService.getValByName(botIDKey);
+		String botID = redisConnectService.getValByName(botIDKey);
 		if(StringUtils.isNotBlank(botID)) {
 			return botID;
 		}
@@ -57,7 +57,7 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 			SystemConstant systemConstant = new SystemConstant();
 			systemConstant.setConstantName(botIDKey);
 			systemConstant.setConstantValue(bot1ID);
-			constantService.setValByName(systemConstant);
+			redisConnectService.setValByName(systemConstant);
 		} catch (Exception e) {
 		}
 		
@@ -115,8 +115,8 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 		try {
 			httpUtil.sendGet(url);
 		} catch (Exception e) {
-			log.error("telegram sending error" + e.getLocalizedMessage());
-			log.error("telegram sending error" + e.getMessage());
+			log.error("telegram sending error: " + e.getMessage());
+			log.error("telegram NOT sending message: " + msg);
 			r.failWithMessage("net work error");
 			return r;
 		}

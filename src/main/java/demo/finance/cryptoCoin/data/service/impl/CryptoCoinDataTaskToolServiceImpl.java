@@ -36,7 +36,7 @@ public class CryptoCoinDataTaskToolServiceImpl extends CryptoCoinCommonService {
 		cryptoCoin1MinuteDataSummaryService.summaryLowPriceRedisData();
 	}
 	
-	@Scheduled(cron = "0 */5 * * * ?")
+	@Scheduled(cron="20 19 03 * * *")
 	public void summaryHistoryData() {
 		cryptoCoin5MinuteDataSummaryService.summaryHistoryData();
 		cryptoCoin60MinuteDataSummaryService.summaryHistoryData();
@@ -56,7 +56,7 @@ public class CryptoCoinDataTaskToolServiceImpl extends CryptoCoinCommonService {
 		cryptoCoin1DayDataSummaryService.setWaitingUpdateCoinType();
 	}
 	
-	@Scheduled(cron = "0 */5 * * * ?")
+	@Scheduled(cron="20 19 01 * * *")
 	public void sendCryptoCoinDailyDataQueryMsg() {
 		cryptoCoin1DayDataSummaryService.sendCryptoCoinDailyDataQueryMsg();
 	}

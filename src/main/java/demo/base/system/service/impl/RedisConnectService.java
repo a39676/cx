@@ -1,18 +1,31 @@
 package demo.base.system.service.impl;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import demo.base.system.pojo.bo.SystemConstant;
+import demo.common.pojo.result.CommonResultCX;
 import demo.common.service.CommonService;
+import net.sf.json.JSONObject;
+import tool.pojo.bo.IpRecordBO;
+import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class RedisConnectService extends CommonService {
+	
+	@Autowired
+	private RedisTemplate<String, Object> redisTemplate;
 	
 	public String getValByName(String constantName) {
 		if(StringUtils.isBlank(constantName)) {
@@ -20,6 +33,9 @@ public class RedisConnectService extends CommonService {
 			return "";
 		}
 		
+		if(redisTemplate == null) {
+			System.err.println("redisTemplate is null");
+		}
 		if(redisTemplate.hasKey(constantName)) {
 			return String.valueOf(redisTemplate.opsForValue().get(constantName));
 		} else {
@@ -54,6 +70,71 @@ public class RedisConnectService extends CommonService {
 	
 	public Boolean hasKey(String key) {
 		return redisTemplate.hasKey(key);
+	}
+	
+	public CommonResultCX refreshRedisValueFromFile(String filePath) {
+		CommonResultCX result = new CommonResultCX();
+		try {
+			if (StringUtils.isBlank(filePath)) {
+				result.failWithMessage("path error");
+				return result;
+			}
+
+			File file = new File(filePath);
+			if (!file.exists()) {
+				result.failWithMessage("file not exists");
+				return result;
+			}
+
+			FileUtilCustom ioUtil = new FileUtilCustom();
+			String fileStr = ioUtil.getStringFromFile(filePath);
+			JSONObject json = JSONObject.fromObject(fileStr);
+			@SuppressWarnings("rawtypes")
+			Set keys = json.keySet();
+			String tmpKey = null;
+			String tmpValue = null;
+			for (Object key : keys) {
+				tmpKey = String.valueOf(key);
+				tmpValue = json.getString(tmpKey);
+				if (StringUtils.isNotBlank(tmpKey)) {
+					if (redisTemplate.hasKey(tmpKey)) {
+						result.addMessage("refresh key:" + tmpKey + " , set: " + tmpValue + "\n");
+					} else {
+						result.addMessage("add key:" + tmpKey + " , set: " + tmpValue + "\n");
+					}
+					redisConnectService.setValByName(tmpKey, tmpValue);
+				} else {
+					result.addMessage("detect an empty key, has value: " + tmpValue + "\n");
+				}
+			}
+
+			result.setIsSuccess();
+			return result;
+		} catch (Exception e) {
+			result.failWithMessage(e.getMessage());
+			return result;
+		}
+	}
+
+	public void insertFunctionalModuleVisitData(HttpServletRequest request, String redisKeyPrefix) {
+		insertFunctionalModuleVisitData(request, redisKeyPrefix, 30, TimeUnit.MINUTES);
+	}
+
+	public void insertFunctionalModuleVisitData(HttpServletRequest request, String redisKeyPrefix, long timeout,
+			TimeUnit unit) {
+		IpRecordBO record = getIp(request);
+
+		String key = buildRedisKeyPrefix(record, redisKeyPrefix) + "_" + snowFlake.getNextId();
+		redisTemplate.opsForValue().set(key, "", timeout, unit);
+	}
+
+	public int checkFunctionalModuleVisitData(HttpServletRequest request, String redisKeyPrefix) {
+		IpRecordBO record = getIp(request);
+
+		String keyPrefix = buildRedisKeyPrefix(record, redisKeyPrefix) + "*";
+		Set<String> keys = redisTemplate.keys(keyPrefix);
+
+		return keys.size();
 	}
 	
 	/**

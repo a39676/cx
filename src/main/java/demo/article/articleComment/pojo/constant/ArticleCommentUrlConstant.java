@@ -7,6 +7,6 @@ public class ArticleCommentUrlConstant {
 	/**
 	 * 2020-05-10 发现, 应该是旧式页面使用, 准备删除此链接
 	 */
-	public static final String findArticleCommentSubPage = "/findArticleCommentSubPage";
+//	public static final String findArticleCommentSubPage = "/findArticleCommentSubPage";
 	public static final String createArticleComment = "/createArticleComment";
 }

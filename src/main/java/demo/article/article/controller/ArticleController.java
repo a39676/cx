@@ -23,7 +23,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.pojo.constant.ArticleUrlConstant;
-import demo.article.article.pojo.dto.ArticleFeedbackDTO;
 import demo.article.article.pojo.dto.EditArticleLongDTO;
 import demo.article.article.pojo.dto.FindArticleLongSummaryListDTO;
 import demo.article.article.pojo.dto.ReadyToEditArticleLongDTO;
@@ -127,12 +126,6 @@ public class ArticleController extends CommonController {
 		outputJson(response, JSONObject.fromObject(serviceResult));
 	}
 	
-	@PostMapping(value = ArticleUrlConstant.articleLongFeedback)
-	@ResponseBody
-	public CommonResultCX articleLongFeedback(@RequestBody ArticleFeedbackDTO dto, HttpServletRequest request) {
-		CommonResultCX result = articleService.articleLongFeedback(dto, request);
-		return result;
-	}
 	
 	@GetMapping(value = ArticleUrlConstant.editArticleLong)
 	public ModelAndView editArticleLongView(@RequestParam(value = "pk", required = false) String pk, HttpServletRequest request) {

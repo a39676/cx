@@ -28,7 +28,6 @@ import demo.article.article.pojo.result.CreatingBurnMessageResult;
 import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.article.service.ArticleBurnService;
 import demo.article.article.service.ArticleService;
-import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.HostnameService;
@@ -71,8 +70,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		if (HostnameType.zhang3.equals(hostnameType)) {
 			return true;
 		} else {
-			String envName = systemConstantService.getSysValByName(SystemConstantStore.envName);
-			return "dev".equals(envName);
+			return "dev".equals(systemConstantService.getEnvName());
 		}
 	}
 	
@@ -99,9 +97,9 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		
 		int count = 0;
 		if(!isBigUser()) {
-			count = checkFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
+			count = redisConnectService.checkFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
 		}
-		if (!"dev".equals(systemConstantService.getSysValByName(SystemConstantStore.envName))) {
+		if (!"dev".equals(systemConstantService.getEnvName())) {
 			if (count >= SearchingDemoConstant.maxInsertCountIn30Minutes) {
 				r.failWithMessage("短时间内加入的任务太多了, 请稍后再试");
 				return r;
@@ -160,7 +158,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		r.setReadUri(ArticleBurnUrlConstant.root + ArticleBurnUrlConstant.readBurningMessage + "?readKey=" + r.getReadKey());
 		r.setBurnUri(ArticleBurnUrlConstant.root + ArticleBurnUrlConstant.burnMessage + "?burnKey=" + r.getBurnKey());
 		r.setIsSuccess();
-		insertFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
+		redisConnectService.insertFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
 		
 		return r;
 	}

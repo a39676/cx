@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
@@ -29,6 +30,9 @@ import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 
 public abstract class CryptoCoinCommonService extends FinanceCommonService {
 
+	@Autowired
+	protected RedisTemplate<String, Object> redisTemplate;
+	
 	@Autowired
 	protected CryptoCoinPriceCacheService cacheService;
 	@Autowired

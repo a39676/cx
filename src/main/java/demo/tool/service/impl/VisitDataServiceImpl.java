@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import demo.base.system.pojo.constant.SystemRedisKey;
@@ -33,6 +34,8 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 	private UserIpMapper userIpMapper;
 	@Autowired
 	private NumericUtilCustom numberUtil;
+	@Autowired
+	private RedisTemplate<String, Object> redisTemplate;
 	
 	@Override
 	public void insertVisitData(HttpServletRequest request, String customInfo) {

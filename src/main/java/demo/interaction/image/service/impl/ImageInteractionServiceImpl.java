@@ -12,7 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.common.service.CommonService;
 import demo.image.mapper.ImageCloudinaryMapper;
 import demo.image.mapper.ImageComplexMapper;
@@ -52,7 +51,7 @@ public class ImageInteractionServiceImpl extends CommonService implements ImageI
 	public UploadImageToCloudinaryResult uploadImageToCloudinary(UploadImageToCloudinaryDTO dto) {
 		UploadImageToCloudinaryResult r = new UploadImageToCloudinaryResult();
 		
-		if("dev".equals(systemConstantService.getSysValByName(SystemConstantStore.envName))) {
+		if("dev".equals(systemConstantService.getEnvName())) {
 			return r;
 		}
 		

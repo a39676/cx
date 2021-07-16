@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
 
 import demo.article.article.pojo.constant.ArticleConstant;
 import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
@@ -36,6 +35,7 @@ import demo.article.articleComment.pojo.po.ArticleCommentCountExample;
 import demo.article.articleComment.pojo.po.ArticleCommentExample;
 import demo.article.articleComment.pojo.po.ArticleCommentExample.Criteria;
 import demo.article.articleComment.pojo.result.FindArticleCommentPageResult;
+import demo.article.articleComment.pojo.type.ArticleCommentResultType;
 import demo.article.articleComment.pojo.vo.ArticleCommentVO;
 import demo.article.articleComment.service.ArticleCommentAdminService;
 import demo.article.articleComment.service.ArticleCommentService;
@@ -180,7 +180,8 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		
 		if(!bigUserFlag) {
 			if(justComment(request, userId, articleId)) {
-				result.fillWithResult(ResultTypeCX.justComment);
+				result.setMessage(ArticleCommentResultType.justComment.getName());
+				result.setIsSuccess();
 				return result;
 			}
 			inputParam.setContent(sanitize(inputParam.getContent()));
@@ -215,7 +216,6 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			insertCommentRedisMark(request, userId, articleId);
 		}
 		
-		articleCommentCountingUp(articleId);
 		result.successWithMessage("评论已发送.");
 		
 		return result;
@@ -225,24 +225,6 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		return articleService.saveArticleFile(storePrefixPath, userId, content);
 	}
 
-	@Override
-	public ModelAndView findArticleCommentPageView(FindArticleCommentPageDTO dto) {
-		ModelAndView view = new ModelAndView("articleJSP/articleCommentListSubList");
-		FindArticleCommentPageResult result = findArticleCommentVOPage(dto);
-		if(!result.isSuccess()) {
-			view.addObject("message", result.getMessage());
-			return view;
-		}
-		
-		view.addObject("commentList", result.getCommentList());
-		view.addObject("pk", result.getPk());
-		if(result.getCommentList() != null && result.getCommentList().size() > 0) {
-			view.addObject("startTime", result.getCommentList().get(result.getCommentList().size() - 1).getCreateTimeStr());
-		}
-		
-		return view;
-	}
-	
 	@Override
 	public FindArticleCommentPageResult findArticleCommentVOPage(FindArticleCommentPageDTO dto) {
 		FindArticleCommentPageResult result = new FindArticleCommentPageResult();
@@ -355,13 +337,13 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	}
 
 	private boolean justComment(HttpServletRequest request, Long userId, Long articleId) {
-		if("dev".equals(systemConstantService.getSysValByName("envName"))) {
+		if("dev".equals(systemConstantService.getEnvName())) {
 			return false;
 		}
 		
 		String keyPrefix = SystemRedisKey.articleCommentKeyPrefix + "_" + userId + "_" + articleId;
 		
-		int counting = checkFunctionalModuleVisitData(request, keyPrefix);
+		int counting = redisConnectService.checkFunctionalModuleVisitData(request, keyPrefix);
 		if(counting > 0) {
 			return true;
 		} else {
@@ -371,10 +353,11 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	
 	private void insertCommentRedisMark(HttpServletRequest request, Long userId, Long articleId) {
 		String keyPrefix = SystemRedisKey.articleCommentKeyPrefix + "_" + userId + "_" + articleId;
-		insertFunctionalModuleVisitData(request, keyPrefix, 10L, TimeUnit.MINUTES);
+		redisConnectService.insertFunctionalModuleVisitData(request, keyPrefix, 10L, TimeUnit.MINUTES);
 	}
 	
-	private void articleCommentCountingUp(Long articleId) {
+	@Override
+	public void articleCommentCountingUp(Long articleId) {
 		ArticleCommentCount po = articleCommentCountMapper.selectByPrimaryKey(articleId);
 		if(po == null) {
 			po = new ArticleCommentCount();
@@ -385,7 +368,19 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			po.setCounting(po.getCounting() + 1);
 			articleCommentCountMapper.updateByPrimaryKey(po);
 		}
-		
+	}
+
+	@Override
+	public void articleCommentCountingDown(Long articleId) {
+		ArticleCommentCount po = articleCommentCountMapper.selectByPrimaryKey(articleId);
+		if(po == null) {
+			return;
+		} else {
+			if(po.getCounting() > 1) {
+				po.setCounting(po.getCounting() - 1);
+				articleCommentCountMapper.updateByPrimaryKey(po);
+			}
+		}
 	}
 
 	@Override

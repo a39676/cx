@@ -32,13 +32,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.article.article.mapper.ArticleLongFeedbackMapper;
 import demo.article.article.mapper.ArticleLongMapper;
 import demo.article.article.mapper.ArticleLongReviewMapper;
 import demo.article.article.pojo.bo.UpdateEditedArticleLongBO;
 import demo.article.article.pojo.constant.ArticleConstant;
 import demo.article.article.pojo.constant.ArticleViewConstant;
-import demo.article.article.pojo.dto.ArticleFeedbackDTO;
 import demo.article.article.pojo.dto.EditArticleLongDTO;
 import demo.article.article.pojo.dto.FindArticleLongByConditionDTO;
 import demo.article.article.pojo.dto.ReadyToEditArticleLongDTO;
@@ -48,13 +46,11 @@ import demo.article.article.pojo.param.controllerParam.FindArticleLongByArticleS
 import demo.article.article.pojo.param.controllerParam.ReviewArticleLongParam;
 import demo.article.article.pojo.po.ArticleChannels;
 import demo.article.article.pojo.po.ArticleLong;
-import demo.article.article.pojo.po.ArticleLongFeedback;
 import demo.article.article.pojo.po.ArticleLongReview;
 import demo.article.article.pojo.result.CheckParamBeforeEditArticleResult;
 import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.article.pojo.result.jsonRespon.FindArticleLongResult;
 import demo.article.article.pojo.type.ArticleChannelType;
-import demo.article.article.pojo.type.ArticleFeedbackType;
 import demo.article.article.pojo.type.ArticleReviewType;
 import demo.article.article.pojo.vo.ArticleLongVO;
 import demo.article.article.service.ArticleAdminService;
@@ -69,7 +65,6 @@ import demo.common.pojo.type.ResultTypeCX;
 import demo.image.pojo.result.ImgHandleSrcDataResult;
 import demo.image.pojo.type.ImageTagType;
 import demo.image.service.ImageService;
-import demo.tool.service.ValidRegexToolService;
 import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.result.ImageSavingResult;
 import toolPack.ioHandle.FileUtilCustom;
@@ -96,13 +91,9 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	private ArticleLongMapper articleLongMapper;
 	@Autowired
 	private ArticleLongReviewMapper articleLongReviewMapper;
-	@Autowired
-	private ArticleLongFeedbackMapper articleLongFeedbackMapper;
 
 	@Autowired
 	private FileUtilCustom ioUtil;
-	@Autowired
-	private ValidRegexToolService validRegexToolService;
 
 	private String getArticleStorePrefixPath() {
 		return systemConstantService.getSysValByName(ArticleConstant.ARTICLE_STORE_PRE_FIX_PATH);
@@ -574,62 +565,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		articleLongReviewMapper.batchUpdateFillCreatorId(reviewResultList);
 	}
 
-	@Override
-	public CommonResultCX articleLongFeedback(ArticleFeedbackDTO dto, HttpServletRequest request) {
-		visitDataService.insertVisitData(request);
-		CommonResultCX result = new CommonResultCX();
-
-		Long userId = baseUtilCustom.getUserId();
-		if (StringUtils.isBlank(dto.getPk()) || StringUtils.isBlank(dto.getFeedback())) {
-			result.fillWithResult(ResultTypeCX.nullParam);
-			return result;
-		}
-		String feedback = sanitize(dto.getFeedback());
-
-		if (StringUtils.isBlank(feedback)) {
-			result.failWithMessage("期待您填写反馈内容");
-			return result;
-		} else if (feedback.length() > 512) {
-			result.failWithMessage("反馈内容过长");
-			return result;
-		} else if (StringUtils.isBlank(dto.getEmail()) || !validRegexToolService.validEmail(dto.getEmail())) {
-			result.failWithMessage("请输入正确的email");
-			return result;
-		}
-
-		dto.setPk(URLDecoder.decode(dto.getPk(), StandardCharsets.UTF_8));
-		Long articleId = decryptPrivateKey(dto.getPk());
-		if (articleId == null) {
-			result.fillWithResult(ResultTypeCX.nullParam);
-			return result;
-		}
-
-		ArticleLong article = articleLongMapper.selectByPrimaryKey(articleId);
-		if (article == null) {
-			result.fillWithResult(ResultTypeCX.errorParam);
-			return result;
-		}
-
-		ArticleLongFeedback feedbackPO = new ArticleLongFeedback();
-
-		feedbackPO.setId(snowFlake.getNextId());
-		feedbackPO.setCreateTime(LocalDateTime.now());
-		feedbackPO.setFeedbackUserId(userId);
-		feedbackPO.setArticleId(articleId);
-		feedbackPO.setArticleCreatorId(article.getUserId());
-		feedbackPO.setArticleTitle(article.getArticleTitle());
-		feedbackPO.setFeedback(feedback);
-		feedbackPO.setEmail(dto.getEmail());
-		feedbackPO.setMobile(dto.getMobile());
-		feedbackPO.setFeedbackUserNickname(dto.getNickname());
-		feedbackPO.setMobile(dto.getMobile());
-		feedbackPO.setFeedbackType(ArticleFeedbackType.normal.getCode());
-
-		articleLongFeedbackMapper.insert(feedbackPO);
-
-		result.fillWithResult(ResultTypeCX.feedbackReciveSuccess);
-		return result;
-	}
 
 	@Override
 	public ModelAndView readyToEditArticleLong(ReadyToEditArticleLongDTO dto) {

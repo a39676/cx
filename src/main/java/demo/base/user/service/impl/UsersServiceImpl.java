@@ -13,7 +13,6 @@ import auxiliaryCommon.pojo.type.GenderType;
 import demo.base.organizations.pojo.dto.FindUserControlOrgDTO;
 import demo.base.organizations.pojo.result.FindUserControlOrgResult;
 import demo.base.organizations.service.OrganizationService;
-import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.user.mapper.UsersDetailMapper;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.bo.FindUserAuthBO;
@@ -71,7 +70,7 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 		}
 		UserAttemptQuerayDTO param = new UserAttemptQuerayDTO();
 		param.setUserName(userName);
-		int maxAttempts = Integer.parseInt(systemConstantService.getSysValByName(SystemConstantStore.maxAttempts));
+		int maxAttempts = systemConstantService.getMaxAttempts();
 		if (getUserAttempts(param).size() >= maxAttempts) {
 			usersMapper.lockUserWithAttempts(userName);
 		} 

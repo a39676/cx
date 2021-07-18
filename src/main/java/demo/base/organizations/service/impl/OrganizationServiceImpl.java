@@ -413,8 +413,7 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 	
 	private OrganizationVO buildOrgVOByPO(Organizations po) {
 		/*
-		 * TODO
-		 * 直属机构名 顶级机构名 未填充
+		 * TODO 直属机构名 顶级机构名 未填充
 		 */
 		OrganizationVO vo = new OrganizationVO();
 		vo.setPk(encryptId(po.getId()));

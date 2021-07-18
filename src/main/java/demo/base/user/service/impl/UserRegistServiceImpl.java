@@ -358,8 +358,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		}
 		
 		/*
-		 * TODO
-		 * 更改邮箱需要将用户角色变回未激活? 最简便
+		 * TODO 更改邮箱需要将用户角色变回未激活? 最简便
 		 */
 		
 		r.setIsSuccess();

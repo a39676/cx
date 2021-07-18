@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ import net.sf.json.JSONObject;
 import tool.pojo.bo.IpRecordBO;
 import toolPack.ioHandle.FileUtilCustom;
 
+@Scope("singleton")
 @Service
 public class RedisConnectService extends CommonService {
 	
@@ -102,7 +104,7 @@ public class RedisConnectService extends CommonService {
 					} else {
 						result.addMessage("add key:" + tmpKey + " , set: " + tmpValue + "\n");
 					}
-					redisConnectService.setValByName(tmpKey, tmpValue);
+					setValByName(tmpKey, tmpValue);
 				} else {
 					result.addMessage("detect an empty key, has value: " + tmpValue + "\n");
 				}

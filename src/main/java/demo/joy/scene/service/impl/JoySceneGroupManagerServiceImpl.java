@@ -99,8 +99,7 @@ public class JoySceneGroupManagerServiceImpl extends JoyCommonService implements
 	}
 
 	/*
-	 * TODO 
-	 * edit
+	 * TODO edit
 	 */
 	
 	@Override

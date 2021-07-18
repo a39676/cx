@@ -35,7 +35,6 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.mapper.ArticleLongMapper;
 import demo.article.article.mapper.ArticleLongReviewMapper;
 import demo.article.article.pojo.bo.UpdateEditedArticleLongBO;
-import demo.article.article.pojo.constant.ArticleConstant;
 import demo.article.article.pojo.constant.ArticleViewConstant;
 import demo.article.article.pojo.dto.EditArticleLongDTO;
 import demo.article.article.pojo.dto.FindArticleLongByConditionDTO;
@@ -95,36 +94,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	@Autowired
 	private FileUtilCustom ioUtil;
 
-	private String getArticleStorePrefixPath() {
-		return systemConstantService.getSysValByName(ArticleConstant.ARTICLE_STORE_PRE_FIX_PATH);
-	}
 
-	private String getArticleImageStorePrefixPath() {
-		String dateStr = localDateTimeHandler.dateToStr(LocalDateTime.now(), "yyyyMM");
-		if (isWindows()) {
-			return "d:/" + ArticleConstant.ARTICLE_IMG_SAVING_FOLDER + "/" + dateStr;
-		}
-		return ArticleConstant.ARTICLE_IMG_SAVING_FOLDER + "/" + dateStr;
-	}
-
-	private String getArticleSummaryStorePrefixPath() {
-		return systemConstantService.getSysValByName(ArticleConstant.ARTICLE_SUMMARY_STORE_PRE_FIX_PATH);
-	}
-
-	private Long loadMaxArticleLength() {
-		Long maxArticleLength = 0L;
-		try {
-			String maxLengthStr = systemConstantService.getSysValByName(ArticleConstant.MAX_ARTICLE_LENGTH);
-			if (maxLengthStr != null) {
-				maxArticleLength = Long.parseLong(maxLengthStr);
-			}
-		} catch (Exception e) {
-			return maxArticleLength;
-		}
-
-		return maxArticleLength;
-
-	}
 
 	@Override
 	public ModelAndView buildCreatingArticleLongView(CreatingArticleParam controllerParam) {
@@ -162,9 +132,9 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		String title = checkResult.getTitle();
 		Long channelId = checkResult.getChannelId();
 
-		String summaryStorePrefixPath = getArticleSummaryStorePrefixPath();
-		String storePrefixPath = getArticleStorePrefixPath();
-		Long maxArticleLength = loadMaxArticleLength();
+		String summaryStorePrefixPath = articleConstantService.getArticleSummaryStorePrefixPath();
+		String storePrefixPath = articleConstantService.getArticleStorePrefixPath();
+		Long maxArticleLength = articleConstantService.getMaxArticleLength();
 		if (StringUtils.isAnyBlank(summaryStorePrefixPath, storePrefixPath) || maxArticleLength < 1) {
 			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
@@ -320,7 +290,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 
 		content = doc.toString();
 
-		Long maxArticleLength = loadMaxArticleLength();
+		Long maxArticleLength = articleConstantService.getMaxArticleLength();
 
 		if (content.length() > maxArticleLength) {
 			result.fillWithResult(ResultTypeCX.articleTooLong);
@@ -369,7 +339,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return "";
 		}
 
-		String saveingFolderPath = getArticleImageStorePrefixPath();
+		String saveingFolderPath = articleConstantService.getArticleImageSavingFolder();
 		String imgSavingPath = saveingFolderPath + "/" + filename;
 		boolean saveFlag = imgService.imgSaveAsFile(bufferedImage, imgSavingPath, srcHandleResult.getImgFileType());
 		if (!saveFlag) {
@@ -564,7 +534,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 
 		articleLongReviewMapper.batchUpdateFillCreatorId(reviewResultList);
 	}
-
 
 	@Override
 	public ModelAndView readyToEditArticleLong(ReadyToEditArticleLongDTO dto) {

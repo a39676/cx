@@ -61,9 +61,7 @@ public class PMemoServiceImpl extends ArticleCommonService implements PMemoServi
 	
 	public void cleanMemo() {
 		/*
-		 *  TODO
-		 *  未加入 security url 鉴定权限
-		 *  提供删除其他 memo? 
+		 *  TODO 未加入 security url 鉴定权限 提供删除其他 memo? 
 		 */
 	}
 

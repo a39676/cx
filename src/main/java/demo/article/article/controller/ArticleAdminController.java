@@ -29,7 +29,6 @@ import demo.article.article.service.ArticleChannelService;
 import demo.common.controller.CommonController;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.ResultTypeCX;
-import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping( value = ArticleAdminUrlConstant.root)
@@ -47,55 +46,56 @@ public class ArticleAdminController extends CommonController {
 	}
 	
 	@PostMapping(value = ArticleAdminUrlConstant.batchUpdatePrivateKey)
-	public void batchUpdatePrivateKey(@RequestBody BatchUpdatePrimaryKeyParam param, HttpServletRequest request, HttpServletResponse response) {
-		CommonResult serviceResult = articleAdminService.batchUpdatePrivateKey(param);
-		outputJson(response, JSONObject.fromObject(serviceResult));
-		return;
+	@ResponseBody
+	public CommonResult batchUpdatePrivateKey(@RequestBody BatchUpdatePrimaryKeyParam param) {
+		return articleAdminService.batchUpdatePrivateKey(param);
 	}
 	
 	@PostMapping(value = ArticleAdminUrlConstant.passArticle)
-	public void passArticle(@RequestBody ReviewArticleLongParam param, HttpServletRequest request, HttpServletResponse response) {
+	@ResponseBody
+	public CommonResultCX passArticle(@RequestBody ReviewArticleLongParam param) {
 		param.setReviewCode(ArticleReviewType.pass.getReviewCode());
-		CommonResultCX serviceResult = new CommonResultCX();
+		
 		try {
-			serviceResult = articleAdminService.handelReviewArticle(param);
+			return articleAdminService.handelReviewArticle(param);
 		} catch (Exception e) {
-			e.printStackTrace();
+			CommonResultCX serviceResult = new CommonResultCX();
 			serviceResult.fillWithResult(ResultTypeCX.serviceError);
+			return serviceResult;
 		}
-		outputJson(response, JSONObject.fromObject(serviceResult));
 	}
 	
 	@PostMapping(value = ArticleAdminUrlConstant.rejectArticle)
-	public void rejectArticle(@RequestBody ReviewArticleLongParam param, HttpServletRequest request, HttpServletResponse response) {
+	@ResponseBody
+	public CommonResultCX rejectArticle(@RequestBody ReviewArticleLongParam param) {
 		param.setReviewCode(ArticleReviewType.reject.getReviewCode());
-		CommonResultCX serviceResult = new CommonResultCX();
+		
 		try {
-			serviceResult = articleAdminService.handelReviewArticle(param);
+			return articleAdminService.handelReviewArticle(param);
 		} catch (Exception e) {
-			e.printStackTrace();
+			CommonResultCX serviceResult = new CommonResultCX();
 			serviceResult.fillWithResult(ResultTypeCX.serviceError);
+			return serviceResult;
 		}
-		outputJson(response, JSONObject.fromObject(serviceResult));
 	}
 	
 	@PostMapping(value = ArticleAdminUrlConstant.deleteArticle)
-	public void deleteArticle(@RequestBody ReviewArticleLongParam param, HttpServletRequest request, HttpServletResponse response) {
+	@ResponseBody
+	public CommonResultCX deleteArticle(@RequestBody ReviewArticleLongParam param) {
 		param.setReviewCode(ArticleReviewType.delete.getReviewCode());
-		CommonResultCX serviceResult = new CommonResultCX();
 		try {
-			serviceResult = articleAdminService.handelReviewArticle(param);
+			return articleAdminService.handelReviewArticle(param);
 		} catch (Exception e) {
-			e.printStackTrace();
+			CommonResultCX serviceResult = new CommonResultCX();
 			serviceResult.fillWithResult(ResultTypeCX.serviceError);
+			return serviceResult;
 		}
-		outputJson(response, JSONObject.fromObject(serviceResult));
 	}
 	
 	@PostMapping(value = ArticleAdminUrlConstant.changeChannel)
-	public void changeChannel(@RequestBody ChangeChannelParam param, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		CommonResult serviceResult = articleAdminService.changeChannel(param);
-		outputJson(response, JSONObject.fromObject(serviceResult));
+	@ResponseBody
+	public CommonResultCX changeChannel(@RequestBody ChangeChannelParam param) throws Exception {
+		return articleAdminService.changeChannel(param);
 	}
 	
 	@PostMapping(value = ArticleAdminUrlConstant.setArticleHot)

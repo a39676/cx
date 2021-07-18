@@ -15,7 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.article.article.pojo.constant.ArticleConstant;
 import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.article.pojo.type.ArticleEvaluationType;
 import demo.article.article.pojo.vo.ArticleEvaluationStatisticsVO;
@@ -54,6 +53,8 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	@Autowired
 	private ArticleService articleService;
 	@Autowired
+	private ArticleCommentConstantService constantService;
+	@Autowired
 	private ArticleEvaluationService articleEvaluationService;
 	@Autowired
 	private ArticleCommentAdminService articleCommentAdminService;
@@ -72,34 +73,6 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	@Autowired
 	private FileUtilCustom ioUtil;
 	
-	private String loadArticleCommentStorePath() {
-		String path = systemConstantService.getSysValByName(ArticleCommentConstant.commentStorePathRedisKey);
-		
-		if(StringUtils.isNotBlank(path)) {
-			return path;
-		}
-		
-		if(isLinux()) {
-			path = "/home/u2/articleComment";
-		} else {
-			path = "d:/home/u2/articleComment";
-		}
-		
-		redisConnectService.setValByName(ArticleCommentConstant.commentStorePathRedisKey, path);
-		
-		return path;
-	}
-	
-	private Long loadMaxArticleLength() {
-		String maxCommentLengthStr = systemConstantService.getSysValByName(ArticleConstant.MAX_ARTICLE_LENGTH);
-		Long maxCommentLength = null;
-		try {
-			maxCommentLength = Long.parseLong(maxCommentLengthStr);
-		} catch (Exception e) {
-			maxCommentLength = 0L;
-		}
-		return maxCommentLength;
-	}
 	
 	@Override
 	public CommonResultCX creatingArticleComment(HttpServletRequest request, CreateArticleCommentDTO inputParam) throws IOException {
@@ -113,8 +86,8 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			result.fillWithResult(ResultTypeCX.articleTooShort);
 			return result;
 		}
-		String articleCommentStorePrefixPath = loadArticleCommentStorePath();
-		if(StringUtils.isBlank(articleCommentStorePrefixPath) || loadMaxArticleLength() <= 0) {
+		String articleCommentStorePrefixPath = constantService.getArticleCommentStorePrefixPath();
+		if(StringUtils.isBlank(articleCommentStorePrefixPath) || constantService.getMaxArticleCommentLength() <= 0) {
 			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
 		}

@@ -10,6 +10,8 @@ public class ArticleCommonService extends CommonService {
 
 	@Autowired
 	private TextFilter textFilter;
+	@Autowired
+	protected ArticleConstantService articleConstantService;
 
 	protected String sanitize(String content) {
 		PolicyFactory filter = textFilter.getArticleFilter();

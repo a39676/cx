@@ -32,10 +32,9 @@ public abstract class PreciousMetalCommonService extends FinanceCommonService {
 		int dayOfWeek = beiJingDateTime.getDayOfWeek().getValue();
 		
 		/*
-		 * 2020-07-06
 		 * 
-		 * TODO
-		 * 未加入美国节假日
+		 * TODO 2020-07-06 未加入美国节假日
+		 * 
 		 * 待明确 goldprice.org 的价格是否受美国节假日影响, 是否受冬令时影响
 		 * 美国法定节假日 ① 新年 （1月1日） ② 总统日 （2月第三个星期一） ③ 战争纪念日 （5月最后星期一） ④ 美国独立节 （7月4日） ⑤ 劳工节 （9月第一个星期一） ⑥ 感恩节 （11月最后一个星期四） ⑦ 圣诞节 （12月25日） 
 		 * 

@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import demo.article.article.mapper.ArticleLongSummaryMapper;
 import demo.article.article.pojo.bo.ArticleLongSummaryBO;
-import demo.article.article.pojo.constant.ArticleConstant;
 import demo.article.article.pojo.dto.FindArticleLongSummaryListDTO;
 import demo.article.article.pojo.dto.FindArticleLongSummaryListMapperDTO;
 import demo.article.article.pojo.param.mapperParam.FindArticleHotSummaryListMapperParam;
@@ -135,8 +134,8 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		if(cp.getLimit() != null ) {
 			mp.setLimit(mp.getLimit());
 		}
-		if(mp.getLimit() == null || mp.getLimit() > ArticleConstant.MAX_PAGE_SIZE) {
-			mp.setLimit(ArticleConstant.DEFAULT_PAGE_SIZE);
+		if(mp.getLimit() == null || mp.getLimit() > articleConstantService.getMaxPageSize()) {
+			mp.setLimit(articleConstantService.getDefaultPageSize());
 		}
 		if(cp.getDesc() != null && !cp.getDesc()) {
 			mp.setDesc(false);
@@ -277,8 +276,8 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			return new ArrayList<ArticleLongSummaryBO>();
 		}
 
-		if (dto.getLimit() != null && dto.getLimit() > ArticleConstant.MAX_PAGE_SIZE) {
-			dto.setLimit(ArticleConstant.DEFAULT_PAGE_SIZE);
+		if (dto.getLimit() != null && dto.getLimit() > articleConstantService.getDefaultPageSize()) {
+			dto.setLimit(articleConstantService.getDefaultPageSize());
 		}
 		Long userId = dto.getUserId();
 		dto.setUserId(null);
@@ -305,11 +304,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		/* 置限制只可浏览某时点之后的文章 */
 		boolean isBigUser = isBigUser();
 		if(!isBigUser) {
-			String normalUserMaxReadingMonth = systemConstantService.getSysValByName(ArticleConstant.NORMAL_USER_MAX_READING_MONTH);
-			int maxReadingMonth = 1;
-			if(numberUtil.matchInteger(normalUserMaxReadingMonth)) {
-				maxReadingMonth = Integer.parseInt(normalUserMaxReadingMonth);
-			}
+			Long maxReadingMonth = articleConstantService.getNormalUserMaxReadingMonth();;
 			LocalDateTime earliestStartTime = LocalDateTime.now().minusMonths(maxReadingMonth);
 			if(dto.getStartTime() == null || dto.getStartTime().isBefore(earliestStartTime)) {
 				dto.setStartTime(earliestStartTime);

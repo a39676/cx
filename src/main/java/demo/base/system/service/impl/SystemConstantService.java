@@ -120,7 +120,7 @@ public class SystemConstantService extends CommonService {
 	
 	public boolean getIsDebuging() {
 		if(isDebuging == null) {
-			isDebuging = DebugStatusConstant.debuging.equals(getSysValByName(SystemConstantStore.debugStatus));
+			isDebuging = DebugStatusConstant.debuging.equals(getSysValByName(SystemConstantStore.DEBUG_STATUS));
 		}
 		return isDebuging;
 	}
@@ -154,7 +154,7 @@ public class SystemConstantService extends CommonService {
 		homepageAnnouncementStr = homepageAnnouncementInput;
 	}
 	
-	public String getSysValByName(String constantName) {
+	private String getSysValByName(String constantName) {
 		String val = redisConnectService.getValByName(constantName);
 		
 		if(!val.equals("")) {

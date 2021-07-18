@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.user.pojo.constant.UsersUrl;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.ResultTypeCX;
@@ -45,6 +44,9 @@ import toolPack.emailHandle.mailService.send.SendEmail;
 public class MailServiceImpl extends CommonService implements MailService {
 
 	@Autowired
+	private MailConstantService mailConstantService;
+	
+	@Autowired
 	private MailToolService mailToolService;
 	
 	@Autowired
@@ -52,17 +54,9 @@ public class MailServiceImpl extends CommonService implements MailService {
 	
 	
 	private boolean isMailReady() {
-		String adminMailName = systemConstantService.getSysValByName(SystemConstantStore.adminMailName);
-		String adminMailPwd = systemConstantService.getSysValByName(SystemConstantStore.adminMailPwd);
+		String adminMailName = mailConstantService.getAdminMailName();
+		String adminMailPwd = mailConstantService.getAdminMailPwd();
 		
-		if(adminMailName == null) {
-			systemConstantService.getSysValByName(SystemConstantStore.adminMailName, true);
-		}
-		
-		if(adminMailPwd == null) {
-			systemConstantService.getSysValByName(SystemConstantStore.adminMailPwd, true);
-		}
-
 		return (adminMailName != null && adminMailPwd != null);
 		
 	}
@@ -83,11 +77,11 @@ public class MailServiceImpl extends CommonService implements MailService {
 
 		SendEmail sm = new SendEmail();
 		sm.sendMail(
-				systemConstantService.getSysValByName(SystemConstantStore.adminMailName), 
-				systemConstantService.getSysValByName(SystemConstantStore.adminMailPwd), 
+				mailConstantService.getAdminMailName(), 
+				mailConstantService.getAdminMailPwd(), 
 				Arrays.asList(sendTo),
 				null,
-				Arrays.asList(systemConstantService.getSysValByName(SystemConstantStore.adminMailName)),
+				Arrays.asList(mailConstantService.getAdminMailName()),
 				title, 
 				content, 
 				null,
@@ -107,11 +101,11 @@ public class MailServiceImpl extends CommonService implements MailService {
 		}
 		SendEmail sm = new SendEmail();
 		sm.sendMail(
-				systemConstantService.getSysValByName(SystemConstantStore.adminMailName), 
-				systemConstantService.getSysValByName(SystemConstantStore.adminMailPwd), 
+				mailConstantService.getAdminMailName(), 
+				mailConstantService.getAdminMailPwd(), 
 				Arrays.asList(sendTo),
 				null,
-				Arrays.asList(systemConstantService.getSysValByName(SystemConstantStore.adminMailName)),
+				Arrays.asList(mailConstantService.getAdminMailName()),
 				title, 
 				content, 
 				attachmentPathList,
@@ -127,11 +121,11 @@ public class MailServiceImpl extends CommonService implements MailService {
 		}
 		SendEmail sm = new SendEmail();
 		sm.sendMail(
-				systemConstantService.getSysValByName(SystemConstantStore.adminMailName), 
-				systemConstantService.getSysValByName(SystemConstantStore.adminMailPwd), 
+				mailConstantService.getAdminMailName(), 
+				mailConstantService.getAdminMailPwd(), 
 				Arrays.asList(sendTo),
 				null,
-				Arrays.asList(systemConstantService.getSysValByName(SystemConstantStore.adminMailName)),
+				Arrays.asList(mailConstantService.getAdminMailName()),
 				title, 
 				content, 
 				Arrays.asList(attachmentPath),
@@ -368,9 +362,9 @@ public class MailServiceImpl extends CommonService implements MailService {
 		Properties properties = mailToolService.buildSinaSmtpSslProperties();
 		SendEmail sm = new SendEmail();
 		sm.sendMail(
-				systemConstantService.getSysValByName(SystemConstantStore.adminMailName), 
-				systemConstantService.getSysValByName(SystemConstantStore.adminMailPwd), 
-				Arrays.asList(systemConstantService.getSysValByName(SystemConstantStore.adminMailName)),
+				mailConstantService.getAdminMailName(), 
+				mailConstantService.getAdminMailPwd(), 
+				Arrays.asList(mailConstantService.getAdminMailName()),
 				null,
 				null,
 				("error : " + LocalDateTime.now().toString()), 
@@ -392,8 +386,8 @@ public class MailServiceImpl extends CommonService implements MailService {
 		Properties imapProperties = mailToolService.buildSinaImapSslProperties();
 		Properties smtpProperties = mailToolService.buildSinaSmtpSslProperties();
 		Store store = mailHandle.getMailStore(
-				systemConstantService.getSysValByName(SystemConstantStore.adminMailName), 
-				systemConstantService.getSysValByName(SystemConstantStore.adminMailPwd), 
+				mailConstantService.getAdminMailName(), 
+				mailConstantService.getAdminMailPwd(), 
 				smtpProperties, 
 				imapProperties
 				);

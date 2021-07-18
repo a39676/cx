@@ -60,8 +60,7 @@ public class JoyCharacterServiceImpl extends JoyCommonService implements JoyChar
 		}
 		
 		/*
-		 * TODO
-		 * 未校验生僻字,特殊字符
+		 * TODO 未校验生僻字,特殊字符
 		 */
 
 		GenderType genderType = GenderType.getType(dto.getGender());

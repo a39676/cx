@@ -10,9 +10,7 @@ import demo.joy.skill.service.JoySkillBattleService;
 public class JoySkillBattleServiceImpl extends JoyCommonService implements JoySkillBattleService {
 
 	/*
-	 * TODO
-	 * 需要双方所有数据
-	 * 双方人物id, 双方buff Map,  
+	 * TODO 需要双方所有数据 双方人物id, 双方buff Map,  
 	 */ 
 	public void skillHandler(JoySkillType skillType) {
 		if(JoySkillType.firstMiracle.equals(skillType)) {
@@ -21,6 +19,5 @@ public class JoySkillBattleServiceImpl extends JoyCommonService implements JoySk
 	}
 	
 	private void firstMiracle() {
-//		TODO
 	}
 }

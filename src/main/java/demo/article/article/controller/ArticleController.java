@@ -41,7 +41,6 @@ import demo.article.article.service.ArticleSummaryService;
 import demo.common.controller.CommonController;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.ResultTypeCX;
-import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping( value = ArticleUrlConstant.root)
@@ -95,35 +94,35 @@ public class ArticleController extends CommonController {
 	}
 	
 	@PostMapping(value = ArticleUrlConstant.deleteArticle)
-	public void deleteArticle(@RequestBody ReviewArticleLongParam param, HttpServletRequest request, HttpServletResponse response) {
+	@ResponseBody
+	public CommonResultCX deleteArticle(@RequestBody ReviewArticleLongParam param, HttpServletRequest request, HttpServletResponse response) {
 		param.setReviewCode(ArticleReviewType.delete.getReviewCode());
 		
 		CommonResultCX serviceResult = new CommonResultCX();
 
 		if(!articleService.iWroteThis(param.getPk())) {
 			serviceResult.fillWithResult(ResultTypeCX.notYourArticle);
-			outputJson(response, JSONObject.fromObject(serviceResult));
-			return;
+			return serviceResult;
 		}
 		
-		articleAdminController.deleteArticle(param, request, response);
+		return articleAdminController.deleteArticle(param);
 	}
 	
 	@PostMapping(value = ArticleUrlConstant.insertArticleLongEvaluation)
-	public void insertArticleLongEvaluation(@RequestBody InsertArticleLongEvaluationParam param, HttpServletRequest request, HttpServletResponse response) {
+	@ResponseBody
+	public CommonResultCX insertArticleLongEvaluation(@RequestBody InsertArticleLongEvaluationParam param) {
 		param.setEvaluationType(ArticleEvaluationType.articleLongEvaluation.getCode());
-		CommonResult serviceResult = articleEvaluationService.insertArticleLongEvaluationRedis(param);
-		outputJson(response, JSONObject.fromObject(serviceResult));
+		return articleEvaluationService.insertArticleLongEvaluationRedis(param);
 	}
 	
-	public void insertArticleLongCommentEvaluation(@RequestBody InsertArticleLongEvaluationParam param, HttpServletRequest request, HttpServletResponse response) {
+	public CommonResult insertArticleLongCommentEvaluation(@RequestBody InsertArticleLongEvaluationParam param) {
 		/*
 		 * TODO
 		 * 2019-06-08 发现 未明用途  待确认
 		 */
 		param.setEvaluationType(ArticleEvaluationType.articleCommentEvaluation.getCode());
 		CommonResult serviceResult = articleEvaluationService.insertArticleLongEvaluationRedis(param);
-		outputJson(response, JSONObject.fromObject(serviceResult));
+		return serviceResult;
 	}
 	
 	

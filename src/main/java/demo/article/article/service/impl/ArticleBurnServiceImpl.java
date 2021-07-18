@@ -18,7 +18,6 @@ import org.springframework.web.servlet.ModelAndView;
 import autoTest.testEvent.pojo.constant.SearchingDemoConstant;
 import demo.article.article.mapper.ArticleBurnMapper;
 import demo.article.article.pojo.constant.ArticleBurnUrlConstant;
-import demo.article.article.pojo.constant.ArticleConstant;
 import demo.article.article.pojo.constant.ArticleViewConstant;
 import demo.article.article.pojo.dto.CreatingBurnMessageDTO;
 import demo.article.article.pojo.po.ArticleBurn;
@@ -47,22 +46,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 	private ArticleBurnMapper articleBurnMapper;
 	
 	private String getArticleBurnStorePrefixPath() {
-		return systemConstantService.getSysValByName(ArticleConstant.ARTICLE_BURN_STORE_PRE_FIX_PATH);
-	}
-	
-	private Long loadMaxArticleLength() {
-		Long maxArticleLength = 0L;
-		try {
-			String maxLengthStr = systemConstantService.getSysValByName(ArticleConstant.MAX_ARTICLE_LENGTH);
-			if(maxLengthStr != null) {
-				maxArticleLength = Long.parseLong(maxLengthStr);
-			}
-		} catch (Exception e) {
-			return maxArticleLength;
-		}
-		
-		return maxArticleLength;
-		
+		return articleConstantService.getArticleBurnStorePrefixPath();
 	}
 	
 	private boolean isInZhang3OrDev(HttpServletRequest request) {
@@ -90,7 +74,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 			return null;
 		}
 
-		if(StringUtils.isBlank(dto.getContent()) || dto.getContent().length() > loadMaxArticleLength()) {
+		if(StringUtils.isBlank(dto.getContent()) || dto.getContent().length() > articleConstantService.getMaxArticleLength()) {
 			r.fillWithResult(ResultTypeCX.errorParam);
 			return r;
 		}

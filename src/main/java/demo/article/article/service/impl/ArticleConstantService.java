@@ -1,10 +1,16 @@
 package demo.article.article.service.impl;
 
+import java.io.File;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.Gson;
+
 import demo.common.service.CommonService;
+import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")
 @Service
@@ -12,16 +18,10 @@ public class ArticleConstantService extends CommonService {
 
 	/*
 	 * TODO 不再从数据库获取, 改从json 文件中读取 文件路径配置? application.yml 中配置? 先从文件读取, gson协助填充,
-	 * 然后refresh 方法中再将 ARTICLE_STORE_PRE_FIX_PATH 之类的文件路径数据再重写, 加上
-	 * articleSavingFolderPrefix
 	 */
 
 	@Value("${optionFilePath.article}")
 	private String optionFilePath;
-
-	public void testing() {
-		System.out.println(optionFilePath);
-	}
 
 	private Long maxArticleLength = 0L;
 	private Integer defaultPageSize = 6;
@@ -31,10 +31,8 @@ public class ArticleConstantService extends CommonService {
 	private Integer minEvaluationCount = 15;
 	/** 评价平衡比例 */
 	private Double balanceEvaluationRatio = 1.1;
-	private String articleSavingFolderPrefix;
 	private String articleBurnStorePrefixPath;
 	private String articleStorePrefixPath;
-
 	private String articleImageSavingFolder;
 	private String articleSummaryStorePrefixPath;
 	private String articleChannelPrefixStorePath;
@@ -43,62 +41,121 @@ public class ArticleConstantService extends CommonService {
 
 	public void refreshConstant() {
 //		TODO
+		File optionFile = new File(optionFilePath);
+		if (!optionFile.exists()) {
+			return;
+		}
+		try {
+			FileUtilCustom fileUtil = new FileUtilCustom();
+			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
+			ArticleConstantService tmp = new Gson().fromJson(jsonStr, ArticleConstantService.class);
+			BeanUtils.copyProperties(tmp, this);
+		} catch (Exception e) {
+		}
 	}
 
-	public String getTesting() {
+	public String getOptionFilePath() {
 		return optionFilePath;
 	}
 
-	public String getArticleBurnStorePrefixPath() {
-		return articleBurnStorePrefixPath;
-	}
-
-	public String getArticleStorePrefixPath() {
-		return articleStorePrefixPath;
+	public void setOptionFilePath(String optionFilePath) {
+		this.optionFilePath = optionFilePath;
 	}
 
 	public Long getMaxArticleLength() {
 		return maxArticleLength;
 	}
 
+	public void setMaxArticleLength(Long maxArticleLength) {
+		this.maxArticleLength = maxArticleLength;
+	}
+
 	public Integer getDefaultPageSize() {
 		return defaultPageSize;
+	}
+
+	public void setDefaultPageSize(Integer defaultPageSize) {
+		this.defaultPageSize = defaultPageSize;
 	}
 
 	public Integer getMaxPageSize() {
 		return maxPageSize;
 	}
 
+	public void setMaxPageSize(Integer maxPageSize) {
+		this.maxPageSize = maxPageSize;
+	}
+
 	public Long getEvaluationCacheLivingTime() {
 		return evaluationCacheLivingTime;
+	}
+
+	public void setEvaluationCacheLivingTime(Long evaluationCacheLivingTime) {
+		this.evaluationCacheLivingTime = evaluationCacheLivingTime;
 	}
 
 	public Integer getMinEvaluationCount() {
 		return minEvaluationCount;
 	}
 
+	public void setMinEvaluationCount(Integer minEvaluationCount) {
+		this.minEvaluationCount = minEvaluationCount;
+	}
+
 	public Double getBalanceEvaluationRatio() {
 		return balanceEvaluationRatio;
 	}
 
-	public String getArticleSavingFolderPrefix() {
-		return articleSavingFolderPrefix;
+	public void setBalanceEvaluationRatio(Double balanceEvaluationRatio) {
+		this.balanceEvaluationRatio = balanceEvaluationRatio;
+	}
+
+	public String getArticleBurnStorePrefixPath() {
+		return articleBurnStorePrefixPath;
+	}
+
+	public void setArticleBurnStorePrefixPath(String articleBurnStorePrefixPath) {
+		this.articleBurnStorePrefixPath = articleBurnStorePrefixPath;
+	}
+
+	public String getArticleStorePrefixPath() {
+		return articleStorePrefixPath;
+	}
+
+	public void setArticleStorePrefixPath(String articleStorePrefixPath) {
+		this.articleStorePrefixPath = articleStorePrefixPath;
 	}
 
 	public String getArticleImageSavingFolder() {
 		return articleImageSavingFolder;
 	}
 
+	public void setArticleImageSavingFolder(String articleImageSavingFolder) {
+		this.articleImageSavingFolder = articleImageSavingFolder;
+	}
+
 	public String getArticleSummaryStorePrefixPath() {
 		return articleSummaryStorePrefixPath;
+	}
+
+	public void setArticleSummaryStorePrefixPath(String articleSummaryStorePrefixPath) {
+		this.articleSummaryStorePrefixPath = articleSummaryStorePrefixPath;
 	}
 
 	public String getArticleChannelPrefixStorePath() {
 		return articleChannelPrefixStorePath;
 	}
 
+	public void setArticleChannelPrefixStorePath(String articleChannelPrefixStorePath) {
+		this.articleChannelPrefixStorePath = articleChannelPrefixStorePath;
+	}
+
 	public Long getNormalUserMaxReadingMonth() {
 		return normalUserMaxReadingMonth;
+	}
+
+	public void setNormalUserMaxReadingMonth(Long normalUserMaxReadingMonth) {
+		this.normalUserMaxReadingMonth = normalUserMaxReadingMonth;
 	}
 
 }

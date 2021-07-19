@@ -3,7 +3,6 @@ package demo.common.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -56,31 +55,6 @@ public abstract class CommonService {
 	protected RedisConnectService redisConnectService;
 
 	protected static final LocalDateTime BLOG_ARTICLE_START_TIME = LocalDateTime.of(2020, 5, 1, 0, 0, 0);
-
-	protected String createDateDescription(Date inputDate) {
-		if (inputDate == null) {
-			return "";
-		}
-		Long oneHourLong = 1000L * 60 * 60;
-		Long timeDiff = System.currentTimeMillis() - inputDate.getTime();
-		if (timeDiff < (oneHourLong / 2)) {
-			return "a moment...";
-		} else if (timeDiff <= oneHourLong) {
-			return "not long ago";
-		} else if (timeDiff <= (oneHourLong * 12)) {
-			return String.valueOf(timeDiff / oneHourLong) + " hours ago";
-		} else if (timeDiff <= (oneHourLong * 24)) {
-			return "today";
-		} else if (timeDiff <= (oneHourLong * 24 * 3)) {
-			return String.valueOf(timeDiff / (oneHourLong * 24)) + " days ago";
-		} else if (timeDiff <= (oneHourLong * 24 * 7)) {
-			return "within a week";
-		} else if (timeDiff <= (oneHourLong * 24 * 31)) {
-			return "within a month";
-		} else {
-			return "long long ago...";
-		}
-	}
 
 	protected CommonResultCX nullParam() {
 		CommonResultCX result = new CommonResultCX();

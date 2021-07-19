@@ -75,7 +75,7 @@ $(document).ready(function() {
     $(this).attr("loadingFlag", "1");
 
     var nickName = $(this).attr("nickName");
-    var url = "${pageContext.request.contextPath}/user/otherUserInfo";
+    var url = "/user/otherUserInfo";
 
     var jsonOutput = {};
     jsonOutput.nickName = nickName;
@@ -122,7 +122,7 @@ $(document).ready(function() {
     }
     $(".articleLongSummary[pk='"+pk+"']").attr("loadingFlag", "1");
     $("div[name='loading'][pk='"+pk+"']").fadeIn(150);
-    var url = "${pageContext.request.contextPath}/article/readArticleLong";
+    var url = "/article/readArticleLong";
     var jsonOutput = {
       pk:pk
     };

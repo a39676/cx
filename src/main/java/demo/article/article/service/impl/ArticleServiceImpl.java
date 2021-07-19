@@ -184,7 +184,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			newArticle.setArticleTitle(title);
 			newArticle.setChannelId(channelId);
 			newArticle.setUserId(editorId);
-			newArticle.setPath(newFilePath);
+			newArticle.setFilePath(newFilePath);
 		}
 		newArticle.setArticleId(newArticleId);
 
@@ -697,7 +697,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		po.setArticleTitle(bo.getTitle());
 		po.setEditOf(bo.getBackupArticleId());
 		po.setEditCount(editCount + 1);
-		po.setPath(bo.getNewFilePath());
+		po.setFilePath(bo.getNewFilePath());
 		po.setEditTime(LocalDateTime.now());
 		po.setChannelId(bo.getChannelId());
 		po.setIsPass(false);

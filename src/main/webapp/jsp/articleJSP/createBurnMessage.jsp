@@ -99,7 +99,7 @@
   
       function createNewBurnArticle() {
         
-        var url = "${pageContext.request.contextPath}/articleBurn/creatingBurnMessage";
+        var url = "/articleBurn/creatingBurnMessage";
         var readLimit = $("input[name='readLimit']").val();
         var validTime = $("select[name='validTime'] option:selected").val();
         var s = $('#summernote');

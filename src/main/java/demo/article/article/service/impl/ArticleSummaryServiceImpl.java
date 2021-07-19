@@ -43,6 +43,7 @@ import demo.common.pojo.type.ResultTypeCX;
 import demo.toyParts.vcode.pojo.param.GetVcodeByValueParam;
 import demo.toyParts.vcode.pojo.po.VCode;
 import demo.toyParts.vcode.service.VCodeService;
+import toolPack.dateTimeHandle.DateTimeUtilCommon;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -79,7 +80,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		als.setUserId(userId);
 		als.setArticleId(articleId);
 		als.setArticleTitle(title);
-		als.setPath(finalFilePath);
+		als.setFilePath(finalFilePath);
 		return articleLongSummaryMapper.insertSelective(als);
 	}
 	
@@ -170,18 +171,18 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		
 		outputList = new ArrayList<ArticleLongSummaryVO>();
 		for(ArticleLongSummaryBO summaryBO : summaryList) {
-			if(StringUtils.isBlank(summaryBO.getPath()) || summaryBO.getCreateTime() == null || StringUtils.isBlank(summaryBO.getPrivateKey())) {
+			if(StringUtils.isBlank(summaryBO.getFilePath()) || summaryBO.getCreateTime() == null || StringUtils.isBlank(summaryBO.getPrivateKey())) {
 				continue;
 			}
 			tmpVO = new ArticleLongSummaryVO();
-			strContent = ioUtil.getStringFromFile(summaryBO.getPath());
+			strContent = ioUtil.getStringFromFile(summaryBO.getFilePath());
 			voContentBuilder.append(strContent);
 			List<String> lines = Arrays.asList(strContent.split("\n"));
 			tmpVO.setArticleTitle(summaryBO.getArticleTitle());
 			tmpVO.setNickName(summaryBO.getNickName());
 			tmpVO.setFirstLine(lines.get(0));
 			tmpVO.setCreateDateString(sdf.format(summaryBO.getCreateTime()));
-			tmpVO.setCreateDateDescription(createDateDescription(summaryBO.getCreateTime()));
+			tmpVO.setCreateDateDescription(localDateTimeHandler.dateToStr(summaryBO.getCreateTime()));
 			tmpVO.setPrivateKey(summaryBO.getPrivateKey());
 			tmpVO.setEvaluationMap(articleEvaluationStatisticsMap.get(summaryBO.getArticleId()).getEvaluationCodeAndCount());
 			if(articleHasCommentNotReviewIdList != null && articleHasCommentNotReviewIdList.size() > 0 && articleHasCommentNotReviewIdList.contains(summaryBO.getArticleId())) {
@@ -198,8 +199,6 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			List<Long> articleHasCommentNotReviewIdList,
 			List<ArticleCommentCount> commentCountList,
 			List<ArticleViewCount> viewCountList) {
-		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat sdfDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String strContent = "";
 		StringBuffer voContentBuilder = new StringBuffer();
 		
@@ -223,12 +222,12 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		
 		outputList = new ArrayList<ArticleLongSummaryVOV3>();
 		for(ArticleLongSummaryBO summaryBO : summaryList) {
-			if(StringUtils.isBlank(summaryBO.getPath()) || summaryBO.getCreateTime() == null || StringUtils.isBlank(summaryBO.getPrivateKey())) {
+			if(StringUtils.isBlank(summaryBO.getFilePath()) || summaryBO.getCreateTime() == null || StringUtils.isBlank(summaryBO.getPrivateKey())) {
 				continue;
 			}
 			tmpVO = new ArticleLongSummaryVOV3();
 			try {
-				strContent = ioUtil.getStringFromFile(summaryBO.getPath());
+				strContent = ioUtil.getStringFromFile(summaryBO.getFilePath());
 			} catch (Exception e) {
 				strContent = "";
 			}
@@ -238,8 +237,8 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			}
 			tmpVO.setArticleTitle(summaryBO.getArticleTitle());
 			tmpVO.setNickName(summaryBO.getNickName());
-			tmpVO.setCreateDateString(sdfDate.format(summaryBO.getCreateTime()));
-			tmpVO.setCreateDateTimeString(sdfDateTime.format(summaryBO.getCreateTime()));
+			tmpVO.setCreateDateString(localDateTimeHandler.dateToStr(summaryBO.getCreateTime(), DateTimeUtilCommon.normalDateFormat));
+			tmpVO.setCreateDateTimeString(localDateTimeHandler.dateToStr(summaryBO.getCreateTime(), DateTimeUtilCommon.normalDateTimeFormat));
 			try {
 				tmpVO.setPrivateKey(URLEncoder.encode(encryptId(summaryBO.getArticleId()), StandardCharsets.UTF_8.toString()));
 			} catch (UnsupportedEncodingException e) {

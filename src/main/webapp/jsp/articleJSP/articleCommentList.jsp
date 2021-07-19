@@ -102,7 +102,7 @@ $(document).ready(function() {
   $("button[name='showMoreArticleComment'][pk='${pk}']").click(function () {
     var pk = '${pk}';
     var startTime = $("button[name='showMoreArticleComment'][pk='${pk}']").attr("startTime");
-    var url = "${pageContext.request.contextPath}/articleComment/findArticleCommentSubPage";
+    var url = "/articleComment/findArticleCommentSubPage";
     var jsonOutput = {
       pk:pk,
       startTime:startTime
@@ -141,7 +141,7 @@ $(document).ready(function() {
     if($("input[name='commentIsDelete'][pk='${pk}']").is(":checked")) {
       isDelete = "1";
     }
-    var url = "${pageContext.request.contextPath}/articleComment/findArticleCommentSubPage";
+    var url = "/articleComment/findArticleCommentSubPage";
     var jsonOutput = {
       pk:pk,
       startTime:startTime,
@@ -174,7 +174,7 @@ $(document).ready(function() {
   <sec:authorize access="hasRole('ROLE_USER')">
   $("button[name='createArticleComment'][pk='${pk}']").click(function () {
     var pk = '${pk}';
-    var url = "${pageContext.request.contextPath}/articleComment/createArticleComment";
+    var url = "/articleComment/createArticleComment";
     var content = $("textarea[pk='${pk}'][name='creatingArticleComment']").val();
     var jsonOutput = {
       pk:pk,

@@ -51,6 +51,7 @@ import demo.tool.pojo.type.MailType;
 import demo.tool.service.MailService;
 import demo.tool.service.TextFilter;
 import demo.tool.service.ValidRegexToolService;
+import toolPack.numericHandel.NumericUtilCustom;
 
 @Service
 public class UserRegistServiceImpl extends CommonService implements UserRegistService {
@@ -61,6 +62,8 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	private MailService mailService;
 	@Autowired
 	private UsersMapper usersMapper;
+	@Autowired
+	private NumericUtilCustom numberUtil;
 	
 	@Autowired
 	private CustomPasswordEncoder passwordEncoder;

@@ -7,6 +7,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import demo.article.article.service.impl.ArticleConstantService;
 import demo.base.organizations.pojo.po.Organizations;
 import demo.base.organizations.service.OrganizationService;
 import demo.base.organizations.service.__SystemOrganizationService;
@@ -45,6 +46,8 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 	private JoySceneManagerService joySceneOperationService;
 	@Autowired
 	private JoyIconService joyIconService;
+	@Autowired
+	private ArticleConstantService articleConstantService;
 	
 	@Autowired
 	private TestingQueueAckProducer testingQueueAckProducer;
@@ -106,6 +109,8 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 			joyIconService.loadAllIconToRedis();
 			log.error("after load joy option");
 			
+			log.error("loading article option");
+			articleConstantService.refreshConstant();
 		}
 		
 		log.error("data base filler end");

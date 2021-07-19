@@ -48,10 +48,13 @@ import demo.finance.account_info.service.AccountInfoStatisticsService;
 import demo.finance.trading.controller.TradingController;
 import demo.finance.trading.pojo.po.TradingRecorder;
 import demo.finance.trading.pojo.result.InsertTradingRecorderResult;
+import toolPack.numericHandel.NumericUtilCustom;
 
 @Service
 public class AccountInfoServiceImpl extends CommonService implements AccountInfoService {
 	
+	@Autowired
+	private NumericUtilCustom numberUtil;
 	@Autowired
 	private AccountInfoMapper accountInfoMapper;
 	@Autowired

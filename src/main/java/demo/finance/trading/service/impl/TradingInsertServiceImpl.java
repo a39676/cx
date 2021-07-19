@@ -20,6 +20,7 @@ import demo.finance.trading.pojo.po.TradingRecorderMarker;
 import demo.finance.trading.pojo.result.InsertTradingRecorderResult;
 import demo.finance.trading.service.TradingInsertService;
 import toolPack.ioHandle.FileUtilCustom;
+import toolPack.numericHandel.NumericUtilCustom;
 
 @Service
 public class TradingInsertServiceImpl extends CommonService implements TradingInsertService {
@@ -32,6 +33,8 @@ public class TradingInsertServiceImpl extends CommonService implements TradingIn
 	private TradingRecorderMarkerMapper tradingMarkerMapper;
 	@Autowired
 	private FileUtilCustom ioUtil;
+	@Autowired
+	private NumericUtilCustom numberUtil;
 
 	private boolean insertTradingRecorderMarker(TradingRecorder tradingRecorder) {
 		TradingRecorderMarker marker = new TradingRecorderMarker();

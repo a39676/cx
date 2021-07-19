@@ -38,9 +38,21 @@ public class ArticleConstantService extends CommonService {
 	private String articleChannelPrefixStorePath;
 	/** 一般用户可以浏览 * 个月内的非置顶内容- */
 	private Long normalUserMaxReadingMonth = 12L;
+	
+	@Override
+	public String toString() {
+		return "ArticleConstantService [optionFilePath=" + optionFilePath + ", maxArticleLength=" + maxArticleLength
+				+ ", defaultPageSize=" + defaultPageSize + ", maxPageSize=" + maxPageSize
+				+ ", evaluationCacheLivingTime=" + evaluationCacheLivingTime + ", minEvaluationCount="
+				+ minEvaluationCount + ", balanceEvaluationRatio=" + balanceEvaluationRatio
+				+ ", articleBurnStorePrefixPath=" + articleBurnStorePrefixPath + ", articleStorePrefixPath="
+				+ articleStorePrefixPath + ", articleImageSavingFolder=" + articleImageSavingFolder
+				+ ", articleSummaryStorePrefixPath=" + articleSummaryStorePrefixPath
+				+ ", articleChannelPrefixStorePath=" + articleChannelPrefixStorePath + ", normalUserMaxReadingMonth="
+				+ normalUserMaxReadingMonth + "]";
+	}
 
 	public void refreshConstant() {
-//		TODO
 		File optionFile = new File(optionFilePath);
 		if (!optionFile.exists()) {
 			return;
@@ -50,16 +62,12 @@ public class ArticleConstantService extends CommonService {
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
 			ArticleConstantService tmp = new Gson().fromJson(jsonStr, ArticleConstantService.class);
 			BeanUtils.copyProperties(tmp, this);
+			
+			log.error(this.toString());
 		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("article constant loading error");
 		}
-	}
-
-	public String getOptionFilePath() {
-		return optionFilePath;
-	}
-
-	public void setOptionFilePath(String optionFilePath) {
-		this.optionFilePath = optionFilePath;
 	}
 
 	public Long getMaxArticleLength() {

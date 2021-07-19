@@ -29,7 +29,6 @@ import demo.tool.service.VisitDataService;
 import tool.pojo.bo.IpRecordBO;
 import toolPack.dateTimeHandle.DateHandler;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
-import toolPack.numericHandel.NumericUtilCustom;
 
 public abstract class CommonService {
 
@@ -40,8 +39,6 @@ public abstract class CommonService {
 
 	@Autowired
 	protected SnowFlake snowFlake;
-	@Autowired
-	protected NumericUtilCustom numberUtil;
 	@Autowired
 	protected VisitDataService visitDataService;
 	@Autowired

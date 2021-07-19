@@ -171,7 +171,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		Long newCommonId = snowFlake.getNextId();
 		newComment.setId(newCommonId);
 		newComment.setArticleId(articleId);
-		newComment.setPath(saveFileResult.getFilePath());
+		newComment.setFilePath(saveFileResult.getFilePath());
 		newComment.setUserId(userId);
 		newComment.setTmpNickName(nickname);
 		newComment.setTmpEmail(email);
@@ -269,7 +269,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	
 	private ArticleCommentVO fillArticleCommentFromBo(Map<Long, ArticleEvaluationStatisticsVO> evaluationStatisticsMap, ArticleComment po) {
 		ArticleCommentVO vo = new ArticleCommentVO();
-		String content = ioUtil.getStringFromFile(po.getPath());
+		String content = ioUtil.getStringFromFile(po.getFilePath());
 		vo.setContent(content);
 		vo.setEvaluationCodeAndCount(evaluationStatisticsMap.get(po.getId()).getEvaluationCodeAndCount());
 		vo.setNickName(po.getTmpNickName());

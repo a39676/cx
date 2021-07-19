@@ -34,10 +34,6 @@ public class RedisConnectService extends CommonService {
 			log.error("constant name was empty");
 			return "";
 		}
-		
-		if(redisTemplate == null) {
-			System.err.println("redisTemplate is null");
-		}
 		if(redisTemplate.hasKey(constantName)) {
 			return String.valueOf(redisTemplate.opsForValue().get(constantName));
 		} else {

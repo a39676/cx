@@ -23,7 +23,6 @@ import demo.article.article.service.ArticleService;
 import demo.article.article.service.impl.ArticleCommonService;
 import demo.article.articleComment.mapper.ArticleCommentCountMapper;
 import demo.article.articleComment.mapper.ArticleCommentMapper;
-import demo.article.articleComment.pojo.constant.ArticleCommentConstant;
 import demo.article.articleComment.pojo.dto.CreateArticleCommentDTO;
 import demo.article.articleComment.pojo.dto.FindArticleCommentPageDTO;
 import demo.article.articleComment.pojo.dto.FindCommentPageDTO;
@@ -69,6 +68,9 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	private ArticleCommentMapper articleCommentMapper;
 	@Autowired
 	private ArticleCommentCountMapper articleCommentCountMapper;
+	
+	@Autowired
+	private ArticleCommentConstantService articleCommentConstantService;
 	
 	@Autowired
 	private FileUtilCustom ioUtil;
@@ -228,8 +230,8 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			dto.setIsPass(true);
 			dto.setIsDelete(false);
 			dto.setIsReject(false);
-			if(dto.getLimit() != null && dto.getLimit() > ArticleCommentConstant.commentPageMaxSize) {
-				dto.setLimit(ArticleCommentConstant.commentPageMaxSize);
+			if(dto.getLimit() != null && dto.getLimit() > articleCommentConstantService.getCommentPageMaxSize()) {
+				dto.setLimit(articleCommentConstantService.getCommentPageMaxSize());
 			}
 		}
 		

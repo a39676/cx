@@ -27,9 +27,9 @@ public class CloudinaryServiceImpl extends CommonService implements CloudinarySe
 
 	protected Cloudinary buildCloudinary() {
 		Cloudinary cloudinary = new CloudinaryCore().buildCloudinary(
-				cloudinaryConstantService.getCloudinaryNameStoreKey(),
-				cloudinaryConstantService.getCloudinaryApiKeyStoreKey(),
-				cloudinaryConstantService.getCloudinaryApiSecretStoreKey());
+				cloudinaryConstantService.getCloudinaryName(),
+				cloudinaryConstantService.getCloudinaryApiKey(),
+				cloudinaryConstantService.getCloudinaryApiSecret());
 		return cloudinary;
 	}
 	

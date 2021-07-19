@@ -16,10 +16,6 @@ import toolPack.ioHandle.FileUtilCustom;
 @Service
 public class ArticleConstantService extends CommonService {
 
-	/*
-	 * TODO 不再从数据库获取, 改从json 文件中读取 文件路径配置? application.yml 中配置? 先从文件读取, gson协助填充,
-	 */
-
 	@Value("${optionFilePath.article}")
 	private String optionFilePath;
 
@@ -62,11 +58,8 @@ public class ArticleConstantService extends CommonService {
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
 			ArticleConstantService tmp = new Gson().fromJson(jsonStr, ArticleConstantService.class);
 			BeanUtils.copyProperties(tmp, this);
-			
-			log.error(this.toString());
 		} catch (Exception e) {
-			e.printStackTrace();
-			log.error("article constant loading error");
+			log.error("article constant loading error: " + e.getLocalizedMessage());
 		}
 	}
 

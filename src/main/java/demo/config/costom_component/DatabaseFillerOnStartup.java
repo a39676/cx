@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import demo.article.article.service.impl.ArticleConstantService;
+import demo.article.articleComment.service.impl.ArticleCommentConstantService;
 import demo.base.organizations.pojo.po.Organizations;
 import demo.base.organizations.service.OrganizationService;
 import demo.base.organizations.service.__SystemOrganizationService;
@@ -24,6 +25,8 @@ import demo.common.service.CommonService;
 import demo.joy.image.icon.service.JoyIconService;
 import demo.joy.scene.service.JoySceneManagerService;
 import demo.test.mp.producer.TestingQueueAckProducer;
+import demo.thirdPartyAPI.cloudinary.service.impl.CloudinaryConstantService;
+import demo.tool.service.impl.MailConstantService;
 
 @Component
 //public class DatabaseFillerOnStartup implements ApplicationListener<ContextStartedEvent> {
@@ -48,6 +51,12 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 	private JoyIconService joyIconService;
 	@Autowired
 	private ArticleConstantService articleConstantService;
+	@Autowired
+	private ArticleCommentConstantService articleCommentConstantService;
+	@Autowired
+	private MailConstantService mailConstantService;
+	@Autowired
+	private CloudinaryConstantService cloudinaryConstantService;
 	
 	@Autowired
 	private TestingQueueAckProducer testingQueueAckProducer;
@@ -111,6 +120,15 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 			
 			log.error("loading article option");
 			articleConstantService.refreshConstant();
+			
+			log.error("loading article comment option");
+			articleCommentConstantService.refreshConstant();
+			
+			log.error("loading mail comment option");
+			mailConstantService.refreshConstant();
+			
+			log.error("loading cloudinary comment option");
+			cloudinaryConstantService.refreshConstant();
 		}
 		
 		log.error("data base filler end");

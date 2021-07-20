@@ -256,6 +256,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		param.setArticleId(articleId);
 		param.setPk(null);
 		
+		log.error("trying to change to channel:" + param.getChannelId());
 		if(articleLongMapper.changeChannel(param) < 1) {
 			throw new Exception();
 		}

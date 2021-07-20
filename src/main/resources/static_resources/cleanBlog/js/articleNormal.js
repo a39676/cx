@@ -60,7 +60,7 @@ function buildSummaryLine(subArticleVO) {
   newRow += " <h3 class='post-subtitle'></h3> ";
   newRow += " </a> ";
   newRow += " <p class='post-meta'>"
-  newRow += "Post by: "+subArticleVO.nickName+" on: "+subArticleVO.createDateString+", views: "+subArticleVO.viewCount+", comments: "+subArticleVO.commentCount;
+  newRow += ""+subArticleVO.createDateString+", views: "+subArticleVO.viewCount+", comments: "+subArticleVO.commentCount;
   if (subArticleVO.hasCommentNotReview) {
     newRow += " <br>CommentReviewWaiting ";
   }

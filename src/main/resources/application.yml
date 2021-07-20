@@ -65,7 +65,7 @@ logging:
     # demo.base.user.mapper: DEBUG
     # demo.organizations.mapper: DEBUG
     # demo.image.mapper: DEBUG
-    demo.article.article.mapper: DEBUG
+    # demo.article.article.mapper: DEBUG
     # demo.articleComment.mapper: DEBUG
     # demo.fakePost.mapper: DEBUG
     # demo.mobile.mapper: DEBUG

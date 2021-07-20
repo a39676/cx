@@ -241,7 +241,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	public CommonResultCX changeChannel(ChangeChannelParam param) throws Exception {
 		CommonResultCX result = new CommonResultCX();
-		if(StringUtils.isBlank(param.getPk()) || param.getArticleId() != null) {
+		if(StringUtils.isBlank(param.getPk())) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}
@@ -253,13 +253,12 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			return result;
 		}
 		
-		param.setArticleId(articleId);
-		param.setPk(null);
 		
-		log.error("trying to change to channel:" + param.getChannelId());
-		if(articleLongMapper.changeChannel(param) < 1) {
-			throw new Exception();
-		}
+		ArticleLong record = new ArticleLong();
+		record.setArticleId(articleId);
+		record.setChannelId(param.getChannelId());
+		record.setIsPass(false);
+		articleLongMapper.updateByPrimaryKeySelective(record);
 		
 		result.fillWithResult(ResultTypeCX.success);
 		return result;

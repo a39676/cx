@@ -484,12 +484,4 @@
     )
   </select>
 
-  <update id="changeChannel">
-    update 
-      article_long 
-    set
-      channel_id = #{channelId}, is_pass = false
-    where
-      article_id = #{articleId}
-  </update>
 </mapper>

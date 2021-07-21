@@ -218,7 +218,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return result;
 		}
 
-		if (controllerParam.getQuickPass()) {
+		if (isBigUser()) {
 			if (editFlag) {
 				quickPass(editedArticleId);
 			} else {
@@ -241,11 +241,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return serviceResult;
 		}
 		Long userId = baseUtilCustom.getUserId();
-		if (isBigUser()) {
-			cp.setQuickPass(true);
-		} else {
-			cp.setQuickPass(false);
-		}
 
 		serviceResult = editOrCreateArticleLong(userId, cp, null);
 		return serviceResult;
@@ -620,9 +615,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		param.setContent(dto.getContent());
 		param.setTitle(dto.getTitle());
 		param.setChannelId(dto.getChannelId());
-		if (isBigUser()) {
-			param.setQuickPass(true);
-		}
 
 		result = editOrCreateArticleLong(userId, param, targetArticleId);
 

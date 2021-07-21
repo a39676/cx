@@ -16,9 +16,6 @@
       <span style="font-size: small;color: gray" pk="${articleLongSummaryVO.privateKey}" name="evaluationResult"></span>
     </div>
     <div class="col-sm-2 articleLongSummaryContent" pk="${articleLongSummaryVO.privateKey}" style="cursor: pointer;">
-      <span class="badge badge-primary badge-pill" style="cursor: pointer;" name="nickName" nickName="${articleLongSummaryVO.nickName}" pk="${articleLongSummaryVO.privateKey}" loadingFlag="0">
-        ${articleLongSummaryVO.nickName}
-      </span><br>
       <span class="badge badge-light">${articleLongSummaryVO.createDateDescription}</span>
     </div>
     <div class="col-sm-7 articleLongSummaryContent" pk="${articleLongSummaryVO.privateKey}" style="cursor: pointer;">

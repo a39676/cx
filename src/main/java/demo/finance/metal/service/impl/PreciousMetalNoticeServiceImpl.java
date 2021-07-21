@@ -89,9 +89,7 @@ public class PreciousMetalNoticeServiceImpl extends PreciousMetalCommonService i
 
 		if (noticeFlag) {
 			/*
-			 * TODO
-			 * 2021-01-04
-			 * 准备迁移到 telegram 通知
+			 * TODO 2021-01-04 准备迁移到 telegram 通知
 			 * 请参照 CryptoCoinCommonNoticeServiceImp.subNoticeHandler((CryptoCoinPriceNotice noticeSetting))
 			 */
 //			if (!validRegexToolService.validEmail(noticeSetting.getEmail())) {

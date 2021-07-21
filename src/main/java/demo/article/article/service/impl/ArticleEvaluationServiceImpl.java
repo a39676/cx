@@ -133,57 +133,6 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 		return voMap;
 	}
 
-	/*
-	 * 2019-08-26 评价缓存已转移到redis, 此方法准备废弃
-	 */
-	public CommonResultCX insertArticleLongEvaluation(InsertArticleLongEvaluationParam inputParam) {
-		CommonResultCX result = new CommonResultCX();
-		Long evaluationVoterId = baseUtilCustom.getUserId();
-		if (evaluationVoterId == null) {
-			result.fillWithResult(ResultTypeCX.notLoginUser);
-			return result;
-		}
-
-		if (StringUtils.isBlank(inputParam.getPk()) || inputParam.getEvaluationCode() == null
-				|| inputParam.getEvaluationType() == null) {
-			result.fillWithResult(ResultTypeCX.nullParam);
-			return result;
-		}
-
-		inputParam.setEvaluationType(ArticleEvaluationType.articleLongEvaluation.getCode());
-
-		ArticleEvaluationCodeType evaluationType = ArticleEvaluationCodeType.getType(inputParam.getEvaluationCode());
-		if (evaluationType == null) {
-			result.fillWithResult(ResultTypeCX.nullParam);
-			return result;
-		}
-
-		Long articleId = decryptPrivateKey(inputParam.getPk());
-		if (articleId == null) {
-			result.fillWithResult(ResultTypeCX.errorParam);
-			return result;
-		}
-		InsertEvaluationDaoParam daoParam = new InsertEvaluationDaoParam();
-		daoParam.setPostObjectId(articleId);
-		daoParam.setEvaluationType(inputParam.getEvaluationType());
-		daoParam.setUserId(evaluationVoterId);
-		daoParam.setEvaluationCode(inputParam.getEvaluationCode());
-
-		int insertCount = articleEvaluationCacheMapper.insertEvaluation(daoParam);
-		if (insertCount != 1) {
-			result.fillWithResult(ResultTypeCX.hadEvaluationVoted);
-			return result;
-		}
-
-		CommonResultCX updateResult = updateChannelCoefficientByInsertEvaluation(articleId, evaluationVoterId,
-				evaluationType);
-		if (!updateResult.isSuccess()) {
-			return updateResult;
-		}
-
-		result.fillWithResult(ResultTypeCX.evaluationVoteSuccess);
-		return result;
-	}
 
 	@Override
 	public CommonResultCX insertArticleLongEvaluationRedis(InsertArticleLongEvaluationParam inputParam) {

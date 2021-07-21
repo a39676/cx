@@ -24,7 +24,6 @@ import autoTest.testEvent.pojo.dto.InsertSearchingDemoTestEventDTO;
 import autoTest.testEvent.pojo.result.InsertSearchingDemoEventResult;
 import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.constant.ServerHost;
-import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.system.service.ExceptionService;
 import demo.common.service.CommonService;
@@ -43,7 +42,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	private HttpUtil httpUtil;
 	@Autowired
 	protected ExceptionService exceptionService;
-
+	
 	@Override
 	public ModelAndView linkToATHome(HttpServletRequest request) {
 		if(baseUtilCustom.hasAdminRole() || isDev(request)) {
@@ -307,9 +306,9 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 
 		int count = 0;
 		if(!isBigUser()) {
-			count = checkFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
+			count = redisConnectService.checkFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
 		}
-		if (!"dev".equals(constantService.getSysValByName(SystemConstantStore.envName))) {
+		if (!"dev".equals(systemConstantService.getEnvName())) {
 			if (count >= SearchingDemoConstant.maxInsertCountIn30Minutes) {
 				r.failWithMessage("短时间内加入的任务太多了, 请稍后再试");
 				return r;
@@ -335,7 +334,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 			r.setWaitingEventCount(responseJson.getInt("waitingEventCount"));
 			if (r.getResult() != null && "0".equals(r.getResult())) {
 				r.setIsSuccess();
-				insertFunctionalModuleVisitData(request, SystemRedisKey.searchingDemoInsertCountingKeyPrefix);
+				redisConnectService.insertFunctionalModuleVisitData(request, SystemRedisKey.searchingDemoInsertCountingKeyPrefix);
 				r.setHasInsertCount(count + 1);
 				r.setMaxInsertCount(SearchingDemoConstant.maxInsertCountIn30Minutes);
 				r.setMessage("/atDemo/findReportByTestEventId?testEventId=" + r.getEventId());
@@ -352,7 +351,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	}
 
 	private boolean isDev(HttpServletRequest request) {
-		String envName = constantService.getSysValByName(SystemConstantStore.envName);
-		return "dev".equals(envName);
+		return "dev".equals(systemConstantService.getEnvName());
 	}
+
 }

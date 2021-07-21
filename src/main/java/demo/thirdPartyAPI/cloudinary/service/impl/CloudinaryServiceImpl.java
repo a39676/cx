@@ -22,12 +22,14 @@ public class CloudinaryServiceImpl extends CommonService implements CloudinarySe
 	
 	@Autowired
 	private CloudinaryFunction cloudinaryFunction;
+	@Autowired
+	private CloudinaryConstantService cloudinaryConstantService;
 
 	protected Cloudinary buildCloudinary() {
 		Cloudinary cloudinary = new CloudinaryCore().buildCloudinary(
-				constantService.getSysValByName(CloudinaryConstant.cloudinaryNameStoreKey),
-				constantService.getSysValByName(CloudinaryConstant.cloudinaryApiKeyStoreKey), 
-				constantService.getSysValByName(CloudinaryConstant.cloudinaryApiSecretStoreKey));
+				cloudinaryConstantService.getCloudinaryName(),
+				cloudinaryConstantService.getCloudinaryApiKey(),
+				cloudinaryConstantService.getCloudinaryApiSecret());
 		return cloudinary;
 	}
 	

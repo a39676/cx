@@ -40,15 +40,8 @@
 <hr>
 
 <div>
-  <input type="text" name="refreshSystemConstant" placeholder="变量名"><br>
-  <button id="refreshSystemConstant">refreshSystemConstant</button><br>
-</div>
-
-<hr>
-
-<div>
-  <input type="text" name="loadHomepageAnnouncementStr" placeholder="刷新主页公告位"><br>
-  <button id="loadHomepageAnnouncementStr">loadHomepageAnnouncementStr</button><br>
+  <input type="text" name="setHomepageAnnouncementStr" placeholder="刷新主页公告位"><br>
+  <button id="setHomepageAnnouncementStr">setHomepageAnnouncementStr</button><br>
 </div>
 
 
@@ -137,48 +130,14 @@
       });  
     };
 
-    $("#refreshSystemConstant").click( function() {
-      refreshSystemConstant();
+    $("#setHomepageAnnouncementStr").click( function() {
+      setHomepageAnnouncementStr();
     });
 
-    function refreshSystemConstant() {
+    function setHomepageAnnouncementStr() {
       
-      var url = "${pageContext.request.contextPath}/admin/refreshSystemConstant";
-      var key = $("input[name='refreshSystemConstant']").val();
-      var jsonOutput = {
-        key:key
-      };
-
-      $.ajax({  
-        type : "POST",  
-        async : true,
-        url : url,  
-        data: JSON.stringify(jsonOutput),
-        cache : false,
-        contentType: "application/json",
-        dataType: "json",
-        timeout:50000,  
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader(csrfHeader, csrfToken);
-        },
-        success:function(datas){
-          console.log(datas);
-          $("span[name='resultSpan']").text(datas);
-        },  
-        error: function(datas) {  
-          $("span[name='resultSpan']").text(datas);
-        }  
-      });  
-    };
-
-    $("#loadHomepageAnnouncementStr").click( function() {
-      loadHomepageAnnouncementStr();
-    });
-
-    function loadHomepageAnnouncementStr() {
-      
-      var url = "${pageContext.request.contextPath}/admin/loadHomepageAnnouncementStr";
-      var homepageAnnouncementStr = $("input[name='loadHomepageAnnouncementStr']").val();
+      var url = "/admin/setHomepageAnnouncementStr";
+      var homepageAnnouncementStr = $("input[name='setHomepageAnnouncementStr']").val();
       var jsonOutput = {
         homepageAnnouncementStr:homepageAnnouncementStr
       };

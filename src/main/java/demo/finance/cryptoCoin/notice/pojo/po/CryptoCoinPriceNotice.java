@@ -4,185 +4,183 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class CryptoCoinPriceNotice {
-	private Long id;
+    private Long id;
 
-	private Integer coinType;
+    private Long coinType;
 
-	private Integer currencyType;
+    private Integer currencyType;
 
-	private BigDecimal maxPrice;
+    private BigDecimal maxPrice;
 
-	private BigDecimal minPrice;
+    private BigDecimal minPrice;
 
-	private Integer timeUnitOfDataWatch;
+    private Integer timeUnitOfDataWatch;
 
-	private Integer timeRangeOfDataWatch;
+    private Integer timeRangeOfDataWatch;
 
-	private BigDecimal fluctuationSpeedPercentage;
+    private BigDecimal fluctuationSpeedPercentage;
 
-	private Long telegramChatId;
+    private Long telegramChatId;
 
-	private Integer noticeCount;
+    private String telegramBotName;
 
-	private Integer timeUnitOfNoticeInterval;
+    private Integer noticeCount;
 
-	private Integer timeRangeOfNoticeInterval;
+    private Integer timeUnitOfNoticeInterval;
 
-	private LocalDateTime validTime;
+    private Integer timeRangeOfNoticeInterval;
 
-	private LocalDateTime noticeTime;
+    private LocalDateTime validTime;
 
-	private LocalDateTime nextNoticeTime;
+    private LocalDateTime noticeTime;
 
-	private LocalDateTime createTime;
+    private LocalDateTime nextNoticeTime;
 
-	private Boolean isDelete;
+    private LocalDateTime createTime;
 
-	public Long getId() {
-		return id;
-	}
+    private Boolean isDelete;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Integer getCoinType() {
-		return coinType;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setCoinType(Integer coinType) {
-		this.coinType = coinType;
-	}
+    public Long getCoinType() {
+        return coinType;
+    }
 
-	public Integer getCurrencyType() {
-		return currencyType;
-	}
+    public void setCoinType(Long coinType) {
+        this.coinType = coinType;
+    }
 
-	public void setCurrencyType(Integer currencyType) {
-		this.currencyType = currencyType;
-	}
+    public Integer getCurrencyType() {
+        return currencyType;
+    }
 
-	public BigDecimal getMaxPrice() {
-		return maxPrice;
-	}
+    public void setCurrencyType(Integer currencyType) {
+        this.currencyType = currencyType;
+    }
 
-	public void setMaxPrice(BigDecimal maxPrice) {
-		this.maxPrice = maxPrice;
-	}
+    public BigDecimal getMaxPrice() {
+        return maxPrice;
+    }
 
-	public BigDecimal getMinPrice() {
-		return minPrice;
-	}
+    public void setMaxPrice(BigDecimal maxPrice) {
+        this.maxPrice = maxPrice;
+    }
 
-	public void setMinPrice(BigDecimal minPrice) {
-		this.minPrice = minPrice;
-	}
+    public BigDecimal getMinPrice() {
+        return minPrice;
+    }
 
-	public Integer getTimeUnitOfDataWatch() {
-		return timeUnitOfDataWatch;
-	}
+    public void setMinPrice(BigDecimal minPrice) {
+        this.minPrice = minPrice;
+    }
 
-	public void setTimeUnitOfDataWatch(Integer timeUnitOfDataWatch) {
-		this.timeUnitOfDataWatch = timeUnitOfDataWatch;
-	}
+    public Integer getTimeUnitOfDataWatch() {
+        return timeUnitOfDataWatch;
+    }
 
-	public Integer getTimeRangeOfDataWatch() {
-		return timeRangeOfDataWatch;
-	}
+    public void setTimeUnitOfDataWatch(Integer timeUnitOfDataWatch) {
+        this.timeUnitOfDataWatch = timeUnitOfDataWatch;
+    }
 
-	public void setTimeRangeOfDataWatch(Integer timeRangeOfDataWatch) {
-		this.timeRangeOfDataWatch = timeRangeOfDataWatch;
-	}
+    public Integer getTimeRangeOfDataWatch() {
+        return timeRangeOfDataWatch;
+    }
 
-	public BigDecimal getFluctuationSpeedPercentage() {
-		return fluctuationSpeedPercentage;
-	}
+    public void setTimeRangeOfDataWatch(Integer timeRangeOfDataWatch) {
+        this.timeRangeOfDataWatch = timeRangeOfDataWatch;
+    }
 
-	public void setFluctuationSpeedPercentage(BigDecimal fluctuationSpeedPercentage) {
-		this.fluctuationSpeedPercentage = fluctuationSpeedPercentage;
-	}
+    public BigDecimal getFluctuationSpeedPercentage() {
+        return fluctuationSpeedPercentage;
+    }
 
-	public Long getTelegramChatId() {
-		return telegramChatId;
-	}
+    public void setFluctuationSpeedPercentage(BigDecimal fluctuationSpeedPercentage) {
+        this.fluctuationSpeedPercentage = fluctuationSpeedPercentage;
+    }
 
-	public void setTelegramChatId(Long telegramChatId) {
-		this.telegramChatId = telegramChatId;
-	}
+    public Long getTelegramChatId() {
+        return telegramChatId;
+    }
 
-	public Integer getNoticeCount() {
-		return noticeCount;
-	}
+    public void setTelegramChatId(Long telegramChatId) {
+        this.telegramChatId = telegramChatId;
+    }
 
-	public void setNoticeCount(Integer noticeCount) {
-		this.noticeCount = noticeCount;
-	}
+    public String getTelegramBotName() {
+        return telegramBotName;
+    }
 
-	public Integer getTimeUnitOfNoticeInterval() {
-		return timeUnitOfNoticeInterval;
-	}
+    public void setTelegramBotName(String telegramBotName) {
+        this.telegramBotName = telegramBotName == null ? null : telegramBotName.trim();
+    }
 
-	public void setTimeUnitOfNoticeInterval(Integer timeUnitOfNoticeInterval) {
-		this.timeUnitOfNoticeInterval = timeUnitOfNoticeInterval;
-	}
+    public Integer getNoticeCount() {
+        return noticeCount;
+    }
 
-	public Integer getTimeRangeOfNoticeInterval() {
-		return timeRangeOfNoticeInterval;
-	}
+    public void setNoticeCount(Integer noticeCount) {
+        this.noticeCount = noticeCount;
+    }
 
-	public void setTimeRangeOfNoticeInterval(Integer timeRangeOfNoticeInterval) {
-		this.timeRangeOfNoticeInterval = timeRangeOfNoticeInterval;
-	}
+    public Integer getTimeUnitOfNoticeInterval() {
+        return timeUnitOfNoticeInterval;
+    }
 
-	public LocalDateTime getValidTime() {
-		return validTime;
-	}
+    public void setTimeUnitOfNoticeInterval(Integer timeUnitOfNoticeInterval) {
+        this.timeUnitOfNoticeInterval = timeUnitOfNoticeInterval;
+    }
 
-	public void setValidTime(LocalDateTime validTime) {
-		this.validTime = validTime;
-	}
+    public Integer getTimeRangeOfNoticeInterval() {
+        return timeRangeOfNoticeInterval;
+    }
 
-	public LocalDateTime getNoticeTime() {
-		return noticeTime;
-	}
+    public void setTimeRangeOfNoticeInterval(Integer timeRangeOfNoticeInterval) {
+        this.timeRangeOfNoticeInterval = timeRangeOfNoticeInterval;
+    }
 
-	public void setNoticeTime(LocalDateTime noticeTime) {
-		this.noticeTime = noticeTime;
-	}
+    public LocalDateTime getValidTime() {
+        return validTime;
+    }
 
-	public LocalDateTime getNextNoticeTime() {
-		return nextNoticeTime;
-	}
+    public void setValidTime(LocalDateTime validTime) {
+        this.validTime = validTime;
+    }
 
-	public void setNextNoticeTime(LocalDateTime nextNoticeTime) {
-		this.nextNoticeTime = nextNoticeTime;
-	}
+    public LocalDateTime getNoticeTime() {
+        return noticeTime;
+    }
 
-	public LocalDateTime getCreateTime() {
-		return createTime;
-	}
+    public void setNoticeTime(LocalDateTime noticeTime) {
+        this.noticeTime = noticeTime;
+    }
 
-	public void setCreateTime(LocalDateTime createTime) {
-		this.createTime = createTime;
-	}
+    public LocalDateTime getNextNoticeTime() {
+        return nextNoticeTime;
+    }
 
-	public Boolean getIsDelete() {
-		return isDelete;
-	}
+    public void setNextNoticeTime(LocalDateTime nextNoticeTime) {
+        this.nextNoticeTime = nextNoticeTime;
+    }
 
-	public void setIsDelete(Boolean isDelete) {
-		this.isDelete = isDelete;
-	}
+    public LocalDateTime getCreateTime() {
+        return createTime;
+    }
 
-	@Override
-	public String toString() {
-		return "CryptoCoinPriceNotice [id=" + id + ", coinType=" + coinType + ", currencyType=" + currencyType
-				+ ", maxPrice=" + maxPrice + ", minPrice=" + minPrice + ", timeUnitOfDataWatch=" + timeUnitOfDataWatch
-				+ ", timeRangeOfDataWatch=" + timeRangeOfDataWatch + ", fluctuationSpeedPercentage="
-				+ fluctuationSpeedPercentage + ", telegramChatId=" + telegramChatId + ", noticeCount=" + noticeCount
-				+ ", timeUnitOfNoticeInterval=" + timeUnitOfNoticeInterval + ", timeRangeOfNoticeInterval="
-				+ timeRangeOfNoticeInterval + ", validTime=" + validTime + ", noticeTime=" + noticeTime
-				+ ", nextNoticeTime=" + nextNoticeTime + ", createTime=" + createTime + ", isDelete=" + isDelete + "]";
-	}
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
+    }
 
+    public Boolean getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(Boolean isDelete) {
+        this.isDelete = isDelete;
+    }
 }

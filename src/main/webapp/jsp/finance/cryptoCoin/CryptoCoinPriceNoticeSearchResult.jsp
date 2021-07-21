@@ -59,12 +59,8 @@
               </select>
             </td>
             <td>
-              <select noticePK="${noticeVO.pk}" name="cryptoCoinCode">
-                <option value="${noticeVO.cryptoCoinCode}">${noticeVO.cryptoCoinName}</option>
-                <c:forEach items="${cryptoCoinType}" var="subCoinType">
-                  <option value="${subCoinType.code}">${subCoinType.name}</option>
-                </c:forEach>
-              </select>
+              <input type="text" noticePK="${noticeVO.pk}" name="cryptoCoinType" 
+              value="${noticeVO.cryptoCoinName}" style="width: 60px;">
               <select noticePK="${noticeVO.pk}" name="currencyCode">
                 <option value="${noticeVO.currencyCode}">${noticeVO.currencyName}</option>
                 <c:forEach items="${currencyType}" var="subCurrencyType">
@@ -163,7 +159,7 @@
       function updateNotice(pk) {
         var url = "/cryptoCoin/updateNotice";
 
-        var cryptoCoinCode = $("select[noticePK='"+pk+"'][name='cryptoCoinCode'] option:selected").val();
+        var cryptoCoinType = $("input[noticePK='"+pk+"'][name='cryptoCoinType']").val();
         var currencyCode = $("select[noticePK='"+pk+"'][name='currencyCode'] option:selected").val();
 
         var timeRangeOfDataWatch = $("input[noticePK='"+pk+"'][name='timeRangeOfDataWatch']").val();
@@ -184,7 +180,7 @@
 
         var jsonOutput = {
           pk : pk,
-          cryptoCoinCode : cryptoCoinCode,
+          cryptoCoinType : cryptoCoinType,
           currencyCode : currencyCode,
           maxPrice : maxPrice,
           minPrice : minPrice,

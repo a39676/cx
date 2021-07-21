@@ -14,6 +14,7 @@ import demo.toyParts.woqu.mapper.WusersMapper;
 import demo.toyParts.woqu.pojo.po.Wusers;
 import demo.toyParts.woqu.service.WoquService;
 import toolPack.ioHandle.FileUtilCustom;
+import toolPack.numericHandel.NumericUtilCustom;
 
 @Service
 public class WoquServiceImpl extends CommonService implements WoquService {
@@ -22,6 +23,8 @@ public class WoquServiceImpl extends CommonService implements WoquService {
 	private WusersMapper wusersMapper;
 	@Autowired
 	private FileUtilCustom ioUtil;
+	@Autowired
+	private NumericUtilCustom numberUtil;
 
 	@Override
 	public void initInsert(String filePath) {

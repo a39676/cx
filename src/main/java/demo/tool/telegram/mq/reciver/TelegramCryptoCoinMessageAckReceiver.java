@@ -31,7 +31,7 @@ public class TelegramCryptoCoinMessageAckReceiver extends CommonService {
 			TelegramMessageDTO dto = msgToDTO(messageStr);
 
 			if (dto != null) {
-				msgService.sendMessage(TelegramBotType.BOT_1, dto.getMsg(), dto.getId());
+				msgService.sendMessage(TelegramBotType.getType(dto.getBotName()), dto.getMsg(), dto.getId());
 			}
 
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
@@ -51,6 +51,7 @@ public class TelegramCryptoCoinMessageAckReceiver extends CommonService {
 
 			dto.setMsg(json.getString("msg"));
 			dto.setId(json.getLong("id"));
+			dto.setBotName(json.getString("botName"));
 			return dto;
 		} catch (Exception e) {
 			return null;

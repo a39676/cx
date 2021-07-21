@@ -1,7 +1,5 @@
 package demo.article.article.pojo.bo;
 
-import demo.article.article.pojo.constant.ArticleConstant;
-
 public class ArticleEvaluationEstimateBO {
 
 	private Long ArticleId;
@@ -49,26 +47,4 @@ public class ArticleEvaluationEstimateBO {
 		this.isGoodResult = isGoodResult;
 	}
 	
-	public void initIsGoodResult() {
-		// 如果评价过于接近. 不作coefficient变动
-		
-		if(goodEvaluationCounter + badEvaluationCounter < ArticleConstant.MINI_EVALUATION_COUNT) {
-			if(goodEvaluationCounter > badEvaluationCounter) {
-				isGoodResult = true;
-			} else {
-				isGoodResult = false;
-			}
-		} else {
-			if(goodEvaluationCounter == 0 && badEvaluationCounter > 0) {
-				isGoodResult = false;
-			} else if(badEvaluationCounter == 0 && goodEvaluationCounter > 0) {
-				isGoodResult = true;
-			} else if(goodEvaluationCounter > badEvaluationCounter && ((goodEvaluationCounter + 0D) / badEvaluationCounter > ArticleConstant.BALANCE_EVALUATION_RATIO)) {
-				isGoodResult = true;
-			} else if(badEvaluationCounter > goodEvaluationCounter && ((badEvaluationCounter + 0D) / goodEvaluationCounter > ArticleConstant.BALANCE_EVALUATION_RATIO)) {
-				isGoodResult = false;
-			}
-		}
-	}
-
 }

@@ -3,7 +3,7 @@
 <mapper namespace="demo.finance.cryptoCoin.notice.mapper.CryptoCoinPriceNoticeMapper">
   <resultMap id="BaseResultMap" type="demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNotice">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="coin_type" jdbcType="INTEGER" property="coinType" />
+    <result column="coin_type" jdbcType="BIGINT" property="coinType" />
     <result column="currency_type" jdbcType="INTEGER" property="currencyType" />
     <result column="max_price" jdbcType="DECIMAL" property="maxPrice" />
     <result column="min_price" jdbcType="DECIMAL" property="minPrice" />
@@ -11,6 +11,7 @@
     <result column="time_range_of_data_watch" jdbcType="INTEGER" property="timeRangeOfDataWatch" />
     <result column="fluctuation_speed_percentage" jdbcType="DECIMAL" property="fluctuationSpeedPercentage" />
     <result column="telegram_chat_id" jdbcType="BIGINT" property="telegramChatId" />
+    <result column="telegram_bot_name" jdbcType="CHAR" property="telegramBotName" />
     <result column="notice_count" jdbcType="INTEGER" property="noticeCount" />
     <result column="time_unit_of_notice_interval" jdbcType="INTEGER" property="timeUnitOfNoticeInterval" />
     <result column="time_range_of_notice_interval" jdbcType="INTEGER" property="timeRangeOfNoticeInterval" />
@@ -80,9 +81,9 @@
   </sql>
   <sql id="Base_Column_List">
     id, coin_type, currency_type, max_price, min_price, time_unit_of_data_watch, time_range_of_data_watch, 
-    fluctuation_speed_percentage, telegram_chat_id, notice_count, time_unit_of_notice_interval, 
-    time_range_of_notice_interval, valid_time, notice_time, next_notice_time, create_time, 
-    is_delete
+    fluctuation_speed_percentage, telegram_chat_id, telegram_bot_name, notice_count, 
+    time_unit_of_notice_interval, time_range_of_notice_interval, valid_time, notice_time, 
+    next_notice_time, create_time, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNoticeExample" resultMap="BaseResultMap">
     select
@@ -118,17 +119,17 @@
     insert into crypto_coin_price_notice (id, coin_type, currency_type, 
       max_price, min_price, time_unit_of_data_watch, 
       time_range_of_data_watch, fluctuation_speed_percentage, 
-      telegram_chat_id, notice_count, time_unit_of_notice_interval, 
-      time_range_of_notice_interval, valid_time, 
-      notice_time, next_notice_time, create_time, 
-      is_delete)
-    values (#{id,jdbcType=BIGINT}, #{coinType,jdbcType=INTEGER}, #{currencyType,jdbcType=INTEGER}, 
+      telegram_chat_id, telegram_bot_name, notice_count, 
+      time_unit_of_notice_interval, time_range_of_notice_interval, 
+      valid_time, notice_time, next_notice_time, 
+      create_time, is_delete)
+    values (#{id,jdbcType=BIGINT}, #{coinType,jdbcType=BIGINT}, #{currencyType,jdbcType=INTEGER}, 
       #{maxPrice,jdbcType=DECIMAL}, #{minPrice,jdbcType=DECIMAL}, #{timeUnitOfDataWatch,jdbcType=INTEGER}, 
       #{timeRangeOfDataWatch,jdbcType=INTEGER}, #{fluctuationSpeedPercentage,jdbcType=DECIMAL}, 
-      #{telegramChatId,jdbcType=BIGINT}, #{noticeCount,jdbcType=INTEGER}, #{timeUnitOfNoticeInterval,jdbcType=INTEGER}, 
-      #{timeRangeOfNoticeInterval,jdbcType=INTEGER}, #{validTime,jdbcType=TIMESTAMP}, 
-      #{noticeTime,jdbcType=TIMESTAMP}, #{nextNoticeTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{isDelete,jdbcType=BIT})
+      #{telegramChatId,jdbcType=BIGINT}, #{telegramBotName,jdbcType=CHAR}, #{noticeCount,jdbcType=INTEGER}, 
+      #{timeUnitOfNoticeInterval,jdbcType=INTEGER}, #{timeRangeOfNoticeInterval,jdbcType=INTEGER}, 
+      #{validTime,jdbcType=TIMESTAMP}, #{noticeTime,jdbcType=TIMESTAMP}, #{nextNoticeTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNotice">
     insert into crypto_coin_price_notice
@@ -160,6 +161,9 @@
       <if test="telegramChatId != null">
         telegram_chat_id,
       </if>
+      <if test="telegramBotName != null">
+        telegram_bot_name,
+      </if>
       <if test="noticeCount != null">
         notice_count,
       </if>
@@ -190,7 +194,7 @@
         #{id,jdbcType=BIGINT},
       </if>
       <if test="coinType != null">
-        #{coinType,jdbcType=INTEGER},
+        #{coinType,jdbcType=BIGINT},
       </if>
       <if test="currencyType != null">
         #{currencyType,jdbcType=INTEGER},
@@ -212,6 +216,9 @@
       </if>
       <if test="telegramChatId != null">
         #{telegramChatId,jdbcType=BIGINT},
+      </if>
+      <if test="telegramBotName != null">
+        #{telegramBotName,jdbcType=CHAR},
       </if>
       <if test="noticeCount != null">
         #{noticeCount,jdbcType=INTEGER},
@@ -252,7 +259,7 @@
         id = #{record.id,jdbcType=BIGINT},
       </if>
       <if test="record.coinType != null">
-        coin_type = #{record.coinType,jdbcType=INTEGER},
+        coin_type = #{record.coinType,jdbcType=BIGINT},
       </if>
       <if test="record.currencyType != null">
         currency_type = #{record.currencyType,jdbcType=INTEGER},
@@ -274,6 +281,9 @@
       </if>
       <if test="record.telegramChatId != null">
         telegram_chat_id = #{record.telegramChatId,jdbcType=BIGINT},
+      </if>
+      <if test="record.telegramBotName != null">
+        telegram_bot_name = #{record.telegramBotName,jdbcType=CHAR},
       </if>
       <if test="record.noticeCount != null">
         notice_count = #{record.noticeCount,jdbcType=INTEGER},
@@ -307,7 +317,7 @@
   <update id="updateByExample" parameterType="map">
     update crypto_coin_price_notice
     set id = #{record.id,jdbcType=BIGINT},
-      coin_type = #{record.coinType,jdbcType=INTEGER},
+      coin_type = #{record.coinType,jdbcType=BIGINT},
       currency_type = #{record.currencyType,jdbcType=INTEGER},
       max_price = #{record.maxPrice,jdbcType=DECIMAL},
       min_price = #{record.minPrice,jdbcType=DECIMAL},
@@ -315,6 +325,7 @@
       time_range_of_data_watch = #{record.timeRangeOfDataWatch,jdbcType=INTEGER},
       fluctuation_speed_percentage = #{record.fluctuationSpeedPercentage,jdbcType=DECIMAL},
       telegram_chat_id = #{record.telegramChatId,jdbcType=BIGINT},
+      telegram_bot_name = #{record.telegramBotName,jdbcType=CHAR},
       notice_count = #{record.noticeCount,jdbcType=INTEGER},
       time_unit_of_notice_interval = #{record.timeUnitOfNoticeInterval,jdbcType=INTEGER},
       time_range_of_notice_interval = #{record.timeRangeOfNoticeInterval,jdbcType=INTEGER},
@@ -331,7 +342,7 @@
     update crypto_coin_price_notice
     <set>
       <if test="coinType != null">
-        coin_type = #{coinType,jdbcType=INTEGER},
+        coin_type = #{coinType,jdbcType=BIGINT},
       </if>
       <if test="currencyType != null">
         currency_type = #{currencyType,jdbcType=INTEGER},
@@ -353,6 +364,9 @@
       </if>
       <if test="telegramChatId != null">
         telegram_chat_id = #{telegramChatId,jdbcType=BIGINT},
+      </if>
+      <if test="telegramBotName != null">
+        telegram_bot_name = #{telegramBotName,jdbcType=CHAR},
       </if>
       <if test="noticeCount != null">
         notice_count = #{noticeCount,jdbcType=INTEGER},
@@ -383,7 +397,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNotice">
     update crypto_coin_price_notice
-    set coin_type = #{coinType,jdbcType=INTEGER},
+    set coin_type = #{coinType,jdbcType=BIGINT},
       currency_type = #{currencyType,jdbcType=INTEGER},
       max_price = #{maxPrice,jdbcType=DECIMAL},
       min_price = #{minPrice,jdbcType=DECIMAL},
@@ -391,6 +405,7 @@
       time_range_of_data_watch = #{timeRangeOfDataWatch,jdbcType=INTEGER},
       fluctuation_speed_percentage = #{fluctuationSpeedPercentage,jdbcType=DECIMAL},
       telegram_chat_id = #{telegramChatId,jdbcType=BIGINT},
+      telegram_bot_name = #{telegramBotName,jdbcType=CHAR},
       notice_count = #{noticeCount,jdbcType=INTEGER},
       time_unit_of_notice_interval = #{timeUnitOfNoticeInterval,jdbcType=INTEGER},
       time_range_of_notice_interval = #{timeRangeOfNoticeInterval,jdbcType=INTEGER},

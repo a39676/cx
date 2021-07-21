@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import demo.article.articleComment.pojo.constant.ArticleCommentUrlConstant;
 import demo.article.articleComment.pojo.dto.CreateArticleCommentDTO;
@@ -42,18 +40,6 @@ public class ArticleCommentController extends CommonController {
 		return articleCommentService.findArticleCommentVOPage(param);
 	}
 	
-	/**
-	 * 2020-05-10 发现, 应该是旧式页面使用, 准备删除此链接
-	 * @param param
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@PostMapping(value = ArticleCommentUrlConstant.findArticleCommentSubPage)
-	public ModelAndView findArticleCommentSubPage(@RequestBody FindArticleCommentPageDTO param, HttpServletRequest request, HttpServletResponse response) {
-		return articleCommentService.findArticleCommentPageView(param);
-	}
-
 	public List<ArticleCommentCount> findCommentCountByArticleId(List<Long> articleIdList) {
 		return articleCommentService.findCommentCountByArticleId(articleIdList);
 	}

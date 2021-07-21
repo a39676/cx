@@ -14,6 +14,7 @@ import demo.base.system.pojo.bo.SystemConstant;
 import demo.common.service.CommonService;
 import demo.tool.telegram.mapper.TelegramChatIdMapper;
 import demo.tool.telegram.mapper.TelegramConstantMapper;
+import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
 import demo.tool.telegram.pojo.po.TelegramChatId;
 import demo.tool.telegram.pojo.po.TelegramChatIdExample;
 import demo.tool.telegram.pojo.po.TelegramConstant;
@@ -26,8 +27,6 @@ import toolPack.httpHandel.HttpUtil;
 @Service
 public class TelegramServiceImpl extends CommonService implements TelegramService {
 
-	private static final Long adminChatId = 1000L;
-	
 	@Autowired
 	private TelegramConstantMapper telegramConstantMapper; 
 	@Autowired
@@ -37,7 +36,7 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 		if(botIDKey == null) {
 			botIDKey = TelegramBotType.BOT_1.getName();
 		}
-		String botID = constantService.getValByName(botIDKey);
+		String botID = redisConnectService.getValByName(botIDKey);
 		if(StringUtils.isNotBlank(botID)) {
 			return botID;
 		}
@@ -58,7 +57,7 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 			SystemConstant systemConstant = new SystemConstant();
 			systemConstant.setConstantName(botIDKey);
 			systemConstant.setConstantValue(bot1ID);
-			constantService.setValByName(systemConstant);
+			redisConnectService.setValByName(systemConstant);
 		} catch (Exception e) {
 		}
 		
@@ -116,8 +115,8 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 		try {
 			httpUtil.sendGet(url);
 		} catch (Exception e) {
-			log.error("telegram sending error" + e.getLocalizedMessage());
-			log.error("telegram sending error" + e.getMessage());
+			log.error("telegram sending error: " + e.getMessage());
+			log.error("telegram NOT sending message: " + msg);
 			r.failWithMessage("net work error");
 			return r;
 		}
@@ -160,7 +159,7 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 	@Override
 	public void telegramSendingCheck() {
 		for(TelegramBotType botType : TelegramBotType.values()) {
-			sendMessage(botType, "testing msg", adminChatId);
+			sendMessage(botType, "testing msg", TelegramStaticChatID.MY_ID);
 		}
 	}
 }

@@ -4,7 +4,6 @@ public class ChangeChannelParam {
 
 	private String pk;
 	private Long channelId;
-	private Long articleId;
 
 	public Long getChannelId() {
 		return channelId;
@@ -22,17 +21,9 @@ public class ChangeChannelParam {
 		this.pk = pk;
 	}
 
-	public Long getArticleId() {
-		return articleId;
-	}
-
-	public void setArticleId(Long articleId) {
-		this.articleId = articleId;
-	}
-
 	@Override
 	public String toString() {
-		return "ChangeChannelParam [pk=" + pk + ", channelId=" + channelId + ", articleId=" + articleId + "]";
+		return "ChangeChannelParam [pk=" + pk + ", channelId=" + channelId + "]";
 	}
 
 }

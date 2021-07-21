@@ -8,10 +8,6 @@ public class ArticleLongSummaryBO extends ArticleLongSummary {
 
 	private Long articleId;
 
-	private String nickName;
-
-	private String headImage;
-
 	private Long userId;
 
 	private List<String> imgUrls;
@@ -19,14 +15,6 @@ public class ArticleLongSummaryBO extends ArticleLongSummary {
 	private String firstLine;
 
 	private String createDateString;
-
-	public String getNickName() {
-		return nickName;
-	}
-
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
-	}
 
 	public List<String> getImgUrls() {
 		return imgUrls;
@@ -68,19 +56,10 @@ public class ArticleLongSummaryBO extends ArticleLongSummary {
 		this.articleId = articleId;
 	}
 
-	public String getHeadImage() {
-		return headImage;
-	}
-
-	public void setHeadImage(String headImage) {
-		this.headImage = headImage;
-	}
-
 	@Override
 	public String toString() {
-		return "ArticleLongSummaryBO [articleId=" + articleId + ", nickName=" + nickName + ", headImage=" + headImage
-				+ ", userId=" + userId + ", imgUrls=" + imgUrls + ", firstLine=" + firstLine + ", createDateString="
-				+ createDateString + "]";
+		return "ArticleLongSummaryBO [articleId=" + articleId + ", userId=" + userId + ", imgUrls=" + imgUrls
+				+ ", firstLine=" + firstLine + ", createDateString=" + createDateString + "]";
 	}
 
 }

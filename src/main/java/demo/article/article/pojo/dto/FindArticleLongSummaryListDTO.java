@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 
-import demo.article.article.pojo.constant.ArticleConstant;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import toolPack.dateTimeHandle.DateHandler;
@@ -31,7 +30,7 @@ public class FindArticleLongSummaryListDTO {
 	private Boolean isPass = true;
 	private Boolean isEdited = false;
 	private Boolean isReject = false;
-	private Integer limit = ArticleConstant.DEFAULT_PAGE_SIZE;
+	private Integer limit = 1;
 	private Boolean desc = true;
 	private Boolean isHot = false;
 	private String vcode;

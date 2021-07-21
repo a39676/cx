@@ -6,7 +6,9 @@ import auxiliaryCommon.pojo.type.TimeUnitType;
 
 public class InsertCryptoCoinPriceNoticeSettingDTO {
 
-	private Integer coinType;
+	private String coinType;
+
+	private Long coinTypeCode;
 
 	private Integer currencyType;
 
@@ -57,12 +59,20 @@ public class InsertCryptoCoinPriceNoticeSettingDTO {
 
 	private String startNoticeTime;
 
-	public Integer getCoinType() {
+	public String getCoinType() {
 		return coinType;
 	}
 
-	public void setCoinType(Integer coinType) {
+	public void setCoinType(String coinType) {
 		this.coinType = coinType;
+	}
+
+	public Long getCoinTypeCode() {
+		return coinTypeCode;
+	}
+
+	public void setCoinTypeCode(Long coinTypeCode) {
+		this.coinTypeCode = coinTypeCode;
 	}
 
 	public Integer getCurrencyType() {

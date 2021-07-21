@@ -14,13 +14,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
-import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.base.user.pojo.dto.UserAttemptQuerayDTO;
 import demo.base.user.pojo.po.UserAttempts;
 import demo.base.user.service.UsersService;
-import demo.common.pojo.type.ResultTypeCX;
-import toolPack.numericHandel.NumericUtilCustom;
 
 @Component("authenticationProvider")
 public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider {
@@ -30,9 +27,6 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
 
 	@Autowired
 	private SystemConstantService systemConstantService;
-	
-	@Autowired
-	private NumericUtilCustom numberUtil;
 	
 	@Autowired
 	@Qualifier("userDetailsService")
@@ -46,10 +40,7 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
 		String error = "";
-		if(!numberUtil.matchInteger(systemConstantService.getSysValByName(SystemConstantStore.maxAttempts))) {
-			throw new BadCredentialsException(ResultTypeCX.serviceError.getName());
-		}
-		maxAttempts = Integer.parseInt(systemConstantService.getSysValByName(SystemConstantStore.maxAttempts));
+		maxAttempts = systemConstantService.getMaxAttempts();
 		
 		try {
 

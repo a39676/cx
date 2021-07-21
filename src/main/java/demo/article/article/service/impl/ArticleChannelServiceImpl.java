@@ -15,7 +15,6 @@ import org.springframework.web.servlet.ModelAndView;
 import demo.article.article.mapper.ArticleChannelKeyHostnameMapper;
 import demo.article.article.mapper.ArticleChannelsMapper;
 import demo.article.article.pojo.bo.GetArticleChannelsBO;
-import demo.article.article.pojo.constant.ArticleConstant;
 import demo.article.article.pojo.dto.ArticleChannelKeyHostnameIdDTO;
 import demo.article.article.pojo.dto.ArticleChannelManagerDTO;
 import demo.article.article.pojo.po.ArticleChannelKeyHostname;
@@ -28,7 +27,6 @@ import demo.article.article.pojo.type.ArticleChannelOperationalType;
 import demo.article.article.pojo.type.ArticleChannelType;
 import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.article.article.service.ArticleChannelService;
-import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.po.Hostname;
 import demo.base.system.service.HostnameService;
 import demo.common.pojo.result.CommonResultCX;
@@ -188,7 +186,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	
 	@Override
 	public String loadChannelPrefix(Integer channelId) {
-		String mainFolderPath = constantService.getSysValByName(ArticleConstant.ARTICLE_CHANNEL_PRE_FIX_STORE_PATH);
+		String mainFolderPath = articleConstantService.getArticleChannelPrefixStorePath();
 		String strContent = "";
 		if (new File(mainFolderPath + channelId + ".txt").exists()) {
 			strContent = ioUtil.getStringFromFile(mainFolderPath + channelId + ".txt");
@@ -211,8 +209,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	}
 
 	private GetArticleChannelsBO removeChannelsForUnknow(GetArticleChannelsBO channelList) {
-		String envName = constantService.getSysValByName(SystemConstantStore.envName, true);
-		if ("dev".equals(envName)) {
+		if ("dev".equals(systemConstantService.getEnvNameRefresh())) {
 			return channelList;
 		}
 

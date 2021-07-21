@@ -36,5 +36,4 @@ public interface ArticleCommentMapper {
      */
     List<ArticleComment> findCommentPage(FindCommentPageDTO dto);
     
-    List<Long> findArticleIdWithCommentWaitingForReview(@Param("isReject") Boolean isReject, @Param("articleIdList")List<Long> articleIdList);
 }

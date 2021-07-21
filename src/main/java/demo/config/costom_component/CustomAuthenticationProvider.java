@@ -15,8 +15,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		String name = authentication.getName();
 		String password = authentication.getCredentials().toString();
 
-//		TODO
-//		增加自定义登陆逻辑
+//		TODO 增加自定义登陆逻辑
 //		if (shouldAuthenticateAgainstThirdPartySystem()) {
 		if ("".equals("")) {
 			// use the credentials

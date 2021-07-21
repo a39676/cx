@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
-import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.system.pojo.constant.BlogViewConstant;
 import demo.base.system.pojo.result.HostnameType;
@@ -21,8 +20,6 @@ import demo.common.service.CommonService;
 @Service
 public class BasePageServiceImpl extends CommonService implements BasePageService {
 
-	private static String atDemoHeadImg = "/static_resources/cleanBlog/img/post-sample-image.jpg";
-	
 	@Autowired
 	private HostnameService hostnameService;
 
@@ -40,7 +37,7 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 		
 		ModelAndView view = new ModelAndView();
 
-		String envName = constantService.getSysValByName(SystemConstantStore.envName, true);
+		String envName = systemConstantService.getEnvNameRefresh();
 		
 		if (hostnameType == null) {
 			if(!"dev".equals(envName)) {
@@ -71,31 +68,15 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 	
 	private ModelAndView buildHomeViewForNormal() {
 		ModelAndView view = new ModelAndView(BlogViewConstant.home);
-		view.addObject("title", constantService.getSysValByName(SystemConstantStore.normalWebSiteTitle));
+		view.addObject("title", systemConstantService.getNormalWebSiteTitle());
 		view.addObject("headerImg", "/static_resources/cleanBlog/img/nature-4607496_1920.jpg");
-		view.addObject("subheading", constantService.getSysValByName(SystemConstantStore.normalSubheading));
+		view.addObject("subheading", systemConstantService.getNormalSubheading());
 		Long visitCount = visitDataService.getVisitCount();
 		view.addObject("visitCount", visitCount);
 		
 		return view;
 	}
 	
-	@SuppressWarnings("unused")
-	private ModelAndView buildHomeViewForSeekingWork() {
-		ModelAndView view = new ModelAndView();
-		if(!"1".contentEquals(constantService.getSysValByName(SystemConstantStore.jobing))) {
-			view.setViewName(BaseViewConstant.empty);
-			return view;
-		}
-		
-		view.setViewName(BlogViewConstant.home);
-		view.addObject("title", constantService.getSysValByName(SystemConstantStore.seekWebSiteTitle));
-		view.addObject("headerImg", atDemoHeadImg);
-		view.addObject("subheading", "Bugs forced the development in a certain sense");
-		
-		return view;
-	}
-
 	@Override
 	public ModelAndView aboutMeHandler(String vcode, HttpServletRequest request) {
 		ModelAndView v = null;
@@ -104,7 +85,7 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 		if (hostnameType != null) {
 			if (HostnameType.zhang3.equals(hostnameType)) {
 				v = new ModelAndView(BlogViewConstant.aboutEasy);
-				v.addObject("email", constantService.getSysValByName(SystemConstantStore.emaild));
+				v.addObject("email", systemConstantService.getEmailD());
 				v.addObject("headerImg", "/static_resources/cleanBlog/img/nature-4607496_1920.jpg");
 //			} else if (HostnameType.seek.equals(hostnameType)) {
 //				v = new ModelAndView(BlogViewConstant.aboutSeek);

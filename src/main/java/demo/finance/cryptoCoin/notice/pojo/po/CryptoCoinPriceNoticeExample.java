@@ -176,52 +176,52 @@ public class CryptoCoinPriceNoticeExample {
             return (Criteria) this;
         }
 
-        public Criteria andCoinTypeEqualTo(Integer value) {
+        public Criteria andCoinTypeEqualTo(Long value) {
             addCriterion("coin_type =", value, "coinType");
             return (Criteria) this;
         }
 
-        public Criteria andCoinTypeNotEqualTo(Integer value) {
+        public Criteria andCoinTypeNotEqualTo(Long value) {
             addCriterion("coin_type <>", value, "coinType");
             return (Criteria) this;
         }
 
-        public Criteria andCoinTypeGreaterThan(Integer value) {
+        public Criteria andCoinTypeGreaterThan(Long value) {
             addCriterion("coin_type >", value, "coinType");
             return (Criteria) this;
         }
 
-        public Criteria andCoinTypeGreaterThanOrEqualTo(Integer value) {
+        public Criteria andCoinTypeGreaterThanOrEqualTo(Long value) {
             addCriterion("coin_type >=", value, "coinType");
             return (Criteria) this;
         }
 
-        public Criteria andCoinTypeLessThan(Integer value) {
+        public Criteria andCoinTypeLessThan(Long value) {
             addCriterion("coin_type <", value, "coinType");
             return (Criteria) this;
         }
 
-        public Criteria andCoinTypeLessThanOrEqualTo(Integer value) {
+        public Criteria andCoinTypeLessThanOrEqualTo(Long value) {
             addCriterion("coin_type <=", value, "coinType");
             return (Criteria) this;
         }
 
-        public Criteria andCoinTypeIn(List<Integer> values) {
+        public Criteria andCoinTypeIn(List<Long> values) {
             addCriterion("coin_type in", values, "coinType");
             return (Criteria) this;
         }
 
-        public Criteria andCoinTypeNotIn(List<Integer> values) {
+        public Criteria andCoinTypeNotIn(List<Long> values) {
             addCriterion("coin_type not in", values, "coinType");
             return (Criteria) this;
         }
 
-        public Criteria andCoinTypeBetween(Integer value1, Integer value2) {
+        public Criteria andCoinTypeBetween(Long value1, Long value2) {
             addCriterion("coin_type between", value1, value2, "coinType");
             return (Criteria) this;
         }
 
-        public Criteria andCoinTypeNotBetween(Integer value1, Integer value2) {
+        public Criteria andCoinTypeNotBetween(Long value1, Long value2) {
             addCriterion("coin_type not between", value1, value2, "coinType");
             return (Criteria) this;
         }
@@ -643,6 +643,76 @@ public class CryptoCoinPriceNoticeExample {
 
         public Criteria andTelegramChatIdNotBetween(Long value1, Long value2) {
             addCriterion("telegram_chat_id not between", value1, value2, "telegramChatId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameIsNull() {
+            addCriterion("telegram_bot_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameIsNotNull() {
+            addCriterion("telegram_bot_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameEqualTo(String value) {
+            addCriterion("telegram_bot_name =", value, "telegramBotName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameNotEqualTo(String value) {
+            addCriterion("telegram_bot_name <>", value, "telegramBotName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameGreaterThan(String value) {
+            addCriterion("telegram_bot_name >", value, "telegramBotName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameGreaterThanOrEqualTo(String value) {
+            addCriterion("telegram_bot_name >=", value, "telegramBotName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameLessThan(String value) {
+            addCriterion("telegram_bot_name <", value, "telegramBotName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameLessThanOrEqualTo(String value) {
+            addCriterion("telegram_bot_name <=", value, "telegramBotName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameLike(String value) {
+            addCriterion("telegram_bot_name like", value, "telegramBotName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameNotLike(String value) {
+            addCriterion("telegram_bot_name not like", value, "telegramBotName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameIn(List<String> values) {
+            addCriterion("telegram_bot_name in", values, "telegramBotName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameNotIn(List<String> values) {
+            addCriterion("telegram_bot_name not in", values, "telegramBotName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameBetween(String value1, String value2) {
+            addCriterion("telegram_bot_name between", value1, value2, "telegramBotName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTelegramBotNameNotBetween(String value1, String value2) {
+            addCriterion("telegram_bot_name not between", value1, value2, "telegramBotName");
             return (Criteria) this;
         }
 

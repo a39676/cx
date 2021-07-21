@@ -21,7 +21,6 @@ import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.UsersService;
 import demo.common.controller.CommonController;
 import demo.config.costom_component.BaseUtilCustom;
-import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping(value = UsersUrl.root)
@@ -39,7 +38,6 @@ public class UsersController extends CommonController {
 	
 	@PostMapping(value = UsersUrl.otherUserInfo)
 	public ModelAndView otherUserInfo(@RequestBody OtherUserInfoDTO param, HttpServletRequest request, HttpServletResponse response) {
-//		TODO
 		ModelAndView view = new ModelAndView("userJSP/otherUserInfo");
 		
 		UsersDetailVO ud = usersService.findOtherUserDetail(param);
@@ -64,12 +62,13 @@ public class UsersController extends CommonController {
 	}
 	
 	@PostMapping(value = UsersUrl.isLogin)
-	public void isLogin(HttpServletResponse response) {
+	@ResponseBody
+	public CommonResult isLogin() {
 		CommonResult result = new CommonResult();
 		if(baseUtilCustom.isLoginUser()) {
 			result.setIsSuccess();
 		}
-		outputJson(response, JSONObject.fromObject(result));
+		return result;
 	}
 	
 	public String findHeadImageUrl(Long userId) {

@@ -3,7 +3,7 @@
 <mapper namespace="demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice60minuteMapper">
   <resultMap id="BaseResultMap" type="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice60minute">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="coin_type" jdbcType="INTEGER" property="coinType" />
+    <result column="coin_type" jdbcType="BIGINT" property="coinType" />
     <result column="currency_type" jdbcType="INTEGER" property="currencyType" />
     <result column="start_price" jdbcType="DECIMAL" property="startPrice" />
     <result column="end_price" jdbcType="DECIMAL" property="endPrice" />
@@ -113,7 +113,7 @@
       low_price, volume, start_time, 
       end_time, create_time, is_delete
       )
-    values (#{id,jdbcType=BIGINT}, #{coinType,jdbcType=INTEGER}, #{currencyType,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=BIGINT}, #{coinType,jdbcType=BIGINT}, #{currencyType,jdbcType=INTEGER}, 
       #{startPrice,jdbcType=DECIMAL}, #{endPrice,jdbcType=DECIMAL}, #{highPrice,jdbcType=DECIMAL}, 
       #{lowPrice,jdbcType=DECIMAL}, #{volume,jdbcType=DECIMAL}, #{startTime,jdbcType=TIMESTAMP}, 
       #{endTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
@@ -164,7 +164,7 @@
         #{id,jdbcType=BIGINT},
       </if>
       <if test="coinType != null">
-        #{coinType,jdbcType=INTEGER},
+        #{coinType,jdbcType=BIGINT},
       </if>
       <if test="currencyType != null">
         #{currencyType,jdbcType=INTEGER},
@@ -211,7 +211,7 @@
         id = #{record.id,jdbcType=BIGINT},
       </if>
       <if test="record.coinType != null">
-        coin_type = #{record.coinType,jdbcType=INTEGER},
+        coin_type = #{record.coinType,jdbcType=BIGINT},
       </if>
       <if test="record.currencyType != null">
         currency_type = #{record.currencyType,jdbcType=INTEGER},
@@ -251,7 +251,7 @@
   <update id="updateByExample" parameterType="map">
     update crypto_coin_price_60minute
     set id = #{record.id,jdbcType=BIGINT},
-      coin_type = #{record.coinType,jdbcType=INTEGER},
+      coin_type = #{record.coinType,jdbcType=BIGINT},
       currency_type = #{record.currencyType,jdbcType=INTEGER},
       start_price = #{record.startPrice,jdbcType=DECIMAL},
       end_price = #{record.endPrice,jdbcType=DECIMAL},
@@ -270,7 +270,7 @@
     update crypto_coin_price_60minute
     <set>
       <if test="coinType != null">
-        coin_type = #{coinType,jdbcType=INTEGER},
+        coin_type = #{coinType,jdbcType=BIGINT},
       </if>
       <if test="currencyType != null">
         currency_type = #{currencyType,jdbcType=INTEGER},
@@ -307,7 +307,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice60minute">
     update crypto_coin_price_60minute
-    set coin_type = #{coinType,jdbcType=INTEGER},
+    set coin_type = #{coinType,jdbcType=BIGINT},
       currency_type = #{currencyType,jdbcType=INTEGER},
       start_price = #{startPrice,jdbcType=DECIMAL},
       end_price = #{endPrice,jdbcType=DECIMAL},

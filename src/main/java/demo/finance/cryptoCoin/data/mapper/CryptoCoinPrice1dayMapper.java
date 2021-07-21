@@ -1,12 +1,10 @@
 package demo.finance.cryptoCoin.data.mapper;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.session.RowBounds;
-
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1day;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
 
 public interface CryptoCoinPrice1dayMapper {
     long countByExample(CryptoCoinPrice1dayExample example);
@@ -32,4 +30,6 @@ public interface CryptoCoinPrice1dayMapper {
     int updateByPrimaryKeySelective(CryptoCoinPrice1day record);
 
     int updateByPrimaryKey(CryptoCoinPrice1day record);
+
+    CryptoCoinPrice1day findLastDailyData(Long coinType);
 }

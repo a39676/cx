@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import demo.base.user.pojo.dto.UserRegistDTO;
 import demo.base.user.pojo.result.ModifyRegistEmailResult;
 import demo.base.user.pojo.result.NewUserRegistResult;
-import demo.base.user.pojo.vo.__baseSuperAdminRegistVO;
+import demo.base.user.pojo.result.__baseSuperAdminRegistResult;
 import demo.common.pojo.result.CommonResultCX;
 
 public interface UserRegistService {
@@ -27,7 +27,7 @@ public interface UserRegistService {
 
 	CommonResultCX registActivation(String mailKey);
 
-	__baseSuperAdminRegistVO __baseSuperAdminRegist();
+	__baseSuperAdminRegistResult __baseSuperAdminRegist();
 
 	CommonResultCX resendRegistMail(Long userId, HttpServletRequest request);
 

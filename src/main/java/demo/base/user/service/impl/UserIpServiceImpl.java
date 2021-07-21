@@ -12,10 +12,13 @@ import demo.base.user.pojo.po.UserIp;
 import demo.base.user.pojo.vo.UserIpVO;
 import demo.base.user.service.UserIpService;
 import demo.common.service.CommonService;
+import toolPack.numericHandel.NumericUtilCustom;
 
 @Service
 public class UserIpServiceImpl extends CommonService implements UserIpService {
 
+	@Autowired
+	private NumericUtilCustom numberUtil;
 	@Autowired
 	private UserIpMapper ipMapper;
 	

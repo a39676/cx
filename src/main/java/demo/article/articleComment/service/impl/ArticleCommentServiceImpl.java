@@ -14,9 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
 
-import demo.article.article.pojo.constant.ArticleConstant;
 import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.article.pojo.type.ArticleEvaluationType;
 import demo.article.article.pojo.vo.ArticleEvaluationStatisticsVO;
@@ -25,7 +23,6 @@ import demo.article.article.service.ArticleService;
 import demo.article.article.service.impl.ArticleCommonService;
 import demo.article.articleComment.mapper.ArticleCommentCountMapper;
 import demo.article.articleComment.mapper.ArticleCommentMapper;
-import demo.article.articleComment.pojo.constant.ArticleCommentConstant;
 import demo.article.articleComment.pojo.dto.CreateArticleCommentDTO;
 import demo.article.articleComment.pojo.dto.FindArticleCommentPageDTO;
 import demo.article.articleComment.pojo.dto.FindCommentPageDTO;
@@ -36,6 +33,7 @@ import demo.article.articleComment.pojo.po.ArticleCommentCountExample;
 import demo.article.articleComment.pojo.po.ArticleCommentExample;
 import demo.article.articleComment.pojo.po.ArticleCommentExample.Criteria;
 import demo.article.articleComment.pojo.result.FindArticleCommentPageResult;
+import demo.article.articleComment.pojo.type.ArticleCommentResultType;
 import demo.article.articleComment.pojo.vo.ArticleCommentVO;
 import demo.article.articleComment.service.ArticleCommentAdminService;
 import demo.article.articleComment.service.ArticleCommentService;
@@ -54,6 +52,8 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	@Autowired
 	private ArticleService articleService;
 	@Autowired
+	private ArticleCommentConstantService constantService;
+	@Autowired
 	private ArticleEvaluationService articleEvaluationService;
 	@Autowired
 	private ArticleCommentAdminService articleCommentAdminService;
@@ -70,36 +70,11 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	private ArticleCommentCountMapper articleCommentCountMapper;
 	
 	@Autowired
+	private ArticleCommentConstantService articleCommentConstantService;
+	
+	@Autowired
 	private FileUtilCustom ioUtil;
 	
-	private String loadArticleCommentStorePath() {
-		String path = constantService.getSysValByName(ArticleCommentConstant.commentStorePathRedisKey);
-		
-		if(StringUtils.isNotBlank(path)) {
-			return path;
-		}
-		
-		if(isLinux()) {
-			path = "/home/u2/articleComment";
-		} else {
-			path = "d:/home/u2/articleComment";
-		}
-		
-		constantService.setValByName(ArticleCommentConstant.commentStorePathRedisKey, path);
-		
-		return path;
-	}
-	
-	private Long loadMaxArticleLength() {
-		String maxCommentLengthStr = constantService.getSysValByName(ArticleConstant.MAX_ARTICLE_LENGTH);
-		Long maxCommentLength = null;
-		try {
-			maxCommentLength = Long.parseLong(maxCommentLengthStr);
-		} catch (Exception e) {
-			maxCommentLength = 0L;
-		}
-		return maxCommentLength;
-	}
 	
 	@Override
 	public CommonResultCX creatingArticleComment(HttpServletRequest request, CreateArticleCommentDTO inputParam) throws IOException {
@@ -113,8 +88,8 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			result.fillWithResult(ResultTypeCX.articleTooShort);
 			return result;
 		}
-		String articleCommentStorePrefixPath = loadArticleCommentStorePath();
-		if(StringUtils.isBlank(articleCommentStorePrefixPath) || loadMaxArticleLength() <= 0) {
+		String articleCommentStorePrefixPath = constantService.getArticleCommentStorePrefixPath();
+		if(StringUtils.isBlank(articleCommentStorePrefixPath) || constantService.getMaxArticleCommentLength() <= 0) {
 			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
 		}
@@ -180,7 +155,8 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		
 		if(!bigUserFlag) {
 			if(justComment(request, userId, articleId)) {
-				result.fillWithResult(ResultTypeCX.justComment);
+				result.setMessage(ArticleCommentResultType.justComment.getName());
+				result.setIsSuccess();
 				return result;
 			}
 			inputParam.setContent(sanitize(inputParam.getContent()));
@@ -195,7 +171,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		Long newCommonId = snowFlake.getNextId();
 		newComment.setId(newCommonId);
 		newComment.setArticleId(articleId);
-		newComment.setPath(saveFileResult.getFilePath());
+		newComment.setFilePath(saveFileResult.getFilePath());
 		newComment.setUserId(userId);
 		newComment.setTmpNickName(nickname);
 		newComment.setTmpEmail(email);
@@ -215,7 +191,6 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			insertCommentRedisMark(request, userId, articleId);
 		}
 		
-		articleCommentCountingUp(articleId);
 		result.successWithMessage("评论已发送.");
 		
 		return result;
@@ -226,24 +201,6 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	}
 
 	@Override
-	public ModelAndView findArticleCommentPageView(FindArticleCommentPageDTO dto) {
-		ModelAndView view = new ModelAndView("articleJSP/articleCommentListSubList");
-		FindArticleCommentPageResult result = findArticleCommentVOPage(dto);
-		if(!result.isSuccess()) {
-			view.addObject("message", result.getMessage());
-			return view;
-		}
-		
-		view.addObject("commentList", result.getCommentList());
-		view.addObject("pk", result.getPk());
-		if(result.getCommentList() != null && result.getCommentList().size() > 0) {
-			view.addObject("startTime", result.getCommentList().get(result.getCommentList().size() - 1).getCreateTimeStr());
-		}
-		
-		return view;
-	}
-	
-	@Override
 	public FindArticleCommentPageResult findArticleCommentVOPage(FindArticleCommentPageDTO dto) {
 		FindArticleCommentPageResult result = new FindArticleCommentPageResult();
 		List<ArticleCommentVO> commentVOList = new ArrayList<ArticleCommentVO>();
@@ -253,8 +210,8 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			return result;
 		}
 		
-		if(dto.getStartTime() != null && dto.getStartTime().isBefore(theStartTime)) {
-			dto.setStartTime(theStartTime);
+		if(dto.getStartTime() != null && dto.getStartTime().isBefore(BLOG_ARTICLE_START_TIME)) {
+			dto.setStartTime(BLOG_ARTICLE_START_TIME);
 		}
 		if(dto.getStartTime() != null) {
 			dto.setStartTime(dto.getStartTime().plusSeconds(1L));
@@ -273,8 +230,8 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			dto.setIsPass(true);
 			dto.setIsDelete(false);
 			dto.setIsReject(false);
-			if(dto.getLimit() != null && dto.getLimit() > ArticleCommentConstant.commentPageMaxSize) {
-				dto.setLimit(ArticleCommentConstant.commentPageMaxSize);
+			if(dto.getLimit() != null && dto.getLimit() > articleCommentConstantService.getCommentPageMaxSize()) {
+				dto.setLimit(articleCommentConstantService.getCommentPageMaxSize());
 			}
 		}
 		
@@ -312,7 +269,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	
 	private ArticleCommentVO fillArticleCommentFromBo(Map<Long, ArticleEvaluationStatisticsVO> evaluationStatisticsMap, ArticleComment po) {
 		ArticleCommentVO vo = new ArticleCommentVO();
-		String content = ioUtil.getStringFromFile(po.getPath());
+		String content = ioUtil.getStringFromFile(po.getFilePath());
 		vo.setContent(content);
 		vo.setEvaluationCodeAndCount(evaluationStatisticsMap.get(po.getId()).getEvaluationCodeAndCount());
 		vo.setNickName(po.getTmpNickName());
@@ -355,13 +312,13 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	}
 
 	private boolean justComment(HttpServletRequest request, Long userId, Long articleId) {
-		if("dev".equals(constantService.getSysValByName("envName"))) {
+		if("dev".equals(systemConstantService.getEnvName())) {
 			return false;
 		}
 		
 		String keyPrefix = SystemRedisKey.articleCommentKeyPrefix + "_" + userId + "_" + articleId;
 		
-		int counting = checkFunctionalModuleVisitData(request, keyPrefix);
+		int counting = redisConnectService.checkFunctionalModuleVisitData(request, keyPrefix);
 		if(counting > 0) {
 			return true;
 		} else {
@@ -371,10 +328,11 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	
 	private void insertCommentRedisMark(HttpServletRequest request, Long userId, Long articleId) {
 		String keyPrefix = SystemRedisKey.articleCommentKeyPrefix + "_" + userId + "_" + articleId;
-		insertFunctionalModuleVisitData(request, keyPrefix, 10L, TimeUnit.MINUTES);
+		redisConnectService.insertFunctionalModuleVisitData(request, keyPrefix, 10L, TimeUnit.MINUTES);
 	}
 	
-	private void articleCommentCountingUp(Long articleId) {
+	@Override
+	public void articleCommentCountingUp(Long articleId) {
 		ArticleCommentCount po = articleCommentCountMapper.selectByPrimaryKey(articleId);
 		if(po == null) {
 			po = new ArticleCommentCount();
@@ -385,7 +343,19 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			po.setCounting(po.getCounting() + 1);
 			articleCommentCountMapper.updateByPrimaryKey(po);
 		}
-		
+	}
+
+	@Override
+	public void articleCommentCountingDown(Long articleId) {
+		ArticleCommentCount po = articleCommentCountMapper.selectByPrimaryKey(articleId);
+		if(po == null) {
+			return;
+		} else {
+			if(po.getCounting() > 1) {
+				po.setCounting(po.getCounting() - 1);
+				articleCommentCountMapper.updateByPrimaryKey(po);
+			}
+		}
 	}
 
 	@Override

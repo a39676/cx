@@ -18,7 +18,6 @@ import org.springframework.web.servlet.ModelAndView;
 import autoTest.testEvent.pojo.constant.SearchingDemoConstant;
 import demo.article.article.mapper.ArticleBurnMapper;
 import demo.article.article.pojo.constant.ArticleBurnUrlConstant;
-import demo.article.article.pojo.constant.ArticleConstant;
 import demo.article.article.pojo.constant.ArticleViewConstant;
 import demo.article.article.pojo.dto.CreatingBurnMessageDTO;
 import demo.article.article.pojo.po.ArticleBurn;
@@ -28,7 +27,6 @@ import demo.article.article.pojo.result.CreatingBurnMessageResult;
 import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.article.service.ArticleBurnService;
 import demo.article.article.service.ArticleService;
-import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.HostnameService;
@@ -48,22 +46,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 	private ArticleBurnMapper articleBurnMapper;
 	
 	private String getArticleBurnStorePrefixPath() {
-		return constantService.getSysValByName(ArticleConstant.ARTICLE_BURN_STORE_PRE_FIX_PATH);
-	}
-	
-	private Long loadMaxArticleLength() {
-		Long maxArticleLength = 0L;
-		try {
-			String maxLengthStr = constantService.getSysValByName(ArticleConstant.MAX_ARTICLE_LENGTH);
-			if(maxLengthStr != null) {
-				maxArticleLength = Long.parseLong(maxLengthStr);
-			}
-		} catch (Exception e) {
-			return maxArticleLength;
-		}
-		
-		return maxArticleLength;
-		
+		return articleConstantService.getArticleBurnStorePrefixPath();
 	}
 	
 	private boolean isInZhang3OrDev(HttpServletRequest request) {
@@ -71,8 +54,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		if (HostnameType.zhang3.equals(hostnameType)) {
 			return true;
 		} else {
-			String envName = constantService.getSysValByName(SystemConstantStore.envName);
-			return "dev".equals(envName);
+			return "dev".equals(systemConstantService.getEnvName());
 		}
 	}
 	
@@ -92,16 +74,16 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 			return null;
 		}
 
-		if(StringUtils.isBlank(dto.getContent()) || dto.getContent().length() > loadMaxArticleLength()) {
+		if(StringUtils.isBlank(dto.getContent()) || dto.getContent().length() > articleConstantService.getMaxArticleLength()) {
 			r.fillWithResult(ResultTypeCX.errorParam);
 			return r;
 		}
 		
 		int count = 0;
 		if(!isBigUser()) {
-			count = checkFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
+			count = redisConnectService.checkFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
 		}
-		if (!"dev".equals(constantService.getSysValByName(SystemConstantStore.envName))) {
+		if (!"dev".equals(systemConstantService.getEnvName())) {
 			if (count >= SearchingDemoConstant.maxInsertCountIn30Minutes) {
 				r.failWithMessage("短时间内加入的任务太多了, 请稍后再试");
 				return r;
@@ -160,7 +142,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		r.setReadUri(ArticleBurnUrlConstant.root + ArticleBurnUrlConstant.readBurningMessage + "?readKey=" + r.getReadKey());
 		r.setBurnUri(ArticleBurnUrlConstant.root + ArticleBurnUrlConstant.burnMessage + "?burnKey=" + r.getBurnKey());
 		r.setIsSuccess();
-		insertFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
+		redisConnectService.insertFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
 		
 		return r;
 	}

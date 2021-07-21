@@ -1,13 +1,18 @@
 package demo.tool.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.common.service.CommonService;
 import demo.tool.service.ValidRegexToolService;
+import toolPack.numericHandel.NumericUtilCustom;
 
 @Service
 public class ValidRegexToolServiceImpl extends CommonService implements ValidRegexToolService {
 
+	@Autowired
+	private NumericUtilCustom numberUtil;
+	
 	@Override
 	public boolean validQQ(String qq) {
 		if (qq == null || !numberUtil.matchInteger(qq) || qq.length() < 5 || qq.length() > 11) {

@@ -51,6 +51,7 @@ public class TelegramCalendarNoticeMessageAckReceiver extends CommonService {
 
 			dto.setMsg(json.getString("msg"));
 			dto.setId(json.getLong("id"));
+			dto.setBotName(json.getString("botName"));
 			return dto;
 		} catch (Exception e) {
 			return null;

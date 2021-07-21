@@ -1,12 +1,5 @@
 article
-	需要增加, 从 页面UI 加密&解密 pk (需要管理员权限)
 	另立附表，记载"有效期"?
-	
-每个模块, 各自都可能有独立的动态参数,
-	全部存放 systemConstant 已不合适
-	提供管理员身份, 逐个执行的通道
-		/admin/refreshSystemConstant
-		未设置前端页面
 
 crypto coin
 	未知原因: crypto coin 订阅的 redis 列表会被清空

@@ -257,7 +257,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		ArticleLong record = new ArticleLong();
 		record.setArticleId(articleId);
 		record.setChannelId(param.getChannelId());
-		record.setIsPass(false);
+		record.setIsPass(isBigUser());
 		articleLongMapper.updateByPrimaryKeySelective(record);
 		
 		result.fillWithResult(ResultTypeCX.success);

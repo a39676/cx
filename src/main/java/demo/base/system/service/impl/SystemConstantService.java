@@ -32,7 +32,7 @@ public class SystemConstantService extends CommonService {
 	@Autowired
 	private SystemConstantMapper systemConstantMapper;
 	@Autowired
-	protected RedisTemplate<String, Object> redisTemplate;
+	private RedisTemplate<String, Object> redisTemplate;
 	
 	private String aesKey = null;
 	private String aesInitVector = null;
@@ -69,10 +69,9 @@ public class SystemConstantService extends CommonService {
 	}
 	
 	public String getEnvNameRefresh() {
-		envName = getSysValByName(SystemConstantStore.ENV_NAME);
+		envName = getSysValByName(SystemConstantStore.ENV_NAME, true);
 		return envName;
 	}
-	
 	
 	public String getEmailD() {
 		if(StringUtils.isBlank(emailD)) {

@@ -131,4 +131,15 @@ public class ComplexToolController extends CommonController {
 		return new ModelAndView("toolJSP/systemOption");
 	}
 
+	@GetMapping(value = "/decryptID")
+	@ResponseBody
+	public Long decryptID(@RequestParam("pk")String pk) {
+		return complexToolServiceImpl.decryptPrivateKey(pk);
+	}
+	
+	@GetMapping(value = "/encryptID")
+	@ResponseBody
+	public String decryptID(@RequestParam("id")Long id) {
+		return complexToolServiceImpl.encryptId(id);
+	}
 }

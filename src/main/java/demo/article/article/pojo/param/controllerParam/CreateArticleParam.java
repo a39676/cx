@@ -6,7 +6,6 @@ public class CreateArticleParam {
 	private String channelId;
 	private String title;
 	private String content;
-	private boolean quickPass = false;
 
 	public String getSuperAdminKey() {
 		return superAdminKey;
@@ -40,18 +39,10 @@ public class CreateArticleParam {
 		this.content = content;
 	}
 
-	public boolean getQuickPass() {
-		return quickPass;
-	}
-
-	public void setQuickPass(boolean quickPass) {
-		this.quickPass = quickPass;
-	}
-
 	@Override
 	public String toString() {
 		return "CreateArticleParam [superAdminKey=" + superAdminKey + ", channelId=" + channelId + ", title=" + title
-				+ ", content=" + content + ", quickPass=" + quickPass + "]";
+				+ ", content=" + content + "]";
 	}
 
 }

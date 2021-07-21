@@ -247,7 +247,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 
 	private void quickPass(Long articleId) {
-		String pk = encryptId(articleId);
+		String pk = URLEncoder.encode(encryptId(articleId), StandardCharsets.UTF_8);
 		if (pk != null) {
 			ReviewArticleLongParam passArticleParam = new ReviewArticleLongParam();
 			passArticleParam.setPk(pk);

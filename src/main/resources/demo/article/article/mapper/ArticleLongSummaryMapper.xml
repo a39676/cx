@@ -248,18 +248,13 @@
       als.article_id as articleId,
       als.private_key as privateKey,
       als.user_id,
-      als.file_path as filePath,
-      udt.nick_name as nickName,
-      udt.head_image as headImage
+      als.file_path as filePath
 
     from 
       article_long as al
 
       left join article_long_summary as als
         on al.article_id = als.article_id
-
-      left join users_detail as udt
-        on al.user_id = udt.user_id
   </sql>
 
   <select id="findArticleLongSummary" resultType="demo.article.article.pojo.bo.ArticleLongSummaryBO">
@@ -287,9 +282,6 @@
         <foreach item="channelId" index="index" collection="channelIdList" open="(" separator="," close=")">
           #{channelId}
         </foreach>
-      </if>
-      <if test="userId != null">
-        and al.user_id = #{userId}
       </if>
       <if test="title != null">
         and al.article_title like concat ('%', #{title}, '%')

@@ -25,8 +25,7 @@
             <h1>${articleLongVO.articleTitle}</h1>
             <h2 class="subheading"></h2>
             <span class="meta">
-              Posted by <a href="#">${articleLongVO.nickName}</a>
-              on ${articleLongVO.createDateString}
+              ${articleLongVO.createDateString}
             </span>
           </div>
         </div>

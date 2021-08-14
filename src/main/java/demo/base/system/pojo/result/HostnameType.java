@@ -2,10 +2,6 @@ package demo.base.system.pojo.result;
 
 public enum HostnameType {
 	
-//	ea("ea", 1), /* 2020-05-27 不再续期 */
-//	seek("seek", 2), /* 2020-05-27 即将过期 */
-//	three("three", 3), /* 2020-05-27 考虑不再续期 */
-//	haven("haven", 4), /* 2020-05-27 即将过期 */
 	zhang3("zhang3", 5),
 	;
 	

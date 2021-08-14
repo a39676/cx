@@ -11,9 +11,9 @@ import autoTest.testEvent.pojo.result.InsertSearchingDemoEventResult;
 
 public interface AutoTestDemoService {
 
-	ModelAndView linkToATHome(HttpServletRequest request);
+	ModelAndView linkToATHome();
 
-	ModelAndView index(HttpServletRequest request);
+	ModelAndView index();
 
 	/**
 	 * 查找报告列表

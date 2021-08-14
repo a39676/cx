@@ -53,7 +53,7 @@ public class ExceptionServiceImpl extends CommonService implements ExceptionServ
 		} else if("dev".equals(systemConstantService.getEnvNameRefresh())){
 			view.setViewName(BaseViewConstant.normal404);
 		} else {
-			view.setViewName(BaseViewConstant.empty);
+			view.setViewName(BaseViewConstant.normal404);
 		}
 
 		return view;

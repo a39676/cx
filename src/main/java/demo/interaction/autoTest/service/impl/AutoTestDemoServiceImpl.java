@@ -44,8 +44,8 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	protected ExceptionService exceptionService;
 	
 	@Override
-	public ModelAndView linkToATHome(HttpServletRequest request) {
-		if(baseUtilCustom.hasAdminRole() || isDev(request)) {
+	public ModelAndView linkToATHome() {
+		if(baseUtilCustom.hasAdminRole() || isDev()) {
 			return new ModelAndView("ATDemoJSP/atDemoLink");
 		}
 
@@ -53,10 +53,10 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	}
 
 	@Override
-	public ModelAndView index(HttpServletRequest request) {
+	public ModelAndView index() {
 
-		if(!baseUtilCustom.hasAdminRole() && !isDev(request)) {
-			return exceptionService.handle404Exception(request);
+		if(!baseUtilCustom.hasAdminRole() && !isDev()) {
+			return exceptionService.handle404Exception(null);
 		}
 
 		ModelAndView v = new ModelAndView("ATDemoJSP/atDemoIndex");
@@ -298,17 +298,11 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	public InsertSearchingDemoEventResult insertSearchingDemoTestEvent(InsertSearchingDemoTestEventDTO dto,
 			HttpServletRequest request) {
 		
-		if(!isDev(request)) {
-			return null;
-		}
-		
 		InsertSearchingDemoEventResult r = new InsertSearchingDemoEventResult();
 
-		int count = 0;
-		if(!isBigUser()) {
-			count = redisConnectService.checkFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
-		}
-		if (!"dev".equals(systemConstantService.getEnvName())) {
+		int count = redisConnectService.checkFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
+
+		if(!isBigUser() && !isDev()) {
 			if (count >= SearchingDemoConstant.maxInsertCountIn30Minutes) {
 				r.failWithMessage("短时间内加入的任务太多了, 请稍后再试");
 				return r;
@@ -321,7 +315,6 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 				requestJson.put("appointment", localDateTimeHandler.dateToStr(dto.getAppointment()));
 			}
 			requestJson.put("searchKeyWord", dto.getSearchKeyWord());
-			requestJson.put("caseId", dto.getCaseId());
 
 			String url = ServerHost.localHost10002 + SearchingDemoUrl.root + SearchingDemoUrl.insert;
 			String response = String.valueOf(httpUtil.sendPostRestful(url, requestJson.toString()));
@@ -350,7 +343,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 		return r;
 	}
 
-	private boolean isDev(HttpServletRequest request) {
+	private boolean isDev() {
 		return "dev".equals(systemConstantService.getEnvName());
 	}
 

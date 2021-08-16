@@ -1,41 +1,17 @@
-article
-	另立附表，记载"有效期"?
-	
-每个模块, 各自都可能有独立的动态参数,
-	全部存放 systemConstant 已不合适
-	提供管理员身份, 逐个执行的通道
-		/admin/refreshSystemConstant
-		未设置前端页面
-
 crypto coin
-	未知原因: crypto coin 订阅的 redis 列表会被清空
 	crypto compare 更新 daily data 时 可能返回全0数据, 需要binance 协助
 	
 
 农历提醒
 图片信息传送
 
-
-DTO
-	测试 @NotNull @NotBlank @Size 等注解
-
 ocr
 	linux 拉取依赖异常, 尝试更新版本号
 
 
 评论模块
-	因注册暂时不开放, 而且打算开放未登录评论
 	需要为管理员增加屏蔽用户/ip等手段
 		请参照 ipRecord 相关模块
-	登录后的用户, 发表评论试, 可否变更昵称? 邮箱? 手机?
-	
-用户注册
-	手机号如需转移? 暂时人工处理
-	暂时不开放注册
-	考虑转用邮件激活 
-		redis控制短时间内注册数量
-			每日? 每N小时?
-			改变邮箱也列入限制
 			
 图床
 	暂时未有合适的 webp webm 支持库

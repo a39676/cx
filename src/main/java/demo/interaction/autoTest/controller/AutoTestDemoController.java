@@ -29,13 +29,13 @@ public class AutoTestDemoController extends CommonController {
 	private AutoTestDemoService atDemoService;
 	
 	@PostMapping(value = AutoTestUrl.linkToATHome)
-	public ModelAndView linkToATHome(HttpServletRequest request) {
-		return atDemoService.linkToATHome(request);
+	public ModelAndView linkToATHome() {
+		return atDemoService.linkToATHome();
 	}
 	
 	@GetMapping(value = AutoTestUrl.index)
-	public ModelAndView index(HttpServletRequest request) {
-		return atDemoService.index(request);
+	public ModelAndView index() {
+		return atDemoService.index();
 	}
 	
 	@PostMapping(value = AutoTestInteractionUrl.FIND_REPORTS_BY_CONDITION)

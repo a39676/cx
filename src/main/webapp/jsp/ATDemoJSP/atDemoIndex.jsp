@@ -102,15 +102,14 @@
                   </sec:authorize>
                   <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
                     <div class="control-group">
-                      <span class="badge badge-info">caseId</span>
-                      <input type="text" name="" id="caseId" placeholder="caseId">
+                      <span class="badge badge-info">flowId</span>
+                      <input type="text" name="" id="flowId" placeholder="flowId">
                     </div>
                   </sec:authorize>
                   <sec:authorize access="!hasRole('ROLE_SUPER_ADMIN')">
-                    <select id="caseIdSelector">
+                    <select id="flowIdSelector">
                       <option value="">All</option>
                       <option value="1">Bing 搜索 demo</option>
-                      <option value="2">Baidu 搜索 demo</option>
                     </select>
                   </sec:authorize>
                 </div>
@@ -227,12 +226,12 @@
         var moduleIdSelector = document.getElementById("moduleIdSelector");
         moduleId = moduleIdSelector.options[moduleIdSelector.selectedIndex].value;
       }
-      var caseId = "";
-      if(document.getElementById("caseId") != null) {
-        caseId = document.getElementById("caseId").value;
+      var flowId = "";
+      if(document.getElementById("flowId") != null) {
+        flowId = document.getElementById("flowId").value;
       } else {
-        var caseIdSelector = document.getElementById("caseIdSelector");
-        caseId = caseIdSelector.options[caseIdSelector.selectedIndex].value;
+        var flowIdSelector = document.getElementById("flowIdSelector");
+        flowId = flowIdSelector.options[flowIdSelector.selectedIndex].value;
       }
       var markTime = searchConditionArea.attr("markTime");
 
@@ -282,7 +281,7 @@
         runTimeEndTime: runTimeEndTime,
         id:id,
         moduleId:moduleId,
-        caseId:caseId,
+        flowId:flowId,
         runFlag:runFlag,
         isSuccess:runSuccessFlag
       };
@@ -410,12 +409,12 @@
       var appointment = buildDateTime(sourceAppointmentDate, sourceAppointmentTime);
 
       var insertNewTestEventCaseIdSelector = document.getElementById("insertNewTestEventCaseIdSelector");
-      var caseId = insertNewTestEventCaseIdSelector.options[insertNewTestEventCaseIdSelector.selectedIndex].value;
+      var flowId = insertNewTestEventCaseIdSelector.options[insertNewTestEventCaseIdSelector.selectedIndex].value;
 
       var jsonOutput = {
         appointment:appointment,
         searchKeyWord:searchKeyWord,
-        caseId:caseId
+        flowId:flowId
       };
 
       var url = "/atDemo/insertSearchingDemoTestEvent";

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import demo.common.controller.CommonController;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.dto.TestDTO;
+import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping(value = { TestUrl.root2 })
@@ -21,5 +22,14 @@ public class TestController2 extends CommonController {
 		TestDTO t = new TestDTO();
 		t.setDatetime(LocalDateTime.now());
 		return t.toString();
+	}
+	
+	@GetMapping(value = "/test2")
+	@ResponseBody
+	public String test2() {
+		TestDTO t = new TestDTO();
+		t.setDatetime(LocalDateTime.now());
+		JSONObject j = JSONObject.fromObject(t);
+		return j.toString();
 	}
 }

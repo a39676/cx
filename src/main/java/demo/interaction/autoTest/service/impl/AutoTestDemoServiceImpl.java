@@ -18,15 +18,17 @@ import autoTest.jsonReport.pojo.constant.AutoTestJsonReportKeyConstant;
 import autoTest.jsonReport.pojo.dto.FindReportByTestEventIdDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
 import autoTest.jsonReport.pojo.result.FindReportByTestEventIdResult;
-import autoTest.testEvent.pojo.constant.SearchingDemoConstant;
-import autoTest.testEvent.pojo.constant.SearchingDemoUrl;
-import autoTest.testEvent.pojo.dto.InsertSearchingDemoTestEventDTO;
-import autoTest.testEvent.pojo.result.InsertSearchingDemoEventResult;
+import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
+import autoTest.testEvent.searchingDemo.pojo.constant.SearchingDemoConstant;
+import autoTest.testEvent.searchingDemo.pojo.dto.BingSearchInHomePageDTO;
+import autoTest.testEvent.searchingDemo.pojo.result.InsertSearchingDemoEventResult;
+import autoTest.testEvent.searchingDemo.pojo.type.BingDemoFlowType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.constant.ServerHost;
 import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.system.service.ExceptionService;
 import demo.common.service.CommonService;
+import demo.interaction.autoTest.mq.producer.TestEventBingDemoInsertAckProducer;
 import demo.interaction.autoTest.pojo.vo.AutoTestJsonReportLineVO;
 import demo.interaction.autoTest.pojo.vo.AutoTestJsonReportVO;
 import demo.interaction.autoTest.service.AutoTestDemoService;
@@ -37,11 +39,18 @@ import toolPack.httpHandel.HttpUtil;
 
 @Service
 public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDemoService {
+	
+	/*
+	 * TODO 
+	 * 加入test event 应该采用 mq 途径
+	 */
 
 	@Autowired
 	private HttpUtil httpUtil;
 	@Autowired
-	protected ExceptionService exceptionService;
+	private ExceptionService exceptionService;
+	@Autowired
+	private TestEventBingDemoInsertAckProducer testEventBingDemoInsertAckProducer;
 	
 	@Override
 	public ModelAndView linkToATHome() {
@@ -67,7 +76,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 		if (baseUtilCustom.hasAdminRole()) {
 			Map<Long, String> modules = new HashMap<Long, String>();
 			for (TestModuleType i : TestModuleType.values()) {
-				modules.put(i.getId(), i.getEventName());
+				modules.put(i.getId(), i.getModuleName());
 			}
 			v.addObject("modules", modules);
 		}
@@ -121,8 +130,8 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 			if (dto.getId() != null) {
 				j.put("id", dto.getId());
 			}
-			if (dto.getCaseId() != null) {
-				j.put("caseId", dto.getCaseId());
+			if (dto.getFlowId() != null) {
+				j.put("flowId", dto.getFlowId());
 			}
 			if (dto.getLimit() != null) {
 				j.put("limit", dto.getLimit());
@@ -295,12 +304,12 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 	}
 
 	@Override
-	public InsertSearchingDemoEventResult insertSearchingDemoTestEvent(InsertSearchingDemoTestEventDTO dto,
+	public InsertSearchingDemoEventResult insertSearchingDemoTestEvent(BingSearchInHomePageDTO dto,
 			HttpServletRequest request) {
 		
 		InsertSearchingDemoEventResult r = new InsertSearchingDemoEventResult();
 
-		int count = redisConnectService.checkFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
+		int count = redisConnectService.checkFunctionalModuleVisitData(request, SystemRedisKey.searchingDemoInsertCountingKeyPrefix);
 
 		if(!isBigUser() && !isDev()) {
 			if (count >= SearchingDemoConstant.maxInsertCountIn30Minutes) {
@@ -310,33 +319,23 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 		}
 
 		try {
-			JSONObject requestJson = new JSONObject();
-			if (dto.getAppointment() != null) {
-				requestJson.put("appointment", localDateTimeHandler.dateToStr(dto.getAppointment()));
-			}
-			requestJson.put("searchKeyWord", dto.getSearchKeyWord());
-
-			String url = ServerHost.localHost10002 + SearchingDemoUrl.root + SearchingDemoUrl.insert;
-			String response = String.valueOf(httpUtil.sendPostRestful(url, requestJson.toString()));
-
-			JSONObject responseJson = JSONObject.fromObject(response);
-
-			r.setCode(responseJson.getString("code"));
-			r.setEventId(responseJson.getLong("eventId"));
-			r.setResult(responseJson.getString("result"));
-			r.setWaitingEventCount(responseJson.getInt("waitingEventCount"));
-			if (r.getResult() != null && "0".equals(r.getResult())) {
-				r.setIsSuccess();
-				redisConnectService.insertFunctionalModuleVisitData(request, SystemRedisKey.searchingDemoInsertCountingKeyPrefix);
-				r.setHasInsertCount(count + 1);
-				r.setMaxInsertCount(SearchingDemoConstant.maxInsertCountIn30Minutes);
-				r.setMessage("/atDemo/findReportByTestEventId?testEventId=" + r.getEventId());
-			} else {
-				r.setMessage(responseJson.getString("message"));
-			}
+			
+			AutomationTestInsertEventDTO insertEventDTO = new AutomationTestInsertEventDTO();
+			insertEventDTO.setTestModuleType(TestModuleType.ATDemo.getId());
+			insertEventDTO.setFlowType(BingDemoFlowType.bingSearchDemo.getId());
+			JSONObject paramJson = new JSONObject();
+			paramJson.put(dto.getClass().getSimpleName(), JSONObject.fromObject(dto).toString());
+			insertEventDTO.setParamStr(paramJson.toString());
+			
+			testEventBingDemoInsertAckProducer.send(insertEventDTO);
+			r.setIsSuccess();
+			redisConnectService.insertFunctionalModuleVisitData(request, SystemRedisKey.searchingDemoInsertCountingKeyPrefix);
+			r.setHasInsertCount(count + 1);
+			r.setMaxInsertCount(SearchingDemoConstant.maxInsertCountIn30Minutes);
+			r.setMessage("/atDemo/findReportByTestEventId?testEventId=" + r.getEventId());
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage());
 			r.failWithMessage("通讯异常, 请稍后再试, 或联系管理员");
 		}
 

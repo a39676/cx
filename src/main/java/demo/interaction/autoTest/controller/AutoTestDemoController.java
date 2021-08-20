@@ -16,8 +16,8 @@ import autoTest.jsonReport.pojo.constant.AutoTestInteractionUrl;
 import autoTest.jsonReport.pojo.dto.FindReportByTestEventIdDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
 import autoTest.pojo.constant.AutoTestUrl;
-import autoTest.testEvent.pojo.dto.InsertSearchingDemoTestEventDTO;
-import autoTest.testEvent.pojo.result.InsertSearchingDemoEventResult;
+import autoTest.testEvent.searchingDemo.pojo.dto.BingSearchInHomePageDTO;
+import autoTest.testEvent.searchingDemo.pojo.result.InsertSearchingDemoEventResult;
 import demo.common.controller.CommonController;
 import demo.interaction.autoTest.service.AutoTestDemoService;
 
@@ -54,7 +54,7 @@ public class AutoTestDemoController extends CommonController {
 	
 	@PostMapping(value = AutoTestInteractionUrl.INSERT_SEARCHING_DEMO_TEST_EVENT)
 	@ResponseBody
-	public InsertSearchingDemoEventResult insertSearchingDemoTestEvent(@RequestBody InsertSearchingDemoTestEventDTO dto, HttpServletRequest request) {
+	public InsertSearchingDemoEventResult insertSearchingDemoTestEvent(@RequestBody BingSearchInHomePageDTO dto, HttpServletRequest request) {
 		return atDemoService.insertSearchingDemoTestEvent(dto, request);
 	}
 }

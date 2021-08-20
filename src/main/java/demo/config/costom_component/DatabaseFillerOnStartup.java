@@ -24,7 +24,6 @@ import demo.base.user.service.UsersService;
 import demo.common.service.CommonService;
 import demo.joy.image.icon.service.JoyIconService;
 import demo.joy.scene.service.JoySceneManagerService;
-import demo.test.mp.producer.TestingQueueAckProducer;
 import demo.thirdPartyAPI.cloudinary.service.impl.CloudinaryConstantService;
 import demo.tool.service.impl.MailConstantService;
 
@@ -58,8 +57,6 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 	@Autowired
 	private CloudinaryConstantService cloudinaryConstantService;
 	
-	@Autowired
-	private TestingQueueAckProducer testingQueueAckProducer;
 /*
  * ContextStartedEvent
  * ContextStoppedEvent
@@ -73,7 +70,6 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 	public void onApplicationEvent(ApplicationReadyEvent event) {
 		
 		log.error("starting database filler");
-		testingQueueAckProducer.send();
 		
 //		if (event.getApplicationContext().getDisplayName().equals("Root WebApplicationContext")) {}
 		if (event.getApplicationContext().getParent() == null) {

@@ -6,8 +6,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import autoTest.jsonReport.pojo.dto.FindReportByTestEventIdDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
-import autoTest.testEvent.pojo.dto.InsertSearchingDemoTestEventDTO;
-import autoTest.testEvent.pojo.result.InsertSearchingDemoEventResult;
+import autoTest.testEvent.searchingDemo.pojo.dto.BingSearchInHomePageDTO;
+import autoTest.testEvent.searchingDemo.pojo.result.InsertSearchingDemoEventResult;
 
 public interface AutoTestDemoService {
 
@@ -31,11 +31,12 @@ public interface AutoTestDemoService {
 	ModelAndView findReportByTestEventId(HttpServletRequest request, FindReportByTestEventIdDTO dto);
 
 	/**
-	 * 新加 bing demo 
+	 * 新加 自动化测试任务
 	 * @param dto
 	 * @param request
 	 * @return
 	 */
-	InsertSearchingDemoEventResult insertSearchingDemoTestEvent(InsertSearchingDemoTestEventDTO dto, HttpServletRequest request);
+	InsertSearchingDemoEventResult insertSearchingDemoTestEvent(BingSearchInHomePageDTO dto,
+			HttpServletRequest request);
 
 }

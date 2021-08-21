@@ -1,3 +1,5 @@
+上传 optionFile automationTest: "/home/u2/cx/optionFile/automationTest/option.json"
+
 crypto coin
 	crypto compare 更新 daily data 时 可能返回全0数据, 需要binance 协助
 	

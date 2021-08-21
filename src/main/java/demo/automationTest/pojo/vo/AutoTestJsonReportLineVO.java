@@ -1,4 +1,4 @@
-package demo.interaction.autoTest.pojo.vo;
+package demo.automationTest.pojo.vo;
 
 public class AutoTestJsonReportLineVO {
 

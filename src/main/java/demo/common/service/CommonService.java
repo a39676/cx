@@ -55,7 +55,8 @@ public abstract class CommonService {
 	protected RedisConnectService redisConnectService;
 
 	protected static final LocalDateTime BLOG_ARTICLE_START_TIME = LocalDateTime.of(2020, 5, 1, 0, 0, 0);
-
+	protected static final String MAIN_FOLDER_PATH = "/home/u2/cx";
+	
 	protected CommonResultCX nullParam() {
 		CommonResultCX result = new CommonResultCX();
 		result.fillWithResult(ResultTypeCX.nullParam);

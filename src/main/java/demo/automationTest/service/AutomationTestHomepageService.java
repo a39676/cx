@@ -1,4 +1,4 @@
-package demo.interaction.autoTest.service;
+package demo.automationTest.service;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -9,7 +9,7 @@ import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
 import autoTest.testEvent.searchingDemo.pojo.dto.BingSearchInHomePageDTO;
 import autoTest.testEvent.searchingDemo.pojo.result.InsertSearchingDemoEventResult;
 
-public interface AutoTestDemoService {
+public interface AutomationTestHomepageService {
 
 	ModelAndView linkToATHome();
 

@@ -1,4 +1,4 @@
-package demo.interaction.autoTest.pojo.vo;
+package demo.automationTest.pojo.vo;
 
 import java.time.LocalDateTime;
 import java.util.List;

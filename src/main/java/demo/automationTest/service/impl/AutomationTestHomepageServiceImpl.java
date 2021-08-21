@@ -1,4 +1,4 @@
-package demo.interaction.autoTest.service.impl;
+package demo.automationTest.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,29 +22,24 @@ import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.searchingDemo.pojo.constant.SearchingDemoConstant;
 import autoTest.testEvent.searchingDemo.pojo.dto.BingSearchInHomePageDTO;
 import autoTest.testEvent.searchingDemo.pojo.result.InsertSearchingDemoEventResult;
-import autoTest.testEvent.searchingDemo.pojo.type.BingDemoFlowType;
+import autoTest.testEvent.searchingDemo.pojo.type.BingDemoSearchCaseType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.constant.ServerHost;
+import demo.automationTest.mq.producer.TestEventBingDemoInsertAckProducer;
+import demo.automationTest.pojo.vo.AutoTestJsonReportLineVO;
+import demo.automationTest.pojo.vo.AutoTestJsonReportVO;
+import demo.automationTest.service.AutomationTestHomepageService;
 import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.system.service.ExceptionService;
 import demo.common.service.CommonService;
-import demo.interaction.autoTest.mq.producer.TestEventBingDemoInsertAckProducer;
-import demo.interaction.autoTest.pojo.vo.AutoTestJsonReportLineVO;
-import demo.interaction.autoTest.pojo.vo.AutoTestJsonReportVO;
-import demo.interaction.autoTest.service.AutoTestDemoService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import toolPack.dateTimeHandle.DateTimeUtilCommon;
 import toolPack.httpHandel.HttpUtil;
 
 @Service
-public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDemoService {
+public class AutomationTestHomepageServiceImpl extends CommonService implements AutomationTestHomepageService {
 	
-	/*
-	 * TODO 
-	 * 加入test event 应该采用 mq 途径
-	 */
-
 	@Autowired
 	private HttpUtil httpUtil;
 	@Autowired
@@ -322,7 +317,7 @@ public class AutoTestDemoServiceImpl extends CommonService implements AutoTestDe
 			
 			AutomationTestInsertEventDTO insertEventDTO = new AutomationTestInsertEventDTO();
 			insertEventDTO.setTestModuleType(TestModuleType.ATDemo.getId());
-			insertEventDTO.setFlowType(BingDemoFlowType.bingSearchDemo.getId());
+			insertEventDTO.setFlowType(BingDemoSearchCaseType.SEARCH_IN_HOMEPAGE.getId());
 			JSONObject paramJson = new JSONObject();
 			paramJson.put(dto.getClass().getSimpleName(), JSONObject.fromObject(dto).toString());
 			insertEventDTO.setParamStr(paramJson.toString());

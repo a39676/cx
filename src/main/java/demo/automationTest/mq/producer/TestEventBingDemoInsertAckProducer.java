@@ -1,4 +1,4 @@
-package demo.interaction.autoTest.mq.producer;
+package demo.automationTest.mq.producer;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;

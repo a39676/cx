@@ -45,6 +45,7 @@ optionFilePath:
   articleComment: "/home/u2/cx/optionFile/articleComment/option.json"
   mail: "/home/u2/cx/optionFile/mail/option.json"
   cloudinary: "/home/u2/cx/optionFile/cloudinary/option.json"
+  automationTest: "/home/u2/cx/optionFile/automationTest/option.json"
   
     
 logging:

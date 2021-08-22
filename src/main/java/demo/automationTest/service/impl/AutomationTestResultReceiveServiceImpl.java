@@ -28,6 +28,7 @@ public class AutomationTestResultReceiveServiceImpl extends CommonService
 		/*
 		 * TODO
 		 * 只处理了报告, 未处理其他数据 
+		 * ATTool 整合入 auxiliaryCommon 后, 报告将和其他 test event result 数据一并处理
 		 */
 		if(dto.getTestEventId() == null || StringUtils.isBlank(dto.getReportStr())) {
 			return;

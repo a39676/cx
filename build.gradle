@@ -50,6 +50,7 @@ dependencies {
 	// tools
 	implementation project(':toolPacksG')
 	implementation project(':auxiliaryCommon')
+	implementation project(':ATTool')
 
 	// spring boot
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.5.3'

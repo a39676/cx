@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,7 +155,7 @@ public class ExcelAnalysisServiceImpl extends CommonService implements ExcelAnal
 		Workbook workbook = null;
 		try {
 			workbook = WorkbookFactory.create(new File(excelAnalysis.getPath()));
-		} catch (EncryptedDocumentException | InvalidFormatException | IOException e) {
+		} catch (EncryptedDocumentException | IOException e) {
 			e.printStackTrace();
 			view.addObject("exception", ResultTypeCX.errorParam.getName());
 			return view;

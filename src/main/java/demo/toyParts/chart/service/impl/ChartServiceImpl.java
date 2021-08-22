@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -263,7 +264,6 @@ public class ChartServiceImpl extends CommonService implements ChartService {
 	 * @param sheet
 	 * @return
 	 */
-	@SuppressWarnings("deprecation")
 	private List<String> getHorizontalLabelsFromSheet(Sheet sheet) {
 		List<String> labels = new ArrayList<String>();
 		if (sheet == null || sheet.getLastRowNum() < 1) {
@@ -276,7 +276,7 @@ public class ChartServiceImpl extends CommonService implements ChartService {
 		Cell tmpCell = null;
 		Date tmpDate = null;
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		int tmpCellType = 0;
+		CellType tmpCellType = null;
 		int firstCellIndex = 0;
 
 		for (int i = firstRowIndwx + 1; i < lastRowIndex + 1; i++) {
@@ -285,14 +285,14 @@ public class ChartServiceImpl extends CommonService implements ChartService {
 			tmpCell = tmpRow.getCell(firstCellIndex);
 			if (tmpCell != null) {
 				tmpCellType = tmpCell.getCellType();
-				if (tmpCellType == Cell.CELL_TYPE_NUMERIC) {
+				if (tmpCellType == CellType.NUMERIC) {
 					if (DateUtil.isCellDateFormatted(tmpCell)) {
 						tmpDate = new Date(tmpCell.getDateCellValue().getTime());
 						labels.add(sdf.format(tmpDate));
 					} else {
 						labels.add(String.valueOf(tmpCell.getNumericCellValue()));
 					}
-				} else if (tmpCellType == Cell.CELL_TYPE_STRING) {
+				} else if (tmpCellType == CellType.NUMERIC) {
 					labels.add(tmpCell.getStringCellValue());
 				} else {
 					labels.add("");

@@ -3,13 +3,14 @@ package demo.automationTest.service.impl;
 import java.io.File;
 import java.time.LocalDateTime;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import autoTest.testEvent.pojo.dto.AutomationTestResultDTO;
-import demo.automationTest.mapper.AutomatinTestReportMapper;
-import demo.automationTest.pojo.po.AutomatinTestReport;
+import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
+import autoTest.testEvent.pojo.type.AutomationTestFlowResultType;
+import demo.automationTest.mapper.TestEventMapper;
+import demo.automationTest.pojo.po.TestEvent;
 import demo.automationTest.service.AutomationTestResultReceiveService;
 import demo.common.service.CommonService;
 import toolPack.dateTimeHandle.DateTimeUtilCommon;
@@ -19,34 +20,39 @@ public class AutomationTestResultReceiveServiceImpl extends CommonService
 		implements AutomationTestResultReceiveService {
 
 	@Autowired
-	private AutomatinTestReportMapper reportMapper;
-	@Autowired
 	private AutomationTestConstantService constantService;
+	@Autowired
+	private TestEventMapper eventMapper;
 	
 	@Override
 	public void savingReport(AutomationTestResultDTO dto) {
-		/*
-		 * TODO
-		 * 只处理了报告, 未处理其他数据 
-		 * ATTool 整合入 auxiliaryCommon 后, 报告将和其他 test event result 数据一并处理
-		 */
-		if(dto.getTestEventId() == null || StringUtils.isBlank(dto.getReportStr())) {
+		if(dto.getTestEventId() == null) {
 			return;
 		}
-		AutomatinTestReport newPO = new AutomatinTestReport();
-		newPO.setId(snowFlake.getNextId());
-		newPO.setTestEventId(dto.getTestEventId());
 		
-		String folderPath = getSavingFolder();
+		TestEvent po = eventMapper.selectByPrimaryKey(dto.getTestEventId());
+		
+		String folderPath = getAutomationTestReportSavingFolder();
 		if(folderPath == null) {
 			return;
 		}
-		newPO.setReportPath(folderPath + File.separator + dto.getTestEventId() + ".json");
+		po.setReportPath(folderPath + File.separator + dto.getTestEventId() + ".json");
 		
-		reportMapper.insertSelective(newPO);
+		po.setIsPass(true);
+		for(AutomationTestCaseResult subResult : dto.getCaseResultList()) {
+			if(!AutomationTestFlowResultType.PASS.equals(subResult.getResultType())) {
+				po.setIsPass(false);
+				break;
+			}
+		}
+		
+		po.setRemark(dto.getRemark());
+		po.setStartTime(dto.getStartTime());
+		po.setEndTime(dto.getEndTime());
+		eventMapper.updateByPrimaryKeySelective(po);
 	}
 	
-	private String getSavingFolder() {
+	private String getAutomationTestReportSavingFolder() {
 		String path = constantService.getReportStorePrefixPath() + File.separator + localDateTimeHandler.dateToStr(LocalDateTime.now(), DateTimeUtilCommon.dateFormatNoSymbol);
 		File folder = new File(path);
 		if(!folder.exists() || !folder.isDirectory()) {

@@ -30,6 +30,8 @@ public class TestController2 extends CommonController {
 		TestDTO t = new TestDTO();
 		t.setDatetime(LocalDateTime.now());
 		JSONObject j = JSONObject.fromObject(t);
+		t = (TestDTO) JSONObject.toBean(j, TestDTO.class);
 		return j.toString();
 	}
+	
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import demo.article.article.service.impl.ArticleConstantService;
 import demo.article.articleComment.service.impl.ArticleCommentConstantService;
+import demo.automationTest.service.impl.AutomationTestConstantService;
 import demo.base.organizations.pojo.po.Organizations;
 import demo.base.organizations.service.OrganizationService;
 import demo.base.organizations.service.__SystemOrganizationService;
@@ -56,6 +57,8 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 	private MailConstantService mailConstantService;
 	@Autowired
 	private CloudinaryConstantService cloudinaryConstantService;
+	@Autowired
+	private AutomationTestConstantService automationTestConstantService;
 	
 /*
  * ContextStartedEvent
@@ -120,11 +123,14 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 			log.error("loading article comment option");
 			articleCommentConstantService.refreshConstant();
 			
-			log.error("loading mail comment option");
+			log.error("loading mail option");
 			mailConstantService.refreshConstant();
 			
-			log.error("loading cloudinary comment option");
+			log.error("loading cloudinary option");
 			cloudinaryConstantService.refreshConstant();
+			
+			log.error("loading automation test option");
+			automationTestConstantService.refreshConstant();
 		}
 		
 		log.error("data base filler end");

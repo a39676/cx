@@ -15,6 +15,12 @@ public class TestEvent {
 
     private String eventName;
 
+    private Integer passCount;
+
+    private Integer failCount;
+
+    private Integer blockCount;
+
     private String remark;
 
     private String parameterFilePath;
@@ -79,6 +85,30 @@ public class TestEvent {
 
     public void setEventName(String eventName) {
         this.eventName = eventName == null ? null : eventName.trim();
+    }
+
+    public Integer getPassCount() {
+        return passCount;
+    }
+
+    public void setPassCount(Integer passCount) {
+        this.passCount = passCount;
+    }
+
+    public Integer getFailCount() {
+        return failCount;
+    }
+
+    public void setFailCount(Integer failCount) {
+        this.failCount = failCount;
+    }
+
+    public Integer getBlockCount() {
+        return blockCount;
+    }
+
+    public void setBlockCount(Integer blockCount) {
+        this.blockCount = blockCount;
     }
 
     public String getRemark() {

@@ -22,13 +22,14 @@ import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.searchingDemo.pojo.constant.SearchingDemoConstant;
 import autoTest.testEvent.searchingDemo.pojo.dto.BingSearchInHomePageDTO;
 import autoTest.testEvent.searchingDemo.pojo.result.InsertSearchingDemoEventResult;
-import autoTest.testEvent.searchingDemo.pojo.type.BingDemoSearchCaseType;
+import autoTest.testEvent.searchingDemo.pojo.type.BingDemoSearchFlowType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.constant.ServerHost;
 import demo.automationTest.mq.producer.TestEventBingDemoInsertAckProducer;
 import demo.automationTest.pojo.vo.AutoTestJsonReportLineVO;
 import demo.automationTest.pojo.vo.AutoTestJsonReportVO;
 import demo.automationTest.service.AutomationTestHomepageService;
+import demo.automationTest.service.TestEventService;
 import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.system.service.ExceptionService;
 import demo.common.service.CommonService;
@@ -46,6 +47,8 @@ public class AutomationTestHomepageServiceImpl extends CommonService implements 
 	private ExceptionService exceptionService;
 	@Autowired
 	private TestEventBingDemoInsertAckProducer testEventBingDemoInsertAckProducer;
+	@Autowired
+	private TestEventService eventService;
 	
 	@Override
 	public ModelAndView linkToATHome() {
@@ -314,13 +317,15 @@ public class AutomationTestHomepageServiceImpl extends CommonService implements 
 		}
 
 		try {
-			
 			AutomationTestInsertEventDTO insertEventDTO = new AutomationTestInsertEventDTO();
+			insertEventDTO.setTestEventId(snowFlake.getNextId());
 			insertEventDTO.setTestModuleType(TestModuleType.ATDemo.getId());
-			insertEventDTO.setFlowType(BingDemoSearchCaseType.SEARCH_IN_HOMEPAGE.getId());
+			insertEventDTO.setFlowType(BingDemoSearchFlowType.SEARCH_IN_HOMEPAGE.getId());
 			JSONObject paramJson = new JSONObject();
 			paramJson.put(dto.getClass().getSimpleName(), JSONObject.fromObject(dto).toString());
 			insertEventDTO.setParamStr(paramJson.toString());
+			
+			eventService.insertEvent(insertEventDTO);
 			
 			testEventBingDemoInsertAckProducer.send(insertEventDTO);
 			r.setIsSuccess();

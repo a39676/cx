@@ -29,7 +29,7 @@ public class MetalPriceTransmissionAckReceiver extends CommonService {
 			PreciousMetailPriceDTO dto = new Gson().fromJson(messageStr, PreciousMetailPriceDTO.class);
 			preciousMetalService.reciveMetalPrice(dto);
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			log.error("mq error, " + PreciousMetalMQConstant.transmissionMetalPriceData + ", e:" + e.getLocalizedMessage());
 			log.error(messageStr);
 			e.printStackTrace();

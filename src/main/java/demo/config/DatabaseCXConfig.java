@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 		"demo.finance.cryptoCoin.*.mapper", 
 		"demo.finance.*.mapper", 
 		"demo.article.*.mapper",
+		"demo.automation.*.mapper",
 		"demo.toyParts.*.mapper", 
 		"demo.joy.*.*.mapper", 
 		"demo.joy.*.mapper",

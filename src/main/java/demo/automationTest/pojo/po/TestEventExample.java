@@ -475,6 +475,186 @@ public class TestEventExample {
             return (Criteria) this;
         }
 
+        public Criteria andPassCountIsNull() {
+            addCriterion("pass_count is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPassCountIsNotNull() {
+            addCriterion("pass_count is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPassCountEqualTo(Integer value) {
+            addCriterion("pass_count =", value, "passCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andPassCountNotEqualTo(Integer value) {
+            addCriterion("pass_count <>", value, "passCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andPassCountGreaterThan(Integer value) {
+            addCriterion("pass_count >", value, "passCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andPassCountGreaterThanOrEqualTo(Integer value) {
+            addCriterion("pass_count >=", value, "passCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andPassCountLessThan(Integer value) {
+            addCriterion("pass_count <", value, "passCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andPassCountLessThanOrEqualTo(Integer value) {
+            addCriterion("pass_count <=", value, "passCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andPassCountIn(List<Integer> values) {
+            addCriterion("pass_count in", values, "passCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andPassCountNotIn(List<Integer> values) {
+            addCriterion("pass_count not in", values, "passCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andPassCountBetween(Integer value1, Integer value2) {
+            addCriterion("pass_count between", value1, value2, "passCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andPassCountNotBetween(Integer value1, Integer value2) {
+            addCriterion("pass_count not between", value1, value2, "passCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailCountIsNull() {
+            addCriterion("fail_count is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailCountIsNotNull() {
+            addCriterion("fail_count is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailCountEqualTo(Integer value) {
+            addCriterion("fail_count =", value, "failCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailCountNotEqualTo(Integer value) {
+            addCriterion("fail_count <>", value, "failCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailCountGreaterThan(Integer value) {
+            addCriterion("fail_count >", value, "failCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailCountGreaterThanOrEqualTo(Integer value) {
+            addCriterion("fail_count >=", value, "failCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailCountLessThan(Integer value) {
+            addCriterion("fail_count <", value, "failCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailCountLessThanOrEqualTo(Integer value) {
+            addCriterion("fail_count <=", value, "failCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailCountIn(List<Integer> values) {
+            addCriterion("fail_count in", values, "failCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailCountNotIn(List<Integer> values) {
+            addCriterion("fail_count not in", values, "failCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailCountBetween(Integer value1, Integer value2) {
+            addCriterion("fail_count between", value1, value2, "failCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailCountNotBetween(Integer value1, Integer value2) {
+            addCriterion("fail_count not between", value1, value2, "failCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlockCountIsNull() {
+            addCriterion("block_count is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlockCountIsNotNull() {
+            addCriterion("block_count is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlockCountEqualTo(Integer value) {
+            addCriterion("block_count =", value, "blockCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlockCountNotEqualTo(Integer value) {
+            addCriterion("block_count <>", value, "blockCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlockCountGreaterThan(Integer value) {
+            addCriterion("block_count >", value, "blockCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlockCountGreaterThanOrEqualTo(Integer value) {
+            addCriterion("block_count >=", value, "blockCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlockCountLessThan(Integer value) {
+            addCriterion("block_count <", value, "blockCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlockCountLessThanOrEqualTo(Integer value) {
+            addCriterion("block_count <=", value, "blockCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlockCountIn(List<Integer> values) {
+            addCriterion("block_count in", values, "blockCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlockCountNotIn(List<Integer> values) {
+            addCriterion("block_count not in", values, "blockCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlockCountBetween(Integer value1, Integer value2) {
+            addCriterion("block_count between", value1, value2, "blockCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlockCountNotBetween(Integer value1, Integer value2) {
+            addCriterion("block_count not between", value1, value2, "blockCount");
+            return (Criteria) this;
+        }
+
         public Criteria andRemarkIsNull() {
             addCriterion("remark is null");
             return (Criteria) this;

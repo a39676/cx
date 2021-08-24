@@ -21,6 +21,8 @@ public class AutomationTestConstantService extends CommonService {
 
 	private String reportStorePrefixPath;
 
+	private String paramStorePrefixPath;
+
 	public void refreshConstant() {
 		File optionFile = new File(optionFilePath);
 		if (!optionFile.exists()) {
@@ -44,10 +46,22 @@ public class AutomationTestConstantService extends CommonService {
 		this.reportStorePrefixPath = reportStorePrefixPath;
 	}
 
+	public String getOptionFilePath() {
+		return optionFilePath;
+	}
+
+	public String getParamStorePrefixPath() {
+		return paramStorePrefixPath;
+	}
+
+	public void setParamStorePrefixPath(String paramStorePrefixPath) {
+		this.paramStorePrefixPath = paramStorePrefixPath;
+	}
+
 	@Override
 	public String toString() {
 		return "AutomationTestConstantService [optionFilePath=" + optionFilePath + ", reportStorePrefixPath="
-				+ reportStorePrefixPath + "]";
+				+ reportStorePrefixPath + ", paramStorePrefixPath=" + paramStorePrefixPath + "]";
 	}
 
 }

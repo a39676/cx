@@ -1,9 +1,11 @@
 package demo.automationTest.service;
 
-import autoTest.testEvent.pojo.dto.AutomationTestResultDTO;
-
 public interface AutomationTestResultReceiveService {
 
-	void savingReport(AutomationTestResultDTO dto);
+	/**
+	 * input MQ message string
+	 * @param messageStr
+	 */
+	void handleAutomationTestResult(String messageStr);
 
 }

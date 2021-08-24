@@ -35,7 +35,7 @@ public class TelegramCryptoCoinMessageAckReceiver extends CommonService {
 			}
 
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			log.error("mq error, " + TelegramMessageMQConstant.TELEGRAM_CRYPTO_COIN_MSG_QUEUE + ", e:" + e.getLocalizedMessage());
 			log.error(messageStr);
 			channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);

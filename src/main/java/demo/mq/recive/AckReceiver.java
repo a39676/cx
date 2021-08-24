@@ -63,7 +63,7 @@
 //		try {
 //			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 //			System.out.println("receiver success");
-//		} catch (IOException e) {
+//		} catch (Exception e) {
 //			channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);
 //			e.printStackTrace();
 //			System.out.println("receiver fail");

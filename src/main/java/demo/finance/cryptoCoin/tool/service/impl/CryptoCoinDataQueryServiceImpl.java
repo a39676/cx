@@ -19,10 +19,10 @@ public class CryptoCoinDataQueryServiceImpl extends CryptoCoinCommonService impl
 	private TestEventInsertAckProducer testEventInsertAckProducer;
 	
 	@Override
-	public void insertSearchingDemoTestEvent(CryptoCoinDailyDataQueryDTO dto) {
+	public void insertCryptoCoinDailyDataCollect(CryptoCoinDailyDataQueryDTO dto) {
 
 		/*
-		 * TODO 未解决参数填充问题
+		 * TODO
 		 * 一次发送大量币种? 需要增加队列消息存活时间
 		 * bbt 服务新增逻辑: 同一个任务接收多次, 且因异常而执行失败时, 直接返回执行失败, 防止MQ队列拥堵
 		 */

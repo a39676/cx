@@ -4,6 +4,6 @@ import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
 
 public interface CryptoCoinDataQueryService {
 
-	void insertSearchingDemoTestEvent(CryptoCoinDailyDataQueryDTO dto);
+	void insertCryptoCoinDailyDataCollect(CryptoCoinDailyDataQueryDTO dto);
 
 }

@@ -10,7 +10,7 @@ import demo.common.service.CommonService;
 import net.sf.json.JSONObject;
 
 @Component
-public class TestEventBingDemoInsertAckProducer extends CommonService {
+public class TestEventInsertAckProducer extends CommonService {
 
 	@Autowired
 	private RabbitTemplate rabbitTemplate;

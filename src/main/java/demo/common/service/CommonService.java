@@ -229,6 +229,10 @@ public abstract class CommonService {
 		return baseUtilCustom.hasSuperAdminRole();
 	}
 
+	protected boolean isDev() {
+		return "dev".equals(systemConstantService.getEnvName());
+	}
+	
 	protected IpRecordBO getIp(HttpServletRequest request) {
 		IpRecordBO record = new IpRecordBO();
 		record.setRemoteAddr(request.getRemoteAddr());

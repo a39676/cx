@@ -27,7 +27,7 @@ public class CryptoCoinDailyDataAckReceiver extends CommonService {
 	public void process(String messageStr, Channel channel, Message message) throws IOException {
 		try {
 			CryptoCoinDataDTO dto = new Gson().fromJson(messageStr, CryptoCoinDataDTO.class);
-			cryptoCoin1DayDataService.receiveDailyData(dto, true);
+			cryptoCoin1DayDataService.receiveDailyData(dto);
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 		} catch (Exception e) {
 			log.error("mq error, " + CryptoCoinMQConstant.CRYPTO_COIN_DAILY_DATA + ", e:" + e.getLocalizedMessage());

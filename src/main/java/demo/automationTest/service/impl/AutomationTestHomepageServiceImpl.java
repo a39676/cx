@@ -25,7 +25,7 @@ import autoTest.testEvent.searchingDemo.pojo.result.InsertSearchingDemoEventResu
 import autoTest.testEvent.searchingDemo.pojo.type.BingDemoSearchFlowType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.constant.ServerHost;
-import demo.automationTest.mq.producer.TestEventBingDemoInsertAckProducer;
+import demo.automationTest.mq.producer.TestEventInsertAckProducer;
 import demo.automationTest.pojo.vo.AutoTestJsonReportLineVO;
 import demo.automationTest.pojo.vo.AutoTestJsonReportVO;
 import demo.automationTest.service.AutomationTestHomepageService;
@@ -46,7 +46,7 @@ public class AutomationTestHomepageServiceImpl extends CommonService implements 
 	@Autowired
 	private ExceptionService exceptionService;
 	@Autowired
-	private TestEventBingDemoInsertAckProducer testEventBingDemoInsertAckProducer;
+	private TestEventInsertAckProducer testEventInsertAckProducer;
 	@Autowired
 	private TestEventService eventService;
 	
@@ -327,7 +327,7 @@ public class AutomationTestHomepageServiceImpl extends CommonService implements 
 			
 			eventService.insertEvent(insertEventDTO);
 			
-			testEventBingDemoInsertAckProducer.send(insertEventDTO);
+			testEventInsertAckProducer.send(insertEventDTO);
 			r.setIsSuccess();
 			redisConnectService.insertFunctionalModuleVisitData(request, SystemRedisKey.searchingDemoInsertCountingKeyPrefix);
 			r.setHasInsertCount(count + 1);
@@ -340,10 +340,6 @@ public class AutomationTestHomepageServiceImpl extends CommonService implements 
 		}
 
 		return r;
-	}
-
-	private boolean isDev() {
-		return "dev".equals(systemConstantService.getEnvName());
 	}
 
 }

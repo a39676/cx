@@ -34,7 +34,7 @@ public class AutomationTestConstantService extends CommonService {
 			AutomationTestConstantService tmp = new Gson().fromJson(jsonStr, AutomationTestConstantService.class);
 			BeanUtils.copyProperties(tmp, this);
 		} catch (Exception e) {
-			log.error("article constant loading error: " + e.getLocalizedMessage());
+			log.error("automation test constant loading error: " + e.getLocalizedMessage());
 		}
 	}
 

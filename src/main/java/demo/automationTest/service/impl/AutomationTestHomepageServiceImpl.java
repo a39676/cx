@@ -21,11 +21,11 @@ import autoTest.jsonReport.pojo.result.FindReportByTestEventIdResult;
 import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.searchingDemo.pojo.constant.SearchingDemoConstant;
 import autoTest.testEvent.searchingDemo.pojo.dto.BingSearchInHomePageDTO;
-import autoTest.testEvent.searchingDemo.pojo.result.InsertSearchingDemoEventResult;
 import autoTest.testEvent.searchingDemo.pojo.type.BingDemoSearchFlowType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.constant.ServerHost;
 import demo.automationTest.mq.producer.TestEventInsertAckProducer;
+import demo.automationTest.pojo.result.InsertSearchingDemoEventResult;
 import demo.automationTest.pojo.vo.AutoTestJsonReportLineVO;
 import demo.automationTest.pojo.vo.AutoTestJsonReportVO;
 import demo.automationTest.service.AutomationTestHomepageService;
@@ -304,9 +304,8 @@ public class AutomationTestHomepageServiceImpl extends CommonService implements 
 	@Override
 	public InsertSearchingDemoEventResult insertSearchingDemoTestEvent(BingSearchInHomePageDTO dto,
 			HttpServletRequest request) {
-		
 		InsertSearchingDemoEventResult r = new InsertSearchingDemoEventResult();
-
+		
 		int count = redisConnectService.checkFunctionalModuleVisitData(request, SystemRedisKey.searchingDemoInsertCountingKeyPrefix);
 
 		if(!isBigUser() && !isDev()) {

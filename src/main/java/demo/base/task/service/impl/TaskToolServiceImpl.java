@@ -13,9 +13,9 @@ import demo.base.system.mapper.BaseMapper;
 import demo.base.system.service.IpRecordService;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.type.SystemRolesType;
-import demo.tool.mapper.MailRecordMapper;
-import demo.tool.service.ComplexToolService;
-import demo.tool.service.VisitDataService;
+import demo.tool.mail.mapper.MailRecordMapper;
+import demo.tool.other.service.ComplexToolService;
+import demo.tool.other.service.VisitDataService;
 
 @Component
 public class TaskToolServiceImpl {

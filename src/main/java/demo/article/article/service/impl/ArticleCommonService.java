@@ -4,7 +4,7 @@ import org.owasp.html.PolicyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import demo.common.service.CommonService;
-import demo.tool.service.TextFilter;
+import demo.tool.other.service.TextFilter;
 import toolPack.numericHandel.NumericUtilCustom;
 
 public class ArticleCommonService extends CommonService {

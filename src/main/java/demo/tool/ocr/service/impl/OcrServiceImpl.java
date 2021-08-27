@@ -17,18 +17,15 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.service.CommonService;
 import demo.config.costom_component.Tess;
 import demo.tool.ocr.pojo.constant.OcrView;
+import demo.tool.ocr.pojo.result.UploadResult;
 import demo.tool.ocr.pojo.type.TessLanguageType;
 import demo.tool.ocr.service.OcrService;
-import demo.tool.pojo.result.UploadResult;
-import demo.tool.service.UploadService;
 import toolPack.constant.FileSuffixNameConstant;
 import toolPack.stringHandle.StringUtilCustom;
 
 @Service
 public class OcrServiceImpl extends CommonService implements OcrService {
 
-	@Autowired
-	private UploadService uploadService;
 	@Autowired
 	private Tess tess;
 
@@ -86,7 +83,9 @@ public class OcrServiceImpl extends CommonService implements OcrService {
 			return r;
 		}
 
-		UploadResult uploadResult = uploadService.__privateUploadV2(file, getOcrImgTmpStorePath());
+//		TODO
+		UploadResult uploadResult = new UploadResult();
+//		UploadResult uploadResult = uploadService.__privateUploadV2(file, getOcrImgTmpStorePath());
 		if (uploadResult.isFail()) {
 			r.addMessage(uploadResult.getMessage());
 			return r;

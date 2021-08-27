@@ -19,7 +19,7 @@ public class CryptoCoinConstantService extends CommonService {
 	@Value("${optionFilePath.cryptoCoin}")
 	private String optionFilePath;
 
-	private String currency;
+	private String defaultCurrency;
 	private String apiKey;
 
 	public void refreshConstant() {
@@ -37,12 +37,12 @@ public class CryptoCoinConstantService extends CommonService {
 		}
 	}
 
-	public String getCurrency() {
-		return currency;
+	public String getDefaultCurrency() {
+		return defaultCurrency;
 	}
 
-	public void setCurrency(String currency) {
-		this.currency = currency;
+	public void setDefaultCurrency(String currency) {
+		this.defaultCurrency = currency;
 	}
 
 	public String getApiKey() {
@@ -55,7 +55,7 @@ public class CryptoCoinConstantService extends CommonService {
 
 	@Override
 	public String toString() {
-		return "CryptoCoinConstantService [optionFilePath=" + optionFilePath + ", currency=" + currency + ", apiKey="
+		return "CryptoCoinConstantService [optionFilePath=" + optionFilePath + ", currency=" + defaultCurrency + ", apiKey="
 				+ apiKey + "]";
 	}
 

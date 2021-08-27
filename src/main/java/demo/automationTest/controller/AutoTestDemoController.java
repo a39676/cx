@@ -17,7 +17,7 @@ import autoTest.jsonReport.pojo.dto.FindReportByTestEventIdDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
 import autoTest.pojo.constant.AutoTestUrl;
 import autoTest.testEvent.searchingDemo.pojo.dto.BingSearchInHomePageDTO;
-import autoTest.testEvent.searchingDemo.pojo.result.InsertSearchingDemoEventResult;
+import demo.automationTest.pojo.result.InsertSearchingDemoEventResult;
 import demo.automationTest.service.AutomationTestHomepageService;
 import demo.common.controller.CommonController;
 

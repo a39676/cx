@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import demo.tool.pojo.constant.ToolUrlConstant;
+import demo.tool.other.pojo.constant.ToolUrlConstant;
 import demo.tool.telegram.service.TelegramService;
 
 @Controller

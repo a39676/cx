@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.tool.mail.mapper.MailRecordMapper">
+
+  <resultMap id="BaseResultMap" type="demo.tool.mail.pojo.po.MailRecord">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="valid_time" jdbcType="TIMESTAMP" property="validTime" />
+    <result column="mail_type" jdbcType="INTEGER" property="mailType" />
+    <result column="was_used" jdbcType="BIT" property="wasUsed" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="used_time" jdbcType="TIMESTAMP" property="usedTime" />
+    <result column="send_count" jdbcType="INTEGER" property="sendCount" />
+    <result column="resend_time" jdbcType="TIMESTAMP" property="resendTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, user_id, valid_time, mail_type, was_used, create_time, used_time, send_count, 
+    resend_time
+  </sql>
+  <select id="selectByExample" parameterType="demo.tool.mail.pojo.po.MailRecordExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from mail_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from mail_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from mail_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.tool.mail.pojo.po.MailRecordExample">
+    delete from mail_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="demo.tool.mail.pojo.po.MailRecord">
+    insert into mail_record (id, user_id, valid_time, 
+      mail_type, was_used, create_time, 
+      used_time, send_count, resend_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{validTime,jdbcType=TIMESTAMP}, 
+      #{mailType,jdbcType=INTEGER}, #{wasUsed,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{usedTime,jdbcType=TIMESTAMP}, #{sendCount,jdbcType=INTEGER}, #{resendTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="demo.tool.mail.pojo.po.MailRecord">
+    insert into mail_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="validTime != null">
+        valid_time,
+      </if>
+      <if test="mailType != null">
+        mail_type,
+      </if>
+      <if test="wasUsed != null">
+        was_used,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="usedTime != null">
+        used_time,
+      </if>
+      <if test="sendCount != null">
+        send_count,
+      </if>
+      <if test="resendTime != null">
+        resend_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="validTime != null">
+        #{validTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mailType != null">
+        #{mailType,jdbcType=INTEGER},
+      </if>
+      <if test="wasUsed != null">
+        #{wasUsed,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="usedTime != null">
+        #{usedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendCount != null">
+        #{sendCount,jdbcType=INTEGER},
+      </if>
+      <if test="resendTime != null">
+        #{resendTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="demo.tool.mail.pojo.po.MailRecordExample" resultType="java.lang.Long">
+    select count(*) from mail_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update mail_record
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=BIGINT},
+      </if>
+      <if test="record.validTime != null">
+        valid_time = #{record.validTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.mailType != null">
+        mail_type = #{record.mailType,jdbcType=INTEGER},
+      </if>
+      <if test="record.wasUsed != null">
+        was_used = #{record.wasUsed,jdbcType=BIT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.usedTime != null">
+        used_time = #{record.usedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.sendCount != null">
+        send_count = #{record.sendCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.resendTime != null">
+        resend_time = #{record.resendTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update mail_record
+    set id = #{record.id,jdbcType=BIGINT},
+      user_id = #{record.userId,jdbcType=BIGINT},
+      valid_time = #{record.validTime,jdbcType=TIMESTAMP},
+      mail_type = #{record.mailType,jdbcType=INTEGER},
+      was_used = #{record.wasUsed,jdbcType=BIT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      used_time = #{record.usedTime,jdbcType=TIMESTAMP},
+      send_count = #{record.sendCount,jdbcType=INTEGER},
+      resend_time = #{record.resendTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.tool.mail.pojo.po.MailRecord">
+    update mail_record
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="validTime != null">
+        valid_time = #{validTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mailType != null">
+        mail_type = #{mailType,jdbcType=INTEGER},
+      </if>
+      <if test="wasUsed != null">
+        was_used = #{wasUsed,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="usedTime != null">
+        used_time = #{usedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendCount != null">
+        send_count = #{sendCount,jdbcType=INTEGER},
+      </if>
+      <if test="resendTime != null">
+        resend_time = #{resendTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="demo.tool.mail.pojo.po.MailRecord">
+    update mail_record
+    set user_id = #{userId,jdbcType=BIGINT},
+      valid_time = #{validTime,jdbcType=TIMESTAMP},
+      mail_type = #{mailType,jdbcType=INTEGER},
+      was_used = #{wasUsed,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      used_time = #{usedTime,jdbcType=TIMESTAMP},
+      send_count = #{sendCount,jdbcType=INTEGER},
+      resend_time = #{resendTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <delete id="cleanMailRecord">
+    delete from
+      mail_record
+    <where>
+      was_used = 1 
+      <if test="validTime != null">
+        or valid_time &lt;= #{validTime}
+      </if>
+      <if test="validTime == null">
+        or valid_time &lt;= date_sub(now(), interval 1 day)
+      </if>
+    </where>
+  </delete>
+
+  <select id="hasMailTask" resultType="int">
+    select exists(
+      select 1 from mail_record where was_used = false and valid_time &gt;= now()
+    )
+  </select>
+
+</mapper>

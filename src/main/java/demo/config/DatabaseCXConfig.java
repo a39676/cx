@@ -31,6 +31,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 		"demo.toyParts.*.mapper", 
 		"demo.joy.*.*.mapper", 
 		"demo.joy.*.mapper",
+		"demo.tool.mail.*.mapper",
+		"demo.tool.excelAnalysis.*.mapper",
 		"demo.tool.*.mapper",
 		"demo.*.mapper" }, sqlSessionTemplateRef = "cxSqlSessionTemplate")
 public class DatabaseCXConfig {

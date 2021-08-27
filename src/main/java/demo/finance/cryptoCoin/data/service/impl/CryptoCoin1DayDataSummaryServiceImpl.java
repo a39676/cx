@@ -12,8 +12,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import autoTest.testEvent.cryptoCoin.pojo.type.CryptoCoinFlowType;
 import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
-import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
@@ -342,7 +342,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		}
 
 		for (CryptoCoinCatalog catalog : catalogList) {
-			sendDailyDataQuery(catalog.getCoinNameEnShort(), constantService.getCurrency(), 5,
+			sendDailyDataQuery(catalog.getCoinNameEnShort(), constantService.getDefaultCurrency(), 5,
 					CryptoCoinDataSourceType.CRYPTO_COMPARE);
 		}
 	}
@@ -354,7 +354,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		}
 
 		if (StringUtils.isBlank(currencyName)) {
-			currencyName = constantService.getCurrency();
+			currencyName = constantService.getDefaultCurrency();
 		}
 
 		sendDailyDataQuery(coinName, currencyName, counting, CryptoCoinDataSourceType.CRYPTO_COMPARE);
@@ -364,13 +364,13 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 			CryptoCoinDataSourceType dataSource) {
 		AutomationTestInsertEventDTO dto = new AutomationTestInsertEventDTO();
 		dto.setTestModuleType(TestModuleType.scheduleClawing.getId());
-		dto.setFlowType(ScheduleClawingType.CRYPTO_COIN_DAILY_DATA.getId());
+		dto.setFlowType(CryptoCoinFlowType.DAILY_DATA.getId());
 		dto.setTestEventId(snowFlake.getNextId());
 
 		CryptoCoinDailyDataQueryDTO paramDTO = new CryptoCoinDailyDataQueryDTO();
 		paramDTO.setApiKey(constantService.getApiKey());
 		paramDTO.setCoinName(coinName);
-		paramDTO.setCurrencyName(constantService.getCurrency());
+		paramDTO.setCurrencyName(constantService.getDefaultCurrency());
 		paramDTO.setCounting(counting);
 		paramDTO.setDataSourceCode(CryptoCoinDataSourceType.CRYPTO_COMPARE.getCode());
 

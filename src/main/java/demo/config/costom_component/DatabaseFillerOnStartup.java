@@ -26,7 +26,7 @@ import demo.common.service.CommonService;
 import demo.joy.image.icon.service.JoyIconService;
 import demo.joy.scene.service.JoySceneManagerService;
 import demo.thirdPartyAPI.cloudinary.service.impl.CloudinaryConstantService;
-import demo.tool.service.impl.MailConstantService;
+import demo.tool.mail.service.impl.MailConstantService;
 
 @Component
 //public class DatabaseFillerOnStartup implements ApplicationListener<ContextStartedEvent> {

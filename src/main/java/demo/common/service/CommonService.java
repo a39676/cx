@@ -24,7 +24,7 @@ import demo.common.pojo.type.ResultTypeCX;
 import demo.config.costom_component.BaseUtilCustom;
 import demo.config.costom_component.EncryptUtil;
 import demo.config.costom_component.SnowFlake;
-import demo.tool.service.VisitDataService;
+import demo.tool.other.service.VisitDataService;
 import tool.pojo.bo.IpRecordBO;
 import toolPack.dateTimeHandle.DateHandler;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
@@ -55,7 +55,8 @@ public abstract class CommonService {
 	protected RedisConnectService redisConnectService;
 
 	protected static final LocalDateTime BLOG_ARTICLE_START_TIME = LocalDateTime.of(2020, 5, 1, 0, 0, 0);
-
+	protected static final String MAIN_FOLDER_PATH = "/home/u2/cx";
+	
 	protected CommonResultCX nullParam() {
 		CommonResultCX result = new CommonResultCX();
 		result.fillWithResult(ResultTypeCX.nullParam);
@@ -228,6 +229,10 @@ public abstract class CommonService {
 		return baseUtilCustom.hasSuperAdminRole();
 	}
 
+	protected boolean isDev() {
+		return "dev".equals(systemConstantService.getEnvName());
+	}
+	
 	protected IpRecordBO getIp(HttpServletRequest request) {
 		IpRecordBO record = new IpRecordBO();
 		record.setRemoteAddr(request.getRemoteAddr());

@@ -47,7 +47,7 @@ import demo.base.user.service.UserAuthService;
 import demo.base.user.service.UsersService;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.service.CommonService;
-import demo.tool.service.TextFilter;
+import demo.tool.other.service.TextFilter;
 
 @Service
 public class OrganizationServiceImpl extends CommonService implements OrganizationService {

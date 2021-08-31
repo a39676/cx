@@ -28,7 +28,7 @@ public class CryptoCoinPriceCacheDataAckReceiver extends CommonService {
 			CryptoCoinPriceCommonDataBO bo = cryptoCoinPriceCacheService.dataStrToBO(messageStr);
 			cryptoCoinPriceCacheService.reciveData(bo);
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			log.error("mq error, " + CryptoCoinMQConstant.CRYPTO_COIN_PRICE_CACHE_QUEUE + ", e:" + e.getLocalizedMessage());
 			log.error(messageStr);
 			channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);

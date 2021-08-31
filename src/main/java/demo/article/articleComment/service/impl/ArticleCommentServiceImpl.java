@@ -43,7 +43,7 @@ import demo.base.user.service.UserDetailService;
 import demo.base.user.service.UsersService;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.ResultTypeCX;
-import demo.tool.service.ValidRegexToolService;
+import demo.tool.other.service.ValidRegexToolService;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service

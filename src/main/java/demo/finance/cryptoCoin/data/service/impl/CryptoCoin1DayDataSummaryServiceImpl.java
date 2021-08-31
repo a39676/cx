@@ -4,30 +4,27 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import autoTest.testEvent.cryptoCoin.pojo.type.CryptoCoinFlowType;
+import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
+import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
+import demo.automationTest.mq.producer.TestEventInsertAckProducer;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1dayMapper;
-import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinConstant;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1day;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
-import demo.finance.cryptoCoin.mq.producer.CryptoCoinDailyDataQueryAckProducer;
 import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
@@ -47,15 +44,13 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 	private CryptoCoinPrice1dayMapper _1DayDataMapper;
 
 	@Autowired
-	private CryptoCoinDailyDataQueryAckProducer cryptoCoinDailyDataQueryAckProducer;
+	private TestEventInsertAckProducer testEventInsertAckProducer;
 
 	@Override
 	public CommonResult receiveDailyData(CryptoCoinDataDTO dto) {
-		return receiveDailyData(dto, false);
-	}
-
-	@Override
-	public CommonResult receiveDailyData(CryptoCoinDataDTO dto, Boolean updateOthers) {
+		/*
+		 * TODO 此处可指定, 如果从某 datasource 获取不到数据, 则重新发起查询并调用下一个 datasource
+		 */
 		CommonResult r = new CommonResult();
 		List<CryptoCoinDataSubDTO> dataList = dto.getPriceHistoryData();
 		if (!isValidData(dataList)) {
@@ -64,9 +59,6 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 			msgDTO.setMsg(dto.getCryptoCoinTypeName() + ", get error data(all zero) from crypto compare");
 			msgDTO.setBotName(TelegramBotType.BOT_2.getName());
 			telegramCryptoCoinMessageAckProducer.send(msgDTO);
-			if (updateOthers != null && updateOthers) {
-				sendCryptoCoinDailyDataQueryMsg();
-			}
 			return r;
 		}
 
@@ -76,24 +68,14 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 			return r;
 		}
 
-		redisConnectService.setValByName(CryptoCoinConstant.RECEIVEING_CRYPTO_COIN_DAILY_DATA_KEY, "_", 3,
-				TimeUnit.MINUTES);
-
-//		mergeDuplicateData(coinType);
 		updateSummaryData(dataList, coinType, currencyType);
-
-		redisConnectService.deleteValByName(CryptoCoinConstant.RECEIVEING_CRYPTO_COIN_DAILY_DATA_KEY);
-		if (updateOthers != null && updateOthers) {
-			sendCryptoCoinDailyDataQueryMsg();
-		}
 
 		r.setIsSuccess();
 		return r;
 	}
 
 	/*
-	 * 2021-04-14 crypto compare 有时会返回全0数据 暂不处理此类数据
-	 * dto 应该附带数据源
+	 * 2021-04-14 crypto compare 有时会返回全0数据 暂不处理此类数据 dto 应该附带数据源
 	 */
 	private boolean isValidData(List<CryptoCoinDataSubDTO> dataList) {
 		if (dataList == null || dataList.isEmpty()) {
@@ -353,121 +335,45 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 	}
 
 	@Override
-	public void setWaitingUpdateCoinType() {
-		List<String> coinTypeSet = findWaitingUpdateCoinType();
-		if (coinTypeSet.isEmpty()) {
+	public void sendAllCryptoCoinDailyDataQueryMsg() {
+		List<CryptoCoinCatalog> catalogList = coinCatalogService.getAllCatalog();
+		if (catalogList == null || catalogList.isEmpty()) {
 			return;
 		}
 
-		setWaitingUpdateCoinTypeList(coinTypeSet);
-	}
-
-	private List<String> findWaitingUpdateCoinType() {
-		List<String> result = new ArrayList<>();
-		Set<String> catalogSet = new HashSet<>();
-
-		CryptoCoinPrice1dayExample example = new CryptoCoinPrice1dayExample();
-		example.createCriteria().andIsDeleteEqualTo(false).andStartTimeEqualTo(LocalDateTime.now().with(LocalTime.MIN));
-		List<CryptoCoinPrice1day> dailyDataList = _1DayDataMapper.selectByExample(example);
-		List<CryptoCoinCatalog> allCatalogPOList = coinCatalogService.getAllCatalog();
-
-		if (dailyDataList == null || dailyDataList.isEmpty()) {
-			for (CryptoCoinCatalog catalog : allCatalogPOList) {
-				catalogSet.add(catalog.getCoinNameEnShort());
-			}
-			result.addAll(catalogSet);
-			return result;
+		for (CryptoCoinCatalog catalog : catalogList) {
+			sendDailyDataQuery(catalog.getCoinNameEnShort(), constantService.getDefaultCurrency(), 5,
+					CryptoCoinDataSourceType.CRYPTO_COMPARE);
 		}
-
-		List<Long> alreadyUpdateCatalogIdList = dailyDataList.stream().map(po -> po.getCoinType())
-				.collect(Collectors.toList());
-
-		for (CryptoCoinCatalog catalog : allCatalogPOList) {
-			if (!alreadyUpdateCatalogIdList.contains(catalog.getId())) {
-				catalogSet.add(catalog.getCoinNameEnShort());
-			}
-		}
-
-		result.addAll(catalogSet);
-		return result;
-	}
-
-	private void setWaitingUpdateCoinTypeList(List<String> coinTypeNameList) {
-		Long listSize = redisTemplate.opsForList()
-				.size(CryptoCoinConstant.CRYPTO_COIN_WAITING_UPDATE_DAILY_DATA_LIST_KEY);
-		if (listSize > 0) {
-			for (int i = 0; i < listSize; i++) {
-				redisTemplate.opsForList().rightPop(CryptoCoinConstant.CRYPTO_COIN_WAITING_UPDATE_DAILY_DATA_LIST_KEY);
-			}
-		}
-
-		for (String coinType : coinTypeNameList) {
-			redisTemplate.opsForList().leftPush(CryptoCoinConstant.CRYPTO_COIN_WAITING_UPDATE_DAILY_DATA_LIST_KEY,
-					coinType);
-		}
-//		redisTemplate.opsForList().leftPushAll(CryptoCoinConstant.CRYPTO_COIN_WAITING_UPDATE_DAILY_DATA_KEY_PREFIX, coinTypeNameList);
-	}
-
-	private String getWatingUpdateCoinType() {
-		return String.valueOf(
-				redisTemplate.opsForList().rightPop(CryptoCoinConstant.CRYPTO_COIN_WAITING_UPDATE_DAILY_DATA_LIST_KEY));
-	}
-
-	private CryptoCoinPrice1day findLastDailyData(Long coinType) {
-		return _1DayDataMapper.findLastDailyData(coinType);
 	}
 
 	@Override
-	public void sendCryptoCoinDailyDataQueryMsg() {
-		sendCryptoCoinDailyDataQueryMsg(CryptoCoinDataSourceType.CRYPTO_COMPARE.getCode());
-	}
-	
-	public void sendCryptoCoinDailyDataQueryMsg(Integer queryCounting) {
-		if (redisConnectService.hasKey(CryptoCoinConstant.RECEIVEING_CRYPTO_COIN_DAILY_DATA_KEY)) {
-			return;
-		}
-		String coinName = getWatingUpdateCoinType();
-		if (StringUtils.isBlank(coinName) || "null".equals(coinName)) {
-			return;
-		}
-		CryptoCoinDailyDataQueryDTO dto = new CryptoCoinDailyDataQueryDTO();
-		if(null == queryCounting || CryptoCoinDataSourceType.CRYPTO_COMPARE.getCode().equals(queryCounting)) {
-			dto.setDataSourceCode(CryptoCoinDataSourceType.CRYPTO_COMPARE.getCode());
-		} else if(CryptoCoinDataSourceType.BINANCE.getCode().equals(queryCounting)){
-			dto.setDataSourceCode(CryptoCoinDataSourceType.BINANCE.getCode());
-		}
-		dto.setCoinName(coinName);
-		CryptoCoinCatalog catalog = coinCatalogService.findCatalog(coinName);
-		CryptoCoinPrice1day lastData = findLastDailyData(catalog.getId());
-		if (lastData == null) {
-			dto.setCounting(CryptoCoinConstant.CRYPTO_COMPARE_API_DATA_MAX_LENGTH);
-		} else {
-			Long days = ChronoUnit.DAYS.between(lastData.getStartTime(), LocalDateTime.now());
-			if (days > CryptoCoinConstant.CRYPTO_COMPARE_API_DATA_MAX_LENGTH) {
-				days = CryptoCoinConstant.CRYPTO_COMPARE_API_DATA_MAX_LENGTH.longValue();
-			}
-			if (days == CryptoCoinConstant.CRYPTO_COMPARE_API_DATA_MAX_LENGTH.longValue()) {
-				TelegramMessageDTO msgDTO = new TelegramMessageDTO();
-				msgDTO.setId(TelegramStaticChatID.MY_ID);
-				msgDTO.setMsg(coinName + " query max data, need check");
-				msgDTO.setBotName(TelegramBotType.BOT_2.getName());
-				telegramCryptoCoinMessageAckProducer.send(msgDTO);
-			}
-			dto.setCounting(days.intValue());
-		}
-
-		cryptoCoinDailyDataQueryAckProducer.send(dto);
-	}
-
-	@Override
-	public void sendCryptoCoinDailyDataQueryMsg(String coinName, Integer counting) {
+	public void sendCryptoCoinDailyDataQueryMsg(String coinName, String currencyName, Integer counting) {
 		if (StringUtils.isBlank(coinName) || counting < 1) {
 			return;
 		}
-		CryptoCoinDailyDataQueryDTO dto = new CryptoCoinDailyDataQueryDTO();
-		dto.setCoinName(coinName);
-		dto.setCounting(counting);
 
-		cryptoCoinDailyDataQueryAckProducer.send(dto);
+		if (StringUtils.isBlank(currencyName)) {
+			currencyName = constantService.getDefaultCurrency();
+		}
+
+		sendDailyDataQuery(coinName, currencyName, counting, CryptoCoinDataSourceType.CRYPTO_COMPARE);
+	}
+
+	private void sendDailyDataQuery(String coinName, String currencyName, Integer counting,
+			CryptoCoinDataSourceType dataSource) {
+		AutomationTestInsertEventDTO dto = new AutomationTestInsertEventDTO();
+		dto.setTestModuleType(TestModuleType.CRYPTO_COIN.getId());
+		dto.setFlowType(CryptoCoinFlowType.DAILY_DATA.getId());
+		dto.setTestEventId(snowFlake.getNextId());
+
+		CryptoCoinDailyDataQueryDTO paramDTO = new CryptoCoinDailyDataQueryDTO();
+		paramDTO.setApiKey(constantService.getApiKey());
+		paramDTO.setCoinName(coinName);
+		paramDTO.setCurrencyName(constantService.getDefaultCurrency());
+		paramDTO.setCounting(counting);
+		paramDTO.setDataSourceCode(CryptoCoinDataSourceType.CRYPTO_COMPARE.getCode());
+
+		testEventInsertAckProducer.send(dto);
 	}
 }

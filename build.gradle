@@ -50,6 +50,7 @@ dependencies {
 	// tools
 	implementation project(':toolPacksG')
 	implementation project(':auxiliaryCommon')
+	implementation project(':ATTool')
 
 	// spring boot
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.5.3'
@@ -129,5 +130,8 @@ dependencies {
 	
     // 公历 农历 转换
 	implementation group: 'com.github.heqiao2010', name: 'lunar', version: '1.4'
+	
+	// web socket as client
+	implementation group: 'com.neovisionaries', name: 'nv-websocket-client', version: '2.12'
 	
 }

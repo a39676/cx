@@ -363,7 +363,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 	private void sendDailyDataQuery(String coinName, String currencyName, Integer counting,
 			CryptoCoinDataSourceType dataSource) {
 		AutomationTestInsertEventDTO dto = new AutomationTestInsertEventDTO();
-		dto.setTestModuleType(TestModuleType.scheduleClawing.getId());
+		dto.setTestModuleType(TestModuleType.CRYPTO_COIN.getId());
 		dto.setFlowType(CryptoCoinFlowType.DAILY_DATA.getId());
 		dto.setTestEventId(snowFlake.getNextId());
 

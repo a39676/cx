@@ -80,7 +80,6 @@ public class AutomationTestReportServiceImpl extends AutomationTestCommonService
 
 	private JsonReportOfCaseDTO buildJsonReportOfCaseDTO(JSONObject caseReportJson) {
 		JsonReportOfCaseDTO dto = new JsonReportOfCaseDTO();
-		dto.setCaseTypeID(caseReportJson.getLong("caseTypeID"));
 		dto.setCaseTypeName(caseReportJson.getString("caseTypeName"));
 		dto.setReportElementList(buildReportElementList(caseReportJson.getJSONArray("reportElementList")));
 		return dto;

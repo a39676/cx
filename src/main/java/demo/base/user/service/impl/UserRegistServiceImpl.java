@@ -42,15 +42,15 @@ import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.ResultTypeCX;
 import demo.common.service.CommonService;
 import demo.config.costom_component.CustomPasswordEncoder;
-import demo.tool.pojo.dto.ResendMailDTO;
-import demo.tool.pojo.dto.SendForgotUsernameMailDTO;
-import demo.tool.pojo.dto.SendMailDTO;
-import demo.tool.pojo.po.MailRecord;
-import demo.tool.pojo.result.SendRegistMailResult;
-import demo.tool.pojo.type.MailType;
-import demo.tool.service.MailService;
-import demo.tool.service.TextFilter;
-import demo.tool.service.ValidRegexToolService;
+import demo.tool.mail.pojo.dto.ResendMailDTO;
+import demo.tool.mail.pojo.dto.SendForgotUsernameMailDTO;
+import demo.tool.mail.pojo.dto.SendMailDTO;
+import demo.tool.mail.pojo.po.MailRecord;
+import demo.tool.mail.pojo.result.SendRegistMailResult;
+import demo.tool.mail.pojo.type.MailType;
+import demo.tool.mail.service.MailService;
+import demo.tool.other.service.TextFilter;
+import demo.tool.other.service.ValidRegexToolService;
 import toolPack.numericHandel.NumericUtilCustom;
 
 @Service

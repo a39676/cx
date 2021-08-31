@@ -55,8 +55,9 @@ public class CryptoCoinManagerController extends CommonController {
 	@GetMapping(value = CryptoCoinManagerUrl.SEND_CRYPTO_COIN_DAILY_DATA_QUERY_MSG)
 	@ResponseBody
 	public String sendCryptoCoinDailyDataQueryMsg(@RequestParam("coinName") String coinName,
+			@RequestParam(value = "currencyName",  required=false) String currencyName, 
 			@RequestParam("counting") Integer counting) {
-		dailyDataService.sendCryptoCoinDailyDataQueryMsg(coinName, counting);
+		dailyDataService.sendCryptoCoinDailyDataQueryMsg(coinName, currencyName, counting);
 		return "done";
 	}
 }

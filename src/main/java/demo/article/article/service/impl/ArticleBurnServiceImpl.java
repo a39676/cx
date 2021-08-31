@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
-import autoTest.testEvent.pojo.constant.SearchingDemoConstant;
+import autoTest.testEvent.searchingDemo.pojo.constant.SearchingDemoConstant;
 import demo.article.article.mapper.ArticleBurnMapper;
 import demo.article.article.pojo.constant.ArticleBurnUrlConstant;
 import demo.article.article.pojo.constant.ArticleViewConstant;

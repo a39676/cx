@@ -51,14 +51,9 @@ public class CryptoCoinDataTaskToolServiceImpl extends CryptoCoinCommonService {
 		cryptoCoin60MinuteDataSummaryService.deleteExpiredCacheData();
 	}
 
-	@Scheduled(cron="12 3 0 * * *") // 每天0:3:12执行
-	public void setWaitingUpdateCoinType() {
-		cryptoCoin1DayDataSummaryService.setWaitingUpdateCoinType();
-	}
-	
 	@Scheduled(cron="20 19 01 * * *")
 	public void sendCryptoCoinDailyDataQueryMsg() {
-		cryptoCoin1DayDataSummaryService.sendCryptoCoinDailyDataQueryMsg();
+		cryptoCoin1DayDataSummaryService.sendAllCryptoCoinDailyDataQueryMsg();
 	}
 	
 	@Scheduled(cron="56 45 7 * * *")

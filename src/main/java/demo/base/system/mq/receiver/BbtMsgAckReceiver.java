@@ -31,7 +31,7 @@ public class BbtMsgAckReceiver extends CommonService {
 			ServiceMsgDTO dto = new Gson().fromJson(messageStr, ServiceMsgDTO.class);
 			telegramService.sendMessage(TelegramBotType.BOT_2, dto.getMsg(), TelegramStaticChatID.MY_ID);
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			log.error("mq error, " + ServiceMQConstant.BBT_SEND_MESSAGE_QUEUE + ", e:" + e.getLocalizedMessage());
 			log.error(messageStr);
 			channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import demo.article.article.service.impl.ArticleConstantService;
 import demo.article.articleComment.service.impl.ArticleCommentConstantService;
+import demo.automationTest.service.impl.AutomationTestConstantService;
 import demo.base.organizations.pojo.po.Organizations;
 import demo.base.organizations.service.OrganizationService;
 import demo.base.organizations.service.__SystemOrganizationService;
@@ -24,9 +25,8 @@ import demo.base.user.service.UsersService;
 import demo.common.service.CommonService;
 import demo.joy.image.icon.service.JoyIconService;
 import demo.joy.scene.service.JoySceneManagerService;
-import demo.test.mp.producer.TestingQueueAckProducer;
 import demo.thirdPartyAPI.cloudinary.service.impl.CloudinaryConstantService;
-import demo.tool.service.impl.MailConstantService;
+import demo.tool.mail.service.impl.MailConstantService;
 
 @Component
 //public class DatabaseFillerOnStartup implements ApplicationListener<ContextStartedEvent> {
@@ -57,9 +57,9 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 	private MailConstantService mailConstantService;
 	@Autowired
 	private CloudinaryConstantService cloudinaryConstantService;
-	
 	@Autowired
-	private TestingQueueAckProducer testingQueueAckProducer;
+	private AutomationTestConstantService automationTestConstantService;
+	
 /*
  * ContextStartedEvent
  * ContextStoppedEvent
@@ -73,7 +73,6 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 	public void onApplicationEvent(ApplicationReadyEvent event) {
 		
 		log.error("starting database filler");
-		testingQueueAckProducer.send();
 		
 //		if (event.getApplicationContext().getDisplayName().equals("Root WebApplicationContext")) {}
 		if (event.getApplicationContext().getParent() == null) {
@@ -124,11 +123,14 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 			log.error("loading article comment option");
 			articleCommentConstantService.refreshConstant();
 			
-			log.error("loading mail comment option");
+			log.error("loading mail option");
 			mailConstantService.refreshConstant();
 			
-			log.error("loading cloudinary comment option");
+			log.error("loading cloudinary option");
 			cloudinaryConstantService.refreshConstant();
+			
+			log.error("loading automation test option");
+			automationTestConstantService.refreshConstant();
 		}
 		
 		log.error("data base filler end");

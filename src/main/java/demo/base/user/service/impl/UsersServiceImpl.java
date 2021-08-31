@@ -41,7 +41,7 @@ import demo.base.user.service.AuthRoleService;
 import demo.base.user.service.UserAuthService;
 import demo.base.user.service.UsersService;
 import demo.common.service.CommonService;
-import demo.tool.service.ValidRegexToolService;
+import demo.tool.other.service.ValidRegexToolService;
 
 /**
  * @author Acorn 2017年4月13日

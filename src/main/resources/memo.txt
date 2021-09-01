@@ -1,13 +1,5 @@
 AT 
 	report 展示页面将需要适应 JsonReportElementDTO 的调整
-	因为 bbt 分布式服务, 可能允许终端新建 测试任务, 回传结果时, event id 可能不存在于 cx 数据库
-		不处理此情况
-	
-	create test_event table 
-	or	
-	alter table test_event add column pass_count int default 0 after event_name;
-	alter table test_event add column fail_count int default 0 after pass_count;
-	alter table test_event add column block_count int default 0 after fail_count;
 		
 crypto coin
 	crypto compare 更新 daily data 时 可能返回全0数据, 需要binance 协助

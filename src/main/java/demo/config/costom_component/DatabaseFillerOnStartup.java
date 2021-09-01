@@ -60,6 +60,7 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 	@Autowired
 	private AutomationTestConstantService automationTestConstantService;
 	
+	
 /*
  * ContextStartedEvent
  * ContextStoppedEvent
@@ -71,6 +72,8 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 	@Override
 //	public void onApplicationEvent(ContextStartedEvent event) {
 	public void onApplicationEvent(ApplicationReadyEvent event) {
+		
+		log.error("verify system constant: " + systemConstantService.toString());
 		
 		log.error("starting database filler");
 		

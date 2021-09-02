@@ -14,7 +14,6 @@ import demo.base.system.service.IpRecordService;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.type.SystemRolesType;
 import demo.tool.mail.mapper.MailRecordMapper;
-import demo.tool.other.service.ComplexToolService;
 import demo.tool.other.service.VisitDataService;
 
 @Component
@@ -30,8 +29,6 @@ public class TaskToolServiceImpl {
 	private VisitDataService visitDataService;
 	@Autowired
 	private IpRecordService ipRecordService;
-	@Autowired
-	private ComplexToolService complexToolService;
 
 	@Autowired
 	private UsersMapper usersMapper;
@@ -151,8 +148,4 @@ public class TaskToolServiceImpl {
 		ipRecordService.deleteExpiredDenyRecord();
 	}
 
-	@Scheduled(fixedRate = 1000L * 60 * 10)
-	public void pingBBT() {
-		complexToolService.pingBBT();
-	}
 }

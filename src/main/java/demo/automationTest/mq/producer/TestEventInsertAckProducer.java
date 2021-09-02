@@ -4,7 +4,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import autoTest.testEvent.pojo.constant.TestEventMQConstant;
+import autoTest.testEvent.pojo.constant.AutomationTestMQConstant;
 import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import demo.common.service.CommonService;
 import net.sf.json.JSONObject;
@@ -21,7 +21,7 @@ public class TestEventInsertAckProducer extends CommonService {
 		}
 		JSONObject json = JSONObject.fromObject(dto);
 		json.put("appointment", localDateTimeHandler.dateToStr(dto.getAppointment()));
-		rabbitTemplate.convertAndSend(TestEventMQConstant.TEST_EVENT_INSERT_QUEUE, json.toString());
+		rabbitTemplate.convertAndSend(AutomationTestMQConstant.TEST_EVENT_INSERT_QUEUE, json.toString());
 	}
 
 }

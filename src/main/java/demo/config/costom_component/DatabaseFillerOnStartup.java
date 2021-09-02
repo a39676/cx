@@ -73,8 +73,6 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 //	public void onApplicationEvent(ContextStartedEvent event) {
 	public void onApplicationEvent(ApplicationReadyEvent event) {
 		
-		log.error("verify system constant: " + systemConstantService.toString());
-		
 		log.error("starting database filler");
 		
 //		if (event.getApplicationContext().getDisplayName().equals("Root WebApplicationContext")) {}

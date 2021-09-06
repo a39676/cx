@@ -23,6 +23,7 @@ import demo.base.user.service.RoleService;
 import demo.base.user.service.UserRegistService;
 import demo.base.user.service.UsersService;
 import demo.common.service.CommonService;
+import demo.finance.cryptoCoin.data.service.impl.CryptoCoinConstantService;
 import demo.joy.image.icon.service.JoyIconService;
 import demo.joy.scene.service.JoySceneManagerService;
 import demo.thirdPartyAPI.cloudinary.service.impl.CloudinaryConstantService;
@@ -59,6 +60,8 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 	private CloudinaryConstantService cloudinaryConstantService;
 	@Autowired
 	private AutomationTestConstantService automationTestConstantService;
+	@Autowired
+	private CryptoCoinConstantService cryptoCoinConstantService;
 	
 	
 /*
@@ -132,6 +135,9 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 			
 			log.error("loading automation test option");
 			automationTestConstantService.refreshConstant();
+			
+			log.error("loading crypto coin option");
+			cryptoCoinConstantService.refreshConstant();
 		}
 		
 		log.error("data base filler end");

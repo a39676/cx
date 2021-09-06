@@ -1,19 +1,17 @@
 package demo.finance.cryptoCoin.data.webSocket;
 
-import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.Gson;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
@@ -22,13 +20,12 @@ import com.neovisionaries.ws.client.WebSocketFrame;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
-import demo.finance.cryptoCoin.data.pojo.bo.CryptoCompareSocketConfigBO;
 import demo.finance.cryptoCoin.data.pojo.type.CryptoCompareWebSocketMsgType;
 import demo.finance.cryptoCoin.data.webSocket.common.CryptoCoinWebSocketCommonClient;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinWebSocketConstant;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import toolPack.ioHandle.FileUtilCustom;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
@@ -36,45 +33,11 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 
 	private WebSocket ws = null;
 
-	@Autowired
-	private FileUtilCustom ioUtil;
-
 	public WebSocket getWs() {
 		if (ws == null) {
-			createWebSocket(getDefaultConfig());
+			createWebSocket();
 		}
 		return ws;
-	}
-
-	private CryptoCompareSocketConfigBO getDefaultConfig() {
-		CryptoCompareSocketConfigBO bo = null;
-		// 迁移代码 此处为获取参数文件路径
-//		String systemParameterSavingFolderPath = globalOptionService.getParameterSavingFolder();
-		String systemParameterSavingFolderPath = "";
-		String cryptoCompareParameterSavingFolderPath = systemParameterSavingFolderPath + File.separator
-				+ CryptoCoinWebSocketConstant.CRYPTO_COMPARE_PARAM_STORE_PATH;
-
-		File configFile = new File(cryptoCompareParameterSavingFolderPath);
-
-		if (!configFile.exists() || !configFile.isFile()) {
-			log.error("crypto compare config file not exists");
-			return bo;
-		}
-
-		String jsonStr = ioUtil.getStringFromFile(cryptoCompareParameterSavingFolderPath);
-		if (StringUtils.isBlank(jsonStr)) {
-			log.error("crypto compare config file format error");
-			return bo;
-		}
-
-		try {
-			bo = new Gson().fromJson(jsonStr, CryptoCompareSocketConfigBO.class);
-		} catch (Exception e) {
-			log.error("crypto compare config trans error");
-			return bo;
-		}
-
-		return bo;
 	}
 
 	private CryptoCompareWebSocketMsgType checkConnection(String msg) {
@@ -136,8 +99,8 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 		return bo;
 	}
 
-	private WebSocket createWebSocket(CryptoCompareSocketConfigBO configBO) {
-		String uriStr = configBO.getUri() + "?api_key=" + configBO.getApiKey();
+	private WebSocket createWebSocket() {
+		String uriStr = constantService.getCryptoCompareUri() + "?api_key=" + constantService.getCryptoCompareApiKey();
 		try {
 			WebSocket ws = new WebSocketFactory().setVerifyHostname(false).createSocket(uriStr);
 			return ws;
@@ -159,7 +122,7 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 					ws.disconnect();
 				} else if (connectionType.getCode() < 400
 						|| CryptoCompareWebSocketMsgType.HEARTBEAT.equals(connectionType)) {
-					refreshLastActiveTime(CryptoCoinWebSocketConstant.CRYPTO_COMPARE_SOCKET_INACTIVE_JUDGMENT_SECOND);
+					refreshLastActiveTime();
 
 				} else if (connectionType.getCode() == 500) {
 					if (CryptoCompareWebSocketMsgType.FORCE_DISCONNECT.equals(connectionType)) {
@@ -169,19 +132,18 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 					} else if (CryptoCompareWebSocketMsgType.RATE_LIMIT_OPENING_SOCKETS_TOO_FAST
 							.equals(connectionType)) {
 						log.error("crypto compare web socket error: " + connectionType.getName());
-						refreshLastActiveTime(CryptoCoinWebSocketConstant.SOCKET_COLDDOWN_SECOND);
+						refreshLastActiveTime();
 						return;
 					} else {
 						log.error("crypto compare web socket error: " + connectionType.getName());
-						refreshLastActiveTime(
-								CryptoCoinWebSocketConstant.CRYPTO_COMPARE_SOCKET_INACTIVE_JUDGMENT_SECOND);
+						refreshLastActiveTime();
 						return;
 					}
 
 				} else if (CryptoCompareWebSocketMsgType.TOO_MANY_SOCKETS_MAX_.getCode()
 						.equals(connectionType.getCode())) {
 					log.error("crypto compare web socket error: " + connectionType.getName());
-					refreshLastActiveTime(CryptoCoinWebSocketConstant.SOCKET_COLDDOWN_SECOND);
+					refreshLastActiveTime();
 					return;
 
 				} else {
@@ -193,39 +155,36 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 
 				CryptoCoinPriceCommonDataBO dataBO = buildCommonDataFromMsg(message);
 				if (dataBO != null) {
-//					迁移代码 保存数据
-//					croptoCoinPriceCacheDataAckProducer.sendPriceCacheData(dataBO);
+					cacheService.reciveData(dataBO);
 				}
 			}
 
 			@Override
 			public void onDisconnected(WebSocket websocket, WebSocketFrame serverCloseFrame,
 					WebSocketFrame clientCloseFrame, boolean closedByServer) throws Exception {
-				redisConnectService
-						.deleteValByName(CryptoCoinWebSocketConstant.CRYPTO_COMPARE_SOCKET_LAST_ACTIVE_TIME_REDIS_KEY);
 			}
 		});
 		return ws;
 	}
 
-	private void refreshLastActiveTime(int seconds) {
-		redisConnectService.setValByName(CryptoCoinWebSocketConstant.CRYPTO_COMPARE_SOCKET_LAST_ACTIVE_TIME_REDIS_KEY,
-				localDateTimeHandler.dateToStr(LocalDateTime.now()), seconds, TimeUnit.SECONDS);
+	private void refreshLastActiveTime() {
+		constantService.setCryptoCompareWebSocketLastActiveTime(LocalDateTime.now());
 	}
 
 	public boolean getSocketLiveFlag() {
-		return redisConnectService.hasKey(CryptoCoinWebSocketConstant.CRYPTO_COMPARE_SOCKET_LAST_ACTIVE_TIME_REDIS_KEY);
+		LocalDateTime lastActiveTime = constantService.getBinanceWebSocketLastActiveTime();
+		if (lastActiveTime == null) {
+			return false;
+		}
+		long seconds = ChronoUnit.SECONDS.between(lastActiveTime, LocalDateTime.now());
+
+		return CryptoCoinWebSocketConstant.CRYPTO_COMPARE_SOCKET_INACTIVE_JUDGMENT_SECOND > seconds;
 	}
 
 	public CommonResult startWebSocket() {
-		CryptoCompareSocketConfigBO configBO = getDefaultConfig();
 		CommonResult r = new CommonResult();
-		if (configBO == null) {
-			r.failWithMessage("crypto compare socket load config error");
-			return r;
-		}
 
-		ws = createWebSocket(configBO);
+		ws = createWebSocket();
 		if (ws == null) {
 			r.failWithMessage("crypto compare socket create scoket error");
 			return r;
@@ -234,8 +193,7 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 		ws = setListener(ws);
 		try {
 			ws.connect();
-//			需要重构订阅列表的管理
-//			addSubscription(getSubscriptionList());
+			addSubscription(new ArrayList<String>(getSubscriptionList()));
 			r.normalSuccess();
 		} catch (WebSocketException e) {
 			log.error("crypto compare socket connect error: " + e.getLocalizedMessage());
@@ -254,115 +212,111 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 		ws = null;
 	}
 
-//	// 需要重构订阅列表的管理
-//	public void syncSubscription() {
-//		removeAllSubscription();
-//		addSubscription(getSubscriptionList());
-//	}
-//
-//	
-//	/**
-//	 * @param channelStrListchannelStr format 5~CCCAGG~BTC~USD ref:
-//	 *                                 https://min-api.cryptocompare.com/documentation/websockets
-//	 */
-//	public void addSubscription(List<String> channelStrList) {
-//		JSONObject json = new JSONObject();
-//		json.put("action", "SubAdd");
-//		JSONArray subs = new JSONArray();
-//		String subscription = null;
-//		for (int i = 0; i < channelStrList.size(); i++) {
-//			subscription = channelStrList.get(i);
-//			subscription = "5~CCCAGG~" + subscription.toUpperCase() + "~USDT"; 
-//			channelStrList.set(i, subscription);
-//			subs.add(subscription);
-//		}
-//		json.put("subs", subs);
-//
-//		ws.sendText(json.toString());
-//		
-//		addSubscriptionRedisList(channelStrList);
-//	}
-//
-//	public void addSubscription(String channelStr) {
-//		JSONObject json = new JSONObject();
-//		json.put("action", "SubAdd");
-//		JSONArray subs = new JSONArray();
-//		channelStr = "5~CCCAGG~" + channelStr.toUpperCase() + "~USDT";
-//		subs.add(channelStr);
-//		json.put("subs", subs);
-//
-//		ws.sendText(json.toString());
-//		
-//		addSubscriptionRedisList(channelStr);
-//	}
-//
-//	public void removeSubscription(List<String> removeChannelStrList) {
-//		if(removeChannelStrList == null || removeChannelStrList.isEmpty()) {
-//			return;
-//		}
-//		
-//		for(int i = 0; i < removeChannelStrList.size(); i++) {
-//			removeChannelStrList.set(i, "5~CCCAGG~" + removeChannelStrList.get(i).toUpperCase() + "~USDT");
-//		}
-//		
-//		JSONObject json = new JSONObject();
-//		json.put("action", "SubRemove");
-//		JSONArray subs = new JSONArray();
-//
-//		
-//		for (String subscription : removeChannelStrList) {
-//			subs.add(subscription);
-//		}
-//		json.put("subs", subs);
-//
-//		ws.sendText(json.toString());
-//		
-//		removeSubscriptionRedisList(removeChannelStrList);
-//	}
-//
-//	public void removeAllSubscription() {
-//		Long listSize = redisTemplate.opsForList().size(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
-//
-//		if (listSize <= 0) {
-//			return;
-//		}
-//		
-//		List<String> recordList = new ArrayList<>();
-//		String tmpSub = null;
-//		for(int i = 0; i < listSize; i++) {
-//			tmpSub = String.valueOf(redisTemplate.opsForList().rightPop(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY));
-//			if(StringUtils.isNotBlank(tmpSub)) {
-//				recordList.add(tmpSub);
-//			}
-//		}
-//		
-//		if(recordList.isEmpty()) {
-//			return;
-//		}
-//		
-//		JSONObject json = new JSONObject();
-//		json.put("action", "SubRemove");
-//		JSONArray subs = new JSONArray();
-//		for (String channelStr : recordList) {
-//			subs.add(channelStr);
-//		}
-//		
-//		json.put("subs", subs);
-//		ws.sendText(json.toString());
-//	}
-//
-//	public void removeSubscription(String channelStr) {
-//		channelStr = channelStr.toUpperCase();
-//		channelStr = "5~CCCAGG~" + channelStr.toUpperCase() + "~USDT";
-//
-//		JSONObject json = new JSONObject();
-//		json.put("action", "SubRemove");
-//		JSONArray subs = new JSONArray();
-//		subs.add(channelStr);
-//		json.put("subs", subs);
-//
-//		ws.sendText(json.toString());
-//
-//		removeSubscriptionRedisList(channelStr);
-//	}
+	public void restart() {
+		wsDestory();
+		startWebSocket();
+	}
+
+	/**
+	 * @param channelStrListchannelStr format 5~CCCAGG~BTC~USD ref:
+	 *                                 https://min-api.cryptocompare.com/documentation/websockets
+	 */
+	public void addSubscription(List<String> channelStrList) {
+		JSONObject json = new JSONObject();
+		json.put("action", "SubAdd");
+		JSONArray subs = new JSONArray();
+		for (String subscription : channelStrList) {
+			subscription = subscription.toUpperCase();
+			subscription = "5~CCCAGG~" + subscription.toUpperCase() + "~USDT";
+			subs.add(subscription);
+		}
+		json.put("subs", subs);
+
+		ws.sendText(json.toString());
+
+		addMainSubscription(channelStrList);
+	}
+
+	public void addSubscription(String channelStr) {
+		JSONObject json = new JSONObject();
+		json.put("action", "SubAdd");
+		JSONArray subs = new JSONArray();
+		channelStr = channelStr.toUpperCase();
+		channelStr = "5~CCCAGG~" + channelStr.toUpperCase() + "~USDT";
+		subs.add(channelStr);
+		json.put("subs", subs);
+
+		ws.sendText(json.toString());
+
+		addMainSubscription(channelStr);
+	}
+
+	public void removeSubscription(List<String> removeChannelStrList) {
+		if (removeChannelStrList == null || removeChannelStrList.isEmpty()) {
+			return;
+		}
+
+		List<String> resultList = new ArrayList<>();
+		String channel = null;
+
+		for (int i = 0; i < removeChannelStrList.size(); i++) {
+			channel = channel.toUpperCase();
+			resultList.set(i, "5~CCCAGG~" + removeChannelStrList.get(i).toUpperCase() + "~USDT");
+		}
+
+		JSONObject json = new JSONObject();
+		json.put("action", "SubRemove");
+		JSONArray subs = new JSONArray();
+
+		for (String subscription : resultList) {
+			subs.add(subscription);
+		}
+		json.put("subs", subs);
+
+		ws.sendText(json.toString());
+
+		removeMainSubscription(removeChannelStrList);
+	}
+
+	public void removeAllSubscription() {
+		if (constantService.getSubscriptionSet() == null || constantService.getSubscriptionSet().isEmpty()) {
+			return;
+		}
+
+		List<String> tmpList = new ArrayList<>();
+		tmpList.addAll(constantService.getSubscriptionSet());
+		String channel = null;
+
+		for (int i = 0; i < tmpList.size(); i++) {
+			channel = channel.toUpperCase();
+			tmpList.add("5~CCCAGG~" + tmpList.get(i).toUpperCase() + "~USDT");
+		}
+
+		JSONObject json = new JSONObject();
+		json.put("action", "SubRemove");
+		JSONArray subs = new JSONArray();
+		for (String channelStr : tmpList) {
+			subs.add(channelStr);
+		}
+
+		json.put("subs", subs);
+		ws.sendText(json.toString());
+
+		removeAllMainSubscription();
+	}
+
+	public void removeSubscription(String channelStr) {
+		channelStr = channelStr.toUpperCase();
+		channelStr = "5~CCCAGG~" + channelStr.toUpperCase() + "~USDT";
+
+		JSONObject json = new JSONObject();
+		json.put("action", "SubRemove");
+		JSONArray subs = new JSONArray();
+		subs.add(channelStr);
+		json.put("subs", subs);
+
+		ws.sendText(json.toString());
+
+		removeMainSubscription(channelStr);
+	}
 }

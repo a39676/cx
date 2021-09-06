@@ -1,6 +1,7 @@
 package demo.automationTest.service.impl;
 
 import java.io.File;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +23,8 @@ public class AutomationTestConstantService extends CommonService {
 	private String reportStorePrefixPath;
 
 	private String paramStorePrefixPath;
+
+	private LocalDateTime lastHeartBeat = LocalDateTime.now();
 
 	public void refreshConstant() {
 		File optionFile = new File(optionFilePath);
@@ -58,10 +61,19 @@ public class AutomationTestConstantService extends CommonService {
 		this.paramStorePrefixPath = paramStorePrefixPath;
 	}
 
+	public LocalDateTime getLastHeartBeat() {
+		return lastHeartBeat;
+	}
+
+	public void setLastHeartBeat(LocalDateTime lastHeartBeat) {
+		this.lastHeartBeat = lastHeartBeat;
+	}
+
 	@Override
 	public String toString() {
 		return "AutomationTestConstantService [optionFilePath=" + optionFilePath + ", reportStorePrefixPath="
-				+ reportStorePrefixPath + ", paramStorePrefixPath=" + paramStorePrefixPath + "]";
+				+ reportStorePrefixPath + ", paramStorePrefixPath=" + paramStorePrefixPath + ", lastHeartBeat="
+				+ lastHeartBeat + "]";
 	}
 
 }

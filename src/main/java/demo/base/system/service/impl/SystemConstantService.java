@@ -206,13 +206,4 @@ public class SystemConstantService extends CommonService {
 		return result;
 	}
 
-	@Override
-	public String toString() {
-		return "SystemConstantService [aesKey=" + aesKey + ", aesInitVector=" + aesInitVector + ", envName=" + envName
-				+ ", emailD=" + emailD + ", emailC=" + emailC + ", maxAttempts=" + maxAttempts + ", normalWebSiteTitle="
-				+ normalWebSiteTitle + ", normalSubheading=" + normalSubheading + ", isJobing=" + isJobing
-				+ ", isDebuging=" + isDebuging + ", fakeFTPHome=" + fakeFTPHome + ", homepageAnnouncementStr="
-				+ homepageAnnouncementStr + "]";
-	}
-	
 }

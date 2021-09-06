@@ -22,8 +22,8 @@ public class CryptoCoinTaskService {
 	@Autowired
 	private CryptoCompareWSClient cryptoCompareWSClient;
 
-	@Scheduled(cron = "0 */10 * * * ?")
-	public void s() {
+	@Scheduled(cron = "0/10 * * ? * * ")
+	public void checkWebSocketStatus() {
 		if (!binanceWSClient.getSocketLiveFlag()) {
 			telegramService.sendMessage(TelegramBotType.BOT_2, "binance socket down", TelegramStaticChatID.MY_ID);
 			binanceWSClient.startWebSocket();

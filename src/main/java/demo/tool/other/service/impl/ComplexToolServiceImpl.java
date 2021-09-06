@@ -19,4 +19,5 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 	public void notificationBbtDown() {
 		telegramService.sendMessage(TelegramBotType.BOT_2, "bbt down", TelegramStaticChatID.MY_ID);
 	}
+	
 }

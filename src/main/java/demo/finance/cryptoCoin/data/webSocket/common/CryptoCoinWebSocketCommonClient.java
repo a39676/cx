@@ -1,18 +1,47 @@
 package demo.finance.cryptoCoin.data.webSocket.common;
 
 import java.util.List;
+import java.util.Set;
 
-import demo.common.service.CommonService;
+import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class CryptoCoinWebSocketCommonClient extends CommonService {
+import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 
-	/**
-	 * 迁移代码 此处应该获取订阅币种
-	 * 
-	 * @return
-	 */
-	protected List<String> getSubscriptionList() {
-		return null;
+public abstract class CryptoCoinWebSocketCommonClient extends CryptoCoinCommonService {
+
+	@Autowired
+	protected CryptoCoinPriceCacheService cacheService;
+	
+	protected Set<String> getSubscriptionList() {
+		return constantService.getSubscriptionSet();
+	}
+	
+	protected void addMainSubscription(String channel) {
+		channel = channel.toUpperCase();
+		constantService.getSubscriptionSet().add(channel);
 	}
 
+	protected void addMainSubscription(List<String> channelList) {
+		for(String channel : channelList) {
+			channel = channel.toUpperCase();
+			constantService.getSubscriptionSet().add(channel);
+		}
+	}
+	
+	protected void removeMainSubscription(String channel) {
+		channel = channel.toUpperCase();
+		constantService.getSubscriptionSet().remove(channel);
+	}
+	
+	protected void removeMainSubscription(List<String> channelList) {
+		for(String channel : channelList) {
+			channel = channel.toUpperCase();
+			constantService.getSubscriptionSet().remove(channel);
+		}
+	}
+
+	protected void removeAllMainSubscription() {
+		constantService.getSubscriptionSet().clear();
+	}
 }

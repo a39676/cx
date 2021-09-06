@@ -1,20 +1,18 @@
 package demo.finance.cryptoCoin.data.webSocket;
 
-import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.Gson;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
@@ -23,12 +21,10 @@ import com.neovisionaries.ws.client.WebSocketFrame;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
-import demo.finance.cryptoCoin.data.pojo.bo.BinanceWebSocketConfigBO;
 import demo.finance.cryptoCoin.data.webSocket.common.CryptoCoinWebSocketCommonClient;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinWebSocketConstant;
 import net.sf.json.JSONObject;
-import toolPack.ioHandle.FileUtilCustom;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
@@ -36,45 +32,11 @@ public class BinanceWSClient extends CryptoCoinWebSocketCommonClient {
 
 	private WebSocket ws = null;
 
-	@Autowired
-	private FileUtilCustom ioUtil;
-
 	public WebSocket getWs() {
 		if (ws == null) {
-			createWebSocket(getDefaultConfig());
+			createWebSocket();
 		}
 		return ws;
-	}
-
-	private BinanceWebSocketConfigBO getDefaultConfig() {
-		BinanceWebSocketConfigBO bo = null;
-//		迁移代码, 此处需要获取配置文件路径
-//		String systemParameterSavingFolderPath = globalOptionService.getParameterSavingFolder();
-		String systemParameterSavingFolderPath = "";
-		String cryptoCompareParameterSavingFolderPath = systemParameterSavingFolderPath + File.separator
-				+ CryptoCoinWebSocketConstant.BINANCE_PARAM_STORE_PATH;
-
-		File configFile = new File(cryptoCompareParameterSavingFolderPath);
-
-		if (!configFile.exists() || !configFile.isFile()) {
-			log.error("binance config file not exists");
-			return bo;
-		}
-
-		String jsonStr = ioUtil.getStringFromFile(cryptoCompareParameterSavingFolderPath);
-		if (StringUtils.isBlank(jsonStr)) {
-			log.error("binance config file format error");
-			return bo;
-		}
-
-		try {
-			bo = new Gson().fromJson(jsonStr, BinanceWebSocketConfigBO.class);
-		} catch (Exception e) {
-			log.error("binance config trans error");
-			return bo;
-		}
-
-		return bo;
 	}
 
 //	   binance web scoket kline respon exaple 
@@ -103,6 +65,7 @@ public class BinanceWSClient extends CryptoCoinWebSocketCommonClient {
 //		    "B": "0"  // Ignore
 //		  }
 //		}
+
 	private CryptoCoinPriceCommonDataBO buildCommonDataFromMsg(String sourceMsg) {
 		CryptoCoinPriceCommonDataBO bo = null;
 		try {
@@ -115,20 +78,20 @@ public class BinanceWSClient extends CryptoCoinWebSocketCommonClient {
 
 			JSONObject kDataJson = sourceMsgJson.getJSONObject("k");
 			String symbol = sourceMsgJson.getString("s").toLowerCase();
-			
-			if(symbol.contains("usdt")) {
+
+			if (symbol.contains("usdt")) {
 				bo.setCurrencyType(CurrencyType.USD.getCode());
 				bo.setCoinType(symbol.replaceAll("usdt", ""));
 			} else {
 				return null;
 			}
-			
+
 			bo.setStartPrice(new BigDecimal(kDataJson.getDouble("o")));
 			bo.setEndPrice(new BigDecimal(kDataJson.getDouble("c")));
 			bo.setHighPrice(new BigDecimal(kDataJson.getDouble("h")));
 			bo.setLowPrice(new BigDecimal(kDataJson.getDouble("l")));
 			bo.setVolume(new BigDecimal(kDataJson.getDouble("v")));
-			
+
 			try {
 				Date tradDate = new Date(sourceMsgJson.getLong("E"));
 				LocalDateTime tradDateTime = localDateTimeHandler.dateToLocalDateTime(tradDate);
@@ -147,20 +110,20 @@ public class BinanceWSClient extends CryptoCoinWebSocketCommonClient {
 		return bo;
 	}
 
-	private WebSocket createWebSocket(BinanceWebSocketConfigBO configBO) {
-		StringBuffer uriBuilder = new StringBuffer(configBO.getUri());
+	private WebSocket createWebSocket() {
+		StringBuffer uriBuilder = new StringBuffer(constantService.getBinanceUri());
 		uriBuilder.append("/ws");
-		List<String> symbolList = getSubscriptionList();
+		List<String> symbolList = new ArrayList<>(getSubscriptionList());
 		log.error("binance socket get symbolList: " + symbolList);
-		for(String symbol : symbolList) {
-			if(StringUtils.isNotBlank(symbol)) {
+		for (String symbol : symbolList) {
+			if (StringUtils.isNotBlank(symbol)) {
 				uriBuilder.append("/" + symbol.toLowerCase() + "usdt" + "@kline_1m");
 			}
 		}
 		log.error("binance url: " + uriBuilder.toString());
 		try {
 			WebSocket ws = new WebSocketFactory().setVerifyHostname(false).createSocket(uriBuilder.toString());
-			refreshLastActiveTime(CryptoCoinWebSocketConstant.BINANCE_SOCKET_INACTIVE_JUDGMENT_SECOND);
+			refreshLastActiveTime();
 			return ws;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -175,45 +138,40 @@ public class BinanceWSClient extends CryptoCoinWebSocketCommonClient {
 			public void onTextMessage(WebSocket websocket, String message) throws Exception {
 //				System.out.println(message);
 //				log.error("binan message: " + message);
-				refreshLastActiveTime(CryptoCoinWebSocketConstant.BINANCE_SOCKET_INACTIVE_JUDGMENT_SECOND);
-		
+				refreshLastActiveTime();
+
 				CryptoCoinPriceCommonDataBO dataBO = buildCommonDataFromMsg(message);
 				if (dataBO != null) {
-					/*
-					 * 迁移代码, 此处应该保存数据
-					 */
-//					croptoCoinPriceCacheDataAckProducer.sendPriceCacheData(dataBO);
+					cacheService.reciveData(dataBO);
 				}
 			}
 
 			@Override
 			public void onDisconnected(WebSocket websocket, WebSocketFrame serverCloseFrame,
 					WebSocketFrame clientCloseFrame, boolean closedByServer) throws Exception {
-				redisConnectService
-						.deleteValByName(CryptoCoinWebSocketConstant.BINANCE_SOCKET_LAST_ACTIVE_TIME_REDIS_KEY);
 			}
 		});
 		return ws;
 	}
 
-	private void refreshLastActiveTime(int seconds) {
-		redisConnectService.setValByName(CryptoCoinWebSocketConstant.BINANCE_SOCKET_LAST_ACTIVE_TIME_REDIS_KEY,
-				localDateTimeHandler.dateToStr(LocalDateTime.now()), seconds, TimeUnit.SECONDS);
+	private void refreshLastActiveTime() {
+		constantService.setBinanceWebSocketLastActiveTime(LocalDateTime.now());
 	}
 
 	public boolean getSocketLiveFlag() {
-		return redisConnectService.hasKey(CryptoCoinWebSocketConstant.BINANCE_SOCKET_LAST_ACTIVE_TIME_REDIS_KEY);
+		LocalDateTime lastActiveTime = constantService.getBinanceWebSocketLastActiveTime();
+		if (lastActiveTime == null) {
+			return false;
+		}
+		long seconds = ChronoUnit.SECONDS.between(lastActiveTime, LocalDateTime.now());
+
+		return CryptoCoinWebSocketConstant.BINANCE_SOCKET_INACTIVE_JUDGMENT_SECOND > seconds;
 	}
 
 	public CommonResult startWebSocket() {
-		BinanceWebSocketConfigBO configBO = getDefaultConfig();
 		CommonResult r = new CommonResult();
-		if (configBO == null) {
-			r.failWithMessage("binance socket load config error");
-			return r;
-		}
 
-		ws = createWebSocket(configBO);
+		ws = createWebSocket();
 		if (ws == null) {
 			r.failWithMessage("binance socket create scoket error");
 			return r;

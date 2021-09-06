@@ -13,7 +13,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
-import demo.base.system.service.impl.RedisConnectService;
 import demo.finance.common.service.impl.FinanceCommonService;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.result.FilterBODataResult;
@@ -34,8 +33,6 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 
 	@Autowired
 	protected RedisTemplate<String, Object> redisTemplate;
-	@Autowired
-	protected RedisConnectService redisConnectService;
 	@Autowired
 	protected CryptoCoinConstantService constantService;
 

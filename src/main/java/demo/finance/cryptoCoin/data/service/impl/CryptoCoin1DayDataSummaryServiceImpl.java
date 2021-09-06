@@ -368,7 +368,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		dto.setTestEventId(snowFlake.getNextId());
 
 		CryptoCoinDailyDataQueryDTO paramDTO = new CryptoCoinDailyDataQueryDTO();
-		paramDTO.setApiKey(constantService.getApiKey());
+		paramDTO.setApiKey(constantService.getCryptoCompareApiKey());
 		paramDTO.setCoinName(coinName);
 		paramDTO.setCurrencyName(constantService.getDefaultCurrency());
 		paramDTO.setCounting(counting);

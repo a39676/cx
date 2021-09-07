@@ -4,9 +4,6 @@ AT
 crypto coin
 	crypto compare 更新 daily data 时 可能返回全0数据, 需要binance 协助
 
-删除 
-	excel analysis 相关数据表
-	
 需要规范化 / 删除
 	ToolPathConstant	
 	

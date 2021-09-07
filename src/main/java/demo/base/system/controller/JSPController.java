@@ -24,7 +24,7 @@ public class JSPController extends CommonController {
 		ModelAndView view = new ModelAndView(BaseViewConstant.financeclearNavigationRoleUser);
 		
 		HashMap<String, String> basePart = new HashMap<String, String>();
-		basePart.put("welcome", BaseUrl.welcome);
+		basePart.put("welcome", BaseUrl.WELCOME);
 		
 		HashMap<String, String> accountInfoPart = new HashMap<String, String>();
 		accountInfoPart.put("accountInfoRoot", AccountUrl.accountInfoRoot);

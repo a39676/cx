@@ -1,6 +1,7 @@
+base
+	管理员页面 提供刷新各模块常量 UI按钮
+
 AT 
-	bbt 服务检测需要改变
-		由其他 bbt 服务器反馈心跳, 检测到一段时间无心跳后, 发送电报
 	report 展示页面将需要适应 JsonReportElementDTO 的调整
 		
 crypto coin

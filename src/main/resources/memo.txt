@@ -1,6 +1,3 @@
-base
-	管理员页面 提供刷新各模块常量 UI按钮
-
 AT 
 	report 展示页面将需要适应 JsonReportElementDTO 的调整
 		

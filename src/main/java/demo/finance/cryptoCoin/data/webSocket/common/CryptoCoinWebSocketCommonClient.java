@@ -6,6 +6,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 
 public abstract class CryptoCoinWebSocketCommonClient extends CryptoCoinCommonService {
@@ -13,35 +14,30 @@ public abstract class CryptoCoinWebSocketCommonClient extends CryptoCoinCommonSe
 	@Autowired
 	protected CryptoCoinPriceCacheService cacheService;
 	
+	@Autowired
+	protected CryptoCoinCatalogService catalogService;
+	
 	protected Set<String> getSubscriptionList() {
-		return constantService.getSubscriptionSet();
+		return catalogService.getSubscriptionNameList();
 	}
 	
 	protected void addMainSubscription(String channel) {
-		channel = channel.toUpperCase();
-		constantService.getSubscriptionSet().add(channel);
+		catalogService.addSubscriptionCatalog(channel);
 	}
 
 	protected void addMainSubscription(List<String> channelList) {
-		for(String channel : channelList) {
-			channel = channel.toUpperCase();
-			constantService.getSubscriptionSet().add(channel);
-		}
+		catalogService.addSubscriptionCatalog(channelList);
 	}
 	
 	protected void removeMainSubscription(String channel) {
-		channel = channel.toUpperCase();
-		constantService.getSubscriptionSet().remove(channel);
+		catalogService.removeSubscriptionCatalog(channel);
 	}
 	
 	protected void removeMainSubscription(List<String> channelList) {
-		for(String channel : channelList) {
-			channel = channel.toUpperCase();
-			constantService.getSubscriptionSet().remove(channel);
-		}
+		catalogService.removeSubscriptionCatalog(channelList);
 	}
 
 	protected void removeAllMainSubscription() {
-		constantService.getSubscriptionSet().clear();
+		catalogService.removeAllSubscriptionCatalog();
 	}
 }

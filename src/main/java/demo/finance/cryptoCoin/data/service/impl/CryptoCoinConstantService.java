@@ -32,6 +32,7 @@ public class CryptoCoinConstantService extends CommonService {
 	private LocalDateTime binanceWebSocketLastActiveTime;
 
 	private Set<String> subscriptionSet = new HashSet<>();
+	private Set<String> lowPriceSubscriptionSet = new HashSet<>();
 
 	public void refreshConstant() {
 		File optionFile = new File(optionFilePath);
@@ -104,13 +105,21 @@ public class CryptoCoinConstantService extends CommonService {
 		this.subscriptionSet = subscriptionList;
 	}
 
+	public Set<String> getLowPriceSubscriptionSet() {
+		return lowPriceSubscriptionSet;
+	}
+
+	public void setLowPriceSubscriptionSet(Set<String> lowPriceSubscriptionSet) {
+		this.lowPriceSubscriptionSet = lowPriceSubscriptionSet;
+	}
+
 	@Override
 	public String toString() {
 		return "CryptoCoinConstantService [optionFilePath=" + optionFilePath + ", defaultCurrency=" + defaultCurrency
 				+ ", cryptoCompareApiKey=" + cryptoCompareApiKey + ", cryptoCompareUri=" + cryptoCompareUri
 				+ ", cryptoCompareWebSocketLastActiveTime=" + cryptoCompareWebSocketLastActiveTime + ", binanceUri="
 				+ binanceUri + ", binanceWebSocketLastActiveTime=" + binanceWebSocketLastActiveTime
-				+ ", subscriptionSet=" + subscriptionSet + "]";
+				+ ", subscriptionSet=" + subscriptionSet + ", lowPriceSubscriptionSet=" + lowPriceSubscriptionSet + "]";
 	}
 
 }

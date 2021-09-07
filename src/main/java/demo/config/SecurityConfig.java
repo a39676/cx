@@ -83,7 +83,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             // used to allow anonymous access 
             // .antMatchers("/welcome**").access("IS_AUTHENTICATED_ANONYMOUSLY")
 //            .antMatchers(ArticleUrlConstant.root + "/**").access("hasAnyRole('" + RolesType.ROLE_ADMIN.getRoleName() + "','" + RolesType.ROLE_USER.getRoleName() + "')")
-            .antMatchers(BaseUrl.shutdown + "/**")
+            .antMatchers(BaseUrl.SHUTDOWN + "/**")
+            	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
+            .antMatchers(BaseUrl.OPTION_CONSTANT+ "/**")
             	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers(TestUrl.root + "/**")
         		.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))

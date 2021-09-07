@@ -62,7 +62,7 @@ public class LoginLogoutController extends CommonController {
 		}
 
 		if (logout != null) {
-			view.setViewName("redirect:" + BaseUrl.baseRoot);
+			view.setViewName("redirect:" + BaseUrl.ROOT);
 			return view;
 		}
 		view.setViewName(BaseViewConstant.loginCustomV3);

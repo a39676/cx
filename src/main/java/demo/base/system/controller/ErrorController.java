@@ -18,7 +18,7 @@ import demo.base.system.pojo.constant.BaseUrl;
 @Controller
 public class ErrorController extends ExceptionController {
 	
-	@GetMapping(value = BaseUrl.error403)
+	@GetMapping(value = BaseUrl.ERROR_403)
 	public ModelAndView accesssDenied(HttpServletRequest request) {
 		return exceptionService.handleCommonException(request);
 	}

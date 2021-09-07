@@ -24,7 +24,7 @@ public class AuxiliaryController extends CommonController {
 	@Autowired
 	private AuxiliaryService auxiliaryService;
 	
-	@GetMapping(value = { BaseUrl.robot })
+	@GetMapping(value = { BaseUrl.ROBOT })
 	public void robots(HttpServletRequest request, HttpServletResponse response) {
 		auxiliaryService.robotTxtHandle(request, response);
 	}
@@ -47,7 +47,7 @@ public class AuxiliaryController extends CommonController {
 //		}
 //	}
 	
-	@GetMapping(value = { BaseUrl.favicon })
+	@GetMapping(value = { BaseUrl.FAVICON })
 	public void favicon(HttpServletResponse response) {
 		Resource resource = new ClassPathResource("/static_resources/favicon.ico");
 		

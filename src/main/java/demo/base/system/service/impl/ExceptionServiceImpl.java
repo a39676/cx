@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
-import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.constant.BaseViewConstant;
-import demo.base.system.pojo.constant.DebugStatusConstant;
 import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.ExceptionService;
 import demo.base.system.service.HostnameService;
@@ -32,7 +30,7 @@ public class ExceptionServiceImpl extends CommonService implements ExceptionServ
 	public ModelAndView handleCommonException(HttpServletRequest request, Exception e) {
 		log.error(e.toString());
 		ModelAndView view = new ModelAndView("baseJSP/errorCustom");
-		if(findDebugStatus()) {
+		if(systemConstantService.getIsDebuging()) {
 			view.addObject("message", e.toString());
 		} else {
 			view.addObject("message", "很抱歉,居然出现了" + description[getRan()] + "的异常");
@@ -52,10 +50,10 @@ public class ExceptionServiceImpl extends CommonService implements ExceptionServ
 			view.setViewName(BaseViewConstant.normal404);
 //		} else if(HostnameType.three.equals(hostnameType)) {
 //			view.setViewName(BaseViewConstant.seekingJob404);
-		} else if("dev".equals(constantService.getValByName(SystemConstantStore.envName, true))){
+		} else if("dev".equals(systemConstantService.getEnvNameRefresh())){
 			view.setViewName(BaseViewConstant.normal404);
 		} else {
-			view.setViewName(BaseViewConstant.empty);
+			view.setViewName(BaseViewConstant.normal404);
 		}
 
 		return view;
@@ -71,12 +69,4 @@ public class ExceptionServiceImpl extends CommonService implements ExceptionServ
 		return view;
 	}
 	
-	private boolean findDebugStatus() {
-		String debugStatusStr = constantService.getValByName(SystemConstantStore.debugStatus);
-		if(DebugStatusConstant.debuging.equals(debugStatusStr)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 }

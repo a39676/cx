@@ -1,7 +1,6 @@
 package demo.finance.cryptoCoin.data.service.impl;
 
 import java.math.BigDecimal;
-import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,39 +11,37 @@ import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
+import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
-import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1dayMapper;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1weekMapper;
-import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinPriceCommonDataBO;
-import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1day;
-import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1week;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1weekExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1WeekDataSummaryService;
-import finance.cryptoCoin.pojo.type.CryptoCoinType;
+import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
+import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 
 @Service
 public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonService
 		implements CryptoCoin1WeekDataSummaryService {
 
 	private final int dayStepLong = 7;
-	private final DayOfWeek startDayOfWeek = DayOfWeek.SUNDAY;
 
 	@Autowired
-	private CryptoCoinPrice1dayMapper cacheMapper;
-	@Autowired
-	private CryptoCoinPrice1weekMapper summaryMapper;
+	private CryptoCoinPrice1weekMapper _1weekDataMapper;
 
 	@Override
 	public CommonResult summaryHistoryData() {
 		CommonResult r = new CommonResult();
 
 		LocalDateTime now = LocalDateTime.now();
-		LocalDateTime lastSunday = localDateTimeHandler.findLastDayOfWeek(now, startDayOfWeek);
+		LocalDateTime lastSunday = localDateTimeHandler.findLastDayOfWeek(now,
+				CryptoCoinDataConstant.START_DAY_OF_WEEK);
 		LocalDateTime thereStepBefore = lastSunday.minusDays(dayStepLong * 3).withHour(0).withMinute(0).withSecond(0)
 				.withNano(0);
 
-		for (CryptoCoinType coinType : CryptoCoinType.values()) {
+		List<CryptoCoinCatalog> coinCatalogList = coinCatalogService.getAllCatalog();
+		for (CryptoCoinCatalog coinType : coinCatalogList) {
 			for (CurrencyType currencyType : CurrencyType.values()) {
 				for (LocalDateTime datetime = thereStepBefore; datetime
 						.isBefore(now); datetime = datetime.plusDays(dayStepLong)) {
@@ -56,41 +53,39 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 		return r;
 	}
 
-	private void handleHistoryDataList(LocalDateTime startTime, CryptoCoinType coinType, CurrencyType currencyType) {
-		LocalDateTime endTime = startTime.plusDays(dayStepLong);
+	private void handleHistoryDataList(LocalDateTime startTime, CryptoCoinCatalog coinType, CurrencyType currencyType) {
 
-		CryptoCoinPrice1dayExample cacheExample = new CryptoCoinPrice1dayExample();
-		cacheExample.createCriteria().andCoinTypeEqualTo(coinType.getCode())
-				.andCurrencyTypeEqualTo(currencyType.getCode()).andStartTimeGreaterThanOrEqualTo(startTime)
-				.andStartTimeLessThan(endTime);
-		List<CryptoCoinPrice1day> cacheList = cacheMapper.selectByExample(cacheExample);
-		if (cacheList == null || cacheList.isEmpty()) {
+		List<CryptoCoinPriceCommonDataBO> cacheDataList = dailyDataService.getCommonDataList(coinType, currencyType,
+				startTime);
+		if (cacheDataList == null || cacheDataList.isEmpty()) {
 			return;
 		}
 
 		CryptoCoinPrice1weekExample example = new CryptoCoinPrice1weekExample();
-		example.createCriteria().andCoinTypeEqualTo(coinType.getCode()).andCurrencyTypeEqualTo(currencyType.getCode())
+		example.createCriteria().andCoinTypeEqualTo(coinType.getId()).andCurrencyTypeEqualTo(currencyType.getCode())
 				.andStartTimeEqualTo(startTime);
-		List<CryptoCoinPrice1week> poList = summaryMapper.selectByExample(example);
+		List<CryptoCoinPrice1week> poList = _1weekDataMapper.selectByExample(example);
 		CryptoCoinPrice1week po = null;
 		boolean newPOFlag = false;
 		if (poList == null || poList.isEmpty()) {
 			newPOFlag = true;
 			po = new CryptoCoinPrice1week();
 			po.setId(snowFlake.getNextId());
-			po.setCoinType(coinType.getCode());
+			po.setCoinType(coinType.getId());
 			po.setCurrencyType(currencyType.getCode());
 		} else {
 			po = poList.get(0);
 		}
 
 		Double volumeSummary = 0D;
-		for (CryptoCoinPrice1day cache : cacheList) {
-			if (po.getStartTime() == null || cache.getStartTime().isBefore(po.getStartTime()) || cache.getStartTime().isEqual(po.getStartTime())) {
+		for (CryptoCoinPriceCommonDataBO cache : cacheDataList) {
+			if (po.getStartTime() == null || cache.getStartTime().isBefore(po.getStartTime())
+					|| cache.getStartTime().isEqual(po.getStartTime())) {
 				po.setStartTime(cache.getStartTime());
 				po.setStartPrice(cache.getStartPrice());
 			}
-			if (po.getEndTime() == null || cache.getEndTime().isAfter(po.getEndTime()) || cache.getEndTime().isEqual(po.getEndTime())) {
+			if (po.getEndTime() == null || cache.getEndTime().isAfter(po.getEndTime())
+					|| cache.getEndTime().isEqual(po.getEndTime())) {
 				po.setEndTime(cache.getEndTime());
 				po.setEndPrice(cache.getEndPrice());
 			}
@@ -105,28 +100,27 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 		po.setVolume(new BigDecimal(volumeSummary));
 
 		if (newPOFlag) {
-			summaryMapper.insertSelective(po);
+			_1weekDataMapper.insertSelective(po);
 		} else {
-			summaryMapper.updateByPrimaryKeySelective(po);
+			_1weekDataMapper.updateByPrimaryKeySelective(po);
 		}
 	}
 
 	@Override
-	public List<CryptoCoinPrice1week> getData(CryptoCoinType coinType, CurrencyType currencyType,
+	public List<CryptoCoinPrice1week> getDataList(CryptoCoinCatalog coinType, CurrencyType currencyType,
 			LocalDateTime startTime) {
 		CryptoCoinPrice1weekExample example = new CryptoCoinPrice1weekExample();
-		example.createCriteria().andCoinTypeEqualTo(coinType.getCode()).andCurrencyTypeEqualTo(currencyType.getCode())
+		example.createCriteria().andCoinTypeEqualTo(coinType.getId()).andCurrencyTypeEqualTo(currencyType.getCode())
 				.andStartTimeGreaterThanOrEqualTo(startTime);
 		;
-		example.setOrderByClause("create_time desc");
 
-		return summaryMapper.selectByExample(example);
+		return _1weekDataMapper.selectByExample(example);
 	}
 
 	@Override
-	public List<CryptoCoinPriceCommonDataBO> getCommonData(CryptoCoinType coinType, CurrencyType currencyType,
+	public List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinCatalog coinType, CurrencyType currencyType,
 			LocalDateTime startTime) {
-		List<CryptoCoinPrice1week> poList = getData(coinType, currencyType, startTime);
+		List<CryptoCoinPrice1week> poList = getDataList(coinType, currencyType, startTime);
 
 		CryptoCoinPriceCommonDataBO tmpCommonData = null;
 		List<CryptoCoinPriceCommonDataBO> commonDataList = new ArrayList<>();
@@ -137,5 +131,24 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 		}
 
 		return commonDataList;
+	}
+
+	@Override
+	public List<CryptoCoinPriceCommonDataBO> getCommonDataListFillWithCache(CryptoCoinCatalog coinType,
+			CurrencyType currencyType, LocalDateTime startTime) {
+
+		List<CryptoCoinPriceCommonDataBO> poDataList = getCommonDataList(coinType, currencyType, startTime);
+//		List<CryptoCoinPriceCommonDataBO> poDataList = buildFakeData(coinType, currencyType, startTime);
+
+		List<CryptoCoinPriceCommonDataBO> cacheDataList = cacheService.getCommonDataList(coinType, currencyType, startTime);
+
+		if (cacheDataList.isEmpty()) {
+			return poDataList;
+		}
+
+		List<CryptoCoinPriceCommonDataBO> resultDataList = mergePODataWithCache(poDataList, cacheDataList, startTime,
+				dayStepLong / 7, TimeUnitType.hour);
+
+		return resultDataList;
 	}
 }

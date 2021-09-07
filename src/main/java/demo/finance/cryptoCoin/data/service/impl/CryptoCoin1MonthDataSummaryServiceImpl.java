@@ -11,16 +11,14 @@ import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
+import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
-import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1dayMapper;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1monthMapper;
-import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinPriceCommonDataBO;
-import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1day;
-import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1month;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1monthExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MonthDataSummaryService;
-import finance.cryptoCoin.pojo.type.CryptoCoinType;
+import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 
 @Service
 public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonService
@@ -28,8 +26,6 @@ public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonServ
 
 	private final int monthStepLong = 1;
 
-	@Autowired
-	private CryptoCoinPrice1dayMapper cacheMapper;
 	@Autowired
 	private CryptoCoinPrice1monthMapper summaryMapper;
 
@@ -41,7 +37,8 @@ public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonServ
 		LocalDateTime thereStepBefore = now.withDayOfMonth(1).minusMonths(monthStepLong * 3).withHour(0).withMinute(0)
 				.withSecond(0).withNano(0);
 
-		for (CryptoCoinType coinType : CryptoCoinType.values()) {
+		List<CryptoCoinCatalog> coinCatalogList = coinCatalogService.getAllCatalog();
+		for (CryptoCoinCatalog coinType : coinCatalogList) {
 			for (CurrencyType currencyType : CurrencyType.values()) {
 				for (LocalDateTime datetime = thereStepBefore; datetime
 						.isBefore(now); datetime = datetime.plusMonths(monthStepLong)) {
@@ -53,20 +50,15 @@ public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonServ
 		return r;
 	}
 
-	private void handleHistoryDataList(LocalDateTime startTime, CryptoCoinType coinType, CurrencyType currencyType) {
-		LocalDateTime endTime = startTime.plusMonths(monthStepLong);
-
-		CryptoCoinPrice1dayExample cacheExample = new CryptoCoinPrice1dayExample();
-		cacheExample.createCriteria().andCoinTypeEqualTo(coinType.getCode())
-				.andCurrencyTypeEqualTo(currencyType.getCode()).andStartTimeGreaterThanOrEqualTo(startTime)
-				.andStartTimeLessThan(endTime);
-		List<CryptoCoinPrice1day> cacheList = cacheMapper.selectByExample(cacheExample);
-		if (cacheList == null || cacheList.isEmpty()) {
+	private void handleHistoryDataList(LocalDateTime startTime, CryptoCoinCatalog coinType, CurrencyType currencyType) {
+		List<CryptoCoinPriceCommonDataBO> cacheDataList = dailyDataService.getCommonDataList(coinType, currencyType,
+				startTime);
+		if (cacheDataList == null || cacheDataList.isEmpty()) {
 			return;
 		}
 
 		CryptoCoinPrice1monthExample example = new CryptoCoinPrice1monthExample();
-		example.createCriteria().andCoinTypeEqualTo(coinType.getCode()).andCurrencyTypeEqualTo(currencyType.getCode())
+		example.createCriteria().andCoinTypeEqualTo(coinType.getId()).andCurrencyTypeEqualTo(currencyType.getCode())
 				.andStartTimeEqualTo(startTime);
 		List<CryptoCoinPrice1month> poList = summaryMapper.selectByExample(example);
 		CryptoCoinPrice1month po = null;
@@ -75,14 +67,14 @@ public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonServ
 			newPOFlag = true;
 			po = new CryptoCoinPrice1month();
 			po.setId(snowFlake.getNextId());
-			po.setCoinType(coinType.getCode());
+			po.setCoinType(coinType.getId());
 			po.setCurrencyType(currencyType.getCode());
 		} else {
 			po = poList.get(0);
 		}
 
 		Double volumeSummary = 0D;
-		for (CryptoCoinPrice1day cache : cacheList) {
+		for (CryptoCoinPriceCommonDataBO cache : cacheDataList) {
 			if (po.getStartTime() == null || cache.getStartTime().isBefore(po.getStartTime()) || cache.getStartTime().isEqual(po.getStartTime())) {
 				po.setStartTime(cache.getStartTime());
 				po.setStartPrice(cache.getStartPrice());
@@ -109,21 +101,20 @@ public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonServ
 	}
 
 	@Override
-	public List<CryptoCoinPrice1month> getData(CryptoCoinType coinType, CurrencyType currencyType,
+	public List<CryptoCoinPrice1month> getDataList(CryptoCoinCatalog coinType, CurrencyType currencyType,
 			LocalDateTime startTime) {
 		CryptoCoinPrice1monthExample example = new CryptoCoinPrice1monthExample();
-		example.createCriteria().andCoinTypeEqualTo(coinType.getCode()).andCurrencyTypeEqualTo(currencyType.getCode())
+		example.createCriteria().andCoinTypeEqualTo(coinType.getId()).andCurrencyTypeEqualTo(currencyType.getCode())
 				.andStartTimeGreaterThanOrEqualTo(startTime);
 		;
-		example.setOrderByClause("create_time desc");
 
 		return summaryMapper.selectByExample(example);
 	}
 
 	@Override
-	public List<CryptoCoinPriceCommonDataBO> getCommonData(CryptoCoinType coinType, CurrencyType currencyType,
+	public List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinCatalog coinType, CurrencyType currencyType,
 			LocalDateTime startTime) {
-		List<CryptoCoinPrice1month> poList = getData(coinType, currencyType, startTime);
+		List<CryptoCoinPrice1month> poList = getDataList(coinType, currencyType, startTime);
 
 		CryptoCoinPriceCommonDataBO tmpCommonData = null;
 		List<CryptoCoinPriceCommonDataBO> commonDataList = new ArrayList<>();
@@ -134,5 +125,23 @@ public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonServ
 		}
 
 		return commonDataList;
+	}
+	
+	@Override
+	public List<CryptoCoinPriceCommonDataBO> getCommonDataListFillWithCache(CryptoCoinCatalog coinType,
+			CurrencyType currencyType, LocalDateTime startTime) {
+
+		List<CryptoCoinPriceCommonDataBO> poDataList = getCommonDataList(coinType, currencyType, startTime);
+//		List<CryptoCoinPriceCommonDataBO> poDataList = buildFakeData(coinType, currencyType, startTime);
+
+		List<CryptoCoinPriceCommonDataBO> cacheDataList = cacheService.getCommonDataList(coinType, currencyType, startTime);
+
+		if (cacheDataList.isEmpty()) {
+			return poDataList;
+		}
+
+		List<CryptoCoinPriceCommonDataBO> resultDataList = mergePODataWithCache(poDataList, cacheDataList, startTime, monthStepLong, TimeUnitType.month);
+
+		return resultDataList;
 	}
 }

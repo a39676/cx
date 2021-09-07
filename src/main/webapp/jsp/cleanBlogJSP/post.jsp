@@ -25,8 +25,7 @@
             <h1>${articleLongVO.articleTitle}</h1>
             <h2 class="subheading"></h2>
             <span class="meta">
-              Posted by <a href="#">${articleLongVO.nickName}</a>
-              on ${articleLongVO.createDateString}
+              ${articleLongVO.createDateString}
             </span>
           </div>
         </div>
@@ -115,8 +114,7 @@
         <div class="row">
           <div class="col-lg-8 col-md-10 mx-auto">
             <div class="page-heading">
-              <h2>这是一个传说的...</h2>
-              <span class="subheading">留言区</span>
+              <span class="subheading">欢迎留言</span>
             </div>
           </div>
         </div>

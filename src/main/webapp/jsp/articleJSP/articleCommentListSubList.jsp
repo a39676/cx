@@ -143,7 +143,7 @@ $(document).ready(function() {
 
   $("button[name='deleteArticleComment']").click(function () {
     var commentId = $(this).attr("commentId");
-    var url = "${pageContext.request.contextPath}/articleAdminComment/deleteArticleComment";
+    var url = "/articleAdminComment/deleteArticleComment";
     var jsonOutput = {
       commentId:commentId
     };
@@ -174,7 +174,7 @@ $(document).ready(function() {
 
   $("button[name='passArticleComment']").click(function () {
     var commentId = $(this).attr("commentId");
-    var url = "${pageContext.request.contextPath}/articleAdminComment/passArticleComment";
+    var url = "/articleAdminComment/passArticleComment";
     var jsonOutput = {
       commentId:commentId
     };

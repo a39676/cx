@@ -8,9 +8,6 @@ public enum ResultTypeCX {
 	editArticleLongSuccess("已成功编辑,可能稍后就会出现...", "0"),
 	evaluationVoteSuccess("已评~", "0"),
 	setArticleHotSuccess("文章已置顶", "0"),
-	feedbackReciveSuccess("感谢您的反馈!", "0"),
-	articleCommentDeleteSuccess("评论已删除", "0"),
-	articleCommentPassSuccess("评论已通过", "0"),
 	
 	fail ("fail", "-1"),
 	nullParam ("参数为空", "-2"),
@@ -47,7 +44,6 @@ public enum ResultTypeCX {
 	mailNotActivation ("邮箱未激活", "-7-5"),
 	notYourArticle ("删除过程异常", "-7-6"),
 	hadEvaluationVoted ("人海中已留下你的足迹...", "-7-7"),
-	justComment("刚刚才发过言...要不坐下先喝杯咖啡...", "-7-8"),
 	
 	communicationError("网络通讯异常", "-8-1"),
 	;

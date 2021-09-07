@@ -55,7 +55,7 @@ import demo.base.user.service.RoleService;
 import demo.base.user.service.UserAuthService;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.service.CommonService;
-import demo.tool.service.TextFilter;
+import demo.tool.other.service.TextFilter;
 
 @Service
 public class AuthServiceImpl extends CommonService implements AuthService {

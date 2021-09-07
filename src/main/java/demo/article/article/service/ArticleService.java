@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.article.article.pojo.dto.ArticleFeedbackDTO;
 import demo.article.article.pojo.dto.EditArticleLongDTO;
 import demo.article.article.pojo.dto.ReadyToEditArticleLongDTO;
 import demo.article.article.pojo.param.controllerParam.CreateArticleParam;
@@ -50,8 +49,6 @@ public interface ArticleService {
 	 * 定时任务逻辑, 拉取article_long_review中  缺失作者ID的数据, 补填
 	 */
 	void refillArticleLongReviewCreatorId();
-
-	CommonResultCX articleLongFeedback(ArticleFeedbackDTO dto, HttpServletRequest request);
 
 	/** 发布文章, 根据条件选择是普通单文章发布 or 批量发布 */
 	CommonResult crateArticleLongPrefixServcie(CreateArticleParam cp)

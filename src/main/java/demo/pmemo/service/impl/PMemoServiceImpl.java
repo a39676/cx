@@ -22,7 +22,7 @@ public class PMemoServiceImpl extends ArticleCommonService implements PMemoServi
 			return "";
 		}
 		
-		return constantService.getValByName(PMemoConstant.P_MEMO_REDIS_KEY + key);
+		return redisConnectService.getValByName(PMemoConstant.P_MEMO_REDIS_KEY + key);
 	}
 	
 	@Override
@@ -53,7 +53,7 @@ public class PMemoServiceImpl extends ArticleCommonService implements PMemoServi
 			validSeconds = PMemoConstant.DEFAULT_VALID_SECONDS;
 		}
 		
-		constantService.setValByName(PMemoConstant.P_MEMO_REDIS_KEY + dto.getRedisKeyValue(), dto.getContent(), validSeconds, TimeUnit.SECONDS);
+		redisConnectService.setValByName(PMemoConstant.P_MEMO_REDIS_KEY + dto.getRedisKeyValue(), dto.getContent(), validSeconds, TimeUnit.SECONDS);
 		
 		r.setIsSuccess();
 		return r;
@@ -61,9 +61,7 @@ public class PMemoServiceImpl extends ArticleCommonService implements PMemoServi
 	
 	public void cleanMemo() {
 		/*
-		 *  TODO
-		 *  未加入 security url 鉴定权限
-		 *  提供删除其他 memo? 
+		 *  TODO 未加入 security url 鉴定权限 提供删除其他 memo? 
 		 */
 	}
 

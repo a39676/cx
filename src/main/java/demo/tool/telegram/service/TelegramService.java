@@ -5,6 +5,7 @@ import java.util.List;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.tool.telegram.pojo.po.TelegramChatId;
 import demo.tool.telegram.pojo.vo.TelegramChatIdVO;
+import telegram.pojo.constant.TelegramBotType;
 
 public interface TelegramService {
 
@@ -15,7 +16,11 @@ public interface TelegramService {
 	TelegramChatIdVO buildChatIdVO(TelegramChatId po);
 
 	TelegramChatId getChatID(Long id);
+	
+	CommonResult sendMessage(TelegramBotType botType, String msg, Long id);
 
 	CommonResult sendMessage(String msg, Long id);
+
+	void telegramSendingCheck();
 
 }

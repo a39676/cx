@@ -3,10 +3,6 @@ package demo.article.article.pojo.vo;
 public class ArticleLongSummaryVOV3 {
 	private String articleTitle;
 
-	private String nickName;
-
-	private String headIamgeUrl;
-
 	private String imgUrl;
 
 	private String createDateString;
@@ -20,7 +16,7 @@ public class ArticleLongSummaryVOV3 {
 	private Integer viewCount = 0;
 
 	private Long commentCount = 0L;
-	
+
 	private Boolean isHot = false;
 
 	public Long getCommentCount() {
@@ -45,22 +41,6 @@ public class ArticleLongSummaryVOV3 {
 
 	public void setArticleTitle(String articleTitle) {
 		this.articleTitle = articleTitle;
-	}
-
-	public String getNickName() {
-		return nickName;
-	}
-
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
-	}
-
-	public String getHeadIamgeUrl() {
-		return headIamgeUrl;
-	}
-
-	public void setHeadIamgeUrl(String headIamgeUrl) {
-		this.headIamgeUrl = headIamgeUrl;
 	}
 
 	public String getImgUrl() {
@@ -102,7 +82,7 @@ public class ArticleLongSummaryVOV3 {
 	public void setCreateDateTimeString(String createDateTimeString) {
 		this.createDateTimeString = createDateTimeString;
 	}
-	
+
 	public Boolean getIsHot() {
 		return isHot;
 	}
@@ -113,9 +93,8 @@ public class ArticleLongSummaryVOV3 {
 
 	@Override
 	public String toString() {
-		return "ArticleLongSummaryVOV3 [articleTitle=" + articleTitle + ", nickName=" + nickName + ", headIamgeUrl="
-				+ headIamgeUrl + ", imgUrl=" + imgUrl + ", createDateString=" + createDateString
-				+ ", createDateTimeString=" + createDateTimeString + ", privateKey=" + privateKey
+		return "ArticleLongSummaryVOV3 [articleTitle=" + articleTitle + ", imgUrl=" + imgUrl + ", createDateString="
+				+ createDateString + ", createDateTimeString=" + createDateTimeString + ", privateKey=" + privateKey
 				+ ", hasCommentNotReview=" + hasCommentNotReview + ", viewCount=" + viewCount + ", commentCount="
 				+ commentCount + ", isHot=" + isHot + "]";
 	}

@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 public class CryptoCoinPriceNotice {
     private Long id;
 
-    private Integer coinType;
+    private Long coinType;
 
     private Integer currencyType;
 
@@ -21,6 +21,8 @@ public class CryptoCoinPriceNotice {
     private BigDecimal fluctuationSpeedPercentage;
 
     private Long telegramChatId;
+
+    private String telegramBotName;
 
     private Integer noticeCount;
 
@@ -46,11 +48,11 @@ public class CryptoCoinPriceNotice {
         this.id = id;
     }
 
-    public Integer getCoinType() {
+    public Long getCoinType() {
         return coinType;
     }
 
-    public void setCoinType(Integer coinType) {
+    public void setCoinType(Long coinType) {
         this.coinType = coinType;
     }
 
@@ -108,6 +110,14 @@ public class CryptoCoinPriceNotice {
 
     public void setTelegramChatId(Long telegramChatId) {
         this.telegramChatId = telegramChatId;
+    }
+
+    public String getTelegramBotName() {
+        return telegramBotName;
+    }
+
+    public void setTelegramBotName(String telegramBotName) {
+        this.telegramBotName = telegramBotName == null ? null : telegramBotName.trim();
     }
 
     public Integer getNoticeCount() {

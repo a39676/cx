@@ -40,13 +40,25 @@ endpoints:
   shutdown:
     enabled: true
     
+optionFilePath:
+  article: "/home/u2/cx/optionFile/article/option.json"
+  articleComment: "/home/u2/cx/optionFile/articleComment/option.json"
+  mail: "/home/u2/cx/optionFile/mail/option.json"
+  cloudinary: "/home/u2/cx/optionFile/cloudinary/option.json"
+  automationTest: "/home/u2/cx/optionFile/automationTest/option.json"
+  cryptoCoin: "/home/u2/cx/optionFile/cryptoCoin/option.json"
+  scheduleClawing: "/home/u2/cx/optionFile/scheduleClawing/option.json"
+  
+    
 logging:
   level: 
+    root: ERROR 
     org.springframework.web: DEBUG
     # demo.test.controller: DEBUG
     demo.test.mapper: DEBUG
     demo.tool.mapper: DEBUG
     # demo.finance.cryptoCoin.notice.mapper: DEBUG
+    # demo.finance.cryptoCoin.data.mapper: DEBUG
     # demo.mapper: DEBUG
     # demo.bank.mapper: DEBUG
     # demo.credit_bill.mapper: DEBUG

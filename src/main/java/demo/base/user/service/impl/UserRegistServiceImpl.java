@@ -32,8 +32,8 @@ import demo.base.user.pojo.result.FindUserAuthResult;
 import demo.base.user.pojo.result.ModifyRegistEmailResult;
 import demo.base.user.pojo.result.NewUserRegistResult;
 import demo.base.user.pojo.result.ValidUserRegistResult;
+import demo.base.user.pojo.result.__baseSuperAdminRegistResult;
 import demo.base.user.pojo.type.AuthType;
-import demo.base.user.pojo.vo.__baseSuperAdminRegistVO;
 import demo.base.user.service.AuthService;
 import demo.base.user.service.UserAuthService;
 import demo.base.user.service.UserDetailService;
@@ -42,15 +42,16 @@ import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.ResultTypeCX;
 import demo.common.service.CommonService;
 import demo.config.costom_component.CustomPasswordEncoder;
-import demo.tool.pojo.dto.ResendMailDTO;
-import demo.tool.pojo.dto.SendForgotUsernameMailDTO;
-import demo.tool.pojo.dto.SendMailDTO;
-import demo.tool.pojo.po.MailRecord;
-import demo.tool.pojo.result.SendRegistMailResult;
-import demo.tool.pojo.type.MailType;
-import demo.tool.service.MailService;
-import demo.tool.service.TextFilter;
-import demo.tool.service.ValidRegexToolService;
+import demo.tool.mail.pojo.dto.ResendMailDTO;
+import demo.tool.mail.pojo.dto.SendForgotUsernameMailDTO;
+import demo.tool.mail.pojo.dto.SendMailDTO;
+import demo.tool.mail.pojo.po.MailRecord;
+import demo.tool.mail.pojo.result.SendRegistMailResult;
+import demo.tool.mail.pojo.type.MailType;
+import demo.tool.mail.service.MailService;
+import demo.tool.other.service.TextFilter;
+import demo.tool.other.service.ValidRegexToolService;
+import toolPack.numericHandel.NumericUtilCustom;
 
 @Service
 public class UserRegistServiceImpl extends CommonService implements UserRegistService {
@@ -61,6 +62,8 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	private MailService mailService;
 	@Autowired
 	private UsersMapper usersMapper;
+	@Autowired
+	private NumericUtilCustom numberUtil;
 	
 	@Autowired
 	private CustomPasswordEncoder passwordEncoder;
@@ -85,7 +88,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		
 		int ipRegistCount = 0;
 		if(!isBigUser()) {
-			ipRegistCount = checkFunctionalModuleVisitData(request, SystemRedisKey.userRegistCountingKeyPrefix);
+			ipRegistCount = redisConnectService.checkFunctionalModuleVisitData(request, SystemRedisKey.userRegistCountingKeyPrefix);
 		}
 		if(ipRegistCount > UserConstant.oneDayRegistCount) {
 			result.failWithMessage("最近已经注册过了,请不要重复注册");
@@ -117,7 +120,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		}
 		
 		result.normalSuccess();
-		insertFunctionalModuleVisitData(request, SystemRedisKey.userRegistCountingKeyPrefix, 1, TimeUnit.DAYS);
+		redisConnectService.insertFunctionalModuleVisitData(request, SystemRedisKey.userRegistCountingKeyPrefix, 1, TimeUnit.DAYS);
 		
 		return result;
 	}
@@ -137,44 +140,55 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		if (!validRegexToolService.validNormalUserName(dto.getUserName())) {
 			dto.setUserName(filter.sanitize(dto.getUserName()));
 			r.setUsername("\"" + dto.getUserName() + "\" 账户名异常, 必须以英文字母开头,长度为6~16个字符.(只可输入英文字母及数字)");
+			log.error("user regist error, username: " + dto.getUserName());
 		}
 
 		if (userRegistMapper.isUserExists(dto.getUserName()) > 0) {
 			r.setUsername("账户名已存在");
+			log.error("user regist error, duplicate username: " + dto.getUserName());
 		}
 
 		dto.setNickName(filter.sanitize(dto.getNickName()));
 		if(StringUtils.isBlank(dto.getNickName())) {
 			r.setNickname("请您一定要起给昵称...");
+			log.error("user regist error, null nickname: " + dto.getNickName());
 		} else if (dto.getNickName().length() > 32) {
 			r.setNickname("昵称太长了...");
+			log.error("user regist error, nickname too long: " + dto.getNickName());
 		} else if (userDetailService.isNicknameExists(dto.getNickName())) {
 			r.setNickname("昵称重复了...");
+			log.error("user regist error, nickname duplicate: " + dto.getNickName());
 		}
 
 		if (!validRegexToolService.validPassword(dto.getPwd())) {
 			r.setPwd("密码长度不正确(8到16位)");
+			log.error("user regist error, pwd too short");
 		}
 
 		if (!dto.getPwd().equals(dto.getPwdRepeat())) {
 			r.setPwdRepeat("两次输入的密码不一致");
+			log.error("user regist error, pwd repeat error");
 		}
 
 		if (!validRegexToolService.validEmail(dto.getEmail())) {
 			r.setEmail("请输入正确的邮箱");
+			log.error("user regist error, email error: " + dto.getEmail());
 		} else {
 			if (userDetailService.ensureActiveEmail(dto.getEmail()).isSuccess()) {
 				r.setEmail("邮箱已注册(忘记密码或用户名?可尝试找回)");
+				log.error("user regist error, email duplicate: " + dto.getEmail());
 			}
 		}
 
 		if (StringUtils.isNotBlank(dto.getMobile())) {
 			if(!numberUtil.matchMobile(dto.getMobile())) {
 				r.setMobile("请填入正确的手机号,或留空");
+				log.error("user regist error, mobile error: " + dto.getMobile());
 			}
 			
 			if(userDetailService.ensureActiveMobile(Long.parseLong(dto.getMobile())).isSuccess()) {
 				r.setMobile("手机号已经被占用, 若需要转移到当前帐号, 请联系管理员, 请参见网站上方\"联系方式\"");
+				log.error("user regist error, mobile duplicate: " + dto.getMobile());
 			}
 		}
 
@@ -182,11 +196,13 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		if (StringUtils.isNotBlank(dto.getReservationInformation())) {
 			if (dto.getReservationInformation().length() > 32) {
 				r.setReservationInformation("预留信息过长...32个字符以内..(中文算2个字符)");
+				log.error("user regist error, reservation information too long");
 			}
 		}
 
 		if (StringUtils.isNotBlank(dto.getQq())) {
 			r.setQq("QQ号格式异常...");
+			log.error("user regist error, QQ num error, qq: " + dto.getQq());
 		}
 		
 		if(r.getUsername() == null 
@@ -259,7 +275,8 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	
 	@Override
 	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
-	public __baseSuperAdminRegistVO __baseSuperAdminRegist() {
+	public __baseSuperAdminRegistResult __baseSuperAdminRegist() {
+		log.error("building base super admin");
 		UserRegistDTO userRegistDTO = new UserRegistDTO();
 		userRegistDTO.setUserName("daven");
 		userRegistDTO.setNickName("DavenC");
@@ -272,9 +289,13 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		
 		Long newUserId = snowFlake.getNextId();
 		
-		validAndSanitizeUserRegistDTO(userRegistDTO);
+		ValidUserRegistResult validAndSanitizeUserRegistResult = validAndSanitizeUserRegistDTO(userRegistDTO);
+		log.error("validAndSanitizeUserRegistResult: " + validAndSanitizeUserRegistResult.isSuccess());
+		if(validAndSanitizeUserRegistResult.isFail()) {
+			log.error(validAndSanitizeUserRegistResult.getMessage());
+		}
 		
-		__baseSuperAdminRegistVO result = new __baseSuperAdminRegistVO();
+		__baseSuperAdminRegistResult result = new __baseSuperAdminRegistResult();
 		
 		UsersDetail userDetail = buildUserDetailFromUserRegistDTO(userRegistDTO, "0.0.0.0", newUserId);
 		Users user = buildUserFromRegistDTO(userRegistDTO, newUserId);
@@ -282,6 +303,8 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		userRegistMapper.insertNewUser(user);
 		userDetailService.insertSelective(userDetail);
 		userAuthService.insertBaseUserAuth(newUserId, AuthType.SUPER_ADMIN);
+		
+		log.error("insert base super admin");
 		
 		result.normalSuccess();
 		result.setNewSuperAdminId(newUserId);
@@ -338,8 +361,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		}
 		
 		/*
-		 * TODO
-		 * 更改邮箱需要将用户角色变回未激活? 最简便
+		 * TODO 更改邮箱需要将用户角色变回未激活? 最简便
 		 */
 		
 		r.setIsSuccess();

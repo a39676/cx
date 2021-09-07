@@ -1,26 +1,38 @@
 package demo.finance.cryptoCoin.data.service.impl;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import autoTest.testEvent.cryptoCoin.pojo.type.CryptoCoinFlowType;
+import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
+import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
+import auxiliaryCommon.pojo.type.TimeUnitType;
+import demo.automationTest.mq.producer.TestEventInsertAckProducer;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1dayMapper;
-import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice60minuteMapper;
-import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinPriceCommonDataBO;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1day;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample;
-import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice60minute;
-import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice60minuteExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
-import finance.cryptoCoin.pojo.type.CryptoCoinType;
+import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
+import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
+import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
+import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
+import finance.cryptoCoin.pojo.dto.CryptoCoinDataSubDTO;
+import finance.cryptoCoin.pojo.type.CryptoCoinDataSourceType;
+import telegram.pojo.constant.TelegramBotType;
+import telegram.pojo.dto.TelegramMessageDTO;
 
 @Service
 public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonService
@@ -29,101 +41,194 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 	private final int dayStepLong = 1;
 
 	@Autowired
-	private CryptoCoinPrice60minuteMapper cacheMapper;
+	private CryptoCoinPrice1dayMapper _1DayDataMapper;
+
 	@Autowired
-	private CryptoCoinPrice1dayMapper summaryMapper;
+	private TestEventInsertAckProducer testEventInsertAckProducer;
 
 	@Override
-	public CommonResult summaryHistoryData() {
+	public CommonResult receiveDailyData(CryptoCoinDataDTO dto) {
+		/*
+		 * TODO 此处可指定, 如果从某 datasource 获取不到数据, 则重新发起查询并调用下一个 datasource
+		 */
 		CommonResult r = new CommonResult();
-
-		LocalDateTime now = LocalDateTime.now();
-		LocalDateTime thereStepBefore = now.minusDays(dayStepLong * 3).withHour(0).withMinute(0).withSecond(0)
-				.withNano(0);
-
-		for (CryptoCoinType coinType : CryptoCoinType.values()) {
-			for (CurrencyType currencyType : CurrencyType.values()) {
-				for (LocalDateTime datetime = thereStepBefore; datetime
-						.isBefore(now); datetime = datetime.plusDays(dayStepLong)) {
-					handleHistoryDataList(datetime, coinType, currencyType);
-				}
-			}
+		List<CryptoCoinDataSubDTO> dataList = dto.getPriceHistoryData();
+		if (!isValidData(dataList)) {
+			TelegramMessageDTO msgDTO = new TelegramMessageDTO();
+			msgDTO.setId(TelegramStaticChatID.MY_ID);
+			msgDTO.setMsg(dto.getCryptoCoinTypeName() + ", get error data(all zero) from crypto compare");
+			msgDTO.setBotName(TelegramBotType.BOT_2.getName());
+			telegramCryptoCoinMessageAckProducer.send(msgDTO);
+			return r;
 		}
 
+		CryptoCoinCatalog coinType = coinCatalogService.findCatalog(dto.getCryptoCoinTypeName());
+		CurrencyType currencyType = CurrencyType.getType(dto.getCurrencyName());
+		if (coinType == null || currencyType == null) {
+			return r;
+		}
+
+		updateSummaryData(dataList, coinType, currencyType);
+
+		r.setIsSuccess();
 		return r;
 	}
 
-	private void handleHistoryDataList(LocalDateTime startTime, CryptoCoinType coinType, CurrencyType currencyType) {
-		LocalDateTime endTime = startTime.plusDays(dayStepLong);
-
-		CryptoCoinPrice60minuteExample cacheExample = new CryptoCoinPrice60minuteExample();
-		cacheExample.createCriteria().andCoinTypeEqualTo(coinType.getCode())
-				.andCurrencyTypeEqualTo(currencyType.getCode()).andStartTimeGreaterThanOrEqualTo(startTime)
-				.andStartTimeLessThan(endTime);
-		List<CryptoCoinPrice60minute> cacheList = cacheMapper.selectByExample(cacheExample);
-		if (cacheList == null || cacheList.isEmpty()) {
-			return;
+	/*
+	 * 2021-04-14 crypto compare 有时会返回全0数据 暂不处理此类数据 dto 应该附带数据源
+	 */
+	private boolean isValidData(List<CryptoCoinDataSubDTO> dataList) {
+		if (dataList == null || dataList.isEmpty()) {
+			return false;
 		}
+		int zeroDataCountDown = dataList.size();
+		CryptoCoinDataSubDTO tmpData = null;
+		for (int i = 0; i < dataList.size() && zeroDataCountDown > 0; i++) {
+			tmpData = dataList.get(i);
+			if (tmpData.getStart() == 0 && tmpData.getEnd() == 0 && tmpData.getHigh() == 0 && tmpData.getLow() == 0) {
+				zeroDataCountDown--;
+			}
+		}
+		return zeroDataCountDown > 0;
+	}
+
+	private void updateSummaryData(List<CryptoCoinDataSubDTO> dataList, CryptoCoinCatalog coinType,
+			CurrencyType currencyType) {
+
+		LocalDateTime dataStartTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dataList.get(0).getTime());
+		dataStartTime = dataStartTime.with(LocalTime.MIN);
+		LocalDateTime dataEndime = localDateTimeHandler
+				.stringToLocalDateTimeUnkonwFormat(dataList.get(dataList.size() - 1).getTime());
 
 		CryptoCoinPrice1dayExample example = new CryptoCoinPrice1dayExample();
-		example.createCriteria().andCoinTypeEqualTo(coinType.getCode()).andCurrencyTypeEqualTo(currencyType.getCode())
-				.andStartTimeEqualTo(startTime);
-		List<CryptoCoinPrice1day> poList = summaryMapper.selectByExample(example);
-		CryptoCoinPrice1day po = null;
-		boolean newPOFlag = false;
-		if (poList == null || poList.isEmpty()) {
-			newPOFlag = true;
-			po = new CryptoCoinPrice1day();
-			po.setId(snowFlake.getNextId());
-			po.setCoinType(coinType.getCode());
-			po.setCurrencyType(currencyType.getCode());
-		} else {
-			po = poList.get(0);
+		example.createCriteria().andCoinTypeEqualTo(coinType.getId()).andCurrencyTypeEqualTo(currencyType.getCode())
+				.andStartTimeBetween(dataStartTime, dataEndime);
+
+		List<CryptoCoinPrice1day> poList = _1DayDataMapper.selectByExample(example);
+
+		LocalDateTime tmpDataTime = null;
+		boolean dataTimeMatchFlag = false;
+		CryptoCoinDataSubDTO tmpNewData = null;
+		for (int dataIndex = 0; dataIndex < dataList.size(); dataIndex++) {
+			tmpNewData = dataList.get(dataIndex);
+			tmpDataTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(tmpNewData.getTime());
+			tmpDataTime = tmpDataTime.with(LocalTime.MIN);
+			for (int i = 0; i < poList.size() && !dataTimeMatchFlag; i++) {
+				CryptoCoinPrice1day po = poList.get(i);
+				if (po.getStartTime().isEqual(tmpDataTime)) {
+					dataTimeMatchFlag = true;
+					mergeDataPair(po, tmpNewData);
+				}
+			}
+			if (!dataTimeMatchFlag) {
+				insertNewData(tmpNewData, coinType, currencyType);
+			}
+
+			dataTimeMatchFlag = false;
 		}
 
-		Double volumeSummary = 0D;
-		for (CryptoCoinPrice60minute cache : cacheList) {
-			if (po.getStartTime() == null || cache.getStartTime().isBefore(po.getStartTime()) || cache.getStartTime().isEqual(po.getStartTime())) {
-				po.setStartTime(cache.getStartTime());
-				po.setStartPrice(cache.getStartPrice());
-			}
-			if (po.getEndTime() == null || cache.getEndTime().isAfter(po.getEndTime()) || cache.getEndTime().isEqual(po.getEndTime())) {
-				po.setEndTime(cache.getEndTime());
-				po.setEndPrice(cache.getEndPrice());
-			}
-			if (po.getHighPrice() == null || po.getHighPrice().compareTo(cache.getHighPrice()) < 0) {
-				po.setHighPrice(cache.getHighPrice());
-			}
-			if (po.getLowPrice() == null || po.getLowPrice().compareTo(cache.getLowPrice()) > 0) {
-				po.setLowPrice(cache.getLowPrice());
-			}
-			volumeSummary += cache.getVolume().doubleValue();
-		}
-		po.setVolume(new BigDecimal(volumeSummary));
+	}
 
-		if (newPOFlag) {
-			summaryMapper.insertSelective(po);
-		} else {
-			summaryMapper.updateByPrimaryKeySelective(po);
+	private CryptoCoinPrice1day mergeDataPair(CryptoCoinPrice1day target, CryptoCoinDataSubDTO data) {
+		target.setStartPrice(new BigDecimal(data.getStart()));
+		target.setEndPrice(new BigDecimal(data.getEnd()));
+		target.setHighPrice(new BigDecimal(data.getHigh()));
+		target.setLowPrice(new BigDecimal(data.getLow()));
+		if (data.getVolume() != null && data.getVolume() > 0) {
+			target.setVolume(new BigDecimal(data.getVolume()));
 		}
+
+		_1DayDataMapper.updateByPrimaryKeySelective(target);
+		return target;
+	}
+
+	private CryptoCoinPrice1day mergeDataPair(CryptoCoinPrice1day target, CryptoCoinPrice1day source) {
+		if (target.getStartTime() == null || target.getStartTime().isAfter(source.getStartTime())) {
+			target.setStartTime(source.getStartTime());
+			target.setStartPrice(source.getStartPrice());
+		}
+		if (target.getEndTime() == null || target.getEndTime().isBefore(source.getEndTime())) {
+			target.setEndTime(source.getEndTime());
+			target.setEndPrice(source.getEndPrice());
+		}
+		target.setVolume(source.getVolume());
+		if (target.getHighPrice() == null || target.getHighPrice().doubleValue() < source.getHighPrice().byteValue()) {
+			target.setHighPrice(source.getHighPrice());
+		}
+		if (target.getLowPrice() == null || target.getLowPrice().doubleValue() > source.getLowPrice().byteValue()) {
+			target.setLowPrice(source.getLowPrice());
+		}
+
+		_1DayDataMapper.deleteByPrimaryKey(source.getId());
+		return target;
+	}
+
+	private void insertNewData(CryptoCoinDataSubDTO data, CryptoCoinCatalog coinType, CurrencyType currencyType) {
+		CryptoCoinPrice1day po = new CryptoCoinPrice1day();
+		po.setId(snowFlake.getNextId());
+		po.setStartTime(localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(data.getTime()).withHour(0).withMinute(0)
+				.withSecond(0).withNano(0));
+		po.setEndTime(po.getStartTime().plusDays(dayStepLong));
+		po.setCoinType(coinType.getId());
+		po.setCurrencyType(currencyType.getCode());
+		po.setStartPrice(new BigDecimal(data.getStart()));
+		po.setEndPrice(new BigDecimal(data.getEnd()));
+		po.setHighPrice(new BigDecimal(data.getHigh()));
+		po.setLowPrice(new BigDecimal(data.getLow()));
+		po.setVolume(new BigDecimal(data.getVolume()));
+
+		_1DayDataMapper.insertSelective(po);
 	}
 
 	@Override
-	public List<CryptoCoinPrice1day> getData(CryptoCoinType coinType, CurrencyType currencyType,
+	public CryptoCoinPriceCommonDataBO getCommonData(CryptoCoinCatalog coinType, CurrencyType currencyType,
+			LocalDateTime datetime) {
+		CryptoCoinPriceCommonDataBO tmpCommonData = null;
+		if (datetime == null || !LocalDate.now().isAfter(datetime.toLocalDate())) {
+			return tmpCommonData;
+		}
+
+		if (LocalDate.now().equals(datetime.toLocalDate())) {
+			tmpCommonData = cacheService.getCommonData(coinType, currencyType, datetime);
+		}
+
+		CryptoCoinPrice1dayExample example = new CryptoCoinPrice1dayExample();
+		example.createCriteria().andCoinTypeEqualTo(coinType.getId()).andCurrencyTypeEqualTo(currencyType.getCode())
+				.andStartTimeLessThanOrEqualTo(datetime).andEndTimeGreaterThanOrEqualTo(datetime);
+		List<CryptoCoinPrice1day> poList = _1DayDataMapper.selectByExample(example);
+		if (!poList.isEmpty()) {
+			tmpCommonData = new CryptoCoinPriceCommonDataBO();
+			BeanUtils.copyProperties(poList.get(0), tmpCommonData);
+			return tmpCommonData;
+		}
+
+		return tmpCommonData;
+	}
+
+	@Override
+	public List<CryptoCoinPrice1day> getDataList(CryptoCoinCatalog coinType, CurrencyType currencyType,
 			LocalDateTime startTime) {
 		CryptoCoinPrice1dayExample example = new CryptoCoinPrice1dayExample();
-		example.createCriteria().andCoinTypeEqualTo(coinType.getCode()).andCurrencyTypeEqualTo(currencyType.getCode())
+		example.createCriteria().andCoinTypeEqualTo(coinType.getId()).andCurrencyTypeEqualTo(currencyType.getCode())
 				.andStartTimeGreaterThanOrEqualTo(startTime);
-		;
-		example.setOrderByClause("create_time desc");
 
-		return summaryMapper.selectByExample(example);
+		return _1DayDataMapper.selectByExample(example);
 	}
 
 	@Override
-	public List<CryptoCoinPriceCommonDataBO> getCommonData(CryptoCoinType coinType, CurrencyType currencyType,
+	public List<CryptoCoinPrice1day> getDataList(CryptoCoinCatalog coinType, CurrencyType currencyType,
+			LocalDateTime startTime, LocalDateTime endTime) {
+		CryptoCoinPrice1dayExample example = new CryptoCoinPrice1dayExample();
+		example.createCriteria().andCoinTypeEqualTo(coinType.getId()).andCurrencyTypeEqualTo(currencyType.getCode())
+				.andStartTimeGreaterThanOrEqualTo(startTime).andEndTimeLessThanOrEqualTo(endTime);
+
+		return _1DayDataMapper.selectByExample(example);
+	}
+
+	@Override
+	public List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinCatalog coinType, CurrencyType currencyType,
 			LocalDateTime startTime) {
-		List<CryptoCoinPrice1day> poList = getData(coinType, currencyType, startTime);
+		List<CryptoCoinPrice1day> poList = getDataList(coinType, currencyType, startTime);
 
 		CryptoCoinPriceCommonDataBO tmpCommonData = null;
 		List<CryptoCoinPriceCommonDataBO> commonDataList = new ArrayList<>();
@@ -134,5 +239,141 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		}
 
 		return commonDataList;
+	}
+
+	@Override
+	public List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinCatalog coinType, CurrencyType currencyType,
+			LocalDateTime startTime, LocalDateTime endTime) {
+		List<CryptoCoinPrice1day> poList = getDataList(coinType, currencyType, startTime, endTime);
+
+		CryptoCoinPriceCommonDataBO tmpCommonData = null;
+		List<CryptoCoinPriceCommonDataBO> commonDataList = new ArrayList<>();
+		for (CryptoCoinPrice1day po : poList) {
+			tmpCommonData = new CryptoCoinPriceCommonDataBO();
+			BeanUtils.copyProperties(po, tmpCommonData);
+			commonDataList.add(tmpCommonData);
+		}
+
+		return commonDataList;
+	}
+
+	@Override
+	public List<CryptoCoinPriceCommonDataBO> getCommonDataListFillWithCache(CryptoCoinCatalog coinType,
+			CurrencyType currencyType, LocalDateTime startTime) {
+
+		List<CryptoCoinPriceCommonDataBO> poDataList = getCommonDataList(coinType, currencyType, startTime);
+//		List<CryptoCoinPriceCommonDataBO> poDataList = buildFakeData(coinType, currencyType, startTime);
+
+		List<CryptoCoinPriceCommonDataBO> cacheDataList = cacheService.getCommonDataList(coinType, currencyType,
+				startTime);
+
+		if (cacheDataList.isEmpty()) {
+			return poDataList;
+		}
+
+		List<CryptoCoinPriceCommonDataBO> resultDataList = mergePODataWithCache(poDataList, cacheDataList, startTime,
+				dayStepLong, TimeUnitType.day);
+
+		return resultDataList;
+
+	}
+
+	/* trying */
+	@SuppressWarnings("unused")
+	private void mergeDuplicateData(CryptoCoinCatalog coinType) {
+		LocalDateTime todayStart = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+		LocalDateTime indexTime = todayStart;
+		// 只整理最近一个月内的重复数据, 采用时间倒序
+		LocalDateTime finishTime = todayStart.minusMonths(1);
+
+		CryptoCoinPrice1dayExample example = new CryptoCoinPrice1dayExample();
+		example.createCriteria().andCoinTypeEqualTo(coinType.getId()).andCurrencyTypeEqualTo(CurrencyType.USD.getCode())
+				.andStartTimeBetween(finishTime, todayStart);
+		List<CryptoCoinPrice1day> poList = _1DayDataMapper.selectByExample(example);
+
+		if (poList == null || poList.size() <= 1) {
+			return;
+		}
+
+		List<CryptoCoinPrice1day> mergeDataList = null;
+
+		while (indexTime.isAfter(finishTime)) {
+			mergeDataList = new ArrayList<>();
+			for (CryptoCoinPrice1day po : poList) {
+				if (po.getStartTime().isEqual(indexTime)) {
+					mergeDataList.add(po);
+				}
+			}
+
+			if (mergeDataList.size() > 1) {
+				log.error("crypto coin 1day duplicate data: coinType: " + coinType.getCoinNameEnShort()
+						+ ", currencyType: " + CurrencyType.USD.getName() + ", size: " + mergeDataList.size());
+				mergeDataList(mergeDataList);
+			}
+
+			indexTime = indexTime.minusDays(dayStepLong);
+		}
+
+	}
+
+	private CryptoCoinPrice1day mergeDataList(List<CryptoCoinPrice1day> poList) {
+		if (poList == null || poList.isEmpty()) {
+			return null;
+		}
+
+		if (poList.size() == 1) {
+			return poList.get(0);
+		}
+
+		CryptoCoinPrice1day firstPO = poList.get(0);
+		for (int i = 1; i < poList.size(); i++) {
+			firstPO = mergeDataPair(firstPO, poList.get(i));
+		}
+
+		_1DayDataMapper.updateByPrimaryKeySelective(firstPO);
+		return firstPO;
+	}
+
+	@Override
+	public void sendAllCryptoCoinDailyDataQueryMsg() {
+		List<CryptoCoinCatalog> catalogList = coinCatalogService.getAllCatalog();
+		if (catalogList == null || catalogList.isEmpty()) {
+			return;
+		}
+
+		for (CryptoCoinCatalog catalog : catalogList) {
+			sendDailyDataQuery(catalog.getCoinNameEnShort(), constantService.getDefaultCurrency(), 5,
+					CryptoCoinDataSourceType.CRYPTO_COMPARE);
+		}
+	}
+
+	@Override
+	public void sendCryptoCoinDailyDataQueryMsg(String coinName, String currencyName, Integer counting) {
+		if (StringUtils.isBlank(coinName) || counting < 1) {
+			return;
+		}
+
+		if (StringUtils.isBlank(currencyName)) {
+			currencyName = constantService.getDefaultCurrency();
+		}
+
+		sendDailyDataQuery(coinName, currencyName, counting, CryptoCoinDataSourceType.CRYPTO_COMPARE);
+	}
+
+	private void sendDailyDataQuery(String coinName, String currencyName, Integer counting,
+			CryptoCoinDataSourceType dataSource) {
+		AutomationTestInsertEventDTO dto = new AutomationTestInsertEventDTO();
+		dto.setTestModuleType(TestModuleType.CRYPTO_COIN.getId());
+		dto.setFlowType(CryptoCoinFlowType.DAILY_DATA.getId());
+		dto.setTestEventId(snowFlake.getNextId());
+
+		CryptoCoinDailyDataQueryDTO paramDTO = new CryptoCoinDailyDataQueryDTO();
+		paramDTO.setApiKey(constantService.getCryptoCompareApiKey());
+		paramDTO.setCoinName(coinName);
+		paramDTO.setCurrencyName(constantService.getDefaultCurrency());
+		paramDTO.setCounting(counting);
+		paramDTO.setDataSourceCode(CryptoCoinDataSourceType.CRYPTO_COMPARE.getCode());
+
+		testEventInsertAckProducer.send(dto);
 	}
 }

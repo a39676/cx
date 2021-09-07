@@ -11,13 +11,14 @@ import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
 
+import demo.common.service.CommonService;
 import demo.finance.metal.service.PreciousMetalService;
 import finance.precious_metal.pojo.constant.PreciousMetalMQConstant;
 import finance.precious_metal.pojo.dto.PreciousMetailPriceDTO;
 
 @Component
 @RabbitListener(queues = PreciousMetalMQConstant.transmissionMetalPriceData)
-public class MetalPriceTransmissionAckReceiver {
+public class MetalPriceTransmissionAckReceiver extends CommonService {
 
 	@Autowired
 	private PreciousMetalService preciousMetalService;
@@ -28,8 +29,9 @@ public class MetalPriceTransmissionAckReceiver {
 			PreciousMetailPriceDTO dto = new Gson().fromJson(messageStr, PreciousMetailPriceDTO.class);
 			preciousMetalService.reciveMetalPrice(dto);
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
-		} catch (IOException e) {
-			channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);
+		} catch (Exception e) {
+			log.error("mq error, " + PreciousMetalMQConstant.transmissionMetalPriceData + ", e:" + e.getLocalizedMessage());
+			log.error(messageStr);
 			e.printStackTrace();
 		}
 	}

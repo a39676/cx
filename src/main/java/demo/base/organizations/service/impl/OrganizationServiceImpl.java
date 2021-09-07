@@ -47,7 +47,7 @@ import demo.base.user.service.UserAuthService;
 import demo.base.user.service.UsersService;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.service.CommonService;
-import demo.tool.service.TextFilter;
+import demo.tool.other.service.TextFilter;
 
 @Service
 public class OrganizationServiceImpl extends CommonService implements OrganizationService {
@@ -413,8 +413,7 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 	
 	private OrganizationVO buildOrgVOByPO(Organizations po) {
 		/*
-		 * TODO
-		 * 直属机构名 顶级机构名 未填充
+		 * TODO 直属机构名 顶级机构名 未填充
 		 */
 		OrganizationVO vo = new OrganizationVO();
 		vo.setPk(encryptId(po.getId()));

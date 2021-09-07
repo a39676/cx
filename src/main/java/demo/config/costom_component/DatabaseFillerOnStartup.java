@@ -7,6 +7,9 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import demo.article.article.service.impl.ArticleConstantService;
+import demo.article.articleComment.service.impl.ArticleCommentConstantService;
+import demo.automationTest.service.impl.AutomationTestConstantService;
 import demo.base.organizations.pojo.po.Organizations;
 import demo.base.organizations.service.OrganizationService;
 import demo.base.organizations.service.__SystemOrganizationService;
@@ -19,12 +22,16 @@ import demo.base.user.service.AuthService;
 import demo.base.user.service.RoleService;
 import demo.base.user.service.UserRegistService;
 import demo.base.user.service.UsersService;
+import demo.common.service.CommonService;
+import demo.finance.cryptoCoin.data.service.impl.CryptoCoinConstantService;
 import demo.joy.image.icon.service.JoyIconService;
 import demo.joy.scene.service.JoySceneManagerService;
+import demo.thirdPartyAPI.cloudinary.service.impl.CloudinaryConstantService;
+import demo.tool.mail.service.impl.MailConstantService;
 
 @Component
 //public class DatabaseFillerOnStartup implements ApplicationListener<ContextStartedEvent> {
-public class DatabaseFillerOnStartup implements ApplicationListener<ApplicationReadyEvent> {
+public class DatabaseFillerOnStartup extends CommonService implements ApplicationListener<ApplicationReadyEvent> {
 	
 	@Autowired
 	private AuthService authService;
@@ -43,6 +50,20 @@ public class DatabaseFillerOnStartup implements ApplicationListener<ApplicationR
 	private JoySceneManagerService joySceneOperationService;
 	@Autowired
 	private JoyIconService joyIconService;
+	@Autowired
+	private ArticleConstantService articleConstantService;
+	@Autowired
+	private ArticleCommentConstantService articleCommentConstantService;
+	@Autowired
+	private MailConstantService mailConstantService;
+	@Autowired
+	private CloudinaryConstantService cloudinaryConstantService;
+	@Autowired
+	private AutomationTestConstantService automationTestConstantService;
+	@Autowired
+	private CryptoCoinConstantService cryptoCoinConstantService;
+	
+	
 /*
  * ContextStartedEvent
  * ContextStoppedEvent
@@ -55,36 +76,71 @@ public class DatabaseFillerOnStartup implements ApplicationListener<ApplicationR
 //	public void onApplicationEvent(ContextStartedEvent event) {
 	public void onApplicationEvent(ApplicationReadyEvent event) {
 		
+		log.error("starting database filler");
+		
 //		if (event.getApplicationContext().getDisplayName().equals("Root WebApplicationContext")) {}
 		if (event.getApplicationContext().getParent() == null) {
 			roleService.__initBaseRole();
+			log.error("after base role init");
 			
 			/* 如无超级管理员角色, 初始化 */
+			log.error("query auth auth");
 			FindAuthsResult authsResult = authService.findSuperAdministratorAuth();
+			log.error("auths result: " + authsResult.isSuccess());
 			List<Auth> superAdminAuthList = authsResult.getAuthList();
+			log.error("super admin auth list size: " + superAdminAuthList.size());
 			Long superAdminAuthId = null;
 			if(superAdminAuthList == null || superAdminAuthList.size() < 1) {
 				superAdminAuthId = authService.__createBaseSuperAdminAuth(UserConstant.noneUserId);
+				log.error("can NOT find super admin auth ID");
 			} else {
 				superAdminAuthId = superAdminAuthList.get(0).getId();
+				log.error("super admin auth id found");
 			}
 			
 			List<Users> superAdminUserList = userService.findUserListByAuthId(superAdminAuthId);
+			log.error("super admin user list size: " + superAdminUserList.size());
 			Long superAdminId = null;
 			if(superAdminUserList.size() < 1) {
+//				TODO FIXME bug here
 				superAdminId = userRegistService.__baseSuperAdminRegist().getNewSuperAdminId();
+				log.error("can NOT find super admin ID");
 			} else {
 				superAdminId = superAdminUserList.get(0).getUserId();
+				log.error("super admin ID found");
 			}
 			
 			Organizations baseOrg = orgService.getOrgById(InitSystemConstant.ORIGINAL_BASE_ORG_ID);
 			if(baseOrg == null || baseOrg.getIsDelete()) {
+				log.error("can NOT find base org, rebuild it");
 				__systemOrgService.__initBaseOrg(superAdminId);
 			}
 			
+			log.error("load joy option");
 			joySceneOperationService.defaultSceneInit();
 			joyIconService.loadAllIconToRedis();
+			log.error("after load joy option");
+			
+			log.error("loading article option");
+			articleConstantService.refreshConstant();
+			
+			log.error("loading article comment option");
+			articleCommentConstantService.refreshConstant();
+			
+			log.error("loading mail option");
+			mailConstantService.refreshConstant();
+			
+			log.error("loading cloudinary option");
+			cloudinaryConstantService.refreshConstant();
+			
+			log.error("loading automation test option");
+			automationTestConstantService.refreshConstant();
+			
+			log.error("loading crypto coin option");
+			cryptoCoinConstantService.refreshConstant();
 		}
+		
+		log.error("data base filler end");
 	}
 
 

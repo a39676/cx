@@ -15,7 +15,7 @@ public class CryptoCoinNoticeVO {
 	private String timeUnitOfNoticeIntervalName;
 	private Integer timeRangeOfNoticeInterval;
 
-	private Integer cryptoCoinCode;
+	private Long cryptoCoinCode;
 	private String cryptoCoinName;
 
 	private Integer currencyCode;
@@ -86,11 +86,11 @@ public class CryptoCoinNoticeVO {
 		this.timeRangeOfNoticeInterval = timeRangeOfNoticeInterval;
 	}
 
-	public Integer getCryptoCoinCode() {
+	public Long getCryptoCoinCode() {
 		return cryptoCoinCode;
 	}
 
-	public void setCryptoCoinCode(Integer cryptoCoinCode) {
+	public void setCryptoCoinCode(Long cryptoCoinCode) {
 		this.cryptoCoinCode = cryptoCoinCode;
 	}
 

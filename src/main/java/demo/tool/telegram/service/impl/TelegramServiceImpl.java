@@ -14,13 +14,14 @@ import demo.base.system.pojo.bo.SystemConstant;
 import demo.common.service.CommonService;
 import demo.tool.telegram.mapper.TelegramChatIdMapper;
 import demo.tool.telegram.mapper.TelegramConstantMapper;
-import demo.tool.telegram.pojo.constant.TelegramKeys;
+import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
 import demo.tool.telegram.pojo.po.TelegramChatId;
 import demo.tool.telegram.pojo.po.TelegramChatIdExample;
 import demo.tool.telegram.pojo.po.TelegramConstant;
 import demo.tool.telegram.pojo.po.TelegramConstantExample;
 import demo.tool.telegram.pojo.vo.TelegramChatIdVO;
 import demo.tool.telegram.service.TelegramService;
+import telegram.pojo.constant.TelegramBotType;
 import toolPack.httpHandel.HttpUtil;
 
 @Service
@@ -31,15 +32,11 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 	@Autowired
 	private TelegramChatIdMapper chatIdMapper;
 	
-	private String botIDReady() {
-		return botIDReady(null);
-	}
-	
 	private String botIDReady(String botIDKey) {
 		if(botIDKey == null) {
-			botIDKey = TelegramKeys.BOT1_ID_KEY;
+			botIDKey = TelegramBotType.BOT_1.getName();
 		}
-		String botID = constantService.getValByName(botIDKey);
+		String botID = redisConnectService.getValByName(botIDKey);
 		if(StringUtils.isNotBlank(botID)) {
 			return botID;
 		}
@@ -48,7 +45,7 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 	
 	private String botIDReset(String botIDKey) {
 		if(botIDKey == null) {
-			botIDKey = TelegramKeys.BOT1_ID_KEY;
+			botIDKey = TelegramBotType.BOT_1.getName();
 		}
 		String bot1ID = null;
 		try {
@@ -60,7 +57,7 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 			SystemConstant systemConstant = new SystemConstant();
 			systemConstant.setConstantName(botIDKey);
 			systemConstant.setConstantValue(bot1ID);
-			constantService.setValByName(systemConstant);
+			redisConnectService.setValByName(systemConstant);
 		} catch (Exception e) {
 		}
 		
@@ -69,6 +66,11 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 	
 	@Override
 	public CommonResult sendMessage(String msg, Long id) {
+		return sendMessage(null, msg, id);
+	}
+	
+	@Override
+	public CommonResult sendMessage(TelegramBotType botType, String msg, Long id) {
 		CommonResult r = new CommonResult();
 		
 		if(id == null) {
@@ -97,7 +99,10 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 			return r;
 		}
 		
-		String botID = botIDReady();
+		if(botType == null) {
+			botType = TelegramBotType.BOT_1;
+		}
+		String botID = botIDReady(botType.getName());
 		if(StringUtils.isBlank(botID)) {
 			r.failWithMessage("please set bot ID");
 			return r;
@@ -110,8 +115,8 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 		try {
 			httpUtil.sendGet(url);
 		} catch (Exception e) {
-			log.error("telegram sending error" + e.getLocalizedMessage());
-			log.error("telegram sending error" + e.getMessage());
+			log.error("telegram sending error: " + e.getMessage());
+			log.error("telegram NOT sending message: " + msg);
 			r.failWithMessage("net work error");
 			return r;
 		}
@@ -151,4 +156,10 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 		return po != null;
 	}
 	
+	@Override
+	public void telegramSendingCheck() {
+		for(TelegramBotType botType : TelegramBotType.values()) {
+			sendMessage(botType, "testing msg", TelegramStaticChatID.MY_ID);
+		}
+	}
 }

@@ -118,7 +118,7 @@ $(document).ready(function() {
     newRow += "<h3 class='post-subtitle'></h3>";
     // newRow += "<img src='"+subArticleVO.imgUrl+"' style='max-width:85%; max-height:150px;'>";
     newRow += "</a>";
-    newRow += "<p class='post-meta'>Post by: "+subArticleVO.nickName+" on: "+subArticleVO.createDateString+", views: "+subArticleVO.viewCount+"</p>";
+    newRow += "<p class='post-meta'>"+subArticleVO.createDateString+", views: "+subArticleVO.viewCount+"</p>";
     newRow += "</div>";
     newRow += "<hr>"
     return newRow;

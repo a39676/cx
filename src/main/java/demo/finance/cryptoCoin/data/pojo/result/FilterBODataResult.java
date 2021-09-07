@@ -65,8 +65,9 @@ public class FilterBODataResult extends CommonResult {
 
 	@Override
 	public String toString() {
-		return "FindMaxMinPriceResult [maxPrice=" + maxPrice + ", minPrice=" + minPrice + ", maxPriceDateTime="
-				+ maxPriceDateTime + ", minPriceDateTime=" + minPriceDateTime + "]";
+		return "FilterBODataResult [maxPrice=" + maxPrice + ", minPrice=" + minPrice + ", maxPriceDateTime="
+				+ maxPriceDateTime + ", minPriceDateTime=" + minPriceDateTime + ", startTime=" + startTime
+				+ ", endTime=" + endTime + "]";
 	}
 
 }

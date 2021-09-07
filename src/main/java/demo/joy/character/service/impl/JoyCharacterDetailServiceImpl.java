@@ -16,8 +16,7 @@ public class JoyCharacterDetailServiceImpl extends JoyCommonService implements J
 	
 	public void createCharacterDetail(Long newCharacterId, String newCharacterImgPath) {
 		/*
-		 * TODO
-		 * newCharacterImgPath?  file???
+		 * TODO newCharacterImgPath?  file???
 		 */
 		JoyCharacterDetail po = new JoyCharacterDetail();
 		po.setId(newCharacterId);

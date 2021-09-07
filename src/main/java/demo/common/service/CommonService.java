@@ -1,13 +1,9 @@
 package demo.common.service;
 
-import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,25 +13,21 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.TimeUnitType;
-import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.IpRecordService;
+import demo.base.system.service.impl.RedisConnectService;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.ResultTypeCX;
 import demo.config.costom_component.BaseUtilCustom;
 import demo.config.costom_component.EncryptUtil;
 import demo.config.costom_component.SnowFlake;
-import demo.tool.service.VisitDataService;
-import net.sf.json.JSONObject;
+import demo.tool.other.service.VisitDataService;
 import tool.pojo.bo.IpRecordBO;
 import toolPack.dateTimeHandle.DateHandler;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
-import toolPack.ioHandle.FileUtilCustom;
-import toolPack.numericHandel.NumericUtilCustom;
 
 public abstract class CommonService {
 
@@ -47,50 +39,24 @@ public abstract class CommonService {
 	@Autowired
 	protected SnowFlake snowFlake;
 	@Autowired
-	protected NumericUtilCustom numberUtil;
-	@Autowired
 	protected VisitDataService visitDataService;
 	@Autowired
 	protected LocalDateTimeHandler localDateTimeHandler;
 	@Autowired
 	protected DateHandler dateHandler;
 	@Autowired
-	protected SystemConstantService constantService;
+	protected SystemConstantService systemConstantService;
 	@Autowired
 	protected BaseUtilCustom baseUtilCustom;
 	@Autowired
 	protected IpRecordService ipRecordService;
 
 	@Autowired
-	protected RedisTemplate<String, Object> redisTemplate;
+	protected RedisConnectService redisConnectService;
 
-	protected static final LocalDateTime theStartTime = LocalDateTime.of(2020, 5, 1, 0, 0, 0);
-
-	protected String createDateDescription(Date inputDate) {
-		if (inputDate == null) {
-			return "";
-		}
-		Long oneHourLong = 1000L * 60 * 60;
-		Long timeDiff = System.currentTimeMillis() - inputDate.getTime();
-		if (timeDiff < (oneHourLong / 2)) {
-			return "a moment...";
-		} else if (timeDiff <= oneHourLong) {
-			return "not long ago";
-		} else if (timeDiff <= (oneHourLong * 12)) {
-			return String.valueOf(timeDiff / oneHourLong) + " hours ago";
-		} else if (timeDiff <= (oneHourLong * 24)) {
-			return "today";
-		} else if (timeDiff <= (oneHourLong * 24 * 3)) {
-			return String.valueOf(timeDiff / (oneHourLong * 24)) + " days ago";
-		} else if (timeDiff <= (oneHourLong * 24 * 7)) {
-			return "within a week";
-		} else if (timeDiff <= (oneHourLong * 24 * 31)) {
-			return "within a month";
-		} else {
-			return "long long ago...";
-		}
-	}
-
+	protected static final LocalDateTime BLOG_ARTICLE_START_TIME = LocalDateTime.of(2020, 5, 1, 0, 0, 0);
+	protected static final String MAIN_FOLDER_PATH = "/home/u2/cx";
+	
 	protected CommonResultCX nullParam() {
 		CommonResultCX result = new CommonResultCX();
 		result.fillWithResult(ResultTypeCX.nullParam);
@@ -157,7 +123,7 @@ public abstract class CommonService {
 	}
 
 	protected String findHostNameFromRequst(HttpServletRequest request) {
-		if ("dev".equals(constantService.getValByName("envName"))) {
+		if ("dev".equals(systemConstantService.getEnvName())) {
 			return "easy";
 		}
 		return request.getServerName();
@@ -201,20 +167,14 @@ public abstract class CommonService {
 			return null;
 		}
 
-		String keys = constantService.getValByName(SystemConstantStore.aesKey);
+		String keys = systemConstantService.getAESKey();
 		if (StringUtils.isBlank(keys)) {
-			keys = constantService.getValByName(SystemConstantStore.aesKey, true);
-			if (StringUtils.isBlank(keys)) {
-				return null;
-			}
+			return null;
 		}
 
-		String initVector = constantService.getValByName(SystemConstantStore.aesInitVector);
+		String initVector = systemConstantService.getAesInitVector();
 		if (StringUtils.isBlank(initVector)) {
-			initVector = constantService.getValByName(SystemConstantStore.aesKey, true);
-			if (StringUtils.isBlank(initVector)) {
-				return null;
-			}
+			return null;
 		}
 
 		List<String> encryptResult = new ArrayList<String>();
@@ -242,20 +202,14 @@ public abstract class CommonService {
 			return null;
 		}
 
-		String keys = constantService.getValByName(SystemConstantStore.aesKey);
+		String keys = systemConstantService.getAESKey();
 		if (StringUtils.isBlank(keys)) {
-			keys = constantService.getValByName(SystemConstantStore.aesKey, true);
-			if (StringUtils.isBlank(keys)) {
-				return null;
-			}
+			return null;
 		}
 
-		String initVector = constantService.getValByName(SystemConstantStore.aesInitVector);
+		String initVector = systemConstantService.getAesInitVector();
 		if (StringUtils.isBlank(initVector)) {
-			initVector = constantService.getValByName(SystemConstantStore.aesInitVector, true);
-			if (StringUtils.isBlank(initVector)) {
-				return null;
-			}
+			return null;
 		}
 
 		Long id = null;
@@ -275,6 +229,10 @@ public abstract class CommonService {
 		return baseUtilCustom.hasSuperAdminRole();
 	}
 
+	protected boolean isDev() {
+		return "dev".equals(systemConstantService.getEnvName());
+	}
+	
 	protected IpRecordBO getIp(HttpServletRequest request) {
 		IpRecordBO record = new IpRecordBO();
 		record.setRemoteAddr(request.getRemoteAddr());
@@ -283,72 +241,7 @@ public abstract class CommonService {
 		return record;
 	}
 
-	protected CommonResultCX refreshRedisValueFromFile(String filePath) {
-		CommonResultCX result = new CommonResultCX();
-		try {
-			if (StringUtils.isBlank(filePath)) {
-				result.failWithMessage("path error");
-				return result;
-			}
-
-			File file = new File(filePath);
-			if (!file.exists()) {
-				result.failWithMessage("file not exists");
-				return result;
-			}
-
-			FileUtilCustom ioUtil = new FileUtilCustom();
-			String fileStr = ioUtil.getStringFromFile(filePath);
-			JSONObject json = JSONObject.fromObject(fileStr);
-			@SuppressWarnings("rawtypes")
-			Set keys = json.keySet();
-			String tmpKey = null;
-			String tmpValue = null;
-			for (Object key : keys) {
-				tmpKey = String.valueOf(key);
-				tmpValue = json.getString(tmpKey);
-				if (StringUtils.isNotBlank(tmpKey)) {
-					if (redisTemplate.hasKey(tmpKey)) {
-						result.addMessage("refresh key:" + tmpKey + " , set: " + tmpValue + "\n");
-					} else {
-						result.addMessage("add key:" + tmpKey + " , set: " + tmpValue + "\n");
-					}
-					constantService.setValByName(tmpKey, tmpValue);
-				} else {
-					result.addMessage("detect an empty key, has value: " + tmpValue + "\n");
-				}
-			}
-
-			result.setIsSuccess();
-			return result;
-		} catch (Exception e) {
-			result.failWithMessage(e.getMessage());
-			return result;
-		}
-	}
-
-	protected void insertFunctionalModuleVisitData(HttpServletRequest request, String redisKeyPrefix) {
-		insertFunctionalModuleVisitData(request, redisKeyPrefix, 30, TimeUnit.MINUTES);
-	}
-
-	protected void insertFunctionalModuleVisitData(HttpServletRequest request, String redisKeyPrefix, long timeout,
-			TimeUnit unit) {
-		IpRecordBO record = getIp(request);
-
-		String key = buildRedisKeyPrefix(record, redisKeyPrefix) + "_" + snowFlake.getNextId();
-		redisTemplate.opsForValue().set(key, "", timeout, unit);
-	}
-
-	protected int checkFunctionalModuleVisitData(HttpServletRequest request, String redisKeyPrefix) {
-		IpRecordBO record = getIp(request);
-
-		String keyPrefix = buildRedisKeyPrefix(record, redisKeyPrefix) + "*";
-		Set<String> keys = redisTemplate.keys(keyPrefix);
-
-		return keys.size();
-	}
-
-	private String buildRedisKeyPrefix(IpRecordBO record, String redisKeyPrefix) {
+	protected String buildRedisKeyPrefix(IpRecordBO record, String redisKeyPrefix) {
 		return redisKeyPrefix + "_" + record.getForwardAddr() + "_" + record.getRemoteAddr();
 	}
 

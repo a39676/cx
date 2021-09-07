@@ -7,7 +7,6 @@ import java.util.List;
 public class FindArticleLongSummaryListMapperDTO {
 
 	private String title;
-	private Long userId;
 	private List<Long> channelIdList;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
@@ -25,14 +24,6 @@ public class FindArticleLongSummaryListMapperDTO {
 
 	public void setIsHot(Boolean isHot) {
 		this.isHot = isHot;
-	}
-
-	public Long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
 	}
 
 	public LocalDateTime getStartTime() {
@@ -124,10 +115,10 @@ public class FindArticleLongSummaryListMapperDTO {
 
 	@Override
 	public String toString() {
-		return "FindArticleLongSummaryListMapperParam [title=" + title + ", userId=" + userId + ", channelIdList="
-				+ channelIdList + ", startTime=" + startTime + ", endTime=" + endTime + ", isDelete=" + isDelete
-				+ ", isPass=" + isPass + ", isEdited=" + isEdited + ", isReject=" + isReject + ", desc=" + desc
-				+ ", limit=" + limit + ", isHot=" + isHot + "]";
+		return "FindArticleLongSummaryListMapperDTO [title=" + title + ", channelIdList=" + channelIdList
+				+ ", startTime=" + startTime + ", endTime=" + endTime + ", isDelete=" + isDelete + ", isPass=" + isPass
+				+ ", isEdited=" + isEdited + ", isReject=" + isReject + ", desc=" + desc + ", limit=" + limit
+				+ ", isHot=" + isHot + "]";
 	}
 
 }

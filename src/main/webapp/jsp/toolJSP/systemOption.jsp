@@ -10,24 +10,6 @@
 <%@ include file="../baseElementJSP/normalHeader.jsp" %>
 </head>
 <body>
-<form action="${pageContext.request.contextPath}/tool/database/getImageCache?${_csrf.parameterName}=${_csrf.token}" method="POST">
-  <div>
-    <input type="text" for="limitNum" id="limitNum" name="limitNum" value="999" style="height: 50px"><br>
-  </div>
-  <div>
-    <button type="submit" id="imageCacheExport">imageCacheExport</button>
-  </div>
-</form>
-
-<hr>
-
-<form action="${pageContext.request.contextPath}/tool/getTomcatOut?${_csrf.parameterName}=${_csrf.token}" method="POST">
-  <div>
-    <button type="submit" id="getTomcatOut">getTomcatOut</button>
-  </div>
-</form>
-
-<hr>
 
 <div>
   <input type="text" name="customStartDate" value="2018-01-01 00:00:00"><br>
@@ -40,22 +22,26 @@
 <hr>
 
 <div>
-  <input type="text" name="refreshSystemConstant" placeholder="变量名"><br>
-  <button id="refreshSystemConstant">refreshSystemConstant</button><br>
+  <input type="text" name="setHomepageAnnouncementStr" placeholder="刷新主页公告位"><br>
+  <button id="setHomepageAnnouncementStr">setHomepageAnnouncementStr</button><br>
 </div>
 
 <hr>
 
 <div>
-  <input type="text" name="loadHomepageAnnouncementStr" placeholder="刷新主页公告位"><br>
-  <button id="loadHomepageAnnouncementStr">loadHomepageAnnouncementStr</button><br>
+  <button id="refreshArticleConstant">refreshArticleConstant</button>
+  <button id="refreshArticleCommentConstant">refreshArticleCommentConstant</button>
+  <button id="refreshMailConstant">refreshMailConstant</button>
+  <button id="refreshCloudinaryConstant">refreshCloudinaryConstant</button>
+  <button id="refreshAutomationTestConstant">refreshAutomationTestConstant</button>
+  <button id="refreshCryptoCoinConstant">refreshCryptoCoinConstant</button>
 </div>
 
-
+<hr>
 
 <div id="resultView">
   resultView
-  <span name="resultSpan">resultSpan</span>
+  <textarea id="result" disabled rows="4" cols="50"></textarea>
 </div>
 
 </body>
@@ -70,7 +56,7 @@
     });
 
     function deleteUserIpRecord() {
-      
+
       var url = "${pageContext.request.contextPath}/admin/deleteUserIpRecord";
       var startDate = $("input[name='customStartDate']").val();
       var endDate = $("input[name='customEndDate']").val();
@@ -79,26 +65,26 @@
         endDate:endDate
       };
 
-      $.ajax({  
-        type : "POST",  
+      $.ajax({
+        type : "POST",
         async : true,
-        url : url,  
+        url : url,
         data: JSON.stringify(jsonOutput),
         cache : false,
         contentType: "application/json",
         dataType: "json",
-        timeout:50000,  
+        timeout:50000,
         beforeSend: function(xhr) {
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
           console.log(datas);
-          $("span[name='resultSpan']").text(datas.message);
-        },  
-        error: function(datas) {  
-          $("span[name='resultSpan']").text(datas.message);
-        }  
-      });  
+          $("#result").val(datas.message);
+        },
+        error: function(datas) {
+          $("#result").val(datas.message);
+        }
+      });
     };
 
     $("#batchUpdatePrivateKey").click( function() {
@@ -106,7 +92,7 @@
     });
 
     function batchUpdatePrivateKey() {
-      
+
       var url = "${pageContext.request.contextPath}/articleAdmin/batchUpdatePrivateKey";
       var startDate = $("input[name='customStartDate']").val();
       var endDate = $("input[name='customEndDate']").val();
@@ -115,93 +101,59 @@
         endDate:endDate
       };
 
-      $.ajax({  
-        type : "POST",  
+      $.ajax({
+        type : "POST",
         async : true,
-        url : url,  
+        url : url,
         data: JSON.stringify(jsonOutput),
         cache : false,
         contentType: "application/json",
         dataType: "json",
-        timeout:50000,  
+        timeout:50000,
         beforeSend: function(xhr) {
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
           console.log(datas);
-          $("span[name='resultSpan']").text(datas.message);
-        },  
-        error: function(datas) {  
-          $("span[name='resultSpan']").text(datas.message);
-        }  
-      });  
-    };
-
-    $("#refreshSystemConstant").click( function() {
-      refreshSystemConstant();
-    });
-
-    function refreshSystemConstant() {
-      
-      var url = "${pageContext.request.contextPath}/admin/refreshSystemConstant";
-      var key = $("input[name='refreshSystemConstant']").val();
-      var jsonOutput = {
-        key:key
-      };
-
-      $.ajax({  
-        type : "POST",  
-        async : true,
-        url : url,  
-        data: JSON.stringify(jsonOutput),
-        cache : false,
-        contentType: "application/json",
-        dataType: "json",
-        timeout:50000,  
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader(csrfHeader, csrfToken);
+          $("#result").val(datas.message);
         },
-        success:function(datas){
-          console.log(datas);
-          $("span[name='resultSpan']").text(datas);
-        },  
-        error: function(datas) {  
-          $("span[name='resultSpan']").text(datas);
-        }  
-      });  
+        error: function(datas) {
+          $("#result").val(datas.message);
+        }
+      });
     };
 
-    $("#loadHomepageAnnouncementStr").click( function() {
-      loadHomepageAnnouncementStr();
+    $("#setHomepageAnnouncementStr").click( function() {
+      setHomepageAnnouncementStr();
     });
 
-    function loadHomepageAnnouncementStr() {
-      
-      var url = "${pageContext.request.contextPath}/admin/loadHomepageAnnouncementStr";
-      var homepageAnnouncementStr = $("input[name='loadHomepageAnnouncementStr']").val();
+    function setHomepageAnnouncementStr() {
+
+      var url = "/admin/setHomepageAnnouncementStr";
+      var homepageAnnouncementStr = $("input[name='setHomepageAnnouncementStr']").val();
       var jsonOutput = {
         homepageAnnouncementStr:homepageAnnouncementStr
       };
 
-      $.ajax({  
-        type : "POST",  
+      $.ajax({
+        type : "POST",
         async : true,
-        url : url,  
+        url : url,
         data: JSON.stringify(jsonOutput),
         cache : false,
         contentType: "application/json",
         dataType: "json",
-        timeout:50000,  
+        timeout:50000,
         beforeSend: function(xhr) {
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          $("span[name='resultSpan']").text(datas.homepageAnnouncementStr);
-        },  
-        error: function(datas) {  
-          $("span[name='resultSpan']").text(datas.message);
-        }  
-      });  
+          $("#result").val(datas.homepageAnnouncementStr);
+        },
+        error: function(datas) {
+          $("#result").val(datas.message);
+        }
+      });
     };
 
 
@@ -210,33 +162,189 @@
     });
 
     function createFakeEvaluationStore() {
-      
-      var url = "${pageContext.request.contextPath}/admin/createFakeEvaluationStore";
+
+      var url = "/admin/createFakeEvaluationStore";
       var jsonOutput = {
       };
 
-      $.ajax({  
-        type : "POST",  
+      $.ajax({
+        type : "POST",
         async : true,
-        url : url,  
+        url : url,
         data: JSON.stringify(jsonOutput),
         cache : false,
         contentType: "application/json",
         dataType: "json",
-        timeout:50000,  
+        timeout:50000,
         beforeSend: function(xhr) {
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
           console.log(datas);
-          $("span[name='resultSpan']").text(datas.message);
-        },  
-        error: function(datas) {  
-          $("span[name='resultSpan']").text(datas.message);
-        }  
-      });  
+          $("#result").val(datas.message);
+        },
+        error: function(datas) {
+          $("#result").val(datas.message);
+        }
+      });
     };
 
+    function refreshArticleConstant() {
+
+      var url = "/optionConstant/refreshArticleConstant/";
+
+      $.ajax({
+        type : "GET",
+        url : url,
+        // data: JSON.stringify(jsonOutput),
+        dataType: 'json',
+        contentType: "application/json",
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        timeout: 15000,
+        success:function(data){
+          $("#result").val(data + ", refreshArticleConstant");
+        },
+        error:function(e){
+        }
+      });
+    };
+
+    function refreshArticleCommentConstant() {
+
+      var url = "/optionConstant/refreshArticleCommentConstant";
+
+      $.ajax({
+        type : "GET",
+        url : url,
+        // data: JSON.stringify(jsonOutput),
+        dataType: 'json',
+        contentType: "application/json",
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        timeout: 15000,
+        success:function(data){
+          $("#result").val(data + ", refreshArticleCommentConstant");
+        },
+        error:function(e){
+        }
+      });
+    };
+
+    function refreshMailConstant() {
+
+      var url = "/optionConstant/refreshMailConstant/";
+
+      $.ajax({
+        type : "GET",
+        url : url,
+        // data: JSON.stringify(jsonOutput),
+        dataType: 'json',
+        contentType: "application/json",
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        timeout: 15000,
+        success:function(data){
+          $("#result").val(data + ", refreshMailConstant");
+        },
+        error:function(e){
+        }
+      });
+    };
+
+    function refreshCloudinaryConstant() {
+
+      var url = "/optionConstant/refreshCloudinaryConstant";
+
+      $.ajax({
+        type : "GET",
+        url : url,
+        // data: JSON.stringify(jsonOutput),
+        dataType: 'json',
+        contentType: "application/json",
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        timeout: 15000,
+        success:function(data){
+          $("#result").val(data + ", refreshCloudinaryConstant");
+        },
+        error:function(e){
+        }
+      });
+    };
+
+    function refreshAutomationTestConstant() {
+
+      var url = "/optionConstant/refreshAutomationTestConstant";
+
+      $.ajax({
+        type : "GET",
+        url : url,
+        // data: JSON.stringify(jsonOutput),
+        dataType: 'json',
+        contentType: "application/json",
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        timeout: 15000,
+        success:function(data){
+          $("#result").val(data + ", refreshAutomationTestConstant");
+        },
+        error:function(e){
+        }
+      });
+    };
+
+    function refreshCryptoCoinConstant() {
+
+      var url = "/optionConstant/refreshCryptoCoinConstant";
+
+      $.ajax({
+        type : "GET",
+        url : url,
+        // data: JSON.stringify(jsonOutput),
+        dataType: 'json',
+        contentType: "application/json",
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        timeout: 15000,
+        success:function(data){
+          $("#result").val(data + ", refreshCryptoCoinConstant");
+        },
+        error:function(e){
+        }
+      });
+    };
+
+    $("#refreshArticleConstant").click(function () {
+      console.log("get in refreshArticleConstant");
+      refreshArticleConstant();
+    })
+
+    $("#refreshArticleCommentConstant").click(function () {
+      refreshArticleCommentConstant();
+    })
+
+    $("#refreshMailConstant").click(function () {
+      refreshMailConstant();
+    })
+
+    $("#refreshCloudinaryConstant").click(function () {
+      refreshCloudinaryConstant();
+    })
+
+    $("#refreshAutomationTestConstant").click(function () {
+      refreshAutomationTestConstant();
+    })
+
+    $("#refreshCryptoCoinConstant").click(function () {
+      refreshCryptoCoinConstant();
+    })
   });
 
 </script>

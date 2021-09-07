@@ -15,7 +15,7 @@ public class ArticleComment {
 
     private Long articleId;
 
-    private String path;
+    private String filePath;
 
     private LocalDateTime createTime;
 
@@ -79,12 +79,12 @@ public class ArticleComment {
         this.articleId = articleId;
     }
 
-    public String getPath() {
-        return path;
+    public String getFilePath() {
+        return filePath;
     }
 
-    public void setPath(String path) {
-        this.path = path == null ? null : path.trim();
+    public void setFilePath(String filePath) {
+        this.filePath = filePath == null ? null : filePath.trim();
     }
 
     public LocalDateTime getCreateTime() {

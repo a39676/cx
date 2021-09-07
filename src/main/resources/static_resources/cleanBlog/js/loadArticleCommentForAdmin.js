@@ -129,7 +129,7 @@ $(document).ready(function() {
     commentRow += "<div class='row commentInfoRow' pk='"+commentVO.pk+"'>";
     commentRow += "  <div class='col-lg-8 col-md-10 mx-auto'>";
     commentRow += "    <p class='post-meta'>";
-    commentRow += "      Post by: "+commentVO.nickName+" on: "+commentVO.createTimeStr;
+    commentRow += "      "+commentVO.createTimeStr;
     commentRow += "    </p>";
     commentRow += "  </div>";
     commentRow += "</div>";

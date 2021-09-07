@@ -20,10 +20,7 @@ import demo.article.fakePost.service.FakePostService;
 import demo.base.admin.pojo.constant.AdminUrlConstant;
 import demo.base.admin.pojo.constant.AdminView;
 import demo.base.admin.pojo.dto.LoadHomepageAnnouncementStrDTO;
-import demo.base.admin.pojo.dto.RefreshSystemConstantDTO;
-import demo.base.admin.pojo.dto.SetSystemConstantDTO;
 import demo.base.admin.service.AdminService;
-import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.pojo.constant.BaseStatusCode;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.base.user.pojo.constant.UserManagerView;
@@ -149,31 +146,19 @@ public class AdminController extends CommonController {
 		CommonResultCX result = adminService.deleteUserIpRecord(param);
 		outputJson(response, JSONObject.fromObject(result));
 	}
-
-	@PostMapping(value = AdminUrlConstant.refreshSystemConstant)
-	@ResponseBody
-	public String refreshSystemConstant(@RequestBody RefreshSystemConstantDTO dto) {
-		String result = systemConstantService.getValByName(dto.getKey(), true);
-		return result;
-	}
 	
-	@PostMapping(value = AdminUrlConstant.setSystemConstant)
+	@PostMapping(value = AdminUrlConstant.setHomepageAnnouncementStr)
 	@ResponseBody
-	public CommonResultCX setSystemConstant(@RequestBody SetSystemConstantDTO dto) {
-		return adminService.setSystemConstant(dto);
-	}
-	
-	@PostMapping(value = AdminUrlConstant.loadHomepageAnnouncementStr)
-	public void loadHomepageAnnouncementStr(@RequestBody LoadHomepageAnnouncementStrDTO dto, HttpServletRequest request, HttpServletResponse response) {
+	public JSONObject setHomepageAnnouncementStr(@RequestBody LoadHomepageAnnouncementStrDTO dto) {
 		String strContent = dto.getHomepageAnnouncementStr();
 		if(StringUtils.isBlank(strContent) || "null".equals(strContent)) {
-			adminService.loadHomepageAnnouncementStr();
+			adminService.setDefaultHomepageAnnouncementStr();
 		} else {
-			adminService.loadHomepageAnnouncementStr(strContent);
+			adminService.setTempHomepageAnnouncement(strContent);
 		}
 		JSONObject jsonOutput = new JSONObject();
-		jsonOutput.put("homepageAnnouncementStr", systemConstantService.getValByName(SystemConstantStore.homepageAnnouncementStr));
-		outputJson(response, jsonOutput);
+		jsonOutput.put("homepageAnnouncementStr", systemConstantService.getHomepageAnnouncement());
+		return jsonOutput;
 	}
 	
 	@PostMapping(value = AdminUrlConstant.createFakeEvaluationStore)

@@ -255,10 +255,7 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 		ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
 		try {
 			/*
-			 *  FIXME
-			 *  2020-04-26
-			 *  暂时未有合适的 webp webm 支持库
-			 *  上传 webp / webm 时, 会返回异常.
+			 *  FIXME 2020-04-26 暂时未有合适的 webp webm 支持库
 			 *  考虑将此类小体积文件转交给 cloudinary 处理?
 			 */
 			image = ImageIO.read(bis);

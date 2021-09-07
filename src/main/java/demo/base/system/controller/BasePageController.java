@@ -28,14 +28,14 @@ public class BasePageController extends CommonController {
 	@Autowired
 	private BasePageService basePageService;
 	
-	@GetMapping(value = { BaseUrl.baseRoot })
+	@GetMapping(value = { BaseUrl.ROOT })
 	public ModelAndView welcomePageV2(@RequestParam(value = "vcode", defaultValue = "") String vcode,
 			HttpServletRequest request) {
 		ModelAndView view = basePageService.baseRootHandlerV3(vcode, request);
 		return view;
 	}
 	
-	@GetMapping(value = { BaseUrl.aboutMe })
+	@GetMapping(value = { BaseUrl.ABOUT_ME })
 	public ModelAndView aboutMe(@RequestParam(value = "vcode", defaultValue = "") String vcode,
 			HttpServletRequest request) {
 		ModelAndView view = basePageService.aboutMeHandler(vcode, request);

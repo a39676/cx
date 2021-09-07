@@ -5,9 +5,9 @@ import java.util.List;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
-import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinPriceCommonDataBO;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice60minute;
-import finance.cryptoCoin.pojo.type.CryptoCoinType;
+import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 
 public interface CryptoCoin60MinuteDataSummaryService {
 
@@ -15,9 +15,12 @@ public interface CryptoCoin60MinuteDataSummaryService {
 
 	CommonResult deleteExpiredCacheData();
 
-	List<CryptoCoinPrice60minute> getData(CryptoCoinType coinType, CurrencyType currencyType, LocalDateTime startTime);
+	List<CryptoCoinPrice60minute> getDataList(CryptoCoinCatalog coinType, CurrencyType currencyType, LocalDateTime startTime);
 
-	List<CryptoCoinPriceCommonDataBO> getCommonData(CryptoCoinType coinType, CurrencyType currencyType,
+	List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinCatalog coinType, CurrencyType currencyType,
+			LocalDateTime startTime);
+
+	List<CryptoCoinPriceCommonDataBO> getCommonDataListFillWithCache(CryptoCoinCatalog coinType, CurrencyType currencyType,
 			LocalDateTime startTime);
 
 }

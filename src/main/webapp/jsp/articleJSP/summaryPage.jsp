@@ -16,9 +16,6 @@
       <span style="font-size: small;color: gray" pk="${articleLongSummaryVO.privateKey}" name="evaluationResult"></span>
     </div>
     <div class="col-sm-2 articleLongSummaryContent" pk="${articleLongSummaryVO.privateKey}" style="cursor: pointer;">
-      <span class="badge badge-primary badge-pill" style="cursor: pointer;" name="nickName" nickName="${articleLongSummaryVO.nickName}" pk="${articleLongSummaryVO.privateKey}" loadingFlag="0">
-        ${articleLongSummaryVO.nickName}
-      </span><br>
       <span class="badge badge-light">${articleLongSummaryVO.createDateDescription}</span>
     </div>
     <div class="col-sm-7 articleLongSummaryContent" pk="${articleLongSummaryVO.privateKey}" style="cursor: pointer;">
@@ -75,7 +72,7 @@ $(document).ready(function() {
     $(this).attr("loadingFlag", "1");
 
     var nickName = $(this).attr("nickName");
-    var url = "${pageContext.request.contextPath}/user/otherUserInfo";
+    var url = "/user/otherUserInfo";
 
     var jsonOutput = {};
     jsonOutput.nickName = nickName;
@@ -122,7 +119,7 @@ $(document).ready(function() {
     }
     $(".articleLongSummary[pk='"+pk+"']").attr("loadingFlag", "1");
     $("div[name='loading'][pk='"+pk+"']").fadeIn(150);
-    var url = "${pageContext.request.contextPath}/article/readArticleLong";
+    var url = "/article/readArticleLong";
     var jsonOutput = {
       pk:pk
     };

@@ -15,11 +15,7 @@
 <div class="container-fluid">
 
 <div class="row">
-  <select id="coinType">
-    <c:forEach items="${cryptoCoinType}" var="subCoinType">
-      <option value="${subCoinType.code}">${subCoinType.name}</option>
-    </c:forEach>
-  </select>
+  <input type="text" name="" id="coinType" value="BTC">
 
   <select id="currencyType">
     <c:forEach items="${currencyType}" var="subCurrencyType">
@@ -97,12 +93,7 @@
             </select>
           </td>
           <td>
-            <select id="coinTypeOfSearch">
-              <option value="">ALL</option>
-              <c:forEach items="${cryptoCoinType}" var="subCoinType">
-                <option value="${subCoinType.code}">${subCoinType.name}</option>
-              </c:forEach>
-            </select>
+            <input type="text" name="" id="coinTypeOfSearch">
           </td>
           <td>
             <select id="currencyOfSearch">
@@ -153,7 +144,7 @@
       
         var url = "/cryptoCoin/insertCryptoCoinNoticeSetting";
 
-        var coinType = $("#coinType option:selected").val();
+        var coinType = $("#coinType").val();
         var currencyType = $("#currencyType option:selected").val();
 
         var maxPrice = $("#maxPrice").val();
@@ -223,14 +214,14 @@
         var url = "/cryptoCoin/searchNotice";
 
         var reciverPK = $("#telegramChatPKOfSearch option:selected").val();
-        var cryptoCoinCode = $("#coinTypeOfSearch option:selected").val();
+        var cryptoCoinType = $("#coinTypeOfSearch").val();
         var currencyCode = $("#currencyOfSearch option:selected").val();
         
         var noticeSearchResult = $("#noticeSearchResult");
 
         var jsonOutput = {
           reciverPK : reciverPK,
-          cryptoCoinCode : cryptoCoinCode,
+          cryptoCoinType : cryptoCoinType,
           currencyCode : currencyCode,
         };
 

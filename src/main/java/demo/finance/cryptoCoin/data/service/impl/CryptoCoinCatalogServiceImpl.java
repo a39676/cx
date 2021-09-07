@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinCatalogMapper;
-import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinConstant;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalogExample;
 import demo.finance.cryptoCoin.data.pojo.vo.CryptoCoinCatalogVO;
@@ -94,7 +93,7 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 	}
 
 	@Override
-	public List<CryptoCoinCatalogVO> getSubscriptionCatalog() {
+	public List<CryptoCoinCatalogVO> getSubscriptionCatalogVOList() {
 		List<CryptoCoinCatalogVO> voList = new ArrayList<>();
 		Set<CryptoCoinCatalogVO> voSet = new HashSet<>();
 
@@ -105,23 +104,26 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 
 		return voList;
 	}
+	
+	@Override
+	public Set<String> getSubscriptionNameList() {
+		Set<String> voSet = new HashSet<>();
+
+		voSet.addAll(constantService.getSubscriptionSet());
+		voSet.addAll(constantService.getLowPriceSubscriptionSet());
+
+		return voSet;
+	}
 
 	private List<CryptoCoinCatalogVO> getNormalSubscriptionCatalog() {
 		List<CryptoCoinCatalogVO> voList = new ArrayList<>();
-		Long size = redisTemplate.opsForList().size(CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY);
-		if (size < 1) {
+		Set<String> set = constantService.getSubscriptionSet();
+		if (set == null || set.isEmpty()) {
 			return voList;
 		}
 
-		List<Object> redisList = redisTemplate.opsForList().range(CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY,
-				0, size);
-		List<String> catalogList = new ArrayList<>();
-		for (Object value : redisList) {
-			catalogList.add(String.valueOf(value));
-		}
-
 		CryptoCoinCatalogExample example = new CryptoCoinCatalogExample();
-		example.createCriteria().andIsDeleteEqualTo(false).andCoinNameEnShortIn(catalogList);
+		example.createCriteria().andIsDeleteEqualTo(false).andCoinNameEnShortIn(new ArrayList<>(set));
 		List<CryptoCoinCatalog> poList = mapper.selectByExample(example);
 
 		for (CryptoCoinCatalog po : poList) {
@@ -133,65 +135,47 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 
 	@Override
 	public void addSubscriptionCatalog(String catalog) {
-		addSubscriptionCatalog(catalog, CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY);
-	}
-
-	@Override
-	public void addSubscriptionCatalog(String catalog, String redisKey) {
-		if (StringUtils.isAnyBlank(catalog, redisKey)) {
+		if(StringUtils.isBlank(catalog)) {
 			return;
 		}
-
 		catalog = catalog.toUpperCase();
-		CryptoCoinCatalogExample example = new CryptoCoinCatalogExample();
-		example.createCriteria().andIsDeleteEqualTo(false).andCoinNameEnShortEqualTo(catalog);
-		List<CryptoCoinCatalog> poList = mapper.selectByExample(example);
-
-		if (poList == null || poList.isEmpty()) {
-			return;
+		constantService.getSubscriptionSet().add(catalog);
+	}
+	
+	@Override
+	public void addSubscriptionCatalog(List<String> catalogList) {
+		for(String catalog : catalogList) {
+			if(StringUtils.isBlank(catalog)) {
+				return;
+			}
+			catalog = catalog.toUpperCase();
+			constantService.getSubscriptionSet().add(catalog);
 		}
-
-		redisTemplate.opsForList().leftPush(redisKey, catalog);
 	}
 
 	@Override
 	public void removeSubscriptionCatalog(String catalog) {
-		if (StringUtils.isBlank(catalog)) {
+		if(StringUtils.isBlank(catalog)) {
 			return;
 		}
-
 		catalog = catalog.toUpperCase();
-		String redisKey = CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY;
-
-		Long size = redisTemplate.opsForList().size(redisKey);
-		if (size < 1) {
-			return;
-		}
-
-		String tmpValue = null;
-		for (int i = 0; i < size; i++) {
-			tmpValue = String.valueOf(redisTemplate.opsForList().rightPop(redisKey));
-
-			if (tmpValue.equals(catalog)) {
+		constantService.getSubscriptionSet().remove(catalog);
+	}
+	
+	@Override
+	public void removeSubscriptionCatalog(List<String> catalogList) {
+		for(String catalog : catalogList) {
+			if(StringUtils.isBlank(catalog)) {
 				return;
-			} else {
-				redisTemplate.opsForList().leftPush(redisKey, tmpValue);
 			}
+			catalog = catalog.toUpperCase();
+			constantService.getSubscriptionSet().remove(catalog);
 		}
-
 	}
 
 	@Override
 	public void removeAllSubscriptionCatalog() {
-		String redisKey = CryptoCoinConstant.CRYPTO_COIN_SUBSCRIPTION_LIST_KEY;
-		Long size = redisTemplate.opsForList().size(redisKey);
-		if (size < 1) {
-			return;
-		}
-
-		for (int i = 0; i < size; i++) {
-			redisTemplate.opsForList().rightPop(redisKey);
-		}
+		constantService.getSubscriptionSet().clear();
 	}
 
 	@Override

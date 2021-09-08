@@ -262,6 +262,10 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 				
 				vo.setCaseReportList(reportDTO.getCaseReportList());
 				
+				vo.setPassCount(po.getPassCount());
+				vo.setFailedCount(po.getFailCount());
+				vo.setBlockedCount(po.getBlockCount());
+				
 				return vo;
 			} catch (Exception e) {
 				e.printStackTrace();

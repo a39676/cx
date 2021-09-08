@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import at.report.service.ATJsonReportService;
 import autoTest.testModule.pojo.type.TestModuleType;
 import demo.automationTest.mapper.TestEventMapper;
 import demo.common.service.CommonService;
@@ -18,8 +17,6 @@ public abstract class AutomationTestCommonService extends CommonService {
 	protected TestEventMapper eventMapper;
 	@Autowired
 	protected AutomationTestConstantService constantService;
-	@Autowired
-	protected ATJsonReportService jsonReportService;
 	@Autowired
 	private FileUtilCustom ioUtil;
 

@@ -2,7 +2,9 @@ package demo.finance.cryptoCoin.data.service.impl;
 
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.BeanUtils;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 
 import demo.common.service.CommonService;
+import demo.finance.cryptoCoin.data.pojo.bo.CacheMapBO;
+import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")
@@ -33,6 +37,8 @@ public class CryptoCoinConstantService extends CommonService {
 
 	private Set<String> subscriptionSet = new HashSet<>();
 	private Set<String> lowPriceSubscriptionSet = new HashSet<>();
+
+	private Map<CacheMapBO, CryptoCoinPriceCommonDataBO> cacheMap = new HashMap<>();
 
 	public void refreshConstant() {
 		File optionFile = new File(optionFilePath);
@@ -113,13 +119,22 @@ public class CryptoCoinConstantService extends CommonService {
 		this.lowPriceSubscriptionSet = lowPriceSubscriptionSet;
 	}
 
+	public Map<CacheMapBO, CryptoCoinPriceCommonDataBO> getCacheMap() {
+		return cacheMap;
+	}
+
+	public void setCacheMap(Map<CacheMapBO, CryptoCoinPriceCommonDataBO> cacheMap) {
+		this.cacheMap = cacheMap;
+	}
+
 	@Override
 	public String toString() {
 		return "CryptoCoinConstantService [optionFilePath=" + optionFilePath + ", defaultCurrency=" + defaultCurrency
 				+ ", cryptoCompareApiKey=" + cryptoCompareApiKey + ", cryptoCompareUri=" + cryptoCompareUri
 				+ ", cryptoCompareWebSocketLastActiveTime=" + cryptoCompareWebSocketLastActiveTime + ", binanceUri="
 				+ binanceUri + ", binanceWebSocketLastActiveTime=" + binanceWebSocketLastActiveTime
-				+ ", subscriptionSet=" + subscriptionSet + ", lowPriceSubscriptionSet=" + lowPriceSubscriptionSet + "]";
+				+ ", subscriptionSet=" + subscriptionSet + ", lowPriceSubscriptionSet=" + lowPriceSubscriptionSet
+				+ ", cacheMap=" + cacheMap + "]";
 	}
 
 }

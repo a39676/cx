@@ -39,6 +39,7 @@ public class TestEventServiceImpl extends AutomationTestCommonService implements
 		po.setModuleId(moduleType.getId());
 		po.setAppointment(dto.getAppointment());
 		po.setFlowId(dto.getFlowType());
+		po.setFlowName(dto.getFlowTypeName());
 		po.setParameterFilePath(paramSavingPath);
 		
 		eventMapper.insertSelective(po);

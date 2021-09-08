@@ -16,14 +16,14 @@
 
   <!-- Page Header -->
   <header class="masthead" style="background-image: url('/static_resources/cleanBlog/img/fog-4597348_1920.jpg')">
-    <div class="overlay" id="readArticleLong" reportId="${reportVO.id}">
+    <div class="overlay" id="readArticleLong">
     </div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="post-heading">
-            <h1>${reportVO.title}</h1>
-            <h2 class="subheading">ID: ${reportVO.id}</h2>
+            <h1>${reportVO.flowTypeName}</h1>
+            <%-- <h2 class="subheading">ID: ${reportVO.id}</h2> --%>
             <span class="meta">
               任务创建时间: ${reportVO.createTimeStr}
             </span>
@@ -55,13 +55,26 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <c:forEach items="${reportVO.contentLines}" var="subLine">
-            <c:if test="${subLine.lineArrtibute == 'strKey'}">
-              <p class="para" style="word-break:break-word;">${subLine.content}</p>
-            </c:if>
-            <c:if test="${subLine.lineArrtibute == 'imgKey'}">
-              <img class="img-fluid" src="${subLine.content}">
-            </c:if>
+          <c:forEach items="${reportVO.caseReportList}" var="caseReport">
+            <p class="para" style="word-break:break-word;">${caseReport.caseTypeName}</p>
+            <c:forEach items="${caseReport.reportElementList}" var="reportElement">
+              <p class="para" style="word-break:break-word;">${reportElement.marktime}</p>
+              <c:choose>
+                <c:when test="${reportElement.content == 'pass'}">
+                  <p class="para" style="word-break:break-word; background:green;">${reportElement.content}</p>
+                </c:when>
+                <c:when test="${reportElement.content == 'failed'}">
+                  <p class="para" style="word-break:break-word; background:red;">${reportElement.content}</p>
+                </c:when>
+                <c:when test="${reportElement.content == 'blocked'}">
+                  <p class="para" style="word-break:break-word; background:yellow;">${reportElement.content}</p>
+                </c:when>
+                <c:otherwise>
+                  <p class="para" style="word-break:break-word;">${reportElement.content}</p>
+                </c:otherwise>
+              </c:choose>
+              <img class="img-fluid" src="${reportElement.imgUrl}">
+            </c:forEach>
           </c:forEach>
 
         </div>

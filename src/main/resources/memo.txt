@@ -1,5 +1,4 @@
 AT 
-	alter table test_event change event_name flow_name varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT null;
 	报告中的截图 如何传输处理
 		
 crypto coin

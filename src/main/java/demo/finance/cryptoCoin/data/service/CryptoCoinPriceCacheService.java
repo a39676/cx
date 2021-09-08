@@ -23,4 +23,6 @@ public interface CryptoCoinPriceCacheService {
 
 	CryptoCoinPriceCommonDataBO getNewPrice(CryptoCoinCatalog coinType, CurrencyType currencyType);
 
+	void cleanOldHistoryData();
+
 }

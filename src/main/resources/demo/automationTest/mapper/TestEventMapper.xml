@@ -7,7 +7,7 @@
     <result column="flow_id" jdbcType="BIGINT" property="flowId" />
     <result column="process_id" jdbcType="BIGINT" property="processId" />
     <result column="module_id" jdbcType="BIGINT" property="moduleId" />
-    <result column="event_name" jdbcType="VARCHAR" property="eventName" />
+    <result column="flow_name" jdbcType="VARCHAR" property="flowName" />
     <result column="pass_count" jdbcType="INTEGER" property="passCount" />
     <result column="fail_count" jdbcType="INTEGER" property="failCount" />
     <result column="block_count" jdbcType="INTEGER" property="blockCount" />
@@ -80,7 +80,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, project_id, flow_id, process_id, module_id, event_name, pass_count, fail_count, 
+    id, project_id, flow_id, process_id, module_id, flow_name, pass_count, fail_count, 
     block_count, remark, parameter_file_path, report_path, create_time, appointment, 
     start_time, end_time, is_pass, is_delete
   </sql>
@@ -116,14 +116,14 @@
   </delete>
   <insert id="insert" parameterType="demo.automationTest.pojo.po.TestEvent">
     insert into test_event (id, project_id, flow_id, 
-      process_id, module_id, event_name, 
+      process_id, module_id, flow_name, 
       pass_count, fail_count, block_count, 
       remark, parameter_file_path, report_path, 
       create_time, appointment, start_time, 
       end_time, is_pass, is_delete
       )
     values (#{id,jdbcType=BIGINT}, #{projectId,jdbcType=BIGINT}, #{flowId,jdbcType=BIGINT}, 
-      #{processId,jdbcType=BIGINT}, #{moduleId,jdbcType=BIGINT}, #{eventName,jdbcType=VARCHAR}, 
+      #{processId,jdbcType=BIGINT}, #{moduleId,jdbcType=BIGINT}, #{flowName,jdbcType=VARCHAR}, 
       #{passCount,jdbcType=INTEGER}, #{failCount,jdbcType=INTEGER}, #{blockCount,jdbcType=INTEGER}, 
       #{remark,jdbcType=VARCHAR}, #{parameterFilePath,jdbcType=VARCHAR}, #{reportPath,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{appointment,jdbcType=TIMESTAMP}, #{startTime,jdbcType=TIMESTAMP}, 
@@ -148,8 +148,8 @@
       <if test="moduleId != null">
         module_id,
       </if>
-      <if test="eventName != null">
-        event_name,
+      <if test="flowName != null">
+        flow_name,
       </if>
       <if test="passCount != null">
         pass_count,
@@ -204,8 +204,8 @@
       <if test="moduleId != null">
         #{moduleId,jdbcType=BIGINT},
       </if>
-      <if test="eventName != null">
-        #{eventName,jdbcType=VARCHAR},
+      <if test="flowName != null">
+        #{flowName,jdbcType=VARCHAR},
       </if>
       <if test="passCount != null">
         #{passCount,jdbcType=INTEGER},
@@ -269,8 +269,8 @@
       <if test="record.moduleId != null">
         module_id = #{record.moduleId,jdbcType=BIGINT},
       </if>
-      <if test="record.eventName != null">
-        event_name = #{record.eventName,jdbcType=VARCHAR},
+      <if test="record.flowName != null">
+        flow_name = #{record.flowName,jdbcType=VARCHAR},
       </if>
       <if test="record.passCount != null">
         pass_count = #{record.passCount,jdbcType=INTEGER},
@@ -320,7 +320,7 @@
       flow_id = #{record.flowId,jdbcType=BIGINT},
       process_id = #{record.processId,jdbcType=BIGINT},
       module_id = #{record.moduleId,jdbcType=BIGINT},
-      event_name = #{record.eventName,jdbcType=VARCHAR},
+      flow_name = #{record.flowName,jdbcType=VARCHAR},
       pass_count = #{record.passCount,jdbcType=INTEGER},
       fail_count = #{record.failCount,jdbcType=INTEGER},
       block_count = #{record.blockCount,jdbcType=INTEGER},
@@ -352,8 +352,8 @@
       <if test="moduleId != null">
         module_id = #{moduleId,jdbcType=BIGINT},
       </if>
-      <if test="eventName != null">
-        event_name = #{eventName,jdbcType=VARCHAR},
+      <if test="flowName != null">
+        flow_name = #{flowName,jdbcType=VARCHAR},
       </if>
       <if test="passCount != null">
         pass_count = #{passCount,jdbcType=INTEGER},
@@ -400,7 +400,7 @@
       flow_id = #{flowId,jdbcType=BIGINT},
       process_id = #{processId,jdbcType=BIGINT},
       module_id = #{moduleId,jdbcType=BIGINT},
-      event_name = #{eventName,jdbcType=VARCHAR},
+      flow_name = #{flowName,jdbcType=VARCHAR},
       pass_count = #{passCount,jdbcType=INTEGER},
       fail_count = #{failCount,jdbcType=INTEGER},
       block_count = #{blockCount,jdbcType=INTEGER},

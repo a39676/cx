@@ -1,5 +1,6 @@
 AT 
-	report 展示页面将需要适应 JsonReportElementDTO 的调整
+	alter table test_event change event_name flow_name varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT null;
+	报告中的截图 如何传输处理
 		
 crypto coin
 	crypto compare 更新 daily data 时 可能返回全0数据, 需要binance 协助

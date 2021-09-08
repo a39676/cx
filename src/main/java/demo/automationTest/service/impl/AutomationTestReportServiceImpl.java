@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import at.report.pojo.dto.JsonReportElementDTO;
 import at.report.pojo.dto.JsonReportOfCaseDTO;
-import at.report.pojo.dto.JsonReportOfEventDTO;
+import at.report.pojo.dto.JsonReportOfFlowDTO;
 import autoTest.testEvent.pojo.dto.AutomationTestResultDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.automationTest.service.AutomationTestReportService;
@@ -49,26 +49,57 @@ public class AutomationTestReportServiceImpl extends AutomationTestCommonService
 	}
 
 	@Override
-	public JsonReportOfEventDTO buildReportFromJson(JSONObject json) {
-		JsonReportOfEventDTO report = new JsonReportOfEventDTO();
+	public JsonReportOfFlowDTO buildReportFromMQ(JSONObject json) {
+		JsonReportOfFlowDTO report = new JsonReportOfFlowDTO();
 
-		JSONObject reportJson = json.getJSONObject("report");
+		JSONObject reportJson = null;
+		
+		if(json.containsKey("report")) {
+			reportJson = json.getJSONObject("report");
+			if(reportJson.containsKey("eventTypeID")) {
+				report.setFlowTypeID(reportJson.getLong("eventTypeID"));
+			}
+			if(reportJson.containsKey("moduleName")) {
+				report.setModuleName(reportJson.getString("moduleName"));
+			}
+			if(reportJson.containsKey("eventTypeName")) {
+				report.setFlowTypeName(reportJson.getString("eventTypeName"));
+			}
 
-		report.setEventTypeID(reportJson.getLong("eventTypeID"));
-		report.setModuleName(reportJson.getString("moduleName"));
-		report.setEventTypeName(reportJson.getString("eventTypeName"));
+		} else if(json.containsKey("caseReportList")) {
+//			TODO 处理数据库中提出的 json report str
 
+		}
+		report.setCaseReportList(buildCaseReportList(reportJson));
+
+		return report;
+	}
+	
+	@Override
+	public JsonReportOfFlowDTO buildReportFromDatabase(JSONObject json) {
+		JsonReportOfFlowDTO report = new JsonReportOfFlowDTO();
+
+		JSONArray reportJson = null;
+		
+		if(json.containsKey("caseReportList")) {
+			reportJson = json.getJSONArray("caseReportList");
+		}
 		report.setCaseReportList(buildCaseReportList(reportJson));
 
 		return report;
 	}
 
 	private List<JsonReportOfCaseDTO> buildCaseReportList(JSONObject reportJson) {
+
+		JSONArray caseReportListJsonArray = reportJson.getJSONArray("caseReportList");
+
+		return buildCaseReportList(caseReportListJsonArray);
+	}
+	
+	private List<JsonReportOfCaseDTO> buildCaseReportList(JSONArray caseReportListJsonArray) {
 		List<JsonReportOfCaseDTO> caseReportList = new ArrayList<>();
 
 		JsonReportOfCaseDTO caseReportDTO = null;
-
-		JSONArray caseReportListJsonArray = reportJson.getJSONArray("caseReportList");
 
 		for (int i = 0; i < caseReportListJsonArray.size(); i++) {
 			caseReportDTO = buildJsonReportOfCaseDTO(caseReportListJsonArray.getJSONObject(i));

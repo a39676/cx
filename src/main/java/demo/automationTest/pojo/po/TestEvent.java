@@ -13,7 +13,7 @@ public class TestEvent {
 
     private Long moduleId;
 
-    private String eventName;
+    private String flowName;
 
     private Integer passCount;
 
@@ -79,12 +79,12 @@ public class TestEvent {
         this.moduleId = moduleId;
     }
 
-    public String getEventName() {
-        return eventName;
+    public String getFlowName() {
+        return flowName;
     }
 
-    public void setEventName(String eventName) {
-        this.eventName = eventName == null ? null : eventName.trim();
+    public void setFlowName(String flowName) {
+        this.flowName = flowName == null ? null : flowName.trim();
     }
 
     public Integer getPassCount() {

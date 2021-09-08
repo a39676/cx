@@ -23,7 +23,7 @@ public class TestController2 extends CommonController {
 		t.setDatetime(LocalDateTime.now());
 		return t.toString();
 	}
-	
+
 	@GetMapping(value = "/test2")
 	@ResponseBody
 	public String test2() {
@@ -33,5 +33,5 @@ public class TestController2 extends CommonController {
 		t = (TestDTO) JSONObject.toBean(j, TestDTO.class);
 		return j.toString();
 	}
-	
+
 }

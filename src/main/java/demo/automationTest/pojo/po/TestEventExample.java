@@ -1105,6 +1105,66 @@ public class TestEventExample {
             return (Criteria) this;
         }
 
+        public Criteria andSendTimeIsNull() {
+            addCriterion("send_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendTimeIsNotNull() {
+            addCriterion("send_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendTimeEqualTo(LocalDateTime value) {
+            addCriterion("send_time =", value, "sendTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendTimeNotEqualTo(LocalDateTime value) {
+            addCriterion("send_time <>", value, "sendTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendTimeGreaterThan(LocalDateTime value) {
+            addCriterion("send_time >", value, "sendTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendTimeGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("send_time >=", value, "sendTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendTimeLessThan(LocalDateTime value) {
+            addCriterion("send_time <", value, "sendTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendTimeLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("send_time <=", value, "sendTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendTimeIn(List<LocalDateTime> values) {
+            addCriterion("send_time in", values, "sendTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendTimeNotIn(List<LocalDateTime> values) {
+            addCriterion("send_time not in", values, "sendTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendTimeBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("send_time between", value1, value2, "sendTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("send_time not between", value1, value2, "sendTime");
+            return (Criteria) this;
+        }
+
         public Criteria andIsPassIsNull() {
             addCriterion("is_pass is null");
             return (Criteria) this;

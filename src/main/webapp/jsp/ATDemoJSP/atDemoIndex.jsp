@@ -15,10 +15,10 @@
   <%@ include file="./nav.jsp" %>
 
   <!-- Page Header -->
-  <!-- 
+  <!--
   <header class="masthead" style="background-image: url('/static_resources/cleanBlog/img/fog-4597348_1920.jpg')">
   -->
-  <header class="masthead" style="background-image: url('/static_resources/cleanBlog/img/post-sample-image.jpg')"> 
+  <header class="masthead" style="background-image: url('/static_resources/cleanBlog/img/post-sample-image.jpg')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
@@ -54,7 +54,7 @@
               <form id="searchConditionArea" markTime="" loadingFlag="">
                 <div class="control-group">
                   <span class="badge badge-info">任务创建时间范围</span>
-                  <input type="date" id="createStartDate" value="${defaultStartTime}"> 
+                  <input type="date" id="createStartDate" value="${defaultStartTime}">
                   <input type="time" time="HH:mm:ss" id="createStartTime" step="1" value="00:00:00">
                   <span>~</span>
                   <input type="date" id="createEndDate" value="${createEndTime}">
@@ -84,12 +84,12 @@
                 </sec:authorize>
                 <div class="control-group">
                   <span class="badge badge-info">任务启动时间范围</span>
-                  <input type="date" id="runTimeStartDate" value="${defaultStartTime}"> 
+                  <input type="date" id="runTimeStartDate" value="${defaultStartTime}">
                   <input type="time" time="HH:mm:ss" id="runTimeStartTime"step="1" value="00:00:00">
                   <span>~</span>
                   <input type="date" id="runTimeEndDate" value="${runTimeEndTime}">
                   <input type="time" time="HH:mm:ss" id="runTimeEndTime" step="1" value="23:59:59">
-                </div>                
+                </div>
                 <div class="control-group">
                   <span class="badge badge-info">请选择案例</span>
                   <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
@@ -133,12 +133,11 @@
                   <span class="badge badge-info">请选择案例</span>
                   <select id="insertNewTestEventCaseIdSelector">
                     <option value="1">Bing 搜索 demo</option>
-                    <option value="2">Baidu 搜索 demo</option>
                   </select>
                 </div>
                 <div class="control-group">
                   <span class="badge badge-info">搜索关键字</span>
-                  <input type="text" size="35" id="searchKeyWord" placeholder="请输入搜索关键字, 若空, 默认为 testDemo">
+                  <input type="text" size="35" id="searchKeyword" placeholder="请输入搜索关键字, (可空)">
                 </div>
                 <div class="control-group">
                   <span class="badge badge-info">预约运行时间(可空)</span>
@@ -167,7 +166,7 @@
       </div>
       <div class="col-md-2 mx-auto">
       </div>
-      
+
     </div>
   </div>
 
@@ -198,14 +197,14 @@
     function buildReportRow(subReportRowVO) {
       var newReportRow = "";
       newReportRow += "<div class='post-preview'>";
-      newReportRow += "<a href='/atDemo/findReportByTestEventId?testEventId="+subReportRowVO.id+"' target='_blank'>";
-      newReportRow += "<h2 class='post-title'>"+subReportRowVO.eventName+"</h2>";
-      newReportRow += "<h3 class='post-subtitle'>ID: "+subReportRowVO.id+"</h3>";
+      newReportRow += "<a href='/atDemo/findReportByTestEventId?testEventId="+subReportRowVO.idStr+"' target='_blank'>";
+      newReportRow += "<h2 class='post-title'>"+subReportRowVO.flowName+"</h2>";
+      newReportRow += "<h3 class='post-subtitle'>ID: "+subReportRowVO.idStr+"</h3>";
       newReportRow += "</a>";
       newReportRow += "<p class='post-meta'>";
-      newReportRow += "任务创建时间: "+subReportRowVO.createTimeStr + "; ";
-      newReportRow += "任务执行时间: "+subReportRowVO.startTimeStr + "; ";
-      newReportRow += "任务结束时间: "+subReportRowVO.endTimeStr + "; ";
+      newReportRow += "任务创建时间: "+subReportRowVO.createTime + "; ";
+      newReportRow += "任务执行时间: "+subReportRowVO.startTime + "; ";
+      newReportRow += "任务结束时间: "+subReportRowVO.endTime + "; ";
       newReportRow += "</p>";
       newReportRow += "</div>";
       newReportRow += "<hr>"
@@ -219,7 +218,7 @@
     function loadReportSummary() {
       var reportRowArea = $("#reportRowArea");
       var searchConditionArea = $("#searchConditionArea");
-      
+
       var id = document.getElementById("id").value;
       var moduleId = "";
       if(document.getElementById("moduleIdSelector") != null) {
@@ -258,7 +257,7 @@
       } else {
         runFlag = false;
       }
-      
+
       var taskRunSuccessVal = $("#taskRunSuccess:checked").val();
       var taskRunFailVal = $("#taskRunFail:checked").val();
       if(taskRunSuccessVal != null && taskRunSuccessVal.length) {
@@ -267,7 +266,7 @@
         runSuccessFlag = false;
       }
 
-      $("#loadingImg").fadeIn(150);    
+      $("#loadingImg").fadeIn(150);
       if(searchConditionArea.attr("loadingFlag") == "1") {
         $("#loadingImg").fadeOut(150);
         return;
@@ -288,32 +287,31 @@
 
       var url = "/atDemo/findReportsByCondition";
       $.ajax({
-        type : "POST",  
+        type : "POST",
         async : true,
-        url : url,  
+        url : url,
         data: JSON.stringify(jsonOutput),
         cache : false,
         contentType: "application/json",
         dataType: "json",
-        timeout:50000,  
+        timeout:50000,
         beforeSend: function(xhr) {
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          var jsonResponse = JSON.parse(datas);
           var reportRowArea = $("#reportRowArea");
           var newRow = "";
-          jsonResponse.forEach(function(subReportVO) {
+          datas.forEach(function(subReportVO) {
             newRow = buildReportRow(subReportVO);
             reportRowArea.append(newRow);
-            searchConditionArea.attr("markTime", subReportVO.createTimeStr);
+            searchConditionArea.attr("markTime", subReportVO.createTime);
           });
           $("#loadingImg").fadeOut(150);
-        },  
-        error: function(datas) {  
+        },
+        error: function(datas) {
           $("#loadingImg").fadeOut(150);
         }
-      }); 
+      });
       searchConditionArea.attr("loadingFlag", "0");
     };
 
@@ -340,19 +338,19 @@
     }
 
     function getDateNow() {
-      var dt = new Date(); 
+      var dt = new Date();
       var year = dt.getFullYear();
       var month = (dt.getMonth() + 1);
       if(month < 10) { month = "0" + month; }
       var date = dt.getDate();
       if (date < 10) { date = "0" + date; }
-      var dtStr = year + "-" + month + "-" + date; 
+      var dtStr = year + "-" + month + "-" + date;
       return dtStr;
     }
 
     function getTimeNow() {
-      var dt = new Date(); 
-      
+      var dt = new Date();
+
       var hours = dt.getHours();
       if (hours < 10) { hours = "0" + hours; }
       var minutes = dt.getMinutes();
@@ -373,8 +371,8 @@
       var searchConditionArea = $("#searchConditionArea");
       searchConditionArea.attr("markTime", "");
       refreshReportRowArea();
-    }); 
-    
+    });
+
     loadReportSummary();
 
     $("input[name='rowType']").click(function () {
@@ -401,11 +399,11 @@
     $("#insertTestEventButton").click(function () {
       var reportRowArea = $("#reportRowArea");
       var insertTestEventResult = $("#insertTestEventResult");
-      var searchKeyWord = $("#searchKeyWord").val();
+      var searchKeyword = $("#searchKeyword").val();
 
       var sourceAppointmentDate = document.getElementById("appointmentDate").value;
       var sourceAppointmentTime = document.getElementById("appointmentTime").value;
-      
+
       var appointment = buildDateTime(sourceAppointmentDate, sourceAppointmentTime);
 
       var insertNewTestEventCaseIdSelector = document.getElementById("insertNewTestEventCaseIdSelector");
@@ -413,26 +411,26 @@
 
       var jsonOutput = {
         appointment:appointment,
-        searchKeyWord:searchKeyWord,
+        searchKeyword:searchKeyword,
         flowId:flowId
       };
 
       var url = "/atDemo/insertSearchingDemoTestEvent";
       $.ajax({
-        type : "POST",  
+        type : "POST",
         async : true,
-        url : url,  
+        url : url,
         data: JSON.stringify(jsonOutput),
         cache : false,
         contentType: "application/json",
         dataType: "json",
-        timeout:50000,  
+        timeout:50000,
         beforeSend: function(xhr) {
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
           // var jsonResponse = JSON.parse(datas);
-          
+
           if (datas.code == 0) {
             var eventId = datas.eventId;
             var waitingEventCount = datas.waitingEventCount;
@@ -445,11 +443,11 @@
             insertTestEventResult.html(datas.message);
           }
 
-        },  
+        },
         error: function(datas) {
-          insertTestEventResult.html(datas.message);  
+          insertTestEventResult.html(datas.message);
         }
-      }); 
+      });
     })
 
     $("#taskNotRun").click(function () {

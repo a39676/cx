@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
+import demo.automationTest.service.impl.AutomationTestConstantService;
 import demo.common.service.CommonService;
 import demo.image.mapper.ImageStoreMapper;
 import demo.image.mapper.ImageTagMapper;
@@ -50,6 +51,9 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 	private ImageStoreMapper imgMapper;
 	@Autowired
 	private ImageTagMapper imageTagMapper;
+	
+	@Autowired
+	private AutomationTestConstantService automationTestConstantService;
 	
 	@Override
 	public void getImage(HttpServletResponse response, String imgPK) {
@@ -108,7 +112,7 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 	@Override
 	public ImageSavingResult __saveImgFromBBT(ImageSavingTransDTO dto) {
 		dto.setImgTagCode(ImageTagType.imageSaving.getCode());
-		ImageSavingResult r = validImageSavingTransDTO(dto);
+		ImageSavingResult r = validImageSavingTransDTO_forBBT(dto);
 		if(r.isFail()) {
 			return r;
 		}
@@ -147,6 +151,20 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 		}
 		
 		r.setIsSuccess();
+		return r;
+	}
+	
+	private ImageSavingResult validImageSavingTransDTO_forBBT(ImageSavingTransDTO dto) {
+		ImageSavingResult r = new ImageSavingResult();
+		if(dto.getValidTime() == null) {
+			dto.setValidTime(LocalDateTime.now().plusMonths(automationTestConstantService.getTestEventLiveLimitMonth()));
+		} else {
+			if(dto.getValidTime().isBefore(LocalDateTime.now())) {
+				r.failWithMessage("error data");
+				return r;
+			}
+		}
+		r = validImageSavingTransDTO(dto);
 		return r;
 	}
 

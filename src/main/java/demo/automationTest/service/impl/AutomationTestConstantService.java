@@ -22,6 +22,7 @@ public class AutomationTestConstantService extends CommonService {
 
 	private String reportStorePrefixPath;
 	private String paramStorePrefixPath;
+	private String imageStorePrefixPath;
 	private LocalDateTime lastHeartBeat = LocalDateTime.now();
 	/** test event 数据存活时长, 单位:月 */
 	private Integer testEventLiveLimitMonth = 3;
@@ -63,6 +64,14 @@ public class AutomationTestConstantService extends CommonService {
 		this.paramStorePrefixPath = paramStorePrefixPath;
 	}
 
+	public String getImageStorePrefixPath() {
+		return imageStorePrefixPath;
+	}
+
+	public void setImageStorePrefixPath(String imageStorePrefixPath) {
+		this.imageStorePrefixPath = imageStorePrefixPath;
+	}
+
 	public LocalDateTime getLastHeartBeat() {
 		return lastHeartBeat;
 	}
@@ -90,9 +99,9 @@ public class AutomationTestConstantService extends CommonService {
 	@Override
 	public String toString() {
 		return "AutomationTestConstantService [optionFilePath=" + optionFilePath + ", reportStorePrefixPath="
-				+ reportStorePrefixPath + ", paramStorePrefixPath=" + paramStorePrefixPath + ", lastHeartBeat="
-				+ lastHeartBeat + ", testEventLiveLimitMonth=" + testEventLiveLimitMonth + ", maxWaitingRunHour="
-				+ maxWaitingRunHour + "]";
+				+ reportStorePrefixPath + ", paramStorePrefixPath=" + paramStorePrefixPath + ", imageStorePrefixPath="
+				+ imageStorePrefixPath + ", lastHeartBeat=" + lastHeartBeat + ", testEventLiveLimitMonth="
+				+ testEventLiveLimitMonth + ", maxWaitingRunHour=" + maxWaitingRunHour + "]";
 	}
 
 }

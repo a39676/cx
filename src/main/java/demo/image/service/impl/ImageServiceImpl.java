@@ -22,11 +22,13 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
+import demo.article.article.pojo.dto.LocalImageSavingDTO;
 import demo.automationTest.service.impl.AutomationTestConstantService;
 import demo.common.service.CommonService;
 import demo.image.mapper.ImageStoreMapper;
@@ -110,6 +112,104 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 	}
 	
 	@Override
+	public ImageSavingResult imageSaving(LocalImageSavingDTO dto) {
+		ImageSavingResult r = validImageSavingTransDTO(dto);
+		if(r.isFail()) {
+			return r;
+		}
+		
+		r = saveImgHandler(dto);
+		
+		return r;
+	}
+	
+	private ImageSavingResult saveImgHandler(LocalImageSavingDTO dto) {
+		ImageSavingResult r = new ImageSavingResult();
+		ImageTagType imgTagType = ImageTagType.getType(dto.getImgTagCode());
+		try {
+			if(imgTagType == null) {
+				r.failWithMessage("error data");
+				return r;
+			}
+			
+			Paths.get(dto.getImgPath());
+			File imgFile = new File(dto.getImgPath());
+			if(!imgFile.exists()) {
+				r.failWithMessage("error data");
+				return r;
+			}
+		} catch (Exception e) {
+			r.failWithMessage("error data");
+			return r;
+		}
+		
+		ImageStore imgPO = new ImageStore();
+		Long newImgId = snowFlake.getNextId();
+		imgPO.setImageId(newImgId);
+		imgPO.setImageUrl(dto.getImgPath());
+		imgPO.setImageName(dto.getImgName());
+		imgPO.setValidTime(dto.getValidTime());
+		int insertCount = imgMapper.insertSelective(imgPO);
+		if(insertCount < 1) {
+			r.failWithMessage("service error");
+			return r;
+		}
+		
+		ImageTag imgTagPO = new ImageTag();
+		imgTagPO.setImageId(newImgId);
+		imgTagPO.setTagId(imgTagType.getCode().longValue());
+		insertCount = imageTagMapper.insertSelective(imgTagPO);
+		if(insertCount < 1) {
+			r.failWithMessage("service error");
+			return r;
+		}
+		
+		String imgPK = encryptId(newImgId);
+		try {
+			String urlEncodeImgPk = URLEncoder.encode(imgPK, StandardCharsets.UTF_8.toString());
+			r.setImgUrl(ImageUrl.root + ImageUrl.getImage + "/?imgPK=" + urlEncodeImgPk);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		r.setImgPK(imgPK);
+		r.setIsSuccess();
+		return r;
+	}
+
+	private ImageSavingResult validImageSavingTransDTO(LocalImageSavingDTO dto) {
+		ImageSavingResult r = new ImageSavingResult();
+		if(dto == null 
+				|| StringUtils.isBlank(dto.getImgName()) 
+				|| dto.getImgTagCode() == null
+				) {
+			r.failWithMessage("error data");
+			return r;
+		}
+		
+		ImageTagType tagType = ImageTagType.getType(dto.getImgTagCode());
+		if(tagType == null) {
+			r.failWithMessage("error data");
+			return r;
+		}
+		
+		if(dto.getValidTime() == null) {
+			if(!isBigUser()) {
+				dto.setValidTime(LocalDateTime.now().plusMonths(1));
+			}
+		} else {
+			if(dto.getValidTime().isBefore(LocalDateTime.now())) {
+				r.failWithMessage("error data");
+				return r;
+			}
+		}
+		
+		r.setIsSuccess();
+		return r;
+	}
+	
+
+	@Override
 	public ImageSavingResult __saveImgFromBBT(ImageSavingTransDTO dto) {
 		dto.setImgTagCode(ImageTagType.imageSaving.getCode());
 		ImageSavingResult r = validImageSavingTransDTO_forBBT(dto);
@@ -125,8 +225,7 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 	private ImageSavingResult validImageSavingTransDTO(ImageSavingTransDTO dto) {
 		ImageSavingResult r = new ImageSavingResult();
 		if(dto == null 
-				|| StringUtils.isAnyBlank(dto.getImgPath(), dto.getImgName()) 
-				|| !dto.getImgPath().endsWith(dto.getImgName())
+				|| StringUtils.isBlank(dto.getImgName()) 
 				|| dto.getImgTagCode() == null
 				) {
 			r.failWithMessage("error data");
@@ -175,18 +274,21 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 	private ImageSavingResult saveImgHandler(ImageSavingTransDTO dto) {
 		ImageSavingResult r = new ImageSavingResult();
 		ImageTagType imgTagType = ImageTagType.getType(dto.getImgTagCode());
+		String newImgFilePath = null;
 		try {
 			if(imgTagType == null) {
 				r.failWithMessage("error data");
 				return r;
 			}
 			
-			Paths.get(dto.getImgPath());
-			File imgFile = new File(dto.getImgPath());
-			if(!imgFile.exists()) {
-				r.failWithMessage("error data");
-				return r;
-			}
+			String imageStorePrefixPath = automationTestConstantService.getImageStorePrefixPath();
+			newImgFilePath = imageStorePrefixPath + File.separator + dto.getImgName();
+			File imgFile = new File(newImgFilePath);
+			
+			String base64Image = dto.getImgBase64Str(); // .split(",")[1];
+			byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+			FileUtils.writeByteArrayToFile(imgFile, imageBytes);
+			
 		} catch (Exception e) {
 			r.failWithMessage("error data");
 			return r;
@@ -195,7 +297,7 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 		ImageStore imgPO = new ImageStore();
 		Long newImgId = snowFlake.getNextId();
 		imgPO.setImageId(newImgId);
-		imgPO.setImageUrl(dto.getImgPath());
+		imgPO.setImageUrl(newImgFilePath);
 		imgPO.setImageName(dto.getImgName());
 		imgPO.setValidTime(dto.getValidTime());
 		int insertCount = imgMapper.insertSelective(imgPO);
@@ -321,4 +423,5 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 		r.setIsSuccess();
 		return r;
 	}
+
 }

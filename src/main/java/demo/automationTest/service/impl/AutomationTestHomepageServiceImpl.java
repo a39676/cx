@@ -43,6 +43,7 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 	
 	@Autowired
 	private FileUtilCustom ioUtil;
+	@SuppressWarnings("unused")
 	@Autowired
 	private ExceptionService exceptionService;
 	@Autowired
@@ -63,9 +64,9 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 	@Override
 	public ModelAndView index() {
 
-		if(!baseUtilCustom.hasAdminRole() && !isDev()) {
-			return exceptionService.handle404Exception(null);
-		}
+//		if(!baseUtilCustom.hasAdminRole() && !isDev()) {
+//			return exceptionService.handle404Exception(null);
+//		}
 
 		ModelAndView v = new ModelAndView("ATDemoJSP/atDemoIndex");
 		v.addObject("title", "自动化测试");
@@ -90,8 +91,6 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 //		if (!baseUtilCustom.hasAdminRole()) {
 //			dto.setModuleId(TestModuleType.ATDemo.getId());
 //		}
-		
-//		TODO
 		
 		List<TestEvent> poList = reportService.findReportPage(dto);
 		List<TestReportSummaryVO> voList = new ArrayList<>();

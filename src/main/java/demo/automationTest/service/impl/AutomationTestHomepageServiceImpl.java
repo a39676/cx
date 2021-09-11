@@ -246,6 +246,7 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 			insertEventDTO.setTestEventId(snowFlake.getNextId());
 			insertEventDTO.setTestModuleType(TestModuleType.ATDemo.getId());
 			insertEventDTO.setFlowType(BingDemoSearchFlowType.SEARCH_IN_HOMEPAGE.getId());
+			insertEventDTO.setFlowTypeName(BingDemoSearchFlowType.SEARCH_IN_HOMEPAGE.getFlowName());
 			insertEventDTO.setAppointment(dto.getAppointment());
 			JSONObject paramJson = new JSONObject();
 			paramJson.put(dto.getClass().getSimpleName(), JSONObject.fromObject(dto).toString());

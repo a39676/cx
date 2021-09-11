@@ -55,8 +55,14 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
+          <p class="para" style="word-break:break-word;">Total: ${reportVO.passCount + reportVO.failedCount + reportVO.blockedCount}</p>
+          <p class="para" style="word-break:break-word; background:green;">Pass: ${reportVO.passCount}</p>
+          <p class="para" style="word-break:break-word; background:red;">Failed: ${reportVO.failedCount}</p>
+          <p class="para" style="word-break:break-word; background:yellow;">Blocked: ${reportVO.blockedCount}</p>
+          <hr>
           <c:forEach items="${reportVO.caseReportList}" var="caseReport">
-            <p class="para" style="word-break:break-word;">${caseReport.caseTypeName}</p>
+            <p class="para" style="word-break:break-word;">Case: ${caseReport.caseTypeName}</p>
+            <hr>
             <c:forEach items="${caseReport.reportElementList}" var="reportElement">
               <p class="para" style="word-break:break-word;">${reportElement.marktime}</p>
               <c:choose>

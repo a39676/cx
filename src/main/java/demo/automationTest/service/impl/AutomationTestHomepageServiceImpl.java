@@ -20,15 +20,15 @@ import at.report.pojo.vo.JsonReportOfEventVO;
 import autoTest.jsonReport.pojo.constant.AutoTestInteractionUrl;
 import autoTest.jsonReport.pojo.dto.FindReportByTestEventIdDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
+import autoTest.pojo.constant.AutoTestUrl;
 import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.searchingDemo.pojo.constant.SearchingDemoConstant;
 import autoTest.testEvent.searchingDemo.pojo.dto.BingSearchInHomePageDTO;
 import autoTest.testEvent.searchingDemo.pojo.type.BingDemoSearchFlowType;
 import autoTest.testModule.pojo.type.TestModuleType;
-import auxiliaryCommon.pojo.constant.ServerHost;
-import demo.automationTest.mq.producer.TestEventInsertAckProducer;
 import demo.automationTest.pojo.po.TestEvent;
 import demo.automationTest.pojo.result.InsertSearchingDemoEventResult;
+import demo.automationTest.pojo.vo.TestReportSummaryVO;
 import demo.automationTest.service.AutomationTestHomepageService;
 import demo.automationTest.service.AutomationTestReportService;
 import demo.automationTest.service.TestEventService;
@@ -36,20 +36,15 @@ import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.system.service.ExceptionService;
 import net.sf.json.JSONObject;
 import toolPack.dateTimeHandle.DateTimeUtilCommon;
-import toolPack.httpHandel.HttpUtil;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class AutomationTestHomepageServiceImpl extends AutomationTestCommonService implements AutomationTestHomepageService {
 	
 	@Autowired
-	private HttpUtil httpUtil;
-	@Autowired
 	private FileUtilCustom ioUtil;
 	@Autowired
 	private ExceptionService exceptionService;
-	@Autowired
-	private TestEventInsertAckProducer testEventInsertAckProducer;
 	@Autowired
 	private TestEventService eventService;
 	@Autowired
@@ -58,11 +53,11 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 	
 	@Override
 	public ModelAndView linkToATHome() {
-		if(baseUtilCustom.hasAdminRole() || isDev()) {
-			return new ModelAndView("ATDemoJSP/atDemoLink");
-		}
-
-		return null;
+		return new ModelAndView("ATDemoJSP/atDemoLink");
+//		if(baseUtilCustom.hasAdminRole() || isDev()) {
+//		}
+//
+//		return null;
 	}
 
 	@Override
@@ -90,81 +85,39 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 	}
 
 	@Override
-	public String findReportsByCondition(HttpServletRequest request, FindTestEventPageByConditionDTO dto) {
+	public List<TestReportSummaryVO> findReportsByCondition(FindTestEventPageByConditionDTO dto) {
 		
-		if (!baseUtilCustom.hasAdminRole()) {
-			dto.setModuleId(TestModuleType.ATDemo.getId());
+//		if (!baseUtilCustom.hasAdminRole()) {
+//			dto.setModuleId(TestModuleType.ATDemo.getId());
+//		}
+		
+//		TODO
+		
+		List<TestEvent> poList = reportService.findReportPage(dto);
+		List<TestReportSummaryVO> voList = new ArrayList<>();
+		
+		for(TestEvent po : poList ) {
+			voList.add(buildReportSummaryVO(po));
 		}
-		
-		
-		if(dto.getEndTime() != null) {
-			if(dto.getCreateEndTime() != null) {
-				if(dto.getEndTime().isBefore(dto.getCreateEndTime())) {
-					dto.setCreateEndTime(dto.getEndTime());
-				}
-			} else {
-				dto.setCreateEndTime(dto.getEndTime());
-			}
-			dto.setEndTime(null);
-		}
-		
-		try {
-			JSONObject j = new JSONObject();
-			if (dto.getCreateStartTime() != null) {
-				j.put("createStartTime", localDateTimeHandler.dateToStr(dto.getCreateStartTime()));
-			}
-			if (dto.getCreateEndTime() != null) {
-				j.put("createEndTime", localDateTimeHandler.dateToStr(dto.getCreateEndTime()));
-			}
-			if (dto.getRunTimeStartTime() != null) {
-				j.put("runTimeStartTime", localDateTimeHandler.dateToStr(dto.getRunTimeStartTime()));
-			}
-			if (dto.getRunTimeEndTime() != null) {
-				j.put("runTimeEndTime", localDateTimeHandler.dateToStr(dto.getRunTimeEndTime()));
-			}
-			if (StringUtils.isNotBlank(dto.getEventName())) {
-				j.put("eventName", dto.getEventName());
-			}
-			if (StringUtils.isNotBlank(dto.getReportPath())) {
-				j.put("reportPath", dto.getReportPath());
-			}
-			if (dto.getModuleId() != null) {
-				j.put("moduleId", dto.getModuleId());
-			}
-			if (dto.getId() != null) {
-				j.put("id", dto.getId());
-			}
-			if (dto.getFlowId() != null) {
-				j.put("flowId", dto.getFlowId());
-			}
-			if (dto.getLimit() != null) {
-				j.put("limit", dto.getLimit());
-			}
-			if (!dto.getRunFlag()) {
-				j.put("runFlag", "false");
-			}
-			if(dto.getIsSuccess() == null || dto.getIsSuccess()) {
-				j.put("isSuccess", "true");
-			} else {
-				j.put("isSuccess", "false");
-			}
-
-			String url = ServerHost.localHost10002 + AutoTestInteractionUrl.ROOT
-					+ AutoTestInteractionUrl.FIND_REPORTS_BY_CONDITION;
-			String response = String.valueOf(httpUtil.sendPostRestful(url, j.toString()));
-			return response;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+		return voList;
+	}
+	
+	private TestReportSummaryVO buildReportSummaryVO(TestEvent po){
+		TestReportSummaryVO vo = new TestReportSummaryVO();
+		vo.setIdStr(po.getId().toString());
+		vo.setFlowName(po.getFlowName());
+		vo.setStartTime(po.getStartTime());
+		vo.setEndTime(po.getEndTime());
+		vo.setCreateTime(po.getCreateTime());
+		return vo;
 	}
 
 	@Override
 	public ModelAndView findReportByTestEventId(HttpServletRequest request, FindReportByTestEventIdDTO dto) {
 		
-		if(!baseUtilCustom.hasAdminRole()) {
-			return exceptionService.handle404Exception(request);
-		}
+//		if(!baseUtilCustom.hasAdminRole()) {
+//			return exceptionService.handle404Exception(request);
+//		}
 		
 		ModelAndView view = new ModelAndView("ATDemoJSP/atReportPost");
 		JsonReportOfEventVO vo = null;
@@ -262,6 +215,10 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 				
 				vo.setCaseReportList(reportDTO.getCaseReportList());
 				
+				vo.setPassCount(po.getPassCount());
+				vo.setFailedCount(po.getFailCount());
+				vo.setBlockedCount(po.getBlockCount());
+				
 				return vo;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -290,18 +247,22 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 			insertEventDTO.setTestEventId(snowFlake.getNextId());
 			insertEventDTO.setTestModuleType(TestModuleType.ATDemo.getId());
 			insertEventDTO.setFlowType(BingDemoSearchFlowType.SEARCH_IN_HOMEPAGE.getId());
+			insertEventDTO.setAppointment(dto.getAppointment());
 			JSONObject paramJson = new JSONObject();
 			paramJson.put(dto.getClass().getSimpleName(), JSONObject.fromObject(dto).toString());
 			insertEventDTO.setParamStr(paramJson.toString());
 			
 			eventService.insertEvent(insertEventDTO);
 			
-			testEventInsertAckProducer.send(insertEventDTO);
+			if(dto.getAppointment() == null || !LocalDateTime.now().isBefore(dto.getAppointment())) {
+				testEventInsertAckProducer.send(insertEventDTO);
+			}
+			r.setEventId(insertEventDTO.getTestEventId());
 			r.setIsSuccess();
 			redisConnectService.insertFunctionalModuleVisitData(request, SystemRedisKey.searchingDemoInsertCountingKeyPrefix);
 			r.setHasInsertCount(count + 1);
 			r.setMaxInsertCount(SearchingDemoConstant.maxInsertCountIn30Minutes);
-			r.setMessage("/atDemo/findReportByTestEventId?testEventId=" + r.getEventId());
+			r.setMessage(AutoTestUrl.root + AutoTestInteractionUrl.FIND_REPORT_BY_TEST_EVENT_ID + "?testEventId=" + r.getEventId());
 
 		} catch (Exception e) {
 			log.error(e.getLocalizedMessage());

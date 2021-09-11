@@ -34,4 +34,9 @@ public class TestController2 extends CommonController {
 		return j.toString();
 	}
 
+	@GetMapping(value = "/test3")
+	@ResponseBody
+	public String test3() {
+		return "done";
+	}
 }

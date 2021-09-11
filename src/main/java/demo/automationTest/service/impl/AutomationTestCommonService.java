@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import autoTest.testModule.pojo.type.TestModuleType;
 import demo.automationTest.mapper.TestEventMapper;
+import demo.automationTest.mq.producer.TestEventInsertAckProducer;
 import demo.common.service.CommonService;
 import toolPack.dateTimeHandle.DateTimeUtilCommon;
 import toolPack.ioHandle.FileUtilCustom;
@@ -14,12 +15,14 @@ import toolPack.ioHandle.FileUtilCustom;
 public abstract class AutomationTestCommonService extends CommonService {
 
 	@Autowired
+	private FileUtilCustom ioUtil;
+	@Autowired
 	protected TestEventMapper eventMapper;
 	@Autowired
 	protected AutomationTestConstantService constantService;
 	@Autowired
-	private FileUtilCustom ioUtil;
-
+	protected TestEventInsertAckProducer testEventInsertAckProducer;
+	
 	protected String getAutomationTestReportSavingFolder() {
 		String path = constantService.getReportStorePrefixPath() + File.separator
 				+ localDateTimeHandler.dateToStr(LocalDateTime.now(), DateTimeUtilCommon.dateFormatNoSymbol);

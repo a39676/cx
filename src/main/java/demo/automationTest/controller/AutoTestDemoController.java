@@ -1,5 +1,7 @@
 package demo.automationTest.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
 import autoTest.pojo.constant.AutoTestUrl;
 import autoTest.testEvent.searchingDemo.pojo.dto.BingSearchInHomePageDTO;
 import demo.automationTest.pojo.result.InsertSearchingDemoEventResult;
+import demo.automationTest.pojo.vo.TestReportSummaryVO;
 import demo.automationTest.service.AutomationTestHomepageService;
 import demo.common.controller.CommonController;
 
@@ -28,20 +31,20 @@ public class AutoTestDemoController extends CommonController {
 	@Autowired
 	private AutomationTestHomepageService atDemoService;
 	
-	@PostMapping(value = AutoTestUrl.linkToATHome)
+	@PostMapping(value = AutoTestUrl.LINK_TO_AT_HOME)
 	public ModelAndView linkToATHome() {
 		return atDemoService.linkToATHome();
 	}
 	
-	@GetMapping(value = AutoTestUrl.index)
+	@GetMapping(value = AutoTestUrl.INDEX)
 	public ModelAndView index() {
 		return atDemoService.index();
 	}
 	
 	@PostMapping(value = AutoTestInteractionUrl.FIND_REPORTS_BY_CONDITION)
 	@ResponseBody
-	public String findReportsByCondition(HttpServletRequest request, @RequestBody FindTestEventPageByConditionDTO dto) {
-		return atDemoService.findReportsByCondition(request, dto);
+	public List<TestReportSummaryVO> findReportsByCondition(@RequestBody FindTestEventPageByConditionDTO dto) {
+		return atDemoService.findReportsByCondition(dto);
 	}
 	
 	@GetMapping(value = AutoTestInteractionUrl.FIND_REPORT_BY_TEST_EVENT_ID)

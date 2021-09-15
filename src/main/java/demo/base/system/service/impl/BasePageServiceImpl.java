@@ -37,10 +37,9 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 		
 		ModelAndView view = new ModelAndView();
 
-		String envName = systemConstantService.getEnvNameRefresh();
 		
 		if (hostnameType == null) {
-			if(!"dev".equals(envName)) {
+			if(!isDev()) {
 				if(hostnameType == null) {
 					view.setViewName(BaseViewConstant.empty);
 					return view;

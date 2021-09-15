@@ -452,8 +452,11 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	public GetArticleChannelsBO filterChannelDynamic(GetArticleChannelsBO channelList, String hostname) {
 		List<Hostname> hostnameList = hostnameService.findHonstnames();
 		Integer hostnameId = null;
+		if(hostname.contains("www")) {
+			hostname = hostname.replaceAll("www\\.", "");
+		}
 		for(Hostname i : hostnameList) {
-			if(hostname.equals(i.getHostname()) || ("www." + hostname).equals(i.getHostname())) {
+			if(hostname.equals(i.getHostname())) {
 				hostnameId = i.getId();
 			}
 		}

@@ -454,7 +454,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		List<Hostname> hostnameList = hostnameService.findHonstnames();
 		Integer hostnameId = null;
 		for(Hostname i : hostnameList) {
-			if(hostname.equals(i.getHostname())) {
+			if(hostname.equals(i.getHostname()) || ("www." + hostname).equals(i.getHostname())) {
 				hostnameId = i.getId();
 			}
 		}

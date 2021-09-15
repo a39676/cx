@@ -27,12 +27,12 @@
         <button class="btn btn-sm btn-success" id="loadMoreButton"><b>LOAD MORE</b></button>
       </div>
       <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
-      <%-- 管理员专用搜索框 --%>
-      <%@ include file="../articleJSP/articleSearchV3.jsp" %>
+        <%-- 管理员专用搜索框 --%>
+        <%@ include file="../articleJSP/articleSearchV3.jsp" %>
       </sec:authorize>
     </div>
-    <!-- dynamic area --> 
-  </div>    
+    <!-- dynamic area -->
+  </div>
 </div>
 
 <footer>

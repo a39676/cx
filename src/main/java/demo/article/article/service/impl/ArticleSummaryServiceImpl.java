@@ -297,7 +297,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		/* 置限制只可浏览某时点之后的文章 */
 		boolean isBigUser = isBigUser();
 		if(!isBigUser) {
-			Long maxReadingMonth = articleConstantService.getNormalUserMaxReadingMonth();;
+			Long maxReadingMonth = articleConstantService.getNormalUserMaxReadingMonth();
 			LocalDateTime earliestStartTime = LocalDateTime.now().minusMonths(maxReadingMonth);
 			if(dto.getStartTime() == null || dto.getStartTime().isBefore(earliestStartTime)) {
 				dto.setStartTime(earliestStartTime);

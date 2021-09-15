@@ -129,7 +129,9 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 		while (!startTime.isAfter(now)) {
 			tmpKey = buildCacheMapKey(coinType, currencyType, startTime);
 			tmpCommonData = constantService.getCacheMap().get(tmpKey);
-			commonDataList.add(tmpCommonData);
+			if(tmpCommonData != null) {
+				commonDataList.add(tmpCommonData);
+			}
 
 			startTime = startTime.plusMinutes(1);
 		}
@@ -165,7 +167,7 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 		CacheMapBO bo = new CacheMapBO();
 		bo.setCoinTypeCode(coinType.getId().intValue());
 		bo.setCurrencyCode(currencyType.getCode());
-		bo.setStartTime(datetime);
+		bo.setStartTime(datetime.withSecond(0).withNano(0));
 		return bo;
 	}
 	

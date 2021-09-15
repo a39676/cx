@@ -38,6 +38,7 @@ import demo.article.article.pojo.bo.UpdateEditedArticleLongBO;
 import demo.article.article.pojo.constant.ArticleViewConstant;
 import demo.article.article.pojo.dto.EditArticleLongDTO;
 import demo.article.article.pojo.dto.FindArticleLongByConditionDTO;
+import demo.article.article.pojo.dto.LocalImageSavingDTO;
 import demo.article.article.pojo.dto.ReadyToEditArticleLongDTO;
 import demo.article.article.pojo.param.controllerParam.CreateArticleParam;
 import demo.article.article.pojo.param.controllerParam.CreatingArticleParam;
@@ -64,7 +65,6 @@ import demo.common.pojo.type.ResultTypeCX;
 import demo.image.pojo.result.ImgHandleSrcDataResult;
 import demo.image.pojo.type.ImageTagType;
 import demo.image.service.ImageService;
-import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.result.ImageSavingResult;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -341,7 +341,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return "";
 		}
 
-		ImageSavingTransDTO dto = new ImageSavingTransDTO();
+		LocalImageSavingDTO dto = new LocalImageSavingDTO();
 		dto.setImgName(filename);
 		dto.setImgPath(imgSavingPath);
 		dto.setImgTagCode(ImageTagType.fromArticle.getCode());

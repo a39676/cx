@@ -38,4 +38,43 @@ public class CacheMapBO {
 				+ currencyCode + "]";
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((coinTypeCode == null) ? 0 : coinTypeCode.hashCode());
+		result = prime * result + ((currencyCode == null) ? 0 : currencyCode.hashCode());
+		result = prime * result + ((startTime == null) ? 0 : startTime.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CacheMapBO other = (CacheMapBO) obj;
+		if (coinTypeCode == null) {
+			if (other.coinTypeCode != null)
+				return false;
+		} else if (!coinTypeCode.equals(other.coinTypeCode))
+			return false;
+		if (currencyCode == null) {
+			if (other.currencyCode != null)
+				return false;
+		} else if (!currencyCode.equals(other.currencyCode))
+			return false;
+		if (startTime == null) {
+			if (other.startTime != null)
+				return false;
+		} else if (!startTime.equals(other.startTime))
+			return false;
+		return true;
+	}
+	
+	
+
 }

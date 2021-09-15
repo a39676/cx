@@ -54,6 +54,7 @@ public abstract class CommonService {
 	@Autowired
 	protected RedisConnectService redisConnectService;
 
+	protected static final Integer NORMAL_PAGE_SIZE = 10;
 	protected static final LocalDateTime BLOG_ARTICLE_START_TIME = LocalDateTime.of(2020, 5, 1, 0, 0, 0);
 	protected static final String MAIN_FOLDER_PATH = "/home/u2/cx";
 	
@@ -123,7 +124,7 @@ public abstract class CommonService {
 	}
 
 	protected String findHostNameFromRequst(HttpServletRequest request) {
-		if ("dev".equals(systemConstantService.getEnvName())) {
+		if (isDev()) {
 			return "easy";
 		}
 		return request.getServerName();

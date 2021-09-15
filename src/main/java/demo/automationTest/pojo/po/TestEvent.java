@@ -35,6 +35,8 @@ public class TestEvent {
 
     private LocalDateTime endTime;
 
+    private LocalDateTime sendTime;
+
     private Boolean isPass;
 
     private Boolean isDelete;
@@ -165,6 +167,14 @@ public class TestEvent {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
+    }
+
+    public LocalDateTime getSendTime() {
+        return sendTime;
+    }
+
+    public void setSendTime(LocalDateTime sendTime) {
+        this.sendTime = sendTime;
     }
 
     public Boolean getIsPass() {

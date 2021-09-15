@@ -119,10 +119,11 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		GetArticleChannelsBO bo = null;
 		Long userId = baseUtilCustom.getUserId();
 
+		String hostName = findHostNameFromRequst(request);
 		if (userId == null) {
-			bo = getArticleChannelsForNotLogin(findHostNameFromRequst(request));
+			bo = getArticleChannelsForNotLogin(hostName);
 		} else {
-			bo = getArticleChannelsByUserId(findHostNameFromRequst(request), userId);
+			bo = getArticleChannelsByUserId(hostName, userId);
 		}
 
 		GetArticleChannelsResult result = buildGetArticleChannelsResult(bo);
@@ -451,6 +452,9 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	public GetArticleChannelsBO filterChannelDynamic(GetArticleChannelsBO channelList, String hostname) {
 		List<Hostname> hostnameList = hostnameService.findHonstnames();
 		Integer hostnameId = null;
+		if(hostname.contains("www")) {
+			hostname = hostname.replaceAll("www\\.", "");
+		}
 		for(Hostname i : hostnameList) {
 			if(hostname.equals(i.getHostname())) {
 				hostnameId = i.getId();

@@ -120,7 +120,6 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		Long userId = baseUtilCustom.getUserId();
 
 		String hostName = findHostNameFromRequst(request);
-		log.error("getArticleChannelsDynamic, hostName: " + hostName);
 		if (userId == null) {
 			bo = getArticleChannelsForNotLogin(hostName);
 		} else {

@@ -30,7 +30,6 @@
       <option value="${chatVO.pk}">${chatVO.username}</option>
     </c:forEach>
   </select>
-  <span>validTime(endTime)</span> <input type="Date" id="validTime">
 </div>
 
 <div class="row">
@@ -62,6 +61,9 @@
   </select>
 </div>
 
+<div class="row">
+  <span>validTime(endTime)</span> <input type="Date" id="validTime">
+</div>
 <div class="row">
   <span>noticeStartTime</span><input type="Date" id="noticeStartDate"><input type="Time" id="noticeStartTime" value="00:00">
 </div>

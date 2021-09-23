@@ -50,8 +50,8 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 		} else {
 			if (HostnameType.zhang3.equals(hostnameType)) {
 				view = buildHomeViewForNormal();
-//			} else if (HostnameType.three.equals(hostnameType)) {
-//				view = buildHomeViewForSeekingWork();
+			} else if (HostnameType.dtro.equals(hostnameType)) {
+				view = buildHomeViewForFake();
 			}
 		}
 
@@ -66,9 +66,20 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 	}
 	
 	private ModelAndView buildHomeViewForNormal() {
-		ModelAndView view = new ModelAndView(BlogViewConstant.home);
+		ModelAndView view = new ModelAndView(BlogViewConstant.HOME);
 		view.addObject("title", systemConstantService.getNormalWebSiteTitle());
 		view.addObject("headerImg", "/static_resources/cleanBlog/img/nature-4607496_1920.jpg");
+		view.addObject("subheading", systemConstantService.getNormalSubheading());
+		Long visitCount = visitDataService.getVisitCount();
+		view.addObject("visitCount", visitCount);
+		
+		return view;
+	}
+	
+	private ModelAndView buildHomeViewForFake() {
+		ModelAndView view = new ModelAndView(BlogViewConstant.HOME);
+		view.addObject("title", systemConstantService.getNormalWebSiteTitle());
+		view.addObject("headerImg", "/static_resources/cleanBlog/img/cat-4481566_1920.jpg");
 		view.addObject("subheading", systemConstantService.getNormalSubheading());
 		Long visitCount = visitDataService.getVisitCount();
 		view.addObject("visitCount", visitCount);
@@ -83,13 +94,14 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 		HostnameType hostnameType = hostnameService.findHostnameType(request);
 		if (hostnameType != null) {
 			if (HostnameType.zhang3.equals(hostnameType)) {
-				v = new ModelAndView(BlogViewConstant.aboutEasy);
+				v = new ModelAndView(BlogViewConstant.ABOUT_ZHANG);
 				v.addObject("email", systemConstantService.getEmailD());
 				v.addObject("headerImg", "/static_resources/cleanBlog/img/nature-4607496_1920.jpg");
-//			} else if (HostnameType.seek.equals(hostnameType)) {
-//				v = new ModelAndView(BlogViewConstant.aboutSeek);
-//				v.addObject("email", constantService.getValByName(SystemConstantStore.emailc));
-//				v.addObject("headerImg", atDemoHeadImg);
+			} else if (HostnameType.dtro.equals(hostnameType)) {
+				v = new ModelAndView(BlogViewConstant.ABOUT_DTRO);
+				v.addObject("email", systemConstantService.getEmailC());
+				v.addObject("headerImg", "/static_resources/cleanBlog/img/cat-4481566_1920.jpg.jpg");
+				
 			}
 		}
 

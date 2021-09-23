@@ -35,7 +35,7 @@ public class ExceptionServiceImpl extends CommonService implements ExceptionServ
 		} else {
 			view.addObject("message", "很抱歉,居然出现了" + description[getRan()] + "的异常");
 		}
-		view.addObject("urlRedirect", findHostNameFromRequst(request));
+		view.addObject("urlRedirect", hostnameService.findHostNameFromRequst(request));
 
 		e.printStackTrace();
 		return view;
@@ -64,7 +64,7 @@ public class ExceptionServiceImpl extends CommonService implements ExceptionServ
 		log.error("_");
 		ModelAndView view = new ModelAndView("baseJSP/errorCustom");
 		view.addObject("message", "很抱歉,居然出现了" + description[getRan()] + "的异常");
-		view.addObject("urlRedirect", findHostNameFromRequst(request));
+		view.addObject("urlRedirect", hostnameService.findHostNameFromRequst(request));
 
 		return view;
 	}

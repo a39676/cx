@@ -3,6 +3,8 @@ package demo.base.system.pojo.result;
 public enum HostnameType {
 	
 	zhang3("zhang3", 5),
+	
+	dtro("dtro", 6),
 	;
 	
 	private String name;

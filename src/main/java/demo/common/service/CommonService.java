@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.TimeUnitType;
+import demo.base.system.service.HostnameService;
 import demo.base.system.service.IpRecordService;
 import demo.base.system.service.impl.RedisConnectService;
 import demo.base.system.service.impl.SystemConstantService;
@@ -50,6 +49,8 @@ public abstract class CommonService {
 	protected BaseUtilCustom baseUtilCustom;
 	@Autowired
 	protected IpRecordService ipRecordService;
+	@Autowired
+	protected HostnameService hostnameService;
 
 	@Autowired
 	protected RedisConnectService redisConnectService;
@@ -121,37 +122,6 @@ public abstract class CommonService {
 		} else {
 			return oldPath.replaceAll("\\\\", "/");
 		}
-	}
-
-	protected String findHostNameFromRequst(HttpServletRequest request) {
-		if (isDev()) {
-			return "easy";
-		}
-		return request.getServerName();
-//		if("dev".equals(constantService.getValByName("envName"))) {
-//			return request.getServerName();
-//		} else {
-//			String url = request.getServerName();
-//			Pattern p = Pattern.compile("(?!:http://)(www\\.[0-9a-zA-Z_]+\\.[a-z]{1,8})(?!:/.*)");
-//			Matcher m = p.matcher(url);
-//			if(m.find()) {
-//				return m.group(0);
-//			} else {
-//				return "";
-//			}
-//		}
-	}
-
-	protected String testFindHostNameFromRequst(HttpServletRequest request) {
-		String r = "from getServerName: " + request.getServerName();
-		String url = request.getServerName();
-		Pattern p = Pattern.compile("(?!:http://)(www\\.[0-9a-zA-Z_]+\\.[a-z]{1,8})(?!:/.*)");
-		Matcher m = p.matcher(url);
-		if (m.find()) {
-			r = r + " from pattern: " + m.group(0);
-		}
-
-		return r;
 	}
 
 	public String encryptId(Long id) {

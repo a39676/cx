@@ -28,6 +28,20 @@ public class HostnameServiceImpl extends CommonService implements HostnameServic
 	}
 	
 	@Override
+	public String findHostNameFromRequst(HttpServletRequest request) {
+		return request.getServerName();
+//		String r = "from getServerName: " + request.getServerName();
+//		String url = request.getServerName();
+//		Pattern p = Pattern.compile("(?!:http://)(www\\.[0-9a-zA-Z_]+\\.[a-z]{1,8})(?!:/.*)");
+//		Matcher m = p.matcher(url);
+//		if (m.find()) {
+//			r = r + " from pattern: " + m.group(0);
+//		}
+//
+//		return r;
+	}
+	
+	@Override
 	public HostnameType findHostnameType(HttpServletRequest request) {
 		return HostnameType.getTypeCustom(findHostNameFromRequst(request));
 	}

@@ -118,9 +118,6 @@ dependencies {
 	
 	implementation group: 'org.apache.maven.plugins', name: 'maven-resources-plugin', version: '3.1.0'
 	
-	// weka
-	implementation group: 'weka', name: 'weka', version: '3.6.2'
-	
 	// tess4j
 	implementation group: 'net.sourceforge.tess4j', name: 'tess4j', version: '4.5.3'
 	implementation group: 'net.java.dev.jna', name: 'jna', version: '5.6.0'

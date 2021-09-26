@@ -3,8 +3,8 @@ package demo.automationTest.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import at.report.pojo.dto.JsonReportOfFlowDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
+import autoTest.report.pojo.dto.JsonReportOfFlowDTO;
 import autoTest.testEvent.pojo.dto.AutomationTestResultDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.automationTest.pojo.po.TestEvent;

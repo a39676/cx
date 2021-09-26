@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
-import at.report.pojo.dto.JsonReportOfCaseDTO;
-import at.report.pojo.dto.JsonReportOfFlowDTO;
-import at.report.service.ATJsonReportService;
+import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
+import autoTest.report.pojo.dto.JsonReportOfFlowDTO;
+import autoTest.report.service.ATJsonReportService;
 import autoTest.testEvent.pojo.dto.AutomationTestResultDTO;
 import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
 import autoTest.testEvent.pojo.type.AutomationTestFlowResultType;

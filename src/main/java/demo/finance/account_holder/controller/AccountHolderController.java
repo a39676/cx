@@ -6,9 +6,9 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -72,7 +72,7 @@ public class AccountHolderController extends CommonController {
 		
 		String userName = baseUtilCustom.getCurrentUserName();
 		
-		if(StringUtils.isEmpty(userName)) {
+		if(StringUtils.isBlank(userName)) {
 			return null;
 		}
 		

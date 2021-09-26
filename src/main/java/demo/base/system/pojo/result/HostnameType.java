@@ -34,8 +34,10 @@ public enum HostnameType {
 	}
 	
 	public static HostnameType getTypeCustom(String typeName) {
-		if(typeName.contains("zhang3")) {
-			return zhang3;
+		for(HostnameType t : HostnameType.values()) {
+			if(t.getName().equals(typeName)) {
+				return t;
+			}
 		}
 		return null;
 	}

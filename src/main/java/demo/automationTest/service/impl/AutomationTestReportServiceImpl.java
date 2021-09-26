@@ -10,10 +10,10 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import at.report.pojo.dto.JsonReportElementDTO;
-import at.report.pojo.dto.JsonReportOfCaseDTO;
-import at.report.pojo.dto.JsonReportOfFlowDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
+import autoTest.report.pojo.dto.JsonReportElementDTO;
+import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
+import autoTest.report.pojo.dto.JsonReportOfFlowDTO;
 import autoTest.testEvent.pojo.dto.AutomationTestResultDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.automationTest.pojo.po.TestEvent;

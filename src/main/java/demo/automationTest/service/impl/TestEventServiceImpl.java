@@ -79,11 +79,13 @@ public class TestEventServiceImpl extends AutomationTestCommonService implements
 			testEventInsertAckProducer.send(insertEventDTO);
 		}
 
-		example = new TestEventExample();
-		example.createCriteria().andIdIn(idList);
-		TestEvent tmpPO = new TestEvent();
-		tmpPO.setSendTime(LocalDateTime.now());
-		eventMapper.updateByExampleSelective(tmpPO, example);
+		if(idList != null && !idList.isEmpty()) {
+			example = new TestEventExample();
+			example.createCriteria().andIdIn(idList);
+			TestEvent tmpPO = new TestEvent();
+			tmpPO.setSendTime(LocalDateTime.now());
+			eventMapper.updateByExampleSelective(tmpPO, example);
+		}
 	}
 
 	@Override
@@ -100,12 +102,14 @@ public class TestEventServiceImpl extends AutomationTestCommonService implements
 			idList.add(po.getId());
 		}
 
-		example = new TestEventExample();
-		example.createCriteria().andIdIn(idList);
-		TestEvent tmpPO = new TestEvent();
-		tmpPO.setIsPass(false);
-		tmpPO.setStartTime(now);
-		tmpPO.setEndTime(now);
-		eventMapper.updateByExampleSelective(tmpPO, example);
+		if(!idList.isEmpty()) {
+			example = new TestEventExample();
+			example.createCriteria().andIdIn(idList);
+			TestEvent tmpPO = new TestEvent();
+			tmpPO.setIsPass(false);
+			tmpPO.setStartTime(now);
+			tmpPO.setEndTime(now);
+			eventMapper.updateByExampleSelective(tmpPO, example);
+		}
 	}
 }

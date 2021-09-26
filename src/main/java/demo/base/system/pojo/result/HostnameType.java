@@ -1,5 +1,7 @@
 package demo.base.system.pojo.result;
 
+import org.apache.commons.lang3.StringUtils;
+
 public enum HostnameType {
 	
 	zhang3("zhang3", 5),
@@ -34,8 +36,11 @@ public enum HostnameType {
 	}
 	
 	public static HostnameType getTypeCustom(String typeName) {
+		if(StringUtils.isBlank(typeName)) {
+			return null;
+		}
 		for(HostnameType t : HostnameType.values()) {
-			if(t.getName().equals(typeName)) {
+			if(typeName.contains(t.getName())) {
 				return t;
 			}
 		}

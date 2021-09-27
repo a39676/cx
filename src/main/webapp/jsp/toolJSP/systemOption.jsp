@@ -36,6 +36,7 @@
   <button id="refreshCloudinaryConstant">refreshCloudinaryConstant</button>
   <button id="refreshAutomationTestConstant">refreshAutomationTestConstant</button>
   <button id="refreshCryptoCoinConstant">refreshCryptoCoinConstant</button>
+  <button id="refreshTelegramConstant">refreshTelegramConstant</button>
 </div>
 
 <hr>
@@ -366,8 +367,11 @@
       });
     };
 
+    $("#refreshSystemConstant").click(function () {
+      refreshSystemConstant();
+    })
+
     $("#refreshArticleConstant").click(function () {
-      console.log("get in refreshArticleConstant");
       refreshArticleConstant();
     })
 

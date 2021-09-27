@@ -1,8 +1,3 @@
-article
-	域名挂靠 channel 需要"激活", 项目刚启动时不生效, 需要到管理页, 更改一下以激活
-	delete /home/u2/cx/homepageAnnouncement/homepageAnnouncement.txt
-	delete systemconstant database table
-
 AT 教程
 	rabbit MQ
 	redis

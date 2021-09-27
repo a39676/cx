@@ -31,13 +31,8 @@ public class AdminServiceImpl extends CommonService implements AdminService {
 	}
 
 	@Override
-	public void setDefaultHomepageAnnouncementStr() {
-		systemConstantService.getHomepageAnnouncement();
-	}
-
-	@Override
 	public void setTempHomepageAnnouncement(String strContent) {
-		systemConstantService.setTempHomepageAnnouncement(strContent);
+		systemConstantService.setTmpHomepageAnnouncementStr(strContent);
 	}
 
 }

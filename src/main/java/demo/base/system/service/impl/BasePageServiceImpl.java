@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import demo.base.pojo.constant.BaseStaticResourcesUrl;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.system.pojo.constant.BlogViewConstant;
 import demo.base.system.pojo.result.HostnameType;
@@ -68,7 +69,7 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 	private ModelAndView buildHomeViewForNormal() {
 		ModelAndView view = new ModelAndView(BlogViewConstant.HOME);
 		view.addObject("title", systemConstantService.getNormalWebSiteTitle());
-		view.addObject("headerImg", "/static_resources/cleanBlog/img/nature-4607496_1920.jpg");
+		view.addObject("headerImg", BaseStaticResourcesUrl.IMG_YELLOW_GRASS_LAND);
 		view.addObject("subheading", systemConstantService.getNormalSubheading());
 		Long visitCount = visitDataService.getVisitCount();
 		view.addObject("visitCount", visitCount);
@@ -78,9 +79,9 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 	
 	private ModelAndView buildHomeViewForFake() {
 		ModelAndView view = new ModelAndView(BlogViewConstant.HOME);
-		view.addObject("title", systemConstantService.getNormalWebSiteTitle());
-		view.addObject("headerImg", "/static_resources/cleanBlog/img/cat-4481566_1920.jpg");
-		view.addObject("subheading", systemConstantService.getNormalSubheading());
+		view.addObject("title", systemConstantService.getWebSiteTitle2());
+		view.addObject("headerImg", BaseStaticResourcesUrl.IMG_CAT);
+		view.addObject("subheading", systemConstantService.getSubheading2());
 		Long visitCount = visitDataService.getVisitCount();
 		view.addObject("visitCount", visitCount);
 		
@@ -96,11 +97,11 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 			if (HostnameType.zhang3.equals(hostnameType)) {
 				v = new ModelAndView(BlogViewConstant.ABOUT_ZHANG);
 				v.addObject("email", systemConstantService.getEmailD());
-				v.addObject("headerImg", "/static_resources/cleanBlog/img/nature-4607496_1920.jpg");
+				v.addObject("headerImg", BaseStaticResourcesUrl.IMG_YELLOW_GRASS_LAND);
 			} else if (HostnameType.dtro.equals(hostnameType)) {
 				v = new ModelAndView(BlogViewConstant.ABOUT_DTRO);
 				v.addObject("email", systemConstantService.getEmailC());
-				v.addObject("headerImg", "/static_resources/cleanBlog/img/cat-4481566_1920.jpg.jpg");
+				v.addObject("headerImg", BaseStaticResourcesUrl.IMG_CAT);
 				
 			}
 		}

@@ -4,6 +4,4 @@ public interface GlobalOptionService {
 
 	boolean checkFolderExists(String path);
 
-	String getParameterSavingFolder();
-
 }

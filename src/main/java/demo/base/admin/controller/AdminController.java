@@ -5,7 +5,6 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
@@ -151,13 +150,9 @@ public class AdminController extends CommonController {
 	@ResponseBody
 	public JSONObject setHomepageAnnouncementStr(@RequestBody LoadHomepageAnnouncementStrDTO dto) {
 		String strContent = dto.getHomepageAnnouncementStr();
-		if(StringUtils.isBlank(strContent) || "null".equals(strContent)) {
-			adminService.setDefaultHomepageAnnouncementStr();
-		} else {
-			adminService.setTempHomepageAnnouncement(strContent);
-		}
+		adminService.setTempHomepageAnnouncement(strContent);
 		JSONObject jsonOutput = new JSONObject();
-		jsonOutput.put("homepageAnnouncementStr", systemConstantService.getHomepageAnnouncement());
+		jsonOutput.put("homepageAnnouncementStr", systemConstantService.getHomepageAnnouncementStr());
 		return jsonOutput;
 	}
 	

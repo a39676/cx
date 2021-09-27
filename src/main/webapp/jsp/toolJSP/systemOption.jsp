@@ -29,6 +29,7 @@
 <hr>
 
 <div>
+  <button id="refreshSystemConstant">refreshSystemConstant</button>
   <button id="refreshArticleConstant">refreshArticleConstant</button>
   <button id="refreshArticleCommentConstant">refreshArticleCommentConstant</button>
   <button id="refreshMailConstant">refreshMailConstant</button>
@@ -189,6 +190,28 @@
       });
     };
 
+    function refreshSystemConstant() {
+
+      var url = "/optionConstant/refreshSystemConstant/";
+
+      $.ajax({
+        type : "GET",
+        url : url,
+        // data: JSON.stringify(jsonOutput),
+        dataType: 'json',
+        contentType: "application/json",
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        timeout: 15000,
+        success:function(data){
+          $("#result").val(data + ", refreshSystemConstant");
+        },
+        error:function(e){
+        }
+      });
+    };
+
     function refreshArticleConstant() {
 
       var url = "/optionConstant/refreshArticleConstant/";
@@ -321,6 +344,28 @@
       });
     };
 
+    function refreshTelegramConstant() {
+
+      var url = "/optionConstant/refreshTelegramConstant";
+
+      $.ajax({
+        type : "GET",
+        url : url,
+        // data: JSON.stringify(jsonOutput),
+        dataType: 'json',
+        contentType: "application/json",
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        timeout: 15000,
+        success:function(data){
+          $("#result").val(data + ", refreshTelegramConstant");
+        },
+        error:function(e){
+        }
+      });
+    };
+
     $("#refreshArticleConstant").click(function () {
       console.log("get in refreshArticleConstant");
       refreshArticleConstant();
@@ -344,6 +389,10 @@
 
     $("#refreshCryptoCoinConstant").click(function () {
       refreshCryptoCoinConstant();
+    })
+
+    $("#refreshTelegramConstant").click(function () {
+      refreshTelegramConstant();
     })
   });
 

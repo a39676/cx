@@ -138,7 +138,7 @@ public abstract class CommonService {
 			return null;
 		}
 
-		String keys = systemConstantService.getAESKey();
+		String keys = systemConstantService.getAesKey();
 		if (StringUtils.isBlank(keys)) {
 			return null;
 		}
@@ -173,7 +173,7 @@ public abstract class CommonService {
 			return null;
 		}
 
-		String keys = systemConstantService.getAESKey();
+		String keys = systemConstantService.getAesKey();
 		if (StringUtils.isBlank(keys)) {
 			return null;
 		}

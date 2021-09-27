@@ -94,6 +94,62 @@ public class SystemConstantService extends CommonService {
 		this.homepageAnnouncementStr = homepageAnnouncementStr;
 	}
 
+	public void setAesKey(String aesKey) {
+		this.aesKey = aesKey;
+	}
+
+	public void setAesInitVector(String aesInitVector) {
+		this.aesInitVector = aesInitVector;
+	}
+
+	public void setEnvName(String envName) {
+		this.envName = envName;
+	}
+
+	public void setEmailD(String emailD) {
+		this.emailD = emailD;
+	}
+
+	public void setEmailC(String emailC) {
+		this.emailC = emailC;
+	}
+
+	public void setMaxAttempts(Integer maxAttempts) {
+		this.maxAttempts = maxAttempts;
+	}
+
+	public void setNormalWebSiteTitle(String normalWebSiteTitle) {
+		this.normalWebSiteTitle = normalWebSiteTitle;
+	}
+
+	public void setNormalSubheading(String normalSubheading) {
+		this.normalSubheading = normalSubheading;
+	}
+
+	public void setWebSiteTitle2(String webSiteTitle2) {
+		this.webSiteTitle2 = webSiteTitle2;
+	}
+
+	public void setSubheading2(String subheading2) {
+		this.subheading2 = subheading2;
+	}
+
+	public void setIsJobing(Boolean isJobing) {
+		this.isJobing = isJobing;
+	}
+
+	public void setIsDebuging(Boolean isDebuging) {
+		this.isDebuging = isDebuging;
+	}
+
+	public void setFakeFTPHome(String fakeFTPHome) {
+		this.fakeFTPHome = fakeFTPHome;
+	}
+
+	public void setHomepageAnnouncementStr(String homepageAnnouncementStr) {
+		this.homepageAnnouncementStr = homepageAnnouncementStr;
+	}
+
 	public void refreshConstant() {
 		File optionFile = new File(optionFilePath);
 		if (!optionFile.exists()) {

@@ -65,7 +65,7 @@ public class OptionConstantController {
 		return "done";
 	}
 
-	@GetMapping(value = "/refreshCryptoCoinConstant")
+	@GetMapping(value = "/refreshTelegramConstant")
 	@ResponseBody
 	public String refreshTelegramConstant() {
 		optionConstantManagerService.refreshTelegramConstant();

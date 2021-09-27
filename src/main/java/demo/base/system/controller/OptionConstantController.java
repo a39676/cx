@@ -16,6 +16,13 @@ public class OptionConstantController {
 	@Autowired
 	private OptionConstantManagerService optionConstantManagerService;
 
+	@GetMapping(value = "/refreshSystemConstant")
+	@ResponseBody
+	public String refreshSystemConstant() {
+		optionConstantManagerService.refreshSystemConstant();
+		return "done";
+	}
+	
 	@GetMapping(value = "/refreshArticleConstant")
 	@ResponseBody
 	public String refreshArticleConstant() {
@@ -58,4 +65,10 @@ public class OptionConstantController {
 		return "done";
 	}
 
+	@GetMapping(value = "/refreshCryptoCoinConstant")
+	@ResponseBody
+	public String refreshTelegramConstant() {
+		optionConstantManagerService.refreshTelegramConstant();
+		return "done";
+	}
 }

@@ -11,10 +11,13 @@ import demo.common.service.CommonService;
 import demo.finance.cryptoCoin.data.service.impl.CryptoCoinConstantService;
 import demo.thirdPartyAPI.cloudinary.service.impl.CloudinaryConstantService;
 import demo.tool.mail.service.impl.MailConstantService;
+import demo.tool.telegram.service.impl.TelegramConstantService;
 
 @Service
 public class OptionConstantManagerServiceImpl extends CommonService implements OptionConstantManagerService {
 
+	@Autowired
+	private SystemConstantService systemConstantService;
 	@Autowired
 	private ArticleConstantService articleConstantService;
 	@Autowired
@@ -27,6 +30,14 @@ public class OptionConstantManagerServiceImpl extends CommonService implements O
 	private AutomationTestConstantService automationTestConstantService;
 	@Autowired
 	private CryptoCoinConstantService cryptoCoinConstantService;
+	@Autowired
+	private TelegramConstantService telegramConstantService;
+	
+	
+	@Override
+	public void refreshSystemConstant() {
+		systemConstantService.refreshConstant();
+	}
 	
 	@Override
 	public void refreshArticleConstant() {
@@ -56,5 +67,10 @@ public class OptionConstantManagerServiceImpl extends CommonService implements O
 	@Override
 	public void refreshCryptoCoinConstant() {
 		cryptoCoinConstantService.refreshConstant();
+	}
+	
+	@Override
+	public void refreshTelegramConstant() {
+		telegramConstantService.refreshConstant();
 	}
 }

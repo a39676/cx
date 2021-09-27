@@ -32,8 +32,8 @@ public class AutoTestDemoController extends CommonController {
 	private AutomationTestHomepageService atDemoService;
 	
 	@PostMapping(value = AutoTestUrl.LINK_TO_AT_HOME)
-	public ModelAndView linkToATHome() {
-		return atDemoService.linkToATHome();
+	public ModelAndView linkToATHome(HttpServletRequest request) {
+		return atDemoService.linkToATHome(request);
 	}
 	
 	@GetMapping(value = AutoTestUrl.INDEX)

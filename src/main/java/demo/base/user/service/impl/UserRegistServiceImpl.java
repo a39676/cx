@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import auxiliaryCommon.pojo.type.GenderType;
 import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.system.pojo.result.HostnameType;
-import demo.base.system.service.HostnameService;
 import demo.base.user.mapper.UserRegistMapper;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.bo.EditUserAuthBO;
@@ -77,8 +76,6 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	private AuthService authService;
 	@Autowired
 	private ValidRegexToolService validRegexToolService;
-	@Autowired
-	private HostnameService hostnameService;
 	@Autowired
 	private TextFilter textFilter;
 	

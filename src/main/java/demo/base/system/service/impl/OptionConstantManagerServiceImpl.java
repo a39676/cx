@@ -8,7 +8,7 @@ import demo.article.articleComment.service.impl.ArticleCommentConstantService;
 import demo.automationTest.service.impl.AutomationTestConstantService;
 import demo.base.system.service.OptionConstantManagerService;
 import demo.common.service.CommonService;
-import demo.finance.cryptoCoin.data.service.impl.CryptoCoinConstantService;
+import demo.finance.cryptoCoin.common.service.CryptoCoinConstantService;
 import demo.thirdPartyAPI.cloudinary.service.impl.CloudinaryConstantService;
 import demo.tool.mail.service.impl.MailConstantService;
 import demo.tool.telegram.service.impl.TelegramConstantService;

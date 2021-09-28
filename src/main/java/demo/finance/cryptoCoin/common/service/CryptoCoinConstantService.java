@@ -1,9 +1,11 @@
-package demo.finance.cryptoCoin.data.service.impl;
+package demo.finance.cryptoCoin.common.service;
 
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,7 +27,10 @@ public class CryptoCoinConstantService extends CommonService {
 
 	@Value("${optionFilePath.cryptoCoin}")
 	private String optionFilePath;
-
+	
+	public static final String DEFAULT_COIN_CATALOG = "BTC";
+	public static final Integer CRYPTO_COMPARE_API_DATA_MAX_LENGTH = 2000;
+	
 	private String defaultCurrency;
 
 	private String cryptoCompareApiKey;
@@ -39,6 +44,8 @@ public class CryptoCoinConstantService extends CommonService {
 	private Set<String> lowPriceSubscriptionSet = new HashSet<>();
 
 	private Map<CacheMapBO, CryptoCoinPriceCommonDataBO> cacheMap = new HashMap<>();
+	
+	private Map<String, List<LocalDateTime>> hitNoDataCountingMap = new HashMap<>();
 
 	public void refreshConstant() {
 		File optionFile = new File(optionFilePath);
@@ -125,6 +132,18 @@ public class CryptoCoinConstantService extends CommonService {
 
 	public void setCacheMap(Map<CacheMapBO, CryptoCoinPriceCommonDataBO> cacheMap) {
 		this.cacheMap = cacheMap;
+	}
+	
+	public Map<String, List<LocalDateTime>> getHitNoDataCountingMap() {
+		return this.hitNoDataCountingMap;
+	}
+	
+	public void putHitNoDataCoutingMap(String coinName) {
+		if(hitNoDataCountingMap.containsKey(coinName)) {
+			hitNoDataCountingMap.get(coinName).add(LocalDateTime.now());
+		} else {
+			hitNoDataCountingMap.put(coinName, Arrays.asList(LocalDateTime.now()));
+		}
 	}
 
 	@Override

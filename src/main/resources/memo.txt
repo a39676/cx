@@ -2,10 +2,9 @@ AT 教程
 	rabbit MQ
 	redis
 	
-AT
-	现在可以无限增加任务
-	
 crypto coin
+	CryptoCoinNoticeConstant.HIT_NO_DATA_COUNTING_KEY
+		迁移至常量服务器
 	crypto compare 更新 daily data 时 可能返回全0数据, 需要binance 协助
 
 

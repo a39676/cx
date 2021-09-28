@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.TimeUnitType;
+import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.HostnameService;
 import demo.base.system.service.IpRecordService;
 import demo.base.system.service.impl.RedisConnectService;
@@ -202,6 +203,15 @@ public abstract class CommonService {
 
 	protected boolean isDev() {
 		return "dev".equals(systemConstantService.getEnvName());
+	}
+	
+	protected boolean isInZhang3OrDev(HttpServletRequest request) {
+		HostnameType hostnameType = hostnameService.findHostnameType(request);
+		if (HostnameType.zhang3.equals(hostnameType)) {
+			return true;
+		} else {
+			return isDev();
+		}
 	}
 	
 	protected IpRecordBO getIp(HttpServletRequest request) {

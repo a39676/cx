@@ -33,9 +33,7 @@ import demo.automationTest.service.AutomationTestHomepageService;
 import demo.automationTest.service.AutomationTestReportService;
 import demo.automationTest.service.TestEventService;
 import demo.base.system.pojo.constant.SystemRedisKey;
-import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.ExceptionService;
-import demo.base.system.service.HostnameService;
 import net.sf.json.JSONObject;
 import toolPack.dateTimeHandle.DateTimeUtilCommon;
 import toolPack.ioHandle.FileUtilCustom;
@@ -52,8 +50,6 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 	private TestEventService eventService;
 	@Autowired
 	private AutomationTestReportService reportService;
-	@Autowired
-	private HostnameService hostnameService;
 	
 	
 	@Override
@@ -62,8 +58,7 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 			return new ModelAndView("ATDemoJSP/atDemoLink");	
 		}
 		
-		HostnameType hostnameType = hostnameService.findHostnameType(request);
-		if(HostnameType.zhang3.equals(hostnameType)) {
+		if(isInZhang3OrDev(request)) {
 			return new ModelAndView("ATDemoJSP/atDemoLink");
 		}
 		

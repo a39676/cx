@@ -28,8 +28,6 @@ import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.article.service.ArticleBurnService;
 import demo.article.article.service.ArticleService;
 import demo.base.system.pojo.constant.SystemRedisKey;
-import demo.base.system.pojo.result.HostnameType;
-import demo.base.system.service.HostnameService;
 import demo.common.pojo.type.ResultTypeCX;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -41,21 +39,10 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 	@Autowired
 	private ArticleService articleService;
 	@Autowired
-	private HostnameService hostnameService;
-	@Autowired
 	private ArticleBurnMapper articleBurnMapper;
 	
 	private String getArticleBurnStorePrefixPath() {
 		return articleConstantService.getArticleBurnStorePrefixPath();
-	}
-	
-	private boolean isInZhang3OrDev(HttpServletRequest request) {
-		HostnameType hostnameType = hostnameService.findHostnameType(request);
-		if (HostnameType.zhang3.equals(hostnameType)) {
-			return true;
-		} else {
-			return "dev".equals(systemConstantService.getEnvName());
-		}
 	}
 	
 	@Override

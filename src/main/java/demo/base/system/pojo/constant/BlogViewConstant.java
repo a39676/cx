@@ -7,6 +7,6 @@ public class BlogViewConstant {
 	
 	public static final String HOME = ROOT + "/index";
 	public static final String ABOUT_ZHANG = ROOT + "/aboutEasy";
-	public static final String ABOUT_DTRO = ROOT + "/aboutDtro";
+//	public static final String ABOUT_DTRO = ROOT + "/aboutDtro";
 	
 }

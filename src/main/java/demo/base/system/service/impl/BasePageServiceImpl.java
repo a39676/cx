@@ -94,10 +94,9 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 				v.addObject("email", systemConstantService.getEmailD());
 				v.addObject("headerImg", BaseStaticResourcesUrl.IMG_YELLOW_GRASS_LAND);
 			} else if (HostnameType.dtro.equals(hostnameType)) {
-				v = new ModelAndView(BlogViewConstant.ABOUT_DTRO);
+				v = new ModelAndView(BlogViewConstant.ABOUT_ZHANG);
 				v.addObject("email", systemConstantService.getEmailC());
 				v.addObject("headerImg", BaseStaticResourcesUrl.IMG_CAT);
-				
 			}
 		}
 

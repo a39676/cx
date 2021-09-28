@@ -28,15 +28,12 @@ import demo.article.article.pojo.type.ArticleChannelType;
 import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.article.article.service.ArticleChannelService;
 import demo.base.system.pojo.po.Hostname;
-import demo.base.system.service.HostnameService;
 import demo.common.pojo.result.CommonResultCX;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class ArticleChannelServiceImpl extends ArticleCommonService implements ArticleChannelService {
 
-	@Autowired
-	private HostnameService hostnameService;
 	@Autowired
 	private ArticleChannelsMapper articleChannelsMapper;
 	@Autowired

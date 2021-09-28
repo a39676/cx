@@ -53,12 +53,16 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 	
 	
 	@Override
-	public ModelAndView linkToATHome() {
-		return new ModelAndView("ATDemoJSP/atDemoLink");
-//		if(baseUtilCustom.hasAdminRole() || isDev()) {
-//		}
-//
-//		return null;
+	public ModelAndView linkToATHome(HttpServletRequest request) {
+		if(baseUtilCustom.hasAdminRole()) {
+			return new ModelAndView("ATDemoJSP/atDemoLink");	
+		}
+		
+		if(isInZhang3OrDev(request)) {
+			return new ModelAndView("ATDemoJSP/atDemoLink");
+		}
+		
+		return null;
 	}
 
 	@Override

@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -14,15 +13,11 @@ import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.system.pojo.constant.BlogViewConstant;
 import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.BasePageService;
-import demo.base.system.service.HostnameService;
 import demo.base.user.pojo.type.SystemRolesType;
 import demo.common.service.CommonService;
 
 @Service
 public class BasePageServiceImpl extends CommonService implements BasePageService {
-
-	@Autowired
-	private HostnameService hostnameService;
 
 	@Override
 	public ModelAndView baseRootHandlerV3(String vcode, HttpServletRequest request) {

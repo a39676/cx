@@ -24,7 +24,7 @@ import demo.base.user.service.RoleService;
 import demo.base.user.service.UserRegistService;
 import demo.base.user.service.UsersService;
 import demo.common.service.CommonService;
-import demo.finance.cryptoCoin.data.service.impl.CryptoCoinConstantService;
+import demo.finance.cryptoCoin.common.service.CryptoCoinConstantService;
 import demo.joy.image.icon.service.JoyIconService;
 import demo.joy.scene.service.JoySceneManagerService;
 import demo.thirdPartyAPI.cloudinary.service.impl.CloudinaryConstantService;

@@ -14,7 +14,7 @@ import demo.automationTest.pojo.vo.TestReportSummaryVO;
 
 public interface AutomationTestHomepageService {
 
-	ModelAndView linkToATHome();
+	ModelAndView linkToATHome(HttpServletRequest request);
 
 	ModelAndView index();
 

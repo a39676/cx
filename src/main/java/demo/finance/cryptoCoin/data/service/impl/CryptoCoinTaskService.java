@@ -29,15 +29,21 @@ public class CryptoCoinTaskService extends CommonService {
 	@Scheduled(cron = "* */11 * * * ?")
 	public void checkWebSocketStatus() {
 		if(!isDev()) {
-			if (!binanceWSClient.getSocketLiveFlag()) {
-				telegramService.sendMessage(TelegramBotType.BOT_2, "binance socket down", TelegramStaticChatID.MY_ID);
-				binanceWSClient.startWebSocket();
+			try {
+				if (!binanceWSClient.getSocketLiveFlag()) {
+					telegramService.sendMessage(TelegramBotType.BOT_2, "binance socket down", TelegramStaticChatID.MY_ID);
+					binanceWSClient.startWebSocket();
+				}
+			} catch (Exception e) {
 			}
 			
-			if (!cryptoCompareWSClient.getSocketLiveFlag()) {
-				telegramService.sendMessage(TelegramBotType.BOT_2, "crypto comapre socket down",
-						TelegramStaticChatID.MY_ID);
-				cryptoCompareWSClient.startWebSocket();
+			try {
+				if (!cryptoCompareWSClient.getSocketLiveFlag()) {
+					telegramService.sendMessage(TelegramBotType.BOT_2, "crypto comapre socket down",
+							TelegramStaticChatID.MY_ID);
+					cryptoCompareWSClient.startWebSocket();
+				}
+			} catch (Exception e) {
 			}
 		}
 	}

@@ -27,10 +27,11 @@ public class CryptoCoinConstantService extends CommonService {
 
 	@Value("${optionFilePath.cryptoCoin}")
 	private String optionFilePath;
-	
-	public static final String DEFAULT_COIN_CATALOG = "BTC";
-	public static final Integer CRYPTO_COMPARE_API_DATA_MAX_LENGTH = 2000;
-	
+
+	private String defaultCoinCatalog;
+	private Integer cryptoCompareApiDataMaxLength = 2000;
+	private Integer defaultDailyDataQueryLenth = 5;
+
 	private String defaultCurrency;
 
 	private String cryptoCompareApiKey;
@@ -44,7 +45,7 @@ public class CryptoCoinConstantService extends CommonService {
 	private Set<String> lowPriceSubscriptionSet = new HashSet<>();
 
 	private Map<CacheMapBO, CryptoCoinPriceCommonDataBO> cacheMap = new HashMap<>();
-	
+
 	private Map<String, List<LocalDateTime>> hitNoDataCountingMap = new HashMap<>();
 
 	public void refreshConstant() {
@@ -60,6 +61,30 @@ public class CryptoCoinConstantService extends CommonService {
 		} catch (Exception e) {
 			log.error("crypto coin constant loading error: " + e.getLocalizedMessage());
 		}
+	}
+
+	public String getDefaultCoinCatalog() {
+		return defaultCoinCatalog;
+	}
+
+	public void setDefaultCoinCatalog(String defaultCoinCatalog) {
+		this.defaultCoinCatalog = defaultCoinCatalog;
+	}
+
+	public Integer getCryptoCompareApiDataMaxLength() {
+		return cryptoCompareApiDataMaxLength;
+	}
+
+	public void setCryptoCompareApiDataMaxLength(Integer cryptoCompareApiDataMaxLength) {
+		this.cryptoCompareApiDataMaxLength = cryptoCompareApiDataMaxLength;
+	}
+
+	public Integer getDefaultDailyDataQueryLenth() {
+		return defaultDailyDataQueryLenth;
+	}
+
+	public void setDefaultDailyDataQueryLenth(Integer defaultDailyDataQueryLenth) {
+		this.defaultDailyDataQueryLenth = defaultDailyDataQueryLenth;
 	}
 
 	public String getDefaultCurrency() {
@@ -133,13 +158,13 @@ public class CryptoCoinConstantService extends CommonService {
 	public void setCacheMap(Map<CacheMapBO, CryptoCoinPriceCommonDataBO> cacheMap) {
 		this.cacheMap = cacheMap;
 	}
-	
+
 	public Map<String, List<LocalDateTime>> getHitNoDataCountingMap() {
 		return this.hitNoDataCountingMap;
 	}
-	
+
 	public void putHitNoDataCoutingMap(String coinName) {
-		if(hitNoDataCountingMap.containsKey(coinName)) {
+		if (hitNoDataCountingMap.containsKey(coinName)) {
 			hitNoDataCountingMap.get(coinName).add(LocalDateTime.now());
 		} else {
 			hitNoDataCountingMap.put(coinName, Arrays.asList(LocalDateTime.now()));

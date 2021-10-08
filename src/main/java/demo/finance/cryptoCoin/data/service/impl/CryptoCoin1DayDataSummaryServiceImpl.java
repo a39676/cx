@@ -345,11 +345,13 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 	@Override
 	public void sendAllCryptoCoinDailyDataQueryMsg() {
 		List<CryptoCoinCatalog> allCatalogList = coinCatalogService.getAllCatalog();
+		log.error("get all catalog list size: " + allCatalogList.size());
 		if (allCatalogList == null || allCatalogList.isEmpty()) {
 			return;
 		}
 
 		List<Long> allCatalogIdList = allCatalogList.stream().map(po -> po.getId()).collect(Collectors.toList());
+		log.error("get all catalog ID list size: " + allCatalogIdList.size());
 		LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
 
 //		TODO 需要找出昨天没有数据的, 发送任务, 本任务可能每日执行多次, 因任务MQ消息有存活时间限制, 时间限制内, 未必能完成覆盖所有币种
@@ -357,10 +359,12 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		example.createCriteria().andCoinTypeIn(allCatalogIdList).andStartTimeBetween(yesterday.with(LocalTime.MIN),
 				yesterday.with(LocalTime.MAX));
 		List<CryptoCoinPrice1day> yesterdayDataList = dataMapper.selectByExample(example);
+		log.error("get all yesterday data list size: " + yesterdayDataList.size());
 		Set<Long> yesterdayCatalogIdSet = yesterdayDataList.stream().map(po -> po.getCoinType()).collect(Collectors.toSet());
 
 		for(CryptoCoinCatalog catalog : allCatalogList) {
 			if(!yesterdayCatalogIdSet.contains(catalog.getId())) {
+				log.error("send query: " + catalog.getCoinNameEnShort());
 				sendDailyDataQuery(catalog.getCoinNameEnShort(), constantService.getDefaultCurrency(),
 						constantService.getDefaultDailyDataQueryLenth(), CryptoCoinDataSourceType.CRYPTO_COMPARE);		
 			}

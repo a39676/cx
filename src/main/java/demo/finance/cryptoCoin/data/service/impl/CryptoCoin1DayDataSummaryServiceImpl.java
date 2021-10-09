@@ -33,7 +33,6 @@ import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataSubDTO;
 import finance.cryptoCoin.pojo.type.CryptoCoinDataSourceType;
-import net.sf.json.JSONObject;
 import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.dto.TelegramMessageDTO;
 
@@ -57,6 +56,9 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		CommonResult r = new CommonResult();
 		List<CryptoCoinDataSubDTO> dataList = dto.getPriceHistoryData();
 		CryptoCoinDataSourceType dataSourceType = CryptoCoinDataSourceType.getType(dto.getDataSourceCode());
+		if(dataSourceType == null) {
+			dataSourceType = CryptoCoinDataSourceType.CRYPTO_COMPARE;
+		}
 		if (!isValidData(dataList)) {
 			TelegramMessageDTO msgDTO = new TelegramMessageDTO();
 			msgDTO.setId(TelegramStaticChatID.MY_ID);
@@ -79,6 +81,8 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 
 		updateSummaryData(dataList, coinType, currencyType);
 
+		constantService.getDailyDataWaitingQuerySet().remove(coinType.getCoinNameEnShort());
+		
 		r.setIsSuccess();
 		return r;
 	}
@@ -345,31 +349,22 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 
 	@Override
 	public void sendAllCryptoCoinDailyDataQueryMsg() {
-		List<CryptoCoinCatalog> allCatalogList = coinCatalogService.getAllCatalog();
-		log.error("get all catalog list size: " + allCatalogList.size());
-		if (allCatalogList == null || allCatalogList.isEmpty()) {
-			return;
-		}
-
-		List<Long> allCatalogIdList = allCatalogList.stream().map(po -> po.getId()).collect(Collectors.toList());
-		log.error("get all catalog ID list size: " + allCatalogIdList.size());
-		LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
-
-//		TODO 需要找出昨天没有数据的, 发送任务, 本任务可能每日执行多次, 因任务MQ消息有存活时间限制, 时间限制内, 未必能完成覆盖所有币种
-		CryptoCoinPrice1dayExample example = new CryptoCoinPrice1dayExample();
-		example.createCriteria().andCoinTypeIn(allCatalogIdList).andStartTimeBetween(yesterday.with(LocalTime.MIN),
-				yesterday.with(LocalTime.MAX));
-		List<CryptoCoinPrice1day> yesterdayDataList = dataMapper.selectByExample(example);
-		log.error("get all yesterday data list size: " + yesterdayDataList.size());
-		Set<Long> yesterdayCatalogIdSet = yesterdayDataList.stream().map(po -> po.getCoinType()).collect(Collectors.toSet());
-
-		for(CryptoCoinCatalog catalog : allCatalogList) {
-			if(!yesterdayCatalogIdSet.contains(catalog.getId())) {
-				log.error("send query: " + catalog.getCoinNameEnShort());
+		Set<String> waitingQuerySet = constantService.getDailyDataWaitingQuerySet();
+		CryptoCoinCatalog catalog = null;
+		for(String catalogName : waitingQuerySet) {
+			catalog = coinCatalogService.findCatalog(catalogName);
+			if(catalog != null) {
 				sendDailyDataQuery(catalog.getCoinNameEnShort(), constantService.getDefaultCurrency(),
-						constantService.getDefaultDailyDataQueryLenth(), CryptoCoinDataSourceType.CRYPTO_COMPARE);		
+						constantService.getDefaultDailyDataQueryLenth(), CryptoCoinDataSourceType.CRYPTO_COMPARE);
 			}
 		}
+	}
+	
+	@Override
+	public void resetDailyDataWaitingQuerySet() {
+		List<CryptoCoinCatalog> allCatalogList = coinCatalogService.getAllCatalog();
+		constantService.getDailyDataWaitingQuerySet().clear();
+		constantService.getDailyDataWaitingQuerySet().addAll(allCatalogList.stream().map(po -> po.getCoinNameEnShort()).collect(Collectors.toSet()));
 	}
 
 	@Override
@@ -398,8 +393,8 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		paramDTO.setCurrencyName(constantService.getDefaultCurrency());
 		paramDTO.setCounting(counting);
 		paramDTO.setDataSourceCode(CryptoCoinDataSourceType.CRYPTO_COMPARE.getCode());
-		JSONObject paramJson = JSONObject.fromObject(paramDTO);
-		dto.setParamStr(paramJson.toString());
+		
+		dto = automationTestInsertEventDtoAddParamStr(dto, paramDTO);
 
 		testEventInsertAckProducer.send(dto);
 	}

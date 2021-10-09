@@ -252,9 +252,8 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 			insertEventDTO.setFlowType(BingDemoSearchFlowType.SEARCH_IN_HOMEPAGE.getId());
 			insertEventDTO.setFlowTypeName(BingDemoSearchFlowType.SEARCH_IN_HOMEPAGE.getFlowName());
 			insertEventDTO.setAppointment(dto.getAppointment());
-			JSONObject paramJson = new JSONObject();
-			paramJson.put(dto.getClass().getSimpleName(), JSONObject.fromObject(dto).toString());
-			insertEventDTO.setParamStr(paramJson.toString());
+			
+			insertEventDTO = automationTestInsertEventDtoAddParamStr(insertEventDTO, dto);
 			
 			eventService.insertEvent(insertEventDTO);
 			

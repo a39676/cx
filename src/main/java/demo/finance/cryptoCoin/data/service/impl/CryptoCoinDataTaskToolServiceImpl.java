@@ -52,8 +52,15 @@ public class CryptoCoinDataTaskToolServiceImpl extends CryptoCoinCommonService {
 	}
 
 	@Scheduled(cron="20 19 01 * * *")
+	@Scheduled(cron="20 19 03 * * *")
+	@Scheduled(cron="20 19 05 * * *")
 	public void sendCryptoCoinDailyDataQueryMsg() {
 		cryptoCoin1DayDataSummaryService.sendAllCryptoCoinDailyDataQueryMsg();
+	}
+	
+	@Scheduled(cron="00 00 00 * * *")
+	public void resetDailyDataWaitingQuerySet() {
+		cryptoCoin1DayDataSummaryService.resetDailyDataWaitingQuerySet();
 	}
 	
 	@Scheduled(cron="56 45 7 * * *")

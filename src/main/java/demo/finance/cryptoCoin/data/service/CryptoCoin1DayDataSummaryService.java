@@ -38,4 +38,6 @@ public interface CryptoCoin1DayDataSummaryService {
 
 	void sendAllCryptoCoinDailyDataQueryMsg();
 
+	void resetDailyDataWaitingQuerySet();
+
 }

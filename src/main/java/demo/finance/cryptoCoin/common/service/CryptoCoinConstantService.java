@@ -43,6 +43,7 @@ public class CryptoCoinConstantService extends CommonService {
 
 	private Set<String> subscriptionSet = new HashSet<>();
 	private Set<String> lowPriceSubscriptionSet = new HashSet<>();
+	private Set<String> dailyDataWaitingQuerySet = new HashSet<>();
 
 	private Map<CacheMapBO, CryptoCoinPriceCommonDataBO> cacheMap = new HashMap<>();
 
@@ -149,6 +150,14 @@ public class CryptoCoinConstantService extends CommonService {
 
 	public void setLowPriceSubscriptionSet(Set<String> lowPriceSubscriptionSet) {
 		this.lowPriceSubscriptionSet = lowPriceSubscriptionSet;
+	}
+
+	public Set<String> getDailyDataWaitingQuerySet() {
+		return dailyDataWaitingQuerySet;
+	}
+
+	public void setDailyDataWaitingQuerySet(Set<String> dailyDataWaitingQuerySet) {
+		this.dailyDataWaitingQuerySet = dailyDataWaitingQuerySet;
 	}
 
 	public Map<CacheMapBO, CryptoCoinPriceCommonDataBO> getCacheMap() {

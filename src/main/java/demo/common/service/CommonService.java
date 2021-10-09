@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.base.system.pojo.result.HostnameType;
@@ -25,6 +26,7 @@ import demo.config.costom_component.BaseUtilCustom;
 import demo.config.costom_component.EncryptUtil;
 import demo.config.costom_component.SnowFlake;
 import demo.tool.other.service.VisitDataService;
+import net.sf.json.JSONObject;
 import tool.pojo.bo.IpRecordBO;
 import toolPack.dateTimeHandle.DateHandler;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
@@ -125,7 +127,7 @@ public abstract class CommonService {
 		}
 	}
 
-	public String encryptId(Long id) {
+	protected String encryptId(Long id) {
 		List<String> encryptIdList = encryptId(Arrays.asList(id));
 		if (encryptIdList == null || encryptIdList.isEmpty()) {
 			return null;
@@ -134,7 +136,7 @@ public abstract class CommonService {
 		}
 	}
 
-	public List<String> encryptId(List<Long> idList) {
+	protected List<String> encryptId(List<Long> idList) {
 		if (idList == null || idList.isEmpty()) {
 			return null;
 		}
@@ -160,7 +162,7 @@ public abstract class CommonService {
 		return encryptResult;
 	}
 
-	public Long decryptPrivateKey(String inputPk) {
+	protected Long decryptPrivateKey(String inputPk) {
 		List<Long> idList = decryptPrivateKey(Arrays.asList(inputPk));
 		if (idList == null || idList.isEmpty()) {
 			return null;
@@ -169,7 +171,7 @@ public abstract class CommonService {
 		}
 	}
 
-	public List<Long> decryptPrivateKey(List<String> inputPkList) {
+	protected List<Long> decryptPrivateKey(List<String> inputPkList) {
 		if (inputPkList == null || inputPkList.isEmpty()) {
 			return null;
 		}
@@ -226,7 +228,7 @@ public abstract class CommonService {
 		return redisKeyPrefix + "_" + record.getForwardAddr() + "_" + record.getRemoteAddr();
 	}
 
-	public LocalDateTime getNextSettingTime(LocalDateTime datetime, TimeUnitType timeUnit, Long step) {
+	protected LocalDateTime getNextSettingTime(LocalDateTime datetime, TimeUnitType timeUnit, Long step) {
 		LocalDateTime nextNoticeTime = null;
 		if (datetime == null || timeUnit == null || step == null) {
 			return nextNoticeTime;
@@ -253,5 +255,24 @@ public abstract class CommonService {
 		}
 
 		return nextNoticeTime;
+	}
+
+	protected AutomationTestInsertEventDTO automationTestInsertEventDtoAddParamStr(AutomationTestInsertEventDTO dto, Object obj) {
+		JSONObject json = null;
+		if(StringUtils.isBlank(dto.getParamStr())) {
+			json = new JSONObject();
+		} else {
+			try {
+				json = JSONObject.fromObject(dto.getParamStr());
+			} catch (Exception e) {
+				json = new JSONObject();
+			}
+		}
+		
+		json.put(obj.getClass().getSimpleName(), obj);
+		
+		dto.setParamStr(json.toString());
+		
+		return dto;
 	}
 }

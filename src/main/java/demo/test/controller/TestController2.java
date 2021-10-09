@@ -51,4 +51,11 @@ public class TestController2 extends CommonController {
 		cryptoCoin1DayDataSummaryService.sendAllCryptoCoinDailyDataQueryMsg();
 		return "done";
 	}
+	
+	@GetMapping(value = "/test5")
+	@ResponseBody
+	public String test5() {
+		cryptoCoin1DayDataSummaryService.resetDailyDataWaitingQuerySet();
+		return "done";
+	}
 }

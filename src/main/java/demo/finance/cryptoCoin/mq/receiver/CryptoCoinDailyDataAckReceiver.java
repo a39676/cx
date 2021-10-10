@@ -31,7 +31,7 @@ public class CryptoCoinDailyDataAckReceiver extends CommonService {
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 		} catch (Exception e) {
 			log.error("mq error, " + CryptoCoinMQConstant.CRYPTO_COIN_DAILY_DATA + ", e:" + e.getLocalizedMessage());
-			log.error(messageStr);
+//			log.error(messageStr);
 			channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);
 		}
 	}

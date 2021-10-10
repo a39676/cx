@@ -1,11 +1,8 @@
 package demo.base.system.service.impl;
 
 import java.io.File;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,7 +12,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import demo.base.system.pojo.bo.SystemConstant;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.service.CommonService;
 import net.sf.json.JSONObject;
@@ -51,15 +47,6 @@ public class RedisConnectService extends CommonService {
 	
 	public void setValByName(String cosntantName, String constantValue, int validTime, TimeUnit timeUnit) {
 		redisTemplate.opsForValue().set(cosntantName, constantValue, validTime, timeUnit);
-	}
-	
-	public void setValByName(SystemConstant systemConstant) {
-		redisTemplate.opsForValue().set(systemConstant.getConstantName(), systemConstant.getConstantValue());
-	}
-	
-	public void setValsByName(List<SystemConstant> systemConstants) {
-		Map<String, String> values = systemConstants.stream().collect(Collectors.toMap(SystemConstant::getConstantName, SystemConstant::getConstantValue));
-		redisTemplate.opsForValue().multiSet(values);
 	}
 	
 	public void deleteValByName(String constantName) {

@@ -405,73 +405,73 @@ public class TestEventExample {
             return (Criteria) this;
         }
 
-        public Criteria andEventNameIsNull() {
-            addCriterion("event_name is null");
+        public Criteria andFlowNameIsNull() {
+            addCriterion("flow_name is null");
             return (Criteria) this;
         }
 
-        public Criteria andEventNameIsNotNull() {
-            addCriterion("event_name is not null");
+        public Criteria andFlowNameIsNotNull() {
+            addCriterion("flow_name is not null");
             return (Criteria) this;
         }
 
-        public Criteria andEventNameEqualTo(String value) {
-            addCriterion("event_name =", value, "eventName");
+        public Criteria andFlowNameEqualTo(String value) {
+            addCriterion("flow_name =", value, "flowName");
             return (Criteria) this;
         }
 
-        public Criteria andEventNameNotEqualTo(String value) {
-            addCriterion("event_name <>", value, "eventName");
+        public Criteria andFlowNameNotEqualTo(String value) {
+            addCriterion("flow_name <>", value, "flowName");
             return (Criteria) this;
         }
 
-        public Criteria andEventNameGreaterThan(String value) {
-            addCriterion("event_name >", value, "eventName");
+        public Criteria andFlowNameGreaterThan(String value) {
+            addCriterion("flow_name >", value, "flowName");
             return (Criteria) this;
         }
 
-        public Criteria andEventNameGreaterThanOrEqualTo(String value) {
-            addCriterion("event_name >=", value, "eventName");
+        public Criteria andFlowNameGreaterThanOrEqualTo(String value) {
+            addCriterion("flow_name >=", value, "flowName");
             return (Criteria) this;
         }
 
-        public Criteria andEventNameLessThan(String value) {
-            addCriterion("event_name <", value, "eventName");
+        public Criteria andFlowNameLessThan(String value) {
+            addCriterion("flow_name <", value, "flowName");
             return (Criteria) this;
         }
 
-        public Criteria andEventNameLessThanOrEqualTo(String value) {
-            addCriterion("event_name <=", value, "eventName");
+        public Criteria andFlowNameLessThanOrEqualTo(String value) {
+            addCriterion("flow_name <=", value, "flowName");
             return (Criteria) this;
         }
 
-        public Criteria andEventNameLike(String value) {
-            addCriterion("event_name like", value, "eventName");
+        public Criteria andFlowNameLike(String value) {
+            addCriterion("flow_name like", value, "flowName");
             return (Criteria) this;
         }
 
-        public Criteria andEventNameNotLike(String value) {
-            addCriterion("event_name not like", value, "eventName");
+        public Criteria andFlowNameNotLike(String value) {
+            addCriterion("flow_name not like", value, "flowName");
             return (Criteria) this;
         }
 
-        public Criteria andEventNameIn(List<String> values) {
-            addCriterion("event_name in", values, "eventName");
+        public Criteria andFlowNameIn(List<String> values) {
+            addCriterion("flow_name in", values, "flowName");
             return (Criteria) this;
         }
 
-        public Criteria andEventNameNotIn(List<String> values) {
-            addCriterion("event_name not in", values, "eventName");
+        public Criteria andFlowNameNotIn(List<String> values) {
+            addCriterion("flow_name not in", values, "flowName");
             return (Criteria) this;
         }
 
-        public Criteria andEventNameBetween(String value1, String value2) {
-            addCriterion("event_name between", value1, value2, "eventName");
+        public Criteria andFlowNameBetween(String value1, String value2) {
+            addCriterion("flow_name between", value1, value2, "flowName");
             return (Criteria) this;
         }
 
-        public Criteria andEventNameNotBetween(String value1, String value2) {
-            addCriterion("event_name not between", value1, value2, "eventName");
+        public Criteria andFlowNameNotBetween(String value1, String value2) {
+            addCriterion("flow_name not between", value1, value2, "flowName");
             return (Criteria) this;
         }
 
@@ -1102,6 +1102,66 @@ public class TestEventExample {
 
         public Criteria andEndTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
             addCriterion("end_time not between", value1, value2, "endTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendTimeIsNull() {
+            addCriterion("send_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendTimeIsNotNull() {
+            addCriterion("send_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendTimeEqualTo(LocalDateTime value) {
+            addCriterion("send_time =", value, "sendTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendTimeNotEqualTo(LocalDateTime value) {
+            addCriterion("send_time <>", value, "sendTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendTimeGreaterThan(LocalDateTime value) {
+            addCriterion("send_time >", value, "sendTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendTimeGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("send_time >=", value, "sendTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendTimeLessThan(LocalDateTime value) {
+            addCriterion("send_time <", value, "sendTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendTimeLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("send_time <=", value, "sendTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendTimeIn(List<LocalDateTime> values) {
+            addCriterion("send_time in", values, "sendTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendTimeNotIn(List<LocalDateTime> values) {
+            addCriterion("send_time not in", values, "sendTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendTimeBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("send_time between", value1, value2, "sendTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("send_time not between", value1, value2, "sendTime");
             return (Criteria) this;
         }
 

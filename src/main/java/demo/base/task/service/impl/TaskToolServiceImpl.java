@@ -147,5 +147,4 @@ public class TaskToolServiceImpl {
 	public void deleteExpiredDenyRecord() {
 		ipRecordService.deleteExpiredDenyRecord();
 	}
-
 }

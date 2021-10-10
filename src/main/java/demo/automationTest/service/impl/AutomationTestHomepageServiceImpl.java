@@ -14,57 +14,63 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import autoTest.jsonReport.pojo.constant.AutoTestInteractionUrl;
-import autoTest.jsonReport.pojo.constant.AutoTestJsonReportKeyConstant;
 import autoTest.jsonReport.pojo.dto.FindReportByTestEventIdDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
-import autoTest.jsonReport.pojo.result.FindReportByTestEventIdResult;
+import autoTest.pojo.constant.AutoTestUrl;
+import autoTest.report.pojo.dto.JsonReportElementDTO;
+import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
+import autoTest.report.pojo.dto.JsonReportOfFlowDTO;
+import autoTest.report.pojo.vo.JsonReportOfEventVO;
 import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.searchingDemo.pojo.constant.SearchingDemoConstant;
 import autoTest.testEvent.searchingDemo.pojo.dto.BingSearchInHomePageDTO;
 import autoTest.testEvent.searchingDemo.pojo.type.BingDemoSearchFlowType;
 import autoTest.testModule.pojo.type.TestModuleType;
-import auxiliaryCommon.pojo.constant.ServerHost;
-import demo.automationTest.mq.producer.TestEventInsertAckProducer;
+import demo.automationTest.pojo.po.TestEvent;
 import demo.automationTest.pojo.result.InsertSearchingDemoEventResult;
-import demo.automationTest.pojo.vo.AutoTestJsonReportLineVO;
-import demo.automationTest.pojo.vo.AutoTestJsonReportVO;
+import demo.automationTest.pojo.vo.TestReportSummaryVO;
 import demo.automationTest.service.AutomationTestHomepageService;
+import demo.automationTest.service.AutomationTestReportService;
 import demo.automationTest.service.TestEventService;
 import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.system.service.ExceptionService;
-import demo.common.service.CommonService;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import toolPack.dateTimeHandle.DateTimeUtilCommon;
-import toolPack.httpHandel.HttpUtil;
+import toolPack.ioHandle.FileUtilCustom;
 
 @Service
-public class AutomationTestHomepageServiceImpl extends CommonService implements AutomationTestHomepageService {
+public class AutomationTestHomepageServiceImpl extends AutomationTestCommonService implements AutomationTestHomepageService {
 	
 	@Autowired
-	private HttpUtil httpUtil;
+	private FileUtilCustom ioUtil;
+	@SuppressWarnings("unused")
 	@Autowired
 	private ExceptionService exceptionService;
 	@Autowired
-	private TestEventInsertAckProducer testEventInsertAckProducer;
-	@Autowired
 	private TestEventService eventService;
+	@Autowired
+	private AutomationTestReportService reportService;
+	
 	
 	@Override
-	public ModelAndView linkToATHome() {
-		if(baseUtilCustom.hasAdminRole() || isDev()) {
+	public ModelAndView linkToATHome(HttpServletRequest request) {
+		if(baseUtilCustom.hasAdminRole()) {
+			return new ModelAndView("ATDemoJSP/atDemoLink");	
+		}
+		
+		if(isInZhang3OrDev(request)) {
 			return new ModelAndView("ATDemoJSP/atDemoLink");
 		}
-
+		
 		return null;
 	}
 
 	@Override
 	public ModelAndView index() {
 
-		if(!baseUtilCustom.hasAdminRole() && !isDev()) {
-			return exceptionService.handle404Exception(null);
-		}
+//		if(!baseUtilCustom.hasAdminRole() && !isDev()) {
+//			return exceptionService.handle404Exception(null);
+//		}
 
 		ModelAndView v = new ModelAndView("ATDemoJSP/atDemoIndex");
 		v.addObject("title", "自动化测试");
@@ -84,128 +90,64 @@ public class AutomationTestHomepageServiceImpl extends CommonService implements 
 	}
 
 	@Override
-	public String findReportsByCondition(HttpServletRequest request, FindTestEventPageByConditionDTO dto) {
+	public List<TestReportSummaryVO> findReportsByCondition(FindTestEventPageByConditionDTO dto) {
 		
-		if (!baseUtilCustom.hasAdminRole()) {
-			dto.setModuleId(TestModuleType.ATDemo.getId());
+//		if (!baseUtilCustom.hasAdminRole()) {
+//			dto.setModuleId(TestModuleType.ATDemo.getId());
+//		}
+		
+		List<TestEvent> poList = reportService.findReportPage(dto);
+		List<TestReportSummaryVO> voList = new ArrayList<>();
+		
+		for(TestEvent po : poList ) {
+			voList.add(buildReportSummaryVO(po));
 		}
-		
-		
-		if(dto.getEndTime() != null) {
-			if(dto.getCreateEndTime() != null) {
-				if(dto.getEndTime().isBefore(dto.getCreateEndTime())) {
-					dto.setCreateEndTime(dto.getEndTime());
-				}
-			} else {
-				dto.setCreateEndTime(dto.getEndTime());
-			}
-			dto.setEndTime(null);
-		}
-		
-		try {
-			JSONObject j = new JSONObject();
-			if (dto.getCreateStartTime() != null) {
-				j.put("createStartTime", localDateTimeHandler.dateToStr(dto.getCreateStartTime()));
-			}
-			if (dto.getCreateEndTime() != null) {
-				j.put("createEndTime", localDateTimeHandler.dateToStr(dto.getCreateEndTime()));
-			}
-			if (dto.getRunTimeStartTime() != null) {
-				j.put("runTimeStartTime", localDateTimeHandler.dateToStr(dto.getRunTimeStartTime()));
-			}
-			if (dto.getRunTimeEndTime() != null) {
-				j.put("runTimeEndTime", localDateTimeHandler.dateToStr(dto.getRunTimeEndTime()));
-			}
-			if (StringUtils.isNotBlank(dto.getEventName())) {
-				j.put("eventName", dto.getEventName());
-			}
-			if (StringUtils.isNotBlank(dto.getReportPath())) {
-				j.put("reportPath", dto.getReportPath());
-			}
-			if (dto.getModuleId() != null) {
-				j.put("moduleId", dto.getModuleId());
-			}
-			if (dto.getId() != null) {
-				j.put("id", dto.getId());
-			}
-			if (dto.getFlowId() != null) {
-				j.put("flowId", dto.getFlowId());
-			}
-			if (dto.getLimit() != null) {
-				j.put("limit", dto.getLimit());
-			}
-			if (!dto.getRunFlag()) {
-				j.put("runFlag", "false");
-			}
-			if(dto.getIsSuccess() == null || dto.getIsSuccess()) {
-				j.put("isSuccess", "true");
-			} else {
-				j.put("isSuccess", "false");
-			}
-
-			String url = ServerHost.localHost10002 + AutoTestInteractionUrl.ROOT
-					+ AutoTestInteractionUrl.FIND_REPORTS_BY_CONDITION;
-			String response = String.valueOf(httpUtil.sendPostRestful(url, j.toString()));
-			return response;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+		return voList;
+	}
+	
+	private TestReportSummaryVO buildReportSummaryVO(TestEvent po){
+		TestReportSummaryVO vo = new TestReportSummaryVO();
+		vo.setIdStr(po.getId().toString());
+		vo.setFlowName(po.getFlowName());
+		vo.setStartTime(po.getStartTime());
+		vo.setEndTime(po.getEndTime());
+		vo.setCreateTime(po.getCreateTime());
+		return vo;
 	}
 
 	@Override
 	public ModelAndView findReportByTestEventId(HttpServletRequest request, FindReportByTestEventIdDTO dto) {
 		
-		if(!baseUtilCustom.hasAdminRole()) {
-			return exceptionService.handle404Exception(request);
-		}
+//		if(!baseUtilCustom.hasAdminRole()) {
+//			return exceptionService.handle404Exception(request);
+//		}
 		
-		ModelAndView v = new ModelAndView("ATDemoJSP/atReportPost");
-		AutoTestJsonReportVO vo = null;
+		ModelAndView view = new ModelAndView("ATDemoJSP/atReportPost");
+		JsonReportOfEventVO vo = null;
 
 		Long visitCount = visitDataService.getVisitCount();
-		v.addObject("visitCount", visitCount);
+		view.addObject("visitCount", visitCount);
 
 		if (dto.getTestEventId() == null || dto.getTestEventId() <= 0) {
 			vo = buildErrorReportVO();
-			v.addObject("reportVO", vo);
-			return v;
+			view.addObject("reportVO", vo);
+			return view;
 		}
 
 		try {
-			JSONObject requestJson = JSONObject.fromObject(dto);
-
-			String url = ServerHost.localHost10002 + AutoTestInteractionUrl.ROOT
-					+ AutoTestInteractionUrl.FIND_REPORT_BY_TEST_EVENT_ID;
-			String responseStr = String.valueOf(httpUtil.sendPostRestful(url, requestJson.toString()));
-
-			JSONObject responseJson = JSONObject.fromObject(responseStr);
-
-			FindReportByTestEventIdResult responseResult = new FindReportByTestEventIdResult();
-			responseResult.setId(responseJson.getLong("id"));
-			responseResult.setCode(responseJson.getString("code"));
-			responseResult.setTitle(responseJson.getString("title"));
-
-			responseResult.setCreateTime(
-					localDateTimeHandler.localDateTimeJsonStrToLocalDateTime(responseJson.getString("createTime")));
-			responseResult.setStartTime(
-					localDateTimeHandler.localDateTimeJsonStrToLocalDateTime(responseJson.getString("startTime")));
-			responseResult.setEndTime(
-					localDateTimeHandler.localDateTimeJsonStrToLocalDateTime(responseJson.getString("endTime")));
-
-			responseResult.setReportStr(responseJson.getString("reportStr"));
-
-			vo = buildReportVOByFindReportByTestEventIdResult(responseResult);
+			TestEvent po = eventMapper.selectByPrimaryKey(dto.getTestEventId());
+			vo = buildReportVOByFindReportByTestEventIdResult(po);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			vo = reportContentReplaceWithErrorMsg(vo, "报告读取异常");
 		}
 
-		v.addObject("reportVO", vo);
-		return v;
+		view.addObject("reportVO", vo);
+		return view;
 	}
 
-	private AutoTestJsonReportVO buildErrorReportVO() {
+	private JsonReportOfEventVO buildErrorReportVO() {
 		return reportVOFillErrorMsg("报告不存在");
 	}
 
@@ -215,83 +157,71 @@ public class AutomationTestHomepageServiceImpl extends CommonService implements 
 	 * @param errorMsg
 	 * @return
 	 */
-	private AutoTestJsonReportVO reportContentReplaceWithErrorMsg(AutoTestJsonReportVO vo, String errorMsg) {
+	private JsonReportOfEventVO reportContentReplaceWithErrorMsg(JsonReportOfEventVO vo, String errorMsg) {
 		if (vo == null) {
-			vo = new AutoTestJsonReportVO();
+			vo = new JsonReportOfEventVO();
 		}
-		List<AutoTestJsonReportLineVO> contentLines = new ArrayList<AutoTestJsonReportLineVO>();
-		AutoTestJsonReportLineVO lineVO = null;
-		lineVO = new AutoTestJsonReportLineVO();
-		lineVO.setLineArrtibute(AutoTestJsonReportKeyConstant.strKey);
-		lineVO.setContent(errorMsg);
-		contentLines.add(lineVO);
-		vo.setContentLines(contentLines);
+		
+		List<JsonReportElementDTO> subReport = new ArrayList<JsonReportElementDTO>();
+		JsonReportElementDTO reportElement = new JsonReportElementDTO();
+		reportElement.setContent(errorMsg);
+		subReport.add(reportElement);
+		
+		JsonReportOfCaseDTO caseReport = new JsonReportOfCaseDTO();
+		caseReport.setReportElementList(subReport);
+		
+		vo.getCaseReportList().add(caseReport);
 		return vo;
 	}
 
-	private AutoTestJsonReportVO reportVOFillErrorMsg(String errorMsg) {
+	private JsonReportOfEventVO reportVOFillErrorMsg(String errorMsg) {
 		return reportContentReplaceWithErrorMsg(null, errorMsg);
 	}
 
-	private AutoTestJsonReportVO reportVOFillCommonData(AutoTestJsonReportVO vo, FindReportByTestEventIdResult r) {
+	private JsonReportOfEventVO reportFillCommonData(JsonReportOfEventVO vo, TestEvent po) {
 		if (vo == null) {
-			vo = new AutoTestJsonReportVO();
+			return vo;
 		}
-		vo.setId(r.getId());
-		vo.setTitle(r.getTitle());
+		vo.setFlowTypeName(po.getFlowName());
+		vo.setModuleName(TestModuleType.getType(po.getModuleId()).getModuleName());
 
-		vo.setCreateTime(r.getCreateTime());
-		vo.setStartTime(r.getStartTime());
-		vo.setEndTime(r.getEndTime());
-
-		vo.setCreateTimeStr(localDateTimeHandler.dateToStr(r.getCreateTime()));
-		vo.setStartTimeStr(localDateTimeHandler.dateToStr(r.getStartTime()));
-		vo.setEndTimeStr(localDateTimeHandler.dateToStr(r.getEndTime()));
+		vo.setCreateTimeStr(localDateTimeHandler.dateToStr(po.getCreateTime()));
+		vo.setStartTimeStr(localDateTimeHandler.dateToStr(po.getStartTime()));
+		vo.setEndTimeStr(localDateTimeHandler.dateToStr(po.getEndTime()));
 		return vo;
 	}
 
-	private AutoTestJsonReportVO buildReportVOByFindReportByTestEventIdResult(FindReportByTestEventIdResult r) {
-		if (r == null) {
+	private JsonReportOfEventVO buildReportVOByFindReportByTestEventIdResult(TestEvent po) {
+		if (po == null) {
 			return buildErrorReportVO();
 		}
 
-		AutoTestJsonReportVO vo = new AutoTestJsonReportVO();
-		reportVOFillCommonData(vo, r);
+		JsonReportOfEventVO vo = new JsonReportOfEventVO();
+		reportFillCommonData(vo, po);
 
-		String line = null;
-		AutoTestJsonReportLineVO lineVO = null;
-		List<AutoTestJsonReportLineVO> contentLines = new ArrayList<AutoTestJsonReportLineVO>();
 
-		if (r.getStartTime() == null) {
+		if (po.getStartTime() == null) {
 			return reportContentReplaceWithErrorMsg(vo, "任务尚未开始执行, 请耐心等待");
 
-		} else if (r.getEndTime() == null) {
+		} else if (po.getEndTime() == null) {
 			return reportContentReplaceWithErrorMsg(vo, "任务正在执行, 执行完成后将输出报告, 请耐心等待");
-
+		
+		} else if (StringUtils.isBlank(po.getReportPath())) {
+			return reportContentReplaceWithErrorMsg(vo, "任务正在执行, 执行完成后将输出报告, 请耐心等待");
+			
 		} else {
 			try {
 
-				JSONArray ja = JSONArray.fromObject(r.getReportStr());
-
-				JSONObject j = null;
-				for (int i = 0; i < ja.size(); i++) {
-					j = ja.getJSONObject(i);
-					lineVO = new AutoTestJsonReportLineVO();
-
-					if (j.containsKey(AutoTestJsonReportKeyConstant.strKey)) {
-						lineVO.setLineArrtibute(AutoTestJsonReportKeyConstant.strKey);
-						line = j.getString(AutoTestJsonReportKeyConstant.strKey);
-					} else {
-						lineVO.setLineArrtibute(AutoTestJsonReportKeyConstant.imgKey);
-						line = j.getString(AutoTestJsonReportKeyConstant.imgKey);
-						line = line.replaceAll("upload/", "upload/c_scale,h_347/");
-					}
-					lineVO.setContent(line);
-					contentLines.add(lineVO);
-				}
-
-				vo.setContentLines(contentLines);
-
+				String reportStr = ioUtil.getStringFromFile(po.getReportPath());
+				JSONObject jsonReport = JSONObject.fromObject(reportStr);
+				JsonReportOfFlowDTO reportDTO = reportService.buildReportFromDatabase(jsonReport);
+				
+				vo.setCaseReportList(reportDTO.getCaseReportList());
+				
+				vo.setPassCount(po.getPassCount());
+				vo.setFailedCount(po.getFailCount());
+				vo.setBlockedCount(po.getBlockCount());
+				
 				return vo;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -320,18 +250,22 @@ public class AutomationTestHomepageServiceImpl extends CommonService implements 
 			insertEventDTO.setTestEventId(snowFlake.getNextId());
 			insertEventDTO.setTestModuleType(TestModuleType.ATDemo.getId());
 			insertEventDTO.setFlowType(BingDemoSearchFlowType.SEARCH_IN_HOMEPAGE.getId());
-			JSONObject paramJson = new JSONObject();
-			paramJson.put(dto.getClass().getSimpleName(), JSONObject.fromObject(dto).toString());
-			insertEventDTO.setParamStr(paramJson.toString());
+			insertEventDTO.setFlowTypeName(BingDemoSearchFlowType.SEARCH_IN_HOMEPAGE.getFlowName());
+			insertEventDTO.setAppointment(dto.getAppointment());
+			
+			insertEventDTO = automationTestInsertEventDtoAddParamStr(insertEventDTO, dto);
 			
 			eventService.insertEvent(insertEventDTO);
 			
-			testEventInsertAckProducer.send(insertEventDTO);
+			if(dto.getAppointment() == null || !LocalDateTime.now().isBefore(dto.getAppointment())) {
+				testEventInsertAckProducer.send(insertEventDTO);
+			}
+			r.setEventId(insertEventDTO.getTestEventId());
 			r.setIsSuccess();
 			redisConnectService.insertFunctionalModuleVisitData(request, SystemRedisKey.searchingDemoInsertCountingKeyPrefix);
 			r.setHasInsertCount(count + 1);
 			r.setMaxInsertCount(SearchingDemoConstant.maxInsertCountIn30Minutes);
-			r.setMessage("/atDemo/findReportByTestEventId?testEventId=" + r.getEventId());
+			r.setMessage(AutoTestUrl.root + AutoTestInteractionUrl.FIND_REPORT_BY_TEST_EVENT_ID + "?testEventId=" + r.getEventId());
 
 		} catch (Exception e) {
 			log.error(e.getLocalizedMessage());

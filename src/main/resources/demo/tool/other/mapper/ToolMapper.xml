@@ -3,8 +3,4 @@
 <mapper namespace="demo.tool.other.mapper.ToolMapper">
 
   
-  <insert id="complexInsert">
-  	insert into ${tableName} values ${values}
-  </insert>
-  
 </mapper>

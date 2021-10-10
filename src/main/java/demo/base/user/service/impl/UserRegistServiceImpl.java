@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import auxiliaryCommon.pojo.type.GenderType;
 import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.system.pojo.result.HostnameType;
-import demo.base.system.service.HostnameService;
 import demo.base.user.mapper.UserRegistMapper;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.bo.EditUserAuthBO;
@@ -77,8 +76,6 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	private AuthService authService;
 	@Autowired
 	private ValidRegexToolService validRegexToolService;
-	@Autowired
-	private HostnameService hostnameService;
 	@Autowired
 	private TextFilter textFilter;
 	
@@ -267,7 +264,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		}
 		SendMailDTO sendRegistMailDTO = new SendMailDTO();
 		sendRegistMailDTO.setUserId(userId);
-		sendRegistMailDTO.setHostName(findHostNameFromRequst(request));
+		sendRegistMailDTO.setHostName(hostnameService.findHostNameFromRequst(request));
 		sendRegistMailDTO.setNickName(dto.getNickName());
 		sendRegistMailDTO.setSendTo(dto.getEmail());
 		return mailService.sendRegistMail(sendRegistMailDTO);
@@ -436,7 +433,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		
 		if(oldMail == null || oldMail.getId() == null) {
 			SendMailDTO sendMailDTO = new SendMailDTO();
-			sendMailDTO.setHostName(findHostNameFromRequst(request));
+			sendMailDTO.setHostName(hostnameService.findHostNameFromRequst(request));
 			sendMailDTO.setNickName(ud.getNickName());
 			sendMailDTO.setSendTo(ud.getEmail());
 			sendMailDTO.setUserId(userId);
@@ -489,7 +486,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			return r;
 		}
 		SendMailDTO sendForgeotPasswordDTO = new SendMailDTO();
-		sendForgeotPasswordDTO.setHostName(findHostNameFromRequst(request));
+		sendForgeotPasswordDTO.setHostName(hostnameService.findHostNameFromRequst(request));
 		sendForgeotPasswordDTO.setNickName(ud.getNickName());
 		sendForgeotPasswordDTO.setSendTo(ud.getEmail());
 		sendForgeotPasswordDTO.setUserId(ud.getUserId());
@@ -538,7 +535,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		
 		SendForgotUsernameMailDTO sendForgotUsernameMailDTO = new SendForgotUsernameMailDTO();
 		sendForgotUsernameMailDTO.setEmail(email);
-		sendForgotUsernameMailDTO.setHostName(findHostNameFromRequst(request));
+		sendForgotUsernameMailDTO.setHostName(hostnameService.findHostNameFromRequst(request));
 		sendForgotUsernameMailDTO.setUserId(ud.getUserId());
 		sendForgotUsernameMailDTO.setUserName(user.getUserName());
 		result = mailService.sendForgotUsernameMail(sendForgotUsernameMailDTO);

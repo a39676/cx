@@ -17,14 +17,6 @@ import demo.finance.account_info.pojo.constant.AccountUrl;
 @Controller
 public class BasePageController extends CommonController {
 	
-//	@Autowired
-//	private BaseUtilCustom baseUtilCustom;
-//	@Autowired
-//	private AdminService adminService;
-//	@Autowired
-//	private ArticleController articleController;
-//	@Autowired
-//	private SystemConstantService systemConstantService;
 	@Autowired
 	private BasePageService basePageService;
 	

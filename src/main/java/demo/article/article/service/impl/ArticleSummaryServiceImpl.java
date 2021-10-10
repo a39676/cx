@@ -39,6 +39,7 @@ import demo.article.article.service.ArticleViewService;
 import demo.article.articleComment.controller.ArticleCommentAdminController;
 import demo.article.articleComment.controller.ArticleCommentController;
 import demo.article.articleComment.pojo.po.ArticleCommentCount;
+import demo.base.system.pojo.result.HostnameType;
 import demo.common.pojo.type.ResultTypeCX;
 import demo.toyParts.vcode.pojo.param.GetVcodeByValueParam;
 import demo.toyParts.vcode.pojo.po.VCode;
@@ -297,7 +298,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		/* 置限制只可浏览某时点之后的文章 */
 		boolean isBigUser = isBigUser();
 		if(!isBigUser) {
-			Long maxReadingMonth = articleConstantService.getNormalUserMaxReadingMonth();;
+			Long maxReadingMonth = articleConstantService.getNormalUserMaxReadingMonth();
 			LocalDateTime earliestStartTime = LocalDateTime.now().minusMonths(maxReadingMonth);
 			if(dto.getStartTime() == null || dto.getStartTime().isBefore(earliestStartTime)) {
 				dto.setStartTime(earliestStartTime);
@@ -351,7 +352,9 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			controllerParam.setIsEdited(false);
 		}
 		
-		if(findHostNameFromRequst(request).contains("site")) {
+		HostnameType hostnameType = hostnameService.findHostnameType(request);
+		// will NOT match
+		if(hostnameType != null && hostnameType.getName().equals("")) {
 			if(StringUtils.isBlank(controllerParam.getVcode())) {
 				controllerParam.setVcode("defaultVcode");
 			}

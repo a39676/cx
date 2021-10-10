@@ -28,15 +28,12 @@ import demo.article.article.pojo.type.ArticleChannelType;
 import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.article.article.service.ArticleChannelService;
 import demo.base.system.pojo.po.Hostname;
-import demo.base.system.service.HostnameService;
 import demo.common.pojo.result.CommonResultCX;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class ArticleChannelServiceImpl extends ArticleCommonService implements ArticleChannelService {
 
-	@Autowired
-	private HostnameService hostnameService;
 	@Autowired
 	private ArticleChannelsMapper articleChannelsMapper;
 	@Autowired
@@ -119,10 +116,11 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		GetArticleChannelsBO bo = null;
 		Long userId = baseUtilCustom.getUserId();
 
+		String hostName = hostnameService.findHostNameFromRequst(request);
 		if (userId == null) {
-			bo = getArticleChannelsForNotLogin(findHostNameFromRequst(request));
+			bo = getArticleChannelsForNotLogin(hostName);
 		} else {
-			bo = getArticleChannelsByUserId(findHostNameFromRequst(request), userId);
+			bo = getArticleChannelsByUserId(hostName, userId);
 		}
 
 		GetArticleChannelsResult result = buildGetArticleChannelsResult(bo);
@@ -209,7 +207,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	}
 
 	private GetArticleChannelsBO removeChannelsForUnknow(GetArticleChannelsBO channelList) {
-		if ("dev".equals(systemConstantService.getEnvNameRefresh())) {
+		if (isDev()) {
 			return channelList;
 		}
 
@@ -451,6 +449,9 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	public GetArticleChannelsBO filterChannelDynamic(GetArticleChannelsBO channelList, String hostname) {
 		List<Hostname> hostnameList = hostnameService.findHonstnames();
 		Integer hostnameId = null;
+		if(hostname.contains("www")) {
+			hostname = hostname.replaceAll("www\\.", "");
+		}
 		for(Hostname i : hostnameList) {
 			if(hostname.equals(i.getHostname())) {
 				hostnameId = i.getId();

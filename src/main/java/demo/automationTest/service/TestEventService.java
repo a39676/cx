@@ -6,4 +6,8 @@ public interface TestEventService {
 
 	void insertEvent(AutomationTestInsertEventDTO dto);
 
+	void sendTestEventToRun();
+
+	void handleLongWaitingEvent();
+
 }

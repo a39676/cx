@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,8 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.TimeUnitType;
+import demo.base.system.pojo.result.HostnameType;
+import demo.base.system.service.HostnameService;
 import demo.base.system.service.IpRecordService;
 import demo.base.system.service.impl.RedisConnectService;
 import demo.base.system.service.impl.SystemConstantService;
@@ -25,6 +26,7 @@ import demo.config.costom_component.BaseUtilCustom;
 import demo.config.costom_component.EncryptUtil;
 import demo.config.costom_component.SnowFlake;
 import demo.tool.other.service.VisitDataService;
+import net.sf.json.JSONObject;
 import tool.pojo.bo.IpRecordBO;
 import toolPack.dateTimeHandle.DateHandler;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
@@ -50,10 +52,13 @@ public abstract class CommonService {
 	protected BaseUtilCustom baseUtilCustom;
 	@Autowired
 	protected IpRecordService ipRecordService;
+	@Autowired
+	protected HostnameService hostnameService;
 
 	@Autowired
 	protected RedisConnectService redisConnectService;
 
+	protected static final Integer NORMAL_PAGE_SIZE = 10;
 	protected static final LocalDateTime BLOG_ARTICLE_START_TIME = LocalDateTime.of(2020, 5, 1, 0, 0, 0);
 	protected static final String MAIN_FOLDER_PATH = "/home/u2/cx";
 	
@@ -122,38 +127,7 @@ public abstract class CommonService {
 		}
 	}
 
-	protected String findHostNameFromRequst(HttpServletRequest request) {
-		if ("dev".equals(systemConstantService.getEnvName())) {
-			return "easy";
-		}
-		return request.getServerName();
-//		if("dev".equals(constantService.getValByName("envName"))) {
-//			return request.getServerName();
-//		} else {
-//			String url = request.getServerName();
-//			Pattern p = Pattern.compile("(?!:http://)(www\\.[0-9a-zA-Z_]+\\.[a-z]{1,8})(?!:/.*)");
-//			Matcher m = p.matcher(url);
-//			if(m.find()) {
-//				return m.group(0);
-//			} else {
-//				return "";
-//			}
-//		}
-	}
-
-	protected String testFindHostNameFromRequst(HttpServletRequest request) {
-		String r = "from getServerName: " + request.getServerName();
-		String url = request.getServerName();
-		Pattern p = Pattern.compile("(?!:http://)(www\\.[0-9a-zA-Z_]+\\.[a-z]{1,8})(?!:/.*)");
-		Matcher m = p.matcher(url);
-		if (m.find()) {
-			r = r + " from pattern: " + m.group(0);
-		}
-
-		return r;
-	}
-
-	public String encryptId(Long id) {
+	protected String encryptId(Long id) {
 		List<String> encryptIdList = encryptId(Arrays.asList(id));
 		if (encryptIdList == null || encryptIdList.isEmpty()) {
 			return null;
@@ -162,12 +136,12 @@ public abstract class CommonService {
 		}
 	}
 
-	public List<String> encryptId(List<Long> idList) {
+	protected List<String> encryptId(List<Long> idList) {
 		if (idList == null || idList.isEmpty()) {
 			return null;
 		}
 
-		String keys = systemConstantService.getAESKey();
+		String keys = systemConstantService.getAesKey();
 		if (StringUtils.isBlank(keys)) {
 			return null;
 		}
@@ -188,7 +162,7 @@ public abstract class CommonService {
 		return encryptResult;
 	}
 
-	public Long decryptPrivateKey(String inputPk) {
+	protected Long decryptPrivateKey(String inputPk) {
 		List<Long> idList = decryptPrivateKey(Arrays.asList(inputPk));
 		if (idList == null || idList.isEmpty()) {
 			return null;
@@ -197,12 +171,12 @@ public abstract class CommonService {
 		}
 	}
 
-	public List<Long> decryptPrivateKey(List<String> inputPkList) {
+	protected List<Long> decryptPrivateKey(List<String> inputPkList) {
 		if (inputPkList == null || inputPkList.isEmpty()) {
 			return null;
 		}
 
-		String keys = systemConstantService.getAESKey();
+		String keys = systemConstantService.getAesKey();
 		if (StringUtils.isBlank(keys)) {
 			return null;
 		}
@@ -233,6 +207,15 @@ public abstract class CommonService {
 		return "dev".equals(systemConstantService.getEnvName());
 	}
 	
+	protected boolean isInZhang3OrDev(HttpServletRequest request) {
+		HostnameType hostnameType = hostnameService.findHostnameType(request);
+		if (HostnameType.zhang3.equals(hostnameType)) {
+			return true;
+		} else {
+			return isDev();
+		}
+	}
+	
 	protected IpRecordBO getIp(HttpServletRequest request) {
 		IpRecordBO record = new IpRecordBO();
 		record.setRemoteAddr(request.getRemoteAddr());
@@ -245,7 +228,7 @@ public abstract class CommonService {
 		return redisKeyPrefix + "_" + record.getForwardAddr() + "_" + record.getRemoteAddr();
 	}
 
-	public LocalDateTime getNextSettingTime(LocalDateTime datetime, TimeUnitType timeUnit, Long step) {
+	protected LocalDateTime getNextSettingTime(LocalDateTime datetime, TimeUnitType timeUnit, Long step) {
 		LocalDateTime nextNoticeTime = null;
 		if (datetime == null || timeUnit == null || step == null) {
 			return nextNoticeTime;
@@ -272,5 +255,24 @@ public abstract class CommonService {
 		}
 
 		return nextNoticeTime;
+	}
+
+	protected AutomationTestInsertEventDTO automationTestInsertEventDtoAddParamStr(AutomationTestInsertEventDTO dto, Object obj) {
+		JSONObject json = null;
+		if(StringUtils.isBlank(dto.getParamStr())) {
+			json = new JSONObject();
+		} else {
+			try {
+				json = JSONObject.fromObject(dto.getParamStr());
+			} catch (Exception e) {
+				json = new JSONObject();
+			}
+		}
+		
+		json.put(obj.getClass().getSimpleName(), obj);
+		
+		dto.setParamStr(json.toString());
+		
+		return dto;
 	}
 }

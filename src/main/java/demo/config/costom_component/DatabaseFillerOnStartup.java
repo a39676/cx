@@ -14,6 +14,7 @@ import demo.base.organizations.pojo.po.Organizations;
 import demo.base.organizations.service.OrganizationService;
 import demo.base.organizations.service.__SystemOrganizationService;
 import demo.base.system.pojo.constant.InitSystemConstant;
+import demo.base.system.service.impl.SystemConstantService;
 import demo.base.user.pojo.constant.UserConstant;
 import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.po.Users;
@@ -23,11 +24,12 @@ import demo.base.user.service.RoleService;
 import demo.base.user.service.UserRegistService;
 import demo.base.user.service.UsersService;
 import demo.common.service.CommonService;
-import demo.finance.cryptoCoin.data.service.impl.CryptoCoinConstantService;
+import demo.finance.cryptoCoin.common.service.CryptoCoinConstantService;
 import demo.joy.image.icon.service.JoyIconService;
 import demo.joy.scene.service.JoySceneManagerService;
 import demo.thirdPartyAPI.cloudinary.service.impl.CloudinaryConstantService;
 import demo.tool.mail.service.impl.MailConstantService;
+import demo.tool.telegram.service.impl.TelegramConstantService;
 
 @Component
 //public class DatabaseFillerOnStartup implements ApplicationListener<ContextStartedEvent> {
@@ -51,6 +53,8 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 	@Autowired
 	private JoyIconService joyIconService;
 	@Autowired
+	private SystemConstantService systemConstantService;
+	@Autowired
 	private ArticleConstantService articleConstantService;
 	@Autowired
 	private ArticleCommentConstantService articleCommentConstantService;
@@ -62,6 +66,8 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 	private AutomationTestConstantService automationTestConstantService;
 	@Autowired
 	private CryptoCoinConstantService cryptoCoinConstantService;
+	@Autowired
+	private TelegramConstantService telegramConstantService;
 	
 	
 /*
@@ -121,6 +127,9 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 			joyIconService.loadAllIconToRedis();
 			log.error("after load joy option");
 			
+			log.error("loading system option");
+			systemConstantService.refreshConstant();
+			
 			log.error("loading article option");
 			articleConstantService.refreshConstant();
 			
@@ -138,6 +147,10 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 			
 			log.error("loading crypto coin option");
 			cryptoCoinConstantService.refreshConstant();
+			
+			log.error("loading telegram option");
+			telegramConstantService.refreshConstant();
+			
 		}
 		
 		log.error("data base filler end");

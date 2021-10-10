@@ -13,7 +13,7 @@ public class TestEvent {
 
     private Long moduleId;
 
-    private String eventName;
+    private String flowName;
 
     private Integer passCount;
 
@@ -34,6 +34,8 @@ public class TestEvent {
     private LocalDateTime startTime;
 
     private LocalDateTime endTime;
+
+    private LocalDateTime sendTime;
 
     private Boolean isPass;
 
@@ -79,12 +81,12 @@ public class TestEvent {
         this.moduleId = moduleId;
     }
 
-    public String getEventName() {
-        return eventName;
+    public String getFlowName() {
+        return flowName;
     }
 
-    public void setEventName(String eventName) {
-        this.eventName = eventName == null ? null : eventName.trim();
+    public void setFlowName(String flowName) {
+        this.flowName = flowName == null ? null : flowName.trim();
     }
 
     public Integer getPassCount() {
@@ -165,6 +167,14 @@ public class TestEvent {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
+    }
+
+    public LocalDateTime getSendTime() {
+        return sendTime;
+    }
+
+    public void setSendTime(LocalDateTime sendTime) {
+        this.sendTime = sendTime;
     }
 
     public Boolean getIsPass() {

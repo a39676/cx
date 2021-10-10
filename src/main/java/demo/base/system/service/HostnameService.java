@@ -15,4 +15,6 @@ public interface HostnameService {
 
 	String findZhang();
 
+	String findHostNameFromRequst(HttpServletRequest request);
+
 }

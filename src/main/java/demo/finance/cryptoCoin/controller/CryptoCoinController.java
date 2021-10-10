@@ -34,10 +34,11 @@ public class CryptoCoinController extends CommonController {
 	public List<CryptoCoinCatalogVO> getSubscriptionCatalog() {
 		return catalogService.getSubscriptionCatalogVOList();
 	}
-	
+
 	@GetMapping(value = CryptoCoinPriceCommonUrl.GET_LOW_PRICE_SUBSCRIPTION_CATALOG)
 	@ResponseBody
 	public List<CryptoCoinCatalogVO> getLowPriceSubscriptionCatalogVOList() {
 		return lowPriceNoticeService.getLowPriceSubscriptionCatalogVOList();
 	}
+
 }

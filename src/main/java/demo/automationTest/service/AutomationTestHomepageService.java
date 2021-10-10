@@ -1,5 +1,7 @@
 package demo.automationTest.service;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.servlet.ModelAndView;
@@ -8,10 +10,11 @@ import autoTest.jsonReport.pojo.dto.FindReportByTestEventIdDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
 import autoTest.testEvent.searchingDemo.pojo.dto.BingSearchInHomePageDTO;
 import demo.automationTest.pojo.result.InsertSearchingDemoEventResult;
+import demo.automationTest.pojo.vo.TestReportSummaryVO;
 
 public interface AutomationTestHomepageService {
 
-	ModelAndView linkToATHome();
+	ModelAndView linkToATHome(HttpServletRequest request);
 
 	ModelAndView index();
 
@@ -21,7 +24,7 @@ public interface AutomationTestHomepageService {
 	 * @param dto
 	 * @return
 	 */
-	String findReportsByCondition(HttpServletRequest request, FindTestEventPageByConditionDTO dto);
+	List<TestReportSummaryVO> findReportsByCondition(FindTestEventPageByConditionDTO dto);
 
 	/**
 	 * 查找报告

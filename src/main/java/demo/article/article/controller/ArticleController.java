@@ -125,7 +125,6 @@ public class ArticleController extends CommonController {
 		return serviceResult;
 	}
 	
-	
 	@GetMapping(value = ArticleUrlConstant.editArticleLong)
 	public ModelAndView editArticleLongView(@RequestParam(value = "pk", required = false) String pk, HttpServletRequest request) {
 		ReadyToEditArticleLongDTO dto = new ReadyToEditArticleLongDTO();

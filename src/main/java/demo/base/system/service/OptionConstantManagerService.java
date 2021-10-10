@@ -1,6 +1,8 @@
 package demo.base.system.service;
 
 public interface OptionConstantManagerService {
+	
+	void refreshSystemConstant();
 
 	void refreshArticleConstant();
 
@@ -13,5 +15,7 @@ public interface OptionConstantManagerService {
 	void refreshAutomationTestConstant();
 
 	void refreshCryptoCoinConstant();
+
+	void refreshTelegramConstant();
 
 }

@@ -20,4 +20,13 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		telegramService.sendMessage(TelegramBotType.BOT_2, "bbt down", TelegramStaticChatID.MY_ID);
 	}
 	
+	@Override
+	public String encryptIDNum(Long id) {
+		return encryptId(id);
+	}
+	
+	@Override
+	public Long decryptPK(String pk) {
+		return decryptPrivateKey(pk);
+	}
 }

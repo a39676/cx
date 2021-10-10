@@ -30,7 +30,6 @@
       <option value="${chatVO.pk}">${chatVO.username}</option>
     </c:forEach>
   </select>
-  <input type="Date" id="validTime">
 </div>
 
 <div class="row">
@@ -63,7 +62,10 @@
 </div>
 
 <div class="row">
-  <input type="Date" id="noticeStartDate"><input type="Time" id="noticeStartTime" value="00:00">
+  <span>validTime(endTime)</span> <input type="Date" id="validTime">
+</div>
+<div class="row">
+  <span>noticeStartTime</span><input type="Date" id="noticeStartDate"><input type="Time" id="noticeStartTime" value="00:00">
 </div>
 
 <div class="row">
@@ -141,7 +143,7 @@
       searchNotice();
 
       function insertCryptoCoinNoticeSetting() {
-      
+
         var url = "/cryptoCoin/insertCryptoCoinNoticeSetting";
 
         var coinType = $("#coinType").val();
@@ -149,7 +151,7 @@
 
         var maxPrice = $("#maxPrice").val();
         var minPrice = $("#minPrice").val();
-        
+
         var originalPrice = $("#originalPrice").val();
         var pricePercentage = $("#pricePercentage").val();
 
@@ -185,9 +187,9 @@
           startNoticeTime : startNoticeTime,
         };
 
-        $.ajax({  
-          type : "POST", 
-          url : url,  
+        $.ajax({
+          type : "POST",
+          url : url,
           data: JSON.stringify(jsonOutput),
           dataType: 'json',
           contentType: "application/json",
@@ -197,7 +199,7 @@
           timeout: 15000,
           success:function(data){
             $("#result").text(data.message);
-          }, 
+          },
           error:function(e){
             $("#result").text(e);
           }
@@ -216,7 +218,7 @@
         var reciverPK = $("#telegramChatPKOfSearch option:selected").val();
         var cryptoCoinType = $("#coinTypeOfSearch").val();
         var currencyCode = $("#currencyOfSearch option:selected").val();
-        
+
         var noticeSearchResult = $("#noticeSearchResult");
 
         var jsonOutput = {
@@ -227,9 +229,9 @@
 
         console.log(jsonOutput);
 
-        $.ajax({  
-          type : "POST", 
-          url : url,  
+        $.ajax({
+          type : "POST",
+          url : url,
           data: JSON.stringify(jsonOutput),
           // dataType: 'json',
           contentType: "application/json",
@@ -239,7 +241,7 @@
           timeout: 15000,
           success:function(datas){
             noticeSearchResult.html(datas);
-          }, 
+          },
           error:function(e){
             $("#result").text(e);
           }

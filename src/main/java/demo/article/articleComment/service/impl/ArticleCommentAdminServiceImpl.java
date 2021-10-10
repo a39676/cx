@@ -126,6 +126,8 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 		articleCommentReviewMapper.insertNew(reviewRecord);
 		
 		record.setIsPass(true);
+		record.setIsDelete(false);
+		record.setIsReject(false);
 		articleCommentMapper.updateByPrimaryKeySelective(record);
 		result.setMessage(ArticleCommentResultType.articleCommentPassSuccess.getName());
 		result.setIsSuccess();

@@ -8,8 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
-import at.report.pojo.dto.JsonReportOfCaseDTO;
-import at.report.pojo.dto.JsonReportOfEventDTO;
+import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
+import autoTest.report.pojo.dto.JsonReportOfFlowDTO;
+import autoTest.report.service.ATJsonReportService;
 import autoTest.testEvent.pojo.dto.AutomationTestResultDTO;
 import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
 import autoTest.testEvent.pojo.type.AutomationTestFlowResultType;
@@ -26,6 +27,8 @@ public class AutomationTestResultReceiveServiceImpl extends AutomationTestCommon
 
 	@Autowired
 	private AutomationTestReportService reportService;
+	@Autowired
+	private ATJsonReportService jsonReportService;
 
 	@Override
 	public void handleAutomationTestResult(String messageStr) {
@@ -80,7 +83,7 @@ public class AutomationTestResultReceiveServiceImpl extends AutomationTestCommon
 		dto.setEndTime(localDateTimeHandler.localDateTimeJsonStrToLocalDateTime(json.getString("endTime")));
 		dto.setStartTime(localDateTimeHandler.localDateTimeJsonStrToLocalDateTime(json.getString("startTime")));
 		dto.setCaseResultList(buildCaseResultList(json));
-		dto.setReport(reportService.buildReportFromJson(json));
+		dto.setReport(reportService.buildReportFromMQ(json));
 		dto.setRemark(json.getString("remark"));
 
 		return dto;
@@ -97,7 +100,7 @@ public class AutomationTestResultReceiveServiceImpl extends AutomationTestCommon
 	}
 
 	private void reportPrefixHandle(AutomationTestResultDTO dto) {
-		JsonReportOfEventDTO eventReport = dto.getReport();
+		JsonReportOfFlowDTO eventReport = dto.getReport();
 		List<AutomationTestCaseResult> caseResultList = dto.getCaseResultList();
 
 		JsonReportOfCaseDTO tmpCaseReport = null;

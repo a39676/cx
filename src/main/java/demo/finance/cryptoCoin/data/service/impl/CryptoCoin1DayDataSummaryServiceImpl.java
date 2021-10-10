@@ -50,39 +50,40 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 
 	@Override
 	public CommonResult receiveDailyData(CryptoCoinDataDTO dto) {
-		/*
-		 * TODO 此处可指定, 如果从某 datasource 获取不到数据, 则重新发起查询并调用下一个 datasource
-		 */
 		CommonResult r = new CommonResult();
 		List<CryptoCoinDataSubDTO> dataList = dto.getPriceHistoryData();
 		CryptoCoinDataSourceType dataSourceType = CryptoCoinDataSourceType.getType(dto.getDataSourceCode());
-		if(dataSourceType == null) {
+		if (dataSourceType == null) {
 			dataSourceType = CryptoCoinDataSourceType.CRYPTO_COMPARE;
 		}
-		if (!isValidData(dataList)) {
-			TelegramMessageDTO msgDTO = new TelegramMessageDTO();
-			msgDTO.setId(TelegramStaticChatID.MY_ID);
-			if (dataSourceType != null) {
-				msgDTO.setMsg(
-						dto.getCryptoCoinTypeName() + ", get error data(all zero) from: " + dataSourceType.getName());
-			} else {
-				msgDTO.setMsg(dto.getCryptoCoinTypeName() + ", get error data(all zero) from crypto compare");
-			}
-			msgDTO.setBotName(TelegramBotType.BOT_2.getName());
-			telegramCryptoCoinMessageAckProducer.send(msgDTO);
-			return r;
-		}
-
+		
 		CryptoCoinCatalog coinType = coinCatalogService.findCatalog(dto.getCryptoCoinTypeName());
 		CurrencyType currencyType = CurrencyType.getType(dto.getCurrencyName());
 		if (coinType == null || currencyType == null) {
+			return r;
+		}
+		
+		if (!isValidData(dataList)) {
+			TelegramMessageDTO msgDTO = new TelegramMessageDTO();
+			msgDTO.setId(TelegramStaticChatID.MY_ID);
+			msgDTO.setMsg(dto.getCryptoCoinTypeName() + ", get error data(all zero) from: " + dataSourceType.getName());
+			msgDTO.setBotName(TelegramBotType.BOT_2.getName());
+			telegramCryptoCoinMessageAckProducer.send(msgDTO);
+			
+			if(CryptoCoinDataSourceType.CRYPTO_COMPARE.equals(dataSourceType)) {
+				sendDailyDataQuery(dto.getCryptoCoinTypeName(), constantService.getDefaultCurrency(),
+						constantService.getDefaultDailyDataQueryLenth(), CryptoCoinDataSourceType.BINANCE);
+			} else if(CryptoCoinDataSourceType.BINANCE.equals(dataSourceType)) {
+				constantService.getDailyDataWaitingQuerySet().remove(coinType.getCoinNameEnShort());
+			}
+			
 			return r;
 		}
 
 		updateSummaryData(dataList, coinType, currencyType);
 
 		constantService.getDailyDataWaitingQuerySet().remove(coinType.getCoinNameEnShort());
-		
+
 		r.setIsSuccess();
 		return r;
 	}
@@ -351,20 +352,21 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 	public void sendAllCryptoCoinDailyDataQueryMsg() {
 		Set<String> waitingQuerySet = constantService.getDailyDataWaitingQuerySet();
 		CryptoCoinCatalog catalog = null;
-		for(String catalogName : waitingQuerySet) {
+		for (String catalogName : waitingQuerySet) {
 			catalog = coinCatalogService.findCatalog(catalogName);
-			if(catalog != null) {
+			if (catalog != null) {
 				sendDailyDataQuery(catalog.getCoinNameEnShort(), constantService.getDefaultCurrency(),
 						constantService.getDefaultDailyDataQueryLenth(), CryptoCoinDataSourceType.CRYPTO_COMPARE);
 			}
 		}
 	}
-	
+
 	@Override
 	public void resetDailyDataWaitingQuerySet() {
 		List<CryptoCoinCatalog> allCatalogList = coinCatalogService.getAllCatalog();
 		constantService.getDailyDataWaitingQuerySet().clear();
-		constantService.getDailyDataWaitingQuerySet().addAll(allCatalogList.stream().map(po -> po.getCoinNameEnShort()).collect(Collectors.toSet()));
+		constantService.getDailyDataWaitingQuerySet()
+				.addAll(allCatalogList.stream().map(po -> po.getCoinNameEnShort()).collect(Collectors.toSet()));
 	}
 
 	@Override
@@ -393,7 +395,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		paramDTO.setCurrencyName(constantService.getDefaultCurrency());
 		paramDTO.setCounting(counting);
 		paramDTO.setDataSourceCode(CryptoCoinDataSourceType.CRYPTO_COMPARE.getCode());
-		
+
 		dto = automationTestInsertEventDtoAddParamStr(dto, paramDTO);
 
 		testEventInsertAckProducer.send(dto);

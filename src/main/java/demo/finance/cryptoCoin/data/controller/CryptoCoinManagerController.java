@@ -1,5 +1,7 @@
 package demo.finance.cryptoCoin.data.controller;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.common.controller.CommonController;
+import demo.finance.cryptoCoin.common.service.CryptoCoinConstantService;
 import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinManagerUrl;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
@@ -30,6 +33,10 @@ public class CryptoCoinManagerController extends CommonController {
 	private CryptoCompareWSClient cryptoCompareWSClient;
 	@Autowired
 	private BinanceWSClient binanceWSClient;
+	@Autowired
+	private CryptoCoin1DayDataSummaryService cryptoCoin1DayDataSummaryService;
+	@Autowired
+	private CryptoCoinConstantService constantService;
 	
 	
 
@@ -88,6 +95,26 @@ public class CryptoCoinManagerController extends CommonController {
 		binanceWSClient.wsDestory();
 		binanceWSClient.startWebSocket();
 		return "done";
+	}
+	
+	@GetMapping(value = "/resetDailyDataWaitingQuerySet")
+	@ResponseBody
+	public String resetDailyDataWaitingQuerySet() {
+		cryptoCoin1DayDataSummaryService.resetDailyDataWaitingQuerySet();
+		return "done";
+	}
+	
+	@GetMapping(value = "/sendAllCryptoCoinDailyDataQueryMsg")
+	@ResponseBody
+	public String sendAllCryptoCoinDailyDataQueryMsg() {
+		cryptoCoin1DayDataSummaryService.sendAllCryptoCoinDailyDataQueryMsg();
+		return "done";
+	}
+	
+	@GetMapping(value = "/getDailyDataWaitingQuerySet")
+	@ResponseBody
+	public Set<String> getDailyDataWaitingQuerySet() {
+		return constantService.getDailyDataWaitingQuerySet();
 	}
 	
 }

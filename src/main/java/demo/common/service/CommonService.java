@@ -32,7 +32,7 @@ import toolPack.dateTimeHandle.DateHandler;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
 
 public abstract class CommonService {
-
+	
 	protected final Logger log = LoggerFactory.getLogger(getClass());
 
 	@Autowired

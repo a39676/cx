@@ -21,10 +21,12 @@ public class ExceptionServiceImpl extends CommonService implements ExceptionServ
 		return ThreadLocalRandom.current().nextInt(0, description.length - 1);
 	}
 	
-	
 	@Override
 	public ModelAndView handleCommonException(HttpServletRequest request, Exception e) {
 		log.error(e.toString());
+		log.error("Catch EXCEPTION: " + request.getServerName() + "/" + request.getRequestURI());
+		visitDataService.insertVisitData(request, "catch EXCEPTION");
+		
 		ModelAndView view = new ModelAndView("baseJSP/errorCustom");
 		if(systemConstantService.getIsDebuging()) {
 			view.addObject("message", e.toString());
@@ -39,13 +41,16 @@ public class ExceptionServiceImpl extends CommonService implements ExceptionServ
 	
 	@Override
 	public ModelAndView handle404Exception(HttpServletRequest request) {
+		log.error("Http 404: " + request.getServerName() + "/" + request.getRequestURI());
+		visitDataService.insertVisitData(request, "catch 404 exception");
+		
 		ModelAndView view = new ModelAndView();
 		
 		HostnameType hostnameType = hostnameService.findHostnameType(request);
 		if(HostnameType.zhang3.equals(hostnameType)) {
 			view.setViewName(BaseViewConstant.normal404);
-//		} else if(HostnameType.three.equals(hostnameType)) {
-//			view.setViewName(BaseViewConstant.seekingJob404);
+		} else if(HostnameType.dtro.equals(hostnameType)) {
+			view.setViewName(BaseViewConstant.normal404);
 		} else if(isDev()){
 			view.setViewName(BaseViewConstant.normal404);
 		} else {
@@ -54,10 +59,11 @@ public class ExceptionServiceImpl extends CommonService implements ExceptionServ
 
 		return view;
 	}
-
+	
 	@Override
-	public ModelAndView handleCommonException(HttpServletRequest request) {
-		log.error("_");
+	public ModelAndView handle403CommonException(HttpServletRequest request) {
+		log.error("Http 403: " + request.getServerName() + "/" + request.getRequestURI());
+		visitDataService.insertVisitData(request, "catch 403 exception");
 		ModelAndView view = new ModelAndView("baseJSP/errorCustom");
 		view.addObject("message", "很抱歉,居然出现了" + description[getRan()] + "的异常");
 		view.addObject("urlRedirect", hostnameService.findHostNameFromRequst(request));
@@ -65,4 +71,14 @@ public class ExceptionServiceImpl extends CommonService implements ExceptionServ
 		return view;
 	}
 	
+	@Override
+	public ModelAndView handleCommonException(HttpServletRequest request) {
+		log.error("Catch EXCEPTION: " + request.getServerName() + "/" + request.getRequestURI());
+		visitDataService.insertVisitData(request, "catch EXCEPTION");
+		ModelAndView view = new ModelAndView("baseJSP/errorCustom");
+		view.addObject("message", "很抱歉,居然出现了" + description[getRan()] + "的异常");
+		view.addObject("urlRedirect", hostnameService.findHostNameFromRequst(request));
+		
+		return view;
+	}
 }

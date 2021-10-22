@@ -25,6 +25,11 @@ public class AuxiliaryController extends CommonController {
 	private AuxiliaryService auxiliaryService;
 	
 	@GetMapping(value = { BaseUrl.ROBOT })
+	public void robot(HttpServletRequest request, HttpServletResponse response) {
+		auxiliaryService.robotTxtHandle(request, response);
+	}
+	
+	@GetMapping(value = { BaseUrl.ROBOTS })
 	public void robots(HttpServletRequest request, HttpServletResponse response) {
 		auxiliaryService.robotTxtHandle(request, response);
 	}

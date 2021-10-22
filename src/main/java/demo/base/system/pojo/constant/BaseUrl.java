@@ -7,6 +7,7 @@ public class BaseUrl {
 	public static final String ABOUT_ME = "/aboutMe";
 
 	public static final String ROBOT = "/robot";
+	public static final String ROBOTS = "/robots";
 	public static final String FAVICON = "/favicon.ico";
 	
 	public static final String BASE = "/base";

@@ -19,7 +19,7 @@ import demo.common.service.CommonService;
 public class AuxiliaryServiceImpl extends CommonService implements AuxiliaryService {
 
 	@Override
-	public void robotTxtHandle(HttpServletRequest request, HttpServletResponse response) {
+	public void robotHandle(HttpServletRequest request, HttpServletResponse response) {
 		visitDataService.insertVisitData(request);
 		
 		Resource resource = new ClassPathResource("/static_resources/txt/robots.txt");
@@ -37,4 +37,5 @@ public class AuxiliaryServiceImpl extends CommonService implements AuxiliaryServ
 			e.printStackTrace();
 		}
 	}
+	
 }

@@ -1,4 +1,4 @@
-package demo.finance.cryptoCoin.mq.producer;
+package demo.tool.calendarNotice.mq.producer;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,7 @@ import telegram.pojo.constant.TelegramMessageMQConstant;
 import telegram.pojo.dto.TelegramMessageDTO;
 
 @Component
-public class TelegramCryptoCoinMessageAckProducer extends CommonService {
+public class TelegramCalendarNoticeMessageAckProducer extends CommonService {
 
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
@@ -20,7 +20,7 @@ public class TelegramCryptoCoinMessageAckProducer extends CommonService {
 			return;
 		}
 		JSONObject json = dtoToJSON(dto);
-		rabbitTemplate.convertAndSend(TelegramMessageMQConstant.TELEGRAM_CALENDAR_NOTICE_MSG_QUEUE, json.toString());
+		rabbitTemplate.convertAndSend(TelegramMessageMQConstant.TELEGRAM_CRYPTO_COIN_MSG_QUEUE, json.toString());
 	}
 
 	private JSONObject dtoToJSON(TelegramMessageDTO te) {

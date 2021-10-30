@@ -225,13 +225,6 @@
 			<version>20211018.1</version>
 		</dependency>
 
-		<!-- 公历 农历 转换 -->
-		<dependency>
-			<groupId>com.github.heqiao2010</groupId>
-			<artifactId>lunar</artifactId>
-			<version>1.4</version>
-		</dependency>
-
 		<dependency>
 			<groupId>com.neovisionaries</groupId>
 			<artifactId>nv-websocket-client</artifactId>

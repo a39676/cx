@@ -134,10 +134,9 @@ public class TaskToolServiceImpl {
 
 	/** 将 redis 内的访问数, 持久化到数据库 */
 	@Scheduled(fixedRate = 1000L * 60 * 30)
-	public String visitCountRedisToOrm() {
+	public void visitCountRedisToOrm() {
 		visitDataService.visitCountRedisToOrm();
 		visitDataService.visitDataRedisToOrm();
-		return null;
 	}
 
 	/**

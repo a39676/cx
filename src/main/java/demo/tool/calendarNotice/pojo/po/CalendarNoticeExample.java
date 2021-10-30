@@ -235,63 +235,63 @@ public class CalendarNoticeExample {
             return (Criteria) this;
         }
 
-        public Criteria andRepeatTypeIsNull() {
-            addCriterion("repeat_type is null");
+        public Criteria andNeedRepeatIsNull() {
+            addCriterion("need_repeat is null");
             return (Criteria) this;
         }
 
-        public Criteria andRepeatTypeIsNotNull() {
-            addCriterion("repeat_type is not null");
+        public Criteria andNeedRepeatIsNotNull() {
+            addCriterion("need_repeat is not null");
             return (Criteria) this;
         }
 
-        public Criteria andRepeatTypeEqualTo(Integer value) {
-            addCriterion("repeat_type =", value, "repeatType");
+        public Criteria andNeedRepeatEqualTo(Boolean value) {
+            addCriterion("need_repeat =", value, "needRepeat");
             return (Criteria) this;
         }
 
-        public Criteria andRepeatTypeNotEqualTo(Integer value) {
-            addCriterion("repeat_type <>", value, "repeatType");
+        public Criteria andNeedRepeatNotEqualTo(Boolean value) {
+            addCriterion("need_repeat <>", value, "needRepeat");
             return (Criteria) this;
         }
 
-        public Criteria andRepeatTypeGreaterThan(Integer value) {
-            addCriterion("repeat_type >", value, "repeatType");
+        public Criteria andNeedRepeatGreaterThan(Boolean value) {
+            addCriterion("need_repeat >", value, "needRepeat");
             return (Criteria) this;
         }
 
-        public Criteria andRepeatTypeGreaterThanOrEqualTo(Integer value) {
-            addCriterion("repeat_type >=", value, "repeatType");
+        public Criteria andNeedRepeatGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("need_repeat >=", value, "needRepeat");
             return (Criteria) this;
         }
 
-        public Criteria andRepeatTypeLessThan(Integer value) {
-            addCriterion("repeat_type <", value, "repeatType");
+        public Criteria andNeedRepeatLessThan(Boolean value) {
+            addCriterion("need_repeat <", value, "needRepeat");
             return (Criteria) this;
         }
 
-        public Criteria andRepeatTypeLessThanOrEqualTo(Integer value) {
-            addCriterion("repeat_type <=", value, "repeatType");
+        public Criteria andNeedRepeatLessThanOrEqualTo(Boolean value) {
+            addCriterion("need_repeat <=", value, "needRepeat");
             return (Criteria) this;
         }
 
-        public Criteria andRepeatTypeIn(List<Integer> values) {
-            addCriterion("repeat_type in", values, "repeatType");
+        public Criteria andNeedRepeatIn(List<Boolean> values) {
+            addCriterion("need_repeat in", values, "needRepeat");
             return (Criteria) this;
         }
 
-        public Criteria andRepeatTypeNotIn(List<Integer> values) {
-            addCriterion("repeat_type not in", values, "repeatType");
+        public Criteria andNeedRepeatNotIn(List<Boolean> values) {
+            addCriterion("need_repeat not in", values, "needRepeat");
             return (Criteria) this;
         }
 
-        public Criteria andRepeatTypeBetween(Integer value1, Integer value2) {
-            addCriterion("repeat_type between", value1, value2, "repeatType");
+        public Criteria andNeedRepeatBetween(Boolean value1, Boolean value2) {
+            addCriterion("need_repeat between", value1, value2, "needRepeat");
             return (Criteria) this;
         }
 
-        public Criteria andRepeatTypeNotBetween(Integer value1, Integer value2) {
-            addCriterion("repeat_type not between", value1, value2, "repeatType");
+        public Criteria andNeedRepeatNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("need_repeat not between", value1, value2, "needRepeat");
             return (Criteria) this;
         }
 
@@ -532,66 +532,6 @@ public class CalendarNoticeExample {
 
         public Criteria andNoticeTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
             addCriterion("notice_time not between", value1, value2, "noticeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andNextNoticeTimeIsNull() {
-            addCriterion("next_notice_time is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andNextNoticeTimeIsNotNull() {
-            addCriterion("next_notice_time is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andNextNoticeTimeEqualTo(LocalDateTime value) {
-            addCriterion("next_notice_time =", value, "nextNoticeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andNextNoticeTimeNotEqualTo(LocalDateTime value) {
-            addCriterion("next_notice_time <>", value, "nextNoticeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andNextNoticeTimeGreaterThan(LocalDateTime value) {
-            addCriterion("next_notice_time >", value, "nextNoticeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andNextNoticeTimeGreaterThanOrEqualTo(LocalDateTime value) {
-            addCriterion("next_notice_time >=", value, "nextNoticeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andNextNoticeTimeLessThan(LocalDateTime value) {
-            addCriterion("next_notice_time <", value, "nextNoticeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andNextNoticeTimeLessThanOrEqualTo(LocalDateTime value) {
-            addCriterion("next_notice_time <=", value, "nextNoticeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andNextNoticeTimeIn(List<LocalDateTime> values) {
-            addCriterion("next_notice_time in", values, "nextNoticeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andNextNoticeTimeNotIn(List<LocalDateTime> values) {
-            addCriterion("next_notice_time not in", values, "nextNoticeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andNextNoticeTimeBetween(LocalDateTime value1, LocalDateTime value2) {
-            addCriterion("next_notice_time between", value1, value2, "nextNoticeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andNextNoticeTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
-            addCriterion("next_notice_time not between", value1, value2, "nextNoticeTime");
             return (Criteria) this;
         }
 

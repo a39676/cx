@@ -7,7 +7,7 @@ public class CalendarNotice {
 
     private String noticeContent;
 
-    private Integer repeatType;
+    private Boolean needRepeat;
 
     private Integer repeatTimeUnit;
 
@@ -16,8 +16,6 @@ public class CalendarNotice {
     private LocalDateTime validTime;
 
     private LocalDateTime noticeTime;
-
-    private LocalDateTime nextNoticeTime;
 
     private Boolean isLunarCalendar;
 
@@ -41,12 +39,12 @@ public class CalendarNotice {
         this.noticeContent = noticeContent == null ? null : noticeContent.trim();
     }
 
-    public Integer getRepeatType() {
-        return repeatType;
+    public Boolean getNeedRepeat() {
+        return needRepeat;
     }
 
-    public void setRepeatType(Integer repeatType) {
-        this.repeatType = repeatType;
+    public void setNeedRepeat(Boolean needRepeat) {
+        this.needRepeat = needRepeat;
     }
 
     public Integer getRepeatTimeUnit() {
@@ -79,14 +77,6 @@ public class CalendarNotice {
 
     public void setNoticeTime(LocalDateTime noticeTime) {
         this.noticeTime = noticeTime;
-    }
-
-    public LocalDateTime getNextNoticeTime() {
-        return nextNoticeTime;
-    }
-
-    public void setNextNoticeTime(LocalDateTime nextNoticeTime) {
-        this.nextNoticeTime = nextNoticeTime;
     }
 
     public Boolean getIsLunarCalendar() {

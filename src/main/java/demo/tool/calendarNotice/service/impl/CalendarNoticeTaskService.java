@@ -13,7 +13,8 @@ public class CalendarNoticeTaskService {
 	private CalendarNoticeService calendarNoticeService;
 	
 	@Scheduled(fixedRate = 1000L * 60 * 10)
-	public void visitCountRedisToOrm() {
+	public void findAndSendNotice() {
 		calendarNoticeService.findAndSendNotice();
 	}
+	
 }

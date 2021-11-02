@@ -36,7 +36,7 @@ public class CalendarNoticeServiceImpl extends CommonService implements Calendar
 		if (r.isFail()) {
 			return r;
 		}
-		if(dto.getIsLunarNotice()) {
+		if (dto.getIsLunarNotice()) {
 			dto = handleLunarDateTrans(dto);
 		}
 
@@ -100,7 +100,7 @@ public class CalendarNoticeServiceImpl extends CommonService implements Calendar
 				} else {
 					LocalDateTime now = LocalDateTime.now();
 					Lunar nextLunarDate = null;
-					if(targetDay.isBefore(now)) {
+					if (targetDay.isBefore(now)) {
 						lunarTargetDay = getNextValidLunarDate(nextLunarDate, timeUnitType, dto.getRepeatTimeRange());
 					}
 					dto.setNoticeTime(
@@ -117,27 +117,26 @@ public class CalendarNoticeServiceImpl extends CommonService implements Calendar
 
 		return r;
 	}
-	
+
 	private AddCalendarNoticeDTO handleLunarDateTrans(AddCalendarNoticeDTO dto) {
-		
+
 		LocalDateTime now = LocalDateTime.now();
 		TimeUnitType timeUnitType = TimeUnitType.getType(dto.getRepeatTimeUnit());
 		Lunar lunarTargetDay = localDateTimeHandler.toLunar(dto.getNoticeTime());
 		LocalTime noticeTime = LocalTime.of(dto.getNoticeTime().getHour(), dto.getNoticeTime().getMinute(),
 				dto.getNoticeTime().getSecond());
-		
+
 		LocalDateTime targetDay = dto.getNoticeTime();
 
-		if(targetDay.isBefore(now)) {
+		if (targetDay.isBefore(now)) {
 			lunarTargetDay = getNextValidLunarDate(lunarTargetDay, timeUnitType, dto.getRepeatTimeRange());
 		}
-		dto.setNoticeTime(
-				localDateTimeHandler.toLocalDateTime(lunarTargetDay).withHour(noticeTime.getHour())
-						.withMinute(noticeTime.getMinute()).withSecond(noticeTime.getSecond()));
+		dto.setNoticeTime(localDateTimeHandler.toLocalDateTime(lunarTargetDay).withHour(noticeTime.getHour())
+				.withMinute(noticeTime.getMinute()).withSecond(noticeTime.getSecond()));
 		return dto;
 	}
 
- 	private Lunar getNextLunarDate(Lunar lunar, TimeUnitType timeUnitType, Integer timeRange) {
+	private Lunar getNextLunarDate(Lunar lunar, TimeUnitType timeUnitType, Integer timeRange) {
 
 		if (timeUnitType.equals(TimeUnitType.day)) {
 			lunar.setLunarDay(lunar.getLunarDay() + timeRange);
@@ -166,12 +165,12 @@ public class CalendarNoticeServiceImpl extends CommonService implements Calendar
 
 		return lunar;
 	}
-	
+
 	private Lunar getNextValidLunarDate(Lunar lunar, TimeUnitType timeUnitType, Integer timeRange) {
 		LocalDateTime now = LocalDateTime.now();
 		Lunar nextLunar = getNextLunarDate(lunar, timeUnitType, timeRange);
 		LocalDateTime nextLocalDateTime = localDateTimeHandler.toLocalDateTime(nextLunar);
-		while(nextLocalDateTime.isBefore(now)) {
+		while (nextLocalDateTime.isBefore(now)) {
 			nextLunar = getNextLunarDate(lunar, timeUnitType, timeRange);
 			nextLocalDateTime = localDateTimeHandler.toLocalDateTime(nextLunar);
 		}
@@ -210,8 +209,7 @@ public class CalendarNoticeServiceImpl extends CommonService implements Calendar
 	private List<CalendarNotice> findNotices() {
 		LocalDateTime now = LocalDateTime.now();
 		CalendarNoticeExample example = new CalendarNoticeExample();
-		example.createCriteria().andIsDeleteEqualTo(false).andIsLunarCalendarEqualTo(false)
-				.andNoticeTimeLessThanOrEqualTo(now);
+		example.createCriteria().andIsDeleteEqualTo(false).andNoticeTimeLessThanOrEqualTo(now);
 		return mapper.selectByExample(example);
 	}
 
@@ -227,9 +225,10 @@ public class CalendarNoticeServiceImpl extends CommonService implements Calendar
 			dto = new TelegramMessageDTO();
 			dto.setId(TelegramStaticChatID.MY_ID);
 			if (po.getIsLunarCalendar()) {
-				po.setNoticeContent(po.getNoticeContent() + ", lunar calendar");
+				dto.setMsg(po.getNoticeContent() + ", lunar calendar");
+			} else {
+				dto.setMsg(po.getNoticeContent());
 			}
-			dto.setMsg(po.getNoticeContent());
 			dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
 			telegramMessageAckProducer.send(dto);
 

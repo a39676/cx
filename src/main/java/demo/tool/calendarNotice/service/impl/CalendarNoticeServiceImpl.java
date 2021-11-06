@@ -201,7 +201,7 @@ public class CalendarNoticeServiceImpl extends CommonService implements Calendar
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime nextLocalDateTime = getNextLocalDateTime(datetime, timeUnitType, timeRange);
 		while (nextLocalDateTime.isBefore(now)) {
-			nextLocalDateTime = getNextLocalDateTime(datetime, timeUnitType, timeRange);
+			nextLocalDateTime = getNextLocalDateTime(nextLocalDateTime, timeUnitType, timeRange);
 		}
 		return nextLocalDateTime;
 	}

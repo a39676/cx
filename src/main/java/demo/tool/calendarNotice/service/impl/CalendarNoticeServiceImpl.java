@@ -187,6 +187,8 @@ public class CalendarNoticeServiceImpl extends CommonService implements Calendar
 			datetime = datetime.plusHours(timeRange);
 		} else if (timeUnitType.equals(TimeUnitType.day)) {
 			datetime = datetime.plusDays(timeRange);
+		} else if (timeUnitType.equals(TimeUnitType.week)) {
+			datetime = datetime.plusWeeks(timeRange);
 		} else if (timeUnitType.equals(TimeUnitType.month)) {
 			datetime = datetime.plusMonths(timeRange);
 		} else if (timeUnitType.equals(TimeUnitType.year)) {

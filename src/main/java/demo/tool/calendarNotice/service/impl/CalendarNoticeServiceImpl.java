@@ -243,6 +243,7 @@ public class CalendarNoticeServiceImpl extends CommonService implements Calendar
 					Lunar nextLunarNoticeTime = getNextLunarDate(oldLunarNoticeTime, timeUnitType,
 							po.getRepeatTimeRange());
 					nextNoticeTime = localDateTimeHandler.toLocalDateTime(nextLunarNoticeTime);
+					nextNoticeTime = nextNoticeTime.withHour(oldNoticeTime.getHour()).withMinute(oldNoticeTime.getMinute()).withSecond(oldNoticeTime.getSecond());
 				} else {
 					nextNoticeTime = getNextValidLocalDateTime(oldNoticeTime, timeUnitType, po.getRepeatTimeRange());
 				}

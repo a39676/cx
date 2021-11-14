@@ -22,5 +22,38 @@
           <a href="/org/orgManager" target="_blank">orgManager</a>
         </li>
     </ul><!-- main-menu -->
-  </div><!-- conatiner -->
+    <ul class="main-menu visible-on-click" id="telegramTool">
+      <li>
+        <a href="/tool/telegram/testing" target="_blank">telegram api testing</a>
+      </li>
+    </ul> <%-- telegramTool --%>
+    <ul class="main-menu visible-on-click" id="cryptoCoinTool">
+      <li>
+        <a href="/cryptoCoin/insertCryptoCoinNoticeSetting" target="_blank">insertCryptoCoinNoticeSetting</a>
+      </li>
+      <li>
+        <a href="/cryptoCoinManager/checkDataAPI" target="_blank">checkDataAPI</a>
+      </li>
+      <li>
+        <a href="/cryptoCoin/dataCompare/CryptoCoinDailyDataComparetor" target="_blank">CryptoCoinDailyDataComparetor</a>
+      </li>
+      <li>
+        <a href="/cryptoCoinManager/cryptoCoinWebSocketManager" target="_blank">cryptoCoinWebSocketManager</a>
+      </li>
+      <li>
+        <a href="/cryptoCoinManager/getDailyDataWaitingQuerySet" target="_blank">getDailyDataWaitingQuerySet</a>
+      </li>
+      <li>
+        <a href="/cryptoCoinManager/resetDailyDataWaitingQuerySet" target="_blank">resetDailyDataWaitingQuerySet</a>
+      </li>
+      <li>
+        <a href="/cryptoCoinManager/sendAllCryptoCoinDailyDataQueryMsg" target="_blank">sendAllCryptoCoinDailyDataQueryMsg</a>
+      </li>
+    </ul> <%-- cryptoCoin --%>
+    <ul class="main-menu visible-on-click" id="canlendarNotice">
+      <li>
+        <a href="/tool/canlendarNotice/manager" target="_blank">canlendarNoticeManager</a>
+      </li>
+    </ul>
+  </div><!-- canlendarNotice -->
 </header>

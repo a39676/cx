@@ -17,6 +17,11 @@ public class AddCalendarNoticeDTO {
 	private Integer repeatTimeUnit;
 	private Integer repeatTimeRange;
 
+	/** {@link TimeUnitType} */
+	private Integer preNoticeRepeatTimeUnit;
+	private Integer preNoticeRepeatTimeRange;
+	private Integer preNoticeCount;
+
 	public String getNoticeContent() {
 		return noticeContent;
 	}
@@ -73,11 +78,37 @@ public class AddCalendarNoticeDTO {
 		this.repeatTimeRange = repeatTimeRange;
 	}
 
+	public Integer getPreNoticeRepeatTimeUnit() {
+		return preNoticeRepeatTimeUnit;
+	}
+
+	public void setPreNoticeRepeatTimeUnit(Integer preNoticeRepeatTimeUnit) {
+		this.preNoticeRepeatTimeUnit = preNoticeRepeatTimeUnit;
+	}
+
+	public Integer getPreNoticeRepeatTimeRange() {
+		return preNoticeRepeatTimeRange;
+	}
+
+	public void setPreNoticeRepeatTimeRange(Integer preNoticeRepeatTimeRange) {
+		this.preNoticeRepeatTimeRange = preNoticeRepeatTimeRange;
+	}
+
+	public Integer getPreNoticeCount() {
+		return preNoticeCount;
+	}
+
+	public void setPreNoticeCount(Integer preNoticeCount) {
+		this.preNoticeCount = preNoticeCount;
+	}
+
 	@Override
 	public String toString() {
-		return "AddCalendarNoticeDTO [noticeContent=" + noticeContent + ", noticeTime=" + noticeTime + ", needRepeat="
-				+ needRepeat + ", isLunarNotice=" + isLunarNotice + ", repeatTimeUnit=" + repeatTimeUnit
-				+ ", repeatTimeRange=" + repeatTimeRange + "]";
+		return "AddCalendarNoticeDTO [noticeContent=" + noticeContent + ", noticeTime=" + noticeTime + ", validTime="
+				+ validTime + ", needRepeat=" + needRepeat + ", isLunarNotice=" + isLunarNotice + ", repeatTimeUnit="
+				+ repeatTimeUnit + ", repeatTimeRange=" + repeatTimeRange + ", preNoticeRepeatTimeUnit="
+				+ preNoticeRepeatTimeUnit + ", preNoticeRepeatTimeRange=" + preNoticeRepeatTimeRange
+				+ ", preNoticeCount=" + preNoticeCount + "]";
 	}
 
 }

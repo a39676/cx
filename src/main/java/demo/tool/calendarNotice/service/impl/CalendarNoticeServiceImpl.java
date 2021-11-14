@@ -2,11 +2,13 @@ package demo.tool.calendarNotice.service.impl;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.TimeUnitType;
@@ -36,13 +38,22 @@ public class CalendarNoticeServiceImpl extends CommonService implements Calendar
 	private TelegramCalendarNoticeMessageAckProducer telegramMessageAckProducer;
 
 	@Override
+	public ModelAndView getManagerView() {
+		ModelAndView v  = new ModelAndView("toolJSP/CalendarNoticeSettingManager");
+		
+		List<TimeUnitType> timeUnitTypeList = Arrays.asList(TimeUnitType.year, TimeUnitType.month, TimeUnitType.week, TimeUnitType.day, TimeUnitType.hour, TimeUnitType.minute);
+		v.addObject("timeUnitTypeList", timeUnitTypeList);
+		
+		List<CalendarNotice> noticeList = findNotices();
+		v.addObject("noticeList", noticeList);
+		return v;
+	}
+	
+	@Override
 	public CommonResult addCalendarNotice(AddCalendarNoticeDTO dto) {
-		CommonResult r = validDTO(dto);
+		CommonResult r = validAndSimpleFixDTO(dto);
 		if (r.isFail()) {
 			return r;
-		}
-		if (dto.getIsLunarNotice()) {
-			dto = handleLunarDateTrans(dto);
 		}
 
 		long newNoticeId = snowFlake.getNextId();
@@ -72,7 +83,8 @@ public class CalendarNoticeServiceImpl extends CommonService implements Calendar
 		po.setValidTime(dto.getNoticeTime());
 		po.setRepeatTimeRange(dto.getPreNoticeRepeatTimeRange());
 		po.setRepeatTimeUnit(dto.getPreNoticeRepeatTimeUnit());
-
+		po.setRepeatCount(dto.getPreNoticeCount());
+		
 		TimeUnitType timeUnitType = TimeUnitType.getType(dto.getPreNoticeRepeatTimeUnit());
 		po.setNoticeTime(getPreNoticeTime(dto.getNoticeTime(), timeUnitType, dto.getPreNoticeRepeatTimeRange(),
 				dto.getPreNoticeCount()));
@@ -80,19 +92,20 @@ public class CalendarNoticeServiceImpl extends CommonService implements Calendar
 		preNoticeMapper.insertSelective(po);
 	}
 
-	private CommonResult validDTO(AddCalendarNoticeDTO dto) {
+	private CommonResult validAndSimpleFixDTO(AddCalendarNoticeDTO dto) {
 		CommonResult r = new CommonResult();
 		if (dto.getNeedRepeat()) {
 			if (dto.getRepeatTimeUnit() == null || dto.getRepeatTimeRange() == null) {
 				r.addMessage("If need repeat, please fill time unit and time range");
-			}
-			if (dto.getRepeatTimeRange() <= 0) {
-				r.addMessage("Time range must >= 0");
-			}
-			TimeUnitType timeUnitType = TimeUnitType.getType(dto.getRepeatTimeUnit());
-			if (timeUnitType == null || timeUnitType.equals(TimeUnitType.nanoSecond)
-					|| timeUnitType.equals(TimeUnitType.milliSecond)) {
-				r.addMessage("Invalid time unit");
+			} else {
+				if (dto.getRepeatTimeRange() <= 0) {
+					r.addMessage("Time range must >= 0");
+				}
+				TimeUnitType timeUnitType = TimeUnitType.getType(dto.getRepeatTimeUnit());
+				if (timeUnitType == null || timeUnitType.equals(TimeUnitType.nanoSecond)
+						|| timeUnitType.equals(TimeUnitType.milliSecond)) {
+					r.addMessage("Invalid time unit");
+				}
 			}
 		}
 
@@ -108,25 +121,22 @@ public class CalendarNoticeServiceImpl extends CommonService implements Calendar
 
 		if (dto.getIsLunarNotice()) {
 			Lunar lunarTargetDay = new Lunar();
-			lunarTargetDay.setLunarYear(dto.getNoticeTime().getYear());
-			lunarTargetDay.setLunarMonth(dto.getNoticeTime().getMonthValue());
-			lunarTargetDay.setLunarDay(dto.getNoticeTime().getDayOfMonth());
-			LocalDateTime targetDay = localDateTimeHandler.toLocalDateTime(lunarTargetDay);
-			LocalTime noticeTime = LocalTime.of(dto.getNoticeTime().getHour(), dto.getNoticeTime().getMinute(),
-					dto.getNoticeTime().getSecond());
+			lunarTargetDay.setLunarYear(dto.getLunarNoticeTime().getYear());
+			lunarTargetDay.setLunarMonth(dto.getLunarNoticeTime().getMonthValue());
+			lunarTargetDay.setLunarDay(dto.getLunarNoticeTime().getDayOfMonth());
+			LocalDateTime targetDayTime = localDateTimeHandler.toLocalDateTime(lunarTargetDay);
+			LocalTime noticeTime = LocalTime.of(dto.getLunarNoticeTime().getHour(), dto.getLunarNoticeTime().getMinute(),
+					dto.getLunarNoticeTime().getSecond());
+			targetDayTime.withHour(noticeTime.getHour()).withMinute(noticeTime.getMinute()).withSecond(noticeTime.getSecond());
 
 			if (dto.getNeedRepeat()) {
 				TimeUnitType timeUnitType = TimeUnitType.getType(dto.getRepeatTimeUnit());
-				if (timeUnitType == null || timeUnitType.equals(TimeUnitType.nanoSecond)
-						|| timeUnitType.equals(TimeUnitType.milliSecond) || timeUnitType.equals(TimeUnitType.second)
-						|| timeUnitType.equals(TimeUnitType.minute) || timeUnitType.equals(TimeUnitType.hour)) {
+				if (timeUnitType == null || timeUnitType.getCode() < TimeUnitType.day.getCode()) {
 					r.addMessage("Invalid time unit for lunar calendar notice");
 
 				} else {
-					LocalDateTime now = LocalDateTime.now();
-					Lunar nextLunarDate = null;
-					if (targetDay.isBefore(now)) {
-						lunarTargetDay = getNextValidLunarDate(nextLunarDate, timeUnitType, dto.getRepeatTimeRange());
+					if (targetDayTime.isBefore(LocalDateTime.now())) {
+						lunarTargetDay = getNextValidLunarDate(lunarTargetDay, timeUnitType, dto.getRepeatTimeRange());
 					}
 					dto.setNoticeTime(
 							localDateTimeHandler.toLocalDateTime(lunarTargetDay).withHour(noticeTime.getHour())
@@ -134,46 +144,32 @@ public class CalendarNoticeServiceImpl extends CommonService implements Calendar
 				}
 
 			} else {
-				if (targetDay.isBefore(LocalDateTime.now())) {
+				if (targetDayTime.isBefore(LocalDateTime.now())) {
 					r.addMessage("Can NOT set a notifications in the past");
+				} else {
+					dto.setNoticeTime(targetDayTime);
 				}
 			}
 
 			if (dto.getPreNoticeRepeatTimeRange() != null || dto.getPreNoticeRepeatTimeUnit() != null) {
 				if (dto.getPreNoticeRepeatTimeRange() == null || dto.getPreNoticeRepeatTimeUnit() == null) {
 					r.addMessage("Please set pre notice repeat time range and time unit, if set pre notice");
-				}
-				if (dto.getPreNoticeRepeatTimeUnit() < TimeUnitType.minute.getCode()) {
-					r.addMessage("Repettition period must be greater than 1 minute");
-				}
-				if (dto.getPreNoticeRepeatTimeRange() < 1) {
-					dto.setPreNoticeRepeatTimeRange(1);
-				}
-				if (dto.getPreNoticeCount() == null || dto.getPreNoticeCount() < 1) {
-					dto.setPreNoticeCount(1);
+				} else {
+					if (dto.getPreNoticeRepeatTimeUnit() < TimeUnitType.minute.getCode()) {
+						r.addMessage("Repettition period must be greater than 1 minute");
+					}
+					if (dto.getPreNoticeRepeatTimeRange() < 1) {
+						r.addMessage("Repettition range must be greater than 1 minute");
+					}
+					if (dto.getPreNoticeCount() == null || dto.getPreNoticeCount() < 1) {
+						r.addMessage("Repettition count must be greater than 1 minute");
+					}
 				}
 			}
 		}
 
+		r.setSuccess(StringUtils.isBlank(r.getMessage()));
 		return r;
-	}
-
-	private AddCalendarNoticeDTO handleLunarDateTrans(AddCalendarNoticeDTO dto) {
-
-		LocalDateTime now = LocalDateTime.now();
-		TimeUnitType timeUnitType = TimeUnitType.getType(dto.getRepeatTimeUnit());
-		Lunar lunarTargetDay = localDateTimeHandler.toLunar(dto.getNoticeTime());
-		LocalTime noticeTime = LocalTime.of(dto.getNoticeTime().getHour(), dto.getNoticeTime().getMinute(),
-				dto.getNoticeTime().getSecond());
-
-		LocalDateTime targetDay = dto.getNoticeTime();
-
-		if (targetDay.isBefore(now)) {
-			lunarTargetDay = getNextValidLunarDate(lunarTargetDay, timeUnitType, dto.getRepeatTimeRange());
-		}
-		dto.setNoticeTime(localDateTimeHandler.toLocalDateTime(lunarTargetDay).withHour(noticeTime.getHour())
-				.withMinute(noticeTime.getMinute()).withSecond(noticeTime.getSecond()));
-		return dto;
 	}
 
 	private Lunar getNextLunarDate(Lunar lunar, TimeUnitType timeUnitType, Integer timeRange) {

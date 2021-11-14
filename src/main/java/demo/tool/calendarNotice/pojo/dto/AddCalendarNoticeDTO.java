@@ -11,7 +11,9 @@ public class AddCalendarNoticeDTO {
 	private LocalDateTime validTime;
 
 	private Boolean needRepeat = false;
+
 	private Boolean isLunarNotice = false;
+	private LocalDateTime lunarNoticeTime;
 
 	/** {@link TimeUnitType} */
 	private Integer repeatTimeUnit;
@@ -62,6 +64,14 @@ public class AddCalendarNoticeDTO {
 		this.isLunarNotice = isLunarNotice;
 	}
 
+	public LocalDateTime getLunarNoticeTime() {
+		return lunarNoticeTime;
+	}
+
+	public void setLunarNoticeTime(LocalDateTime lunarNoticeTime) {
+		this.lunarNoticeTime = lunarNoticeTime;
+	}
+
 	public Integer getRepeatTimeUnit() {
 		return repeatTimeUnit;
 	}
@@ -105,10 +115,10 @@ public class AddCalendarNoticeDTO {
 	@Override
 	public String toString() {
 		return "AddCalendarNoticeDTO [noticeContent=" + noticeContent + ", noticeTime=" + noticeTime + ", validTime="
-				+ validTime + ", needRepeat=" + needRepeat + ", isLunarNotice=" + isLunarNotice + ", repeatTimeUnit="
-				+ repeatTimeUnit + ", repeatTimeRange=" + repeatTimeRange + ", preNoticeRepeatTimeUnit="
-				+ preNoticeRepeatTimeUnit + ", preNoticeRepeatTimeRange=" + preNoticeRepeatTimeRange
-				+ ", preNoticeCount=" + preNoticeCount + "]";
+				+ validTime + ", needRepeat=" + needRepeat + ", isLunarNotice=" + isLunarNotice + ", lunarNoticeTime="
+				+ lunarNoticeTime + ", repeatTimeUnit=" + repeatTimeUnit + ", repeatTimeRange=" + repeatTimeRange
+				+ ", preNoticeRepeatTimeUnit=" + preNoticeRepeatTimeUnit + ", preNoticeRepeatTimeRange="
+				+ preNoticeRepeatTimeRange + ", preNoticeCount=" + preNoticeCount + "]";
 	}
 
 }

@@ -13,8 +13,6 @@ public class ArticleLongSummary {
 
     private LocalDateTime createTime;
 
-    private String privateKey;
-
     public Long getArticleId() {
         return articleId;
     }
@@ -53,13 +51,5 @@ public class ArticleLongSummary {
 
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
-    }
-
-    public String getPrivateKey() {
-        return privateKey;
-    }
-
-    public void setPrivateKey(String privateKey) {
-        this.privateKey = privateKey == null ? null : privateKey.trim();
     }
 }

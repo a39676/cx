@@ -1,12 +1,8 @@
 package demo.article.article.service.impl;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDateTime;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import demo.article.article.mapper.ArticleHotMapper;
 import demo.article.article.mapper.ArticleLongMapper;
 import demo.article.article.mapper.ArticleLongReviewMapper;
-import demo.article.article.mapper.ArticleLongSummaryMapper;
-import demo.article.article.pojo.param.controllerParam.BatchUpdatePrimaryKeyParam;
 import demo.article.article.pojo.param.controllerParam.ChangeChannelParam;
 import demo.article.article.pojo.param.controllerParam.InsertNewReviewRecordParam;
 import demo.article.article.pojo.param.controllerParam.ReviewArticleLongParam;
@@ -25,7 +19,6 @@ import demo.article.article.pojo.param.controllerParam.SetArticleHotParam;
 import demo.article.article.pojo.param.mapperParam.UpdateArticleLongReviewStatuParam;
 import demo.article.article.pojo.po.ArticleHot;
 import demo.article.article.pojo.po.ArticleLong;
-import demo.article.article.pojo.po.ArticleLongSummary;
 import demo.article.article.pojo.type.ArticleReviewType;
 import demo.article.article.service.ArticleAdminService;
 import demo.common.pojo.result.CommonResultCX;
@@ -37,60 +30,10 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	@Autowired
 	private ArticleLongMapper articleLongMapper;
 	@Autowired
-	private ArticleLongSummaryMapper articleLongSummaryMapper;
-	@Autowired
 	private ArticleLongReviewMapper articleLongReviewMapper;
 	@Autowired
 	private ArticleHotMapper articleHotMapper;
 	
-	@Override
-	public CommonResultCX batchUpdatePrivateKey(BatchUpdatePrimaryKeyParam param) {
-		CommonResultCX result = new CommonResultCX();
-		if (param.getStartTime() == null && param.getEndTime() == null) {
-			param.setEndTime(new Date());
-		}
-
-		if (param.getStartTime() != null && param.getEndTime() != null
-				&& (param.getStartTime().after(param.getEndTime())
-						|| param.getStartTime().equals(param.getEndTime()))) {
-			result.fillWithResult(ResultTypeCX.errorParam);
-			return result;
-		}
-		
-		List<Long> articleLongIds = articleLongSummaryMapper.findArticleLongSummaryListIds(param);
-		if(articleLongIds == null || articleLongIds.size() < 1) {
-			result.fillWithResult(ResultTypeCX.errorParam);
-			return result;
-		}
-		
-		ArticleLongSummary tmpPo = null;
-		List<ArticleLongSummary> summarys = new ArrayList<ArticleLongSummary>();
-		String tmpPrivateKey = null;
-		for(Long id : articleLongIds) {
-			try {
-				tmpPrivateKey = URLEncoder.encode(encryptId(id), StandardCharsets.UTF_8.toString());
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-			if(tmpPrivateKey == null) {
-				continue;
-			}
-			tmpPo = new ArticleLongSummary();
-			tmpPo.setArticleId(id);
-			tmpPo.setPrivateKey(tmpPrivateKey);
-			summarys.add(tmpPo);
-		}
-		
-		Integer updateCount = articleLongSummaryMapper.batchUpdatePrivateKey(summarys);
-		if(updateCount == null || updateCount < 1) {
-			result.fillWithResult(ResultTypeCX.errorParam);
-			return result;
-		}
-		
-		result.normalSuccess();
-		result.setMessage(updateCount.toString());
-		return result;
-	}
 	
 	@Override
 	public CommonResultCX handelReviewArticle(ReviewArticleLongParam param) throws Exception {
@@ -294,9 +237,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		newArticleHot.setArticleId(oldArticleLong.getArticleId());
 		newArticleHot.setChannelId(oldArticleLong.getChannelId());
 		newArticleHot.setHotLevel(controllerParam.getHotLevel());
-		Long nowMS = System.currentTimeMillis();
-		nowMS = nowMS + (controllerParam.getHotMinutes() * 60 * 1000);
-		newArticleHot.setValidTime(new Date(nowMS));
+		newArticleHot.setValidTime(LocalDateTime.now().plusMinutes(controllerParam.getHotMinutes()));
 		
 		articleHotMapper.insertNew(newArticleHot);
 		

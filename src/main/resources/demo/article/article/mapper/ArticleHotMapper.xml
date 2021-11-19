@@ -1,25 +1,113 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="demo.article.article.mapper.ArticleHotMapper">
-
   <resultMap id="BaseResultMap" type="demo.article.article.pojo.po.ArticleHot">
-    <result column="article_id" jdbcType="BIGINT" property="articleId" />
+    <id column="article_id" jdbcType="BIGINT" property="articleId" />
     <result column="channel_id" jdbcType="BIGINT" property="channelId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="valid_time" jdbcType="TIMESTAMP" property="validTime" />
     <result column="hot_level" jdbcType="INTEGER" property="hotLevel" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
   </resultMap>
-
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    article_id, channel_id, create_time, valid_time, hot_level, is_delete
+  </sql>
+  <select id="selectByExample" parameterType="demo.article.article.pojo.po.ArticleHotExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from article_hot
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from article_hot
+    where article_id = #{articleId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from article_hot
+    where article_id = #{articleId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.article.article.pojo.po.ArticleHotExample">
+    delete from article_hot
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
   <insert id="insert" parameterType="demo.article.article.pojo.po.ArticleHot">
-    insert into article_hot (article_id, channel_id, create_time, 
+    insert into article_hot (article_id, channel_id, create_time,
       valid_time, hot_level, is_delete
       )
-    values (#{articleId,jdbcType=BIGINT}, #{channelId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+    values (#{articleId,jdbcType=BIGINT}, #{channelId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP},
       #{validTime,jdbcType=TIMESTAMP}, #{hotLevel,jdbcType=INTEGER}, #{isDelete,jdbcType=BIT}
       )
   </insert>
-
   <insert id="insertSelective" parameterType="demo.article.article.pojo.po.ArticleHot">
     insert into article_hot
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -63,6 +151,94 @@
       </if>
     </trim>
   </insert>
+  <select id="countByExample" parameterType="demo.article.article.pojo.po.ArticleHotExample" resultType="java.lang.Long">
+    select count(*) from article_hot
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update article_hot
+    <set>
+      <if test="record.articleId != null">
+        article_id = #{record.articleId,jdbcType=BIGINT},
+      </if>
+      <if test="record.channelId != null">
+        channel_id = #{record.channelId,jdbcType=BIGINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.validTime != null">
+        valid_time = #{record.validTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.hotLevel != null">
+        hot_level = #{record.hotLevel,jdbcType=INTEGER},
+      </if>
+      <if test="record.isDelete != null">
+        is_delete = #{record.isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update article_hot
+    set article_id = #{record.articleId,jdbcType=BIGINT},
+      channel_id = #{record.channelId,jdbcType=BIGINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      valid_time = #{record.validTime,jdbcType=TIMESTAMP},
+      hot_level = #{record.hotLevel,jdbcType=INTEGER},
+      is_delete = #{record.isDelete,jdbcType=BIT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.article.article.pojo.po.ArticleHot">
+    update article_hot
+    <set>
+      <if test="channelId != null">
+        channel_id = #{channelId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="validTime != null">
+        valid_time = #{validTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hotLevel != null">
+        hot_level = #{hotLevel,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    where article_id = #{articleId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="demo.article.article.pojo.po.ArticleHot">
+    update article_hot
+    set channel_id = #{channelId,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      valid_time = #{validTime,jdbcType=TIMESTAMP},
+      hot_level = #{hotLevel,jdbcType=INTEGER},
+      is_delete = #{isDelete,jdbcType=BIT}
+    where article_id = #{articleId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="demo.article.article.pojo.po.ArticleHotExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from article_hot
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
 
   <insert id="insertNew">
     insert into 
@@ -82,43 +258,4 @@
         , hot_level = #{hotLevel}
       </if>
   </insert>
-
-  <update id="batchUpdateDeleteMark">
-    update article_hot set is_delete = true where article_id in 
-    <foreach item="articleId" index="index" collection="list"
-      open="(" separator="," close=")">
-      #{articleId}
-    </foreach>
-  </update>
-
-  <update id="updateDeleteMark">
-    update article_hot set is_delete = true where article_id = #{articleId}
-  </update>
-
-  <delete id="deleteArticleHotByDeleteMark">
-    delete from article_hot where is_delete = true
-  </delete>
-
-  <select id="findInvalidArticleHotId" resultType="Long">
-    select
-      article_id
-    from
-      article_hot as ah
-    where
-      ah.valid_time &lt; now()
-      and ah.is_delete = false
-  </select>
-
-  <select id="findArticleHotOrderByHotLevel" resultMap="BaseResultMap">
-    select
-      *
-    from
-      article_hot as ah
-    where
-      ah.is_delete = false
-      and valid_time &gt; now()
-      and channel_id = #{channelId}
-    order by ah.hot_level desc
-  </select>
-
 </mapper>

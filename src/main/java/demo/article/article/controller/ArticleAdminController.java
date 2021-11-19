@@ -14,11 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.pojo.constant.ArticleAdminUrlConstant;
 import demo.article.article.pojo.dto.ArticleChannelKeyHostnameIdDTO;
 import demo.article.article.pojo.dto.ArticleChannelManagerDTO;
-import demo.article.article.pojo.param.controllerParam.BatchUpdatePrimaryKeyParam;
 import demo.article.article.pojo.param.controllerParam.ChangeChannelParam;
 import demo.article.article.pojo.param.controllerParam.ReviewArticleLongParam;
 import demo.article.article.pojo.param.controllerParam.SetArticleHotParam;
@@ -43,12 +41,6 @@ public class ArticleAdminController extends CommonController {
 	@ResponseBody
 	public List<ArticleChannelVO> findArticleChannel() {
 		return channelService.findArticleChannel();
-	}
-	
-	@PostMapping(value = ArticleAdminUrlConstant.batchUpdatePrivateKey)
-	@ResponseBody
-	public CommonResult batchUpdatePrivateKey(@RequestBody BatchUpdatePrimaryKeyParam param) {
-		return articleAdminService.batchUpdatePrivateKey(param);
 	}
 	
 	@PostMapping(value = ArticleAdminUrlConstant.passArticle)

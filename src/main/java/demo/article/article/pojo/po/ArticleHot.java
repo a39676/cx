@@ -1,15 +1,15 @@
 package demo.article.article.pojo.po;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
-public class ArticleHot implements Comparable<ArticleHot>{
+public class ArticleHot {
     private Long articleId;
 
     private Long channelId;
 
-    private Date createTime;
+    private LocalDateTime createTime;
 
-    private Date validTime;
+    private LocalDateTime validTime;
 
     private Integer hotLevel;
 
@@ -31,19 +31,19 @@ public class ArticleHot implements Comparable<ArticleHot>{
         this.channelId = channelId;
     }
 
-    public Date getCreateTime() {
+    public LocalDateTime getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
     }
 
-    public Date getValidTime() {
+    public LocalDateTime getValidTime() {
         return validTime;
     }
 
-    public void setValidTime(Date validTime) {
+    public void setValidTime(LocalDateTime validTime) {
         this.validTime = validTime;
     }
 
@@ -62,24 +62,4 @@ public class ArticleHot implements Comparable<ArticleHot>{
     public void setIsDelete(Boolean isDelete) {
         this.isDelete = isDelete;
     }
-
-	@Override
-	public int compareTo(ArticleHot o) {
-		if(this.hotLevel == null || o.hotLevel == null) {
-			if(this.hotLevel == null && o.hotLevel == null) {
-				return 0;
-			} else if(this.hotLevel == null) {
-				return -1;
-			} else {
-				return 1;
-			}
-		} else {
-			if(this.hotLevel > o.hotLevel) {
-				return 1;
-			} else if(this.hotLevel < o.hotLevel) {
-				return -1;
-			} 
-		}
-		return 0;
-	}
 }

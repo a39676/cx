@@ -77,7 +77,6 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			return 0;
 		}
 		ArticleLongSummary als = new ArticleLongSummary();
-		als.setPrivateKey(privateKey);
 		als.setUserId(userId);
 		als.setArticleId(articleId);
 		als.setArticleTitle(title);
@@ -172,7 +171,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		
 		outputList = new ArrayList<ArticleLongSummaryVO>();
 		for(ArticleLongSummaryBO summaryBO : summaryList) {
-			if(StringUtils.isBlank(summaryBO.getFilePath()) || summaryBO.getCreateTime() == null || StringUtils.isBlank(summaryBO.getPrivateKey())) {
+			if(StringUtils.isBlank(summaryBO.getFilePath()) || summaryBO.getCreateTime() == null) {
 				continue;
 			}
 			tmpVO = new ArticleLongSummaryVO();
@@ -183,7 +182,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			tmpVO.setFirstLine(lines.get(0));
 			tmpVO.setCreateDateString(sdf.format(summaryBO.getCreateTime()));
 			tmpVO.setCreateDateDescription(localDateTimeHandler.dateToStr(summaryBO.getCreateTime()));
-			tmpVO.setPrivateKey(summaryBO.getPrivateKey());
+			tmpVO.setPrivateKey(encryptId(summaryBO.getArticleId()));
 			tmpVO.setEvaluationMap(articleEvaluationStatisticsMap.get(summaryBO.getArticleId()).getEvaluationCodeAndCount());
 			if(articleHasCommentNotReviewIdList != null && articleHasCommentNotReviewIdList.size() > 0 && articleHasCommentNotReviewIdList.contains(summaryBO.getArticleId())) {
 				tmpVO.setHasCommentNotReview(true);
@@ -222,7 +221,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		
 		outputList = new ArrayList<ArticleLongSummaryVOV3>();
 		for(ArticleLongSummaryBO summaryBO : summaryList) {
-			if(StringUtils.isBlank(summaryBO.getFilePath()) || summaryBO.getCreateTime() == null || StringUtils.isBlank(summaryBO.getPrivateKey())) {
+			if(StringUtils.isBlank(summaryBO.getFilePath()) || summaryBO.getCreateTime() == null) {
 				continue;
 			}
 			tmpVO = new ArticleLongSummaryVOV3();
@@ -448,77 +447,4 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		return result;
 	}
 	
-	public FindArticleLongSummaryListResultV3 summaryListByChannelIdV5(FindArticleLongSummaryListDTO param, HttpServletRequest request) {
-		FindArticleLongSummaryListResultV3 result = articleLongSummaryListByChannelIdV5(param, request);
-		if(param.getIsHot()) {
-			FindArticleLongSummaryListResultV3 hotResult = articleLongSummaryHotListByChannelIdV3(param, request);
-			List<ArticleLongSummaryVOV3> tmpVOList = hotResult.getArticleLongSummaryVOList();
-			if(tmpVOList != null && tmpVOList.size() > 0) {
-				tmpVOList.addAll(result.getArticleLongSummaryVOList());
-				result.setArticleLongSummaryVOList(tmpVOList);
-			}
-		}
-		return result;
-	}
-	
-	private FindArticleLongSummaryListResultV3 articleLongSummaryListByChannelIdV5(FindArticleLongSummaryListDTO dto, HttpServletRequest request) {
-		/*
-		 * 此处为非置顶部分
-		 * 应该将置顶/非置顶文章分开处理
-		 * 
-		 * 有设置限制只可浏览某时点之后的文章
-		 */
-		FindArticleLongSummaryListResultV3 result = new FindArticleLongSummaryListResultV3();
-		findArticleLongSummaryListParamPreHandle(dto, request);
-		
-		if(dto.getEndTime() != null) {
-			dto.setEndTime(dto.getEndTime().minusSeconds(1L));
-		}
-		
-		/* 置限制只可浏览某时点之后的文章 */
-		boolean isBigUser = isBigUser();
-		if(!isBigUser) {
-			Long maxReadingMonth = articleConstantService.getNormalUserMaxReadingMonth();
-			LocalDateTime earliestStartTime = LocalDateTime.now().minusMonths(maxReadingMonth);
-			if(dto.getStartTime() == null || dto.getStartTime().isBefore(earliestStartTime)) {
-				dto.setStartTime(earliestStartTime);
-			}
-		}
-		
-		Long channelId = dto.getArticleChannelId();
-		if(channelId == null && StringUtils.isBlank(dto.getTitle())) {
-			result.fillWithResult(ResultTypeCX.errorParam);
-			return result;
-		}
-		
-		result.setChannelId(channelId);
-		
-		FindArticleLongSummaryListMapperDTO findSummaryBOListDTO = buildFindArticleLongSummaryListMapperDTO(dto, request);
-		List<ArticleLongSummaryBO> summaryBOList = findArticleLongSummaryList(findSummaryBOListDTO);
-		
-		List<Long> articleIdList = new ArrayList<Long>();
-		List<Long> articleHasCommentNotReviewIdList = null;
-		summaryBOList.stream().forEach(bo -> articleIdList.add(bo.getArticleId()));
-		List<ArticleCommentCount> commentCountList = articleCommentController.findCommentCountByArticleId(articleIdList);
-	
-		List<ArticleViewCount> viewCountList = articleViewService.findArticleViewCountByArticleId(articleIdList);
-		if(isBigUser && articleIdList.size() > 0) {
-			articleHasCommentNotReviewIdList = articleCommentAdminController.findArticleIdWithCommentWaitingForReview(articleIdList);
-		} else {
-			articleHasCommentNotReviewIdList = new ArrayList<Long>();
-		}
-		
-		List<ArticleLongSummaryVOV3> summaryVOList 
-			= fillArticleSummaryContentV3(
-//					dto.getIsHot(),
-					false,
-					summaryBOList, 
-					articleHasCommentNotReviewIdList, 
-					commentCountList,
-					viewCountList);
-		
-		result.setArticleLongSummaryVOList(summaryVOList);
-		
-		return result;
-	}
 }

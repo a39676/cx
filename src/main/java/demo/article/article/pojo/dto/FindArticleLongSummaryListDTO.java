@@ -13,8 +13,6 @@ import toolPack.dateTimeHandle.DateHandler;
 @ApiModel(value = "查询文章缩写标题参数", description = "")
 public class FindArticleLongSummaryListDTO {
 
-	@ApiModelProperty(value = "频道名")
-	private String articleChannelName;
 	@ApiModelProperty(value = "频道id")
 	private Long articleChannelId;
 	@ApiModelProperty(value = "title")
@@ -107,14 +105,6 @@ public class FindArticleLongSummaryListDTO {
 		this.limit = limit;
 	}
 
-	public String getArticleChannelName() {
-		return articleChannelName;
-	}
-
-	public void setArticleChannelName(String articleChannelName) {
-		this.articleChannelName = articleChannelName;
-	}
-
 	public Long getArticleChannelId() {
 		return articleChannelId;
 	}
@@ -149,11 +139,10 @@ public class FindArticleLongSummaryListDTO {
 
 	@Override
 	public String toString() {
-		return "FindArticleLongSummaryListDTO [articleChannelName=" + articleChannelName + ", articleChannelId="
-				+ articleChannelId + ", title=" + title + ", userId=" + userId + ", startTime=" + startTime
-				+ ", endTime=" + endTime + ", isDelete=" + isDelete + ", isPass=" + isPass + ", isEdited=" + isEdited
-				+ ", isReject=" + isReject + ", limit=" + limit + ", desc=" + desc + ", isHot=" + isHot + ", vcode="
-				+ vcode + "]";
+		return "FindArticleLongSummaryListDTO [articleChannelId=" + articleChannelId + ", title=" + title + ", userId="
+				+ userId + ", startTime=" + startTime + ", endTime=" + endTime + ", isDelete=" + isDelete + ", isPass="
+				+ isPass + ", isEdited=" + isEdited + ", isReject=" + isReject + ", limit=" + limit + ", desc=" + desc
+				+ ", isHot=" + isHot + ", vcode=" + vcode + "]";
 	}
 
 }

@@ -7,7 +7,6 @@
     <result column="article_title" jdbcType="VARCHAR" property="articleTitle" />
     <result column="file_path" jdbcType="VARCHAR" property="filePath" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="private_key" jdbcType="CHAR" property="privateKey" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -68,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    article_id, user_id, article_title, file_path, create_time, private_key
+    article_id, user_id, article_title, file_path, create_time
   </sql>
   <select id="selectByExample" parameterType="demo.article.article.pojo.po.ArticleLongSummaryExample" resultMap="BaseResultMap">
     select
@@ -85,7 +84,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from article_long_summary
     where article_id = #{articleId,jdbcType=BIGINT}
@@ -101,12 +100,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="demo.article.article.pojo.po.ArticleLongSummary">
-    insert into article_long_summary (article_id, user_id, article_title, 
-      file_path, create_time, private_key
-      )
-    values (#{articleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{articleTitle,jdbcType=VARCHAR}, 
-      #{filePath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{privateKey,jdbcType=CHAR}
-      )
+    insert into article_long_summary (article_id, user_id, article_title,
+      file_path, create_time)
+    values (#{articleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{articleTitle,jdbcType=VARCHAR},
+      #{filePath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="demo.article.article.pojo.po.ArticleLongSummary">
     insert into article_long_summary
@@ -126,9 +123,6 @@
       <if test="createTime != null">
         create_time,
       </if>
-      <if test="privateKey != null">
-        private_key,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="articleId != null">
@@ -145,9 +139,6 @@
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="privateKey != null">
-        #{privateKey,jdbcType=CHAR},
       </if>
     </trim>
   </insert>
@@ -175,9 +166,6 @@
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.privateKey != null">
-        private_key = #{record.privateKey,jdbcType=CHAR},
-      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -189,8 +177,7 @@
       user_id = #{record.userId,jdbcType=BIGINT},
       article_title = #{record.articleTitle,jdbcType=VARCHAR},
       file_path = #{record.filePath,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      private_key = #{record.privateKey,jdbcType=CHAR}
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -210,9 +197,6 @@
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="privateKey != null">
-        private_key = #{privateKey,jdbcType=CHAR},
-      </if>
     </set>
     where article_id = #{articleId,jdbcType=BIGINT}
   </update>
@@ -221,8 +205,7 @@
     set user_id = #{userId,jdbcType=BIGINT},
       article_title = #{articleTitle,jdbcType=VARCHAR},
       file_path = #{filePath,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      private_key = #{privateKey,jdbcType=CHAR}
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where article_id = #{articleId,jdbcType=BIGINT}
   </update>
   <select id="selectByExampleWithRowbounds" parameterType="demo.article.article.pojo.po.ArticleLongSummaryExample" resultMap="BaseResultMap">
@@ -240,17 +223,15 @@
     </if>
   </select>
 
-  
   <sql id="findArticleLongSummaryPrefix">
     select
       al.article_title as articleTitle,
       al.create_time as createTime,
       als.article_id as articleId,
-      als.private_key as privateKey,
       als.user_id,
       als.file_path as filePath
 
-    from 
+    from
       article_long as al
 
       left join article_long_summary as als
@@ -352,18 +333,6 @@
 
     order by ah.hot_level desc
   </select>
-  
-  <update id="batchUpdatePrivateKey">
-    <foreach item="summary" index="index" collection="list"
-      open="" separator=";" close="">
-      update 
-        article_long_summary
-      set
-        private_key = #{summary.privateKey}
-      where
-        article_id = #{summary.articleId}
-    </foreach>
-  </update>
 
   <select id="findArticleLongSummaryListIds" resultType="Long">
     select

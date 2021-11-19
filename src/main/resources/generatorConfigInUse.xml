@@ -34,7 +34,7 @@
         </javaTypeResolver>  
           
         <!-- 生成模型的包名和位置-->    
-        <javaModelGenerator targetPackage="demo.tool.calendarNotice.pojo.po" targetProject="cx">    
+        <javaModelGenerator targetPackage="demo.article.article.pojo.po" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
             <property name="trimStrings" value="true"/> 
             <!-- for MyBatis3 / MyBatis3Simple
@@ -45,18 +45,18 @@
         </javaModelGenerator>    
         
         <!-- 生成映射文件的包名和位置-->    
-        <sqlMapGenerator targetPackage="demo.tool.calendarNotice.mapper" targetProject="cx">    
+        <sqlMapGenerator targetPackage="demo.article.article.mapper" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
         </sqlMapGenerator>    
         
         <!-- 生成DAO的包名和位置-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.tool.calendarNotice.mapper" targetProject="cx">    
+        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.article.article.mapper" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="calendar_pre_notice">
-        	<property name="tableName" value="calendar_pre_notice"></property>
-        	<property name="domainObjectName" value="calendar_pre_notice"></property>
+        <table tableName="article_long_summary">
+        	<property name="tableName" value="article_long_summary"></property>
+        	<property name="domainObjectName" value="article_long_summary"></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

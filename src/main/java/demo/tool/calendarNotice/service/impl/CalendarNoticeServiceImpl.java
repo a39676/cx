@@ -17,6 +17,7 @@ import demo.tool.calendarNotice.mapper.CalendarNoticeMapper;
 import demo.tool.calendarNotice.mapper.CalendarPreNoticeMapper;
 import demo.tool.calendarNotice.mq.producer.TelegramCalendarNoticeMessageAckProducer;
 import demo.tool.calendarNotice.pojo.dto.AddCalendarNoticeDTO;
+import demo.tool.calendarNotice.pojo.dto.DeleteNoticeDTO;
 import demo.tool.calendarNotice.pojo.po.CalendarNotice;
 import demo.tool.calendarNotice.pojo.po.CalendarNoticeExample;
 import demo.tool.calendarNotice.pojo.po.CalendarPreNotice;
@@ -39,19 +40,20 @@ public class CalendarNoticeServiceImpl extends CommonService implements Calendar
 
 	@Override
 	public ModelAndView getManagerView() {
-		ModelAndView v  = new ModelAndView("toolJSP/CalendarNoticeSettingManager");
-		
-		List<TimeUnitType> timeUnitTypeList = Arrays.asList(TimeUnitType.year, TimeUnitType.month, TimeUnitType.week, TimeUnitType.day, TimeUnitType.hour, TimeUnitType.minute);
+		ModelAndView v = new ModelAndView("toolJSP/CalendarNoticeSettingManager");
+
+		List<TimeUnitType> timeUnitTypeList = Arrays.asList(TimeUnitType.year, TimeUnitType.month, TimeUnitType.week,
+				TimeUnitType.day, TimeUnitType.hour, TimeUnitType.minute);
 		v.addObject("timeUnitTypeList", timeUnitTypeList);
-		
+
 		List<CalendarNotice> noticeList = findNotices();
 		v.addObject("noticeList", noticeList);
 		return v;
 	}
-	
+
 	@Override
 	public CommonResult addCalendarNotice(AddCalendarNoticeDTO dto) {
-		CommonResult r = validAndSimpleFixDTO(dto);
+		CommonResult r = checkAddNoticeDtoAndSimpleFix(dto);
 		if (r.isFail()) {
 			return r;
 		}
@@ -84,7 +86,7 @@ public class CalendarNoticeServiceImpl extends CommonService implements Calendar
 		po.setRepeatTimeRange(dto.getPreNoticeRepeatTimeRange());
 		po.setRepeatTimeUnit(dto.getPreNoticeRepeatTimeUnit());
 		po.setRepeatCount(dto.getPreNoticeCount());
-		
+
 		TimeUnitType timeUnitType = TimeUnitType.getType(dto.getPreNoticeRepeatTimeUnit());
 		po.setNoticeTime(getPreNoticeTime(dto.getNoticeTime(), timeUnitType, dto.getPreNoticeRepeatTimeRange(),
 				dto.getPreNoticeCount()));
@@ -92,7 +94,7 @@ public class CalendarNoticeServiceImpl extends CommonService implements Calendar
 		preNoticeMapper.insertSelective(po);
 	}
 
-	private CommonResult validAndSimpleFixDTO(AddCalendarNoticeDTO dto) {
+	private CommonResult checkAddNoticeDtoAndSimpleFix(AddCalendarNoticeDTO dto) {
 		CommonResult r = new CommonResult();
 		if (dto.getNeedRepeat()) {
 			if (dto.getRepeatTimeUnit() == null || dto.getRepeatTimeRange() == null) {
@@ -125,9 +127,10 @@ public class CalendarNoticeServiceImpl extends CommonService implements Calendar
 			lunarTargetDay.setLunarMonth(dto.getLunarNoticeTime().getMonthValue());
 			lunarTargetDay.setLunarDay(dto.getLunarNoticeTime().getDayOfMonth());
 			LocalDateTime targetDayTime = localDateTimeHandler.toLocalDateTime(lunarTargetDay);
-			LocalTime noticeTime = LocalTime.of(dto.getLunarNoticeTime().getHour(), dto.getLunarNoticeTime().getMinute(),
-					dto.getLunarNoticeTime().getSecond());
-			targetDayTime.withHour(noticeTime.getHour()).withMinute(noticeTime.getMinute()).withSecond(noticeTime.getSecond());
+			LocalTime noticeTime = LocalTime.of(dto.getLunarNoticeTime().getHour(),
+					dto.getLunarNoticeTime().getMinute(), dto.getLunarNoticeTime().getSecond());
+			targetDayTime.withHour(noticeTime.getHour()).withMinute(noticeTime.getMinute())
+					.withSecond(noticeTime.getSecond());
 
 			if (dto.getNeedRepeat()) {
 				TimeUnitType timeUnitType = TimeUnitType.getType(dto.getRepeatTimeUnit());
@@ -323,7 +326,13 @@ public class CalendarNoticeServiceImpl extends CommonService implements Calendar
 			} else {
 				nextNoticeTime = getNextValidLocalDateTime(oldNoticeTime, timeUnitType, po.getRepeatTimeRange());
 			}
+
 			po.setNoticeTime(nextNoticeTime);
+
+			if (po.getValidTime() != null && nextNoticeTime.isAfter(po.getValidTime())) {
+				po.setIsDelete(true);
+			}
+
 			mapper.updateByPrimaryKeySelective(po);
 		} else {
 			po.setIsDelete(true);
@@ -369,5 +378,28 @@ public class CalendarNoticeServiceImpl extends CommonService implements Calendar
 			preNoticeMapper.updateByPrimaryKeySelective(preNoticePo);
 			return;
 		}
+	}
+
+	@Override
+	public CommonResult deleteNotice(DeleteNoticeDTO dto) {
+		CommonResult r = new CommonResult();
+
+		if (dto == null || dto.getId() == null) {
+			return r;
+		}
+
+		CalendarNotice noticePO = new CalendarNotice();
+		noticePO.setId(dto.getId());
+		noticePO.setIsDelete(true);
+		mapper.updateByPrimaryKeySelective(noticePO);
+
+		CalendarPreNotice preNoticePO = new CalendarPreNotice();
+		preNoticePO.setIsDelete(true);
+		CalendarPreNoticeExample preNoticeExample = new CalendarPreNoticeExample();
+		preNoticeExample.createCriteria().andBindNoticeIdEqualTo(dto.getId());
+		preNoticeMapper.updateByExampleSelective(preNoticePO, preNoticeExample);
+
+		r.setIsSuccess();
+		return r;
 	}
 }

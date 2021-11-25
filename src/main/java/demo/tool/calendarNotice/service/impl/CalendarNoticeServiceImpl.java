@@ -17,7 +17,8 @@ import demo.tool.calendarNotice.mapper.CalendarNoticeMapper;
 import demo.tool.calendarNotice.mapper.CalendarPreNoticeMapper;
 import demo.tool.calendarNotice.mq.producer.TelegramCalendarNoticeMessageAckProducer;
 import demo.tool.calendarNotice.pojo.dto.AddCalendarNoticeDTO;
-import demo.tool.calendarNotice.pojo.dto.DeleteNoticeDTO;
+import demo.tool.calendarNotice.pojo.dto.DeleteCalendarNoticeDTO;
+import demo.tool.calendarNotice.pojo.dto.EditCalendarNoticeDTO;
 import demo.tool.calendarNotice.pojo.po.CalendarNotice;
 import demo.tool.calendarNotice.pojo.po.CalendarNoticeExample;
 import demo.tool.calendarNotice.pojo.po.CalendarPreNotice;
@@ -381,7 +382,7 @@ public class CalendarNoticeServiceImpl extends CommonService implements Calendar
 	}
 
 	@Override
-	public CommonResult deleteNotice(DeleteNoticeDTO dto) {
+	public CommonResult deleteNotice(DeleteCalendarNoticeDTO dto) {
 		CommonResult r = new CommonResult();
 
 		if (dto == null || dto.getId() == null) {
@@ -400,6 +401,30 @@ public class CalendarNoticeServiceImpl extends CommonService implements Calendar
 		preNoticeMapper.updateByExampleSelective(preNoticePO, preNoticeExample);
 
 		r.setIsSuccess();
+		return r;
+	}
+
+	@Override
+	public CommonResult editNotice(EditCalendarNoticeDTO dto) {
+		CommonResult r = new CommonResult(); 
+		if(dto.getId() == null) {
+			r.setMessage("null param");
+			return r;
+		}
+		r = checkAddNoticeDtoAndSimpleFix(dto);
+		if (r.isFail()) {
+			return r;
+		}
+		
+		r = addCalendarNotice(dto);
+		if (r.isFail()) {
+			return r;
+		}
+		
+		DeleteCalendarNoticeDTO deleteDTO = new DeleteCalendarNoticeDTO();
+		deleteDTO.setId(dto.getId());
+		deleteNotice(deleteDTO);
+		
 		return r;
 	}
 }

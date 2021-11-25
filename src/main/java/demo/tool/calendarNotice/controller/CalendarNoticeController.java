@@ -11,7 +11,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.tool.calendarNotice.pojo.dto.AddCalendarNoticeDTO;
-import demo.tool.calendarNotice.pojo.dto.DeleteNoticeDTO;
+import demo.tool.calendarNotice.pojo.dto.DeleteCalendarNoticeDTO;
+import demo.tool.calendarNotice.pojo.dto.EditCalendarNoticeDTO;
 import demo.tool.calendarNotice.service.CalendarNoticeService;
 import demo.tool.other.pojo.constant.ToolUrlConstant;
 
@@ -35,8 +36,14 @@ public class CalendarNoticeController {
 
 	@PostMapping(value = "/deleteNotice")
 	@ResponseBody
-	public CommonResult deleteNotice(@RequestBody DeleteNoticeDTO dto) {
+	public CommonResult deleteNotice(@RequestBody DeleteCalendarNoticeDTO dto) {
 		return service.deleteNotice(dto);
+	}
+
+	@PostMapping(value = "/editNotice")
+	@ResponseBody
+	public CommonResult editNotice(@RequestBody EditCalendarNoticeDTO dto) {
+		return service.editNotice(dto);
 	}
 
 }

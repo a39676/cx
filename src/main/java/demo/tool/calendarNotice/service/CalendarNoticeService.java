@@ -4,7 +4,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.tool.calendarNotice.pojo.dto.AddCalendarNoticeDTO;
-import demo.tool.calendarNotice.pojo.dto.DeleteNoticeDTO;
+import demo.tool.calendarNotice.pojo.dto.DeleteCalendarNoticeDTO;
+import demo.tool.calendarNotice.pojo.dto.EditCalendarNoticeDTO;
 
 public interface CalendarNoticeService {
 
@@ -21,6 +22,8 @@ public interface CalendarNoticeService {
 
 	ModelAndView getManagerView();
 
-	CommonResult deleteNotice(DeleteNoticeDTO dto);
+	CommonResult deleteNotice(DeleteCalendarNoticeDTO dto);
+
+	CommonResult editNotice(EditCalendarNoticeDTO dto);
 
 }

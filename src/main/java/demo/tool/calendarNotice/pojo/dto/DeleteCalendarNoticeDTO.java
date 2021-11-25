@@ -1,6 +1,6 @@
 package demo.tool.calendarNotice.pojo.dto;
 
-public class DeleteNoticeDTO {
+public class DeleteCalendarNoticeDTO {
 
 	private Long id;
 

@@ -14,91 +14,76 @@
 <body>
 <div class="container-fluid">
 
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-striped table-dark">
       <thead class="thead-dark">
         <tr>
-          <td>接收人</td> <%-- noticeReciver --%>
-          <td>数据时间范围</td> <%-- timeUnitOfDataWatch --%>
-          <td>通知间隔</td> <%-- timeUnitOfNoticeInterval --%>
-          <td>加密币 & 兑换币</td> <%-- cryptoCoin currency --%>
-          <td>监控最高价</td> <%-- maxPrice --%>
-          <td>监控最低价</td> <%-- minPrice --%>
-          <td>监控涨跌速(%)</td> <%-- fluctuactionSpeedPercentage --%>
-          <td>剩余提醒次数</td> <%-- noticeCount --%>
-          <td>上次提醒时间</td> <%-- noticeTime --%>
-          <td>下次提醒时间</td> <%-- nextNoticeTime --%>
-          <td>有效期至</td> <%-- validTime --%>
+          <td>pk</td> <%-- pk --%>
+          <td>noticeContent</td> <%-- noticeContent --%>
+          <td>repeat</td> <%-- repeat setting --%>
+          <td>noticeTime</td> <%-- noticeTime --%>
+          <td>validTime</td> <%-- validTime --%>
+          <td>isLunarCalendar</td> <%-- isLunarCalendar --%>
+          <td>pre notice repeat</td> <%-- pre notice repeat setting --%>
+          <td>preNoticeTime</td> <%-- preNoticeTime --%>
+          <td>preNoticeCount</td>
           <td></td>
         </tr>
       </thead>
       <tbody id="noticeVOList">
         <c:forEach items="${noticeVOList}" var="noticeVO">
-          <tr class="noticeVO" noticePK="${noticeVO.pk}">
-            <td noticePK="${noticeVO.pk}" name="noticeReciver">${noticeVO.noticeReciver}</td>
+          <tr class="noticeVO">
+            <td name="noticePk" noticePK="${noticeVO.pk}">
+              <%-- ${noticeVO.pk} --%>
+            </td>
+            <td name="noticeContent">${noticeVO.noticeContent}</td>
             <td>
-              <input type="number" noticePK="${noticeVO.pk}" name="timeRangeOfDataWatch"
-              value="${noticeVO.timeRangeOfDataWatch}" style="width: 80px;">
-              <select noticePK="${noticeVO.pk}" name="timeUnitOfDataWatch">
-                <option value="${noticeVO.timeUnitOfDataWatch}">${noticeVO.timeUnitOfDataWatchName}</option>
+              <input type="number" name="repeatTimeRange"
+              value="${noticeVO.repeatTimeRange}" style="width: 80px;">
+              <select name="timeUnitOfNotice">
+                <option value="${noticeVO.repeatTimeUnit}">${noticeVO.repeatTimeUnitName}</option>
                 <c:forEach items="${timeUnitType}" var="timeUnitType">
-                  <option value="${timeUnitType.code}">${timeUnitType.cnName}</option>
+                  <option value="${timeUnitType.code}">${timeUnitType.cnName}${timeUnitType.name}</option>
                 </c:forEach>
               </select>
             </td>
             <td>
-              <input type="number" noticePK="${noticeVO.pk}" name="timeRangeOfNoticeInterval"
-              value="${noticeVO.timeRangeOfNoticeInterval}" style="width: 80px;">
-              <select noticePK="${noticeVO.pk}" name="timeUnitOfNoticeInterval">
-              <option value="${noticeVO.timeUnitOfNoticeInterval}">${noticeVO.timeUnitOfNoticeIntervalName} </option>
-                <c:forEach items="${timeUnitType}" var="timeUnitType">
-                  <option value="${timeUnitType.code}">${timeUnitType.cnName}</option>
-                </c:forEach>
-              </select>
-            </td>
-            <td>
-              <input type="text" noticePK="${noticeVO.pk}" name="cryptoCoinType"
-              value="${noticeVO.cryptoCoinName}" style="width: 60px;">
-              <select noticePK="${noticeVO.pk}" name="currencyCode">
-                <option value="${noticeVO.currencyCode}">${noticeVO.currencyName}</option>
-                <c:forEach items="${currencyType}" var="subCurrencyType">
-                  <option value="${subCurrencyType.code}">${subCurrencyType.name}</option>
-                </c:forEach>
-              </select>
-            </td>
-            <td>
-              <input type="" noticePK="${noticeVO.pk}" name="maxPrice"
-              value="${noticeVO.maxPrice}" style="width: 80px;">
-            </td>
-            <td>
-              <input type="" noticePK="${noticeVO.pk}" name="minPrice"
-              value="${noticeVO.minPrice}" style="width: 80px;">
-            </td>
-            <td>
-              <input type="number" noticePK="${noticeVO.pk}" name="fluctuactionSpeedPercentage"
-              value="${noticeVO.fluctuactionSpeedPercentage}" style="width: 50px;">
-            </td>
-            <td>
-              <input type="number" noticePK="${noticeVO.pk}" name="noticeCount"
-              value="${noticeVO.noticeCount}" style="width: 80px;">
-            </td>
-            <td>
-              ${noticeVO.noticeTime}
-            </td>
-            <td>
-              <c:set var = "tmpDate" value = "${fn:substring(noticeVO.nextNoticeTime, 0, 10)}" />
-              <c:set var = "tmpTime" value = "${fn:substring(noticeVO.nextNoticeTime, 11, 19)}" />
-              <input type="date" name="nextNoticeDate" noticePK="${noticeVO.pk}" value="${tmpDate}">
-              <input type="time" name="nextNoticeTime" noticePK="${noticeVO.pk}" value="${tmpTime}">
+              <c:set var = "tmpDate" value = "${fn:substring(noticeVO.noticeTime, 0, 10)}" />
+              <c:set var = "tmpTime" value = "${fn:substring(noticeVO.noticeTime, 11, 19)}" />
+              <input type="date" name="nextNoticeDate" value="${tmpDate}">
+              <input type="time" name="nextNoticeTime" value="${tmpTime}">
             </td>
             <td>
               <c:set var = "tmpDate" value = "${fn:substring(noticeVO.validTime, 0, 10)}" />
               <c:set var = "tmpTime" value = "${fn:substring(noticeVO.validTime, 11, 19)}" />
-              <input type="date" name="validDate" noticePK="${noticeVO.pk}" value="${tmpDate}">
-              <input type="time" name="validTime" noticePK="${noticeVO.pk}" value="${tmpTime}">
+              <input type="date" name="nextNoticeDate" value="${tmpDate}">
+              <input type="time" name="nextNoticeTime" value="${tmpTime}">
             </td>
+            <td>
+              ${noticeVO.isLunarCalendar}
+            </td>
+            <td>
+              <input type="number" name="preNoticeRepeatTimeRange"
+              value="${noticeVO.preNoticeRepeatTimeRange}" style="width: 80px;">
+              <select name="preNoticeTimeUnitOfNotice">
+                <option value="${noticeVO.preNoticeRepeatTimeUnit}">${noticeVO.preNoticeRepeatTimeUnitName}</option>
+                <c:forEach items="${timeUnitType}" var="timeUnitType">
+                  <option value="${timeUnitType.code}">${timeUnitType.cnName}${timeUnitType.name}</option>
+                </c:forEach>
+              </select>
+            </td>
+            <td>
+              <c:set var = "tmpDate" value = "${fn:substring(noticeVO.preNoticeTime, 0, 10)}" />
+              <c:set var = "tmpTime" value = "${fn:substring(noticeVO.preNoticeTime, 11, 19)}" />
+              <input type="date" name="nextNoticeDate" value="${tmpDate}">
+              <input type="time" name="nextNoticeTime" value="${tmpTime}">
+            </td>
+            <td>
+              <input type="" name="preNoticeRepeatCount"
+              value="${noticeVO.preNoticeRepeatCount}" style="width: 80px;">
+            </td>
+
             <td>
               <button name="modify" noticePK="${noticeVO.pk}">修改</button>
               <button name="delete" noticePK="${noticeVO.pk}">删除</button>
@@ -109,7 +94,6 @@
     </table>
   </div>
 </div>
-
 
 </div>
 </body>
@@ -125,17 +109,16 @@
         deleteNotice(pk);
       })
 
-      $("button[name='modify']").click(function () {
-        var pk = $(this).attr("noticePK");
-        updateNotice(pk);
-      })
+      // $("button[name='modify']").click(function () {
+      //   var pk = $(this).attr("noticePK");
+      //   updateNotice(pk);
+      // })
 
       function deleteNotice(pk) {
-        var url = "/cryptoCoin/deleteNotice";
+        var url = "/tool/canlendarNotice/deleteNotice";
         var jsonOutput = {
           pk : pk,
         };
-
 
         $.ajax({
           type : "POST",
@@ -157,7 +140,8 @@
       }
 
       function updateNotice(pk) {
-        var url = "/cryptoCoin/updateNotice";
+        // TODO
+        // var url = "/cryptoCoin/updateNotice";
 
         var cryptoCoinType = $("input[noticePK='"+pk+"'][name='cryptoCoinType']").val();
         var currencyCode = $("select[noticePK='"+pk+"'][name='currencyCode'] option:selected").val();

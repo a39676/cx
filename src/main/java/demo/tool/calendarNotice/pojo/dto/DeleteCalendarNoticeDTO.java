@@ -2,19 +2,19 @@ package demo.tool.calendarNotice.pojo.dto;
 
 public class DeleteCalendarNoticeDTO {
 
-	private Long id;
+	private String pk;
 
-	public Long getId() {
-		return id;
+	public String getPk() {
+		return pk;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setPk(String pk) {
+		this.pk = pk;
 	}
 
 	@Override
 	public String toString() {
-		return "DeleteNoticeDTO [id=" + id + "]";
+		return "DeleteCalendarNoticeDTO [pk=" + pk + "]";
 	}
 
 }

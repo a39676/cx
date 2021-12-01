@@ -26,4 +26,6 @@ public interface CalendarNoticeService {
 
 	CommonResult editNotice(EditCalendarNoticeDTO dto);
 
+	ModelAndView searchNoticeView();
+
 }

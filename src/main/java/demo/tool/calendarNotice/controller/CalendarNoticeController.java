@@ -45,5 +45,11 @@ public class CalendarNoticeController {
 	public CommonResult editNotice(@RequestBody EditCalendarNoticeDTO dto) {
 		return service.editNotice(dto);
 	}
+	
+	@PostMapping(value = "/searchNotice")
+	@ResponseBody
+	public ModelAndView searchNoticeView() {
+		return service.searchNoticeView();
+	}
 
 }

@@ -2,19 +2,19 @@ package demo.tool.calendarNotice.pojo.dto;
 
 public class EditCalendarNoticeDTO extends AddCalendarNoticeDTO {
 
-	private Long id;
+	private String pk;
 
-	public Long getId() {
-		return id;
+	public String getPk() {
+		return pk;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setPk(String pk) {
+		this.pk = pk;
 	}
 
 	@Override
 	public String toString() {
-		return "EditCalendarNoticeDTO [id=" + id + ", getNoticeContent()=" + getNoticeContent() + ", getNoticeTime()="
+		return "EditCalendarNoticeDTO [pk=" + pk + ", getNoticeContent()=" + getNoticeContent() + ", getNoticeTime()="
 				+ getNoticeTime() + ", getValidTime()=" + getValidTime() + ", getNeedRepeat()=" + getNeedRepeat()
 				+ ", getIsLunarNotice()=" + getIsLunarNotice() + ", getLunarNoticeTime()=" + getLunarNoticeTime()
 				+ ", getRepeatTimeUnit()=" + getRepeatTimeUnit() + ", getRepeatTimeRange()=" + getRepeatTimeRange()

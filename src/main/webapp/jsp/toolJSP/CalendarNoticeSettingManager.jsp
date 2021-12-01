@@ -79,9 +79,6 @@
 
     $(document).ready(function() {
 
-      // document.getElementById('noticeStartDate').valueAsDate = new Date();
-      // document.getElementById('validTime').valueAsDate = new Date();
-
       $("#insert").click(function () {
         addNotice();
       });
@@ -96,7 +93,7 @@
       //   updateNotice(pk);
       // })
       //
-      // searchNotice();
+      searchNotice();
 
       function addNotice() {
 
@@ -133,7 +130,6 @@
           preNoticeCount : preNoticeCount,
         };
 
-        console.log(jsonOutput);
         $.ajax({
           type : "POST",
           url : url,
@@ -145,12 +141,7 @@
           },
           timeout: 15000,
           success:function(data){
-            console.log("connect success: " + data);
-            if(data.code == 0){
-              $("#result").text("Done");
-            } else {
-              $("#result").text(data.message);
-            }
+            $("#result").text(data.message);
           },
           error:function(e){
             $("#result").text(e);
@@ -158,41 +149,32 @@
         });
       };
 
-      // function searchNotice() {
-      //   var url = "/tool/canlendarNotice/searchNotice";
-      //
-      //   var reciverPK = $("#telegramChatPKOfSearch option:selected").val();
-      //   var cryptoCoinType = $("#coinTypeOfSearch").val();
-      //   var currencyCode = $("#currencyOfSearch option:selected").val();
-      //
-      //   var noticeSearchResult = $("#noticeSearchResult");
-      //
-      //   var jsonOutput = {
-      //     reciverPK : reciverPK,
-      //     cryptoCoinType : cryptoCoinType,
-      //     currencyCode : currencyCode,
-      //   };
-      //
-      //   console.log(jsonOutput);
-      //
-      //   $.ajax({
-      //     type : "POST",
-      //     url : url,
-      //     data: JSON.stringify(jsonOutput),
-      //     // dataType: 'json',
-      //     contentType: "application/json",
-      //     beforeSend: function(xhr) {
-      //       xhr.setRequestHeader(csrfHeader, csrfToken);
-      //     },
-      //     timeout: 15000,
-      //     success:function(datas){
-      //       noticeSearchResult.html(datas);
-      //     },
-      //     error:function(e){
-      //       $("#result").text(e);
-      //     }
-      //   });
-      // }
+      function searchNotice() {
+        var url = "/tool/canlendarNotice/searchNotice";
+
+        var noticeSearchResult = $("#noticeSearchResult");
+
+        var jsonOutput = {
+        };
+
+        $.ajax({
+          type : "POST",
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          // dataType: 'json',
+          contentType: "application/json",
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          timeout: 15000,
+          success:function(datas){
+            noticeSearchResult.html(datas);
+          },
+          error:function(e){
+            $("#result").text(e);
+          }
+        });
+      }
 
     });
 

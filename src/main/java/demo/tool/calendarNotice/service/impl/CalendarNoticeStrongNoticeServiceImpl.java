@@ -18,7 +18,9 @@ public class CalendarNoticeStrongNoticeServiceImpl extends CalendarNoticeCommonS
 
 	@Override
 	public List<CalendarNotice> getStrongNoticeList() {
+		log.error("get in");
 		List<String> objStrList = redisHashConnectService.getValsByName(CalendarNoticeConstant.STRONG_NOTICE_REDIS_KEY);
+		log.error("objStrList: " + objStrList);
 		List<CalendarNotice> result = new ArrayList<>();
 		CalendarNotice obj = null;
 		for (String objStr : objStrList) {
@@ -26,9 +28,16 @@ public class CalendarNoticeStrongNoticeServiceImpl extends CalendarNoticeCommonS
 				obj = new Gson().fromJson(objStr, CalendarNotice.class);
 				result.add(obj);
 			} catch (Exception e) {
+				log.error(e.toString());
+				log.error(e.getLocalizedMessage());
+				log.error(e.getMessage());
+				log.error(e.getStackTrace().toString());
 			}
 		}
 
+		log.error(result.toString());
+		
+		log.error("end");
 		return result;
 	}
 

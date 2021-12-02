@@ -13,7 +13,7 @@ import demo.tool.calendarNotice.pojo.po.CalendarNotice;
 @Service
 public class CalendarNoticeConstantService extends CommonService {
 
-	private List<CalendarNotice> strongNoticeList = new ArrayList<>();
+	private List<CalendarNotice> strongNoticeList = null;
 
 	@Override
 	public String toString() {
@@ -26,6 +26,13 @@ public class CalendarNoticeConstantService extends CommonService {
 
 	public void setStrongNoticeList(List<CalendarNotice> strongNoticeList) {
 		this.strongNoticeList = strongNoticeList;
+	}
+	
+	public void addStrongNotice(CalendarNotice strongNotice) {
+		if(strongNoticeList == null) {
+			strongNoticeList = new ArrayList<>();
+		}
+		strongNoticeList.add(strongNotice);
 	}
 
 }

@@ -1,6 +1,7 @@
 package demo.test.controller;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import demo.common.controller.CommonController;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.dto.TestDTO;
+import demo.tool.calendarNotice.pojo.po.CalendarNotice;
 import demo.tool.calendarNotice.service.CalendarNoticeService;
+import demo.tool.calendarNotice.service.impl.CalendarNoticeConstantService;
 import net.sf.json.JSONObject;
 
 @Controller
@@ -51,5 +54,14 @@ public class TestController2 extends CommonController {
 	public String t2() {
 		service.findAndSendStrongNotice();
 		return "done";
+	}
+
+	@Autowired
+	protected CalendarNoticeConstantService cs;
+	
+	@GetMapping(value = "/t3")
+	@ResponseBody
+	public List<CalendarNotice> t3() {
+		return cs.getStrongNoticeList();
 	}
 }

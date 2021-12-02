@@ -20,7 +20,7 @@ public class CalendarNoticeController {
 
 	@GetMapping(value = CalendarNoticeUrl.STOP_STRONG_NOTICE)
 	@ResponseBody
-	public CommonResult calendarNoticeManager(@RequestParam("pk") String pk) {
+	public CommonResult stopStrongNotice(@RequestParam("pk") String pk) {
 		return service.stopStrongNotic(pk);
 	}
 

@@ -307,8 +307,9 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			if (po.getStrongNotice()) {
 				calendarNoticeConstantService.getStrongNoticeList().add(po);
 				dto.setMsg(po.getNoticeContent() + " " + hostnameService.findZhang() + CalendarNoticeUrl.ROOT
-						+ CalendarNoticeUrl.STOP_STRONG_NOTICE + "?pk=" + URLEncoder.encode(encryptId(po.getId()), StandardCharsets.UTF_8));
-				
+						+ CalendarNoticeUrl.STOP_STRONG_NOTICE + "?pk="
+						+ URLEncoder.encode(encryptId(po.getId()), StandardCharsets.UTF_8));
+
 			} else {
 				dto.setMsg(po.getNoticeContent());
 			}
@@ -559,7 +560,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 
 		return r;
 	}
-	
+
 	@Override
 	public void findAndSendStrongNotice() {
 		List<CalendarNotice> commonNoticeList = calendarNoticeConstantService.getStrongNoticeList();
@@ -572,10 +573,9 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			dto = new TelegramMessageDTO();
 			dto.setId(TelegramStaticChatID.MY_ID);
 			dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
-			if (po.getStrongNotice()) {
-				dto.setMsg(po.getNoticeContent() + " " + hostnameService.findZhang() + CalendarNoticeUrl.ROOT
-						+ CalendarNoticeUrl.STOP_STRONG_NOTICE + "?pk=" + URLEncoder.encode(encryptId(po.getId()), StandardCharsets.UTF_8));
-			}
+			dto.setMsg(po.getNoticeContent() + " " + hostnameService.findZhang() + CalendarNoticeUrl.ROOT
+					+ CalendarNoticeUrl.STOP_STRONG_NOTICE + "?pk="
+					+ URLEncoder.encode(encryptId(po.getId()), StandardCharsets.UTF_8));
 
 			telegramMessageAckProducer.send(dto);
 		}

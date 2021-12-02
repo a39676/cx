@@ -318,7 +318,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		
 		String keyPrefix = SystemRedisKey.articleCommentKeyPrefix + "_" + userId + "_" + articleId;
 		
-		int counting = redisConnectService.checkFunctionalModuleVisitData(request, keyPrefix);
+		int counting = redisOriginalConnectService.checkFunctionalModuleVisitData(request, keyPrefix);
 		if(counting > 0) {
 			return true;
 		} else {
@@ -328,7 +328,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	
 	private void insertCommentRedisMark(HttpServletRequest request, Long userId, Long articleId) {
 		String keyPrefix = SystemRedisKey.articleCommentKeyPrefix + "_" + userId + "_" + articleId;
-		redisConnectService.insertFunctionalModuleVisitData(request, keyPrefix, 10L, TimeUnit.MINUTES);
+		redisOriginalConnectService.insertFunctionalModuleVisitData(request, keyPrefix, 10L, TimeUnit.MINUTES);
 	}
 	
 	@Override

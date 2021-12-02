@@ -1,9 +1,13 @@
 package demo.tool.other.service.impl;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.common.service.CommonService;
+import demo.tool.other.pojo.vo.EncryptIdVO;
 import demo.tool.other.service.ComplexToolService;
 import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
 import demo.tool.telegram.service.TelegramService;
@@ -21,8 +25,11 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 	}
 	
 	@Override
-	public String encryptIDNum(Long id) {
-		return encryptId(id);
+	public EncryptIdVO encryptIDNum(Long id) {
+		EncryptIdVO vo = new EncryptIdVO();
+		vo.setPk(encryptId(id));
+		vo.setUrlEncodePk(URLEncoder.encode(vo.getPk(), StandardCharsets.UTF_8));
+		return vo;
 	}
 	
 	@Override

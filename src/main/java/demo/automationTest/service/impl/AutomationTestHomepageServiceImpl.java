@@ -236,7 +236,7 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 			HttpServletRequest request) {
 		InsertSearchingDemoEventResult r = new InsertSearchingDemoEventResult();
 		
-		int count = redisConnectService.checkFunctionalModuleVisitData(request, SystemRedisKey.searchingDemoInsertCountingKeyPrefix);
+		int count = redisOriginalConnectService.checkFunctionalModuleVisitData(request, SystemRedisKey.searchingDemoInsertCountingKeyPrefix);
 
 		if(!isBigUser() && !isDev()) {
 			if (count >= SearchingDemoConstant.maxInsertCountIn30Minutes) {
@@ -262,7 +262,7 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 			}
 			r.setEventId(insertEventDTO.getTestEventId());
 			r.setIsSuccess();
-			redisConnectService.insertFunctionalModuleVisitData(request, SystemRedisKey.searchingDemoInsertCountingKeyPrefix);
+			redisOriginalConnectService.insertFunctionalModuleVisitData(request, SystemRedisKey.searchingDemoInsertCountingKeyPrefix);
 			r.setHasInsertCount(count + 1);
 			r.setMaxInsertCount(SearchingDemoConstant.maxInsertCountIn30Minutes);
 			r.setMessage(AutoTestUrl.root + AutoTestInteractionUrl.FIND_REPORT_BY_TEST_EVENT_ID + "?testEventId=" + r.getEventId());

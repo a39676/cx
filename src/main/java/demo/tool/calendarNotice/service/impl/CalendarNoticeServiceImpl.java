@@ -65,7 +65,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 		CalendarNotice po = new CalendarNotice();
 		po.setId(newNoticeId);
 		po.setIsLunarCalendar(dto.getIsLunarNotice());
-		po.setNeedRepeat(dto.getNeedRepeat());
+		po.setNeedRepeat(dto.getRepeatTimeRange() != null && dto.getRepeatTimeUnit() != null);
 		po.setNoticeContent(dto.getNoticeContent());
 		po.setNoticeTime(dto.getNoticeTime());
 		po.setRepeatTimeUnit(dto.getRepeatTimeUnit());
@@ -100,10 +100,13 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 
 	private CommonResult checkAddNoticeDtoAndSimpleFix(AddCalendarNoticeDTO dto) {
 		CommonResult r = new CommonResult();
-		if (dto.getNeedRepeat()) {
+		boolean needRepeat = dto.getRepeatTimeUnit() != null && dto.getRepeatTimeRange() != null;
+		
+		if (dto.getRepeatTimeUnit() != null || dto.getRepeatTimeRange() != null) {
 			if (dto.getRepeatTimeUnit() == null || dto.getRepeatTimeRange() == null) {
 				r.addMessage("If need repeat, please fill time unit and time range");
-			} else {
+			}
+			if (needRepeat) {
 				if (dto.getRepeatTimeRange() <= 0) {
 					r.addMessage("Time range must >= 0");
 				}
@@ -114,6 +117,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 				}
 			}
 		}
+		
 
 		if (StringUtils.isBlank(dto.getNoticeContent())) {
 			r.addMessage("Please fill notice content");
@@ -136,7 +140,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			targetDayTime.withHour(noticeTime.getHour()).withMinute(noticeTime.getMinute())
 					.withSecond(noticeTime.getSecond());
 
-			if (dto.getNeedRepeat()) {
+			if (needRepeat) {
 				TimeUnitType timeUnitType = TimeUnitType.getType(dto.getRepeatTimeUnit());
 				if (timeUnitType == null || timeUnitType.getCode() < TimeUnitType.day.getCode()) {
 					r.addMessage("Invalid time unit for lunar calendar notice");
@@ -489,7 +493,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 		vo.setRepeatTimeUnit(po.getRepeatTimeUnit());
 		TimeUnitType timeUnitType = TimeUnitType.getType(po.getRepeatTimeUnit());
 		if(timeUnitType != null) {
-			vo.setRepeatTimeUnitName(timeUnitType.getCnName());
+			vo.setRepeatTimeUnitName(timeUnitType.getCnName() + timeUnitType.getName());
 		}
 		if(po.getValidTime() != null) {
 			vo.setValidTime(po.getValidTime());
@@ -503,11 +507,11 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 		
 		vo.setPreNoticePk(encryptId(preNotice.getId()));
 		
-		vo.setRepeatTimeRange(preNotice.getRepeatTimeRange());
-		vo.setRepeatTimeUnit(preNotice.getRepeatTimeUnit());
+		vo.setPreNoticeRepeatTimeRange(preNotice.getRepeatTimeRange());
+		vo.setPreNoticeRepeatTimeUnit(preNotice.getRepeatTimeUnit());
 		timeUnitType = TimeUnitType.getType(preNotice.getRepeatTimeUnit());
 		if(timeUnitType != null) {
-			vo.setPreNoticeRepeatTimeUnitName(timeUnitType.getCnName());
+			vo.setPreNoticeRepeatTimeUnitName(timeUnitType.getCnName() + timeUnitType.getName());
 		}
 		
 		vo.setPreNoticeRepeatCount(preNotice.getRepeatCount());

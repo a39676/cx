@@ -19,14 +19,12 @@
     <table class="table table-striped table-dark">
       <thead class="thead-dark">
         <tr>
-          <td>pk</td> <%-- pk --%>
           <td>noticeContent</td> <%-- noticeContent --%>
           <td>repeat</td> <%-- repeat setting --%>
           <td>noticeTime</td> <%-- noticeTime --%>
           <td>validTime</td> <%-- validTime --%>
           <td>isLunarCalendar</td> <%-- isLunarCalendar --%>
           <td>pre notice repeat</td> <%-- pre notice repeat setting --%>
-          <td>preNoticeTime</td> <%-- preNoticeTime --%>
           <td>preNoticeCount</td>
           <td></td>
         </tr>
@@ -34,14 +32,14 @@
       <tbody id="noticeVOList">
         <c:forEach items="${noticeVOList}" var="noticeVO">
           <tr class="noticeVO">
-            <td name="noticePk" noticePK="${noticeVO.pk}">
-              <%-- ${noticeVO.pk} --%>
-            </td>
-            <td name="noticeContent">${noticeVO.noticeContent}</td>
             <td>
-              <input type="number" name="repeatTimeRange"
+              <input name="noticeContent" noticePK="${noticeVO.pk}" type="text"
+                value="${noticeVO.noticeContent}">
+            </td>
+            <td>
+              <input type="number" name="repeatTimeRange" noticePK="${noticeVO.pk}"
               value="${noticeVO.repeatTimeRange}" style="width: 80px;">
-              <select name="timeUnitOfNotice">
+              <select noticePK="${noticeVO.pk}" name="repeatTimeUnit">
                 <option value="${noticeVO.repeatTimeUnit}">${noticeVO.repeatTimeUnitName}</option>
                 <c:forEach items="${timeUnitType}" var="timeUnitType">
                   <option value="${timeUnitType.code}">${timeUnitType.cnName}${timeUnitType.name}</option>
@@ -51,22 +49,27 @@
             <td>
               <c:set var = "tmpDate" value = "${fn:substring(noticeVO.noticeTime, 0, 10)}" />
               <c:set var = "tmpTime" value = "${fn:substring(noticeVO.noticeTime, 11, 19)}" />
-              <input type="date" name="nextNoticeDate" value="${tmpDate}">
-              <input type="time" name="nextNoticeTime" value="${tmpTime}">
+              <input type="date" noticePK="${noticeVO.pk}" name="noticeDate" value="${tmpDate}">
+              <input type="time" noticePK="${noticeVO.pk}" name="noticeTime" value="${tmpTime}" step="1">
             </td>
             <td>
               <c:set var = "tmpDate" value = "${fn:substring(noticeVO.validTime, 0, 10)}" />
               <c:set var = "tmpTime" value = "${fn:substring(noticeVO.validTime, 11, 19)}" />
-              <input type="date" name="nextNoticeDate" value="${tmpDate}">
-              <input type="time" name="nextNoticeTime" value="${tmpTime}">
+              <input type="date" noticePK="${noticeVO.pk}" name="validDate" value="${tmpDate}">
+              <input type="time" noticePK="${noticeVO.pk}" name="validTime" value="${tmpTime}" step="1">
             </td>
             <td>
-              ${noticeVO.isLunarCalendar}
+              <c:if test="${noticeVO.isLunarCalendar}">
+                <input type="checkbox" noticePK="${noticeVO.pk}" name="isLunarNotice" checked="checked">
+              </c:if>
+              <c:if test="${noticeVO.isLunarCalendar == false}">
+                <input type="checkbox" noticePK="${noticeVO.pk}"name="isLunarNotice" >
+              </c:if>
             </td>
             <td>
-              <input type="number" name="preNoticeRepeatTimeRange"
+              <input type="number" name="preNoticeRepeatTimeRange" noticePK="${noticeVO.pk}"
               value="${noticeVO.preNoticeRepeatTimeRange}" style="width: 80px;">
-              <select name="preNoticeTimeUnitOfNotice">
+              <select name="preNoticeTimeUnitOfNotice" noticePK="${noticeVO.pk}">
                 <option value="${noticeVO.preNoticeRepeatTimeUnit}">${noticeVO.preNoticeRepeatTimeUnitName}</option>
                 <c:forEach items="${timeUnitType}" var="timeUnitType">
                   <option value="${timeUnitType.code}">${timeUnitType.cnName}${timeUnitType.name}</option>
@@ -74,18 +77,11 @@
               </select>
             </td>
             <td>
-              <c:set var = "tmpDate" value = "${fn:substring(noticeVO.preNoticeTime, 0, 10)}" />
-              <c:set var = "tmpTime" value = "${fn:substring(noticeVO.preNoticeTime, 11, 19)}" />
-              <input type="date" name="nextNoticeDate" value="${tmpDate}">
-              <input type="time" name="nextNoticeTime" value="${tmpTime}">
-            </td>
-            <td>
-              <input type="" name="preNoticeRepeatCount"
+              <input type="" name="preNoticeRepeatCount" noticePK="${noticeVO.pk}"
               value="${noticeVO.preNoticeRepeatCount}" style="width: 80px;">
             </td>
-
             <td>
-              <button name="modify" noticePK="${noticeVO.pk}">修改</button>
+              <button name="edit" noticePK="${noticeVO.pk}">修改</button>
               <button name="delete" noticePK="${noticeVO.pk}">删除</button>
             </td>
           </tr>
@@ -109,10 +105,10 @@
         deleteNotice(pk);
       })
 
-      // $("button[name='modify']").click(function () {
-      //   var pk = $(this).attr("noticePK");
-      //   updateNotice(pk);
-      // })
+      $("button[name='edit']").click(function () {
+        var pk = $(this).attr("noticePK");
+        editNotice(pk);
+      })
 
       function deleteNotice(pk) {
         var url = "/tool/canlendarNotice/deleteNotice";
@@ -139,43 +135,38 @@
         });
       }
 
-      function updateNotice(pk) {
-        // TODO
-        // var url = "/cryptoCoin/updateNotice";
+      function editNotice(pk) {
+        var url = "/tool/canlendarNotice/editNotice";
 
-        var cryptoCoinType = $("input[noticePK='"+pk+"'][name='cryptoCoinType']").val();
-        var currencyCode = $("select[noticePK='"+pk+"'][name='currencyCode'] option:selected").val();
-
-        var timeRangeOfDataWatch = $("input[noticePK='"+pk+"'][name='timeRangeOfDataWatch']").val();
-        var timeUnitOfDataWatch = $("select[noticePK='"+pk+"'][name='timeUnitOfDataWatch'] option:selected").val();
-
-        var timeRangeOfNoticeInterval = $("input[noticePK='"+pk+"'][name='timeRangeOfNoticeInterval']").val();
-        var timeUnitOfNoticeInterval = $("select[noticePK='"+pk+"'][name='timeUnitOfNoticeInterval'] option:selected").val();
-
-        var maxPrice = $("input[noticePK='"+pk+"'][name='maxPrice']").val();
-        var minPrice = $("input[noticePK='"+pk+"'][name='minPrice']").val();
-        var fluctuactionSpeedPercentage = $("input[noticePK='"+pk+"'][name='fluctuactionSpeedPercentage']").val();
-        var noticeCount = $("input[noticePK='"+pk+"'][name='noticeCount']").val();
-
-        var nextNoticeDateTime = $("input[noticePK='"+pk+"'][name='nextNoticeDate']").val()
-        + " " + $("input[noticePK='"+pk+"'][name='nextNoticeTime']").val();
-        var validDateTime = $("input[noticePK='"+pk+"'][name='validDate']").val()
+        var noticeContent = $("input[noticePK='"+pk+"'][name='noticeContent']").val();
+        var validTime = $("input[noticePK='"+pk+"'][name='validDate']").val()
         + " " + $("input[noticePK='"+pk+"'][name='validTime']").val();
+        var repeatTimeRange = $("input[noticePK='"+pk+"'][name='repeatTimeRange']").val();
+        var repeatTimeUnit = $("select[noticePK='"+pk+"'][name='repeatTimeUnit'] option:selected").val();
+        var isLunarNotice = $("input[noticePK='"+pk+"'][name='isLunarNotice']").is(":checked");
+        var noticeTime;
+        var lunarNoticeTime;
+        if(isLunarNotice){
+          lunarNoticeTime = $("input[noticePK='"+pk+"'][name='noticeDate']").val() + " " + $("input[noticePK='"+pk+"'][name='noticeTime']").val();
+        } else{
+          noticeTime = $("input[noticePK='"+pk+"'][name='noticeDate']").val() + " " + $("input[noticePK='"+pk+"'][name='noticeTime']").val();
+        }
+        var preNoticeRepeatTimeRange = $("input[noticePK='"+pk+"'][name='preNoticeRepeatTimeRange']").val();
+        var preNoticeRepeatTimeUnit = $("select[noticePK='"+pk+"'][name='preNoticeTimeUnitOfNotice'] option:selected").val();
+        var preNoticeCount = $("input[noticePK='"+pk+"'][name='preNoticeRepeatCount']").val();
 
         var jsonOutput = {
           pk : pk,
-          cryptoCoinType : cryptoCoinType,
-          currencyCode : currencyCode,
-          maxPrice : maxPrice,
-          minPrice : minPrice,
-          timeRangeOfDataWatch : timeRangeOfDataWatch,
-          timeUnitOfDataWatch : timeUnitOfDataWatch,
-          timeRangeOfNoticeInterval : timeRangeOfNoticeInterval,
-          timeUnitOfNoticeInterval : timeUnitOfNoticeInterval,
-          fluctuactionSpeedPercentage : fluctuactionSpeedPercentage,
-          noticeCount : noticeCount,
-          nextNoticeTime : nextNoticeDateTime,
-          validTime : validDateTime,
+          noticeContent : noticeContent,
+          noticeTime : noticeTime,
+          lunarNoticeTime : lunarNoticeTime,
+          validTime : validTime,
+          isLunarNotice : isLunarNotice,
+          repeatTimeUnit : repeatTimeUnit,
+          repeatTimeRange : repeatTimeRange,
+          preNoticeRepeatTimeUnit : preNoticeRepeatTimeUnit,
+          preNoticeRepeatTimeRange : preNoticeRepeatTimeRange,
+          preNoticeCount : preNoticeCount,
         };
 
         $.ajax({

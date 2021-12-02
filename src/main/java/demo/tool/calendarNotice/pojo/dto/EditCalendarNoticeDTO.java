@@ -15,12 +15,12 @@ public class EditCalendarNoticeDTO extends AddCalendarNoticeDTO {
 	@Override
 	public String toString() {
 		return "EditCalendarNoticeDTO [pk=" + pk + ", getNoticeContent()=" + getNoticeContent() + ", getNoticeTime()="
-				+ getNoticeTime() + ", getValidTime()=" + getValidTime() + ", getNeedRepeat()=" + getNeedRepeat()
-				+ ", getIsLunarNotice()=" + getIsLunarNotice() + ", getLunarNoticeTime()=" + getLunarNoticeTime()
-				+ ", getRepeatTimeUnit()=" + getRepeatTimeUnit() + ", getRepeatTimeRange()=" + getRepeatTimeRange()
-				+ ", getPreNoticeRepeatTimeUnit()=" + getPreNoticeRepeatTimeUnit() + ", getPreNoticeRepeatTimeRange()="
-				+ getPreNoticeRepeatTimeRange() + ", getPreNoticeCount()=" + getPreNoticeCount() + ", toString()="
-				+ super.toString() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + "]";
+				+ getNoticeTime() + ", getValidTime()=" + getValidTime() + ", getIsLunarNotice()=" + getIsLunarNotice()
+				+ ", getLunarNoticeTime()=" + getLunarNoticeTime() + ", getRepeatTimeUnit()=" + getRepeatTimeUnit()
+				+ ", getRepeatTimeRange()=" + getRepeatTimeRange() + ", getPreNoticeRepeatTimeUnit()="
+				+ getPreNoticeRepeatTimeUnit() + ", getPreNoticeRepeatTimeRange()=" + getPreNoticeRepeatTimeRange()
+				+ ", getPreNoticeCount()=" + getPreNoticeCount() + ", toString()=" + super.toString() + ", getClass()="
+				+ getClass() + ", hashCode()=" + hashCode() + "]";
 	}
 
 }

@@ -10,8 +10,6 @@ public class AddCalendarNoticeDTO {
 	private LocalDateTime noticeTime;
 	private LocalDateTime validTime;
 
-	private Boolean needRepeat = false;
-
 	private Boolean isLunarNotice = false;
 	private LocalDateTime lunarNoticeTime;
 
@@ -46,14 +44,6 @@ public class AddCalendarNoticeDTO {
 
 	public void setValidTime(LocalDateTime validTime) {
 		this.validTime = validTime;
-	}
-
-	public Boolean getNeedRepeat() {
-		return needRepeat;
-	}
-
-	public void setNeedRepeat(Boolean needRepeat) {
-		this.needRepeat = needRepeat;
 	}
 
 	public Boolean getIsLunarNotice() {
@@ -115,8 +105,8 @@ public class AddCalendarNoticeDTO {
 	@Override
 	public String toString() {
 		return "AddCalendarNoticeDTO [noticeContent=" + noticeContent + ", noticeTime=" + noticeTime + ", validTime="
-				+ validTime + ", needRepeat=" + needRepeat + ", isLunarNotice=" + isLunarNotice + ", lunarNoticeTime="
-				+ lunarNoticeTime + ", repeatTimeUnit=" + repeatTimeUnit + ", repeatTimeRange=" + repeatTimeRange
+				+ validTime + ", isLunarNotice=" + isLunarNotice + ", lunarNoticeTime=" + lunarNoticeTime
+				+ ", repeatTimeUnit=" + repeatTimeUnit + ", repeatTimeRange=" + repeatTimeRange
 				+ ", preNoticeRepeatTimeUnit=" + preNoticeRepeatTimeUnit + ", preNoticeRepeatTimeRange="
 				+ preNoticeRepeatTimeRange + ", preNoticeCount=" + preNoticeCount + "]";
 	}

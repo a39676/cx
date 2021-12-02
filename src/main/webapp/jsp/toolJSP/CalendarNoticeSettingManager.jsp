@@ -28,11 +28,6 @@
   <label for="isLunarNotice">农历日期提醒(如需要重复提醒, 则按输入日期所对应的农历日期进行重复, 只能精确到日)</label><br>
 </div>
 
-<div class="row">
-  <input type="checkbox" id="needRepeat" name="needRepeat">
-  <label for="needRepeat">需要重复提醒</label>
-</div>
-
 <div class="row" id="repeatSettingRow">
   <input type="text" id="repeatTimeRange" placeholder="重复提醒间隔">
   <select id="repeatTimeUnit">
@@ -44,7 +39,8 @@
 </div>
 
 <div class="row">
-  <span>validTime(endTime)</span> <input type="Date" id="validTime" placeholder="过期时间">
+  <span>validTime(endTime)</span> <input type="Date" id="validDate" placeholder="过期时间">
+  <input type="Time" id="validTime" value="00:00:00" step="1">
 </div>
 
 <div class="row" id="preNoticeSettingRow">
@@ -83,16 +79,6 @@
         addNotice();
       });
 
-      // $("button[name='delete']").click(function () {
-      //   var pk = $(this).attr("noticePK");
-      //   deleteNotice(pk);
-      // })
-      //
-      // $("button[name='modify']").click(function () {
-      //   var pk = $(this).attr("noticePK");
-      //   updateNotice(pk);
-      // })
-      //
       searchNotice();
 
       function addNotice() {
@@ -107,8 +93,7 @@
         } else{
           noticeTime = $("#noticeTime").val() + " " + $("#noticeStartTime").val();
         }
-        var validTime = $("#validTime").val();
-        var needRepeat = $("#needRepeat").is(":checked");
+        var validTime = $("#validDate").val() + " " + $("#validTime").val();
         var isLunarNotice = $("#isLunarNotice").is(":checked");
         var repeatTimeUnit = $("#repeatTimeUnit option:selected").val();
         var repeatTimeRange = $("#repeatTimeRange").val();
@@ -121,7 +106,6 @@
           noticeTime : noticeTime,
           lunarNoticeTime : lunarNoticeTime,
           validTime : validTime,
-          needRepeat : needRepeat,
           isLunarNotice : isLunarNotice,
           repeatTimeUnit : repeatTimeUnit,
           repeatTimeRange : repeatTimeRange,

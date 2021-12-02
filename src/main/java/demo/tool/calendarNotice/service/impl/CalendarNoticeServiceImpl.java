@@ -372,7 +372,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 				LocalDateTime nextNoticeTime = getNextLocalDateTime(po.getNoticeTime(), noticeTimeUnitType,
 						po.getRepeatTimeRange());
 				// 重复通知仍要继续
-				if (po.getValidTime() == null || !nextNoticeTime.isAfter(po.getValidTime())) {
+				if (!po.getIsDelete() && (po.getValidTime() == null || !nextNoticeTime.isAfter(po.getValidTime()))) {
 					nextPreNoticeTime = getPreNoticeTime(nextNoticeTime, preNoticeTimeUnitType,
 							preNoticePo.getRepeatTimeRange(), preNoticePo.getRepeatCount());
 					preNoticePo.setValidTime(nextNoticeTime);

@@ -24,6 +24,11 @@
 </div>
 
 <div class="row">
+  <input type="checkbox" id="isStrongNotice" name="isStrongNotice">
+  <label for="isStrongNotice">强提醒, 5分钟一次, 需手动点击链接终止提醒</label><br>
+</div>
+
+<div class="row">
   <input type="checkbox" id="isLunarNotice" name="isLunarNotice">
   <label for="isLunarNotice">农历日期提醒(如需要重复提醒, 则按输入日期所对应的农历日期进行重复, 只能精确到日)</label><br>
 </div>
@@ -40,7 +45,7 @@
 
 <div class="row">
   <span>validTime(endTime)</span> <input type="Date" id="validDate" placeholder="过期时间">
-  <input type="Time" id="validTime" value="00:00:00" step="1">
+  <input type="Time" id="validTime" step="1">
 </div>
 
 <div class="row" id="preNoticeSettingRow">
@@ -88,6 +93,7 @@
         var noticeContent = $("#newNoticeContent").val();
         var noticeTime;
         var lunarNoticeTime;
+        var isStrongNotice = $("#isStrongNotice").is(":checked");
         if($("#isLunarNotice").is(":checked")){
           lunarNoticeTime = $("#noticeTime").val() + " " + $("#noticeStartTime").val();
         } else{
@@ -104,6 +110,7 @@
         var jsonOutput = {
           noticeContent : noticeContent,
           noticeTime : noticeTime,
+          isStrongNotice : isStrongNotice,
           lunarNoticeTime : lunarNoticeTime,
           validTime : validTime,
           isLunarNotice : isLunarNotice,

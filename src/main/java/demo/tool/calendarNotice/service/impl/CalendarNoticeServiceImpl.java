@@ -1,5 +1,7 @@
 package demo.tool.calendarNotice.service.impl;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.tool.calendarNotice.mapper.CalendarNoticeMapper;
 import demo.tool.calendarNotice.mapper.CalendarPreNoticeMapper;
 import demo.tool.calendarNotice.mq.producer.TelegramCalendarNoticeMessageAckProducer;
+import demo.tool.calendarNotice.pojo.constant.CalendarNoticeUrl;
 import demo.tool.calendarNotice.pojo.dto.AddCalendarNoticeDTO;
 import demo.tool.calendarNotice.pojo.dto.DeleteCalendarNoticeDTO;
 import demo.tool.calendarNotice.pojo.dto.EditCalendarNoticeDTO;
@@ -65,6 +68,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 		CalendarNotice po = new CalendarNotice();
 		po.setId(newNoticeId);
 		po.setIsLunarCalendar(dto.getIsLunarNotice());
+		po.setStrongNotice(dto.getIsStrongNotice());
 		po.setNeedRepeat(dto.getRepeatTimeRange() != null && dto.getRepeatTimeUnit() != null);
 		po.setNoticeContent(dto.getNoticeContent());
 		po.setNoticeTime(dto.getNoticeTime());
@@ -76,7 +80,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 		if (dto.getPreNoticeRepeatTimeRange() != null && dto.getPreNoticeRepeatTimeUnit() != null) {
 			addPreNotice(dto, newNoticeId);
 		}
-		
+
 		r.setMessage("Add: " + localDateTimeHandler.dateToStr(po.getNoticeTime()) + ", " + po.getNoticeContent());
 		r.setIsSuccess();
 		return r;
@@ -101,7 +105,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 	private CommonResult checkAddNoticeDtoAndSimpleFix(AddCalendarNoticeDTO dto) {
 		CommonResult r = new CommonResult();
 		boolean needRepeat = dto.getRepeatTimeUnit() != null && dto.getRepeatTimeRange() != null;
-		
+
 		if (dto.getRepeatTimeUnit() != null || dto.getRepeatTimeRange() != null) {
 			if (dto.getRepeatTimeUnit() == null || dto.getRepeatTimeRange() == null) {
 				r.addMessage("If need repeat, please fill time unit and time range");
@@ -117,7 +121,6 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 				}
 			}
 		}
-		
 
 		if (StringUtils.isBlank(dto.getNoticeContent())) {
 			r.addMessage("Please fill notice content");
@@ -300,8 +303,16 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 		for (CalendarNotice po : commonNoticeList) {
 			dto = new TelegramMessageDTO();
 			dto.setId(TelegramStaticChatID.MY_ID);
-			dto.setMsg(po.getNoticeContent());
 			dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
+			if (po.getStrongNotice()) {
+				calendarNoticeConstantService.getStrongNoticeList().add(po);
+				dto.setMsg(po.getNoticeContent() + " " + hostnameService.findZhang() + CalendarNoticeUrl.ROOT
+						+ CalendarNoticeUrl.STOP_STRONG_NOTICE + "?pk=" + URLEncoder.encode(encryptId(po.getId()), StandardCharsets.UTF_8));
+				
+			} else {
+				dto.setMsg(po.getNoticeContent());
+			}
+
 			telegramMessageAckProducer.send(dto);
 
 			updateNoticeStatus(po);
@@ -397,16 +408,16 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 		}
 
 		Long id = decryptPrivateKey(dto.getPk());
-		if(id == null) {
+		if (id == null) {
 			return r;
 		}
-		
+
 		return deleteNotice(id);
 	}
-	
+
 	private CommonResult deleteNotice(Long id) {
 		CommonResult r = new CommonResult();
-		
+
 		CalendarNotice noticePO = mapper.selectByPrimaryKey(id);
 		noticePO.setIsDelete(true);
 		mapper.updateByPrimaryKeySelective(noticePO);
@@ -418,107 +429,155 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 		preNoticeMapper.updateByExampleSelective(preNoticePO, preNoticeExample);
 
 		r.setIsSuccess();
-		r.setMessage("delete: " + noticePO.getNoticeContent() + ", " + localDateTimeHandler.dateToStr(noticePO.getNoticeTime()));
+		r.setMessage("delete: " + noticePO.getNoticeContent() + ", "
+				+ localDateTimeHandler.dateToStr(noticePO.getNoticeTime()));
 		return r;
 	}
 
 	@Override
 	public CommonResult editNotice(EditCalendarNoticeDTO dto) {
-		CommonResult r = new CommonResult(); 
-		
+		CommonResult r = new CommonResult();
+
 		if (dto == null || StringUtils.isBlank(dto.getPk())) {
 			r.setMessage("null param");
 			return r;
 		}
 
 		Long id = decryptPrivateKey(dto.getPk());
-		if(id == null) {
+		if (id == null) {
 			return r;
 		}
-		
+
 		r = checkAddNoticeDtoAndSimpleFix(dto);
 		if (r.isFail()) {
 			return r;
 		}
-		
+
 		r = addCalendarNotice(dto);
 		if (r.isFail()) {
 			return r;
 		}
-		
+
 		deleteNotice(id);
-		
+
 		return r;
 	}
 
 	@Override
 	public ModelAndView searchNoticeView() {
 		ModelAndView view = new ModelAndView("toolJSP/CalendarNoticeSearchResult");
-		
+
 		CalendarNoticeExample example = new CalendarNoticeExample();
 		example.createCriteria().andIsDeleteEqualTo(false);
 		List<CalendarNotice> commonNoticeList = mapper.selectByExample(example);
-		
+
 		CalendarPreNoticeExample preNoticeExample = new CalendarPreNoticeExample();
 		preNoticeExample.createCriteria().andIsDeleteEqualTo(false);
 		List<CalendarPreNotice> preNoticeList = preNoticeMapper.selectByExample(preNoticeExample);
 		HashMap<Long, CalendarPreNotice> preNoticeMap = new HashMap<>();
-		for(CalendarPreNotice preNotice : preNoticeList) {
+		for (CalendarPreNotice preNotice : preNoticeList) {
 			preNoticeMap.put(preNotice.getBindNoticeId(), preNotice);
 		}
-		
+
 		List<CalendarNoticeVO> noticeVOList = new ArrayList<>();
-		for(CalendarNotice po : commonNoticeList) {
+		for (CalendarNotice po : commonNoticeList) {
 			noticeVOList.add(poToVo(po, preNoticeMap));
 		}
-		
+
 		view.addObject("noticeVOList", noticeVOList);
-		
+
 		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.minute, TimeUnitType.hour, TimeUnitType.day,
 				TimeUnitType.week, TimeUnitType.month };
 		view.addObject("timeUnitType", timeUnitTypes);
-		
+
 		return view;
 	}
-	
+
 	private CalendarNoticeVO poToVo(CalendarNotice po, HashMap<Long, CalendarPreNotice> preNoticeMap) {
 		CalendarNoticeVO vo = new CalendarNoticeVO();
-		
+
 		vo.setPk(encryptId(po.getId()));
 		vo.setNoticeContent(po.getNoticeContent());
 		vo.setIsLunarCalendar(po.getIsLunarCalendar());
+		vo.setStrongNotice(po.getStrongNotice());
 		vo.setNoticeTime(po.getNoticeTime());
 		vo.setNoticeTimeStr(localDateTimeHandler.dateToStr(po.getNoticeTime()));
 		vo.setRepeatTimeRange(po.getRepeatTimeRange());
 		vo.setRepeatTimeUnit(po.getRepeatTimeUnit());
 		TimeUnitType timeUnitType = TimeUnitType.getType(po.getRepeatTimeUnit());
-		if(timeUnitType != null) {
+		if (timeUnitType != null) {
 			vo.setRepeatTimeUnitName(timeUnitType.getCnName() + timeUnitType.getName());
 		}
-		if(po.getValidTime() != null) {
+		if (po.getValidTime() != null) {
 			vo.setValidTime(po.getValidTime());
 			vo.setValidTimeStr(localDateTimeHandler.dateToStr(po.getValidTime()));
 		}
-		
+
 		CalendarPreNotice preNotice = preNoticeMap.get(po.getId());
-		if(preNotice == null) {
+		if (preNotice == null) {
 			return vo;
 		}
-		
+
 		vo.setPreNoticePk(encryptId(preNotice.getId()));
-		
+
 		vo.setPreNoticeRepeatTimeRange(preNotice.getRepeatTimeRange());
 		vo.setPreNoticeRepeatTimeUnit(preNotice.getRepeatTimeUnit());
 		timeUnitType = TimeUnitType.getType(preNotice.getRepeatTimeUnit());
-		if(timeUnitType != null) {
+		if (timeUnitType != null) {
 			vo.setPreNoticeRepeatTimeUnitName(timeUnitType.getCnName() + timeUnitType.getName());
 		}
-		
+
 		vo.setPreNoticeRepeatCount(preNotice.getRepeatCount());
-		
+
 		vo.setPreNoticeTime(preNotice.getNoticeTime());
 		vo.setPreNoticeTimeStr(localDateTimeHandler.dateToStr(preNotice.getNoticeTime()));
-		
+
 		return vo;
+	}
+
+	@Override
+	public CommonResult stopStrongNotic(String pk) {
+		CommonResult r = new CommonResult();
+		if (StringUtils.isBlank(pk)) {
+			return r;
+		}
+
+		Long id = decryptPrivateKey(pk);
+		if (id == null) {
+			return r;
+		}
+
+		CalendarNotice po = null;
+		for (int i = 0; i < calendarNoticeConstantService.getStrongNoticeList().size(); i++) {
+			po = calendarNoticeConstantService.getStrongNoticeList().get(i);
+			if (id.equals(po.getId())) {
+				calendarNoticeConstantService.getStrongNoticeList().remove(i);
+				r.setIsSuccess();
+				return r;
+			}
+		}
+
+		return r;
+	}
+	
+	@Override
+	public void findAndSendStrongNotice() {
+		List<CalendarNotice> commonNoticeList = calendarNoticeConstantService.getStrongNoticeList();
+		if (commonNoticeList == null || commonNoticeList.isEmpty()) {
+			return;
+		}
+
+		TelegramMessageDTO dto = null;
+		for (CalendarNotice po : commonNoticeList) {
+			dto = new TelegramMessageDTO();
+			dto.setId(TelegramStaticChatID.MY_ID);
+			dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
+			if (po.getStrongNotice()) {
+				dto.setMsg(po.getNoticeContent() + " " + hostnameService.findZhang() + CalendarNoticeUrl.ROOT
+						+ CalendarNoticeUrl.STOP_STRONG_NOTICE + "?pk=" + URLEncoder.encode(encryptId(po.getId()), StandardCharsets.UTF_8));
+			}
+
+			telegramMessageAckProducer.send(dto);
+		}
 	}
 }

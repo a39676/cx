@@ -24,6 +24,7 @@
           <td>noticeTime</td> <%-- noticeTime --%>
           <td>validTime</td> <%-- validTime --%>
           <td>isLunarCalendar</td> <%-- isLunarCalendar --%>
+          <td>isStrongNotice</td> <%-- isStrongNotice --%>
           <td>pre notice repeat</td> <%-- pre notice repeat setting --%>
           <td>preNoticeCount</td>
           <td></td>
@@ -66,6 +67,14 @@
                 <input type="checkbox" noticePK="${noticeVO.pk}"name="isLunarNotice" >
               </c:if>
             </td>
+            <td>
+              <c:if test="${noticeVO.strongNotice}">
+                <input type="checkbox" noticePK="${noticeVO.pk}" name="isStrongNotice" checked="checked">
+                </c:if>
+                <c:if test="${noticeVO.strongNotice == false}">
+                  <input type="checkbox" noticePK="${noticeVO.pk}"name="isStrongNotice" >
+                  </c:if>
+                </td>
             <td>
               <input type="number" name="preNoticeRepeatTimeRange" noticePK="${noticeVO.pk}"
               value="${noticeVO.preNoticeRepeatTimeRange}" style="width: 80px;">
@@ -144,6 +153,7 @@
         var repeatTimeRange = $("input[noticePK='"+pk+"'][name='repeatTimeRange']").val();
         var repeatTimeUnit = $("select[noticePK='"+pk+"'][name='repeatTimeUnit'] option:selected").val();
         var isLunarNotice = $("input[noticePK='"+pk+"'][name='isLunarNotice']").is(":checked");
+        var isStrongNotice = $("input[noticePK='"+pk+"'][name='isStrongNotice']").is(":checked");
         var noticeTime;
         var lunarNoticeTime;
         if(isLunarNotice){
@@ -162,6 +172,7 @@
           lunarNoticeTime : lunarNoticeTime,
           validTime : validTime,
           isLunarNotice : isLunarNotice,
+          isStrongNotice : isStrongNotice,
           repeatTimeUnit : repeatTimeUnit,
           repeatTimeRange : repeatTimeRange,
           preNoticeRepeatTimeUnit : preNoticeRepeatTimeUnit,

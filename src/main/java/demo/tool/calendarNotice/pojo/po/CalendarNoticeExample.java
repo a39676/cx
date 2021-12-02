@@ -235,6 +235,66 @@ public class CalendarNoticeExample {
             return (Criteria) this;
         }
 
+        public Criteria andStrongNoticeIsNull() {
+            addCriterion("strong_notice is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStrongNoticeIsNotNull() {
+            addCriterion("strong_notice is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStrongNoticeEqualTo(Boolean value) {
+            addCriterion("strong_notice =", value, "strongNotice");
+            return (Criteria) this;
+        }
+
+        public Criteria andStrongNoticeNotEqualTo(Boolean value) {
+            addCriterion("strong_notice <>", value, "strongNotice");
+            return (Criteria) this;
+        }
+
+        public Criteria andStrongNoticeGreaterThan(Boolean value) {
+            addCriterion("strong_notice >", value, "strongNotice");
+            return (Criteria) this;
+        }
+
+        public Criteria andStrongNoticeGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("strong_notice >=", value, "strongNotice");
+            return (Criteria) this;
+        }
+
+        public Criteria andStrongNoticeLessThan(Boolean value) {
+            addCriterion("strong_notice <", value, "strongNotice");
+            return (Criteria) this;
+        }
+
+        public Criteria andStrongNoticeLessThanOrEqualTo(Boolean value) {
+            addCriterion("strong_notice <=", value, "strongNotice");
+            return (Criteria) this;
+        }
+
+        public Criteria andStrongNoticeIn(List<Boolean> values) {
+            addCriterion("strong_notice in", values, "strongNotice");
+            return (Criteria) this;
+        }
+
+        public Criteria andStrongNoticeNotIn(List<Boolean> values) {
+            addCriterion("strong_notice not in", values, "strongNotice");
+            return (Criteria) this;
+        }
+
+        public Criteria andStrongNoticeBetween(Boolean value1, Boolean value2) {
+            addCriterion("strong_notice between", value1, value2, "strongNotice");
+            return (Criteria) this;
+        }
+
+        public Criteria andStrongNoticeNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("strong_notice not between", value1, value2, "strongNotice");
+            return (Criteria) this;
+        }
+
         public Criteria andNeedRepeatIsNull() {
             addCriterion("need_repeat is null");
             return (Criteria) this;

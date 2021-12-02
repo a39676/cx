@@ -18,6 +18,7 @@ public class CalendarNoticeVO {
 	private LocalDateTime noticeTime;
 
 	private boolean isLunarCalendar;
+	private boolean strongNotice;
 
 	private String preNoticePk;
 
@@ -108,6 +109,14 @@ public class CalendarNoticeVO {
 
 	public void setIsLunarCalendar(boolean isLunarCalendar) {
 		this.isLunarCalendar = isLunarCalendar;
+	}
+
+	public boolean getStrongNotice() {
+		return strongNotice;
+	}
+
+	public void setStrongNotice(boolean strongNotice) {
+		this.strongNotice = strongNotice;
 	}
 
 	public String getPreNoticePk() {

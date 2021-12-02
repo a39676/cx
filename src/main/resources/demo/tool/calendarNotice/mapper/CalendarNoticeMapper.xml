@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="demo.tool.calendarNotice.pojo.po.CalendarNotice">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="notice_content" jdbcType="CHAR" property="noticeContent" />
+    <result column="strong_notice" jdbcType="BIT" property="strongNotice" />
     <result column="need_repeat" jdbcType="BIT" property="needRepeat" />
     <result column="repeat_time_unit" jdbcType="INTEGER" property="repeatTimeUnit" />
     <result column="repeat_time_range" jdbcType="INTEGER" property="repeatTimeRange" />
@@ -72,8 +73,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, notice_content, need_repeat, repeat_time_unit, repeat_time_range, valid_time, 
-    notice_time, is_lunar_calendar, create_time, is_delete
+    id, notice_content, strong_notice, need_repeat, repeat_time_unit, repeat_time_range, 
+    valid_time, notice_time, is_lunar_calendar, create_time, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.tool.calendarNotice.pojo.po.CalendarNoticeExample" resultMap="BaseResultMap">
     select
@@ -106,14 +107,14 @@
     </if>
   </delete>
   <insert id="insert" parameterType="demo.tool.calendarNotice.pojo.po.CalendarNotice">
-    insert into calendar_notice (id, notice_content, need_repeat, 
-      repeat_time_unit, repeat_time_range, valid_time, 
-      notice_time, is_lunar_calendar, create_time, 
-      is_delete)
-    values (#{id,jdbcType=BIGINT}, #{noticeContent,jdbcType=CHAR}, #{needRepeat,jdbcType=BIT}, 
-      #{repeatTimeUnit,jdbcType=INTEGER}, #{repeatTimeRange,jdbcType=INTEGER}, #{validTime,jdbcType=TIMESTAMP}, 
-      #{noticeTime,jdbcType=TIMESTAMP}, #{isLunarCalendar,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{isDelete,jdbcType=BIT})
+    insert into calendar_notice (id, notice_content, strong_notice, 
+      need_repeat, repeat_time_unit, repeat_time_range, 
+      valid_time, notice_time, is_lunar_calendar, 
+      create_time, is_delete)
+    values (#{id,jdbcType=BIGINT}, #{noticeContent,jdbcType=CHAR}, #{strongNotice,jdbcType=BIT}, 
+      #{needRepeat,jdbcType=BIT}, #{repeatTimeUnit,jdbcType=INTEGER}, #{repeatTimeRange,jdbcType=INTEGER}, 
+      #{validTime,jdbcType=TIMESTAMP}, #{noticeTime,jdbcType=TIMESTAMP}, #{isLunarCalendar,jdbcType=BIT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="demo.tool.calendarNotice.pojo.po.CalendarNotice">
     insert into calendar_notice
@@ -123,6 +124,9 @@
       </if>
       <if test="noticeContent != null">
         notice_content,
+      </if>
+      <if test="strongNotice != null">
+        strong_notice,
       </if>
       <if test="needRepeat != null">
         need_repeat,
@@ -155,6 +159,9 @@
       </if>
       <if test="noticeContent != null">
         #{noticeContent,jdbcType=CHAR},
+      </if>
+      <if test="strongNotice != null">
+        #{strongNotice,jdbcType=BIT},
       </if>
       <if test="needRepeat != null">
         #{needRepeat,jdbcType=BIT},
@@ -197,6 +204,9 @@
       <if test="record.noticeContent != null">
         notice_content = #{record.noticeContent,jdbcType=CHAR},
       </if>
+      <if test="record.strongNotice != null">
+        strong_notice = #{record.strongNotice,jdbcType=BIT},
+      </if>
       <if test="record.needRepeat != null">
         need_repeat = #{record.needRepeat,jdbcType=BIT},
       </if>
@@ -230,6 +240,7 @@
     update calendar_notice
     set id = #{record.id,jdbcType=BIGINT},
       notice_content = #{record.noticeContent,jdbcType=CHAR},
+      strong_notice = #{record.strongNotice,jdbcType=BIT},
       need_repeat = #{record.needRepeat,jdbcType=BIT},
       repeat_time_unit = #{record.repeatTimeUnit,jdbcType=INTEGER},
       repeat_time_range = #{record.repeatTimeRange,jdbcType=INTEGER},
@@ -247,6 +258,9 @@
     <set>
       <if test="noticeContent != null">
         notice_content = #{noticeContent,jdbcType=CHAR},
+      </if>
+      <if test="strongNotice != null">
+        strong_notice = #{strongNotice,jdbcType=BIT},
       </if>
       <if test="needRepeat != null">
         need_repeat = #{needRepeat,jdbcType=BIT},
@@ -278,6 +292,7 @@
   <update id="updateByPrimaryKey" parameterType="demo.tool.calendarNotice.pojo.po.CalendarNotice">
     update calendar_notice
     set notice_content = #{noticeContent,jdbcType=CHAR},
+      strong_notice = #{strongNotice,jdbcType=BIT},
       need_repeat = #{needRepeat,jdbcType=BIT},
       repeat_time_unit = #{repeatTimeUnit,jdbcType=INTEGER},
       repeat_time_range = #{repeatTimeRange,jdbcType=INTEGER},

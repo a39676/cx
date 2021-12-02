@@ -7,6 +7,8 @@ public class CalendarNotice {
 
     private String noticeContent;
 
+    private Boolean strongNotice;
+
     private Boolean needRepeat;
 
     private Integer repeatTimeUnit;
@@ -37,6 +39,14 @@ public class CalendarNotice {
 
     public void setNoticeContent(String noticeContent) {
         this.noticeContent = noticeContent == null ? null : noticeContent.trim();
+    }
+
+    public Boolean getStrongNotice() {
+        return strongNotice;
+    }
+
+    public void setStrongNotice(Boolean strongNotice) {
+        this.strongNotice = strongNotice;
     }
 
     public Boolean getNeedRepeat() {

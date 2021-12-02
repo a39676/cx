@@ -17,4 +17,9 @@ public class CalendarNoticeTaskService {
 		calendarNoticeService.findAndSendNotice();
 	}
 	
+	@Scheduled(fixedRate = 1000L * 60 * 5)
+	public void findAndSendStrongNotice() {
+		calendarNoticeService.findAndSendStrongNotice();
+	}
+	
 }

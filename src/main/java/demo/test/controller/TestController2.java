@@ -2,6 +2,7 @@ package demo.test.controller;
 
 import java.time.LocalDateTime;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import demo.common.controller.CommonController;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.dto.TestDTO;
+import demo.tool.calendarNotice.service.CalendarNoticeService;
 import net.sf.json.JSONObject;
 
 @Controller
@@ -33,11 +35,21 @@ public class TestController2 extends CommonController {
 		t = (TestDTO) JSONObject.toBean(j, TestDTO.class);
 		return j.toString();
 	}
+	
+	@Autowired
+	private CalendarNoticeService service;
 
-	@GetMapping(value = "/test3")
+	@GetMapping(value = "/t1")
 	@ResponseBody
-	public String test3() {
+	public String t1() {
+		service.findAndSendNotice();
 		return "done";
 	}
-
+	
+	@GetMapping(value = "/t2")
+	@ResponseBody
+	public String t2() {
+		service.findAndSendStrongNotice();
+		return "done";
+	}
 }

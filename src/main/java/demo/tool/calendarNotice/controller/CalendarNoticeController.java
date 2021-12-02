@@ -3,53 +3,25 @@ package demo.tool.calendarNotice.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.tool.calendarNotice.pojo.dto.AddCalendarNoticeDTO;
-import demo.tool.calendarNotice.pojo.dto.DeleteCalendarNoticeDTO;
-import demo.tool.calendarNotice.pojo.dto.EditCalendarNoticeDTO;
+import demo.tool.calendarNotice.pojo.constant.CalendarNoticeUrl;
 import demo.tool.calendarNotice.service.CalendarNoticeService;
-import demo.tool.other.pojo.constant.ToolUrlConstant;
 
 @Controller
-@RequestMapping(value = ToolUrlConstant.root + "/canlendarNotice")
+@RequestMapping(value = CalendarNoticeUrl.ROOT)
 public class CalendarNoticeController {
 
 	@Autowired
 	private CalendarNoticeService service;
 
-	@GetMapping(value = "/manager")
-	public ModelAndView calendarNoticeManager() {
-		return service.getManagerView();
-	}
-
-	@PostMapping(value = "/addNotice")
+	@GetMapping(value = CalendarNoticeUrl.STOP_STRONG_NOTICE)
 	@ResponseBody
-	public CommonResult addCalendarNotice(@RequestBody AddCalendarNoticeDTO dto) {
-		return service.addCalendarNotice(dto);
-	}
-
-	@PostMapping(value = "/deleteNotice")
-	@ResponseBody
-	public CommonResult deleteNotice(@RequestBody DeleteCalendarNoticeDTO dto) {
-		return service.deleteNotice(dto);
-	}
-
-	@PostMapping(value = "/editNotice")
-	@ResponseBody
-	public CommonResult editNotice(@RequestBody EditCalendarNoticeDTO dto) {
-		return service.editNotice(dto);
-	}
-	
-	@PostMapping(value = "/searchNotice")
-	@ResponseBody
-	public ModelAndView searchNoticeView() {
-		return service.searchNoticeView();
+	public CommonResult calendarNoticeManager(@RequestParam("pk") String pk) {
+		return service.stopStrongNotic(pk);
 	}
 
 }

@@ -28,4 +28,8 @@ public interface CalendarNoticeService {
 
 	ModelAndView searchNoticeView();
 
+	CommonResult stopStrongNotic(String pk);
+
+	void findAndSendStrongNotice();
+
 }

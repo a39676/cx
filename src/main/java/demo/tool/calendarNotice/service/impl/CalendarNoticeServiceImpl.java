@@ -305,7 +305,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			dto.setId(TelegramStaticChatID.MY_ID);
 			dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
 			if (po.getStrongNotice()) {
-				calendarNoticeConstantService.getStrongNoticeList().add(po);
+				calendarNoticeConstantService.addStrongNotice(po);
 				dto.setMsg(po.getNoticeContent() + " " + hostnameService.findZhang() + CalendarNoticeUrl.ROOT
 						+ CalendarNoticeUrl.STOP_STRONG_NOTICE + "?pk="
 						+ URLEncoder.encode(encryptId(po.getId()), StandardCharsets.UTF_8));

@@ -29,6 +29,7 @@ import demo.tool.calendarNotice.pojo.po.CalendarPreNotice;
 import demo.tool.calendarNotice.pojo.po.CalendarPreNoticeExample;
 import demo.tool.calendarNotice.pojo.vo.CalendarNoticeVO;
 import demo.tool.calendarNotice.service.CalendarNoticeService;
+import demo.tool.calendarNotice.service.CalendarNoticeStrongNoticeService;
 import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.dto.TelegramMessageDTO;
@@ -43,6 +44,8 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 	private CalendarPreNoticeMapper preNoticeMapper;
 	@Autowired
 	private TelegramCalendarNoticeMessageAckProducer telegramMessageAckProducer;
+	@Autowired
+	private CalendarNoticeStrongNoticeService strongNoticeService;
 
 	@Override
 	public ModelAndView getManagerView() {
@@ -305,7 +308,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			dto.setId(TelegramStaticChatID.MY_ID);
 			dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
 			if (po.getStrongNotice()) {
-				calendarNoticeConstantService.addStrongNotice(po);
+				strongNoticeService.addStrongNotice(po);
 				dto.setMsg(po.getNoticeContent() + " " + hostnameService.findZhang() + CalendarNoticeUrl.ROOT
 						+ CalendarNoticeUrl.STOP_STRONG_NOTICE + "?pk="
 						+ URLEncoder.encode(encryptId(po.getId()), StandardCharsets.UTF_8));
@@ -548,22 +551,15 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			return r;
 		}
 
-		CalendarNotice po = null;
-		for (int i = 0; i < calendarNoticeConstantService.getStrongNoticeList().size(); i++) {
-			po = calendarNoticeConstantService.getStrongNoticeList().get(i);
-			if (id.equals(po.getId())) {
-				calendarNoticeConstantService.getStrongNoticeList().remove(i);
-				r.setIsSuccess();
-				return r;
-			}
-		}
+		strongNoticeService.stopStrongNotice(id);
 
+		r.setIsSuccess();
 		return r;
 	}
 
 	@Override
 	public void findAndSendStrongNotice() {
-		List<CalendarNotice> commonNoticeList = calendarNoticeConstantService.getStrongNoticeList();
+		List<CalendarNotice> commonNoticeList = strongNoticeService.getStrongNoticeList();
 		if (commonNoticeList == null || commonNoticeList.isEmpty()) {
 			return;
 		}

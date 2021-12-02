@@ -14,7 +14,8 @@ import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.dto.TestDTO;
 import demo.tool.calendarNotice.pojo.po.CalendarNotice;
 import demo.tool.calendarNotice.service.CalendarNoticeService;
-import demo.tool.calendarNotice.service.impl.CalendarNoticeConstantService;
+import demo.tool.calendarNotice.service.CalendarNoticeStrongNoticeService;
+import demo.tool.calendarNotice.service.impl.CalendarNoticeStrongNoticeServiceImpl;
 import net.sf.json.JSONObject;
 
 @Controller
@@ -57,11 +58,21 @@ public class TestController2 extends CommonController {
 	}
 
 	@Autowired
-	protected CalendarNoticeConstantService cs;
+	protected CalendarNoticeStrongNoticeServiceImpl cs;
 	
 	@GetMapping(value = "/t3")
 	@ResponseBody
 	public List<CalendarNotice> t3() {
 		return cs.getStrongNoticeList();
 	}
+	
+	@Autowired
+	private CalendarNoticeStrongNoticeService sr;
+	
+	@GetMapping(value = "/a1")
+	@ResponseBody
+	public List<CalendarNotice> a3() {
+		return sr.getStrongNoticeList();
+	}
+	
 }

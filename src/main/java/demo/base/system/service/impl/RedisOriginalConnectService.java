@@ -7,23 +7,15 @@ import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import demo.common.pojo.result.CommonResultCX;
-import demo.common.service.CommonService;
 import net.sf.json.JSONObject;
 import tool.pojo.bo.IpRecordBO;
 import toolPack.ioHandle.FileUtilCustom;
 
-@Scope("singleton")
 @Service
-public class RedisConnectService extends CommonService {
-	
-	@Autowired
-	private RedisTemplate<String, Object> redisTemplate;
+public class RedisOriginalConnectService extends RedisConnectCommonService {
 	
 	public String getValByName(String constantName) {
 		if(StringUtils.isBlank(constantName)) {
@@ -51,10 +43,6 @@ public class RedisConnectService extends CommonService {
 	
 	public void deleteValByName(String constantName) {
 		redisTemplate.delete(constantName);
-	}
-	
-	public Boolean hasKey(String key) {
-		return redisTemplate.hasKey(key);
 	}
 	
 	public CommonResultCX refreshRedisValueFromFile(String filePath) {
@@ -121,52 +109,5 @@ public class RedisConnectService extends CommonService {
 
 		return keys.size();
 	}
-	
-	/**
-	 * 保留作为用例
-	 */
-//	private void setRoleListFromDBToRedis() {
-//		List<Roles> roleList = getRoleListFromDB();
-//		
-//		JSONArray ja = JSONArray.fromObject(roleList);
-//		constantService.setValByName(SystemConstantStore.roleList, ja.toString());
-//	}
-//	
-//	public List<Roles> getRoleListFromDB() {
-//		
-//		List<Roles> roleList = roleMapper.getRoleList();
-//		
-//		if(roleList == null || roleList.isEmpty()) {
-//			roleList = new ArrayList<Roles>();
-//		}
-//		
-//		return roleList;
-//		
-//	}
-//	
-//	public List<Roles> getRoleListFromRedis(boolean refresh) {
-//		if(refresh) {
-//			setRoleListFromDBToRedis();
-//		}
-//		
-//		String roleListStr = constantService.getValByName(SystemConstantStore.roleList);
-//		if(StringUtils.isBlank(roleListStr)) {
-//			return new ArrayList<Roles>();
-//		}
-//		
-//		JSONArray ja = JSONArray.fromObject(roleListStr);
-//		if(ja.size() < 1) {
-//			return new ArrayList<Roles>();
-//		}
-//		
-//		Gson g = new Gson();
-//		Roles r = null;
-//		List<Roles> roleList = new ArrayList<Roles>();
-//		for(int i = 0; i < ja.size(); i++) {
-//			r = g.fromJson(ja.getString(i), Roles.class);
-//			roleList.add(r);
-//		}
-//		
-//		return roleList;
-//	}
+
 }

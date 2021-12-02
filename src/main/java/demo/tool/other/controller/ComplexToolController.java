@@ -10,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import demo.common.controller.CommonController;
 import demo.tool.other.pojo.constant.ToolUrlConstant;
+import demo.tool.other.pojo.vo.EncryptIdVO;
 import demo.tool.other.service.ComplexToolService;
 
 @Controller
@@ -26,7 +27,7 @@ public class ComplexToolController extends CommonController {
 	
 	@GetMapping(value = "/encryptId")
 	@ResponseBody
-	public String encryptIDNum(@RequestParam(value = "id", defaultValue = "0")Long id) {
+	public EncryptIdVO encryptIDNum(@RequestParam(value = "id", defaultValue = "0")Long id) {
 		return complexToolService.encryptIDNum(id);
 	}
 	

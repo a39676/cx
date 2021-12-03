@@ -14,10 +14,13 @@
 <body>
 <div class="container-fluid">
 
-<div class="row">
-  ${noticeContent}
-  <button id="stopStrongNotice">Stop strong notice</button>
-</div>
+  <div class="row">
+    ${noticeContent}
+  </div>
+
+  <div class="row">
+    <button id="stopStrongNotice">Stop strong notice</button>
+  </div>
 
 <hr>
 

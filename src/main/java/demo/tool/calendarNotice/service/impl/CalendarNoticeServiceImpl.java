@@ -408,6 +408,38 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 		}
 	}
 
+	private void updatePreNoticeStatusSkipThisRound(CalendarPreNotice preNoticePo, CalendarNotice po) {
+		// 通知无需重复 或 已删除 无需下一轮提前提醒
+		if (!po.getNeedRepeat() || po.getIsDelete()) {
+			preNoticePo.setIsDelete(true);
+			preNoticeMapper.updateByPrimaryKeySelective(preNoticePo);
+			return;
+		}
+
+		TimeUnitType noticeTimeUnitType = TimeUnitType.getType(po.getRepeatTimeUnit());
+		LocalDateTime nextNoticeTime = getNextLocalDateTime(po.getNoticeTime(), noticeTimeUnitType,
+				po.getRepeatTimeRange());
+
+		// 超过有效期 无需下一轮提前提醒
+		if (po.getValidTime() != null && nextNoticeTime.isAfter(po.getValidTime())) {
+			preNoticePo.setIsDelete(true);
+			preNoticeMapper.updateByPrimaryKeySelective(preNoticePo);
+			return;
+		}
+
+		TimeUnitType preNoticeTimeUnitType = TimeUnitType.getType(preNoticePo.getRepeatTimeUnit());
+		LocalDateTime nextPreNoticeTime = getNextLocalDateTime(preNoticePo.getNoticeTime(), preNoticeTimeUnitType,
+				preNoticePo.getRepeatTimeRange());
+
+		nextPreNoticeTime = getPreNoticeTime(nextNoticeTime, preNoticeTimeUnitType, preNoticePo.getRepeatTimeRange(),
+				preNoticePo.getRepeatCount());
+		preNoticePo.setValidTime(nextNoticeTime);
+		preNoticePo.setNoticeTime(nextPreNoticeTime);
+		preNoticeMapper.updateByPrimaryKeySelective(preNoticePo);
+		return;
+
+	}
+
 	@Override
 	public CommonResult deleteNotice(DeleteCalendarNoticeDTO dto) {
 		CommonResult r = new CommonResult();
@@ -638,7 +670,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			return r;
 		}
 
-		updatePreNoticeStatus(preNoticePO, noticePO);
+		updatePreNoticeStatusSkipThisRound(preNoticePO, noticePO);
 
 		r.setMessage("Done");
 		r.setIsSuccess();

@@ -332,8 +332,8 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			dto.setId(TelegramStaticChatID.MY_ID);
 			dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
 			dto.setMsg("PreNotice: " + notice.getNoticeContent() + " at: " + notice.getNoticeTime() + " "
-					+ hostnameService.findZhang() + CalendarNoticeUrl.ROOT + CalendarNoticeUrl.STOP_PRE_NOTICE
-					+ "?pk=" + URLEncoder.encode(encryptId(preNoticePo.getId()), StandardCharsets.UTF_8));
+					+ hostnameService.findZhang() + CalendarNoticeUrl.ROOT + CalendarNoticeUrl.STOP_PRE_NOTICE + "?pk="
+					+ URLEncoder.encode(encryptId(preNoticePo.getId()), StandardCharsets.UTF_8));
 			telegramMessageAckProducer.send(dto);
 
 			updatePreNoticeStatus(preNoticePo, notice);
@@ -610,7 +610,8 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 		if (noticePO == null) {
 			return v;
 		}
-		v.addObject("noticeContent", noticePO.getNoticeContent());
+		v.addObject("noticeContent", ("Pre notice time: " + localDateTimeHandler.dateToStr(preNoticePO.getNoticeTime())
+				+ ", " + noticePO.getNoticeContent()));
 
 		return v;
 	}

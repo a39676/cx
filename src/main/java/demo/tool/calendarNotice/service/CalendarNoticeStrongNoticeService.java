@@ -13,4 +13,6 @@ public interface CalendarNoticeStrongNoticeService {
 
 	void stopStrongNotice(Long id);
 
+	StrongNoticeBO getStrongNotice(Long id);
+
 }

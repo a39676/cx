@@ -32,6 +32,14 @@ public class CalendarNoticeStrongNoticeServiceImpl extends CalendarNoticeCommonS
 
 		return result;
 	}
+	
+	@Override
+	public StrongNoticeBO getStrongNotice(Long id) {
+		String objStr = redisHashConnectService.getValByName(CalendarNoticeConstant.STRONG_NOTICE_REDIS_KEY, id.toString());
+		StrongNoticeBO obj = new Gson().fromJson(objStr, StrongNoticeBO.class);;
+
+		return obj;
+	}
 
 	@Override
 	public void addStrongNotice(CalendarNotice strongNotice) {

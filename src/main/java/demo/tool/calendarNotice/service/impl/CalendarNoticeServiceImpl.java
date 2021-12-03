@@ -547,7 +547,9 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 		Long id = decryptPrivateKey(pk);
 		v.addObject("pk", pk);
 		StrongNoticeBO bo = strongNoticeService.getStrongNotice(id);
-		v.addObject("noticeContent", bo.getNoticeContent());
+		if(bo != null) {
+			v.addObject("noticeContent", bo.getNoticeContent());
+		}
 		
 		return v;
 	}

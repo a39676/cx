@@ -37,6 +37,7 @@
     $(document).ready(function() {
 
       $("#stopStrongNotice").click(function () {
+        console.log("get in");
         stopStrongNotice();
       });
 
@@ -45,8 +46,10 @@
         var url = "/canlendarNotice/stopStrongNotice";
 
         var jsonOutput = {
-          pk : ${pk}
+          pk : "${pk}"
         };
+
+        console.log(jsonOutput);
 
         $.ajax({
           type : "POST",

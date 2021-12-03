@@ -9,9 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import demo.base.system.service.impl.RedisSetConnectService;
 import demo.common.controller.CommonController;
+import demo.config.costom_component.SnowFlake;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.dto.TestDTO;
+import demo.tool.calendarNotice.pojo.bo.StrongNoticeBO;
 import demo.tool.calendarNotice.pojo.po.CalendarNotice;
 import demo.tool.calendarNotice.service.CalendarNoticeService;
 import demo.tool.calendarNotice.service.CalendarNoticeStrongNoticeService;
@@ -62,7 +65,7 @@ public class TestController2 extends CommonController {
 	
 	@GetMapping(value = "/t3")
 	@ResponseBody
-	public List<CalendarNotice> t3() {
+	public List<StrongNoticeBO> t3() {
 		return cs.getStrongNoticeList();
 	}
 	
@@ -71,8 +74,56 @@ public class TestController2 extends CommonController {
 	
 	@GetMapping(value = "/a1")
 	@ResponseBody
-	public List<CalendarNotice> a3() {
+	public List<StrongNoticeBO> a1() {
 		return sr.getStrongNoticeList();
 	}
+	
+	@GetMapping(value = "/a2")
+	@ResponseBody
+	public void a2() {
+		CalendarNotice po = new CalendarNotice();
+		po.setId(1L);
+		po.setNeedRepeat(false);
+		po.setNoticeContent("1");
+		sr.addStrongNotice(po);
+		po = new CalendarNotice();
+		po.setId(2L);
+		po.setNeedRepeat(false);
+		po.setNoticeContent("2");
+		sr.addStrongNotice(po);
+	}
+	
+	@Autowired
+	private RedisSetConnectService rs;
+	@Autowired
+	private SnowFlake snowFlake;
+	
+	@GetMapping(value = "/r1")
+	@ResponseBody
+	public void r1() {
+		rs.add("ts", String.valueOf(snowFlake.getNextId()));
+		rs.add("ts", String.valueOf(snowFlake.getNextId()));
+		rs.add("ts", String.valueOf(snowFlake.getNextId()));
+	}
+	
+	@GetMapping(value = "/r2")
+	@ResponseBody
+	public String r2() {
+		return rs.pop("ts");
+	}
+	
+	@GetMapping(value = "/r3")
+	@ResponseBody
+	public List<String> r3() {
+		return rs.pop("ts", 3);
+	}
+	
+	@GetMapping(value = "/r4")
+	@ResponseBody
+	public List<String> r4() {
+		return rs.members("ts");
+	}
+	
+	
 	
 }

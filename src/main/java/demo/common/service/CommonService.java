@@ -19,6 +19,7 @@ import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.HostnameService;
 import demo.base.system.service.IpRecordService;
 import demo.base.system.service.impl.RedisHashConnectService;
+import demo.base.system.service.impl.RedisSetConnectService;
 import demo.base.system.service.impl.RedisOriginalConnectService;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.common.pojo.result.CommonResultCX;
@@ -58,9 +59,11 @@ public abstract class CommonService {
 
 	@Autowired
 	protected RedisOriginalConnectService redisOriginalConnectService;
-	
 	@Autowired
 	protected RedisHashConnectService redisHashConnectService;
+	@Autowired
+	protected RedisSetConnectService redisSetConnectService;
+	
 
 	protected static final Integer NORMAL_PAGE_SIZE = 10;
 	protected static final LocalDateTime BLOG_ARTICLE_START_TIME = LocalDateTime.of(2020, 5, 1, 0, 0, 0);

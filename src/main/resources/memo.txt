@@ -2,8 +2,6 @@
 
 calendar notice
 	
-	telegram 会访问 发送的链接??  导致强提醒链接被访问而 cancel?
-		
 	preNotice 
 		提供接口, 关闭当轮提前提醒
 		关闭本轮提前提醒时 / 到期, 如果对应通知为重复通知

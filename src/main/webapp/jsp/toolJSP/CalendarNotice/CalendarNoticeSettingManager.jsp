@@ -9,7 +9,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<%@ include file="../baseElementJSP/normalHeader.jsp" %>
+<%@ include file="../../baseElementJSP/normalHeader.jsp" %>
 </head>
 <body>
 <div class="container-fluid">
@@ -75,7 +75,7 @@
 </body>
 
 <footer>
-  <%@ include file="../baseElementJSP/normalJSPart.jsp" %>
+  <%@ include file="../../baseElementJSP/normalJSPart.jsp" %>
   <script type="text/javascript">
 
     $(document).ready(function() {

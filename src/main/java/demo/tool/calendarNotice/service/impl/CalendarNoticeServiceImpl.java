@@ -24,6 +24,7 @@ import demo.tool.calendarNotice.pojo.constant.CalendarNoticeUrl;
 import demo.tool.calendarNotice.pojo.dto.AddCalendarNoticeDTO;
 import demo.tool.calendarNotice.pojo.dto.DeleteCalendarNoticeDTO;
 import demo.tool.calendarNotice.pojo.dto.EditCalendarNoticeDTO;
+import demo.tool.calendarNotice.pojo.dto.StopPreNoticeDTO;
 import demo.tool.calendarNotice.pojo.dto.StopStrongNoticeDTO;
 import demo.tool.calendarNotice.pojo.po.CalendarNotice;
 import demo.tool.calendarNotice.pojo.po.CalendarNoticeExample;
@@ -51,7 +52,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 
 	@Override
 	public ModelAndView getManagerView() {
-		ModelAndView v = new ModelAndView("toolJSP/CalendarNoticeSettingManager");
+		ModelAndView v = new ModelAndView("toolJSP/CalendarNotice/CalendarNoticeSettingManager");
 
 		List<TimeUnitType> timeUnitTypeList = Arrays.asList(TimeUnitType.year, TimeUnitType.month, TimeUnitType.week,
 				TimeUnitType.day, TimeUnitType.hour, TimeUnitType.minute);
@@ -329,8 +330,10 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			notice = mapper.selectByPrimaryKey(preNoticePo.getBindNoticeId());
 			dto = new TelegramMessageDTO();
 			dto.setId(TelegramStaticChatID.MY_ID);
-			dto.setMsg("PreNotice: " + notice.getNoticeContent() + " at: " + notice.getNoticeTime());
 			dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
+			dto.setMsg("PreNotice: " + notice.getNoticeContent() + " at: " + notice.getNoticeTime() + " "
+					+ hostnameService.findZhang() + CalendarNoticeUrl.ROOT + CalendarNoticeUrl.STOP_PRE_NOTICE
+					+ "?pk=" + URLEncoder.encode(encryptId(preNoticePo.getId()), StandardCharsets.UTF_8));
 			telegramMessageAckProducer.send(dto);
 
 			updatePreNoticeStatus(preNoticePo, notice);
@@ -471,7 +474,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 
 	@Override
 	public ModelAndView searchNoticeView() {
-		ModelAndView view = new ModelAndView("toolJSP/CalendarNoticeSearchResult");
+		ModelAndView view = new ModelAndView("toolJSP/CalendarNotice/CalendarNoticeSearchResult");
 
 		CalendarNoticeExample example = new CalendarNoticeExample();
 		example.createCriteria().andIsDeleteEqualTo(false);
@@ -543,17 +546,17 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 
 	@Override
 	public ModelAndView stopStrongNotice(String pk) {
-		ModelAndView v = new ModelAndView("toolJSP/CalendarNoticeStopStrongNotice");
+		ModelAndView v = new ModelAndView("toolJSP/CalendarNotice/CalendarNoticeStopStrongNotice");
 		Long id = decryptPrivateKey(pk);
 		v.addObject("pk", pk);
 		StrongNoticeBO bo = strongNoticeService.getStrongNotice(id);
-		if(bo != null) {
+		if (bo != null) {
 			v.addObject("noticeContent", bo.getNoticeContent());
 		}
-		
+
 		return v;
 	}
-	
+
 	@Override
 	public CommonResult stopStrongNotic(StopStrongNoticeDTO dto) {
 		CommonResult r = new CommonResult();
@@ -568,6 +571,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 
 		strongNoticeService.stopStrongNotice(id);
 
+		r.setMessage("Done");
 		r.setIsSuccess();
 		return r;
 	}
@@ -590,5 +594,53 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 
 			telegramMessageAckProducer.send(dto);
 		}
+	}
+
+	@Override
+	public ModelAndView stopPreNotice(String preNoticePK) {
+		ModelAndView v = new ModelAndView("toolJSP/CalendarNotice/CalendarNoticeStopPreNotice");
+		Long id = decryptPrivateKey(preNoticePK);
+		v.addObject("pk", preNoticePK);
+		CalendarPreNotice preNoticePO = preNoticeMapper.selectByPrimaryKey(id);
+		if (preNoticePO == null) {
+			return v;
+		}
+
+		CalendarNotice noticePO = mapper.selectByPrimaryKey(preNoticePO.getBindNoticeId());
+		if (noticePO == null) {
+			return v;
+		}
+		v.addObject("noticeContent", noticePO.getNoticeContent());
+
+		return v;
+	}
+
+	@Override
+	public CommonResult stopPreNotic(StopPreNoticeDTO dto) {
+		CommonResult r = new CommonResult();
+		if (dto == null || StringUtils.isBlank(dto.getPk())) {
+			return r;
+		}
+
+		Long preNoticeID = decryptPrivateKey(dto.getPk());
+		if (preNoticeID == null) {
+			return r;
+		}
+
+		CalendarPreNotice preNoticePO = preNoticeMapper.selectByPrimaryKey(preNoticeID);
+		if (preNoticePO == null) {
+			return r;
+		}
+
+		CalendarNotice noticePO = mapper.selectByPrimaryKey(preNoticePO.getBindNoticeId());
+		if (noticePO == null) {
+			return r;
+		}
+
+		updatePreNoticeStatus(preNoticePO, noticePO);
+
+		r.setMessage("Done");
+		r.setIsSuccess();
+		return r;
 	}
 }

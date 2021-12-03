@@ -42,7 +42,7 @@
 
       function stopStrongNotice() {
 
-        var url = "/canlendarNotice/addNotice";
+        var url = "/canlendarNotice/stopStrongNotice";
 
         var jsonOutput = {
           pk : ${pk}

@@ -543,7 +543,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 
 	@Override
 	public ModelAndView stopStrongNotice(String pk) {
-		ModelAndView v = new ModelAndView();
+		ModelAndView v = new ModelAndView("toolJSP/CalendarNoticeStopStrongNotice");
 		Long id = decryptPrivateKey(pk);
 		v.addObject("pk", pk);
 		StrongNoticeBO bo = strongNoticeService.getStrongNotice(id);

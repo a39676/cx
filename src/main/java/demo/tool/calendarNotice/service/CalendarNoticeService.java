@@ -6,6 +6,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.tool.calendarNotice.pojo.dto.AddCalendarNoticeDTO;
 import demo.tool.calendarNotice.pojo.dto.DeleteCalendarNoticeDTO;
 import demo.tool.calendarNotice.pojo.dto.EditCalendarNoticeDTO;
+import demo.tool.calendarNotice.pojo.dto.StopStrongNoticeDTO;
 
 public interface CalendarNoticeService {
 
@@ -28,8 +29,10 @@ public interface CalendarNoticeService {
 
 	ModelAndView searchNoticeView();
 
-	CommonResult stopStrongNotic(String pk);
-
 	void findAndSendStrongNotice();
+
+	CommonResult stopStrongNotic(StopStrongNoticeDTO dto);
+
+	ModelAndView stopStrongNotice(String pk);
 
 }

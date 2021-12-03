@@ -24,6 +24,7 @@ import demo.tool.calendarNotice.pojo.constant.CalendarNoticeUrl;
 import demo.tool.calendarNotice.pojo.dto.AddCalendarNoticeDTO;
 import demo.tool.calendarNotice.pojo.dto.DeleteCalendarNoticeDTO;
 import demo.tool.calendarNotice.pojo.dto.EditCalendarNoticeDTO;
+import demo.tool.calendarNotice.pojo.dto.StopStrongNoticeDTO;
 import demo.tool.calendarNotice.pojo.po.CalendarNotice;
 import demo.tool.calendarNotice.pojo.po.CalendarNoticeExample;
 import demo.tool.calendarNotice.pojo.po.CalendarPreNotice;
@@ -541,13 +542,24 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 	}
 
 	@Override
-	public CommonResult stopStrongNotic(String pk) {
+	public ModelAndView stopStrongNotice(String pk) {
+		ModelAndView v = new ModelAndView();
+		Long id = decryptPrivateKey(pk);
+		v.addObject("pk", pk);
+		StrongNoticeBO bo = strongNoticeService.getStrongNotice(id);
+		v.addObject("noticeContent", bo.getNoticeContent());
+		
+		return v;
+	}
+	
+	@Override
+	public CommonResult stopStrongNotic(StopStrongNoticeDTO dto) {
 		CommonResult r = new CommonResult();
-		if (StringUtils.isBlank(pk)) {
+		if (dto == null || StringUtils.isBlank(dto.getPk())) {
 			return r;
 		}
 
-		Long id = decryptPrivateKey(pk);
+		Long id = decryptPrivateKey(dto.getPk());
 		if (id == null) {
 			return r;
 		}

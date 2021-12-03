@@ -19,6 +19,7 @@ import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.tool.calendarNotice.mapper.CalendarNoticeMapper;
 import demo.tool.calendarNotice.mapper.CalendarPreNoticeMapper;
 import demo.tool.calendarNotice.mq.producer.TelegramCalendarNoticeMessageAckProducer;
+import demo.tool.calendarNotice.pojo.bo.StrongNoticeBO;
 import demo.tool.calendarNotice.pojo.constant.CalendarNoticeUrl;
 import demo.tool.calendarNotice.pojo.dto.AddCalendarNoticeDTO;
 import demo.tool.calendarNotice.pojo.dto.DeleteCalendarNoticeDTO;
@@ -559,19 +560,19 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 
 	@Override
 	public void findAndSendStrongNotice() {
-		List<CalendarNotice> commonNoticeList = strongNoticeService.getStrongNoticeList();
-		if (commonNoticeList == null || commonNoticeList.isEmpty()) {
+		List<StrongNoticeBO> strongNoticeList = strongNoticeService.getStrongNoticeList();
+		if (strongNoticeList == null || strongNoticeList.isEmpty()) {
 			return;
 		}
 
 		TelegramMessageDTO dto = null;
-		for (CalendarNotice po : commonNoticeList) {
+		for (StrongNoticeBO bo : strongNoticeList) {
 			dto = new TelegramMessageDTO();
 			dto.setId(TelegramStaticChatID.MY_ID);
 			dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
-			dto.setMsg(po.getNoticeContent() + " " + hostnameService.findZhang() + CalendarNoticeUrl.ROOT
+			dto.setMsg(bo.getNoticeContent() + " " + hostnameService.findZhang() + CalendarNoticeUrl.ROOT
 					+ CalendarNoticeUrl.STOP_STRONG_NOTICE + "?pk="
-					+ URLEncoder.encode(encryptId(po.getId()), StandardCharsets.UTF_8));
+					+ URLEncoder.encode(encryptId(bo.getId()), StandardCharsets.UTF_8));
 
 			telegramMessageAckProducer.send(dto);
 		}

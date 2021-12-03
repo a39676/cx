@@ -12,12 +12,12 @@ public class CalendarNoticeTaskService {
 	@Autowired
 	private CalendarNoticeService calendarNoticeService;
 	
-	@Scheduled(fixedRate = 1000L * 60 * 10)
+	@Scheduled(fixedRate = 1000L * 60 * 5)
 	public void findAndSendNotice() {
 		calendarNoticeService.findAndSendNotice();
 	}
 	
-	@Scheduled(fixedRate = 1000L * 60 * 5)
+	@Scheduled(fixedRate = 1000L * 60 * 3)
 	public void findAndSendStrongNotice() {
 		calendarNoticeService.findAndSendStrongNotice();
 	}

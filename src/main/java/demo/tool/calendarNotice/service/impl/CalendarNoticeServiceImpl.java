@@ -58,7 +58,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 				TimeUnitType.day, TimeUnitType.hour, TimeUnitType.minute);
 		v.addObject("timeUnitTypeList", timeUnitTypeList);
 
-		List<CalendarNotice> noticeList = findNotices();
+		List<CalendarNotice> noticeList = findNoticesToSend();
 		v.addObject("noticeList", noticeList);
 		return v;
 	}
@@ -282,14 +282,14 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 		return nextLocalDateTime;
 	}
 
-	private List<CalendarNotice> findNotices() {
+	private List<CalendarNotice> findNoticesToSend() {
 		LocalDateTime now = LocalDateTime.now();
 		CalendarNoticeExample example = new CalendarNoticeExample();
 		example.createCriteria().andIsDeleteEqualTo(false).andNoticeTimeLessThanOrEqualTo(now);
 		return mapper.selectByExample(example);
 	}
 
-	private List<CalendarPreNotice> findPreNotices() {
+	private List<CalendarPreNotice> findPreNoticesToSend() {
 		LocalDateTime now = LocalDateTime.now();
 		CalendarPreNoticeExample example = new CalendarPreNoticeExample();
 		example.createCriteria().andIsDeleteEqualTo(false).andNoticeTimeLessThanOrEqualTo(now);
@@ -298,8 +298,8 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 
 	@Override
 	public void findAndSendNotice() {
-		List<CalendarNotice> commonNoticeList = findNotices();
-		List<CalendarPreNotice> preNoticeList = findPreNotices();
+		List<CalendarNotice> commonNoticeList = findNoticesToSend();
+		List<CalendarPreNotice> preNoticeList = findPreNoticesToSend();
 		if ((commonNoticeList == null || commonNoticeList.isEmpty())
 				&& (preNoticeList == null || preNoticeList.isEmpty())) {
 			return;
@@ -638,7 +638,9 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			return r;
 		}
 
-		updatePreNoticeStatus(preNoticePO, noticePO);
+		if(preNoticePO.getNoticeTime().isBefore(LocalDateTime.now())) {
+			updatePreNoticeStatus(preNoticePO, noticePO);
+		}
 
 		r.setMessage("Done");
 		r.setIsSuccess();

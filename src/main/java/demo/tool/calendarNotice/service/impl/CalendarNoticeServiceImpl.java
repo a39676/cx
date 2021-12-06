@@ -370,7 +370,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 
 	private void updatePreNoticeStatus(CalendarPreNotice preNoticePo, CalendarNotice po) {
 		TimeUnitType preNoticeTimeUnitType = TimeUnitType.getType(preNoticePo.getRepeatTimeUnit());
-		LocalDateTime nextPreNoticeTime = getNextLocalDateTime(preNoticePo.getNoticeTime(), preNoticeTimeUnitType,
+		LocalDateTime nextPreNoticeTime = getNextLocalDateTime(po.getNoticeTime(), preNoticeTimeUnitType,
 				preNoticePo.getRepeatTimeRange());
 
 		// 超出本次提前通知的有效时间

@@ -71,6 +71,12 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 	@Override
 	public CommonResult sendMessage(TelegramBotType botType, String msg, Long id) {
 		CommonResult r = new CommonResult();
+		
+		if(isDev()) {
+			log.error(msg);
+			r.setIsSuccess();
+			return r;
+		}
 
 		if (id == null) {
 			r.failWithMessage("param error");

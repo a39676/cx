@@ -489,8 +489,8 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			return r;
 		}
 
-		Long id = decryptPrivateKey(dto.getPk());
-		if (id == null) {
+		Long noticeId = decryptPrivateKey(dto.getPk());
+		if (noticeId == null) {
 			return r;
 		}
 
@@ -499,12 +499,33 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			return r;
 		}
 
-		r = addCalendarNotice(dto);
-		if (r.isFail()) {
-			return r;
+		CalendarNotice po = mapper.selectByPrimaryKey(noticeId);
+
+		po.setIsLunarCalendar(dto.getIsLunarNotice());
+		po.setStrongNotice(dto.getIsStrongNotice());
+		po.setNeedRepeat(dto.getRepeatTimeRange() != null && dto.getRepeatTimeUnit() != null);
+		po.setNoticeContent(dto.getNoticeContent());
+		po.setNoticeTime(dto.getNoticeTime());
+		po.setRepeatTimeUnit(dto.getRepeatTimeUnit());
+		po.setRepeatTimeRange(dto.getRepeatTimeRange());
+		po.setValidTime(dto.getValidTime());
+		mapper.updateByPrimaryKeySelective(po);
+		
+		
+		CalendarPreNoticeExample preNoticeExample = new CalendarPreNoticeExample();
+		preNoticeExample.createCriteria().andIsDeleteEqualTo(false).andBindNoticeIdEqualTo(noticeId);
+		List<CalendarPreNotice> preNoticePOList = preNoticeMapper.selectByExample(preNoticeExample);
+		
+		if(preNoticePOList != null && !preNoticePOList.isEmpty()) {
+			CalendarPreNotice preNoticePO = preNoticePOList.get(0);
+			preNoticePO.setRepeatCount(dto.getPreNoticeCount());
+			preNoticePO.setRepeatTimeRange(dto.getPreNoticeRepeatTimeRange());
+			preNoticePO.setRepeatTimeUnit(dto.getPreNoticeRepeatTimeUnit());
+			preNoticeMapper.updateByPrimaryKeySelective(preNoticePO);
 		}
 
-		deleteNotice(id);
+		r.setMessage("Edit: " + localDateTimeHandler.dateToStr(po.getNoticeTime()) + ", " + po.getNoticeContent());
+		r.setIsSuccess();
 
 		return r;
 	}

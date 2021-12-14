@@ -50,10 +50,20 @@
         <a href="/cryptoCoinManager/sendAllCryptoCoinDailyDataQueryMsg" target="_blank">sendAllCryptoCoinDailyDataQueryMsg</a>
       </li>
     </ul> <%-- cryptoCoin --%>
+
     <ul class="main-menu visible-on-click" id="canlendarNotice">
       <li>
         <a href="/tool/canlendarNotice/manager" target="_blank">canlendarNoticeManager</a>
       </li>
-    </ul>
-  </div><!-- canlendarNotice -->
+    </ul><!-- canlendarNotice -->
+
+    <ul class="main-menu visible-on-click" id="notes">
+      <li>
+        <a href="/pNote/edit" target="_blank">note edit</a>
+      </li>
+      <li>
+        <a href="/pMemo/get?key=key" target="_blank">pmemo</a>
+      </li>
+    </ul> <%-- notes --%>
+  </div>
 </header>

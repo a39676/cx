@@ -33,5 +33,6 @@ public class TestController2 extends CommonController {
 		t = (TestDTO) JSONObject.toBean(j, TestDTO.class);
 		return j.toString();
 	}
+	
 
 }

@@ -1,6 +1,5 @@
 package demo.article.article.service.impl;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -329,14 +328,14 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 
 		String filename = String.valueOf(snowFlake.getNextId()) + "." + srcHandleResult.getImgFileType();
 
-		BufferedImage bufferedImage = imgService.base64ToBufferedImg(srcHandleResult.getBase64Str());
-		if (bufferedImage == null) {
-			return "";
-		}
+//		BufferedImage bufferedImage = imgService.base64ToBufferedImg(srcHandleResult.getBase64Str());
+//		if (bufferedImage == null) {
+//			return "";
+//		}
 
 		String saveingFolderPath = articleConstantService.getArticleImageSavingFolder();
 		String imgSavingPath = saveingFolderPath + "/" + filename;
-		boolean saveFlag = imgService.imgSaveAsFile(bufferedImage, imgSavingPath, srcHandleResult.getImgFileType());
+		boolean saveFlag = imgService.imgSaveAsFileDirect(srcHandleResult.getBase64Str(), imgSavingPath, srcHandleResult.getImgFileType());
 		if (!saveFlag) {
 			return "";
 		}

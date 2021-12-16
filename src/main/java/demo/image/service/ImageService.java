@@ -43,4 +43,6 @@ public interface ImageService {
 	 */
 	ImgHandleSrcDataResult imgHandleSrcData(String src);
 
+	boolean imgSaveAsFileDirect(String base64Str, String filePath, String fileType);
+
 }

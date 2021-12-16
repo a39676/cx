@@ -1,6 +1,3 @@
-article long
-	发表 gif 失败
-
 图片信息传送
 
 ocr

@@ -22,7 +22,7 @@ public class JoySceneGroupServiceImpl extends JoyCommonService implements JoySce
 		JoySceneGroupVO vo = new JoySceneGroupVO();
 		vo.setName(po.getSceneGroupName());
 		vo.setRemark(po.getRemark());
-		vo.setPk(encryptId(po.getId()));
+		vo.setPk(systemConstantService.encryptId(po.getId()));
 		return vo;
 	}
 	

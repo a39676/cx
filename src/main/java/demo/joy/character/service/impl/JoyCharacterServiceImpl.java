@@ -115,7 +115,7 @@ public class JoyCharacterServiceImpl extends JoyCommonService implements JoyChar
 		JoyCharacterVO vo = new JoyCharacterVO();
 		vo.setGender(po.getGender());
 		vo.setName(po.getCharacterName());
-		vo.setPk(encryptId(po.getId()));
+		vo.setPk(systemConstantService.encryptId(po.getId()));
 		return vo;
 	}
 }

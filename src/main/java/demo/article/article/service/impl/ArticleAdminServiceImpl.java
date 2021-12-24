@@ -58,7 +58,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	private CommonResultCX passArticle(String privateKey) throws Exception {
 		CommonResultCX result = new CommonResultCX();
-		Long articleId = decryptPrivateKey(privateKey);
+		Long articleId = systemConstantService.decryptPrivateKey(privateKey);
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -100,7 +100,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	private CommonResultCX rejectArticle(String privateKey) throws Exception {
 		CommonResultCX result = new CommonResultCX();
 		
-		Long articleId = decryptPrivateKey(privateKey);
+		Long articleId = systemConstantService.decryptPrivateKey(privateKey);
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -142,7 +142,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	@Override
 	public CommonResultCX deleteArticle(String privateKey) throws Exception {
 		CommonResultCX result = new CommonResultCX();
-		Long articleId = decryptPrivateKey(privateKey);
+		Long articleId = systemConstantService.decryptPrivateKey(privateKey);
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -190,7 +190,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		}
 		
 		param.setPk(URLDecoder.decode(param.getPk(), StandardCharsets.UTF_8));
-		Long articleId = decryptPrivateKey(param.getPk());
+		Long articleId = systemConstantService.decryptPrivateKey(param.getPk());
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -221,7 +221,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		}
 		
 		controllerParam.setPk(URLDecoder.decode(controllerParam.getPk(), StandardCharsets.UTF_8));
-		Long articleId = decryptPrivateKey(controllerParam.getPk());
+		Long articleId = systemConstantService.decryptPrivateKey(controllerParam.getPk());
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;

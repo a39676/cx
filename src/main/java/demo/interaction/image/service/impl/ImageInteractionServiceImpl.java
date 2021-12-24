@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import demo.base.system.service.impl.SystemConstantService;
 import demo.common.service.CommonService;
 import demo.image.mapper.ImageCloudinaryMapper;
 import demo.image.mapper.ImageComplexMapper;
@@ -36,6 +37,8 @@ import toolPack.cloudinary.pojo.result.CloudinaryUploadResult;
 @Service
 public class ImageInteractionServiceImpl extends CommonService implements ImageInteractionService {
 
+	@Autowired
+	protected SystemConstantService systemConstantService;
 	@Autowired
 	private ImageStoreMapper imageStoreMapper;
 	@Autowired

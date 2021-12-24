@@ -14,10 +14,9 @@ import demo.base.system.pojo.constant.BlogViewConstant;
 import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.BasePageService;
 import demo.base.user.pojo.type.SystemRolesType;
-import demo.common.service.CommonService;
 
 @Service
-public class BasePageServiceImpl extends CommonService implements BasePageService {
+public class BasePageServiceImpl extends SystemCommonService implements BasePageService {
 
 	@Override
 	public ModelAndView baseRootHandlerV3(String vcode, HttpServletRequest request) {
@@ -35,7 +34,7 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 
 		
 		if (hostnameType == null) {
-			if(!isDev()) {
+			if(!systemConstantService.isDev()) {
 				if(hostnameType == null) {
 					view.setViewName(BaseViewConstant.empty);
 					return view;

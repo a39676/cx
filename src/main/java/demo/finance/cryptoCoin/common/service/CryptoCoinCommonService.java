@@ -565,7 +565,7 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 
 	protected CryptoCoinCatalogVO cryptoCoinCatalogPOToVO(CryptoCoinCatalog po) {
 		CryptoCoinCatalogVO vo = new CryptoCoinCatalogVO();
-		vo.setPk(encryptId(po.getId()));
+		vo.setPk(systemConstantService.encryptId(po.getId()));
 		vo.setEnShortname(po.getCoinNameEnShort());
 		return vo;
 	}

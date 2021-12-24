@@ -13,6 +13,7 @@ import auxiliaryCommon.pojo.type.GenderType;
 import demo.base.organizations.pojo.dto.FindUserControlOrgDTO;
 import demo.base.organizations.pojo.result.FindUserControlOrgResult;
 import demo.base.organizations.service.OrganizationService;
+import demo.base.system.service.impl.SystemCommonService;
 import demo.base.user.mapper.UsersDetailMapper;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.bo.FindUserAuthBO;
@@ -40,14 +41,13 @@ import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.AuthRoleService;
 import demo.base.user.service.UserAuthService;
 import demo.base.user.service.UsersService;
-import demo.common.service.CommonService;
 import demo.tool.other.service.ValidRegexToolService;
 
 /**
  * @author Acorn 2017年4月13日
  */
 @Service
-public class UsersServiceImpl extends CommonService implements UsersService {
+public class UsersServiceImpl extends SystemCommonService implements UsersService {
 
 	@Autowired
 	private UsersMapper usersMapper;
@@ -205,7 +205,7 @@ public class UsersServiceImpl extends CommonService implements UsersService {
 		    return vo;
 		}
 		
-		vo.setUserPk(encryptId(po.getUserId()));
+		vo.setUserPk(systemConstantService.encryptId(po.getUserId()));
 		vo.setNickName(po.getNickName());
 
 		UserPrivateLevelType privateLevel = UserPrivateLevelType.p1;

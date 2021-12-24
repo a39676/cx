@@ -9,13 +9,13 @@ public abstract class RedisConnectCommonService extends CommonService {
 
 	@Autowired
 	protected RedisTemplate<String, Object> redisTemplate;
-	
+
 	public void deleteValByName(String constantName) {
 		redisTemplate.delete(constantName);
 	}
-	
+
 	public Boolean hasKey(String key) {
 		return redisTemplate.hasKey(key);
 	}
-	
+
 }

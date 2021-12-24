@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.base.system.service.impl.SystemConstantService;
 import demo.base.user.pojo.constant.UsersUrl;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.ResultTypeCX;
@@ -43,6 +44,9 @@ import toolPack.emailHandle.mailService.send.SendEmail;
 @Service
 public class MailServiceImpl extends CommonService implements MailService {
 
+	@Autowired
+	private SystemConstantService systemConstantService;
+	
 	@Autowired
 	private MailConstantService mailConstantService;
 	
@@ -148,7 +152,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 		Long newMailId = snowFlake.getNextId();
 		String mailKey = null;
 		try {
-			mailKey = URLEncoder.encode(encryptId(newMailId), StandardCharsets.UTF_8.toString());
+			mailKey = URLEncoder.encode(systemConstantService.encryptId(newMailId), StandardCharsets.UTF_8.toString());
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -173,7 +177,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 		
 		SendRegistMailResult result = sendRegistMail(dto);
 		
-		Long mailId = decryptPrivateKey(dto.getMailKey());
+		Long mailId = systemConstantService.decryptPrivateKey(dto.getMailKey());
 		MailRecord oldMail = mailRecordMapper.selectByPrimaryKey(mailId);
 		if(oldMail == null) {
 			result.failWithMessage(ResultTypeCX.errorParam.getName());
@@ -195,7 +199,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 			return new MailRecord();
 		}
 		
-		Long id = decryptPrivateKey(mailKey);
+		Long id = systemConstantService.decryptPrivateKey(mailKey);
 		if(id == null) {
 			return new MailRecord();
 		}
@@ -294,7 +298,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 		
 		String mailKey = null;
 		try {
-			mailKey = URLEncoder.encode(encryptId(mailId), StandardCharsets.UTF_8.toString());
+			mailKey = URLEncoder.encode(systemConstantService.encryptId(mailId), StandardCharsets.UTF_8.toString());
 		} catch (UnsupportedEncodingException e) {
 			log.error(mailId + ", trans mail key error");
 		} 
@@ -308,7 +312,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 		
 		String mailKey = null;
 		try {
-			mailKey = URLEncoder.encode(encryptId(oldMail.getId()), StandardCharsets.UTF_8.toString());
+			mailKey = URLEncoder.encode(systemConstantService.encryptId(oldMail.getId()), StandardCharsets.UTF_8.toString());
 		} catch (UnsupportedEncodingException e) {
 			log.error(oldMail.getId() + ", trans mail key error");
 		}

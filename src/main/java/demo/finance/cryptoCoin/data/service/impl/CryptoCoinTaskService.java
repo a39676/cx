@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import demo.base.system.service.impl.SystemConstantService;
 import demo.common.service.CommonService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import demo.finance.cryptoCoin.data.webSocket.BinanceWSClient;
@@ -15,6 +16,8 @@ import telegram.pojo.constant.TelegramBotType;
 @Component
 public class CryptoCoinTaskService extends CommonService {
 
+	@Autowired
+	private SystemConstantService systemConstantService;
 	@Autowired
 	private TelegramService telegramService;
 	@Autowired
@@ -28,7 +31,7 @@ public class CryptoCoinTaskService extends CommonService {
 
 	@Scheduled(cron = "* */11 * * * ?")
 	public void checkWebSocketStatus() {
-		if(!isDev()) {
+		if(!systemConstantService.isDev()) {
 			try {
 				if (!binanceWSClient.getSocketLiveFlag()) {
 					telegramService.sendMessage(TelegramBotType.BOT_2, "binance socket down", TelegramStaticChatID.MY_ID);

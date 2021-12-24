@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 
 import demo.article.article.pojo.dto.LocalImageSavingDTO;
 import demo.automationTest.service.impl.AutomationTestConstantService;
+import demo.base.system.service.impl.SystemConstantService;
 import demo.common.service.CommonService;
 import demo.image.mapper.ImageStoreMapper;
 import demo.image.mapper.ImageTagMapper;
@@ -58,6 +59,8 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 	private ImageTagMapper imageTagMapper;
 	
 	@Autowired
+	private SystemConstantService systemConstantService;
+	@Autowired
 	private AutomationTestConstantService automationTestConstantService;
 	
 	@Override
@@ -66,7 +69,7 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 			return;
 		}
 		
-		Long imgId = decryptPrivateKey(imgPK);
+		Long imgId = systemConstantService.decryptPrivateKey(imgPK);
 		if(imgId == null) {
 			return;
 		}
@@ -167,7 +170,7 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 			return r;
 		}
 		
-		String imgPK = encryptId(newImgId);
+		String imgPK = systemConstantService.encryptId(newImgId);
 		try {
 			String urlEncodeImgPk = URLEncoder.encode(imgPK, StandardCharsets.UTF_8.toString());
 			r.setImgUrl(ImageUrl.root + ImageUrl.getImage + "/?imgPK=" + urlEncodeImgPk);
@@ -318,7 +321,7 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 			return r;
 		}
 		
-		String imgPK = encryptId(newImgId);
+		String imgPK = systemConstantService.encryptId(newImgId);
 		try {
 			String urlEncodeImgPk = URLEncoder.encode(imgPK, StandardCharsets.UTF_8.toString());
 			r.setImgUrl(ImageUrl.root + ImageUrl.getImage + "/?imgPK=" + urlEncodeImgPk);

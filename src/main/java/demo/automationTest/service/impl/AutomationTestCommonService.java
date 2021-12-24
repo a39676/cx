@@ -6,13 +6,14 @@ import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import autoTest.testModule.pojo.type.TestModuleType;
+import demo.article.article.service.impl.ArticleCommonService;
 import demo.automationTest.mapper.TestEventMapper;
 import demo.automationTest.mq.producer.TestEventInsertAckProducer;
-import demo.common.service.CommonService;
+import demo.tool.other.service.VisitDataService;
 import toolPack.dateTimeHandle.DateTimeUtilCommon;
 import toolPack.ioHandle.FileUtilCustom;
 
-public abstract class AutomationTestCommonService extends CommonService {
+public abstract class AutomationTestCommonService extends ArticleCommonService {
 
 	@Autowired
 	private FileUtilCustom ioUtil;
@@ -22,7 +23,9 @@ public abstract class AutomationTestCommonService extends CommonService {
 	protected AutomationTestConstantService constantService;
 	@Autowired
 	protected TestEventInsertAckProducer testEventInsertAckProducer;
-	
+	@Autowired
+	protected VisitDataService visitDataService;
+
 	protected String getAutomationTestReportSavingFolder() {
 		String path = constantService.getReportStorePrefixPath() + File.separator
 				+ localDateTimeHandler.dateToStr(LocalDateTime.now(), DateTimeUtilCommon.dateFormatNoSymbol);

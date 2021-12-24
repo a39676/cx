@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import demo.article.article.service.impl.ArticleCommonService;
 import demo.article.articleComment.mapper.ArticleCommentMapper;
 import demo.article.articleComment.mapper.ArticleCommentReviewMapper;
 import demo.article.articleComment.pojo.dto.ArticleCommentReviewCommonDTO;
@@ -24,10 +25,9 @@ import demo.article.articleComment.service.ArticleCommentAdminService;
 import demo.article.articleComment.service.ArticleCommentService;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.ResultTypeCX;
-import demo.common.service.CommonService;
 
 @Service
-public class ArticleCommentAdminServiceImpl extends CommonService implements ArticleCommentAdminService {
+public class ArticleCommentAdminServiceImpl extends ArticleCommonService implements ArticleCommentAdminService {
 	
 //	@Autowired
 //	private ArticleEvaluationService articleEvaluationService;
@@ -65,7 +65,7 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 			return result;
 		}
 		
-		Long commentId = decryptPrivateKey(param.getPk());
+		Long commentId = systemConstantService.decryptPrivateKey(param.getPk());
 		if(commentId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -107,7 +107,7 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 			return result;
 		}
 		
-		Long commentId = decryptPrivateKey(param.getPk());
+		Long commentId = systemConstantService.decryptPrivateKey(param.getPk());
 		if(commentId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -151,7 +151,7 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 			return result;
 		}
 		
-		Long commentId = decryptPrivateKey(param.getPk());
+		Long commentId = systemConstantService.decryptPrivateKey(param.getPk());
 		if(commentId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;

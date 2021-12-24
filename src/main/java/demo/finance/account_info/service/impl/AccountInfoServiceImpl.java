@@ -19,6 +19,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.TransationType;
 import demo.common.service.CommonService;
+import demo.config.costom_component.EncryptUtil;
 import demo.finance.account_holder.controller.AccountHolderController;
 import demo.finance.account_holder.pojo.po.AccountHolder;
 import demo.finance.account_info.mapper.AccountInfoMapper;
@@ -55,6 +56,8 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	
 	@Autowired
 	private NumericUtilCustom numberUtil;
+	@Autowired
+	private EncryptUtil encryptUtil;
 	@Autowired
 	private AccountInfoMapper accountInfoMapper;
 	@Autowired

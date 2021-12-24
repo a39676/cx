@@ -13,10 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
 import demo.base.system.service.AuxiliaryService;
-import demo.common.service.CommonService;
 
 @Service
-public class AuxiliaryServiceImpl extends CommonService implements AuxiliaryService {
+public class AuxiliaryServiceImpl extends SystemCommonService implements AuxiliaryService {
 
 	@Override
 	public void robotHandle(HttpServletRequest request, HttpServletResponse response) {

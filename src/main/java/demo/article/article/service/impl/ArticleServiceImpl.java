@@ -246,7 +246,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 
 	private void quickPass(Long articleId) {
-		String pk = URLEncoder.encode(encryptId(articleId), StandardCharsets.UTF_8);
+		String pk = URLEncoder.encode(systemConstantService.encryptId(articleId), StandardCharsets.UTF_8);
 		if (pk != null) {
 			ReviewArticleLongParam passArticleParam = new ReviewArticleLongParam();
 			passArticleParam.setPk(pk);
@@ -406,7 +406,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		FindArticleLongResult result = new FindArticleLongResult();
 		ArticleLongVO articleVO = null;
 
-		Long articleId = decryptPrivateKey(param.getPrivateKey());
+		Long articleId = systemConstantService.decryptPrivateKey(param.getPrivateKey());
 		if (articleId == null) {
 			articleVO = new ArticleLongVO();
 			articleVO.setContentLines(ResultTypeCX.errorParam.getName());
@@ -494,7 +494,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		}
 
 		privateKey = URLDecoder.decode(privateKey, StandardCharsets.UTF_8);
-		Long articleId = decryptPrivateKey(privateKey);
+		Long articleId = systemConstantService.decryptPrivateKey(privateKey);
 		if (articleId == null) {
 			return false;
 		}
@@ -551,7 +551,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return vo;
 		}
 
-		Long articleId = decryptPrivateKey(dto.getPrivateKey());
+		Long articleId = systemConstantService.decryptPrivateKey(dto.getPrivateKey());
 
 		if (articleId == null) {
 			vo = new ArticleLongVO();
@@ -601,7 +601,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		}
 
 		dto.setPk(URLDecoder.decode(dto.getPk(), StandardCharsets.UTF_8));
-		Long targetArticleId = decryptPrivateKey(dto.getPk());
+		Long targetArticleId = systemConstantService.decryptPrivateKey(dto.getPk());
 
 		if (targetArticleId == null) {
 			result.failWithMessage("参数错误");

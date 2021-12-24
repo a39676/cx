@@ -47,7 +47,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 	
 	@Override
 	public ModelAndView articleBurnLink(HttpServletRequest request) {
-		if(isInZhang3OrDev(request)) {
+		if(systemConstantService.isInZhang3OrDev(request)) {
 			return new ModelAndView(ArticleViewConstant.articleBurnLink);
 		}
 		return null;
@@ -57,7 +57,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 	public CreatingBurnMessageResult creatingBurnMessage(CreatingBurnMessageDTO dto, HttpServletRequest request) {
 		CreatingBurnMessageResult r = new CreatingBurnMessageResult();
 		
-		if(!isInZhang3OrDev(request)) {
+		if(!systemConstantService.isInZhang3OrDev(request)) {
 			return null;
 		}
 
@@ -122,8 +122,8 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		articleBurnMapper.insertSelective(po);
 		
 		try {
-			r.setReadKey(URLEncoder.encode(encryptId(po.getReadId()), StandardCharsets.UTF_8.toString()));
-			r.setBurnKey(URLEncoder.encode(encryptId(po.getBurnId()), StandardCharsets.UTF_8.toString()));
+			r.setReadKey(URLEncoder.encode(systemConstantService.encryptId(po.getReadId()), StandardCharsets.UTF_8.toString()));
+			r.setBurnKey(URLEncoder.encode(systemConstantService.encryptId(po.getBurnId()), StandardCharsets.UTF_8.toString()));
 		} catch (UnsupportedEncodingException e) {
 		}
 		r.setReadUri(ArticleBurnUrlConstant.root + ArticleBurnUrlConstant.readBurningMessage + "?readKey=" + r.getReadKey());
@@ -151,7 +151,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 			return fillArticleBurnResultWithErrorMessage();
 		}
 
-		Long readId = decryptPrivateKey(readKey);
+		Long readId = systemConstantService.decryptPrivateKey(readKey);
 		ArticleBurnExample example = new ArticleBurnExample();
 		example.createCriteria()
 		.andIsBurnedEqualTo(false)
@@ -184,7 +184,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 	private ArticleBurnResult fillArticleBurnResultWithPO(ArticleBurn po) {
 		ArticleBurnResult r = new ArticleBurnResult();
 		try {
-			r.setBurnKey(URLEncoder.encode(encryptId(po.getBurnId()), StandardCharsets.UTF_8.toString()));
+			r.setBurnKey(URLEncoder.encode(systemConstantService.encryptId(po.getBurnId()), StandardCharsets.UTF_8.toString()));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -215,7 +215,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 			return;
 		}
 		
-		Long burnId = decryptPrivateKey(burnKey);
+		Long burnId = systemConstantService.decryptPrivateKey(burnKey);
 		if(burnId != null) {
 			articleBurnMapper.burnArticleByBurnId(burnId);
 		}

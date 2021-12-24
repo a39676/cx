@@ -1,20 +1,35 @@
 package demo.base.system.service.impl;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
+import demo.base.system.pojo.result.HostnameType;
+import demo.base.system.service.HostnameService;
 import demo.common.service.CommonService;
+import demo.config.costom_component.EncryptUtil;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")
 @Service
 public class SystemConstantService extends CommonService {
+	
+	@Autowired
+	private EncryptUtil encryptUtil;
+	@Autowired
+	private HostnameService hostnameService;
 
 	@Value("${optionFilePath.system}")
 	private String optionFilePath;
@@ -33,6 +48,91 @@ public class SystemConstantService extends CommonService {
 	private Boolean isDebuging = null;
 	private String fakeFTPHome = null;
 	private String homepageAnnouncementStr = null;
+	
+	public String encryptId(Long id) {
+		List<String> encryptIdList = encryptId(Arrays.asList(id));
+		if (encryptIdList == null || encryptIdList.isEmpty()) {
+			return null;
+		} else {
+			return encryptIdList.get(0);
+		}
+	}
+
+	public List<String> encryptId(List<Long> idList) {
+		if (idList == null || idList.isEmpty()) {
+			return null;
+		}
+
+		String keys = getAesKey();
+		if (StringUtils.isBlank(keys)) {
+			return null;
+		}
+
+		String initVector = getAesInitVector();
+		if (StringUtils.isBlank(initVector)) {
+			return null;
+		}
+
+		List<String> encryptResult = new ArrayList<String>();
+		try {
+			for (Long id : idList) {
+				encryptResult.add(encryptUtil.aesEncrypt(keys, initVector, String.valueOf(id)));
+			}
+		} catch (Exception e) {
+
+		}
+		return encryptResult;
+	}
+
+	public Long decryptPrivateKey(String inputPk) {
+		List<Long> idList = decryptPrivateKey(Arrays.asList(inputPk));
+		if (idList == null || idList.isEmpty()) {
+			return null;
+		} else {
+			return idList.get(0);
+		}
+	}
+
+	public List<Long> decryptPrivateKey(List<String> inputPkList) {
+		if (inputPkList == null || inputPkList.isEmpty()) {
+			return null;
+		}
+
+		String keys = getAesKey();
+		if (StringUtils.isBlank(keys)) {
+			return null;
+		}
+
+		String initVector = getAesInitVector();
+		if (StringUtils.isBlank(initVector)) {
+			return null;
+		}
+
+		Long id = null;
+		List<Long> idList = new ArrayList<Long>();
+		for (String pk : inputPkList) {
+			try {
+				id = Long.parseLong(encryptUtil.aesDecrypt(keys, initVector, pk));
+				idList.add(id);
+			} catch (Exception e) {
+				idList.add(null);
+			}
+		}
+		return idList;
+	}
+	
+	public boolean isDev() {
+		return "dev".equals(getEnvName());
+	}
+	
+	public boolean isInZhang3OrDev(HttpServletRequest request) {
+		if(isDev()) {
+			return true;
+		}
+		
+		HostnameType hostnameType = hostnameService.findHostnameType(request);
+		return HostnameType.zhang3.equals(hostnameType);
+	}
 
 	public String getAesKey() {
 		return aesKey;

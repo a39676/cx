@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.common.service.CommonService;
+import demo.tool.service.impl.ToolCommonService;
 import demo.tool.telegram.mapper.TelegramChatIdMapper;
 import demo.tool.telegram.mapper.TelegramConstantMapper;
 import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
@@ -24,7 +24,7 @@ import telegram.pojo.constant.TelegramBotType;
 import toolPack.httpHandel.HttpUtil;
 
 @Service
-public class TelegramServiceImpl extends CommonService implements TelegramService {
+public class TelegramServiceImpl extends ToolCommonService implements TelegramService {
 
 	@Autowired
 	private TelegramConstantMapper telegramConstantMapper;
@@ -34,32 +34,32 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 	private TelegramConstantService telegramConstantService;
 
 	private String botIDReady(String botIDKey) {
-		if(StringUtils.isBlank(botIDKey)) {
+		if (StringUtils.isBlank(botIDKey)) {
 			botIDKey = TelegramBotType.BOT_1.getName();
 		}
 		TelegramConstant botConstant = telegramConstantService.getTelegramConstantMap().get(botIDKey);
-		
-		if(botConstant != null) {
+
+		if (botConstant != null) {
 			return botConstant.getConstantvalue();
 		}
-		
+
 		return botIDReset(botIDKey);
 	}
 
 	private String botIDReset(String botIDKey) {
 		String bot1ID = null;
-		
+
 		TelegramConstantExample example = new TelegramConstantExample();
 		example.createCriteria().andIsdeleteEqualTo(false).andConstantnameEqualTo(botIDKey);
 		List<TelegramConstant> poList = telegramConstantMapper.selectByExample(example);
 
-		if(poList != null && !poList.isEmpty()) {
-			for (TelegramConstant po:poList) {
+		if (poList != null && !poList.isEmpty()) {
+			for (TelegramConstant po : poList) {
 				telegramConstantService.putTelegramConstantMap(po.getConstantname(), po);
 			}
-			bot1ID = poList.get(0).getConstantvalue(); 
+			bot1ID = poList.get(0).getConstantvalue();
 		}
-		
+
 		return bot1ID;
 	}
 
@@ -71,8 +71,8 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 	@Override
 	public CommonResult sendMessage(TelegramBotType botType, String msg, Long id) {
 		CommonResult r = new CommonResult();
-		
-		if(isDev()) {
+
+		if (systemConstantService.isDev()) {
 			log.error(msg);
 			r.setIsSuccess();
 			return r;
@@ -146,14 +146,14 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 	@Override
 	public TelegramChatIdVO buildChatIdVO(TelegramChatId po) {
 		TelegramChatIdVO vo = new TelegramChatIdVO();
-		vo.setPk(encryptId(po.getId().longValue()));
+		vo.setPk(systemConstantService.encryptId(po.getId().longValue()));
 		vo.setUsername(po.getChatUserName());
 		return vo;
 	}
 
 	@Override
 	public boolean chatIdExists(String pk) {
-		Long id = decryptPrivateKey(pk);
+		Long id = systemConstantService.decryptPrivateKey(pk);
 		if (id == null) {
 			return false;
 		}

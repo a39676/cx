@@ -38,6 +38,7 @@ import demo.article.articleComment.pojo.vo.ArticleCommentVO;
 import demo.article.articleComment.service.ArticleCommentAdminService;
 import demo.article.articleComment.service.ArticleCommentService;
 import demo.base.system.pojo.constant.SystemRedisKey;
+import demo.base.system.service.IpRecordService;
 import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.UserDetailService;
 import demo.base.user.service.UsersService;
@@ -49,6 +50,9 @@ import toolPack.ioHandle.FileUtilCustom;
 @Service
 public class ArticleCommentServiceImpl extends ArticleCommonService implements ArticleCommentService {
 	
+	@Autowired
+	protected IpRecordService ipRecordService;
+
 	@Autowired
 	private ArticleService articleService;
 	@Autowired
@@ -95,7 +99,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		}
 		
 		inputParam.setPk(URLDecoder.decode(inputParam.getPk(), StandardCharsets.UTF_8));
-		Long articleId = decryptPrivateKey(inputParam.getPk());
+		Long articleId = systemConstantService.decryptPrivateKey(inputParam.getPk());
 		
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
@@ -185,7 +189,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		
 		if(bigUserFlag) {
 			PassArticleCommentDTO param = new PassArticleCommentDTO();
-			param.setPk(encryptId(newCommonId));
+			param.setPk(systemConstantService.encryptId(newCommonId));
 			articleCommentAdminService.passArticleComment(param);
 		} else {
 			insertCommentRedisMark(request, userId, articleId);
@@ -218,7 +222,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		}
 		
 		dto.setPk(URLDecoder.decode(dto.getPk(), StandardCharsets.UTF_8));
-		Long articleId = decryptPrivateKey(dto.getPk());
+		Long articleId = systemConstantService.decryptPrivateKey(dto.getPk());
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -274,7 +278,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		vo.setEvaluationCodeAndCount(evaluationStatisticsMap.get(po.getId()).getEvaluationCodeAndCount());
 		vo.setNickName(po.getTmpNickName());
 		vo.setCreateTimeStr(localDateTimeHandler.dateToStr(po.getCreateTime()));
-		vo.setPk(encryptId(po.getId()));
+		vo.setPk(systemConstantService.encryptId(po.getId()));
 		vo.setIsPass(po.getIsPass());
 		vo.setIsDelete(po.getIsDelete());
 		vo.setIsReject(po.getIsReject());

@@ -5,11 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import demo.base.system.service.impl.SystemCommonService;
 import demo.base.user.mapper.UserAuthMapper;
 import demo.base.user.pojo.bo.EditUserAuthBO;
 import demo.base.user.pojo.bo.FindAuthsBO;
@@ -33,12 +32,9 @@ import demo.base.user.service.AuthRoleService;
 import demo.base.user.service.AuthService;
 import demo.base.user.service.UserAuthService;
 import demo.common.pojo.result.CommonResultCX;
-import demo.common.service.CommonService;
 
 @Service
-public class UserAuthServiceImpl extends CommonService implements UserAuthService {
-
-	private static final Logger log = LoggerFactory.getLogger(UserAuthServiceImpl.class);
+public class UserAuthServiceImpl extends SystemCommonService implements UserAuthService {
 
 	@Autowired
 	private UserAuthMapper userAuthMapper;
@@ -49,8 +45,8 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 	
 	@Override
 	public CommonResultCX insertUserAuth(EditUserAuthDTO dto) {
-		Long authId = decryptPrivateKey(dto.getNewAuthPk());
-		Long userId = decryptPrivateKey(dto.getUserPk());
+		Long authId = systemConstantService.decryptPrivateKey(dto.getNewAuthPk());
+		Long userId = systemConstantService.decryptPrivateKey(dto.getUserPk());
 		return insertUserAuth(userId, authId);
 	}
 	
@@ -116,8 +112,8 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 	@Override
 	public CommonResultCX deleteUserAuth(EditUserAuthDTO dto) {
 		EditUserAuthBO bo = new EditUserAuthBO();
-		bo.setAuthId(decryptPrivateKey(dto.getNewAuthPk()));
-		bo.setUserId(decryptPrivateKey(dto.getUserPk()));
+		bo.setAuthId(systemConstantService.decryptPrivateKey(dto.getNewAuthPk()));
+		bo.setUserId(systemConstantService.decryptPrivateKey(dto.getUserPk()));
 		
 		return deleteUserAuth(bo);
 	}
@@ -216,8 +212,8 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 	@Override
 	public FindUserAuthResult findUserAuth(FindUserAuthDTO dto) {
 		FindUserAuthBO bo = new FindUserAuthBO();
-		bo.setAuthId(decryptPrivateKey(dto.getAuthPk()));
-		bo.setUserId(decryptPrivateKey(dto.getUserPk()));
+		bo.setAuthId(systemConstantService.decryptPrivateKey(dto.getAuthPk()));
+		bo.setUserId(systemConstantService.decryptPrivateKey(dto.getUserPk()));
 		bo.setSysRoleTypeList(dto.getSysRoleTypeList());
 		bo.setOrgRoleTypeList(dto.getOrgRoleTypeList());
 		return findUserAuth(bo);
@@ -300,10 +296,10 @@ public class UserAuthServiceImpl extends CommonService implements UserAuthServic
 	
 	private UserAuthVO buildUserAuthVOByPO(UserAuth po) {
 		UserAuthVO vo = new UserAuthVO();
-		vo.setAuthPk(encryptId(po.getAuthId()));
+		vo.setAuthPk(systemConstantService.encryptId(po.getAuthId()));
 		vo.setIsDelete(po.getIsDelete());
-		vo.setPk(encryptId(po.getId()));
-		vo.setUserPk(encryptId(po.getUserId()));
+		vo.setPk(systemConstantService.encryptId(po.getId()));
+		vo.setUserPk(systemConstantService.encryptId(po.getUserId()));
 		return vo;
 	}
 	

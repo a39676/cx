@@ -10,10 +10,9 @@ import org.springframework.web.servlet.ModelAndView;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.ExceptionService;
-import demo.common.service.CommonService;
 
 @Service
-public class ExceptionServiceImpl extends CommonService implements ExceptionService {
+public class ExceptionServiceImpl extends SystemCommonService implements ExceptionService {
 
 	private static final String[] description = { "神奇", "野生", "迷幻", "抽象", "清奇", "脱俗", "清新", "艳丽"};
 
@@ -51,7 +50,7 @@ public class ExceptionServiceImpl extends CommonService implements ExceptionServ
 			view.setViewName(BaseViewConstant.normal404);
 		} else if(HostnameType.dtro.equals(hostnameType)) {
 			view.setViewName(BaseViewConstant.normal404);
-		} else if(isDev()){
+		} else if(systemConstantService.isDev()){
 			view.setViewName(BaseViewConstant.normal404);
 		} else {
 			view.setViewName(BaseViewConstant.normal404);

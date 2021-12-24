@@ -207,7 +207,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	}
 
 	private GetArticleChannelsBO removeChannelsForUnknow(GetArticleChannelsBO channelList) {
-		if (isDev()) {
+		if (systemConstantService.isDev()) {
 			return channelList;
 		}
 

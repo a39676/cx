@@ -8,8 +8,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.owasp.html.PolicyFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +26,7 @@ import demo.base.organizations.pojo.result.OrgRegistResult;
 import demo.base.organizations.pojo.result.VerifyAffiliatesOrgRegistDTOResult;
 import demo.base.organizations.pojo.vo.OrganizationVO;
 import demo.base.organizations.service.OrganizationService;
+import demo.base.system.service.impl.SystemCommonService;
 import demo.base.user.pojo.bo.DeleteAuthBO;
 import demo.base.user.pojo.bo.FindUserAuthBO;
 import demo.base.user.pojo.bo.MyUserPrincipal;
@@ -46,13 +45,11 @@ import demo.base.user.service.AuthService;
 import demo.base.user.service.UserAuthService;
 import demo.base.user.service.UsersService;
 import demo.common.pojo.result.CommonResultCX;
-import demo.common.service.CommonService;
 import demo.tool.other.service.TextFilter;
 
 @Service
-public class OrganizationServiceImpl extends CommonService implements OrganizationService {
+public class OrganizationServiceImpl extends SystemCommonService implements OrganizationService {
 
-	private static final Logger log = LoggerFactory.getLogger(OrganizationServiceImpl.class);
 
 	@Autowired
 	protected TextFilter textFilter;
@@ -103,7 +100,7 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 		
 		InsertAuthDTO insertNewAuthDTO = new InsertAuthDTO();
 		insertNewAuthDTO.setAuthName(dto.getOrgName() + "_Admin");
-		insertNewAuthDTO.setBelongOrgPK(encryptId(newOrgId));
+		insertNewAuthDTO.setBelongOrgPK(systemConstantService.encryptId(newOrgId));
 		InsertNewAuthResult insertOrgAuthResult = authService.insertAuth(insertNewAuthDTO);
 		if(!insertOrgAuthResult.isSuccess()) {
 			result.addMessage(insertOrgAuthResult.getMessage());
@@ -157,7 +154,7 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 		
 		InsertAuthDTO insertNewAuthDTO = new InsertAuthDTO();
 		insertNewAuthDTO.setAuthName(dto.getOrgName() + "_admin_affiliate");
-		insertNewAuthDTO.setBelongOrgPK(encryptId(newOrgId));
+		insertNewAuthDTO.setBelongOrgPK(systemConstantService.encryptId(newOrgId));
 		InsertNewAuthResult insertOrgAuthResult = authService.insertAuth(insertNewAuthDTO);
 		if(!insertOrgAuthResult.isSuccess()) {
 			result.addMessage(insertOrgAuthResult.getMessage());
@@ -218,8 +215,8 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 			return r;
 		}
 		
-		Long topOrgId = decryptPrivateKey(dto.getTopOrg());
-		Long belongToOrgId = decryptPrivateKey(dto.getBelongTo());
+		Long topOrgId = systemConstantService.decryptPrivateKey(dto.getTopOrg());
+		Long belongToOrgId = systemConstantService.decryptPrivateKey(dto.getBelongTo());
 		OrganizationsExample example = new OrganizationsExample();
 		example.createCriteria().andIsDeleteEqualTo(false).andIdIn(Arrays.asList(topOrgId, belongToOrgId));
 		List<Organizations> belongOrgList = orgMapper.selectByExample(example);
@@ -320,16 +317,16 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 		bo.setIsDelete(dto.getIsDelete());
 		bo.setOrgName(dto.getOrgName());
 		if(StringUtils.isNotBlank(dto.getOrgPk())) {
-			bo.setOrgId(decryptPrivateKey(dto.getOrgPk()));
+			bo.setOrgId(systemConstantService.decryptPrivateKey(dto.getOrgPk()));
 		}
 		if(StringUtils.isNotBlank(dto.getBelongTo())) {
-			bo.setBelongTo(decryptPrivateKey(dto.getBelongTo()));
+			bo.setBelongTo(systemConstantService.decryptPrivateKey(dto.getBelongTo()));
 		}
 		if(StringUtils.isNotBlank(dto.getTopOrg())) {
-			bo.setTopOrg(decryptPrivateKey(dto.getTopOrg()));
+			bo.setTopOrg(systemConstantService.decryptPrivateKey(dto.getTopOrg()));
 		}
 		if(StringUtils.isNotBlank(dto.getCreatorPk())) {
-			bo.setCreatorId(decryptPrivateKey(dto.getCreatorPk()));
+			bo.setCreatorId(systemConstantService.decryptPrivateKey(dto.getCreatorPk()));
 		}
 		bo.setCreatorName(dto.getCreatorName());
 		return bo;
@@ -377,7 +374,7 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 			
 			List<Long> creatorIdList = new ArrayList<Long>();
 			for(UsersDetailVO vo : findUserResult.getUserVOList()) {
-				creatorIdList.add(decryptPrivateKey(vo.getUserPk()));
+				creatorIdList.add(systemConstantService.decryptPrivateKey(vo.getUserPk()));
 			}
 			orgCriteria.andCreateByIn(creatorIdList);
 		}
@@ -416,10 +413,10 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 		 * TODO 直属机构名 顶级机构名 未填充
 		 */
 		OrganizationVO vo = new OrganizationVO();
-		vo.setPk(encryptId(po.getId()));
+		vo.setPk(systemConstantService.encryptId(po.getId()));
 		vo.setOrgName(po.getOrgName());
-		vo.setBelongToPk(encryptId(po.getBelongTo()));
-		vo.setTopOrgPk(encryptId(po.getTopOrg()));
+		vo.setBelongToPk(systemConstantService.encryptId(po.getBelongTo()));
+		vo.setTopOrgPk(systemConstantService.encryptId(po.getTopOrg()));
 		vo.setIsDelete(po.getIsDelete());
 		return vo;
 	}
@@ -487,7 +484,7 @@ public class OrganizationServiceImpl extends CommonService implements Organizati
 			return r;
 		}
 		
-		Long orgId = decryptPrivateKey(dto.getOrgPk());
+		Long orgId = systemConstantService.decryptPrivateKey(dto.getOrgPk());
 		if(orgId == null) {
 			return r;
 		}

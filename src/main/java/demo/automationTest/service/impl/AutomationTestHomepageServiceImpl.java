@@ -58,7 +58,7 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 			return new ModelAndView("ATDemoJSP/atDemoLink");	
 		}
 		
-		if(isInZhang3OrDev(request)) {
+		if(systemConstantService.isInZhang3OrDev(request)) {
 			return new ModelAndView("ATDemoJSP/atDemoLink");
 		}
 		
@@ -238,7 +238,7 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 		
 		int count = redisOriginalConnectService.checkFunctionalModuleVisitData(request, SystemRedisKey.searchingDemoInsertCountingKeyPrefix);
 
-		if(!isBigUser() && !isDev()) {
+		if(!isBigUser() && !systemConstantService.isDev()) {
 			if (count >= SearchingDemoConstant.maxInsertCountIn30Minutes) {
 				r.failWithMessage("短时间内加入的任务太多了, 请稍后再试");
 				return r;

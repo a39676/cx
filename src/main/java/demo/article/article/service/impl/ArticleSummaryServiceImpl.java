@@ -72,7 +72,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 	
 	@Override
 	public int insertArticleLongSummary(Long userId, Long articleId, String title, String finalFilePath) {
-		String privateKey = encryptId(articleId);
+		String privateKey = systemConstantService.encryptId(articleId);
 		if(privateKey == null) {
 			return 0;
 		}
@@ -182,7 +182,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			tmpVO.setFirstLine(lines.get(0));
 			tmpVO.setCreateDateString(sdf.format(summaryBO.getCreateTime()));
 			tmpVO.setCreateDateDescription(localDateTimeHandler.dateToStr(summaryBO.getCreateTime()));
-			tmpVO.setPrivateKey(encryptId(summaryBO.getArticleId()));
+			tmpVO.setPrivateKey(systemConstantService.encryptId(summaryBO.getArticleId()));
 			tmpVO.setEvaluationMap(articleEvaluationStatisticsMap.get(summaryBO.getArticleId()).getEvaluationCodeAndCount());
 			if(articleHasCommentNotReviewIdList != null && articleHasCommentNotReviewIdList.size() > 0 && articleHasCommentNotReviewIdList.contains(summaryBO.getArticleId())) {
 				tmpVO.setHasCommentNotReview(true);
@@ -238,7 +238,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			tmpVO.setCreateDateString(localDateTimeHandler.dateToStr(summaryBO.getCreateTime(), DateTimeUtilCommon.normalDateFormat));
 			tmpVO.setCreateDateTimeString(localDateTimeHandler.dateToStr(summaryBO.getCreateTime(), DateTimeUtilCommon.normalDateTimeFormat));
 			try {
-				tmpVO.setPrivateKey(URLEncoder.encode(encryptId(summaryBO.getArticleId()), StandardCharsets.UTF_8.toString()));
+				tmpVO.setPrivateKey(URLEncoder.encode(systemConstantService.encryptId(summaryBO.getArticleId()), StandardCharsets.UTF_8.toString()));
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}

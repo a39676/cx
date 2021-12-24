@@ -203,7 +203,7 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 
 		InsertCryptoCoinLowPriceNoticeSettingDTO dto = null;
 		CryptoCoinPriceCommonDataBO newPrice = null;
-		String telegramChatPK = encryptId(TelegramStaticChatID.MY_ID);
+		String telegramChatPK = systemConstantService.encryptId(TelegramStaticChatID.MY_ID);
 		for (CryptoCoinCatalog po : lowPriceSubscriptionCatalogPOList) {
 			dto = new InsertCryptoCoinLowPriceNoticeSettingDTO();
 			dto.setTelegramChatPK(telegramChatPK);

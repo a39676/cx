@@ -4,14 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.base.admin.service.AdminService;
+import demo.base.system.service.impl.SystemCommonService;
 import demo.base.user.mapper.UserIpMapper;
 import demo.base.user.pojo.dto.UserIpDeleteDTO;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.ResultTypeCX;
-import demo.common.service.CommonService;
 
 @Service
-public class AdminServiceImpl extends CommonService implements AdminService {
+public class AdminServiceImpl extends SystemCommonService implements AdminService {
 
 	@Autowired
 	private UserIpMapper userIpMapper;

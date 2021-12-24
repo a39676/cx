@@ -6,12 +6,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.base.organizations.service.OrganizationService;
+import demo.base.system.service.impl.SystemCommonService;
 import demo.base.user.mapper.AuthRoleMapper;
 import demo.base.user.pojo.bo.BatchDeleteAuthRoleBO;
 import demo.base.user.pojo.dto.EditAuthRoleByRoleNameDTO;
@@ -32,12 +31,9 @@ import demo.base.user.service.AuthRoleService;
 import demo.base.user.service.AuthService;
 import demo.base.user.service.RoleService;
 import demo.common.pojo.result.CommonResultCX;
-import demo.common.service.CommonService;
 
 @Service
-public class AuthRoleServiceImpl extends CommonService implements AuthRoleService {
-	
-	private static final Logger log = LoggerFactory.getLogger(AuthRoleServiceImpl.class);
+public class AuthRoleServiceImpl extends SystemCommonService implements AuthRoleService {
 	
 	@Autowired
 	private AuthRoleMapper authRoleMapper;
@@ -151,8 +147,8 @@ public class AuthRoleServiceImpl extends CommonService implements AuthRoleServic
 			return r;
 		}
 		
-		Long authId = decryptPrivateKey(dto.getAuthPK());
-		Long roleId = decryptPrivateKey(dto.getRolePK());
+		Long authId = systemConstantService.decryptPrivateKey(dto.getAuthPK());
+		Long roleId = systemConstantService.decryptPrivateKey(dto.getRolePK());
 		if(authId == null || roleId == null) {
 			r.failWithMessage("null param");
 			return r;
@@ -189,8 +185,8 @@ public class AuthRoleServiceImpl extends CommonService implements AuthRoleServic
 			return r;
 		}
 		
-		Long authId = decryptPrivateKey(dto.getAuthPK());
-		Long roleId = decryptPrivateKey(dto.getRolePK());
+		Long authId = systemConstantService.decryptPrivateKey(dto.getAuthPK());
+		Long roleId = systemConstantService.decryptPrivateKey(dto.getRolePK());
 		return insertAuthRole(authId, roleId);
 	}
 	
@@ -203,7 +199,7 @@ public class AuthRoleServiceImpl extends CommonService implements AuthRoleServic
 			return r;
 		}
 		
-		Long authId = decryptPrivateKey(dto.getAuthPK());
+		Long authId = systemConstantService.decryptPrivateKey(dto.getAuthPK());
 		Roles role = roleService.findRoleByName(dto.getRoleName());
 		
 		if(role == null) {

@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import auxiliaryCommon.pojo.type.GenderType;
 import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.system.pojo.result.HostnameType;
+import demo.base.system.service.impl.SystemCommonService;
 import demo.base.user.mapper.UserRegistMapper;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.bo.EditUserAuthBO;
@@ -39,7 +40,6 @@ import demo.base.user.service.UserDetailService;
 import demo.base.user.service.UserRegistService;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.ResultTypeCX;
-import demo.common.service.CommonService;
 import demo.config.costom_component.CustomPasswordEncoder;
 import demo.tool.mail.pojo.dto.ResendMailDTO;
 import demo.tool.mail.pojo.dto.SendForgotUsernameMailDTO;
@@ -53,7 +53,7 @@ import demo.tool.other.service.ValidRegexToolService;
 import toolPack.numericHandel.NumericUtilCustom;
 
 @Service
-public class UserRegistServiceImpl extends CommonService implements UserRegistService {
+public class UserRegistServiceImpl extends SystemCommonService implements UserRegistService {
 
 	@Autowired
 	private UserRegistMapper userRegistMapper;
@@ -449,7 +449,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			}
 			ResendMailDTO resendMailDTO = new ResendMailDTO();
 			resendMailDTO.setHostName(hostnameType.getName());
-			resendMailDTO.setMailKey(encryptId(oldMail.getId()));
+			resendMailDTO.setMailKey(systemConstantService.encryptId(oldMail.getId()));
 			resendMailDTO.setNickName(ud.getNickName());
 			resendMailDTO.setSendTo(ud.getEmail());
 			resendMailDTO.setUserId(userId);

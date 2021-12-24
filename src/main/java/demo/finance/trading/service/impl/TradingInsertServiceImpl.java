@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import demo.common.pojo.type.TransationType;
 import demo.common.service.CommonService;
+import demo.config.costom_component.EncryptUtil;
 import demo.finance.account_info.controller.AccountInfoController;
 import demo.finance.account_info.pojo.dto.controllerDTO.InsertNewTransationDTO;
 import demo.finance.account_info.pojo.po.AccountInfo;
@@ -35,6 +36,8 @@ public class TradingInsertServiceImpl extends CommonService implements TradingIn
 	private FileUtilCustom ioUtil;
 	@Autowired
 	private NumericUtilCustom numberUtil;
+	@Autowired
+	private EncryptUtil encryptUtil;
 
 	private boolean insertTradingRecorderMarker(TradingRecorder tradingRecorder) {
 		TradingRecorderMarker marker = new TradingRecorderMarker();

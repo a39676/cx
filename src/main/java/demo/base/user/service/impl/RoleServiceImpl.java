@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import demo.base.system.service.impl.SystemCommonService;
 import demo.base.user.mapper.RolesMapper;
 import demo.base.user.pojo.dto.FindRolesDTO;
 import demo.base.user.pojo.po.Roles;
@@ -20,10 +21,9 @@ import demo.base.user.pojo.type.RolesType;
 import demo.base.user.pojo.type.SystemRolesType;
 import demo.base.user.pojo.vo.RoleVO;
 import demo.base.user.service.RoleService;
-import demo.common.service.CommonService;
 
 @Service
-public class RoleServiceImpl extends CommonService implements RoleService {
+public class RoleServiceImpl extends SystemCommonService implements RoleService {
 
 	@Autowired
 	private RolesMapper roleMapper;
@@ -154,7 +154,7 @@ public class RoleServiceImpl extends CommonService implements RoleService {
 	
 	private RoleVO buildVO(Roles po) {
 		RoleVO vo = new RoleVO();
-		vo.setPk(encryptId(po.getRoleId()));
+		vo.setPk(systemConstantService.encryptId(po.getRoleId()));
 		vo.setRoleName(po.getRole());
 		return vo;
 	}

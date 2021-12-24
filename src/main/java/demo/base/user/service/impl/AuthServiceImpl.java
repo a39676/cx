@@ -9,8 +9,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.owasp.html.PolicyFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +19,7 @@ import demo.base.organizations.pojo.po.Organizations;
 import demo.base.organizations.pojo.result.FindOrgListResult;
 import demo.base.organizations.service.OrganizationService;
 import demo.base.system.pojo.constant.InitSystemConstant;
+import demo.base.system.service.impl.SystemCommonService;
 import demo.base.user.mapper.AuthMapper;
 import demo.base.user.pojo.bo.BatchDeleteAuthRoleBO;
 import demo.base.user.pojo.bo.DeleteAuthBO;
@@ -54,13 +53,10 @@ import demo.base.user.service.AuthService;
 import demo.base.user.service.RoleService;
 import demo.base.user.service.UserAuthService;
 import demo.common.pojo.result.CommonResultCX;
-import demo.common.service.CommonService;
 import demo.tool.other.service.TextFilter;
 
 @Service
-public class AuthServiceImpl extends CommonService implements AuthService {
-
-	private static final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
+public class AuthServiceImpl extends SystemCommonService implements AuthService {
 
 	@Autowired
 	protected TextFilter textFilter;
@@ -156,7 +152,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 			return view;
 		}
 		
-		Long orgId = decryptPrivateKey(orgPK);
+		Long orgId = systemConstantService.decryptPrivateKey(orgPK);
 		if(orgId == null) {
 			return view;
 		}
@@ -185,7 +181,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 			return view;
 		}
 		
-		Long authId = decryptPrivateKey(authPK);
+		Long authId = systemConstantService.decryptPrivateKey(authPK);
 		
 		CommonResultCX canEditUserAuthResult = canEditUserAuth(authId);
 		if(canEditUserAuthResult.isFail()) {
@@ -219,7 +215,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 			List<String> hasRolePK = new ArrayList<String>();
 			List<Long> roleIdList = authRoleList.stream().map(AuthRole::getRoleId).collect(Collectors.toList());
 			if(roleIdList != null && !roleIdList.isEmpty()) {
-				hasRolePK.addAll(encryptId(roleIdList));
+				hasRolePK.addAll(systemConstantService.encryptId(roleIdList));
 				view.addObject("hasRolePK", hasRolePK);
 			}
 		}
@@ -253,7 +249,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 			List<Long> authIdList = new ArrayList<Long>();
 			Long authId = null;
 			for(String authPk : dto.getAuthPkList()) {
-				authId = decryptPrivateKey(authPk);
+				authId = systemConstantService.decryptPrivateKey(authPk);
 				if(authId == null) {
 					r.failWithMessage("error param");
 					return r;
@@ -267,7 +263,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 			List<Long> orgIdList = new ArrayList<Long>();
 			Long orgId = null;
 			for(String orgPk : dto.getBelongOrgPkList()) {
-				orgId = decryptPrivateKey(orgPk);
+				orgId = systemConstantService.decryptPrivateKey(orgPk);
 				if(orgId == null) {
 					r.failWithMessage("error param");
 					return r;
@@ -395,7 +391,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 	@Override
 	public AuthVO buildAuthVOByPO(Auth po) {
 		AuthVO vo = new AuthVO();
-		vo.setPk(encryptId(po.getId()));
+		vo.setPk(systemConstantService.encryptId(po.getId()));
 		vo.setAuthName(po.getAuthName());
 		vo.setAuthType(po.getAuthType());
 		vo.setBelongOrg(po.getBelongOrg());
@@ -432,7 +428,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 			return view;
 		}
 		
-		Long belongOrgId = decryptPrivateKey(belongOrgPK);
+		Long belongOrgId = systemConstantService.decryptPrivateKey(belongOrgPK);
 		if(belongOrgId == null) {
 			return view;
 		}
@@ -465,7 +461,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		PolicyFactory filter = textFilter.getAllFilter();
 		dto.setAuthName(filter.sanitize(dto.getAuthName()));
 
-		Long orgId = decryptPrivateKey(dto.getBelongOrgPK());
+		Long orgId = systemConstantService.decryptPrivateKey(dto.getBelongOrgPK());
 		if(orgId == null) {
 			r.failWithMessage("error param");
 			return r;
@@ -532,7 +528,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 			return r;
 		} 
 		
-		r.setAuthPK(encryptId(newAuthID));
+		r.setAuthPK(systemConstantService.encryptId(newAuthID));
 		r.setIsSuccess();
 		return r;
 	}
@@ -540,8 +536,8 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 	@Override
 	public CommonResultCX deleteAuth(DeleteAuthDTO dto) {
 		DeleteAuthBO bo = new DeleteAuthBO();
-		bo.setOrgId(decryptPrivateKey(dto.getOrgPk()));
-		bo.setAuthIdList(decryptPrivateKey(dto.getAuthPkList()));
+		bo.setOrgId(systemConstantService.decryptPrivateKey(dto.getOrgPk()));
+		bo.setAuthIdList(systemConstantService.decryptPrivateKey(dto.getAuthPkList()));
 		return deleteAuth(bo);
 	}
 	
@@ -763,7 +759,7 @@ public class AuthServiceImpl extends CommonService implements AuthService {
 		PolicyFactory filter = textFilter.getAllFilter();
 		dto.setAuthName(filter.sanitize(dto.getAuthName()));
 		
-		Long authId = decryptPrivateKey(dto.getAuthPK());
+		Long authId = systemConstantService.decryptPrivateKey(dto.getAuthPK());
 		if(authId == null) {
 			r.failWithMessage("error param");
 			return r;

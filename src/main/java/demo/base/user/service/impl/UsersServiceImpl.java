@@ -140,7 +140,7 @@ public class UsersServiceImpl extends SystemCommonService implements UsersServic
 		FindUserAuthBO findUserAuthBO = new FindUserAuthBO();
 		findUserAuthBO.setUserId(user.getUserId());
 		FindUserAuthResult authResult = userAuthService.findUserAuth(findUserAuthBO);
-		if(!authResult.isSuccess()) {
+		if(authResult.isFail()) {
 			return myUserPrincipal;
 		}
 		List<Auth> auths = authResult.getAuthList();

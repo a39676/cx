@@ -19,10 +19,10 @@ import demo.base.user.pojo.constant.UserConstant;
 import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.po.Users;
 import demo.base.user.pojo.result.FindAuthsResult;
-import demo.base.user.service.AuthService;
 import demo.base.user.service.RoleService;
 import demo.base.user.service.UserRegistService;
 import demo.base.user.service.UsersService;
+import demo.base.user.service.__AuthInitService;
 import demo.common.service.CommonService;
 import demo.finance.cryptoCoin.common.service.CryptoCoinConstantService;
 import demo.joy.image.icon.service.JoyIconService;
@@ -36,7 +36,7 @@ import demo.tool.telegram.service.impl.TelegramConstantService;
 public class DatabaseFillerOnStartup extends CommonService implements ApplicationListener<ApplicationReadyEvent> {
 	
 	@Autowired
-	private AuthService authService;
+	private __AuthInitService __authInitService;
 	@Autowired
 	private RoleService roleService;
 	@Autowired
@@ -91,13 +91,13 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 			
 			/* 如无超级管理员角色, 初始化 */
 			log.error("query auth auth");
-			FindAuthsResult authsResult = authService.findSuperAdministratorAuth();
+			FindAuthsResult authsResult = __authInitService.findSuperAdministratorAuth();
 			log.error("auths result: " + authsResult.isSuccess());
 			List<Auth> superAdminAuthList = authsResult.getAuthList();
 			log.error("super admin auth list size: " + superAdminAuthList.size());
 			Long superAdminAuthId = null;
 			if(superAdminAuthList == null || superAdminAuthList.size() < 1) {
-				superAdminAuthId = authService.__createBaseSuperAdminAuth(UserConstant.noneUserId);
+				superAdminAuthId = __authInitService.__createBaseSuperAdminAuth(UserConstant.noneUserId);
 				log.error("can NOT find super admin auth ID");
 			} else {
 				superAdminAuthId = superAdminAuthList.get(0).getId();

@@ -57,13 +57,7 @@ public class OrganizationServiceImpl extends SystemCommonService implements Orga
 	@Autowired
 	private OrganizationsMapper orgMapper;
 	@Autowired
-	private UserAuthService userAuthService;
-	@Autowired
-	private AuthRoleService authRoleService;
-	@Autowired
 	private UsersService userService;
-	@Autowired
-	private AuthService authService;
 	
 	@Override
 	public OrgRegistResult topOrgRegist(OrgRegistDTO dto) {

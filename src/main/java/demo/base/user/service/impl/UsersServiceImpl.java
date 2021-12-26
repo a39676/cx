@@ -38,8 +38,6 @@ import demo.base.user.pojo.result.FindUserAuthResult;
 import demo.base.user.pojo.result.FindUserByConditionResult;
 import demo.base.user.pojo.type.UserPrivateLevelType;
 import demo.base.user.pojo.vo.UsersDetailVO;
-import demo.base.user.service.AuthRoleService;
-import demo.base.user.service.UserAuthService;
 import demo.base.user.service.UsersService;
 import demo.tool.other.service.ValidRegexToolService;
 
@@ -55,10 +53,6 @@ public class UsersServiceImpl extends SystemCommonService implements UsersServic
 	private UsersDetailMapper usersDetailMapper;
 	@Autowired
 	private ValidRegexToolService validRegexToolService;
-	@Autowired
-	private UserAuthService userAuthService;
-	@Autowired
-	private AuthRoleService authRoleService;
 	@Autowired
 	private OrganizationService orgService;
 	
@@ -234,30 +228,6 @@ public class UsersServiceImpl extends SystemCommonService implements UsersServic
 		}
 		
 		return vo;
-	}
-	
-	@Override
-	public List<Users> findUserListByAuthId(Long authId) {
-		if (authId == null) {
-			return new ArrayList<Users>();
-		}
-		
-		FindUserAuthBO findUserAuthBO = new FindUserAuthBO();
-		findUserAuthBO.setAuthId(authId);
-		FindUserAuthResult userAuthResult = userAuthService.findUserAuth(findUserAuthBO);
-		if(!userAuthResult.isSuccess()) {
-			return new ArrayList<Users>();
-		}
-		List<UserAuth> userAuthList = userAuthResult.getUserAuthList();
-		if(userAuthList == null || userAuthList.isEmpty()) {
-			return new ArrayList<Users>();
-		}
-		
-		List<Long> userIdList = userAuthList.stream().map(UserAuth::getUserId).collect(Collectors.toList());
-
-		UsersExample userExample = new UsersExample();
-		userExample.createCriteria().andUserIdIn(userIdList);
-		return usersMapper.selectByExample(userExample);
 	}
 	
 	@Override

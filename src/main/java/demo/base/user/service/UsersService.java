@@ -1,7 +1,6 @@
 package demo.base.user.service;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.web.servlet.ModelAndView;
 
@@ -47,9 +46,6 @@ public interface UsersService {
 	int countAttempts(String userName);
 
 	UsersDetailVO findOtherUserDetail(OtherUserInfoDTO param);
-
-	/** 查找某种角色的所有userId */
-	List<Users> findUserListByAuthId(Long authId);
 
 	MyUserPrincipal buildMyUserPrincipalByUserName(String userName);
 

@@ -10,7 +10,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import demo.base.organizations.pojo.po.Organizations;
-import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.po.Users;
 
 public class MyUserPrincipal implements UserDetails {
@@ -21,7 +20,6 @@ public class MyUserPrincipal implements UserDetails {
 	private String email;
 	private String nickName;
 	private List<String> roles;
-	private List<Auth> auths;
 	private List<Organizations> superManagerOrgList;
 	private List<Organizations> controllerOrganizations;
 	private List<Organizations> subOrganizations;
@@ -58,14 +56,6 @@ public class MyUserPrincipal implements UserDetails {
 		this.subOrganizations = subOrganizations;
 	}
 
-	public List<Auth> getAuths() {
-		return auths;
-	}
-
-	public void setAuths(List<Auth> auths) {
-		this.auths = auths;
-	}
-
 	public Users getUser() {
 		return user;
 	}
@@ -97,7 +87,7 @@ public class MyUserPrincipal implements UserDetails {
 	@Override
 	public String toString() {
 		return "MyUserPrincipal [user=" + user + ", email=" + email + ", nickName=" + nickName + ", roles=" + roles
-				+ ", auths=" + auths + ", superManagerOrgList=" + superManagerOrgList + ", controllerOrganizations="
+				+ ", superManagerOrgList=" + superManagerOrgList + ", controllerOrganizations="
 				+ controllerOrganizations + ", subOrganizations=" + subOrganizations + "]";
 	}
 

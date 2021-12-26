@@ -22,9 +22,7 @@ import demo.article.article.pojo.constant.ArticleAdminUrlConstant;
 import demo.article.articleComment.pojo.constant.ArticleAdminCommentUrlConstant;
 import demo.base.admin.pojo.constant.AdminUrlConstant;
 import demo.base.system.pojo.constant.BaseUrl;
-import demo.base.user.pojo.constant.AuthUrl;
 import demo.base.user.pojo.constant.LoginUrlConstant;
-import demo.base.user.pojo.constant.UserAuthUrl;
 import demo.base.user.pojo.constant.UsersUrl;
 import demo.base.user.pojo.type.OrganzationRolesType;
 import demo.base.user.pojo.type.SystemRolesType;
@@ -97,8 +95,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers(ArticleAdminUrlConstant.root + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN))
-            .antMatchers(UserAuthUrl.root + "/**")
-            	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers(ArticleAdminCommentUrlConstant.root + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN)) 
             .antMatchers("/dba/**")
@@ -107,8 +103,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers(CryptoCoinManagerUrl.ROOT + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
-            .antMatchers(AuthUrl.root + "/**")
-            	.access(hasAnyRole(Arrays.asList(SystemRolesType.ROLE_SUPER_ADMIN), Arrays.asList(OrganzationRolesType.ROLE_ORG_SUPER_ADMIN)))
             .antMatchers(PMemoUrl.ROOT + PMemoUrl.SET)
             	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers(WXUrl.root + "/**")

@@ -90,7 +90,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		 *     return holderRegist??
 		 * }
 		 */
-		Long holderId = holder.getAccountHolderId();
+		Long holderId = holder.getId();
 		
 		AccountInfo newAccount = new AccountInfo();
 		BeanUtils.copyProperties(dto, newAccount);
@@ -244,7 +244,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		if(holder == null) {
 			return new ArrayList<AccountInfo>();
 		}
-		dto.setAccountHolderId(holder.getAccountHolderId());
+		dto.setAccountHolderId(holder.getId());
 		return accountInfoMapper.findByCondition(dto);
 	}
 	
@@ -424,7 +424,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		
 		HashMap<String, String> conditionMap = new HashMap<String, String>();
 		conditionMap.put("accountNumber", accountNumber);
-		conditionMap.put("accountHolderId", String.valueOf(holderList.get(0).getAccountHolderId()));
+		conditionMap.put("accountHolderId", String.valueOf(holderList.get(0).getId()));
 		
 		Integer result = accountInfoMapper.checkAccountNumberBelongUser(conditionMap);
 		if(result == 1) {
@@ -443,7 +443,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		
 		HashMap<String, String> conditionMap = new HashMap<String, String>();
 		conditionMap.put("accountTailNumber", accountTailNumber);
-		conditionMap.put("accountHolderId", String.valueOf(holderList.get(0).getAccountHolderId()));
+		conditionMap.put("accountHolderId", String.valueOf(holderList.get(0).getId()));
 		
 		Integer result = accountInfoMapper.checkAccountNumberBelongUser(conditionMap);
 		if(result == 1) {
@@ -722,7 +722,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		GetAccountListResult result = new GetAccountListResult();
 		List<AccountHolder> holderList = accountHolderController.getCurrentHolders();
 		
-		List<AccountInfoWithBankInfo> accountList = getAccountInfoWithBankInfoByCondition(0L + holderList.get(0).getAccountHolderId(), param);
+		List<AccountInfoWithBankInfo> accountList = getAccountInfoWithBankInfoByCondition(0L + holderList.get(0).getId(), param);
 		result.setIsSuccess();
 		result.setAccountList(accountList);
 		return result;

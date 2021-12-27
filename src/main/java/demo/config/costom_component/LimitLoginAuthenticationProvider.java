@@ -1,7 +1,7 @@
 package demo.config.costom_component;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -75,9 +75,9 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
 			param.setUserName(authentication.getName());
 			ArrayList<UserAttempts> userAttempts = userService.getUserAttempts(param);
 			if (userAttempts != null && userAttempts.size() > 0) {
-				Date lastAttempts = userAttempts.get(0).getAttemptTime();
+				LocalDateTime lastAttempts = userAttempts.get(0).getAttemptTime();
 				for (UserAttempts ua : userAttempts) {
-					if (ua.getAttemptTime().after(lastAttempts)) {
+					if (ua.getAttemptTime().isAfter(lastAttempts)) {
 						lastAttempts = ua.getAttemptTime();
 					}
 				}

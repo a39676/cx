@@ -6,4 +6,6 @@ public interface UserRoleService {
 
 	void insertActiveUserAuth(Long userId);
 
+	void insertSuperAdminAuth(Long userId);
+
 }

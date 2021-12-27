@@ -270,7 +270,7 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 		userRegistDTO.setEmail("example@email.com");
 		userRegistDTO.setQq("1050092382");
 		userRegistDTO.setPwd("defaultPWD");
-		userRegistDTO.setPwd(passwordEncoder.encode(userRegistDTO.getPwd()));
+//		userRegistDTO.setPwd(passwordEncoder.encode(userRegistDTO.getPwd()));
 		userRegistDTO.setGender(GenderType.unknow.getCode());
 		userRegistDTO.setMobile("13800138000");
 		
@@ -289,7 +289,7 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 		
 		userRegistMapper.insertNewUser(user);
 		userDetailService.insertSelective(userDetail);
-		userRoleService.insertBaseUserAuth(newUserId);
+		userRoleService.insertSuperAdminAuth(newUserId);
 		
 		log.error("insert base super admin");
 		

@@ -9,12 +9,12 @@ import demo.finance.account_holder.pojo.po.AccountHolder;
 
 public interface AccountHolderService {
 	
-	public AccountHolder getHolder(Long id);
+	public AccountHolder getHolder(Long holderId);
 	
 	public List<AccountHolder> findHolder(String holderName);
 	
 	public Long holderRegister(Long userId, HttpServletRequest request);
 	
-	List<AccountHolder> getCurrentHolders(String userName);
+	List<AccountHolder> getCurrentHolders();
 
 }

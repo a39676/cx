@@ -16,6 +16,7 @@ import demo.base.user.pojo.type.SystemRolesType;
 import demo.base.user.service.RoleService;
 import demo.base.user.service.UserRegistService;
 import demo.base.user.service.UsersService;
+import demo.base.user.service.impl.UserRoleConstantService;
 import demo.common.service.CommonService;
 import demo.finance.cryptoCoin.common.service.CryptoCoinConstantService;
 import demo.joy.image.icon.service.JoyIconService;
@@ -30,6 +31,8 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 	
 	@Autowired
 	private RoleService roleService;
+	@Autowired
+	private UserRoleConstantService userRoleConstantService;
 	@Autowired
 	private UsersService userService;
 	@Autowired
@@ -76,6 +79,8 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 			roleService.__initBaseRole();
 			log.error("after base role init");
 			
+			userRoleConstantService.refresh();
+			
 			/* 如无超级管理员角色, 初始化 */
 			log.error("query auth auth");
 			List<Users> superUserList = userService.findUserListByRole(SystemRolesType.ROLE_SUPER_ADMIN);
@@ -85,14 +90,12 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 				log.error("Has super admin");
 			}
 			
-			Long superAdminId = null;
+			
 			if(superUserList.isEmpty()) {
-//				TODO FIXME bug here
-				superAdminId = userRegistService.__baseSuperAdminRegist().getNewSuperAdminId();
-				log.error("can NOT find super admin ID");
+				userRegistService.__baseSuperAdminRegist().getNewSuperAdminId();
+				log.error("can NOT find super admin");
 			} else {
-				superAdminId = superUserList.get(0).getUserId();
-				log.error("super admin ID found");
+				log.error("super admin found");
 			}
 			
 			log.error("load joy option");

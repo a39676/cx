@@ -55,5 +55,23 @@ public class UserRoleServiceImpl extends CommonService implements UserRoleServic
 			}
 		}
 	}
+	
+	@Override
+	public void insertSuperAdminAuth(Long userId) {
+		List<Roles> baseUserRoles = userRoleConstantService.getSuperAdminRoles();
+		UserRoles po = null;
+		for(Roles r : baseUserRoles) {
+			po = new UserRoles();
+			po.setCreateBy(UserConstant.noneUserId);
+			po.setRoleId(r.getRoleId());
+			po.setUserId(userId);
+			po.setId(snowFlake.getNextId());
+			try {
+				userRoleMapper.insertSelective(po);
+			} catch (Exception e) {
+				log.error(e.getLocalizedMessage());
+			}
+		}
+	}
 
 }

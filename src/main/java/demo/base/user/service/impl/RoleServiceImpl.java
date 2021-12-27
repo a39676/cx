@@ -34,24 +34,24 @@ public class RoleServiceImpl extends SystemCommonService implements RoleService 
 		example.createCriteria().andIsDeleteEqualTo(false);
 		List<Roles> hadBaseRoleList = roleMapper.selectByExample(example);
 		List<String> hadRoleNameList = hadBaseRoleList.stream().map(Roles::getRole).collect(Collectors.toList());
-		Roles r = null;
-		for(SystemRolesType rt : SystemRolesType.values()) {
-			if(!hadRoleNameList.contains(rt.getName())) {
-				r = new Roles();
-				r.setRoleId(snowFlake.getNextId());
-				r.setRole(rt.getName());
-				r.setIsDelete(false);
-				roleMapper.insertSelective(r);
+		Roles tmpRole = null;
+		for(SystemRolesType systemRoleType : SystemRolesType.values()) {
+			if(!hadRoleNameList.contains(systemRoleType.getName())) {
+				tmpRole = new Roles();
+				tmpRole.setRoleId(snowFlake.getNextId());
+				tmpRole.setRole(systemRoleType.getName());
+				tmpRole.setIsDelete(false);
+				roleMapper.insertSelective(tmpRole);
 			}
 		}
 		
 		for(OrganzationRolesType rt : OrganzationRolesType.values()) {
 			if(!hadRoleNameList.contains(rt.getName())) {
-				r = new Roles();
-				r.setRoleId(snowFlake.getNextId());
-				r.setRole(rt.getName());
-				r.setIsDelete(false);
-				roleMapper.insertSelective(r);
+				tmpRole = new Roles();
+				tmpRole.setRoleId(snowFlake.getNextId());
+				tmpRole.setRole(rt.getName());
+				tmpRole.setIsDelete(false);
+				roleMapper.insertSelective(tmpRole);
 			}
 		}
 	}

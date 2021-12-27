@@ -8,7 +8,7 @@ import demo.joy.character.pojo.result.GetCharacterDetailResult;
 import demo.joy.character.service.JoyCharacterService;
 import demo.joy.common.service.JoyCommonService;
 import demo.joy.scene.pojo.result.FindSceneGroupVOResult;
-import demo.joy.scene.service.JoySceneGroupService;
+import demo.joy.scene.service.JoySceneGroupManagerService;
 import demo.joy.start.pojo.constant.JoyStartView;
 import demo.joy.start.service.JoyStartService;
 
@@ -18,7 +18,7 @@ public class JoyStartServiceImpl extends JoyCommonService implements JoyStartSer
 	@Autowired
 	private JoyCharacterService joyCharacterService;
 	@Autowired
-	private JoySceneGroupService joySceneGroupService;
+	private JoySceneGroupManagerService joySceneGroupService;
 
 	@Override
 	public ModelAndView getStartView() {

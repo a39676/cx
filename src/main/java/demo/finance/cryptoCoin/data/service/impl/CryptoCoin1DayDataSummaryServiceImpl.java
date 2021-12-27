@@ -27,6 +27,8 @@ import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1day;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
@@ -40,10 +42,14 @@ import telegram.pojo.dto.TelegramMessageDTO;
 public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonService
 		implements CryptoCoin1DayDataSummaryService {
 
-	private final int dayStepLong = 1;
+	private final int DAY_STEP_LONG = 1;
 
 	@Autowired
 	private CryptoCoinPrice1dayMapper dataMapper;
+	@Autowired
+	private CryptoCoinCatalogService coinCatalogService;
+	@Autowired
+	private CryptoCoinPriceCacheService cacheService;
 
 	@Autowired
 	private TestEventInsertAckProducer testEventInsertAckProducer;
@@ -182,7 +188,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		po.setId(snowFlake.getNextId());
 		po.setStartTime(localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(data.getTime()).withHour(0).withMinute(0)
 				.withSecond(0).withNano(0));
-		po.setEndTime(po.getStartTime().plusDays(dayStepLong));
+		po.setEndTime(po.getStartTime().plusDays(DAY_STEP_LONG));
 		po.setCoinType(coinType.getId());
 		po.setCurrencyType(currencyType.getCode());
 		po.setStartPrice(new BigDecimal(data.getStart()));
@@ -286,7 +292,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		}
 
 		List<CryptoCoinPriceCommonDataBO> resultDataList = mergePODataWithCache(poDataList, cacheDataList, startTime,
-				dayStepLong, TimeUnitType.day);
+				DAY_STEP_LONG, TimeUnitType.day);
 
 		return resultDataList;
 
@@ -325,7 +331,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 				mergeDataList(mergeDataList);
 			}
 
-			indexTime = indexTime.minusDays(dayStepLong);
+			indexTime = indexTime.minusDays(DAY_STEP_LONG);
 		}
 
 	}

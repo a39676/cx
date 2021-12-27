@@ -18,26 +18,18 @@ import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.impl.SystemCommonService;
 import demo.base.user.mapper.UserRegistMapper;
 import demo.base.user.mapper.UsersMapper;
-import demo.base.user.pojo.bo.EditUserAuthBO;
-import demo.base.user.pojo.bo.FindUserAuthBO;
 import demo.base.user.pojo.constant.UserConstant;
-import demo.base.user.pojo.dto.FindAuthsDTO;
 import demo.base.user.pojo.dto.ResetFailAttemptDTO;
 import demo.base.user.pojo.dto.UserRegistDTO;
-import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.po.Users;
 import demo.base.user.pojo.po.UsersDetail;
-import demo.base.user.pojo.result.FindAuthsResult;
-import demo.base.user.pojo.result.FindUserAuthResult;
 import demo.base.user.pojo.result.ModifyRegistEmailResult;
 import demo.base.user.pojo.result.NewUserRegistResult;
 import demo.base.user.pojo.result.ValidUserRegistResult;
 import demo.base.user.pojo.result.__baseSuperAdminRegistResult;
-import demo.base.user.pojo.type.AuthType;
-import demo.base.user.service.AuthService;
-import demo.base.user.service.UserAuthService;
 import demo.base.user.service.UserDetailService;
 import demo.base.user.service.UserRegistService;
+import demo.base.user.service.UserRoleService;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.ResultTypeCX;
 import demo.config.costom_component.CustomPasswordEncoder;
@@ -69,11 +61,9 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 	@Autowired
 	private UsersServiceImpl userService;
 	@Autowired
+	private UserRoleService userRoleService;
+	@Autowired
 	private UserDetailService userDetailService;
-	@Autowired
-	private UserAuthService userAuthService;
-	@Autowired
-	private AuthService authService;
 	@Autowired
 	private ValidRegexToolService validRegexToolService;
 	@Autowired
@@ -87,7 +77,7 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 		if(!isBigUser()) {
 			ipRegistCount = redisOriginalConnectService.checkFunctionalModuleVisitData(request, SystemRedisKey.userRegistCountingKeyPrefix);
 		}
-		if(ipRegistCount > UserConstant.oneDayRegistCount) {
+		if(ipRegistCount > UserConstant.registLimitForOneIPOneDay) {
 			result.failWithMessage("最近已经注册过了,请不要重复注册");
 			return result;
 		}
@@ -126,7 +116,7 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 	private void insertNewUserData(Users newUser, UsersDetail newUserDetail) {
 		userRegistMapper.insertNewUser(newUser);
 		userDetailService.insertSelective(newUserDetail);
-		userAuthService.insertBaseUserAuth(newUser.getUserId(), AuthType.USER);
+		userRoleService.insertBaseUserAuth(newUser.getUserId());
 	}
 	
 	private ValidUserRegistResult validAndSanitizeUserRegistDTO(UserRegistDTO dto) {
@@ -299,7 +289,7 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 		
 		userRegistMapper.insertNewUser(user);
 		userDetailService.insertSelective(userDetail);
-		userAuthService.insertBaseUserAuth(newUserId, AuthType.SUPER_ADMIN);
+		userRoleService.insertBaseUserAuth(newUserId);
 		
 		log.error("insert base super admin");
 		
@@ -380,31 +370,7 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 			return result;
 		}
 		
-		FindUserAuthBO findUserAuthBO = new FindUserAuthBO();
-		findUserAuthBO.setUserId(mr.getUserId());
-		FindUserAuthResult findUserAuthResult = userAuthService.findUserAuth(findUserAuthBO);
-		if(!findUserAuthResult.isSuccess()) {
-			result.addMessage(findUserAuthResult.getMessage());
-			return result;
-		}
-		
-		FindAuthsDTO findAuthDTO = new FindAuthsDTO();
-		findAuthDTO.setAuthType(AuthType.USER_ACTIVE.getCode().intValue());
-		FindAuthsResult activeUserAuthResult = authService.findAuthsByCondition(findAuthDTO);
-		if(!activeUserAuthResult.isSuccess()) {
-			result.addMessage(activeUserAuthResult.getMessage());
-			return result;
-		}
-		Auth activeUserAuth = activeUserAuthResult.getAuthList().get(0);
-		
-		EditUserAuthBO editUserAuthBO = new EditUserAuthBO();
-		editUserAuthBO.setUserId(mr.getUserId());
-		editUserAuthBO.setAuthId(activeUserAuth.getId());
-		CommonResultCX editUserAuthResult = userAuthService.insertUserAuth(editUserAuthBO);
-		if(!editUserAuthResult.isSuccess()) {
-			result.addMessage(editUserAuthResult.getMessage());
-			return result;
-		}
+		userRoleService.insertActiveUserAuth(mr.getUserId());
 		
 		mailService.updateWasUsed(mr.getId());
 		result.successWithMessage("账号已激活");

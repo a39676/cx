@@ -8,12 +8,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.pojo.bo.CacheMapBO;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
+import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
@@ -25,6 +27,9 @@ import telegram.pojo.dto.TelegramMessageDTO;
 @Service
 public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService implements CryptoCoinPriceCacheService {
 
+	@Autowired
+	private CryptoCoinCatalogService coinCatalogService;
+	
 	@Override
 	public void reciveData(CryptoCoinPriceCommonDataBO newBO) {
 		CryptoCoinCatalog coinType = coinCatalogService.findCatalog(newBO.getCoinType());
@@ -91,7 +96,7 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 
 	@Override
 	public CryptoCoinPriceCommonDataBO getNewPrice(CryptoCoinCatalog coinType, CurrencyType currencyType) {
-		List<CryptoCoinPriceCommonDataBO> cacheDataList = cacheService.getCommonDataList(coinType, currencyType,
+		List<CryptoCoinPriceCommonDataBO> cacheDataList = getCommonDataList(coinType, currencyType,
 				LocalDateTime.now().minusMinutes(CryptoCoinDataConstant.CRYPTO_COIN_CACHE_DATA_LIVE_MINUTES));
 		if (cacheDataList == null || cacheDataList.isEmpty()) {
 			return null;
@@ -103,7 +108,7 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 	@Override
 	public CryptoCoinPriceCommonDataBO getCommonData(CryptoCoinCatalog coinType, CurrencyType currencyType,
 			LocalDateTime datetime) {
-		List<CryptoCoinPriceCommonDataBO> cacheDataList = cacheService.getCommonDataList(coinType, currencyType,
+		List<CryptoCoinPriceCommonDataBO> cacheDataList = getCommonDataList(coinType, currencyType,
 				datetime);
 		for (CryptoCoinPriceCommonDataBO bo : cacheDataList) {
 			if (!datetime.isBefore(bo.getStartTime()) && !datetime.isAfter(bo.getEndTime())) {

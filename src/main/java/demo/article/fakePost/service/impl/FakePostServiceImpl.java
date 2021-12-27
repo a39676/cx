@@ -26,7 +26,7 @@ import demo.article.fakePost.pojo.param.mapperParam.FindArticleIdNotPassAndPostB
 import demo.article.fakePost.pojo.param.mapperParam.ModifyArticleInfoParam;
 import demo.article.fakePost.service.FakePostService;
 import demo.base.user.pojo.po.Users;
-import demo.base.user.pojo.type.AuthType;
+import demo.base.user.pojo.type.SystemRolesType;
 import demo.base.user.service.UsersService;
 import demo.common.service.CommonService;
 
@@ -104,7 +104,7 @@ public class FakePostServiceImpl extends CommonService implements FakePostServic
 	@Override
 	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	public void autoPass() throws Exception {
-		List<Users> userList = usersService.findUserListByAuthId(AuthType.DELAY_POSTER.getCode());
+		List<Users> userList = usersService.findUserListByRole(SystemRolesType.ROLE_DELAY_POSTER);
 		if(userList == null || userList.isEmpty()) {
 			return;
 		}

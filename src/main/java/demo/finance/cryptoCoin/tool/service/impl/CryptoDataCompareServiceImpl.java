@@ -24,6 +24,10 @@ import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1dayMapper;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1day;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample;
+import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinHistoryDataService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import demo.finance.cryptoCoin.tool.pojo.dto.CryptoCoinDataMutipleCompareDTO;
 import demo.finance.cryptoCoin.tool.pojo.dto.CryptoCoinDataSingleCompareDTO;
 import demo.finance.cryptoCoin.tool.pojo.dto.CryptoCoinLowPriceCompareDTO;
@@ -42,6 +46,14 @@ public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implem
 	private CryptoCoinLowPriceNoticeService lowPriceNoticeService;
 	@Autowired
 	private CryptoCoinPrice1dayMapper dailyDataMapper;
+	@Autowired
+	private CryptoCoinPriceCacheService cacheService;
+	@Autowired
+	private CryptoCoinCatalogService coinCatalogService;
+	@Autowired
+	private CryptoCoin1DayDataSummaryService dailyDataService;
+	@Autowired
+	private CryptoCoinHistoryDataService cryptoCoinHistoryDataService;
 
 	@Override
 	public ModelAndView CryptoCoinDailyDataComparetor() {
@@ -226,9 +238,9 @@ public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implem
 		CryptoCoinCatalog coinType1 = coinCatalogService.findCatalog(dto.getCoinTypeOrigin());
 		CryptoCoinCatalog coinType2 = coinCatalogService.findCatalog(dto.getCoinTypeCompared());
 
-		List<CryptoCoinPriceCommonDataBO> dataList1 = getHistoryDataList(coinType1, currencyType, timeUnitType,
+		List<CryptoCoinPriceCommonDataBO> dataList1 = cryptoCoinHistoryDataService.getHistoryDataList(coinType1, currencyType, timeUnitType,
 				dto.getTimeRange());
-		List<CryptoCoinPriceCommonDataBO> dataList2 = getHistoryDataList(coinType2, currencyType, timeUnitType,
+		List<CryptoCoinPriceCommonDataBO> dataList2 = cryptoCoinHistoryDataService.getHistoryDataList(coinType2, currencyType, timeUnitType,
 				dto.getTimeRange());
 
 		if (dataList1.isEmpty() || dataList2.isEmpty()) {

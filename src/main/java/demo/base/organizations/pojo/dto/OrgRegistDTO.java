@@ -1,14 +1,14 @@
 package demo.base.organizations.pojo.dto;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 public class OrgRegistDTO {
 
-	@ApiModelProperty(value = "机构名称")
+	@Schema(name = "机构名称")
 	private String orgName;
-	@ApiModelProperty(value = "直属机构Pk")
+	@Schema(name = "直属机构Pk")
 	private String belongTo;
-	@ApiModelProperty(value = "顶级机构Pk")
+	@Schema(name = "顶级机构Pk")
 	private String topOrg;
 
 	public String getOrgName() {

@@ -23,6 +23,9 @@ import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1day;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample;
 import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinMAResult;
 import demo.finance.cryptoCoin.data.pojo.vo.CryptoCoinCatalogVO;
+import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import demo.finance.cryptoCoin.notice.service.CryptoCoinCommonNoticeService;
 import demo.finance.cryptoCoin.tool.service.CryptoCoinLowPriceNoticeService;
 import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
@@ -36,7 +39,13 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 	@Autowired
 	private CryptoCoinPrice1dayMapper dailyDataMaper;
 	@Autowired
+	private CryptoCoin1DayDataSummaryService dailyDataService;
+	@Autowired
 	private CryptoCoinCatalogMapper catalogMapper;
+	@Autowired
+	private CryptoCoinPriceCacheService cacheService;
+	@Autowired
+	private CryptoCoinCatalogService coinCatalogService;
 
 	@Autowired
 	private CryptoCoinCommonNoticeService noticeService;

@@ -17,7 +17,10 @@ import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1weekMapper;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1week;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1weekExample;
+import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1WeekDataSummaryService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 
@@ -26,6 +29,12 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 		implements CryptoCoin1WeekDataSummaryService {
 
 	private final int dayStepLong = 7;
+	@Autowired
+	private CryptoCoin1DayDataSummaryService dailyDataService;
+	@Autowired
+	private CryptoCoinPriceCacheService cacheService;
+	@Autowired
+	private CryptoCoinCatalogService coinCatalogService;
 
 	@Autowired
 	private CryptoCoinPrice1weekMapper _1weekDataMapper;

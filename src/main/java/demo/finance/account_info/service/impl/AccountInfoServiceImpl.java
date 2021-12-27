@@ -331,14 +331,14 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 
 	@Override
 	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
-	public InsertTransationResult insertTradingRecorderSelective(InsertNewTransationDTO p) throws Exception {
+	public InsertTransationResult insertTradingRecorderSelective(InsertNewTransationDTO insertNewTransationDTO) throws Exception {
 		InsertTransationResult result = new InsertTransationResult();
 		
-		String accountNumber = p.getAccountNumber();
+		String accountNumber = insertNewTransationDTO.getAccountNumber();
 		TransationType transationType = null;
 		
-		if(p.getTransationType() == null 
-				|| (transationType = TransationType.getType(p.getTransationType())) == null 
+		if(insertNewTransationDTO.getTransationType() == null 
+				|| (transationType = TransationType.getType(insertNewTransationDTO.getTransationType())) == null 
 				|| !checkAccountNumberBelongUser(accountNumber)) {
 			result.failWithMessage("缺失交易类型,或者账号异常");
 			return result;
@@ -355,14 +355,14 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 			try {
 				if(AccountType.creditAccount.getCode().equals(targetAccount.getAccountType())) {
 					// 如果是贷记卡类账户,可直接输入需要冲正的可用额度
-					if(p.getFixCreditQuota() != null) {
-						BigDecimal targetQuota = p.getFixCreditQuota();
+					if(insertNewTransationDTO.getFixCreditQuota() != null) {
+						BigDecimal targetQuota = insertNewTransationDTO.getFixCreditQuota();
 						targetQuota = targetQuota.setScale(0, RoundingMode.HALF_UP);
 						transationAmount = targetQuota.subtract(targetAccount.getAccountBalance()).subtract(targetAccount.getTotalCreditQuota());
 					}
 				} else if(AccountType.debitAccount.getCode().equals(targetAccount.getAccountType())) {
 					BigDecimal targetAmount = null;
-					targetAmount = p.getTransationAmount();
+					targetAmount = insertNewTransationDTO.getTransationAmount();
 					targetAmount = targetAmount.setScale(2, RoundingMode.HALF_UP);
 					transationAmount = targetAmount.subtract(targetAccount.getAccountBalance());
 				} else {
@@ -370,13 +370,13 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 					return result;
 				}
 				
-				p.setTransationAmount(transationAmount);
-				p.setTransationType(TransationType.transationTypeIncome.getCode());
-				if(StringUtils.isBlank(p.getRemark())) {
-					p.setRemark(TransationType.transationTypeFix.getName());
+				insertNewTransationDTO.setTransationAmount(transationAmount);
+				insertNewTransationDTO.setTransationType(TransationType.transationTypeIncome.getCode());
+				if(StringUtils.isBlank(insertNewTransationDTO.getRemark())) {
+					insertNewTransationDTO.setRemark(TransationType.transationTypeFix.getName());
 				}
-				if(StringUtils.isBlank(p.getTransationParties())) {
-					p.setTransationParties(TransationType.transationTypeFix.getName());
+				if(StringUtils.isBlank(insertNewTransationDTO.getTransationParties())) {
+					insertNewTransationDTO.setTransationParties(TransationType.transationTypeFix.getName());
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -390,7 +390,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 			return result;
 		}
 		
-		InsertTradingRecorderResult InsertTradingRecordResult = tradingController.insertTradingRecorderSelective(p, targetAccount.getAccountId());
+		InsertTradingRecorderResult InsertTradingRecordResult = tradingController.insertTradingRecorderSelective(insertNewTransationDTO, targetAccount.getAccountId());
 		
 		TradingRecorder tradingRecord = tradingController.getTradingRecorderById(InsertTradingRecordResult.getNewTradingId());
 		
@@ -402,8 +402,8 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 				result.normalSuccess();
 				result.setAccountNumber(accountNumber);
 				result.setTransationAmount(transationAmount);
-				result.setTransationDate(p.getTransationDate());
-				result.setTransationParties(p.getTransationParties());
+				result.setTransationDate(insertNewTransationDTO.getTransationDate());
+				result.setTransationParties(insertNewTransationDTO.getTransationParties());
 				return result;
 			} else {
 				throw new Exception();
@@ -804,6 +804,6 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		}
 		
 		return r;
-		
     }
+    
 }

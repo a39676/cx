@@ -22,9 +22,6 @@ import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +34,6 @@ import demo.article.article.pojo.bo.UpdateEditedArticleLongBO;
 import demo.article.article.pojo.constant.ArticleViewConstant;
 import demo.article.article.pojo.dto.EditArticleLongDTO;
 import demo.article.article.pojo.dto.FindArticleLongByConditionDTO;
-import demo.article.article.pojo.dto.LocalImageSavingDTO;
 import demo.article.article.pojo.dto.ReadyToEditArticleLongDTO;
 import demo.article.article.pojo.param.controllerParam.CreateArticleParam;
 import demo.article.article.pojo.param.controllerParam.CreatingArticleParam;
@@ -61,10 +57,6 @@ import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.user.controller.UsersController;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.ResultTypeCX;
-import demo.image.pojo.result.ImgHandleSrcDataResult;
-import demo.image.pojo.type.ImageTagType;
-import demo.image.service.ImageService;
-import image.pojo.result.ImageSavingResult;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -72,9 +64,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 
 	@Autowired
 	private UsersController userController;
-
-	@Autowired
-	private ImageService imgService;
 
 	@Autowired
 	private ArticleChannelService channelService;
@@ -257,95 +246,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 				e.printStackTrace();
 			}
 		}
-	}
-
-	@Override
-	public ArticleFileSaveResult saveArticleFile(String storePrefixPath, Long creatorId, String content)
-			throws IOException {
-		String fileName = creatorId + "L" + snowFlake.getNextId() + ".txt";
-		String timeFolder = LocalDate.now().toString();
-		File mainFolder = new File(storePrefixPath + timeFolder);
-		String finalFilePath = storePrefixPath + timeFolder + "/" + fileName;
-		ArticleFileSaveResult result = new ArticleFileSaveResult();
-
-		if (!mainFolder.exists()) {
-			if (!mainFolder.mkdirs()) {
-				result.fillWithResult(ResultTypeCX.serviceError);
-				return result;
-			}
-		}
-
-		Element doc = Jsoup.parse(content);
-		Elements imgs = doc.select("img[src]");
-		/* 解决如果文章内有本地上传的图片, 转到服务器硬盘保存, 并提供 url 访问, */
-		for (Element s : imgs) {
-			s.attr("src", imgSrcHandler(s.attr("src")));
-		}
-
-		content = doc.toString();
-
-		Long maxArticleLength = articleConstantService.getMaxArticleLength();
-
-		if (content.length() > maxArticleLength) {
-			result.fillWithResult(ResultTypeCX.articleTooLong);
-			return result;
-		}
-
-		if (StringUtils.isBlank(content) || content.replaceAll("\\s", "").length() < 6) {
-			result.fillWithResult(ResultTypeCX.articleTooShort);
-			return result;
-		}
-
-		StringBuffer sb = new StringBuffer();
-
-		sb.append(content);
-
-		ioUtil.byteToFile(sb.toString().getBytes(StandardCharsets.UTF_8), finalFilePath);
-
-		result.setFilePath(finalFilePath);
-
-		result.setIsSuccess();
-		return result;
-	}
-
-	@Override
-	public String imgSrcHandler(String src) {
-		if (src == null) {
-			return src;
-		} else if (src.startsWith("http")) {
-			return src;
-		} else if (src.startsWith("data")) {
-			return imgBase64ToImageStore(src);
-		}
-		return src;
-	}
-
-	private String imgBase64ToImageStore(String src) {
-		ImgHandleSrcDataResult srcHandleResult = imgService.imgHandleSrcData(src);
-		if (srcHandleResult.isFail()) {
-			return "";
-		}
-
-		String filename = String.valueOf(snowFlake.getNextId()) + "." + srcHandleResult.getImgFileType();
-
-//		BufferedImage bufferedImage = imgService.base64ToBufferedImg(srcHandleResult.getBase64Str());
-//		if (bufferedImage == null) {
-//			return "";
-//		}
-
-		String saveingFolderPath = articleConstantService.getArticleImageSavingFolder();
-		String imgSavingPath = saveingFolderPath + "/" + filename;
-		boolean saveFlag = imgService.imgSaveAsFileDirect(srcHandleResult.getBase64Str(), imgSavingPath, srcHandleResult.getImgFileType());
-		if (!saveFlag) {
-			return "";
-		}
-
-		LocalImageSavingDTO dto = new LocalImageSavingDTO();
-		dto.setImgName(filename);
-		dto.setImgPath(imgSavingPath);
-		dto.setImgTagCode(ImageTagType.fromArticle.getCode());
-		ImageSavingResult result = imgService.imageSaving(dto);
-		return result.getImgUrl();
 	}
 
 	/**

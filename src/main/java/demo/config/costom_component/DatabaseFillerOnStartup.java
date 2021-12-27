@@ -10,19 +10,12 @@ import org.springframework.stereotype.Component;
 import demo.article.article.service.impl.ArticleConstantService;
 import demo.article.articleComment.service.impl.ArticleCommentConstantService;
 import demo.automationTest.service.impl.AutomationTestConstantService;
-import demo.base.organizations.pojo.po.Organizations;
-import demo.base.organizations.service.OrganizationService;
-import demo.base.organizations.service.__SystemOrganizationService;
-import demo.base.system.pojo.constant.InitSystemConstant;
 import demo.base.system.service.impl.SystemConstantService;
-import demo.base.user.pojo.constant.UserConstant;
-import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.po.Users;
-import demo.base.user.pojo.result.FindAuthsResult;
+import demo.base.user.pojo.type.SystemRolesType;
 import demo.base.user.service.RoleService;
 import demo.base.user.service.UserRegistService;
 import demo.base.user.service.UsersService;
-import demo.base.user.service.__AuthInitService;
 import demo.common.service.CommonService;
 import demo.finance.cryptoCoin.common.service.CryptoCoinConstantService;
 import demo.joy.image.icon.service.JoyIconService;
@@ -36,17 +29,11 @@ import demo.tool.telegram.service.impl.TelegramConstantService;
 public class DatabaseFillerOnStartup extends CommonService implements ApplicationListener<ApplicationReadyEvent> {
 	
 	@Autowired
-	private __AuthInitService __authInitService;
-	@Autowired
 	private RoleService roleService;
 	@Autowired
 	private UsersService userService;
 	@Autowired
 	private UserRegistService userRegistService;
-	@Autowired
-	private OrganizationService orgService;
-	@Autowired
-	private __SystemOrganizationService __systemOrgService;
 	
 	@Autowired
 	private JoySceneManagerService joySceneOperationService;
@@ -91,35 +78,21 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 			
 			/* 如无超级管理员角色, 初始化 */
 			log.error("query auth auth");
-			FindAuthsResult authsResult = __authInitService.findSuperAdministratorAuth();
-			log.error("auths result: " + authsResult.isSuccess());
-			List<Auth> superAdminAuthList = authsResult.getAuthList();
-			log.error("super admin auth list size: " + superAdminAuthList.size());
-			Long superAdminAuthId = null;
-			if(superAdminAuthList == null || superAdminAuthList.size() < 1) {
-				superAdminAuthId = __authInitService.__createBaseSuperAdminAuth(UserConstant.noneUserId);
-				log.error("can NOT find super admin auth ID");
+			List<Users> superUserList = userService.findUserListByRole(SystemRolesType.ROLE_SUPER_ADMIN);
+			if(superUserList.isEmpty()) {
+				log.error("NO super admin");
 			} else {
-				superAdminAuthId = superAdminAuthList.get(0).getId();
-				log.error("super admin auth id found");
+				log.error("Has super admin");
 			}
 			
-			List<Users> superAdminUserList = userService.findUserListByAuthId(superAdminAuthId);
-			log.error("super admin user list size: " + superAdminUserList.size());
 			Long superAdminId = null;
-			if(superAdminUserList.size() < 1) {
+			if(superUserList.isEmpty()) {
 //				TODO FIXME bug here
 				superAdminId = userRegistService.__baseSuperAdminRegist().getNewSuperAdminId();
 				log.error("can NOT find super admin ID");
 			} else {
-				superAdminId = superAdminUserList.get(0).getUserId();
+				superAdminId = superUserList.get(0).getUserId();
 				log.error("super admin ID found");
-			}
-			
-			Organizations baseOrg = orgService.getOrgById(InitSystemConstant.ORIGINAL_BASE_ORG_ID);
-			if(baseOrg == null || baseOrg.getIsDelete()) {
-				log.error("can NOT find base org, rebuild it");
-				__systemOrgService.__initBaseOrg(superAdminId);
 			}
 			
 			log.error("load joy option");

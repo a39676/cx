@@ -26,7 +26,6 @@ import demo.article.article.pojo.result.ArticleBurnResult;
 import demo.article.article.pojo.result.CreatingBurnMessageResult;
 import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.article.service.ArticleBurnService;
-import demo.article.article.service.ArticleService;
 import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.common.pojo.type.ResultTypeCX;
 import toolPack.ioHandle.FileUtilCustom;
@@ -36,8 +35,6 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 	
 	@Autowired
 	private FileUtilCustom ioUtil;
-	@Autowired
-	private ArticleService articleService;
 	@Autowired
 	private ArticleBurnMapper articleBurnMapper;
 	
@@ -83,7 +80,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		
 		ArticleFileSaveResult saveArticleFileResult = null;
 		try {
-			saveArticleFileResult = articleService.saveArticleFile(getArticleBurnStorePrefixPath(), userId, contentAfterSanitize);
+			saveArticleFileResult = saveArticleFile(getArticleBurnStorePrefixPath(), userId, contentAfterSanitize);
 		} catch (Exception e) {
 			r.failWithMessage("保存信息异常");
 			return r;

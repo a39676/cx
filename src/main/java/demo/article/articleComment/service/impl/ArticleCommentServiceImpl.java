@@ -19,7 +19,6 @@ import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.article.pojo.type.ArticleEvaluationType;
 import demo.article.article.pojo.vo.ArticleEvaluationStatisticsVO;
 import demo.article.article.service.ArticleEvaluationService;
-import demo.article.article.service.ArticleService;
 import demo.article.article.service.impl.ArticleCommonService;
 import demo.article.articleComment.mapper.ArticleCommentCountMapper;
 import demo.article.articleComment.mapper.ArticleCommentMapper;
@@ -53,8 +52,8 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	@Autowired
 	protected IpRecordService ipRecordService;
 
-	@Autowired
-	private ArticleService articleService;
+//	@Autowired
+//	private ArticleService articleService;
 	@Autowired
 	private ArticleCommentConstantService constantService;
 	@Autowired
@@ -201,7 +200,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	}
 	
 	private ArticleFileSaveResult saveArticleCommentFile(String storePrefixPath, Long userId, String content) throws IOException {
-		return articleService.saveArticleFile(storePrefixPath, userId, content);
+		return saveArticleFile(storePrefixPath, userId, content);
 	}
 
 	@Override
@@ -335,33 +334,6 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		redisOriginalConnectService.insertFunctionalModuleVisitData(request, keyPrefix, 10L, TimeUnit.MINUTES);
 	}
 	
-	@Override
-	public void articleCommentCountingUp(Long articleId) {
-		ArticleCommentCount po = articleCommentCountMapper.selectByPrimaryKey(articleId);
-		if(po == null) {
-			po = new ArticleCommentCount();
-			po.setArticleId(articleId);
-			po.setCounting(1L);
-			articleCommentCountMapper.insertSelective(po);
-		} else {
-			po.setCounting(po.getCounting() + 1);
-			articleCommentCountMapper.updateByPrimaryKey(po);
-		}
-	}
-
-	@Override
-	public void articleCommentCountingDown(Long articleId) {
-		ArticleCommentCount po = articleCommentCountMapper.selectByPrimaryKey(articleId);
-		if(po == null) {
-			return;
-		} else {
-			if(po.getCounting() > 1) {
-				po.setCounting(po.getCounting() - 1);
-				articleCommentCountMapper.updateByPrimaryKey(po);
-			}
-		}
-	}
-
 	@Override
 	public void batchRejectComment() {
 		List<Long> ipList = ipRecordService.getAllDenyList();

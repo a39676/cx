@@ -1,11 +1,8 @@
 package demo.article.article.pojo.param.controllerParam;
 
-import io.swagger.annotations.ApiModelProperty;
-
 public class ReviewArticleLongParam {
 
 	private String pk;
-	@ApiModelProperty(hidden = true)
 	private Integer reviewCode;
 
 	public String getPk() {

@@ -135,4 +135,10 @@ public class JoySceneGroupManagerServiceImpl extends JoyCommonService implements
 		r.setIsSuccess();
 		return r;
 	}
+
+	@Override
+	public FindSceneGroupVOResult findAllSceneGroupVOList() {
+		FindSceneGroupByConditionDTO dto = new FindSceneGroupByConditionDTO();
+		return findSceneGroupVOListByCondition(dto);
+	}
 }

@@ -1,14 +1,13 @@
 package demo.base.user.pojo.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel("用户注册参数")
+@Schema(name = "用户注册参数")
 public class UserRegistDTO {
 
-	@ApiModelProperty(name = "用户名", dataType = "string")
+	@Schema(name = "用户名")
 	private String userName;
-	@ApiModelProperty(name = "用户昵称", dataType = "string")
+	@Schema(name = "用户昵称")
 	private String nickName;
 	private String email;
 	private String pwd;

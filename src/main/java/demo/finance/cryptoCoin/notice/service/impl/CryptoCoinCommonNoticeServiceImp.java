@@ -23,6 +23,9 @@ import demo.finance.cryptoCoin.data.pojo.dto.InsertCryptoCoinPriceNoticeSettingD
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinNoticeDTOCheckResult;
 import demo.finance.cryptoCoin.data.pojo.result.FilterBODataResult;
+import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinHistoryDataService;
 import demo.finance.cryptoCoin.mq.producer.TelegramCryptoCoinMessageAckProducer;
 import demo.finance.cryptoCoin.notice.mapper.CryptoCoinPriceNoticeMapper;
 import demo.finance.cryptoCoin.notice.pojo.dto.NoticeUpdateDTO;
@@ -41,6 +44,13 @@ import telegram.pojo.dto.TelegramMessageDTO;
 @Service
 public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService implements CryptoCoinCommonNoticeService {
 
+	@Autowired
+	private CryptoCoinCatalogService coinCatalogService;
+	@Autowired
+	private CryptoCoinHistoryDataService cryptoCoinHistoryDataService;
+	@Autowired
+	private CryptoCoin1MinuteDataSummaryService minuteDataService;
+	
 	@Autowired
 	protected CryptoCoinPriceNoticeMapper noticeMapper;
 
@@ -437,7 +447,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		TimeUnitType timeUnit = TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch());
 
-		List<CryptoCoinPriceCommonDataBO> historyBOList = getHistoryDataList(coinType, currencyType, timeUnit,
+		List<CryptoCoinPriceCommonDataBO> historyBOList = cryptoCoinHistoryDataService.getHistoryDataList(coinType, currencyType, timeUnit,
 				noticeSetting.getTimeRangeOfDataWatch());
 		if (historyBOList == null || historyBOList.isEmpty()) {
 			log.error(noticeSetting.getId() + ", can NOT find any history data of: " + coinType.getCoinNameEnShort());

@@ -22,7 +22,6 @@ import demo.article.articleComment.pojo.po.ArticleCommentReview;
 import demo.article.articleComment.pojo.type.ArticleCommentResultType;
 import demo.article.articleComment.pojo.type.ArticleCommentReviewType;
 import demo.article.articleComment.service.ArticleCommentAdminService;
-import demo.article.articleComment.service.ArticleCommentService;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.ResultTypeCX;
 
@@ -36,8 +35,6 @@ public class ArticleCommentAdminServiceImpl extends ArticleCommonService impleme
 	private ArticleCommentMapper articleCommentMapper;
 	@Autowired
 	private ArticleCommentReviewMapper articleCommentReviewMapper;
-	@Autowired
-	private ArticleCommentService commentService;
 	
 	private CommonResultCX ArticleCommentReviewDTOValider(ArticleCommentReviewCommonDTO dto) {
 		CommonResultCX result = new CommonResultCX();
@@ -88,7 +85,7 @@ public class ArticleCommentAdminServiceImpl extends ArticleCommonService impleme
 		result.setMessage(ArticleCommentResultType.articleCommentDeleteSuccess.getName());
 		result.setIsSuccess();
 		
-		commentService.articleCommentCountingDown(record.getArticleId());
+		articleCommentCountingDown(record.getArticleId());
 		
 		return result;
 	}
@@ -132,7 +129,7 @@ public class ArticleCommentAdminServiceImpl extends ArticleCommonService impleme
 		result.setMessage(ArticleCommentResultType.articleCommentPassSuccess.getName());
 		result.setIsSuccess();
 		
-		commentService.articleCommentCountingUp(record.getArticleId());
+		articleCommentCountingUp(record.getArticleId());
 		
 		return result;
 	}

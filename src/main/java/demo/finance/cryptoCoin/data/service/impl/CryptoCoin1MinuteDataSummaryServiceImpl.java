@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,8 @@ import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1minute;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1minuteExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
-import demo.finance.cryptoCoin.tool.service.CryptoCoinLowPriceNoticeService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
@@ -33,8 +35,12 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 
 	@Autowired
 	private CryptoCoinPrice1minuteMapper summaryMapper;
+//	@Autowired
+//	private CryptoCoinLowPriceNoticeService lowPriceNoticeService;
 	@Autowired
-	private CryptoCoinLowPriceNoticeService lowPriceNoticeService;
+	private CryptoCoinCatalogService coinCatalogService;
+	@Autowired
+	private CryptoCoinPriceCacheService cacheService;
 
 	@Override
 	public CommonResult reciveMinuteData(CryptoCoinDataDTO dto) {
@@ -58,7 +64,10 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 
 	@Override
 	public void summaryLowPriceRedisData() {
-		List<CryptoCoinCatalog> catalogPOList = lowPriceNoticeService.getLowPriceSubscriptionCatalogList();
+		Set<String> subscriptionNameSet = coinCatalogService.getSubscriptionNameList();
+		List<String> subscriptionNameList = new ArrayList<>();
+		subscriptionNameList.addAll(subscriptionNameSet);
+		List<CryptoCoinCatalog> catalogPOList = coinCatalogService.findCatalog(subscriptionNameList);
 		if (catalogPOList.isEmpty()) {
 			return;
 		}

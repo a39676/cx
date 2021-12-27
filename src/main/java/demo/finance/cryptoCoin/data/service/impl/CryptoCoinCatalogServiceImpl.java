@@ -16,15 +16,12 @@ import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalogExample;
 import demo.finance.cryptoCoin.data.pojo.vo.CryptoCoinCatalogVO;
 import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
-import demo.finance.cryptoCoin.tool.service.CryptoCoinLowPriceNoticeService;
 
 @Service
 public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implements CryptoCoinCatalogService {
 
 	@Autowired
 	private CryptoCoinCatalogMapper mapper;
-	@Autowired
-	private CryptoCoinLowPriceNoticeService lowPriceNoticeService;
 
 	@Override
 	public CryptoCoinCatalog findCatalog(String coinName) {
@@ -98,7 +95,6 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 		Set<CryptoCoinCatalogVO> voSet = new HashSet<>();
 
 		voSet.addAll(getNormalSubscriptionCatalog());
-		voSet.addAll(lowPriceNoticeService.getLowPriceSubscriptionCatalogVOList());
 
 		voList.addAll(voSet);
 

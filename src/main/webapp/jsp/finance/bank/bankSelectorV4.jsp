@@ -48,7 +48,7 @@ function bankIdListDynamic(){
   };
   $.ajax({               
     type: "POST",  
-    url: "${pageContext.request.contextPath}/bankInfo/bankSelectorV4",   
+    url: "/bankInfo/bankSelectorV4",   
     data: JSON.stringify(jsonOutput),
     dataType: 'json',
     contentType: "application/json",

@@ -59,7 +59,7 @@
 
     function deleteUserIpRecord() {
 
-      var url = "${pageContext.request.contextPath}/admin/deleteUserIpRecord";
+      var url = "/admin/deleteUserIpRecord";
       var startDate = $("input[name='customStartDate']").val();
       var endDate = $("input[name='customEndDate']").val();
       var jsonOutput = {
@@ -95,7 +95,7 @@
 
     function batchUpdatePrivateKey() {
 
-      var url = "${pageContext.request.contextPath}/articleAdmin/batchUpdatePrivateKey";
+      var url = "/articleAdmin/batchUpdatePrivateKey";
       var startDate = $("input[name='customStartDate']").val();
       var endDate = $("input[name='customEndDate']").val();
       var jsonOutput = {

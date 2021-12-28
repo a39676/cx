@@ -13,7 +13,7 @@
 <body>
   <h1>Message : ${message}</h1>
   <div class="testArea">${testArea}</div>
-  <form class="col-md-8" method="post" action="${pageContext.request.contextPath}/admin/updateAccountMarker"  >
+  <form class="col-md-8" method="post" action="/admin/updateAccountMarker"  >
 
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
   
@@ -54,7 +54,7 @@
 
           $.ajax({               
             type: "POST",  
-            url: "${pageContext.request.contextPath}/accountInfo/accountNumberDuplicateCheck",   
+            url: "/accountInfo/accountNumberDuplicateCheck",   
             data: JSON.stringify(jsonParams), 
             dataType: 'json',
             contentType: "application/json",

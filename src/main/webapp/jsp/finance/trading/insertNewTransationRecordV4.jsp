@@ -91,7 +91,7 @@
       
       $.ajax({               
         type: "POST",  
-        url: "${pageContext.request.contextPath}/accountInfo/insertNewTransationV4",   
+        url: "/accountInfo/insertNewTransationV4",   
         data: JSON.stringify(jsonParams), 
         dataType: 'json',
         contentType: "application/json",

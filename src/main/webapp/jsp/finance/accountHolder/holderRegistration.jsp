@@ -52,7 +52,7 @@
 
     $.ajax({
       type: "POST",
-      url:"${pageContext.request.contextPath}/holder/holderRegister",
+      url:"/holder/holderRegister",
       data: $("#holderRegisterForm").serialize(),
       beforeSend: function(xhr) {
         xhr.setRequestHeader(csrfHeader, csrfToken);

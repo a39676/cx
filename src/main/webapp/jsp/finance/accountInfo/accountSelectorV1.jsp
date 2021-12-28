@@ -78,7 +78,7 @@ function accountListDynamic(){
   };
   $.ajax({               
     type: "POST",  
-    url: "${pageContext.request.contextPath}/accountInfo/accountList",   
+    url: "/accountInfo/accountList",   
     data: JSON.stringify(jsonOutput),
     dataType: 'json',
     contentType: "application/json",

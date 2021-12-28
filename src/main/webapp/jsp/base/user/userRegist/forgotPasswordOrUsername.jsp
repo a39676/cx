@@ -48,12 +48,12 @@
   $(document).ready(function() {
 
     $("button[name='sendForgetPasswordMail']").click(function() {
-      var url = "${pageContext.request.contextPath}/user/forgotPassword";
+      var url = "/user/forgotPassword";
       sendMail(url);
     });
 
     $("button[name='sendForgetUsernameMail']").click(function() {
-      var url = "${pageContext.request.contextPath}/user/forgotUsername";
+      var url = "/user/forgotUsername";
       sendMail(url); 
     });
 

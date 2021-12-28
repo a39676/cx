@@ -147,7 +147,7 @@
 
     $.ajax({               
       type: "POST",  
-      url: "${pageContext.request.contextPath}/accountInfo/modifyCreditsQuota",   
+      url: "/accountInfo/modifyCreditsQuota",   
       data: JSON.stringify(jsonOutput),
       dataType: 'json',
       contentType: "application/json",

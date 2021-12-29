@@ -360,6 +360,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		CryptoCoinCatalog catalog = null;
 		for (String catalogName : waitingQuerySet) {
 			catalog = coinCatalogService.findCatalog(catalogName);
+			log.error("find coin name to send:" + catalogName);
 			if (catalog != null) {
 				sendDailyDataQuery(catalog.getCoinNameEnShort(), constantService.getDefaultCurrency(),
 						constantService.getDefaultDailyDataQueryLenth(), CryptoCoinDataSourceType.CRYPTO_COMPARE);
@@ -401,9 +402,15 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		paramDTO.setCurrencyName(constantService.getDefaultCurrency());
 		paramDTO.setCounting(counting);
 		paramDTO.setDataSourceCode(CryptoCoinDataSourceType.CRYPTO_COMPARE.getCode());
-
+		
+		log.error("mq param: " + paramDTO.toString());
+		
 		dto = automationTestInsertEventDtoAddParamStr(dto, paramDTO);
+		
+		log.error("ma dto: " + dto.toString());
 
 		testEventInsertAckProducer.send(dto);
+		
+		log.error("after send");
 	}
 }

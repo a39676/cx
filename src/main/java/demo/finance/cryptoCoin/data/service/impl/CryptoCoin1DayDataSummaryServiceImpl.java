@@ -360,7 +360,6 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		CryptoCoinCatalog catalog = null;
 		for (String catalogName : waitingQuerySet) {
 			catalog = coinCatalogService.findCatalog(catalogName);
-			log.error("find coin name to send:" + catalogName);
 			if (catalog != null) {
 				sendDailyDataQuery(catalog.getCoinNameEnShort(), constantService.getDefaultCurrency(),
 						constantService.getDefaultDailyDataQueryLenth(), CryptoCoinDataSourceType.CRYPTO_COMPARE);

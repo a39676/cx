@@ -403,14 +403,8 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		paramDTO.setCounting(counting);
 		paramDTO.setDataSourceCode(CryptoCoinDataSourceType.CRYPTO_COMPARE.getCode());
 		
-		log.error("mq param: " + paramDTO.toString());
-		
 		dto = automationTestInsertEventDtoAddParamStr(dto, paramDTO);
-		
-		log.error("ma dto: " + dto.toString());
 
 		testEventInsertAckProducer.send(dto);
-		
-		log.error("after send");
 	}
 }

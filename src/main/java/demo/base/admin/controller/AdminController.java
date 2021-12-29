@@ -130,16 +130,6 @@ public class AdminController extends CommonController {
 
 	}
 
-	@GetMapping(value = AdminUrlConstant.dba)
-	public ModelAndView dbaPage() {
-		ModelAndView view = new ModelAndView();
-		view.addObject("title", "Spring Security Hello World");
-		view.addObject("message", "This is protected page - Database Page!");
-		view.setViewName(AdminView.adminView);
-
-		return view;
-	}
-
 	@PostMapping(value = AdminUrlConstant.deleteUserIpRecord)
 	public void deleteUserIpRecord(@RequestBody UserIpDeleteDTO param, HttpServletRequest request, HttpServletResponse response) {
 		CommonResultCX result = adminService.deleteUserIpRecord(param);

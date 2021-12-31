@@ -370,7 +370,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 
 	private void updatePreNoticeStatus(CalendarPreNotice preNoticePo, CalendarNotice po) {
 		TimeUnitType preNoticeTimeUnitType = TimeUnitType.getType(preNoticePo.getRepeatTimeUnit());
-		LocalDateTime nextPreNoticeTime = getNextLocalDateTime(po.getNoticeTime(), preNoticeTimeUnitType,
+		LocalDateTime nextPreNoticeTime = getNextLocalDateTime(preNoticePo.getNoticeTime(), preNoticeTimeUnitType,
 				preNoticePo.getRepeatTimeRange());
 
 		// 超出本次提前通知的有效时间
@@ -518,9 +518,19 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 		
 		if(preNoticePOList != null && !preNoticePOList.isEmpty()) {
 			CalendarPreNotice preNoticePO = preNoticePOList.get(0);
-			preNoticePO.setRepeatCount(dto.getPreNoticeCount());
-			preNoticePO.setRepeatTimeRange(dto.getPreNoticeRepeatTimeRange());
-			preNoticePO.setRepeatTimeUnit(dto.getPreNoticeRepeatTimeUnit());
+			if((dto.getPreNoticeCount() != null && dto.getPreNoticeCount() > 0) && (dto.getPreNoticeRepeatTimeRange() != null && dto.getPreNoticeRepeatTimeRange() > 0)) {
+				preNoticePO.setRepeatCount(dto.getPreNoticeCount());
+				preNoticePO.setRepeatTimeRange(dto.getPreNoticeRepeatTimeRange());
+				preNoticePO.setRepeatTimeUnit(dto.getPreNoticeRepeatTimeUnit());
+				preNoticePO.setValidTime(po.getNoticeTime());
+				
+				TimeUnitType timeUnitType = TimeUnitType.getType(dto.getPreNoticeRepeatTimeUnit());
+				preNoticePO.setNoticeTime(getPreNoticeTime(dto.getNoticeTime(), timeUnitType, dto.getPreNoticeRepeatTimeRange(),
+						dto.getPreNoticeCount()));
+				
+			} else {
+				preNoticePO.setIsDelete(true);
+			}
 			preNoticeMapper.updateByPrimaryKeySelective(preNoticePO);
 		}
 

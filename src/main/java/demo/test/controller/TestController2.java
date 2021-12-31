@@ -33,6 +33,10 @@ public class TestController2 extends CommonController {
 		t = (TestDTO) JSONObject.toBean(j, TestDTO.class);
 		return j.toString();
 	}
-	
 
+	@GetMapping(value = "/t")
+	@ResponseBody
+	public String t() {
+		return "done";
+	}
 }

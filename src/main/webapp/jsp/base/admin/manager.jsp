@@ -9,24 +9,26 @@
   <div class="container-fluid position-relative no-side-padding">
     <div class="menu-nav-icon" data-nav-menu="#main-menu"><i class="ion-navicon"></i></div>
     <ul class="main-menu visible-on-click" id="main-menu">
-        <li>
-          <a href="/tool/systemOption" target="_blank">systemOption</a>
-        </li>
-        <li>
-          <a href="/fakeFTP/getFilePathDetail" target="_blank">fakeFTP</a>
-        </li>
-        <li>
-          <a href="/articleAdmin/articleChannelManager" target="_blank">article channel manager</a>
-        </li>
-        <li>
-          <a href="/org/orgManager" target="_blank">orgManager</a>
-        </li>
+      <li>
+        <a href="/tool/systemOption" target="_blank">systemOption</a>
+      </li>
+      <li>
+        <a href="/fakeFTP/getFilePathDetail" target="_blank">fakeFTP</a>
+      </li>
+      <li>
+        <a href="/articleAdmin/articleChannelManager" target="_blank">article channel manager</a>
+      </li>
+      <li>
+        <a href="/org/orgManager" target="_blank">orgManager</a>
+      </li>
     </ul><!-- main-menu -->
+
     <ul class="main-menu visible-on-click" id="telegramTool">
       <li>
         <a href="/tool/telegram/testing" target="_blank">telegram api testing</a>
       </li>
     </ul> <%-- telegramTool --%>
+
     <ul class="main-menu visible-on-click" id="cryptoCoinTool">
       <li>
         <a href="/cryptoCoin/insertCryptoCoinNoticeSetting" target="_blank">insertCryptoCoinNoticeSetting</a>
@@ -50,6 +52,12 @@
         <a href="/cryptoCoinManager/sendAllCryptoCoinDailyDataQueryMsg" target="_blank">sendAllCryptoCoinDailyDataQueryMsg</a>
       </li>
     </ul> <%-- cryptoCoin --%>
+
+    <ul class="main-menu visible-on-click" id="qrcode">
+      <li>
+        <a href="/tool/qrcode/" target="_blank">qrcode</a>
+      </li>
+    </ul><!-- canlendarNotice -->
 
     <ul class="main-menu visible-on-click" id="canlendarNotice">
       <li>

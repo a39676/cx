@@ -15,4 +15,6 @@ public abstract class ToolCommonService extends CommonService {
 	protected HostnameService hostnameService;
 	@Autowired
 	protected RedisHashConnectService redisHashConnectService;
+	@Autowired
+	protected ToolConstantService toolConstantService;
 }

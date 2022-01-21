@@ -23,6 +23,7 @@ import demo.joy.image.icon.service.JoyIconService;
 import demo.joy.scene.service.JoySceneManagerService;
 import demo.thirdPartyAPI.cloudinary.service.impl.CloudinaryConstantService;
 import demo.tool.mail.service.impl.MailConstantService;
+import demo.tool.service.impl.ToolConstantService;
 import demo.tool.telegram.service.impl.TelegramConstantService;
 
 @Component
@@ -58,6 +59,8 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 	private CryptoCoinConstantService cryptoCoinConstantService;
 	@Autowired
 	private TelegramConstantService telegramConstantService;
+	@Autowired
+	private ToolConstantService toolConstantService;
 	
 	
 /*
@@ -105,6 +108,9 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 			
 			log.error("loading system option");
 			systemConstantService.refreshConstant();
+			
+			log.error("loading tool option");
+			toolConstantService.refreshConstant();
 			
 			log.error("loading article option");
 			articleConstantService.refreshConstant();

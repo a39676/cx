@@ -13,6 +13,8 @@ import toolPack.dateTimeHandle.LocalDateTimeHandler;
 import toolPack.httpHandel.HttpUtil;
 import toolPack.ioHandle.FileUtilCustom;
 import toolPack.numericHandel.NumericUtilCustom;
+import toolPack.qrcode.QrCodeDecode;
+import toolPack.qrcode.QrCodeGenerator;
 import toolPack.stringHandle.StringUtilCustom;
 
 @Component
@@ -61,6 +63,16 @@ public class CustomToolBeanConfig {
 	@Bean 
 	public MailToolService getMailToolService() {
 		return new MailToolService();
+	}
+	
+	@Bean
+	public QrCodeGenerator getQrCodeGenerator() {
+		return new QrCodeGenerator();
+	}
+	
+	@Bean
+	public QrCodeDecode getQrCodeDecode() {
+		return new QrCodeDecode();
 	}
 	
 	@Bean

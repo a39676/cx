@@ -214,7 +214,6 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 		return r;
 	}
 	
-
 	@Override
 	public ImageSavingResult __saveImgFromBBT(ImageSavingTransDTO dto) {
 		dto.setImgTagCode(ImageTagType.imageSaving.getCode());

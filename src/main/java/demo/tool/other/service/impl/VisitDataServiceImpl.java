@@ -45,6 +45,7 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 		
 		ui.setCreateTime(LocalDateTime.now());
 		ui.setIp(numberUtil.ipToLong(record.getRemoteAddr()));
+		// TODO 需要兼容 IPv6
 		ui.setForwardIp(numberUtil.ipToLong(record.getForwardAddr()));
 		ui.setServerName(request.getServerName());
 		if(StringUtils.isNotBlank(customInfo)) {

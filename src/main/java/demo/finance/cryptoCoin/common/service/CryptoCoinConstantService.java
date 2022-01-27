@@ -129,6 +129,7 @@ public class CryptoCoinConstantService extends CommonService {
 	}
 
 	public LocalDateTime getBinanceWebSocketLastActiveTime() {
+		log.error("get binance web socket last active time = " + binanceWebSocketLastActiveTime);
 		return binanceWebSocketLastActiveTime;
 	}
 

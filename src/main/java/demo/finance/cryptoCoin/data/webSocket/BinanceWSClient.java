@@ -169,14 +169,18 @@ public class BinanceWSClient extends CryptoCoinWebSocketCommonClient {
 	}
 
 	public CommonResult startWebSocket() {
+		log.error("get into binance create web socket");
 		CommonResult r = new CommonResult();
 
 		ws = createWebSocket();
+		log.error("after create socker");
 		if (ws == null) {
 			r.failWithMessage("binance socket create scoket error");
+			log.error("socket == null");
 			return r;
 		}
 
+		log.error("before set listerer");
 		ws = setListener(ws);
 		try {
 			ws.connect();

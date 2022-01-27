@@ -39,7 +39,7 @@ public class CryptoCoinConstantService extends CommonService {
 	private LocalDateTime cryptoCompareWebSocketLastActiveTime;
 
 	private String binanceUri;
-	private LocalDateTime binanceWebSocketLastActiveTime;
+	private LocalDateTime binanceWebSocketLastActiveTime = LocalDateTime.now().minusDays(1);
 
 	private Set<String> subscriptionSet = new HashSet<>();
 	private Set<String> lowPriceSubscriptionSet = new HashSet<>();

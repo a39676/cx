@@ -38,6 +38,9 @@ public class CryptoCoinTaskService extends CommonService {
 					binanceWSClient.startWebSocket();
 				}
 			} catch (Exception e) {
+				log.error("create Binance web socket error: " + e.getLocalizedMessage());
+				log.error(e.getMessage());
+				log.error(e.toString());
 			}
 			
 			try {

@@ -111,6 +111,8 @@ public class BinanceWSClient extends CryptoCoinWebSocketCommonClient {
 	}
 
 	private WebSocket createWebSocket() {
+		log.error("get into create websocket inside");
+		log.error("constantService: " + constantService.toString());
 		StringBuffer uriBuilder = new StringBuffer(constantService.getBinanceUri());
 		uriBuilder.append("/ws");
 		List<String> symbolList = new ArrayList<>(getSubscriptionList());
@@ -169,6 +171,7 @@ public class BinanceWSClient extends CryptoCoinWebSocketCommonClient {
 	}
 
 	public CommonResult startWebSocket() {
+//		TODO delete debug logger
 		log.error("get into binance create web socket");
 		CommonResult r = new CommonResult();
 

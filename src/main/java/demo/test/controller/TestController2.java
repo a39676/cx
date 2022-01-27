@@ -37,6 +37,14 @@ public class TestController2 extends CommonController {
 	@GetMapping(value = "/t")
 	@ResponseBody
 	public String t() {
-		return "done";
+		return """
+				{"testKey":"tv"}
+				""";
+	}
+	
+	@GetMapping(value = "/t2")
+	@ResponseBody
+	public String t2() {
+		return "{\"k\":\"v\"}";
 	}
 }

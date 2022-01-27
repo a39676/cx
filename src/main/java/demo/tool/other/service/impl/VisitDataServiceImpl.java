@@ -39,29 +39,32 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 	
 	@Override
 	public void insertVisitData(HttpServletRequest request, String customInfo) {
-		UserIp ui = new UserIp();
-		JSONObject j = null;
-		IpRecordBO record = getIp(request);
-		
-		ui.setCreateTime(LocalDateTime.now());
-		ui.setIp(numberUtil.ipToLong(record.getRemoteAddr()));
-		// TODO 需要兼容 IPv6
-		ui.setForwardIp(numberUtil.ipToLong(record.getForwardAddr()));
-		ui.setServerName(request.getServerName());
-		if(StringUtils.isNotBlank(customInfo)) {
-			ui.setUri(request.getRequestURI() + "/?customInfo=" + customInfo);
-		} else {
-			ui.setUri(request.getRequestURI());
+		try {
+			UserIp ui = new UserIp();
+			JSONObject j = null;
+			IpRecordBO record = getIp(request);
+			
+			ui.setCreateTime(LocalDateTime.now());
+			ui.setIp(numberUtil.ipToLong(record.getRemoteAddr()));
+			// TODO 需要兼容 IPv6
+			ui.setForwardIp(numberUtil.ipToLong(record.getForwardAddr()));
+			ui.setServerName(request.getServerName());
+			if(StringUtils.isNotBlank(customInfo)) {
+				ui.setUri(request.getRequestURI() + "/?customInfo=" + customInfo);
+			} else {
+				ui.setUri(request.getRequestURI());
+			}
+			ui.setUserId(baseUtilCustom.getUserId());
+			
+			j = JSONObject.fromObject(ui);
+			j.put("createTime", localDateTimeHandler.dateToStr(ui.getCreateTime()));
+			if(ui.getUserId() == null) {
+				j.put("userId", "null");
+			}
+			
+			redisTemplate.opsForList().leftPush(SystemRedisKey.VISIT_DATA_REDIS_KEY, j.toString());
+		} catch (Exception e) {
 		}
-		ui.setUserId(baseUtilCustom.getUserId());
-		
-		j = JSONObject.fromObject(ui);
-		j.put("createTime", localDateTimeHandler.dateToStr(ui.getCreateTime()));
-		if(ui.getUserId() == null) {
-			j.put("userId", "null");
-		}
-		
-		redisTemplate.opsForList().leftPush(SystemRedisKey.VISIT_DATA_REDIS_KEY, j.toString());
 	}
 	
 	@Override

@@ -18,7 +18,7 @@ import demo.article.articleComment.mapper.ArticleCommentCountMapper;
 import demo.article.articleComment.pojo.po.ArticleCommentCount;
 import demo.base.system.service.HostnameService;
 import demo.base.system.service.impl.RedisOriginalConnectService;
-import demo.base.system.service.impl.SystemConstantService;
+import demo.base.system.service.impl.SystemOptionService;
 import demo.common.pojo.type.ResultTypeCX;
 import demo.common.service.CommonService;
 import demo.image.pojo.result.ImgHandleSrcDataResult;
@@ -42,13 +42,13 @@ public class ArticleCommonService extends CommonService {
 	@Autowired
 	private TextFilter textFilter;
 	@Autowired
-	protected ArticleConstantService articleConstantService;
+	protected ArticleOptionService articleConstantService;
 	@Autowired
 	protected NumericUtilCustom numberUtil;
 	@Autowired
 	protected VisitDataService visitDataService;
 	@Autowired
-	protected SystemConstantService systemConstantService;
+	protected SystemOptionService systemConstantService;
 	@Autowired
 	protected HostnameService hostnameService;
 	@Autowired

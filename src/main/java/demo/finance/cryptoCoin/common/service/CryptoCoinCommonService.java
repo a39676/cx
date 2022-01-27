@@ -26,6 +26,8 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 	protected RedisTemplate<String, Object> redisTemplate;
 	@Autowired
 	protected CryptoCoinConstantService constantService;
+	@Autowired
+	protected CryptoCoinOptionService optionService;
 
 	
 	protected FilterBODataResult filterData(List<CryptoCoinPriceCommonDataBO> list) {

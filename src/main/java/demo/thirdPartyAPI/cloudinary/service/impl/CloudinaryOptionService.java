@@ -14,7 +14,7 @@ import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")
 @Service
-public class CloudinaryConstantService extends CommonService {
+public class CloudinaryOptionService extends CommonService {
 
 	@Value("${optionFilePath.cloudinary}")
 	private String optionFilePath;
@@ -23,7 +23,7 @@ public class CloudinaryConstantService extends CommonService {
 	private String cloudinaryApiKey;
 	private String cloudinaryApiSecret;
 
-	public void refreshConstant() {
+	public void refreshOption() {
 		File optionFile = new File(optionFilePath);
 		if (!optionFile.exists()) {
 			return;
@@ -31,7 +31,7 @@ public class CloudinaryConstantService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
-			CloudinaryConstantService tmp = new Gson().fromJson(jsonStr, CloudinaryConstantService.class);
+			CloudinaryOptionService tmp = new Gson().fromJson(jsonStr, CloudinaryOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
 		} catch (Exception e) {
 			log.error("cloudinary constant loading error: " + e.getLocalizedMessage());

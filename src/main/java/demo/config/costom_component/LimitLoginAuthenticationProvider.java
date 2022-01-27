@@ -14,7 +14,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
-import demo.base.system.service.impl.SystemConstantService;
+import demo.base.system.service.impl.SystemOptionService;
 import demo.base.user.pojo.dto.UserAttemptQuerayDTO;
 import demo.base.user.pojo.po.UserAttempts;
 import demo.base.user.service.UsersService;
@@ -26,7 +26,7 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
 	private UsersService userService;
 
 	@Autowired
-	private SystemConstantService systemConstantService;
+	private SystemOptionService systemConstantService;
 	
 	@Autowired
 	@Qualifier("userDetailsService")

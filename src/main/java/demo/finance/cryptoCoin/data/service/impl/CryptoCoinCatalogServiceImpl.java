@@ -100,12 +100,12 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 
 		return voList;
 	}
-	
+
 	@Override
 	public Set<String> getSubscriptionNameList() {
 		Set<String> voSet = new HashSet<>();
 
-		voSet.addAll(constantService.getSubscriptionSet());
+		voSet.addAll(optionService.getSubscriptionSet());
 		voSet.addAll(constantService.getLowPriceSubscriptionSet());
 
 		return voSet;
@@ -113,7 +113,7 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 
 	private List<CryptoCoinCatalogVO> getNormalSubscriptionCatalog() {
 		List<CryptoCoinCatalogVO> voList = new ArrayList<>();
-		Set<String> set = constantService.getSubscriptionSet();
+		Set<String> set = optionService.getSubscriptionSet();
 		if (set == null || set.isEmpty()) {
 			return voList;
 		}
@@ -135,9 +135,9 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 			return;
 		}
 		catalog = catalog.toUpperCase();
-		constantService.getSubscriptionSet().add(catalog);
+		optionService.getSubscriptionSet().add(catalog);
 	}
-	
+
 	@Override
 	public void addSubscriptionCatalog(List<String> catalogList) {
 		for(String catalog : catalogList) {
@@ -145,7 +145,7 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 				return;
 			}
 			catalog = catalog.toUpperCase();
-			constantService.getSubscriptionSet().add(catalog);
+			optionService.getSubscriptionSet().add(catalog);
 		}
 	}
 
@@ -155,9 +155,9 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 			return;
 		}
 		catalog = catalog.toUpperCase();
-		constantService.getSubscriptionSet().remove(catalog);
+		optionService.getSubscriptionSet().remove(catalog);
 	}
-	
+
 	@Override
 	public void removeSubscriptionCatalog(List<String> catalogList) {
 		for(String catalog : catalogList) {
@@ -165,13 +165,13 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 				return;
 			}
 			catalog = catalog.toUpperCase();
-			constantService.getSubscriptionSet().remove(catalog);
+			optionService.getSubscriptionSet().remove(catalog);
 		}
 	}
 
 	@Override
 	public void removeAllSubscriptionCatalog() {
-		constantService.getSubscriptionSet().clear();
+		optionService.getSubscriptionSet().clear();
 	}
 
 	@Override

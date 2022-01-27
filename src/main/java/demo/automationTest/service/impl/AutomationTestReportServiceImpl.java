@@ -220,7 +220,7 @@ public class AutomationTestReportServiceImpl extends AutomationTestCommonService
 	@Override
 	public void deleteOldData(LocalDateTime limitDateTime) {
 		if(limitDateTime == null) {
-			limitDateTime = LocalDateTime.now().minusMonths(constantService.getTestEventLiveLimitMonth());
+			limitDateTime = LocalDateTime.now().minusMonths(optionService.getTestEventLiveLimitMonth());
 		}
 
 		TestEventExample example = new TestEventExample();

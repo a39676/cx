@@ -7,10 +7,10 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import demo.article.article.service.impl.ArticleConstantService;
-import demo.article.articleComment.service.impl.ArticleCommentConstantService;
-import demo.automationTest.service.impl.AutomationTestConstantService;
-import demo.base.system.service.impl.SystemConstantService;
+import demo.article.article.service.impl.ArticleOptionService;
+import demo.article.articleComment.service.impl.ArticleCommentOptionService;
+import demo.automationTest.service.impl.AutomationTestOptionService;
+import demo.base.system.service.impl.SystemOptionService;
 import demo.base.user.pojo.po.Users;
 import demo.base.user.pojo.type.SystemRolesType;
 import demo.base.user.service.RoleService;
@@ -18,13 +18,13 @@ import demo.base.user.service.UserRegistService;
 import demo.base.user.service.UsersService;
 import demo.base.user.service.impl.UserRoleConstantService;
 import demo.common.service.CommonService;
-import demo.finance.cryptoCoin.common.service.CryptoCoinConstantService;
+import demo.finance.cryptoCoin.common.service.CryptoCoinOptionService;
 import demo.joy.image.icon.service.JoyIconService;
 import demo.joy.scene.service.JoySceneManagerService;
-import demo.thirdPartyAPI.cloudinary.service.impl.CloudinaryConstantService;
-import demo.tool.mail.service.impl.MailConstantService;
+import demo.thirdPartyAPI.cloudinary.service.impl.CloudinaryOptionService;
+import demo.tool.mail.service.impl.MailOptionService;
 import demo.tool.service.impl.ToolConstantService;
-import demo.tool.telegram.service.impl.TelegramConstantService;
+import demo.tool.telegram.service.impl.TelegramOptionService;
 
 @Component
 //public class DatabaseFillerOnStartup implements ApplicationListener<ContextStartedEvent> {
@@ -44,23 +44,23 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 	@Autowired
 	private JoyIconService joyIconService;
 	@Autowired
-	private SystemConstantService systemConstantService;
+	private SystemOptionService systemOptionService;
 	@Autowired
-	private ArticleConstantService articleConstantService;
+	private ArticleOptionService articleOptionService;
 	@Autowired
-	private ArticleCommentConstantService articleCommentConstantService;
+	private ArticleCommentOptionService articleCommentOptionService;
 	@Autowired
-	private MailConstantService mailConstantService;
+	private MailOptionService mailOptionService;
 	@Autowired
-	private CloudinaryConstantService cloudinaryConstantService;
+	private CloudinaryOptionService cloudinaryOptionService;
 	@Autowired
-	private AutomationTestConstantService automationTestConstantService;
+	private AutomationTestOptionService automationTestOptionService;
 	@Autowired
-	private CryptoCoinConstantService cryptoCoinConstantService;
+	private CryptoCoinOptionService cryptoCoinOptionService;
 	@Autowired
-	private TelegramConstantService telegramConstantService;
+	private TelegramOptionService telegramOptionService;
 	@Autowired
-	private ToolConstantService toolConstantService;
+	private ToolConstantService toolOptionService;
 	
 	
 /*
@@ -107,31 +107,31 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 			log.error("after load joy option");
 			
 			log.error("loading system option");
-			systemConstantService.refreshConstant();
+			systemOptionService.refreshOption();
 			
 			log.error("loading tool option");
-			toolConstantService.refreshConstant();
+			toolOptionService.refreshConstant();
 			
 			log.error("loading article option");
-			articleConstantService.refreshConstant();
+			articleOptionService.refreshOption();
 			
 			log.error("loading article comment option");
-			articleCommentConstantService.refreshConstant();
+			articleCommentOptionService.refreshOption();
 			
 			log.error("loading mail option");
-			mailConstantService.refreshConstant();
+			mailOptionService.refreshOption();
 			
 			log.error("loading cloudinary option");
-			cloudinaryConstantService.refreshConstant();
+			cloudinaryOptionService.refreshOption();
 			
 			log.error("loading automation test option");
-			automationTestConstantService.refreshConstant();
+			automationTestOptionService.refreshOption();
 			
 			log.error("loading crypto coin option");
-			cryptoCoinConstantService.refreshConstant();
+			cryptoCoinOptionService.refreshOption();
 			
 			log.error("loading telegram option");
-			telegramConstantService.refreshConstant();
+			telegramOptionService.refreshOption();
 			
 		}
 		

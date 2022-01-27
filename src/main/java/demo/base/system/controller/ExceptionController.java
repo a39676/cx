@@ -1,6 +1,7 @@
 package demo.base.system.controller;
 
 import java.io.IOException;
+import java.lang.reflect.InaccessibleObjectException;
 import java.sql.SQLException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,6 +51,14 @@ public class ExceptionController extends CommonController {
     public ModelAndView handleError404_1(HttpServletRequest request, Exception e)   {
         return exceptionService.handle404Exception(request);
     }
+	
+	@ExceptionHandler(InaccessibleObjectException.class)
+    @ResponseStatus(value = HttpStatus.SERVICE_UNAVAILABLE)
+    public ModelAndView handleInaccessibleObjectException(HttpServletRequest request, Exception e)   {
+        return exceptionService.handle503Exception(request, e);
+    }
+	
+	
 	
 //	@ExceptionHandler(NotFoundException.class)
 //    @ResponseStatus(value = HttpStatus.NOT_FOUND)

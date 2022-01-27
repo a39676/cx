@@ -71,6 +71,30 @@ public class ExceptionServiceImpl extends SystemCommonService implements Excepti
 	}
 	
 	@Override
+	public ModelAndView handle503Exception(HttpServletRequest request, Exception e) {
+		log.error("Http 503: " + request.getServerName() + "/" + request.getRequestURI());
+		log.error(e.getLocalizedMessage());
+		log.error(e.getMessage());
+		
+		visitDataService.insertVisitData(request, "catch 503 exception");
+		
+		ModelAndView view = new ModelAndView();
+		
+		HostnameType hostnameType = hostnameService.findHostnameType(request);
+		if(HostnameType.zhang3.equals(hostnameType)) {
+			view.setViewName(BaseViewConstant.normal404);
+		} else if(HostnameType.dtro.equals(hostnameType)) {
+			view.setViewName(BaseViewConstant.normal404);
+		} else if(systemConstantService.isDev()){
+			view.setViewName(BaseViewConstant.normal404);
+		} else {
+			view.setViewName(BaseViewConstant.normal404);
+		}
+
+		return view;
+	}
+	
+	@Override
 	public ModelAndView handleCommonException(HttpServletRequest request) {
 		log.error("Catch EXCEPTION: " + request.getServerName() + "/" + request.getRequestURI());
 		visitDataService.insertVisitData(request, "catch EXCEPTION");

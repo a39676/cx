@@ -14,7 +14,7 @@ import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")
 @Service
-public class ArticleConstantService extends CommonService {
+public class ArticleOptionService extends CommonService {
 
 	@Value("${optionFilePath.article}")
 	private String optionFilePath;
@@ -48,7 +48,7 @@ public class ArticleConstantService extends CommonService {
 				+ normalUserMaxReadingMonth + "]";
 	}
 
-	public void refreshConstant() {
+	public void refreshOption() {
 		File optionFile = new File(optionFilePath);
 		if (!optionFile.exists()) {
 			return;
@@ -56,7 +56,7 @@ public class ArticleConstantService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
-			ArticleConstantService tmp = new Gson().fromJson(jsonStr, ArticleConstantService.class);
+			ArticleOptionService tmp = new Gson().fromJson(jsonStr, ArticleOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
 		} catch (Exception e) {
 			log.error("article constant loading error: " + e.getLocalizedMessage());

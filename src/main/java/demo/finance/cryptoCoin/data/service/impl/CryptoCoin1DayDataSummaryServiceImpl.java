@@ -77,8 +77,8 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 			telegramCryptoCoinMessageAckProducer.send(msgDTO);
 			
 			if(CryptoCoinDataSourceType.CRYPTO_COMPARE.equals(dataSourceType)) {
-				sendDailyDataQuery(dto.getCryptoCoinTypeName(), constantService.getDefaultCurrency(),
-						constantService.getDefaultDailyDataQueryLenth(), CryptoCoinDataSourceType.BINANCE);
+				sendDailyDataQuery(dto.getCryptoCoinTypeName(), optionService.getDefaultCurrency(),
+						optionService.getDefaultDailyDataQueryLenth(), CryptoCoinDataSourceType.BINANCE);
 			} else if(CryptoCoinDataSourceType.BINANCE.equals(dataSourceType)) {
 				constantService.getDailyDataWaitingQuerySet().remove(coinType.getCoinNameEnShort());
 			}
@@ -361,8 +361,8 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		for (String catalogName : waitingQuerySet) {
 			catalog = coinCatalogService.findCatalog(catalogName);
 			if (catalog != null) {
-				sendDailyDataQuery(catalog.getCoinNameEnShort(), constantService.getDefaultCurrency(),
-						constantService.getDefaultDailyDataQueryLenth(), CryptoCoinDataSourceType.CRYPTO_COMPARE);
+				sendDailyDataQuery(catalog.getCoinNameEnShort(), optionService.getDefaultCurrency(),
+						optionService.getDefaultDailyDataQueryLenth(), CryptoCoinDataSourceType.CRYPTO_COMPARE);
 			}
 		}
 	}
@@ -382,7 +382,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		}
 
 		if (StringUtils.isBlank(currencyName)) {
-			currencyName = constantService.getDefaultCurrency();
+			currencyName = optionService.getDefaultCurrency();
 		}
 
 		sendDailyDataQuery(coinName, currencyName, counting, CryptoCoinDataSourceType.CRYPTO_COMPARE);
@@ -396,9 +396,9 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		dto.setTestEventId(snowFlake.getNextId());
 
 		CryptoCoinDailyDataQueryDTO paramDTO = new CryptoCoinDailyDataQueryDTO();
-		paramDTO.setApiKey(constantService.getCryptoCompareApiKey());
+		paramDTO.setApiKey(optionService.getCryptoCompareApiKey());
 		paramDTO.setCoinName(coinName);
-		paramDTO.setCurrencyName(constantService.getDefaultCurrency());
+		paramDTO.setCurrencyName(optionService.getDefaultCurrency());
 		paramDTO.setCounting(counting);
 		paramDTO.setDataSourceCode(CryptoCoinDataSourceType.CRYPTO_COMPARE.getCode());
 		

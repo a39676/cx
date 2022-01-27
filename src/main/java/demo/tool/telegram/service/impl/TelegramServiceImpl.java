@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.tool.service.impl.ToolCommonService;
 import demo.tool.telegram.mapper.TelegramChatIdMapper;
 import demo.tool.telegram.mapper.TelegramConstantMapper;
+import demo.tool.telegram.pojo.bo.TelegramConstantBO;
 import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
 import demo.tool.telegram.pojo.po.TelegramChatId;
 import demo.tool.telegram.pojo.po.TelegramChatIdExample;
@@ -31,13 +33,13 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 	@Autowired
 	private TelegramChatIdMapper chatIdMapper;
 	@Autowired
-	private TelegramConstantService telegramConstantService;
+	private TelegramOptionService telegramOptionService;
 
 	private String botIDReady(String botIDKey) {
 		if (StringUtils.isBlank(botIDKey)) {
 			botIDKey = TelegramBotType.BOT_1.getName();
 		}
-		TelegramConstant botConstant = telegramConstantService.getTelegramConstantMap().get(botIDKey);
+		TelegramConstantBO botConstant = telegramOptionService.getTelegramConstantMap().get(botIDKey);
 
 		if (botConstant != null) {
 			return botConstant.getConstantvalue();
@@ -54,8 +56,11 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 		List<TelegramConstant> poList = telegramConstantMapper.selectByExample(example);
 
 		if (poList != null && !poList.isEmpty()) {
+			TelegramConstantBO bo = null;
 			for (TelegramConstant po : poList) {
-				telegramConstantService.putTelegramConstantMap(po.getConstantname(), po);
+				bo = new TelegramConstantBO();
+				BeanUtils.copyProperties(po, bo);
+				telegramOptionService.putTelegramConstantMap(po.getConstantname(), bo);
 			}
 			bot1ID = poList.get(0).getConstantvalue();
 		}

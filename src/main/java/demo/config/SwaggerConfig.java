@@ -4,12 +4,12 @@ import org.springdoc.core.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 
-import demo.base.system.service.impl.SystemConstantService;
+import demo.base.system.service.impl.SystemOptionService;
 
 public class SwaggerConfig {
 
 	@Autowired
-	private SystemConstantService constantService;
+	private SystemOptionService constantService;
 
 	@Bean
 	public GroupedOpenApi publicApi() {

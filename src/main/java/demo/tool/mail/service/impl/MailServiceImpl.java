@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.base.system.service.impl.SystemConstantService;
+import demo.base.system.service.impl.SystemOptionService;
 import demo.base.user.pojo.constant.UsersUrl;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.ResultTypeCX;
@@ -45,10 +45,10 @@ import toolPack.emailHandle.mailService.send.SendEmail;
 public class MailServiceImpl extends CommonService implements MailService {
 
 	@Autowired
-	private SystemConstantService systemConstantService;
+	private SystemOptionService systemConstantService;
 	
 	@Autowired
-	private MailConstantService mailConstantService;
+	private MailOptionService mailConstantService;
 	
 	@Autowired
 	private MailToolService mailToolService;

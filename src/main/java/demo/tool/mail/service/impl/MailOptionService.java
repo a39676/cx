@@ -14,7 +14,7 @@ import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")
 @Service
-public class MailConstantService extends CommonService {
+public class MailOptionService extends CommonService {
 
 	@Value("${optionFilePath.mail}")
 	private String optionFilePath;
@@ -22,7 +22,7 @@ public class MailConstantService extends CommonService {
 	private String adminMailName = "adminMailName";
 	private String adminMailPwd = "adminMailPwd";
 
-	public void refreshConstant() {
+	public void refreshOption() {
 		File optionFile = new File(optionFilePath);
 		if (!optionFile.exists()) {
 			return;
@@ -30,7 +30,7 @@ public class MailConstantService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
-			MailConstantService tmp = new Gson().fromJson(jsonStr, MailConstantService.class);
+			MailOptionService tmp = new Gson().fromJson(jsonStr, MailOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
 		} catch (Exception e) {
 			log.error("mail constant loading error: " + e.getLocalizedMessage());

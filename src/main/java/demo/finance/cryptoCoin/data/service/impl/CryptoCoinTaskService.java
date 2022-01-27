@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import demo.base.system.service.impl.SystemConstantService;
+import demo.base.system.service.impl.SystemOptionService;
 import demo.common.service.CommonService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import demo.finance.cryptoCoin.data.webSocket.BinanceWSClient;
@@ -17,7 +17,7 @@ import telegram.pojo.constant.TelegramBotType;
 public class CryptoCoinTaskService extends CommonService {
 
 	@Autowired
-	private SystemConstantService systemConstantService;
+	private SystemOptionService systemConstantService;
 	@Autowired
 	private TelegramService telegramService;
 	@Autowired

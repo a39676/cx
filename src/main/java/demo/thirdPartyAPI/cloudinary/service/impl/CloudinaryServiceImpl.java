@@ -23,7 +23,7 @@ public class CloudinaryServiceImpl extends CommonService implements CloudinarySe
 	@Autowired
 	private CloudinaryFunction cloudinaryFunction;
 	@Autowired
-	private CloudinaryConstantService cloudinaryConstantService;
+	private CloudinaryOptionService cloudinaryConstantService;
 
 	protected Cloudinary buildCloudinary() {
 		Cloudinary cloudinary = new CloudinaryCore().buildCloudinary(

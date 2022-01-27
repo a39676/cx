@@ -14,7 +14,7 @@ import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")
 @Service
-public class ArticleCommentConstantService extends CommonService {
+public class ArticleCommentOptionService extends CommonService {
 
 	@Value("${optionFilePath.articleComment}")
 	private String optionFilePath;
@@ -23,7 +23,7 @@ public class ArticleCommentConstantService extends CommonService {
 	private Long maxArticleCommentLength = 0L;
 	private Short commentPageMaxSize = 30;
 
-	public void refreshConstant() {
+	public void refreshOption() {
 		File optionFile = new File(optionFilePath);
 		if (!optionFile.exists()) {
 			return;
@@ -31,7 +31,7 @@ public class ArticleCommentConstantService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
-			ArticleCommentConstantService tmp = new Gson().fromJson(jsonStr, ArticleCommentConstantService.class);
+			ArticleCommentOptionService tmp = new Gson().fromJson(jsonStr, ArticleCommentOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
 		} catch (Exception e) {
 			log.error("article comment constant loading error: " + e.getLocalizedMessage());

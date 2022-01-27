@@ -11,7 +11,7 @@ public abstract class SystemCommonService extends CommonService{
 	@Autowired
 	protected VisitDataService visitDataService;
 	@Autowired
-	protected SystemConstantService systemConstantService;
+	protected SystemOptionService systemConstantService;
 	@Autowired
 	protected HostnameService hostnameService;
 	@Autowired

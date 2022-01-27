@@ -32,8 +32,8 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import demo.article.article.pojo.dto.LocalImageSavingDTO;
-import demo.automationTest.service.impl.AutomationTestConstantService;
-import demo.base.system.service.impl.SystemConstantService;
+import demo.automationTest.service.impl.AutomationTestOptionService;
+import demo.base.system.service.impl.SystemOptionService;
 import demo.common.service.CommonService;
 import demo.image.mapper.ImageStoreMapper;
 import demo.image.mapper.ImageTagMapper;
@@ -59,9 +59,9 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 	private ImageTagMapper imageTagMapper;
 	
 	@Autowired
-	private SystemConstantService systemConstantService;
+	private SystemOptionService systemConstantService;
 	@Autowired
-	private AutomationTestConstantService automationTestConstantService;
+	private AutomationTestOptionService automationTestConstantService;
 	
 	@Override
 	public void getImage(HttpServletResponse response, String imgPK) {

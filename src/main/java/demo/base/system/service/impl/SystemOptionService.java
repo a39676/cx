@@ -24,7 +24,7 @@ import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")
 @Service
-public class SystemConstantService extends CommonService {
+public class SystemOptionService extends CommonService {
 	
 	@Autowired
 	private EncryptUtil encryptUtil;
@@ -250,7 +250,7 @@ public class SystemConstantService extends CommonService {
 		this.homepageAnnouncementStr = homepageAnnouncementStr;
 	}
 
-	public void refreshConstant() {
+	public void refreshOption() {
 		File optionFile = new File(optionFilePath);
 		if (!optionFile.exists()) {
 			return;
@@ -258,7 +258,7 @@ public class SystemConstantService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
-			SystemConstantService tmp = new Gson().fromJson(jsonStr, SystemConstantService.class);
+			SystemOptionService tmp = new Gson().fromJson(jsonStr, SystemOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
 		} catch (Exception e) {
 			log.error("system constant loading error: " + e.getLocalizedMessage());

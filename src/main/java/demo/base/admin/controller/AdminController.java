@@ -21,7 +21,7 @@ import demo.base.admin.pojo.constant.AdminView;
 import demo.base.admin.pojo.dto.LoadHomepageAnnouncementStrDTO;
 import demo.base.admin.service.AdminService;
 import demo.base.system.pojo.constant.BaseStatusCode;
-import demo.base.system.service.impl.SystemConstantService;
+import demo.base.system.service.impl.SystemOptionService;
 import demo.base.user.pojo.constant.UserManagerView;
 import demo.base.user.pojo.dto.UserIpDeleteDTO;
 import demo.base.user.pojo.po.Users;
@@ -49,7 +49,7 @@ public class AdminController extends CommonController {
 	private AdminService adminService;
 	
 	@Autowired
-	private SystemConstantService systemConstantService;
+	private SystemOptionService systemConstantService;
 	
 	@Autowired
 	private FakePostService fakePostService;

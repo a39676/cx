@@ -20,6 +20,8 @@ public abstract class AutomationTestCommonService extends ArticleCommonService {
 	@Autowired
 	protected TestEventMapper eventMapper;
 	@Autowired
+	protected AutomationTestOptionService optionService;
+	@Autowired
 	protected AutomationTestConstantService constantService;
 	@Autowired
 	protected TestEventInsertAckProducer testEventInsertAckProducer;
@@ -27,7 +29,7 @@ public abstract class AutomationTestCommonService extends ArticleCommonService {
 	protected VisitDataService visitDataService;
 
 	protected String getAutomationTestReportSavingFolder() {
-		String path = constantService.getReportStorePrefixPath() + File.separator
+		String path = optionService.getReportStorePrefixPath() + File.separator
 				+ localDateTimeHandler.dateToStr(LocalDateTime.now(), DateTimeUtilCommon.dateFormatNoSymbol);
 		File folder = new File(path);
 		if (!folder.exists() || !folder.isDirectory()) {
@@ -39,7 +41,7 @@ public abstract class AutomationTestCommonService extends ArticleCommonService {
 	}
 
 	protected String buildAutomationParamSavingPath(TestModuleType moduleType, Long flowId, Long eventID) {
-		String path = constantService.getParamStorePrefixPath() + File.separator + moduleType.getModuleName()
+		String path = optionService.getParamStorePrefixPath() + File.separator + moduleType.getModuleName()
 				+ File.separator + flowId.toString() + File.separator + eventID.toString() + ".json";
 		File folder = new File(path);
 		ioUtil.checkFolderExists(folder.getParentFile().getAbsolutePath());

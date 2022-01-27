@@ -55,7 +55,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 //	@Autowired
 //	private ArticleService articleService;
 	@Autowired
-	private ArticleCommentConstantService constantService;
+	private ArticleCommentOptionService constantService;
 	@Autowired
 	private ArticleEvaluationService articleEvaluationService;
 	@Autowired
@@ -73,7 +73,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	private ArticleCommentCountMapper articleCommentCountMapper;
 	
 	@Autowired
-	private ArticleCommentConstantService articleCommentConstantService;
+	private ArticleCommentOptionService articleCommentConstantService;
 	
 	@Autowired
 	private FileUtilCustom ioUtil;

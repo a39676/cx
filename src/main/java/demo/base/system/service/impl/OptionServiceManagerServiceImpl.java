@@ -12,6 +12,7 @@ import demo.finance.cryptoCoin.common.service.CryptoCoinOptionService;
 import demo.thirdPartyAPI.cloudinary.service.impl.CloudinaryOptionService;
 import demo.tool.mail.service.impl.MailOptionService;
 import demo.tool.telegram.service.impl.TelegramOptionService;
+import demo.toyParts.educate.service.impl.EducateOptionService;
 
 @Service
 public class OptionServiceManagerServiceImpl extends CommonService implements OptionConstantManagerService {
@@ -32,6 +33,8 @@ public class OptionServiceManagerServiceImpl extends CommonService implements Op
 	private CryptoCoinOptionService cryptoCoinOptionService;
 	@Autowired
 	private TelegramOptionService telegramOptionService;
+	@Autowired
+	private EducateOptionService educateOptionService;
 	
 	
 	@Override
@@ -40,37 +43,42 @@ public class OptionServiceManagerServiceImpl extends CommonService implements Op
 	}
 	
 	@Override
-	public void refreshArticleConstant() {
+	public void refreshArticleOption() {
 		articleConstantService.refreshOption();
 	}
 	
 	@Override
-	public void refreshArticleCommentConstant() {
+	public void refreshArticleCommentOption() {
 		articleCommentConstantService.refreshOption();
 	}
 	
 	@Override
-	public void refreshMailConstant() {
+	public void refreshMailOption() {
 		mailConstantService.refreshOption();
 	}
 	
 	@Override
-	public void refreshCloudinaryConstant() {
+	public void refreshCloudinaryOption() {
 		cloudinaryConstantService.refreshOption();
 	}
 	
 	@Override
-	public void refreshAutomationTestConstant() {
+	public void refreshAutomationTestOption() {
 		automationTestOptionService.refreshOption();
 	}
 	
 	@Override
-	public void refreshCryptoCoinConstant() {
+	public void refreshCryptoCoinOption() {
 		cryptoCoinOptionService.refreshOption();
 	}
 	
 	@Override
-	public void refreshTelegramConstant() {
+	public void refreshTelegramOption() {
 		telegramOptionService.refreshOption();
+	}
+	
+	@Override
+	public void refreshEducateOption() {
+		educateOptionService.refreshOption();
 	}
 }

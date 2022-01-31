@@ -26,49 +26,56 @@ public class OptionConstantController {
 	@GetMapping(value = "/refreshArticleConstant")
 	@ResponseBody
 	public String refreshArticleConstant() {
-		optionConstantManagerService.refreshArticleConstant();
+		optionConstantManagerService.refreshArticleOption();
 		return "done";
 	}
 
 	@GetMapping(value = "/refreshArticleCommentConstant")
 	@ResponseBody
 	public String refreshArticleCommentConstant() {
-		optionConstantManagerService.refreshArticleCommentConstant();
+		optionConstantManagerService.refreshArticleCommentOption();
 		return "done";
 	}
 
 	@GetMapping(value = "/refreshMailConstant")
 	@ResponseBody
 	public String refreshMailConstant() {
-		optionConstantManagerService.refreshMailConstant();
+		optionConstantManagerService.refreshMailOption();
 		return "done";
 	}
 
 	@GetMapping(value = "/refreshCloudinaryConstant")
 	@ResponseBody
 	public String refreshCloudinaryConstant() {
-		optionConstantManagerService.refreshCloudinaryConstant();
+		optionConstantManagerService.refreshCloudinaryOption();
 		return "done";
 	}
 
 	@GetMapping(value = "/refreshAutomationTestConstant")
 	@ResponseBody
 	public String refreshAutomationTestConstant() {
-		optionConstantManagerService.refreshAutomationTestConstant();
+		optionConstantManagerService.refreshAutomationTestOption();
 		return "done";
 	}
 
 	@GetMapping(value = "/refreshCryptoCoinConstant")
 	@ResponseBody
 	public String refreshCryptoCoinConstant() {
-		optionConstantManagerService.refreshCryptoCoinConstant();
+		optionConstantManagerService.refreshCryptoCoinOption();
 		return "done";
 	}
 
 	@GetMapping(value = "/refreshTelegramConstant")
 	@ResponseBody
 	public String refreshTelegramConstant() {
-		optionConstantManagerService.refreshTelegramConstant();
+		optionConstantManagerService.refreshTelegramOption();
+		return "done";
+	}
+	
+	@GetMapping(value = "/refreshEducateOption")
+	@ResponseBody
+	public String refreshEducateOption() {
+		optionConstantManagerService.refreshEducateOption();
 		return "done";
 	}
 }

@@ -37,6 +37,7 @@
   <button id="refreshAutomationTestConstant">refreshAutomationTestConstant</button>
   <button id="refreshCryptoCoinConstant">refreshCryptoCoinConstant</button>
   <button id="refreshTelegramConstant">refreshTelegramConstant</button>
+  <button id="refreshEducateOption">refreshEducateOption</button>
 </div>
 
 <hr>
@@ -58,7 +59,6 @@
     });
 
     function deleteUserIpRecord() {
-
       var url = "/admin/deleteUserIpRecord";
       var startDate = $("input[name='customStartDate']").val();
       var endDate = $("input[name='customEndDate']").val();
@@ -94,7 +94,6 @@
     });
 
     function batchUpdatePrivateKey() {
-
       var url = "/articleAdmin/batchUpdatePrivateKey";
       var startDate = $("input[name='customStartDate']").val();
       var endDate = $("input[name='customEndDate']").val();
@@ -130,7 +129,6 @@
     });
 
     function setHomepageAnnouncementStr() {
-
       var url = "/admin/setHomepageAnnouncementStr";
       var homepageAnnouncementStr = $("input[name='setHomepageAnnouncementStr']").val();
       var jsonOutput = {
@@ -164,7 +162,6 @@
     });
 
     function createFakeEvaluationStore() {
-
       var url = "/admin/createFakeEvaluationStore";
       var jsonOutput = {
       };
@@ -192,9 +189,7 @@
     };
 
     function refreshSystemConstant() {
-
       var url = "/optionConstant/refreshSystemConstant/";
-
       $.ajax({
         type : "GET",
         url : url,
@@ -214,9 +209,7 @@
     };
 
     function refreshArticleConstant() {
-
       var url = "/optionConstant/refreshArticleConstant/";
-
       $.ajax({
         type : "GET",
         url : url,
@@ -236,9 +229,7 @@
     };
 
     function refreshArticleCommentConstant() {
-
       var url = "/optionConstant/refreshArticleCommentConstant";
-
       $.ajax({
         type : "GET",
         url : url,
@@ -258,9 +249,7 @@
     };
 
     function refreshMailConstant() {
-
       var url = "/optionConstant/refreshMailConstant/";
-
       $.ajax({
         type : "GET",
         url : url,
@@ -280,9 +269,7 @@
     };
 
     function refreshCloudinaryConstant() {
-
       var url = "/optionConstant/refreshCloudinaryConstant";
-
       $.ajax({
         type : "GET",
         url : url,
@@ -302,9 +289,7 @@
     };
 
     function refreshAutomationTestConstant() {
-
       var url = "/optionConstant/refreshAutomationTestConstant";
-
       $.ajax({
         type : "GET",
         url : url,
@@ -324,9 +309,7 @@
     };
 
     function refreshCryptoCoinConstant() {
-
       var url = "/optionConstant/refreshCryptoCoinConstant";
-
       $.ajax({
         type : "GET",
         url : url,
@@ -346,9 +329,7 @@
     };
 
     function refreshTelegramConstant() {
-
       var url = "/optionConstant/refreshTelegramConstant";
-
       $.ajax({
         type : "GET",
         url : url,
@@ -361,6 +342,26 @@
         timeout: 15000,
         success:function(data){
           $("#result").val(data + ", refreshTelegramConstant");
+        },
+        error:function(e){
+        }
+      });
+    };
+
+    function refreshEducateOption() {
+      var url = "/optionConstant/refreshEducateOption";
+      $.ajax({
+        type : "GET",
+        url : url,
+        // data: JSON.stringify(jsonOutput),
+        dataType: 'json',
+        contentType: "application/json",
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        timeout: 15000,
+        success:function(data){
+          $("#result").val(data + ", refreshEducateOption");
         },
         error:function(e){
         }
@@ -397,6 +398,10 @@
 
     $("#refreshTelegramConstant").click(function () {
       refreshTelegramConstant();
+    })
+
+    $("#refreshEducateOption").click(function () {
+      refreshEducateOption();
     })
   });
 

@@ -96,10 +96,16 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-            console.log(datas);
             $("#resultSpan").text(datas.message);
             $("#score").text("本份习题获得分数: " + datas.totalScore);
             $("#point").text("本份习题获得积分: " + datas.points);
+
+            $("#submitAnswer").prop('disabled', true);
+
+            var wrongNumberList = datas.wrongNumberList;
+            wrongNumberList.forEach(function (element) {
+              $(".answerInput[questionNumber='"+element+"']").css('border-color', 'red');
+            });
           },
           error: function(datas) {
             $("#resultSpan").text(datas.message);

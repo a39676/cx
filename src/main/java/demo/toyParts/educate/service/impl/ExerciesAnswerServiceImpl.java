@@ -82,8 +82,7 @@ public class ExerciesAnswerServiceImpl extends ExerciesCommonService implements 
 		}
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
-		int randomPoints = t.nextInt(optionService.getRandomPointMin().intValue(),
-				optionService.getMaxScore().intValue() + 1);
+		int randomPoints = 0;
 
 		GradeType studentGrade = GradeType.getType(detail.getGradeType().intValue());
 
@@ -96,13 +95,21 @@ public class ExerciesAnswerServiceImpl extends ExerciesCommonService implements 
 				randomPoints = optionService.getRandomPointMax().intValue();
 				answerResult.addMessage("今日首次获得本学期的 " + exerciesDTO.getSubjectType().getCnName() + " 满分习题! 获得最高积分: "
 						+ optionService.getRandomPointMax());
+				answerResult.setPoints(randomPoints);
+				return answerResult;
 			}
 		}
 
-		// 每错2题 扣1随机积分上限
+		// 按错题比例扣减随机积分上限
 		if (!answerResult.getWrongNumberList().isEmpty()) {
-			int halfOfWrongCounting = answerResult.getWrongNumberList().size() / 2;
-			randomPointMax = randomPointMax.subtract(new BigDecimal(halfOfWrongCounting));
+			
+			if(optionService.getQuestionListSize().equals(answerResult.getWrongNumberList().size())) {
+				answerResult.setPoints(0);
+				return answerResult;
+			} else {
+				Double coefficient = Double.valueOf(answerResult.getWrongNumberList().size()) / Double.valueOf(optionService.getQuestionListSize());
+				randomPointMax = randomPointMax.multiply(BigDecimal.ONE.subtract(new BigDecimal(coefficient)));
+			}
 		}
 
 		// 做以往的学期题目, 每学期扣1随机积分上限
@@ -137,7 +144,7 @@ public class ExerciesAnswerServiceImpl extends ExerciesCommonService implements 
 			if (gavenAnswer.equals(standarAnswer)) {
 				totalScore = totalScore.add(scoreOfSubQuestion);
 			} else {
-				r.getWrongNumberList().add(i);
+				r.getWrongNumberList().add(dto.getAnswerList().get(i).getQuestionNumber());
 			}
 		}
 

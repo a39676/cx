@@ -12,6 +12,7 @@ public enum SystemRolesType {
 	ROLE_POSTER("ROLE_POSTER", 3),
 	ROLE_DELAY_POSTER("ROLE_DELAY_POSTER", 4),
 	
+	ROLE_STUDENT("ROLE_STUDENT", 5),
 	;
 	
 	private String name;

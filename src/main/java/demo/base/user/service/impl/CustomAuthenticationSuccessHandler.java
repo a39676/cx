@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
@@ -16,20 +17,24 @@ import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import auxiliaryCommon.pojo.result.CommonResult;
-import net.sf.json.JSONObject;
+import demo.base.user.pojo.type.SystemRolesType;
+import demo.config.costom_component.BaseUtilCustom;
+import demo.toyParts.educate.pojo.constant.EducateUrl;
 
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
+	@Autowired
+	private BaseUtilCustom baseUtilCustom;
+
 	protected Log logger = LogFactory.getLog(this.getClass());
-	 
-    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+
+	private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication auth)
 			throws IOException, ServletException {
-		
+
 //		String remoteAddr = null;
 //		if (request != null) {
 //            remoteAddr = request.getHeader("X-FORWARDED-FOR");
@@ -42,7 +47,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 //		ui.setUri(request.getRequestURI());
 //		ui.setUserId(userId);
 //		userIpMapper.insertSelective(ui);
-		
+
 		handle(request, response, auth);
 		clearAuthenticationAttributes(request);
 	}
@@ -57,11 +62,19 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 			return;
 		}
 
-//		redirectStrategy.sendRedirect(request, response, targetUrl);
-		CommonResult result = new CommonResult();
-		result.successWithMessage("/");
-		response.getWriter().println(JSONObject.fromObject(result));
-		return;
+		if (baseUtilCustom.hasAdminRole()) {
+			targetUrl = "/admin/manager";
+		} else if (baseUtilCustom.hasRole(SystemRolesType.ROLE_STUDENT.getName())) {
+			targetUrl = EducateUrl.ROOT;
+		} else {
+			targetUrl = "/";
+		}
+
+		redirectStrategy.sendRedirect(request, response, targetUrl);
+//		CommonResult result = new CommonResult();
+//		result.successWithMessage("/");
+//		response.getWriter().println(JSONObject.fromObject(result));
+//		return;
 	}
 
 	protected String determineTargetUrl(Authentication authentication) {

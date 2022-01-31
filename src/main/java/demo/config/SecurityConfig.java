@@ -72,7 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
             .antMatchers("/welcome**").permitAll()
-            .antMatchers(LoginUrlConstant.login + "/**").permitAll()
+            .antMatchers(LoginUrlConstant.LOGIN + "/**").permitAll()
             .antMatchers(UsersUrl.root + "/**").permitAll()
             .antMatchers("/static_resources/**").permitAll()
             .antMatchers("/tHome/**").permitAll()

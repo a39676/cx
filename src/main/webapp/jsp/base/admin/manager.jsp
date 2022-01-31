@@ -73,5 +73,11 @@
         <a href="/pMemo/get?key=key" target="_blank">pmemo</a>
       </li>
     </ul> <%-- notes --%>
+
+    <ul class="main-menu visible-on-click" id="finance">
+      <li>
+        <a href="/financeclear" target="_blank">financeclear</a>
+      </li>
+    </ul><!-- finance -->
   </div>
 </header>

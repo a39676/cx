@@ -60,7 +60,7 @@ public class BaseUtilCustom {
 			
 			Collection<? extends GrantedAuthority> userDetails = getCurrentUser().getAuthorities();
 			if(userDetails != null) {
-				for(Object ele : getCurrentUser().getAuthorities()) {
+				for(Object ele : userDetails) {
 					roleList.add(String.valueOf(ele));
 				}
 			}

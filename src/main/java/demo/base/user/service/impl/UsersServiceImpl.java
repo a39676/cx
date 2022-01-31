@@ -284,7 +284,7 @@ public class UsersServiceImpl extends SystemCommonService implements UsersServic
 		ModelAndView view = new ModelAndView("userJSP/userInfo");
 
 		if (!baseUtilCustom.isLoginUser()) {
-			view.setViewName(LoginUrlConstant.login);
+			view.setViewName(LoginUrlConstant.LOGIN);
 			return view;
 		}
 

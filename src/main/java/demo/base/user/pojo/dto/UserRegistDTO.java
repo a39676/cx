@@ -1,13 +1,8 @@
 package demo.base.user.pojo.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
-@Schema(name = "用户注册参数")
 public class UserRegistDTO {
 
-	@Schema(name = "用户名")
 	private String userName;
-	@Schema(name = "用户昵称")
 	private String nickName;
 	private String email;
 	private String pwd;

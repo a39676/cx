@@ -2,6 +2,8 @@ package demo.article.articleComment.service.impl;
 
 import java.io.File;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -23,6 +25,7 @@ public class ArticleCommentOptionService extends CommonService {
 	private Long maxArticleCommentLength = 0L;
 	private Short commentPageMaxSize = 30;
 
+	@PostConstruct
 	public void refreshOption() {
 		File optionFile = new File(optionFilePath);
 		if (!optionFile.exists()) {
@@ -34,8 +37,9 @@ public class ArticleCommentOptionService extends CommonService {
 			ArticleCommentOptionService tmp = new Gson().fromJson(jsonStr, ArticleCommentOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
 		} catch (Exception e) {
-			log.error("article comment constant loading error: " + e.getLocalizedMessage());
+			log.error("article comment option loading error: " + e.getLocalizedMessage());
 		}
+		log.error("educate option loaded");
 	}
 
 	@Override

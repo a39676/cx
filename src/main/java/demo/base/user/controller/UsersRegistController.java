@@ -30,7 +30,6 @@ import demo.common.controller.CommonController;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.ResultTypeCX;
 import demo.config.costom_component.BaseUtilCustom;
-import io.swagger.v3.oas.annotations.Operation;
 
 @Controller
 @RequestMapping(value = UsersUrl.root)
@@ -71,7 +70,6 @@ public class UsersRegistController extends CommonController {
 		return result;
 	}
 
-	@Operation(summary = "创建用户页面", description = "返回创建用户页面")
 	@GetMapping(value = UsersUrl.userRegist)
 	public ModelAndView userRegistView(HttpServletRequest request) {
 		ModelAndView view = new ModelAndView();
@@ -80,7 +78,6 @@ public class UsersRegistController extends CommonController {
 		return view;
 	}
 
-	@Operation(summary = "用户注册", description = "用户注册请求")
 	@PostMapping(value = UsersUrl.userRegist)
 	@ResponseBody
 	public NewUserRegistResult userRegistHandler(@RequestBody UserRegistDTO dto, HttpServletRequest request) {

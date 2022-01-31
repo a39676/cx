@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -250,6 +251,7 @@ public class SystemOptionService extends CommonService {
 		this.homepageAnnouncementStr = homepageAnnouncementStr;
 	}
 
+	@PostConstruct
 	public void refreshOption() {
 		File optionFile = new File(optionFilePath);
 		if (!optionFile.exists()) {
@@ -263,6 +265,7 @@ public class SystemOptionService extends CommonService {
 		} catch (Exception e) {
 			log.error("system constant loading error: " + e.getLocalizedMessage());
 		}
+		log.error("system constant loaded");
 	}
 
 }

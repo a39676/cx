@@ -2,6 +2,8 @@ package demo.tool.mail.service.impl;
 
 import java.io.File;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -22,6 +24,7 @@ public class MailOptionService extends CommonService {
 	private String adminMailName = "adminMailName";
 	private String adminMailPwd = "adminMailPwd";
 
+	@PostConstruct
 	public void refreshOption() {
 		File optionFile = new File(optionFilePath);
 		if (!optionFile.exists()) {
@@ -33,8 +36,9 @@ public class MailOptionService extends CommonService {
 			MailOptionService tmp = new Gson().fromJson(jsonStr, MailOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
 		} catch (Exception e) {
-			log.error("mail constant loading error: " + e.getLocalizedMessage());
+			log.error("mail option loading error: " + e.getLocalizedMessage());
 		}
+		log.error("mail option loaded");
 	}
 
 	public String getAdminMailName() {

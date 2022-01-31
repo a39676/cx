@@ -34,7 +34,7 @@ public class ArticleCommonService extends CommonService {
 
 	@Autowired
 	private ArticleCommentCountMapper articleCommentCountMapper;
-	
+
 	@Autowired
 	private ImageService imgService;
 	@Autowired
@@ -54,16 +54,14 @@ public class ArticleCommonService extends CommonService {
 	@Autowired
 	protected RedisOriginalConnectService redisOriginalConnectService;
 
-	
-	
 	protected String sanitize(String content) {
 		PolicyFactory filter = textFilter.getArticleFilter();
 		return filter.sanitize(content);
 	}
 
 	/**
-	 * 用于保存新建/编辑的文章,
-	 * 在编辑情况下, creatorId 是编辑者ID, 不一定是原作者ID, 用于命名文件名
+	 * 用于保存新建/编辑的文章, 在编辑情况下, creatorId 是编辑者ID, 不一定是原作者ID, 用于命名文件名
+	 * 
 	 * @param storePrefixPath
 	 * @param creatorId
 	 * @param content
@@ -74,8 +72,8 @@ public class ArticleCommonService extends CommonService {
 			throws IOException {
 		String fileName = creatorId + "L" + snowFlake.getNextId() + ".txt";
 		String timeFolder = LocalDate.now().toString();
-		File mainFolder = new File(storePrefixPath + timeFolder);
-		String finalFilePath = storePrefixPath + timeFolder + "/" + fileName;
+		File mainFolder = new File(storePrefixPath + "/" + timeFolder);
+		String finalFilePath = storePrefixPath + "/" + timeFolder + "/" + fileName;
 		ArticleFileSaveResult result = new ArticleFileSaveResult();
 
 		if (!mainFolder.exists()) {
@@ -117,7 +115,7 @@ public class ArticleCommonService extends CommonService {
 		result.setIsSuccess();
 		return result;
 	}
-	
+
 	protected String imgSrcHandler(String src) {
 		if (src == null) {
 			return src;
@@ -128,7 +126,7 @@ public class ArticleCommonService extends CommonService {
 		}
 		return src;
 	}
-	
+
 	private String imgBase64ToImageStore(String src) {
 		ImgHandleSrcDataResult srcHandleResult = imgService.imgHandleSrcData(src);
 		if (srcHandleResult.isFail()) {
@@ -144,7 +142,8 @@ public class ArticleCommonService extends CommonService {
 
 		String saveingFolderPath = articleConstantService.getArticleImageSavingFolder();
 		String imgSavingPath = saveingFolderPath + "/" + filename;
-		boolean saveFlag = imgService.imgSaveAsFileDirect(srcHandleResult.getBase64Str(), imgSavingPath, srcHandleResult.getImgFileType());
+		boolean saveFlag = imgService.imgSaveAsFileDirect(srcHandleResult.getBase64Str(), imgSavingPath,
+				srcHandleResult.getImgFileType());
 		if (!saveFlag) {
 			return "";
 		}
@@ -159,7 +158,7 @@ public class ArticleCommonService extends CommonService {
 
 	public void articleCommentCountingUp(Long articleId) {
 		ArticleCommentCount po = articleCommentCountMapper.selectByPrimaryKey(articleId);
-		if(po == null) {
+		if (po == null) {
 			po = new ArticleCommentCount();
 			po.setArticleId(articleId);
 			po.setCounting(1L);
@@ -172,10 +171,10 @@ public class ArticleCommonService extends CommonService {
 
 	public void articleCommentCountingDown(Long articleId) {
 		ArticleCommentCount po = articleCommentCountMapper.selectByPrimaryKey(articleId);
-		if(po == null) {
+		if (po == null) {
 			return;
 		} else {
-			if(po.getCounting() > 1) {
+			if (po.getCounting() > 1) {
 				po.setCounting(po.getCounting() - 1);
 				articleCommentCountMapper.updateByPrimaryKey(po);
 			}

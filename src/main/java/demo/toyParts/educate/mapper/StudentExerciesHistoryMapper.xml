@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.toyParts.educate.mapper.StudentExerciesHistoryMapper">
+  <resultMap id="BaseResultMap" type="demo.toyParts.educate.pojo.po.StudentExerciesHistory">
+    <id column="exercies_id" jdbcType="BIGINT" property="exerciesId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="subject_type" jdbcType="BIGINT" property="subjectType" />
+    <result column="grade_type" jdbcType="BIGINT" property="gradeType" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="compeletion_time" jdbcType="TIMESTAMP" property="compeletionTime" />
+    <result column="score" jdbcType="DECIMAL" property="score" />
+    <result column="points" jdbcType="DECIMAL" property="points" />
+    <result column="file_path" jdbcType="VARCHAR" property="filePath" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    exercies_id, user_id, subject_type, grade_type, create_time, compeletion_time, score, 
+    points, file_path
+  </sql>
+  <select id="selectByExample" parameterType="demo.toyParts.educate.pojo.po.StudentExerciesHistoryExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from student_exercies_history
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from student_exercies_history
+    where exercies_id = #{exerciesId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from student_exercies_history
+    where exercies_id = #{exerciesId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.toyParts.educate.pojo.po.StudentExerciesHistoryExample">
+    delete from student_exercies_history
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="demo.toyParts.educate.pojo.po.StudentExerciesHistory">
+    insert into student_exercies_history (exercies_id, user_id, subject_type, 
+      grade_type, create_time, compeletion_time, 
+      score, points, file_path
+      )
+    values (#{exerciesId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{subjectType,jdbcType=BIGINT}, 
+      #{gradeType,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{compeletionTime,jdbcType=TIMESTAMP}, 
+      #{score,jdbcType=DECIMAL}, #{points,jdbcType=DECIMAL}, #{filePath,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="demo.toyParts.educate.pojo.po.StudentExerciesHistory">
+    insert into student_exercies_history
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="exerciesId != null">
+        exercies_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="subjectType != null">
+        subject_type,
+      </if>
+      <if test="gradeType != null">
+        grade_type,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="compeletionTime != null">
+        compeletion_time,
+      </if>
+      <if test="score != null">
+        score,
+      </if>
+      <if test="points != null">
+        points,
+      </if>
+      <if test="filePath != null">
+        file_path,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="exerciesId != null">
+        #{exerciesId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="subjectType != null">
+        #{subjectType,jdbcType=BIGINT},
+      </if>
+      <if test="gradeType != null">
+        #{gradeType,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="compeletionTime != null">
+        #{compeletionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="score != null">
+        #{score,jdbcType=DECIMAL},
+      </if>
+      <if test="points != null">
+        #{points,jdbcType=DECIMAL},
+      </if>
+      <if test="filePath != null">
+        #{filePath,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="demo.toyParts.educate.pojo.po.StudentExerciesHistoryExample" resultType="java.lang.Long">
+    select count(*) from student_exercies_history
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update student_exercies_history
+    <set>
+      <if test="record.exerciesId != null">
+        exercies_id = #{record.exerciesId,jdbcType=BIGINT},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=BIGINT},
+      </if>
+      <if test="record.subjectType != null">
+        subject_type = #{record.subjectType,jdbcType=BIGINT},
+      </if>
+      <if test="record.gradeType != null">
+        grade_type = #{record.gradeType,jdbcType=BIGINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.compeletionTime != null">
+        compeletion_time = #{record.compeletionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.score != null">
+        score = #{record.score,jdbcType=DECIMAL},
+      </if>
+      <if test="record.points != null">
+        points = #{record.points,jdbcType=DECIMAL},
+      </if>
+      <if test="record.filePath != null">
+        file_path = #{record.filePath,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update student_exercies_history
+    set exercies_id = #{record.exerciesId,jdbcType=BIGINT},
+      user_id = #{record.userId,jdbcType=BIGINT},
+      subject_type = #{record.subjectType,jdbcType=BIGINT},
+      grade_type = #{record.gradeType,jdbcType=BIGINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      compeletion_time = #{record.compeletionTime,jdbcType=TIMESTAMP},
+      score = #{record.score,jdbcType=DECIMAL},
+      points = #{record.points,jdbcType=DECIMAL},
+      file_path = #{record.filePath,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.toyParts.educate.pojo.po.StudentExerciesHistory">
+    update student_exercies_history
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="subjectType != null">
+        subject_type = #{subjectType,jdbcType=BIGINT},
+      </if>
+      <if test="gradeType != null">
+        grade_type = #{gradeType,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="compeletionTime != null">
+        compeletion_time = #{compeletionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="score != null">
+        score = #{score,jdbcType=DECIMAL},
+      </if>
+      <if test="points != null">
+        points = #{points,jdbcType=DECIMAL},
+      </if>
+      <if test="filePath != null">
+        file_path = #{filePath,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where exercies_id = #{exerciesId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="demo.toyParts.educate.pojo.po.StudentExerciesHistory">
+    update student_exercies_history
+    set user_id = #{userId,jdbcType=BIGINT},
+      subject_type = #{subjectType,jdbcType=BIGINT},
+      grade_type = #{gradeType,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      compeletion_time = #{compeletionTime,jdbcType=TIMESTAMP},
+      score = #{score,jdbcType=DECIMAL},
+      points = #{points,jdbcType=DECIMAL},
+      file_path = #{filePath,jdbcType=VARCHAR}
+    where exercies_id = #{exerciesId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="demo.toyParts.educate.pojo.po.StudentExerciesHistoryExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from student_exercies_history
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

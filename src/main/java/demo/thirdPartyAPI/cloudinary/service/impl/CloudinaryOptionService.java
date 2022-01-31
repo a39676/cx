@@ -2,6 +2,8 @@ package demo.thirdPartyAPI.cloudinary.service.impl;
 
 import java.io.File;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -23,6 +25,7 @@ public class CloudinaryOptionService extends CommonService {
 	private String cloudinaryApiKey;
 	private String cloudinaryApiSecret;
 
+	@PostConstruct
 	public void refreshOption() {
 		File optionFile = new File(optionFilePath);
 		if (!optionFile.exists()) {
@@ -34,8 +37,9 @@ public class CloudinaryOptionService extends CommonService {
 			CloudinaryOptionService tmp = new Gson().fromJson(jsonStr, CloudinaryOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
 		} catch (Exception e) {
-			log.error("cloudinary constant loading error: " + e.getLocalizedMessage());
+			log.error("cloudinary option loading error: " + e.getLocalizedMessage());
 		}
+		log.error("cloudinary option loaded");
 	}
 
 	public String getCloudinaryName() {

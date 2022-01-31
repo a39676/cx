@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,7 @@ public class TelegramOptionService extends CommonService {
 		telegramConstantMap.put(key, constant);
 	}
 
+	@PostConstruct
 	public void refreshOption() {
 		File optionFile = new File(optionFilePath);
 		if (!optionFile.exists()) {
@@ -47,6 +50,7 @@ public class TelegramOptionService extends CommonService {
 		} catch (Exception e) {
 			log.error("telegram constant loading error: " + e.getLocalizedMessage());
 		}
+		log.error("telegram constant loaded");
 	}
 
 }

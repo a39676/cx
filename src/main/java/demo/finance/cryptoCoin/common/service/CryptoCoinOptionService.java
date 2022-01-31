@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,7 @@ public class CryptoCoinOptionService extends CommonService {
 
 	private Set<String> subscriptionSet = new HashSet<>();
 
+	@PostConstruct
 	public void refreshOption() {
 		File optionFile = new File(optionFilePath);
 		if (!optionFile.exists()) {
@@ -44,8 +47,9 @@ public class CryptoCoinOptionService extends CommonService {
 			BeanUtils.copyProperties(tmp, this);
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.error("crypto coin constant loading error: " + e.getLocalizedMessage());
+			log.error("crypto coin option loading error: " + e.getLocalizedMessage());
 		}
+		log.error("crypto coin option loaded");
 	}
 
 	public String getDefaultCoinCatalog() {

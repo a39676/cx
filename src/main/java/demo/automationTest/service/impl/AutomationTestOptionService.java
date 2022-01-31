@@ -2,6 +2,8 @@ package demo.automationTest.service.impl;
 
 import java.io.File;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,7 @@ public class AutomationTestOptionService extends CommonService {
 	/** 任务分派后, 经过 maxWaitingRunHour 小时, 如仍无返回数据, 执行相关逻辑 */
 	private Integer maxWaitingRunHour = 3;
 
+	@PostConstruct
 	public void refreshOption() {
 		File optionFile = new File(optionFilePath);
 		if (!optionFile.exists()) {
@@ -38,8 +41,9 @@ public class AutomationTestOptionService extends CommonService {
 			AutomationTestOptionService tmp = new Gson().fromJson(jsonStr, AutomationTestOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
 		} catch (Exception e) {
-			log.error("automation test constant loading error: " + e.getLocalizedMessage());
+			log.error("automation test option loading error: " + e.getLocalizedMessage());
 		}
+		log.error("automation test option loaded");
 	}
 
 	public String getReportStorePrefixPath() {

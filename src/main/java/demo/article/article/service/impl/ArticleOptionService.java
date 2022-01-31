@@ -2,6 +2,8 @@ package demo.article.article.service.impl;
 
 import java.io.File;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -48,6 +50,7 @@ public class ArticleOptionService extends CommonService {
 				+ normalUserMaxReadingMonth + "]";
 	}
 
+	@PostConstruct
 	public void refreshOption() {
 		File optionFile = new File(optionFilePath);
 		if (!optionFile.exists()) {
@@ -59,8 +62,9 @@ public class ArticleOptionService extends CommonService {
 			ArticleOptionService tmp = new Gson().fromJson(jsonStr, ArticleOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
 		} catch (Exception e) {
-			log.error("article constant loading error: " + e.getLocalizedMessage());
+			log.error("article option loading error: " + e.getLocalizedMessage());
 		}
+		log.error("article option loaded");
 	}
 
 	public Long getMaxArticleLength() {

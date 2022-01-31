@@ -6,15 +6,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import toolPack.dateTimeHandle.DateHandler;
 
-@Schema(name = "查询文章缩写标题参数", description = "")
 public class FindArticleLongSummaryListDTO {
 
-	@Schema(name = "频道id")
 	private Long articleChannelId;
-	@Schema(name = "title")
 	private String title;
 	private Long userId;
 	@JsonFormat(pattern = DateHandler.normalDateTimeFormat)

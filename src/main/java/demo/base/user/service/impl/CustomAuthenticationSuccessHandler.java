@@ -55,52 +55,23 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 	protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
 			throws IOException {
 
-		String targetUrl = determineTargetUrl(authentication);
+		String targetUrl = determineTargetUrl();
 
 		if (response.isCommitted()) {
 			logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
 			return;
 		}
+		redirectStrategy.sendRedirect(request, response, targetUrl);
+	}
 
+	protected String determineTargetUrl() {
+		String targetUrl = "/";
 		if (baseUtilCustom.hasAdminRole()) {
 			targetUrl = "/admin/manager";
 		} else if (baseUtilCustom.hasRole(SystemRolesType.ROLE_STUDENT.getName())) {
-			targetUrl = EducateUrl.ROOT;
-		} else {
-			targetUrl = "/";
+			targetUrl = EducateUrl.ROOT + "/";
 		}
-
-		redirectStrategy.sendRedirect(request, response, targetUrl);
-//		CommonResult result = new CommonResult();
-//		result.successWithMessage("/");
-//		response.getWriter().println(JSONObject.fromObject(result));
-//		return;
-	}
-
-	protected String determineTargetUrl(Authentication authentication) {
-		// 资料留存
-		// 依据实际情况,全部跳转首页.
-//		boolean isUser = false;
-//		boolean isAdmin = false;
-//		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-//		for (GrantedAuthority grantedAuthority : authorities) {
-//			if (grantedAuthority.getAuthority().contains("ROLE_USER")) {
-//				isUser = true;
-//				break;
-//			} else if (grantedAuthority.getAuthority().contains("ROLE_ADMIN")) {
-//				isAdmin = true;
-//				break;
-//			}
-//		}
-//
-//		if (isUser) {
-//			return "/homepage.html";
-//		} else if (isAdmin) {
-//			return "/console.html";
-//		} else {
-//			throw new IllegalStateException();
-//		}
-		return "/";
+		return targetUrl;
 	}
 
 	protected void clearAuthenticationAttributes(HttpServletRequest request) {

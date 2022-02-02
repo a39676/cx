@@ -22,11 +22,11 @@ import demo.toyParts.educate.pojo.result.ExerciesAnswerMatchResult;
 import demo.toyParts.educate.pojo.type.ExerciesSubjectType;
 import demo.toyParts.educate.pojo.type.GradeType;
 import demo.toyParts.educate.service.ExerciesAnswerService;
-import demo.toyParts.educate.service.ExerciesCommonService;
+import demo.toyParts.educate.service.EducateCommonService;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
-public class ExerciesAnswerServiceImpl extends ExerciesCommonService implements ExerciesAnswerService {
+public class ExerciesAnswerServiceImpl extends EducateCommonService implements ExerciesAnswerService {
 
 	@Autowired
 	private FileUtilCustom ioUtil;
@@ -77,7 +77,7 @@ public class ExerciesAnswerServiceImpl extends ExerciesCommonService implements 
 		LocalDateTime now = LocalDateTime.now();
 		if (now.getHour() >= optionService.getDailyMaxHour() || now.getHour() <= optionService.getDailyMinHour()) {
 			answerResult.setPoints(0);
-			answerResult.addMessage("现在应该是休息时间, 请注意劳逸结合");
+			answerResult.addMessage("晚上 " + optionService.getDailyMaxHour() + "点, 至次日 " + optionService.getDailyMinHour() + "点, 是休息时间, 请注意劳逸结合");
 			return answerResult;
 		}
 
@@ -158,7 +158,7 @@ public class ExerciesAnswerServiceImpl extends ExerciesCommonService implements 
 		example.createCriteria().andUserIdEqualTo(userId)
 				.andCreateTimeBetween(LocalDateTime.now().with(LocalTime.MIN), LocalDateTime.now().with(LocalTime.MAX))
 				.andGradeTypeEqualTo(gradeType.getCode().longValue()).andScoreEqualTo(optionService.getMaxScore())
-				.andSubjectTypeEqualTo(subjectType.getCode().longValue());
+				.andSubjectTypeEqualTo(subjectType.getCode().longValue()).andPointsEqualTo(optionService.getRandomPointMax());
 		List<StudentExerciesHistory> poList = exerciesHistoryMapper.selectByExample(example);
 		return poList != null && !poList.isEmpty();
 	}

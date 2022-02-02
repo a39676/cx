@@ -8,4 +8,6 @@ public interface UserRoleService {
 
 	void insertSuperAdminAuth(Long userId);
 
+	void insertStudentUserAuth(Long userId);
+
 }

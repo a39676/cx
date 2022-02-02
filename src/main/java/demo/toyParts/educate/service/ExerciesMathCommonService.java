@@ -1,6 +1,6 @@
 package demo.toyParts.educate.service;
 
-public abstract class ExerciesMathCommonService extends ExerciesCommonService {
+public abstract class ExerciesMathCommonService extends EducateCommonService {
 
 	
 }

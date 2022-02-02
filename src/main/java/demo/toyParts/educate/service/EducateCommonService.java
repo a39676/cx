@@ -16,7 +16,7 @@ import demo.toyParts.educate.service.impl.EducateOptionService;
 import net.sf.json.JSONObject;
 import toolPack.ioHandle.FileUtilCustom;
 
-public abstract class ExerciesCommonService extends CommonService {
+public abstract class EducateCommonService extends CommonService {
 
 	@Autowired
 	protected SystemOptionService systemConstantService;

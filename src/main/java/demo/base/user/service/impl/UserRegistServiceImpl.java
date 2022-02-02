@@ -20,6 +20,7 @@ import demo.base.user.mapper.UserRegistMapper;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.constant.UserConstant;
 import demo.base.user.pojo.dto.ResetFailAttemptDTO;
+import demo.base.user.pojo.dto.StudentRegistDTO;
 import demo.base.user.pojo.dto.UserRegistDTO;
 import demo.base.user.pojo.po.Users;
 import demo.base.user.pojo.po.UsersDetail;
@@ -37,11 +38,12 @@ import demo.tool.mail.pojo.dto.ResendMailDTO;
 import demo.tool.mail.pojo.dto.SendForgotUsernameMailDTO;
 import demo.tool.mail.pojo.dto.SendMailDTO;
 import demo.tool.mail.pojo.po.MailRecord;
-import demo.tool.mail.pojo.result.SendRegistMailResult;
 import demo.tool.mail.pojo.type.MailType;
 import demo.tool.mail.service.MailService;
 import demo.tool.other.service.TextFilter;
 import demo.tool.other.service.ValidRegexToolService;
+import demo.toyParts.educate.pojo.type.GradeType;
+import demo.toyParts.educate.service.StudentService;
 import toolPack.numericHandel.NumericUtilCustom;
 
 @Service
@@ -55,7 +57,6 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 	private UsersMapper usersMapper;
 	@Autowired
 	private NumericUtilCustom numberUtil;
-	
 	@Autowired
 	private CustomPasswordEncoder passwordEncoder;
 	@Autowired
@@ -68,6 +69,8 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 	private ValidRegexToolService validRegexToolService;
 	@Autowired
 	private TextFilter textFilter;
+	@Autowired
+	private StudentService studentService;
 	
 	@Override
 	public NewUserRegistResult newUserRegist(UserRegistDTO registDTO, String ip, HttpServletRequest request) {
@@ -93,11 +96,12 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 		UsersDetail userDetail = buildUserDetailFromUserRegistDTO(registDTO, ip, newUserId);
 		Users user = buildUserFromRegistDTO(registDTO, newUserId);
 		
-		SendRegistMailResult sendRegistMailResult = sendRegistMail(registDTO, request, newUserId);
-		if(!sendRegistMailResult.isSuccess()) {
-			result.addMessage(sendRegistMailResult.getMessage());
-			return result;
-		}
+		// TODO 暂时搁置发送注册邮件
+//		SendRegistMailResult sendRegistMailResult = sendRegistMail(registDTO, request, newUserId);
+//		if(!sendRegistMailResult.isSuccess()) {
+//			result.addMessage(sendRegistMailResult.getMessage());
+//			return result;
+//		}
 
 		try {
 			insertNewUserData(user, userDetail);
@@ -111,19 +115,75 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 		
 		return result;
 	}
-	
+
+	@Override
+	public NewUserRegistResult newStudentRegist(StudentRegistDTO registDTO, String ip, HttpServletRequest request) {
+		NewUserRegistResult result = new NewUserRegistResult();
+
+		int ipRegistCount = 0;
+		if (!isBigUser()) {
+			ipRegistCount = redisOriginalConnectService.checkFunctionalModuleVisitData(request,
+					SystemRedisKey.userRegistCountingKeyPrefix);
+		}
+		if (ipRegistCount > UserConstant.registLimitForOneIPOneDay) {
+			result.failWithMessage("最近已经注册过了,请不要重复注册");
+			return result;
+		}
+
+		ValidUserRegistResult validUserRegistDTOResult = validAndSanitizeUserRegistDTO(registDTO);
+
+		if (!validUserRegistDTOResult.isSuccess()) {
+			result.setValidUserRegistResult(validUserRegistDTOResult);
+			return result;
+		}
+
+		Long newUserId = snowFlake.getNextId();
+		UsersDetail userDetail = buildUserDetailFromUserRegistDTO(registDTO, ip, newUserId);
+		Users user = buildUserFromRegistDTO(registDTO, newUserId);
+
+		// TODO 暂时搁置发送注册邮件
+//		SendRegistMailResult sendRegistMailResult = sendRegistMail(registDTO, request, newUserId);
+//		if(!sendRegistMailResult.isSuccess()) {
+//			result.addMessage(sendRegistMailResult.getMessage());
+//			return result;
+//		}
+
+		try {
+			insertStudentUserAuth(user, userDetail);
+		} catch (Exception e) {
+			result.failWithMessage("server error");
+			return result;
+		}
+		
+		studentService.initStudentDetail(newUserId, GradeType.getType(registDTO.getGradeType().intValue()));
+
+		result.normalSuccess();
+		redisOriginalConnectService.insertFunctionalModuleVisitData(request, SystemRedisKey.userRegistCountingKeyPrefix,
+				1, TimeUnit.DAYS);
+
+		return result;
+	}
+
 	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	private void insertNewUserData(Users newUser, UsersDetail newUserDetail) {
 		userRegistMapper.insertNewUser(newUser);
 		userDetailService.insertSelective(newUserDetail);
-		userRoleService.insertBaseUserAuth(newUser.getUserId());
+//		userRoleService.insertBaseUserAuth(newUser.getUserId());
+		userRoleService.insertActiveUserAuth(newUser.getUserId());
 	}
-	
+
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
+	private void insertStudentUserAuth(Users newUser, UsersDetail newUserDetail) {
+		userRegistMapper.insertNewUser(newUser);
+		userDetailService.insertSelective(newUserDetail);
+		userRoleService.insertStudentUserAuth(newUser.getUserId());
+	}
+
 	private ValidUserRegistResult validAndSanitizeUserRegistDTO(UserRegistDTO dto) {
 		ValidUserRegistResult r = new ValidUserRegistResult();
-		
+
 		PolicyFactory filter = textFilter.getArticleFilter();
-		
+
 		if (!validRegexToolService.validNormalUserName(dto.getUserName())) {
 			dto.setUserName(filter.sanitize(dto.getUserName()));
 			r.setUsername("\"" + dto.getUserName() + "\" 账户名异常, 必须以英文字母开头,长度为6~16个字符.(只可输入英文字母及数字)");
@@ -136,7 +196,7 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 		}
 
 		dto.setNickName(filter.sanitize(dto.getNickName()));
-		if(StringUtils.isBlank(dto.getNickName())) {
+		if (StringUtils.isBlank(dto.getNickName())) {
 			r.setNickname("请您一定要起给昵称...");
 			log.error("user regist error, null nickname: " + dto.getNickName());
 		} else if (dto.getNickName().length() > 32) {
@@ -168,12 +228,12 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 		}
 
 		if (StringUtils.isNotBlank(dto.getMobile())) {
-			if(!numberUtil.matchMobile(dto.getMobile())) {
+			if (!numberUtil.matchMobile(dto.getMobile())) {
 				r.setMobile("请填入正确的手机号,或留空");
 				log.error("user regist error, mobile error: " + dto.getMobile());
 			}
-			
-			if(userDetailService.ensureActiveMobile(Long.parseLong(dto.getMobile())).isSuccess()) {
+
+			if (userDetailService.ensureActiveMobile(Long.parseLong(dto.getMobile())).isSuccess()) {
 				r.setMobile("手机号已经被占用, 若需要转移到当前帐号, 请联系管理员, 请参见网站上方\"联系方式\"");
 				log.error("user regist error, mobile duplicate: " + dto.getMobile());
 			}
@@ -191,51 +251,45 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 			r.setQq("QQ号格式异常...");
 			log.error("user regist error, QQ num error, qq: " + dto.getQq());
 		}
-		
-		if(r.getUsername() == null 
-				&& r.getNickname() == null 
-				&& r.getPwd() == null 
-				&& r.getPwdRepeat() == null 
-				&& r.getEmail() == null 
-				&& r.getMobile() == null 
-				&& r.getReservationInformation() == null 
-				&& r.getQq() == null 
-				) {
+
+		if (r.getUsername() == null && r.getNickname() == null && r.getPwd() == null && r.getPwdRepeat() == null
+				&& r.getEmail() == null && r.getMobile() == null && r.getReservationInformation() == null
+				&& r.getQq() == null) {
 			r.setIsSuccess();
 		}
-		
+
 		return r;
 	}
-	
+
 	private Users buildUserFromRegistDTO(UserRegistDTO dto, Long userId) {
 		dto.setPwd(passwordEncoder.encode(dto.getPwd()));
-    	Users user = new Users();
-    	user.setUserId(userId);
-    	user.setUserName(dto.getUserName());
-    	user.setPwd(dto.getPwd());
-    	user.setPwdd(dto.getPwd());
-    	user.setAccountNonExpired(true);
+		Users user = new Users();
+		user.setUserId(userId);
+		user.setUserName(dto.getUserName());
+		user.setPwd(dto.getPwd());
+		user.setPwdd(dto.getPwd());
+		user.setAccountNonExpired(true);
 		user.setAccountNonLocked(true);
 		user.setCredentialsNonExpired(true);
 		user.setEnabled(true);
-    	return user;
-    }
-	
+		return user;
+	}
+
 	private UsersDetail buildUserDetailFromUserRegistDTO(UserRegistDTO dto, String ip, Long userId) {
 		UsersDetail ud = new UsersDetail();
-		
+
 		ud.setEmail(dto.getEmail());
-		if(numberUtil.matchMobile(dto.getMobile())) {
+		if (numberUtil.matchMobile(dto.getMobile())) {
 			ud.setMobile(Long.parseLong(dto.getMobile()));
 		}
 		ud.setNickName(dto.getNickName());
-		if(numberUtil.matchSimpleNumber(dto.getQq())) {
+		if (numberUtil.matchSimpleNumber(dto.getQq())) {
 			ud.setQq(Long.parseLong(dto.getQq()));
 		}
 		ud.setRegistIp(numberUtil.ipToLong(ip));
 		ud.setReservationInformation(dto.getReservationInformation());
 		ud.setUserId(userId);
-		
+
 		if (dto.getGender() == null || GenderType.unknow.getCode().equals(dto.getGender())) {
 			ud.setGender(GenderType.unknow.getCode());
 		} else if (GenderType.unknow.getCode().equals(dto.getGender())) {
@@ -243,23 +297,24 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 		} else {
 			ud.setGender(GenderType.female.getCode());
 		}
-		
+
 		return ud;
 	}
-	
-	private SendRegistMailResult sendRegistMail(UserRegistDTO dto, HttpServletRequest request, Long userId) {
-		HostnameType hostnameType = hostnameService.findHostnameType(request);
-		if(hostnameType == null) {
-			return new SendRegistMailResult();
-		}
-		SendMailDTO sendRegistMailDTO = new SendMailDTO();
-		sendRegistMailDTO.setUserId(userId);
-		sendRegistMailDTO.setHostName(hostnameService.findHostNameFromRequst(request));
-		sendRegistMailDTO.setNickName(dto.getNickName());
-		sendRegistMailDTO.setSendTo(dto.getEmail());
-		return mailService.sendRegistMail(sendRegistMailDTO);
-	}
-	
+
+//	TODO 暂时搁置发送注册邮件
+//	private SendRegistMailResult sendRegistMail(UserRegistDTO dto, HttpServletRequest request, Long userId) {
+//		HostnameType hostnameType = hostnameService.findHostnameType(request);
+//		if(hostnameType == null) {
+//			return new SendRegistMailResult();
+//		}
+//		SendMailDTO sendRegistMailDTO = new SendMailDTO();
+//		sendRegistMailDTO.setUserId(userId);
+//		sendRegistMailDTO.setHostName(hostnameService.findHostNameFromRequst(request));
+//		sendRegistMailDTO.setNickName(dto.getNickName());
+//		sendRegistMailDTO.setSendTo(dto.getEmail());
+//		return mailService.sendRegistMail(sendRegistMailDTO);
+//	}
+
 	@Override
 	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	public __baseSuperAdminRegistResult __baseSuperAdminRegist() {
@@ -273,26 +328,26 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 //		userRegistDTO.setPwd(passwordEncoder.encode(userRegistDTO.getPwd()));
 		userRegistDTO.setGender(GenderType.unknow.getCode());
 		userRegistDTO.setMobile("13800138000");
-		
+
 		Long newUserId = snowFlake.getNextId();
-		
+
 		ValidUserRegistResult validAndSanitizeUserRegistResult = validAndSanitizeUserRegistDTO(userRegistDTO);
 		log.error("validAndSanitizeUserRegistResult: " + validAndSanitizeUserRegistResult.isSuccess());
-		if(validAndSanitizeUserRegistResult.isFail()) {
+		if (validAndSanitizeUserRegistResult.isFail()) {
 			log.error(validAndSanitizeUserRegistResult.getMessage());
 		}
-		
+
 		__baseSuperAdminRegistResult result = new __baseSuperAdminRegistResult();
-		
+
 		UsersDetail userDetail = buildUserDetailFromUserRegistDTO(userRegistDTO, "0.0.0.0", newUserId);
 		Users user = buildUserFromRegistDTO(userRegistDTO, newUserId);
-		
+
 		userRegistMapper.insertNewUser(user);
 		userDetailService.insertSelective(userDetail);
 		userRoleService.insertSuperAdminAuth(newUserId);
-		
+
 		log.error("insert base super admin");
-		
+
 		result.normalSuccess();
 		result.setNewSuperAdminId(newUserId);
 
@@ -312,7 +367,7 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 
 		return result;
 	}
-	
+
 	@Override
 	public ModifyRegistEmailResult modifyRegistEmail(Long userId, String email) {
 //		CommonResult result = new CommonResult();
@@ -329,86 +384,86 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 //		
 //		result = resendRegistMail(userId);
 //		return result;
-		
+
 		ModifyRegistEmailResult r = new ModifyRegistEmailResult();
-		if(userId == null || !validRegexToolService.validEmail(email)) {
+		if (userId == null || !validRegexToolService.validEmail(email)) {
 			r.fillWithResult(ResultTypeCX.errorParam);
 			return r;
 		}
-		
+
 		if (userDetailService.ensureActiveEmail(email).isSuccess()) {
 			r.failWithMessage("邮箱已注册(忘记密码或用户名?可尝试找回)");
 			return r;
 		}
-		
+
 		int updateCount = userDetailService.modifyRegistEmail(email, userId);
-		if(updateCount < 1) {
+		if (updateCount < 1) {
 			r.fillWithResult(ResultTypeCX.serviceError);
 			return r;
 		}
-		
+
 		/*
 		 * TODO 更改邮箱需要将用户角色变回未激活? 最简便
 		 */
-		
+
 		r.setIsSuccess();
 		return r;
 	}
-	
+
 	@Override
 	public CommonResultCX registActivation(String mailKey) {
 		CommonResultCX result = new CommonResultCX();
-		if(StringUtils.isBlank(mailKey)) {
+		if (StringUtils.isBlank(mailKey)) {
 			result.fillWithResult(ResultTypeCX.linkExpired);
 			return result;
 		}
-		
+
 		MailRecord mr = mailService.findMailByMailKeyMailType(mailKey, MailType.registActivation);
 
 		if (mr == null || mr.getUserId() == null) {
 			result.fillWithResult(ResultTypeCX.linkExpired);
 			return result;
 		}
-		
+
 		userRoleService.insertActiveUserAuth(mr.getUserId());
-		
+
 		mailService.updateWasUsed(mr.getId());
 		result.successWithMessage("账号已激活");
 		return result;
 	}
-	
+
 	@Override
 	public CommonResultCX resendRegistMail(Long userId, HttpServletRequest request) {
 		CommonResultCX result = new CommonResultCX();
-		if(userId == null) {
+		if (userId == null) {
 			result.fillWithResult(ResultTypeCX.nullParam);
 		}
-		
+
 		UsersDetail ud = userDetailService.findById(userId);
-		
-		if(ud == null || !validRegexToolService.validEmail(ud.getEmail())) {
+
+		if (ud == null || !validRegexToolService.validEmail(ud.getEmail())) {
 			result.fillWithResult(ResultTypeCX.nullParam);
 		}
-		
+
 		MailRecord oldMail = mailService.findRegistActivationUnusedByUserId(userId);
-		
+
 		HostnameType hostnameType = hostnameService.findHostnameType(request);
-		if(hostnameType == null) {
+		if (hostnameType == null) {
 			return result;
 		}
-		
-		if(oldMail == null || oldMail.getId() == null) {
+
+		if (oldMail == null || oldMail.getId() == null) {
 			SendMailDTO sendMailDTO = new SendMailDTO();
 			sendMailDTO.setHostName(hostnameService.findHostNameFromRequst(request));
 			sendMailDTO.setNickName(ud.getNickName());
 			sendMailDTO.setSendTo(ud.getEmail());
 			sendMailDTO.setUserId(userId);
 			result = mailService.sendRegistMail(sendMailDTO);
-			
+
 		} else {
 			// 发送(包括重发) 时间差少于1分钟, 不再重复发送
 			LocalDateTime now = LocalDateTime.now();
-			if(oldMail.getCreateTime().plusMinutes(1).isAfter(now) 
+			if (oldMail.getCreateTime().plusMinutes(1).isAfter(now)
 					|| (oldMail.getResendTime() != null && oldMail.getResendTime().plusMinutes(1).isAfter(now))) {
 				result.isSuccess();
 				return result;
@@ -421,15 +476,15 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 			resendMailDTO.setUserId(userId);
 			result = mailService.resendRegistMail(resendMailDTO);
 		}
-		
+
 		return result;
 	}
-	
+
 	@Override
 	public CommonResultCX sendForgotPasswordMail(String email, HttpServletRequest request) {
 		CommonResultCX r = new CommonResultCX();
-		
-		if(!validRegexToolService.validEmail(email)) {
+
+		if (!validRegexToolService.validEmail(email)) {
 			r.fillWithResult(ResultTypeCX.mailNotActivation);
 			return r;
 		}
@@ -437,17 +492,17 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 			r.failWithMessage("邮箱未被绑定, 无法用于找回密码");
 			return r;
 		}
-		
+
 		List<UsersDetail> userDetailList = userDetailService.findByEmail(email);
-		
-		if(userDetailList == null || userDetailList.isEmpty()) {
+
+		if (userDetailList == null || userDetailList.isEmpty()) {
 			r.fillWithResult(ResultTypeCX.mailNotActivation);
 			return r;
 		}
 		UsersDetail ud = userDetailList.get(0);
-		
+
 		HostnameType hostnameType = hostnameService.findHostnameType(request);
-		if(hostnameType == null) {
+		if (hostnameType == null) {
 			r.fillWithResult(ResultTypeCX.serviceError);
 			return r;
 		}
@@ -457,20 +512,20 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 		sendForgeotPasswordDTO.setSendTo(ud.getEmail());
 		sendForgeotPasswordDTO.setUserId(ud.getUserId());
 		r = mailService.sendForgotPasswordMail(sendForgeotPasswordDTO);
-		
-		if(!r.isSuccess()) {
+
+		if (!r.isSuccess()) {
 			r.fillWithResult(ResultTypeCX.serviceError);
 			return r;
 		}
-		
+
 		return r;
 	}
-	
+
 	@Override
 	public CommonResultCX sendForgotUsernameMail(String email, HttpServletRequest request) {
 		CommonResultCX result = new CommonResultCX();
 
-		if(!validRegexToolService.validEmail(email)) {
+		if (!validRegexToolService.validEmail(email)) {
 			result.fillWithResult(ResultTypeCX.mailNotActivation);
 			return result;
 		}
@@ -478,62 +533,63 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 			result.fillWithResult(ResultTypeCX.mailNotActivation);
 			return result;
 		}
-		
+
 		List<UsersDetail> userDetailList = userDetailService.findByEmail(email);
-		
-		if(userDetailList == null || userDetailList.isEmpty()) {
+
+		if (userDetailList == null || userDetailList.isEmpty()) {
 			result.fillWithResult(ResultTypeCX.mailNotActivation);
 			return result;
 		}
 		UsersDetail ud = userDetailList.get(0);
-		
+
 		Users user = usersMapper.selectByPrimaryKey(ud.getUserId());
-		if(user == null) {
+		if (user == null) {
 			result.failWithMessage("用户不存在");
 			return result;
 		}
-		
+
 		HostnameType hostnameType = hostnameService.findHostnameType(request);
-		if(hostnameType == null) {
+		if (hostnameType == null) {
 			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
 		}
-		
+
 		SendForgotUsernameMailDTO sendForgotUsernameMailDTO = new SendForgotUsernameMailDTO();
 		sendForgotUsernameMailDTO.setEmail(email);
 		sendForgotUsernameMailDTO.setHostName(hostnameService.findHostNameFromRequst(request));
 		sendForgotUsernameMailDTO.setUserId(ud.getUserId());
 		sendForgotUsernameMailDTO.setUserName(user.getUserName());
 		result = mailService.sendForgotUsernameMail(sendForgotUsernameMailDTO);
-		
-		if(!result.isSuccess()) {
+
+		if (!result.isSuccess()) {
 			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
 		}
-		
+
 		return result;
 	}
-	
+
 	private CommonResultCX resetPassword(Long userId, String newPassword, String newPasswordRepeat) {
 		CommonResultCX result = new CommonResultCX();
 		if (!validRegexToolService.validPassword(newPassword)) {
 			result.fillWithResult(ResultTypeCX.invalidPassword);
 			return result;
 		}
-		
-		if(!newPassword.equals(newPasswordRepeat)) {
+
+		if (!newPassword.equals(newPasswordRepeat)) {
 			result.fillWithResult(ResultTypeCX.differentPassword);
 			return result;
 		}
-		
+
 		Users user = usersMapper.findUser(userId);
-		if(user == null) {
+		if (user == null) {
 			result.fillWithResult(ResultTypeCX.linkExpired);
 			return result;
 		}
-		
-		int resetCount = userRegistMapper.resetPassword(passwordEncoder.encode(newPassword), newPassword, user.getUserId());
-		if(resetCount > 0) {
+
+		int resetCount = userRegistMapper.resetPassword(passwordEncoder.encode(newPassword), newPassword,
+				user.getUserId());
+		if (resetCount > 0) {
 			result.fillWithResult(ResultTypeCX.resetPassword);
 			return result;
 		} else {
@@ -541,51 +597,51 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 			return result;
 		}
 	}
-	
+
 	@Override
 	public CommonResultCX resetPasswordByMailKey(String mailKey, String newPassword, String newPasswordRepeat) {
-		CommonResultCX result  = new CommonResultCX();
-		if(StringUtils.isBlank(mailKey)) {
+		CommonResultCX result = new CommonResultCX();
+		if (StringUtils.isBlank(mailKey)) {
 			result.fillWithResult(ResultTypeCX.linkExpired);
 			return result;
 		}
-		
+
 		MailRecord mr = mailService.findMailByMailKeyMailType(mailKey, MailType.forgotPassword);
 		if (mr == null || mr.getUserId() == null) {
 			result.fillWithResult(ResultTypeCX.linkExpired);
 			return result;
 		}
-		
+
 		result = resetPassword(mr.getUserId(), newPassword, newPasswordRepeat);
-		if(!result.isSuccess()) {
+		if (!result.isSuccess()) {
 			return result;
 		}
-		
+
 		mailService.updateWasUsed(mr.getId());
-		
+
 		ResetFailAttemptDTO resetFailAttemptParam = new ResetFailAttemptDTO();
 		resetFailAttemptParam.setUserId(mr.getUserId());
 		usersMapper.resetFailAttempts(resetFailAttemptParam);
-		
+
 		Users tmpUser = new Users();
 		tmpUser.setEnabled(true);
 		userService.setLockeds(tmpUser);
-		
+
 		result.successWithMessage("已成功重置密码");
 		return result;
 	}
 
 	@Override
-	public CommonResultCX resetPasswordByLoginUser(Long userId, String oldPassword, String newPassword, String newPasswordRepeat) {
+	public CommonResultCX resetPasswordByLoginUser(Long userId, String oldPassword, String newPassword,
+			String newPasswordRepeat) {
 		CommonResultCX result = new CommonResultCX();
 		String encodePassword = passwordEncoder.encode(oldPassword);
-		if(usersMapper.matchUserPassword(userId, encodePassword) < 1) {
+		if (usersMapper.matchUserPassword(userId, encodePassword) < 1) {
 			result.fillWithResult(ResultTypeCX.wrongOldPassword);
 			return result;
 		}
-		
+
 		return resetPassword(userId, newPassword, newPasswordRepeat);
 	}
-	
 
 }

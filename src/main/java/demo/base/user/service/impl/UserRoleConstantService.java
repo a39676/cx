@@ -25,7 +25,10 @@ public class UserRoleConstantService extends CommonService {
 
 	private List<Roles> activeUserRoles = new ArrayList<>();
 	private List<String> activeUserRoleStrList = new ArrayList<>();
-	
+
+	private List<Roles> studentUserRoles = new ArrayList<>();
+	private List<String> stucentUserRoleStrList = new ArrayList<>();
+
 	private List<Roles> posterRoles = new ArrayList<>();
 	private List<String> posterRoleStrList = new ArrayList<>();
 
@@ -47,12 +50,18 @@ public class UserRoleConstantService extends CommonService {
 		example.createCriteria().andIsDeleteEqualTo(false).andRoleIn(activeUserRoleStrList);
 		activeUserRoles.addAll(roleMapper.selectByExample(example));
 
+		stucentUserRoleStrList.addAll(baseUserRoleStrList);
+		stucentUserRoleStrList.add(SystemRolesType.ROLE_STUDENT.getName());
+		example = new RolesExample();
+		example.createCriteria().andIsDeleteEqualTo(false).andRoleIn(stucentUserRoleStrList);
+		studentUserRoles.addAll(roleMapper.selectByExample(example));
+
 		posterRoleStrList.addAll(activeUserRoleStrList);
 		posterRoleStrList.add(SystemRolesType.ROLE_POSTER.getName());
 		example = new RolesExample();
 		example.createCriteria().andIsDeleteEqualTo(false).andRoleIn(posterRoleStrList);
 		posterRoles.addAll(roleMapper.selectByExample(example));
-		
+
 		adminRoleStrList.addAll(activeUserRoleStrList);
 		adminRoleStrList.add(SystemRolesType.ROLE_ADMIN.getName());
 		example = new RolesExample();
@@ -96,6 +105,38 @@ public class UserRoleConstantService extends CommonService {
 
 	public void setActiveUserRoleStrList(List<String> activeUserRoleStrList) {
 		this.activeUserRoleStrList = activeUserRoleStrList;
+	}
+
+	public List<Roles> getStudentUserRoles() {
+		return studentUserRoles;
+	}
+
+	public void setStudentUserRoles(List<Roles> studentUserRoles) {
+		this.studentUserRoles = studentUserRoles;
+	}
+
+	public List<String> getStucentUserRoleStrList() {
+		return stucentUserRoleStrList;
+	}
+
+	public void setStucentUserRoleStrList(List<String> stucentUserRoleStrList) {
+		this.stucentUserRoleStrList = stucentUserRoleStrList;
+	}
+
+	public List<Roles> getPosterRoles() {
+		return posterRoles;
+	}
+
+	public void setPosterRoles(List<Roles> posterRoles) {
+		this.posterRoles = posterRoles;
+	}
+
+	public List<String> getPosterRoleStrList() {
+		return posterRoleStrList;
+	}
+
+	public void setPosterRoleStrList(List<String> posterRoleStrList) {
+		this.posterRoleStrList = posterRoleStrList;
 	}
 
 	public List<Roles> getAdminRoles() {

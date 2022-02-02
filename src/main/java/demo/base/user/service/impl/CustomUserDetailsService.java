@@ -11,6 +11,7 @@ import demo.base.user.service.UsersService;
 
 @Service("userDetailsService")
 public class CustomUserDetailsService implements UserDetailsService {
+	
 	@Autowired
 	private UsersService usersService;
 	

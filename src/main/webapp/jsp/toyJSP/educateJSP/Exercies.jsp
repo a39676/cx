@@ -23,7 +23,9 @@
       <div class="col-md-12" id="questionList">
         <%-- ${exercies.questionList} --%>
         <c:forEach items="${exercies.questionList}" var="question">
-          <%-- ${question}<br> --%>
+          <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
+            ${question}<br>
+          </sec:authorize>
           <span class="question" questionNumber="${question.questionNumber}">
             ${question.expression} =
           </span>

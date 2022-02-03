@@ -23,7 +23,7 @@
       <div class="col-md-12" id="questionList">
         <%-- ${exercies.questionList} --%>
         <c:forEach items="${exercies.questionList}" var="question">
-          ${question}<br>
+          <%-- ${question}<br> --%>
           <span class="question" questionNumber="${question.questionNumber}">
             ${question.expression} =
           </span>

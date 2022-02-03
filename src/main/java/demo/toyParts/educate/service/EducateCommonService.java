@@ -3,15 +3,22 @@ package demo.toyParts.educate.service;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.google.gson.Gson;
 
 import demo.base.system.service.impl.SystemOptionService;
 import demo.common.service.CommonService;
 import demo.toyParts.educate.mapper.StudentDetailMapper;
 import demo.toyParts.educate.mapper.StudentExerciesHistoryMapper;
 import demo.toyParts.educate.pojo.dto.MathExerciesDTO;
+import demo.toyParts.educate.pojo.po.StudentExerciesHistory;
+import demo.toyParts.educate.pojo.po.StudentExerciesHistoryExample;
 import demo.toyParts.educate.pojo.result.ExerciesFileSaveResult;
+import demo.toyParts.educate.pojo.type.ExerciesSubjectType;
+import demo.toyParts.educate.pojo.type.GradeType;
 import demo.toyParts.educate.service.impl.EducateOptionService;
 import net.sf.json.JSONObject;
 import toolPack.ioHandle.FileUtilCustom;
@@ -60,5 +67,19 @@ public abstract class EducateCommonService extends CommonService {
 		return result;
 	}
 
-
+	protected <T> StudentExerciesHistory reloadExercies(GradeType gradeType, ExerciesSubjectType subjectType, Long userId) {
+		StudentExerciesHistoryExample example = new StudentExerciesHistoryExample();
+		example.createCriteria().andGradeTypeEqualTo(gradeType.getCode().longValue()).andSubjectTypeEqualTo(subjectType.getCode().longValue()).andUserIdEqualTo(userId).andCompeletionTimeIsNull();
+		List<StudentExerciesHistory> poList = exerciesHistoryMapper.selectByExample(example);
+		if(poList == null || poList.isEmpty()) {
+			return null;
+		}
+		return poList.get(0);
+	}
+	
+	protected <T> T buildExerciesFromFile(StudentExerciesHistory exerciesPO, Class<T> clazz) {
+		String exerciesJsonStr = ioUtil.getStringFromFile(exerciesPO.getFilePath());
+		return new Gson().fromJson(exerciesJsonStr, clazz);
+	}
+	
 }

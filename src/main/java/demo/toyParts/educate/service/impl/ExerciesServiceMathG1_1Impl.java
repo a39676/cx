@@ -15,7 +15,6 @@ import demo.toyParts.educate.pojo.dto.MathQuestionBaseDTO;
 import demo.toyParts.educate.pojo.po.StudentExerciesHistory;
 import demo.toyParts.educate.pojo.result.ExerciesBuildResult;
 import demo.toyParts.educate.pojo.result.ExerciesFileSaveResult;
-import demo.toyParts.educate.pojo.type.ExerciesSubjectType;
 import demo.toyParts.educate.pojo.type.GradeType;
 import demo.toyParts.educate.pojo.type.MathBaseSymbolType;
 import demo.toyParts.educate.service.ExerciesMathCommonService;
@@ -28,6 +27,7 @@ public class ExerciesServiceMathG1_1Impl extends ExerciesMathCommonService imple
 
 	private static final Integer MAX_NUM = 10;
 	private static final Integer MIN_NUM = 0;
+	private static final GradeType gradeType = GradeType.grade1_1;
 	
 	@Override
 	public ModelAndView getExercies() {
@@ -40,8 +40,22 @@ public class ExerciesServiceMathG1_1Impl extends ExerciesMathCommonService imple
 
 	@Override
 	public ExerciesBuildResult buildExercies() {
+		
+		Long userId = baseUtilCustom.getUserId();
 		ExerciesBuildResult r = new ExerciesBuildResult();
-		MathExerciesDTO exerciesDTO = exerciesGenerator();
+		MathExerciesDTO exerciesDTO = null;
+		if(userId != null) {
+			exerciesDTO = reloadExercies(gradeType, userId);
+			if(exerciesDTO != null) {
+				r.setGradeType(exerciesDTO.getGradeType());
+				r.setSubjectType(exerciesDTO.getSubjectType());
+				r.setQuestionList(exerciesDTO.getQuestionList());
+				r.setIsSuccess();
+				return r;
+			}
+		}
+		
+		exerciesDTO = exerciesGenerator();
 		ExerciesFileSaveResult saveResult = saveExerciesFile(exerciesDTO);
 		
 		if(saveResult.isFail()) {
@@ -73,9 +87,9 @@ public class ExerciesServiceMathG1_1Impl extends ExerciesMathCommonService imple
 		MathExerciesDTO exerciesDTO = new MathExerciesDTO(); 
 		exerciesDTO.setExerciesID(snowFlake.getNextId());
 		exerciesDTO.setUserId(baseUtilCustom.getUserId());
-		exerciesDTO.setSubjectType(ExerciesSubjectType.math);
+		exerciesDTO.setSubjectType(SUBJECT_TYPE);
 		exerciesDTO.setQuestionList(new ArrayList<>());
-		exerciesDTO.setGradeType(GradeType.grade1_1);
+		exerciesDTO.setGradeType(gradeType);
 		
 		MathQuestionBaseDTO question = null;
 		for(int questionNumber = 1; questionNumber <= optionService.getQuestionListSize(); questionNumber++) {
@@ -120,10 +134,14 @@ public class ExerciesServiceMathG1_1Impl extends ExerciesMathCommonService imple
 			exp = String.valueOf(num3 + mathSymbolType2.getCodeSymbol() + num2 + mathSymbolType1.getCodeSymbol() + num1);
 		}
 		
+		expression = new ExpressionBuilder(exp).build();
+		result = expression.evaluate();
+		
 		exp = replaceCodingSymbolToMathSymbol(exp);
 		q.setExpression(exp);
 		q.setStandardAnswer(new BigDecimal(result));
 		return q;
 	}
 	
+
 }

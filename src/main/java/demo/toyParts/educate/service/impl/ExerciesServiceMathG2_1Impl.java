@@ -15,7 +15,6 @@ import demo.toyParts.educate.pojo.dto.MathQuestionBaseDTO;
 import demo.toyParts.educate.pojo.po.StudentExerciesHistory;
 import demo.toyParts.educate.pojo.result.ExerciesBuildResult;
 import demo.toyParts.educate.pojo.result.ExerciesFileSaveResult;
-import demo.toyParts.educate.pojo.type.ExerciesSubjectType;
 import demo.toyParts.educate.pojo.type.GradeType;
 import demo.toyParts.educate.pojo.type.MathBaseSymbolType;
 import demo.toyParts.educate.service.ExerciesMathCommonService;
@@ -30,7 +29,6 @@ public class ExerciesServiceMathG2_1Impl extends ExerciesMathCommonService imple
 	private static final Integer MAX_NUM = 99;
 	private static final Integer MIN_NUM = 11;
 	private static final GradeType gradeType = GradeType.grade2_1;
-	private static final ExerciesSubjectType subjectType = ExerciesSubjectType.math;
 	
 	@Override
 	public ModelAndView getExercies() {
@@ -43,8 +41,21 @@ public class ExerciesServiceMathG2_1Impl extends ExerciesMathCommonService imple
 
 	@Override
 	public ExerciesBuildResult buildExercies() {
+		Long userId = baseUtilCustom.getUserId();
 		ExerciesBuildResult r = new ExerciesBuildResult();
-		MathExerciesDTO exerciesDTO = exerciesGenerator();
+		MathExerciesDTO exerciesDTO = null;
+		if(userId != null) {
+			exerciesDTO = reloadExercies(gradeType, userId);
+			if(exerciesDTO != null) {
+				r.setGradeType(exerciesDTO.getGradeType());
+				r.setSubjectType(exerciesDTO.getSubjectType());
+				r.setQuestionList(exerciesDTO.getQuestionList());
+				r.setIsSuccess();
+				return r;
+			}
+		}
+		
+		exerciesDTO = exerciesGenerator();
 		ExerciesFileSaveResult saveResult = saveExerciesFile(exerciesDTO);
 		
 		if(saveResult.isFail()) {
@@ -76,7 +87,7 @@ public class ExerciesServiceMathG2_1Impl extends ExerciesMathCommonService imple
 		MathExerciesDTO exerciesDTO = new MathExerciesDTO(); 
 		exerciesDTO.setExerciesID(snowFlake.getNextId());
 		exerciesDTO.setUserId(baseUtilCustom.getUserId());
-		exerciesDTO.setSubjectType(subjectType);
+		exerciesDTO.setSubjectType(SUBJECT_TYPE);
 		exerciesDTO.setQuestionList(new ArrayList<>());
 		exerciesDTO.setGradeType(gradeType);
 		

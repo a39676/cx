@@ -47,6 +47,11 @@ public class ExerciesServiceMathG2_1Impl extends ExerciesMathCommonService imple
 		if(userId != null) {
 			exerciesDTO = reloadExercies(gradeType, userId);
 			if(exerciesDTO != null) {
+				try {
+					r.setExerciesPK(URLEncoder.encode(systemConstantService.encryptId(exerciesDTO.getExerciesID()), StandardCharsets.UTF_8.toString()));
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
 				r.setGradeType(exerciesDTO.getGradeType());
 				r.setSubjectType(exerciesDTO.getSubjectType());
 				r.setQuestionList(exerciesDTO.getQuestionList());
@@ -94,7 +99,8 @@ public class ExerciesServiceMathG2_1Impl extends ExerciesMathCommonService imple
 		MathQuestionBaseDTO question = null;
 		for(int questionNumber = 1; questionNumber <= optionService.getQuestionListSize(); questionNumber++) {
 			question = createQuestion();
-			while(question.getStandardAnswer().compareTo(new BigDecimal(MAX_CALCULATE)) > 0) {
+			while(question.getStandardAnswer().compareTo(new BigDecimal(MAX_CALCULATE)) > 0 || 
+					question.getStandardAnswer().compareTo(BigDecimal.ZERO) < 0) {
 				question = createQuestion();
 			}
 			question.setQuestionNumber(questionNumber);

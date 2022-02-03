@@ -47,6 +47,11 @@ public class ExerciesServiceMathG1_1Impl extends ExerciesMathCommonService imple
 		if(userId != null) {
 			exerciesDTO = reloadExercies(gradeType, userId);
 			if(exerciesDTO != null) {
+				try {
+					r.setExerciesPK(URLEncoder.encode(systemConstantService.encryptId(exerciesDTO.getExerciesID()), StandardCharsets.UTF_8.toString()));
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
 				r.setGradeType(exerciesDTO.getGradeType());
 				r.setSubjectType(exerciesDTO.getSubjectType());
 				r.setQuestionList(exerciesDTO.getQuestionList());
@@ -94,6 +99,9 @@ public class ExerciesServiceMathG1_1Impl extends ExerciesMathCommonService imple
 		MathQuestionBaseDTO question = null;
 		for(int questionNumber = 1; questionNumber <= optionService.getQuestionListSize(); questionNumber++) {
 			question = createQuestion();
+			while(question.getStandardAnswer().compareTo(BigDecimal.ZERO) < 0) {
+				question = createQuestion();
+			}
 			question.setQuestionNumber(questionNumber);
 			exerciesDTO.getQuestionList().add(question);
 		}
@@ -109,37 +117,38 @@ public class ExerciesServiceMathG1_1Impl extends ExerciesMathCommonService imple
 		int num2 = t.nextInt(MIN_NUM, MAX_NUM + 1);
 		MathBaseSymbolType mathSymbolType1 = getRandomMathBaseSymbolType(MathBaseSymbolType.addition, MathBaseSymbolType.subtraction);
 		
-		String exp = String.valueOf(num1 + mathSymbolType1.getCodeSymbol() + num2);
-		Expression expression = new ExpressionBuilder(exp).build();
-		double result = expression.evaluate();
+		String exp1 = String.valueOf(num1 + mathSymbolType1.getCodeSymbol() + num2);
+		Expression expression1 = new ExpressionBuilder(exp1).build();
+		double result1 = expression1.evaluate();
 		
-		if(result < 0) {
-			exp = String.valueOf(num2 + mathSymbolType1.getCodeSymbol() + num1);
+		if(result1 < 0) {
+			exp1 = String.valueOf(num2 + mathSymbolType1.getCodeSymbol() + num1);
 		}
+		expression1 = new ExpressionBuilder(exp1).build();
+		result1 = expression1.evaluate();
 		
 		boolean threeNum = (0 == t.nextInt(0, 1 + 1));
 		if(!threeNum) {
-			q.setExpression(exp);
-			q.setStandardAnswer(new BigDecimal(result));
+			q.setExpression(exp1);
+			q.setStandardAnswer(new BigDecimal(result1));
 			return q;
 		}
 		
 		int num3 = t.nextInt(MIN_NUM, MAX_NUM + 1);
 		MathBaseSymbolType mathSymbolType2 = getRandomMathBaseSymbolType(MathBaseSymbolType.addition, MathBaseSymbolType.subtraction);
 		
-		exp = String.valueOf(num1 + mathSymbolType1.getCodeSymbol() + num2);
-		expression = new ExpressionBuilder(exp).build();
-		result = expression.evaluate();
-		if(result < 0) {
-			exp = String.valueOf(num3 + mathSymbolType2.getCodeSymbol() + num2 + mathSymbolType1.getCodeSymbol() + num1);
+		String exp2 = String.valueOf(exp1 + mathSymbolType2.getCodeSymbol() + num3);
+		Expression expression2 = new ExpressionBuilder(exp2).build();
+		double result2 = expression2.evaluate();
+		if(result2 < 0) {
+			exp2 = String.valueOf(num3 + mathSymbolType2.getCodeSymbol() + exp1);
+			expression2 = new ExpressionBuilder(exp2).build();
+			result2 = expression2.evaluate();
 		}
 		
-		expression = new ExpressionBuilder(exp).build();
-		result = expression.evaluate();
-		
-		exp = replaceCodingSymbolToMathSymbol(exp);
-		q.setExpression(exp);
-		q.setStandardAnswer(new BigDecimal(result));
+		exp2 = replaceCodingSymbolToMathSymbol(exp2);
+		q.setExpression(exp2);
+		q.setStandardAnswer(new BigDecimal(result2));
 		return q;
 	}
 	

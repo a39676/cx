@@ -1,5 +1,7 @@
 package demo.toyParts.educate.service.impl;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -80,23 +82,38 @@ public class ExerciesHomepageServiceImpl extends EducateCommonService implements
 		
 		dto.setSubjectType(subject);
 		for(StudentExerciesHistory po : exerciesHistoryPOList) {
-			if(po.getCreateTime().isAfter(sevenDayStart)) {
-				if(po.getScore() != null) {
-					sevenDayScoreTotal = sevenDayScoreTotal + po.getScore().doubleValue();
+			if(po.getSubjectType().equals(subject.getCode().longValue())) {
+				if(po.getCreateTime().isAfter(sevenDayStart)) {
+					if(po.getScore() != null) {
+						sevenDayScoreTotal = sevenDayScoreTotal + po.getScore().doubleValue();
+					}
+					sevenDayCounting++;
 				}
-				sevenDayCounting++;
-			}
-			if(po.getScore() != null) {
-				thirtyDayScoreTotal = thirtyDayScoreTotal + po.getScore().doubleValue();
-			}
-			thirtyDayCounting++;
-			if(po.getScore() != null) {
-				dto.setLastScore(po.getScore().doubleValue());
+				if(po.getScore() != null) {
+					thirtyDayScoreTotal = thirtyDayScoreTotal + po.getScore().doubleValue();
+				}
+				thirtyDayCounting++;
+				if(po.getScore() != null) {
+					dto.setLastScore(po.getScore().doubleValue());
+				}
 			}
 		}
 		
-		dto.setAvgScoreSevenDays(sevenDayScoreTotal / 7);
-		dto.setAvgScoreThirtyDays(thirtyDayScoreTotal / 30);
+		if(sevenDayCounting == 0) {
+			dto.setAvgScoreSevenDays(0D);
+		} else {
+			dto.setAvgScoreSevenDays(BigDecimal.valueOf(sevenDayScoreTotal / sevenDayCounting)
+				    .setScale(3, RoundingMode.HALF_UP)
+				    .doubleValue());
+			
+		}
+		if(thirtyDayCounting == 0) {
+			dto.setAvgScoreThirtyDays(0D);
+		} else {
+			dto.setAvgScoreThirtyDays(BigDecimal.valueOf(thirtyDayScoreTotal / thirtyDayCounting)
+				    .setScale(3, RoundingMode.HALF_UP)
+				    .doubleValue());
+		}
 		
 		dto.setExerciesCountSevenDays(sevenDayCounting);
 		dto.setExerciesCountThirtyDays(thirtyDayCounting);

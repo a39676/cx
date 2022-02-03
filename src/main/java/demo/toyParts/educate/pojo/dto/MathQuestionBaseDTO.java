@@ -2,19 +2,11 @@ package demo.toyParts.educate.pojo.dto;
 
 import java.math.BigDecimal;
 
-import demo.toyParts.educate.pojo.type.MathBaseSymbolType;
-
 public class MathQuestionBaseDTO {
 
 	private Integer questionNumber;
 
-	private boolean hasBrackets = false;
-
-	private BigDecimal num1;
-
-	private BigDecimal num2;
-
-	private MathBaseSymbolType mathBaseSymbolType;
+	private String expression;
 
 	private BigDecimal standardAnswer;
 
@@ -26,36 +18,12 @@ public class MathQuestionBaseDTO {
 		this.questionNumber = questionNumber;
 	}
 
-	public boolean getHasBrackets() {
-		return hasBrackets;
+	public String getExpression() {
+		return expression;
 	}
 
-	public void setHasBrackets(boolean hasBrackets) {
-		this.hasBrackets = hasBrackets;
-	}
-
-	public BigDecimal getNum1() {
-		return num1;
-	}
-
-	public void setNum1(BigDecimal num1) {
-		this.num1 = num1;
-	}
-
-	public BigDecimal getNum2() {
-		return num2;
-	}
-
-	public void setNum2(BigDecimal num2) {
-		this.num2 = num2;
-	}
-
-	public MathBaseSymbolType getMathBaseSymbolType() {
-		return mathBaseSymbolType;
-	}
-
-	public void setMathBaseSymbolType(MathBaseSymbolType mathBaseSymbolType) {
-		this.mathBaseSymbolType = mathBaseSymbolType;
+	public void setExpression(String expression) {
+		this.expression = expression;
 	}
 
 	public BigDecimal getStandardAnswer() {
@@ -68,9 +36,8 @@ public class MathQuestionBaseDTO {
 
 	@Override
 	public String toString() {
-		return "MathQuestionBaseDTO [questionNumber=" + questionNumber + ", hasBrackets=" + hasBrackets + ", num1="
-				+ num1 + ", num2=" + num2 + ", mathBaseSymbolType=" + mathBaseSymbolType + ", standardAnswer="
-				+ standardAnswer + "]";
+		return "MathQuestionBaseDTO [questionNumber=" + questionNumber + ", expression=" + expression
+				+ ", standardAnswer=" + standardAnswer + "]";
 	}
 
 }

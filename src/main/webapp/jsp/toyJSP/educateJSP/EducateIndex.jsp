@@ -18,9 +18,23 @@
         <span>学期: ${gradeType.name}</span>
         <br>
         <span>积分: ${points}</span>
-        <br>
-          ${exerciesData}
       </div>
+    </div>
+    <hr>
+    <div class="row">
+      ${exerciesData}
+      <c:forEach items="${exerciesData.subjectDataList}" var="subjectData">
+        <div class="col-md-4">
+          <span>${subjectData.subjectType.cnName}</span><br>
+          <span>最新分数${subjectData.lastScore}</span><br>
+          <span>最近7日做了 ${subjectData.exerciesCountSevenDays}份习题</span><br>
+          <span>最近7日总分数: ${subjectData.totalScoreSevenDays}</span><br>
+          <span>最近7日习题平均分: ${subjectData.avgScoreSevenDays}</span><br>
+          <span>最近30日做了 ${subjectData.exerciesCountThirtyDays}份习题</span><br>
+          <span>最近30日总分数: ${subjectData.totalScoreThirtyDays}</span><br>
+          <span>最近30日习题平均分: ${subjectData.avgScoreThirtyDays}</span><br>
+        </div>
+      </c:forEach>
     </div>
     <hr>
     <div class="row">

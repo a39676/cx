@@ -13,6 +13,7 @@ import demo.toyParts.educate.pojo.constant.EducateUrl;
 import demo.toyParts.educate.pojo.type.ExerciesSubjectType;
 import demo.toyParts.educate.pojo.type.GradeType;
 import demo.toyParts.educate.service.ExerciesServiceMathG1_1;
+import demo.toyParts.educate.service.ExerciesServiceMathG2_1;
 
 @Controller
 @RequestMapping(value = EducateUrl.ROOT)
@@ -20,6 +21,8 @@ public class ExerciesQuestionController extends CommonController {
 
 	@Autowired
 	private ExerciesServiceMathG1_1 g1_1_math;
+	@Autowired
+	private ExerciesServiceMathG2_1 g2_1_math;
 
 	@GetMapping(value = EducateUrl.QUESTION)
 	@ResponseBody
@@ -40,7 +43,7 @@ public class ExerciesQuestionController extends CommonController {
 			if (ExerciesSubjectType.chinese.equals(subjectType)) {
 
 			} else if (ExerciesSubjectType.math.equals(subjectType)) {
-
+				return g2_1_math.getExercies();
 			} else if (ExerciesSubjectType.english.equals(subjectType)) {
 
 			}
@@ -70,5 +73,11 @@ public class ExerciesQuestionController extends CommonController {
 	@ResponseBody
 	public ModelAndView getG1_1_math_exercies() {
 		return g1_1_math.getExercies();
+	}
+	
+	@GetMapping(value = "/getG2_1_math")
+	@ResponseBody
+	public ModelAndView getG2_1_math_exercies() {
+		return g2_1_math.getExercies();
 	}
 }

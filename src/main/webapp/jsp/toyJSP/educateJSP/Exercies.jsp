@@ -25,15 +25,7 @@
         <c:forEach items="${exercies.questionList}" var="question">
           <%-- ${question}<br> --%>
           <span class="question" questionNumber="${question.questionNumber}">
-            ${question.num1}
-            <c:if test="${question.mathBaseSymbolType.code == 1}">
-              +
-            </c:if>
-            <c:if test="${question.mathBaseSymbolType.code == 2}">
-              -
-            </c:if>
-            ${question.num2}
-            =
+            ${question.expression} =
           </span>
           <input type="number" class="answerInput" name="" value="" questionNumber="${question.questionNumber}">
           <br>
@@ -44,6 +36,7 @@
     <div class="row">
       <div class="col-md-12">
         <button type="button" name="button" id="submitAnswer">提交</button>
+        <button type="button" name="button" id="reload" style="display: none;">再做一份</button>
       </div>
     </div>
 
@@ -62,6 +55,10 @@
   <%@ include file="../../baseElementJSP/normalJSPart.jsp" %>
   <script type="text/javascript">
     $(document).ready(function() {
+
+      $("#reload").click(function () {
+        location.reload();
+      });
 
       $("#submitAnswer").click(function () {
         var url = "/educate/answerSubmit";
@@ -106,6 +103,7 @@
             wrongNumberList.forEach(function (element) {
               $(".answerInput[questionNumber='"+element+"']").css('border-color', 'red');
             });
+            $("#reload").show();
           },
           error: function(datas) {
             $("#resultSpan").text(datas.message);

@@ -22,7 +22,6 @@
     </div>
     <hr>
     <div class="row">
-      ${exerciesData}
       <c:forEach items="${exerciesData.subjectDataList}" var="subjectData">
         <div class="col-md-4">
           <span>${subjectData.subjectType.cnName}</span><br>

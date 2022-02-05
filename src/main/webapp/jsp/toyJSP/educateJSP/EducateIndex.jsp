@@ -68,10 +68,8 @@
   <%@ include file="../../baseElementJSP/normalJSPart.jsp" %>
   <script type="text/javascript">
     $(document).ready(function() {
-      console.log("started");
 
       $("#startExercies").click(function () {
-        console.log("going");
         var url = "/educate/question";
 
         var gradeType = $("#selectGrade option:selected").val();
@@ -79,11 +77,9 @@
 
         url = url + "?" + "grade=" + gradeType + "&subject=" + subjectType;
 
-        console.log("url: " + url);
         window.open(url, '_blank');
       });
 
-      console.log("end");
     })
   </script>
 </body>

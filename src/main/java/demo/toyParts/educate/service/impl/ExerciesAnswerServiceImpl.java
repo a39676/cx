@@ -100,10 +100,14 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 			}
 		}
 
+		// 做以往的学期题目, 每学期扣1随机积分上限
+		randomPointMax = randomPointMax
+				.subtract(new BigDecimal(studentGrade.getCode() - exerciesDTO.getGradeType().getCode()));
+		
 		// 按错题比例扣减随机积分上限
 		if (!answerResult.getWrongNumberList().isEmpty()) {
-			
 			if(optionService.getQuestionListSize().equals(answerResult.getWrongNumberList().size())) {
+				// 全错 失去保底一分
 				answerResult.setPoints(0);
 				return answerResult;
 			} else {
@@ -111,10 +115,6 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 				randomPointMax = randomPointMax.multiply(BigDecimal.ONE.subtract(new BigDecimal(coefficient)));
 			}
 		}
-
-		// 做以往的学期题目, 每学期扣1随机积分上限
-		randomPointMax = randomPointMax
-				.subtract(new BigDecimal(studentGrade.getCode() - exerciesDTO.getGradeType().getCode()));
 
 		// 最少获得1分
 		if (randomPointMax.compareTo(optionService.getRandomPointMin()) <= 0) {

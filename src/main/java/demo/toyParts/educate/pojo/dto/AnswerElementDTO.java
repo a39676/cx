@@ -1,10 +1,13 @@
 package demo.toyParts.educate.pojo.dto;
 
-public class AnswerSubDTO {
+import java.util.ArrayList;
+import java.util.List;
+
+public class AnswerElementDTO {
 
 	private Integer questionNumber;
 
-	private String answer;
+	private List<String> answer = new ArrayList<>();
 
 	public Integer getQuestionNumber() {
 		return questionNumber;
@@ -14,11 +17,11 @@ public class AnswerSubDTO {
 		this.questionNumber = questionNumber;
 	}
 
-	public String getAnswer() {
+	public List<String> getAnswer() {
 		return answer;
 	}
 
-	public void setAnswer(String answer) {
+	public void setAnswer(List<String> answer) {
 		this.answer = answer;
 	}
 

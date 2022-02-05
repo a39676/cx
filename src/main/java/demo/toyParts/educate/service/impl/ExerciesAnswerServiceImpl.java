@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
-import demo.toyParts.educate.pojo.dto.AnswerDTO;
+import demo.toyParts.educate.pojo.dto.ExerciesAnswerDTO;
 import demo.toyParts.educate.pojo.dto.MathExerciesDTO;
 import demo.toyParts.educate.pojo.po.StudentDetail;
 import demo.toyParts.educate.pojo.po.StudentExerciesHistory;
@@ -32,7 +32,7 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 	private FileUtilCustom ioUtil;
 
 	@Override
-	public ExerciesAnswerMatchResult answerSubmit(AnswerDTO dto) {
+	public ExerciesAnswerMatchResult answerSubmit(ExerciesAnswerDTO dto) {
 		ExerciesAnswerMatchResult answerResult = new ExerciesAnswerMatchResult();
 		String privateKey = URLDecoder.decode(dto.getPk(), StandardCharsets.UTF_8);
 		Long exerciesId = systemConstantService.decryptPrivateKey(privateKey);
@@ -128,23 +128,24 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 		return answerResult;
 	}
 
-	private ExerciesAnswerMatchResult matchAnswer(AnswerDTO dto, MathExerciesDTO exerciesDTO) {
+	private ExerciesAnswerMatchResult matchAnswer(ExerciesAnswerDTO dto, MathExerciesDTO exerciesDTO) {
 		ExerciesAnswerMatchResult r = new ExerciesAnswerMatchResult();
 
 		BigDecimal totalScore = BigDecimal.ZERO;
 		BigDecimal maxScore = optionService.getMaxScore();
 		BigDecimal scoreOfSubQuestion = maxScore.divide(new BigDecimal(exerciesDTO.getQuestionList().size()));
 
-		String gavenAnswer = null;
-		String standarAnswer = null;
+		List<String> gavenAnswer = null;
+		List<String> standarAnswer = null;
 
 		for (int i = 0; i < exerciesDTO.getQuestionList().size(); i++) {
 			gavenAnswer = dto.getAnswerList().get(i).getAnswer();
-			standarAnswer = String.valueOf(exerciesDTO.getQuestionList().get(i).getStandardAnswer());
+			standarAnswer = exerciesDTO.getQuestionList().get(i).getStandardAnswer();
 			if (gavenAnswer.equals(standarAnswer)) {
 				totalScore = totalScore.add(scoreOfSubQuestion);
 			} else {
 				r.getWrongNumberList().add(dto.getAnswerList().get(i).getQuestionNumber());
+				r.getAnswerMap().put(dto.getAnswerList().get(i).getQuestionNumber(), standarAnswer);
 			}
 		}
 

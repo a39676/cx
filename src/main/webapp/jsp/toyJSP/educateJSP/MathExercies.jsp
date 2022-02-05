@@ -26,10 +26,12 @@
           <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
             ${question}<br>
           </sec:authorize>
+          <span>(${question.questionNumber})  </span>
           <span class="question" questionNumber="${question.questionNumber}">
             ${question.expression} =
           </span>
-          <input type="number" class="answerInput" name="" value="" questionNumber="${question.questionNumber}">
+          <input type="number" class="answerInput" name="" value="" questionNumber="${question.questionNumber}" style="width:80px;">
+          <span questionNumber="${question.questionNumber}" class="standarAnswer"></span>
           <br>
         </c:forEach>
       </div>
@@ -67,19 +69,24 @@
 
         var detail = $("#detail");
         var pk = detail.attr("pk");
-        var answerSourceList = $(".answerInput");
-        var subAnswer = {}
-        var answerResultList = new Array();
-        answerSourceList.each(function(index,element) {
-          subAnswer = {};
-          subAnswer.questionNumber = $(this).attr("questionnumber");
-          subAnswer.answer = $(this).val();
-          answerResultList.push(subAnswer);
-        });
+
+        var exerciesAnswerDTO = new Array();
+        var answerElementDTO = {};
+        for (let i = 1; i <= ${questionListSize}; i++) {
+          var answerList = new Array();
+          var answer = $(".answerInput[questionNumber='"+ i +"']");
+          answer.each(function(index,element) {
+            answerList.push($(this).val());
+          });
+          answerElementDTO = {};
+          answerElementDTO.questionNumber = i;
+          answerElementDTO.answer = answerList;
+          exerciesAnswerDTO.push(answerElementDTO);
+        }
 
         var jsonOutput = {
           "pk":pk,
-          "answerList":answerResultList,
+          "answerList":exerciesAnswerDTO,
         };
 
         $.ajax({
@@ -105,6 +112,12 @@
             wrongNumberList.forEach(function (element) {
               $(".answerInput[questionNumber='"+element+"']").css('border-color', 'red');
             });
+
+            var answerMap = datas.answerMap;
+            Object.keys(answerMap).forEach(function (key) {
+              $(".standarAnswer[questionNumber='"+key+"']").text(answerMap[key]);
+            });
+
             $("#reload").show();
           },
           error: function(datas) {
@@ -112,6 +125,24 @@
           }
         });
       });
+
+      var intervalId = window.setInterval(function(){
+        $.ajax({
+          type : "GET",
+          async : true,
+          url : "/1jlbdmb",
+          data: "",
+          cache : false,
+          timeout:50000,
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          success:function(datas){
+          },
+          error: function(datas) {
+          }
+        });
+      }, 15000);
     })
   </script>
 </body>

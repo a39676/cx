@@ -2,11 +2,11 @@ package demo.toyParts.educate.pojo.dto;
 
 import java.util.List;
 
-public class AnswerDTO {
+public class ExerciesAnswerDTO {
 
 	private String pk;
 
-	private List<AnswerSubDTO> answerList;
+	private List<AnswerElementDTO> answerList;
 
 	public String getPk() {
 		return pk;
@@ -16,11 +16,11 @@ public class AnswerDTO {
 		this.pk = pk;
 	}
 
-	public List<AnswerSubDTO> getAnswerList() {
+	public List<AnswerElementDTO> getAnswerList() {
 		return answerList;
 	}
 
-	public void setAnswerList(List<AnswerSubDTO> answerList) {
+	public void setAnswerList(List<AnswerElementDTO> answerList) {
 		this.answerList = answerList;
 	}
 

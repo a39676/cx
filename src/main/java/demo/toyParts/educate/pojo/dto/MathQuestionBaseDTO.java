@@ -1,6 +1,7 @@
 package demo.toyParts.educate.pojo.dto;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MathQuestionBaseDTO {
 
@@ -8,7 +9,7 @@ public class MathQuestionBaseDTO {
 
 	private String expression;
 
-	private BigDecimal standardAnswer;
+	private List<String> standardAnswer = new ArrayList<>();
 
 	public Integer getQuestionNumber() {
 		return questionNumber;
@@ -26,11 +27,11 @@ public class MathQuestionBaseDTO {
 		this.expression = expression;
 	}
 
-	public BigDecimal getStandardAnswer() {
+	public List<String> getStandardAnswer() {
 		return standardAnswer;
 	}
 
-	public void setStandardAnswer(BigDecimal standardAnswer) {
+	public void setStandardAnswer(List<String> standardAnswer) {
 		this.standardAnswer = standardAnswer;
 	}
 

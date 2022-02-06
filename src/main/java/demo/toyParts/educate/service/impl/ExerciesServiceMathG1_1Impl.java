@@ -39,7 +39,7 @@ public class ExerciesServiceMathG1_1Impl extends ExerciesMathCommonService imple
 				exerciesDTO = exerciesGenerator();
 			}
 		}
-		return buildExercies(exerciesDTO, true);
+		return buildExercies(exerciesDTO, false);
 	}
 
 	private MathExerciesDTO exerciesGenerator() {

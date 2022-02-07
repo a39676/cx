@@ -30,18 +30,15 @@ public class ExerciesServiceMathG1_1Impl extends ExerciesMathCommonService imple
 
 	@Override
 	public ExerciesBuildResult buildExercies() {
-		Long userId = baseUtilCustom.getUserId();
-		MathExerciesDTO exerciesDTO = null;
+		MathExerciesDTO exerciesDTO = reloadExercies(GRADE_TYPE);
 
-		if (userId != null) {
-			exerciesDTO = reloadExercies(GRADE_TYPE, userId);
-			if (exerciesDTO == null) {
-				exerciesDTO = exerciesGenerator();
-			}
+		boolean newExerciesFlag = (exerciesDTO == null);
+		if (newExerciesFlag) {
+			exerciesDTO = exerciesGenerator();
 		}
-		return buildExercies(exerciesDTO, false);
+		return buildExercies(exerciesDTO, newExerciesFlag);
 	}
-
+	
 	private MathExerciesDTO exerciesGenerator() {
 		MathExerciesDTO exerciesDTO = new MathExerciesDTO();
 		exerciesDTO.setExerciesID(snowFlake.getNextId());

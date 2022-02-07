@@ -74,7 +74,11 @@ public abstract class ExerciesMathCommonService extends EducateCommonService {
 		return exp;
 	}
 	
-	protected MathExerciesDTO reloadExercies(GradeType gradeType, Long userId) {
+	protected MathExerciesDTO reloadExercies(GradeType gradeType) {
+		Long userId = baseUtilCustom.getUserId();
+		if(userId == null) {
+			return null;
+		}
 		StudentExerciesHistory lastExercies = reloadExercies(gradeType, SUBJECT_TYPE, userId);
 		if(lastExercies == null) {
 			return null;

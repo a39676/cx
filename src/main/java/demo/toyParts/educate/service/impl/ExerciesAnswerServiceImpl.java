@@ -38,6 +38,10 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 		Long exerciesId = systemConstantService.decryptPrivateKey(privateKey);
 
 		StudentExerciesHistory exerciesPO = exerciesHistoryMapper.selectByPrimaryKey(exerciesId);
+		if (exerciesPO == null) {
+			answerResult.setMessage("考卷已过期, 请做另一份, 如有疑问, 请联系管理员.");
+			return answerResult;
+		}
 		if (exerciesPO.getCompeletionTime() != null) {
 			answerResult.setMessage("已经提交过答案,无法重复提交");
 			return answerResult;
@@ -77,7 +81,8 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 		LocalDateTime now = LocalDateTime.now();
 		if (now.getHour() >= optionService.getDailyMaxHour() || now.getHour() <= optionService.getDailyMinHour()) {
 			answerResult.setPoints(0);
-			answerResult.addMessage("晚上 " + optionService.getDailyMaxHour() + "点, 至次日 " + optionService.getDailyMinHour() + "点, 是休息时间, 请注意劳逸结合");
+			answerResult.addMessage("晚上 " + optionService.getDailyMaxHour() + "点, 至次日 "
+					+ optionService.getDailyMinHour() + "点, 是休息时间, 请注意劳逸结合");
 			return answerResult;
 		}
 
@@ -103,15 +108,16 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 		// 做以往的学期题目, 每学期扣1随机积分上限
 		randomPointMax = randomPointMax
 				.subtract(new BigDecimal(studentGrade.getCode() - exerciesDTO.getGradeType().getCode()));
-		
+
 		// 按错题比例扣减随机积分上限
 		if (!answerResult.getWrongNumberList().isEmpty()) {
-			if(optionService.getQuestionListSize().equals(answerResult.getWrongNumberList().size())) {
+			if (optionService.getQuestionListSize().equals(answerResult.getWrongNumberList().size())) {
 				// 全错 失去保底一分
 				answerResult.setPoints(0);
 				return answerResult;
 			} else {
-				Double coefficient = Double.valueOf(answerResult.getWrongNumberList().size()) / Double.valueOf(optionService.getQuestionListSize());
+				Double coefficient = Double.valueOf(answerResult.getWrongNumberList().size())
+						/ Double.valueOf(optionService.getQuestionListSize());
 				randomPointMax = randomPointMax.multiply(BigDecimal.ONE.subtract(new BigDecimal(coefficient)));
 			}
 		}
@@ -159,7 +165,8 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 		example.createCriteria().andUserIdEqualTo(userId)
 				.andCreateTimeBetween(LocalDateTime.now().with(LocalTime.MIN), LocalDateTime.now().with(LocalTime.MAX))
 				.andGradeTypeEqualTo(gradeType.getCode().longValue()).andScoreEqualTo(optionService.getMaxScore())
-				.andSubjectTypeEqualTo(subjectType.getCode().longValue()).andPointsEqualTo(optionService.getRandomPointMax());
+				.andSubjectTypeEqualTo(subjectType.getCode().longValue())
+				.andPointsEqualTo(optionService.getRandomPointMax());
 		List<StudentExerciesHistory> poList = exerciesHistoryMapper.selectByExample(example);
 		return poList != null && !poList.isEmpty();
 	}

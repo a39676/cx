@@ -13,6 +13,12 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12" id="detail">
+        leaderboard
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-12" id="detail">
         <span>昵称: ${nickname}</span>
         <br>
         <span>学期: ${gradeType.name}</span>
@@ -59,7 +65,7 @@
     <hr>
     <div class="row">
       <div class="col-md-12">
-        <button type="button" name="button" id="startExercies">开始习题</button>
+        <a id="startExerciesLink" href="#" target="_blank">开始习题</a>
       </div>
     </div>
   </div>
@@ -68,8 +74,14 @@
   <%@ include file="../../baseElementJSP/normalJSPart.jsp" %>
   <script type="text/javascript">
     $(document).ready(function() {
+      $("#selectGrade").change(function () {
+        changeStartExerciesLink();
+      });
+      $("#selectSubject").change(function () {
+        changeStartExerciesLink();
+      });
 
-      $("#startExercies").click(function () {
+      function changeStartExerciesLink() {
         var url = "/educate/question";
 
         var gradeType = $("#selectGrade option:selected").val();
@@ -77,9 +89,9 @@
 
         url = url + "?" + "grade=" + gradeType + "&subject=" + subjectType;
 
-        window.open(url, '_blank');
-      });
-
+        var startExerciesLink = $("#startExerciesLink");
+        startExerciesLink.attr("href", url);
+      }
     })
   </script>
 </body>

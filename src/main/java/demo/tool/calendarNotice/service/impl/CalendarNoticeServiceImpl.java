@@ -373,6 +373,8 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 		LocalDateTime nextPreNoticeTime = getNextLocalDateTime(preNoticePo.getNoticeTime(), preNoticeTimeUnitType,
 				preNoticePo.getRepeatTimeRange());
 
+		preNoticePo.setValidTime(po.getNoticeTime());
+		
 		// 超出本次提前通知的有效时间
 		if (nextPreNoticeTime.isAfter(po.getNoticeTime())) {
 			// 如果是重复通知
@@ -384,8 +386,8 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 				if (!po.getIsDelete() && (po.getValidTime() == null || !nextNoticeTime.isAfter(po.getValidTime()))) {
 					nextPreNoticeTime = getPreNoticeTime(nextNoticeTime, preNoticeTimeUnitType,
 							preNoticePo.getRepeatTimeRange(), preNoticePo.getRepeatCount());
-					preNoticePo.setValidTime(nextNoticeTime);
 					preNoticePo.setNoticeTime(nextPreNoticeTime);
+					preNoticePo.setValidTime(nextNoticeTime);
 					preNoticeMapper.updateByPrimaryKeySelective(preNoticePo);
 					return;
 					// 重复通知无需继续

@@ -1,18 +1,13 @@
 package demo.base.user.mapper;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
-import demo.base.user.pojo.dto.BatchInsertUserIpDTO;
-import demo.base.user.pojo.dto.FindLastUserIpDTO;
-import demo.base.user.pojo.dto.UserIpDeleteDTO;
 import demo.base.user.pojo.po.UserIp;
 import demo.base.user.pojo.po.UserIpExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
 
 public interface UserIpMapper {
-
-	long countByExample(UserIpExample example);
+    long countByExample(UserIpExample example);
 
     int deleteByExample(UserIpExample example);
 
@@ -20,15 +15,13 @@ public interface UserIpMapper {
 
     int insertSelective(UserIp record);
 
+    List<UserIp> selectByExampleWithRowbounds(UserIpExample example, RowBounds rowBounds);
+
     List<UserIp> selectByExample(UserIpExample example);
 
     int updateByExampleSelective(@Param("record") UserIp record, @Param("example") UserIpExample example);
 
     int updateByExample(@Param("record") UserIp record, @Param("example") UserIpExample example);
-    
-    int deleteRecord(UserIpDeleteDTO param);
-	
-    int batchInsert(BatchInsertUserIpDTO dto);
-    
-    List<UserIp> findLastUserIp(FindLastUserIpDTO dto);
+
+	void batchInsert(List<UserIp> poList);
 }

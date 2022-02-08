@@ -43,27 +43,27 @@ public class TestController2 extends CommonController {
 				{"testKey":"tv"}
 				""";
 	}
-	
+
 	@GetMapping(value = "/t2")
 	@ResponseBody
 	public String t2() {
 		return "{\"k\":\"v\"}";
 	}
-	
+
 	@Autowired
 	protected CryptoCoinConstantService constantService;
-	
+
 	@GetMapping(value = "/t3")
 	@ResponseBody
 	public LocalDateTime t3() {
 		constantService.setBinanceWebSocketLastActiveTime(LocalDateTime.now());
 		return constantService.getBinanceWebSocketLastActiveTime();
 	}
-	
+
 	@GetMapping(value = "/t4")
 	@ResponseBody
 	public String t4() {
 		return "{\"k\":\"v\"}";
 	}
-	
+
 }

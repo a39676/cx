@@ -92,6 +92,8 @@
         var startExerciesLink = $("#startExerciesLink");
         startExerciesLink.attr("href", url);
       }
+
+      changeStartExerciesLink();
     })
   </script>
 </body>

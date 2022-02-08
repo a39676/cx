@@ -16,4 +16,6 @@ public interface ExceptionService {
 
 	ModelAndView handle503Exception(HttpServletRequest request, Exception e);
 
+	void handleSQLErrorException(HttpServletRequest request, Exception e);
+
 }

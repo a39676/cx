@@ -51,7 +51,7 @@ optionFilePath:
   scheduleClawing: "/home/u2/cx/optionFile/scheduleClawing/option.json"
   telegram: "/home/u2/cx/optionFile/telegram/option.json"
   tool: "/home/u2/cx/optionFile/tool/option.json"
-  exercies: "/home/u2/cx/optionFile/exercies/option.json"
+  educate: "/home/u2/cx/optionFile/educate/option.json"
   
     
 logging:

@@ -17,7 +17,7 @@ import toolPack.ioHandle.FileUtilCustom;
 @Service
 public class EducateOptionService extends CommonService {
 
-	@Value("${optionFilePath.exercies}")
+	@Value("${optionFilePath.educate}")
 	private String optionFilePath;
 
 	private String exerciesStorePrefixPath;

@@ -12,6 +12,7 @@ import demo.common.controller.CommonController;
 import demo.finance.cryptoCoin.common.service.CryptoCoinConstantService;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.dto.TestDTO;
+import demo.tool.calendarNotice.service.CalendarNoticeService;
 import net.sf.json.JSONObject;
 
 @Controller
@@ -66,4 +67,12 @@ public class TestController2 extends CommonController {
 		return "{\"k\":\"v\"}";
 	}
 
+	@Autowired
+	private CalendarNoticeService calendarNoticeService;
+	
+	@GetMapping(value = "/t5")
+	@ResponseBody
+	public void findAndSendNotice() {
+		calendarNoticeService.findAndSendNotice();
+	}
 }

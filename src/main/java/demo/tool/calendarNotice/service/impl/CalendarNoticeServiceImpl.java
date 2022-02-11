@@ -304,8 +304,23 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 				&& (preNoticeList == null || preNoticeList.isEmpty())) {
 			return;
 		}
-
+		
+		CalendarNotice notice = null;
 		TelegramMessageDTO dto = null;
+		
+		for (CalendarPreNotice preNoticePo : preNoticeList) {
+			notice = mapper.selectByPrimaryKey(preNoticePo.getBindNoticeId());
+			dto = new TelegramMessageDTO();
+			dto.setId(TelegramStaticChatID.MY_ID);
+			dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
+			dto.setMsg("PreNotice: " + notice.getNoticeContent() + " at: " + notice.getNoticeTime() + " "
+					+ hostnameService.findZhang() + CalendarNoticeUrl.ROOT + CalendarNoticeUrl.STOP_PRE_NOTICE + "?pk="
+					+ URLEncoder.encode(systemConstantService.encryptId(preNoticePo.getId()), StandardCharsets.UTF_8));
+			telegramMessageAckProducer.send(dto);
+
+			updatePreNoticeStatus(preNoticePo, notice);
+		}
+		
 		for (CalendarNotice po : commonNoticeList) {
 			dto = new TelegramMessageDTO();
 			dto.setId(TelegramStaticChatID.MY_ID);
@@ -325,21 +340,14 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			updateNoticeStatus(po);
 		}
 
-		CalendarNotice notice = null;
-		for (CalendarPreNotice preNoticePo : preNoticeList) {
-			notice = mapper.selectByPrimaryKey(preNoticePo.getBindNoticeId());
-			dto = new TelegramMessageDTO();
-			dto.setId(TelegramStaticChatID.MY_ID);
-			dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
-			dto.setMsg("PreNotice: " + notice.getNoticeContent() + " at: " + notice.getNoticeTime() + " "
-					+ hostnameService.findZhang() + CalendarNoticeUrl.ROOT + CalendarNoticeUrl.STOP_PRE_NOTICE + "?pk="
-					+ URLEncoder.encode(systemConstantService.encryptId(preNoticePo.getId()), StandardCharsets.UTF_8));
-			telegramMessageAckProducer.send(dto);
-
-			updatePreNoticeStatus(preNoticePo, notice);
-		}
 	}
 
+	/**
+	 * 如果 原PO 已经更新过提醒时间, 导致提醒时间已经跳跃到下一周期
+	 * 所以必须将此方法放在PO 更新之前
+	 * FIXME 需要兼容先更新PO 的情况? / 暂时以目前的执行顺序, 绕过影响
+	 * @param po
+	 */
 	private void updateNoticeStatus(CalendarNotice po) {
 		if (po.getNeedRepeat()) {
 			LocalDateTime oldNoticeTime = po.getNoticeTime();
@@ -370,10 +378,8 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 
 	private void updatePreNoticeStatus(CalendarPreNotice preNoticePo, CalendarNotice po) {
 		TimeUnitType preNoticeTimeUnitType = TimeUnitType.getType(preNoticePo.getRepeatTimeUnit());
-		LocalDateTime nextPreNoticeTime = getNextLocalDateTime(preNoticePo.getNoticeTime(), preNoticeTimeUnitType,
+		LocalDateTime nextPreNoticeTime = getNextValidLocalDateTime(preNoticePo.getNoticeTime(), preNoticeTimeUnitType,
 				preNoticePo.getRepeatTimeRange());
-
-		preNoticePo.setValidTime(po.getNoticeTime());
 		
 		// 超出本次提前通知的有效时间
 		if (nextPreNoticeTime.isAfter(po.getNoticeTime())) {
@@ -390,13 +396,13 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 					preNoticePo.setValidTime(nextNoticeTime);
 					preNoticeMapper.updateByPrimaryKeySelective(preNoticePo);
 					return;
-					// 重复通知无需继续
+				// 重复通知无需继续
 				} else {
 					preNoticePo.setIsDelete(true);
 					preNoticeMapper.updateByPrimaryKeySelective(preNoticePo);
 					return;
 				}
-				// 非重复通知
+			// 非重复通知
 			} else {
 				preNoticePo.setIsDelete(true);
 				preNoticeMapper.updateByPrimaryKeySelective(preNoticePo);

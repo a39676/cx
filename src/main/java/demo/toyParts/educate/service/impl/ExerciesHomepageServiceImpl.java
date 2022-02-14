@@ -15,6 +15,7 @@ import demo.toyParts.educate.pojo.dto.EducateHomepageSubjectDataSummaryDTO;
 import demo.toyParts.educate.pojo.po.StudentDetail;
 import demo.toyParts.educate.pojo.po.StudentExerciesHistory;
 import demo.toyParts.educate.pojo.po.StudentExerciesHistoryExample;
+import demo.toyParts.educate.pojo.type.EducateLeaderboardOrderType;
 import demo.toyParts.educate.pojo.type.ExerciesSubjectType;
 import demo.toyParts.educate.pojo.type.GradeType;
 import demo.toyParts.educate.pojo.type.MatchGradeType;
@@ -55,6 +56,7 @@ public class ExerciesHomepageServiceImpl extends EducateCommonService implements
 		subjectTypeList.add(ExerciesSubjectType.english);
 		subjectTypeList.add(ExerciesSubjectType.chinese);
 		view.addObject("subjectList", subjectTypeList);
+		view.addObject("leaderboardOrderTypeList", EducateLeaderboardOrderType.values());
 
 		return view;
 	}
@@ -92,8 +94,8 @@ public class ExerciesHomepageServiceImpl extends EducateCommonService implements
 					sevenDayScoreTotal = sevenDayScoreTotal + po.getScore().doubleValue();
 					sevenDayCounting++;
 					if (po.getCreateTime().isAfter(todayStart)) {
-						totayScoreTotal = thirtyDayScoreTotal + po.getScore().doubleValue();
-						thirtyDayCounting++;
+						totayScoreTotal = totayScoreTotal + po.getScore().doubleValue();
+						todayCounting++;
 					}
 				}
 				thirtyDayScoreTotal = thirtyDayScoreTotal + po.getScore().doubleValue();

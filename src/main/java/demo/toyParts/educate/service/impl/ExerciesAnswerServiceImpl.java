@@ -69,6 +69,7 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 		exerciesPO.setPoints(new BigDecimal(answerResult.getPoints()));
 		exerciesPO.setCompeletionTime(LocalDateTime.now());
 		exerciesPO.setScore(answerResult.getTotalScore());
+		exerciesPO.setMatchGradeType(answerResult.getMatchGradeType().getCode());
 		exerciesHistoryMapper.updateByPrimaryKeySelective(exerciesPO);
 
 		detail.setPointsSummary(detail.getPointsSummary().add(exerciesPO.getPoints()));

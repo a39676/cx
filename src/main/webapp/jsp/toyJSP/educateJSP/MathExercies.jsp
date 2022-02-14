@@ -13,24 +13,26 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12" id="detail" pk=${exercies.exerciesPK}>
-        学期: ${exercies.gradeType.name}
-        <br>
-        科目: ${exercies.subjectType.cnName}
+        <h3><span class="badge badge-primary">学期: ${exercies.gradeType.name}</span></h3>
+        <h3><span class="badge badge-primary">科目: ${exercies.subjectType.cnName}</span></h3>
       </div>
     </div>
 
     <div class="row">
-      <div class="col-md-12" id="questionList">
+      <div class="col-md-3" id="questionList">
         <%-- ${exercies.questionList} --%>
         <c:forEach items="${exercies.questionList}" var="question">
           <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
             ${question}<br>
           </sec:authorize>
-          <span>(${question.questionNumber}): </span>
-          <span class="question" questionNumber="${question.questionNumber}">
-            ${question.expression} =
-          </span>
-          <input type="number" class="answerInput" name="" value="" questionNumber="${question.questionNumber}" style="width:80px;">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="question input-group-text" questionNumber="${question.questionNumber}">
+                (${question.questionNumber}):&nbsp;&nbsp;&nbsp;${question.expression} =
+              </span>
+            </div>
+            <input type="number" class="form-control answerInput" name="" questionNumber="${question.questionNumber}">
+          </div>
           <span questionNumber="${question.questionNumber}" class="standarAnswer"></span>
           <br>
         </c:forEach>
@@ -39,20 +41,32 @@
 
     <div class="row">
       <div class="col-md-12">
-        <button type="button" name="button" id="submitAnswer">提交</button>
-        <button type="button" name="button" id="reload" style="display: none;">再做一份</button>
+        <button type="button" name="button" class="btn btn-primary" id="submitAnswer">提交</button>
+        <button type="button" name="button" class="btn btn-primary" id="reload" style="display: none;">再做一份</button>
       </div>
     </div>
 
-    <div class="row">
+    <div class="row" id="resultRow" style="display:none;">
       <div class="col-md-12">
-        <span id="resultSpan"></span>
-        <br>
-        <span id="score">分数</span>
-        <br>
-        <span id="point">积分</span>
+        <h3><span class="badge badge-success" id="resultSpan"></span></h3>
+        <h3><span class="badge badge-success" id="score">分数</span></h3>
+        <h3><span class="badge badge-success" id="point">积分</span></h3>
       </div>
     </div>
+
+    <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
+      <div class="row" id="demo">
+        <div class="col-md-12">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="">Multiple inputs</span>
+            </div>
+            <input type="text" class="form-control" value="input v1">
+            <input type="text" class="form-control" value="input v2">
+          </div>
+        </div>
+      </div>
+    </sec:authorize>
   </div>
 
   <!-- SCIPTS -->
@@ -102,6 +116,8 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
+            $("#resultRow").show();
+            $("html, body").animate({ scrollTop: $(document).height() }, "slow");
             $("#resultSpan").text(datas.message);
             $("#score").text("本份习题获得分数: " + datas.totalScore);
             $("#point").text("本份习题获得积分: " + datas.points);

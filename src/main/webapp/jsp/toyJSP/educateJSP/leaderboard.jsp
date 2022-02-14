@@ -10,22 +10,22 @@
 </head>
 <body>
 
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12" id="detail">
-        <span>${orderType}</span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12" id="detail">
-        <%-- ${leaderboard} --%>
-        <c:forEach items="${leaderboard}" var="vo">
-          <span>${vo.nickname}</span>
-          <span>${vo.number}</span><br>
-        </c:forEach>
-      </div>
-    </div>
-  </div>
+<table class="table table-hover table-striped table-light">
+  <thead class="">
+    <tr class="table-primary">
+      <td>昵称</td>
+      <td></td>
+    </tr>
+  </thead>
+  <tbody>
+    <c:forEach items="${leaderboard}" var="vo">
+      <tr>
+        <td><span>${vo.nickname}</span></td>
+        <td><span>${vo.number}</span></td>
+      </tr>
+    </c:forEach>
+  </tbody>
+</table>
 
   <!-- SCIPTS -->
   <%@ include file="../../baseElementJSP/normalJSPart.jsp" %>

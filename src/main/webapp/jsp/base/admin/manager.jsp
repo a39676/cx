@@ -88,9 +88,6 @@
         <a href="/login/loginForStudent" target="_blank">loginForStudent</a>
       </li>
       <li>
-        <a href="/educate/leaderboard?orderType=2&days=7" target="_blank">leaderboard</a>
-      </li>
-      <li>
         <a href="/user/studentRegist" target="_blank">studentRegist</a>
       </li>
     </ul><!-- educate -->

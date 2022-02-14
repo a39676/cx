@@ -41,7 +41,7 @@
     <hr>
 
     <div class="row">
-      <table class="table table-hover table-striped table-light">
+      <table class="table table-hover table-bordered table-striped table-light">
         <thead class="">
           <tr class="table-primary">
             <td>科目</td>

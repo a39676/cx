@@ -32,6 +32,9 @@
         <div class="col-md-4">
           <span>${subjectData.subjectType.cnName}</span><br>
           <span>最新分数${subjectData.lastScore}</span><br>
+          <span>今日做了 ${subjectData.exerciesCountToday}份习题</span><br>
+          <span>今日总分数: ${subjectData.totalScoreToday}</span><br>
+          <span>今日习题平均分: ${subjectData.avgScoreToday}</span><br>
           <span>最近7日做了 ${subjectData.exerciesCountSevenDays}份习题</span><br>
           <span>最近7日总分数: ${subjectData.totalScoreSevenDays}</span><br>
           <span>最近7日习题平均分: ${subjectData.avgScoreSevenDays}</span><br>

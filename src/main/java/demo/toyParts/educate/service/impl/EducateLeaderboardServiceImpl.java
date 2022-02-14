@@ -18,6 +18,7 @@ import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.UsersService;
 import demo.toyParts.educate.pojo.po.StudentExerciesHistory;
 import demo.toyParts.educate.pojo.po.StudentExerciesHistoryExample;
+import demo.toyParts.educate.pojo.type.MatchGradeType;
 import demo.toyParts.educate.pojo.vo.RankingVO;
 import demo.toyParts.educate.service.EducateCommonService;
 import demo.toyParts.educate.service.EducateLeaderboardService;
@@ -45,9 +46,9 @@ public class EducateLeaderboardServiceImpl extends EducateCommonService implemen
 		}
 
 		LocalDateTime now = LocalDateTime.now();
-		StudentExerciesHistoryExample example = new StudentExerciesHistoryExample();
-		example.createCriteria().andCreateTimeBetween(now.minusDays(days - 1).with(LocalTime.MIN), now);
-		List<StudentExerciesHistory> exerciesHistoryPOList = exerciesHistoryMapper.selectByExample(example);
+		StudentExerciesHistoryExample historyExample = new StudentExerciesHistoryExample();
+		historyExample.createCriteria().andCreateTimeBetween(now.minusDays(days - 1).with(LocalTime.MIN), now).andMatchGradeTypeGreaterThanOrEqualTo(MatchGradeType.CURRENT_GRADE.getCode());
+		List<StudentExerciesHistory> exerciesHistoryPOList = exerciesHistoryMapper.selectByExample(historyExample);
 
 		List<RankingVO> voList = null;
 		if(orderType == 1) {

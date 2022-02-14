@@ -79,5 +79,20 @@
         <a href="/financeclear" target="_blank">financeclear</a>
       </li>
     </ul><!-- finance -->
+
+    <ul class="main-menu visible-on-click" id="educate">
+      <li>
+        <a href="/educate/" target="_blank">educate homepage</a>
+      </li>
+      <li>
+        <a href="/login/loginForStudent" target="_blank">loginForStudent</a>
+      </li>
+      <li>
+        <a href="/educate/leaderboard?orderType=2&days=7" target="_blank">leaderboard</a>
+      </li>
+      <li>
+        <a href="/user/studentRegist" target="_blank">studentRegist</a>
+      </li>
+    </ul><!-- educate -->
   </div>
 </header>

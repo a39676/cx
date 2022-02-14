@@ -7,12 +7,16 @@ import java.util.List;
 import java.util.Map;
 
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.toyParts.educate.pojo.type.MatchGradeType;
 
 public class ExerciesAnswerMatchResult extends CommonResult {
 
 	private BigDecimal totalScore = BigDecimal.ZERO;
 
 	private Integer points = 0;
+
+	/** {@link MatchGradeType} */
+	private MatchGradeType matchGradeType = MatchGradeType.CURRENT_GRADE;
 
 	private List<Integer> wrongNumberList = new ArrayList<>();
 
@@ -34,6 +38,14 @@ public class ExerciesAnswerMatchResult extends CommonResult {
 		this.points = points;
 	}
 
+	public MatchGradeType getMatchGradeType() {
+		return matchGradeType;
+	}
+
+	public void setMatchGradeType(MatchGradeType matchGradeType) {
+		this.matchGradeType = matchGradeType;
+	}
+
 	public List<Integer> getWrongNumberList() {
 		return wrongNumberList;
 	}
@@ -52,8 +64,8 @@ public class ExerciesAnswerMatchResult extends CommonResult {
 
 	@Override
 	public String toString() {
-		return "ExerciesAnswerMatchResult [totalScore=" + totalScore + ", points=" + points + ", wrongNumberList="
-				+ wrongNumberList + ", answerMap=" + answerMap + "]";
+		return "ExerciesAnswerMatchResult [totalScore=" + totalScore + ", points=" + points + ", matchGradeType="
+				+ matchGradeType + ", wrongNumberList=" + wrongNumberList + ", answerMap=" + answerMap + "]";
 	}
 
 }

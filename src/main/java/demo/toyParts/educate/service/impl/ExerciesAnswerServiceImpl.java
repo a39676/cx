@@ -21,6 +21,7 @@ import demo.toyParts.educate.pojo.po.StudentExerciesHistoryExample;
 import demo.toyParts.educate.pojo.result.ExerciesAnswerMatchResult;
 import demo.toyParts.educate.pojo.type.ExerciesSubjectType;
 import demo.toyParts.educate.pojo.type.GradeType;
+import demo.toyParts.educate.pojo.type.MatchGradeType;
 import demo.toyParts.educate.service.ExerciesAnswerService;
 import demo.toyParts.educate.service.EducateCommonService;
 import toolPack.ioHandle.FileUtilCustom;
@@ -93,6 +94,7 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 
 		BigDecimal maxScore = optionService.getMaxScore();
 		BigDecimal randomPointMax = optionService.getRandomPointMax();
+		BigDecimal randomPointMin = optionService.getRandomPointMin();
 
 		// 满分 && 符合自身年级
 		if (answerResult.getTotalScore().compareTo(maxScore) == 0 && studentGrade.equals(exerciesDTO.getGradeType())) {
@@ -105,7 +107,20 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 			}
 		}
 
+		// 做以往的学期题目, 1年之前的习题, 不计算积分, 只统计成绩
+		if ((studentGrade.getCode() - exerciesDTO.getGradeType().getCode()) > 2) {
+			randomPoints = 0;
+			answerResult.setMatchGradeType(MatchGradeType.PAST_GRADE);
+			answerResult.addMessage("复习过往知识,巩固良好基础,本次习题只统计成绩,不计算积分");
+			answerResult.setPoints(randomPoints);
+			return answerResult;
+		}
+
 		// 做以往的学期题目, 每学期扣1随机积分上限
+		// 做往后学期的题目, 每学期加1随机积分上限
+		if (studentGrade.getCode() < exerciesDTO.getGradeType().getCode()) {
+			answerResult.setMatchGradeType(MatchGradeType.FUTURE_GRADE);
+		}
 		randomPointMax = randomPointMax
 				.subtract(new BigDecimal(studentGrade.getCode() - exerciesDTO.getGradeType().getCode()));
 
@@ -121,12 +136,17 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 				randomPointMax = randomPointMax.multiply(BigDecimal.ONE.subtract(new BigDecimal(coefficient)));
 			}
 		}
+		// 如果没有做错题 && 非以往习题
+		if (answerResult.getWrongNumberList().isEmpty()
+				&& answerResult.getMatchGradeType().getCode() > MatchGradeType.PAST_GRADE.getCode()) {
+			randomPointMin = new BigDecimal(2);
+		}
 
-		// 最少获得1分
+		// 最少获得保底分
 		if (randomPointMax.compareTo(optionService.getRandomPointMin()) <= 0) {
-			randomPoints = optionService.getRandomPointMin().intValue();
+			randomPoints = randomPointMin.intValue();
 		} else {
-			randomPoints = t.nextInt(optionService.getRandomPointMin().intValue(), randomPointMax.intValue() + 1);
+			randomPoints = t.nextInt(randomPointMin.intValue(), randomPointMax.intValue() + 1);
 		}
 
 		answerResult.setPoints(randomPoints);

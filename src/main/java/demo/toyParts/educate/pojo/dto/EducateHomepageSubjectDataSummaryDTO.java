@@ -8,6 +8,10 @@ public class EducateHomepageSubjectDataSummaryDTO {
 
 	private Double lastScore;
 
+	private Integer exerciesCountToday;
+	private Double totalScoreToday;
+	private Double avgScoreToday;
+
 	private Integer exerciesCountSevenDays;
 	private Double totalScoreSevenDays;
 	private Double avgScoreSevenDays;
@@ -15,6 +19,30 @@ public class EducateHomepageSubjectDataSummaryDTO {
 	private Integer exerciesCountThirtyDays;
 	private Double totalScoreThirtyDays;
 	private Double avgScoreThirtyDays;
+
+	public Integer getExerciesCountToday() {
+		return exerciesCountToday;
+	}
+
+	public void setExerciesCountToday(Integer exerciesCountToday) {
+		this.exerciesCountToday = exerciesCountToday;
+	}
+
+	public Double getTotalScoreToday() {
+		return totalScoreToday;
+	}
+
+	public void setTotalScoreToday(Double totalScoreToday) {
+		this.totalScoreToday = totalScoreToday;
+	}
+
+	public Double getAvgScoreToday() {
+		return avgScoreToday;
+	}
+
+	public void setAvgScoreToday(Double avgScoreToday) {
+		this.avgScoreToday = avgScoreToday;
+	}
 
 	public ExerciesSubjectType getSubjectType() {
 		return subjectType;
@@ -83,9 +111,11 @@ public class EducateHomepageSubjectDataSummaryDTO {
 	@Override
 	public String toString() {
 		return "EducateHomepageSubjectDataSummaryDTO [subjectType=" + subjectType + ", lastScore=" + lastScore
-				+ ", exerciesCountSevenDays=" + exerciesCountSevenDays + ", totalScoreSevenDays=" + totalScoreSevenDays
-				+ ", avgScoreSevenDays=" + avgScoreSevenDays + ", exerciesCountThirtyDays=" + exerciesCountThirtyDays
-				+ ", totalScoreThirtyDays=" + totalScoreThirtyDays + ", avgScoreThirtyDays=" + avgScoreThirtyDays + "]";
+				+ ", exerciesCountToday=" + exerciesCountToday + ", totalScoreToday=" + totalScoreToday
+				+ ", avgScoreToday=" + avgScoreToday + ", exerciesCountSevenDays=" + exerciesCountSevenDays
+				+ ", totalScoreSevenDays=" + totalScoreSevenDays + ", avgScoreSevenDays=" + avgScoreSevenDays
+				+ ", exerciesCountThirtyDays=" + exerciesCountThirtyDays + ", totalScoreThirtyDays="
+				+ totalScoreThirtyDays + ", avgScoreThirtyDays=" + avgScoreThirtyDays + "]";
 	}
 
 }

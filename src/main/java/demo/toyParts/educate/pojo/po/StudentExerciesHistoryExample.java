@@ -655,6 +655,66 @@ public class StudentExerciesHistoryExample {
             addCriterion("file_path not between", value1, value2, "filePath");
             return (Criteria) this;
         }
+
+        public Criteria andMatchGradeTypeIsNull() {
+            addCriterion("match_grade_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMatchGradeTypeIsNotNull() {
+            addCriterion("match_grade_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMatchGradeTypeEqualTo(Integer value) {
+            addCriterion("match_grade_type =", value, "matchGradeType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMatchGradeTypeNotEqualTo(Integer value) {
+            addCriterion("match_grade_type <>", value, "matchGradeType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMatchGradeTypeGreaterThan(Integer value) {
+            addCriterion("match_grade_type >", value, "matchGradeType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMatchGradeTypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("match_grade_type >=", value, "matchGradeType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMatchGradeTypeLessThan(Integer value) {
+            addCriterion("match_grade_type <", value, "matchGradeType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMatchGradeTypeLessThanOrEqualTo(Integer value) {
+            addCriterion("match_grade_type <=", value, "matchGradeType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMatchGradeTypeIn(List<Integer> values) {
+            addCriterion("match_grade_type in", values, "matchGradeType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMatchGradeTypeNotIn(List<Integer> values) {
+            addCriterion("match_grade_type not in", values, "matchGradeType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMatchGradeTypeBetween(Integer value1, Integer value2) {
+            addCriterion("match_grade_type between", value1, value2, "matchGradeType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMatchGradeTypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("match_grade_type not between", value1, value2, "matchGradeType");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

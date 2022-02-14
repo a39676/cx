@@ -14,6 +14,8 @@ public class StudentDetail {
 
     private LocalDateTime updateTime;
 
+    private Boolean isDelete;
+
     public Long getId() {
         return id;
     }
@@ -52,5 +54,13 @@ public class StudentDetail {
 
     public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Boolean getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(Boolean isDelete) {
+        this.isDelete = isDelete;
     }
 }

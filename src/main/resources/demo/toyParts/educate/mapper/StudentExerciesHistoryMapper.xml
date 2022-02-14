@@ -11,6 +11,7 @@
     <result column="score" jdbcType="DECIMAL" property="score" />
     <result column="points" jdbcType="DECIMAL" property="points" />
     <result column="file_path" jdbcType="VARCHAR" property="filePath" />
+    <result column="match_grade_type" jdbcType="INTEGER" property="matchGradeType" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -72,7 +73,7 @@
   </sql>
   <sql id="Base_Column_List">
     exercies_id, user_id, subject_type, grade_type, create_time, compeletion_time, score, 
-    points, file_path
+    points, file_path, match_grade_type
   </sql>
   <select id="selectByExample" parameterType="demo.toyParts.educate.pojo.po.StudentExerciesHistoryExample" resultMap="BaseResultMap">
     select
@@ -107,12 +108,12 @@
   <insert id="insert" parameterType="demo.toyParts.educate.pojo.po.StudentExerciesHistory">
     insert into student_exercies_history (exercies_id, user_id, subject_type, 
       grade_type, create_time, compeletion_time, 
-      score, points, file_path
-      )
+      score, points, file_path, 
+      match_grade_type)
     values (#{exerciesId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{subjectType,jdbcType=BIGINT}, 
       #{gradeType,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{compeletionTime,jdbcType=TIMESTAMP}, 
-      #{score,jdbcType=DECIMAL}, #{points,jdbcType=DECIMAL}, #{filePath,jdbcType=VARCHAR}
-      )
+      #{score,jdbcType=DECIMAL}, #{points,jdbcType=DECIMAL}, #{filePath,jdbcType=VARCHAR}, 
+      #{matchGradeType,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="demo.toyParts.educate.pojo.po.StudentExerciesHistory">
     insert into student_exercies_history
@@ -144,6 +145,9 @@
       <if test="filePath != null">
         file_path,
       </if>
+      <if test="matchGradeType != null">
+        match_grade_type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="exerciesId != null">
@@ -172,6 +176,9 @@
       </if>
       <if test="filePath != null">
         #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="matchGradeType != null">
+        #{matchGradeType,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -211,6 +218,9 @@
       <if test="record.filePath != null">
         file_path = #{record.filePath,jdbcType=VARCHAR},
       </if>
+      <if test="record.matchGradeType != null">
+        match_grade_type = #{record.matchGradeType,jdbcType=INTEGER},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -226,7 +236,8 @@
       compeletion_time = #{record.compeletionTime,jdbcType=TIMESTAMP},
       score = #{record.score,jdbcType=DECIMAL},
       points = #{record.points,jdbcType=DECIMAL},
-      file_path = #{record.filePath,jdbcType=VARCHAR}
+      file_path = #{record.filePath,jdbcType=VARCHAR},
+      match_grade_type = #{record.matchGradeType,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -258,6 +269,9 @@
       <if test="filePath != null">
         file_path = #{filePath,jdbcType=VARCHAR},
       </if>
+      <if test="matchGradeType != null">
+        match_grade_type = #{matchGradeType,jdbcType=INTEGER},
+      </if>
     </set>
     where exercies_id = #{exerciesId,jdbcType=BIGINT}
   </update>
@@ -270,7 +284,8 @@
       compeletion_time = #{compeletionTime,jdbcType=TIMESTAMP},
       score = #{score,jdbcType=DECIMAL},
       points = #{points,jdbcType=DECIMAL},
-      file_path = #{filePath,jdbcType=VARCHAR}
+      file_path = #{filePath,jdbcType=VARCHAR},
+      match_grade_type = #{matchGradeType,jdbcType=INTEGER}
     where exercies_id = #{exerciesId,jdbcType=BIGINT}
   </update>
   <select id="selectByExampleWithRowbounds" parameterType="demo.toyParts.educate.pojo.po.StudentExerciesHistoryExample" resultMap="BaseResultMap">

@@ -22,6 +22,8 @@ public class StudentExerciesHistory {
 
     private String filePath;
 
+    private Integer matchGradeType;
+
     public Long getExerciesId() {
         return exerciesId;
     }
@@ -92,5 +94,13 @@ public class StudentExerciesHistory {
 
     public void setFilePath(String filePath) {
         this.filePath = filePath == null ? null : filePath.trim();
+    }
+
+    public Integer getMatchGradeType() {
+        return matchGradeType;
+    }
+
+    public void setMatchGradeType(Integer matchGradeType) {
+        this.matchGradeType = matchGradeType;
     }
 }

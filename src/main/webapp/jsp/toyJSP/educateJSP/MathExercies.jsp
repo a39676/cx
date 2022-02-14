@@ -26,7 +26,7 @@
           <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
             ${question}<br>
           </sec:authorize>
-          <span>(${question.questionNumber})  </span>
+          <span>(${question.questionNumber}): </span>
           <span class="question" questionNumber="${question.questionNumber}">
             ${question.expression} =
           </span>

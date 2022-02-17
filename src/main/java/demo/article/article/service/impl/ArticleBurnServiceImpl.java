@@ -241,6 +241,10 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 			}
 		}
 		
+		if(poIdList == null || poIdList.isEmpty()) {
+			return;
+		}
+		
 		articleBurnMapper.batchDeleteById(poIdList);
 		
 	}

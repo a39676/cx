@@ -59,7 +59,7 @@ public class CryptoCoinLocalDataRestoreServiceImpl extends CryptoCoinCommonServi
 		LocalDateTime tmpFirstStart = null;
 
 		List<CryptoCoinCatalog> coinCatalogList = coinCatalogService.getAllCatalog();
-		String lastEnd = "ARPA";
+		String lastEnd = "TEST";
 		boolean startFlag = false;
 
 		for (CryptoCoinCatalog coinType : coinCatalogList) {

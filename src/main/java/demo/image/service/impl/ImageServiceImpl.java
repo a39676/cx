@@ -361,6 +361,10 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 			}
 		}
 		
+		if(targetImgIdList == null || targetImgIdList.isEmpty()) {
+			return;
+		}
+		
 		ImageTagExample imgTagExample = new ImageTagExample();
 		imgTagExample.createCriteria().andImageIdIn(targetImgIdList);
 		imageTagMapper.deleteByExample(imgTagExample);

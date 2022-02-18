@@ -183,8 +183,9 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 
 	private boolean hasMaxScoreToday(Long userId, GradeType gradeType, ExerciesSubjectType subjectType) {
 		StudentExerciesHistoryExample example = new StudentExerciesHistoryExample();
+		LocalDateTime now = LocalDateTime.now();
 		example.createCriteria().andUserIdEqualTo(userId)
-				.andCreateTimeBetween(LocalDateTime.now().with(LocalTime.MIN), LocalDateTime.now().with(LocalTime.MAX))
+				.andCompeletionTimeBetween(now.with(LocalTime.MIN), now.with(LocalTime.MAX))
 				.andGradeTypeEqualTo(gradeType.getCode().longValue()).andScoreEqualTo(optionService.getMaxScore())
 				.andSubjectTypeEqualTo(subjectType.getCode().longValue())
 				.andPointsEqualTo(optionService.getRandomPointMax());

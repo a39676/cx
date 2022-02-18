@@ -117,6 +117,9 @@ public class ImageInteractionServiceImpl extends CommonService implements ImageI
 		Map<String, Long> cloudinaryPublicIdMapImgStoreId = new HashMap<String, Long>();
 		
 		for(ImageCloudinary po : imgCloudinaryPOList) {
+			if(po == null) {
+				continue;
+			}
 			sourceCloudinaryPublicIdList.add(po.getCloudinaryPublicId());
 			cloudinaryPublicIdMapImgStoreId.put(po.getCloudinaryPublicId(), po.getImageId());
 		}

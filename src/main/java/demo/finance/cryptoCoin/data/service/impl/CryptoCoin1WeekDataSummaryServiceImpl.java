@@ -2,6 +2,7 @@ package demo.finance.cryptoCoin.data.service.impl;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,8 +65,9 @@ public class CryptoCoin1WeekDataSummaryServiceImpl extends CryptoCoinCommonServi
 
 	private void handleHistoryDataList(LocalDateTime startTime, CryptoCoinCatalog coinType, CurrencyType currencyType) {
 
+		LocalDateTime endTime = startTime.plusDays(dayStepLong).with(LocalTime.MAX);
 		List<CryptoCoinPriceCommonDataBO> cacheDataList = dailyDataService.getCommonDataList(coinType, currencyType,
-				startTime);
+				startTime, endTime);
 		if (cacheDataList == null || cacheDataList.isEmpty()) {
 			return;
 		}

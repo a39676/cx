@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.common.controller.CommonController;
 import demo.finance.cryptoCoin.common.service.CryptoCoinConstantService;
-import demo.finance.cryptoCoin.data.service.CryptoCoinLocalDataRestoreService;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.dto.TestDTO;
 import net.sf.json.JSONObject;
@@ -66,34 +65,5 @@ public class TestController2 extends CommonController {
 	public String t4() {
 		return "{\"k\":\"v\"}";
 	}
-	
-	@Autowired
-	private CryptoCoinLocalDataRestoreService cryptoCoinLocalDataRestoreService;
 
-	@GetMapping(value = "/t5")
-	@ResponseBody
-	public String t5() {
-		cryptoCoinLocalDataRestoreService.restoreWeekData();
-		return "{\"k\":\"v\"}";
-	}
-	
-	@GetMapping(value = "/t6")
-	@ResponseBody
-	public String t6() {
-		cryptoCoinLocalDataRestoreService.restoreMonthData();
-		return "{\"k\":\"v\"}";
-	}
-	
-	@GetMapping(value = "/t7")
-	@ResponseBody
-	public Long t7() {
-		return cryptoCoinLocalDataRestoreService.cleanDuplicateDailyData();
-	}
-	
-	@GetMapping(value = "/t8")
-	@ResponseBody
-	public Long t8() {
-		return cryptoCoinLocalDataRestoreService.cleanDuplicateDailyDataInTheSameDay();
-	}
-	
 }

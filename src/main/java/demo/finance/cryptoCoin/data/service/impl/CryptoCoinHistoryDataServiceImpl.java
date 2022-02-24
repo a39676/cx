@@ -1,6 +1,5 @@
 package demo.finance.cryptoCoin.data.service.impl;
 
-import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +14,6 @@ import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MonthDataSummaryService;
-import demo.finance.cryptoCoin.data.service.CryptoCoin1WeekDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin5MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin60MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinHistoryDataService;
@@ -33,8 +31,6 @@ public class CryptoCoinHistoryDataServiceImpl extends CryptoCoinCommonService im
 	private CryptoCoin60MinuteDataSummaryService hourDataService;
 	@Autowired
 	private CryptoCoin1DayDataSummaryService dailyDataService;
-	@Autowired
-	private CryptoCoin1WeekDataSummaryService weeklyDataService;
 	@Autowired
 	private CryptoCoin1MonthDataSummaryService monthlyDataService;
 	
@@ -57,10 +53,6 @@ public class CryptoCoinHistoryDataServiceImpl extends CryptoCoinCommonService im
 		} else if (TimeUnitType.day.equals(timeUnit)) {
 			startTime = LocalDateTime.now().minusDays(timeRange).withHour(0).withMinute(0).withSecond(0).withNano(0);
 			return dailyDataService.getCommonDataList(coinType, currencyType, startTime);
-		} else if (TimeUnitType.week.equals(timeUnit)) {
-			LocalDateTime lastSunday = localDateTimeHandler.findLastDayOfWeek(LocalDateTime.now(), DayOfWeek.SUNDAY);
-			startTime = lastSunday.minusDays((timeRange - 1) * 7).withSecond(0).withNano(0);
-			return weeklyDataService.getCommonDataList(coinType, currencyType, startTime);
 		} else if (TimeUnitType.month.equals(timeUnit)) {
 			startTime = LocalDateTime.now().withDayOfMonth(1).minusMonths(timeRange - 1).withSecond(0).withNano(0);
 			return monthlyDataService.getCommonDataList(coinType, currencyType, startTime);

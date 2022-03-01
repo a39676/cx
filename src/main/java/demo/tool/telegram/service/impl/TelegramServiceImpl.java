@@ -168,8 +168,10 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 
 	@Override
 	public void telegramSendingCheck() {
+		String msg = null;
 		for (TelegramBotType botType : TelegramBotType.values()) {
-			sendMessage(botType, "testing msg", TelegramStaticChatID.MY_ID);
+			msg = "Testing msg, from: " + botType.getName();
+			sendMessage(botType, msg, TelegramStaticChatID.MY_ID);
 		}
 	}
 }

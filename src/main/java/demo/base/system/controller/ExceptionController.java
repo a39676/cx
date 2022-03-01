@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.BadSqlGrammarException;
+import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -53,6 +54,13 @@ public class ExceptionController extends CommonController {
         exceptionService.handleSQLErrorException(request, e);
     }
 	
+	@ExceptionHandler(RequestRejectedException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public ModelAndView handleRequestRejectedException(HttpServletRequest request, Exception e)   {
+        exceptionService.handleRequestRejectedException(request, e);
+        return exceptionService.handle404Exception(request);
+    }
+	
 	@ExceptionHandler({NoHandlerFoundException.class})
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ModelAndView handleError404_1(HttpServletRequest request, Exception e)   {
@@ -64,6 +72,9 @@ public class ExceptionController extends CommonController {
     public ModelAndView handleInaccessibleObjectException(HttpServletRequest request, Exception e)   {
         return exceptionService.handle503Exception(request, e);
     }
+	
+
+	
 	
 
 	

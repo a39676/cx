@@ -75,6 +75,18 @@ public class ExceptionServiceImpl extends SystemCommonService implements Excepti
 	}
 	
 	@Override
+	public void handleRequestRejectedException(HttpServletRequest request, Exception e) {
+		log.error("Catch Request Rejected ErrorException: ");
+		if(request != null) {
+			log.error(request.getServerName() + "/" + request.getRequestURI());
+		}
+		log.error(e.getCause().toString());
+		log.error("error: {}", e.getMessage(), e);
+		
+		sendTelegram(e.getCause().toString() + ", " + e);
+	}
+	
+	@Override
 	public ModelAndView handle404Exception(HttpServletRequest request) {
 		log.error("Http 404: " + request.getServerName() + "/" + request.getRequestURI());
 		visitDataService.insertVisitData(request, "catch 404 exception");

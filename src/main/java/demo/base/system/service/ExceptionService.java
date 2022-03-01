@@ -18,4 +18,6 @@ public interface ExceptionService {
 
 	void handleSQLErrorException(HttpServletRequest request, Exception e);
 
+	void handleRequestRejectedException(HttpServletRequest request, Exception e);
+
 }

@@ -1,9 +1,3 @@
-crypto data 
-	取消周线数据
-	
-Handle exception
-org.springframework.security.web.firewall.RequestRejectedException: The request was rejected because the URL contained a potentially malicious String "//"
-
 需要引入 学生-父母关系 部分统计只允许父母 / 管理员查看
 练习换积分
 
@@ -28,13 +22,9 @@ org.springframework.security.web.firewall.RequestRejectedException: The request 
 
 加入习题回顾?
 
-
-
 articleLong
 	之前保存文件路径异常, 需要修改数据库 & 迁移对应文件
 
-VisitDataServiceImpl
-	需要兼容 IPv6
 
 需要重新打理
 	user admin 的一堆历史遗留 url
@@ -47,7 +37,6 @@ VisitDataServiceImpl
 	调整 初次启动服务时, 初始化 机构 / 超管 / 权限
 	初次登录系统时 强制跳转超管重置密码页面? 创建超管? 
 	
-Swagger 与 Gson 冲突 待处理
 
 图片信息传送
 

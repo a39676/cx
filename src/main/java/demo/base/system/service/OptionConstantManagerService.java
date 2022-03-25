@@ -20,4 +20,6 @@ public interface OptionConstantManagerService {
 
 	void refreshEducateOption();
 
+	void refreshBinanceOption();
+
 }

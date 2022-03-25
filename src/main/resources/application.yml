@@ -52,6 +52,7 @@ optionFilePath:
   telegram: "/home/u2/cx/optionFile/telegram/option.json"
   tool: "/home/u2/cx/optionFile/tool/option.json"
   educate: "/home/u2/cx/optionFile/educate/option.json"
+  binance: "/home/u2/cx/optionFile/binance/option.json"
   
     
 logging:

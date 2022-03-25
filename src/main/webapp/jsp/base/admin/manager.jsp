@@ -9,7 +9,7 @@
   <div class="container-fluid position-relative no-side-padding">
     <div class="menu-nav-icon" data-nav-menu="#main-menu"><i class="ion-navicon"></i></div>
     <ul class="main-menu visible-on-click" id="main-menu">
-      <li>System</li>
+      <li style="background-color:yellow;">System</li>
       <li>
         <a href="/tool/systemOption" target="_blank">systemOption</a>
       </li>
@@ -31,14 +31,14 @@
     </ul><!-- system -->
 
     <ul class="main-menu visible-on-click" id="telegramTool">
-      <li>TelegramTool</li>
+      <li style="background-color:yellow;">TelegramTool</li>
       <li>
         <a href="/tool/telegram/testing" target="_blank">telegram api testing</a>
       </li>
     </ul> <%-- telegramTool --%>
 
     <ul class="main-menu visible-on-click" id="cryptoCoinTool">
-      <li>CryptoCoinTool</li>
+      <li style="background-color:yellow;">CryptoCoinTool</li>
       <li>
         <a href="/cryptoCoin/insertCryptoCoinNoticeSetting" target="_blank">insertCryptoCoinNoticeSetting</a>
       </li>
@@ -63,21 +63,21 @@
     </ul> <%-- cryptoCoin --%>
 
     <ul class="main-menu visible-on-click" id="qrcode">
-      <li>qrcode</li>
+      <li style="background-color:yellow;">qrcode</li>
       <li>
         <a href="/tool/qrcode/" target="_blank">qrcode</a>
       </li>
     </ul><!-- canlendarNotice -->
 
     <ul class="main-menu visible-on-click" id="canlendarNotice">
-      <li>canlendarNotice</li>
+      <li style="background-color:yellow;">canlendarNotice</li>
       <li>
         <a href="/tool/canlendarNotice/manager" target="_blank">canlendarNoticeManager</a>
       </li>
     </ul><!-- canlendarNotice -->
 
     <ul class="main-menu visible-on-click" id="notes">
-      <li>notes</li>
+      <li style="background-color:yellow;">notes</li>
       <li>
         <a href="/pNote/edit" target="_blank">note edit</a>
       </li>
@@ -87,14 +87,14 @@
     </ul> <%-- notes --%>
 
     <ul class="main-menu visible-on-click" id="finance">
-      <li>finance</li>
+      <li style="background-color:yellow;">finance</li>
       <li>
         <a href="/financeclear" target="_blank">financeclear</a>
       </li>
     </ul><!-- finance -->
 
     <ul class="main-menu visible-on-click" id="educate">
-      <li>educate</li>
+      <li style="background-color:yellow;">educate</li>
       <li>
         <a href="/educate/" target="_blank">educate homepage</a>
       </li>

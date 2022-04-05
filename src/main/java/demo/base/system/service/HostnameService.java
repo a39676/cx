@@ -13,7 +13,7 @@ public interface HostnameService {
 
 	HostnameType findHostnameType(HttpServletRequest request);
 
-	String findZhang();
+	String findMainHostname();
 
 	String findHostNameFromRequst(HttpServletRequest request);
 

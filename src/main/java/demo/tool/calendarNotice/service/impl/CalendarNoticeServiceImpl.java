@@ -314,7 +314,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			dto.setId(TelegramStaticChatID.MY_ID);
 			dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
 			dto.setMsg("PreNotice: " + notice.getNoticeContent() + " at: " + notice.getNoticeTime() + " "
-					+ hostnameService.findZhang() + CalendarNoticeUrl.ROOT + CalendarNoticeUrl.STOP_PRE_NOTICE + "?pk="
+					+ hostnameService.findMainHostname() + CalendarNoticeUrl.ROOT + CalendarNoticeUrl.STOP_PRE_NOTICE + "?pk="
 					+ URLEncoder.encode(systemConstantService.encryptId(preNoticePo.getId()), StandardCharsets.UTF_8));
 			telegramMessageAckProducer.send(dto);
 
@@ -327,7 +327,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
 			if (po.getStrongNotice()) {
 				strongNoticeService.addStrongNotice(po);
-				dto.setMsg(po.getNoticeContent() + " " + hostnameService.findZhang() + CalendarNoticeUrl.ROOT
+				dto.setMsg(po.getNoticeContent() + " " + hostnameService.findMainHostname() + CalendarNoticeUrl.ROOT
 						+ CalendarNoticeUrl.STOP_STRONG_NOTICE + "?pk="
 						+ URLEncoder.encode(systemConstantService.encryptId(po.getId()), StandardCharsets.UTF_8));
 
@@ -664,7 +664,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			dto = new TelegramMessageDTO();
 			dto.setId(TelegramStaticChatID.MY_ID);
 			dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
-			dto.setMsg(bo.getNoticeContent() + " " + hostnameService.findZhang() + CalendarNoticeUrl.ROOT
+			dto.setMsg(bo.getNoticeContent() + " " + hostnameService.findMainHostname() + CalendarNoticeUrl.ROOT
 					+ CalendarNoticeUrl.STOP_STRONG_NOTICE + "?pk="
 					+ URLEncoder.encode(systemConstantService.encryptId(bo.getId()), StandardCharsets.UTF_8));
 

@@ -78,7 +78,7 @@ public class LoginLogoutController extends CommonController {
 	
 	@GetMapping(value = LoginUrlConstant.LOGIN_FOR_STUDENT)
 	public ModelAndView loginForStudent() {
-		return new ModelAndView(BaseViewConstant.LOGIN_FOR_STUDENT);
+		return new ModelAndView(BaseViewConstant.LOGIN_V2);
 	}
 	
 	@GetMapping(value = LoginUrlConstant.LOGOUT)

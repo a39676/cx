@@ -47,7 +47,7 @@ public class HostnameServiceImpl extends CommonService implements HostnameServic
 	}
 	
 	@Override
-	public String findZhang() {
+	public String findMainHostname() {
 		Hostname po = hostnameMapper.selectByPrimaryKey(5);
 		if(po == null) {
 			return null;

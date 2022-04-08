@@ -122,7 +122,7 @@ public class BinanceWSClient extends CryptoCoinWebSocketCommonClient {
 		}
 		log.error("binance url: " + uriBuilder.toString());
 		try {
-			WebSocket ws = new WebSocketFactory().setVerifyHostname(false).createSocket(uriBuilder.toString());
+			ws = new WebSocketFactory().setVerifyHostname(false).createSocket(uriBuilder.toString());
 			refreshLastActiveTime();
 			return ws;
 		} catch (IOException e) {
@@ -168,9 +168,11 @@ public class BinanceWSClient extends CryptoCoinWebSocketCommonClient {
 		return CryptoCoinWebSocketConstant.BINANCE_SOCKET_INACTIVE_JUDGMENT_SECOND > seconds;
 	}
 
-	public CommonResult startWebSocket() {
+	public CommonResult restartWebSocket() {
 		CommonResult r = new CommonResult();
 
+		wsDestory();
+		
 		ws = createWebSocket();
 		if (ws == null) {
 			r.failWithMessage("binance socket create scoket error");

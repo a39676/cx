@@ -11,7 +11,6 @@
 </head>
 
 <body>
-  
   <!-- Navigation -->
   <%@ include file="./nav.jsp" %>
 

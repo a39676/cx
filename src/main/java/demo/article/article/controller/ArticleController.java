@@ -43,12 +43,12 @@ import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.ResultTypeCX;
 
 @Controller
-@RequestMapping( value = ArticleUrlConstant.root)
+@RequestMapping(value = ArticleUrlConstant.root)
 public class ArticleController extends CommonController {
 
 	@Autowired
 	private ArticleAdminController articleAdminController;
-	
+
 	@Autowired
 	private ArticleService articleService;
 	@Autowired
@@ -57,81 +57,86 @@ public class ArticleController extends CommonController {
 	private ArticleChannelService channelService;
 	@Autowired
 	private ArticleSummaryService summaryService;
-	
+
 	@PostMapping(value = ArticleUrlConstant.createArticleLong)
 	@ResponseBody
-	public CommonResult createArticleLong(@RequestBody CreateArticleParam dto) throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
+	public CommonResult createArticleLong(@RequestBody CreateArticleParam dto)
+			throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException,
+			IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
 		CommonResult serviceResult = articleService.crateArticleLongPrefixServcie(dto);
 		return serviceResult;
 	}
-	
+
 	@GetMapping(value = ArticleUrlConstant.creatingArticleLong)
 	public ModelAndView creatingArticleLong(HttpServletRequest request) {
 		CreatingArticleParam param = new CreatingArticleParam();
 		ModelAndView view = articleService.buildCreatingArticleLongView(param);
 		GetArticleChannelsResult channelsResult = getArticleChannelsDynamic(request);
 		view.addObject("channelList", channelsResult.getChannelList());
-		
+
 		return view;
 	}
-	
+
 	@PostMapping(value = ArticleUrlConstant.findChannels)
 	@ResponseBody
 	public GetArticleChannelsResult getArticleChannelsDynamic(HttpServletRequest request) {
 		GetArticleChannelsResult result = channelService.getArticleChannelsDynamic(request);
 		return result;
 	}
-	
+
 	@PostMapping(value = ArticleUrlConstant.articleLongSummaryListByChannel)
 	@ResponseBody
-	public FindArticleLongSummaryListResult articleLongSummaryListByChannel(@RequestBody FindArticleLongSummaryListDTO param, HttpServletRequest request) {
-		if(param.getArticleChannelId() == null) {
+	public FindArticleLongSummaryListResult articleLongSummaryListByChannel(
+			@RequestBody FindArticleLongSummaryListDTO param, HttpServletRequest request) {
+		if (param.getArticleChannelId() == null) {
 			return summaryService.summaryListWithoutChannel(param, request);
 		} else {
-			return summaryService.summaryListByChannelId(param, request);	
+			return summaryService.summaryListByChannelId(param, request);
 		}
-		
+
 	}
-	
+
 	@GetMapping(value = ArticleUrlConstant.readArticleLong)
-	public ModelAndView readArticleLong(@RequestParam(value = "pk", required = false) String pk, HttpServletRequest request) {
+	public ModelAndView readArticleLong(@RequestParam(value = "pk", required = false) String pk,
+			HttpServletRequest request) {
 		return articleService.readArticleLong(pk, request);
 	}
-	
+
 	@PostMapping(value = ArticleUrlConstant.deleteArticle)
 	@ResponseBody
-	public CommonResultCX deleteArticle(@RequestBody ReviewArticleLongParam param, HttpServletRequest request, HttpServletResponse response) {
+	public CommonResultCX deleteArticle(@RequestBody ReviewArticleLongParam param, HttpServletRequest request,
+			HttpServletResponse response) {
 		param.setReviewCode(ArticleReviewType.delete.getReviewCode());
-		
+
 		CommonResultCX serviceResult = new CommonResultCX();
 
-		if(!articleService.iWroteThis(param.getPk())) {
+		if (!articleService.iWroteThis(param.getPk())) {
 			serviceResult.fillWithResult(ResultTypeCX.notYourArticle);
 			return serviceResult;
 		}
-		
+
 		return articleAdminController.deleteArticle(param);
 	}
-	
+
 	@PostMapping(value = ArticleUrlConstant.insertArticleLongEvaluation)
 	@ResponseBody
 	public CommonResultCX insertArticleLongEvaluation(@RequestBody InsertArticleLongEvaluationParam param) {
 		param.setEvaluationType(ArticleEvaluationType.articleLongEvaluation.getCode());
 		return articleEvaluationService.insertArticleLongEvaluationRedis(param);
 	}
-	
+
 	public CommonResult insertArticleLongCommentEvaluation(@RequestBody InsertArticleLongEvaluationParam param) {
 		/*
-		 * TODO
-		 * 2019-06-08 发现 未明用途  待确认
+		 * TODO 2019-06-08 发现 未明用途 待确认
 		 */
 		param.setEvaluationType(ArticleEvaluationType.articleCommentEvaluation.getCode());
 		CommonResult serviceResult = articleEvaluationService.insertArticleLongEvaluationRedis(param);
 		return serviceResult;
 	}
-	
+
 	@GetMapping(value = ArticleUrlConstant.editArticleLong)
-	public ModelAndView editArticleLongView(@RequestParam(value = "pk", required = false) String pk, HttpServletRequest request) {
+	public ModelAndView editArticleLongView(@RequestParam(value = "pk", required = false) String pk,
+			HttpServletRequest request) {
 		ReadyToEditArticleLongDTO dto = new ReadyToEditArticleLongDTO();
 		dto.setPrivateKey(pk);
 		ModelAndView view = articleService.readyToEditArticleLong(dto);
@@ -139,10 +144,12 @@ public class ArticleController extends CommonController {
 		view.addObject("channelList", channelsResult.getChannelList());
 		return view;
 	}
-	
+
 	@PostMapping(value = ArticleUrlConstant.editArticleLong)
 	@ResponseBody
-	public CommonResultCX editArticleLong(@RequestBody EditArticleLongDTO dto) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, IOException {
+	public CommonResultCX editArticleLong(@RequestBody EditArticleLongDTO dto)
+			throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
+			BadPaddingException, InvalidAlgorithmParameterException, IOException {
 		return articleService.editArticleLongHandler(dto);
 	}
 

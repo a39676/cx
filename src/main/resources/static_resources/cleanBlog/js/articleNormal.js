@@ -173,7 +173,7 @@ function searchArticleLongSummary(firstSearchFlag) {
   blogArea.attr("loadingFlag", "1");
   var jsonOutput = {
     endTime:markTime,
-    isHot:"true",
+    isHot:firstSearchFlag,
   };
   if (firstSearchFlag) {
     jsonOutput["title"] = newKeyword;

@@ -62,7 +62,7 @@ public class ArticleCommentAdminServiceImpl extends ArticleCommonService impleme
 			return result;
 		}
 		
-		Long commentId = systemConstantService.decryptPrivateKey(param.getPk());
+		Long commentId = systemOptionService.decryptPrivateKey(param.getPk());
 		if(commentId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -104,7 +104,7 @@ public class ArticleCommentAdminServiceImpl extends ArticleCommonService impleme
 			return result;
 		}
 		
-		Long commentId = systemConstantService.decryptPrivateKey(param.getPk());
+		Long commentId = systemOptionService.decryptPrivateKey(param.getPk());
 		if(commentId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -148,7 +148,7 @@ public class ArticleCommentAdminServiceImpl extends ArticleCommonService impleme
 			return result;
 		}
 		
-		Long commentId = systemConstantService.decryptPrivateKey(param.getPk());
+		Long commentId = systemOptionService.decryptPrivateKey(param.getPk());
 		if(commentId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;

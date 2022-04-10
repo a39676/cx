@@ -39,12 +39,12 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 	private ArticleBurnMapper articleBurnMapper;
 	
 	private String getArticleBurnStorePrefixPath() {
-		return articleConstantService.getArticleBurnStorePrefixPath();
+		return articleOptionService.getArticleBurnStorePrefixPath();
 	}
 	
 	@Override
 	public ModelAndView articleBurnLink(HttpServletRequest request) {
-		if(systemConstantService.isInZhang3OrDev(request)) {
+		if(systemOptionService.isDev() || hostnameService.isMainHostname(request)) {
 			return new ModelAndView(ArticleViewConstant.articleBurnLink);
 		}
 		return null;
@@ -54,11 +54,11 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 	public CreatingBurnMessageResult creatingBurnMessage(CreatingBurnMessageDTO dto, HttpServletRequest request) {
 		CreatingBurnMessageResult r = new CreatingBurnMessageResult();
 		
-		if(!systemConstantService.isInZhang3OrDev(request)) {
+		if(!systemOptionService.isDev() && !hostnameService.isMainHostname(request)) {
 			return null;
 		}
 
-		if(StringUtils.isBlank(dto.getContent()) || dto.getContent().length() > articleConstantService.getMaxArticleLength()) {
+		if(StringUtils.isBlank(dto.getContent()) || dto.getContent().length() > articleOptionService.getMaxArticleLength()) {
 			r.fillWithResult(ResultTypeCX.errorParam);
 			return r;
 		}
@@ -67,7 +67,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		if(!isBigUser()) {
 			count = redisOriginalConnectService.checkFunctionalModuleVisitData(request, SystemRedisKey.articleBurnInsertCountingKeyPrefix);
 		}
-		if (!"dev".equals(systemConstantService.getEnvName())) {
+		if (!"dev".equals(systemOptionService.getEnvName())) {
 			if (count >= SearchingDemoConstant.maxInsertCountIn30Minutes) {
 				r.failWithMessage("短时间内加入的任务太多了, 请稍后再试");
 				return r;
@@ -75,12 +75,11 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		}
 		
 		String contentAfterSanitize = sanitize(dto.getContent());
-		Long userId = baseUtilCustom.getUserId();
 		Long newArticleId = snowFlake.getNextId();
 		
 		ArticleFileSaveResult saveArticleFileResult = null;
 		try {
-			saveArticleFileResult = saveArticleFile(getArticleBurnStorePrefixPath(), userId, contentAfterSanitize);
+			saveArticleFileResult = saveArticleFile(getArticleBurnStorePrefixPath(), contentAfterSanitize);
 		} catch (Exception e) {
 			r.failWithMessage("保存信息异常");
 			return r;
@@ -119,8 +118,8 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		articleBurnMapper.insertSelective(po);
 		
 		try {
-			r.setReadKey(URLEncoder.encode(systemConstantService.encryptId(po.getReadId()), StandardCharsets.UTF_8.toString()));
-			r.setBurnKey(URLEncoder.encode(systemConstantService.encryptId(po.getBurnId()), StandardCharsets.UTF_8.toString()));
+			r.setReadKey(URLEncoder.encode(systemOptionService.encryptId(po.getReadId()), StandardCharsets.UTF_8.toString()));
+			r.setBurnKey(URLEncoder.encode(systemOptionService.encryptId(po.getBurnId()), StandardCharsets.UTF_8.toString()));
 		} catch (UnsupportedEncodingException e) {
 		}
 		r.setReadUri(ArticleBurnUrlConstant.root + ArticleBurnUrlConstant.readBurningMessage + "?readKey=" + r.getReadKey());
@@ -148,7 +147,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 			return fillArticleBurnResultWithErrorMessage();
 		}
 
-		Long readId = systemConstantService.decryptPrivateKey(readKey);
+		Long readId = systemOptionService.decryptPrivateKey(readKey);
 		ArticleBurnExample example = new ArticleBurnExample();
 		example.createCriteria()
 		.andIsBurnedEqualTo(false)
@@ -181,7 +180,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 	private ArticleBurnResult fillArticleBurnResultWithPO(ArticleBurn po) {
 		ArticleBurnResult r = new ArticleBurnResult();
 		try {
-			r.setBurnKey(URLEncoder.encode(systemConstantService.encryptId(po.getBurnId()), StandardCharsets.UTF_8.toString()));
+			r.setBurnKey(URLEncoder.encode(systemOptionService.encryptId(po.getBurnId()), StandardCharsets.UTF_8.toString()));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -212,7 +211,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 			return;
 		}
 		
-		Long burnId = systemConstantService.decryptPrivateKey(burnKey);
+		Long burnId = systemOptionService.decryptPrivateKey(burnKey);
 		if(burnId != null) {
 			articleBurnMapper.burnArticleByBurnId(burnId);
 		}

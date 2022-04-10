@@ -16,7 +16,7 @@ public class FindArticleLongSummaryListMapperDTO {
 	private Boolean isReject = false;
 	private Boolean desc = true;
 	private Integer limit;
-	private Boolean isHot = false;
+	private Boolean isHot;
 
 	public Boolean getIsHot() {
 		return isHot;
@@ -89,9 +89,12 @@ public class FindArticleLongSummaryListMapperDTO {
 	public void setChannelIdList(List<Long> channelIdList) {
 		this.channelIdList = channelIdList;
 	}
-	
+
 	public void addChannelId(Long channelId) {
-		if(this.channelIdList == null) {
+		if (channelId == null) {
+			return;
+		}
+		if (this.channelIdList == null) {
 			this.channelIdList = new ArrayList<Long>();
 		}
 		this.channelIdList.add(channelId);

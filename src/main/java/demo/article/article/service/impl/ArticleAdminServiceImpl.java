@@ -9,16 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import demo.article.article.mapper.ArticleHotMapper;
 import demo.article.article.mapper.ArticleLongMapper;
 import demo.article.article.mapper.ArticleLongReviewMapper;
+import demo.article.article.mapper.ArticleLongSummaryMapper;
 import demo.article.article.pojo.param.controllerParam.ChangeChannelParam;
 import demo.article.article.pojo.param.controllerParam.InsertNewReviewRecordParam;
 import demo.article.article.pojo.param.controllerParam.ReviewArticleLongParam;
 import demo.article.article.pojo.param.controllerParam.SetArticleHotParam;
 import demo.article.article.pojo.param.mapperParam.UpdateArticleLongReviewStatuParam;
-import demo.article.article.pojo.po.ArticleHot;
 import demo.article.article.pojo.po.ArticleLong;
+import demo.article.article.pojo.po.ArticleLongSummary;
 import demo.article.article.pojo.type.ArticleReviewType;
 import demo.article.article.service.ArticleAdminService;
 import demo.common.pojo.result.CommonResultCX;
@@ -30,9 +30,9 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	@Autowired
 	private ArticleLongMapper articleLongMapper;
 	@Autowired
-	private ArticleLongReviewMapper articleLongReviewMapper;
+	private ArticleLongSummaryMapper articleLongSummaryMapper;
 	@Autowired
-	private ArticleHotMapper articleHotMapper;
+	private ArticleLongReviewMapper articleLongReviewMapper;
 	
 	
 	@Override
@@ -58,7 +58,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	private CommonResultCX passArticle(String privateKey) throws Exception {
 		CommonResultCX result = new CommonResultCX();
-		Long articleId = systemConstantService.decryptPrivateKey(privateKey);
+		Long articleId = systemOptionService.decryptPrivateKey(privateKey);
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -100,7 +100,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	private CommonResultCX rejectArticle(String privateKey) throws Exception {
 		CommonResultCX result = new CommonResultCX();
 		
-		Long articleId = systemConstantService.decryptPrivateKey(privateKey);
+		Long articleId = systemOptionService.decryptPrivateKey(privateKey);
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -142,7 +142,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	@Override
 	public CommonResultCX deleteArticle(String privateKey) throws Exception {
 		CommonResultCX result = new CommonResultCX();
-		Long articleId = systemConstantService.decryptPrivateKey(privateKey);
+		Long articleId = systemOptionService.decryptPrivateKey(privateKey);
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -190,7 +190,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		}
 		
 		param.setPk(URLDecoder.decode(param.getPk(), StandardCharsets.UTF_8));
-		Long articleId = systemConstantService.decryptPrivateKey(param.getPk());
+		Long articleId = systemOptionService.decryptPrivateKey(param.getPk());
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -221,7 +221,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		}
 		
 		controllerParam.setPk(URLDecoder.decode(controllerParam.getPk(), StandardCharsets.UTF_8));
-		Long articleId = systemConstantService.decryptPrivateKey(controllerParam.getPk());
+		Long articleId = systemOptionService.decryptPrivateKey(controllerParam.getPk());
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -233,13 +233,14 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			return result;
 		}
 		
-		ArticleHot newArticleHot = new ArticleHot();
-		newArticleHot.setArticleId(oldArticleLong.getArticleId());
-		newArticleHot.setChannelId(oldArticleLong.getChannelId());
-		newArticleHot.setHotLevel(controllerParam.getHotLevel());
-		newArticleHot.setValidTime(LocalDateTime.now().plusMinutes(controllerParam.getHotMinutes()));
 		
-		articleHotMapper.insertNew(newArticleHot);
+		ArticleLongSummary summaryPO = new ArticleLongSummary();
+		summaryPO.setArticleId(articleId);
+		summaryPO.setIsHot(true);
+		summaryPO.setHotLevel(controllerParam.getHotLevel());
+		summaryPO.setHotValidTime(LocalDateTime.now().plusMinutes(controllerParam.getHotMinutes()));
+		articleLongSummaryMapper.updateByPrimaryKeySelective(summaryPO);
+		
 		
 		result.fillWithResult(ResultTypeCX.setArticleHotSuccess);
 		return result;

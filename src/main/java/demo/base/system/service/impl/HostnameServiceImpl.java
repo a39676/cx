@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,17 +20,20 @@ public class HostnameServiceImpl extends CommonService implements HostnameServic
 
 	@Autowired
 	private HostnameMapper hostnameMapper;
-	
+
 	@Override
-	public List<Hostname> findHonstnames() {
+	public List<Hostname> findHostnames() {
 		HostnameExample example = new HostnameExample();
 		example.createCriteria().andIsdeleteEqualTo(false);
 		return hostnameMapper.selectByExample(example);
 	}
-	
+
 	@Override
 	public String findHostNameFromRequst(HttpServletRequest request) {
-		return request.getServerName();
+//		TODO
+		return "zhang3.xyz";
+//		return request.getServerName();
+
 //		String r = "from getServerName: " + request.getServerName();
 //		String url = request.getServerName();
 //		Pattern p = Pattern.compile("(?!:http://)(www\\.[0-9a-zA-Z_]+\\.[a-z]{1,8})(?!:/.*)");
@@ -40,19 +44,28 @@ public class HostnameServiceImpl extends CommonService implements HostnameServic
 //
 //		return r;
 	}
-	
+
 	@Override
 	public HostnameType findHostnameType(HttpServletRequest request) {
 		return HostnameType.getTypeCustom(findHostNameFromRequst(request));
 	}
-	
+
 	@Override
 	public String findMainHostname() {
 		Hostname po = hostnameMapper.selectByPrimaryKey(5);
-		if(po == null) {
+		if (po == null) {
 			return null;
 		} else {
 			return po.getHostname();
 		}
+	}
+
+	@Override
+	public boolean isMainHostname(HttpServletRequest request) {
+		String hostname = request.getServerName();
+		if (StringUtils.isBlank(hostname)) {
+			return false;
+		}
+		return HostnameType.zhang3.equals(HostnameType.getTypeCustom(hostname));
 	}
 }

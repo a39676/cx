@@ -42,13 +42,13 @@ public class ArticleCommonService extends CommonService {
 	@Autowired
 	private TextFilter textFilter;
 	@Autowired
-	protected ArticleOptionService articleConstantService;
+	protected ArticleOptionService articleOptionService;
 	@Autowired
 	protected NumericUtilCustom numberUtil;
 	@Autowired
 	protected VisitDataService visitDataService;
 	@Autowired
-	protected SystemOptionService systemConstantService;
+	protected SystemOptionService systemOptionService;
 	@Autowired
 	protected HostnameService hostnameService;
 	@Autowired
@@ -68,12 +68,12 @@ public class ArticleCommonService extends CommonService {
 	 * @return
 	 * @throws IOException
 	 */
-	protected ArticleFileSaveResult saveArticleFile(String storePrefixPath, Long creatorId, String content)
+	protected ArticleFileSaveResult saveArticleFile(String storePrefixPath, String content)
 			throws IOException {
-		String fileName = creatorId + "L" + snowFlake.getNextId() + ".txt";
+		String fileName = snowFlake.getNextId() + ".txt";
 		String timeFolder = LocalDate.now().toString();
-		File mainFolder = new File(storePrefixPath + "/" + timeFolder);
-		String finalFilePath = storePrefixPath + "/" + timeFolder + "/" + fileName;
+		File mainFolder = new File(storePrefixPath + File.separator + timeFolder);
+		String finalFilePath = storePrefixPath + File.separator + timeFolder + File.separator + fileName;
 		ArticleFileSaveResult result = new ArticleFileSaveResult();
 
 		if (!mainFolder.exists()) {
@@ -92,7 +92,7 @@ public class ArticleCommonService extends CommonService {
 
 		content = doc.toString();
 
-		Long maxArticleLength = articleConstantService.getMaxArticleLength();
+		Long maxArticleLength = articleOptionService.getMaxArticleLength();
 
 		if (content.length() > maxArticleLength) {
 			result.fillWithResult(ResultTypeCX.articleTooLong);
@@ -140,8 +140,8 @@ public class ArticleCommonService extends CommonService {
 //			return "";
 //		}
 
-		String saveingFolderPath = articleConstantService.getArticleImageSavingFolder();
-		String imgSavingPath = saveingFolderPath + "/" + filename;
+		String saveingFolderPath = articleOptionService.getArticleImageSavingFolder();
+		String imgSavingPath = saveingFolderPath + File.separator + filename;
 		boolean saveFlag = imgService.imgSaveAsFileDirect(srcHandleResult.getBase64Str(), imgSavingPath,
 				srcHandleResult.getImgFileType());
 		if (!saveFlag) {

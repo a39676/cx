@@ -1,83 +1,38 @@
 package demo.article.article.pojo.vo;
 
-import java.util.HashMap;
-import java.util.List;
-
 public class ArticleLongSummaryVO {
 	private String articleTitle;
 
-	private String nickName;
-
-	private Long userId;
-
-	private List<String> imgUrls;
-
-	private String firstLine;
+	private String imgUrl;
 
 	private String createDateString;
 
-	private String createDateDescription;
+	private String createDateTimeString;
 
 	private String privateKey;
 
-	private HashMap<Integer, ArticleEvaluationCounterVO> evaluationMap;
-	
 	private Boolean hasCommentNotReview = false;
 
-	public String getNickName() {
-		return nickName;
+	private Integer viewCount = 0;
+
+	private Long commentCount = 0L;
+
+	private Boolean isHot = false;
+
+	public Long getCommentCount() {
+		return commentCount;
 	}
 
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
+	public void setCommentCount(Long commentCount) {
+		this.commentCount = commentCount;
 	}
 
-	public String getPrivateKey() {
-		return privateKey;
+	public Integer getViewCount() {
+		return viewCount;
 	}
 
-	public void setPrivateKey(String privateKey) {
-		this.privateKey = privateKey;
-	}
-
-	public List<String> getImgUrls() {
-		return imgUrls;
-	}
-
-	public void setImgUrls(List<String> imgChannels) {
-		this.imgUrls = imgChannels;
-	}
-
-	public String getFirstLine() {
-		return firstLine;
-	}
-
-	public void setFirstLine(String firstLine) {
-		this.firstLine = firstLine;
-	}
-
-	public String getCreateDateString() {
-		return createDateString;
-	}
-
-	public void setCreateDateString(String createDateString) {
-		this.createDateString = createDateString;
-	}
-
-	public Long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
-
-	public HashMap<Integer, ArticleEvaluationCounterVO> getEvaluationMap() {
-		return evaluationMap;
-	}
-
-	public void setEvaluationMap(HashMap<Integer, ArticleEvaluationCounterVO> evaluationMap) {
-		this.evaluationMap = evaluationMap;
+	public void setViewCount(Integer viewCount) {
+		this.viewCount = viewCount;
 	}
 
 	public String getArticleTitle() {
@@ -88,15 +43,29 @@ public class ArticleLongSummaryVO {
 		this.articleTitle = articleTitle;
 	}
 
-	public String getCreateDateDescription() {
-		return createDateDescription;
+	public String getImgUrl() {
+		return imgUrl;
 	}
 
-	public void setCreateDateDescription(String createDateDescription) {
-		this.createDateDescription = createDateDescription;
+	public void setImgUrl(String imgUrl) {
+		this.imgUrl = imgUrl;
 	}
-	
-	
+
+	public String getCreateDateString() {
+		return createDateString;
+	}
+
+	public void setCreateDateString(String createDateString) {
+		this.createDateString = createDateString;
+	}
+
+	public String getPrivateKey() {
+		return privateKey;
+	}
+
+	public void setPrivateKey(String privateKey) {
+		this.privateKey = privateKey;
+	}
 
 	public Boolean getHasCommentNotReview() {
 		return hasCommentNotReview;
@@ -106,12 +75,28 @@ public class ArticleLongSummaryVO {
 		this.hasCommentNotReview = hasCommentNotReview;
 	}
 
+	public String getCreateDateTimeString() {
+		return createDateTimeString;
+	}
+
+	public void setCreateDateTimeString(String createDateTimeString) {
+		this.createDateTimeString = createDateTimeString;
+	}
+
+	public Boolean getIsHot() {
+		return isHot;
+	}
+
+	public void setIsHot(Boolean isHot) {
+		this.isHot = isHot;
+	}
+
 	@Override
 	public String toString() {
-		return "ArticleLongSummaryVO [articleTitle=" + articleTitle + ", nickName=" + nickName + ", userId=" + userId
-				+ ", imgUrls=" + imgUrls + ", firstLine=" + firstLine + ", createDateString=" + createDateString
-				+ ", createDateDescription=" + createDateDescription + ", privateKey=" + privateKey + ", evaluationMap="
-				+ evaluationMap + ", hasCommentNotReview=" + hasCommentNotReview + "]";
+		return "ArticleLongSummaryVOV3 [articleTitle=" + articleTitle + ", imgUrl=" + imgUrl + ", createDateString="
+				+ createDateString + ", createDateTimeString=" + createDateTimeString + ", privateKey=" + privateKey
+				+ ", hasCommentNotReview=" + hasCommentNotReview + ", viewCount=" + viewCount + ", commentCount="
+				+ commentCount + ", isHot=" + isHot + "]";
 	}
 
 }

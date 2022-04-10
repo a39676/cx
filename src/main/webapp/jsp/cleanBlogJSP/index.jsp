@@ -11,12 +11,12 @@
 </head>
 
 <body>
-
+  
   <!-- Navigation -->
   <%@ include file="./nav.jsp" %>
 
   <!-- Page Header -->
-  <header class="masthead" style="background-image: url('${headerImg}')"> 
+  <header class="masthead" style="background-image: url('${headerImg}')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
@@ -62,7 +62,7 @@
       </div>
       <div class="col-md-2 mx-auto">
       </div>
-      
+
     </div>
   </div>
 

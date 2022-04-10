@@ -1,4 +1,7 @@
-首页 应新增默认频道  将所有频道的 post 汇总, 按时间倒序排列
+article
+	load public channel & flash channel list when application start
+		refresh flash channel list with task
+	load private channel list when login
 
 WuYiJobServiceImpl ??? 待处理
 

@@ -22,7 +22,7 @@ import toolPack.dateTimeHandle.DateHandler;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
 
 public abstract class CommonService {
-	
+
 	protected final Logger log = LoggerFactory.getLogger(getClass());
 
 	@Autowired
@@ -37,7 +37,7 @@ public abstract class CommonService {
 	protected static final Integer NORMAL_PAGE_SIZE = 10;
 	protected static final LocalDateTime BLOG_ARTICLE_START_TIME = LocalDateTime.of(2020, 5, 1, 0, 0, 0);
 	protected static final String MAIN_FOLDER_PATH = "/home/u2/cx";
-	
+
 	protected CommonResultCX nullParam() {
 		CommonResultCX result = new CommonResultCX();
 		result.fillWithResult(ResultTypeCX.nullParam);
@@ -103,13 +103,10 @@ public abstract class CommonService {
 		}
 	}
 
-	
-
 	protected boolean isBigUser() {
 		return baseUtilCustom.hasSuperAdminRole();
 	}
 
-	
 	protected IpRecordBO getIp(HttpServletRequest request) {
 		IpRecordBO record = new IpRecordBO();
 		record.setRemoteAddr(request.getRemoteAddr());
@@ -151,9 +148,10 @@ public abstract class CommonService {
 		return nextNoticeTime;
 	}
 
-	protected AutomationTestInsertEventDTO automationTestInsertEventDtoAddParamStr(AutomationTestInsertEventDTO dto, Object obj) {
+	protected AutomationTestInsertEventDTO automationTestInsertEventDtoAddParamStr(AutomationTestInsertEventDTO dto,
+			Object obj) {
 		JSONObject json = null;
-		if(StringUtils.isBlank(dto.getParamStr())) {
+		if (StringUtils.isBlank(dto.getParamStr())) {
 			json = new JSONObject();
 		} else {
 			try {
@@ -162,11 +160,11 @@ public abstract class CommonService {
 				json = new JSONObject();
 			}
 		}
-		
+
 		json.put(obj.getClass().getSimpleName(), obj);
-		
+
 		dto.setParamStr(json.toString());
-		
+
 		return dto;
 	}
 }

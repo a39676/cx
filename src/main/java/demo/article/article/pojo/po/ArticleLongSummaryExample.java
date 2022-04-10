@@ -424,6 +424,186 @@ public class ArticleLongSummaryExample {
             addCriterion("create_time not between", value1, value2, "createTime");
             return (Criteria) this;
         }
+
+        public Criteria andIsHotIsNull() {
+            addCriterion("is_hot is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotIsNotNull() {
+            addCriterion("is_hot is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotEqualTo(Boolean value) {
+            addCriterion("is_hot =", value, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotNotEqualTo(Boolean value) {
+            addCriterion("is_hot <>", value, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotGreaterThan(Boolean value) {
+            addCriterion("is_hot >", value, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_hot >=", value, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotLessThan(Boolean value) {
+            addCriterion("is_hot <", value, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_hot <=", value, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotIn(List<Boolean> values) {
+            addCriterion("is_hot in", values, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotNotIn(List<Boolean> values) {
+            addCriterion("is_hot not in", values, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_hot between", value1, value2, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_hot not between", value1, value2, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotLevelIsNull() {
+            addCriterion("hot_level is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotLevelIsNotNull() {
+            addCriterion("hot_level is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotLevelEqualTo(Integer value) {
+            addCriterion("hot_level =", value, "hotLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotLevelNotEqualTo(Integer value) {
+            addCriterion("hot_level <>", value, "hotLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotLevelGreaterThan(Integer value) {
+            addCriterion("hot_level >", value, "hotLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotLevelGreaterThanOrEqualTo(Integer value) {
+            addCriterion("hot_level >=", value, "hotLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotLevelLessThan(Integer value) {
+            addCriterion("hot_level <", value, "hotLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotLevelLessThanOrEqualTo(Integer value) {
+            addCriterion("hot_level <=", value, "hotLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotLevelIn(List<Integer> values) {
+            addCriterion("hot_level in", values, "hotLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotLevelNotIn(List<Integer> values) {
+            addCriterion("hot_level not in", values, "hotLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotLevelBetween(Integer value1, Integer value2) {
+            addCriterion("hot_level between", value1, value2, "hotLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotLevelNotBetween(Integer value1, Integer value2) {
+            addCriterion("hot_level not between", value1, value2, "hotLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotValidTimeIsNull() {
+            addCriterion("hot_valid_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotValidTimeIsNotNull() {
+            addCriterion("hot_valid_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotValidTimeEqualTo(LocalDateTime value) {
+            addCriterion("hot_valid_time =", value, "hotValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotValidTimeNotEqualTo(LocalDateTime value) {
+            addCriterion("hot_valid_time <>", value, "hotValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotValidTimeGreaterThan(LocalDateTime value) {
+            addCriterion("hot_valid_time >", value, "hotValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotValidTimeGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("hot_valid_time >=", value, "hotValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotValidTimeLessThan(LocalDateTime value) {
+            addCriterion("hot_valid_time <", value, "hotValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotValidTimeLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("hot_valid_time <=", value, "hotValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotValidTimeIn(List<LocalDateTime> values) {
+            addCriterion("hot_valid_time in", values, "hotValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotValidTimeNotIn(List<LocalDateTime> values) {
+            addCriterion("hot_valid_time not in", values, "hotValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotValidTimeBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("hot_valid_time between", value1, value2, "hotValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotValidTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("hot_valid_time not between", value1, value2, "hotValidTime");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

@@ -1,4 +1,5 @@
 loadArticleChannels();
+
 var getUrlParameter = function getUrlParameter(sParam) {
   var sPageURL = decodeURIComponent(window.location.search.substring(1)),
   sURLVariables = sPageURL.split('&'),
@@ -11,6 +12,7 @@ var getUrlParameter = function getUrlParameter(sParam) {
     }
   }
 };
+
 function loadArticleChannels() {
   var url = "/article/findChannels";
   $.ajax({
@@ -171,7 +173,7 @@ function searchArticleLongSummary(firstSearchFlag) {
   blogArea.attr("loadingFlag", "1");
   var jsonOutput = {
     endTime:markTime,
-    isHot:"false",
+    isHot:"true",
   };
   if (firstSearchFlag) {
     jsonOutput["title"] = newKeyword;

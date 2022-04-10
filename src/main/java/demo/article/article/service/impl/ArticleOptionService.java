@@ -1,6 +1,8 @@
 package demo.article.article.service.impl;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
+import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.common.service.CommonService;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -36,7 +39,9 @@ public class ArticleOptionService extends CommonService {
 	private String articleChannelPrefixStorePath;
 	/** 一般用户可以浏览 * 个月内的非置顶内容- */
 	private Long normalUserMaxReadingMonth = 12L;
-	
+
+	private HashMap<String, List<ArticleChannelVO>> publicChannels = new HashMap<>();
+
 	@Override
 	public String toString() {
 		return "ArticleConstantService [optionFilePath=" + optionFilePath + ", maxArticleLength=" + maxArticleLength
@@ -161,6 +166,14 @@ public class ArticleOptionService extends CommonService {
 
 	public void setNormalUserMaxReadingMonth(Long normalUserMaxReadingMonth) {
 		this.normalUserMaxReadingMonth = normalUserMaxReadingMonth;
+	}
+
+	public HashMap<String, List<ArticleChannelVO>> getPublicChannels() {
+		return publicChannels;
+	}
+
+	public void setPublicChannels(HashMap<String, List<ArticleChannelVO>> publicChannels) {
+		this.publicChannels = publicChannels;
 	}
 
 }

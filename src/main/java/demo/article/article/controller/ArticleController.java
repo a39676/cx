@@ -31,7 +31,7 @@ import demo.article.article.pojo.param.controllerParam.CreatingArticleParam;
 import demo.article.article.pojo.param.controllerParam.InsertArticleLongEvaluationParam;
 import demo.article.article.pojo.param.controllerParam.ReviewArticleLongParam;
 import demo.article.article.pojo.result.GetArticleChannelsResult;
-import demo.article.article.pojo.result.jsonRespon.FindArticleLongSummaryListResultV3;
+import demo.article.article.pojo.result.jsonRespon.FindArticleLongSummaryListResult;
 import demo.article.article.pojo.type.ArticleEvaluationType;
 import demo.article.article.pojo.type.ArticleReviewType;
 import demo.article.article.service.ArticleChannelService;
@@ -84,8 +84,13 @@ public class ArticleController extends CommonController {
 	
 	@PostMapping(value = ArticleUrlConstant.articleLongSummaryListByChannel)
 	@ResponseBody
-	public FindArticleLongSummaryListResultV3 articleLongSummaryListByChannel(@RequestBody FindArticleLongSummaryListDTO param, HttpServletRequest request) {
-		return summaryService.summaryListByChannelIdV4(param, request);
+	public FindArticleLongSummaryListResult articleLongSummaryListByChannel(@RequestBody FindArticleLongSummaryListDTO param, HttpServletRequest request) {
+		if(param.getArticleChannelId() == null) {
+			return summaryService.summaryListWithoutChannel(param, request);
+		} else {
+			return summaryService.summaryListByChannelId(param, request);	
+		}
+		
 	}
 	
 	@GetMapping(value = ArticleUrlConstant.readArticleLong)

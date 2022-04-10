@@ -12,33 +12,35 @@ import demo.article.article.pojo.po.ArticleLongSummary;
 import demo.article.article.pojo.po.ArticleLongSummaryExample;
 
 public interface ArticleLongSummaryMapper {
-    long countByExample(ArticleLongSummaryExample example);
+	long countByExample(ArticleLongSummaryExample example);
 
-    int deleteByExample(ArticleLongSummaryExample example);
+	int deleteByExample(ArticleLongSummaryExample example);
 
-    int deleteByPrimaryKey(Long articleId);
+	int deleteByPrimaryKey(Long articleId);
 
-    int insert(ArticleLongSummary record);
+	int insert(ArticleLongSummary record);
 
-    int insertSelective(ArticleLongSummary record);
+	int insertSelective(ArticleLongSummary record);
 
-    List<ArticleLongSummary> selectByExampleWithRowbounds(ArticleLongSummaryExample example, RowBounds rowBounds);
+	List<ArticleLongSummary> selectByExampleWithRowbounds(ArticleLongSummaryExample example, RowBounds rowBounds);
 
-    List<ArticleLongSummary> selectByExample(ArticleLongSummaryExample example);
+	List<ArticleLongSummary> selectByExample(ArticleLongSummaryExample example);
 
-    ArticleLongSummary selectByPrimaryKey(Long articleId);
+	ArticleLongSummary selectByPrimaryKey(Long articleId);
 
-    int updateByExampleSelective(@Param("record") ArticleLongSummary record, @Param("example") ArticleLongSummaryExample example);
+	int updateByExampleSelective(@Param("record") ArticleLongSummary record,
+			@Param("example") ArticleLongSummaryExample example);
 
-    int updateByExample(@Param("record") ArticleLongSummary record, @Param("example") ArticleLongSummaryExample example);
+	int updateByExample(@Param("record") ArticleLongSummary record,
+			@Param("example") ArticleLongSummaryExample example);
 
-    int updateByPrimaryKeySelective(ArticleLongSummary record);
+	int updateByPrimaryKeySelective(ArticleLongSummary record);
 
-    int updateByPrimaryKey(ArticleLongSummary record);
-    
-    ArticleLongSummaryBO findArticleLongSummary(Long articleId);
-    
-    List<ArticleLongSummaryBO> findArticleHotSummaryList(FindArticleHotSummaryListMapperParam param);
-    
-    List<ArticleLongSummaryBO> findArticleLongSummaryList(FindArticleLongSummaryListMapperDTO param);
+	int updateByPrimaryKey(ArticleLongSummary record);
+
+	ArticleLongSummaryBO findArticleLongSummary(Long articleId);
+
+	List<ArticleLongSummaryBO> findArticleHotSummaryList(FindArticleHotSummaryListMapperParam param);
+
+	List<ArticleLongSummaryBO> findArticleLongSummaryList(FindArticleLongSummaryListMapperDTO param);
 }

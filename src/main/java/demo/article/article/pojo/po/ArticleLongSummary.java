@@ -13,6 +13,12 @@ public class ArticleLongSummary {
 
     private LocalDateTime createTime;
 
+    private Boolean isHot;
+
+    private Integer hotLevel;
+
+    private LocalDateTime hotValidTime;
+
     public Long getArticleId() {
         return articleId;
     }
@@ -51,5 +57,29 @@ public class ArticleLongSummary {
 
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
+    }
+
+    public Boolean getIsHot() {
+        return isHot;
+    }
+
+    public void setIsHot(Boolean isHot) {
+        this.isHot = isHot;
+    }
+
+    public Integer getHotLevel() {
+        return hotLevel;
+    }
+
+    public void setHotLevel(Integer hotLevel) {
+        this.hotLevel = hotLevel;
+    }
+
+    public LocalDateTime getHotValidTime() {
+        return hotValidTime;
+    }
+
+    public void setHotValidTime(LocalDateTime hotValidTime) {
+        this.hotValidTime = hotValidTime;
     }
 }

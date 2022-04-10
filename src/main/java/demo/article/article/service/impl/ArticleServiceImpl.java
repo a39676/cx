@@ -120,9 +120,9 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		String title = checkResult.getTitle();
 		Long channelId = checkResult.getChannelId();
 
-		String summaryStorePrefixPath = articleConstantService.getArticleSummaryStorePrefixPath();
-		String storePrefixPath = articleConstantService.getArticleStorePrefixPath();
-		Long maxArticleLength = articleConstantService.getMaxArticleLength();
+		String summaryStorePrefixPath = articleOptionService.getArticleSummaryStorePrefixPath();
+		String storePrefixPath = articleOptionService.getArticleStorePrefixPath();
+		Long maxArticleLength = articleOptionService.getMaxArticleLength();
 		if (StringUtils.isAnyBlank(summaryStorePrefixPath, storePrefixPath) || maxArticleLength < 1) {
 			result.fillWithResult(ResultTypeCX.serviceError);
 			return result;
@@ -142,7 +142,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			}
 		}
 
-		ArticleFileSaveResult saveArticleResult = saveArticleFile(storePrefixPath, editorId,
+		ArticleFileSaveResult saveArticleResult = saveArticleFile(storePrefixPath,
 				controllerParam.getContent());
 		if (!saveArticleResult.isSuccess()) {
 			result.failWithMessage(saveArticleResult.getMessage());
@@ -190,7 +190,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 
 		saveArticleResult.setArticleId(newArticleId);
 
-		CommonResultCX saveArtieleSummaryResult = saveArticleSummaryFile(editorId, newArticleId, title,
+		CommonResultCX saveArtieleSummaryResult = saveArticleSummaryFile(newArticleId, title,
 				saveArticleResult.getFirstLine(), saveArticleResult.getImageUrls(), summaryStorePrefixPath);
 		if (!saveArtieleSummaryResult.isSuccess()) {
 			result.failWithMessage(saveArtieleSummaryResult.getMessage());
@@ -235,7 +235,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 
 	private void quickPass(Long articleId) {
-		String pk = URLEncoder.encode(systemConstantService.encryptId(articleId), StandardCharsets.UTF_8);
+		String pk = URLEncoder.encode(systemOptionService.encryptId(articleId), StandardCharsets.UTF_8);
 		if (pk != null) {
 			ReviewArticleLongParam passArticleParam = new ReviewArticleLongParam();
 			passArticleParam.setPk(pk);
@@ -251,7 +251,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	/**
 	 * 用于保存新建/编辑的摘要文档 在编辑情况下, userID 是编辑者ID, 不一定是原作者ID, 用于命名文件名
 	 * 
-	 * @param userId
 	 * @param articleId
 	 * @param title
 	 * @param firstLine
@@ -259,18 +258,18 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	 * @param summaryStorePrefixPath
 	 * @return
 	 */
-	private CommonResultCX saveArticleSummaryFile(Long userId, Long articleId, String title, String firstLine,
+	private CommonResultCX saveArticleSummaryFile( Long articleId, String title, String firstLine,
 			List<String> imageUrls, String summaryStorePrefixPath) {
 		if (StringUtils.isBlank(firstLine)) {
 			firstLine = "";
 		}
 		CommonResultCX result = new CommonResultCX();
 
-		String fileName = userId + "L" + snowFlake.getNextId() + ".txt";
+		String fileName = snowFlake.getNextId() + ".txt";
 		String timeFolder = LocalDate.now().toString();
 
 		File mainFolder = new File(summaryStorePrefixPath + timeFolder);
-		String finalFilePath = summaryStorePrefixPath + timeFolder + "/" + fileName;
+		String finalFilePath = summaryStorePrefixPath + File.separator + timeFolder + File.separator + fileName;
 
 		if (!mainFolder.exists()) {
 			if (!mainFolder.mkdirs()) {
@@ -306,7 +305,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		FindArticleLongResult result = new FindArticleLongResult();
 		ArticleLongVO articleVO = null;
 
-		Long articleId = systemConstantService.decryptPrivateKey(param.getPrivateKey());
+		Long articleId = systemOptionService.decryptPrivateKey(param.getPrivateKey());
 		if (articleId == null) {
 			articleVO = new ArticleLongVO();
 			articleVO.setContentLines(ResultTypeCX.errorParam.getName());
@@ -394,7 +393,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		}
 
 		privateKey = URLDecoder.decode(privateKey, StandardCharsets.UTF_8);
-		Long articleId = systemConstantService.decryptPrivateKey(privateKey);
+		Long articleId = systemOptionService.decryptPrivateKey(privateKey);
 		if (articleId == null) {
 			return false;
 		}
@@ -451,7 +450,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			return vo;
 		}
 
-		Long articleId = systemConstantService.decryptPrivateKey(dto.getPrivateKey());
+		Long articleId = systemOptionService.decryptPrivateKey(dto.getPrivateKey());
 
 		if (articleId == null) {
 			vo = new ArticleLongVO();
@@ -501,7 +500,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		}
 
 		dto.setPk(URLDecoder.decode(dto.getPk(), StandardCharsets.UTF_8));
-		Long targetArticleId = systemConstantService.decryptPrivateKey(dto.getPk());
+		Long targetArticleId = systemOptionService.decryptPrivateKey(dto.getPk());
 
 		if (targetArticleId == null) {
 			result.failWithMessage("参数错误");

@@ -2,20 +2,20 @@ package demo.article.article.pojo.result.jsonRespon;
 
 import java.util.List;
 
-import demo.article.article.pojo.vo.ArticleLongSummaryVOV3;
+import demo.article.article.pojo.vo.ArticleLongSummaryVO;
 import demo.common.pojo.result.CommonResultCX;
 
-public class FindArticleLongSummaryListResultV3 extends CommonResultCX {
+public class FindArticleLongSummaryListResult extends CommonResultCX {
 
-	private List<ArticleLongSummaryVOV3> articleLongSummaryVOList;
+	private List<ArticleLongSummaryVO> articleLongSummaryVOList;
 
 	private Long channelId = -1L;
 
-	public List<ArticleLongSummaryVOV3> getArticleLongSummaryVOList() {
+	public List<ArticleLongSummaryVO> getArticleLongSummaryVOList() {
 		return articleLongSummaryVOList;
 	}
 
-	public void setArticleLongSummaryVOList(List<ArticleLongSummaryVOV3> articleLongSummaryVOList) {
+	public void setArticleLongSummaryVOList(List<ArticleLongSummaryVO> articleLongSummaryVOList) {
 		this.articleLongSummaryVOList = articleLongSummaryVOList;
 	}
 

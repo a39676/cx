@@ -98,7 +98,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		}
 		
 		inputParam.setPk(URLDecoder.decode(inputParam.getPk(), StandardCharsets.UTF_8));
-		Long articleId = systemConstantService.decryptPrivateKey(inputParam.getPk());
+		Long articleId = systemOptionService.decryptPrivateKey(inputParam.getPk());
 		
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
@@ -165,7 +165,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			inputParam.setContent(sanitize(inputParam.getContent()));
 		} 
 
-		ArticleFileSaveResult saveFileResult = saveArticleCommentFile(articleCommentStorePrefixPath, userId, inputParam.getContent());
+		ArticleFileSaveResult saveFileResult = saveArticleCommentFile(articleCommentStorePrefixPath, inputParam.getContent());
 		if(!saveFileResult.isSuccess()) {
 			return saveFileResult;
 		}
@@ -188,7 +188,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		
 		if(bigUserFlag) {
 			PassArticleCommentDTO param = new PassArticleCommentDTO();
-			param.setPk(systemConstantService.encryptId(newCommonId));
+			param.setPk(systemOptionService.encryptId(newCommonId));
 			articleCommentAdminService.passArticleComment(param);
 		} else {
 			insertCommentRedisMark(request, userId, articleId);
@@ -199,8 +199,8 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		return result;
 	}
 	
-	private ArticleFileSaveResult saveArticleCommentFile(String storePrefixPath, Long userId, String content) throws IOException {
-		return saveArticleFile(storePrefixPath, userId, content);
+	private ArticleFileSaveResult saveArticleCommentFile(String storePrefixPath, String content) throws IOException {
+		return saveArticleFile(storePrefixPath, content);
 	}
 
 	@Override
@@ -221,7 +221,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		}
 		
 		dto.setPk(URLDecoder.decode(dto.getPk(), StandardCharsets.UTF_8));
-		Long articleId = systemConstantService.decryptPrivateKey(dto.getPk());
+		Long articleId = systemOptionService.decryptPrivateKey(dto.getPk());
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -277,7 +277,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		vo.setEvaluationCodeAndCount(evaluationStatisticsMap.get(po.getId()).getEvaluationCodeAndCount());
 		vo.setNickName(po.getTmpNickName());
 		vo.setCreateTimeStr(localDateTimeHandler.dateToStr(po.getCreateTime()));
-		vo.setPk(systemConstantService.encryptId(po.getId()));
+		vo.setPk(systemOptionService.encryptId(po.getId()));
 		vo.setIsPass(po.getIsPass());
 		vo.setIsDelete(po.getIsDelete());
 		vo.setIsReject(po.getIsReject());
@@ -315,7 +315,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	}
 
 	private boolean justComment(HttpServletRequest request, Long userId, Long articleId) {
-		if("dev".equals(systemConstantService.getEnvName())) {
+		if("dev".equals(systemOptionService.getEnvName())) {
 			return false;
 		}
 		

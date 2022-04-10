@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -17,8 +16,6 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
-import demo.base.system.pojo.result.HostnameType;
-import demo.base.system.service.HostnameService;
 import demo.common.service.CommonService;
 import demo.config.costom_component.EncryptUtil;
 import toolPack.ioHandle.FileUtilCustom;
@@ -26,11 +23,9 @@ import toolPack.ioHandle.FileUtilCustom;
 @Scope("singleton")
 @Service
 public class SystemOptionService extends CommonService {
-	
+
 	@Autowired
 	private EncryptUtil encryptUtil;
-	@Autowired
-	private HostnameService hostnameService;
 
 	@Value("${optionFilePath.system}")
 	private String optionFilePath;
@@ -49,7 +44,7 @@ public class SystemOptionService extends CommonService {
 	private Boolean isDebuging = null;
 	private String fakeFTPHome = null;
 	private String homepageAnnouncementStr = null;
-	
+
 	public String encryptId(Long id) {
 		List<String> encryptIdList = encryptId(Arrays.asList(id));
 		if (encryptIdList == null || encryptIdList.isEmpty()) {
@@ -121,18 +116,9 @@ public class SystemOptionService extends CommonService {
 		}
 		return idList;
 	}
-	
+
 	public boolean isDev() {
 		return "dev".equals(getEnvName());
-	}
-	
-	public boolean isInZhang3OrDev(HttpServletRequest request) {
-		if(isDev()) {
-			return true;
-		}
-		
-		HostnameType hostnameType = hostnameService.findHostnameType(request);
-		return HostnameType.zhang3.equals(hostnameType);
 	}
 
 	public String getAesKey() {
@@ -190,7 +176,7 @@ public class SystemOptionService extends CommonService {
 	public String getHomepageAnnouncementStr() {
 		return homepageAnnouncementStr;
 	}
-	
+
 	public void setTmpHomepageAnnouncementStr(String homepageAnnouncementStr) {
 		this.homepageAnnouncementStr = homepageAnnouncementStr;
 	}

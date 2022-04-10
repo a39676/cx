@@ -34,7 +34,7 @@
         </javaTypeResolver>  
           
         <!-- 生成模型的包名和位置-->    
-        <javaModelGenerator targetPackage="demo.toyParts.educate.pojo.po" targetProject="cx">    
+        <javaModelGenerator targetPackage="demo.article.article.pojo.po" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
             <property name="trimStrings" value="true"/> 
             <!-- for MyBatis3 / MyBatis3Simple
@@ -45,18 +45,18 @@
         </javaModelGenerator>    
         
         <!-- 生成映射文件的包名和位置-->    
-        <sqlMapGenerator targetPackage="demo.toyParts.educate.mapper" targetProject="cx">    
+        <sqlMapGenerator targetPackage="demo.article.article.mapper" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
         </sqlMapGenerator>    
         
         <!-- 生成DAO的包名和位置-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.toyParts.educate.mapper" targetProject="cx">    
+        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.article.article.mapper" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="student_exercies_history">
-        	<property name="tableName" value="student_exercies_history"></property>
-        	<property name="domainObjectName" value="student_exercies_history"></property>
+        <table tableName="article_long_summary">
+        	<property name="tableName" value="article_long_summary"></property>
+        	<property name="domainObjectName" value="article_long_summary"></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

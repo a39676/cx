@@ -1,4 +1,7 @@
 article
+	
+	search -> loadmore -> show more post NOT match key word
+	
 	load public channel & flash channel list when application start
 		refresh flash channel list with task
 	load private channel list when login

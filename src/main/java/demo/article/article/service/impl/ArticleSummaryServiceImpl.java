@@ -104,12 +104,16 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			}
 			mapperParam.setChannelIdList(channelIdList);
 		} else {
-			List<ArticleChannelVO> publicChannelList = articleOptionService.getPublicChannels().get(hostnameService.findHostNameFromRequst(request));
-			for(ArticleChannelVO channelVO : publicChannelList) {
-				try {
-					mapperParam.addChannelId(Long.parseLong(channelVO.getChannelId()));
-				} catch (Exception e) {
+			if(cp.getArticleChannelId() == null) {
+				List<ArticleChannelVO> publicChannelList = articleOptionService.getPublicChannels().get(hostnameService.findHostNameFromRequst(request));
+				for(ArticleChannelVO channelVO : publicChannelList) {
+					try {
+						mapperParam.addChannelId(Long.parseLong(channelVO.getChannelId()));
+					} catch (Exception e) {
+					}
 				}
+			} else {
+				mapperParam.addChannelId(cp.getArticleChannelId());
 			}
 		}
 

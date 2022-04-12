@@ -1,5 +1,7 @@
 article
-	
+	comment error
+		search error
+			
 	search -> loadmore -> show more post NOT match key word
 	
 	load public channel & flash channel list when application start

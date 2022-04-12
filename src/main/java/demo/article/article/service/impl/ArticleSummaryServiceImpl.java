@@ -25,14 +25,12 @@ import demo.article.article.pojo.param.mapperParam.FindArticleHotSummaryListMapp
 import demo.article.article.pojo.po.ArticleLongSummary;
 import demo.article.article.pojo.po.ArticleSummaryVCode;
 import demo.article.article.pojo.po.ArticleViewCount;
-import demo.article.article.pojo.result.GetArticleChannelsResult;
 import demo.article.article.pojo.result.jsonRespon.FindArticleLongSummaryListResult;
 import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.article.article.pojo.vo.ArticleEvaluationStatisticsVO;
 import demo.article.article.pojo.vo.ArticleLongSummaryVO;
 import demo.article.article.pojo.vo.ArticleLongSummaryVO_need_update;
 import demo.article.article.service.ArticleCatchVCodeService;
-import demo.article.article.service.ArticleChannelService;
 import demo.article.article.service.ArticleSummaryService;
 import demo.article.article.service.ArticleViewService;
 import demo.article.articleComment.controller.ArticleCommentAdminController;
@@ -61,9 +59,6 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 	private ArticleCommentController articleCommentController;
 
 	@Autowired
-	private ArticleChannelService channelService;
-
-	@Autowired
 	private FileUtilCustom ioUtil;
 
 	@Override
@@ -88,31 +83,19 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 	}
 
 	private FindArticleLongSummaryListMapperDTO buildFindArticleLongSummaryListMapperDTO(
-			FindArticleLongSummaryListDTO cp, HttpServletRequest request) {
+			FindArticleLongSummaryListDTO cp, String hostname) {
 		FindArticleLongSummaryListMapperDTO mapperParam = new FindArticleLongSummaryListMapperDTO();
 
-		if (StringUtils.isNotBlank(cp.getTitle())) {
-			GetArticleChannelsResult getChannelResult = channelService.getArticleChannelsDynamic(request);
-			List<Long> channelIdList = new ArrayList<Long>();
-			for (ArticleChannelVO i : getChannelResult.getChannelList()) {
-				if (numberUtil.matchInteger(i.getChannelId())) {
-					channelIdList.add(Long.parseLong(i.getChannelId()));
+		if (cp.getArticleChannelId() == null) {
+			List<ArticleChannelVO> publicChannelList = articleOptionService.getPublicChannels().get(hostname);
+			for (ArticleChannelVO channelVO : publicChannelList) {
+				try {
+					mapperParam.addChannelId(Long.parseLong(channelVO.getChannelId()));
+				} catch (Exception e) {
 				}
 			}
-			mapperParam.setChannelIdList(channelIdList);
 		} else {
-			if (cp.getArticleChannelId() == null) {
-				List<ArticleChannelVO> publicChannelList = articleOptionService.getPublicChannels()
-						.get(hostnameService.findHostNameFromRequst(request));
-				for (ArticleChannelVO channelVO : publicChannelList) {
-					try {
-						mapperParam.addChannelId(Long.parseLong(channelVO.getChannelId()));
-					} catch (Exception e) {
-					}
-				}
-			} else {
-				mapperParam.addChannelId(cp.getArticleChannelId());
-			}
+			mapperParam.addChannelId(cp.getArticleChannelId());
 		}
 
 		mapperParam.setIsHot(cp.getIsHot());
@@ -288,14 +271,14 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 	}
 
 	private FindArticleLongSummaryListResult articleLongSummaryListByChannelId(FindArticleLongSummaryListDTO dto,
-			HttpServletRequest request) {
+			String hostname) {
 		/*
 		 * 此处为非置顶部分 应该将置顶/非置顶文章分开处理
 		 * 
 		 * 有设置限制只可浏览某时点之后的文章
 		 */
 		FindArticleLongSummaryListResult result = new FindArticleLongSummaryListResult();
-		findArticleLongSummaryListParamPreHandle(dto, request);
+		findArticleLongSummaryListParamPreHandle(dto);
 
 		if (dto.getEndTime() != null) {
 			dto.setEndTime(dto.getEndTime().minusSeconds(1L));
@@ -316,8 +299,10 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 
 		result.setChannelId(channelId);
 
+		List<ArticleLongSummaryVO> summaryVOList = new ArrayList<>();
+
 		FindArticleLongSummaryListMapperDTO findSummaryBOListDTO = buildFindArticleLongSummaryListMapperDTO(dto,
-				request);
+				hostname);
 		findSummaryBOListDTO.setIsHot(false);
 		List<ArticleLongSummaryBO> summaryBOList = findNormalArticleLongSummaryList(findSummaryBOListDTO);
 
@@ -335,16 +320,15 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			articleHasCommentNotReviewIdList = new ArrayList<Long>();
 		}
 
-		List<ArticleLongSummaryVO> summaryVOList = fillArticleSummaryContent(false, summaryBOList,
-				articleHasCommentNotReviewIdList, commentCountList, viewCountList);
+		summaryVOList = fillArticleSummaryContent(false, summaryBOList, articleHasCommentNotReviewIdList,
+				commentCountList, viewCountList);
 
 		result.setArticleLongSummaryVOList(summaryVOList);
 
 		return result;
 	}
 
-	private void findArticleLongSummaryListParamPreHandle(FindArticleLongSummaryListDTO controllerParam,
-			HttpServletRequest request) {
+	private void findArticleLongSummaryListParamPreHandle(FindArticleLongSummaryListDTO controllerParam) {
 		if (baseUtilCustom.isLoginUser()) {
 			controllerParam.setUserId(baseUtilCustom.getUserId());
 		}
@@ -357,7 +341,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 	}
 
 	private FindArticleLongSummaryListResult articleLongSummaryHotListByChannelId(
-			FindArticleLongSummaryListDTO controllerParam, HttpServletRequest request) {
+			FindArticleLongSummaryListDTO controllerParam, String hostname) {
 		/*
 		 * 此处为置顶部分 应该将置顶/非置顶文章分开处理 部分情况下 需要处理 vcode 动态插入部分 "置顶"文章
 		 * 不设创建时间限制(避免与置顶时间冲突----------> 保证置顶生效期间效果)
@@ -365,7 +349,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 
 		FindArticleLongSummaryListResult result = new FindArticleLongSummaryListResult();
 
-		findArticleLongSummaryListParamPreHandle(controllerParam, request);
+		findArticleLongSummaryListParamPreHandle(controllerParam);
 
 		if (controllerParam.getEndTime() == null) {
 			controllerParam.setEndTime(LocalDateTime.now());
@@ -375,11 +359,21 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		}
 
 		Long channelId = controllerParam.getArticleChannelId();
-		visitDataService.insertVisitData(request, result.getChannelId().toString());
 		result.setChannelId(channelId);
 
 		FindArticleHotSummaryListMapperParam findHotSummaryBOListParam = new FindArticleHotSummaryListMapperParam();
-		findHotSummaryBOListParam.setChannelId(channelId);
+
+		if (channelId == null) {
+			List<ArticleChannelVO> publicChannelList = articleOptionService.getPublicChannels().get(hostname);
+			for (ArticleChannelVO channelVO : publicChannelList) {
+				try {
+					findHotSummaryBOListParam.addChannelId(Long.parseLong(channelVO.getChannelId()));
+				} catch (Exception e) {
+				}
+			}
+		} else {
+			findHotSummaryBOListParam.addChannelId(channelId);
+		}
 		List<ArticleLongSummaryBO> hotSummaryBOList = findArticleHotSummaryList(findHotSummaryBOListParam);
 
 //		如有vcode的处理逻辑
@@ -419,9 +413,18 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 	@Override
 	public FindArticleLongSummaryListResult summaryListByChannelId(FindArticleLongSummaryListDTO param,
 			HttpServletRequest request) {
-		FindArticleLongSummaryListResult result = articleLongSummaryListByChannelId(param, request);
+
+		String hostname = hostnameService.findHostNameFromRequst(request);
+		visitDataService.insertVisitData(request, String.valueOf(param.getArticleChannelId()));
+
+		FindArticleLongSummaryListResult result = new FindArticleLongSummaryListResult();
+		if (!channelMatchHostname(hostname, param.getArticleChannelId())) {
+			return result;
+		}
+		
+		result = articleLongSummaryListByChannelId(param, hostname);
 		if (param.getIsHot()) {
-			FindArticleLongSummaryListResult hotResult = articleLongSummaryHotListByChannelId(param, request);
+			FindArticleLongSummaryListResult hotResult = articleLongSummaryHotListByChannelId(param, hostname);
 			List<ArticleLongSummaryVO> tmpVOList = hotResult.getArticleLongSummaryVOList();
 			if (tmpVOList != null && tmpVOList.size() > 0) {
 				tmpVOList.addAll(result.getArticleLongSummaryVOList());
@@ -434,9 +437,13 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 	@Override
 	public FindArticleLongSummaryListResult summaryListWithoutChannel(FindArticleLongSummaryListDTO param,
 			HttpServletRequest request) {
-		FindArticleLongSummaryListResult result = articleLongSummaryListByChannelId(param, request);
+
+		String hostname = hostnameService.findHostNameFromRequst(request);
+		visitDataService.insertVisitData(request, String.valueOf(param.getArticleChannelId()));
+
+		FindArticleLongSummaryListResult result = articleLongSummaryListByChannelId(param, hostname);
 		if (param.getIsHot()) {
-			FindArticleLongSummaryListResult hotResult = articleLongSummaryHotListByChannelId(param, request);
+			FindArticleLongSummaryListResult hotResult = articleLongSummaryHotListByChannelId(param, hostname);
 			List<ArticleLongSummaryVO> tmpVOList = hotResult.getArticleLongSummaryVOList();
 			if (tmpVOList != null && tmpVOList.size() > 0) {
 				tmpVOList.addAll(result.getArticleLongSummaryVOList());
@@ -446,4 +453,20 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		return result;
 	}
 
+	private boolean channelMatchHostname(String hostname, Long channelId) {
+		if (StringUtils.isBlank(hostname) || channelId == null) {
+			return false;
+		}
+		List<ArticleChannelVO> channelVoList = articleOptionService.getPublicChannels().get(hostname);
+		if (channelVoList == null || channelVoList.isEmpty()) {
+			return false;
+		}
+
+		for (ArticleChannelVO vo : channelVoList) {
+			if (channelId.toString().equals(vo.getChannelId())) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

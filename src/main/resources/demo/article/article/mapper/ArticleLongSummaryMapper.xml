@@ -363,8 +363,11 @@
     <where>
       and als.is_hot = true
       and als.hot_valid_time &gt; now()
-      <if test="channelId != null">
-        and al.channel_id = #{channelId}
+      <if test="channelIdList != null">
+      and al.channel_id in
+      	<foreach close=")" collection="channelIdList" item="channelId" open="(" separator=",">
+          #{channelId}
+        </foreach>
       </if>
     </where>
 

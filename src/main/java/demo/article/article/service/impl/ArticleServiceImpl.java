@@ -55,6 +55,7 @@ import demo.article.article.service.ArticleSummaryService;
 import demo.article.article.service.ArticleViewService;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.user.controller.UsersController;
+import demo.base.user.pojo.bo.MyUserPrincipal;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.ResultTypeCX;
 import toolPack.ioHandle.FileUtilCustom;
@@ -81,8 +82,6 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 
 	@Autowired
 	private FileUtilCustom ioUtil;
-
-
 
 	@Override
 	public ModelAndView buildCreatingArticleLongView(CreatingArticleParam controllerParam) {
@@ -142,8 +141,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			}
 		}
 
-		ArticleFileSaveResult saveArticleResult = saveArticleFile(storePrefixPath,
-				controllerParam.getContent());
+		ArticleFileSaveResult saveArticleResult = saveArticleFile(storePrefixPath, controllerParam.getContent());
 		if (!saveArticleResult.isSuccess()) {
 			result.failWithMessage(saveArticleResult.getMessage());
 			return result;
@@ -258,7 +256,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	 * @param summaryStorePrefixPath
 	 * @return
 	 */
-	private CommonResultCX saveArticleSummaryFile( Long articleId, String title, String firstLine,
+	private CommonResultCX saveArticleSummaryFile(Long articleId, String title, String firstLine,
 			List<String> imageUrls, String summaryStorePrefixPath) {
 		if (StringUtils.isBlank(firstLine)) {
 			firstLine = "";
@@ -268,7 +266,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		String fileName = snowFlake.getNextId() + ".txt";
 		String timeFolder = LocalDate.now().toString();
 
-		File mainFolder = new File(summaryStorePrefixPath + timeFolder);
+		File mainFolder = new File(summaryStorePrefixPath + File.separator + timeFolder);
 		String finalFilePath = summaryStorePrefixPath + File.separator + timeFolder + File.separator + fileName;
 
 		if (!mainFolder.exists()) {
@@ -356,6 +354,11 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		view.addObject("articleLongVO", result.getArticleLongVO());
 		view.addObject("visitCount", visitDataService.getVisitCount());
 		view.addObject("title", result.getArticleLongVO().getArticleTitle());
+		if(baseUtilCustom.isLoginUser()) {
+			MyUserPrincipal user = baseUtilCustom.getUserPrincipal();
+			view.addObject("nickName", user.getNickName());
+			view.addObject("email", user.getEmail());
+		}
 		if (result.isSuccess()) {
 			insertArticleVisitData(request, result.getArticleId());
 		}
@@ -525,7 +528,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 
 		String channelIdStr = controllerParam.getChannelId();
 		if (StringUtils.isBlank(channelIdStr) || !numberUtil.matchInteger(channelIdStr)) {
-			log.error("creating article errorParam %s, userId: %s", controllerParam.toString(), userId);
+			log.error("creating article errorParam " + controllerParam.toString() + ", userId: " + userId);
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
 		}

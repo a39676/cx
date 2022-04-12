@@ -77,7 +77,7 @@ public class ArticleCommentAdminServiceImpl extends ArticleCommonService impleme
 		reviewRecord.setCommentId(commentId);
 		reviewRecord.setReviewTypeId(ArticleCommentReviewType.delete.getReviewCode());
 		reviewRecord.setArticleReviewerId(reviewerId);
-		articleCommentReviewMapper.insertNew(reviewRecord);
+		articleCommentReviewMapper.insertOrUpdate(reviewRecord);
 		
 		
 		record.setIsDelete(true);
@@ -120,7 +120,7 @@ public class ArticleCommentAdminServiceImpl extends ArticleCommonService impleme
 		reviewRecord.setCommentId(commentId);
 		reviewRecord.setReviewTypeId(ArticleCommentReviewType.pass.getReviewCode());
 		reviewRecord.setArticleReviewerId(reviewerId);
-		articleCommentReviewMapper.insertNew(reviewRecord);
+		articleCommentReviewMapper.insertOrUpdate(reviewRecord);
 		
 		record.setIsPass(true);
 		record.setIsDelete(false);
@@ -158,11 +158,11 @@ public class ArticleCommentAdminServiceImpl extends ArticleCommonService impleme
 		reviewRecord.setCommentId(commentId);
 		reviewRecord.setReviewTypeId(ArticleCommentReviewType.reject.getReviewCode());
 		reviewRecord.setArticleReviewerId(reviewerId);
-		articleCommentReviewMapper.insertNew(reviewRecord);
+		articleCommentReviewMapper.insertOrUpdate(reviewRecord);
 		
 		ArticleComment record = new ArticleComment();
 		record.setId(commentId);
-		record.setIsPass(true);
+		record.setIsReject(true);
 		articleCommentMapper.updateByPrimaryKeySelective(record);
 		result.setMessage(ArticleCommentResultType.articleCommentRejectSuccess.getName());
 		result.setIsSuccess();

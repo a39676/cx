@@ -55,9 +55,11 @@
     </trim>
   </insert>
 
-  <insert id="insertNew">
+  <insert id="insertOrUpdate">
     insert into 
       article_comment_review (comment_id, article_reviewer_id, review_type_id)
     values (#{commentId,jdbcType=BIGINT}, #{articleReviewerId,jdbcType=BIGINT}, #{reviewTypeId,jdbcType=INTEGER})
+    ON DUPLICATE KEY UPDATE
+    article_reviewer_id = #{articleReviewerId,jdbcType=BIGINT}, review_type_id = #{reviewTypeId,jdbcType=INTEGER}
   </insert>
 </mapper>

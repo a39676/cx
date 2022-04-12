@@ -27,11 +27,10 @@ import demo.article.article.pojo.po.ArticleSummaryVCode;
 import demo.article.article.pojo.po.ArticleViewCount;
 import demo.article.article.pojo.result.GetArticleChannelsResult;
 import demo.article.article.pojo.result.jsonRespon.FindArticleLongSummaryListResult;
-import demo.article.article.pojo.type.ArticlePublicChannelType;
 import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.article.article.pojo.vo.ArticleEvaluationStatisticsVO;
-import demo.article.article.pojo.vo.ArticleLongSummaryVO_need_update;
 import demo.article.article.pojo.vo.ArticleLongSummaryVO;
+import demo.article.article.pojo.vo.ArticleLongSummaryVO_need_update;
 import demo.article.article.service.ArticleCatchVCodeService;
 import demo.article.article.service.ArticleChannelService;
 import demo.article.article.service.ArticleSummaryService;
@@ -39,8 +38,6 @@ import demo.article.article.service.ArticleViewService;
 import demo.article.articleComment.controller.ArticleCommentAdminController;
 import demo.article.articleComment.controller.ArticleCommentController;
 import demo.article.articleComment.pojo.po.ArticleCommentCount;
-import demo.base.system.pojo.result.HostnameType;
-import demo.toyParts.vcode.pojo.param.GetVcodeByValueParam;
 import demo.toyParts.vcode.pojo.po.VCode;
 import demo.toyParts.vcode.service.VCodeService;
 import toolPack.dateTimeHandle.DateTimeUtilCommon;
@@ -104,9 +101,10 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			}
 			mapperParam.setChannelIdList(channelIdList);
 		} else {
-			if(cp.getArticleChannelId() == null) {
-				List<ArticleChannelVO> publicChannelList = articleOptionService.getPublicChannels().get(hostnameService.findHostNameFromRequst(request));
-				for(ArticleChannelVO channelVO : publicChannelList) {
+			if (cp.getArticleChannelId() == null) {
+				List<ArticleChannelVO> publicChannelList = articleOptionService.getPublicChannels()
+						.get(hostnameService.findHostNameFromRequst(request));
+				for (ArticleChannelVO channelVO : publicChannelList) {
 					try {
 						mapperParam.addChannelId(Long.parseLong(channelVO.getChannelId()));
 					} catch (Exception e) {
@@ -356,15 +354,6 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			controllerParam.setIsEdited(false);
 		}
 
-		HostnameType hostnameType = hostnameService.findHostnameType(request);
-		// TODO will NOT match
-		if (hostnameType != null && hostnameType.getName().equals("")) {
-			if (StringUtils.isBlank(controllerParam.getVcode())) {
-				controllerParam.setVcode("defaultVcode");
-			}
-		} else {
-			controllerParam.setVcode(null);
-		}
 	}
 
 	private FindArticleLongSummaryListResult articleLongSummaryHotListByChannelId(
@@ -394,13 +383,10 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		List<ArticleLongSummaryBO> hotSummaryBOList = findArticleHotSummaryList(findHotSummaryBOListParam);
 
 //		如有vcode的处理逻辑
-		if (ArticlePublicChannelType.CHANNEL_PUBLIC.equals(ArticlePublicChannelType.getType(channelId))
-				&& StringUtils.isNotBlank(controllerParam.getVcode())) {
-			GetVcodeByValueParam getVCodeParam = new GetVcodeByValueParam();
-			getVCodeParam.setCodeValue(controllerParam.getVcode());
-			VCode vcode = vCodeService.findVCode(getVCodeParam);
-			vCodeService.updateUseCount(vcode);
-			ArticleSummaryVCode targetArticleSummaryInfo = articleCatchVCodeService.findArticleSummaryInfo(vcode);
+		if (channelId == null && StringUtils.isNotBlank(controllerParam.getVp())) {
+			VCode vcodePO = vCodeService.findVCode(controllerParam.getVp());
+			vCodeService.updateUseCount(vcodePO);
+			ArticleSummaryVCode targetArticleSummaryInfo = articleCatchVCodeService.findArticleSummaryInfo(vcodePO);
 			if (targetArticleSummaryInfo != null) {
 				ArticleLongSummaryBO targetSummaryBO = articleLongSummaryMapper
 						.findArticleLongSummary(targetArticleSummaryInfo.getArticleId());

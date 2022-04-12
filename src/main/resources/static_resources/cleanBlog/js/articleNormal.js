@@ -85,7 +85,7 @@ function loadArticleLongSummary(channelId, withHot) {
     isHot:withHot,
   };
   if(withHot == "true") {
-    jsonOutput['vcode'] = getUrlParameter('vcode');
+    jsonOutput['vp'] = getUrlParameter('vp');
   } else {
     jsonOutput['endTime'] = markTime;
   }

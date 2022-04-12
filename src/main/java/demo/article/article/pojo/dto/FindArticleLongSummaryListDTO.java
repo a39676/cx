@@ -26,7 +26,7 @@ public class FindArticleLongSummaryListDTO {
 	private Integer limit = 1;
 	private Boolean desc = true;
 	private Boolean isHot = false;
-	private String vcode;
+	private String vp;
 
 	public Boolean getIsHot() {
 		return isHot;
@@ -116,12 +116,12 @@ public class FindArticleLongSummaryListDTO {
 		this.isReject = isReject;
 	}
 
-	public String getVcode() {
-		return vcode;
+	public String getVp() {
+		return vp;
 	}
 
-	public void setVcode(String vcode) {
-		this.vcode = vcode;
+	public void setVp(String vp) {
+		this.vp = vp;
 	}
 
 	public Boolean getDesc() {
@@ -137,7 +137,7 @@ public class FindArticleLongSummaryListDTO {
 		return "FindArticleLongSummaryListDTO [articleChannelId=" + articleChannelId + ", title=" + title + ", userId="
 				+ userId + ", startTime=" + startTime + ", endTime=" + endTime + ", isDelete=" + isDelete + ", isPass="
 				+ isPass + ", isEdited=" + isEdited + ", isReject=" + isReject + ", limit=" + limit + ", desc=" + desc
-				+ ", isHot=" + isHot + ", vcode=" + vcode + "]";
+				+ ", isHot=" + isHot + ", vp=" + vp + "]";
 	}
 
 }

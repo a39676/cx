@@ -20,6 +20,9 @@
         <a href="/articleAdmin/articleChannelManager" target="_blank">article channel manager</a>
       </li>
       <li>
+        <a href="/articleAdmin/loadPublicChannels" target="_blank">reload article public channel</a>
+      </li>
+      <li>
         <a href="/org/orgManager" target="_blank">orgManager</a>
       </li>
       <li>

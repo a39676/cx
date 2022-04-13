@@ -23,6 +23,7 @@ import demo.article.article.pojo.dto.FindArticleLongSummaryListDTO;
 import demo.article.article.pojo.dto.FindArticleLongSummaryListMapperDTO;
 import demo.article.article.pojo.param.mapperParam.FindArticleHotSummaryListMapperParam;
 import demo.article.article.pojo.po.ArticleLongSummary;
+import demo.article.article.pojo.po.ArticleLongSummaryExample;
 import demo.article.article.pojo.po.ArticleSummaryVCode;
 import demo.article.article.pojo.po.ArticleViewCount;
 import demo.article.article.pojo.result.jsonRespon.FindArticleLongSummaryListResult;
@@ -472,5 +473,16 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public void updateArticleHotExpired() {
+		ArticleLongSummaryExample example = new ArticleLongSummaryExample();
+		example.createCriteria().andIsHotEqualTo(true).andHotValidTimeLessThanOrEqualTo(LocalDateTime.now());
+		List<ArticleLongSummary> expiredHotList = articleLongSummaryMapper.selectByExample(example);
+		for(ArticleLongSummary po : expiredHotList) {
+			po.setIsHot(false);
+			articleLongSummaryMapper.updateByPrimaryKeySelective(po);
+		}
 	}
 }

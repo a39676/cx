@@ -1,9 +1,4 @@
-article
-	定期更新 hot -> false
-	update summary title when article edit
-	comment error
-		search error
-			
+article			
 	search -> loadmore -> show more post NOT match key word
 	
 	load public channel & flash channel list when application start

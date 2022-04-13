@@ -17,4 +17,6 @@ public interface ArticleSummaryService {
 	FindArticleLongSummaryListResult summaryListWithoutChannel(FindArticleLongSummaryListDTO param,
 			HttpServletRequest request);
 
+	void updateArticleHotExpired();
+
 }

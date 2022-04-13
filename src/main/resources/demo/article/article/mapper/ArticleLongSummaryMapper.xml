@@ -4,7 +4,6 @@
   <resultMap id="BaseResultMap" type="demo.article.article.pojo.po.ArticleLongSummary">
     <id column="article_id" jdbcType="BIGINT" property="articleId" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
-    <result column="article_title" jdbcType="VARCHAR" property="articleTitle" />
     <result column="file_path" jdbcType="VARCHAR" property="filePath" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="is_hot" jdbcType="BIT" property="isHot" />
@@ -70,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    article_id, user_id, article_title, file_path, create_time, is_hot, hot_level, hot_valid_time
+    article_id, user_id, file_path, create_time, is_hot, hot_level, hot_valid_time
   </sql>
   <select id="selectByExample" parameterType="demo.article.article.pojo.po.ArticleLongSummaryExample" resultMap="BaseResultMap">
     select
@@ -87,7 +86,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select
+    select 
     <include refid="Base_Column_List" />
     from article_long_summary
     where article_id = #{articleId,jdbcType=BIGINT}
@@ -103,12 +102,12 @@
     </if>
   </delete>
   <insert id="insert" parameterType="demo.article.article.pojo.po.ArticleLongSummary">
-    insert into article_long_summary (article_id, user_id, article_title,
-      file_path, create_time, is_hot,
-      hot_level, hot_valid_time)
-    values (#{articleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{articleTitle,jdbcType=VARCHAR},
-      #{filePath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{isHot,jdbcType=BIT},
-      #{hotLevel,jdbcType=INTEGER}, #{hotValidTime,jdbcType=TIMESTAMP})
+    insert into article_long_summary (article_id, user_id, file_path, 
+      create_time, is_hot, hot_level, 
+      hot_valid_time)
+    values (#{articleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{filePath,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{isHot,jdbcType=BIT}, #{hotLevel,jdbcType=INTEGER}, 
+      #{hotValidTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="demo.article.article.pojo.po.ArticleLongSummary">
     insert into article_long_summary
@@ -118,9 +117,6 @@
       </if>
       <if test="userId != null">
         user_id,
-      </if>
-      <if test="articleTitle != null">
-        article_title,
       </if>
       <if test="filePath != null">
         file_path,
@@ -144,9 +140,6 @@
       </if>
       <if test="userId != null">
         #{userId,jdbcType=BIGINT},
-      </if>
-      <if test="articleTitle != null">
-        #{articleTitle,jdbcType=VARCHAR},
       </if>
       <if test="filePath != null">
         #{filePath,jdbcType=VARCHAR},
@@ -180,9 +173,6 @@
       <if test="record.userId != null">
         user_id = #{record.userId,jdbcType=BIGINT},
       </if>
-      <if test="record.articleTitle != null">
-        article_title = #{record.articleTitle,jdbcType=VARCHAR},
-      </if>
       <if test="record.filePath != null">
         file_path = #{record.filePath,jdbcType=VARCHAR},
       </if>
@@ -207,7 +197,6 @@
     update article_long_summary
     set article_id = #{record.articleId,jdbcType=BIGINT},
       user_id = #{record.userId,jdbcType=BIGINT},
-      article_title = #{record.articleTitle,jdbcType=VARCHAR},
       file_path = #{record.filePath,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       is_hot = #{record.isHot,jdbcType=BIT},
@@ -222,9 +211,6 @@
     <set>
       <if test="userId != null">
         user_id = #{userId,jdbcType=BIGINT},
-      </if>
-      <if test="articleTitle != null">
-        article_title = #{articleTitle,jdbcType=VARCHAR},
       </if>
       <if test="filePath != null">
         file_path = #{filePath,jdbcType=VARCHAR},
@@ -247,7 +233,6 @@
   <update id="updateByPrimaryKey" parameterType="demo.article.article.pojo.po.ArticleLongSummary">
     update article_long_summary
     set user_id = #{userId,jdbcType=BIGINT},
-      article_title = #{articleTitle,jdbcType=VARCHAR},
       file_path = #{filePath,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       is_hot = #{isHot,jdbcType=BIT},
@@ -269,7 +254,8 @@
       order by ${orderByClause}
     </if>
   </select>
-
+  
+  
   <sql id="findArticleLongSummaryPrefix">
     select
       al.article_title as articleTitle,
@@ -374,18 +360,4 @@
     order by als.hot_level, als.create_time desc
   </select>
 
-  <select id="findArticleLongSummaryListIds" resultType="Long">
-    select
-      als.article_id
-    from
-      article_long_summary as als
-    <where>
-      <if test="startTime != null">
-        and als.create_time &gt;= #{startTime}
-      </if>
-      <if test="endTime != null">
-        and als.create_time &lt;= #{endTime}
-      </if>
-    </where>
-  </select>
 </mapper>

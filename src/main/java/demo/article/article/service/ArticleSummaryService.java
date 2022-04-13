@@ -7,7 +7,9 @@ import demo.article.article.pojo.result.jsonRespon.FindArticleLongSummaryListRes
 
 public interface ArticleSummaryService {
 
-	int insertArticleLongSummary(Long userId, Long articleId, String title, String finalFilePath);
+	int insertArticleLongSummary(Long userId, Long articleId, String finalFilePath);
+	
+	int updateArticleLongSummary(Long userId, Long articleId, String finalFilePath);
 	
 	FindArticleLongSummaryListResult summaryListByChannelId(FindArticleLongSummaryListDTO param,
 			HttpServletRequest request);

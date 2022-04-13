@@ -116,7 +116,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			result.failWithMessage(checkResult.getMessage());
 			return result;
 		}
-		String title = checkResult.getTitle();
+		String newTitle = checkResult.getTitle();
 		Long channelId = checkResult.getChannelId();
 
 		String summaryStorePrefixPath = articleOptionService.getArticleSummaryStorePrefixPath();
@@ -161,13 +161,13 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			bo.setEditedArticlePO(editedArticlePO);
 			bo.setEditorId(editorId);
 			bo.setNewFilePath(newFilePath);
-			bo.setTitle(title);
+			bo.setTitle(newTitle);
 			result = updateEditedArticleLong(bo);
 			if (!result.isSuccess()) {
 				return result;
 			}
 		} else {
-			newArticle.setArticleTitle(title);
+			newArticle.setArticleTitle(newTitle);
 			newArticle.setChannelId(channelId);
 			newArticle.setUserId(editorId);
 			newArticle.setFilePath(newFilePath);
@@ -188,14 +188,14 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 
 		saveArticleResult.setArticleId(newArticleId);
 
-		CommonResultCX saveArtieleSummaryResult = saveArticleSummaryFile(newArticleId, title,
+		CommonResultCX saveArtieleSummaryResult = saveArticleSummaryFile(newArticleId,
 				saveArticleResult.getFirstLine(), saveArticleResult.getImageUrls(), summaryStorePrefixPath);
 		if (!saveArtieleSummaryResult.isSuccess()) {
 			result.failWithMessage(saveArtieleSummaryResult.getMessage());
 			return result;
 		}
 
-		insertCount = summaryService.insertArticleLongSummary(newArticle.getUserId(), newArticle.getArticleId(), title,
+		insertCount = summaryService.insertArticleLongSummary(newArticle.getUserId(), newArticle.getArticleId(),
 				saveArtieleSummaryResult.getMessage());
 		if (insertCount < 1) {
 			log.error("creating article insertArticleSummaryError %s, userId: %s", controllerParam.toString(),
@@ -256,7 +256,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	 * @param summaryStorePrefixPath
 	 * @return
 	 */
-	private CommonResultCX saveArticleSummaryFile(Long articleId, String title, String firstLine,
+	private CommonResultCX saveArticleSummaryFile(Long articleId, String firstLine,
 			List<String> imageUrls, String summaryStorePrefixPath) {
 		if (StringUtils.isBlank(firstLine)) {
 			firstLine = "";

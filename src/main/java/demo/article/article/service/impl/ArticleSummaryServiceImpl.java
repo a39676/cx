@@ -62,17 +62,21 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 	private FileUtilCustom ioUtil;
 
 	@Override
-	public int insertArticleLongSummary(Long userId, Long articleId, String title, String finalFilePath) {
-		String privateKey = systemOptionService.encryptId(articleId);
-		if (privateKey == null) {
-			return 0;
-		}
+	public int insertArticleLongSummary(Long userId, Long articleId, String finalFilePath) {
 		ArticleLongSummary als = new ArticleLongSummary();
 		als.setUserId(userId);
 		als.setArticleId(articleId);
-		als.setArticleTitle(title);
 		als.setFilePath(finalFilePath);
 		return articleLongSummaryMapper.insertSelective(als);
+	}
+	
+	@Override
+	public int updateArticleLongSummary(Long userId, Long articleId, String finalFilePath) {
+		ArticleLongSummary als = new ArticleLongSummary();
+		als.setUserId(userId);
+		als.setArticleId(articleId);
+		als.setFilePath(finalFilePath);
+		return articleLongSummaryMapper.updateByPrimaryKeySelective(als);
 	}
 
 	private List<ArticleLongSummaryBO> findArticleHotSummaryList(FindArticleHotSummaryListMapperParam param) {

@@ -7,8 +7,6 @@ public class ArticleLongSummary {
 
     private Long userId;
 
-    private String articleTitle;
-
     private String filePath;
 
     private LocalDateTime createTime;
@@ -33,14 +31,6 @@ public class ArticleLongSummary {
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public String getArticleTitle() {
-        return articleTitle;
-    }
-
-    public void setArticleTitle(String articleTitle) {
-        this.articleTitle = articleTitle == null ? null : articleTitle.trim();
     }
 
     public String getFilePath() {

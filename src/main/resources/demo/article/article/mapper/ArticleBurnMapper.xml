@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="demo.article.article.mapper.ArticleBurnMapper">
-
   <resultMap id="BaseResultMap" type="demo.article.article.pojo.po.ArticleBurn">
     <id column="article_id" jdbcType="BIGINT" property="articleId" />
     <result column="read_count" jdbcType="INTEGER" property="readCount" />
@@ -12,6 +11,7 @@
     <result column="file_path" jdbcType="VARCHAR" property="filePath" />
     <result column="is_burned" jdbcType="BIT" property="isBurned" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="md5hash" jdbcType="CHAR" property="md5hash" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -73,7 +73,7 @@
   </sql>
   <sql id="Base_Column_List">
     article_id, read_count, read_limit, valid_time, read_id, burn_id, file_path, is_burned, 
-    create_time
+    create_time, md5hash
   </sql>
   <select id="selectByExample" parameterType="demo.article.article.pojo.po.ArticleBurnExample" resultMap="BaseResultMap">
     select
@@ -108,12 +108,12 @@
   <insert id="insert" parameterType="demo.article.article.pojo.po.ArticleBurn">
     insert into article_burn (article_id, read_count, read_limit, 
       valid_time, read_id, burn_id, 
-      file_path, is_burned, create_time
-      )
+      file_path, is_burned, create_time, 
+      md5hash)
     values (#{articleId,jdbcType=BIGINT}, #{readCount,jdbcType=INTEGER}, #{readLimit,jdbcType=INTEGER}, 
       #{validTime,jdbcType=TIMESTAMP}, #{readId,jdbcType=BIGINT}, #{burnId,jdbcType=BIGINT}, 
-      #{filePath,jdbcType=VARCHAR}, #{isBurned,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}
-      )
+      #{filePath,jdbcType=VARCHAR}, #{isBurned,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{md5hash,jdbcType=CHAR})
   </insert>
   <insert id="insertSelective" parameterType="demo.article.article.pojo.po.ArticleBurn">
     insert into article_burn
@@ -145,6 +145,9 @@
       <if test="createTime != null">
         create_time,
       </if>
+      <if test="md5hash != null">
+        md5hash,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="articleId != null">
@@ -173,6 +176,9 @@
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="md5hash != null">
+        #{md5hash,jdbcType=CHAR},
       </if>
     </trim>
   </insert>
@@ -212,6 +218,9 @@
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.md5hash != null">
+        md5hash = #{record.md5hash,jdbcType=CHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -227,7 +236,8 @@
       burn_id = #{record.burnId,jdbcType=BIGINT},
       file_path = #{record.filePath,jdbcType=VARCHAR},
       is_burned = #{record.isBurned,jdbcType=BIT},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      md5hash = #{record.md5hash,jdbcType=CHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -259,6 +269,9 @@
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="md5hash != null">
+        md5hash = #{md5hash,jdbcType=CHAR},
+      </if>
     </set>
     where article_id = #{articleId,jdbcType=BIGINT}
   </update>
@@ -271,26 +284,29 @@
       burn_id = #{burnId,jdbcType=BIGINT},
       file_path = #{filePath,jdbcType=VARCHAR},
       is_burned = #{isBurned,jdbcType=BIT},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      md5hash = #{md5hash,jdbcType=CHAR}
     where article_id = #{articleId,jdbcType=BIGINT}
   </update>
-
+  <select id="selectByExampleWithRowbounds" parameterType="demo.article.article.pojo.po.ArticleBurnExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from article_burn
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  
   <update id="burnArticleByBurnId">
     update article_burn set is_burned = true where burn_id = #{burnId}
   </update>
   
-  <update id="burnArticleById">
-    update article_burn set is_burned = true where article_id = #{id}
-  </update>
-
-  <update id="readCountPlus">
-    update article_burn set read_count = read_count + 1 where article_id = #{id}
-  </update>
-
-  <update id="lastRead">
-    update article_burn set read_count = read_count + 1 , is_burned = true where article_id = #{id}
-  </update>
-
   <select id="findExpiredArticleBurn" resultMap="BaseResultMap">
     select
       *

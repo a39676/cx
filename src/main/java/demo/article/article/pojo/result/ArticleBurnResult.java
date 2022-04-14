@@ -12,7 +12,9 @@ public class ArticleBurnResult extends CommonResultCX {
 	private LocalDateTime validTime;
 	private String readKey;
 	private String burnKey;
+	private String burnUri;
 	private boolean isBurned;
+	private boolean needPwd = false;
 
 	public String getContent() {
 		return content;
@@ -62,19 +64,35 @@ public class ArticleBurnResult extends CommonResultCX {
 		this.burnKey = burnKey;
 	}
 
-	public boolean isBurned() {
+	public boolean getNeedPwd() {
+		return needPwd;
+	}
+
+	public void setNeedPwd(boolean needPwd) {
+		this.needPwd = needPwd;
+	}
+
+	public boolean getIsBurned() {
 		return isBurned;
 	}
 
-	public void setBurned(boolean isBurned) {
+	public void setIsBurned(boolean isBurned) {
 		this.isBurned = isBurned;
+	}
+
+	public String getBurnUri() {
+		return burnUri;
+	}
+
+	public void setBurnUri(String burnUri) {
+		this.burnUri = burnUri;
 	}
 
 	@Override
 	public String toString() {
 		return "ArticleBurnResult [content=" + content + ", readCount=" + readCount + ", readLimit=" + readLimit
-				+ ", validTime=" + validTime + ", readKey=" + readKey + ", burnKey=" + burnKey + ", isBurned="
-				+ isBurned + "]";
+				+ ", validTime=" + validTime + ", readKey=" + readKey + ", burnKey=" + burnKey + ", burnUri=" + burnUri
+				+ ", isBurned=" + isBurned + ", needPwd=" + needPwd + "]";
 	}
 
 }

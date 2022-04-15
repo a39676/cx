@@ -167,7 +167,15 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 			return fillArticleBurnResultWithErrorMessage(null);
 		}
 
-		Long readId = systemOptionService.decryptPrivateKey(readKey);
+		Long readId = null;
+		try {
+			readId = systemOptionService.decryptPrivateKey(readKey);
+			if (readId == null) {
+				return fillArticleBurnResultWithErrorMessage(null);
+			}
+		} catch (Exception e) {
+			return fillArticleBurnResultWithErrorMessage(null);
+		}
 		ArticleBurnExample example = new ArticleBurnExample();
 		example.createCriteria().andIsBurnedEqualTo(false).andValidTimeGreaterThan(LocalDateTime.now())
 				.andReadIdEqualTo(readId);

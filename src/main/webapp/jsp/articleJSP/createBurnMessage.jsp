@@ -66,7 +66,7 @@
 
 <div class="row">
   <div class="col-sm-12" >
-    <button class="btn  btn-primary btn-sm" name="createNewBurnArticle"><span style="font-size: small;">提交</span></button>
+    <button class="btn  btn-primary btn-sm" name="createNewBurnArticle"><span style="font-size: small;">生成</span></button>
   </div>
 </div>
 

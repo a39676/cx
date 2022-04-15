@@ -87,10 +87,8 @@ $("#su").click(function () {
       xhr.setRequestHeader(csrfHeader, csrfToken);
     },
     success:function(datas) {
-      console.log(datas);
     },  
     error: function(datas) {
-      console.log(datas);
     }  
   });  
 });
@@ -98,7 +96,6 @@ $("#su").click(function () {
 $("#su2").click(function () {
   var url = $("#testUrl").val();
   var jsonOutput = $("#testMessage").val();
-  console.log(jsonOutput);
 
   $.ajax({  
     type : "POST",  
@@ -113,10 +110,8 @@ $("#su2").click(function () {
       xhr.setRequestHeader(csrfHeader, csrfToken);
     },
     success:function(datas) {
-      console.log(datas);
     },  
     error: function(datas) {
-      console.log(datas);
     }  
   });  
 });
@@ -124,7 +119,6 @@ $("#su2").click(function () {
 $("#su3").click(function () {
   var url = $("#testUrl").val();
   var dataOutput = $("#testMessage").val();
-  console.log(dataOutput);
 
   $.ajax({  
     type : "POST",  
@@ -139,10 +133,8 @@ $("#su3").click(function () {
       xhr.setRequestHeader(csrfHeader, csrfToken);
     },
     success:function(datas) {
-      console.log(datas);
     },  
     error: function(datas) {
-      console.log(datas);
     }  
   });  
 });

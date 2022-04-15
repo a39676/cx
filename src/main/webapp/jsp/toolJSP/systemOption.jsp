@@ -80,7 +80,6 @@
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          console.log(datas);
           $("#result").val(datas.message);
         },
         error: function(datas) {
@@ -115,7 +114,6 @@
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          console.log(datas);
           $("#result").val(datas.message);
         },
         error: function(datas) {
@@ -179,7 +177,6 @@
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          console.log(datas);
           $("#result").val(datas.message);
         },
         error: function(datas) {

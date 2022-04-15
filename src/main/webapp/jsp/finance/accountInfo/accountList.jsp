@@ -86,7 +86,6 @@
       var jsonOutput = {
         accountNumber:$(this).attr("accountNumber"),
       };
-      console.log(jsonOutput);
       
 
       $.ajax({               

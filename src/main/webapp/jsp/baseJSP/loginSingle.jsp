@@ -103,7 +103,6 @@ $(document).ready(function() {
       },
       timeout: 30000,
       success:function(data){
-        console.log(data);
         if(data.code == 0) {
           // window.location.href = "/";
         } else {
@@ -115,7 +114,6 @@ $(document).ready(function() {
         }
       },
       error:function(e){
-        console.log(e);
       }
     });
   });

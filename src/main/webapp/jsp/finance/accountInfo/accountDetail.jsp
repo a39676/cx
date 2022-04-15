@@ -98,7 +98,6 @@
 
 
   function modifyVaildDate() {
-    console.log("modifyVaildDate");
     var $accountNumber = $("label[name='accountNumber']").attr("accountNumber");
     var $newVaildDate = $("input[name='modifyVaildDate']").val();
 

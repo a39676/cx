@@ -67,8 +67,6 @@ function bankIdListDynamic(){
       });
     }, 
     error:function(e){
-      // console.log("error");
-      // console.log(e);
     }
   });             
 };

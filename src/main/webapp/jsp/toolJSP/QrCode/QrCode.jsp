@@ -151,8 +151,6 @@
             $('#qrcodeResult').attr('src', "data:image/png;base64," + datas);
           },
           error: function(datas) {
-            console.log("error");
-            console.log(datas);
           }
         });
       });

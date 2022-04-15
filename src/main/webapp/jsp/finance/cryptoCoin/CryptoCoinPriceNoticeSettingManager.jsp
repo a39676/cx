@@ -227,8 +227,6 @@
           currencyCode : currencyCode,
         };
 
-        console.log(jsonOutput);
-
         $.ajax({
           type : "POST",
           url : url,

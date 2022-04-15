@@ -113,7 +113,6 @@
           }
         }, 
         error:function(e){
-          // console.log(e);
         }
       });
     });  
@@ -138,13 +137,10 @@
       var year = now.getFullYear();
 
       var today = (year) + "-" + (month) + "-" + (day); // + " 00:00";
-      console.log("today: " + today);
 
       var transationDate = document.getElementById("transationDate").value;
-      console.log("transationDate: " + transationDate);
 
       var currentDate = new Date();
-      console.log("currentDate: " + currentDate);
       document.getElementById("transationDate").value = today;
     });
 

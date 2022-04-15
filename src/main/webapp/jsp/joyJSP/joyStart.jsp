@@ -121,7 +121,6 @@
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          console.log(datas);
           var sceneVOList = datas.sceneVOList;
           sceneListTR.empty();
           $.each(sceneVOList, function(index, sceneVO) {
@@ -131,7 +130,6 @@
           });
         },  
         error: function(datas) {
-          console.log("error: " + datas);
         }  
       });  
     }
@@ -162,7 +160,6 @@
             );
         },  
         error: function(datas) {
-          console.log("error: " + datas);
           $("#resultView").html(datas);
         }  
       });  

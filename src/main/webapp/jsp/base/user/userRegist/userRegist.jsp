@@ -144,7 +144,6 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-            console.log(datas);
             if(datas.code == 0) {
               $("#registForm").html("");
               $("#registResult").text(datas.message);

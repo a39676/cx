@@ -39,14 +39,22 @@ function loadArticleChannels() {
   });
 }
 function buildSubChannel(channel) {
-  var channelButton = "";
-  channelButton += "<button class='btn btn-sm channelButton'";
-  channelButton += " channelId='"+channel.channelId+"'";
-  channelButton += " ";
-  channelButton += "onclick='loadArticleLongSummaryFirstPage(\""+channel.channelId+"\")'>";
-  channelButton += channel.channelName;
-  channelButton += "</button>";
-  return channelButton;
+  var channelElement = "";
+  channelElement += "<button class='btn btn-sm btn-light channelButton'";
+  channelElement += " channelId='"+channel.channelId+"'";
+  channelElement += " ";
+  channelElement += "onclick='loadArticleLongSummaryFirstPage(\""+channel.channelId+"\")'>";
+  channelElement += "<span channelId='"+channel.channelId+"'";
+  channelElement += " class='channelAttachL'";
+  channelElement += " >";
+  channelElement += "</span>";
+  channelElement += channel.channelName;
+  channelElement += "<span channelId='"+channel.channelId+"'";
+  channelElement += " class='channelAttachR'";
+  channelElement += " >";
+  channelElement += "</span>";
+  channelElement += "</button>";
+  return channelElement;
 }
 function buildSummaryLine(subArticleVO) {
   var newRow = " ";
@@ -126,6 +134,10 @@ function loadArticleLongSummaryFirstPage(channelId) {
   $("#blogArea").attr("markTime", "");
   $(".channelButton").prop('disabled', true);
   $("#searchByTitle").prop('disabled', true);
+  $(".channelAttachR").text("");
+  $(".channelAttachR[channelId='"+channelId+"'").text(" <<<");
+  $(".channelAttachL").text("");
+  $(".channelAttachL[channelId='"+channelId+"'").text(">>> ");
   var blogRowArea = $("#blogRowArea");
   blogRowArea.html("");
   setTimeout(function(){

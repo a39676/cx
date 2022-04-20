@@ -60,6 +60,9 @@
         </div>
       </div>
       <div class="col-md-2 mx-auto">
+        <span style="color: rgb(255, 156, 0); background-color: rgb(255, 255, 255);">接受Doge捐赠</span>
+        <img src="/image/getImage/?imgPK=NvUOSlmFPztgWedREnPQNsOwO8gBm3Ab3pOPxOcLcrU%3D" alt="" style="width:65px; height:65px;">
+        <%-- <img src="/image/getImage/?imgPK=Zns%2FuyjamOdnRyBl3cMoux%2Bv0eH3%2BH4QSKZFh9cHldQ%3D" alt="" style="width:65px; height:65px;"> --%>
       </div>
 
     </div>

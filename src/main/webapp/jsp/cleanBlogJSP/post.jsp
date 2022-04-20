@@ -89,6 +89,13 @@
           </div>
         </div>
 
+        <div class="row">
+          <div class="col-md-12">
+            <span style="color: rgb(255, 156, 0); background-color: rgb(255, 255, 255);">接受Doge捐赠</span>
+            <img src="/image/getImage/?imgPK=NvUOSlmFPztgWedREnPQNsOwO8gBm3Ab3pOPxOcLcrU%3D" alt="" style="width:65px; height:65px;">
+          </div>
+        </div>
+
         <%-- search comment start --%>
         <sec:authorize access="!hasRole('ROLE_SUPER_ADMIN')">
           <div class="row">

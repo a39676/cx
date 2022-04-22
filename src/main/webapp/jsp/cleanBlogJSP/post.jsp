@@ -79,6 +79,16 @@
 
         </div>
       </div>
+
+      <div class="row">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-9">
+          <span style="color: rgb(255, 156, 0); background-color: rgb(255, 255, 255);">打赏Doge coin</span>
+          <img src="/image/getImage/?imgPK=rLq%2B%2FRjDi7s3Ddt3xHE1DZfoftiFB%2B7vm4AtaQtR59o%3D" alt="" style="width:65px; height:65px;">
+        </div>
+      </div>
+
       <hr>
       <%-- comment list start --%>
       <div class="container" id="commentArea">
@@ -86,13 +96,6 @@
           <div class="container" pk="${articleLongVO.privateKey}" id="commentList"
           markTime="${articleLongVO.createDateString}" loadingFlag="">
 
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-12">
-            <span style="color: rgb(255, 156, 0); background-color: rgb(255, 255, 255);">接受Doge捐赠</span>
-            <img src="/image/getImage/?imgPK=NvUOSlmFPztgWedREnPQNsOwO8gBm3Ab3pOPxOcLcrU%3D" alt="" style="width:65px; height:65px;">
           </div>
         </div>
 

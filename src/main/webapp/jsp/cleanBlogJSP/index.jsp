@@ -61,7 +61,7 @@
       </div>
       <div class="col-md-2 mx-auto">
         <span style="color: rgb(255, 156, 0); background-color: rgb(255, 255, 255);">打赏 Doge coin</span>
-        <img src="/image/getImage/?imgPK=rLq%2B%2FRjDi7s3Ddt3xHE1DZfoftiFB%2B7vm4AtaQtR59o%3D" alt="" style="width:100px; height:100px;">
+        <img src="${donateImgUrl}" alt="" style="width:100px; height:100px;">
       </div>
 
     </div>

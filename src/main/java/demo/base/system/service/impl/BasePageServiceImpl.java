@@ -5,9 +5,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import demo.article.article.service.impl.ArticleOptionService;
 import demo.base.pojo.constant.BaseStaticResourcesUrl;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.system.pojo.constant.BlogViewConstant;
@@ -17,6 +19,9 @@ import demo.base.user.pojo.type.SystemRolesType;
 
 @Service
 public class BasePageServiceImpl extends SystemCommonService implements BasePageService {
+	
+	@Autowired
+	private ArticleOptionService articleOptionService;
 
 	@Override
 	public ModelAndView baseRootHandlerV3(String vcode, HttpServletRequest request) {
@@ -67,6 +72,7 @@ public class BasePageServiceImpl extends SystemCommonService implements BasePage
 		view.addObject("subheading", systemConstantService.getNormalSubheading());
 		Long visitCount = visitDataService.getVisitCount();
 		view.addObject("visitCount", visitCount);
+		view.addObject("donateImgUrl", articleOptionService.getDonateImgUrl());
 		
 		return view;
 	}

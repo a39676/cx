@@ -39,20 +39,21 @@ public class ArticleOptionService extends CommonService {
 	private String articleChannelPrefixStorePath;
 	/** 一般用户可以浏览 * 个月内的非置顶内容- */
 	private Long normalUserMaxReadingMonth = 12L;
+	private String donateImgUrl;
 
 	private HashMap<String, List<ArticleChannelVO>> publicChannels = new HashMap<>();
 
 	@Override
 	public String toString() {
-		return "ArticleConstantService [optionFilePath=" + optionFilePath + ", maxArticleLength=" + maxArticleLength
-				+ ", defaultPageSize=" + defaultPageSize + ", maxPageSize=" + maxPageSize
-				+ ", evaluationCacheLivingTime=" + evaluationCacheLivingTime + ", minEvaluationCount="
-				+ minEvaluationCount + ", balanceEvaluationRatio=" + balanceEvaluationRatio
+		return "ArticleOptionService [maxArticleLength=" + maxArticleLength + ", defaultPageSize=" + defaultPageSize
+				+ ", maxPageSize=" + maxPageSize + ", evaluationCacheLivingTime=" + evaluationCacheLivingTime
+				+ ", minEvaluationCount=" + minEvaluationCount + ", balanceEvaluationRatio=" + balanceEvaluationRatio
 				+ ", articleBurnStorePrefixPath=" + articleBurnStorePrefixPath + ", articleStorePrefixPath="
 				+ articleStorePrefixPath + ", articleImageSavingFolder=" + articleImageSavingFolder
 				+ ", articleSummaryStorePrefixPath=" + articleSummaryStorePrefixPath
 				+ ", articleChannelPrefixStorePath=" + articleChannelPrefixStorePath + ", normalUserMaxReadingMonth="
-				+ normalUserMaxReadingMonth + "]";
+				+ normalUserMaxReadingMonth + ", donateImgUrl=" + donateImgUrl + ", publicChannels=" + publicChannels
+				+ "]";
 	}
 
 	@PostConstruct
@@ -174,6 +175,14 @@ public class ArticleOptionService extends CommonService {
 
 	public void setPublicChannels(HashMap<String, List<ArticleChannelVO>> publicChannels) {
 		this.publicChannels = publicChannels;
+	}
+
+	public String getDonateImgUrl() {
+		return donateImgUrl;
+	}
+
+	public void setDonateImgUrl(String donateImgUrl) {
+		this.donateImgUrl = donateImgUrl;
 	}
 
 }

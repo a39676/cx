@@ -354,6 +354,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		view.addObject("articleLongVO", result.getArticleLongVO());
 		view.addObject("visitCount", visitDataService.getVisitCount());
 		view.addObject("title", result.getArticleLongVO().getArticleTitle());
+		view.addObject("donateImgUrl", articleOptionService.getDonateImgUrl());
 		if(baseUtilCustom.isLoginUser()) {
 			MyUserPrincipal user = baseUtilCustom.getUserPrincipal();
 			view.addObject("nickName", user.getNickName());

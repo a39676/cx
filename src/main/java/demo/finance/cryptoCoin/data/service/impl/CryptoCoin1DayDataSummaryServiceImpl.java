@@ -362,7 +362,8 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 			catalog = coinCatalogService.findCatalog(catalogName);
 			if (catalog != null) {
 				sendDailyDataQuery(catalog.getCoinNameEnShort(), optionService.getDefaultCurrency(),
-						optionService.getDefaultDailyDataQueryLenth(), CryptoCoinDataSourceType.CRYPTO_COMPARE);
+//						optionService.getDefaultDailyDataQueryLenth(), CryptoCoinDataSourceType.CRYPTO_COMPARE);
+						optionService.getDefaultDailyDataQueryLenth(), CryptoCoinDataSourceType.BINANCE);
 			}
 		}
 	}

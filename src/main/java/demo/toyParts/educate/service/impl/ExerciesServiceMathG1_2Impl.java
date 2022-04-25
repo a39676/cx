@@ -12,16 +12,17 @@ import demo.toyParts.educate.pojo.result.ExerciesBuildResult;
 import demo.toyParts.educate.pojo.type.GradeType;
 import demo.toyParts.educate.pojo.type.MathBaseSymbolType;
 import demo.toyParts.educate.service.ExerciesMathCommonService;
-import demo.toyParts.educate.service.ExerciesServiceMathG1_1;
+import demo.toyParts.educate.service.ExerciesServiceMathG1_2;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
 @Service
-public class ExerciesServiceMathG1_1Impl extends ExerciesMathCommonService implements ExerciesServiceMathG1_1 {
+public class ExerciesServiceMathG1_2Impl extends ExerciesMathCommonService implements ExerciesServiceMathG1_2 {
 
-	private static final Integer MAX_NUM = 10;
+	private static final Integer MAX_NUM = 100;
 	private static final Integer MIN_NUM = 0;
-	private static final GradeType GRADE_TYPE = GradeType.GRADE_1_1;
+	private static final Integer MAX_RESULT = 100;
+	private static final GradeType GRADE_TYPE = GradeType.GRADE_1_2;
 
 	@Override
 	public ModelAndView getExercies() {
@@ -78,7 +79,7 @@ public class ExerciesServiceMathG1_1Impl extends ExerciesMathCommonService imple
 		Expression expression1 = new ExpressionBuilder(exp1).build();
 		Double result1 = expression1.evaluate();
 
-		while (result1 < MIN_NUM) {
+		while (result1 < MIN_NUM || result1 > MAX_RESULT) {
 			num1 = t.nextInt(MIN_NUM, MAX_NUM + 1);
 			num2 = t.nextInt(MIN_NUM, MAX_NUM + 1);
 			exp1 = String.valueOf(num2 + mathSymbolType1.getCodeSymbol() + num1);
@@ -101,7 +102,7 @@ public class ExerciesServiceMathG1_1Impl extends ExerciesMathCommonService imple
 		String exp2 = String.valueOf(exp1 + mathSymbolType2.getCodeSymbol() + num3);
 		Expression expression2 = new ExpressionBuilder(exp2).build();
 		Double result2 = expression2.evaluate();
-		if (result2 < 0) {
+		while (result2 < MIN_NUM || result2 > MAX_RESULT) {
 			num3 = t.nextInt(MIN_NUM, MAX_NUM + 1);
 			exp2 = String.valueOf(num3 + mathSymbolType2.getCodeSymbol() + exp1);
 			expression2 = new ExpressionBuilder(exp2).build();

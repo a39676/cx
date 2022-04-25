@@ -132,10 +132,10 @@
       function changeStartExerciesLink() {
         var url = "/educate/question";
 
-        var gradeType = $("#selectGrade option:selected").val();
+        var gradeTypeCode = $("#selectGrade option:selected").val();
         var subjectType = $("#selectSubject option:selected").val();
 
-        url = url + "?" + "grade=" + gradeType + "&subject=" + subjectType;
+        url = url + "?" + "gradeTypeCode=" + gradeTypeCode + "&subject=" + subjectType;
 
         var startExerciesLink = $("#startExerciesLink");
         startExerciesLink.attr("href", url);

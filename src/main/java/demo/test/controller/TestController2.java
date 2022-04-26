@@ -2,6 +2,8 @@ package demo.test.controller;
 
 import java.time.LocalDateTime;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,5 +67,10 @@ public class TestController2 extends CommonController {
 	public String t4() {
 		return "{\"k\":\"v\"}";
 	}
-	
+
+	@GetMapping(value = "/t5")
+	@ResponseBody
+	public String findHostNameFromRequst(HttpServletRequest request) {
+		return request.getServerName();
+	}
 }

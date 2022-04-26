@@ -10,12 +10,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import demo.common.controller.CommonController;
 import demo.finance.cryptoCoin.common.service.CryptoCoinConstantService;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.dto.TestDTO;
-import demo.test.service.TestService;
+import demo.test.service.TestService2;
 import net.sf.json.JSONObject;
 
 @Controller
@@ -78,11 +79,13 @@ public class TestController2 extends CommonController {
 	
 	
 	@Autowired
-	private TestService testService;
+	private TestService2 testService;
 	
 	@GetMapping(value = "/t6")
-	@ResponseBody
-	public List<String> getRole() {
-		return testService.getRoles();
+	public ModelAndView getRole() {
+		ModelAndView v = new ModelAndView("testJSP/test");
+		List<String> roles = testService.getRoles();
+		v.addObject("message", roles);
+		return v;
 	}
 }

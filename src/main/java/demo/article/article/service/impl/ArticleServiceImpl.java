@@ -188,8 +188,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 
 		saveArticleResult.setArticleId(newArticleId);
 
-		CommonResultCX saveArtieleSummaryResult = saveArticleSummaryFile(newArticleId,
-				saveArticleResult.getFirstLine(), saveArticleResult.getImageUrls(), summaryStorePrefixPath);
+		CommonResultCX saveArtieleSummaryResult = saveArticleSummaryFile(newArticleId, saveArticleResult.getFirstLine(),
+				saveArticleResult.getImageUrls(), summaryStorePrefixPath);
 		if (!saveArtieleSummaryResult.isSuccess()) {
 			result.failWithMessage(saveArtieleSummaryResult.getMessage());
 			return result;
@@ -256,8 +256,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	 * @param summaryStorePrefixPath
 	 * @return
 	 */
-	private CommonResultCX saveArticleSummaryFile(Long articleId, String firstLine,
-			List<String> imageUrls, String summaryStorePrefixPath) {
+	private CommonResultCX saveArticleSummaryFile(Long articleId, String firstLine, List<String> imageUrls,
+			String summaryStorePrefixPath) {
 		if (StringUtils.isBlank(firstLine)) {
 			firstLine = "";
 		}
@@ -355,7 +355,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		view.addObject("visitCount", visitDataService.getVisitCount());
 		view.addObject("title", result.getArticleLongVO().getArticleTitle());
 		view.addObject("donateImgUrl", articleOptionService.getDonateImgUrl());
-		if(baseUtilCustom.isLoginUser()) {
+		if (baseUtilCustom.isLoginUser()) {
 			MyUserPrincipal user = baseUtilCustom.getUserPrincipal();
 			view.addObject("nickName", user.getNickName());
 			view.addObject("email", user.getEmail());
@@ -530,18 +530,27 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		String channelIdStr = controllerParam.getChannelId();
 		if (StringUtils.isBlank(channelIdStr) || !numberUtil.matchInteger(channelIdStr)) {
 			log.error("creating article errorParam " + controllerParam.toString() + ", userId: " + userId);
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("Error param");
 			return result;
 		}
 
 		Long channelId = Long.parseLong(channelIdStr);
 
 		ArticleChannels channel = channelService.findArticleChannelById(channelId);
-		if (channel == null || !ArticleChannelType.publicChannel.getCode().equals(channel.getChannelType())) {
+		if (channel == null) {
 			log.error("creating article checkPostLimitError %s, userId: %s", controllerParam.toString(), userId);
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("Error param");
 			return result;
+		} else {
+			if (!ArticleChannelType.publicChannel.getCode().equals(channel.getChannelType())) {
+				if (!channelService.canVisitThisChannel(userId, channelId)) {
+					log.error("creating article checkPostLimitError %s, userId: %s", controllerParam.toString(), userId);
+					result.setMessage("Error param");
+					return result;
+				}
+			}
 		}
+
 		result.setChannelId(channelId);
 
 		String title = null;

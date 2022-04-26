@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import demo.article.article.mapper.ArticleChannelKeyHostnameMapper;
 import demo.article.article.mapper.ArticleChannelsMapper;
+import demo.article.article.mapper.ArticleUserDetailMapper;
 import demo.article.article.pojo.bo.GetArticleChannelsBO;
 import demo.article.article.pojo.dto.ArticleChannelKeyHostnameIdDTO;
 import demo.article.article.pojo.dto.ArticleChannelManagerDTO;
@@ -23,6 +25,8 @@ import demo.article.article.pojo.po.ArticleChannelKeyHostname;
 import demo.article.article.pojo.po.ArticleChannelKeyHostnameExample;
 import demo.article.article.pojo.po.ArticleChannels;
 import demo.article.article.pojo.po.ArticleChannelsExample;
+import demo.article.article.pojo.po.ArticleUserDetail;
+import demo.article.article.pojo.po.ArticleUserDetailExample;
 import demo.article.article.pojo.result.GetArticleChannelsResult;
 import demo.article.article.pojo.type.ArticleChannelKeyHostnameType;
 import demo.article.article.pojo.type.ArticleChannelOperationalType;
@@ -38,6 +42,8 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 
 	@Autowired
 	private ArticleChannelsMapper articleChannelsMapper;
+	@Autowired
+	private ArticleUserDetailMapper articleUserDetailMapper;
 	@Autowired
 	private ArticleChannelKeyHostnameMapper articleChannelKeyHostnameMapper;
 	@Autowired
@@ -92,6 +98,31 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		List<ArticleChannels> openChannels = articleChannelsMapper.selectByExample(example);
 		List<ArticleChannelVO> publicChannelVOList = buildChannelVOByPO(openChannels);
 		return publicChannelVOList;
+	}
+
+	@Override
+	public List<ArticleChannelVO> getPrivateChannels(Long userId) {
+		ArticleUserDetailExample privateChannelConnectExample = new ArticleUserDetailExample();
+		privateChannelConnectExample.createCriteria().andIsDeleteEqualTo(false).andUserIdEqualTo(userId)
+				.andConnectTypeEqualTo(true);
+		List<ArticleUserDetail> privateChannelConnectList = articleUserDetailMapper
+				.selectByExample(privateChannelConnectExample);
+		if (privateChannelConnectList == null || privateChannelConnectList.isEmpty()) {
+			return new ArrayList<>();
+		}
+		List<Long> privateChannelIdList = privateChannelConnectList.stream().map(po -> po.getArticleChannelId())
+				.collect(Collectors.toList());
+
+		ArticleChannelsExample example = new ArticleChannelsExample();
+		example.createCriteria().andChannelTypeEqualTo(ArticleChannelType.privateChannel.getCode())
+				.andChannelIdIn(privateChannelIdList).andIsDeleteEqualTo(false);
+		List<ArticleChannels> privateChannels = articleChannelsMapper.selectByExample(example);
+		if (privateChannels == null || privateChannels.isEmpty()) {
+			return new ArrayList<>();
+		}
+		List<ArticleChannelVO> privateChannelVOList = buildChannelVOByPO(privateChannels);
+
+		return privateChannelVOList;
 	}
 
 	private ArticleChannelVO buildChannelVOByPO(ArticleChannels channel) {
@@ -204,15 +235,13 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 			return channelListBO;
 		}
 
-		/*
-		 * FIXME 2020-02-06 暂时不开放闪现频道 私人频道 考虑废除?
-		 */
+		List<ArticleChannelVO> privateChannelVOList = getPrivateChannels(userId);
 
 		channelListBO.setFlashChannels(new ArrayList<ArticleChannelVO>());
-		channelListBO.setPrivateChannels(new ArrayList<ArticleChannelVO>());
+		channelListBO.setPrivateChannels(privateChannelVOList);
 
 		channelListBO = removeChannelsByHostName(hostname, channelListBO);
-		
+
 		channelListBO.getPublicChannels().add(0, createTheAllChannel());
 
 		return channelListBO;
@@ -331,13 +360,16 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 
 		List<ArticleChannelKeyHostnameIdDTO> channelKeyHostTmpList = null;
 		ArticleChannelKeyHostnameIdDTO tmpChannelKeyHostnameDTO = null;
+		ArticleChannelType channelType = null;
 		for (ArticleChannels channel : channelPOList) {
+			channelType = ArticleChannelType.getType(channel.getChannelType());
 			tmpChannelVO = new ArticleChannelVO();
 			tmpChannelVO.setChannelName(channel.getChannelName());
 			tmpChannelVO.setChannelId(String.valueOf(channel.getChannelId()));
 			tmpChannelVO.setWeights(channel.getWeights());
 			tmpChannelVO.setIsDelete(channel.getIsDelete());
 			tmpChannelVO.setChannelType(channel.getChannelType());
+			tmpChannelVO.setChannelTypeName(channelType.getName());
 			channelKeyHostTmpList = new ArrayList<ArticleChannelKeyHostnameIdDTO>();
 			for (Hostname i : hostnamePOList) {
 				tmpChannelKeyHostnameDTO = new ArticleChannelKeyHostnameIdDTO();
@@ -360,6 +392,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	public ModelAndView articleChannelManagerView() {
 		ModelAndView v = new ModelAndView();
 		v.setViewName("articleJSP/articleChannelManager");
+		v.addObject("channelTypeList", ArticleChannelType.values());
 		v.addObject("channelList", findArticleChannel());
 		return v;
 	}
@@ -483,6 +516,8 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 			r.failWithMessage("更新失败");
 			return r;
 		}
+		
+		loadPublicChannels();
 
 		r.successWithMessage("成功更新");
 		return r;
@@ -552,7 +587,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		}
 
 		loadPublicChannels();
-		
+
 		r.setIsSuccess();
 		return r;
 	}
@@ -573,4 +608,15 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		return ArticleChannelKeyHostnameType.ban;
 	}
 
+	@Override
+	public boolean canVisitThisChannel(Long userId, Long channelId) {
+		if (userId == null || channelId == null) {
+			return false;
+		}
+		ArticleUserDetailExample example = new ArticleUserDetailExample();
+		example.createCriteria().andIsDeleteEqualTo(false).andConnectTypeEqualTo(true).andUserIdEqualTo(userId)
+				.andArticleChannelIdEqualTo(channelId);
+		List<ArticleUserDetail> poList = articleUserDetailMapper.selectByExample(example);
+		return poList != null && !poList.isEmpty();
+	}
 }

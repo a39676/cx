@@ -1,8 +1,8 @@
 package demo.article.article.pojo.result;
 
-import demo.common.pojo.result.CommonResultCX;
+import auxiliaryCommon.pojo.result.CommonResult;
 
-public class CheckParamBeforeEditArticleResult extends CommonResultCX {
+public class CheckParamBeforeEditArticleResult extends CommonResult {
 
 	private Long channelId;
 	private String title;

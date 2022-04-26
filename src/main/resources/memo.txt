@@ -1,4 +1,6 @@
-article			
+article
+	Add back to Homepage button in post.jsp
+			
 	search -> loadmore -> show more post NOT match key word
 	
 	load public channel & flash channel list when application start

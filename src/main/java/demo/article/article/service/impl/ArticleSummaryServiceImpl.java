@@ -32,6 +32,7 @@ import demo.article.article.pojo.vo.ArticleEvaluationStatisticsVO;
 import demo.article.article.pojo.vo.ArticleLongSummaryVO;
 import demo.article.article.pojo.vo.ArticleLongSummaryVO_need_update;
 import demo.article.article.service.ArticleCatchVCodeService;
+import demo.article.article.service.ArticleChannelService;
 import demo.article.article.service.ArticleSummaryService;
 import demo.article.article.service.ArticleViewService;
 import demo.article.articleComment.controller.ArticleCommentAdminController;
@@ -47,6 +48,8 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 
 	@Autowired
 	private VCodeService vCodeService;
+	@Autowired
+	private ArticleChannelService channelService;
 	@Autowired
 	private ArticleCatchVCodeService articleCatchVCodeService;
 	@Autowired
@@ -88,10 +91,10 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 	}
 
 	private FindArticleLongSummaryListMapperDTO buildFindArticleLongSummaryListMapperDTO(
-			FindArticleLongSummaryListDTO cp, String hostname) {
+			FindArticleLongSummaryListDTO controllerDTO, String hostname) {
 		FindArticleLongSummaryListMapperDTO mapperParam = new FindArticleLongSummaryListMapperDTO();
 
-		if (cp.getArticleChannelId() == null) {
+		if (controllerDTO.getArticleChannelId() == null) {
 			List<ArticleChannelVO> publicChannelList = articleOptionService.getPublicChannels().get(hostname);
 			for (ArticleChannelVO channelVO : publicChannelList) {
 				try {
@@ -99,40 +102,47 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 				} catch (Exception e) {
 				}
 			}
+			List<ArticleChannelVO> privateChannelList = channelService.getPrivateChannels(baseUtilCustom.getUserId());
+			for (ArticleChannelVO channelVO : privateChannelList) {
+				try {
+					mapperParam.addChannelId(Long.parseLong(channelVO.getChannelId()));
+				} catch (Exception e) {
+				}
+			}
 		} else {
-			mapperParam.addChannelId(cp.getArticleChannelId());
+			mapperParam.addChannelId(controllerDTO.getArticleChannelId());
 		}
 
-		mapperParam.setIsHot(cp.getIsHot());
+		mapperParam.setIsHot(controllerDTO.getIsHot());
 
-		if (cp.getIsDelete() != null) {
-			mapperParam.setIsDelete(cp.getIsDelete());
+		if (controllerDTO.getIsDelete() != null) {
+			mapperParam.setIsDelete(controllerDTO.getIsDelete());
 		}
-		if (cp.getIsEdited() != null) {
-			mapperParam.setIsEdited(cp.getIsEdited());
+		if (controllerDTO.getIsEdited() != null) {
+			mapperParam.setIsEdited(controllerDTO.getIsEdited());
 		}
-		if (cp.getIsPass() != null) {
-			mapperParam.setIsPass(cp.getIsPass());
+		if (controllerDTO.getIsPass() != null) {
+			mapperParam.setIsPass(controllerDTO.getIsPass());
 		}
-		if (cp.getIsReject() != null) {
+		if (controllerDTO.getIsReject() != null) {
 			mapperParam.getIsReject();
 		}
-		if (cp.getEndTime() != null) {
-			mapperParam.setEndTime(cp.getEndTime());
+		if (controllerDTO.getEndTime() != null) {
+			mapperParam.setEndTime(controllerDTO.getEndTime());
 		}
-		if (cp.getStartTime() != null) {
-			mapperParam.setStartTime(cp.getStartTime());
+		if (controllerDTO.getStartTime() != null) {
+			mapperParam.setStartTime(controllerDTO.getStartTime());
 		}
-		if (cp.getTitle() != null) {
-			mapperParam.setTitle(cp.getTitle());
+		if (controllerDTO.getTitle() != null) {
+			mapperParam.setTitle(controllerDTO.getTitle());
 		}
-		if (cp.getLimit() != null) {
+		if (controllerDTO.getLimit() != null) {
 			mapperParam.setLimit(mapperParam.getLimit());
 		}
 		if (mapperParam.getLimit() == null || mapperParam.getLimit() > articleOptionService.getMaxPageSize()) {
 			mapperParam.setLimit(articleOptionService.getDefaultPageSize());
 		}
-		if (cp.getDesc() != null && !cp.getDesc()) {
+		if (controllerDTO.getDesc() != null && !controllerDTO.getDesc()) {
 			mapperParam.setDesc(false);
 		}
 		return mapperParam;
@@ -275,7 +285,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		return boList;
 	}
 
-	private FindArticleLongSummaryListResult articleLongSummaryListByChannelId(FindArticleLongSummaryListDTO dto,
+	private FindArticleLongSummaryListResult articleLongSummaryList(FindArticleLongSummaryListDTO dto,
 			String hostname) {
 		/*
 		 * 此处为非置顶部分 应该将置顶/非置顶文章分开处理
@@ -423,11 +433,11 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		visitDataService.insertVisitData(request, String.valueOf(param.getArticleChannelId()));
 
 		FindArticleLongSummaryListResult result = new FindArticleLongSummaryListResult();
-		if (!channelMatchHostname(hostname, param.getArticleChannelId())) {
+		if (!channelMatchHostname(hostname, baseUtilCustom.getUserId(), param.getArticleChannelId())) {
 			return result;
 		}
 		
-		result = articleLongSummaryListByChannelId(param, hostname);
+		result = articleLongSummaryList(param, hostname);
 		if (param.getIsHot()) {
 			FindArticleLongSummaryListResult hotResult = articleLongSummaryHotListByChannelId(param, hostname);
 			List<ArticleLongSummaryVO> tmpVOList = hotResult.getArticleLongSummaryVOList();
@@ -444,9 +454,8 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			HttpServletRequest request) {
 
 		String hostname = hostnameService.findHostNameFromRequst(request);
-		visitDataService.insertVisitData(request, String.valueOf(param.getArticleChannelId()));
 
-		FindArticleLongSummaryListResult result = articleLongSummaryListByChannelId(param, hostname);
+		FindArticleLongSummaryListResult result = articleLongSummaryList(param, hostname);
 		if (param.getIsHot()) {
 			FindArticleLongSummaryListResult hotResult = articleLongSummaryHotListByChannelId(param, hostname);
 			List<ArticleLongSummaryVO> tmpVOList = hotResult.getArticleLongSummaryVOList();
@@ -458,20 +467,24 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		return result;
 	}
 
-	private boolean channelMatchHostname(String hostname, Long channelId) {
+	private boolean channelMatchHostname(String hostname, Long userId, Long channelId) {
 		if (StringUtils.isBlank(hostname) || channelId == null) {
 			return false;
 		}
+		
 		List<ArticleChannelVO> channelVoList = articleOptionService.getPublicChannels().get(hostname);
-		if (channelVoList == null || channelVoList.isEmpty()) {
-			return false;
-		}
-
-		for (ArticleChannelVO vo : channelVoList) {
-			if (channelId.toString().equals(vo.getChannelId())) {
-				return true;
+		if (channelVoList != null && !channelVoList.isEmpty()) {
+			for (ArticleChannelVO vo : channelVoList) {
+				if (channelId.toString().equals(vo.getChannelId())) {
+					return true;
+				}
 			}
 		}
+		
+		if(userId != null) {
+			return channelService.canVisitThisChannel(userId, channelId);
+		}
+		
 		return false;
 	}
 

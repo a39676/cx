@@ -38,4 +38,8 @@ public interface ArticleChannelService {
 
 	void loadPublicChannels();
 
+	boolean canVisitThisChannel(Long userId, Long channelId);
+
+	List<ArticleChannelVO> getPrivateChannels(Long userId);
+
 }

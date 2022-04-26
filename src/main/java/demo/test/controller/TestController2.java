@@ -1,6 +1,7 @@
 package demo.test.controller;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,6 +15,7 @@ import demo.common.controller.CommonController;
 import demo.finance.cryptoCoin.common.service.CryptoCoinConstantService;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.dto.TestDTO;
+import demo.test.service.TestService;
 import net.sf.json.JSONObject;
 
 @Controller
@@ -72,5 +74,15 @@ public class TestController2 extends CommonController {
 	@ResponseBody
 	public String findHostNameFromRequst(HttpServletRequest request) {
 		return request.getServerName();
+	}
+	
+	
+	@Autowired
+	private TestService testService;
+	
+	@GetMapping(value = "/t6")
+	@ResponseBody
+	public List<String> getRole() {
+		return testService.getRoles();
 	}
 }

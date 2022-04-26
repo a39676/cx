@@ -113,7 +113,7 @@ public class ArticleAdminController extends CommonController {
 		return channelService.editChannelKeyHostname(dto);
 	}
 	
-	@PostMapping(value = ArticleAdminUrlConstant.loadPublicChannels)
+	@GetMapping(value = ArticleAdminUrlConstant.loadPublicChannels)
 	@ResponseBody
 	public CommonResultCX loadPublicChannels() {
 		CommonResultCX r = new CommonResultCX();

@@ -34,6 +34,7 @@ import demo.article.article.pojo.type.ArticleChannelType;
 import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.article.article.service.ArticleChannelService;
 import demo.base.system.pojo.po.Hostname;
+import demo.base.system.pojo.result.HostnameType;
 import demo.common.pojo.result.CommonResultCX;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -53,15 +54,17 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	@Override
 	public void loadPublicChannels() {
 		if (articleOptionService.getPublicChannels() == null) {
-			articleOptionService.setPublicChannels(new HashMap<String, List<ArticleChannelVO>>());
+			articleOptionService.setPublicChannels(new HashMap<HostnameType, List<ArticleChannelVO>>());
 		}
 
 		List<Hostname> hostnameList = hostnameService.findHostnames();
 		List<ArticleChannelVO> allPublicChannelVoList = getPublicChannels();
-
+		HostnameType hostnameType = null;
+		
 		for (Hostname hostname : hostnameList) {
 			ArticleChannelKeyHostnameExample channelKeyHostnameExample = new ArticleChannelKeyHostnameExample();
 			channelKeyHostnameExample.createCriteria().andIsDeleteEqualTo(false).andHostIdEqualTo(hostname.getId());
+			hostnameType = HostnameType.getTypeCustom(hostname.getHostname());
 			List<ArticleChannelKeyHostname> channelKeyHostnameList = articleChannelKeyHostnameMapper
 					.selectByExample(channelKeyHostnameExample);
 			List<Long> channelPassList = new ArrayList<Long>();
@@ -79,7 +82,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 			tmpChannelList.add(createTheAllChannel());
 			tmpChannelList.addAll(removeChannels(allPublicChannelVoList, channelBanList, channelPassList));
 
-			articleOptionService.getPublicChannels().put(hostname.getHostname(), tmpChannelList);
+			articleOptionService.getPublicChannels().put(hostnameType, tmpChannelList);
 		}
 	}
 
@@ -102,6 +105,9 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 
 	@Override
 	public List<ArticleChannelVO> getPrivateChannels(Long userId) {
+		if(userId == null) {
+			return new ArrayList<ArticleChannelVO>();
+		}
 		ArticleUserDetailExample privateChannelConnectExample = new ArticleUserDetailExample();
 		privateChannelConnectExample.createCriteria().andIsDeleteEqualTo(false).andUserIdEqualTo(userId)
 				.andConnectTypeEqualTo(true);
@@ -155,6 +161,8 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		result.getChannelList().addAll(bo.getPrivateChannels());
 		result.getChannelList().addAll(bo.getFlashChannels());
 		Collections.sort(result.getChannelList());
+		
+		result.setIsSuccess();
 		return result;
 	}
 
@@ -184,11 +192,11 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		GetArticleChannelsBO bo = null;
 		Long userId = baseUtilCustom.getUserId();
 
-		String hostname = hostnameService.findHostNameFromRequst(request);
+		HostnameType hostnameType = hostnameService.findHostnameType(request);
 		if (userId == null) {
-			bo = getArticleChannelsForNotLogin(hostname);
+			bo = getArticleChannelsForNotLogin(hostnameType);
 		} else {
-			bo = getArticleChannelsByUserId(hostname, userId);
+			bo = getArticleChannelsByUserId(hostnameType, userId);
 		}
 
 		GetArticleChannelsResult result = buildGetArticleChannelsResult(bo);
@@ -204,10 +212,10 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		return vo;
 	}
 
-	private GetArticleChannelsBO getArticleChannelsForNotLogin(String hostname) {
+	private GetArticleChannelsBO getArticleChannelsForNotLogin(HostnameType hostnameType) {
 		GetArticleChannelsBO channelListBO = new GetArticleChannelsBO();
 
-		channelListBO.setPublicChannels(articleOptionService.getPublicChannels().get(hostname));
+		channelListBO.setPublicChannels(articleOptionService.getPublicChannels().get(hostnameType));
 		fillChannels(channelListBO);
 
 		return channelListBO;
@@ -225,10 +233,10 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		}
 	}
 
-	private GetArticleChannelsBO getArticleChannelsByUserId(String hostname, Long userId) {
+	private GetArticleChannelsBO getArticleChannelsByUserId(HostnameType hostnameType, Long userId) {
 		GetArticleChannelsBO channelListBO = new GetArticleChannelsBO();
 
-		channelListBO.setPublicChannels(articleOptionService.getPublicChannels().get(hostname));
+		channelListBO.setPublicChannels(articleOptionService.getPublicChannels().get(hostnameType));
 
 		if (userId == null) {
 			fillChannels(channelListBO);
@@ -240,7 +248,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		channelListBO.setFlashChannels(new ArrayList<ArticleChannelVO>());
 		channelListBO.setPrivateChannels(privateChannelVOList);
 
-		channelListBO = removeChannelsByHostName(hostname, channelListBO);
+		channelListBO = removeChannelsByHostName(hostnameType, channelListBO);
 
 		channelListBO.getPublicChannels().add(0, createTheAllChannel());
 
@@ -257,15 +265,15 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		return strContent;
 	}
 
-	private GetArticleChannelsBO removeChannelsByHostName(String hostName, GetArticleChannelsBO channelList) {
+	private GetArticleChannelsBO removeChannelsByHostName(HostnameType hostnameType, GetArticleChannelsBO channelList) {
 		if (channelList == null) {
 			return channelList;
 		}
 
-		if (StringUtils.isBlank(hostName)) {
+		if (hostnameType == null) {
 			channelList = removeChannelsForUnknow(channelList);
 		} else {
-			filterChannelDynamic(channelList, hostName);
+			filterChannelDynamic(channelList, hostnameType);
 		}
 
 		return channelList;
@@ -279,9 +287,6 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		if (channelList == null) {
 			return channelList;
 		}
-
-		channelList.getFlashChannels().clear();
-		channelList.getPrivateChannels().clear();
 
 		GetArticleChannelsBO newChannelList = removeAllChannels(channelList);
 
@@ -523,15 +528,12 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		return r;
 	}
 
-	public GetArticleChannelsBO filterChannelDynamic(GetArticleChannelsBO channelList, String hostname) {
+	private GetArticleChannelsBO filterChannelDynamic(GetArticleChannelsBO channelList, HostnameType hostnameType) {
 		List<Hostname> hostnameList = hostnameService.findHostnames();
 		Integer hostnameId = null;
-		if (hostname.contains("www")) {
-			hostname = hostname.replaceAll("www\\.", "");
-		}
-		for (Hostname i : hostnameList) {
-			if (hostname.equals(i.getHostname())) {
-				hostnameId = i.getId();
+		for (Hostname hostname : hostnameList) {
+			if (hostnameType.equals(HostnameType.getTypeCustom(hostname.getHostname()))) {
+				hostnameId = hostname.getId();
 			}
 		}
 

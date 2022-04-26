@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 
 import demo.article.article.pojo.vo.ArticleChannelVO;
+import demo.base.system.pojo.result.HostnameType;
 import demo.common.service.CommonService;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -41,7 +42,7 @@ public class ArticleOptionService extends CommonService {
 	private Long normalUserMaxReadingMonth = 12L;
 	private String donateImgUrl;
 
-	private HashMap<String, List<ArticleChannelVO>> publicChannels = new HashMap<>();
+	private HashMap<HostnameType, List<ArticleChannelVO>> publicChannels = new HashMap<>();
 
 	@Override
 	public String toString() {
@@ -169,11 +170,11 @@ public class ArticleOptionService extends CommonService {
 		this.normalUserMaxReadingMonth = normalUserMaxReadingMonth;
 	}
 
-	public HashMap<String, List<ArticleChannelVO>> getPublicChannels() {
+	public HashMap<HostnameType, List<ArticleChannelVO>> getPublicChannels() {
 		return publicChannels;
 	}
 
-	public void setPublicChannels(HashMap<String, List<ArticleChannelVO>> publicChannels) {
+	public void setPublicChannels(HashMap<HostnameType, List<ArticleChannelVO>> publicChannels) {
 		this.publicChannels = publicChannels;
 	}
 

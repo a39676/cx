@@ -30,9 +30,8 @@ public class HostnameServiceImpl extends CommonService implements HostnameServic
 
 	@Override
 	public String findHostNameFromRequst(HttpServletRequest request) {
-//		TODO
-		return "zhang3.xyz";
-//		return request.getServerName();
+//		return "zhang3.xyz";
+		return request.getServerName();
 
 //		String r = "from getServerName: " + request.getServerName();
 //		String url = request.getServerName();

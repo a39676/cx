@@ -34,7 +34,7 @@
         </javaTypeResolver>  
           
         <!-- 生成模型的包名和位置-->    
-        <javaModelGenerator targetPackage="demo.article.article.pojo.po" targetProject="cx">    
+        <javaModelGenerator targetPackage="demo.finance.cryptoCoin.mining.pojo.po" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
             <property name="trimStrings" value="true"/> 
             <!-- for MyBatis3 / MyBatis3Simple
@@ -45,18 +45,18 @@
         </javaModelGenerator>    
         
         <!-- 生成映射文件的包名和位置-->    
-        <sqlMapGenerator targetPackage="demo.article.article.mapper" targetProject="cx">    
+        <sqlMapGenerator targetPackage="demo.finance.cryptoCoin.mining.mapper" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
         </sqlMapGenerator>    
         
         <!-- 生成DAO的包名和位置-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.article.article.mapper" targetProject="cx">    
+        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.finance.cryptoCoin.mining.mapper" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="article_burn">
-        	<property name="tableName" value="article_burn"></property>
-        	<property name="domainObjectName" value="article_burn"></property>
+        <table tableName="crypto_coin_mining_output">
+        	<property name="tableName" value="crypto_coin_mining_output"></property>
+        	<property name="domainObjectName" value="crypto_coin_mining_output"></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

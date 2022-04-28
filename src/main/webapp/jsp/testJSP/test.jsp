@@ -6,7 +6,6 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.css" rel="stylesheet">
- 
 <sec:csrfMetaTags />
 <title>${ title }</title>
 <span style="font-size: smaller;">${message}</span><br>

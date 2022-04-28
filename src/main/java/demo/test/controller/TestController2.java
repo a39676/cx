@@ -48,6 +48,12 @@ public class TestController2 extends CommonController {
 				{"testKey":"tv"}
 				""";
 	}
+	
+	@GetMapping(value = "/t1")
+	@ResponseBody
+	public ModelAndView t1() {
+		return new ModelAndView("testJSP/test");
+	}
 
 	@GetMapping(value = "/t2")
 	@ResponseBody

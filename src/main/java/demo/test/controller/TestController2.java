@@ -94,4 +94,5 @@ public class TestController2 extends CommonController {
 		v.addObject("message", roles);
 		return v;
 	}
+	
 }

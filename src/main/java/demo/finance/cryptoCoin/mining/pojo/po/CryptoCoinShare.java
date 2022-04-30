@@ -1,16 +1,15 @@
 package demo.finance.cryptoCoin.mining.pojo.po;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class CryptoCoinMiningOutput {
+public class CryptoCoinShare {
     private Long id;
 
     private Long miningMachineId;
 
     private LocalDateTime outputTime;
 
-    private BigDecimal outputCounting;
+    private String filePath;
 
     private LocalDateTime createTime;
 
@@ -40,12 +39,12 @@ public class CryptoCoinMiningOutput {
         this.outputTime = outputTime;
     }
 
-    public BigDecimal getOutputCounting() {
-        return outputCounting;
+    public String getFilePath() {
+        return filePath;
     }
 
-    public void setOutputCounting(BigDecimal outputCounting) {
-        this.outputCounting = outputCounting;
+    public void setFilePath(String filePath) {
+        this.filePath = filePath == null ? null : filePath.trim();
     }
 
     public LocalDateTime getCreateTime() {

@@ -10,7 +10,7 @@ public class CryptoCoinAllocationAssistantMatchMachine {
 
     private Long miningMachineId;
 
-    private Integer partingCount;
+    private BigDecimal partingCount;
 
     private BigDecimal commissionFeeRate;
 
@@ -44,11 +44,11 @@ public class CryptoCoinAllocationAssistantMatchMachine {
         this.miningMachineId = miningMachineId;
     }
 
-    public Integer getPartingCount() {
+    public BigDecimal getPartingCount() {
         return partingCount;
     }
 
-    public void setPartingCount(Integer partingCount) {
+    public void setPartingCount(BigDecimal partingCount) {
         this.partingCount = partingCount;
     }
 

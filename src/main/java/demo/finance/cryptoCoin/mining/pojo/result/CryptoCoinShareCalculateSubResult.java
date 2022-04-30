@@ -6,8 +6,11 @@ public class CryptoCoinShareCalculateSubResult {
 
 	private Long assistantId;
 	private String assistantName;
-	private BigDecimal coinCounting;
+	private BigDecimal partingCount;
+	private BigDecimal receiveFromParting;
 	private BigDecimal commissionFee;
+	private BigDecimal commissionFeeRate;
+	private BigDecimal totalCoinCounting;
 
 	public Long getAssistantId() {
 		return assistantId;
@@ -25,12 +28,20 @@ public class CryptoCoinShareCalculateSubResult {
 		this.assistantName = assistantName;
 	}
 
-	public BigDecimal getCoinCounting() {
-		return coinCounting;
+	public BigDecimal getPartingCount() {
+		return partingCount;
 	}
 
-	public void setCoinCounting(BigDecimal coinCounting) {
-		this.coinCounting = coinCounting;
+	public void setPartingCount(BigDecimal partingCount) {
+		this.partingCount = partingCount;
+	}
+
+	public BigDecimal getTotalCoinCounting() {
+		return totalCoinCounting;
+	}
+
+	public void setTotalCoinCounting(BigDecimal totalCoinCounting) {
+		this.totalCoinCounting = totalCoinCounting;
 	}
 
 	public BigDecimal getCommissionFee() {
@@ -41,10 +52,28 @@ public class CryptoCoinShareCalculateSubResult {
 		this.commissionFee = commissionFee;
 	}
 
+	public BigDecimal getCommissionFeeRate() {
+		return commissionFeeRate;
+	}
+
+	public void setCommissionFeeRate(BigDecimal commissionFeeRate) {
+		this.commissionFeeRate = commissionFeeRate;
+	}
+
+	public BigDecimal getReceiveFromParting() {
+		return receiveFromParting;
+	}
+
+	public void setReceiveFromParting(BigDecimal receiveFromParting) {
+		this.receiveFromParting = receiveFromParting;
+	}
+
 	@Override
 	public String toString() {
 		return "CryptoCoinShareCalculateSubResult [assistantId=" + assistantId + ", assistantName=" + assistantName
-				+ ", coinCounting=" + coinCounting + ", commissionFee=" + commissionFee + "]";
+				+ ", partingCount=" + partingCount + ", receiveFromParting=" + receiveFromParting + ", commissionFee="
+				+ commissionFee + ", commissionFeeRate=" + commissionFeeRate + ", totalCoinCounting="
+				+ totalCoinCounting + "]";
 	}
 
 }

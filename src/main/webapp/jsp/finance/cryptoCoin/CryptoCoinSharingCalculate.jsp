@@ -19,32 +19,40 @@
         <table class="table table-hover table-bordered table-striped table-light">
           <thead class="thead-dark">
             <tr>
-              <th colspan="2" style="text-align: center; vertical-align: middle;">集群名(ID)</th>
+              <th style="text-align: center; vertical-align: middle;">集群名(ID)</th>
               <th style="text-align: center; vertical-align: middle;">对应币</th>
               <th style="text-align: center; vertical-align: middle;">手续费</th>
               <th style="text-align: center; vertical-align: middle;">分割份数</th>
+              <th></th>
             </tr>
           </thead>
           <tr>
-            <td colspan="2" style="text-align: center; vertical-align: middle;">${machine.machineName}(${machine.idStr})</td>
+            <td style="text-align: center; vertical-align: middle;">${machine.machineName}(${machine.idStr})</td>
             <td style="text-align: center; vertical-align: middle;">${machine.coinName}</td>
             <c:set var="handlingFeeRateInPercent"><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${machine.handlingFeeRate * 100}" /></c:set>
             <td style="text-align: center; vertical-align: middle;">${handlingFeeRateInPercent}%</td>
             <td style="text-align: center; vertical-align: middle;">${machine.partingCount}</td>
+            <td></td>
           </tr>
           <tr class="table-primary">
-            <td style="text-align: center; vertical-align: middle;">用户名</td>
-            <td colspan="2"></td>
+            <td colspan="2" style="text-align: center; vertical-align: middle;">用户名</td>
             <td style="text-align: center; vertical-align: middle;">佣金</td>
             <td style="text-align: center; vertical-align: middle;">所占份数</td>
+            <td></td>
           </tr>
           <c:forEach items="${machine.assistantList}" var="assistant">
             <tr>
-              <td style="text-align: center; vertical-align: middle;">${assistant.name}</td>
-              <td colspan="2"></td>
+              <td colspan="2" style="text-align: center; vertical-align: middle;">${assistant.name}</td>
               <c:set var="commissionFeeRateInPercent"><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${assistant.commissionFeeRate * 100}" /></c:set>
-              <td style="text-align: center; vertical-align: middle;">${commissionFeeRateInPercent}%</td>
-              <td style="text-align: center; vertical-align: middle;">${assistant.partingCount}</td>
+              <td style="text-align: center; vertical-align: middle;">
+                <input type="number" machineId="${machine.id}" assistantId="${assistant.id}" name="commissionFeeRateInPercent" value="${commissionFeeRateInPercent}">%
+              </td>
+              <td style="text-align: center; vertical-align: middle;">
+                <input type="number" machineId="${machine.id}" assistantId="${assistant.id}" name="partingCount" value="${assistant.partingCount}">
+              </td>
+              <td style="text-align: center; vertical-align: middle;">
+                <button type="button" name="updateAssistant" machineId="${machine.id}">修改</button>
+              </td>
             </tr>
           </c:forEach>
         </table>
@@ -84,38 +92,38 @@
 
       function assistantCalculate(machineId) {
 
-        var url = "/cryptoCoin/dataCompare/CryptoCoinDailyDataComparetor";
+        var url = "/cryptoCoinSharingCalculate/sharingCalculate";
 
         var markDate = $("input[machineId='"+machineId+"'][name='markDate']").val();
         var getCoinCounting = $("input[machineId='"+machineId+"'][name='getCoinCounting']").val();
 
         var jsonOutput = {
-          machineId : machineId,
-          markDate : markDate,
+          machineIdStr : machineId,
+          markDateStr : markDate,
           getCoinCounting : getCoinCounting
         };
 
         console.log(jsonOutput);
 
-        // $.ajax({
-        //   type : "POST",
-        //   url : url,
-        //   data: JSON.stringify(jsonOutput),
-        //   dataType: 'json',
-        //   contentType: "application/json",
-        //   beforeSend: function(xhr) {
-        //     xhr.setRequestHeader(csrfHeader, csrfToken);
-        //   },
-        //   timeout: 15000,
-        //   success:function(data){
-        //     $("#result").html("");
-        //     var subData;
-        //
-        //   },
-        //   error:function(e){
-        //     $("#result").text(e);
-        //   }
-        // });
+        $.ajax({
+          type : "POST",
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          dataType: 'json',
+          contentType: "application/json",
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          timeout: 15000,
+          success:function(data){
+            // $("#result").html("");
+            console.log(data);
+          },
+          error:function(e){
+            // $("#result").text(e);
+            console.log(e);
+          }
+        });
       };
 
     });

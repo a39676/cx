@@ -296,52 +296,52 @@ public class CryptoCoinAllocationAssistantMatchMachineExample {
             return (Criteria) this;
         }
 
-        public Criteria andPartingCountEqualTo(Integer value) {
+        public Criteria andPartingCountEqualTo(BigDecimal value) {
             addCriterion("parting_count =", value, "partingCount");
             return (Criteria) this;
         }
 
-        public Criteria andPartingCountNotEqualTo(Integer value) {
+        public Criteria andPartingCountNotEqualTo(BigDecimal value) {
             addCriterion("parting_count <>", value, "partingCount");
             return (Criteria) this;
         }
 
-        public Criteria andPartingCountGreaterThan(Integer value) {
+        public Criteria andPartingCountGreaterThan(BigDecimal value) {
             addCriterion("parting_count >", value, "partingCount");
             return (Criteria) this;
         }
 
-        public Criteria andPartingCountGreaterThanOrEqualTo(Integer value) {
+        public Criteria andPartingCountGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("parting_count >=", value, "partingCount");
             return (Criteria) this;
         }
 
-        public Criteria andPartingCountLessThan(Integer value) {
+        public Criteria andPartingCountLessThan(BigDecimal value) {
             addCriterion("parting_count <", value, "partingCount");
             return (Criteria) this;
         }
 
-        public Criteria andPartingCountLessThanOrEqualTo(Integer value) {
+        public Criteria andPartingCountLessThanOrEqualTo(BigDecimal value) {
             addCriterion("parting_count <=", value, "partingCount");
             return (Criteria) this;
         }
 
-        public Criteria andPartingCountIn(List<Integer> values) {
+        public Criteria andPartingCountIn(List<BigDecimal> values) {
             addCriterion("parting_count in", values, "partingCount");
             return (Criteria) this;
         }
 
-        public Criteria andPartingCountNotIn(List<Integer> values) {
+        public Criteria andPartingCountNotIn(List<BigDecimal> values) {
             addCriterion("parting_count not in", values, "partingCount");
             return (Criteria) this;
         }
 
-        public Criteria andPartingCountBetween(Integer value1, Integer value2) {
+        public Criteria andPartingCountBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("parting_count between", value1, value2, "partingCount");
             return (Criteria) this;
         }
 
-        public Criteria andPartingCountNotBetween(Integer value1, Integer value2) {
+        public Criteria andPartingCountNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("parting_count not between", value1, value2, "partingCount");
             return (Criteria) this;
         }

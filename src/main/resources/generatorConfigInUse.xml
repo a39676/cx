@@ -54,9 +54,9 @@
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="crypto_coin_mining_output">
-        	<property name="tableName" value="crypto_coin_mining_output"></property>
-        	<property name="domainObjectName" value="crypto_coin_mining_output"></property>
+        <table tableName="crypto_coin_allocation_assistant_match_machine">
+        	<property name="tableName" value="crypto_coin_allocation_assistant_match_machine"></property>
+        	<property name="domainObjectName" value="crypto_coin_allocation_assistant_match_machine"></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

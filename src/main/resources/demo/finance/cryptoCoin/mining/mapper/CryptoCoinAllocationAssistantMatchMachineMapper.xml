@@ -5,7 +5,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="assistant_id" jdbcType="BIGINT" property="assistantId" />
     <result column="mining_machine_id" jdbcType="BIGINT" property="miningMachineId" />
-    <result column="parting_count" jdbcType="INTEGER" property="partingCount" />
+    <result column="parting_count" jdbcType="DECIMAL" property="partingCount" />
     <result column="commission_fee_rate" jdbcType="DECIMAL" property="commissionFeeRate" />
     <result column="udpate_time" jdbcType="TIMESTAMP" property="udpateTime" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -108,7 +108,7 @@
       parting_count, commission_fee_rate, udpate_time, 
       create_time, is_delete)
     values (#{id,jdbcType=BIGINT}, #{assistantId,jdbcType=BIGINT}, #{miningMachineId,jdbcType=BIGINT}, 
-      #{partingCount,jdbcType=INTEGER}, #{commissionFeeRate,jdbcType=DECIMAL}, #{udpateTime,jdbcType=TIMESTAMP}, 
+      #{partingCount,jdbcType=DECIMAL}, #{commissionFeeRate,jdbcType=DECIMAL}, #{udpateTime,jdbcType=TIMESTAMP}, 
       #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="demo.finance.cryptoCoin.mining.pojo.po.CryptoCoinAllocationAssistantMatchMachine">
@@ -150,7 +150,7 @@
         #{miningMachineId,jdbcType=BIGINT},
       </if>
       <if test="partingCount != null">
-        #{partingCount,jdbcType=INTEGER},
+        #{partingCount,jdbcType=DECIMAL},
       </if>
       <if test="commissionFeeRate != null">
         #{commissionFeeRate,jdbcType=DECIMAL},
@@ -185,7 +185,7 @@
         mining_machine_id = #{record.miningMachineId,jdbcType=BIGINT},
       </if>
       <if test="record.partingCount != null">
-        parting_count = #{record.partingCount,jdbcType=INTEGER},
+        parting_count = #{record.partingCount,jdbcType=DECIMAL},
       </if>
       <if test="record.commissionFeeRate != null">
         commission_fee_rate = #{record.commissionFeeRate,jdbcType=DECIMAL},
@@ -209,7 +209,7 @@
     set id = #{record.id,jdbcType=BIGINT},
       assistant_id = #{record.assistantId,jdbcType=BIGINT},
       mining_machine_id = #{record.miningMachineId,jdbcType=BIGINT},
-      parting_count = #{record.partingCount,jdbcType=INTEGER},
+      parting_count = #{record.partingCount,jdbcType=DECIMAL},
       commission_fee_rate = #{record.commissionFeeRate,jdbcType=DECIMAL},
       udpate_time = #{record.udpateTime,jdbcType=TIMESTAMP},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -228,7 +228,7 @@
         mining_machine_id = #{miningMachineId,jdbcType=BIGINT},
       </if>
       <if test="partingCount != null">
-        parting_count = #{partingCount,jdbcType=INTEGER},
+        parting_count = #{partingCount,jdbcType=DECIMAL},
       </if>
       <if test="commissionFeeRate != null">
         commission_fee_rate = #{commissionFeeRate,jdbcType=DECIMAL},
@@ -249,7 +249,7 @@
     update crypto_coin_allocation_assistant_match_machine
     set assistant_id = #{assistantId,jdbcType=BIGINT},
       mining_machine_id = #{miningMachineId,jdbcType=BIGINT},
-      parting_count = #{partingCount,jdbcType=INTEGER},
+      parting_count = #{partingCount,jdbcType=DECIMAL},
       commission_fee_rate = #{commissionFeeRate,jdbcType=DECIMAL},
       udpate_time = #{udpateTime,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},

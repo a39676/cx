@@ -32,6 +32,9 @@ public class CryptoCoinOptionService extends CommonService {
 
 	private String binanceUri;
 
+	private Integer scaleOfSharingCalculate = 4;
+	private String sharingCalculateResultSavingPath;
+
 	private Set<String> subscriptionSet = new HashSet<>();
 
 	@PostConstruct
@@ -116,13 +119,34 @@ public class CryptoCoinOptionService extends CommonService {
 		this.subscriptionSet = subscriptionList;
 	}
 
+	public Integer getScaleOfSharingCalculate() {
+		return scaleOfSharingCalculate;
+	}
+
+	public void setScaleOfSharingCalculate(Integer scaleOfSharingCalculate) {
+		this.scaleOfSharingCalculate = scaleOfSharingCalculate;
+	}
+
+	public String getSharingCalculateResultSavingPath() {
+		return sharingCalculateResultSavingPath;
+	}
+
+	public void setSharingCalculateResultSavingPath(String sharingCalculateResultSavingPath) {
+		this.sharingCalculateResultSavingPath = sharingCalculateResultSavingPath;
+	}
+
+	public String getOptionFilePath() {
+		return optionFilePath;
+	}
+
 	@Override
 	public String toString() {
 		return "CryptoCoinOptionService [defaultCoinCatalog=" + defaultCoinCatalog + ", cryptoCompareApiDataMaxLength="
 				+ cryptoCompareApiDataMaxLength + ", defaultDailyDataQueryLenth=" + defaultDailyDataQueryLenth
 				+ ", defaultCurrency=" + defaultCurrency + ", cryptoCompareApiKey=" + cryptoCompareApiKey
-				+ ", cryptoCompareUri=" + cryptoCompareUri + ", binanceUri=" + binanceUri + ", subscriptionSet="
-				+ subscriptionSet + "]";
+				+ ", cryptoCompareUri=" + cryptoCompareUri + ", binanceUri=" + binanceUri + ", scaleOfSharingCalculate="
+				+ scaleOfSharingCalculate + ", sharingCalculateResultSavingPath=" + sharingCalculateResultSavingPath
+				+ ", subscriptionSet=" + subscriptionSet + "]";
 	}
 
 }

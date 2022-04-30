@@ -9,7 +9,7 @@ public class AllocationAssistantVO {
 	private String name;
 	private Long machineId;
 	private String machineIdStr;
-	private Integer partingCount;
+	private BigDecimal partingCount;
 	private BigDecimal commissionFeeRate;
 
 	public Long getId() {
@@ -52,11 +52,11 @@ public class AllocationAssistantVO {
 		this.machineIdStr = machineIdStr;
 	}
 
-	public Integer getPartingCount() {
+	public BigDecimal getPartingCount() {
 		return partingCount;
 	}
 
-	public void setPartingCount(Integer partingCount) {
+	public void setPartingCount(BigDecimal partingCount) {
 		this.partingCount = partingCount;
 	}
 

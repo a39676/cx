@@ -1,18 +1,17 @@
 package demo.finance.cryptoCoin.mining.pojo.po;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CryptoCoinMiningOutputExample {
+public class CryptoCoinShareExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public CryptoCoinMiningOutputExample() {
+    public CryptoCoinShareExample() {
         oredCriteria = new ArrayList<>();
     }
 
@@ -286,63 +285,73 @@ public class CryptoCoinMiningOutputExample {
             return (Criteria) this;
         }
 
-        public Criteria andOutputCountingIsNull() {
-            addCriterion("output_counting is null");
+        public Criteria andFilePathIsNull() {
+            addCriterion("file_path is null");
             return (Criteria) this;
         }
 
-        public Criteria andOutputCountingIsNotNull() {
-            addCriterion("output_counting is not null");
+        public Criteria andFilePathIsNotNull() {
+            addCriterion("file_path is not null");
             return (Criteria) this;
         }
 
-        public Criteria andOutputCountingEqualTo(BigDecimal value) {
-            addCriterion("output_counting =", value, "outputCounting");
+        public Criteria andFilePathEqualTo(String value) {
+            addCriterion("file_path =", value, "filePath");
             return (Criteria) this;
         }
 
-        public Criteria andOutputCountingNotEqualTo(BigDecimal value) {
-            addCriterion("output_counting <>", value, "outputCounting");
+        public Criteria andFilePathNotEqualTo(String value) {
+            addCriterion("file_path <>", value, "filePath");
             return (Criteria) this;
         }
 
-        public Criteria andOutputCountingGreaterThan(BigDecimal value) {
-            addCriterion("output_counting >", value, "outputCounting");
+        public Criteria andFilePathGreaterThan(String value) {
+            addCriterion("file_path >", value, "filePath");
             return (Criteria) this;
         }
 
-        public Criteria andOutputCountingGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("output_counting >=", value, "outputCounting");
+        public Criteria andFilePathGreaterThanOrEqualTo(String value) {
+            addCriterion("file_path >=", value, "filePath");
             return (Criteria) this;
         }
 
-        public Criteria andOutputCountingLessThan(BigDecimal value) {
-            addCriterion("output_counting <", value, "outputCounting");
+        public Criteria andFilePathLessThan(String value) {
+            addCriterion("file_path <", value, "filePath");
             return (Criteria) this;
         }
 
-        public Criteria andOutputCountingLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("output_counting <=", value, "outputCounting");
+        public Criteria andFilePathLessThanOrEqualTo(String value) {
+            addCriterion("file_path <=", value, "filePath");
             return (Criteria) this;
         }
 
-        public Criteria andOutputCountingIn(List<BigDecimal> values) {
-            addCriterion("output_counting in", values, "outputCounting");
+        public Criteria andFilePathLike(String value) {
+            addCriterion("file_path like", value, "filePath");
             return (Criteria) this;
         }
 
-        public Criteria andOutputCountingNotIn(List<BigDecimal> values) {
-            addCriterion("output_counting not in", values, "outputCounting");
+        public Criteria andFilePathNotLike(String value) {
+            addCriterion("file_path not like", value, "filePath");
             return (Criteria) this;
         }
 
-        public Criteria andOutputCountingBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("output_counting between", value1, value2, "outputCounting");
+        public Criteria andFilePathIn(List<String> values) {
+            addCriterion("file_path in", values, "filePath");
             return (Criteria) this;
         }
 
-        public Criteria andOutputCountingNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("output_counting not between", value1, value2, "outputCounting");
+        public Criteria andFilePathNotIn(List<String> values) {
+            addCriterion("file_path not in", values, "filePath");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilePathBetween(String value1, String value2) {
+            addCriterion("file_path between", value1, value2, "filePath");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilePathNotBetween(String value1, String value2) {
+            addCriterion("file_path not between", value1, value2, "filePath");
             return (Criteria) this;
         }
 

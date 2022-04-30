@@ -1,22 +1,35 @@
 package demo.finance.cryptoCoin.mining.pojo.vo;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
-public class CryptoCoinMiningMachineVO {
+public class CryptoCoinMiningMachineVO implements Comparable<CryptoCoinMiningMachineVO> {
 
-	private String id;
+	private Long id;
+	private String idStr;
 	private String machineName;
-	private String coinId;
+	private String coinIdStr;
+	private Long coinId;
 	private String coinName;
 	private BigDecimal handlingFeeRate;
 	private Integer partingCount;
+	private List<AllocationAssistantVO> assistantList;
 
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getIdStr() {
+		return idStr;
+	}
+
+	public void setIdStr(String idStr) {
+		this.idStr = idStr;
 	}
 
 	public String getMachineName() {
@@ -27,11 +40,19 @@ public class CryptoCoinMiningMachineVO {
 		this.machineName = machineName;
 	}
 
-	public String getCoinId() {
+	public String getCoinIdStr() {
+		return coinIdStr;
+	}
+
+	public void setCoinIdStr(String coinIdStr) {
+		this.coinIdStr = coinIdStr;
+	}
+
+	public Long getCoinId() {
 		return coinId;
 	}
 
-	public void setCoinId(String coinId) {
+	public void setCoinId(Long coinId) {
 		this.coinId = coinId;
 	}
 
@@ -59,11 +80,54 @@ public class CryptoCoinMiningMachineVO {
 		this.partingCount = partingCount;
 	}
 
+	public List<AllocationAssistantVO> getAssistantList() {
+		return assistantList;
+	}
+
+	public List<AllocationAssistantVO> addAssistant(AllocationAssistantVO vo) {
+		if (assistantList == null) {
+			assistantList = new ArrayList<>();
+		}
+		assistantList.add(vo);
+		return assistantList;
+	}
+
+	public void setAssistantList(List<AllocationAssistantVO> assistantList) {
+		this.assistantList = assistantList;
+	}
+
 	@Override
 	public String toString() {
-		return "CryptoCoinMiningMachineVO [id=" + id + ", machineName=" + machineName + ", coinId=" + coinId
-				+ ", coinName=" + coinName + ", handlingFeeRate=" + handlingFeeRate + ", partingCount=" + partingCount
-				+ "]";
+		return "CryptoCoinMiningMachineVO [id=" + id + ", idStr=" + idStr + ", machineName=" + machineName
+				+ ", coinIdStr=" + coinIdStr + ", coinId=" + coinId + ", coinName=" + coinName + ", handlingFeeRate="
+				+ handlingFeeRate + ", partingCount=" + partingCount + ", assistantList=" + assistantList + "]";
+	}
+
+	@Override
+	public int compareTo(CryptoCoinMiningMachineVO o) {
+		return compareId(o, this);
+	}
+
+	private int compareId(CryptoCoinMiningMachineVO o, CryptoCoinMiningMachineVO t) {
+		if (o.getId() == null || t.getId() == null) {
+			if (o.getId() == null && t.getId() == null) {
+				return 0;
+			} else if (o.getId() == null) {
+				return 1;
+			} else if (t.getId() == null) {
+				return -1;
+			} else {
+				return 0;
+			}
+		} else {
+			if (t.getId() > (o.getId())) {
+				return 1;
+			} else if (t.getId() < (o.getId())) {
+				return -1;
+			} else {
+				return 0;
+			}
+		}
 	}
 
 }

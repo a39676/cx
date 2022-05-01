@@ -25,7 +25,7 @@
 
   <div class="row">
     <div class="col-md-12">
-      <input type="Date" class="detailSearchCondition" value="${today}" id="startTime" data-date-format="yyyy-mm-dd"/>
+      <input type="Date" class="detailSearchCondition" value="${startTime}" id="startTime" data-date-format="yyyy-mm-dd"/>
       <input type="Date" class="detailSearchCondition" value="${today}" id="endTime" data-date-format="yyyy-mm-dd"/>
     </div>
   </div>
@@ -47,7 +47,7 @@
     $(document).ready(function() {
 
       searchSharingDetailList();
-      
+
       $(".detailSearchCondition").change(function () {
         searchSharingDetailList();
       });

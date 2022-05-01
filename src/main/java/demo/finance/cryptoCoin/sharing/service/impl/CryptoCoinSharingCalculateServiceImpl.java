@@ -448,6 +448,7 @@ public class CryptoCoinSharingCalculateServiceImpl extends CryptoCoinCommonServi
 			voList.add(buildCryptoCoinMachineInfoVO(machine, machineInfoMap.get(machine.getId())));
 		}
 
+		view.addObject("startTime", LocalDate.now().minusMonths(2));
 		view.addObject("today", LocalDate.now());
 		view.addObject("machineList", voList);
 		return view;

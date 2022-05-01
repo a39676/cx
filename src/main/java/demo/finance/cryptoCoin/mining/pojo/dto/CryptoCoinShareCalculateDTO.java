@@ -4,16 +4,16 @@ import java.math.BigDecimal;
 
 public class CryptoCoinShareCalculateDTO {
 
-	private String machineIdStr;
+	private String machinePK;
 	private String markDateStr;
 	private BigDecimal getCoinCounting;
 
-	public String getMachineIdStr() {
-		return machineIdStr;
+	public String getMachinePK() {
+		return machinePK;
 	}
 
-	public void setMachineIdStr(String machineIdStr) {
-		this.machineIdStr = machineIdStr;
+	public void setMachinePK(String machinePK) {
+		this.machinePK = machinePK;
 	}
 
 	public String getMarkDateStr() {
@@ -34,7 +34,7 @@ public class CryptoCoinShareCalculateDTO {
 
 	@Override
 	public String toString() {
-		return "CryptoCoinShareCalculateDTO [machineIdStr=" + machineIdStr + ", markDateStr=" + markDateStr
+		return "CryptoCoinShareCalculateDTO [machinePK=" + machinePK + ", markDateStr=" + markDateStr
 				+ ", getCoinCounting=" + getCoinCounting + "]";
 	}
 

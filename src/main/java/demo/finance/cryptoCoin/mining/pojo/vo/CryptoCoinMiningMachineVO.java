@@ -4,10 +4,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CryptoCoinMiningMachineVO implements Comparable<CryptoCoinMiningMachineVO> {
+public class CryptoCoinMiningMachineVO {
 
-	private Long id;
-	private String idStr;
+	private String machinePK;
 	private String machineName;
 	private String coinIdStr;
 	private Long coinId;
@@ -16,20 +15,12 @@ public class CryptoCoinMiningMachineVO implements Comparable<CryptoCoinMiningMac
 	private Integer partingCount;
 	private List<AllocationAssistantVO> assistantList;
 
-	public Long getId() {
-		return id;
+	public String getMachinePK() {
+		return machinePK;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getIdStr() {
-		return idStr;
-	}
-
-	public void setIdStr(String idStr) {
-		this.idStr = idStr;
+	public void setMachinePK(String machinePK) {
+		this.machinePK = machinePK;
 	}
 
 	public String getMachineName() {
@@ -98,36 +89,9 @@ public class CryptoCoinMiningMachineVO implements Comparable<CryptoCoinMiningMac
 
 	@Override
 	public String toString() {
-		return "CryptoCoinMiningMachineVO [id=" + id + ", idStr=" + idStr + ", machineName=" + machineName
-				+ ", coinIdStr=" + coinIdStr + ", coinId=" + coinId + ", coinName=" + coinName + ", handlingFeeRate="
-				+ handlingFeeRate + ", partingCount=" + partingCount + ", assistantList=" + assistantList + "]";
-	}
-
-	@Override
-	public int compareTo(CryptoCoinMiningMachineVO o) {
-		return compareId(o, this);
-	}
-
-	private int compareId(CryptoCoinMiningMachineVO o, CryptoCoinMiningMachineVO t) {
-		if (o.getId() == null || t.getId() == null) {
-			if (o.getId() == null && t.getId() == null) {
-				return 0;
-			} else if (o.getId() == null) {
-				return 1;
-			} else if (t.getId() == null) {
-				return -1;
-			} else {
-				return 0;
-			}
-		} else {
-			if (t.getId() > (o.getId())) {
-				return 1;
-			} else if (t.getId() < (o.getId())) {
-				return -1;
-			} else {
-				return 0;
-			}
-		}
+		return "CryptoCoinMiningMachineVO [machinePK=" + machinePK + ", machineName=" + machineName + ", coinIdStr="
+				+ coinIdStr + ", coinId=" + coinId + ", coinName=" + coinName + ", handlingFeeRate=" + handlingFeeRate
+				+ ", partingCount=" + partingCount + ", assistantList=" + assistantList + "]";
 	}
 
 }

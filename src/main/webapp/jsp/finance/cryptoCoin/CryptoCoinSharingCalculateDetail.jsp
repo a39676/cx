@@ -74,47 +74,6 @@
 
     $(document).ready(function() {
 
-      $("button[name='calculate']").click(function () {
-        var machineId = $(this).attr("machineId");
-        assistantCalculate(machineId);
-      });
-
-      function assistantCalculate(machineId) {
-
-        var url = "/cryptoCoinSharingCalculate/sharingCalculate";
-
-        var markDate = $("input[machineId='"+machineId+"'][name='markDate']").val();
-        var getCoinCounting = $("input[machineId='"+machineId+"'][name='getCoinCounting']").val();
-
-        var jsonOutput = {
-          machineIdStr : machineId,
-          markDateStr : markDate,
-          getCoinCounting : getCoinCounting
-        };
-
-        console.log(jsonOutput);
-
-        $.ajax({
-          type : "POST",
-          url : url,
-          data: JSON.stringify(jsonOutput),
-          dataType: 'json',
-          contentType: "application/json",
-          beforeSend: function(xhr) {
-            xhr.setRequestHeader(csrfHeader, csrfToken);
-          },
-          timeout: 15000,
-          success:function(data){
-            // $("#result").html("");
-            console.log(data);
-          },
-          error:function(e){
-            // $("#result").text(e);
-            console.log(e);
-          }
-        });
-      };
-
     });
 
   </script>

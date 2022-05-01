@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class CryptoCoinShareCalculateSubResult {
 
-	private Long assistantId;
+	private String assistantPK;
 	private String assistantName;
 	private BigDecimal partingCount;
 	private BigDecimal receiveFromParting;
@@ -12,12 +12,12 @@ public class CryptoCoinShareCalculateSubResult {
 	private BigDecimal commissionFeeRate;
 	private BigDecimal totalCoinCounting;
 
-	public Long getAssistantId() {
-		return assistantId;
+	public String getAssistantPK() {
+		return assistantPK;
 	}
 
-	public void setAssistantId(Long assistantId) {
-		this.assistantId = assistantId;
+	public void setAssistantPK(String assistantPK) {
+		this.assistantPK = assistantPK;
 	}
 
 	public String getAssistantName() {
@@ -70,7 +70,7 @@ public class CryptoCoinShareCalculateSubResult {
 
 	@Override
 	public String toString() {
-		return "CryptoCoinShareCalculateSubResult [assistantId=" + assistantId + ", assistantName=" + assistantName
+		return "CryptoCoinShareCalculateSubResult [assistantPK=" + assistantPK + ", assistantName=" + assistantName
 				+ ", partingCount=" + partingCount + ", receiveFromParting=" + receiveFromParting + ", commissionFee="
 				+ commissionFee + ", commissionFeeRate=" + commissionFeeRate + ", totalCoinCounting="
 				+ totalCoinCounting + "]";

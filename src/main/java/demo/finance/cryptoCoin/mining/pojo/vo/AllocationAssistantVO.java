@@ -4,28 +4,19 @@ import java.math.BigDecimal;
 
 public class AllocationAssistantVO {
 
-	private Long id;
-	private String idStr;
+	private String pk;
 	private String name;
 	private Long machineId;
 	private String machineIdStr;
 	private BigDecimal partingCount;
 	private BigDecimal commissionFeeRate;
 
-	public Long getId() {
-		return id;
+	public String getPk() {
+		return pk;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getIdStr() {
-		return idStr;
-	}
-
-	public void setIdStr(String idStr) {
-		this.idStr = idStr;
+	public void setPk(String pk) {
+		this.pk = pk;
 	}
 
 	public String getName() {
@@ -70,9 +61,8 @@ public class AllocationAssistantVO {
 
 	@Override
 	public String toString() {
-		return "AllocationAssistantVO [id=" + id + ", idStr=" + idStr + ", name=" + name + ", machineId=" + machineId
-				+ ", machineIdStr=" + machineIdStr + ", partingCount=" + partingCount + ", commissionFeeRate="
-				+ commissionFeeRate + "]";
+		return "AllocationAssistantVO [pk=" + pk + ", name=" + name + ", machineId=" + machineId + ", machineIdStr="
+				+ machineIdStr + ", partingCount=" + partingCount + ", commissionFeeRate=" + commissionFeeRate + "]";
 	}
 
 }

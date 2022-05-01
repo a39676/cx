@@ -94,7 +94,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		newPO.setTelegramBotName(TelegramBotType.BOT_2.getName());
 		newPO.setCoinType(dto.getCoinTypeCode());
 		newPO.setCurrencyType(dto.getCurrencyType());
-		newPO.setTelegramChatId(systemConstantService.decryptPrivateKey(dto.getTelegramChatPK()));
+		newPO.setTelegramChatId(systemOptionService.decryptPrivateKey(dto.getTelegramChatPK()));
 		newPO.setNoticeCount(dto.getNoticeCount());
 		newPO.setMaxPrice(dto.getMaxPrice());
 		newPO.setMinPrice(dto.getMinPrice());
@@ -135,7 +135,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		newPO.setTelegramBotName(TelegramBotType.CRYPTO_COIN_LOW_PRICE_NOTICE_BOT.getName());
 		newPO.setCoinType(dto.getCoinTypeCode());
 		newPO.setCurrencyType(dto.getCurrencyType());
-		newPO.setTelegramChatId(systemConstantService.decryptPrivateKey(dto.getTelegramChatPK()));
+		newPO.setTelegramChatId(systemOptionService.decryptPrivateKey(dto.getTelegramChatPK()));
 		newPO.setNoticeCount(dto.getNoticeCount());
 		newPO.setMaxPrice(dto.getMaxPrice());
 		newPO.setMinPrice(dto.getMinPrice());
@@ -367,7 +367,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		}
 
 		if (StringUtils.isNotBlank(content)) {
-			if (!"dev".equals(systemConstantService.getEnvName())) {
+			if (!"dev".equals(systemOptionService.getEnvName())) {
 				TelegramMessageDTO dto = new TelegramMessageDTO();
 				dto.setMsg(content);
 				dto.setId(noticeSetting.getTelegramChatId());
@@ -527,7 +527,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 				TimeUnitType.week, TimeUnitType.month };
 		view.addObject("timeUnitType", timeUnitTypes);
 
-		Long chatId = systemConstantService.decryptPrivateKey(dto.getReciverPK());
+		Long chatId = systemOptionService.decryptPrivateKey(dto.getReciverPK());
 
 		CryptoCoinPriceNoticeExample example = new CryptoCoinPriceNoticeExample();
 		Criteria criteria = example.createCriteria();
@@ -559,7 +559,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 	private CryptoCoinNoticeVO poToVO(CryptoCoinPriceNotice po) {
 		CryptoCoinNoticeVO vo = new CryptoCoinNoticeVO();
-		vo.setPk(systemConstantService.encryptId(po.getId()));
+		vo.setPk(systemOptionService.encryptId(po.getId()));
 		vo.setCryptoCoinCode(po.getCoinType());
 		CryptoCoinCatalog coinType = coinCatalogService.findCatalog(po.getCoinType());
 		vo.setCryptoCoinName(coinType.getCoinNameEnShort());
@@ -598,7 +598,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	@Override
 	public CommonResult deleteNotice(String pk) {
 		CommonResult r = new CommonResult();
-		Long id = systemConstantService.decryptPrivateKey(pk);
+		Long id = systemOptionService.decryptPrivateKey(pk);
 		if (id == null) {
 			r.failWithMessage("param error");
 			return r;
@@ -622,7 +622,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	public CommonResult updateNotice(NoticeUpdateDTO dto) {
 		CommonResult r = new CommonResult();
 
-		Long id = systemConstantService.decryptPrivateKey(dto.getPk());
+		Long id = systemOptionService.decryptPrivateKey(dto.getPk());
 		if (id == null) {
 			r.failWithMessage("param error");
 			return r;

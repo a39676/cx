@@ -14,7 +14,7 @@ import demo.tool.telegram.service.TelegramService;
 public abstract class FinanceCommonService extends CommonService {
 	
 	@Autowired
-	protected SystemOptionService systemConstantService;
+	protected SystemOptionService systemOptionService;
 	@Autowired
 	protected MailService mailService;
 	@Autowired

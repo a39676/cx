@@ -19,7 +19,7 @@
         <table class="table table-hover table-bordered table-striped table-light">
           <thead class="thead-dark">
             <tr>
-              <th style="text-align: center; vertical-align: middle;">集群名(ID)</th>
+              <th style="text-align: center; vertical-align: middle;">集群名</th>
               <th style="text-align: center; vertical-align: middle;">对应币</th>
               <th style="text-align: center; vertical-align: middle;">手续费</th>
               <th style="text-align: center; vertical-align: middle;">分割份数</th>
@@ -27,7 +27,7 @@
             </tr>
           </thead>
           <tr>
-            <td style="text-align: center; vertical-align: middle;">${machine.machineName}(${machine.idStr})</td>
+            <td style="text-align: center; vertical-align: middle;">${machine.machineName}</td>
             <td style="text-align: center; vertical-align: middle;">${machine.coinName}</td>
             <c:set var="handlingFeeRateInPercent"><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${machine.handlingFeeRate * 100}" /></c:set>
             <td style="text-align: center; vertical-align: middle;">${handlingFeeRateInPercent}%</td>
@@ -45,30 +45,32 @@
               <td colspan="2" style="text-align: center; vertical-align: middle;">${assistant.name}</td>
               <c:set var="commissionFeeRateInPercent"><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${assistant.commissionFeeRate * 100}" /></c:set>
               <td style="text-align: center; vertical-align: middle;">
-                <input type="number" machineId="${machine.id}" assistantId="${assistant.id}" name="commissionFeeRateInPercent" value="${commissionFeeRateInPercent}">%
+                <input type="number" machinePK="${machine.machinePK}" assistantPK="${assistant.pk}" name="commissionFeeRateInPercent" value="${commissionFeeRateInPercent}">%
               </td>
               <td style="text-align: center; vertical-align: middle;">
-                <input type="number" machineId="${machine.id}" assistantId="${assistant.id}" name="partingCount" value="${assistant.partingCount}">
+                <input type="number" machinePK="${machine.machinePK}" assistantPK="${assistant.pk}" name="partingCount" value="${assistant.partingCount}">
               </td>
               <td style="text-align: center; vertical-align: middle;">
-                <button type="button" name="updateAssistant" machineId="${machine.id}">修改</button>
+                <button class="btn btn-primary" type="button" name="updateAssistant" assistantPK="${assistant.pk}" machinePK="${machine.machinePK}">修改</button>
+                <span name="updateAssistantResult" assistantPK="${assistant.pk}" machinePK="${machine.machinePK}"></span>
               </td>
             </tr>
           </c:forEach>
         </table>
-        <form name="calculateAssistant" machineId="${machine.id}" novalidate>
+        <form name="calculateAssistant" machinePK="${machine.machinePK}" novalidate>
           <div class="control-group">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <span class="input-group-text">标记日期</span>
               </div>
-              <input type="Date" class="" value="${today}" machineId="${machine.id}" name="markDate" data-date-format="yyyy-mm-dd"/>
+              <input type="Date" class="" value="${today}" machinePK="${machine.machinePK}" name="markDate" data-date-format="yyyy-mm-dd"/>
               <div class="input-group-prepend">
                 <span class="input-group-text">本期获得币</span>
               </div>
-              <input type="number" class="form-control" placeholder="0" machineId="${machine.id}" name="getCoinCounting" required data-validation-required-message="请输入本期获得币数" value="">
+              <input type="number" class="form-control" placeholder="0" machinePK="${machine.machinePK}" name="getCoinCounting" required data-validation-required-message="请输入本期获得币数" value="">
             </div>
-            <button machineId="${machine.id}" class="btn btn-primary" type="button" name="calculate">核算</button>
+            <button machinePK="${machine.machinePK}" class="btn btn-primary" type="button" name="calculate">核算</button>
+            <span machinePK="${machine.machinePK}" name="calculateResult"></span>
           </div>
         </form>
         <hr>
@@ -86,24 +88,22 @@
     $(document).ready(function() {
 
       $("button[name='calculate']").click(function () {
-        var machineId = $(this).attr("machineId");
-        assistantCalculate(machineId);
+        var machinePK = $(this).attr("machinePK");
+        assistantCalculate(machinePK);
       });
 
-      function assistantCalculate(machineId) {
+      function assistantCalculate(machinePK) {
 
         var url = "/cryptoCoinSharingCalculate/sharingCalculate";
 
-        var markDate = $("input[machineId='"+machineId+"'][name='markDate']").val();
-        var getCoinCounting = $("input[machineId='"+machineId+"'][name='getCoinCounting']").val();
+        var markDate = $("input[machinePK='"+machinePK+"'][name='markDate']").val();
+        var getCoinCounting = $("input[machinePK='"+machinePK+"'][name='getCoinCounting']").val();
 
         var jsonOutput = {
-          machineIdStr : machineId,
+          machinePK : machinePK,
           markDateStr : markDate,
           getCoinCounting : getCoinCounting
         };
-
-        console.log(jsonOutput);
 
         $.ajax({
           type : "POST",
@@ -116,12 +116,57 @@
           },
           timeout: 15000,
           success:function(data){
-            // $("#result").html("");
-            console.log(data);
+            if(data.code == 0){
+              $("span[name='calculateResult'][machinePK='"+machinePK+"']").text("核算完毕");
+            } else {
+              $("span[name='calculateResult'][machinePK='"+machinePK+"']").text("核算失败,请联系管理员");
+            }
           },
           error:function(e){
             // $("#result").text(e);
-            console.log(e);
+          }
+        });
+      };
+
+      $("button[name='updateAssistant']").click(function () {
+        var machinePK = $(this).attr("machinePK");
+        var assistantPK = $(this).attr("assistantPK");
+        updateAssistant(machinePK, assistantPK);
+      });
+
+      function updateAssistant(machinePK, assistantPK) {
+
+        var url = "/cryptoCoinSharingCalculate/updateAssistant";
+
+        var partingCount = $("input[name='partingCount'][assistantPK='"+assistantPK+"'][machinePK='"+machinePK+"']").val();
+        var commissionFeeRateInPercent =  $("input[name='commissionFeeRateInPercent'][assistantPK='"+assistantPK+"'][machinePK='"+machinePK+"']").val();
+
+        var jsonOutput = {
+          machinePK : machinePK,
+          assistantPK : assistantPK,
+          partingCount : partingCount,
+          commissionFeeRateInPercent : commissionFeeRateInPercent
+        };
+
+        $.ajax({
+          type : "POST",
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          dataType: 'json',
+          contentType: "application/json",
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          timeout: 15000,
+          success:function(data){
+            if(data.code == 0){
+              $("span[name='updateAssistantResult'][assistantPK='"+assistantPK+"'][machinePK='"+machinePK+"']").text("修改成功");
+            } else {
+              $("span[name='updateAssistantResult'][assistantPK='"+assistantPK+"'][machinePK='"+machinePK+"']").text(data.message);
+            }
+          },
+          error:function(e){
+            // $("#result").text(e);
           }
         });
       };

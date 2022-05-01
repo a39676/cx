@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -345,6 +346,7 @@ public class CryptoCoinSharingCalculateServiceImpl extends CryptoCoinCommonServi
 			return r;
 		}
 
+		dto.setPk(URLDecoder.decode(dto.getPk(), StandardCharsets.UTF_8));
 		Long id = systemOptionService.decryptPrivateKey(dto.getPk());
 		if (id == null) {
 			return r;

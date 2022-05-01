@@ -107,9 +107,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers(WXUrl.root + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DEV))
-            	
+            .antMatchers("/cryptoCoinSharingCalculate/calculateDetail")
+            	.permitAll()
+            .antMatchers("/cryptoCoinSharingCalculate/**")
+            	.access("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')")
             // joy url start
-            
             .antMatchers(JoyUrl.ROOT + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_USER_ACTIVE))
             .antMatchers(JoyManagerUrl.ROOT + "/**")
@@ -232,4 +234,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		roleExpressionBuilder.append(")");
 		return roleExpressionBuilder.toString();
 	}
+	
 }

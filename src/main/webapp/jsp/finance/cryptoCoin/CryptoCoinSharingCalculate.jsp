@@ -15,6 +15,12 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
+      <a href="/cryptoCoinSharingCalculate/sharingCalculateDetailListSearchView" target="_blank">查看各明细</a>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
       <c:forEach items="${machineList}" var="machine">
         <table class="table table-hover table-bordered table-striped table-light">
           <thead class="thead-dark">

@@ -82,7 +82,7 @@ public class ExerciesServiceMathG1_2Impl extends ExerciesMathCommonService imple
 		while (result1 < MIN_NUM || result1 > MAX_RESULT) {
 			num1 = t.nextInt(MIN_NUM, MAX_NUM + 1);
 			num2 = t.nextInt(MIN_NUM, MAX_NUM + 1);
-			exp1 = String.valueOf(num2 + mathSymbolType1.getCodeSymbol() + num1);
+			exp1 = String.valueOf(num1 + mathSymbolType1.getCodeSymbol() + num2);
 			expression1 = new ExpressionBuilder(exp1).build();
 			result1 = expression1.evaluate();
 		}

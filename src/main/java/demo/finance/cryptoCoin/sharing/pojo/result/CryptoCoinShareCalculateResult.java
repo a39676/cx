@@ -10,6 +10,8 @@ public class CryptoCoinShareCalculateResult extends CommonResult {
 
 	private String markDateStr;
 
+	private BigDecimal totalOutput;
+
 	private Integer partingCount;
 
 	private BigDecimal coinCountingOfEachPartOfMachine;
@@ -30,6 +32,14 @@ public class CryptoCoinShareCalculateResult extends CommonResult {
 
 	public void setMarkDateStr(String markDateStr) {
 		this.markDateStr = markDateStr;
+	}
+
+	public BigDecimal getTotalOutput() {
+		return totalOutput;
+	}
+
+	public void setTotalOutput(BigDecimal totalOutput) {
+		this.totalOutput = totalOutput;
 	}
 
 	public Integer getPartingCount() {
@@ -97,11 +107,11 @@ public class CryptoCoinShareCalculateResult extends CommonResult {
 
 	@Override
 	public String toString() {
-		return "CryptoCoinShareCalculateResult [markDateStr=" + markDateStr + ", partingCount=" + partingCount
-				+ ", coinCountingOfEachPartOfMachine=" + coinCountingOfEachPartOfMachine + ", hanldingFeeRate="
-				+ hanldingFeeRate + ", hanldingFee=" + hanldingFee + ", restAfterHanldingFee=" + restAfterHanldingFee
-				+ ", restAfterCommissionFee=" + restAfterCommissionFee + ", caculateResultList=" + caculateResultList
-				+ "]";
+		return "CryptoCoinShareCalculateResult [markDateStr=" + markDateStr + ", totalOutput=" + totalOutput
+				+ ", partingCount=" + partingCount + ", coinCountingOfEachPartOfMachine="
+				+ coinCountingOfEachPartOfMachine + ", hanldingFeeRate=" + hanldingFeeRate + ", hanldingFee="
+				+ hanldingFee + ", restAfterHanldingFee=" + restAfterHanldingFee + ", restAfterCommissionFee="
+				+ restAfterCommissionFee + ", caculateResultList=" + caculateResultList + "]";
 	}
 
 }

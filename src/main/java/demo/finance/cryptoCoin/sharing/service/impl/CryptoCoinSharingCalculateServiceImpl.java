@@ -110,6 +110,7 @@ public class CryptoCoinSharingCalculateServiceImpl extends CryptoCoinCommonServi
 
 		CryptoCoinMiningMachineVO machineVO = machineVoList.get(0);
 		result.setPartingCount(machineVO.getPartingCount());
+		result.setTotalOutput(dto.getGetCoinCounting());
 
 		BigDecimal restAfterHanldingFee = dto.getGetCoinCounting()
 				.multiply(BigDecimal.ONE.subtract(machineVO.getHandlingFeeRate()))
@@ -491,6 +492,7 @@ public class CryptoCoinSharingCalculateServiceImpl extends CryptoCoinCommonServi
 		}
 		
 		CryptoCoinAllocationAssistantMatchMachine po = matchList.get(0);
+		po.setUdpateTime(LocalDateTime.now());
 		po.setCommissionFeeRate(dto.getCommissionFeeRateInPercent().divide(new BigDecimal(100)));
 		po.setPartingCount(dto.getPartingCount());
 		

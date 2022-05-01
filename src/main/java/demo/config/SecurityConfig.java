@@ -33,6 +33,7 @@ import demo.config.costom_component.CustomAuthenticationProvider;
 import demo.config.costom_component.CustomPasswordEncoder;
 import demo.config.costom_component.LimitLoginAuthenticationProvider;
 import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinManagerUrl;
+import demo.finance.cryptoCoin.sharing.pojo.constant.CryptoCoinSharingUrl;
 import demo.joy.common.pojo.constant.JoyManagerUrl;
 import demo.joy.common.pojo.constant.JoyUrl;
 import demo.pmemo.pojo.constant.PMemoUrl;
@@ -107,9 +108,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers(WXUrl.root + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DEV))
-            .antMatchers("/cryptoCoinSharingCalculate/calculateDetail")
+            .antMatchers(CryptoCoinSharingUrl.ROOT + CryptoCoinSharingUrl.CALCULATE_DETAIL)
             	.permitAll()
-            .antMatchers("/cryptoCoinSharingCalculate/**")
+            .antMatchers(CryptoCoinSharingUrl.ROOT + "/**")
             	.access("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')")
             // joy url start
             .antMatchers(JoyUrl.ROOT + "/**")

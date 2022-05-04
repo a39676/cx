@@ -33,8 +33,8 @@ import demo.tool.calendarNotice.pojo.po.CalendarPreNoticeExample;
 import demo.tool.calendarNotice.pojo.vo.CalendarNoticeVO;
 import demo.tool.calendarNotice.service.CalendarNoticeService;
 import demo.tool.calendarNotice.service.CalendarNoticeStrongNoticeService;
-import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.constant.TelegramBotType;
+import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.dto.TelegramMessageDTO;
 import toolPack.dateTimeHandle.Lunar;
 

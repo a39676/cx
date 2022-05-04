@@ -28,9 +28,9 @@ import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import demo.finance.cryptoCoin.notice.service.CryptoCoinCommonNoticeService;
 import demo.finance.cryptoCoin.tool.service.CryptoCoinLowPriceNoticeService;
-import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import telegram.pojo.constant.TelegramBotType;
+import telegram.pojo.constant.TelegramStaticChatID;
 
 @Service
 public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisService

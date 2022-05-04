@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 import demo.tool.other.pojo.vo.EncryptIdVO;
 import demo.tool.other.service.ComplexToolService;
 import demo.tool.service.impl.ToolCommonService;
-import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
 import demo.tool.telegram.service.TelegramService;
 import telegram.pojo.constant.TelegramBotType;
+import telegram.pojo.constant.TelegramStaticChatID;
 
 @Service
 public class ComplexToolServiceImpl extends ToolCommonService implements ComplexToolService {

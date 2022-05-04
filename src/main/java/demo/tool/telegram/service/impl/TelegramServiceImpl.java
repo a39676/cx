@@ -15,7 +15,6 @@ import demo.tool.service.impl.ToolCommonService;
 import demo.tool.telegram.mapper.TelegramChatIdMapper;
 import demo.tool.telegram.mapper.TelegramConstantMapper;
 import demo.tool.telegram.pojo.bo.TelegramConstantBO;
-import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
 import demo.tool.telegram.pojo.po.TelegramChatId;
 import demo.tool.telegram.pojo.po.TelegramChatIdExample;
 import demo.tool.telegram.pojo.po.TelegramConstant;
@@ -23,6 +22,7 @@ import demo.tool.telegram.pojo.po.TelegramConstantExample;
 import demo.tool.telegram.pojo.vo.TelegramChatIdVO;
 import demo.tool.telegram.service.TelegramService;
 import telegram.pojo.constant.TelegramBotType;
+import telegram.pojo.constant.TelegramStaticChatID;
 import toolPack.httpHandel.HttpUtil;
 
 @Service

@@ -12,8 +12,8 @@ import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.ExceptionService;
 import demo.tool.calendarNotice.mq.producer.TelegramCalendarNoticeMessageAckProducer;
-import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.constant.TelegramBotType;
+import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.dto.TelegramMessageDTO;
 
 @Service

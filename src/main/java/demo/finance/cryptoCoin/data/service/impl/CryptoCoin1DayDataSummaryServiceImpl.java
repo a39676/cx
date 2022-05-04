@@ -29,13 +29,13 @@ import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
-import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataSubDTO;
 import finance.cryptoCoin.pojo.type.CryptoCoinDataSourceType;
 import telegram.pojo.constant.TelegramBotType;
+import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.dto.TelegramMessageDTO;
 
 @Service

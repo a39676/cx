@@ -17,11 +17,11 @@ import demo.finance.cryptoCoin.data.pojo.bo.CacheMapBO;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
-import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import net.sf.json.JSONObject;
 import telegram.pojo.constant.TelegramBotType;
+import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.dto.TelegramMessageDTO;
 
 @Service

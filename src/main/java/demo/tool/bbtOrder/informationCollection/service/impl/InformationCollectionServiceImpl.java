@@ -1,21 +1,16 @@
-package demo.informationCollection.service.impl;
+package demo.tool.bbtOrder.informationCollection.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import autoTest.testModule.pojo.type.TestModuleType;
-import demo.automationTest.mq.producer.TestEventInsertAckProducer;
-import demo.common.service.CommonService;
-import demo.informationCollection.service.InformationCollectionService;
+import demo.tool.bbtOrder.informationCollection.service.InformationCollectionService;
+import demo.tool.bbtOrder.service.BbtOrderCommonService;
 
 @Service
-public class InformationCollectionServiceImpl extends CommonService implements InformationCollectionService {
+public class InformationCollectionServiceImpl extends BbtOrderCommonService implements InformationCollectionService {
 
-	@Autowired
-	private TestEventInsertAckProducer testEventInsertAckProducer;
-	
 	@Override
 	public void sendEducationInfomationCollectionTask() {
 		AutomationTestInsertEventDTO dto = new AutomationTestInsertEventDTO();

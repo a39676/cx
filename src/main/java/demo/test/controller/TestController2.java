@@ -1,9 +1,6 @@
 package demo.test.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,40 +9,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import autoTest.testEvent.searchingDemo.pojo.dto.HsbcWechatPreregistDTO;
 import demo.common.controller.CommonController;
-import demo.finance.cryptoCoin.common.service.CryptoCoinConstantService;
 import demo.test.pojo.constant.TestUrl;
-import demo.test.pojo.dto.TestDTO;
 import demo.test.service.TestService2;
-import net.sf.json.JSONObject;
+import demo.tool.bbtOrder.hsbc.service.HsbcService;
 
 @Controller
 @RequestMapping(value = { TestUrl.root2 })
 public class TestController2 extends CommonController {
 
-	@GetMapping(value = "/test")
-	@ResponseBody
-	public String test() {
-		TestDTO t = new TestDTO();
-		t.setDatetime(LocalDateTime.now());
-		return t.toString();
-	}
-
-	@GetMapping(value = "/test2")
-	@ResponseBody
-	public String test2() {
-		TestDTO t = new TestDTO();
-		t.setDatetime(LocalDateTime.now());
-		JSONObject j = JSONObject.fromObject(t);
-		t = (TestDTO) JSONObject.toBean(j, TestDTO.class);
-		return j.toString();
-	}
-
 	@GetMapping(value = "/t")
 	@ResponseBody
 	public String t() {
 		return """
-				{"testKey":"tv"}
+				{"testKey":"testValue"}
 				""";
 	}
 	
@@ -62,29 +40,6 @@ public class TestController2 extends CommonController {
 	}
 
 	@Autowired
-	protected CryptoCoinConstantService constantService;
-
-	@GetMapping(value = "/t3")
-	@ResponseBody
-	public LocalDateTime t3() {
-		constantService.setBinanceWebSocketLastActiveTime(LocalDateTime.now());
-		return constantService.getBinanceWebSocketLastActiveTime();
-	}
-
-	@GetMapping(value = "/t4")
-	@ResponseBody
-	public String t4() {
-		return "{\"k\":\"v\"}";
-	}
-
-	@GetMapping(value = "/t5")
-	@ResponseBody
-	public String findHostNameFromRequst(HttpServletRequest request) {
-		return request.getServerName();
-	}
-	
-	
-	@Autowired
 	private TestService2 testService;
 	
 	@GetMapping(value = "/t6")
@@ -95,4 +50,21 @@ public class TestController2 extends CommonController {
 		return v;
 	}
 	
+	@Autowired
+	private HsbcService hsbcService;
+	
+	@GetMapping(value = "/t7")
+	@ResponseBody
+	public String t7() {
+		HsbcWechatPreregistDTO dto = new HsbcWechatPreregistDTO();
+		dto.setIdNumber("136602198001013003");
+		dto.setPhoneNumber("17822222223");
+		dto.setMainlandFlag(true);
+		dto.setMainlandPhoneFlag(true);
+		dto.setMainUrl("https://www.hkg2vl0830-cn.p2g.netd2.hsbc.com.hk/PublicContent/wechat/wechat_library/VTM/prd-branch/index.html#/");
+		dto.setStaffId("44123708");
+		
+		hsbcService.sendHsbcWechatPreregistTask(dto);
+		return "Done";
+	}
 }

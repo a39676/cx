@@ -1,4 +1,4 @@
-package demo.tool.scheduleClawing.service.impl;
+package demo.tool.bbtOrder.wuYiJob.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -7,11 +7,12 @@ import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.scheduleClawing.pojo.bo.WuYiJobClawingBO;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import autoTest.testModule.pojo.type.TestModuleType;
-import demo.tool.scheduleClawing.service.WuYiJobService;
+import demo.tool.bbtOrder.service.BbtOrderCommonService;
+import demo.tool.bbtOrder.wuYiJob.service.WuYiJobService;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
-public class WuYiJobServiceImpl extends ScheduleClawingCommonService implements WuYiJobService {
+public class WuYiJobServiceImpl extends BbtOrderCommonService implements WuYiJobService {
 
 	@Autowired
 	private FileUtilCustom ioUtil;

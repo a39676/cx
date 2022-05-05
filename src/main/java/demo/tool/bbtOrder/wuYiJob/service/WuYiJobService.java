@@ -1,4 +1,4 @@
-package demo.tool.scheduleClawing.service;
+package demo.tool.bbtOrder.wuYiJob.service;
 
 public interface WuYiJobService {
 

@@ -1,4 +1,4 @@
-package demo.informationCollection.service;
+package demo.tool.bbtOrder.informationCollection.service;
 
 public interface InformationCollectionService {
 

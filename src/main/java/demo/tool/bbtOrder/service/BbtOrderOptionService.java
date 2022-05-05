@@ -1,4 +1,4 @@
-package demo.tool.scheduleClawing.service.impl;
+package demo.tool.bbtOrder.service;
 
 import java.io.File;
 
@@ -14,12 +14,14 @@ import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")
 @Service
-public class ScheduleClawingConstantService extends CommonService {
+public class BbtOrderOptionService extends CommonService {
 
 	@Value("${optionFilePath.scheduleClawing}")
 	private String optionFilePath;
 
 	private String paramSavingPath;
+
+	private String hsbcWechatPreregistUrl;
 
 	public void refreshConstant() {
 		File optionFile = new File(optionFilePath);
@@ -29,7 +31,7 @@ public class ScheduleClawingConstantService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
-			ScheduleClawingConstantService tmp = new Gson().fromJson(jsonStr, ScheduleClawingConstantService.class);
+			BbtOrderOptionService tmp = new Gson().fromJson(jsonStr, BbtOrderOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
 		} catch (Exception e) {
 			log.error("schedule clawing constant loading error: " + e.getLocalizedMessage());
@@ -44,10 +46,18 @@ public class ScheduleClawingConstantService extends CommonService {
 		this.paramSavingPath = paramSavingPath;
 	}
 
+	public String getHsbcWechatPreregistUrl() {
+		return hsbcWechatPreregistUrl;
+	}
+
+	public void setHsbcWechatPreregistUrl(String hsbcWechatPreregistUrl) {
+		this.hsbcWechatPreregistUrl = hsbcWechatPreregistUrl;
+	}
+
 	@Override
 	public String toString() {
-		return "ScheduleClawingConstantService [optionFilePath=" + optionFilePath + ", paramSavingPath="
-				+ paramSavingPath + "]";
+		return "BbtOrderOptionService [paramSavingPath=" + paramSavingPath + ", hsbcWechatPreregistUrl="
+				+ hsbcWechatPreregistUrl + "]";
 	}
 
 }

@@ -1,13 +1,13 @@
-package demo.informationCollection.service.impl;
+package demo.tool.bbtOrder.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import demo.informationCollection.service.InformationCollectionService;
+import demo.tool.bbtOrder.informationCollection.service.InformationCollectionService;
 
 @Component
-public class InformationCollectionTaskService {
+public class BbtOrderTaskService {
 
 	@Autowired
 	private InformationCollectionService informationCollectionService;

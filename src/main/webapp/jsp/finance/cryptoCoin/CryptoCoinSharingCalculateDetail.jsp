@@ -21,8 +21,12 @@
             <th style="text-align: center; vertical-align: middle;">日期</th>
             <th style="text-align: center; vertical-align: middle;">产出</th>
             <th style="text-align: center; vertical-align: middle;">手续费(手续费率)</th>
-            <th style="text-align: center; vertical-align: middle;">扣除佣金后</th>
             <th style="text-align: center; vertical-align: middle;">刨除手续费后</th>
+            <th style="text-align: center; vertical-align: middle;">
+              <sec:authorize access="hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')">
+                扣除佣金后
+              </sec:authorize>
+            </th>
             <th style="text-align: center; vertical-align: middle;">份数</th>
             <th style="text-align: center; vertical-align: middle;">每份分币</th>
           </tr>
@@ -33,14 +37,18 @@
           <c:set var="hanldingFeeRateInPercent"><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${detail.hanldingFeeRate * 100}" /></c:set>
           <td style="text-align: center; vertical-align: middle;">${detail.hanldingFee}(${hanldingFeeRateInPercent}%)</td>
           <td style="text-align: center; vertical-align: middle;">${detail.restAfterHanldingFee}</td>
-          <td style="text-align: center; vertical-align: middle;">${detail.restAfterCommissionFee}</td>
+          <td style="text-align: center; vertical-align: middle;">
+            <sec:authorize access="hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')">
+              ${detail.restAfterCommissionFee}
+            </sec:authorize>
+          </td>
           <td style="text-align: center; vertical-align: middle;">${detail.partingCount}</td>
           <td style="text-align: center; vertical-align: middle;">${detail.coinCountingOfEachPartOfMachine}</td>
         </tr>
         <tr class="table-primary">
           <td colspan="2" style="text-align: center; vertical-align: middle;">用户名</td>
-          <td style="text-align: center; vertical-align: middle;">佣金(率)</td>
-          <td></td>
+          <td style="text-align: center; vertical-align: middle;">总佣金(佣金率)</td>
+          <td style="text-align: center; vertical-align: middle;">每份额产生佣金</td>
           <td style="text-align: center; vertical-align: middle;">份数</td>
           <td style="text-align: center; vertical-align: middle;">份额产出</td>
           <td style="text-align: center; vertical-align: middle;">总共应转</td>
@@ -52,7 +60,9 @@
               <c:set var="commissionFeeRateInPercent"><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${assistant.commissionFeeRate * 100}" /></c:set>
               <span>${assistant.commissionFee}</span><span>(${commissionFeeRateInPercent}%)</span>
             </td>
-            <td></td>
+            <td style="text-align: center; vertical-align: middle;">
+              ${assistant.commissionFeeOfOneParting}
+            </td>
             <td style="text-align: center; vertical-align: middle;">
               <span>${assistant.partingCount}</span>
             </td>

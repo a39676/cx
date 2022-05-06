@@ -86,7 +86,8 @@ public class CryptoCoinSharingCalculateServiceImpl extends CryptoCoinCommonServi
 	@Override
 	public CryptoCoinShareCalculateResult getCalculateResult(CryptoCoinShareCalculateDTO dto) {
 		CryptoCoinShareCalculateResult result = new CryptoCoinShareCalculateResult();
-		if (StringUtils.isBlank(dto.getMachinePK()) || dto.getGetCoinCounting() == null || dto.getGetCoinCounting().compareTo(BigDecimal.ZERO) < 1) {
+		if (StringUtils.isBlank(dto.getMachinePK()) || dto.getGetCoinCounting() == null
+				|| dto.getGetCoinCounting().compareTo(BigDecimal.ZERO) < 1) {
 			return result;
 		}
 
@@ -128,6 +129,7 @@ public class CryptoCoinSharingCalculateServiceImpl extends CryptoCoinCommonServi
 		result.setHanldingFeeRate(machineVO.getHandlingFeeRate());
 
 		BigDecimal assistantTotalCoinCounting = null;
+		BigDecimal commissionFeeOfOneParting = null;
 		BigDecimal commissionFee = null;
 		BigDecimal receiveFromParting = null;
 		BigDecimal commissionFeeTotal = BigDecimal.ZERO;
@@ -139,8 +141,10 @@ public class CryptoCoinSharingCalculateServiceImpl extends CryptoCoinCommonServi
 			receiveFromParting = coinCountingOfEachPartOfMachine.multiply(assistant.getPartingCount())
 					.setScale(optionService.getScaleOfSharingCalculate(), RoundingMode.DOWN);
 
-			commissionFee = coinCountingOfEachPartOfMachine.multiply(assistant.getPartingCount())
-					.multiply(assistant.getCommissionFeeRate())
+			commissionFeeOfOneParting = coinCountingOfEachPartOfMachine.multiply(assistant.getCommissionFeeRate())
+					.setScale(optionService.getScaleOfSharingCalculate(), RoundingMode.DOWN);
+
+			commissionFee = commissionFeeOfOneParting.multiply(assistant.getPartingCount())
 					.setScale(optionService.getScaleOfSharingCalculate(), RoundingMode.DOWN);
 
 			commissionFeeTotal = commissionFeeTotal.add(commissionFee);
@@ -154,6 +158,7 @@ public class CryptoCoinSharingCalculateServiceImpl extends CryptoCoinCommonServi
 			subResult.setCommissionFee(commissionFee);
 			subResult.setCommissionFeeRate(assistant.getCommissionFeeRate());
 			subResult.setReceiveFromParting(receiveFromParting);
+			subResult.setCommissionFeeOfOneParting(commissionFeeOfOneParting);
 			result.addCaculateResult(subResult);
 		}
 
@@ -476,29 +481,31 @@ public class CryptoCoinSharingCalculateServiceImpl extends CryptoCoinCommonServi
 	@Override
 	public CommonResult updateAssistant(UpdateAllocationAssistantDTO dto) {
 		CommonResult r = new CommonResult();
-		if(StringUtils.isAnyBlank(dto.getAssistantPK(), dto.getMachinePK())) {
+		if (StringUtils.isAnyBlank(dto.getAssistantPK(), dto.getMachinePK())) {
 			return r;
 		}
-		
+
 		Long machineId = systemOptionService.decryptPrivateKey(dto.getMachinePK());
 		Long assistantId = systemOptionService.decryptPrivateKey(dto.getAssistantPK());
-		
-		if(machineId == null || assistantId == null) {
+
+		if (machineId == null || assistantId == null) {
 			return r;
 		}
-		
+
 		CryptoCoinAllocationAssistantMatchMachineExample example = new CryptoCoinAllocationAssistantMatchMachineExample();
-		example.createCriteria().andIsDeleteEqualTo(false).andAssistantIdEqualTo(assistantId).andMiningMachineIdEqualTo(machineId);
-		List<CryptoCoinAllocationAssistantMatchMachine> matchList = assistantMatchMachineMapper.selectByExample(example);
-		if(matchList == null || matchList.isEmpty()) {
+		example.createCriteria().andIsDeleteEqualTo(false).andAssistantIdEqualTo(assistantId)
+				.andMiningMachineIdEqualTo(machineId);
+		List<CryptoCoinAllocationAssistantMatchMachine> matchList = assistantMatchMachineMapper
+				.selectByExample(example);
+		if (matchList == null || matchList.isEmpty()) {
 			return r;
 		}
-		
+
 		CryptoCoinAllocationAssistantMatchMachine po = matchList.get(0);
 		po.setUdpateTime(LocalDateTime.now());
 		po.setCommissionFeeRate(dto.getCommissionFeeRateInPercent().divide(new BigDecimal(100)));
 		po.setPartingCount(dto.getPartingCount());
-		
+
 		assistantMatchMachineMapper.updateByPrimaryKeySelective(po);
 		r.setIsSuccess();
 		return r;

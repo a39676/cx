@@ -11,6 +11,7 @@ public class CryptoCoinShareCalculateSubResult {
 	private BigDecimal commissionFee;
 	private BigDecimal commissionFeeRate;
 	private BigDecimal totalCoinCounting;
+	private BigDecimal commissionFeeOfOneParting;
 
 	public String getAssistantPK() {
 		return assistantPK;
@@ -68,12 +69,20 @@ public class CryptoCoinShareCalculateSubResult {
 		this.receiveFromParting = receiveFromParting;
 	}
 
+	public BigDecimal getCommissionFeeOfOneParting() {
+		return commissionFeeOfOneParting;
+	}
+
+	public void setCommissionFeeOfOneParting(BigDecimal commissionFeeOfOneParting) {
+		this.commissionFeeOfOneParting = commissionFeeOfOneParting;
+	}
+
 	@Override
 	public String toString() {
 		return "CryptoCoinShareCalculateSubResult [assistantPK=" + assistantPK + ", assistantName=" + assistantName
 				+ ", partingCount=" + partingCount + ", receiveFromParting=" + receiveFromParting + ", commissionFee="
 				+ commissionFee + ", commissionFeeRate=" + commissionFeeRate + ", totalCoinCounting="
-				+ totalCoinCounting + "]";
+				+ totalCoinCounting + ", commissionFeeOfOneParting=" + commissionFeeOfOneParting + "]";
 	}
 
 }

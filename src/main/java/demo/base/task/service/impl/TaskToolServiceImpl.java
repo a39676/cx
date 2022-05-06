@@ -142,8 +142,9 @@ public class TaskToolServiceImpl {
 	/**
 	 * 将Ip记录(黑白名单)中, 过期/逻辑删除的记录, 进行物理删除.
 	 */
-	@Scheduled(cron = "40 01 12 * * *") // 每天01:12:40执行
+	@Scheduled(cron = "40 12 01 * * *") // 每天01:12:40执行
 	public void deleteExpiredDenyRecord() {
 		ipRecordService.deleteExpiredDenyRecord();
 	}
+	
 }

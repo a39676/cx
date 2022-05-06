@@ -22,4 +22,9 @@ public class CalendarNoticeTaskService {
 		calendarNoticeService.findAndSendStrongNotice();
 	}
 	
+	@Scheduled(cron = "01 30 20 * * *")
+	public void sendTomorrowNoticeList() {
+		calendarNoticeService.sendTomorrowNoticeList();
+	}
+	
 }

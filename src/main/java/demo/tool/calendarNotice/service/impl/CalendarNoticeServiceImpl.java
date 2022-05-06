@@ -2,6 +2,7 @@ package demo.tool.calendarNotice.service.impl;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -719,5 +720,29 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 		r.setMessage("Done");
 		r.setIsSuccess();
 		return r;
+	}
+
+	@Override
+	public void sendTomorrowNoticeList() {
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime tomorrowStartTime = now.plusDays(1).with(LocalDate.MIN);
+		LocalDateTime tomorrowEndTime = now.plusDays(1).with(LocalDate.MAX);
+		
+		CalendarNoticeExample example = new CalendarNoticeExample();
+		example.createCriteria().andIsDeleteEqualTo(false).andNoticeTimeBetween(tomorrowStartTime, tomorrowEndTime);
+		List<CalendarNotice> tomorrowNoticeList = mapper.selectByExample(example);
+		
+		TelegramMessageDTO dto = new TelegramMessageDTO();
+		dto.setId(TelegramStaticChatID.MY_ID);
+		dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
+		
+		StringBuffer sb = new StringBuffer("Tomorrow todo list: " + System.lineSeparator());
+		
+		for (CalendarNotice po : tomorrowNoticeList) {
+			sb.append(po.getNoticeContent() + System.lineSeparator());
+		}
+		dto.setMsg(sb.toString());
+		
+		telegramMessageAckProducer.send(dto);
 	}
 }

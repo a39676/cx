@@ -40,4 +40,6 @@ public interface CalendarNoticeService {
 
 	CommonResult stopPreNotic(StopPreNoticeDTO dto);
 
+	void sendTomorrowNoticeList();
+
 }

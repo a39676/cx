@@ -63,6 +63,12 @@
       <li>
         <a href="/cryptoCoinManager/sendAllCryptoCoinDailyDataQueryMsg" target="_blank">sendAllCryptoCoinDailyDataQueryMsg</a>
       </li>
+      <li>
+        <a href="/cryptoCoinSharingCalculate/home" target="_blank">Sharing manager</a>
+      </li>
+      <li>
+        <a href="/cryptoCoinSharingCalculate/sharingCalculateDetailListSearchView" target="_blank">Sharing detail search</a>
+      </li>
     </ul> <%-- cryptoCoin --%>
 
     <ul class="main-menu visible-on-click" id="qrcode">
@@ -108,5 +114,7 @@
         <a href="/user/studentRegist" target="_blank">studentRegist</a>
       </li>
     </ul><!-- educate -->
+
+
   </div>
 </header>

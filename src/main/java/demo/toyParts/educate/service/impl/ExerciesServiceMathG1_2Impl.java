@@ -104,7 +104,7 @@ public class ExerciesServiceMathG1_2Impl extends ExerciesMathCommonService imple
 		Double result2 = expression2.evaluate();
 		while (result2 < MIN_NUM || result2 > MAX_RESULT) {
 			num3 = t.nextInt(MIN_NUM, MAX_NUM + 1);
-			exp2 = String.valueOf(num3 + mathSymbolType2.getCodeSymbol() + exp1);
+			exp2 = String.valueOf(exp1 + mathSymbolType2.getCodeSymbol() + num3);
 			expression2 = new ExpressionBuilder(exp2).build();
 			result2 = expression2.evaluate();
 		}

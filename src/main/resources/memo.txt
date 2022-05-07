@@ -1,6 +1,4 @@
-calendar notice
-	提醒，每日，发送明日日程
-
+crypto coin sharing url should add to admin manager view
 
 article
 	Add back to Homepage button in post.jsp

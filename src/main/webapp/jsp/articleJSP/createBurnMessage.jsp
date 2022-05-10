@@ -10,10 +10,16 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <sec:csrfMetaTags />
-  <title>${ title }</title>
+  <title>阅后即焚</title>
 </head>
 <body>
 <div class="container-fluid">
+
+  <div class="row">
+    <div class="col-md-6">
+      <span>创建"阅后即焚"信息</span>
+    </div>
+  </div>
 
   <div class="row">
     <div class="col-md-6">

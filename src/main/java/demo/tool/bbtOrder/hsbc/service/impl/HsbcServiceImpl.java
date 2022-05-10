@@ -1,6 +1,9 @@
 package demo.tool.bbtOrder.hsbc.service.impl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -49,12 +52,35 @@ public class HsbcServiceImpl extends BbtOrderCommonService implements HsbcServic
 			return r;
 		}
 		
+		if(!checkPreregistStatus()) {
+			r.setMessage("Too much tasks, please insert later");
+			return r;
+		}
+		
 		dto.setMainUrl(optionService.getHsbcWechatPreregistUrl());
 		sendHsbcWechatPreregistTask(dto);
+		
+		optionService.getHsbcWechatPreregistTaskInsertTime().add(LocalDateTime.now());
 		
 		r.setMessage("Task inserted");
 		r.setIsSuccess();
 		return r;
+	}
+	
+	private boolean checkPreregistStatus() {
+		List<LocalDateTime> list = optionService.getHsbcWechatPreregistTaskInsertTime();
+		if(list == null) {
+			optionService.setHsbcWechatPreregistTaskInsertTime(new ArrayList<>());
+			return true;
+		}
+		
+		if(list.isEmpty()) {
+			return true;
+		}
+			
+		list = list.stream().filter(ldt -> ldt.isAfter(LocalDateTime.now().minusMinutes(10))).toList();
+		optionService.setHsbcWechatPreregistTaskInsertTime(list);
+		return !(list.size() > 3);
 	}
 	
 	@Override

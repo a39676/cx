@@ -10,6 +10,7 @@ import demo.base.system.service.OptionConstantManagerService;
 import demo.common.service.CommonService;
 import demo.finance.cryptoCoin.common.service.CryptoCoinOptionService;
 import demo.thirdPartyAPI.cloudinary.service.impl.CloudinaryOptionService;
+import demo.tool.bbtOrder.service.BbtOrderOptionService;
 import demo.tool.mail.service.impl.MailOptionService;
 import demo.tool.telegram.service.impl.TelegramOptionService;
 import demo.toyParts.educate.service.impl.EducateOptionService;
@@ -35,6 +36,8 @@ public class OptionServiceManagerServiceImpl extends CommonService implements Op
 	private TelegramOptionService telegramOptionService;
 	@Autowired
 	private EducateOptionService educateOptionService;
+	@Autowired
+	private BbtOrderOptionService bbtOrderOptionService;
 	
 	
 	@Override
@@ -80,5 +83,10 @@ public class OptionServiceManagerServiceImpl extends CommonService implements Op
 	@Override
 	public void refreshEducateOption() {
 		educateOptionService.refreshOption();
+	}
+	
+	@Override
+	public void refreshBbtOrderOption() {
+		bbtOrderOptionService.refreshOption();
 	}
 }

@@ -1,5 +1,3 @@
-crypto coin sharing url should add to admin manager view
-
 article
 	Add back to Homepage button in post.jsp
 			

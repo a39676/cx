@@ -17,11 +17,12 @@ import demo.tool.bbtOrder.service.BbtOrderCommonService;
 @Service
 public class HsbcServiceImpl extends BbtOrderCommonService implements HsbcService {
 
+	@Override
 	public ModelAndView hsbcWechatPreregistView() {
-//		TODO
-		return new ModelAndView("");
+		return new ModelAndView("toolJSP/publicTool/HsbcWechatPreregist");
 	}
 	
+	@Override
 	public CommonResult hsbcWechatPreregist(HsbcWechatPreregistDTO dto) {
 		CommonResult r = new CommonResult();
 		
@@ -43,9 +44,15 @@ public class HsbcServiceImpl extends BbtOrderCommonService implements HsbcServic
 			return r;
 		}
 		
+		if(StringUtils.isAnyBlank(dto.getIdNumber(), dto.getPhoneNumber())) {
+			r.setMessage("Empty param");
+			return r;
+		}
+		
 		dto.setMainUrl(optionService.getHsbcWechatPreregistUrl());
 		sendHsbcWechatPreregistTask(dto);
 		
+		r.setMessage("Task inserted");
 		r.setIsSuccess();
 		return r;
 	}

@@ -38,6 +38,7 @@
   <button id="refreshCryptoCoinConstant">refreshCryptoCoinConstant</button>
   <button id="refreshTelegramConstant">refreshTelegramConstant</button>
   <button id="refreshEducateOption">refreshEducateOption</button>
+  <button id="refreshBbtOrderOption">refreshBbtOrderOption</button>
 </div>
 
 <hr>
@@ -365,6 +366,26 @@
       });
     };
 
+    function refreshBbtOrderOption() {
+      var url = "/optionConstant/refreshBbtOrderOption";
+      $.ajax({
+        type : "GET",
+        url : url,
+        // data: JSON.stringify(jsonOutput),
+        dataType: 'json',
+        contentType: "application/json",
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        timeout: 15000,
+        success:function(data){
+          $("#result").val(data + ", refreshBbtOrderOption");
+        },
+        error:function(e){
+        }
+      });
+    };
+
     $("#refreshSystemConstant").click(function () {
       refreshSystemConstant();
     })
@@ -399,6 +420,10 @@
 
     $("#refreshEducateOption").click(function () {
       refreshEducateOption();
+    })
+
+    $("#refreshBbtOrderOption").click(function () {
+      refreshBbtOrderOption();
     })
   });
 

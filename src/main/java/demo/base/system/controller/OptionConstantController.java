@@ -78,4 +78,11 @@ public class OptionConstantController {
 		optionConstantManagerService.refreshEducateOption();
 		return "done";
 	}
+	
+	@GetMapping(value = "/refreshBbtOrderOption")
+	@ResponseBody
+	public String refreshBbtOrderOption() {
+		optionConstantManagerService.refreshBbtOrderOption();
+		return "done";
+	}
 }

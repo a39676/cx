@@ -2,6 +2,8 @@ package demo.tool.bbtOrder.service;
 
 import java.io.File;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -23,7 +25,8 @@ public class BbtOrderOptionService extends CommonService {
 
 	private String hsbcWechatPreregistUrl;
 
-	public void refreshConstant() {
+	@PostConstruct
+	public void refreshOption() {
 		File optionFile = new File(optionFilePath);
 		if (!optionFile.exists()) {
 			return;

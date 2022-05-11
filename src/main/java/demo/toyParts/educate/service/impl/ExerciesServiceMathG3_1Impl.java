@@ -19,7 +19,8 @@ import net.objecthunter.exp4j.ExpressionBuilder;
 @Service
 public class ExerciesServiceMathG3_1Impl extends ExerciesMathCommonService implements ExerciesServiceMathG3_1 {
 
-	private static final Integer MAX_CALCULATE = 10000;
+	private static final Integer MIN_RESULT = 0;
+	private static final Integer MAX_RESULT = 10000;
 	private static final Integer MAX_ADDITION_NUM = 5000;
 	private static final Integer MIN_ADDITION_NUM = 110;
 	private static final Integer MAX_MULTIPLICATION_NUM = 9;
@@ -54,7 +55,7 @@ public class ExerciesServiceMathG3_1Impl extends ExerciesMathCommonService imple
 		for(int questionNumber = 1; questionNumber <= optionService.getQuestionListSize(); questionNumber++) {
 			question = null;
 			Integer standardAnswer = -1;
-			while(standardAnswer < 0 || standardAnswer > MAX_CALCULATE) {
+			while(standardAnswer < MIN_RESULT || standardAnswer > MAX_RESULT) {
 				question = createQuestion();
 				try {
 					standardAnswer = Integer.parseInt(question.getStandardAnswer().get(0));
@@ -85,7 +86,7 @@ public class ExerciesServiceMathG3_1Impl extends ExerciesMathCommonService imple
 		Expression expression1 = new ExpressionBuilder(exp1).build();
 		Double result1 = expression1.evaluate();
 		
-		if(result1 < 0) {
+		if(result1 < MIN_RESULT) {
 			if(multiplecationFromLeft) {
 				exp1 = String.valueOf("(" + num2 + mathSymbolType1.getCodeSymbol() + num1 + ")");
 			}

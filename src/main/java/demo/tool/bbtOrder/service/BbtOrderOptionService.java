@@ -1,9 +1,6 @@
 package demo.tool.bbtOrder.service;
 
 import java.io.File;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.PostConstruct;
 
@@ -28,8 +25,6 @@ public class BbtOrderOptionService extends CommonService {
 
 	private String hsbcWechatPreregistUrl;
 
-	private List<LocalDateTime> hsbcWechatPreregistTaskInsertTime = new ArrayList<>();
-
 	@PostConstruct
 	public void refreshOption() {
 		File optionFile = new File(optionFilePath);
@@ -44,14 +39,6 @@ public class BbtOrderOptionService extends CommonService {
 		} catch (Exception e) {
 			log.error("schedule clawing constant loading error: " + e.getLocalizedMessage());
 		}
-	}
-
-	public List<LocalDateTime> getHsbcWechatPreregistTaskInsertTime() {
-		return hsbcWechatPreregistTaskInsertTime;
-	}
-
-	public void setHsbcWechatPreregistTaskInsertTime(List<LocalDateTime> hsbcWechatPreregistTaskInsertTime) {
-		this.hsbcWechatPreregistTaskInsertTime = hsbcWechatPreregistTaskInsertTime;
 	}
 
 	public String getParamSavingPath() {
@@ -73,8 +60,7 @@ public class BbtOrderOptionService extends CommonService {
 	@Override
 	public String toString() {
 		return "BbtOrderOptionService [optionFilePath=" + optionFilePath + ", paramSavingPath=" + paramSavingPath
-				+ ", hsbcWechatPreregistUrl=" + hsbcWechatPreregistUrl + ", hsbcWechatPreregistTaskInsertTime="
-				+ hsbcWechatPreregistTaskInsertTime + "]";
+				+ ", hsbcWechatPreregistUrl=" + hsbcWechatPreregistUrl + "]";
 	}
 
 }

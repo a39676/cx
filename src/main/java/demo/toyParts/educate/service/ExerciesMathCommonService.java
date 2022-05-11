@@ -93,5 +93,4 @@ public abstract class ExerciesMathCommonService extends EducateCommonService {
 			    .doubleValue();
 	}
 	
-	
 }

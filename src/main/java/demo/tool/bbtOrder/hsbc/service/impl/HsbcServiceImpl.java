@@ -19,6 +19,8 @@ import demo.tool.bbtOrder.service.BbtOrderCommonService;
 
 @Service
 public class HsbcServiceImpl extends BbtOrderCommonService implements HsbcService {
+	
+	private List<LocalDateTime> hsbcWechatPreregistTaskInsertTime = new ArrayList<>();
 
 	@Override
 	public ModelAndView hsbcWechatPreregistView() {
@@ -60,7 +62,7 @@ public class HsbcServiceImpl extends BbtOrderCommonService implements HsbcServic
 		dto.setMainUrl(optionService.getHsbcWechatPreregistUrl());
 		sendHsbcWechatPreregistTask(dto);
 		
-		optionService.getHsbcWechatPreregistTaskInsertTime().add(LocalDateTime.now());
+		hsbcWechatPreregistTaskInsertTime.add(LocalDateTime.now());
 		
 		r.setMessage("Task inserted");
 		r.setIsSuccess();
@@ -68,9 +70,9 @@ public class HsbcServiceImpl extends BbtOrderCommonService implements HsbcServic
 	}
 	
 	private boolean checkPreregistStatus() {
-		List<LocalDateTime> list = optionService.getHsbcWechatPreregistTaskInsertTime();
+		List<LocalDateTime> list = hsbcWechatPreregistTaskInsertTime;
 		if(list == null) {
-			optionService.setHsbcWechatPreregistTaskInsertTime(new ArrayList<>());
+			hsbcWechatPreregistTaskInsertTime = new ArrayList<>();
 			return true;
 		}
 		
@@ -85,7 +87,7 @@ public class HsbcServiceImpl extends BbtOrderCommonService implements HsbcServic
 			}
 		}
 			
-		optionService.setHsbcWechatPreregistTaskInsertTime(list);
+		hsbcWechatPreregistTaskInsertTime = list;
 		return !(list.size() > 3);
 	}
 	

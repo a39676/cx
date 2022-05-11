@@ -77,8 +77,14 @@ public class HsbcServiceImpl extends BbtOrderCommonService implements HsbcServic
 		if(list.isEmpty()) {
 			return true;
 		}
+		
+		for(int i = 0; i < list.size(); i++) {
+			if(list.get(i).isBefore(LocalDateTime.now().minusMinutes(10))) {
+				list.remove(i);
+				i--;
+			}
+		}
 			
-		list = list.stream().filter(ldt -> ldt.isAfter(LocalDateTime.now().minusMinutes(10))).toList();
 		optionService.setHsbcWechatPreregistTaskInsertTime(list);
 		return !(list.size() > 3);
 	}

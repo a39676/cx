@@ -31,7 +31,9 @@
                 (${question.questionNumber}):&nbsp;&nbsp;&nbsp;${question.expression} =
               </span>
             </div>
-            <input type="number" class="form-control answerInput" name="" questionNumber="${question.questionNumber}">
+            <c:forEach items="${question.standardAnswer}" var="standardAnswer">
+              <input type="number" class="form-control answerInput" name="" questionNumber="${question.questionNumber}">
+            </c:forEach>
           </div>
           <span questionNumber="${question.questionNumber}" class="standarAnswer"></span>
           <br>

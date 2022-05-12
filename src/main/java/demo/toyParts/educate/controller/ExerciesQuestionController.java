@@ -15,6 +15,7 @@ import demo.toyParts.educate.pojo.type.GradeType;
 import demo.toyParts.educate.service.ExerciesServiceMathG1_1;
 import demo.toyParts.educate.service.ExerciesServiceMathG1_2;
 import demo.toyParts.educate.service.ExerciesServiceMathG2_1;
+import demo.toyParts.educate.service.ExerciesServiceMathG2_2;
 import demo.toyParts.educate.service.ExerciesServiceMathG3_1;
 import demo.toyParts.educate.service.ExerciesServiceMathG3_2;
 
@@ -28,6 +29,8 @@ public class ExerciesQuestionController extends CommonController {
 	private ExerciesServiceMathG1_2 g1_2_math;
 	@Autowired
 	private ExerciesServiceMathG2_1 g2_1_math;
+	@Autowired
+	private ExerciesServiceMathG2_2 g2_2_math;
 	@Autowired
 	private ExerciesServiceMathG3_1 g3_1_math;
 	@Autowired
@@ -68,7 +71,7 @@ public class ExerciesQuestionController extends CommonController {
 			if (ExerciesSubjectType.chinese.equals(subjectType)) {
 
 			} else if (ExerciesSubjectType.math.equals(subjectType)) {
-
+				return g2_2_math.getExercies();
 			} else if (ExerciesSubjectType.english.equals(subjectType)) {
 
 			}

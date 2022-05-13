@@ -27,22 +27,58 @@
       <div class="col-md-12">
         <div class="input-group">
           <div class="input-group-prepend">
-            <span class="input-group-text">身份证</span>
+            <span class="input-group-text">国籍(国家/地区)</span>
+          </div>
+          <select class="" name="" id="areaTypeSelector">
+            <c:forEach items="${internationalityTypeList}" var="internationalityType">
+              <option value="${internationalityType.code}" cnName="${internationalityType.cnName}">${internationalityType.cnName}</option>
+            </c:forEach>
+          </select>
+        </div>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">证件类型</span>
+          </div>
+          <select class="" name="" id="idTypeSelector">
+            <c:forEach items="${idTypeList}" var="idType">
+              <option value="${idType.id}">${idType.cnName}</option>
+            </c:forEach>
+          </select>
+          <div class="input-group-prepend">
+            <span class="input-group-text">证件号码</span>
           </div>
           <input type="text" class="form-control" name="" id="idNumber">
         </div>
         <div class="input-group">
           <div class="input-group-prepend">
+            <span class="input-group-text">手机区号</span>
+          </div>
+          <select class="" name="" id="phoneAreaTypeSelector">
+            <c:forEach items="${internationalityTypeList}" var="internationalityType">
+              <option value="${internationalityType.code}" cnName="${internationalityType.cnName}">(${internationalityType.code})${internationalityType.cnName}</option>
+            </c:forEach>
+          </select>
+          <div class="input-group-prepend">
             <span class="input-group-text">手机号</span>
           </div>
           <input type="text" class="form-control" name="" id="phoneNumber">
+        </div>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">FirstName(姓)</span>
+          </div>
+          <input type="text" class="form-control" name="" id="customerFirstName" value="测">
+          <div class="input-group-prepend">
+            <span class="input-group-text">LastName(名)</span>
+          </div>
+          <input type="text" class="form-control" name="" id="customerLastName" value="试">
         </div>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-12">
-        <span>每个预注册任务可能耗时数分钟, 可能因为证件号码无效 / 重复手机号码导致失败, 请使用其他参数重试</span>
+        <span>每个预注册任务可能耗时数分钟, 可能因为证件号码无效 / 重复手机号码 / 错误数据组合导致失败, 请使用其他参数重试</span>
       </div>
     </div>
 
@@ -72,14 +108,28 @@
       function insertTask() {
         var url = "/publicTool/hsbc/hsbcWechatPreregist";
 
+        var idType = $("#idTypeSelector option:selected").val();
+        var areaType = $("#areaTypeSelector option:selected").val();
+        var areaTypeName = $("#areaTypeSelector option:selected").attr("cnName");
+        var phoneAreaTypeCode = $("#phoneAreaTypeSelector option:selected").val();
+        var phoneAreaTypeName = $("#phoneAreaTypeSelector option:selected").attr("cnName");
         var idNumber = $("#idNumber").val();
         var phoneNumber = $("#phoneNumber").val();
         var apkDownloadPassword = $("#apkDownloadPassword").val();
+        var customerFirstName = $("#customerFirstName").val();
+        var customerLastName = $("#customerLastName").val();
 
         var jsonOutput = {
           "idNumber":idNumber,
           "phoneNumber":phoneNumber,
           "apkDownloadPassword":apkDownloadPassword,
+          "idType":idType,
+          "areaType":areaType,
+          "areaName":areaTypeName,
+          "phoneAreaType":phoneAreaTypeCode,
+          "phoneAreaName":phoneAreaTypeName,
+          "customerFirstName":customerFirstName,
+          "customerLastName":customerLastName,
         };
 
         $.ajax({

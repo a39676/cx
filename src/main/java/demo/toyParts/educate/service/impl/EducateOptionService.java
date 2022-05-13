@@ -27,6 +27,7 @@ public class EducateOptionService extends CommonService {
 	private BigDecimal randomPointMin = BigDecimal.ONE;
 	private Integer dailyMaxHour = 22;
 	private Integer dailyMinHour = 7;
+	private Integer oldExerciesFileLivingDay = 7;
 
 	@PostConstruct
 	public void refreshOption() {
@@ -101,12 +102,21 @@ public class EducateOptionService extends CommonService {
 		this.dailyMinHour = dailyMinHour;
 	}
 
+	public Integer getOldExerciesFileLivingDay() {
+		return oldExerciesFileLivingDay;
+	}
+
+	public void setOldExerciesFileLivingDay(Integer oldExerciesFileLivingDay) {
+		this.oldExerciesFileLivingDay = oldExerciesFileLivingDay;
+	}
+
 	@Override
 	public String toString() {
-		return "EducateOptionService [exerciesStorePrefixPath=" + exerciesStorePrefixPath + ", questionListSize="
-				+ questionListSize + ", maxScore=" + maxScore + ", randomPointMax=" + randomPointMax
-				+ ", randomPointMin=" + randomPointMin + ", dailyMaxHour=" + dailyMaxHour + ", dailyMinHour="
-				+ dailyMinHour + "]";
+		return "EducateOptionService [optionFilePath=" + optionFilePath + ", exerciesStorePrefixPath="
+				+ exerciesStorePrefixPath + ", questionListSize=" + questionListSize + ", maxScore=" + maxScore
+				+ ", randomPointMax=" + randomPointMax + ", randomPointMin=" + randomPointMin + ", dailyMaxHour="
+				+ dailyMaxHour + ", dailyMinHour=" + dailyMinHour + ", oldExerciesFileLivingDay="
+				+ oldExerciesFileLivingDay + "]";
 	}
 
 }

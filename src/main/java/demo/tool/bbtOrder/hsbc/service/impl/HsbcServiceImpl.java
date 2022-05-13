@@ -12,10 +12,12 @@ import org.springframework.web.servlet.ModelAndView;
 import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import autoTest.testEvent.searchingDemo.pojo.dto.HsbcWechatPreregistDTO;
+import autoTest.testEvent.searchingDemo.pojo.type.HsbcIdType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.tool.bbtOrder.hsbc.service.HsbcService;
 import demo.tool.bbtOrder.service.BbtOrderCommonService;
+import tool.pojo.type.InternationalityType;
 
 @Service
 public class HsbcServiceImpl extends BbtOrderCommonService implements HsbcService {
@@ -24,13 +26,15 @@ public class HsbcServiceImpl extends BbtOrderCommonService implements HsbcServic
 
 	@Override
 	public ModelAndView hsbcWechatPreregistView() {
-		return new ModelAndView("toolJSP/publicTool/HsbcWechatPreregist");
+		ModelAndView view = new ModelAndView("toolJSP/publicTool/HsbcWechatPreregist");
+		view.addObject("idTypeList", HsbcIdType.values());
+		view.addObject("internationalityTypeList", InternationalityType.values());
+		return view;
 	}
 	
 	@Override
 	public CommonResult hsbcWechatPreregist(HsbcWechatPreregistDTO dto) {
 		CommonResult r = new CommonResult();
-		
 		if(StringUtils.isBlank(dto.getApkDownloadPassword())) {
 			r.setMessage("password error");
 			return r;
@@ -61,7 +65,6 @@ public class HsbcServiceImpl extends BbtOrderCommonService implements HsbcServic
 		
 		dto.setMainUrl(optionService.getHsbcWechatPreregistUrl());
 		sendHsbcWechatPreregistTask(dto);
-		
 		hsbcWechatPreregistTaskInsertTime.add(LocalDateTime.now());
 		
 		r.setMessage("Task inserted");
@@ -88,7 +91,8 @@ public class HsbcServiceImpl extends BbtOrderCommonService implements HsbcServic
 		}
 			
 		hsbcWechatPreregistTaskInsertTime = list;
-		return !(list.size() > 3);
+//		TODO
+		return !(list.size() > 300);
 	}
 	
 	@Override

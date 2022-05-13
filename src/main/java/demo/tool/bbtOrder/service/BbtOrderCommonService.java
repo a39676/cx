@@ -6,12 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import demo.automationTest.mq.producer.TestEventInsertAckProducer;
 import demo.automationTest.service.TestEventService;
+import demo.base.system.service.impl.SystemOptionService;
 import demo.common.service.CommonService;
 
 public abstract class BbtOrderCommonService extends CommonService {
 
 	@Autowired
 	protected BbtOrderOptionService optionService;
+	@Autowired
+	protected SystemOptionService systemOptionService;
 	@Autowired
 	protected TestEventService eventService;
 	@Autowired

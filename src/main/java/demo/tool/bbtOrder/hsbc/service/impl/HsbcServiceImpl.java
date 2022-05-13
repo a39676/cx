@@ -58,7 +58,7 @@ public class HsbcServiceImpl extends BbtOrderCommonService implements HsbcServic
 			return r;
 		}
 		
-		if(!checkPreregistStatus()) {
+		if(!canInsertPreregistTask()) {
 			r.setMessage("Too much tasks, please insert later");
 			return r;
 		}
@@ -72,7 +72,11 @@ public class HsbcServiceImpl extends BbtOrderCommonService implements HsbcServic
 		return r;
 	}
 	
-	private boolean checkPreregistStatus() {
+	private boolean canInsertPreregistTask() {
+		if(systemOptionService.isDev()) {
+			return true;
+		}
+		
 		List<LocalDateTime> list = hsbcWechatPreregistTaskInsertTime;
 		if(list == null) {
 			hsbcWechatPreregistTaskInsertTime = new ArrayList<>();
@@ -91,8 +95,7 @@ public class HsbcServiceImpl extends BbtOrderCommonService implements HsbcServic
 		}
 			
 		hsbcWechatPreregistTaskInsertTime = list;
-//		TODO
-		return !(list.size() > 300);
+		return !(list.size() > 3);
 	}
 	
 	@Override

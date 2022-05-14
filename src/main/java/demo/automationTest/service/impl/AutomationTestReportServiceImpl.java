@@ -74,7 +74,7 @@ public class AutomationTestReportServiceImpl extends AutomationTestCommonService
 			}
 
 		} else if (json.containsKey("caseReportList")) {
-//			TODO 处理数据库中提出的 json report str
+//			TODO 处理数据库中提出的 json report str 2022-05-14 发现, 用途未知, 待删除
 
 		}
 		report.setCaseReportList(buildCaseReportList(reportJson));
@@ -245,6 +245,10 @@ public class AutomationTestReportServiceImpl extends AutomationTestCommonService
 			try {
 				tmpFile = new File(filePath);
 				tmpFile.delete();
+				File[] tmpFileList = tmpFile.getParentFile().listFiles();
+				if(tmpFileList == null || tmpFileList.length == 0) {
+					tmpFile.getParentFile().delete();
+				}
 			} catch (Exception e) {
 			}
 		}

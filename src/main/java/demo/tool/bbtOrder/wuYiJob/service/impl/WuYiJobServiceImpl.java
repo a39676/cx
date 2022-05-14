@@ -7,19 +7,22 @@ import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.scheduleClawing.pojo.bo.WuYiJobClawingBO;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import autoTest.testModule.pojo.type.TestModuleType;
-import demo.tool.bbtOrder.service.BbtOrderCommonService;
+import demo.automationTest.service.TestEventService;
+import demo.automationTest.service.impl.AutomationTestCommonService;
 import demo.tool.bbtOrder.wuYiJob.service.WuYiJobService;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
-public class WuYiJobServiceImpl extends BbtOrderCommonService implements WuYiJobService {
+public class WuYiJobServiceImpl extends AutomationTestCommonService implements WuYiJobService {
 
 	@Autowired
 	private FileUtilCustom ioUtil;
+	@Autowired
+	private TestEventService eventService;
 	
 	@Override
 	public void insertRefreshEvent() {
-		String paramSavingPath = getParamFilePath(ScheduleClawingType.WU_YI_JOB.getFlowName(), WuYiJobClawingBO.class.getSimpleName());
+		String paramSavingPath = getParamFilePath(TestModuleType.SCHEDULE_CLAWING.getModuleName(), ScheduleClawingType.WU_YI_JOB.getFlowName(), WuYiJobClawingBO.class.getSimpleName());
 		
 		AutomationTestInsertEventDTO insertEventDTO = new AutomationTestInsertEventDTO();
 		insertEventDTO.setTestEventId(snowFlake.getNextId());

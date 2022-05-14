@@ -48,7 +48,6 @@ optionFilePath:
   cloudinary: "/home/u2/cx/optionFile/cloudinary/option.json"
   automationTest: "/home/u2/cx/optionFile/automationTest/option.json"
   cryptoCoin: "/home/u2/cx/optionFile/cryptoCoin/option.json"
-  scheduleClawing: "/home/u2/cx/optionFile/scheduleClawing/option.json"
   telegram: "/home/u2/cx/optionFile/telegram/option.json"
   tool: "/home/u2/cx/optionFile/tool/option.json"
   educate: "/home/u2/cx/optionFile/educate/option.json"

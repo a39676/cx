@@ -27,7 +27,12 @@ public abstract class AutomationTestCommonService extends ArticleCommonService {
 	protected TestEventInsertAckProducer testEventInsertAckProducer;
 	@Autowired
 	protected VisitDataService visitDataService;
-
+	
+	protected String getParamFilePath(String moduleName, String flowTypeName, String dtoClassName) {
+		String paramSavingPath = optionService.getInputParamStorePrefixPath();
+		return paramSavingPath + File.separator + moduleName + File.separator + flowTypeName + File.separator + dtoClassName + ".json";
+	}
+	
 	protected String getAutomationTestReportSavingFolder() {
 		String path = optionService.getReportStorePrefixPath() + File.separator
 				+ localDateTimeHandler.dateToStr(LocalDateTime.now(), DateTimeUtilCommon.dateFormatNoSymbol);

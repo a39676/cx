@@ -19,6 +19,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.automationTest.pojo.po.TestEvent;
 import demo.automationTest.pojo.po.TestEventExample;
 import demo.automationTest.pojo.po.TestEventExample.Criteria;
+import demo.automationTest.pojo.vo.TestReportSummaryVO;
 import demo.automationTest.service.AutomationTestReportService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -266,5 +267,16 @@ public class AutomationTestReportServiceImpl extends AutomationTestCommonService
 		TestEventExample deleteExample = new TestEventExample();
 		deleteExample.createCriteria().andIdIn(testEventIdList);
 		eventMapper.updateByExampleSelective(tmpPO, deleteExample);
+	}
+
+	@Override
+	public TestReportSummaryVO buildReportSummaryVO(TestEvent po){
+		TestReportSummaryVO vo = new TestReportSummaryVO();
+		vo.setIdStr(po.getId().toString());
+		vo.setFlowName(po.getFlowName());
+		vo.setStartTime(po.getStartTime());
+		vo.setEndTime(po.getEndTime());
+		vo.setCreateTime(po.getCreateTime());
+		return vo;
 	}
 }

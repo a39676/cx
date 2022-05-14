@@ -65,32 +65,45 @@
         </div>
         <div class="input-group">
           <div class="input-group-prepend">
-            <span class="input-group-text">FirstName(姓)</span>
+            <span class="input-group-text">LastName(姓)</span>
           </div>
-          <input type="text" class="form-control" name="" id="customerFirstName" value="测">
+          <input type="text" class="form-control" name="" id="customerLastName" value="测">
           <div class="input-group-prepend">
-            <span class="input-group-text">LastName(名)</span>
+            <span class="input-group-text">FirstName(名)</span>
           </div>
-          <input type="text" class="form-control" name="" id="customerLastName" value="试">
+          <input type="text" class="form-control" name="" id="customerFirstName" value="试">
         </div>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-12">
-        <span>每个预注册任务可能耗时数分钟, 可能因为证件号码无效 / 重复手机号码 / 错误数据组合导致失败, 请使用其他参数重试</span>
+        <span class="badge badge-warning"><h6>每个预注册任务可能耗时数分钟, 可能因为证件号码无效 / 重复手机号码 / 错误数据组合导致失败, 请使用其他参数重试</h6></span>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-12">
-        <button type="button" name="button"id="insertTask">加入预注册任务</button>
+        <button class="btn btn-sm btn-primary" type="button" name="button" id="insertTask">加入预注册任务</button>
+        <button class="btn btn-sm btn-primary" type="button" name="button" id="refreshReport">刷新报告列表</button>
       </div>
     </div>
 
+    <hr>
+
     <div class="row">
       <div class="col-md-12">
-        <span id="result"></span>
+        <span class="badge badge-primary">
+          <h6>Result: <span id="result"></span></h6>
+        </span>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+      <div class="col-md-12" id="reportSummary">
+
       </div>
     </div>
   </div>
@@ -103,7 +116,6 @@
         $("#result").text("");
         insertTask();
       });
-
 
       function insertTask() {
         var url = "/publicTool/hsbc/hsbcWechatPreregist";
@@ -146,9 +158,45 @@
           },
           success:function(datas){
             $("#result").text(datas.message);
+            findReportSummary();
           },
           error: function(datas) {
             $("#result").text(datas.message);
+          }
+        });
+      }
+
+
+      $("#refreshReport").click(function () {
+        findReportSummary();
+      });
+
+      function findReportSummary() {
+        var url = "/publicTool/hsbc/getReportSummaryPage";
+
+        var apkDownloadPassword = $("#apkDownloadPassword").val();
+
+        var jsonOutput = {
+          "apkDownloadPassword":apkDownloadPassword,
+        };
+
+        $.ajax({
+          type : "POST",
+          async : true,
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          cache : false,
+          contentType: "application/json",
+          // dataType: "json",
+          timeout:50000,
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          success:function(datas){
+            $("#reportSummary").html(datas);
+          },
+          error: function(datas) {
+            $("#reportSummary").html(datas);
           }
         });
       }

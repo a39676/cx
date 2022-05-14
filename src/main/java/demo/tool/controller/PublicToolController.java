@@ -31,4 +31,9 @@ public class PublicToolController extends CommonController {
 	public CommonResult hsbcWechatPreregist(@RequestBody HsbcWechatPreregistDTO dto) {
 		return hsbcService.hsbcWechatPreregist(dto);
 	}
+	
+	@PostMapping(value = "/hsbc/getReportSummaryPage")
+	public ModelAndView getReportSummaryPage(@RequestBody HsbcWechatPreregistDTO dto) {
+		return hsbcService.getReportSummaryPage(dto);
+	}
 }

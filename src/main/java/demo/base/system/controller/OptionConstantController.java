@@ -79,10 +79,4 @@ public class OptionConstantController {
 		return "done";
 	}
 	
-	@GetMapping(value = "/refreshBbtOrderOption")
-	@ResponseBody
-	public String refreshBbtOrderOption() {
-		optionConstantManagerService.refreshBbtOrderOption();
-		return "done";
-	}
 }

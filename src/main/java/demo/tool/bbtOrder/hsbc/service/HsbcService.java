@@ -13,4 +13,6 @@ public interface HsbcService {
 
 	CommonResult hsbcWechatPreregist(HsbcWechatPreregistDTO dto);
 
+	ModelAndView getReportSummaryPage(HsbcWechatPreregistDTO dto);
+
 }

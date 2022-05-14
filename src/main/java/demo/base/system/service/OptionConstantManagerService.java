@@ -20,6 +20,4 @@ public interface OptionConstantManagerService {
 
 	void refreshEducateOption();
 
-	void refreshBbtOrderOption();
-
 }

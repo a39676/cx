@@ -8,6 +8,7 @@ import autoTest.report.pojo.dto.JsonReportOfFlowDTO;
 import autoTest.testEvent.pojo.dto.AutomationTestResultDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.automationTest.pojo.po.TestEvent;
+import demo.automationTest.pojo.vo.TestReportSummaryVO;
 import net.sf.json.JSONObject;
 
 public interface AutomationTestReportService {
@@ -23,5 +24,7 @@ public interface AutomationTestReportService {
 	List<TestEvent> findReportPage(FindTestEventPageByConditionDTO dto);
 
 	void deleteOldData(LocalDateTime limitDateTime);
+
+	TestReportSummaryVO buildReportSummaryVO(TestEvent po);
 
 }

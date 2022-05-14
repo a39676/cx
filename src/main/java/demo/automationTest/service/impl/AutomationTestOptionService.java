@@ -19,6 +19,8 @@ public class AutomationTestOptionService extends CommonService {
 	@Value("${optionFilePath.automationTest}")
 	private String optionFilePath;
 
+	private String inputParamStorePrefixPath;
+
 	private String reportStorePrefixPath;
 	private String paramStorePrefixPath;
 	private String imageStorePrefixPath;
@@ -44,6 +46,14 @@ public class AutomationTestOptionService extends CommonService {
 			log.error("automation test option loading error: " + e.getLocalizedMessage());
 		}
 		log.error("automation test option loaded");
+	}
+
+	public String getInputParamStorePrefixPath() {
+		return inputParamStorePrefixPath;
+	}
+
+	public void setInputParamStorePrefixPath(String inputParamStorePrefixPath) {
+		this.inputParamStorePrefixPath = inputParamStorePrefixPath;
 	}
 
 	public String getReportStorePrefixPath() {
@@ -92,9 +102,11 @@ public class AutomationTestOptionService extends CommonService {
 
 	@Override
 	public String toString() {
-		return "AutomationTestOptionService [reportStorePrefixPath=" + reportStorePrefixPath + ", paramStorePrefixPath="
-				+ paramStorePrefixPath + ", imageStorePrefixPath=" + imageStorePrefixPath + ", testEventLiveLimitMonth="
-				+ testEventLiveLimitMonth + ", maxWaitingRunHour=" + maxWaitingRunHour + "]";
+		return "AutomationTestOptionService [optionFilePath=" + optionFilePath + ", inputParamStorePrefixPath="
+				+ inputParamStorePrefixPath + ", reportStorePrefixPath=" + reportStorePrefixPath
+				+ ", paramStorePrefixPath=" + paramStorePrefixPath + ", imageStorePrefixPath=" + imageStorePrefixPath
+				+ ", testEventLiveLimitMonth=" + testEventLiveLimitMonth + ", maxWaitingRunHour=" + maxWaitingRunHour
+				+ "]";
 	}
 
 }

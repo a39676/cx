@@ -100,19 +100,9 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 		List<TestReportSummaryVO> voList = new ArrayList<>();
 		
 		for(TestEvent po : poList ) {
-			voList.add(buildReportSummaryVO(po));
+			voList.add(reportService.buildReportSummaryVO(po));
 		}
 		return voList;
-	}
-	
-	private TestReportSummaryVO buildReportSummaryVO(TestEvent po){
-		TestReportSummaryVO vo = new TestReportSummaryVO();
-		vo.setIdStr(po.getId().toString());
-		vo.setFlowName(po.getFlowName());
-		vo.setStartTime(po.getStartTime());
-		vo.setEndTime(po.getEndTime());
-		vo.setCreateTime(po.getCreateTime());
-		return vo;
 	}
 
 	@Override

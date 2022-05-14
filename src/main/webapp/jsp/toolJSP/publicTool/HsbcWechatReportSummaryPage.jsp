@@ -19,7 +19,7 @@
               <td>Param</td>
               <td>Start time</td>
               <td>End time</td>
-              <td></td>
+              <td>Status</td>
             </tr>
           </thead>
           <c:forEach items="${reportVoList}" var="reportVO">

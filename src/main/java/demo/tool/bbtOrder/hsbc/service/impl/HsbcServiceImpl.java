@@ -103,9 +103,12 @@ public class HsbcServiceImpl extends BbtOrderCommonService implements HsbcServic
 		AutomationTestInsertEventDTO mainDTO = new AutomationTestInsertEventDTO();
 		mainDTO.setTestModuleType(TestModuleType.SCHEDULE_CLAWING.getId());
 		mainDTO.setFlowType(ScheduleClawingType.HSBC_WECHAT_PREREGIST.getId());
+		mainDTO.setFlowTypeName(ScheduleClawingType.HSBC_WECHAT_PREREGIST.getFlowName());
 		mainDTO.setTestEventId(snowFlake.getNextId());
 		
 		mainDTO = automationTestInsertEventDtoAddParamStr(mainDTO, paramDTO);
+		
+		eventService.insertEvent(mainDTO);
 
 		testEventInsertAckProducer.send(mainDTO);
 	}

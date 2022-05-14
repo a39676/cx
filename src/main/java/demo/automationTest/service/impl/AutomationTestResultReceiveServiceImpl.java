@@ -1,8 +1,10 @@
 package demo.automationTest.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,17 +46,17 @@ public class AutomationTestResultReceiveServiceImpl extends AutomationTestCommon
 		if (po == null) {
 			return;
 		}
-		
+
 		reportPrefixHandle(dto);
 		CommonResult saveReportResult = reportService.saveReport(dto);
-		if(saveReportResult.isSuccess()) {
+		if (saveReportResult.isSuccess()) {
 			po.setReportPath(saveReportResult.getMessage());
 		} else {
 			log.error("automation test report saving error: " + dto.getTestEventId());
 		}
-		
+
 		updateCaseCounting(po, dto);
-		
+
 		po.setIsPass(true);
 		for (AutomationTestCaseResult subResult : dto.getCaseResultList()) {
 			if (!AutomationTestFlowResultType.PASS.equals(subResult.getResultType())) {
@@ -80,7 +82,11 @@ public class AutomationTestResultReceiveServiceImpl extends AutomationTestCommon
 		}
 
 		dto.setTestEventId(json.getLong("testEventId"));
-		dto.setEndTime(localDateTimeHandler.localDateTimeJsonStrToLocalDateTime(json.getString("endTime")));
+		if (StringUtils.isBlank(json.getString("endTime"))) {
+			dto.setEndTime(LocalDateTime.now());
+		} else {
+			dto.setEndTime(localDateTimeHandler.localDateTimeJsonStrToLocalDateTime(json.getString("endTime")));
+		}
 		dto.setStartTime(localDateTimeHandler.localDateTimeJsonStrToLocalDateTime(json.getString("startTime")));
 		dto.setCaseResultList(buildCaseResultList(json));
 		dto.setReport(reportService.buildReportFromMQ(json));

@@ -67,11 +67,11 @@
           <div class="input-group-prepend">
             <span class="input-group-text">LastName(姓)</span>
           </div>
-          <input type="text" class="form-control" name="" id="customerLastName" value="测">
+          <input type="text" class="form-control" name="" id="customerLastName" value="测" maxlength="2">
           <div class="input-group-prepend">
             <span class="input-group-text">FirstName(名)</span>
           </div>
-          <input type="text" class="form-control" name="" id="customerFirstName" value="试">
+          <input type="text" class="form-control" name="" id="customerFirstName" value="试" maxlength="2">
         </div>
       </div>
     </div>

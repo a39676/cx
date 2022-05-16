@@ -1,8 +1,8 @@
 article
 	Add back to Homepage button in post.jsp
-			
+
 	search -> loadmore -> show more post NOT match key word
-	
+
 	load public channel & flash channel list when application start
 		refresh flash channel list with task
 	load private channel list when login
@@ -35,12 +35,12 @@ ocr
 评论模块
 	需要为管理员增加屏蔽用户/ip等手段
 		请参照 ipRecord 相关模块
-			
+
 图床
 	暂时未有合适的 webp webm 支持库
 	上传 webp / webm 时, 会返回异常.
 	等有成熟转换技术再作打算
-	因有保存截屏类数据进数据库, 需要删除过时数据  --- 2020/02/29	
+	因有保存截屏类数据进数据库, 需要删除过时数据  --- 2020/02/29
 
 -------------
 

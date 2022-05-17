@@ -22,13 +22,9 @@
             <th style="text-align: center; vertical-align: middle;">产出</th>
             <th style="text-align: center; vertical-align: middle;">手续费(手续费率)</th>
             <th style="text-align: center; vertical-align: middle;">刨除手续费后</th>
-            <th style="text-align: center; vertical-align: middle;">
-              <sec:authorize access="hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')">
-                扣除佣金后
-              </sec:authorize>
-            </th>
             <th style="text-align: center; vertical-align: middle;">份数</th>
             <th style="text-align: center; vertical-align: middle;">每份分币</th>
+            <th style="text-align: center; vertical-align: middle;"></th>
           </tr>
         </thead>
         <tr>
@@ -37,13 +33,9 @@
           <c:set var="hanldingFeeRateInPercent"><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${detail.hanldingFeeRate * 100}" /></c:set>
           <td style="text-align: center; vertical-align: middle;">${detail.hanldingFee}(${hanldingFeeRateInPercent}%)</td>
           <td style="text-align: center; vertical-align: middle;">${detail.restAfterHanldingFee}</td>
-          <td style="text-align: center; vertical-align: middle;">
-            <sec:authorize access="hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')">
-              ${detail.restAfterCommissionFee}
-            </sec:authorize>
-          </td>
           <td style="text-align: center; vertical-align: middle;">${detail.partingCount}</td>
           <td style="text-align: center; vertical-align: middle;">${detail.coinCountingOfEachPartOfMachine}</td>
+          <td style="text-align: center; vertical-align: middle;"></td>
         </tr>
         <tr class="table-primary">
           <td colspan="2" style="text-align: center; vertical-align: middle;">用户名</td>
@@ -75,6 +67,35 @@
           </tr>
         </c:forEach>
       </table>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <sec:authorize access="hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')">
+        <table class="table table-hover table-bordered table-striped table-light">
+          <thead class="thead-dark">
+            <tr>
+              <th style="text-align: center; vertical-align: middle;">
+                手续费(扣除佣金后)
+              </th>
+              <th style="text-align: center; vertical-align: middle;">
+                净收入
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="text-align: center; vertical-align: middle;">
+                ${detail.restAfterCommissionFee}
+              </td>
+              <td style="text-align: center; vertical-align: middle;">
+                ${detail.netIncome}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </sec:authorize>
     </div>
   </div>
 

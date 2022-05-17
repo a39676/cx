@@ -133,6 +133,7 @@ public class CryptoCoinSharingCalculateServiceImpl extends CryptoCoinCommonServi
 		BigDecimal commissionFee = null;
 		BigDecimal receiveFromParting = null;
 		BigDecimal commissionFeeTotal = BigDecimal.ZERO;
+		BigDecimal totalSharingCounting = BigDecimal.ZERO;
 
 		CryptoCoinShareCalculateSubResult subResult = null;
 		for (AllocationAssistantVO assistant : machineVO.getAssistantList()) {
@@ -151,6 +152,8 @@ public class CryptoCoinSharingCalculateServiceImpl extends CryptoCoinCommonServi
 
 			assistantTotalCoinCounting = receiveFromParting.add(commissionFee);
 
+			totalSharingCounting = totalSharingCounting.add(assistantTotalCoinCounting);
+
 			subResult.setAssistantPK(assistant.getPk());
 			subResult.setAssistantName(assistant.getName());
 			subResult.setPartingCount(assistant.getPartingCount());
@@ -163,6 +166,7 @@ public class CryptoCoinSharingCalculateServiceImpl extends CryptoCoinCommonServi
 		}
 
 		result.setRestAfterCommissionFee(handlingFee.subtract(commissionFeeTotal));
+		result.setNetIncome(dto.getGetCoinCounting().subtract(totalSharingCounting));
 
 		Long sharingResultId = snowFlake.getNextId();
 		CryptoCoinShare shareResultPO = new CryptoCoinShare();

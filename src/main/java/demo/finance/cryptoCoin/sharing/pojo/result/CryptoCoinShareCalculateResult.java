@@ -24,6 +24,8 @@ public class CryptoCoinShareCalculateResult extends CommonResult {
 
 	private BigDecimal restAfterCommissionFee;
 
+	private BigDecimal netIncome;
+
 	private List<CryptoCoinShareCalculateSubResult> caculateResultList;
 
 	public String getMarkDateStr() {
@@ -90,6 +92,14 @@ public class CryptoCoinShareCalculateResult extends CommonResult {
 		this.restAfterCommissionFee = restAfterCommissionFee;
 	}
 
+	public BigDecimal getNetIncome() {
+		return netIncome;
+	}
+
+	public void setNetIncome(BigDecimal netIncome) {
+		this.netIncome = netIncome;
+	}
+
 	public List<CryptoCoinShareCalculateSubResult> getCaculateResultList() {
 		return caculateResultList;
 	}
@@ -111,7 +121,8 @@ public class CryptoCoinShareCalculateResult extends CommonResult {
 				+ ", partingCount=" + partingCount + ", coinCountingOfEachPartOfMachine="
 				+ coinCountingOfEachPartOfMachine + ", hanldingFeeRate=" + hanldingFeeRate + ", hanldingFee="
 				+ hanldingFee + ", restAfterHanldingFee=" + restAfterHanldingFee + ", restAfterCommissionFee="
-				+ restAfterCommissionFee + ", caculateResultList=" + caculateResultList + "]";
+				+ restAfterCommissionFee + ", netIncome=" + netIncome + ", caculateResultList=" + caculateResultList
+				+ "]";
 	}
 
 }

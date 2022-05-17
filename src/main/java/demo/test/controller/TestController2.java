@@ -24,7 +24,7 @@ public class TestController2 extends CommonController {
 				{"testKey":"testValue"}
 				""";
 	}
-	
+
 	@GetMapping(value = "/t1")
 	@ResponseBody
 	public ModelAndView t1() {
@@ -39,7 +39,7 @@ public class TestController2 extends CommonController {
 
 	@Autowired
 	private TestService2 testService;
-	
+
 	@GetMapping(value = "/t6")
 	public ModelAndView getRole() {
 		ModelAndView v = new ModelAndView("testJSP/test");
@@ -47,5 +47,5 @@ public class TestController2 extends CommonController {
 		v.addObject("message", roles);
 		return v;
 	}
-	
+
 }

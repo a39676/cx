@@ -9,6 +9,7 @@ import demo.config.costom_component.SnowFlake;
 import demo.config.costom_component.Tess;
 import mail.service.MailToolService;
 import toolPack.dateTimeHandle.DateHandler;
+import toolPack.dateTimeHandle.LocalDateTimeAdapter;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
 import toolPack.httpHandel.HttpUtil;
 import toolPack.ioHandle.FileUtilCustom;
@@ -73,6 +74,11 @@ public class CustomToolBeanConfig {
 	@Bean
 	public QrCodeDecode getQrCodeDecode() {
 		return new QrCodeDecode();
+	}
+	
+	@Bean
+	public LocalDateTimeAdapter getLocalDateTimeAdapter() {
+		return new LocalDateTimeAdapter();
 	}
 	
 	@Bean

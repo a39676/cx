@@ -9,6 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.TimeUnitType;
@@ -19,6 +22,7 @@ import demo.config.costom_component.SnowFlake;
 import net.sf.json.JSONObject;
 import tool.pojo.bo.IpRecordBO;
 import toolPack.dateTimeHandle.DateHandler;
+import toolPack.dateTimeHandle.LocalDateTimeAdapter;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
 
 public abstract class CommonService {
@@ -33,6 +37,8 @@ public abstract class CommonService {
 	protected DateHandler dateHandler;
 	@Autowired
 	protected BaseUtilCustom baseUtilCustom;
+	@Autowired
+	protected LocalDateTimeAdapter localDateTimeAdapter;
 
 	protected static final Integer NORMAL_PAGE_SIZE = 10;
 	protected static final LocalDateTime BLOG_ARTICLE_START_TIME = LocalDateTime.of(2020, 5, 1, 0, 0, 0);
@@ -167,4 +173,21 @@ public abstract class CommonService {
 
 		return dto;
 	}
+
+	protected <T> T buildObjFromJsonCustomization(String jsonStr, Class<T> clazz) {
+		String className = clazz.getSimpleName();
+
+		try {
+			Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, localDateTimeAdapter).create();
+
+			return gson.fromJson(jsonStr, clazz);
+
+		} catch (Exception e) {
+			String msg = String.format("Build gson error, param name: %s ", className);
+			log.error(msg);
+		}
+		return null;
+
+	}
+
 }

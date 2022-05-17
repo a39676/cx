@@ -30,7 +30,7 @@
 <div class="row">
   <div class="col-md-12" style="word-break:break-word;">
     <c:if test="${needPwd}">
-      <div class="input-group mb-3">
+      <div class="input-group mb-3" id="pwdInputDiv">
         <div class="input-group-prepend ">
           <span class="input-group-text" style="font-size: small;">请输入阅读密码</span>
         </div>
@@ -147,6 +147,7 @@
             if(datas.code == 0){
               $("#readBurningMessageByPwd").prop('disabled', true);
               showDestoryDiv(datas.burnUri);
+              $("#pwdInputDiv").hide();
             }
           },
           error: function(datas) {

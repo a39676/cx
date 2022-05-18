@@ -96,6 +96,8 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 //			dto.setModuleId(TestModuleType.ATDemo.getId());
 //		}
 		
+		dto.setModuleId(TestModuleType.ATDemo.getId());
+		
 		List<TestEvent> poList = reportService.findReportPage(dto);
 		List<TestReportSummaryVO> voList = new ArrayList<>();
 		

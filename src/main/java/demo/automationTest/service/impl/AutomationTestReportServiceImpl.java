@@ -1,6 +1,7 @@
 package demo.automationTest.service.impl;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
 import autoTest.report.pojo.dto.JsonReportElementDTO;
@@ -45,7 +49,10 @@ public class AutomationTestReportServiceImpl extends AutomationTestCommonService
 
 			String reportFilePath = folderPath + File.separator + dto.getTestEventId() + ".json";
 
-			ioUtil.byteToFile(JSONObject.fromObject(dto.getReport()).toString(), reportFilePath);
+			Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, localDateTimeAdapter).create();
+			gson.toJson(dto.getReport());
+			
+			ioUtil.byteToFile(gson.toJson(dto.getReport()).getBytes(StandardCharsets.UTF_8), reportFilePath);
 
 			r.setMessage(reportFilePath);
 			r.setIsSuccess();
@@ -138,9 +145,11 @@ public class AutomationTestReportServiceImpl extends AutomationTestCommonService
 	private JsonReportElementDTO buildJsonReportElementDTO(JSONObject jsonReportElement) {
 		JsonReportElementDTO dto = new JsonReportElementDTO();
 
-		dto.setMarktime(localDateTimeHandler.jsonStrToLocalDateTime(jsonReportElement.getString("marktime")));
+		dto.setMarktime(localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(jsonReportElement.getString("marktime")));
 		dto.setContent(jsonReportElement.getString("content"));
-		dto.setImgUrl(jsonReportElement.getString("imgUrl"));
+		if(jsonReportElement.has("imgUrl")) {
+			dto.setImgUrl(jsonReportElement.getString("imgUrl"));
+		}
 
 		return dto;
 	}

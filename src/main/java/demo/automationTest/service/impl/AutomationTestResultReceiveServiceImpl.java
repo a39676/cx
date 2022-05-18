@@ -29,7 +29,7 @@ public class AutomationTestResultReceiveServiceImpl extends AutomationTestCommon
 	public void handleAutomationTestResult(String messageStr) {
 		AutomationTestResultDTO dto;
 		try {
-			dto = messageStrToAutomationTestResultDTO(messageStr);
+			dto = buildObjFromJsonCustomization(messageStr, AutomationTestResultDTO.class);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			log.error("receive error automation test result: " + messageStr);
@@ -63,23 +63,6 @@ public class AutomationTestResultReceiveServiceImpl extends AutomationTestCommon
 		po.setStartTime(dto.getStartTime());
 		po.setEndTime(dto.getEndTime());
 		eventMapper.updateByPrimaryKeySelective(po);
-	}
-
-	private AutomationTestResultDTO messageStrToAutomationTestResultDTO(String messageStr) throws Exception {
-		AutomationTestResultDTO dto = buildObjFromJsonCustomization(messageStr, AutomationTestResultDTO.class);
-		System.out.println(dto);
-//		AutomationTestResultDTO dto = new AutomationTestResultDTO();
-//		
-//		JSONObject json = null;
-//		try {
-//			json = JSONObject.fromObject(messageStr);
-//		} catch (Exception e) {
-//			throw new Exception();
-//		}
-//		dto.setCaseResultList(buildCaseResultList(json));
-//		dto.setReport(reportService.buildReportFromMQ(json));
-
-		return dto;
 	}
 
 	private void reportPrefixHandle(AutomationTestResultDTO dto) {

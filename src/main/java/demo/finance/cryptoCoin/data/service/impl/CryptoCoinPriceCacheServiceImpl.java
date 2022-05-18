@@ -49,11 +49,6 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 
 	}
 
-	@Override
-	public CryptoCoinPriceCommonDataBO dataStrToBO(String str) {
-		return buildObjFromJsonCustomization(str, CryptoCoinPriceCommonDataBO.class);
-	}
-
 	private CryptoCoinPriceCommonDataBO dataMerge(CryptoCoinPriceCommonDataBO oldBO,
 			CryptoCoinPriceCommonDataBO newBO) {
 

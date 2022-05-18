@@ -206,7 +206,7 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 
 				String reportStr = ioUtil.getStringFromFile(po.getReportPath());
 				JSONObject jsonReport = JSONObject.fromObject(reportStr);
-				JsonReportOfFlowDTO reportDTO = reportService.buildReportFromDatabase(jsonReport);
+				JsonReportOfFlowDTO reportDTO = buildObjFromJsonCustomization(jsonReport.toString(), JsonReportOfFlowDTO.class);
 				
 				vo.setCaseReportList(reportDTO.getCaseReportList());
 				

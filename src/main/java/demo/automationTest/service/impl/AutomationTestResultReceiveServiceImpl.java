@@ -1,14 +1,9 @@
 package demo.automationTest.service.impl;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.google.gson.Gson;
 
 import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
 import autoTest.report.pojo.dto.JsonReportOfFlowDTO;
@@ -20,8 +15,6 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.automationTest.pojo.po.TestEvent;
 import demo.automationTest.service.AutomationTestReportService;
 import demo.automationTest.service.AutomationTestResultReceiveService;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 @Service
 public class AutomationTestResultReceiveServiceImpl extends AutomationTestCommonService
@@ -38,6 +31,7 @@ public class AutomationTestResultReceiveServiceImpl extends AutomationTestCommon
 		try {
 			dto = messageStrToAutomationTestResultDTO(messageStr);
 		} catch (Exception e1) {
+			e1.printStackTrace();
 			log.error("receive error automation test result: " + messageStr);
 			return;
 		}
@@ -72,37 +66,20 @@ public class AutomationTestResultReceiveServiceImpl extends AutomationTestCommon
 	}
 
 	private AutomationTestResultDTO messageStrToAutomationTestResultDTO(String messageStr) throws Exception {
-		AutomationTestResultDTO dto = new AutomationTestResultDTO();
-
-		JSONObject json = null;
-		try {
-			json = JSONObject.fromObject(messageStr);
-		} catch (Exception e) {
-			throw new Exception();
-		}
-
-		dto.setTestEventId(json.getLong("testEventId"));
-		if (StringUtils.isBlank(json.getString("endTime"))) {
-			dto.setEndTime(LocalDateTime.now());
-		} else {
-			dto.setEndTime(localDateTimeHandler.localDateTimeJsonStrToLocalDateTime(json.getString("endTime")));
-		}
-		dto.setStartTime(localDateTimeHandler.localDateTimeJsonStrToLocalDateTime(json.getString("startTime")));
-		dto.setCaseResultList(buildCaseResultList(json));
-		dto.setReport(reportService.buildReportFromMQ(json));
-		dto.setRemark(json.getString("remark"));
+		AutomationTestResultDTO dto = buildObjFromJsonCustomization(messageStr, AutomationTestResultDTO.class);
+		System.out.println(dto);
+//		AutomationTestResultDTO dto = new AutomationTestResultDTO();
+//		
+//		JSONObject json = null;
+//		try {
+//			json = JSONObject.fromObject(messageStr);
+//		} catch (Exception e) {
+//			throw new Exception();
+//		}
+//		dto.setCaseResultList(buildCaseResultList(json));
+//		dto.setReport(reportService.buildReportFromMQ(json));
 
 		return dto;
-	}
-
-	private List<AutomationTestCaseResult> buildCaseResultList(JSONObject json) {
-		List<AutomationTestCaseResult> caseResultList = new ArrayList<>();
-		JSONArray jsonArray = json.getJSONArray("caseResultList");
-		for (int i = 0; i < jsonArray.size(); i++) {
-			caseResultList
-					.add(new Gson().fromJson(jsonArray.getJSONObject(i).toString(), AutomationTestCaseResult.class));
-		}
-		return caseResultList;
 	}
 
 	private void reportPrefixHandle(AutomationTestResultDTO dto) {

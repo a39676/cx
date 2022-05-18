@@ -1,6 +1,5 @@
 package demo.finance.cryptoCoin.data.service.impl;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -19,7 +18,6 @@ import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
-import net.sf.json.JSONObject;
 import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.dto.TelegramMessageDTO;
@@ -53,21 +51,7 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 
 	@Override
 	public CryptoCoinPriceCommonDataBO dataStrToBO(String str) {
-		CryptoCoinPriceCommonDataBO bo = null;
-		try {
-			JSONObject j = JSONObject.fromObject(str);
-			bo = new CryptoCoinPriceCommonDataBO();
-			bo.setCoinType(j.getString("coinType"));
-			bo.setCurrencyType(j.getInt("currencyType"));
-			bo.setStartPrice(new BigDecimal(j.getDouble("startPrice")));
-			bo.setEndPrice(new BigDecimal(j.getDouble("endPrice")));
-			bo.setHighPrice(new BigDecimal(j.getDouble("highPrice")));
-			bo.setLowPrice(new BigDecimal(j.getDouble("lowPrice")));
-			bo.setStartTime(localDateTimeHandler.jsonStrToLocalDateTime(String.valueOf(j.getJSONObject("startTime"))));
-			bo.setEndTime(localDateTimeHandler.jsonStrToLocalDateTime(String.valueOf(j.getJSONObject("endTime"))));
-		} catch (Exception e) {
-		}
-		return bo;
+		return buildObjFromJsonCustomization(str, CryptoCoinPriceCommonDataBO.class);
 	}
 
 	private CryptoCoinPriceCommonDataBO dataMerge(CryptoCoinPriceCommonDataBO oldBO,

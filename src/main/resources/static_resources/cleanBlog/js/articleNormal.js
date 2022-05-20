@@ -141,11 +141,15 @@ function loadArticleLongSummary(channelId, withHot) {
 function loadArticleLongSummaryFirstPage(channelId) {
   $("#blogArea").attr("markTime", "");
   $(".channelButton").prop('disabled', true);
+  $(".channelButton").removeClass("btn-warning");
+  $(".channelButton").addClass("btn-primary");
   $("#searchByTitle").prop('disabled', true);
   $(".channelAttachR").text("");
   $(".channelAttachR[channelId='"+channelId+"'").text(" <<<");
   $(".channelAttachL").text("");
   $(".channelAttachL[channelId='"+channelId+"'").text(">>> ");
+  $(".channelButton[channelId='"+channelId+"'").removeClass("btn-primary");
+  $(".channelButton[channelId='"+channelId+"'").addClass("btn-warning");
   var blogRowArea = $("#blogRowArea");
   blogRowArea.html("");
   setTimeout(function(){

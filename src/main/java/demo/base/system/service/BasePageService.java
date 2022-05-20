@@ -10,4 +10,6 @@ public interface BasePageService {
 
 	ModelAndView aboutMeHandler(String vcode, HttpServletRequest request);
 
+	ModelAndView baseRootHandlerV4(String vcode, HttpServletRequest request);
+
 }

@@ -20,6 +20,8 @@ public class HostnameServiceImpl extends CommonService implements HostnameServic
 
 	@Autowired
 	private HostnameMapper hostnameMapper;
+	@Autowired
+	private SystemOptionService systemOptionService;
 
 	@Override
 	public List<Hostname> findHostnames() {
@@ -45,6 +47,9 @@ public class HostnameServiceImpl extends CommonService implements HostnameServic
 
 	@Override
 	public HostnameType findHostnameType(HttpServletRequest request) {
+		if(systemOptionService.isDev()) {
+			return HostnameType.zhang3;
+		}
 		return HostnameType.getTypeCustom(findHostNameFromRequst(request));
 	}
 

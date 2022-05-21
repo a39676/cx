@@ -22,8 +22,8 @@
 <hr>
 
 <div class="row">
-  <div class="col-md-12" style="word-break:break-word;">
-    <p id="burningMessage">${content}</p>
+  <div class="col-md-12" style="word-break:break-word;" id="burningMessage">
+    <p>${content}</p>
   </div>
 </div>
 
@@ -90,8 +90,7 @@
       if(${needPwd}){
         $(".destoryDiv").hide();
       } else {
-        ${burnUri}
-        showDestoryDiv(${burnUri});
+        showDestoryDiv("${burnUri}");
       }
 
       $("button[name='destoryButton']").click(function() {
@@ -156,13 +155,15 @@
       };
 
       function showDestoryDiv(newBurnUri) {
-        burnUri = newBurnUri;
-        $("span[name='burnUri']").append("访问此地址销毁信息: ");
-        $("span[name='burnUri']").append("<br>");
-        $("span[name='burnUri']").append(urlPerfix);
-        $("span[name='burnUri']").append(burnUri);
-        $("button[name='destoryButton']").show();
-        $(".destoryDiv").show();
+        if(newBurnUri.length != 0){
+          burnUri = newBurnUri;
+          $("span[name='burnUri']").append("访问此地址销毁信息: ");
+          $("span[name='burnUri']").append("<br>");
+          $("span[name='burnUri']").append(urlPerfix);
+          $("span[name='burnUri']").append(burnUri);
+          $("button[name='destoryButton']").show();
+          $(".destoryDiv").show();
+        }
       }
     });
 

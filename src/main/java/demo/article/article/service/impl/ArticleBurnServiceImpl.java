@@ -147,9 +147,9 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		ModelAndView view = new ModelAndView(ArticleViewConstant.readBurningMessage);
 		ArticleBurnResult result = findArticleByReadKey(readKey, null);
 		view.addObject("content", result.getContent());
+		view.addObject("needPwd", result.getNeedPwd());
 		if (result.getNeedPwd()) {
 			view.addObject("readKey", readKey);
-			view.addObject("needPwd", true);
 		}
 		if (result.isSuccess()) {
 			view.addObject("burnUri", result.getBurnUri());
@@ -275,8 +275,9 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 	private void burnMessageAndDeleteFile(ArticleBurn po) {
 		File tmpFile = new File(po.getFilePath());
 		try {
-			tmpFile.deleteOnExit();
+			tmpFile.delete();
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		po.setIsBurned(true);
 		articleBurnMapper.updateByPrimaryKeySelective(po);

@@ -303,10 +303,6 @@
     </if>
   </select>
   
-  <update id="burnArticleByBurnId">
-    update article_burn set is_burned = true where burn_id = #{burnId}
-  </update>
-  
   <select id="findExpiredArticleBurn" resultMap="BaseResultMap">
     select
       *

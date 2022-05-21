@@ -216,8 +216,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 
 		} else if (po.getReadCount() == po.getReadLimit() - 1) {
 			po.setReadCount(po.getReadCount() + 1);
-			po.setIsBurned(true);
-			articleBurnMapper.updateByPrimaryKeySelective(po);
+			burnMessageAndDeleteFile(po);
 			return fillArticleBurnResultWithPO(po);
 		}
 
@@ -257,9 +256,30 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		}
 
 		Long burnId = systemOptionService.decryptPrivateKey(burnKey);
-		if (burnId != null) {
-			articleBurnMapper.burnArticleByBurnId(burnId);
+		if (burnId == null) {
+			return;
 		}
+		
+		ArticleBurnExample example = new ArticleBurnExample();
+		example.createCriteria().andBurnIdEqualTo(burnId).andIsBurnedEqualTo(false);
+		List<ArticleBurn> poList = articleBurnMapper.selectByExample(example);
+		
+		if(poList != null && !poList.isEmpty()) {
+			for(ArticleBurn po : poList ) {
+				burnMessageAndDeleteFile(po);
+			}
+		}
+		
+	}
+	
+	private void burnMessageAndDeleteFile(ArticleBurn po) {
+		File tmpFile = new File(po.getFilePath());
+		try {
+			tmpFile.deleteOnExit();
+		} catch (Exception e) {
+		}
+		po.setIsBurned(true);
+		articleBurnMapper.updateByPrimaryKeySelective(po);
 	}
 
 	@Override

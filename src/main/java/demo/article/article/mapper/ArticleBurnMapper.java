@@ -34,8 +34,6 @@ public interface ArticleBurnMapper {
 
 	int updateByPrimaryKey(ArticleBurn record);
 	
-	void burnArticleByBurnId(Long burnId);
-
 	List<ArticleBurn> findExpiredArticleBurn(LocalDateTime validTime);
 
 	int batchDeleteById(@Param("idList") List<Long> idList);

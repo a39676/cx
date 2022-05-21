@@ -44,15 +44,7 @@ function buildSubChannel(channel) {
   channelElement += " channelId='"+channel.channelId+"'";
   channelElement += " ";
   channelElement += "onclick='loadArticleLongSummaryFirstPage(\""+channel.channelId+"\")'>";
-  channelElement += "<span channelId='"+channel.channelId+"'";
-  channelElement += " class='channelAttachL'";
-  channelElement += " >";
-  channelElement += "</span>";
   channelElement += channel.channelName;
-  channelElement += "<span channelId='"+channel.channelId+"'";
-  channelElement += " class='channelAttachR'";
-  channelElement += " >";
-  channelElement += "</span>";
   channelElement += "</button>";
   return channelElement;
 }
@@ -144,10 +136,6 @@ function loadArticleLongSummaryFirstPage(channelId) {
   $(".channelButton").removeClass("btn-warning");
   $(".channelButton").addClass("btn-primary");
   $("#searchByTitle").prop('disabled', true);
-  $(".channelAttachR").text("");
-  $(".channelAttachR[channelId='"+channelId+"'").text(" <<<");
-  $(".channelAttachL").text("");
-  $(".channelAttachL[channelId='"+channelId+"'").text(">>> ");
   $(".channelButton[channelId='"+channelId+"'").removeClass("btn-primary");
   $(".channelButton[channelId='"+channelId+"'").addClass("btn-warning");
   var blogRowArea = $("#blogRowArea");

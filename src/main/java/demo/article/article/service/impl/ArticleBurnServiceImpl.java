@@ -277,7 +277,6 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		try {
 			tmpFile.delete();
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		po.setIsBurned(true);
 		articleBurnMapper.updateByPrimaryKeySelective(po);

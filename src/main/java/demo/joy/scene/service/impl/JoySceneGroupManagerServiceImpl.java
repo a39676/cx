@@ -85,7 +85,7 @@ public class JoySceneGroupManagerServiceImpl extends JoyCommonService implements
 	@Override
 	public JoyCommonResult deleteJoySceneGroup(EditJoySceneGroupDTO dto) {
 		JoyCommonResult r = new JoyCommonResult();
-		Long groupId = systemConstantService.decryptPrivateKey(dto.getSceneGroupPK());
+		Long groupId = systemOptionService.decryptPrivateKey(dto.getSceneGroupPK());
 		if (groupId == null) {
 			r.failWithMessage("error param");
 			return r;
@@ -118,7 +118,7 @@ public class JoySceneGroupManagerServiceImpl extends JoyCommonService implements
 		}
 		
 		if(StringUtils.isNotBlank(dto.getSceneGroupPK())) {
-			Long sceneGroupId = systemConstantService.decryptPrivateKey(dto.getSceneGroupPK());
+			Long sceneGroupId = systemOptionService.decryptPrivateKey(dto.getSceneGroupPK());
 			if(sceneGroupId != null) {
 				criteria.andIdEqualTo(sceneGroupId);
 			}

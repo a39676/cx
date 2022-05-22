@@ -151,7 +151,7 @@ public class ArticleCommonService extends CommonService {
 		LocalImageSavingDTO dto = new LocalImageSavingDTO();
 		dto.setImgName(filename);
 		dto.setImgPath(imgSavingPath);
-		dto.setImgTagCode(ImageTagType.fromArticle.getCode());
+		dto.setImgTagCode(ImageTagType.FROM_ARTICLE.getCode());
 		ImageSavingResult result = imgService.imageSaving(dto);
 		return result.getImgUrl();
 	}

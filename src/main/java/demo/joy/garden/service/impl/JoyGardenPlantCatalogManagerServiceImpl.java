@@ -30,12 +30,19 @@ public class JoyGardenPlantCatalogManagerServiceImpl extends JoyCommonService
 
 	@Autowired
 	private FileUtilCustom ioUtil;
+	
+	@Override
+	public ModelAndView plantCatalogManager() {
+		ModelAndView view = new ModelAndView("joyJSP/garden/JoyPlantCatalogManager");
+		view.addObject("plantTypeList", JoyGardenPlantType.values());
+		return view;
+	}
 
 	@Override
-	public ModelAndView index(JoyGardenPlantSearchConditionDTO dto) {
-//		TODO
-		ModelAndView view = new ModelAndView();
-
+	public ModelAndView plantSearch(JoyGardenPlantSearchConditionDTO dto) {
+		ModelAndView view = new ModelAndView("joyJSP/garden/JoyPlantCatalogSearchResult");
+		view.addObject("plantTypeList", JoyGardenPlantType.values());
+		
 		JoyGardenPlantCatalogExample example = new JoyGardenPlantCatalogExample();
 		Criteria criteria = example.createCriteria();
 		criteria.andIsDeleteEqualTo(false).andPlantTypeEqualTo(dto.getPlantType());
@@ -43,6 +50,9 @@ public class JoyGardenPlantCatalogManagerServiceImpl extends JoyCommonService
 			criteria.andPlantNameLike(dto.getName());
 		}
 		List<JoyGardenPlantCatalog> poList = plantCatalogMapper.selectByExample(example);
+		if(poList == null || poList.isEmpty()) {
+			return view;
+		}
 		List<JoyGardenPlantCatalogVO> voList = new ArrayList<>();
 		for(JoyGardenPlantCatalog po : poList) {
 			voList.add(buildPlantVO(po));

@@ -1,5 +1,10 @@
 挖好的坑
 
+garden
+	收获 joy_garden_plant_gain_catalog
+		收获管理 另建页面 新建 管理
+	植物 joy_garden_plant_catalog
+
 场景
 	进入"私有" 场景
 		未实现

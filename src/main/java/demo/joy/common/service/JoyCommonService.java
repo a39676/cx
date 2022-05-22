@@ -8,12 +8,14 @@ import demo.base.user.service.UserDetailService;
 import demo.common.service.CommonService;
 
 public class JoyCommonService extends CommonService {
-	
+
 	@Autowired
 	protected SystemOptionService systemOptionService;
 	@Autowired
 	protected RedisTemplate<String, Object> redisTemplate;
 	@Autowired
 	protected UserDetailService userDetailService;
-
+	@Autowired
+	protected JoyOptionService optionService;
+	
 }

@@ -89,7 +89,7 @@ public class ImageInteractionServiceImpl extends CommonService implements ImageI
 		
 		ImageTag imgTagPO = new ImageTag();
 		imgTagPO.setImageId(imgId);
-		imgTagPO.setTagId(ImageTagType.autoTestImgToCloudinary.getCode().longValue());
+		imgTagPO.setTagId(ImageTagType.AUTO_TEST_IMG_TO_CLOUDINARY.getCode().longValue());
 		imageTagMapper.insertSelective(imgTagPO);
 		
 		r.setImgId(imgId);
@@ -106,7 +106,7 @@ public class ImageInteractionServiceImpl extends CommonService implements ImageI
 		
 		FindOldAutoTestImageOnCloudinaryDTO findOldAutoTestImageOnCloudinaryDTO = new FindOldAutoTestImageOnCloudinaryDTO();
 		findOldAutoTestImageOnCloudinaryDTO.setEndTime(deadLine);
-		findOldAutoTestImageOnCloudinaryDTO.setTagId(ImageTagType.autoTestImgToCloudinary.getCode().longValue());
+		findOldAutoTestImageOnCloudinaryDTO.setTagId(ImageTagType.AUTO_TEST_IMG_TO_CLOUDINARY.getCode().longValue());
 		List<ImageCloudinary> imgCloudinaryPOList = imageComplexMapper.findOldAutoTestImageOnCloudinary(findOldAutoTestImageOnCloudinaryDTO);
 		
 		if(imgCloudinaryPOList == null || imgCloudinaryPOList.size() < 1) {

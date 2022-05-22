@@ -46,6 +46,7 @@ import demo.image.pojo.po.ImageTagExample;
 import demo.image.pojo.result.ImgHandleSrcDataResult;
 import demo.image.pojo.type.ImageTagType;
 import demo.image.service.ImageService;
+import demo.joy.common.service.JoyOptionService;
 import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.result.ImageSavingResult;
 import toolPack.constant.FileSuffixNameConstant;
@@ -59,9 +60,11 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 	private ImageTagMapper imageTagMapper;
 	
 	@Autowired
-	private SystemOptionService systemConstantService;
+	private SystemOptionService systemOptionService;
 	@Autowired
 	private AutomationTestOptionService automationTestConstantService;
+	@Autowired
+	private JoyOptionService joyOptionService;
 	
 	@Override
 	public void getImage(HttpServletResponse response, String imgPK) {
@@ -69,7 +72,7 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 			return;
 		}
 		
-		Long imgId = systemConstantService.decryptPrivateKey(imgPK);
+		Long imgId = systemOptionService.decryptPrivateKey(imgPK);
 		if(imgId == null) {
 			return;
 		}
@@ -170,7 +173,7 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 			return r;
 		}
 		
-		String imgPK = systemConstantService.encryptId(newImgId);
+		String imgPK = systemOptionService.encryptId(newImgId);
 		try {
 			String urlEncodeImgPk = URLEncoder.encode(imgPK, StandardCharsets.UTF_8.toString());
 			r.setImgUrl(ImageUrl.root + ImageUrl.getImage + "/?imgPK=" + urlEncodeImgPk);
@@ -216,7 +219,7 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 	
 	@Override
 	public ImageSavingResult __saveImgFromBBT(ImageSavingTransDTO dto) {
-		dto.setImgTagCode(ImageTagType.imageSaving.getCode());
+		dto.setImgTagCode(ImageTagType.IMAGE_SAVING.getCode());
 		ImageSavingResult r = validImageSavingTransDTO_forBBT(dto);
 		if(r.isFail()) {
 			return r;
@@ -286,7 +289,19 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 				return r;
 			}
 			
-			String imageStorePrefixPath = automationTestConstantService.getImageStorePrefixPath();
+			String imageStorePrefixPath = null;
+			if(ImageTagType.IMAGE_SAVING.equals(imgTagType)) {
+				imageStorePrefixPath = automationTestConstantService.getImageStorePrefixPath();
+			} else if(ImageTagType.JOY_IMAGE_SAVING.equals(imgTagType)){
+				imageStorePrefixPath = joyOptionService.getImgStorePathPrefix();
+				dto.setValidTime(LocalDateTime.of(2999, 12, 31, 23, 59, 59));
+			}
+			
+			if(imageStorePrefixPath == null) {
+				r.failWithMessage("error data");
+				return r;
+			}
+			
 			newImgFilePath = imageStorePrefixPath + File.separator + dto.getImgName();
 			File imgFile = new File(newImgFilePath);
 			
@@ -320,7 +335,7 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 			return r;
 		}
 		
-		String imgPK = systemConstantService.encryptId(newImgId);
+		String imgPK = systemOptionService.encryptId(newImgId);
 		try {
 			String urlEncodeImgPk = URLEncoder.encode(imgPK, StandardCharsets.UTF_8.toString());
 			r.setImgUrl(ImageUrl.root + ImageUrl.getImage + "/?imgPK=" + urlEncodeImgPk);

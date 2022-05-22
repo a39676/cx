@@ -5,7 +5,9 @@ import org.springframework.web.servlet.ModelAndView;
 import demo.joy.garden.pojo.dto.JoyGardenPlantSearchConditionDTO;
 
 public interface JoyGardenPlantCatalogManagerService {
+	
+	ModelAndView plantCatalogManager();
 
-	ModelAndView index(JoyGardenPlantSearchConditionDTO dto);
+	ModelAndView plantSearch(JoyGardenPlantSearchConditionDTO dto);
 
 }

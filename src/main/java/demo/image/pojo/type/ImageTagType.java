@@ -2,9 +2,10 @@ package demo.image.pojo.type;
 
 public enum ImageTagType {
 	
-	fromArticle("fromArticle", 11L),
-	autoTestImgToCloudinary("autoTestImgToCloudinary", 12L),
-	imageSaving("imageSaving", 13L),
+	FROM_ARTICLE("fromArticle", 11L),
+	AUTO_TEST_IMG_TO_CLOUDINARY("autoTestImgToCloudinary", 12L),
+	IMAGE_SAVING("imageSaving", 13L),
+	JOY_IMAGE_SAVING("joyImageSaving", 14L),
 	
 	;
 	

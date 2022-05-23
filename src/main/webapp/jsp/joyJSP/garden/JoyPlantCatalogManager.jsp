@@ -13,9 +13,13 @@
 </head>
 <body>
 
-<%@ include file="./JoyPlantCatalogCreator.jsp" %>
 
 <div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <a href="/joy/garden/plantCatalogCreator" target="_blank">创建新品种</a>
+    </div>
+  </div>
   <div class="row">
     <div class="col-md-12">
       <form name="" novalidate id="plantSearchCondition">

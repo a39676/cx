@@ -12,7 +12,6 @@ import org.jsoup.select.Elements;
 import org.owasp.html.PolicyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import demo.article.article.pojo.dto.LocalImageSavingDTO;
 import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.articleComment.mapper.ArticleCommentCountMapper;
 import demo.article.articleComment.pojo.po.ArticleCommentCount;
@@ -26,6 +25,7 @@ import demo.image.pojo.type.ImageTagType;
 import demo.image.service.ImageService;
 import demo.tool.other.service.TextFilter;
 import demo.tool.other.service.VisitDataService;
+import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.result.ImageSavingResult;
 import toolPack.ioHandle.FileUtilCustom;
 import toolPack.numericHandel.NumericUtilCustom;
@@ -135,22 +135,9 @@ public class ArticleCommonService extends CommonService {
 
 		String filename = String.valueOf(snowFlake.getNextId()) + "." + srcHandleResult.getImgFileType();
 
-//		BufferedImage bufferedImage = imgService.base64ToBufferedImg(srcHandleResult.getBase64Str());
-//		if (bufferedImage == null) {
-//			return "";
-//		}
-
-		String saveingFolderPath = articleOptionService.getArticleImageSavingFolder();
-		String imgSavingPath = saveingFolderPath + File.separator + filename;
-		boolean saveFlag = imgService.imgSaveAsFileDirect(srcHandleResult.getBase64Str(), imgSavingPath,
-				srcHandleResult.getImgFileType());
-		if (!saveFlag) {
-			return "";
-		}
-
-		LocalImageSavingDTO dto = new LocalImageSavingDTO();
+		ImageSavingTransDTO dto = new ImageSavingTransDTO();
 		dto.setImgName(filename);
-		dto.setImgPath(imgSavingPath);
+		dto.setImgBase64Str(srcHandleResult.getBase64Str());
 		dto.setImgTagCode(ImageTagType.FROM_ARTICLE.getCode());
 		ImageSavingResult result = imgService.imageSaving(dto);
 		return result.getImgUrl();

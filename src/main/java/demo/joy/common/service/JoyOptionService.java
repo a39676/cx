@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 
 import demo.common.service.CommonService;
-import demo.joy.common.pojo.dto.JoyGardenOptionDTO;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")
@@ -24,7 +23,11 @@ public class JoyOptionService extends CommonService {
 
 	private String imgStorePathPrefix;
 
-	private JoyGardenOptionDTO gradenOptionDTO;
+	private String iconImageStorePathPrefix;
+
+	private String npcImageStorePathPrefix;
+
+	private String gardenImageStorePathPrefix;
 
 	public String getImgStorePathPrefix() {
 		return imgStorePathPrefix;
@@ -34,18 +37,35 @@ public class JoyOptionService extends CommonService {
 		this.imgStorePathPrefix = imgStorePathPrefix;
 	}
 
-	public JoyGardenOptionDTO getGradenOptionDTO() {
-		return gradenOptionDTO;
+	public String getIconImageStorePathPrefix() {
+		return iconImageStorePathPrefix;
 	}
 
-	public void setGradenOptionDTO(JoyGardenOptionDTO gradenOptionDTO) {
-		this.gradenOptionDTO = gradenOptionDTO;
+	public void setIconImageStorePathPrefix(String iconImageStorePathPrefix) {
+		this.iconImageStorePathPrefix = iconImageStorePathPrefix;
+	}
+
+	public String getNpcImageStorePathPrefix() {
+		return npcImageStorePathPrefix;
+	}
+
+	public void setNpcImageStorePathPrefix(String npcImageStorePathPrefix) {
+		this.npcImageStorePathPrefix = npcImageStorePathPrefix;
+	}
+
+	public String getGardenImageStorePathPrefix() {
+		return gardenImageStorePathPrefix;
+	}
+
+	public void setGardenImageStorePathPrefix(String gardenImageStorePathPrefix) {
+		this.gardenImageStorePathPrefix = gardenImageStorePathPrefix;
 	}
 
 	@Override
 	public String toString() {
-		return "JoyOptionService [imgStorePathPrefix=" + imgStorePathPrefix + ", gradenOptionDTO=" + gradenOptionDTO
-				+ "]";
+		return "JoyOptionService [imgStorePathPrefix=" + imgStorePathPrefix + ", iconImageStorePathPrefix="
+				+ iconImageStorePathPrefix + ", npcImageStorePathPrefix=" + npcImageStorePathPrefix
+				+ ", gardenImageStorePathPrefix=" + gardenImageStorePathPrefix + "]";
 	}
 
 	@PostConstruct

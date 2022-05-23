@@ -1,6 +1,5 @@
 package demo.joy.garden.pojo.vo;
 
-import demo.joy.garden.pojo.dto.JoyGardenPlantOptionDTO;
 import demo.joy.garden.pojo.type.JoyGardenPlantType;
 
 public class JoyGardenPlantCatalogVO {
@@ -12,8 +11,6 @@ public class JoyGardenPlantCatalogVO {
 	private String creatorName;
 
 	private JoyGardenPlantType plantType;
-
-	private JoyGardenPlantOptionDTO optionDTO;
 
 	public String getPk() {
 		return pk;
@@ -47,18 +44,10 @@ public class JoyGardenPlantCatalogVO {
 		this.plantType = plantType;
 	}
 
-	public JoyGardenPlantOptionDTO getOptionDTO() {
-		return optionDTO;
-	}
-
-	public void setOptionDTO(JoyGardenPlantOptionDTO optionDTO) {
-		this.optionDTO = optionDTO;
-	}
-
 	@Override
 	public String toString() {
 		return "JoyGardenPlantCatalogVO [pk=" + pk + ", plantName=" + plantName + ", creatorName=" + creatorName
-				+ ", plantType=" + plantType + ", optionDTO=" + optionDTO + "]";
+				+ ", plantType=" + plantType + "]";
 	}
 
 }

@@ -1,9 +1,17 @@
 挖好的坑
+因各个功能模块 各自有 img 表, 并保存图片地址. 且冇对应的 url
+	以 garden 为例, 将 path 抛到 view 再经过 公共 imageService 读取图片显得难以操作
+	考虑新建 joyImageService, 以 模块code + 图片ID , 负责管理 传输 joy 相关图片
+
+garden & image upload url 未设置权限管理
 
 garden
 	收获 joy_garden_plant_gain_catalog
 		收获管理 另建页面 新建 管理
 	植物 joy_garden_plant_catalog
+	
+	创建 / 修改 plant stage 的时候, if 最后 stage, 更新 对应 plant 的 img url 
+		注意修改 包括 stage manager 页面上的 last stage pk
 
 场景
 	进入"私有" 场景

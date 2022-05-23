@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 
 import javax.servlet.http.HttpServletResponse;
 
-import demo.article.article.pojo.dto.LocalImageSavingDTO;
 import demo.image.pojo.result.ImgHandleSrcDataResult;
 import demo.joy.image.npc.service.JoyImageNpcService;
 import image.pojo.dto.ImageSavingTransDTO;
@@ -17,8 +16,6 @@ public interface ImageService {
 	void getImageByPath(HttpServletResponse response, String path);
 	
 	ImageSavingResult imageSaving(ImageSavingTransDTO dto);
-	ImageSavingResult imageSaving(LocalImageSavingDTO dto);
-	
 
 	ImageSavingResult __saveImgFromBBT(ImageSavingTransDTO dto);
 
@@ -42,7 +39,5 @@ public interface ImageService {
 	 * @return
 	 */
 	ImgHandleSrcDataResult imgHandleSrcData(String src);
-
-	boolean imgSaveAsFileDirect(String base64Str, String filePath, String fileType);
 
 }

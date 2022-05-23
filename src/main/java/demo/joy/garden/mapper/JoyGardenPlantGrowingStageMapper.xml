@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="demo.joy.garden.mapper.JoyGardenPlantCatalogMapper">
-  <resultMap id="BaseResultMap" type="demo.joy.garden.pojo.po.JoyGardenPlantCatalog">
+<mapper namespace="demo.joy.garden.mapper.JoyGardenPlantGrowingStageMapper">
+  <resultMap id="BaseResultMap" type="demo.joy.garden.pojo.po.JoyGardenPlantGrowingStage">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="plant_name" jdbcType="CHAR" property="plantName" />
-    <result column="creator_id" jdbcType="BIGINT" property="creatorId" />
-    <result column="plant_type" jdbcType="INTEGER" property="plantType" />
-    <result column="option_file_path" jdbcType="VARCHAR" property="optionFilePath" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="plant_id" jdbcType="BIGINT" property="plantId" />
+    <result column="next_stage_id" jdbcType="BIGINT" property="nextStageId" />
+    <result column="stage_name" jdbcType="CHAR" property="stageName" />
+    <result column="living_minute" jdbcType="INTEGER" property="livingMinute" />
+    <result column="img_url_path" jdbcType="VARCHAR" property="imgUrlPath" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
   </resultMap>
@@ -70,16 +70,16 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, plant_name, creator_id, plant_type, option_file_path, create_time, update_time, 
+    id, plant_id, next_stage_id, stage_name, living_minute, img_url_path, update_time, 
     is_delete
   </sql>
-  <select id="selectByExample" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantCatalogExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantGrowingStageExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from joy_garden_plant_catalog
+    from joy_garden_plant_growing_stage
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -90,47 +90,47 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from joy_garden_plant_catalog
+    from joy_garden_plant_growing_stage
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from joy_garden_plant_catalog
+    delete from joy_garden_plant_growing_stage
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantCatalogExample">
-    delete from joy_garden_plant_catalog
+  <delete id="deleteByExample" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantGrowingStageExample">
+    delete from joy_garden_plant_growing_stage
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantCatalog">
-    insert into joy_garden_plant_catalog (id, plant_name, creator_id, 
-      plant_type, option_file_path, create_time, 
+  <insert id="insert" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantGrowingStage">
+    insert into joy_garden_plant_growing_stage (id, plant_id, next_stage_id, 
+      stage_name, living_minute, img_url_path, 
       update_time, is_delete)
-    values (#{id,jdbcType=BIGINT}, #{plantName,jdbcType=CHAR}, #{creatorId,jdbcType=BIGINT}, 
-      #{plantType,jdbcType=INTEGER}, #{optionFilePath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+    values (#{id,jdbcType=BIGINT}, #{plantId,jdbcType=BIGINT}, #{nextStageId,jdbcType=BIGINT}, 
+      #{stageName,jdbcType=CHAR}, #{livingMinute,jdbcType=INTEGER}, #{imgUrlPath,jdbcType=VARCHAR}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
   </insert>
-  <insert id="insertSelective" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantCatalog">
-    insert into joy_garden_plant_catalog
+  <insert id="insertSelective" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantGrowingStage">
+    insert into joy_garden_plant_growing_stage
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
       </if>
-      <if test="plantName != null">
-        plant_name,
+      <if test="plantId != null">
+        plant_id,
       </if>
-      <if test="creatorId != null">
-        creator_id,
+      <if test="nextStageId != null">
+        next_stage_id,
       </if>
-      <if test="plantType != null">
-        plant_type,
+      <if test="stageName != null">
+        stage_name,
       </if>
-      <if test="optionFilePath != null">
-        option_file_path,
+      <if test="livingMinute != null">
+        living_minute,
       </if>
-      <if test="createTime != null">
-        create_time,
+      <if test="imgUrlPath != null">
+        img_url_path,
       </if>
       <if test="updateTime != null">
         update_time,
@@ -143,20 +143,20 @@
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="plantName != null">
-        #{plantName,jdbcType=CHAR},
+      <if test="plantId != null">
+        #{plantId,jdbcType=BIGINT},
       </if>
-      <if test="creatorId != null">
-        #{creatorId,jdbcType=BIGINT},
+      <if test="nextStageId != null">
+        #{nextStageId,jdbcType=BIGINT},
       </if>
-      <if test="plantType != null">
-        #{plantType,jdbcType=INTEGER},
+      <if test="stageName != null">
+        #{stageName,jdbcType=CHAR},
       </if>
-      <if test="optionFilePath != null">
-        #{optionFilePath,jdbcType=VARCHAR},
+      <if test="livingMinute != null">
+        #{livingMinute,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
+      <if test="imgUrlPath != null">
+        #{imgUrlPath,jdbcType=VARCHAR},
       </if>
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
@@ -166,32 +166,32 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantCatalogExample" resultType="java.lang.Long">
-    select count(*) from joy_garden_plant_catalog
+  <select id="countByExample" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantGrowingStageExample" resultType="java.lang.Long">
+    select count(*) from joy_garden_plant_growing_stage
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update joy_garden_plant_catalog
+    update joy_garden_plant_growing_stage
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.plantName != null">
-        plant_name = #{record.plantName,jdbcType=CHAR},
+      <if test="record.plantId != null">
+        plant_id = #{record.plantId,jdbcType=BIGINT},
       </if>
-      <if test="record.creatorId != null">
-        creator_id = #{record.creatorId,jdbcType=BIGINT},
+      <if test="record.nextStageId != null">
+        next_stage_id = #{record.nextStageId,jdbcType=BIGINT},
       </if>
-      <if test="record.plantType != null">
-        plant_type = #{record.plantType,jdbcType=INTEGER},
+      <if test="record.stageName != null">
+        stage_name = #{record.stageName,jdbcType=CHAR},
       </if>
-      <if test="record.optionFilePath != null">
-        option_file_path = #{record.optionFilePath,jdbcType=VARCHAR},
+      <if test="record.livingMinute != null">
+        living_minute = #{record.livingMinute,jdbcType=INTEGER},
       </if>
-      <if test="record.createTime != null">
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      <if test="record.imgUrlPath != null">
+        img_url_path = #{record.imgUrlPath,jdbcType=VARCHAR},
       </if>
       <if test="record.updateTime != null">
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
@@ -205,36 +205,36 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update joy_garden_plant_catalog
+    update joy_garden_plant_growing_stage
     set id = #{record.id,jdbcType=BIGINT},
-      plant_name = #{record.plantName,jdbcType=CHAR},
-      creator_id = #{record.creatorId,jdbcType=BIGINT},
-      plant_type = #{record.plantType,jdbcType=INTEGER},
-      option_file_path = #{record.optionFilePath,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      plant_id = #{record.plantId,jdbcType=BIGINT},
+      next_stage_id = #{record.nextStageId,jdbcType=BIGINT},
+      stage_name = #{record.stageName,jdbcType=CHAR},
+      living_minute = #{record.livingMinute,jdbcType=INTEGER},
+      img_url_path = #{record.imgUrlPath,jdbcType=VARCHAR},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       is_delete = #{record.isDelete,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantCatalog">
-    update joy_garden_plant_catalog
+  <update id="updateByPrimaryKeySelective" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantGrowingStage">
+    update joy_garden_plant_growing_stage
     <set>
-      <if test="plantName != null">
-        plant_name = #{plantName,jdbcType=CHAR},
+      <if test="plantId != null">
+        plant_id = #{plantId,jdbcType=BIGINT},
       </if>
-      <if test="creatorId != null">
-        creator_id = #{creatorId,jdbcType=BIGINT},
+      <if test="nextStageId != null">
+        next_stage_id = #{nextStageId,jdbcType=BIGINT},
       </if>
-      <if test="plantType != null">
-        plant_type = #{plantType,jdbcType=INTEGER},
+      <if test="stageName != null">
+        stage_name = #{stageName,jdbcType=CHAR},
       </if>
-      <if test="optionFilePath != null">
-        option_file_path = #{optionFilePath,jdbcType=VARCHAR},
+      <if test="livingMinute != null">
+        living_minute = #{livingMinute,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
+      <if test="imgUrlPath != null">
+        img_url_path = #{imgUrlPath,jdbcType=VARCHAR},
       </if>
       <if test="updateTime != null">
         update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -245,24 +245,24 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantCatalog">
-    update joy_garden_plant_catalog
-    set plant_name = #{plantName,jdbcType=CHAR},
-      creator_id = #{creatorId,jdbcType=BIGINT},
-      plant_type = #{plantType,jdbcType=INTEGER},
-      option_file_path = #{optionFilePath,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
+  <update id="updateByPrimaryKey" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantGrowingStage">
+    update joy_garden_plant_growing_stage
+    set plant_id = #{plantId,jdbcType=BIGINT},
+      next_stage_id = #{nextStageId,jdbcType=BIGINT},
+      stage_name = #{stageName,jdbcType=CHAR},
+      living_minute = #{livingMinute,jdbcType=INTEGER},
+      img_url_path = #{imgUrlPath,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       is_delete = #{isDelete,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectByExampleWithRowbounds" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantCatalogExample" resultMap="BaseResultMap">
+  <select id="selectByExampleWithRowbounds" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantGrowingStageExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from joy_garden_plant_catalog
+    from joy_garden_plant_growing_stage
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>

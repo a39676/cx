@@ -13,7 +13,7 @@ public abstract class JoyImageCommonService extends JoyCommonService {
 	@Autowired
 	protected ImageService imgService;
 
-	protected String imgBase64Saving(String savingFolderPath, String srcStr, String remark) {
+	protected String imgBase64Saving(String savingFolderPath, String srcStr) {
 		ImgHandleSrcDataResult srcHandleResult = imgService.imgHandleSrcData(srcStr);
 		if (srcHandleResult.isFail()) {
 			return null;

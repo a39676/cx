@@ -40,15 +40,9 @@ public class JoyImageNpcManagerServiceImpl extends JoyImageNpcCommonService impl
 		Elements imgs = doc.select("img[src]");
 		String imgSavingPath = null;
 		
-		String saveingFolderPath = null;
-		if (isLinux()) {
-			saveingFolderPath = ImageNpcConstant.NPC_LOCAL_STORE;
-		} else if (isWindows()) {
-			saveingFolderPath = "d:" + ImageNpcConstant.NPC_LOCAL_STORE;
-		}
 		
 		for (Element s : imgs) {
-			imgSavingPath = imgBase64Saving(saveingFolderPath, s.attr("src"), dto.getRemark());
+			imgSavingPath = imgBase64Saving(optionService.getNpcImageStorePathPrefix(), s.attr("src"));
 			if(imgSavingPath != null) {
 				JoyImageNpc po = new JoyImageNpc();
 				po.setId(snowFlake.getNextId());

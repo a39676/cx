@@ -40,15 +40,8 @@ public class JoyIconManagerServiceImpl extends JoyIconCommonService implements J
 		Elements imgs = doc.select("img[src]");
 		String imgSavingPath = null;
 		
-		String saveingFolderPath = null;
-		if (isLinux()) {
-			saveingFolderPath = IconConstant.ICON_LOCAL_STORE;
-		} else if (isWindows()) {
-			saveingFolderPath = "d:" + IconConstant.ICON_LOCAL_STORE;
-		}
-		
 		for (Element s : imgs) {
-			imgSavingPath = imgBase64Saving(saveingFolderPath, s.attr("src"), dto.getRemark());
+			imgSavingPath = imgBase64Saving(optionService.getIconImageStorePathPrefix(), s.attr("src"));
 			if(imgSavingPath != null) {
 				JoyImageIcon po = new JoyImageIcon();
 				po.setId(snowFlake.getNextId());

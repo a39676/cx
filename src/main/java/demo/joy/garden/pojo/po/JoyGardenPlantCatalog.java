@@ -11,7 +11,7 @@ public class JoyGardenPlantCatalog {
 
     private Integer plantType;
 
-    private String optionFilePath;
+    private String imgUrlPath;
 
     private LocalDateTime createTime;
 
@@ -51,12 +51,12 @@ public class JoyGardenPlantCatalog {
         this.plantType = plantType;
     }
 
-    public String getOptionFilePath() {
-        return optionFilePath;
+    public String getImgUrlPath() {
+        return imgUrlPath;
     }
 
-    public void setOptionFilePath(String optionFilePath) {
-        this.optionFilePath = optionFilePath == null ? null : optionFilePath.trim();
+    public void setImgUrlPath(String imgUrlPath) {
+        this.imgUrlPath = imgUrlPath == null ? null : imgUrlPath.trim();
     }
 
     public LocalDateTime getCreateTime() {

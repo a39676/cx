@@ -1,17 +1,17 @@
 package demo.joy.garden.pojo.type;
 
-public enum JoyGardenPlantType {
+public enum JoyGardenPlantGainType {
 	
 	FLOWER("flower", "花卉", 1),
-	AQUATIC("aquatic", "水生植物", 2),
-	SHRUB("shrub", "灌木", 3),
+	FRUIT("fruit", "果实", 2),
+	SEED("seed", "种子", 3),
 	;
 	
 	private String name;
 	private String cnName;
 	private Integer code;
 	
-	JoyGardenPlantType(String name, String cnName, Integer code) {
+	JoyGardenPlantGainType(String name, String cnName, Integer code) {
 		this.name = name;
 		this.cnName = cnName;
 		this.code = code;
@@ -30,8 +30,8 @@ public enum JoyGardenPlantType {
 		return code;
 	}
 
-	public static JoyGardenPlantType getType(String typeName) {
-		for(JoyGardenPlantType t : JoyGardenPlantType.values()) {
+	public static JoyGardenPlantGainType getType(String typeName) {
+		for(JoyGardenPlantGainType t : JoyGardenPlantGainType.values()) {
 			if(t.getName().equals(typeName)) {
 				return t;
 			}
@@ -39,8 +39,8 @@ public enum JoyGardenPlantType {
 		return null;
 	}
 	
-	public static JoyGardenPlantType getType(Integer typeCode) {
-		for(JoyGardenPlantType t : JoyGardenPlantType.values()) {
+	public static JoyGardenPlantGainType getType(Integer typeCode) {
+		for(JoyGardenPlantGainType t : JoyGardenPlantGainType.values()) {
 			if(t.getCode().equals(typeCode)) {
 				return t;
 			}

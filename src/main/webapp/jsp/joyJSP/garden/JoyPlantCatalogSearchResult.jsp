@@ -11,76 +11,88 @@
 <head>
 <%@ include file="../../baseElementJSP/normalHeader.jsp" %>
 </head>
-<body>
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-12">
-      <table class="table table-hover table-bordered table-striped table-light">
-        <thead class="thead-dark">
-          <tr>
-            <th style="text-align: center; vertical-align: middle;">名称</th>
-            <th style="text-align: center; vertical-align: middle;">创造者</th>
-            <th style="text-align: center; vertical-align: middle;">类型</th>
-          </tr>
-        </thead>
-        <c:forEach items="${plantList}" var="plant">
-          <tr class="table-primary">
-            <td style="text-align: center; vertical-align: middle;">
-              <input type="text" name="" value="${plant.plantName}" plantPK="${plant.pk}">
-            </td>
-            <td style="text-align: center; vertical-align: middle;">
-              <input type="text" name="" value="${plant.creatorName}" plantPK="${plant.pk}">
-            </td>
-            <td style="text-align: center; vertical-align: middle;">
-              <select class="" name="" plantPK="${plant.pk}">
-                <option value="${plant.plantType.code}">${plant.plantType.cnName}</option>
-                <c:forEach items="${plantTypeList}" var="plantType">
-                  <option value="${plantType.code}">${plantType.cnName}</option>
-                </c:forEach>
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <td style="text-align: center; vertical-align: middle;">
-              阶段名称
-            </td>
-            <td style="text-align: center; vertical-align: middle;">
-              图片
-            </td>
-            <td style="text-align: center; vertical-align: middle;">
-              持续时间
-            </td>
-          </tr>
-            <c:forEach items="${plant.growingOptionList}" var="growingOption">
-              <tr>
-                <td style="text-align: center; vertical-align: middle;">
-                  ${growingOption.stageName}
-                </td>
-                <td style="text-align: center; vertical-align: middle;">
-                  ${growingOption.stageImgUrl}
-                  <img src="${growingOption.stageImgUrl}" alt="">
-                </td>
-                <td style="text-align: center; vertical-align: middle;">
-                  ${growingOption.stageLivingMinute}
-                </td>
-              </tr>
-            </c:forEach>
-        </c:forEach>
-      </table>
-    </div>
+
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-hover table-bordered table-striped table-light">
+      <thead class="thead-dark">
+        <tr>
+          <th style="text-align: center; vertical-align: middle;">名称</th>
+          <th style="text-align: center; vertical-align: middle;">创造者</th>
+          <th style="text-align: center; vertical-align: middle;">类型</th>
+          <th></th>
+        </tr>
+      </thead>
+      <c:forEach items="${plantList}" var="plant">
+        <tr class="plantTR" name="" plantPK="${plant.pk}">
+          <td style="text-align: center; vertical-align: middle;">
+            <input type="text" name="" value="${plant.plantName}" plantPK="${plant.pk}">
+          </td>
+          <td style="text-align: center; vertical-align: middle;">
+            <span plantPK="${plant.pk}">${plant.creatorName}</span>
+          </td>
+          <td style="text-align: center; vertical-align: middle;">
+            <select class="" name="" plantPK="${plant.pk}">
+              <option value="${plant.plantType.code}">${plant.plantType.cnName}</option>
+              <c:forEach items="${plantTypeList}" var="plantType">
+                <option value="${plantType.code}">${plantType.cnName}</option>
+              </c:forEach>
+            </select>
+          </td>
+          <td style="text-align: center; vertical-align: middle;">
+            <button type="button" name="button" name="editPlantStage" plantPK="${plant.pk}">编辑种植阶段</button>
+          </td>
+        </tr>
+      </c:forEach>
+    </table>
   </div>
 
 </div>
-</body>
+
+<div id="stageManagerView">
+</div>
 
 <footer>
-  <%@ include file="../../baseElementJSP/normalJSPart.jsp" %>
-  <script type="text/javascript">
+</footer>
 
-    $(document).ready(function() {
+<%@ include file="../../baseElementJSP/normalJSPart.jsp" %>
+<script type="text/javascript">
 
+  $(document).ready(function() {
+    $(".plantTR").click(function () {
+      var plantPK = $(this).attr("plantPK");
+      showPlantStage(plantPK);
+      $(".plantTR").removeClass("table-danger");
+      $(this).addClass("table-danger");
     });
 
-  </script>
-</footer>
+    function showPlantStage(plantPK) {
+      var url = "/joy/garden/plantStageManager";
+
+      var jsonOutput = {
+        plantPK : plantPK,
+      };
+
+      $.ajax({
+        type : "POST",
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        // dataType: 'json',
+        contentType: "application/json",
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        timeout: 15000,
+        success:function(data){
+          $("#stageManagerView").html(data);
+        },
+        error:function(e){
+          $("#stageManagerView").html("出现异常,请联系管理员");
+        }
+      });
+    }
+  });
+
+</script>
+
 </html>

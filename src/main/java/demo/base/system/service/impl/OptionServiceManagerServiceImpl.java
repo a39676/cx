@@ -9,6 +9,7 @@ import demo.automationTest.service.impl.AutomationTestOptionService;
 import demo.base.system.service.OptionConstantManagerService;
 import demo.common.service.CommonService;
 import demo.finance.cryptoCoin.common.service.CryptoCoinOptionService;
+import demo.joy.common.service.JoyOptionService;
 import demo.thirdPartyAPI.cloudinary.service.impl.CloudinaryOptionService;
 import demo.tool.mail.service.impl.MailOptionService;
 import demo.tool.telegram.service.impl.TelegramOptionService;
@@ -35,6 +36,8 @@ public class OptionServiceManagerServiceImpl extends CommonService implements Op
 	private TelegramOptionService telegramOptionService;
 	@Autowired
 	private EducateOptionService educateOptionService;
+	@Autowired
+	private JoyOptionService joyOptionService;
 	
 	
 	@Override
@@ -75,6 +78,11 @@ public class OptionServiceManagerServiceImpl extends CommonService implements Op
 	@Override
 	public void refreshTelegramOption() {
 		telegramOptionService.refreshOption();
+	}
+	
+	@Override
+	public void refreshJoyOption() {
+		joyOptionService.refreshOption();
 	}
 	
 	@Override

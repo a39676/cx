@@ -79,4 +79,11 @@ public class OptionConstantController {
 		return "done";
 	}
 	
+	@GetMapping(value = "/refreshJoyOption")
+	@ResponseBody
+	public String refreshJoyOption() {
+		optionConstantManagerService.refreshJoyOption();
+		return "done";
+	}
+	
 }

@@ -1,4 +1,4 @@
-package demo.joy.image.common.pojo.po;
+package demo.joy.image.pojo.po;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

@@ -57,7 +57,7 @@
       });
 
       function create() {
-        var url = "/joy/garden/plantCatalogCreator";
+        var url = "/joyManager/garden/plantCatalogCreator";
 
         var newPlantName = $("#newPlantName").val();
         var newPlantType = $("#newPlantType option:selected").val();

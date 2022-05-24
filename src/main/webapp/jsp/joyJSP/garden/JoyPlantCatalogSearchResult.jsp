@@ -20,11 +20,12 @@
           <th style="text-align: center; vertical-align: middle;">名称</th>
           <th style="text-align: center; vertical-align: middle;">创造者</th>
           <th style="text-align: center; vertical-align: middle;">类型</th>
-          <th></th>
+          <th style="text-align: center; vertical-align: middle;">Image</th>
+          <th style="text-align: center; vertical-align: middle;">操作</th>
         </tr>
       </thead>
       <c:forEach items="${plantList}" var="plant">
-        <tr class="plantTR" name="" plantPK="${plant.pk}">
+        <tr class="" name="plantTR" plantPK="${plant.pk}">
           <td style="text-align: center; vertical-align: middle;">
             <input type="text" name="" value="${plant.plantName}" plantPK="${plant.pk}">
           </td>
@@ -40,7 +41,10 @@
             </select>
           </td>
           <td style="text-align: center; vertical-align: middle;">
-            <button type="button" name="button" name="editPlantStage" plantPK="${plant.pk}">编辑种植阶段</button>
+            <img src="${plant.imgUrl}" alt="" style="width:80px; height:80px;">
+          </td>
+          <td style="text-align: center; vertical-align: middle;">
+            <button type="button" name="editPlantStage" class="btn btn-sm btn-primary" plantPK="${plant.pk}">编辑生长阶段</button>
           </td>
         </tr>
       </c:forEach>
@@ -59,15 +63,15 @@
 <script type="text/javascript">
 
   $(document).ready(function() {
-    $(".plantTR").click(function () {
+    $("button[name='editPlantStage']").click(function () {
       var plantPK = $(this).attr("plantPK");
       showPlantStage(plantPK);
-      $(".plantTR").removeClass("table-danger");
-      $(this).addClass("table-danger");
+      $("tr[name='plantTR']").removeClass("table-danger");
+      $("tr[name='plantTR'][plantPK='"+plantPK+"']").addClass("table-danger");
     });
 
     function showPlantStage(plantPK) {
-      var url = "/joy/garden/plantStageManager";
+      var url = "/joyManager/garden/plantStageManager";
 
       var jsonOutput = {
         plantPK : plantPK,

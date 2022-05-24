@@ -6,7 +6,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import demo.base.system.service.impl.SystemOptionService;
 import demo.base.user.service.UserDetailService;
 import demo.common.service.CommonService;
-import demo.joy.image.common.service.JoyImageService;
+import demo.joy.image.service.JoyImageService;
 
 public class JoyCommonService extends CommonService {
 

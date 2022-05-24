@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="demo.joy.image.common.mapper.JoyImageStoreMapper">
-  <resultMap id="BaseResultMap" type="demo.joy.image.common.pojo.po.JoyImageStore">
+<mapper namespace="demo.joy.image.mapper.JoyImageStoreMapper">
+  <resultMap id="BaseResultMap" type="demo.joy.image.pojo.po.JoyImageStore">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="module_id" jdbcType="INTEGER" property="moduleId" />
     <result column="sub_module_id" jdbcType="INTEGER" property="subModuleId" />
@@ -69,7 +69,7 @@
   <sql id="Base_Column_List">
     id, module_id, sub_module_id, image_path, create_time
   </sql>
-  <select id="selectByExample" parameterType="demo.joy.image.common.pojo.po.JoyImageStoreExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="demo.joy.image.pojo.po.JoyImageStoreExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -93,19 +93,19 @@
     delete from joy_image_store
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="demo.joy.image.common.pojo.po.JoyImageStoreExample">
+  <delete id="deleteByExample" parameterType="demo.joy.image.pojo.po.JoyImageStoreExample">
     delete from joy_image_store
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="demo.joy.image.common.pojo.po.JoyImageStore">
+  <insert id="insert" parameterType="demo.joy.image.pojo.po.JoyImageStore">
     insert into joy_image_store (id, module_id, sub_module_id, 
       image_path, create_time)
     values (#{id,jdbcType=BIGINT}, #{moduleId,jdbcType=INTEGER}, #{subModuleId,jdbcType=INTEGER}, 
       #{imagePath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="demo.joy.image.common.pojo.po.JoyImageStore">
+  <insert id="insertSelective" parameterType="demo.joy.image.pojo.po.JoyImageStore">
     insert into joy_image_store
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -142,7 +142,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="demo.joy.image.common.pojo.po.JoyImageStoreExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="demo.joy.image.pojo.po.JoyImageStoreExample" resultType="java.lang.Long">
     select count(*) from joy_image_store
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -182,7 +182,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="demo.joy.image.common.pojo.po.JoyImageStore">
+  <update id="updateByPrimaryKeySelective" parameterType="demo.joy.image.pojo.po.JoyImageStore">
     update joy_image_store
     <set>
       <if test="moduleId != null">
@@ -200,7 +200,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="demo.joy.image.common.pojo.po.JoyImageStore">
+  <update id="updateByPrimaryKey" parameterType="demo.joy.image.pojo.po.JoyImageStore">
     update joy_image_store
     set module_id = #{moduleId,jdbcType=INTEGER},
       sub_module_id = #{subModuleId,jdbcType=INTEGER},
@@ -208,7 +208,7 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectByExampleWithRowbounds" parameterType="demo.joy.image.common.pojo.po.JoyImageStoreExample" resultMap="BaseResultMap">
+  <select id="selectByExampleWithRowbounds" parameterType="demo.joy.image.pojo.po.JoyImageStoreExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct

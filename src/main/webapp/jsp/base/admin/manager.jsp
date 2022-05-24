@@ -118,13 +118,13 @@
     <ul class="main-menu visible-on-click" id="joy">
       <li style="background-color:yellow;">joy</li>
       <li>
-        <a href="/joy/garden/plantCatalogManager" target="_blank">joy garden plant catalog manager</a>
+        <a href="/joyManager/garden/plantCatalogManager" target="_blank">joy garden plant catalog manager</a>
       </li>
       <li>
-        <a href="/joy/garden/plantCatalogCreator" target="_blank">joy garden plant catalog creator</a>
+        <a href="/joyManager/garden/plantCatalogCreator" target="_blank">joy garden plant catalog creator</a>
       </li>
       <li>
-        <a href="/joy/imageManager/cleanJoyImageRedis" target="_blank">cleanJoyImageRedis</a>
+        <a href="/joyManager/image/cleanIdPathMap" target="_blank">cleanJoyImageRedis</a>
       </li>
     </ul><!-- joy -->
 

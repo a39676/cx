@@ -28,8 +28,6 @@
               <span class="input-group-text">生长阶段名称</span>
             </div>
             <input type="text" class="" name="newPlantStageName" id="newPlantStageName"/>
-          </div>
-          <div class="input-group mb-3">
             <div class="input-group-prepend">
               <span class="input-group-text">生长阶段持续时间(分钟)</span>
             </div>
@@ -53,6 +51,7 @@
           </div>
           <hr>
           <button class="btn btn-primary" type="button" name="" id="createNewPlantStage">创建植物生长阶段</button>
+          <span id="createResult"></span>
         </div>
       </form>
     </div>
@@ -80,6 +79,12 @@
             <td style="text-align: center; vertical-align: middle;">
               <img src="${stageVO.imgUrlPath}" alt="">
             </td>
+            <td style="text-align: center; vertical-align: middle;">
+              <button class="btn btn-sm btn-primary" type="button" name="updateStage" stagePK="${stageVO.pk}">编辑此阶段</button>
+              <button class="btn btn-sm btn-primary" type="button" name="updateStageSort" stagePK="${stageVO.pk}" flag="1">提升此阶段排序</button>
+              <button class="btn btn-sm btn-primary" type="button" name="updateStageSort" stagePK="${stageVO.pk}" flag="0">降低此阶段排序</button>
+              <button class="btn btn-sm btn-danger" type="button" name="deleteStage" stagePK="${stageVO.pk}">删除此阶段</button>
+            </td>
           </tr>
         </c:forEach>
       </table>
@@ -88,7 +93,6 @@
 
   <div class="row">
     <div class="col-md-12">
-      <span id="createResult"></span>
     </div>
   </div>
 
@@ -100,6 +104,8 @@
   <script type="text/javascript">
 
     $(document).ready(function() {
+
+      var plantPK = "${plantPK}";
 
       $("#newPlantStageImgUpload").change(function () {
         const file = this.files[0];
@@ -114,7 +120,7 @@
       });
 
       $("#createNewPlantStage").click(function () {
-        var url = "/joy/garden/createPlantStage";
+        var url = "/joyManager/garden/createPlantStage";
 
         var newStageNameInput = $("#newPlantStageName");
         var newStageName = newStageNameInput.val();
@@ -144,7 +150,40 @@
           cycleStage : cycleStage,
         };
 
-        console.log(jsonOutput);
+        $.ajax({
+          type : "POST",
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          dataType: 'json',
+          contentType: "application/json",
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          timeout: 15000,
+          success:function(data){
+            if(data.code == 0){
+              $("#createResult").text("新建成功");
+            } else {
+              $("#createResult").text(data.message);
+            }
+            newStageNameInput.attr("style", "");
+            livingMinuteInput.attr("style", "");
+          },
+          error:function(e){
+          }
+        });
+
+      });
+
+      $("button[name='deleteStage']").click(function () {
+        $("#createResult").text("");
+        var url = "/joyManager/garden/plantStageDelete";
+
+        var stagePK = $(this).attr("stagePK");
+
+        var jsonOutput = {
+          stagePK : stagePK,
+        };
 
         $.ajax({
           type : "POST",
@@ -157,15 +196,90 @@
           },
           timeout: 15000,
           success:function(data){
-            console.log(data);
-            $("#createResult").text(data);
-            newStageNameInput.attr("style", "");
-            livingMinuteInput.attr("style", "");
+            if(data.code == 0){
+              $("#createResult").text("删除成功");
+              $("tr[stagePK='"+stagePK+"']").hide();
+            } else {
+              $("#createResult").text(data.message);
+            }
           },
           error:function(e){
           }
         });
       });
+
+      $("button[name='updateStage']").click(function () {
+        $("#createResult").text("");
+        var url = "/joyManager/garden/plantStageUpdate";
+
+        var stagePK = $(this).attr("stagePK");
+        var stageName = $("input[name='stageName'][stagePK='"+stagePK+"']").val();
+        var livingMinute = $("input[name='livingMinute'][stagePK='"+stagePK+"']").val();
+
+        var jsonOutput = {
+          stagePK : stagePK,
+          stageName : stageName,
+          livingMinute : livingMinute,
+        };
+
+        $.ajax({
+          type : "POST",
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          dataType: 'json',
+          contentType: "application/json",
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          timeout: 15000,
+          success:function(data){
+            if(data.code == 0){
+              $("#createResult").text("编辑成功");
+            } else {
+              $("#createResult").text(data.message);
+            }
+          },
+          error:function(e){
+          }
+        });
+      });
+
+      $("button[name='updateStageSort']").click(function () {
+        var flag = $(this).attr("flag");
+        var stagePK = $(this).attr("stagePK");
+        updatePlantStageSort(stagePK, flag);
+      });
+
+      function updatePlantStageSort(stagePK, flag) {
+        $("#createResult").text("");
+        var url = "/joyManager/garden/plantStageSortUpdate";
+
+        var jsonOutput = {
+          stagePK : stagePK,
+          flag : flag,
+        };
+
+        $.ajax({
+          type : "POST",
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          dataType: 'json',
+          contentType: "application/json",
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          timeout: 15000,
+          success:function(data){
+            if(data.code == 0){
+              $("#createResult").text("编辑成功");
+            } else {
+              $("#createResult").text(data.message);
+            }
+          },
+          error:function(e){
+          }
+        });
+      };
 
     });
 

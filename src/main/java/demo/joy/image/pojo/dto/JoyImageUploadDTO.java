@@ -1,4 +1,4 @@
-package demo.joy.image.common.pojo.dto;
+package demo.joy.image.pojo.dto;
 
 public class JoyImageUploadDTO {
 

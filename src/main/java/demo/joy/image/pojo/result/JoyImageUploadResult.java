@@ -1,4 +1,4 @@
-package demo.joy.image.common.pojo.result;
+package demo.joy.image.pojo.result;
 
 import demo.joy.common.pojo.result.JoyCommonResult;
 

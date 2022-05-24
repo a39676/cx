@@ -1,10 +1,11 @@
-package demo.joy.image.common.service;
+package demo.joy.image.service;
 
 import javax.servlet.http.HttpServletResponse;
 
+import demo.joy.common.pojo.result.JoyCommonResult;
 import demo.joy.common.pojo.type.JoyModuleType;
-import demo.joy.image.common.pojo.dto.JoyImageUploadDTO;
-import demo.joy.image.common.pojo.result.JoyImageUploadResult;
+import demo.joy.image.pojo.dto.JoyImageUploadDTO;
+import demo.joy.image.pojo.result.JoyImageUploadResult;
 
 public interface JoyImageService {
 
@@ -15,7 +16,7 @@ public interface JoyImageService {
 	JoyImageUploadResult uploadImage(JoyImageUploadDTO dto, String savingPathPrefix, JoyModuleType joyModuleType,
 			Integer subModultTypeCode);
 
-	void cleanIdPathMap();
+	JoyCommonResult cleanIdPathMap();
 
 	String buildImageUrl(Long id);
 

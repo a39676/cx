@@ -1,10 +1,11 @@
-package demo.joy.image.common.mapper;
+package demo.joy.image.mapper;
 
-import demo.joy.image.common.pojo.po.JoyImageStore;
-import demo.joy.image.common.pojo.po.JoyImageStoreExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
+
+import demo.joy.image.pojo.po.JoyImageStore;
+import demo.joy.image.pojo.po.JoyImageStoreExample;
 
 public interface JoyImageStoreMapper {
     long countByExample(JoyImageStoreExample example);

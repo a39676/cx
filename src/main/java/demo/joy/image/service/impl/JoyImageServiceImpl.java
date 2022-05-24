@@ -1,4 +1,4 @@
-package demo.joy.image.common.service.impl;
+package demo.joy.image.service.impl;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -20,13 +20,14 @@ import demo.common.service.CommonService;
 import demo.image.pojo.result.ImgHandleSrcDataResult;
 import demo.image.service.ImageService;
 import demo.joy.common.pojo.constant.JoyUrl;
+import demo.joy.common.pojo.result.JoyCommonResult;
 import demo.joy.common.pojo.type.JoyModuleType;
-import demo.joy.image.common.mapper.JoyImageStoreMapper;
-import demo.joy.image.common.pojo.constant.JoyImageUrl;
-import demo.joy.image.common.pojo.dto.JoyImageUploadDTO;
-import demo.joy.image.common.pojo.po.JoyImageStore;
-import demo.joy.image.common.pojo.result.JoyImageUploadResult;
-import demo.joy.image.common.service.JoyImageService;
+import demo.joy.image.mapper.JoyImageStoreMapper;
+import demo.joy.image.pojo.constant.JoyImageUrl;
+import demo.joy.image.pojo.dto.JoyImageUploadDTO;
+import demo.joy.image.pojo.po.JoyImageStore;
+import demo.joy.image.pojo.result.JoyImageUploadResult;
+import demo.joy.image.service.JoyImageService;
 
 @Scope("singleton")
 @Service
@@ -88,8 +89,11 @@ public class JoyImageServiceImpl extends CommonService implements JoyImageServic
 	}
 
 	@Override
-	public void cleanIdPathMap() {
+	public JoyCommonResult cleanIdPathMap() {
 		idPathMap.clear();
+		JoyCommonResult r = new JoyCommonResult();
+		r.setIsSuccess();
+		return r;
 	}
 
 	private void getImageByPath(HttpServletResponse response, String path) {

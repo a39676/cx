@@ -17,7 +17,7 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
-      <a href="/joy/garden/plantCatalogCreator" target="_blank">创建新品种</a>
+      <a href="/joyManager/garden/plantCatalogCreator" target="_blank">创建新品种</a>
     </div>
   </div>
   <div class="row">
@@ -66,7 +66,7 @@
       });
 
       function search() {
-        var url = "/joy/garden/plantCatalogSearch";
+        var url = "/joyManager/garden/plantCatalogSearch";
 
         var name = $("#plantName").val();
         var plantType = $("#plantType option:selected").val();

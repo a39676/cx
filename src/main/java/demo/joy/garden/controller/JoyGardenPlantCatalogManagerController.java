@@ -10,18 +10,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.joy.common.pojo.constant.JoyGardenUrl;
-import demo.joy.common.pojo.constant.JoyUrl;
+import demo.joy.common.pojo.constant.JoyManagerUrl;
 import demo.joy.common.pojo.result.JoyCommonResult;
 import demo.joy.garden.pojo.dto.JoyGardenCreatePlantDTO;
 import demo.joy.garden.pojo.dto.JoyGardenCreatePlantStageDTO;
+import demo.joy.garden.pojo.dto.JoyGardenPlantSearchConditionDTO;
 import demo.joy.garden.pojo.dto.JoyGardenPlantStageDeleteDTO;
 import demo.joy.garden.pojo.dto.JoyGardenPlantStageUpdateDTO;
 import demo.joy.garden.pojo.dto.JoyGardenPlantStageUpdateSortDTO;
-import demo.joy.garden.pojo.dto.JoyGardenPlantSearchConditionDTO;
 import demo.joy.garden.pojo.dto.ShowPlantStageMangerDTO;
 import demo.joy.garden.service.JoyGardenPlantCatalogManagerService;
 
-@RequestMapping(value = JoyUrl.ROOT + JoyGardenUrl.ROOT)
+@RequestMapping(value = JoyManagerUrl.ROOT + JoyGardenUrl.ROOT)
 @Controller
 public class JoyGardenPlantCatalogManagerController {
 

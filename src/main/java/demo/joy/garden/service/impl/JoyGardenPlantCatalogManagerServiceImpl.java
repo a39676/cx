@@ -33,8 +33,8 @@ import demo.joy.garden.pojo.type.JoyGardenSubModuleType;
 import demo.joy.garden.pojo.vo.JoyGardenPlantCatalogVO;
 import demo.joy.garden.pojo.vo.JoyGardenPlantGrowingStageVO;
 import demo.joy.garden.service.JoyGardenPlantCatalogManagerService;
-import demo.joy.image.common.pojo.dto.JoyImageUploadDTO;
-import demo.joy.image.common.pojo.result.JoyImageUploadResult;
+import demo.joy.image.pojo.dto.JoyImageUploadDTO;
+import demo.joy.image.pojo.result.JoyImageUploadResult;
 
 @Service
 public class JoyGardenPlantCatalogManagerServiceImpl extends JoyCommonService

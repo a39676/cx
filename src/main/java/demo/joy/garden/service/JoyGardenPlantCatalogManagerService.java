@@ -5,6 +5,9 @@ import org.springframework.web.servlet.ModelAndView;
 import demo.joy.common.pojo.result.JoyCommonResult;
 import demo.joy.garden.pojo.dto.JoyGardenCreatePlantDTO;
 import demo.joy.garden.pojo.dto.JoyGardenCreatePlantStageDTO;
+import demo.joy.garden.pojo.dto.JoyGardenPlantStageDeleteDTO;
+import demo.joy.garden.pojo.dto.JoyGardenPlantStageUpdateDTO;
+import demo.joy.garden.pojo.dto.JoyGardenPlantStageUpdateSortDTO;
 import demo.joy.garden.pojo.dto.JoyGardenPlantSearchConditionDTO;
 import demo.joy.garden.pojo.dto.ShowPlantStageMangerDTO;
 
@@ -21,5 +24,11 @@ public interface JoyGardenPlantCatalogManagerService {
 	JoyCommonResult createNewPlantStage(JoyGardenCreatePlantStageDTO dto);
 
 	ModelAndView plantStageManger(ShowPlantStageMangerDTO dto);
+
+	JoyCommonResult deletePlantStage(JoyGardenPlantStageDeleteDTO dto);
+
+	JoyCommonResult updatePlantStage(JoyGardenPlantStageUpdateDTO dto);
+
+	JoyCommonResult updatePlantStageSort(JoyGardenPlantStageUpdateSortDTO dto);
 
 }

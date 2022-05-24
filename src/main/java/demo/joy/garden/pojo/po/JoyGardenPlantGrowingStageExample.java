@@ -415,73 +415,63 @@ public class JoyGardenPlantGrowingStageExample {
             return (Criteria) this;
         }
 
-        public Criteria andImgUrlPathIsNull() {
-            addCriterion("img_url_path is null");
+        public Criteria andImgIdIsNull() {
+            addCriterion("img_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andImgUrlPathIsNotNull() {
-            addCriterion("img_url_path is not null");
+        public Criteria andImgIdIsNotNull() {
+            addCriterion("img_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andImgUrlPathEqualTo(String value) {
-            addCriterion("img_url_path =", value, "imgUrlPath");
+        public Criteria andImgIdEqualTo(Long value) {
+            addCriterion("img_id =", value, "imgId");
             return (Criteria) this;
         }
 
-        public Criteria andImgUrlPathNotEqualTo(String value) {
-            addCriterion("img_url_path <>", value, "imgUrlPath");
+        public Criteria andImgIdNotEqualTo(Long value) {
+            addCriterion("img_id <>", value, "imgId");
             return (Criteria) this;
         }
 
-        public Criteria andImgUrlPathGreaterThan(String value) {
-            addCriterion("img_url_path >", value, "imgUrlPath");
+        public Criteria andImgIdGreaterThan(Long value) {
+            addCriterion("img_id >", value, "imgId");
             return (Criteria) this;
         }
 
-        public Criteria andImgUrlPathGreaterThanOrEqualTo(String value) {
-            addCriterion("img_url_path >=", value, "imgUrlPath");
+        public Criteria andImgIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("img_id >=", value, "imgId");
             return (Criteria) this;
         }
 
-        public Criteria andImgUrlPathLessThan(String value) {
-            addCriterion("img_url_path <", value, "imgUrlPath");
+        public Criteria andImgIdLessThan(Long value) {
+            addCriterion("img_id <", value, "imgId");
             return (Criteria) this;
         }
 
-        public Criteria andImgUrlPathLessThanOrEqualTo(String value) {
-            addCriterion("img_url_path <=", value, "imgUrlPath");
+        public Criteria andImgIdLessThanOrEqualTo(Long value) {
+            addCriterion("img_id <=", value, "imgId");
             return (Criteria) this;
         }
 
-        public Criteria andImgUrlPathLike(String value) {
-            addCriterion("img_url_path like", value, "imgUrlPath");
+        public Criteria andImgIdIn(List<Long> values) {
+            addCriterion("img_id in", values, "imgId");
             return (Criteria) this;
         }
 
-        public Criteria andImgUrlPathNotLike(String value) {
-            addCriterion("img_url_path not like", value, "imgUrlPath");
+        public Criteria andImgIdNotIn(List<Long> values) {
+            addCriterion("img_id not in", values, "imgId");
             return (Criteria) this;
         }
 
-        public Criteria andImgUrlPathIn(List<String> values) {
-            addCriterion("img_url_path in", values, "imgUrlPath");
+        public Criteria andImgIdBetween(Long value1, Long value2) {
+            addCriterion("img_id between", value1, value2, "imgId");
             return (Criteria) this;
         }
 
-        public Criteria andImgUrlPathNotIn(List<String> values) {
-            addCriterion("img_url_path not in", values, "imgUrlPath");
-            return (Criteria) this;
-        }
-
-        public Criteria andImgUrlPathBetween(String value1, String value2) {
-            addCriterion("img_url_path between", value1, value2, "imgUrlPath");
-            return (Criteria) this;
-        }
-
-        public Criteria andImgUrlPathNotBetween(String value1, String value2) {
-            addCriterion("img_url_path not between", value1, value2, "imgUrlPath");
+        public Criteria andImgIdNotBetween(Long value1, Long value2) {
+            addCriterion("img_id not between", value1, value2, "imgId");
             return (Criteria) this;
         }
 

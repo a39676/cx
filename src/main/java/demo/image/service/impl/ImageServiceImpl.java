@@ -91,10 +91,8 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 		try {
 			File f = new File(imgPO.getImageUrl());
 			InputStream in = new FileInputStream(f);
-			response.setContentType(MediaType.IMAGE_JPEG_VALUE);
 			IOUtils.copy(in, response.getOutputStream());
 		} catch (Exception e) {
-			return;
 		}
 	}
 

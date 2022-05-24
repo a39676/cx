@@ -14,7 +14,6 @@ import demo.base.user.service.UserRegistService;
 import demo.base.user.service.UsersService;
 import demo.base.user.service.impl.UserRoleConstantService;
 import demo.common.service.CommonService;
-import demo.joy.image.icon.service.JoyIconService;
 import demo.joy.scene.service.JoySceneManagerService;
 
 @Component
@@ -32,8 +31,6 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 
 	@Autowired
 	private JoySceneManagerService joySceneOperationService;
-	@Autowired
-	private JoyIconService joyIconService;
 
 	/*
 	 * ContextStartedEvent ContextStoppedEvent ContextRefreshedEvent
@@ -71,7 +68,6 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 
 			log.error("load joy option");
 			joySceneOperationService.defaultSceneInit();
-			joyIconService.loadAllIconToRedis();
 			log.error("after load joy option");
 
 		}

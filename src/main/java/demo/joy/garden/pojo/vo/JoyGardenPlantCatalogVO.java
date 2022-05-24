@@ -12,6 +12,8 @@ public class JoyGardenPlantCatalogVO {
 
 	private JoyGardenPlantType plantType;
 
+	private String imgUrl;
+
 	public String getPk() {
 		return pk;
 	}
@@ -44,10 +46,18 @@ public class JoyGardenPlantCatalogVO {
 		this.plantType = plantType;
 	}
 
+	public String getImgUrl() {
+		return imgUrl;
+	}
+
+	public void setImgUrl(String imgUrl) {
+		this.imgUrl = imgUrl;
+	}
+
 	@Override
 	public String toString() {
 		return "JoyGardenPlantCatalogVO [pk=" + pk + ", plantName=" + plantName + ", creatorName=" + creatorName
-				+ ", plantType=" + plantType + "]";
+				+ ", plantType=" + plantType + ", imgUrl=" + imgUrl + "]";
 	}
 
 }

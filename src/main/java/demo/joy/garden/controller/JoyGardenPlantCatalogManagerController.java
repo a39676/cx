@@ -14,6 +14,9 @@ import demo.joy.common.pojo.constant.JoyUrl;
 import demo.joy.common.pojo.result.JoyCommonResult;
 import demo.joy.garden.pojo.dto.JoyGardenCreatePlantDTO;
 import demo.joy.garden.pojo.dto.JoyGardenCreatePlantStageDTO;
+import demo.joy.garden.pojo.dto.JoyGardenPlantStageDeleteDTO;
+import demo.joy.garden.pojo.dto.JoyGardenPlantStageUpdateDTO;
+import demo.joy.garden.pojo.dto.JoyGardenPlantStageUpdateSortDTO;
 import demo.joy.garden.pojo.dto.JoyGardenPlantSearchConditionDTO;
 import demo.joy.garden.pojo.dto.ShowPlantStageMangerDTO;
 import demo.joy.garden.service.JoyGardenPlantCatalogManagerService;
@@ -39,6 +42,24 @@ public class JoyGardenPlantCatalogManagerController {
 	@ResponseBody
 	public JoyCommonResult plantCatalogCreator(@RequestBody JoyGardenCreatePlantDTO dto) {
 		return plantCatalogManagerService.createNewPlant(dto);
+	}
+	
+	@PostMapping(value = JoyGardenUrl.PLANT_STAGE_DELETE)
+	@ResponseBody
+	public JoyCommonResult deletePlantStage(@RequestBody JoyGardenPlantStageDeleteDTO dto) {
+		return plantCatalogManagerService.deletePlantStage(dto);
+	}
+	
+	@PostMapping(value = JoyGardenUrl.PLANT_STAGE_UPDATE)
+	@ResponseBody
+	public JoyCommonResult updatePlantStage(@RequestBody JoyGardenPlantStageUpdateDTO dto) {
+		return plantCatalogManagerService.updatePlantStage(dto);
+	}
+	
+	@PostMapping(value = JoyGardenUrl.PLANT_STAGE_SORT_UPDATE)
+	@ResponseBody
+	public JoyCommonResult updatePlantStage(@RequestBody JoyGardenPlantStageUpdateSortDTO dto) {
+		return plantCatalogManagerService.updatePlantStageSort(dto);
 	}
 	
 	@PostMapping(value = JoyGardenUrl.CREAT_PLANT_STAGE)

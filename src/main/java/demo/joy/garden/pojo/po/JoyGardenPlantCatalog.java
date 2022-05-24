@@ -11,7 +11,7 @@ public class JoyGardenPlantCatalog {
 
     private Integer plantType;
 
-    private String imgUrlPath;
+    private Long imgId;
 
     private LocalDateTime createTime;
 
@@ -51,12 +51,12 @@ public class JoyGardenPlantCatalog {
         this.plantType = plantType;
     }
 
-    public String getImgUrlPath() {
-        return imgUrlPath;
+    public Long getImgId() {
+        return imgId;
     }
 
-    public void setImgUrlPath(String imgUrlPath) {
-        this.imgUrlPath = imgUrlPath == null ? null : imgUrlPath.trim();
+    public void setImgId(Long imgId) {
+        this.imgId = imgId;
     }
 
     public LocalDateTime getCreateTime() {

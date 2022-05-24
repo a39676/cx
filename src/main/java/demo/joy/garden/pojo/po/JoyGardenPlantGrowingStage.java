@@ -13,7 +13,7 @@ public class JoyGardenPlantGrowingStage {
 
     private Integer livingMinute;
 
-    private String imgUrlPath;
+    private Long imgId;
 
     private LocalDateTime updateTime;
 
@@ -59,12 +59,12 @@ public class JoyGardenPlantGrowingStage {
         this.livingMinute = livingMinute;
     }
 
-    public String getImgUrlPath() {
-        return imgUrlPath;
+    public Long getImgId() {
+        return imgId;
     }
 
-    public void setImgUrlPath(String imgUrlPath) {
-        this.imgUrlPath = imgUrlPath == null ? null : imgUrlPath.trim();
+    public void setImgId(Long imgId) {
+        this.imgId = imgId;
     }
 
     public LocalDateTime getUpdateTime() {

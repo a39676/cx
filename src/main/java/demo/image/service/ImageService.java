@@ -5,15 +5,10 @@ import java.awt.image.BufferedImage;
 import javax.servlet.http.HttpServletResponse;
 
 import demo.image.pojo.result.ImgHandleSrcDataResult;
-import demo.joy.image.npc.service.JoyImageNpcService;
 import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.result.ImageSavingResult;
 
 public interface ImageService {
-	
-	void getImage(HttpServletResponse response, String imgPK);
-	
-	void getImageByPath(HttpServletResponse response, String path);
 	
 	ImageSavingResult imageSaving(ImageSavingTransDTO dto);
 
@@ -39,5 +34,9 @@ public interface ImageService {
 	 * @return
 	 */
 	ImgHandleSrcDataResult imgHandleSrcData(String src);
+
+	void getImageByPath(HttpServletResponse response, String path);
+
+	void getImage(HttpServletResponse response, String imgPK);
 
 }

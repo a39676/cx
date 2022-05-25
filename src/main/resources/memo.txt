@@ -1,6 +1,3 @@
-imageStore
-	drop md5 backupTime column
-
 article
 	Add back to Homepage button in post.jsp
 

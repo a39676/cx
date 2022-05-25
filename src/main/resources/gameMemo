@@ -1,14 +1,12 @@
 挖好的坑
 	
-garden & image upload url 未设置权限管理
-
 garden
 	收获 joy_garden_plant_gain_catalog
 		收获管理 另建页面 新建 管理
 	植物 joy_garden_plant_catalog
 	
-	创建 / 修改 plant stage 的时候, if 最后 stage, 更新 对应 plant 的 img url 
-		注意修改 包括 stage manager 页面上的 last stage pk
+	创建 / 修改 plant stage 的时候
+		如果已经设置 gain 需要同步修改
 
 场景
 	进入"私有" 场景

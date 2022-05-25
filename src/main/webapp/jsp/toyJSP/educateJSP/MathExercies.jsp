@@ -28,11 +28,12 @@
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="question input-group-text" questionNumber="${question.questionNumber}">
-                (${question.questionNumber}):&nbsp;&nbsp;&nbsp;${question.expression} =
+                <h5>(${question.questionNumber}):</h5>
+                <h4>&nbsp;&nbsp;&nbsp;${question.expression} =</h4>
               </span>
             </div>
             <c:forEach items="${question.standardAnswer}" var="standardAnswer">
-              <input type="number" class="form-control answerInput" name="" questionNumber="${question.questionNumber}">
+              <input type="number" class="form-control answerInput" style="font-size:26px" name="" questionNumber="${question.questionNumber}">
             </c:forEach>
           </div>
           <span questionNumber="${question.questionNumber}" class="standarAnswer"></span>

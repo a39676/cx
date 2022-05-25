@@ -12,6 +12,7 @@ import demo.base.user.pojo.dto.UserAttemptQuerayDTO;
 import demo.base.user.pojo.po.UserAttempts;
 import demo.base.user.pojo.po.Users;
 import demo.base.user.pojo.result.FindUserByConditionResult;
+import demo.base.user.pojo.type.SystemRolesType;
 import demo.base.user.pojo.vo.UsersDetailVO;
 
 
@@ -48,13 +49,12 @@ public interface UsersService {
 
 	UsersDetailVO findOtherUserDetail(OtherUserInfoDTO param);
 
-	/** 查找某种角色的所有userId */
-	List<Users> findUserListByAuthId(Long authId);
-
 	MyUserPrincipal buildMyUserPrincipalByUserName(String userName);
 
 	FindUserByConditionResult findUserByCondition(FindUserByConditionDTO dto);
 
 	ModelAndView findUserInfo();
+
+	List<Users> findUserListByRole(SystemRolesType systemRoleType);
 
 }

@@ -3,7 +3,7 @@ package demo.article.article.pojo.type;
 /** 仅记录必存在的公共频道. */
 public enum ArticlePublicChannelType {
 	
-	c1("公地", 1L),
+	CHANNEL_PUBLIC("公地", 1L),
 	;
 	
 	private String channelName;

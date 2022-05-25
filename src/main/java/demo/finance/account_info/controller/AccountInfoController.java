@@ -198,7 +198,7 @@ public class AccountInfoController extends CommonController {
 			return view;
 		}
 		
-		Long holderId = accountHolderController.getCurrentHolders().get(0).getAccountHolderId();
+		Long holderId = accountHolderController.getCurrentHolders().get(0).getId();
 		
 		if(holderId == null) {
 			view.setViewName(AccountHolderViewConstants.holderRegistration);
@@ -262,7 +262,7 @@ public class AccountInfoController extends CommonController {
 			return null;
 		}
 		
-		return accountInfoService.getAccountInfoWithBankInfoByHolderId(0L + holderList.get(0).getAccountHolderId());
+		return accountInfoService.getAccountInfoWithBankInfoByHolderId(0L + holderList.get(0).getId());
 	}
 	
 	public AccountInfo getAccountInfoByAccountNumber(String accountNumber) {
@@ -294,4 +294,5 @@ public class AccountInfoController extends CommonController {
 	public List<AccountInfo> findAccountsByCondition(FindAccountInfoByConditionDTO dto) {
 		return accountInfoService.findAccountsByCondition(dto);
 	}
+	
 }

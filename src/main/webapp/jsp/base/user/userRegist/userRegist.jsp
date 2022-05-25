@@ -10,7 +10,7 @@
 <head>
 <%@ include file="../../../baseElementJSP/normalHeader.jsp" %>
 </head>
-<body>  
+<body>
 
   <div>
     <label name="message"></label>
@@ -92,9 +92,9 @@
   </div>
   <br>
   <div id="loginView">
-    
+
   </div>
-</body>  
+</body>
 <footer>
 <%@ include file="../../../baseElementJSP/normalJSPart.jsp" %>
 <script type="text/javascript">
@@ -106,13 +106,13 @@
     });
 
 
-    function userRegist(){ 
+    function userRegist(){
       $("label[name='message']").empty();
 
       var url = "/user/userRegist";
 
       var gender;
-      if($('#male').is(':checked')) { 
+      if($('#male').is(':checked')) {
         gender = 1;
       } else if ($('#female').is(':checked')) {
         gender = 0;
@@ -132,19 +132,18 @@
         gender : gender
       };
 
-      $.ajax({  
-          type : "POST",  
+      $.ajax({
+          type : "POST",
           async : true,
-          url : url,  
+          url : url,
           data: JSON.stringify(jsonOutput),
           contentType: "application/json",
           dataType: 'json',
-          timeout:15000,  
+          timeout:15000,
           beforeSend: function(xhr) {
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-            console.log(datas);
             if(datas.code == 0) {
               $("#registForm").html("");
               $("#registResult").text(datas.message);
@@ -177,15 +176,15 @@
                 $("#reservationInformationWarnMsg").append(datas.validUserRegistResult.reservationInformation);
               }
             }
-          },  
-          error: function(datas) {  
+          },
+          error: function(datas) {
             $("#registResult").text(datas.message);
-          }  
-      });  
+          }
+      });
     };
 
   });
-   
+
 </script>
 </footer>
 </html>

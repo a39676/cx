@@ -3,10 +3,12 @@ package demo.article.article.pojo.dto;
 public class CreatingBurnMessageDTO {
 
 	private String content;
-	
+
 	private Integer readLimit;
-	
+
 	private Integer validTime;
+
+	private String pwd;
 
 	public String getContent() {
 		return content;
@@ -17,7 +19,6 @@ public class CreatingBurnMessageDTO {
 		return this;
 	}
 
-	
 	public Integer getReadLimit() {
 		return readLimit;
 	}
@@ -36,10 +37,18 @@ public class CreatingBurnMessageDTO {
 		return this;
 	}
 
+	public String getPwd() {
+		return pwd;
+	}
+
+	public void setPwd(String pwd) {
+		this.pwd = pwd;
+	}
+
 	@Override
 	public String toString() {
 		return "CreatingBurnMessageDTO [content=" + content + ", readLimit=" + readLimit + ", validTime=" + validTime
-				+ "]";
+				+ ", pwd=" + pwd + "]";
 	}
 
 }

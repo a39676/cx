@@ -24,78 +24,78 @@ a {
 <body>
 
 <div style="display:none;" name="hiddenMessage" bankId="" bankUnionId="" accountId="" ></div>
- 
+
 <table>
 
   <thead>
     <tr>
       <td class="fakePanel" name="basePart">
-        <a href="/">回到主页</a>
+        <a href="/">Homepage中文标记</a>
       </td>
     </tr>
     <tr>
       <td>
         <c:if test="${pageContext.request.userPrincipal.name != null}">
-      
-        Welcome! ${pageContext.request.userPrincipal.name} 
-      
+
+        Welcome! ${pageContext.request.userPrincipal.name}
+
         </c:if>
-    
+
         <a href="/login/logout"/>Logout</a>
       </td>
     </tr>
   </thead>
-  
+
 
   <thead>
-    <tr><td class="fakePanel" name="accountInfoPart" some="something">我的统计</td></tr>
-  </thead>  
+    <tr><td class="fakePanel" name="accountInfoPart" some="something">Summary</td></tr>
+  </thead>
   <tbody style="display: none" name="accountInfoPart">
     <tr><td>
-          <label class="fakeButton" 
+          <label class="fakeButton"
             data-url="/accountInfo/accountStatistics">
-            所有卡 
+            All cards
           </label>
     </td></tr>
     <tr><td>
-          <label class="fakeButton" 
+          <label class="fakeButton"
             data-url="/accountInfo/insertNewTransationV4">
-            新加交易记录V4
+            Add new trading record V4
           </label>
     </td></tr>
     <tr><td>
-          <label class="fakeButton" 
+          <label class="fakeButton"
             data-url="/accountInfo/transationHistory">
-            临时交易记录展示
+            Tmp tarding record query
           </label>
     </td></tr>
     <tr><td>
-          <label class="fakeButton" 
+          <label class="fakeButton"
             data-url="/trading/importTradingRecordFromFiles">
-            从文件导入交易记录
+            Import tarding from document
           </label>
     </td></tr>
     <tr><td>
-          <label class="fakeButton" 
+          <label class="fakeButton"
             data-url="/accountInfo/transationHistoryQuery">
-            交易记录查询
+            Trading record query
           </label>
     </td></tr>
     <tr><td>
-          <label class="fakeButton" 
+          <label class="fakeButton"
             data-url="/accountInfo/accountRegist">
-            新增卡号
+            Add new card
           </label>
     </td></tr>
   </tbody>
 
   <thead>
-    <tr><td class="fakePanel" name="toolPart" some="something">工具模块</td></tr>
-  </thead>  
+    <tr><td class="fakePanel" name="toolPart" some="something">Tools</td></tr>
+  </thead>
   <tbody style="display: none" name="toolPart">
     <tr><td>
-<%-- 
-          <label class="fakeButton" 
+<%--
+          <label class="fakeButton"
             data-url="tool/image/imageSave">
             imageSave
           </label>
@@ -105,9 +105,9 @@ a {
 
   <thead>
     <tr>
-      <td class="fakePanel" name="holder">个人模块</td>
+      <td class="fakePanel" name="holder">Personal block</td>
     </tr>
-  </thead>  
+  </thead>
   <tbody style="display: none" name="holder">
     <tr>
       <td>holder2</td>
@@ -116,26 +116,26 @@ a {
 
   <thead>
     <tr>
-      <td class="fakePanel" name="testing">测试模块</td>
+      <td class="fakePanel" name="testing">Testing block</td>
     </tr>
-  </thead>  
+  </thead>
   <tbody style="display: none" name="testing">
     <tr><td>
-          <label class="fakeButton" 
+          <label class="fakeButton"
             data-url="/accountInfo/insertNewTransationV4">
-            新加交易记录V4
+            Add new trading record V4
           </label>
     </td></tr>
     <tr><td>
-          <label class="fakeButton" 
+          <label class="fakeButton"
             data-url="/bankInfo/bankSelectorV4">
-            银行选择器V4
+            Bank selector V4
           </label>
     </td></tr>
     <tr><td>
-          <label class="fakeButton" 
+          <label class="fakeButton"
             data-url="/accountInfo/accountSelectorV1">
-            账户选择器V4
+            Account selector V4
           </label>
     </td></tr>
   </tbody>
@@ -144,7 +144,7 @@ a {
     <tr>
       <td class="fakePanel" name="something">something</td>
     </tr>
-  </thead>  
+  </thead>
   <tbody style="display: none" name="something">
     <tr>
       <td>something1</td>
@@ -174,9 +174,9 @@ a {
     $(document).ready(function() {
 
       $("td[class='fakePanel']").click(function(){
-        
+
         var $panelName = $(this).attr('name');
-        
+
         if($("tbody[name='" + $panelName + "']").is(":visible")) {
           $("tbody[name^='" + $panelName + "']").hide();
         } else {

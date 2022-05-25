@@ -11,7 +11,6 @@ import demo.common.pojo.type.ResultTypeCX;
 import demo.common.service.CommonService;
 import demo.toyParts.vcode.mapper.VCodeMapper;
 import demo.toyParts.vcode.pojo.param.DeleteInvalidCodeParam;
-import demo.toyParts.vcode.pojo.param.GetVcodeByValueParam;
 import demo.toyParts.vcode.pojo.param.UpdateDeleteMarkParam;
 import demo.toyParts.vcode.pojo.param.type.VCodeType;
 import demo.toyParts.vcode.pojo.po.VCode;
@@ -24,12 +23,12 @@ public class VCodeServiceImpl extends CommonService implements VCodeService {
 	private VCodeMapper vCodeMapper;
 	
 	@Override
-	public VCode findVCode(GetVcodeByValueParam param) {
-		if(param == null || StringUtils.isBlank(param.getCodeValue())) {
+	public VCode findVCode(String vcode) {
+		if(StringUtils.isBlank(vcode)) {
 			return null;
 		}
 		
-		return vCodeMapper.getVCodeByValue(param);
+		return vCodeMapper.getVCodeByValue(vcode);
 	}
 	
 	@Override

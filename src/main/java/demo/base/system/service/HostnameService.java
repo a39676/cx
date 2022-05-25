@@ -9,10 +9,14 @@ import demo.base.system.pojo.result.HostnameType;
 
 public interface HostnameService {
 
-	List<Hostname> findHonstnames();
+	List<Hostname> findHostnames();
 
 	HostnameType findHostnameType(HttpServletRequest request);
 
-	String findZhang();
+	String findMainHostname();
+
+	String findHostNameFromRequst(HttpServletRequest request);
+
+	boolean isMainHostname(HttpServletRequest request);
 
 }

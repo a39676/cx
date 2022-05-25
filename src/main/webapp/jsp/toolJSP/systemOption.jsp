@@ -10,24 +10,6 @@
 <%@ include file="../baseElementJSP/normalHeader.jsp" %>
 </head>
 <body>
-<form action="${pageContext.request.contextPath}/tool/database/getImageCache?${_csrf.parameterName}=${_csrf.token}" method="POST">
-  <div>
-    <input type="text" for="limitNum" id="limitNum" name="limitNum" value="999" style="height: 50px"><br>
-  </div>
-  <div>
-    <button type="submit" id="imageCacheExport">imageCacheExport</button>
-  </div>
-</form>
-
-<hr>
-
-<form action="${pageContext.request.contextPath}/tool/getTomcatOut?${_csrf.parameterName}=${_csrf.token}" method="POST">
-  <div>
-    <button type="submit" id="getTomcatOut">getTomcatOut</button>
-  </div>
-</form>
-
-<hr>
 
 <div>
   <input type="text" name="customStartDate" value="2018-01-01 00:00:00"><br>
@@ -44,11 +26,26 @@
   <button id="setHomepageAnnouncementStr">setHomepageAnnouncementStr</button><br>
 </div>
 
+<hr>
 
+<div>
+  <a href="/optionConstant/refreshSystemConstant" target="_blank">refreshSystemConstant</a><br>
+  <a href="/optionConstant/refreshArticleConstant" target="_blank">refreshArticleConstant</a><br>
+  <a href="/optionConstant/refreshArticleCommentConstant" target="_blank">refreshArticleCommentConstant</a><br>
+  <a href="/optionConstant/refreshMailConstant" target="_blank">refreshMailConstant</a><br>
+  <a href="/optionConstant/refreshCloudinaryConstant" target="_blank">refreshCloudinaryConstant</a><br>
+  <a href="/optionConstant/refreshAutomationTestConstant" target="_blank">refreshAutomationTestConstant</a><br>
+  <a href="/optionConstant/refreshCryptoCoinConstant" target="_blank">refreshCryptoCoinConstant</a><br>
+  <a href="/optionConstant/refreshTelegramConstant" target="_blank">refreshTelegramConstant</a><br>
+  <a href="/optionConstant/refreshEducateOption" target="_blank">refreshEducateOption</a><br>
+  <a href="/optionConstant/refreshJoyOption" target="_blank">refreshJoyOption</a><br>
+</div>
+
+<hr>
 
 <div id="resultView">
   resultView
-  <span name="resultSpan">resultSpan</span>
+  <textarea id="result" disabled rows="4" cols="50"></textarea>
 </div>
 
 </body>
@@ -63,8 +60,7 @@
     });
 
     function deleteUserIpRecord() {
-      
-      var url = "${pageContext.request.contextPath}/admin/deleteUserIpRecord";
+      var url = "/admin/deleteUserIpRecord";
       var startDate = $("input[name='customStartDate']").val();
       var endDate = $("input[name='customEndDate']").val();
       var jsonOutput = {
@@ -72,26 +68,25 @@
         endDate:endDate
       };
 
-      $.ajax({  
-        type : "POST",  
+      $.ajax({
+        type : "POST",
         async : true,
-        url : url,  
+        url : url,
         data: JSON.stringify(jsonOutput),
         cache : false,
         contentType: "application/json",
         dataType: "json",
-        timeout:50000,  
+        timeout:50000,
         beforeSend: function(xhr) {
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          console.log(datas);
-          $("span[name='resultSpan']").text(datas.message);
-        },  
-        error: function(datas) {  
-          $("span[name='resultSpan']").text(datas.message);
-        }  
-      });  
+          $("#result").val(datas.message);
+        },
+        error: function(datas) {
+          $("#result").val(datas.message);
+        }
+      });
     };
 
     $("#batchUpdatePrivateKey").click( function() {
@@ -99,8 +94,7 @@
     });
 
     function batchUpdatePrivateKey() {
-      
-      var url = "${pageContext.request.contextPath}/articleAdmin/batchUpdatePrivateKey";
+      var url = "/articleAdmin/batchUpdatePrivateKey";
       var startDate = $("input[name='customStartDate']").val();
       var endDate = $("input[name='customEndDate']").val();
       var jsonOutput = {
@@ -108,26 +102,25 @@
         endDate:endDate
       };
 
-      $.ajax({  
-        type : "POST",  
+      $.ajax({
+        type : "POST",
         async : true,
-        url : url,  
+        url : url,
         data: JSON.stringify(jsonOutput),
         cache : false,
         contentType: "application/json",
         dataType: "json",
-        timeout:50000,  
+        timeout:50000,
         beforeSend: function(xhr) {
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          console.log(datas);
-          $("span[name='resultSpan']").text(datas.message);
-        },  
-        error: function(datas) {  
-          $("span[name='resultSpan']").text(datas.message);
-        }  
-      });  
+          $("#result").val(datas.message);
+        },
+        error: function(datas) {
+          $("#result").val(datas.message);
+        }
+      });
     };
 
     $("#setHomepageAnnouncementStr").click( function() {
@@ -135,32 +128,31 @@
     });
 
     function setHomepageAnnouncementStr() {
-      
       var url = "/admin/setHomepageAnnouncementStr";
       var homepageAnnouncementStr = $("input[name='setHomepageAnnouncementStr']").val();
       var jsonOutput = {
         homepageAnnouncementStr:homepageAnnouncementStr
       };
 
-      $.ajax({  
-        type : "POST",  
+      $.ajax({
+        type : "POST",
         async : true,
-        url : url,  
+        url : url,
         data: JSON.stringify(jsonOutput),
         cache : false,
         contentType: "application/json",
         dataType: "json",
-        timeout:50000,  
+        timeout:50000,
         beforeSend: function(xhr) {
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          $("span[name='resultSpan']").text(datas.homepageAnnouncementStr);
-        },  
-        error: function(datas) {  
-          $("span[name='resultSpan']").text(datas.message);
-        }  
-      });  
+          $("#result").val(datas.homepageAnnouncementStr);
+        },
+        error: function(datas) {
+          $("#result").val(datas.message);
+        }
+      });
     };
 
 
@@ -169,31 +161,29 @@
     });
 
     function createFakeEvaluationStore() {
-      
-      var url = "${pageContext.request.contextPath}/admin/createFakeEvaluationStore";
+      var url = "/admin/createFakeEvaluationStore";
       var jsonOutput = {
       };
 
-      $.ajax({  
-        type : "POST",  
+      $.ajax({
+        type : "POST",
         async : true,
-        url : url,  
+        url : url,
         data: JSON.stringify(jsonOutput),
         cache : false,
         contentType: "application/json",
         dataType: "json",
-        timeout:50000,  
+        timeout:50000,
         beforeSend: function(xhr) {
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          console.log(datas);
-          $("span[name='resultSpan']").text(datas.message);
-        },  
-        error: function(datas) {  
-          $("span[name='resultSpan']").text(datas.message);
-        }  
-      });  
+          $("#result").val(datas.message);
+        },
+        error: function(datas) {
+          $("#result").val(datas.message);
+        }
+      });
     };
 
   });

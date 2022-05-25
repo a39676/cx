@@ -76,8 +76,6 @@
           redisKeyValue : redisKeyValue
         };
 
-        console.log(jsonOutput);
-
         $("span[name='createArticleResult']").text("");
   
         $.ajax({  

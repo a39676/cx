@@ -72,7 +72,6 @@
           startDateTimeStr : startDateTimeStr,
         };
 
-        console.log(jsonOutput);
 
         $.ajax({  
           type : "POST", 
@@ -85,7 +84,6 @@
           },
           timeout: 15000,
           success:function(data){
-            console.log(data.resultList);
             $("#result").html("");
             var subData;
             for(var i = 0; i < data.resultList.length; i++){

@@ -2,6 +2,7 @@ package demo.base.user.service;
 
 import javax.servlet.http.HttpServletRequest;
 
+import demo.base.user.pojo.dto.StudentRegistDTO;
 import demo.base.user.pojo.dto.UserRegistDTO;
 import demo.base.user.pojo.result.ModifyRegistEmailResult;
 import demo.base.user.pojo.result.NewUserRegistResult;
@@ -11,6 +12,8 @@ import demo.common.pojo.result.CommonResultCX;
 public interface UserRegistService {
 
 	NewUserRegistResult newUserRegist(UserRegistDTO param, String ip, HttpServletRequest request);
+
+	NewUserRegistResult newStudentRegist(StudentRegistDTO registDTO, String ip, HttpServletRequest request);
 
 	ModifyRegistEmailResult modifyRegistEmail(Long userId, String email);
 

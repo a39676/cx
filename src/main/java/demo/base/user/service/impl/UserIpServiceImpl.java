@@ -1,5 +1,6 @@
 package demo.base.user.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,26 +8,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.base.user.mapper.UserIpMapper;
-import demo.base.user.pojo.dto.FindLastUserIpDTO;
 import demo.base.user.pojo.po.UserIp;
+import demo.base.user.pojo.po.UserIpExample;
 import demo.base.user.pojo.vo.UserIpVO;
 import demo.base.user.service.UserIpService;
 import demo.common.service.CommonService;
-import toolPack.numericHandel.NumericUtilCustom;
 
 @Service
 public class UserIpServiceImpl extends CommonService implements UserIpService {
 
-	@Autowired
-	private NumericUtilCustom numberUtil;
 	@Autowired
 	private UserIpMapper ipMapper;
 	
 	@Override
 	public List<UserIpVO> findIpRecordLastMonth() {
 		boolean isAdmin = baseUtilCustom.hasAdminRole();
-		FindLastUserIpDTO dto = new FindLastUserIpDTO();
-		List<UserIp> ips = ipMapper.findLastUserIp(dto);
+		UserIpExample example = new UserIpExample();
+		example.createCriteria().andCreateTimeLessThanOrEqualTo(LocalDateTime.now().minusMonths(1));
+		List<UserIp> ips = ipMapper.selectByExample(example);
 		UserIpVO v = null;
 		List<UserIpVO> vos = new ArrayList<UserIpVO>();
 		for(UserIp po : ips) {
@@ -41,8 +40,8 @@ public class UserIpServiceImpl extends CommonService implements UserIpService {
 		v.setVisitTime(localDateTimeHandler.dateToStr(po.getCreateTime()));
 		v.setUri(po.getUri());
 		v.setUserId(po.getUserId());
-		v.setIp(numberUtil.longToIp2(po.getIp()));
-		v.setForwardIp(numberUtil.longToIp2(po.getForwardIp()));
+		v.setIp(po.getIp());
+		v.setForwardIp(po.getForwardIp());
 		if(isAdmin) {
 			v.setServerName(po.getServerName());
 		}

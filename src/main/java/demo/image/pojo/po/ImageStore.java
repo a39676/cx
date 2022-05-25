@@ -11,10 +11,6 @@ public class ImageStore {
 
     private LocalDateTime createTime;
 
-    private LocalDateTime backupTime;
-
-    private String md5Mark;
-
     private LocalDateTime validTime;
 
     public Long getImageId() {
@@ -47,22 +43,6 @@ public class ImageStore {
 
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
-    }
-
-    public LocalDateTime getBackupTime() {
-        return backupTime;
-    }
-
-    public void setBackupTime(LocalDateTime backupTime) {
-        this.backupTime = backupTime;
-    }
-
-    public String getMd5Mark() {
-        return md5Mark;
-    }
-
-    public void setMd5Mark(String md5Mark) {
-        this.md5Mark = md5Mark == null ? null : md5Mark.trim();
     }
 
     public LocalDateTime getValidTime() {

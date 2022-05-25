@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
@@ -16,20 +17,25 @@ import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import auxiliaryCommon.pojo.result.CommonResult;
-import net.sf.json.JSONObject;
+import demo.base.user.pojo.type.SystemRolesType;
+import demo.config.costom_component.BaseUtilCustom;
+import demo.finance.cryptoCoin.sharing.pojo.constant.CryptoCoinSharingUrl;
+import demo.toyParts.educate.pojo.constant.EducateUrl;
 
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
+	@Autowired
+	private BaseUtilCustom baseUtilCustom;
+
 	protected Log logger = LogFactory.getLog(this.getClass());
-	 
-    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+
+	private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication auth)
 			throws IOException, ServletException {
-		
+
 //		String remoteAddr = null;
 //		if (request != null) {
 //            remoteAddr = request.getHeader("X-FORWARDED-FOR");
@@ -42,7 +48,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 //		ui.setUri(request.getRequestURI());
 //		ui.setUserId(userId);
 //		userIpMapper.insertSelective(ui);
-		
+
 		handle(request, response, auth);
 		clearAuthenticationAttributes(request);
 	}
@@ -50,44 +56,25 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 	protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
 			throws IOException {
 
-		String targetUrl = determineTargetUrl(authentication);
+		String targetUrl = determineTargetUrl();
 
 		if (response.isCommitted()) {
 			logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
 			return;
 		}
-
-//		redirectStrategy.sendRedirect(request, response, targetUrl);
-		CommonResult result = new CommonResult();
-		result.successWithMessage("/");
-		response.getWriter().println(JSONObject.fromObject(result));
-		return;
+		redirectStrategy.sendRedirect(request, response, targetUrl);
 	}
 
-	protected String determineTargetUrl(Authentication authentication) {
-		// 资料留存
-		// 依据实际情况,全部跳转首页.
-//		boolean isUser = false;
-//		boolean isAdmin = false;
-//		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-//		for (GrantedAuthority grantedAuthority : authorities) {
-//			if (grantedAuthority.getAuthority().contains("ROLE_USER")) {
-//				isUser = true;
-//				break;
-//			} else if (grantedAuthority.getAuthority().contains("ROLE_ADMIN")) {
-//				isAdmin = true;
-//				break;
-//			}
-//		}
-//
-//		if (isUser) {
-//			return "/homepage.html";
-//		} else if (isAdmin) {
-//			return "/console.html";
-//		} else {
-//			throw new IllegalStateException();
-//		}
-		return "/";
+	protected String determineTargetUrl() {
+		String targetUrl = "/";
+		if (baseUtilCustom.hasAdminRole()) {
+			targetUrl = "/admin/manager";
+		} else if (baseUtilCustom.hasRole(SystemRolesType.ROLE_CRYPTO_SHARING_MANAGER.getName())) {
+			targetUrl = CryptoCoinSharingUrl.ROOT + CryptoCoinSharingUrl.HOME;
+		} else if (baseUtilCustom.hasRole(SystemRolesType.ROLE_STUDENT.getName())) {
+			targetUrl = EducateUrl.ROOT + "/";
+		}
+		return targetUrl;
 	}
 
 	protected void clearAuthenticationAttributes(HttpServletRequest request) {

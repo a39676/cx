@@ -17,25 +17,24 @@ import demo.finance.account_info.pojo.constant.AccountUrl;
 @Controller
 public class BasePageController extends CommonController {
 	
-//	@Autowired
-//	private BaseUtilCustom baseUtilCustom;
-//	@Autowired
-//	private AdminService adminService;
-//	@Autowired
-//	private ArticleController articleController;
-//	@Autowired
-//	private SystemConstantService systemConstantService;
 	@Autowired
 	private BasePageService basePageService;
 	
-	@GetMapping(value = { BaseUrl.baseRoot })
-	public ModelAndView welcomePageV2(@RequestParam(value = "vcode", defaultValue = "") String vcode,
+//	@GetMapping(value = { BaseUrl.ROOT4 })
+//	public ModelAndView welcomePageV2(@RequestParam(value = "vcode", defaultValue = "") String vcode,
+//			HttpServletRequest request) {
+//		ModelAndView view = basePageService.baseRootHandlerV3(vcode, request);
+//		return view;
+//	}
+	
+	@GetMapping(value = { BaseUrl.ROOT })
+	public ModelAndView welcomePageV4(@RequestParam(value = "vcode", defaultValue = "") String vcode,
 			HttpServletRequest request) {
-		ModelAndView view = basePageService.baseRootHandlerV3(vcode, request);
+		ModelAndView view = basePageService.baseRootHandlerV4(vcode, request);
 		return view;
 	}
 	
-	@GetMapping(value = { BaseUrl.aboutMe })
+	@GetMapping(value = { BaseUrl.ABOUT_ME })
 	public ModelAndView aboutMe(@RequestParam(value = "vcode", defaultValue = "") String vcode,
 			HttpServletRequest request) {
 		ModelAndView view = basePageService.aboutMeHandler(vcode, request);

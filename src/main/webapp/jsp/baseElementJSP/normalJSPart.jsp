@@ -1,7 +1,6 @@
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="/static_resources/js/jquery3.1.1.min.js"><\/script>')</script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.3/js/tether.js"></script>
-<script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/4.1.0/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static_resources/js/jquery/v3_1_1/jquery.min.js"></script>
+<script type="text/javascript" src="/static_resources/js/tether/v1_3_3/tether.js"></script>
+<script type="text/javascript" src="/static_resources/js/bootstrap/v4_1_0/bootstrap.min.js"></script>
 
 <!-- csrf part -->
 <script type="text/javascript">

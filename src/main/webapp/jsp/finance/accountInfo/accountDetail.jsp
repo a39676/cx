@@ -98,7 +98,6 @@
 
 
   function modifyVaildDate() {
-    console.log("modifyVaildDate");
     var $accountNumber = $("label[name='accountNumber']").attr("accountNumber");
     var $newVaildDate = $("input[name='modifyVaildDate']").val();
 
@@ -147,7 +146,7 @@
 
     $.ajax({               
       type: "POST",  
-      url: "${pageContext.request.contextPath}/accountInfo/modifyCreditsQuota",   
+      url: "/accountInfo/modifyCreditsQuota",   
       data: JSON.stringify(jsonOutput),
       dataType: 'json',
       contentType: "application/json",

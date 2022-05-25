@@ -10,13 +10,13 @@ import demo.base.system.pojo.constant.BaseUrl;
 import demo.base.system.service.ShutdownService;
 
 @Controller
-@RequestMapping(value = BaseUrl.shutdown)
+@RequestMapping(value = BaseUrl.SHUTDOWN)
 public class ShutdownController {
 
 	@Autowired
 	private ShutdownService shutdownService;
 
-	@GetMapping(BaseUrl.shutdown)
+	@GetMapping(BaseUrl.SHUTDOWN)
 	@ResponseBody
 	public String shutdownContext() {
 		return shutdownService.shutdownContext();

@@ -16,7 +16,7 @@
 
 <div class="row">
 <div class="col-md-8" name="accountList">
-  <jsp:include page="${pageContext.request.contextPath}/accountInfo/accountListView" flush="true"/>
+  <jsp:include page="/accountInfo/accountListView" flush="true"/>
 </div>
 
 <div class="col-md-4">
@@ -63,7 +63,7 @@
       
       $.ajax({               
         type: "POST",  
-        url: "${pageContext.request.contextPath}/accountInfo/accountListView",   
+        url: "/accountInfo/accountListView",   
         data: JSON.stringify($jsonSend),
         // dataType: 'json',
         contentType: "application/json",

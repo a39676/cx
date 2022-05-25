@@ -45,7 +45,7 @@
             <input name="submit" type="submit" value="登录" />
           </td>
           <td colspan="1">
-            <a href="${pageContext.request.contextPath}/user/userRegist">[注册]</a>
+            <a href="/user/userRegist">[注册]</a>
           </td>
         </tr>
       </table>

@@ -1,11 +1,6 @@
 package demo.common.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,19 +9,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.TimeUnitType;
-import demo.base.system.service.IpRecordService;
-import demo.base.system.service.impl.RedisConnectService;
-import demo.base.system.service.impl.SystemConstantService;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.ResultTypeCX;
 import demo.config.costom_component.BaseUtilCustom;
-import demo.config.costom_component.EncryptUtil;
 import demo.config.costom_component.SnowFlake;
-import demo.tool.service.VisitDataService;
+import net.sf.json.JSONObject;
 import tool.pojo.bo.IpRecordBO;
 import toolPack.dateTimeHandle.DateHandler;
+import toolPack.dateTimeHandle.LocalDateTimeAdapter;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
 
 public abstract class CommonService {
@@ -34,27 +30,19 @@ public abstract class CommonService {
 	protected final Logger log = LoggerFactory.getLogger(getClass());
 
 	@Autowired
-	protected EncryptUtil encryptUtil;
-
-	@Autowired
 	protected SnowFlake snowFlake;
-	@Autowired
-	protected VisitDataService visitDataService;
 	@Autowired
 	protected LocalDateTimeHandler localDateTimeHandler;
 	@Autowired
 	protected DateHandler dateHandler;
 	@Autowired
-	protected SystemConstantService systemConstantService;
-	@Autowired
 	protected BaseUtilCustom baseUtilCustom;
 	@Autowired
-	protected IpRecordService ipRecordService;
+	protected LocalDateTimeAdapter localDateTimeAdapter;
 
-	@Autowired
-	protected RedisConnectService redisConnectService;
-
+	protected static final Integer NORMAL_PAGE_SIZE = 10;
 	protected static final LocalDateTime BLOG_ARTICLE_START_TIME = LocalDateTime.of(2020, 5, 1, 0, 0, 0);
+	protected static final String MAIN_FOLDER_PATH = "/home/u2/cx";
 
 	protected CommonResultCX nullParam() {
 		CommonResultCX result = new CommonResultCX();
@@ -121,109 +109,6 @@ public abstract class CommonService {
 		}
 	}
 
-	protected String findHostNameFromRequst(HttpServletRequest request) {
-		if ("dev".equals(systemConstantService.getEnvName())) {
-			return "easy";
-		}
-		return request.getServerName();
-//		if("dev".equals(constantService.getValByName("envName"))) {
-//			return request.getServerName();
-//		} else {
-//			String url = request.getServerName();
-//			Pattern p = Pattern.compile("(?!:http://)(www\\.[0-9a-zA-Z_]+\\.[a-z]{1,8})(?!:/.*)");
-//			Matcher m = p.matcher(url);
-//			if(m.find()) {
-//				return m.group(0);
-//			} else {
-//				return "";
-//			}
-//		}
-	}
-
-	protected String testFindHostNameFromRequst(HttpServletRequest request) {
-		String r = "from getServerName: " + request.getServerName();
-		String url = request.getServerName();
-		Pattern p = Pattern.compile("(?!:http://)(www\\.[0-9a-zA-Z_]+\\.[a-z]{1,8})(?!:/.*)");
-		Matcher m = p.matcher(url);
-		if (m.find()) {
-			r = r + " from pattern: " + m.group(0);
-		}
-
-		return r;
-	}
-
-	public String encryptId(Long id) {
-		List<String> encryptIdList = encryptId(Arrays.asList(id));
-		if (encryptIdList == null || encryptIdList.isEmpty()) {
-			return null;
-		} else {
-			return encryptIdList.get(0);
-		}
-	}
-
-	public List<String> encryptId(List<Long> idList) {
-		if (idList == null || idList.isEmpty()) {
-			return null;
-		}
-
-		String keys = systemConstantService.getAESKey();
-		if (StringUtils.isBlank(keys)) {
-			return null;
-		}
-
-		String initVector = systemConstantService.getAesInitVector();
-		if (StringUtils.isBlank(initVector)) {
-			return null;
-		}
-
-		List<String> encryptResult = new ArrayList<String>();
-		try {
-			for (Long id : idList) {
-				encryptResult.add(encryptUtil.aesEncrypt(keys, initVector, String.valueOf(id)));
-			}
-		} catch (Exception e) {
-
-		}
-		return encryptResult;
-	}
-
-	public Long decryptPrivateKey(String inputPk) {
-		List<Long> idList = decryptPrivateKey(Arrays.asList(inputPk));
-		if (idList == null || idList.isEmpty()) {
-			return null;
-		} else {
-			return idList.get(0);
-		}
-	}
-
-	public List<Long> decryptPrivateKey(List<String> inputPkList) {
-		if (inputPkList == null || inputPkList.isEmpty()) {
-			return null;
-		}
-
-		String keys = systemConstantService.getAESKey();
-		if (StringUtils.isBlank(keys)) {
-			return null;
-		}
-
-		String initVector = systemConstantService.getAesInitVector();
-		if (StringUtils.isBlank(initVector)) {
-			return null;
-		}
-
-		Long id = null;
-		List<Long> idList = new ArrayList<Long>();
-		for (String pk : inputPkList) {
-			try {
-				id = Long.parseLong(encryptUtil.aesDecrypt(keys, initVector, pk));
-				idList.add(id);
-			} catch (Exception e) {
-				idList.add(null);
-			}
-		}
-		return idList;
-	}
-
 	protected boolean isBigUser() {
 		return baseUtilCustom.hasSuperAdminRole();
 	}
@@ -240,7 +125,7 @@ public abstract class CommonService {
 		return redisKeyPrefix + "_" + record.getForwardAddr() + "_" + record.getRemoteAddr();
 	}
 
-	public LocalDateTime getNextSettingTime(LocalDateTime datetime, TimeUnitType timeUnit, Long step) {
+	protected LocalDateTime getNextSettingTime(LocalDateTime datetime, TimeUnitType timeUnit, Long step) {
 		LocalDateTime nextNoticeTime = null;
 		if (datetime == null || timeUnit == null || step == null) {
 			return nextNoticeTime;
@@ -268,4 +153,41 @@ public abstract class CommonService {
 
 		return nextNoticeTime;
 	}
+
+	protected AutomationTestInsertEventDTO automationTestInsertEventDtoAddParamStr(AutomationTestInsertEventDTO dto,
+			Object obj) {
+		JSONObject json = null;
+		if (StringUtils.isBlank(dto.getParamStr())) {
+			json = new JSONObject();
+		} else {
+			try {
+				json = JSONObject.fromObject(dto.getParamStr());
+			} catch (Exception e) {
+				json = new JSONObject();
+			}
+		}
+
+		json.put(obj.getClass().getSimpleName(), obj);
+
+		dto.setParamStr(json.toString());
+
+		return dto;
+	}
+
+	protected <T> T buildObjFromJsonCustomization(String jsonStr, Class<T> clazz) {
+		String className = clazz.getSimpleName();
+
+		try {
+			Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, localDateTimeAdapter).create();
+
+			return gson.fromJson(jsonStr, clazz);
+
+		} catch (Exception e) {
+			String msg = String.format("Build gson error, param name: %s ", className);
+			log.error(msg);
+		}
+		return null;
+
+	}
+
 }

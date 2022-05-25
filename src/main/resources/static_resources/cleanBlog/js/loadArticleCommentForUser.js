@@ -16,7 +16,7 @@ $(document).ready(function() {
     if(commentList.attr("loadingFlag") == "1") {
       return;
     }
-    $("#articleAreaLoadingImg").fadeIn(100);    
+    $("#articleAreaLoadingImg").fadeIn(100);
     commentList.attr("loadingFlag", "1");
     var jsonOutput = {
       pk:pk,
@@ -24,14 +24,14 @@ $(document).ready(function() {
     };
     var url = "/articleComment/findArticleCommentPage";
     $.ajax({
-      type : "POST",  
+      type : "POST",
       async : true,
-      url : url,  
+      url : url,
       data: JSON.stringify(jsonOutput),
       cache : false,
       contentType: "application/json",
       dataType: "json",
-      timeout:50000,  
+      timeout:50000,
       beforeSend: function(xhr) {
         xhr.setRequestHeader(csrfHeader, csrfToken);
       },
@@ -44,10 +44,10 @@ $(document).ready(function() {
           commentList.append(newRow);
           commentList.attr("markTime", commentVO.createTimeStr);
         });
-      },  
-      error: function(datas) {  
+      },
+      error: function(datas) {
       }
-    }); 
+    });
     $("#articleAreaLoadingImg").fadeOut(100);
     setTimeout(function(){
       commentList.attr("loadingFlag", "0");
@@ -56,18 +56,18 @@ $(document).ready(function() {
 
   function buildComment(commentVO) {
     var commentRow = "";
-    commentRow += "<div class='row'>";
+    commentRow += "<div class='row commentInfoRow' pk='"+commentVO.pk+"'>";
     commentRow += "  <div class='col-lg-8 col-md-10 mx-auto'>";
-    commentRow += "    <p class='post-meta'>";
-    commentRow += "      "+" on: "+commentVO.createTimeStr;
-    commentRow += "    </p>";
+    commentRow += "    <h6><span><p class='post-meta badge badge-light'>";
+    commentRow += "      "+commentVO.nickName+" on "+commentVO.createTimeStr;
+    commentRow += "    </p></span></h6>";
     commentRow += "  </div>";
     commentRow += "</div>";
     commentRow += "<div class='row'>";
     commentRow += "  <div class='col-lg-8 col-md-10 mx-auto'>";
-    commentRow += "    <p class='para' style=;word-break:break-word;'>"
+    commentRow += "    <h4><span><p class='post-meta badge badge-light' style=;word-break:break-word;'>"
     commentRow +=        commentVO.content;
-    commentRow += "    </p>";
+    commentRow += "    </p></span></h4>";
     commentRow += "  </div>";
     commentRow += "</div>";
     commentRow += "<hr>";

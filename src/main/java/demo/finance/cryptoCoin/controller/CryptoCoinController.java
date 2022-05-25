@@ -1,6 +1,9 @@
 package demo.finance.cryptoCoin.controller;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,12 +35,22 @@ public class CryptoCoinController extends CommonController {
 	@GetMapping(value = CryptoCoinPriceCommonUrl.GET_SUBSCRIPTION_CATALOG)
 	@ResponseBody
 	public List<CryptoCoinCatalogVO> getSubscriptionCatalog() {
-		return catalogService.getSubscriptionCatalog();
+		List<CryptoCoinCatalogVO> voList = new ArrayList<>();
+		Set<CryptoCoinCatalogVO> voSet = new HashSet<>();
+
+		voSet.addAll(catalogService.getSubscriptionCatalogVOList());
+		voSet.addAll(lowPriceNoticeService.getLowPriceSubscriptionCatalogVOList());
+
+		voList.addAll(voSet);
+
+		return voList;
+		
 	}
-	
+
 	@GetMapping(value = CryptoCoinPriceCommonUrl.GET_LOW_PRICE_SUBSCRIPTION_CATALOG)
 	@ResponseBody
 	public List<CryptoCoinCatalogVO> getLowPriceSubscriptionCatalogVOList() {
 		return lowPriceNoticeService.getLowPriceSubscriptionCatalogVOList();
 	}
+
 }

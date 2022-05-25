@@ -23,15 +23,14 @@ import demo.article.article.pojo.dto.FindArticleLongSummaryListDTO;
 import demo.article.article.pojo.dto.FindArticleLongSummaryListMapperDTO;
 import demo.article.article.pojo.param.mapperParam.FindArticleHotSummaryListMapperParam;
 import demo.article.article.pojo.po.ArticleLongSummary;
+import demo.article.article.pojo.po.ArticleLongSummaryExample;
 import demo.article.article.pojo.po.ArticleSummaryVCode;
 import demo.article.article.pojo.po.ArticleViewCount;
-import demo.article.article.pojo.result.GetArticleChannelsResult;
-import demo.article.article.pojo.result.jsonRespon.FindArticleLongSummaryListResultV3;
-import demo.article.article.pojo.type.ArticlePublicChannelType;
+import demo.article.article.pojo.result.jsonRespon.FindArticleLongSummaryListResult;
 import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.article.article.pojo.vo.ArticleEvaluationStatisticsVO;
 import demo.article.article.pojo.vo.ArticleLongSummaryVO;
-import demo.article.article.pojo.vo.ArticleLongSummaryVOV3;
+import demo.article.article.pojo.vo.ArticleLongSummaryVO_need_update;
 import demo.article.article.service.ArticleCatchVCodeService;
 import demo.article.article.service.ArticleChannelService;
 import demo.article.article.service.ArticleSummaryService;
@@ -39,8 +38,7 @@ import demo.article.article.service.ArticleViewService;
 import demo.article.articleComment.controller.ArticleCommentAdminController;
 import demo.article.articleComment.controller.ArticleCommentController;
 import demo.article.articleComment.pojo.po.ArticleCommentCount;
-import demo.common.pojo.type.ResultTypeCX;
-import demo.toyParts.vcode.pojo.param.GetVcodeByValueParam;
+import demo.base.system.pojo.result.HostnameType;
 import demo.toyParts.vcode.pojo.po.VCode;
 import demo.toyParts.vcode.service.VCodeService;
 import toolPack.dateTimeHandle.DateTimeUtilCommon;
@@ -52,6 +50,8 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 	@Autowired
 	private VCodeService vCodeService;
 	@Autowired
+	private ArticleChannelService channelService;
+	@Autowired
 	private ArticleCatchVCodeService articleCatchVCodeService;
 	@Autowired
 	private ArticleViewService articleViewService;
@@ -62,105 +62,112 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 	private ArticleCommentAdminController articleCommentAdminController;
 	@Autowired
 	private ArticleCommentController articleCommentController;
-	
-	@Autowired
-	private ArticleChannelService channelService;
-	
+
 	@Autowired
 	private FileUtilCustom ioUtil;
-	
+
 	@Override
-	public int insertArticleLongSummary(Long userId, Long articleId, String title, String finalFilePath) {
-		String privateKey = encryptId(articleId);
-		if(privateKey == null) {
-			return 0;
-		}
+	public int insertArticleLongSummary(Long userId, Long articleId, String finalFilePath) {
 		ArticleLongSummary als = new ArticleLongSummary();
-		als.setPrivateKey(privateKey);
 		als.setUserId(userId);
 		als.setArticleId(articleId);
-		als.setArticleTitle(title);
 		als.setFilePath(finalFilePath);
 		return articleLongSummaryMapper.insertSelective(als);
 	}
 	
+	@Override
+	public int updateArticleLongSummary(Long userId, Long articleId, String finalFilePath) {
+		ArticleLongSummary als = new ArticleLongSummary();
+		als.setUserId(userId);
+		als.setArticleId(articleId);
+		als.setFilePath(finalFilePath);
+		return articleLongSummaryMapper.updateByPrimaryKeySelective(als);
+	}
+
 	private List<ArticleLongSummaryBO> findArticleHotSummaryList(FindArticleHotSummaryListMapperParam param) {
 		List<ArticleLongSummaryBO> boList;
-		if(param.getChannelId() == null) {
-			boList = new ArrayList<ArticleLongSummaryBO>();
-			return boList;
-		}
-		
+
 		boList = articleLongSummaryMapper.findArticleHotSummaryList(param);
 		return boList;
 	}
-	
-	private FindArticleLongSummaryListMapperDTO buildFindArticleLongSummaryListMapperDTO(FindArticleLongSummaryListDTO cp, HttpServletRequest request) {
+
+	private FindArticleLongSummaryListMapperDTO buildFindArticleLongSummaryListMapperDTO(
+			FindArticleLongSummaryListDTO controllerDTO, HostnameType hostnameType) {
 		FindArticleLongSummaryListMapperDTO mapperParam = new FindArticleLongSummaryListMapperDTO();
-		
-		if(StringUtils.isNotBlank(cp.getTitle())) {
-			GetArticleChannelsResult getChannelResult = channelService.getArticleChannelsDynamic(request);
-			List<Long> channelIdList = new ArrayList<Long>();
-			for(ArticleChannelVO i : getChannelResult.getChannelList()) {
-				if(numberUtil.matchInteger(i.getChannelId())) {
-					channelIdList.add(Long.parseLong(i.getChannelId()));
+
+		if (controllerDTO.getArticleChannelId() == null) {
+			List<ArticleChannelVO> publicChannelList = articleOptionService.getPublicChannels().get(hostnameType);
+			for (ArticleChannelVO channelVO : publicChannelList) {
+				try {
+					mapperParam.addChannelId(Long.parseLong(channelVO.getChannelId()));
+				} catch (Exception e) {
 				}
 			}
-			mapperParam.setChannelIdList(channelIdList);
+			List<ArticleChannelVO> privateChannelList = channelService.getPrivateChannels(baseUtilCustom.getUserId());
+			for (ArticleChannelVO channelVO : privateChannelList) {
+				try {
+					mapperParam.addChannelId(Long.parseLong(channelVO.getChannelId()));
+				} catch (Exception e) {
+				}
+			}
 		} else {
-			mapperParam.addChannelId(cp.getArticleChannelId());
+			mapperParam.addChannelId(controllerDTO.getArticleChannelId());
 		}
-		
-		if(cp.getIsDelete() != null) {
-			mapperParam.setIsDelete(cp.getIsDelete());
+
+		mapperParam.setIsHot(controllerDTO.getIsHot());
+
+		if (controllerDTO.getIsDelete() != null) {
+			mapperParam.setIsDelete(controllerDTO.getIsDelete());
 		}
-		if(cp.getIsEdited() != null) {
-			mapperParam.setIsEdited(cp.getIsEdited());
+		if (controllerDTO.getIsEdited() != null) {
+			mapperParam.setIsEdited(controllerDTO.getIsEdited());
 		}
-		if(cp.getIsPass() != null) {
-			mapperParam.setIsPass(cp.getIsPass());
+		if (controllerDTO.getIsPass() != null) {
+			mapperParam.setIsPass(controllerDTO.getIsPass());
 		}
-		if(cp.getIsReject() != null) {
+		if (controllerDTO.getIsReject() != null) {
 			mapperParam.getIsReject();
 		}
-		if(cp.getEndTime() != null) {
-			mapperParam.setEndTime(cp.getEndTime());
+		if (controllerDTO.getEndTime() != null) {
+			mapperParam.setEndTime(controllerDTO.getEndTime());
 		}
-		if(cp.getStartTime() != null) {
-			mapperParam.setStartTime(cp.getStartTime());
+		if (controllerDTO.getStartTime() != null) {
+			mapperParam.setStartTime(controllerDTO.getStartTime());
 		}
-		if(cp.getTitle() != null) {
-			mapperParam.setTitle(cp.getTitle());
+		if (controllerDTO.getTitle() != null) {
+			mapperParam.setTitle(controllerDTO.getTitle());
 		}
-		if(cp.getLimit() != null ) {
+		if (controllerDTO.getLimit() != null) {
 			mapperParam.setLimit(mapperParam.getLimit());
 		}
-		if(mapperParam.getLimit() == null || mapperParam.getLimit() > articleConstantService.getMaxPageSize()) {
-			mapperParam.setLimit(articleConstantService.getDefaultPageSize());
+		if (mapperParam.getLimit() == null || mapperParam.getLimit() > articleOptionService.getMaxPageSize()) {
+			mapperParam.setLimit(articleOptionService.getDefaultPageSize());
 		}
-		if(cp.getDesc() != null && !cp.getDesc()) {
+		if (controllerDTO.getDesc() != null && !controllerDTO.getDesc()) {
 			mapperParam.setDesc(false);
 		}
 		return mapperParam;
 	}
 
-	/** 
-	 * FIXME 2019-06-08 发现 需要处理
-	 * 此方法在V3落实后考虑保留 因其中的评价参数模块 
-	 * */
-	protected List<ArticleLongSummaryVO> fillArticleSummaryContent(boolean loadArticleHot, List<ArticleLongSummaryBO> summaryList, Map<Long, ArticleEvaluationStatisticsVO> articleEvaluationStatisticsMap, List<Long> articleHasCommentNotReviewIdList) {
+	/**
+	 * FIXME 2019-06-08 发现 需要处理 此方法在V3落实后考虑保留 因其中的评价参数模块
+	 */
+	protected List<ArticleLongSummaryVO_need_update> fillArticleSummaryContentNeedUpdate(boolean loadArticleHot,
+			List<ArticleLongSummaryBO> summaryList,
+			Map<Long, ArticleEvaluationStatisticsVO> articleEvaluationStatisticsMap,
+			List<Long> articleHasCommentNotReviewIdList) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String strContent = "";
 		StringBuffer voContentBuilder = new StringBuffer();
-		
-		List<ArticleLongSummaryVO> outputList = null;
-		if(summaryList == null) {
-			outputList = new ArrayList<ArticleLongSummaryVO>();
+
+		List<ArticleLongSummaryVO_need_update> outputList = null;
+		if (summaryList == null) {
+			outputList = new ArrayList<ArticleLongSummaryVO_need_update>();
 		}
-		ArticleLongSummaryVO tmpVO = null;
-		if(!loadArticleHot && summaryList.size() < 1) {
-			outputList = new ArrayList<ArticleLongSummaryVO>();
-			tmpVO = new ArticleLongSummaryVO();
+		ArticleLongSummaryVO_need_update tmpVO = null;
+		if (!loadArticleHot && summaryList.size() < 1) {
+			outputList = new ArrayList<ArticleLongSummaryVO_need_update>();
+			tmpVO = new ArticleLongSummaryVO_need_update();
 			tmpVO.setFirstLine("到底了...");
 			tmpVO.setImgUrls(new ArrayList<String>());
 			tmpVO.setCreateDateString("2000-01-01 00:00:00");
@@ -168,13 +175,13 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			outputList.add(tmpVO);
 			return outputList;
 		}
-		
-		outputList = new ArrayList<ArticleLongSummaryVO>();
-		for(ArticleLongSummaryBO summaryBO : summaryList) {
-			if(StringUtils.isBlank(summaryBO.getFilePath()) || summaryBO.getCreateTime() == null || StringUtils.isBlank(summaryBO.getPrivateKey())) {
+
+		outputList = new ArrayList<ArticleLongSummaryVO_need_update>();
+		for (ArticleLongSummaryBO summaryBO : summaryList) {
+			if (StringUtils.isBlank(summaryBO.getFilePath()) || summaryBO.getCreateTime() == null) {
 				continue;
 			}
-			tmpVO = new ArticleLongSummaryVO();
+			tmpVO = new ArticleLongSummaryVO_need_update();
 			strContent = ioUtil.getStringFromFile(summaryBO.getFilePath());
 			voContentBuilder.append(strContent);
 			List<String> lines = Arrays.asList(strContent.split("\n"));
@@ -182,73 +189,76 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 			tmpVO.setFirstLine(lines.get(0));
 			tmpVO.setCreateDateString(sdf.format(summaryBO.getCreateTime()));
 			tmpVO.setCreateDateDescription(localDateTimeHandler.dateToStr(summaryBO.getCreateTime()));
-			tmpVO.setPrivateKey(summaryBO.getPrivateKey());
-			tmpVO.setEvaluationMap(articleEvaluationStatisticsMap.get(summaryBO.getArticleId()).getEvaluationCodeAndCount());
-			if(articleHasCommentNotReviewIdList != null && articleHasCommentNotReviewIdList.size() > 0 && articleHasCommentNotReviewIdList.contains(summaryBO.getArticleId())) {
+			tmpVO.setPrivateKey(systemOptionService.encryptId(summaryBO.getArticleId()));
+			tmpVO.setEvaluationMap(
+					articleEvaluationStatisticsMap.get(summaryBO.getArticleId()).getEvaluationCodeAndCount());
+			if (articleHasCommentNotReviewIdList != null && articleHasCommentNotReviewIdList.size() > 0
+					&& articleHasCommentNotReviewIdList.contains(summaryBO.getArticleId())) {
 				tmpVO.setHasCommentNotReview(true);
 			}
 			outputList.add(tmpVO);
 		}
 		return outputList;
 	}
-	
-	private List<ArticleLongSummaryVOV3> fillArticleSummaryContentV3(
-			boolean loadArticleHot, 
-			List<ArticleLongSummaryBO> summaryList, 
-			List<Long> articleHasCommentNotReviewIdList,
-			List<ArticleCommentCount> commentCountList,
-			List<ArticleViewCount> viewCountList) {
+
+	private List<ArticleLongSummaryVO> fillArticleSummaryContent(boolean loadArticleHot,
+			List<ArticleLongSummaryBO> summaryList, List<Long> articleHasCommentNotReviewIdList,
+			List<ArticleCommentCount> commentCountList, List<ArticleViewCount> viewCountList) {
 		String strContent = "";
 		StringBuffer voContentBuilder = new StringBuffer();
-		
-		List<ArticleLongSummaryVOV3> outputList = null;
-		if(summaryList == null) {
-			outputList = new ArrayList<ArticleLongSummaryVOV3>();
+
+		List<ArticleLongSummaryVO> outputList = null;
+		if (summaryList == null) {
+			outputList = new ArrayList<ArticleLongSummaryVO>();
 		}
-		ArticleLongSummaryVOV3 tmpVO = null;
-		if(!loadArticleHot && summaryList.size() < 1) {
-			outputList = new ArrayList<ArticleLongSummaryVOV3>();
+		ArticleLongSummaryVO tmpVO = null;
+		if (!loadArticleHot && summaryList.size() < 1) {
+			outputList = new ArrayList<ArticleLongSummaryVO>();
 			return outputList;
 		}
 		HashMap<Long, Long> commentCountMap = new HashMap<Long, Long>();
-		if(commentCountList != null && commentCountList.size() > 0) {
+		if (commentCountList != null && commentCountList.size() > 0) {
 			commentCountList.stream().forEach(po -> commentCountMap.put(po.getArticleId(), po.getCounting()));
 		}
 		HashMap<Long, Integer> viewCountMap = new HashMap<Long, Integer>();
-		if(viewCountList != null && viewCountList.size() > 0) {
+		if (viewCountList != null && viewCountList.size() > 0) {
 			viewCountList.stream().forEach(bo -> viewCountMap.put(bo.getArticleId(), bo.getViewCount()));
 		}
-		
-		outputList = new ArrayList<ArticleLongSummaryVOV3>();
-		for(ArticleLongSummaryBO summaryBO : summaryList) {
-			if(StringUtils.isBlank(summaryBO.getFilePath()) || summaryBO.getCreateTime() == null || StringUtils.isBlank(summaryBO.getPrivateKey())) {
+
+		outputList = new ArrayList<ArticleLongSummaryVO>();
+		for (ArticleLongSummaryBO summaryBO : summaryList) {
+			if (StringUtils.isBlank(summaryBO.getFilePath()) || summaryBO.getCreateTime() == null) {
 				continue;
 			}
-			tmpVO = new ArticleLongSummaryVOV3();
+			tmpVO = new ArticleLongSummaryVO();
 			try {
 				strContent = ioUtil.getStringFromFile(summaryBO.getFilePath());
 			} catch (Exception e) {
 				strContent = "";
 			}
 			voContentBuilder.append(strContent);
-			if(loadArticleHot) {
+			if (loadArticleHot) {
 				tmpVO.setIsHot(loadArticleHot);
 			}
 			tmpVO.setArticleTitle(summaryBO.getArticleTitle());
-			tmpVO.setCreateDateString(localDateTimeHandler.dateToStr(summaryBO.getCreateTime(), DateTimeUtilCommon.normalDateFormat));
-			tmpVO.setCreateDateTimeString(localDateTimeHandler.dateToStr(summaryBO.getCreateTime(), DateTimeUtilCommon.normalDateTimeFormat));
+			tmpVO.setCreateDateString(
+					localDateTimeHandler.dateToStr(summaryBO.getCreateTime(), DateTimeUtilCommon.normalDateFormat));
+			tmpVO.setCreateDateTimeString(
+					localDateTimeHandler.dateToStr(summaryBO.getCreateTime(), DateTimeUtilCommon.normalDateTimeFormat));
 			try {
-				tmpVO.setPrivateKey(URLEncoder.encode(encryptId(summaryBO.getArticleId()), StandardCharsets.UTF_8.toString()));
+				tmpVO.setPrivateKey(URLEncoder.encode(systemOptionService.encryptId(summaryBO.getArticleId()),
+						StandardCharsets.UTF_8.toString()));
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
-			if(commentCountMap.get(summaryBO.getArticleId()) != null) {
+			if (commentCountMap.get(summaryBO.getArticleId()) != null) {
 				tmpVO.setCommentCount(commentCountMap.get(summaryBO.getArticleId()));
 			}
-			if(viewCountMap.get(summaryBO.getArticleId()) != null) {
+			if (viewCountMap.get(summaryBO.getArticleId()) != null) {
 				tmpVO.setViewCount(viewCountMap.get(summaryBO.getArticleId()));
 			}
-			if(articleHasCommentNotReviewIdList != null && articleHasCommentNotReviewIdList.size() > 0 && articleHasCommentNotReviewIdList.contains(summaryBO.getArticleId())) {
+			if (articleHasCommentNotReviewIdList != null && articleHasCommentNotReviewIdList.size() > 0
+					&& articleHasCommentNotReviewIdList.contains(summaryBO.getArticleId())) {
 				tmpVO.setHasCommentNotReview(true);
 			}
 			outputList.add(tmpVO);
@@ -256,266 +266,237 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 		return outputList;
 	}
 
-	private List<ArticleLongSummaryBO> findArticleLongSummaryList(FindArticleLongSummaryListMapperDTO dto) {
+	private List<ArticleLongSummaryBO> findNormalArticleLongSummaryList(FindArticleLongSummaryListMapperDTO dto) {
 
 		if (dto.getStartTime() == null && dto.getEndTime() == null) {
 			dto.setEndTime(LocalDateTime.now());
 		}
 
 		if (dto.getStartTime() != null && dto.getEndTime() != null
-				&& (dto.getStartTime().isAfter(dto.getEndTime())
-						|| dto.getStartTime().equals(dto.getEndTime()))) {
+				&& (dto.getStartTime().isAfter(dto.getEndTime()) || dto.getStartTime().equals(dto.getEndTime()))) {
 			return new ArrayList<ArticleLongSummaryBO>();
 		}
 
-		if (dto.getChannelIdList() == null || dto.getChannelIdList().isEmpty()) {
-			return new ArrayList<ArticleLongSummaryBO>();
+		if ((dto.getLimit() != null && dto.getLimit() > articleOptionService.getDefaultPageSize())
+				|| (dto.getLimit() == null)) {
+			dto.setLimit(articleOptionService.getDefaultPageSize());
 		}
 
-		if ((dto.getLimit() != null && dto.getLimit() > articleConstantService.getDefaultPageSize()) || (dto.getLimit() == null)) {
-			dto.setLimit(articleConstantService.getDefaultPageSize());
-		}
-		
 		List<ArticleLongSummaryBO> boList = articleLongSummaryMapper.findArticleLongSummaryList(dto);
 		return boList;
 	}
 
-	private FindArticleLongSummaryListResultV3 articleLongSummaryListByChannelIdV3(FindArticleLongSummaryListDTO dto, HttpServletRequest request) {
+	private FindArticleLongSummaryListResult articleLongSummaryList(FindArticleLongSummaryListDTO dto,
+			HostnameType hostnameType) {
 		/*
-		 * 此处为非置顶部分
-		 * 应该将置顶/非置顶文章分开处理
+		 * 此处为非置顶部分 应该将置顶/非置顶文章分开处理
 		 * 
 		 * 有设置限制只可浏览某时点之后的文章
 		 */
-		FindArticleLongSummaryListResultV3 result = new FindArticleLongSummaryListResultV3();
-		findArticleLongSummaryListParamPreHandle(dto, request);
-		
-		if(dto.getEndTime() != null) {
+		FindArticleLongSummaryListResult result = new FindArticleLongSummaryListResult();
+		findArticleLongSummaryListParamPreHandle(dto);
+
+		if (dto.getEndTime() != null) {
 			dto.setEndTime(dto.getEndTime().minusSeconds(1L));
 		}
-		
+
 		/* 置限制只可浏览某时点之后的文章 */
 		boolean isBigUser = isBigUser();
-		if(!isBigUser) {
-			Long maxReadingMonth = articleConstantService.getNormalUserMaxReadingMonth();;
+		if (!isBigUser) {
+			Long maxReadingMonth = articleOptionService.getNormalUserMaxReadingMonth();
 			LocalDateTime earliestStartTime = LocalDateTime.now().minusMonths(maxReadingMonth);
-			if(dto.getStartTime() == null || dto.getStartTime().isBefore(earliestStartTime)) {
+			if (dto.getStartTime() == null || dto.getStartTime().isBefore(earliestStartTime)) {
 				dto.setStartTime(earliestStartTime);
 			}
 		}
-		
+
 		Long channelId = dto.getArticleChannelId();
-		if(channelId == null && StringUtils.isBlank(dto.getTitle())) {
-			result.fillWithResult(ResultTypeCX.errorParam);
-			return result;
-		}
-		
+//		TODO 做首页汇总频道  稍后处理搜索"空标题"问题
+
 		result.setChannelId(channelId);
-		
-		FindArticleLongSummaryListMapperDTO findSummaryBOListDTO = buildFindArticleLongSummaryListMapperDTO(dto, request);
-		List<ArticleLongSummaryBO> summaryBOList = findArticleLongSummaryList(findSummaryBOListDTO);
-		
+
+		List<ArticleLongSummaryVO> summaryVOList = new ArrayList<>();
+
+		FindArticleLongSummaryListMapperDTO findSummaryBOListDTO = buildFindArticleLongSummaryListMapperDTO(dto,
+				hostnameType);
+		findSummaryBOListDTO.setIsHot(false);
+		List<ArticleLongSummaryBO> summaryBOList = findNormalArticleLongSummaryList(findSummaryBOListDTO);
+
 		List<Long> articleIdList = new ArrayList<Long>();
 		List<Long> articleHasCommentNotReviewIdList = null;
 		summaryBOList.stream().forEach(bo -> articleIdList.add(bo.getArticleId()));
-		List<ArticleCommentCount> commentCountList = articleCommentController.findCommentCountByArticleId(articleIdList);
-	
+		List<ArticleCommentCount> commentCountList = articleCommentController
+				.findCommentCountByArticleId(articleIdList);
+
 		List<ArticleViewCount> viewCountList = articleViewService.findArticleViewCountByArticleId(articleIdList);
-		if(isBigUser && articleIdList.size() > 0) {
-			articleHasCommentNotReviewIdList = articleCommentAdminController.findArticleIdWithCommentWaitingForReview(articleIdList);
+		if (isBigUser && articleIdList.size() > 0) {
+			articleHasCommentNotReviewIdList = articleCommentAdminController
+					.findArticleIdWithCommentWaitingForReview(articleIdList);
 		} else {
 			articleHasCommentNotReviewIdList = new ArrayList<Long>();
 		}
-		
-		List<ArticleLongSummaryVOV3> summaryVOList 
-			= fillArticleSummaryContentV3(
-//					dto.getIsHot(),
-					false,
-					summaryBOList, 
-					articleHasCommentNotReviewIdList, 
-					commentCountList,
-					viewCountList);
-		
+
+		summaryVOList = fillArticleSummaryContent(false, summaryBOList, articleHasCommentNotReviewIdList,
+				commentCountList, viewCountList);
+
 		result.setArticleLongSummaryVOList(summaryVOList);
-		
+
 		return result;
 	}
-	
-	private void findArticleLongSummaryListParamPreHandle(FindArticleLongSummaryListDTO controllerParam, HttpServletRequest request) {
-		if(baseUtilCustom.isLoginUser()) {
+
+	private void findArticleLongSummaryListParamPreHandle(FindArticleLongSummaryListDTO controllerParam) {
+		if (baseUtilCustom.isLoginUser()) {
 			controllerParam.setUserId(baseUtilCustom.getUserId());
 		}
-		if(!baseUtilCustom.hasAdminRole()) {
+		if (!baseUtilCustom.hasAdminRole()) {
 			controllerParam.setIsPass(true);
 			controllerParam.setIsDelete(false);
 			controllerParam.setIsEdited(false);
 		}
-		
-		if(findHostNameFromRequst(request).contains("site")) {
-			if(StringUtils.isBlank(controllerParam.getVcode())) {
-				controllerParam.setVcode("defaultVcode");
-			}
-		} else {
-			controllerParam.setVcode(null);
-		}
+
 	}
-	
-	private FindArticleLongSummaryListResultV3 articleLongSummaryHotListByChannelIdV3(FindArticleLongSummaryListDTO controllerParam, HttpServletRequest request) {
+
+	private FindArticleLongSummaryListResult articleLongSummaryHotListByChannelId(
+			FindArticleLongSummaryListDTO controllerParam, HostnameType hostnameType) {
 		/*
-		 * 此处为置顶部分
-		 * 应该将置顶/非置顶文章分开处理 
-		 * 部分情况下 需要处理 vcode 动态插入部分 "置顶"文章
+		 * 此处为置顶部分 应该将置顶/非置顶文章分开处理 部分情况下 需要处理 vcode 动态插入部分 "置顶"文章
 		 * 不设创建时间限制(避免与置顶时间冲突----------> 保证置顶生效期间效果)
 		 */
-		
-		FindArticleLongSummaryListResultV3 result = new FindArticleLongSummaryListResultV3();
-		
-		findArticleLongSummaryListParamPreHandle(controllerParam, request);
 
-		if(controllerParam.getEndTime() == null) {
+		FindArticleLongSummaryListResult result = new FindArticleLongSummaryListResult();
+
+		findArticleLongSummaryListParamPreHandle(controllerParam);
+
+		if (controllerParam.getEndTime() == null) {
 			controllerParam.setEndTime(LocalDateTime.now());
 		}
-		if(controllerParam.getStartTime() == null) {
+		if (controllerParam.getStartTime() == null) {
 			controllerParam.setStartTime(LocalDateTime.MIN);
 		}
-		
-		
+
 		Long channelId = controllerParam.getArticleChannelId();
-		visitDataService.insertVisitData(request, result.getChannelId().toString());
-		if(channelId == null) {
-			result.fillWithResult(ResultTypeCX.errorParam);
-			return result;
-		}
-		
 		result.setChannelId(channelId);
-		
+
 		FindArticleHotSummaryListMapperParam findHotSummaryBOListParam = new FindArticleHotSummaryListMapperParam();
-		findHotSummaryBOListParam.setChannelId(channelId);
+
+		if (channelId == null) {
+			List<ArticleChannelVO> publicChannelList = articleOptionService.getPublicChannels().get(hostnameType);
+			for (ArticleChannelVO channelVO : publicChannelList) {
+				try {
+					findHotSummaryBOListParam.addChannelId(Long.parseLong(channelVO.getChannelId()));
+				} catch (Exception e) {
+				}
+			}
+		} else {
+			findHotSummaryBOListParam.addChannelId(channelId);
+		}
 		List<ArticleLongSummaryBO> hotSummaryBOList = findArticleHotSummaryList(findHotSummaryBOListParam);
-		
+
 //		如有vcode的处理逻辑
-		if(ArticlePublicChannelType.c1.equals(ArticlePublicChannelType.getType(channelId)) && StringUtils.isNotBlank(controllerParam.getVcode())) {
-			GetVcodeByValueParam getVCodeParam = new GetVcodeByValueParam();
-			getVCodeParam.setCodeValue(controllerParam.getVcode());
-			VCode vcode = vCodeService.findVCode(getVCodeParam);
-			vCodeService.updateUseCount(vcode);
-			ArticleSummaryVCode targetArticleSummaryInfo = articleCatchVCodeService.findArticleSummaryInfo(vcode);
-			if(targetArticleSummaryInfo != null) {
-				ArticleLongSummaryBO targetSummaryBO = articleLongSummaryMapper.findArticleLongSummary(targetArticleSummaryInfo.getArticleId());
- 				hotSummaryBOList.add(0, targetSummaryBO);
+		if (channelId == null && StringUtils.isNotBlank(controllerParam.getVp())) {
+			VCode vcodePO = vCodeService.findVCode(controllerParam.getVp());
+			vCodeService.updateUseCount(vcodePO);
+			ArticleSummaryVCode targetArticleSummaryInfo = articleCatchVCodeService.findArticleSummaryInfo(vcodePO);
+			if (targetArticleSummaryInfo != null) {
+				ArticleLongSummaryBO targetSummaryBO = articleLongSummaryMapper
+						.findArticleLongSummary(targetArticleSummaryInfo.getArticleId());
+				hotSummaryBOList.add(0, targetSummaryBO);
 			}
 		}
-		
+
 		List<Long> articleIdList = new ArrayList<Long>();
 		List<Long> articleHasCommentNotReviewIdList = null;
 		hotSummaryBOList.stream().forEach(bo -> articleIdList.add(bo.getArticleId()));
-		List<ArticleCommentCount> commentCountList = articleCommentController.findCommentCountByArticleId(articleIdList);
+		List<ArticleCommentCount> commentCountList = articleCommentController
+				.findCommentCountByArticleId(articleIdList);
 		List<ArticleViewCount> viewCountList = articleViewService.findArticleViewCountByArticleId(articleIdList);
-		if(baseUtilCustom.hasAdminRole() && articleIdList.size() > 0) {
-			articleHasCommentNotReviewIdList = articleCommentAdminController.findArticleIdWithCommentWaitingForReview(articleIdList);
+		if (baseUtilCustom.hasAdminRole() && articleIdList.size() > 0) {
+			articleHasCommentNotReviewIdList = articleCommentAdminController
+					.findArticleIdWithCommentWaitingForReview(articleIdList);
 		} else {
 			articleHasCommentNotReviewIdList = new ArrayList<Long>();
 		}
-		
-		List<ArticleLongSummaryVOV3> hotSummaryVOList 
-			= fillArticleSummaryContentV3(
-					controllerParam.getIsHot(), 
-					hotSummaryBOList, 
-					articleHasCommentNotReviewIdList, 
-					commentCountList,
-					viewCountList);
-		
+
+		List<ArticleLongSummaryVO> hotSummaryVOList = fillArticleSummaryContent(true, hotSummaryBOList,
+				articleHasCommentNotReviewIdList, commentCountList, viewCountList);
+
 		result.setArticleLongSummaryVOList(hotSummaryVOList);
 		result.setIsSuccess();
-		
+
 		return result;
 	}
-	
+
 	@Override
-	public FindArticleLongSummaryListResultV3 summaryListByChannelIdV4(FindArticleLongSummaryListDTO param, HttpServletRequest request) {
-		FindArticleLongSummaryListResultV3 result = articleLongSummaryListByChannelIdV3(param, request);
-		if(param.getIsHot()) {
-			FindArticleLongSummaryListResultV3 hotResult = articleLongSummaryHotListByChannelIdV3(param, request);
-			List<ArticleLongSummaryVOV3> tmpVOList = hotResult.getArticleLongSummaryVOList();
-			if(tmpVOList != null && tmpVOList.size() > 0) {
-				tmpVOList.addAll(result.getArticleLongSummaryVOList());
-				result.setArticleLongSummaryVOList(tmpVOList);
-			}
-		}
-		return result;
-	}
-	
-	public FindArticleLongSummaryListResultV3 summaryListByChannelIdV5(FindArticleLongSummaryListDTO param, HttpServletRequest request) {
-		FindArticleLongSummaryListResultV3 result = articleLongSummaryListByChannelIdV5(param, request);
-		if(param.getIsHot()) {
-			FindArticleLongSummaryListResultV3 hotResult = articleLongSummaryHotListByChannelIdV3(param, request);
-			List<ArticleLongSummaryVOV3> tmpVOList = hotResult.getArticleLongSummaryVOList();
-			if(tmpVOList != null && tmpVOList.size() > 0) {
-				tmpVOList.addAll(result.getArticleLongSummaryVOList());
-				result.setArticleLongSummaryVOList(tmpVOList);
-			}
-		}
-		return result;
-	}
-	
-	private FindArticleLongSummaryListResultV3 articleLongSummaryListByChannelIdV5(FindArticleLongSummaryListDTO dto, HttpServletRequest request) {
-		/*
-		 * 此处为非置顶部分
-		 * 应该将置顶/非置顶文章分开处理
-		 * 
-		 * 有设置限制只可浏览某时点之后的文章
-		 */
-		FindArticleLongSummaryListResultV3 result = new FindArticleLongSummaryListResultV3();
-		findArticleLongSummaryListParamPreHandle(dto, request);
-		
-		if(dto.getEndTime() != null) {
-			dto.setEndTime(dto.getEndTime().minusSeconds(1L));
-		}
-		
-		/* 置限制只可浏览某时点之后的文章 */
-		boolean isBigUser = isBigUser();
-		if(!isBigUser) {
-			Long maxReadingMonth = articleConstantService.getNormalUserMaxReadingMonth();
-			LocalDateTime earliestStartTime = LocalDateTime.now().minusMonths(maxReadingMonth);
-			if(dto.getStartTime() == null || dto.getStartTime().isBefore(earliestStartTime)) {
-				dto.setStartTime(earliestStartTime);
-			}
-		}
-		
-		Long channelId = dto.getArticleChannelId();
-		if(channelId == null && StringUtils.isBlank(dto.getTitle())) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+	public FindArticleLongSummaryListResult summaryListByChannelId(FindArticleLongSummaryListDTO param,
+			HttpServletRequest request) {
+
+		HostnameType hostnameType = hostnameService.findHostnameType(request);
+		visitDataService.insertVisitData(request, String.valueOf(param.getArticleChannelId()));
+
+		FindArticleLongSummaryListResult result = new FindArticleLongSummaryListResult();
+		if (!channelMatchHostname(hostnameType, baseUtilCustom.getUserId(), param.getArticleChannelId())) {
 			return result;
 		}
 		
-		result.setChannelId(channelId);
-		
-		FindArticleLongSummaryListMapperDTO findSummaryBOListDTO = buildFindArticleLongSummaryListMapperDTO(dto, request);
-		List<ArticleLongSummaryBO> summaryBOList = findArticleLongSummaryList(findSummaryBOListDTO);
-		
-		List<Long> articleIdList = new ArrayList<Long>();
-		List<Long> articleHasCommentNotReviewIdList = null;
-		summaryBOList.stream().forEach(bo -> articleIdList.add(bo.getArticleId()));
-		List<ArticleCommentCount> commentCountList = articleCommentController.findCommentCountByArticleId(articleIdList);
-	
-		List<ArticleViewCount> viewCountList = articleViewService.findArticleViewCountByArticleId(articleIdList);
-		if(isBigUser && articleIdList.size() > 0) {
-			articleHasCommentNotReviewIdList = articleCommentAdminController.findArticleIdWithCommentWaitingForReview(articleIdList);
-		} else {
-			articleHasCommentNotReviewIdList = new ArrayList<Long>();
+		result = articleLongSummaryList(param, hostnameType);
+		if (param.getIsHot()) {
+			FindArticleLongSummaryListResult hotResult = articleLongSummaryHotListByChannelId(param, hostnameType);
+			List<ArticleLongSummaryVO> tmpVOList = hotResult.getArticleLongSummaryVOList();
+			if (tmpVOList != null && tmpVOList.size() > 0) {
+				tmpVOList.addAll(result.getArticleLongSummaryVOList());
+				result.setArticleLongSummaryVOList(tmpVOList);
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public FindArticleLongSummaryListResult summaryListWithoutChannel(FindArticleLongSummaryListDTO param,
+			HttpServletRequest request) {
+
+		HostnameType hostnameType = hostnameService.findHostnameType(request);
+
+		FindArticleLongSummaryListResult result = articleLongSummaryList(param, hostnameType);
+		if (param.getIsHot()) {
+			FindArticleLongSummaryListResult hotResult = articleLongSummaryHotListByChannelId(param, hostnameType);
+			List<ArticleLongSummaryVO> tmpVOList = hotResult.getArticleLongSummaryVOList();
+			if (tmpVOList != null && tmpVOList.size() > 0) {
+				tmpVOList.addAll(result.getArticleLongSummaryVOList());
+				result.setArticleLongSummaryVOList(tmpVOList);
+			}
+		}
+		return result;
+	}
+
+	private boolean channelMatchHostname(HostnameType hostnameType, Long userId, Long channelId) {
+		if (hostnameType == null || channelId == null) {
+			return false;
 		}
 		
-		List<ArticleLongSummaryVOV3> summaryVOList 
-			= fillArticleSummaryContentV3(
-//					dto.getIsHot(),
-					false,
-					summaryBOList, 
-					articleHasCommentNotReviewIdList, 
-					commentCountList,
-					viewCountList);
+		List<ArticleChannelVO> channelVoList = articleOptionService.getPublicChannels().get(hostnameType);
+		if (channelVoList != null && !channelVoList.isEmpty()) {
+			for (ArticleChannelVO vo : channelVoList) {
+				if (channelId.toString().equals(vo.getChannelId())) {
+					return true;
+				}
+			}
+		}
 		
-		result.setArticleLongSummaryVOList(summaryVOList);
+		if(userId != null) {
+			return channelService.canVisitThisChannel(userId, channelId);
+		}
 		
-		return result;
+		return false;
+	}
+
+	@Override
+	public void updateArticleHotExpired() {
+		ArticleLongSummaryExample example = new ArticleLongSummaryExample();
+		example.createCriteria().andIsHotEqualTo(true).andHotValidTimeLessThanOrEqualTo(LocalDateTime.now());
+		List<ArticleLongSummary> expiredHotList = articleLongSummaryMapper.selectByExample(example);
+		for(ArticleLongSummary po : expiredHotList) {
+			po.setIsHot(false);
+			articleLongSummaryMapper.updateByPrimaryKeySelective(po);
+		}
 	}
 }

@@ -22,9 +22,7 @@ import demo.article.article.pojo.constant.ArticleAdminUrlConstant;
 import demo.article.articleComment.pojo.constant.ArticleAdminCommentUrlConstant;
 import demo.base.admin.pojo.constant.AdminUrlConstant;
 import demo.base.system.pojo.constant.BaseUrl;
-import demo.base.user.pojo.constant.AuthUrl;
 import demo.base.user.pojo.constant.LoginUrlConstant;
-import demo.base.user.pojo.constant.UserAuthUrl;
 import demo.base.user.pojo.constant.UsersUrl;
 import demo.base.user.pojo.type.OrganzationRolesType;
 import demo.base.user.pojo.type.SystemRolesType;
@@ -35,13 +33,12 @@ import demo.config.costom_component.CustomAuthenticationProvider;
 import demo.config.costom_component.CustomPasswordEncoder;
 import demo.config.costom_component.LimitLoginAuthenticationProvider;
 import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinManagerUrl;
+import demo.finance.cryptoCoin.sharing.pojo.constant.CryptoCoinSharingUrl;
 import demo.joy.common.pojo.constant.JoyManagerUrl;
 import demo.joy.common.pojo.constant.JoyUrl;
 import demo.pmemo.pojo.constant.PMemoUrl;
 import demo.test.pojo.constant.TestUrl;
-import demo.tool.fakeFTP.pojo.constant.FakeFTPUrlConstant;
-import demo.tool.pojo.constant.ToolUrlConstant;
-import demo.tool.pojo.constant.UploadUrlConstant;
+import demo.tool.other.pojo.constant.ToolUrlConstant;
 import demo.toyParts.weixin.pojo.constant.WXUrl;
 import image.pojo.constant.ImageInteractionUrl;
 
@@ -76,7 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
             .antMatchers("/welcome**").permitAll()
-            .antMatchers(LoginUrlConstant.login + "/**").permitAll()
+            .antMatchers(LoginUrlConstant.LOGIN + "/**").permitAll()
             .antMatchers(UsersUrl.root + "/**").permitAll()
             .antMatchers("/static_resources/**").permitAll()
             .antMatchers("/tHome/**").permitAll()
@@ -85,7 +82,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             // used to allow anonymous access 
             // .antMatchers("/welcome**").access("IS_AUTHENTICATED_ANONYMOUSLY")
 //            .antMatchers(ArticleUrlConstant.root + "/**").access("hasAnyRole('" + RolesType.ROLE_ADMIN.getRoleName() + "','" + RolesType.ROLE_USER.getRoleName() + "')")
-            .antMatchers(BaseUrl.shutdown + "/**")
+            .antMatchers(BaseUrl.SHUTDOWN + "/**")
+            	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
+            .antMatchers(BaseUrl.OPTION_CONSTANT+ "/**")
             	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers(TestUrl.root + "/**")
         		.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
@@ -95,31 +94,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             	.access(hasAnyRole(SystemRolesType.ROLE_USER))
             .antMatchers(AdminUrlConstant.root + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN))
-            .antMatchers(FakeFTPUrlConstant.root + "/**")
-            	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers(ArticleAdminUrlConstant.root + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN))
-            .antMatchers(UserAuthUrl.root + "/**")
-            	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers(ArticleAdminCommentUrlConstant.root + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN)) 
             .antMatchers("/dba/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DBA)) 
             .antMatchers(ToolUrlConstant.root + "/**")
             	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
-            .antMatchers(UploadUrlConstant.uploadPriRoot + "/**")
-            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DEV))
             .antMatchers(CryptoCoinManagerUrl.ROOT + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
-            .antMatchers(AuthUrl.root + "/**")
-            	.access(hasAnyRole(Arrays.asList(SystemRolesType.ROLE_SUPER_ADMIN), Arrays.asList(OrganzationRolesType.ROLE_ORG_SUPER_ADMIN)))
             .antMatchers(PMemoUrl.ROOT + PMemoUrl.SET)
             	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers(WXUrl.root + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DEV))
-            	
+            .antMatchers(CryptoCoinSharingUrl.ROOT + CryptoCoinSharingUrl.CALCULATE_DETAIL)
+            	.permitAll()
+            .antMatchers(CryptoCoinSharingUrl.ROOT + "/**")
+            	.access("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')")
             // joy url start
-            
             .antMatchers(JoyUrl.ROOT + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_USER_ACTIVE))
             .antMatchers(JoyManagerUrl.ROOT + "/**")
@@ -242,4 +235,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		roleExpressionBuilder.append(")");
 		return roleExpressionBuilder.toString();
 	}
+	
 }

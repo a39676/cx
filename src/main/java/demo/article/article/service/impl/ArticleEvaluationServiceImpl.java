@@ -62,7 +62,7 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 		}
 
 		HashMap<Long, String> encryptIdMap = new HashMap<Long, String>();
-		articleIdList.stream().forEach(id -> encryptIdMap.put(id, encryptId(id)));
+		articleIdList.stream().forEach(id -> encryptIdMap.put(id, systemOptionService.encryptId(id)));
 		if (encryptIdMap.size() != articleIdList.size()) {
 			return voMap;
 		}
@@ -154,7 +154,7 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 			return result;
 		}
 
-		Long articleId = decryptPrivateKey(inputParam.getPk());
+		Long articleId = systemOptionService.decryptPrivateKey(inputParam.getPk());
 		if (articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;

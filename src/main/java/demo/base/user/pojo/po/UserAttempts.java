@@ -1,21 +1,21 @@
 package demo.base.user.pojo.po;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class UserAttempts {
-    private Integer userId;
+    private Long userId;
 
     private String userName;
 
-    private Date attemptTime;
+    private LocalDateTime attemptTime;
 
     private Boolean statu;
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -27,11 +27,11 @@ public class UserAttempts {
         this.userName = userName == null ? null : userName.trim();
     }
 
-    public Date getAttemptTime() {
+    public LocalDateTime getAttemptTime() {
         return attemptTime;
     }
 
-    public void setAttemptTime(Date attemptTime) {
+    public void setAttemptTime(LocalDateTime attemptTime) {
         this.attemptTime = attemptTime;
     }
 

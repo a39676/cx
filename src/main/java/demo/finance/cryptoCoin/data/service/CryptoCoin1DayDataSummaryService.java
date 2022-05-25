@@ -30,17 +30,14 @@ public interface CryptoCoin1DayDataSummaryService {
 	/** 为单币种刷新数据 */
 	CommonResult receiveDailyData(CryptoCoinDataDTO dto);
 
-	/** 为后续币种刷新数据 */
-	CommonResult receiveDailyData(CryptoCoinDataDTO dto, Boolean updateOthers);
-
 	CryptoCoinPriceCommonDataBO getCommonData(CryptoCoinCatalog coinType, CurrencyType currencyType,
 			LocalDateTime datetime);
 
-	void setWaitingUpdateCoinType();
-
-	void sendCryptoCoinDailyDataQueryMsg();
-
 	/** 留给手动启动 */
-	void sendCryptoCoinDailyDataQueryMsg(String coinName, Integer counting);
+	void sendCryptoCoinDailyDataQueryMsg(String coinName, String currencyName, Integer counting);
+
+	void sendAllCryptoCoinDailyDataQueryMsg();
+
+	void resetDailyDataWaitingQuerySet();
 
 }

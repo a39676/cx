@@ -9,8 +9,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import demo.base.organizations.pojo.po.Organizations;
-import demo.base.user.pojo.po.Auth;
 import demo.base.user.pojo.po.Users;
 
 public class MyUserPrincipal implements UserDetails {
@@ -21,10 +19,6 @@ public class MyUserPrincipal implements UserDetails {
 	private String email;
 	private String nickName;
 	private List<String> roles;
-	private List<Auth> auths;
-	private List<Organizations> superManagerOrgList;
-	private List<Organizations> controllerOrganizations;
-	private List<Organizations> subOrganizations;
 
 	public String getEmail() {
 		return email;
@@ -42,30 +36,6 @@ public class MyUserPrincipal implements UserDetails {
 		this.nickName = nickName;
 	}
 
-	public List<Organizations> getControllerOrganizations() {
-		return controllerOrganizations;
-	}
-
-	public void setControllerOrganizations(List<Organizations> controllerOrganizations) {
-		this.controllerOrganizations = controllerOrganizations;
-	}
-
-	public List<Organizations> getSubOrganizations() {
-		return subOrganizations;
-	}
-
-	public void setSubOrganizations(List<Organizations> subOrganizations) {
-		this.subOrganizations = subOrganizations;
-	}
-
-	public List<Auth> getAuths() {
-		return auths;
-	}
-
-	public void setAuths(List<Auth> auths) {
-		this.auths = auths;
-	}
-
 	public Users getUser() {
 		return user;
 	}
@@ -81,14 +51,6 @@ public class MyUserPrincipal implements UserDetails {
 	public void setRoles(List<String> roles) {
 		this.roles = roles;
 	}
-	
-	public List<Organizations> getSuperManagerOrgList() {
-		return superManagerOrgList;
-	}
-
-	public void setSuperManagerOrgList(List<Organizations> superManagerOrgList) {
-		this.superManagerOrgList = superManagerOrgList;
-	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
@@ -97,8 +59,7 @@ public class MyUserPrincipal implements UserDetails {
 	@Override
 	public String toString() {
 		return "MyUserPrincipal [user=" + user + ", email=" + email + ", nickName=" + nickName + ", roles=" + roles
-				+ ", auths=" + auths + ", superManagerOrgList=" + superManagerOrgList + ", controllerOrganizations="
-				+ controllerOrganizations + ", subOrganizations=" + subOrganizations + "]";
+				+ "]";
 	}
 
 	@Override

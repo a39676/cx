@@ -13,13 +13,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
 import demo.base.system.service.AuxiliaryService;
-import demo.common.service.CommonService;
 
 @Service
-public class AuxiliaryServiceImpl extends CommonService implements AuxiliaryService {
+public class AuxiliaryServiceImpl extends SystemCommonService implements AuxiliaryService {
 
 	@Override
-	public void robotTxtHandle(HttpServletRequest request, HttpServletResponse response) {
+	public void robotHandle(HttpServletRequest request, HttpServletResponse response) {
 		visitDataService.insertVisitData(request);
 		
 		Resource resource = new ClassPathResource("/static_resources/txt/robots.txt");
@@ -37,4 +36,5 @@ public class AuxiliaryServiceImpl extends CommonService implements AuxiliaryServ
 			e.printStackTrace();
 		}
 	}
+	
 }

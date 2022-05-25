@@ -10,10 +10,6 @@ import image.pojo.result.ImageSavingResult;
 
 public interface ImageService {
 	
-	void getImage(HttpServletResponse response, String imgPK);
-	
-	void getImageByPath(HttpServletResponse response, String path);
-	
 	ImageSavingResult imageSaving(ImageSavingTransDTO dto);
 
 	ImageSavingResult __saveImgFromBBT(ImageSavingTransDTO dto);
@@ -38,5 +34,9 @@ public interface ImageService {
 	 * @return
 	 */
 	ImgHandleSrcDataResult imgHandleSrcData(String src);
+
+	void getImageByPath(HttpServletResponse response, String path);
+
+	void getImage(HttpServletResponse response, String imgPK);
 
 }

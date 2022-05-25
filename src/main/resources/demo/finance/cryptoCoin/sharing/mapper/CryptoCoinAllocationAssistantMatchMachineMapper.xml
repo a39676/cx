@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.finance.cryptoCoin.sharing.mapper.CryptoCoinAllocationAssistantMatchMachineMapper">
+  <resultMap id="BaseResultMap" type="demo.finance.cryptoCoin.sharing.pojo.po.CryptoCoinAllocationAssistantMatchMachine">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="assistant_id" jdbcType="BIGINT" property="assistantId" />
+    <result column="mining_machine_id" jdbcType="BIGINT" property="miningMachineId" />
+    <result column="parting_count" jdbcType="DECIMAL" property="partingCount" />
+    <result column="commission_fee_rate" jdbcType="DECIMAL" property="commissionFeeRate" />
+    <result column="udpate_time" jdbcType="TIMESTAMP" property="udpateTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, assistant_id, mining_machine_id, parting_count, commission_fee_rate, udpate_time, 
+    create_time, is_delete
+  </sql>
+  <select id="selectByExample" parameterType="demo.finance.cryptoCoin.sharing.pojo.po.CryptoCoinAllocationAssistantMatchMachineExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from crypto_coin_allocation_assistant_match_machine
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from crypto_coin_allocation_assistant_match_machine
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from crypto_coin_allocation_assistant_match_machine
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.finance.cryptoCoin.sharing.pojo.po.CryptoCoinAllocationAssistantMatchMachineExample">
+    delete from crypto_coin_allocation_assistant_match_machine
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="demo.finance.cryptoCoin.sharing.pojo.po.CryptoCoinAllocationAssistantMatchMachine">
+    insert into crypto_coin_allocation_assistant_match_machine (id, assistant_id, mining_machine_id, 
+      parting_count, commission_fee_rate, udpate_time, 
+      create_time, is_delete)
+    values (#{id,jdbcType=BIGINT}, #{assistantId,jdbcType=BIGINT}, #{miningMachineId,jdbcType=BIGINT}, 
+      #{partingCount,jdbcType=DECIMAL}, #{commissionFeeRate,jdbcType=DECIMAL}, #{udpateTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="demo.finance.cryptoCoin.sharing.pojo.po.CryptoCoinAllocationAssistantMatchMachine">
+    insert into crypto_coin_allocation_assistant_match_machine
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="assistantId != null">
+        assistant_id,
+      </if>
+      <if test="miningMachineId != null">
+        mining_machine_id,
+      </if>
+      <if test="partingCount != null">
+        parting_count,
+      </if>
+      <if test="commissionFeeRate != null">
+        commission_fee_rate,
+      </if>
+      <if test="udpateTime != null">
+        udpate_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="assistantId != null">
+        #{assistantId,jdbcType=BIGINT},
+      </if>
+      <if test="miningMachineId != null">
+        #{miningMachineId,jdbcType=BIGINT},
+      </if>
+      <if test="partingCount != null">
+        #{partingCount,jdbcType=DECIMAL},
+      </if>
+      <if test="commissionFeeRate != null">
+        #{commissionFeeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="udpateTime != null">
+        #{udpateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="demo.finance.cryptoCoin.sharing.pojo.po.CryptoCoinAllocationAssistantMatchMachineExample" resultType="java.lang.Long">
+    select count(*) from crypto_coin_allocation_assistant_match_machine
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update crypto_coin_allocation_assistant_match_machine
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.assistantId != null">
+        assistant_id = #{record.assistantId,jdbcType=BIGINT},
+      </if>
+      <if test="record.miningMachineId != null">
+        mining_machine_id = #{record.miningMachineId,jdbcType=BIGINT},
+      </if>
+      <if test="record.partingCount != null">
+        parting_count = #{record.partingCount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.commissionFeeRate != null">
+        commission_fee_rate = #{record.commissionFeeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="record.udpateTime != null">
+        udpate_time = #{record.udpateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isDelete != null">
+        is_delete = #{record.isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update crypto_coin_allocation_assistant_match_machine
+    set id = #{record.id,jdbcType=BIGINT},
+      assistant_id = #{record.assistantId,jdbcType=BIGINT},
+      mining_machine_id = #{record.miningMachineId,jdbcType=BIGINT},
+      parting_count = #{record.partingCount,jdbcType=DECIMAL},
+      commission_fee_rate = #{record.commissionFeeRate,jdbcType=DECIMAL},
+      udpate_time = #{record.udpateTime,jdbcType=TIMESTAMP},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      is_delete = #{record.isDelete,jdbcType=BIT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.finance.cryptoCoin.sharing.pojo.po.CryptoCoinAllocationAssistantMatchMachine">
+    update crypto_coin_allocation_assistant_match_machine
+    <set>
+      <if test="assistantId != null">
+        assistant_id = #{assistantId,jdbcType=BIGINT},
+      </if>
+      <if test="miningMachineId != null">
+        mining_machine_id = #{miningMachineId,jdbcType=BIGINT},
+      </if>
+      <if test="partingCount != null">
+        parting_count = #{partingCount,jdbcType=DECIMAL},
+      </if>
+      <if test="commissionFeeRate != null">
+        commission_fee_rate = #{commissionFeeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="udpateTime != null">
+        udpate_time = #{udpateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="demo.finance.cryptoCoin.sharing.pojo.po.CryptoCoinAllocationAssistantMatchMachine">
+    update crypto_coin_allocation_assistant_match_machine
+    set assistant_id = #{assistantId,jdbcType=BIGINT},
+      mining_machine_id = #{miningMachineId,jdbcType=BIGINT},
+      parting_count = #{partingCount,jdbcType=DECIMAL},
+      commission_fee_rate = #{commissionFeeRate,jdbcType=DECIMAL},
+      udpate_time = #{udpateTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      is_delete = #{isDelete,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="demo.finance.cryptoCoin.sharing.pojo.po.CryptoCoinAllocationAssistantMatchMachineExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from crypto_coin_allocation_assistant_match_machine
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

@@ -16,7 +16,6 @@ import demo.finance.cryptoCoin.common.service.CryptoCoinAnalysisService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinCatalogMapper;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1dayMapper;
 import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinMABO;
-import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinConstant;
 import demo.finance.cryptoCoin.data.pojo.dto.InsertCryptoCoinLowPriceNoticeSettingDTO;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalogExample;
@@ -24,11 +23,14 @@ import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1day;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample;
 import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinMAResult;
 import demo.finance.cryptoCoin.data.pojo.vo.CryptoCoinCatalogVO;
+import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import demo.finance.cryptoCoin.notice.service.CryptoCoinCommonNoticeService;
 import demo.finance.cryptoCoin.tool.service.CryptoCoinLowPriceNoticeService;
-import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import telegram.pojo.constant.TelegramBotType;
+import telegram.pojo.constant.TelegramStaticChatID;
 
 @Service
 public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisService
@@ -37,7 +39,13 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 	@Autowired
 	private CryptoCoinPrice1dayMapper dailyDataMaper;
 	@Autowired
+	private CryptoCoin1DayDataSummaryService dailyDataService;
+	@Autowired
 	private CryptoCoinCatalogMapper catalogMapper;
+	@Autowired
+	private CryptoCoinPriceCacheService cacheService;
+	@Autowired
+	private CryptoCoinCatalogService coinCatalogService;
 
 	@Autowired
 	private CryptoCoinCommonNoticeService noticeService;
@@ -162,29 +170,17 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 	}
 
 	private void setLowPriceCatalogRedisList(List<String> list) {
+		cleanLowPriceCatalogRedisList();
+
 		if (list.isEmpty()) {
-			cleanLowPriceCatalogRedisList();
 			return;
 		}
 		
-		Long size = redisTemplate.opsForList().size(CryptoCoinConstant.CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY);
-		for(int i = 0; i < size; i++) {
-			redisTemplate.opsForList().rightPop(CryptoCoinConstant.CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY);
-		}
-		
-		for(String subscription : list) {
-			redisTemplate.opsForList().leftPush(CryptoCoinConstant.CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY, subscription);
-		}
+		constantService.getLowPriceSubscriptionSet().addAll(list);
 	}
 
 	private void cleanLowPriceCatalogRedisList() {
-		Long size = redisTemplate.opsForList().size(CryptoCoinConstant.CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY);
-		if (size == 0) {
-			return;
-		}
-		for (int i = 0; i < size; i++) {
-			redisTemplate.opsForList().rightPop(CryptoCoinConstant.CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY);
-		}
+		constantService.getLowPriceSubscriptionSet().clear();
 	}
 
 	@Override
@@ -204,24 +200,7 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 
 	@Override
 	public List<CryptoCoinCatalog> getLowPriceSubscriptionCatalogList() {
-		List<CryptoCoinCatalog> poList = new ArrayList<>();
-		
-		Long size = redisTemplate.opsForList().size(CryptoCoinConstant.CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY);
-		if(size < 1) {
-			return poList;
-		}
-		
-		List<String> coinNameList = new ArrayList<>();
-		for(int i = 0; i < size; i++){
-			List<Object> l = redisTemplate.opsForList().range(CryptoCoinConstant.CRYPTO_COIN_LOW_PRICE_SUBSCRIPTION_LIST_KEY, 0, size);
-			for(Object o : l) {
-				if(o instanceof String) {
-					coinNameList.add(String.valueOf(o));
-				}
-			}
-		}
-
-		return coinCatalogService.findCatalog(coinNameList);
+		return coinCatalogService.findCatalog(new ArrayList<>(constantService.getLowPriceSubscriptionSet()));
 	}
 
 	@Override
@@ -233,7 +212,7 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 
 		InsertCryptoCoinLowPriceNoticeSettingDTO dto = null;
 		CryptoCoinPriceCommonDataBO newPrice = null;
-		String telegramChatPK = encryptId(TelegramStaticChatID.MY_ID);
+		String telegramChatPK = systemOptionService.encryptId(TelegramStaticChatID.MY_ID);
 		for (CryptoCoinCatalog po : lowPriceSubscriptionCatalogPOList) {
 			dto = new InsertCryptoCoinLowPriceNoticeSettingDTO();
 			dto.setTelegramChatPK(telegramChatPK);

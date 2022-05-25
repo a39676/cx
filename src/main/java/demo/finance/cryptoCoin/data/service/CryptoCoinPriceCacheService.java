@@ -14,13 +14,13 @@ public interface CryptoCoinPriceCacheService {
 	List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinCatalog coinType, CurrencyType currencyType,
 			LocalDateTime startTime);
 
-	CryptoCoinPriceCommonDataBO dataStrToBO(String str);
-
 	boolean isSocketAlive();
 
 	CryptoCoinPriceCommonDataBO getCommonData(CryptoCoinCatalog coinType, CurrencyType currencyType,
 			LocalDateTime datetime);
 
 	CryptoCoinPriceCommonDataBO getNewPrice(CryptoCoinCatalog coinType, CurrencyType currencyType);
+
+	void cleanOldHistoryData();
 
 }

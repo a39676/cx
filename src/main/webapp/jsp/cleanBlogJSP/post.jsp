@@ -51,7 +51,7 @@
               <a href="/article/editArticleLong?pk=${articleLongVO.privateKey}" target="_blank"><span class=" badge badge-info">编辑</span></a>
               </c:if>
               <span pk="${articleLongVO.privateKey}" name="reviewResult"></span>
-            </c:if>              
+            </c:if>
             <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
             <%@ include file="../articleJSP/articleReview.jsp" %>
             <%@ include file="../articleJSP/articleManager.jsp" %>
@@ -79,13 +79,23 @@
 
         </div>
       </div>
+
+      <div class="row">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-9">
+          <span style="color: rgb(255, 156, 0); background-color: rgb(255, 255, 255);">打赏Doge coin</span>
+          <img src="${donateImgUrl}" alt="" style="width:100px; height:100px;">
+        </div>
+      </div>
+
       <hr>
       <%-- comment list start --%>
       <div class="container" id="commentArea">
         <div class="row">
-          <div class="container" pk="${articleLongVO.privateKey}" id="commentList" 
+          <div class="container" pk="${articleLongVO.privateKey}" id="commentList"
           markTime="${articleLongVO.createDateString}" loadingFlag="">
-            
+
           </div>
         </div>
 
@@ -122,29 +132,27 @@
           <div class="col-lg-8 col-md-10 mx-auto">
             <form name="sentMessage" novalidate>
               <div class="control-group">
-                <div class="form-group floating-label-form-group controls">
-                  <label>您的称呼</label>
-                <input type="text" class="form-control" placeholder="您的称呼" id="nickname" required   data-validation-required-message="Please enter your name.">
-                  <p class="help-block text-danger"></p>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">您的称呼</span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="您的称呼" id="nickname" required   data-validation-required-message="Please enter your name." value="${nickName}">
                 </div>
-              </div>
-              <div class="control-group">
-                <div class="form-group floating-label-form-group controls">
-                  <label>Email (不会展示给其他用户)</label>
-                  <input type="email" class="form-control" placeholder="Email Address (不会展示给其他用户)" id="email" required data-validation-required-message="Please enter your  email address.  ">
-                  <p class="help-block text-danger"></p>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Email</span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Email(不会展示给其他用户)" id="email" required data-validation-required-message="Please enter your  email address.  " value="${email}">
                 </div>
-              </div>
-              <div class="control-group">
-                <div class="form-group col-xs-12 floating-label-form-group controls">
-                  <label>Phone Number (可选, 不会展示给其他用户)</label>
-                  <input type="tel" class="form-control" placeholder="Phone Number (可选,   不会展示给其他用户)" id="mobile">
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Phone</span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="手机号(选填,不会展示给其他用户)" id="mobile">
                 </div>
-              </div>
-              <div class="control-group">
                 <div class="form-group col-xs-12 floating-label-form-group controls">
                   <label>Message</label>
-                  <textarea rows="5" class="form-control" placeholder="请输入您想说的" id="message"  required data-validation-required-message="Please enter a message."></textarea>
+                  <textarea rows="5" class="form-control" placeholder="期待你的留言" id="message"  required data-validation-required-message="Please enter a message."></textarea>
                   <p class="help-block text-danger"></p>
                 </div>
               </div>
@@ -162,7 +170,7 @@
         <%-- create comment end --%>
       </div>
       <%-- comment list end --%>
-      
+
     </div>
   </article>
 

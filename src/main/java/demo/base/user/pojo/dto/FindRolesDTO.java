@@ -7,20 +7,11 @@ import demo.base.user.pojo.type.SystemRolesType;
 
 public class FindRolesDTO {
 
-	private List<Long> authIdList;
 	private List<Long> rolesIdList;
 	private List<SystemRolesType> sysRoleTypeList;
 	private List<OrganzationRolesType> orgRoleTypeList;
 	private List<Long> belongOrgIdList;
 	private List<String> roleNameList;
-
-	public List<Long> getAuthIdList() {
-		return authIdList;
-	}
-
-	public void setAuthIdList(List<Long> authIdList) {
-		this.authIdList = authIdList;
-	}
 
 	public List<Long> getRolesIdList() {
 		return rolesIdList;
@@ -64,9 +55,9 @@ public class FindRolesDTO {
 
 	@Override
 	public String toString() {
-		return "FindRolesDTO [authIdList=" + authIdList + ", rolesIdList=" + rolesIdList + ", sysRoleTypeList="
-				+ sysRoleTypeList + ", orgRoleTypeList=" + orgRoleTypeList + ", belongOrgIdList=" + belongOrgIdList
-				+ ", roleNameList=" + roleNameList + "]";
+		return "FindRolesDTO [rolesIdList=" + rolesIdList + ", sysRoleTypeList=" + sysRoleTypeList
+				+ ", orgRoleTypeList=" + orgRoleTypeList + ", belongOrgIdList=" + belongOrgIdList + ", roleNameList="
+				+ roleNameList + "]";
 	}
 
 }

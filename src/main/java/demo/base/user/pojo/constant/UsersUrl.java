@@ -5,6 +5,7 @@ public class UsersUrl {
 	public static final String root = "/user";
 	public static final String userNameExistCheck = "/userNameExistCheck";
 	public static final String userRegist = "/userRegist";
+	public static final String STUDENT_REGIST = "/studentRegist";
 	public static final String userInfo = "/userInfo";
 	public static final String otherUserInfo = "/otherUserInfo";
 	public static final String findUserByCondition = "/findUserByCondition";

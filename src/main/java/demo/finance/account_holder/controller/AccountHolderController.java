@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -69,14 +68,7 @@ public class AccountHolderController extends CommonController {
 	
 
 	public List<AccountHolder> getCurrentHolders() {
-		
-		String userName = baseUtilCustom.getCurrentUserName();
-		
-		if(StringUtils.isEmpty(userName)) {
-			return null;
-		}
-		
-		return accountHolderService.getCurrentHolders(userName);
+		return accountHolderService.getCurrentHolders();
 	}
 	
 	public AccountHolder getDefaultHolder() {

@@ -19,7 +19,6 @@ import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.article.pojo.type.ArticleEvaluationType;
 import demo.article.article.pojo.vo.ArticleEvaluationStatisticsVO;
 import demo.article.article.service.ArticleEvaluationService;
-import demo.article.article.service.ArticleService;
 import demo.article.article.service.impl.ArticleCommonService;
 import demo.article.articleComment.mapper.ArticleCommentCountMapper;
 import demo.article.articleComment.mapper.ArticleCommentMapper;
@@ -38,21 +37,25 @@ import demo.article.articleComment.pojo.vo.ArticleCommentVO;
 import demo.article.articleComment.service.ArticleCommentAdminService;
 import demo.article.articleComment.service.ArticleCommentService;
 import demo.base.system.pojo.constant.SystemRedisKey;
+import demo.base.system.service.IpRecordService;
 import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.UserDetailService;
 import demo.base.user.service.UsersService;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.ResultTypeCX;
-import demo.tool.service.ValidRegexToolService;
+import demo.tool.other.service.ValidRegexToolService;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class ArticleCommentServiceImpl extends ArticleCommonService implements ArticleCommentService {
 	
 	@Autowired
-	private ArticleService articleService;
+	protected IpRecordService ipRecordService;
+
+//	@Autowired
+//	private ArticleService articleService;
 	@Autowired
-	private ArticleCommentConstantService constantService;
+	private ArticleCommentOptionService constantService;
 	@Autowired
 	private ArticleEvaluationService articleEvaluationService;
 	@Autowired
@@ -70,7 +73,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	private ArticleCommentCountMapper articleCommentCountMapper;
 	
 	@Autowired
-	private ArticleCommentConstantService articleCommentConstantService;
+	private ArticleCommentOptionService articleCommentConstantService;
 	
 	@Autowired
 	private FileUtilCustom ioUtil;
@@ -95,7 +98,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		}
 		
 		inputParam.setPk(URLDecoder.decode(inputParam.getPk(), StandardCharsets.UTF_8));
-		Long articleId = decryptPrivateKey(inputParam.getPk());
+		Long articleId = systemOptionService.decryptPrivateKey(inputParam.getPk());
 		
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
@@ -162,7 +165,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			inputParam.setContent(sanitize(inputParam.getContent()));
 		} 
 
-		ArticleFileSaveResult saveFileResult = saveArticleCommentFile(articleCommentStorePrefixPath, userId, inputParam.getContent());
+		ArticleFileSaveResult saveFileResult = saveArticleCommentFile(articleCommentStorePrefixPath, inputParam.getContent());
 		if(!saveFileResult.isSuccess()) {
 			return saveFileResult;
 		}
@@ -185,7 +188,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		
 		if(bigUserFlag) {
 			PassArticleCommentDTO param = new PassArticleCommentDTO();
-			param.setPk(encryptId(newCommonId));
+			param.setPk(systemOptionService.encryptId(newCommonId));
 			articleCommentAdminService.passArticleComment(param);
 		} else {
 			insertCommentRedisMark(request, userId, articleId);
@@ -196,8 +199,8 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		return result;
 	}
 	
-	private ArticleFileSaveResult saveArticleCommentFile(String storePrefixPath, Long userId, String content) throws IOException {
-		return articleService.saveArticleFile(storePrefixPath, userId, content);
+	private ArticleFileSaveResult saveArticleCommentFile(String storePrefixPath, String content) throws IOException {
+		return saveArticleFile(storePrefixPath, content);
 	}
 
 	@Override
@@ -218,7 +221,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		}
 		
 		dto.setPk(URLDecoder.decode(dto.getPk(), StandardCharsets.UTF_8));
-		Long articleId = decryptPrivateKey(dto.getPk());
+		Long articleId = systemOptionService.decryptPrivateKey(dto.getPk());
 		if(articleId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -274,7 +277,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		vo.setEvaluationCodeAndCount(evaluationStatisticsMap.get(po.getId()).getEvaluationCodeAndCount());
 		vo.setNickName(po.getTmpNickName());
 		vo.setCreateTimeStr(localDateTimeHandler.dateToStr(po.getCreateTime()));
-		vo.setPk(encryptId(po.getId()));
+		vo.setPk(systemOptionService.encryptId(po.getId()));
 		vo.setIsPass(po.getIsPass());
 		vo.setIsDelete(po.getIsDelete());
 		vo.setIsReject(po.getIsReject());
@@ -312,13 +315,13 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	}
 
 	private boolean justComment(HttpServletRequest request, Long userId, Long articleId) {
-		if("dev".equals(systemConstantService.getEnvName())) {
+		if("dev".equals(systemOptionService.getEnvName())) {
 			return false;
 		}
 		
 		String keyPrefix = SystemRedisKey.articleCommentKeyPrefix + "_" + userId + "_" + articleId;
 		
-		int counting = redisConnectService.checkFunctionalModuleVisitData(request, keyPrefix);
+		int counting = redisOriginalConnectService.checkFunctionalModuleVisitData(request, keyPrefix);
 		if(counting > 0) {
 			return true;
 		} else {
@@ -328,36 +331,9 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	
 	private void insertCommentRedisMark(HttpServletRequest request, Long userId, Long articleId) {
 		String keyPrefix = SystemRedisKey.articleCommentKeyPrefix + "_" + userId + "_" + articleId;
-		redisConnectService.insertFunctionalModuleVisitData(request, keyPrefix, 10L, TimeUnit.MINUTES);
+		redisOriginalConnectService.insertFunctionalModuleVisitData(request, keyPrefix, 10L, TimeUnit.MINUTES);
 	}
 	
-	@Override
-	public void articleCommentCountingUp(Long articleId) {
-		ArticleCommentCount po = articleCommentCountMapper.selectByPrimaryKey(articleId);
-		if(po == null) {
-			po = new ArticleCommentCount();
-			po.setArticleId(articleId);
-			po.setCounting(1L);
-			articleCommentCountMapper.insertSelective(po);
-		} else {
-			po.setCounting(po.getCounting() + 1);
-			articleCommentCountMapper.updateByPrimaryKey(po);
-		}
-	}
-
-	@Override
-	public void articleCommentCountingDown(Long articleId) {
-		ArticleCommentCount po = articleCommentCountMapper.selectByPrimaryKey(articleId);
-		if(po == null) {
-			return;
-		} else {
-			if(po.getCounting() > 1) {
-				po.setCounting(po.getCounting() - 1);
-				articleCommentCountMapper.updateByPrimaryKey(po);
-			}
-		}
-	}
-
 	@Override
 	public void batchRejectComment() {
 		List<Long> ipList = ipRecordService.getAllDenyList();

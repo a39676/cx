@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import demo.article.article.service.impl.ArticleCommonService;
 import demo.article.articleComment.mapper.ArticleCommentMapper;
 import demo.article.articleComment.mapper.ArticleCommentReviewMapper;
 import demo.article.articleComment.pojo.dto.ArticleCommentReviewCommonDTO;
@@ -21,13 +22,11 @@ import demo.article.articleComment.pojo.po.ArticleCommentReview;
 import demo.article.articleComment.pojo.type.ArticleCommentResultType;
 import demo.article.articleComment.pojo.type.ArticleCommentReviewType;
 import demo.article.articleComment.service.ArticleCommentAdminService;
-import demo.article.articleComment.service.ArticleCommentService;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.ResultTypeCX;
-import demo.common.service.CommonService;
 
 @Service
-public class ArticleCommentAdminServiceImpl extends CommonService implements ArticleCommentAdminService {
+public class ArticleCommentAdminServiceImpl extends ArticleCommonService implements ArticleCommentAdminService {
 	
 //	@Autowired
 //	private ArticleEvaluationService articleEvaluationService;
@@ -36,8 +35,6 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 	private ArticleCommentMapper articleCommentMapper;
 	@Autowired
 	private ArticleCommentReviewMapper articleCommentReviewMapper;
-	@Autowired
-	private ArticleCommentService commentService;
 	
 	private CommonResultCX ArticleCommentReviewDTOValider(ArticleCommentReviewCommonDTO dto) {
 		CommonResultCX result = new CommonResultCX();
@@ -65,7 +62,7 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 			return result;
 		}
 		
-		Long commentId = decryptPrivateKey(param.getPk());
+		Long commentId = systemOptionService.decryptPrivateKey(param.getPk());
 		if(commentId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -80,7 +77,7 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 		reviewRecord.setCommentId(commentId);
 		reviewRecord.setReviewTypeId(ArticleCommentReviewType.delete.getReviewCode());
 		reviewRecord.setArticleReviewerId(reviewerId);
-		articleCommentReviewMapper.insertNew(reviewRecord);
+		articleCommentReviewMapper.insertOrUpdate(reviewRecord);
 		
 		
 		record.setIsDelete(true);
@@ -88,7 +85,7 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 		result.setMessage(ArticleCommentResultType.articleCommentDeleteSuccess.getName());
 		result.setIsSuccess();
 		
-		commentService.articleCommentCountingDown(record.getArticleId());
+		articleCommentCountingDown(record.getArticleId());
 		
 		return result;
 	}
@@ -107,7 +104,7 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 			return result;
 		}
 		
-		Long commentId = decryptPrivateKey(param.getPk());
+		Long commentId = systemOptionService.decryptPrivateKey(param.getPk());
 		if(commentId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -123,14 +120,16 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 		reviewRecord.setCommentId(commentId);
 		reviewRecord.setReviewTypeId(ArticleCommentReviewType.pass.getReviewCode());
 		reviewRecord.setArticleReviewerId(reviewerId);
-		articleCommentReviewMapper.insertNew(reviewRecord);
+		articleCommentReviewMapper.insertOrUpdate(reviewRecord);
 		
 		record.setIsPass(true);
+		record.setIsDelete(false);
+		record.setIsReject(false);
 		articleCommentMapper.updateByPrimaryKeySelective(record);
 		result.setMessage(ArticleCommentResultType.articleCommentPassSuccess.getName());
 		result.setIsSuccess();
 		
-		commentService.articleCommentCountingUp(record.getArticleId());
+		articleCommentCountingUp(record.getArticleId());
 		
 		return result;
 	}
@@ -149,7 +148,7 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 			return result;
 		}
 		
-		Long commentId = decryptPrivateKey(param.getPk());
+		Long commentId = systemOptionService.decryptPrivateKey(param.getPk());
 		if(commentId == null) {
 			result.fillWithResult(ResultTypeCX.errorParam);
 			return result;
@@ -159,11 +158,11 @@ public class ArticleCommentAdminServiceImpl extends CommonService implements Art
 		reviewRecord.setCommentId(commentId);
 		reviewRecord.setReviewTypeId(ArticleCommentReviewType.reject.getReviewCode());
 		reviewRecord.setArticleReviewerId(reviewerId);
-		articleCommentReviewMapper.insertNew(reviewRecord);
+		articleCommentReviewMapper.insertOrUpdate(reviewRecord);
 		
 		ArticleComment record = new ArticleComment();
 		record.setId(commentId);
-		record.setIsPass(true);
+		record.setIsReject(true);
 		articleCommentMapper.updateByPrimaryKeySelective(record);
 		result.setMessage(ArticleCommentResultType.articleCommentRejectSuccess.getName());
 		result.setIsSuccess();

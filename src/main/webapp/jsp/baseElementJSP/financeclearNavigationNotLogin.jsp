@@ -18,8 +18,8 @@
 <div>
 
   <sec:authorize access="!hasRole('ROLE_USER')">
-    <label>Please</label> <a href="${pageContext.request.contextPath}/login/login">Login</a> <br>
-    <label> or </label> <a href="${pageContext.request.contextPath}/user/userRegist">Regist</a>
+    <label>Please</label> <a href="/login/login">Login</a> <br>
+    <label> or </label> <a href="/user/userRegist">Regist</a>
   </sec:authorize>
   
 </div>

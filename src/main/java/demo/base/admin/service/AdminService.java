@@ -7,8 +7,6 @@ public interface AdminService {
 
 	CommonResultCX deleteUserIpRecord(UserIpDeleteDTO param);
 
-	void setDefaultHomepageAnnouncementStr();
-
 	void setTempHomepageAnnouncement(String strContent);
 
 }

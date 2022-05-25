@@ -15,6 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 import demo.article.article.pojo.constant.ArticleBurnUrlConstant;
 import demo.article.article.pojo.constant.ArticleViewConstant;
 import demo.article.article.pojo.dto.CreatingBurnMessageDTO;
+import demo.article.article.pojo.dto.ReadBurningMessageByPwdDTO;
+import demo.article.article.pojo.result.ArticleBurnResult;
 import demo.article.article.pojo.result.CreatingBurnMessageResult;
 import demo.article.article.service.ArticleBurnService;
 import demo.common.controller.CommonController;
@@ -46,6 +48,12 @@ public class ArticleBurnController extends CommonController {
 	@GetMapping(value = ArticleBurnUrlConstant.readBurningMessage)
 	public ModelAndView readBurningMessage(@RequestParam(value = "readKey", defaultValue = "" ) String readKey) {
 		return articleBurnService.readBurningMessage(readKey);
+	}
+	
+	@PostMapping(value = ArticleBurnUrlConstant.readBurningMessageByPwd)
+	@ResponseBody
+	public ArticleBurnResult readBurningMessage(@RequestBody ReadBurningMessageByPwdDTO dto) {
+		return articleBurnService.getBurningMessageByReadKeyAndPwd(dto);
 	}
 	
 	@GetMapping(value = ArticleBurnUrlConstant.burnMessage)

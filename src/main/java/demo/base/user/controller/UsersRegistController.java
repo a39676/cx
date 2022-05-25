@@ -21,6 +21,7 @@ import demo.base.user.pojo.dto.ForgotPasswordDTO;
 import demo.base.user.pojo.dto.ForgotUsernameDTO;
 import demo.base.user.pojo.dto.ModifyRegistMailDTO;
 import demo.base.user.pojo.dto.ResetPasswordDTO;
+import demo.base.user.pojo.dto.StudentRegistDTO;
 import demo.base.user.pojo.dto.UserNameExistCheckDTO;
 import demo.base.user.pojo.dto.UserRegistDTO;
 import demo.base.user.pojo.result.NewUserRegistResult;
@@ -30,7 +31,7 @@ import demo.common.controller.CommonController;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.ResultTypeCX;
 import demo.config.costom_component.BaseUtilCustom;
-import io.swagger.annotations.ApiOperation;
+import demo.toyParts.educate.pojo.type.GradeType;
 
 @Controller
 @RequestMapping(value = UsersUrl.root)
@@ -71,7 +72,6 @@ public class UsersRegistController extends CommonController {
 		return result;
 	}
 
-	@ApiOperation(value = "创建用户页面", notes = "返回创建用户页面")
 	@GetMapping(value = UsersUrl.userRegist)
 	public ModelAndView userRegistView(HttpServletRequest request) {
 		ModelAndView view = new ModelAndView();
@@ -80,13 +80,28 @@ public class UsersRegistController extends CommonController {
 		return view;
 	}
 
-	@ApiOperation(value = "用户注册", notes = "用户注册请求")
 	@PostMapping(value = UsersUrl.userRegist)
 	@ResponseBody
 	public NewUserRegistResult userRegistHandler(@RequestBody UserRegistDTO dto, HttpServletRequest request) {
 		String ip = request.getHeader("X-FORWARDED-FOR");
 
 		return userRegistService.newUserRegist(dto, ip, request);
+	}
+	
+	@GetMapping(value = UsersUrl.STUDENT_REGIST)
+	public ModelAndView studentRegistView(HttpServletRequest request) {
+		ModelAndView view = new ModelAndView();
+		view.setViewName("toyJSP/educateJSP/studentRegist");
+		view.addObject("gradeTypeList", GradeType.values());
+		view.addObject("title", "Student sign up");
+		return view;
+	}
+	
+	@PostMapping(value = UsersUrl.STUDENT_REGIST)
+	@ResponseBody
+	public NewUserRegistResult studentRegist(@RequestBody StudentRegistDTO dto, HttpServletRequest request) {
+		String ip = request.getHeader("X-FORWARDED-FOR");
+		return userRegistService.newStudentRegist(dto, ip, request);
 	}
 
 	@GetMapping(value = UsersUrl.registActivation)

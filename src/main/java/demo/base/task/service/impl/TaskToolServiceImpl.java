@@ -13,9 +13,8 @@ import demo.base.system.mapper.BaseMapper;
 import demo.base.system.service.IpRecordService;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.type.SystemRolesType;
-import demo.tool.mapper.MailRecordMapper;
-import demo.tool.service.ComplexToolService;
-import demo.tool.service.VisitDataService;
+import demo.tool.mail.mapper.MailRecordMapper;
+import demo.tool.other.service.VisitDataService;
 
 @Component
 public class TaskToolServiceImpl {
@@ -30,8 +29,6 @@ public class TaskToolServiceImpl {
 	private VisitDataService visitDataService;
 	@Autowired
 	private IpRecordService ipRecordService;
-	@Autowired
-	private ComplexToolService complexToolService;
 
 	@Autowired
 	private UsersMapper usersMapper;
@@ -136,23 +133,18 @@ public class TaskToolServiceImpl {
 	}
 
 	/** 将 redis 内的访问数, 持久化到数据库 */
-	@Scheduled(cron = "01 02 00 * * *")
-	public String visitCountRedisToOrm() {
+	@Scheduled(fixedRate = 1000L * 60 * 30)
+	public void visitCountRedisToOrm() {
 		visitDataService.visitCountRedisToOrm();
 		visitDataService.visitDataRedisToOrm();
-		return null;
 	}
 
 	/**
 	 * 将Ip记录(黑白名单)中, 过期/逻辑删除的记录, 进行物理删除.
 	 */
-	@Scheduled(cron = "40 01 12 * * *") // 每天01:12:40执行
+	@Scheduled(cron = "40 12 01 * * *") // 每天01:12:40执行
 	public void deleteExpiredDenyRecord() {
 		ipRecordService.deleteExpiredDenyRecord();
 	}
-
-	@Scheduled(fixedRate = 1000L * 60 * 10)
-	public void pingBBT() {
-		complexToolService.pingBBT();
-	}
+	
 }

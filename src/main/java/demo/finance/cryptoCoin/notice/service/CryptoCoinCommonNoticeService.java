@@ -24,8 +24,6 @@ public interface CryptoCoinCommonNoticeService {
 
 	ModelAndView searchValidNotices(SearchCryptoCoinConditionDTO dto);
 
-	void deleteNoticeByHitNoData();
-
 	CommonResult insertNewCryptoCoinLowPriceNoticeSetting(InsertCryptoCoinLowPriceNoticeSettingDTO dto);
 
 }

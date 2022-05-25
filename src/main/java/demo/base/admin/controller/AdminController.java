@@ -5,7 +5,6 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
@@ -22,7 +21,7 @@ import demo.base.admin.pojo.constant.AdminView;
 import demo.base.admin.pojo.dto.LoadHomepageAnnouncementStrDTO;
 import demo.base.admin.service.AdminService;
 import demo.base.system.pojo.constant.BaseStatusCode;
-import demo.base.system.service.impl.SystemConstantService;
+import demo.base.system.service.impl.SystemOptionService;
 import demo.base.user.pojo.constant.UserManagerView;
 import demo.base.user.pojo.dto.UserIpDeleteDTO;
 import demo.base.user.pojo.po.Users;
@@ -50,7 +49,7 @@ public class AdminController extends CommonController {
 	private AdminService adminService;
 	
 	@Autowired
-	private SystemConstantService systemConstantService;
+	private SystemOptionService systemConstantService;
 	
 	@Autowired
 	private FakePostService fakePostService;
@@ -131,16 +130,6 @@ public class AdminController extends CommonController {
 
 	}
 
-	@GetMapping(value = AdminUrlConstant.dba)
-	public ModelAndView dbaPage() {
-		ModelAndView view = new ModelAndView();
-		view.addObject("title", "Spring Security Hello World");
-		view.addObject("message", "This is protected page - Database Page!");
-		view.setViewName(AdminView.adminView);
-
-		return view;
-	}
-
 	@PostMapping(value = AdminUrlConstant.deleteUserIpRecord)
 	public void deleteUserIpRecord(@RequestBody UserIpDeleteDTO param, HttpServletRequest request, HttpServletResponse response) {
 		CommonResultCX result = adminService.deleteUserIpRecord(param);
@@ -151,13 +140,9 @@ public class AdminController extends CommonController {
 	@ResponseBody
 	public JSONObject setHomepageAnnouncementStr(@RequestBody LoadHomepageAnnouncementStrDTO dto) {
 		String strContent = dto.getHomepageAnnouncementStr();
-		if(StringUtils.isBlank(strContent) || "null".equals(strContent)) {
-			adminService.setDefaultHomepageAnnouncementStr();
-		} else {
-			adminService.setTempHomepageAnnouncement(strContent);
-		}
+		adminService.setTempHomepageAnnouncement(strContent);
 		JSONObject jsonOutput = new JSONObject();
-		jsonOutput.put("homepageAnnouncementStr", systemConstantService.getHomepageAnnouncement());
+		jsonOutput.put("homepageAnnouncementStr", systemConstantService.getHomepageAnnouncementStr());
 		return jsonOutput;
 	}
 	

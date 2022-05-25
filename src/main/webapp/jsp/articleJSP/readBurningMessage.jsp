@@ -22,28 +22,36 @@
 <hr>
 
 <div class="row">
-  <div class="col-md-12" >
-    ${content}
+  <div class="col-md-12" style="word-break:break-word;" id="burningMessage">
+    <p>${content}</p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12" style="word-break:break-word;">
+    <c:if test="${needPwd}">
+      <div class="input-group mb-3" id="pwdInputDiv">
+        <div class="input-group-prepend ">
+          <span class="input-group-text" style="font-size: small;">请输入阅读密码</span>
+        </div>
+        <input class="form-control" type="password" id="messagePwd" maxlength="16" value="">
+        <div class="input-group-append">
+          <button class="btn btn-primary" type="button" id="readBurningMessageByPwd">提交</button>
+        </div>
+      </div>
+    </c:if>
   </div>
 </div>
 
 <hr>
 
-<div class="row">
-  <div class="col-md-12" >
-    <span style="font-size: small;" name="comment"></span>
-  </div>
-</div>
-
-<hr>
-
-<div class="row">
+<div class="row destoryDiv">
   <div class="col-md-12">
     <span style="font-size: small;" name="burnUri"></span>
   </div>
 </div>
 
-<div class="row">
+<div class="row destoryDiv">
   <div class="col-md-2">
     <button class="btn btn-danger btn-sm" name="destoryButton" style="display: none">
       <span style="font-size: small;" >马上销毁本信息</span>
@@ -67,7 +75,6 @@
   </div>
 </div>
 
-
 </div>
 </body>
 
@@ -78,45 +85,86 @@
     $(document).ready(function() {
 
       var urlPerfix = window.location.host;
-      var burnUri = "${burnUri}";
-      
-      var remainingReadCount = ${remainingReadCount};
-      if(remainingReadCount > 0) {
-        $("span[name='comment']").text("再读( " + remainingReadCount + " )次后销毁");
-        $("span[name='burnUri']").append("访问此地址销毁信息: ");
-        $("span[name='burnUri']").append("<br>");
-        $("span[name='burnUri']").append(urlPerfix);
-        $("span[name='burnUri']").append(burnUri);
-        $("button[name='destoryButton']").show();
-      } else if (remainingReadCount == 0) {
-        $("span[name='comment']").text("这是最后一次阅读");
-      } 
+      var burnUri = "";
+
+      if(${needPwd}){
+        $(".destoryDiv").hide();
+      } else {
+        showDestoryDiv("${burnUri}");
+      }
 
       $("button[name='destoryButton']").click(function() {
         destoryButton();
       });
 
       function destoryButton() {
-      
         var url = burnUri;
-  
-        $.ajax({  
-          type : "GET",  
+        $.ajax({
+          type : "GET",
           async : true,
-          url : url,  
+          url : url,
           cache : false,
-          timeout:50000,  
+          timeout:50000,
           success:function(datas){
             $("span[name='burnUri']").text("信息已销毁");
-            $("input[name='content']").val("");
-            $("span[name='comment']").text("");
-          },  
-          error: function(datas) {  
-            
-          }  
-        });  
+            $("#burningMessage").html("");
+            $("#messagePwd").val("");
+          },
+          error: function(datas) {
+          }
+        });
       };
 
+      $("#readBurningMessageByPwd").click(function () {
+        readBurningMessageByPwd();
+      });
+
+      function readBurningMessageByPwd() {
+        var url = "/articleBurn/readBurningMessageByPwd";
+        var readKey = "${readKey}";
+        var pwd = $("#messagePwd").val();
+
+        var jsonOutput = {
+          readKey : readKey,
+          pwd : pwd
+        };
+
+        $.ajax({
+          type : "POST",
+          async : true,
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          cache : false,
+          contentType: "application/json",
+          dataType: "json",
+          timeout:50000,
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          success:function(datas){
+            $("#burningMessage").html(datas.content);
+            if(datas.code == 0){
+              $("#readBurningMessageByPwd").prop('disabled', true);
+              showDestoryDiv(datas.burnUri);
+              $("#pwdInputDiv").hide();
+            }
+          },
+          error: function(datas) {
+          }
+        });
+      };
+
+      function showDestoryDiv(newBurnUri) {
+        if(newBurnUri.length != 0){
+          burnUri = newBurnUri;
+          $("span[name='burnUri']").append("访问此地址销毁信息: ");
+          $("span[name='burnUri']").append("<br>");
+          $("span[name='burnUri']").append(urlPerfix);
+          $("span[name='burnUri']").append(burnUri);
+          $("button[name='destoryButton']").show();
+          $(".destoryDiv").show();
+        }
+      }
     });
 
   </script>

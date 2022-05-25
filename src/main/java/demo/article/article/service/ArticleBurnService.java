@@ -5,6 +5,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.article.article.pojo.dto.CreatingBurnMessageDTO;
+import demo.article.article.pojo.dto.ReadBurningMessageByPwdDTO;
+import demo.article.article.pojo.result.ArticleBurnResult;
 import demo.article.article.pojo.result.CreatingBurnMessageResult;
 
 public interface ArticleBurnService {
@@ -19,4 +21,6 @@ public interface ArticleBurnService {
 
 	/** 清理时间过长的阅后即焚信息. */
 	void cleanExpiredArticleBurn();
+
+	ArticleBurnResult getBurningMessageByReadKeyAndPwd(ReadBurningMessageByPwdDTO dto);
 }

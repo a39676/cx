@@ -32,22 +32,33 @@
                 <td>
                   <c:if test="${channel.isDelete == true}">
                     <span class="badge badge-secondary">${channel.channelName}</span>
+                    <span class="badge badge-secondary">${channel.channelId}</span>
                   </c:if>
                   <c:if test="${channel.isDelete == false}">
                     <span class="badge badge-primary">${channel.channelName}</span>
+                    <span class="badge badge-primary">${channel.channelId}</span>
                   </c:if>
                 </td>
                 <td>
                   <c:if test="${channel.isDelete == true}">
-                    <button class="badge badge-danger" name="reuseChannel" channelId="${channel.channelId}">reuse</button>  
+                    <button class="badge badge-danger" name="reuseChannel" channelId="${channel.channelId}">reuse</button>
                   </c:if>
                   <c:if test="${channel.isDelete == false}">
-                    <button class="badge badge-danger" name="deleteChannel" channelId="${channel.channelId}">delete</button>  
+                    <button class="badge badge-danger" name="deleteChannel" channelId="${channel.channelId}">delete</button>
                   </c:if>
                 </td>
                 <td>
                   <span class="badge badge-primary">weights</span>
                   <input type="text" name="channelWeight" channelId="${channel.channelId}" style="width: 50px;" value="${channel.weights}">
+                </td>
+                <td>
+                  <span class="badge badge-primary">channelType</span>
+                  <select class="" name="channelType" channelId="${channel.channelId}">
+                    <option value="${channel.channelType}">${channel.channelTypeName}</option>
+                    <c:forEach items="${channelTypeList}" var="channelType">
+                      <option value="${channelType.code}">${channelType.name}</option>
+                    </c:forEach>
+                  </select>
                 </td>
                 <td>
                   <span class="badge badge-primary">channel name</span>
@@ -76,19 +87,19 @@
                         <td>
                           <div class="form-check form-check-inline">
                             <c:if test="${channelKeyHostnameIdDTO.articleChannelKeyHostnameType == 1}">
-                              <input class="form-check-input channelKeyHostnameRadio" type="radio" 
+                              <input class="form-check-input channelKeyHostnameRadio" type="radio"
                                 id="${channel.channelId}_${channelKeyHostnameIdDTO.hostnameId}_pass"
-                                channelId="${channel.channelId}" 
-                                hostnameId="${channelKeyHostnameIdDTO.hostnameId}" 
+                                channelId="${channel.channelId}"
+                                hostnameId="${channelKeyHostnameIdDTO.hostnameId}"
                                 name="${channel.channelId}_${channelKeyHostnameIdDTO.hostnameId}"
                                 checked="checked"
                                 value="1">
                             </c:if>
                             <c:if test="${channelKeyHostnameIdDTO.articleChannelKeyHostnameType == 2}">
-                              <input class="form-check-input channelKeyHostnameRadio" type="radio" 
+                              <input class="form-check-input channelKeyHostnameRadio" type="radio"
                                 id="${channel.channelId}_${channelKeyHostnameIdDTO.hostnameId}_pass"
-                                channelId="${channel.channelId}" 
-                                hostnameId="${channelKeyHostnameIdDTO.hostnameId}" 
+                                channelId="${channel.channelId}"
+                                hostnameId="${channelKeyHostnameIdDTO.hostnameId}"
                                 name="${channel.channelId}_${channelKeyHostnameIdDTO.hostnameId}"
                                 value="1">
                             </c:if>
@@ -98,19 +109,19 @@
                         <td>
                           <div class="form-check form-check-inline">
                             <c:if test="${channelKeyHostnameIdDTO.articleChannelKeyHostnameType == 2}">
-                              <input class="form-check-input channelKeyHostnameRadio" type="radio" 
+                              <input class="form-check-input channelKeyHostnameRadio" type="radio"
                                 id="${channel.channelId}_${channelKeyHostnameIdDTO.hostnameId}_ban"
-                                channelId="${channel.channelId}" 
-                                hostnameId="${channelKeyHostnameIdDTO.hostnameId}" 
+                                channelId="${channel.channelId}"
+                                hostnameId="${channelKeyHostnameIdDTO.hostnameId}"
                                 name="${channel.channelId}_${channelKeyHostnameIdDTO.hostnameId}"
                                 checked="checked"
                                 value="2">
                             </c:if>
                             <c:if test="${channelKeyHostnameIdDTO.articleChannelKeyHostnameType == 1}">
-                              <input class="form-check-input channelKeyHostnameRadio" type="radio" 
+                              <input class="form-check-input channelKeyHostnameRadio" type="radio"
                                 id="${channel.channelId}_${channelKeyHostnameIdDTO.hostnameId}_ban"
-                                channelId="${channel.channelId}" 
-                                hostnameId="${channelKeyHostnameIdDTO.hostnameId}" 
+                                channelId="${channel.channelId}"
+                                hostnameId="${channelKeyHostnameIdDTO.hostnameId}"
                                 name="${channel.channelId}_${channelKeyHostnameIdDTO.hostnameId}"
                                 value="2">
                             </c:if>
@@ -173,33 +184,35 @@
 
       var channelNewName = $("input[name='channelNewName'][channelId='"+channelId+"']").val();
       var channelWeight = $("input[name='channelWeight'][channelId='"+channelId+"']").val();
+      var channelType = $("select[name='channelType'][channelId='"+channelId+"']").val();
 
       var jsonOutput = {
         channelId:channelId,
         channelName:channelNewName,
         weights:channelWeight,
+        channelType:channelType,
         operationalType:"1"
       };
 
-      $.ajax({  
-        type : "POST",  
+      $.ajax({
+        type : "POST",
         async : true,
-        url : url,  
+        url : url,
         data: JSON.stringify(jsonOutput),
         cache : false,
         contentType: "application/json",
         dataType: "json",
-        timeout:50000,  
+        timeout:50000,
         beforeSend: function(xhr) {
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
           $("#"+channelId+"_editResult").val("" + datas.code + ":" + datas.message + ":" + new Date().toLocaleString());
-        },  
+        },
         error: function(datas) {
-  
-        }  
-      });  
+
+        }
+      });
     };
 
     $("#addNewChannel").click(function () {
@@ -219,25 +232,25 @@
         operationalType:"0"
       };
 
-      $.ajax({  
-        type : "POST",  
+      $.ajax({
+        type : "POST",
         async : true,
-        url : url,  
+        url : url,
         data: JSON.stringify(jsonOutput),
         cache : false,
         contentType: "application/json",
         dataType: "json",
-        timeout:50000,  
+        timeout:50000,
         beforeSend: function(xhr) {
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
           $("#resultSpan").text("" + datas.code + " : " + datas.message + " : " + new Date().toLocaleString());
-        },  
+        },
         error: function(datas) {
-  
-        }  
-      });  
+
+        }
+      });
     };
 
     $("button[name='deleteChannel']").click(function () {
@@ -257,26 +270,26 @@
         operationalType:"2"
       };
 
-      $.ajax({  
-        type : "POST",  
+      $.ajax({
+        type : "POST",
         async : true,
-        url : url,  
+        url : url,
         data: JSON.stringify(jsonOutput),
         cache : false,
         contentType: "application/json",
         dataType: "json",
-        timeout:50000,  
+        timeout:50000,
         beforeSend: function(xhr) {
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
           JSON.stringify(datas);
           $("#"+channelId+"_editResult").val("" + datas.code + ":" + datas.message + ":" + new Date().toLocaleString());
-        },  
+        },
         error: function(datas) {
-  
-        }  
-      });  
+
+        }
+      });
     };
 
     $(".channelKeyHostnameRadio").click(function () {
@@ -295,26 +308,26 @@
         articleChannelKeyHostnameType:keyType
       };
 
-      $.ajax({  
-        type : "POST",  
+      $.ajax({
+        type : "POST",
         async : true,
-        url : url,  
+        url : url,
         data: JSON.stringify(jsonOutput),
         cache : false,
         contentType: "application/json",
         dataType: "json",
-        timeout:50000,  
+        timeout:50000,
         beforeSend: function(xhr) {
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
           JSON.stringify(datas);
           $("#"+channelId+"_"+hostnameId+"_editResult").val("" + datas.code + ":" + datas.message + ":" + new Date().toLocaleString());
-        },  
+        },
         error: function(datas) {
-  
-        }  
-      });  
+
+        }
+      });
     }
 
     $(".channelKeyHostnameBtn").click(function () {
@@ -338,7 +351,7 @@
       }
     });
 
-    
+
   });
 
 </script>

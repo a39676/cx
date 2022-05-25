@@ -3,8 +3,8 @@
 <mapper namespace="demo.base.user.mapper.UserIpMapper">
   <resultMap id="BaseResultMap" type="demo.base.user.pojo.po.UserIp">
     <result column="user_id" jdbcType="BIGINT" property="userId" />
-    <result column="ip" jdbcType="BIGINT" property="ip" />
-    <result column="forward_ip" jdbcType="BIGINT" property="forwardIp" />
+    <result column="ip" jdbcType="CHAR" property="ip" />
+    <result column="forward_ip" jdbcType="CHAR" property="forwardIp" />
     <result column="server_name" jdbcType="CHAR" property="serverName" />
     <result column="uri" jdbcType="CHAR" property="uri" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -94,7 +94,7 @@
     insert into user_ip (user_id, ip, forward_ip, 
       server_name, uri, create_time
       )
-    values (#{userId,jdbcType=BIGINT}, #{ip,jdbcType=BIGINT}, #{forwardIp,jdbcType=BIGINT}, 
+    values (#{userId,jdbcType=BIGINT}, #{ip,jdbcType=CHAR}, #{forwardIp,jdbcType=CHAR}, 
       #{serverName,jdbcType=CHAR}, #{uri,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -125,10 +125,10 @@
         #{userId,jdbcType=BIGINT},
       </if>
       <if test="ip != null">
-        #{ip,jdbcType=BIGINT},
+        #{ip,jdbcType=CHAR},
       </if>
       <if test="forwardIp != null">
-        #{forwardIp,jdbcType=BIGINT},
+        #{forwardIp,jdbcType=CHAR},
       </if>
       <if test="serverName != null">
         #{serverName,jdbcType=CHAR},
@@ -154,10 +154,10 @@
         user_id = #{record.userId,jdbcType=BIGINT},
       </if>
       <if test="record.ip != null">
-        ip = #{record.ip,jdbcType=BIGINT},
+        ip = #{record.ip,jdbcType=CHAR},
       </if>
       <if test="record.forwardIp != null">
-        forward_ip = #{record.forwardIp,jdbcType=BIGINT},
+        forward_ip = #{record.forwardIp,jdbcType=CHAR},
       </if>
       <if test="record.serverName != null">
         server_name = #{record.serverName,jdbcType=CHAR},
@@ -176,8 +176,8 @@
   <update id="updateByExample" parameterType="map">
     update user_ip
     set user_id = #{record.userId,jdbcType=BIGINT},
-      ip = #{record.ip,jdbcType=BIGINT},
-      forward_ip = #{record.forwardIp,jdbcType=BIGINT},
+      ip = #{record.ip,jdbcType=CHAR},
+      forward_ip = #{record.forwardIp,jdbcType=CHAR},
       server_name = #{record.serverName,jdbcType=CHAR},
       uri = #{record.uri,jdbcType=CHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP}
@@ -185,30 +185,22 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-
-  <delete id="deleteRecord">
-    delete from 
-      user_ip
-    <where>
-      <if test="startDate != null">
-        and create_time &gt; #{startDate}
-      </if>
-      <if test="endDate != null">
-        and create_time &lt; #{endDate}
-      </if>
-      <if test="uri != null">
-        and uri = #{uri}
-      </if>
-      <if test="uriList != null">
-        and uri in
-        <foreach item="uriItem" index="index" collection="list"
-          open="(" separator="," close=")">
-          #{uriItem}
-        </foreach>
-      </if>
-    </where>
-  </delete>
-
+  <select id="selectByExampleWithRowbounds" parameterType="demo.base.user.pojo.po.UserIpExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from user_ip
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  
+  
   <insert id="batchInsert">
     insert ignore into user_ip(user_id, ip, forward_ip, server_name, uri, create_time)
     values
@@ -253,15 +245,4 @@
         )
     </foreach>
   </insert>
-
-  <select id="findLastUserIp" resultMap="BaseResultMap">
-    select
-      *
-    from
-      user_ip
-    where
-      create_time &gt;= #{startTime}
-    order by create_time desc 
-    limit 1000
-  </select>
 </mapper>

@@ -23,9 +23,4 @@ public class CryptoCoinNoticeTaskToolServiceImpl extends CryptoCoinCommonService
 		noticeService.deleteOldNotice();
 	}
 
-	@Scheduled(fixedRate = 40000L * 10)
-	public void deleteNoticeByHitNoData() {
-		noticeService.deleteNoticeByHitNoData();
-	}
-	
 }

@@ -125,7 +125,7 @@
       var modifyRegistMail = $("input[name='modifyRegistMail']").val();
       $("input[name='modifyRegistMail']").attr('disabled','disabled');
       $("button[name='modifyRegistMail']").attr('disabled','disabled');
-      var url = "${pageContext.request.contextPath}/user/modifyRegistMail";
+      var url = "/user/modifyRegistMail";
       var jsonOutput = {
         modifyRegistMail : modifyRegistMail
       };
@@ -163,7 +163,7 @@
 
     $("button[name='resetPassword']").click(function() {
         
-      var url = "${pageContext.request.contextPath}/user/resetPassword";
+      var url = "/user/resetPassword";
 
       var oldPassword = $("input[name='oldPassword']").val();
       var newPassword = $("input[name='newPassword']").val();

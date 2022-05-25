@@ -19,6 +19,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.pojo.result.CommonResultCX;
 import demo.common.pojo.type.TransationType;
 import demo.common.service.CommonService;
+import demo.config.costom_component.EncryptUtil;
 import demo.finance.account_holder.controller.AccountHolderController;
 import demo.finance.account_holder.pojo.po.AccountHolder;
 import demo.finance.account_info.mapper.AccountInfoMapper;
@@ -56,6 +57,8 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	@Autowired
 	private NumericUtilCustom numberUtil;
 	@Autowired
+	private EncryptUtil encryptUtil;
+	@Autowired
 	private AccountInfoMapper accountInfoMapper;
 	@Autowired
 	private AccountInfoMarkerMapper accountInfoMarkerMapper;
@@ -87,7 +90,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		 *     return holderRegist??
 		 * }
 		 */
-		Long holderId = holder.getAccountHolderId();
+		Long holderId = holder.getId();
 		
 		AccountInfo newAccount = new AccountInfo();
 		BeanUtils.copyProperties(dto, newAccount);
@@ -241,7 +244,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		if(holder == null) {
 			return new ArrayList<AccountInfo>();
 		}
-		dto.setAccountHolderId(holder.getAccountHolderId());
+		dto.setAccountHolderId(holder.getId());
 		return accountInfoMapper.findByCondition(dto);
 	}
 	
@@ -328,14 +331,14 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 
 	@Override
 	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
-	public InsertTransationResult insertTradingRecorderSelective(InsertNewTransationDTO p) throws Exception {
+	public InsertTransationResult insertTradingRecorderSelective(InsertNewTransationDTO insertNewTransationDTO) throws Exception {
 		InsertTransationResult result = new InsertTransationResult();
 		
-		String accountNumber = p.getAccountNumber();
+		String accountNumber = insertNewTransationDTO.getAccountNumber();
 		TransationType transationType = null;
 		
-		if(p.getTransationType() == null 
-				|| (transationType = TransationType.getType(p.getTransationType())) == null 
+		if(insertNewTransationDTO.getTransationType() == null 
+				|| (transationType = TransationType.getType(insertNewTransationDTO.getTransationType())) == null 
 				|| !checkAccountNumberBelongUser(accountNumber)) {
 			result.failWithMessage("缺失交易类型,或者账号异常");
 			return result;
@@ -352,14 +355,14 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 			try {
 				if(AccountType.creditAccount.getCode().equals(targetAccount.getAccountType())) {
 					// 如果是贷记卡类账户,可直接输入需要冲正的可用额度
-					if(p.getFixCreditQuota() != null) {
-						BigDecimal targetQuota = p.getFixCreditQuota();
+					if(insertNewTransationDTO.getFixCreditQuota() != null) {
+						BigDecimal targetQuota = insertNewTransationDTO.getFixCreditQuota();
 						targetQuota = targetQuota.setScale(0, RoundingMode.HALF_UP);
 						transationAmount = targetQuota.subtract(targetAccount.getAccountBalance()).subtract(targetAccount.getTotalCreditQuota());
 					}
 				} else if(AccountType.debitAccount.getCode().equals(targetAccount.getAccountType())) {
 					BigDecimal targetAmount = null;
-					targetAmount = p.getTransationAmount();
+					targetAmount = insertNewTransationDTO.getTransationAmount();
 					targetAmount = targetAmount.setScale(2, RoundingMode.HALF_UP);
 					transationAmount = targetAmount.subtract(targetAccount.getAccountBalance());
 				} else {
@@ -367,13 +370,13 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 					return result;
 				}
 				
-				p.setTransationAmount(transationAmount);
-				p.setTransationType(TransationType.transationTypeIncome.getCode());
-				if(StringUtils.isBlank(p.getRemark())) {
-					p.setRemark(TransationType.transationTypeFix.getName());
+				insertNewTransationDTO.setTransationAmount(transationAmount);
+				insertNewTransationDTO.setTransationType(TransationType.transationTypeIncome.getCode());
+				if(StringUtils.isBlank(insertNewTransationDTO.getRemark())) {
+					insertNewTransationDTO.setRemark(TransationType.transationTypeFix.getName());
 				}
-				if(StringUtils.isBlank(p.getTransationParties())) {
-					p.setTransationParties(TransationType.transationTypeFix.getName());
+				if(StringUtils.isBlank(insertNewTransationDTO.getTransationParties())) {
+					insertNewTransationDTO.setTransationParties(TransationType.transationTypeFix.getName());
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -387,7 +390,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 			return result;
 		}
 		
-		InsertTradingRecorderResult InsertTradingRecordResult = tradingController.insertTradingRecorderSelective(p, targetAccount.getAccountId());
+		InsertTradingRecorderResult InsertTradingRecordResult = tradingController.insertTradingRecorderSelective(insertNewTransationDTO, targetAccount.getAccountId());
 		
 		TradingRecorder tradingRecord = tradingController.getTradingRecorderById(InsertTradingRecordResult.getNewTradingId());
 		
@@ -399,8 +402,8 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 				result.normalSuccess();
 				result.setAccountNumber(accountNumber);
 				result.setTransationAmount(transationAmount);
-				result.setTransationDate(p.getTransationDate());
-				result.setTransationParties(p.getTransationParties());
+				result.setTransationDate(insertNewTransationDTO.getTransationDate());
+				result.setTransationParties(insertNewTransationDTO.getTransationParties());
 				return result;
 			} else {
 				throw new Exception();
@@ -421,7 +424,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		
 		HashMap<String, String> conditionMap = new HashMap<String, String>();
 		conditionMap.put("accountNumber", accountNumber);
-		conditionMap.put("accountHolderId", String.valueOf(holderList.get(0).getAccountHolderId()));
+		conditionMap.put("accountHolderId", String.valueOf(holderList.get(0).getId()));
 		
 		Integer result = accountInfoMapper.checkAccountNumberBelongUser(conditionMap);
 		if(result == 1) {
@@ -440,7 +443,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		
 		HashMap<String, String> conditionMap = new HashMap<String, String>();
 		conditionMap.put("accountTailNumber", accountTailNumber);
-		conditionMap.put("accountHolderId", String.valueOf(holderList.get(0).getAccountHolderId()));
+		conditionMap.put("accountHolderId", String.valueOf(holderList.get(0).getId()));
 		
 		Integer result = accountInfoMapper.checkAccountNumberBelongUser(conditionMap);
 		if(result == 1) {
@@ -719,7 +722,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		GetAccountListResult result = new GetAccountListResult();
 		List<AccountHolder> holderList = accountHolderController.getCurrentHolders();
 		
-		List<AccountInfoWithBankInfo> accountList = getAccountInfoWithBankInfoByCondition(0L + holderList.get(0).getAccountHolderId(), param);
+		List<AccountInfoWithBankInfo> accountList = getAccountInfoWithBankInfoByCondition(0L + holderList.get(0).getId(), param);
 		result.setIsSuccess();
 		result.setAccountList(accountList);
 		return result;
@@ -801,6 +804,6 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 		}
 		
 		return r;
-		
     }
+    
 }

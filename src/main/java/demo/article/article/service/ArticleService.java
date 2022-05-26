@@ -19,7 +19,6 @@ import demo.article.article.pojo.param.controllerParam.CreateArticleParam;
 import demo.article.article.pojo.param.controllerParam.CreatingArticleParam;
 import demo.article.article.pojo.param.controllerParam.FindArticleLongByArticleSummaryPrivateKeyDTO;
 import demo.article.article.pojo.result.jsonRespon.FindArticleLongResult;
-import demo.common.pojo.result.CommonResultCX;
 
 public interface ArticleService {
 
@@ -57,7 +56,7 @@ public interface ArticleService {
 	/** 编辑文章 */
 	ModelAndView readyToEditArticleLong(ReadyToEditArticleLongDTO dto);
 
-	CommonResultCX editArticleLongHandler(EditArticleLongDTO dto) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, IOException;
+	CommonResult editArticleLongHandler(EditArticleLongDTO dto) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, IOException;
 
 	ModelAndView readArticleLong(String pk, HttpServletRequest request);
 

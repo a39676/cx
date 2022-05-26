@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.fakePost.service.FakePostService;
 import demo.base.admin.pojo.constant.AdminUrlConstant;
 import demo.base.admin.pojo.constant.AdminView;
@@ -27,7 +28,6 @@ import demo.base.user.pojo.dto.UserIpDeleteDTO;
 import demo.base.user.pojo.po.Users;
 import demo.base.user.service.UsersService;
 import demo.common.controller.CommonController;
-import demo.common.pojo.result.CommonResultCX;
 import demo.finance.account_info.controller.AccountInfoController;
 import net.sf.json.JSONObject;
 
@@ -132,7 +132,7 @@ public class AdminController extends CommonController {
 
 	@PostMapping(value = AdminUrlConstant.deleteUserIpRecord)
 	public void deleteUserIpRecord(@RequestBody UserIpDeleteDTO param, HttpServletRequest request, HttpServletResponse response) {
-		CommonResultCX result = adminService.deleteUserIpRecord(param);
+		CommonResult result = adminService.deleteUserIpRecord(param);
 		outputJson(response, JSONObject.fromObject(result));
 	}
 	

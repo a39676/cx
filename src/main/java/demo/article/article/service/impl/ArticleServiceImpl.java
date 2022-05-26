@@ -52,12 +52,11 @@ import demo.article.article.service.ArticleAdminService;
 import demo.article.article.service.ArticleChannelService;
 import demo.article.article.service.ArticleService;
 import demo.article.article.service.ArticleSummaryService;
+import demo.article.article.service.ArticleValidService;
 import demo.article.article.service.ArticleViewService;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.user.controller.UsersController;
 import demo.base.user.pojo.bo.MyUserPrincipal;
-import demo.common.pojo.result.CommonResultCX;
-import demo.common.pojo.type.ResultTypeCX;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -76,6 +75,9 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	private ArticleSummaryService summaryService;
 
 	@Autowired
+	private ArticleValidService articleValidService;
+	
+	@Autowired
 	private ArticleLongMapper articleLongMapper;
 	@Autowired
 	private ArticleLongReviewMapper articleLongReviewMapper;
@@ -89,7 +91,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		controllerParam.setUserId(baseUtilCustom.getUserId());
 		if (controllerParam.getUserId() == null) {
 			view = new ModelAndView(BaseViewConstant.viewError);
-			view.addObject("exception", ResultTypeCX.notLoginUser.getName());
+			view.addObject("exception", "Please login");
 			return view;
 		}
 
@@ -106,12 +108,11 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	 * @throws IOException
 	 * 
 	 */
-	private CommonResultCX editOrCreateArticleLong(Long editorId, CreateArticleParam controllerParam,
+	private CommonResult editOrCreateArticleLong(Long editorId, CreateArticleParam controllerParam,
 			Long editedArticleId) throws IOException {
-		CommonResultCX result = new CommonResultCX();
-		boolean editFlag = (editedArticleId != null && editorId != null);
+		CommonResult result = new CommonResult();
 
-		CheckParamBeforeEditArticleResult checkResult = checkParamBeforeEditArticle(editorId, controllerParam);
+		CheckParamBeforeEditArticleResult checkResult = checkParamBeforeEditArticle(editorId, editedArticleId, controllerParam);
 		if (!checkResult.isSuccess()) {
 			result.failWithMessage(checkResult.getMessage());
 			return result;
@@ -123,12 +124,12 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		String storePrefixPath = articleOptionService.getArticleStorePrefixPath();
 		Long maxArticleLength = articleOptionService.getMaxArticleLength();
 		if (StringUtils.isAnyBlank(summaryStorePrefixPath, storePrefixPath) || maxArticleLength < 1) {
-			result.fillWithResult(ResultTypeCX.serviceError);
+			result.setMessage("Service error");
 			return result;
 		}
 
 		ArticleLong editedArticlePO = null;
-		if (editFlag) {
+		if (checkResult.getEditFlag()) {
 			editedArticlePO = articleLongMapper.selectByPrimaryKey(editedArticleId);
 			if (editedArticlePO == null || editedArticlePO.getIsEdited()) {
 				result.failWithMessage("参数异常");
@@ -152,7 +153,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		ArticleLong newArticle = new ArticleLong();
 		Long newArticleId = snowFlake.getNextId();
 
-		if (editFlag) {
+		if (checkResult.getEditFlag()) {
 			BeanUtils.copyProperties(editedArticlePO, newArticle);
 			newArticle.setIsEdited(true);
 			UpdateEditedArticleLongBO bo = new UpdateEditedArticleLongBO();
@@ -182,13 +183,13 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		}
 		if (insertCount < 1) {
 			log.error("creating article insertArticleLongError %s, userId: %s", controllerParam.toString(), editorId);
-			result.fillWithResult(ResultTypeCX.serviceError);
+			result.setMessage("Service error");
 			return result;
 		}
 
 		saveArticleResult.setArticleId(newArticleId);
 
-		CommonResultCX saveArtieleSummaryResult = saveArticleSummaryFile(newArticleId, saveArticleResult.getFirstLine(),
+		CommonResult saveArtieleSummaryResult = saveArticleSummaryFile(newArticleId, saveArticleResult.getFirstLine(),
 				saveArticleResult.getImageUrls(), summaryStorePrefixPath);
 		if (!saveArtieleSummaryResult.isSuccess()) {
 			result.failWithMessage(saveArtieleSummaryResult.getMessage());
@@ -200,19 +201,26 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		if (insertCount < 1) {
 			log.error("creating article insertArticleSummaryError %s, userId: %s", controllerParam.toString(),
 					editorId);
-			result.fillWithResult(ResultTypeCX.serviceError);
+			result.setMessage("Service error");
 			return result;
 		}
 
 		if (isBigUser()) {
-			if (editFlag) {
+			if (checkResult.getEditFlag()) {
 				quickPass(editedArticleId);
 			} else {
 				quickPass(newArticle.getArticleId());
 			}
 		}
+		
+		if(checkResult.getEditFlag()) {
+			if(controllerParam.getValidTime() != null) {
+				articleValidService.addOrUpdateValid(newArticleId, controllerParam.getValidTime());
+			}
+		}
 
-		result.fillWithResult(ResultTypeCX.editArticleLongSuccess);
+		result.setMessage("已成功编辑,可能稍后就会出现...");
+		result.setIsSuccess();
 		return result;
 	}
 
@@ -256,12 +264,12 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	 * @param summaryStorePrefixPath
 	 * @return
 	 */
-	private CommonResultCX saveArticleSummaryFile(Long articleId, String firstLine, List<String> imageUrls,
+	private CommonResult saveArticleSummaryFile(Long articleId, String firstLine, List<String> imageUrls,
 			String summaryStorePrefixPath) {
 		if (StringUtils.isBlank(firstLine)) {
 			firstLine = "";
 		}
-		CommonResultCX result = new CommonResultCX();
+		CommonResult result = new CommonResult();
 
 		String fileName = snowFlake.getNextId() + ".txt";
 		String timeFolder = LocalDate.now().toString();
@@ -271,7 +279,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 
 		if (!mainFolder.exists()) {
 			if (!mainFolder.mkdirs()) {
-				result.fillWithResult(ResultTypeCX.serviceError);
+				result.setMessage("Service error");
 				return result;
 			}
 		}
@@ -306,7 +314,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		Long articleId = systemOptionService.decryptPrivateKey(param.getPrivateKey());
 		if (articleId == null) {
 			articleVO = new ArticleLongVO();
-			articleVO.setContentLines(ResultTypeCX.errorParam.getName());
+			articleVO.setContentLines("Error apram");
 			result.setArticleLongVO(articleVO);
 			return result;
 		}
@@ -320,9 +328,9 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		articleVO = articleLongMapper.findArticleLongByDecryptId(mapperDTO);
 
 		if (articleVO == null) {
-			result.fillWithResult(ResultTypeCX.errorWhenArticleLoad);
+			result.setMessage("文章加载时异常");
 			articleVO = new ArticleLongVO();
-			articleVO.setContentLines(ResultTypeCX.errorWhenArticleLoad.getName());
+			articleVO.setContentLines(result.getMessage());
 			result.setArticleLongVO(articleVO);
 			return result;
 		}
@@ -450,7 +458,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 
 		if (StringUtils.isBlank(dto.getPrivateKey())) {
 			vo = new ArticleLongVO();
-			vo.setContentLines(ResultTypeCX.errorParam.getName());
+			vo.setContentLines("Error apram");
 			return vo;
 		}
 
@@ -458,7 +466,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 
 		if (articleId == null) {
 			vo = new ArticleLongVO();
-			vo.setContentLines(ResultTypeCX.errorParam.getName());
+			vo.setContentLines("Error apram");
 			return vo;
 		}
 
@@ -469,7 +477,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 
 		if (vo == null) {
 			vo = new ArticleLongVO();
-			vo.setContentLines(ResultTypeCX.errorWhenArticleLoad.getName());
+			vo.setContentLines("Can not found post");
 			return vo;
 		}
 
@@ -493,11 +501,11 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	}
 
 	@Override
-	public CommonResultCX editArticleLongHandler(EditArticleLongDTO dto)
+	public CommonResult editArticleLongHandler(EditArticleLongDTO dto)
 			throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
 			BadPaddingException, InvalidAlgorithmParameterException, IOException {
 
-		CommonResultCX result = new CommonResultCX();
+		CommonResult result = new CommonResult();
 		if (StringUtils.isBlank(dto.getPk())) {
 			result.failWithMessage("参数缺失");
 			return result;
@@ -523,9 +531,19 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		return result;
 	}
 
-	private CheckParamBeforeEditArticleResult checkParamBeforeEditArticle(Long userId,
+	private CheckParamBeforeEditArticleResult checkParamBeforeEditArticle(Long userId, Long editedArticleId,
 			CreateArticleParam controllerParam) {
 		CheckParamBeforeEditArticleResult result = new CheckParamBeforeEditArticleResult();
+
+		result.setEditFlag(editedArticleId != null && userId != null);
+		
+		if(!result.getEditFlag()) {
+			if(controllerParam.getValidTime() != null) {
+				if(controllerParam.getValidTime().isBefore(LocalDateTime.now())) {
+					result.setMessage("Please do NOT set valid time or valid time must after NOW");
+				}
+			}
+		}
 
 		String channelIdStr = controllerParam.getChannelId();
 		if (StringUtils.isBlank(channelIdStr) || !numberUtil.matchInteger(channelIdStr)) {
@@ -544,7 +562,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		} else {
 			if (!ArticleChannelType.publicChannel.getCode().equals(channel.getChannelType())) {
 				if (!channelService.canVisitThisChannel(userId, channelId)) {
-					log.error("creating article checkPostLimitError %s, userId: %s", controllerParam.toString(), userId);
+					log.error("creating article checkPostLimitError %s, userId: %s", controllerParam.toString(),
+							userId);
 					result.setMessage("Error param");
 					return result;
 				}
@@ -583,8 +602,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 	 * @param po
 	 * @return
 	 */
-	private CommonResultCX updateEditedArticleLong(UpdateEditedArticleLongBO bo) {
-		CommonResultCX result = new CommonResultCX();
+	private CommonResult updateEditedArticleLong(UpdateEditedArticleLongBO bo) {
+		CommonResult result = new CommonResult();
 		if (bo.getEditedArticlePO() == null || bo.getEditorId() == null) {
 			result.failWithMessage("参数缺失");
 			return result;

@@ -6,8 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.common.pojo.result.CommonResultCX;
-import demo.common.pojo.type.ResultTypeCX;
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.service.CommonService;
 import demo.toyParts.vcode.mapper.VCodeMapper;
 import demo.toyParts.vcode.pojo.param.DeleteInvalidCodeParam;
@@ -48,13 +47,13 @@ public class VCodeServiceImpl extends CommonService implements VCodeService {
 	}
 
 	@Override
-	public CommonResultCX insertVcode(VCode newVCode) {
-		CommonResultCX result = new CommonResultCX();
+	public CommonResult insertVcode(VCode newVCode) {
+		CommonResult result = new CommonResult();
 		if(StringUtils.isBlank(newVCode.getCodeValue())
 				|| newVCode.getValidTime().getTime() <= System.currentTimeMillis()
 				|| newVCode.getCodeType() == null
 				|| VCodeType.getType(newVCode.getCodeType()) == null) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("Service error");
 			return result;
 		}
 		
@@ -68,19 +67,19 @@ public class VCodeServiceImpl extends CommonService implements VCodeService {
 		
 		int insertCount = vCodeMapper.insertSelective(newVCode);
 		if(insertCount == 1) {
-			result.fillWithResult(ResultTypeCX.success);
+			result.setIsSuccess();
 			return result;
 		} else {
-			result.fillWithResult(ResultTypeCX.serviceError);
+			result.setMessage("Service error");
 			return result;
 		}
 	}
 	
 	@Override
-	public CommonResultCX updateUseCount(VCode vcode) {
-		CommonResultCX result = new CommonResultCX();
+	public CommonResult updateUseCount(VCode vcode) {
+		CommonResult result = new CommonResult();
 		if(vcode == null || vcode.getCodeId() == null) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("Service error");
 			return result;
 		}
 		

@@ -2,9 +2,9 @@ package demo.article.article.pojo.result.jsonRespon;
 
 import java.util.List;
 
-import demo.common.pojo.result.CommonResultCX;
+import auxiliaryCommon.pojo.result.CommonResult;
 
-public class ArticleFileSaveResult extends CommonResultCX {
+public class ArticleFileSaveResult extends CommonResult {
 
 	private Long articleId;
 	private String firstLine;

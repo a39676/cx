@@ -2,10 +2,10 @@ package demo.base.organizations.pojo.result;
 
 import java.util.List;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.organizations.pojo.vo.OrganizationVO;
-import demo.common.pojo.result.CommonResultCX;
 
-public class FindOrgListResult extends CommonResultCX {
+public class FindOrgListResult extends CommonResult {
 
 	private List<OrganizationVO> orgVOList;
 

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.mapper.ArticleLongMapper;
 import demo.article.article.mapper.ArticleLongReviewMapper;
 import demo.article.article.mapper.ArticleLongSummaryMapper;
@@ -21,8 +22,6 @@ import demo.article.article.pojo.po.ArticleLong;
 import demo.article.article.pojo.po.ArticleLongSummary;
 import demo.article.article.pojo.type.ArticleReviewType;
 import demo.article.article.service.ArticleAdminService;
-import demo.common.pojo.result.CommonResultCX;
-import demo.common.pojo.type.ResultTypeCX;
 
 @Service
 public class ArticleAdminServiceImpl extends ArticleCommonService implements ArticleAdminService {
@@ -36,8 +35,8 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	
 	
 	@Override
-	public CommonResultCX handelReviewArticle(ReviewArticleLongParam param) throws Exception {
-		CommonResultCX result = null;
+	public CommonResult handelReviewArticle(ReviewArticleLongParam param) throws Exception {
+		CommonResult result = null;
 		param.setPk(URLDecoder.decode(param.getPk(), StandardCharsets.UTF_8));
 		if(param.getReviewCode().equals(ArticleReviewType.pass.getReviewCode())) {
 			result = passArticle(param.getPk());
@@ -49,29 +48,29 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			result = deleteArticle(param.getPk());
 			return result;
 		} else {
-			result = new CommonResultCX();
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result = new CommonResult();
+			result.setMessage("error param");
 		}
 		return result;
 	}
 	
 	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
-	private CommonResultCX passArticle(String privateKey) throws Exception {
-		CommonResultCX result = new CommonResultCX();
+	private CommonResult passArticle(String privateKey) throws Exception {
+		CommonResult result = new CommonResult();
 		Long articleId = systemOptionService.decryptPrivateKey(privateKey);
 		if(articleId == null) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("error param");
 			return result;
 		}
 		
 		ArticleLong article = articleLongMapper.selectByPrimaryKey(articleId);
 		if(article == null) {
-			result.fillWithResult(ResultTypeCX.serviceError);
+			result.setMessage("Service error");
 			return result;
 		}
 		
 		if(article.getIsPass()) {
-			result.fillWithResult(ResultTypeCX.articleWasPass);
+			result.setMessage("Article was pass");
 			return result;
 		}
 		
@@ -92,28 +91,28 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			throw new Exception();
 		}
 		
-		result.fillWithResult(ResultTypeCX.success);
+		result.setIsSuccess();
 		return result;
 	}
 	
 	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
-	private CommonResultCX rejectArticle(String privateKey) throws Exception {
-		CommonResultCX result = new CommonResultCX();
+	private CommonResult rejectArticle(String privateKey) throws Exception {
+		CommonResult result = new CommonResult();
 		
 		Long articleId = systemOptionService.decryptPrivateKey(privateKey);
 		if(articleId == null) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("error param");
 			return result;
 		}
 		
 		ArticleLong article = articleLongMapper.selectByPrimaryKey(articleId);
 		if(article == null) {
-			result.fillWithResult(ResultTypeCX.serviceError);
+			result.setMessage("Service error");
 			return result;
 		}
 		
 		if(article.getIsReject()) {
-			result.fillWithResult(ResultTypeCX.articleWasReject);
+			result.setMessage("Article was rejected");
 			return result;
 		}
 		
@@ -134,28 +133,28 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			throw new Exception();
 		}
 		
-		result.fillWithResult(ResultTypeCX.success);
+		result.setIsSuccess();
 		return result;
 	}
 	
 	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	@Override
-	public CommonResultCX deleteArticle(String privateKey) throws Exception {
-		CommonResultCX result = new CommonResultCX();
+	public CommonResult deleteArticle(String privateKey) throws Exception {
+		CommonResult result = new CommonResult();
 		Long articleId = systemOptionService.decryptPrivateKey(privateKey);
 		if(articleId == null) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("error param");
 			return result;
 		}
 		
 		ArticleLong article = articleLongMapper.selectByPrimaryKey(articleId);
 		if(article == null) {
-			result.fillWithResult(ResultTypeCX.serviceError);
+			result.setMessage("Service error");
 			return result;
 		}
 		
 		if(article.getIsDelete()) {
-			result.fillWithResult(ResultTypeCX.articleWasDelete);
+			result.setMessage("Article was deleted");
 			return result;
 		}
 		
@@ -176,23 +175,23 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			throw new Exception();
 		}
 		
-		result.fillWithResult(ResultTypeCX.success);
+		result.setIsSuccess();
 		return result;
 	}
 	
 	@Override
 	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
-	public CommonResultCX changeChannel(ChangeChannelParam param) throws Exception {
-		CommonResultCX result = new CommonResultCX();
+	public CommonResult changeChannel(ChangeChannelParam param) throws Exception {
+		CommonResult result = new CommonResult();
 		if(StringUtils.isBlank(param.getPk())) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("error param");
 			return result;
 		}
 		
 		param.setPk(URLDecoder.decode(param.getPk(), StandardCharsets.UTF_8));
 		Long articleId = systemOptionService.decryptPrivateKey(param.getPk());
 		if(articleId == null) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("error param");
 			return result;
 		}
 		
@@ -203,33 +202,33 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		record.setIsPass(isBigUser());
 		articleLongMapper.updateByPrimaryKeySelective(record);
 		
-		result.fillWithResult(ResultTypeCX.success);
+		result.setIsSuccess();
 		return result;
 	}
 	
 	@Override
-	public CommonResultCX setArticleHot(SetArticleHotParam controllerParam) {
-		CommonResultCX result = new CommonResultCX();
+	public CommonResult setArticleHot(SetArticleHotParam controllerParam) {
+		CommonResult result = new CommonResult();
 		if(StringUtils.isBlank(controllerParam.getPk()) || controllerParam.getHotMinutes() == null || controllerParam.getHotLevel() == null) {
-			result.fillWithResult(ResultTypeCX.nullParam);
+			result.setMessage("null param");
 			return result;
 		}
 		
 		if(controllerParam.getHotMinutes() < 0 || controllerParam.getHotMinutes() > (60L * 24 * 30) || controllerParam.getHotLevel() < 0 || controllerParam.getHotLevel() > 10) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("error param");
 			return result;
 		}
 		
 		controllerParam.setPk(URLDecoder.decode(controllerParam.getPk(), StandardCharsets.UTF_8));
 		Long articleId = systemOptionService.decryptPrivateKey(controllerParam.getPk());
 		if(articleId == null) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("error param");
 			return result;
 		}
 		
 		ArticleLong oldArticleLong = articleLongMapper.selectByPrimaryKey(articleId);
 		if(oldArticleLong == null || oldArticleLong.getIsPass() == false || oldArticleLong.getIsDelete() == true || oldArticleLong.getIsReject() == true || oldArticleLong.getIsEdited() == true) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("error param");
 			return result;
 		}
 		
@@ -242,7 +241,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		articleLongSummaryMapper.updateByPrimaryKeySelective(summaryPO);
 		
 		
-		result.fillWithResult(ResultTypeCX.setArticleHotSuccess);
+		result.setIsSuccess();
 		return result;
 	}
 

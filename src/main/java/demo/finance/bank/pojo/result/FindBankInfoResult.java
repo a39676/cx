@@ -2,11 +2,11 @@ package demo.finance.bank.pojo.result;
 
 import java.util.List;
 
-import demo.common.pojo.result.CommonResultCX;
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.bank.pojo.po.BankInfo;
 
-public class FindBankInfoResult extends CommonResultCX {
-	
+public class FindBankInfoResult extends CommonResult {
+
 	private List<BankInfo> bankList;
 
 	public List<BankInfo> getBankList() {
@@ -21,6 +21,5 @@ public class FindBankInfoResult extends CommonResultCX {
 	public String toString() {
 		return "FindBankInfoResult [bankList=" + bankList + "]";
 	}
-
 
 }

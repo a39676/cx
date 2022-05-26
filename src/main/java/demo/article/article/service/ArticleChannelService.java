@@ -6,12 +6,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.servlet.ModelAndView;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.pojo.dto.ArticleChannelKeyHostnameIdDTO;
 import demo.article.article.pojo.dto.ArticleChannelManagerDTO;
 import demo.article.article.pojo.po.ArticleChannels;
 import demo.article.article.pojo.result.GetArticleChannelsResult;
 import demo.article.article.pojo.vo.ArticleChannelVO;
-import demo.common.pojo.result.CommonResultCX;
 
 public interface ArticleChannelService {
 
@@ -28,13 +28,13 @@ public interface ArticleChannelService {
 
 	List<ArticleChannelVO> findArticleChannel();
 
-	CommonResultCX articleChannelManager(ArticleChannelManagerDTO dto);
+	CommonResult articleChannelManager(ArticleChannelManagerDTO dto);
 
 	ModelAndView articleChannelManagerView();
 
 	boolean containThisChannel(HttpServletRequest request, Long channelId);
 
-	CommonResultCX editChannelKeyHostname(ArticleChannelKeyHostnameIdDTO dto);
+	CommonResult editChannelKeyHostname(ArticleChannelKeyHostnameIdDTO dto);
 
 	void loadPublicChannels();
 

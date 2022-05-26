@@ -39,8 +39,6 @@ import demo.article.article.service.ArticleEvaluationService;
 import demo.article.article.service.ArticleService;
 import demo.article.article.service.ArticleSummaryService;
 import demo.common.controller.CommonController;
-import demo.common.pojo.result.CommonResultCX;
-import demo.common.pojo.type.ResultTypeCX;
 
 @Controller
 @RequestMapping(value = ArticleUrlConstant.root)
@@ -104,14 +102,14 @@ public class ArticleController extends CommonController {
 
 	@PostMapping(value = ArticleUrlConstant.deleteArticle)
 	@ResponseBody
-	public CommonResultCX deleteArticle(@RequestBody ReviewArticleLongParam param, HttpServletRequest request,
+	public CommonResult deleteArticle(@RequestBody ReviewArticleLongParam param, HttpServletRequest request,
 			HttpServletResponse response) {
 		param.setReviewCode(ArticleReviewType.delete.getReviewCode());
 
-		CommonResultCX serviceResult = new CommonResultCX();
+		CommonResult serviceResult = new CommonResult();
 
 		if (!articleService.iWroteThis(param.getPk())) {
-			serviceResult.fillWithResult(ResultTypeCX.notYourArticle);
+			serviceResult.setMessage("无权限编辑");
 			return serviceResult;
 		}
 
@@ -120,7 +118,7 @@ public class ArticleController extends CommonController {
 
 	@PostMapping(value = ArticleUrlConstant.insertArticleLongEvaluation)
 	@ResponseBody
-	public CommonResultCX insertArticleLongEvaluation(@RequestBody InsertArticleLongEvaluationParam param) {
+	public CommonResult insertArticleLongEvaluation(@RequestBody InsertArticleLongEvaluationParam param) {
 		param.setEvaluationType(ArticleEvaluationType.articleLongEvaluation.getCode());
 		return articleEvaluationService.insertArticleLongEvaluationRedis(param);
 	}
@@ -147,7 +145,7 @@ public class ArticleController extends CommonController {
 
 	@PostMapping(value = ArticleUrlConstant.editArticleLong)
 	@ResponseBody
-	public CommonResultCX editArticleLong(@RequestBody EditArticleLongDTO dto)
+	public CommonResult editArticleLong(@RequestBody EditArticleLongDTO dto)
 			throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
 			BadPaddingException, InvalidAlgorithmParameterException, IOException {
 		return articleService.editArticleLongHandler(dto);

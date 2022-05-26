@@ -1,5 +1,7 @@
 article
 	给部分非科技类post 设置有效期
+		前端页面未更新
+		ArticleValidServiceImpl 未配置给定时任务
 	
 	Add back to Homepage button in post.jsp
 

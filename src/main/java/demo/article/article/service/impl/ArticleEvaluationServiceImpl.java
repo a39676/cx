@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.mapper.ArticleEvaluationCacheMapper;
 import demo.article.article.mapper.ArticleEvaluationStoreMapper;
 import demo.article.article.mapper.ArticleLongMapper;
@@ -35,8 +36,6 @@ import demo.article.article.pojo.type.ArticleEvaluationType;
 import demo.article.article.pojo.vo.ArticleEvaluationCounterVO;
 import demo.article.article.pojo.vo.ArticleEvaluationStatisticsVO;
 import demo.article.article.service.ArticleEvaluationService;
-import demo.common.pojo.result.CommonResultCX;
-import demo.common.pojo.type.ResultTypeCX;
 import net.sf.json.JSONObject;
 
 @Service
@@ -133,30 +132,29 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 		return voMap;
 	}
 
-
 	@Override
-	public CommonResultCX insertArticleLongEvaluationRedis(InsertArticleLongEvaluationParam inputParam) {
-		CommonResultCX result = new CommonResultCX();
+	public CommonResult insertArticleLongEvaluationRedis(InsertArticleLongEvaluationParam inputParam) {
+		CommonResult result = new CommonResult();
 		Long evaluationVoterId = baseUtilCustom.getUserId();
 		if (evaluationVoterId == null) {
-			result.fillWithResult(ResultTypeCX.notLoginUser);
+			result.setMessage("Please login");
 			return result;
 		}
 		if (StringUtils.isBlank(inputParam.getPk()) || inputParam.getEvaluationCode() == null
 				|| inputParam.getEvaluationType() == null) {
-			result.fillWithResult(ResultTypeCX.nullParam);
+			result.setMessage("Null param");
 			return result;
 		}
 		inputParam.setEvaluationType(ArticleEvaluationType.articleLongEvaluation.getCode());
 		ArticleEvaluationCodeType evaluationType = ArticleEvaluationCodeType.getType(inputParam.getEvaluationCode());
 		if (evaluationType == null) {
-			result.fillWithResult(ResultTypeCX.nullParam);
+			result.setMessage("Null param");
 			return result;
 		}
 
 		Long articleId = systemOptionService.decryptPrivateKey(inputParam.getPk());
 		if (articleId == null) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("Service error");
 			return result;
 		}
 
@@ -164,7 +162,7 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 				.range(ArticleEvaluationConstant.evaluationCacheRedisKeyNamePreffix + articleId, 0, -1);
 		for (String i : evaluationCacheList) {
 			if (StringUtils.isNotEmpty(i) && i.contains(evaluationVoterId.toString())) {
-				result.fillWithResult(ResultTypeCX.hadEvaluationVoted);
+				result.setMessage("hadEvaluationVoted");
 				return result;
 			}
 		}
@@ -174,13 +172,13 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 				ArticleEvaluationConstant.evaluationCacheRedisKeyNamePreffix + articleId,
 				JSONObject.fromObject(cache).toString());
 
-		CommonResultCX updateResult = updateChannelCoefficientByInsertEvaluation(articleId, evaluationVoterId,
+		CommonResult updateResult = updateChannelCoefficientByInsertEvaluation(articleId, evaluationVoterId,
 				evaluationType);
 		if (!updateResult.isSuccess()) {
 			return updateResult;
 		}
 
-		result.fillWithResult(ResultTypeCX.evaluationVoteSuccess);
+		result.setIsSuccess();
 		return result;
 	}
 
@@ -200,29 +198,30 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 	/*
 	 * 从redis中查找
 	 */
-	public CommonResultCX insertArticleCommentEvaluation(InsertArticleCommentEvaluationParam inputParam,
+	public CommonResult insertArticleCommentEvaluation(InsertArticleCommentEvaluationParam inputParam,
 			Long evaluationVoterId) {
 //		TODO
-		CommonResultCX result = new CommonResultCX();
+		CommonResult result = new CommonResult();
 		if (evaluationVoterId == null) {
-			result.fillWithResult(ResultTypeCX.notLoginUser);
+			result.setMessage("Please login");
 			return result;
 		}
 
 		if (inputParam.getCommentId() == null || inputParam.getEvaluationCode() == null
 				|| inputParam.getEvaluationType() == null) {
-			result.fillWithResult(ResultTypeCX.nullParam);
+			result.setMessage("Null param");
+
 			return result;
 		}
 
 		if (ArticleEvaluationType.getType(inputParam.getEvaluationType()) == null) {
-			result.fillWithResult(ResultTypeCX.nullParam);
+			result.setMessage("Null param");
 			return result;
 		}
 
 		ArticleEvaluationCodeType evaluationType = ArticleEvaluationCodeType.getType(inputParam.getEvaluationCode());
 		if (evaluationType == null) {
-			result.fillWithResult(ResultTypeCX.nullParam);
+			result.setMessage("Null param");
 			return result;
 		}
 
@@ -234,35 +233,35 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 
 		int insertCount = articleEvaluationCacheMapper.insertEvaluation(daoParam);
 		if (insertCount != 1) {
-			result.fillWithResult(ResultTypeCX.hadEvaluationVoted);
+			result.setMessage("hadEvaluationVoted");
 			return result;
 		}
 
-		CommonResultCX updateResult = updateChannelCoefficientByInsertEvaluation(inputParam.getCommentId(),
+		CommonResult updateResult = updateChannelCoefficientByInsertEvaluation(inputParam.getCommentId(),
 				evaluationVoterId, evaluationType);
 		if (!updateResult.isSuccess()) {
 			return updateResult;
 		}
 
-		result.fillWithResult(ResultTypeCX.evaluationVoteSuccess);
+		result.setIsSuccess();
 		return result;
 	}
 
-	private CommonResultCX updateChannelCoefficientByInsertEvaluation(Long articleId, Long evaluationVoterId,
+	private CommonResult updateChannelCoefficientByInsertEvaluation(Long articleId, Long evaluationVoterId,
 			ArticleEvaluationCodeType evaluationType) {
-		CommonResultCX result = new CommonResultCX();
+		CommonResult result = new CommonResult();
 		if (articleId == null || evaluationVoterId == null || evaluationType == null) {
-			result.fillWithResult(ResultTypeCX.nullParam);
+			result.setMessage("Null param");
 			return result;
 		}
 
 		ArticleLong article = articleLongMapper.selectByPrimaryKey(articleId);
 		if (article == null || article.getChannelId() == null || article.getUserId() == null) {
-			result.fillWithResult(ResultTypeCX.serviceError);
+			result.setMessage("Service error");
 			return result;
 		}
 
-		result.fillWithResult(ResultTypeCX.success);
+		result.setIsSuccess();
 		return result;
 	}
 

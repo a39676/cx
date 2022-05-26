@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.pojo.constant.ArticleAdminUrlConstant;
 import demo.article.article.pojo.dto.ArticleChannelKeyHostnameIdDTO;
 import demo.article.article.pojo.dto.ArticleChannelManagerDTO;
@@ -25,8 +26,6 @@ import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.article.article.service.ArticleAdminService;
 import demo.article.article.service.ArticleChannelService;
 import demo.common.controller.CommonController;
-import demo.common.pojo.result.CommonResultCX;
-import demo.common.pojo.type.ResultTypeCX;
 
 @Controller
 @RequestMapping( value = ArticleAdminUrlConstant.root)
@@ -45,54 +44,54 @@ public class ArticleAdminController extends CommonController {
 	
 	@PostMapping(value = ArticleAdminUrlConstant.passArticle)
 	@ResponseBody
-	public CommonResultCX passArticle(@RequestBody ReviewArticleLongParam param) {
+	public CommonResult passArticle(@RequestBody ReviewArticleLongParam param) {
 		param.setReviewCode(ArticleReviewType.pass.getReviewCode());
 		
 		try {
 			return articleAdminService.handelReviewArticle(param);
 		} catch (Exception e) {
-			CommonResultCX serviceResult = new CommonResultCX();
-			serviceResult.fillWithResult(ResultTypeCX.serviceError);
+			CommonResult serviceResult = new CommonResult();
+			serviceResult.setMessage("Service error");
 			return serviceResult;
 		}
 	}
 	
 	@PostMapping(value = ArticleAdminUrlConstant.rejectArticle)
 	@ResponseBody
-	public CommonResultCX rejectArticle(@RequestBody ReviewArticleLongParam param) {
+	public CommonResult rejectArticle(@RequestBody ReviewArticleLongParam param) {
 		param.setReviewCode(ArticleReviewType.reject.getReviewCode());
 		
 		try {
 			return articleAdminService.handelReviewArticle(param);
 		} catch (Exception e) {
-			CommonResultCX serviceResult = new CommonResultCX();
-			serviceResult.fillWithResult(ResultTypeCX.serviceError);
+			CommonResult serviceResult = new CommonResult();
+			serviceResult.setMessage("Service error");
 			return serviceResult;
 		}
 	}
 	
 	@PostMapping(value = ArticleAdminUrlConstant.deleteArticle)
 	@ResponseBody
-	public CommonResultCX deleteArticle(@RequestBody ReviewArticleLongParam param) {
+	public CommonResult deleteArticle(@RequestBody ReviewArticleLongParam param) {
 		param.setReviewCode(ArticleReviewType.delete.getReviewCode());
 		try {
 			return articleAdminService.handelReviewArticle(param);
 		} catch (Exception e) {
-			CommonResultCX serviceResult = new CommonResultCX();
-			serviceResult.fillWithResult(ResultTypeCX.serviceError);
+			CommonResult serviceResult = new CommonResult();
+			serviceResult.setMessage("Service error");
 			return serviceResult;
 		}
 	}
 	
 	@PostMapping(value = ArticleAdminUrlConstant.changeChannel)
 	@ResponseBody
-	public CommonResultCX changeChannel(@RequestBody ChangeChannelParam param) throws Exception {
+	public CommonResult changeChannel(@RequestBody ChangeChannelParam param) throws Exception {
 		return articleAdminService.changeChannel(param);
 	}
 	
 	@PostMapping(value = ArticleAdminUrlConstant.setArticleHot)
 	@ResponseBody
-	public CommonResultCX setArticleHot(@RequestBody SetArticleHotParam param, HttpServletRequest request, HttpServletResponse response) {
+	public CommonResult setArticleHot(@RequestBody SetArticleHotParam param, HttpServletRequest request, HttpServletResponse response) {
 		return articleAdminService.setArticleHot(param);
 	}
 	
@@ -103,20 +102,20 @@ public class ArticleAdminController extends CommonController {
 	
 	@PostMapping(value = ArticleAdminUrlConstant.articleChannelManager)
 	@ResponseBody
-	public CommonResultCX articleChannelManager(@RequestBody ArticleChannelManagerDTO dto) {
+	public CommonResult articleChannelManager(@RequestBody ArticleChannelManagerDTO dto) {
 		return channelService.articleChannelManager(dto);
 	}
 
 	@PostMapping(value = ArticleAdminUrlConstant.editChannelKeyHostname)
 	@ResponseBody
-	public CommonResultCX editChannelKeyHostname(@RequestBody ArticleChannelKeyHostnameIdDTO dto) {
+	public CommonResult editChannelKeyHostname(@RequestBody ArticleChannelKeyHostnameIdDTO dto) {
 		return channelService.editChannelKeyHostname(dto);
 	}
 	
 	@GetMapping(value = ArticleAdminUrlConstant.loadPublicChannels)
 	@ResponseBody
-	public CommonResultCX loadPublicChannels() {
-		CommonResultCX r = new CommonResultCX();
+	public CommonResult loadPublicChannels() {
+		CommonResult r = new CommonResult();
 		channelService.loadPublicChannels();
 		r.setIsSuccess();
 		return r;

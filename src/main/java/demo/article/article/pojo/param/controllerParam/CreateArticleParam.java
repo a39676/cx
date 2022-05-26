@@ -1,11 +1,14 @@
 package demo.article.article.pojo.param.controllerParam;
 
+import java.time.LocalDateTime;
+
 public class CreateArticleParam {
 
 	private String superAdminKey;
 	private String channelId;
 	private String title;
 	private String content;
+	private LocalDateTime validTime;
 
 	public String getSuperAdminKey() {
 		return superAdminKey;
@@ -39,10 +42,18 @@ public class CreateArticleParam {
 		this.content = content;
 	}
 
+	public LocalDateTime getValidTime() {
+		return validTime;
+	}
+
+	public void setValidTime(LocalDateTime validTime) {
+		this.validTime = validTime;
+	}
+
 	@Override
 	public String toString() {
 		return "CreateArticleParam [superAdminKey=" + superAdminKey + ", channelId=" + channelId + ", title=" + title
-				+ ", content=" + content + "]";
+				+ ", content=" + content + ", validTime=" + validTime + "]";
 	}
 
 }

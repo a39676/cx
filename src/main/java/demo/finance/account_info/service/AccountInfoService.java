@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.common.pojo.result.CommonResultCX;
 import demo.finance.account_info.pojo.bo.AccountInfoWithBankInfo;
 import demo.finance.account_info.pojo.dto.ModifyValidDateDTO;
 import demo.finance.account_info.pojo.dto.controllerDTO.AccountInfoRegistDTO;
@@ -22,11 +21,11 @@ import demo.finance.account_info.pojo.result.InsertTransationResult;
 import demo.finance.account_info.pojo.vo.SummaryAccountsByBankId;
 
 public interface AccountInfoService {
-	
+
 	AccountRegistResult accountRegistration(AccountInfoRegistDTO dto);
 
 	CommonResult accountNumberDuplicateCheck(AccountNumberDuplicateCheckDTO dto);
-	
+
 	String getMainAccountNum(int id);
 
 	InsertTransationResult insertTradingRecorderSelective(InsertNewTransationDTO param) throws Exception;
@@ -39,7 +38,8 @@ public interface AccountInfoService {
 
 	List<AccountInfoWithBankInfo> getAccountInfoWithBankInfoByHolderId(Long holderId);
 
-	List<AccountInfoWithBankInfo> getAccountInfoWithBankInfoByCondition(Long holderId, GetAccountListByConditionParam controllerParam);
+	List<AccountInfoWithBankInfo> getAccountInfoWithBankInfoByCondition(Long holderId,
+			GetAccountListByConditionParam controllerParam);
 
 	List<AccountInfo> getAllAffiliatedAccountByAffiliationId(String accountNumber);
 
@@ -58,6 +58,7 @@ public interface AccountInfoService {
 
 	/**
 	 * 根据尾号确认卡片是否归属
+	 * 
 	 * @param accountTailNumber
 	 * @return
 	 */
@@ -69,11 +70,9 @@ public interface AccountInfoService {
 
 	List<AccountInfoWithBankInfo> accountUsedQuotaStatistics(List<AccountInfoWithBankInfo> accountInfoList);
 
-	/** 
-	 * 获取账户列表 
-	 * 2019-07-04 
-	 * 发现耦合度过高, 需要拆改或重写.
-	 * */
+	/**
+	 * 获取账户列表 2019-07-04 发现耦合度过高, 需要拆改或重写.
+	 */
 	GetAccountListResult accountInfoWithBankInfoList(GetAccountListByConditionParam param);
 
 	List<String> findAccountNumberListByCondition(FindAccountInfoByConditionDTO dto);
@@ -84,7 +83,7 @@ public interface AccountInfoService {
 
 	List<AccountInfo> findAccountsByCondition(FindAccountInfoByConditionDTO dto);
 
-	CommonResultCX modifyCreditsQuota(ModifyCreditsQuotaDTO dto);
+	CommonResult modifyCreditsQuota(ModifyCreditsQuotaDTO dto);
 
 	CommonResult modifyAccountInfoVaildDate(ModifyValidDateDTO dto) throws Exception;
 

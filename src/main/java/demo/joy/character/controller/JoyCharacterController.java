@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import demo.common.pojo.result.CommonResultCX;
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.joy.character.pojo.constant.JoyCharacterUrl;
 import demo.joy.character.pojo.dto.CreateJoyCharacterCharacterDTO;
 import demo.joy.character.pojo.result.GetCharacterDetailResult;
@@ -24,7 +24,7 @@ public class JoyCharacterController extends JoyCommonController {
 	
 	@PostMapping(value = JoyCharacterUrl.CREATE_CHARACTER)
 	@ResponseBody
-	public CommonResultCX createJoyCharacterCharacter(@RequestBody CreateJoyCharacterCharacterDTO dto) {
+	public CommonResult createJoyCharacterCharacter(@RequestBody CreateJoyCharacterCharacterDTO dto) {
 		return joyCharacterService.createJoyCharacterCharacter(dto);
 	}
 	

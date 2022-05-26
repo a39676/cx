@@ -1,8 +1,8 @@
 package demo.base.organizations.pojo.result;
 
-import demo.common.pojo.result.CommonResultCX;
+import auxiliaryCommon.pojo.result.CommonResult;
 
-public class OrgUserBelongResult extends CommonResultCX {
+public class OrgUserBelongResult extends CommonResult {
 
 	private boolean isBelong = false;
 

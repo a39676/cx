@@ -2,10 +2,10 @@ package demo.article.articleComment.pojo.result;
 
 import java.util.List;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.articleComment.pojo.vo.ArticleCommentVO;
-import demo.common.pojo.result.CommonResultCX;
 
-public class FindArticleCommentPageResult extends CommonResultCX {
+public class FindArticleCommentPageResult extends CommonResult {
 
 	private List<ArticleCommentVO> commentList;
 

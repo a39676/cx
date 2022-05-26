@@ -2,8 +2,8 @@ package demo.base.user.service;
 
 import java.util.List;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.user.pojo.po.UsersDetail;
-import demo.common.pojo.result.CommonResultCX;
 
 public interface UserDetailService {
 
@@ -14,9 +14,9 @@ public interface UserDetailService {
 	 * @param email
 	 * @return
 	 */
-	CommonResultCX ensureActiveEmail(String email);
+	CommonResult ensureActiveEmail(String email);
 
-	CommonResultCX ensureActiveMobile(Long mobile);
+	CommonResult ensureActiveMobile(Long mobile);
 	
 	List<UsersDetail> findByEmail(String email);
 

@@ -25,8 +25,6 @@ import org.springframework.stereotype.Service;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.service.impl.SystemOptionService;
 import demo.base.user.pojo.constant.UsersUrl;
-import demo.common.pojo.result.CommonResultCX;
-import demo.common.pojo.type.ResultTypeCX;
 import demo.common.service.CommonService;
 import demo.tool.mail.mapper.MailRecordMapper;
 import demo.tool.mail.pojo.dto.ResendMailDTO;
@@ -69,11 +67,11 @@ public class MailServiceImpl extends CommonService implements MailService {
 	public CommonResult sendSimpleMail(String sendTo, String title, String content, String mailKey, MailType mailType) {
 		CommonResult result = new CommonResult();
 		if(mailType == null || mailType.getCode() == null) {
-			result.failWithMessage(ResultTypeCX.nullParam.getName());
+			result.setMessage("Null param");
 			return result;
 		}
 		if(!isMailReady()) {
-			result.failWithMessage(ResultTypeCX.mailBaseOptionError.getName());
+			result.setMessage("Mail option error");
 			return result;
 		}
 		
@@ -141,11 +139,11 @@ public class MailServiceImpl extends CommonService implements MailService {
 	public SendRegistMailResult sendRegistMail(SendMailDTO dto) {
 		SendRegistMailResult result = new SendRegistMailResult();
 		if(dto.getUserId() == null || StringUtils.isAnyBlank(dto.getHostName(), dto.getSendTo(), dto.getNickName())) {
-			result.failWithMessage(ResultTypeCX.nullParam.getName());
+			result.setMessage("Null param");
 			return result;
 		}
 		if(!isMailReady()) {
-			result.failWithMessage(ResultTypeCX.mailBaseOptionError.getName());
+			result.setMessage("Mail option error");
 			return result;
 		}
 		
@@ -180,7 +178,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 		Long mailId = systemConstantService.decryptPrivateKey(dto.getMailKey());
 		MailRecord oldMail = mailRecordMapper.selectByPrimaryKey(mailId);
 		if(oldMail == null) {
-			result.failWithMessage(ResultTypeCX.errorParam.getName());
+			result.setMessage("Error param");
 			return result;
 		}
 		oldMail.setValidTime(oldMail.getValidTime().plusDays(1));
@@ -235,12 +233,12 @@ public class MailServiceImpl extends CommonService implements MailService {
 	}
 
 	@Override
-	public CommonResultCX updateWasUsed(Long mailId) {
+	public CommonResult updateWasUsed(Long mailId) {
 		/*
 		 * TODO
 		 * delete??
 		 */
-		CommonResultCX result = new CommonResultCX();
+		CommonResult result = new CommonResult();
 		if(mailId == null) {
 			return result;
 		}
@@ -257,14 +255,14 @@ public class MailServiceImpl extends CommonService implements MailService {
 	}
 	
 	@Override
-	public CommonResultCX sendForgotPasswordMail(SendMailDTO dto) {
-		CommonResultCX result = new CommonResultCX();
+	public CommonResult sendForgotPasswordMail(SendMailDTO dto) {
+		CommonResult result = new CommonResult();
 		if(dto.getUserId() == null || StringUtils.isBlank(dto.getSendTo())) {
-			result.fillWithResult(ResultTypeCX.nullParam);
+			result.setMessage("Null param");
 			return result;
 		}
 		if(!isMailReady()) {
-			result.failWithMessage(ResultTypeCX.mailBaseOptionError.getName());
+			result.setMessage("Mail option error");
 			return result;
 		}
 		
@@ -286,7 +284,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 		return result;
 	}
 	
-	private CommonResultCX sendNewForgotPasswordMail(SendMailDTO dto) {
+	private CommonResult sendNewForgotPasswordMail(SendMailDTO dto) {
 		MailRecord mr = new MailRecord();
 		Long mailId = snowFlake.getNextId();
 		mr.setId(mailId);
@@ -303,10 +301,10 @@ public class MailServiceImpl extends CommonService implements MailService {
 			log.error(mailId + ", trans mail key error");
 		} 
 		String mailUrl = dto.getHostName() + UsersUrl.root + UsersUrl.resetPassword + "?mailKey=" + mailKey;
-		return (CommonResultCX) sendSimpleMail(dto.getSendTo(), ("重置您在" + dto.getHostName() + "的密码"), createForgotPasswordMailContent(mailUrl), mailKey, MailType.forgotPassword);
+		return (CommonResult) sendSimpleMail(dto.getSendTo(), ("重置您在" + dto.getHostName() + "的密码"), createForgotPasswordMailContent(mailUrl), mailKey, MailType.forgotPassword);
 	}
 	
-	private CommonResultCX resendForgotPasswordMail(SendMailDTO dto, MailRecord oldMail) {
+	private CommonResult resendForgotPasswordMail(SendMailDTO dto, MailRecord oldMail) {
 		oldMail.setValidTime(oldMail.getValidTime().plusDays(1));
 		mailRecordMapper.updateByPrimaryKeySelective(oldMail);
 		
@@ -317,18 +315,18 @@ public class MailServiceImpl extends CommonService implements MailService {
 			log.error(oldMail.getId() + ", trans mail key error");
 		}
 		String mailUrl = dto.getHostName() + UsersUrl.root + UsersUrl.resetPassword + "?mailKey=" + mailKey;
-		return (CommonResultCX) sendSimpleMail(dto.getSendTo(), ("重置您在" + dto.getHostName() + "的密码"), createForgotPasswordMailContent(mailUrl), mailKey, MailType.forgotPassword);
+		return (CommonResult) sendSimpleMail(dto.getSendTo(), ("重置您在" + dto.getHostName() + "的密码"), createForgotPasswordMailContent(mailUrl), mailKey, MailType.forgotPassword);
 	}
 	
 	@Override
-	public CommonResultCX sendForgotUsernameMail(SendForgotUsernameMailDTO dto) {
-		CommonResultCX result = new CommonResultCX();
+	public CommonResult sendForgotUsernameMail(SendForgotUsernameMailDTO dto) {
+		CommonResult result = new CommonResult();
 		if(StringUtils.isAnyBlank(dto.getUserName(), dto.getEmail()) || dto.getUserId() == null) {
-			result.fillWithResult(ResultTypeCX.nullParam);
+			result.setMessage("Null param");
 			return result;
 		}
 		if(!isMailReady()) {
-			result.fillWithResult(ResultTypeCX.mailBaseOptionError);
+			result.setMessage("Mail option error");
 			return result;
 		}
 		

@@ -2,10 +2,10 @@ package demo.article.article.pojo.result.jsonRespon;
 
 import java.util.List;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.pojo.vo.ArticleLongSummaryVO;
-import demo.common.pojo.result.CommonResultCX;
 
-public class FindArticleLongSummaryListResult extends CommonResultCX {
+public class FindArticleLongSummaryListResult extends CommonResult {
 
 	private List<ArticleLongSummaryVO> articleLongSummaryVOList;
 

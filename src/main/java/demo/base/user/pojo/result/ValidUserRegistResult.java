@@ -1,8 +1,8 @@
 package demo.base.user.pojo.result;
 
-import demo.common.pojo.result.CommonResultCX;
+import auxiliaryCommon.pojo.result.CommonResult;
 
-public class ValidUserRegistResult extends CommonResultCX {
+public class ValidUserRegistResult extends CommonResult {
 
 	private String username;
 	private String nickname;

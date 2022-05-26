@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.article.pojo.type.ArticleEvaluationType;
 import demo.article.article.pojo.vo.ArticleEvaluationStatisticsVO;
@@ -41,8 +42,6 @@ import demo.base.system.service.IpRecordService;
 import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.UserDetailService;
 import demo.base.user.service.UsersService;
-import demo.common.pojo.result.CommonResultCX;
-import demo.common.pojo.type.ResultTypeCX;
 import demo.tool.other.service.ValidRegexToolService;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -80,20 +79,20 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	
 	
 	@Override
-	public CommonResultCX creatingArticleComment(HttpServletRequest request, CreateArticleCommentDTO inputParam) throws IOException {
+	public CommonResult creatingArticleComment(HttpServletRequest request, CreateArticleCommentDTO inputParam) throws IOException {
 		
-		CommonResultCX result = new CommonResultCX();
+		CommonResult result = new CommonResult();
 		if(StringUtils.isBlank(inputParam.getContent())) {
-			result.fillWithResult(ResultTypeCX.nullParam);
+			result.setMessage("Null param");
 			return result;
 		}
 		if(inputParam.getContent().replaceAll("\\s", "").length() < 6) {
-			result.fillWithResult(ResultTypeCX.articleTooShort);
+			result.setMessage("Article too short");
 			return result;
 		}
 		String articleCommentStorePrefixPath = constantService.getArticleCommentStorePrefixPath();
 		if(StringUtils.isBlank(articleCommentStorePrefixPath) || constantService.getMaxArticleCommentLength() <= 0) {
-			result.fillWithResult(ResultTypeCX.serviceError);
+			result.setMessage("Service error");
 			return result;
 		}
 		
@@ -101,7 +100,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		Long articleId = systemOptionService.decryptPrivateKey(inputParam.getPk());
 		
 		if(articleId == null) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("Error param");
 			return result;
 		}
 		
@@ -209,7 +208,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		List<ArticleCommentVO> commentVOList = new ArrayList<ArticleCommentVO>();
 		
 		if(StringUtils.isBlank(dto.getPk())) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("Error param");
 			return result;
 		}
 		
@@ -223,7 +222,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		dto.setPk(URLDecoder.decode(dto.getPk(), StandardCharsets.UTF_8));
 		Long articleId = systemOptionService.decryptPrivateKey(dto.getPk());
 		if(articleId == null) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("Error param");
 			return result;
 		}
 		result.setPk(dto.getPk());

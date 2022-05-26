@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.user.mapper.RolesMapper;
 import demo.base.user.mapper.UserRolesMapper;
 import demo.base.user.mapper.UsersDetailMapper;
@@ -19,7 +20,6 @@ import demo.base.user.pojo.po.UsersDetail;
 import demo.base.user.pojo.po.UsersDetailExample;
 import demo.base.user.pojo.type.SystemRolesType;
 import demo.base.user.service.UserDetailService;
-import demo.common.pojo.result.CommonResultCX;
 import demo.common.service.CommonService;
 
 @Service
@@ -41,8 +41,8 @@ public class UserDetailServiceImpl extends CommonService implements UserDetailSe
 	}
 
 	@Override
-	public CommonResultCX ensureActiveEmail(String email) {
-		CommonResultCX r = new CommonResultCX();
+	public CommonResult ensureActiveEmail(String email) {
+		CommonResult r = new CommonResult();
 
 		UsersDetailExample userDetailExample = new UsersDetailExample();
 		userDetailExample.createCriteria().andEmailEqualTo(email);
@@ -77,8 +77,8 @@ public class UserDetailServiceImpl extends CommonService implements UserDetailSe
 	}
 
 	@Override
-	public CommonResultCX ensureActiveMobile(Long mobile) {
-		CommonResultCX r = new CommonResultCX();
+	public CommonResult ensureActiveMobile(Long mobile) {
+		CommonResult r = new CommonResult();
 
 		UsersDetailExample userDetailExample = new UsersDetailExample();
 		userDetailExample.createCriteria().andMobileEqualTo(mobile);

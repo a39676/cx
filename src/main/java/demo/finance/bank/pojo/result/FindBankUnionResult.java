@@ -2,10 +2,10 @@ package demo.finance.bank.pojo.result;
 
 import java.util.List;
 
-import demo.common.pojo.result.CommonResultCX;
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.bank.pojo.po.BankUnion;
 
-public class FindBankUnionResult extends CommonResultCX {
+public class FindBankUnionResult extends CommonResult {
 
 	private List<BankUnion> bankUnionList;
 

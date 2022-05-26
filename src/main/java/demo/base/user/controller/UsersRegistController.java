@@ -28,8 +28,6 @@ import demo.base.user.pojo.result.NewUserRegistResult;
 import demo.base.user.pojo.type.SystemRolesType;
 import demo.base.user.service.UserRegistService;
 import demo.common.controller.CommonController;
-import demo.common.pojo.result.CommonResultCX;
-import demo.common.pojo.type.ResultTypeCX;
 import demo.config.costom_component.BaseUtilCustom;
 import demo.toyParts.educate.pojo.type.GradeType;
 
@@ -57,11 +55,11 @@ public class UsersRegistController extends CommonController {
 
 	@PostMapping(value = UsersUrl.modifyRegistMail)
 	@ResponseBody
-	public CommonResultCX modifyRegistMail(@RequestBody ModifyRegistMailDTO dto) {
+	public CommonResult modifyRegistMail(@RequestBody ModifyRegistMailDTO dto) {
 
-		CommonResultCX result = new CommonResultCX();
+		CommonResult result = new CommonResult();
 		if (!baseUtilCustom.isLoginUser() || StringUtils.isBlank(dto.getModifyRegistMail())) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("Error param");
 			return result;
 		}
 
@@ -106,7 +104,7 @@ public class UsersRegistController extends CommonController {
 
 	@GetMapping(value = UsersUrl.registActivation)
 	public ModelAndView registActivation(@RequestParam(value = "mailKey", defaultValue = "") String mailKey) {
-		CommonResultCX serviceResult = userRegistService.registActivation(mailKey);
+		CommonResult serviceResult = userRegistService.registActivation(mailKey);
 		ModelAndView view = new ModelAndView(UserRegistView.userRegistActivationResult);
 		view.addObject("message", serviceResult.getMessage());
 		return view;
@@ -114,17 +112,17 @@ public class UsersRegistController extends CommonController {
 
 	@PostMapping(value = UsersUrl.resendRegistMail)
 	@ResponseBody
-	public CommonResultCX resendRegistMail(HttpServletRequest request) {
-		CommonResultCX result = new CommonResultCX();
+	public CommonResult resendRegistMail(HttpServletRequest request) {
+		CommonResult result = new CommonResult();
 		if (!baseUtilCustom.isLoginUser()
 				|| baseUtilCustom.getRoles().contains(SystemRolesType.ROLE_USER_ACTIVE.getName())) {
-			result.fillWithResult(ResultTypeCX.notLoginUser);
+			result.setMessage("Please login");
 			return result;
 		}
 		Long userId = baseUtilCustom.getUserId();
 		result = userRegistService.resendRegistMail(userId, request);
-		if (!result.getResult().equals(ResultTypeCX.success.getCode())) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+		if (result.isFail()) {
+			result.setMessage("Error param");
 			return result;
 		}
 		result.successWithMessage("邮件已发送,因网络原因,可能存在延迟,请稍后至邮箱查收.请留意邮箱拦截规则,如果邮件被拦截,可能存放于邮箱垃圾箱内...");
@@ -138,11 +136,11 @@ public class UsersRegistController extends CommonController {
 
 	@PostMapping(value = UsersUrl.forgotPassword)
 	@ResponseBody
-	public CommonResultCX forgotPassword(@RequestBody ForgotPasswordDTO dto, HttpServletRequest request) {
-		CommonResultCX result = new CommonResultCX();
+	public CommonResult forgotPassword(@RequestBody ForgotPasswordDTO dto, HttpServletRequest request) {
+		CommonResult result = new CommonResult();
 
 		if (StringUtils.isBlank(dto.getEmail())) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("Error param");
 			return result;
 		}
 
@@ -157,11 +155,11 @@ public class UsersRegistController extends CommonController {
 
 	@PostMapping(value = UsersUrl.forgotUsername)
 	@ResponseBody
-	public CommonResultCX forgotUsername(@RequestBody ForgotUsernameDTO dto, HttpServletRequest request) {
-		CommonResultCX result = new CommonResultCX();
+	public CommonResult forgotUsername(@RequestBody ForgotUsernameDTO dto, HttpServletRequest request) {
+		CommonResult result = new CommonResult();
 
 		if (StringUtils.isBlank(dto.getEmail())) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("Error param");
 			return result;
 		}
 
@@ -183,7 +181,7 @@ public class UsersRegistController extends CommonController {
 		ModelAndView view = new ModelAndView("userJSP/resetPassword");
 
 		if (StringUtils.isBlank(mailKey)) {
-			view.addObject("errorMessage", ResultTypeCX.errorParam.getName());
+			view.addObject("errorMessage", "Error param");
 			return view;
 		}
 
@@ -194,11 +192,11 @@ public class UsersRegistController extends CommonController {
 
 	@PostMapping(value = UsersUrl.resetPassword)
 	@ResponseBody
-	public CommonResultCX resetPassword(@RequestBody ResetPasswordDTO dto) {
-		CommonResultCX r = new CommonResultCX();
+	public CommonResult resetPassword(@RequestBody ResetPasswordDTO dto) {
+		CommonResult r = new CommonResult();
 
 		if (StringUtils.isAnyBlank(dto.getNewPassword(), dto.getNewPasswordRepeat())) {
-			r.fillWithResult(ResultTypeCX.nullParam);
+			r.setMessage("Null param");
 			return r;
 		}
 
@@ -207,7 +205,7 @@ public class UsersRegistController extends CommonController {
 					dto.getNewPasswordRepeat());
 		} else if (baseUtilCustom.isLoginUser()) {
 			if (StringUtils.isBlank(dto.getOldPassword())) {
-				r.fillWithResult(ResultTypeCX.nullParam);
+				r.setMessage("Null param");
 				return r;
 			}
 			r = userRegistService.resetPasswordByLoginUser(baseUtilCustom.getUserId(), dto.getOldPassword(),

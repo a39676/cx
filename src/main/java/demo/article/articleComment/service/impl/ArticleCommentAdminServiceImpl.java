@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.service.impl.ArticleCommonService;
 import demo.article.articleComment.mapper.ArticleCommentMapper;
 import demo.article.articleComment.mapper.ArticleCommentReviewMapper;
@@ -22,8 +23,6 @@ import demo.article.articleComment.pojo.po.ArticleCommentReview;
 import demo.article.articleComment.pojo.type.ArticleCommentResultType;
 import demo.article.articleComment.pojo.type.ArticleCommentReviewType;
 import demo.article.articleComment.service.ArticleCommentAdminService;
-import demo.common.pojo.result.CommonResultCX;
-import demo.common.pojo.type.ResultTypeCX;
 
 @Service
 public class ArticleCommentAdminServiceImpl extends ArticleCommonService implements ArticleCommentAdminService {
@@ -36,11 +35,11 @@ public class ArticleCommentAdminServiceImpl extends ArticleCommonService impleme
 	@Autowired
 	private ArticleCommentReviewMapper articleCommentReviewMapper;
 	
-	private CommonResultCX ArticleCommentReviewDTOValider(ArticleCommentReviewCommonDTO dto) {
-		CommonResultCX result = new CommonResultCX();
+	private CommonResult ArticleCommentReviewDTOValider(ArticleCommentReviewCommonDTO dto) {
+		CommonResult result = new CommonResult();
 		
 		if(StringUtils.isBlank(dto.getPk())) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("Error param");
 			return result;
 		}
 		
@@ -50,21 +49,21 @@ public class ArticleCommentAdminServiceImpl extends ArticleCommonService impleme
 	
 	@Override
 	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
-	public CommonResultCX deleteArticleComment(DeleteArticleCommentDTO param) {
-		CommonResultCX result = ArticleCommentReviewDTOValider(param);
+	public CommonResult deleteArticleComment(DeleteArticleCommentDTO param) {
+		CommonResult result = ArticleCommentReviewDTOValider(param);
 		if(result.isFail()) {
 			return result;
 		}
 		
 		Long reviewerId = baseUtilCustom.getUserId();
 		if(reviewerId == null ) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("Error param");
 			return result;
 		}
 		
 		Long commentId = systemOptionService.decryptPrivateKey(param.getPk());
 		if(commentId == null) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("Error param");
 			return result;
 		}
 		ArticleComment record = articleCommentMapper.selectByPrimaryKey(commentId);
@@ -92,21 +91,21 @@ public class ArticleCommentAdminServiceImpl extends ArticleCommonService impleme
 	
 	@Override
 	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
-	public CommonResultCX passArticleComment(PassArticleCommentDTO param) {
-		CommonResultCX result = ArticleCommentReviewDTOValider(param);
+	public CommonResult passArticleComment(PassArticleCommentDTO param) {
+		CommonResult result = ArticleCommentReviewDTOValider(param);
 		if(result.isFail()) {
 			return result;
 		}
 		
 		Long reviewerId = baseUtilCustom.getUserId();
 		if(reviewerId == null ) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("Error param");
 			return result;
 		}
 		
 		Long commentId = systemOptionService.decryptPrivateKey(param.getPk());
 		if(commentId == null) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("Error param");
 			return result;
 		}
 		
@@ -136,21 +135,21 @@ public class ArticleCommentAdminServiceImpl extends ArticleCommonService impleme
 	
 	@Override
 	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
-	public CommonResultCX rejectArticleComment(RejectArticleCommentDTO param) {
-		CommonResultCX result = ArticleCommentReviewDTOValider(param);
+	public CommonResult rejectArticleComment(RejectArticleCommentDTO param) {
+		CommonResult result = ArticleCommentReviewDTOValider(param);
 		if(result.isFail()) {
 			return result;
 		}
 		
 		Long reviewerId = baseUtilCustom.getUserId();
 		if(reviewerId == null ) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("Error param");
 			return result;
 		}
 		
 		Long commentId = systemOptionService.decryptPrivateKey(param.getPk());
 		if(commentId == null) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("Error param");
 			return result;
 		}
 		

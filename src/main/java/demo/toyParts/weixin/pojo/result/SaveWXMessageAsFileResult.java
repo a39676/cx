@@ -1,8 +1,8 @@
 package demo.toyParts.weixin.pojo.result;
 
-import demo.common.pojo.result.CommonResultCX;
+import auxiliaryCommon.pojo.result.CommonResult;
 
-public class SaveWXMessageAsFileResult extends CommonResultCX {
+public class SaveWXMessageAsFileResult extends CommonResult {
 
 	private String filePath;
 

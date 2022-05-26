@@ -3,12 +3,7 @@
 <mapper namespace="demo.article.article.mapper.ArticleValidMapper">
   <resultMap id="BaseResultMap" type="demo.article.article.pojo.po.ArticleValid">
     <id column="article_id" jdbcType="BIGINT" property="articleId" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="valid_time" jdbcType="TIMESTAMP" property="validTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="update_count" jdbcType="INTEGER" property="updateCount" />
-    <result column="update_by" jdbcType="BIGINT" property="updateBy" />
-    <result column="is_delete" jdbcType="BIT" property="isDelete" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -69,7 +64,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    article_id, create_time, valid_time, update_time, update_count, update_by, is_delete
+    article_id, valid_time
   </sql>
   <select id="selectByExample" parameterType="demo.article.article.pojo.po.ArticleValidExample" resultMap="BaseResultMap">
     select
@@ -102,12 +97,8 @@
     </if>
   </delete>
   <insert id="insert" parameterType="demo.article.article.pojo.po.ArticleValid">
-    insert into article_valid (article_id, create_time, valid_time, 
-      update_time, update_count, update_by, 
-      is_delete)
-    values (#{articleId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{validTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{updateCount,jdbcType=INTEGER}, #{updateBy,jdbcType=BIGINT}, 
-      #{isDelete,jdbcType=BIT})
+    insert into article_valid (article_id, valid_time)
+    values (#{articleId,jdbcType=BIGINT}, #{validTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="demo.article.article.pojo.po.ArticleValid">
     insert into article_valid
@@ -115,46 +106,16 @@
       <if test="articleId != null">
         article_id,
       </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
       <if test="validTime != null">
         valid_time,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-      <if test="updateCount != null">
-        update_count,
-      </if>
-      <if test="updateBy != null">
-        update_by,
-      </if>
-      <if test="isDelete != null">
-        is_delete,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="articleId != null">
         #{articleId,jdbcType=BIGINT},
       </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="validTime != null">
         #{validTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateCount != null">
-        #{updateCount,jdbcType=INTEGER},
-      </if>
-      <if test="updateBy != null">
-        #{updateBy,jdbcType=BIGINT},
-      </if>
-      <if test="isDelete != null">
-        #{isDelete,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -170,23 +131,8 @@
       <if test="record.articleId != null">
         article_id = #{record.articleId,jdbcType=BIGINT},
       </if>
-      <if test="record.createTime != null">
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="record.validTime != null">
         valid_time = #{record.validTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.updateTime != null">
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.updateCount != null">
-        update_count = #{record.updateCount,jdbcType=INTEGER},
-      </if>
-      <if test="record.updateBy != null">
-        update_by = #{record.updateBy,jdbcType=BIGINT},
-      </if>
-      <if test="record.isDelete != null">
-        is_delete = #{record.isDelete,jdbcType=BIT},
       </if>
     </set>
     <if test="_parameter != null">
@@ -196,12 +142,7 @@
   <update id="updateByExample" parameterType="map">
     update article_valid
     set article_id = #{record.articleId,jdbcType=BIGINT},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      valid_time = #{record.validTime,jdbcType=TIMESTAMP},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      update_count = #{record.updateCount,jdbcType=INTEGER},
-      update_by = #{record.updateBy,jdbcType=BIGINT},
-      is_delete = #{record.isDelete,jdbcType=BIT}
+      valid_time = #{record.validTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -209,35 +150,29 @@
   <update id="updateByPrimaryKeySelective" parameterType="demo.article.article.pojo.po.ArticleValid">
     update article_valid
     <set>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="validTime != null">
         valid_time = #{validTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateCount != null">
-        update_count = #{updateCount,jdbcType=INTEGER},
-      </if>
-      <if test="updateBy != null">
-        update_by = #{updateBy,jdbcType=BIGINT},
-      </if>
-      <if test="isDelete != null">
-        is_delete = #{isDelete,jdbcType=BIT},
       </if>
     </set>
     where article_id = #{articleId,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="demo.article.article.pojo.po.ArticleValid">
     update article_valid
-    set create_time = #{createTime,jdbcType=TIMESTAMP},
-      valid_time = #{validTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      update_count = #{updateCount,jdbcType=INTEGER},
-      update_by = #{updateBy,jdbcType=BIGINT},
-      is_delete = #{isDelete,jdbcType=BIT}
+    set valid_time = #{validTime,jdbcType=TIMESTAMP}
     where article_id = #{articleId,jdbcType=BIGINT}
   </update>
+  <select id="selectByExampleWithRowbounds" parameterType="demo.article.article.pojo.po.ArticleValidExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from article_valid
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
 </mapper>

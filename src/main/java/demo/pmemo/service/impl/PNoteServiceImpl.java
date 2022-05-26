@@ -17,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.article.service.impl.ArticleCommonService;
-import demo.common.pojo.type.ResultTypeCX;
 import demo.pmemo.mapper.PNoteMapper;
 import demo.pmemo.pojo.constant.PMemoConstant;
 import demo.pmemo.pojo.dto.EditPNoteDTO;
@@ -85,7 +84,7 @@ public class PNoteServiceImpl extends ArticleCommonService implements PNoteServi
 		File mainFolder = new File(storePrefixPath);
 		if (!mainFolder.exists()) {
 			if (!mainFolder.mkdirs()) {
-				result.fillWithResult(ResultTypeCX.serviceError);
+				result.setMessage("Service error");
 				return result;
 			}
 		}

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.mapper.ArticleChannelKeyHostnameMapper;
 import demo.article.article.mapper.ArticleChannelsMapper;
 import demo.article.article.mapper.ArticleUserDetailMapper;
@@ -35,7 +36,6 @@ import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.article.article.service.ArticleChannelService;
 import demo.base.system.pojo.po.Hostname;
 import demo.base.system.pojo.result.HostnameType;
-import demo.common.pojo.result.CommonResultCX;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -403,8 +403,8 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	}
 
 	@Override
-	public CommonResultCX articleChannelManager(ArticleChannelManagerDTO dto) {
-		CommonResultCX result = new CommonResultCX();
+	public CommonResult articleChannelManager(ArticleChannelManagerDTO dto) {
+		CommonResult result = new CommonResult();
 		if (dto.getOperationalType() == null) {
 			result.failWithMessage("参数为空");
 			return result;
@@ -432,8 +432,8 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		return result;
 	}
 
-	private CommonResultCX addNewChannel(ArticleChannelManagerDTO dto) {
-		CommonResultCX r = new CommonResultCX();
+	private CommonResult addNewChannel(ArticleChannelManagerDTO dto) {
+		CommonResult r = new CommonResult();
 		if (StringUtils.isBlank(dto.getChannelName())) {
 			r.failWithMessage("不能设置空白名称");
 			return r;
@@ -465,8 +465,8 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		return r;
 	}
 
-	private CommonResultCX updateDeleteChannel(ArticleChannelManagerDTO dto) {
-		CommonResultCX r = new CommonResultCX();
+	private CommonResult updateDeleteChannel(ArticleChannelManagerDTO dto) {
+		CommonResult r = new CommonResult();
 		if (dto.getChannelId() == null) {
 			return r;
 		}
@@ -488,8 +488,8 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		return r;
 	}
 
-	private CommonResultCX modifyChannel(ArticleChannelManagerDTO dto) {
-		CommonResultCX r = new CommonResultCX();
+	private CommonResult modifyChannel(ArticleChannelManagerDTO dto) {
+		CommonResult r = new CommonResult();
 		if (dto.getChannelId() == null) {
 			r.failWithMessage("参数为空");
 			return r;
@@ -562,8 +562,8 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 	}
 
 	@Override
-	public CommonResultCX editChannelKeyHostname(ArticleChannelKeyHostnameIdDTO dto) {
-		CommonResultCX r = new CommonResultCX();
+	public CommonResult editChannelKeyHostname(ArticleChannelKeyHostnameIdDTO dto) {
+		CommonResult r = new CommonResult();
 		if (dto.getChannelId() == null || dto.getHostnameId() == null
 				|| dto.getArticleChannelKeyHostnameType() == null) {
 			r.failWithMessage("参数异常");

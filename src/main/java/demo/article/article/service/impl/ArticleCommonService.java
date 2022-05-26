@@ -18,7 +18,6 @@ import demo.article.articleComment.pojo.po.ArticleCommentCount;
 import demo.base.system.service.HostnameService;
 import demo.base.system.service.impl.RedisOriginalConnectService;
 import demo.base.system.service.impl.SystemOptionService;
-import demo.common.pojo.type.ResultTypeCX;
 import demo.common.service.CommonService;
 import demo.image.pojo.result.ImgHandleSrcDataResult;
 import demo.image.pojo.type.ImageTagType;
@@ -78,7 +77,7 @@ public class ArticleCommonService extends CommonService {
 
 		if (!mainFolder.exists()) {
 			if (!mainFolder.mkdirs()) {
-				result.fillWithResult(ResultTypeCX.serviceError);
+				result.setMessage("Service error");
 				return result;
 			}
 		}
@@ -95,12 +94,12 @@ public class ArticleCommonService extends CommonService {
 		Long maxArticleLength = articleOptionService.getMaxArticleLength();
 
 		if (content.length() > maxArticleLength) {
-			result.fillWithResult(ResultTypeCX.articleTooLong);
+			result.setMessage("Article too long");
 			return result;
 		}
 
 		if (StringUtils.isBlank(content) || content.replaceAll("\\s", "").length() < 6) {
-			result.fillWithResult(ResultTypeCX.articleTooShort);
+			result.setMessage("Article too short");
 			return result;
 		}
 

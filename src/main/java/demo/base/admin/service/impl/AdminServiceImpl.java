@@ -4,14 +4,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.admin.service.AdminService;
 import demo.base.system.service.impl.SystemCommonService;
 import demo.base.user.mapper.UserIpMapper;
 import demo.base.user.pojo.dto.UserIpDeleteDTO;
 import demo.base.user.pojo.po.UserIpExample;
 import demo.base.user.pojo.po.UserIpExample.Criteria;
-import demo.common.pojo.result.CommonResultCX;
-import demo.common.pojo.type.ResultTypeCX;
 
 @Service
 public class AdminServiceImpl extends SystemCommonService implements AdminService {
@@ -20,10 +19,10 @@ public class AdminServiceImpl extends SystemCommonService implements AdminServic
 	private UserIpMapper userIpMapper;
 
 	@Override
-	public CommonResultCX deleteUserIpRecord(UserIpDeleteDTO param) {
-		CommonResultCX result = new CommonResultCX();
+	public CommonResult deleteUserIpRecord(UserIpDeleteDTO param) {
+		CommonResult result = new CommonResult();
 		if (param.getStartDate() == null || param.getEndDate() == null) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("Error param");
 			return result;
 		}
 
@@ -44,7 +43,7 @@ public class AdminServiceImpl extends SystemCommonService implements AdminServic
 		
 		userIpMapper.deleteByExample(example);
 		int deleteCount = userIpMapper.deleteByExample(example);
-		result.fillWithResult(ResultTypeCX.success);
+		result.setIsSuccess();
 		result.setMessage(String.valueOf(deleteCount));
 		return result;
 	}

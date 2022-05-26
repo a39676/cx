@@ -13,10 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
-import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.TimeUnitType;
-import demo.common.pojo.result.CommonResultCX;
-import demo.common.pojo.type.ResultTypeCX;
 import demo.config.costom_component.BaseUtilCustom;
 import demo.config.costom_component.SnowFlake;
 import net.sf.json.JSONObject;
@@ -43,36 +40,6 @@ public abstract class CommonService {
 	protected static final Integer NORMAL_PAGE_SIZE = 10;
 	protected static final LocalDateTime BLOG_ARTICLE_START_TIME = LocalDateTime.of(2020, 5, 1, 0, 0, 0);
 	protected static final String MAIN_FOLDER_PATH = "/home/u2/cx";
-
-	protected CommonResultCX nullParam() {
-		CommonResultCX result = new CommonResultCX();
-		result.fillWithResult(ResultTypeCX.nullParam);
-		return result;
-	}
-
-	protected CommonResultCX errorParam() {
-		CommonResultCX result = new CommonResultCX();
-		result.fillWithResult(ResultTypeCX.errorParam);
-		return result;
-	}
-
-	protected CommonResultCX serviceError() {
-		CommonResultCX result = new CommonResultCX();
-		result.fillWithResult(ResultTypeCX.serviceError);
-		return result;
-	}
-
-	protected CommonResult normalSuccess() {
-		CommonResult result = new CommonResult();
-		result.normalSuccess();
-		return result;
-	}
-
-	protected CommonResult notLogin() {
-		CommonResult result = new CommonResult();
-		result.failWithMessage("请登录后操作");
-		return result;
-	}
 
 	protected boolean isWindows() {
 		String os = System.getProperty("os.name");

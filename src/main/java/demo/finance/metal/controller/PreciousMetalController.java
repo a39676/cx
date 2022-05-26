@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.controller.CommonController;
-import demo.common.pojo.result.CommonResultCX;
 import demo.finance.metal.pojo.constant.PreciousMetalPriceUrl;
 import demo.finance.metal.pojo.dto.InsertNewMetalPriceNoticeSettingDTO;
 import demo.finance.metal.service.PreciousMetalNoticeService;
@@ -22,13 +22,13 @@ public class PreciousMetalController extends CommonController {
 
 	@Autowired
 	private PreciousMetalNoticeService preciousMetalNoticeService;
-	
+
 	@PostMapping(value = PreciousMetalPriceUrl.INSERT_METAL_NOTICE_SETTING)
 	@ResponseBody
-	public CommonResultCX insertNewMetalPriceNoticeSetting(@RequestBody InsertNewMetalPriceNoticeSettingDTO dto) {
+	public CommonResult insertNewMetalPriceNoticeSetting(@RequestBody InsertNewMetalPriceNoticeSettingDTO dto) {
 		return preciousMetalNoticeService.insertNewMetalPriceNoticeSetting(dto);
 	}
-	
+
 	@GetMapping(value = PreciousMetalPriceUrl.INSERT_METAL_NOTICE_SETTING)
 	public ModelAndView insertNewMetalPriceNoticeSetting() {
 		return preciousMetalNoticeService.insertNewMetalPriceNoticeSetting();

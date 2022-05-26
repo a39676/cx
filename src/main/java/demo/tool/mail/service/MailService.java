@@ -8,7 +8,6 @@ import javax.mail.Message;
 import javax.mail.search.SearchTerm;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.common.pojo.result.CommonResultCX;
 import demo.tool.mail.pojo.dto.ResendMailDTO;
 import demo.tool.mail.pojo.dto.SendForgotUsernameMailDTO;
 import demo.tool.mail.pojo.dto.SendMailDTO;
@@ -29,11 +28,11 @@ public interface MailService {
 
 	public MailRecord findMailByMailKeyMailType(String mailKey, MailType mailType);
 
-	CommonResultCX updateWasUsed(Long mailId);
+	CommonResult updateWasUsed(Long mailId);
 
-	CommonResultCX sendForgotPasswordMail(SendMailDTO dto);
+	CommonResult sendForgotPasswordMail(SendMailDTO dto);
 	
-	CommonResultCX sendForgotUsernameMail(SendForgotUsernameMailDTO dto);
+	CommonResult sendForgotUsernameMail(SendForgotUsernameMailDTO dto);
 
 	MailRecord findRegistActivationUnusedByUserId(Long userId);
 

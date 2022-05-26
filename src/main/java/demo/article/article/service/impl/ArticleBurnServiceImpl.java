@@ -29,7 +29,6 @@ import demo.article.article.pojo.result.CreatingBurnMessageResult;
 import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.article.service.ArticleBurnService;
 import demo.base.system.pojo.constant.SystemRedisKey;
-import demo.common.pojo.type.ResultTypeCX;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -62,7 +61,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 
 		if (StringUtils.isBlank(dto.getContent())
 				|| dto.getContent().length() > articleOptionService.getMaxArticleLength()) {
-			r.fillWithResult(ResultTypeCX.errorParam);
+			r.setMessage("Error param");
 			return r;
 		}
 

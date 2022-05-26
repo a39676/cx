@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
-import demo.common.pojo.result.CommonResultCX;
+import auxiliaryCommon.pojo.result.CommonResult;
 import net.sf.json.JSONObject;
 import tool.pojo.bo.IpRecordBO;
 import toolPack.ioHandle.FileUtilCustom;
@@ -45,8 +45,8 @@ public class RedisOriginalConnectService extends RedisConnectCommonService {
 		redisTemplate.delete(constantName);
 	}
 	
-	public CommonResultCX refreshRedisValueFromFile(String filePath) {
-		CommonResultCX result = new CommonResultCX();
+	public CommonResult refreshRedisValueFromFile(String filePath) {
+		CommonResult result = new CommonResult();
 		try {
 			if (StringUtils.isBlank(filePath)) {
 				result.failWithMessage("path error");

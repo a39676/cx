@@ -77,6 +77,10 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 					channelBanList.add(i.getChannelId());
 				}
 			}
+			
+			log.error("allPublicChannelVoList: " + allPublicChannelVoList);
+			log.error("channelPassList: " + channelPassList);
+			log.error("channelBanList: " + channelBanList);
 
 			List<ArticleChannelVO> tmpChannelList = new ArrayList<ArticleChannelVO>();
 			tmpChannelList.add(createTheAllChannel());

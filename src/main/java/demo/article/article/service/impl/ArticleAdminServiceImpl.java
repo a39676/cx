@@ -147,7 +147,19 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			return result;
 		}
 		
-		ArticleLong article = articleLongMapper.selectByPrimaryKey(articleId);
+		return deleteArticle(articleId);
+	}
+	
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
+	@Override
+	public CommonResult deleteArticle(Long id) throws Exception {
+		CommonResult result = new CommonResult();
+		if(id == null) {
+			result.setMessage("error param");
+			return result;
+		}
+		
+		ArticleLong article = articleLongMapper.selectByPrimaryKey(id);
 		if(article == null) {
 			result.setMessage("Service error");
 			return result;
@@ -159,7 +171,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		}
 		
 		UpdateArticleLongReviewStatuParam updateArticleReviewStatuParam = new UpdateArticleLongReviewStatuParam();
-		updateArticleReviewStatuParam.setArticleId(articleId);
+		updateArticleReviewStatuParam.setArticleId(id);
 		updateArticleReviewStatuParam.setDelete(true);
 		int updateCount = articleLongMapper.updateArticleLongReviewStatu(updateArticleReviewStatuParam);
 		if(updateCount == 0) {
@@ -167,7 +179,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		}
 		
 		InsertNewReviewRecordParam insertNewReviewRecordParam = new InsertNewReviewRecordParam();
-		insertNewReviewRecordParam.setArticleId(articleId);
+		insertNewReviewRecordParam.setArticleId(id);
 		insertNewReviewRecordParam.setArticleReviewerId(baseUtilCustom.getUserId());
 		insertNewReviewRecordParam.setReviewTypeId(ArticleReviewType.delete.getReviewCode());
 		updateCount = articleLongReviewMapper.insertNewReviewRecord(insertNewReviewRecordParam);

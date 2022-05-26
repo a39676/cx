@@ -27,4 +27,6 @@ public interface ArticleAdminService {
 
 	CommonResult setArticleHot(SetArticleHotParam controllerParam);
 
+	CommonResult deleteArticle(Long id) throws Exception;
+
 }

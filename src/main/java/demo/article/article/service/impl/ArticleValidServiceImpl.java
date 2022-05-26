@@ -33,7 +33,6 @@ public class ArticleValidServiceImpl extends ArticleCommonService implements Art
 			} catch (Exception e) {
 				log.error("Delete article error, articleId: " + articleId + ", error: " + e.getLocalizedMessage());
 			}
-			return;
 		}
 
 		ArticleValid po = validMapper.selectByPrimaryKey(articleId);
@@ -70,5 +69,15 @@ public class ArticleValidServiceImpl extends ArticleCommonService implements Art
 		ArticleValidExample example = new ArticleValidExample();
 		example.createCriteria().andValidTimeLessThan(LocalDateTime.now().minusDays(3));
 		validMapper.deleteByExample(example);
+	}
+
+	@Override
+	public LocalDateTime getById(Long articleId) {
+		ArticleValid po = validMapper.selectByPrimaryKey(articleId);
+		if(po != null) {
+			return po.getValidTime();
+		} else {
+			return null;
+		}
 	}
 }

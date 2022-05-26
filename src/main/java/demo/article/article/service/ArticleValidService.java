@@ -11,4 +11,6 @@ public interface ArticleValidService {
 
 	void cleanOldData();
 
+	LocalDateTime getById(Long articleId);
+
 }

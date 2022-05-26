@@ -57,6 +57,7 @@ import demo.article.article.service.ArticleViewService;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.user.controller.UsersController;
 import demo.base.user.pojo.bo.MyUserPrincipal;
+import toolPack.dateTimeHandle.DateTimeUtilCommon;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -213,10 +214,10 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			}
 		}
 		
-		if(checkResult.getEditFlag()) {
-			if(controllerParam.getValidTime() != null) {
-				articleValidService.addOrUpdateValid(newArticleId, controllerParam.getValidTime());
-			}
+		if (checkResult.getEditFlag()) {
+			articleValidService.addOrUpdateValid(editedArticleId, controllerParam.getValidTime());
+		} else {
+			articleValidService.addOrUpdateValid(newArticleId, controllerParam.getValidTime());
 		}
 
 		result.setMessage("已成功编辑,可能稍后就会出现...");
@@ -449,7 +450,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 
 		view.addObject("articleVO", vo);
 		view.addObject("edit", "true");
-
+		
 		return view;
 	}
 
@@ -494,9 +495,15 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			vo.setContentLines("这篇文已经失踪了...请联系管理员...");
 			return vo;
 		}
-
+		
 		fillArticleContent(vo, dto.getPrivateKey(), userId);
 
+		LocalDateTime validTime = articleValidService.getById(articleId);
+		
+		vo.setValidTimeStr(localDateTimeHandler.dateToStr(validTime, DateTimeUtilCommon.normalTimeFormat));
+		vo.setValidDateStr(localDateTimeHandler.dateToStr(validTime, DateTimeUtilCommon.normalDateFormat));
+		vo.setValidTime(validTime);
+		
 		return vo;
 	}
 
@@ -525,6 +532,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		param.setContent(dto.getContent());
 		param.setTitle(dto.getTitle());
 		param.setChannelId(dto.getChannelId());
+		param.setValidTime(dto.getValidTime());
 
 		result = editOrCreateArticleLong(userId, param, targetArticleId);
 
@@ -541,6 +549,7 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 			if(controllerParam.getValidTime() != null) {
 				if(controllerParam.getValidTime().isBefore(LocalDateTime.now())) {
 					result.setMessage("Please do NOT set valid time or valid time must after NOW");
+					return result;
 				}
 			}
 		}

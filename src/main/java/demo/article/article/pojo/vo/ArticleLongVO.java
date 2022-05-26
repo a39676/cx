@@ -1,5 +1,6 @@
 package demo.article.article.pojo.vo;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class ArticleLongVO {
@@ -7,7 +8,7 @@ public class ArticleLongVO {
 	private String articleTitle;
 
 	private String nickName;
-	
+
 	private Long channelId;
 
 	private String headIamgeUrl;
@@ -39,11 +40,17 @@ public class ArticleLongVO {
 	private Integer editCount;
 
 	private boolean iWroteThis = false;
-	
+
+	private String validDateStr;
+
+	private String validTimeStr;
+
+	private LocalDateTime validTime;
+
 	public String getHeadIamgeUrl() {
 		return headIamgeUrl;
 	}
-	
+
 	public void setHeadIamgeUrl(String headIamgeUrl) {
 		this.headIamgeUrl = headIamgeUrl;
 	}
@@ -179,13 +186,37 @@ public class ArticleLongVO {
 	public void setEditCount(Integer editCount) {
 		this.editCount = editCount;
 	}
-	
+
 	public Long getChannelId() {
 		return channelId;
 	}
 
 	public void setChannelId(Long channelId) {
 		this.channelId = channelId;
+	}
+
+	public String getValidDateStr() {
+		return validDateStr;
+	}
+
+	public void setValidDateStr(String validDateStr) {
+		this.validDateStr = validDateStr;
+	}
+
+	public String getValidTimeStr() {
+		return validTimeStr;
+	}
+
+	public void setValidTimeStr(String validTimeStr) {
+		this.validTimeStr = validTimeStr;
+	}
+
+	public LocalDateTime getValidTime() {
+		return validTime;
+	}
+
+	public void setValidTime(LocalDateTime validTime) {
+		this.validTime = validTime;
 	}
 
 	@Override
@@ -195,7 +226,8 @@ public class ArticleLongVO {
 				+ createDateString + ", editDateString=" + editDateString + ", privateKey=" + privateKey + ", path="
 				+ path + ", isPass=" + isPass + ", isDelete=" + isDelete + ", isEdited=" + isEdited + ", isReject="
 				+ isReject + ", createTime=" + createTime + ", editTime=" + editTime + ", userId=" + userId
-				+ ", editCount=" + editCount + ", iWroteThis=" + iWroteThis + "]";
+				+ ", editCount=" + editCount + ", iWroteThis=" + iWroteThis + ", validDateStr=" + validDateStr
+				+ ", validTimeStr=" + validTimeStr + ", validTime=" + validTime + "]";
 	}
 
 }

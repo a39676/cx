@@ -4,6 +4,10 @@ public class JoyGardenUrl {
 
 	public static final String ROOT = "/garden";
 	
+	public static final String INDEX = "/index";
+	
+	public static final String CREAT_NEW_GARDEN = "/createNewGarden";
+	
 	public static final String PLANT_CATALOG_MANAGER = "/plantCatalogManager";
 	
 	public static final String PLANT_CATALOG_CREATOR = "/plantCatalogCreator";

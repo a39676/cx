@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.joy.garden.mapper.JoyGardenInfoMapper">
+  <resultMap id="BaseResultMap" type="demo.joy.garden.pojo.po.JoyGardenInfo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="garden_name" jdbcType="CHAR" property="gardenName" />
+    <result column="field_count" jdbcType="INTEGER" property="fieldCount" />
+    <result column="wetland_count" jdbcType="INTEGER" property="wetlandCount" />
+    <result column="woodland_count" jdbcType="INTEGER" property="woodlandCount" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, garden_name, field_count, wetland_count, woodland_count, create_time, update_time, 
+    is_delete
+  </sql>
+  <select id="selectByExample" parameterType="demo.joy.garden.pojo.po.JoyGardenInfoExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from joy_garden_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from joy_garden_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from joy_garden_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.joy.garden.pojo.po.JoyGardenInfoExample">
+    delete from joy_garden_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="demo.joy.garden.pojo.po.JoyGardenInfo">
+    insert into joy_garden_info (id, garden_name, field_count, 
+      wetland_count, woodland_count, create_time, 
+      update_time, is_delete)
+    values (#{id,jdbcType=BIGINT}, #{gardenName,jdbcType=CHAR}, #{fieldCount,jdbcType=INTEGER}, 
+      #{wetlandCount,jdbcType=INTEGER}, #{woodlandCount,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="demo.joy.garden.pojo.po.JoyGardenInfo">
+    insert into joy_garden_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="gardenName != null">
+        garden_name,
+      </if>
+      <if test="fieldCount != null">
+        field_count,
+      </if>
+      <if test="wetlandCount != null">
+        wetland_count,
+      </if>
+      <if test="woodlandCount != null">
+        woodland_count,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="gardenName != null">
+        #{gardenName,jdbcType=CHAR},
+      </if>
+      <if test="fieldCount != null">
+        #{fieldCount,jdbcType=INTEGER},
+      </if>
+      <if test="wetlandCount != null">
+        #{wetlandCount,jdbcType=INTEGER},
+      </if>
+      <if test="woodlandCount != null">
+        #{woodlandCount,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="demo.joy.garden.pojo.po.JoyGardenInfoExample" resultType="java.lang.Long">
+    select count(*) from joy_garden_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update joy_garden_info
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.gardenName != null">
+        garden_name = #{record.gardenName,jdbcType=CHAR},
+      </if>
+      <if test="record.fieldCount != null">
+        field_count = #{record.fieldCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.wetlandCount != null">
+        wetland_count = #{record.wetlandCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.woodlandCount != null">
+        woodland_count = #{record.woodlandCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isDelete != null">
+        is_delete = #{record.isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update joy_garden_info
+    set id = #{record.id,jdbcType=BIGINT},
+      garden_name = #{record.gardenName,jdbcType=CHAR},
+      field_count = #{record.fieldCount,jdbcType=INTEGER},
+      wetland_count = #{record.wetlandCount,jdbcType=INTEGER},
+      woodland_count = #{record.woodlandCount,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      is_delete = #{record.isDelete,jdbcType=BIT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.joy.garden.pojo.po.JoyGardenInfo">
+    update joy_garden_info
+    <set>
+      <if test="gardenName != null">
+        garden_name = #{gardenName,jdbcType=CHAR},
+      </if>
+      <if test="fieldCount != null">
+        field_count = #{fieldCount,jdbcType=INTEGER},
+      </if>
+      <if test="wetlandCount != null">
+        wetland_count = #{wetlandCount,jdbcType=INTEGER},
+      </if>
+      <if test="woodlandCount != null">
+        woodland_count = #{woodlandCount,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="demo.joy.garden.pojo.po.JoyGardenInfo">
+    update joy_garden_info
+    set garden_name = #{gardenName,jdbcType=CHAR},
+      field_count = #{fieldCount,jdbcType=INTEGER},
+      wetland_count = #{wetlandCount,jdbcType=INTEGER},
+      woodland_count = #{woodlandCount,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_delete = #{isDelete,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="demo.joy.garden.pojo.po.JoyGardenInfoExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from joy_garden_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

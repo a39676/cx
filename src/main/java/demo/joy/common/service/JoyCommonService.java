@@ -9,6 +9,7 @@ import demo.base.user.service.UserDetailService;
 import demo.common.service.CommonService;
 import demo.joy.image.service.JoyImageService;
 import demo.tool.other.service.TextFilter;
+import demo.toyParts.educate.service.StudentService;
 
 public class JoyCommonService extends CommonService {
 
@@ -22,6 +23,8 @@ public class JoyCommonService extends CommonService {
 	protected JoyOptionService optionService;
 	@Autowired
 	protected JoyImageService imageService;
+	@Autowired
+	protected StudentService studentService;
 	@Autowired
 	private TextFilter textFilter;
 	

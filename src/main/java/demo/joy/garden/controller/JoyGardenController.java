@@ -22,16 +22,22 @@ public class JoyGardenController extends CommonController {
 
 	@Autowired
 	private JoyGradenInfoService gardenInfoService;
-	
+
 	@GetMapping(value = JoyGardenUrl.INDEX)
 	public ModelAndView index() {
 		return gardenInfoService.index();
 	}
-	
+
 	@PostMapping(value = JoyGardenUrl.CREAT_NEW_GARDEN)
 	@ResponseBody
 	public JoyCommonResult createNewGarden(@RequestBody CreateNewGardenDTO dto) {
 		return gardenInfoService.createNewGarden(dto);
 	}
-	
+
+	@PostMapping(value = JoyGardenUrl.CREAT_NEW_FIELD_LAND)
+	@ResponseBody
+	public JoyCommonResult createNewFieldLand() {
+		return gardenInfoService.createNewFieldLand();
+	}
+
 }

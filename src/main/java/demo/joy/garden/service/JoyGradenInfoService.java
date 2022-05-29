@@ -13,4 +13,6 @@ public interface JoyGradenInfoService {
 
 	JoyCommonResult createNewGarden(CreateNewGardenDTO dto);
 
+	JoyCommonResult createNewFieldLand();
+
 }

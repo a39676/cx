@@ -14,13 +14,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.joy.common.pojo.result.JoyCommonResult;
-import demo.joy.common.service.JoyCommonService;
 import demo.joy.garden.mapper.JoyGardenInfoMapper;
 import demo.joy.garden.mapper.JoyGardenLandsMapper;
 import demo.joy.garden.pojo.dto.CreateNewGardenDTO;
 import demo.joy.garden.pojo.po.JoyGardenInfo;
 import demo.joy.garden.pojo.po.JoyGardenLands;
 import demo.joy.garden.pojo.po.JoyGardenLandsExample;
+import demo.joy.garden.pojo.result.JoyGardenCreateNewFieldLandResult;
 import demo.joy.garden.pojo.type.JoyGardenLandType;
 import demo.joy.garden.pojo.vo.GardenInfoVO;
 import demo.joy.garden.pojo.vo.JoyGardenLandVO;
@@ -28,7 +28,7 @@ import demo.joy.garden.service.JoyGradenInfoService;
 
 @Scope("singleton")
 @Service
-public class JoyGradenInfoServiceImpl extends JoyCommonService implements JoyGradenInfoService {
+public class JoyGradenInfoServiceImpl extends JoyGardenCommonService implements JoyGradenInfoService {
 
 	@Autowired
 	private JoyGardenInfoMapper infoMapper;
@@ -85,32 +85,33 @@ public class JoyGradenInfoServiceImpl extends JoyCommonService implements JoyGra
 		}
 
 		GardenInfoVO vo = buildGardenInfoVO(po);
-		view.addObject("title", vo.getGardenName());
+		view.addObject("nickname", baseUtilCustom.getUserPrincipal().getNickName());
+		view.addObject("title", baseUtilCustom.getUserPrincipal().getNickName() + "的" + vo.getGardenName());
 		view.addObject("gardenInfo", vo);
 
 		loadLands(false);
-		List<JoyGardenLandVO> fieldLandVoList = new ArrayList<>();
-		List<JoyGardenLandVO> wetlandVoList = new ArrayList<>();
-		List<JoyGardenLandVO> woodlandVoList = new ArrayList<>();
-
-		List<JoyGardenLands> fieldLandPoList = fieldMap.get(userId);
-		List<JoyGardenLands> wetLandPoList = wetlandsMap.get(userId);
-		List<JoyGardenLands> woodLandPoList = woodlandsMap.get(userId);
-
-		for (JoyGardenLands land : fieldLandPoList) {
-			fieldLandVoList.add(buildLandVO(land));
-		}
-		for (JoyGardenLands land : wetLandPoList) {
-			wetlandVoList.add(buildLandVO(land));
-		}
-		for (JoyGardenLands land : woodLandPoList) {
-			woodlandVoList.add(buildLandVO(land));
-		}
-
-		view.addObject("fieldVoList", fieldLandVoList);
-		view.addObject("canCreateNewField", gardenOptionService.getFieldMaxSize() > fieldLandVoList.size());
-		view.addObject("wetlandVoList", wetlandVoList);
-		view.addObject("woodlandVoList", woodlandVoList);
+//		List<JoyGardenLandVO> fieldLandVoList = new ArrayList<>();
+//		List<JoyGardenLandVO> wetlandVoList = new ArrayList<>();
+//		List<JoyGardenLandVO> woodlandVoList = new ArrayList<>();
+//
+//		List<JoyGardenLands> fieldLandPoList = fieldMap.get(userId);
+//		List<JoyGardenLands> wetLandPoList = wetlandsMap.get(userId);
+//		List<JoyGardenLands> woodLandPoList = woodlandsMap.get(userId);
+//
+//		for (JoyGardenLands land : fieldLandPoList) {
+//			fieldLandVoList.add(buildLandVO(land));
+//		}
+//		for (JoyGardenLands land : wetLandPoList) {
+//			wetlandVoList.add(buildLandVO(land));
+//		}
+//		for (JoyGardenLands land : woodLandPoList) {
+//			woodlandVoList.add(buildLandVO(land));
+//		}
+//
+//		view.addObject("fieldVoList", fieldLandVoList);
+//		view.addObject("canCreateNewField", gardenOptionService.getFieldMaxSize() > fieldLandVoList.size());
+//		view.addObject("wetlandVoList", wetlandVoList);
+//		view.addObject("woodlandVoList", woodlandVoList);
 
 		return view;
 	}
@@ -138,16 +139,6 @@ public class JoyGradenInfoServiceImpl extends JoyCommonService implements JoyGra
 
 	private ModelAndView createNewGardenView() {
 		return new ModelAndView("joyJSP/garden/JoyGardenCreateNewGarden");
-	}
-
-	private GardenInfoVO buildGardenInfoVO(JoyGardenInfo po) {
-		GardenInfoVO vo = new GardenInfoVO();
-		vo.setPk(systemOptionService.encryptId(po.getId()));
-		vo.setFieldCount(po.getFieldCount());
-		vo.setWetlandCount(po.getWetlandCount());
-		vo.setWoodlandCount(po.getWoodlandCount());
-		vo.setGardenName(po.getGardenName());
-		return vo;
 	}
 
 	private void loadLands(boolean refresh) {
@@ -181,18 +172,9 @@ public class JoyGradenInfoServiceImpl extends JoyCommonService implements JoyGra
 		woodlandsMap.put(userId, woodlandVoList);
 	}
 
-	private JoyGardenLandVO buildLandVO(JoyGardenLands po) {
-		JoyGardenLandVO vo = new JoyGardenLandVO();
-		vo.setPk(systemOptionService.encryptId(po.getId()));
-		vo.setLandLevel(po.getLandLevel());
-		vo.setLandType(JoyGardenLandType.getType(po.getLandType()));
-		vo.setUserId(po.getUserId());
-		return vo;
-	}
-
 	@Override
-	public JoyCommonResult createNewFieldLand() {
-		JoyCommonResult r = new JoyCommonResult();
+	public JoyGardenCreateNewFieldLandResult createNewFieldLand() {
+		JoyGardenCreateNewFieldLandResult r = new JoyGardenCreateNewFieldLandResult();
 		Long userId = baseUtilCustom.getUserId();
 		
 		List<JoyGardenLands> fieldLandPoList = fieldMap.get(userId);
@@ -226,7 +208,27 @@ public class JoyGradenInfoServiceImpl extends JoyCommonService implements JoyGra
 			r.setMessage("MAX");
 		}
 		
+		r.setView(getFieldLandView());
 		r.setIsSuccess();
 		return r;
+	}
+
+	@Override
+	public ModelAndView getFieldLandView() {
+		ModelAndView view = new ModelAndView("joyJSP/garden/JoyFieldLandView");
+		
+		Long userId = baseUtilCustom.getUserId();
+		List<JoyGardenLandVO> fieldLandVoList = new ArrayList<>();
+
+		List<JoyGardenLands> fieldLandPoList = fieldMap.get(userId);
+
+		for (JoyGardenLands land : fieldLandPoList) {
+			fieldLandVoList.add(buildLandVO(land));
+		}
+
+		view.addObject("fieldVoList", fieldLandVoList);
+		view.addObject("canCreateNewField", gardenOptionService.getFieldMaxSize() > fieldLandVoList.size());
+		
+		return view;
 	}
 }

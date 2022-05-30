@@ -225,63 +225,183 @@ public class JoyGardenPlantGrowingStageExample {
             return (Criteria) this;
         }
 
-        public Criteria andNextStageIdIsNull() {
-            addCriterion("next_stage_id is null");
+        public Criteria andStageSequenceIsNull() {
+            addCriterion("stage_sequence is null");
             return (Criteria) this;
         }
 
-        public Criteria andNextStageIdIsNotNull() {
-            addCriterion("next_stage_id is not null");
+        public Criteria andStageSequenceIsNotNull() {
+            addCriterion("stage_sequence is not null");
             return (Criteria) this;
         }
 
-        public Criteria andNextStageIdEqualTo(Long value) {
-            addCriterion("next_stage_id =", value, "nextStageId");
+        public Criteria andStageSequenceEqualTo(Integer value) {
+            addCriterion("stage_sequence =", value, "stageSequence");
             return (Criteria) this;
         }
 
-        public Criteria andNextStageIdNotEqualTo(Long value) {
-            addCriterion("next_stage_id <>", value, "nextStageId");
+        public Criteria andStageSequenceNotEqualTo(Integer value) {
+            addCriterion("stage_sequence <>", value, "stageSequence");
             return (Criteria) this;
         }
 
-        public Criteria andNextStageIdGreaterThan(Long value) {
-            addCriterion("next_stage_id >", value, "nextStageId");
+        public Criteria andStageSequenceGreaterThan(Integer value) {
+            addCriterion("stage_sequence >", value, "stageSequence");
             return (Criteria) this;
         }
 
-        public Criteria andNextStageIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("next_stage_id >=", value, "nextStageId");
+        public Criteria andStageSequenceGreaterThanOrEqualTo(Integer value) {
+            addCriterion("stage_sequence >=", value, "stageSequence");
             return (Criteria) this;
         }
 
-        public Criteria andNextStageIdLessThan(Long value) {
-            addCriterion("next_stage_id <", value, "nextStageId");
+        public Criteria andStageSequenceLessThan(Integer value) {
+            addCriterion("stage_sequence <", value, "stageSequence");
             return (Criteria) this;
         }
 
-        public Criteria andNextStageIdLessThanOrEqualTo(Long value) {
-            addCriterion("next_stage_id <=", value, "nextStageId");
+        public Criteria andStageSequenceLessThanOrEqualTo(Integer value) {
+            addCriterion("stage_sequence <=", value, "stageSequence");
             return (Criteria) this;
         }
 
-        public Criteria andNextStageIdIn(List<Long> values) {
-            addCriterion("next_stage_id in", values, "nextStageId");
+        public Criteria andStageSequenceIn(List<Integer> values) {
+            addCriterion("stage_sequence in", values, "stageSequence");
             return (Criteria) this;
         }
 
-        public Criteria andNextStageIdNotIn(List<Long> values) {
-            addCriterion("next_stage_id not in", values, "nextStageId");
+        public Criteria andStageSequenceNotIn(List<Integer> values) {
+            addCriterion("stage_sequence not in", values, "stageSequence");
             return (Criteria) this;
         }
 
-        public Criteria andNextStageIdBetween(Long value1, Long value2) {
-            addCriterion("next_stage_id between", value1, value2, "nextStageId");
+        public Criteria andStageSequenceBetween(Integer value1, Integer value2) {
+            addCriterion("stage_sequence between", value1, value2, "stageSequence");
             return (Criteria) this;
         }
 
-        public Criteria andNextStageIdNotBetween(Long value1, Long value2) {
-            addCriterion("next_stage_id not between", value1, value2, "nextStageId");
+        public Criteria andStageSequenceNotBetween(Integer value1, Integer value2) {
+            addCriterion("stage_sequence not between", value1, value2, "stageSequence");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLastStageIsNull() {
+            addCriterion("is_last_stage is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLastStageIsNotNull() {
+            addCriterion("is_last_stage is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLastStageEqualTo(Boolean value) {
+            addCriterion("is_last_stage =", value, "isLastStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLastStageNotEqualTo(Boolean value) {
+            addCriterion("is_last_stage <>", value, "isLastStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLastStageGreaterThan(Boolean value) {
+            addCriterion("is_last_stage >", value, "isLastStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLastStageGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_last_stage >=", value, "isLastStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLastStageLessThan(Boolean value) {
+            addCriterion("is_last_stage <", value, "isLastStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLastStageLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_last_stage <=", value, "isLastStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLastStageIn(List<Boolean> values) {
+            addCriterion("is_last_stage in", values, "isLastStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLastStageNotIn(List<Boolean> values) {
+            addCriterion("is_last_stage not in", values, "isLastStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLastStageBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_last_stage between", value1, value2, "isLastStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLastStageNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_last_stage not between", value1, value2, "isLastStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCycleStageIsNull() {
+            addCriterion("is_cycle_stage is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCycleStageIsNotNull() {
+            addCriterion("is_cycle_stage is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCycleStageEqualTo(Boolean value) {
+            addCriterion("is_cycle_stage =", value, "isCycleStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCycleStageNotEqualTo(Boolean value) {
+            addCriterion("is_cycle_stage <>", value, "isCycleStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCycleStageGreaterThan(Boolean value) {
+            addCriterion("is_cycle_stage >", value, "isCycleStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCycleStageGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_cycle_stage >=", value, "isCycleStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCycleStageLessThan(Boolean value) {
+            addCriterion("is_cycle_stage <", value, "isCycleStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCycleStageLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_cycle_stage <=", value, "isCycleStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCycleStageIn(List<Boolean> values) {
+            addCriterion("is_cycle_stage in", values, "isCycleStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCycleStageNotIn(List<Boolean> values) {
+            addCriterion("is_cycle_stage not in", values, "isCycleStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCycleStageBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_cycle_stage between", value1, value2, "isCycleStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCycleStageNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_cycle_stage not between", value1, value2, "isCycleStage");
             return (Criteria) this;
         }
 

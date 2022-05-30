@@ -6,6 +6,8 @@
   服务器关闭前持久化
   	
 garden
+	plant catalog & plant stage set cache map?
+	
 	收获 joy_garden_plant_gain_catalog
 		收获管理 另建页面 新建 管理
 	植物 joy_garden_plant_catalog

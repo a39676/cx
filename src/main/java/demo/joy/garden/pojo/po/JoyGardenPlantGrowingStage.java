@@ -7,7 +7,11 @@ public class JoyGardenPlantGrowingStage {
 
     private Long plantId;
 
-    private Long nextStageId;
+    private Integer stageSequence;
+
+    private Boolean isLastStage;
+
+    private Boolean isCycleStage;
 
     private String stageName;
 
@@ -35,12 +39,28 @@ public class JoyGardenPlantGrowingStage {
         this.plantId = plantId;
     }
 
-    public Long getNextStageId() {
-        return nextStageId;
+    public Integer getStageSequence() {
+        return stageSequence;
     }
 
-    public void setNextStageId(Long nextStageId) {
-        this.nextStageId = nextStageId;
+    public void setStageSequence(Integer stageSequence) {
+        this.stageSequence = stageSequence;
+    }
+
+    public Boolean getIsLastStage() {
+        return isLastStage;
+    }
+
+    public void setIsLastStage(Boolean isLastStage) {
+        this.isLastStage = isLastStage;
+    }
+
+    public Boolean getIsCycleStage() {
+        return isCycleStage;
+    }
+
+    public void setIsCycleStage(Boolean isCycleStage) {
+        this.isCycleStage = isCycleStage;
     }
 
     public String getStageName() {

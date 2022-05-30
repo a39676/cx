@@ -4,7 +4,9 @@
   <resultMap id="BaseResultMap" type="demo.joy.garden.pojo.po.JoyGardenPlantGrowingStage">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="plant_id" jdbcType="BIGINT" property="plantId" />
-    <result column="next_stage_id" jdbcType="BIGINT" property="nextStageId" />
+    <result column="stage_sequence" jdbcType="INTEGER" property="stageSequence" />
+    <result column="is_last_stage" jdbcType="BIT" property="isLastStage" />
+    <result column="is_cycle_stage" jdbcType="BIT" property="isCycleStage" />
     <result column="stage_name" jdbcType="CHAR" property="stageName" />
     <result column="living_minute" jdbcType="INTEGER" property="livingMinute" />
     <result column="img_id" jdbcType="BIGINT" property="imgId" />
@@ -70,7 +72,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, plant_id, next_stage_id, stage_name, living_minute, img_id, update_time, is_delete
+    id, plant_id, stage_sequence, is_last_stage, is_cycle_stage, stage_name, living_minute, 
+    img_id, update_time, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantGrowingStageExample" resultMap="BaseResultMap">
     select
@@ -103,12 +106,14 @@
     </if>
   </delete>
   <insert id="insert" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantGrowingStage">
-    insert into joy_garden_plant_growing_stage (id, plant_id, next_stage_id, 
-      stage_name, living_minute, img_id, 
-      update_time, is_delete)
-    values (#{id,jdbcType=BIGINT}, #{plantId,jdbcType=BIGINT}, #{nextStageId,jdbcType=BIGINT}, 
-      #{stageName,jdbcType=CHAR}, #{livingMinute,jdbcType=INTEGER}, #{imgId,jdbcType=BIGINT}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
+    insert into joy_garden_plant_growing_stage (id, plant_id, stage_sequence, 
+      is_last_stage, is_cycle_stage, stage_name, 
+      living_minute, img_id, update_time, 
+      is_delete)
+    values (#{id,jdbcType=BIGINT}, #{plantId,jdbcType=BIGINT}, #{stageSequence,jdbcType=INTEGER}, 
+      #{isLastStage,jdbcType=BIT}, #{isCycleStage,jdbcType=BIT}, #{stageName,jdbcType=CHAR}, 
+      #{livingMinute,jdbcType=INTEGER}, #{imgId,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{isDelete,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantGrowingStage">
     insert into joy_garden_plant_growing_stage
@@ -119,8 +124,14 @@
       <if test="plantId != null">
         plant_id,
       </if>
-      <if test="nextStageId != null">
-        next_stage_id,
+      <if test="stageSequence != null">
+        stage_sequence,
+      </if>
+      <if test="isLastStage != null">
+        is_last_stage,
+      </if>
+      <if test="isCycleStage != null">
+        is_cycle_stage,
       </if>
       <if test="stageName != null">
         stage_name,
@@ -145,8 +156,14 @@
       <if test="plantId != null">
         #{plantId,jdbcType=BIGINT},
       </if>
-      <if test="nextStageId != null">
-        #{nextStageId,jdbcType=BIGINT},
+      <if test="stageSequence != null">
+        #{stageSequence,jdbcType=INTEGER},
+      </if>
+      <if test="isLastStage != null">
+        #{isLastStage,jdbcType=BIT},
+      </if>
+      <if test="isCycleStage != null">
+        #{isCycleStage,jdbcType=BIT},
       </if>
       <if test="stageName != null">
         #{stageName,jdbcType=CHAR},
@@ -180,8 +197,14 @@
       <if test="record.plantId != null">
         plant_id = #{record.plantId,jdbcType=BIGINT},
       </if>
-      <if test="record.nextStageId != null">
-        next_stage_id = #{record.nextStageId,jdbcType=BIGINT},
+      <if test="record.stageSequence != null">
+        stage_sequence = #{record.stageSequence,jdbcType=INTEGER},
+      </if>
+      <if test="record.isLastStage != null">
+        is_last_stage = #{record.isLastStage,jdbcType=BIT},
+      </if>
+      <if test="record.isCycleStage != null">
+        is_cycle_stage = #{record.isCycleStage,jdbcType=BIT},
       </if>
       <if test="record.stageName != null">
         stage_name = #{record.stageName,jdbcType=CHAR},
@@ -207,7 +230,9 @@
     update joy_garden_plant_growing_stage
     set id = #{record.id,jdbcType=BIGINT},
       plant_id = #{record.plantId,jdbcType=BIGINT},
-      next_stage_id = #{record.nextStageId,jdbcType=BIGINT},
+      stage_sequence = #{record.stageSequence,jdbcType=INTEGER},
+      is_last_stage = #{record.isLastStage,jdbcType=BIT},
+      is_cycle_stage = #{record.isCycleStage,jdbcType=BIT},
       stage_name = #{record.stageName,jdbcType=CHAR},
       living_minute = #{record.livingMinute,jdbcType=INTEGER},
       img_id = #{record.imgId,jdbcType=BIGINT},
@@ -223,8 +248,14 @@
       <if test="plantId != null">
         plant_id = #{plantId,jdbcType=BIGINT},
       </if>
-      <if test="nextStageId != null">
-        next_stage_id = #{nextStageId,jdbcType=BIGINT},
+      <if test="stageSequence != null">
+        stage_sequence = #{stageSequence,jdbcType=INTEGER},
+      </if>
+      <if test="isLastStage != null">
+        is_last_stage = #{isLastStage,jdbcType=BIT},
+      </if>
+      <if test="isCycleStage != null">
+        is_cycle_stage = #{isCycleStage,jdbcType=BIT},
       </if>
       <if test="stageName != null">
         stage_name = #{stageName,jdbcType=CHAR},
@@ -247,7 +278,9 @@
   <update id="updateByPrimaryKey" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantGrowingStage">
     update joy_garden_plant_growing_stage
     set plant_id = #{plantId,jdbcType=BIGINT},
-      next_stage_id = #{nextStageId,jdbcType=BIGINT},
+      stage_sequence = #{stageSequence,jdbcType=INTEGER},
+      is_last_stage = #{isLastStage,jdbcType=BIT},
+      is_cycle_stage = #{isCycleStage,jdbcType=BIT},
       stage_name = #{stageName,jdbcType=CHAR},
       living_minute = #{livingMinute,jdbcType=INTEGER},
       img_id = #{imgId,jdbcType=BIGINT},

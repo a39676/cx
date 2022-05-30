@@ -11,7 +11,7 @@ import demo.joy.image.service.JoyImageService;
 import demo.tool.other.service.TextFilter;
 import demo.toyParts.educate.service.StudentService;
 
-public class JoyCommonService extends CommonService {
+public abstract class JoyCommonService extends CommonService {
 
 	@Autowired
 	protected SystemOptionService systemOptionService;

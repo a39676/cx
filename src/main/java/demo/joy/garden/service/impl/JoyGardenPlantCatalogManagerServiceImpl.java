@@ -1,19 +1,17 @@
 package demo.joy.garden.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 
-import demo.base.user.pojo.po.UsersDetail;
 import demo.joy.common.pojo.result.JoyCommonResult;
 import demo.joy.common.pojo.type.JoyModuleType;
-import demo.joy.common.service.JoyCommonService;
 import demo.joy.garden.mapper.JoyGardenPlantCatalogMapper;
 import demo.joy.garden.mapper.JoyGardenPlantGrowingStageMapper;
 import demo.joy.garden.pojo.dto.JoyGardenCreatePlantDTO;
@@ -37,7 +35,7 @@ import demo.joy.image.pojo.dto.JoyImageUploadDTO;
 import demo.joy.image.pojo.result.JoyImageUploadResult;
 
 @Service
-public class JoyGardenPlantCatalogManagerServiceImpl extends JoyCommonService
+public class JoyGardenPlantCatalogManagerServiceImpl extends JoyGardenCommonService
 		implements JoyGardenPlantCatalogManagerService {
 
 	@Autowired
@@ -81,20 +79,6 @@ public class JoyGardenPlantCatalogManagerServiceImpl extends JoyCommonService
 
 		view.addObject("plantList", voList);
 		return view;
-	}
-
-	private JoyGardenPlantCatalogVO buildPlantVO(JoyGardenPlantCatalog po) {
-		JoyGardenPlantCatalogVO vo = new JoyGardenPlantCatalogVO();
-		vo.setPk(systemOptionService.encryptId(po.getId()));
-		vo.setPlantName(po.getPlantName());
-		vo.setPlantType(JoyGardenPlantType.getType(po.getPlantType()));
-		vo.setImgUrl(imageService.buildImageUrl(po.getImgId()));
-		UsersDetail userDetail = userDetailService.findById(po.getCreatorId());
-		if (userDetail != null) {
-			vo.setCreatorName(userDetail.getNickName());
-		}
-
-		return vo;
 	}
 
 	@Override
@@ -166,19 +150,30 @@ public class JoyGardenPlantCatalogManagerServiceImpl extends JoyCommonService
 
 		updatePlantImgByNewStage(plant, imgSaveResult.getImgId());
 
+		JoyGardenPlantGrowingStageExample stageExample = new JoyGardenPlantGrowingStageExample();
+		stageExample.createCriteria().andIsDeleteEqualTo(false).andPlantIdEqualTo(plantId);
+		List<JoyGardenPlantGrowingStage> stagePOList = plantGrowingStageMapper.selectByExample(stageExample);
+		Integer maxStageSequence = 0;
+		if (stagePOList != null && !stagePOList.isEmpty()) {
+			maxStageSequence = 1;
+			for (JoyGardenPlantGrowingStage stage : stagePOList) {
+				if (maxStageSequence < stage.getStageSequence()) {
+					maxStageSequence = stage.getStageSequence();
+				}
+			}
+		}
+
 		JoyGardenPlantGrowingStage po = new JoyGardenPlantGrowingStage();
 		long newId = snowFlake.getNextId();
 		po.setId(newId);
 		if (dto.getCycleStage()) {
-			po.setNextStageId(newId);
+			po.setIsCycleStage(true);
 		}
 		po.setImgId(imgSaveResult.getImgId());
 		po.setLivingMinute(dto.getLivingMinute());
 		po.setPlantId(plantId);
 		po.setStageName(dto.getStageName());
-
-		updatePreStageLinkIdBeforeNewRecordInsert(plantId, newId);
-
+		po.setStageSequence(maxStageSequence + 1);
 		plantGrowingStageMapper.insertSelective(po);
 
 		r.setIsSuccess();
@@ -208,6 +203,7 @@ public class JoyGardenPlantCatalogManagerServiceImpl extends JoyCommonService
 
 		stagePO.setStageName(dto.getStageName());
 		stagePO.setLivingMinute(dto.getLivingMinute());
+		stagePO.setUpdateTime(LocalDateTime.now());
 		plantGrowingStageMapper.updateByPrimaryKeySelective(stagePO);
 
 		r.setIsSuccess();
@@ -245,81 +241,53 @@ public class JoyGardenPlantCatalogManagerServiceImpl extends JoyCommonService
 		return r;
 	}
 
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	private void ascendingStageSort(JoyGardenPlantGrowingStage po) {
 		JoyGardenPlantGrowingStageExample example = new JoyGardenPlantGrowingStageExample();
-		example.createCriteria().andIsDeleteEqualTo(false).andNextStageIdEqualTo(po.getId());
+		example.createCriteria().andIsDeleteEqualTo(false).andPlantIdEqualTo(po.getPlantId())
+				.andStageSequenceEqualTo(po.getStageSequence() - 1);
 		List<JoyGardenPlantGrowingStage> stagePOList = plantGrowingStageMapper.selectByExample(example);
 		if (stagePOList == null || stagePOList.isEmpty()) {
 			return;
 		}
 
-		JoyGardenPlantGrowingStage preStage = stagePOList.get(0);
+		Integer oldSequence = po.getStageSequence();
 
-		example = new JoyGardenPlantGrowingStageExample();
-		example.createCriteria().andIsDeleteEqualTo(false).andNextStageIdEqualTo(preStage.getId());
-		stagePOList = plantGrowingStageMapper.selectByExample(example);
-		if (stagePOList != null && !stagePOList.isEmpty()) {
-			JoyGardenPlantGrowingStage prePreStage = stagePOList.get(0);
-			prePreStage.setNextStageId(po.getId());
-			plantGrowingStageMapper.updateByPrimaryKeySelective(prePreStage);
-		}
+		JoyGardenPlantGrowingStage preStagePO = stagePOList.get(0);
+		preStagePO.setStageSequence(oldSequence);
+		preStagePO.setUpdateTime(LocalDateTime.now());
 
-		if (po.getId().equals(po.getNextStageId())) {
-			preStage.setNextStageId(preStage.getId());
-			plantGrowingStageMapper.updateByPrimaryKey(preStage);
-		} else if (po.getId() == null) {
-			preStage.setNextStageId(null);
-			plantGrowingStageMapper.updateByPrimaryKey(preStage);
-		} else {
-			preStage.setNextStageId(po.getNextStageId());
-			plantGrowingStageMapper.updateByPrimaryKey(preStage);
-		}
-
-		po.setNextStageId(preStage.getId());
+		po.setStageSequence(oldSequence - 1);
+		po.setUpdateTime(LocalDateTime.now());
 		plantGrowingStageMapper.updateByPrimaryKeySelective(po);
-
+		plantGrowingStageMapper.updateByPrimaryKeySelective(preStagePO);
 	}
 
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	private void descendingStageSort(JoyGardenPlantGrowingStage po) {
-		if (po.getNextStageId() == null || po.getId().equals(po.getNextStageId())) {
-			return;
-		}
-
 		JoyGardenPlantGrowingStageExample example = new JoyGardenPlantGrowingStageExample();
-		example.createCriteria().andIsDeleteEqualTo(false).andIdEqualTo(po.getNextStageId());
+		example.createCriteria().andIsDeleteEqualTo(false).andPlantIdEqualTo(po.getPlantId())
+				.andStageSequenceEqualTo(po.getStageSequence() + 1);
 		List<JoyGardenPlantGrowingStage> stagePOList = plantGrowingStageMapper.selectByExample(example);
 		if (stagePOList == null || stagePOList.isEmpty()) {
 			return;
 		}
 
-		JoyGardenPlantGrowingStage nextStage = stagePOList.get(0);
+		Integer oldSequence = po.getStageSequence();
 
-		example = new JoyGardenPlantGrowingStageExample();
-		example.createCriteria().andIsDeleteEqualTo(false).andNextStageIdEqualTo(po.getId());
-		stagePOList = plantGrowingStageMapper.selectByExample(example);
-		if (stagePOList != null && !stagePOList.isEmpty()) {
-			JoyGardenPlantGrowingStage preStage = stagePOList.get(0);
-			preStage.setNextStageId(nextStage.getId());
-			plantGrowingStageMapper.updateByPrimaryKeySelective(preStage);
-		}
+		JoyGardenPlantGrowingStage nextStagePO = stagePOList.get(0);
+		nextStagePO.setStageSequence(oldSequence);
+		nextStagePO.setUpdateTime(LocalDateTime.now());
 
-		if (nextStage.getNextStageId() == null) {
-			po.setNextStageId(null);
-			plantGrowingStageMapper.updateByPrimaryKey(po);
-		} else if (nextStage.getId().equals(nextStage.getNextStageId())) {
-			po.setNextStageId(po.getId());
-			plantGrowingStageMapper.updateByPrimaryKeySelective(po);
-		} else {
-			po.setNextStageId(nextStage.getNextStageId());
-			plantGrowingStageMapper.updateByPrimaryKeySelective(po);
-		}
-
-		nextStage.setNextStageId(po.getId());
-		plantGrowingStageMapper.updateByPrimaryKeySelective(nextStage);
+		po.setStageSequence(oldSequence + 1);
+		po.setUpdateTime(LocalDateTime.now());
+		plantGrowingStageMapper.updateByPrimaryKeySelective(po);
+		plantGrowingStageMapper.updateByPrimaryKeySelective(nextStagePO);
 
 	}
 
 	@Override
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	public JoyCommonResult deletePlantStage(JoyGardenPlantStageDeleteDTO dto) {
 		JoyCommonResult r = new JoyCommonResult();
 
@@ -334,12 +302,13 @@ public class JoyGardenPlantCatalogManagerServiceImpl extends JoyCommonService
 			return r;
 		}
 
-		JoyGardenPlantGrowingStage stagePO = new JoyGardenPlantGrowingStage();
+		JoyGardenPlantGrowingStage stagePO = plantGrowingStageMapper.selectByPrimaryKey(stageId);
 		stagePO.setIsDelete(true);
 		stagePO.setId(stageId);
+		stagePO.setUpdateTime(LocalDateTime.now());
 		plantGrowingStageMapper.updateByPrimaryKeySelective(stagePO);
 
-		updatePreStageLinkIdAfterStageDelete(stageId);
+		updatePreStageLinkIdAfterStageDelete(stagePO);
 
 		r.setIsSuccess();
 		return r;
@@ -350,36 +319,20 @@ public class JoyGardenPlantCatalogManagerServiceImpl extends JoyCommonService
 		plantCatalogMapper.updateByPrimaryKeySelective(plant);
 	}
 
-	private void updatePreStageLinkIdBeforeNewRecordInsert(Long plantId, Long newStageId) {
+	private void updatePreStageLinkIdAfterStageDelete(JoyGardenPlantGrowingStage stagePO) {
 		JoyGardenPlantGrowingStageExample example = new JoyGardenPlantGrowingStageExample();
-		example.createCriteria().andIsDeleteEqualTo(false).andPlantIdEqualTo(plantId);
-		List<JoyGardenPlantGrowingStage> stagePOList = plantGrowingStageMapper.selectByExample(example);
-		if (stagePOList == null || stagePOList.isEmpty()) {
-			return;
-		}
-
-		stagePOList = sortStagePOList(stagePOList);
-
-		JoyGardenPlantGrowingStage preStagePO = stagePOList.get(stagePOList.size() - 1);
-		preStagePO.setNextStageId(newStageId);
-
-		plantGrowingStageMapper.updateByPrimaryKeySelective(preStagePO);
-	}
-
-	private void updatePreStageLinkIdAfterStageDelete(Long deletedStageId) {
-		JoyGardenPlantGrowingStageExample example = new JoyGardenPlantGrowingStageExample();
-		example.createCriteria().andIsDeleteEqualTo(false).andNextStageIdEqualTo(deletedStageId);
+		example.createCriteria().andIsDeleteEqualTo(false).andPlantIdEqualTo(stagePO.getPlantId())
+				.andStageSequenceGreaterThan(stagePO.getStageSequence());
 		List<JoyGardenPlantGrowingStage> stageList = plantGrowingStageMapper.selectByExample(example);
 		if (stageList == null || stageList.isEmpty()) {
 			return;
 		}
 
-		JoyGardenPlantGrowingStage deletedPO = plantGrowingStageMapper.selectByPrimaryKey(deletedStageId);
-
-		JoyGardenPlantGrowingStage lastStage = stageList.get(0);
-		lastStage.setNextStageId(deletedPO.getNextStageId());
-
-		plantGrowingStageMapper.updateByPrimaryKey(lastStage);
+		for (JoyGardenPlantGrowingStage stage : stageList) {
+			stage.setStageSequence(stage.getStageSequence() - 1);
+			stage.setUpdateTime(LocalDateTime.now());
+			plantGrowingStageMapper.updateByPrimaryKey(stage);
+		}
 	}
 
 	@Override
@@ -405,13 +358,12 @@ public class JoyGardenPlantCatalogManagerServiceImpl extends JoyCommonService
 
 		JoyGardenPlantGrowingStageExample growingStageExample = new JoyGardenPlantGrowingStageExample();
 		growingStageExample.createCriteria().andIsDeleteEqualTo(false).andPlantIdEqualTo(plantCatalogId);
+		growingStageExample.setOrderByClause(" stage_sequence ");
 		List<JoyGardenPlantGrowingStage> plantStagePOList = plantGrowingStageMapper
 				.selectByExample(growingStageExample);
 		if (plantStagePOList == null || plantStagePOList.isEmpty()) {
 			return view;
 		}
-
-		plantStagePOList = sortStagePOList(plantStagePOList);
 
 		List<JoyGardenPlantGrowingStageVO> stageVOList = new ArrayList<>();
 		for (JoyGardenPlantGrowingStage stagePO : plantStagePOList) {
@@ -423,54 +375,4 @@ public class JoyGardenPlantCatalogManagerServiceImpl extends JoyCommonService
 		return view;
 	}
 
-	private JoyGardenPlantGrowingStageVO buildJoyGardenPlantGrowingStageVO(JoyGardenPlantGrowingStage po) {
-		JoyGardenPlantGrowingStageVO vo = new JoyGardenPlantGrowingStageVO();
-		vo.setPk(systemOptionService.encryptId(po.getId()));
-		vo.setLivingMinute(po.getLivingMinute());
-		vo.setStageName(po.getStageName());
-		vo.setImgUrlPath(imageService.buildImageUrl(po.getImgId()));
-		return vo;
-	}
-
-	private List<JoyGardenPlantGrowingStage> sortStagePOList(List<JoyGardenPlantGrowingStage> stagePOList) {
-		if (stagePOList.size() == 1) {
-			return stagePOList;
-		}
-
-		List<JoyGardenPlantGrowingStage> result = new ArrayList<>();
-
-		Map<Long, JoyGardenPlantGrowingStage> idMap = new HashMap<>();
-		for (JoyGardenPlantGrowingStage po : stagePOList) {
-			idMap.put(po.getId(), po);
-		}
-
-		result.add(stagePOList.get(0));
-		JoyGardenPlantGrowingStage nextStagePO = stagePOList.get(0);
-		firstTag: while (idMap.get(nextStagePO.getNextStageId()) != null) {
-			result.add(idMap.get(nextStagePO.getNextStageId()));
-			nextStagePO = idMap.get(nextStagePO.getNextStageId());
-			if (nextStagePO.getId().equals(nextStagePO.getNextStageId())) {
-				break firstTag;
-			}
-		}
-
-		if (result.size() == stagePOList.size()) {
-			return result;
-		}
-
-		idMap.clear();
-		for (JoyGardenPlantGrowingStage po : stagePOList) {
-			idMap.put(po.getNextStageId(), po);
-		}
-
-		JoyGardenPlantGrowingStage preStagePO = null;
-		secondTag: while ((preStagePO = idMap.get(result.get(0).getId())) != null) {
-			result.add(0, preStagePO);
-			if (preStagePO.getId().equals(preStagePO.getNextStageId())) {
-				break secondTag;
-			}
-		}
-
-		return result;
-	}
 }

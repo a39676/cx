@@ -4,6 +4,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import demo.joy.common.pojo.result.JoyCommonResult;
 import demo.joy.garden.pojo.dto.CreateNewGardenDTO;
+import demo.joy.garden.pojo.result.JoyGardenCreateNewFieldLandResult;
 
 public interface JoyGradenInfoService {
 
@@ -13,6 +14,8 @@ public interface JoyGradenInfoService {
 
 	JoyCommonResult createNewGarden(CreateNewGardenDTO dto);
 
-	JoyCommonResult createNewFieldLand();
+	JoyGardenCreateNewFieldLandResult createNewFieldLand();
+
+	ModelAndView getFieldLandView();
 
 }

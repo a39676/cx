@@ -8,6 +8,8 @@ public class JoyGardenUrl {
 	
 	public static final String CREAT_NEW_GARDEN = "/createNewGarden";
 	
+	public static final String GET_FIELD_LAND_VIEW = "/getFieldLandView";
+	
 	public static final String CREAT_NEW_FIELD_LAND = "/createNewFieldLand";
 	
 	public static final String PLANT_CATALOG_MANAGER = "/plantCatalogManager";

@@ -14,6 +14,7 @@ import demo.joy.common.pojo.constant.JoyGardenUrl;
 import demo.joy.common.pojo.constant.JoyUrl;
 import demo.joy.common.pojo.result.JoyCommonResult;
 import demo.joy.garden.pojo.dto.CreateNewGardenDTO;
+import demo.joy.garden.pojo.result.JoyGardenCreateNewFieldLandResult;
 import demo.joy.garden.service.JoyGradenInfoService;
 
 @RequestMapping(value = JoyUrl.ROOT + JoyGardenUrl.ROOT)
@@ -36,8 +37,14 @@ public class JoyGardenController extends CommonController {
 
 	@PostMapping(value = JoyGardenUrl.CREAT_NEW_FIELD_LAND)
 	@ResponseBody
-	public JoyCommonResult createNewFieldLand() {
+	public JoyGardenCreateNewFieldLandResult createNewFieldLand() {
 		return gardenInfoService.createNewFieldLand();
+	}
+
+	@PostMapping(value = JoyGardenUrl.GET_FIELD_LAND_VIEW)
+	@ResponseBody
+	public ModelAndView getFieldLandView() {
+		return gardenInfoService.getFieldLandView();
 	}
 
 }

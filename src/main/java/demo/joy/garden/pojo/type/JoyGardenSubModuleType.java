@@ -2,7 +2,7 @@ package demo.joy.garden.pojo.type;
 
 public enum JoyGardenSubModuleType {
 	
-	
+	GARDEN_INFO("gardenInfo", 0),
 	PLANT_STAGE("plantStage", 1),
 	
 	;

@@ -4,11 +4,8 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -312,7 +309,7 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 	}
 
 	@Override
-	public boolean imgSaveAsFile(BufferedImage image, String filePath, String fileType) {
+	public boolean imgSaveAsFile(String imageBase64Str, String filePath, String fileType) {
 		File outputfile = new File(filePath);
 		if (!outputfile.exists()) {
 			try {
@@ -322,39 +319,14 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 			}
 		}
 		try {
-			ImageIO.write(image, fileType, outputfile);
+
+			byte[] imageBytes = Base64.getDecoder().decode(imageBase64Str);
+			FileUtils.writeByteArrayToFile(outputfile, imageBytes);
+			
 			return true;
 		} catch (IOException e) {
 			return false;
 		}
-	}
-
-	/** TODO 2022 05 23 无用 准备移除*/
-	public boolean imgSaveAsFileDirect(String base64Str, String filePath, String fileType) {
-		File outputfile = new File(filePath);
-		if (!outputfile.exists()) {
-			try {
-				outputfile.getParentFile().mkdirs();
-				outputfile.createNewFile();
-			} catch (Exception e) {
-				return false;
-			}
-		}
-
-		byte[] imageByte = Base64.getDecoder().decode(base64Str);
-		try {
-			OutputStream stream = new FileOutputStream(filePath, false);
-			stream.write(imageByte);
-			stream.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return false;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-
-		return true;
 	}
 
 	@Override

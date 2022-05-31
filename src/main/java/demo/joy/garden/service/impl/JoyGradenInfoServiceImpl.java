@@ -81,30 +81,11 @@ public class JoyGradenInfoServiceImpl extends JoyGardenCommonService implements 
 		view.addObject("nickname", baseUtilCustom.getUserPrincipal().getNickName());
 		view.addObject("title", baseUtilCustom.getUserPrincipal().getNickName() + "的" + vo.getGardenName());
 		view.addObject("gardenInfo", vo);
+		
+		view.addObject("backgroundImgSrc", imageService.getImageInBase64Str(gardenOptionService.getBackgroundImgPath()));
+		view.addObject("gardenShopNpcImgSrc", imageService.getImageInBase64Str(gardenOptionService.getGardenNpcImgPath()));
 
 		loadLands(false);
-//		List<JoyGardenLandVO> fieldLandVoList = new ArrayList<>();
-//		List<JoyGardenLandVO> wetlandVoList = new ArrayList<>();
-//		List<JoyGardenLandVO> woodlandVoList = new ArrayList<>();
-//
-//		List<JoyGardenLands> fieldLandPoList = fieldMap.get(userId);
-//		List<JoyGardenLands> wetLandPoList = wetlandsMap.get(userId);
-//		List<JoyGardenLands> woodLandPoList = woodlandsMap.get(userId);
-//
-//		for (JoyGardenLands land : fieldLandPoList) {
-//			fieldLandVoList.add(buildLandVO(land));
-//		}
-//		for (JoyGardenLands land : wetLandPoList) {
-//			wetlandVoList.add(buildLandVO(land));
-//		}
-//		for (JoyGardenLands land : woodLandPoList) {
-//			woodlandVoList.add(buildLandVO(land));
-//		}
-//
-//		view.addObject("fieldVoList", fieldLandVoList);
-//		view.addObject("canCreateNewField", gardenOptionService.getFieldMaxSize() > fieldLandVoList.size());
-//		view.addObject("wetlandVoList", wetlandVoList);
-//		view.addObject("woodlandVoList", woodlandVoList);
 
 		return view;
 	}
@@ -221,6 +202,9 @@ public class JoyGradenInfoServiceImpl extends JoyGardenCommonService implements 
 
 		view.addObject("fieldVoList", fieldLandVoList);
 		view.addObject("canCreateNewField", gardenOptionService.getFieldMaxSize() > fieldLandVoList.size());
+		
+		view.addObject("fieldImgSrc", imageService.getImageInBase64Str(gardenOptionService.getFieldlandImgPath()));
+		view.addObject("fieldNotDevImgSrc", imageService.getImageInBase64Str(gardenOptionService.getFieldlandNotDevelopImgPath()));
 		
 		return view;
 	}

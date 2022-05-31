@@ -1,15 +1,17 @@
 package demo.joy.image.service.impl;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -41,32 +43,17 @@ public class JoyImageServiceImpl extends CommonService implements JoyImageServic
 
 	private Map<Long, String> idPathMap = new HashMap<>();
 
-	@Override
-	public String imgBase64Saving(String savingFolderPath, String srcStr) {
+	private String imgBase64Saving(String savingFolderPath, String srcStr) {
 		ImgHandleSrcDataResult srcHandleResult = systemImgService.imgHandleSrcData(srcStr);
 		if (srcHandleResult.isFail()) {
 			return null;
 		}
 
-		BufferedImage bufferedImage = systemImgService.base64ToBufferedImg(srcHandleResult.getBase64Str());
-		if (bufferedImage == null) {
-			return null;
-		}
-
-		String imgSavingPath = saveBufferedImgAsFile(bufferedImage, savingFolderPath, srcHandleResult.getImgFileType());
-		if (imgSavingPath == null) {
-			return null;
-		}
-
-		return imgSavingPath;
-	}
-
-	private String saveBufferedImgAsFile(BufferedImage bufferedImage, String savingFolderPath, String fileType) {
-		String filename = String.valueOf(snowFlake.getNextId()) + "." + fileType;
-
+		String filename = String.valueOf(snowFlake.getNextId()) + "." + srcHandleResult.getImgFileType();
 		String imgSavingPath = savingFolderPath + "/" + filename;
 
-		if (systemImgService.imgSaveAsFile(bufferedImage, imgSavingPath, fileType)) {
+		if (systemImgService.imgSaveAsFile(srcHandleResult.getBase64Str(), imgSavingPath,
+				srcHandleResult.getImgFileType())) {
 			return imgSavingPath;
 		} else {
 			return null;
@@ -108,6 +95,20 @@ public class JoyImageServiceImpl extends CommonService implements JoyImageServic
 			IOUtils.copy(in, response.getOutputStream());
 		} catch (Exception e) {
 			return;
+		}
+	}
+	
+	@Override
+	public String getImageInBase64Str(String path) {
+		if(StringUtils.isBlank(path)) {
+			return null;
+		}
+		byte[] fileContent;
+		try {
+			fileContent = FileUtils.readFileToByteArray(new File(path));
+			return Base64.getEncoder().encodeToString(fileContent);
+		} catch (IOException e) {
+			return null;
 		}
 	}
 

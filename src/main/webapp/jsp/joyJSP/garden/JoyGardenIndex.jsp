@@ -12,7 +12,7 @@
 <%@ include file="../../baseElementJSP/normalHeader.jsp" %>
 </head>
 <body>
-<div class="container-fluid">
+<div class="container-fluid" style="background-image: url('data:image/png;base64,${backgroundImgSrc}'); background-attachment: inherit;">
   <div class="row">
     <div class="col-md-12">
       ${gardenInfo}
@@ -24,12 +24,17 @@
   </div>
 
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-11">
       <span id="createFieldLandResult"></span>
     </div>
+    <div class="col-md-1">
+      <button type="button" name="" class="" id="shopNpc">
+        <span>商店</span>
+        <img src='data:image/png;base64,${gardenShopNpcImgSrc}' alt=""
+          style="-moz-transform:scaleX(-1);-webkit-transform:scaleX(-1);-o-transform:scaleX(-1);transform:scaleX(-1);">
+      </button>
+    </div>
   </div>
-
-
 </div>
 </body>
 

@@ -26,10 +26,17 @@ public class JoyGardenOptionService extends CommonService {
 
 	private Integer fieldMaxSize;
 
+	private String backgroundImgPath;
+	private String fieldlandImgPath;
+	private String fieldlandNotDevelopImgPath;
+	private String gardenNpcImgPath;
+
 	@Override
 	public String toString() {
-		return "JoyGardenOptionService [createFieldConsumePointMap=" + createFieldConsumePointMap + ", fieldMaxSize="
-				+ fieldMaxSize + "]";
+		return "JoyGardenOptionService [optionFilePath=" + optionFilePath + ", createFieldConsumePointMap="
+				+ createFieldConsumePointMap + ", fieldMaxSize=" + fieldMaxSize + ", backgroundImgPath="
+				+ backgroundImgPath + ", fieldlandImgPath=" + fieldlandImgPath + ", fieldlandNotDevelopImgPath="
+				+ fieldlandNotDevelopImgPath + ", gardenNpcImgPath=" + gardenNpcImgPath + "]";
 	}
 
 	@PostConstruct
@@ -49,6 +56,13 @@ public class JoyGardenOptionService extends CommonService {
 		log.error("Joy Garden option loaded");
 	}
 
+	public String getOptionFilePath() {
+		return null;
+	}
+
+	public void setOptionFilePath(String optionFilePath) {
+	}
+
 	public HashMap<Integer, Integer> getCreateFieldConsumePointMap() {
 		return createFieldConsumePointMap;
 	}
@@ -63,6 +77,38 @@ public class JoyGardenOptionService extends CommonService {
 
 	public void setFieldMaxSize(Integer fieldMaxSize) {
 		this.fieldMaxSize = fieldMaxSize;
+	}
+
+	public String getBackgroundImgPath() {
+		return backgroundImgPath;
+	}
+
+	public void setBackgroundImgPath(String backgroundImgPath) {
+		this.backgroundImgPath = backgroundImgPath;
+	}
+
+	public String getFieldlandImgPath() {
+		return fieldlandImgPath;
+	}
+
+	public void setFieldlandImgPath(String fieldlandImgPath) {
+		this.fieldlandImgPath = fieldlandImgPath;
+	}
+
+	public String getFieldlandNotDevelopImgPath() {
+		return fieldlandNotDevelopImgPath;
+	}
+
+	public void setFieldlandNotDevelopImgPath(String fieldlandNotDevelopImgPath) {
+		this.fieldlandNotDevelopImgPath = fieldlandNotDevelopImgPath;
+	}
+
+	public String getGardenNpcImgPath() {
+		return gardenNpcImgPath;
+	}
+
+	public void setGardenNpcImgPath(String gardenNpcImgPath) {
+		this.gardenNpcImgPath = gardenNpcImgPath;
 	}
 
 }

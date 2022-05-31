@@ -118,6 +118,9 @@
     <ul class="main-menu visible-on-click" id="joy">
       <li style="background-color:yellow;">joy</li>
       <li>
+        <a href="/joy/garden/index" target="_blank">garden index</a>
+      </li>
+      <li>
         <a href="/joyManager/garden/plantCatalogManager" target="_blank">joy garden plant catalog manager</a>
       </li>
       <li>

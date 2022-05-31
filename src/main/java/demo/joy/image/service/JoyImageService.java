@@ -9,8 +9,6 @@ import demo.joy.image.pojo.result.JoyImageUploadResult;
 
 public interface JoyImageService {
 
-	String imgBase64Saving(String savingFolderPath, String srcStr);
-
 	void getImageById(HttpServletResponse response, Long id);
 
 	JoyImageUploadResult uploadImage(JoyImageUploadDTO dto, String savingPathPrefix, JoyModuleType joyModuleType,
@@ -19,5 +17,7 @@ public interface JoyImageService {
 	JoyCommonResult cleanIdPathMap();
 
 	String buildImageUrl(Long id);
+
+	String getImageInBase64Str(String path);
 
 }

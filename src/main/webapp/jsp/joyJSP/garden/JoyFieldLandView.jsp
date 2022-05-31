@@ -17,26 +17,104 @@
   </div>
   <div class="col-md-6">
     <table class="table table-bordered">
-      <c:forEach items="${fieldVoList}" var="field" varStatus="loop">
-        <c:if test="${(loop.index + 1) % 3 == 1}">
-          <tr>
+      <tr>
+        <td class="fieldlandTD" landPK="${fieldVoList[0].pk}" landLevel="${fieldVoList[0].landLevel}"
+          style="text-align: center; vertical-align: middle;">
+          <c:if test="${fieldVoList[0] != null}">
+            <img src='data:image/png;base64,${fieldImgSrc}' alt="">
           </c:if>
-          <td>
-            <span>${field.landType}, ${field.landLevel}</span>
-          </td>
-          <c:if test="${(loop.index + 1) % 3 == 0}">
-          </tr>
-        </c:if>
-      </c:forEach>
+          <c:if test="${fieldVoList[0] == null}">
+            <img src='data:image/png;base64,${fieldNotDevImgSrc}' alt="">
+          </c:if>
+        </td>
+        <td class="fieldlandTD" landPK="${fieldVoList[1].pk}" landLevel="${fieldVoList[1].landLevel}"
+          style="text-align: center; vertical-align: middle;">
+          <c:if test="${fieldVoList[1] != null}">
+            <img src='data:image/png;base64,${fieldImgSrc}' alt="">
+          </c:if>
+          <c:if test="${fieldVoList[1] == null}">
+            <img src='data:image/png;base64,${fieldNotDevImgSrc}' alt="">
+          </c:if>
+        </td>
+        <td class="fieldlandTD" landPK="${fieldVoList[2].pk}" landLevel="${fieldVoList[2].landLevel}"
+          style="text-align: center; vertical-align: middle;">
+          <c:if test="${fieldVoList[2] != null}">
+            <img src='data:image/png;base64,${fieldImgSrc}' alt="">
+          </c:if>
+          <c:if test="${fieldVoList[2] == null}">
+            <img src='data:image/png;base64,${fieldNotDevImgSrc}' alt="">
+          </c:if>
+        </td>
+      </tr>
+      <tr>
+        <td class="fieldlandTD" landPK="${fieldVoList[3].pk}" landLevel="${fieldVoList[3].landLevel}"
+          style="text-align: center; vertical-align: middle;">
+          <c:if test="${fieldVoList[3] != null}">
+            <img src='data:image/png;base64,${fieldImgSrc}' alt="">
+          </c:if>
+          <c:if test="${fieldVoList[3] == null}">
+            <img src='data:image/png;base64,${fieldNotDevImgSrc}' alt="">
+          </c:if>
+        </td>
+        <td class="fieldlandTD" landPK="${fieldVoList[4].pk}" landLevel="${fieldVoList[4].landLevel}"
+          style="text-align: center; vertical-align: middle;">
+          <c:if test="${fieldVoList[4] != null}">
+            <img src='data:image/png;base64,${fieldImgSrc}' alt="">
+          </c:if>
+          <c:if test="${fieldVoList[4] == null}">
+            <img src='data:image/png;base64,${fieldNotDevImgSrc}' alt="">
+          </c:if>
+        </td>
+        <td class="fieldlandTD" landPK="${fieldVoList[5].pk}" landLevel="${fieldVoList[5].landLevel}"
+          style="text-align: center; vertical-align: middle;">
+          <c:if test="${fieldVoList[5] != null}">
+            <img src='data:image/png;base64,${fieldImgSrc}' alt="">
+          </c:if>
+          <c:if test="${fieldVoList[5] == null}">
+            <img src='data:image/png;base64,${fieldNotDevImgSrc}' alt="">
+          </c:if>
+        </td>
+      </tr>
+      <tr>
+        <td class="fieldlandTD" landPK="${fieldVoList[6].pk}" landLevel="${fieldVoList[6].landLevel}"
+          style="text-align: center; vertical-align: middle;">
+          <c:if test="${fieldVoList[6] != null}">
+            <img src='data:image/png;base64,${fieldImgSrc}' alt="">
+          </c:if>
+          <c:if test="${fieldVoList[6] == null}">
+            <img src='data:image/png;base64,${fieldNotDevImgSrc}' alt="">
+          </c:if>
+        </td>
+        <td class="fieldlandTD" landPK="${fieldVoList[7].pk}" landLevel="${fieldVoList[7].landLevel}"
+          style="text-align: center; vertical-align: middle;">
+          <c:if test="${fieldVoList[7] != null}">
+            <img src='data:image/png;base64,${fieldImgSrc}' alt="">
+          </c:if>
+          <c:if test="${fieldVoList[7] == null}">
+            <img src='data:image/png;base64,${fieldNotDevImgSrc}' alt="">
+          </c:if>
+        </td>
+        <td class="fieldlandTD" landPK="${fieldVoList[8].pk}" landLevel="${fieldVoList[8].landLevel}"
+          style="text-align: center; vertical-align: middle;">
+          <c:if test="${fieldVoList[8] != null}">
+            <img src='data:image/png;base64,${fieldImgSrc}' alt="">
+          </c:if>
+          <c:if test="${fieldVoList[8] == null}">
+            <img src='data:image/png;base64,${fieldNotDevImgSrc}' alt="">
+          </c:if>
+        </td>
+      </tr>
     </table>
   </div>
   <div class="col-md-3">
     <c:if test="${canCreateNewField}">
-      <span id="createNewFieldLand">创建新种植地</span>
+      <button type="button" name="" class="btn btn-sm btn-primary" id="createNewFieldLand">创建新种植地</button>
     </c:if>
   </div>
-
 </div>
+
+
+
 </body>
 
 <footer>
@@ -66,6 +144,7 @@
           success:function(data){
             if(data.code == 0){
               $("#createFieldLandResult").text("创建成功");
+              getFieldLandView();
             } else {
               $("#createFieldLandResult").text(data.message);
             }
@@ -79,6 +158,28 @@
         });
       }
 
+      function getFieldLandView() {
+        var url = "/joy/garden/getFieldLandView";
+
+        var jsonOutput = {};
+
+        $.ajax({
+          type : "POST",
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          // dataType: 'json',
+          contentType: "application/json",
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          timeout: 15000,
+          success:function(data){
+            $("#fieldLandRow").html(data);
+          },
+          error:function(e){
+          }
+        });
+      }
     });
 
   </script>

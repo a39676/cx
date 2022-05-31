@@ -24,6 +24,8 @@ public abstract class JoyCommonService extends CommonService {
 	@Autowired
 	protected JoyImageService imageService;
 	@Autowired
+	protected JoyCacheService cacheService;
+	@Autowired
 	protected StudentService studentService;
 	@Autowired
 	private TextFilter textFilter;

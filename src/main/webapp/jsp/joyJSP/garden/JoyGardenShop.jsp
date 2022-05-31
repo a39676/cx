@@ -15,17 +15,19 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
-      ${gardenInfo}
-      <span>欢迎光临${nickname}的${gardenInfo.gardenName}</span>
+      <div class="btn-group" role="group" id="shopTag" currentTag="">
+        <button type="button" class="btn btn-primary" id="shopTagSeed">种子</button>
+        <button type="button" class="btn btn-primary" id="shopTagFertilizer">肥料</button>
+      </div>
     </div>
   </div>
 
-  <div class="row" id="fieldLandRow">
+  <div class="row" id="shopDetail">
   </div>
 
   <div class="row">
     <div class="col-md-12">
-      <span id="createFieldLandResult"></span>
+      <span id="shopFeedback"></span>
     </div>
   </div>
 
@@ -39,10 +41,19 @@
 
     $(document).ready(function() {
 
-      getFieldLandView();
+      seedSearch();
 
-      function getFieldLandView() {
-        var url = "/joy/garden/getFieldLandView";
+      $("#shopTagSeed").click(function () {
+        switchCurrentTag($(this).attr("id"));
+        seedSearch();
+      });
+
+      $("#shopTagFertilizer").click(function () {
+        switchCurrentTag($(this).attr("id"));
+      });
+
+      function seedSearch() {
+        var url = "/joy/garden/shop/seedSearchView";
 
         var jsonOutput = {};
 
@@ -57,11 +68,15 @@
           },
           timeout: 15000,
           success:function(data){
-            $("#fieldLandRow").html(data);
+            $("#shopDetail").html(data);
           },
           error:function(e){
           }
         });
+      }
+
+      function switchCurrentTag(tagId) {
+        $("#shopTag").attr("currentTag", tagId);
       }
     });
 

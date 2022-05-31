@@ -2,19 +2,38 @@ package demo.joy.garden.pojo.dto;
 
 public class JoyGardenShopSeedSearchDTO {
 
-	private Integer pageNo = 1;
+	private String startPK;
+	private String endPK;
+	private Boolean isNextPage;
 
-	public Integer getPageNo() {
-		return pageNo;
+	public String getStartPK() {
+		return startPK;
 	}
 
-	public void setPageNo(Integer pageNo) {
-		this.pageNo = pageNo;
+	public void setStartPK(String startPK) {
+		this.startPK = startPK;
+	}
+
+	public String getEndPK() {
+		return endPK;
+	}
+
+	public void setEndPK(String endPK) {
+		this.endPK = endPK;
+	}
+
+	public Boolean getIsNextPage() {
+		return isNextPage;
+	}
+
+	public void setIsNextPage(Boolean isNextPage) {
+		this.isNextPage = isNextPage;
 	}
 
 	@Override
 	public String toString() {
-		return "JoyGardenShopSeedSearchDTO [pageNo=" + pageNo + "]";
+		return "JoyGardenShopSeedSearchDTO [startPK=" + startPK + ", endPK=" + endPK + ", isNextPage=" + isNextPage
+				+ "]";
 	}
 
 }

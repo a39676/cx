@@ -1,10 +1,13 @@
 package demo.joy.garden.mapper;
 
-import demo.joy.garden.pojo.po.JoyGardenPlantGrowingStage;
-import demo.joy.garden.pojo.po.JoyGardenPlantGrowingStageExample;
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
+
+import demo.joy.garden.pojo.dto.FindSeedPageDTO;
+import demo.joy.garden.pojo.po.JoyGardenPlantGrowingStage;
+import demo.joy.garden.pojo.po.JoyGardenPlantGrowingStageExample;
 
 public interface JoyGardenPlantGrowingStageMapper {
     long countByExample(JoyGardenPlantGrowingStageExample example);
@@ -30,4 +33,6 @@ public interface JoyGardenPlantGrowingStageMapper {
     int updateByPrimaryKeySelective(JoyGardenPlantGrowingStage record);
 
     int updateByPrimaryKey(JoyGardenPlantGrowingStage record);
+    
+    List<JoyGardenPlantGrowingStage> findSeedPage(FindSeedPageDTO dto);
 }

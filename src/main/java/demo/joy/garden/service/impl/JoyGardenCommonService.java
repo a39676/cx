@@ -1,7 +1,11 @@
 package demo.joy.garden.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import demo.base.user.pojo.po.UsersDetail;
 import demo.joy.common.service.JoyCommonService;
+import demo.joy.garden.mapper.JoyGardenPlantCatalogMapper;
+import demo.joy.garden.mapper.JoyGardenPlantGrowingStageMapper;
 import demo.joy.garden.pojo.po.JoyGardenInfo;
 import demo.joy.garden.pojo.po.JoyGardenLands;
 import demo.joy.garden.pojo.po.JoyGardenPlantCatalog;
@@ -14,6 +18,13 @@ import demo.joy.garden.pojo.vo.JoyGardenPlantCatalogVO;
 import demo.joy.garden.pojo.vo.JoyGardenPlantGrowingStageVO;
 
 public abstract class JoyGardenCommonService extends JoyCommonService {
+	
+	@Autowired
+	protected JoyGardenPlantGrowingStageMapper plantStageMapper;
+	@Autowired
+	protected JoyGardenPlantCatalogMapper plantCatalogMapper;
+	@Autowired
+	protected JoyGardenPlantGrowingStageMapper plantGrowingStageMapper;
 
 	protected JoyGardenPlantGrowingStageVO buildJoyGardenPlantGrowingStageVO(JoyGardenPlantGrowingStage po) {
 		JoyGardenPlantGrowingStageVO vo = new JoyGardenPlantGrowingStageVO();

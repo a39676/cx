@@ -2,9 +2,7 @@ package demo.joy.garden.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,11 +35,6 @@ public class JoyGradenInfoServiceImpl extends JoyGardenCommonService implements 
 	@Autowired
 	private JoyGardenOptionService gardenOptionService;
 
-	private Map<Long, JoyGardenInfo> infoMap = new HashMap<>();
-	private Map<Long, List<JoyGardenLands>> fieldMap = new HashMap<>();
-	private Map<Long, List<JoyGardenLands>> wetlandsMap = new HashMap<>();
-	private Map<Long, List<JoyGardenLands>> woodlandsMap = new HashMap<>();
-
 	@Override
 	public ModelAndView visitOtherGarden(String userPK) {
 		ModelAndView view = new ModelAndView("joyJSP/garden/JoyGardenIndex");
@@ -55,11 +48,11 @@ public class JoyGradenInfoServiceImpl extends JoyGardenCommonService implements 
 			return view;
 		}
 
-		JoyGardenInfo po = infoMap.get(userId);
+		JoyGardenInfo po = cacheService.getGardenInfoMap().get(userId);
 		if (po == null) {
 			po = infoMapper.selectByPrimaryKey(userId);
 			if (po != null) {
-				infoMap.put(userId, po);
+				cacheService.getGardenInfoMap().put(userId, po);
 			} else {
 				po = new JoyGardenInfo();
 			}
@@ -74,11 +67,11 @@ public class JoyGradenInfoServiceImpl extends JoyGardenCommonService implements 
 		ModelAndView view = new ModelAndView("joyJSP/garden/JoyGardenIndex");
 
 		Long userId = baseUtilCustom.getUserId();
-		JoyGardenInfo po = infoMap.get(userId);
+		JoyGardenInfo po = cacheService.getGardenInfoMap().get(userId);
 		if (po == null) {
 			po = infoMapper.selectByPrimaryKey(userId);
 			if (po != null) {
-				infoMap.put(userId, po);
+				cacheService.getGardenInfoMap().put(userId, po);
 			} else {
 				return createNewGardenView();
 			}
@@ -143,7 +136,7 @@ public class JoyGradenInfoServiceImpl extends JoyGardenCommonService implements 
 
 	private void loadLands(boolean refresh) {
 		Long userId = baseUtilCustom.getUserId();
-		if (fieldMap.containsKey(userId) && wetlandsMap.containsKey(userId) && woodlandsMap.containsKey(userId)
+		if (cacheService.getFieldlandMap().containsKey(userId) && cacheService.getWetlandsMap().containsKey(userId) && cacheService.getWoodlandsMap().containsKey(userId)
 				&& refresh) {
 			return;
 		}
@@ -167,9 +160,9 @@ public class JoyGradenInfoServiceImpl extends JoyGardenCommonService implements 
 			}
 		}
 
-		fieldMap.put(userId, fieldLandList);
-		wetlandsMap.put(userId, wetlandVoList);
-		woodlandsMap.put(userId, woodlandVoList);
+		cacheService.getFieldlandMap().put(userId, fieldLandList);
+		cacheService.getWetlandsMap().put(userId, wetlandVoList);
+		cacheService.getWoodlandsMap().put(userId, woodlandVoList);
 	}
 
 	@Override
@@ -177,7 +170,7 @@ public class JoyGradenInfoServiceImpl extends JoyGardenCommonService implements 
 		JoyGardenCreateNewFieldLandResult r = new JoyGardenCreateNewFieldLandResult();
 		Long userId = baseUtilCustom.getUserId();
 		
-		List<JoyGardenLands> fieldLandPoList = fieldMap.get(userId);
+		List<JoyGardenLands> fieldLandPoList = cacheService.getFieldlandMap().get(userId);
 		if(fieldLandPoList.size() >= gardenOptionService.getFieldMaxSize()) {
 			r.setMessage("已经达到最大数量, 无法再扩容了");
 			return r;
@@ -202,7 +195,7 @@ public class JoyGradenInfoServiceImpl extends JoyGardenCommonService implements 
 		landsMapper.insert(newField);
 		
 		fieldLandPoList.add(newField);
-		fieldMap.put(userId, fieldLandPoList);
+		cacheService.getFieldlandMap().put(userId, fieldLandPoList);
 		
 		if(gardenOptionService.getFieldMaxSize().equals(fieldLandPoList.size())) {
 			r.setMessage("MAX");
@@ -220,7 +213,7 @@ public class JoyGradenInfoServiceImpl extends JoyGardenCommonService implements 
 		Long userId = baseUtilCustom.getUserId();
 		List<JoyGardenLandVO> fieldLandVoList = new ArrayList<>();
 
-		List<JoyGardenLands> fieldLandPoList = fieldMap.get(userId);
+		List<JoyGardenLands> fieldLandPoList = cacheService.getFieldlandMap().get(userId);
 
 		for (JoyGardenLands land : fieldLandPoList) {
 			fieldLandVoList.add(buildLandVO(land));

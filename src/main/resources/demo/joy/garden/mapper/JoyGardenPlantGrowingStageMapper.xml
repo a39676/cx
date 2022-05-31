@@ -302,4 +302,27 @@
       order by ${orderByClause}
     </if>
   </select>
+  
+  <select id="findSeedPage" resultMap="BaseResultMap">
+  	select
+  	  *
+  	from
+  	  joy_garden_plant_growing_stage
+  	<where>
+  	  is_delete = false
+  	  and stage_sequence = 1
+  	  <if test="startId != null">
+  	    and id &gt; #{startId}
+  	  </if>
+  	  <if test="endId != null">
+  	    and id &lt; #{endId}
+  	  </if>
+  	</where>
+  	<if test="pageSize != null">
+  	  limit #{pageSize}
+  	</if>
+  	<if test="pageSize == null">
+  	  limit 16
+  	</if>
+  </select>
 </mapper>

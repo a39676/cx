@@ -15,20 +15,24 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
-      ${gardenInfo}
-      <span>欢迎光临${nickname}的${gardenInfo.gardenName}</span>
+      <table class="table table-bordered" style="" id="shopDetailTable" startPK="" endPK="">
+        <c:forEach items="${seedVoList}" var="seed" varStatus="loop">
+          <c:if test="${(loop.index + 1) % 4 == 1}">
+            <tr>
+          </c:if>
+          <td>
+            <span>${seed.plantName},${seed.stageName}</span>
+            <img src="${seed.imgUrlPath}" alt="${seed.plantName}">
+          </td>
+          <c:if test="${(loop.index + 1) % 4 == 0}">
+            </tr>
+          </c:if>
+        </c:forEach>
+      </table>
+      <button type="button" name="button" class="btn btn-sm btn-primary" id="lastPage">上一页</button>
+      <button type="button" name="button" class="btn btn-sm btn-primary" id="nextPage">下一页</button>
     </div>
   </div>
-
-  <div class="row" id="fieldLandRow">
-  </div>
-
-  <div class="row">
-    <div class="col-md-12">
-      <span id="createFieldLandResult"></span>
-    </div>
-  </div>
-
 
 </div>
 </body>
@@ -39,12 +43,25 @@
 
     $(document).ready(function() {
 
-      getFieldLandView();
+      $("#lastPage").click(function () {
+        seedSearchWithPage(false);
+      });
+      $("#nextPage").click(function () {
+        seedSearchWithPage(true);
+      });
 
-      function getFieldLandView() {
-        var url = "/joy/garden/getFieldLandView";
+      function seedSearchWithPage(isNextPage) {
+        var url = "/joy/garden/shop/seedSearchView";
 
-        var jsonOutput = {};
+        var jsonOutput = {
+          isNextPage:isNextPage,
+        };
+
+        if(isNextPage){
+          jsonOutput["endPK"] = "${endPK}";
+        } else {
+          jsonOutput["startPK"] = "${startPK}";
+        }
 
         $.ajax({
           type : "POST",
@@ -57,7 +74,7 @@
           },
           timeout: 15000,
           success:function(data){
-            $("#fieldLandRow").html(data);
+            $("#shopDetail").html(data);
           },
           error:function(e){
           }

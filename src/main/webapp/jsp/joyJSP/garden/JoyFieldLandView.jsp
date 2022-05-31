@@ -12,23 +12,29 @@
 <%@ include file="../../baseElementJSP/normalHeader.jsp" %>
 </head>
 <body>
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-12">
-      ${gardenInfo}
-      <span>欢迎光临${nickname}的${gardenInfo.gardenName}</span>
-    </div>
-  </div>
 
-  <div class="row" id="fieldLandRow">
+  <div class="col-md-3">
   </div>
-
-  <div class="row">
-    <div class="col-md-12">
-      <span id="createFieldLandResult"></span>
-    </div>
+  <div class="col-md-6">
+    <table class="table table-bordered">
+      <c:forEach items="${fieldVoList}" var="field" varStatus="loop">
+        <c:if test="${(loop.index + 1) % 3 == 1}">
+          <tr>
+          </c:if>
+          <td>
+            <span>${field.landType}, ${field.landLevel}</span>
+          </td>
+          <c:if test="${(loop.index + 1) % 3 == 0}">
+          </tr>
+        </c:if>
+      </c:forEach>
+    </table>
   </div>
-
+  <div class="col-md-3">
+    <c:if test="${canCreateNewField}">
+      <span id="createNewFieldLand">创建新种植地</span>
+    </c:if>
+  </div>
 
 </div>
 </body>
@@ -38,11 +44,12 @@
   <script type="text/javascript">
 
     $(document).ready(function() {
+      $("#createNewFieldLand").click(function () {
+        createNewFieldLand();
+      });
 
-      getFieldLandView();
-
-      function getFieldLandView() {
-        var url = "/joy/garden/getFieldLandView";
+      function createNewFieldLand() {
+        var url = "/joy/garden/createNewFieldLand";
 
         var jsonOutput = {};
 
@@ -50,19 +57,28 @@
           type : "POST",
           url : url,
           data: JSON.stringify(jsonOutput),
-          // dataType: 'json',
+          dataType: 'json',
           contentType: "application/json",
           beforeSend: function(xhr) {
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           timeout: 15000,
           success:function(data){
-            $("#fieldLandRow").html(data);
+            if(data.code == 0){
+              $("#createFieldLandResult").text("创建成功");
+            } else {
+              $("#createFieldLandResult").text(data.message);
+            }
+            if(data.message == "MAX"){
+              $("#createNewFieldLandTR").hide();
+            }
           },
           error:function(e){
+            $("#createFieldLandResult").text("出现异常,请联系管理员");
           }
         });
       }
+
     });
 
   </script>

@@ -5,15 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.joy.common.pojo.result.JoyCommonResult;
 import demo.joy.common.pojo.type.JoyModuleType;
-import demo.joy.garden.mapper.JoyGardenPlantCatalogMapper;
-import demo.joy.garden.mapper.JoyGardenPlantGrowingStageMapper;
 import demo.joy.garden.pojo.dto.JoyGardenCreatePlantDTO;
 import demo.joy.garden.pojo.dto.JoyGardenCreatePlantStageDTO;
 import demo.joy.garden.pojo.dto.JoyGardenPlantSearchConditionDTO;
@@ -38,10 +35,6 @@ import demo.joy.image.pojo.result.JoyImageUploadResult;
 public class JoyGardenPlantCatalogManagerServiceImpl extends JoyGardenCommonService
 		implements JoyGardenPlantCatalogManagerService {
 
-	@Autowired
-	private JoyGardenPlantCatalogMapper plantCatalogMapper;
-	@Autowired
-	private JoyGardenPlantGrowingStageMapper plantGrowingStageMapper;
 
 	@Override
 	public ModelAndView plantCatalogManager() {

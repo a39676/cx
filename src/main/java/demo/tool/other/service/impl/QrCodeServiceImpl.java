@@ -12,9 +12,6 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.owasp.html.PolicyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -78,45 +75,26 @@ public class QrCodeServiceImpl extends ToolCommonService implements QrCodeServic
 	public List<String> decodeFromContent(String content) {
 		List<String> result = new ArrayList<>();
 
-		Element doc = Jsoup.parse(content);
-		Elements imgs = doc.select("img[src]");
-
 		PolicyFactory filter = textFilter.getArticleFilter();
 
 		String tmpResult = null;
-		for (Element img : imgs) {
-			String src = img.attr("src");
-			if (src.startsWith("http")) {
-				try {
-					tmpResult = decodeByImageUrl(src);
-					if (StringUtils.isNotBlank(tmpResult)) {
-						result.add(filter.sanitize(tmpResult));
-					}
-				} catch (IOException e) {
-				}
-			} else {
-				ImgHandleSrcDataResult srcHandleResult = imageService.imgHandleSrcData(src);
-				if (srcHandleResult.isFail()) {
-					continue;
-				}
-				BufferedImage bufferImage = imageService.base64ToBufferedImg(srcHandleResult.getBase64Str());
-				try {
-					tmpResult = decode.decode(bufferImage);
-					result.add(filter.sanitize(tmpResult));
-				} catch (NotFoundException e) {
-				}
-			}
-		}
-
-		Elements hrefs = doc.select("a[href]");
-		for (Element ref : hrefs) {
-			String src = ref.attr("href");
+		if (content.startsWith("http")) {
 			try {
-				tmpResult = decodeByImageUrl(src);
+				tmpResult = decodeByImageUrl(content);
 				if (StringUtils.isNotBlank(tmpResult)) {
 					result.add(filter.sanitize(tmpResult));
 				}
 			} catch (IOException e) {
+			}
+		} else {
+			ImgHandleSrcDataResult srcHandleResult = imageService.imgHandleSrcData(content);
+			if (srcHandleResult.isFail()) {
+			}
+			BufferedImage bufferImage = imageService.base64ToBufferedImg(srcHandleResult.getBase64Str());
+			try {
+				tmpResult = decode.decode(bufferImage);
+				result.add(filter.sanitize(tmpResult));
+			} catch (NotFoundException e) {
 			}
 		}
 

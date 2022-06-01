@@ -74,7 +74,7 @@
     <ul class="main-menu visible-on-click" id="qrcode">
       <li style="background-color:yellow;">qrcode</li>
       <li>
-        <a href="/tool/qrcode/" target="_blank">qrcode</a>
+        <a href="/publicTool/qrcode/" target="_blank">qrcode</a>
       </li>
     </ul><!-- canlendarNotice -->
 

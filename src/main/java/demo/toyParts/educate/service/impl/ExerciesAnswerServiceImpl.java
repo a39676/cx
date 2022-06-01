@@ -90,7 +90,7 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		Double randomAwardPoints = 0D;
-		Integer inherentPoints = optionService.getGardePointMap().get(exerciesDTO.getGradeType().getCode());
+		BigDecimal inherentPoints = optionService.getGardePointMap().get(exerciesDTO.getGradeType().getCode());
 
 		GradeType studentGrade = GradeType.getType(detail.getGradeType().intValue());
 
@@ -108,10 +108,11 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 		if (answerResult.getTotalScore().compareTo(maxScore) == 0 && studentGrade.equals(exerciesDTO.getGradeType())) {
 			if (!hasMaxScoreToday(detail.getId(), studentGrade, exerciesDTO.getSubjectType())) {
 				randomAwardCoefficient = randomMaxAwardCoefficient;
-				randomAwardPoints = randomAwardCoefficient.multiply(new BigDecimal(inherentPoints)).doubleValue();
+				randomAwardPoints = randomAwardCoefficient.multiply(inherentPoints).doubleValue();
+				BigDecimal total = inherentPoints.add(new BigDecimal(randomAwardPoints));
 				answerResult.addMessage("今日首次获得本学期的 " + exerciesDTO.getSubjectType().getCnName() + " 满分习题! 获得最高积分: "
-						+ (randomAwardPoints + inherentPoints));
-				answerResult.setPoints(new BigDecimal(randomAwardPoints + inherentPoints));
+						+ (total));
+				answerResult.setPoints(total);
 				return answerResult;
 			}
 		}
@@ -120,7 +121,7 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 		if ((studentGrade.getCode() - exerciesDTO.getGradeType().getCode()) > 2) {
 			answerResult.setMatchGradeType(MatchGradeType.PAST_GRADE);
 			answerResult.addMessage("复习过往知识,巩固良好基础. 但要注意跟进最新课程");
-			answerResult.setPoints(new BigDecimal(inherentPoints));
+			answerResult.setPoints(inherentPoints);
 			return answerResult;
 		}
 
@@ -139,7 +140,7 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 		if (wrongCoefficient <= 0.4) {
 			randomAwardCoefficient = new BigDecimal(
 					t.nextDouble(randomMinAwardCoefficient.doubleValue(), randomMaxAwardCoefficient.doubleValue()));
-			randomAwardPoints = randomAwardCoefficient.multiply(new BigDecimal(inherentPoints))
+			randomAwardPoints = randomAwardCoefficient.multiply(inherentPoints)
 					.multiply(new BigDecimal(1 - wrongCoefficient)).doubleValue();
 		}
 		Double totalPoint = inherentPoints.doubleValue() * (1 - wrongCoefficient) + randomAwardPoints;

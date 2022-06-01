@@ -26,7 +26,7 @@ public class EducateOptionService extends CommonService {
 	private BigDecimal maxScore = new BigDecimal(100);
 	private BigDecimal randomMaxAwardCoefficient;
 	private BigDecimal randomMinAwardCoefficient;
-	private HashMap<Integer, Integer> gardePointMap;
+	private HashMap<Integer, BigDecimal> gardePointMap;
 	private Integer dailyMaxHour = 22;
 	private Integer dailyMinHour = 7;
 	private Integer oldExerciesFileLivingDay = 7;
@@ -97,11 +97,11 @@ public class EducateOptionService extends CommonService {
 		this.randomMinAwardCoefficient = randomMinAwardCoefficient;
 	}
 
-	public HashMap<Integer, Integer> getGardePointMap() {
+	public HashMap<Integer, BigDecimal> getGardePointMap() {
 		return gardePointMap;
 	}
 
-	public void setGardePointMap(HashMap<Integer, Integer> gardePointMap) {
+	public void setGardePointMap(HashMap<Integer, BigDecimal> gardePointMap) {
 		this.gardePointMap = gardePointMap;
 	}
 

@@ -65,14 +65,10 @@ public abstract class EducateCommonService extends CommonService {
 		return result;
 	}
 
-	protected <T> StudentExerciesHistory reloadExercies(GradeType gradeType, ExerciesSubjectType subjectType, Long userId) {
+	protected <T> List<StudentExerciesHistory> reloadExercies(GradeType gradeType, ExerciesSubjectType subjectType, Long userId) {
 		StudentExerciesHistoryExample example = new StudentExerciesHistoryExample();
 		example.createCriteria().andGradeTypeEqualTo(gradeType.getCode().longValue()).andSubjectTypeEqualTo(subjectType.getCode().longValue()).andUserIdEqualTo(userId).andCompeletionTimeIsNull();
-		List<StudentExerciesHistory> poList = exerciesHistoryMapper.selectByExample(example);
-		if(poList == null || poList.isEmpty()) {
-			return null;
-		}
-		return poList.get(0);
+		return exerciesHistoryMapper.selectByExample(example);
 	}
 	
 	protected <T> T buildExerciesFromFile(StudentExerciesHistory exerciesPO, Class<T> clazz) {

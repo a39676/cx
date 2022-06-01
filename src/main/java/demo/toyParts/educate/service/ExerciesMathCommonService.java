@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.web.servlet.ModelAndView;
@@ -79,12 +80,21 @@ public abstract class ExerciesMathCommonService extends EducateCommonService {
 		if(userId == null) {
 			return null;
 		}
-		StudentExerciesHistory lastExercies = reloadExercies(gradeType, SUBJECT_TYPE, userId);
-		if(lastExercies == null) {
+		List<StudentExerciesHistory> oldExerciesList = reloadExercies(gradeType, SUBJECT_TYPE, userId);
+		if(oldExerciesList == null || oldExerciesList.isEmpty()) {
 			return null;
-		} else {
-			return buildExerciesFromFile(lastExercies, MathExerciesDTO.class);
 		}
+		MathExerciesDTO resultDTO = null;
+		for(StudentExerciesHistory oldExercies : oldExerciesList) {
+			try {
+				resultDTO = buildExerciesFromFile(oldExercies, MathExerciesDTO.class);
+				if(resultDTO != null) {
+					return resultDTO;
+				}
+			} catch (Exception e) {
+			}
+		}
+		return null;
 	}
 	
 	protected Double doubleSetScale(Double d, int scaleIndex) {

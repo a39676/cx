@@ -63,7 +63,7 @@ public class ExerciesQuestionController extends CommonController {
 			if (ExerciesSubjectType.chinese.equals(subjectType)) {
 
 			} else if (ExerciesSubjectType.math.equals(subjectType)) {
-				return g2_1_math.getExercies(); 
+				return g2_1_math.getExercies();
 			} else if (ExerciesSubjectType.english.equals(subjectType)) {
 
 			}
@@ -75,7 +75,7 @@ public class ExerciesQuestionController extends CommonController {
 			} else if (ExerciesSubjectType.english.equals(subjectType)) {
 
 			}
-		}else if (GradeType.GRADE_3_1.equals(gradeType)) {
+		} else if (GradeType.GRADE_3_1.equals(gradeType)) {
 			if (ExerciesSubjectType.chinese.equals(subjectType)) {
 
 			} else if (ExerciesSubjectType.math.equals(subjectType)) {
@@ -92,7 +92,7 @@ public class ExerciesQuestionController extends CommonController {
 
 			}
 		}
-		
+
 		return null;
 
 	}
@@ -102,13 +102,13 @@ public class ExerciesQuestionController extends CommonController {
 	public ModelAndView getG1_1_math_exercies() {
 		return g1_1_math.getExercies();
 	}
-	
+
 	@GetMapping(value = "/getG1_2_math")
 	@ResponseBody
 	public ModelAndView getG1_2_math_exercies() {
 		return g1_2_math.getExercies();
 	}
-	
+
 	@GetMapping(value = "/getG2_1_math")
 	@ResponseBody
 	public ModelAndView getG2_1_math_exercies() {

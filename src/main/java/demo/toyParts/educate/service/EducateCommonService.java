@@ -7,8 +7,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.google.gson.Gson;
-
 import demo.base.system.service.impl.SystemOptionService;
 import demo.common.service.CommonService;
 import demo.toyParts.educate.mapper.StudentDetailMapper;
@@ -79,7 +77,7 @@ public abstract class EducateCommonService extends CommonService {
 	
 	protected <T> T buildExerciesFromFile(StudentExerciesHistory exerciesPO, Class<T> clazz) {
 		String exerciesJsonStr = ioUtil.getStringFromFile(exerciesPO.getFilePath());
-		return new Gson().fromJson(exerciesJsonStr, clazz);
+		return buildObjFromJsonCustomization(exerciesJsonStr, clazz);
 	}
 	
 }

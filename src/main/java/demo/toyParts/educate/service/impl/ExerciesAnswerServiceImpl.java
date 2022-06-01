@@ -1,6 +1,7 @@
 package demo.toyParts.educate.service.impl;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -55,7 +56,7 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 
 		Long userId = baseUtilCustom.getUserId();
 		if (userId == null) {
-			exerciesPO.setPoints(new BigDecimal(answerResult.getPoints()));
+			exerciesPO.setPoints(answerResult.getPoints());
 			exerciesPO.setCompeletionTime(LocalDateTime.now());
 			exerciesPO.setScore(answerResult.getTotalScore());
 			exerciesHistoryMapper.updateByPrimaryKeySelective(exerciesPO);
@@ -66,7 +67,7 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 
 		answerResult = handlePointsCalculcate(answerResult, detail, exerciesDTO);
 
-		exerciesPO.setPoints(new BigDecimal(answerResult.getPoints()));
+		exerciesPO.setPoints(answerResult.getPoints());
 		exerciesPO.setCompeletionTime(LocalDateTime.now());
 		exerciesPO.setScore(answerResult.getTotalScore());
 		exerciesPO.setMatchGradeType(answerResult.getMatchGradeType().getCode());
@@ -82,75 +83,67 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 			StudentDetail detail, MathExerciesDTO exerciesDTO) {
 		LocalDateTime now = LocalDateTime.now();
 		if (now.getHour() >= optionService.getDailyMaxHour() || now.getHour() <= optionService.getDailyMinHour()) {
-			answerResult.setPoints(0);
 			answerResult.addMessage("晚上 " + optionService.getDailyMaxHour() + "点, 至次日 "
 					+ optionService.getDailyMinHour() + "点, 是休息时间, 请注意劳逸结合");
 			return answerResult;
 		}
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
-		int randomPoints = 0;
+		Double randomAwardPoints = 0D;
+		Integer inherentPoints = optionService.getGardePointMap().get(exerciesDTO.getGradeType().getCode());
 
 		GradeType studentGrade = GradeType.getType(detail.getGradeType().intValue());
 
 		BigDecimal maxScore = optionService.getMaxScore();
-		BigDecimal randomPointMax = optionService.getRandomPointMax();
-		BigDecimal randomPointMin = optionService.getRandomPointMin();
+		BigDecimal randomMaxAwardCoefficient = optionService.getRandomMaxAwardCoefficient();
+		BigDecimal randomMinAwardCoefficient = optionService.getRandomMinAwardCoefficient();
+		BigDecimal randomAwardCoefficient = null;
+
+		// 全错 返回0分
+		if (optionService.getQuestionListSize().equals(answerResult.getWrongNumberList().size())) {
+			return answerResult;
+		}
 
 		// 满分 && 符合自身年级
 		if (answerResult.getTotalScore().compareTo(maxScore) == 0 && studentGrade.equals(exerciesDTO.getGradeType())) {
 			if (!hasMaxScoreToday(detail.getId(), studentGrade, exerciesDTO.getSubjectType())) {
-				randomPoints = optionService.getRandomPointMax().intValue();
+				randomAwardCoefficient = randomMaxAwardCoefficient;
+				randomAwardPoints = randomAwardCoefficient.multiply(new BigDecimal(inherentPoints)).doubleValue();
 				answerResult.addMessage("今日首次获得本学期的 " + exerciesDTO.getSubjectType().getCnName() + " 满分习题! 获得最高积分: "
-						+ optionService.getRandomPointMax());
-				answerResult.setPoints(randomPoints);
+						+ (randomAwardPoints + inherentPoints));
+				answerResult.setPoints(new BigDecimal(randomAwardPoints + inherentPoints));
 				return answerResult;
 			}
 		}
 
-		// 做以往的学期题目, 1年之前的习题, 不计算积分, 只统计成绩
+		// 做以往的学期题目, 不添加随机积分
 		if ((studentGrade.getCode() - exerciesDTO.getGradeType().getCode()) > 2) {
-			randomPoints = 0;
 			answerResult.setMatchGradeType(MatchGradeType.PAST_GRADE);
-			answerResult.addMessage("复习过往知识,巩固良好基础,本次习题只统计成绩,不计算积分");
-			answerResult.setPoints(randomPoints);
+			answerResult.addMessage("复习过往知识,巩固良好基础. 但要注意跟进最新课程");
+			answerResult.setPoints(new BigDecimal(inherentPoints));
 			return answerResult;
 		}
 
-		// 做以往的学期题目, 每学期扣1随机积分上限
-		// 做往后学期的题目, 每学期加1随机积分上限
-		if (studentGrade.getCode() < exerciesDTO.getGradeType().getCode()) {
+		// 做往后学期的题目, 每学期加10%随机奖励积分上限
+		// 做以往学期的题目, 每学期减10%随机奖励积分上限
+		if (exerciesDTO.getGradeType().getCode() > studentGrade.getCode()) {
 			answerResult.setMatchGradeType(MatchGradeType.FUTURE_GRADE);
 		}
-		randomPointMax = randomPointMax
-				.subtract(new BigDecimal(studentGrade.getCode() - exerciesDTO.getGradeType().getCode()));
+		randomMaxAwardCoefficient = randomMaxAwardCoefficient
+				.add(new BigDecimal((exerciesDTO.getGradeType().getCode() - studentGrade.getCode()) * 0.1));
 
-		// 按错题比例扣减随机积分上限
-		if (!answerResult.getWrongNumberList().isEmpty()) {
-			if (optionService.getQuestionListSize().equals(answerResult.getWrongNumberList().size())) {
-				// 全错 失去保底一分
-				answerResult.setPoints(0);
-				return answerResult;
-			} else {
-				Double coefficient = Double.valueOf(answerResult.getWrongNumberList().size())
-						/ Double.valueOf(optionService.getQuestionListSize());
-				randomPointMax = randomPointMax.multiply(BigDecimal.ONE.subtract(new BigDecimal(coefficient)));
-			}
+		// 错题, 按错题比例扣减总体积分上限 总体积分, 非随机积分
+		Double wrongCoefficient = Double.valueOf(answerResult.getWrongNumberList().size())
+				/ Double.valueOf(optionService.getQuestionListSize());
+		// 错题率超 40% 不奖励积分
+		if (wrongCoefficient <= 0.4) {
+			randomAwardCoefficient = new BigDecimal(
+					t.nextDouble(randomMinAwardCoefficient.doubleValue(), randomMaxAwardCoefficient.doubleValue()));
+			randomAwardPoints = randomAwardCoefficient.multiply(new BigDecimal(inherentPoints))
+					.multiply(new BigDecimal(1 - wrongCoefficient)).doubleValue();
 		}
-		// 如果没有做错题 && 非以往习题
-		if (answerResult.getWrongNumberList().isEmpty()
-				&& answerResult.getMatchGradeType().getCode() > MatchGradeType.PAST_GRADE.getCode()) {
-			randomPointMin = new BigDecimal(2);
-		}
-
-		// 最少获得保底分
-		if (randomPointMax.compareTo(optionService.getRandomPointMin()) <= 0) {
-			randomPoints = randomPointMin.intValue();
-		} else {
-			randomPoints = t.nextInt(randomPointMin.intValue(), randomPointMax.intValue() + 1);
-		}
-
-		answerResult.setPoints(randomPoints);
+		Double totalPoint = inherentPoints.doubleValue() * (1 - wrongCoefficient) + randomAwardPoints;
+		answerResult.setPoints(new BigDecimal(totalPoint).setScale(2, RoundingMode.HALF_UP));
 
 		return answerResult;
 	}
@@ -187,8 +180,7 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 		example.createCriteria().andUserIdEqualTo(userId)
 				.andCompeletionTimeBetween(now.with(LocalTime.MIN), now.with(LocalTime.MAX))
 				.andGradeTypeEqualTo(gradeType.getCode().longValue()).andScoreEqualTo(optionService.getMaxScore())
-				.andSubjectTypeEqualTo(subjectType.getCode().longValue())
-				.andPointsEqualTo(optionService.getRandomPointMax());
+				.andSubjectTypeEqualTo(subjectType.getCode().longValue()).andScoreEqualTo(optionService.getMaxScore());
 		List<StudentExerciesHistory> poList = exerciesHistoryMapper.selectByExample(example);
 		return poList != null && !poList.isEmpty();
 	}

@@ -2,6 +2,7 @@ package demo.toyParts.educate.service.impl;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.util.HashMap;
 
 import javax.annotation.PostConstruct;
 
@@ -23,8 +24,9 @@ public class EducateOptionService extends CommonService {
 	private String exerciesStorePrefixPath;
 	private Integer questionListSize = 20;
 	private BigDecimal maxScore = new BigDecimal(100);
-	private BigDecimal randomPointMax = BigDecimal.TEN;
-	private BigDecimal randomPointMin = BigDecimal.ONE;
+	private BigDecimal randomMaxAwardCoefficient;
+	private BigDecimal randomMinAwardCoefficient;
+	private HashMap<Integer, Integer> gardePointMap;
 	private Integer dailyMaxHour = 22;
 	private Integer dailyMinHour = 7;
 	private Integer oldExerciesFileLivingDay = 7;
@@ -44,6 +46,13 @@ public class EducateOptionService extends CommonService {
 			log.error("educate option loading error: " + e.getLocalizedMessage());
 		}
 		log.error("educate option loaded");
+	}
+
+	public String getOptionFilePath() {
+		return null;
+	}
+
+	public void setOptionFilePath(String optionFilePath) {
 	}
 
 	public String getExerciesStorePrefixPath() {
@@ -70,20 +79,28 @@ public class EducateOptionService extends CommonService {
 		this.maxScore = maxScore;
 	}
 
-	public BigDecimal getRandomPointMax() {
-		return randomPointMax;
+	public BigDecimal getRandomMaxAwardCoefficient() {
+		return randomMaxAwardCoefficient;
 	}
 
-	public void setRandomPointMax(BigDecimal randomPointMax) {
-		this.randomPointMax = randomPointMax;
+	public void setRandomMaxAwardCoefficient(BigDecimal randomMaxAwardCoefficient) {
+		this.randomMaxAwardCoefficient = randomMaxAwardCoefficient;
 	}
 
-	public BigDecimal getRandomPointMin() {
-		return randomPointMin;
+	public BigDecimal getRandomMinAwardCoefficient() {
+		return randomMinAwardCoefficient;
 	}
 
-	public void setRandomPointMin(BigDecimal randomPointMin) {
-		this.randomPointMin = randomPointMin;
+	public void setRandomMinAwardCoefficient(BigDecimal randomMinAwardCoefficient) {
+		this.randomMinAwardCoefficient = randomMinAwardCoefficient;
+	}
+
+	public HashMap<Integer, Integer> getGardePointMap() {
+		return gardePointMap;
+	}
+
+	public void setGardePointMap(HashMap<Integer, Integer> gardePointMap) {
+		this.gardePointMap = gardePointMap;
 	}
 
 	public Integer getDailyMaxHour() {
@@ -112,11 +129,11 @@ public class EducateOptionService extends CommonService {
 
 	@Override
 	public String toString() {
-		return "EducateOptionService [optionFilePath=" + optionFilePath + ", exerciesStorePrefixPath="
-				+ exerciesStorePrefixPath + ", questionListSize=" + questionListSize + ", maxScore=" + maxScore
-				+ ", randomPointMax=" + randomPointMax + ", randomPointMin=" + randomPointMin + ", dailyMaxHour="
-				+ dailyMaxHour + ", dailyMinHour=" + dailyMinHour + ", oldExerciesFileLivingDay="
-				+ oldExerciesFileLivingDay + "]";
+		return "EducateOptionService [exerciesStorePrefixPath=" + exerciesStorePrefixPath + ", questionListSize="
+				+ questionListSize + ", maxScore=" + maxScore + ", randomMaxAwardCoefficient="
+				+ randomMaxAwardCoefficient + ", randomMinAwardCoefficient=" + randomMinAwardCoefficient
+				+ ", gardePointMap=" + gardePointMap + ", dailyMaxHour=" + dailyMaxHour + ", dailyMinHour="
+				+ dailyMinHour + ", oldExerciesFileLivingDay=" + oldExerciesFileLivingDay + "]";
 	}
 
 }

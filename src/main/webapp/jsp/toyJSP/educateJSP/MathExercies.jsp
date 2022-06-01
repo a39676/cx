@@ -19,7 +19,7 @@
     </div>
 
     <div class="row">
-      <div class="col-md-3" id="questionList">
+      <div class="col-md-12" id="questionList">
         <%-- ${exercies.questionList} --%>
         <c:forEach items="${exercies.questionList}" var="question">
           <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
@@ -33,7 +33,7 @@
               </span>
             </div>
             <c:forEach items="${question.standardAnswer}" var="standardAnswer">
-              <input type="number" class="form-control answerInput" style="font-size:26px" name="" questionNumber="${question.questionNumber}">
+              <input type="number" class="form-control answerInput" style="font-size:26px" size="8" name="" questionNumber="${question.questionNumber}">
             </c:forEach>
           </div>
           <span questionNumber="${question.questionNumber}" class="standarAnswer"></span>

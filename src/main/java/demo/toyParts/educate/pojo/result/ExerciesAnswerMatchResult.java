@@ -13,7 +13,7 @@ public class ExerciesAnswerMatchResult extends CommonResult {
 
 	private BigDecimal totalScore = BigDecimal.ZERO;
 
-	private Integer points = 0;
+	private BigDecimal points = BigDecimal.ZERO;
 
 	/** {@link MatchGradeType} */
 	private MatchGradeType matchGradeType = MatchGradeType.CURRENT_GRADE;
@@ -30,11 +30,11 @@ public class ExerciesAnswerMatchResult extends CommonResult {
 		this.totalScore = totalScore;
 	}
 
-	public Integer getPoints() {
+	public BigDecimal getPoints() {
 		return points;
 	}
 
-	public void setPoints(Integer points) {
+	public void setPoints(BigDecimal points) {
 		this.points = points;
 	}
 

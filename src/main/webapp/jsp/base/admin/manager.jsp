@@ -71,13 +71,6 @@
       </li>
     </ul> <%-- cryptoCoin --%>
 
-    <ul class="main-menu visible-on-click" id="qrcode">
-      <li style="background-color:yellow;">qrcode</li>
-      <li>
-        <a href="/publicTool/qrcode/" target="_blank">qrcode</a>
-      </li>
-    </ul><!-- canlendarNotice -->
-
     <ul class="main-menu visible-on-click" id="canlendarNotice">
       <li style="background-color:yellow;">canlendarNotice</li>
       <li>

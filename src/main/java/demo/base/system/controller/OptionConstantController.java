@@ -75,8 +75,7 @@ public class OptionConstantController {
 	@GetMapping(value = "/refreshEducateOption")
 	@ResponseBody
 	public String refreshEducateOption() {
-		optionConstantManagerService.refreshEducateOption();
-		return "done";
+		return optionConstantManagerService.refreshEducateOption();
 	}
 	
 	@GetMapping(value = "/refreshJoyOption")

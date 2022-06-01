@@ -94,8 +94,8 @@ public class OptionServiceManagerServiceImpl extends CommonService implements Op
 	}
 	
 	@Override
-	public void refreshEducateOption() {
-		educateOptionService.refreshOption();
+	public String refreshEducateOption() {
+		return educateOptionService.refreshOption();
 	}
 	
 }

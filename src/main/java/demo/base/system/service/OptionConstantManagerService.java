@@ -18,7 +18,7 @@ public interface OptionConstantManagerService {
 
 	void refreshTelegramOption();
 
-	void refreshEducateOption();
+	String refreshEducateOption();
 
 	void refreshJoyOption();
 

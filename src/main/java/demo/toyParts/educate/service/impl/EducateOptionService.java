@@ -32,20 +32,22 @@ public class EducateOptionService extends CommonService {
 	private Integer oldExerciesFileLivingDay = 7;
 
 	@PostConstruct
-	public void refreshOption() {
+	public String refreshOption() {
 		File optionFile = new File(optionFilePath);
 		if (!optionFile.exists()) {
-			return;
+			return null;
 		}
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
 			EducateOptionService tmp = new Gson().fromJson(jsonStr, EducateOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
+			return jsonStr;
 		} catch (Exception e) {
 			log.error("educate option loading error: " + e.getLocalizedMessage());
 		}
 		log.error("educate option loaded");
+		return null;
 	}
 
 	public String getOptionFilePath() {

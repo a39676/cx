@@ -86,4 +86,11 @@ public class OptionConstantController {
 		return "done";
 	}
 	
+	@GetMapping(value = "/refreshJoyGardenOption")
+	@ResponseBody
+	public String refreshJoyGardenOption() {
+		optionConstantManagerService.refreshJoyGardenOption();
+		return "done";
+	}
+	
 }

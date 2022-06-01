@@ -39,6 +39,7 @@
   <a href="/optionConstant/refreshTelegramConstant" target="_blank">refreshTelegramConstant</a><br>
   <a href="/optionConstant/refreshEducateOption" target="_blank">refreshEducateOption</a><br>
   <a href="/optionConstant/refreshJoyOption" target="_blank">refreshJoyOption</a><br>
+  <a href="/optionConstant/refreshJoyGardenOption" target="_blank">refreshJoyGardenOption</a><br>
 </div>
 
 <hr>

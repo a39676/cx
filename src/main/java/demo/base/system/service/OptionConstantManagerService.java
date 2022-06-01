@@ -22,4 +22,6 @@ public interface OptionConstantManagerService {
 
 	void refreshJoyOption();
 
+	void refreshJoyGardenOption();
+
 }

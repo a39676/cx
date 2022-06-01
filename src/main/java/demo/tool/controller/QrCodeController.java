@@ -1,4 +1,4 @@
-package demo.tool.other.controller;
+package demo.tool.controller;
 
 import java.util.List;
 
@@ -14,12 +14,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.common.controller.CommonController;
-import demo.tool.other.pojo.constant.ToolUrlConstant;
 import demo.tool.other.pojo.dto.QrCodeDTO;
 import demo.tool.other.service.QrCodeService;
 
 @Controller
-@RequestMapping(value = ToolUrlConstant.root + "/qrcode")
+@RequestMapping(value = "/publicTool" + "/qrcode")
 public class QrCodeController extends CommonController {
 
 	@Autowired
@@ -27,7 +26,9 @@ public class QrCodeController extends CommonController {
 	
 	@GetMapping(value = "/")
 	public ModelAndView view() {
-		return new ModelAndView("toolJSP/QrCode/QrCode");
+		ModelAndView view = new ModelAndView("toolJSP/QrCode/QrCode");
+		view.addObject("title", "QR Code");
+		return view;
 	}
 	
 	@PostMapping(value = "/decode")

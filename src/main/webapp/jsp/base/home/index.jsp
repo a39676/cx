@@ -62,6 +62,9 @@
           </li>
           <li class="nav-item active font-weight-bold" id="articleBurn">
           </li>
+          <li class="nav-item active font-weight-bold">
+            <a class="nav-link" target="_blank" href="/publicTool/qrcode/">QR Code 生成 / 解码</a>
+          </li>
         </ul>
 
         <c:if test="${isHomePage == true}">

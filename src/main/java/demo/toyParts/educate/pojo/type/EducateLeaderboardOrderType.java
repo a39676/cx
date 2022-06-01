@@ -2,8 +2,8 @@ package demo.toyParts.educate.pojo.type;
 
 public enum EducateLeaderboardOrderType {
 
-	ORDER_BY_SCORE("orderByScore", "按成绩排名", 1), 
-	ORDER_BY_POINT("orderByPoint", "按积分排名", 2),
+	ORDER_BY_POINT("orderByPoint", "按积分排名", 1),
+	ORDER_BY_SCORE("orderByScore", "按成绩排名", 2), 
 	;
 
 	private String name;

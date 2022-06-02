@@ -18,4 +18,6 @@ public interface JoyGradenInfoService {
 
 	ModelAndView getFieldLandView();
 
+	void cacheToDatabase();
+
 }

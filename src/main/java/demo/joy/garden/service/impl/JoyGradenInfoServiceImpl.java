@@ -3,6 +3,7 @@ package demo.joy.garden.service.impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,9 +82,11 @@ public class JoyGradenInfoServiceImpl extends JoyGardenCommonService implements 
 		view.addObject("nickname", baseUtilCustom.getUserPrincipal().getNickName());
 		view.addObject("title", baseUtilCustom.getUserPrincipal().getNickName() + "的" + vo.getGardenName());
 		view.addObject("gardenInfo", vo);
-		
-		view.addObject("backgroundImgSrc", imageService.getImageInBase64Str(gardenOptionService.getBackgroundImgPath()));
-		view.addObject("gardenShopNpcImgSrc", imageService.getImageInBase64Str(gardenOptionService.getGardenNpcImgPath()));
+
+		view.addObject("backgroundImgSrc",
+				imageService.getImageInBase64Str(gardenOptionService.getBackgroundImgPath()));
+		view.addObject("gardenShopNpcImgSrc",
+				imageService.getImageInBase64Str(gardenOptionService.getGardenNpcImgPath()));
 
 		loadLands(false);
 
@@ -117,8 +120,8 @@ public class JoyGradenInfoServiceImpl extends JoyGardenCommonService implements 
 
 	private void loadLands(boolean refresh) {
 		Long userId = baseUtilCustom.getUserId();
-		if (cacheService.getFieldlandMap().containsKey(userId) && cacheService.getWetlandsMap().containsKey(userId) && cacheService.getWoodlandsMap().containsKey(userId)
-				&& refresh) {
+		if (cacheService.getFieldlandMap().containsKey(userId) && cacheService.getWetlandsMap().containsKey(userId)
+				&& cacheService.getWoodlandsMap().containsKey(userId) && refresh) {
 			return;
 		}
 
@@ -150,21 +153,21 @@ public class JoyGradenInfoServiceImpl extends JoyGardenCommonService implements 
 	public JoyGardenCreateNewFieldLandResult createNewFieldLand() {
 		JoyGardenCreateNewFieldLandResult r = new JoyGardenCreateNewFieldLandResult();
 		Long userId = baseUtilCustom.getUserId();
-		
+
 		List<JoyGardenLands> fieldLandPoList = cacheService.getFieldlandMap().get(userId);
-		if(fieldLandPoList.size() >= gardenOptionService.getFieldMaxSize()) {
+		if (fieldLandPoList.size() >= gardenOptionService.getFieldMaxSize()) {
 			r.setMessage("已经达到最大数量, 无法再扩容了");
 			return r;
 		}
-		
+
 		Integer consumePoint = gardenOptionService.getCreateFieldConsumePointMap().get(fieldLandPoList.size() + 1);
-		
+
 		CommonResult consumePointResult = studentService.pointConsume(userId, consumePoint.doubleValue());
-		if(consumePointResult.isFail()) {
+		if (consumePointResult.isFail()) {
 			r.setMessage(consumePointResult.getMessage());
 			return r;
 		}
-		
+
 		JoyGardenLands newField = new JoyGardenLands();
 		newField.setUserId(userId);
 		newField.setId(snowFlake.getNextId());
@@ -172,16 +175,16 @@ public class JoyGradenInfoServiceImpl extends JoyGardenCommonService implements 
 		newField.setIsDelete(false);
 		newField.setLandLevel(1);
 		newField.setLandType(JoyGardenLandType.FIELD.getCode());
-		
+
 		landsMapper.insert(newField);
-		
+
 		fieldLandPoList.add(newField);
 		cacheService.getFieldlandMap().put(userId, fieldLandPoList);
-		
-		if(gardenOptionService.getFieldMaxSize().equals(fieldLandPoList.size())) {
+
+		if (gardenOptionService.getFieldMaxSize().equals(fieldLandPoList.size())) {
 			r.setMessage("MAX");
 		}
-		
+
 		r.setView(getFieldLandView());
 		r.setIsSuccess();
 		return r;
@@ -190,7 +193,7 @@ public class JoyGradenInfoServiceImpl extends JoyGardenCommonService implements 
 	@Override
 	public ModelAndView getFieldLandView() {
 		ModelAndView view = new ModelAndView("joyJSP/garden/JoyFieldLandView");
-		
+
 		Long userId = baseUtilCustom.getUserId();
 		List<JoyGardenLandVO> fieldLandVoList = new ArrayList<>();
 
@@ -202,10 +205,54 @@ public class JoyGradenInfoServiceImpl extends JoyGardenCommonService implements 
 
 		view.addObject("fieldVoList", fieldLandVoList);
 		view.addObject("canCreateNewField", gardenOptionService.getFieldMaxSize() > fieldLandVoList.size());
-		
+
 		view.addObject("fieldImgSrc", imageService.getImageInBase64Str(gardenOptionService.getFieldlandImgPath()));
-		view.addObject("fieldNotDevImgSrc", imageService.getImageInBase64Str(gardenOptionService.getFieldlandNotDevelopImgPath()));
-		
+		view.addObject("fieldNotDevImgSrc",
+				imageService.getImageInBase64Str(gardenOptionService.getFieldlandNotDevelopImgPath()));
+
 		return view;
+	}
+
+	@Override
+	public void cacheToDatabase() {
+		Map<Long, JoyGardenInfo> gardenInfoMap = cacheService.getGardenInfoMap();
+		if (gardenInfoMap != null && !gardenInfoMap.isEmpty()) {
+			for (JoyGardenInfo info : gardenInfoMap.values()) {
+				infoMapper.updateByPrimaryKeySelective(info);
+			}
+		}
+
+		Map<Long, List<JoyGardenLands>> fieldlandMap = cacheService.getFieldlandMap();
+		if (fieldlandMap != null && !fieldlandMap.isEmpty()) {
+			for (List<JoyGardenLands> landList : fieldlandMap.values()) {
+				if (landList != null && !landList.isEmpty()) {
+					for (JoyGardenLands land : landList) {
+						landsMapper.updateByPrimaryKeySelective(land);
+					}
+				}
+			}
+		}
+
+		Map<Long, List<JoyGardenLands>> wetlandMap = cacheService.getWetlandsMap();
+		if (wetlandMap != null && !wetlandMap.isEmpty()) {
+			for (List<JoyGardenLands> landList : wetlandMap.values()) {
+				if (landList != null && !landList.isEmpty()) {
+					for (JoyGardenLands land : landList) {
+						landsMapper.updateByPrimaryKeySelective(land);
+					}
+				}
+			}
+		}
+
+		Map<Long, List<JoyGardenLands>> woodlandMap = cacheService.getWoodlandsMap();
+		if (woodlandMap != null && !woodlandMap.isEmpty()) {
+			for (List<JoyGardenLands> landList : woodlandMap.values()) {
+				if (landList != null && !landList.isEmpty()) {
+					for (JoyGardenLands land : landList) {
+						landsMapper.updateByPrimaryKeySelective(land);
+					}
+				}
+			}
+		}
 	}
 }

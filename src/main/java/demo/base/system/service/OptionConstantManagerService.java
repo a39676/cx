@@ -2,7 +2,7 @@ package demo.base.system.service;
 
 public interface OptionConstantManagerService {
 	
-	void refreshSystemConstant();
+	void refreshSystemOption();
 
 	void refreshArticleOption();
 

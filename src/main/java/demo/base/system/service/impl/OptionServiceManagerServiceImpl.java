@@ -44,7 +44,7 @@ public class OptionServiceManagerServiceImpl extends CommonService implements Op
 	
 	
 	@Override
-	public void refreshSystemConstant() {
+	public void refreshSystemOption() {
 		systemConstantService.refreshOption();
 	}
 	

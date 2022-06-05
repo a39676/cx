@@ -109,7 +109,7 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 			if (!hasMaxScoreToday(detail.getId(), studentGrade, exerciesDTO.getSubjectType())) {
 				randomAwardCoefficient = randomMaxAwardCoefficient;
 				randomAwardPoints = randomAwardCoefficient.multiply(inherentPoints).doubleValue();
-				BigDecimal total = inherentPoints.add(new BigDecimal(randomAwardPoints));
+				BigDecimal total = inherentPoints.add(new BigDecimal(randomAwardPoints)).setScale(2, RoundingMode.HALF_UP);
 				answerResult.addMessage("今日首次获得本学期的 " + exerciesDTO.getSubjectType().getCnName() + " 满分习题! 获得最高积分: "
 						+ (total));
 				answerResult.setPoints(total);

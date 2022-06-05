@@ -16,58 +16,58 @@ public class OptionConstantController {
 	@Autowired
 	private OptionConstantManagerService optionConstantManagerService;
 
-	@GetMapping(value = "/refreshSystemConstant")
+	@GetMapping(value = "/refreshSystemOption")
 	@ResponseBody
-	public String refreshSystemConstant() {
-		optionConstantManagerService.refreshSystemConstant();
+	public String refreshSystemOption() {
+		optionConstantManagerService.refreshSystemOption();
 		return "done";
 	}
 	
-	@GetMapping(value = "/refreshArticleConstant")
+	@GetMapping(value = "/refreshArticleOption")
 	@ResponseBody
-	public String refreshArticleConstant() {
+	public String refreshArticleOption() {
 		optionConstantManagerService.refreshArticleOption();
 		return "done";
 	}
 
-	@GetMapping(value = "/refreshArticleCommentConstant")
+	@GetMapping(value = "/refreshArticleCommentOption")
 	@ResponseBody
-	public String refreshArticleCommentConstant() {
+	public String refreshArticleCommentOption() {
 		optionConstantManagerService.refreshArticleCommentOption();
 		return "done";
 	}
 
-	@GetMapping(value = "/refreshMailConstant")
+	@GetMapping(value = "/refreshMailOption")
 	@ResponseBody
-	public String refreshMailConstant() {
+	public String refreshMailOption() {
 		optionConstantManagerService.refreshMailOption();
 		return "done";
 	}
 
-	@GetMapping(value = "/refreshCloudinaryConstant")
+	@GetMapping(value = "/refreshCloudinaryOption")
 	@ResponseBody
-	public String refreshCloudinaryConstant() {
+	public String refreshCloudinaryOption() {
 		optionConstantManagerService.refreshCloudinaryOption();
 		return "done";
 	}
 
-	@GetMapping(value = "/refreshAutomationTestConstant")
+	@GetMapping(value = "/refreshAutomationTestOption")
 	@ResponseBody
-	public String refreshAutomationTestConstant() {
+	public String refreshAutomationTestOption() {
 		optionConstantManagerService.refreshAutomationTestOption();
 		return "done";
 	}
 
-	@GetMapping(value = "/refreshCryptoCoinConstant")
+	@GetMapping(value = "/refreshCryptoCoinOption")
 	@ResponseBody
-	public String refreshCryptoCoinConstant() {
+	public String refreshCryptoCoinOption() {
 		optionConstantManagerService.refreshCryptoCoinOption();
 		return "done";
 	}
 
-	@GetMapping(value = "/refreshTelegramConstant")
+	@GetMapping(value = "/refreshTelegramOption")
 	@ResponseBody
-	public String refreshTelegramConstant() {
+	public String refreshTelegramOption() {
 		optionConstantManagerService.refreshTelegramOption();
 		return "done";
 	}

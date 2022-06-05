@@ -29,14 +29,14 @@
 <hr>
 
 <div>
-  <a href="/optionConstant/refreshSystemConstant" target="_blank">refreshSystemConstant</a><br>
-  <a href="/optionConstant/refreshArticleConstant" target="_blank">refreshArticleConstant</a><br>
-  <a href="/optionConstant/refreshArticleCommentConstant" target="_blank">refreshArticleCommentConstant</a><br>
-  <a href="/optionConstant/refreshMailConstant" target="_blank">refreshMailConstant</a><br>
-  <a href="/optionConstant/refreshCloudinaryConstant" target="_blank">refreshCloudinaryConstant</a><br>
-  <a href="/optionConstant/refreshAutomationTestConstant" target="_blank">refreshAutomationTestConstant</a><br>
-  <a href="/optionConstant/refreshCryptoCoinConstant" target="_blank">refreshCryptoCoinConstant</a><br>
-  <a href="/optionConstant/refreshTelegramConstant" target="_blank">refreshTelegramConstant</a><br>
+  <a href="/optionConstant/refreshSystemOption" target="_blank">refreshSystemOption</a><br>
+  <a href="/optionConstant/refreshArticleOption" target="_blank">refreshArticleOption</a><br>
+  <a href="/optionConstant/refreshArticleCommentOption" target="_blank">refreshArticleCommentOption</a><br>
+  <a href="/optionConstant/refreshMailOption" target="_blank">refreshMailOption</a><br>
+  <a href="/optionConstant/refreshCloudinaryOption" target="_blank">refreshCloudinaryOption</a><br>
+  <a href="/optionConstant/refreshAutomationTestOption" target="_blank">refreshAutomationTestOption</a><br>
+  <a href="/optionConstant/refreshCryptoCoinOption" target="_blank">refreshCryptoCoinOption</a><br>
+  <a href="/optionConstant/refreshTelegramOption" target="_blank">refreshTelegramOption</a><br>
   <a href="/optionConstant/refreshEducateOption" target="_blank">refreshEducateOption</a><br>
   <a href="/optionConstant/refreshJoyOption" target="_blank">refreshJoyOption</a><br>
   <a href="/optionConstant/refreshJoyGardenOption" target="_blank">refreshJoyGardenOption</a><br>

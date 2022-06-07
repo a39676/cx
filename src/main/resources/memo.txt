@@ -1,6 +1,3 @@
-Ip record 需要重建
-
-
 article
 	Add back to Homepage button in post.jsp
 

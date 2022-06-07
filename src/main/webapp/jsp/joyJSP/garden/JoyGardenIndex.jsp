@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt"  prefix="fmt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
@@ -12,9 +12,9 @@
 <%@ include file="../../baseElementJSP/normalHeader.jsp" %>
 </head>
 <body>
-<div class="container-fluid" style="background-image: url('data:image/png;base64,${backgroundImgSrc}'); background-attachment: inherit;">
+<div class="container" style="width: 900px; height: 600px; background-image: url('data:image/png;base64,${backgroundImgSrc}'); background-attachment: inherit;">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-sm-12">
       ${gardenInfo}
       <span>欢迎光临${nickname}的${gardenInfo.gardenName}</span>
     </div>
@@ -24,10 +24,12 @@
   </div>
 
   <div class="row">
-    <div class="col-md-11">
+    <div class="col-sm-1">
+    </div>
+    <div class="col-sm-10">
       <span id="createFieldLandResult"></span>
     </div>
-    <div class="col-md-1">
+    <div class="col-sm-1">
       <button type="button" name="" class="" id="shopNpc">
         <span>商店</span>
         <img src='data:image/png;base64,${gardenShopNpcImgSrc}' alt=""

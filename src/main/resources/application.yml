@@ -65,18 +65,7 @@ logging:
     # demo.finance.cryptoCoin.notice.mapper: DEBUG
     # demo.finance.cryptoCoin.data.mapper: DEBUG
     # demo.mapper: DEBUG
-    # demo.bank.mapper: DEBUG
-    # demo.credit_bill.mapper: DEBUG
-    # demo.trading.mapper: DEBUG
-    # demo.base.account_DEBUG.mapper: DEBUG
-    # demo.base.system.mapper: DEBUG
-    # demo.base.user.mapper: DEBUG
-    # demo.organizations.mapper: DEBUG
-    # demo.image.mapper: DEBUG
-    # demo.article.article.mapper: DEBUG
-    # demo.articleComment.mapper: DEBUG
-    # demo.fakePost.mapper: DEBUG
-    # demo.mobile.mapper: DEBUG
+    # demo.joy.garden.mapper: DEBUG
   pattern:
     console: "%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"
     file: "[%p] [%d{yyyy-MM-dd HH:mm:ss}][%c]%m%n [%thread] %-5level %logger{36}"

@@ -34,7 +34,7 @@
         </javaTypeResolver>  
           
         <!-- 生成模型的包名和位置-->    
-        <javaModelGenerator targetPackage="demo.automationTest.pojo.po" targetProject="cx">    
+        <javaModelGenerator targetPackage="demo.joy.garden.pojo.po" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
             <property name="trimStrings" value="true"/> 
             <!-- for MyBatis3 / MyBatis3Simple
@@ -45,18 +45,18 @@
         </javaModelGenerator>    
         
         <!-- 生成映射文件的包名和位置-->    
-        <sqlMapGenerator targetPackage="demo.automationTest.mapper" targetProject="cx">    
+        <sqlMapGenerator targetPackage="demo.joy.garden.mapper" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
         </sqlMapGenerator>    
         
         <!-- 生成DAO的包名和位置-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.automationTest.mapper" targetProject="cx">    
+        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.joy.garden.mapper" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="test_event">
-        	<property name="tableName" value="test_event"></property>
-        	<property name="domainObjectName" value="test_event"></property>
+        <table tableName="joy_garden_storehouse">
+        	<property name="tableName" value="joy_garden_storehouse"></property>
+        	<property name="domainObjectName" value="joy_garden_storehouse"></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

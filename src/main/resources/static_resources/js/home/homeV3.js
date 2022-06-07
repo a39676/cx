@@ -28,7 +28,7 @@ $(document).ready(function() {
   function showLogin(){ 
     var url = "/login/login";
     $.ajax({  
-      type : "GET",  
+      type : "POST",  
       async : true,
       url : url,  
       success:function(datas){

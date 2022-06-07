@@ -29,14 +29,17 @@
 <hr>
 
 <div>
-  <button id="refreshSystemConstant">refreshSystemConstant</button>
-  <button id="refreshArticleConstant">refreshArticleConstant</button>
-  <button id="refreshArticleCommentConstant">refreshArticleCommentConstant</button>
-  <button id="refreshMailConstant">refreshMailConstant</button>
-  <button id="refreshCloudinaryConstant">refreshCloudinaryConstant</button>
-  <button id="refreshAutomationTestConstant">refreshAutomationTestConstant</button>
-  <button id="refreshCryptoCoinConstant">refreshCryptoCoinConstant</button>
-  <button id="refreshTelegramConstant">refreshTelegramConstant</button>
+  <a href="/optionConstant/refreshSystemConstant" target="_blank">refreshSystemConstant</a><br>
+  <a href="/optionConstant/refreshArticleConstant" target="_blank">refreshArticleConstant</a><br>
+  <a href="/optionConstant/refreshArticleCommentConstant" target="_blank">refreshArticleCommentConstant</a><br>
+  <a href="/optionConstant/refreshMailConstant" target="_blank">refreshMailConstant</a><br>
+  <a href="/optionConstant/refreshCloudinaryConstant" target="_blank">refreshCloudinaryConstant</a><br>
+  <a href="/optionConstant/refreshAutomationTestConstant" target="_blank">refreshAutomationTestConstant</a><br>
+  <a href="/optionConstant/refreshCryptoCoinConstant" target="_blank">refreshCryptoCoinConstant</a><br>
+  <a href="/optionConstant/refreshTelegramConstant" target="_blank">refreshTelegramConstant</a><br>
+  <a href="/optionConstant/refreshEducateOption" target="_blank">refreshEducateOption</a><br>
+  <a href="/optionConstant/refreshJoyOption" target="_blank">refreshJoyOption</a><br>
+  <a href="/optionConstant/refreshJoyGardenOption" target="_blank">refreshJoyGardenOption</a><br>
 </div>
 
 <hr>
@@ -58,8 +61,7 @@
     });
 
     function deleteUserIpRecord() {
-
-      var url = "${pageContext.request.contextPath}/admin/deleteUserIpRecord";
+      var url = "/admin/deleteUserIpRecord";
       var startDate = $("input[name='customStartDate']").val();
       var endDate = $("input[name='customEndDate']").val();
       var jsonOutput = {
@@ -80,7 +82,6 @@
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          console.log(datas);
           $("#result").val(datas.message);
         },
         error: function(datas) {
@@ -94,8 +95,7 @@
     });
 
     function batchUpdatePrivateKey() {
-
-      var url = "${pageContext.request.contextPath}/articleAdmin/batchUpdatePrivateKey";
+      var url = "/articleAdmin/batchUpdatePrivateKey";
       var startDate = $("input[name='customStartDate']").val();
       var endDate = $("input[name='customEndDate']").val();
       var jsonOutput = {
@@ -116,7 +116,6 @@
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          console.log(datas);
           $("#result").val(datas.message);
         },
         error: function(datas) {
@@ -130,7 +129,6 @@
     });
 
     function setHomepageAnnouncementStr() {
-
       var url = "/admin/setHomepageAnnouncementStr";
       var homepageAnnouncementStr = $("input[name='setHomepageAnnouncementStr']").val();
       var jsonOutput = {
@@ -164,7 +162,6 @@
     });
 
     function createFakeEvaluationStore() {
-
       var url = "/admin/createFakeEvaluationStore";
       var jsonOutput = {
       };
@@ -182,7 +179,6 @@
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          console.log(datas);
           $("#result").val(datas.message);
         },
         error: function(datas) {
@@ -191,213 +187,6 @@
       });
     };
 
-    function refreshSystemConstant() {
-
-      var url = "/optionConstant/refreshSystemConstant/";
-
-      $.ajax({
-        type : "GET",
-        url : url,
-        // data: JSON.stringify(jsonOutput),
-        dataType: 'json',
-        contentType: "application/json",
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader(csrfHeader, csrfToken);
-        },
-        timeout: 15000,
-        success:function(data){
-          $("#result").val(data + ", refreshSystemConstant");
-        },
-        error:function(e){
-        }
-      });
-    };
-
-    function refreshArticleConstant() {
-
-      var url = "/optionConstant/refreshArticleConstant/";
-
-      $.ajax({
-        type : "GET",
-        url : url,
-        // data: JSON.stringify(jsonOutput),
-        dataType: 'json',
-        contentType: "application/json",
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader(csrfHeader, csrfToken);
-        },
-        timeout: 15000,
-        success:function(data){
-          $("#result").val(data + ", refreshArticleConstant");
-        },
-        error:function(e){
-        }
-      });
-    };
-
-    function refreshArticleCommentConstant() {
-
-      var url = "/optionConstant/refreshArticleCommentConstant";
-
-      $.ajax({
-        type : "GET",
-        url : url,
-        // data: JSON.stringify(jsonOutput),
-        dataType: 'json',
-        contentType: "application/json",
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader(csrfHeader, csrfToken);
-        },
-        timeout: 15000,
-        success:function(data){
-          $("#result").val(data + ", refreshArticleCommentConstant");
-        },
-        error:function(e){
-        }
-      });
-    };
-
-    function refreshMailConstant() {
-
-      var url = "/optionConstant/refreshMailConstant/";
-
-      $.ajax({
-        type : "GET",
-        url : url,
-        // data: JSON.stringify(jsonOutput),
-        dataType: 'json',
-        contentType: "application/json",
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader(csrfHeader, csrfToken);
-        },
-        timeout: 15000,
-        success:function(data){
-          $("#result").val(data + ", refreshMailConstant");
-        },
-        error:function(e){
-        }
-      });
-    };
-
-    function refreshCloudinaryConstant() {
-
-      var url = "/optionConstant/refreshCloudinaryConstant";
-
-      $.ajax({
-        type : "GET",
-        url : url,
-        // data: JSON.stringify(jsonOutput),
-        dataType: 'json',
-        contentType: "application/json",
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader(csrfHeader, csrfToken);
-        },
-        timeout: 15000,
-        success:function(data){
-          $("#result").val(data + ", refreshCloudinaryConstant");
-        },
-        error:function(e){
-        }
-      });
-    };
-
-    function refreshAutomationTestConstant() {
-
-      var url = "/optionConstant/refreshAutomationTestConstant";
-
-      $.ajax({
-        type : "GET",
-        url : url,
-        // data: JSON.stringify(jsonOutput),
-        dataType: 'json',
-        contentType: "application/json",
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader(csrfHeader, csrfToken);
-        },
-        timeout: 15000,
-        success:function(data){
-          $("#result").val(data + ", refreshAutomationTestConstant");
-        },
-        error:function(e){
-        }
-      });
-    };
-
-    function refreshCryptoCoinConstant() {
-
-      var url = "/optionConstant/refreshCryptoCoinConstant";
-
-      $.ajax({
-        type : "GET",
-        url : url,
-        // data: JSON.stringify(jsonOutput),
-        dataType: 'json',
-        contentType: "application/json",
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader(csrfHeader, csrfToken);
-        },
-        timeout: 15000,
-        success:function(data){
-          $("#result").val(data + ", refreshCryptoCoinConstant");
-        },
-        error:function(e){
-        }
-      });
-    };
-
-    function refreshTelegramConstant() {
-
-      var url = "/optionConstant/refreshTelegramConstant";
-
-      $.ajax({
-        type : "GET",
-        url : url,
-        // data: JSON.stringify(jsonOutput),
-        dataType: 'json',
-        contentType: "application/json",
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader(csrfHeader, csrfToken);
-        },
-        timeout: 15000,
-        success:function(data){
-          $("#result").val(data + ", refreshTelegramConstant");
-        },
-        error:function(e){
-        }
-      });
-    };
-
-    $("#refreshSystemConstant").click(function () {
-      refreshSystemConstant();
-    })
-
-    $("#refreshArticleConstant").click(function () {
-      refreshArticleConstant();
-    })
-
-    $("#refreshArticleCommentConstant").click(function () {
-      refreshArticleCommentConstant();
-    })
-
-    $("#refreshMailConstant").click(function () {
-      refreshMailConstant();
-    })
-
-    $("#refreshCloudinaryConstant").click(function () {
-      refreshCloudinaryConstant();
-    })
-
-    $("#refreshAutomationTestConstant").click(function () {
-      refreshAutomationTestConstant();
-    })
-
-    $("#refreshCryptoCoinConstant").click(function () {
-      refreshCryptoCoinConstant();
-    })
-
-    $("#refreshTelegramConstant").click(function () {
-      refreshTelegramConstant();
-    })
   });
 
 </script>

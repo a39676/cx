@@ -5,62 +5,61 @@ import java.time.LocalDateTime;
 public class UserIp {
     private Long userId;
 
-	private Long ip;
+    private String ip;
 
-	private Long forwardIp;
+    private String forwardIp;
 
-	private String serverName;
+    private String serverName;
 
-	private String uri;
+    private String uri;
 
-	private LocalDateTime createTime;
+    private LocalDateTime createTime;
 
-	public Long getUserId() {
-		return userId;
-	}
+    public Long getUserId() {
+        return userId;
+    }
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
-	public Long getIp() {
-		return ip;
-	}
+    public String getIp() {
+        return ip;
+    }
 
-	public void setIp(Long ip) {
-		this.ip = ip;
-	}
+    public void setIp(String ip) {
+        this.ip = ip == null ? null : ip.trim();
+    }
 
-	public Long getForwardIp() {
-		return forwardIp;
-	}
+    public String getForwardIp() {
+        return forwardIp;
+    }
 
-	public void setForwardIp(Long forwardIp) {
-		this.forwardIp = forwardIp;
-	}
+    public void setForwardIp(String forwardIp) {
+        this.forwardIp = forwardIp == null ? null : forwardIp.trim();
+    }
 
-	public String getServerName() {
-		return serverName;
-	}
+    public String getServerName() {
+        return serverName;
+    }
 
-	public void setServerName(String serverName) {
-		this.serverName = serverName == null ? null : serverName.trim();
-	}
+    public void setServerName(String serverName) {
+        this.serverName = serverName == null ? null : serverName.trim();
+    }
 
-	public String getUri() {
-		return uri;
-	}
+    public String getUri() {
+        return uri;
+    }
 
-	public void setUri(String uri) {
-		this.uri = uri == null ? null : uri.trim();
-	}
+    public void setUri(String uri) {
+        this.uri = uri == null ? null : uri.trim();
+    }
 
-	public LocalDateTime getCreateTime() {
-		return createTime;
-	}
+    public LocalDateTime getCreateTime() {
+        return createTime;
+    }
 
-	public void setCreateTime(LocalDateTime createTime) {
-		this.createTime = createTime;
-	}
-
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
+    }
 }

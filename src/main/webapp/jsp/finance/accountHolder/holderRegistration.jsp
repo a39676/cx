@@ -52,19 +52,16 @@
 
     $.ajax({
       type: "POST",
-      url:"${pageContext.request.contextPath}/holder/holderRegister",
+      url:"/holder/holderRegister",
       data: $("#holderRegisterForm").serialize(),
       beforeSend: function(xhr) {
         xhr.setRequestHeader(csrfHeader, csrfToken);
       },
       timeout: 15000,  
       success: function (data) {
-        console.log(data);
         $('#subBody').html(data);
       },  
       error:function(e){
-        // console.log("error");
-        // console.log(e);
       }
     });
   };

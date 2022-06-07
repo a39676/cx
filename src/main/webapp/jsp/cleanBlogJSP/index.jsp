@@ -11,12 +11,11 @@
 </head>
 
 <body>
-
   <!-- Navigation -->
   <%@ include file="./nav.jsp" %>
 
   <!-- Page Header -->
-  <header class="masthead" style="background-image: url('${headerImg}')"> 
+  <header class="masthead" style="background-image: url('${headerImg}')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
@@ -61,8 +60,10 @@
         </div>
       </div>
       <div class="col-md-2 mx-auto">
+        <span style="color: rgb(255, 156, 0); background-color: rgb(255, 255, 255);">打赏 Doge coin</span>
+        <img src="${donateImgUrl}" alt="" style="width:100px; height:100px;">
       </div>
-      
+
     </div>
   </div>
 

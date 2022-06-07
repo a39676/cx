@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import demo.base.system.service.impl.SystemOptionService;
 import demo.common.service.CommonService;
 import demo.finance.cryptoCoin.mq.producer.TelegramCryptoCoinMessageAckProducer;
 import demo.tool.mail.service.MailService;
@@ -12,6 +13,8 @@ import demo.tool.telegram.service.TelegramService;
 
 public abstract class FinanceCommonService extends CommonService {
 	
+	@Autowired
+	protected SystemOptionService systemOptionService;
 	@Autowired
 	protected MailService mailService;
 	@Autowired

@@ -1,35 +1,27 @@
 package demo.article.article.service.impl;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDateTime;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import demo.article.article.mapper.ArticleHotMapper;
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.mapper.ArticleLongMapper;
 import demo.article.article.mapper.ArticleLongReviewMapper;
 import demo.article.article.mapper.ArticleLongSummaryMapper;
-import demo.article.article.pojo.param.controllerParam.BatchUpdatePrimaryKeyParam;
 import demo.article.article.pojo.param.controllerParam.ChangeChannelParam;
 import demo.article.article.pojo.param.controllerParam.InsertNewReviewRecordParam;
 import demo.article.article.pojo.param.controllerParam.ReviewArticleLongParam;
 import demo.article.article.pojo.param.controllerParam.SetArticleHotParam;
 import demo.article.article.pojo.param.mapperParam.UpdateArticleLongReviewStatuParam;
-import demo.article.article.pojo.po.ArticleHot;
 import demo.article.article.pojo.po.ArticleLong;
 import demo.article.article.pojo.po.ArticleLongSummary;
 import demo.article.article.pojo.type.ArticleReviewType;
 import demo.article.article.service.ArticleAdminService;
-import demo.common.pojo.result.CommonResultCX;
-import demo.common.pojo.type.ResultTypeCX;
 
 @Service
 public class ArticleAdminServiceImpl extends ArticleCommonService implements ArticleAdminService {
@@ -40,61 +32,11 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 	private ArticleLongSummaryMapper articleLongSummaryMapper;
 	@Autowired
 	private ArticleLongReviewMapper articleLongReviewMapper;
-	@Autowired
-	private ArticleHotMapper articleHotMapper;
+	
 	
 	@Override
-	public CommonResultCX batchUpdatePrivateKey(BatchUpdatePrimaryKeyParam param) {
-		CommonResultCX result = new CommonResultCX();
-		if (param.getStartTime() == null && param.getEndTime() == null) {
-			param.setEndTime(new Date());
-		}
-
-		if (param.getStartTime() != null && param.getEndTime() != null
-				&& (param.getStartTime().after(param.getEndTime())
-						|| param.getStartTime().equals(param.getEndTime()))) {
-			result.fillWithResult(ResultTypeCX.errorParam);
-			return result;
-		}
-		
-		List<Long> articleLongIds = articleLongSummaryMapper.findArticleLongSummaryListIds(param);
-		if(articleLongIds == null || articleLongIds.size() < 1) {
-			result.fillWithResult(ResultTypeCX.errorParam);
-			return result;
-		}
-		
-		ArticleLongSummary tmpPo = null;
-		List<ArticleLongSummary> summarys = new ArrayList<ArticleLongSummary>();
-		String tmpPrivateKey = null;
-		for(Long id : articleLongIds) {
-			try {
-				tmpPrivateKey = URLEncoder.encode(encryptId(id), StandardCharsets.UTF_8.toString());
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-			if(tmpPrivateKey == null) {
-				continue;
-			}
-			tmpPo = new ArticleLongSummary();
-			tmpPo.setArticleId(id);
-			tmpPo.setPrivateKey(tmpPrivateKey);
-			summarys.add(tmpPo);
-		}
-		
-		Integer updateCount = articleLongSummaryMapper.batchUpdatePrivateKey(summarys);
-		if(updateCount == null || updateCount < 1) {
-			result.fillWithResult(ResultTypeCX.errorParam);
-			return result;
-		}
-		
-		result.normalSuccess();
-		result.setMessage(updateCount.toString());
-		return result;
-	}
-	
-	@Override
-	public CommonResultCX handelReviewArticle(ReviewArticleLongParam param) throws Exception {
-		CommonResultCX result = null;
+	public CommonResult handelReviewArticle(ReviewArticleLongParam param) throws Exception {
+		CommonResult result = null;
 		param.setPk(URLDecoder.decode(param.getPk(), StandardCharsets.UTF_8));
 		if(param.getReviewCode().equals(ArticleReviewType.pass.getReviewCode())) {
 			result = passArticle(param.getPk());
@@ -106,29 +48,29 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			result = deleteArticle(param.getPk());
 			return result;
 		} else {
-			result = new CommonResultCX();
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result = new CommonResult();
+			result.setMessage("error param");
 		}
 		return result;
 	}
 	
 	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
-	private CommonResultCX passArticle(String privateKey) throws Exception {
-		CommonResultCX result = new CommonResultCX();
-		Long articleId = decryptPrivateKey(privateKey);
+	private CommonResult passArticle(String privateKey) throws Exception {
+		CommonResult result = new CommonResult();
+		Long articleId = systemOptionService.decryptPrivateKey(privateKey);
 		if(articleId == null) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("error param");
 			return result;
 		}
 		
 		ArticleLong article = articleLongMapper.selectByPrimaryKey(articleId);
 		if(article == null) {
-			result.fillWithResult(ResultTypeCX.serviceError);
+			result.setMessage("Service error");
 			return result;
 		}
 		
 		if(article.getIsPass()) {
-			result.fillWithResult(ResultTypeCX.articleWasPass);
+			result.setMessage("Article was pass");
 			return result;
 		}
 		
@@ -149,28 +91,28 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			throw new Exception();
 		}
 		
-		result.fillWithResult(ResultTypeCX.success);
+		result.setIsSuccess();
 		return result;
 	}
 	
 	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
-	private CommonResultCX rejectArticle(String privateKey) throws Exception {
-		CommonResultCX result = new CommonResultCX();
+	private CommonResult rejectArticle(String privateKey) throws Exception {
+		CommonResult result = new CommonResult();
 		
-		Long articleId = decryptPrivateKey(privateKey);
+		Long articleId = systemOptionService.decryptPrivateKey(privateKey);
 		if(articleId == null) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("error param");
 			return result;
 		}
 		
 		ArticleLong article = articleLongMapper.selectByPrimaryKey(articleId);
 		if(article == null) {
-			result.fillWithResult(ResultTypeCX.serviceError);
+			result.setMessage("Service error");
 			return result;
 		}
 		
 		if(article.getIsReject()) {
-			result.fillWithResult(ResultTypeCX.articleWasReject);
+			result.setMessage("Article was rejected");
 			return result;
 		}
 		
@@ -191,33 +133,45 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			throw new Exception();
 		}
 		
-		result.fillWithResult(ResultTypeCX.success);
+		result.setIsSuccess();
 		return result;
 	}
 	
 	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	@Override
-	public CommonResultCX deleteArticle(String privateKey) throws Exception {
-		CommonResultCX result = new CommonResultCX();
-		Long articleId = decryptPrivateKey(privateKey);
+	public CommonResult deleteArticle(String privateKey) throws Exception {
+		CommonResult result = new CommonResult();
+		Long articleId = systemOptionService.decryptPrivateKey(privateKey);
 		if(articleId == null) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("error param");
 			return result;
 		}
 		
-		ArticleLong article = articleLongMapper.selectByPrimaryKey(articleId);
+		return deleteArticle(articleId);
+	}
+	
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
+	@Override
+	public CommonResult deleteArticle(Long id) throws Exception {
+		CommonResult result = new CommonResult();
+		if(id == null) {
+			result.setMessage("error param");
+			return result;
+		}
+		
+		ArticleLong article = articleLongMapper.selectByPrimaryKey(id);
 		if(article == null) {
-			result.fillWithResult(ResultTypeCX.serviceError);
+			result.setMessage("Service error");
 			return result;
 		}
 		
 		if(article.getIsDelete()) {
-			result.fillWithResult(ResultTypeCX.articleWasDelete);
+			result.setMessage("Article was deleted");
 			return result;
 		}
 		
 		UpdateArticleLongReviewStatuParam updateArticleReviewStatuParam = new UpdateArticleLongReviewStatuParam();
-		updateArticleReviewStatuParam.setArticleId(articleId);
+		updateArticleReviewStatuParam.setArticleId(id);
 		updateArticleReviewStatuParam.setDelete(true);
 		int updateCount = articleLongMapper.updateArticleLongReviewStatu(updateArticleReviewStatuParam);
 		if(updateCount == 0) {
@@ -225,7 +179,7 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		}
 		
 		InsertNewReviewRecordParam insertNewReviewRecordParam = new InsertNewReviewRecordParam();
-		insertNewReviewRecordParam.setArticleId(articleId);
+		insertNewReviewRecordParam.setArticleId(id);
 		insertNewReviewRecordParam.setArticleReviewerId(baseUtilCustom.getUserId());
 		insertNewReviewRecordParam.setReviewTypeId(ArticleReviewType.delete.getReviewCode());
 		updateCount = articleLongReviewMapper.insertNewReviewRecord(insertNewReviewRecordParam);
@@ -233,23 +187,23 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 			throw new Exception();
 		}
 		
-		result.fillWithResult(ResultTypeCX.success);
+		result.setIsSuccess();
 		return result;
 	}
 	
 	@Override
 	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
-	public CommonResultCX changeChannel(ChangeChannelParam param) throws Exception {
-		CommonResultCX result = new CommonResultCX();
+	public CommonResult changeChannel(ChangeChannelParam param) throws Exception {
+		CommonResult result = new CommonResult();
 		if(StringUtils.isBlank(param.getPk())) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("error param");
 			return result;
 		}
 		
 		param.setPk(URLDecoder.decode(param.getPk(), StandardCharsets.UTF_8));
-		Long articleId = decryptPrivateKey(param.getPk());
+		Long articleId = systemOptionService.decryptPrivateKey(param.getPk());
 		if(articleId == null) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("error param");
 			return result;
 		}
 		
@@ -260,47 +214,46 @@ public class ArticleAdminServiceImpl extends ArticleCommonService implements Art
 		record.setIsPass(isBigUser());
 		articleLongMapper.updateByPrimaryKeySelective(record);
 		
-		result.fillWithResult(ResultTypeCX.success);
+		result.setIsSuccess();
 		return result;
 	}
 	
 	@Override
-	public CommonResultCX setArticleHot(SetArticleHotParam controllerParam) {
-		CommonResultCX result = new CommonResultCX();
+	public CommonResult setArticleHot(SetArticleHotParam controllerParam) {
+		CommonResult result = new CommonResult();
 		if(StringUtils.isBlank(controllerParam.getPk()) || controllerParam.getHotMinutes() == null || controllerParam.getHotLevel() == null) {
-			result.fillWithResult(ResultTypeCX.nullParam);
+			result.setMessage("null param");
 			return result;
 		}
 		
 		if(controllerParam.getHotMinutes() < 0 || controllerParam.getHotMinutes() > (60L * 24 * 30) || controllerParam.getHotLevel() < 0 || controllerParam.getHotLevel() > 10) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("error param");
 			return result;
 		}
 		
 		controllerParam.setPk(URLDecoder.decode(controllerParam.getPk(), StandardCharsets.UTF_8));
-		Long articleId = decryptPrivateKey(controllerParam.getPk());
+		Long articleId = systemOptionService.decryptPrivateKey(controllerParam.getPk());
 		if(articleId == null) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("error param");
 			return result;
 		}
 		
 		ArticleLong oldArticleLong = articleLongMapper.selectByPrimaryKey(articleId);
 		if(oldArticleLong == null || oldArticleLong.getIsPass() == false || oldArticleLong.getIsDelete() == true || oldArticleLong.getIsReject() == true || oldArticleLong.getIsEdited() == true) {
-			result.fillWithResult(ResultTypeCX.errorParam);
+			result.setMessage("error param");
 			return result;
 		}
 		
-		ArticleHot newArticleHot = new ArticleHot();
-		newArticleHot.setArticleId(oldArticleLong.getArticleId());
-		newArticleHot.setChannelId(oldArticleLong.getChannelId());
-		newArticleHot.setHotLevel(controllerParam.getHotLevel());
-		Long nowMS = System.currentTimeMillis();
-		nowMS = nowMS + (controllerParam.getHotMinutes() * 60 * 1000);
-		newArticleHot.setValidTime(new Date(nowMS));
 		
-		articleHotMapper.insertNew(newArticleHot);
+		ArticleLongSummary summaryPO = new ArticleLongSummary();
+		summaryPO.setArticleId(articleId);
+		summaryPO.setIsHot(true);
+		summaryPO.setHotLevel(controllerParam.getHotLevel());
+		summaryPO.setHotValidTime(LocalDateTime.now().plusMinutes(controllerParam.getHotMinutes()));
+		articleLongSummaryMapper.updateByPrimaryKeySelective(summaryPO);
 		
-		result.fillWithResult(ResultTypeCX.setArticleHotSuccess);
+		
+		result.setIsSuccess();
 		return result;
 	}
 

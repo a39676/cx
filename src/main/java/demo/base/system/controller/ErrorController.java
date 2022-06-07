@@ -20,7 +20,7 @@ public class ErrorController extends ExceptionController {
 	
 	@GetMapping(value = BaseUrl.ERROR_403)
 	public ModelAndView accesssDenied(HttpServletRequest request) {
-		return exceptionService.handleCommonException(request);
+		return exceptionService.handle403CommonException(request);
 	}
 	
 //	@RequestMapping(value = UrlConstant.error)

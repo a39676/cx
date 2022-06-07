@@ -15,19 +15,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.fakePost.service.FakePostService;
 import demo.base.admin.pojo.constant.AdminUrlConstant;
 import demo.base.admin.pojo.constant.AdminView;
 import demo.base.admin.pojo.dto.LoadHomepageAnnouncementStrDTO;
 import demo.base.admin.service.AdminService;
 import demo.base.system.pojo.constant.BaseStatusCode;
-import demo.base.system.service.impl.SystemConstantService;
+import demo.base.system.service.impl.SystemOptionService;
 import demo.base.user.pojo.constant.UserManagerView;
 import demo.base.user.pojo.dto.UserIpDeleteDTO;
 import demo.base.user.pojo.po.Users;
 import demo.base.user.service.UsersService;
 import demo.common.controller.CommonController;
-import demo.common.pojo.result.CommonResultCX;
 import demo.finance.account_info.controller.AccountInfoController;
 import net.sf.json.JSONObject;
 
@@ -49,7 +49,7 @@ public class AdminController extends CommonController {
 	private AdminService adminService;
 	
 	@Autowired
-	private SystemConstantService systemConstantService;
+	private SystemOptionService systemConstantService;
 	
 	@Autowired
 	private FakePostService fakePostService;
@@ -130,19 +130,9 @@ public class AdminController extends CommonController {
 
 	}
 
-	@GetMapping(value = AdminUrlConstant.dba)
-	public ModelAndView dbaPage() {
-		ModelAndView view = new ModelAndView();
-		view.addObject("title", "Spring Security Hello World");
-		view.addObject("message", "This is protected page - Database Page!");
-		view.setViewName(AdminView.adminView);
-
-		return view;
-	}
-
 	@PostMapping(value = AdminUrlConstant.deleteUserIpRecord)
 	public void deleteUserIpRecord(@RequestBody UserIpDeleteDTO param, HttpServletRequest request, HttpServletResponse response) {
-		CommonResultCX result = adminService.deleteUserIpRecord(param);
+		CommonResult result = adminService.deleteUserIpRecord(param);
 		outputJson(response, JSONObject.fromObject(result));
 	}
 	

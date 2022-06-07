@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -28,8 +27,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
-import demo.article.article.pojo.dto.LocalImageSavingDTO;
-import demo.automationTest.service.impl.AutomationTestConstantService;
+import demo.article.article.service.impl.ArticleOptionService;
+import demo.automationTest.service.impl.AutomationTestOptionService;
+import demo.base.system.service.impl.SystemOptionService;
 import demo.common.service.CommonService;
 import demo.image.mapper.ImageStoreMapper;
 import demo.image.mapper.ImageTagMapper;
@@ -53,42 +53,52 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 	private ImageStoreMapper imgMapper;
 	@Autowired
 	private ImageTagMapper imageTagMapper;
-	
+
 	@Autowired
-	private AutomationTestConstantService automationTestConstantService;
+	private SystemOptionService systemOptionService;
+	@Autowired
+	private AutomationTestOptionService automationTestConstantService;
+	@Autowired
+	protected ArticleOptionService articleOptionService;
 	
 	@Override
 	public void getImage(HttpServletResponse response, String imgPK) {
-		if(StringUtils.isBlank(imgPK)) {
+		if (StringUtils.isBlank(imgPK)) {
 			return;
 		}
-		
-		Long imgId = decryptPrivateKey(imgPK);
-		if(imgId == null) {
+
+		Long imgId = systemOptionService.decryptPrivateKey(imgPK);
+		if (imgId == null) {
 			return;
 		}
-		
+
+		getImage(response, imgId);
+	}
+	
+	private void getImage(HttpServletResponse response, Long imgId) {
+		if (imgId == null) {
+			return;
+		}
+
 		ImageStore imgPO = imgMapper.selectByPrimaryKey(imgId);
-		if(imgPO == null || StringUtils.isBlank(imgPO.getImageUrl())) {
+		if (imgPO == null || StringUtils.isBlank(imgPO.getImageUrl())) {
 			return;
 		}
-		
+
 		try {
 			File f = new File(imgPO.getImageUrl());
 			InputStream in = new FileInputStream(f);
-			response.setContentType(MediaType.IMAGE_JPEG_VALUE);
 			IOUtils.copy(in, response.getOutputStream());
 		} catch (Exception e) {
-			return;
 		}
 	}
-	
+
 	@Override
 	public void getImageByPath(HttpServletResponse response, String path) {
-		if(StringUtils.isBlank(path)) {
+		if (StringUtils.isBlank(path)) {
 			return;
 		}
-		
+
 		try {
 			File f = new File(path);
 			InputStream in = new FileInputStream(f);
@@ -98,167 +108,67 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 			return;
 		}
 	}
-	
+
 	@Override
 	public ImageSavingResult imageSaving(ImageSavingTransDTO dto) {
 		ImageSavingResult r = validImageSavingTransDTO(dto);
-		if(r.isFail()) {
+		if (r.isFail()) {
 			return r;
 		}
-		
-		r = saveImgHandler(dto);
-		
-		return r;
-	}
-	
-	@Override
-	public ImageSavingResult imageSaving(LocalImageSavingDTO dto) {
-		ImageSavingResult r = validImageSavingTransDTO(dto);
-		if(r.isFail()) {
-			return r;
-		}
-		
-		r = saveImgHandler(dto);
-		
-		return r;
-	}
-	
-	private ImageSavingResult saveImgHandler(LocalImageSavingDTO dto) {
-		ImageSavingResult r = new ImageSavingResult();
-		ImageTagType imgTagType = ImageTagType.getType(dto.getImgTagCode());
-		try {
-			if(imgTagType == null) {
-				r.failWithMessage("error data");
-				return r;
-			}
-			
-			Paths.get(dto.getImgPath());
-			File imgFile = new File(dto.getImgPath());
-			if(!imgFile.exists()) {
-				r.failWithMessage("error data");
-				return r;
-			}
-		} catch (Exception e) {
-			r.failWithMessage("error data");
-			return r;
-		}
-		
-		ImageStore imgPO = new ImageStore();
-		Long newImgId = snowFlake.getNextId();
-		imgPO.setImageId(newImgId);
-		imgPO.setImageUrl(dto.getImgPath());
-		imgPO.setImageName(dto.getImgName());
-		imgPO.setValidTime(dto.getValidTime());
-		int insertCount = imgMapper.insertSelective(imgPO);
-		if(insertCount < 1) {
-			r.failWithMessage("service error");
-			return r;
-		}
-		
-		ImageTag imgTagPO = new ImageTag();
-		imgTagPO.setImageId(newImgId);
-		imgTagPO.setTagId(imgTagType.getCode().longValue());
-		insertCount = imageTagMapper.insertSelective(imgTagPO);
-		if(insertCount < 1) {
-			r.failWithMessage("service error");
-			return r;
-		}
-		
-		String imgPK = encryptId(newImgId);
-		try {
-			String urlEncodeImgPk = URLEncoder.encode(imgPK, StandardCharsets.UTF_8.toString());
-			r.setImgUrl(ImageUrl.root + ImageUrl.getImage + "/?imgPK=" + urlEncodeImgPk);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		
-		r.setImgPK(imgPK);
-		r.setIsSuccess();
-		return r;
-	}
 
-	private ImageSavingResult validImageSavingTransDTO(LocalImageSavingDTO dto) {
-		ImageSavingResult r = new ImageSavingResult();
-		if(dto == null 
-				|| StringUtils.isBlank(dto.getImgName()) 
-				|| dto.getImgTagCode() == null
-				) {
-			r.failWithMessage("error data");
-			return r;
-		}
-		
-		ImageTagType tagType = ImageTagType.getType(dto.getImgTagCode());
-		if(tagType == null) {
-			r.failWithMessage("error data");
-			return r;
-		}
-		
-		if(dto.getValidTime() == null) {
-			if(!isBigUser()) {
-				dto.setValidTime(LocalDateTime.now().plusMonths(1));
-			}
-		} else {
-			if(dto.getValidTime().isBefore(LocalDateTime.now())) {
-				r.failWithMessage("error data");
-				return r;
-			}
-		}
-		
-		r.setIsSuccess();
+		r = saveImgHandler(dto);
+
 		return r;
 	}
-	
 
 	@Override
 	public ImageSavingResult __saveImgFromBBT(ImageSavingTransDTO dto) {
-		dto.setImgTagCode(ImageTagType.imageSaving.getCode());
+		dto.setImgTagCode(ImageTagType.IMAGE_SAVING.getCode());
 		ImageSavingResult r = validImageSavingTransDTO_forBBT(dto);
-		if(r.isFail()) {
+		if (r.isFail()) {
 			return r;
 		}
-		
+
 		r = __saveImgFromBBTHandler(dto);
-		
+
 		return r;
 	}
-	
+
 	private ImageSavingResult validImageSavingTransDTO(ImageSavingTransDTO dto) {
 		ImageSavingResult r = new ImageSavingResult();
-		if(dto == null 
-				|| StringUtils.isBlank(dto.getImgName()) 
-				|| dto.getImgTagCode() == null
-				) {
+		if (dto == null || StringUtils.isBlank(dto.getImgName()) || dto.getImgTagCode() == null) {
 			r.failWithMessage("error data");
 			return r;
 		}
-		
+
 		ImageTagType tagType = ImageTagType.getType(dto.getImgTagCode());
-		if(tagType == null) {
+		if (tagType == null) {
 			r.failWithMessage("error data");
 			return r;
 		}
-		
-		if(dto.getValidTime() == null) {
-			if(!isBigUser()) {
+
+		if (dto.getValidTime() == null) {
+			if (!isBigUser()) {
 				dto.setValidTime(LocalDateTime.now().plusMonths(1));
 			}
 		} else {
-			if(dto.getValidTime().isBefore(LocalDateTime.now())) {
+			if (dto.getValidTime().isBefore(LocalDateTime.now())) {
 				r.failWithMessage("error data");
 				return r;
 			}
 		}
-		
+
 		r.setIsSuccess();
 		return r;
 	}
-	
+
 	private ImageSavingResult validImageSavingTransDTO_forBBT(ImageSavingTransDTO dto) {
 		ImageSavingResult r = new ImageSavingResult();
-		if(dto.getValidTime() == null) {
-			dto.setValidTime(LocalDateTime.now().plusMonths(automationTestConstantService.getTestEventLiveLimitMonth()));
+		if (dto.getValidTime() == null) {
+			dto.setValidTime(
+					LocalDateTime.now().plusMonths(automationTestConstantService.getTestEventLiveLimitMonth()));
 		} else {
-			if(dto.getValidTime().isBefore(LocalDateTime.now())) {
+			if (dto.getValidTime().isBefore(LocalDateTime.now())) {
 				r.failWithMessage("error data");
 				return r;
 			}
@@ -270,30 +180,42 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 	private ImageSavingResult __saveImgFromBBTHandler(ImageSavingTransDTO dto) {
 		return saveImgHandler(dto);
 	}
-	
+
 	private ImageSavingResult saveImgHandler(ImageSavingTransDTO dto) {
 		ImageSavingResult r = new ImageSavingResult();
 		ImageTagType imgTagType = ImageTagType.getType(dto.getImgTagCode());
 		String newImgFilePath = null;
 		try {
-			if(imgTagType == null) {
+			if (imgTagType == null) {
 				r.failWithMessage("error data");
 				return r;
 			}
-			
-			String imageStorePrefixPath = automationTestConstantService.getImageStorePrefixPath();
+
+			String imageStorePrefixPath = null;
+			if (ImageTagType.IMAGE_SAVING.equals(imgTagType)) {
+				imageStorePrefixPath = automationTestConstantService.getImageStorePrefixPath();
+			} else if(ImageTagType.FROM_ARTICLE.equals(imgTagType)) {
+				imageStorePrefixPath = articleOptionService.getArticleImageSavingFolder();
+				dto.setValidTime(LocalDateTime.of(2999, 12, 31, 23, 59, 59));
+			}
+
+			if (imageStorePrefixPath == null) {
+				r.failWithMessage("error data");
+				return r;
+			}
+
 			newImgFilePath = imageStorePrefixPath + File.separator + dto.getImgName();
 			File imgFile = new File(newImgFilePath);
-			
+
 			String base64Image = dto.getImgBase64Str(); // .split(",")[1];
 			byte[] imageBytes = Base64.getDecoder().decode(base64Image);
 			FileUtils.writeByteArrayToFile(imgFile, imageBytes);
-			
+
 		} catch (Exception e) {
 			r.failWithMessage("error data");
 			return r;
 		}
-		
+
 		ImageStore imgPO = new ImageStore();
 		Long newImgId = snowFlake.getNextId();
 		imgPO.setImageId(newImgId);
@@ -301,28 +223,28 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 		imgPO.setImageName(dto.getImgName());
 		imgPO.setValidTime(dto.getValidTime());
 		int insertCount = imgMapper.insertSelective(imgPO);
-		if(insertCount < 1) {
+		if (insertCount < 1) {
 			r.failWithMessage("service error");
 			return r;
 		}
-		
+
 		ImageTag imgTagPO = new ImageTag();
 		imgTagPO.setImageId(newImgId);
 		imgTagPO.setTagId(imgTagType.getCode().longValue());
 		insertCount = imageTagMapper.insertSelective(imgTagPO);
-		if(insertCount < 1) {
+		if (insertCount < 1) {
 			r.failWithMessage("service error");
 			return r;
 		}
-		
-		String imgPK = encryptId(newImgId);
+
+		String imgPK = systemOptionService.encryptId(newImgId);
 		try {
 			String urlEncodeImgPk = URLEncoder.encode(imgPK, StandardCharsets.UTF_8.toString());
 			r.setImgUrl(ImageUrl.root + ImageUrl.getImage + "/?imgPK=" + urlEncodeImgPk);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		
+
 		r.setImgPK(imgPK);
 		r.setIsSuccess();
 		return r;
@@ -333,50 +255,51 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 		ImageStoreExample imgStoreExample = new ImageStoreExample();
 		imgStoreExample.createCriteria().andValidTimeLessThan(LocalDateTime.now());
 		List<ImageStore> targetImgList = imgMapper.selectByExample(imgStoreExample);
-		if(targetImgList == null || targetImgList.isEmpty()) {
+		if (targetImgList == null || targetImgList.isEmpty()) {
 			return;
 		}
-		
+
 		Map<String, Long> imgPathMap = new HashMap<String, Long>();
-		for(ImageStore po : targetImgList) {
-			if(!po.getImageUrl().startsWith("http")) {
+		for (ImageStore po : targetImgList) {
+			if (!po.getImageUrl().startsWith("http")) {
 				imgPathMap.put(po.getImageUrl(), po.getImageId());
 			}
 		}
-		
+
 		File tmpFile = null;
 		List<Long> targetImgIdList = new ArrayList<Long>();
-		for(Entry<String, Long> m : imgPathMap.entrySet()) {
+		for (Entry<String, Long> m : imgPathMap.entrySet()) {
 			tmpFile = new File(m.getKey());
-			if(tmpFile.exists()) {
-				if(tmpFile.delete()) {
+			if (tmpFile.exists()) {
+				if (tmpFile.delete()) {
 					targetImgIdList.add(m.getValue());
 					imgMapper.deleteByPrimaryKey(m.getValue());
 				}
 			}
 		}
-		
+
+		if (targetImgIdList == null || targetImgIdList.isEmpty()) {
+			return;
+		}
+
 		ImageTagExample imgTagExample = new ImageTagExample();
 		imgTagExample.createCriteria().andImageIdIn(targetImgIdList);
 		imageTagMapper.deleteByExample(imgTagExample);
-		
+
 	}
 
 	@Override
 	public BufferedImage base64ToBufferedImg(String base64) {
-		if(base64 == null || base64.length() > ImageConstant.imgBase64MaxSize) {
+		if (base64 == null || base64.length() > ImageConstant.imgBase64MaxSize) {
 			return null;
 		}
-		
-		BufferedImage image = null;
-		byte[] imageByte;
 
-		imageByte = Base64.getDecoder().decode(base64);
+		BufferedImage image = null;
+		byte[] imageByte = Base64.getDecoder().decode(base64);
 		ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
 		try {
 			/*
-			 *  FIXME 2020-04-26 暂时未有合适的 webp webm 支持库
-			 *  考虑将此类小体积文件转交给 cloudinary 处理?
+			 * FIXME 2020-04-26 暂时未有合适的 webm 支持库 考虑将此类小体积文件转交给 cloudinary 处理?
 			 */
 			image = ImageIO.read(bis);
 			bis.close();
@@ -384,40 +307,43 @@ public class ImageServiceImpl extends CommonService implements ImageService {
 		}
 		return image;
 	}
-	
+
 	@Override
-	public boolean imgSaveAsFile(BufferedImage image, String filePath, String fileType) {
+	public boolean imgSaveAsFile(String imageBase64Str, String filePath, String fileType) {
 		File outputfile = new File(filePath);
-		if(!outputfile.exists()) {
+		if (!outputfile.exists()) {
 			try {
-				outputfile.mkdirs();
+				outputfile.getParentFile().mkdirs();
 			} catch (Exception e) {
 				return false;
 			}
 		}
 		try {
-			ImageIO.write(image, fileType, outputfile);
+
+			byte[] imageBytes = Base64.getDecoder().decode(imageBase64Str);
+			FileUtils.writeByteArrayToFile(outputfile, imageBytes);
+			
 			return true;
 		} catch (IOException e) {
 			return false;
 		}
 	}
-	
+
 	@Override
 	public ImgHandleSrcDataResult imgHandleSrcData(String src) {
 		ImgHandleSrcDataResult r = new ImgHandleSrcDataResult();
 		int slashIndex = src.indexOf("/");
 		int semicolonIndex = src.indexOf(";");
 		int commaIndex = src.indexOf(",");
-		
-		if(semicolonIndex < 0 || slashIndex < 0 || commaIndex < 0) {
+
+		if (semicolonIndex < 0 || slashIndex < 0 || commaIndex < 0) {
 			return r;
 		}
 		String fileType = src.substring(slashIndex + 1, semicolonIndex);
-		if(!FileSuffixNameConstant.IMAGE_SUFFIX.contains(fileType)) {
+		if (!FileSuffixNameConstant.IMAGE_SUFFIX.contains(fileType)) {
 			return r;
 		}
-		
+
 		r.setImgFileType(fileType);
 		r.setBase64Str(src.split(",")[1]);
 		r.setIsSuccess();

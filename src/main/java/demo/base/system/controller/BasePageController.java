@@ -20,10 +20,17 @@ public class BasePageController extends CommonController {
 	@Autowired
 	private BasePageService basePageService;
 	
+//	@GetMapping(value = { BaseUrl.ROOT4 })
+//	public ModelAndView welcomePageV2(@RequestParam(value = "vcode", defaultValue = "") String vcode,
+//			HttpServletRequest request) {
+//		ModelAndView view = basePageService.baseRootHandlerV3(vcode, request);
+//		return view;
+//	}
+	
 	@GetMapping(value = { BaseUrl.ROOT })
-	public ModelAndView welcomePageV2(@RequestParam(value = "vcode", defaultValue = "") String vcode,
+	public ModelAndView welcomePageV4(@RequestParam(value = "vcode", defaultValue = "") String vcode,
 			HttpServletRequest request) {
-		ModelAndView view = basePageService.baseRootHandlerV3(vcode, request);
+		ModelAndView view = basePageService.baseRootHandlerV4(vcode, request);
 		return view;
 	}
 	

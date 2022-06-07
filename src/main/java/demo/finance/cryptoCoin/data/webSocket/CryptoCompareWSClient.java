@@ -100,7 +100,7 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 	}
 
 	private WebSocket createWebSocket() {
-		String uriStr = constantService.getCryptoCompareUri() + "?api_key=" + constantService.getCryptoCompareApiKey();
+		String uriStr = optionService.getCryptoCompareUri() + "?api_key=" + optionService.getCryptoCompareApiKey();
 		try {
 			WebSocket ws = new WebSocketFactory().setVerifyHostname(false).createSocket(uriStr);
 			return ws;
@@ -279,12 +279,12 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 	}
 
 	public void removeAllSubscription() {
-		if (constantService.getSubscriptionSet() == null || constantService.getSubscriptionSet().isEmpty()) {
+		if (optionService.getSubscriptionSet() == null || optionService.getSubscriptionSet().isEmpty()) {
 			return;
 		}
 
 		List<String> tmpList = new ArrayList<>();
-		tmpList.addAll(constantService.getSubscriptionSet());
+		tmpList.addAll(optionService.getSubscriptionSet());
 		String channel = null;
 
 		for (int i = 0; i < tmpList.size(); i++) {

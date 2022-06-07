@@ -12,4 +12,12 @@ public interface ExceptionService {
 
 	ModelAndView handle404Exception(HttpServletRequest request);
 
+	ModelAndView handle403CommonException(HttpServletRequest request);
+
+	ModelAndView handle503Exception(HttpServletRequest request, Exception e);
+
+	void handleSQLErrorException(HttpServletRequest request, Exception e);
+
+	void handleRequestRejectedException(HttpServletRequest request, Exception e);
+
 }

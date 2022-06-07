@@ -16,15 +16,12 @@ import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalogExample;
 import demo.finance.cryptoCoin.data.pojo.vo.CryptoCoinCatalogVO;
 import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
-import demo.finance.cryptoCoin.tool.service.CryptoCoinLowPriceNoticeService;
 
 @Service
 public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implements CryptoCoinCatalogService {
 
 	@Autowired
 	private CryptoCoinCatalogMapper mapper;
-	@Autowired
-	private CryptoCoinLowPriceNoticeService lowPriceNoticeService;
 
 	@Override
 	public CryptoCoinCatalog findCatalog(String coinName) {
@@ -98,18 +95,17 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 		Set<CryptoCoinCatalogVO> voSet = new HashSet<>();
 
 		voSet.addAll(getNormalSubscriptionCatalog());
-		voSet.addAll(lowPriceNoticeService.getLowPriceSubscriptionCatalogVOList());
 
 		voList.addAll(voSet);
 
 		return voList;
 	}
-	
+
 	@Override
 	public Set<String> getSubscriptionNameList() {
 		Set<String> voSet = new HashSet<>();
 
-		voSet.addAll(constantService.getSubscriptionSet());
+		voSet.addAll(optionService.getSubscriptionSet());
 		voSet.addAll(constantService.getLowPriceSubscriptionSet());
 
 		return voSet;
@@ -117,7 +113,7 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 
 	private List<CryptoCoinCatalogVO> getNormalSubscriptionCatalog() {
 		List<CryptoCoinCatalogVO> voList = new ArrayList<>();
-		Set<String> set = constantService.getSubscriptionSet();
+		Set<String> set = optionService.getSubscriptionSet();
 		if (set == null || set.isEmpty()) {
 			return voList;
 		}
@@ -139,9 +135,9 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 			return;
 		}
 		catalog = catalog.toUpperCase();
-		constantService.getSubscriptionSet().add(catalog);
+		optionService.getSubscriptionSet().add(catalog);
 	}
-	
+
 	@Override
 	public void addSubscriptionCatalog(List<String> catalogList) {
 		for(String catalog : catalogList) {
@@ -149,7 +145,7 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 				return;
 			}
 			catalog = catalog.toUpperCase();
-			constantService.getSubscriptionSet().add(catalog);
+			optionService.getSubscriptionSet().add(catalog);
 		}
 	}
 
@@ -159,9 +155,9 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 			return;
 		}
 		catalog = catalog.toUpperCase();
-		constantService.getSubscriptionSet().remove(catalog);
+		optionService.getSubscriptionSet().remove(catalog);
 	}
-	
+
 	@Override
 	public void removeSubscriptionCatalog(List<String> catalogList) {
 		for(String catalog : catalogList) {
@@ -169,13 +165,13 @@ public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implem
 				return;
 			}
 			catalog = catalog.toUpperCase();
-			constantService.getSubscriptionSet().remove(catalog);
+			optionService.getSubscriptionSet().remove(catalog);
 		}
 	}
 
 	@Override
 	public void removeAllSubscriptionCatalog() {
-		constantService.getSubscriptionSet().clear();
+		optionService.getSubscriptionSet().clear();
 	}
 
 	@Override

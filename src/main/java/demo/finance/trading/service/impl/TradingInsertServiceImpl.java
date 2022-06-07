@@ -1,6 +1,5 @@
 package demo.finance.trading.service.impl;
 
-import java.io.File;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -10,31 +9,27 @@ import org.springframework.transaction.annotation.Transactional;
 
 import demo.common.pojo.type.TransationType;
 import demo.common.service.CommonService;
-import demo.finance.account_info.controller.AccountInfoController;
+import demo.config.costom_component.EncryptUtil;
 import demo.finance.account_info.pojo.dto.controllerDTO.InsertNewTransationDTO;
-import demo.finance.account_info.pojo.po.AccountInfo;
 import demo.finance.trading.mapper.TradingRecorderMapper;
 import demo.finance.trading.mapper.TradingRecorderMarkerMapper;
 import demo.finance.trading.pojo.po.TradingRecorder;
 import demo.finance.trading.pojo.po.TradingRecorderMarker;
 import demo.finance.trading.pojo.result.InsertTradingRecorderResult;
 import demo.finance.trading.service.TradingInsertService;
-import toolPack.ioHandle.FileUtilCustom;
 import toolPack.numericHandel.NumericUtilCustom;
 
 @Service
 public class TradingInsertServiceImpl extends CommonService implements TradingInsertService {
 
 	@Autowired
-	private AccountInfoController accountInfoController;
-	@Autowired
 	private TradingRecorderMapper tradingMapper;
 	@Autowired
 	private TradingRecorderMarkerMapper tradingMarkerMapper;
 	@Autowired
-	private FileUtilCustom ioUtil;
-	@Autowired
 	private NumericUtilCustom numberUtil;
+	@Autowired
+	private EncryptUtil encryptUtil;
 
 	private boolean insertTradingRecorderMarker(TradingRecorder tradingRecorder) {
 		TradingRecorderMarker marker = new TradingRecorderMarker();
@@ -82,79 +77,8 @@ public class TradingInsertServiceImpl extends CommonService implements TradingIn
 	}
 
 	@Override
-	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
-	public long insertTradingRecorderFromFileLine(String strLineInput, AccountInfo accountInfo) {
-
-		TradingRecorder tradingRecorder = stringLineToTradingRecorder(strLineInput, accountInfo);
-		if (tradingRecorder == null) {
-			return 0L;
-		}
-
-		tradingMapper.isnertTradingRecorder(tradingRecorder);
-		insertTradingRecorderMarker(tradingRecorder);
-
-		accountInfoController.updateAccountAmount(accountInfo, tradingRecorder.getAmount());
-
-		return tradingRecorder.getTradingId();
-	}
-
-	@Override
 	public TradingRecorder getTradingRecordById(Long tradingRecorderId) {
 		return tradingMapper.getTradingRecordById(tradingRecorderId);
-	}
-
-
-	@Override
-	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
-	public String importTradingRecordFromFiles(String tradingRecordTxtPath) {
-		File mainFolder = new File(tradingRecordTxtPath);
-		if (!mainFolder.isDirectory()) {
-			return "not a folder";
-		}
-
-		StringBuffer result = new StringBuffer();
-
-		File[] files = mainFolder.listFiles();
-//		List<File> fileList = new ArrayList<File>();
-		for (File tmpFile : files) {
-			if (tmpFile.isFile() && tmpFile.getName().endsWith(".csv")
-					&& tmpFile.getName().substring(0, tmpFile.getName().lastIndexOf(".")).matches("\\d{16,19}")) {
-				result.append(importTradingRecordFromFile(tmpFile, ioUtil));
-			}
-		}
-
-		return result.toString();
-	}
-
-	private String importTradingRecordFromFile(File subFile, FileUtilCustom fileHandle) {
-		String accountNumber = subFile.getName().substring(0, subFile.getName().lastIndexOf("."));
-		boolean isBelong = accountInfoController.checkAccountNumberBelongUser(accountNumber);
-		if (!isBelong) {
-			return accountNumber + " was not your account, trading record didn`t import \n";
-		}
-
-		AccountInfo accountInfo = accountInfoController.getAccountInfoByAccountNumber(accountNumber);
-
-		StringBuffer result = new StringBuffer();
-		result.append(accountNumber + ": \n");
-
-		String str = fileHandle.getStringFromFile(subFile.getAbsolutePath());
-		System.out.println(str.split("\n")[0]);
-		String[] lines = str.split("\n");
-		if (lines.length <= 0) {
-			return result.toString();
-		}
-		for (String line : lines) {
-			if (!line.startsWith("#")) {
-				if (insertTradingRecorderFromFileLine(line, accountInfo) > 0) {
-					result.append(line + "\t" + "insert" + "\n");
-				} else {
-					result.append(line + "\t" + "not insert" + "\n");
-				}
-			}
-		}
-
-		return result.toString();
 	}
 
 	// 2019-01-29 规范化迁移 从 TradingRecorderBuildAndVerifier 收入
@@ -242,43 +166,6 @@ public class TradingInsertServiceImpl extends CommonService implements TradingIn
 		return tradingRecorder;
 	}
 
-	private TradingRecorder stringLineToTradingRecorder(String strInput, AccountInfo accountInfo) {
-
-		Date now = new Date();
-
-		String[] line = strInput.split(",");
-		if (line.length < 2) {
-			return null;
-		}
-
-		Date transationDate = dateHandler.stringToDateUnkonwFormat(String.valueOf(line[0]));
-		if (transationDate == null) {
-			return null;
-		}
-
-		BigDecimal transationAmount = null;
-
-		try {
-			transationAmount = new BigDecimal(String.valueOf(line[1]));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-		String transationParties = String.valueOf(line[2]);
-
-		TradingRecorder tradingRecorder = new TradingRecorder();
-		tradingRecorder.setTradingId(snowFlake.getNextId());
-		tradingRecorder.setAccountId(accountInfo.getAccountId());
-		tradingRecorder.setAccountNumber(accountInfo.getAccountNumber());
-		tradingRecorder.setAmount(transationAmount);
-		tradingRecorder.setTransationDate(transationDate);
-		tradingRecorder.setTransationParties(transationParties);
-		tradingRecorder.setCreateTime(now);
-		if (line.length > 3) {
-			tradingRecorder.setRemark(String.valueOf(line[3]));
-		}
-
-		return tradingRecorder;
-	}
+	
 
 }

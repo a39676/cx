@@ -2,6 +2,7 @@ package demo.finance.cryptoCoin.data.service.impl;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,31 +18,40 @@ import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1monthMapper;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1month;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1monthExample;
+import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MonthDataSummaryService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 
 @Service
 public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonService
 		implements CryptoCoin1MonthDataSummaryService {
 
-	private final int monthStepLong = 1;
+	private final int MONTH_STEP_LONG = 1;
 
 	@Autowired
 	private CryptoCoinPrice1monthMapper summaryMapper;
+	@Autowired
+	private CryptoCoinCatalogService coinCatalogService;
+	@Autowired
+	private CryptoCoinPriceCacheService cacheService;
+	@Autowired
+	private CryptoCoin1DayDataSummaryService dailyDataService;
 
 	@Override
 	public CommonResult summaryHistoryData() {
 		CommonResult r = new CommonResult();
 
 		LocalDateTime now = LocalDateTime.now();
-		LocalDateTime thereStepBefore = now.withDayOfMonth(1).minusMonths(monthStepLong * 3).withHour(0).withMinute(0)
+		LocalDateTime thereStepBefore = now.withDayOfMonth(1).minusMonths(MONTH_STEP_LONG * 3).withHour(0).withMinute(0)
 				.withSecond(0).withNano(0);
 
 		List<CryptoCoinCatalog> coinCatalogList = coinCatalogService.getAllCatalog();
 		for (CryptoCoinCatalog coinType : coinCatalogList) {
 			for (CurrencyType currencyType : CurrencyType.values()) {
 				for (LocalDateTime datetime = thereStepBefore; datetime
-						.isBefore(now); datetime = datetime.plusMonths(monthStepLong)) {
+						.isBefore(now); datetime = datetime.plusMonths(MONTH_STEP_LONG)) {
 					handleHistoryDataList(datetime, coinType, currencyType);
 				}
 			}
@@ -51,8 +61,9 @@ public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonServ
 	}
 
 	private void handleHistoryDataList(LocalDateTime startTime, CryptoCoinCatalog coinType, CurrencyType currencyType) {
+		LocalDateTime endTime = startTime.plusMonths(MONTH_STEP_LONG).with(LocalTime.MAX);
 		List<CryptoCoinPriceCommonDataBO> cacheDataList = dailyDataService.getCommonDataList(coinType, currencyType,
-				startTime);
+				startTime, endTime);
 		if (cacheDataList == null || cacheDataList.isEmpty()) {
 			return;
 		}
@@ -140,7 +151,7 @@ public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonServ
 			return poDataList;
 		}
 
-		List<CryptoCoinPriceCommonDataBO> resultDataList = mergePODataWithCache(poDataList, cacheDataList, startTime, monthStepLong, TimeUnitType.month);
+		List<CryptoCoinPriceCommonDataBO> resultDataList = mergePODataWithCache(poDataList, cacheDataList, startTime, MONTH_STEP_LONG, TimeUnitType.month);
 
 		return resultDataList;
 	}

@@ -2,8 +2,9 @@ package demo.base.user.pojo.constant;
 
 public class LoginUrlConstant {
 	
-	public static final String login = "/login";
-	public static final String loginSingle = "/loginSingle";
-	public static final String logout = "/logout";
+	public static final String LOGIN = "/login";
+	public static final String LOGIN_SINGLE = "/loginSingle";
+	public static final String LOGIN_FOR_STUDENT = "/loginForStudent";
+	public static final String LOGOUT = "/logout";
 
 }

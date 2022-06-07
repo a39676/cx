@@ -25,7 +25,7 @@ public class CryptoCoinPriceCacheDataAckReceiver extends CommonService {
 	@RabbitHandler
 	public void process(String messageStr, Channel channel, Message message) throws IOException {
 		try {
-			CryptoCoinPriceCommonDataBO bo = cryptoCoinPriceCacheService.dataStrToBO(messageStr);
+			CryptoCoinPriceCommonDataBO bo = buildObjFromJsonCustomization(messageStr, CryptoCoinPriceCommonDataBO.class);
 			cryptoCoinPriceCacheService.reciveData(bo);
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 		} catch (Exception e) {

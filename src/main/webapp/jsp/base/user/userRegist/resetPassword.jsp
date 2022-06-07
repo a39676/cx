@@ -53,7 +53,7 @@
 
     $("button[name='resetPassword']").click(function() {
         
-      var url = "${pageContext.request.contextPath}/user/resetPassword";
+      var url = "/user/resetPassword";
 
       var jsonOutput ={
         newPassword : $("#pwd").val(),

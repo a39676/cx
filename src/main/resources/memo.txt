@@ -1,8 +1,31 @@
-AT 教程
-	rabbit MQ
-	redis
-	
-农历提醒
+article
+	Add back to Homepage button in post.jsp
+
+	search -> loadmore -> show more post NOT match key word
+
+	load public channel & flash channel list when application start
+		refresh flash channel list with task
+	load private channel list when login
+
+WuYiJobServiceImpl ??? 待处理
+
+需要引入 学生-父母关系 部分统计只允许父母 / 管理员查看
+练习换积分
+
+习题 按做题时间影响积分计算随机空间
+按时间 * 正确率 考量进步空间 影响积分计算
+高年级可以做低年级/往学期题目 顺应降低积分空间
+做高年级题目 提升积分空间 上下限?
+设定每日获取积分上限量? 超出后降低随机空间
+准备删除
+	homepage V3 相关
+
+积分以盲盒表现 按时段划分随机空间
+
+考虑后期引入统计数据
+日 周 月 统计
+
+
 图片信息传送
 
 ocr
@@ -12,38 +35,15 @@ ocr
 评论模块
 	需要为管理员增加屏蔽用户/ip等手段
 		请参照 ipRecord 相关模块
-			
+
 图床
 	暂时未有合适的 webp webm 支持库
 	上传 webp / webm 时, 会返回异常.
 	等有成熟转换技术再作打算
-	因有保存截屏类数据进数据库, 需要删除过时数据  --- 2020/02/29	
+	因有保存截屏类数据进数据库, 需要删除过时数据  --- 2020/02/29
 
-
-cloudinary 可用图片url 上传图片
-https://cloudinary.com/documentation/image_upload_api_reference
-
-CREATE TABLE `duralbe_recorder` (
-id bigint not null,
-   `trading_id` bigint default null,
-   `holder_id` bigint NOT NULL,
-   `amount` decimal(9,2) NOT NULL,
-   `transation_date` date NOT NULL,
-   `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
-   
-   `remark` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-   is_broken boolean default false,
-   
-   is_delete boolean default false,
-   PRIMARY KEY (`id`)
- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='duralbe_recorder'
-;
-
------------------
-
-
-验证码模块
-
-maxAttempts user_attempts 增加时间列?
 -------------
-老旧的物件, 就像是有一种魔力, 时光在它身上仿佛不会流动.
+
+books
+3小时读懂现代中国
+用地理看历史 荆州 为何兵家必争

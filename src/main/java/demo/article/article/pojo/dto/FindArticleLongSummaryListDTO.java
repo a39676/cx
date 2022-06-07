@@ -6,18 +6,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import toolPack.dateTimeHandle.DateHandler;
 
-@ApiModel(value = "查询文章缩写标题参数", description = "")
 public class FindArticleLongSummaryListDTO {
 
-	@ApiModelProperty(value = "频道名")
-	private String articleChannelName;
-	@ApiModelProperty(value = "频道id")
 	private Long articleChannelId;
-	@ApiModelProperty(value = "title")
 	private String title;
 	private Long userId;
 	@JsonFormat(pattern = DateHandler.normalDateTimeFormat)
@@ -33,7 +26,7 @@ public class FindArticleLongSummaryListDTO {
 	private Integer limit = 1;
 	private Boolean desc = true;
 	private Boolean isHot = false;
-	private String vcode;
+	private String vp;
 
 	public Boolean getIsHot() {
 		return isHot;
@@ -107,14 +100,6 @@ public class FindArticleLongSummaryListDTO {
 		this.limit = limit;
 	}
 
-	public String getArticleChannelName() {
-		return articleChannelName;
-	}
-
-	public void setArticleChannelName(String articleChannelName) {
-		this.articleChannelName = articleChannelName;
-	}
-
 	public Long getArticleChannelId() {
 		return articleChannelId;
 	}
@@ -131,12 +116,12 @@ public class FindArticleLongSummaryListDTO {
 		this.isReject = isReject;
 	}
 
-	public String getVcode() {
-		return vcode;
+	public String getVp() {
+		return vp;
 	}
 
-	public void setVcode(String vcode) {
-		this.vcode = vcode;
+	public void setVp(String vp) {
+		this.vp = vp;
 	}
 
 	public Boolean getDesc() {
@@ -149,11 +134,10 @@ public class FindArticleLongSummaryListDTO {
 
 	@Override
 	public String toString() {
-		return "FindArticleLongSummaryListDTO [articleChannelName=" + articleChannelName + ", articleChannelId="
-				+ articleChannelId + ", title=" + title + ", userId=" + userId + ", startTime=" + startTime
-				+ ", endTime=" + endTime + ", isDelete=" + isDelete + ", isPass=" + isPass + ", isEdited=" + isEdited
-				+ ", isReject=" + isReject + ", limit=" + limit + ", desc=" + desc + ", isHot=" + isHot + ", vcode="
-				+ vcode + "]";
+		return "FindArticleLongSummaryListDTO [articleChannelId=" + articleChannelId + ", title=" + title + ", userId="
+				+ userId + ", startTime=" + startTime + ", endTime=" + endTime + ", isDelete=" + isDelete + ", isPass="
+				+ isPass + ", isEdited=" + isEdited + ", isReject=" + isReject + ", limit=" + limit + ", desc=" + desc
+				+ ", isHot=" + isHot + ", vp=" + vp + "]";
 	}
 
 }

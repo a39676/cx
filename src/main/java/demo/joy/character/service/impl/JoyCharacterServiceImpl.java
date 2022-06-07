@@ -6,8 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.GenderType;
-import demo.common.pojo.result.CommonResultCX;
 import demo.joy.character.mapper.JoyCharacterMapper;
 import demo.joy.character.pojo.constant.JoyCharacterConstant;
 import demo.joy.character.pojo.dto.CreateJoyCharacterCharacterDTO;
@@ -25,8 +25,8 @@ public class JoyCharacterServiceImpl extends JoyCommonService implements JoyChar
 	private JoyCharacterMapper joyCharacterMapper;
 
 	@Override
-	public CommonResultCX createJoyCharacterCharacter(CreateJoyCharacterCharacterDTO dto) {
-		CommonResultCX r = validCreateCharacterDTO(dto);
+	public CommonResult createJoyCharacterCharacter(CreateJoyCharacterCharacterDTO dto) {
+		CommonResult r = validCreateCharacterDTO(dto);
 		if (r.isFail()) {
 			return r;
 		}
@@ -46,8 +46,8 @@ public class JoyCharacterServiceImpl extends JoyCommonService implements JoyChar
 		return r;
 	}
 
-	private CommonResultCX validCreateCharacterDTO(CreateJoyCharacterCharacterDTO dto) {
-		CommonResultCX r = new CommonResultCX();
+	private CommonResult validCreateCharacterDTO(CreateJoyCharacterCharacterDTO dto) {
+		CommonResult r = new CommonResult();
 		if (StringUtils.isBlank(dto.getCharacterName())) {
 			r.failWithMessage("角色名不能为空");
 			return r;
@@ -115,7 +115,7 @@ public class JoyCharacterServiceImpl extends JoyCommonService implements JoyChar
 		JoyCharacterVO vo = new JoyCharacterVO();
 		vo.setGender(po.getGender());
 		vo.setName(po.getCharacterName());
-		vo.setPk(encryptId(po.getId()));
+		vo.setPk(systemOptionService.encryptId(po.getId()));
 		return vo;
 	}
 }

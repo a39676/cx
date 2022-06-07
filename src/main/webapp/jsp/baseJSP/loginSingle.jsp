@@ -23,7 +23,7 @@
     <div class="form-group">
       <span style="font-size: smaller;">用户名: </span>
       <input type="text" name="user_name" class="form-control" />
-    </div>  
+    </div>
     <div class="form-group">
       <span style="font-size: smaller;">密码: </span>
       <input type="password" name="pwd" class="form-control" />
@@ -37,7 +37,7 @@
         <span class="badge badge-warning">[取消]</span>
       </button>
     </div>
-    <%--       
+    <%--
     <button class="loginCustomButton btn btn-warning btn-sm" name="userRegist" url="/user/userRegist">
       <span class="badge badge-warning">[注册]</span>
     </button>
@@ -45,6 +45,32 @@
       <span class="badge badge-warning">[忘记密码/用户名]</span>
     </button>
      --%>
+    <div class="">
+      <!-- <form name='loginForm' action="<c:url value='j_spring_security_check' />" method='POST'> -->
+      <form name='loginForm' action="<c:url value='/auth/login_check?targetUrl=${targetUrl}' />" method='POST'>
+
+        <table>
+          <tr>
+            <td>用户名:</td>
+            <td><input type='text' name='user_name' value=''></td>
+          </tr>
+          <tr>
+            <td>密码:</td>
+            <td><input type='password' name='pwd' /></td>
+          </tr>
+          <tr>
+            <td colspan='1'>
+              <input name="submit" type="submit" value="登录" />
+            </td>
+            <%-- <td colspan="1">
+              <a href="/user/userRegist">[注册]</a>
+            </td> --%>
+          </tr>
+        </table>
+
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+      </form>
+    </div>
     <div>
       <span name="loginMessage" style="font-size: small;"></span>
     </div>
@@ -63,8 +89,8 @@ $(document).ready(function() {
     var userName = $("input[name='user_name']").val();
     var pwd = $("input[name='pwd']").val();
 
-    $.ajax({               
-      type: "POST",  
+    $.ajax({
+      type: "POST",
       url: loginUrl,
       data: {
         user_name:userName,
@@ -76,10 +102,9 @@ $(document).ready(function() {
         xhr.setRequestHeader(csrfHeader, csrfToken);
       },
       timeout: 30000,
-      success:function(data){  
+      success:function(data){
         if(data.code == 0) {
-          // location.reload();
-          window.location.href = "/";
+          // window.location.href = "/";
         } else {
           if(data.message.length < 1) {
             $("span[name='loginMessage']").text("账户名或密码错误");
@@ -87,9 +112,8 @@ $(document).ready(function() {
             $("span[name='loginMessage']").text(data.message);
           }
         }
-      }, 
+      },
       error:function(e){
-
       }
     });
   });
@@ -99,21 +123,21 @@ $(document).ready(function() {
   };
 
   // $(".loginCustomButton").click(function () {
-  //   loginCustomButtonClick($(this).attr("url")); 
+  //   loginCustomButtonClick($(this).attr("url"));
   // });
 
   // function loginCustomButtonClick(buttonUrl){
-  //   $.ajax({  
-  //     type : "GET",  
+  //   $.ajax({
+  //     type : "GET",
   //     async : true,
-  //     url : buttonUrl,  
-  //     success:function(datas){  
+  //     url : buttonUrl,
+  //     success:function(datas){
   //         $("div[name='subBodyRow']").html(datas);
-  //         $("div[name='subBodyRow']").show(); 
-  //     },  
-  //     error: function(datas) {                
-  //     }  
-  //   });  
+  //         $("div[name='subBodyRow']").show();
+  //     },
+  //     error: function(datas) {
+  //     }
+  //   });
   // }
 
 });

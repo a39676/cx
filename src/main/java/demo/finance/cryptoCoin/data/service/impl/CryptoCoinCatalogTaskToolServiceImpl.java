@@ -15,7 +15,7 @@ public class CryptoCoinCatalogTaskToolServiceImpl extends CryptoCoinCommonServic
 
 	@Scheduled(fixedRate = 1000L * 60)
 	public void cryptoCoinPriceNoticeHandler() {
-		catalogService.addSubscriptionCatalog(constantService.getDefaultCoinCatalog());
+		catalogService.addSubscriptionCatalog(optionService.getDefaultCoinCatalog());
 	}
 	
 }

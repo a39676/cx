@@ -5,19 +5,23 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import demo.article.article.service.impl.ArticleOptionService;
 import demo.base.pojo.constant.BaseStaticResourcesUrl;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.system.pojo.constant.BlogViewConstant;
 import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.BasePageService;
 import demo.base.user.pojo.type.SystemRolesType;
-import demo.common.service.CommonService;
 
 @Service
-public class BasePageServiceImpl extends CommonService implements BasePageService {
+public class BasePageServiceImpl extends SystemCommonService implements BasePageService {
+	
+	@Autowired
+	private ArticleOptionService articleOptionService;
 
 	@Override
 	public ModelAndView baseRootHandlerV3(String vcode, HttpServletRequest request) {
@@ -35,7 +39,7 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 
 		
 		if (hostnameType == null) {
-			if(!isDev()) {
+			if(!systemConstantService.isDev()) {
 				if(hostnameType == null) {
 					view.setViewName(BaseViewConstant.empty);
 					return view;
@@ -61,6 +65,48 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 		return view;
 	}
 	
+	@Override
+	public ModelAndView baseRootHandlerV4(String vcode, HttpServletRequest request) {
+
+		if(StringUtils.isBlank(vcode)) {
+			visitDataService.insertVisitData(request);
+		} else {
+			visitDataService.insertVisitData(request, "?vcode=" + vcode);
+		}
+		visitDataService.addVisitCounting(request);
+		
+		HostnameType hostnameType = hostnameService.findHostnameType(request);
+		
+		ModelAndView view = new ModelAndView();
+
+		
+		if (hostnameType == null) {
+			if(!systemConstantService.isDev()) {
+				if(hostnameType == null) {
+					view.setViewName(BaseViewConstant.empty);
+					return view;
+				}
+			} else {
+				view = buildHomeViewForNormalV4();
+			}
+		} else {
+			if (HostnameType.zhang3.equals(hostnameType)) {
+				view = buildHomeViewForNormalV4();
+			} else if (HostnameType.dtro.equals(hostnameType)) {
+				view = buildHomeViewForFake();
+			}
+		}
+
+		List<String> roles = baseUtilCustom.getRoles();
+		if (roles != null && roles.size() > 0 && roles.contains(SystemRolesType.ROLE_USER.getName())) {
+			view.addObject("nickName", baseUtilCustom.getUserPrincipal().getNickName());
+		}
+		
+		view.addObject("isHomePage", "true");
+		
+		return view;
+	}
+	
 	private ModelAndView buildHomeViewForNormal() {
 		ModelAndView view = new ModelAndView(BlogViewConstant.HOME);
 		view.addObject("title", systemConstantService.getNormalWebSiteTitle());
@@ -68,6 +114,19 @@ public class BasePageServiceImpl extends CommonService implements BasePageServic
 		view.addObject("subheading", systemConstantService.getNormalSubheading());
 		Long visitCount = visitDataService.getVisitCount();
 		view.addObject("visitCount", visitCount);
+		view.addObject("donateImgUrl", articleOptionService.getDonateImgUrl());
+		
+		return view;
+	}
+	
+	private ModelAndView buildHomeViewForNormalV4() {
+		ModelAndView view = new ModelAndView("base/home/index");
+		view.addObject("title", systemConstantService.getNormalWebSiteTitle());
+		view.addObject("headerImg", BaseStaticResourcesUrl.IMG_YELLOW_GRASS_LAND);
+		view.addObject("subheading", systemConstantService.getNormalSubheading());
+		Long visitCount = visitDataService.getVisitCount();
+		view.addObject("visitCount", visitCount);
+		view.addObject("donateImgUrl", articleOptionService.getDonateImgUrl());
 		
 		return view;
 	}

@@ -4,6 +4,7 @@ import demo.article.article.pojo.po.ArticleValid;
 import demo.article.article.pojo.po.ArticleValidExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
 
 public interface ArticleValidMapper {
     long countByExample(ArticleValidExample example);
@@ -15,6 +16,8 @@ public interface ArticleValidMapper {
     int insert(ArticleValid record);
 
     int insertSelective(ArticleValid record);
+
+    List<ArticleValid> selectByExampleWithRowbounds(ArticleValidExample example, RowBounds rowBounds);
 
     List<ArticleValid> selectByExample(ArticleValidExample example);
 

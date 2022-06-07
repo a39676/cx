@@ -1,15 +1,11 @@
 package demo.article.article.service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.article.article.pojo.param.controllerParam.BatchUpdatePrimaryKeyParam;
 import demo.article.article.pojo.param.controllerParam.ChangeChannelParam;
 import demo.article.article.pojo.param.controllerParam.ReviewArticleLongParam;
 import demo.article.article.pojo.param.controllerParam.SetArticleHotParam;
-import demo.common.pojo.result.CommonResultCX;
 
 public interface ArticleAdminService {
-
-	CommonResultCX batchUpdatePrivateKey(BatchUpdatePrimaryKeyParam param);
 
 	/**
 	 * 复核文章前置接口
@@ -17,7 +13,7 @@ public interface ArticleAdminService {
 	 * @return
 	 * @throws Exception
 	 */
-	CommonResultCX handelReviewArticle(ReviewArticleLongParam param) throws Exception;
+	CommonResult handelReviewArticle(ReviewArticleLongParam param) throws Exception;
 	
 	/**
 	 * 可删除自己的文章
@@ -27,8 +23,10 @@ public interface ArticleAdminService {
 	 */
 	CommonResult deleteArticle(String privateKey) throws Exception;
 
-	CommonResultCX changeChannel(ChangeChannelParam param) throws Exception;
+	CommonResult changeChannel(ChangeChannelParam param) throws Exception;
 
-	CommonResultCX setArticleHot(SetArticleHotParam controllerParam);
+	CommonResult setArticleHot(SetArticleHotParam controllerParam);
+
+	CommonResult deleteArticle(Long id) throws Exception;
 
 }

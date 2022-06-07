@@ -12,7 +12,7 @@ public class ImageStoreExample {
     protected List<Criteria> oredCriteria;
 
     public ImageStoreExample() {
-        oredCriteria = new ArrayList<Criteria>();
+        oredCriteria = new ArrayList<>();
     }
 
     public void setOrderByClause(String orderByClause) {
@@ -69,7 +69,7 @@ public class ImageStoreExample {
 
         protected GeneratedCriteria() {
             super();
-            criteria = new ArrayList<Criterion>();
+            criteria = new ArrayList<>();
         }
 
         public boolean isValid() {
@@ -365,136 +365,6 @@ public class ImageStoreExample {
             return (Criteria) this;
         }
 
-        public Criteria andBackupTimeIsNull() {
-            addCriterion("backup_time is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBackupTimeIsNotNull() {
-            addCriterion("backup_time is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBackupTimeEqualTo(LocalDateTime value) {
-            addCriterion("backup_time =", value, "backupTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andBackupTimeNotEqualTo(LocalDateTime value) {
-            addCriterion("backup_time <>", value, "backupTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andBackupTimeGreaterThan(LocalDateTime value) {
-            addCriterion("backup_time >", value, "backupTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andBackupTimeGreaterThanOrEqualTo(LocalDateTime value) {
-            addCriterion("backup_time >=", value, "backupTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andBackupTimeLessThan(LocalDateTime value) {
-            addCriterion("backup_time <", value, "backupTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andBackupTimeLessThanOrEqualTo(LocalDateTime value) {
-            addCriterion("backup_time <=", value, "backupTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andBackupTimeIn(List<LocalDateTime> values) {
-            addCriterion("backup_time in", values, "backupTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andBackupTimeNotIn(List<LocalDateTime> values) {
-            addCriterion("backup_time not in", values, "backupTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andBackupTimeBetween(LocalDateTime value1, LocalDateTime value2) {
-            addCriterion("backup_time between", value1, value2, "backupTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andBackupTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
-            addCriterion("backup_time not between", value1, value2, "backupTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andMd5MarkIsNull() {
-            addCriterion("md5_mark is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andMd5MarkIsNotNull() {
-            addCriterion("md5_mark is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andMd5MarkEqualTo(String value) {
-            addCriterion("md5_mark =", value, "md5Mark");
-            return (Criteria) this;
-        }
-
-        public Criteria andMd5MarkNotEqualTo(String value) {
-            addCriterion("md5_mark <>", value, "md5Mark");
-            return (Criteria) this;
-        }
-
-        public Criteria andMd5MarkGreaterThan(String value) {
-            addCriterion("md5_mark >", value, "md5Mark");
-            return (Criteria) this;
-        }
-
-        public Criteria andMd5MarkGreaterThanOrEqualTo(String value) {
-            addCriterion("md5_mark >=", value, "md5Mark");
-            return (Criteria) this;
-        }
-
-        public Criteria andMd5MarkLessThan(String value) {
-            addCriterion("md5_mark <", value, "md5Mark");
-            return (Criteria) this;
-        }
-
-        public Criteria andMd5MarkLessThanOrEqualTo(String value) {
-            addCriterion("md5_mark <=", value, "md5Mark");
-            return (Criteria) this;
-        }
-
-        public Criteria andMd5MarkLike(String value) {
-            addCriterion("md5_mark like", value, "md5Mark");
-            return (Criteria) this;
-        }
-
-        public Criteria andMd5MarkNotLike(String value) {
-            addCriterion("md5_mark not like", value, "md5Mark");
-            return (Criteria) this;
-        }
-
-        public Criteria andMd5MarkIn(List<String> values) {
-            addCriterion("md5_mark in", values, "md5Mark");
-            return (Criteria) this;
-        }
-
-        public Criteria andMd5MarkNotIn(List<String> values) {
-            addCriterion("md5_mark not in", values, "md5Mark");
-            return (Criteria) this;
-        }
-
-        public Criteria andMd5MarkBetween(String value1, String value2) {
-            addCriterion("md5_mark between", value1, value2, "md5Mark");
-            return (Criteria) this;
-        }
-
-        public Criteria andMd5MarkNotBetween(String value1, String value2) {
-            addCriterion("md5_mark not between", value1, value2, "md5Mark");
-            return (Criteria) this;
-        }
-
         public Criteria andValidTimeIsNull() {
             addCriterion("valid_time is null");
             return (Criteria) this;
@@ -557,7 +427,6 @@ public class ImageStoreExample {
     }
 
     public static class Criteria extends GeneratedCriteria {
-
         protected Criteria() {
             super();
         }

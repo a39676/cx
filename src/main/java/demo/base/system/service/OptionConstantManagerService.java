@@ -4,18 +4,24 @@ public interface OptionConstantManagerService {
 	
 	void refreshSystemConstant();
 
-	void refreshArticleConstant();
+	void refreshArticleOption();
 
-	void refreshArticleCommentConstant();
+	void refreshArticleCommentOption();
 
-	void refreshMailConstant();
+	void refreshMailOption();
 
-	void refreshCloudinaryConstant();
+	void refreshCloudinaryOption();
 
-	void refreshAutomationTestConstant();
+	void refreshAutomationTestOption();
 
-	void refreshCryptoCoinConstant();
+	void refreshCryptoCoinOption();
 
-	void refreshTelegramConstant();
+	void refreshTelegramOption();
+
+	String refreshEducateOption();
+
+	void refreshJoyOption();
+
+	void refreshJoyGardenOption();
 
 }

@@ -1,8 +1,8 @@
 package demo.tool.mail.pojo.result;
 
-import demo.common.pojo.result.CommonResultCX;
+import auxiliaryCommon.pojo.result.CommonResult;
 
-public class SendRegistMailResult extends CommonResultCX {
+public class SendRegistMailResult extends CommonResult {
 
 	private String mailKey;
 

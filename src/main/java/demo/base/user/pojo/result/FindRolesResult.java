@@ -2,10 +2,10 @@ package demo.base.user.pojo.result;
 
 import java.util.List;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.user.pojo.po.Roles;
-import demo.common.pojo.result.CommonResultCX;
 
-public class FindRolesResult extends CommonResultCX {
+public class FindRolesResult extends CommonResult {
 
 	private List<Roles> roleList;
 

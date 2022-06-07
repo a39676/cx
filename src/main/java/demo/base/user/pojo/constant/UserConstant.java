@@ -9,5 +9,5 @@ public class UserConstant {
 	 * when there is no user(ex: run application first time) fill the create by field */
 	public static final long noneUserId = 0L;
 	
-	public static final int oneDayRegistCount = 2;
+	public static final int registLimitForOneIPOneDay = 2;
 }

@@ -9,7 +9,6 @@ public class ArticleUrlConstant {
 	/** 打开创建文章的界面 */
 	public static final String creatingArticleLong = "/creatingArticleLong";
 	public static final String articleLongSummaryListByChannel = "/articleLongSummaryListByChannel";
-//	public static final String articleLongSummarySubListByChannel = "/articleLongSummarySubListByChannel";
 	public static final String readArticleLong = "/readArticleLong";
 	public static final String editArticleLong = "/editArticleLong";
 	public static final String deleteArticle = "/deleteArticle";

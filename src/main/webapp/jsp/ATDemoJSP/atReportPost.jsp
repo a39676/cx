@@ -54,37 +54,90 @@
   <article>
     <div class="container">
       <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-          <p class="para" style="word-break:break-word;">Total: ${reportVO.passCount + reportVO.failedCount + reportVO.blockedCount}</p>
-          <p class="para" style="word-break:break-word; background:green;">Pass: ${reportVO.passCount}</p>
-          <p class="para" style="word-break:break-word; background:red;">Failed: ${reportVO.failedCount}</p>
-          <p class="para" style="word-break:break-word; background:yellow;">Blocked: ${reportVO.blockedCount}</p>
-          <hr>
-          <c:forEach items="${reportVO.caseReportList}" var="caseReport">
-            <p class="para" style="word-break:break-word;">Case: ${caseReport.caseTypeName}</p>
-            <hr>
-            <c:forEach items="${caseReport.reportElementList}" var="reportElement">
-              <p class="para" style="word-break:break-word;">${reportElement.marktime}</p>
-              <c:choose>
-                <c:when test="${reportElement.content == 'pass'}">
-                  <p class="para" style="word-break:break-word; background:green;">${reportElement.content}</p>
-                </c:when>
-                <c:when test="${reportElement.content == 'failed'}">
-                  <p class="para" style="word-break:break-word; background:red;">${reportElement.content}</p>
-                </c:when>
-                <c:when test="${reportElement.content == 'blocked'}">
-                  <p class="para" style="word-break:break-word; background:yellow;">${reportElement.content}</p>
-                </c:when>
-                <c:otherwise>
-                  <p class="para" style="word-break:break-word;">${reportElement.content}</p>
-                </c:otherwise>
-              </c:choose>
-              <img class="img-fluid" src="${reportElement.imgUrl}">
-            </c:forEach>
-          </c:forEach>
-
+        <div class="col-md-12 mx-auto">
+          <table class="table table-hover table-bordered table-striped table-light">
+            <thead class="">
+              <tr class="table-primary">
+                <th style="text-align: center; vertical-align: middle;">
+                  <span class="badge badge-primary">Total</span>
+                </th>
+                <th style="text-align: center; vertical-align: middle;">
+                  <span class="badge badge-success">Pass</span>
+                </th>
+                <th style="text-align: center; vertical-align: middle;">
+                  <span class="badge badge-danger">Failed</span>
+                </th>
+                <th style="text-align: center; vertical-align: middle;">
+                  <span class="badge badge-warning">Block</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align: center; vertical-align: middle;">
+                  ${reportVO.passCount + reportVO.failedCount + reportVO.blockedCount}
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+                  ${reportVO.passCount}
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+                  ${reportVO.failedCount}
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+                  ${reportVO.blockedCount}
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
+      <c:forEach items="${reportVO.caseReportList}" var="caseReport">
+        <div class="row">
+          <div class="col-md-12 mx-auto">
+            <table class="table table-hover table-bordered table-striped table-light">
+              <thead class="">
+                <tr class="table-primary">
+                  <th colspan="2" style="text-align: center; vertical-align: middle;">
+                    Case: ${caseReport.caseTypeName}
+                  </th>
+                </tr>
+                <tbody>
+                  <c:forEach items="${caseReport.reportElementList}" var="reportElement">
+                    <tr>
+                      <td style="text-align: center; vertical-align: middle;">
+                        ${reportElement.marktime}
+                      </td>
+                      <c:choose>
+                        <c:when test="${reportElement.content == 'pass'}">
+                          <td style="text-align: center; vertical-align: middle;">
+                            <span class="badge badge-success">${reportElement.content}</span>
+                          </td>
+                        </c:when>
+                        <c:when test="${reportElement.content == 'failed'}">
+                          <td style="text-align: center; vertical-align: middle;">
+                            <span class="badge badge-danger">${reportElement.content}</span>
+                          </td>
+                        </c:when>
+                        <c:when test="${reportElement.content == 'blocked'}">
+                          <td style="text-align: center; vertical-align: middle;">
+                            <span class="badge badge-warning">${reportElement.content}</span>
+                          </td>
+                        </c:when>
+                        <c:otherwise>
+                          <td style="text-align: center; vertical-align: middle;">
+                            ${reportElement.content}
+                            <img class="img-fluid" src="${reportElement.imgUrl}">
+                          </td>
+                        </c:otherwise>
+                      </c:choose>
+                    </tr>
+                  </c:forEach>
+                </tbody>
+              </thead>
+            </table>
+          </div>
+        </div>
+      </c:forEach>
     </div>
   </article>
 
@@ -96,7 +149,7 @@
   <%@ include file="../cleanBlogJSP/cleanBlogNormalFooter.jsp" %>
   <script type="text/javascript" src="<c:url value='/static_resources/cleanBlog/js/readArticleLongV4.js'/>"></script>
   <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
-  <%-- <script type="text/javascript" src="<c:url value='/static_resources/js/article/articleManager.js'/>"></script> --%>
+
   </sec:authorize>
 
 </body>

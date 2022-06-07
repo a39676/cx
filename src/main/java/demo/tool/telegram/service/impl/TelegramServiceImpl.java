@@ -6,14 +6,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.common.service.CommonService;
+import demo.tool.service.impl.ToolCommonService;
 import demo.tool.telegram.mapper.TelegramChatIdMapper;
 import demo.tool.telegram.mapper.TelegramConstantMapper;
-import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
+import demo.tool.telegram.pojo.bo.TelegramConstantBO;
 import demo.tool.telegram.pojo.po.TelegramChatId;
 import demo.tool.telegram.pojo.po.TelegramChatIdExample;
 import demo.tool.telegram.pojo.po.TelegramConstant;
@@ -21,45 +22,49 @@ import demo.tool.telegram.pojo.po.TelegramConstantExample;
 import demo.tool.telegram.pojo.vo.TelegramChatIdVO;
 import demo.tool.telegram.service.TelegramService;
 import telegram.pojo.constant.TelegramBotType;
+import telegram.pojo.constant.TelegramStaticChatID;
 import toolPack.httpHandel.HttpUtil;
 
 @Service
-public class TelegramServiceImpl extends CommonService implements TelegramService {
+public class TelegramServiceImpl extends ToolCommonService implements TelegramService {
 
 	@Autowired
 	private TelegramConstantMapper telegramConstantMapper;
 	@Autowired
 	private TelegramChatIdMapper chatIdMapper;
 	@Autowired
-	private TelegramConstantService telegramConstantService;
+	private TelegramOptionService telegramOptionService;
 
 	private String botIDReady(String botIDKey) {
-		if(StringUtils.isBlank(botIDKey)) {
+		if (StringUtils.isBlank(botIDKey)) {
 			botIDKey = TelegramBotType.BOT_1.getName();
 		}
-		TelegramConstant botConstant = telegramConstantService.getTelegramConstantMap().get(botIDKey);
-		
-		if(botConstant != null) {
+		TelegramConstantBO botConstant = telegramOptionService.getTelegramConstantMap().get(botIDKey);
+
+		if (botConstant != null) {
 			return botConstant.getConstantvalue();
 		}
-		
+
 		return botIDReset(botIDKey);
 	}
 
 	private String botIDReset(String botIDKey) {
 		String bot1ID = null;
-		
+
 		TelegramConstantExample example = new TelegramConstantExample();
 		example.createCriteria().andIsdeleteEqualTo(false).andConstantnameEqualTo(botIDKey);
 		List<TelegramConstant> poList = telegramConstantMapper.selectByExample(example);
 
-		if(poList != null && !poList.isEmpty()) {
-			for (TelegramConstant po:poList) {
-				telegramConstantService.putTelegramConstantMap(po.getConstantname(), po);
+		if (poList != null && !poList.isEmpty()) {
+			TelegramConstantBO bo = null;
+			for (TelegramConstant po : poList) {
+				bo = new TelegramConstantBO();
+				BeanUtils.copyProperties(po, bo);
+				telegramOptionService.putTelegramConstantMap(po.getConstantname(), bo);
 			}
-			bot1ID = poList.get(0).getConstantvalue(); 
+			bot1ID = poList.get(0).getConstantvalue();
 		}
-		
+
 		return bot1ID;
 	}
 
@@ -71,6 +76,12 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 	@Override
 	public CommonResult sendMessage(TelegramBotType botType, String msg, Long id) {
 		CommonResult r = new CommonResult();
+
+		if (systemConstantService.isDev()) {
+			log.error(msg);
+			r.setIsSuccess();
+			return r;
+		}
 
 		if (id == null) {
 			r.failWithMessage("param error");
@@ -140,14 +151,14 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 	@Override
 	public TelegramChatIdVO buildChatIdVO(TelegramChatId po) {
 		TelegramChatIdVO vo = new TelegramChatIdVO();
-		vo.setPk(encryptId(po.getId().longValue()));
+		vo.setPk(systemConstantService.encryptId(po.getId().longValue()));
 		vo.setUsername(po.getChatUserName());
 		return vo;
 	}
 
 	@Override
 	public boolean chatIdExists(String pk) {
-		Long id = decryptPrivateKey(pk);
+		Long id = systemConstantService.decryptPrivateKey(pk);
 		if (id == null) {
 			return false;
 		}
@@ -157,8 +168,10 @@ public class TelegramServiceImpl extends CommonService implements TelegramServic
 
 	@Override
 	public void telegramSendingCheck() {
+		String msg = null;
 		for (TelegramBotType botType : TelegramBotType.values()) {
-			sendMessage(botType, "testing msg", TelegramStaticChatID.MY_ID);
+			msg = "Testing msg, from: " + botType.getName();
+			sendMessage(botType, msg, TelegramStaticChatID.MY_ID);
 		}
 	}
 }

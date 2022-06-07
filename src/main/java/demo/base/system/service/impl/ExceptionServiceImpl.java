@@ -4,16 +4,23 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.ExceptionService;
-import demo.common.service.CommonService;
+import demo.tool.calendarNotice.mq.producer.TelegramCalendarNoticeMessageAckProducer;
+import telegram.pojo.constant.TelegramBotType;
+import telegram.pojo.constant.TelegramStaticChatID;
+import telegram.pojo.dto.TelegramMessageDTO;
 
 @Service
-public class ExceptionServiceImpl extends CommonService implements ExceptionService {
+public class ExceptionServiceImpl extends SystemCommonService implements ExceptionService {
+	
+	@Autowired
+	private TelegramCalendarNoticeMessageAckProducer telegramMessageAckProducer;
 
 	private static final String[] description = { "神奇", "野生", "迷幻", "抽象", "清奇", "脱俗", "清新", "艳丽"};
 
@@ -21,10 +28,18 @@ public class ExceptionServiceImpl extends CommonService implements ExceptionServ
 		return ThreadLocalRandom.current().nextInt(0, description.length - 1);
 	}
 	
-	
 	@Override
 	public ModelAndView handleCommonException(HttpServletRequest request, Exception e) {
-		log.error(e.toString());
+		log.error(e.getLocalizedMessage());
+		log.error(e.getMessage());
+		log.error(e.getCause().toString());
+		
+		log.error("Catch EXCEPTION: " + request.getServerName() + "/" + request.getRequestURI());
+		
+		sendTelegram(e.getCause().toString());
+		
+		visitDataService.insertVisitData(request, "catch EXCEPTION");
+		
 		ModelAndView view = new ModelAndView("baseJSP/errorCustom");
 		if(systemConstantService.getIsDebuging()) {
 			view.addObject("message", e.toString());
@@ -33,20 +48,57 @@ public class ExceptionServiceImpl extends CommonService implements ExceptionServ
 		}
 		view.addObject("urlRedirect", hostnameService.findHostNameFromRequst(request));
 
-		e.printStackTrace();
 		return view;
 	}
 	
 	@Override
+	public ModelAndView handleCommonException(HttpServletRequest request) {
+		log.error("Catch EXCEPTION: " + request.getServerName() + "/" + request.getRequestURI());
+		visitDataService.insertVisitData(request, "catch EXCEPTION");
+		ModelAndView view = new ModelAndView("baseJSP/errorCustom");
+		view.addObject("message", "很抱歉,居然出现了" + description[getRan()] + "的异常");
+		view.addObject("urlRedirect", hostnameService.findHostNameFromRequst(request));
+		
+		return view;
+	}
+	
+	@Override
+	public void handleSQLErrorException(HttpServletRequest request, Exception e) {
+		log.error("Catch SQLSyntaxErrorException: ");
+		if(request != null) {
+			log.error(request.getServerName() + "/" + request.getRequestURI());
+		}
+		log.error(e.getCause().toString());
+		log.error("error: {}", e.getMessage(), e);
+		
+		sendTelegram(e.getCause().toString() + ", " + e);
+	}
+	
+	@Override
+	public void handleRequestRejectedException(HttpServletRequest request, Exception e) {
+		log.error("Catch Request Rejected ErrorException: ");
+		if(request != null) {
+			log.error(request.getServerName() + "/" + request.getRequestURI());
+		}
+		log.error(e.getCause().toString());
+		log.error("error: {}", e.getMessage(), e);
+		
+		sendTelegram(e.getCause().toString() + ", " + e);
+	}
+	
+	@Override
 	public ModelAndView handle404Exception(HttpServletRequest request) {
+		log.error("Http 404: " + request.getServerName() + "/" + request.getRequestURI());
+		visitDataService.insertVisitData(request, "catch 404 exception");
+		
 		ModelAndView view = new ModelAndView();
 		
 		HostnameType hostnameType = hostnameService.findHostnameType(request);
 		if(HostnameType.zhang3.equals(hostnameType)) {
 			view.setViewName(BaseViewConstant.normal404);
-//		} else if(HostnameType.three.equals(hostnameType)) {
-//			view.setViewName(BaseViewConstant.seekingJob404);
-		} else if(isDev()){
+		} else if(HostnameType.dtro.equals(hostnameType)) {
+			view.setViewName(BaseViewConstant.normal404);
+		} else if(systemConstantService.isDev()){
 			view.setViewName(BaseViewConstant.normal404);
 		} else {
 			view.setViewName(BaseViewConstant.normal404);
@@ -54,10 +106,11 @@ public class ExceptionServiceImpl extends CommonService implements ExceptionServ
 
 		return view;
 	}
-
+	
 	@Override
-	public ModelAndView handleCommonException(HttpServletRequest request) {
-		log.error("_");
+	public ModelAndView handle403CommonException(HttpServletRequest request) {
+		log.error("Http 403: " + request.getServerName() + "/" + request.getRequestURI());
+		visitDataService.insertVisitData(request, "catch 403 exception");
 		ModelAndView view = new ModelAndView("baseJSP/errorCustom");
 		view.addObject("message", "很抱歉,居然出现了" + description[getRan()] + "的异常");
 		view.addObject("urlRedirect", hostnameService.findHostNameFromRequst(request));
@@ -65,4 +118,36 @@ public class ExceptionServiceImpl extends CommonService implements ExceptionServ
 		return view;
 	}
 	
+	@Override
+	public ModelAndView handle503Exception(HttpServletRequest request, Exception e) {
+		log.error("Http 503: " + request.getServerName() + "/" + request.getRequestURI());
+		log.error(e.getCause().toString());
+		
+		visitDataService.insertVisitData(request, "catch 503 exception");
+		
+		ModelAndView view = new ModelAndView();
+		
+		HostnameType hostnameType = hostnameService.findHostnameType(request);
+		if(HostnameType.zhang3.equals(hostnameType)) {
+			view.setViewName(BaseViewConstant.normal404);
+		} else if(HostnameType.dtro.equals(hostnameType)) {
+			view.setViewName(BaseViewConstant.normal404);
+		} else if(systemConstantService.isDev()){
+			view.setViewName(BaseViewConstant.normal404);
+		} else {
+			view.setViewName(BaseViewConstant.normal404);
+		}
+
+		return view;
+	}
+	
+	private void sendTelegram(String msg) {
+		TelegramMessageDTO dto = null;
+		dto = new TelegramMessageDTO();
+		dto.setId(TelegramStaticChatID.MY_ID);
+		dto.setBotName(TelegramBotType.BOT_1.getName());
+		dto.setMsg(msg);
+		
+		telegramMessageAckProducer.send(dto);
+	}
 }

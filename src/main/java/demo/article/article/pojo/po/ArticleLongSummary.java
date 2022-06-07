@@ -7,13 +7,15 @@ public class ArticleLongSummary {
 
     private Long userId;
 
-    private String articleTitle;
-
     private String filePath;
 
     private LocalDateTime createTime;
 
-    private String privateKey;
+    private Boolean isHot;
+
+    private Integer hotLevel;
+
+    private LocalDateTime hotValidTime;
 
     public Long getArticleId() {
         return articleId;
@@ -29,14 +31,6 @@ public class ArticleLongSummary {
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public String getArticleTitle() {
-        return articleTitle;
-    }
-
-    public void setArticleTitle(String articleTitle) {
-        this.articleTitle = articleTitle == null ? null : articleTitle.trim();
     }
 
     public String getFilePath() {
@@ -55,11 +49,27 @@ public class ArticleLongSummary {
         this.createTime = createTime;
     }
 
-    public String getPrivateKey() {
-        return privateKey;
+    public Boolean getIsHot() {
+        return isHot;
     }
 
-    public void setPrivateKey(String privateKey) {
-        this.privateKey = privateKey == null ? null : privateKey.trim();
+    public void setIsHot(Boolean isHot) {
+        this.isHot = isHot;
+    }
+
+    public Integer getHotLevel() {
+        return hotLevel;
+    }
+
+    public void setHotLevel(Integer hotLevel) {
+        this.hotLevel = hotLevel;
+    }
+
+    public LocalDateTime getHotValidTime() {
+        return hotValidTime;
+    }
+
+    public void setHotValidTime(LocalDateTime hotValidTime) {
+        this.hotValidTime = hotValidTime;
     }
 }

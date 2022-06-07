@@ -48,34 +48,26 @@ optionFilePath:
   cloudinary: "/home/u2/cx/optionFile/cloudinary/option.json"
   automationTest: "/home/u2/cx/optionFile/automationTest/option.json"
   cryptoCoin: "/home/u2/cx/optionFile/cryptoCoin/option.json"
-  scheduleClawing: "/home/u2/cx/optionFile/scheduleClawing/option.json"
   telegram: "/home/u2/cx/optionFile/telegram/option.json"
+  tool: "/home/u2/cx/optionFile/tool/option.json"
+  educate: "/home/u2/cx/optionFile/educate/option.json"
+  joy: "/home/u2/cx/optionFile/joy/option.json"
+  joyGarden: "/home/u2/cx/optionFile/joy/gardenOption.json"
   
     
 logging:
   level: 
     root: ERROR 
-    org.springframework.web: DEBUG
+    org.springframework.web: ERROR
     # demo.test.controller: DEBUG
-    demo.test.mapper: DEBUG
-    demo.tool.mapper: DEBUG
+    demo.test.mapper: ERROR
+    demo.tool.mapper: ERROR
     # demo.finance.cryptoCoin.notice.mapper: DEBUG
     # demo.finance.cryptoCoin.data.mapper: DEBUG
     # demo.mapper: DEBUG
-    # demo.bank.mapper: DEBUG
-    # demo.credit_bill.mapper: DEBUG
-    # demo.trading.mapper: DEBUG
-    # demo.base.account_DEBUG.mapper: DEBUG
-    # demo.base.system.mapper: DEBUG
-    # demo.base.user.mapper: DEBUG
-    # demo.organizations.mapper: DEBUG
-    # demo.image.mapper: DEBUG
-    # demo.article.article.mapper: DEBUG
-    # demo.articleComment.mapper: DEBUG
-    # demo.fakePost.mapper: DEBUG
-    # demo.mobile.mapper: DEBUG
+    # demo.joy.garden.mapper: DEBUG
   pattern:
     console: "%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"
     file: "[%p] [%d{yyyy-MM-dd HH:mm:ss}][%c]%m%n [%thread] %-5level %logger{36}"
       
-  file: /home/u2/logs/cx.log
+  file.name: /home/u2/logs/cx.log

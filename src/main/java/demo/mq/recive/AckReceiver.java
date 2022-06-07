@@ -44,7 +44,7 @@
 ////				System.out.println(message);
 ////
 ////				if (message.contains(":3")) {
-////					// requeue：重新入队列，false：直接丢弃，相当于告诉队列可以直接删除掉
+////					// requeue:重新入队列, false:直接丢弃, 相当于告诉队列可以直接删除掉
 ////					channel.basicReject(envelope.getDeliveryTag(), true);
 ////				} else {
 ////					channel.basicAck(envelope.getDeliveryTag(), true);

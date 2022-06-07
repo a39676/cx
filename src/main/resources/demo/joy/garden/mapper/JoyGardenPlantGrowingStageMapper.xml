@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.joy.garden.mapper.JoyGardenPlantGrowingStageMapper">
+  <resultMap id="BaseResultMap" type="demo.joy.garden.pojo.po.JoyGardenPlantGrowingStage">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="plant_id" jdbcType="BIGINT" property="plantId" />
+    <result column="stage_sequence" jdbcType="INTEGER" property="stageSequence" />
+    <result column="is_last_stage" jdbcType="BIT" property="isLastStage" />
+    <result column="is_cycle_stage" jdbcType="BIT" property="isCycleStage" />
+    <result column="stage_name" jdbcType="CHAR" property="stageName" />
+    <result column="living_minute" jdbcType="INTEGER" property="livingMinute" />
+    <result column="img_id" jdbcType="BIGINT" property="imgId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, plant_id, stage_sequence, is_last_stage, is_cycle_stage, stage_name, living_minute, 
+    img_id, update_time, is_delete
+  </sql>
+  <select id="selectByExample" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantGrowingStageExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from joy_garden_plant_growing_stage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from joy_garden_plant_growing_stage
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from joy_garden_plant_growing_stage
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantGrowingStageExample">
+    delete from joy_garden_plant_growing_stage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantGrowingStage">
+    insert into joy_garden_plant_growing_stage (id, plant_id, stage_sequence, 
+      is_last_stage, is_cycle_stage, stage_name, 
+      living_minute, img_id, update_time, 
+      is_delete)
+    values (#{id,jdbcType=BIGINT}, #{plantId,jdbcType=BIGINT}, #{stageSequence,jdbcType=INTEGER}, 
+      #{isLastStage,jdbcType=BIT}, #{isCycleStage,jdbcType=BIT}, #{stageName,jdbcType=CHAR}, 
+      #{livingMinute,jdbcType=INTEGER}, #{imgId,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{isDelete,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantGrowingStage">
+    insert into joy_garden_plant_growing_stage
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="plantId != null">
+        plant_id,
+      </if>
+      <if test="stageSequence != null">
+        stage_sequence,
+      </if>
+      <if test="isLastStage != null">
+        is_last_stage,
+      </if>
+      <if test="isCycleStage != null">
+        is_cycle_stage,
+      </if>
+      <if test="stageName != null">
+        stage_name,
+      </if>
+      <if test="livingMinute != null">
+        living_minute,
+      </if>
+      <if test="imgId != null">
+        img_id,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="plantId != null">
+        #{plantId,jdbcType=BIGINT},
+      </if>
+      <if test="stageSequence != null">
+        #{stageSequence,jdbcType=INTEGER},
+      </if>
+      <if test="isLastStage != null">
+        #{isLastStage,jdbcType=BIT},
+      </if>
+      <if test="isCycleStage != null">
+        #{isCycleStage,jdbcType=BIT},
+      </if>
+      <if test="stageName != null">
+        #{stageName,jdbcType=CHAR},
+      </if>
+      <if test="livingMinute != null">
+        #{livingMinute,jdbcType=INTEGER},
+      </if>
+      <if test="imgId != null">
+        #{imgId,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantGrowingStageExample" resultType="java.lang.Long">
+    select count(*) from joy_garden_plant_growing_stage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update joy_garden_plant_growing_stage
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.plantId != null">
+        plant_id = #{record.plantId,jdbcType=BIGINT},
+      </if>
+      <if test="record.stageSequence != null">
+        stage_sequence = #{record.stageSequence,jdbcType=INTEGER},
+      </if>
+      <if test="record.isLastStage != null">
+        is_last_stage = #{record.isLastStage,jdbcType=BIT},
+      </if>
+      <if test="record.isCycleStage != null">
+        is_cycle_stage = #{record.isCycleStage,jdbcType=BIT},
+      </if>
+      <if test="record.stageName != null">
+        stage_name = #{record.stageName,jdbcType=CHAR},
+      </if>
+      <if test="record.livingMinute != null">
+        living_minute = #{record.livingMinute,jdbcType=INTEGER},
+      </if>
+      <if test="record.imgId != null">
+        img_id = #{record.imgId,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isDelete != null">
+        is_delete = #{record.isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update joy_garden_plant_growing_stage
+    set id = #{record.id,jdbcType=BIGINT},
+      plant_id = #{record.plantId,jdbcType=BIGINT},
+      stage_sequence = #{record.stageSequence,jdbcType=INTEGER},
+      is_last_stage = #{record.isLastStage,jdbcType=BIT},
+      is_cycle_stage = #{record.isCycleStage,jdbcType=BIT},
+      stage_name = #{record.stageName,jdbcType=CHAR},
+      living_minute = #{record.livingMinute,jdbcType=INTEGER},
+      img_id = #{record.imgId,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      is_delete = #{record.isDelete,jdbcType=BIT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantGrowingStage">
+    update joy_garden_plant_growing_stage
+    <set>
+      <if test="plantId != null">
+        plant_id = #{plantId,jdbcType=BIGINT},
+      </if>
+      <if test="stageSequence != null">
+        stage_sequence = #{stageSequence,jdbcType=INTEGER},
+      </if>
+      <if test="isLastStage != null">
+        is_last_stage = #{isLastStage,jdbcType=BIT},
+      </if>
+      <if test="isCycleStage != null">
+        is_cycle_stage = #{isCycleStage,jdbcType=BIT},
+      </if>
+      <if test="stageName != null">
+        stage_name = #{stageName,jdbcType=CHAR},
+      </if>
+      <if test="livingMinute != null">
+        living_minute = #{livingMinute,jdbcType=INTEGER},
+      </if>
+      <if test="imgId != null">
+        img_id = #{imgId,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantGrowingStage">
+    update joy_garden_plant_growing_stage
+    set plant_id = #{plantId,jdbcType=BIGINT},
+      stage_sequence = #{stageSequence,jdbcType=INTEGER},
+      is_last_stage = #{isLastStage,jdbcType=BIT},
+      is_cycle_stage = #{isCycleStage,jdbcType=BIT},
+      stage_name = #{stageName,jdbcType=CHAR},
+      living_minute = #{livingMinute,jdbcType=INTEGER},
+      img_id = #{imgId,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_delete = #{isDelete,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="demo.joy.garden.pojo.po.JoyGardenPlantGrowingStageExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from joy_garden_plant_growing_stage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  
+  <select id="findSeedPage" resultMap="BaseResultMap">
+  	select
+  	  *
+  	from
+  	  joy_garden_plant_growing_stage
+  	<where>
+  	  is_delete = false
+  	  and stage_sequence = 1
+  	  <if test="startId != null">
+  	    and id &gt; #{startId}
+  	  </if>
+  	  <if test="endId != null">
+  	    and id &lt; #{endId}
+  	  </if>
+  	</where>
+  	<if test="pageSize != null">
+  	  limit #{pageSize}
+  	</if>
+  	<if test="pageSize == null">
+  	  limit 16
+  	</if>
+  </select>
+</mapper>

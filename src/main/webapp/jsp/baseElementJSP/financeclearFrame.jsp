@@ -16,13 +16,13 @@
   <!-- as navigation -->
   <sec:authorize access="hasRole('ROLE_USER')">
   <div class="col-md-1">
-    <jsp:include page="${pageContext.request.contextPath}/jsp/financeclearNavigationRoleUser" flush="true"/>
+    <jsp:include page="/jsp/financeclearNavigationRoleUser" flush="true"/>
   </div>
   </sec:authorize>
   
   <sec:authorize access="hasRole('ROLE_ANONYMOUS')">
   <div class="col-md-1">
-    <jsp:include page="${pageContext.request.contextPath}/jsp/financeclearNavigationNotLogin" flush="true"/>
+    <jsp:include page="/jsp/financeclearNavigationNotLogin" flush="true"/>
   </div>
   </sec:authorize>
 

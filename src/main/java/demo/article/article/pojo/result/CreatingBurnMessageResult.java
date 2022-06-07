@@ -1,8 +1,8 @@
 package demo.article.article.pojo.result;
 
-import demo.common.pojo.result.CommonResultCX;
+import auxiliaryCommon.pojo.result.CommonResult;
 
-public class CreatingBurnMessageResult extends CommonResultCX {
+public class CreatingBurnMessageResult extends CommonResult {
 	
 	private String readKey;
 

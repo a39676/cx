@@ -2,10 +2,10 @@ package demo.base.user.pojo.result;
 
 import java.util.List;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.user.pojo.vo.UsersDetailVO;
-import demo.common.pojo.result.CommonResultCX;
 
-public class FindUserByConditionResult extends CommonResultCX {
+public class FindUserByConditionResult extends CommonResult {
 
 	private List<UsersDetailVO> userVOList;
 

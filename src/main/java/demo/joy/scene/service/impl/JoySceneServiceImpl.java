@@ -30,7 +30,7 @@ public class JoySceneServiceImpl extends JoyCommonService implements JoySceneSer
 	public FindSceneVOListResult findSceneVOListBySceneGroupPK(FindSceneVOListBySceneGroupPKDTO dto) {
 		FindSceneVOListResult r = new FindSceneVOListResult();
 		
-		Long sceneGroupId = decryptPrivateKey(dto.getSceneGroupPK());
+		Long sceneGroupId = systemOptionService.decryptPrivateKey(dto.getSceneGroupPK());
 		if(sceneGroupId == null) {
 			r.addMessage("error param");
 			return r;
@@ -62,14 +62,14 @@ public class JoySceneServiceImpl extends JoyCommonService implements JoySceneSer
 	@Override
 	public JoySceneVO scenePOToVO(JoyScene po) {
 		JoySceneVO vo = new JoySceneVO();
-		vo.setPk(encryptId(po.getId()));
+		vo.setPk(systemOptionService.encryptId(po.getId()));
 		vo.setSceneName(po.getSceneName());
 		return vo;
 	}
 	
 	@Override
 	public JoyScene findByPk(String pk) {
-		Long id = decryptPrivateKey(pk);
+		Long id = systemOptionService.decryptPrivateKey(pk);
 		return findById(id);
 	}
 	

@@ -91,7 +91,7 @@ public class TestEventServiceImpl extends AutomationTestCommonService implements
 	@Override
 	public void handleLongWaitingEvent() {
 		LocalDateTime now = LocalDateTime.now();
-		LocalDateTime limitWaitingTime = now.minusHours(constantService.getMaxWaitingRunHour());
+		LocalDateTime limitWaitingTime = now.minusHours(optionService.getMaxWaitingRunHour());
 		TestEventExample example = new TestEventExample();
 		example.createCriteria().andIsDeleteEqualTo(false).andStartTimeIsNull().andSendTimeLessThan(limitWaitingTime);
 		List<TestEvent> poList = eventMapper.selectByExample(example);

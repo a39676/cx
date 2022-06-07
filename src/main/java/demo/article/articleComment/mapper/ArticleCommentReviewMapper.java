@@ -7,5 +7,5 @@ public interface ArticleCommentReviewMapper {
 
     int insertSelective(ArticleCommentReview record);
     
-    int insertNew(ArticleCommentReview record);
+    int insertOrUpdate(ArticleCommentReview record);
 }

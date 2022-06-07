@@ -8,10 +8,8 @@ import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MonthDataSummaryService;
-import demo.finance.cryptoCoin.data.service.CryptoCoin1WeekDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin5MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoin60MinuteDataSummaryService;
-import demo.finance.cryptoCoin.tool.service.CryptoCoinLowPriceNoticeService;
 
 @Component
 public class CryptoCoinDataTaskToolServiceImpl extends CryptoCoinCommonService {
@@ -25,11 +23,8 @@ public class CryptoCoinDataTaskToolServiceImpl extends CryptoCoinCommonService {
 	@Autowired
 	private CryptoCoin1DayDataSummaryService cryptoCoin1DayDataSummaryService;
 	@Autowired
-	private CryptoCoin1WeekDataSummaryService cryptoCoin1WeekDataSummaryService;
-	@Autowired
 	private CryptoCoin1MonthDataSummaryService cryptoCoin1MonthDataSummaryService;
-	@Autowired
-	private CryptoCoinLowPriceNoticeService cryptoCoinLowPriceNoticeService;
+	
 
 	@Scheduled(cron = "0 */2 * * * ?")
 	public void summaryMinuteData() {
@@ -40,7 +35,6 @@ public class CryptoCoinDataTaskToolServiceImpl extends CryptoCoinCommonService {
 	public void summaryHistoryData() {
 		cryptoCoin5MinuteDataSummaryService.summaryHistoryData();
 		cryptoCoin60MinuteDataSummaryService.summaryHistoryData();
-		cryptoCoin1WeekDataSummaryService.summaryHistoryData();
 		cryptoCoin1MonthDataSummaryService.summaryHistoryData();
 	}
 
@@ -63,17 +57,19 @@ public class CryptoCoinDataTaskToolServiceImpl extends CryptoCoinCommonService {
 		cryptoCoin1DayDataSummaryService.resetDailyDataWaitingQuerySet();
 	}
 	
-	@Scheduled(cron="56 45 7 * * *")
-	@Scheduled(cron="56 45 15 * * *")
-	@Scheduled(cron="56 45 23 * * *")
-	public void setNewLowPriceSubscription() {
-		cryptoCoinLowPriceNoticeService.setNewLowPriceSubscription();
-	}
-	
-	@Scheduled(cron="56 05 8 * * *")
-	@Scheduled(cron="56 05 16 * * *")
-	@Scheduled(cron="56 05 0 * * *")
-	public void setLowPriceCoinWatching() {
-		cryptoCoinLowPriceNoticeService.setLowPriceCoinWatching();
-	}
+//	@Autowired
+//	private CryptoCoinLowPriceNoticeService cryptoCoinLowPriceNoticeService;
+//	@Scheduled(cron="56 45 7 * * *")
+//	@Scheduled(cron="56 45 15 * * *")
+//	@Scheduled(cron="56 45 23 * * *")
+//	public void setNewLowPriceSubscription() {
+//		cryptoCoinLowPriceNoticeService.setNewLowPriceSubscription();
+//	}
+//	
+//	@Scheduled(cron="56 05 8 * * *")
+//	@Scheduled(cron="56 05 16 * * *")
+//	@Scheduled(cron="56 05 0 * * *")
+//	public void setLowPriceCoinWatching() {
+//		cryptoCoinLowPriceNoticeService.setLowPriceCoinWatching();
+//	}
 }

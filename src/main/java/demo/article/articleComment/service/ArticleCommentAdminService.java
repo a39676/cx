@@ -2,18 +2,18 @@ package demo.article.articleComment.service;
 
 import java.util.List;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.articleComment.pojo.dto.DeleteArticleCommentDTO;
 import demo.article.articleComment.pojo.dto.PassArticleCommentDTO;
 import demo.article.articleComment.pojo.dto.RejectArticleCommentDTO;
-import demo.common.pojo.result.CommonResultCX;
 
 public interface ArticleCommentAdminService {
 
-	CommonResultCX deleteArticleComment(DeleteArticleCommentDTO param);
+	CommonResult deleteArticleComment(DeleteArticleCommentDTO param);
 
-	CommonResultCX passArticleComment(PassArticleCommentDTO param);
+	CommonResult passArticleComment(PassArticleCommentDTO param);
 	
-	CommonResultCX rejectArticleComment(RejectArticleCommentDTO param);
+	CommonResult rejectArticleComment(RejectArticleCommentDTO param);
 
 	List<Long> findArticleIdWithCommentWaitingForReview(List<Long> articleIdList);
 

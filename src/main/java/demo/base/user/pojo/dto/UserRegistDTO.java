@@ -1,14 +1,8 @@
 package demo.base.user.pojo.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
-@ApiModel("用户注册参数")
 public class UserRegistDTO {
 
-	@ApiModelProperty(name = "用户名", dataType = "string")
 	private String userName;
-	@ApiModelProperty(name = "用户昵称", dataType = "string")
 	private String nickName;
 	private String email;
 	private String pwd;

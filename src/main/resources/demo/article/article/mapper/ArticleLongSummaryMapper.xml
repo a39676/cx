@@ -4,10 +4,11 @@
   <resultMap id="BaseResultMap" type="demo.article.article.pojo.po.ArticleLongSummary">
     <id column="article_id" jdbcType="BIGINT" property="articleId" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
-    <result column="article_title" jdbcType="VARCHAR" property="articleTitle" />
     <result column="file_path" jdbcType="VARCHAR" property="filePath" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="private_key" jdbcType="CHAR" property="privateKey" />
+    <result column="is_hot" jdbcType="BIT" property="isHot" />
+    <result column="hot_level" jdbcType="INTEGER" property="hotLevel" />
+    <result column="hot_valid_time" jdbcType="TIMESTAMP" property="hotValidTime" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -68,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    article_id, user_id, article_title, file_path, create_time, private_key
+    article_id, user_id, file_path, create_time, is_hot, hot_level, hot_valid_time
   </sql>
   <select id="selectByExample" parameterType="demo.article.article.pojo.po.ArticleLongSummaryExample" resultMap="BaseResultMap">
     select
@@ -101,12 +102,12 @@
     </if>
   </delete>
   <insert id="insert" parameterType="demo.article.article.pojo.po.ArticleLongSummary">
-    insert into article_long_summary (article_id, user_id, article_title, 
-      file_path, create_time, private_key
-      )
-    values (#{articleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{articleTitle,jdbcType=VARCHAR}, 
-      #{filePath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{privateKey,jdbcType=CHAR}
-      )
+    insert into article_long_summary (article_id, user_id, file_path, 
+      create_time, is_hot, hot_level, 
+      hot_valid_time)
+    values (#{articleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{filePath,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{isHot,jdbcType=BIT}, #{hotLevel,jdbcType=INTEGER}, 
+      #{hotValidTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="demo.article.article.pojo.po.ArticleLongSummary">
     insert into article_long_summary
@@ -117,17 +118,20 @@
       <if test="userId != null">
         user_id,
       </if>
-      <if test="articleTitle != null">
-        article_title,
-      </if>
       <if test="filePath != null">
         file_path,
       </if>
       <if test="createTime != null">
         create_time,
       </if>
-      <if test="privateKey != null">
-        private_key,
+      <if test="isHot != null">
+        is_hot,
+      </if>
+      <if test="hotLevel != null">
+        hot_level,
+      </if>
+      <if test="hotValidTime != null">
+        hot_valid_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -137,17 +141,20 @@
       <if test="userId != null">
         #{userId,jdbcType=BIGINT},
       </if>
-      <if test="articleTitle != null">
-        #{articleTitle,jdbcType=VARCHAR},
-      </if>
       <if test="filePath != null">
         #{filePath,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="privateKey != null">
-        #{privateKey,jdbcType=CHAR},
+      <if test="isHot != null">
+        #{isHot,jdbcType=BIT},
+      </if>
+      <if test="hotLevel != null">
+        #{hotLevel,jdbcType=INTEGER},
+      </if>
+      <if test="hotValidTime != null">
+        #{hotValidTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -166,17 +173,20 @@
       <if test="record.userId != null">
         user_id = #{record.userId,jdbcType=BIGINT},
       </if>
-      <if test="record.articleTitle != null">
-        article_title = #{record.articleTitle,jdbcType=VARCHAR},
-      </if>
       <if test="record.filePath != null">
         file_path = #{record.filePath,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.privateKey != null">
-        private_key = #{record.privateKey,jdbcType=CHAR},
+      <if test="record.isHot != null">
+        is_hot = #{record.isHot,jdbcType=BIT},
+      </if>
+      <if test="record.hotLevel != null">
+        hot_level = #{record.hotLevel,jdbcType=INTEGER},
+      </if>
+      <if test="record.hotValidTime != null">
+        hot_valid_time = #{record.hotValidTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null">
@@ -187,10 +197,11 @@
     update article_long_summary
     set article_id = #{record.articleId,jdbcType=BIGINT},
       user_id = #{record.userId,jdbcType=BIGINT},
-      article_title = #{record.articleTitle,jdbcType=VARCHAR},
       file_path = #{record.filePath,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      private_key = #{record.privateKey,jdbcType=CHAR}
+      is_hot = #{record.isHot,jdbcType=BIT},
+      hot_level = #{record.hotLevel,jdbcType=INTEGER},
+      hot_valid_time = #{record.hotValidTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -201,17 +212,20 @@
       <if test="userId != null">
         user_id = #{userId,jdbcType=BIGINT},
       </if>
-      <if test="articleTitle != null">
-        article_title = #{articleTitle,jdbcType=VARCHAR},
-      </if>
       <if test="filePath != null">
         file_path = #{filePath,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="privateKey != null">
-        private_key = #{privateKey,jdbcType=CHAR},
+      <if test="isHot != null">
+        is_hot = #{isHot,jdbcType=BIT},
+      </if>
+      <if test="hotLevel != null">
+        hot_level = #{hotLevel,jdbcType=INTEGER},
+      </if>
+      <if test="hotValidTime != null">
+        hot_valid_time = #{hotValidTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where article_id = #{articleId,jdbcType=BIGINT}
@@ -219,10 +233,11 @@
   <update id="updateByPrimaryKey" parameterType="demo.article.article.pojo.po.ArticleLongSummary">
     update article_long_summary
     set user_id = #{userId,jdbcType=BIGINT},
-      article_title = #{articleTitle,jdbcType=VARCHAR},
       file_path = #{filePath,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      private_key = #{privateKey,jdbcType=CHAR}
+      is_hot = #{isHot,jdbcType=BIT},
+      hot_level = #{hotLevel,jdbcType=INTEGER},
+      hot_valid_time = #{hotValidTime,jdbcType=TIMESTAMP}
     where article_id = #{articleId,jdbcType=BIGINT}
   </update>
   <select id="selectByExampleWithRowbounds" parameterType="demo.article.article.pojo.po.ArticleLongSummaryExample" resultMap="BaseResultMap">
@@ -239,18 +254,17 @@
       order by ${orderByClause}
     </if>
   </select>
-
+  
   
   <sql id="findArticleLongSummaryPrefix">
     select
       al.article_title as articleTitle,
       al.create_time as createTime,
       als.article_id as articleId,
-      als.private_key as privateKey,
       als.user_id,
       als.file_path as filePath
 
-    from 
+    from
       article_long as al
 
       left join article_long_summary as als
@@ -267,15 +281,12 @@
   <select id="findArticleLongSummaryList" resultType="demo.article.article.pojo.bo.ArticleLongSummaryBO">
     <include refid="findArticleLongSummaryPrefix"></include>
 
-      left join article_hot as ah
-        on al.article_id = ah.article_id
-
     <where>
-      <if test="isHot == null or isHot == false">
-        and (ah.hot_level is null or ah.valid_time &lt; now())
+      <if test="isHot != null and isHot == false">
+        and (als.is_hot = false or als.hot_valid_time &lt; now())
       </if>
       <if test="isHot != null and isHot == true">
-        and (ah.hot_level is not null and ah.valid_time &lt; now())
+        and (als.is_hot = true and als.hot_valid_time &gt; now())
       </if>
       <if test="channelIdList != null">
         and al.channel_id in
@@ -317,14 +328,12 @@
         and al.is_reject = false
       </if>
     </where>
+    order by hot_level desc
     <if test="desc != null and desc == false">
-      order by al.create_time
+      , al.create_time
     </if>
     <if test="desc == null or desc == true">
-      order by al.create_time desc
-    </if>
-    <if test="isHot != null and isHot == true">
-      order by ah.hot_level desc
+      , al.create_time desc
     </if>
     <if test="limit != null">
       limit #{limit}
@@ -334,49 +343,21 @@
     </if>
   </select>
 
-  <!-- 准备废弃 -->
   <select id="findArticleHotSummaryList" resultType="demo.article.article.pojo.bo.ArticleLongSummaryBO">
     <include refid="findArticleLongSummaryPrefix"></include>
 
-      left join article_hot as ah
-        on al.article_id = ah.article_id
-
     <where>
-      and ah.hot_level is not null
-      and ah.valid_time &gt; now()
-      and al.is_delete = false
-      <if test="channelId != null">
-        and al.channel_id = #{channelId}
+      and als.is_hot = true
+      and als.hot_valid_time &gt; now()
+      <if test="channelIdList != null">
+      and al.channel_id in
+      	<foreach close=")" collection="channelIdList" item="channelId" open="(" separator=",">
+          #{channelId}
+        </foreach>
       </if>
     </where>
 
-    order by ah.hot_level desc
+    order by als.hot_level, als.create_time desc
   </select>
-  
-  <update id="batchUpdatePrivateKey">
-    <foreach item="summary" index="index" collection="list"
-      open="" separator=";" close="">
-      update 
-        article_long_summary
-      set
-        private_key = #{summary.privateKey}
-      where
-        article_id = #{summary.articleId}
-    </foreach>
-  </update>
 
-  <select id="findArticleLongSummaryListIds" resultType="Long">
-    select
-      als.article_id
-    from
-      article_long_summary as als
-    <where>
-      <if test="startTime != null">
-        and als.create_time &gt;= #{startTime}
-      </if>
-      <if test="endTime != null">
-        and als.create_time &lt;= #{endTime}
-      </if>
-    </where>
-  </select>
 </mapper>

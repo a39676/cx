@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.user.mapper.UserIpMapper;
-import demo.base.user.pojo.dto.BatchInsertUserIpDTO;
 import demo.base.user.pojo.po.UserIp;
 import demo.common.service.CommonService;
 import demo.tool.other.mapper.VisitCountMapper;
@@ -36,78 +35,88 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 	private NumericUtilCustom numberUtil;
 	@Autowired
 	private RedisTemplate<String, Object> redisTemplate;
-	
+
+	// https://stackoverflow.com/questions/53497/regular-expression-that-matches-valid-ipv6-addresses
+	private static final String IPV6_REGEX = "(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))";
+
 	@Override
 	public void insertVisitData(HttpServletRequest request, String customInfo) {
-		UserIp ui = new UserIp();
-		JSONObject j = null;
-		IpRecordBO record = getIp(request);
-		
-		ui.setCreateTime(LocalDateTime.now());
-		ui.setIp(numberUtil.ipToLong(record.getRemoteAddr()));
-		ui.setForwardIp(numberUtil.ipToLong(record.getForwardAddr()));
-		ui.setServerName(request.getServerName());
-		if(StringUtils.isNotBlank(customInfo)) {
-			ui.setUri(request.getRequestURI() + "/?customInfo=" + customInfo);
-		} else {
-			ui.setUri(request.getRequestURI());
+		try {
+			UserIp ui = new UserIp();
+			JSONObject j = null;
+			IpRecordBO record = getIp(request);
+			
+			if(!record.getForwardAddr().matches(IPV6_REGEX) || !record.getRemoteAddr().matches(IPV6_REGEX)) {
+				log.error("Recive strange IP: " + record.toString());
+			}
+
+			ui.setCreateTime(LocalDateTime.now());
+			ui.setIp(record.getRemoteAddr());
+			ui.setForwardIp(record.getForwardAddr());
+			ui.setServerName(request.getServerName());
+			if(StringUtils.isNotBlank(customInfo)) {
+				ui.setUri(request.getRequestURI() + "/?customInfo=" + customInfo);
+			} else {
+				ui.setUri(request.getRequestURI());
+			}
+			ui.setUserId(baseUtilCustom.getUserId());
+
+			j = JSONObject.fromObject(ui);
+			j.put("createTime", localDateTimeHandler.dateToStr(ui.getCreateTime()));
+			if(ui.getUserId() == null) {
+				j.put("userId", "null");
+			}
+
+			redisTemplate.opsForList().leftPush(SystemRedisKey.VISIT_DATA_REDIS_KEY, j.toString());
+		} catch (Exception e) {
 		}
-		ui.setUserId(baseUtilCustom.getUserId());
-		
-		j = JSONObject.fromObject(ui);
-		j.put("createTime", localDateTimeHandler.dateToStr(ui.getCreateTime()));
-		if(ui.getUserId() == null) {
-			j.put("userId", "null");
-		}
-		
-		redisTemplate.opsForList().leftPush(SystemRedisKey.VISIT_DATA_REDIS_KEY, j.toString());
 	}
-	
+
 	@Override
 	public void insertVisitData(HttpServletRequest request) {
 		insertVisitData(request, null);
 	}
-	
+
 	@Override
 	public void addVisitCounting(HttpServletRequest request) {
 		IpRecordBO record = getIp(request);
-		Long l = numberUtil.ipToLong(record.getRemoteAddr());
-		if(l == 0) {
-			l = numberUtil.ipToLong(record.getForwardAddr());
+		String ip = record.getRemoteAddr();
+		if(StringUtils.isBlank(ip)) {
+			ip = record.getForwardAddr();
 		}
-		redisTemplate.opsForSet().add(SystemRedisKey.VISIT_COUNTING_REDIS_KEY, String.valueOf(l));
+		redisTemplate.opsForSet().add(SystemRedisKey.VISIT_COUNTING_REDIS_KEY, ip);
 	}
-	
+
 	@Override
 	public void visitCountRedisToOrm() {
 		Long visitSetSize = redisTemplate.opsForSet().size(SystemRedisKey.VISIT_COUNTING_REDIS_KEY);
-		
+
 		VisitCount r = new VisitCount();
 		r.setId(snowFlake.getNextId());
 		r.setCounting(visitSetSize);
 		visitCountMapper.insertSelective(r);
-		
+
 		redisTemplate.opsForSet().pop(SystemRedisKey.VISIT_COUNTING_REDIS_KEY, visitSetSize);
-		
+
 	}
-	
+
 	@Override
 	public void visitDataRedisToOrm() {
 		long size = redisTemplate.opsForList().size(SystemRedisKey.VISIT_DATA_REDIS_KEY);
 		if(size < 1) {
 			return;
 		}
-		
+
 		long maxSize = 100000;
 		if(size > maxSize) {
 			size = maxSize;
 		}
-		
-		List<UserIp> l = new ArrayList<UserIp>();
+
+		List<UserIp> poList = new ArrayList<UserIp>();
 		String str = null;
 		JSONObject j = null;
 		UserIp ui = null;
-		
+
 		for(int i = 0; i < size; i++) {
 			str = (String) redisTemplate.opsForList().rightPop(SystemRedisKey.VISIT_DATA_REDIS_KEY);
 			j = JSONObject.fromObject(str);
@@ -115,38 +124,32 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 			String cdStr = j.getString("createTime");
 			Date createDate = dateHandler.stringToDateUnkonwFormat(cdStr);
 			ui.setCreateTime(localDateTimeHandler.dateToLocalDateTime(createDate));
-			if(numberUtil.matchInteger(j.getString("forwardIp"))) {
-				ui.setForwardIp(j.getLong("forwardIp"));
-			}
-			if(numberUtil.matchInteger(j.getString("ip"))) {
-				ui.setIp(j.getLong("ip"));
-			}
+			ui.setForwardIp(j.getString("forwardIp"));
+			ui.setIp(j.getString("ip"));
 			ui.setServerName(j.getString("serverName"));
 			ui.setUri(j.getString("uri"));
 			if(numberUtil.matchInteger(j.getString("userId"))) {
 				ui.setUserId(j.getLong("userId"));
 			}
-			l.add(ui);
+			poList.add(ui);
 		}
-		
-		BatchInsertUserIpDTO dto = new BatchInsertUserIpDTO();
-		dto.setPoList(l);
-		userIpMapper.batchInsert(dto);
+
+		userIpMapper.batchInsert(poList);
 	}
-	
+
 	public Long getVisitCount(LocalDateTime startTime) {
 		Long visitSetSize = redisTemplate.opsForSet().size(SystemRedisKey.VISIT_COUNTING_REDIS_KEY);
-		
+
 		GetVisitCountTotalDTO dto = new GetVisitCountTotalDTO();
 		dto.setStartTime(startTime);
 		Long ormVisitCount = visitCountMapper.getVisitCountTotal(dto);
-		
+
 		return visitSetSize + ormVisitCount;
 	}
-	
+
 	@Override
 	public Long getVisitCount() {
 		return getVisitCount(null);
 	}
-	
+
 }

@@ -1,7 +1,7 @@
 package demo.config.costom_component;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,7 +14,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
-import demo.base.system.service.impl.SystemConstantService;
+import demo.base.system.service.impl.SystemOptionService;
 import demo.base.user.pojo.dto.UserAttemptQuerayDTO;
 import demo.base.user.pojo.po.UserAttempts;
 import demo.base.user.service.UsersService;
@@ -26,7 +26,7 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
 	private UsersService userService;
 
 	@Autowired
-	private SystemConstantService systemConstantService;
+	private SystemOptionService systemConstantService;
 	
 	@Autowired
 	@Qualifier("userDetailsService")
@@ -75,9 +75,9 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
 			param.setUserName(authentication.getName());
 			ArrayList<UserAttempts> userAttempts = userService.getUserAttempts(param);
 			if (userAttempts != null && userAttempts.size() > 0) {
-				Date lastAttempts = userAttempts.get(0).getAttemptTime();
+				LocalDateTime lastAttempts = userAttempts.get(0).getAttemptTime();
 				for (UserAttempts ua : userAttempts) {
-					if (ua.getAttemptTime().after(lastAttempts)) {
+					if (ua.getAttemptTime().isAfter(lastAttempts)) {
 						lastAttempts = ua.getAttemptTime();
 					}
 				}

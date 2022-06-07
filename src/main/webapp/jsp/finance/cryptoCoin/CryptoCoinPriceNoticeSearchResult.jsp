@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt"  prefix="fmt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
@@ -39,27 +39,27 @@
           <tr class="noticeVO" noticePK="${noticeVO.pk}">
             <td noticePK="${noticeVO.pk}" name="noticeReciver">${noticeVO.noticeReciver}</td>
             <td>
-              <input type="number" noticePK="${noticeVO.pk}" name="timeRangeOfDataWatch" 
+              <input type="number" noticePK="${noticeVO.pk}" name="timeRangeOfDataWatch"
               value="${noticeVO.timeRangeOfDataWatch}" style="width: 80px;">
               <select noticePK="${noticeVO.pk}" name="timeUnitOfDataWatch">
                 <option value="${noticeVO.timeUnitOfDataWatch}">${noticeVO.timeUnitOfDataWatchName}</option>
                 <c:forEach items="${timeUnitType}" var="timeUnitType">
-                  <option value="${timeUnitType.code}">${timeUnitType.cnName}</option>
+                  <option value="${timeUnitType.code}">${timeUnitType.cnName}${timeUnitType.name}</option>
                 </c:forEach>
               </select>
             </td>
             <td>
-              <input type="number" noticePK="${noticeVO.pk}" name="timeRangeOfNoticeInterval" 
+              <input type="number" noticePK="${noticeVO.pk}" name="timeRangeOfNoticeInterval"
               value="${noticeVO.timeRangeOfNoticeInterval}" style="width: 80px;">
               <select noticePK="${noticeVO.pk}" name="timeUnitOfNoticeInterval">
               <option value="${noticeVO.timeUnitOfNoticeInterval}">${noticeVO.timeUnitOfNoticeIntervalName} </option>
                 <c:forEach items="${timeUnitType}" var="timeUnitType">
-                  <option value="${timeUnitType.code}">${timeUnitType.cnName}</option>
+                  <option value="${timeUnitType.code}">${timeUnitType.cnName}${timeUnitType.name}</option>
                 </c:forEach>
               </select>
             </td>
             <td>
-              <input type="text" noticePK="${noticeVO.pk}" name="cryptoCoinType" 
+              <input type="text" noticePK="${noticeVO.pk}" name="cryptoCoinType"
               value="${noticeVO.cryptoCoinName}" style="width: 60px;">
               <select noticePK="${noticeVO.pk}" name="currencyCode">
                 <option value="${noticeVO.currencyCode}">${noticeVO.currencyName}</option>
@@ -69,19 +69,19 @@
               </select>
             </td>
             <td>
-              <input type="" noticePK="${noticeVO.pk}" name="maxPrice" 
+              <input type="" noticePK="${noticeVO.pk}" name="maxPrice"
               value="${noticeVO.maxPrice}" style="width: 80px;">
             </td>
             <td>
-              <input type="" noticePK="${noticeVO.pk}" name="minPrice" 
+              <input type="" noticePK="${noticeVO.pk}" name="minPrice"
               value="${noticeVO.minPrice}" style="width: 80px;">
             </td>
             <td>
-              <input type="number" noticePK="${noticeVO.pk}" name="fluctuactionSpeedPercentage" 
+              <input type="number" noticePK="${noticeVO.pk}" name="fluctuactionSpeedPercentage"
               value="${noticeVO.fluctuactionSpeedPercentage}" style="width: 50px;">
             </td>
             <td>
-              <input type="number" noticePK="${noticeVO.pk}" name="noticeCount" 
+              <input type="number" noticePK="${noticeVO.pk}" name="noticeCount"
               value="${noticeVO.noticeCount}" style="width: 80px;">
             </td>
             <td>
@@ -137,9 +137,9 @@
         };
 
 
-        $.ajax({  
-          type : "POST", 
-          url : url,  
+        $.ajax({
+          type : "POST",
+          url : url,
           data: JSON.stringify(jsonOutput),
           dataType: 'json',
           contentType: "application/json",
@@ -149,7 +149,7 @@
           timeout: 15000,
           success:function(data){
             $("#result").text(data.message);
-          }, 
+          },
           error:function(e){
             $("#result").text(e);
           }
@@ -173,9 +173,9 @@
         var fluctuactionSpeedPercentage = $("input[noticePK='"+pk+"'][name='fluctuactionSpeedPercentage']").val();
         var noticeCount = $("input[noticePK='"+pk+"'][name='noticeCount']").val();
 
-        var nextNoticeDateTime = $("input[noticePK='"+pk+"'][name='nextNoticeDate']").val() 
+        var nextNoticeDateTime = $("input[noticePK='"+pk+"'][name='nextNoticeDate']").val()
         + " " + $("input[noticePK='"+pk+"'][name='nextNoticeTime']").val();
-        var validDateTime = $("input[noticePK='"+pk+"'][name='validDate']").val() 
+        var validDateTime = $("input[noticePK='"+pk+"'][name='validDate']").val()
         + " " + $("input[noticePK='"+pk+"'][name='validTime']").val();
 
         var jsonOutput = {
@@ -194,9 +194,9 @@
           validTime : validDateTime,
         };
 
-        $.ajax({  
-          type : "POST", 
-          url : url,  
+        $.ajax({
+          type : "POST",
+          url : url,
           data: JSON.stringify(jsonOutput),
           dataType: 'json',
           contentType: "application/json",
@@ -206,7 +206,7 @@
           timeout: 15000,
           success:function(data){
             $("#result").text(data.message);
-          }, 
+          },
           error:function(e){
             $("#result").text(e);
           }

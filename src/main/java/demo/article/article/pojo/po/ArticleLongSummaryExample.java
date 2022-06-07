@@ -225,76 +225,6 @@ public class ArticleLongSummaryExample {
             return (Criteria) this;
         }
 
-        public Criteria andArticleTitleIsNull() {
-            addCriterion("article_title is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andArticleTitleIsNotNull() {
-            addCriterion("article_title is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andArticleTitleEqualTo(String value) {
-            addCriterion("article_title =", value, "articleTitle");
-            return (Criteria) this;
-        }
-
-        public Criteria andArticleTitleNotEqualTo(String value) {
-            addCriterion("article_title <>", value, "articleTitle");
-            return (Criteria) this;
-        }
-
-        public Criteria andArticleTitleGreaterThan(String value) {
-            addCriterion("article_title >", value, "articleTitle");
-            return (Criteria) this;
-        }
-
-        public Criteria andArticleTitleGreaterThanOrEqualTo(String value) {
-            addCriterion("article_title >=", value, "articleTitle");
-            return (Criteria) this;
-        }
-
-        public Criteria andArticleTitleLessThan(String value) {
-            addCriterion("article_title <", value, "articleTitle");
-            return (Criteria) this;
-        }
-
-        public Criteria andArticleTitleLessThanOrEqualTo(String value) {
-            addCriterion("article_title <=", value, "articleTitle");
-            return (Criteria) this;
-        }
-
-        public Criteria andArticleTitleLike(String value) {
-            addCriterion("article_title like", value, "articleTitle");
-            return (Criteria) this;
-        }
-
-        public Criteria andArticleTitleNotLike(String value) {
-            addCriterion("article_title not like", value, "articleTitle");
-            return (Criteria) this;
-        }
-
-        public Criteria andArticleTitleIn(List<String> values) {
-            addCriterion("article_title in", values, "articleTitle");
-            return (Criteria) this;
-        }
-
-        public Criteria andArticleTitleNotIn(List<String> values) {
-            addCriterion("article_title not in", values, "articleTitle");
-            return (Criteria) this;
-        }
-
-        public Criteria andArticleTitleBetween(String value1, String value2) {
-            addCriterion("article_title between", value1, value2, "articleTitle");
-            return (Criteria) this;
-        }
-
-        public Criteria andArticleTitleNotBetween(String value1, String value2) {
-            addCriterion("article_title not between", value1, value2, "articleTitle");
-            return (Criteria) this;
-        }
-
         public Criteria andFilePathIsNull() {
             addCriterion("file_path is null");
             return (Criteria) this;
@@ -425,73 +355,183 @@ public class ArticleLongSummaryExample {
             return (Criteria) this;
         }
 
-        public Criteria andPrivateKeyIsNull() {
-            addCriterion("private_key is null");
+        public Criteria andIsHotIsNull() {
+            addCriterion("is_hot is null");
             return (Criteria) this;
         }
 
-        public Criteria andPrivateKeyIsNotNull() {
-            addCriterion("private_key is not null");
+        public Criteria andIsHotIsNotNull() {
+            addCriterion("is_hot is not null");
             return (Criteria) this;
         }
 
-        public Criteria andPrivateKeyEqualTo(String value) {
-            addCriterion("private_key =", value, "privateKey");
+        public Criteria andIsHotEqualTo(Boolean value) {
+            addCriterion("is_hot =", value, "isHot");
             return (Criteria) this;
         }
 
-        public Criteria andPrivateKeyNotEqualTo(String value) {
-            addCriterion("private_key <>", value, "privateKey");
+        public Criteria andIsHotNotEqualTo(Boolean value) {
+            addCriterion("is_hot <>", value, "isHot");
             return (Criteria) this;
         }
 
-        public Criteria andPrivateKeyGreaterThan(String value) {
-            addCriterion("private_key >", value, "privateKey");
+        public Criteria andIsHotGreaterThan(Boolean value) {
+            addCriterion("is_hot >", value, "isHot");
             return (Criteria) this;
         }
 
-        public Criteria andPrivateKeyGreaterThanOrEqualTo(String value) {
-            addCriterion("private_key >=", value, "privateKey");
+        public Criteria andIsHotGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_hot >=", value, "isHot");
             return (Criteria) this;
         }
 
-        public Criteria andPrivateKeyLessThan(String value) {
-            addCriterion("private_key <", value, "privateKey");
+        public Criteria andIsHotLessThan(Boolean value) {
+            addCriterion("is_hot <", value, "isHot");
             return (Criteria) this;
         }
 
-        public Criteria andPrivateKeyLessThanOrEqualTo(String value) {
-            addCriterion("private_key <=", value, "privateKey");
+        public Criteria andIsHotLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_hot <=", value, "isHot");
             return (Criteria) this;
         }
 
-        public Criteria andPrivateKeyLike(String value) {
-            addCriterion("private_key like", value, "privateKey");
+        public Criteria andIsHotIn(List<Boolean> values) {
+            addCriterion("is_hot in", values, "isHot");
             return (Criteria) this;
         }
 
-        public Criteria andPrivateKeyNotLike(String value) {
-            addCriterion("private_key not like", value, "privateKey");
+        public Criteria andIsHotNotIn(List<Boolean> values) {
+            addCriterion("is_hot not in", values, "isHot");
             return (Criteria) this;
         }
 
-        public Criteria andPrivateKeyIn(List<String> values) {
-            addCriterion("private_key in", values, "privateKey");
+        public Criteria andIsHotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_hot between", value1, value2, "isHot");
             return (Criteria) this;
         }
 
-        public Criteria andPrivateKeyNotIn(List<String> values) {
-            addCriterion("private_key not in", values, "privateKey");
+        public Criteria andIsHotNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_hot not between", value1, value2, "isHot");
             return (Criteria) this;
         }
 
-        public Criteria andPrivateKeyBetween(String value1, String value2) {
-            addCriterion("private_key between", value1, value2, "privateKey");
+        public Criteria andHotLevelIsNull() {
+            addCriterion("hot_level is null");
             return (Criteria) this;
         }
 
-        public Criteria andPrivateKeyNotBetween(String value1, String value2) {
-            addCriterion("private_key not between", value1, value2, "privateKey");
+        public Criteria andHotLevelIsNotNull() {
+            addCriterion("hot_level is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotLevelEqualTo(Integer value) {
+            addCriterion("hot_level =", value, "hotLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotLevelNotEqualTo(Integer value) {
+            addCriterion("hot_level <>", value, "hotLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotLevelGreaterThan(Integer value) {
+            addCriterion("hot_level >", value, "hotLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotLevelGreaterThanOrEqualTo(Integer value) {
+            addCriterion("hot_level >=", value, "hotLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotLevelLessThan(Integer value) {
+            addCriterion("hot_level <", value, "hotLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotLevelLessThanOrEqualTo(Integer value) {
+            addCriterion("hot_level <=", value, "hotLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotLevelIn(List<Integer> values) {
+            addCriterion("hot_level in", values, "hotLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotLevelNotIn(List<Integer> values) {
+            addCriterion("hot_level not in", values, "hotLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotLevelBetween(Integer value1, Integer value2) {
+            addCriterion("hot_level between", value1, value2, "hotLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotLevelNotBetween(Integer value1, Integer value2) {
+            addCriterion("hot_level not between", value1, value2, "hotLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotValidTimeIsNull() {
+            addCriterion("hot_valid_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotValidTimeIsNotNull() {
+            addCriterion("hot_valid_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotValidTimeEqualTo(LocalDateTime value) {
+            addCriterion("hot_valid_time =", value, "hotValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotValidTimeNotEqualTo(LocalDateTime value) {
+            addCriterion("hot_valid_time <>", value, "hotValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotValidTimeGreaterThan(LocalDateTime value) {
+            addCriterion("hot_valid_time >", value, "hotValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotValidTimeGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("hot_valid_time >=", value, "hotValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotValidTimeLessThan(LocalDateTime value) {
+            addCriterion("hot_valid_time <", value, "hotValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotValidTimeLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("hot_valid_time <=", value, "hotValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotValidTimeIn(List<LocalDateTime> values) {
+            addCriterion("hot_valid_time in", values, "hotValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotValidTimeNotIn(List<LocalDateTime> values) {
+            addCriterion("hot_valid_time not in", values, "hotValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotValidTimeBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("hot_valid_time between", value1, value2, "hotValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotValidTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("hot_valid_time not between", value1, value2, "hotValidTime");
             return (Criteria) this;
         }
     }

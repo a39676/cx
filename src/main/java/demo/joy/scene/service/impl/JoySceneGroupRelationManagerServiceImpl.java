@@ -45,8 +45,8 @@ public class JoySceneGroupRelationManagerServiceImpl extends JoyCommonService im
 			return r;
 		}
 		
-		Long sceneGroupId = decryptPrivateKey(dto.getSceneGroupPK());
-		Long sceneId = decryptPrivateKey(dto.getScenePK());
+		Long sceneGroupId = systemOptionService.decryptPrivateKey(dto.getSceneGroupPK());
+		Long sceneId = systemOptionService.decryptPrivateKey(dto.getScenePK());
 		
 		if(sceneGroupId == null || sceneId == null) {
 			r.failWithMessage("error param");
@@ -77,8 +77,8 @@ public class JoySceneGroupRelationManagerServiceImpl extends JoyCommonService im
 			return r;
 		}
 		
-		Long sceneGroupId = decryptPrivateKey(dto.getSceneGroupPK());
-		Long sceneId = decryptPrivateKey(dto.getScenePK());
+		Long sceneGroupId = systemOptionService.decryptPrivateKey(dto.getSceneGroupPK());
+		Long sceneId = systemOptionService.decryptPrivateKey(dto.getScenePK());
 		
 		if(sceneGroupId == null || sceneId == null) {
 			r.failWithMessage("error param");

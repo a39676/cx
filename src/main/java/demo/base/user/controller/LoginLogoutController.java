@@ -29,10 +29,10 @@ import net.sf.json.JSONObject;
  * login and logout
  */
 @Controller
-@RequestMapping(value = LoginUrlConstant.login)
+@RequestMapping(value = LoginUrlConstant.LOGIN)
 public class LoginLogoutController extends CommonController {
 	
-	@GetMapping(value = LoginUrlConstant.login)
+	@GetMapping(value = LoginUrlConstant.LOGIN)
 	public ModelAndView login(
 		@RequestParam(value = "error", required = false) String error,
 		@RequestParam(value = "logout", required = false) String logout,
@@ -71,12 +71,17 @@ public class LoginLogoutController extends CommonController {
 
 	}
 	
-	@GetMapping(value = LoginUrlConstant.loginSingle)
+	@GetMapping(value = LoginUrlConstant.LOGIN_SINGLE)
 	public ModelAndView loginSingle() {
 		return new ModelAndView(BaseViewConstant.loginSingle);
 	}
 	
-	@GetMapping(value = LoginUrlConstant.logout)
+	@GetMapping(value = LoginUrlConstant.LOGIN_FOR_STUDENT)
+	public ModelAndView loginForStudent() {
+		return new ModelAndView(BaseViewConstant.LOGIN_V2);
+	}
+	
+	@GetMapping(value = LoginUrlConstant.LOGOUT)
 	public void logout (HttpServletRequest request, HttpServletResponse response) {
 	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 	    if (auth != null){    

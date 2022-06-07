@@ -18,9 +18,7 @@ import demo.article.article.pojo.dto.ReadyToEditArticleLongDTO;
 import demo.article.article.pojo.param.controllerParam.CreateArticleParam;
 import demo.article.article.pojo.param.controllerParam.CreatingArticleParam;
 import demo.article.article.pojo.param.controllerParam.FindArticleLongByArticleSummaryPrivateKeyDTO;
-import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.article.pojo.result.jsonRespon.FindArticleLongResult;
-import demo.common.pojo.result.CommonResultCX;
 
 public interface ArticleService {
 
@@ -58,21 +56,8 @@ public interface ArticleService {
 	/** 编辑文章 */
 	ModelAndView readyToEditArticleLong(ReadyToEditArticleLongDTO dto);
 
-	/**
-	 * 用于保存新建/编辑的文章,
-	 * 在编辑情况下, creatorId 是编辑者ID, 不一定是原作者ID, 用于命名文件名
-	 * @param storePrefixPath
-	 * @param creatorId
-	 * @param content
-	 * @return
-	 * @throws IOException
-	 */
-	ArticleFileSaveResult saveArticleFile(String storePrefixPath, Long creatorId, String content) throws IOException;
-
-	CommonResultCX editArticleLongHandler(EditArticleLongDTO dto) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, IOException;
+	CommonResult editArticleLongHandler(EditArticleLongDTO dto) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, IOException;
 
 	ModelAndView readArticleLong(String pk, HttpServletRequest request);
-
-	String imgSrcHandler(String src);
 
 }

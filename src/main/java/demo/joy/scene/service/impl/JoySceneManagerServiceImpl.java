@@ -80,7 +80,7 @@ public class JoySceneManagerServiceImpl extends JoyCommonService implements JoyS
 			return r;
 		}
 
-		Long sceneId = decryptPrivateKey(dto.getScenePK());
+		Long sceneId = systemOptionService.decryptPrivateKey(dto.getScenePK());
 		if (sceneId == null) {
 			r.failWithMessage("参数异常");
 			return r;
@@ -102,7 +102,7 @@ public class JoySceneManagerServiceImpl extends JoyCommonService implements JoyS
 	private JoySceneOperationDTOValidResult validDeleteSceneDTO(JoySceneOperationDTO dto) {
 		JoySceneOperationDTOValidResult r = new JoySceneOperationDTOValidResult();
 
-		Long sceneId = decryptPrivateKey(dto.getScenePK());
+		Long sceneId = systemOptionService.decryptPrivateKey(dto.getScenePK());
 		if (sceneId == null) {
 			r.failWithMessage("参数异常");
 			return r;

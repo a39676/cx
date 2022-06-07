@@ -1,9 +1,9 @@
 package demo.finance.account_holder.pojo.po;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class AccountHolder {
-    private Long accountHolderId;
+    private Long id;
 
     private Long userId;
 
@@ -11,16 +11,16 @@ public class AccountHolder {
 
     private String gender;
 
-    private Date birth;
+    private LocalDate birth;
 
     private Long mobileNumber;
 
-    public Long getAccountHolderId() {
-        return accountHolderId;
+    public Long getId() {
+        return id;
     }
 
-    public void setAccountHolderId(Long accountHolderId) {
-        this.accountHolderId = accountHolderId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getUserId() {
@@ -47,11 +47,11 @@ public class AccountHolder {
         this.gender = gender == null ? null : gender.trim();
     }
 
-    public Date getBirth() {
+    public LocalDate getBirth() {
         return birth;
     }
 
-    public void setBirth(Date birth) {
+    public void setBirth(LocalDate birth) {
         this.birth = birth;
     }
 
@@ -62,13 +62,4 @@ public class AccountHolder {
     public void setMobileNumber(Long mobileNumber) {
         this.mobileNumber = mobileNumber;
     }
-
-	@Override
-	public String toString() {
-		return "AccountHolder [accountHolderId=" + accountHolderId + ", userId=" + userId + ", accountHolderName="
-				+ accountHolderName + ", gender=" + gender + ", birth=" + birth + ", mobileNumber=" + mobileNumber
-				+ "]";
-	}
-    
-    
 }

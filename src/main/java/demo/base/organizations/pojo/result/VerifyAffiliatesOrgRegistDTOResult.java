@@ -1,8 +1,8 @@
 package demo.base.organizations.pojo.result;
 
-import demo.common.pojo.result.CommonResultCX;
+import auxiliaryCommon.pojo.result.CommonResult;
 
-public class VerifyAffiliatesOrgRegistDTOResult extends CommonResultCX {
+public class VerifyAffiliatesOrgRegistDTOResult extends CommonResult {
 
 	private Long topOrgId;
 	private Long belongToOrgId;

@@ -16,9 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
-import demo.article.article.service.ArticleService;
 import demo.article.article.service.impl.ArticleCommonService;
-import demo.common.pojo.type.ResultTypeCX;
 import demo.pmemo.mapper.PNoteMapper;
 import demo.pmemo.pojo.constant.PMemoConstant;
 import demo.pmemo.pojo.dto.EditPNoteDTO;
@@ -33,8 +31,6 @@ public class PNoteServiceImpl extends ArticleCommonService implements PNoteServi
 
 	@Autowired
 	private PNoteMapper noteMapper;
-	@Autowired
-	private ArticleService articleService;
 	@Autowired
 	private FileUtilCustom ioUtil;
 
@@ -88,7 +84,7 @@ public class PNoteServiceImpl extends ArticleCommonService implements PNoteServi
 		File mainFolder = new File(storePrefixPath);
 		if (!mainFolder.exists()) {
 			if (!mainFolder.mkdirs()) {
-				result.fillWithResult(ResultTypeCX.serviceError);
+				result.setMessage("Service error");
 				return result;
 			}
 		}
@@ -97,7 +93,7 @@ public class PNoteServiceImpl extends ArticleCommonService implements PNoteServi
 		Elements imgs = doc.select("img[src]");
 		/* 解决如果文章内有本地上传的图片, 转到服务器硬盘保存, 并提供 url 访问, */
 		for (Element s : imgs) {
-			s.attr("src", articleService.imgSrcHandler(s.attr("src")));
+			s.attr("src", imgSrcHandler(s.attr("src")));
 		}
 
 		content = doc.toString();

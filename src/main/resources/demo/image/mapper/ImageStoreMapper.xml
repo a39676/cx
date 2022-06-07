@@ -6,8 +6,6 @@
     <result column="image_url" jdbcType="VARCHAR" property="imageUrl" />
     <result column="image_name" jdbcType="VARCHAR" property="imageName" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="backup_time" jdbcType="TIMESTAMP" property="backupTime" />
-    <result column="md5_mark" jdbcType="CHAR" property="md5Mark" />
     <result column="valid_time" jdbcType="TIMESTAMP" property="validTime" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -69,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    image_id, image_url, image_name, create_time, backup_time, md5_mark, valid_time
+    image_id, image_url, image_name, create_time, valid_time
   </sql>
   <select id="selectByExample" parameterType="demo.image.pojo.po.ImageStoreExample" resultMap="BaseResultMap">
     select
@@ -103,11 +101,9 @@
   </delete>
   <insert id="insert" parameterType="demo.image.pojo.po.ImageStore">
     insert into image_store (image_id, image_url, image_name, 
-      create_time, backup_time, md5_mark, 
-      valid_time)
+      create_time, valid_time)
     values (#{imageId,jdbcType=BIGINT}, #{imageUrl,jdbcType=VARCHAR}, #{imageName,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{backupTime,jdbcType=TIMESTAMP}, #{md5Mark,jdbcType=CHAR}, 
-      #{validTime,jdbcType=TIMESTAMP})
+      #{createTime,jdbcType=TIMESTAMP}, #{validTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="demo.image.pojo.po.ImageStore">
     insert into image_store
@@ -123,12 +119,6 @@
       </if>
       <if test="createTime != null">
         create_time,
-      </if>
-      <if test="backupTime != null">
-        backup_time,
-      </if>
-      <if test="md5Mark != null">
-        md5_mark,
       </if>
       <if test="validTime != null">
         valid_time,
@@ -146,12 +136,6 @@
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="backupTime != null">
-        #{backupTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="md5Mark != null">
-        #{md5Mark,jdbcType=CHAR},
       </if>
       <if test="validTime != null">
         #{validTime,jdbcType=TIMESTAMP},
@@ -179,12 +163,6 @@
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.backupTime != null">
-        backup_time = #{record.backupTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.md5Mark != null">
-        md5_mark = #{record.md5Mark,jdbcType=CHAR},
-      </if>
       <if test="record.validTime != null">
         valid_time = #{record.validTime,jdbcType=TIMESTAMP},
       </if>
@@ -199,8 +177,6 @@
       image_url = #{record.imageUrl,jdbcType=VARCHAR},
       image_name = #{record.imageName,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      backup_time = #{record.backupTime,jdbcType=TIMESTAMP},
-      md5_mark = #{record.md5Mark,jdbcType=CHAR},
       valid_time = #{record.validTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -218,12 +194,6 @@
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="backupTime != null">
-        backup_time = #{backupTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="md5Mark != null">
-        md5_mark = #{md5Mark,jdbcType=CHAR},
-      </if>
       <if test="validTime != null">
         valid_time = #{validTime,jdbcType=TIMESTAMP},
       </if>
@@ -235,9 +205,21 @@
     set image_url = #{imageUrl,jdbcType=VARCHAR},
       image_name = #{imageName,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      backup_time = #{backupTime,jdbcType=TIMESTAMP},
-      md5_mark = #{md5Mark,jdbcType=CHAR},
       valid_time = #{validTime,jdbcType=TIMESTAMP}
     where image_id = #{imageId,jdbcType=BIGINT}
   </update>
+  <select id="selectByExampleWithRowbounds" parameterType="demo.image.pojo.po.ImageStoreExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from image_store
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
 </mapper>

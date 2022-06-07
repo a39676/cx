@@ -92,8 +92,7 @@ public class CryptoCoinManagerController extends CommonController {
 	@GetMapping(value = CryptoCoinManagerUrl.RESTART_BINANCE_WEB_SOCKET)
 	@ResponseBody
 	public String restartBinanceWS() {
-		binanceWSClient.wsDestory();
-		binanceWSClient.startWebSocket();
+		binanceWSClient.restartWebSocket();
 		return "done";
 	}
 	

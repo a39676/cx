@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt"  prefix="fmt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
@@ -46,7 +46,7 @@
   <input type="text" id="timeRangeOfDataWatch" placeholder="监控数据时间范围">
   <select id="timeUnitOfDataWatch">
     <c:forEach items="${timeUnitType}" var="timeUnitType">
-      <option value="${timeUnitType.code}">${timeUnitType.cnName}</option>
+      <option value="${timeUnitType.code}">${timeUnitType.cnName}${timeUnitType.name}</option>
     </c:forEach>
   </select>
   <input type="text" id="fluctuationSpeedPercentage" placeholder="升速/跌速范围(%)">
@@ -56,7 +56,7 @@
   <input type="text" id="timeRangeOfNoticeInterval" placeholder="提示时间间隔设置">
   <select id="timeUnitOfNoticeInterval">
     <c:forEach items="${timeUnitType}" var="timeUnitType">
-      <option value="${timeUnitType.code}">${timeUnitType.cnName}</option>
+      <option value="${timeUnitType.code}">${timeUnitType.cnName}${timeUnitType.name}</option>
     </c:forEach>
   </select>
 </div>
@@ -226,8 +226,6 @@
           cryptoCoinType : cryptoCoinType,
           currencyCode : currencyCode,
         };
-
-        console.log(jsonOutput);
 
         $.ajax({
           type : "POST",

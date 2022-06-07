@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
-import demo.common.pojo.result.CommonResultCX;
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.metal.mapper.MetalPriceNoticeMapper;
 import demo.finance.metal.pojo.dto.InsertNewMetalPriceNoticeSettingDTO;
 import demo.finance.metal.pojo.po.MetalPrice;
@@ -25,7 +25,7 @@ public class PreciousMetalNoticeServiceImpl extends PreciousMetalCommonService i
 
 	@Autowired
 	private MetalPriceNoticeMapper metalPriceNoticeMapper;
-	
+
 	@Override
 	public void noticeHandler() {
 		List<MetalPriceNotice> noticeList = metalPriceNoticeMapper.selectValidNoticeSetting(LocalDateTime.now());
@@ -89,8 +89,9 @@ public class PreciousMetalNoticeServiceImpl extends PreciousMetalCommonService i
 
 		if (noticeFlag) {
 			/*
-			 * TODO 2021-01-04 准备迁移到 telegram 通知
-			 * 请参照 CryptoCoinCommonNoticeServiceImp.subNoticeHandler((CryptoCoinPriceNotice noticeSetting))
+			 * TODO 2021-01-04 准备迁移到 telegram 通知 请参照
+			 * CryptoCoinCommonNoticeServiceImp.subNoticeHandler((CryptoCoinPriceNotice
+			 * noticeSetting))
 			 */
 //			if (!validRegexToolService.validEmail(noticeSetting.getEmail())) {
 //				return;
@@ -109,8 +110,8 @@ public class PreciousMetalNoticeServiceImpl extends PreciousMetalCommonService i
 	}
 
 	@Override
-	public CommonResultCX insertNewMetalPriceNoticeSetting(InsertNewMetalPriceNoticeSettingDTO dto) {
-		CommonResultCX r = new CommonResultCX();
+	public CommonResult insertNewMetalPriceNoticeSetting(InsertNewMetalPriceNoticeSettingDTO dto) {
+		CommonResult r = new CommonResult();
 
 		MetalPriceNotice newPO = new MetalPriceNotice();
 		MetalType metalType = MetalType.getType(dto.getMetalType());

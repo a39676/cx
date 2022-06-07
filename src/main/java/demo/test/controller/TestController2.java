@@ -1,43 +1,32 @@
 package demo.test.controller;
 
-import java.time.LocalDateTime;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import demo.common.controller.CommonController;
 import demo.test.pojo.constant.TestUrl;
-import demo.test.pojo.dto.TestDTO;
-import net.sf.json.JSONObject;
+import demo.test.service.TestService2;
 
 @Controller
 @RequestMapping(value = { TestUrl.root2 })
 public class TestController2 extends CommonController {
 
-	@GetMapping(value = "/test")
-	@ResponseBody
-	public String test() {
-		TestDTO t = new TestDTO();
-		t.setDatetime(LocalDateTime.now());
-		return t.toString();
+	@Autowired
+	private TestService2 testService2;
+
+	@GetMapping(value = "/t1")
+	public ModelAndView testView() {
+		return testService2.testView();
 	}
 
-	@GetMapping(value = "/test2")
+	@GetMapping(value = "/demo")
 	@ResponseBody
-	public String test2() {
-		TestDTO t = new TestDTO();
-		t.setDatetime(LocalDateTime.now());
-		JSONObject j = JSONObject.fromObject(t);
-		t = (TestDTO) JSONObject.toBean(j, TestDTO.class);
-		return j.toString();
-	}
-
-	@GetMapping(value = "/test3")
-	@ResponseBody
-	public String test3() {
-		return "done";
+	public String demo() {
+		return "{\"k\":\"v\"}";
 	}
 
 }

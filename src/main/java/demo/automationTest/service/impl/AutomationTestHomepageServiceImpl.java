@@ -58,7 +58,7 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 			return new ModelAndView("ATDemoJSP/atDemoLink");	
 		}
 		
-		if(isInZhang3OrDev(request)) {
+		if(systemOptionService.isDev() || hostnameService.isMainHostname(request)) {
 			return new ModelAndView("ATDemoJSP/atDemoLink");
 		}
 		
@@ -96,23 +96,15 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 //			dto.setModuleId(TestModuleType.ATDemo.getId());
 //		}
 		
+		dto.setModuleId(TestModuleType.ATDemo.getId());
+		
 		List<TestEvent> poList = reportService.findReportPage(dto);
 		List<TestReportSummaryVO> voList = new ArrayList<>();
 		
 		for(TestEvent po : poList ) {
-			voList.add(buildReportSummaryVO(po));
+			voList.add(reportService.buildReportSummaryVO(po));
 		}
 		return voList;
-	}
-	
-	private TestReportSummaryVO buildReportSummaryVO(TestEvent po){
-		TestReportSummaryVO vo = new TestReportSummaryVO();
-		vo.setIdStr(po.getId().toString());
-		vo.setFlowName(po.getFlowName());
-		vo.setStartTime(po.getStartTime());
-		vo.setEndTime(po.getEndTime());
-		vo.setCreateTime(po.getCreateTime());
-		return vo;
 	}
 
 	@Override
@@ -214,7 +206,7 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 
 				String reportStr = ioUtil.getStringFromFile(po.getReportPath());
 				JSONObject jsonReport = JSONObject.fromObject(reportStr);
-				JsonReportOfFlowDTO reportDTO = reportService.buildReportFromDatabase(jsonReport);
+				JsonReportOfFlowDTO reportDTO = buildObjFromJsonCustomization(jsonReport.toString(), JsonReportOfFlowDTO.class);
 				
 				vo.setCaseReportList(reportDTO.getCaseReportList());
 				
@@ -236,9 +228,9 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 			HttpServletRequest request) {
 		InsertSearchingDemoEventResult r = new InsertSearchingDemoEventResult();
 		
-		int count = redisConnectService.checkFunctionalModuleVisitData(request, SystemRedisKey.searchingDemoInsertCountingKeyPrefix);
+		int count = redisOriginalConnectService.checkFunctionalModuleVisitData(request, SystemRedisKey.searchingDemoInsertCountingKeyPrefix);
 
-		if(!isBigUser() && !isDev()) {
+		if(!isBigUser() && !systemOptionService.isDev()) {
 			if (count >= SearchingDemoConstant.maxInsertCountIn30Minutes) {
 				r.failWithMessage("短时间内加入的任务太多了, 请稍后再试");
 				return r;
@@ -262,7 +254,7 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 			}
 			r.setEventId(insertEventDTO.getTestEventId());
 			r.setIsSuccess();
-			redisConnectService.insertFunctionalModuleVisitData(request, SystemRedisKey.searchingDemoInsertCountingKeyPrefix);
+			redisOriginalConnectService.insertFunctionalModuleVisitData(request, SystemRedisKey.searchingDemoInsertCountingKeyPrefix);
 			r.setHasInsertCount(count + 1);
 			r.setMaxInsertCount(SearchingDemoConstant.maxInsertCountIn30Minutes);
 			r.setMessage(AutoTestUrl.root + AutoTestInteractionUrl.FIND_REPORT_BY_TEST_EVENT_ID + "?testEventId=" + r.getEventId());

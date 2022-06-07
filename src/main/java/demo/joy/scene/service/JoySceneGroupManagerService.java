@@ -13,4 +13,6 @@ public interface JoySceneGroupManagerService {
 
 	FindSceneGroupVOResult findSceneGroupVOListByCondition(FindSceneGroupByConditionDTO dto);
 
+	FindSceneGroupVOResult findAllSceneGroupVOList();
+
 }

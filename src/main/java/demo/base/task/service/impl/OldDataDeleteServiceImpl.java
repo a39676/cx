@@ -8,6 +8,7 @@ import demo.article.article.service.ArticleBurnService;
 import demo.image.service.ImageService;
 import demo.interaction.image.service.ImageInteractionService;
 import demo.tool.ocr.service.OcrService;
+import demo.toyParts.educate.service.EducateTaskService;
 
 @Component
 public class OldDataDeleteServiceImpl {
@@ -20,6 +21,8 @@ public class OldDataDeleteServiceImpl {
 	private ImageService imgService;
 	@Autowired
 	private OcrService ocrService;
+	@Autowired
+	private EducateTaskService educateTaskService;
 
 	/** 清理时间过长的, cloudinary上的 自动测试报告图片. */
 	@Scheduled(cron = "19 25 03 * * *")
@@ -38,6 +41,12 @@ public class OldDataDeleteServiceImpl {
 	public void imageClean() {
 		imgService.imageClean();
 		ocrService.cleanOldOcrImg();
+	}
+	
+	/** Delete old exercies file */
+	@Scheduled(cron = "24 45 03 * * *")
+	public void deleteOldExerciesFile() {
+		educateTaskService.deleteOldExerciesFile();
 	}
 
 }

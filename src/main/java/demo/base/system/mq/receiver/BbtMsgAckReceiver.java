@@ -14,9 +14,9 @@ import com.rabbitmq.client.Channel;
 import auxiliaryCommon.pojo.constant.ServiceMQConstant;
 import auxiliaryCommon.pojo.dto.ServiceMsgDTO;
 import demo.common.service.CommonService;
-import demo.tool.telegram.pojo.constant.TelegramStaticChatID;
 import demo.tool.telegram.service.TelegramService;
 import telegram.pojo.constant.TelegramBotType;
+import telegram.pojo.constant.TelegramStaticChatID;
 
 @Component
 @RabbitListener(queues = ServiceMQConstant.BBT_SEND_MESSAGE_QUEUE)

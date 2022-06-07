@@ -41,10 +41,10 @@
     <button class="btn  btn-warning btn-sm" name="loginSubmit">
       <span class="badge badge-warning">[登录]</span>
     </button>        
-    <button class="loginCustomButton btn btn-warning btn-sm" name="userRegist" url="${pageContext.request.contextPath}/user/userRegist">
+    <button class="loginCustomButton btn btn-warning btn-sm" name="userRegist" url="/user/userRegist">
       <span class="badge badge-warning">[注册]</span>
     </button>
-    <button class="loginCustomButton btn btn-warning btn-sm" name="forgotPassword" url="${pageContext.request.contextPath}/user/forgotPasswordOrUsername">
+    <button class="loginCustomButton btn btn-warning btn-sm" name="forgotPassword" url="/user/forgotPasswordOrUsername">
       <span class="badge badge-warning">[忘记密码/用户名]</span>
     </button>
 
@@ -62,7 +62,7 @@ $(document).ready(function() {
 
   $("button[name='loginSubmit']").click(function () {
 
-    var loginUrl = "${pageContext.request.contextPath}/auth/login_check";
+    var loginUrl = "/auth/login_check";
     var userName = $("input[name='user_name']").val();
     var pwd = $("input[name='pwd']").val();
 

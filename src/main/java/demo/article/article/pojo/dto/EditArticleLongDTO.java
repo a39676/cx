@@ -1,11 +1,14 @@
 package demo.article.article.pojo.dto;
 
+import java.time.LocalDateTime;
+
 public class EditArticleLongDTO {
 
 	private String pk;
 	private String channelId;
 	private String title;
 	private String content;
+	private LocalDateTime validTime;
 
 	public String getPk() {
 		return pk;
@@ -39,10 +42,18 @@ public class EditArticleLongDTO {
 		this.content = content;
 	}
 
+	public LocalDateTime getValidTime() {
+		return validTime;
+	}
+
+	public void setValidTime(LocalDateTime validTime) {
+		this.validTime = validTime;
+	}
+
 	@Override
 	public String toString() {
 		return "EditArticleLongDTO [pk=" + pk + ", channelId=" + channelId + ", title=" + title + ", content=" + content
-				+ "]";
+				+ ", validTime=" + validTime + "]";
 	}
 
 }

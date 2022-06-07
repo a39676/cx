@@ -1,5 +1,33 @@
 挖好的坑
 
+游戏数据 尤其是用户数据 应该以内存数据为主
+  定期持久化
+  有更新时 先更新 map -> database
+  服务器关闭前持久化
+  	
+garden
+	plant catalog & plant stage set cache map?
+	
+	收获 joy_garden_plant_gain_catalog
+		收获管理 另建页面 新建 管理
+	植物 joy_garden_plant_catalog
+	
+	创建 / 修改 plant stage 的时候
+		如果已经设置 gain 需要同步修改
+		
+	用户-garden
+  		graden name
+  		田地数量上限
+  		水盆数量上限
+  		林地数量上限
+
+	用户-仓库
+  		货币数量
+  		种子库
+  		收获库
+  
+	garden-种植地 (地形属性)
+
 场景
 	进入"私有" 场景
 		未实现

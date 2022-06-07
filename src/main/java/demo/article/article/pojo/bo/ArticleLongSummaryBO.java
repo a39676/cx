@@ -8,6 +8,8 @@ public class ArticleLongSummaryBO extends ArticleLongSummary {
 
 	private Long articleId;
 
+	private String articleTitle;
+
 	private Long userId;
 
 	private List<String> imgUrls;
@@ -56,10 +58,18 @@ public class ArticleLongSummaryBO extends ArticleLongSummary {
 		this.articleId = articleId;
 	}
 
+	public String getArticleTitle() {
+		return articleTitle;
+	}
+
+	public void setArticleTitle(String articleTitle) {
+		this.articleTitle = articleTitle;
+	}
+
 	@Override
 	public String toString() {
-		return "ArticleLongSummaryBO [articleId=" + articleId + ", userId=" + userId + ", imgUrls=" + imgUrls
-				+ ", firstLine=" + firstLine + ", createDateString=" + createDateString + "]";
+		return "ArticleLongSummaryBO [articleId=" + articleId + ", articleTitle=" + articleTitle + ", userId=" + userId
+				+ ", imgUrls=" + imgUrls + ", firstLine=" + firstLine + ", createDateString=" + createDateString + "]";
 	}
 
 }

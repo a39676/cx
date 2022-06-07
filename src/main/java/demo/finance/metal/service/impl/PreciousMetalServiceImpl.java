@@ -7,7 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.common.pojo.result.CommonResultCX;
 import demo.finance.metal.pojo.constant.MetalConstant;
 import demo.finance.metal.pojo.po.MetalPrice;
 import demo.finance.metal.pojo.po.MetalPriceExample;
@@ -61,8 +60,8 @@ public class PreciousMetalServiceImpl extends PreciousMetalCommonService impleme
 	}
 
 	@Override
-	public CommonResultCX deleteExpiredCacheData() {
-		CommonResultCX r = new CommonResultCX();
+	public CommonResult deleteExpiredCacheData() {
+		CommonResult r = new CommonResult();
 
 		LocalDateTime expriedTime = LocalDateTime.now().minusHours(MetalConstant.METAL_PRICE_CACHE_DATA_LIVE_HOURS);
 

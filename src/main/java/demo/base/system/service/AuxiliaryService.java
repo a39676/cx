@@ -5,6 +5,6 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface AuxiliaryService {
 
-	void robotTxtHandle(HttpServletRequest request, HttpServletResponse response);
+	void robotHandle(HttpServletRequest request, HttpServletResponse response);
 
 }

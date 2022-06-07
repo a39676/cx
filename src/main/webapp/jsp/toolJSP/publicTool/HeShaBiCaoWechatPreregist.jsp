@@ -118,7 +118,7 @@
       });
 
       function insertTask() {
-        var url = "/publicTool/hsbc/hsbcWechatPreregist";
+        var url = "/publicTool/heShaBiCao/heShaBiCaoWechatPreregist";
 
         var idType = $("#idTypeSelector option:selected").val();
         var areaType = $("#areaTypeSelector option:selected").val();
@@ -172,7 +172,7 @@
       });
 
       function findReportSummary() {
-        var url = "/publicTool/hsbc/getReportSummaryPage";
+        var url = "/publicTool/heShaBiCao/getReportSummaryPage";
 
         var apkDownloadPassword = $("#apkDownloadPassword").val();
 

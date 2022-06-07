@@ -54,7 +54,6 @@
       });
 
       function plantSearchWithPage(isNextPage) {
-        console.log("shop page");
         var url = "/joy/garden/shop/plantSearchView";
 
         var jsonOutput = {
@@ -66,8 +65,6 @@
         } else {
           jsonOutput["startPK"] = "${startPK}";
         }
-
-        console.log(jsonOutput);
 
         $.ajax({
           type : "POST",

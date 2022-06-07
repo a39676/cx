@@ -9,31 +9,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import autoTest.testEvent.searchingDemo.pojo.dto.HsbcWechatPreregistDTO;
+import autoTest.testEvent.searchingDemo.pojo.dto.HeShaBiCaoWechatPreregistDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.controller.CommonController;
-import demo.tool.bbtOrder.hsbc.service.HsbcService;
+import demo.tool.bbtOrder.heShaBiCao.service.HeShaBiCaoService;
 
 @RequestMapping(value = "/publicTool")
 @Controller
 public class PublicToolController extends CommonController {
 
 	@Autowired
-	private HsbcService hsbcService;
+	private HeShaBiCaoService heShaBiCaoService;
 	
-	@GetMapping(value = "/hsbc/hsbcWechatPreregist")
-	public ModelAndView hsbcWechatPreregistView() {
-		return hsbcService.hsbcWechatPreregistView();
+	@GetMapping(value = "/heShaBiCao/heShaBiCaoWechatPreregist")
+	public ModelAndView heShaBiCaoWechatPreregistView() {
+		return heShaBiCaoService.heShaBiCaoWechatPreregistView();
 	}
 	
-	@PostMapping(value = "/hsbc/hsbcWechatPreregist")
+	@PostMapping(value = "/heShaBiCao/heShaBiCaoWechatPreregist")
 	@ResponseBody
-	public CommonResult hsbcWechatPreregist(@RequestBody HsbcWechatPreregistDTO dto) {
-		return hsbcService.hsbcWechatPreregist(dto);
+	public CommonResult heShaBiCaoWechatPreregist(@RequestBody HeShaBiCaoWechatPreregistDTO dto) {
+		return heShaBiCaoService.heShaBiCaoWechatPreregist(dto);
 	}
 	
-	@PostMapping(value = "/hsbc/getReportSummaryPage")
-	public ModelAndView getReportSummaryPage(@RequestBody HsbcWechatPreregistDTO dto) {
-		return hsbcService.getReportSummaryPage(dto);
+	@PostMapping(value = "/heShaBiCao/getReportSummaryPage")
+	public ModelAndView getReportSummaryPage(@RequestBody HeShaBiCaoWechatPreregistDTO dto) {
+		return heShaBiCaoService.getReportSummaryPage(dto);
 	}
 }

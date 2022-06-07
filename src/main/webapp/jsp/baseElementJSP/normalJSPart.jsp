@@ -1,6 +1,6 @@
-<script type="text/javascript" src="/static_resources/js/jquery/v3_1_1/jquery.min.js"></script>
+<script type="text/javascript" src="/static_resources/js/jquery/v3_6_0/jquery.min.js"></script>
 <script type="text/javascript" src="/static_resources/js/tether/v1_3_3/tether.js"></script>
-<script type="text/javascript" src="/static_resources/js/bootstrap/v4_1_0/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static_resources/js/bootstrap/v4_6_1/bootstrap.min.js"></script>
 
 <!-- csrf part -->
 <script type="text/javascript">

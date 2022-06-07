@@ -122,6 +122,12 @@
       <li>
         <a href="/joyManager/image/cleanIdPathMap" target="_blank">cleanJoyImageRedis</a>
       </li>
+      <li>
+        <a href="/joyManager/garden/shop/index/" target="_blank">Garden Shop manager</a>
+      </li>
+      <li>
+        <a href="/joy/garden/shop/index/" target="_blank">Garden Shop</a>
+      </li>
     </ul><!-- joy -->
 
 

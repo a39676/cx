@@ -12,7 +12,7 @@ import demo.common.controller.CommonController;
 import demo.joy.common.pojo.constant.JoyGardenShopUrl;
 import demo.joy.common.pojo.constant.JoyGardenUrl;
 import demo.joy.common.pojo.constant.JoyUrl;
-import demo.joy.garden.pojo.dto.JoyGardenShopSeedSearchDTO;
+import demo.joy.garden.pojo.dto.JoyGardenShopSearchDTO;
 import demo.joy.garden.service.JoyGardenShopService;
 
 @RequestMapping(value = JoyUrl.ROOT + JoyGardenUrl.ROOT + JoyGardenShopUrl.ROOT)
@@ -27,9 +27,9 @@ public class JoyGardenShopController extends CommonController {
 		return shopService.shop();
 	}
 
-	@PostMapping(value = JoyGardenShopUrl.SEED_SEARCH)
-	public ModelAndView index(@RequestBody JoyGardenShopSeedSearchDTO dto) {
-		return shopService.seedSearchView(dto);
+	@PostMapping(value = JoyGardenShopUrl.PLANT_SEARCH)
+	public ModelAndView plantSearch(@RequestBody JoyGardenShopSearchDTO dto) {
+		return shopService.shopStoreView(dto);
 	}
 
 }

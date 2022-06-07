@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.joy.garden.mapper.JoyGardenShopGoodsMapper">
+  <resultMap id="BaseResultMap" type="demo.joy.garden.pojo.po.JoyGardenShopGoods">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="object_type" jdbcType="INTEGER" property="objectType" />
+    <result column="object_sub_type" jdbcType="INTEGER" property="objectSubType" />
+    <result column="object_id" jdbcType="BIGINT" property="objectId" />
+    <result column="object_name" jdbcType="CHAR" property="objectName" />
+    <result column="img_id" jdbcType="BIGINT" property="imgId" />
+    <result column="counting" jdbcType="INTEGER" property="counting" />
+    <result column="object_price" jdbcType="DECIMAL" property="objectPrice" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, object_type, object_sub_type, object_id, object_name, img_id, counting, object_price,
+    create_time, update_time
+  </sql>
+  <select id="selectByExample" parameterType="demo.joy.garden.pojo.po.JoyGardenShopGoodsExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from joy_garden_shop_goods
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from joy_garden_shop_goods
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from joy_garden_shop_goods
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.joy.garden.pojo.po.JoyGardenShopGoodsExample">
+    delete from joy_garden_shop_goods
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="demo.joy.garden.pojo.po.JoyGardenShopGoods">
+    insert into joy_garden_shop_goods (id, object_type, object_sub_type,
+      object_id, object_name, img_id,
+      counting, object_price, create_time,
+      update_time)
+    values (#{id,jdbcType=BIGINT}, #{objectType,jdbcType=INTEGER}, #{objectSubType,jdbcType=INTEGER},
+      #{objectId,jdbcType=BIGINT}, #{objectName,jdbcType=CHAR}, #{imgId,jdbcType=BIGINT},
+      #{counting,jdbcType=INTEGER}, #{objectPrice,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP},
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="demo.joy.garden.pojo.po.JoyGardenShopGoods">
+    insert into joy_garden_shop_goods
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="objectType != null">
+        object_type,
+      </if>
+      <if test="objectSubType != null">
+        object_sub_type,
+      </if>
+      <if test="objectId != null">
+        object_id,
+      </if>
+      <if test="objectName != null">
+        object_name,
+      </if>
+      <if test="imgId != null">
+        img_id,
+      </if>
+      <if test="counting != null">
+        counting,
+      </if>
+      <if test="objectPrice != null">
+        object_price,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="objectType != null">
+        #{objectType,jdbcType=INTEGER},
+      </if>
+      <if test="objectSubType != null">
+        #{objectSubType,jdbcType=INTEGER},
+      </if>
+      <if test="objectId != null">
+        #{objectId,jdbcType=BIGINT},
+      </if>
+      <if test="objectName != null">
+        #{objectName,jdbcType=CHAR},
+      </if>
+      <if test="imgId != null">
+        #{imgId,jdbcType=BIGINT},
+      </if>
+      <if test="counting != null">
+        #{counting,jdbcType=INTEGER},
+      </if>
+      <if test="objectPrice != null">
+        #{objectPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="demo.joy.garden.pojo.po.JoyGardenShopGoodsExample" resultType="java.lang.Long">
+    select count(*) from joy_garden_shop_goods
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update joy_garden_shop_goods
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.objectType != null">
+        object_type = #{record.objectType,jdbcType=INTEGER},
+      </if>
+      <if test="record.objectSubType != null">
+        object_sub_type = #{record.objectSubType,jdbcType=INTEGER},
+      </if>
+      <if test="record.objectId != null">
+        object_id = #{record.objectId,jdbcType=BIGINT},
+      </if>
+      <if test="record.objectName != null">
+        object_name = #{record.objectName,jdbcType=CHAR},
+      </if>
+      <if test="record.imgId != null">
+        img_id = #{record.imgId,jdbcType=BIGINT},
+      </if>
+      <if test="record.counting != null">
+        counting = #{record.counting,jdbcType=INTEGER},
+      </if>
+      <if test="record.objectPrice != null">
+        object_price = #{record.objectPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update joy_garden_shop_goods
+    set id = #{record.id,jdbcType=BIGINT},
+      object_type = #{record.objectType,jdbcType=INTEGER},
+      object_sub_type = #{record.objectSubType,jdbcType=INTEGER},
+      object_id = #{record.objectId,jdbcType=BIGINT},
+      object_name = #{record.objectName,jdbcType=CHAR},
+      img_id = #{record.imgId,jdbcType=BIGINT},
+      counting = #{record.counting,jdbcType=INTEGER},
+      object_price = #{record.objectPrice,jdbcType=DECIMAL},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.joy.garden.pojo.po.JoyGardenShopGoods">
+    update joy_garden_shop_goods
+    <set>
+      <if test="objectType != null">
+        object_type = #{objectType,jdbcType=INTEGER},
+      </if>
+      <if test="objectSubType != null">
+        object_sub_type = #{objectSubType,jdbcType=INTEGER},
+      </if>
+      <if test="objectId != null">
+        object_id = #{objectId,jdbcType=BIGINT},
+      </if>
+      <if test="objectName != null">
+        object_name = #{objectName,jdbcType=CHAR},
+      </if>
+      <if test="imgId != null">
+        img_id = #{imgId,jdbcType=BIGINT},
+      </if>
+      <if test="counting != null">
+        counting = #{counting,jdbcType=INTEGER},
+      </if>
+      <if test="objectPrice != null">
+        object_price = #{objectPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="demo.joy.garden.pojo.po.JoyGardenShopGoods">
+    update joy_garden_shop_goods
+    set object_type = #{objectType,jdbcType=INTEGER},
+      object_sub_type = #{objectSubType,jdbcType=INTEGER},
+      object_id = #{objectId,jdbcType=BIGINT},
+      object_name = #{objectName,jdbcType=CHAR},
+      img_id = #{imgId,jdbcType=BIGINT},
+      counting = #{counting,jdbcType=INTEGER},
+      object_price = #{objectPrice,jdbcType=DECIMAL},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="demo.joy.garden.pojo.po.JoyGardenShopGoodsExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from joy_garden_shop_goods
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+
+  <select id="findShopGoodsPage" resultMap="BaseResultMap">
+    select
+      *
+    from
+      joy_garden_shop_goods
+    <where>
+      <if test="goodsMainType != null">
+        and object_type = #{goodsMainType}
+      </if>
+      <if test="goodsSubType != null">
+        and object_sub_type = #{goodsSubType}
+      </if>
+      <if test="objectId != null">
+        and object_id = #{objectId}
+      </if>
+      <if test="startId != null">
+        and id &gt; #{startId}
+      </if>
+      <if test="endId != null">
+        and id &lt; #{endId}
+      </if>
+    </where>
+    <if test="pageSize != null">
+      limit #{pageSize}
+    </if>
+    <if test="pageSize == null">
+      limit 16
+    </if>
+  </select>
+</mapper>

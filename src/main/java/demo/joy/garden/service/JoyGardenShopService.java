@@ -2,12 +2,12 @@ package demo.joy.garden.service;
 
 import org.springframework.web.servlet.ModelAndView;
 
-import demo.joy.garden.pojo.dto.JoyGardenShopSeedSearchDTO;
+import demo.joy.garden.pojo.dto.JoyGardenShopSearchDTO;
 
 public interface JoyGardenShopService {
 
-	ModelAndView seedSearchView(JoyGardenShopSeedSearchDTO dto);
-
 	ModelAndView shop();
+
+	ModelAndView shopStoreView(JoyGardenShopSearchDTO dto);
 
 }

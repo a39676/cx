@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt"  prefix="fmt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
@@ -13,9 +13,9 @@
 </head>
 <body>
 
-  <div class="col-md-3">
+  <div class="col-sm-3">
   </div>
-  <div class="col-md-6">
+  <div class="col-sm-6">
     <table class="table table-bordered">
       <tr>
         <td class="fieldlandTD" landPK="${fieldVoList[0].pk}" landLevel="${fieldVoList[0].landLevel}"
@@ -106,7 +106,7 @@
       </tr>
     </table>
   </div>
-  <div class="col-md-3">
+  <div class="col-sm-3">
     <c:if test="${canCreateNewField}">
       <button type="button" name="" class="btn btn-sm btn-primary" id="createNewFieldLand">创建新种植地</button>
     </c:if>

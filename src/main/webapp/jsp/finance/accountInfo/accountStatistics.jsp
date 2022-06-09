@@ -6,7 +6,12 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
+<html>
+<head>
+<%@ include file="../../baseElementJSP/normalHeader.jsp" %>
+</head>
 
+<body>
 
 <div class="row">
 <div class="col-md-12">
@@ -46,24 +51,26 @@
   </c:forEach>
 </div>
 </div>
+</body>
 
-
+<footer>
+</footer>
+<%@ include file="../../baseElementJSP/normalJSPart.jsp" %>
 <script type="text/javascript">
 
   $(document).ready(function() {
-      
 
-    //getAccountListByBankId 
+    //getAccountListByBankId
     function getAccountListByBankId(bankId){
       var $accountListDiv = $("div[name='accountListDiv']");
 
       var $jsonSend = {
         bankId : bankId
       };
-      
-      $.ajax({               
-        type: "POST",  
-        url: "/accountInfo/accountListView",   
+
+      $.ajax({
+        type: "POST",
+        url: "/accountInfo/accountListView",
         data: JSON.stringify($jsonSend),
         // dataType: 'json',
         contentType: "application/json",
@@ -71,9 +78,9 @@
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         timeout: 15000,
-        success:function(data){  
+        success:function(data){
           $accountListDiv.html(data);
-        }, 
+        },
         error:function(e){
         }
       });
@@ -86,3 +93,4 @@
 
   });
 </script>
+</html>

@@ -6,7 +6,6 @@ public class BaseUrl {
 	
 	public static final String ROOT4 = "/4";
 	
-	public static final String WELCOME = "/welcome**";
 	public static final String ABOUT_ME = "/aboutMe";
 
 	public static final String ROBOT = "/robot";

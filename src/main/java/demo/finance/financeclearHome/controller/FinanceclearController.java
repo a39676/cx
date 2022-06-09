@@ -15,4 +15,9 @@ public class FinanceclearController extends CommonController {
 	public ModelAndView financeclear() {
 		return new ModelAndView("baseElementJSP/financeclearFrame");
 	}
+	
+	@GetMapping(value = "/2")
+	public ModelAndView financeclear2() {
+		return new ModelAndView("finance/financeclearHome");
+	}
 }

@@ -16,16 +16,6 @@ public class BaseViewConstant {
 	public static final String normal404 = "baseElementJSP/normal404";
 	public static final String viewError = "baseJSP/error";
 	
-	
-	public static final String financeclearFrame = "baseElementJSP/financeclearFrame";
-	public static final String financeclearNavigationNotLogin = "baseElementJSP/financeclearNavigationNotLogin";
-	public static final String financeclearNavigationRoleUser = "baseElementJSP/financeclearNavigationRoleUser";
-	
-	public static final String navigationMain = "baseElementJSP/navigationMain";
-	public static final String navigationAdmin = "baseElementJSP/navigationAdminV3";
-	public static final String navigationNotLogin = "baseElementJSP/navigationNotLogin";
-	public static final String navigationRoleUser = "baseElementJSP/navigationRoleUser";
-	
 	public static final String tempViewHome = "tempViewJSP/home";
 	
 }

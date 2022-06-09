@@ -12,7 +12,6 @@ import demo.base.system.pojo.constant.BaseUrl;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.system.service.BasePageService;
 import demo.common.controller.CommonController;
-import demo.finance.account_info.pojo.constant.AccountUrl;
 
 @Controller
 public class BasePageController extends CommonController {
@@ -39,15 +38,6 @@ public class BasePageController extends CommonController {
 			HttpServletRequest request) {
 		ModelAndView view = basePageService.aboutMeHandler(vcode, request);
 		return view;
-	}
-	
-	@GetMapping(value = { AccountUrl.financeclear })
-	public ModelAndView financeclearHome() {
-		ModelAndView view = new ModelAndView();
-		view.addObject("title", "financeclear");
-		view.setViewName(BaseViewConstant.financeclearFrame);
-		return view;
-
 	}
 	
 	@GetMapping(value = "/ea404")

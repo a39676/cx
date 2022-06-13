@@ -731,6 +731,9 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 		CalendarNoticeExample example = new CalendarNoticeExample();
 		example.createCriteria().andIsDeleteEqualTo(false).andNoticeTimeBetween(tomorrowStartTime, tomorrowEndTime);
 		List<CalendarNotice> tomorrowNoticeList = mapper.selectByExample(example);
+		if(tomorrowNoticeList == null || tomorrowNoticeList.isEmpty()) {
+			return;
+		}
 		
 		TelegramMessageDTO dto = new TelegramMessageDTO();
 		dto.setId(TelegramStaticChatID.MY_ID);

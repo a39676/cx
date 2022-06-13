@@ -42,7 +42,11 @@ import demo.base.system.service.IpRecordService;
 import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.UserDetailService;
 import demo.base.user.service.UsersService;
+import demo.tool.calendarNotice.mq.producer.TelegramCalendarNoticeMessageAckProducer;
 import demo.tool.other.service.ValidRegexToolService;
+import telegram.pojo.constant.TelegramBotType;
+import telegram.pojo.constant.TelegramStaticChatID;
+import telegram.pojo.dto.TelegramMessageDTO;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -51,8 +55,8 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	@Autowired
 	protected IpRecordService ipRecordService;
 
-//	@Autowired
-//	private ArticleService articleService;
+	@Autowired
+	private TelegramCalendarNoticeMessageAckProducer telegramMessageAckProducer;
 	@Autowired
 	private ArticleCommentOptionService constantService;
 	@Autowired
@@ -184,6 +188,13 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			newComment.setIsReject(true);
 		}
 		articleCommentMapper.insertSelective(newComment);
+		
+		TelegramMessageDTO dto = new TelegramMessageDTO();
+		dto.setId(TelegramStaticChatID.MY_ID);
+		dto.setBotName(TelegramBotType.BOT_1.getName());
+		dto.setMsg("Recive article comment: " + inputParam.getContent());
+
+		telegramMessageAckProducer.send(dto);
 		
 		if(bigUserFlag) {
 			PassArticleCommentDTO param = new PassArticleCommentDTO();

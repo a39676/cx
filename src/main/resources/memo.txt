@@ -1,4 +1,6 @@
 article
+	收到评论时 发送电报通知
+
 	Add back to Homepage button in post.jsp
 
 	search -> loadmore -> show more post NOT match key word

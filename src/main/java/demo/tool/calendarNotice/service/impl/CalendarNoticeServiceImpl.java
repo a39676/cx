@@ -417,41 +417,10 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 		}
 	}
 
-	private void updatePreNoticeStatusSkipThisRound(CalendarPreNotice preNoticePo, CalendarNotice po) {
-		// 通知无需重复 或 已删除 无需下一轮提前提醒
-		if (!po.getNeedRepeat() || po.getIsDelete()) {
-			preNoticePo.setIsDelete(true);
-			preNoticeMapper.updateByPrimaryKeySelective(preNoticePo);
-			return;
-		}
-
-		// 刚好发送提醒 && 当期最后一条提前提醒
-		if(po.getNoticeTime().isAfter(LocalDateTime.now())) {
-			return;
-		}
-		
-		TimeUnitType noticeTimeUnitType = TimeUnitType.getType(po.getRepeatTimeUnit());
-		LocalDateTime nextNoticeTime = getNextLocalDateTime(po.getNoticeTime(), noticeTimeUnitType,
-				po.getRepeatTimeRange());
-
-		// 超过有效期 无需下一轮提前提醒
-		if (po.getValidTime() != null && nextNoticeTime.isAfter(po.getValidTime())) {
-			preNoticePo.setIsDelete(true);
-			preNoticeMapper.updateByPrimaryKeySelective(preNoticePo);
-			return;
-		}
-
-		TimeUnitType preNoticeTimeUnitType = TimeUnitType.getType(preNoticePo.getRepeatTimeUnit());
-		LocalDateTime nextPreNoticeTime = getNextLocalDateTime(preNoticePo.getNoticeTime(), preNoticeTimeUnitType,
-				preNoticePo.getRepeatTimeRange());
-
-		nextPreNoticeTime = getPreNoticeTime(nextNoticeTime, preNoticeTimeUnitType, preNoticePo.getRepeatTimeRange(),
-				preNoticePo.getRepeatCount());
-		preNoticePo.setValidTime(nextNoticeTime);
-		preNoticePo.setNoticeTime(nextPreNoticeTime);
+	private void updatePreNoticeStatusSkipThisRound(CalendarPreNotice preNoticePo) {
+		preNoticePo.setNoticeTime(preNoticePo.getValidTime());
 		preNoticeMapper.updateByPrimaryKeySelective(preNoticePo);
 		return;
-
 	}
 
 	@Override
@@ -715,7 +684,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			return r;
 		}
 
-		updatePreNoticeStatusSkipThisRound(preNoticePO, noticePO);
+		updatePreNoticeStatusSkipThisRound(preNoticePO);
 
 		r.setMessage("Done");
 		r.setIsSuccess();

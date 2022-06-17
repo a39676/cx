@@ -34,6 +34,13 @@
       </div>
     </div>
 
+    <div class="row">
+      <div class="col-md-12">
+        <button class="btn btn-sm btn-primary" type="button" name="button" id="insertTask">加入任务</button>
+      </div>
+    </div>
+
+
     <hr>
 
     <div class="row">

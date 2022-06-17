@@ -3,6 +3,7 @@ package demo.tool.bbtOrder.underWayMonthTest.service.impl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
@@ -23,6 +24,10 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 	@Autowired
 	private TestEventService eventService;
 	
+	@Override
+	public ModelAndView monthTestView() {
+		return new ModelAndView("toolJSP/publicTool/UnderWayMonthTest");
+	}
 	
 	@Override
 	public CommonResult monthTest(UnderWayMonthTestDTO inputDTO) {

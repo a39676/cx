@@ -92,11 +92,9 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 	@Override
 	public List<TestReportSummaryVO> findReportsByCondition(FindTestEventPageByConditionDTO dto) {
 		
-//		if (!baseUtilCustom.hasAdminRole()) {
-//			dto.setModuleId(TestModuleType.ATDemo.getId());
-//		}
-		
-		dto.setModuleId(TestModuleType.ATDemo.getId());
+		if (!baseUtilCustom.hasAdminRole()) {
+			dto.setModuleId(TestModuleType.ATDemo.getId());
+		}
 		
 		List<TestEvent> poList = reportService.findReportPage(dto);
 		List<TestReportSummaryVO> voList = new ArrayList<>();

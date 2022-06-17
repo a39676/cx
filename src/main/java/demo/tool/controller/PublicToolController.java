@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import autoTest.testEvent.searchingDemo.pojo.dto.HeShaBiCaoWechatPreregistDTO;
+import autoTest.testEvent.searchingDemo.pojo.dto.UnderWayMonthTestDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.controller.CommonController;
 import demo.tool.bbtOrder.heShaBiCao.service.HeShaBiCaoService;
+import demo.tool.bbtOrder.underWayMonthTest.service.UnderWayMonthTestService;
 
 @RequestMapping(value = "/publicTool")
 @Controller
@@ -20,6 +22,9 @@ public class PublicToolController extends CommonController {
 
 	@Autowired
 	private HeShaBiCaoService heShaBiCaoService;
+	
+	@Autowired
+	private UnderWayMonthTestService underWayMonthTestService;
 	
 	@GetMapping(value = "/heShaBiCao/heShaBiCaoWechatPreregist")
 	public ModelAndView heShaBiCaoWechatPreregistView() {
@@ -35,5 +40,16 @@ public class PublicToolController extends CommonController {
 	@PostMapping(value = "/heShaBiCao/getReportSummaryPage")
 	public ModelAndView getReportSummaryPage(@RequestBody HeShaBiCaoWechatPreregistDTO dto) {
 		return heShaBiCaoService.getReportSummaryPage(dto);
+	}
+	
+	@GetMapping(value = "/freeYourTime/monthTest")
+	public ModelAndView monthTestView() {
+		return underWayMonthTestService.monthTestView();
+	}
+	
+	@PostMapping(value = "/freeYourTime/addMonthTest")
+	@ResponseBody
+	public CommonResult heShaBiCaoWechatPreregistView(@RequestBody UnderWayMonthTestDTO dto) {
+		return underWayMonthTestService.monthTest(dto);
 	}
 }

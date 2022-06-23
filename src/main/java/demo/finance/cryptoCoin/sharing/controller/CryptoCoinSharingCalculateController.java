@@ -15,6 +15,7 @@ import demo.finance.cryptoCoin.sharing.pojo.constant.CryptoCoinSharingUrl;
 import demo.finance.cryptoCoin.sharing.pojo.dto.CryptoCoinShareCalculateDTO;
 import demo.finance.cryptoCoin.sharing.pojo.dto.CryptoCoinSharingCalculateDetailSearchDTO;
 import demo.finance.cryptoCoin.sharing.pojo.dto.DeleteSharingDetailDTO;
+import demo.finance.cryptoCoin.sharing.pojo.dto.ReadCombineSharingDetailDTO;
 import demo.finance.cryptoCoin.sharing.pojo.dto.UpdateAllocationAssistantDTO;
 import demo.finance.cryptoCoin.sharing.pojo.result.CryptoCoinShareCalculateResult;
 import demo.finance.cryptoCoin.sharing.service.CryptoCoinSharingCalculateService;
@@ -40,6 +41,11 @@ public class CryptoCoinSharingCalculateController {
 	@GetMapping(value = CryptoCoinSharingUrl.CALCULATE_DETAIL)
 	public ModelAndView readSharingDetail(@RequestParam("pk") String pk) {
 		return service.readSharingDetail(pk);
+	}
+	
+	@PostMapping(value = CryptoCoinSharingUrl.CALCULATE_DETAIL_COMBINE)
+	public ModelAndView readSharingDetail(@RequestBody ReadCombineSharingDetailDTO dto) {
+		return service.readCombineSharingDetail(dto);
 	}
 	
 	@PostMapping(value = CryptoCoinSharingUrl.DELETE_SHAREING_DETAIL)

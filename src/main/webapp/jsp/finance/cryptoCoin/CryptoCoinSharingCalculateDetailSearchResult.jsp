@@ -19,6 +19,7 @@
         <thead class="thead-dark">
           <tr>
             <th style="text-align: center; vertical-align: middle;">日期</th>
+            <th style="text-align: center; vertical-align: middle;"></th>
             <th colspan="2" style="text-align: center; vertical-align: middle;">操作</th>
           </tr>
         </thead>
@@ -26,6 +27,9 @@
           <tr>
             <td style="text-align: center; vertical-align: middle;">
               <span detailPK="${detail.pk}">${detail.outputTimeStr}</span>
+            </td>
+            <td style="text-align: center; vertical-align: middle;">
+              <input type="checkbox" detailPK="${detail.pk}" name="combineCheckbox">
             </td>
             <td style="text-align: center; vertical-align: middle;">
               <a href="/cryptoCoinSharingCalculate/calculateDetail?pk=${detail.pk}" target="_blank">查看</a>
@@ -36,10 +40,26 @@
             </td>
           </tr>
         </c:forEach>
+        <tr>
+          <td style="text-align: center; vertical-align: middle;">
+          </td>
+          <td style="text-align: center; vertical-align: middle;">
+            <button class="btn btn-sm btn-primary" id="calculateDetailCombine">合并查看</button>
+          </td>
+          <td style="text-align: center; vertical-align: middle;">
+          </td>
+          <td style="text-align: center; vertical-align: middle;">
+          </td>
+        </tr>
       </table>
     </div>
   </div>
 
+  <div class="row">
+    <div class="col-md-12">
+      <div id="combineResult"></div>
+    </div>
+  </div>
 </div>
 </body>
 
@@ -54,7 +74,6 @@
       });
 
       function deleteSharingDetail(detailPK) {
-
         var url = "/cryptoCoinSharingCalculate/deleteSharingDetail";
 
         var jsonOutput = {
@@ -73,17 +92,45 @@
           },
           timeout: 15000,
           success:function(data){
-            // $("#result").html("");
             $("span[detailPK='"+detailPK+"'][name='result']").val(data.message);
             if(data.code == 0){
               $("button[detailPK='"+detailPK+"'][name='deleteDetail']").prop("disabled",true);
             }
           },
           error:function(e){
-            // $("#result").text(e);
           }
         });
       };
+
+      $("#calculateDetailCombine").click(function () {
+        var url = "/cryptoCoinSharingCalculate/calculateDetailCombine";
+        var targetPkList = $("[name='combineCheckbox']:checked");
+        var pkList = [];
+        targetPkList.each(function( index ) {
+          pkList.push($(this).attr("detailPK"));
+        });
+
+        var jsonOutput = {
+          detailPkList : pkList,
+        };
+
+        $.ajax({
+          type : "POST",
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          // dataType: 'json',
+          contentType: "application/json",
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          timeout: 15000,
+          success:function(data){
+            $("#combineResult").html(data);
+          },
+          error:function(e){
+          }
+        });
+      });
   });
 
   </script>

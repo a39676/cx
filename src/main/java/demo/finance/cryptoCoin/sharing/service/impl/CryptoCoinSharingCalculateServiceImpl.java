@@ -36,6 +36,7 @@ import demo.finance.cryptoCoin.sharing.mapper.CryptoCoinShareMapper;
 import demo.finance.cryptoCoin.sharing.pojo.dto.CryptoCoinShareCalculateDTO;
 import demo.finance.cryptoCoin.sharing.pojo.dto.CryptoCoinSharingCalculateDetailSearchDTO;
 import demo.finance.cryptoCoin.sharing.pojo.dto.DeleteSharingDetailDTO;
+import demo.finance.cryptoCoin.sharing.pojo.dto.ReadCombineSharingDetailDTO;
 import demo.finance.cryptoCoin.sharing.pojo.dto.UpdateAllocationAssistantDTO;
 import demo.finance.cryptoCoin.sharing.pojo.po.CryptoCoinAllocationAssistant;
 import demo.finance.cryptoCoin.sharing.pojo.po.CryptoCoinAllocationAssistantExample;
@@ -319,6 +320,92 @@ public class CryptoCoinSharingCalculateServiceImpl extends CryptoCoinCommonServi
 	}
 
 	@Override
+	public ModelAndView readCombineSharingDetail(ReadCombineSharingDetailDTO dto) {
+		ModelAndView view = new ModelAndView("finance/cryptoCoin/CryptoCoinSharingCalculateDetail");
+
+		if (dto.getDetailPkList() == null || dto.getDetailPkList().isEmpty()) {
+			return view;
+		}
+		
+		if(dto.getDetailPkList().size() == 1) {
+			return readSharingDetail(dto.getDetailPkList().get(0));
+		}
+
+		List<String> decodePkList = new ArrayList<>();
+		for(String pk : dto.getDetailPkList()) {
+			decodePkList.add(URLDecoder.decode(pk, StandardCharsets.UTF_8));
+		}
+		List<Long> idList = systemOptionService.decryptPrivateKey(decodePkList);
+		if (idList.isEmpty()) {
+			return view;
+		}
+
+		CryptoCoinShare po = null;
+		List<CryptoCoinShare> poList = new ArrayList<>();
+		for (Long id : idList) {
+			po = shareResultMapper.selectByPrimaryKey(id);
+			if (po == null || (po.getIsDelete() && !baseUtilCustom.hasAdminRole())) {
+				continue;
+			}
+			poList.add(po);
+		}
+		
+		if(poList.isEmpty()) {
+			return view;
+		}
+
+		CryptoCoinShare firstpo = poList.get(0);
+		String content = ioUtil.getStringFromFile(firstpo.getFilePath());
+		CryptoCoinShareCalculateResult resultDetail = new Gson().fromJson(content, CryptoCoinShareCalculateResult.class);
+		for (int i = 1; i < poList.size(); i++) {
+			content = ioUtil.getStringFromFile(poList.get(i).getFilePath());
+			CryptoCoinShareCalculateResult tmpDetail = new Gson().fromJson(content, CryptoCoinShareCalculateResult.class);
+			resultDetail = combineCryptoCoinShareCalculateResult(resultDetail, tmpDetail);
+		}
+
+		view.addObject("detail", resultDetail);
+
+		return view;
+	}
+
+	public CryptoCoinShareCalculateResult combineCryptoCoinShareCalculateResult(CryptoCoinShareCalculateResult result,
+			CryptoCoinShareCalculateResult source) {
+		result.setMarkDateStr(source.getMarkDateStr());
+		result.setTotalOutput(result.getTotalOutput().add(source.getTotalOutput()));
+		result.setPartingCount(source.getPartingCount());
+		result.setCoinCountingOfEachPartOfMachine(result.getCoinCountingOfEachPartOfMachine().add(source.getCoinCountingOfEachPartOfMachine()));
+		result.setCoinCountingOfEachPartOfMachine(source.getCoinCountingOfEachPartOfMachine());
+		result.setHanldingFeeRate(source.getHanldingFeeRate());
+		result.setHanldingFee(result.getHanldingFee().add(source.getHanldingFee()));
+		result.setRestAfterHanldingFee(result.getRestAfterHanldingFee().add(source.getRestAfterHanldingFee()));
+		result.setRestAfterCommissionFee(result.getRestAfterCommissionFee().add(source.getRestAfterCommissionFee()));
+		result.setNetIncome(result.getNetIncome().add(source.getNetIncome()));
+		
+		HashMap<String, CryptoCoinShareCalculateSubResult> sourceSubResultMap = new HashMap<>();
+		for(CryptoCoinShareCalculateSubResult subResult : source.getCaculateResultList()) {
+			sourceSubResultMap.put(subResult.getAssistantPK(), subResult);
+		}
+		
+		for(CryptoCoinShareCalculateSubResult subResult : result.getCaculateResultList()) {
+			CryptoCoinShareCalculateSubResult sourceSubResult = sourceSubResultMap.get(subResult.getAssistantPK());
+			if(sourceSubResult == null) {
+				continue;
+			}
+			subResult = combineCryptoCoinShareCalculateSubResult(subResult, sourceSubResult);
+		}
+		
+		return result;
+	}
+
+	private CryptoCoinShareCalculateSubResult combineCryptoCoinShareCalculateSubResult(
+			CryptoCoinShareCalculateSubResult result, CryptoCoinShareCalculateSubResult source) {
+		result.setReceiveFromParting(result.getReceiveFromParting().add(source.getReceiveFromParting()));
+		result.setCommissionFee(result.getCommissionFee().add(source.getCommissionFee()));
+		result.setTotalCoinCounting(result.getTotalCoinCounting().add(source.getTotalCoinCounting()));
+		result.setCommissionFeeOfOneParting(result.getCommissionFeeOfOneParting().add(source.getCommissionFeeOfOneParting()));
+		return result;
+	}
+
 	public ModelAndView readSharingDetail(String detailPk) {
 		ModelAndView view = new ModelAndView("finance/cryptoCoin/CryptoCoinSharingCalculateDetail");
 

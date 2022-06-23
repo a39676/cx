@@ -8,6 +8,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.sharing.pojo.dto.CryptoCoinShareCalculateDTO;
 import demo.finance.cryptoCoin.sharing.pojo.dto.CryptoCoinSharingCalculateDetailSearchDTO;
 import demo.finance.cryptoCoin.sharing.pojo.dto.DeleteSharingDetailDTO;
+import demo.finance.cryptoCoin.sharing.pojo.dto.ReadCombineSharingDetailDTO;
 import demo.finance.cryptoCoin.sharing.pojo.dto.UpdateAllocationAssistantDTO;
 import demo.finance.cryptoCoin.sharing.pojo.result.CryptoCoinShareCalculateResult;
 import demo.finance.cryptoCoin.sharing.pojo.vo.CryptoCoinMiningMachineVO;
@@ -29,5 +30,7 @@ public interface CryptoCoinSharingCalculateService {
 	CommonResult deleteSharingDetail(DeleteSharingDetailDTO dto);
 
 	CommonResult updateAssistant(UpdateAllocationAssistantDTO dto);
+
+	ModelAndView readCombineSharingDetail(ReadCombineSharingDetailDTO dto);
 
 }

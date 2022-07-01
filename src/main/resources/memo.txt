@@ -1,6 +1,4 @@
-summernote
-	资源崩溃
-	
+
 article
 	Add back to Homepage button in post.jsp
 

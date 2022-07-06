@@ -1,5 +1,6 @@
 package demo.tool.bbtOrder.heShaBiCao.service.impl;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -145,7 +146,14 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 			return false;
 		}
 
-		String correctPwd = "shabiyinhang";
+//		String correctPwd = "shabiyinhang";
+		String correctPwd = "hsbc";
+		Integer month = LocalDate.now().getMonthValue();
+		if(month < 10) {
+			correctPwd = correctPwd + "0" + month;
+		} else {
+			correctPwd = correctPwd + month;
+		}
 
 		return correctPwd.equals(dto.getApkDownloadPassword());
 	}

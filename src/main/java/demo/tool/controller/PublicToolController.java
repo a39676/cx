@@ -13,7 +13,7 @@ import autoTest.testEvent.searchingDemo.pojo.dto.HeShaBiCaoWechatPreregistDTO;
 import autoTest.testEvent.searchingDemo.pojo.dto.UnderWayMonthTestDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.controller.CommonController;
-import demo.tool.bbtOrder.heShaBiCao.service.HeShaBiCaoService;
+import demo.tool.bbtOrder.hsbc.service.HsbcService;
 import demo.tool.bbtOrder.underWayMonthTest.service.UnderWayMonthTestService;
 
 @RequestMapping(value = "/publicTool")
@@ -21,25 +21,25 @@ import demo.tool.bbtOrder.underWayMonthTest.service.UnderWayMonthTestService;
 public class PublicToolController extends CommonController {
 
 	@Autowired
-	private HeShaBiCaoService heShaBiCaoService;
+	private HsbcService hsbcService;
 	
 	@Autowired
 	private UnderWayMonthTestService underWayMonthTestService;
 	
-	@GetMapping(value = "/heShaBiCao/heShaBiCaoWechatPreregist")
-	public ModelAndView heShaBiCaoWechatPreregistView() {
-		return heShaBiCaoService.heShaBiCaoWechatPreregistView();
+	@GetMapping(value = "/hsbc/hsbcWechatPreregist")
+	public ModelAndView hsbcWechatPreregistView() {
+		return hsbcService.hsbcWechatPreregistView();
 	}
 	
-	@PostMapping(value = "/heShaBiCao/heShaBiCaoWechatPreregist")
+	@PostMapping(value = "/hsbc/hsbcWechatPreregist")
 	@ResponseBody
-	public CommonResult heShaBiCaoWechatPreregist(@RequestBody HeShaBiCaoWechatPreregistDTO dto) {
-		return heShaBiCaoService.heShaBiCaoWechatPreregist(dto);
+	public CommonResult hsbcWechatPreregist(@RequestBody HeShaBiCaoWechatPreregistDTO dto) {
+		return hsbcService.hsbcWechatPreregist(dto);
 	}
 	
-	@PostMapping(value = "/heShaBiCao/getReportSummaryPage")
+	@PostMapping(value = "/hsbc/getReportSummaryPage")
 	public ModelAndView getReportSummaryPage(@RequestBody HeShaBiCaoWechatPreregistDTO dto) {
-		return heShaBiCaoService.getReportSummaryPage(dto);
+		return hsbcService.getReportSummaryPage(dto);
 	}
 	
 	@GetMapping(value = "/freeYourTime/monthTest")
@@ -49,7 +49,7 @@ public class PublicToolController extends CommonController {
 	
 	@PostMapping(value = "/freeYourTime/addMonthTest")
 	@ResponseBody
-	public CommonResult heShaBiCaoWechatPreregistView(@RequestBody UnderWayMonthTestDTO dto) {
+	public CommonResult monthTestView(@RequestBody UnderWayMonthTestDTO dto) {
 		return underWayMonthTestService.monthTest(dto);
 	}
 }

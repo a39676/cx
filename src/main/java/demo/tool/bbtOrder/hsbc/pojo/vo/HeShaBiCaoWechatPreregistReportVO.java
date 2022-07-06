@@ -1,4 +1,4 @@
-package demo.tool.bbtOrder.heShaBiCao.pojo.vo;
+package demo.tool.bbtOrder.hsbc.pojo.vo;
 
 import autoTest.testEvent.searchingDemo.pojo.type.HeShaBiCaoIdType;
 import tool.pojo.type.InternationalityType;

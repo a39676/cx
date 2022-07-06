@@ -1,4 +1,4 @@
-package demo.tool.bbtOrder.heShaBiCao.service.impl;
+package demo.tool.bbtOrder.hsbc.service.impl;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,14 +23,14 @@ import demo.automationTest.pojo.po.TestEvent;
 import demo.automationTest.service.AutomationTestReportService;
 import demo.automationTest.service.TestEventService;
 import demo.automationTest.service.impl.AutomationTestCommonService;
-import demo.tool.bbtOrder.heShaBiCao.pojo.vo.HeShaBiCaoWechatPreregistReportVO;
-import demo.tool.bbtOrder.heShaBiCao.service.HeShaBiCaoService;
+import demo.tool.bbtOrder.hsbc.pojo.vo.HeShaBiCaoWechatPreregistReportVO;
+import demo.tool.bbtOrder.hsbc.service.HsbcService;
 import net.sf.json.JSONObject;
 import tool.pojo.type.InternationalityType;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
-public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implements HeShaBiCaoService {
+public class HsbcServiceImpl extends AutomationTestCommonService implements HsbcService {
 
 	@Autowired
 	private FileUtilCustom ioUtil;
@@ -42,7 +42,7 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 	private List<LocalDateTime> hsbcWechatPreregistTaskInsertTime = new ArrayList<>();
 
 	@Override
-	public ModelAndView heShaBiCaoWechatPreregistView() {
+	public ModelAndView hsbcWechatPreregistView() {
 		ModelAndView view = new ModelAndView("toolJSP/publicTool/HeShaBiCaoWechatPreregist");
 		view.addObject("idTypeList", HeShaBiCaoIdType.values());
 		view.addObject("internationalityTypeList", InternationalityType.values());
@@ -105,7 +105,7 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 	}
 
 	@Override
-	public CommonResult heShaBiCaoWechatPreregist(HeShaBiCaoWechatPreregistDTO dto) {
+	public CommonResult hsbcWechatPreregist(HeShaBiCaoWechatPreregistDTO dto) {
 		CommonResult r = new CommonResult();
 		if(!checkPwd(dto)) {
 			r.setMessage("password error");
@@ -133,7 +133,7 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 			return r;
 		}
 
-		sendHeShaBiCaoWechatPreregistTask(dto);
+		sendHsbcWechatPreregistTask(dto);
 		hsbcWechatPreregistTaskInsertTime.add(LocalDateTime.now());
 
 		r.setMessage("Task inserted");
@@ -185,7 +185,7 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 	}
 
 	@Override
-	public void sendHeShaBiCaoWechatPreregistTask(HeShaBiCaoWechatPreregistDTO paramDTO) {
+	public void sendHsbcWechatPreregistTask(HeShaBiCaoWechatPreregistDTO paramDTO) {
 		AutomationTestInsertEventDTO mainDTO = new AutomationTestInsertEventDTO();
 		mainDTO.setTestModuleType(TestModuleType.SCHEDULE_CLAWING.getId());
 		mainDTO.setFlowType(ScheduleClawingType.HE_SHA_BI_CAO_WECHAT_PREREGIST.getId());

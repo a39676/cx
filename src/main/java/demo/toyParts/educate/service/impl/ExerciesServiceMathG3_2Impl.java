@@ -1,5 +1,7 @@
 package demo.toyParts.educate.service.impl;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -55,11 +57,11 @@ public class ExerciesServiceMathG3_2Impl extends ExerciesMathCommonService imple
 		MathQuestionBaseDTO question = null;
 		for (int questionNumber = 1; questionNumber <= optionService.getQuestionListSize(); questionNumber++) {
 			question = null;
-			Integer standardAnswer = -1;
+			Double standardAnswer = -1D;
 			while (standardAnswer < 0 || standardAnswer > MAX_CALCULATE) {
 				question = createQuestion();
 				try {
-					standardAnswer = Integer.parseInt(question.getStandardAnswer().get(0));
+					standardAnswer = Double.valueOf(question.getStandardAnswer().get(0));
 				} catch (Exception e) {
 				}
 			}
@@ -69,8 +71,65 @@ public class ExerciesServiceMathG3_2Impl extends ExerciesMathCommonService imple
 
 		return exerciesDTO;
 	}
-
+	
 	private MathQuestionBaseDTO createQuestion() {
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+		
+		int rate = t.nextInt(1, 11);
+		if(rate > 3) {
+			return createIntegerQuestion();
+		} else {
+			return createDecimalQuestion();
+		}
+	}
+	
+	private MathQuestionBaseDTO createDecimalQuestion() {
+		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+
+		BigDecimal num1 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(2, RoundingMode.HALF_UP);
+		BigDecimal num2 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(2, RoundingMode.HALF_UP);
+		BigDecimal num3 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(2, RoundingMode.HALF_UP);
+		
+		MathBaseSymbolType mathSymbolType1 = getRandomMathBaseSymbolType(MathBaseSymbolType.addition,
+				MathBaseSymbolType.subtraction);
+		
+		MathBaseSymbolType mathSymbolType2 = getRandomMathBaseSymbolType(MathBaseSymbolType.addition,
+				MathBaseSymbolType.subtraction);
+		
+		String exp = String.valueOf(num1 + mathSymbolType1.getCodeSymbol() + num2 + mathSymbolType2.getCodeSymbol() + num3);
+		Expression expression = new ExpressionBuilder(exp).build();
+		Double result = expression.evaluate();
+		
+		while(result < 0 || result > MAX_CALCULATE) {
+			num1 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(2, RoundingMode.HALF_UP);
+			num2 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(2, RoundingMode.HALF_UP);
+			num3 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(2, RoundingMode.HALF_UP);
+			
+			mathSymbolType1 = getRandomMathBaseSymbolType(MathBaseSymbolType.addition,
+					MathBaseSymbolType.subtraction);
+			
+			mathSymbolType2 = getRandomMathBaseSymbolType(MathBaseSymbolType.addition,
+					MathBaseSymbolType.subtraction);
+			
+			exp = String.valueOf(num1 + mathSymbolType1.getCodeSymbol() + num2 + mathSymbolType2.getCodeSymbol() + num3);
+			expression = new ExpressionBuilder(exp).build();
+			result = expression.evaluate();
+		}
+		
+		BigDecimal fromDouble = new BigDecimal(result).setScale(2, RoundingMode.HALF_UP);
+		if(String.valueOf(fromDouble).endsWith("0")) {
+			fromDouble = new BigDecimal(result).setScale(1, RoundingMode.HALF_UP);
+		}
+		
+		exp = replaceCodingSymbolToMathSymbol(exp);
+		q.setExpression(exp);
+		q.getStandardAnswer().clear();
+		q.getStandardAnswer().add(String.valueOf(fromDouble));
+		return q;
+	}
+
+	private MathQuestionBaseDTO createIntegerQuestion() {
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 

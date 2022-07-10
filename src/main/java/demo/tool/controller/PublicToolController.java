@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import autoTest.testEvent.searchingDemo.pojo.dto.HeShaBiCaoWechatPreregistDTO;
+import autoTest.testEvent.hsbc.pojo.dto.HeShaBiCaoWechatPreregistDTO;
 import autoTest.testEvent.searchingDemo.pojo.dto.UnderWayMonthTestDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.controller.CommonController;

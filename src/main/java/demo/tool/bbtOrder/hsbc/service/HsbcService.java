@@ -2,7 +2,7 @@ package demo.tool.bbtOrder.hsbc.service;
 
 import org.springframework.web.servlet.ModelAndView;
 
-import autoTest.testEvent.searchingDemo.pojo.dto.HeShaBiCaoWechatPreregistDTO;
+import autoTest.testEvent.hsbc.pojo.dto.HeShaBiCaoWechatPreregistDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 
 public interface HsbcService {

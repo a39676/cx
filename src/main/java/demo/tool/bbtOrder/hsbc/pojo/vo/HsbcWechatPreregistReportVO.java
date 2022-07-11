@@ -1,15 +1,15 @@
 package demo.tool.bbtOrder.hsbc.pojo.vo;
 
-import autoTest.testEvent.hsbc.pojo.type.HeShaBiCaoIdType;
+import autoTest.testEvent.hsbc.pojo.type.HsbcIdType;
 import tool.pojo.type.InternationalityType;
 
-public class HeShaBiCaoWechatPreregistReportVO {
+public class HsbcWechatPreregistReportVO {
 
 	private String idNumber;
 	private String phoneNumber;
 	private String customerFirstName;
 	private String customerLastName;
-	/** {@link HeShaBiCaoIdType} */
+	/** {@link HsbcIdType} */
 	private String idTypeCnName;
 	/** {@link InternationalityType} */
 	private String areaTypeCnName;

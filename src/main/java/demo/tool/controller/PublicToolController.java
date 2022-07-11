@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import autoTest.testEvent.searchingDemo.pojo.dto.HeShaBiCaoWechatPreregistDTO;
+import autoTest.testEvent.hsbc.pojo.dto.HsbcWechatPreregistDTO;
 import autoTest.testEvent.searchingDemo.pojo.dto.UnderWayMonthTestDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.controller.CommonController;
@@ -33,12 +33,12 @@ public class PublicToolController extends CommonController {
 	
 	@PostMapping(value = "/hsbc/hsbcWechatPreregist")
 	@ResponseBody
-	public CommonResult hsbcWechatPreregist(@RequestBody HeShaBiCaoWechatPreregistDTO dto) {
+	public CommonResult hsbcWechatPreregist(@RequestBody HsbcWechatPreregistDTO dto) {
 		return hsbcService.hsbcWechatPreregist(dto);
 	}
 	
 	@PostMapping(value = "/hsbc/getReportSummaryPage")
-	public ModelAndView getReportSummaryPage(@RequestBody HeShaBiCaoWechatPreregistDTO dto) {
+	public ModelAndView getReportSummaryPage(@RequestBody HsbcWechatPreregistDTO dto) {
 		return hsbcService.getReportSummaryPage(dto);
 	}
 	

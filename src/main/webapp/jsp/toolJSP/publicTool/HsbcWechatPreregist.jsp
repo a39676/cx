@@ -25,6 +25,7 @@
 
     <div class="row">
       <div class="col-md-12">
+
         <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text">国籍(国家/地区)</span>
@@ -34,6 +35,65 @@
               <option value="${internationalityType.code}" cnName="${internationalityType.cnName}">${internationalityType.cnName}</option>
             </c:forEach>
           </select>
+          <div class="input-group-prepend">
+            <span class="input-group-text">开户行</span>
+          </div>
+          <select class="" name="" id="openAccountBranchSelector">
+            <option value="北京">北京</option>
+            <option value="揭阳">揭阳</option>
+            <option value="重庆">重庆</option>
+            <option value="江门">江门</option>
+            <option value="云浮">云浮</option>
+            <option value="唐山">唐山</option>
+            <option value="阳江">阳江</option>
+            <option value="哈尔滨">哈尔滨</option>
+            <option value="清远">清远</option>
+            <option value="天津">天津</option>
+            <option value="成都">成都</option>
+            <option value="太原">太原</option>
+            <option value="深圳">深圳</option>
+            <option value="惠州">惠州</option>
+            <option value="珠海">珠海</option>
+            <option value="汕尾">汕尾</option>
+            <option value="青岛">青岛</option>
+            <option value="佛山">佛山</option>
+            <option value="苏州">苏州</option>
+            <option value="潮州">潮州</option>
+            <option value="河源">河源</option>
+            <option value="杭州">杭州</option>
+            <option value="郑州">郑州</option>
+            <option value="肇庆">肇庆</option>
+            <option value="无锡">无锡</option>
+            <option value="沈阳">沈阳</option>
+            <option value="广州">广州</option>
+            <option value="大连">大连</option>
+            <option value="宁波">宁波</option>
+            <option value="中山">中山</option>
+            <option value="茂名">茂名</option>
+            <option value="湛江">湛江</option>
+            <option value="上海">上海</option>
+            <option value="梅州">梅州</option>
+            <option value="韶关">韶关</option>
+            <option value="西安">西安</option>
+            <option value="东莞">东莞</option>
+            <option value="南京">南京</option>
+            <option value="武汉">武汉</option>
+            <option value="厦门">厦门</option>
+            <option value="汕头">汕头</option>
+            <option value="合肥">合肥</option>
+            <option value="济南">济南</option>
+          </select>
+
+          <div class="input-group-prepend">
+            <span class="input-group-text">居住地开户</span>
+          </div>
+          <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" class="btn-check" name="btnradio" id="openAccountInLivingCity" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="openAccountInLivingCity">是</label>
+            <input type="radio" class="btn-check" name="btnradio" id="notOpenAccountInLivingCity" autocomplete="off">
+            <label class="btn btn-outline-primary" for="notOpenAccountInLivingCity">否(将随机选择居住市)</label>
+          </div>
+          
         </div>
         <div class="input-group">
           <div class="input-group-prepend">
@@ -73,6 +133,7 @@
           </div>
           <input type="text" class="form-control" name="" id="customerFirstName" value="试" maxlength="2">
         </div>
+
       </div>
     </div>
 
@@ -123,6 +184,7 @@
         var idType = $("#idTypeSelector option:selected").val();
         var areaType = $("#areaTypeSelector option:selected").val();
         var areaTypeName = $("#areaTypeSelector option:selected").attr("cnName");
+        var cityNameOfOpeningAccountBranch = $("#openAccountBranchSelector option:selected").attr("value");
         var phoneAreaTypeCode = $("#phoneAreaTypeSelector option:selected").val();
         var phoneAreaTypeName = $("#phoneAreaTypeSelector option:selected").attr("cnName");
         var idNumber = $("#idNumber").val();
@@ -130,6 +192,7 @@
         var apkDownloadPassword = $("#apkDownloadPassword").val();
         var customerFirstName = $("#customerFirstName").val();
         var customerLastName = $("#customerLastName").val();
+        var openAccountInLivingCity = $("#openAccountInLivingCity");
 
         var jsonOutput = {
           "idNumber":idNumber,
@@ -142,6 +205,8 @@
           "phoneAreaName":phoneAreaTypeName,
           "customerFirstName":customerFirstName,
           "customerLastName":customerLastName,
+          "openAccountInLivingCity":openAccountInLivingCity.is(':checked'),
+          "cityNameOfOpeningAccountBranch":cityNameOfOpeningAccountBranch,
         };
 
         $.ajax({

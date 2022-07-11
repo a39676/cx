@@ -2,17 +2,17 @@ package demo.tool.bbtOrder.hsbc.service;
 
 import org.springframework.web.servlet.ModelAndView;
 
-import autoTest.testEvent.searchingDemo.pojo.dto.HeShaBiCaoWechatPreregistDTO;
+import autoTest.testEvent.hsbc.pojo.dto.HsbcWechatPreregistDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 
 public interface HsbcService {
 
-	void sendHsbcWechatPreregistTask(HeShaBiCaoWechatPreregistDTO dto);
+	void sendHsbcWechatPreregistTask(HsbcWechatPreregistDTO dto);
 
 	ModelAndView hsbcWechatPreregistView();
 
-	CommonResult hsbcWechatPreregist(HeShaBiCaoWechatPreregistDTO dto);
+	CommonResult hsbcWechatPreregist(HsbcWechatPreregistDTO dto);
 
-	ModelAndView getReportSummaryPage(HeShaBiCaoWechatPreregistDTO dto);
+	ModelAndView getReportSummaryPage(HsbcWechatPreregistDTO dto);
 
 }

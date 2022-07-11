@@ -13,17 +13,17 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.Gson;
 
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
+import autoTest.testEvent.hsbc.pojo.dto.HsbcWechatPreregistDTO;
+import autoTest.testEvent.hsbc.pojo.type.HsbcIdType;
 import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
-import autoTest.testEvent.searchingDemo.pojo.dto.HeShaBiCaoWechatPreregistDTO;
-import autoTest.testEvent.searchingDemo.pojo.type.HeShaBiCaoIdType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.automationTest.pojo.po.TestEvent;
 import demo.automationTest.service.AutomationTestReportService;
 import demo.automationTest.service.TestEventService;
 import demo.automationTest.service.impl.AutomationTestCommonService;
-import demo.tool.bbtOrder.hsbc.pojo.vo.HeShaBiCaoWechatPreregistReportVO;
+import demo.tool.bbtOrder.hsbc.pojo.vo.HsbcWechatPreregistReportVO;
 import demo.tool.bbtOrder.hsbc.service.HsbcService;
 import net.sf.json.JSONObject;
 import tool.pojo.type.InternationalityType;
@@ -43,16 +43,16 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 
 	@Override
 	public ModelAndView hsbcWechatPreregistView() {
-		ModelAndView view = new ModelAndView("toolJSP/publicTool/HeShaBiCaoWechatPreregist");
-		view.addObject("idTypeList", HeShaBiCaoIdType.values());
+		ModelAndView view = new ModelAndView("toolJSP/publicTool/HsbcWechatPreregist");
+		view.addObject("idTypeList", HsbcIdType.values());
 		view.addObject("internationalityTypeList", InternationalityType.values());
 
 		return view;
 	}
 	
 	@Override
-	public ModelAndView getReportSummaryPage(HeShaBiCaoWechatPreregistDTO dto) {
-		ModelAndView view = new ModelAndView("toolJSP/publicTool/HeShaBiCaoWechatReportSummaryPage");
+	public ModelAndView getReportSummaryPage(HsbcWechatPreregistDTO dto) {
+		ModelAndView view = new ModelAndView("toolJSP/publicTool/HsbcWechatReportSummaryPage");
 
 		if(!checkPwd(dto)) {
 			return view;
@@ -60,12 +60,12 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		
 		FindTestEventPageByConditionDTO queryDTO = new FindTestEventPageByConditionDTO();
 		queryDTO.setLimit(30L);
-		queryDTO.setFlowId(ScheduleClawingType.HE_SHA_BI_CAO_WECHAT_PREREGIST.getId());
+		queryDTO.setFlowId(ScheduleClawingType.HSBC_WECHAT_PREREGIST.getId());
 		queryDTO.setModuleId(TestModuleType.SCHEDULE_CLAWING.getId());
 		queryDTO.setIsSuccess(null);
 		queryDTO.setRunFlag(null);
 		List<TestEvent> reportPoList = reportService.findReportPage(queryDTO);
-		List<HeShaBiCaoWechatPreregistReportVO> reportVoList = new ArrayList<>();
+		List<HsbcWechatPreregistReportVO> reportVoList = new ArrayList<>();
 
 		for (TestEvent po : reportPoList) {
 			reportVoList.add(buildReportVO(po));
@@ -75,8 +75,8 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		return view;
 	}
 
-	private HeShaBiCaoWechatPreregistReportVO buildReportVO(TestEvent po) {
-		HeShaBiCaoWechatPreregistReportVO vo = new HeShaBiCaoWechatPreregistReportVO();
+	private HsbcWechatPreregistReportVO buildReportVO(TestEvent po) {
+		HsbcWechatPreregistReportVO vo = new HsbcWechatPreregistReportVO();
 		vo.setIsPass(po.getIsPass());
 		vo.setStartTimeStr(localDateTimeHandler.dateToStr(po.getStartTime()));
 		vo.setEndTimeStr(localDateTimeHandler.dateToStr(po.getEndTime()));
@@ -84,14 +84,14 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		try {
 			String paramStr = ioUtil.getStringFromFile(po.getParameterFilePath());
 			JSONObject json = JSONObject.fromObject(paramStr);
-			HeShaBiCaoWechatPreregistDTO paramDTO = new Gson().fromJson(json.getString(HeShaBiCaoWechatPreregistDTO.class.getSimpleName()), HeShaBiCaoWechatPreregistDTO.class);
+			HsbcWechatPreregistDTO paramDTO = new Gson().fromJson(json.getString(HsbcWechatPreregistDTO.class.getSimpleName()), HsbcWechatPreregistDTO.class);
 			InternationalityType areaType = InternationalityType.getType(paramDTO.getAreaType(),
 					paramDTO.getAreaName());
 			vo.setAreaTypeCnName(areaType.getCnName());
 			InternationalityType phoneAreaType = InternationalityType.getType(paramDTO.getPhoneAreaType(),
 					paramDTO.getPhoneAreaName());
 			vo.setPhoneAreaCnName(phoneAreaType.getCnName());
-			HeShaBiCaoIdType idType = HeShaBiCaoIdType.getType(paramDTO.getIdType());
+			HsbcIdType idType = HsbcIdType.getType(paramDTO.getIdType());
 			vo.setIdTypeCnName(idType.getCnName());
 			vo.setIdNumber(paramDTO.getIdNumber());
 			vo.setPhoneNumber(paramDTO.getPhoneNumber());
@@ -105,7 +105,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 	}
 
 	@Override
-	public CommonResult hsbcWechatPreregist(HeShaBiCaoWechatPreregistDTO dto) {
+	public CommonResult hsbcWechatPreregist(HsbcWechatPreregistDTO dto) {
 		CommonResult r = new CommonResult();
 		if(!checkPwd(dto)) {
 			r.setMessage("password error");
@@ -123,11 +123,12 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		}
 
 		String paramSavingPath = getParamFilePath(TestModuleType.SCHEDULE_CLAWING.getModuleName(),
-				ScheduleClawingType.HE_SHA_BI_CAO_WECHAT_PREREGIST.getFlowName(), HeShaBiCaoWechatPreregistDTO.class.getSimpleName());
+				ScheduleClawingType.HSBC_WECHAT_PREREGIST.getFlowName(), HsbcWechatPreregistDTO.class.getSimpleName());
 		String paramStr = ioUtil.getStringFromFile(paramSavingPath);
 		try {
-			JSONObject paramJson = JSONObject.fromObject(paramStr);
-			dto.setMainUrl(paramJson.getString("shaBiYinHangWechatPreregistUrl"));
+			HsbcWechatPreregistDTO paramDTO = buildObjFromJsonCustomization(paramStr, HsbcWechatPreregistDTO.class);
+			dto.setMainUrl(paramDTO.getMainUrl());
+			dto.setProvinceRegionMap(paramDTO.getProvinceRegionMap());
 		} catch (Exception e) {
 			r.setMessage("Option service error, please call admin");
 			return r;
@@ -141,7 +142,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		return r;
 	}
 	
-	private boolean checkPwd(HeShaBiCaoWechatPreregistDTO dto) {
+	private boolean checkPwd(HsbcWechatPreregistDTO dto) {
 		if (StringUtils.isBlank(dto.getApkDownloadPassword())) {
 			return false;
 		}
@@ -185,11 +186,11 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 	}
 
 	@Override
-	public void sendHsbcWechatPreregistTask(HeShaBiCaoWechatPreregistDTO paramDTO) {
+	public void sendHsbcWechatPreregistTask(HsbcWechatPreregistDTO paramDTO) {
 		AutomationTestInsertEventDTO mainDTO = new AutomationTestInsertEventDTO();
 		mainDTO.setTestModuleType(TestModuleType.SCHEDULE_CLAWING.getId());
-		mainDTO.setFlowType(ScheduleClawingType.HE_SHA_BI_CAO_WECHAT_PREREGIST.getId());
-		mainDTO.setFlowTypeName(ScheduleClawingType.HE_SHA_BI_CAO_WECHAT_PREREGIST.getFlowName());
+		mainDTO.setFlowType(ScheduleClawingType.HSBC_WECHAT_PREREGIST.getId());
+		mainDTO.setFlowTypeName(ScheduleClawingType.HSBC_WECHAT_PREREGIST.getFlowName());
 		mainDTO.setTestEventId(snowFlake.getNextId());
 
 		mainDTO = automationTestInsertEventDtoAddParamStr(mainDTO, paramDTO);

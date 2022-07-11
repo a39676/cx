@@ -18,6 +18,7 @@ import demo.toyParts.educate.service.ExerciesServiceMathG2_1;
 import demo.toyParts.educate.service.ExerciesServiceMathG2_2;
 import demo.toyParts.educate.service.ExerciesServiceMathG3_1;
 import demo.toyParts.educate.service.ExerciesServiceMathG3_2;
+import demo.toyParts.educate.service.ExerciesServiceMathG4_1;
 
 @Controller
 @RequestMapping(value = EducateUrl.ROOT)
@@ -35,6 +36,8 @@ public class ExerciesQuestionController extends CommonController {
 	private ExerciesServiceMathG3_1 g3_1_math;
 	@Autowired
 	private ExerciesServiceMathG3_2 g3_2_math;
+	@Autowired
+	private ExerciesServiceMathG4_1 g4_1_math;
 
 	@GetMapping(value = EducateUrl.QUESTION)
 	@ResponseBody
@@ -91,6 +94,14 @@ public class ExerciesQuestionController extends CommonController {
 			} else if (ExerciesSubjectType.english.equals(subjectType)) {
 
 			}
+		} else if (GradeType.GRADE_4_1.equals(gradeType)) {
+			if (ExerciesSubjectType.chinese.equals(subjectType)) {
+
+			} else if (ExerciesSubjectType.math.equals(subjectType)) {
+				return g4_1_math.getExercies();
+			} else if (ExerciesSubjectType.english.equals(subjectType)) {
+
+			}
 		}
 
 		return null;
@@ -112,6 +123,30 @@ public class ExerciesQuestionController extends CommonController {
 	@GetMapping(value = "/getG2_1_math")
 	@ResponseBody
 	public ModelAndView getG2_1_math_exercies() {
+		return g2_1_math.getExercies();
+	}
+	
+	@GetMapping(value = "/getG2_2_math")
+	@ResponseBody
+	public ModelAndView getG2_2_math_exercies() {
+		return g2_2_math.getExercies();
+	}
+	
+	@GetMapping(value = "/getG3_1_math")
+	@ResponseBody
+	public ModelAndView getG3_1_math_exercies() {
+		return g3_1_math.getExercies();
+	}
+	
+	@GetMapping(value = "/getG3_2_math")
+	@ResponseBody
+	public ModelAndView getG3_2_math_exercies() {
 		return g3_2_math.getExercies();
+	}
+	
+	@GetMapping(value = "/getG4_1_math")
+	@ResponseBody
+	public ModelAndView getG4_1_math_exercies() {
+		return g4_1_math.getExercies();
 	}
 }

@@ -15,4 +15,6 @@ public interface HsbcService {
 
 	ModelAndView getReportSummaryPage(HsbcWechatPreregistDTO dto);
 
+	CommonResult hsbcWechatPreregistRandomInsert();
+
 }

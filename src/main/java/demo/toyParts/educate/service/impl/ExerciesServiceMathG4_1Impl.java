@@ -28,8 +28,8 @@ public class ExerciesServiceMathG4_1Impl extends ExerciesMathCommonService imple
 	private static final Integer MIN_MULTIPLICATION1_NUM = 100;
 	private static final Integer MAX_MULTIPLICATION2_NUM = 99;
 	private static final Integer MIN_MULTIPLICATION2_NUM = 10;
-	private static final Integer MAX_DIVISION_NUM = 19;
-	private static final Integer MIN_DIVISION_NUM = 3;
+	private static final Integer MAX_DIVISION_NUM = 99;
+	private static final Integer MIN_DIVISION_NUM = 6;
 	private static final GradeType GRADE_TYPE = GradeType.GRADE_4_1;
 
 	@Override
@@ -73,57 +73,60 @@ public class ExerciesServiceMathG4_1Impl extends ExerciesMathCommonService imple
 
 		return exerciesDTO;
 	}
-	
+
 	private MathQuestionBaseDTO createQuestion() {
 		ThreadLocalRandom t = ThreadLocalRandom.current();
-		
+
 		int rate = t.nextInt(1, 11);
-		if(rate > 3) {
+		if (rate > 3) {
 			return createIntegerQuestion();
 		} else {
 			return createDecimalQuestion();
 		}
 	}
-	
+
 	private MathQuestionBaseDTO createDecimalQuestion() {
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
-		BigDecimal num1 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(2, RoundingMode.HALF_UP);
-		BigDecimal num2 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(2, RoundingMode.HALF_UP);
-		BigDecimal num3 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(2, RoundingMode.HALF_UP);
-		
+		BigDecimal num1 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(2,
+				RoundingMode.HALF_UP);
+		BigDecimal num2 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(2,
+				RoundingMode.HALF_UP);
+		BigDecimal num3 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(2,
+				RoundingMode.HALF_UP);
+
 		MathBaseSymbolType mathSymbolType1 = getRandomMathBaseSymbolType(MathBaseSymbolType.addition,
 				MathBaseSymbolType.subtraction);
-		
+
 		MathBaseSymbolType mathSymbolType2 = getRandomMathBaseSymbolType(MathBaseSymbolType.addition,
 				MathBaseSymbolType.subtraction);
-		
-		String exp = String.valueOf(num1 + mathSymbolType1.getCodeSymbol() + num2 + mathSymbolType2.getCodeSymbol() + num3);
+
+		String exp = String
+				.valueOf(num1 + mathSymbolType1.getCodeSymbol() + num2 + mathSymbolType2.getCodeSymbol() + num3);
 		Expression expression = new ExpressionBuilder(exp).build();
 		Double result = expression.evaluate();
-		
-		while(result < 0 || result > MAX_CALCULATE) {
+
+		while (result < 0 || result > MAX_CALCULATE) {
 			num1 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(2, RoundingMode.HALF_UP);
 			num2 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(2, RoundingMode.HALF_UP);
 			num3 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(2, RoundingMode.HALF_UP);
-			
-			mathSymbolType1 = getRandomMathBaseSymbolType(MathBaseSymbolType.addition,
-					MathBaseSymbolType.subtraction);
-			
-			mathSymbolType2 = getRandomMathBaseSymbolType(MathBaseSymbolType.addition,
-					MathBaseSymbolType.subtraction);
-			
-			exp = String.valueOf(num1 + mathSymbolType1.getCodeSymbol() + num2 + mathSymbolType2.getCodeSymbol() + num3);
+
+			mathSymbolType1 = getRandomMathBaseSymbolType(MathBaseSymbolType.addition, MathBaseSymbolType.subtraction);
+
+			mathSymbolType2 = getRandomMathBaseSymbolType(MathBaseSymbolType.addition, MathBaseSymbolType.subtraction);
+
+			exp = String
+					.valueOf(num1 + mathSymbolType1.getCodeSymbol() + num2 + mathSymbolType2.getCodeSymbol() + num3);
 			expression = new ExpressionBuilder(exp).build();
 			result = expression.evaluate();
 		}
-		
+
 		BigDecimal fromDouble = new BigDecimal(result).setScale(2, RoundingMode.HALF_UP);
-		if(String.valueOf(fromDouble).endsWith("0")) {
+		if (String.valueOf(fromDouble).endsWith("0")) {
 			fromDouble = new BigDecimal(result).setScale(1, RoundingMode.HALF_UP);
 		}
-		
+
 		exp = replaceCodingSymbolToMathSymbol(exp);
 		q.setExpression(exp);
 		q.getStandardAnswer().clear();
@@ -156,7 +159,7 @@ public class ExerciesServiceMathG4_1Impl extends ExerciesMathCommonService imple
 				mathSymbolType1 = getRandomMathBaseSymbolType(MathBaseSymbolType.addition,
 						MathBaseSymbolType.subtraction);
 				num3 = t.nextInt(MIN_DIVISION_NUM, MAX_DIVISION_NUM + 1);
-				num2 = t.nextInt(MIN_MULTIPLICATION_NUM * 3, MAX_MULTIPLICATION_NUM * 3 + 1);
+				num2 = t.nextInt(MIN_MULTIPLICATION2_NUM * 3, MAX_MULTIPLICATION2_NUM * 3 + 1);
 				num1 = num3 * num2;
 				String expLeftPart = "(" + createExpressionBySymbol(mathSymbolType1, num1).getExpression() + ")";
 				resultExp = expLeftPart + mathSymbolType2.getCodeSymbol() + num3;
@@ -165,10 +168,10 @@ public class ExerciesServiceMathG4_1Impl extends ExerciesMathCommonService imple
 			mathSymbolType1 = getRandomMathBaseSymbolType(MathBaseSymbolType.addition,
 					MathBaseSymbolType.multiplication);
 			if (mathSymbolType1.getCode() < MathBaseSymbolType.multiplication.getCode()) {
-				num3 = t.nextInt(MIN_MULTIPLICATION_NUM, MAX_MULTIPLICATION_NUM + 1);
+				num3 = t.nextInt(MIN_MULTIPLICATION2_NUM, MAX_MULTIPLICATION2_NUM + 1);
 				if (hasBrackets) {
 					if (mathSymbolType1.getCode() < MathBaseSymbolType.multiplication.getCode()) {
-						Integer leftPartExpectResult = t.nextInt(MIN_MULTIPLICATION_NUM, MAX_MULTIPLICATION_NUM);
+						Integer leftPartExpectResult = t.nextInt(MIN_MULTIPLICATION1_NUM, MAX_MULTIPLICATION1_NUM);
 						MathQuestionBaseDTO questLeftPart = createExpressionBySymbol(mathSymbolType1,
 								leftPartExpectResult);
 						String expLeftPart = questLeftPart.getExpression();
@@ -186,9 +189,9 @@ public class ExerciesServiceMathG4_1Impl extends ExerciesMathCommonService imple
 				} else {
 					if (MathBaseSymbolType.addition.equals(mathSymbolType1)) {
 						num1 = t.nextInt(MIN_ADDITION_NUM, MAX_ADDITION_NUM + 1);
-						num2 = t.nextInt(MIN_MULTIPLICATION_NUM, MAX_MULTIPLICATION_NUM + 1);
+						num2 = t.nextInt(MIN_MULTIPLICATION1_NUM, MAX_MULTIPLICATION1_NUM + 1);
 					} else {
-						num2 = t.nextInt(MIN_MULTIPLICATION_NUM, MAX_MULTIPLICATION_NUM + 1);
+						num2 = t.nextInt(MIN_MULTIPLICATION1_NUM, MAX_MULTIPLICATION1_NUM + 1);
 						num1 = t.nextInt(num2 * num3, MAX_CALCULATE);
 					}
 					resultExp = String.valueOf(
@@ -197,7 +200,7 @@ public class ExerciesServiceMathG4_1Impl extends ExerciesMathCommonService imple
 			} else {
 				num1 = t.nextInt(MIN_DIVISION_NUM, MAX_DIVISION_NUM + 1);
 				num2 = t.nextInt(MIN_DIVISION_NUM, MAX_DIVISION_NUM + 1);
-				num3 = t.nextInt(MIN_MULTIPLICATION_NUM, MAX_MULTIPLICATION_NUM + 1);
+				num3 = t.nextInt(MIN_MULTIPLICATION2_NUM, MAX_MULTIPLICATION2_NUM + 1);
 
 				if (hasBrackets) {
 					if (bracketOnLeft) {
@@ -233,16 +236,17 @@ public class ExerciesServiceMathG4_1Impl extends ExerciesMathCommonService imple
 							resultExp = String.valueOf(num1 + mathSymbolType1.getCodeSymbol() + "(" + num2
 									+ mathSymbolType2.getCodeSymbol() + num3 + ")");
 						} else if (MathBaseSymbolType.multiplication.equals(mathSymbolType1)) {
-							num1 = t.nextInt(MIN_DIVISION_NUM, MAX_DIVISION_NUM + 1);
-							num2 = t.nextInt(MIN_DIVISION_NUM, MAX_DIVISION_NUM + 1);
-							num3 = t.nextInt(MIN_MULTIPLICATION_NUM, MAX_MULTIPLICATION_NUM + 1);
-							resultExp = String.valueOf(num1 + mathSymbolType1.getCodeSymbol() + "(" + num2
-									+ mathSymbolType2.getCodeSymbol() + num3 + ")");
+							num1 = t.nextInt(MIN_MULTIPLICATION1_NUM, MAX_MULTIPLICATION1_NUM + 1);
+							int expectAddtionResult = t.nextInt(MIN_MULTIPLICATION2_NUM, MAX_MULTIPLICATION2_NUM + 1);
+							MathQuestionBaseDTO addtionQuestion = createExpressionBySymbol(mathSymbolType2,
+									expectAddtionResult);
+							resultExp = String.valueOf(num1 + mathSymbolType1.getCodeSymbol() + "("
+									+ addtionQuestion.getExpression() + ")");
 						} else {
 							int rightPartResult = t.nextInt(MIN_DIVISION_NUM, MAX_DIVISION_NUM + 1);
 							MathQuestionBaseDTO questionRightPart = createExpressionBySymbol(mathSymbolType2,
 									rightPartResult);
-							num2 = t.nextInt(MIN_MULTIPLICATION_NUM * 3, MAX_MULTIPLICATION_NUM * 3 + 1);
+							num2 = t.nextInt(MIN_MULTIPLICATION2_NUM * 3, MAX_MULTIPLICATION2_NUM * 3 + 1);
 							num1 = rightPartResult * num2;
 							resultExp = String.valueOf(num1 + mathSymbolType1.getCodeSymbol() + "("
 									+ questionRightPart.getExpression() + ")");
@@ -274,8 +278,8 @@ public class ExerciesServiceMathG4_1Impl extends ExerciesMathCommonService imple
 							resultExp = String.valueOf(num1 + mathSymbolType1.getCodeSymbol() + "(" + num2
 									+ mathSymbolType2.getCodeSymbol() + num3 + ")");
 						} else if (MathBaseSymbolType.multiplication.equals(mathSymbolType1)) {
-							num1 = t.nextInt(MIN_MULTIPLICATION_NUM, MAX_MULTIPLICATION_NUM + 1);
-							int expectRightPartResult = t.nextInt(MIN_MULTIPLICATION_NUM, MAX_MULTIPLICATION_NUM + 1);
+							num1 = t.nextInt(MIN_MULTIPLICATION1_NUM, MAX_MULTIPLICATION1_NUM + 1);
+							int expectRightPartResult = t.nextInt(MIN_MULTIPLICATION2_NUM, MAX_MULTIPLICATION2_NUM + 1);
 							MathQuestionBaseDTO questionRightPart = createExpressionBySymbol(mathSymbolType2,
 									expectRightPartResult);
 							resultExp = String.valueOf(num1 + mathSymbolType1.getCodeSymbol() + "("
@@ -284,7 +288,7 @@ public class ExerciesServiceMathG4_1Impl extends ExerciesMathCommonService imple
 							int expectRightPartResult = t.nextInt(MIN_DIVISION_NUM, MAX_DIVISION_NUM + 1);
 							MathQuestionBaseDTO questionRightPart = createExpressionBySymbol(mathSymbolType2,
 									expectRightPartResult);
-							num2 = t.nextInt(MIN_MULTIPLICATION_NUM, MAX_MULTIPLICATION_NUM * 3 + 1);
+							num2 = t.nextInt(MIN_MULTIPLICATION2_NUM, MAX_MULTIPLICATION2_NUM * 3 + 1);
 							num1 = expectRightPartResult * num2;
 							resultExp = String.valueOf(num1 + mathSymbolType1.getCodeSymbol() + "("
 									+ questionRightPart.getExpression() + ")");
@@ -348,7 +352,7 @@ public class ExerciesServiceMathG4_1Impl extends ExerciesMathCommonService imple
 			Double result = expression.evaluate();
 			inputResult = result.intValue();
 		}
-		Integer num1 = inputResult * t.nextInt(MIN_MULTIPLICATION_NUM, MAX_MULTIPLICATION_NUM * 3 + 1);
+		Integer num1 = inputResult * t.nextInt(MIN_MULTIPLICATION2_NUM, MAX_MULTIPLICATION2_NUM * 3 + 1);
 
 		String exp = String.valueOf(num1 + mathSymbolType1.getCodeSymbol() + inputResult);
 
@@ -408,7 +412,7 @@ public class ExerciesServiceMathG4_1Impl extends ExerciesMathCommonService imple
 		MathBaseSymbolType mathSymbolType1 = MathBaseSymbolType.subtraction;
 
 		if (inputResult == null) {
-			inputResult = t.nextInt(MIN_MULTIPLICATION_NUM, MAX_CALCULATE);
+			inputResult = t.nextInt(MIN_MULTIPLICATION2_NUM, MAX_CALCULATE);
 		}
 		Integer num1 = t.nextInt(inputResult, MAX_CALCULATE + 1);
 		Integer num2 = num1 - inputResult;
@@ -428,8 +432,8 @@ public class ExerciesServiceMathG4_1Impl extends ExerciesMathCommonService imple
 
 		MathBaseSymbolType mathSymbolType1 = MathBaseSymbolType.multiplication;
 
-		Integer num1 = t.nextInt(MIN_MULTIPLICATION_NUM, MAX_MULTIPLICATION_NUM + 1);
-		Integer num2 = t.nextInt(MIN_MULTIPLICATION_NUM, MAX_MULTIPLICATION_NUM + 1);
+		Integer num1 = t.nextInt(MIN_MULTIPLICATION2_NUM, MAX_MULTIPLICATION2_NUM + 1);
+		Integer num2 = t.nextInt(MIN_MULTIPLICATION2_NUM, MAX_MULTIPLICATION2_NUM + 1);
 
 		String exp = String.valueOf(num1 + mathSymbolType1.getCodeSymbol() + num2);
 		Expression expression = new ExpressionBuilder(exp).build();
@@ -446,11 +450,11 @@ public class ExerciesServiceMathG4_1Impl extends ExerciesMathCommonService imple
 
 		MathBaseSymbolType mathSymbolType1 = MathBaseSymbolType.multiplication;
 
-		Integer num1 = t.nextInt(MIN_MULTIPLICATION_NUM, MAX_MULTIPLICATION_NUM + 1);
-		Integer num2 = t.nextInt(MIN_MULTIPLICATION_NUM, MAX_MULTIPLICATION_NUM + 1);
+		Integer num1 = t.nextInt(MIN_MULTIPLICATION1_NUM, MAX_MULTIPLICATION1_NUM + 1);
+		Integer num2 = t.nextInt(MIN_MULTIPLICATION2_NUM, MAX_MULTIPLICATION2_NUM + 1);
 		while (num1 * num2 < inputMinResult) {
-			num1 = t.nextInt(MIN_MULTIPLICATION_NUM, MAX_MULTIPLICATION_NUM + 1);
-			num2 = t.nextInt(MIN_MULTIPLICATION_NUM, MAX_MULTIPLICATION_NUM + 1);
+			num1 = t.nextInt(MIN_MULTIPLICATION2_NUM, MAX_MULTIPLICATION2_NUM + 1);
+			num2 = t.nextInt(MIN_MULTIPLICATION2_NUM, MAX_MULTIPLICATION2_NUM + 1);
 		}
 
 		String exp = String.valueOf(num1 + mathSymbolType1.getCodeSymbol() + num2);

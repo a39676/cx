@@ -107,7 +107,7 @@
           <div class="input-group-prepend">
             <span class="input-group-text">证件号码</span>
           </div>
-          <input type="text" class="form-control" name="" id="idNumber">
+          <input type="text" class="form-control" name="" id="idNumber" value="${randomIdNumber}">
         </div>
         <div class="input-group">
           <div class="input-group-prepend">

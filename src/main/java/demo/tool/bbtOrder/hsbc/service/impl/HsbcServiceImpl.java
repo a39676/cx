@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ import demo.tool.bbtOrder.hsbc.pojo.vo.HsbcWechatPreregistReportVO;
 import demo.tool.bbtOrder.hsbc.service.HsbcService;
 import net.sf.json.JSONObject;
 import tool.pojo.type.InternationalityType;
+import toolPack.complexTool.ChinaMainLandIdNumGenerator;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -46,7 +49,8 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		ModelAndView view = new ModelAndView("toolJSP/publicTool/HsbcWechatPreregist");
 		view.addObject("idTypeList", HsbcIdType.values());
 		view.addObject("internationalityTypeList", InternationalityType.values());
-
+		ChinaMainLandIdNumGenerator g = new ChinaMainLandIdNumGenerator();
+		view.addObject("randomIdNumber", g.getRandomId());
 		return view;
 	}
 	
@@ -198,5 +202,71 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		eventService.insertEvent(mainDTO);
 
 		testEventInsertAckProducer.send(mainDTO);
+	}
+
+	@Override
+	public CommonResult hsbcWechatPreregistRandomInsert() {
+		CommonResult r = new CommonResult();
+		if(systemOptionService.isDev()) {
+			return r;
+		}
+		
+		LocalDateTime now = LocalDateTime.now();
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+		if(now.getHour() < 10 || now.getHour() > 21 || t.nextInt(1, now.getHour()) < 8) {
+			return r;
+		}
+		
+		HsbcWechatPreregistDTO dto = new HsbcWechatPreregistDTO();
+		
+		String paramSavingPath = getParamFilePath(TestModuleType.SCHEDULE_CLAWING.getModuleName(),
+				ScheduleClawingType.HSBC_WECHAT_PREREGIST.getFlowName(), HsbcWechatPreregistDTO.class.getSimpleName());
+		String paramStr = ioUtil.getStringFromFile(paramSavingPath);
+		try {
+			HsbcWechatPreregistDTO paramDTO = buildObjFromJsonCustomization(paramStr, HsbcWechatPreregistDTO.class);
+			dto.setMainUrl(paramDTO.getMainUrl());
+			dto.setProvinceRegionMap(paramDTO.getProvinceRegionMap());
+			
+		} catch (Exception e) {
+			r.setMessage("Option service error, please call admin");
+			return r;
+		}
+		
+		InternationalityType phoneArea = InternationalityType.CN;
+		dto.setPhoneAreaType(phoneArea.getCode());
+		dto.setPhoneAreaName(phoneArea.getCnName());
+		
+		dto.setAreaName(phoneArea.getCnName());
+		dto.setAreaType(phoneArea.getCode());
+		
+		dto.setCustomerFirstName("测");
+		dto.setCustomerLastName("试");
+		
+		HsbcIdType idType = HsbcIdType.MAIN_LAND_ID;
+		dto.setIdType(idType.getId());
+		
+		int randomNum = t.nextInt(10000000, 99999999);
+		String randomPhone = String.valueOf("187" + randomNum);
+		dto.setPhoneNumber(randomPhone);
+		
+		Set<String> provinceSet = dto.getProvinceRegionMap().keySet();
+		List<String> provinceList = new ArrayList<>();
+		provinceList.addAll(provinceSet);
+		dto.setCityNameOfOpeningAccountBranch(provinceList.get(t.nextInt(0, provinceList.size())));
+		
+		ChinaMainLandIdNumGenerator g = new ChinaMainLandIdNumGenerator();
+		String randomId = g.getRandomId();
+		dto.setIdNumber(randomId);
+
+		if (StringUtils.isAnyBlank(dto.getIdNumber(), dto.getPhoneNumber())) {
+			r.setMessage("Empty param");
+			return r;
+		}
+
+		sendHsbcWechatPreregistTask(dto);
+
+		r.setMessage("Task inserted");
+		r.setIsSuccess();
+		return r;
 	}
 }

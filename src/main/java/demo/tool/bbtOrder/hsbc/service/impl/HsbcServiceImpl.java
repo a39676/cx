@@ -160,7 +160,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 	}
 
 	private boolean canInsertPreregistTask() {
-		if (systemOptionService.isDev()) {
+		if (baseUtilCustom.hasAdminRole() || systemOptionService.isDev()) {
 			return true;
 		}
 

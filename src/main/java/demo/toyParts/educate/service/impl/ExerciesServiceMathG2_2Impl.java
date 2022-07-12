@@ -22,6 +22,8 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 
 	private static final Integer MAX_ADDITION_NUM = 99;
 	private static final Integer MIN_ADDITION_NUM = 0;
+	private static final Integer MAX_DIVISION_NUM = 9;
+	private static final Integer MIN_DIVISION_NUM = 3;
 	private static final Integer MIN_RESULT = 0;
 	private static final Integer MAX_RESULT = 10000;
 	private static final GradeType GRADE_TYPE = GradeType.GRADE_2_2;
@@ -107,7 +109,7 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 			} else if(result1 > 0 && result1 < 6) {
 				num3 = 1;
 			} else {
-				num3 = t.nextInt(MIN_ADDITION_NUM + 1, result1.intValue() / 2);
+				num3 = t.nextInt(MIN_DIVISION_NUM + 1, MAX_DIVISION_NUM);
 			}
 			resultExpStr = String.valueOf(exp1 + MathBaseSymbolType.division.getCodeSymbol() + num3);
 			resultExpression = new ExpressionBuilder(resultExpStr).build();

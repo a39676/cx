@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.commons.lang3.StringUtils;
@@ -17,6 +16,7 @@ import com.google.gson.Gson;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
 import autoTest.testEvent.hsbc.pojo.dto.HsbcWechatPreregistDTO;
 import autoTest.testEvent.hsbc.pojo.type.HsbcIdType;
+import autoTest.testEvent.hsbc.pojo.type.HsbcWechatPreregistBranchCityNameType;
 import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import autoTest.testModule.pojo.type.TestModuleType;
@@ -249,10 +249,11 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		String randomPhone = String.valueOf("187" + randomNum);
 		dto.setPhoneNumber(randomPhone);
 		
-		Set<String> provinceSet = dto.getProvinceRegionMap().keySet();
-		List<String> provinceList = new ArrayList<>();
-		provinceList.addAll(provinceSet);
-		dto.setCityNameOfOpeningAccountBranch(provinceList.get(t.nextInt(0, provinceList.size())));
+		List<String> citynameList = new ArrayList<>();
+		for(HsbcWechatPreregistBranchCityNameType data : HsbcWechatPreregistBranchCityNameType.values()) {
+			citynameList.add(data.getName());
+		}
+		dto.setCityNameOfOpeningAccountBranch(citynameList.get(t.nextInt(0, citynameList.size())));
 		
 		ChinaMainLandIdNumGenerator g = new ChinaMainLandIdNumGenerator();
 		String randomId = g.getRandomId();

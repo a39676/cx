@@ -28,6 +28,7 @@ public class ExerciesServiceMathG3_2Impl extends ExerciesMathCommonService imple
 	private static final Integer MIN_MULTIPLICATION_NUM = 50;
 	private static final Integer MAX_DIVISION_NUM = 9;
 	private static final Integer MIN_DIVISION_NUM = 3;
+	private static final Integer SCALE = 1;
 	private static final GradeType GRADE_TYPE = GradeType.GRADE_3_2;
 
 	@Override
@@ -87,9 +88,9 @@ public class ExerciesServiceMathG3_2Impl extends ExerciesMathCommonService imple
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
-		BigDecimal num1 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(2, RoundingMode.HALF_UP);
-		BigDecimal num2 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(2, RoundingMode.HALF_UP);
-		BigDecimal num3 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(2, RoundingMode.HALF_UP);
+		BigDecimal num1 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(SCALE, RoundingMode.HALF_UP);
+		BigDecimal num2 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(SCALE, RoundingMode.HALF_UP);
+		BigDecimal num3 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(SCALE, RoundingMode.HALF_UP);
 		
 		MathBaseSymbolType mathSymbolType1 = getRandomMathBaseSymbolType(MathBaseSymbolType.addition,
 				MathBaseSymbolType.subtraction);
@@ -102,9 +103,9 @@ public class ExerciesServiceMathG3_2Impl extends ExerciesMathCommonService imple
 		Double result = expression.evaluate();
 		
 		while(result < 0 || result > MAX_CALCULATE) {
-			num1 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(2, RoundingMode.HALF_UP);
-			num2 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(2, RoundingMode.HALF_UP);
-			num3 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(2, RoundingMode.HALF_UP);
+			num1 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(SCALE, RoundingMode.HALF_UP);
+			num2 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(SCALE, RoundingMode.HALF_UP);
+			num3 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(SCALE, RoundingMode.HALF_UP);
 			
 			mathSymbolType1 = getRandomMathBaseSymbolType(MathBaseSymbolType.addition,
 					MathBaseSymbolType.subtraction);
@@ -112,14 +113,20 @@ public class ExerciesServiceMathG3_2Impl extends ExerciesMathCommonService imple
 			mathSymbolType2 = getRandomMathBaseSymbolType(MathBaseSymbolType.addition,
 					MathBaseSymbolType.subtraction);
 			
+			if(MathBaseSymbolType.subtraction.equals(mathSymbolType1)) {
+				if(num1.compareTo(num2) < 0) {
+					continue;
+				}
+			}
+			
 			exp = String.valueOf(num1 + mathSymbolType1.getCodeSymbol() + num2 + mathSymbolType2.getCodeSymbol() + num3);
 			expression = new ExpressionBuilder(exp).build();
 			result = expression.evaluate();
 		}
 		
-		BigDecimal fromDouble = new BigDecimal(result).setScale(2, RoundingMode.HALF_UP);
+		BigDecimal fromDouble = new BigDecimal(result).setScale(SCALE, RoundingMode.HALF_UP);
 		if(String.valueOf(fromDouble).endsWith("0")) {
-			fromDouble = new BigDecimal(result).setScale(1, RoundingMode.HALF_UP);
+			fromDouble = new BigDecimal(result).setScale(SCALE, RoundingMode.HALF_UP);
 		}
 		
 		exp = replaceCodingSymbolToMathSymbol(exp);

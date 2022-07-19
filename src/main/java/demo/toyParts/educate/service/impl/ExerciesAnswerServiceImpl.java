@@ -154,7 +154,7 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 
 		BigDecimal totalScore = BigDecimal.ZERO;
 		BigDecimal maxScore = optionService.getMaxScore();
-		BigDecimal scoreOfSubQuestion = maxScore.divide(new BigDecimal(exerciesDTO.getQuestionList().size()));
+		BigDecimal scoreOfSubQuestion = maxScore.divide(new BigDecimal(exerciesDTO.getQuestionList().size()), RoundingMode.HALF_UP);
 
 		List<String> gavenAnswer = null;
 		List<String> standarAnswer = null;

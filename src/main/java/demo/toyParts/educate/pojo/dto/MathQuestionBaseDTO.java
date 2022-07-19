@@ -34,6 +34,13 @@ public class MathQuestionBaseDTO {
 	public void setStandardAnswer(List<String> standardAnswer) {
 		this.standardAnswer = standardAnswer;
 	}
+	
+	public void addStandardAnswer(String standardAnswer) {
+		 if(this.standardAnswer == null) {
+			 this.standardAnswer = new ArrayList<>();
+		 }
+		 this.standardAnswer.add(standardAnswer);
+	}
 
 	@Override
 	public String toString() {

@@ -55,7 +55,7 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 
 		MathQuestionBaseDTO question = null;
 		int questionNumber = 1;
-		for (; questionNumber <= optionService.getQuestionListSize() - 4; questionNumber++) {
+		for (; questionNumber <= optionService.getQuestionListSize() - 5; questionNumber++) {
 			question = createCalculateQuestion();
 			question.setQuestionNumber(questionNumber);
 			exerciesDTO.getQuestionList().add(question);
@@ -75,8 +75,13 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 		question.setQuestionNumber(questionNumber);
 		exerciesDTO.getQuestionList().add(question);
 		questionNumber++;
-		
+
 		question = createWordProblemModule4();
+		question.setQuestionNumber(questionNumber);
+		exerciesDTO.getQuestionList().add(question);
+		questionNumber++;
+		
+		question = createWordProblemModule5();
 		question.setQuestionNumber(questionNumber);
 		exerciesDTO.getQuestionList().add(question);
 		questionNumber++;
@@ -451,11 +456,42 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 		return q;
 	}
 
+	private MathQuestionBaseDTO createWordProblemModule5() {
+		String moduleStr = "一场篮球赛分为上半场和下半场, A班上半场得了%d分, 全场总分是%d分, %s,B班的全场总分是%d分, (1)B班下半场得了多少分";
+
+		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+
+		int classAFirstHalfScore = t.nextInt(12, 50 + 1);
+		int classBFirstHalfScore = t.nextInt(12, 50 + 1);
+		int classASecondHalfScore = t.nextInt(12, 50 + 1);
+		int classBSecondHalfScore = t.nextInt(12, 50 + 1);
+		int total = classAFirstHalfScore + classBFirstHalfScore + classASecondHalfScore + classBSecondHalfScore;
+		int classBTotalScore = classBFirstHalfScore + classBSecondHalfScore;
+
+		String dynamicStr = "";
+		if (classAFirstHalfScore > classBFirstHalfScore) {
+			dynamicStr = "上半场A班比B班得分多" + (classAFirstHalfScore - classBFirstHalfScore) + "分";
+		} else if (classAFirstHalfScore < classBFirstHalfScore) {
+			dynamicStr = "上半场B班比A班得分多" + (classBFirstHalfScore - classAFirstHalfScore) + "分";
+		} else {
+			dynamicStr = "上半场两个班的得分一样多";
+		}
+
+//		String moduleStr = "一场篮球赛分为上半场和下半场, A班上半场得了%d分, 全场总分是%d分, %s, B班的全场总分是%d分, (1)B班下半场得了多少分";
+		q.setExpression(String.format(moduleStr, classAFirstHalfScore, total, dynamicStr, classBTotalScore));
+
+		q.addStandardAnswer(String.valueOf(classBSecondHalfScore));
+
+		return q;
+	}
+
 	public static void main(String[] args) {
 		ExerciesServiceMathG2_2Impl t = new ExerciesServiceMathG2_2Impl();
 		int i = 0;
 		while (i < 10) {
-			MathQuestionBaseDTO q = t.createWordProblemModule4();
+			MathQuestionBaseDTO q = t.createWordProblemModule5();
 			System.out.println(q.toString());
 			i++;
 		}

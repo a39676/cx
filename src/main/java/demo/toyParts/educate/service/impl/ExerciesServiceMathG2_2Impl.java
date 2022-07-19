@@ -55,23 +55,28 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 
 		MathQuestionBaseDTO question = null;
 		int questionNumber = 1;
-		for (; questionNumber <= optionService.getQuestionListSize() - 3; questionNumber++) {
+		for (; questionNumber <= optionService.getQuestionListSize() - 4; questionNumber++) {
 			question = createCalculateQuestion();
 			question.setQuestionNumber(questionNumber);
 			exerciesDTO.getQuestionList().add(question);
 		}
-		
+
 		question = createWordProblemModule1();
 		question.setQuestionNumber(questionNumber);
 		exerciesDTO.getQuestionList().add(question);
 		questionNumber++;
-		
+
 		question = createWordProblemModule2();
 		question.setQuestionNumber(questionNumber);
 		exerciesDTO.getQuestionList().add(question);
 		questionNumber++;
-		
+
 		question = createWordProblemModule3();
+		question.setQuestionNumber(questionNumber);
+		exerciesDTO.getQuestionList().add(question);
+		questionNumber++;
+		
+		question = createWordProblemModule4();
 		question.setQuestionNumber(questionNumber);
 		exerciesDTO.getQuestionList().add(question);
 		questionNumber++;
@@ -128,7 +133,7 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 			} else if (result1 > 0 && result1 < 6) {
 				num3 = 1;
 			} else {
-				num3 = t.nextInt(MIN_DIVISION_NUM + 1, MAX_DIVISION_NUM);
+				num3 = t.nextInt(MIN_DIVISION_NUM, MAX_DIVISION_NUM + 1);
 			}
 			resultExpStr = String.valueOf(exp1 + MathBaseSymbolType.division.getCodeSymbol() + num3);
 			resultExpression = new ExpressionBuilder(resultExpStr).build();
@@ -354,8 +359,8 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 		int randomKeyWordIndex = t.nextInt(0, dynamicKeyWord.size());
 		String[] keyWord = dynamicKeyWord.get(randomKeyWordIndex);
 
-		int item2Price = t.nextInt(MIN_DIVISION_NUM + 1, MAX_DIVISION_NUM);
-		int times = t.nextInt(MIN_DIVISION_NUM + 1, MAX_DIVISION_NUM);
+		int item2Price = t.nextInt(MIN_DIVISION_NUM, MAX_DIVISION_NUM + 1);
+		int times = t.nextInt(MIN_DIVISION_NUM, MAX_DIVISION_NUM + 1);
 		int item1Price = item2Price * times;
 
 //		String moduleStr = "一%s%s, 可以买%d%s%s, 如果每%s%s%d元, (1)每%s%s几元? (2)一%s%s比一%s%s便宜多少元?";
@@ -372,11 +377,85 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 		return q;
 	}
 
+	private MathQuestionBaseDTO createWordProblemModule4() {
+		String moduleStr = "商店有%s%d%s, %s%d%s, %s%d%s, %s想用%d%s%s, %d%s%s, %d%s%s, 做成%s%s, 这些%s最多可以做成多少个这样的%s%s";
+		List<String[]> dynamicKeyWord = new ArrayList<>();
+		dynamicKeyWord.add(new String[] { "个", "苹果", "雪梨", "橙", "水果", "礼盒", "李叔叔" });
+		dynamicKeyWord.add(new String[] { "支", "蜡笔", "颜色笔", "水彩笔", "文具", "套装", "张叔叔" });
+		dynamicKeyWord.add(new String[] { "张", "红色", "蓝色", "黄色", "卡纸", "组合", "王叔叔" });
+		dynamicKeyWord.add(new String[] { "颗", "草莓糖果", "芒果糖果", "橘子糖果", "糖果", "礼包", "何叔叔" });
+		dynamicKeyWord.add(new String[] { "个", "兔子印章", "精灵印章", "小熊印章", "印章", "套装", "李阿姨" });
+		dynamicKeyWord.add(new String[] { "颗", "棉花糖", "水果软糖", "花生糖", "零食", "大礼包", "张阿姨" });
+		dynamicKeyWord.add(new String[] { "条", "绿色丝带", "白色丝带", "彩色丝带", "丝带", "组合", "王阿姨" });
+
+		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+
+		int randomKeyWordIndex = t.nextInt(0, dynamicKeyWord.size());
+		String[] keyWord = dynamicKeyWord.get(randomKeyWordIndex);
+
+		int item1base = t.nextInt(MIN_DIVISION_NUM, MAX_DIVISION_NUM + 1);
+		int item2base = t.nextInt(MIN_DIVISION_NUM, MAX_DIVISION_NUM + 1);
+		int item3base = t.nextInt(MIN_DIVISION_NUM, MAX_DIVISION_NUM + 1);
+
+		int times1 = t.nextInt(MIN_DIVISION_NUM, MAX_DIVISION_NUM + 1);
+		int times2 = t.nextInt(MIN_DIVISION_NUM, MAX_DIVISION_NUM + 1);
+		int times3 = t.nextInt(MIN_DIVISION_NUM, MAX_DIVISION_NUM + 1);
+
+		int random1Add = 0;
+		if (item1base == MIN_DIVISION_NUM) {
+			random1Add = 2;
+		} else {
+			random1Add = t.nextInt(MIN_DIVISION_NUM, item1base);
+		}
+
+		int random2Add = 0;
+		if (item2base == MIN_DIVISION_NUM) {
+			random2Add = 2;
+		} else {
+			random2Add = t.nextInt(MIN_DIVISION_NUM, item2base);
+		}
+
+		int random3Add = 0;
+		if (item3base == MIN_DIVISION_NUM) {
+			random3Add = 2;
+		} else {
+			random3Add = t.nextInt(MIN_DIVISION_NUM, item3base);
+		}
+
+		int item1Total = item1base * times1 + random1Add;
+		int item2Total = item2base * times2 + random2Add;
+		int item3Total = item3base * times3 + random3Add;
+
+//		String moduleStr = "商店有%s%d%s, %s%d%s, %s%d%s, %s想用%d%s%s, %d%s%s, %d%s%s, 做成%s%s, 这些%s最多可以做成多少个这样的%s%s";
+//		dynamicKeyWord.add(new String[] { "条", "绿色丝带", "白色丝带", "彩色丝带", "丝带", "组合", "李叔叔" });
+		q.setExpression(String.format(moduleStr, keyWord[1], item1Total, keyWord[0], keyWord[2], item2Total, keyWord[0],
+				keyWord[3], item3Total, keyWord[0], // 商店有%s%d%s, %s%d%s, %s%d%s,
+				keyWord[6], item1base, keyWord[0], keyWord[1], item2base, keyWord[0], keyWord[2], item3base, keyWord[0],
+				keyWord[3], // %s想用%d%s%s, %d%s%s, %d%s%s,
+				keyWord[4], keyWord[5], // 做成%s%s
+				keyWord[4], keyWord[4], keyWord[5] // 这些%s最多可以做成多少个这样的%s%s"
+		));
+
+		int result = times1;
+		if (times2 < result) {
+			result = times2;
+		}
+		if (times3 < result) {
+			result = times3;
+		}
+
+		q.addStandardAnswer(String.valueOf(result));
+
+		return q;
+	}
+
 	public static void main(String[] args) {
 		ExerciesServiceMathG2_2Impl t = new ExerciesServiceMathG2_2Impl();
 		int i = 0;
 		while (i < 10) {
-			MathQuestionBaseDTO q = t.createWordProblemModule3();
+			MathQuestionBaseDTO q = t.createWordProblemModule4();
 			System.out.println(q.toString());
 			i++;
 		}

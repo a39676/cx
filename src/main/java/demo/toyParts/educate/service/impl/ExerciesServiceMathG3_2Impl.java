@@ -466,4 +466,31 @@ public class ExerciesServiceMathG3_2Impl extends ExerciesMathCommonService imple
 		q.getStandardAnswer().add(String.valueOf(result.intValue()));
 		return q;
 	}
+	
+	private MathQuestionBaseDTO createWordProblemModule1() {
+		String moduleStr = "要使“%d×____”的积是三位数，____ 内最大可以填（   ）；要使积是四位数， ____ 内最小可以填（   ）。";
+
+		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+		int r = t.nextInt(125, 369 + 1);
+		int multipleLessThanThousand = 1000 / r;
+		
+		q.setExpression(String.format(moduleStr, r));
+		q.addStandardAnswer(String.valueOf(multipleLessThanThousand));
+		q.addStandardAnswer(String.valueOf(multipleLessThanThousand + 1));
+
+		return q;
+	}
+	
+	public static void main(String[] args) {
+		ExerciesServiceMathG3_2Impl t = new ExerciesServiceMathG3_2Impl();
+		int i = 0;
+		while (i < 10) {
+			MathQuestionBaseDTO q = t.createWordProblemModule1();
+			System.out.println(q.toString());
+			i++;
+		}
+	}
+
 }

@@ -103,4 +103,18 @@ public abstract class ExerciesMathCommonService extends EducateCommonService {
 			    .doubleValue();
 	}
 	
+	protected Integer getLowestCommonMultiple(int i1, int i2) {
+		if (i1 == 0 || i2 == 0) {
+	        return 0;
+	    }
+	    int absNumber1 = Math.abs(i1);
+	    int absNumber2 = Math.abs(i2);
+	    int absHigherNumber = Math.max(absNumber1, absNumber2);
+	    int absLowerNumber = Math.min(absNumber1, absNumber2);
+	    int lcm = absHigherNumber;
+	    while (lcm % absLowerNumber != 0) {
+	        lcm += absHigherNumber;
+	    }
+	    return lcm;
+	}
 }

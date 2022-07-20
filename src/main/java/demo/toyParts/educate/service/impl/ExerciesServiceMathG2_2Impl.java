@@ -1,6 +1,7 @@
 package demo.toyParts.educate.service.impl;
 
 import java.math.BigDecimal;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -55,7 +56,7 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 
 		MathQuestionBaseDTO question = null;
 		int questionNumber = 1;
-		for (; questionNumber <= optionService.getQuestionListSize() - 5; questionNumber++) {
+		for (; questionNumber <= optionService.getQuestionListSize() - 6; questionNumber++) {
 			question = createCalculateQuestion();
 			question.setQuestionNumber(questionNumber);
 			exerciesDTO.getQuestionList().add(question);
@@ -80,8 +81,13 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 		question.setQuestionNumber(questionNumber);
 		exerciesDTO.getQuestionList().add(question);
 		questionNumber++;
-		
+
 		question = createWordProblemModule5();
+		question.setQuestionNumber(questionNumber);
+		exerciesDTO.getQuestionList().add(question);
+		questionNumber++;
+		
+		question = createWordProblemModule6();
 		question.setQuestionNumber(questionNumber);
 		exerciesDTO.getQuestionList().add(question);
 		questionNumber++;
@@ -487,13 +493,35 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 		return q;
 	}
 
-	public static void main(String[] args) {
-		ExerciesServiceMathG2_2Impl t = new ExerciesServiceMathG2_2Impl();
-		int i = 0;
-		while (i < 10) {
-			MathQuestionBaseDTO q = t.createWordProblemModule5();
-			System.out.println(q.toString());
-			i++;
+	/** 时间计算 */
+	private MathQuestionBaseDTO createWordProblemModule6() {
+		String moduleStr = "现在时间是";
+
+		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+
+		int randomHour = t.nextInt(0, 23 + 1);
+		int randomMinute = t.nextInt(0, 59 + 1);
+		LocalTime startTime = LocalTime.of(randomHour, randomMinute);
+		int randomPass = 0;
+		boolean isBefore = t.nextInt(0, 1 + 1) > 0;
+		LocalTime time2 = null;
+		if(isBefore) {
+			randomPass = t.nextInt(randomMinute, 59 + 1);
+			time2 = startTime.minusMinutes(randomPass);
+			moduleStr = moduleStr + startTime + ", " + randomPass + "分钟之前, 是____";
+		} else {
+			randomPass = t.nextInt(60 - randomMinute, 59 + 1);
+			time2 = startTime.plusMinutes(randomPass);
+			moduleStr = moduleStr + startTime + ", 再过" + randomPass + "分钟之后, 是____";
 		}
+
+		q.setExpression(moduleStr);
+
+		q.addStandardAnswer(String.valueOf(time2));
+
+		return q;
 	}
+
 }

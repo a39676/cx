@@ -54,7 +54,7 @@ public class ExerciesServiceMathG3_1Impl extends ExerciesMathCommonService imple
 
 		MathQuestionBaseDTO question = null;
 		int questionNumber = 1;
-		for (; questionNumber <= optionService.getQuestionListSize() - 6; questionNumber++) {
+		for (; questionNumber <= optionService.getQuestionListSize() - 7; questionNumber++) {
 			question = null;
 			Integer standardAnswer = -1;
 			while (standardAnswer < MIN_RESULT || standardAnswer > MAX_RESULT) {
@@ -67,33 +67,38 @@ public class ExerciesServiceMathG3_1Impl extends ExerciesMathCommonService imple
 			question.setQuestionNumber(questionNumber);
 			exerciesDTO.getQuestionList().add(question);
 		}
-		
+
 		question = createWordProblemModule1();
 		question.setQuestionNumber(questionNumber);
 		exerciesDTO.getQuestionList().add(question);
 		questionNumber++;
-		
+
 		question = createWordProblemModule2();
 		question.setQuestionNumber(questionNumber);
 		exerciesDTO.getQuestionList().add(question);
 		questionNumber++;
-		
+
 		question = createWordProblemModule3();
 		question.setQuestionNumber(questionNumber);
 		exerciesDTO.getQuestionList().add(question);
 		questionNumber++;
-		
+
 		question = createWordProblemModule4();
 		question.setQuestionNumber(questionNumber);
 		exerciesDTO.getQuestionList().add(question);
 		questionNumber++;
-		
+
 		question = createWordProblemModule5();
 		question.setQuestionNumber(questionNumber);
 		exerciesDTO.getQuestionList().add(question);
 		questionNumber++;
-		
+
 		question = createWordProblemModule6();
+		question.setQuestionNumber(questionNumber);
+		exerciesDTO.getQuestionList().add(question);
+		questionNumber++;
+		
+		question = createWordProblemModule7();
 		question.setQuestionNumber(questionNumber);
 		exerciesDTO.getQuestionList().add(question);
 		questionNumber++;
@@ -162,7 +167,7 @@ public class ExerciesServiceMathG3_1Impl extends ExerciesMathCommonService imple
 
 		return q;
 	}
-	
+
 	private MathQuestionBaseDTO createWordProblemModule2() {
 		String moduleStr = "商店里有%s、%s、%s三种%s，买%d%s%s%s的钱可以买%d%s%s%s和%d%s%s%s，买%d%s%s%s的钱可以买%d%s%s%s。买%d%s%s%s的钱可以买几%s%s%s？";
 		List<String[]> dynamicKeyWord = new ArrayList<>();
@@ -178,36 +183,34 @@ public class ExerciesServiceMathG3_1Impl extends ExerciesMathCommonService imple
 		int i1 = t.nextInt(30, 40 + 1);
 		int i2 = t.nextInt(20, 30);
 		int i3 = t.nextInt(10, 20);
-		
+
 		int r = t.nextInt(2, 5 + 1);
-		
+
 		Integer lmcOfCodition1 = getLowestCommonMultiple(i2, (i1 * r + i2));
 		int c1_i2_count = lmcOfCodition1 / i2;
 		int c1_group_count = lmcOfCodition1 / (i1 * r + i2);
-		
+
 		Integer lmcOfCodition2 = getLowestCommonMultiple(i2, i3);
 		int c2_i2_count = lmcOfCodition2 / i2;
 		int c2_i3_count = lmcOfCodition2 / i3;
-		
+
 		Integer lmcOfCodition3 = getLowestCommonMultiple(i1, i3);
 		int c3_i1_count = lmcOfCodition3 / i1;
 		int c3_i3_count = lmcOfCodition3 / i3;
 
 		int randomKeyWordIndex = t.nextInt(0, dynamicKeyWord.size());
 		String[] keyWord = dynamicKeyWord.get(randomKeyWordIndex);
-		q.setExpression(String.format(moduleStr, 
-				keyWord[2], keyWord[3], keyWord[4], keyWord[1], // 商店里有%s、%s、%s三种%s
-				c1_i2_count, keyWord[0], keyWord[3], keyWord[1],
-				(c1_group_count * r), keyWord[0], keyWord[2], keyWord[1],
-				c1_group_count, keyWord[0], keyWord[3], keyWord[1],// 买%d%s%s的钱可以买%d%s%s和d%s%s
-				c2_i2_count, keyWord[0], keyWord[3], keyWord[1],c2_i3_count, keyWord[0], keyWord[4], keyWord[1], // 买%d%s%s的钱可以买%d%s%s
+		q.setExpression(String.format(moduleStr, keyWord[2], keyWord[3], keyWord[4], keyWord[1], // 商店里有%s、%s、%s三种%s
+				c1_i2_count, keyWord[0], keyWord[3], keyWord[1], (c1_group_count * r), keyWord[0], keyWord[2],
+				keyWord[1], c1_group_count, keyWord[0], keyWord[3], keyWord[1], // 买%d%s%s的钱可以买%d%s%s和d%s%s
+				c2_i2_count, keyWord[0], keyWord[3], keyWord[1], c2_i3_count, keyWord[0], keyWord[4], keyWord[1], // 买%d%s%s的钱可以买%d%s%s
 				c3_i1_count, keyWord[0], keyWord[2], keyWord[1], keyWord[0], keyWord[4], keyWord[1]// 买%d%s%s的钱可以买几%s%s？
-						));
+		));
 		q.addStandardAnswer(String.valueOf(c3_i3_count));
 
 		return q;
 	}
-	
+
 	private MathQuestionBaseDTO createWordProblemModule3() {
 		String moduleStr = "1个正方形被分成%d个相等的长方形，每个长方形的周长是%d厘米，正方形的周长是多少厘米？ ";
 
@@ -217,13 +220,13 @@ public class ExerciesServiceMathG3_1Impl extends ExerciesMathCommonService imple
 		int rectangleCount = t.nextInt(3, 7 + 1);
 		int rectanglePerimeter = t.nextInt(30, 90 + 1);
 		int squarePreimeter = rectangleCount * rectanglePerimeter;
-		
+
 		q.setExpression(String.format(moduleStr, rectangleCount, rectanglePerimeter));
 		q.addStandardAnswer(String.valueOf(squarePreimeter));
 
 		return q;
 	}
-	
+
 	private MathQuestionBaseDTO createWordProblemModule4() {
 		String moduleStr = "小明和%s的年龄加在一起是%d岁，%s今年的年龄是小明%d倍，%s今年多少岁？小明今年几岁？";
 
@@ -234,24 +237,25 @@ public class ExerciesServiceMathG3_1Impl extends ExerciesMathCommonService imple
 		dynamicKeyWord.add(new String[] { "表姐" });
 		dynamicKeyWord.add(new String[] { "姑姑" });
 		dynamicKeyWord.add(new String[] { "舅舅" });
-		
+
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int mingAge = t.nextInt(7, 12 + 1);
 		int multiple = t.nextInt(3, 6 + 1);
 		int otherGuyAge = mingAge * multiple;
-		
+
 		int randomKeyWordIndex = t.nextInt(0, dynamicKeyWord.size());
 		String[] keyWord = dynamicKeyWord.get(randomKeyWordIndex);
-		
-		q.setExpression(String.format(moduleStr, keyWord[0], (mingAge + otherGuyAge), keyWord[0], multiple, keyWord[0]));
+
+		q.setExpression(
+				String.format(moduleStr, keyWord[0], (mingAge + otherGuyAge), keyWord[0], multiple, keyWord[0]));
 		q.addStandardAnswer(String.valueOf(otherGuyAge));
 		q.addStandardAnswer(String.valueOf(mingAge));
 
 		return q;
 	}
-	
+
 	private MathQuestionBaseDTO createWordProblemModule5() {
 		String moduleStr = "有一筐%s连筐重%d千克，卖掉一半%s后，连筐重%d千克，这筐%s原来有多重？";
 
@@ -262,60 +266,75 @@ public class ExerciesServiceMathG3_1Impl extends ExerciesMathCommonService imple
 		dynamicKeyWord.add(new String[] { "番茄" });
 		dynamicKeyWord.add(new String[] { "青瓜" });
 		dynamicKeyWord.add(new String[] { "冬瓜" });
-		
+
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int netWeight = t.nextInt(56, 100 + 1);
-		while(netWeight % 2 != 0) {
+		while (netWeight % 2 != 0) {
 			netWeight = t.nextInt(56, 100 + 1);
 		}
 		int tareWeight = t.nextInt(3, 6 + 1);
-		
+
 		int randomKeyWordIndex = t.nextInt(0, dynamicKeyWord.size());
 		String[] keyWord = dynamicKeyWord.get(randomKeyWordIndex);
-		
-		q.setExpression(String.format(moduleStr, keyWord[0], (netWeight + tareWeight), keyWord[0], (tareWeight + netWeight / 2), keyWord[0]));
+
+		q.setExpression(String.format(moduleStr, keyWord[0], (netWeight + tareWeight), keyWord[0],
+				(tareWeight + netWeight / 2), keyWord[0]));
 		q.addStandardAnswer(String.valueOf(netWeight));
 
 		return q;
 	}
-	
+
 	private MathQuestionBaseDTO createWordProblemModule6() {
 		String moduleStr = "商店买来%d%s%s和%d%s%s，共用%d元钱，每%s%s是每%s%s格的%d倍，每%s%s和每%s%s各多少元？";
 
 		List<String[]> dynamicKeyWord = new ArrayList<>();
-		dynamicKeyWord.add(new String[] {"支", "彩笔", "铅笔" });
-		dynamicKeyWord.add(new String[] {"支", "钢笔", "圆珠笔" });
-		dynamicKeyWord.add(new String[] {"本", "练习册", "草稿本" });
-		dynamicKeyWord.add(new String[] {"个", "篮球", "排球" });
-		dynamicKeyWord.add(new String[] {"对", "羽毛球拍", "乒乓球拍" });
-		dynamicKeyWord.add(new String[] {"支", "固体胶", "浆糊" });
-		
+		dynamicKeyWord.add(new String[] { "支", "彩笔", "铅笔" });
+		dynamicKeyWord.add(new String[] { "支", "钢笔", "圆珠笔" });
+		dynamicKeyWord.add(new String[] { "本", "练习册", "草稿本" });
+		dynamicKeyWord.add(new String[] { "个", "篮球", "排球" });
+		dynamicKeyWord.add(new String[] { "对", "羽毛球拍", "乒乓球拍" });
+		dynamicKeyWord.add(new String[] { "支", "固体胶", "浆糊" });
+
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int item2Price = t.nextInt(13, 100 + 1);
 		int multiple = t.nextInt(3, 6 + 1);
 		int item1Price = item2Price * multiple;
-		
+
 		int item1Count = t.nextInt(10, 20 + 1);
 		int item2Count = t.nextInt(15, 30 + 1);
-		
+
 		int totalPrice = item1Price * item1Count + item2Price * item2Count;
-		
+
 		int randomKeyWordIndex = t.nextInt(0, dynamicKeyWord.size());
 		String[] keyWord = dynamicKeyWord.get(randomKeyWordIndex);
-		
+
 //		商店买来%d%s%s和%d%s%s，共用%d元钱，每%s%s是每%s%s格的%d倍，每%s%s和每%s%s各多少元？"
-		q.setExpression(String.format(moduleStr, 
-				item1Count, keyWord[0], keyWord[1], item2Count, keyWord[0], keyWord[2], // 商店买来%d%s%s和%d%s%s
-				totalPrice,
-				keyWord[0], keyWord[1], keyWord[0], keyWord[2], multiple,
-				keyWord[0], keyWord[1], keyWord[0], keyWord[2]
-						));
+		q.setExpression(String.format(moduleStr, item1Count, keyWord[0], keyWord[1], item2Count, keyWord[0], keyWord[2], // 商店买来%d%s%s和%d%s%s
+				totalPrice, keyWord[0], keyWord[1], keyWord[0], keyWord[2], multiple, keyWord[0], keyWord[1],
+				keyWord[0], keyWord[2]));
 		q.addStandardAnswer(String.valueOf(item1Price));
 		q.addStandardAnswer(String.valueOf(item2Price));
+
+		return q;
+	}
+
+	private MathQuestionBaseDTO createWordProblemModule7() {
+		String moduleStr = "两个数的和是%d，小玲在抄题时，将其中一个加数个位上0丢掉了，结果算出是%d，这两个数分别是____和____。";
+
+		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+		int i1 = t.nextInt(13, 100 + 1);
+		int i2Small = t.nextInt(3, 9 + 1);
+		int i2 = i2Small * 10;
+
+		q.setExpression(String.format(moduleStr, (i1 + i2), (i1 + i2Small)));
+		q.addStandardAnswer(String.valueOf(i1));
+		q.addStandardAnswer(String.valueOf(i2));
 
 		return q;
 	}

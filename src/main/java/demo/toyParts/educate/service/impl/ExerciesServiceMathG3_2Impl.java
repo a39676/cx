@@ -3,6 +3,7 @@ package demo.toyParts.educate.service.impl;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.stereotype.Service;
@@ -56,7 +57,8 @@ public class ExerciesServiceMathG3_2Impl extends ExerciesMathCommonService imple
 		exerciesDTO.setGradeType(GRADE_TYPE);
 
 		MathQuestionBaseDTO question = null;
-		for (int questionNumber = 1; questionNumber <= optionService.getQuestionListSize(); questionNumber++) {
+		int questionNumber = 1;
+		for (; questionNumber <= optionService.getQuestionListSize() - 5; questionNumber++) {
 			question = null;
 			Double standardAnswer = -1D;
 			while (standardAnswer < 0 || standardAnswer > MAX_CALCULATE) {
@@ -69,6 +71,31 @@ public class ExerciesServiceMathG3_2Impl extends ExerciesMathCommonService imple
 			question.setQuestionNumber(questionNumber);
 			exerciesDTO.getQuestionList().add(question);
 		}
+		
+		question = createWordProblemModule1();
+		question.setQuestionNumber(questionNumber);
+		exerciesDTO.getQuestionList().add(question);
+		questionNumber++;
+
+		question = createWordProblemModule2();
+		question.setQuestionNumber(questionNumber);
+		exerciesDTO.getQuestionList().add(question);
+		questionNumber++;
+
+		question = createWordProblemModule3();
+		question.setQuestionNumber(questionNumber);
+		exerciesDTO.getQuestionList().add(question);
+		questionNumber++;
+
+		question = createWordProblemModule4();
+		question.setQuestionNumber(questionNumber);
+		exerciesDTO.getQuestionList().add(question);
+		questionNumber++;
+
+		question = createWordProblemModule5();
+		question.setQuestionNumber(questionNumber);
+		exerciesDTO.getQuestionList().add(question);
+		questionNumber++;
 
 		return exerciesDTO;
 	}
@@ -479,6 +506,98 @@ public class ExerciesServiceMathG3_2Impl extends ExerciesMathCommonService imple
 		q.setExpression(String.format(moduleStr, r));
 		q.addStandardAnswer(String.valueOf(multipleLessThanThousand));
 		q.addStandardAnswer(String.valueOf(multipleLessThanThousand + 1));
+
+		return q;
+	}
+	
+	private MathQuestionBaseDTO createWordProblemModule2() {
+		String moduleStr = "长方形长边 长%d, 宽%d, 它的周长是多少?<br>"
+				+ " 正方形 边长%d, 它的周长是多少?";
+
+		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+		int l1 = t.nextInt(15, 30 + 1);
+		int l2 = t.nextInt(3, 14 + 1);
+		int l3 = t.nextInt(22, 36 + 1);
+		
+		q.setExpression(String.format(moduleStr, l1, l2, l3));
+		q.addStandardAnswer(String.valueOf(l1 * 2 + l2 * 2));
+		q.addStandardAnswer(String.valueOf(l3 * 4));
+
+		return q;
+	}
+	
+	private MathQuestionBaseDTO createWordProblemModule3() {
+		String moduleStr = "有一个长方形，长%d厘米, 宽%d厘米, 从这个长方形中剪下一个最大的正方形<br>"
+				+ "正方形的周长是多少厘米？<br>"
+				+ "剩下的长方形的周长是多少厘米？";
+		
+		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+		int longSide = t.nextInt(25, 60 + 1);
+		int wideSide = t.nextInt(12, longSide + 1);
+		
+		q.setExpression(String.format(moduleStr, longSide, wideSide));
+		q.addStandardAnswer(String.valueOf(wideSide * 4));
+		q.addStandardAnswer(String.valueOf(wideSide * 2 + (longSide - wideSide) * 2));
+
+		return q;
+	}
+	
+	private MathQuestionBaseDTO createWordProblemModule4() {
+		String moduleStr = "有一块%s实验田，长为%d米、宽为%d分米。<br>"
+				+ "(1)这块实验田的面积是多少平方米?<br>"
+				+ "(2)如果每平方米可以收获%s%d千克，这块%s实验田一共能收获%s多少千克? ";
+
+		List<String[]> dynamicKeyWord = new ArrayList<>();
+		dynamicKeyWord.add(new String[] { "小麦" });
+		dynamicKeyWord.add(new String[] { "玉米" });
+		dynamicKeyWord.add(new String[] { "高粱" });
+		dynamicKeyWord.add(new String[] { "西瓜" });
+		dynamicKeyWord.add(new String[] { "冬瓜" });
+		dynamicKeyWord.add(new String[] { "草莓" });
+		dynamicKeyWord.add(new String[] { "甘蔗" });
+		
+		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+		int longSideInMeter = t.nextInt(100, 200 + 1);
+		int wideSideInDecimeter = t.nextInt(100, longSideInMeter * 10 + 1);
+		int productKgInSquareMeter = t.nextInt(15, 45 + 1);
+		
+		int area = longSideInMeter * wideSideInDecimeter / 10;
+		
+		int randomKeyWordIndex = t.nextInt(0, dynamicKeyWord.size());
+		String[] keyWord = dynamicKeyWord.get(randomKeyWordIndex);
+		
+		q.setExpression(String.format(moduleStr, keyWord[0], longSideInMeter, wideSideInDecimeter, keyWord[0], productKgInSquareMeter, keyWord[0], keyWord[0]));
+		q.addStandardAnswer(String.valueOf(area));
+		q.addStandardAnswer(String.valueOf(area * productKgInSquareMeter));
+
+		return q;
+	}
+	
+	private MathQuestionBaseDTO createWordProblemModule5() {
+		String moduleStr = "同学们去公园玩，女生有%d人，男生比女生人数的%d倍少%d人。<br>"
+				+ "(1)男生有多少人？<br>"
+				+ "(2)如果聚餐时，每%d人坐一张桌子，能坐满多少张桌子？ ";
+
+		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+		int girlCount = t.nextInt(200, 300 + 1);
+		int mutiple = t.nextInt(3, 6 + 1);
+		int randomMinus = t.nextInt(15, 45 + 1);
+		int boyCount = girlCount * mutiple - randomMinus;
+		int total = girlCount + boyCount;
+		int tableSize = t.nextInt(6, 12 + 1);
+		int fullTableCount = total / tableSize;
+		
+		q.setExpression(String.format(moduleStr, girlCount, mutiple, randomMinus, tableSize));
+		q.addStandardAnswer(String.valueOf(boyCount));
+		q.addStandardAnswer(String.valueOf(fullTableCount));
 
 		return q;
 	}

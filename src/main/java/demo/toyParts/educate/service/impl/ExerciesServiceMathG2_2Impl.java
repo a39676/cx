@@ -56,7 +56,7 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 
 		MathQuestionBaseDTO question = null;
 		int questionNumber = 1;
-		for (; questionNumber <= optionService.getQuestionListSize() - 6; questionNumber++) {
+		for (; questionNumber <= optionService.getQuestionListSize(); questionNumber++) {
 			question = createCalculateQuestion();
 			question.setQuestionNumber(questionNumber);
 			exerciesDTO.getQuestionList().add(question);
@@ -88,6 +88,16 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 		questionNumber++;
 		
 		question = createWordProblemModule6();
+		question.setQuestionNumber(questionNumber);
+		exerciesDTO.getQuestionList().add(question);
+		questionNumber++;
+		
+		question = createWordProblemModule7();
+		question.setQuestionNumber(questionNumber);
+		exerciesDTO.getQuestionList().add(question);
+		questionNumber++;
+		
+		question = createWordProblemModule8();
 		question.setQuestionNumber(questionNumber);
 		exerciesDTO.getQuestionList().add(question);
 		questionNumber++;
@@ -520,6 +530,40 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 		q.setExpression(moduleStr);
 
 		q.addStandardAnswer(String.valueOf(time2));
+
+		return q;
+	}
+	
+	private MathQuestionBaseDTO createWordProblemModule7() {
+		String moduleStr = "?÷%d=%d......__，__里最大可以填";
+
+		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+
+		int i1 = t.nextInt(3, 9 + 1);
+		int i2 = t.nextInt(3, 9 + 1);
+
+		q.setExpression(String.format(moduleStr, i1, i2));
+
+		q.addStandardAnswer(String.valueOf(i1 - 1));
+
+		return q;
+	}
+	
+	private MathQuestionBaseDTO createWordProblemModule8() {
+		String moduleStr = "?÷__=%d...%d，当__里填最小的数时，?等于( )";
+
+		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+
+		int i1 = t.nextInt(3, 9 + 1);
+		int i2 = t.nextInt(3, 9 + 1);
+
+		q.setExpression(String.format(moduleStr, i1, i2));
+
+		q.addStandardAnswer(String.valueOf(i1 + i2));
 
 		return q;
 	}

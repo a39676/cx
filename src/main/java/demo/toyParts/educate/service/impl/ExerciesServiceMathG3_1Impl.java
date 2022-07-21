@@ -54,7 +54,7 @@ public class ExerciesServiceMathG3_1Impl extends ExerciesMathCommonService imple
 
 		MathQuestionBaseDTO question = null;
 		int questionNumber = 1;
-		for (; questionNumber <= optionService.getQuestionListSize() - 7; questionNumber++) {
+		for (; questionNumber <= optionService.getQuestionListSize(); questionNumber++) {
 			question = null;
 			Integer standardAnswer = -1;
 			while (standardAnswer < MIN_RESULT || standardAnswer > MAX_RESULT) {

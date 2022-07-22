@@ -25,22 +25,67 @@
           <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
             ${question}<br>
           </sec:authorize>
-          <div class="input-group">
+          <%-- calculate --%>
+          <c:if test="${question.mathQuestionType.code == 1}">
             <div class="input-group">
-              <span class="question input-group-text" questionNumber="${question.questionNumber}">
-                <h5>(${question.questionNumber}):</h5>
-                <h4>
-                  <p class="text-left">
-                    &nbsp;&nbsp;&nbsp;${question.expression}  
-                  </p>
-                </h4>
-              </span>
+              <div class="input-group-prepend">
+                <span class="question input-group-text" questionNumber="${question.questionNumber}">
+                  <h5>(${question.questionNumber}):</h5>
+                  <h4>&nbsp;&nbsp;&nbsp;${question.expression}=</h4>
+                </span>
+              </div>
+              <c:forEach items="${question.standardAnswer}" var="standardAnswer">
+                <input type="number" class="form-control answerInput" style="font-size:26px" size="8" name="" questionNumber="${question.questionNumber}">
+              </c:forEach>
             </div>
+          </c:if>
+
+          <%-- fill --%>
+          <c:if test="${question.mathQuestionType.code == 2}">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="question input-group-text" questionNumber="${question.questionNumber}">
+                  <h5>(${question.questionNumber}):</h5>
+                  <h4>
+                    <p class="text-left">
+                      ${question.expression}  
+                    </p>
+                  </h4>
+                </span>
+              </div>
+              <br>
+              <c:forEach items="${question.standardAnswer}" var="standardAnswer">
+                <input type="text" class="form-control answerInput" style="font-size:26px" size="8" name="" questionNumber="${question.questionNumber}">
+              </c:forEach>
+            </div>
+          </c:if>
+
+          <%-- wordProblem --%>
+          <c:if test="${question.mathQuestionType.code == 3}">
+            <span class="question input-group-text" questionNumber="${question.questionNumber}">
+              <h5>(${question.questionNumber}):</h5>
+              <h4>
+                <p class="text-left">
+                  ${question.expression}  
+                </p>
+              </h4>
+            </span>
             <br>
-            <c:forEach items="${question.standardAnswer}" var="standardAnswer">
-              <input type="text" class="form-control answerInput" style="font-size:26px" size="8" name="" questionNumber="${question.questionNumber}">
+            <c:forEach items="${question.imgUrlList}" var="imgUrl">
+              <img src="${imgUrl}">
             </c:forEach>
-          </div>
+            <c:forEach items="${question.standardAnswer}" var="standardAnswer" varStatus="loop">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <h6>(${question.questionNumber})_${loop.index + 1}:</h6>
+                </span>
+              </div>
+              <input type="text" class="form-control answerInput" style="font-size:26px" size="8" name="" questionNumber="${question.questionNumber}">
+            </div>
+            </c:forEach>
+          </c:if>
+
           <span questionNumber="${question.questionNumber}" class="standarAnswer"></span>
           <br>
         </c:forEach>

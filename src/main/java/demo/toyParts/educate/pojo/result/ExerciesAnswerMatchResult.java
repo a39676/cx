@@ -20,6 +20,8 @@ public class ExerciesAnswerMatchResult extends CommonResult {
 
 	private List<Integer> wrongNumberList = new ArrayList<>();
 
+	private Integer questionListSize = 0;
+
 	private Map<Integer, List<String>> answerMap = new HashMap<>();
 
 	public BigDecimal getTotalScore() {
@@ -54,6 +56,14 @@ public class ExerciesAnswerMatchResult extends CommonResult {
 		this.wrongNumberList = wrongNumberList;
 	}
 
+	public Integer getQuestionListSize() {
+		return questionListSize;
+	}
+
+	public void setQuestionListSize(Integer questionListSize) {
+		this.questionListSize = questionListSize;
+	}
+
 	public Map<Integer, List<String>> getAnswerMap() {
 		return answerMap;
 	}
@@ -65,7 +75,8 @@ public class ExerciesAnswerMatchResult extends CommonResult {
 	@Override
 	public String toString() {
 		return "ExerciesAnswerMatchResult [totalScore=" + totalScore + ", points=" + points + ", matchGradeType="
-				+ matchGradeType + ", wrongNumberList=" + wrongNumberList + ", answerMap=" + answerMap + "]";
+				+ matchGradeType + ", wrongNumberList=" + wrongNumberList + ", answerListSize=" + questionListSize
+				+ ", answerMap=" + answerMap + "]";
 	}
 
 }

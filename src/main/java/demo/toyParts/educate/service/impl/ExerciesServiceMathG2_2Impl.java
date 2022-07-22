@@ -14,6 +14,7 @@ import demo.toyParts.educate.pojo.dto.MathQuestionBaseDTO;
 import demo.toyParts.educate.pojo.result.ExerciesBuildResult;
 import demo.toyParts.educate.pojo.type.GradeType;
 import demo.toyParts.educate.pojo.type.MathBaseSymbolType;
+import demo.toyParts.educate.pojo.type.MathQuestionType;
 import demo.toyParts.educate.service.ExerciesMathCommonService;
 import demo.toyParts.educate.service.ExerciesServiceMathG2_2;
 import net.objecthunter.exp4j.Expression;
@@ -56,7 +57,7 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 
 		MathQuestionBaseDTO question = null;
 		int questionNumber = 1;
-		for (; questionNumber <= optionService.getQuestionListSize(); questionNumber++) {
+		for (; questionNumber <= optionService.getCalculateQuestionListSize(); questionNumber++) {
 			question = createCalculateQuestion();
 			question.setQuestionNumber(questionNumber);
 			exerciesDTO.getQuestionList().add(question);
@@ -107,6 +108,7 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 
 	private MathQuestionBaseDTO createCalculateQuestion() {
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.calculate);
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		MathBaseSymbolType mathSymbolType1 = getRandomMathBaseSymbolType(MathBaseSymbolType.addition,
@@ -297,6 +299,7 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 		dynamicKeyWord.add(new String[] { "家电店", "吸尘器", "台" });
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int num1 = t.nextInt(MIN_ADDITION_NUM, MAX_ADDITION_NUM + 1);
@@ -318,7 +321,9 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 	}
 
 	private MathQuestionBaseDTO createWordProblemModule2() {
-		String moduleStr = "%s今年%d岁, %s今年%d岁, 小朋友比%s%s%d岁. (1)%s比%s大多少岁 (2)小朋友今年多少岁 ";
+		String moduleStr = "%s今年%d岁, %s今年%d岁, 小朋友比%s%s%d岁.<br>"
+				+ "(1)%s比%s大多少岁 <br>"
+				+ "(2)小朋友今年多少岁 ";
 		List<String[]> dynamicKeyWord = new ArrayList<>();
 		dynamicKeyWord.add(new String[] { "爷爷", "表姑", "-" });
 		dynamicKeyWord.add(new String[] { "大舅", "姐姐", "-" });
@@ -331,7 +336,8 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 		dynamicKeyWord.add(new String[] { "妈妈", "表妹", "+" });
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-
+		q.setMathQuestionType(MathQuestionType.wordProblem);
+		
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		int randomKeyWordIndex = t.nextInt(0, dynamicKeyWord.size());
@@ -360,7 +366,9 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 	}
 
 	private MathQuestionBaseDTO createWordProblemModule3() {
-		String moduleStr = "一%s%s, 可以买%d%s%s, 如果每%s%s%d元, (1)每%s%s几元? (2)一%s%s比一%s%s便宜多少元?";
+		String moduleStr = "一%s%s, 可以买%d%s%s, 如果每%s%s%d元,<br>"
+				+ "(1)每%s%s几元?<br>"
+				+ "(2)一%s%s比一%s%s便宜多少元?";
 		List<String[]> dynamicKeyWord = new ArrayList<>();
 		dynamicKeyWord.add(new String[] { "衣服", "件", "帽子", "顶" });
 		dynamicKeyWord.add(new String[] { "大衣", "件", "短袖", "件" });
@@ -374,7 +382,8 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 		dynamicKeyWord.add(new String[] { "兰花", "盆", "金银花", "盆" });
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-
+		q.setMathQuestionType(MathQuestionType.wordProblem);
+		
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		int randomKeyWordIndex = t.nextInt(0, dynamicKeyWord.size());
@@ -399,7 +408,8 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 	}
 
 	private MathQuestionBaseDTO createWordProblemModule4() {
-		String moduleStr = "商店有%s%d%s, %s%d%s, %s%d%s, %s想用%d%s%s, %d%s%s, %d%s%s, 做成%s%s, 这些%s最多可以做成多少个这样的%s%s";
+		String moduleStr = "商店有%s%d%s, %s%d%s, %s%d%s, %s想用%d%s%s, %d%s%s, %d%s%s,<br>"
+				+ "做成%s%s, 这些%s最多可以做成多少个这样的%s%s";
 		List<String[]> dynamicKeyWord = new ArrayList<>();
 		dynamicKeyWord.add(new String[] { "个", "苹果", "雪梨", "橙", "水果", "礼盒", "李叔叔" });
 		dynamicKeyWord.add(new String[] { "支", "蜡笔", "颜色笔", "水彩笔", "文具", "套装", "张叔叔" });
@@ -410,7 +420,8 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 		dynamicKeyWord.add(new String[] { "条", "绿色丝带", "白色丝带", "彩色丝带", "丝带", "组合", "王阿姨" });
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-
+		q.setMathQuestionType(MathQuestionType.wordProblem);
+		
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		int randomKeyWordIndex = t.nextInt(0, dynamicKeyWord.size());
@@ -473,10 +484,13 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 	}
 
 	private MathQuestionBaseDTO createWordProblemModule5() {
-		String moduleStr = "一场篮球赛分为上半场和下半场, A班上半场得了%d分, 全场总分是%d分, %s,B班的全场总分是%d分, (1)B班下半场得了多少分";
+		String moduleStr = "一场篮球赛分为上半场和下半场, A班上半场得了%d分, 全场总分是%d分, %s,<br>"
+				+ "B班的全场总分是%d分,<br>"
+				+ "(1)B班下半场得了多少分";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-
+		q.setMathQuestionType(MathQuestionType.wordProblem);
+		
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		int classAFirstHalfScore = t.nextInt(12, 50 + 1);
@@ -508,7 +522,8 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 		String moduleStr = "现在时间是";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-
+		q.setMathQuestionType(MathQuestionType.wordProblem);
+		
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		int randomHour = t.nextInt(0, 23 + 1);
@@ -538,7 +553,8 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 		String moduleStr = "?÷%d=%d......__，__里最大可以填";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-
+		q.setMathQuestionType(MathQuestionType.wordProblem);
+		
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		int i1 = t.nextInt(3, 9 + 1);
@@ -555,7 +571,8 @@ public class ExerciesServiceMathG2_2Impl extends ExerciesMathCommonService imple
 		String moduleStr = "?÷__=%d...%d，当__里填最小的数时，?等于( )";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-
+		q.setMathQuestionType(MathQuestionType.wordProblem);
+		
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		int i1 = t.nextInt(3, 9 + 1);

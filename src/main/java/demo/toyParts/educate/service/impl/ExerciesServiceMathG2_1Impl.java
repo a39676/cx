@@ -52,7 +52,7 @@ public class ExerciesServiceMathG2_1Impl extends ExerciesMathCommonService imple
 		exerciesDTO.setGradeType(GRADE_TYPE);
 		
 		MathQuestionBaseDTO question = null;
-		for(int questionNumber = 1; questionNumber <= optionService.getQuestionListSize(); questionNumber++) {
+		for(int questionNumber = 1; questionNumber <= optionService.getCalculateQuestionListSize(); questionNumber++) {
 			question = null;
 			Integer standardAnswer = -1;
 			while(standardAnswer < MIN_RESULT || standardAnswer > MAX_RESULT) {

@@ -13,6 +13,7 @@ import demo.toyParts.educate.pojo.dto.MathQuestionBaseDTO;
 import demo.toyParts.educate.pojo.result.ExerciesBuildResult;
 import demo.toyParts.educate.pojo.type.GradeType;
 import demo.toyParts.educate.pojo.type.MathBaseSymbolType;
+import demo.toyParts.educate.pojo.type.MathQuestionType;
 import demo.toyParts.educate.service.ExerciesMathCommonService;
 import demo.toyParts.educate.service.ExerciesServiceMathG4_1;
 import net.objecthunter.exp4j.Expression;
@@ -59,7 +60,8 @@ public class ExerciesServiceMathG4_1Impl extends ExerciesMathCommonService imple
 		exerciesDTO.setGradeType(GRADE_TYPE);
 
 		MathQuestionBaseDTO question = null;
-		for (int questionNumber = 1; questionNumber <= optionService.getQuestionListSize(); questionNumber++) {
+		int questionNumber = 1;
+		for (; questionNumber <= optionService.getCalculateQuestionListSize(); questionNumber++) {
 			question = null;
 			Double standardAnswer = -1D;
 			while (standardAnswer < 0 || standardAnswer > MAX_CALCULATE) {
@@ -70,8 +72,34 @@ public class ExerciesServiceMathG4_1Impl extends ExerciesMathCommonService imple
 				}
 			}
 			question.setQuestionNumber(questionNumber);
+			question.setMathQuestionType(MathQuestionType.calculate);
 			exerciesDTO.getQuestionList().add(question);
 		}
+
+		question = createWordProblemModule1();
+		question.setQuestionNumber(questionNumber);
+		exerciesDTO.getQuestionList().add(question);
+		questionNumber++;
+
+		question = createWordProblemModule2();
+		question.setQuestionNumber(questionNumber);
+		exerciesDTO.getQuestionList().add(question);
+		questionNumber++;
+		
+		question = createWordProblemModule3();
+		question.setQuestionNumber(questionNumber);
+		exerciesDTO.getQuestionList().add(question);
+		questionNumber++;
+		
+		question = createWordProblemModule4();
+		question.setQuestionNumber(questionNumber);
+		exerciesDTO.getQuestionList().add(question);
+		questionNumber++;
+		
+		question = createWordProblemModule5();
+		question.setQuestionNumber(questionNumber);
+		exerciesDTO.getQuestionList().add(question);
+		questionNumber++;
 
 		return exerciesDTO;
 	}
@@ -89,6 +117,7 @@ public class ExerciesServiceMathG4_1Impl extends ExerciesMathCommonService imple
 
 	private MathQuestionBaseDTO createDecimalQuestion() {
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		BigDecimal num1 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_DECIMAL_ADDITION_NUM)).setScale(SCALE,
@@ -147,6 +176,7 @@ public class ExerciesServiceMathG4_1Impl extends ExerciesMathCommonService imple
 
 	private MathQuestionBaseDTO createIntegerQuestion() {
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		int num1 = 0;
@@ -351,6 +381,7 @@ public class ExerciesServiceMathG4_1Impl extends ExerciesMathCommonService imple
 
 	private MathQuestionBaseDTO createSimpleDivisionWithInputExp(String inputRightPartExp) {
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		MathBaseSymbolType mathSymbolType1 = MathBaseSymbolType.division;
@@ -377,6 +408,7 @@ public class ExerciesServiceMathG4_1Impl extends ExerciesMathCommonService imple
 
 	private MathQuestionBaseDTO createSimpleDivisionWithInputMinResult(Integer minResult) {
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		MathBaseSymbolType mathSymbolType1 = MathBaseSymbolType.division;
@@ -397,6 +429,7 @@ public class ExerciesServiceMathG4_1Impl extends ExerciesMathCommonService imple
 
 	private MathQuestionBaseDTO createSimpleAddtionByResult(Integer inputResult) {
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		MathBaseSymbolType mathSymbolType1 = MathBaseSymbolType.addition;
@@ -418,6 +451,7 @@ public class ExerciesServiceMathG4_1Impl extends ExerciesMathCommonService imple
 
 	private MathQuestionBaseDTO createSimpleSubtractionByResult(Integer inputResult) {
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		MathBaseSymbolType mathSymbolType1 = MathBaseSymbolType.subtraction;
@@ -439,6 +473,7 @@ public class ExerciesServiceMathG4_1Impl extends ExerciesMathCommonService imple
 
 	private MathQuestionBaseDTO createSimpleMultiplication() {
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		MathBaseSymbolType mathSymbolType1 = MathBaseSymbolType.multiplication;
@@ -457,6 +492,7 @@ public class ExerciesServiceMathG4_1Impl extends ExerciesMathCommonService imple
 
 	private MathQuestionBaseDTO createSimpleMultiplicationWithInpuMinResult(Integer inputMinResult) {
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.calculate);
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		MathBaseSymbolType mathSymbolType1 = MathBaseSymbolType.multiplication;
@@ -474,6 +510,113 @@ public class ExerciesServiceMathG4_1Impl extends ExerciesMathCommonService imple
 		q.setExpression(exp);
 		q.getStandardAnswer().clear();
 		q.getStandardAnswer().add(String.valueOf(result.intValue()));
+		return q;
+	}
+
+	private MathQuestionBaseDTO createWordProblemModule1() {
+		String moduleStr = " 两个数的积是%d，如果一个因数不变，另一个因数缩小%d倍，则积是(    )。";
+
+		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
+
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+		int l1 = t.nextInt(3, 9 + 1);
+		int l2 = t.nextInt(3, 9 + 1);
+		int l3 = t.nextInt(3, 9 + 1);
+
+		int r1 = l1 * l2;
+		int r2 = l1 * l2 * l3;
+
+		q.setExpression(String.format(moduleStr, r2, l3));
+		q.addStandardAnswer(String.valueOf(r1));
+
+		return q;
+	}
+
+	private MathQuestionBaseDTO createWordProblemModule2() {
+		String moduleStr = "在A÷%d=%d……B中，余数B最大可取(     )，这时被除数A是(     )。";
+
+		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
+
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+		int l1 = t.nextInt(11, 19 + 1);
+		int l2 = t.nextInt(11, 19 + 1);
+
+		int r1 = l1 * l2 + l1 - 1;
+
+		q.setExpression(String.format(moduleStr, l1, l2));
+		q.addStandardAnswer(String.valueOf(l1 - 1));
+		q.addStandardAnswer(String.valueOf(r1));
+
+		return q;
+	}
+
+	private MathQuestionBaseDTO createWordProblemModule3() {
+		String moduleStr = "如图，已知∠1＝%d°，<br>" + "∠2＝（    ），<br>" + "∠3＝（   ）。";
+
+		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
+		q.addImgUrlList("/image/getImage/?imgPK=GgF2AtKXoNbMF7SGEXUt%2BbG5vzDVyNE%2FyxNy3ntkHO0%3D");
+
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+		int l1 = t.nextInt(30, 89 + 1);
+
+		int r1 = 90 - l1;
+		int r2 = 180 - r1;
+
+		q.setExpression(String.format(moduleStr, l1));
+		q.addStandardAnswer(String.valueOf(r1));
+		q.addStandardAnswer(String.valueOf(r2));
+
+		return q;
+	}
+
+	private MathQuestionBaseDTO createWordProblemModule4() {
+		String moduleStr = "某校开展节约用电活动，前%d个月共节约用电%d度。照这样计算，一年（12月）能节约用电多少度？";
+
+		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
+
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+		int powerCounter = t.nextInt(120, 220 + 1);
+		int monthCounter = t.nextInt(3, 8 + 1);
+		
+		q.setExpression(String.format(moduleStr, monthCounter, (powerCounter * monthCounter)));
+		q.addStandardAnswer(String.valueOf(powerCounter * 12));
+
+		return q;
+	}
+	
+	private MathQuestionBaseDTO createWordProblemModule5() {
+		String moduleStr = "小东做乘法计算时，把其中一个因数%d看成了%d，<br>"
+				+ "结果得到的积比正确的积%s了%d。正确的积应该是(         )。";
+
+		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
+
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+		int i1 = t.nextInt(25, 99 + 1);
+		int correctNum = t.nextInt(25, 99 + 1);
+		int wrongNum = t.nextInt(25, 99 + 1);
+		
+		while(correctNum == wrongNum) {
+			wrongNum = t.nextInt(25, 99 + 1);
+		}
+		
+		int correctResult = i1 * correctNum;
+		int wrongResult = i1 * wrongNum;
+		
+		String dynamicWord = "多";
+		if(wrongNum < correctNum) {
+			dynamicWord = "少";
+		}
+		
+		int gap = Math.abs(correctResult - wrongResult);
+		
+		q.setExpression(String.format(moduleStr, correctNum, wrongNum, dynamicWord, gap));
+		q.addStandardAnswer(String.valueOf(correctResult));
+
 		return q;
 	}
 }

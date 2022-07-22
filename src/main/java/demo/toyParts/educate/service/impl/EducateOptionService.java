@@ -22,7 +22,7 @@ public class EducateOptionService extends CommonService {
 	private String optionFilePath;
 
 	private String exerciesStorePrefixPath;
-	private Integer questionListSize = 20;
+	private Integer calculateQuestionListSize = 20;
 	private BigDecimal maxScore = new BigDecimal(100);
 	private BigDecimal randomMaxAwardCoefficient;
 	private BigDecimal randomMinAwardCoefficient;
@@ -65,12 +65,12 @@ public class EducateOptionService extends CommonService {
 		this.exerciesStorePrefixPath = exerciesStorePrefixPath;
 	}
 
-	public Integer getQuestionListSize() {
-		return questionListSize;
+	public Integer getCalculateQuestionListSize() {
+		return calculateQuestionListSize;
 	}
 
-	public void setQuestionListSize(Integer questionListSize) {
-		this.questionListSize = questionListSize;
+	public void setCalculateQuestionListSize(Integer calculateQuestionListSize) {
+		this.calculateQuestionListSize = calculateQuestionListSize;
 	}
 
 	public BigDecimal getMaxScore() {
@@ -132,7 +132,7 @@ public class EducateOptionService extends CommonService {
 	@Override
 	public String toString() {
 		return "EducateOptionService [exerciesStorePrefixPath=" + exerciesStorePrefixPath + ", questionListSize="
-				+ questionListSize + ", maxScore=" + maxScore + ", randomMaxAwardCoefficient="
+				+ calculateQuestionListSize + ", maxScore=" + maxScore + ", randomMaxAwardCoefficient="
 				+ randomMaxAwardCoefficient + ", randomMinAwardCoefficient=" + randomMinAwardCoefficient
 				+ ", gardePointMap=" + gardePointMap + ", dailyMaxHour=" + dailyMaxHour + ", dailyMinHour="
 				+ dailyMinHour + ", oldExerciesFileLivingDay=" + oldExerciesFileLivingDay + "]";

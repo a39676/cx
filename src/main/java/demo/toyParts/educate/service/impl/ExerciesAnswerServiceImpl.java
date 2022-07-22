@@ -100,7 +100,7 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 		BigDecimal randomAwardCoefficient = null;
 
 		// 全错 返回0分
-		if (optionService.getQuestionListSize().equals(answerResult.getWrongNumberList().size())) {
+		if (answerResult.getQuestionListSize().equals(answerResult.getWrongNumberList().size())) {
 			return answerResult;
 		}
 
@@ -135,7 +135,7 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 
 		// 错题, 按错题比例扣减总体积分上限 总体积分, 非随机积分
 		Double wrongCoefficient = Double.valueOf(answerResult.getWrongNumberList().size())
-				/ Double.valueOf(optionService.getQuestionListSize());
+				/ Double.valueOf(answerResult.getQuestionListSize());
 		// 错题率超 40% 不奖励积分
 		if (wrongCoefficient <= 0.4) {
 			randomAwardCoefficient = new BigDecimal(
@@ -169,7 +169,8 @@ public class ExerciesAnswerServiceImpl extends EducateCommonService implements E
 				r.getAnswerMap().put(dto.getAnswerList().get(i).getQuestionNumber(), standarAnswer);
 			}
 		}
-
+		
+		r.setQuestionListSize(exerciesDTO.getQuestionList().size());
 		r.setTotalScore(totalScore);
 		r.setIsSuccess();
 		return r;

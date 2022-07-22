@@ -12,6 +12,7 @@ import demo.toyParts.educate.pojo.dto.MathQuestionBaseDTO;
 import demo.toyParts.educate.pojo.result.ExerciesBuildResult;
 import demo.toyParts.educate.pojo.type.GradeType;
 import demo.toyParts.educate.pojo.type.MathBaseSymbolType;
+import demo.toyParts.educate.pojo.type.MathQuestionType;
 import demo.toyParts.educate.service.ExerciesMathCommonService;
 import demo.toyParts.educate.service.ExerciesServiceMathG3_1;
 import net.objecthunter.exp4j.Expression;
@@ -54,7 +55,7 @@ public class ExerciesServiceMathG3_1Impl extends ExerciesMathCommonService imple
 
 		MathQuestionBaseDTO question = null;
 		int questionNumber = 1;
-		for (; questionNumber <= optionService.getQuestionListSize(); questionNumber++) {
+		for (; questionNumber <= optionService.getCalculateQuestionListSize(); questionNumber++) {
 			question = null;
 			Integer standardAnswer = -1;
 			while (standardAnswer < MIN_RESULT || standardAnswer > MAX_RESULT) {
@@ -108,6 +109,7 @@ public class ExerciesServiceMathG3_1Impl extends ExerciesMathCommonService imple
 
 	private MathQuestionBaseDTO createQuestion() {
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.calculate);
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		int num1 = t.nextInt(MIN_ADDITION_NUM, MAX_ADDITION_NUM + 1);
@@ -153,6 +155,7 @@ public class ExerciesServiceMathG3_1Impl extends ExerciesMathCommonService imple
 		String moduleStr = "跑道长%d米，同学们跑接力，每组%d人，每人跑一个往返，每组要跑（　 ）米。";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int trackBase = t.nextInt(1, 10 + 1);
@@ -169,7 +172,9 @@ public class ExerciesServiceMathG3_1Impl extends ExerciesMathCommonService imple
 	}
 
 	private MathQuestionBaseDTO createWordProblemModule2() {
-		String moduleStr = "商店里有%s、%s、%s三种%s，买%d%s%s%s的钱可以买%d%s%s%s和%d%s%s%s，买%d%s%s%s的钱可以买%d%s%s%s。买%d%s%s%s的钱可以买几%s%s%s？";
+		String moduleStr = "商店里有%s、%s、%s三种%s，买%d%s%s%s的钱可以买%d%s%s%s和%d%s%s%s，<br>"
+				+ "买%d%s%s%s的钱可以买%d%s%s%s。<br>"
+				+ "买%d%s%s%s的钱可以买几%s%s%s？";
 		List<String[]> dynamicKeyWord = new ArrayList<>();
 		dynamicKeyWord.add(new String[] { "个", "花瓶", "大", "中", "小" });
 		dynamicKeyWord.add(new String[] { "条", "丝带", "粉", "白", "蓝" });
@@ -178,6 +183,7 @@ public class ExerciesServiceMathG3_1Impl extends ExerciesMathCommonService imple
 		dynamicKeyWord.add(new String[] { "顶", "帽子", "橙", "紫", "黑" });
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int i1 = t.nextInt(30, 40 + 1);
@@ -215,6 +221,7 @@ public class ExerciesServiceMathG3_1Impl extends ExerciesMathCommonService imple
 		String moduleStr = "1个正方形被分成%d个相等的长方形，每个长方形的周长是%d厘米，正方形的周长是多少厘米？ ";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int rectangleCount = t.nextInt(3, 7 + 1);
@@ -239,6 +246,7 @@ public class ExerciesServiceMathG3_1Impl extends ExerciesMathCommonService imple
 		dynamicKeyWord.add(new String[] { "舅舅" });
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int mingAge = t.nextInt(7, 12 + 1);
@@ -268,6 +276,7 @@ public class ExerciesServiceMathG3_1Impl extends ExerciesMathCommonService imple
 		dynamicKeyWord.add(new String[] { "冬瓜" });
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int netWeight = t.nextInt(56, 100 + 1);
@@ -287,7 +296,8 @@ public class ExerciesServiceMathG3_1Impl extends ExerciesMathCommonService imple
 	}
 
 	private MathQuestionBaseDTO createWordProblemModule6() {
-		String moduleStr = "商店买来%d%s%s和%d%s%s，共用%d元钱，每%s%s是每%s%s格的%d倍，每%s%s和每%s%s各多少元？";
+		String moduleStr = "商店买来%d%s%s和%d%s%s，共用%d元钱，每%s%s是每%s%s格的%d倍，<br>"
+				+ "每%s%s和每%s%s各多少元？";
 
 		List<String[]> dynamicKeyWord = new ArrayList<>();
 		dynamicKeyWord.add(new String[] { "支", "彩笔", "铅笔" });
@@ -298,6 +308,7 @@ public class ExerciesServiceMathG3_1Impl extends ExerciesMathCommonService imple
 		dynamicKeyWord.add(new String[] { "支", "固体胶", "浆糊" });
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int item2Price = t.nextInt(13, 100 + 1);
@@ -326,6 +337,7 @@ public class ExerciesServiceMathG3_1Impl extends ExerciesMathCommonService imple
 		String moduleStr = "两个数的和是%d，小玲在抄题时，将其中一个加数个位上0丢掉了，结果算出是%d，这两个数分别是____和____。";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int i1 = t.nextInt(13, 100 + 1);

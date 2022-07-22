@@ -14,6 +14,7 @@ import demo.toyParts.educate.pojo.dto.MathQuestionBaseDTO;
 import demo.toyParts.educate.pojo.result.ExerciesBuildResult;
 import demo.toyParts.educate.pojo.type.GradeType;
 import demo.toyParts.educate.pojo.type.MathBaseSymbolType;
+import demo.toyParts.educate.pojo.type.MathQuestionType;
 import demo.toyParts.educate.service.ExerciesMathCommonService;
 import demo.toyParts.educate.service.ExerciesServiceMathG3_2;
 import net.objecthunter.exp4j.Expression;
@@ -58,7 +59,7 @@ public class ExerciesServiceMathG3_2Impl extends ExerciesMathCommonService imple
 
 		MathQuestionBaseDTO question = null;
 		int questionNumber = 1;
-		for (; questionNumber <= optionService.getQuestionListSize(); questionNumber++) {
+		for (; questionNumber <= optionService.getCalculateQuestionListSize(); questionNumber++) {
 			question = null;
 			Double standardAnswer = -1D;
 			while (standardAnswer < 0 || standardAnswer > MAX_CALCULATE) {
@@ -113,6 +114,7 @@ public class ExerciesServiceMathG3_2Impl extends ExerciesMathCommonService imple
 	
 	private MathQuestionBaseDTO createDecimalQuestion() {
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.calculate);
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		BigDecimal num1 = new BigDecimal(t.nextDouble(MIN_ADDITION_NUM, MAX_ADDITION_NUM)).setScale(SCALE, RoundingMode.HALF_UP);
@@ -165,6 +167,7 @@ public class ExerciesServiceMathG3_2Impl extends ExerciesMathCommonService imple
 
 	private MathQuestionBaseDTO createIntegerQuestion() {
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.calculate);
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		int num1 = 0;
@@ -368,6 +371,7 @@ public class ExerciesServiceMathG3_2Impl extends ExerciesMathCommonService imple
 
 	private MathQuestionBaseDTO createSimpleDivisionWithInputExp(String inputRightPartExp) {
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		MathBaseSymbolType mathSymbolType1 = MathBaseSymbolType.division;
@@ -394,6 +398,7 @@ public class ExerciesServiceMathG3_2Impl extends ExerciesMathCommonService imple
 
 	private MathQuestionBaseDTO createSimpleDivisionWithInputMinResult(Integer minResult) {
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		MathBaseSymbolType mathSymbolType1 = MathBaseSymbolType.division;
@@ -414,6 +419,7 @@ public class ExerciesServiceMathG3_2Impl extends ExerciesMathCommonService imple
 
 	private MathQuestionBaseDTO createSimpleAddtionByResult(Integer inputResult) {
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		MathBaseSymbolType mathSymbolType1 = MathBaseSymbolType.addition;
@@ -435,6 +441,7 @@ public class ExerciesServiceMathG3_2Impl extends ExerciesMathCommonService imple
 
 	private MathQuestionBaseDTO createSimpleSubtractionByResult(Integer inputResult) {
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		MathBaseSymbolType mathSymbolType1 = MathBaseSymbolType.subtraction;
@@ -456,6 +463,7 @@ public class ExerciesServiceMathG3_2Impl extends ExerciesMathCommonService imple
 
 	private MathQuestionBaseDTO createSimpleMultiplication() {
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		MathBaseSymbolType mathSymbolType1 = MathBaseSymbolType.multiplication;
@@ -474,6 +482,7 @@ public class ExerciesServiceMathG3_2Impl extends ExerciesMathCommonService imple
 
 	private MathQuestionBaseDTO createSimpleMultiplicationWithInpuMinResult(Integer inputMinResult) {
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		MathBaseSymbolType mathSymbolType1 = MathBaseSymbolType.multiplication;
@@ -498,6 +507,7 @@ public class ExerciesServiceMathG3_2Impl extends ExerciesMathCommonService imple
 		String moduleStr = "要使“%d×____”的积是三位数，____ 内最大可以填（   ）；要使积是四位数， ____ 内最小可以填（   ）。";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int r = t.nextInt(125, 369 + 1);
@@ -515,6 +525,7 @@ public class ExerciesServiceMathG3_2Impl extends ExerciesMathCommonService imple
 				+ " 正方形 边长%d, 它的周长是多少?";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int l1 = t.nextInt(15, 30 + 1);
@@ -534,6 +545,7 @@ public class ExerciesServiceMathG3_2Impl extends ExerciesMathCommonService imple
 				+ "剩下的长方形的周长是多少厘米？";
 		
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int longSide = t.nextInt(25, 60 + 1);
@@ -561,6 +573,7 @@ public class ExerciesServiceMathG3_2Impl extends ExerciesMathCommonService imple
 		dynamicKeyWord.add(new String[] { "甘蔗" });
 		
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int longSideInMeter = t.nextInt(100, 200 + 1);
@@ -585,6 +598,7 @@ public class ExerciesServiceMathG3_2Impl extends ExerciesMathCommonService imple
 				+ "(2)如果聚餐时，每%d人坐一张桌子，能坐满多少张桌子？ ";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.wordProblem);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int girlCount = t.nextInt(200, 300 + 1);

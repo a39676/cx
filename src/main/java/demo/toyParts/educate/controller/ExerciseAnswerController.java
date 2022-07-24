@@ -6,23 +6,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
-import demo.common.controller.CommonController;
 import demo.toyParts.educate.pojo.constant.EducateUrl;
-import demo.toyParts.educate.pojo.dto.GetExerciseLeaderboardDTO;
-import demo.toyParts.educate.service.EducateLeaderboardService;
+import demo.toyParts.educate.pojo.dto.ExerciseAnswerDTO;
+import demo.toyParts.educate.pojo.result.ExerciseAnswerMatchResult;
+import demo.toyParts.educate.service.ExerciseAnswerService;
 
 @Controller
 @RequestMapping(value = EducateUrl.ROOT)
-public class EducateLeaderboardController extends CommonController {
+public class ExerciseAnswerController {
 
 	@Autowired
-	private EducateLeaderboardService educateLeaderboardService;
+	private ExerciseAnswerService answerService;
 	
-	@PostMapping(value = EducateUrl.LEADERBOARD)
+	@PostMapping(value = EducateUrl.ANSWER_SUBMIT)
 	@ResponseBody
-	public ModelAndView leaderboard(@RequestBody GetExerciseLeaderboardDTO dto) {
-		return educateLeaderboardService.getLeaderboard(dto);
+	public ExerciseAnswerMatchResult answerSubmit(@RequestBody ExerciseAnswerDTO dto) {
+		return answerService.answerSubmit(dto);
 	}
 }

@@ -1,31 +1,31 @@
 package demo.toyParts.educate.pojo.dto;
 
-import demo.toyParts.educate.pojo.type.ExerciesSubjectType;
+import demo.toyParts.educate.pojo.type.ExerciseSubjectType;
 
 public class EducateHomepageSubjectDataSummaryDTO {
 
-	private ExerciesSubjectType subjectType;
+	private ExerciseSubjectType subjectType;
 
 	private Double lastScore;
 
-	private Integer exerciesCountToday;
+	private Integer exerciseCountToday;
 	private Double totalScoreToday;
 	private Double avgScoreToday;
 
-	private Integer exerciesCountSevenDays;
+	private Integer exerciseCountSevenDays;
 	private Double totalScoreSevenDays;
 	private Double avgScoreSevenDays;
 
-	private Integer exerciesCountThirtyDays;
+	private Integer exerciseCountThirtyDays;
 	private Double totalScoreThirtyDays;
 	private Double avgScoreThirtyDays;
 
-	public Integer getExerciesCountToday() {
-		return exerciesCountToday;
+	public Integer getExerciseCountToday() {
+		return exerciseCountToday;
 	}
 
-	public void setExerciesCountToday(Integer exerciesCountToday) {
-		this.exerciesCountToday = exerciesCountToday;
+	public void setExerciseCountToday(Integer exerciseCountToday) {
+		this.exerciseCountToday = exerciseCountToday;
 	}
 
 	public Double getTotalScoreToday() {
@@ -44,11 +44,11 @@ public class EducateHomepageSubjectDataSummaryDTO {
 		this.avgScoreToday = avgScoreToday;
 	}
 
-	public ExerciesSubjectType getSubjectType() {
+	public ExerciseSubjectType getSubjectType() {
 		return subjectType;
 	}
 
-	public void setSubjectType(ExerciesSubjectType subjectType) {
+	public void setSubjectType(ExerciseSubjectType subjectType) {
 		this.subjectType = subjectType;
 	}
 
@@ -60,12 +60,12 @@ public class EducateHomepageSubjectDataSummaryDTO {
 		this.lastScore = lastScore;
 	}
 
-	public Integer getExerciesCountSevenDays() {
-		return exerciesCountSevenDays;
+	public Integer getExerciseCountSevenDays() {
+		return exerciseCountSevenDays;
 	}
 
-	public void setExerciesCountSevenDays(Integer exerciesCountSevenDays) {
-		this.exerciesCountSevenDays = exerciesCountSevenDays;
+	public void setExerciseCountSevenDays(Integer exerciseCountSevenDays) {
+		this.exerciseCountSevenDays = exerciseCountSevenDays;
 	}
 
 	public Double getTotalScoreSevenDays() {
@@ -84,12 +84,12 @@ public class EducateHomepageSubjectDataSummaryDTO {
 		this.avgScoreSevenDays = avgScoreSevenDays;
 	}
 
-	public Integer getExerciesCountThirtyDays() {
-		return exerciesCountThirtyDays;
+	public Integer getExerciseCountThirtyDays() {
+		return exerciseCountThirtyDays;
 	}
 
-	public void setExerciesCountThirtyDays(Integer exerciesCountThirtyDays) {
-		this.exerciesCountThirtyDays = exerciesCountThirtyDays;
+	public void setExerciseCountThirtyDays(Integer exerciseCountThirtyDays) {
+		this.exerciseCountThirtyDays = exerciseCountThirtyDays;
 	}
 
 	public Double getTotalScoreThirtyDays() {
@@ -111,10 +111,10 @@ public class EducateHomepageSubjectDataSummaryDTO {
 	@Override
 	public String toString() {
 		return "EducateHomepageSubjectDataSummaryDTO [subjectType=" + subjectType + ", lastScore=" + lastScore
-				+ ", exerciesCountToday=" + exerciesCountToday + ", totalScoreToday=" + totalScoreToday
-				+ ", avgScoreToday=" + avgScoreToday + ", exerciesCountSevenDays=" + exerciesCountSevenDays
+				+ ", exerciseCountToday=" + exerciseCountToday + ", totalScoreToday=" + totalScoreToday
+				+ ", avgScoreToday=" + avgScoreToday + ", exerciseCountSevenDays=" + exerciseCountSevenDays
 				+ ", totalScoreSevenDays=" + totalScoreSevenDays + ", avgScoreSevenDays=" + avgScoreSevenDays
-				+ ", exerciesCountThirtyDays=" + exerciesCountThirtyDays + ", totalScoreThirtyDays="
+				+ ", exerciseCountThirtyDays=" + exerciseCountThirtyDays + ", totalScoreThirtyDays="
 				+ totalScoreThirtyDays + ", avgScoreThirtyDays=" + avgScoreThirtyDays + "]";
 	}
 

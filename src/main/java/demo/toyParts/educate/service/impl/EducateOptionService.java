@@ -21,7 +21,7 @@ public class EducateOptionService extends CommonService {
 	@Value("${optionFilePath.educate}")
 	private String optionFilePath;
 
-	private String exerciesStorePrefixPath;
+	private String exerciseStorePrefixPath;
 	private Integer calculateQuestionListSize = 20;
 	private BigDecimal maxScore = new BigDecimal(100);
 	private BigDecimal randomMaxAwardCoefficient;
@@ -29,7 +29,7 @@ public class EducateOptionService extends CommonService {
 	private HashMap<Integer, BigDecimal> gardePointMap;
 	private Integer dailyMaxHour = 22;
 	private Integer dailyMinHour = 7;
-	private Integer oldExerciesFileLivingDay = 7;
+	private Integer oldExerciseFileLivingDay = 7;
 
 	@PostConstruct
 	public String refreshOption() {
@@ -57,12 +57,12 @@ public class EducateOptionService extends CommonService {
 	public void setOptionFilePath(String optionFilePath) {
 	}
 
-	public String getExerciesStorePrefixPath() {
-		return exerciesStorePrefixPath;
+	public String getExerciseStorePrefixPath() {
+		return exerciseStorePrefixPath;
 	}
 
-	public void setExerciesStorePrefixPath(String exerciesStorePrefixPath) {
-		this.exerciesStorePrefixPath = exerciesStorePrefixPath;
+	public void setExerciseStorePrefixPath(String exerciseStorePrefixPath) {
+		this.exerciseStorePrefixPath = exerciseStorePrefixPath;
 	}
 
 	public Integer getCalculateQuestionListSize() {
@@ -121,21 +121,21 @@ public class EducateOptionService extends CommonService {
 		this.dailyMinHour = dailyMinHour;
 	}
 
-	public Integer getOldExerciesFileLivingDay() {
-		return oldExerciesFileLivingDay;
+	public Integer getOldExerciseFileLivingDay() {
+		return oldExerciseFileLivingDay;
 	}
 
-	public void setOldExerciesFileLivingDay(Integer oldExerciesFileLivingDay) {
-		this.oldExerciesFileLivingDay = oldExerciesFileLivingDay;
+	public void setOldExerciseFileLivingDay(Integer oldExerciseFileLivingDay) {
+		this.oldExerciseFileLivingDay = oldExerciseFileLivingDay;
 	}
 
 	@Override
 	public String toString() {
-		return "EducateOptionService [exerciesStorePrefixPath=" + exerciesStorePrefixPath + ", questionListSize="
+		return "EducateOptionService [exerciseStorePrefixPath=" + exerciseStorePrefixPath + ", questionListSize="
 				+ calculateQuestionListSize + ", maxScore=" + maxScore + ", randomMaxAwardCoefficient="
 				+ randomMaxAwardCoefficient + ", randomMinAwardCoefficient=" + randomMinAwardCoefficient
 				+ ", gardePointMap=" + gardePointMap + ", dailyMaxHour=" + dailyMaxHour + ", dailyMinHour="
-				+ dailyMinHour + ", oldExerciesFileLivingDay=" + oldExerciesFileLivingDay + "]";
+				+ dailyMinHour + ", oldExerciseFileLivingDay=" + oldExerciseFileLivingDay + "]";
 	}
 
 }

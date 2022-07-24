@@ -2,9 +2,10 @@ package demo.toyParts.educate.pojo.type;
 
 public enum MathQuestionType {
 
-	calculate("calculate", "计算题", 1), 
-	fill("fill", "填空题", 2), 
-	wordProblem("wordProblem", "应用题", 3),
+	CALCULATE("calculate", "计算题", 1), 
+	FILL("fill", "填空题", 2), 
+	WORD_PROBLEM("wordProblem", "应用题", 3),
+	TRUE_OR_FALSE("trueOrFalse", "判断题", 4),
 	;
 
 	private String name;

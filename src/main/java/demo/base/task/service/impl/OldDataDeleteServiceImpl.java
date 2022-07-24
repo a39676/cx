@@ -43,10 +43,10 @@ public class OldDataDeleteServiceImpl {
 		ocrService.cleanOldOcrImg();
 	}
 	
-	/** Delete old exercies file */
+	/** Delete old exercise file */
 	@Scheduled(cron = "24 45 03 * * *")
-	public void deleteOldExerciesFile() {
-		educateTaskService.deleteOldExerciesFile();
+	public void deleteOldExerciseFile() {
+		educateTaskService.deleteOldExerciseFile();
 	}
 
 }

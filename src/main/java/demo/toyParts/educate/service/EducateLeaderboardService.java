@@ -2,10 +2,10 @@ package demo.toyParts.educate.service;
 
 import org.springframework.web.servlet.ModelAndView;
 
-import demo.toyParts.educate.pojo.dto.GetExerciesLeaderboardDTO;
+import demo.toyParts.educate.pojo.dto.GetExerciseLeaderboardDTO;
 
 public interface EducateLeaderboardService {
 
-	ModelAndView getLeaderboard(GetExerciesLeaderboardDTO dto);
+	ModelAndView getLeaderboard(GetExerciseLeaderboardDTO dto);
 
 }

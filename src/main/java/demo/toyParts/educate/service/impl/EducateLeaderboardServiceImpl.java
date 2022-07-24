@@ -16,9 +16,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.UsersService;
-import demo.toyParts.educate.pojo.dto.GetExerciesLeaderboardDTO;
-import demo.toyParts.educate.pojo.po.StudentExerciesHistory;
-import demo.toyParts.educate.pojo.po.StudentExerciesHistoryExample;
+import demo.toyParts.educate.pojo.dto.GetExerciseLeaderboardDTO;
+import demo.toyParts.educate.pojo.po.StudentExerciseHistory;
+import demo.toyParts.educate.pojo.po.StudentExerciseHistoryExample;
 import demo.toyParts.educate.pojo.type.EducateLeaderboardOrderType;
 import demo.toyParts.educate.pojo.type.MatchGradeType;
 import demo.toyParts.educate.pojo.vo.RankingVO;
@@ -32,7 +32,7 @@ public class EducateLeaderboardServiceImpl extends EducateCommonService implemen
 	private UsersService usersService;
 
 	@Override
-	public ModelAndView getLeaderboard(GetExerciesLeaderboardDTO dto) {
+	public ModelAndView getLeaderboard(GetExerciseLeaderboardDTO dto) {
 		ModelAndView view = new ModelAndView("toyJSP/educateJSP/leaderboard");
 		if (dto == null || dto.getDays() == null || dto.getOrderType() == null) {
 			return view;
@@ -50,17 +50,17 @@ public class EducateLeaderboardServiceImpl extends EducateCommonService implemen
 		}
 
 		LocalDateTime now = LocalDateTime.now();
-		StudentExerciesHistoryExample historyExample = new StudentExerciesHistoryExample();
+		StudentExerciseHistoryExample historyExample = new StudentExerciseHistoryExample();
 		historyExample.createCriteria().andCreateTimeBetween(now.minusDays(dto.getDays() - 1).with(LocalTime.MIN), now).andMatchGradeTypeGreaterThanOrEqualTo(MatchGradeType.CURRENT_GRADE.getCode());
-		List<StudentExerciesHistory> exerciesHistoryPOList = exerciesHistoryMapper.selectByExample(historyExample);
+		List<StudentExerciseHistory> exerciseHistoryPOList = exerciseHistoryMapper.selectByExample(historyExample);
 
 		List<RankingVO> voList = null;
 		if(EducateLeaderboardOrderType.ORDER_BY_SCORE.equals(orderType)) {
 			view.addObject("orderType", "按累计成绩排名");
-			voList = orderByScore(exerciesHistoryPOList);
+			voList = orderByScore(exerciseHistoryPOList);
 		} else {
 			view.addObject("orderType", "按累计积分排名");
-			voList = orderByPoint(exerciesHistoryPOList);
+			voList = orderByPoint(exerciseHistoryPOList);
 		}
 		view.addObject("calculateDays", dto.getDays());
 		view.addObject("leaderboardOrderTypeList", EducateLeaderboardOrderType.values());
@@ -71,10 +71,10 @@ public class EducateLeaderboardServiceImpl extends EducateCommonService implemen
 		return view;
 	}
 
-	private List<RankingVO> orderByPoint(List<StudentExerciesHistory> exerciesHistoryPOList) {
+	private List<RankingVO> orderByPoint(List<StudentExerciseHistory> exerciseHistoryPOList) {
 		Set<Long> userIdSet = new HashSet<>();
 		Map<Long, Double> pointMap = new HashMap<>();
-		for(StudentExerciesHistory po : exerciesHistoryPOList) {
+		for(StudentExerciseHistory po : exerciseHistoryPOList) {
 			if(po.getUserId() == null) {
 				continue;
 			}
@@ -105,10 +105,10 @@ public class EducateLeaderboardServiceImpl extends EducateCommonService implemen
 		return voList;
 	}
 	
-	private List<RankingVO> orderByScore(List<StudentExerciesHistory> exerciesHistoryPOList) {
+	private List<RankingVO> orderByScore(List<StudentExerciseHistory> exerciseHistoryPOList) {
 		Set<Long> userIdSet = new HashSet<>();
 		Map<Long, Double> scoreMap = new HashMap<>();
-		for(StudentExerciesHistory po : exerciesHistoryPOList) {
+		for(StudentExerciseHistory po : exerciseHistoryPOList) {
 			if(po.getUserId() == null || po.getScore() == null) {
 				continue;
 			}

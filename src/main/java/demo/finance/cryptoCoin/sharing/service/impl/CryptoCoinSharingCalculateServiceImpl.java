@@ -193,9 +193,9 @@ public class CryptoCoinSharingCalculateServiceImpl extends CryptoCoinCommonServi
 
 		StringBuffer sb = new StringBuffer();
 
-		JSONObject exerciesJson = JSONObject.fromObject(result);
+		JSONObject resultJson = JSONObject.fromObject(result);
 
-		sb.append(exerciesJson.toString());
+		sb.append(resultJson.toString());
 
 		ioUtil.byteToFile(sb.toString().getBytes(StandardCharsets.UTF_8), finalFilePath);
 

@@ -9,7 +9,9 @@ public class MathQuestionBaseDTO {
 
 	private Integer questionNumber;
 
-	private MathQuestionType mathQuestionType = MathQuestionType.calculate;
+	private String comment;
+
+	private MathQuestionType mathQuestionType = MathQuestionType.CALCULATE;
 
 	private String expression;
 
@@ -23,6 +25,14 @@ public class MathQuestionBaseDTO {
 
 	public void setQuestionNumber(Integer questionNumber) {
 		this.questionNumber = questionNumber;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	public MathQuestionType getMathQuestionType() {
@@ -73,9 +83,9 @@ public class MathQuestionBaseDTO {
 
 	@Override
 	public String toString() {
-		return "MathQuestionBaseDTO [questionNumber=" + questionNumber + ", mathQuestionType=" + mathQuestionType
-				+ ", expression=" + expression + ", imgUrlList=" + imgUrlList + ", standardAnswer=" + standardAnswer
-				+ "]";
+		return "MathQuestionBaseDTO [questionNumber=" + questionNumber + ", comment=" + comment + ", mathQuestionType="
+				+ mathQuestionType + ", expression=" + expression + ", imgUrlList=" + imgUrlList + ", standardAnswer="
+				+ standardAnswer + "]";
 	}
 
 }

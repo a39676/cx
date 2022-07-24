@@ -10,12 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import demo.base.system.service.impl.SystemOptionService;
 import demo.common.service.CommonService;
 import demo.toyParts.educate.mapper.StudentDetailMapper;
-import demo.toyParts.educate.mapper.StudentExerciesHistoryMapper;
-import demo.toyParts.educate.pojo.dto.MathExerciesDTO;
-import demo.toyParts.educate.pojo.po.StudentExerciesHistory;
-import demo.toyParts.educate.pojo.po.StudentExerciesHistoryExample;
-import demo.toyParts.educate.pojo.result.ExerciesFileSaveResult;
-import demo.toyParts.educate.pojo.type.ExerciesSubjectType;
+import demo.toyParts.educate.mapper.StudentExerciseHistoryMapper;
+import demo.toyParts.educate.pojo.dto.MathExerciseDTO;
+import demo.toyParts.educate.pojo.po.StudentExerciseHistory;
+import demo.toyParts.educate.pojo.po.StudentExerciseHistoryExample;
+import demo.toyParts.educate.pojo.result.ExerciseFileSaveResult;
+import demo.toyParts.educate.pojo.type.ExerciseSubjectType;
 import demo.toyParts.educate.pojo.type.GradeType;
 import demo.toyParts.educate.service.impl.EducateOptionService;
 import net.sf.json.JSONObject;
@@ -29,20 +29,20 @@ public abstract class EducateCommonService extends CommonService {
 	@Autowired
 	protected EducateOptionService optionService;
 	@Autowired
-	protected StudentExerciesHistoryMapper exerciesHistoryMapper;
+	protected StudentExerciseHistoryMapper exerciseHistoryMapper;
 	@Autowired
 	protected StudentDetailMapper studentDetailMapper;
 	
 	@Autowired
 	private FileUtilCustom ioUtil;
 
-	protected ExerciesFileSaveResult saveExerciesFile(MathExerciesDTO dto) {
-		String storePrefixPath = optionService.getExerciesStorePrefixPath();
-		String fileName = dto.getExerciesID() + "L" + ".txt";
+	protected ExerciseFileSaveResult saveExerciseFile(MathExerciseDTO dto) {
+		String storePrefixPath = optionService.getExerciseStorePrefixPath();
+		String fileName = dto.getExerciseID() + "L" + ".txt";
 		String timeFolder = LocalDate.now().toString();
 		File mainFolder = new File(storePrefixPath + "/" + timeFolder);
 		String finalFilePath = storePrefixPath + "/" + timeFolder + "/" + fileName;
-		ExerciesFileSaveResult result = new ExerciesFileSaveResult();
+		ExerciseFileSaveResult result = new ExerciseFileSaveResult();
 
 		if (!mainFolder.exists() || dto == null || dto.getQuestionList() == null || dto.getQuestionList().isEmpty()) {
 			if (!mainFolder.mkdirs()) {
@@ -53,9 +53,9 @@ public abstract class EducateCommonService extends CommonService {
 
 		StringBuffer sb = new StringBuffer();
 
-		JSONObject exerciesJson = JSONObject.fromObject(dto);
+		JSONObject exerciseJson = JSONObject.fromObject(dto);
 
-		sb.append(exerciesJson.toString());
+		sb.append(exerciseJson.toString());
 
 		ioUtil.byteToFile(sb.toString().getBytes(StandardCharsets.UTF_8), finalFilePath);
 
@@ -65,15 +65,15 @@ public abstract class EducateCommonService extends CommonService {
 		return result;
 	}
 
-	protected <T> List<StudentExerciesHistory> reloadExercies(GradeType gradeType, ExerciesSubjectType subjectType, Long userId) {
-		StudentExerciesHistoryExample example = new StudentExerciesHistoryExample();
+	protected <T> List<StudentExerciseHistory> reloadExercise(GradeType gradeType, ExerciseSubjectType subjectType, Long userId) {
+		StudentExerciseHistoryExample example = new StudentExerciseHistoryExample();
 		example.createCriteria().andGradeTypeEqualTo(gradeType.getCode().longValue()).andSubjectTypeEqualTo(subjectType.getCode().longValue()).andUserIdEqualTo(userId).andCompeletionTimeIsNull();
-		return exerciesHistoryMapper.selectByExample(example);
+		return exerciseHistoryMapper.selectByExample(example);
 	}
 	
-	protected <T> T buildExerciesFromFile(StudentExerciesHistory exerciesPO, Class<T> clazz) {
-		String exerciesJsonStr = ioUtil.getStringFromFile(exerciesPO.getFilePath());
-		return buildObjFromJsonCustomization(exerciesJsonStr, clazz);
+	protected <T> T buildExerciseFromFile(StudentExerciseHistory exercisePO, Class<T> clazz) {
+		String exerciseJsonStr = ioUtil.getStringFromFile(exercisePO.getFilePath());
+		return buildObjFromJsonCustomization(exerciseJsonStr, clazz);
 	}
 	
 }

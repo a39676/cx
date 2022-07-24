@@ -63,17 +63,17 @@
           </tr>
         </thead>
         <tbody>
-          <c:forEach items="${exerciesData.subjectDataList}" var="subjectData">
+          <c:forEach items="${exerciseData.subjectDataList}" var="subjectData">
             <tr>
               <td><span>${subjectData.subjectType.cnName}</span></td>
               <td><span>${subjectData.lastScore}</span></td>
-              <td><span>${subjectData.exerciesCountToday}</span></td>
+              <td><span>${subjectData.exerciseCountToday}</span></td>
               <td><span>${subjectData.totalScoreToday}</span></td>
               <td><span>${subjectData.avgScoreToday}</span></td>
-              <td><span>${subjectData.exerciesCountSevenDays}</spar></td>
+              <td><span>${subjectData.exerciseCountSevenDays}</spar></td>
               <td><span>${subjectData.totalScoreSevenDays}</span></td>
               <td><span>${subjectData.avgScoreSevenDays}</span></td>
-              <td><span>${subjectData.exerciesCountThirtyDays}</span></td>
+              <td><span>${subjectData.exerciseCountThirtyDays}</span></td>
               <td><span>${subjectData.totalScoreThirtyDays}</span></td>
               <td><span>${subjectData.avgScoreThirtyDays}</span></td>
             </tr>
@@ -113,7 +113,7 @@
     <hr>
     <div class="row">
       <div class="col-md-12">
-        <a id="startExerciesLink" href="#" target="_blank">开始习题</a>
+        <a id="startExerciseLink" href="#" target="_blank">开始习题</a>
       </div>
     </div>
   </div>
@@ -123,13 +123,13 @@
   <script type="text/javascript">
     $(document).ready(function() {
       $("#selectGrade").change(function () {
-        changeStartExerciesLink();
+        changeStartExerciseLink();
       });
       $("#selectSubject").change(function () {
-        changeStartExerciesLink();
+        changeStartExerciseLink();
       });
 
-      function changeStartExerciesLink() {
+      function changeStartExerciseLink() {
         var url = "/educate/question";
 
         var gradeTypeCode = $("#selectGrade option:selected").val();
@@ -137,11 +137,11 @@
 
         url = url + "?" + "gradeTypeCode=" + gradeTypeCode + "&subject=" + subjectType;
 
-        var startExerciesLink = $("#startExerciesLink");
-        startExerciesLink.attr("href", url);
+        var startExerciseLink = $("#startExerciseLink");
+        startExerciseLink.attr("href", url);
       }
 
-      changeStartExerciesLink();
+      changeStartExerciseLink();
 
       $("#leaderboardCalculateDays").change(function () {
         changeLeaderboardLink();

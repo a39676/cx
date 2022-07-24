@@ -9,14 +9,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import demo.common.controller.CommonController;
 import demo.toyParts.educate.pojo.constant.EducateUrl;
-import demo.toyParts.educate.service.ExerciesHomepageService;
+import demo.toyParts.educate.service.ExerciseHomepageService;
 
 @Controller
 @RequestMapping(value = EducateUrl.ROOT)
 public class EducateHomepageController extends CommonController {
 
 	@Autowired
-	private ExerciesHomepageService service;
+	private ExerciseHomepageService service;
 	
 	@GetMapping(value = "/")
 	@ResponseBody

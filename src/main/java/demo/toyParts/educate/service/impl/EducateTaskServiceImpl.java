@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.tool.calendarNotice.mq.producer.TelegramCalendarNoticeMessageAckProducer;
-import demo.toyParts.educate.mapper.StudentExerciesHistoryMapper;
-import demo.toyParts.educate.pojo.po.StudentExerciesHistory;
-import demo.toyParts.educate.pojo.po.StudentExerciesHistoryExample;
+import demo.toyParts.educate.mapper.StudentExerciseHistoryMapper;
+import demo.toyParts.educate.pojo.po.StudentExerciseHistory;
+import demo.toyParts.educate.pojo.po.StudentExerciseHistoryExample;
 import demo.toyParts.educate.service.EducateCommonService;
 import demo.toyParts.educate.service.EducateTaskService;
 import telegram.pojo.constant.TelegramBotType;
@@ -25,36 +25,36 @@ public class EducateTaskServiceImpl extends EducateCommonService implements Educ
 	private TelegramCalendarNoticeMessageAckProducer telegramMessageAckProducer;
 	
 	@Autowired
-	private StudentExerciesHistoryMapper exerciesHistoryMapper;
+	private StudentExerciseHistoryMapper exerciseHistoryMapper;
 
 	@Override
-	public void deleteOldExerciesFile() {
-		LocalDateTime limitLivingTime = LocalDateTime.now().minusDays(optionService.getOldExerciesFileLivingDay());
-		StudentExerciesHistoryExample example = new StudentExerciesHistoryExample();
+	public void deleteOldExerciseFile() {
+		LocalDateTime limitLivingTime = LocalDateTime.now().minusDays(optionService.getOldExerciseFileLivingDay());
+		StudentExerciseHistoryExample example = new StudentExerciseHistoryExample();
 		example.createCriteria().andFilePathIsNotNull().andCompeletionTimeLessThan(limitLivingTime);
-		List<StudentExerciesHistory> poListByCompeletionTime = exerciesHistoryMapper.selectByExample(example);
+		List<StudentExerciseHistory> poListByCompeletionTime = exerciseHistoryMapper.selectByExample(example);
 		
-		HashSet<StudentExerciesHistory> summaryPoSet = new HashSet<>();
+		HashSet<StudentExerciseHistory> summaryPoSet = new HashSet<>();
 		summaryPoSet.addAll(poListByCompeletionTime);
 		
-		example = new StudentExerciesHistoryExample();
+		example = new StudentExerciseHistoryExample();
 		example.createCriteria().andFilePathIsNotNull().andCreateTimeLessThan(limitLivingTime).andCompeletionTimeIsNull();
-		List<StudentExerciesHistory> poListByCreateTimeAndNotCompelet = exerciesHistoryMapper.selectByExample(example);
+		List<StudentExerciseHistory> poListByCreateTimeAndNotCompelet = exerciseHistoryMapper.selectByExample(example);
 		summaryPoSet.addAll(poListByCreateTimeAndNotCompelet);
 		
 		File tmpFile = null;
-		for(StudentExerciesHistory po : summaryPoSet) {
+		for(StudentExerciseHistory po : summaryPoSet) {
 			tmpFile = new File(po.getFilePath());
 			if(tmpFile.exists() && tmpFile.isFile()) {
 				try {
 					if(!tmpFile.delete()) {
-						sendTelegram("Delete old exercies file error, ID: " + po.getExerciesId());
+						sendTelegram("Delete old exercise file error, ID: " + po.getExerciseId());
 					} else {
 						po.setFilePath(null);
-						exerciesHistoryMapper.updateByPrimaryKeySelective(po);
+						exerciseHistoryMapper.updateByPrimaryKeySelective(po);
 					}
 				} catch (Exception e) {
-					sendTelegram("Delete old exercies file error, ID: " + po.getExerciesId());
+					sendTelegram("Delete old exercise file error, ID: " + po.getExerciseId());
 				}
 			}
 		}

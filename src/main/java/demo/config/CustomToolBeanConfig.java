@@ -7,7 +7,9 @@ import org.springframework.stereotype.Component;
 import demo.config.costom_component.BaseUtilCustom;
 import demo.config.costom_component.SnowFlake;
 import demo.config.costom_component.Tess;
+import demo.tool.other.service.impl.RandomChineseNameGenerator;
 import mail.service.MailToolService;
+import toolPack.complexTool.ChinaMainLandIdNumGenerator;
 import toolPack.dateTimeHandle.DateHandler;
 import toolPack.dateTimeHandle.LocalDateTimeAdapter;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
@@ -79,6 +81,16 @@ public class CustomToolBeanConfig {
 	@Bean
 	public LocalDateTimeAdapter getLocalDateTimeAdapter() {
 		return new LocalDateTimeAdapter();
+	}
+	
+	@Bean
+	public RandomChineseNameGenerator getRandomChineseNameGenerator() {
+		return new RandomChineseNameGenerator();
+	}
+	
+	@Bean
+	public ChinaMainLandIdNumGenerator getChinaMainLandIdNumGenerator() {
+		return new ChinaMainLandIdNumGenerator();
 	}
 	
 	@Bean

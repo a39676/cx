@@ -4,6 +4,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import autoTest.testEvent.hsbc.pojo.dto.HsbcWechatPreregistDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.tool.bbtOrder.hsbc.pojo.vo.RandomIdDataVO;
 
 public interface HsbcService {
 
@@ -16,5 +17,7 @@ public interface HsbcService {
 	ModelAndView getReportSummaryPage(HsbcWechatPreregistDTO dto);
 
 	CommonResult hsbcWechatPreregistRandomInsert();
+
+	RandomIdDataVO getRandomIdData();
 
 }

@@ -13,6 +13,7 @@ import autoTest.testEvent.hsbc.pojo.dto.HsbcWechatPreregistDTO;
 import autoTest.testEvent.searchingDemo.pojo.dto.UnderWayMonthTestDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.controller.CommonController;
+import demo.tool.bbtOrder.hsbc.pojo.vo.RandomIdDataVO;
 import demo.tool.bbtOrder.hsbc.service.HsbcService;
 import demo.tool.bbtOrder.underWayMonthTest.service.UnderWayMonthTestService;
 
@@ -29,6 +30,12 @@ public class PublicToolController extends CommonController {
 	@GetMapping(value = "/hsbc/hsbcWechatPreregist")
 	public ModelAndView hsbcWechatPreregistView() {
 		return hsbcService.hsbcWechatPreregistView();
+	}
+	
+	@PostMapping(value = "/hsbc/getRandomIdData")
+	@ResponseBody
+	public RandomIdDataVO getRandomIdData() {
+		return hsbcService.getRandomIdData();
 	}
 	
 	@PostMapping(value = "/hsbc/hsbcWechatPreregist")

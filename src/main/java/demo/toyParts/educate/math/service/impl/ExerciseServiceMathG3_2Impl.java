@@ -59,7 +59,8 @@ public class ExerciseServiceMathG3_2Impl extends ExerciseMathCommonService imple
 
 		MathQuestionBaseDTO question = null;
 		int questionNumber = 1;
-		for (; questionNumber <= optionService.getCalculateQuestionListSize(); questionNumber++) {
+		int normalCalculateQuestionSize = 10;
+		for (; questionNumber <= normalCalculateQuestionSize; questionNumber++) {
 			question = null;
 			Double standardAnswer = -1D;
 			while (standardAnswer < 0 || standardAnswer > MAX_CALCULATE) {

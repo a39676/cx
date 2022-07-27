@@ -26,7 +26,9 @@ import demo.automationTest.service.AutomationTestReportService;
 import demo.automationTest.service.TestEventService;
 import demo.automationTest.service.impl.AutomationTestCommonService;
 import demo.tool.bbtOrder.hsbc.pojo.vo.HsbcWechatPreregistReportVO;
+import demo.tool.bbtOrder.hsbc.pojo.vo.RandomIdDataVO;
 import demo.tool.bbtOrder.hsbc.service.HsbcService;
+import demo.tool.other.service.impl.RandomChineseNameGenerator;
 import net.sf.json.JSONObject;
 import tool.pojo.type.InternationalityType;
 import toolPack.complexTool.ChinaMainLandIdNumGenerator;
@@ -41,6 +43,10 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 	private AutomationTestReportService reportService;
 	@Autowired
 	private TestEventService eventService;
+	@Autowired
+	private RandomChineseNameGenerator randomChineseNameGenerator;
+	@Autowired
+	private ChinaMainLandIdNumGenerator chinaMainLandIdNumGenerator;
 
 	private List<LocalDateTime> hsbcWechatPreregistTaskInsertTime = new ArrayList<>();
 
@@ -49,19 +55,40 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		ModelAndView view = new ModelAndView("toolJSP/publicTool/HsbcWechatPreregist");
 		view.addObject("idTypeList", HsbcIdType.values());
 		view.addObject("internationalityTypeList", InternationalityType.values());
-		ChinaMainLandIdNumGenerator g = new ChinaMainLandIdNumGenerator();
-		view.addObject("randomIdNumber", g.getRandomId());
+		view.addObject("randomIdNumber", chinaMainLandIdNumGenerator.getRandomId());
+		view.addObject("randomLastName", randomChineseNameGenerator.getRandomLastName());
+		view.addObject("randomFirstName", randomChineseNameGenerator.getRandomFirstName());
+		
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+		int randomNum = t.nextInt(10000000, 99999999);
+		String randomPhone = String.valueOf("187" + randomNum);
+		view.addObject("randomPhoneNumber", randomPhone);
+		
 		return view;
 	}
 	
 	@Override
+	public RandomIdDataVO getRandomIdData() {
+		RandomIdDataVO vo = new RandomIdDataVO();
+		
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+		int randomNum = t.nextInt(10000000, 99999999);
+		String randomPhone = String.valueOf("187" + randomNum);
+		vo.setRandomPhoneNumber(randomPhone);
+		vo.setRandomIdNumber(chinaMainLandIdNumGenerator.getRandomId());
+		vo.setRandomFirstname(randomChineseNameGenerator.getRandomFirstName());
+		vo.setRandomLastname(randomChineseNameGenerator.getRandomLastName());
+		return vo;
+	}
+
+	@Override
 	public ModelAndView getReportSummaryPage(HsbcWechatPreregistDTO dto) {
 		ModelAndView view = new ModelAndView("toolJSP/publicTool/HsbcWechatReportSummaryPage");
 
-		if(!checkPwd(dto)) {
+		if (!checkPwd(dto)) {
 			return view;
 		}
-		
+
 		FindTestEventPageByConditionDTO queryDTO = new FindTestEventPageByConditionDTO();
 		queryDTO.setLimit(30L);
 		queryDTO.setFlowId(ScheduleClawingType.HSBC_WECHAT_PREREGIST.getId());
@@ -88,7 +115,8 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		try {
 			String paramStr = ioUtil.getStringFromFile(po.getParameterFilePath());
 			JSONObject json = JSONObject.fromObject(paramStr);
-			HsbcWechatPreregistDTO paramDTO = new Gson().fromJson(json.getString(HsbcWechatPreregistDTO.class.getSimpleName()), HsbcWechatPreregistDTO.class);
+			HsbcWechatPreregistDTO paramDTO = new Gson().fromJson(
+					json.getString(HsbcWechatPreregistDTO.class.getSimpleName()), HsbcWechatPreregistDTO.class);
 			InternationalityType areaType = InternationalityType.getType(paramDTO.getAreaType(),
 					paramDTO.getAreaName());
 			vo.setAreaTypeCnName(areaType.getCnName());
@@ -111,7 +139,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 	@Override
 	public CommonResult hsbcWechatPreregist(HsbcWechatPreregistDTO dto) {
 		CommonResult r = new CommonResult();
-		if(!checkPwd(dto)) {
+		if (!checkPwd(dto)) {
 			r.setMessage("password error");
 			return r;
 		}
@@ -145,7 +173,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		r.setIsSuccess();
 		return r;
 	}
-	
+
 	private boolean checkPwd(HsbcWechatPreregistDTO dto) {
 		if (StringUtils.isBlank(dto.getApkDownloadPassword())) {
 			return false;
@@ -154,7 +182,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 //		String correctPwd = "shabiyinhang";
 		String correctPwd = "hsbc";
 		Integer month = LocalDate.now().getMonthValue();
-		if(month < 10) {
+		if (month < 10) {
 			correctPwd = correctPwd + "0" + month;
 		} else {
 			correctPwd = correctPwd + month;
@@ -207,18 +235,18 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 	@Override
 	public CommonResult hsbcWechatPreregistRandomInsert() {
 		CommonResult r = new CommonResult();
-		if(systemOptionService.isDev()) {
+		if (systemOptionService.isDev()) {
 			return r;
 		}
-		
+
 		LocalDateTime now = LocalDateTime.now();
 		ThreadLocalRandom t = ThreadLocalRandom.current();
-		if(now.getHour() < 10 || now.getHour() > 21 || t.nextInt(1, now.getHour()) < 8) {
+		if (now.getHour() < 10 || now.getHour() > 21 || t.nextInt(1, now.getHour()) < 8) {
 			return r;
 		}
-		
+
 		HsbcWechatPreregistDTO dto = new HsbcWechatPreregistDTO();
-		
+
 		String paramSavingPath = getParamFilePath(TestModuleType.SCHEDULE_CLAWING.getModuleName(),
 				ScheduleClawingType.HSBC_WECHAT_PREREGIST.getFlowName(), HsbcWechatPreregistDTO.class.getSimpleName());
 		String paramStr = ioUtil.getStringFromFile(paramSavingPath);
@@ -226,35 +254,35 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 			HsbcWechatPreregistDTO paramDTO = buildObjFromJsonCustomization(paramStr, HsbcWechatPreregistDTO.class);
 			dto.setMainUrl(paramDTO.getMainUrl());
 			dto.setProvinceRegionMap(paramDTO.getProvinceRegionMap());
-			
+
 		} catch (Exception e) {
 			r.setMessage("Option service error, please call admin");
 			return r;
 		}
-		
+
 		InternationalityType phoneArea = InternationalityType.CN;
 		dto.setPhoneAreaType(phoneArea.getCode());
 		dto.setPhoneAreaName(phoneArea.getCnName());
-		
+
 		dto.setAreaName(phoneArea.getCnName());
 		dto.setAreaType(phoneArea.getCode());
-		
-		dto.setCustomerFirstName("测");
-		dto.setCustomerLastName("试");
-		
+
+		dto.setCustomerFirstName(randomChineseNameGenerator.getRandomFirstName());
+		dto.setCustomerLastName(randomChineseNameGenerator.getRandomLastName());
+
 		HsbcIdType idType = HsbcIdType.MAIN_LAND_ID;
 		dto.setIdType(idType.getId());
-		
+
 		int randomNum = t.nextInt(10000000, 99999999);
 		String randomPhone = String.valueOf("187" + randomNum);
 		dto.setPhoneNumber(randomPhone);
-		
+
 		List<String> citynameList = new ArrayList<>();
-		for(HsbcWechatPreregistBranchCityNameType data : HsbcWechatPreregistBranchCityNameType.values()) {
+		for (HsbcWechatPreregistBranchCityNameType data : HsbcWechatPreregistBranchCityNameType.values()) {
 			citynameList.add(data.getName());
 		}
 		dto.setCityNameOfOpeningAccountBranch(citynameList.get(t.nextInt(0, citynameList.size())));
-		
+
 		ChinaMainLandIdNumGenerator g = new ChinaMainLandIdNumGenerator();
 		String randomId = g.getRandomId();
 		dto.setIdNumber(randomId);
@@ -270,4 +298,6 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		r.setIsSuccess();
 		return r;
 	}
+
+	
 }

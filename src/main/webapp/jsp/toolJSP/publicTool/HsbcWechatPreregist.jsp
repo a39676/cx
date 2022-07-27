@@ -121,17 +121,17 @@
           <div class="input-group-prepend">
             <span class="input-group-text">手机号</span>
           </div>
-          <input type="text" class="form-control" name="" id="phoneNumber">
+          <input type="text" class="form-control" value="${randomPhoneNumber}" name="" id="phoneNumber">
         </div>
         <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text">LastName(姓)</span>
           </div>
-          <input type="text" class="form-control" name="" id="customerLastName" value="测" maxlength="2">
+          <input type="text" class="form-control" name="" id="customerLastName" value="${randomLastName}" maxlength="2">
           <div class="input-group-prepend">
             <span class="input-group-text">FirstName(名)</span>
           </div>
-          <input type="text" class="form-control" name="" id="customerFirstName" value="试" maxlength="2">
+          <input type="text" class="form-control" name="" id="customerFirstName" value="${randomFirstName}" maxlength="2">
         </div>
 
       </div>
@@ -145,6 +145,7 @@
 
     <div class="row">
       <div class="col-md-12">
+        <button class="btn btn-sm btn-success" type="button" name="button" id="getRandomIdData">随机生成身份信息</button>
         <button class="btn btn-sm btn-primary" type="button" name="button" id="insertTask">加入预注册任务</button>
         <button class="btn btn-sm btn-primary" type="button" name="button" id="refreshReport">刷新报告列表</button>
       </div>
@@ -173,6 +174,47 @@
   <%@ include file="../../baseElementJSP/normalJSPart.jsp" %>
   <script type="text/javascript">
     $(document).ready(function() {
+      
+      $("#getRandomIdData").click(function () {
+        getRandomIdData();
+      });
+
+      function getRandomIdData() {
+        var url = "/publicTool/hsbc/getRandomIdData";
+
+        var idNumber = $("#idNumber");
+        var customerFirstName = $("#customerFirstName");
+        var customerLastName = $("#customerLastName");
+        var phoneNumber = $("#phoneNumber");
+        
+        var jsonOutput = {
+        };
+
+        $.ajax({
+          type : "POST",
+          async : true,
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          cache : false,
+          contentType: "application/json",
+          dataType: "json",
+          timeout:50000,
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          success:function(datas){
+            idNumber.val(datas.randomIdNumber);
+            customerFirstName.val(datas.randomFirstname);
+            customerLastName.val(datas.randomLastname);
+            phoneNumber.val(datas.randomPhoneNumber);
+          },
+          error: function(datas) {
+            $("#result").text(datas.message);
+          }
+        });
+      }
+
+
       $("#insertTask").click(function () {
         $("#result").text("");
         insertTask();

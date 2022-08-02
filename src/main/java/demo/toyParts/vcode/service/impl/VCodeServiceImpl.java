@@ -8,15 +8,21 @@ import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.service.CommonService;
+import demo.tool.telegram.service.TelegramService;
 import demo.toyParts.vcode.mapper.VCodeMapper;
 import demo.toyParts.vcode.pojo.param.DeleteInvalidCodeParam;
 import demo.toyParts.vcode.pojo.param.UpdateDeleteMarkParam;
 import demo.toyParts.vcode.pojo.param.type.VCodeType;
 import demo.toyParts.vcode.pojo.po.VCode;
 import demo.toyParts.vcode.service.VCodeService;
+import telegram.pojo.constant.TelegramBotType;
+import telegram.pojo.constant.TelegramStaticChatID;
 
 @Service
 public class VCodeServiceImpl extends CommonService implements VCodeService {
+	
+	@Autowired
+	private TelegramService telegramService;
 	
 	@Autowired
 	private VCodeMapper vCodeMapper;
@@ -84,6 +90,11 @@ public class VCodeServiceImpl extends CommonService implements VCodeService {
 		}
 		
 		vCodeMapper.updateUseCount(vcode.getCodeId());
+		
+		String msg = "Vcode visit: " + vcode;
+		
+		telegramService.sendMessage(TelegramBotType.BOT_2, msg, TelegramStaticChatID.MY_ID);
+		
 		result.setIsSuccess();
 		return result;
 	}

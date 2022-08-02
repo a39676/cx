@@ -94,6 +94,11 @@ public class ExerciseServiceMathG4_1Impl extends ExerciseMathCommonService imple
 		question.setQuestionNumber(questionNumber);
 		exerciseDTO.getQuestionList().add(question);
 		questionNumber++;
+		
+		question = createWordProblemModule6();
+		question.setQuestionNumber(questionNumber);
+		exerciseDTO.getQuestionList().add(question);
+		questionNumber++;
 
 		return exerciseDTO;
 	}
@@ -248,5 +253,42 @@ public class ExerciseServiceMathG4_1Impl extends ExerciseMathCommonService imple
 		q.addStandardAnswer(String.valueOf(correctResult));
 
 		return q;
+	}
+	
+	private MathQuestionBaseDTO createWordProblemModule6() {
+		String moduleStr = "汽车上山的速度为每小时%d千米, 行驶了%d小时到达山顶, 下山时原路返回用了%d小时,<br>"
+				+ " 汽车下山时平均每小时行驶多少千米?";
+
+		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+		int speedForClimbing = t.nextInt(40, 80 + 1);
+		int takeHourForClimbing = t.nextInt(8, 16 + 1);
+		
+		int totalKilometers = speedForClimbing * takeHourForClimbing;
+		
+		int takeHourForDownhill = takeHourForClimbing - 1;
+		
+		while (totalKilometers % takeHourForDownhill != 0) {
+			takeHourForDownhill--;
+		}
+		int speedForDownhill = totalKilometers / takeHourForDownhill;
+
+
+		q.setExpression(String.format(moduleStr, speedForClimbing, takeHourForClimbing, takeHourForDownhill));
+		q.addStandardAnswer(String.valueOf(speedForDownhill));
+
+		return q;
+	}
+	
+	public static void main(String[] args) {
+		ExerciseServiceMathG4_1Impl t = new ExerciseServiceMathG4_1Impl();
+		int i = 0;
+		while (i < 10) {
+			MathQuestionBaseDTO q = t.createWordProblemModule6();
+			System.out.println(q.toString());
+			i++;
+		}
 	}
 }

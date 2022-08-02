@@ -12,12 +12,7 @@
 <sec:csrfMetaTags />
 <title>${ title }</title>
 
-<span>upload test</span>
-<input type="file" name="" value="" accept="image/*" id="uploadImageInput">
-<input type="text" name="" value="imgName" id="imgName">
-<img id="uploadImgPreview" src="" alt="" />
-<button type="button" name="button" id="uploadImgButton">uploadImg</button>
-
+<button id="t2">t2</button>
 
 <footer>
 </footer>
@@ -27,17 +22,11 @@
 
   $(document).ready(function() {
 
-    $("#uploadImgButton").click(function () {
+    $("#t2").click(function () {
       var url = "/test2/t2";
 
-      var imgName = $("#imgName").val();
-      var imgBase64Str = $("#uploadImgPreview").attr("src");
-
       var jsonOutput = {
-        imgName : imgName,
-        validTime : "2000-12-31 23:59:59",
-        imgBase64Str : imgBase64Str.split("base64,")[1],
-        imgTagCode : 14,
+        
       };
 
       console.log(jsonOutput);
@@ -57,6 +46,7 @@
           // $("#searchResult").html(data);
         },
         error:function(e){
+          console.log(data);
           // $("#result").text(e);
         }
       });

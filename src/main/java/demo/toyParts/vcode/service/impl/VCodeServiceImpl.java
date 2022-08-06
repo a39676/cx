@@ -91,8 +91,7 @@ public class VCodeServiceImpl extends CommonService implements VCodeService {
 		
 		vCodeMapper.updateUseCount(vcode.getCodeId());
 		
-		String msg = "Vcode visit: " + vcode;
-		
+		String msg = "Vcode visit: " + vcode.getCodeValue();		
 		telegramService.sendMessage(TelegramBotType.BOT_2, msg, TelegramStaticChatID.MY_ID);
 		
 		result.setIsSuccess();

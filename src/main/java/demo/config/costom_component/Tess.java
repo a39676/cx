@@ -68,7 +68,7 @@ public class Tess {
 		try {
 			result = getITesseractV2(languageType).doOCR(imageFile);
 		} catch (TesseractException e) {
-//			System.err.println(e.getMessage());
+			e.printStackTrace();
 		}
 		return result;
 	}
@@ -82,4 +82,9 @@ public class Tess {
 		return result;
 	}
 
+//	public static void main(String[] args) {
+//		Tess t = new Tess();
+//		String result = t.ocr("", TessLanguageType.CHI_SIM);
+//		System.out.println(result);
+//	}
 }

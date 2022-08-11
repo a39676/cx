@@ -108,6 +108,13 @@
       </li>
     </ul><!-- educate -->
 
+    <ul class="main-menu visible-on-click" id="ocr">
+      <li style="background-color:yellow;">OCR</li>
+      <li>
+        <a href="/ocr/uploadImg" target="_blank">uploadImg</a>
+      </li>
+    </ul> <%-- ocr --%>
+
     <ul class="main-menu visible-on-click" id="joy">
       <li style="background-color:yellow;">joy</li>
       <li>

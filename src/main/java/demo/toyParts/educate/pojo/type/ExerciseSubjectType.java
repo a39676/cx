@@ -2,9 +2,9 @@ package demo.toyParts.educate.pojo.type;
 
 public enum ExerciseSubjectType {
 
-	chinese("chinese", "语文", 1), 
-	math("math", "数学", 2), 
-	english("english", "英语", 3),
+	CHINESE("chinese", "语文", 1), 
+	MATH("math", "数学", 2), 
+	ENGLISH("english", "英语", 3),
 	;
 
 	private String name;

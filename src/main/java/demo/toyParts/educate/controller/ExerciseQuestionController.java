@@ -50,67 +50,67 @@ public class ExerciseQuestionController extends CommonController {
 		ExerciseSubjectType subjectType = ExerciseSubjectType.getType(subject);
 
 		if (GradeType.GRADE_1_1.equals(gradeType)) {
-			if (ExerciseSubjectType.chinese.equals(subjectType)) {
+			if (ExerciseSubjectType.CHINESE.equals(subjectType)) {
 
-			} else if (ExerciseSubjectType.math.equals(subjectType)) {
+			} else if (ExerciseSubjectType.MATH.equals(subjectType)) {
 				return g1_1_math.getExercise();
-			} else if (ExerciseSubjectType.english.equals(subjectType)) {
+			} else if (ExerciseSubjectType.ENGLISH.equals(subjectType)) {
 
 			}
 		} else if (GradeType.GRADE_1_2.equals(gradeType)) {
-			if (ExerciseSubjectType.chinese.equals(subjectType)) {
+			if (ExerciseSubjectType.CHINESE.equals(subjectType)) {
 
-			} else if (ExerciseSubjectType.math.equals(subjectType)) {
+			} else if (ExerciseSubjectType.MATH.equals(subjectType)) {
 				return g1_2_math.getExercise();
-			} else if (ExerciseSubjectType.english.equals(subjectType)) {
+			} else if (ExerciseSubjectType.ENGLISH.equals(subjectType)) {
 
 			}
 		} else if (GradeType.GRADE_2_1.equals(gradeType)) {
-			if (ExerciseSubjectType.chinese.equals(subjectType)) {
+			if (ExerciseSubjectType.CHINESE.equals(subjectType)) {
 
-			} else if (ExerciseSubjectType.math.equals(subjectType)) {
+			} else if (ExerciseSubjectType.MATH.equals(subjectType)) {
 				return g2_1_math.getExercise();
-			} else if (ExerciseSubjectType.english.equals(subjectType)) {
+			} else if (ExerciseSubjectType.ENGLISH.equals(subjectType)) {
 
 			}
 		} else if (GradeType.GRADE_2_2.equals(gradeType)) {
-			if (ExerciseSubjectType.chinese.equals(subjectType)) {
+			if (ExerciseSubjectType.CHINESE.equals(subjectType)) {
 
-			} else if (ExerciseSubjectType.math.equals(subjectType)) {
+			} else if (ExerciseSubjectType.MATH.equals(subjectType)) {
 				return g2_2_math.getExercise();
-			} else if (ExerciseSubjectType.english.equals(subjectType)) {
+			} else if (ExerciseSubjectType.ENGLISH.equals(subjectType)) {
 
 			}
 		} else if (GradeType.GRADE_3_1.equals(gradeType)) {
-			if (ExerciseSubjectType.chinese.equals(subjectType)) {
+			if (ExerciseSubjectType.CHINESE.equals(subjectType)) {
 
-			} else if (ExerciseSubjectType.math.equals(subjectType)) {
+			} else if (ExerciseSubjectType.MATH.equals(subjectType)) {
 				return g3_1_math.getExercise();
-			} else if (ExerciseSubjectType.english.equals(subjectType)) {
+			} else if (ExerciseSubjectType.ENGLISH.equals(subjectType)) {
 
 			}
 		} else if (GradeType.GRADE_3_2.equals(gradeType)) {
-			if (ExerciseSubjectType.chinese.equals(subjectType)) {
+			if (ExerciseSubjectType.CHINESE.equals(subjectType)) {
 
-			} else if (ExerciseSubjectType.math.equals(subjectType)) {
+			} else if (ExerciseSubjectType.MATH.equals(subjectType)) {
 				return g3_2_math.getExercise();
-			} else if (ExerciseSubjectType.english.equals(subjectType)) {
+			} else if (ExerciseSubjectType.ENGLISH.equals(subjectType)) {
 
 			}
 		} else if (GradeType.GRADE_4_1.equals(gradeType)) {
-			if (ExerciseSubjectType.chinese.equals(subjectType)) {
+			if (ExerciseSubjectType.CHINESE.equals(subjectType)) {
 
-			} else if (ExerciseSubjectType.math.equals(subjectType)) {
+			} else if (ExerciseSubjectType.MATH.equals(subjectType)) {
 				return g4_1_math.getExercise();
-			} else if (ExerciseSubjectType.english.equals(subjectType)) {
+			} else if (ExerciseSubjectType.ENGLISH.equals(subjectType)) {
 
 			}
 		} else if (GradeType.GRADE_4_2.equals(gradeType)) {
-			if (ExerciseSubjectType.chinese.equals(subjectType)) {
+			if (ExerciseSubjectType.CHINESE.equals(subjectType)) {
 
-			} else if (ExerciseSubjectType.math.equals(subjectType)) {
+			} else if (ExerciseSubjectType.MATH.equals(subjectType)) {
 				return g4_2_math.getExercise();
-			} else if (ExerciseSubjectType.english.equals(subjectType)) {
+			} else if (ExerciseSubjectType.ENGLISH.equals(subjectType)) {
 
 			}
 		}

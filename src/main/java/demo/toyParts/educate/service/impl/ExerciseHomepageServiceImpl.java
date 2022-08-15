@@ -52,9 +52,9 @@ public class ExerciseHomepageServiceImpl extends EducateCommonService implements
 		view.addObject("points", detailPO.getPointsSummary());
 		view.addObject("gradeTypeList", GradeType.values());
 		List<ExerciseSubjectType> subjectTypeList = new ArrayList<>();
-		subjectTypeList.add(ExerciseSubjectType.math);
-		subjectTypeList.add(ExerciseSubjectType.english);
-		subjectTypeList.add(ExerciseSubjectType.chinese);
+		subjectTypeList.add(ExerciseSubjectType.MATH);
+		subjectTypeList.add(ExerciseSubjectType.ENGLISH);
+		subjectTypeList.add(ExerciseSubjectType.CHINESE);
 		view.addObject("subjectList", subjectTypeList);
 		view.addObject("leaderboardOrderTypeList", EducateLeaderboardOrderType.values());
 

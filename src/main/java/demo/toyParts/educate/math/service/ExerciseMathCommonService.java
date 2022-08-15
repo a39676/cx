@@ -21,7 +21,7 @@ import demo.toyParts.educate.service.EducateCommonService;
 
 public abstract class ExerciseMathCommonService extends EducateCommonService {
 
-	protected static final ExerciseSubjectType SUBJECT_TYPE = ExerciseSubjectType.math;
+	protected static final ExerciseSubjectType SUBJECT_TYPE = ExerciseSubjectType.MATH;
 	
 	protected ExerciseBuildResult buildExercise(MathExerciseDTO exerciseDTO) {
 		return buildExercise(exerciseDTO, false);

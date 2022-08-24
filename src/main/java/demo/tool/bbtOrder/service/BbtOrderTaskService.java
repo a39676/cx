@@ -22,6 +22,7 @@ public class BbtOrderTaskService {
 	@Scheduled(cron="20 19 23 * * *")
 	public void sendEducationInfomationCollectionTask() {
 		informationCollectionService.sendEducationInfomationCollectionTask();
+		informationCollectionService.sendV2exJobInfomationCollectionTask();
 	}
 	
 	@Scheduled(fixedRate = 1000L * 60 * 10)

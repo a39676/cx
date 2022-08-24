@@ -20,4 +20,13 @@ public class InformationCollectionServiceImpl extends AutomationTestCommonServic
 		testEventInsertAckProducer.send(dto);
 	}
 	
+	@Override
+	public void sendV2exJobInfomationCollectionTask() {
+		AutomationTestInsertEventDTO dto = new AutomationTestInsertEventDTO();
+		dto.setTestModuleType(TestModuleType.SCHEDULE_CLAWING.getId());
+		dto.setFlowType(ScheduleClawingType.V2EX_JOB_INFO.getId());
+		dto.setTestEventId(snowFlake.getNextId());
+		testEventInsertAckProducer.send(dto);
+	}
+	
 }

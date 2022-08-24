@@ -4,4 +4,6 @@ public interface InformationCollectionService {
 
 	void sendEducationInfomationCollectionTask();
 
+	void sendV2exJobInfomationCollectionTask();
+
 }

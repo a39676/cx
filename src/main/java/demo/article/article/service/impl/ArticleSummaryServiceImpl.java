@@ -39,7 +39,7 @@ import demo.article.articleComment.controller.ArticleCommentAdminController;
 import demo.article.articleComment.controller.ArticleCommentController;
 import demo.article.articleComment.pojo.po.ArticleCommentCount;
 import demo.base.system.pojo.result.HostnameType;
-import demo.toyParts.vcode.pojo.po.VCode;
+import demo.toyParts.vcode.pojo.po.Vcode;
 import demo.toyParts.vcode.service.VCodeService;
 import toolPack.dateTimeHandle.DateTimeUtilCommon;
 import toolPack.ioHandle.FileUtilCustom;
@@ -394,7 +394,7 @@ public class ArticleSummaryServiceImpl extends ArticleCommonService implements A
 
 //		如有vcode的处理逻辑
 		if (channelId == null && StringUtils.isNotBlank(controllerParam.getVp())) {
-			VCode vcodePO = vCodeService.findVCode(controllerParam.getVp());
+			Vcode vcodePO = vCodeService.findVCode(controllerParam.getVp());
 			vCodeService.updateUseCount(vcodePO);
 			ArticleSummaryVCode targetArticleSummaryInfo = articleCatchVCodeService.findArticleSummaryInfo(vcodePO);
 			if (targetArticleSummaryInfo != null) {

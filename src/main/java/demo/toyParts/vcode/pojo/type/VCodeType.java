@@ -1,4 +1,4 @@
-package demo.toyParts.vcode.pojo.param.type;
+package demo.toyParts.vcode.pojo.type;
 
 public enum VCodeType {
 	

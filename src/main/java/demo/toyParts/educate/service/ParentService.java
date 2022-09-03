@@ -1,11 +1,9 @@
 package demo.toyParts.educate.service;
 
-import java.util.List;
-
-import demo.toyParts.educate.pojo.vo.StudentDetailVO;
+import org.springframework.web.servlet.ModelAndView;
 
 public interface ParentService {
 
-	List<StudentDetailVO> findStudent();
+	ModelAndView findStudent();
 
 }

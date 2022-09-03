@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.UsersService;
@@ -28,10 +29,21 @@ public class ParentServiceImpl extends EducateCommonService implements ParentSer
 	private StudentParentMapper studentParentMapper;
 
 	@Override
-	public List<StudentDetailVO> findStudent() {
+	public ModelAndView findStudent() {
+		Long loginParentId = baseUtilCustom.getUserId();
+
+		List<StudentDetailVO> studentDetailVoList = findStudent(loginParentId);
+
+		ModelAndView view = new ModelAndView("toyJSP/educateJSP/searchStudentByParent");
+
+		view.addObject("studentList", studentDetailVoList);
+
+		return view;
+	}
+
+	private List<StudentDetailVO> findStudent(Long loginParentId) {
 		List<StudentDetailVO> studentDetailVoList = new ArrayList<>();
 
-		Long loginParentId = baseUtilCustom.getUserId();
 		if (loginParentId == null) {
 			return studentDetailVoList;
 		}

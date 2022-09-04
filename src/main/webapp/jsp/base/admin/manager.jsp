@@ -101,10 +101,13 @@
         <a href="/educate/" target="_blank">educate homepage</a>
       </li>
       <li>
-        <a href="/login/loginForStudent" target="_blank">loginForStudent</a>
+        <a href="/login/loginForStudent" target="_blank">Login for student</a>
       </li>
       <li>
-        <a href="/user/studentRegist" target="_blank">studentRegist</a>
+        <a href="/user/studentRegist" target="_blank">Student regist</a>
+      </li>
+      <li>
+        <a href="/educate/forParent" target="_blank">For parent</a>
       </li>
     </ul><!-- educate -->
 

@@ -19,6 +19,7 @@ import demo.toyParts.educate.pojo.dto.MathExerciseDTO;
 import demo.toyParts.educate.pojo.po.StudentDetail;
 import demo.toyParts.educate.pojo.po.StudentExerciseHistory;
 import demo.toyParts.educate.pojo.po.StudentExerciseHistoryExample;
+import demo.toyParts.educate.pojo.po.StudentPointHistory;
 import demo.toyParts.educate.pojo.result.ExerciseAnswerMatchResult;
 import demo.toyParts.educate.pojo.type.ExerciseSubjectType;
 import demo.toyParts.educate.pojo.type.GradeType;
@@ -75,6 +76,15 @@ public class ExerciseAnswerServiceImpl extends EducateCommonService implements E
 
 		detail.setPointsSummary(detail.getPointsSummary().add(exercisePO.getPoints()));
 		studentDetailMapper.updateByPrimaryKeySelective(detail);
+		
+		if(answerResult.getPoints().compareTo(BigDecimal.ZERO) != 0) {
+			StudentPointHistory studentPointHistory = new StudentPointHistory();
+			studentPointHistory.setId(snowFlake.getNextId());
+			studentPointHistory.setPoints(answerResult.getPoints());
+			studentPointHistory.setRemark("exercise");
+			studentPointHistory.setUserId(userId);
+			studentPointHistoryMapper.insertSelective(studentPointHistory);
+		}
 
 		return answerResult;
 	}

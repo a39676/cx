@@ -11,6 +11,7 @@ import demo.base.system.service.impl.SystemOptionService;
 import demo.common.service.CommonService;
 import demo.toyParts.educate.mapper.StudentDetailMapper;
 import demo.toyParts.educate.mapper.StudentExerciseHistoryMapper;
+import demo.toyParts.educate.mapper.StudentPointHistoryMapper;
 import demo.toyParts.educate.pojo.dto.MathExerciseDTO;
 import demo.toyParts.educate.pojo.po.StudentExerciseHistory;
 import demo.toyParts.educate.pojo.po.StudentExerciseHistoryExample;
@@ -32,6 +33,8 @@ public abstract class EducateCommonService extends CommonService {
 	protected StudentExerciseHistoryMapper exerciseHistoryMapper;
 	@Autowired
 	protected StudentDetailMapper studentDetailMapper;
+	@Autowired
+	protected StudentPointHistoryMapper studentPointHistoryMapper;
 	
 	@Autowired
 	private FileUtilCustom ioUtil;

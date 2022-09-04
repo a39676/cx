@@ -6,15 +6,20 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.UsersService;
 import demo.toyParts.educate.mapper.StudentParentMapper;
+import demo.toyParts.educate.pojo.dto.StudentPointConsumeHistoryDTO;
 import demo.toyParts.educate.pojo.po.StudentDetail;
 import demo.toyParts.educate.pojo.po.StudentDetailExample;
 import demo.toyParts.educate.pojo.po.StudentParent;
 import demo.toyParts.educate.pojo.po.StudentParentExample;
+import demo.toyParts.educate.pojo.po.StudentParentKey;
+import demo.toyParts.educate.pojo.po.StudentPointHistory;
 import demo.toyParts.educate.pojo.type.GradeType;
 import demo.toyParts.educate.pojo.vo.StudentDetailVO;
 import demo.toyParts.educate.service.EducateCommonService;
@@ -83,4 +88,51 @@ public class ParentServiceImpl extends EducateCommonService implements ParentSer
 
 		return vo;
 	}
+
+	@Override
+	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
+	public CommonResult addPointConsumeHistory(StudentPointConsumeHistoryDTO dto) {
+		CommonResult r = new CommonResult();
+		
+		if(dto.getPoint() == null) {
+			r.setMessage("Please input point correct");
+			return r;
+		}
+		
+		Long studentId = systemConstantService.decryptPrivateKey(dto.getStudentPK());
+		if(studentId == null) {
+			r.setMessage("Can NOT find correct student");
+			return r;
+		}
+		
+		Long userId = baseUtilCustom.getUserId();
+		
+		if(!baseUtilCustom.hasSuperAdminRole()) {
+			StudentParentKey key = new StudentParentKey();
+			key.setParentId(userId);
+			key.setStudentId(studentId);
+			StudentParent studentParentPO = studentParentMapper.selectByPrimaryKey(key);
+			
+			if(studentParentPO == null) {
+				r.setMessage("Not correct releationship student");
+				return r;
+			}
+		}
+		
+		StudentPointHistory studentPointHistory = new StudentPointHistory();
+		studentPointHistory.setId(snowFlake.getNextId());
+		studentPointHistory.setPoints(dto.getPoint());
+		studentPointHistory.setRemark(dto.getRemark());
+		studentPointHistory.setUserId(studentId);
+		studentPointHistoryMapper.insertSelective(studentPointHistory);
+		
+		StudentDetail studentDetail = studentDetailMapper.selectByPrimaryKey(studentId);
+		studentDetail.setPointsSummary(studentDetail.getPointsSummary().add(dto.getPoint()));
+		studentDetailMapper.updateByPrimaryKeySelective(studentDetail);
+		
+		r.setMessage("Point update success");
+		r.setIsSuccess();
+		return r;
+	}
+
 }

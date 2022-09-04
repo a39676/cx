@@ -17,9 +17,11 @@
     <p>Points: ${student.points}</p>
     <p>
       Point consume: 
-      <input type="number" name="pointConsume" studentPK="${student.pk}">
+      <input type="number" name="pointConsume" studentPK="${student.pk}" value="0">
+      <input type="text" name="consumeRemark" studentPK="${student.pk}" placeholder="Remark">
       <button name="submitPointConsume" studentPK="${student.pk}">Submit</button> 
     </p>
+    <label studentPK="${student.pk}" name="messageResult"></label>
   </c:forEach>
 
 
@@ -30,36 +32,26 @@
 
   $(document).ready(function() {
 
-    $("button[name='apply']").click(function() {
-        userRegist();
+    $("button[name='submitPointConsume']").click(function() {
+      var pk = $(this).attr("studentPK");
+      console.log(pk);
+      submitPointConsume(pk);
     });
 
 
-    function userRegist(){
-      $("label[name='message']").empty();
+    function submitPointConsume(pk){
+      var resultLabel = $("label[name='messageResult'][studentPK='"+pk+"']");
+      resultLabel.empty();
 
-      var url = "/user/studentRegist";
+      var url = "/educate/addPointConsumeHistory";
 
-      var gender;
-      if($('#male').is(':checked')) {
-        gender = 1;
-      } else if ($('#female').is(':checked')) {
-        gender = 0;
-      } else {
-        gender = -1;
-      }
+      var point = $("input[name='pointConsume'][studentPK='"+pk+"']").val();
+      var remark = $("input[name='consumeRemark'][studentPK='"+pk+"']").val();
 
       var jsonOutput = {
-        userName : $("#userName").val(),
-        nickName : $("#nickName").val(),
-        gradeType : $("#gradeType option:selected").val(),
-        email : $("#email").val(),
-        pwd : $("#pwd").val(),
-        pwdRepeat : $("#pwdRepeat").val(),
-        qq : $("#qq").val(),
-        mobile : $("#mobile").val(),
-        reservationInformation : $("#reservationInformation").val(),
-        gender : gender
+        studentPK : pk,
+        point : point,
+        remark : remark,
       };
 
       $.ajax({
@@ -74,41 +66,15 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
+            resultLabel.text(datas.message);
             if(datas.code == 0) {
-              $("#registForm").html("");
-              $("#registResult").text(datas.message);
+
             } else {
-              $("label[name='message']").text(datas.message);
-              $("#pwd").val("");
-              $("#pwdRepeat").val("");
-              if(datas.validUserRegistResult.username != null) {
-                $("#userNameWarnMsg").append(datas.validUserRegistResult.username);
-              }
-              if(datas.validUserRegistResult.nickname != null) {
-                $("#nickNameWarnMsg").append(datas.validUserRegistResult.nickname);
-              }
-              if(datas.validUserRegistResult.email != null) {
-                $("#emailWarnMsg").append(datas.validUserRegistResult.email);
-              }
-              if(datas.validUserRegistResult.pwd != null) {
-                $("#pwdWarnMsg").append(datas.validUserRegistResult.pwd);
-              }
-              if(datas.validUserRegistResult.pwdRepeat != null) {
-                $("#pwdRepeatWarnMsg").append(datas.validUserRegistResult.pwdRepeat);
-              }
-              if(datas.validUserRegistResult.qq != null) {
-                $("#qqWarnMsg").append(datas.validUserRegistResult.qq);
-              }
-              if(datas.validUserRegistResult.mobile != null) {
-                $("#mobileWarnMsg").append(datas.validUserRegistResult.mobile);
-              }
-              if(datas.validUserRegistResult.reservationInformation != null) {
-                $("#reservationInformationWarnMsg").append(datas.validUserRegistResult.reservationInformation);
-              }
+
             }
           },
           error: function(datas) {
-            $("#registResult").text(datas.message);
+            resultLabel.text(datas.message);
           }
       });
     };

@@ -241,7 +241,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 
 		LocalDateTime now = LocalDateTime.now();
 		ThreadLocalRandom t = ThreadLocalRandom.current();
-		if (now.getHour() < 10 || now.getHour() > 21 || t.nextInt(1, now.getHour()) < 8) {
+		if (now.getHour() < 10 || now.getHour() > 21 || t.nextInt(1, 101) < 8) {
 			return r;
 		}
 

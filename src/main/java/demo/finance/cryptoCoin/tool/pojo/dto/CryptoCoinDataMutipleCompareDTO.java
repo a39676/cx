@@ -2,7 +2,7 @@ package demo.finance.cryptoCoin.tool.pojo.dto;
 
 import java.util.List;
 
-import auxiliaryCommon.pojo.type.CurrencyType;
+import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 
 public class CryptoCoinDataMutipleCompareDTO {
 
@@ -11,7 +11,7 @@ public class CryptoCoinDataMutipleCompareDTO {
 	private String coinTypeOrigin;
 	private List<String> coinTypeComparedList;
 
-	/** {@link CurrencyType} */
+	/** {@link CurrencyTypeForCryptoCoin} */
 	private Integer currencyType;
 
 	public Integer getCurrencyType() {

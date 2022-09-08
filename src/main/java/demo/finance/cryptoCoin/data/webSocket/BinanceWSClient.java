@@ -20,10 +20,10 @@ import com.neovisionaries.ws.client.WebSocketFactory;
 import com.neovisionaries.ws.client.WebSocketFrame;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.finance.cryptoCoin.data.webSocket.common.CryptoCoinWebSocketCommonClient;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinWebSocketConstant;
+import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 import net.sf.json.JSONObject;
 
 @Component
@@ -80,7 +80,7 @@ public class BinanceWSClient extends CryptoCoinWebSocketCommonClient {
 			String symbol = sourceMsgJson.getString("s").toLowerCase();
 
 			if (symbol.contains("usdt")) {
-				bo.setCurrencyType(CurrencyType.USD.getCode());
+				bo.setCurrencyType(CurrencyTypeForCryptoCoin.USD.getCode());
 				bo.setCoinType(symbol.replaceAll("usdt", ""));
 			} else {
 				return null;

@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.pojo.dto.InsertCryptoCoinLowPriceNoticeSettingDTO;
@@ -38,6 +37,7 @@ import demo.finance.cryptoCoin.notice.service.CryptoCoinCommonNoticeService;
 import demo.tool.telegram.pojo.po.TelegramChatId;
 import demo.tool.telegram.pojo.vo.TelegramChatIdVO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
+import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.dto.TelegramMessageDTO;
 
@@ -60,9 +60,9 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	@Override
 	public ModelAndView cryptoCoinPriceNoticeSettingManager() {
 		ModelAndView view = new ModelAndView("finance/cryptoCoin/CryptoCoinPriceNoticeSettingManager");
-		List<CurrencyType> currencyTypeList = new ArrayList<>();
-		currencyTypeList.add(CurrencyType.USD);
-		currencyTypeList.addAll(Arrays.asList(CurrencyType.values()));
+		List<CurrencyTypeForCryptoCoin> currencyTypeList = new ArrayList<>();
+		currencyTypeList.add(CurrencyTypeForCryptoCoin.USD);
+		currencyTypeList.addAll(Arrays.asList(CurrencyTypeForCryptoCoin.values()));
 		view.addObject("currencyType", currencyTypeList);
 
 		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.minute, TimeUnitType.hour, TimeUnitType.day,
@@ -163,7 +163,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	private CryptoCoinNoticeDTOCheckResult noticeDTOCheck(InsertCryptoCoinPriceNoticeSettingDTO dto) {
 		CryptoCoinNoticeDTOCheckResult r = new CryptoCoinNoticeDTOCheckResult();
 
-		CurrencyType currencyType = CurrencyType.getType(dto.getCurrencyType());
+		CurrencyTypeForCryptoCoin currencyType = CurrencyTypeForCryptoCoin.getType(dto.getCurrencyType());
 
 		if (dto.getNoticeCount() == null || dto.getNoticeCount() < 0) {
 			dto.setNoticeCount(1);
@@ -332,7 +332,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			return r;
 		}
 
-		CurrencyType currencyType = CurrencyType.getType(noticeSetting.getCurrencyType());
+		CurrencyTypeForCryptoCoin currencyType = CurrencyTypeForCryptoCoin.getType(noticeSetting.getCurrencyType());
 		if (currencyType == null) {
 			log.error(noticeSetting.getId() + ", currencty type setting error");
 			r.failWithMessage("currencty type setting error");
@@ -400,7 +400,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	}
 
 	private CommonResult priceConditionNoticeHandle(CryptoCoinPriceNotice noticeSetting, CryptoCoinCatalog coinType,
-			CurrencyType currencyType) {
+			CurrencyTypeForCryptoCoin currencyType) {
 		CommonResult r = new CommonResult();
 		List<CryptoCoinPriceCommonDataBO> historyDataList = minuteDataService.getCommonDataListFillWithCache(coinType,
 				currencyType, LocalDateTime.now().minusMinutes(2).withSecond(0).withNano(0));
@@ -442,7 +442,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	}
 	
 	private CommonResult priceFluctuationSpeedNoticeHandle(CryptoCoinPriceNotice noticeSetting,
-			CryptoCoinCatalog coinType, CurrencyType currencyType) {
+			CryptoCoinCatalog coinType, CurrencyTypeForCryptoCoin currencyType) {
 		CommonResult r = new CommonResult();
 
 		TimeUnitType timeUnit = TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch());
@@ -522,7 +522,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	public ModelAndView searchValidNotices(SearchCryptoCoinConditionDTO dto) {
 		ModelAndView view = new ModelAndView("finance/cryptoCoin/CryptoCoinPriceNoticeSearchResult");
 
-		view.addObject("currencyType", CurrencyType.values());
+		view.addObject("currencyType", CurrencyTypeForCryptoCoin.values());
 		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.minute, TimeUnitType.hour, TimeUnitType.day,
 				TimeUnitType.week, TimeUnitType.month };
 		view.addObject("timeUnitType", timeUnitTypes);
@@ -564,7 +564,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		CryptoCoinCatalog coinType = coinCatalogService.findCatalog(po.getCoinType());
 		vo.setCryptoCoinName(coinType.getCoinNameEnShort());
 		vo.setCurrencyCode(po.getCurrencyType());
-		vo.setCurrencyName(CurrencyType.getType(po.getCurrencyType()).getName());
+		vo.setCurrencyName(CurrencyTypeForCryptoCoin.getType(po.getCurrencyType()).getName());
 		if (po.getMaxPrice() != null) {
 			vo.setMaxPrice(po.getMaxPrice().doubleValue());
 		}
@@ -634,7 +634,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		}
 
 		CryptoCoinCatalog coinType = coinCatalogService.findCatalog(dto.getCryptoCoinType());
-		CurrencyType currencyType = CurrencyType.getType(dto.getCurrencyCode());
+		CurrencyTypeForCryptoCoin currencyType = CurrencyTypeForCryptoCoin.getType(dto.getCurrencyCode());
 		if (coinType == null || currencyType == null) {
 			r.failWithMessage("param error");
 			return r;

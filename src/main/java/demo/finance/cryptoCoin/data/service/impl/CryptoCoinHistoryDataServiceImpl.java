@@ -7,7 +7,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
@@ -19,6 +18,7 @@ import demo.finance.cryptoCoin.data.service.CryptoCoin60MinuteDataSummaryService
 import demo.finance.cryptoCoin.data.service.CryptoCoinHistoryDataService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
+import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 
 @Service
 public class CryptoCoinHistoryDataServiceImpl extends CryptoCoinCommonService implements CryptoCoinHistoryDataService {
@@ -36,7 +36,7 @@ public class CryptoCoinHistoryDataServiceImpl extends CryptoCoinCommonService im
 	
 	
 	@Override
-	public List<CryptoCoinPriceCommonDataBO> getHistoryDataList(CryptoCoinCatalog coinType, CurrencyType currencyType,
+	public List<CryptoCoinPriceCommonDataBO> getHistoryDataList(CryptoCoinCatalog coinType, CurrencyTypeForCryptoCoin currencyType,
 			TimeUnitType timeUnit, Integer timeRange) {
 		LocalDateTime startTime = null;
 		if (TimeUnitType.minute.equals(timeUnit)) {

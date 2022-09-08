@@ -11,7 +11,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.common.service.impl.FinanceCommonService;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
@@ -19,6 +18,7 @@ import demo.finance.cryptoCoin.data.pojo.result.FilterBODataResult;
 import demo.finance.cryptoCoin.data.pojo.vo.CryptoCoinCatalogVO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
+import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 
 public abstract class CryptoCoinCommonService extends FinanceCommonService {
 
@@ -145,7 +145,7 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 	/**
 	 * for test use
 	 */
-	protected List<CryptoCoinPriceCommonDataBO> buildFakeData(String coinType, CurrencyType currencyType,
+	protected List<CryptoCoinPriceCommonDataBO> buildFakeData(String coinType, CurrencyTypeForCryptoCoin currencyType,
 			LocalDateTime startTime) {
 		List<CryptoCoinPriceCommonDataBO> l = new ArrayList<>();
 

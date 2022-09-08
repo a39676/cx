@@ -1,4 +1,6 @@
 article
+	凭密码访问
+
 	Add back to Homepage button in post.jsp
 
 	search -> loadmore -> show more post NOT match key word

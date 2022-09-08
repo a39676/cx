@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinAnalysisService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinCatalogMapper;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1dayMapper;
@@ -23,6 +22,7 @@ import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
 import demo.finance.cryptoCoin.tool.pojo.result.CryptoCoinLocalDataFinderResult;
 import demo.finance.cryptoCoin.tool.service.CryptoCoinLocalDataTool;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
+import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 
 @Service
 public class CryptoCoinLocalDataToolImpl extends CryptoCoinAnalysisService implements CryptoCoinLocalDataTool {
@@ -80,7 +80,7 @@ public class CryptoCoinLocalDataToolImpl extends CryptoCoinAnalysisService imple
 
 	private boolean judgment1(CryptoCoinCatalog catalog, LocalDateTime startDatetime, LocalDateTime endDatetime,
 			Double upApmlitude, Double downApmlitude) {
-		List<CryptoCoinPriceCommonDataBO> dataList = _1DayDataService.getCommonDataList(catalog, CurrencyType.USD,
+		List<CryptoCoinPriceCommonDataBO> dataList = _1DayDataService.getCommonDataList(catalog, CurrencyTypeForCryptoCoin.USD,
 				startDatetime, endDatetime);
 		FilterBODataResult maxMinPriceResult = filterData(dataList);
 

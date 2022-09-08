@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1dayMapper;
@@ -38,6 +37,7 @@ import demo.finance.cryptoCoin.tool.pojo.result.CryptoDataCompareRateSubResult;
 import demo.finance.cryptoCoin.tool.service.CryptoCoinLowPriceNoticeService;
 import demo.finance.cryptoCoin.tool.service.CryptoDataCompareService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
+import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 
 @Service
 public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implements CryptoDataCompareService {
@@ -58,9 +58,9 @@ public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implem
 	@Override
 	public ModelAndView CryptoCoinDailyDataComparetor() {
 		ModelAndView view = new ModelAndView("finance/cryptoCoin/CryptoCoinDailyDataComparetor");
-		List<CurrencyType> currencyTypeList = new ArrayList<>();
-		currencyTypeList.add(CurrencyType.USD);
-		currencyTypeList.addAll(Arrays.asList(CurrencyType.values()));
+		List<CurrencyTypeForCryptoCoin> currencyTypeList = new ArrayList<>();
+		currencyTypeList.add(CurrencyTypeForCryptoCoin.USD);
+		currencyTypeList.addAll(Arrays.asList(CurrencyTypeForCryptoCoin.values()));
 		view.addObject("currencyType", currencyTypeList);
 		return view;
 	}
@@ -74,7 +74,7 @@ public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implem
 			return r;
 		}
 
-		CurrencyType currencyType = CurrencyType.getType(dto.getCurrencyType());
+		CurrencyTypeForCryptoCoin currencyType = CurrencyTypeForCryptoCoin.getType(dto.getCurrencyType());
 
 		CryptoCoinCatalog coinTypeOrigin = coinCatalogService.findCatalog(dto.getCoinTypeOrigin());
 		CryptoCoinCatalog coinTypeCompared = coinCatalogService.findCatalog(dto.getCoinTypeCompared());
@@ -127,7 +127,7 @@ public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implem
 			return r;
 		}
 
-		CurrencyType currencyType = CurrencyType.getType(dto.getCurrencyType());
+		CurrencyTypeForCryptoCoin currencyType = CurrencyTypeForCryptoCoin.getType(dto.getCurrencyType());
 
 		CryptoCoinCatalog coinTypeOrigin = coinCatalogService.findCatalog(dto.getCoinTypeOrigin());
 		List<CryptoCoinCatalog> comparedCoinTypeList = new ArrayList<>();
@@ -182,7 +182,7 @@ public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implem
 	}
 
 	private CryptoDataCompareRateSubResult cryptoCoinDailyDataComparePoint(BigDecimal dataOriginRate,
-			CryptoCoinCatalog coinTypeOrigin, CryptoCoinCatalog coinTypeCompared, CurrencyType currencyType,
+			CryptoCoinCatalog coinTypeOrigin, CryptoCoinCatalog coinTypeCompared, CurrencyTypeForCryptoCoin currencyType,
 			LocalDateTime startDateTime) {
 		CryptoDataCompareRateSubResult r = new CryptoDataCompareRateSubResult();
 		CryptoCoinPriceCommonDataBO dataComparedStart = dailyDataService.getCommonData(coinTypeCompared, currencyType,
@@ -232,7 +232,7 @@ public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implem
 			return r;
 		}
 
-		CurrencyType currencyType = CurrencyType.getType(dto.getCurrencyType());
+		CurrencyTypeForCryptoCoin currencyType = CurrencyTypeForCryptoCoin.getType(dto.getCurrencyType());
 		TimeUnitType timeUnitType = TimeUnitType.getType(dto.getTimeUnit());
 
 		CryptoCoinCatalog coinType1 = coinCatalogService.findCatalog(dto.getCoinTypeOrigin());
@@ -284,9 +284,9 @@ public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implem
 			}
 		}
 
-		CurrencyType currencyType = CurrencyType.getType(dto.getCurrencyType());
+		CurrencyTypeForCryptoCoin currencyType = CurrencyTypeForCryptoCoin.getType(dto.getCurrencyType());
 		if (currencyType == null) {
-			dto.setCurrencyType(CurrencyType.USD.getCode());
+			dto.setCurrencyType(CurrencyTypeForCryptoCoin.USD.getCode());
 		}
 
 		if (localDateTimeHandler.determineDateFormat(dto.getStartDateTimeStr()) == null) {
@@ -308,9 +308,9 @@ public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implem
 	private CommonResult checkDTO(CryptoCoinDataMutipleCompareDTO dto) {
 		CommonResult r = new CommonResult();
 
-		CurrencyType currencyType = CurrencyType.getType(dto.getCurrencyType());
+		CurrencyTypeForCryptoCoin currencyType = CurrencyTypeForCryptoCoin.getType(dto.getCurrencyType());
 		if (currencyType == null) {
-			dto.setCurrencyType(CurrencyType.USD.getCode());
+			dto.setCurrencyType(CurrencyTypeForCryptoCoin.USD.getCode());
 		}
 
 		if (localDateTimeHandler.determineDateFormat(dto.getStartDateTimeStr()) == null) {
@@ -358,7 +358,7 @@ public class CryptoDataCompareServiceImpl extends CryptoCoinCommonService implem
 		Map<Long, CryptoCoinPriceCommonDataBO> minuteDataMap = new HashMap<>();
 		CryptoCoinPriceCommonDataBO tmpCachePriceBO = null;
 		for (CryptoCoinCatalog catalog : lowPriceSubscriptionList) {
-			tmpCachePriceBO = cacheService.getNewPrice(catalog, CurrencyType.USD);
+			tmpCachePriceBO = cacheService.getNewPrice(catalog, CurrencyTypeForCryptoCoin.USD);
 			minuteDataMap.put(catalog.getId(), tmpCachePriceBO);
 		}
 		if (minuteDataMap.isEmpty()) {

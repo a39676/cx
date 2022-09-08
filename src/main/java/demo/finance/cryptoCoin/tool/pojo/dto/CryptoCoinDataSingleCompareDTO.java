@@ -1,7 +1,7 @@
 package demo.finance.cryptoCoin.tool.pojo.dto;
 
-import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
+import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 
 public class CryptoCoinDataSingleCompareDTO {
 
@@ -14,7 +14,7 @@ public class CryptoCoinDataSingleCompareDTO {
 	private Integer timeUnit;
 	private Integer timeRange;
 
-	/** {@link CurrencyType} */
+	/** {@link CurrencyTypeForCryptoCoin} */
 	private Integer currencyType;
 
 	public Integer getCurrencyType() {

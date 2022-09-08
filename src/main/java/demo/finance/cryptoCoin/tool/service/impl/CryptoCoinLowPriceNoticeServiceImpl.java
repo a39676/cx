@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinAnalysisService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinCatalogMapper;
@@ -29,6 +28,7 @@ import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import demo.finance.cryptoCoin.notice.service.CryptoCoinCommonNoticeService;
 import demo.finance.cryptoCoin.tool.service.CryptoCoinLowPriceNoticeService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
+import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
 
@@ -95,7 +95,7 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 			return false;
 		}
 
-		List<CryptoCoinPriceCommonDataBO> dataList = dailyDataService.getCommonDataList(catalog, CurrencyType.USD,
+		List<CryptoCoinPriceCommonDataBO> dataList = dailyDataService.getCommonDataList(catalog, CurrencyTypeForCryptoCoin.USD,
 				twoMonthAgo);
 		if (continuousRiseSixDay(dataList) || priceDoubledInTwoWeek(dataList) || rise30Percentage(dataList)
 				|| breakAwayMA(dataList)) {
@@ -218,7 +218,7 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 			dto.setTelegramChatPK(telegramChatPK);
 			dto.setBotName(TelegramBotType.CRYPTO_COIN_LOW_PRICE_NOTICE_BOT.getName());
 			dto.setCoinType(po.getCoinNameEnShort());
-			dto.setCurrencyType(CurrencyType.USD.getCode());
+			dto.setCurrencyType(CurrencyTypeForCryptoCoin.USD.getCode());
 			dto.setNoticeCount(999999);
 			dto.setFluctuationSpeedPercentage(1.2);
 			dto.setTimeRangeOfDataWatch(3);
@@ -229,7 +229,7 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 			dto.setValidTime(localDateTimeHandler.dateToStr(LocalDateTime.now().plusHours(8)));
 			noticeService.insertNewCryptoCoinLowPriceNoticeSetting(dto);
 
-			newPrice = cacheService.getNewPrice(po, CurrencyType.USD);
+			newPrice = cacheService.getNewPrice(po, CurrencyTypeForCryptoCoin.USD);
 			if (newPrice != null) {
 				dto.setFluctuationSpeedPercentage(null);
 				dto.setTimeRangeOfDataWatch(null);

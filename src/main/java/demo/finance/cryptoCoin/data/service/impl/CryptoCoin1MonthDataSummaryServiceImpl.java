@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1monthMapper;
@@ -23,6 +22,7 @@ import demo.finance.cryptoCoin.data.service.CryptoCoin1MonthDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
+import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 
 @Service
 public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonService
@@ -49,7 +49,7 @@ public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonServ
 
 		List<CryptoCoinCatalog> coinCatalogList = coinCatalogService.getAllCatalog();
 		for (CryptoCoinCatalog coinType : coinCatalogList) {
-			for (CurrencyType currencyType : CurrencyType.values()) {
+			for (CurrencyTypeForCryptoCoin currencyType : CurrencyTypeForCryptoCoin.values()) {
 				for (LocalDateTime datetime = thereStepBefore; datetime
 						.isBefore(now); datetime = datetime.plusMonths(MONTH_STEP_LONG)) {
 					handleHistoryDataList(datetime, coinType, currencyType);
@@ -60,7 +60,7 @@ public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonServ
 		return r;
 	}
 
-	private void handleHistoryDataList(LocalDateTime startTime, CryptoCoinCatalog coinType, CurrencyType currencyType) {
+	private void handleHistoryDataList(LocalDateTime startTime, CryptoCoinCatalog coinType, CurrencyTypeForCryptoCoin currencyType) {
 		LocalDateTime endTime = startTime.plusMonths(MONTH_STEP_LONG).with(LocalTime.MAX);
 		List<CryptoCoinPriceCommonDataBO> cacheDataList = dailyDataService.getCommonDataList(coinType, currencyType,
 				startTime, endTime);
@@ -112,7 +112,7 @@ public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonServ
 	}
 
 	@Override
-	public List<CryptoCoinPrice1month> getDataList(CryptoCoinCatalog coinType, CurrencyType currencyType,
+	public List<CryptoCoinPrice1month> getDataList(CryptoCoinCatalog coinType, CurrencyTypeForCryptoCoin currencyType,
 			LocalDateTime startTime) {
 		CryptoCoinPrice1monthExample example = new CryptoCoinPrice1monthExample();
 		example.createCriteria().andCoinTypeEqualTo(coinType.getId()).andCurrencyTypeEqualTo(currencyType.getCode())
@@ -123,7 +123,7 @@ public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonServ
 	}
 
 	@Override
-	public List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinCatalog coinType, CurrencyType currencyType,
+	public List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinCatalog coinType, CurrencyTypeForCryptoCoin currencyType,
 			LocalDateTime startTime) {
 		List<CryptoCoinPrice1month> poList = getDataList(coinType, currencyType, startTime);
 
@@ -140,7 +140,7 @@ public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonServ
 	
 	@Override
 	public List<CryptoCoinPriceCommonDataBO> getCommonDataListFillWithCache(CryptoCoinCatalog coinType,
-			CurrencyType currencyType, LocalDateTime startTime) {
+			CurrencyTypeForCryptoCoin currencyType, LocalDateTime startTime) {
 
 		List<CryptoCoinPriceCommonDataBO> poDataList = getCommonDataList(coinType, currencyType, startTime);
 //		List<CryptoCoinPriceCommonDataBO> poDataList = buildFakeData(coinType, currencyType, startTime);

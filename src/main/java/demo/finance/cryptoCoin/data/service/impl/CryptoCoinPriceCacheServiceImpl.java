@@ -10,7 +10,6 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.pojo.bo.CacheMapBO;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
@@ -18,6 +17,7 @@ import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
+import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.dto.TelegramMessageDTO;
@@ -31,7 +31,7 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 	@Override
 	public void reciveData(CryptoCoinPriceCommonDataBO newBO) {
 		CryptoCoinCatalog coinType = coinCatalogService.findCatalog(newBO.getCoinType());
-		CacheMapBO key = buildCacheMapKey(coinType, CurrencyType.getType(newBO.getCurrencyType()), newBO.getStartTime());
+		CacheMapBO key = buildCacheMapKey(coinType, CurrencyTypeForCryptoCoin.getType(newBO.getCurrencyType()), newBO.getStartTime());
 
 		CryptoCoinPriceCommonDataBO oldBO = constantService.getCacheMap().get(key);
 
@@ -74,7 +74,7 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 	}
 
 	@Override
-	public CryptoCoinPriceCommonDataBO getNewPrice(CryptoCoinCatalog coinType, CurrencyType currencyType) {
+	public CryptoCoinPriceCommonDataBO getNewPrice(CryptoCoinCatalog coinType, CurrencyTypeForCryptoCoin currencyType) {
 		List<CryptoCoinPriceCommonDataBO> cacheDataList = getCommonDataList(coinType, currencyType,
 				LocalDateTime.now().minusMinutes(CryptoCoinDataConstant.CRYPTO_COIN_CACHE_DATA_LIVE_MINUTES));
 		if (cacheDataList == null || cacheDataList.isEmpty()) {
@@ -85,7 +85,7 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 	}
 
 	@Override
-	public CryptoCoinPriceCommonDataBO getCommonData(CryptoCoinCatalog coinType, CurrencyType currencyType,
+	public CryptoCoinPriceCommonDataBO getCommonData(CryptoCoinCatalog coinType, CurrencyTypeForCryptoCoin currencyType,
 			LocalDateTime datetime) {
 		List<CryptoCoinPriceCommonDataBO> cacheDataList = getCommonDataList(coinType, currencyType,
 				datetime);
@@ -99,7 +99,7 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 	}
 
 	@Override
-	public List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinCatalog coinType, CurrencyType currencyType,
+	public List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinCatalog coinType, CurrencyTypeForCryptoCoin currencyType,
 			LocalDateTime startTime) {
 		List<CryptoCoinPriceCommonDataBO> commonDataList = new ArrayList<>();
 		CryptoCoinPriceCommonDataBO tmpCommonData = null;
@@ -147,7 +147,7 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 		return flag;
 	}
 
-	private CacheMapBO buildCacheMapKey(CryptoCoinCatalog coinType, CurrencyType currencyType, LocalDateTime datetime) {
+	private CacheMapBO buildCacheMapKey(CryptoCoinCatalog coinType, CurrencyTypeForCryptoCoin currencyType, LocalDateTime datetime) {
 		CacheMapBO bo = new CacheMapBO();
 		bo.setCoinTypeCode(coinType.getId().intValue());
 		bo.setCurrencyCode(currencyType.getCode());

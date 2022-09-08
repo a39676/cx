@@ -19,11 +19,11 @@ import com.neovisionaries.ws.client.WebSocketFactory;
 import com.neovisionaries.ws.client.WebSocketFrame;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.finance.cryptoCoin.data.pojo.type.CryptoCompareWebSocketMsgType;
 import demo.finance.cryptoCoin.data.webSocket.common.CryptoCoinWebSocketCommonClient;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinWebSocketConstant;
+import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -74,10 +74,13 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 			bo.setHighPrice(new BigDecimal(sourceMsgJson.getDouble("PRICE")));
 			bo.setLowPrice(new BigDecimal(sourceMsgJson.getDouble("PRICE")));
 			bo.setCoinType(sourceMsgJson.getString("FROMSYMBOL"));
-			CurrencyType currencyType = CurrencyType.getType(sourceMsgJson.getString("TOSYMBOL"));
+			String toSymbol = sourceMsgJson.getString("TOSYMBOL");
+			CurrencyTypeForCryptoCoin currencyType = null;
 			/* TODO 2021-04-08 临时处理, usdt 等同 usd 处理 */
-			if (CurrencyType.USDT.equals(currencyType)) {
-				currencyType = CurrencyType.USD;
+			if ("USDT".equals(toSymbol) || "usdt".equals(toSymbol)) {
+				currencyType = CurrencyTypeForCryptoCoin.USD;
+			} else {
+				currencyType = CurrencyTypeForCryptoCoin.getType(sourceMsgJson.getString("TOSYMBOL"));
 			}
 			bo.setCurrencyType(currencyType.getCode());
 			try {

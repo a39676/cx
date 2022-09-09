@@ -69,7 +69,7 @@ public class VCodeServiceImpl extends CommonService implements VCodeService {
 		newHistory.setVisitTime(LocalDateTime.now());
 		historyMapper.insertSelective(newHistory);
 
-		String msg = "Vcode visit: " + vcode.getCodeValue();
+		String msg = "Vcode visit: " + vcode.getCodeValue() + ", " + vcode.getRemark();
 		telegramService.sendMessage(TelegramBotType.BOT_2, msg, TelegramStaticChatID.MY_ID);
 
 		result.setIsSuccess();

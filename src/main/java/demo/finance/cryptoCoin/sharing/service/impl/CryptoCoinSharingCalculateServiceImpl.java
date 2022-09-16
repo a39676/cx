@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -253,6 +254,7 @@ public class CryptoCoinSharingCalculateServiceImpl extends CryptoCoinCommonServi
 		Map<Long, CryptoCoinMiningMachineVO> cryptoCoinMiningMachineVOMap = buildCryptoCoinMiningMachineVOMap(
 				machineMap, machineInfoMap, assistantMatchList, assistantMap);
 		result.addAll(cryptoCoinMiningMachineVOMap.values());
+		Collections.sort(result);
 
 		return result;
 	}
@@ -294,6 +296,7 @@ public class CryptoCoinSharingCalculateServiceImpl extends CryptoCoinCommonServi
 				coinCatalog = coinCatalogService.findCatalog(machine.getCryptoId());
 				machineVO.setMachinePK(systemOptionService.encryptId(machineId));
 				machineVO.setMachineName(machine.getMachineName());
+				machineVO.setCreateTime(machine.getCreateTime());
 				machineVO.setCoinId(coinCatalog.getId());
 				machineVO.setCoinIdStr(coinCatalog.getId().toString());
 				machineVO.setCoinName(coinCatalog.getCoinNameEnShort());
@@ -523,6 +526,7 @@ public class CryptoCoinSharingCalculateServiceImpl extends CryptoCoinCommonServi
 
 		CryptoCoinMiningMachineExample machineExample = new CryptoCoinMiningMachineExample();
 		machineExample.createCriteria().andIsDeleteEqualTo(false);
+		machineExample.setOrderByClause(" create_time desc ");
 
 		List<CryptoCoinMiningMachine> machineList = machineMapper.selectByExample(machineExample);
 		if (machineList == null || machineList.isEmpty()) {

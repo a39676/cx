@@ -1,10 +1,11 @@
 package demo.finance.cryptoCoin.sharing.pojo.vo;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CryptoCoinMiningMachineVO {
+public class CryptoCoinMiningMachineVO implements Comparable<CryptoCoinMiningMachineVO> {
 
 	private String machinePK;
 	private String machineName;
@@ -14,6 +15,7 @@ public class CryptoCoinMiningMachineVO {
 	private BigDecimal handlingFeeRate;
 	private Integer partingCount;
 	private List<AllocationAssistantVO> assistantList;
+	private LocalDateTime createTime;
 
 	public String getMachinePK() {
 		return machinePK;
@@ -87,11 +89,43 @@ public class CryptoCoinMiningMachineVO {
 		this.assistantList = assistantList;
 	}
 
+	public LocalDateTime getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(LocalDateTime createTime) {
+		this.createTime = createTime;
+	}
+
 	@Override
 	public String toString() {
 		return "CryptoCoinMiningMachineVO [machinePK=" + machinePK + ", machineName=" + machineName + ", coinIdStr="
 				+ coinIdStr + ", coinId=" + coinId + ", coinName=" + coinName + ", handlingFeeRate=" + handlingFeeRate
-				+ ", partingCount=" + partingCount + ", assistantList=" + assistantList + "]";
+				+ ", partingCount=" + partingCount + ", assistantList=" + assistantList + ", createTime=" + createTime
+				+ "]";
+	}
+
+	@Override
+	public int compareTo(CryptoCoinMiningMachineVO o) {
+		if (o.getCreateTime() == null || this.getCreateTime() == null) {
+			if (o.getCreateTime() == null && this.getCreateTime() == null) {
+				return 0;
+			} else if (o.getCreateTime() == null) {
+				return -1;
+			} else if (this.getCreateTime() == null) {
+				return 1;
+			} else {
+				return 0;
+			}
+		} else {
+			if (this.getCreateTime().isAfter(o.getCreateTime())) {
+				return -1;
+			} else if (this.getCreateTime().isBefore(o.getCreateTime())) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}
 	}
 
 }

@@ -36,6 +36,7 @@
   <a href="/optionConstant/refreshCloudinaryOption" target="_blank">refreshCloudinaryOption</a><br>
   <a href="/optionConstant/refreshAutomationTestOption" target="_blank">refreshAutomationTestOption</a><br>
   <a href="/optionConstant/refreshCryptoCoinOption" target="_blank">refreshCryptoCoinOption</a><br>
+  <a href="/optionConstant/refreshCurrencyExchangeRateOption" target="_blank">refreshCurrencyExchangeRateOption</a><br>
   <a href="/optionConstant/refreshTelegramOption" target="_blank">refreshTelegramOption</a><br>
   <a href="/optionConstant/refreshEducateOption" target="_blank">refreshEducateOption</a><br>
   <a href="/optionConstant/refreshJoyOption" target="_blank">refreshJoyOption</a><br>

@@ -15,7 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
-import autoTest.testEvent.pojo.dto.AutomationTestResultDTO;
+import autoTest.testEvent.common.pojo.dto.AutomationTestResultDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.automationTest.pojo.po.TestEvent;
 import demo.automationTest.pojo.po.TestEventExample;

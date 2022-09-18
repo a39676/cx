@@ -14,10 +14,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.Gson;
 
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
-import autoTest.testEvent.hsbc.pojo.dto.HsbcWechatPreregistDTO;
-import autoTest.testEvent.hsbc.pojo.type.HsbcIdType;
-import autoTest.testEvent.hsbc.pojo.type.HsbcWechatPreregistBranchCityNameType;
-import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
+import autoTest.testEvent.common.pojo.dto.AutomationTestInsertEventDTO;
+import autoTest.testEvent.scheduleClawing.hsbc.pojo.dto.HsbcWechatPreregistDTO;
+import autoTest.testEvent.scheduleClawing.hsbc.pojo.type.HsbcIdType;
+import autoTest.testEvent.scheduleClawing.hsbc.pojo.type.HsbcWechatPreregistBranchCityNameType;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.result.CommonResult;

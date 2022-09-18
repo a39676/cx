@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
-import autoTest.testEvent.pojo.dto.AutomationTestResultDTO;
+import autoTest.testEvent.common.pojo.dto.AutomationTestResultDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.automationTest.pojo.po.TestEvent;
 import demo.automationTest.pojo.vo.TestReportSummaryVO;

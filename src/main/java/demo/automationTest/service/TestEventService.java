@@ -1,6 +1,6 @@
 package demo.automationTest.service;
 
-import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
+import autoTest.testEvent.common.pojo.dto.AutomationTestInsertEventDTO;
 
 public interface TestEventService {
 

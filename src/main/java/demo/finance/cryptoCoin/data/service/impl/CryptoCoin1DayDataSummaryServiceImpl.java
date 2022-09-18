@@ -14,8 +14,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import autoTest.testEvent.cryptoCoin.pojo.type.CryptoCoinFlowType;
-import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
+import autoTest.testEvent.common.pojo.dto.AutomationTestInsertEventDTO;
+import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.TimeUnitType;
@@ -391,8 +391,8 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 	private void sendDailyDataQuery(String coinName, String currencyName, Integer counting,
 			CryptoCoinDataSourceType dataSource) {
 		AutomationTestInsertEventDTO dto = new AutomationTestInsertEventDTO();
-		dto.setTestModuleType(TestModuleType.CRYPTO_COIN.getId());
-		dto.setFlowType(CryptoCoinFlowType.DAILY_DATA.getId());
+		dto.setTestModuleType(TestModuleType.SCHEDULE_CLAWING.getId());
+		dto.setFlowType(ScheduleClawingType.CRYPTO_COIN.getId());
 		dto.setTestEventId(snowFlake.getNextId());
 
 		CryptoCoinDailyDataQueryDTO paramDTO = new CryptoCoinDailyDataQueryDTO();

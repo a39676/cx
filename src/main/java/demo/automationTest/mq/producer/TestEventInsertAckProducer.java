@@ -4,8 +4,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import autoTest.testEvent.pojo.constant.AutomationTestMQConstant;
-import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
+import autoTest.testEvent.common.pojo.constant.AutomationTestMQConstant;
+import autoTest.testEvent.common.pojo.dto.AutomationTestInsertEventDTO;
 import demo.common.service.CommonService;
 import net.sf.json.JSONObject;
 

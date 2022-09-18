@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
+import autoTest.testEvent.common.pojo.dto.AutomationTestInsertEventDTO;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.config.costom_component.BaseUtilCustom;
 import demo.config.costom_component.SnowFlake;

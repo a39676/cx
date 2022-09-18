@@ -1,6 +1,6 @@
 package demo.tool.bbtOrder.hsbc.pojo.vo;
 
-import autoTest.testEvent.hsbc.pojo.type.HsbcIdType;
+import autoTest.testEvent.scheduleClawing.hsbc.pojo.type.HsbcIdType;
 import tool.pojo.type.InternationalityType;
 
 public class HsbcWechatPreregistReportVO {

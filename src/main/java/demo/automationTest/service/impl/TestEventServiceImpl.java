@@ -8,7 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
+import autoTest.testEvent.common.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testModule.pojo.type.TestModuleType;
 import demo.automationTest.pojo.po.TestEvent;
 import demo.automationTest.pojo.po.TestEventExample;

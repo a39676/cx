@@ -26,12 +26,6 @@ public class TestController2 extends CommonController {
 		return testService2.testView();
 	}
 
-	@GetMapping(value = "/demo")
-	@ResponseBody
-	public String demo() {
-		return "{\"k\":\"v\"}";
-	}
-
 	@PostMapping(value = "/t2")
 	@ResponseBody
 	public String t2(@RequestBody TestDTO dto) {

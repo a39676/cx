@@ -34,7 +34,7 @@
         </javaTypeResolver>  
           
         <!-- 生成模型的包名和位置-->    
-        <javaModelGenerator targetPackage="demo.toyParts.educate.pojo.po" targetProject="cx">    
+        <javaModelGenerator targetPackage="demo.finance.currencyExchangeRate.data.pojo.po" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
             <property name="trimStrings" value="true"/> 
             <!-- for MyBatis3 / MyBatis3Simple
@@ -45,18 +45,18 @@
         </javaModelGenerator>    
         
         <!-- 生成映射文件的包名和位置-->    
-        <sqlMapGenerator targetPackage="demo.toyParts.educate.mapper" targetProject="cx">    
+        <sqlMapGenerator targetPackage="demo.finance.currencyExchangeRate.data.mapper" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
         </sqlMapGenerator>    
         
         <!-- 生成DAO的包名和位置-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.toyParts.educate.mapper" targetProject="cx">    
+        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.finance.currencyExchangeRate.data.mapper" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="student_point_history">
-        	<property name="tableName" value="student_point_history"></property>
-        	<property name="domainObjectName" value="student_point_history"></property>
+        <table tableName="currency_exchange_rate_1day">
+        	<property name="tableName" value="currency_exchange_rate_1day"></property>
+        	<property name="domainObjectName" value="currency_exchange_rate_1day"></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

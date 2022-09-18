@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import autoTest.testEvent.hsbc.pojo.dto.HsbcWechatPreregistDTO;
-import autoTest.testEvent.searchingDemo.pojo.dto.UnderWayMonthTestDTO;
+import autoTest.testEvent.scheduleClawing.hsbc.pojo.dto.HsbcWechatPreregistDTO;
+import autoTest.testEvent.scheduleClawing.searchingDemo.pojo.dto.UnderWayMonthTestDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.controller.CommonController;
 import demo.tool.bbtOrder.hsbc.pojo.vo.RandomIdDataVO;

@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.finance.currencyExchangeRate.data.mapper.CurrencyExchangeRate1dayMapper">
+  <resultMap id="BaseResultMap" type="demo.finance.currencyExchangeRate.data.pojo.po.CurrencyExchangeRate1day">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="currency_from" jdbcType="INTEGER" property="currencyFrom" />
+    <result column="currency_to" jdbcType="INTEGER" property="currencyTo" />
+    <result column="sell_avg_price" jdbcType="DECIMAL" property="sellAvgPrice" />
+    <result column="buy_avg_price" jdbcType="DECIMAL" property="buyAvgPrice" />
+    <result column="sell_high_price" jdbcType="DECIMAL" property="sellHighPrice" />
+    <result column="sell_low_price" jdbcType="DECIMAL" property="sellLowPrice" />
+    <result column="buy_high_price" jdbcType="DECIMAL" property="buyHighPrice" />
+    <result column="buy_low_price" jdbcType="DECIMAL" property="buyLowPrice" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, currency_from, currency_to, sell_avg_price, buy_avg_price, sell_high_price, sell_low_price, 
+    buy_high_price, buy_low_price, start_time, end_time, create_time, is_delete
+  </sql>
+  <select id="selectByExample" parameterType="demo.finance.currencyExchangeRate.data.pojo.po.CurrencyExchangeRate1dayExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from currency_exchange_rate_1day
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from currency_exchange_rate_1day
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from currency_exchange_rate_1day
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.finance.currencyExchangeRate.data.pojo.po.CurrencyExchangeRate1dayExample">
+    delete from currency_exchange_rate_1day
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="demo.finance.currencyExchangeRate.data.pojo.po.CurrencyExchangeRate1day">
+    insert into currency_exchange_rate_1day (id, currency_from, currency_to, 
+      sell_avg_price, buy_avg_price, sell_high_price, 
+      sell_low_price, buy_high_price, buy_low_price, 
+      start_time, end_time, create_time, 
+      is_delete)
+    values (#{id,jdbcType=BIGINT}, #{currencyFrom,jdbcType=INTEGER}, #{currencyTo,jdbcType=INTEGER}, 
+      #{sellAvgPrice,jdbcType=DECIMAL}, #{buyAvgPrice,jdbcType=DECIMAL}, #{sellHighPrice,jdbcType=DECIMAL}, 
+      #{sellLowPrice,jdbcType=DECIMAL}, #{buyHighPrice,jdbcType=DECIMAL}, #{buyLowPrice,jdbcType=DECIMAL}, 
+      #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{isDelete,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="demo.finance.currencyExchangeRate.data.pojo.po.CurrencyExchangeRate1day">
+    insert into currency_exchange_rate_1day
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="currencyFrom != null">
+        currency_from,
+      </if>
+      <if test="currencyTo != null">
+        currency_to,
+      </if>
+      <if test="sellAvgPrice != null">
+        sell_avg_price,
+      </if>
+      <if test="buyAvgPrice != null">
+        buy_avg_price,
+      </if>
+      <if test="sellHighPrice != null">
+        sell_high_price,
+      </if>
+      <if test="sellLowPrice != null">
+        sell_low_price,
+      </if>
+      <if test="buyHighPrice != null">
+        buy_high_price,
+      </if>
+      <if test="buyLowPrice != null">
+        buy_low_price,
+      </if>
+      <if test="startTime != null">
+        start_time,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="currencyFrom != null">
+        #{currencyFrom,jdbcType=INTEGER},
+      </if>
+      <if test="currencyTo != null">
+        #{currencyTo,jdbcType=INTEGER},
+      </if>
+      <if test="sellAvgPrice != null">
+        #{sellAvgPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="buyAvgPrice != null">
+        #{buyAvgPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="sellHighPrice != null">
+        #{sellHighPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="sellLowPrice != null">
+        #{sellLowPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="buyHighPrice != null">
+        #{buyHighPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="buyLowPrice != null">
+        #{buyLowPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="startTime != null">
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="demo.finance.currencyExchangeRate.data.pojo.po.CurrencyExchangeRate1dayExample" resultType="java.lang.Long">
+    select count(*) from currency_exchange_rate_1day
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update currency_exchange_rate_1day
+    <set>
+      <if test="row.id != null">
+        id = #{row.id,jdbcType=BIGINT},
+      </if>
+      <if test="row.currencyFrom != null">
+        currency_from = #{row.currencyFrom,jdbcType=INTEGER},
+      </if>
+      <if test="row.currencyTo != null">
+        currency_to = #{row.currencyTo,jdbcType=INTEGER},
+      </if>
+      <if test="row.sellAvgPrice != null">
+        sell_avg_price = #{row.sellAvgPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="row.buyAvgPrice != null">
+        buy_avg_price = #{row.buyAvgPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="row.sellHighPrice != null">
+        sell_high_price = #{row.sellHighPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="row.sellLowPrice != null">
+        sell_low_price = #{row.sellLowPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="row.buyHighPrice != null">
+        buy_high_price = #{row.buyHighPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="row.buyLowPrice != null">
+        buy_low_price = #{row.buyLowPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="row.startTime != null">
+        start_time = #{row.startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.endTime != null">
+        end_time = #{row.endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.createTime != null">
+        create_time = #{row.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.isDelete != null">
+        is_delete = #{row.isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update currency_exchange_rate_1day
+    set id = #{row.id,jdbcType=BIGINT},
+      currency_from = #{row.currencyFrom,jdbcType=INTEGER},
+      currency_to = #{row.currencyTo,jdbcType=INTEGER},
+      sell_avg_price = #{row.sellAvgPrice,jdbcType=DECIMAL},
+      buy_avg_price = #{row.buyAvgPrice,jdbcType=DECIMAL},
+      sell_high_price = #{row.sellHighPrice,jdbcType=DECIMAL},
+      sell_low_price = #{row.sellLowPrice,jdbcType=DECIMAL},
+      buy_high_price = #{row.buyHighPrice,jdbcType=DECIMAL},
+      buy_low_price = #{row.buyLowPrice,jdbcType=DECIMAL},
+      start_time = #{row.startTime,jdbcType=TIMESTAMP},
+      end_time = #{row.endTime,jdbcType=TIMESTAMP},
+      create_time = #{row.createTime,jdbcType=TIMESTAMP},
+      is_delete = #{row.isDelete,jdbcType=BIT}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.finance.currencyExchangeRate.data.pojo.po.CurrencyExchangeRate1day">
+    update currency_exchange_rate_1day
+    <set>
+      <if test="currencyFrom != null">
+        currency_from = #{currencyFrom,jdbcType=INTEGER},
+      </if>
+      <if test="currencyTo != null">
+        currency_to = #{currencyTo,jdbcType=INTEGER},
+      </if>
+      <if test="sellAvgPrice != null">
+        sell_avg_price = #{sellAvgPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="buyAvgPrice != null">
+        buy_avg_price = #{buyAvgPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="sellHighPrice != null">
+        sell_high_price = #{sellHighPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="sellLowPrice != null">
+        sell_low_price = #{sellLowPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="buyHighPrice != null">
+        buy_high_price = #{buyHighPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="buyLowPrice != null">
+        buy_low_price = #{buyLowPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="demo.finance.currencyExchangeRate.data.pojo.po.CurrencyExchangeRate1day">
+    update currency_exchange_rate_1day
+    set currency_from = #{currencyFrom,jdbcType=INTEGER},
+      currency_to = #{currencyTo,jdbcType=INTEGER},
+      sell_avg_price = #{sellAvgPrice,jdbcType=DECIMAL},
+      buy_avg_price = #{buyAvgPrice,jdbcType=DECIMAL},
+      sell_high_price = #{sellHighPrice,jdbcType=DECIMAL},
+      sell_low_price = #{sellLowPrice,jdbcType=DECIMAL},
+      buy_high_price = #{buyHighPrice,jdbcType=DECIMAL},
+      buy_low_price = #{buyLowPrice,jdbcType=DECIMAL},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      is_delete = #{isDelete,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="demo.finance.currencyExchangeRate.data.pojo.po.CurrencyExchangeRate1dayExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from currency_exchange_rate_1day
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

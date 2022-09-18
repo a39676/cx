@@ -8,7 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import autoTest.jsonReport.pojo.dto.FindReportByTestEventIdDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
-import autoTest.testEvent.searchingDemo.pojo.dto.BingSearchInHomePageDTO;
+import autoTest.testEvent.scheduleClawing.searchingDemo.pojo.dto.BingSearchInHomePageDTO;
 import demo.automationTest.pojo.result.InsertSearchingDemoEventResult;
 import demo.automationTest.pojo.vo.TestReportSummaryVO;
 

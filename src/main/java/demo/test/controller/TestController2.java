@@ -37,6 +37,7 @@ public class TestController2 extends CommonController {
 	private CurrencyExchangeRateService currencyExchangeRateService;
 
 	@GetMapping(value = "/t3")
+	@ResponseBody
 	public String t3() {
 		currencyExchangeRateService.sendDailyDataQuery();
 		return "done";

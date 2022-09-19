@@ -7,6 +7,8 @@ public interface CurrencyExchangeRateService {
 
 	void sendDailyDataQuery();
 
-	CommonResult receiveDailyData(CurrencyExchageRateCollectResult inputDataresult);
+	CommonResult receiveDailyData(CurrencyExchageRateCollectResult inputDataResult);
+
+	void sendDataQuery(Boolean isDailyQuery);
 
 }

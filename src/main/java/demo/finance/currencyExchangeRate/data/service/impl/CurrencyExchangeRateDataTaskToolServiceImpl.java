@@ -13,9 +13,26 @@ public class CurrencyExchangeRateDataTaskToolServiceImpl extends CryptoCoinCommo
 	@Autowired
 	private CurrencyExchangeRateService currencyExchangeRateService;
 
-	@Scheduled(cron="0 10 * * * ?")
+	@Scheduled(cron = "0 10 3 * * ?")
+	@Scheduled(cron = "0 10 2 * * ?")
+	@Scheduled(cron = "0 10 1 * * ?")
+	@Scheduled(cron = "0 10 0 * * ?")
 	public void sendDailyDataQuery() {
 		currencyExchangeRateService.sendDailyDataQuery();
+	}
+
+	@Scheduled(cron = "0 10 23 * * ?")
+	@Scheduled(cron = "0 10 21 * * ?")
+	@Scheduled(cron = "0 10 19 * * ?")
+	@Scheduled(cron = "0 10 17 * * ?")
+	@Scheduled(cron = "0 10 15 * * ?")
+	@Scheduled(cron = "0 10 13 * * ?")
+	@Scheduled(cron = "0 10 11 * * ?")
+	@Scheduled(cron = "0 10 9 * * ?")
+	@Scheduled(cron = "0 10 7 * * ?")
+	@Scheduled(cron = "0 10 5 * * ?")
+	public void sendDataQuery() {
+		currencyExchangeRateService.sendDataQuery(false);
 	}
 
 }

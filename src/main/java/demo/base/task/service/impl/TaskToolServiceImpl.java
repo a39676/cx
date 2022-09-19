@@ -40,13 +40,15 @@ public class TaskToolServiceImpl {
 	private BaseMapper baseMapper;
 
 //	*/31 * * * * ? // 每31秒执行一次
-//	@Scheduled(cron="0 */30 * * * ?")   //每30分钟执行一次
-//	@Scheduled(cron="* 2 */1 * * ?")   // 每小时的02分执行
+//	@Scheduled(cron="0 */30 * * * ?")   //每30分钟的0秒
+//	@Scheduled(cron="*/10 */1 */1 * * ?") // 每10秒
+//	@Scheduled(cron="15 */1 */1 * * ?")  // 每分钟的 15秒 
+//	@Scheduled(cron="* 2 */1 * * ?")   // 每小时的02分执行, 02分中的每秒执行一次
 //	@Scheduled(cron="40 49 23 * * *") // 每天23:49:40执行
 //  @Scheduled(cron = "[Seconds] [Minutes] [Hours] [Day of month] [Month] [Day of week] [Year]")
 //	@Scheduled(fixedRate = 1000) // 上次任务结束后 1000 毫秒后再执行
 
-//	@Scheduled(cron="0 */30 * * * ?")   //每30分钟执行一次
+//	@Scheduled(cron="0 */30 * * * ?")
 //	public void sendTomcatOut() {
 //		mailService.sendTomcatOut();
 //	}

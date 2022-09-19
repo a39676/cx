@@ -37,6 +37,11 @@ public class CurrencyExchangeRateServiceImpl extends CommonService implements Cu
 	
 	@Override
 	public void sendDailyDataQuery() {
+		sendDataQuery(true);
+	}
+	
+	@Override
+	public void sendDataQuery(Boolean isDailyQuery) {
 		AutomationTestInsertEventDTO eventDTO = new AutomationTestInsertEventDTO();
 		eventDTO.setTestEventId(0L);
 		eventDTO.setTestModuleType(TestModuleType.SCHEDULE_CLAWING.getId());
@@ -44,6 +49,7 @@ public class CurrencyExchangeRateServiceImpl extends CommonService implements Cu
 		eventDTO.setTestEventId(snowFlake.getNextId());
 
 		CurrencyExchangeRateCollectDTO paramDTO = new CurrencyExchangeRateCollectDTO();
+		paramDTO.setIsDailyQuery(isDailyQuery);
 		paramDTO.setMainUrl("https://www.oanda.com/currency-converter/zh/?from=USD&to=CNY&amount=1");
 		
 		List<CurrencyExchangeRatePairDTO> currencyPairList = optionService.getPairList();
@@ -63,13 +69,15 @@ public class CurrencyExchangeRateServiceImpl extends CommonService implements Cu
 	}
 	
 	@Override
-	public CommonResult receiveDailyData(CurrencyExchageRateCollectResult inputDataresult) {
+	public CommonResult receiveDailyData(CurrencyExchageRateCollectResult inputDataResult) {
 		CommonResult r = new CommonResult();
 
-		List<CurrencyExchageRateDataDTO> dataList = inputDataresult.getDataList();
+		List<CurrencyExchageRateDataDTO> dataList = inputDataResult.getDataList();
 		for(CurrencyExchageRateDataDTO dataDTO : dataList) {
-			updateYesterDayData(dataDTO);
 			updateTodayDayData(dataDTO);
+			if(inputDataResult.getIsDailyQuery()) {
+				updateYesterDayData(dataDTO);
+			}
 		}
 		
 		r.setIsSuccess();

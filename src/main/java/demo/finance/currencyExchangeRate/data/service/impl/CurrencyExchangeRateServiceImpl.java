@@ -15,7 +15,7 @@ import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.automationTest.mq.producer.TestEventInsertAckProducer;
-import demo.common.service.CommonService;
+import demo.finance.common.service.impl.FinanceCommonService;
 import demo.finance.currencyExchangeRate.data.mapper.CurrencyExchangeRate1dayMapper;
 import demo.finance.currencyExchangeRate.data.pojo.po.CurrencyExchangeRate1day;
 import demo.finance.currencyExchangeRate.data.pojo.po.CurrencyExchangeRate1dayExample;
@@ -24,7 +24,7 @@ import finance.currencyExchangeRate.pojo.dto.CurrencyExchageRateDataDTO;
 import finance.currencyExchangeRate.pojo.result.CurrencyExchageRateCollectResult;
 
 @Service
-public class CurrencyExchangeRateServiceImpl extends CommonService implements CurrencyExchangeRateService {
+public class CurrencyExchangeRateServiceImpl extends FinanceCommonService implements CurrencyExchangeRateService {
 
 	@Autowired
 	private CurrencyExchangeRateOptionService optionService;
@@ -155,9 +155,7 @@ public class CurrencyExchangeRateServiceImpl extends CommonService implements Cu
 		if(po.getSellLowPrice() == null || dto.getCurrencyAmountTo().compareTo(po.getSellLowPrice()) < 0) {
 			po.setSellLowPrice(dto.getCurrencyAmountTo());
 		}
-		if(po.getBuyHighPrice() == null || dto.getCurrencyAmountTo().compareTo(po.getBuyHighPrice()) > 0) {
-			po.setBuyHighPrice(dto.getCurrencyAmountTo());
-		}
+		po.setBuyAvgPrice(dto.getCurrencyAmountTo());
 		
 		po.setBuyAvgPrice(BigDecimal.ZERO);
 		po.setSellAvgPrice(BigDecimal.ZERO);

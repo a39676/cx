@@ -4,21 +4,20 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.common.service.impl.FinanceCommonService;
-import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
-import demo.finance.cryptoCoin.data.pojo.result.FilterBODataResult;
 import demo.finance.cryptoCoin.mq.producer.TelegramCryptoCoinMessageAckProducer;
-import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNotice;
 import demo.finance.currencyExchangeRate.data.mapper.CurrencyExchangeRate1dayMapper;
 import demo.finance.currencyExchangeRate.data.pojo.po.CurrencyExchangeRate1day;
 import demo.finance.currencyExchangeRate.data.pojo.po.CurrencyExchangeRate1dayExample;
@@ -30,8 +29,8 @@ import demo.finance.currencyExchangeRate.notice.pojo.po.CurrencyExchangeRateNoti
 import demo.finance.currencyExchangeRate.notice.pojo.po.CurrencyExchangeRateNoticeExample.Criteria;
 import demo.finance.currencyExchangeRate.notice.pojo.result.CurrencyExchangeRateNoticeDTOCheckResult;
 import demo.finance.currencyExchangeRate.notice.service.CurrencyExchangeRateNoticeService;
-import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
-import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
+import demo.tool.telegram.pojo.po.TelegramChatId;
+import demo.tool.telegram.pojo.vo.TelegramChatIdVO;
 import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.dto.TelegramMessageDTO;
 
@@ -47,6 +46,28 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 	@Autowired
 	private CurrencyExchangeRate1dayMapper dataMapper;
 
+	@Override
+	public ModelAndView currencyExhchangeRateNoticeSettingManager() {
+		ModelAndView view = new ModelAndView("finance/currencyExchangeRate/CurrencyExchangeRateNoticeSettingManager");
+		List<CurrencyType> currencyTypeList = new ArrayList<>();
+		currencyTypeList.add(CurrencyType.USD);
+		currencyTypeList.addAll(Arrays.asList(CurrencyType.values()));
+		view.addObject("currencyType", currencyTypeList);
+
+		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.day,
+				TimeUnitType.week, TimeUnitType.month };
+		view.addObject("timeUnitType", timeUnitTypes);
+
+		List<TelegramChatId> chatIDPOList = telegramService.getChatIDList();
+		List<TelegramChatIdVO> chatIdVOList = new ArrayList<>();
+		for (TelegramChatId po : chatIDPOList) {
+			chatIdVOList.add(telegramService.buildChatIdVO(po));
+		}
+		view.addObject("chatVOList", chatIdVOList);
+		return view;
+	}
+	
+	@Override
 	public CommonResult insertNewCryptoCoinPriceNoticeSetting(InsertCurrencyExchangeRateNoticeSettingDTO dto) {
 		CommonResult r = new CommonResult();
 		CurrencyExchangeRateNoticeDTOCheckResult checkResult = noticeDTOCheck(dto);
@@ -225,6 +246,7 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 		noticeMapper.updateByExampleSelective(record, example);
 	}
 
+	@Override
 	public void noticeHandler() {
 		LocalDateTime now = LocalDateTime.now();
 		CurrencyExchangeRateNoticeExample noticeExample = new CurrencyExchangeRateNoticeExample();
@@ -275,7 +297,6 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 				content += handleResult.getMessage();
 			}
 		}
-//		TODO
 		if (rateFluctuationSpeedConditionHadSet(notice)) {
 			handleResult = rateFluctuationSpeedNoticeHandle(notice, currencyFrom, currencyTo);
 			if (handleResult.isSuccess()) {
@@ -324,6 +345,7 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 		dataExample.createCriteria().andCurrencyFromEqualTo(currencyFrom.getCode())
 				.andCurrencyToEqualTo(currencyTo.getCode()).andStartTimeEqualTo(todayStart);
 		List<CurrencyExchangeRate1day> historyDataList = dataMapper.selectByExample(dataExample);
+//		TODO need order by?
 
 		if (historyDataList == null || historyDataList.isEmpty()) {
 			log.error(noticeSetting.getId() + ", can NOT find any history data of: from " + currencyFrom.getName()
@@ -362,29 +384,31 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 		return r;
 	}
 
-	private CommonResult rateFluctuationSpeedNoticeHandle(CryptoCoinPriceNotice noticeSetting, CurrencyType currencyFrom,
+	private CommonResult rateFluctuationSpeedNoticeHandle(CurrencyExchangeRateNotice noticeSetting, CurrencyType currencyFrom,
 			CurrencyType currencyTo) {
 		CommonResult r = new CommonResult();
 
-		TimeUnitType timeUnit = TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch());
-
-		List<CryptoCoinPriceCommonDataBO> historyBOList = cryptoCoinHistoryDataService.getHistoryDataList(coinType,
-				currencyType, timeUnit, noticeSetting.getTimeRangeOfDataWatch());
-		if (historyBOList == null || historyBOList.isEmpty()) {
-			log.error(noticeSetting.getId() + ", can NOT find any history data of: " + coinType.getCoinNameEnShort());
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime todayStart = now.with(LocalTime.MIN);
+		CurrencyExchangeRate1dayExample dataExample = new CurrencyExchangeRate1dayExample();
+		dataExample.createCriteria().andCurrencyFromEqualTo(currencyFrom.getCode())
+				.andCurrencyToEqualTo(currencyTo.getCode()).andStartTimeEqualTo(todayStart);
+		List<CurrencyExchangeRate1day> historyDataList = dataMapper.selectByExample(dataExample);
+//		TODO need order by?
+		if (historyDataList == null || historyDataList.isEmpty()) {
+			log.error(noticeSetting.getId() + ", can NOT find any history data of: from " + currencyFrom.getName()
+					+ ", to " + currencyTo.getName());
 			return r;
 		}
-
-		Collections.sort(historyBOList);
-
-		FilterBODataResult maxMinPriceResult = filterData(historyBOList);
+		
+		FilterDataResult maxMinPriceResult = filterData(historyDataList);
 		if (maxMinPriceResult.isFail()) {
 			r.addMessage(maxMinPriceResult.getMessage());
 			return r;
 		}
 
-		double lastMax = maxMinPriceResult.getMaxPrice().doubleValue();
-		double lastMin = maxMinPriceResult.getMinPrice().doubleValue();
+		double lastMax = maxMinPriceResult.getMaxRate().doubleValue();
+		double lastMin = maxMinPriceResult.getMinRate().doubleValue();
 
 		Double upApmlitude = (lastMax / lastMin - 1) * 100;
 		Double lowApmlitude = (lastMin / lastMax - 1) * 100;
@@ -395,27 +419,27 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 			trigerPercentage = 0 - trigerPercentage;
 		}
 
-		if (!maxMinPriceResult.getMinPriceDateTime().isAfter(maxMinPriceResult.getMaxPriceDateTime())) {
+		if (!maxMinPriceResult.getMinRateDateTime().isAfter(maxMinPriceResult.getMaxRateDateTime())) {
 			if (upApmlitude >= trigerPercentage) {
 				BigDecimal upApmlitudeBigDecimal = new BigDecimal(upApmlitude);
-				content = coinType.getCoinNameEnShort() + ", " + currencyType.getName() + ", " + "最新价: "
-						+ numberSetScale(historyBOList.get(historyBOList.size() - 1).getEndPrice()) + "\n" + ", " + "最近"
+				content = "From " + currencyFrom.getName() + ", to " + currencyTo.getName() + ", " + " rate: "
+						+ numberSetScale(historyDataList.get(historyDataList.size() - 1).getBuyAvgPrice()) + "\n" + ", " + "最近"
 						+ noticeSetting.getTimeRangeOfDataWatch()
 						+ TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch()).getCnName() + ", " + "波幅达 "
 						+ upApmlitudeBigDecimal.setScale(2, RoundingMode.HALF_UP) + "%" + "\n" + ", "
-						+ maxMinPriceResult.getMinPriceDateTime() + " 时触及低价: " + lastMin + "\n" + ", "
-						+ maxMinPriceResult.getMaxPriceDateTime() + " 时触及高价: " + lastMax;
+						+ maxMinPriceResult.getMinRateDateTime() + " 时触及低价: " + lastMin + "\n" + ", "
+						+ maxMinPriceResult.getMaxRateDateTime() + " 时触及高价: " + lastMax;
 			}
 		} else {
 			if ((0 - lowApmlitude) >= trigerPercentage) {
 				BigDecimal lowApmlitubeBigDecimal = new BigDecimal(lowApmlitude);
-				content = coinType.getCoinNameEnShort() + ", " + currencyType.getName() + ", " + "最新价: "
-						+ numberSetScale(historyBOList.get(historyBOList.size() - 1).getEndPrice()) + "\n" + ", " + "最近"
+				content = "From " + currencyFrom.getName() + ", to " + currencyTo.getName() + ", " + " rate: "
+						+ numberSetScale(historyDataList.get(historyDataList.size() - 1).getBuyAvgPrice()) + "\n" + ", " + "最近"
 						+ noticeSetting.getTimeRangeOfDataWatch()
 						+ TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch()).getCnName() + ", " + "波幅达 "
 						+ lowApmlitubeBigDecimal.setScale(2, RoundingMode.HALF_UP) + "%" + "\n" + ", "
-						+ maxMinPriceResult.getMaxPriceDateTime() + " 时触及高价: " + lastMax + "\n" + ", "
-						+ maxMinPriceResult.getMinPriceDateTime() + " 时触及低价: " + lastMin;
+						+ maxMinPriceResult.getMaxRateDateTime() + " 时触及高价: " + lastMax + "\n" + ", "
+						+ maxMinPriceResult.getMinRateDateTime() + " 时触及低价: " + lastMin;
 			}
 		}
 

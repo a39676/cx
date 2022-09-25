@@ -20,6 +20,9 @@ public class CurrencyExchangeRateDataTaskToolServiceImpl extends CryptoCoinCommo
 
 	@Scheduled(cron = "0 10 * * * ?")
 	public void sendDataQuery() {
+		if(systemOptionService.isDev()) {
+			return;
+		}
 		LocalTime now = LocalTime.now();
 		int hour = now.getHour();
 		if(hour >= 0 && hour <= 3) {

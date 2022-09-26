@@ -11,4 +11,6 @@ public class PMemoConstant {
 	public static final Long MEMO_MAX_SIZE = 1024L * 1024 * 5;
 	
 	public static final String P_NOTE_SAVING_FOLDER = "/home/u2/pNote";
+	
+	public static final String URGE_NOTE_SAVING_FOLDER = "/home/u2/urgeNote";
 }

@@ -16,7 +16,7 @@ import demo.toyParts.educate.service.EducateCommonService;
 import demo.toyParts.educate.service.EducateTaskService;
 import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
-import telegram.pojo.dto.TelegramMessageDTO;
+import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 
 @Service
 public class EducateTaskServiceImpl extends EducateCommonService implements EducateTaskService {
@@ -61,8 +61,8 @@ public class EducateTaskServiceImpl extends EducateCommonService implements Educ
 	}
 	
 	private void sendTelegram(String msg) {
-		TelegramMessageDTO dto = null;
-		dto = new TelegramMessageDTO();
+		TelegramBotNoticeMessageDTO dto = null;
+		dto = new TelegramBotNoticeMessageDTO();
 		dto.setId(TelegramStaticChatID.MY_ID);
 		dto.setBotName(TelegramBotType.BOT_1.getName());
 		dto.setMsg(msg);

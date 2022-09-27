@@ -15,7 +15,7 @@ import demo.tool.telegram.service.TelegramService;
 import net.sf.json.JSONObject;
 import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramMessageMQConstant;
-import telegram.pojo.dto.TelegramMessageDTO;
+import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 
 @Component
 @RabbitListener(queues = TelegramMessageMQConstant.TELEGRAM_CRYPTO_COIN_MSG_QUEUE)
@@ -28,7 +28,7 @@ public class TelegramCryptoCoinMessageAckReceiver extends CommonService {
 	public void process(String messageStr, Channel channel, Message message) throws IOException {
 
 		try {
-			TelegramMessageDTO dto = msgToDTO(messageStr);
+			TelegramBotNoticeMessageDTO dto = msgToDTO(messageStr);
 
 			if (dto != null) {
 				msgService.sendMessage(TelegramBotType.getType(dto.getBotName()), dto.getMsg(), dto.getId());
@@ -43,11 +43,11 @@ public class TelegramCryptoCoinMessageAckReceiver extends CommonService {
 
 	}
 
-	private TelegramMessageDTO msgToDTO(String messageStr) {
+	private TelegramBotNoticeMessageDTO msgToDTO(String messageStr) {
 		try {
 			JSONObject json = JSONObject.fromObject(messageStr);
 
-			TelegramMessageDTO dto = new TelegramMessageDTO();
+			TelegramBotNoticeMessageDTO dto = new TelegramBotNoticeMessageDTO();
 
 			dto.setMsg(json.getString("msg"));
 			dto.setId(json.getLong("id"));

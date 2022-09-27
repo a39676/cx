@@ -15,6 +15,7 @@ import demo.tool.service.impl.ToolCommonService;
 import demo.tool.telegram.mapper.TelegramChatIdMapper;
 import demo.tool.telegram.mapper.TelegramConstantMapper;
 import demo.tool.telegram.pojo.bo.TelegramConstantBO;
+import demo.tool.telegram.pojo.dto.TelegramGetUpdateMessageFeedbackDTO;
 import demo.tool.telegram.pojo.po.TelegramChatId;
 import demo.tool.telegram.pojo.po.TelegramChatIdExample;
 import demo.tool.telegram.pojo.po.TelegramConstant;
@@ -173,5 +174,29 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 			msg = "Testing msg, from: " + botType.getName();
 			sendMessage(botType, msg, TelegramStaticChatID.MY_ID);
 		}
+	}
+
+	@Override
+	public TelegramGetUpdateMessageFeedbackDTO getUpdateMessage(String botIDKey) {
+		TelegramGetUpdateMessageFeedbackDTO dto = null;
+		
+		if(StringUtils.isBlank(botIDKey)) {
+			return dto;
+		}
+		
+		String urlModel = "https://api.telegram.org/bot%s/getUpdates";
+		String botID = botIDReady(botIDKey);
+		String url = String.format(urlModel, botID);
+
+		HttpUtil httpUtil = new HttpUtil();
+		try {
+			String response = httpUtil.sendGet(url);
+			
+			dto = buildObjFromJsonCustomization(response, TelegramGetUpdateMessageFeedbackDTO.class);
+			
+		} catch (Exception e) {
+			log.error("Get message update from telegram error: " + e.getMessage());
+		}
+		return dto;
 	}
 }

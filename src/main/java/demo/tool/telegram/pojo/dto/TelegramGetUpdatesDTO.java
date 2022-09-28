@@ -2,10 +2,10 @@ package demo.tool.telegram.pojo.dto;
 
 import java.util.List;
 
-public class TelegramGetUpdateMessageFeedbackDTO {
+public class TelegramGetUpdatesDTO {
 
 	private Boolean ok;
-	private List<TelegramGetUpdateMessageResultDTO> result;
+	private List<UpdateMessageDTO> result;
 
 	public Boolean getOk() {
 		return ok;
@@ -15,11 +15,11 @@ public class TelegramGetUpdateMessageFeedbackDTO {
 		this.ok = ok;
 	}
 
-	public List<TelegramGetUpdateMessageResultDTO> getResult() {
+	public List<UpdateMessageDTO> getResult() {
 		return result;
 	}
 
-	public void setResult(List<TelegramGetUpdateMessageResultDTO> result) {
+	public void setResult(List<UpdateMessageDTO> result) {
 		this.result = result;
 	}
 

@@ -3,7 +3,7 @@ package demo.tool.telegram.service;
 import java.util.List;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.tool.telegram.pojo.dto.TelegramGetUpdateMessageFeedbackDTO;
+import demo.tool.telegram.pojo.dto.TelegramGetUpdatesDTO;
 import demo.tool.telegram.pojo.po.TelegramChatId;
 import demo.tool.telegram.pojo.vo.TelegramChatIdVO;
 import telegram.pojo.constant.TelegramBotType;
@@ -24,6 +24,10 @@ public interface TelegramService {
 
 	void telegramSendingCheck();
 
-	TelegramGetUpdateMessageFeedbackDTO getUpdateMessage(String botIDKey);
+	TelegramGetUpdatesDTO getUpdateMessage(String botIDKey);
+
+	TelegramGetUpdatesDTO getUpdateMessage(String botIDKey, Long lastUpdateMsgId);
+
+	TelegramGetUpdatesDTO setWebhook(String botIDKey, String webhookUrl, String secretToken);
 
 }

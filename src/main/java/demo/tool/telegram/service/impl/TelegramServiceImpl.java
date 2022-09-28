@@ -15,7 +15,7 @@ import demo.tool.service.impl.ToolCommonService;
 import demo.tool.telegram.mapper.TelegramChatIdMapper;
 import demo.tool.telegram.mapper.TelegramConstantMapper;
 import demo.tool.telegram.pojo.bo.TelegramConstantBO;
-import demo.tool.telegram.pojo.dto.TelegramGetUpdateMessageFeedbackDTO;
+import demo.tool.telegram.pojo.dto.TelegramGetUpdatesDTO;
 import demo.tool.telegram.pojo.po.TelegramChatId;
 import demo.tool.telegram.pojo.po.TelegramChatIdExample;
 import demo.tool.telegram.pojo.po.TelegramConstant;
@@ -177,25 +177,54 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 	}
 
 	@Override
-	public TelegramGetUpdateMessageFeedbackDTO getUpdateMessage(String botIDKey) {
-		TelegramGetUpdateMessageFeedbackDTO dto = null;
+	public TelegramGetUpdatesDTO getUpdateMessage(String botIDKey, Long lastUpdateMsgId) {
+		TelegramGetUpdatesDTO dto = null;
 		
 		if(StringUtils.isBlank(botIDKey)) {
 			return dto;
 		}
 		
-		String urlModel = "https://api.telegram.org/bot%s/getUpdates";
+		String urlModel = "https://api.telegram.org/bot%s/getUpdates?offset=%d";
 		String botID = botIDReady(botIDKey);
-		String url = String.format(urlModel, botID);
+		String url = String.format(urlModel, botID, lastUpdateMsgId);
 
 		HttpUtil httpUtil = new HttpUtil();
 		try {
 			String response = httpUtil.sendGet(url);
 			
-			dto = buildObjFromJsonCustomization(response, TelegramGetUpdateMessageFeedbackDTO.class);
+			dto = buildObjFromJsonCustomization(response, TelegramGetUpdatesDTO.class);
 			
 		} catch (Exception e) {
-			log.error("Get message update from telegram error: " + e.getMessage());
+			log.error("Get message update from telegram bot: " + botIDKey + ", error: " + e.getMessage());
+		}
+		return dto;
+	}
+	
+	@Override
+	public TelegramGetUpdatesDTO getUpdateMessage(String botIDKey) {
+		return getUpdateMessage(botIDKey, 0L);
+	}
+	
+	@Override
+	public TelegramGetUpdatesDTO setWebhook(String botIDKey,String webhookUrl, String secretToken) {
+		TelegramGetUpdatesDTO dto = null;
+		
+		if(StringUtils.isBlank(botIDKey)) {
+			return dto;
+		}
+		
+		String urlModel = "https://api.telegram.org/bot%s/setWebhook?url=%s&secret_token=%s";
+		String botID = botIDReady(botIDKey);
+		String url = String.format(urlModel, botID, webhookUrl, secretToken);
+
+		HttpUtil httpUtil = new HttpUtil();
+		try {
+			String response = httpUtil.sendGet(url);
+			
+			dto = buildObjFromJsonCustomization(response, TelegramGetUpdatesDTO.class);
+			
+		} catch (Exception e) {
+			log.error("Telegram bot: " + botIDKey + ", set web hook error: " + e.getMessage());
 		}
 		return dto;
 	}

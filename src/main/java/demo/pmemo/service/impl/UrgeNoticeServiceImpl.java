@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,69 +12,96 @@ import org.springframework.stereotype.Service;
 import demo.article.article.service.impl.ArticleCommonService;
 import demo.pmemo.pojo.constant.PMemoConstant;
 import demo.pmemo.service.UrgeNoticeService;
-import demo.tool.telegram.pojo.dto.TelegramGetUpdateMessageFeedbackDTO;
-import demo.tool.telegram.pojo.dto.TelegramGetUpdateMessageResultDTO;
-import demo.tool.telegram.pojo.dto.telegramDTO.TelegramMessageDTO;
+import demo.tool.telegram.pojo.dto.TelegramGetUpdatesDTO;
+import demo.tool.telegram.pojo.dto.UpdateMessageDTO;
+import demo.tool.telegram.pojo.dto.UpdateMessageResponseStoreDTO;
 import demo.tool.telegram.service.TelegramService;
 import telegram.pojo.constant.TelegramBotType;
+import telegram.pojo.constant.TelegramStaticChatID;
+import toolPack.httpHandel.HttpUtil;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeNoticeService {
-	
+
 	/*
 	 * TODO
-	 * 1. Need white name list
-	 * 2. Need file max length
+	 * 
+	 * Update set web hook instead
+	 * 
+	 * 1. Need white name list 2. Need file max length
 	 */
 
 	@Autowired
 	private TelegramService telegramService;
-	
-	public TelegramGetUpdateMessageFeedbackDTO getMessageUpdate() {
-		TelegramGetUpdateMessageFeedbackDTO result = telegramService.getUpdateMessage(TelegramBotType.URGE_NOTICE.getName());
-		return result;
+
+	@Override
+	public void receiveUpdateMsgWebhook(String unknowContent) {
+		/*
+		 * TODO For telegram HTTP POST, receive new msg from bot
+		 */
+		telegramService.sendMessage(TelegramBotType.BOT_2, unknowContent, TelegramStaticChatID.MY_ID);
 	}
 	
-	private List<TelegramGetUpdateMessageResultDTO> filterMsgUpdate(TelegramGetUpdateMessageFeedbackDTO dto) {
-		List<TelegramGetUpdateMessageResultDTO> newMsgList = new ArrayList<>();
-		
-		String lastUpdateMsgIdStr = redisOriginalConnectService.getValByName(PMemoConstant.LAST_UPDATE_TELEGRAM_BOT_URGE_NOTICE_MSG_ID_KEY);
+	@Override
+	public void setUpdateMsgWebhook(String secretToken) {
+		String hostname = hostnameService.findMainHostname();
+		String webhookUrl = "https://" + hostname + "/receiveUrgeNoticeMsg";
+		telegramService.setWebhook(TelegramBotType.URGE_NOTICE.getName(), webhookUrl, secretToken);
+	}
+
+	public TelegramGetUpdatesDTO getMessageUpdate() {
+		TelegramGetUpdatesDTO result = telegramService.getUpdateMessage(TelegramBotType.URGE_NOTICE.getName(),
+				getLastUpdateMsgId());
+		return result;
+	}
+
+	private Long getLastUpdateMsgId() {
 		Long lastUpdateMsgId = 0L;
+		String lastUpdateMsgIdStr = redisOriginalConnectService
+				.getValByName(PMemoConstant.LAST_UPDATE_TELEGRAM_BOT_URGE_NOTICE_MSG_ID_KEY);
 		try {
 			lastUpdateMsgId = Long.parseLong(lastUpdateMsgIdStr);
 		} catch (Exception e) {
 		}
-		
-		if(!dto.getOk() || dto.getResult() == null || dto.getResult().isEmpty()) {
+		return lastUpdateMsgId;
+	}
+
+	private List<UpdateMessageDTO> filterMsgUpdate(TelegramGetUpdatesDTO dto) {
+		List<UpdateMessageDTO> newMsgList = new ArrayList<>();
+
+		Long lastUpdateMsgId = getLastUpdateMsgId();
+
+		if (!dto.getOk() || dto.getResult() == null || dto.getResult().isEmpty()) {
 			return newMsgList;
 		}
-		
-		for(TelegramGetUpdateMessageResultDTO msg : dto.getResult()) {
-			if(msg.getUpdate_id() <= lastUpdateMsgId) {
+
+		for (UpdateMessageDTO msg : dto.getResult()) {
+			if (msg.getUpdate_id() <= lastUpdateMsgId) {
 //				TODO need white name list
 				continue;
 			}
 			lastUpdateMsgId = msg.getUpdate_id();
 			newMsgList.add(msg);
 		}
-		
-		redisOriginalConnectService.setValByName(PMemoConstant.LAST_UPDATE_TELEGRAM_BOT_URGE_NOTICE_MSG_ID_KEY, lastUpdateMsgId.toString());
-		
+
+		redisOriginalConnectService.setValByName(PMemoConstant.LAST_UPDATE_TELEGRAM_BOT_URGE_NOTICE_MSG_ID_KEY,
+				lastUpdateMsgId.toString());
+
 		return newMsgList;
 	}
 
-	private void msgStore(List<TelegramGetUpdateMessageResultDTO> msgList) {
+	private void msgHandle(List<UpdateMessageDTO> msgList) {
 		if (msgList == null || msgList.isEmpty()) {
 			return;
 		}
-		
-		Map<Long, List<TelegramGetUpdateMessageResultDTO>> userMsgMap = new HashMap<>();
-		List<TelegramGetUpdateMessageResultDTO> tmpMsgList = null;
+
+		Map<Long, List<UpdateMessageDTO>> userMsgMap = new HashMap<>();
+		List<UpdateMessageDTO> tmpMsgList = null;
 		Long tmpTelegramUserId = null;
-		for(TelegramGetUpdateMessageResultDTO udpateMsg : msgList) {
+		for (UpdateMessageDTO udpateMsg : msgList) {
 			tmpTelegramUserId = udpateMsg.getMessage().getFrom().getId();
-			if(!userMsgMap.containsKey(tmpTelegramUserId)) {
+			if (!userMsgMap.containsKey(tmpTelegramUserId)) {
 				tmpMsgList = new ArrayList<>();
 			} else {
 				tmpMsgList = userMsgMap.get(tmpTelegramUserId);
@@ -81,49 +109,61 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 			tmpMsgList.add(udpateMsg);
 			userMsgMap.put(tmpTelegramUserId, tmpMsgList);
 		}
-		
-		
+
+		for (Entry<Long, List<UpdateMessageDTO>> entry : userMsgMap.entrySet()) {
+			handleUrgeNoticeUpdate(entry.getKey(), entry.getValue());
+		}
 	}
-	
-	private void handleUrgeNoticeUpdate(Long telegramUserId, List<TelegramMessageDTO> newMsgList) {
+
+	private void handleUrgeNoticeUpdate(Long telegramUserId, List<UpdateMessageDTO> newMsgList) {
 		/*
 		 * TODO
 		 */
-		
-		
+
 	}
-	
+
 //	TODO delete notice
-	
+
 //	TODO clear notice
-	
+
 //	TODO add notice 
-	
-//	TODO show notice 
-	
-//	TODO read file
-	private List<TelegramMessageDTO> readUrgeNoticeFile(Long telegramUserId) {
-//		TODO
-		
+	private UpdateMessageResponseStoreDTO addNotice(UpdateMessageDTO newMsg, UpdateMessageResponseStoreDTO oldDTO) {
+		for (int i = 0; i < oldDTO.getResult().size(); i++) {
+			if (oldDTO.getResult().get(i).getUpdate_id() <= newMsg.getUpdate_id()) {
+				continue;
+			} else {
+				oldDTO.getResult().add(newMsg);
+			}
+		}
+
+		return oldDTO;
 	}
-	
+
+//	TODO show notice 
+
+//	TODO read file
+	private UpdateMessageResponseStoreDTO readUrgeNoticeFile(Long telegramUserId) {
+		String content = getUrgeNoticeFilePath(telegramUserId);
+		UpdateMessageResponseStoreDTO dto = buildObjFromJsonCustomization(content, UpdateMessageResponseStoreDTO.class);
+		return dto;
+	}
+
 	private String getUrgeNoticeFilePath(Long telegramUserId) {
-		if(telegramUserId == null) {
+		if (telegramUserId == null) {
 			return null;
 		}
 		return getUrgeNoticeStorePrefixPath() + "/" + telegramUserId + ".txt";
 	}
-	
-	private void rewiriteUrgeNotice(Long telegramUserId, String content) {
+
+	private void rewriteUrgeNotice(Long telegramUserId, String content) {
 		String pathStr = getUrgeNoticeFilePath(telegramUserId);
-		if(pathStr == null) {
+		if (pathStr == null) {
 			return;
 		}
-		
+
 		FileUtilCustom io = new FileUtilCustom();
 		io.byteToFile(content.getBytes(), pathStr);
 	}
-	
 
 	private String getUrgeNoticeStorePrefixPath() {
 		if (isWindows()) {

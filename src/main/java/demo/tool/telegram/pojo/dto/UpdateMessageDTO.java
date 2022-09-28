@@ -2,7 +2,7 @@ package demo.tool.telegram.pojo.dto;
 
 import demo.tool.telegram.pojo.dto.telegramDTO.TelegramMessageDTO;
 
-public class TelegramGetUpdateMessageResultDTO {
+public class UpdateMessageDTO {
 
 	private Long update_id;
 	private TelegramMessageDTO message;

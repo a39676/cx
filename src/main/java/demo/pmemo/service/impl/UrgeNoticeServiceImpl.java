@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import demo.article.article.service.impl.ArticleCommonService;
 import demo.pmemo.pojo.constant.PMemoConstant;
+import demo.pmemo.pojo.constant.UrgeNoticeUrl;
 import demo.pmemo.service.UrgeNoticeService;
 import demo.tool.telegram.pojo.dto.TelegramGetUpdatesDTO;
 import demo.tool.telegram.pojo.dto.UpdateMessageDTO;
@@ -18,7 +19,6 @@ import demo.tool.telegram.pojo.dto.UpdateMessageResponseStoreDTO;
 import demo.tool.telegram.service.TelegramService;
 import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
-import toolPack.httpHandel.HttpUtil;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -42,11 +42,11 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 		 */
 		telegramService.sendMessage(TelegramBotType.BOT_2, unknowContent, TelegramStaticChatID.MY_ID);
 	}
-	
+
 	@Override
 	public void setUpdateMsgWebhook(String secretToken) {
 		String hostname = hostnameService.findMainHostname();
-		String webhookUrl = "https://" + hostname + "/receiveUrgeNoticeMsg";
+		String webhookUrl = "https://" + hostname + UrgeNoticeUrl.ROOT + "/" + UrgeNoticeUrl.RECEIVE_URGE_NOTICE_MSG;
 		telegramService.setWebhook(TelegramBotType.URGE_NOTICE.getName(), webhookUrl, secretToken);
 	}
 

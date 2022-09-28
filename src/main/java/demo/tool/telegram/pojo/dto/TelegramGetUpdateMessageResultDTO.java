@@ -1,13 +1,11 @@
 package demo.tool.telegram.pojo.dto;
 
-import java.util.List;
-
 import demo.tool.telegram.pojo.dto.telegramDTO.TelegramMessageDTO;
 
 public class TelegramGetUpdateMessageResultDTO {
 
 	private Long update_id;
-	private List<TelegramMessageDTO> message;
+	private TelegramMessageDTO message;
 
 	public Long getUpdate_id() {
 		return update_id;
@@ -17,17 +15,17 @@ public class TelegramGetUpdateMessageResultDTO {
 		this.update_id = update_id;
 	}
 
-	public List<TelegramMessageDTO> getMessage() {
+	public TelegramMessageDTO getMessage() {
 		return message;
 	}
 
-	public void setMessage(List<TelegramMessageDTO> message) {
+	public void setMessage(TelegramMessageDTO message) {
 		this.message = message;
 	}
 
 	@Override
 	public String toString() {
-		return "TelegramGetUpdateMessageDTO [update_id=" + update_id + ", message=" + message + "]";
+		return "TelegramGetUpdateMessageResultDTO [update_id=" + update_id + ", message=" + message + "]";
 	}
 
 }

@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import demo.common.controller.CommonController;
+import demo.common.service.CommonService;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.dto.TestDTO;
 import demo.test.service.TestService2;
 
 @Controller
 @RequestMapping(value = { TestUrl.root2 })
-public class TestController2 extends CommonController {
+public class TestController2 extends CommonService {
 
 	@Autowired
 	private TestService2 testService2;

@@ -27,9 +27,6 @@ public class PMemoServiceImpl extends ArticleCommonService implements PMemoServi
 	
 	@Override
 	public CommonResult setMemo(SetPMemoDTO dto) {
-		/*
-		 * 插入之前, 删除其他memo?
-		 */
 		CommonResult r = new CommonResult();
 		
 		if(StringUtils.isAnyBlank(dto.getContent(), dto.getRedisKeyValue())) {

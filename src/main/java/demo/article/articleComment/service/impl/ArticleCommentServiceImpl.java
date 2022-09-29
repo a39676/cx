@@ -46,7 +46,7 @@ import demo.tool.calendarNotice.mq.producer.TelegramCalendarNoticeMessageAckProd
 import demo.tool.other.service.ValidRegexToolService;
 import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
-import telegram.pojo.dto.TelegramMessageDTO;
+import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -189,7 +189,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		}
 		articleCommentMapper.insertSelective(newComment);
 		
-		TelegramMessageDTO dto = new TelegramMessageDTO();
+		TelegramBotNoticeMessageDTO dto = new TelegramBotNoticeMessageDTO();
 		dto.setId(TelegramStaticChatID.MY_ID);
 		dto.setBotName(TelegramBotType.BOT_1.getName());
 		dto.setMsg("Recive article comment: " + inputParam.getContent());

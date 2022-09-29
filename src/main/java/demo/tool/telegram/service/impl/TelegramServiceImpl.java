@@ -15,6 +15,7 @@ import demo.tool.service.impl.ToolCommonService;
 import demo.tool.telegram.mapper.TelegramChatIdMapper;
 import demo.tool.telegram.mapper.TelegramConstantMapper;
 import demo.tool.telegram.pojo.bo.TelegramConstantBO;
+import demo.tool.telegram.pojo.dto.TelegramGetUpdatesDTO;
 import demo.tool.telegram.pojo.po.TelegramChatId;
 import demo.tool.telegram.pojo.po.TelegramChatIdExample;
 import demo.tool.telegram.pojo.po.TelegramConstant;
@@ -70,11 +71,30 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 
 	@Override
 	public CommonResult sendMessage(String msg, Long id) {
-		return sendMessage(null, msg, id);
+		return sendMessageByChatRecordId(null, msg, id);
 	}
 
 	@Override
-	public CommonResult sendMessage(TelegramBotType botType, String msg, Long id) {
+	public CommonResult sendMessageByChatRecordId(TelegramBotType botType, String msg, Long id) {
+		CommonResult r = new CommonResult();
+		if (id == null) {
+			r.failWithMessage("param error");
+			return r;
+		}
+		
+		TelegramChatId po = chatIdMapper.selectByPrimaryKey(id);
+		if (po == null) {
+			r.failWithMessage("param error");
+			return r;
+		}
+		
+		r = sendMessageByChatRecordId(botType, msg, Long.parseLong(po.getChatId()));
+
+		return r;
+	}
+	
+	@Override
+	public CommonResult sendMessageByTelegramChatId(TelegramBotType botType, String msg, Long telegramChatId) {
 		CommonResult r = new CommonResult();
 
 		if (systemConstantService.isDev()) {
@@ -83,7 +103,7 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 			return r;
 		}
 
-		if (id == null) {
+		if (telegramChatId == null) {
 			r.failWithMessage("param error");
 			return r;
 		}
@@ -103,12 +123,6 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 			return r;
 		}
 
-		TelegramChatId po = chatIdMapper.selectByPrimaryKey(id);
-		if (po == null) {
-			r.failWithMessage("param error");
-			return r;
-		}
-
 		if (botType == null) {
 			botType = TelegramBotType.BOT_1;
 		}
@@ -119,7 +133,7 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 		}
 
 		String urlModel = "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s";
-		String url = String.format(urlModel, botID, po.getChatId(), msg);
+		String url = String.format(urlModel, botID, telegramChatId, msg);
 
 		HttpUtil httpUtil = new HttpUtil();
 		try {
@@ -171,7 +185,67 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 		String msg = null;
 		for (TelegramBotType botType : TelegramBotType.values()) {
 			msg = "Testing msg, from: " + botType.getName();
-			sendMessage(botType, msg, TelegramStaticChatID.MY_ID);
+			sendMessageByChatRecordId(botType, msg, TelegramStaticChatID.MY_ID);
 		}
+	}
+
+	@Override
+	public TelegramGetUpdatesDTO getUpdateMessage(String botIDKey, Long lastUpdateMsgId) {
+		TelegramGetUpdatesDTO dto = null;
+
+		if (StringUtils.isBlank(botIDKey)) {
+			return dto;
+		}
+
+		String urlModel = "https://api.telegram.org/bot%s/getUpdates?offset=%d";
+		String botID = botIDReady(botIDKey);
+		String url = String.format(urlModel, botID, lastUpdateMsgId);
+
+		HttpUtil httpUtil = new HttpUtil();
+		try {
+			String response = httpUtil.sendGet(url);
+
+			dto = buildObjFromJsonCustomization(response, TelegramGetUpdatesDTO.class);
+
+		} catch (Exception e) {
+			log.error("Get message update from telegram bot: " + botIDKey + ", error: " + e.getMessage());
+		}
+		return dto;
+	}
+
+	@Override
+	public TelegramGetUpdatesDTO getUpdateMessage(String botIDKey) {
+		return getUpdateMessage(botIDKey, 0L);
+	}
+
+	@Override
+	public void setWebhook(String botIDKey, String webhookUrl, String secretToken) {
+
+		if (StringUtils.isBlank(botIDKey)) {
+			return;
+		}
+
+		String urlModel = "https://api.telegram.org/bot%s/setWebhook?url=%s&secret_token=%s";
+		String botID = botIDReady(botIDKey);
+		String url = String.format(urlModel, botID, webhookUrl, secretToken);
+
+		HttpUtil httpUtil = new HttpUtil();
+		try {
+			String response = httpUtil.sendGet(url);
+
+			log.error("set web hook response: " + response);
+
+		} catch (Exception e) {
+			log.error("Telegram bot: " + botIDKey + ", set web hook error: " + e.getMessage());
+		}
+		return;
+	}
+
+	@Override
+	public boolean hasThisChatId(Long chatId) {
+		TelegramChatIdExample example = new TelegramChatIdExample();
+		example.createCriteria().andIsdeleteEqualTo(false).andChatIdEqualTo(chatId.toString());
+		List<TelegramChatId> poList = chatIdMapper.selectByExample(example);
+		return poList != null && !poList.isEmpty();
 	}
 }

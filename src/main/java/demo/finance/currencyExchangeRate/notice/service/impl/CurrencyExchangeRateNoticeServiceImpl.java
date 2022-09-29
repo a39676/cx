@@ -32,7 +32,7 @@ import demo.finance.currencyExchangeRate.notice.service.CurrencyExchangeRateNoti
 import demo.tool.telegram.pojo.po.TelegramChatId;
 import demo.tool.telegram.pojo.vo.TelegramChatIdVO;
 import telegram.pojo.constant.TelegramBotType;
-import telegram.pojo.dto.TelegramMessageDTO;
+import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 
 @Service
 public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
@@ -306,7 +306,7 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 
 		if (StringUtils.isNotBlank(content)) {
 			if (!"dev".equals(systemOptionService.getEnvName())) {
-				TelegramMessageDTO dto = new TelegramMessageDTO();
+				TelegramBotNoticeMessageDTO dto = new TelegramBotNoticeMessageDTO();
 				dto.setMsg(content);
 				dto.setId(notice.getTelegramChatId());
 				dto.setBotName(notice.getTelegramBotName());

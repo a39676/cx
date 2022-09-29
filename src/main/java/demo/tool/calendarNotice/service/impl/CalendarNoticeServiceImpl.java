@@ -36,7 +36,7 @@ import demo.tool.calendarNotice.service.CalendarNoticeService;
 import demo.tool.calendarNotice.service.CalendarNoticeStrongNoticeService;
 import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
-import telegram.pojo.dto.TelegramMessageDTO;
+import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 import toolPack.dateTimeHandle.Lunar;
 
 @Service
@@ -307,11 +307,11 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 		}
 		
 		CalendarNotice notice = null;
-		TelegramMessageDTO dto = null;
+		TelegramBotNoticeMessageDTO dto = null;
 		
 		for (CalendarPreNotice preNoticePo : preNoticeList) {
 			notice = mapper.selectByPrimaryKey(preNoticePo.getBindNoticeId());
-			dto = new TelegramMessageDTO();
+			dto = new TelegramBotNoticeMessageDTO();
 			dto.setId(TelegramStaticChatID.MY_ID);
 			dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
 			dto.setMsg("PreNotice: " + notice.getNoticeContent() + " at: " + notice.getNoticeTime() + " "
@@ -323,7 +323,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 		}
 		
 		for (CalendarNotice po : commonNoticeList) {
-			dto = new TelegramMessageDTO();
+			dto = new TelegramBotNoticeMessageDTO();
 			dto.setId(TelegramStaticChatID.MY_ID);
 			dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
 			if (po.getStrongNotice()) {
@@ -629,9 +629,9 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			return;
 		}
 
-		TelegramMessageDTO dto = null;
+		TelegramBotNoticeMessageDTO dto = null;
 		for (StrongNoticeBO bo : strongNoticeList) {
-			dto = new TelegramMessageDTO();
+			dto = new TelegramBotNoticeMessageDTO();
 			dto.setId(TelegramStaticChatID.MY_ID);
 			dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
 			dto.setMsg(bo.getNoticeContent() + " " + hostnameService.findMainHostname() + CalendarNoticeUrl.ROOT
@@ -704,7 +704,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			return;
 		}
 		
-		TelegramMessageDTO dto = new TelegramMessageDTO();
+		TelegramBotNoticeMessageDTO dto = new TelegramBotNoticeMessageDTO();
 		dto.setId(TelegramStaticChatID.MY_ID);
 		dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
 		

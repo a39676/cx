@@ -39,7 +39,7 @@ import demo.tool.telegram.pojo.vo.TelegramChatIdVO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 import telegram.pojo.constant.TelegramBotType;
-import telegram.pojo.dto.TelegramMessageDTO;
+import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 
 @Service
 public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService implements CryptoCoinCommonNoticeService {
@@ -368,7 +368,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		if (StringUtils.isNotBlank(content)) {
 			if (!"dev".equals(systemOptionService.getEnvName())) {
-				TelegramMessageDTO dto = new TelegramMessageDTO();
+				TelegramBotNoticeMessageDTO dto = new TelegramBotNoticeMessageDTO();
 				dto.setMsg(content);
 				dto.setId(noticeSetting.getTelegramChatId());
 				dto.setBotName(noticeSetting.getTelegramBotName());

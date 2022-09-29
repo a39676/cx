@@ -36,7 +36,7 @@ import finance.cryptoCoin.pojo.type.CryptoCoinDataSourceType;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
-import telegram.pojo.dto.TelegramMessageDTO;
+import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 
 @Service
 public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonService
@@ -70,7 +70,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		}
 		
 		if (!isValidData(dataList)) {
-			TelegramMessageDTO msgDTO = new TelegramMessageDTO();
+			TelegramBotNoticeMessageDTO msgDTO = new TelegramBotNoticeMessageDTO();
 			msgDTO.setId(TelegramStaticChatID.MY_ID);
 			msgDTO.setMsg(dto.getCryptoCoinTypeName() + ", get error data(all zero) from: " + dataSourceType.getName());
 			msgDTO.setBotName(TelegramBotType.BOT_2.getName());

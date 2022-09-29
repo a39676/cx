@@ -20,7 +20,7 @@ import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
-import telegram.pojo.dto.TelegramMessageDTO;
+import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 
 @Service
 public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService implements CryptoCoinPriceCacheService {
@@ -138,7 +138,7 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 		}
 
 		if (!flag) {
-			TelegramMessageDTO dto = new TelegramMessageDTO();
+			TelegramBotNoticeMessageDTO dto = new TelegramBotNoticeMessageDTO();
 			dto.setId(TelegramStaticChatID.MY_ID);
 			dto.setMsg("crypto compare socket hit error");
 			dto.setBotName(TelegramBotType.BOT_2.getName());

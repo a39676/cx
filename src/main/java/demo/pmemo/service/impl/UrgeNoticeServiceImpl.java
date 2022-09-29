@@ -47,6 +47,7 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 		 * TODO For telegram HTTP POST, receive new msg from bot
 		 */
 		String token = request.getHeader("X-Telegram-Bot-Api-Secret-Token");
+		log.error("token: " + token);
 		if(StringUtils.isBlank(token) || !managerService.getSecretToken().equals(token)) {
 			log.error("fake msg: " + unknowContent.toString());
 			return;

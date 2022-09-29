@@ -37,4 +37,11 @@ public class UrgeNoticeController extends CommonController {
 		service.receiveUpdateMsgWebhook(unknowContent.toString());
 		return "done";
 	}
+	
+	@PostMapping(value = "/test2")
+	@ResponseBody
+	public String test2(String unknowContent) {
+		log.error("Get msg: " + unknowContent);
+		return "done";
+	}
 }

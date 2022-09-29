@@ -1,5 +1,6 @@
 package demo.pmemo.service.impl;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -127,7 +128,7 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 		for (int i = 0; i < noticeList.size(); i++) {
 			if (noticeList.get(i).getOrderNumber().equals(targetNumber)) {
 				noticeList.remove(i);
-				oldDTO.setNoticeList(noticeList);
+				oldDTO.setNoticeList(sortAndRefreshNoticeNumber(noticeList));
 				return oldDTO;
 			}
 		}
@@ -137,18 +138,18 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 
 	private UpdateMessageResponseStoreDTO addNotice(TelegramUpdateMessageDTO newMsg,
 			UpdateMessageResponseStoreDTO oldDTO) {
-		for (int i = 0; i < oldDTO.getNoticeList().size(); i++) {
-			if (oldDTO.getNoticeList().get(i).getUpdate_id() <= newMsg.getUpdate_id()) {
-				continue;
-			}
-			UpdateMessageStoreDTO storeMsgDTO = new UpdateMessageStoreDTO();
-			BeanUtils.copyProperties(newMsg, storeMsgDTO);
-			List<UpdateMessageStoreDTO> noticeList = oldDTO.getNoticeList();
-			noticeList.add(storeMsgDTO);
-
-			oldDTO.setNoticeList(sortAndRefreshNoticeNumber(noticeList));
+		List<UpdateMessageStoreDTO> noticeList = null;
+		
+		if(oldDTO.getNoticeList() == null || oldDTO.getNoticeList().isEmpty()) {
+			noticeList = new ArrayList<>();
+		} else {
+			noticeList = oldDTO.getNoticeList();
 		}
-
+		
+		UpdateMessageStoreDTO storeMsgDTO = new UpdateMessageStoreDTO();
+		BeanUtils.copyProperties(newMsg, storeMsgDTO);
+		noticeList.add(storeMsgDTO);
+		oldDTO.setNoticeList(sortAndRefreshNoticeNumber(noticeList));
 		return oldDTO;
 	}
 

@@ -31,18 +31,18 @@ public class UrgeNoticeManagerServiceImpl extends ArticleCommonService implement
 	@Override
 	public void setUpdateMsgWebhook() {
 		String secretToken = generateNewSecretToken();
-		String tokenUrlEncode = URLEncoder.encode(secretToken, StandardCharsets.UTF_8);
 
 		String hostname = hostnameService.findMainHostname();
 		String webhookUrl = "https://" + hostname + UrgeNoticeUrl.ROOT + UrgeNoticeUrl.RECEIVE_URGE_NOTICE_MSG;
 		
 		String webhookUrlEncode = URLEncoder.encode(webhookUrl, StandardCharsets.UTF_8);
-		telegramService.setWebhook(TelegramBotType.URGE_NOTICE.getName(), webhookUrlEncode, tokenUrlEncode);
+		telegramService.setWebhook(TelegramBotType.URGE_NOTICE.getName(), webhookUrlEncode, secretToken);
 	}
 
 	private String generateNewSecretToken() {
 		String str = systemOptionService.encryptId(snowFlake.getNextId());
 		str = str.replaceAll("[^a-zA-Z0-9_]", "");
+		storeSecretToken(str);
 		return str;
 	}
 

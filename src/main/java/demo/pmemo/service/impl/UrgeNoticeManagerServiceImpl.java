@@ -17,14 +17,6 @@ import telegram.pojo.constant.TelegramBotType;
 @Service
 public class UrgeNoticeManagerServiceImpl extends ArticleCommonService implements UrgeNoticeManagerService {
 
-	/*
-	 * TODO
-	 * 
-	 * Update set web hook instead
-	 * 
-	 * 1. Need white name list 2. Need file max length
-	 */
-
 	@Autowired
 	private TelegramService telegramService;
 

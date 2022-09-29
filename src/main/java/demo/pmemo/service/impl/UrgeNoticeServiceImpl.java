@@ -31,6 +31,7 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 	 * TODO
 	 * 
 	 * 2. Need file max length
+	 * 3. Add UrgeNoticeManagerServiceImpl.setUpdateMsgWebhook() to url 
 	 */
 
 	@Autowired
@@ -50,17 +51,22 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 		TelegramMessageDTO message = unknowContent.getMessage();
 
 		UrgeNoticeBotCommandType commandType = findBotCommand(message);
+		log.error("Command type: " + commandType);
 		if (commandType == null) {
 			return;
 		}
+		log.error("Msg: " + message.getText());
 
 		Long chatId = message.getFrom().getId();
 		if (!telegramService.hasThisChatId(chatId)) {
 			return;
 		}
-
+		
 		if (UrgeNoticeBotCommandType.ADD.equals(commandType)) {
 			UpdateMessageResponseStoreDTO oldDTO = readUrgeNoticeFile(chatId);
+			if(oldDTO == null) {
+				oldDTO = new UpdateMessageResponseStoreDTO();
+			}
 			UpdateMessageResponseStoreDTO newDTO = addNotice(unknowContent, oldDTO);
 			JSONObject json = JSONObject.fromObject(newDTO);
 			rewriteUrgeNotice(chatId, json.toString());
@@ -71,6 +77,9 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 			try {
 				Integer number = Integer.parseInt(numberStr);
 				UpdateMessageResponseStoreDTO oldDTO = readUrgeNoticeFile(chatId);
+				if(oldDTO == null) {
+					return;
+				}
 				UpdateMessageResponseStoreDTO newDTO = deleteNotice(number, oldDTO);
 				JSONObject json = JSONObject.fromObject(newDTO);
 				rewriteUrgeNotice(chatId, json.toString());
@@ -79,6 +88,9 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 			
 		} else if (UrgeNoticeBotCommandType.SHOW.equals(commandType)) {
 			UpdateMessageResponseStoreDTO oldDTO = readUrgeNoticeFile(chatId);
+			if(oldDTO == null) {
+				telegramService.sendMessage(TelegramBotType.URGE_NOTICE, "Empty list", chatId);
+			}
 			StringBuffer sb = new StringBuffer();
 			for(UpdateMessageStoreDTO notice : oldDTO.getNoticeList()) {
 				sb.append("" + notice.getOrderNumber() + ". " + notice.getMessage().getText() + "\n");

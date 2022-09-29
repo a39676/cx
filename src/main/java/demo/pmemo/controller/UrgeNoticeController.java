@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import demo.common.controller.CommonController;
 import demo.pmemo.pojo.constant.UrgeNoticeUrl;
 import demo.pmemo.service.UrgeNoticeService;
+import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping(value = UrgeNoticeUrl.ROOT)
@@ -31,8 +32,9 @@ public class UrgeNoticeController extends CommonController {
 	
 	@PostMapping(value = UrgeNoticeUrl.RECEIVE_URGE_NOTICE_MSG)
 	@ResponseBody
-	public String receiveUpdateMsgWebhook(@RequestBody String unknowContent) {
-		service.receiveUpdateMsgWebhook(unknowContent);
+	public String receiveUpdateMsgWebhook(@RequestBody JSONObject unknowContent) {
+		log.error("Get msg: " + unknowContent);
+		service.receiveUpdateMsgWebhook(unknowContent.toString());
 		return "done";
 	}
 }

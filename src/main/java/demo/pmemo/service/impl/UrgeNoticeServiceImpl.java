@@ -6,12 +6,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.article.article.service.impl.ArticleCommonService;
-import demo.pmemo.pojo.constant.PMemoConstant;
-import demo.pmemo.pojo.constant.UrgeNoticeUrl;
+import demo.pmemo.pojo.constant.UrgeNoticeConstant;
+import demo.pmemo.service.UrgeNoticeManagerService;
 import demo.pmemo.service.UrgeNoticeService;
 import demo.tool.telegram.pojo.dto.TelegramGetUpdatesDTO;
 import demo.tool.telegram.pojo.dto.TelegramUpdateMessageDTO;
@@ -34,21 +37,21 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 
 	@Autowired
 	private TelegramService telegramService;
+	
+	@Autowired
+	private UrgeNoticeManagerService managerService;
 
 	@Override
-	public void receiveUpdateMsgWebhook(String unknowContent) {
+	public void receiveUpdateMsgWebhook(HttpServletRequest request, TelegramUpdateMessageDTO unknowContent) {
 		/*
 		 * TODO For telegram HTTP POST, receive new msg from bot
 		 */
-		telegramService.sendMessage(TelegramBotType.BOT_2, unknowContent, TelegramStaticChatID.MY_ID);
-	}
-
-	@Override
-	public void setUpdateMsgWebhook(String secretToken) {
-		String hostname = hostnameService.findMainHostname();
-		String webhookUrl = "https://" + hostname + UrgeNoticeUrl.ROOT + UrgeNoticeUrl.RECEIVE_URGE_NOTICE_MSG + "?secret_token=" + secretToken;
-		log.error("Set web hook: " + webhookUrl);
-		telegramService.setWebhook(TelegramBotType.URGE_NOTICE.getName(), webhookUrl, secretToken);
+		String token = request.getHeader("X-Telegram-Bot-Api-Secret-Token");
+		if(StringUtils.isBlank(token) || !managerService.getSecretToken().equals(token)) {
+			log.error("fake msg: " + unknowContent.toString());
+			return;
+		}
+		telegramService.sendMessage(TelegramBotType.BOT_2, unknowContent.getMessage().getText(), TelegramStaticChatID.MY_ID);
 	}
 
 	@Override
@@ -61,7 +64,7 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 	private Long getLastUpdateMsgId() {
 		Long lastUpdateMsgId = 0L;
 		String lastUpdateMsgIdStr = redisOriginalConnectService
-				.getValByName(PMemoConstant.LAST_UPDATE_TELEGRAM_BOT_URGE_NOTICE_MSG_ID_KEY);
+				.getValByName(UrgeNoticeConstant.LAST_UPDATE_TELEGRAM_BOT_URGE_NOTICE_MSG_ID_KEY);
 		try {
 			lastUpdateMsgId = Long.parseLong(lastUpdateMsgIdStr);
 		} catch (Exception e) {
@@ -87,7 +90,7 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 			newMsgList.add(msg);
 		}
 
-		redisOriginalConnectService.setValByName(PMemoConstant.LAST_UPDATE_TELEGRAM_BOT_URGE_NOTICE_MSG_ID_KEY,
+		redisOriginalConnectService.setValByName(UrgeNoticeConstant.LAST_UPDATE_TELEGRAM_BOT_URGE_NOTICE_MSG_ID_KEY,
 				lastUpdateMsgId.toString());
 
 		return newMsgList;
@@ -169,9 +172,9 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 
 	private String getUrgeNoticeStorePrefixPath() {
 		if (isWindows()) {
-			return "d:" + PMemoConstant.URGE_NOTE_SAVING_FOLDER;
+			return "d:" + UrgeNoticeConstant.URGE_NOTE_SAVING_FOLDER;
 		} else {
-			return PMemoConstant.URGE_NOTE_SAVING_FOLDER;
+			return UrgeNoticeConstant.URGE_NOTE_SAVING_FOLDER;
 		}
 	}
 }

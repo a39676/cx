@@ -30,4 +30,6 @@ public interface TelegramService {
 
 	void setWebhook(String botIDKey, String webhookUrl, String secretToken);
 
+	boolean hasThisChatId(Long chatId);
+
 }

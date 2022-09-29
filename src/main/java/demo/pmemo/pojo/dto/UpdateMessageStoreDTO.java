@@ -1,6 +1,8 @@
-package demo.tool.telegram.pojo.dto;
+package demo.pmemo.pojo.dto;
 
-public class UpdateMessageStoreDTO extends TelegramUpdateMessageDTO {
+import demo.tool.telegram.pojo.dto.TelegramUpdateMessageDTO;
+
+public class UpdateMessageStoreDTO extends TelegramUpdateMessageDTO implements Comparable<UpdateMessageStoreDTO>{
 
 	private Integer orderNumber;
 
@@ -17,6 +19,16 @@ public class UpdateMessageStoreDTO extends TelegramUpdateMessageDTO {
 		return "UpdateMessageStoreDTO [orderNumber=" + orderNumber + ", getUpdate_id()=" + getUpdate_id()
 				+ ", getMessage()=" + getMessage() + ", toString()=" + super.toString() + ", getClass()=" + getClass()
 				+ ", hashCode()=" + hashCode() + "]";
+	}
+
+	@Override
+	public int compareTo(UpdateMessageStoreDTO o) {
+		if(o.getUpdate_id() < this.getUpdate_id()) {
+			return -1;
+		} else if (o.getOrderNumber() > this.getUpdate_id()) {
+			return 1;
+		}
+		return 0;
 	}
 
 }

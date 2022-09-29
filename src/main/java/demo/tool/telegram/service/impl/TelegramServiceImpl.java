@@ -179,11 +179,11 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 	@Override
 	public TelegramGetUpdatesDTO getUpdateMessage(String botIDKey, Long lastUpdateMsgId) {
 		TelegramGetUpdatesDTO dto = null;
-		
-		if(StringUtils.isBlank(botIDKey)) {
+
+		if (StringUtils.isBlank(botIDKey)) {
 			return dto;
 		}
-		
+
 		String urlModel = "https://api.telegram.org/bot%s/getUpdates?offset=%d";
 		String botID = botIDReady(botIDKey);
 		String url = String.format(urlModel, botID, lastUpdateMsgId);
@@ -191,27 +191,27 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 		HttpUtil httpUtil = new HttpUtil();
 		try {
 			String response = httpUtil.sendGet(url);
-			
+
 			dto = buildObjFromJsonCustomization(response, TelegramGetUpdatesDTO.class);
-			
+
 		} catch (Exception e) {
 			log.error("Get message update from telegram bot: " + botIDKey + ", error: " + e.getMessage());
 		}
 		return dto;
 	}
-	
+
 	@Override
 	public TelegramGetUpdatesDTO getUpdateMessage(String botIDKey) {
 		return getUpdateMessage(botIDKey, 0L);
 	}
-	
+
 	@Override
-	public void setWebhook(String botIDKey,String webhookUrl, String secretToken) {
-		
-		if(StringUtils.isBlank(botIDKey)) {
-			return ;
+	public void setWebhook(String botIDKey, String webhookUrl, String secretToken) {
+
+		if (StringUtils.isBlank(botIDKey)) {
+			return;
 		}
-		
+
 		String urlModel = "https://api.telegram.org/bot%s/setWebhook?url=%s&secret_token=%s";
 		String botID = botIDReady(botIDKey);
 		String url = String.format(urlModel, botID, webhookUrl, secretToken);
@@ -219,12 +219,20 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 		HttpUtil httpUtil = new HttpUtil();
 		try {
 			String response = httpUtil.sendGet(url);
-			
+
 			log.error("set web hook response: " + response);
-			
+
 		} catch (Exception e) {
 			log.error("Telegram bot: " + botIDKey + ", set web hook error: " + e.getMessage());
 		}
 		return;
+	}
+
+	@Override
+	public boolean hasThisChatId(Long chatId) {
+		TelegramChatIdExample example = new TelegramChatIdExample();
+		example.createCriteria().andIsdeleteEqualTo(false).andChatIdEqualTo(chatId.toString());
+		List<TelegramChatId> poList = chatIdMapper.selectByExample(example);
+		return poList != null && !poList.isEmpty();
 	}
 }

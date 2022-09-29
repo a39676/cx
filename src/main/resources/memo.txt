@@ -1,3 +1,6 @@
+need fix 
+	PMemoConstant.P_NOTE_SAVING_FOLDER -----> under cx
+
 article
 	凭密码访问
 

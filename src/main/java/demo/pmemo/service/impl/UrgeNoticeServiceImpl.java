@@ -1,5 +1,7 @@
 package demo.pmemo.service.impl;
 
+import java.io.File;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,6 +13,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import demo.article.article.service.impl.ArticleCommonService;
 import demo.pmemo.pojo.constant.UrgeNoticeConstant;
 import demo.pmemo.pojo.dto.UpdateMessageResponseStoreDTO;
@@ -21,7 +26,6 @@ import demo.pmemo.service.UrgeNoticeService;
 import demo.tool.telegram.pojo.dto.TelegramUpdateMessageDTO;
 import demo.tool.telegram.pojo.dto.telegramDTO.TelegramMessageDTO;
 import demo.tool.telegram.service.TelegramService;
-import net.sf.json.JSONObject;
 import telegram.pojo.constant.TelegramBotType;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -42,21 +46,21 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 	private UrgeNoticeManagerService managerService;
 
 	@Override
-	public void receiveUpdateMsgWebhook(HttpServletRequest request, TelegramUpdateMessageDTO unknowContent) {
-		String inputToken = request.getHeader("X-Telegram-Bot-Api-Secret-Token");
-		if (StringUtils.isBlank(inputToken) || !managerService.getSecretToken().equals(inputToken)) {
-			log.error("fake msg: " + unknowContent.toString());
-			return;
+	public void receiveUpdateMsgWebhook(HttpServletRequest request, TelegramUpdateMessageDTO receiveUpdateMessage) {
+		if(!systemOptionService.isDev()) {
+			String inputToken = request.getHeader("X-Telegram-Bot-Api-Secret-Token");
+			if (StringUtils.isBlank(inputToken) || !managerService.getSecretToken().equals(inputToken)) {
+				log.error("fake msg: " + receiveUpdateMessage.toString());
+				return;
+			}
 		}
 
-		TelegramMessageDTO message = unknowContent.getMessage();
+		TelegramMessageDTO message = receiveUpdateMessage.getMessage();
 
 		UrgeNoticeBotCommandType commandType = findBotCommand(message);
-		log.error("Command type: " + commandType);
 		if (commandType == null) {
 			return;
 		}
-		log.error("Msg: " + message.getText());
 
 		Long chatId = message.getFrom().getId();
 		if (!telegramService.hasThisChatId(chatId)) {
@@ -68,40 +72,21 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 			if(oldDTO == null) {
 				oldDTO = new UpdateMessageResponseStoreDTO();
 			}
-			UpdateMessageResponseStoreDTO newDTO = addNotice(unknowContent, oldDTO);
-			JSONObject json = JSONObject.fromObject(newDTO);
-			rewriteUrgeNotice(chatId, json.toString());
+			UpdateMessageResponseStoreDTO newDTO = addNotice(receiveUpdateMessage, oldDTO);
+			rewriteUrgeNotice(chatId, newDTO);
+			showNotice(chatId);
 
 		} else if (UrgeNoticeBotCommandType.DELETE.equals(commandType)) {
-			String text = message.getText();
-			String numberStr = text.replaceFirst(UrgeNoticeBotCommandType.DELETE.getName() + " ", "");
-			try {
-				Integer number = Integer.parseInt(numberStr);
-				UpdateMessageResponseStoreDTO oldDTO = readUrgeNoticeFile(chatId);
-				if(oldDTO == null) {
-					return;
-				}
-				UpdateMessageResponseStoreDTO newDTO = deleteNotice(number, oldDTO);
-				JSONObject json = JSONObject.fromObject(newDTO);
-				rewriteUrgeNotice(chatId, json.toString());
-			} catch (Exception e) {
-			}
+			deleteNotice(receiveUpdateMessage);
+			showNotice(chatId);
 			
 		} else if (UrgeNoticeBotCommandType.SHOW.equals(commandType)) {
-			UpdateMessageResponseStoreDTO oldDTO = readUrgeNoticeFile(chatId);
-			if(oldDTO == null) {
-				telegramService.sendMessage(TelegramBotType.URGE_NOTICE, "Empty list", chatId);
-			}
-			StringBuffer sb = new StringBuffer();
-			for(UpdateMessageStoreDTO notice : oldDTO.getNoticeList()) {
-				sb.append("" + notice.getOrderNumber() + ". " + notice.getMessage().getText() + "\n");
-			}
-			telegramService.sendMessage(TelegramBotType.URGE_NOTICE, sb.toString(), chatId);
+			showNotice(chatId);
 		
 		} else if (UrgeNoticeBotCommandType.CLEAR.equals(commandType)) {
 			UpdateMessageResponseStoreDTO newDTO = new UpdateMessageResponseStoreDTO();
-			JSONObject json = JSONObject.fromObject(newDTO);
-			rewriteUrgeNotice(chatId, json.toString());
+			rewriteUrgeNotice(chatId, newDTO);
+			showNotice(chatId);
 		}
 	}
 
@@ -123,7 +108,33 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 		return null;
 	}
 
-	private UpdateMessageResponseStoreDTO deleteNotice(Integer targetNumber, UpdateMessageResponseStoreDTO oldDTO) {
+	private void deleteNotice(TelegramUpdateMessageDTO receiveUpdateMessage) {
+		TelegramMessageDTO message = receiveUpdateMessage.getMessage();
+		Long chatId = message.getFrom().getId();
+		
+		String text = message.getText();
+		String numberStr = text.replaceFirst(UrgeNoticeBotCommandType.DELETE.getName() + " ", "");
+		Integer targetNumber = null;
+		try {
+			targetNumber = Integer.parseInt(numberStr);
+		} catch (Exception e) {
+			return;
+		}
+		
+		UpdateMessageResponseStoreDTO oldDTO = readUrgeNoticeFile(chatId);
+		if(oldDTO == null) {
+			return;
+		}
+		
+		if(targetNumber > oldDTO.getNoticeList().size()) {
+			return;
+		}
+		
+		UpdateMessageResponseStoreDTO newDTO = deleteNoticeByNumber(targetNumber, oldDTO);
+		rewriteUrgeNotice(chatId, newDTO);
+	}
+	
+	private UpdateMessageResponseStoreDTO deleteNoticeByNumber(Integer targetNumber, UpdateMessageResponseStoreDTO oldDTO) {
 		List<UpdateMessageStoreDTO> noticeList = oldDTO.getNoticeList();
 		for (int i = 0; i < noticeList.size(); i++) {
 			if (noticeList.get(i).getOrderNumber().equals(targetNumber)) {
@@ -146,24 +157,56 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 			noticeList = oldDTO.getNoticeList();
 		}
 		
+		
+		String text = newMsg.getMessage().getText();
+		String content = text.replaceFirst(UrgeNoticeBotCommandType.ADD.getName() + " ", "");
+		
 		UpdateMessageStoreDTO storeMsgDTO = new UpdateMessageStoreDTO();
 		BeanUtils.copyProperties(newMsg, storeMsgDTO);
+		storeMsgDTO.getMessage().setText(content);
 		noticeList.add(storeMsgDTO);
 		oldDTO.setNoticeList(sortAndRefreshNoticeNumber(noticeList));
 		return oldDTO;
 	}
 
+	private void showNotice(Long chatId) {
+		UpdateMessageResponseStoreDTO oldDTO = readUrgeNoticeFile(chatId);
+		if(oldDTO == null || oldDTO.getNoticeList().isEmpty()) {
+			telegramService.sendMessage(TelegramBotType.URGE_NOTICE, "Empty list", chatId);
+			return;
+		}
+		StringBuffer sb = new StringBuffer();
+		for(UpdateMessageStoreDTO notice : oldDTO.getNoticeList()) {
+			sb.append("" + notice.getOrderNumber() + ". " + notice.getMessage().getText() + "\n");
+		}
+		telegramService.sendMessage(TelegramBotType.URGE_NOTICE, sb.toString(), chatId);
+	}
+	
 	private List<UpdateMessageStoreDTO> sortAndRefreshNoticeNumber(List<UpdateMessageStoreDTO> noticeList) {
 		Collections.sort(noticeList);
-		for (int i = 1; i < noticeList.size(); i++) {
-			noticeList.get(i).setOrderNumber(i);
+		UpdateMessageStoreDTO tmpDTO = null;
+		for (int i = 0; i < noticeList.size(); i++) {
+			tmpDTO = noticeList.get(i);
+			tmpDTO.setOrderNumber(i + 1);
+			noticeList.set(i, tmpDTO);
 		}
 		return noticeList;
 	}
 
 	private UpdateMessageResponseStoreDTO readUrgeNoticeFile(Long telegramUserId) {
-		String content = getUrgeNoticeFilePath(telegramUserId);
-		UpdateMessageResponseStoreDTO dto = buildObjFromJsonCustomization(content, UpdateMessageResponseStoreDTO.class);
+		String filePath = getUrgeNoticeFilePath(telegramUserId);
+		File file = new File(filePath);
+		if(!file.exists()) {
+			return new UpdateMessageResponseStoreDTO();
+		}
+		FileUtilCustom io = new FileUtilCustom();
+		String content = io.getStringFromFile(filePath);
+		UpdateMessageResponseStoreDTO dto = null;
+		try {
+			dto = buildObjFromJsonCustomization(content, UpdateMessageResponseStoreDTO.class);
+		} catch (Exception e) {
+			dto = new UpdateMessageResponseStoreDTO();
+		}
 		return dto;
 	}
 
@@ -174,14 +217,17 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 		return getUrgeNoticeStorePrefixPath() + "/" + telegramUserId + ".txt";
 	}
 
-	private void rewriteUrgeNotice(Long telegramUserId, String content) {
+	private void rewriteUrgeNotice(Long telegramUserId, UpdateMessageResponseStoreDTO dto) {
 		String pathStr = getUrgeNoticeFilePath(telegramUserId);
 		if (pathStr == null) {
 			return;
 		}
-
+		
+		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, localDateTimeAdapter).setPrettyPrinting().create();
+		String jsonString = gson.toJson(dto);
+		
 		FileUtilCustom io = new FileUtilCustom();
-		io.byteToFile(content.getBytes(), pathStr);
+		io.byteToFile(jsonString.getBytes(), pathStr);
 	}
 
 	private String getUrgeNoticeStorePrefixPath() {

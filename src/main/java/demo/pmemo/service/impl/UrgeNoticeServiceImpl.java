@@ -46,7 +46,7 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 	@Override
 	public void setUpdateMsgWebhook(String secretToken) {
 		String hostname = hostnameService.findMainHostname();
-		String webhookUrl = "https://" + hostname + UrgeNoticeUrl.ROOT + UrgeNoticeUrl.RECEIVE_URGE_NOTICE_MSG;
+		String webhookUrl = "https://" + hostname + UrgeNoticeUrl.ROOT + UrgeNoticeUrl.RECEIVE_URGE_NOTICE_MSG + "?secret_token=" + secretToken;
 		log.error("Set web hook: " + webhookUrl);
 		telegramService.setWebhook(TelegramBotType.URGE_NOTICE.getName(), webhookUrl, secretToken);
 	}

@@ -18,7 +18,7 @@ public interface TelegramService {
 
 	TelegramChatId getChatID(Long id);
 	
-	CommonResult sendMessage(TelegramBotType botType, String msg, Long id);
+	CommonResult sendMessageByChatRecordId(TelegramBotType botType, String msg, Long id);
 
 	CommonResult sendMessage(String msg, Long id);
 
@@ -31,5 +31,7 @@ public interface TelegramService {
 	void setWebhook(String botIDKey, String webhookUrl, String secretToken);
 
 	boolean hasThisChatId(Long chatId);
+
+	CommonResult sendMessageByTelegramChatId(TelegramBotType botType, String msg, Long telegramChatId);
 
 }

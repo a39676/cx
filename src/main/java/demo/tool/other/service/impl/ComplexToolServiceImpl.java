@@ -21,7 +21,7 @@ public class ComplexToolServiceImpl extends ToolCommonService implements Complex
 	
 	@Override
 	public void notificationBbtDown() {
-		telegramService.sendMessage(TelegramBotType.BOT_2, "bbt down", TelegramStaticChatID.MY_ID);
+		telegramService.sendMessageByChatRecordId(TelegramBotType.BOT_2, "bbt down", TelegramStaticChatID.MY_ID);
 	}
 	
 	@Override

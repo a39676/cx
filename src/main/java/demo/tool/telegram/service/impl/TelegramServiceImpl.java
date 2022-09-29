@@ -71,11 +71,30 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 
 	@Override
 	public CommonResult sendMessage(String msg, Long id) {
-		return sendMessage(null, msg, id);
+		return sendMessageByChatRecordId(null, msg, id);
 	}
 
 	@Override
-	public CommonResult sendMessage(TelegramBotType botType, String msg, Long id) {
+	public CommonResult sendMessageByChatRecordId(TelegramBotType botType, String msg, Long id) {
+		CommonResult r = new CommonResult();
+		if (id == null) {
+			r.failWithMessage("param error");
+			return r;
+		}
+		
+		TelegramChatId po = chatIdMapper.selectByPrimaryKey(id);
+		if (po == null) {
+			r.failWithMessage("param error");
+			return r;
+		}
+		
+		r = sendMessageByChatRecordId(botType, msg, Long.parseLong(po.getChatId()));
+
+		return r;
+	}
+	
+	@Override
+	public CommonResult sendMessageByTelegramChatId(TelegramBotType botType, String msg, Long telegramChatId) {
 		CommonResult r = new CommonResult();
 
 		if (systemConstantService.isDev()) {
@@ -84,7 +103,7 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 			return r;
 		}
 
-		if (id == null) {
+		if (telegramChatId == null) {
 			r.failWithMessage("param error");
 			return r;
 		}
@@ -104,12 +123,6 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 			return r;
 		}
 
-		TelegramChatId po = chatIdMapper.selectByPrimaryKey(id);
-		if (po == null) {
-			r.failWithMessage("param error");
-			return r;
-		}
-
 		if (botType == null) {
 			botType = TelegramBotType.BOT_1;
 		}
@@ -120,7 +133,7 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 		}
 
 		String urlModel = "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s";
-		String url = String.format(urlModel, botID, po.getChatId(), msg);
+		String url = String.format(urlModel, botID, telegramChatId, msg);
 
 		HttpUtil httpUtil = new HttpUtil();
 		try {
@@ -172,7 +185,7 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 		String msg = null;
 		for (TelegramBotType botType : TelegramBotType.values()) {
 			msg = "Testing msg, from: " + botType.getName();
-			sendMessage(botType, msg, TelegramStaticChatID.MY_ID);
+			sendMessageByChatRecordId(botType, msg, TelegramStaticChatID.MY_ID);
 		}
 	}
 

@@ -31,7 +31,7 @@ public class TelegramCalendarNoticeMessageAckReceiver extends CommonService {
 			TelegramBotNoticeMessageDTO dto = msgToDTO(messageStr);
 
 			if (dto != null) {
-				msgService.sendMessage(TelegramBotType.CX_CALENDAR_NOTICE_BOT, dto.getMsg(), dto.getId());
+				msgService.sendMessageByChatRecordId(TelegramBotType.CX_CALENDAR_NOTICE_BOT, dto.getMsg(), dto.getId());
 			}
 
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);

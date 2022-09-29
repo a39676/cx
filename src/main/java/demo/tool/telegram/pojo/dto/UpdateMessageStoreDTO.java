@@ -1,6 +1,6 @@
 package demo.tool.telegram.pojo.dto;
 
-public class UpdateMessageStoreDTO extends UpdateMessageDTO {
+public class UpdateMessageStoreDTO extends TelegramUpdateMessageDTO {
 
 	private Integer orderNumber;
 

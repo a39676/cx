@@ -5,7 +5,7 @@ import java.util.List;
 public class TelegramGetUpdatesDTO {
 
 	private Boolean ok;
-	private List<UpdateMessageDTO> result;
+	private List<TelegramUpdateMessageDTO> result;
 
 	public Boolean getOk() {
 		return ok;
@@ -15,11 +15,11 @@ public class TelegramGetUpdatesDTO {
 		this.ok = ok;
 	}
 
-	public List<UpdateMessageDTO> getResult() {
+	public List<TelegramUpdateMessageDTO> getResult() {
 		return result;
 	}
 
-	public void setResult(List<UpdateMessageDTO> result) {
+	public void setResult(List<TelegramUpdateMessageDTO> result) {
 		this.result = result;
 	}
 

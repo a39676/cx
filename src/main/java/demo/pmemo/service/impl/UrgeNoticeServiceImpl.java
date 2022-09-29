@@ -14,7 +14,7 @@ import demo.pmemo.pojo.constant.PMemoConstant;
 import demo.pmemo.pojo.constant.UrgeNoticeUrl;
 import demo.pmemo.service.UrgeNoticeService;
 import demo.tool.telegram.pojo.dto.TelegramGetUpdatesDTO;
-import demo.tool.telegram.pojo.dto.UpdateMessageDTO;
+import demo.tool.telegram.pojo.dto.TelegramUpdateMessageDTO;
 import demo.tool.telegram.pojo.dto.UpdateMessageResponseStoreDTO;
 import demo.tool.telegram.service.TelegramService;
 import telegram.pojo.constant.TelegramBotType;
@@ -50,6 +50,7 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 		telegramService.setWebhook(TelegramBotType.URGE_NOTICE.getName(), webhookUrl, secretToken);
 	}
 
+	@Override
 	public TelegramGetUpdatesDTO getMessageUpdate() {
 		TelegramGetUpdatesDTO result = telegramService.getUpdateMessage(TelegramBotType.URGE_NOTICE.getName(),
 				getLastUpdateMsgId());
@@ -67,8 +68,8 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 		return lastUpdateMsgId;
 	}
 
-	private List<UpdateMessageDTO> filterMsgUpdate(TelegramGetUpdatesDTO dto) {
-		List<UpdateMessageDTO> newMsgList = new ArrayList<>();
+	private List<TelegramUpdateMessageDTO> filterMsgUpdate(TelegramGetUpdatesDTO dto) {
+		List<TelegramUpdateMessageDTO> newMsgList = new ArrayList<>();
 
 		Long lastUpdateMsgId = getLastUpdateMsgId();
 
@@ -76,7 +77,7 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 			return newMsgList;
 		}
 
-		for (UpdateMessageDTO msg : dto.getResult()) {
+		for (TelegramUpdateMessageDTO msg : dto.getResult()) {
 			if (msg.getUpdate_id() <= lastUpdateMsgId) {
 //				TODO need white name list
 				continue;
@@ -91,15 +92,15 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 		return newMsgList;
 	}
 
-	private void msgHandle(List<UpdateMessageDTO> msgList) {
+	private void msgHandle(List<TelegramUpdateMessageDTO> msgList) {
 		if (msgList == null || msgList.isEmpty()) {
 			return;
 		}
 
-		Map<Long, List<UpdateMessageDTO>> userMsgMap = new HashMap<>();
-		List<UpdateMessageDTO> tmpMsgList = null;
+		Map<Long, List<TelegramUpdateMessageDTO>> userMsgMap = new HashMap<>();
+		List<TelegramUpdateMessageDTO> tmpMsgList = null;
 		Long tmpTelegramUserId = null;
-		for (UpdateMessageDTO udpateMsg : msgList) {
+		for (TelegramUpdateMessageDTO udpateMsg : msgList) {
 			tmpTelegramUserId = udpateMsg.getMessage().getFrom().getId();
 			if (!userMsgMap.containsKey(tmpTelegramUserId)) {
 				tmpMsgList = new ArrayList<>();
@@ -110,12 +111,12 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 			userMsgMap.put(tmpTelegramUserId, tmpMsgList);
 		}
 
-		for (Entry<Long, List<UpdateMessageDTO>> entry : userMsgMap.entrySet()) {
+		for (Entry<Long, List<TelegramUpdateMessageDTO>> entry : userMsgMap.entrySet()) {
 			handleUrgeNoticeUpdate(entry.getKey(), entry.getValue());
 		}
 	}
 
-	private void handleUrgeNoticeUpdate(Long telegramUserId, List<UpdateMessageDTO> newMsgList) {
+	private void handleUrgeNoticeUpdate(Long telegramUserId, List<TelegramUpdateMessageDTO> newMsgList) {
 		/*
 		 * TODO
 		 */
@@ -127,7 +128,7 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 //	TODO clear notice
 
 //	TODO add notice 
-	private UpdateMessageResponseStoreDTO addNotice(UpdateMessageDTO newMsg, UpdateMessageResponseStoreDTO oldDTO) {
+	private UpdateMessageResponseStoreDTO addNotice(TelegramUpdateMessageDTO newMsg, UpdateMessageResponseStoreDTO oldDTO) {
 		for (int i = 0; i < oldDTO.getResult().size(); i++) {
 			if (oldDTO.getResult().get(i).getUpdate_id() <= newMsg.getUpdate_id()) {
 				continue;

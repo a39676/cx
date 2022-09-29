@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.service.impl.ArticleCommonService;
 import demo.pmemo.pojo.constant.UrgeNoticeConstant;
 import demo.pmemo.pojo.dto.UpdateMessageResponseStoreDTO;
@@ -181,7 +182,8 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 			sb.append("" + notice.getOrderNumber() + ". " + notice.getMessage().getText() + "\n");
 		}
 		log.error("Msg for send: " + sb.toString());
-		telegramService.sendMessage(TelegramBotType.URGE_NOTICE, sb.toString(), chatId);
+		CommonResult sendResult = telegramService.sendMessage(TelegramBotType.URGE_NOTICE, sb.toString(), chatId);
+		log.error("send ersult: " + sendResult.getMessage());
 	}
 	
 	private List<UpdateMessageStoreDTO> sortAndRefreshNoticeNumber(List<UpdateMessageStoreDTO> noticeList) {

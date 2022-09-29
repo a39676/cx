@@ -141,6 +141,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		    	.authorizeRequests()
 		    .and()
 		    	.csrf()
+		    		.ignoringAntMatchers(UrgeNoticeUrl.ROOT + "/**")
 //		    尝试搭建 web socket, 修改同源策略
 //		    .and()
 //		        .headers().frameOptions().sameOrigin()

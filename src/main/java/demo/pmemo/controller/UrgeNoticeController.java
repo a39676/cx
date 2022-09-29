@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import demo.common.controller.CommonController;
 import demo.pmemo.pojo.constant.UrgeNoticeUrl;
 import demo.pmemo.service.UrgeNoticeService;
-import net.sf.json.JSONObject;
+import demo.tool.telegram.pojo.dto.TelegramUpdateMessageDTO;
 
 @Controller
 @RequestMapping(value = UrgeNoticeUrl.ROOT)
@@ -32,7 +32,7 @@ public class UrgeNoticeController extends CommonController {
 	
 	@PostMapping(value = UrgeNoticeUrl.RECEIVE_URGE_NOTICE_MSG)
 	@ResponseBody
-	public String receiveUpdateMsgWebhook(@RequestBody JSONObject unknowContent) {
+	public String receiveUpdateMsgWebhook(@RequestBody TelegramUpdateMessageDTO unknowContent) {
 		log.error("Get msg: " + unknowContent);
 		service.receiveUpdateMsgWebhook(unknowContent.toString());
 		return "done";
@@ -42,6 +42,20 @@ public class UrgeNoticeController extends CommonController {
 	@ResponseBody
 	public String test2(String unknowContent) {
 		log.error("Get msg: " + unknowContent);
+		return "done";
+	}
+	
+	@GetMapping(value = "/test3")
+	@ResponseBody
+	public String test3() {
+		log.error("Get test 3");
+		return "done";
+	}
+	
+	@PostMapping(value = "/test4")
+	@ResponseBody
+	public String test4() {
+		log.error("Get test 4");
 		return "done";
 	}
 }

@@ -28,6 +28,6 @@ public interface TelegramService {
 
 	TelegramGetUpdatesDTO getUpdateMessage(String botIDKey, Long lastUpdateMsgId);
 
-	TelegramGetUpdatesDTO setWebhook(String botIDKey, String webhookUrl, String secretToken);
+	void setWebhook(String botIDKey, String webhookUrl, String secretToken);
 
 }

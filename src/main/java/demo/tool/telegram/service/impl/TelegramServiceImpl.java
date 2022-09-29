@@ -206,11 +206,10 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 	}
 	
 	@Override
-	public TelegramGetUpdatesDTO setWebhook(String botIDKey,String webhookUrl, String secretToken) {
-		TelegramGetUpdatesDTO dto = null;
+	public void setWebhook(String botIDKey,String webhookUrl, String secretToken) {
 		
 		if(StringUtils.isBlank(botIDKey)) {
-			return dto;
+			return ;
 		}
 		
 		String urlModel = "https://api.telegram.org/bot%s/setWebhook?url=%s&secret_token=%s";
@@ -221,11 +220,11 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 		try {
 			String response = httpUtil.sendGet(url);
 			
-			dto = buildObjFromJsonCustomization(response, TelegramGetUpdatesDTO.class);
+			log.error("set web hook response: " + response);
 			
 		} catch (Exception e) {
 			log.error("Telegram bot: " + botIDKey + ", set web hook error: " + e.getMessage());
 		}
-		return dto;
+		return;
 	}
 }

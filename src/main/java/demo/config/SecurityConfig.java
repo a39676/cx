@@ -37,6 +37,7 @@ import demo.finance.cryptoCoin.sharing.pojo.constant.CryptoCoinSharingUrl;
 import demo.joy.common.pojo.constant.JoyManagerUrl;
 import demo.joy.common.pojo.constant.JoyUrl;
 import demo.pmemo.pojo.constant.PMemoUrl;
+import demo.pmemo.pojo.constant.UrgeNoticeUrl;
 import demo.test.pojo.constant.TestUrl;
 import demo.tool.other.pojo.constant.ToolUrlConstant;
 import demo.toyParts.weixin.pojo.constant.WXUrl;
@@ -78,6 +79,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/static_resources/**").permitAll()
             .antMatchers("/tHome/**").permitAll()
             .antMatchers(WXUrl.root + WXUrl.weixin).permitAll()
+            .antMatchers(UrgeNoticeUrl.ROOT + UrgeNoticeUrl.RECEIVE_URGE_NOTICE_MSG).permitAll()
+            .antMatchers(UrgeNoticeUrl.ROOT + "/test**").permitAll()
 //            .anyRequest().authenticated() 
             // used to allow anonymous access 
             // .antMatchers("/welcome**").access("IS_AUTHENTICATED_ANONYMOUSLY")

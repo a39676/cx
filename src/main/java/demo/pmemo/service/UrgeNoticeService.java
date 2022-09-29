@@ -8,4 +8,6 @@ public interface UrgeNoticeService {
 
 	void receiveUpdateMsgWebhook(HttpServletRequest request, TelegramUpdateMessageDTO unknowContent);
 
+	void sendAllUrgeNoticeList();
+
 }

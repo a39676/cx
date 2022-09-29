@@ -25,6 +25,7 @@ import demo.pmemo.service.UrgeNoticeManagerService;
 import demo.pmemo.service.UrgeNoticeService;
 import demo.tool.telegram.pojo.dto.TelegramUpdateMessageDTO;
 import demo.tool.telegram.pojo.dto.telegramDTO.TelegramMessageDTO;
+import demo.tool.telegram.pojo.po.TelegramChatId;
 import demo.tool.telegram.service.TelegramService;
 import telegram.pojo.constant.TelegramBotType;
 import toolPack.ioHandle.FileUtilCustom;
@@ -36,7 +37,6 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 	 * TODO
 	 * 
 	 * 2. Need file max length
-	 * 3. Add UrgeNoticeManagerServiceImpl.setUpdateMsgWebhook() to url 
 	 */
 
 	@Autowired
@@ -235,6 +235,14 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 			return "d:" + UrgeNoticeConstant.URGE_NOTE_SAVING_FOLDER;
 		} else {
 			return UrgeNoticeConstant.URGE_NOTE_SAVING_FOLDER;
+		}
+	}
+
+	@Override
+	public void sendAllUrgeNoticeList() {
+		List<TelegramChatId> chatIdList = telegramService.getChatIDList();
+		for(TelegramChatId chat : chatIdList) {
+			showNotice(Long.parseLong(chat.getChatId()));
 		}
 	}
 }

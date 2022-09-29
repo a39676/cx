@@ -86,6 +86,11 @@
       <li>
         <a href="/pMemo/get?key=key" target="_blank">pmemo</a>
       </li>
+      <li>
+        <a href="/urgeNoticeManager/setUpdateMsgWebhook" target="_blank">
+          update urge notice message web hook
+        </a>
+      </li>
     </ul> <%-- notes --%>
 
     <ul class="main-menu visible-on-click" id="finance">

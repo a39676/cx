@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -30,7 +31,7 @@ public class UrgeNoticeController extends CommonController {
 	
 	@PostMapping(value = UrgeNoticeUrl.RECEIVE_URGE_NOTICE_MSG)
 	@ResponseBody
-	public String receiveUpdateMsgWebhook(String unknowContent) {
+	public String receiveUpdateMsgWebhook(@RequestBody String unknowContent) {
 		service.receiveUpdateMsgWebhook(unknowContent);
 		return "done";
 	}

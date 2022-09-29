@@ -171,6 +171,7 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 
 	private void showNotice(Long chatId) {
 		UpdateMessageResponseStoreDTO oldDTO = readUrgeNoticeFile(chatId);
+		log.error("chat id: " + chatId);
 		if(oldDTO == null || oldDTO.getNoticeList().isEmpty()) {
 			telegramService.sendMessage(TelegramBotType.URGE_NOTICE, "Empty list", chatId);
 			return;
@@ -179,6 +180,7 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 		for(UpdateMessageStoreDTO notice : oldDTO.getNoticeList()) {
 			sb.append("" + notice.getOrderNumber() + ". " + notice.getMessage().getText() + "\n");
 		}
+		log.error("Msg for send: " + sb.toString());
 		telegramService.sendMessage(TelegramBotType.URGE_NOTICE, sb.toString(), chatId);
 	}
 	

@@ -88,7 +88,7 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 			return r;
 		}
 		
-		r = sendMessageByChatRecordId(botType, msg, Long.parseLong(po.getChatId()));
+		r = sendMessageByTelegramChatId(botType, msg, Long.parseLong(po.getChatId()));
 
 		return r;
 	}

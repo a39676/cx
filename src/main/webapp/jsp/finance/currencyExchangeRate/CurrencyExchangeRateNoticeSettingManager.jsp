@@ -15,18 +15,14 @@
 <div class="container-fluid">
 
 <div class="row">
+  <button class="btn btn-primary btn-sm">bootstrap demo</button>
+</div>
+
+<div class="row">
   From: 
-  <select id="currencyFrom">
-    <c:forEach items="${currencyType}" var="subCurrencyType">
-      <option value="${subCurrencyType.code}">${subCurrencyType.name}</option>
-    </c:forEach>
-  </select>
+  <input type="text" id="currencyFrom" name="" placeholder="From currency(USD)">
   To:
-  <select id="currencyTo">
-    <c:forEach items="${currencyType}" var="subCurrencyType">
-      <option value="${subCurrencyType.code}">${subCurrencyType.name}</option>
-    </c:forEach>
-  </select>
+  <input type="text" id="currencyTo" name="" placeholder="From currency(USD)">
 </div>
 
 <div class="row">
@@ -132,7 +128,7 @@
       document.getElementById('validTime').valueAsDate = new Date();
 
       $("#insert").click(function () {
-        insertCryptoCoinNoticeSetting();
+        insertCurrencyExchangeRateNoticeSetting();
       });
 
       $("button[name='delete']").click(function () {
@@ -147,9 +143,9 @@
 
       searchNotice();
 
-      function insertCryptoCoinNoticeSetting() {
+      function insertCurrencyExchangeRateNoticeSetting() {
 
-        var url = "/cryptoCoin/insertCryptoCoinNoticeSetting";
+        var url = "/currencyExchangeRateNotice/insertNotice";
 
         var coinType = $("#coinType").val();
         var currencyType = $("#currencyType option:selected").val();
@@ -218,7 +214,7 @@
       );
 
       function searchNotice() {
-        var url = "/cryptoCoin/searchNotice";
+        var url = "/currencyExchangeRateNotice/searchNotice";
 
         var reciverPK = $("#telegramChatPKOfSearch option:selected").val();
         var cryptoCoinType = $("#coinTypeOfSearch").val();

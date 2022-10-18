@@ -139,8 +139,8 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 		try {
 			httpUtil.sendGet(url);
 		} catch (Exception e) {
-			log.error("telegram sending error: " + e.getMessage());
 			log.error("telegram NOT sending message: " + msg);
+			log.error("bot: " + botType.getName());
 			r.failWithMessage("net work error");
 			return r;
 		}

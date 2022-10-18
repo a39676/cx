@@ -98,6 +98,11 @@
       <li>
         <a href="/financeclear" target="_blank">financeclear</a>
       </li>
+      <li>
+        <a href="/currencyExchangeRateNotice/insertNotice" target="_blank">
+          Manager currency exchange rate notice
+        </a>
+      </li>
     </ul><!-- finance -->
 
     <ul class="main-menu visible-on-click" id="educate">

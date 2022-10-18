@@ -34,6 +34,7 @@ import demo.config.costom_component.CustomPasswordEncoder;
 import demo.config.costom_component.LimitLoginAuthenticationProvider;
 import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinManagerUrl;
 import demo.finance.cryptoCoin.sharing.pojo.constant.CryptoCoinSharingUrl;
+import demo.finance.currencyExchangeRate.notice.pojo.constant.CurrencyExchangeRateNoticeUrl;
 import demo.joy.common.pojo.constant.JoyManagerUrl;
 import demo.joy.common.pojo.constant.JoyUrl;
 import demo.pmemo.pojo.constant.PMemoUrl;
@@ -105,6 +106,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(ToolUrlConstant.root + "/**")
             	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers(CryptoCoinManagerUrl.ROOT + "/**")
+            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+            .antMatchers(CurrencyExchangeRateNoticeUrl.ROOT + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
             .antMatchers(PMemoUrl.ROOT + PMemoUrl.SET)
             	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))

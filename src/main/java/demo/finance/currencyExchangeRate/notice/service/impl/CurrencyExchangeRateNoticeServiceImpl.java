@@ -114,6 +114,14 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 	private CurrencyExchangeRateNoticeDTOCheckResult noticeDTOCheck(InsertCurrencyExchangeRateNoticeSettingDTO dto) {
 		CurrencyExchangeRateNoticeDTOCheckResult r = new CurrencyExchangeRateNoticeDTOCheckResult();
 
+		if(dto.getFromCurrencyType() == null || dto.getToCurrencyType() == null) {
+			r.setMessage("Please set correct currency type");
+			return r;
+		}
+		
+		dto.setFromCurrencyType(dto.getFromCurrencyType().toUpperCase());
+		dto.setToCurrencyType(dto.getToCurrencyType().toUpperCase());
+		
 		CurrencyType fromCurrencyType = CurrencyType.getType(dto.getFromCurrencyType());
 		CurrencyType toCurrencyType = CurrencyType.getType(dto.getToCurrencyType());
 
@@ -226,7 +234,7 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 
 		dto.setMaxRate(new BigDecimal(dto.getOriginalRate() * (1 + range / 100)));
 		dto.setMinRate(new BigDecimal(dto.getOriginalRate() * (1 - range / 100)));
-
+		
 		dto.setOriginalRate(null);
 		dto.setPricePercentage(null);
 

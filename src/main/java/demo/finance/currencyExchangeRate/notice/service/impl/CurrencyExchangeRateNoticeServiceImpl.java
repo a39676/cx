@@ -54,8 +54,7 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 		currencyTypeList.addAll(Arrays.asList(CurrencyType.values()));
 		view.addObject("currencyType", currencyTypeList);
 
-		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.day,
-				TimeUnitType.week, TimeUnitType.month };
+		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.minute, TimeUnitType.hour, TimeUnitType.day, TimeUnitType.week, TimeUnitType.month };
 		view.addObject("timeUnitType", timeUnitTypes);
 
 		List<TelegramChatId> chatIDPOList = telegramService.getChatIDList();
@@ -66,7 +65,7 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 		view.addObject("chatVOList", chatIdVOList);
 		return view;
 	}
-	
+
 	@Override
 	public CommonResult insertNewCryptoCoinPriceNoticeSetting(InsertCurrencyExchangeRateNoticeSettingDTO dto) {
 		CommonResult r = new CommonResult();
@@ -114,14 +113,14 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 	private CurrencyExchangeRateNoticeDTOCheckResult noticeDTOCheck(InsertCurrencyExchangeRateNoticeSettingDTO dto) {
 		CurrencyExchangeRateNoticeDTOCheckResult r = new CurrencyExchangeRateNoticeDTOCheckResult();
 
-		if(dto.getFromCurrencyType() == null || dto.getToCurrencyType() == null) {
+		if (dto.getFromCurrencyType() == null || dto.getToCurrencyType() == null) {
 			r.setMessage("Please set correct currency type");
 			return r;
 		}
-		
+
 		dto.setFromCurrencyType(dto.getFromCurrencyType().toUpperCase());
 		dto.setToCurrencyType(dto.getToCurrencyType().toUpperCase());
-		
+
 		CurrencyType fromCurrencyType = CurrencyType.getType(dto.getFromCurrencyType());
 		CurrencyType toCurrencyType = CurrencyType.getType(dto.getToCurrencyType());
 
@@ -166,8 +165,7 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 			dto.setTimeUnitOfDataWatch(null);
 		}
 
-		if (!rateConditionHadSet(dto) && !rateRangeConditionHadSet(dto)
-				&& !rateFluctuationSpeedConditionHadSet(dto)) {
+		if (!rateConditionHadSet(dto) && !rateRangeConditionHadSet(dto) && !rateFluctuationSpeedConditionHadSet(dto)) {
 			r.failWithMessage("please set a condition");
 			return r;
 		}
@@ -234,7 +232,7 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 
 		dto.setMaxRate(new BigDecimal(dto.getOriginalRate() * (1 + range / 100)));
 		dto.setMinRate(new BigDecimal(dto.getOriginalRate() * (1 - range / 100)));
-		
+
 		dto.setOriginalRate(null);
 		dto.setPricePercentage(null);
 
@@ -319,6 +317,9 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 				dto.setId(notice.getTelegramChatId());
 				dto.setBotName(notice.getTelegramBotName());
 				telegramMessageAckProducer.send(dto);
+			} else {
+				log.error("In dev env, will NOT send msg: " + content + ", chat ID: " + notice.getTelegramChatId()
+						+ ", bot name: " + notice.getTelegramBotName());
 			}
 
 			notice.setNoticeTime(LocalDateTime.now());
@@ -392,8 +393,8 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 		return r;
 	}
 
-	private CommonResult rateFluctuationSpeedNoticeHandle(CurrencyExchangeRateNotice noticeSetting, CurrencyType currencyFrom,
-			CurrencyType currencyTo) {
+	private CommonResult rateFluctuationSpeedNoticeHandle(CurrencyExchangeRateNotice noticeSetting,
+			CurrencyType currencyFrom, CurrencyType currencyTo) {
 		CommonResult r = new CommonResult();
 
 		LocalDateTime now = LocalDateTime.now();
@@ -408,7 +409,7 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 					+ ", to " + currencyTo.getName());
 			return r;
 		}
-		
+
 		FilterDataResult maxMinPriceResult = filterData(historyDataList);
 		if (maxMinPriceResult.isFail()) {
 			r.addMessage(maxMinPriceResult.getMessage());
@@ -431,8 +432,8 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 			if (upApmlitude >= trigerPercentage) {
 				BigDecimal upApmlitudeBigDecimal = new BigDecimal(upApmlitude);
 				content = "From " + currencyFrom.getName() + ", to " + currencyTo.getName() + ", " + " rate: "
-						+ numberSetScale(historyDataList.get(historyDataList.size() - 1).getBuyAvgPrice()) + "\n" + ", " + "最近"
-						+ noticeSetting.getTimeRangeOfDataWatch()
+						+ numberSetScale(historyDataList.get(historyDataList.size() - 1).getBuyAvgPrice()) + "\n" + ", "
+						+ "最近" + noticeSetting.getTimeRangeOfDataWatch()
 						+ TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch()).getCnName() + ", " + "波幅达 "
 						+ upApmlitudeBigDecimal.setScale(2, RoundingMode.HALF_UP) + "%" + "\n" + ", "
 						+ maxMinPriceResult.getMinRateDateTime() + " 时触及低价: " + lastMin + "\n" + ", "
@@ -442,8 +443,8 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 			if ((0 - lowApmlitude) >= trigerPercentage) {
 				BigDecimal lowApmlitubeBigDecimal = new BigDecimal(lowApmlitude);
 				content = "From " + currencyFrom.getName() + ", to " + currencyTo.getName() + ", " + " rate: "
-						+ numberSetScale(historyDataList.get(historyDataList.size() - 1).getBuyAvgPrice()) + "\n" + ", " + "最近"
-						+ noticeSetting.getTimeRangeOfDataWatch()
+						+ numberSetScale(historyDataList.get(historyDataList.size() - 1).getBuyAvgPrice()) + "\n" + ", "
+						+ "最近" + noticeSetting.getTimeRangeOfDataWatch()
 						+ TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch()).getCnName() + ", " + "波幅达 "
 						+ lowApmlitubeBigDecimal.setScale(2, RoundingMode.HALF_UP) + "%" + "\n" + ", "
 						+ maxMinPriceResult.getMaxRateDateTime() + " 时触及高价: " + lastMax + "\n" + ", "

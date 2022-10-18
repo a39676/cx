@@ -26,9 +26,9 @@ import demo.pmemo.service.UrgeNoticeManagerService;
 import demo.pmemo.service.UrgeNoticeService;
 import demo.tool.telegram.pojo.dto.TelegramUpdateMessageDTO;
 import demo.tool.telegram.pojo.dto.telegramDTO.TelegramMessageDTO;
-import demo.tool.telegram.pojo.po.TelegramChatId;
 import demo.tool.telegram.service.TelegramService;
 import telegram.pojo.constant.TelegramBotType;
+import telegram.pojo.constant.TelegramStaticChatID;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -244,9 +244,10 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 
 	@Override
 	public void sendAllUrgeNoticeList() {
-		List<TelegramChatId> chatIdList = telegramService.getChatIDList();
-		for(TelegramChatId chat : chatIdList) {
-			showNotice(Long.parseLong(chat.getChatId()));
-		}
+//		List<TelegramChatId> chatIdList = telegramService.getChatIDList();
+//		for(TelegramChatId chat : chatIdList) {
+//			showNotice(Long.parseLong(chat.getChatId()));
+//		}
+		showNotice(TelegramStaticChatID.MY_ID);
 	}
 }

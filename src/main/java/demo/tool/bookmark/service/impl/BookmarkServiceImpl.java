@@ -1,6 +1,7 @@
 package demo.tool.bookmark.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,15 +32,18 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 		BookmarkExample example = new BookmarkExample();
 		example.createCriteria().andIsDeleteEqualTo(false).andUserIdEqualTo(userId);
 		List<Bookmark> poList = mapper.selectByExample(example);
-		
+		List<BookmarkVO> voList = new ArrayList<>();
+		for (Bookmark po : poList) {
+			voList.add(buildBookVO(po));
+		}
 	}
-	
+
 	private BookmarkVO buildBookVO(Bookmark po) {
 		BookmarkVO vo = new BookmarkVO();
 //		TODO
 		return vo;
 	}
-	
+
 	public static void main(String[] args) {
 
 		LocalDateTimeAdapter localDateTimeAdapter = new LocalDateTimeAdapter();
@@ -61,8 +65,7 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 		t.setTagName("tag for main folder");
 		m.addTag(t);
 
-		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, localDateTimeAdapter)
-				.setPrettyPrinting()
+		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, localDateTimeAdapter).setPrettyPrinting()
 				.create();
 		String jsonString = gson.toJson(m);
 

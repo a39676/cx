@@ -3,13 +3,15 @@ package demo.tool.bookmark.pojo.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookmarkUrlDTO {
+public class BookmarkUrlDTO implements Comparable<BookmarkUrlDTO> {
 
 	private String name;
 
 	private String url;
 
 	private List<BookmarkTagDTO> tagList = new ArrayList<>();
+
+	private Double weight = 0D;
 
 	public String getName() {
 		return name;
@@ -39,9 +41,39 @@ public class BookmarkUrlDTO {
 		this.tagList = tagList;
 	}
 
+	public Double getWeight() {
+		return weight;
+	}
+
+	public void setWeight(Double weight) {
+		this.weight = weight;
+	}
+
 	@Override
 	public String toString() {
 		return "BookmarkUrlDTO [name=" + name + ", url=" + url + ", tagList=" + tagList + "]";
+	}
+
+	@Override
+	public int compareTo(BookmarkUrlDTO o) {
+		if (o.weight == null && this.weight == null) {
+			return 0;
+		}
+
+		if (o.weight == null && this.weight != null) {
+			return -1;
+		}
+
+		if (o.weight != null && this.weight == null) {
+			return 1;
+		}
+
+		if (this.weight > o.weight) {
+			return 1;
+		} else if (this.weight < o.weight) {
+			return -1;
+		}
+		return 0;
 	}
 
 }

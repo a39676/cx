@@ -31,9 +31,9 @@ public class OcrServiceImpl extends CommonService implements OcrService {
 
 	private String getOcrImgTmpStorePath() {
 		if (isLinux()) {
-			return "/home/u2/ocrImg";
+			return MAIN_FOLDER_PATH  + "/ocrImg";
 		} else {
-			return "d:/home/u2/ocrImg";
+			return "d:" + MAIN_FOLDER_PATH + "/ocrImg";
 		}
 	}
 	

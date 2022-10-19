@@ -29,9 +29,9 @@ public class JoyMercenaryServiceImpl extends JoyCommonService implements JoyMerc
 	
 	private String getMercenaryStoreAttributeSavePath() {
 		if(isLinux()) {
-			return "/home/u2/joy/mercenary/attribute";
+			return MAIN_FOLDER_PATH + "/joy/mercenary/attribute";
 		} else {
-			return "d:/home/u2/joy/mercenary/attribute";
+			return "d:" + MAIN_FOLDER_PATH + "/joy/mercenary/attribute";
 		}
 	}
 

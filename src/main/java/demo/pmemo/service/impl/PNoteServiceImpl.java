@@ -70,7 +70,7 @@ public class PNoteServiceImpl extends ArticleCommonService implements PNoteServi
 			po.setEditTime(LocalDateTime.now());
 			noteMapper.updateByPrimaryKeySelective(po);
 		}
-		
+
 		r.setMessage("note updated");
 		r.setIsSuccess();
 		return r;
@@ -119,9 +119,9 @@ public class PNoteServiceImpl extends ArticleCommonService implements PNoteServi
 
 	private String getPNoteStorePrefixPath() {
 		if (isWindows()) {
-			return "d:" + PMemoConstant.P_NOTE_SAVING_FOLDER;
+			return "d:" + MAIN_FOLDER_PATH + "/pNote";
 		} else {
-			return PMemoConstant.P_NOTE_SAVING_FOLDER;
+			return MAIN_FOLDER_PATH + "/pNote";
 		}
 	}
 
@@ -133,7 +133,7 @@ public class PNoteServiceImpl extends ArticleCommonService implements PNoteServi
 			PNote po = new PNote();
 			po.setId(snowFlake.getNextId());
 			po.setUserId(userId);
-			
+
 			return po;
 		} else {
 			return poList.get(0);
@@ -147,14 +147,14 @@ public class PNoteServiceImpl extends ArticleCommonService implements PNoteServi
 
 		Long userId = baseUtilCustom.getUserId();
 		PNote po = findPNote(userId);
-		
-		if(!StringUtils.isBlank(po.getPath())) {
+
+		if (!StringUtils.isBlank(po.getPath())) {
 			String content = ioUtil.getStringFromFile(po.getPath());
 			vo.setContent(content);
 		}
-		
+
 		v.addObject("noteVO", vo);
-		
+
 		return v;
 
 	}

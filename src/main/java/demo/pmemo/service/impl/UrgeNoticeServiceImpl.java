@@ -18,7 +18,6 @@ import com.google.gson.GsonBuilder;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.service.impl.ArticleCommonService;
-import demo.pmemo.pojo.constant.UrgeNoticeConstant;
 import demo.pmemo.pojo.dto.UpdateMessageResponseStoreDTO;
 import demo.pmemo.pojo.dto.UpdateMessageStoreDTO;
 import demo.pmemo.pojo.type.UrgeNoticeBotCommandType;
@@ -244,16 +243,16 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 
 	private String getUrgeNoticeStorePrefixPath() {
 		if (isWindows()) {
-			return "d:" + UrgeNoticeConstant.URGE_NOTE_SAVING_FOLDER;
+			return "d:" + MAIN_FOLDER_PATH + "/urgeNote";
 		} else {
-			return UrgeNoticeConstant.URGE_NOTE_SAVING_FOLDER;
+			return MAIN_FOLDER_PATH + "/urgeNote";
 		}
 	}
 
 	@Override
 	public void sendAllUrgeNoticeList() {
 		List<TelegramChatId> chatIdList = telegramService.getChatIDList();
-		for(TelegramChatId chat : chatIdList) {
+		for (TelegramChatId chat : chatIdList) {
 			showNotice(Long.parseLong(chat.getChatId()));
 		}
 	}

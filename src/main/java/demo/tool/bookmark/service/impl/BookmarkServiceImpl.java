@@ -16,14 +16,13 @@ import demo.tool.bookmark.pojo.dto.BookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.BookmarkUrlDTO;
 import demo.tool.bookmark.pojo.po.Bookmark;
 import demo.tool.bookmark.pojo.po.BookmarkExample;
+import demo.tool.bookmark.pojo.vo.BookmarkVO;
 import demo.tool.bookmark.service.BookmarkService;
 import toolPack.dateTimeHandle.LocalDateTimeAdapter;
 
 @Service
 public class BookmarkServiceImpl extends CommonService implements BookmarkService {
 
-	private static final Integer maxFolderLevel = 32;
-	
 	@Autowired
 	private BookmarkMapper mapper;
 
@@ -33,6 +32,12 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 		example.createCriteria().andIsDeleteEqualTo(false).andUserIdEqualTo(userId);
 		List<Bookmark> poList = mapper.selectByExample(example);
 		
+	}
+	
+	private BookmarkVO buildBookVO(Bookmark po) {
+		BookmarkVO vo = new BookmarkVO();
+//		TODO
+		return vo;
 	}
 	
 	public static void main(String[] args) {

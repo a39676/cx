@@ -5,6 +5,8 @@ import java.util.List;
 
 public class BookmarkUrlDTO implements Comparable<BookmarkUrlDTO> {
 
+	private Long id;
+
 	private String name;
 
 	private String url;
@@ -12,6 +14,14 @@ public class BookmarkUrlDTO implements Comparable<BookmarkUrlDTO> {
 	private List<BookmarkTagDTO> tagList = new ArrayList<>();
 
 	private Double weight = 0D;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getName() {
 		return name;
@@ -51,7 +61,8 @@ public class BookmarkUrlDTO implements Comparable<BookmarkUrlDTO> {
 
 	@Override
 	public String toString() {
-		return "BookmarkUrlDTO [name=" + name + ", url=" + url + ", tagList=" + tagList + "]";
+		return "BookmarkUrlDTO [id=" + id + ", name=" + name + ", url=" + url + ", tagList=" + tagList + ", weight="
+				+ weight + "]";
 	}
 
 	@Override

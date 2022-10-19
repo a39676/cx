@@ -1,11 +1,15 @@
-package demo.tool.bookmark.pojo.dto;
+package demo.tool.bookmark.pojo.vo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookmarkDTO {
+import demo.tool.bookmark.pojo.dto.BookmarkDTO;
+import demo.tool.bookmark.pojo.dto.BookmarkTagDTO;
+import demo.tool.bookmark.pojo.dto.BookmarkUrlDTO;
 
-	private Long id;
+public class BookmarkVO {
+
+	private String pk;
 
 	private String bookmarkName;
 
@@ -16,12 +20,12 @@ public class BookmarkDTO {
 	/** 包括所有 url 的 Tag */
 	private List<BookmarkTagDTO> allTagList = new ArrayList<>();
 
-	public Long getId() {
-		return id;
+	public String getPk() {
+		return pk;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setPk(String pk) {
+		this.pk = pk;
 	}
 
 	public String getBookmarkName() {
@@ -44,10 +48,6 @@ public class BookmarkDTO {
 		return urlList;
 	}
 
-	public void addUrl(BookmarkUrlDTO u) {
-		urlList.add(u);
-	}
-
 	public void setUrlList(List<BookmarkUrlDTO> urlList) {
 		this.urlList = urlList;
 	}
@@ -56,17 +56,13 @@ public class BookmarkDTO {
 		return allTagList;
 	}
 
-	public void addTag(BookmarkTagDTO t) {
-		allTagList.add(t);
-	}
-
 	public void setAllTagList(List<BookmarkTagDTO> allTagList) {
 		this.allTagList = allTagList;
 	}
 
 	@Override
 	public String toString() {
-		return "BookmarkDTO [id=" + id + ", bookmarkName=" + bookmarkName + ", folderList=" + folderList + ", urlList="
+		return "BookMarkVO [pk=" + pk + ", bookmarkName=" + bookmarkName + ", folderList=" + folderList + ", urlList="
 				+ urlList + ", allTagList=" + allTagList + "]";
 	}
 

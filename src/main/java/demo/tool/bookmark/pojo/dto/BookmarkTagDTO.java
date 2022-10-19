@@ -2,9 +2,19 @@ package demo.tool.bookmark.pojo.dto;
 
 public class BookmarkTagDTO implements Comparable<BookmarkTagDTO> {
 
+	private Long id;
+
 	private String tagName;
 
 	private Double weight = 0D;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getTagName() {
 		return tagName;
@@ -24,7 +34,7 @@ public class BookmarkTagDTO implements Comparable<BookmarkTagDTO> {
 
 	@Override
 	public String toString() {
-		return "BookmarkTagDTO [tagName=" + tagName + "]";
+		return "BookmarkTagDTO [id=" + id + ", tagName=" + tagName + ", weight=" + weight + "]";
 	}
 
 	@Override

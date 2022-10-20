@@ -3,8 +3,6 @@ package demo.tool.bookmark.pojo.vo;
 import java.util.ArrayList;
 import java.util.List;
 
-import demo.tool.bookmark.pojo.dto.BookmarkTagDTO;
-
 public class BookmarkUrlVO {
 
 	private String pk;
@@ -13,7 +11,7 @@ public class BookmarkUrlVO {
 
 	private String url;
 
-	private List<BookmarkTagDTO> tagList = new ArrayList<>();
+	private List<String> tagNameList = new ArrayList<>();
 
 	private Double weight = 0D;
 
@@ -41,12 +39,12 @@ public class BookmarkUrlVO {
 		this.url = url;
 	}
 
-	public List<BookmarkTagDTO> getTagList() {
-		return tagList;
+	public List<String> getTagNameList() {
+		return tagNameList;
 	}
 
-	public void setTagList(List<BookmarkTagDTO> tagList) {
-		this.tagList = tagList;
+	public void setTagNameList(List<String> tagNameList) {
+		this.tagNameList = tagNameList;
 	}
 
 	public Double getWeight() {
@@ -59,7 +57,7 @@ public class BookmarkUrlVO {
 
 	@Override
 	public String toString() {
-		return "BookmarkUrlVO [pk=" + pk + ", name=" + name + ", url=" + url + ", tagList=" + tagList + ", weight="
+		return "BookmarkUrlVO [pk=" + pk + ", name=" + name + ", url=" + url + ", tagList=" + tagNameList + ", weight="
 				+ weight + "]";
 	}
 }

@@ -41,4 +41,13 @@ public class CustomPasswordEncoder implements PasswordEncoder {
 
 		return encode(rawPassword).equals(encodedPassword); 
 	}
+	
+	public boolean matches(CharSequence rawPassword, String encodedPassword, String salt) {
+		
+		if (encodedPassword == null || encodedPassword.length() == 0) {
+			return false;
+		}
+
+		return encode(salt, rawPassword).equals(encodedPassword); 
+	}
 }

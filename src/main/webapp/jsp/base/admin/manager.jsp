@@ -71,12 +71,18 @@
       </li>
     </ul> <%-- cryptoCoin --%>
 
-    <ul class="main-menu visible-on-click" id="canlendarNotice">
-      <li style="background-color:yellow;">canlendarNotice</li>
+    <ul class="main-menu visible-on-click" id="Tools">
+      <li style="background-color:yellow;">Tools</li>
       <li>
         <a href="/tool/canlendarNotice/manager" target="_blank">canlendarNoticeManager</a>
       </li>
-    </ul><!-- canlendarNotice -->
+      <li>
+        <a href="/ocr/uploadImg" target="_blank">ocr</a>
+      </li>
+      <li>
+        <a href="/bookmark/manager" target="_blank">bookmark</a>
+      </li>
+    </ul><!-- Tools -->
 
     <ul class="main-menu visible-on-click" id="notes">
       <li style="background-color:yellow;">notes</li>
@@ -120,13 +126,6 @@
         <a href="/educate/forParent" target="_blank">For parent</a>
       </li>
     </ul><!-- educate -->
-
-    <ul class="main-menu visible-on-click" id="ocr">
-      <li style="background-color:yellow;">OCR</li>
-      <li>
-        <a href="/ocr/uploadImg" target="_blank">uploadImg</a>
-      </li>
-    </ul> <%-- ocr --%>
 
     <ul class="main-menu visible-on-click" id="joy">
       <li style="background-color:yellow;">joy</li>

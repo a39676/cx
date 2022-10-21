@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.owasp.html.PolicyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
@@ -24,17 +25,21 @@ import demo.tool.bookmark.mapper.BookmarkMapper;
 import demo.tool.bookmark.pojo.dto.BookmarkDTO;
 import demo.tool.bookmark.pojo.dto.BookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.BookmarkUrlDTO;
+import demo.tool.bookmark.pojo.dto.CreateBookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.CreateNewBookmarkDTO;
 import demo.tool.bookmark.pojo.dto.DeleteBookmarkTagDTO;
+import demo.tool.bookmark.pojo.dto.EditBookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.GetBookmarkWithPwdDTO;
 import demo.tool.bookmark.pojo.po.Bookmark;
 import demo.tool.bookmark.pojo.po.BookmarkExample;
+import demo.tool.bookmark.pojo.result.CreateBookmarkTagResult;
 import demo.tool.bookmark.pojo.result.GetBookmarkResult;
 import demo.tool.bookmark.pojo.vo.BookmarkNameVO;
 import demo.tool.bookmark.pojo.vo.BookmarkTagVO;
 import demo.tool.bookmark.pojo.vo.BookmarkUrlVO;
 import demo.tool.bookmark.pojo.vo.BookmarkVO;
 import demo.tool.bookmark.service.BookmarkService;
+import demo.tool.other.service.TextFilter;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -48,6 +53,8 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 	private FileUtilCustom ioUtil;
 	@Autowired
 	private CustomPasswordEncoder passwordEncoder;
+	@Autowired
+	private TextFilter textFilter;
 
 	private static final String bookmarkSalt = "bookmarkSalt";
 
@@ -155,7 +162,7 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 	private BookmarkVO buildBookVO(BookmarkDTO dto) {
 		BookmarkVO vo = new BookmarkVO();
 		vo.setPk(systemOptionService.encryptId(dto.getId()));
-		
+
 		Map<Long, BookmarkTagVO> tagVoMap = new HashMap<>();
 
 		for (BookmarkTagDTO tag : dto.getAllTagList()) {
@@ -167,7 +174,7 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 		for (BookmarkUrlDTO url : dto.getUrlList()) {
 			vo.getUrlList().add(buildBookmarkUrlVO(url, tagVoMap));
 		}
-		
+
 		vo.setBookmarkName(dto.getBookmarkName());
 
 		return vo;
@@ -189,7 +196,7 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 		vo.setWeight(dto.getWeight());
 		for (BookmarkTagDTO tag : dto.getTagList()) {
 			BookmarkTagVO tagVO = tagVoMap.get(tag.getId());
-			if(tagVO != null) {
+			if (tagVO != null) {
 				vo.getTagVoList().add(tagVO);
 				vo.getTagNameList().add(tagVO.getTagName());
 			}
@@ -251,7 +258,7 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 		mapper.insertSelective(po);
 
 		BookmarkDTO newBookmarkDTO = new BookmarkDTO();
-		newBookmarkDTO.setBookmarkName(dto.getBookmarkName());
+		newBookmarkDTO.setBookmarkName(sanitize(dto.getBookmarkName()));
 		newBookmarkDTO.setId(newBookmarkId);
 
 		rewiriteBookmarkFile(newBookmarkDTO);
@@ -298,7 +305,7 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 				}
 			}
 		}
-		
+
 		rewiriteBookmarkFile(bookmarkDTO);
 
 		r.setIsSuccess();
@@ -311,6 +318,10 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 	}
 
 	private Bookmark matchBookmarkAndUser(String bookmarkPK) {
+		if (StringUtils.isBlank(bookmarkPK)) {
+			return null;
+		}
+
 		Long bookId = systemOptionService.decryptPrivateKey(bookmarkPK);
 		if (bookId == null) {
 			return null;
@@ -340,5 +351,121 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 				.create();
 		String jsonString = gson.toJson(dto);
 		ioUtil.byteToFile(jsonString.toString().getBytes(StandardCharsets.UTF_8), getStorePath(dto.getId()));
+	}
+
+	@Override
+	public CreateBookmarkTagResult createBookmarkTag(CreateBookmarkTagDTO dto) {
+		CreateBookmarkTagResult r = new CreateBookmarkTagResult();
+
+		Bookmark po = matchBookmarkAndUser(dto.getBookmarkPK());
+		if (po == null) {
+			r.setMessage("It doesn't look like your bookmark");
+			return r;
+		}
+
+		if (StringUtils.isBlank(dto.getTagName())) {
+			r.setMessage("Can not use empty tag name");
+			return r;
+		}
+
+		if (dto.getTagName().length() > 18) {
+			r.setMessage("Tag name can NOT longer than 18");
+			return r;
+		}
+
+		dto.setTagName(sanitize(dto.getTagName()));
+
+		BookmarkDTO bookmarkDTO = buildBookmarkDtoFromFile(po.getId());
+		if (hadDuplicateTagName(bookmarkDTO, dto.getTagName())) {
+			r.setMessage("Can not use duplicate tag name");
+			return r;
+		}
+
+		BookmarkTagDTO tagDTO = new BookmarkTagDTO();
+		tagDTO.setId(snowFlake.getNextId());
+		tagDTO.setTagName(dto.getTagName());
+		tagDTO.setWeight(0D);
+
+		bookmarkDTO.addTag(tagDTO);
+
+		rewiriteBookmarkFile(bookmarkDTO);
+
+		r.setPk(URLEncoder.encode(systemOptionService.encryptId(tagDTO.getId()), StandardCharsets.UTF_8));
+		r.setIsSuccess();
+		return r;
+	}
+	
+	@Override
+	public CommonResult editBookmarkTag(EditBookmarkTagDTO dto) {
+		CommonResult r = new CommonResult();
+
+		Bookmark po = matchBookmarkAndUser(dto.getBookmarkPK());
+		if (po == null) {
+			r.setMessage("It doesn't look like your bookmark");
+			return r;
+		}
+
+		if (StringUtils.isBlank(dto.getTagName())) {
+			r.setMessage("Can not use empty tag name");
+			return r;
+		}
+
+		if (dto.getTagName().length() > 18) {
+			r.setMessage("Tag name can NOT longer than 18");
+			return r;
+		}
+		
+		Long tagId = systemOptionService.decryptPrivateKey(dto.getTagPK());
+		if(tagId == null) {
+			r.setMessage("Old tan NOT found");
+			return r;
+		}
+
+		dto.setTagName(sanitize(dto.getTagName()));
+
+		BookmarkDTO bookmarkDTO = buildBookmarkDtoFromFile(po.getId());
+		if (hadDuplicateTagName(bookmarkDTO, dto.getTagName())) {
+			r.setMessage("Can not use duplicate tag name");
+			return r;
+		}
+
+		BookmarkTagDTO tagDTO = null;
+		List<BookmarkTagDTO> tagList = bookmarkDTO.getAllTagList();
+		for(int i = 0; tagDTO == null && i < tagList.size(); i++) {
+			if(tagList.get(i).getId().equals(tagId)) {
+				tagDTO = tagList.remove(i);
+			}
+		}
+		
+		if(tagDTO == null) {
+			r.setMessage("Can not use duplicate tag name");
+			return r;
+		}
+		
+		tagDTO.setTagName(dto.getTagName());
+
+		bookmarkDTO.addTag(tagDTO);
+
+		rewiriteBookmarkFile(bookmarkDTO);
+
+		r.setIsSuccess();
+		return r;
+	}
+
+	private boolean hadDuplicateTagName(BookmarkDTO dto, String tagName) {
+		List<BookmarkTagDTO> tagList = dto.getAllTagList();
+		boolean flag = false;
+		for (BookmarkTagDTO tag : tagList) {
+			if (tag.getTagName().equals(tagName)) {
+				flag = true;
+				return flag;
+			}
+		}
+		return flag;
+	}
+
+	private String sanitize(String content) {
+		PolicyFactory filter = textFilter.getArticleFilter();
+		return filter.sanitize(content);
 	}
 }

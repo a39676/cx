@@ -13,8 +13,11 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.controller.CommonController;
 import demo.tool.bookmark.po.constant.BookmarkUrl;
+import demo.tool.bookmark.pojo.dto.CreateBookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.DeleteBookmarkTagDTO;
+import demo.tool.bookmark.pojo.dto.EditBookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.GetBookmarkWithPwdDTO;
+import demo.tool.bookmark.pojo.result.CreateBookmarkTagResult;
 import demo.tool.bookmark.pojo.result.GetBookmarkResult;
 import demo.tool.bookmark.service.BookmarkService;
 
@@ -43,7 +46,19 @@ public class BookmarkController extends CommonController {
 	
 	@PostMapping(value = BookmarkUrl.DELETE_BOOKMARK_TAG)
 	@ResponseBody
-	public CommonResult bookmarkDetail(@RequestBody DeleteBookmarkTagDTO dto) {
+	public CommonResult deleteBookmarkTag(@RequestBody DeleteBookmarkTagDTO dto) {
 		return service.deleteBookmarkTag(dto);
+	}
+	
+	@PostMapping(value = BookmarkUrl.ADD_BOOKMARK_TAG)
+	@ResponseBody
+	public CreateBookmarkTagResult addBookmarkTag(@RequestBody CreateBookmarkTagDTO dto) {
+		return service.createBookmarkTag(dto);
+	}
+	
+	@PostMapping(value = BookmarkUrl.EDIT_BOOKMARK_TAG)
+	@ResponseBody
+	public CommonResult addBookmarkTag(@RequestBody EditBookmarkTagDTO dto) {
+		return service.editBookmarkTag(dto);
 	}
 }

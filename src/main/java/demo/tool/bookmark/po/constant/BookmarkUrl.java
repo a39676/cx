@@ -6,5 +6,7 @@ public class BookmarkUrl {
 	public static final String MANAGER = "/manager";
 	public static final String DETAIL = "/detail";
 	public static final String DELETE_BOOKMARK_TAG = "/deleteBookmarkTag";
+	public static final String ADD_BOOKMARK_TAG = "/addBookmarkTag";
+	public static final String EDIT_BOOKMARK_TAG = "/editBookmarkTag";
 	
 }

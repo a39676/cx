@@ -16,10 +16,10 @@
     <div class="row" id="mainRow" filterTags="">
       <div class="col-md-12" id="info" bookmarkPK="${bookmarkVO.pk}">
         Bookmark name: ${bookmarkVO.bookmarkName}
-        <table class="table table-striped table-dark">
-          <thead class="thead-dark">
+        <table class="table table-striped">
+          <thead class="">
             <tr>
-              <td>
+              <td id="tagTd">
                 <c:forEach items="${bookmarkVO.allTagList}" var="tagVO">
                   <button class="btn btn-light btn-sm bookmarkTag" 
                   tagPk="${tagVO.pk}" tagName="${tagVO.tagName}">
@@ -38,6 +38,10 @@
                 <button id="deleteTag" class="btn btn-danger btn-sm">
                   Delete selected tags
                 </button>
+                <button id="addTag" class="btn btn-success btn-sm">
+                  Add new tag
+                </button>
+                <input type="text" name="" id="newTagName" placeholder="New tag name">
               </td>
             </tr>
             <tr>
@@ -95,20 +99,27 @@
 
     $(document).ready(function() {
 
+      
+
       $(".TagManagerTr").hide();
 
       
       $(".bookmarkTag").click(function(){
-        if($(this).hasClass("btn-light")){
-          $(this).removeClass("btn-light");
-          $(this).addClass("btn-primary");
+        tagClick($(this).attr("tagPk"));
+      })
+
+      function tagClick(tagPk){
+        var thisTag = $(".bookmarkTag[tagPk='"+tagPk+"']");
+        if(thisTag.hasClass("btn-light")){
+          thisTag.removeClass("btn-light");
+          thisTag.addClass("btn-primary");
         } else {
-          $(this).removeClass("btn-primary");
-          $(this).addClass("btn-light");
+          thisTag.removeClass("btn-primary");
+          thisTag.addClass("btn-light");
         }
 
         filterBookmark();  
-      })
+      }
 
       $("#bookmarkKeyword").change(function(){
         filterBookmark();  
@@ -256,6 +267,48 @@
             $("#result").text(data.message);
             if(data.code == 0){
               bookmarkTagInPrimary.remove();
+            }
+          },
+          error:function(e){
+            $("#result").text(e);
+          }
+        });
+      })
+
+      $("#addTag").click(function() {
+        var bookmarkPK = $("#info").attr("bookmarkPK");
+        var newTagName = $("#newTagName").val();
+
+        var url = "/bookmark/addBookmarkTag";
+        var jsonOutput = {
+          bookmarkPK : bookmarkPK,
+          tagName : newTagName,
+        };
+
+        $.ajax({
+          type : "POST",
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          dataType: 'json',
+          contentType: "application/json",
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          timeout: 15000,
+          success:function(data){
+            $("#result").text(data.message);
+            if(data.code == 0){
+              var newBtnHtml = "<button class=\"btn btn-light btn-sm bookmarkTag\"";
+              newBtnHtml += "tagpk=\"" + data.pk + "\" ";
+              newBtnHtml += "tagName=\"" + newTagName + "\" >";
+              newBtnHtml += newTagName;
+              newBtnHtml += "</button>";
+              $("#tagTd").append(newBtnHtml);
+              var thisNewTag = $(".bookmarkTag[tagPk='"+data.pk+"']");
+              thisNewTag.bind( "click", function() {
+                tagClick(data.pk);
+              });
+              $("#newTagName").val("");
             }
           },
           error:function(e){

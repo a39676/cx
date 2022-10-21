@@ -442,12 +442,14 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 			return r;
 		}
 		
+		String oldTagName = tagDTO.getTagName();
 		tagDTO.setTagName(dto.getTagName());
 
 		bookmarkDTO.addTag(tagDTO);
 
 		rewiriteBookmarkFile(bookmarkDTO);
 
+		r.setMessage("Edit success, rename " + oldTagName + " to " + dto.getTagName());
 		r.setIsSuccess();
 		return r;
 	}

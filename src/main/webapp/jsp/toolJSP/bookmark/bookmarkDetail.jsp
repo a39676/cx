@@ -20,6 +20,7 @@
           <thead class="">
             <tr>
               <td id="tagTd">
+                <button class="btn btn-light btn-sm" id="unselectALlTag">Unselect ALL tag</button>
                 <c:forEach items="${bookmarkVO.allTagList}" var="tagVO">
                   <button class="btn btn-light btn-sm bookmarkTag" 
                   tagPk="${tagVO.pk}" tagName="${tagVO.tagName}">
@@ -42,6 +43,10 @@
                   Add new tag
                 </button>
                 <input type="text" name="" id="newTagName" placeholder="New tag name">
+                <button id="editTag" class="btn btn-success btn-sm">
+                  Edit tag name
+                </button>
+                <input type="text" name="" id="editTagName" placeholder="Edit tag name">
               </td>
             </tr>
             <tr>
@@ -66,7 +71,7 @@
         <table class="table table-striped">
           <tbody id="bookmarkVoList">
             <c:forEach items="${bookmarkVO.urlList}" var="urlVO">
-              <tr class="bookmarkVO" tagNameList="${urlVO.tagNameList}" 
+              <tr class="urlVoTr" tagNameList="${urlVO.tagNameList}" 
               urlName="${urlVO.name}" url="${urlVO.url}">
                 <td>
                   <a href="${urlVO.url}" target="_blank">
@@ -76,7 +81,7 @@
                 <td>
                   <c:forEach items="${urlVO.tagVoList}" var="tagVoInUrl">
                     <span class="badge badge-md badge-success tagVoInUrl" tagPk="${tagVoInUrl.pk}">
-                      ${tagVoInUrl.tagName}    
+                      ${tagVoInUrl.tagName}
                     </span>
                   </c:forEach>
                 </td>
@@ -99,11 +104,14 @@
 
     $(document).ready(function() {
 
-      
+      $("#unselectALlTag").click(function() {
+        $(".bookmarkTag").removeClass("btn-primary");
+        $(".bookmarkTag").addClass("btn-light");
+        tagClick($(this).attr("tagPk"));
+      })
 
       $(".TagManagerTr").hide();
 
-      
       $(".bookmarkTag").click(function(){
         tagClick($(this).attr("tagPk"));
       })
@@ -148,17 +156,17 @@
       }
 
       function searchBookmark(tagList, keyword){
-        var bookmarkVoList = $(".bookmarkVO");
+        var urlVoTr = $(".urlVoTr");
 
         if(tagList.length === 0 && keyword.length < 1){
-          bookmarkVoList.each(function(){
+          urlVoTr.each(function(){
             $(this).show();
           })
           return;
         }
 
         if(tagList.length === 0 && keyword.length > 0){
-          bookmarkVoList.each(function(){
+          urlVoTr.each(function(){
             var urlName = $(this).attr("urlName");
             var url = $(this).attr("url");
             if(matchKeyword(urlName, url, keyword)){
@@ -171,7 +179,7 @@
         }
 
         if(tagList.length != 0 && keyword.length < 1){
-          bookmarkVoList.each(function(){
+          urlVoTr.each(function(){
             var thisTagNameStr = $(this).attr("tagNameList");
 
             thisTagNameStr = thisTagNameStr.substring(1, thisTagNameStr.length - 1);
@@ -197,7 +205,7 @@
           return;
         }
 
-        bookmarkVoList.each(function(){
+        urlVoTr.each(function(){
           var urlName = $(this).attr("urlName");
           var url = $(this).attr("url");
           var thisTagNameStr = $(this).attr("tagNameList");
@@ -317,6 +325,54 @@
         });
       })
 
+      $("#editTag").click(function() {
+        var bookmarkTagInPrimary = $(".bookmarkTag.btn-primary");
+        var tagPkList = [];
+        bookmarkTagInPrimary.each(function(){
+          tagPkList.push($(this).attr("tagPk"));
+        })
+
+        if(tagPkList.length != 1){
+          $("#result").text("Please select ONE tag");
+          return;
+        }
+
+        var bookmarkPK = $("#info").attr("bookmarkPK");
+        var editTagName = $("#editTagName").val();
+        var tagPK = tagPkList[0];
+
+        var url = "/bookmark/editBookmarkTag";
+        var jsonOutput = {
+          bookmarkPK : bookmarkPK,
+          tagPK : tagPK,
+          tagName : editTagName,
+        };
+
+        $.ajax({
+          type : "POST",
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          dataType: 'json',
+          contentType: "application/json",
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          timeout: 15000,
+          success:function(data){
+            $("#result").text(data.message);
+            if(data.code == 0){
+              // change tag name in Tag list
+              bookmarkTagInPrimary.html(editTagName);
+
+              // change tag name in all url
+              $(".tagVoInUrl[tagPk='"+tagPK+"']").text(editTagName);
+            }
+          },
+          error:function(e){
+            $("#result").text(e);
+          }
+        });
+      })
     });
 
   </script>

@@ -90,22 +90,22 @@ public class SystemOptionService extends CommonService {
 	}
 
 	public List<Long> decryptPrivateKey(List<String> inputPkList) {
+		List<Long> idList = new ArrayList<Long>();
 		if (inputPkList == null || inputPkList.isEmpty()) {
-			return null;
+			return idList;
 		}
 
 		String keys = getAesKey();
 		if (StringUtils.isBlank(keys)) {
-			return null;
+			return idList;
 		}
 
 		String initVector = getAesInitVector();
 		if (StringUtils.isBlank(initVector)) {
-			return null;
+			return idList;
 		}
 
 		Long id = null;
-		List<Long> idList = new ArrayList<Long>();
 		for (String pk : inputPkList) {
 			try {
 				id = Long.parseLong(encryptUtil.aesDecrypt(keys, initVector, pk));

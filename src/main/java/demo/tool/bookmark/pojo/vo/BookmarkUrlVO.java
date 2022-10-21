@@ -11,6 +11,8 @@ public class BookmarkUrlVO {
 
 	private String url;
 
+	private List<BookmarkTagVO> tagVoList = new ArrayList<>();
+
 	private List<String> tagNameList = new ArrayList<>();
 
 	private Double weight = 0D;
@@ -39,12 +41,12 @@ public class BookmarkUrlVO {
 		this.url = url;
 	}
 
-	public List<String> getTagNameList() {
-		return tagNameList;
+	public List<BookmarkTagVO> getTagVoList() {
+		return tagVoList;
 	}
 
-	public void setTagNameList(List<String> tagNameList) {
-		this.tagNameList = tagNameList;
+	public void setTagVoList(List<BookmarkTagVO> tagVoList) {
+		this.tagVoList = tagVoList;
 	}
 
 	public Double getWeight() {
@@ -55,9 +57,17 @@ public class BookmarkUrlVO {
 		this.weight = weight;
 	}
 
+	public List<String> getTagNameList() {
+		return tagNameList;
+	}
+
+	public void setTagNameList(List<String> tagNameList) {
+		this.tagNameList = tagNameList;
+	}
+
 	@Override
 	public String toString() {
-		return "BookmarkUrlVO [pk=" + pk + ", name=" + name + ", url=" + url + ", tagList=" + tagNameList + ", weight="
-				+ weight + "]";
+		return "BookmarkUrlVO [pk=" + pk + ", name=" + name + ", url=" + url + ", tagVoList=" + tagVoList
+				+ ", tagNameList=" + tagNameList + ", weight=" + weight + "]";
 	}
 }

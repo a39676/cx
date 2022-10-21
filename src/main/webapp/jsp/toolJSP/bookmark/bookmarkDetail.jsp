@@ -14,30 +14,52 @@
 <body>
   <div class="container-fluid">
     <div class="row" id="mainRow" filterTags="">
-      <div class="col-md-12">
+      <div class="col-md-12" id="info" bookmarkPK="${bookmarkVO.pk}">
         Bookmark name: ${bookmarkVO.bookmarkName}
         <table class="table table-striped table-dark">
           <thead class="thead-dark">
             <tr>
               <td>
                 <c:forEach items="${bookmarkVO.allTagList}" var="tagVO">
-                  <button class="btn btn-light btn-sm bookmarkTag" tagName="${tagVO.tagName}">
+                  <button class="btn btn-light btn-sm bookmarkTag" 
+                  tagPk="${tagVO.pk}" tagName="${tagVO.tagName}">
                     ${tagVO.tagName}
                   </button>
                 </c:forEach>
               </td>
               <td>
+                <button id="TagManager" class="btn btn-warning btn-sm" tagManagerMode="0">
+                  Manager tags
+                </button>
+              </td>
+            </tr>
+            <tr class="TagManagerTr">
+              <td>
+                <button id="deleteTag" class="btn btn-danger btn-sm">
+                  Delete selected tags
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>
                 <input type="" id="bookmarkKeyword" name="" placeholder="Search keyword">
               </td>
             </tr>
           </thead>
+          <tbody>
+            <tr>
+              <td>
+                <span id="result"></span>
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
     </div>
 
     <div class="row" id="mainRow" filterTags="">
       <div class="col-md-12">
-        <table class="table table-striped table-dark">
+        <table class="table table-striped">
           <tbody id="bookmarkVoList">
             <c:forEach items="${bookmarkVO.urlList}" var="urlVO">
               <tr class="bookmarkVO" tagNameList="${urlVO.tagNameList}" 
@@ -47,9 +69,16 @@
                     ${urlVO.name}
                   </a>
                 </td>
-                <td>${urlVO.tagNameList}</td>
+                <td>
+                  <c:forEach items="${urlVO.tagVoList}" var="tagVoInUrl">
+                    <span class="badge badge-md badge-success tagVoInUrl" tagPk="${tagVoInUrl.pk}">
+                      ${tagVoInUrl.tagName}    
+                    </span>
+                  </c:forEach>
+                </td>
                 <td>
                   <button class="btn btn-success btn-sm" urlPK="${urlVO.pk}">Edit</button>
+                  <button class="btn btn-danger btn-sm deleteUrl" urlPK="${urlVO.pk}">Delete</button>
                 </td>
               </tr>
             </c:forEach>
@@ -66,6 +95,9 @@
 
     $(document).ready(function() {
 
+      $(".TagManagerTr").hide();
+
+      
       $(".bookmarkTag").click(function(){
         if($(this).hasClass("btn-light")){
           $(this).removeClass("btn-light");
@@ -74,14 +106,18 @@
           $(this).removeClass("btn-primary");
           $(this).addClass("btn-light");
         }
-        filterBookmark();
+
+        filterBookmark();  
       })
 
       $("#bookmarkKeyword").change(function(){
-        filterBookmark();
+        filterBookmark();  
       })
 
       function filterBookmark(){
+        if($("#TagManager").attr("tagManagerMode") == 1){
+          return;
+        }
         var tagList = findAllTagsInFilter();
         var keyword = $("#bookmarkKeyword").val();
         searchBookmark(tagList, keyword);
@@ -126,13 +162,25 @@
         if(tagList.length != 0 && keyword.length < 1){
           bookmarkVoList.each(function(){
             var thisTagNameStr = $(this).attr("tagNameList");
+
             thisTagNameStr = thisTagNameStr.substring(1, thisTagNameStr.length - 1);
-            var thisTagNameArr = thisTagNameStr.split(",");
-            var common = thisTagNameArr.filter(x => tagList.indexOf(x) !== -1)
-            if(common.length < 1){
-              $(this).hide();
-            } else {
+            var thisTagNameArr = thisTagNameStr.split(", ");
+
+            var tagNameMatch = false;
+            for(let thisTagNameArrIndex = 0; 
+              thisTagNameArrIndex < thisTagNameArr.length && !tagNameMatch;
+              thisTagNameArrIndex++){
+              for(let tagListIndex = 0;
+                tagListIndex < tagList.length && !tagNameMatch;
+                tagListIndex++){
+                tagNameMatch = (tagList[tagListIndex] == thisTagNameArr[thisTagNameArrIndex]);
+              }
+            }
+
+            if(tagNameMatch){
               $(this).show();
+            } else {
+              $(this).hide();
             }
           })
           return;
@@ -143,9 +191,20 @@
           var url = $(this).attr("url");
           var thisTagNameStr = $(this).attr("tagNameList");
           thisTagNameStr = thisTagNameStr.substring(1, thisTagNameStr.length - 1);
-          var thisTagNameArr = thisTagNameStr.split(",");
-          var common = thisTagNameArr.filter(x => tagList.indexOf(x) !== -1)
-          if(common.length > 0 && (matchKeyword(urlName, url, keyword))){
+          var thisTagNameArr = thisTagNameStr.split(", ");
+
+          var tagNameMatch = false;
+          for(let thisTagNameArrIndex = 0; 
+            thisTagNameArrIndex < thisTagNameArr.length && !tagNameMatch;
+            thisTagNameArrIndex++){
+            for(let tagListIndex = 0;
+              tagListIndex < tagList.length && !tagNameMatch;
+              tagListIndex++){
+              tagNameMatch = (tagList[tagListIndex] == thisTagNameArr[thisTagNameArrIndex]);
+            }
+          }
+
+          if(tagNameMatch && matchKeyword(urlName, url, keyword)){
             $(this).show();
           } else {
             $(this).hide();
@@ -153,7 +212,57 @@
         })
       }
 
-      
+      $("#TagManager").click(function(){
+        $(".bookmarkTag").removeClass("btn-primary");
+        $(".bookmarkTag").addClass("btn-light");
+        $("#bookmarkKeyword").val("");
+        
+        if($(this).attr("tagManagerMode") == 0){
+          $(".TagManagerTr").show();
+          $(this).attr("tagManagerMode", 1);
+        }else{
+          $(".TagManagerTr").hide();
+          $(this).attr("tagManagerMode", 0);
+        }
+        filterBookmark();
+      })
+
+      $("#deleteTag").click(function() {
+        var bookmarkPK = $("#info").attr("bookmarkPK");
+
+        var bookmarkTagInPrimary = $(".bookmarkTag.btn-primary");
+        var tagPkList = [];
+        bookmarkTagInPrimary.each(function(){
+          tagPkList.push($(this).attr("tagPk"));
+        })
+
+        var url = "/bookmark/deleteBookmarkTag";
+        var jsonOutput = {
+          bookmarkPK : bookmarkPK,
+          tagPkList : tagPkList,
+        };
+
+        $.ajax({
+          type : "POST",
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          dataType: 'json',
+          contentType: "application/json",
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          timeout: 15000,
+          success:function(data){
+            $("#result").text(data.message);
+            if(data.code == 0){
+              bookmarkTagInPrimary.remove();
+            }
+          },
+          error:function(e){
+            $("#result").text(e);
+          }
+        });
+      })
 
     });
 

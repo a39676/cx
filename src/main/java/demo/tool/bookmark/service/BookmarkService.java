@@ -2,6 +2,9 @@ package demo.tool.bookmark.service;
 
 import org.springframework.web.servlet.ModelAndView;
 
+import auxiliaryCommon.pojo.result.CommonResult;
+import demo.tool.bookmark.pojo.dto.CreateNewBookmarkDTO;
+import demo.tool.bookmark.pojo.dto.DeleteBookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.GetBookmarkWithPwdDTO;
 import demo.tool.bookmark.pojo.result.GetBookmarkResult;
 
@@ -12,5 +15,11 @@ public interface BookmarkService {
 	ModelAndView getBookmark(String pk);
 
 	GetBookmarkResult getBookmark(GetBookmarkWithPwdDTO dto);
+
+	CommonResult createNewBookmark(CreateNewBookmarkDTO dto);
+
+	CommonResult deleteBookmarkUrl(String bookmarkPk, String bookmarkUrlPk);
+
+	CommonResult deleteBookmarkTag(DeleteBookmarkTagDTO dto);
 
 }

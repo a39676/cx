@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.controller.CommonController;
 import demo.tool.bookmark.po.constant.BookmarkUrl;
+import demo.tool.bookmark.pojo.dto.DeleteBookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.GetBookmarkWithPwdDTO;
 import demo.tool.bookmark.pojo.result.GetBookmarkResult;
 import demo.tool.bookmark.service.BookmarkService;
@@ -37,5 +39,11 @@ public class BookmarkController extends CommonController {
 	@ResponseBody
 	public GetBookmarkResult bookmarkDetail(@RequestBody GetBookmarkWithPwdDTO dto) {
 		return service.getBookmark(dto);
+	}
+	
+	@PostMapping(value = BookmarkUrl.DELETE_BOOKMARK_TAG)
+	@ResponseBody
+	public CommonResult bookmarkDetail(@RequestBody DeleteBookmarkTagDTO dto) {
+		return service.deleteBookmarkTag(dto);
 	}
 }

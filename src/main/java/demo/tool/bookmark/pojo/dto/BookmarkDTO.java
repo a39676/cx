@@ -9,8 +9,6 @@ public class BookmarkDTO {
 
 	private String bookmarkName;
 
-	private List<BookmarkDTO> folderList = new ArrayList<>();
-
 	private List<BookmarkUrlDTO> urlList = new ArrayList<>();
 
 	/** 包括所有 url 的 Tag */
@@ -30,14 +28,6 @@ public class BookmarkDTO {
 
 	public void setBookmarkName(String bookmarkName) {
 		this.bookmarkName = bookmarkName;
-	}
-
-	public List<BookmarkDTO> getFolderList() {
-		return folderList;
-	}
-
-	public void setFolderList(List<BookmarkDTO> folderList) {
-		this.folderList = folderList;
 	}
 
 	public List<BookmarkUrlDTO> getUrlList() {
@@ -66,8 +56,8 @@ public class BookmarkDTO {
 
 	@Override
 	public String toString() {
-		return "BookmarkDTO [id=" + id + ", bookmarkName=" + bookmarkName + ", folderList=" + folderList + ", urlList="
-				+ urlList + ", allTagList=" + allTagList + "]";
+		return "BookmarkDTO [id=" + id + ", bookmarkName=" + bookmarkName + ", urlList=" + urlList + ", allTagList="
+				+ allTagList + "]";
 	}
 
 }

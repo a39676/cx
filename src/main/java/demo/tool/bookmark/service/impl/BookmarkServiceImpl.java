@@ -28,7 +28,9 @@ import demo.tool.bookmark.pojo.dto.BookmarkUrlDTO;
 import demo.tool.bookmark.pojo.dto.CreateBookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.CreateNewBookmarkDTO;
 import demo.tool.bookmark.pojo.dto.DeleteBookmarkTagDTO;
+import demo.tool.bookmark.pojo.dto.DeleteBookmarkUrlDTO;
 import demo.tool.bookmark.pojo.dto.EditBookmarkTagDTO;
+import demo.tool.bookmark.pojo.dto.EditBookmarkUrlDTO;
 import demo.tool.bookmark.pojo.dto.GetBookmarkWithPwdDTO;
 import demo.tool.bookmark.pojo.po.Bookmark;
 import demo.tool.bookmark.pojo.po.BookmarkExample;
@@ -390,11 +392,11 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 
 		rewiriteBookmarkFile(bookmarkDTO);
 
-		r.setPk(URLEncoder.encode(systemOptionService.encryptId(tagDTO.getId()), StandardCharsets.UTF_8));
+		r.setPk(systemOptionService.encryptId(tagDTO.getId()));
 		r.setIsSuccess();
 		return r;
 	}
-	
+
 	@Override
 	public CommonResult editBookmarkTag(EditBookmarkTagDTO dto) {
 		CommonResult r = new CommonResult();
@@ -414,9 +416,9 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 			r.setMessage("Tag name can NOT longer than 18");
 			return r;
 		}
-		
+
 		Long tagId = systemOptionService.decryptPrivateKey(dto.getTagPK());
-		if(tagId == null) {
+		if (tagId == null) {
 			r.setMessage("Old tan NOT found");
 			return r;
 		}
@@ -431,17 +433,17 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 
 		BookmarkTagDTO tagDTO = null;
 		List<BookmarkTagDTO> tagList = bookmarkDTO.getAllTagList();
-		for(int i = 0; tagDTO == null && i < tagList.size(); i++) {
-			if(tagList.get(i).getId().equals(tagId)) {
+		for (int i = 0; tagDTO == null && i < tagList.size(); i++) {
+			if (tagList.get(i).getId().equals(tagId)) {
 				tagDTO = tagList.remove(i);
 			}
 		}
-		
-		if(tagDTO == null) {
+
+		if (tagDTO == null) {
 			r.setMessage("Can not use duplicate tag name");
 			return r;
 		}
-		
+
 		String oldTagName = tagDTO.getTagName();
 		tagDTO.setTagName(dto.getTagName());
 
@@ -469,5 +471,118 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 	private String sanitize(String content) {
 		PolicyFactory filter = textFilter.getArticleFilter();
 		return filter.sanitize(content);
+	}
+
+	@Override
+	public CommonResult editBookmarkUrl(EditBookmarkUrlDTO dto) {
+		CommonResult r = new CommonResult();
+
+		dto.setBookmarkUrlName(sanitize(dto.getBookmarkUrlName()));
+		if (StringUtils.isBlank(dto.getBookmarkUrlName())) {
+			r.setMessage("Can NOT use empty url name");
+			return r;
+		}
+		if (dto.getBookmarkUrlName().length() > 30) {
+			r.setMessage("Url name should NOT longer than 30");
+			return r;
+		}
+
+		Bookmark po = matchBookmarkAndUser(dto.getBookmarkPK());
+		if (po == null) {
+			r.setMessage("It doesn't look like your bookmark");
+			return r;
+		}
+
+		BookmarkDTO bookmarkDTO = buildBookmarkDtoFromFile(po.getId());
+
+		Map<String, BookmarkTagDTO> tagNameMap = new HashMap<>();
+		for (BookmarkTagDTO tag : bookmarkDTO.getAllTagList()) {
+			tagNameMap.put(tag.getTagName(), tag);
+		}
+
+		BookmarkUrlDTO urlDTO = null;
+		if (dto.getCreateNew()) {
+			urlDTO = new BookmarkUrlDTO();
+			urlDTO.setId(snowFlake.getNextId());
+			urlDTO.setName(dto.getBookmarkUrlName());
+			urlDTO.setUrl(dto.getBookmarkUrl());
+			for (String editTagName : dto.getTagNameList()) {
+				BookmarkTagDTO tmpTag = tagNameMap.get(editTagName);
+				if (tmpTag != null) {
+					urlDTO.addTag(tmpTag);
+				}
+			}
+			bookmarkDTO.addUrl(urlDTO);
+			rewiriteBookmarkFile(bookmarkDTO);
+			r.setMessage("Insert new bookmark: " + dto.getBookmarkUrlName());
+			r.setIsSuccess();
+			return r;
+			
+		} else {
+
+			Long urlId = systemOptionService.decryptPrivateKey(dto.getBookmarkUrlPK());
+			if (urlId == null) {
+				r.setMessage("Can NOT find this url. Would you create a new one ?");
+				return r;
+			}
+			for (int i = 0; i < bookmarkDTO.getUrlList().size() && urlDTO == null; i++) {
+				if (bookmarkDTO.getUrlList().get(i).getId().equals(urlId)) {
+					urlDTO = bookmarkDTO.getUrlList().remove(i);
+				}
+			}
+			if (urlDTO == null) {
+				r.setMessage("Can NOT find this url. Would you create a new one ?");
+				return r;
+			}
+
+			urlDTO.setName(dto.getBookmarkUrlName());
+			urlDTO.setUrl(dto.getBookmarkUrl());
+			List<BookmarkTagDTO> newTagList = new ArrayList<>();
+			for (String tmpTagName : dto.getTagNameList()) {
+				BookmarkTagDTO tmpTag = tagNameMap.get(tmpTagName);
+				if (tmpTag != null) {
+					newTagList.add(tmpTag);
+				}
+			}
+			urlDTO.setTagList(newTagList);
+			
+			bookmarkDTO.addUrl(urlDTO);
+			rewiriteBookmarkFile(bookmarkDTO);
+			r.setMessage("Edited bookmark: " + dto.getBookmarkUrlName());
+			r.setIsSuccess();
+			return r;
+		}
+	}
+
+	@Override
+	public CommonResult deleteBookmarkUrl(DeleteBookmarkUrlDTO dto) {
+		CommonResult r = new CommonResult();
+
+		Bookmark po = matchBookmarkAndUser(dto.getBookmarkPK());
+		if (po == null) {
+			r.setMessage("It doesn't look like your bookmark");
+			return r;
+		}
+		
+		Long urlId = systemOptionService.decryptPrivateKey(dto.getBookmarkUrlPK());
+		if(urlId == null) {
+			return r;
+		}
+		
+		BookmarkDTO bookmarkDTO = buildBookmarkDtoFromFile(po.getId());
+		
+		BookmarkUrlDTO deleteBookmark = null;
+		for(int i = 0; i < bookmarkDTO.getUrlList().size() && deleteBookmark == null; i++) {
+			if(urlId.equals(bookmarkDTO.getUrlList().get(i).getId())) {
+				deleteBookmark = bookmarkDTO.getUrlList().remove(i);
+			}
+		}
+		
+		if(deleteBookmark != null) {
+			rewiriteBookmarkFile(bookmarkDTO);
+			r.setMessage("\"" + deleteBookmark.getName() + "\", " + deleteBookmark.getUrl() + ", " + "deleted");
+			r.setIsSuccess();
+		}
+		return r;
 	}
 }

@@ -14,7 +14,6 @@
 <body>
   <div class="container-fluid">
     <div class="row">
-      ${bookmarkList}
       <div class="col-md-12">
         <table class="table table-striped table-dark">
           <thead class="thead-dark">

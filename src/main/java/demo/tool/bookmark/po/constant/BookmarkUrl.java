@@ -8,5 +8,7 @@ public class BookmarkUrl {
 	public static final String DELETE_BOOKMARK_TAG = "/deleteBookmarkTag";
 	public static final String ADD_BOOKMARK_TAG = "/addBookmarkTag";
 	public static final String EDIT_BOOKMARK_TAG = "/editBookmarkTag";
+	public static final String EDIT_BOOKMARK_URL = "/editBookmarkUrl";
+	public static final String DELETE_BOOKMARK_URL = "/deleteBookmarkUrl";
 	
 }

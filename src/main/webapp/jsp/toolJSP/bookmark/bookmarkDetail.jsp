@@ -13,7 +13,7 @@
 </head>
 <body>
   <div class="container-fluid">
-    <div class="row" id="mainRow" filterTags="">
+    <div class="row">
       <div class="col-md-12" id="info" bookmarkPK="${bookmarkVO.pk}">
         Bookmark name: ${bookmarkVO.bookmarkName}
         <table class="table table-striped">
@@ -27,10 +27,15 @@
                     ${tagVO.tagName}
                   </button>
                 </c:forEach>
+                <br>
+                <input type="" id="bookmarkKeyword" name="" placeholder="Search keyword">
               </td>
               <td>
                 <button id="TagManager" class="btn btn-warning btn-sm" tagManagerMode="0">
                   Manager tags
+                </button>
+                <button id="StopTagManager" class="btn btn-warning btn-sm">
+                  Stop manager tags
                 </button>
               </td>
             </tr>
@@ -42,16 +47,11 @@
                 <button id="addTag" class="btn btn-success btn-sm">
                   Add new tag
                 </button>
-                <input type="text" name="" id="newTagName" placeholder="New tag name">
+                <input type="text" name="" id="newTagNameInTagManager" placeholder="New tag name">
                 <button id="editTag" class="btn btn-success btn-sm">
                   Edit tag name
                 </button>
                 <input type="text" name="" id="editTagName" placeholder="Edit tag name">
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <input type="" id="bookmarkKeyword" name="" placeholder="Search keyword">
               </td>
             </tr>
           </thead>
@@ -66,27 +66,56 @@
       </div>
     </div>
 
-    <div class="row" id="mainRow" filterTags="">
+    <div class="row">
       <div class="col-md-12">
         <table class="table table-striped">
           <tbody id="bookmarkVoList">
+            <tr id="editUrlVoTr" urlPK="" style="display: none">
+              <td>
+                <input type="text" name="" value="" id="editUrlName" placeholder="URL name"><br>
+                <input type="text" name="" value="" id="editUrlUrl" placeholder="URL here">
+              </td>
+              <td id="urlTagListTd">
+                <input type="text" name="" placeholder="Create new tag" id="createNewTagWhenUrlEdit">
+                <button id="createNewTagWhenUrlEditBtn" class="btn btn-success btn-sm">
+                  Create new tag
+                </button><br>
+                <c:forEach items="${bookmarkVO.allTagList}" var="tagVO">
+                  <button class="btn btn-light btn-sm bookmarkTagForEdit" 
+                  tagPk="${tagVO.pk}" tagName="${tagVO.tagName}">
+                    ${tagVO.tagName}
+                  </button>
+                </c:forEach>
+              </td>
+              <td>
+                <button class="btn btn-sm btn-primary" id="submitUrlEdit">Submit</button>
+                <button class="btn btn-sm btn-primary" id="cancelUrlEdit">Cancel</button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <button class="btn btn-warning btn-sm" id="createNewBookmarkUrl">
+                  Create new bookmark URL
+                </button>
+              </td>
+            </tr>
             <c:forEach items="${bookmarkVO.urlList}" var="urlVO">
               <tr class="urlVoTr" tagNameList="${urlVO.tagNameList}" 
-              urlName="${urlVO.name}" url="${urlVO.url}">
+              urlName="${urlVO.name}" url="${urlVO.url}" urlPK="${urlVO.pk}">
                 <td>
-                  <a href="${urlVO.url}" target="_blank">
+                  <a class="bookmarkUrl" urlPK="${urlVO.pk}" href="${urlVO.url}" target="_blank">
                     ${urlVO.name}
                   </a>
                 </td>
-                <td>
+                <td class="bookmarkUrlTagList" urlPK="${urlVO.pk}">
                   <c:forEach items="${urlVO.tagVoList}" var="tagVoInUrl">
-                    <span class="badge badge-md badge-success tagVoInUrl" tagPk="${tagVoInUrl.pk}">
+                    <span class="badge badge-md badge-success tagVoInUrl" tagPk="${tagVoInUrl.pk}" tagName="${tagVoInUrl.tagName}">
                       ${tagVoInUrl.tagName}
                     </span>
                   </c:forEach>
                 </td>
                 <td>
-                  <button class="btn btn-success btn-sm" urlPK="${urlVO.pk}">Edit</button>
+                  <button class="btn btn-success btn-sm editUrl" urlPK="${urlVO.pk}">Edit</button>
                   <button class="btn btn-danger btn-sm deleteUrl" urlPK="${urlVO.pk}">Delete</button>
                 </td>
               </tr>
@@ -104,13 +133,18 @@
 
     $(document).ready(function() {
 
-      $("#unselectALlTag").click(function() {
-        $(".bookmarkTag").removeClass("btn-primary");
-        $(".bookmarkTag").addClass("btn-light");
-        tagClick($(this).attr("tagPk"));
+      $("#createNewBookmarkUrl").click(function() {
+        $(".bookmarkTagForEdit").removeClass("btn-primary");
+        $(".bookmarkTagForEdit").addClass("btn-light");
+        $("#editUrlVoTr").show();
+
+        $("#TagManager").prop("disabled", true);
+        stopTagManager();
+        $(this).hide();
       })
 
       $(".TagManagerTr").hide();
+      $("#StopTagManager").hide();
 
       $(".bookmarkTag").click(function(){
         tagClick($(this).attr("tagPk"));
@@ -232,27 +266,50 @@
       }
 
       $("#TagManager").click(function(){
+        startTagManager();
+      })
+
+      $("#StopTagManager").click(function() {
+        stopTagManager();
+      })
+
+      function startTagManager(){
+        $("#TagManager").hide();
+        $("#StopTagManager").show();
+
+        $("#TagManager").attr("tagManagerMode", 1);
         $(".bookmarkTag").removeClass("btn-primary");
         $(".bookmarkTag").addClass("btn-light");
         $("#bookmarkKeyword").val("");
-        
-        if($(this).attr("tagManagerMode") == 0){
-          $(".TagManagerTr").show();
-          $(this).attr("tagManagerMode", 1);
-        }else{
-          $(".TagManagerTr").hide();
-          $(this).attr("tagManagerMode", 0);
-        }
+
+        $(".TagManagerTr").show();
+
         filterBookmark();
-      })
+      }
+
+      function stopTagManager(){
+        $("#TagManager").show();
+        $("#StopTagManager").hide();
+
+        $("#TagManager").attr("tagManagerMode", 0);
+        $(".bookmarkTag").removeClass("btn-primary");
+        $(".bookmarkTag").addClass("btn-light");
+        $("#bookmarkKeyword").val("");
+
+        $(".TagManagerTr").hide();
+
+        filterBookmark();
+      }
 
       $("#deleteTag").click(function() {
         var bookmarkPK = $("#info").attr("bookmarkPK");
 
         var bookmarkTagInPrimary = $(".bookmarkTag.btn-primary");
         var tagPkList = [];
+        var tagNameList = [];
         bookmarkTagInPrimary.each(function(){
           tagPkList.push($(this).attr("tagPk"));
+          tagNameList.push($(this).attr("tagName"));
         })
 
         var url = "/bookmark/deleteBookmarkTag";
@@ -276,6 +333,10 @@
             if(data.code == 0){
               bookmarkTagInPrimary.remove();
             }
+            for(let i = 0; i < tagNameList.length; i++){
+              $(".bookmarkTagForEdit[tagName='"+tagNameList[i]+"']").remove();
+              $(".tagVoInUrl[tagName='"+tagNameList[i]+"']").remove();
+            }
           },
           error:function(e){
             $("#result").text(e);
@@ -284,8 +345,12 @@
       })
 
       $("#addTag").click(function() {
+        var newTagName = $("#newTagNameInTagManager").val();
+        createNewTag(newTagName);
+      })
+
+      function createNewTag(newTagName) {
         var bookmarkPK = $("#info").attr("bookmarkPK");
-        var newTagName = $("#newTagName").val();
 
         var url = "/bookmark/addBookmarkTag";
         var jsonOutput = {
@@ -316,14 +381,25 @@
               thisNewTag.bind( "click", function() {
                 tagClick(data.pk);
               });
-              $("#newTagName").val("");
+              $("#newTagNameInTagManager").val("");
+              $("#createNewTagWhenUrlEdit").val("");
+
+              newBtnHtml = "<button class=\"btn btn-light btn-sm bookmarkTagForEdit\""; 
+              newBtnHtml += "tagPk=\""+data.pk+"\" tagName=\""+newTagName+"\">";
+              newBtnHtml += newTagName;
+              newBtnHtml += "</button>";
+              $("#urlTagListTd").append(newBtnHtml);
+              var thisNewTag = $(".bookmarkTagForEdit[tagPk='"+data.pk+"']");
+                thisNewTag.bind( "click", function() {
+                editBookmarkTagClick(data.pk);
+              });
             }
           },
           error:function(e){
             $("#result").text(e);
           }
         });
-      })
+      }
 
       $("#editTag").click(function() {
         var bookmarkTagInPrimary = $(".bookmarkTag.btn-primary");
@@ -366,6 +442,7 @@
 
               // change tag name in all url
               $(".tagVoInUrl[tagPk='"+tagPK+"']").text(editTagName);
+              $(".bookmarkTagForEdit[tagPk='"+tagPK+"']").text(editTagName);
             }
           },
           error:function(e){
@@ -373,6 +450,177 @@
           }
         });
       })
+
+      $("#unselectALlTag").click(function() {
+        $(".bookmarkTag").removeClass("btn-primary");
+        $(".bookmarkTag").addClass("btn-light");
+        tagClick($(this).attr("tagPk"));
+      })
+
+      $("#submitUrlEdit").click(function() {
+        var bookmarkTagForEditUrl = $(".bookmarkTagForEdit.btn-primary");
+        var tagNameList = [];
+        var tagPkList = [];
+        bookmarkTagForEditUrl.each(function(){
+          tagNameList.push($(this).attr("tagName"));
+          tagPkList.push($(this).attr("tagPK"));
+        })
+
+        var bookmarkPK = $("#info").attr("bookmarkPK");
+        var bookmarkUrlPK = $("#editUrlVoTr").attr("urlPK");
+        var bookmarkUrl = $("#editUrlUrl").val();
+        var bookmarkUrlName = $("#editUrlName").val();
+        var createNew = bookmarkUrlPK.length < 1;
+
+        var url = "/bookmark/editBookmarkUrl";
+        var jsonOutput = {
+          bookmarkPK : bookmarkPK,
+          bookmarkUrlPK : bookmarkUrlPK,
+          bookmarkUrlName : bookmarkUrlName,
+          bookmarkUrl : bookmarkUrl,
+          tagNameList : tagNameList,
+          createNew : createNew,
+        };
+
+        $.ajax({
+          type : "POST",
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          dataType: 'json',
+          contentType: "application/json",
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          timeout: 15000,
+          success:function(data){
+            $("#result").text(data.message);
+            if(data.code == 0){
+              // update target url
+              $(".bookmarkUrl[urlPK='"+bookmarkUrlPK+"']").attr("href", bookmarkUrl);
+              $(".bookmarkUrl[urlPK='"+bookmarkUrlPK+"']").text(bookmarkUrlName);
+
+              var targetUrlTagList = $(".bookmarkUrlTagList[urlPK='"+bookmarkUrlPK+"']");
+              targetUrlTagList.html("");
+
+              for(let i = 0; i < tagNameList.length; i++){
+                var newTagSpan = "<span class='badge badge-md badge-success tagVoInUrl' tagPK='"+tagPkList[i]+"' tagName='"+tagNameList[i]+"'>";
+                newTagSpan += " " + tagNameList[i] + " ";
+                newTagSpan += "</span>"
+                console.log(newTagSpan);
+                targetUrlTagList.append(newTagSpan);
+              }
+
+              endEditUrl();
+            }
+          },
+          error:function(e){
+            $("#result").text(e);
+          }
+        });
+      })
+
+      $("#cancelUrlEdit").click(function() {
+        endEditUrl();
+      })
+
+      function endEditUrl() {
+        $("#editUrlVoTr").hide();
+
+        $(".bookmarkTagForEdit").removeClass("btn-primary");
+        $(".bookmarkTagForEdit").addClass("btn-light");
+
+        $("#editUrlName").val("");
+        $("#editUrlUrl").val("");
+        $("#editUrlVoTr").attr("urlPK", "");
+
+        $("#TagManager").prop("disabled", false);
+        stopTagManager();
+        $("#createNewBookmarkUrl").show();
+      }
+
+      $("#createNewTagWhenUrlEditBtn").click(function() {
+        var newTagName = $("#createNewTagWhenUrlEdit").val();
+        createNewTag(newTagName);
+      })
+
+      $(".editUrl").click(function() {
+        $(".bookmarkTagForEdit").removeClass("btn-primary");
+        $(".bookmarkTagForEdit").addClass("btn-light");
+        copyUrlInfoToEditArea($(this).attr("urlPK"));
+        $("#editUrlVoTr").show();
+
+        $("#TagManager").prop("disabled", true);
+        stopTagManager();
+      })
+
+      function copyUrlInfoToEditArea(urlPK){
+        var bookmarkPK = $("#info").attr("bookmarkPK");
+        var sourceUrl = $(".urlVoTr[urlPK='"+urlPK+"']");
+        var url = sourceUrl.attr("url");
+        var urlName = sourceUrl.attr("urlName");
+        var sourceTagNameListStr = sourceUrl.attr("tagNameList");
+        sourceTagNameListStr = sourceTagNameListStr.substring(1, sourceTagNameListStr.length - 1);
+        var sourceTagNameList = sourceTagNameListStr.split(", ");
+
+        $("#editUrlName").val(urlName);
+        $("#editUrlUrl").val(url);
+        $("#editUrlVoTr").attr("urlPK", urlPK);
+
+        for(let tagListIndex = 0;
+                tagListIndex < sourceTagNameList.length;
+                tagListIndex++){
+          $(".bookmarkTagForEdit[tagName='"+sourceTagNameList[tagListIndex]+"']").addClass("btn-primary");
+          $(".bookmarkTagForEdit[tagName='"+sourceTagNameList[tagListIndex]+"']").removeClass("btn-light");
+        }
+      }
+
+      $(".bookmarkTagForEdit").click(function(){
+        editBookmarkTagClick($(this).attr("tagPk"));
+      })
+
+      function editBookmarkTagClick(tagPk){
+        var thisTag = $(".bookmarkTagForEdit[tagPk='"+tagPk+"']");
+        if(thisTag.hasClass("btn-light")){
+          thisTag.removeClass("btn-light");
+          thisTag.addClass("btn-primary");
+        } else {
+          thisTag.removeClass("btn-primary");
+          thisTag.addClass("btn-light");
+        }
+      }
+
+      $(".deleteUrl").click(function() {
+        var bookmarkPK = $("#info").attr("bookmarkPK");
+        var bookmarkUrlPK = $(this).attr("urlPK");
+
+        var url = "/bookmark/deleteBookmarkUrl";
+        var jsonOutput = {
+          bookmarkPK : bookmarkPK,
+          bookmarkUrlPK : bookmarkUrlPK,
+        };
+
+        $.ajax({
+          type : "POST",
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          dataType: 'json',
+          contentType: "application/json",
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          timeout: 15000,
+          success:function(data){
+            $("#result").text(data.message);
+            if(data.code == 0){
+              $(".urlVoTr[urlPK='"+bookmarkUrlPK+"']").remove();
+            }
+          },
+          error:function(e){
+            $("#result").text(e);
+          }
+        });
+      })
+
     });
 
   </script>

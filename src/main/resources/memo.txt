@@ -5,9 +5,15 @@
 	可选凭密码访问
 		密码 6~16位
 	
-	需要 Tag list search, 以及自动删除无 url 的"空Tag"
+	需要可以手动删除无 url 的"空Tag"
 	
-	每个 url 可标记多个 Tag, 以 Tag 搜索 + 关键词(url name + url)
+	url
+		新增
+		删除
+		编辑(name + url + tag + weight)
+		For view: 
+			页面预埋 editUrlVoTr 默认隐藏, 避免 jquery 重新 bind 方法的尴尬
+			需要编辑时, 将被编辑的 url 数据转移至 editUrlVoTr 对应字段
 	
 	Tag 与 Url 需要 weight 排序
 		以点击数更新 weight , 以动态更新排序

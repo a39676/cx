@@ -133,15 +133,7 @@
 
     $(document).ready(function() {
 
-      $("#createNewBookmarkUrl").click(function() {
-        $(".bookmarkTagForEdit").removeClass("btn-primary");
-        $(".bookmarkTagForEdit").addClass("btn-light");
-        $("#editUrlVoTr").show();
-
-        $("#TagManager").prop("disabled", true);
-        stopTagManager();
-        $(this).hide();
-      })
+      
 
       $(".TagManagerTr").hide();
       $("#StopTagManager").hide();
@@ -506,8 +498,53 @@
                 var newTagSpan = "<span class='badge badge-md badge-success tagVoInUrl' tagPK='"+tagPkList[i]+"' tagName='"+tagNameList[i]+"'>";
                 newTagSpan += " " + tagNameList[i] + " ";
                 newTagSpan += "</span>"
-                console.log(newTagSpan);
                 targetUrlTagList.append(newTagSpan);
+              }
+
+              if(createNew){
+                bookmarkUrlPK = data.bookmarkUrlPk;
+
+                var tagNameListStr = "[";
+                for(let i = 0; i < tagNameList.length; i++){
+                  tagNameListStr += tagNameList[i] + ", ";
+                }
+                tagNameListStr = tagNameListStr.substring(0, tagNameListStr.length - 2);
+                tagNameListStr += "]";
+
+                var urlVoTr = "<tr class='urlVoTr' tagNameList='"+tagNameListStr+"' urlName='"+bookmarkUrlName+"' url='"+bookmarkUrl+"' urlpk='"+bookmarkUrlPK+"'>";
+                urlVoTr += "<td>";
+                urlVoTr += "<a class='bookmarkUrl' urlpk='"+bookmarkUrlPK+"' href='"+bookmarkUrl+"' target='_blank'>";
+                urlVoTr += " " + bookmarkUrlName + " ";
+                urlVoTr += "</a>"
+                urlVoTr += "</td>"
+                urlVoTr += "<td class='bookmarkUrlTagList' urlpk='"+bookmarkUrlPK+"'>";
+                urlVoTr += "</td>"
+                urlVoTr += "<td>"
+                urlVoTr += "<button class='btn btn-success btn-sm editUrl' urlpk='"+bookmarkUrlPK+"'>Edit</button>";
+                urlVoTr += "<button class='btn btn-danger btn-sm deleteUrl' urlpk='"+bookmarkUrlPK+"'>Delete</button>";
+                urlVoTr += "</td>"
+                urlVoTr += "</tr>"
+
+                $("#bookmarkVoList").append(urlVoTr);
+
+                var thisNewEditBtn = $(".editUrl[urlpk='"+bookmarkUrlPK+"']");
+                thisNewEditBtn.bind( "click", function() {
+                  editUrl(bookmarkUrlPK);
+                });
+
+                var thisNewDeleteBtn = $(".deleteUrl[urlpk='"+bookmarkUrlPK+"']");
+                thisNewDeleteBtn.bind( "click", function() {
+                  deleteUrl(bookmarkUrlPK);
+                });
+
+                var urlTag = "";
+                for(let i = 0; i < tagNameList.length; i++){
+                  urlTag = "";
+                  urlTag += "<span class='badge badge-md badge-success tagVoInUrl' tagpk='"+tagPkList[i]+"' tagname='"+tagNameList[i]+"'>";
+                  urlTag += tagNameList[i];
+                  urlTag += "</span>";
+                  $(".bookmarkUrlTagList[urlpk='"+bookmarkUrlPK+"']").append(urlTag);
+                }
               }
 
               endEditUrl();
@@ -544,14 +581,18 @@
       })
 
       $(".editUrl").click(function() {
+        editUrl($(this).attr("urlPK"));
+      })
+
+      function editUrl(urlPK){
         $(".bookmarkTagForEdit").removeClass("btn-primary");
         $(".bookmarkTagForEdit").addClass("btn-light");
-        copyUrlInfoToEditArea($(this).attr("urlPK"));
+        copyUrlInfoToEditArea(urlPK);
         $("#editUrlVoTr").show();
 
         $("#TagManager").prop("disabled", true);
         stopTagManager();
-      })
+      }
 
       function copyUrlInfoToEditArea(urlPK){
         var bookmarkPK = $("#info").attr("bookmarkPK");
@@ -590,8 +631,12 @@
       }
 
       $(".deleteUrl").click(function() {
+        deleteUrl($(this).attr("urlPK"));
+      })
+
+      function deleteUrl(urlPK) {
         var bookmarkPK = $("#info").attr("bookmarkPK");
-        var bookmarkUrlPK = $(this).attr("urlPK");
+        var bookmarkUrlPK = urlPK;
 
         var url = "/bookmark/deleteBookmarkUrl";
         var jsonOutput = {
@@ -619,6 +664,20 @@
             $("#result").text(e);
           }
         });
+      }
+
+      $("#createNewBookmarkUrl").click(function() {
+        $(".bookmarkTagForEdit").removeClass("btn-primary");
+        $(".bookmarkTagForEdit").addClass("btn-light");
+        $("#editUrlVoTr").show();
+
+        $("#editUrlName").val("");
+        $("#editUrlUrl").val("");
+        $("#editUrlVoTr").attr("urlPK", "");
+
+        $("#TagManager").prop("disabled", true);
+        stopTagManager();
+        $(this).hide();
       })
 
     });

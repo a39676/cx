@@ -1,6 +1,6 @@
 package demo.tool.bookmark.pojo.vo;
 
-public class BookmarkTagVO {
+public class BookmarkTagVO implements Comparable<BookmarkTagVO> {
 
 	private String pk;
 
@@ -35,6 +35,16 @@ public class BookmarkTagVO {
 	@Override
 	public String toString() {
 		return "BookmarkTagVO [pk=" + pk + ", tagName=" + tagName + ", weight=" + weight + "]";
+	}
+
+	@Override
+	public int compareTo(BookmarkTagVO o) {
+		if (this.weight > o.weight) {
+			return 1;
+		} else if (this.weight < o.weight) {
+			return -1;
+		}
+		return 0;
 	}
 
 }

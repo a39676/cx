@@ -4,6 +4,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,10 @@ import demo.config.costom_component.CustomPasswordEncoder;
 import demo.tool.bookmark.mapper.BookmarkMapper;
 import demo.tool.bookmark.pojo.dto.BookmarkDTO;
 import demo.tool.bookmark.pojo.dto.BookmarkTagDTO;
+import demo.tool.bookmark.pojo.dto.BookmarkTagWeightChangeSubDataDTO;
 import demo.tool.bookmark.pojo.dto.BookmarkUrlDTO;
+import demo.tool.bookmark.pojo.dto.BookmarkUrlWeightChangeSubDataDTO;
+import demo.tool.bookmark.pojo.dto.BookmarkWeightChangeMainDTO;
 import demo.tool.bookmark.pojo.dto.CreateBookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.CreateNewBookmarkDTO;
 import demo.tool.bookmark.pojo.dto.DeleteBookmarkTagDTO;
@@ -35,6 +39,7 @@ import demo.tool.bookmark.pojo.dto.GetBookmarkWithPwdDTO;
 import demo.tool.bookmark.pojo.po.Bookmark;
 import demo.tool.bookmark.pojo.po.BookmarkExample;
 import demo.tool.bookmark.pojo.result.CreateBookmarkTagResult;
+import demo.tool.bookmark.pojo.result.EditBookmarkUrlResult;
 import demo.tool.bookmark.pojo.result.GetBookmarkResult;
 import demo.tool.bookmark.pojo.vo.BookmarkNameVO;
 import demo.tool.bookmark.pojo.vo.BookmarkTagVO;
@@ -172,6 +177,9 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 			vo.getAllTagList().add(tagVO);
 			tagVoMap.put(tag.getId(), tagVO);
 		}
+
+		Collections.sort(vo.getAllTagList());
+		Collections.reverse(vo.getAllTagList());
 
 		for (BookmarkUrlDTO url : dto.getUrlList()) {
 			vo.getUrlList().add(buildBookmarkUrlVO(url, tagVoMap));
@@ -474,8 +482,8 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 	}
 
 	@Override
-	public CommonResult editBookmarkUrl(EditBookmarkUrlDTO dto) {
-		CommonResult r = new CommonResult();
+	public EditBookmarkUrlResult editBookmarkUrl(EditBookmarkUrlDTO dto) {
+		EditBookmarkUrlResult r = new EditBookmarkUrlResult();
 
 		dto.setBookmarkUrlName(sanitize(dto.getBookmarkUrlName()));
 		if (StringUtils.isBlank(dto.getBookmarkUrlName())) {
@@ -503,7 +511,8 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 		BookmarkUrlDTO urlDTO = null;
 		if (dto.getCreateNew()) {
 			urlDTO = new BookmarkUrlDTO();
-			urlDTO.setId(snowFlake.getNextId());
+			Long newUrlId = snowFlake.getNextId();
+			urlDTO.setId(newUrlId);
 			urlDTO.setName(dto.getBookmarkUrlName());
 			urlDTO.setUrl(dto.getBookmarkUrl());
 			for (String editTagName : dto.getTagNameList()) {
@@ -514,10 +523,12 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 			}
 			bookmarkDTO.addUrl(urlDTO);
 			rewiriteBookmarkFile(bookmarkDTO);
+
+			r.setBookmarkUrlPk(systemOptionService.encryptId(newUrlId));
 			r.setMessage("Insert new bookmark: " + dto.getBookmarkUrlName());
 			r.setIsSuccess();
 			return r;
-			
+
 		} else {
 
 			Long urlId = systemOptionService.decryptPrivateKey(dto.getBookmarkUrlPK());
@@ -545,7 +556,7 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 				}
 			}
 			urlDTO.setTagList(newTagList);
-			
+
 			bookmarkDTO.addUrl(urlDTO);
 			rewiriteBookmarkFile(bookmarkDTO);
 			r.setMessage("Edited bookmark: " + dto.getBookmarkUrlName());
@@ -563,26 +574,108 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 			r.setMessage("It doesn't look like your bookmark");
 			return r;
 		}
-		
+
 		Long urlId = systemOptionService.decryptPrivateKey(dto.getBookmarkUrlPK());
-		if(urlId == null) {
+		if (urlId == null) {
 			return r;
 		}
-		
+
 		BookmarkDTO bookmarkDTO = buildBookmarkDtoFromFile(po.getId());
-		
+
 		BookmarkUrlDTO deleteBookmark = null;
-		for(int i = 0; i < bookmarkDTO.getUrlList().size() && deleteBookmark == null; i++) {
-			if(urlId.equals(bookmarkDTO.getUrlList().get(i).getId())) {
+		for (int i = 0; i < bookmarkDTO.getUrlList().size() && deleteBookmark == null; i++) {
+			if (urlId.equals(bookmarkDTO.getUrlList().get(i).getId())) {
 				deleteBookmark = bookmarkDTO.getUrlList().remove(i);
 			}
 		}
-		
-		if(deleteBookmark != null) {
+
+		if (deleteBookmark != null) {
 			rewiriteBookmarkFile(bookmarkDTO);
 			r.setMessage("\"" + deleteBookmark.getName() + "\", " + deleteBookmark.getUrl() + ", " + "deleted");
 			r.setIsSuccess();
 		}
+		return r;
+	}
+
+	@Override
+	public CommonResult bookmarkWeightChange(BookmarkWeightChangeMainDTO dto) {
+		CommonResult r = new CommonResult();
+
+		if ((dto.getTagSubDataList() == null || dto.getTagSubDataList().isEmpty())
+				&& (dto.getUrlSubDataList() == null || dto.getUrlSubDataList().isEmpty())) {
+			return r;
+		}
+
+		Bookmark po = matchBookmarkAndUser(dto.getBookmarkPK());
+		if (po == null) {
+			r.setMessage("It doesn't look like your bookmark");
+			return r;
+		}
+
+		BookmarkDTO bookmarkDTO = buildBookmarkDtoFromFile(po.getId());
+		boolean hadUpdate = false;
+		
+		bookmarkTagIf: if (dto.getTagSubDataList() != null && !dto.getTagSubDataList().isEmpty()) {
+			List<BookmarkTagDTO> tagList = bookmarkDTO.getAllTagList();
+			Map<Long, Double> idMap = new HashMap<Long, Double>();
+			for (BookmarkTagWeightChangeSubDataDTO tagData : dto.getTagSubDataList()) {
+				Long tagId = null;
+				if ((tagId = systemOptionService.decryptPrivateKey(tagData.getTagPK())) != null) {
+					idMap.put(tagId, tagData.getWeight());
+				}
+			}
+
+			if (idMap.isEmpty()) {
+				break bookmarkTagIf;
+			}
+			BookmarkTagDTO tag = null;
+			for (int i = 0; i < tagList.size(); i++) {
+				tag = tagList.get(i);
+				if (idMap.get(tag.getId()) != null) {
+					tag.setWeight(tag.getWeight() + idMap.get(tag.getId()));
+					tagList.set(i, tag);
+					hadUpdate = true;
+				}
+			}
+			
+			if(hadUpdate) {
+				bookmarkDTO.setAllTagList(tagList);
+			}
+		}
+		
+		bookmarkUrlIf: if (dto.getUrlSubDataList() != null && !dto.getUrlSubDataList().isEmpty()) {
+			List<BookmarkUrlDTO> urlList = bookmarkDTO.getUrlList();
+			Map<Long, Double> idMap = new HashMap<Long, Double>();
+			for (BookmarkUrlWeightChangeSubDataDTO urlData : dto.getUrlSubDataList()) {
+				Long urlId = null;
+				if ((urlId = systemOptionService.decryptPrivateKey(urlData.getUrlPK())) != null) {
+					idMap.put(urlId, urlData.getWeight());
+				}
+			}
+
+			if (idMap.isEmpty()) {
+				break bookmarkUrlIf;
+			}
+			BookmarkUrlDTO url = null;
+			for (int i = 0; i < urlList.size(); i++) {
+				url = urlList.get(i);
+				if (idMap.get(url.getId()) != null) {
+					url.setWeight(url.getWeight() + idMap.get(url.getId()));
+					urlList.set(i, url);
+					hadUpdate = true;
+				}
+			}
+			
+			if(hadUpdate) {
+				bookmarkDTO.setUrlList(urlList);
+			}
+		}
+		
+		if(hadUpdate) {
+			rewiriteBookmarkFile(bookmarkDTO);
+			r.setIsSuccess();
+		}
+		
 		return r;
 	}
 }

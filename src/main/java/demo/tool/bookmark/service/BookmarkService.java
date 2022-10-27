@@ -3,6 +3,7 @@ package demo.tool.bookmark.service;
 import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.tool.bookmark.pojo.dto.BookmarkWeightChangeMainDTO;
 import demo.tool.bookmark.pojo.dto.CreateBookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.CreateNewBookmarkDTO;
 import demo.tool.bookmark.pojo.dto.DeleteBookmarkTagDTO;
@@ -11,6 +12,7 @@ import demo.tool.bookmark.pojo.dto.EditBookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.EditBookmarkUrlDTO;
 import demo.tool.bookmark.pojo.dto.GetBookmarkWithPwdDTO;
 import demo.tool.bookmark.pojo.result.CreateBookmarkTagResult;
+import demo.tool.bookmark.pojo.result.EditBookmarkUrlResult;
 import demo.tool.bookmark.pojo.result.GetBookmarkResult;
 
 public interface BookmarkService {
@@ -31,8 +33,10 @@ public interface BookmarkService {
 
 	CommonResult editBookmarkTag(EditBookmarkTagDTO dto);
 
-	CommonResult editBookmarkUrl(EditBookmarkUrlDTO dto);
+	EditBookmarkUrlResult editBookmarkUrl(EditBookmarkUrlDTO dto);
 
 	CommonResult deleteBookmarkUrl(DeleteBookmarkUrlDTO dto);
+
+	CommonResult bookmarkWeightChange(BookmarkWeightChangeMainDTO dto);
 
 }

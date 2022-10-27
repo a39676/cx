@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.controller.CommonController;
 import demo.tool.bookmark.po.constant.BookmarkUrl;
+import demo.tool.bookmark.pojo.dto.BookmarkWeightChangeMainDTO;
 import demo.tool.bookmark.pojo.dto.CreateBookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.DeleteBookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.DeleteBookmarkUrlDTO;
@@ -20,6 +21,7 @@ import demo.tool.bookmark.pojo.dto.EditBookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.EditBookmarkUrlDTO;
 import demo.tool.bookmark.pojo.dto.GetBookmarkWithPwdDTO;
 import demo.tool.bookmark.pojo.result.CreateBookmarkTagResult;
+import demo.tool.bookmark.pojo.result.EditBookmarkUrlResult;
 import demo.tool.bookmark.pojo.result.GetBookmarkResult;
 import demo.tool.bookmark.service.BookmarkService;
 
@@ -66,7 +68,7 @@ public class BookmarkController extends CommonController {
 	
 	@PostMapping(value = BookmarkUrl.EDIT_BOOKMARK_URL)
 	@ResponseBody
-	public CommonResult editBookmarkUrl(@RequestBody EditBookmarkUrlDTO dto) {
+	public EditBookmarkUrlResult editBookmarkUrl(@RequestBody EditBookmarkUrlDTO dto) {
 		return service.editBookmarkUrl(dto);
 	}
 	
@@ -74,5 +76,11 @@ public class BookmarkController extends CommonController {
 	@ResponseBody
 	public CommonResult editBookmarkUrl(@RequestBody DeleteBookmarkUrlDTO dto) {
 		return service.deleteBookmarkUrl(dto);
+	}
+	
+	@PostMapping(value = BookmarkUrl.BOOKMARK_WEIGHT_CHANGE)
+	@ResponseBody
+	public CommonResult editBookmarkUrl(@RequestBody BookmarkWeightChangeMainDTO dto) {
+		return service.bookmarkWeightChange(dto);
 	}
 }

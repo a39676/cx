@@ -52,6 +52,9 @@
                   Edit tag name
                 </button>
                 <input type="text" name="" id="editTagName" placeholder="Edit tag name">
+                <button id="removeEmptyTags" class="btn btn-sm btn-warning">
+                  Remove empty tags
+                </button>
               </td>
             </tr>
           </thead>
@@ -133,20 +136,39 @@
 
     $(document).ready(function() {
 
+      const tagWeightMap = new Map();
+      const urlWeightMap = new Map();
       
-
       $(".TagManagerTr").hide();
       $("#StopTagManager").hide();
 
       $(".bookmarkTag").click(function(){
-        tagClick($(this).attr("tagPk"));
+        var tagPK = $(this).attr("tagPk");
+        tagClick(tagPK);
       })
 
-      function tagClick(tagPk){
-        var thisTag = $(".bookmarkTag[tagPk='"+tagPk+"']");
+      window.setInterval(updateBookmarkWeightData(), 60000);
+
+      $(".bookmarkUrl").click(function() {
+        var urlPK = $(this).attr("urlPK");
+        if(urlWeightMap.has(urlPK)){
+          urlWeightMap.set(urlPK, urlWeightMap.get(urlPK) + 1);
+        }else{
+          urlWeightMap.set(urlPK, 1);
+        }
+      })
+
+      function tagClick(tagPK){
+        var thisTag = $(".bookmarkTag[tagPK='"+tagPK+"']");
         if(thisTag.hasClass("btn-light")){
           thisTag.removeClass("btn-light");
           thisTag.addClass("btn-primary");
+          
+          if(tagWeightMap.has(tagPK)){
+            tagWeightMap.set(tagPK, tagWeightMap.get(tagPK) + 1);
+          }else{
+            tagWeightMap.set(tagPK, 1);
+          }
         } else {
           thisTag.removeClass("btn-primary");
           thisTag.addClass("btn-light");
@@ -680,6 +702,79 @@
         $(this).hide();
       })
 
+      $("#removeEmptyTags").click(function() {
+        var bookmarkPK = $("#info").attr("bookmarkPK");
+
+        var url = "/bookmark/removeEmptyTag";
+        var jsonOutput = {
+          bookmarkPK : bookmarkPK,
+        };
+
+        $.ajax({
+          type : "POST",
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          dataType: 'json',
+          contentType: "application/json",
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          timeout: 15000,
+          success:function(data){
+            $("#result").text(data.message);
+          },
+          error:function(e){
+            $("#result").text(e);
+          }
+        });
+      })
+
+      function updateBookmarkWeightData() {
+        var bookmarkPK = $("#info").attr("bookmarkPK");
+        var tagSubDataList = [];
+        var urlSudDataList = [];
+        var tmpTagData = {};
+        var tmpUrlData = {};
+
+        tagWeightMap.forEach(function(value, key) {
+          tmpTagData = {tagPK:key, weight:value}
+          tagSubDataList.push(tmpTagData);
+        });
+
+        urlWeightMap.forEach(function(value, key) {
+          tmpUrlData = {urlPK:key, weight:value}
+          urlSudDataList.push(tmpUrlData);
+        });
+
+        var url = "/bookmark/bookmarkWeightChange";
+        var jsonOutput = {
+          bookmarkPK : bookmarkPK,
+          tagSubDataList : tagSubDataList,
+          urlSudDataList : urlSudDataList,
+        };
+
+        $.ajax({
+          type : "POST",
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          dataType: 'json',
+          contentType: "application/json",
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          timeout: 15000,
+          success:function(data){
+            $("#result").text(data.message);
+            if(data.code == 0){
+              tagWeightMap.clear();
+              urlWeightMap.clear();
+            }
+          },
+          error:function(e){
+            $("#result").text(e);
+          }
+        });
+      }
     });
 
   </script>

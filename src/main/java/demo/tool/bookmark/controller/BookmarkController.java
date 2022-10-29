@@ -20,9 +20,11 @@ import demo.tool.bookmark.pojo.dto.DeleteBookmarkUrlDTO;
 import demo.tool.bookmark.pojo.dto.EditBookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.EditBookmarkUrlDTO;
 import demo.tool.bookmark.pojo.dto.GetBookmarkWithPwdDTO;
+import demo.tool.bookmark.pojo.dto.RemoveEmptyTagDTO;
 import demo.tool.bookmark.pojo.result.CreateBookmarkTagResult;
 import demo.tool.bookmark.pojo.result.EditBookmarkUrlResult;
 import demo.tool.bookmark.pojo.result.GetBookmarkResult;
+import demo.tool.bookmark.pojo.result.RemoveEmptyTagResult;
 import demo.tool.bookmark.service.BookmarkService;
 
 @Controller
@@ -56,13 +58,13 @@ public class BookmarkController extends CommonController {
 	
 	@PostMapping(value = BookmarkUrl.ADD_BOOKMARK_TAG)
 	@ResponseBody
-	public CreateBookmarkTagResult addBookmarkTag(@RequestBody CreateBookmarkTagDTO dto) {
+	public CreateBookmarkTagResult createBookmarkTag(@RequestBody CreateBookmarkTagDTO dto) {
 		return service.createBookmarkTag(dto);
 	}
 	
 	@PostMapping(value = BookmarkUrl.EDIT_BOOKMARK_TAG)
 	@ResponseBody
-	public CommonResult addBookmarkTag(@RequestBody EditBookmarkTagDTO dto) {
+	public CommonResult editBookmarkTag(@RequestBody EditBookmarkTagDTO dto) {
 		return service.editBookmarkTag(dto);
 	}
 	
@@ -74,13 +76,19 @@ public class BookmarkController extends CommonController {
 	
 	@PostMapping(value = BookmarkUrl.DELETE_BOOKMARK_URL)
 	@ResponseBody
-	public CommonResult editBookmarkUrl(@RequestBody DeleteBookmarkUrlDTO dto) {
+	public CommonResult deleteBookmarkUrl(@RequestBody DeleteBookmarkUrlDTO dto) {
 		return service.deleteBookmarkUrl(dto);
 	}
 	
 	@PostMapping(value = BookmarkUrl.BOOKMARK_WEIGHT_CHANGE)
 	@ResponseBody
-	public CommonResult editBookmarkUrl(@RequestBody BookmarkWeightChangeMainDTO dto) {
+	public CommonResult bookmarkWeightChange(@RequestBody BookmarkWeightChangeMainDTO dto) {
 		return service.bookmarkWeightChange(dto);
+	}
+	
+	@PostMapping(value = BookmarkUrl.REMOVE_EMPTY_TAG)
+	@ResponseBody
+	public RemoveEmptyTagResult editBookmarkUrl(@RequestBody RemoveEmptyTagDTO dto) {
+		return service.removeEmptyTags(dto);
 	}
 }

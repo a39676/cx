@@ -3,7 +3,7 @@ package demo.tool.bookmark.pojo.vo;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookmarkUrlVO {
+public class BookmarkUrlVO implements Comparable<BookmarkUrlVO>{
 
 	private String pk;
 
@@ -69,5 +69,15 @@ public class BookmarkUrlVO {
 	public String toString() {
 		return "BookmarkUrlVO [pk=" + pk + ", name=" + name + ", url=" + url + ", tagVoList=" + tagVoList
 				+ ", tagNameList=" + tagNameList + ", weight=" + weight + "]";
+	}
+
+	@Override
+	public int compareTo(BookmarkUrlVO o) {
+		if (this.weight > o.weight) {
+			return 1;
+		} else if (this.weight < o.weight) {
+			return -1;
+		}
+		return 0;
 	}
 }

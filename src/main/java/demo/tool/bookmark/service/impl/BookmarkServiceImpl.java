@@ -6,8 +6,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.owasp.html.PolicyFactory;
@@ -36,11 +38,13 @@ import demo.tool.bookmark.pojo.dto.DeleteBookmarkUrlDTO;
 import demo.tool.bookmark.pojo.dto.EditBookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.EditBookmarkUrlDTO;
 import demo.tool.bookmark.pojo.dto.GetBookmarkWithPwdDTO;
+import demo.tool.bookmark.pojo.dto.RemoveEmptyTagDTO;
 import demo.tool.bookmark.pojo.po.Bookmark;
 import demo.tool.bookmark.pojo.po.BookmarkExample;
 import demo.tool.bookmark.pojo.result.CreateBookmarkTagResult;
 import demo.tool.bookmark.pojo.result.EditBookmarkUrlResult;
 import demo.tool.bookmark.pojo.result.GetBookmarkResult;
+import demo.tool.bookmark.pojo.result.RemoveEmptyTagResult;
 import demo.tool.bookmark.pojo.vo.BookmarkNameVO;
 import demo.tool.bookmark.pojo.vo.BookmarkTagVO;
 import demo.tool.bookmark.pojo.vo.BookmarkUrlVO;
@@ -180,10 +184,13 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 
 		Collections.sort(vo.getAllTagList());
 		Collections.reverse(vo.getAllTagList());
-
+		
 		for (BookmarkUrlDTO url : dto.getUrlList()) {
 			vo.getUrlList().add(buildBookmarkUrlVO(url, tagVoMap));
 		}
+		
+		Collections.sort(vo.getUrlList());
+		Collections.reverse(vo.getUrlList());
 
 		vo.setBookmarkName(dto.getBookmarkName());
 
@@ -676,6 +683,54 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 			r.setIsSuccess();
 		}
 		
+		return r;
+	}
+	
+	@Override
+	public RemoveEmptyTagResult removeEmptyTags(RemoveEmptyTagDTO dto) {
+		RemoveEmptyTagResult r = new RemoveEmptyTagResult();
+		
+		Bookmark po = matchBookmarkAndUser(dto.getBookmarkPK());
+		if (po == null) {
+			r.setMessage("It doesn't look like your bookmark");
+			return r;
+		}
+
+		BookmarkDTO bookmarkDTO = buildBookmarkDtoFromFile(po.getId());
+		
+		if(bookmarkDTO.getAllTagList().isEmpty() || bookmarkDTO.getUrlList().isEmpty()) {
+			return r;
+		}
+		
+		List<BookmarkTagDTO> allTagList = bookmarkDTO.getAllTagList();
+		List<BookmarkUrlDTO> urlList = bookmarkDTO.getUrlList();
+		Set<BookmarkTagDTO> allTagSet = new HashSet<>();
+		allTagSet.addAll(allTagList);
+		
+		for(int i = 0; i < urlList.size() && !allTagSet.isEmpty(); i++) {
+			BookmarkUrlDTO url = urlList.get(i);
+			for(int j = 0; j < url.getTagList().size() && !allTagSet.isEmpty(); j++) {
+				BookmarkTagDTO tmpTag = url.getTagList().get(j);
+				allTagSet.remove(tmpTag);
+			}
+		}
+		
+		if(allTagSet.isEmpty()) {
+			return r;
+		}
+		
+		List<String> tagRemoved = new ArrayList<>();
+		for(BookmarkTagDTO tagNeedRemove : allTagSet) {
+			allTagList.remove(tagNeedRemove);
+			tagRemoved.add(tagNeedRemove.getTagName());
+		}
+		
+		if(!allTagList.isEmpty()) {
+			rewiriteBookmarkFile(bookmarkDTO);
+		}
+		
+		r.setMessage("Removed: " + tagRemoved);
+		r.setIsSuccess();
 		return r;
 	}
 }

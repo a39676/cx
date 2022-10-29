@@ -1,5 +1,7 @@
 package demo.tool.bookmark.pojo.dto;
 
+import java.util.Objects;
+
 public class BookmarkTagDTO implements Comparable<BookmarkTagDTO> {
 
 	private Long id;
@@ -35,6 +37,23 @@ public class BookmarkTagDTO implements Comparable<BookmarkTagDTO> {
 	@Override
 	public String toString() {
 		return "BookmarkTagDTO [id=" + id + ", tagName=" + tagName + ", weight=" + weight + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, tagName);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		BookmarkTagDTO other = (BookmarkTagDTO) obj;
+		return Objects.equals(id, other.id) && Objects.equals(tagName, other.tagName);
 	}
 
 	@Override

@@ -11,9 +11,11 @@ import demo.tool.bookmark.pojo.dto.DeleteBookmarkUrlDTO;
 import demo.tool.bookmark.pojo.dto.EditBookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.EditBookmarkUrlDTO;
 import demo.tool.bookmark.pojo.dto.GetBookmarkWithPwdDTO;
+import demo.tool.bookmark.pojo.dto.RemoveEmptyTagDTO;
 import demo.tool.bookmark.pojo.result.CreateBookmarkTagResult;
 import demo.tool.bookmark.pojo.result.EditBookmarkUrlResult;
 import demo.tool.bookmark.pojo.result.GetBookmarkResult;
+import demo.tool.bookmark.pojo.result.RemoveEmptyTagResult;
 
 public interface BookmarkService {
 
@@ -38,5 +40,7 @@ public interface BookmarkService {
 	CommonResult deleteBookmarkUrl(DeleteBookmarkUrlDTO dto);
 
 	CommonResult bookmarkWeightChange(BookmarkWeightChangeMainDTO dto);
+
+	RemoveEmptyTagResult removeEmptyTags(RemoveEmptyTagDTO dto);
 
 }

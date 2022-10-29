@@ -736,6 +736,10 @@
         var tmpTagData = {};
         var tmpUrlData = {};
 
+        if(tagSubDataList.size() < 1 && urlSudDataList.size() < 1){
+          return;
+        }
+  
         tagWeightMap.forEach(function(value, key) {
           tmpTagData = {tagPK:key, weight:value}
           tagSubDataList.push(tmpTagData);

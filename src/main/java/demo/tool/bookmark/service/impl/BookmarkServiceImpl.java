@@ -733,4 +733,63 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 		r.setIsSuccess();
 		return r;
 	}
+
+	@Override
+	public void reBalanceWeight() {
+		BookmarkExample example = new BookmarkExample();
+		example.createCriteria().andIsDeleteEqualTo(false);
+		List<Bookmark> poList = mapper.selectByExample(example);
+		for(Bookmark po : poList) {
+			BookmarkDTO dto = buildBookmarkDtoFromFile(po.getId());
+			reBalanceWeight(dto);
+		}
+	}
+	
+	private void reBalanceWeight(BookmarkDTO dto) {
+		if(dto == null || (dto.getAllTagList().isEmpty() && dto.getUrlList().isEmpty())) {
+			return;
+		}
+		
+		Double limitWeight = 9999D;
+		boolean needUpdate = false;
+		
+		if(!dto.getAllTagList().isEmpty()) {
+			Double tagMaxWeight = 0D;
+			for(BookmarkTagDTO tag : dto.getAllTagList()) {
+				if(tag.getWeight() > tagMaxWeight) {
+					tagMaxWeight = tag.getWeight();
+				}
+			}
+			
+			if(tagMaxWeight > limitWeight) {
+				needUpdate = true;
+				Double rate = limitWeight / tagMaxWeight;
+				for(BookmarkTagDTO tag : dto.getAllTagList()) {
+					tag.setWeight(tag.getWeight() * rate);
+				}
+			}
+		}
+		
+		
+		if(!dto.getUrlList().isEmpty()) {
+			Double tagUrlWeight = 0D;
+			for(BookmarkUrlDTO url : dto.getUrlList()) {
+				if(url.getWeight() > tagUrlWeight) {
+					tagUrlWeight = url.getWeight();
+				}
+			}
+			
+			if(tagUrlWeight > limitWeight) {
+				needUpdate = true;
+				Double rate = limitWeight / tagUrlWeight;
+				for(BookmarkUrlDTO url : dto.getUrlList()) {
+					url.setWeight(url.getWeight() * rate);
+				}
+			}
+		}
+		
+		if(needUpdate) {
+			rewiriteBookmarkFile(dto);
+		}
+	}
 }

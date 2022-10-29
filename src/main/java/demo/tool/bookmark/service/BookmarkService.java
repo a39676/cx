@@ -43,4 +43,6 @@ public interface BookmarkService {
 
 	RemoveEmptyTagResult removeEmptyTags(RemoveEmptyTagDTO dto);
 
+	void reBalanceWeight();
+
 }

@@ -12,6 +12,7 @@ import demo.tool.bookmark.pojo.dto.EditBookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.EditBookmarkUrlDTO;
 import demo.tool.bookmark.pojo.dto.GetBookmarkWithPwdDTO;
 import demo.tool.bookmark.pojo.dto.RemoveEmptyTagDTO;
+import demo.tool.bookmark.pojo.dto.UploadBookmarkDTO;
 import demo.tool.bookmark.pojo.result.CreateBookmarkTagResult;
 import demo.tool.bookmark.pojo.result.EditBookmarkUrlResult;
 import demo.tool.bookmark.pojo.result.GetBookmarkResult;
@@ -44,5 +45,7 @@ public interface BookmarkService {
 	RemoveEmptyTagResult removeEmptyTags(RemoveEmptyTagDTO dto);
 
 	void reBalanceWeight();
+
+	CommonResult importFromBookmarkFile(UploadBookmarkDTO dto);
 
 }

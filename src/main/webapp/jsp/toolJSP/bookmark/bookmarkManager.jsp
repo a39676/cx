@@ -38,6 +38,15 @@
                 </td>
               </tr>
             </c:forEach>
+            <tr>
+              <input type="text" name="" placeholder="New bookmark name" id="newBookmarkName">
+              <input type="file" name="" id="uploadHtmlInput">
+              <input type="text" name="" id="uploadHtmlContent" style="display: none">
+              <input type="password" name="" id="pwd1">
+              <input type="password" name="" id="pwd2">
+              <button id="updateHtmlBookmark">Submit html bookmark</button>
+              <span id="uploadResult"></span>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -51,6 +60,62 @@
 
     $(document).ready(function() {
 
+      $("#uploadHtmlInput").change(function() {
+        const file = this.files[0];
+        let reader = new FileReader();
+        reader.onload = function(event){
+          var content = event.target.result;
+          $("#uploadHtmlContent").val(content);
+        }
+        reader.readAsDataURL(file);
+      });
+
+      $("#updateHtmlBookmark").click(function () {
+        var url = "/bookmark/uploadBookmark";
+
+        var newBookmarkName = $("#newBookmarkName").val();
+        var pwd = "";
+        var bookmarkHtmlInBase64 = $("#uploadHtmlContent").val();
+
+        // TODO
+        if(pwd1.length > 0){
+          if(pwd1 != pwd2){
+            $("#uploadResult").text("The passwords entered twice do not match");  
+          } else {
+            pwd = pwd1;
+          }
+        }
+
+        var jsonOutput = {
+          bookmarkName : newBookmarkName,
+          pwd : pwd,
+          bookmarkHtmlInBase64 : bookmarkHtmlInBase64,
+        };
+
+        console.log(jsonOutput);
+
+        $.ajax({
+          type : "POST",
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          dataType: 'json',
+          contentType: "application/json",
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          timeout: 15000,
+          success:function(data){
+            if(data.code == 0){
+              newBookmarkName.val("");
+              bookmarkHtmlSrc.val("");
+            }
+            $("#uploadResult").text(data.message);
+          },
+          error:function(e){
+          }
+        });
+
+      });
 
     });
 

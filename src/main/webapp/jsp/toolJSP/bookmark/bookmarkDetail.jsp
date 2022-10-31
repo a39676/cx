@@ -736,7 +736,7 @@
         var tmpTagData = {};
         var tmpUrlData = {};
 
-        if(tagSubDataList.size() < 1 && urlSudDataList.size() < 1){
+        if(tagSubDataList.length < 1 && urlSudDataList.length < 1){
           return;
         }
   

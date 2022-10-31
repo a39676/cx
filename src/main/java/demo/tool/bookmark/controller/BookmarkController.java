@@ -21,6 +21,7 @@ import demo.tool.bookmark.pojo.dto.EditBookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.EditBookmarkUrlDTO;
 import demo.tool.bookmark.pojo.dto.GetBookmarkWithPwdDTO;
 import demo.tool.bookmark.pojo.dto.RemoveEmptyTagDTO;
+import demo.tool.bookmark.pojo.dto.UploadBookmarkDTO;
 import demo.tool.bookmark.pojo.result.CreateBookmarkTagResult;
 import demo.tool.bookmark.pojo.result.EditBookmarkUrlResult;
 import demo.tool.bookmark.pojo.result.GetBookmarkResult;
@@ -90,5 +91,11 @@ public class BookmarkController extends CommonController {
 	@ResponseBody
 	public RemoveEmptyTagResult editBookmarkUrl(@RequestBody RemoveEmptyTagDTO dto) {
 		return service.removeEmptyTags(dto);
+	}
+	
+	@PostMapping(value = BookmarkUrl.UPLOAD_BOOKMARK)
+	@ResponseBody
+	public CommonResult importFromBookmarkFile(@RequestBody UploadBookmarkDTO dto) {
+		return service.importFromBookmarkFile(dto);
 	}
 }

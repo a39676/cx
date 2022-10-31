@@ -4,6 +4,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,6 +13,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.owasp.html.PolicyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +29,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.service.impl.SystemOptionService;
 import demo.common.service.CommonService;
 import demo.config.costom_component.CustomPasswordEncoder;
+import demo.image.pojo.constant.ImageConstant;
 import demo.tool.bookmark.mapper.BookmarkMapper;
 import demo.tool.bookmark.pojo.dto.BookmarkDTO;
 import demo.tool.bookmark.pojo.dto.BookmarkTagDTO;
@@ -39,6 +45,7 @@ import demo.tool.bookmark.pojo.dto.EditBookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.EditBookmarkUrlDTO;
 import demo.tool.bookmark.pojo.dto.GetBookmarkWithPwdDTO;
 import demo.tool.bookmark.pojo.dto.RemoveEmptyTagDTO;
+import demo.tool.bookmark.pojo.dto.UploadBookmarkDTO;
 import demo.tool.bookmark.pojo.po.Bookmark;
 import demo.tool.bookmark.pojo.po.BookmarkExample;
 import demo.tool.bookmark.pojo.result.CreateBookmarkTagResult;
@@ -184,11 +191,11 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 
 		Collections.sort(vo.getAllTagList());
 		Collections.reverse(vo.getAllTagList());
-		
+
 		for (BookmarkUrlDTO url : dto.getUrlList()) {
 			vo.getUrlList().add(buildBookmarkUrlVO(url, tagVoMap));
 		}
-		
+
 		Collections.sort(vo.getUrlList());
 		Collections.reverse(vo.getUrlList());
 
@@ -621,7 +628,7 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 
 		BookmarkDTO bookmarkDTO = buildBookmarkDtoFromFile(po.getId());
 		boolean hadUpdate = false;
-		
+
 		bookmarkTagIf: if (dto.getTagSubDataList() != null && !dto.getTagSubDataList().isEmpty()) {
 			List<BookmarkTagDTO> tagList = bookmarkDTO.getAllTagList();
 			Map<Long, Double> idMap = new HashMap<Long, Double>();
@@ -644,12 +651,12 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 					hadUpdate = true;
 				}
 			}
-			
-			if(hadUpdate) {
+
+			if (hadUpdate) {
 				bookmarkDTO.setAllTagList(tagList);
 			}
 		}
-		
+
 		bookmarkUrlIf: if (dto.getUrlSubDataList() != null && !dto.getUrlSubDataList().isEmpty()) {
 			List<BookmarkUrlDTO> urlList = bookmarkDTO.getUrlList();
 			Map<Long, Double> idMap = new HashMap<Long, Double>();
@@ -672,24 +679,24 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 					hadUpdate = true;
 				}
 			}
-			
-			if(hadUpdate) {
+
+			if (hadUpdate) {
 				bookmarkDTO.setUrlList(urlList);
 			}
 		}
-		
-		if(hadUpdate) {
+
+		if (hadUpdate) {
 			rewiriteBookmarkFile(bookmarkDTO);
 			r.setIsSuccess();
 		}
-		
+
 		return r;
 	}
-	
+
 	@Override
 	public RemoveEmptyTagResult removeEmptyTags(RemoveEmptyTagDTO dto) {
 		RemoveEmptyTagResult r = new RemoveEmptyTagResult();
-		
+
 		Bookmark po = matchBookmarkAndUser(dto.getBookmarkPK());
 		if (po == null) {
 			r.setMessage("It doesn't look like your bookmark");
@@ -697,38 +704,38 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 		}
 
 		BookmarkDTO bookmarkDTO = buildBookmarkDtoFromFile(po.getId());
-		
-		if(bookmarkDTO.getAllTagList().isEmpty() || bookmarkDTO.getUrlList().isEmpty()) {
+
+		if (bookmarkDTO.getAllTagList().isEmpty() || bookmarkDTO.getUrlList().isEmpty()) {
 			return r;
 		}
-		
+
 		List<BookmarkTagDTO> allTagList = bookmarkDTO.getAllTagList();
 		List<BookmarkUrlDTO> urlList = bookmarkDTO.getUrlList();
 		Set<BookmarkTagDTO> allTagSet = new HashSet<>();
 		allTagSet.addAll(allTagList);
-		
-		for(int i = 0; i < urlList.size() && !allTagSet.isEmpty(); i++) {
+
+		for (int i = 0; i < urlList.size() && !allTagSet.isEmpty(); i++) {
 			BookmarkUrlDTO url = urlList.get(i);
-			for(int j = 0; j < url.getTagList().size() && !allTagSet.isEmpty(); j++) {
+			for (int j = 0; j < url.getTagList().size() && !allTagSet.isEmpty(); j++) {
 				BookmarkTagDTO tmpTag = url.getTagList().get(j);
 				allTagSet.remove(tmpTag);
 			}
 		}
-		
-		if(allTagSet.isEmpty()) {
+
+		if (allTagSet.isEmpty()) {
 			return r;
 		}
-		
+
 		List<String> tagRemoved = new ArrayList<>();
-		for(BookmarkTagDTO tagNeedRemove : allTagSet) {
+		for (BookmarkTagDTO tagNeedRemove : allTagSet) {
 			allTagList.remove(tagNeedRemove);
 			tagRemoved.add(tagNeedRemove.getTagName());
 		}
-		
-		if(!allTagList.isEmpty()) {
+
+		if (!allTagList.isEmpty()) {
 			rewiriteBookmarkFile(bookmarkDTO);
 		}
-		
+
 		r.setMessage("Removed: " + tagRemoved);
 		r.setIsSuccess();
 		return r;
@@ -739,57 +746,166 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 		BookmarkExample example = new BookmarkExample();
 		example.createCriteria().andIsDeleteEqualTo(false);
 		List<Bookmark> poList = mapper.selectByExample(example);
-		for(Bookmark po : poList) {
+		for (Bookmark po : poList) {
 			BookmarkDTO dto = buildBookmarkDtoFromFile(po.getId());
 			reBalanceWeight(dto);
 		}
 	}
-	
+
 	private void reBalanceWeight(BookmarkDTO dto) {
-		if(dto == null || (dto.getAllTagList().isEmpty() && dto.getUrlList().isEmpty())) {
+		if (dto == null || (dto.getAllTagList().isEmpty() && dto.getUrlList().isEmpty())) {
 			return;
 		}
-		
+
 		Double limitWeight = 9999D;
 		boolean needUpdate = false;
-		
-		if(!dto.getAllTagList().isEmpty()) {
+
+		if (!dto.getAllTagList().isEmpty()) {
 			Double tagMaxWeight = 0D;
-			for(BookmarkTagDTO tag : dto.getAllTagList()) {
-				if(tag.getWeight() > tagMaxWeight) {
+			for (BookmarkTagDTO tag : dto.getAllTagList()) {
+				if (tag.getWeight() > tagMaxWeight) {
 					tagMaxWeight = tag.getWeight();
 				}
 			}
-			
-			if(tagMaxWeight > limitWeight) {
+
+			if (tagMaxWeight > limitWeight) {
 				needUpdate = true;
 				Double rate = limitWeight / tagMaxWeight;
-				for(BookmarkTagDTO tag : dto.getAllTagList()) {
+				for (BookmarkTagDTO tag : dto.getAllTagList()) {
 					tag.setWeight(tag.getWeight() * rate);
 				}
 			}
 		}
-		
-		
-		if(!dto.getUrlList().isEmpty()) {
+
+		if (!dto.getUrlList().isEmpty()) {
 			Double tagUrlWeight = 0D;
-			for(BookmarkUrlDTO url : dto.getUrlList()) {
-				if(url.getWeight() > tagUrlWeight) {
+			for (BookmarkUrlDTO url : dto.getUrlList()) {
+				if (url.getWeight() > tagUrlWeight) {
 					tagUrlWeight = url.getWeight();
 				}
 			}
-			
-			if(tagUrlWeight > limitWeight) {
+
+			if (tagUrlWeight > limitWeight) {
 				needUpdate = true;
 				Double rate = limitWeight / tagUrlWeight;
-				for(BookmarkUrlDTO url : dto.getUrlList()) {
+				for (BookmarkUrlDTO url : dto.getUrlList()) {
 					url.setWeight(url.getWeight() * rate);
 				}
 			}
 		}
-		
-		if(needUpdate) {
+
+		if (needUpdate) {
 			rewiriteBookmarkFile(dto);
 		}
 	}
+
+	@Override
+	public CommonResult importFromBookmarkFile(UploadBookmarkDTO dto) {
+		CommonResult r = new CommonResult();
+		
+		if (dto.getBookmarkHtmlInBase64() == null) {
+			r.setMessage("Please upload an HTML file");
+			return r;
+		}
+
+		if (dto.getBookmarkHtmlInBase64().length() > ImageConstant.imgBase64MaxSize) {
+			r.setMessage("File too big, please upload file less than " + ImageConstant.imgBase64MaxSize / 1024 / 1024
+					+ "MB");
+			return r;
+		}
+
+		BookmarkDTO bookmarkDTO = buildBookmarkDtoFromHtmlLines(dto.getBookmarkHtmlInBase64(), dto.getBookmarkName());
+		if(bookmarkDTO == null) {
+			r.setMessage("Please upload bookmark export from Chrome or Firefox and DO NOT edit it");
+			return r;
+		}
+		
+		Long userId = baseUtilCustom.getUserId();
+		Bookmark newBookmarkPO = new Bookmark();
+		newBookmarkPO.setUserId(userId);
+		newBookmarkPO.setBookmarkName(dto.getBookmarkName());
+		newBookmarkPO.setId(bookmarkDTO.getId());
+		newBookmarkPO.setPwd(passwordEncoder.encode(dto.getPwd()));
+		mapper.insertSelective(newBookmarkPO);
+		
+		rewiriteBookmarkFile(bookmarkDTO);
+
+		r.setIsSuccess();
+		r.setMessage("Import success");
+		return r;
+	}
+
+	private BookmarkDTO buildBookmarkDtoFromHtmlLines(String htmlStrInBase64, String bookmarkName) {
+		try {
+			htmlStrInBase64 = htmlStrInBase64.split(",")[1];
+			
+			byte[] htmlByte = Base64.getDecoder().decode(htmlStrInBase64);
+			String htmlStr = new String(htmlByte);
+			
+			BookmarkDTO dto = new BookmarkDTO();
+			dto.setId(snowFlake.getNextId());
+			dto.setBookmarkName(bookmarkName);
+			
+			BookmarkTagDTO tagDTO = null;
+			BookmarkUrlDTO urlDTO = null;
+			List<BookmarkTagDTO> tmpTagList = null;
+			Map<String, BookmarkTagDTO> tagMap = new HashMap<>();
+			
+			Document doc = Jsoup.parse(htmlStr);
+			
+			Elements bodyList = doc.getElementsByTag("body");
+			Element body = bodyList.get(0);
+			
+			Elements childrenOfBody = body.children();
+			Element targetDL = null;
+			for(int i = 0; i < childrenOfBody.size() && targetDL == null; i++) {
+				if("dl".equals(childrenOfBody.get(i).tagName())) {
+					targetDL = childrenOfBody.get(i);
+				}
+			}
+
+			Elements aList = doc.getElementsByTag("a");
+			for(Element a : aList) {
+				urlDTO = new BookmarkUrlDTO();
+				urlDTO.setId(snowFlake.getNextId());
+				urlDTO.setName(a.text());
+				urlDTO.setUrl(URLEncoder.encode(a.attr("href"), StandardCharsets.UTF_8));
+
+				tmpTagList = new ArrayList<>();
+				
+				Element parent = null;
+				while (a.hasParent() && ("dt".equals(a.parent().tagName()) || "dl".equals(a.parent().tagName()))) {
+					parent = a.parent();
+					if("dt".equals(parent.tagName())) {
+						Elements children = parent.children();
+						for(int i = 0; i < children.size(); i++) {
+							if("h3".equals(children.get(i).tagName())) {
+								String bookmarkTagName = children.get(i).text();
+								if(tagMap.containsKey(bookmarkTagName)) {
+									tagDTO = tagMap.get(bookmarkTagName);
+								} else {
+									tagDTO = new BookmarkTagDTO();
+									tagDTO.setId(snowFlake.getNextId());
+									tagDTO.setTagName(bookmarkTagName);
+									tagMap.put(bookmarkTagName, tagDTO);
+								}
+								tmpTagList.add(tagDTO);
+							}
+						}
+					}
+					a = parent;
+				}
+				urlDTO.setTagList(tmpTagList);
+				dto.addUrl(urlDTO);
+			}
+			
+			dto.getAllTagList().addAll(tagMap.values());
+			return dto;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 }

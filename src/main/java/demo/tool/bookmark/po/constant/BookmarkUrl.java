@@ -12,5 +12,6 @@ public class BookmarkUrl {
 	public static final String DELETE_BOOKMARK_URL = "/deleteBookmarkUrl";
 	public static final String BOOKMARK_WEIGHT_CHANGE = "/bookmarkWeightChange";
 	public static final String REMOVE_EMPTY_TAG = "/removeEmptyTag";
+	public static final String UPLOAD_BOOKMARK = "/uploadBookmark";
 	
 }

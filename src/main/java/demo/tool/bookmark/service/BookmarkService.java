@@ -6,6 +6,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.tool.bookmark.pojo.dto.BookmarkWeightChangeMainDTO;
 import demo.tool.bookmark.pojo.dto.CreateBookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.CreateNewBookmarkDTO;
+import demo.tool.bookmark.pojo.dto.DeleteBookmarkDTO;
 import demo.tool.bookmark.pojo.dto.DeleteBookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.DeleteBookmarkUrlDTO;
 import demo.tool.bookmark.pojo.dto.EditBookmarkTagDTO;
@@ -47,5 +48,7 @@ public interface BookmarkService {
 	void reBalanceWeight();
 
 	CommonResult importFromBookmarkFile(UploadBookmarkDTO dto);
+
+	CommonResult deleteBookmark(DeleteBookmarkDTO dto);
 
 }

@@ -15,6 +15,7 @@ import demo.common.controller.CommonController;
 import demo.tool.bookmark.po.constant.BookmarkUrl;
 import demo.tool.bookmark.pojo.dto.BookmarkWeightChangeMainDTO;
 import demo.tool.bookmark.pojo.dto.CreateBookmarkTagDTO;
+import demo.tool.bookmark.pojo.dto.DeleteBookmarkDTO;
 import demo.tool.bookmark.pojo.dto.DeleteBookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.DeleteBookmarkUrlDTO;
 import demo.tool.bookmark.pojo.dto.EditBookmarkTagDTO;
@@ -97,5 +98,11 @@ public class BookmarkController extends CommonController {
 	@ResponseBody
 	public CommonResult importFromBookmarkFile(@RequestBody UploadBookmarkDTO dto) {
 		return service.importFromBookmarkFile(dto);
+	}
+	
+	@PostMapping(value = BookmarkUrl.DELETE_BOOKMARK)
+	@ResponseBody
+	public CommonResult deleteBookmark(@RequestBody DeleteBookmarkDTO dto) {
+		return service.deleteBookmark(dto);
 	}
 }

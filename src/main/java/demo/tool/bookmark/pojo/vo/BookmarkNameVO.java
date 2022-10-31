@@ -4,6 +4,8 @@ public class BookmarkNameVO {
 
 	private String pk;
 
+	private String pkUrlEncoded;
+
 	private String bookmarkName;
 
 	private boolean needPwd = true;
@@ -14,6 +16,14 @@ public class BookmarkNameVO {
 
 	public void setPk(String pk) {
 		this.pk = pk;
+	}
+
+	public String getPkUrlEncoded() {
+		return pkUrlEncoded;
+	}
+
+	public void setPkUrlEncoded(String pkUrlEncoded) {
+		this.pkUrlEncoded = pkUrlEncoded;
 	}
 
 	public String getBookmarkName() {
@@ -34,7 +44,8 @@ public class BookmarkNameVO {
 
 	@Override
 	public String toString() {
-		return "BookmarkNameVO [pk=" + pk + ", bookmarkName=" + bookmarkName + ", needPwd=" + needPwd + "]";
+		return "BookmarkNameVO [pk=" + pk + ", pkUrlEncoded=" + pkUrlEncoded + ", bookmarkName=" + bookmarkName
+				+ ", needPwd=" + needPwd + "]";
 	}
 
 }

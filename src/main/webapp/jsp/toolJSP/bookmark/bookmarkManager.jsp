@@ -18,35 +18,68 @@
         <table class="table table-striped table-dark">
           <thead class="thead-dark">
             <tr>
+              <td>
+                <span>New bookmark name</span><br>
+                <input type="text" name="" placeholder="New bookmark name" id="newBookmarkName">
+              </td>
+              <td>
+                <input type="file" name="" id="uploadHtmlInput">
+                <input type="text" name="" id="uploadHtmlContent" style="display: none">
+              </td>
+              <td>
+                <div id="pwdInputDiv">
+                  <input type="password" name="" id="pwd1" placeholder="Input password if need"><br>
+                  <input type="password" name="" id="pwd2" placeholder="Repeat password">
+                </div>
+              </td>
+              <td>
+                <button class="btn btn-primary btn-sm" id="updateHtmlBookmark">
+                  Submit html bookmark
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span id="uploadResult"></span>
+              </td>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <table class="table table-striped table-dark">
+          <thead class="thead-dark">
+            <tr>
               <td>Name</td>
-              <td>Need pwd</td>
+              <td></td>
               <td></td>
             </tr>
           </thead>
           <tbody id="bookmarkVoList">
             <c:forEach items="${bookmarkList}" var="bookmarkVO">
-              <tr class="bookmarkVO">
+              <tr class="bookmarkVO" bookmarkPK="${bookmarkVO.pk}">
                 <td>
-                  <a href="/bookmark/detail?pk=${bookmarkVO.pk}">${bookmarkVO.bookmarkName}</a>
+                  <a href="/bookmark/detail?pk=${bookmarkVO.pkUrlEncoded}">${bookmarkVO.bookmarkName}</a>
                 </td>
                 <td>
-                  <input name="needPwd" bookmarkPK="${bookmarkVO.pk}" type="text"
-                  value="${bookmarkVO.needPwd}">
+                  <c:if test="${bookmarkVO.needPwd}">
+                    凭密码访问
+                  </c:if>
                 </td>
                 <td>
-                  Edit
+                  <button class="btn btn-primary btn-sm editBookmark" 
+                    bookmarkPK="${bookmarkVO.pk}">
+                    Edit
+                  </button>
+                  <button class="btn btn-danger btn-sm deleteBookmark" 
+                    bookmarkPK="${bookmarkVO.pk}">
+                    Delete
+                  </button>
                 </td>
               </tr>
             </c:forEach>
-            <tr>
-              <input type="text" name="" placeholder="New bookmark name" id="newBookmarkName">
-              <input type="file" name="" id="uploadHtmlInput">
-              <input type="text" name="" id="uploadHtmlContent" style="display: none">
-              <input type="password" name="" id="pwd1">
-              <input type="password" name="" id="pwd2">
-              <button id="updateHtmlBookmark">Submit html bookmark</button>
-              <span id="uploadResult"></span>
-            </tr>
           </tbody>
         </table>
       </div>
@@ -59,6 +92,36 @@
   <script type="text/javascript">
 
     $(document).ready(function() {
+
+      $(".deleteBookmark").click(function() {
+        var url = "/bookmark/deleteBookmark";
+
+        var bookmarkPK = $(this).attr("bookmarkPK");
+
+        var jsonOutput = {
+          bookmarkPK : bookmarkPK,
+        };
+
+        $.ajax({
+          type : "POST",
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          dataType: 'json',
+          contentType: "application/json",
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          timeout: 15000,
+          success:function(data){
+            $("#uploadResult").text(data.message);
+            if(data.code == 0){
+              $(".bookmarkVO[bookmarkPK='"+bookmarkPK+"']").remove();
+            }
+          },
+          error:function(e){
+          }
+        });
+      });
 
       $("#uploadHtmlInput").change(function() {
         const file = this.files[0];
@@ -77,10 +140,18 @@
         var pwd = "";
         var bookmarkHtmlInBase64 = $("#uploadHtmlContent").val();
 
-        // TODO
+        if(newBookmarkName.length < 1){
+          $("#uploadResult").text("Please set bookmark name");
+          return;
+        }
+
+        var pwd1 = $("#pwd1").val();
+        var pwd2 = $("#pwd2").val();
+
         if(pwd1.length > 0){
           if(pwd1 != pwd2){
-            $("#uploadResult").text("The passwords entered twice do not match");  
+            $("#uploadResult").text("The passwords entered twice do not match");
+            return;
           } else {
             pwd = pwd1;
           }
@@ -106,8 +177,10 @@
           timeout: 15000,
           success:function(data){
             if(data.code == 0){
-              newBookmarkName.val("");
-              bookmarkHtmlSrc.val("");
+              $("#newBookmarkName").val("");
+              $("#uploadHtmlContent").val("");
+              $("#pwd1").val("");
+              $("#pwd2").val("");
             }
             $("#uploadResult").text(data.message);
           },

@@ -1,5 +1,6 @@
 package demo.tool.bookmark.service.impl;
 
+import java.io.File;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -39,6 +40,7 @@ import demo.tool.bookmark.pojo.dto.BookmarkUrlWeightChangeSubDataDTO;
 import demo.tool.bookmark.pojo.dto.BookmarkWeightChangeMainDTO;
 import demo.tool.bookmark.pojo.dto.CreateBookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.CreateNewBookmarkDTO;
+import demo.tool.bookmark.pojo.dto.DeleteBookmarkDTO;
 import demo.tool.bookmark.pojo.dto.DeleteBookmarkTagDTO;
 import demo.tool.bookmark.pojo.dto.DeleteBookmarkUrlDTO;
 import demo.tool.bookmark.pojo.dto.EditBookmarkTagDTO;
@@ -91,9 +93,12 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 		List<Bookmark> poList = mapper.selectByExample(example);
 		List<BookmarkNameVO> voList = new ArrayList<>();
 		BookmarkNameVO vo = null;
+		String bookmarkPK = null;
 		for (Bookmark po : poList) {
 			vo = new BookmarkNameVO();
-			vo.setPk(URLEncoder.encode(systemOptionService.encryptId(po.getId()), StandardCharsets.UTF_8));
+			bookmarkPK = systemOptionService.encryptId(po.getId());
+			vo.setPkUrlEncoded(URLEncoder.encode(systemOptionService.encryptId(po.getId()), StandardCharsets.UTF_8));
+			vo.setPk(bookmarkPK);
 			vo.setBookmarkName(po.getBookmarkName());
 			vo.setNeedPwd(po.getPwd() != null);
 			voList.add(vo);
@@ -825,7 +830,9 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 		newBookmarkPO.setUserId(userId);
 		newBookmarkPO.setBookmarkName(dto.getBookmarkName());
 		newBookmarkPO.setId(bookmarkDTO.getId());
-		newBookmarkPO.setPwd(passwordEncoder.encode(dto.getPwd()));
+		if(StringUtils.isNotBlank(dto.getPwd())) {
+			newBookmarkPO.setPwd(passwordEncoder.encode(dto.getPwd()));
+		}
 		mapper.insertSelective(newBookmarkPO);
 		
 		rewiriteBookmarkFile(bookmarkDTO);
@@ -908,4 +915,25 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 		}
 	}
 
+	@Override
+	public CommonResult deleteBookmark(DeleteBookmarkDTO dto) {
+		CommonResult r = new CommonResult();
+		Bookmark po = matchBookmarkAndUser(dto.getBookmarkPK());
+		if (po == null) {
+			r.setMessage("It doesn't look like your bookmark");
+			return r;
+		}
+		
+		String filePath = getStorePath(po.getId());
+		File f = new File(filePath);
+		f.deleteOnExit();
+		
+		po.setIsDelete(true);
+		
+		mapper.updateByPrimaryKeySelective(po);
+		
+		r.setMessage(po.getBookmarkName() + " deleted.");
+		r.setIsSuccess();
+		return r;
+	}
 }

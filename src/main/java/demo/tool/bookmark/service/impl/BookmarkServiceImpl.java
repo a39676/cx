@@ -849,6 +849,8 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 			byte[] htmlByte = Base64.getDecoder().decode(htmlStrInBase64);
 			String htmlStr = new String(htmlByte);
 			
+			htmlStr = sanitize(htmlStr);
+			
 			BookmarkDTO dto = new BookmarkDTO();
 			dto.setId(snowFlake.getNextId());
 			dto.setBookmarkName(bookmarkName);
@@ -876,7 +878,7 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 				urlDTO = new BookmarkUrlDTO();
 				urlDTO.setId(snowFlake.getNextId());
 				urlDTO.setName(a.text());
-				urlDTO.setUrl(URLEncoder.encode(a.attr("href"), StandardCharsets.UTF_8));
+				urlDTO.setUrl(a.attr("href"));
 
 				tmpTagList = new ArrayList<>();
 				

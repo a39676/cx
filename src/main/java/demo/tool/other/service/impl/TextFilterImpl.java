@@ -22,6 +22,18 @@ public class TextFilterImpl extends CommonService implements TextFilter {
 	}
 	
 	@Override
+	public PolicyFactory getBookmarkFilter() {
+		PolicyFactory policy = new HtmlPolicyBuilder()
+			    .allowElements("a").allowUrlProtocols("https").allowAttributes("href").onElements("a").requireRelNofollowOnLinks()
+			    .allowElements("h3")
+			    .allowElements("dl")
+			    .allowElements("dt")
+			    .allowElements("p")
+			    .toFactory();
+		return policy;
+	}
+	
+	@Override
 	public PolicyFactory getAllFilter() {
 		PolicyFactory policy = new HtmlPolicyBuilder()
 			    .toFactory();

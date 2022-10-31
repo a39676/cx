@@ -8,4 +8,6 @@ public interface TextFilter {
 
 	PolicyFactory getAllFilter();
 
+	PolicyFactory getBookmarkFilter();
+
 }

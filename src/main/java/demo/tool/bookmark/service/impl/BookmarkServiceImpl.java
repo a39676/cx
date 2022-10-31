@@ -176,7 +176,7 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 
 	private String getStorePath(Long id) {
 		if (isWindows()) {
-			return "d:/" + MAIN_FOLDER_PATH + "/bookmark/" + String.valueOf(id) + ".json";
+			return "d:" + MAIN_FOLDER_PATH + "/bookmark/" + String.valueOf(id) + ".json";
 		} else {
 			return MAIN_FOLDER_PATH + "/bookmark/" + String.valueOf(id) + ".json";
 		}
@@ -496,7 +496,7 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 	}
 
 	private String sanitize(String content) {
-		PolicyFactory filter = textFilter.getArticleFilter();
+		PolicyFactory filter = textFilter.getBookmarkFilter();
 		return filter.sanitize(content);
 	}
 
@@ -928,7 +928,7 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 		
 		String filePath = getStorePath(po.getId());
 		File f = new File(filePath);
-		f.deleteOnExit();
+		f.delete();
 		
 		po.setIsDelete(true);
 		

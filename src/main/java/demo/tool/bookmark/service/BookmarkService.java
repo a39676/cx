@@ -51,4 +51,6 @@ public interface BookmarkService {
 
 	CommonResult deleteBookmark(DeleteBookmarkDTO dto);
 
+	void cleanOldFile();
+
 }

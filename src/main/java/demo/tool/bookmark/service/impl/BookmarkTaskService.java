@@ -15,5 +15,6 @@ public class BookmarkTaskService {
 	@Scheduled(cron = "30 29 03 * * *")
 	public void reBalanceWeight() {
 		service.reBalanceWeight();
+		service.cleanOldFile();
 	}
 }

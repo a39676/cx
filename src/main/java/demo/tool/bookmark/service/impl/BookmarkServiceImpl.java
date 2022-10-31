@@ -339,6 +339,9 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 
 		r.setIsSuccess();
 		if (!removedTagNameList.isEmpty()) {
+			po.setUpdateTime(LocalDateTime.now());
+			mapper.updateByPrimaryKeySelective(po);
+			
 			r.setMessage("Tag :\"" + removedTagNameList + "\" deleted");
 		} else {
 			r.setMessage("Tag deleted");
@@ -367,7 +370,7 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 		}
 
 		if (!baseUtilCustom.hasAdminRole()) {
-			if (!userId.equals(po.getUserId())) {
+			if (po.getIsDelete() || !userId.equals(po.getUserId())) {
 				return null;
 			}
 		}
@@ -418,6 +421,9 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 		bookmarkDTO.addTag(tagDTO);
 
 		rewiriteBookmarkFile(bookmarkDTO);
+		
+		po.setUpdateTime(LocalDateTime.now());
+		mapper.updateByPrimaryKeySelective(po);
 
 		r.setPk(systemOptionService.encryptId(tagDTO.getId()));
 		r.setIsSuccess();
@@ -477,6 +483,9 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 		bookmarkDTO.addTag(tagDTO);
 
 		rewiriteBookmarkFile(bookmarkDTO);
+		
+		po.setUpdateTime(LocalDateTime.now());
+		mapper.updateByPrimaryKeySelective(po);
 
 		r.setMessage("Edit success, rename " + oldTagName + " to " + dto.getTagName());
 		r.setIsSuccess();
@@ -578,6 +587,10 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 
 			bookmarkDTO.addUrl(urlDTO);
 			rewiriteBookmarkFile(bookmarkDTO);
+			
+			po.setUpdateTime(LocalDateTime.now());
+			mapper.updateByPrimaryKeySelective(po);
+			
 			r.setMessage("Edited bookmark: " + dto.getBookmarkUrlName());
 			r.setIsSuccess();
 			return r;
@@ -610,6 +623,10 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 
 		if (deleteBookmark != null) {
 			rewiriteBookmarkFile(bookmarkDTO);
+			
+			po.setUpdateTime(LocalDateTime.now());
+			mapper.updateByPrimaryKeySelective(po);
+			
 			r.setMessage("\"" + deleteBookmark.getName() + "\", " + deleteBookmark.getUrl() + ", " + "deleted");
 			r.setIsSuccess();
 		}
@@ -692,6 +709,10 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 
 		if (hadUpdate) {
 			rewiriteBookmarkFile(bookmarkDTO);
+			
+			po.setUpdateTime(LocalDateTime.now());
+			mapper.updateByPrimaryKeySelective(po);
+			
 			r.setIsSuccess();
 		}
 
@@ -739,6 +760,9 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 
 		if (!allTagList.isEmpty()) {
 			rewiriteBookmarkFile(bookmarkDTO);
+			
+			po.setUpdateTime(LocalDateTime.now());
+			mapper.updateByPrimaryKeySelective(po);
 		}
 
 		r.setMessage("Removed: " + tagRemoved);
@@ -849,7 +873,9 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 			byte[] htmlByte = Base64.getDecoder().decode(htmlStrInBase64);
 			String htmlStr = new String(htmlByte);
 			
-			htmlStr = sanitize(htmlStr);
+			if(!baseUtilCustom.hasSuperAdminRole()) {
+				htmlStr = sanitize(htmlStr);
+			}
 			
 			BookmarkDTO dto = new BookmarkDTO();
 			dto.setId(snowFlake.getNextId());
@@ -878,7 +904,12 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 				urlDTO = new BookmarkUrlDTO();
 				urlDTO.setId(snowFlake.getNextId());
 				urlDTO.setName(a.text());
-				urlDTO.setUrl(a.attr("href"));
+				String url = a.attr("href");
+				if(!url.startsWith("http")) {
+					urlDTO.setUrl("https://" + url);
+				} else {
+					urlDTO.setUrl(url);
+				}
 
 				tmpTagList = new ArrayList<>();
 				
@@ -926,10 +957,7 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 			return r;
 		}
 		
-		String filePath = getStorePath(po.getId());
-		File f = new File(filePath);
-		f.delete();
-		
+		po.setUpdateTime(LocalDateTime.now());
 		po.setIsDelete(true);
 		
 		mapper.updateByPrimaryKeySelective(po);
@@ -937,5 +965,22 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 		r.setMessage(po.getBookmarkName() + " deleted.");
 		r.setIsSuccess();
 		return r;
+	}
+	
+	@Override
+	public void cleanOldFile() {
+		int maxLivingMonth = 1;
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime oldestTime = now.minusMonths(maxLivingMonth);
+		
+		BookmarkExample example = new BookmarkExample();
+		example.createCriteria().andIsDeleteEqualTo(true).andUpdateTimeLessThan(oldestTime);
+		List<Bookmark> poList = mapper.selectByExample(example);
+		
+		for(Bookmark po : poList) {
+			String filePath = getStorePath(po.getId());
+			File f = new File(filePath);
+			f.delete();
+		}
 	}
 }

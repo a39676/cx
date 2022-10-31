@@ -147,8 +147,6 @@
         tagClick(tagPK);
       })
 
-      window.setInterval(updateBookmarkWeightData(), 60000);
-
       $(".bookmarkUrl").click(function() {
         var urlPK = $(this).attr("urlPK");
         if(urlWeightMap.has(urlPK)){
@@ -156,6 +154,7 @@
         }else{
           urlWeightMap.set(urlPK, 1);
         }
+        updateBookmarkWeightData();
       })
 
       function tagClick(tagPK){
@@ -169,6 +168,7 @@
           }else{
             tagWeightMap.set(tagPK, 1);
           }
+          updateBookmarkWeightData();
         } else {
           thisTag.removeClass("btn-primary");
           thisTag.addClass("btn-light");
@@ -736,10 +736,6 @@
         var tmpTagData = {};
         var tmpUrlData = {};
 
-        if(tagSubDataList.length < 1 && urlSudDataList.length < 1){
-          return;
-        }
-  
         tagWeightMap.forEach(function(value, key) {
           tmpTagData = {tagPK:key, weight:value}
           tagSubDataList.push(tmpTagData);
@@ -750,12 +746,18 @@
           urlSudDataList.push(tmpUrlData);
         });
 
+        if(tagSubDataList.length < 1 && urlSudDataList.length < 1){
+          return;
+        }
+
         var url = "/bookmark/bookmarkWeightChange";
         var jsonOutput = {
           bookmarkPK : bookmarkPK,
           tagSubDataList : tagSubDataList,
           urlSudDataList : urlSudDataList,
         };
+
+        console.log(jsonOutput);
 
         $.ajax({
           type : "POST",

@@ -1,4 +1,9 @@
-自定义书签
+Spring Boot update to 2.7.5
+	Spring Security update, WebSecurityConfigurerAdapter was deprecated
+	Try update Security.java code
+	 
+
+定义书签
 	可选凭密码访问
 		密码 6~16位
 	

@@ -12,8 +12,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -46,8 +45,8 @@ import demo.toyParts.weixin.pojo.constant.WXUrl;
 import image.pojo.constant.ImageInteractionUrl;
 
 @Configuration
-@EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+//@EnableWebSecurity
+public class SecurityConfig {
 	
 	@Autowired
 	private DataSource dataSource;
@@ -72,8 +71,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	    return authProvider;
 	}
 	
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
+	@Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
             .antMatchers("/welcome**").permitAll()
             .antMatchers(LoginUrlConstant.LOGIN + "/**").permitAll()
@@ -144,35 +143,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		    .and()
 		    	.csrf()
 		    		.ignoringAntMatchers(UrgeNoticeUrl.ROOT + "/**")
-//		    尝试搭建 web socket, 修改同源策略
-//		    .and()
-//		        .headers().frameOptions().sameOrigin()
 		    ;
 	  
-        /*
-         * 增加filter在此  同样操作 但建议使用
-         * http.addFilterAfter(newFilter,CsrfFilter.class); 
-         * 2020-03-18 
-         * 编码过滤拟转移到 application.yml
-         */
-//        CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
-//        encodingFilter.setEncoding(StandardCharsets.UTF_8.displayName());
-//        encodingFilter.setForceEncoding(true);
-//        http.addFilterBefore(encodingFilter, CsrfFilter.class);
-        
+        return http.build();
 	}
 	
-	@Override
-	public void configure(WebSecurity web) throws Exception {
+	@Bean
+	public WebSecurity configure(WebSecurity web) throws Exception {
 	    web.ignoring()
 	    .antMatchers("/test/testIgnoring")
 	    .antMatchers(ImageInteractionUrl.root + "/**")
 	    ;
+	    return web;
 	}
 	
-	@Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+	@Bean
+    public AuthenticationManagerBuilder configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authProvider());
+        return auth;
     }
 
 	@Bean

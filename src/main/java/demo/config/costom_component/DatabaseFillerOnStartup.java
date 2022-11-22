@@ -94,7 +94,7 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 		}
 		
 		log.error("taskHandlerServiceImpl.fixRuningEventStatus();");
-		taskHandlerServiceImpl.fixRuningEventStatus();
+		taskHandlerServiceImpl.fixRuningTaskStatus();
 		
 		log.error("taskHandlerServiceImpl.setBreakFlag(0);");
 		taskHandlerServiceImpl.setBreakFlag(0);

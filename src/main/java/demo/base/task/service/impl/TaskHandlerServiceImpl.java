@@ -63,12 +63,12 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 			return r;
 		}
 
-		if (!optionService.getBreakFlag()) {
+		if (optionService.getBreakFlag()) {
 			r.setMessage("Break flag = true");
 			return r;
 		}
 
-		if (existsRuningEvent()) {
+		if (optionService.getRunningTask()) {
 			String taskName = optionService.getRunningTaskName();
 			r.setMessage("Still running task: " + taskName);
 			return r;
@@ -80,8 +80,10 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 		String secondTaskName = null;
 
 		try {
+			if (TaskType.TEST.getCode().equals(dto.getTaskFirstCode())) {
+				sendTelegram("Receive test task");
 
-			if (TaskType.SYSTEM.getCode().equals(dto.getTaskFirstCode())) {
+			} else if (TaskType.SYSTEM.getCode().equals(dto.getTaskFirstCode())) {
 				SystemTaskType secondTaskType = SystemTaskType.getType(dto.getTaskSecondCode());
 				secondTaskName = secondTaskType.getName();
 
@@ -155,7 +157,7 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 				} else if (CalendarNoticeTaskType.SEND_TOMORROW_NOTICE_LIST.getCode().equals(dto.getTaskSecondCode())) {
 					calendarNoticeTaskService.sendTomorrowNoticeList();
 				}
-				
+
 			} else if (TaskType.OLD_DATA_DELETE.getCode().equals(dto.getTaskFirstCode())) {
 				OldDataDeleteTaskType secondTaskType = OldDataDeleteTaskType.getType(dto.getTaskSecondCode());
 				secondTaskName = secondTaskType.getName();
@@ -193,7 +195,14 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 			return r;
 		}
 
-		if (TaskType.ARTICLE.equals(taskType)) {
+		if (TaskType.SYSTEM.equals(taskType)) {
+			SystemTaskType secondTaskType = SystemTaskType.getType(dto.getTaskSecondCode());
+			if (secondTaskType == null) {
+				r.setMessage("Can NOT find system test task type, type code: " + dto.getTaskSecondCode()
+						+ ", task name: " + dto.getTaskSecondName());
+				return r;
+			}
+		} else if (TaskType.ARTICLE.equals(taskType)) {
 			ArticleTaskType secondTaskType = ArticleTaskType.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
 				r.setMessage("Can NOT find article task type, type code: " + dto.getTaskSecondCode() + ", task name: "
@@ -202,7 +211,33 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 			}
 
 		} else if (TaskType.AUTOMATION_TEST.equals(taskType)) {
-//			TODO
+			AutomationTestTaskType secondTaskType = AutomationTestTaskType.getType(dto.getTaskSecondCode());
+			if (secondTaskType == null) {
+				r.setMessage("Can NOT find automation test task type, type code: " + dto.getTaskSecondCode()
+						+ ", task name: " + dto.getTaskSecondName());
+				return r;
+			}
+		} else if (TaskType.BOOKMARK.equals(taskType)) {
+			BookmarkTaskType secondTaskType = BookmarkTaskType.getType(dto.getTaskSecondCode());
+			if (secondTaskType == null) {
+				r.setMessage("Can NOT find bookmark test task type, type code: " + dto.getTaskSecondCode()
+						+ ", task name: " + dto.getTaskSecondName());
+				return r;
+			}
+		} else if (TaskType.CALENDAR_NOTICE.equals(taskType)) {
+			CalendarNoticeTaskType secondTaskType = CalendarNoticeTaskType.getType(dto.getTaskSecondCode());
+			if (secondTaskType == null) {
+				r.setMessage("Can NOT find calendar notice test task type, type code: " + dto.getTaskSecondCode()
+						+ ", task name: " + dto.getTaskSecondName());
+				return r;
+			}
+		} else if (TaskType.OLD_DATA_DELETE.equals(taskType)) {
+			OldDataDeleteTaskType secondTaskType = OldDataDeleteTaskType.getType(dto.getTaskSecondCode());
+			if (secondTaskType == null) {
+				r.setMessage("Can NOT find old data delete test task type, type code: " + dto.getTaskSecondCode()
+						+ ", task name: " + dto.getTaskSecondName());
+				return r;
+			}
 		}
 
 		if (optionService.getFaildTaskCountingMap().containsKey(dto.getTaskId())) {
@@ -244,12 +279,12 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 	}
 
 	@Override
-	public boolean existsRuningEvent() {
-		return optionService.getRunningTask();
+	public String getRunningTaskName() {
+		return optionService.getRunningTaskName() + "," + optionService.getRunningTask();
 	}
 
 	@Override
-	public void fixRuningEventStatus() {
+	public void fixRuningTaskStatus() {
 		endTask();
 	}
 

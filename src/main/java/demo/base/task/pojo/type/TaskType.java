@@ -2,6 +2,8 @@ package demo.base.task.pojo.type;
 
 public enum TaskType {
 	
+	TEST("system", -1),
+	
 	SYSTEM("system", 1),
 	ARTICLE("article", 2),
 	AUTOMATION_TEST("automationTest", 3),

@@ -4,9 +4,9 @@ import auxiliaryCommon.pojo.result.CommonResult;
 
 public interface TaskHandlerService {
 
-	boolean existsRuningEvent();
+	String getRunningTaskName();
 
-	void fixRuningEventStatus();
+	void fixRuningTaskStatus();
 
 	boolean setBreakFlag(Integer flag);
 

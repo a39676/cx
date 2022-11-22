@@ -7,6 +7,7 @@ public enum TaskType {
 	AUTOMATION_TEST("automationTest", 3),
 	BOOKMARK("bookmark", 4),
 	CALENDAR_NOTICE("calendarNotice", 5),
+	OLD_DATA_DELETE("oldDataDelete", 6),
 	;
 	
 	private String name;

@@ -10,6 +10,7 @@ import demo.automationTest.pojo.type.AutomationTestTaskType;
 import demo.automationTest.service.impl.AutomationTestTaskServiceImpl;
 import demo.base.task.pojo.constant.TaskResultConstant;
 import demo.base.task.pojo.dto.SendTaskDTO;
+import demo.base.task.pojo.type.OldDataDeleteTaskType;
 import demo.base.task.pojo.type.SystemTaskType;
 import demo.base.task.pojo.type.TaskType;
 import demo.base.task.service.TaskHandlerService;
@@ -42,6 +43,8 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 	private BookmarkTaskService bookmarkTaskService;
 	@Autowired
 	private CalendarNoticeTaskService calendarNoticeTaskService;
+	@Autowired
+	private OldDataDeleteServiceImpl oldDataDeleteService;
 
 	@Override
 	public CommonResult startEvent(String message) {
@@ -139,6 +142,7 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 				if (BookmarkTaskType.RE_BALANCE_WEIGHT.getCode().equals(dto.getTaskSecondCode())) {
 					bookmarkTaskService.reBalanceWeight();
 				}
+
 			} else if (TaskType.CALENDAR_NOTICE.getCode().equals(dto.getTaskFirstCode())) {
 				CalendarNoticeTaskType secondTaskType = CalendarNoticeTaskType.getType(dto.getTaskSecondCode());
 				secondTaskName = secondTaskType.getName();
@@ -151,6 +155,21 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 				} else if (CalendarNoticeTaskType.SEND_TOMORROW_NOTICE_LIST.getCode().equals(dto.getTaskSecondCode())) {
 					calendarNoticeTaskService.sendTomorrowNoticeList();
 				}
+				
+			} else if (TaskType.OLD_DATA_DELETE.getCode().equals(dto.getTaskFirstCode())) {
+				OldDataDeleteTaskType secondTaskType = OldDataDeleteTaskType.getType(dto.getTaskSecondCode());
+				secondTaskName = secondTaskType.getName();
+
+				if (OldDataDeleteTaskType.CLEAN_OLD_AUTO_TEST_UPLOAD_IMAGE.getCode().equals(dto.getTaskSecondCode())) {
+					oldDataDeleteService.cleanOldAutoTestUploadImage();
+				} else if (OldDataDeleteTaskType.CLEAN_EXPIRED_ARTICLE_BURN.getCode().equals(dto.getTaskSecondCode())) {
+					oldDataDeleteService.cleanExpiredArticleBurn();
+				} else if (OldDataDeleteTaskType.IMAGE_CLEAN.getCode().equals(dto.getTaskSecondCode())) {
+					oldDataDeleteService.imageClean();
+				} else if (OldDataDeleteTaskType.DELETE_OLD_EXERCISE_FILE.getCode().equals(dto.getTaskSecondCode())) {
+					oldDataDeleteService.deleteOldExerciseFile();
+				}
+
 			}
 
 		} catch (Exception e) {

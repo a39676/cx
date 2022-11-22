@@ -5,6 +5,8 @@ public enum TaskType {
 	SYSTEM("system", 1),
 	ARTICLE("article", 2),
 	AUTOMATION_TEST("automationTest", 3),
+	BOOKMARK("bookmark", 4),
+	CALENDAR_NOTICE("calendarNotice", 5),
 	;
 	
 	private String name;

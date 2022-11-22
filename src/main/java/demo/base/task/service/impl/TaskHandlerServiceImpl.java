@@ -205,36 +205,36 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 		} else if (TaskType.ARTICLE.equals(taskType)) {
 			ArticleTaskType secondTaskType = ArticleTaskType.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
-				r.setMessage("Can NOT find article task type, type code: " + dto.getTaskSecondCode() + ", task name: "
-						+ dto.getTaskSecondName());
+				r.setMessage("Can NOT find " + ArticleTaskType.class.getSimpleName() + " task type, type code: "
+						+ dto.getTaskSecondCode() + ", task name: " + dto.getTaskSecondName());
 				return r;
 			}
 
 		} else if (TaskType.AUTOMATION_TEST.equals(taskType)) {
 			AutomationTestTaskType secondTaskType = AutomationTestTaskType.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
-				r.setMessage("Can NOT find automation test task type, type code: " + dto.getTaskSecondCode()
+				r.setMessage("Can NOT find " + AutomationTestTaskType.class.getSimpleName() + " task type, type code: " + dto.getTaskSecondCode()
 						+ ", task name: " + dto.getTaskSecondName());
 				return r;
 			}
 		} else if (TaskType.BOOKMARK.equals(taskType)) {
 			BookmarkTaskType secondTaskType = BookmarkTaskType.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
-				r.setMessage("Can NOT find bookmark test task type, type code: " + dto.getTaskSecondCode()
+				r.setMessage("Can NOT find " + BookmarkTaskType.class.getSimpleName() + " task type, type code: " + dto.getTaskSecondCode()
 						+ ", task name: " + dto.getTaskSecondName());
 				return r;
 			}
 		} else if (TaskType.CALENDAR_NOTICE.equals(taskType)) {
 			CalendarNoticeTaskType secondTaskType = CalendarNoticeTaskType.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
-				r.setMessage("Can NOT find calendar notice test task type, type code: " + dto.getTaskSecondCode()
+				r.setMessage("Can NOT find " + CalendarNoticeTaskType.class.getSimpleName() + " task type, type code: " + dto.getTaskSecondCode()
 						+ ", task name: " + dto.getTaskSecondName());
 				return r;
 			}
 		} else if (TaskType.OLD_DATA_DELETE.equals(taskType)) {
 			OldDataDeleteTaskType secondTaskType = OldDataDeleteTaskType.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
-				r.setMessage("Can NOT find old data delete test task type, type code: " + dto.getTaskSecondCode()
+				r.setMessage("Can NOT find " + OldDataDeleteTaskType.class.getSimpleName() + " task type, type code: " + dto.getTaskSecondCode()
 						+ ", task name: " + dto.getTaskSecondName());
 				return r;
 			}
@@ -309,4 +309,5 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 
 		telegramMessageAckProducer.send(dto);
 	}
+
 }

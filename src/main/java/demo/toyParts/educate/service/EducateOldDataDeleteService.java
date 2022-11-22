@@ -1,6 +1,6 @@
 package demo.toyParts.educate.service;
 
-public interface EducateTaskService {
+public interface EducateOldDataDeleteService {
 
 	void deleteOldExerciseFile();
 

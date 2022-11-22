@@ -12,7 +12,7 @@ import demo.base.task.service.CommonTaskService;
 import demo.image.service.ImageService;
 import demo.interaction.image.service.ImageInteractionService;
 import demo.tool.ocr.service.OcrService;
-import demo.toyParts.educate.service.EducateTaskService;
+import demo.toyParts.educate.service.EducateOldDataDeleteService;
 
 @Component
 public class OldDataDeleteServiceImpl extends CommonTaskService {
@@ -26,7 +26,7 @@ public class OldDataDeleteServiceImpl extends CommonTaskService {
 	@Autowired
 	private OcrService ocrService;
 	@Autowired
-	private EducateTaskService educateTaskService;
+	private EducateOldDataDeleteService educateTaskService;
 
 	/** 清理时间过长的, cloudinary上的 自动测试报告图片. */
 	@Scheduled(cron = "19 25 03 * * *")

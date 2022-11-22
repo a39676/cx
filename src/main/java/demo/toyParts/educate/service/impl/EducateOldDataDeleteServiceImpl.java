@@ -13,13 +13,13 @@ import demo.toyParts.educate.mapper.StudentExerciseHistoryMapper;
 import demo.toyParts.educate.pojo.po.StudentExerciseHistory;
 import demo.toyParts.educate.pojo.po.StudentExerciseHistoryExample;
 import demo.toyParts.educate.service.EducateCommonService;
-import demo.toyParts.educate.service.EducateTaskService;
+import demo.toyParts.educate.service.EducateOldDataDeleteService;
 import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 
 @Service
-public class EducateTaskServiceImpl extends EducateCommonService implements EducateTaskService {
+public class EducateOldDataDeleteServiceImpl extends EducateCommonService implements EducateOldDataDeleteService {
 
 	@Autowired
 	private TelegramCalendarNoticeMessageAckProducer telegramMessageAckProducer;
@@ -64,7 +64,7 @@ public class EducateTaskServiceImpl extends EducateCommonService implements Educ
 		TelegramBotNoticeMessageDTO dto = null;
 		dto = new TelegramBotNoticeMessageDTO();
 		dto.setId(TelegramStaticChatID.MY_ID);
-		dto.setBotName(TelegramBotType.BOT_1.getName());
+		dto.setBotName(TelegramBotType.BOT_2.getName());
 		dto.setMsg(msg);
 		
 		telegramMessageAckProducer.send(dto);

@@ -1,11 +1,8 @@
 package demo.base.task.service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.base.task.pojo.dto.SendTaskDTO;
 
 public interface TaskHandlerService {
-
-	CommonResult startEvent(SendTaskDTO dto);
 
 	boolean existsRuningEvent();
 
@@ -14,5 +11,7 @@ public interface TaskHandlerService {
 	boolean setBreakFlag(Integer flag);
 
 	boolean setBreakFlag(boolean flag);
+
+	CommonResult startEvent(String message);
 
 }

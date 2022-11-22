@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.pojo.type.ArticleTaskType;
 import demo.article.article.service.impl.ArticleTaskService;
+import demo.base.task.pojo.constant.TaskResultConstant;
 import demo.base.task.pojo.dto.SendTaskDTO;
 import demo.base.task.pojo.type.TaskType;
 import demo.base.task.service.TaskHandlerService;
@@ -21,8 +22,18 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 	private ArticleTaskService articleTaskService;
 
 	@Override
-	public CommonResult startEvent(SendTaskDTO dto) {
-		CommonResult r = verifyTaskDTO(dto);
+	public CommonResult startEvent(String message) {
+		CommonResult r = new CommonResult ();
+		SendTaskDTO dto = null;
+		
+		try {
+			dto = buildObjFromJsonCustomization(message, SendTaskDTO.class);
+		} catch (Exception e) {
+			r.setMessage("Message format error");
+			return r;
+		}
+		
+		r = verifyTaskDTO(dto);
 		if (r.isFail()) {
 			return r;
 		}
@@ -62,12 +73,11 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 			return r;
 		}
 
-		endTask();
+		endTask(r, dto);
 
 		r.setIsSuccess();
 		return r;
 	}
-	
 
 	private CommonResult verifyTaskDTO(SendTaskDTO dto) {
 		CommonResult r = new CommonResult();
@@ -90,34 +100,52 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 //			TODO
 		}
 
+		if (optionService.getFaildTaskCountingMap().containsKey(dto.getTaskId())) {
+			if (optionService.getFaildTaskCountingMap().get(dto.getTaskId()) >= TaskResultConstant.MAX_FAIL_COUNT) {
+				r.setCode(TaskResultConstant.FAIL_BY_MAX_COUNT);
+				return r;
+			}
+		}
+
 		r.setIsSuccess();
 		return r;
 	}
-	
 
 	private void startTask(SendTaskDTO dto) {
 		optionService.setRunningTask(true);
 		optionService.setRunningTaskName(dto.getTaskFirstName() + "," + dto.getTaskSecondName());
+
+	}
+
+	private void endTask(CommonResult result, SendTaskDTO dto) {
+		optionService.setRunningTask(false);
+		optionService.setRunningTaskName(null);
+
+		if (result.isSuccess() || TaskResultConstant.FAIL_BY_MAX_COUNT.equals(result.getCode())) {
+			optionService.removeFailTaskCount(dto.getTaskId());
+		} else {
+			optionService.addFailTaskCount(dto.getTaskId());
+		}
+		
+		if(result.isFail()) {
+//			TODO send message 
+		}
 	}
 	
-
 	private void endTask() {
 		optionService.setRunningTask(false);
 		optionService.setRunningTaskName(null);
 	}
-	
 
 	@Override
 	public boolean existsRuningEvent() {
 		return optionService.getRunningTask();
 	}
-	
 
 	@Override
 	public void fixRuningEventStatus() {
 		endTask();
 	}
-	
 
 	@Override
 	public boolean setBreakFlag(Integer flag) {
@@ -125,7 +153,6 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 		return optionService.getBreakFlag();
 	}
 
-	
 	@Override
 	public boolean setBreakFlag(boolean flag) {
 		optionService.setBreakFlag(flag);

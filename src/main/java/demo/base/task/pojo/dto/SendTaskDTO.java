@@ -1,5 +1,7 @@
 package demo.base.task.pojo.dto;
 
+import demo.base.task.pojo.type.TaskType;
+
 public class SendTaskDTO {
 
 	private Long taskId;
@@ -18,6 +20,11 @@ public class SendTaskDTO {
 
 	public void setTaskId(Long taskId) {
 		this.taskId = taskId;
+	}
+	
+	public void setFirstTask(TaskType taskType) {
+		this.taskFirstCode = taskType.getCode();
+		this.taskFirstName = taskType.getName();
 	}
 
 	public String getTaskFirstName() {

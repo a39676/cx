@@ -6,36 +6,29 @@ import org.springframework.stereotype.Service;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.pojo.type.ArticleTaskType;
 import demo.article.article.service.impl.ArticleTaskService;
-import demo.base.system.service.impl.RedisHashConnectService;
 import demo.base.task.pojo.dto.SendTaskDTO;
 import demo.base.task.pojo.type.TaskType;
+import demo.base.task.service.TaskHandlerService;
 import demo.common.service.CommonService;
 
 @Service
-public class TaskHandlerServiceImpl extends CommonService {
+public class TaskHandlerServiceImpl extends CommonService implements TaskHandlerService {
 
 	@Autowired
-	private RedisHashConnectService redisHashConnectService;
-
-	private final String RUNNING_TASK_REDIS_KEY = "runningTaskKey";
-	private final String RUNNING_TASK_REDIS_TASK_NAME_KEY = "runningTaskNameKey";
-	private final String RUNNING_TASK_REDIS_TASK_STATUS_KEY = "runningTaskStatusKey";
-
-	private final Integer RUNNING_TASK_STATU = 1;
-	private final Integer NOT_RUNNING_TASK_STATU = 0;
+	private TaskOptionService optionService;
 
 	@Autowired
 	private ArticleTaskService articleTaskService;
 
+	@Override
 	public CommonResult startEvent(SendTaskDTO dto) {
 		CommonResult r = verifyTaskDTO(dto);
 		if (r.isFail()) {
 			return r;
 		}
 
-		if (existsRuningEvent()) {
-			String taskName = redisHashConnectService.getValByName(RUNNING_TASK_REDIS_KEY,
-					RUNNING_TASK_REDIS_TASK_NAME_KEY);
+		if (!optionService.getBreakFlag() && existsRuningEvent()) {
+			String taskName = optionService.getRunningTaskName();
 			r.setMessage("Still running task: " + taskName);
 			return r;
 		}
@@ -74,6 +67,7 @@ public class TaskHandlerServiceImpl extends CommonService {
 		r.setIsSuccess();
 		return r;
 	}
+	
 
 	private CommonResult verifyTaskDTO(SendTaskDTO dto) {
 		CommonResult r = new CommonResult();
@@ -99,25 +93,42 @@ public class TaskHandlerServiceImpl extends CommonService {
 		r.setIsSuccess();
 		return r;
 	}
+	
 
 	private void startTask(SendTaskDTO dto) {
-		redisHashConnectService.setValByName(RUNNING_TASK_REDIS_KEY, RUNNING_TASK_REDIS_TASK_NAME_KEY,
-				dto.getTaskFirstName() + dto.getTaskSecondName());
-		redisHashConnectService.setValByName(RUNNING_TASK_REDIS_KEY, RUNNING_TASK_REDIS_TASK_STATUS_KEY,
-				RUNNING_TASK_STATU.toString());
+		optionService.setRunningTask(true);
+		optionService.setRunningTaskName(dto.getTaskFirstName() + "," + dto.getTaskSecondName());
 	}
+	
 
 	private void endTask() {
-		redisHashConnectService.setValByName(RUNNING_TASK_REDIS_KEY, RUNNING_TASK_REDIS_TASK_STATUS_KEY,
-				NOT_RUNNING_TASK_STATU.toString());
+		optionService.setRunningTask(false);
+		optionService.setRunningTaskName(null);
 	}
+	
 
+	@Override
 	public boolean existsRuningEvent() {
-		String val = redisHashConnectService.getValByName(RUNNING_TASK_REDIS_KEY, RUNNING_TASK_REDIS_TASK_STATUS_KEY);
-		return String.valueOf(RUNNING_TASK_STATU).equals(val);
+		return optionService.getRunningTask();
+	}
+	
+
+	@Override
+	public void fixRuningEventStatus() {
+		endTask();
+	}
+	
+
+	@Override
+	public boolean setBreakFlag(Integer flag) {
+		optionService.setBreakFlag("1".equals(String.valueOf(flag)));
+		return optionService.getBreakFlag();
 	}
 
-	public void fixRuningEventStatus() {
-		redisHashConnectService.deleteValByName(RUNNING_TASK_REDIS_KEY);
+	
+	@Override
+	public boolean setBreakFlag(boolean flag) {
+		optionService.setBreakFlag(flag);
+		return optionService.getBreakFlag();
 	}
 }

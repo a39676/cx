@@ -8,6 +8,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Service;
 
 import demo.base.system.service.ShutdownService;
+import demo.base.task.service.TaskHandlerService;
 import demo.common.service.CommonService;
 import demo.joy.common.service.JoyTaskServiceImpl;
 
@@ -17,6 +18,8 @@ public class ShutdownServiceImpl extends CommonService implements ShutdownServic
 	private ApplicationContext context;
 	@Autowired
 	private JoyTaskServiceImpl JoyTaskServiceImpl;
+	@Autowired
+	private TaskHandlerService taskHandlerServiceImpl;
 
 	@Override
 	public void setApplicationContext(ApplicationContext ctx) throws BeansException {
@@ -31,6 +34,8 @@ public class ShutdownServiceImpl extends CommonService implements ShutdownServic
 		}
 		
 		JoyTaskServiceImpl.cacheToDatabase();
+		
+		taskHandlerServiceImpl.setBreakFlag(true);
 
 		((ConfigurableApplicationContext) context).close();
 		// if context close success, will NOT return anything

@@ -7,6 +7,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import demo.base.task.service.TaskHandlerService;
 import demo.base.user.pojo.po.Users;
 import demo.base.user.pojo.type.SystemRolesType;
 import demo.base.user.service.RoleService;
@@ -31,6 +32,9 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 
 	@Autowired
 	private JoySceneManagerService joySceneOperationService;
+	
+	@Autowired
+	private TaskHandlerService taskHandlerServiceImpl;
 
 	/*
 	 * ContextStartedEvent ContextStoppedEvent ContextRefreshedEvent
@@ -88,6 +92,13 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 			
 			log.error("Had set proxy");
 		}
+		
+		log.error("taskHandlerServiceImpl.fixRuningEventStatus();");
+		taskHandlerServiceImpl.fixRuningEventStatus();
+		
+		log.error("taskHandlerServiceImpl.setBreakFlag(0);");
+		taskHandlerServiceImpl.setBreakFlag(0);
+		
 		log.error("DatabaseFillerOnStartup end");
 	}
 

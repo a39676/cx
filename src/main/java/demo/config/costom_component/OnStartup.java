@@ -16,10 +16,11 @@ import demo.base.user.service.UsersService;
 import demo.base.user.service.impl.UserRoleConstantService;
 import demo.common.service.CommonService;
 import demo.joy.scene.service.JoySceneManagerService;
+import demo.pmemo.service.UrgeNoticeManagerService;
 
 @Component
 //public class DatabaseFillerOnStartup implements ApplicationListener<ContextStartedEvent> {
-public class DatabaseFillerOnStartup extends CommonService implements ApplicationListener<ApplicationReadyEvent> {
+public class OnStartup extends CommonService implements ApplicationListener<ApplicationReadyEvent> {
 
 	@Autowired
 	private RoleService roleService;
@@ -29,12 +30,12 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 	private UsersService userService;
 	@Autowired
 	private UserRegistService userRegistService;
-
 	@Autowired
 	private JoySceneManagerService joySceneOperationService;
-	
 	@Autowired
 	private TaskHandlerService taskHandlerServiceImpl;
+	@Autowired
+	private UrgeNoticeManagerService urgeNoticeService;
 
 	/*
 	 * ContextStartedEvent ContextStoppedEvent ContextRefreshedEvent
@@ -98,6 +99,9 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 		
 		log.error("taskHandlerServiceImpl.setBreakFlag(0);");
 		taskHandlerServiceImpl.setBreakFlag(0);
+		
+		log.error("urge notice service, update message web hook secret token");
+		urgeNoticeService.setUpdateMsgWebhook();
 		
 		log.error("DatabaseFillerOnStartup end");
 	}

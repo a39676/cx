@@ -5,7 +5,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import demo.base.system.service.impl.SystemOptionService;
-import demo.common.service.CommonService;
+import demo.base.task.pojo.dto.SendTaskDTO;
+import demo.base.task.pojo.type.TaskType;
+import demo.base.task.service.CommonTaskService;
+import demo.finance.cryptoCoin.data.pojo.type.CryptoCoinTaskType;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import demo.finance.cryptoCoin.data.webSocket.BinanceWSClient;
 import demo.finance.cryptoCoin.data.webSocket.CryptoCompareWSClient;
@@ -14,7 +17,7 @@ import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
 
 @Component
-public class CryptoCoinTaskService extends CommonService {
+public class CryptoCoinTaskService extends CommonTaskService {
 
 	@Autowired
 	private SystemOptionService systemConstantService;
@@ -31,6 +34,18 @@ public class CryptoCoinTaskService extends CommonService {
 
 	@Scheduled(cron = "* */11 * * * ?")
 	public void checkWebSocketStatus() {
+		SendTaskDTO dto = new SendTaskDTO();
+		dto.setFirstTask(TaskType.CRYPTO_COIN);
+		dto.setTaskId(snowFlake.getNextId());
+		
+		CryptoCoinTaskType articleTaskType = CryptoCoinTaskType.CHECK_WEB_SOCKET_STATUS;
+		dto.setTaskSecondCode(articleTaskType.getCode());
+		dto.setTaskSecondName(articleTaskType.getName());
+		
+		taskInsertAckProducer.send(dto);
+	}
+
+	public void checkWebSocketStatusTask() {
 		if(!systemConstantService.isDev()) {
 			try {
 				if (!binanceWSClient.getSocketLiveFlag()) {
@@ -56,6 +71,18 @@ public class CryptoCoinTaskService extends CommonService {
 	
 	@Scheduled(fixedRate = 60000)
 	public void cleanOldHistoryData() {
+		SendTaskDTO dto = new SendTaskDTO();
+		dto.setFirstTask(TaskType.CRYPTO_COIN);
+		dto.setTaskId(snowFlake.getNextId());
+		
+		CryptoCoinTaskType articleTaskType = CryptoCoinTaskType.CLEAN_OLD_HISTORY_DATA;
+		dto.setTaskSecondCode(articleTaskType.getCode());
+		dto.setTaskSecondName(articleTaskType.getName());
+		
+		taskInsertAckProducer.send(dto);
+	}
+
+	public void cleanOldHistoryDataTask() {
 		cacheService.cleanOldHistoryData();
 	}
 	

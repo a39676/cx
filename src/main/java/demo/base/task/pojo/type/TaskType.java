@@ -10,6 +10,9 @@ public enum TaskType {
 	BOOKMARK("bookmark", 4),
 	CALENDAR_NOTICE("calendarNotice", 5),
 	OLD_DATA_DELETE("oldDataDelete", 6),
+	CRYPTO_COIN("cryptoCoin", 7),
+	JOY("joy", 8),
+	URGE_NOTICE("urgeNotice", 9),
 	;
 	
 	private String name;

@@ -15,6 +15,12 @@ import demo.base.task.pojo.type.SystemTaskType;
 import demo.base.task.pojo.type.TaskType;
 import demo.base.task.service.TaskHandlerService;
 import demo.common.service.CommonService;
+import demo.finance.cryptoCoin.data.pojo.type.CryptoCoinTaskType;
+import demo.finance.cryptoCoin.data.service.impl.CryptoCoinTaskService;
+import demo.joy.common.pojo.type.JoyTaskType;
+import demo.joy.common.service.JoyTaskService;
+import demo.pmemo.pojo.type.UrgeNoticeTaskType;
+import demo.pmemo.service.impl.UrgeNoticeTaskService;
 import demo.tool.bookmark.pojo.type.BookmarkTaskType;
 import demo.tool.bookmark.service.impl.BookmarkTaskService;
 import demo.tool.calendarNotice.mq.producer.TelegramCalendarNoticeMessageAckProducer;
@@ -45,6 +51,12 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 	private CalendarNoticeTaskService calendarNoticeTaskService;
 	@Autowired
 	private OldDataDeleteServiceImpl oldDataDeleteService;
+	@Autowired
+	private CryptoCoinTaskService cryptoCoinTaskService;
+	@Autowired
+	private JoyTaskService joyTaskService;
+	@Autowired
+	private UrgeNoticeTaskService urgeNoticeTaskService;
 
 	@Override
 	public CommonResult startEvent(String message) {
@@ -172,6 +184,29 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 					oldDataDeleteService.deleteOldExerciseFile();
 				}
 
+			} else if (TaskType.CRYPTO_COIN.getCode().equals(dto.getTaskFirstCode())) {
+				CryptoCoinTaskType secondTaskType = CryptoCoinTaskType.getType(dto.getTaskSecondCode());
+				secondTaskName = secondTaskType.getName();
+
+				if (CryptoCoinTaskType.CHECK_WEB_SOCKET_STATUS.getCode().equals(dto.getTaskSecondCode())) {
+					cryptoCoinTaskService.checkWebSocketStatus();
+				} else if (CryptoCoinTaskType.CLEAN_OLD_HISTORY_DATA.getCode().equals(dto.getTaskSecondCode())) {
+					cryptoCoinTaskService.cleanOldHistoryData();
+				}
+			} else if (TaskType.JOY.getCode().equals(dto.getTaskFirstCode())) {
+				JoyTaskType secondTaskType = JoyTaskType.getType(dto.getTaskSecondCode());
+				secondTaskName = secondTaskType.getName();
+
+				if (JoyTaskType.CACHE_TO_DATABASE.getCode().equals(dto.getTaskSecondCode())) {
+					joyTaskService.cacheToDatabase();
+				}
+			} else if (TaskType.URGE_NOTICE.getCode().equals(dto.getTaskFirstCode())) {
+				UrgeNoticeTaskType secondTaskType = UrgeNoticeTaskType.getType(dto.getTaskSecondCode());
+				secondTaskName = secondTaskType.getName();
+
+				if (UrgeNoticeTaskType.SEND_URGE_NOTICE.getCode().equals(dto.getTaskSecondCode())) {
+					urgeNoticeTaskService.sendUrgeNotice();
+				}
 			}
 
 		} catch (Exception e) {
@@ -189,6 +224,8 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 	private CommonResult verifyTaskDTO(SendTaskDTO dto) {
 		CommonResult r = new CommonResult();
 		TaskType taskType = TaskType.getType(dto.getTaskFirstCode());
+		String taskTypeName = null;
+
 		if (taskType == null) {
 			r.setMessage("Can NOT find task type, type code: " + dto.getTaskFirstCode() + ", task name: "
 					+ dto.getTaskFirstName());
@@ -198,46 +235,54 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 		if (TaskType.SYSTEM.equals(taskType)) {
 			SystemTaskType secondTaskType = SystemTaskType.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
-				r.setMessage("Can NOT find system test task type, type code: " + dto.getTaskSecondCode()
-						+ ", task name: " + dto.getTaskSecondName());
-				return r;
+				taskTypeName = SystemTaskType.class.getSimpleName();
 			}
 		} else if (TaskType.ARTICLE.equals(taskType)) {
 			ArticleTaskType secondTaskType = ArticleTaskType.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
-				r.setMessage("Can NOT find " + ArticleTaskType.class.getSimpleName() + " task type, type code: "
-						+ dto.getTaskSecondCode() + ", task name: " + dto.getTaskSecondName());
-				return r;
+				taskTypeName = ArticleTaskType.class.getSimpleName();
 			}
-
 		} else if (TaskType.AUTOMATION_TEST.equals(taskType)) {
 			AutomationTestTaskType secondTaskType = AutomationTestTaskType.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
-				r.setMessage("Can NOT find " + AutomationTestTaskType.class.getSimpleName() + " task type, type code: " + dto.getTaskSecondCode()
-						+ ", task name: " + dto.getTaskSecondName());
-				return r;
+				taskTypeName = AutomationTestTaskType.class.getSimpleName();
 			}
 		} else if (TaskType.BOOKMARK.equals(taskType)) {
 			BookmarkTaskType secondTaskType = BookmarkTaskType.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
-				r.setMessage("Can NOT find " + BookmarkTaskType.class.getSimpleName() + " task type, type code: " + dto.getTaskSecondCode()
-						+ ", task name: " + dto.getTaskSecondName());
-				return r;
+				taskTypeName = BookmarkTaskType.class.getSimpleName();
 			}
 		} else if (TaskType.CALENDAR_NOTICE.equals(taskType)) {
 			CalendarNoticeTaskType secondTaskType = CalendarNoticeTaskType.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
-				r.setMessage("Can NOT find " + CalendarNoticeTaskType.class.getSimpleName() + " task type, type code: " + dto.getTaskSecondCode()
-						+ ", task name: " + dto.getTaskSecondName());
-				return r;
+				taskTypeName = CalendarNoticeTaskType.class.getSimpleName();
 			}
 		} else if (TaskType.OLD_DATA_DELETE.equals(taskType)) {
 			OldDataDeleteTaskType secondTaskType = OldDataDeleteTaskType.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
-				r.setMessage("Can NOT find " + OldDataDeleteTaskType.class.getSimpleName() + " task type, type code: " + dto.getTaskSecondCode()
-						+ ", task name: " + dto.getTaskSecondName());
-				return r;
+				taskTypeName = OldDataDeleteTaskType.class.getSimpleName();
 			}
+		} else if (TaskType.CRYPTO_COIN.equals(taskType)) {
+			CryptoCoinTaskType secondTaskType = CryptoCoinTaskType.getType(dto.getTaskSecondCode());
+			if (secondTaskType == null) {
+				taskTypeName = CryptoCoinTaskType.class.getSimpleName();
+			}
+		} else if (TaskType.JOY.equals(taskType)) {
+			JoyTaskType secondTaskType = JoyTaskType.getType(dto.getTaskSecondCode());
+			if (secondTaskType == null) {
+				taskTypeName = JoyTaskType.class.getSimpleName();
+			}
+		} else if (TaskType.URGE_NOTICE.equals(taskType)) {
+			UrgeNoticeTaskType secondTaskType = UrgeNoticeTaskType.getType(dto.getTaskSecondCode());
+			if (secondTaskType == null) {
+				taskTypeName = UrgeNoticeTaskType.class.getSimpleName();
+			}
+		}
+
+		if (taskTypeName != null) {
+			r.setMessage("Can NOT find " + taskTypeName + " task type, type code: " + dto.getTaskSecondCode()
+					+ ", task name: " + dto.getTaskSecondName());
+			return r;
 		}
 
 		if (optionService.getFaildTaskCountingMap().containsKey(dto.getTaskId())) {

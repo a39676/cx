@@ -6,15 +6,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import demo.base.task.pojo.dto.SendTaskDTO;
+import demo.base.task.pojo.type.TaskType;
+import demo.base.task.service.CommonTaskService;
+import demo.pmemo.pojo.type.UrgeNoticeTaskType;
 import demo.pmemo.service.UrgeNoticeService;
 
 @Component
-public class UrgeNoticeTaskService {
+public class UrgeNoticeTaskService extends CommonTaskService {
 
 	@Autowired
 	private UrgeNoticeService urgeNoticeService;
 	
 	@Scheduled(fixedRate = 1000L * 60 * 60)
+	public void sendUrgeNoticeTask() {
+		SendTaskDTO dto = new SendTaskDTO();
+		dto.setFirstTask(TaskType.URGE_NOTICE);
+		dto.setTaskId(snowFlake.getNextId());
+		
+		UrgeNoticeTaskType articleTaskType = UrgeNoticeTaskType.SEND_URGE_NOTICE;
+		dto.setTaskSecondCode(articleTaskType.getCode());
+		dto.setTaskSecondName(articleTaskType.getName());
+		
+		taskInsertAckProducer.send(dto);
+	}
+	
 	public void sendUrgeNotice() {
 		LocalTime now = LocalTime.now();
 		if(now.getHour() < 8 || now.getHour() > 22) {

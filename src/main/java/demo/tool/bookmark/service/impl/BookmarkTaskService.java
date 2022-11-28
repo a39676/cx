@@ -22,9 +22,9 @@ public class BookmarkTaskService extends CommonTaskService {
 		dto.setFirstTask(TaskType.BOOKMARK);
 		dto.setTaskId(snowFlake.getNextId());
 		
-		BookmarkTaskType articleTaskType = BookmarkTaskType.RE_BALANCE_WEIGHT;
-		dto.setTaskSecondCode(articleTaskType.getCode());
-		dto.setTaskSecondName(articleTaskType.getName());
+		BookmarkTaskType subTaskType = BookmarkTaskType.RE_BALANCE_WEIGHT;
+		dto.setTaskSecondCode(subTaskType.getCode());
+		dto.setTaskSecondName(subTaskType.getName());
 		
 		taskInsertAckProducer.send(dto);
 	}

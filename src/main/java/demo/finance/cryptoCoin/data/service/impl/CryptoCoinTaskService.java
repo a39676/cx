@@ -33,19 +33,19 @@ public class CryptoCoinTaskService extends CommonTaskService {
 	
 
 	@Scheduled(cron = "* */11 * * * ?")
-	public void checkWebSocketStatus() {
+	public void checkWebSocketStatusTask() {
 		SendTaskDTO dto = new SendTaskDTO();
 		dto.setFirstTask(TaskType.CRYPTO_COIN);
 		dto.setTaskId(snowFlake.getNextId());
 		
-		CryptoCoinTaskType articleTaskType = CryptoCoinTaskType.CHECK_WEB_SOCKET_STATUS;
-		dto.setTaskSecondCode(articleTaskType.getCode());
-		dto.setTaskSecondName(articleTaskType.getName());
+		CryptoCoinTaskType subTaskType = CryptoCoinTaskType.CHECK_WEB_SOCKET_STATUS;
+		dto.setTaskSecondCode(subTaskType.getCode());
+		dto.setTaskSecondName(subTaskType.getName());
 		
 		taskInsertAckProducer.send(dto);
 	}
 
-	public void checkWebSocketStatusTask() {
+	public void checkWebSocketStatus() {
 		if(!systemConstantService.isDev()) {
 			try {
 				if (!binanceWSClient.getSocketLiveFlag()) {
@@ -69,20 +69,20 @@ public class CryptoCoinTaskService extends CommonTaskService {
 		}
 	}
 	
-	@Scheduled(fixedRate = 60000)
-	public void cleanOldHistoryData() {
+	@Scheduled(fixedDelay = 60000)
+	public void cleanOldHistoryDataTask() {
 		SendTaskDTO dto = new SendTaskDTO();
 		dto.setFirstTask(TaskType.CRYPTO_COIN);
 		dto.setTaskId(snowFlake.getNextId());
 		
-		CryptoCoinTaskType articleTaskType = CryptoCoinTaskType.CLEAN_OLD_HISTORY_DATA;
-		dto.setTaskSecondCode(articleTaskType.getCode());
-		dto.setTaskSecondName(articleTaskType.getName());
+		CryptoCoinTaskType subTaskType = CryptoCoinTaskType.CLEAN_OLD_HISTORY_DATA;
+		dto.setTaskSecondCode(subTaskType.getCode());
+		dto.setTaskSecondName(subTaskType.getName());
 		
 		taskInsertAckProducer.send(dto);
 	}
 
-	public void cleanOldHistoryDataTask() {
+	public void cleanOldHistoryData() {
 		cacheService.cleanOldHistoryData();
 	}
 	

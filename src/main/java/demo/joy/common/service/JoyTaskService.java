@@ -16,20 +16,20 @@ public class JoyTaskService extends CommonTaskService {
 	@Autowired
 	private JoyGradenInfoService infoService;
 
-	@Scheduled(cron = "* */30 * * * ?")
-	public void cacheToDatabase() {
+	@Scheduled(fixedDelay = 1000L * 60 * 30)
+	public void cacheToDatabaseTask() {
 		SendTaskDTO dto = new SendTaskDTO();
 		dto.setFirstTask(TaskType.JOY);
 		dto.setTaskId(snowFlake.getNextId());
 		
-		JoyTaskType articleTaskType = JoyTaskType.CACHE_TO_DATABASE;
-		dto.setTaskSecondCode(articleTaskType.getCode());
-		dto.setTaskSecondName(articleTaskType.getName());
+		JoyTaskType subTaskType = JoyTaskType.CACHE_TO_DATABASE;
+		dto.setTaskSecondCode(subTaskType.getCode());
+		dto.setTaskSecondName(subTaskType.getName());
 		
 		taskInsertAckProducer.send(dto);
 	}
 	
-	public void cacheToDatabaseTask() {
+	public void cacheToDatabase() {
 		infoService.cacheToDatabase();
 	}
 

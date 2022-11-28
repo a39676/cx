@@ -24,9 +24,9 @@ public class UrgeNoticeTaskService extends CommonTaskService {
 		dto.setFirstTask(TaskType.URGE_NOTICE);
 		dto.setTaskId(snowFlake.getNextId());
 		
-		UrgeNoticeTaskType articleTaskType = UrgeNoticeTaskType.SEND_URGE_NOTICE;
-		dto.setTaskSecondCode(articleTaskType.getCode());
-		dto.setTaskSecondName(articleTaskType.getName());
+		UrgeNoticeTaskType subTaskType = UrgeNoticeTaskType.SEND_URGE_NOTICE;
+		dto.setTaskSecondCode(subTaskType.getCode());
+		dto.setTaskSecondName(subTaskType.getName());
 		
 		taskInsertAckProducer.send(dto);
 	}

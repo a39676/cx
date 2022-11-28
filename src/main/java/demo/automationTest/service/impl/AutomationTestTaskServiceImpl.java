@@ -46,9 +46,9 @@ public class AutomationTestTaskServiceImpl extends CommonTaskService {
 		dto.setFirstTask(TaskType.AUTOMATION_TEST);
 		dto.setTaskId(snowFlake.getNextId());
 		
-		AutomationTestTaskType articleTaskType = AutomationTestTaskType.DELETE_OLD_DATA;
-		dto.setTaskSecondCode(articleTaskType.getCode());
-		dto.setTaskSecondName(articleTaskType.getName());
+		AutomationTestTaskType subTaskType = AutomationTestTaskType.DELETE_OLD_DATA;
+		dto.setTaskSecondCode(subTaskType.getCode());
+		dto.setTaskSecondName(subTaskType.getName());
 		
 		taskInsertAckProducer.send(dto);
 	}
@@ -61,11 +61,11 @@ public class AutomationTestTaskServiceImpl extends CommonTaskService {
 	public void sendTestEventToRunTask() {
 		SendTaskDTO dto = new SendTaskDTO();
 		dto.setFirstTask(TaskType.AUTOMATION_TEST);
-		AutomationTestTaskType articleTaskType = AutomationTestTaskType.SEND_TEST_EVENT_TO_RUN;
+		AutomationTestTaskType subTaskType = AutomationTestTaskType.SEND_TEST_EVENT_TO_RUN;
 		
 		dto.setTaskId(snowFlake.getNextId());
-		dto.setTaskSecondCode(articleTaskType.getCode());
-		dto.setTaskSecondName(articleTaskType.getName());
+		dto.setTaskSecondCode(subTaskType.getCode());
+		dto.setTaskSecondName(subTaskType.getName());
 		
 		taskInsertAckProducer.send(dto);
 	}
@@ -78,11 +78,11 @@ public class AutomationTestTaskServiceImpl extends CommonTaskService {
 	public void sendHandleLongWaitingEventTask() {
 		SendTaskDTO dto = new SendTaskDTO();
 		dto.setFirstTask(TaskType.AUTOMATION_TEST);
-		AutomationTestTaskType articleTaskType = AutomationTestTaskType.HANDLE_LONG_WAITING_EVENT;
+		AutomationTestTaskType subTaskType = AutomationTestTaskType.HANDLE_LONG_WAITING_EVENT;
 		
 		dto.setTaskId(snowFlake.getNextId());
-		dto.setTaskSecondCode(articleTaskType.getCode());
-		dto.setTaskSecondName(articleTaskType.getName());
+		dto.setTaskSecondCode(subTaskType.getCode());
+		dto.setTaskSecondName(subTaskType.getName());
 		
 		taskInsertAckProducer.send(dto);
 	}

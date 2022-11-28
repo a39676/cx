@@ -13,6 +13,11 @@ public enum TaskType {
 	CRYPTO_COIN("cryptoCoin", 7),
 	JOY("joy", 8),
 	URGE_NOTICE("urgeNotice", 9),
+	CRYPTO_COIN_CATALOG("cryptoCoinCatalog", 10),
+	CRYPTO_COIN_DATA("cryptoCoinData", 11),
+	CRYPTO_COIN_NOTICE("cryptoCoinNotice", 12),
+	CURRENCY_EXCHANGE_RATE_DATA("currencyExchangeRateData", 13),
+	CURRENCY_EXCHANGE_RATE_NOTICE("currencyExchangeRateNotice", 14),
 	;
 	
 	private String name;

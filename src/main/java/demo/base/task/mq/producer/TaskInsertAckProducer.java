@@ -19,9 +19,6 @@ public class TaskInsertAckProducer extends CommonService {
 		if (dto == null) {
 			return;
 		}
-//		System.out.println(LocalDateTime.now());
-//		System.out.println(dto.getTaskFirstName());
-//		System.out.println(dto.getTaskSecondName());
 
 		JSONObject json = JSONObject.fromObject(dto);
 		rabbitTemplate.convertAndSend(TaskMqConstant.TASK_INSERT_QUEUE, json.toString());

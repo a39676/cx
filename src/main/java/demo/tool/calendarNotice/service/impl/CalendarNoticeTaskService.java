@@ -26,6 +26,8 @@ public class CalendarNoticeTaskService extends CommonTaskService {
 		CalendarNoticeTaskType calendarNoticeTaskType = CalendarNoticeTaskType.FIND_AND_SEND_NOTICE;
 		dto.setTaskSecondCode(calendarNoticeTaskType.getCode());
 		dto.setTaskSecondName(calendarNoticeTaskType.getName());
+		
+		taskInsertAckProducer.send(dto);
 	}
 
 	public void findAndSendNotice() {
@@ -41,6 +43,8 @@ public class CalendarNoticeTaskService extends CommonTaskService {
 		CalendarNoticeTaskType calendarNoticeTaskType = CalendarNoticeTaskType.FIND_AND_SNED_STRONG_NOTICE;
 		dto.setTaskSecondCode(calendarNoticeTaskType.getCode());
 		dto.setTaskSecondName(calendarNoticeTaskType.getName());
+		
+		taskInsertAckProducer.send(dto);
 	}
 
 	public void findAndSendStrongNotice() {
@@ -56,6 +60,8 @@ public class CalendarNoticeTaskService extends CommonTaskService {
 		CalendarNoticeTaskType calendarNoticeTaskType = CalendarNoticeTaskType.SEND_TOMORROW_NOTICE_LIST;
 		dto.setTaskSecondCode(calendarNoticeTaskType.getCode());
 		dto.setTaskSecondName(calendarNoticeTaskType.getName());
+		
+		taskInsertAckProducer.send(dto);
 	}
 
 	public void sendTomorrowNoticeList() {

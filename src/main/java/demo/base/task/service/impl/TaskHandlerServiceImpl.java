@@ -347,6 +347,33 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 			if (secondTaskType == null) {
 				taskTypeName = UrgeNoticeTaskType.class.getSimpleName();
 			}
+		} else if (TaskType.CRYPTO_COIN_CATALOG.equals(taskType)) {
+			CryptoCoinCatalogTaskType secondTaskType = CryptoCoinCatalogTaskType.getType(dto.getTaskSecondCode());
+			if (secondTaskType == null) {
+				taskTypeName = UrgeNoticeTaskType.class.getSimpleName();
+			}
+		} else if (TaskType.CRYPTO_COIN_DATA.equals(taskType)) {
+			CryptoCoinDataTaskType secondTaskType = CryptoCoinDataTaskType.getType(dto.getTaskSecondCode());
+			if (secondTaskType == null) {
+				taskTypeName = UrgeNoticeTaskType.class.getSimpleName();
+			}
+		} else if (TaskType.CRYPTO_COIN_NOTICE.equals(taskType)) {
+			CryptoCoinNoticeTaskType secondTaskType = CryptoCoinNoticeTaskType.getType(dto.getTaskSecondCode());
+			if (secondTaskType == null) {
+				taskTypeName = UrgeNoticeTaskType.class.getSimpleName();
+			}
+		} else if (TaskType.CURRENCY_EXCHANGE_RATE_DATA.equals(taskType)) {
+			CurrencyExchangeRateDataTaskType secondTaskType = CurrencyExchangeRateDataTaskType
+					.getType(dto.getTaskSecondCode());
+			if (secondTaskType == null) {
+				taskTypeName = UrgeNoticeTaskType.class.getSimpleName();
+			}
+		} else if (TaskType.CURRENCY_EXCHANGE_RATE_NOTICE.equals(taskType)) {
+			CurrencyExchangeRateNoticeTaskType secondTaskType = CurrencyExchangeRateNoticeTaskType
+					.getType(dto.getTaskSecondCode());
+			if (secondTaskType == null) {
+				taskTypeName = UrgeNoticeTaskType.class.getSimpleName();
+			}
 		}
 
 		if (taskTypeName != null) {

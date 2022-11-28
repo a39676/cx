@@ -16,8 +16,7 @@ public class CalendarNoticeTaskService extends CommonTaskService {
 	@Autowired
 	private CalendarNoticeService calendarNoticeService;
 
-//	@Scheduled(fixedDelay  = 1000L * 60 * 5)
-	@Scheduled(fixedDelay  = 1000L * 5)
+	@Scheduled(fixedDelay  = 1000L * 60 * 5)
 	public void findAndSendNoticeTask() {
 		SendTaskDTO dto = new SendTaskDTO();
 		dto.setFirstTask(TaskType.CALENDAR_NOTICE);

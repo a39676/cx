@@ -325,83 +325,117 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 			return r;
 		}
 
-		if (TaskType.SYSTEM.equals(taskType)) {
+		switch (taskType) {
+
+		case SYSTEM: {
 			SystemTaskType secondTaskType = SystemTaskType.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
 				taskTypeName = SystemTaskType.class.getSimpleName();
 			}
-		} else if (TaskType.ARTICLE.equals(taskType)) {
+			break;
+		}
+		case ARTICLE: {
 			ArticleTaskType secondTaskType = ArticleTaskType.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
 				taskTypeName = ArticleTaskType.class.getSimpleName();
 			}
-		} else if (TaskType.AUTOMATION_TEST.equals(taskType)) {
+			break;
+		}
+		case AUTOMATION_TEST: {
 			AutomationTestTaskType secondTaskType = AutomationTestTaskType.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
 				taskTypeName = AutomationTestTaskType.class.getSimpleName();
 			}
-		} else if (TaskType.BOOKMARK.equals(taskType)) {
+			break;
+		}
+		case BOOKMARK: {
 			BookmarkTaskType secondTaskType = BookmarkTaskType.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
 				taskTypeName = BookmarkTaskType.class.getSimpleName();
 			}
-		} else if (TaskType.CALENDAR_NOTICE.equals(taskType)) {
+			break;
+		}
+		case CALENDAR_NOTICE: {
 			CalendarNoticeTaskType secondTaskType = CalendarNoticeTaskType.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
 				taskTypeName = CalendarNoticeTaskType.class.getSimpleName();
 			}
-		} else if (TaskType.OLD_DATA_DELETE.equals(taskType)) {
+			break;
+		}
+		case OLD_DATA_DELETE: {
 			OldDataDeleteTaskType secondTaskType = OldDataDeleteTaskType.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
 				taskTypeName = OldDataDeleteTaskType.class.getSimpleName();
 			}
-		} else if (TaskType.CRYPTO_COIN.equals(taskType)) {
+			break;
+		}
+		case CRYPTO_COIN: {
 			CryptoCoinTaskType secondTaskType = CryptoCoinTaskType.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
 				taskTypeName = CryptoCoinTaskType.class.getSimpleName();
 			}
-		} else if (TaskType.JOY.equals(taskType)) {
+			break;
+		}
+		case JOY: {
 			JoyTaskType secondTaskType = JoyTaskType.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
 				taskTypeName = JoyTaskType.class.getSimpleName();
 			}
-		} else if (TaskType.URGE_NOTICE.equals(taskType)) {
+			break;
+		}
+		case URGE_NOTICE: {
 			UrgeNoticeTaskType secondTaskType = UrgeNoticeTaskType.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
 				taskTypeName = UrgeNoticeTaskType.class.getSimpleName();
 			}
-		} else if (TaskType.CRYPTO_COIN_CATALOG.equals(taskType)) {
+			break;
+		}
+		case CRYPTO_COIN_CATALOG: {
 			CryptoCoinCatalogTaskType secondTaskType = CryptoCoinCatalogTaskType.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
 				taskTypeName = UrgeNoticeTaskType.class.getSimpleName();
 			}
-		} else if (TaskType.CRYPTO_COIN_DATA.equals(taskType)) {
+			break;
+		}
+		case CRYPTO_COIN_DATA: {
 			CryptoCoinDataTaskType secondTaskType = CryptoCoinDataTaskType.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
 				taskTypeName = UrgeNoticeTaskType.class.getSimpleName();
 			}
-		} else if (TaskType.CRYPTO_COIN_NOTICE.equals(taskType)) {
+			break;
+		}
+		case CRYPTO_COIN_NOTICE: {
 			CryptoCoinNoticeTaskType secondTaskType = CryptoCoinNoticeTaskType.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
 				taskTypeName = UrgeNoticeTaskType.class.getSimpleName();
 			}
-		} else if (TaskType.CURRENCY_EXCHANGE_RATE_DATA.equals(taskType)) {
+			break;
+		}
+		case CURRENCY_EXCHANGE_RATE_DATA: {
 			CurrencyExchangeRateDataTaskType secondTaskType = CurrencyExchangeRateDataTaskType
 					.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
 				taskTypeName = UrgeNoticeTaskType.class.getSimpleName();
 			}
-		} else if (TaskType.CURRENCY_EXCHANGE_RATE_NOTICE.equals(taskType)) {
+			break;
+		}
+		case CURRENCY_EXCHANGE_RATE_NOTICE: {
 			CurrencyExchangeRateNoticeTaskType secondTaskType = CurrencyExchangeRateNoticeTaskType
 					.getType(dto.getTaskSecondCode());
 			if (secondTaskType == null) {
 				taskTypeName = UrgeNoticeTaskType.class.getSimpleName();
 			}
+			break;
+		}
+		case TEST:
+			break;
+		default:
+			break;
 		}
 
-		if (taskTypeName != null) {
-			r.setMessage("Can NOT find " + taskTypeName + " task type, type code: " + dto.getTaskSecondCode()
-					+ ", task name: " + dto.getTaskSecondName());
+		if (taskType == null || taskTypeName == null) {
+			r.setMessage("Can NOT find task type, type code: " + dto.getTaskSecondCode() + ", task name: "
+					+ dto.getTaskSecondName());
 			return r;
 		}
 
@@ -414,6 +448,7 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 
 		r.setIsSuccess();
 		return r;
+
 	}
 
 	private void startTask(SendTaskDTO dto) {

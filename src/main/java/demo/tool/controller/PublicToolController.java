@@ -27,7 +27,7 @@ public class PublicToolController extends CommonController {
 	@Autowired
 	private UnderWayMonthTestService underWayMonthTestService;
 	
-	@GetMapping(value = "/hsbc/hsbcWechatPreregist")
+	@GetMapping(value = "/hsbc/hsbcWechatPreregist_")
 	public ModelAndView hsbcWechatPreregistView() {
 		return hsbcService.hsbcWechatPreregistView();
 	}

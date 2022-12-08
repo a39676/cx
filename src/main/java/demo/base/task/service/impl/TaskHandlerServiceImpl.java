@@ -112,10 +112,13 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 		String secondTaskName = null;
 
 		try {
-			if (TaskType.TEST.getCode().equals(dto.getTaskFirstCode())) {
-				sendTelegram("Receive test task");
+			switch (taskType) {
 
-			} else if (TaskType.SYSTEM.getCode().equals(dto.getTaskFirstCode())) {
+			case TEST: {
+				sendTelegram("Receive test task");
+				break;
+			}
+			case SYSTEM: {
 				SystemTaskType secondTaskType = SystemTaskType.getType(dto.getTaskSecondCode());
 				secondTaskName = secondTaskType.getName();
 
@@ -141,8 +144,9 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 				} else if (SystemTaskType.DELETE_EXPIRED_DENY_RECORD.getCode().equals(dto.getTaskSecondCode())) {
 					systemTaskService.deleteExpiredDenyRecord();
 				}
-
-			} else if (TaskType.ARTICLE.getCode().equals(dto.getTaskFirstCode())) {
+				break;
+			}
+			case ARTICLE: {
 				ArticleTaskType secondTaskType = ArticleTaskType.getType(dto.getTaskSecondCode());
 				secondTaskName = secondTaskType.getName();
 
@@ -153,8 +157,9 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 					articleTaskService.updateArticleHotExpired();
 
 				}
-
-			} else if (TaskType.AUTOMATION_TEST.getCode().equals(dto.getTaskFirstCode())) {
+				break;
+			}
+			case AUTOMATION_TEST: {
 				AutomationTestTaskType secondTaskType = AutomationTestTaskType.getType(dto.getTaskSecondCode());
 				secondTaskName = secondTaskType.getName();
 
@@ -168,16 +173,18 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 					automationTestTaskService.sendTestEventToRun();
 
 				}
-
-			} else if (TaskType.BOOKMARK.getCode().equals(dto.getTaskFirstCode())) {
+				break;
+			}
+			case BOOKMARK: {
 				BookmarkTaskType secondTaskType = BookmarkTaskType.getType(dto.getTaskSecondCode());
 				secondTaskName = secondTaskType.getName();
 
 				if (BookmarkTaskType.RE_BALANCE_WEIGHT.getCode().equals(dto.getTaskSecondCode())) {
 					bookmarkTaskService.reBalanceWeight();
 				}
-
-			} else if (TaskType.CALENDAR_NOTICE.getCode().equals(dto.getTaskFirstCode())) {
+				break;
+			}
+			case CALENDAR_NOTICE: {
 				CalendarNoticeTaskType secondTaskType = CalendarNoticeTaskType.getType(dto.getTaskSecondCode());
 				secondTaskName = secondTaskType.getName();
 
@@ -189,8 +196,9 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 				} else if (CalendarNoticeTaskType.SEND_TOMORROW_NOTICE_LIST.getCode().equals(dto.getTaskSecondCode())) {
 					calendarNoticeTaskService.sendTomorrowNoticeList();
 				}
-
-			} else if (TaskType.OLD_DATA_DELETE.getCode().equals(dto.getTaskFirstCode())) {
+				break;
+			}
+			case OLD_DATA_DELETE: {
 				OldDataDeleteTaskType secondTaskType = OldDataDeleteTaskType.getType(dto.getTaskSecondCode());
 				secondTaskName = secondTaskType.getName();
 
@@ -203,8 +211,9 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 				} else if (OldDataDeleteTaskType.DELETE_OLD_EXERCISE_FILE.getCode().equals(dto.getTaskSecondCode())) {
 					oldDataDeleteService.deleteOldExerciseFile();
 				}
-
-			} else if (TaskType.CRYPTO_COIN.getCode().equals(dto.getTaskFirstCode())) {
+				break;
+			}
+			case CRYPTO_COIN: {
 				CryptoCoinTaskType secondTaskType = CryptoCoinTaskType.getType(dto.getTaskSecondCode());
 				secondTaskName = secondTaskType.getName();
 
@@ -213,28 +222,36 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 				} else if (CryptoCoinTaskType.CLEAN_OLD_HISTORY_DATA.getCode().equals(dto.getTaskSecondCode())) {
 					cryptoCoinTaskService.cleanOldHistoryData();
 				}
-			} else if (TaskType.JOY.getCode().equals(dto.getTaskFirstCode())) {
+				break;
+			}
+			case JOY: {
 				JoyTaskType secondTaskType = JoyTaskType.getType(dto.getTaskSecondCode());
 				secondTaskName = secondTaskType.getName();
 
 				if (JoyTaskType.CACHE_TO_DATABASE.getCode().equals(dto.getTaskSecondCode())) {
 					joyTaskService.cacheToDatabase();
 				}
-			} else if (TaskType.URGE_NOTICE.getCode().equals(dto.getTaskFirstCode())) {
+				break;
+			}
+			case URGE_NOTICE: {
 				UrgeNoticeTaskType secondTaskType = UrgeNoticeTaskType.getType(dto.getTaskSecondCode());
 				secondTaskName = secondTaskType.getName();
 
 				if (UrgeNoticeTaskType.SEND_URGE_NOTICE.getCode().equals(dto.getTaskSecondCode())) {
 					urgeNoticeTaskService.sendUrgeNotice();
 				}
-			} else if (TaskType.CRYPTO_COIN_CATALOG.getCode().equals(dto.getTaskFirstCode())) {
+				break;
+			}
+			case CRYPTO_COIN_CATALOG: {
 				CryptoCoinCatalogTaskType secondTaskType = CryptoCoinCatalogTaskType.getType(dto.getTaskSecondCode());
 				secondTaskName = secondTaskType.getName();
 
 				if (CryptoCoinCatalogTaskType.ADD_SUBSCRIPTION_CATALOG.getCode().equals(dto.getTaskSecondCode())) {
 					cryptoCoinCatalogTaskService.addSubscriptionCatalog();
 				}
-			} else if (TaskType.CRYPTO_COIN_DATA.getCode().equals(dto.getTaskFirstCode())) {
+				break;
+			}
+			case CRYPTO_COIN_DATA: {
 				CryptoCoinDataTaskType secondTaskType = CryptoCoinDataTaskType.getType(dto.getTaskSecondCode());
 				secondTaskName = secondTaskType.getName();
 
@@ -251,7 +268,9 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 				} else if (CryptoCoinDataTaskType.SUMMARY_MINUTE_DATA.getCode().equals(dto.getTaskSecondCode())) {
 					cryptoCoinDataTaskService.summaryMinuteData();
 				}
-			} else if (TaskType.CRYPTO_COIN_NOTICE.getCode().equals(dto.getTaskFirstCode())) {
+				break;
+			}
+			case CRYPTO_COIN_NOTICE: {
 				CryptoCoinNoticeTaskType secondTaskType = CryptoCoinNoticeTaskType.getType(dto.getTaskSecondCode());
 				secondTaskName = secondTaskType.getName();
 
@@ -261,7 +280,9 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 				} else if (CryptoCoinNoticeTaskType.DELETE_OLD_NOTICE.getCode().equals(dto.getTaskSecondCode())) {
 					cryptoCoinDataTaskService.deleteExpiredCacheData();
 				}
-			} else if (TaskType.CURRENCY_EXCHANGE_RATE_DATA.getCode().equals(dto.getTaskFirstCode())) {
+				break;
+			}
+			case CURRENCY_EXCHANGE_RATE_DATA: {
 				CurrencyExchangeRateDataTaskType secondTaskType = CurrencyExchangeRateDataTaskType
 						.getType(dto.getTaskSecondCode());
 				secondTaskName = secondTaskType.getName();
@@ -269,7 +290,9 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 				if (CurrencyExchangeRateDataTaskType.SEND_DATA_QUERY.getCode().equals(dto.getTaskSecondCode())) {
 					currencyExchangeRateDataTaskService.sendDataQuery();
 				}
-			} else if (TaskType.CURRENCY_EXCHANGE_RATE_NOTICE.getCode().equals(dto.getTaskFirstCode())) {
+				break;
+			}
+			case CURRENCY_EXCHANGE_RATE_NOTICE: {
 				CurrencyExchangeRateNoticeTaskType secondTaskType = CurrencyExchangeRateNoticeTaskType
 						.getType(dto.getTaskSecondCode());
 				secondTaskName = secondTaskType.getName();
@@ -278,7 +301,7 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 					currencyExchangeRateNoticeTaskService.deleteOldNotice();
 				}
 			}
-
+			}
 		} catch (Exception e) {
 			r.setMessage("Task running failed, task type: " + taskType.getName() + ", second task type name: "
 					+ secondTaskName + ". error: " + e.getLocalizedMessage());

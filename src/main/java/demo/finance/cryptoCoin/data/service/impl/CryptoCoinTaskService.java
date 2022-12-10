@@ -32,7 +32,7 @@ public class CryptoCoinTaskService extends CommonTaskService {
 	
 	
 
-	@Scheduled(cron = "* */11 * * * ?")
+	@Scheduled(fixedDelay = 1000L * 60 * 10)
 	public void checkWebSocketStatusTask() {
 		SendTaskDTO dto = new SendTaskDTO();
 		dto.setFirstTask(TaskType.CRYPTO_COIN);

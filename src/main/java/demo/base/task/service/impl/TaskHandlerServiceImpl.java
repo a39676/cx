@@ -329,84 +329,84 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 
 		case SYSTEM: {
 			SystemTaskType secondTaskType = SystemTaskType.getType(dto.getTaskSecondCode());
-			if (secondTaskType == null) {
+			if (secondTaskType != null) {
 				taskTypeName = SystemTaskType.class.getSimpleName();
 			}
 			break;
 		}
 		case ARTICLE: {
 			ArticleTaskType secondTaskType = ArticleTaskType.getType(dto.getTaskSecondCode());
-			if (secondTaskType == null) {
+			if (secondTaskType != null) {
 				taskTypeName = ArticleTaskType.class.getSimpleName();
 			}
 			break;
 		}
 		case AUTOMATION_TEST: {
 			AutomationTestTaskType secondTaskType = AutomationTestTaskType.getType(dto.getTaskSecondCode());
-			if (secondTaskType == null) {
+			if (secondTaskType != null) {
 				taskTypeName = AutomationTestTaskType.class.getSimpleName();
 			}
 			break;
 		}
 		case BOOKMARK: {
 			BookmarkTaskType secondTaskType = BookmarkTaskType.getType(dto.getTaskSecondCode());
-			if (secondTaskType == null) {
+			if (secondTaskType != null) {
 				taskTypeName = BookmarkTaskType.class.getSimpleName();
 			}
 			break;
 		}
 		case CALENDAR_NOTICE: {
 			CalendarNoticeTaskType secondTaskType = CalendarNoticeTaskType.getType(dto.getTaskSecondCode());
-			if (secondTaskType == null) {
+			if (secondTaskType != null) {
 				taskTypeName = CalendarNoticeTaskType.class.getSimpleName();
 			}
 			break;
 		}
 		case OLD_DATA_DELETE: {
 			OldDataDeleteTaskType secondTaskType = OldDataDeleteTaskType.getType(dto.getTaskSecondCode());
-			if (secondTaskType == null) {
+			if (secondTaskType != null) {
 				taskTypeName = OldDataDeleteTaskType.class.getSimpleName();
 			}
 			break;
 		}
 		case CRYPTO_COIN: {
 			CryptoCoinTaskType secondTaskType = CryptoCoinTaskType.getType(dto.getTaskSecondCode());
-			if (secondTaskType == null) {
+			if (secondTaskType != null) {
 				taskTypeName = CryptoCoinTaskType.class.getSimpleName();
 			}
 			break;
 		}
 		case JOY: {
 			JoyTaskType secondTaskType = JoyTaskType.getType(dto.getTaskSecondCode());
-			if (secondTaskType == null) {
+			if (secondTaskType != null) {
 				taskTypeName = JoyTaskType.class.getSimpleName();
 			}
 			break;
 		}
 		case URGE_NOTICE: {
 			UrgeNoticeTaskType secondTaskType = UrgeNoticeTaskType.getType(dto.getTaskSecondCode());
-			if (secondTaskType == null) {
+			if (secondTaskType != null) {
 				taskTypeName = UrgeNoticeTaskType.class.getSimpleName();
 			}
 			break;
 		}
 		case CRYPTO_COIN_CATALOG: {
 			CryptoCoinCatalogTaskType secondTaskType = CryptoCoinCatalogTaskType.getType(dto.getTaskSecondCode());
-			if (secondTaskType == null) {
+			if (secondTaskType != null) {
 				taskTypeName = UrgeNoticeTaskType.class.getSimpleName();
 			}
 			break;
 		}
 		case CRYPTO_COIN_DATA: {
 			CryptoCoinDataTaskType secondTaskType = CryptoCoinDataTaskType.getType(dto.getTaskSecondCode());
-			if (secondTaskType == null) {
+			if (secondTaskType != null) {
 				taskTypeName = UrgeNoticeTaskType.class.getSimpleName();
 			}
 			break;
 		}
 		case CRYPTO_COIN_NOTICE: {
 			CryptoCoinNoticeTaskType secondTaskType = CryptoCoinNoticeTaskType.getType(dto.getTaskSecondCode());
-			if (secondTaskType == null) {
+			if (secondTaskType != null) {
 				taskTypeName = UrgeNoticeTaskType.class.getSimpleName();
 			}
 			break;
@@ -414,7 +414,7 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 		case CURRENCY_EXCHANGE_RATE_DATA: {
 			CurrencyExchangeRateDataTaskType secondTaskType = CurrencyExchangeRateDataTaskType
 					.getType(dto.getTaskSecondCode());
-			if (secondTaskType == null) {
+			if (secondTaskType != null) {
 				taskTypeName = UrgeNoticeTaskType.class.getSimpleName();
 			}
 			break;
@@ -422,7 +422,7 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 		case CURRENCY_EXCHANGE_RATE_NOTICE: {
 			CurrencyExchangeRateNoticeTaskType secondTaskType = CurrencyExchangeRateNoticeTaskType
 					.getType(dto.getTaskSecondCode());
-			if (secondTaskType == null) {
+			if (secondTaskType != null) {
 				taskTypeName = UrgeNoticeTaskType.class.getSimpleName();
 			}
 			break;

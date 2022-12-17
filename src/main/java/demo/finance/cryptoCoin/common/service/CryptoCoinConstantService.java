@@ -18,8 +18,10 @@ import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 @Service
 public class CryptoCoinConstantService extends CommonService {
 
-	private LocalDateTime cryptoCompareWebSocketLastActiveTime;
+	private boolean cryptoCompareWebSocketTurnOn = true;
+	private boolean binanceWebSocketTurnOn = true;
 
+	private LocalDateTime cryptoCompareWebSocketLastActiveTime;
 	private LocalDateTime binanceWebSocketLastActiveTime;
 
 	private Set<String> lowPriceSubscriptionSet = new HashSet<>();
@@ -28,6 +30,22 @@ public class CryptoCoinConstantService extends CommonService {
 	private Map<CacheMapBO, CryptoCoinPriceCommonDataBO> cacheMap = new HashMap<>();
 
 	private Map<String, List<LocalDateTime>> hitNoDataCountingMap = new HashMap<>();
+
+	public boolean getCryptoCompareWebSocketTurnOn() {
+		return cryptoCompareWebSocketTurnOn;
+	}
+
+	public void setCryptoCompareWebSocketTurnOn(boolean cryptoCompareWebSocketTurnOn) {
+		this.cryptoCompareWebSocketTurnOn = cryptoCompareWebSocketTurnOn;
+	}
+
+	public boolean getBinanceWebSocketTurnOn() {
+		return binanceWebSocketTurnOn;
+	}
+
+	public void setBinanceWebSocketTurnOn(boolean binanceWebSocketTurnOn) {
+		this.binanceWebSocketTurnOn = binanceWebSocketTurnOn;
+	}
 
 	public LocalDateTime getCryptoCompareWebSocketLastActiveTime() {
 		return cryptoCompareWebSocketLastActiveTime;
@@ -79,10 +97,12 @@ public class CryptoCoinConstantService extends CommonService {
 
 	@Override
 	public String toString() {
-		return "CryptoCoinConstantService [cryptoCompareWebSocketLastActiveTime=" + cryptoCompareWebSocketLastActiveTime
-				+ ", binanceWebSocketLastActiveTime=" + binanceWebSocketLastActiveTime + ", lowPriceSubscriptionSet="
-				+ lowPriceSubscriptionSet + ", dailyDataWaitingQuerySet=" + dailyDataWaitingQuerySet + ", cacheMap="
-				+ cacheMap + ", hitNoDataCountingMap=" + hitNoDataCountingMap + "]";
+		return "CryptoCoinConstantService [cryptoCompareWebSocketTurnOn=" + cryptoCompareWebSocketTurnOn
+				+ ", binanceWebSocketTurnOn=" + binanceWebSocketTurnOn + ", cryptoCompareWebSocketLastActiveTime="
+				+ cryptoCompareWebSocketLastActiveTime + ", binanceWebSocketLastActiveTime="
+				+ binanceWebSocketLastActiveTime + ", lowPriceSubscriptionSet=" + lowPriceSubscriptionSet
+				+ ", dailyDataWaitingQuerySet=" + dailyDataWaitingQuerySet + ", cacheMap=" + cacheMap
+				+ ", hitNoDataCountingMap=" + hitNoDataCountingMap + "]";
 	}
 
 }

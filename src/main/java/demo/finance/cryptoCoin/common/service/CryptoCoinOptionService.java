@@ -37,6 +37,9 @@ public class CryptoCoinOptionService extends CommonService {
 
 	private Set<String> subscriptionSet = new HashSet<>();
 
+	private boolean cryptoCompareWebSocketTurnOn = true;
+	private boolean binanceWebSocketTurnOn = true;
+
 	@PostConstruct
 	public void refreshOption() {
 		File optionFile = new File(optionFilePath);
@@ -135,6 +138,22 @@ public class CryptoCoinOptionService extends CommonService {
 		this.sharingCalculateResultSavingPath = sharingCalculateResultSavingPath;
 	}
 
+	public boolean getCryptoCompareWebSocketTurnOn() {
+		return cryptoCompareWebSocketTurnOn;
+	}
+
+	public void setCryptoCompareWebSocketTurnOn(boolean cryptoCompareWebSocketTurnOn) {
+		this.cryptoCompareWebSocketTurnOn = cryptoCompareWebSocketTurnOn;
+	}
+
+	public boolean getBinanceWebSocketTurnOn() {
+		return binanceWebSocketTurnOn;
+	}
+
+	public void setBinanceWebSocketTurnOn(boolean binanceWebSocketTurnOn) {
+		this.binanceWebSocketTurnOn = binanceWebSocketTurnOn;
+	}
+
 	public String getOptionFilePath() {
 		return optionFilePath;
 	}
@@ -146,7 +165,8 @@ public class CryptoCoinOptionService extends CommonService {
 				+ ", defaultCurrency=" + defaultCurrency + ", cryptoCompareApiKey=" + cryptoCompareApiKey
 				+ ", cryptoCompareUri=" + cryptoCompareUri + ", binanceUri=" + binanceUri + ", scaleOfSharingCalculate="
 				+ scaleOfSharingCalculate + ", sharingCalculateResultSavingPath=" + sharingCalculateResultSavingPath
-				+ ", subscriptionSet=" + subscriptionSet + "]";
+				+ ", subscriptionSet=" + subscriptionSet + ", cryptoCompareWebSocketTurnOn="
+				+ cryptoCompareWebSocketTurnOn + ", binanceWebSocketTurnOn=" + binanceWebSocketTurnOn + "]";
 	}
 
 }

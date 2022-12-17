@@ -8,6 +8,7 @@ import demo.base.system.service.impl.SystemOptionService;
 import demo.base.task.pojo.dto.SendTaskDTO;
 import demo.base.task.pojo.type.TaskType;
 import demo.base.task.service.CommonTaskService;
+import demo.finance.cryptoCoin.common.service.CryptoCoinOptionService;
 import demo.finance.cryptoCoin.data.pojo.type.CryptoCoinTaskType;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import demo.finance.cryptoCoin.data.webSocket.BinanceWSClient;
@@ -29,6 +30,8 @@ public class CryptoCoinTaskService extends CommonTaskService {
 	private CryptoCompareWSClient cryptoCompareWSClient;
 	@Autowired
 	private CryptoCoinPriceCacheService cacheService;
+	@Autowired
+	protected CryptoCoinOptionService optionService;
 	
 	
 
@@ -48,7 +51,7 @@ public class CryptoCoinTaskService extends CommonTaskService {
 	public void checkWebSocketStatus() {
 		if(!systemConstantService.isDev()) {
 			try {
-				if (!binanceWSClient.getSocketLiveFlag()) {
+				if (optionService.getBinanceWebSocketTurnOn() && !binanceWSClient.getSocketLiveFlag()) {
 					telegramService.sendMessageByChatRecordId(TelegramBotType.BOT_2, "binance socket down", TelegramStaticChatID.MY_ID);
 					binanceWSClient.restartWebSocket();
 				}
@@ -59,7 +62,7 @@ public class CryptoCoinTaskService extends CommonTaskService {
 			}
 			
 			try {
-				if (!cryptoCompareWSClient.getSocketLiveFlag()) {
+				if (optionService.getCryptoCompareWebSocketTurnOn() && !cryptoCompareWSClient.getSocketLiveFlag()) {
 					telegramService.sendMessageByChatRecordId(TelegramBotType.BOT_2, "crypto comapre socket down",
 							TelegramStaticChatID.MY_ID);
 					cryptoCompareWSClient.restart();

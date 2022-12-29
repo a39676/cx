@@ -225,8 +225,9 @@ public class ExerciseServiceMathG3_1Impl extends ExerciseMathCommonService imple
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int rectangleCount = t.nextInt(3, 7 + 1);
-		int rectanglePerimeter = t.nextInt(30, 90 + 1);
-		int squarePreimeter = rectangleCount * rectanglePerimeter;
+		int rectangleShortSide = t.nextInt(10, 30 + 1);
+		int rectanglePerimeter = rectangleShortSide * (1 + rectangleCount) * 2;
+		int squarePreimeter = rectangleShortSide * rectangleCount * 4;
 
 		q.setExpression(String.format(moduleStr, rectangleCount, rectanglePerimeter));
 		q.addStandardAnswer(String.valueOf(squarePreimeter));

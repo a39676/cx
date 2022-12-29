@@ -580,7 +580,7 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 
 		q.setExpression(String.format(moduleStr, i1, i2));
 
-		q.addStandardAnswer(String.valueOf(i1 + i2));
+		q.addStandardAnswer(String.valueOf((i2 + 1) * i1 + i2));
 
 		return q;
 	}

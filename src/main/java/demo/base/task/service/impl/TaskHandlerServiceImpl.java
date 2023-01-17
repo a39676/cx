@@ -85,25 +85,30 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 	public CommonResult startEvent(String message) {
 		CommonResult r = new CommonResult();
 		SendTaskDTO dto = null;
+		
+		StringBuffer sb = new StringBuffer();
 
 		try {
 			dto = buildObjFromJsonCustomization(message, SendTaskDTO.class);
 			
-			sendTelegram("Receive " + dto.getTaskFirstName() + ", " + dto.getTaskSecondName());
+			sb.append("Receive " + dto.getTaskFirstName() + ", " + dto.getTaskSecondName());
 		} catch (Exception e) {
-			sendTelegram("Receive task error, message: " + message);
+			sb.append("Receive task error, message: " + message);
+			sendTelegram(sb.toString());
 			r.setMessage("Message format error");
 			return r;
 		}
 
 		r = verifyTaskDTO(dto);
 		if (r.isFail()) {
-			sendTelegram("Receive task, verify failed, message: " + r.getMessage());
+			sb.append("Receive task, verify failed, message: " + r.getMessage());
+			sendTelegram(sb.toString());
 			return r;
 		}
 
 		if (optionService.getBreakFlag()) {
-			sendTelegram("Task flag = true");
+			sb.append("Task flag = true");
+			sendTelegram(sb.toString());
 			r.setMessage("Break flag = true");
 			return r;
 		}
@@ -115,7 +120,7 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 		}
 
 		LocalDateTime startTime = LocalDateTime.now();
-		sendTelegram("Before start task. datetime: " + startTime);
+		sb.append("Before start task. datetime: " + startTime);
 		startTask(dto);
 
 		TaskType taskType = TaskType.getType(dto.getTaskFirstCode());
@@ -313,11 +318,12 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 				break;
 			}
 			default:{
-				sendTelegram("Can NOT match task type: " + taskType.getName());
+				sb.append("Can NOT match task type: " + taskType.getName());
 			}
 			}
 		} catch (Exception e) {
-			sendTelegram("Task running exception, " + dto.getTaskFirstName() + ", " + dto.getTaskSecondName());
+			sb.append("Task running exception, " + dto.getTaskFirstName() + ", " + dto.getTaskSecondName());
+			sendTelegram(sb.toString());
 			r.setMessage("Task running failed, task type: " + taskType.getName() + ", second task type name: "
 					+ secondTaskName + ". error: " + e.getLocalizedMessage());
 			return r;
@@ -325,7 +331,8 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 		
 		endTask(r, dto);
 		long minutes = ChronoUnit.MINUTES.between(startTime, LocalDateTime.now());
-		sendTelegram("End task, " + dto.getTaskFirstName() + ", " + dto.getTaskSecondName() + " use minutes: " + minutes);
+		sb.append("End task, " + dto.getTaskFirstName() + ", " + dto.getTaskSecondName() + " use minutes: " + minutes);
+		sendTelegram(sb.toString());
 
 		r.setIsSuccess();
 		return r;

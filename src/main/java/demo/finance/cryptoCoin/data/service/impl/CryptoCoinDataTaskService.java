@@ -65,7 +65,7 @@ public class CryptoCoinDataTaskService extends CommonTaskService {
 		cryptoCoin1MonthDataSummaryService.summaryHistoryData();
 	}
 
-	@Scheduled(cron = "* 2 */1 * * ?")
+	@Scheduled(fixedDelay = 1000L * 60 * 10)
 	public void deleteExpiredCacheDataTask() {
 		SendTaskDTO dto = new SendTaskDTO();
 		dto.setFirstTask(TaskType.CRYPTO_COIN_DATA);

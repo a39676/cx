@@ -1,5 +1,8 @@
 package demo.base.task.service.impl;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -85,17 +88,22 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 
 		try {
 			dto = buildObjFromJsonCustomization(message, SendTaskDTO.class);
+			
+			sendTelegram("Receive " + dto.getTaskFirstName() + ", " + dto.getTaskSecondName());
 		} catch (Exception e) {
+			sendTelegram("Receive task error, message: " + message);
 			r.setMessage("Message format error");
 			return r;
 		}
 
 		r = verifyTaskDTO(dto);
 		if (r.isFail()) {
+			sendTelegram("Receive task, verify failed, message: " + r.getMessage());
 			return r;
 		}
 
 		if (optionService.getBreakFlag()) {
+			sendTelegram("Task flag = true");
 			r.setMessage("Break flag = true");
 			return r;
 		}
@@ -106,6 +114,8 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 			return r;
 		}
 
+		LocalDateTime startTime = LocalDateTime.now();
+		sendTelegram("Before start task. datetime: " + startTime);
 		startTask(dto);
 
 		TaskType taskType = TaskType.getType(dto.getTaskFirstCode());
@@ -300,15 +310,22 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 				if (CurrencyExchangeRateNoticeTaskType.DELETE_OLD_NOTICE.getCode().equals(dto.getTaskSecondCode())) {
 					currencyExchangeRateNoticeTaskService.deleteOldNotice();
 				}
+				break;
+			}
+			default:{
+				sendTelegram("Can NOT match task type: " + taskType.getName());
 			}
 			}
 		} catch (Exception e) {
+			sendTelegram("Task running exception, " + dto.getTaskFirstName() + ", " + dto.getTaskSecondName());
 			r.setMessage("Task running failed, task type: " + taskType.getName() + ", second task type name: "
 					+ secondTaskName + ". error: " + e.getLocalizedMessage());
 			return r;
 		}
-
+		
 		endTask(r, dto);
+		long minutes = ChronoUnit.MINUTES.between(startTime, LocalDateTime.now());
+		sendTelegram("End task, " + dto.getTaskFirstName() + ", " + dto.getTaskSecondName() + " use minutes: " + minutes);
 
 		r.setIsSuccess();
 		return r;

@@ -102,13 +102,13 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 		r = verifyTaskDTO(dto);
 		if (r.isFail()) {
 			sb.append("Receive task, verify failed, message: " + r.getMessage());
-			sendTelegram(sb.toString());
+			sendTelegram(sb.toString(), TelegramBotType.CRYPTO_COIN_LOW_PRICE_NOTICE_BOT);
 			return r;
 		}
 
 		if (optionService.getBreakFlag()) {
 			sb.append("Task flag = true");
-			sendTelegram(sb.toString());
+			sendTelegram(sb.toString(), TelegramBotType.CRYPTO_COIN_LOW_PRICE_NOTICE_BOT);
 			r.setMessage("Break flag = true");
 			return r;
 		}
@@ -323,7 +323,7 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 			}
 		} catch (Exception e) {
 			sb.append("Task running exception, " + dto.getTaskFirstName() + ", " + dto.getTaskSecondName());
-			sendTelegram(sb.toString());
+			sendTelegram(sb.toString(), TelegramBotType.CRYPTO_COIN_LOW_PRICE_NOTICE_BOT);
 			r.setMessage("Task running failed, task type: " + taskType.getName() + ", second task type name: "
 					+ secondTaskName + ". error: " + e.getLocalizedMessage());
 			return r;
@@ -331,8 +331,10 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 		
 		endTask(r, dto);
 		long minutes = ChronoUnit.MINUTES.between(startTime, LocalDateTime.now());
-		sb.append("End task, " + dto.getTaskFirstName() + ", " + dto.getTaskSecondName() + " use minutes: " + minutes);
-		sendTelegram(sb.toString());
+		if(minutes > 0) {
+			sb.append("End task, " + dto.getTaskFirstName() + ", " + dto.getTaskSecondName() + " use minutes: " + minutes);
+			sendTelegram(sb.toString(), TelegramBotType.CRYPTO_COIN_LOW_PRICE_NOTICE_BOT);
+		}
 
 		r.setIsSuccess();
 		return r;
@@ -529,6 +531,16 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 		dto = new TelegramBotNoticeMessageDTO();
 		dto.setId(TelegramStaticChatID.MY_ID);
 		dto.setBotName(TelegramBotType.BOT_2.getName());
+		dto.setMsg(msg);
+
+		telegramMessageAckProducer.send(dto);
+	}
+	
+	private void sendTelegram(String msg, TelegramBotType botType) {
+		TelegramBotNoticeMessageDTO dto = null;
+		dto = new TelegramBotNoticeMessageDTO();
+		dto.setId(TelegramStaticChatID.MY_ID);
+		dto.setBotName(botType.getName());
 		dto.setMsg(msg);
 
 		telegramMessageAckProducer.send(dto);

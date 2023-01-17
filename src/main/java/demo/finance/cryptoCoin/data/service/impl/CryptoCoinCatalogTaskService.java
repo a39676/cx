@@ -19,7 +19,7 @@ public class CryptoCoinCatalogTaskService extends CommonTaskService {
 	@Autowired
 	private CryptoCoinOptionService optionService;
 
-	@Scheduled(fixedDelay = 1000L * 60)
+	@Scheduled(fixedDelay = 1000L * 60 * 5)
 	public void addSubscriptionCatalogTask() {
 		SendTaskDTO dto = new SendTaskDTO();
 		dto.setFirstTask(TaskType.CRYPTO_COIN_CATALOG);

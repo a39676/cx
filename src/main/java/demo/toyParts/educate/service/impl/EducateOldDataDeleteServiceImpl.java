@@ -8,7 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.tool.calendarNotice.mq.producer.TelegramCalendarNoticeMessageAckProducer;
+import demo.tool.telegram.service.TelegramService;
 import demo.toyParts.educate.mapper.StudentExerciseHistoryMapper;
 import demo.toyParts.educate.pojo.po.StudentExerciseHistory;
 import demo.toyParts.educate.pojo.po.StudentExerciseHistoryExample;
@@ -16,14 +16,12 @@ import demo.toyParts.educate.service.EducateCommonService;
 import demo.toyParts.educate.service.EducateOldDataDeleteService;
 import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
-import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 
 @Service
 public class EducateOldDataDeleteServiceImpl extends EducateCommonService implements EducateOldDataDeleteService {
 
 	@Autowired
-	private TelegramCalendarNoticeMessageAckProducer telegramMessageAckProducer;
-	
+	private TelegramService telegramService;
 	@Autowired
 	private StudentExerciseHistoryMapper exerciseHistoryMapper;
 
@@ -61,12 +59,6 @@ public class EducateOldDataDeleteServiceImpl extends EducateCommonService implem
 	}
 	
 	private void sendTelegram(String msg) {
-		TelegramBotNoticeMessageDTO dto = null;
-		dto = new TelegramBotNoticeMessageDTO();
-		dto.setId(TelegramStaticChatID.MY_ID);
-		dto.setBotName(TelegramBotType.BOT_2.getName());
-		dto.setMsg(msg);
-		
-		telegramMessageAckProducer.send(dto);
+		telegramService.sendMessageByChatRecordId(TelegramBotType.BBT_MESSAGE, msg, TelegramStaticChatID.MY_ID);
 	}
 }

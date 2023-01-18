@@ -52,7 +52,7 @@ public class CryptoCoinTaskService extends CommonTaskService {
 		if(!systemConstantService.isDev()) {
 			try {
 				if (optionService.getBinanceWebSocketTurnOn() && !binanceWSClient.getSocketLiveFlag()) {
-					telegramService.sendMessageByChatRecordId(TelegramBotType.BOT_2, "binance socket down", TelegramStaticChatID.MY_ID);
+					telegramService.sendMessageByChatRecordId(TelegramBotType.BBT_MESSAGE, "binance socket down", TelegramStaticChatID.MY_ID);
 					binanceWSClient.restartWebSocket();
 				}
 			} catch (Exception e) {
@@ -63,7 +63,7 @@ public class CryptoCoinTaskService extends CommonTaskService {
 			
 			try {
 				if (optionService.getCryptoCompareWebSocketTurnOn() && !cryptoCompareWSClient.getSocketLiveFlag()) {
-					telegramService.sendMessageByChatRecordId(TelegramBotType.BOT_2, "crypto comapre socket down",
+					telegramService.sendMessageByChatRecordId(TelegramBotType.BBT_MESSAGE, "crypto comapre socket down",
 							TelegramStaticChatID.MY_ID);
 					cryptoCompareWSClient.restart();
 				}

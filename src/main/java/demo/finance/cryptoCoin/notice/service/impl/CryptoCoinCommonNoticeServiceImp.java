@@ -25,7 +25,6 @@ import demo.finance.cryptoCoin.data.pojo.result.FilterBODataResult;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinHistoryDataService;
-import demo.finance.cryptoCoin.mq.producer.TelegramCryptoCoinMessageAckProducer;
 import demo.finance.cryptoCoin.notice.mapper.CryptoCoinPriceNoticeMapper;
 import demo.finance.cryptoCoin.notice.pojo.dto.NoticeUpdateDTO;
 import demo.finance.cryptoCoin.notice.pojo.dto.SearchCryptoCoinConditionDTO;
@@ -36,10 +35,10 @@ import demo.finance.cryptoCoin.notice.pojo.vo.CryptoCoinNoticeVO;
 import demo.finance.cryptoCoin.notice.service.CryptoCoinCommonNoticeService;
 import demo.tool.telegram.pojo.po.TelegramChatId;
 import demo.tool.telegram.pojo.vo.TelegramChatIdVO;
+import demo.tool.telegram.service.TelegramService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 import telegram.pojo.constant.TelegramBotType;
-import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 
 @Service
 public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService implements CryptoCoinCommonNoticeService {
@@ -55,7 +54,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	protected CryptoCoinPriceNoticeMapper noticeMapper;
 
 	@Autowired
-	private TelegramCryptoCoinMessageAckProducer telegramMessageAckProducer;
+	private TelegramService telegramService;
 
 	@Override
 	public ModelAndView cryptoCoinPriceNoticeSettingManager() {
@@ -91,7 +90,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		CryptoCoinPriceNotice newPO = new CryptoCoinPriceNotice();
 		newPO.setId(snowFlake.getNextId());
-		newPO.setTelegramBotName(TelegramBotType.BOT_2.getName());
+		newPO.setTelegramBotName(TelegramBotType.BBT_MESSAGE.getName());
 		newPO.setCoinType(dto.getCoinTypeCode());
 		newPO.setCurrencyType(dto.getCurrencyType());
 		newPO.setTelegramChatId(systemOptionService.decryptPrivateKey(dto.getTelegramChatPK()));
@@ -368,11 +367,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		if (StringUtils.isNotBlank(content)) {
 			if (!"dev".equals(systemOptionService.getEnvName())) {
-				TelegramBotNoticeMessageDTO dto = new TelegramBotNoticeMessageDTO();
-				dto.setMsg(content);
-				dto.setId(noticeSetting.getTelegramChatId());
-				dto.setBotName(noticeSetting.getTelegramBotName());
-				telegramMessageAckProducer.send(dto);
+				telegramService.sendMessageByTelegramChatId(TelegramBotType.getType(noticeSetting.getTelegramBotName()), content, noticeSetting.getTelegramChatId());
 			}
 
 			noticeSetting.setNoticeTime(LocalDateTime.now());

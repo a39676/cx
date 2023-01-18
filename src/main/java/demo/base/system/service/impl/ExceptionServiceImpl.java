@@ -11,16 +11,15 @@ import org.springframework.web.servlet.ModelAndView;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.ExceptionService;
-import demo.tool.calendarNotice.mq.producer.TelegramCalendarNoticeMessageAckProducer;
+import demo.tool.telegram.service.TelegramService;
 import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
-import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 
 @Service
 public class ExceptionServiceImpl extends SystemCommonService implements ExceptionService {
 	
 	@Autowired
-	private TelegramCalendarNoticeMessageAckProducer telegramMessageAckProducer;
+	private TelegramService telegramService;
 
 	private static final String[] description = { "神奇", "野生", "迷幻", "抽象", "清奇", "脱俗", "清新", "艳丽"};
 
@@ -142,12 +141,6 @@ public class ExceptionServiceImpl extends SystemCommonService implements Excepti
 	}
 	
 	private void sendTelegram(String msg) {
-		TelegramBotNoticeMessageDTO dto = null;
-		dto = new TelegramBotNoticeMessageDTO();
-		dto.setId(TelegramStaticChatID.MY_ID);
-		dto.setBotName(TelegramBotType.BOT_1.getName());
-		dto.setMsg(msg);
-		
-		telegramMessageAckProducer.send(dto);
+		telegramService.sendMessageByChatRecordId(TelegramBotType.CX_MESSAGE, msg, TelegramStaticChatID.MY_ID);
 	}
 }

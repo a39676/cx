@@ -20,18 +20,18 @@ import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
-import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 
 @Service
 public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService implements CryptoCoinPriceCacheService {
 
 	@Autowired
 	private CryptoCoinCatalogService coinCatalogService;
-	
+
 	@Override
 	public void reciveData(CryptoCoinPriceCommonDataBO newBO) {
 		CryptoCoinCatalog coinType = coinCatalogService.findCatalog(newBO.getCoinType());
-		CacheMapBO key = buildCacheMapKey(coinType, CurrencyTypeForCryptoCoin.getType(newBO.getCurrencyType()), newBO.getStartTime());
+		CacheMapBO key = buildCacheMapKey(coinType, CurrencyTypeForCryptoCoin.getType(newBO.getCurrencyType()),
+				newBO.getStartTime());
 
 		CryptoCoinPriceCommonDataBO oldBO = constantService.getCacheMap().get(key);
 
@@ -44,7 +44,7 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 		} else {
 			oldBO = dataMerge(oldBO, newBO);
 			constantService.getCacheMap().put(key, oldBO);
-			
+
 		}
 
 	}
@@ -87,8 +87,7 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 	@Override
 	public CryptoCoinPriceCommonDataBO getCommonData(CryptoCoinCatalog coinType, CurrencyTypeForCryptoCoin currencyType,
 			LocalDateTime datetime) {
-		List<CryptoCoinPriceCommonDataBO> cacheDataList = getCommonDataList(coinType, currencyType,
-				datetime);
+		List<CryptoCoinPriceCommonDataBO> cacheDataList = getCommonDataList(coinType, currencyType, datetime);
 		for (CryptoCoinPriceCommonDataBO bo : cacheDataList) {
 			if (!datetime.isBefore(bo.getStartTime()) && !datetime.isAfter(bo.getEndTime())) {
 				return bo;
@@ -99,8 +98,8 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 	}
 
 	@Override
-	public List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinCatalog coinType, CurrencyTypeForCryptoCoin currencyType,
-			LocalDateTime startTime) {
+	public List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinCatalog coinType,
+			CurrencyTypeForCryptoCoin currencyType, LocalDateTime startTime) {
 		List<CryptoCoinPriceCommonDataBO> commonDataList = new ArrayList<>();
 		CryptoCoinPriceCommonDataBO tmpCommonData = null;
 
@@ -113,7 +112,7 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 		while (!startTime.isAfter(now)) {
 			tmpKey = buildCacheMapKey(coinType, currencyType, startTime);
 			tmpCommonData = constantService.getCacheMap().get(tmpKey);
-			if(tmpCommonData != null) {
+			if (tmpCommonData != null) {
 				commonDataList.add(tmpCommonData);
 			}
 
@@ -130,45 +129,43 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 		boolean flag = false;
 
 		LocalDateTime now = LocalDateTime.now();
-		keySetLoop: for(CacheMapBO key : keySet) {
-			if(ChronoUnit.MINUTES.between(key.getStartTime(), now) <= 1) {
+		keySetLoop: for (CacheMapBO key : keySet) {
+			if (ChronoUnit.MINUTES.between(key.getStartTime(), now) <= 1) {
 				flag = true;
 				break keySetLoop;
 			}
 		}
 
 		if (!flag) {
-			TelegramBotNoticeMessageDTO dto = new TelegramBotNoticeMessageDTO();
-			dto.setId(TelegramStaticChatID.MY_ID);
-			dto.setMsg("crypto compare socket hit error");
-			dto.setBotName(TelegramBotType.BOT_2.getName());
-			telegramCryptoCoinMessageAckProducer.send(dto);
+			telegramService.sendMessageByChatRecordId(TelegramBotType.BBT_MESSAGE, "crypto compare socket hit error",
+					TelegramStaticChatID.MY_ID);
 		}
 		return flag;
 	}
 
-	private CacheMapBO buildCacheMapKey(CryptoCoinCatalog coinType, CurrencyTypeForCryptoCoin currencyType, LocalDateTime datetime) {
+	private CacheMapBO buildCacheMapKey(CryptoCoinCatalog coinType, CurrencyTypeForCryptoCoin currencyType,
+			LocalDateTime datetime) {
 		CacheMapBO bo = new CacheMapBO();
 		bo.setCoinTypeCode(coinType.getId().intValue());
 		bo.setCurrencyCode(currencyType.getCode());
 		bo.setStartTime(datetime.withSecond(0).withNano(0));
 		return bo;
 	}
-	
+
 	@Override
 	public void cleanOldHistoryData() {
 		LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
 		LocalDateTime limitDateTime = now.minusMinutes(CryptoCoinDataConstant.CRYPTO_COIN_CACHE_DATA_LIVE_MINUTES);
-		
+
 		Set<CacheMapBO> keySet = constantService.getCacheMap().keySet();
 		Set<CacheMapBO> targetKey = new HashSet<>();
-		for(CacheMapBO key : keySet) {
-			if(key.getStartTime().isBefore(limitDateTime)) {
+		for (CacheMapBO key : keySet) {
+			if (key.getStartTime().isBefore(limitDateTime)) {
 				targetKey.add(key);
 			}
 		}
-		
-		for(CacheMapBO key : targetKey) {
+
+		for (CacheMapBO key : targetKey) {
 			constantService.getCacheMap().remove(key);
 		}
 

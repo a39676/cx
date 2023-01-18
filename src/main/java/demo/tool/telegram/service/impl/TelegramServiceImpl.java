@@ -38,7 +38,7 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 
 	private String botIDReady(String botIDKey) {
 		if (StringUtils.isBlank(botIDKey)) {
-			botIDKey = TelegramBotType.BOT_1.getName();
+			botIDKey = TelegramBotType.CX_MESSAGE.getName();
 		}
 		TelegramConstantBO botConstant = telegramOptionService.getTelegramConstantMap().get(botIDKey);
 
@@ -124,7 +124,7 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 		}
 
 		if (botType == null) {
-			botType = TelegramBotType.BOT_1;
+			botType = TelegramBotType.CX_MESSAGE;
 		}
 		String botID = botIDReady(botType.getName());
 		if (StringUtils.isBlank(botID)) {

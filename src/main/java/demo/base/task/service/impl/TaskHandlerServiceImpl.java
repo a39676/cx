@@ -36,12 +36,11 @@ import demo.pmemo.pojo.type.UrgeNoticeTaskType;
 import demo.pmemo.service.impl.UrgeNoticeTaskService;
 import demo.tool.bookmark.pojo.type.BookmarkTaskType;
 import demo.tool.bookmark.service.impl.BookmarkTaskService;
-import demo.tool.calendarNotice.mq.producer.TelegramCalendarNoticeMessageAckProducer;
 import demo.tool.calendarNotice.pojo.type.CalendarNoticeTaskType;
 import demo.tool.calendarNotice.service.impl.CalendarNoticeTaskService;
+import demo.tool.telegram.service.TelegramService;
 import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
-import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 
 @Service
 public class TaskHandlerServiceImpl extends CommonService implements TaskHandlerService {
@@ -50,8 +49,8 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 	private TaskOptionService optionService;
 
 	@Autowired
-	private TelegramCalendarNoticeMessageAckProducer telegramMessageAckProducer;
-
+	private TelegramService telegramService;
+	
 	@Autowired
 	private SystemTaskServiceImpl systemTaskService;
 	@Autowired
@@ -527,23 +526,11 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 	}
 
 	private void sendTelegram(String msg) {
-		TelegramBotNoticeMessageDTO dto = null;
-		dto = new TelegramBotNoticeMessageDTO();
-		dto.setId(TelegramStaticChatID.MY_ID);
-		dto.setBotName(TelegramBotType.BOT_2.getName());
-		dto.setMsg(msg);
-
-		telegramMessageAckProducer.send(dto);
+		telegramService.sendMessageByChatRecordId(TelegramBotType.CX_MESSAGE, msg, TelegramStaticChatID.MY_ID);
 	}
 	
 	private void sendTelegram(String msg, TelegramBotType botType) {
-		TelegramBotNoticeMessageDTO dto = null;
-		dto = new TelegramBotNoticeMessageDTO();
-		dto.setId(TelegramStaticChatID.MY_ID);
-		dto.setBotName(botType.getName());
-		dto.setMsg(msg);
-
-		telegramMessageAckProducer.send(dto);
+		telegramService.sendMessageByChatRecordId(TelegramBotType.CX_CALENDAR_NOTICE_BOT, msg, TelegramStaticChatID.MY_ID);
 	}
 
 }

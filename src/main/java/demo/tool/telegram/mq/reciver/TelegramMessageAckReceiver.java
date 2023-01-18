@@ -18,25 +18,30 @@ import telegram.pojo.constant.TelegramMessageMQConstant;
 import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 
 @Component
-@RabbitListener(queues = TelegramMessageMQConstant.TELEGRAM_CALENDAR_NOTICE_MSG_QUEUE)
-public class TelegramCalendarNoticeMessageAckReceiver extends CommonService {
+@RabbitListener(queues = TelegramMessageMQConstant.TELEGRAM_MESSAGE_MSG_QUEUE)
+public class TelegramMessageAckReceiver extends CommonService {
 
 	@Autowired
 	private TelegramService msgService;
 
 	@RabbitHandler
 	public void process(String messageStr, Channel channel, Message message) throws IOException {
-		
+
 		try {
 			TelegramBotNoticeMessageDTO dto = msgToDTO(messageStr);
 
 			if (dto != null) {
-				msgService.sendMessageByChatRecordId(TelegramBotType.CX_CALENDAR_NOTICE_BOT, dto.getMsg(), dto.getId());
+				TelegramBotType botType = TelegramBotType.getType(dto.getBotName());
+				if (botType == null) {
+					throw new Exception("Send telegram message error: bot NULL");
+				}
+				msgService.sendMessageByChatRecordId(botType, dto.getMsg(), dto.getId());
 			}
 
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 		} catch (Exception e) {
-			log.error("mq error, " + TelegramMessageMQConstant.TELEGRAM_CALENDAR_NOTICE_MSG_QUEUE + ", e:" + e.getLocalizedMessage());
+			log.error("mq error, " + TelegramMessageMQConstant.TELEGRAM_MESSAGE_MSG_QUEUE + ", e:"
+					+ e.getLocalizedMessage());
 			log.error(messageStr);
 			channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);
 		}

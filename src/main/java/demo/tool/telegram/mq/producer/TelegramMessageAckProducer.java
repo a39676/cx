@@ -1,4 +1,4 @@
-package demo.tool.calendarNotice.mq.producer;
+package demo.tool.telegram.mq.producer;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,19 +10,27 @@ import telegram.pojo.constant.TelegramMessageMQConstant;
 import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 
 @Component
-public class TelegramCalendarNoticeMessageAckProducer extends CommonService {
+public class TelegramMessageAckProducer extends CommonService {
+	
+	/**
+	 * Just an exmaple should NOT use in CX project
+	 */
 
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
 
+	/**
+	 * Just an exmaple should NOT use in CX project
+	 */
 	public void send(TelegramBotNoticeMessageDTO dto) {
 		if (dto == null) {
 			return;
 		}
+		
 		JSONObject json = dtoToJSON(dto);
-		rabbitTemplate.convertAndSend(TelegramMessageMQConstant.TELEGRAM_CALENDAR_NOTICE_MSG_QUEUE, json.toString());
+		rabbitTemplate.convertAndSend(TelegramMessageMQConstant.TELEGRAM_MESSAGE_MSG_QUEUE, json.toString());
 	}
-
+	
 	private JSONObject dtoToJSON(TelegramBotNoticeMessageDTO te) {
 		JSONObject json = new JSONObject();
 

@@ -17,7 +17,6 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.common.service.impl.FinanceCommonService;
-import demo.finance.cryptoCoin.mq.producer.TelegramCryptoCoinMessageAckProducer;
 import demo.finance.currencyExchangeRate.data.mapper.CurrencyExchangeRate1dayMapper;
 import demo.finance.currencyExchangeRate.data.pojo.po.CurrencyExchangeRate1day;
 import demo.finance.currencyExchangeRate.data.pojo.po.CurrencyExchangeRate1dayExample;
@@ -31,15 +30,15 @@ import demo.finance.currencyExchangeRate.notice.pojo.result.CurrencyExchangeRate
 import demo.finance.currencyExchangeRate.notice.service.CurrencyExchangeRateNoticeService;
 import demo.tool.telegram.pojo.po.TelegramChatId;
 import demo.tool.telegram.pojo.vo.TelegramChatIdVO;
+import demo.tool.telegram.service.TelegramService;
 import telegram.pojo.constant.TelegramBotType;
-import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 
 @Service
 public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 		implements CurrencyExchangeRateNoticeService {
 
 	@Autowired
-	private TelegramCryptoCoinMessageAckProducer telegramMessageAckProducer;
+	private TelegramService telegramService;
 
 	@Autowired
 	private CurrencyExchangeRateNoticeMapper noticeMapper;
@@ -54,7 +53,8 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 		currencyTypeList.addAll(Arrays.asList(CurrencyType.values()));
 		view.addObject("currencyType", currencyTypeList);
 
-		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.minute, TimeUnitType.hour, TimeUnitType.day, TimeUnitType.week, TimeUnitType.month };
+		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.minute, TimeUnitType.hour, TimeUnitType.day,
+				TimeUnitType.week, TimeUnitType.month };
 		view.addObject("timeUnitType", timeUnitTypes);
 
 		List<TelegramChatId> chatIDPOList = telegramService.getChatIDList();
@@ -82,7 +82,7 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 
 		CurrencyExchangeRateNotice newPO = new CurrencyExchangeRateNotice();
 		newPO.setId(snowFlake.getNextId());
-		newPO.setTelegramBotName(TelegramBotType.BOT_2.getName());
+		newPO.setTelegramBotName(TelegramBotType.BBT_MESSAGE.getName());
 		newPO.setCurrencyFrom(currencyFrom.getCode());
 		newPO.setCurrencyTo(currencyTo.getCode());
 		newPO.setTelegramChatId(systemOptionService.decryptPrivateKey(dto.getTelegramChatPK()));
@@ -312,11 +312,8 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 
 		if (StringUtils.isNotBlank(content)) {
 			if (!"dev".equals(systemOptionService.getEnvName())) {
-				TelegramBotNoticeMessageDTO dto = new TelegramBotNoticeMessageDTO();
-				dto.setMsg(content);
-				dto.setId(notice.getTelegramChatId());
-				dto.setBotName(notice.getTelegramBotName());
-				telegramMessageAckProducer.send(dto);
+				telegramService.sendMessageByTelegramChatId(TelegramBotType.getType(notice.getTelegramBotName()),
+						content, notice.getTelegramChatId());
 			} else {
 				log.error("In dev env, will NOT send msg: " + content + ", chat ID: " + notice.getTelegramChatId()
 						+ ", bot name: " + notice.getTelegramBotName());

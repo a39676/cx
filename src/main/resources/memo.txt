@@ -1,3 +1,6 @@
+是否需要保留 ServiceMQConstant.BBT_SEND_MESSAGE_QUEUE
+每款微服务设立一个 telegram queue ? 共用一条?
+
 自定义书签
 	url 图标
 	
@@ -7,6 +10,8 @@
 		有密码书签 不需登录
 	
 article
+	私有频道, 文章设置置顶后, 再次查看 "New", 消失 
+
 	凭密码访问
 
 	Add back to Homepage button in post.jsp

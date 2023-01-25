@@ -1,3 +1,7 @@
+open ai
+vps 上尚未建立对应的 option.json
+
+
 是否需要保留 ServiceMQConstant.BBT_SEND_MESSAGE_QUEUE
 每款微服务设立一个 telegram queue ? 共用一条?
 

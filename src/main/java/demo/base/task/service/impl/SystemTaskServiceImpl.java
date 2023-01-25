@@ -71,18 +71,9 @@ public class SystemTaskServiceImpl extends CommonTaskService {
 	/**
 	 * 2021-06-17 keep database connection alive after update JDK and update MySQL
 	 * and SpringBoot database connection will lose automation
+	 * ONLY a short query, no need MQ task
 	 */
-	@Scheduled(cron = "*/31 * * * * ?")
-	public void keepDatabaseConnectionAliveTask() {
-		SendTaskDTO dto = new SendTaskDTO();
-		dto.setFirstTask(TaskType.SYSTEM);
-		dto.setTaskId(snowFlake.getNextId());
-
-		SystemTaskType systemTaskType = SystemTaskType.KEEP_DATABASE_CONNECTION_ALIVE;
-		dto.setTaskSecondCode(systemTaskType.getCode());
-		dto.setTaskSecondName(systemTaskType.getName());
-	}
-
+	@Scheduled(fixedDelay = 1000L * 20)
 	public void keepDatabaseConnectionAlive() {
 		baseMapper.keepDatabaseAlive();
 	}

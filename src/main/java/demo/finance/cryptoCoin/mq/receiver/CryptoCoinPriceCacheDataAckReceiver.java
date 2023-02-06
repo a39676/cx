@@ -10,14 +10,16 @@ import org.springframework.stereotype.Component;
 
 import com.rabbitmq.client.Channel;
 
-import demo.common.service.CommonService;
+import demo.common.service.CommonMessageQueueReceiverService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinMQConstant;
+import telegram.pojo.constant.TelegramBotType;
+import telegram.pojo.constant.TelegramStaticChatID;
 
 @Component
 @RabbitListener(queues = CryptoCoinMQConstant.CRYPTO_COIN_PRICE_CACHE_QUEUE)
-public class CryptoCoinPriceCacheDataAckReceiver extends CommonService {
+public class CryptoCoinPriceCacheDataAckReceiver extends CommonMessageQueueReceiverService {
 
 	@Autowired
 	private CryptoCoinPriceCacheService cryptoCoinPriceCacheService;
@@ -27,11 +29,10 @@ public class CryptoCoinPriceCacheDataAckReceiver extends CommonService {
 		try {
 			CryptoCoinPriceCommonDataBO bo = buildObjFromJsonCustomization(messageStr, CryptoCoinPriceCommonDataBO.class);
 			cryptoCoinPriceCacheService.reciveData(bo);
-			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 		} catch (Exception e) {
 			log.error("mq error, " + CryptoCoinMQConstant.CRYPTO_COIN_PRICE_CACHE_QUEUE + ", e:" + e.getLocalizedMessage());
 			log.error(messageStr);
-			channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);
+			telegramService.sendMessageByChatRecordId(TelegramBotType.CRYPTO_COIN_LOW_PRICE_NOTICE_BOT, "Crypto daily data error: " + e.getLocalizedMessage() + ", msgStr: " + messageStr, TelegramStaticChatID.MY_ID);
 		}
 	}
 }

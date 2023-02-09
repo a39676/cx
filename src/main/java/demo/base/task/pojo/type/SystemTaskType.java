@@ -2,7 +2,6 @@ package demo.base.task.pojo.type;
 
 public enum SystemTaskType {
 	
-	KEEP_DATABASE_CONNECTION_ALIVE("keepDatabaseConnectionAlive", 1),
 	CLEAN_ATTEMPTS("cleanAttempts", 2),
 	CLEAN_MAIL_RECORD("cleanMailRecord", 3),
 	EVALUATION_CACHE_TO_STORE("evaluationCacheToStore", 4),

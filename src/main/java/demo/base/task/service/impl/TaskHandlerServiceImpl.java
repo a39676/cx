@@ -136,9 +136,7 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 				SystemTaskType secondTaskType = SystemTaskType.getType(dto.getTaskSecondCode());
 				secondTaskName = secondTaskType.getName();
 
-				if (SystemTaskType.KEEP_DATABASE_CONNECTION_ALIVE.getCode().equals(dto.getTaskSecondCode())) {
-					systemTaskService.keepDatabaseConnectionAlive();
-				} else if (SystemTaskType.CLEAN_ATTEMPTS.getCode().equals(dto.getTaskSecondCode())) {
+				if (SystemTaskType.CLEAN_ATTEMPTS.getCode().equals(dto.getTaskSecondCode())) {
 					systemTaskService.cleanAttempts();
 				} else if (SystemTaskType.CLEAN_MAIL_RECORD.getCode().equals(dto.getTaskSecondCode())) {
 					systemTaskService.cleanMailRecord();

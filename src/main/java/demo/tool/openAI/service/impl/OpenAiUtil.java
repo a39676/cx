@@ -21,6 +21,8 @@ public class OpenAiUtil {
 	@SuppressWarnings("unused")
 	private static final String ENGINES = "/engines";
 	private static final String COMPLETIONS = "/completions ";
+	
+	private static final String MODEL_DAVINCI_003 = "text-davinci-003";
 
 	public String sendMsg(String msg) {
 //		TODO delete it
@@ -77,7 +79,7 @@ public class OpenAiUtil {
 	private JSONObject buildCompletionsParamJson(String msg) {
 //		{"model": "text-davinci-003", "prompt": "Say this is a test", "temperature": 0, "max_tokens": 7}
 		JSONObject json = new JSONObject();
-		json.put("model", "text-davinci-003");
+		json.put("model", MODEL_DAVINCI_003);
 		json.put("prompt", msg);
 		json.put("temperature", 0);
 		json.put("max_tokens", 7);
@@ -97,7 +99,7 @@ public class OpenAiUtil {
 		System.setProperty("https.proxyPort", proxyPort);
 
 		OpenAiUtil o = new OpenAiUtil();
-		o.sendMsg("请翻译以下内容 \"As part of our global Law Enforcement Training Program, we recently held a workshop in Wellington, New Zealand with the @nzpolice.Jarek Jakubcek, #Binance Global Head of Intelligence and Investigations, led the workshop designed to build crypto understanding, safety & adoption.\"");
+		o.sendMsg("请翻译以下内容成中文 The current job market is becoming increasingly difficult.");
 		
 		/**
 		 * feedback

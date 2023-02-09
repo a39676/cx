@@ -97,7 +97,13 @@ public class OpenAiUtil {
 		System.setProperty("https.proxyPort", proxyPort);
 
 		OpenAiUtil o = new OpenAiUtil();
-		o.sendMsg("请翻译以下内容: This is a testing message");
+		o.sendMsg("请翻译以下内容 \"As part of our global Law Enforcement Training Program, we recently held a workshop in Wellington, New Zealand with the @nzpolice.Jarek Jakubcek, #Binance Global Head of Intelligence and Investigations, led the workshop designed to build crypto understanding, safety & adoption.\"");
+		
+		/**
+		 * feedback
+		 * {"id":"cmpl-6hvS1FyHsh70jt1ScHWuHOxUOQTdT","object":"text_completion","created":1675926965,"model":"text-davinci-003","choices":[{"text":"\r\n\r\n作为","index":0,"logprobs":null,"finish_reason":"length"}],"usage":{"prompt_tokens":79,"completion_tokens":7,"total_tokens":86}}
+		 * {"id":"cmpl-6hvTf5AHSURnm35u1cEKLvrViMhLl","object":"text_completion","created":1675927067,"model":"text-davinci-003","choices":[{"text":"\n\n作为我","index":0,"logprobs":null,"finish_reason":"length"}],"usage":{"prompt_tokens":73,"completion_tokens":7,"total_tokens":80}}
+		 */
 	}
 
 //	TODO for dev

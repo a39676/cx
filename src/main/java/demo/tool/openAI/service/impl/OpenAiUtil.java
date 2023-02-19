@@ -26,7 +26,8 @@ public class OpenAiUtil {
 
 	public String sendMsg(String msg) {
 //		TODO delete it
-		optionService = buildOption();
+		optionService = new OpenAiOptionService();
+		optionService.setApiKey("sk-");
 
 		try {
 			URL url = new URL(MAIN_URL 
@@ -82,7 +83,7 @@ public class OpenAiUtil {
 		json.put("model", MODEL_DAVINCI_003);
 		json.put("prompt", msg);
 		json.put("temperature", 0);
-		json.put("max_tokens", 7);
+		json.put("max_tokens", 1000);
 		return json;
 	}
 
@@ -99,19 +100,14 @@ public class OpenAiUtil {
 		System.setProperty("https.proxyPort", proxyPort);
 
 		OpenAiUtil o = new OpenAiUtil();
-		o.sendMsg("请翻译以下内容成中文 The current job market is becoming increasingly difficult.");
+		o.sendMsg("请将以下内容翻译成中文\r\n"
+				+ "Despite unwarranted criticism by the PRC, the facts are undeniable. The U.S. is the leading humanitarian donor to the Syrian people since the start of the war. We have provided over $15B to the Syrian people in Syria & in the region. These funds go to the people, not the regime.");
 		
 		/**
 		 * feedback
-		 * {"id":"cmpl-6hvS1FyHsh70jt1ScHWuHOxUOQTdT","object":"text_completion","created":1675926965,"model":"text-davinci-003","choices":[{"text":"\r\n\r\n作为","index":0,"logprobs":null,"finish_reason":"length"}],"usage":{"prompt_tokens":79,"completion_tokens":7,"total_tokens":86}}
-		 * {"id":"cmpl-6hvTf5AHSURnm35u1cEKLvrViMhLl","object":"text_completion","created":1675927067,"model":"text-davinci-003","choices":[{"text":"\n\n作为我","index":0,"logprobs":null,"finish_reason":"length"}],"usage":{"prompt_tokens":73,"completion_tokens":7,"total_tokens":80}}
+		 * {"id":"cmpl-6hvS1FyHsh70jt1ScHWUOQTdT","object":"text_completion","created":1675926965,"model":"text-davinci-003","choices":[{"text":"\r\n\r\n作为","index":0,"logprobs":null,"finish_reason":"length"}],"usage":{"prompt_tokens":79,"completion_tokens":7,"total_tokens":86}}
+		 * {"id":"cmpl-6hvTf5AHSURnm35u1cEKLvhLl","object":"text_completion","created":1675927067,"model":"text-davinci-003","choices":[{"text":"\n\n作为我","index":0,"logprobs":null,"finish_reason":"length"}],"usage":{"prompt_tokens":73,"completion_tokens":7,"total_tokens":80}}
 		 */
 	}
 
-//	TODO for dev
-	private OpenAiOptionService buildOption() {
-		OpenAiOptionService o = new OpenAiOptionService();
-		o.setApiKey("");
-		return o;
-	}
 }

@@ -1,7 +1,5 @@
 package demo.image.controller;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -12,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import demo.common.controller.CommonController;
 import demo.image.pojo.constant.ImageUrl;
 import demo.image.service.ImageService;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping(value = ImageUrl.root)

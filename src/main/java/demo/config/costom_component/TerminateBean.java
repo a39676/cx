@@ -1,6 +1,6 @@
 package demo.config.costom_component;
 
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PreDestroy;
 
 public class TerminateBean {
 

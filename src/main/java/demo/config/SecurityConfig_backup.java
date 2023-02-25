@@ -11,9 +11,7 @@
 //import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 //import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 //import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-//import org.springframework.security.config.annotation.web.builders.WebSecurity;
-//import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-//import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+//import org.springframework.security.web.SecurityFilterChain;
 //import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 //import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 //import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -22,7 +20,7 @@
 //import demo.article.articleComment.pojo.constant.ArticleAdminCommentUrlConstant;
 //import demo.base.admin.pojo.constant.AdminUrlConstant;
 //import demo.base.system.pojo.constant.BaseUrl;
-//import demo.base.user.pojo.constant.LoginUrlConstant;
+//import demo.base.task.pojo.constant.TaskUrl;
 //import demo.base.user.pojo.constant.UsersUrl;
 //import demo.base.user.pojo.type.OrganzationRolesType;
 //import demo.base.user.pojo.type.SystemRolesType;
@@ -46,8 +44,8 @@
 //import image.pojo.constant.ImageInteractionUrl;
 //
 //@Configuration
-//@EnableWebSecurity
-//public class SecurityConfig_backup extends WebSecurityConfigurerAdapter {
+////@EnableWebSecurity
+//public class SecurityConfig_backup {
 //	
 //	@Autowired
 //	private DataSource dataSource;
@@ -72,108 +70,65 @@
 //	    return authProvider;
 //	}
 //	
-//	@Override
-//	protected void configure(HttpSecurity http) throws Exception {
-//        http.authorizeRequests()
-//            .antMatchers("/welcome**").permitAll()
-//            .antMatchers(LoginUrlConstant.LOGIN + "/**").permitAll()
-//            .antMatchers(UsersUrl.root + "/**").permitAll()
-//            .antMatchers("/static_resources/**").permitAll()
-//            .antMatchers("/tHome/**").permitAll()
-//            .antMatchers(WXUrl.root + WXUrl.weixin).permitAll()
-////            .anyRequest().authenticated() 
-//            // used to allow anonymous access 
-//            // .antMatchers("/welcome**").access("IS_AUTHENTICATED_ANONYMOUSLY")
-////            .antMatchers(ArticleUrlConstant.root + "/**").access("hasAnyRole('" + RolesType.ROLE_ADMIN.getRoleName() + "','" + RolesType.ROLE_USER.getRoleName() + "')")
-//            .antMatchers(BaseUrl.SHUTDOWN + "/**")
-//            	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
-//            .antMatchers(BaseUrl.OPTION_CONSTANT+ "/**")
-//            	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
-//            .antMatchers(TestUrl.root + "/**")
-//        		.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
-//            .antMatchers("/holder/**")
-//            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_USER))
-//            .antMatchers("/accountInfo/**")
-//            	.access(hasAnyRole(SystemRolesType.ROLE_USER))
-//            .antMatchers(AdminUrlConstant.root + "/**")
-//            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN))
-//            .antMatchers(ArticleAdminUrlConstant.root + "/**")
-//            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN))
-//            .antMatchers(ArticleAdminCommentUrlConstant.root + "/**")
-//            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN)) 
-//            .antMatchers("/dba/**")
-//            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DBA)) 
-//            .antMatchers(ToolUrlConstant.root + "/**")
-//            	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
-//            .antMatchers(CryptoCoinManagerUrl.ROOT + "/**")
-//            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
-//            .antMatchers(CurrencyExchangeRateNoticeUrl.ROOT + "/**")
-//            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
-//            .antMatchers(PMemoUrl.ROOT + PMemoUrl.SET)
-//            	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
-//            .antMatchers(WXUrl.root + "/**")
-//            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DEV))
-//            .antMatchers(UrgeNoticeManagerUrl.ROOT + "/**")
-//            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
-//            .antMatchers(CryptoCoinSharingUrl.ROOT + CryptoCoinSharingUrl.CALCULATE_DETAIL)
-//            	.permitAll()
-//            .antMatchers(CryptoCoinSharingUrl.ROOT + "/**")
-//            	.access("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')")
-//            // joy url start
-//            .antMatchers(JoyUrl.ROOT + "/**")
-//            	.access(hasAnyRole(SystemRolesType.ROLE_USER_ACTIVE))
-//            .antMatchers(JoyManagerUrl.ROOT + "/**")
-//            	.access(hasAnyRole(SystemRolesType.ROLE_ADMIN, SystemRolesType.ROLE_SUPER_ADMIN))
-//            // joy url end
-//            	
-//            .and()
-//				.formLogin().loginPage("/login/login").failureUrl("/login/login?error")
+//	@Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//		http.authorizeHttpRequests(
+//				(requests) -> requests
+//				.requestMatchers(new AntPathRequestMatcher("/welcome**")).permitAll()
+////				.requestMatchers(new AntPathRequestMatcher(LoginUrlConstant.LOGIN + "/**")).permitAll()
+//				.requestMatchers(new AntPathRequestMatcher(UsersUrl.root + "/**")).permitAll()
+//				.requestMatchers(new AntPathRequestMatcher("/static_resources/**")).permitAll()
+//				.requestMatchers(new AntPathRequestMatcher("/tHome/**")).permitAll()
+//				.requestMatchers(new AntPathRequestMatcher(WXUrl.root + WXUrl.weixin)).permitAll()
+//				.requestMatchers(new AntPathRequestMatcher(BaseUrl.SHUTDOWN + "/**")).hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName())
+//				.requestMatchers(new AntPathRequestMatcher(BaseUrl.OPTION_CONSTANT+ "/**")).hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName())
+//				.requestMatchers(new AntPathRequestMatcher(TestUrl.root + "/**")).hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName())
+//				.requestMatchers(new AntPathRequestMatcher("/holder/****")).hasAnyRole(buildRolesName(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_USER))
+//				.requestMatchers(new AntPathRequestMatcher("/accountInfo/**")).hasAnyRole(buildRolesName(SystemRolesType.ROLE_USER))
+//				.requestMatchers(new AntPathRequestMatcher(AdminUrlConstant.root + "/**")).hasAnyRole(buildRolesName(SystemRolesType.ROLE_SUPER_ADMIN))
+//				.requestMatchers(new AntPathRequestMatcher(ArticleAdminUrlConstant.root + "/**")).hasAnyRole(buildRolesName(SystemRolesType.ROLE_SUPER_ADMIN))
+//				.requestMatchers(new AntPathRequestMatcher(ArticleAdminCommentUrlConstant.root + "/**")).hasAnyRole(buildRolesName(SystemRolesType.ROLE_SUPER_ADMIN))
+//				.requestMatchers(new AntPathRequestMatcher("/dba/**")).hasAnyRole(buildRolesName(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DBA))
+//				.requestMatchers(new AntPathRequestMatcher(ToolUrlConstant.root + "/**")).hasAnyRole(buildRolesName(SystemRolesType.ROLE_SUPER_ADMIN))
+//				.requestMatchers(new AntPathRequestMatcher(CryptoCoinManagerUrl.ROOT + "/**")).hasAnyRole(buildRolesName(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+//				.requestMatchers(new AntPathRequestMatcher(CurrencyExchangeRateNoticeUrl.ROOT + "/**")).hasAnyRole(buildRolesName(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+//				.requestMatchers(new AntPathRequestMatcher(PMemoUrl.ROOT + PMemoUrl.SET)).hasAnyRole(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
+//				.requestMatchers(new AntPathRequestMatcher(WXUrl.root + "/**")).hasAnyRole(buildRolesName(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DEV))
+//				.requestMatchers(new AntPathRequestMatcher(UrgeNoticeManagerUrl.ROOT + "/**")).hasAnyRole(buildRolesName(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+//				.requestMatchers(new AntPathRequestMatcher(TaskUrl.ROOT + "/**")).hasAnyRole(buildRolesName(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+//				.requestMatchers(new AntPathRequestMatcher(CryptoCoinSharingUrl.ROOT + CryptoCoinSharingUrl.CALCULATE_DETAIL)).permitAll()
+//				.requestMatchers(new AntPathRequestMatcher(CryptoCoinSharingUrl.ROOT + "/**")).hasAnyRole("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_CRYPTO_SHARING_MANAGER")
+//				.requestMatchers(new AntPathRequestMatcher(JoyUrl.ROOT + "/**")).hasAnyRole(buildRolesName(SystemRolesType.ROLE_USER_ACTIVE))
+//				.requestMatchers(new AntPathRequestMatcher(JoyManagerUrl.ROOT + "/**")).hasAnyRole(buildRolesName(SystemRolesType.ROLE_ADMIN, SystemRolesType.ROLE_SUPER_ADMIN))
+//	            .anyRequest().authenticated()
+//	            )
+//		.formLogin((form) -> form
+//				.loginPage("/login/login")
 //				.loginProcessingUrl("/auth/login_check")
 //				.successHandler(customAuthenticationSuccessHandler)
 //				.failureHandler(customAuthenticationFailHandler)
 //				.usernameParameter("user_name").passwordParameter("pwd")
-//			.and()
-//		    	.logout().logoutRequestMatcher(new AntPathRequestMatcher("/login/logout"))
-//		    .and()
-//		    	.exceptionHandling().accessDeniedPage("/403")
-//		    .and()
-//		    	.rememberMe().tokenRepository(persistentTokenRepository())
-//		    	.tokenValiditySeconds(3600)
-//		    .and()
-//		    	.authorizeRequests()
-//		    .and()
-//		    	.csrf()
-//		    		.ignoringAntMatchers(UrgeNoticeUrl.ROOT + "/**")
-////		    尝试搭建 web socket, 修改同源策略
-////		    .and()
-////		        .headers().frameOptions().sameOrigin()
-//		    ;
+//				.permitAll())
+////		.logout().logoutRequestMatcher(new AntPathRequestMatcher("/login/logout"))
+//		.logout((logout) -> logout.permitAll())
+//		.exceptionHandling().accessDeniedPage("/403")
+//		.and()
+//			.rememberMe().tokenRepository(persistentTokenRepository())
+//			.tokenValiditySeconds(3600)
+//		.and()
+//	    	.csrf()
+//	    	.ignoringRequestMatchers(UrgeNoticeUrl.ROOT + "/**")
+//	    	.ignoringRequestMatchers(ImageInteractionUrl.ROOT + "/**")
+//		;
 //	  
-//        /*
-//         * 增加filter在此  同样操作 但建议使用
-//         * http.addFilterAfter(newFilter,CsrfFilter.class); 
-//         * 2020-03-18 
-//         * 编码过滤拟转移到 application.yml
-//         */
-////        CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
-////        encodingFilter.setEncoding(StandardCharsets.UTF_8.displayName());
-////        encodingFilter.setForceEncoding(true);
-////        http.addFilterBefore(encodingFilter, CsrfFilter.class);
-//        
+//        return http.build();
 //	}
 //	
-//	@Override
-//	public void configure(WebSecurity web) throws Exception {
-//	    web.ignoring()
-//	    .antMatchers("/test/testIgnoring")
-//	    .antMatchers(ImageInteractionUrl.root + "/**")
-//	    ;
-//	}
-//	
-//	@Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.authenticationProvider(authProvider());
-//    }
+////	@Bean
+////    public AuthenticationManagerBuilder buildAuthenticationManager(AuthenticationManagerBuilder auth) throws Exception {
+////        auth.authenticationProvider(authProvider());
+////        return auth;
+////    }
 //
 //	@Bean
 //	public PersistentTokenRepository persistentTokenRepository() {
@@ -203,15 +158,15 @@
 ////		return "hasRole('"+ roleType.getName() +"')";
 ////	}
 //	
-//	private String hasAnyRole(SystemRolesType... roleTypes) {
-//		return hasAnyRole(Arrays.asList(roleTypes), null);
+//	private String buildRolesName(SystemRolesType... roleTypes) {
+//		return buildRolesName(Arrays.asList(roleTypes), null);
 //	}
 //	
 ////	private String hasAnyRole(OrganzationRolesType... roleTypes) {
 ////		return hasAnyRole(null, Arrays.asList(roleTypes));
 ////	}
 //	
-//	private String hasAnyRole(List<SystemRolesType> sysRoleTypes, List<OrganzationRolesType> orgRoleTypes) {
+//	private String buildRolesName(List<SystemRolesType> sysRoleTypes, List<OrganzationRolesType> orgRoleTypes) {
 //		StringBuffer roleExpressionBuilder = new StringBuffer("hasAnyRole(");
 //		
 //		if((sysRoleTypes == null || sysRoleTypes.isEmpty())

@@ -2,11 +2,6 @@ package demo.base.user.service.impl;
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +16,10 @@ import demo.base.user.pojo.type.SystemRolesType;
 import demo.config.costom_component.BaseUtilCustom;
 import demo.finance.cryptoCoin.sharing.pojo.constant.CryptoCoinSharingUrl;
 import demo.toyParts.educate.pojo.constant.EducateUrl;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {

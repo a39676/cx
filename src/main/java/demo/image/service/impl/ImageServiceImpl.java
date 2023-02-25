@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.io.FileUtils;
@@ -44,6 +43,7 @@ import demo.image.pojo.type.ImageTagType;
 import demo.image.service.ImageService;
 import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.result.ImageSavingResult;
+import jakarta.servlet.http.HttpServletResponse;
 import toolPack.constant.FileSuffixNameConstant;
 
 @Service

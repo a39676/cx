@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -16,6 +14,7 @@ import com.google.gson.Gson;
 import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.base.system.pojo.result.HostnameType;
 import demo.common.service.CommonService;
+import jakarta.annotation.PostConstruct;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")

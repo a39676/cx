@@ -2,9 +2,6 @@ package demo.article.article.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +23,8 @@ import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.article.article.service.ArticleAdminService;
 import demo.article.article.service.ArticleChannelService;
 import demo.common.controller.CommonController;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping( value = ArticleAdminUrlConstant.root)

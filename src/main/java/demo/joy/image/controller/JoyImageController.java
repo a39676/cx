@@ -1,7 +1,5 @@
 package demo.joy.image.controller;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +10,7 @@ import demo.joy.common.controller.JoyCommonController;
 import demo.joy.common.pojo.constant.JoyUrl;
 import demo.joy.image.pojo.constant.JoyImageUrl;
 import demo.joy.image.service.JoyImageService;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping(value = JoyUrl.ROOT + JoyImageUrl.ROOT)

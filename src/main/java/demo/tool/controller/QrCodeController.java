@@ -2,8 +2,6 @@ package demo.tool.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import demo.common.controller.CommonController;
 import demo.tool.other.pojo.dto.QrCodeDTO;
 import demo.tool.other.service.QrCodeService;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping(value = "/publicTool" + "/qrcode")

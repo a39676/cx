@@ -7,9 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +33,8 @@ import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.article.article.service.ArticleChannelService;
 import demo.base.system.pojo.po.Hostname;
 import demo.base.system.pojo.result.HostnameType;
+import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service

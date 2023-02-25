@@ -1,7 +1,5 @@
 package demo.base.user.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,6 +28,7 @@ import demo.base.user.service.UserRegistService;
 import demo.common.controller.CommonController;
 import demo.config.costom_component.BaseUtilCustom;
 import demo.toyParts.educate.pojo.type.GradeType;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping(value = UsersUrl.root)

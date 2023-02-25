@@ -1,8 +1,8 @@
 package demo.base.system.service;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.web.servlet.ModelAndView;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 public interface ExceptionService {
 

@@ -2,11 +2,10 @@ package demo.image.service;
 
 import java.awt.image.BufferedImage;
 
-import javax.servlet.http.HttpServletResponse;
-
 import demo.image.pojo.result.ImgHandleSrcDataResult;
 import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.result.ImageSavingResult;
+import jakarta.servlet.http.HttpServletResponse;
 
 public interface ImageService {
 

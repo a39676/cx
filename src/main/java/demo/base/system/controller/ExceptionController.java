@@ -5,8 +5,6 @@ import java.lang.reflect.InaccessibleObjectException;
 import java.sql.SQLException;
 import java.sql.SQLSyntaxErrorException;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.BadSqlGrammarException;
@@ -19,6 +17,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import demo.base.system.service.ExceptionService;
 import demo.common.controller.CommonController;
+import jakarta.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
 public class ExceptionController extends CommonController {

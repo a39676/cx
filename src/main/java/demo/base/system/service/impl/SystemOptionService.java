@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +16,7 @@ import com.google.gson.Gson;
 
 import demo.common.service.CommonService;
 import demo.config.costom_component.EncryptUtil;
+import jakarta.annotation.PostConstruct;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")

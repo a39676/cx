@@ -8,8 +8,6 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -30,6 +28,7 @@ import demo.joy.image.pojo.dto.JoyImageUploadDTO;
 import demo.joy.image.pojo.po.JoyImageStore;
 import demo.joy.image.pojo.result.JoyImageUploadResult;
 import demo.joy.image.service.JoyImageService;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Scope("singleton")
 @Service

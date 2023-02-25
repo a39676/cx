@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +25,7 @@ import demo.tool.telegram.pojo.dto.TelegramUpdateMessageDTO;
 import demo.tool.telegram.pojo.dto.telegramDTO.TelegramMessageDTO;
 import demo.tool.telegram.pojo.po.TelegramChatId;
 import demo.tool.telegram.service.TelegramService;
+import jakarta.servlet.http.HttpServletRequest;
 import telegram.pojo.constant.TelegramBotType;
 import toolPack.ioHandle.FileUtilCustom;
 

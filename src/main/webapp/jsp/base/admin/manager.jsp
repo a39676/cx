@@ -31,6 +31,12 @@
       <li>
         <a href="/admin/updateAccountMarker" target="_blank">updateAccountMarker</a>
       </li>
+      <li>
+        <a href="/task/fixRuningTaskStatus" target="_blank">fixRuningTaskStatus</a>
+      </li>
+      <li>
+        <a href="/task/getRuningTaskName" target="_blank">getRuningTaskName</a>
+      </li>
     </ul><!-- system -->
 
     <ul class="main-menu visible-on-click" id="telegramTool">

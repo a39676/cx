@@ -25,7 +25,7 @@ public class BbtOrderTaskService {
 		informationCollectionService.sendV2exJobInfomationCollectionTask();
 	}
 	
-	@Scheduled(fixedRate = 1000L * 60 * 10)
+	@Scheduled(fixedDelay = 1000L * 60 * 10)
 	public void hsbcWechatPreregistRandomInsert() {
 		hsbcService.hsbcWechatPreregistRandomInsert();
 	}

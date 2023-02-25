@@ -12,23 +12,18 @@ import com.rabbitmq.client.Channel;
 
 import autoTest.testEvent.common.pojo.constant.AutomationTestMQConstant;
 import demo.automationTest.service.AutomationTestResultReceiveService;
-import demo.common.service.CommonService;
+import demo.common.service.CommonMessageQueueReceiverService;
 
 @Component
 @RabbitListener(queues = AutomationTestMQConstant.AUTOMATION_TEST_RESULT_QUEUE)
-public class AutomationTestResultAckReceiver extends CommonService {
+public class AutomationTestResultAckReceiver extends CommonMessageQueueReceiverService {
 
 	@Autowired
 	private AutomationTestResultReceiveService reportReceiveService;
 
 	@RabbitHandler
 	public void process(String messageStr, Channel channel, Message message) throws IOException {
-		try {
-			reportReceiveService.handleAutomationTestResult(messageStr);
-			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
-		} catch (Exception e) {
-			channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);
-		}
+		reportReceiveService.handleAutomationTestResult(messageStr);
 	}
 	
 	

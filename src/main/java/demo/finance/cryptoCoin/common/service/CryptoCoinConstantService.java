@@ -19,7 +19,6 @@ import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 public class CryptoCoinConstantService extends CommonService {
 
 	private LocalDateTime cryptoCompareWebSocketLastActiveTime;
-
 	private LocalDateTime binanceWebSocketLastActiveTime;
 
 	private Set<String> lowPriceSubscriptionSet = new HashSet<>();

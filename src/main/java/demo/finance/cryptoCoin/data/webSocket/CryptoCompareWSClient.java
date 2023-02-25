@@ -175,7 +175,7 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 	}
 
 	public boolean getSocketLiveFlag() {
-		LocalDateTime lastActiveTime = constantService.getBinanceWebSocketLastActiveTime();
+		LocalDateTime lastActiveTime = constantService.getCryptoCompareWebSocketLastActiveTime();
 		if (lastActiveTime == null) {
 			return false;
 		}

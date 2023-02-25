@@ -42,21 +42,20 @@ import demo.base.system.service.IpRecordService;
 import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.UserDetailService;
 import demo.base.user.service.UsersService;
-import demo.tool.calendarNotice.mq.producer.TelegramCalendarNoticeMessageAckProducer;
 import demo.tool.other.service.ValidRegexToolService;
+import demo.tool.telegram.service.TelegramService;
 import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
-import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class ArticleCommentServiceImpl extends ArticleCommonService implements ArticleCommentService {
-	
+
 	@Autowired
 	protected IpRecordService ipRecordService;
 
 	@Autowired
-	private TelegramCalendarNoticeMessageAckProducer telegramMessageAckProducer;
+	private TelegramService telegramService;
 	@Autowired
 	private ArticleCommentOptionService constantService;
 	@Autowired
@@ -69,75 +68,75 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	private UserDetailService userDetailService;
 	@Autowired
 	private ValidRegexToolService validRegexToolService;
-	
+
 	@Autowired
 	private ArticleCommentMapper articleCommentMapper;
 	@Autowired
 	private ArticleCommentCountMapper articleCommentCountMapper;
-	
+
 	@Autowired
 	private ArticleCommentOptionService articleCommentConstantService;
-	
+
 	@Autowired
 	private FileUtilCustom ioUtil;
-	
-	
+
 	@Override
-	public CommonResult creatingArticleComment(HttpServletRequest request, CreateArticleCommentDTO inputParam) throws IOException {
-		
+	public CommonResult creatingArticleComment(HttpServletRequest request, CreateArticleCommentDTO inputParam)
+			throws IOException {
+
 		CommonResult result = new CommonResult();
-		if(StringUtils.isBlank(inputParam.getContent())) {
+		if (StringUtils.isBlank(inputParam.getContent())) {
 			result.setMessage("Null param");
 			return result;
 		}
-		if(inputParam.getContent().replaceAll("\\s", "").length() < 6) {
+		if (inputParam.getContent().replaceAll("\\s", "").length() < 6) {
 			result.setMessage("Article too short");
 			return result;
 		}
 		String articleCommentStorePrefixPath = constantService.getArticleCommentStorePrefixPath();
-		if(StringUtils.isBlank(articleCommentStorePrefixPath) || constantService.getMaxArticleCommentLength() <= 0) {
+		if (StringUtils.isBlank(articleCommentStorePrefixPath) || constantService.getMaxArticleCommentLength() <= 0) {
 			result.setMessage("Service error");
 			return result;
 		}
-		
+
 		inputParam.setPk(URLDecoder.decode(inputParam.getPk(), StandardCharsets.UTF_8));
 		Long articleId = systemOptionService.decryptPrivateKey(inputParam.getPk());
-		
-		if(articleId == null) {
+
+		if (articleId == null) {
 			result.setMessage("Error param");
 			return result;
 		}
-		
+
 		boolean bigUserFlag = isBigUser();
 		Long userId = baseUtilCustom.getUserId();
-		
+
 		String nickname = null;
 		String email = null;
 		Long mobile = null;
-		if(userId == null) {
+		if (userId == null) {
 			nickname = sanitize(inputParam.getNickname());
 			email = inputParam.getEmail();
-			if(!validRegexToolService.validEmail(email)) {
+			if (!validRegexToolService.validEmail(email)) {
 				result.failWithMessage("请输入正确的邮箱格式");
 				return result;
 			}
-			
-			if(userDetailService.isNicknameExists(nickname)) {
+
+			if (userDetailService.isNicknameExists(nickname)) {
 				result.failWithMessage("此昵称已注册, 如需使用此昵称, 请登录");
 				return result;
 			}
-			
-			if(userDetailService.ensureActiveEmail(email).isSuccess()) {
+
+			if (userDetailService.ensureActiveEmail(email).isSuccess()) {
 				result.failWithMessage("此邮箱已注册, 如需使用此邮箱, 请登录");
 				return result;
 			}
-			
-			if(StringUtils.isNotBlank(inputParam.getMobile())) {				
-				if(!validRegexToolService.validMobile(inputParam.getMobile())) {
+
+			if (StringUtils.isNotBlank(inputParam.getMobile())) {
+				if (!validRegexToolService.validMobile(inputParam.getMobile())) {
 					result.failWithMessage("请输入11位数字手机号, 或留空");
 					return result;
 				} else {
-					if(userDetailService.ensureActiveMobile(Long.parseLong(inputParam.getMobile())).isSuccess()) {
+					if (userDetailService.ensureActiveMobile(Long.parseLong(inputParam.getMobile())).isSuccess()) {
 						result.failWithMessage("此手机号已注册, 如需使用此手机号, 请登录, 或留空此输入框");
 						return result;
 					} else {
@@ -145,34 +144,35 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 					}
 				}
 			}
-			
+
 		} else {
 			UsersDetailVO userDetailVO = usersService.findUserDetail(userId);
 			nickname = userDetailVO.getNickName();
 			email = userDetailVO.getEmail();
-			if(userDetailVO.getMobile() != null) {
+			if (userDetailVO.getMobile() != null) {
 				mobile = userDetailVO.getMobile();
 			}
 		}
-		
+
 		Long remoteIp = numberUtil.ipToLong(request.getRemoteAddr());
 		Long forwardIp = numberUtil.ipToLong(request.getHeader("X-FORWARDED-FOR"));
 		boolean inBlackList = (ipRecordService.isDeny(remoteIp) || ipRecordService.isDeny(forwardIp));
-		
-		if(!bigUserFlag) {
-			if(justComment(request, userId, articleId)) {
+
+		if (!bigUserFlag) {
+			if (justComment(request, userId, articleId)) {
 				result.setMessage(ArticleCommentResultType.justComment.getName());
 				result.setIsSuccess();
 				return result;
 			}
 			inputParam.setContent(sanitize(inputParam.getContent()));
-		} 
+		}
 
-		ArticleFileSaveResult saveFileResult = saveArticleCommentFile(articleCommentStorePrefixPath, inputParam.getContent());
-		if(!saveFileResult.isSuccess()) {
+		ArticleFileSaveResult saveFileResult = saveArticleCommentFile(articleCommentStorePrefixPath,
+				inputParam.getContent());
+		if (!saveFileResult.isSuccess()) {
 			return saveFileResult;
 		}
-		
+
 		ArticleComment newComment = new ArticleComment();
 		Long newCommonId = snowFlake.getNextId();
 		newComment.setId(newCommonId);
@@ -184,31 +184,27 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		newComment.setTmpMobile(mobile);
 		newComment.setForwardIp(forwardIp);
 		newComment.setRemoteIp(remoteIp);
-		if(inBlackList) {
+		if (inBlackList) {
 			newComment.setIsReject(true);
 		}
 		articleCommentMapper.insertSelective(newComment);
-		
-		TelegramBotNoticeMessageDTO dto = new TelegramBotNoticeMessageDTO();
-		dto.setId(TelegramStaticChatID.MY_ID);
-		dto.setBotName(TelegramBotType.BOT_1.getName());
-		dto.setMsg("Recive article comment: " + inputParam.getContent());
 
-		telegramMessageAckProducer.send(dto);
-		
-		if(bigUserFlag) {
+		telegramService.sendMessageByChatRecordId(TelegramBotType.CX_MESSAGE,
+				("Recive article comment: " + inputParam.getContent()), TelegramStaticChatID.MY_ID);
+
+		if (bigUserFlag) {
 			PassArticleCommentDTO param = new PassArticleCommentDTO();
 			param.setPk(systemOptionService.encryptId(newCommonId));
 			articleCommentAdminService.passArticleComment(param);
 		} else {
 			insertCommentRedisMark(request, userId, articleId);
 		}
-		
+
 		result.successWithMessage("评论已发送.");
-		
+
 		return result;
 	}
-	
+
 	private ArticleFileSaveResult saveArticleCommentFile(String storePrefixPath, String content) throws IOException {
 		return saveArticleFile(storePrefixPath, content);
 	}
@@ -217,37 +213,36 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	public FindArticleCommentPageResult findArticleCommentVOPage(FindArticleCommentPageDTO dto) {
 		FindArticleCommentPageResult result = new FindArticleCommentPageResult();
 		List<ArticleCommentVO> commentVOList = new ArrayList<ArticleCommentVO>();
-		
-		if(StringUtils.isBlank(dto.getPk())) {
+
+		if (StringUtils.isBlank(dto.getPk())) {
 			result.setMessage("Error param");
 			return result;
 		}
-		
-		if(dto.getStartTime() != null && dto.getStartTime().isBefore(BLOG_ARTICLE_START_TIME)) {
+
+		if (dto.getStartTime() != null && dto.getStartTime().isBefore(BLOG_ARTICLE_START_TIME)) {
 			dto.setStartTime(BLOG_ARTICLE_START_TIME);
 		}
-		if(dto.getStartTime() != null) {
+		if (dto.getStartTime() != null) {
 			dto.setStartTime(dto.getStartTime().plusSeconds(1L));
 		}
-		
+
 		dto.setPk(URLDecoder.decode(dto.getPk(), StandardCharsets.UTF_8));
 		Long articleId = systemOptionService.decryptPrivateKey(dto.getPk());
-		if(articleId == null) {
+		if (articleId == null) {
 			result.setMessage("Error param");
 			return result;
 		}
 		result.setPk(dto.getPk());
-		
 
-		if(!isBigUser()) {
+		if (!isBigUser()) {
 			dto.setIsPass(true);
 			dto.setIsDelete(false);
 			dto.setIsReject(false);
-			if(dto.getLimit() != null && dto.getLimit() > articleCommentConstantService.getCommentPageMaxSize()) {
+			if (dto.getLimit() != null && dto.getLimit() > articleCommentConstantService.getCommentPageMaxSize()) {
 				dto.setLimit(articleCommentConstantService.getCommentPageMaxSize());
 			}
 		}
-		
+
 		FindCommentPageDTO mapperDTO = new FindCommentPageDTO();
 		mapperDTO.setArticleId(articleId);
 		mapperDTO.setStartTime(dto.getStartTime());
@@ -256,7 +251,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		mapperDTO.setIsReject(dto.getIsReject());
 		mapperDTO.setLimit(dto.getLimit().intValue());
 		List<ArticleComment> commentPOList = articleCommentMapper.findCommentPage(mapperDTO);
-		if(commentPOList == null || commentPOList.isEmpty()) {
+		if (commentPOList == null || commentPOList.isEmpty()) {
 			result.setIsSuccess();
 			ArticleCommentVO vo = new ArticleCommentVO();
 			vo.setNickName("-");
@@ -266,21 +261,22 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			result.setCommentList(commentVOList);
 			return result;
 		}
-		
+
 		List<Long> commentIdList = new ArrayList<Long>();
 		commentPOList.stream().forEach(bo -> commentIdList.add(bo.getId()));
-		
-		Map<Long, ArticleEvaluationStatisticsVO> evaluationStatisticsMap = articleEvaluationService.findEvaluationStatisticsByArticleId(ArticleEvaluationType.articleCommentEvaluation, commentIdList);
+
+		Map<Long, ArticleEvaluationStatisticsVO> evaluationStatisticsMap = articleEvaluationService
+				.findEvaluationStatisticsByArticleId(ArticleEvaluationType.articleCommentEvaluation, commentIdList);
 		commentPOList.stream().forEach(po -> commentVOList.add(fillArticleCommentFromBo(evaluationStatisticsMap, po)));
-		
+
 		result.setIsSuccess();
 		result.setCommentList(commentVOList);
-		
-		
+
 		return result;
 	}
-	
-	private ArticleCommentVO fillArticleCommentFromBo(Map<Long, ArticleEvaluationStatisticsVO> evaluationStatisticsMap, ArticleComment po) {
+
+	private ArticleCommentVO fillArticleCommentFromBo(Map<Long, ArticleEvaluationStatisticsVO> evaluationStatisticsMap,
+			ArticleComment po) {
 		ArticleCommentVO vo = new ArticleCommentVO();
 		String content = ioUtil.getStringFromFile(po.getFilePath());
 		vo.setContent(content);
@@ -291,29 +287,29 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 		vo.setIsPass(po.getIsPass());
 		vo.setIsDelete(po.getIsDelete());
 		vo.setIsReject(po.getIsReject());
-		
+
 		return vo;
 	}
-	
+
 	@Override
 	public List<ArticleCommentCount> findCommentCountByArticleId(List<Long> articleIdList) {
-		if(articleIdList == null || articleIdList.size() < 1) {
+		if (articleIdList == null || articleIdList.size() < 1) {
 			return new ArrayList<ArticleCommentCount>();
 		}
-		
+
 		ArticleCommentCount tmpBO = null;
 		boolean idExistsFlag = false;
 		ArticleCommentCountExample example = new ArticleCommentCountExample();
 		example.createCriteria().andArticleIdIn(articleIdList);
 		List<ArticleCommentCount> resultList = articleCommentCountMapper.selectByExample(example);
-		for(Long articleId : articleIdList) {
-			for(int i = 0; i < resultList.size() && !idExistsFlag; i++) {
+		for (Long articleId : articleIdList) {
+			for (int i = 0; i < resultList.size() && !idExistsFlag; i++) {
 				tmpBO = resultList.get(i);
-				if(tmpBO.getArticleId().equals(articleId)) {
+				if (tmpBO.getArticleId().equals(articleId)) {
 					idExistsFlag = true;
 				}
 			}
-			if(!idExistsFlag) {
+			if (!idExistsFlag) {
 				tmpBO = new ArticleCommentCount();
 				tmpBO.setArticleId(articleId);
 				tmpBO.setCounting(0L);
@@ -325,32 +321,32 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	}
 
 	private boolean justComment(HttpServletRequest request, Long userId, Long articleId) {
-		if("dev".equals(systemOptionService.getEnvName())) {
+		if ("dev".equals(systemOptionService.getEnvName())) {
 			return false;
 		}
-		
+
 		String keyPrefix = SystemRedisKey.articleCommentKeyPrefix + "_" + userId + "_" + articleId;
-		
+
 		int counting = redisOriginalConnectService.checkFunctionalModuleVisitData(request, keyPrefix);
-		if(counting > 0) {
+		if (counting > 0) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
+
 	private void insertCommentRedisMark(HttpServletRequest request, Long userId, Long articleId) {
 		String keyPrefix = SystemRedisKey.articleCommentKeyPrefix + "_" + userId + "_" + articleId;
 		redisOriginalConnectService.insertFunctionalModuleVisitData(request, keyPrefix, 10L, TimeUnit.MINUTES);
 	}
-	
+
 	@Override
 	public void batchRejectComment() {
 		List<Long> ipList = ipRecordService.getAllDenyList();
-		if(ipList.isEmpty()) {
+		if (ipList.isEmpty()) {
 			return;
 		}
-		
+
 		ArticleCommentExample example = new ArticleCommentExample();
 		Criteria criteriaForwardIp = example.createCriteria();
 		criteriaForwardIp.andIsDeleteEqualTo(false).andForwardIpIn(ipList);

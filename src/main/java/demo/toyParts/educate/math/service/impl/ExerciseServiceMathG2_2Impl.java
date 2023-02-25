@@ -57,7 +57,7 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 
 		MathQuestionBaseDTO question = null;
 		int questionNumber = 1;
-		for (; questionNumber <= optionService.getCalculateQuestionListSize(); questionNumber++) {
+		for (; questionNumber <= 10; questionNumber++) {
 			question = createCalculateQuestion();
 			question.setQuestionNumber(questionNumber);
 			exerciseDTO.getQuestionList().add(question);
@@ -580,7 +580,7 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 
 		q.setExpression(String.format(moduleStr, i1, i2));
 
-		q.addStandardAnswer(String.valueOf(i1 + i2));
+		q.addStandardAnswer(String.valueOf((i2 + 1) * i1 + i2));
 
 		return q;
 	}

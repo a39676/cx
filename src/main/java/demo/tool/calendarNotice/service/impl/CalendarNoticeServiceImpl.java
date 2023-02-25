@@ -19,7 +19,6 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.tool.calendarNotice.mapper.CalendarNoticeMapper;
 import demo.tool.calendarNotice.mapper.CalendarPreNoticeMapper;
-import demo.tool.calendarNotice.mq.producer.TelegramCalendarNoticeMessageAckProducer;
 import demo.tool.calendarNotice.pojo.bo.StrongNoticeBO;
 import demo.tool.calendarNotice.pojo.constant.CalendarNoticeUrl;
 import demo.tool.calendarNotice.pojo.dto.AddCalendarNoticeDTO;
@@ -34,9 +33,9 @@ import demo.tool.calendarNotice.pojo.po.CalendarPreNoticeExample;
 import demo.tool.calendarNotice.pojo.vo.CalendarNoticeVO;
 import demo.tool.calendarNotice.service.CalendarNoticeService;
 import demo.tool.calendarNotice.service.CalendarNoticeStrongNoticeService;
+import demo.tool.telegram.service.TelegramService;
 import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
-import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 import toolPack.dateTimeHandle.Lunar;
 
 @Service
@@ -47,7 +46,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 	@Autowired
 	private CalendarPreNoticeMapper preNoticeMapper;
 	@Autowired
-	private TelegramCalendarNoticeMessageAckProducer telegramMessageAckProducer;
+	private TelegramService telegramService;
 	@Autowired
 	private CalendarNoticeStrongNoticeService strongNoticeService;
 
@@ -305,38 +304,35 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 				&& (preNoticeList == null || preNoticeList.isEmpty())) {
 			return;
 		}
-		
+
 		CalendarNotice notice = null;
-		TelegramBotNoticeMessageDTO dto = null;
-		
+
 		for (CalendarPreNotice preNoticePo : preNoticeList) {
 			notice = mapper.selectByPrimaryKey(preNoticePo.getBindNoticeId());
-			dto = new TelegramBotNoticeMessageDTO();
-			dto.setId(TelegramStaticChatID.MY_ID);
-			dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
-			dto.setMsg("PreNotice: " + notice.getNoticeContent() + " at: " + notice.getNoticeTime() + " "
-					+ hostnameService.findMainHostname() + CalendarNoticeUrl.ROOT + CalendarNoticeUrl.STOP_PRE_NOTICE + "?pk="
-					+ URLEncoder.encode(systemConstantService.encryptId(preNoticePo.getId()), StandardCharsets.UTF_8));
-			telegramMessageAckProducer.send(dto);
+			telegramService.sendMessageByChatRecordId(TelegramBotType.CX_CALENDAR_NOTICE_BOT,
+					("PreNotice: " + notice.getNoticeContent() + " at: " + notice.getNoticeTime() + " "
+							+ hostnameService.findMainHostname() + CalendarNoticeUrl.ROOT
+							+ CalendarNoticeUrl.STOP_PRE_NOTICE + "?pk=" + URLEncoder.encode(
+									systemConstantService.encryptId(preNoticePo.getId()), StandardCharsets.UTF_8)),
+					TelegramStaticChatID.MY_ID);
 
 			updatePreNoticeStatus(preNoticePo, notice);
 		}
-		
+
+		String msg = null;
 		for (CalendarNotice po : commonNoticeList) {
-			dto = new TelegramBotNoticeMessageDTO();
-			dto.setId(TelegramStaticChatID.MY_ID);
-			dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
 			if (po.getStrongNotice()) {
 				strongNoticeService.addStrongNotice(po);
-				dto.setMsg(po.getNoticeContent() + " " + hostnameService.findMainHostname() + CalendarNoticeUrl.ROOT
+				msg = (po.getNoticeContent() + " " + hostnameService.findMainHostname() + CalendarNoticeUrl.ROOT
 						+ CalendarNoticeUrl.STOP_STRONG_NOTICE + "?pk="
 						+ URLEncoder.encode(systemConstantService.encryptId(po.getId()), StandardCharsets.UTF_8));
 
 			} else {
-				dto.setMsg(po.getNoticeContent());
+				msg = po.getNoticeContent();
 			}
 
-			telegramMessageAckProducer.send(dto);
+			telegramService.sendMessageByChatRecordId(TelegramBotType.CX_CALENDAR_NOTICE_BOT, msg,
+					TelegramStaticChatID.MY_ID);
 
 			updateNoticeStatus(po);
 		}
@@ -344,9 +340,9 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 	}
 
 	/**
-	 * 如果 原PO 已经更新过提醒时间, 导致提醒时间已经跳跃到下一周期
-	 * 所以必须将此方法放在PO 更新之前
-	 * FIXME 需要兼容先更新PO 的情况? / 暂时以目前的执行顺序, 绕过影响
+	 * 如果 原PO 已经更新过提醒时间, 导致提醒时间已经跳跃到下一周期 所以必须将此方法放在PO 更新之前 FIXME 需要兼容先更新PO 的情况? /
+	 * 暂时以目前的执行顺序, 绕过影响
+	 * 
 	 * @param po
 	 */
 	private void updateNoticeStatus(CalendarNotice po) {
@@ -381,7 +377,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 		TimeUnitType preNoticeTimeUnitType = TimeUnitType.getType(preNoticePo.getRepeatTimeUnit());
 		LocalDateTime nextPreNoticeTime = getNextValidLocalDateTime(preNoticePo.getNoticeTime(), preNoticeTimeUnitType,
 				preNoticePo.getRepeatTimeRange());
-		
+
 		// 超出本次提前通知的有效时间
 		if (nextPreNoticeTime.isAfter(po.getNoticeTime())) {
 			// 如果是重复通知
@@ -397,13 +393,13 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 					preNoticePo.setValidTime(nextNoticeTime);
 					preNoticeMapper.updateByPrimaryKeySelective(preNoticePo);
 					return;
-				// 重复通知无需继续
+					// 重复通知无需继续
 				} else {
 					preNoticePo.setIsDelete(true);
 					preNoticeMapper.updateByPrimaryKeySelective(preNoticePo);
 					return;
 				}
-			// 非重复通知
+				// 非重复通知
 			} else {
 				preNoticePo.setIsDelete(true);
 				preNoticeMapper.updateByPrimaryKeySelective(preNoticePo);
@@ -488,24 +484,24 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 		po.setRepeatTimeRange(dto.getRepeatTimeRange());
 		po.setValidTime(dto.getValidTime());
 		mapper.updateByPrimaryKeySelective(po);
-		
-		
+
 		CalendarPreNoticeExample preNoticeExample = new CalendarPreNoticeExample();
 		preNoticeExample.createCriteria().andIsDeleteEqualTo(false).andBindNoticeIdEqualTo(noticeId);
 		List<CalendarPreNotice> preNoticePOList = preNoticeMapper.selectByExample(preNoticeExample);
-		
-		if(preNoticePOList != null && !preNoticePOList.isEmpty()) {
+
+		if (preNoticePOList != null && !preNoticePOList.isEmpty()) {
 			CalendarPreNotice preNoticePO = preNoticePOList.get(0);
-			if((dto.getPreNoticeCount() != null && dto.getPreNoticeCount() > 0) && (dto.getPreNoticeRepeatTimeRange() != null && dto.getPreNoticeRepeatTimeRange() > 0)) {
+			if ((dto.getPreNoticeCount() != null && dto.getPreNoticeCount() > 0)
+					&& (dto.getPreNoticeRepeatTimeRange() != null && dto.getPreNoticeRepeatTimeRange() > 0)) {
 				preNoticePO.setRepeatCount(dto.getPreNoticeCount());
 				preNoticePO.setRepeatTimeRange(dto.getPreNoticeRepeatTimeRange());
 				preNoticePO.setRepeatTimeUnit(dto.getPreNoticeRepeatTimeUnit());
 				preNoticePO.setValidTime(po.getNoticeTime());
-				
+
 				TimeUnitType timeUnitType = TimeUnitType.getType(dto.getPreNoticeRepeatTimeUnit());
-				preNoticePO.setNoticeTime(getPreNoticeTime(dto.getNoticeTime(), timeUnitType, dto.getPreNoticeRepeatTimeRange(),
-						dto.getPreNoticeCount()));
-				
+				preNoticePO.setNoticeTime(getPreNoticeTime(dto.getNoticeTime(), timeUnitType,
+						dto.getPreNoticeRepeatTimeRange(), dto.getPreNoticeCount()));
+
 			} else {
 				preNoticePO.setIsDelete(true);
 			}
@@ -629,16 +625,13 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			return;
 		}
 
-		TelegramBotNoticeMessageDTO dto = null;
 		for (StrongNoticeBO bo : strongNoticeList) {
-			dto = new TelegramBotNoticeMessageDTO();
-			dto.setId(TelegramStaticChatID.MY_ID);
-			dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
-			dto.setMsg(bo.getNoticeContent() + " " + hostnameService.findMainHostname() + CalendarNoticeUrl.ROOT
-					+ CalendarNoticeUrl.STOP_STRONG_NOTICE + "?pk="
-					+ URLEncoder.encode(systemConstantService.encryptId(bo.getId()), StandardCharsets.UTF_8));
-
-			telegramMessageAckProducer.send(dto);
+			telegramService
+					.sendMessageByChatRecordId(TelegramBotType.CX_CALENDAR_NOTICE_BOT,
+							(bo.getNoticeContent() + " " + hostnameService.findMainHostname() + CalendarNoticeUrl.ROOT
+									+ CalendarNoticeUrl.STOP_STRONG_NOTICE + "?pk=" + URLEncoder.encode(
+											systemConstantService.encryptId(bo.getId()), StandardCharsets.UTF_8)),
+							TelegramStaticChatID.MY_ID);
 		}
 	}
 
@@ -696,25 +689,21 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime tomorrowStartTime = now.plusDays(1).with(LocalDate.MIN);
 		LocalDateTime tomorrowEndTime = now.plusDays(1).with(LocalDate.MAX);
-		
+
 		CalendarNoticeExample example = new CalendarNoticeExample();
 		example.createCriteria().andIsDeleteEqualTo(false).andNoticeTimeBetween(tomorrowStartTime, tomorrowEndTime);
 		List<CalendarNotice> tomorrowNoticeList = mapper.selectByExample(example);
-		if(tomorrowNoticeList == null || tomorrowNoticeList.isEmpty()) {
+		if (tomorrowNoticeList == null || tomorrowNoticeList.isEmpty()) {
 			return;
 		}
-		
-		TelegramBotNoticeMessageDTO dto = new TelegramBotNoticeMessageDTO();
-		dto.setId(TelegramStaticChatID.MY_ID);
-		dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
-		
+
 		StringBuffer sb = new StringBuffer("Tomorrow todo list: " + System.lineSeparator());
-		
+
 		for (CalendarNotice po : tomorrowNoticeList) {
 			sb.append(po.getNoticeContent() + System.lineSeparator());
 		}
-		dto.setMsg(sb.toString());
-		
-		telegramMessageAckProducer.send(dto);
+
+		telegramService.sendMessageByChatRecordId(TelegramBotType.CX_CALENDAR_NOTICE_BOT, (sb.toString()),
+				TelegramStaticChatID.MY_ID);
 	}
 }

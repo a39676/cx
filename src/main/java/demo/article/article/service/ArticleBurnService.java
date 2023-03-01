@@ -1,12 +1,13 @@
 package demo.article.article.service;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.article.article.pojo.dto.CreatingBurnMessageDTO;
 import demo.article.article.pojo.dto.ReadBurningMessageByPwdDTO;
 import demo.article.article.pojo.result.ArticleBurnResult;
 import demo.article.article.pojo.result.CreatingBurnMessageResult;
-import jakarta.servlet.http.HttpServletRequest;
 
 public interface ArticleBurnService {
 	

@@ -2,6 +2,8 @@ package demo.base.system.service.impl;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +14,6 @@ import demo.base.system.pojo.po.HostnameExample;
 import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.HostnameService;
 import demo.common.service.CommonService;
-import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class HostnameServiceImpl extends CommonService implements HostnameService {

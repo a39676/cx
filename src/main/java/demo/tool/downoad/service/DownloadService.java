@@ -2,7 +2,7 @@ package demo.tool.downoad.service;
 
 import java.io.IOException;
 
-import jakarta.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponse;
 
 public interface DownloadService {
 

@@ -1,6 +1,6 @@
 package demo.tool.other.service;
 
-import jakarta.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 public interface VisitDataService {
 

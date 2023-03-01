@@ -1,8 +1,8 @@
 package demo.base.system.service;
 
-import org.springframework.web.servlet.ModelAndView;
+import javax.servlet.http.HttpServletRequest;
 
-import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
 
 public interface BasePageService {
 

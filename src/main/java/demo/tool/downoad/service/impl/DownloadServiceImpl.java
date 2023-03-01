@@ -8,12 +8,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
 import demo.tool.downoad.service.DownloadService;
-import jakarta.servlet.http.HttpServletResponse;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service

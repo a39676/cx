@@ -6,17 +6,7 @@ server:
 spring:
   application:
     name: cx
-  data:
-    redis:
-      database: 0
-      host: 127.0.0.1
-      port: 6380
-      password: 
-      pool.max-active: 8
-      pool.max-wait: -1
-      pool.max-idle: 8
-      pool.min-idle: 0
-      timeout: 2000
+    
   datasource:
     cx:
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -36,7 +26,16 @@ spring:
     virtualHost: /
     username: u1
     password: something
-
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6380
+    password: 
+    pool.max-active: 8
+    pool.max-wait: -1
+    pool.max-idle: 8
+    pool.min-idle: 0
+    timeout: 2000
 #  servlet:
 #    multipart:
 #      max-file-size=30MB

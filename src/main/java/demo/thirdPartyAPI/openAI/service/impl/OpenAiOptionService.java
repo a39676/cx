@@ -13,6 +13,7 @@ public class OpenAiOptionService {
 	private String apiKey = "";
 	private String orgId = "";
 	private Integer maxTokens = 500;
+	private String chatStorePrefixPath;
 
 	public String getApiKey() {
 		return apiKey;
@@ -38,9 +39,18 @@ public class OpenAiOptionService {
 		this.maxTokens = maxTokens;
 	}
 
+	public String getChatStorePrefixPath() {
+		return chatStorePrefixPath;
+	}
+
+	public void setChatStorePrefixPath(String chatStorePrefixPath) {
+		this.chatStorePrefixPath = chatStorePrefixPath;
+	}
+
 	@Override
 	public String toString() {
-		return "OpenAiOptionService [apiKey=" + apiKey + ", orgId=" + orgId + ", maxTokens=" + maxTokens + "]";
+		return "OpenAiOptionService [apiKey=" + apiKey + ", orgId=" + orgId + ", maxTokens=" + maxTokens
+				+ ", chatStorePrefixPath=" + chatStorePrefixPath + "]";
 	}
 
 }

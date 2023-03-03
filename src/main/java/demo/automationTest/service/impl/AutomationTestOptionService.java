@@ -42,10 +42,10 @@ public class AutomationTestOptionService extends CommonService {
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
 			AutomationTestOptionService tmp = new Gson().fromJson(jsonStr, AutomationTestOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
+			log.error("automation test option loaded");
 		} catch (Exception e) {
 			log.error("automation test option loading error: " + e.getLocalizedMessage());
 		}
-		log.error("automation test option loaded");
 	}
 
 	public String getInputParamStorePrefixPath() {

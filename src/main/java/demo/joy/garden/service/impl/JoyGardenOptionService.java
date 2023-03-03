@@ -50,10 +50,10 @@ public class JoyGardenOptionService extends CommonService {
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
 			JoyGardenOptionService tmp = new Gson().fromJson(jsonStr, JoyGardenOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
+			log.error("Joy Garden option loaded");
 		} catch (Exception e) {
 			log.error("Joy Garden option loading error: " + e.getLocalizedMessage());
 		}
-		log.error("Joy Garden option loaded");
 	}
 
 	public String getOptionFilePath() {

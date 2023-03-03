@@ -42,11 +42,11 @@ public class EducateOptionService extends CommonService {
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
 			EducateOptionService tmp = new Gson().fromJson(jsonStr, EducateOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
+			log.error("educate option loaded");
 			return jsonStr;
 		} catch (Exception e) {
 			log.error("educate option loading error: " + e.getLocalizedMessage());
 		}
-		log.error("educate option loaded");
 		return null;
 	}
 

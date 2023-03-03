@@ -21,8 +21,7 @@ public class CurrencyExchangeRateOptionService extends CommonService {
 	@Value("${optionFilePath.currencyExchangeRate}")
 	private String optionFilePath;
 
-	private String mainUrl;
-
+	private String exchangerateApiApiKey;
 	private List<CurrencyExchangeRatePairDTO> pairList;
 
 	@PostConstruct
@@ -37,23 +36,23 @@ public class CurrencyExchangeRateOptionService extends CommonService {
 			CurrencyExchangeRateOptionService tmp = new Gson().fromJson(jsonStr,
 					CurrencyExchangeRateOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
+			log.error("crypto coin option loaded");
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("crypto coin option loading error: " + e.getLocalizedMessage());
 		}
-		log.error("crypto coin option loaded");
-	}
-
-	public String getMainUrl() {
-		return mainUrl;
-	}
-
-	public void setMainUrl(String mainUrl) {
-		this.mainUrl = mainUrl;
 	}
 
 	public List<CurrencyExchangeRatePairDTO> getPairList() {
 		return pairList;
+	}
+
+	public String getExchangerateApiApiKey() {
+		return exchangerateApiApiKey;
+	}
+
+	public void setExchangerateApiApiKey(String exchangerateApiApiKey) {
+		this.exchangerateApiApiKey = exchangerateApiApiKey;
 	}
 
 	public void setPairList(List<CurrencyExchangeRatePairDTO> pairList) {
@@ -62,7 +61,8 @@ public class CurrencyExchangeRateOptionService extends CommonService {
 
 	@Override
 	public String toString() {
-		return "CurrencyExchangeRateOptionService [mainUrl=" + mainUrl + ", pairList=" + pairList + "]";
+		return "CurrencyExchangeRateOptionService [exchangerateApiApiKey=" + exchangerateApiApiKey + ", pairList="
+				+ pairList + "]";
 	}
 
 }

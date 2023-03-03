@@ -47,10 +47,10 @@ public class TelegramOptionService extends CommonService {
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
 			TelegramOptionService tmp = new Gson().fromJson(jsonStr, TelegramOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
+			log.error("telegram constant loaded");
 		} catch (Exception e) {
 			log.error("telegram constant loading error: " + e.getLocalizedMessage());
 		}
-		log.error("telegram constant loaded");
 	}
 
 }

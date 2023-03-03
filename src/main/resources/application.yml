@@ -6,17 +6,26 @@ server:
 spring:
   application:
     name: cx
-  http:
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
+    
   datasource:
     cx:
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://127.0.0.1:3306/financeclear?characterEncoding=utf8&useUnicode=true&useLegacyDatetimeCode=false&useTimezone=true&serverTimezone=GMT%2B8&autoReconnect=true&useSSL=false&useServerPrepStmts=true&allowMultiQueries=true
       username: root
       password: test
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  mvc:
+    throw-exception-if-no-handler-found: true
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    virtualHost: /
+    username: u1
+    password: something
   redis:
     database: 0
     host: 127.0.0.1
@@ -27,14 +36,9 @@ spring:
     pool.max-idle: 8
     pool.min-idle: 0
     timeout: 2000
-  mvc:
-    throw-exception-if-no-handler-found: true
-  rabbitmq:
-    host: 127.0.0.1
-    port: 5672
-    virtualHost: /
-    username: u1
-    password: something
+#  servlet:
+#    multipart:
+#      max-file-size=30MB
 
 endpoints:
   shutdown:

@@ -22,6 +22,10 @@ public class UrgeNoticeManagerServiceImpl extends ArticleCommonService implement
 
 	@Override
 	public void setUpdateMsgWebhook() {
+		if(systemOptionService.isDev()) {
+			log.error("In dev environment, will NOT update telegram message webhook");
+			return;
+		}
 		String secretToken = generateNewSecretToken();
 
 		String hostname = hostnameService.findMainHostname();

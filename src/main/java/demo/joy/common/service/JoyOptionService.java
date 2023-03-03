@@ -79,10 +79,10 @@ public class JoyOptionService extends CommonService {
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
 			JoyOptionService tmp = new Gson().fromJson(jsonStr, JoyOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
+			log.error("article option loaded");
 		} catch (Exception e) {
 			log.error("article option loading error: " + e.getLocalizedMessage());
 		}
-		log.error("article option loaded");
 	}
 
 }

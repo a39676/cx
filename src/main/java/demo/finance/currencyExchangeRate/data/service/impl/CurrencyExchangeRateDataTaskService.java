@@ -24,7 +24,8 @@ public class CurrencyExchangeRateDataTaskService extends CommonTaskService {
 	@Autowired
 	private SystemOptionService systemOptionService;
 
-	@Scheduled(cron = "0 10 * * * ?")
+	@Scheduled(cron="40 05 22 * * *")
+	@Scheduled(cron="40 05 10 * * *")
 	public void sendDataQueryTask() {
 		SendTaskDTO dto = new SendTaskDTO();
 		dto.setFirstTask(TaskType.CURRENCY_EXCHANGE_RATE_DATA);

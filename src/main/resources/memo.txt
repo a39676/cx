@@ -1,3 +1,11 @@
+Spring Boot update to 3.0.3
+	Spring Security update, WebSecurityConfigurerAdapter was deprecated
+	Try update Security.java code
+	 
+
+定义书签
+	可选凭密码访问
+
 open ai
 vps 上尚未建立对应的 option.json
 

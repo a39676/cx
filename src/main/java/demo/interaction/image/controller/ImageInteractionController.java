@@ -17,7 +17,7 @@ import image.pojo.result.ImageSavingResult;
 import image.pojo.result.UploadImageToCloudinaryResult;
 
 @Controller
-@RequestMapping(value = ImageInteractionUrl.root)
+@RequestMapping(value = ImageInteractionUrl.ROOT)
 public class ImageInteractionController extends CommonController {
 
 	@Autowired
@@ -25,7 +25,7 @@ public class ImageInteractionController extends CommonController {
 	@Autowired
 	private ImageService imgService;
 	
-	@PostMapping(value = ImageInteractionUrl.uploadImageToCloudinary)
+	@PostMapping(value = ImageInteractionUrl.UPLOAD_IMAGE_TO_CLOUDINARY)
 	@ResponseBody
 	public UploadImageToCloudinaryResult uploadImageToCloudinary(@RequestBody UploadImageToCloudinaryDTO dto) {
 		return imageInteractionService.uploadImageToCloudinary(dto);

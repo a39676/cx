@@ -36,10 +36,10 @@ public class CloudinaryOptionService extends CommonService {
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
 			CloudinaryOptionService tmp = new Gson().fromJson(jsonStr, CloudinaryOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
+			log.error("cloudinary option loaded");
 		} catch (Exception e) {
 			log.error("cloudinary option loading error: " + e.getLocalizedMessage());
 		}
-		log.error("cloudinary option loaded");
 	}
 
 	public String getCloudinaryName() {

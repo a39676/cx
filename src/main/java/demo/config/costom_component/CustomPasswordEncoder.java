@@ -50,4 +50,9 @@ public class CustomPasswordEncoder implements PasswordEncoder {
 
 		return encode(salt, rawPassword).equals(encodedPassword); 
 	}
+	
+	public static void main(String[] args) {
+		CustomPasswordEncoder e = new CustomPasswordEncoder();
+		System.out.println(e.encode("test"));
+	}
 }

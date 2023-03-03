@@ -50,8 +50,8 @@ public class CurrencyExchangeRateServiceImpl extends FinanceCommonService implem
 
 		CurrencyExchangeRateCollectDTO paramDTO = new CurrencyExchangeRateCollectDTO();
 		paramDTO.setIsDailyQuery(isDailyQuery);
-		paramDTO.setMainUrl("https://www.oanda.com/currency-converter/zh/?from=USD&to=CNY&amount=1");
 		
+		paramDTO.setExchangerateApiApiKey(optionService.getExchangerateApiApiKey());
 		List<CurrencyExchangeRatePairDTO> currencyPairList = optionService.getPairList();
 		
 		CurrencyExchangeRatePairDTO dataPair = null;

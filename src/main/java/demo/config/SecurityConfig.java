@@ -46,6 +46,7 @@ import demo.tool.other.pojo.constant.ToolUrlConstant;
 import demo.toyParts.weixin.pojo.constant.WXUrl;
 import image.pojo.constant.ImageInteractionUrl;
 
+@SuppressWarnings("deprecation")
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -169,7 +170,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configure(WebSecurity web) throws Exception {
 	    web.ignoring()
 	    .antMatchers("/test/testIgnoring")
-	    .antMatchers(ImageInteractionUrl.root + "/**")
+	    .antMatchers(ImageInteractionUrl.ROOT + "/**")
 	    ;
 	}
 	

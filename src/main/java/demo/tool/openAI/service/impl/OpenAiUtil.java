@@ -23,6 +23,8 @@ public class OpenAiUtil {
 	private static final String COMPLETIONS = "/completions ";
 	
 	private static final String MODEL_DAVINCI_003 = "text-davinci-003";
+	@SuppressWarnings("unused")
+	private static final String GPT_V_3_5 = "gpt-3.5-turbo";
 
 	public String sendMsg(String msg) {
 //		TODO delete it

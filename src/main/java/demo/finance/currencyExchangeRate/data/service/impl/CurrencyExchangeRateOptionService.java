@@ -37,11 +37,11 @@ public class CurrencyExchangeRateOptionService extends CommonService {
 			CurrencyExchangeRateOptionService tmp = new Gson().fromJson(jsonStr,
 					CurrencyExchangeRateOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
+			log.error("crypto coin option loaded");
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("crypto coin option loading error: " + e.getLocalizedMessage());
 		}
-		log.error("crypto coin option loaded");
 	}
 
 	public String getMainUrl() {

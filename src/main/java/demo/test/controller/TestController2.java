@@ -31,7 +31,7 @@ public class TestController2 extends CommonService {
 	public String t2(@RequestBody TestDTO dto) {
 		return "{\"k\":\"v\"}";
 	}
-	
+
 	@GetMapping(value = "/t3")
 	@ResponseBody
 	public String t3() {

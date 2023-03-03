@@ -35,10 +35,10 @@ public class MailOptionService extends CommonService {
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
 			MailOptionService tmp = new Gson().fromJson(jsonStr, MailOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
+			log.error("mail option loaded");
 		} catch (Exception e) {
 			log.error("mail option loading error: " + e.getLocalizedMessage());
 		}
-		log.error("mail option loaded");
 	}
 
 	public String getAdminMailName() {

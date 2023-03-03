@@ -68,10 +68,10 @@ public class ArticleOptionService extends CommonService {
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
 			ArticleOptionService tmp = new Gson().fromJson(jsonStr, ArticleOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
+			log.error("article option loaded");
 		} catch (Exception e) {
 			log.error("article option loading error: " + e.getLocalizedMessage());
 		}
-		log.error("article option loaded");
 	}
 
 	public Long getMaxArticleLength() {

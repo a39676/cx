@@ -51,11 +51,11 @@ public class CryptoCoinOptionService extends CommonService {
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
 			CryptoCoinOptionService tmp = new Gson().fromJson(jsonStr, CryptoCoinOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
+			log.error("crypto coin option loaded");
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("crypto coin option loading error: " + e.getLocalizedMessage());
 		}
-		log.error("crypto coin option loaded");
 	}
 
 	public String getDefaultCoinCatalog() {

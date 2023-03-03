@@ -248,10 +248,10 @@ public class SystemOptionService extends CommonService {
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
 			SystemOptionService tmp = new Gson().fromJson(jsonStr, SystemOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
+			log.error("system constant loaded");
 		} catch (Exception e) {
 			log.error("system constant loading error: " + e.getLocalizedMessage());
 		}
-		log.error("system constant loaded");
 	}
 
 }

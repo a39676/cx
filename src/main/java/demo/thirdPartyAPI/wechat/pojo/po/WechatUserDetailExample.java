@@ -4,14 +4,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WechatOidUidExample {
+public class WechatUserDetailExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public WechatOidUidExample() {
+    public WechatUserDetailExample() {
         oredCriteria = new ArrayList<>();
     }
 
@@ -422,6 +422,146 @@ public class WechatOidUidExample {
 
         public Criteria andUnionIdNotBetween(String value1, String value2) {
             addCriterion("union_id not between", value1, value2, "unionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameIsNull() {
+            addCriterion("nickname is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameIsNotNull() {
+            addCriterion("nickname is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameEqualTo(String value) {
+            addCriterion("nickname =", value, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameNotEqualTo(String value) {
+            addCriterion("nickname <>", value, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameGreaterThan(String value) {
+            addCriterion("nickname >", value, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameGreaterThanOrEqualTo(String value) {
+            addCriterion("nickname >=", value, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameLessThan(String value) {
+            addCriterion("nickname <", value, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameLessThanOrEqualTo(String value) {
+            addCriterion("nickname <=", value, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameLike(String value) {
+            addCriterion("nickname like", value, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameNotLike(String value) {
+            addCriterion("nickname not like", value, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameIn(List<String> values) {
+            addCriterion("nickname in", values, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameNotIn(List<String> values) {
+            addCriterion("nickname not in", values, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameBetween(String value1, String value2) {
+            addCriterion("nickname between", value1, value2, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameNotBetween(String value1, String value2) {
+            addCriterion("nickname not between", value1, value2, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfilePictureUrlIsNull() {
+            addCriterion("profile_picture_url is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfilePictureUrlIsNotNull() {
+            addCriterion("profile_picture_url is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfilePictureUrlEqualTo(String value) {
+            addCriterion("profile_picture_url =", value, "profilePictureUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfilePictureUrlNotEqualTo(String value) {
+            addCriterion("profile_picture_url <>", value, "profilePictureUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfilePictureUrlGreaterThan(String value) {
+            addCriterion("profile_picture_url >", value, "profilePictureUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfilePictureUrlGreaterThanOrEqualTo(String value) {
+            addCriterion("profile_picture_url >=", value, "profilePictureUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfilePictureUrlLessThan(String value) {
+            addCriterion("profile_picture_url <", value, "profilePictureUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfilePictureUrlLessThanOrEqualTo(String value) {
+            addCriterion("profile_picture_url <=", value, "profilePictureUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfilePictureUrlLike(String value) {
+            addCriterion("profile_picture_url like", value, "profilePictureUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfilePictureUrlNotLike(String value) {
+            addCriterion("profile_picture_url not like", value, "profilePictureUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfilePictureUrlIn(List<String> values) {
+            addCriterion("profile_picture_url in", values, "profilePictureUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfilePictureUrlNotIn(List<String> values) {
+            addCriterion("profile_picture_url not in", values, "profilePictureUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfilePictureUrlBetween(String value1, String value2) {
+            addCriterion("profile_picture_url between", value1, value2, "profilePictureUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andProfilePictureUrlNotBetween(String value1, String value2) {
+            addCriterion("profile_picture_url not between", value1, value2, "profilePictureUrl");
             return (Criteria) this;
         }
 

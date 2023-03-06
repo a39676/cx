@@ -2,7 +2,7 @@ package demo.thirdPartyAPI.wechat.pojo.po;
 
 import java.time.LocalDateTime;
 
-public class WechatOidUid {
+public class WechatUserDetail {
     private Long id;
 
     private Integer sourceOfficialAccount;
@@ -12,6 +12,10 @@ public class WechatOidUid {
     private String openId;
 
     private String unionId;
+
+    private String nickname;
+
+    private String profilePictureUrl;
 
     private LocalDateTime createTime;
 
@@ -55,6 +59,22 @@ public class WechatOidUid {
 
     public void setUnionId(String unionId) {
         this.unionId = unionId == null ? null : unionId.trim();
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname == null ? null : nickname.trim();
+    }
+
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl == null ? null : profilePictureUrl.trim();
     }
 
     public LocalDateTime getCreateTime() {

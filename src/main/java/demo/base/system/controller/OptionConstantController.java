@@ -16,6 +16,8 @@ import demo.finance.currencyExchangeRate.data.service.impl.CurrencyExchangeRateO
 import demo.joy.common.service.JoyOptionService;
 import demo.joy.garden.service.impl.JoyGardenOptionService;
 import demo.thirdPartyAPI.cloudinary.service.impl.CloudinaryOptionService;
+import demo.thirdPartyAPI.openAI.service.impl.OpenAiOptionService;
+import demo.thirdPartyAPI.wechat.service.impl.WechatOptionService;
 import demo.tool.mail.service.impl.MailOptionService;
 import demo.tool.telegram.service.impl.TelegramOptionService;
 import demo.toyParts.educate.service.impl.EducateOptionService;
@@ -48,6 +50,10 @@ public class OptionConstantController {
 	private JoyGardenOptionService joyGardenOptionService;
 	@Autowired
 	private CurrencyExchangeRateOptionService currencyExchangeRateOptionService;
+	@Autowired
+	private OpenAiOptionService openAiOptionService;
+	@Autowired
+	private WechatOptionService wechatOptionService;
 
 	@GetMapping(value = "/refreshSystemOption")
 	@ResponseBody
@@ -129,6 +135,20 @@ public class OptionConstantController {
 	@ResponseBody
 	public String refreshCurrencyExchangeRateOption() {
 		currencyExchangeRateOptionService.refreshOption();
+		return "done";
+	}
+	
+	@GetMapping(value = "/refreshOpenAiOption")
+	@ResponseBody
+	public String refreshOpenAiOption() {
+		openAiOptionService.refreshOption();
+		return "done";
+	}
+	
+	@GetMapping(value = "/refreshWechatOption")
+	@ResponseBody
+	public String refreshWechatOption() {
+		wechatOptionService.refreshOption();
 		return "done";
 	}
 	

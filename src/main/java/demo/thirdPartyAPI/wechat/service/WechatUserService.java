@@ -1,9 +1,9 @@
 package demo.thirdPartyAPI.wechat.service;
 
-import demo.thirdPartyAPI.wechat.pojo.po.WechatOidUid;
+import demo.thirdPartyAPI.wechat.pojo.po.WechatUserDetail;
 
 public interface WechatUserService {
 
-	WechatOidUid findWechatUserByUid(String uid);
+	WechatUserDetail findWechatUserByUid(String uid);
 
 }

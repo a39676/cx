@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="demo.thirdPartyAPI.wechat.mapper.WechatOidUidMapper">
-  <resultMap id="BaseResultMap" type="demo.thirdPartyAPI.wechat.pojo.po.WechatOidUid">
+<mapper namespace="demo.thirdPartyAPI.wechat.mapper.WechatUserDetailMapper">
+  <resultMap id="BaseResultMap" type="demo.thirdPartyAPI.wechat.pojo.po.WechatUserDetail">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="source_official_account" jdbcType="INTEGER" property="sourceOfficialAccount" />
     <result column="phone_number" jdbcType="INTEGER" property="phoneNumber" />
     <result column="open_id" jdbcType="CHAR" property="openId" />
     <result column="union_id" jdbcType="CHAR" property="unionId" />
+    <result column="nickname" jdbcType="CHAR" property="nickname" />
+    <result column="profile_picture_url" jdbcType="CHAR" property="profilePictureUrl" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
   </resultMap>
@@ -69,15 +71,16 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, source_official_account, phone_number, open_id, union_id, create_time, is_delete
+    id, source_official_account, phone_number, open_id, union_id, nickname, profile_picture_url, 
+    create_time, is_delete
   </sql>
-  <select id="selectByExample" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatOidUidExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatUserDetailExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from wechat_oid_uid
+    from wechat_user_detail
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -88,29 +91,29 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from wechat_oid_uid
+    from wechat_user_detail
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from wechat_oid_uid
+    delete from wechat_user_detail
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatOidUidExample">
-    delete from wechat_oid_uid
+  <delete id="deleteByExample" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatUserDetailExample">
+    delete from wechat_user_detail
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatOidUid">
-    insert into wechat_oid_uid (id, source_official_account, phone_number, 
-      open_id, union_id, create_time, 
-      is_delete)
+  <insert id="insert" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatUserDetail">
+    insert into wechat_user_detail (id, source_official_account, phone_number, 
+      open_id, union_id, nickname, profile_picture_url, 
+      create_time, is_delete)
     values (#{id,jdbcType=BIGINT}, #{sourceOfficialAccount,jdbcType=INTEGER}, #{phoneNumber,jdbcType=INTEGER}, 
-      #{openId,jdbcType=CHAR}, #{unionId,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{isDelete,jdbcType=BIT})
+      #{openId,jdbcType=CHAR}, #{unionId,jdbcType=CHAR}, #{nickname,jdbcType=CHAR}, #{profilePictureUrl,jdbcType=CHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
   </insert>
-  <insert id="insertSelective" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatOidUid">
-    insert into wechat_oid_uid
+  <insert id="insertSelective" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatUserDetail">
+    insert into wechat_user_detail
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -126,6 +129,12 @@
       </if>
       <if test="unionId != null">
         union_id,
+      </if>
+      <if test="nickname != null">
+        nickname,
+      </if>
+      <if test="profilePictureUrl != null">
+        profile_picture_url,
       </if>
       <if test="createTime != null">
         create_time,
@@ -150,6 +159,12 @@
       <if test="unionId != null">
         #{unionId,jdbcType=CHAR},
       </if>
+      <if test="nickname != null">
+        #{nickname,jdbcType=CHAR},
+      </if>
+      <if test="profilePictureUrl != null">
+        #{profilePictureUrl,jdbcType=CHAR},
+      </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -158,14 +173,14 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatOidUidExample" resultType="java.lang.Long">
-    select count(*) from wechat_oid_uid
+  <select id="countByExample" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatUserDetailExample" resultType="java.lang.Long">
+    select count(*) from wechat_user_detail
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update wechat_oid_uid
+    update wechat_user_detail
     <set>
       <if test="row.id != null">
         id = #{row.id,jdbcType=BIGINT},
@@ -182,6 +197,12 @@
       <if test="row.unionId != null">
         union_id = #{row.unionId,jdbcType=CHAR},
       </if>
+      <if test="row.nickname != null">
+        nickname = #{row.nickname,jdbcType=CHAR},
+      </if>
+      <if test="row.profilePictureUrl != null">
+        profile_picture_url = #{row.profilePictureUrl,jdbcType=CHAR},
+      </if>
       <if test="row.createTime != null">
         create_time = #{row.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -194,20 +215,22 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update wechat_oid_uid
+    update wechat_user_detail
     set id = #{row.id,jdbcType=BIGINT},
       source_official_account = #{row.sourceOfficialAccount,jdbcType=INTEGER},
       phone_number = #{row.phoneNumber,jdbcType=INTEGER},
       open_id = #{row.openId,jdbcType=CHAR},
       union_id = #{row.unionId,jdbcType=CHAR},
+      nickname = #{row.nickname,jdbcType=CHAR},
+      profile_picture_url = #{row.profilePictureUrl,jdbcType=CHAR},
       create_time = #{row.createTime,jdbcType=TIMESTAMP},
       is_delete = #{row.isDelete,jdbcType=BIT}
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatOidUid">
-    update wechat_oid_uid
+  <update id="updateByPrimaryKeySelective" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatUserDetail">
+    update wechat_user_detail
     <set>
       <if test="sourceOfficialAccount != null">
         source_official_account = #{sourceOfficialAccount,jdbcType=INTEGER},
@@ -221,6 +244,12 @@
       <if test="unionId != null">
         union_id = #{unionId,jdbcType=CHAR},
       </if>
+      <if test="nickname != null">
+        nickname = #{nickname,jdbcType=CHAR},
+      </if>
+      <if test="profilePictureUrl != null">
+        profile_picture_url = #{profilePictureUrl,jdbcType=CHAR},
+      </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -230,23 +259,25 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatOidUid">
-    update wechat_oid_uid
+  <update id="updateByPrimaryKey" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatUserDetail">
+    update wechat_user_detail
     set source_official_account = #{sourceOfficialAccount,jdbcType=INTEGER},
       phone_number = #{phoneNumber,jdbcType=INTEGER},
       open_id = #{openId,jdbcType=CHAR},
       union_id = #{unionId,jdbcType=CHAR},
+      nickname = #{nickname,jdbcType=CHAR},
+      profile_picture_url = #{profilePictureUrl,jdbcType=CHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       is_delete = #{isDelete,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectByExampleWithRowbounds" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatOidUidExample" resultMap="BaseResultMap">
+  <select id="selectByExampleWithRowbounds" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatUserDetailExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from wechat_oid_uid
+    from wechat_user_detail
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>

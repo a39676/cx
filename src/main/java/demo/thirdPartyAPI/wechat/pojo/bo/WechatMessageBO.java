@@ -1,8 +1,8 @@
-package demo.toyParts.weixin.pojo.bo;
+package demo.thirdPartyAPI.wechat.pojo.bo;
 
 import java.math.BigDecimal;
 
-public class WXMessageBO {
+public class WechatMessageBO {
 
 	private String ToUserName;
 	private String FromUserName;

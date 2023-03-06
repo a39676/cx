@@ -1,6 +1,6 @@
 package demo.thirdPartyAPI.openAI.pojo.dto;
 
-public class SendChatingMessageDTO {
+public class SendChatingMessageFromWechatDTO {
 
 	private String uid;
 	private String msg;

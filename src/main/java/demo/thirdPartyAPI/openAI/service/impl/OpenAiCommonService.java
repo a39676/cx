@@ -3,12 +3,15 @@ package demo.thirdPartyAPI.openAI.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.base.system.service.impl.SystemOptionService;
 import demo.common.service.CommonService;
 
 public abstract class OpenAiCommonService extends CommonService{
 
 	@Autowired
 	protected OpenAiUtil util;
+	@Autowired
+	protected SystemOptionService systemOptionService;
 	
 	protected CommonResult notEnoughtAmount() {
 		CommonResult r = new CommonResult();

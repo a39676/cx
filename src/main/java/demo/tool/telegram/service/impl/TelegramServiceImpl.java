@@ -1,6 +1,8 @@
 package demo.tool.telegram.service.impl;
 
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -133,11 +135,14 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 		}
 
 		String urlModel = "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s";
-		String url = String.format(urlModel, botID, telegramChatId, msg);
+		String urlStr = String.format(urlModel, botID, telegramChatId, msg);
 
-		HttpUtil httpUtil = new HttpUtil();
 		try {
-			httpUtil.sendGet(url);
+//			HttpUtil httpUtil = new HttpUtil();
+//			httpUtil.sendGet(url);
+			URL url = new URL(urlStr);
+			InputStream inputSteam = url.openStream();
+			inputSteam.close();
 		} catch (Exception e) {
 			log.error("telegram NOT sending message: " + msg);
 			log.error("bot: " + botType.getName());

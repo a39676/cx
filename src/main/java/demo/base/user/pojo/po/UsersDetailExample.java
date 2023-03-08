@@ -12,7 +12,7 @@ public class UsersDetailExample {
     protected List<Criteria> oredCriteria;
 
     public UsersDetailExample() {
-        oredCriteria = new ArrayList<Criteria>();
+        oredCriteria = new ArrayList<>();
     }
 
     public void setOrderByClause(String orderByClause) {
@@ -69,7 +69,7 @@ public class UsersDetailExample {
 
         protected GeneratedCriteria() {
             super();
-            criteria = new ArrayList<Criterion>();
+            criteria = new ArrayList<>();
         }
 
         public boolean isValid() {
@@ -245,52 +245,62 @@ public class UsersDetailExample {
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginIpEqualTo(Long value) {
+        public Criteria andLastLoginIpEqualTo(String value) {
             addCriterion("last_login_ip =", value, "lastLoginIp");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginIpNotEqualTo(Long value) {
+        public Criteria andLastLoginIpNotEqualTo(String value) {
             addCriterion("last_login_ip <>", value, "lastLoginIp");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginIpGreaterThan(Long value) {
+        public Criteria andLastLoginIpGreaterThan(String value) {
             addCriterion("last_login_ip >", value, "lastLoginIp");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginIpGreaterThanOrEqualTo(Long value) {
+        public Criteria andLastLoginIpGreaterThanOrEqualTo(String value) {
             addCriterion("last_login_ip >=", value, "lastLoginIp");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginIpLessThan(Long value) {
+        public Criteria andLastLoginIpLessThan(String value) {
             addCriterion("last_login_ip <", value, "lastLoginIp");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginIpLessThanOrEqualTo(Long value) {
+        public Criteria andLastLoginIpLessThanOrEqualTo(String value) {
             addCriterion("last_login_ip <=", value, "lastLoginIp");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginIpIn(List<Long> values) {
+        public Criteria andLastLoginIpLike(String value) {
+            addCriterion("last_login_ip like", value, "lastLoginIp");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastLoginIpNotLike(String value) {
+            addCriterion("last_login_ip not like", value, "lastLoginIp");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastLoginIpIn(List<String> values) {
             addCriterion("last_login_ip in", values, "lastLoginIp");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginIpNotIn(List<Long> values) {
+        public Criteria andLastLoginIpNotIn(List<String> values) {
             addCriterion("last_login_ip not in", values, "lastLoginIp");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginIpBetween(Long value1, Long value2) {
+        public Criteria andLastLoginIpBetween(String value1, String value2) {
             addCriterion("last_login_ip between", value1, value2, "lastLoginIp");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginIpNotBetween(Long value1, Long value2) {
+        public Criteria andLastLoginIpNotBetween(String value1, String value2) {
             addCriterion("last_login_ip not between", value1, value2, "lastLoginIp");
             return (Criteria) this;
         }
@@ -305,52 +315,52 @@ public class UsersDetailExample {
             return (Criteria) this;
         }
 
-        public Criteria andGenderEqualTo(Integer value) {
+        public Criteria andGenderEqualTo(Boolean value) {
             addCriterion("gender =", value, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderNotEqualTo(Integer value) {
+        public Criteria andGenderNotEqualTo(Boolean value) {
             addCriterion("gender <>", value, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderGreaterThan(Integer value) {
+        public Criteria andGenderGreaterThan(Boolean value) {
             addCriterion("gender >", value, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderGreaterThanOrEqualTo(Integer value) {
+        public Criteria andGenderGreaterThanOrEqualTo(Boolean value) {
             addCriterion("gender >=", value, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderLessThan(Integer value) {
+        public Criteria andGenderLessThan(Boolean value) {
             addCriterion("gender <", value, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderLessThanOrEqualTo(Integer value) {
+        public Criteria andGenderLessThanOrEqualTo(Boolean value) {
             addCriterion("gender <=", value, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderIn(List<Integer> values) {
+        public Criteria andGenderIn(List<Boolean> values) {
             addCriterion("gender in", values, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderNotIn(List<Integer> values) {
+        public Criteria andGenderNotIn(List<Boolean> values) {
             addCriterion("gender not in", values, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderBetween(Integer value1, Integer value2) {
+        public Criteria andGenderBetween(Boolean value1, Boolean value2) {
             addCriterion("gender between", value1, value2, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderNotBetween(Integer value1, Integer value2) {
+        public Criteria andGenderNotBetween(Boolean value1, Boolean value2) {
             addCriterion("gender not between", value1, value2, "gender");
             return (Criteria) this;
         }
@@ -805,52 +815,62 @@ public class UsersDetailExample {
             return (Criteria) this;
         }
 
-        public Criteria andRegistIpEqualTo(Long value) {
+        public Criteria andRegistIpEqualTo(String value) {
             addCriterion("regist_ip =", value, "registIp");
             return (Criteria) this;
         }
 
-        public Criteria andRegistIpNotEqualTo(Long value) {
+        public Criteria andRegistIpNotEqualTo(String value) {
             addCriterion("regist_ip <>", value, "registIp");
             return (Criteria) this;
         }
 
-        public Criteria andRegistIpGreaterThan(Long value) {
+        public Criteria andRegistIpGreaterThan(String value) {
             addCriterion("regist_ip >", value, "registIp");
             return (Criteria) this;
         }
 
-        public Criteria andRegistIpGreaterThanOrEqualTo(Long value) {
+        public Criteria andRegistIpGreaterThanOrEqualTo(String value) {
             addCriterion("regist_ip >=", value, "registIp");
             return (Criteria) this;
         }
 
-        public Criteria andRegistIpLessThan(Long value) {
+        public Criteria andRegistIpLessThan(String value) {
             addCriterion("regist_ip <", value, "registIp");
             return (Criteria) this;
         }
 
-        public Criteria andRegistIpLessThanOrEqualTo(Long value) {
+        public Criteria andRegistIpLessThanOrEqualTo(String value) {
             addCriterion("regist_ip <=", value, "registIp");
             return (Criteria) this;
         }
 
-        public Criteria andRegistIpIn(List<Long> values) {
+        public Criteria andRegistIpLike(String value) {
+            addCriterion("regist_ip like", value, "registIp");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistIpNotLike(String value) {
+            addCriterion("regist_ip not like", value, "registIp");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistIpIn(List<String> values) {
             addCriterion("regist_ip in", values, "registIp");
             return (Criteria) this;
         }
 
-        public Criteria andRegistIpNotIn(List<Long> values) {
+        public Criteria andRegistIpNotIn(List<String> values) {
             addCriterion("regist_ip not in", values, "registIp");
             return (Criteria) this;
         }
 
-        public Criteria andRegistIpBetween(Long value1, Long value2) {
+        public Criteria andRegistIpBetween(String value1, String value2) {
             addCriterion("regist_ip between", value1, value2, "registIp");
             return (Criteria) this;
         }
 
-        public Criteria andRegistIpNotBetween(Long value1, Long value2) {
+        public Criteria andRegistIpNotBetween(String value1, String value2) {
             addCriterion("regist_ip not between", value1, value2, "registIp");
             return (Criteria) this;
         }
@@ -987,7 +1007,6 @@ public class UsersDetailExample {
     }
 
     public static class Criteria extends GeneratedCriteria {
-
         protected Criteria() {
             super();
         }

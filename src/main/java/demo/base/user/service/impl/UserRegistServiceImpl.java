@@ -40,8 +40,12 @@ import demo.tool.mail.pojo.type.MailType;
 import demo.tool.mail.service.MailService;
 import demo.tool.other.service.TextFilter;
 import demo.tool.other.service.ValidRegexToolService;
+import demo.tool.telegram.service.TelegramService;
 import demo.toyParts.educate.pojo.type.GradeType;
 import demo.toyParts.educate.service.StudentService;
+import telegram.pojo.constant.TelegramBotType;
+import telegram.pojo.constant.TelegramStaticChatID;
+import tool.pojo.bo.IpRecordBO;
 import toolPack.numericHandel.NumericUtilCustom;
 
 @Service
@@ -69,31 +73,35 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 	private TextFilter textFilter;
 	@Autowired
 	private StudentService studentService;
+	@Autowired
+	private TelegramService telegramService;
 	
 	@Override
-	public NewUserRegistResult newUserRegist(UserRegistDTO registDTO, String ip, HttpServletRequest request) {
+	public NewUserRegistResult newUserRegist(UserRegistDTO registDTO, HttpServletRequest request) {
 		NewUserRegistResult result = new NewUserRegistResult();
-		
+
 		int ipRegistCount = 0;
-		if(!isBigUser()) {
-			ipRegistCount = redisOriginalConnectService.checkFunctionalModuleVisitData(request, SystemRedisKey.userRegistCountingKeyPrefix);
+		if (!isBigUser()) {
+			ipRegistCount = redisOriginalConnectService.checkFunctionalModuleVisitData(request,
+					SystemRedisKey.userRegistCountingKeyPrefix);
 		}
-		if(ipRegistCount > UserConstant.registLimitForOneIPOneDay) {
+		if (ipRegistCount > UserConstant.REGIST_LIMIT_FOR_ONE_IP_ONE_DAY) {
 			result.failWithMessage("最近已经注册过了,请不要重复注册");
 			return result;
 		}
-		
+
 		ValidUserRegistResult validUserRegistDTOResult = validAndSanitizeUserRegistDTO(registDTO);
-		
+
 		if (!validUserRegistDTOResult.isSuccess()) {
 			result.setValidUserRegistResult(validUserRegistDTOResult);
 			return result;
 		}
 
 		Long newUserId = snowFlake.getNextId();
-		UsersDetail userDetail = buildUserDetailFromUserRegistDTO(registDTO, ip, newUserId);
+		IpRecordBO ip = getIp(request);
+		UsersDetail userDetail = buildUserDetailFromUserRegistDTO(registDTO, ip.getForwardAddr(), newUserId);
 		Users user = buildUserFromRegistDTO(registDTO, newUserId);
-		
+
 		// TODO 暂时搁置发送注册邮件
 //		SendRegistMailResult sendRegistMailResult = sendRegistMail(registDTO, request, newUserId);
 //		if(!sendRegistMailResult.isSuccess()) {
@@ -103,14 +111,17 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 
 		try {
 			insertNewUserData(user, userDetail);
+			sendTelegramMsg("New user: " + user.getUserName() + ", from: " + ip.getForwardAddr() + ", nickname: "
+					+ userDetail.getNickName() + ", phone: " + userDetail.getMobile());
 		} catch (Exception e) {
 			result.failWithMessage("server error");
 			return result;
 		}
-		
+
 		result.normalSuccess();
-		redisOriginalConnectService.insertFunctionalModuleVisitData(request, SystemRedisKey.userRegistCountingKeyPrefix, 1, TimeUnit.DAYS);
-		
+		redisOriginalConnectService.insertFunctionalModuleVisitData(request, SystemRedisKey.userRegistCountingKeyPrefix,
+				1, TimeUnit.DAYS);
+
 		return result;
 	}
 
@@ -123,7 +134,7 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 			ipRegistCount = redisOriginalConnectService.checkFunctionalModuleVisitData(request,
 					SystemRedisKey.userRegistCountingKeyPrefix);
 		}
-		if (ipRegistCount > UserConstant.registLimitForOneIPOneDay) {
+		if (ipRegistCount > UserConstant.REGIST_LIMIT_FOR_ONE_IP_ONE_DAY) {
 			result.failWithMessage("最近已经注册过了,请不要重复注册");
 			return result;
 		}
@@ -152,7 +163,7 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 			result.failWithMessage("server error");
 			return result;
 		}
-		
+
 		studentService.initStudentDetail(newUserId, GradeType.getType(registDTO.getGradeType().intValue()));
 
 		result.normalSuccess();
@@ -162,6 +173,20 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 		return result;
 	}
 
+	public NewUserRegistResult newUserRegistForAiChat(UserRegistDTO registDTO, HttpServletRequest request) {
+		if(registDTO.getEmail() == null) {
+			registDTO.setEmail(snowFlake.getNextId() + "@null.com");
+		}
+		NewUserRegistResult r = newUserRegist(registDTO, request);
+		if(r.isFail()) {
+			return r;
+		}
+		
+//		TODO need AI chat user service;
+		r.setIsSuccess();
+		return r;
+	}
+	
 	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	private void insertNewUserData(Users newUser, UsersDetail newUserDetail) {
 		userRegistMapper.insertNewUser(newUser);
@@ -184,7 +209,7 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 
 		if (!validRegexToolService.validNormalUserName(dto.getUserName())) {
 			dto.setUserName(filter.sanitize(dto.getUserName()));
-			r.setUsername("\"" + dto.getUserName() + "\" 账户名异常, 必须以英文字母开头,长度为6~16个字符.(只可输入英文字母及数字)");
+			r.setUsername("\"" + dto.getUserName() + "\" 账户名异常, 只可输入英文字母及数字, 长度为6~16个字符.");
 			log.error("user regist error, username: " + dto.getUserName());
 		}
 
@@ -215,13 +240,15 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 			log.error("user regist error, pwd repeat error");
 		}
 
-		if (!validRegexToolService.validEmail(dto.getEmail())) {
-			r.setEmail("请输入正确的邮箱");
-			log.error("user regist error, email error: " + dto.getEmail());
-		} else {
-			if (userDetailService.ensureActiveEmail(dto.getEmail()).isSuccess()) {
-				r.setEmail("邮箱已注册(忘记密码或用户名?可尝试找回)");
-				log.error("user regist error, email duplicate: " + dto.getEmail());
+		if (StringUtils.isNotBlank(dto.getEmail())) {
+			if (!validRegexToolService.validEmail(dto.getEmail())) {
+				r.setEmail("请输入正确的邮箱, 或留空");
+				log.error("user regist error, email error: " + dto.getEmail());
+			} else {
+				if (userDetailService.ensureActiveEmail(dto.getEmail()).isSuccess()) {
+					r.setEmail("邮箱已注册(忘记密码或用户名?可尝试找回)");
+					log.error("user regist error, email duplicate: " + dto.getEmail());
+				}
 			}
 		}
 
@@ -241,13 +268,14 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 		if (StringUtils.isNotBlank(dto.getReservationInformation())) {
 			if (dto.getReservationInformation().length() > 32) {
 				r.setReservationInformation("预留信息过长...32个字符以内..(中文算2个字符)");
-				log.error("user regist error, reservation information too long");
 			}
 		}
 
 		if (StringUtils.isNotBlank(dto.getQq())) {
-			r.setQq("QQ号格式异常...");
-			log.error("user regist error, QQ num error, qq: " + dto.getQq());
+			if (!validRegexToolService.validQQ(dto.getQq())) {
+				r.setQq("QQ号格式异常...");
+				log.error("user regist error, QQ num error, qq: " + dto.getQq());
+			}
 		}
 
 		if (r.getUsername() == null && r.getNickname() == null && r.getPwd() == null && r.getPwdRepeat() == null
@@ -284,7 +312,7 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 		if (numberUtil.matchSimpleNumber(dto.getQq())) {
 			ud.setQq(Long.parseLong(dto.getQq()));
 		}
-		ud.setRegistIp(numberUtil.ipToLong(ip));
+		ud.setRegistIp(ip);
 		ud.setReservationInformation(dto.getReservationInformation());
 		ud.setUserId(userId);
 
@@ -642,4 +670,7 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 		return resetPassword(userId, newPassword, newPasswordRepeat);
 	}
 
+	private void sendTelegramMsg(String msg) {
+		telegramService.sendMessageByChatRecordId(TelegramBotType.CX_MESSAGE, msg, TelegramStaticChatID.MY_ID);
+	}
 }

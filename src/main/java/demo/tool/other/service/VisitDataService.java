@@ -2,6 +2,8 @@ package demo.tool.other.service;
 
 import javax.servlet.http.HttpServletRequest;
 
+import demo.base.user.pojo.po.UserIp;
+
 public interface VisitDataService {
 
 	/**
@@ -13,8 +15,9 @@ public interface VisitDataService {
 	 * 将访问数据(ip, url 记录)放入到 Redis 缓存
 	 * @param request
 	 * @param customInfo
+	 * @return 
 	 */
-	void insertVisitData(HttpServletRequest request, String customInfo);
+	UserIp insertVisitData(HttpServletRequest request, String customInfo);
 
 	/**
 	 * 将访问数据(ip, url 记录)放入到 Redis 缓存

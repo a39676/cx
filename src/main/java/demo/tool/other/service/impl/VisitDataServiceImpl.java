@@ -37,22 +37,30 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 	private RedisTemplate<String, Object> redisTemplate;
 
 	// https://stackoverflow.com/questions/53497/regular-expression-that-matches-valid-ipv6-addresses
+	@SuppressWarnings("unused")
 	private static final String IPV6_REGEX = "(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))";
 
 	@Override
-	public void insertVisitData(HttpServletRequest request, String customInfo) {
+	public UserIp insertVisitData(HttpServletRequest request, String customInfo) {
 		try {
 			UserIp ui = new UserIp();
 			JSONObject j = null;
 			IpRecordBO record = getIp(request);
 			
-			if(!record.getForwardAddr().matches(IPV6_REGEX) || !record.getRemoteAddr().matches(IPV6_REGEX)) {
-				log.error("Recive strange IP: " + record.toString());
+//			if(!record.getForwardAddr().matches(IPV6_REGEX) || !record.getRemoteAddr().matches(IPV6_REGEX)) {
+//				log.error("Recive strange IP: " + record.toString());
+//			}
+			
+			String ipStr = record.getForwardAddr();
+			if(ipStr.contains(", ")) {
+				String[] arr = ipStr.split(", ");
+				ui.setIp(arr[0]);
+				ui.setForwardIp(arr[1]);
+			} else {
+				ui.setIp(ipStr);
 			}
 
 			ui.setCreateTime(LocalDateTime.now());
-			ui.setIp(record.getRemoteAddr());
-			ui.setForwardIp(record.getForwardAddr());
 			ui.setServerName(request.getServerName());
 			if(StringUtils.isNotBlank(customInfo)) {
 				ui.setUri(request.getRequestURI() + "/?customInfo=" + customInfo);
@@ -68,8 +76,12 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 			}
 
 			redisTemplate.opsForList().leftPush(SystemRedisKey.VISIT_DATA_REDIS_KEY, j.toString());
+			
+			return ui;
 		} catch (Exception e) {
+			log.error("Get strange visit data: " + e.getLocalizedMessage());
 		}
+		return null;
 	}
 
 	@Override

@@ -10,7 +10,7 @@ import demo.base.user.pojo.result.__baseSuperAdminRegistResult;
 
 public interface UserRegistService {
 
-	NewUserRegistResult newUserRegist(UserRegistDTO param, String ip, HttpServletRequest request);
+	NewUserRegistResult newUserRegist(UserRegistDTO param, HttpServletRequest request);
 
 	NewUserRegistResult newStudentRegist(StudentRegistDTO registDTO, String ip, HttpServletRequest request);
 

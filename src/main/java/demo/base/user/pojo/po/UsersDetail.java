@@ -2,158 +2,144 @@ package demo.base.user.pojo.po;
 
 import java.time.LocalDateTime;
 
-import demo.base.user.pojo.type.UserPrivateLevelType;
-
 public class UsersDetail {
-	private Long userId;
+    private Long userId;
 
-	private String nickName;
+    private String nickName;
 
-	private Long lastLoginIp;
+    private String lastLoginIp;
 
-	private Integer gender;
+    private Integer gender;
 
-	private Long qq;
+    private Long qq;
 
-	private String email;
+    private String email;
 
-	private Long mobile;
+    private Long mobile;
 
-	private LocalDateTime lastLoginTime;
+    private LocalDateTime lastLoginTime;
 
-	private LocalDateTime modifyTime;
+    private LocalDateTime modifyTime;
 
-	private Integer modifyCount;
+    private Integer modifyCount;
 
-	private String reservationInformation;
+    private String reservationInformation;
 
-	private Long registIp;
+    private String registIp;
 
-	/** {@link UserPrivateLevelType} */
-	private Integer privateLevel;
+    private Integer privateLevel;
 
-	private String headImage;
+    private String headImage;
 
-	public Long getUserId() {
-		return userId;
-	}
+    public Long getUserId() {
+        return userId;
+    }
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
-	public String getNickName() {
-		return nickName;
-	}
+    public String getNickName() {
+        return nickName;
+    }
 
-	public void setNickName(String nickName) {
-		this.nickName = nickName == null ? null : nickName.trim();
-	}
+    public void setNickName(String nickName) {
+        this.nickName = nickName == null ? null : nickName.trim();
+    }
 
-	public Long getLastLoginIp() {
-		return lastLoginIp;
-	}
+    public String getLastLoginIp() {
+        return lastLoginIp;
+    }
 
-	public void setLastLoginIp(Long lastLoginIp) {
-		this.lastLoginIp = lastLoginIp;
-	}
+    public void setLastLoginIp(String lastLoginIp) {
+        this.lastLoginIp = lastLoginIp == null ? null : lastLoginIp.trim();
+    }
 
-	public Integer getGender() {
-		return gender;
-	}
+    public Integer getGender() {
+        return gender;
+    }
 
-	public void setGender(Integer gender) {
-		this.gender = gender;
-	}
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
 
-	public Long getQq() {
-		return qq;
-	}
+    public Long getQq() {
+        return qq;
+    }
 
-	public void setQq(Long qq) {
-		this.qq = qq;
-	}
+    public void setQq(Long qq) {
+        this.qq = qq;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setEmail(String email) {
-		this.email = email == null ? null : email.trim();
-	}
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim();
+    }
 
-	public Long getMobile() {
-		return mobile;
-	}
+    public Long getMobile() {
+        return mobile;
+    }
 
-	public void setMobile(Long mobile) {
-		this.mobile = mobile;
-	}
+    public void setMobile(Long mobile) {
+        this.mobile = mobile;
+    }
 
-	public LocalDateTime getLastLoginTime() {
-		return lastLoginTime;
-	}
+    public LocalDateTime getLastLoginTime() {
+        return lastLoginTime;
+    }
 
-	public void setLastLoginTime(LocalDateTime lastLoginTime) {
-		this.lastLoginTime = lastLoginTime;
-	}
+    public void setLastLoginTime(LocalDateTime lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
+    }
 
-	public LocalDateTime getModifyTime() {
-		return modifyTime;
-	}
+    public LocalDateTime getModifyTime() {
+        return modifyTime;
+    }
 
-	public void setModifyTime(LocalDateTime modifyTime) {
-		this.modifyTime = modifyTime;
-	}
+    public void setModifyTime(LocalDateTime modifyTime) {
+        this.modifyTime = modifyTime;
+    }
 
-	public Integer getModifyCount() {
-		return modifyCount;
-	}
+    public Integer getModifyCount() {
+        return modifyCount;
+    }
 
-	public void setModifyCount(Integer modifyCount) {
-		this.modifyCount = modifyCount;
-	}
+    public void setModifyCount(Integer modifyCount) {
+        this.modifyCount = modifyCount;
+    }
 
-	public String getReservationInformation() {
-		return reservationInformation;
-	}
+    public String getReservationInformation() {
+        return reservationInformation;
+    }
 
-	public void setReservationInformation(String reservationInformation) {
-		this.reservationInformation = reservationInformation == null ? null : reservationInformation.trim();
-	}
+    public void setReservationInformation(String reservationInformation) {
+        this.reservationInformation = reservationInformation == null ? null : reservationInformation.trim();
+    }
 
-	public Long getRegistIp() {
-		return registIp;
-	}
+    public String getRegistIp() {
+        return registIp;
+    }
 
-	public void setRegistIp(Long registIp) {
-		this.registIp = registIp;
-	}
+    public void setRegistIp(String registIp) {
+        this.registIp = registIp == null ? null : registIp.trim();
+    }
 
-	public Integer getPrivateLevel() {
-		return privateLevel;
-	}
+    public Integer getPrivateLevel() {
+        return privateLevel;
+    }
 
-	public void setPrivateLevel(Integer privateLevel) {
-		this.privateLevel = privateLevel;
-	}
+    public void setPrivateLevel(Integer privateLevel) {
+        this.privateLevel = privateLevel;
+    }
 
-	public String getHeadImage() {
-		return headImage;
-	}
+    public String getHeadImage() {
+        return headImage;
+    }
 
-	public void setHeadImage(String headImage) {
-		this.headImage = headImage == null ? null : headImage.trim();
-	}
-
-
-	@Override
-	public String toString() {
-		return "UsersDetail [userId=" + userId + ", nickName=" + nickName + ", lastLoginIp=" + lastLoginIp + ", gender="
-				+ gender + ", qq=" + qq + ", email=" + email + ", mobile=" + mobile + ", lastLoginTime=" + lastLoginTime
-				+ ", modifyTime=" + modifyTime + ", modifyCount=" + modifyCount + ", reservationInformation="
-				+ reservationInformation + ", registIp=" + registIp + ", privateLevel=" + privateLevel + ", headImage="
-				+ headImage + "]";
-	}
-
+    public void setHeadImage(String headImage) {
+        this.headImage = headImage == null ? null : headImage.trim();
+    }
 }

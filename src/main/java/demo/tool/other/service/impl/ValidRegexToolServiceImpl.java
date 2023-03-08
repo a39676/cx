@@ -34,7 +34,7 @@ public class ValidRegexToolServiceImpl extends CommonService implements ValidReg
 		if (userNameInput == null) {
 			return false;
 		}
-		return userNameInput.matches("[a-zA-Z][a-zA-Z0-9_]{5,15}");
+		return userNameInput.matches("[a-zA-Z0-9_]{5,15}");
 	}
 
 	@Override

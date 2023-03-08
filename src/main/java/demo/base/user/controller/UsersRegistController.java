@@ -81,9 +81,7 @@ public class UsersRegistController extends CommonController {
 	@PostMapping(value = UsersUrl.userRegist)
 	@ResponseBody
 	public NewUserRegistResult userRegistHandler(@RequestBody UserRegistDTO dto, HttpServletRequest request) {
-		String ip = request.getHeader("X-FORWARDED-FOR");
-
-		return userRegistService.newUserRegist(dto, ip, request);
+		return userRegistService.newUserRegist(dto, request);
 	}
 	
 	@GetMapping(value = UsersUrl.STUDENT_REGIST)

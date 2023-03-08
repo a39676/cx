@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="demo.base.user.mapper.UsersDetailMapper">
-  
   <resultMap id="BaseResultMap" type="demo.base.user.pojo.po.UsersDetail">
     <id column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="nick_name" jdbcType="CHAR" property="nickName" />
-    <result column="last_login_ip" jdbcType="BIGINT" property="lastLoginIp" />
-    <result column="gender" jdbcType="BIT" property="gender" />
+    <result column="last_login_ip" jdbcType="CHAR" property="lastLoginIp" />
+    <result column="gender" jdbcType="INTEGER" property="gender" />
     <result column="qq" jdbcType="BIGINT" property="qq" />
     <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="mobile" jdbcType="BIGINT" property="mobile" />
@@ -14,7 +13,7 @@
     <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
     <result column="modify_count" jdbcType="INTEGER" property="modifyCount" />
     <result column="reservation_information" jdbcType="VARCHAR" property="reservationInformation" />
-    <result column="regist_ip" jdbcType="BIGINT" property="registIp" />
+    <result column="regist_ip" jdbcType="CHAR" property="registIp" />
     <result column="private_level" jdbcType="INTEGER" property="privateLevel" />
     <result column="head_image" jdbcType="CHAR" property="headImage" />
   </resultMap>
@@ -116,10 +115,10 @@
       last_login_time, modify_time, modify_count, 
       reservation_information, regist_ip, private_level, 
       head_image)
-    values (#{userId,jdbcType=BIGINT}, #{nickName,jdbcType=CHAR}, #{lastLoginIp,jdbcType=BIGINT}, 
-      #{gender,jdbcType=BIT}, #{qq,jdbcType=BIGINT}, #{email,jdbcType=VARCHAR}, #{mobile,jdbcType=BIGINT}, 
+    values (#{userId,jdbcType=BIGINT}, #{nickName,jdbcType=CHAR}, #{lastLoginIp,jdbcType=CHAR}, 
+      #{gender,jdbcType=INTEGER}, #{qq,jdbcType=BIGINT}, #{email,jdbcType=VARCHAR}, #{mobile,jdbcType=BIGINT}, 
       #{lastLoginTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, #{modifyCount,jdbcType=INTEGER}, 
-      #{reservationInformation,jdbcType=VARCHAR}, #{registIp,jdbcType=BIGINT}, #{privateLevel,jdbcType=INTEGER}, 
+      #{reservationInformation,jdbcType=VARCHAR}, #{registIp,jdbcType=CHAR}, #{privateLevel,jdbcType=INTEGER}, 
       #{headImage,jdbcType=CHAR})
   </insert>
   <insert id="insertSelective" parameterType="demo.base.user.pojo.po.UsersDetail">
@@ -176,10 +175,10 @@
         #{nickName,jdbcType=CHAR},
       </if>
       <if test="lastLoginIp != null">
-        #{lastLoginIp,jdbcType=BIGINT},
+        #{lastLoginIp,jdbcType=CHAR},
       </if>
       <if test="gender != null">
-        #{gender,jdbcType=BIT},
+        #{gender,jdbcType=INTEGER},
       </if>
       <if test="qq != null">
         #{qq,jdbcType=BIGINT},
@@ -203,7 +202,7 @@
         #{reservationInformation,jdbcType=VARCHAR},
       </if>
       <if test="registIp != null">
-        #{registIp,jdbcType=BIGINT},
+        #{registIp,jdbcType=CHAR},
       </if>
       <if test="privateLevel != null">
         #{privateLevel,jdbcType=INTEGER},
@@ -222,70 +221,70 @@
   <update id="updateByExampleSelective" parameterType="map">
     update users_detail
     <set>
-      <if test="record.userId != null">
-        user_id = #{record.userId,jdbcType=BIGINT},
+      <if test="row.userId != null">
+        user_id = #{row.userId,jdbcType=BIGINT},
       </if>
-      <if test="record.nickName != null">
-        nick_name = #{record.nickName,jdbcType=CHAR},
+      <if test="row.nickName != null">
+        nick_name = #{row.nickName,jdbcType=CHAR},
       </if>
-      <if test="record.lastLoginIp != null">
-        last_login_ip = #{record.lastLoginIp,jdbcType=BIGINT},
+      <if test="row.lastLoginIp != null">
+        last_login_ip = #{row.lastLoginIp,jdbcType=CHAR},
       </if>
-      <if test="record.gender != null">
-        gender = #{record.gender,jdbcType=BIT},
+      <if test="row.gender != null">
+        gender = #{row.gender,jdbcType=INTEGER},
       </if>
-      <if test="record.qq != null">
-        qq = #{record.qq,jdbcType=BIGINT},
+      <if test="row.qq != null">
+        qq = #{row.qq,jdbcType=BIGINT},
       </if>
-      <if test="record.email != null">
-        email = #{record.email,jdbcType=VARCHAR},
+      <if test="row.email != null">
+        email = #{row.email,jdbcType=VARCHAR},
       </if>
-      <if test="record.mobile != null">
-        mobile = #{record.mobile,jdbcType=BIGINT},
+      <if test="row.mobile != null">
+        mobile = #{row.mobile,jdbcType=BIGINT},
       </if>
-      <if test="record.lastLoginTime != null">
-        last_login_time = #{record.lastLoginTime,jdbcType=TIMESTAMP},
+      <if test="row.lastLoginTime != null">
+        last_login_time = #{row.lastLoginTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.modifyTime != null">
-        modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+      <if test="row.modifyTime != null">
+        modify_time = #{row.modifyTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.modifyCount != null">
-        modify_count = #{record.modifyCount,jdbcType=INTEGER},
+      <if test="row.modifyCount != null">
+        modify_count = #{row.modifyCount,jdbcType=INTEGER},
       </if>
-      <if test="record.reservationInformation != null">
-        reservation_information = #{record.reservationInformation,jdbcType=VARCHAR},
+      <if test="row.reservationInformation != null">
+        reservation_information = #{row.reservationInformation,jdbcType=VARCHAR},
       </if>
-      <if test="record.registIp != null">
-        regist_ip = #{record.registIp,jdbcType=BIGINT},
+      <if test="row.registIp != null">
+        regist_ip = #{row.registIp,jdbcType=CHAR},
       </if>
-      <if test="record.privateLevel != null">
-        private_level = #{record.privateLevel,jdbcType=INTEGER},
+      <if test="row.privateLevel != null">
+        private_level = #{row.privateLevel,jdbcType=INTEGER},
       </if>
-      <if test="record.headImage != null">
-        head_image = #{record.headImage,jdbcType=CHAR},
+      <if test="row.headImage != null">
+        head_image = #{row.headImage,jdbcType=CHAR},
       </if>
     </set>
-    <if test="_parameter != null">
+    <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
     update users_detail
-    set user_id = #{record.userId,jdbcType=BIGINT},
-      nick_name = #{record.nickName,jdbcType=CHAR},
-      last_login_ip = #{record.lastLoginIp,jdbcType=BIGINT},
-      gender = #{record.gender,jdbcType=BIT},
-      qq = #{record.qq,jdbcType=BIGINT},
-      email = #{record.email,jdbcType=VARCHAR},
-      mobile = #{record.mobile,jdbcType=BIGINT},
-      last_login_time = #{record.lastLoginTime,jdbcType=TIMESTAMP},
-      modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
-      modify_count = #{record.modifyCount,jdbcType=INTEGER},
-      reservation_information = #{record.reservationInformation,jdbcType=VARCHAR},
-      regist_ip = #{record.registIp,jdbcType=BIGINT},
-      private_level = #{record.privateLevel,jdbcType=INTEGER},
-      head_image = #{record.headImage,jdbcType=CHAR}
-    <if test="_parameter != null">
+    set user_id = #{row.userId,jdbcType=BIGINT},
+      nick_name = #{row.nickName,jdbcType=CHAR},
+      last_login_ip = #{row.lastLoginIp,jdbcType=CHAR},
+      gender = #{row.gender,jdbcType=INTEGER},
+      qq = #{row.qq,jdbcType=BIGINT},
+      email = #{row.email,jdbcType=VARCHAR},
+      mobile = #{row.mobile,jdbcType=BIGINT},
+      last_login_time = #{row.lastLoginTime,jdbcType=TIMESTAMP},
+      modify_time = #{row.modifyTime,jdbcType=TIMESTAMP},
+      modify_count = #{row.modifyCount,jdbcType=INTEGER},
+      reservation_information = #{row.reservationInformation,jdbcType=VARCHAR},
+      regist_ip = #{row.registIp,jdbcType=CHAR},
+      private_level = #{row.privateLevel,jdbcType=INTEGER},
+      head_image = #{row.headImage,jdbcType=CHAR}
+    <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
@@ -296,10 +295,10 @@
         nick_name = #{nickName,jdbcType=CHAR},
       </if>
       <if test="lastLoginIp != null">
-        last_login_ip = #{lastLoginIp,jdbcType=BIGINT},
+        last_login_ip = #{lastLoginIp,jdbcType=CHAR},
       </if>
       <if test="gender != null">
-        gender = #{gender,jdbcType=BIT},
+        gender = #{gender,jdbcType=INTEGER},
       </if>
       <if test="qq != null">
         qq = #{qq,jdbcType=BIGINT},
@@ -323,7 +322,7 @@
         reservation_information = #{reservationInformation,jdbcType=VARCHAR},
       </if>
       <if test="registIp != null">
-        regist_ip = #{registIp,jdbcType=BIGINT},
+        regist_ip = #{registIp,jdbcType=CHAR},
       </if>
       <if test="privateLevel != null">
         private_level = #{privateLevel,jdbcType=INTEGER},
@@ -337,8 +336,8 @@
   <update id="updateByPrimaryKey" parameterType="demo.base.user.pojo.po.UsersDetail">
     update users_detail
     set nick_name = #{nickName,jdbcType=CHAR},
-      last_login_ip = #{lastLoginIp,jdbcType=BIGINT},
-      gender = #{gender,jdbcType=BIT},
+      last_login_ip = #{lastLoginIp,jdbcType=CHAR},
+      gender = #{gender,jdbcType=INTEGER},
       qq = #{qq,jdbcType=BIGINT},
       email = #{email,jdbcType=VARCHAR},
       mobile = #{mobile,jdbcType=BIGINT},
@@ -346,11 +345,25 @@
       modify_time = #{modifyTime,jdbcType=TIMESTAMP},
       modify_count = #{modifyCount,jdbcType=INTEGER},
       reservation_information = #{reservationInformation,jdbcType=VARCHAR},
-      regist_ip = #{registIp,jdbcType=BIGINT},
+      regist_ip = #{registIp,jdbcType=CHAR},
       private_level = #{privateLevel,jdbcType=INTEGER},
       head_image = #{headImage,jdbcType=CHAR}
     where user_id = #{userId,jdbcType=BIGINT}
   </update>
+  <select id="selectByExampleWithRowbounds" parameterType="demo.base.user.pojo.po.UsersDetailExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from users_detail
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
   
   <select id="isNickNameExists" resultType="int">
     select exists(select * from users_detail where nick_name = #{nickName})
@@ -359,25 +372,7 @@
   <select id="findEmailByUserId" resultType="String">
     select email from users_detail where user_id = #{userId}
   </select>
-
-  <select id="findUserDetail" resultMap="BaseResultMap">
-    select
-      *
-    from
-      users_detail 
-    where
-      user_id = #{userId}
-  </select>
-
-  <select id="findUserDetailByNickName" resultMap="BaseResultMap">
-    select
-      *
-    from
-      users_detail as ud
-    where
-      ud.nick_name = #{nickName}
-  </select>
-
+  
   <update id="modifyRegistEmail">
     update 
       users_detail 

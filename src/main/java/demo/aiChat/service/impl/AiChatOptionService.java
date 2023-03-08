@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
+import demo.aiChat.pojo.dto.AiChatAesOptionDTO;
 import demo.aiChat.pojo.dto.AiChatUserMembershipDetailSummaryDTO;
 import demo.aiChat.pojo.dto.AiChatUserMembershipLevelDetailDTO;
 import demo.common.service.CommonService;
@@ -27,14 +28,15 @@ public class AiChatOptionService extends CommonService {
 	private String optionFilePath;
 	private String chatStorePrefixPath;
 	private Integer chatHistorySaveCountingLimit = 100;
-	private List<AiChatUserMembershipLevelDetailDTO> membershipLevelDetail;
 
+	private Map<Integer, AiChatAesOptionDTO> aesOptionMap;
+
+	private List<AiChatUserMembershipLevelDetailDTO> membershipLevelDetail;
 	private Map<String, Long> uidMatchAiChatUserIdMap = new HashMap<>();
+	private Map<Long, Long> systemUserIdMatchAiChatUserIdMap = new HashMap<>();
 
 	/*
-	 * TODO
-	 * 当触发购买会员时需要刷新
-	 * 凌晨清空
+	 * TODO 当触发购买会员时需要刷新 凌晨清空
 	 */
 	private Map<Long, AiChatUserMembershipDetailSummaryDTO> membershipCacheMap = new HashMap<>();
 
@@ -54,6 +56,14 @@ public class AiChatOptionService extends CommonService {
 		this.chatHistorySaveCountingLimit = chatHistorySaveCountingLimit;
 	}
 
+	public Map<Integer, AiChatAesOptionDTO> getAesOptionMap() {
+		return aesOptionMap;
+	}
+
+	public void setAesOptionMap(Map<Integer, AiChatAesOptionDTO> aesOptionMap) {
+		this.aesOptionMap = aesOptionMap;
+	}
+
 	public List<AiChatUserMembershipLevelDetailDTO> getMembershipLevelDetail() {
 		return membershipLevelDetail;
 	}
@@ -70,6 +80,14 @@ public class AiChatOptionService extends CommonService {
 		this.uidMatchAiChatUserIdMap = uidMatchAiChatUserIdMap;
 	}
 
+	public Map<Long, Long> getSystemUserIdMatchAiChatUserIdMap() {
+		return systemUserIdMatchAiChatUserIdMap;
+	}
+
+	public void setSystemUserIdMatchAiChatUserIdMap(Map<Long, Long> systemUserIdMatchAiChatUserIdMap) {
+		this.systemUserIdMatchAiChatUserIdMap = systemUserIdMatchAiChatUserIdMap;
+	}
+
 	public Map<Long, AiChatUserMembershipDetailSummaryDTO> getMembershipCacheMap() {
 		return membershipCacheMap;
 	}
@@ -81,9 +99,10 @@ public class AiChatOptionService extends CommonService {
 	@Override
 	public String toString() {
 		return "AiChatOptionService [chatStorePrefixPath=" + chatStorePrefixPath + ", chatHistorySaveCountingLimit="
-				+ chatHistorySaveCountingLimit + ", membershipLevelDetail=" + membershipLevelDetail
-				+ ", uidMatchAiChatUserIdMap=" + uidMatchAiChatUserIdMap + ", membershipCacheMap=" + membershipCacheMap
-				+ "]";
+				+ chatHistorySaveCountingLimit + ", aesOptionMap=" + aesOptionMap + ", membershipLevelDetail="
+				+ membershipLevelDetail + ", uidMatchAiChatUserIdMap=" + uidMatchAiChatUserIdMap
+				+ ", systemUserIdMatchAiChatUserIdMap=" + systemUserIdMatchAiChatUserIdMap + ", membershipCacheMap="
+				+ membershipCacheMap + "]";
 	}
 
 	@PostConstruct

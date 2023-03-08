@@ -6,4 +6,6 @@ public interface WechatUserService {
 
 	WechatUserDetail findWechatUserByUid(String uid);
 
+	Long findWechatLongIdByUid(String uid);
+
 }

@@ -26,4 +26,16 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		}
 		return wechatUserList.get(0);
 	}
+	
+	@Override
+	public Long findWechatLongIdByUid(String uid) {
+		WechatUserDetailExample example = new WechatUserDetailExample();
+		example.createCriteria().andUnionIdEqualTo(uid);
+		List<WechatUserDetail> wechatUserList = wechatUserDetailMapper.selectByExample(example);
+		if(!wechatUserList.isEmpty()) {
+			return null;
+		}
+		WechatUserDetail po = wechatUserList.get(0);
+		return po.getId();
+	}
 }

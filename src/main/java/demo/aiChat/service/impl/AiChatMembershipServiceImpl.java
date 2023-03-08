@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import demo.aiChat.mapper.AiChatUserMembershipMapper;
@@ -16,19 +15,12 @@ import demo.aiChat.pojo.po.AiChatUserMembership;
 import demo.aiChat.pojo.po.AiChatUserMembershipExample;
 import demo.aiChat.service.AiChatMembershipService;
 
-@Scope("singleton")
 @Service
 public class AiChatMembershipServiceImpl extends AiChatCommonService implements AiChatMembershipService {
 
 	@Autowired
 	private AiChatUserMembershipMapper mapper;
 	
-	/*
-	 * TODO
-	 * 当触发购买会员时需要刷新
-	 * 凌晨清空
-	 */
-	private Map<Long, AiChatUserMembershipDetailSummaryDTO> membershipCacheMap = new HashMap<>();
 
 	private Map<Integer, AiChatUserMembershipLevelDetailDTO> getMembershipLevelMap() {
 		List<AiChatUserMembershipLevelDetailDTO> membershipList = optionService.getMembershipLevelDetail();
@@ -49,8 +41,8 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 
 	@Override
 	public AiChatUserMembershipDetailSummaryDTO findMembershipDetailSummaryByUserId(Long aiChatUserId) {
-		if(membershipCacheMap.containsKey(aiChatUserId)) {
-			return membershipCacheMap.get(aiChatUserId);
+		if(optionService.getMembershipCacheMap().containsKey(aiChatUserId)) {
+			return optionService.getMembershipCacheMap().get(aiChatUserId);
 		}
 		
 		List<AiChatUserMembership> membershipList = findMembershipDetailListByUserId(aiChatUserId);
@@ -85,7 +77,7 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 			}
 		}
 		
-		membershipCacheMap.put(aiChatUserId, summaryDTO);
+		optionService.getMembershipCacheMap().put(aiChatUserId, summaryDTO);
 
 		return summaryDTO;
 	}

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
+import demo.aiChat.pojo.dto.AiChatUserMembershipDetailSummaryDTO;
 import demo.aiChat.pojo.dto.AiChatUserMembershipLevelDetailDTO;
 import demo.common.service.CommonService;
 import toolPack.ioHandle.FileUtilCustom;
@@ -29,6 +30,13 @@ public class AiChatOptionService extends CommonService {
 	private List<AiChatUserMembershipLevelDetailDTO> membershipLevelDetail;
 
 	private Map<String, Long> uidMatchAiChatUserIdMap = new HashMap<>();
+
+	/*
+	 * TODO
+	 * 当触发购买会员时需要刷新
+	 * 凌晨清空
+	 */
+	private Map<Long, AiChatUserMembershipDetailSummaryDTO> membershipCacheMap = new HashMap<>();
 
 	public String getChatStorePrefixPath() {
 		return chatStorePrefixPath;
@@ -62,11 +70,20 @@ public class AiChatOptionService extends CommonService {
 		this.uidMatchAiChatUserIdMap = uidMatchAiChatUserIdMap;
 	}
 
+	public Map<Long, AiChatUserMembershipDetailSummaryDTO> getMembershipCacheMap() {
+		return membershipCacheMap;
+	}
+
+	public void setMembershipCacheMap(Map<Long, AiChatUserMembershipDetailSummaryDTO> membershipCacheMap) {
+		this.membershipCacheMap = membershipCacheMap;
+	}
+
 	@Override
 	public String toString() {
 		return "AiChatOptionService [chatStorePrefixPath=" + chatStorePrefixPath + ", chatHistorySaveCountingLimit="
 				+ chatHistorySaveCountingLimit + ", membershipLevelDetail=" + membershipLevelDetail
-				+ ", uidMatchAiChatUserIdMap=" + uidMatchAiChatUserIdMap + "]";
+				+ ", uidMatchAiChatUserIdMap=" + uidMatchAiChatUserIdMap + ", membershipCacheMap=" + membershipCacheMap
+				+ "]";
 	}
 
 	@PostConstruct

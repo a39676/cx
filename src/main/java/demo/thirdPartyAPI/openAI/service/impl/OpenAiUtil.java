@@ -240,8 +240,8 @@ public class OpenAiUtil {
 		 */
 		new SetProxyWhenWindowsEnvironment();
 
-		String apiKey = "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";
-		String orgId = "org-qelqNZ4IPh1mk8rINN5LB8IM";
+		String apiKey = "";
+		String orgId = "";
 		optionService = new OpenAiOptionService();
 		optionService.setApiKey(apiKey);
 		optionService.setOrgId(orgId);

@@ -12,10 +12,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.thirdPartyAPI.openAI.pojo.dto.ChatContentDTO;
+import com.google.gson.Gson;
+
+import demo.thirdPartyAPI.openAI.pojo.dto.OpanAiChatCompletionMessageDTO;
+import demo.thirdPartyAPI.openAI.pojo.result.OpenAiChatCompletionSendMessageResult;
+import demo.thirdPartyAPI.openAI.pojo.type.OpenAiChatCompletionMessageRoleType;
 import demo.thirdPartyAPI.openAI.pojo.type.OpenAiModelType;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import tool.service.SetProxyWhenWindowsEnvironment;
 
 @Service
 public class OpenAiUtil {
@@ -30,7 +35,7 @@ public class OpenAiUtil {
 	private static final String COMPLETIONS = "/completions";
 	private static final String MODELS = "/models";
 
-	public String sendCompletion(String msg) {
+	public String NotFinishYet_sendCompletion(String msg) {
 		try {
 			URL url = new URL(MAIN_URL + COMPLETIONS);
 
@@ -75,13 +80,28 @@ public class OpenAiUtil {
 		return "";
 	}
 
-	public String sendChatCompletion(List<ChatContentDTO> chatHistory, String msg, Integer maxToken) {
+	public OpenAiChatCompletionSendMessageResult sendChatCompletion(List<OpanAiChatCompletionMessageDTO> chatHistory,
+			String msg) {
+		return sendChatCompletion(chatHistory, msg, optionService.getMaxTokens());
+	}
+
+	public OpenAiChatCompletionSendMessageResult sendChatCompletion(String msg) {
+		return sendChatCompletion(null, msg, optionService.getMaxTokens());
+	}
+
+	private OpenAiChatCompletionSendMessageResult sendChatCompletion(List<OpanAiChatCompletionMessageDTO> chatHistory,
+			String msg, Integer maxToken) {
+		OpenAiChatCompletionSendMessageResult r = new OpenAiChatCompletionSendMessageResult();
+		if (chatHistory == null) {
+			chatHistory = new ArrayList<>();
+		}
+
 		try {
 			URL url = new URL(MAIN_URL + CHAT + COMPLETIONS);
 
 			JSONObject parameterJson = null;
-			ChatContentDTO newChatMsg = new ChatContentDTO();
-			newChatMsg.setRole("user");
+			OpanAiChatCompletionMessageDTO newChatMsg = new OpanAiChatCompletionMessageDTO();
+			newChatMsg.setRole(OpenAiChatCompletionMessageRoleType.USER.getName());
 			newChatMsg.setContent(msg);
 
 			parameterJson = buildChatCompletionsParamJson(chatHistory, newChatMsg, maxToken);
@@ -99,9 +119,9 @@ public class OpenAiUtil {
 
 			int responseCode = con.getResponseCode();
 
-			System.out.println("POST Response Code :: " + responseCode);
-			if (responseCode != HttpURLConnection.HTTP_OK) { // success
-				System.out.println("POST request did not work.");
+			if (responseCode != HttpURLConnection.HTTP_OK) {
+				r.setMessage("Http : " + responseCode + ", 运算服务器异常");
+				return r;
 			}
 
 			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -113,44 +133,41 @@ public class OpenAiUtil {
 			}
 			in.close();
 
-			/*
-			 * TODO
-			 * refresh user chat history?
-			 * handover to outside code?
-			 */
-			
-			// print result
-			System.out.println(response.toString());
+			OpanAiChatCompletionMessageDTO dto = new Gson().fromJson(response.toString(),
+					OpanAiChatCompletionMessageDTO.class);
+			r.setDto(dto);
+			r.setIsSuccess();
+			return r;
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			r.setMessage("运算服务器异常");
 		}
 
-//		TODO
-		return "";
+		return r;
 	}
 
+	/** NOT finish yet */
 	public String queryModels() {
 		try {
 			URL url = new URL(MAIN_URL + MODELS);
 
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET");
-			con.setRequestProperty("Content-Type", "application/json");
-			con.setRequestProperty("organization", optionService.getOrgId());
+//			con.setRequestProperty("Content-Type", "application/json");
+//			con.setRequestProperty("organization", optionService.getOrgId());
 			con.setRequestProperty("Authorization", "Bearer " + optionService.getApiKey());
 			con.setDoOutput(true);
-			OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
-			writer.write("");
-			writer.flush();
-			writer.close();
+//			OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
+//			writer.write("");
+//			writer.flush();
+//			writer.close();
 			con.getOutputStream().close();
 
 			int responseCode = con.getResponseCode();
 
-			System.out.println("POST Response Code :: " + responseCode);
+			System.out.println("GET Response Code :: " + responseCode);
 			if (responseCode != HttpURLConnection.HTTP_OK) { // success
-				System.out.println("POST request did not work.");
+				System.out.println("GET request did not work.");
 			}
 
 			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -162,7 +179,6 @@ public class OpenAiUtil {
 			}
 			in.close();
 
-			// print result
 			System.out.println(response.toString());
 
 		} catch (Exception e) {
@@ -183,13 +199,14 @@ public class OpenAiUtil {
 		return json;
 	}
 
-	private JSONObject buildChatCompletionsParamJson(List<ChatContentDTO> chatHistory, ChatContentDTO newChatMessage, Integer maxToken) {
+	private JSONObject buildChatCompletionsParamJson(List<OpanAiChatCompletionMessageDTO> chatHistory,
+			OpanAiChatCompletionMessageDTO newChatMessage, Integer maxToken) {
 		/* Reference: https://platform.openai.com/docs/api-reference/chat/create */
 		JSONObject parameterJson = new JSONObject();
 		parameterJson.put("model", OpenAiModelType.GPT_V_3_5.getName());
 		JSONArray messageArray = new JSONArray();
 		JSONObject subChatMsg = null;
-		for (ChatContentDTO dto : chatHistory) {
+		for (OpanAiChatCompletionMessageDTO dto : chatHistory) {
 			subChatMsg = new JSONObject();
 			subChatMsg.put("role", dto.getRole());
 			subChatMsg.put("content", dto.getContent());
@@ -202,7 +219,7 @@ public class OpenAiUtil {
 		messageArray.add(subChatMsg);
 
 		parameterJson.put("messages", messageArray);
-		
+
 		parameterJson.put("max_tokens", maxToken);
 		return parameterJson;
 	}
@@ -211,30 +228,24 @@ public class OpenAiUtil {
 	public static void main(String[] args) throws IOException {
 		OpenAiUtil o = new OpenAiUtil();
 		o.forDev();
-		List<ChatContentDTO> chatHistory = new ArrayList<>();
-		String newMsg = "";
-		o.sendChatCompletion(chatHistory, newMsg, 500);
+		List<OpanAiChatCompletionMessageDTO> chatHistory = new ArrayList<>();
+		String newMsg = "test";
+		o.sendChatCompletion(chatHistory, newMsg, 1);
+
 	}
 
 	private void forDev() {
-		/* 
-		 * TODO
-		 * clean before upload
+		/*
+		 * TODO clean before upload
 		 */
-		String apiKey = "";
-		String orgId = "";
+		new SetProxyWhenWindowsEnvironment();
+
+		String apiKey = "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";
+		String orgId = "org-qelqNZ4IPh1mk8rINN5LB8IM";
 		optionService = new OpenAiOptionService();
 		optionService.setApiKey(apiKey);
 		optionService.setOrgId(orgId);
 
-		String proxyHost = "127.0.0.1";
-		String proxyPort = "10809";
-
-		System.setProperty("http.proxyHost", proxyHost);
-		System.setProperty("http.proxyPort", proxyPort);
-
-		System.setProperty("https.proxyHost", proxyHost);
-		System.setProperty("https.proxyPort", proxyPort);
 	}
 
 }

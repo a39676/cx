@@ -23,7 +23,6 @@ public class OpenAiOptionService extends CommonService {
 	private String apiKey = "";
 	private String orgId = "";
 	private Integer maxTokens = 500;
-	private String chatStorePrefixPath;
 
 	public String getApiKey() {
 		return apiKey;
@@ -49,18 +48,9 @@ public class OpenAiOptionService extends CommonService {
 		this.maxTokens = maxTokens;
 	}
 
-	public String getChatStorePrefixPath() {
-		return chatStorePrefixPath;
-	}
-
-	public void setChatStorePrefixPath(String chatStorePrefixPath) {
-		this.chatStorePrefixPath = chatStorePrefixPath;
-	}
-
 	@Override
 	public String toString() {
-		return "OpenAiOptionService [apiKey=" + apiKey + ", orgId=" + orgId + ", maxTokens=" + maxTokens
-				+ ", chatStorePrefixPath=" + chatStorePrefixPath + "]";
+		return "OpenAiOptionService [apiKey=" + apiKey + ", orgId=" + orgId + ", maxTokens=" + maxTokens + "]";
 	}
 
 	@PostConstruct

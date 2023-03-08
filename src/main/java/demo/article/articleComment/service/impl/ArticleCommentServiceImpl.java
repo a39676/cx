@@ -57,7 +57,7 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 	@Autowired
 	private TelegramService telegramService;
 	@Autowired
-	private ArticleCommentOptionService constantService;
+	private ArticleCommentOptionService articleCommentOptionService;
 	@Autowired
 	private ArticleEvaluationService articleEvaluationService;
 	@Autowired
@@ -93,8 +93,8 @@ public class ArticleCommentServiceImpl extends ArticleCommonService implements A
 			result.setMessage("Article too short");
 			return result;
 		}
-		String articleCommentStorePrefixPath = constantService.getArticleCommentStorePrefixPath();
-		if (StringUtils.isBlank(articleCommentStorePrefixPath) || constantService.getMaxArticleCommentLength() <= 0) {
+		String articleCommentStorePrefixPath = articleCommentOptionService.getArticleCommentStorePrefixPath();
+		if (StringUtils.isBlank(articleCommentStorePrefixPath) || articleCommentOptionService.getMaxArticleCommentLength() <= 0) {
 			result.setMessage("Service error");
 			return result;
 		}

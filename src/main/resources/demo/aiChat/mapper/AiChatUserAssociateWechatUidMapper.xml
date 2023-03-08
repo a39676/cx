@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.aiChat.mapper.AiChatUserAssociateWechatUidMapper">
+  <resultMap id="BaseResultMap" type="demo.aiChat.pojo.po.AiChatUserAssociateWechatUidKey">
+    <id column="ai_chat_user_id" jdbcType="BIGINT" property="aiChatUserId" />
+    <id column="wechat_id" jdbcType="BIGINT" property="wechatId" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ai_chat_user_id, wechat_id
+  </sql>
+  <select id="selectByExample" parameterType="demo.aiChat.pojo.po.AiChatUserAssociateWechatUidExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ai_chat_user_associate_wechat_uid
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="demo.aiChat.pojo.po.AiChatUserAssociateWechatUidKey">
+    delete from ai_chat_user_associate_wechat_uid
+    where ai_chat_user_id = #{aiChatUserId,jdbcType=BIGINT}
+      and wechat_id = #{wechatId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.aiChat.pojo.po.AiChatUserAssociateWechatUidExample">
+    delete from ai_chat_user_associate_wechat_uid
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="demo.aiChat.pojo.po.AiChatUserAssociateWechatUidKey">
+    insert into ai_chat_user_associate_wechat_uid (ai_chat_user_id, wechat_id)
+    values (#{aiChatUserId,jdbcType=BIGINT}, #{wechatId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="demo.aiChat.pojo.po.AiChatUserAssociateWechatUidKey">
+    insert into ai_chat_user_associate_wechat_uid
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="aiChatUserId != null">
+        ai_chat_user_id,
+      </if>
+      <if test="wechatId != null">
+        wechat_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="aiChatUserId != null">
+        #{aiChatUserId,jdbcType=BIGINT},
+      </if>
+      <if test="wechatId != null">
+        #{wechatId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="demo.aiChat.pojo.po.AiChatUserAssociateWechatUidExample" resultType="java.lang.Long">
+    select count(*) from ai_chat_user_associate_wechat_uid
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update ai_chat_user_associate_wechat_uid
+    <set>
+      <if test="row.aiChatUserId != null">
+        ai_chat_user_id = #{row.aiChatUserId,jdbcType=BIGINT},
+      </if>
+      <if test="row.wechatId != null">
+        wechat_id = #{row.wechatId,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update ai_chat_user_associate_wechat_uid
+    set ai_chat_user_id = #{row.aiChatUserId,jdbcType=BIGINT},
+      wechat_id = #{row.wechatId,jdbcType=BIGINT}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="demo.aiChat.pojo.po.AiChatUserAssociateWechatUidExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ai_chat_user_associate_wechat_uid
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

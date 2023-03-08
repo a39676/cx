@@ -43,7 +43,6 @@ import demo.pmemo.pojo.constant.UrgeNoticeManagerUrl;
 import demo.pmemo.pojo.constant.UrgeNoticeUrl;
 import demo.test.pojo.constant.TestUrl;
 import demo.tool.other.pojo.constant.ToolUrlConstant;
-import demo.toyParts.weixin.pojo.constant.WXUrl;
 import image.pojo.constant.ImageInteractionUrl;
 
 @SuppressWarnings("deprecation")
@@ -82,8 +81,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(UsersUrl.root + "/**").permitAll()
             .antMatchers("/static_resources/**").permitAll()
             .antMatchers("/tHome/**").permitAll()
-            .antMatchers(WXUrl.root + WXUrl.weixin).permitAll()
-//            .anyRequest().authenticated() 
             // used to allow anonymous access 
             // .antMatchers("/welcome**").access("IS_AUTHENTICATED_ANONYMOUSLY")
 //            .antMatchers(ArticleUrlConstant.root + "/**").access("hasAnyRole('" + RolesType.ROLE_ADMIN.getRoleName() + "','" + RolesType.ROLE_USER.getRoleName() + "')")
@@ -113,8 +110,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
             .antMatchers(PMemoUrl.ROOT + PMemoUrl.SET)
             	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
-            .antMatchers(WXUrl.root + "/**")
-            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DEV))
             .antMatchers(UrgeNoticeManagerUrl.ROOT + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
             .antMatchers(TaskUrl.ROOT + "/**")

@@ -59,6 +59,8 @@ optionFilePath:
   joy: "/home/u2/cx/optionFile/joy/option.json"
   joyGarden: "/home/u2/cx/optionFile/joy/gardenOption.json"
   openAI: "/home/u2/cx/optionFile/openAI/option.json"
+  wechat: "/home/u2/cx/optionFile/wechat/option.json"
+  aiChat: "/home/u2/cx/optionFile/aiChat/option.json"
   
     
 logging:

@@ -1,7 +1,6 @@
 package demo.thirdPartyAPI.openAI.service.impl;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -15,12 +14,12 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 
 import demo.thirdPartyAPI.openAI.pojo.dto.OpanAiChatCompletionMessageDTO;
+import demo.thirdPartyAPI.openAI.pojo.dto.OpanAiChatCompletionResponseDTO;
 import demo.thirdPartyAPI.openAI.pojo.result.OpenAiChatCompletionSendMessageResult;
 import demo.thirdPartyAPI.openAI.pojo.type.OpenAiChatCompletionMessageRoleType;
 import demo.thirdPartyAPI.openAI.pojo.type.OpenAiModelType;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import tool.service.SetProxyWhenWindowsEnvironment;
 
 @Service
 public class OpenAiUtil {
@@ -120,7 +119,7 @@ public class OpenAiUtil {
 			int responseCode = con.getResponseCode();
 
 			if (responseCode != HttpURLConnection.HTTP_OK) {
-				r.setMessage("Http : " + responseCode + ", 运算服务器异常");
+				r.setMessage("Http : " + responseCode);
 				return r;
 			}
 
@@ -133,21 +132,20 @@ public class OpenAiUtil {
 			}
 			in.close();
 
-			OpanAiChatCompletionMessageDTO dto = new Gson().fromJson(response.toString(),
-					OpanAiChatCompletionMessageDTO.class);
+			OpanAiChatCompletionResponseDTO dto = new Gson().fromJson(response.toString(),
+					OpanAiChatCompletionResponseDTO.class);
 			r.setDto(dto);
 			r.setIsSuccess();
 			return r;
 
 		} catch (Exception e) {
-			r.setMessage("运算服务器异常");
+			r.setMessage("Open AI error: " + e.getLocalizedMessage());
 		}
 
 		return r;
 	}
 
-	/** NOT finish yet */
-	public String queryModels() {
+	public String notFinishYet_queryModels() {
 		try {
 			URL url = new URL(MAIN_URL + MODELS);
 
@@ -222,30 +220,6 @@ public class OpenAiUtil {
 
 		parameterJson.put("max_tokens", maxToken);
 		return parameterJson;
-	}
-
-//	TODO delete it
-	public static void main(String[] args) throws IOException {
-		OpenAiUtil o = new OpenAiUtil();
-		o.forDev();
-		List<OpanAiChatCompletionMessageDTO> chatHistory = new ArrayList<>();
-		String newMsg = "test";
-		o.sendChatCompletion(chatHistory, newMsg, 1);
-
-	}
-
-	private void forDev() {
-		/*
-		 * TODO clean before upload
-		 */
-		new SetProxyWhenWindowsEnvironment();
-
-		String apiKey = "";
-		String orgId = "";
-		optionService = new OpenAiOptionService();
-		optionService.setApiKey(apiKey);
-		optionService.setOrgId(orgId);
-
 	}
 
 }

@@ -1,7 +1,9 @@
 package demo.aiChat.service.impl;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -25,6 +27,8 @@ public class AiChatOptionService extends CommonService {
 	private String chatStorePrefixPath;
 	private Integer chatHistorySaveCountingLimit = 100;
 	private List<AiChatUserMembershipLevelDetailDTO> membershipLevelDetail;
+
+	private Map<String, Long> uidMatchAiChatUserIdMap = new HashMap<>();
 
 	public String getChatStorePrefixPath() {
 		return chatStorePrefixPath;
@@ -50,10 +54,19 @@ public class AiChatOptionService extends CommonService {
 		this.membershipLevelDetail = membershipLevelDetail;
 	}
 
+	public Map<String, Long> getUidMatchAiChatUserIdMap() {
+		return uidMatchAiChatUserIdMap;
+	}
+
+	public void setUidMatchAiChatUserIdMap(Map<String, Long> uidMatchAiChatUserIdMap) {
+		this.uidMatchAiChatUserIdMap = uidMatchAiChatUserIdMap;
+	}
+
 	@Override
 	public String toString() {
 		return "AiChatOptionService [chatStorePrefixPath=" + chatStorePrefixPath + ", chatHistorySaveCountingLimit="
-				+ chatHistorySaveCountingLimit + ", membershipLevelDetail=" + membershipLevelDetail + "]";
+				+ chatHistorySaveCountingLimit + ", membershipLevelDetail=" + membershipLevelDetail
+				+ ", uidMatchAiChatUserIdMap=" + uidMatchAiChatUserIdMap + "]";
 	}
 
 	@PostConstruct

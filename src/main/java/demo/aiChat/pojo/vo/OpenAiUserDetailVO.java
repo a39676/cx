@@ -1,4 +1,4 @@
-package demo.thirdPartyAPI.openAI.pojo.vo;
+package demo.aiChat.pojo.vo;
 
 public class OpenAiUserDetailVO {
 

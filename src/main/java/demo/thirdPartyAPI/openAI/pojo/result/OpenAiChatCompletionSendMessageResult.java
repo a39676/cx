@@ -1,17 +1,17 @@
 package demo.thirdPartyAPI.openAI.pojo.result;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.thirdPartyAPI.openAI.pojo.dto.OpanAiChatCompletionMessageDTO;
+import demo.thirdPartyAPI.openAI.pojo.dto.OpanAiChatCompletionResponseDTO;
 
 public class OpenAiChatCompletionSendMessageResult extends CommonResult {
 
-	private OpanAiChatCompletionMessageDTO dto;
+	private OpanAiChatCompletionResponseDTO dto;
 
-	public OpanAiChatCompletionMessageDTO getDto() {
+	public OpanAiChatCompletionResponseDTO getDto() {
 		return dto;
 	}
 
-	public void setDto(OpanAiChatCompletionMessageDTO dto) {
+	public void setDto(OpanAiChatCompletionResponseDTO dto) {
 		this.dto = dto;
 	}
 

@@ -6,6 +6,9 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.service.impl.SystemOptionService;
 import demo.common.service.CommonService;
 import demo.thirdPartyAPI.openAI.service.impl.OpenAiUtil;
+import demo.tool.telegram.service.TelegramService;
+import telegram.pojo.constant.TelegramBotType;
+import telegram.pojo.constant.TelegramStaticChatID;
 
 public abstract class AiChatCommonService extends CommonService{
 
@@ -15,6 +18,8 @@ public abstract class AiChatCommonService extends CommonService{
 	protected SystemOptionService systemOptionService;
 	@Autowired
 	protected AiChatOptionService optionService;
+	@Autowired
+	private TelegramService telegramService;
 	
 	protected CommonResult notEnoughtAmount() {
 		CommonResult r = new CommonResult();
@@ -26,6 +31,10 @@ public abstract class AiChatCommonService extends CommonService{
 		CommonResult r = new CommonResult();
 		r.setMessage("服务器正在拼命运算, 请稍后再试");
 		return r;
+	}
+	
+	protected void sendTelegramMessage(String msg) {
+		telegramService.sendMessageByChatRecordId(TelegramBotType.CX_MESSAGE, msg, TelegramStaticChatID.MY_ID);
 	}
 	
 }

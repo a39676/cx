@@ -1,26 +1,38 @@
 package demo.aiChat.service.impl;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.Gson;
+
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiChat.mapper.AiChatUserAmountHistoryMapper;
-import demo.aiChat.mapper.AiChatUserAssociateWechatUidMapper;
 import demo.aiChat.mapper.AiChatUserChatHistoryMapper;
 import demo.aiChat.mapper.AiChatUserDetailMapper;
 import demo.aiChat.pojo.dto.AiChatUserMembershipDetailSummaryDTO;
 import demo.aiChat.pojo.po.AiChatUserAmountHistory;
+import demo.aiChat.pojo.po.AiChatUserChatHistory;
 import demo.aiChat.pojo.po.AiChatUserDetail;
+import demo.aiChat.pojo.result.AiChatSendNewMessageResult;
+import demo.aiChat.pojo.result.GetAiChatHistoryResult;
 import demo.aiChat.service.AiChatMembershipService;
 import demo.aiChat.service.AiChatService;
 import demo.thirdPartyAPI.openAI.pojo.dto.OpanAiChatCompletionMessageDTO;
 import demo.thirdPartyAPI.openAI.pojo.result.OpenAiChatCompletionSendMessageResult;
 import demo.thirdPartyAPI.openAI.pojo.type.OpenAiAmountType;
-import demo.thirdPartyAPI.wechat.service.WechatUserService;
+import demo.thirdPartyAPI.openAI.pojo.type.OpenAiChatCompletionFinishType;
+import demo.thirdPartyAPI.openAI.pojo.type.OpenAiChatCompletionMessageRoleType;
 import net.sf.json.JSONObject;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -30,48 +42,185 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 	@Autowired
 	private AiChatUserAmountHistoryMapper amountHistoryMapper;
 	@Autowired
-	private AiChatUserAssociateWechatUidMapper aiChatUserAssociateWechatUidMapper;
-	@Autowired
-	private AiChatUserChatHistoryMapper chatGptHistoryMapper;
+	private AiChatUserChatHistoryMapper chatHistoryMapper;
 	@Autowired
 	private AiChatUserDetailMapper detailMapper;
 	@Autowired
 	private AiChatMembershipService membershipService;
-	@Autowired
-	private WechatUserService wechatUserService;
-	
+
 	@Autowired
 	private FileUtilCustom ioUtil;
 
-	public OpenAiChatCompletionSendMessageResult sendNewChatMessage(Long openAiUserId, String msg) {
-		OpenAiChatCompletionSendMessageResult r = new OpenAiChatCompletionSendMessageResult();
-		AiChatUserDetail userDetail = detailMapper.selectByPrimaryKey(openAiUserId);
+	@Override
+	public AiChatSendNewMessageResult sendNewChatMessage(Long aiChatUserId, String msg) {
+		AiChatSendNewMessageResult r = new AiChatSendNewMessageResult();
 
+		// check amount
+		AiChatUserDetail userDetail = detailMapper.selectByPrimaryKey(aiChatUserId);
+		if (userDetail == null) {
+			r.setMessage("请刷新页面后登录, 或者输入 API key, 如仍旧异常, 请联系管理员");
+			return r;
+		}
+		if (userDetail.getBonusAmount().doubleValue() < 0 && userDetail.getRechargeAmount().doubleValue() < 0) {
+			r.setMessage(notEnoughtAmount().getMessage());
+			return r;
+		}
+
+//		find chat saving limit counting
 		AiChatUserMembershipDetailSummaryDTO membershipDetail = membershipService
-				.findMembershipDetailSummaryByUserId(openAiUserId);
+				.findMembershipDetailSummaryByUserId(aiChatUserId);
 		Integer historyCountingLimit = membershipDetail.getChatHistoryCountLimit();
 
-		// find chat saving limit counting
-		// check amount
-		// find history
-		// cut history with limit
-		// send history + new msg
-		// wait feedback
+		// find history and cut history with limit
+		List<OpanAiChatCompletionMessageDTO> chatHistory = findChatHistoryByAiChatUserId(aiChatUserId,
+				historyCountingLimit);
+
+		// send history + new msg, wait feedback
+		OpenAiChatCompletionSendMessageResult apiResult = util.sendChatCompletion(chatHistory, msg);
+
 		// if fail, send fail response
+		if (apiResult.isFail()) {
+			r.setMessage("运算异常, 正在排查故障");
+			sendTelegramMessage(apiResult.getMessage());
+			return r;
+		}
+
 		// if success, debit amount, refresh history, send feedback
+		Integer totalTokens = apiResult.getDto().getUsage().getTotal_tokens();
+		debitAmount(userDetail, new BigDecimal(totalTokens));
+		refreshChatHistory(aiChatUserId, msg);
+
+		OpanAiChatCompletionMessageDTO feedbackMsgDTO = apiResult.getDto().getChoices().get(0).getMessage();
+
+		r.setMsgDTO(feedbackMsgDTO);
+		r.setFinishType(
+				OpenAiChatCompletionFinishType.getType(apiResult.getDto().getChoices().get(0).getFinish_reason()));
+		r.setIsSuccess();
+		return r;
 	}
 
-	private CommonResult refreshChatHistory(Long aiChatUserId, OpanAiChatCompletionMessageDTO msg) {
+	@Override
+	public GetAiChatHistoryResult findChatHistoryByAiChatUserIdToFrontEnd(Long aiChatUserId) {
+		GetAiChatHistoryResult r = new GetAiChatHistoryResult();
+		List<OpanAiChatCompletionMessageDTO> list = findChatHistoryByAiChatUserId(aiChatUserId,
+				optionService.getChatHistorySaveCountingLimit());
+		r.setMsgList(list);
+		r.setIsSuccess();
+		return r;
+	}
+
+	private List<OpanAiChatCompletionMessageDTO> findChatHistoryByAiChatUserId(Long aiChatUserId,
+			Integer historyCountingLimit) {
+		AiChatUserChatHistory historyPO = chatHistoryMapper.selectByPrimaryKey(aiChatUserId);
+		List<String> lines = null;
+		if (historyPO == null) {
+			lines = new ArrayList<>();
+		} else {
+			lines = findChatHistoryLines(historyPO.getHistoryFilePath(), historyCountingLimit);
+		}
+
+		List<OpanAiChatCompletionMessageDTO> chatHistory = new ArrayList<>();
+		OpanAiChatCompletionMessageDTO chatDataDTO = null;
+		if (!lines.isEmpty()) {
+			for (String line : lines) {
+				chatDataDTO = new Gson().fromJson(line, OpanAiChatCompletionMessageDTO.class);
+				chatHistory.add(chatDataDTO);
+			}
+		}
+
+		return chatHistory;
+	}
+
+	private List<String> findChatHistoryLines(String filePathStr, Integer limit) {
+		if (limit == null) {
+			limit = optionService.getChatHistorySaveCountingLimit();
+		}
+
+		List<String> lines = new ArrayList<>();
+		File targetFile = new File(filePathStr);
+		if (!targetFile.exists()) {
+			return lines;
+		}
+
+		Path path = Paths.get(filePathStr);
+
+		try {
+			BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8);
+			String currentLine = null;
+			while ((currentLine = reader.readLine()) != null) {
+				lines.add(currentLine);
+				if (lines.size() > limit) {
+					lines.remove(0);
+				}
+			}
+		} catch (IOException ex) {
+		}
+		return lines;
+	}
+
+	private CommonResult refreshChatHistory(Long aiChatUserId, String msg) {
 		CommonResult r = new CommonResult();
 
-//		TODO
 		String fileName = aiChatUserId + ".txt";
 		File mainFolder = new File(optionService.getChatStorePrefixPath() + File.separator + aiChatUserId);
 		String finalFilePath = mainFolder + File.separator + fileName;
-		
-		JSONObject json = JSONObject.fromObject(msg);
-		ioUtil.byteToFile(json.toString().getBytes(StandardCharsets.UTF_8), finalFilePath, true);
-		
+
+		OpanAiChatCompletionMessageDTO msgDTO = new OpanAiChatCompletionMessageDTO();
+		msgDTO.setContent(msg);
+		msgDTO.setRole(OpenAiChatCompletionMessageRoleType.USER.getName());
+		JSONObject newMsgJson = JSONObject.fromObject(msgDTO);
+		Integer chatHistorySaveCountingLimit = optionService.getChatHistorySaveCountingLimit();
+
+		Path path = Paths.get(finalFilePath);
+
+		File targetFile = new File(finalFilePath);
+		File paraentFolder = targetFile.getParentFile();
+
+		if (!paraentFolder.exists()) {
+			if (!paraentFolder.mkdirs()) {
+				r.setMessage("对话记录存储异常, 本次对话可能没有正确存档 01");
+				return r;
+			}
+		}
+
+		if (!targetFile.exists()) {
+			try {
+				targetFile.createNewFile();
+			} catch (IOException e) {
+				r.setMessage("对话记录存储异常, 本次对话可能没有正确存档 02");
+				return r;
+			}
+		}
+
+		List<String> lines = new ArrayList<>();
+
+		try {
+			BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8);
+			String currentLine = null;
+			while ((currentLine = reader.readLine()) != null) {
+				lines.add(currentLine);
+			}
+		} catch (IOException ex) {
+			r.setMessage("对话记录存储异常, 本次对话可能没有正确存档 03");
+			return r;
+		}
+
+		if (lines.size() > chatHistorySaveCountingLimit) {
+			int gap = lines.size() - chatHistorySaveCountingLimit;
+			while (gap > 0) {
+				lines.remove(0);
+				gap--;
+			}
+		}
+		lines.add(newMsgJson.toString());
+
+		StringBuffer sb = new StringBuffer();
+		for (String line : lines) {
+			sb.append(line + System.lineSeparator());
+		}
+		ioUtil.byteToFile(sb.toString().getBytes(StandardCharsets.UTF_8), finalFilePath);
+
+		r.setIsSuccess();
 		return r;
 	}
 

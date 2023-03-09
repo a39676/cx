@@ -43,6 +43,7 @@
   <a href="/optionConstant/refreshJoyGardenOption" target="_blank">refreshJoyGardenOption</a><br>
   <a href="/optionConstant/refreshOpenAiOption" target="_blank">refreshOpenAiOption</a><br>
   <a href="/optionConstant/refreshWechatOption" target="_blank">refreshWechatOption</a><br>
+  <a href="/optionConstant/refreshAiChatOption" target="_blank">refreshAiChatOption</a><br>
 </div>
 
 <hr>

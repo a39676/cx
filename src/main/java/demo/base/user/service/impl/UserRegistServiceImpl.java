@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.GenderType;
+import demo.aiChat.service.AiChatUserService;
 import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.impl.SystemCommonService;
@@ -75,6 +76,8 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 	private StudentService studentService;
 	@Autowired
 	private TelegramService telegramService;
+	@Autowired
+	private AiChatUserService aiChatUserService;
 	
 	@Override
 	public NewUserRegistResult newUserRegist(UserRegistDTO registDTO, HttpServletRequest request) {
@@ -102,12 +105,17 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 		UsersDetail userDetail = buildUserDetailFromUserRegistDTO(registDTO, ip.getForwardAddr(), newUserId);
 		Users user = buildUserFromRegistDTO(registDTO, newUserId);
 
-		// TODO 暂时搁置发送注册邮件
+		// 暂时搁置发送注册邮件
 //		SendRegistMailResult sendRegistMailResult = sendRegistMail(registDTO, request, newUserId);
 //		if(!sendRegistMailResult.isSuccess()) {
 //			result.addMessage(sendRegistMailResult.getMessage());
 //			return result;
 //		}
+		
+		/* 
+		 * TODO
+		 * 需要手机短信验证服务
+		 */
 
 		try {
 			insertNewUserData(user, userDetail);
@@ -118,6 +126,7 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 			return result;
 		}
 
+		result.setNewUserPk(systemOptionService.encryptId(newUserId));
 		result.normalSuccess();
 		redisOriginalConnectService.insertFunctionalModuleVisitData(request, SystemRedisKey.userRegistCountingKeyPrefix,
 				1, TimeUnit.DAYS);
@@ -182,8 +191,14 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 			return r;
 		}
 		
-//		TODO need AI chat user service;
-		r.setIsSuccess();
+		Long newUserId = systemOptionService.decryptPrivateKey(r.getNewUserPk());
+		CommonResult createAiChatProfileResult = aiChatUserService.createAiChatUserDetailBySystemUserId(newUserId);
+		if(createAiChatProfileResult.isFail()) {
+			r.setMessage(createAiChatProfileResult.getMessage());
+			r.setIsFail();
+			return r;
+		}
+		
 		return r;
 	}
 	
@@ -496,7 +511,7 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 			}
 			ResendMailDTO resendMailDTO = new ResendMailDTO();
 			resendMailDTO.setHostName(hostnameType.getName());
-			resendMailDTO.setMailKey(systemConstantService.encryptId(oldMail.getId()));
+			resendMailDTO.setMailKey(systemOptionService.encryptId(oldMail.getId()));
 			resendMailDTO.setNickName(ud.getNickName());
 			resendMailDTO.setSendTo(ud.getEmail());
 			resendMailDTO.setUserId(userId);

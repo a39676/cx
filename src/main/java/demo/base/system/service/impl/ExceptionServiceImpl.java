@@ -40,7 +40,7 @@ public class ExceptionServiceImpl extends SystemCommonService implements Excepti
 		visitDataService.insertVisitData(request, "catch EXCEPTION");
 		
 		ModelAndView view = new ModelAndView("baseJSP/errorCustom");
-		if(systemConstantService.getIsDebuging()) {
+		if(systemOptionService.getIsDebuging()) {
 			view.addObject("message", e.toString());
 		} else {
 			view.addObject("message", "很抱歉,居然出现了" + description[getRan()] + "的异常");
@@ -97,7 +97,7 @@ public class ExceptionServiceImpl extends SystemCommonService implements Excepti
 			view.setViewName(BaseViewConstant.normal404);
 		} else if(HostnameType.dtro.equals(hostnameType)) {
 			view.setViewName(BaseViewConstant.normal404);
-		} else if(systemConstantService.isDev()){
+		} else if(systemOptionService.isDev()){
 			view.setViewName(BaseViewConstant.normal404);
 		} else {
 			view.setViewName(BaseViewConstant.normal404);
@@ -131,7 +131,7 @@ public class ExceptionServiceImpl extends SystemCommonService implements Excepti
 			view.setViewName(BaseViewConstant.normal404);
 		} else if(HostnameType.dtro.equals(hostnameType)) {
 			view.setViewName(BaseViewConstant.normal404);
-		} else if(systemConstantService.isDev()){
+		} else if(systemOptionService.isDev()){
 			view.setViewName(BaseViewConstant.normal404);
 		} else {
 			view.setViewName(BaseViewConstant.normal404);

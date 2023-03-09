@@ -19,4 +19,6 @@ public interface HostnameService {
 
 	boolean isMainHostname(HttpServletRequest request);
 
+	Hostname findHostname(HostnameType type);
+
 }

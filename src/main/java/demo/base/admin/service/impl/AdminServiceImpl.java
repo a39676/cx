@@ -50,7 +50,7 @@ public class AdminServiceImpl extends SystemCommonService implements AdminServic
 
 	@Override
 	public void setTempHomepageAnnouncement(String strContent) {
-		systemConstantService.setTmpHomepageAnnouncementStr(strContent);
+		systemOptionService.setTmpHomepageAnnouncementStr(strContent);
 	}
 
 }

@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 
 import demo.common.service.CommonService;
-import demo.config.costom_component.EncryptUtil;
+import toolPack.encryptHandle.EncryptUtil;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")

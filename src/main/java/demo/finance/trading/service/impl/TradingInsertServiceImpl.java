@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import demo.common.pojo.type.TransationType;
 import demo.common.service.CommonService;
-import demo.config.costom_component.EncryptUtil;
 import demo.finance.account_info.pojo.dto.controllerDTO.InsertNewTransationDTO;
 import demo.finance.trading.mapper.TradingRecorderMapper;
 import demo.finance.trading.mapper.TradingRecorderMarkerMapper;
@@ -17,6 +16,7 @@ import demo.finance.trading.pojo.po.TradingRecorder;
 import demo.finance.trading.pojo.po.TradingRecorderMarker;
 import demo.finance.trading.pojo.result.InsertTradingRecorderResult;
 import demo.finance.trading.service.TradingInsertService;
+import toolPack.encryptHandle.EncryptUtil;
 import toolPack.numericHandel.NumericUtilCustom;
 
 @Service

@@ -34,7 +34,7 @@
         </javaTypeResolver>  
           
         <!-- 生成模型的包名和位置-->    
-        <javaModelGenerator targetPackage="demo.aiChat.pojo.po" targetProject="cx">    
+        <javaModelGenerator targetPackage="demo.interaction.sms.pojo.po" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
             <property name="trimStrings" value="true"/> 
             <!-- for MyBatis3 / MyBatis3Simple
@@ -45,18 +45,18 @@
         </javaModelGenerator>    
         
         <!-- 生成映射文件的包名和位置-->    
-        <sqlMapGenerator targetPackage="demo.aiChat.mapper" targetProject="cx">    
+        <sqlMapGenerator targetPackage="demo.interaction.sms.mapper" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
         </sqlMapGenerator>    
         
         <!-- 生成DAO的包名和位置-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.aiChat.mapper" targetProject="cx">    
+        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.interaction.sms.mapper" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="system_user_associate_ai_chat_user">
-        	<property name="tableName" value="system_user_associate_ai_chat_user"></property>
-        	<property name="domainObjectName" value="system_user_associate_ai_chat_user"></property>
+        <table tableName="sms_sending_history">
+        	<property name="tableName" value="sms_sending_history"></property>
+        	<property name="domainObjectName" value="sms_sending_history"></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

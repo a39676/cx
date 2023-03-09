@@ -39,7 +39,7 @@ public class BasePageServiceImpl extends SystemCommonService implements BasePage
 
 		
 		if (hostnameType == null) {
-			if(!systemConstantService.isDev()) {
+			if(!systemOptionService.isDev()) {
 				if(hostnameType == null) {
 					view.setViewName(BaseViewConstant.empty);
 					return view;
@@ -81,7 +81,7 @@ public class BasePageServiceImpl extends SystemCommonService implements BasePage
 
 		
 		if (hostnameType == null) {
-			if(!systemConstantService.isDev()) {
+			if(!systemOptionService.isDev()) {
 				if(hostnameType == null) {
 					view.setViewName(BaseViewConstant.empty);
 					return view;
@@ -109,9 +109,9 @@ public class BasePageServiceImpl extends SystemCommonService implements BasePage
 	
 	private ModelAndView buildHomeViewForNormal() {
 		ModelAndView view = new ModelAndView(BlogViewConstant.HOME);
-		view.addObject("title", systemConstantService.getNormalWebSiteTitle());
+		view.addObject("title", systemOptionService.getNormalWebSiteTitle());
 		view.addObject("headerImg", BaseStaticResourcesUrl.IMG_YELLOW_GRASS_LAND);
-		view.addObject("subheading", systemConstantService.getNormalSubheading());
+		view.addObject("subheading", systemOptionService.getNormalSubheading());
 		Long visitCount = visitDataService.getVisitCount();
 		view.addObject("visitCount", visitCount);
 		view.addObject("donateImgUrl", articleOptionService.getDonateImgUrl());
@@ -121,9 +121,9 @@ public class BasePageServiceImpl extends SystemCommonService implements BasePage
 	
 	private ModelAndView buildHomeViewForNormalV4() {
 		ModelAndView view = new ModelAndView("base/home/index");
-		view.addObject("title", systemConstantService.getNormalWebSiteTitle());
+		view.addObject("title", systemOptionService.getNormalWebSiteTitle());
 		view.addObject("headerImg", BaseStaticResourcesUrl.IMG_YELLOW_GRASS_LAND);
-		view.addObject("subheading", systemConstantService.getNormalSubheading());
+		view.addObject("subheading", systemOptionService.getNormalSubheading());
 		Long visitCount = visitDataService.getVisitCount();
 		view.addObject("visitCount", visitCount);
 		view.addObject("donateImgUrl", articleOptionService.getDonateImgUrl());
@@ -133,9 +133,9 @@ public class BasePageServiceImpl extends SystemCommonService implements BasePage
 	
 	private ModelAndView buildHomeViewForFake() {
 		ModelAndView view = new ModelAndView(BlogViewConstant.HOME);
-		view.addObject("title", systemConstantService.getWebSiteTitle2());
+		view.addObject("title", systemOptionService.getWebSiteTitle2());
 		view.addObject("headerImg", BaseStaticResourcesUrl.IMG_CAT);
-		view.addObject("subheading", systemConstantService.getSubheading2());
+		view.addObject("subheading", systemOptionService.getSubheading2());
 		Long visitCount = visitDataService.getVisitCount();
 		view.addObject("visitCount", visitCount);
 		
@@ -150,11 +150,11 @@ public class BasePageServiceImpl extends SystemCommonService implements BasePage
 		if (hostnameType != null) {
 			if (HostnameType.zhang3.equals(hostnameType)) {
 				v = new ModelAndView(BlogViewConstant.ABOUT_ZHANG);
-				v.addObject("email", systemConstantService.getEmailD());
+				v.addObject("email", systemOptionService.getEmailD());
 				v.addObject("headerImg", BaseStaticResourcesUrl.IMG_YELLOW_GRASS_LAND);
 			} else if (HostnameType.dtro.equals(hostnameType)) {
 				v = new ModelAndView(BlogViewConstant.ABOUT_ZHANG);
-				v.addObject("email", systemConstantService.getEmailC());
+				v.addObject("email", systemOptionService.getEmailC());
 				v.addObject("headerImg", BaseStaticResourcesUrl.IMG_CAT);
 			}
 		}

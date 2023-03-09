@@ -13,6 +13,7 @@ import toolPack.complexTool.ChinaMainLandIdNumGenerator;
 import toolPack.dateTimeHandle.DateHandler;
 import toolPack.dateTimeHandle.LocalDateTimeAdapter;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
+import toolPack.encryptHandle.EncryptUtil;
 import toolPack.httpHandel.HttpUtil;
 import toolPack.ioHandle.FileUtilCustom;
 import toolPack.numericHandel.NumericUtilCustom;
@@ -91,6 +92,11 @@ public class CustomToolBeanConfig {
 	@Bean
 	public ChinaMainLandIdNumGenerator getChinaMainLandIdNumGenerator() {
 		return new ChinaMainLandIdNumGenerator();
+	}
+	
+	@Bean
+	public EncryptUtil getEncryptUtil() {
+		return new EncryptUtil();
 	}
 	
 	@Bean

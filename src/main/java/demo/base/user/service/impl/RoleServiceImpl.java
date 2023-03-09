@@ -154,7 +154,7 @@ public class RoleServiceImpl extends SystemCommonService implements RoleService 
 	
 	private RoleVO buildVO(Roles po) {
 		RoleVO vo = new RoleVO();
-		vo.setPk(systemConstantService.encryptId(po.getRoleId()));
+		vo.setPk(systemOptionService.encryptId(po.getRoleId()));
 		vo.setRoleName(po.getRole());
 		return vo;
 	}

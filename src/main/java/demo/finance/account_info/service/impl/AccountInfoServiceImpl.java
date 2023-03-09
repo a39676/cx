@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.pojo.type.TransationType;
 import demo.common.service.CommonService;
-import demo.config.costom_component.EncryptUtil;
 import demo.finance.account_holder.controller.AccountHolderController;
 import demo.finance.account_holder.pojo.po.AccountHolder;
 import demo.finance.account_info.mapper.AccountInfoMapper;
@@ -48,6 +47,7 @@ import demo.finance.account_info.service.AccountInfoStatisticsService;
 import demo.finance.trading.controller.TradingController;
 import demo.finance.trading.pojo.po.TradingRecorder;
 import demo.finance.trading.pojo.result.InsertTradingRecorderResult;
+import toolPack.encryptHandle.EncryptUtil;
 import toolPack.numericHandel.NumericUtilCustom;
 
 @Service

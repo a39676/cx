@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.common.service.CommonService;
-import demo.config.costom_component.EncryptUtil;
 import demo.finance.account_info.pojo.bo.AccountInfoWithBankInfo;
 import demo.finance.account_info.pojo.po.AccountInfo;
 import demo.finance.credit_bill.mapper.BillInfoMapper;
@@ -18,6 +17,7 @@ import demo.finance.credit_bill.pojo.BillInfoCustomDetail;
 import demo.finance.credit_bill.pojo.po.BillInfo;
 import demo.finance.credit_bill.pojo.po.CreditBills;
 import demo.finance.credit_bill.service.CreditBillsService;
+import toolPack.encryptHandle.EncryptUtil;
 
 @Service
 public class CreditBillsServiceImpl extends CommonService implements CreditBillsService{

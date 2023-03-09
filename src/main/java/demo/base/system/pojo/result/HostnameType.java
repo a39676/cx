@@ -5,8 +5,9 @@ import org.apache.commons.lang3.StringUtils;
 public enum HostnameType {
 
 	zhang3("zhang3", 5),
-
-	dtro("dtro", 6),;
+	dtro("dtro", 6),
+	fdj("fdjaoreql", 7),
+	;
 
 	private String name;
 	private Integer code;

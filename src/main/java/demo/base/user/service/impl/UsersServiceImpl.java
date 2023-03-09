@@ -65,7 +65,7 @@ public class UsersServiceImpl extends SystemCommonService implements UsersServic
 		}
 		UserAttemptQuerayDTO param = new UserAttemptQuerayDTO();
 		param.setUserName(userName);
-		int maxAttempts = systemConstantService.getMaxAttempts();
+		int maxAttempts = systemOptionService.getMaxAttempts();
 		if (getUserAttempts(param).size() >= maxAttempts) {
 			usersMapper.lockUserWithAttempts(userName);
 		}
@@ -184,7 +184,7 @@ public class UsersServiceImpl extends SystemCommonService implements UsersServic
 			return vo;
 		}
 
-		vo.setUserPk(systemConstantService.encryptId(po.getUserId()));
+		vo.setUserPk(systemOptionService.encryptId(po.getUserId()));
 		vo.setNickName(po.getNickName());
 
 		UserPrivateLevelType privateLevel = UserPrivateLevelType.p1;

@@ -1,11 +1,14 @@
 package demo.base.system.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import demo.base.system.mapper.HostnameMapper;
@@ -15,6 +18,7 @@ import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.HostnameService;
 import demo.common.service.CommonService;
 
+@Scope("singleton")
 @Service
 public class HostnameServiceImpl extends CommonService implements HostnameService {
 
@@ -22,6 +26,8 @@ public class HostnameServiceImpl extends CommonService implements HostnameServic
 	private HostnameMapper hostnameMapper;
 	@Autowired
 	private SystemOptionService systemOptionService;
+	
+	private Map<HostnameType, Hostname> hostnameMap = new HashMap<>();
 
 	@Override
 	public List<Hostname> findHostnames() {
@@ -70,5 +76,15 @@ public class HostnameServiceImpl extends CommonService implements HostnameServic
 			return false;
 		}
 		return HostnameType.zhang3.equals(HostnameType.getTypeCustom(hostname));
+	}
+	
+	@Override
+	public Hostname findHostname(HostnameType type) {
+		if(hostnameMap.containsKey(type)) {
+			return hostnameMap.get(type);
+		}
+		Hostname po = hostnameMapper.selectByPrimaryKey(type.getCode());
+		hostnameMap.put(type, po);
+		return po;
 	}
 }

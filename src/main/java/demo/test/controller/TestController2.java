@@ -37,5 +37,11 @@ public class TestController2 extends CommonService {
 	public String t3() {
 		return "done";
 	}
+	
+	@GetMapping(value = "/tv")
+	public ModelAndView tv() {
+		ModelAndView v = new ModelAndView("/testJSP/test");
+		return v;
+	}
 
 }

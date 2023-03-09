@@ -219,4 +219,8 @@
       phone_number = #{phoneNumber}
       create_time between #{dailyStartTime} and #{dailyEndTime}
   </select>
+  
+  <select id="querySendedCounting" resultType="Integer">
+  	select count(*) from sms_sending_history ssh where create_time between #{startTime} and #{endTime}
+  </select>
 </mapper>

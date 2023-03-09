@@ -49,15 +49,20 @@ public class SmsSendingServiceImpl extends CommonService implements SmsSendingSe
 
 	private static final int MAX_NUMBER_OF_SENDS_PER_HOUR = 3;
 	private static final int MAX_NUMBER_OF_SENDS_PER_DAY = 5;
+	private static final int MAX_TOTAL_OF_SENDS_PER_DAY = 500;
 
 	@Override
 	public CommonResult sendVerificationCode(SendVerificationCodeSmsDTO dto) {
 		CommonResult r = smsSendingFrequencyVerification(dto);
-
 		if (r.isFail()) {
 			return r;
 		}
 
+		r = checkSmsSendedDailyCounting();
+		if (r.isFail()) {
+			return r;
+		}
+		
 		JSONObject json = JSONObject.fromObject(dto);
 		try {
 			String encryptStr = encryptUtil.aesEncrypt(systemOptionService.getAesKey(),
@@ -104,6 +109,18 @@ public class SmsSendingServiceImpl extends CommonService implements SmsSendingSe
 			r.setMessage("超出发送次数上限, 请稍后再试");
 		}
 
+		r.setIsSuccess();
+		return r;
+	}
+	
+	private CommonResult checkSmsSendedDailyCounting() {
+		CommonResult r = new CommonResult();
+		LocalDateTime now = LocalDateTime.now();
+		int count = smsSendingHistoryMapper.querySendedCounting(now.with(LocalTime.MIN), now.with(LocalTime.MAX));
+		if(count > MAX_TOTAL_OF_SENDS_PER_DAY) {
+			r.setMessage("超出今日发送上限");
+			return r;
+		}
 		r.setIsSuccess();
 		return r;
 	}

@@ -208,7 +208,8 @@
     </if>
   </select>
 
-  <select id="querySendingFrequency" parameterType="demo.interaction.sms.pojo.dto.QuerySendingFrequencyDTO" resultMap="demo.interaction.sms.pojo.result.QuerySendingFrequencyResult">
+  <select id="querySendingFrequency" parameterType="demo.interaction.sms.pojo.dto.QuerySendingFrequencyDTO" 
+  resultType="demo.interaction.sms.pojo.result.QuerySendingFrequencyResult">
     select
       ifnull(SUM(if(create_time between #{dailyStartTime} and #{dailyEndTime}, 1, 0)), 0) AS dailyCounting,
       ifnull(SUM(if(create_time between #{hourlyStartTime} and ${hourlyEndTime}, 1, 0)), 0) AS hourlyCounting

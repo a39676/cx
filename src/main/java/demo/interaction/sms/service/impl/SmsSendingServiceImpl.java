@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 
 import aliCloud.sms.pojo.constant.SmsUrl;
 import aliCloud.sms.pojo.dto.SendSmsDTO;
+import aliCloud.sms.pojo.dto.SendVerificationCodeSmsDTO;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.pojo.po.Hostname;
@@ -21,7 +22,8 @@ import demo.interaction.sms.mapper.SmsSendingHistoryMapper;
 import demo.interaction.sms.pojo.dto.QuerySendingFrequencyDTO;
 import demo.interaction.sms.pojo.po.SmsSendingHistory;
 import demo.interaction.sms.pojo.result.QuerySendingFrequencyResult;
-import demo.interaction.sms.service.SmsService;
+import demo.interaction.sms.service.SmsSendingService;
+import demo.interaction.sms.service.SmsVerificationService;
 import demo.tool.telegram.service.TelegramService;
 import net.sf.json.JSONObject;
 import telegram.pojo.constant.TelegramBotType;
@@ -30,7 +32,7 @@ import toolPack.encryptHandle.EncryptUtil;
 import toolPack.httpHandel.HttpUtil;
 
 @Service
-public class SmsServiceImpl extends CommonService implements SmsService {
+public class SmsSendingServiceImpl extends CommonService implements SmsSendingService {
 
 	@Autowired
 	private SmsSendingHistoryMapper smsSendingHistoryMapper;
@@ -42,12 +44,14 @@ public class SmsServiceImpl extends CommonService implements SmsService {
 	private SystemOptionService systemOptionService;
 	@Autowired
 	private TelegramService telegramService;
+	@Autowired
+	private SmsVerificationService smsVerificationService;
 
 	private static final int MAX_NUMBER_OF_SENDS_PER_HOUR = 3;
 	private static final int MAX_NUMBER_OF_SENDS_PER_DAY = 5;
 
 	@Override
-	public CommonResult sendVerificationCode(SendSmsDTO dto) {
+	public CommonResult sendVerificationCode(SendVerificationCodeSmsDTO dto) {
 		CommonResult r = smsSendingFrequencyVerification(dto);
 
 		if (r.isFail()) {
@@ -75,6 +79,7 @@ public class SmsServiceImpl extends CommonService implements SmsService {
 					telegramService.sendMessageByChatRecordId(TelegramBotType.CX_MESSAGE,
 							"Can NOT insert SMS sending history of: " + dto.toString(), TelegramStaticChatID.MY_ID);
 				}
+				smsVerificationService.insertData(dto);
 			}
 			return r;
 		} catch (Exception e) {

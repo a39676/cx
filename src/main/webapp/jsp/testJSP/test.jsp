@@ -29,13 +29,8 @@
 
 <footer> </footer>
 <%@ include file="../baseElementJSP/normalJSPart.jsp"%>
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-<%-- <script src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script> --%>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?" async defer></script>
 <script type="text/javascript">
-
-  
-
-  console.log("something");
 
   function cfCallBack() {
     console.log("get into turnstile");
@@ -43,7 +38,6 @@
       sitekey : '${siteKey}',
       callback : function(token) {
         document.getElementById("captcha").setAttribute("token", token);
-        console.log("Challenge Success token: " + token);
       },
     });
   };
@@ -51,8 +45,6 @@
   function errorCallBack() {
     console.log("errorCallBack");
   };
-
-  console.log("after onloadTurnstileCallback");
 
   function printCfToken(){
     var token = document.getElementById("captcha").getAttribute("token");

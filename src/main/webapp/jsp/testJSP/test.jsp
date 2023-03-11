@@ -70,7 +70,8 @@
       turnstile.render('#example-container', {
         sitekey : '${siteKey}',
         callback : function(token) {
-          console.log(`Challenge Success ${token}`);
+          console.log("Challenge Success token: " + token);
+          sendToken(token);
         },
       });
     };

@@ -6,6 +6,6 @@ public interface SmsVerificationService {
 
 	void insertData(SendVerificationCodeSmsDTO dto);
 
-	boolean hasCode(String code, String phone);
+	boolean verify(String code, String phone);
 
 }

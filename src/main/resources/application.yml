@@ -61,6 +61,7 @@ optionFilePath:
   openAI: "/home/u2/cx/optionFile/openAI/option.json"
   wechat: "/home/u2/cx/optionFile/wechat/option.json"
   aiChat: "/home/u2/cx/optionFile/aiChat/option.json"
+  cloudFlare: "/home/u2/cx/optionFile/cloudFlare/option.json"
   
     
 logging:

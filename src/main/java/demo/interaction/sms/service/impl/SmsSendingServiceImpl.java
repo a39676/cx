@@ -2,6 +2,7 @@ package demo.interaction.sms.service.impl;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,8 +53,8 @@ public class SmsSendingServiceImpl extends CommonService implements SmsSendingSe
 	private static final int MAX_TOTAL_OF_SENDS_PER_DAY = 500;
 
 	@Override
-	public CommonResult sendVerificationCode(SendVerificationCodeSmsDTO dto) {
-		CommonResult r = smsSendingFrequencyVerification(dto);
+	public CommonResult sendVerificationCode(String phoneNumber) {
+		CommonResult r = smsSendingFrequencyVerification(phoneNumber);
 		if (r.isFail()) {
 			return r;
 		}
@@ -62,6 +63,18 @@ public class SmsSendingServiceImpl extends CommonService implements SmsSendingSe
 		if (r.isFail()) {
 			return r;
 		}
+		Integer code = ThreadLocalRandom.current().nextInt(100000, 999999);
+		SendVerificationCodeSmsDTO dto = new SendVerificationCodeSmsDTO();
+		dto.setVerificationCode(code.toString());
+		dto.setPhoneNumber(phoneNumber);
+		JSONObject telplateParamJson = new JSONObject();
+		telplateParamJson.put("code", code.toString());
+		dto.setTemplateCode(telplateParamJson.toString());
+		dto.setTemplateCode("SMS_272605730");
+		/* 
+		 * TODO
+		 * 未设置签名
+		 */
 		
 		JSONObject json = JSONObject.fromObject(dto);
 		try {
@@ -93,10 +106,10 @@ public class SmsSendingServiceImpl extends CommonService implements SmsSendingSe
 		}
 	}
 
-	private CommonResult smsSendingFrequencyVerification(SendSmsDTO dto) {
+	private CommonResult smsSendingFrequencyVerification(String phoneNumber) {
 		CommonResult r = new CommonResult();
 		QuerySendingFrequencyDTO mapperDTO = new QuerySendingFrequencyDTO();
-		mapperDTO.setPhoneNumber(dto.getPhoneNumber());
+		mapperDTO.setPhoneNumber(phoneNumber);
 		LocalDateTime now = LocalDateTime.now();
 		mapperDTO.setDailyStartTime(now.with(LocalTime.MIN));
 		mapperDTO.setDailyEndTime(now.with(LocalTime.MAX));

@@ -44,6 +44,7 @@
   <a href="/optionConstant/refreshOpenAiOption" target="_blank">refreshOpenAiOption</a><br>
   <a href="/optionConstant/refreshWechatOption" target="_blank">refreshWechatOption</a><br>
   <a href="/optionConstant/refreshAiChatOption" target="_blank">refreshAiChatOption</a><br>
+  <a href="/optionConstant/refreshCloudFlareOption" target="_blank">refreshCloudFlareOption</a><br>
 </div>
 
 <hr>

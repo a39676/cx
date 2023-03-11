@@ -22,7 +22,7 @@ public class SmsVerificationServiceImpl extends CommonService implements SmsVeri
 	}
 	
 	@Override
-	public boolean hasCode(String code, String phone) {
+	public boolean verify(String code, String phone) {
 		String codeInCache = redisConnectService.getValByName(phone);
 		
 		Boolean flag = codeInCache.equals(code);

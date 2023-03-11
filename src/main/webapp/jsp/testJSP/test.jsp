@@ -15,15 +15,13 @@
 <title>${ title }</title>
 
 <button id="t2">t2</button>
-<div>something</div>
+<div id="cfToken" token="something">something</div>
 <button id="printToken" onclick="printCfToken()">printToken</button>
-<button id="tokenVerify" onclick="tokenVerify()">tokenVerify</button>
+<button id="updateToken" onclick="updateToken()">updateToken</button>
+<button id="tokenVerify">tokenVerify</button>
 
 <div class="cf-turnstile" data-sitekey="${siteKey}"
   data-callback="javascriptCallback"></div>
-
-<div id="cfToken" token="something">  
-</div>
 
 <footer> </footer>
 <%@ include file="../baseElementJSP/normalJSPart.jsp"%>
@@ -38,6 +36,7 @@
     turnstile.render('#example-container', {
       sitekey : '${siteKey}',
       callback : function(token) {
+        console.log("call back");
         console.log("Challenge Success token: " + token);
         var cfTokenDiv = document.getElementById("cfToken");
         cfTokenDiv.setAttribute("token", token);
@@ -49,6 +48,12 @@
     var cfTokenDiv = document.getElementById("cfToken");
     var token = cfTokenDiv.getAttribute("token");
     console.log("token: " + token);
+  }
+
+  function updateToken(){
+    var cfTokenDiv = document.getElementById("cfToken");
+    cfTokenDiv.setAttribute("token", "nothing");
+    console.log("updated");
   }
 
   $(document).ready(function() {
@@ -78,6 +83,9 @@
       });
     });
 
+    $("#tokenVerify").click(function() {
+      tokenVerify();
+    });
 
     function tokenVerify() {
 

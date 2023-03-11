@@ -50,7 +50,6 @@
     console.log("token: " + token);
   }
 
-
   $(document).ready(function() {
 
     $("#t2").click(function() {

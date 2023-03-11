@@ -16,7 +16,6 @@
 
 <button id="t2">t2</button>
 <button id="printToken" onclick="printCfToken()">printToken</button>
-<button id="updateToken" onclick="updateToken()">updateToken</button>
 <button id="tokenVerify">tokenVerify</button>
 
 <div id="captcha" class="cf-turnstile" 
@@ -51,10 +50,6 @@
     console.log("token: " + token);
   }
 
-  function updateToken(){
-    document.getElementById("captcha").setAttribute("token", "nothing");
-    console.log("updated");
-  }
 
   $(document).ready(function() {
 

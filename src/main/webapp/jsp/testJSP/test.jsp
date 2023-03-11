@@ -22,7 +22,9 @@
 <div id="captcha" class="cf-turnstile" 
   data-sitekey="${siteKey}" data-callback="cfCallBack" 
   error-callback="errorCallBack" token="">
+  <br>
   captcha
+  <br>
 </div>
 
 <footer> </footer>

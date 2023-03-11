@@ -22,9 +22,9 @@ public class CloudFlareServiceImpl extends CommonService implements CloudFlareSe
 
 	@Autowired
 	private CloudFlareOptionService optionService;
-	
+
 	@Override
-	public String verify(String token) {
+	public boolean verify(String token) {
 		String urlStr = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
 		Map<String, String> requestPropertyMap = new HashMap<>();
@@ -38,8 +38,8 @@ public class CloudFlareServiceImpl extends CommonService implements CloudFlareSe
 		parameterJson.put("secret", optionService.getServerKey());
 		parameterJson.put("response", token);
 
-		JSONObject responseJson = new JSONObject();
-		
+		JSONObject responseJson = null;
+
 		byte[] postData = parameterJson.toString().getBytes(StandardCharsets.UTF_8);
 
 		try {
@@ -65,9 +65,10 @@ public class CloudFlareServiceImpl extends CommonService implements CloudFlareSe
 
 			while ((line = in.readLine()) != null) {
 				response.append(line);
+				response.append(System.lineSeparator());
 			}
 
-			responseJson = JSONObject.fromObject(response);
+			responseJson = JSONObject.fromObject(response.toString());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -76,7 +77,6 @@ public class CloudFlareServiceImpl extends CommonService implements CloudFlareSe
 			con.disconnect();
 		}
 
-//		return responseJson.containsKey("success") && "true".equals(String.valueOf(responseJson.get("success")));
-		return response.toString();
+		return responseJson.containsKey("success") && "true".equals(String.valueOf(responseJson.get("success")));
 	}
 }

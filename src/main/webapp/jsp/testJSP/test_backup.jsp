@@ -1,10 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-  pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="sec"
-  uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
@@ -15,50 +13,45 @@
 <title>${ title }</title>
 
 <button id="t2">t2</button>
+<div id="cfToken" token="something">something</div>
 <button id="printToken" onclick="printCfToken()">printToken</button>
 <button id="updateToken" onclick="updateToken()">updateToken</button>
 <button id="tokenVerify">tokenVerify</button>
 
-<div id="captcha" class="cf-turnstile" 
-  data-sitekey="${siteKey}" data-callback="cfCallBack" 
-  error-callback="errorCallBack" token="">
-  captcha
-</div>
+<div class="h-captcha" data-sitekey="${siteKey}" data-callback="captchaCallBack"></div>
 
 <footer> </footer>
 <%@ include file="../baseElementJSP/normalJSPart.jsp"%>
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-<%-- <script src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script> --%>
+<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 <script type="text/javascript">
 
-  
+  var cfToken = "";
 
   console.log("something");
 
-  function cfCallBack() {
+  function captchaCallBack() {
     console.log("get into turnstile");
-    turnstile.render('#captcha', {
+    turnstile.render('#example-container', {
       sitekey : '${siteKey}',
       callback : function(token) {
-        document.getElementById("captcha").setAttribute("token", token);
+        cfToken = token;
         console.log("Challenge Success token: " + token);
       },
     });
   };
 
-  function errorCallBack() {
-    console.log("errorCallBack");
-  };
-
   console.log("after onloadTurnstileCallback");
 
   function printCfToken(){
-    var token = document.getElementById("captcha").getAttribute("token");
+    var cfTokenDiv = document.getElementById("cfToken");
+    var token = cfTokenDiv.getAttribute("token");
     console.log("token: " + token);
+    console.log("cfToken: " + cfToken);
   }
 
   function updateToken(){
-    document.getElementById("captcha").setAttribute("token", "nothing");
+    var cfTokenDiv = document.getElementById("cfToken");
+    cfTokenDiv.setAttribute("token", "nothing");
     console.log("updated");
   }
 
@@ -95,7 +88,8 @@
 
     function tokenVerify() {
 
-      var token = document.getElementById("captcha").getAttribute("token");
+      var cfTokenDiv = document.getElementById("cfToken");
+      var token = cfTokenDiv.getAttribute("token");
 
       var url = "/test2/t4?token="+token;
       // var jsonOutput = {};

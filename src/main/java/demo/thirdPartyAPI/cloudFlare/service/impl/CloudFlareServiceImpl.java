@@ -39,7 +39,7 @@ public class CloudFlareServiceImpl extends CommonService implements CloudFlareSe
 		parameterJson.put("response", token);
 
 		JSONObject responseJson = new JSONObject();
-
+		
 		byte[] postData = parameterJson.toString().getBytes(StandardCharsets.UTF_8);
 
 		try {
@@ -65,18 +65,17 @@ public class CloudFlareServiceImpl extends CommonService implements CloudFlareSe
 
 			while ((line = in.readLine()) != null) {
 				response.append(line);
-				response.append(System.lineSeparator());
 			}
 
 			responseJson = JSONObject.fromObject(response);
 
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 		if (con != null) {
 			con.disconnect();
 		}
 
-		return responseJson.containsKey("succcess") && "true".equals(String.valueOf(responseJson.get("success")));
+		return responseJson.containsKey("success") && "true".equals(String.valueOf(responseJson.get("success")));
 	}
 }

@@ -12,6 +12,7 @@ public class ValidUserRegistResult extends CommonResult {
 	private String mobile;
 	private String reservationInformation;
 	private String qq;
+	private String captcha;
 
 	public String getUsername() {
 		return username;
@@ -77,13 +78,19 @@ public class ValidUserRegistResult extends CommonResult {
 		this.qq = qq;
 	}
 
+	public String getCaptcha() {
+		return captcha;
+	}
+
+	public void setCaptcha(String captcha) {
+		this.captcha = captcha;
+	}
+
 	@Override
 	public String toString() {
 		return "ValidUserRegistResult [username=" + username + ", nickname=" + nickname + ", pwd=" + pwd
 				+ ", pwdRepeat=" + pwdRepeat + ", email=" + email + ", mobile=" + mobile + ", reservationInformation="
-				+ reservationInformation + ", qq=" + qq + ", getCode()=" + getCode() + ", getResult()=" + getResult()
-				+ ", getMessage()=" + getMessage() + ", isSuccess()=" + isSuccess() + ", toString()=" + super.toString()
-				+ ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + "]";
+				+ reservationInformation + ", qq=" + qq + ", captcha=" + captcha + "]";
 	}
 
 }

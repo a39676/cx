@@ -72,10 +72,7 @@ public class UsersRegistController extends CommonController {
 
 	@GetMapping(value = UsersUrl.userRegist)
 	public ModelAndView userRegistView(HttpServletRequest request) {
-		ModelAndView view = new ModelAndView();
-		view.setViewName(UserRegistView.userRegist);
-		view.addObject("title", "Sign up");
-		return view;
+		return userRegistService.userRegistView(request);
 	}
 
 	@PostMapping(value = UsersUrl.userRegist)

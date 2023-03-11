@@ -11,6 +11,7 @@ public class UserRegistDTO {
 	private String qq;
 	private String mobile;
 	private String reservationInformation;
+	private String captchaToken;
 
 	public String getUserName() {
 		return userName;
@@ -75,13 +76,28 @@ public class UserRegistDTO {
 	public void setReservationInformation(String reservationInformation) {
 		this.reservationInformation = reservationInformation;
 	}
-	
+
 	public String getEmail() {
 		return email;
 	}
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getCaptchaToken() {
+		return captchaToken;
+	}
+
+	public void setCaptchaToken(String captchaToken) {
+		this.captchaToken = captchaToken;
+	}
+
+	@Override
+	public String toString() {
+		return "UserRegistDTO [userName=" + userName + ", nickName=" + nickName + ", email=" + email + ", pwd=" + pwd
+				+ ", pwdRepeat=" + pwdRepeat + ", gender=" + gender + ", qq=" + qq + ", mobile=" + mobile
+				+ ", reservationInformation=" + reservationInformation + ", captchaToken=" + captchaToken + "]";
 	}
 
 }

@@ -81,6 +81,12 @@
       <input id="reservationInformation" class="form-control" placeholder="用于账号找回,网站验证之类的." />
       <span id="reservationInformationWarnMsg" style='color: rgb(255, 0, 0);font-weight: bold;'></span>
     </div>
+
+    <div id="captcha" class="cf-turnstile" 
+      data-sitekey="${siteKey}" data-callback="cfCallBack" 
+      error-callback="errorCallBack" token="">
+    </div>
+
     <div>
       <button name="apply" class="btn btn-warning btn-sm">提交</button>
     </div>
@@ -98,6 +104,16 @@
 <footer>
 <%@ include file="../../../baseElementJSP/normalJSPart.jsp" %>
 <script type="text/javascript">
+
+  function cfCallBack() {
+    console.log("get into turnstile");
+    turnstile.render('#captcha', {
+      sitekey : '${siteKey}',
+      callback : function(token) {
+        document.getElementById("captcha").setAttribute("token", token);
+      },
+    });
+  };
 
   $(document).ready(function() {
 
@@ -129,7 +145,8 @@
         qq : $("#qq").val(),
         mobile : $("#mobile").val(),
         reservationInformation : $("#reservationInformation").val(),
-        gender : gender
+        gender : gender,
+        captchaToken : $("#captcha").attr("token"),
       };
 
       $.ajax({

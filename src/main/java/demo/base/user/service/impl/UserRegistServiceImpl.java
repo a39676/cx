@@ -11,6 +11,7 @@ import org.owasp.html.PolicyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.GenderType;
@@ -21,6 +22,7 @@ import demo.base.system.service.impl.SystemCommonService;
 import demo.base.user.mapper.UserRegistMapper;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.constant.UserConstant;
+import demo.base.user.pojo.constant.UserRegistView;
 import demo.base.user.pojo.dto.ResetFailAttemptDTO;
 import demo.base.user.pojo.dto.StudentRegistDTO;
 import demo.base.user.pojo.dto.UserRegistDTO;
@@ -33,6 +35,8 @@ import demo.base.user.service.UserDetailService;
 import demo.base.user.service.UserRegistService;
 import demo.base.user.service.UserRoleService;
 import demo.config.costom_component.CustomPasswordEncoder;
+import demo.thirdPartyAPI.cloudFlare.service.CloudFlareService;
+import demo.thirdPartyAPI.cloudFlare.service.impl.CloudFlareOptionService;
 import demo.tool.mail.pojo.dto.ResendMailDTO;
 import demo.tool.mail.pojo.dto.SendForgotUsernameMailDTO;
 import demo.tool.mail.pojo.dto.SendMailDTO;
@@ -78,6 +82,19 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 	private TelegramService telegramService;
 	@Autowired
 	private AiChatUserService aiChatUserService;
+	@Autowired
+	private CloudFlareService cloudFlareService;
+	@Autowired
+	private CloudFlareOptionService cloudFlareOptionService;
+
+	@Override
+	public ModelAndView userRegistView(HttpServletRequest request) {
+		ModelAndView view = new ModelAndView();
+		view.setViewName(UserRegistView.userRegist);
+		view.addObject("title", "Sign up");
+		view.addObject("siteKey", cloudFlareOptionService.getClientKey());
+		return view;
+	}
 	
 	@Override
 	public NewUserRegistResult newUserRegist(UserRegistDTO registDTO, HttpServletRequest request) {
@@ -111,10 +128,9 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 //			result.addMessage(sendRegistMailResult.getMessage());
 //			return result;
 //		}
-		
-		/* 
-		 * TODO
-		 * 需要手机短信验证服务
+
+		/*
+		 * TODO 需要手机短信验证服务
 		 */
 
 		try {
@@ -183,25 +199,25 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 	}
 
 	public NewUserRegistResult newUserRegistForAiChat(UserRegistDTO registDTO, HttpServletRequest request) {
-		if(registDTO.getEmail() == null) {
+		if (registDTO.getEmail() == null) {
 			registDTO.setEmail(snowFlake.getNextId() + "@null.com");
 		}
 		NewUserRegistResult r = newUserRegist(registDTO, request);
-		if(r.isFail()) {
+		if (r.isFail()) {
 			return r;
 		}
-		
+
 		Long newUserId = systemOptionService.decryptPrivateKey(r.getNewUserPk());
 		CommonResult createAiChatProfileResult = aiChatUserService.createAiChatUserDetailBySystemUserId(newUserId);
-		if(createAiChatProfileResult.isFail()) {
+		if (createAiChatProfileResult.isFail()) {
 			r.setMessage(createAiChatProfileResult.getMessage());
 			r.setIsFail();
 			return r;
 		}
-		
+
 		return r;
 	}
-	
+
 	@Transactional(value = "cxTransactionManager", rollbackFor = Exception.class)
 	private void insertNewUserData(Users newUser, UsersDetail newUserDetail) {
 		userRegistMapper.insertNewUser(newUser);
@@ -221,6 +237,10 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 		ValidUserRegistResult r = new ValidUserRegistResult();
 
 		PolicyFactory filter = textFilter.getArticleFilter();
+
+		if (!cloudFlareService.verify(dto.getCaptchaToken())) {
+			dto.setCaptchaToken("图片校验失败, 请刷新页面");
+		}
 
 		if (!validRegexToolService.validNormalUserName(dto.getUserName())) {
 			dto.setUserName(filter.sanitize(dto.getUserName()));

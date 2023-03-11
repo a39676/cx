@@ -15,9 +15,15 @@
 <title>${ title }</title>
 
 <button id="t2">t2</button>
+<div>something</div>
+<button id="printToken" onclick="printCfToken()">printToken</button>
+<button id="tokenVerify" onclick="tokenVerify()">tokenVerify</button>
 
 <div class="cf-turnstile" data-sitekey="${siteKey}"
   data-callback="javascriptCallback"></div>
+
+<div id="cfToken" token="something">  
+</div>
 
 <footer> </footer>
 <%@ include file="../baseElementJSP/normalJSPart.jsp"%>
@@ -28,15 +34,22 @@
   async defer></script>
 <script type="text/javascript">
 
-  // window.onloadTurnstileCallback = function() {
-  //   turnstile.render('#example-container', {
-  //     sitekey : '${siteKey}',
-  //     callback : function(token) {
-  //       console.log(`Challenge Success ${token}`);
-  //     },
-  //   });
-  // };
+  window.onloadTurnstileCallback = function() {
+    turnstile.render('#example-container', {
+      sitekey : '${siteKey}',
+      callback : function(token) {
+        console.log("Challenge Success token: " + token);
+        var cfTokenDiv = document.getElementById("cfToken");
+        cfTokenDiv.setAttribute("token", token);
+      },
+    });
+  };
 
+  function printCfToken(){
+    var cfTokenDiv = document.getElementById("cfToken");
+    var token = cfTokenDiv.getAttribute("token");
+    console.log("token: " + token);
+  }
 
   $(document).ready(function() {
 
@@ -66,19 +79,11 @@
     });
 
 
-    function cfVerify() {
-      turnstile.render('#example-container', {
-        sitekey : '${siteKey}',
-        callback : function(token) {
-          console.log("Challenge Success token: " + token);
-          sendToken(token);
-        },
-      });
-    };
+    function tokenVerify() {
 
-    cfVerify();
+      var cfTokenDiv = document.getElementById("cfToken");
+      var token = cfTokenDiv.getAttribute("token");
 
-    function sendToken(token) {
       var url = "/test2/t4?token="+token;
       // var jsonOutput = {};
       // console.log(jsonOutput);

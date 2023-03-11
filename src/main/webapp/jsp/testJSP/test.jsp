@@ -20,34 +20,38 @@
 <button id="updateToken" onclick="updateToken()">updateToken</button>
 <button id="tokenVerify">tokenVerify</button>
 
-<div class="cf-turnstile" data-sitekey="${siteKey}"
-  data-callback="javascriptCallback"></div>
+<div class="cf-turnstile" data-sitekey="${siteKey}" data-callback="cfCallBack"></div>
+
+<div id="example-container">example-container</div>
 
 <footer> </footer>
 <%@ include file="../baseElementJSP/normalJSPart.jsp"%>
-<script
-  src="https://challenges.cloudflare.com/turnstile/v0/api.js?compat=recaptcha"
-  async defer></script>
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-  async defer></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<%-- <script src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script> --%>
 <script type="text/javascript">
 
-  window.onloadTurnstileCallback = function() {
+  var cfToken = "";
+
+  console.log("something");
+
+  function cfCallBack() {
+    console.log("get into turnstile");
     turnstile.render('#example-container', {
       sitekey : '${siteKey}',
       callback : function(token) {
-        console.log("call back");
+        cfToken = token;
         console.log("Challenge Success token: " + token);
-        var cfTokenDiv = document.getElementById("cfToken");
-        cfTokenDiv.setAttribute("token", token);
       },
     });
   };
+
+  console.log("after onloadTurnstileCallback");
 
   function printCfToken(){
     var cfTokenDiv = document.getElementById("cfToken");
     var token = cfTokenDiv.getAttribute("token");
     console.log("token: " + token);
+    console.log("cfToken: " + cfToken);
   }
 
   function updateToken(){

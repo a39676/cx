@@ -24,7 +24,7 @@ public class CloudFlareServiceImpl extends CommonService implements CloudFlareSe
 	private CloudFlareOptionService optionService;
 	
 	@Override
-	public boolean verify(String token) {
+	public String verify(String token) {
 		String urlStr = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
 		Map<String, String> requestPropertyMap = new HashMap<>();
@@ -76,6 +76,7 @@ public class CloudFlareServiceImpl extends CommonService implements CloudFlareSe
 			con.disconnect();
 		}
 
-		return responseJson.containsKey("success") && "true".equals(String.valueOf(responseJson.get("success")));
+//		return responseJson.containsKey("success") && "true".equals(String.valueOf(responseJson.get("success")));
+		return response.toString();
 	}
 }

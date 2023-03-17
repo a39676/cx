@@ -16,11 +16,11 @@ public abstract class WechatCommonService extends ToolCommonService {
 
 	@Autowired
 	private TelegramService telegramService;
-	
+
 	protected void sendTelegramMessage(String msg) {
 		telegramService.sendMessageByChatRecordId(TelegramBotType.CX_MESSAGE, msg, TelegramStaticChatID.MY_ID);
 	}
-	
+
 	protected <T> T decryptEncryptDTO(EncryptDTO encryptedDTO, Class<T> clazz) {
 		try {
 			String encryptedStr = encryptedDTO.getEncryptedStr();
@@ -34,11 +34,17 @@ public abstract class WechatCommonService extends ToolCommonService {
 
 	protected EncryptDTO encryptDTO(Object obj) {
 		EncryptDTO dto = new EncryptDTO();
-		JSONObject json = JSONObject.fromObject(obj);
-		String jsonStr = json.toString();
+		String strNeedEncrypt = null;
+
 		try {
-			String encryptedStr = encryptUtil.aesEncrypt(wechatOptionService.getAesKey(),
-					wechatOptionService.getAesInitVector(), jsonStr);
+			JSONObject json = JSONObject.fromObject(obj);
+			strNeedEncrypt = json.toString();
+		} catch (Exception e) {
+			strNeedEncrypt = String.valueOf(obj);
+		}
+		try {
+			String encryptedStr = encryptUtil.aesEncrypt(systemOptionService.getAesKey(),
+					systemOptionService.getAesInitVector(), strNeedEncrypt);
 			dto.setEncryptedStr(encryptedStr);
 		} catch (Exception e) {
 		}

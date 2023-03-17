@@ -1,11 +1,10 @@
 package demo.interaction.wechat.mapper;
 
+import demo.interaction.wechat.pojo.po.WechatUserDetail;
+import demo.interaction.wechat.pojo.po.WechatUserDetailExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
-
-import demo.interaction.wechat.pojo.po.WechatUserDetail;
-import demo.interaction.wechat.pojo.po.WechatUserDetailExample;
 
 public interface WechatUserDetailMapper {
     long countByExample(WechatUserDetailExample example);

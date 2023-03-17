@@ -1,11 +1,10 @@
 package demo.interaction.wechat.mapper;
 
+import demo.interaction.wechat.pojo.po.WechatAccessToken;
+import demo.interaction.wechat.pojo.po.WechatAccessTokenExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
-
-import demo.interaction.wechat.pojo.po.WechatAccessToken;
-import demo.interaction.wechat.pojo.po.WechatAccessTokenExample;
 
 public interface WechatAccessTokenMapper {
     long countByExample(WechatAccessTokenExample example);

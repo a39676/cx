@@ -684,6 +684,66 @@ public class WechatUserDetailExample {
             addCriterion("is_delete not between", value1, value2, "isDelete");
             return (Criteria) this;
         }
+
+        public Criteria andIsBlockIsNull() {
+            addCriterion("is_block is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBlockIsNotNull() {
+            addCriterion("is_block is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBlockEqualTo(Boolean value) {
+            addCriterion("is_block =", value, "isBlock");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBlockNotEqualTo(Boolean value) {
+            addCriterion("is_block <>", value, "isBlock");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBlockGreaterThan(Boolean value) {
+            addCriterion("is_block >", value, "isBlock");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBlockGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_block >=", value, "isBlock");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBlockLessThan(Boolean value) {
+            addCriterion("is_block <", value, "isBlock");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBlockLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_block <=", value, "isBlock");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBlockIn(List<Boolean> values) {
+            addCriterion("is_block in", values, "isBlock");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBlockNotIn(List<Boolean> values) {
+            addCriterion("is_block not in", values, "isBlock");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBlockBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_block between", value1, value2, "isBlock");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBlockNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_block not between", value1, value2, "isBlock");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

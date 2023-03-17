@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.common.service.ToolCommonService;
 import demo.interaction.wechat.service.WechatSdkManagerService;
 import net.sf.json.JSONObject;
 import toolPack.httpHandel.HttpUtil;
@@ -13,7 +12,7 @@ import wechatSdk.pojo.constant.WechatSdkUrlConstant;
 import wechatSdk.pojo.dto.UpdateWechatOptionDTO;
 
 @Service
-public class WechatSdkManagerServiceImpl extends ToolCommonService implements WechatSdkManagerService {
+public class WechatSdkManagerServiceImpl extends WechatCommonService implements WechatSdkManagerService {
 
 	@Autowired
 	private WechatOptionService wechatOptionService;
@@ -48,19 +47,10 @@ public class WechatSdkManagerServiceImpl extends ToolCommonService implements We
 
 	@Override
 	public EncryptDTO getWechatSdkWechatOption() {
-		EncryptDTO encryptedDTO = new EncryptDTO();
 		UpdateWechatOptionDTO dto = new UpdateWechatOptionDTO();
 		dto.setAppId(wechatOptionService.getAppId1());
 		dto.setAppSecret(wechatOptionService.getAppSecret1());
 
-		try {
-			JSONObject json = JSONObject.fromObject(dto);
-			String jsonStr = json.toString();
-			String encryptedStr = encryptUtil.aesEncrypt(wechatOptionService.getAesKey(),
-					wechatOptionService.getAesInitVector(), jsonStr);
-			encryptedDTO.setEncryptedStr(encryptedStr);
-		} catch (Exception e) {
-		}
-		return encryptedDTO;
+		return encryptDTO(dto);
 	}
 }

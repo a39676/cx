@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="demo.thirdPartyAPI.wechat.mapper.WechatUserDetailMapper">
-  <resultMap id="BaseResultMap" type="demo.thirdPartyAPI.wechat.pojo.po.WechatUserDetail">
+<mapper namespace="demo.interaction.wechat.mapper.WechatUserDetailMapper">
+  <resultMap id="BaseResultMap" type="demo.interaction.wechat.pojo.po.WechatUserDetail">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="source_official_account" jdbcType="INTEGER" property="sourceOfficialAccount" />
     <result column="phone_number" jdbcType="INTEGER" property="phoneNumber" />
@@ -11,6 +11,7 @@
     <result column="profile_picture_url" jdbcType="CHAR" property="profilePictureUrl" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
+    <result column="is_block" jdbcType="BIT" property="isBlock" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -72,9 +73,9 @@
   </sql>
   <sql id="Base_Column_List">
     id, source_official_account, phone_number, open_id, union_id, nickname, profile_picture_url, 
-    create_time, is_delete
+    create_time, is_delete, is_block
   </sql>
-  <select id="selectByExample" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatUserDetailExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="demo.interaction.wechat.pojo.po.WechatUserDetailExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -98,21 +99,23 @@
     delete from wechat_user_detail
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatUserDetailExample">
+  <delete id="deleteByExample" parameterType="demo.interaction.wechat.pojo.po.WechatUserDetailExample">
     delete from wechat_user_detail
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatUserDetail">
+  <insert id="insert" parameterType="demo.interaction.wechat.pojo.po.WechatUserDetail">
     insert into wechat_user_detail (id, source_official_account, phone_number, 
       open_id, union_id, nickname, profile_picture_url, 
-      create_time, is_delete)
+      create_time, is_delete, is_block
+      )
     values (#{id,jdbcType=BIGINT}, #{sourceOfficialAccount,jdbcType=INTEGER}, #{phoneNumber,jdbcType=INTEGER}, 
       #{openId,jdbcType=CHAR}, #{unionId,jdbcType=CHAR}, #{nickname,jdbcType=CHAR}, #{profilePictureUrl,jdbcType=CHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
+      #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}, #{isBlock,jdbcType=BIT}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatUserDetail">
+  <insert id="insertSelective" parameterType="demo.interaction.wechat.pojo.po.WechatUserDetail">
     insert into wechat_user_detail
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -141,6 +144,9 @@
       </if>
       <if test="isDelete != null">
         is_delete,
+      </if>
+      <if test="isBlock != null">
+        is_block,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -171,9 +177,12 @@
       <if test="isDelete != null">
         #{isDelete,jdbcType=BIT},
       </if>
+      <if test="isBlock != null">
+        #{isBlock,jdbcType=BIT},
+      </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatUserDetailExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="demo.interaction.wechat.pojo.po.WechatUserDetailExample" resultType="java.lang.Long">
     select count(*) from wechat_user_detail
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -209,6 +218,9 @@
       <if test="row.isDelete != null">
         is_delete = #{row.isDelete,jdbcType=BIT},
       </if>
+      <if test="row.isBlock != null">
+        is_block = #{row.isBlock,jdbcType=BIT},
+      </if>
     </set>
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -224,12 +236,13 @@
       nickname = #{row.nickname,jdbcType=CHAR},
       profile_picture_url = #{row.profilePictureUrl,jdbcType=CHAR},
       create_time = #{row.createTime,jdbcType=TIMESTAMP},
-      is_delete = #{row.isDelete,jdbcType=BIT}
+      is_delete = #{row.isDelete,jdbcType=BIT},
+      is_block = #{row.isBlock,jdbcType=BIT}
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatUserDetail">
+  <update id="updateByPrimaryKeySelective" parameterType="demo.interaction.wechat.pojo.po.WechatUserDetail">
     update wechat_user_detail
     <set>
       <if test="sourceOfficialAccount != null">
@@ -256,10 +269,13 @@
       <if test="isDelete != null">
         is_delete = #{isDelete,jdbcType=BIT},
       </if>
+      <if test="isBlock != null">
+        is_block = #{isBlock,jdbcType=BIT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatUserDetail">
+  <update id="updateByPrimaryKey" parameterType="demo.interaction.wechat.pojo.po.WechatUserDetail">
     update wechat_user_detail
     set source_official_account = #{sourceOfficialAccount,jdbcType=INTEGER},
       phone_number = #{phoneNumber,jdbcType=INTEGER},
@@ -268,10 +284,11 @@
       nickname = #{nickname,jdbcType=CHAR},
       profile_picture_url = #{profilePictureUrl,jdbcType=CHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      is_delete = #{isDelete,jdbcType=BIT}
+      is_delete = #{isDelete,jdbcType=BIT},
+      is_block = #{isBlock,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectByExampleWithRowbounds" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatUserDetailExample" resultMap="BaseResultMap">
+  <select id="selectByExampleWithRowbounds" parameterType="demo.interaction.wechat.pojo.po.WechatUserDetailExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="demo.thirdPartyAPI.wechat.mapper.WechatAccessTokenMapper">
-  <resultMap id="BaseResultMap" type="demo.thirdPartyAPI.wechat.pojo.po.WechatAccessToken">
+<mapper namespace="demo.interaction.wechat.mapper.WechatAccessTokenMapper">
+  <resultMap id="BaseResultMap" type="demo.interaction.wechat.pojo.po.WechatAccessToken">
     <id column="app_id" jdbcType="CHAR" property="appId" />
     <result column="token" jdbcType="CHAR" property="token" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -67,7 +67,7 @@
   <sql id="Base_Column_List">
     app_id, token, create_time
   </sql>
-  <select id="selectByExample" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatAccessTokenExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="demo.interaction.wechat.pojo.po.WechatAccessTokenExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -91,19 +91,19 @@
     delete from wechat_access_token
     where app_id = #{appId,jdbcType=CHAR}
   </delete>
-  <delete id="deleteByExample" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatAccessTokenExample">
+  <delete id="deleteByExample" parameterType="demo.interaction.wechat.pojo.po.WechatAccessTokenExample">
     delete from wechat_access_token
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatAccessToken">
+  <insert id="insert" parameterType="demo.interaction.wechat.pojo.po.WechatAccessToken">
     insert into wechat_access_token (app_id, token, create_time
       )
     values (#{appId,jdbcType=CHAR}, #{token,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatAccessToken">
+  <insert id="insertSelective" parameterType="demo.interaction.wechat.pojo.po.WechatAccessToken">
     insert into wechat_access_token
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="appId != null">
@@ -128,7 +128,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatAccessTokenExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="demo.interaction.wechat.pojo.po.WechatAccessTokenExample" resultType="java.lang.Long">
     select count(*) from wechat_access_token
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -160,7 +160,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatAccessToken">
+  <update id="updateByPrimaryKeySelective" parameterType="demo.interaction.wechat.pojo.po.WechatAccessToken">
     update wechat_access_token
     <set>
       <if test="token != null">
@@ -172,13 +172,13 @@
     </set>
     where app_id = #{appId,jdbcType=CHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatAccessToken">
+  <update id="updateByPrimaryKey" parameterType="demo.interaction.wechat.pojo.po.WechatAccessToken">
     update wechat_access_token
     set token = #{token,jdbcType=CHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where app_id = #{appId,jdbcType=CHAR}
   </update>
-  <select id="selectByExampleWithRowbounds" parameterType="demo.thirdPartyAPI.wechat.pojo.po.WechatAccessTokenExample" resultMap="BaseResultMap">
+  <select id="selectByExampleWithRowbounds" parameterType="demo.interaction.wechat.pojo.po.WechatAccessTokenExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct

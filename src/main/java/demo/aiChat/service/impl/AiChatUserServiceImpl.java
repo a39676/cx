@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiChat.mapper.AiChatUserAssociateWechatUidMapper;
 import demo.aiChat.mapper.AiChatUserDetailMapper;
 import demo.aiChat.mapper.SystemUserAssociateAiChatUserMapper;
@@ -14,8 +13,8 @@ import demo.aiChat.pojo.po.AiChatUserAssociateWechatUidKey;
 import demo.aiChat.pojo.po.AiChatUserDetail;
 import demo.aiChat.pojo.po.SystemUserAssociateAiChatUserExample;
 import demo.aiChat.pojo.po.SystemUserAssociateAiChatUserKey;
+import demo.aiChat.pojo.result.CreateAiChatUserResult;
 import demo.aiChat.service.AiChatUserService;
-import demo.interaction.wechat.service.WechatUserService;
 
 @Service
 public class AiChatUserServiceImpl extends AiChatCommonService implements AiChatUserService {
@@ -26,18 +25,17 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 	private SystemUserAssociateAiChatUserMapper systemUserAssociateMapper;
 	@Autowired
 	private AiChatUserAssociateWechatUidMapper aiChatUserAssociateWechatUidMapper;
-	@Autowired
-	private WechatUserService wechatUserService;
 
 	@Override
-	public CommonResult createAiChatUserDetailBySystemUserId(Long systemUserId) {
-		CommonResult r = new CommonResult();
+	public CreateAiChatUserResult createAiChatUserDetailBySystemUserId(Long systemUserId) {
+		CreateAiChatUserResult r = new CreateAiChatUserResult();
 
 		SystemUserAssociateAiChatUserExample associateExample = new SystemUserAssociateAiChatUserExample();
 		associateExample.createCriteria().andSystemUserIdEqualTo(systemUserId);
 		List<SystemUserAssociateAiChatUserKey> associateList = systemUserAssociateMapper
 				.selectByExample(associateExample);
 		if (associateList != null && !associateList.isEmpty()) {
+			r.setAiChatUserId(associateList.get(0).getAiChatUserId());
 			r.setMessage("Already create AI chat profile data");
 			return r;
 		}
@@ -53,41 +51,70 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 		userDetailMapper.insertSelective(aiChatUserDetailPO);
 
 		cacheService.getSystemUserIdMatchAiChatUserIdMap().put(systemUserId, newAiChatUserId);
-
+		r.setAiChatUserId(newAiChatUserId);
+		r.setIsSuccess();
 		return r;
 	}
 
 	@Override
-	public CommonResult createAiChatUserDetailByWechatUid(String wechatUid) {
-		CommonResult r = new CommonResult();
-		
-		Long wechatUserLongId = wechatUserService.findWechatLongIdByOpenId(wechatUid);
-		if(wechatUserLongId == null) {
-			r.setMessage("Wechat user data NOT ready");
-			return r;
-		}
-		
+	public CreateAiChatUserResult createAiChatUserDetailByWechatUid(Long wechatUserId, String wechatOid) {
+		CreateAiChatUserResult r = new CreateAiChatUserResult();
+
 		AiChatUserAssociateWechatUidExample associateExample = new AiChatUserAssociateWechatUidExample();
-		associateExample.createCriteria().andWechatIdEqualTo(wechatUserLongId);
-		List<AiChatUserAssociateWechatUidKey> associateList = aiChatUserAssociateWechatUidMapper.selectByExample(associateExample);
-		if(associateList != null && !associateList.isEmpty()) {
+		associateExample.createCriteria().andWechatIdEqualTo(wechatUserId);
+		List<AiChatUserAssociateWechatUidKey> associateList = aiChatUserAssociateWechatUidMapper
+				.selectByExample(associateExample);
+		if (associateList != null && !associateList.isEmpty()) {
+			r.setAiChatUserId(associateList.get(0).getAiChatUserId());
 			r.setMessage("Already create AI chat profile data");
 			return r;
 		}
-		
+
 		Long newAiChatUserId = snowFlake.getNextId();
 		AiChatUserAssociateWechatUidKey associatePO = new AiChatUserAssociateWechatUidKey();
 		associatePO.setAiChatUserId(newAiChatUserId);
-		associatePO.setWechatId(wechatUserLongId);
+		associatePO.setWechatId(wechatUserId);
 		aiChatUserAssociateWechatUidMapper.insertSelective(associatePO);
 
 		AiChatUserDetail aiChatUserDetailPO = new AiChatUserDetail();
 		aiChatUserDetailPO.setId(newAiChatUserId);
 		userDetailMapper.insertSelective(aiChatUserDetailPO);
-		
-		cacheService.getOpenIdMatchAiChatUserIdMap().put(wechatUid, newAiChatUserId);
-		
+
+		cacheService.getOpenIdMatchAiChatUserIdMap().put(wechatOid, newAiChatUserId);
+
+		Long tmpKey = snowFlake.getNextId();
+		tmpKeyInsertOrUpdateLiveTime(tmpKey, newAiChatUserId);
+
+		r.setTmpKey(tmpKey);
+		r.setAiChatUserId(newAiChatUserId);
+		r.setIsSuccess();
 		return r;
 	}
 
+	@Override
+	public Long createNewTmpKey(Long wechatUserId, String openId) {
+		Long tmpKey = null;
+		Long aiChatUserId = cacheService.getOpenIdMatchAiChatUserIdMap().get(openId);
+		if(aiChatUserId != null) {
+			tmpKey = snowFlake.getNextId();
+			tmpKeyInsertOrUpdateLiveTime(tmpKey, aiChatUserId);
+			return tmpKey;
+		}
+		
+		AiChatUserAssociateWechatUidExample associateExample = new AiChatUserAssociateWechatUidExample();
+		associateExample.createCriteria().andWechatIdEqualTo(wechatUserId);
+		List<AiChatUserAssociateWechatUidKey> associateList = aiChatUserAssociateWechatUidMapper
+				.selectByExample(associateExample);
+		if (associateList.isEmpty()) {
+			CreateAiChatUserResult createUserResult = createAiChatUserDetailByWechatUid(wechatUserId, openId);
+			return createUserResult.getTmpKey();
+		}
+		AiChatUserAssociateWechatUidKey associate = associateList.get(0);
+
+		cacheService.getOpenIdMatchAiChatUserIdMap().put(openId, associate.getAiChatUserId());
+
+		tmpKey = snowFlake.getNextId();
+		tmpKeyInsertOrUpdateLiveTime(tmpKey, associate.getAiChatUserId());
+		return tmpKey;
+	}
 }

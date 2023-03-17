@@ -21,6 +21,8 @@ public class WechatUserDetail {
 
     private Boolean isDelete;
 
+    private Boolean isBlock;
+
     public Long getId() {
         return id;
     }
@@ -91,5 +93,13 @@ public class WechatUserDetail {
 
     public void setIsDelete(Boolean isDelete) {
         this.isDelete = isDelete;
+    }
+
+    public Boolean getIsBlock() {
+        return isBlock;
+    }
+
+    public void setIsBlock(Boolean isBlock) {
+        this.isBlock = isBlock;
     }
 }

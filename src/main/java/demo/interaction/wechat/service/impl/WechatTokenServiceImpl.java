@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
+import auxiliaryCommon.pojo.dto.EncryptDTO;
 import demo.interaction.wechat.mapper.WechatAccessTokenMapper;
 import demo.interaction.wechat.pojo.po.WechatAccessToken;
 import demo.interaction.wechat.service.WechatTokenService;
@@ -33,8 +34,9 @@ public class WechatTokenServiceImpl extends WechatCommonService implements Wecha
 		GetAccessTokenDTO dto = new GetAccessTokenDTO();
 		dto.setAppId(appId);
 		dto.setAppSecret(secret);
+		EncryptDTO encryptDTO = encryptDTO(dto);
 
-		JSONObject json = JSONObject.fromObject(dto);
+		JSONObject json = JSONObject.fromObject(encryptDTO);
 
 		String response = null;
 		try {

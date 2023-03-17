@@ -76,6 +76,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 				historyCountingLimit);
 
 		// send history + new msg, wait feedback
+		msg = sanitize(msg);
 		OpenAiChatCompletionSendMessageResult apiResult = util.sendChatCompletion(chatHistory, msg);
 
 		// if fail, send fail response

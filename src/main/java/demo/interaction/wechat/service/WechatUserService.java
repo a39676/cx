@@ -1,11 +1,11 @@
 package demo.interaction.wechat.service;
 
-import demo.interaction.wechat.pojo.po.WechatUserDetail;
+import aiChat.pojo.result.GetTmpKeyByOpenIdResult;
+import auxiliaryCommon.pojo.dto.EncryptDTO;
 
 public interface WechatUserService {
 
-	WechatUserDetail findWechatUserByOpenId(String uid);
+	GetTmpKeyByOpenIdResult getTmpKeyByOpenId(EncryptDTO dto);
 
-	Long findWechatLongIdByOpenId(String uid);
 
 }

@@ -1,11 +1,13 @@
 package demo.aiChat.service;
 
-import auxiliaryCommon.pojo.result.CommonResult;
+import demo.aiChat.pojo.result.CreateAiChatUserResult;
 
 public interface AiChatUserService {
-	
-	CommonResult createAiChatUserDetailBySystemUserId(Long systemUserId);
 
-	CommonResult createAiChatUserDetailByWechatUid(String wechatUid);
+	CreateAiChatUserResult createAiChatUserDetailBySystemUserId(Long systemUserId);
+
+	CreateAiChatUserResult createAiChatUserDetailByWechatUid(Long wechatUserLongId, String wechatOid);
+
+	Long createNewTmpKey(Long wechatUserId, String openId);
 
 }

@@ -41,8 +41,8 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 
 	@Override
 	public AiChatUserMembershipDetailSummaryDTO findMembershipDetailSummaryByUserId(Long aiChatUserId) {
-		if(optionService.getMembershipCacheMap().containsKey(aiChatUserId)) {
-			return optionService.getMembershipCacheMap().get(aiChatUserId);
+		if(cacheService.getMembershipCacheMap().containsKey(aiChatUserId)) {
+			return cacheService.getMembershipCacheMap().get(aiChatUserId);
 		}
 		
 		List<AiChatUserMembership> membershipList = findMembershipDetailListByUserId(aiChatUserId);
@@ -77,7 +77,7 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 			}
 		}
 		
-		optionService.getMembershipCacheMap().put(aiChatUserId, summaryDTO);
+		cacheService.getMembershipCacheMap().put(aiChatUserId, summaryDTO);
 
 		return summaryDTO;
 	}

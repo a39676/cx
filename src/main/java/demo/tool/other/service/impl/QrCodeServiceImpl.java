@@ -19,11 +19,11 @@ import org.springframework.stereotype.Service;
 
 import com.google.zxing.NotFoundException;
 
+import demo.common.service.ToolCommonService;
 import demo.image.pojo.result.ImgHandleSrcDataResult;
 import demo.image.service.ImageService;
 import demo.tool.other.service.QrCodeService;
 import demo.tool.other.service.TextFilter;
-import demo.tool.service.impl.ToolCommonService;
 import toolPack.constant.FileSuffixNameConstant;
 import toolPack.qrcode.QrCodeDecode;
 import toolPack.qrcode.QrCodeGenerator;

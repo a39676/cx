@@ -29,8 +29,7 @@ import org.springframework.stereotype.Service;
 
 import demo.article.article.service.impl.ArticleOptionService;
 import demo.automationTest.service.impl.AutomationTestOptionService;
-import demo.base.system.service.impl.SystemOptionService;
-import demo.common.service.CommonService;
+import demo.common.service.ToolCommonService;
 import demo.image.mapper.ImageStoreMapper;
 import demo.image.mapper.ImageTagMapper;
 import demo.image.pojo.constant.ImageConstant;
@@ -47,15 +46,13 @@ import image.pojo.result.ImageSavingResult;
 import toolPack.constant.FileSuffixNameConstant;
 
 @Service
-public class ImageServiceImpl extends CommonService implements ImageService {
+public class ImageServiceImpl extends ToolCommonService implements ImageService {
 
 	@Autowired
 	private ImageStoreMapper imgMapper;
 	@Autowired
 	private ImageTagMapper imageTagMapper;
 
-	@Autowired
-	private SystemOptionService systemOptionService;
 	@Autowired
 	private AutomationTestOptionService automationTestConstantService;
 	@Autowired

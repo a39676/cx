@@ -9,7 +9,6 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -17,15 +16,11 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 
 import demo.common.service.CommonService;
-import toolPack.encryptHandle.EncryptUtil;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")
 @Service
 public class SystemOptionService extends CommonService {
-
-	@Autowired
-	private EncryptUtil encryptUtil;
 
 	@Value("${optionFilePath.system}")
 	private String optionFilePath;

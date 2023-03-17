@@ -1,6 +1,6 @@
 package demo.tool.calendarNotice.service.impl;
 
-import demo.tool.service.impl.ToolCommonService;
+import demo.common.service.ToolCommonService;
 
 public abstract class CalendarNoticeCommonService extends ToolCommonService {
 

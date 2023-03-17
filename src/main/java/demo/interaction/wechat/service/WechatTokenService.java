@@ -1,4 +1,4 @@
-package demo.thirdPartyAPI.wechat.service;
+package demo.interaction.wechat.service;
 
 public interface WechatTokenService {
 

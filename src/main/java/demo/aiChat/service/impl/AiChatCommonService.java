@@ -19,6 +19,8 @@ public abstract class AiChatCommonService extends CommonService{
 	@Autowired
 	protected AiChatOptionService optionService;
 	@Autowired
+	protected AiChatCacheService cacheService;
+	@Autowired
 	private TelegramService telegramService;
 	
 	protected CommonResult notEnoughtAmount() {

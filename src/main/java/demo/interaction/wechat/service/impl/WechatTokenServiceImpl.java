@@ -1,4 +1,4 @@
-package demo.thirdPartyAPI.wechat.service.impl;
+package demo.interaction.wechat.service.impl;
 
 import java.time.LocalDateTime;
 
@@ -7,14 +7,14 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
-import demo.thirdPartyAPI.wechat.mapper.WechatAccessTokenMapper;
-import demo.thirdPartyAPI.wechat.pojo.po.WechatAccessToken;
-import demo.thirdPartyAPI.wechat.service.WechatTokenService;
+import demo.interaction.wechat.mapper.WechatAccessTokenMapper;
+import demo.interaction.wechat.pojo.po.WechatAccessToken;
+import demo.interaction.wechat.service.WechatTokenService;
 import net.sf.json.JSONObject;
 import toolPack.httpHandel.HttpUtil;
-import wechat.pojo.constant.WechatSdkUrlConstant;
-import wechat.pojo.dto.GetAccessTokenDTO;
-import wechat.pojo.result.GetWechatAccessTokenResult;
+import wechatApi.pojo.dto.GetAccessTokenDTO;
+import wechatSdk.pojo.constant.WechatSdkUrlConstant;
+import wechatSdk.pojo.result.GetWechatAccessTokenResult;
 
 @Service
 public class WechatTokenServiceImpl extends WechatCommonService implements WechatTokenService {

@@ -23,9 +23,9 @@ import demo.common.service.CommonService;
 public class HostnameServiceImpl extends CommonService implements HostnameService {
 
 	@Autowired
-	private HostnameMapper hostnameMapper;
-	@Autowired
 	private SystemOptionService systemOptionService;
+	@Autowired
+	private HostnameMapper hostnameMapper;
 	
 	private Map<HostnameType, Hostname> hostnameMap = new HashMap<>();
 

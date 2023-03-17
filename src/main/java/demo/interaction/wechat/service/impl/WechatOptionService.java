@@ -1,4 +1,4 @@
-package demo.thirdPartyAPI.wechat.service.impl;
+package demo.interaction.wechat.service.impl;
 
 import java.io.File;
 
@@ -27,6 +27,8 @@ public class WechatOptionService extends CommonService {
 	private String appId1;
 	private String appSecret1;
 	private Long accessTokenLivingSecond;
+	private String aesKey;
+	private String aesInitVector;
 
 	public String getSdkMainUrl() {
 		return sdkMainUrl;
@@ -76,11 +78,20 @@ public class WechatOptionService extends CommonService {
 		this.accessTokenLivingSecond = accessTokenLivingSecond;
 	}
 
-	@Override
-	public String toString() {
-		return "WechatOptionService [sdkMainUrl=" + sdkMainUrl + ", appTestId=" + appTestId + ", appTestSecret="
-				+ appTestSecret + ", appId1=" + appId1 + ", appSecret1=" + appSecret1 + ", accessTokenLivingSecond="
-				+ accessTokenLivingSecond + "]";
+	public String getAesKey() {
+		return aesKey;
+	}
+
+	public void setAesKey(String aesKey) {
+		this.aesKey = aesKey;
+	}
+
+	public String getAesInitVector() {
+		return aesInitVector;
+	}
+
+	public void setAesInitVector(String aesInitVector) {
+		this.aesInitVector = aesInitVector;
 	}
 
 	@PostConstruct
@@ -94,9 +105,10 @@ public class WechatOptionService extends CommonService {
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
 			WechatOptionService tmp = new Gson().fromJson(jsonStr, WechatOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
-			log.error("Open AI option loaded");
+			log.error("WechatOptionService option loaded");
 		} catch (Exception e) {
-			log.error("Open AI option loading error: " + e.getLocalizedMessage());
+			log.error("WechatOptionService option loading error: " + e.getLocalizedMessage());
 		}
 	}
+
 }

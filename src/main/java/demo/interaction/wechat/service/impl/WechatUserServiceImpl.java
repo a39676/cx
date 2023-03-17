@@ -1,14 +1,14 @@
-package demo.thirdPartyAPI.wechat.service.impl;
+package demo.interaction.wechat.service.impl;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.thirdPartyAPI.wechat.mapper.WechatUserDetailMapper;
-import demo.thirdPartyAPI.wechat.pojo.po.WechatUserDetail;
-import demo.thirdPartyAPI.wechat.pojo.po.WechatUserDetailExample;
-import demo.thirdPartyAPI.wechat.service.WechatUserService;
+import demo.interaction.wechat.mapper.WechatUserDetailMapper;
+import demo.interaction.wechat.pojo.po.WechatUserDetail;
+import demo.interaction.wechat.pojo.po.WechatUserDetailExample;
+import demo.interaction.wechat.service.WechatUserService;
 
 @Service
 public class WechatUserServiceImpl extends WechatCommonService implements WechatUserService {
@@ -16,8 +16,10 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 	@Autowired
 	private WechatUserDetailMapper wechatUserDetailMapper;
 	
+	private static final String FAKE_UID_PREFIX = "FakeUid_";
+	
 	@Override
-	public WechatUserDetail findWechatUserByUid(String uid) {
+	public WechatUserDetail findWechatUserByOpenId(String uid) {
 		WechatUserDetailExample example = new WechatUserDetailExample();
 		example.createCriteria().andUnionIdEqualTo(uid);
 		List<WechatUserDetail> wechatUserList = wechatUserDetailMapper.selectByExample(example);
@@ -28,7 +30,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 	}
 	
 	@Override
-	public Long findWechatLongIdByUid(String uid) {
+	public Long findWechatLongIdByOpenId(String uid) {
 		WechatUserDetailExample example = new WechatUserDetailExample();
 		example.createCriteria().andUnionIdEqualTo(uid);
 		List<WechatUserDetail> wechatUserList = wechatUserDetailMapper.selectByExample(example);

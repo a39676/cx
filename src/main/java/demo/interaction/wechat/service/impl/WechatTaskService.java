@@ -1,4 +1,4 @@
-package demo.thirdPartyAPI.wechat.service.impl;
+package demo.interaction.wechat.service.impl;
 
 import org.springframework.stereotype.Component;
 

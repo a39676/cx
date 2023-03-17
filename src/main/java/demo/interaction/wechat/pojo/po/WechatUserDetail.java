@@ -1,4 +1,4 @@
-package demo.thirdPartyAPI.wechat.pojo.po;
+package demo.interaction.wechat.pojo.po;
 
 import java.time.LocalDateTime;
 

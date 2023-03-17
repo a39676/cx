@@ -1,7 +1,6 @@
 package demo.aiChat.service.impl;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 
 import demo.aiChat.pojo.dto.AiChatAesOptionDTO;
-import demo.aiChat.pojo.dto.AiChatUserMembershipDetailSummaryDTO;
 import demo.aiChat.pojo.dto.AiChatUserMembershipLevelDetailDTO;
 import demo.common.service.CommonService;
 import toolPack.ioHandle.FileUtilCustom;
@@ -28,17 +26,8 @@ public class AiChatOptionService extends CommonService {
 	private String optionFilePath;
 	private String chatStorePrefixPath;
 	private Integer chatHistorySaveCountingLimit = 100;
-
-	private Map<Integer, AiChatAesOptionDTO> aesOptionMap;
-
+	private Map<String, AiChatAesOptionDTO> aesOptionMap;
 	private List<AiChatUserMembershipLevelDetailDTO> membershipLevelDetail;
-	private Map<String, Long> uidMatchAiChatUserIdMap = new HashMap<>();
-	private Map<Long, Long> systemUserIdMatchAiChatUserIdMap = new HashMap<>();
-
-	/*
-	 * TODO 当触发购买会员时需要刷新 凌晨清空
-	 */
-	private Map<Long, AiChatUserMembershipDetailSummaryDTO> membershipCacheMap = new HashMap<>();
 
 	public String getChatStorePrefixPath() {
 		return chatStorePrefixPath;
@@ -56,11 +45,11 @@ public class AiChatOptionService extends CommonService {
 		this.chatHistorySaveCountingLimit = chatHistorySaveCountingLimit;
 	}
 
-	public Map<Integer, AiChatAesOptionDTO> getAesOptionMap() {
+	public Map<String, AiChatAesOptionDTO> getAesOptionMap() {
 		return aesOptionMap;
 	}
 
-	public void setAesOptionMap(Map<Integer, AiChatAesOptionDTO> aesOptionMap) {
+	public void setAesOptionMap(Map<String, AiChatAesOptionDTO> aesOptionMap) {
 		this.aesOptionMap = aesOptionMap;
 	}
 
@@ -72,37 +61,11 @@ public class AiChatOptionService extends CommonService {
 		this.membershipLevelDetail = membershipLevelDetail;
 	}
 
-	public Map<String, Long> getUidMatchAiChatUserIdMap() {
-		return uidMatchAiChatUserIdMap;
-	}
-
-	public void setUidMatchAiChatUserIdMap(Map<String, Long> uidMatchAiChatUserIdMap) {
-		this.uidMatchAiChatUserIdMap = uidMatchAiChatUserIdMap;
-	}
-
-	public Map<Long, Long> getSystemUserIdMatchAiChatUserIdMap() {
-		return systemUserIdMatchAiChatUserIdMap;
-	}
-
-	public void setSystemUserIdMatchAiChatUserIdMap(Map<Long, Long> systemUserIdMatchAiChatUserIdMap) {
-		this.systemUserIdMatchAiChatUserIdMap = systemUserIdMatchAiChatUserIdMap;
-	}
-
-	public Map<Long, AiChatUserMembershipDetailSummaryDTO> getMembershipCacheMap() {
-		return membershipCacheMap;
-	}
-
-	public void setMembershipCacheMap(Map<Long, AiChatUserMembershipDetailSummaryDTO> membershipCacheMap) {
-		this.membershipCacheMap = membershipCacheMap;
-	}
-
 	@Override
 	public String toString() {
 		return "AiChatOptionService [chatStorePrefixPath=" + chatStorePrefixPath + ", chatHistorySaveCountingLimit="
 				+ chatHistorySaveCountingLimit + ", aesOptionMap=" + aesOptionMap + ", membershipLevelDetail="
-				+ membershipLevelDetail + ", uidMatchAiChatUserIdMap=" + uidMatchAiChatUserIdMap
-				+ ", systemUserIdMatchAiChatUserIdMap=" + systemUserIdMatchAiChatUserIdMap + ", membershipCacheMap="
-				+ membershipCacheMap + "]";
+				+ membershipLevelDetail + "]";
 	}
 
 	@PostConstruct

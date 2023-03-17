@@ -1,16 +1,16 @@
-package demo.tool.service.impl;
+package demo.common.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import demo.base.system.service.HostnameService;
 import demo.base.system.service.impl.RedisHashConnectService;
 import demo.base.system.service.impl.SystemOptionService;
-import demo.common.service.CommonService;
+import demo.tool.service.impl.ToolConstantService;
 
 public abstract class ToolCommonService extends CommonService {
 
 	@Autowired
-	protected SystemOptionService systemConstantService;
+	protected SystemOptionService systemOptionService;
 	@Autowired
 	protected HostnameService hostnameService;
 	@Autowired

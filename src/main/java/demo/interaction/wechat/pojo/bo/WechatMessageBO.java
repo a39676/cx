@@ -1,4 +1,4 @@
-package demo.thirdPartyAPI.wechat.pojo.bo;
+package demo.interaction.wechat.pojo.bo;
 
 import java.math.BigDecimal;
 

@@ -15,7 +15,7 @@ import demo.aiChat.pojo.po.AiChatUserDetail;
 import demo.aiChat.pojo.po.SystemUserAssociateAiChatUserExample;
 import demo.aiChat.pojo.po.SystemUserAssociateAiChatUserKey;
 import demo.aiChat.service.AiChatUserService;
-import demo.thirdPartyAPI.wechat.service.WechatUserService;
+import demo.interaction.wechat.service.WechatUserService;
 
 @Service
 public class AiChatUserServiceImpl extends AiChatCommonService implements AiChatUserService {
@@ -52,7 +52,7 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 		aiChatUserDetailPO.setId(newAiChatUserId);
 		userDetailMapper.insertSelective(aiChatUserDetailPO);
 
-		optionService.getSystemUserIdMatchAiChatUserIdMap().put(systemUserId, newAiChatUserId);
+		cacheService.getSystemUserIdMatchAiChatUserIdMap().put(systemUserId, newAiChatUserId);
 
 		return r;
 	}
@@ -61,7 +61,7 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 	public CommonResult createAiChatUserDetailByWechatUid(String wechatUid) {
 		CommonResult r = new CommonResult();
 		
-		Long wechatUserLongId = wechatUserService.findWechatLongIdByUid(wechatUid);
+		Long wechatUserLongId = wechatUserService.findWechatLongIdByOpenId(wechatUid);
 		if(wechatUserLongId == null) {
 			r.setMessage("Wechat user data NOT ready");
 			return r;
@@ -85,7 +85,7 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 		aiChatUserDetailPO.setId(newAiChatUserId);
 		userDetailMapper.insertSelective(aiChatUserDetailPO);
 		
-		optionService.getUidMatchAiChatUserIdMap().put(wechatUid, newAiChatUserId);
+		cacheService.getOpenIdMatchAiChatUserIdMap().put(wechatUid, newAiChatUserId);
 		
 		return r;
 	}

@@ -313,7 +313,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 					("PreNotice: " + notice.getNoticeContent() + " at: " + notice.getNoticeTime() + " "
 							+ hostnameService.findMainHostname() + CalendarNoticeUrl.ROOT
 							+ CalendarNoticeUrl.STOP_PRE_NOTICE + "?pk=" + URLEncoder.encode(
-									systemConstantService.encryptId(preNoticePo.getId()), StandardCharsets.UTF_8)),
+									systemOptionService.encryptId(preNoticePo.getId()), StandardCharsets.UTF_8)),
 					TelegramStaticChatID.MY_ID);
 
 			updatePreNoticeStatus(preNoticePo, notice);
@@ -325,7 +325,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 				strongNoticeService.addStrongNotice(po);
 				msg = (po.getNoticeContent() + " " + hostnameService.findMainHostname() + CalendarNoticeUrl.ROOT
 						+ CalendarNoticeUrl.STOP_STRONG_NOTICE + "?pk="
-						+ URLEncoder.encode(systemConstantService.encryptId(po.getId()), StandardCharsets.UTF_8));
+						+ URLEncoder.encode(systemOptionService.encryptId(po.getId()), StandardCharsets.UTF_8));
 
 			} else {
 				msg = po.getNoticeContent();
@@ -427,7 +427,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			return r;
 		}
 
-		Long id = systemConstantService.decryptPrivateKey(dto.getPk());
+		Long id = systemOptionService.decryptPrivateKey(dto.getPk());
 		if (id == null) {
 			return r;
 		}
@@ -463,7 +463,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			return r;
 		}
 
-		Long noticeId = systemConstantService.decryptPrivateKey(dto.getPk());
+		Long noticeId = systemOptionService.decryptPrivateKey(dto.getPk());
 		if (noticeId == null) {
 			return r;
 		}
@@ -547,7 +547,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 	private CalendarNoticeVO poToVo(CalendarNotice po, HashMap<Long, CalendarPreNotice> preNoticeMap) {
 		CalendarNoticeVO vo = new CalendarNoticeVO();
 
-		vo.setPk(systemConstantService.encryptId(po.getId()));
+		vo.setPk(systemOptionService.encryptId(po.getId()));
 		vo.setNoticeContent(po.getNoticeContent());
 		vo.setIsLunarCalendar(po.getIsLunarCalendar());
 		vo.setStrongNotice(po.getStrongNotice());
@@ -569,7 +569,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			return vo;
 		}
 
-		vo.setPreNoticePk(systemConstantService.encryptId(preNotice.getId()));
+		vo.setPreNoticePk(systemOptionService.encryptId(preNotice.getId()));
 
 		vo.setPreNoticeRepeatTimeRange(preNotice.getRepeatTimeRange());
 		vo.setPreNoticeRepeatTimeUnit(preNotice.getRepeatTimeUnit());
@@ -589,7 +589,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 	@Override
 	public ModelAndView stopStrongNotice(String pk) {
 		ModelAndView v = new ModelAndView("toolJSP/CalendarNotice/CalendarNoticeStopStrongNotice");
-		Long id = systemConstantService.decryptPrivateKey(pk);
+		Long id = systemOptionService.decryptPrivateKey(pk);
 		v.addObject("pk", pk);
 		StrongNoticeBO bo = strongNoticeService.getStrongNotice(id);
 		if (bo != null) {
@@ -606,7 +606,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			return r;
 		}
 
-		Long id = systemConstantService.decryptPrivateKey(dto.getPk());
+		Long id = systemOptionService.decryptPrivateKey(dto.getPk());
 		if (id == null) {
 			return r;
 		}
@@ -630,7 +630,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 					.sendMessageByChatRecordId(TelegramBotType.CX_CALENDAR_NOTICE_BOT,
 							(bo.getNoticeContent() + " " + hostnameService.findMainHostname() + CalendarNoticeUrl.ROOT
 									+ CalendarNoticeUrl.STOP_STRONG_NOTICE + "?pk=" + URLEncoder.encode(
-											systemConstantService.encryptId(bo.getId()), StandardCharsets.UTF_8)),
+											systemOptionService.encryptId(bo.getId()), StandardCharsets.UTF_8)),
 							TelegramStaticChatID.MY_ID);
 		}
 	}
@@ -638,7 +638,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 	@Override
 	public ModelAndView stopPreNotice(String preNoticePK) {
 		ModelAndView v = new ModelAndView("toolJSP/CalendarNotice/CalendarNoticeStopPreNotice");
-		Long id = systemConstantService.decryptPrivateKey(preNoticePK);
+		Long id = systemOptionService.decryptPrivateKey(preNoticePK);
 		v.addObject("pk", preNoticePK);
 		CalendarPreNotice preNoticePO = preNoticeMapper.selectByPrimaryKey(id);
 		if (preNoticePO == null) {
@@ -662,7 +662,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			return r;
 		}
 
-		Long preNoticeID = systemConstantService.decryptPrivateKey(dto.getPk());
+		Long preNoticeID = systemOptionService.decryptPrivateKey(dto.getPk());
 		if (preNoticeID == null) {
 			return r;
 		}

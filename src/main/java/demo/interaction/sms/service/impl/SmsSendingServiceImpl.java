@@ -16,9 +16,7 @@ import auxiliaryCommon.pojo.dto.EncryptDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.pojo.po.Hostname;
 import demo.base.system.pojo.result.HostnameType;
-import demo.base.system.service.HostnameService;
-import demo.base.system.service.impl.SystemOptionService;
-import demo.common.service.CommonService;
+import demo.common.service.ToolCommonService;
 import demo.interaction.sms.mapper.SmsSendingHistoryMapper;
 import demo.interaction.sms.pojo.dto.QuerySendingFrequencyDTO;
 import demo.interaction.sms.pojo.po.SmsSendingHistory;
@@ -33,16 +31,12 @@ import toolPack.encryptHandle.EncryptUtil;
 import toolPack.httpHandel.HttpUtil;
 
 @Service
-public class SmsSendingServiceImpl extends CommonService implements SmsSendingService {
+public class SmsSendingServiceImpl extends ToolCommonService implements SmsSendingService {
 
 	@Autowired
 	private SmsSendingHistoryMapper smsSendingHistoryMapper;
 	@Autowired
 	private EncryptUtil encryptUtil;
-	@Autowired
-	private HostnameService hostnameService;
-	@Autowired
-	private SystemOptionService systemOptionService;
 	@Autowired
 	private TelegramService telegramService;
 	@Autowired

@@ -23,9 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.base.system.service.impl.SystemOptionService;
 import demo.base.user.pojo.constant.UsersUrl;
-import demo.common.service.CommonService;
+import demo.common.service.ToolCommonService;
 import demo.tool.mail.mapper.MailRecordMapper;
 import demo.tool.mail.pojo.dto.ResendMailDTO;
 import demo.tool.mail.pojo.dto.SendForgotUsernameMailDTO;
@@ -40,10 +39,8 @@ import toolPack.emailHandle.MailHandle;
 import toolPack.emailHandle.mailService.send.SendEmail;
 
 @Service
-public class MailServiceImpl extends CommonService implements MailService {
+public class MailServiceImpl extends ToolCommonService implements MailService {
 
-	@Autowired
-	private SystemOptionService systemConstantService;
 	
 	@Autowired
 	private MailOptionService mailConstantService;
@@ -150,7 +147,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 		Long newMailId = snowFlake.getNextId();
 		String mailKey = null;
 		try {
-			mailKey = URLEncoder.encode(systemConstantService.encryptId(newMailId), StandardCharsets.UTF_8.toString());
+			mailKey = URLEncoder.encode(systemOptionService.encryptId(newMailId), StandardCharsets.UTF_8.toString());
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -175,7 +172,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 		
 		SendRegistMailResult result = sendRegistMail(dto);
 		
-		Long mailId = systemConstantService.decryptPrivateKey(dto.getMailKey());
+		Long mailId = systemOptionService.decryptPrivateKey(dto.getMailKey());
 		MailRecord oldMail = mailRecordMapper.selectByPrimaryKey(mailId);
 		if(oldMail == null) {
 			result.setMessage("Error param");
@@ -197,7 +194,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 			return new MailRecord();
 		}
 		
-		Long id = systemConstantService.decryptPrivateKey(mailKey);
+		Long id = systemOptionService.decryptPrivateKey(mailKey);
 		if(id == null) {
 			return new MailRecord();
 		}
@@ -296,7 +293,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 		
 		String mailKey = null;
 		try {
-			mailKey = URLEncoder.encode(systemConstantService.encryptId(mailId), StandardCharsets.UTF_8.toString());
+			mailKey = URLEncoder.encode(systemOptionService.encryptId(mailId), StandardCharsets.UTF_8.toString());
 		} catch (UnsupportedEncodingException e) {
 			log.error(mailId + ", trans mail key error");
 		} 
@@ -310,7 +307,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 		
 		String mailKey = null;
 		try {
-			mailKey = URLEncoder.encode(systemConstantService.encryptId(oldMail.getId()), StandardCharsets.UTF_8.toString());
+			mailKey = URLEncoder.encode(systemOptionService.encryptId(oldMail.getId()), StandardCharsets.UTF_8.toString());
 		} catch (UnsupportedEncodingException e) {
 			log.error(oldMail.getId() + ", trans mail key error");
 		}

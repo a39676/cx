@@ -20,8 +20,8 @@ public class OpenAiOptionService extends CommonService {
 
 	@Value("${optionFilePath.openAI}")
 	private String optionFilePath;
-	private String apiKey = "";
-	private String orgId = "";
+	private String apiKey;
+	private String orgId;
 	private Integer maxTokens = 500;
 
 	public String getApiKey() {
@@ -66,6 +66,7 @@ public class OpenAiOptionService extends CommonService {
 			BeanUtils.copyProperties(tmp, this);
 			log.error("Open AI option loaded");
 		} catch (Exception e) {
+			e.printStackTrace();
 			log.error("Open AI option loading error: " + e.getLocalizedMessage());
 		}
 	}

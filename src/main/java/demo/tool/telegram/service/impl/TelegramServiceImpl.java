@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.tool.service.impl.ToolCommonService;
+import demo.common.service.ToolCommonService;
 import demo.tool.telegram.mapper.TelegramChatIdMapper;
 import demo.tool.telegram.mapper.TelegramConstantMapper;
 import demo.tool.telegram.pojo.bo.TelegramConstantBO;
@@ -99,7 +99,7 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 	public CommonResult sendMessageByTelegramChatId(TelegramBotType botType, String msg, Long telegramChatId) {
 		CommonResult r = new CommonResult();
 
-		if (systemConstantService.isDev()) {
+		if (systemOptionService.isDev()) {
 			log.error(msg);
 			r.setIsSuccess();
 			return r;
@@ -170,14 +170,14 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 	@Override
 	public TelegramChatIdVO buildChatIdVO(TelegramChatId po) {
 		TelegramChatIdVO vo = new TelegramChatIdVO();
-		vo.setPk(systemConstantService.encryptId(po.getId().longValue()));
+		vo.setPk(systemOptionService.encryptId(po.getId().longValue()));
 		vo.setUsername(po.getChatUserName());
 		return vo;
 	}
 
 	@Override
 	public boolean chatIdExists(String pk) {
-		Long id = systemConstantService.decryptPrivateKey(pk);
+		Long id = systemOptionService.decryptPrivateKey(pk);
 		if (id == null) {
 			return false;
 		}

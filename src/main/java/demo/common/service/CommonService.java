@@ -21,6 +21,7 @@ import tool.pojo.bo.IpRecordBO;
 import toolPack.dateTimeHandle.DateHandler;
 import toolPack.dateTimeHandle.LocalDateTimeAdapter;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
+import toolPack.encryptHandle.EncryptUtil;
 
 public abstract class CommonService {
 
@@ -36,6 +37,8 @@ public abstract class CommonService {
 	protected BaseUtilCustom baseUtilCustom;
 	@Autowired
 	protected LocalDateTimeAdapter localDateTimeAdapter;
+	@Autowired
+	protected EncryptUtil encryptUtil;
 
 	protected static final Integer NORMAL_PAGE_SIZE = 10;
 	protected static final LocalDateTime BLOG_ARTICLE_START_TIME = LocalDateTime.of(2020, 5, 1, 0, 0, 0);

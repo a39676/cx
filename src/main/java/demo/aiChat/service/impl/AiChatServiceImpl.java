@@ -238,26 +238,30 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 			return notEnoughtAmount();
 		}
 
-		AiChatUserAmountHistory newAmountHistory = null;
+		AiChatUserAmountHistory bonusAmountHistory = null;
 		BigDecimal restDebitAmount = new BigDecimal(debitAmount.doubleValue());
 
 		if (detail.getBonusAmount().compareTo(BigDecimal.ZERO) > 0) {
-			if (detail.getBonusAmount().compareTo(debitAmount) > -1) {
-				restDebitAmount = debitAmount.subtract(detail.getBonusAmount());
+			restDebitAmount = debitAmount.subtract(detail.getBonusAmount());
 
+			if (detail.getBonusAmount().compareTo(debitAmount) <= 0) {
+				detail.setBonusAmount(BigDecimal.ZERO);
+			} else {
 				detail.setBonusAmount(detail.getBonusAmount().subtract(debitAmount));
-				detailMapper.updateByPrimaryKeySelective(detail);
-
-				newAmountHistory = new AiChatUserAmountHistory();
-				newAmountHistory.setId(snowFlake.getNextId());
-				newAmountHistory.setAmountType(OpenAiAmountType.BONUS.getCode());
-				newAmountHistory.setAmountChange(debitAmount);
-				newAmountHistory.setUserId(detail.getId());
-				amountHistoryMapper.insertSelective(newAmountHistory);
 			}
+
+			bonusAmountHistory = new AiChatUserAmountHistory();
+			bonusAmountHistory.setId(snowFlake.getNextId());
+			bonusAmountHistory.setAmountType(OpenAiAmountType.BONUS.getCode());
+			bonusAmountHistory.setAmountChange(debitAmount);
+			bonusAmountHistory.setUserId(detail.getId());
 		}
 
 		if (restDebitAmount.doubleValue() <= 0) {
+			detailMapper.updateByPrimaryKeySelective(detail);
+			if (bonusAmountHistory != null) {
+				amountHistoryMapper.insertSelective(bonusAmountHistory);
+			}
 			r.setIsSuccess();
 			return r;
 		}
@@ -265,12 +269,12 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		detail.setRechargeAmount(detail.getRechargeAmount().subtract(restDebitAmount));
 		detailMapper.updateByPrimaryKeySelective(detail);
 
-		newAmountHistory = new AiChatUserAmountHistory();
-		newAmountHistory.setId(snowFlake.getNextId());
-		newAmountHistory.setAmountType(OpenAiAmountType.RECHARGE.getCode());
-		newAmountHistory.setAmountChange(debitAmount.subtract(detail.getBonusAmount()));
-		newAmountHistory.setUserId(detail.getId());
-		amountHistoryMapper.insertSelective(newAmountHistory);
+		AiChatUserAmountHistory rechargeAmountHistory = new AiChatUserAmountHistory();
+		rechargeAmountHistory.setId(snowFlake.getNextId());
+		rechargeAmountHistory.setAmountType(OpenAiAmountType.RECHARGE.getCode());
+		rechargeAmountHistory.setAmountChange(debitAmount.subtract(detail.getBonusAmount()));
+		rechargeAmountHistory.setUserId(detail.getId());
+		amountHistoryMapper.insertSelective(rechargeAmountHistory);
 		r.setIsSuccess();
 		return r;
 	}

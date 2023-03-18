@@ -43,8 +43,8 @@ public abstract class WechatCommonService extends ToolCommonService {
 			strNeedEncrypt = String.valueOf(obj);
 		}
 		try {
-			String encryptedStr = encryptUtil.aesEncrypt(systemOptionService.getAesKey(),
-					systemOptionService.getAesInitVector(), strNeedEncrypt);
+			String encryptedStr = encryptUtil.aesEncrypt(wechatOptionService.getAesKey(),
+					wechatOptionService.getAesInitVector(), strNeedEncrypt);
 			dto.setEncryptedStr(encryptedStr);
 		} catch (Exception e) {
 		}

@@ -61,7 +61,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 			r.setMessage("请刷新页面后登录, 或者输入 API key, 如仍旧异常, 请联系管理员");
 			return r;
 		}
-		if (userDetail.getBonusAmount().doubleValue() < 0 && userDetail.getRechargeAmount().doubleValue() < 0) {
+		if (userDetail.getBonusAmount().doubleValue() + userDetail.getRechargeAmount().doubleValue() <= 0) {
 			r.setMessage(notEnoughtAmount().getMessage());
 			return r;
 		}
@@ -248,11 +248,6 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		if (debitAmount.compareTo(BigDecimal.ZERO) < 1) {
 			r.setMessage("输入消耗额异常");
 			return r;
-		}
-
-		BigDecimal totalAmount = detail.getBonusAmount().add(detail.getRechargeAmount());
-		if (totalAmount.compareTo(debitAmount) < 0) {
-			return notEnoughtAmount();
 		}
 
 		AiChatUserAmountHistory bonusAmountHistory = null;

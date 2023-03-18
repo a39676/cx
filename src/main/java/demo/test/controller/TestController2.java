@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -14,8 +13,6 @@ import demo.common.service.CommonService;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.dto.TestDTO;
 import demo.test.service.TestService2;
-import demo.thirdPartyAPI.cloudFlare.service.CloudFlareService;
-import demo.thirdPartyAPI.cloudFlare.service.impl.CloudFlareOptionService;
 
 @Controller
 @RequestMapping(value = { TestUrl.root2 })
@@ -41,23 +38,9 @@ public class TestController2 extends CommonService {
 		return "done";
 	}
 
-	@Autowired
-	private CloudFlareService cloudFlareService;
-
-	@Autowired
-	private CloudFlareOptionService cloudFlareOptionService;
-	
-	@GetMapping(value = "/tv")
-	public ModelAndView tv() {
-		ModelAndView v = new ModelAndView("/testJSP/test");
-		v.addObject("siteKey", cloudFlareOptionService.getClientKey());
-		return v;
-	}
-
-	
-	@GetMapping(value = "/t4")
+	@PostMapping(value = "/t4")
 	@ResponseBody
-	public String t4(@RequestParam("token") String token) {
-		return String.valueOf(cloudFlareService.verify(token));
+	public String t4() {
+		return "{\"k\":\"v\"}";
 	}
 }

@@ -34,7 +34,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		}
 
 		WechatUserDetailExample example = new WechatUserDetailExample();
-		example.createCriteria().andUnionIdEqualTo(oid);
+		example.createCriteria().andOpenIdEqualTo(oid);
 		List<WechatUserDetail> wechatUserList = wechatUserDetailMapper.selectByExample(example);
 		if (!wechatUserList.isEmpty()) {
 			WechatUserDetail detail = wechatUserList.get(0);

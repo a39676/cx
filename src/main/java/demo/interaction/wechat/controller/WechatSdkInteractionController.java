@@ -11,6 +11,7 @@ import aiChat.pojo.constant.AiChatFromWechatSdkUrlConstant;
 import aiChat.pojo.result.GetTmpKeyByOpenIdResult;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import demo.common.controller.CommonController;
+import demo.interaction.wechat.service.WechatAiChatService;
 import demo.interaction.wechat.service.WechatUserService;
 
 @Controller
@@ -19,11 +20,19 @@ public class WechatSdkInteractionController extends CommonController {
 
 	@Autowired
 	private WechatUserService wechatUserService;
+	@Autowired
+	private WechatAiChatService wechatAiChatService;
 
 	@PostMapping(value = AiChatFromWechatSdkUrlConstant.GET_TMP_KEY_BY_OPEN_ID)
 	@ResponseBody
 	public GetTmpKeyByOpenIdResult getTmpKeyByOpenId(@RequestBody EncryptDTO dto) {
 		return wechatUserService.getTmpKeyByOpenId(dto);
+	}
+	
+	@PostMapping(value = AiChatFromWechatSdkUrlConstant.SEND_NEW_MESSAGE)
+	@ResponseBody
+	public EncryptDTO sendNewMessage(@RequestBody EncryptDTO dto) {
+		return wechatAiChatService.sendNewMessage(dto);
 	}
 
 }

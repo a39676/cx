@@ -1,6 +1,6 @@
 package demo.aiChat.service;
 
-import demo.aiChat.pojo.result.AiChatSendNewMessageResult;
+import aiChat.pojo.result.AiChatSendNewMessageResult;
 import demo.aiChat.pojo.result.GetAiChatHistoryResult;
 
 public interface AiChatService {

@@ -3,7 +3,7 @@ package demo.aiChat.pojo.result;
 import java.util.List;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.thirdPartyAPI.openAI.pojo.dto.OpanAiChatCompletionMessageDTO;
+import openAi.pojo.dto.OpanAiChatCompletionMessageDTO;
 
 public class GetAiChatHistoryResult extends CommonResult {
 

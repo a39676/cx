@@ -6,6 +6,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,19 +14,26 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
-import demo.thirdPartyAPI.openAI.pojo.dto.OpanAiChatCompletionMessageDTO;
-import demo.thirdPartyAPI.openAI.pojo.dto.OpanAiChatCompletionResponseDTO;
-import demo.thirdPartyAPI.openAI.pojo.result.OpenAiChatCompletionSendMessageResult;
-import demo.thirdPartyAPI.openAI.pojo.type.OpenAiChatCompletionMessageRoleType;
-import demo.thirdPartyAPI.openAI.pojo.type.OpenAiModelType;
+import demo.base.system.service.impl.SystemOptionService;
+import demo.common.service.CommonService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import openAi.pojo.dto.OpanAiChatCompletionMessageDTO;
+import openAi.pojo.dto.OpanAiChatCompletionResponseChoiceDTO;
+import openAi.pojo.dto.OpanAiChatCompletionResponseDTO;
+import openAi.pojo.dto.OpanAiChatCompletionResponseUsageDTO;
+import openAi.pojo.result.OpenAiChatCompletionSendMessageResult;
+import openAi.pojo.type.OpenAiChatCompletionFinishType;
+import openAi.pojo.type.OpenAiChatCompletionMessageRoleType;
+import openAi.pojo.type.OpenAiModelType;
 
 @Service
-public class OpenAiUtil {
+public class OpenAiUtil extends CommonService {
 
 	@Autowired
 	private OpenAiOptionService optionService;
+	@Autowired
+	private SystemOptionService systemOptionService;
 
 	private static final String MAIN_URL = "https://api.openai.com/v1";
 	@SuppressWarnings("unused")
@@ -93,6 +101,29 @@ public class OpenAiUtil {
 		OpenAiChatCompletionSendMessageResult r = new OpenAiChatCompletionSendMessageResult();
 		if (chatHistory == null) {
 			chatHistory = new ArrayList<>();
+		}
+
+		if (systemOptionService.isDev()) {
+			r.setIsSuccess();
+			OpanAiChatCompletionResponseDTO dto = new OpanAiChatCompletionResponseDTO();
+			OpanAiChatCompletionResponseChoiceDTO c = new OpanAiChatCompletionResponseChoiceDTO();
+			c.setFinish_reason(OpenAiChatCompletionFinishType.STOP.getName());
+			c.setIndex(0);
+			OpanAiChatCompletionMessageDTO msgDTO = new OpanAiChatCompletionMessageDTO();
+			msgDTO.setContent(msg + ", feedback");
+			msgDTO.setRole(OpenAiChatCompletionMessageRoleType.ASSISTANT.getName());
+			c.setMessage(msgDTO);
+			dto.setChoices(Arrays.asList(c));
+			dto.setCreated(1L);
+			dto.setId("id");
+			dto.setModel(OpenAiModelType.GPT_V_3_5.getName());
+			OpanAiChatCompletionResponseUsageDTO usage = new OpanAiChatCompletionResponseUsageDTO();
+			usage.setCompletion_tokens(1);
+			usage.setPrompt_tokens(2);
+			usage.setTotal_tokens(3);
+			dto.setUsage(usage);
+			r.setDto(dto);
+			return r;
 		}
 
 		try {

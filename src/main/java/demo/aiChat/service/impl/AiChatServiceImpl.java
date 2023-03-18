@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
+import aiChat.pojo.result.AiChatSendNewMessageResult;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiChat.mapper.AiChatUserAmountHistoryMapper;
 import demo.aiChat.mapper.AiChatUserChatHistoryMapper;
@@ -24,16 +25,15 @@ import demo.aiChat.pojo.dto.AiChatUserMembershipDetailSummaryDTO;
 import demo.aiChat.pojo.po.AiChatUserAmountHistory;
 import demo.aiChat.pojo.po.AiChatUserChatHistory;
 import demo.aiChat.pojo.po.AiChatUserDetail;
-import demo.aiChat.pojo.result.AiChatSendNewMessageResult;
 import demo.aiChat.pojo.result.GetAiChatHistoryResult;
 import demo.aiChat.service.AiChatMembershipService;
 import demo.aiChat.service.AiChatService;
-import demo.thirdPartyAPI.openAI.pojo.dto.OpanAiChatCompletionMessageDTO;
-import demo.thirdPartyAPI.openAI.pojo.result.OpenAiChatCompletionSendMessageResult;
-import demo.thirdPartyAPI.openAI.pojo.type.OpenAiAmountType;
-import demo.thirdPartyAPI.openAI.pojo.type.OpenAiChatCompletionFinishType;
-import demo.thirdPartyAPI.openAI.pojo.type.OpenAiChatCompletionMessageRoleType;
 import net.sf.json.JSONObject;
+import openAi.pojo.dto.OpanAiChatCompletionMessageDTO;
+import openAi.pojo.result.OpenAiChatCompletionSendMessageResult;
+import openAi.pojo.type.OpenAiAmountType;
+import openAi.pojo.type.OpenAiChatCompletionFinishType;
+import openAi.pojo.type.OpenAiChatCompletionMessageRoleType;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -93,6 +93,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 
 		OpanAiChatCompletionMessageDTO feedbackMsgDTO = apiResult.getDto().getChoices().get(0).getMessage();
 
+		r.setUsage(apiResult.getDto().getUsage().getTotal_tokens());
 		r.setMsgDTO(feedbackMsgDTO);
 		r.setFinishType(
 				OpenAiChatCompletionFinishType.getType(apiResult.getDto().getChoices().get(0).getFinish_reason()));

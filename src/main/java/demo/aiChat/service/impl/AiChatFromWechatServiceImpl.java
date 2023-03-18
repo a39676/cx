@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import aiChat.pojo.dto.AiChatSendNewMsgDTO;
-import demo.aiChat.pojo.result.AiChatSendNewMessageResult;
+import aiChat.pojo.result.AiChatSendNewMessageResult;
 import demo.aiChat.service.AiChatFromWechatService;
 import demo.aiChat.service.AiChatService;
 
@@ -40,8 +40,11 @@ public class AiChatFromWechatServiceImpl extends AiChatCommonService implements 
 			r.setMessage("Temporary key expired");
 			return r;
 		}
+		
+		tmpKeyInsertOrUpdateLiveTime(tmpK, aiChatUserId);
 
-		return aiChatService.sendNewChatMessage(aiChatUserId, dto.getMsg());
+		r = aiChatService.sendNewChatMessage(aiChatUserId, dto.getMsg());
+		return r;
 	}
 
 }

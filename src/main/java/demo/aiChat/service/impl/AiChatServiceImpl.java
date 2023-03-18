@@ -89,9 +89,18 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		// if success, debit amount, refresh history, send feedback
 		Integer totalTokens = apiResult.getDto().getUsage().getTotal_tokens();
 		debitAmount(userDetail, new BigDecimal(totalTokens));
-		refreshChatHistory(aiChatUserId, msg);
-
+		CommonResult refreshHistoryResult = refreshChatHistory(aiChatUserId, msg,
+				OpenAiChatCompletionMessageRoleType.USER);
+		if (refreshHistoryResult.isFail()) {
+			r.setMessage(refreshHistoryResult.getMessage());
+		}
 		OpanAiChatCompletionMessageDTO feedbackMsgDTO = apiResult.getDto().getChoices().get(0).getMessage();
+		OpenAiChatCompletionMessageRoleType feedbackMsgRoleType = OpenAiChatCompletionMessageRoleType
+				.getType(feedbackMsgDTO.getRole());
+		if (feedbackMsgRoleType == null) {
+			feedbackMsgRoleType = OpenAiChatCompletionMessageRoleType.ASSISTANT;
+		}
+		refreshChatHistory(aiChatUserId, feedbackMsgDTO.getContent(), feedbackMsgRoleType);
 
 		r.setUsage(apiResult.getDto().getUsage().getTotal_tokens());
 		r.setMsgDTO(feedbackMsgDTO);
@@ -160,30 +169,38 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		return lines;
 	}
 
-	private CommonResult refreshChatHistory(Long aiChatUserId, String msg) {
+	private CommonResult refreshChatHistory(Long aiChatUserId, String msg,
+			OpenAiChatCompletionMessageRoleType roleType) {
 		CommonResult r = new CommonResult();
 
-		String fileName = aiChatUserId + ".txt";
-		File mainFolder = new File(optionService.getChatStorePrefixPath() + File.separator + aiChatUserId);
-		String finalFilePath = mainFolder + File.separator + fileName;
+		String finalFilePath = null;
+		File targetFile = null;
+		AiChatUserChatHistory historyPO = chatHistoryMapper.selectByPrimaryKey(aiChatUserId);
+		if (historyPO == null) {
+			String fileName = aiChatUserId + ".txt";
+			File mainFolder = new File(optionService.getChatStorePrefixPath() + File.separator + aiChatUserId);
+			finalFilePath = mainFolder + File.separator + fileName;
+
+			targetFile = new File(finalFilePath);
+			File paraentFolder = targetFile.getParentFile();
+
+			if (!paraentFolder.exists()) {
+				if (!paraentFolder.mkdirs()) {
+					r.setMessage("对话记录存储异常, 本次对话可能没有正确存档 01");
+					return r;
+				}
+			}
+		} else {
+			finalFilePath = historyPO.getHistoryFilePath();
+		}
+		
+		Path path = Paths.get(finalFilePath);
 
 		OpanAiChatCompletionMessageDTO msgDTO = new OpanAiChatCompletionMessageDTO();
 		msgDTO.setContent(msg);
-		msgDTO.setRole(OpenAiChatCompletionMessageRoleType.USER.getName());
+		msgDTO.setRole(roleType.getName());
 		JSONObject newMsgJson = JSONObject.fromObject(msgDTO);
 		Integer chatHistorySaveCountingLimit = optionService.getChatHistorySaveCountingLimit();
-
-		Path path = Paths.get(finalFilePath);
-
-		File targetFile = new File(finalFilePath);
-		File paraentFolder = targetFile.getParentFile();
-
-		if (!paraentFolder.exists()) {
-			if (!paraentFolder.mkdirs()) {
-				r.setMessage("对话记录存储异常, 本次对话可能没有正确存档 01");
-				return r;
-			}
-		}
 
 		if (!targetFile.exists()) {
 			try {

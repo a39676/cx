@@ -2,7 +2,6 @@ package demo.aiChat.service.impl;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
-import demo.aiChat.pojo.dto.AiChatAesOptionDTO;
 import demo.aiChat.pojo.dto.AiChatUserMembershipLevelDetailDTO;
 import demo.common.service.CommonService;
 import toolPack.ioHandle.FileUtilCustom;
@@ -26,7 +24,6 @@ public class AiChatOptionService extends CommonService {
 	private String optionFilePath;
 	private String chatStorePrefixPath;
 	private Integer chatHistorySaveCountingLimit = 100;
-	private Map<String, AiChatAesOptionDTO> aesOptionMap;
 	private List<AiChatUserMembershipLevelDetailDTO> membershipLevelDetail;
 
 	public String getChatStorePrefixPath() {
@@ -45,14 +42,6 @@ public class AiChatOptionService extends CommonService {
 		this.chatHistorySaveCountingLimit = chatHistorySaveCountingLimit;
 	}
 
-	public Map<String, AiChatAesOptionDTO> getAesOptionMap() {
-		return aesOptionMap;
-	}
-
-	public void setAesOptionMap(Map<String, AiChatAesOptionDTO> aesOptionMap) {
-		this.aesOptionMap = aesOptionMap;
-	}
-
 	public List<AiChatUserMembershipLevelDetailDTO> getMembershipLevelDetail() {
 		return membershipLevelDetail;
 	}
@@ -64,8 +53,7 @@ public class AiChatOptionService extends CommonService {
 	@Override
 	public String toString() {
 		return "AiChatOptionService [chatStorePrefixPath=" + chatStorePrefixPath + ", chatHistorySaveCountingLimit="
-				+ chatHistorySaveCountingLimit + ", aesOptionMap=" + aesOptionMap + ", membershipLevelDetail="
-				+ membershipLevelDetail + "]";
+				+ chatHistorySaveCountingLimit + ", membershipLevelDetail=" + membershipLevelDetail + "]";
 	}
 
 	@PostConstruct

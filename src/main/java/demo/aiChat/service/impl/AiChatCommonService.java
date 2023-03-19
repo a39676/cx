@@ -62,4 +62,5 @@ public abstract class AiChatCommonService extends ToolCommonService{
 		PolicyFactory filter = textFilter.getArticleFilter();
 		return filter.sanitize(content);
 	}
+
 }

@@ -35,4 +35,9 @@ public class WechatSdkInteractionController extends CommonController {
 		return wechatAiChatService.sendNewMessage(dto);
 	}
 
+	@PostMapping(value = AiChatFromWechatSdkUrlConstant.GET_CHAT_HISTORY)
+	@ResponseBody
+	public EncryptDTO getChatHistory(@RequestBody EncryptDTO dto) {
+		return wechatAiChatService.findChatHistoryByAiChatUserIdToFrontEnd(dto);
+	}
 }

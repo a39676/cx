@@ -6,4 +6,6 @@ public interface WechatAiChatService {
 
 	EncryptDTO sendNewMessage(EncryptDTO encryptedDTO);
 
+	EncryptDTO findChatHistoryByAiChatUserIdToFrontEnd(EncryptDTO encryptedDTO);
+
 }

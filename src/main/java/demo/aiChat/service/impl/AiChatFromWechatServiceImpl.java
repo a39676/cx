@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import aiChat.pojo.dto.AiChatSendNewMsgDTO;
 import aiChat.pojo.result.AiChatSendNewMessageResult;
+import aiChat.pojo.result.GetAiChatHistoryResult;
 import demo.aiChat.service.AiChatFromWechatService;
 import demo.aiChat.service.AiChatService;
 
@@ -40,11 +41,34 @@ public class AiChatFromWechatServiceImpl extends AiChatCommonService implements 
 			r.setMessage("Temporary key expired");
 			return r;
 		}
-		
+
 		tmpKeyInsertOrUpdateLiveTime(tmpK, aiChatUserId);
 
 		r = aiChatService.sendNewChatMessage(aiChatUserId, dto.getMsg());
 		return r;
 	}
 
+	@Override
+	public GetAiChatHistoryResult findChatHistoryByAiChatUserIdToFrontEnd(String tmpKeyStr) {
+		GetAiChatHistoryResult r = null;
+		Long tmpKey = getTmpKeyNum(tmpKeyStr);
+		if (tmpKey == null) {
+			r = new GetAiChatHistoryResult();
+			r.setMessage("登录过期, 请重新登录后再试");
+			return r;
+		}
+
+		Long aiChatUserId = getAiChatUserIdByTempKey(tmpKey);
+
+		r = aiChatService.findChatHistoryByAiChatUserIdToFrontEnd(aiChatUserId);
+		return r;
+	}
+
+	private Long getTmpKeyNum(String tmpKeyStr) {
+		try {
+			return Long.parseLong(tmpKeyStr);
+		} catch (Exception e) {
+			return null;
+		}
+	}
 }

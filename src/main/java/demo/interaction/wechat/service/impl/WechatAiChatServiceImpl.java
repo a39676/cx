@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import aiChat.pojo.dto.AiChatSendNewMsgDTO;
 import aiChat.pojo.result.AiChatSendNewMessageResult;
+import aiChat.pojo.result.GetAiChatHistoryResult;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import demo.aiChat.service.AiChatFromWechatService;
 import demo.interaction.wechat.service.WechatAiChatService;
@@ -30,4 +31,15 @@ public class WechatAiChatServiceImpl extends WechatCommonService implements Wech
 		encryptedResult = encryptDTO(r);
 		return encryptedResult;
 	}
+
+	@Override
+	public EncryptDTO findChatHistoryByAiChatUserIdToFrontEnd(EncryptDTO encryptedDTO) {
+		EncryptDTO encryptedResult = null;
+		String tmpKeyStr = decryptEncryptDTO(encryptedDTO, String.class);
+		
+		GetAiChatHistoryResult getHistoryResult = aiChatService.findChatHistoryByAiChatUserIdToFrontEnd(tmpKeyStr);
+		encryptedResult =  encryptDTO(getHistoryResult);
+		return encryptedResult;
+	}
+	
 }

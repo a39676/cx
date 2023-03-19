@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 
 import aiChat.pojo.result.AiChatSendNewMessageResult;
+import aiChat.pojo.result.GetAiChatHistoryResult;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiChat.mapper.AiChatUserAmountHistoryMapper;
 import demo.aiChat.mapper.AiChatUserChatHistoryMapper;
@@ -25,7 +26,6 @@ import demo.aiChat.pojo.dto.AiChatUserMembershipDetailSummaryDTO;
 import demo.aiChat.pojo.po.AiChatUserAmountHistory;
 import demo.aiChat.pojo.po.AiChatUserChatHistory;
 import demo.aiChat.pojo.po.AiChatUserDetail;
-import demo.aiChat.pojo.result.GetAiChatHistoryResult;
 import demo.aiChat.service.AiChatMembershipService;
 import demo.aiChat.service.AiChatService;
 import net.sf.json.JSONObject;

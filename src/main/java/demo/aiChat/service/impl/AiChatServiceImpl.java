@@ -177,6 +177,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		File targetFile = null;
 		AiChatUserChatHistory historyPO = chatHistoryMapper.selectByPrimaryKey(aiChatUserId);
 		if (historyPO == null) {
+			
 			String fileName = aiChatUserId + ".txt";
 			File mainFolder = new File(optionService.getChatStorePrefixPath() + File.separator + aiChatUserId);
 			finalFilePath = mainFolder + File.separator + fileName;
@@ -190,8 +191,14 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 					return r;
 				}
 			}
+			
+			historyPO = new AiChatUserChatHistory();
+			historyPO.setHistoryFilePath(finalFilePath);
+			historyPO.setUserId(aiChatUserId);
+			chatHistoryMapper.insertSelective(historyPO);
 		} else {
 			finalFilePath = historyPO.getHistoryFilePath();
+			targetFile = new File(finalFilePath);
 		}
 		
 		Path path = Paths.get(finalFilePath);

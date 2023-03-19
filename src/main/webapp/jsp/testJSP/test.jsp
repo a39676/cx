@@ -109,5 +109,23 @@
         }
       });
     }
+
+    function waitingDemo() {
+      function waitLoop() {
+        var i = 1;
+        var loop = function() {
+          demoLoop(i);
+          i++;
+          if (i < 6) {
+            setTimeout(loop, 5000);
+          }
+        };
+        loop();
+      }
+      waitLoop();
+    }      
+    function demoLoop(str){
+      console.log(str);
+    }
   });
 </script>

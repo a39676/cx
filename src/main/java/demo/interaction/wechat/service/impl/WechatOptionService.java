@@ -21,6 +21,7 @@ public class WechatOptionService extends CommonService {
 	@Value("${optionFilePath.wechat}")
 	private String optionFilePath;
 
+	private String managerCode;
 	private String sdkMainUrl;
 	private String appTestId;
 	private String appTestSecret;
@@ -29,6 +30,22 @@ public class WechatOptionService extends CommonService {
 	private Long accessTokenLivingSecond;
 	private String aesKey;
 	private String aesInitVector;
+
+	@Override
+	public String toString() {
+		return "WechatOptionService [managerCode=" + managerCode + ", sdkMainUrl=" + sdkMainUrl + ", appTestId="
+				+ appTestId + ", appTestSecret=" + appTestSecret + ", appId1=" + appId1 + ", appSecret1=" + appSecret1
+				+ ", accessTokenLivingSecond=" + accessTokenLivingSecond + ", aesKey=" + aesKey + ", aesInitVector="
+				+ aesInitVector + "]";
+	}
+
+	public String getManagerCode() {
+		return managerCode;
+	}
+
+	public void setManagerCode(String managerCode) {
+		this.managerCode = managerCode;
+	}
 
 	public String getSdkMainUrl() {
 		return sdkMainUrl;

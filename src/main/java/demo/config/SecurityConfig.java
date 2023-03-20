@@ -46,7 +46,6 @@ import demo.test.pojo.constant.TestUrl;
 import demo.tool.other.pojo.constant.ToolUrlConstant;
 import image.pojo.constant.ImageInteractionUrl;
 import wechatPaySdk.jsApi.pojo.constant.WechatPaySdkUrlConstant;
-import wechatSdk.pojo.constant.WechatSdkUrlConstant;
 
 @SuppressWarnings("deprecation")
 @Configuration
@@ -127,9 +126,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(JoyManagerUrl.ROOT + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_ADMIN, SystemRolesType.ROLE_SUPER_ADMIN))
             // joy url end
-            .antMatchers(WechatSdkUrlConstant.ROOT + "/**")
-            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN))
-            	
             .and()
 				.formLogin().loginPage("/login/login").failureUrl("/login/login?error")
 				.loginProcessingUrl("/auth/login_check")

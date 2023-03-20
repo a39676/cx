@@ -2,19 +2,16 @@ package demo.interaction.wechat.service.impl;
 
 import java.time.LocalDateTime;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.Gson;
-
 import auxiliaryCommon.pojo.dto.EncryptDTO;
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.interaction.wechat.mapper.WechatAccessTokenMapper;
 import demo.interaction.wechat.pojo.po.WechatAccessToken;
 import demo.interaction.wechat.service.WechatTokenService;
-import net.sf.json.JSONObject;
-import toolPack.httpHandel.HttpUtil;
-import wechatApi.pojo.dto.GetAccessTokenDTO;
-import wechatSdk.pojo.constant.WechatSdkUrlConstant;
+import wechatSdk.pojo.dto.SaveAccessTokenDTO;
 import wechatSdk.pojo.result.GetWechatAccessTokenResult;
 
 @Service
@@ -24,77 +21,79 @@ public class WechatTokenServiceImpl extends WechatCommonService implements Wecha
 	private WechatAccessTokenMapper accessTokenMapper;
 
 	@Override
-	public void updateAccessToken() {
-		String appId = wechatOptionService.getAppId1();
-		String secret = wechatOptionService.getAppSecret1();
-		String url = wechatOptionService.getSdkMainUrl() + WechatSdkUrlConstant.ROOT
-				+ WechatSdkUrlConstant.UPDATE_ACCESS_TOKEN;
-		HttpUtil h = new HttpUtil();
+	public EncryptDTO updateAccessToken(EncryptDTO encryptedDTO) {
+		CommonResult r = new CommonResult();
+		EncryptDTO encryptedResult = null;
 
-		GetAccessTokenDTO dto = new GetAccessTokenDTO();
-		dto.setAppId(appId);
-		dto.setAppSecret(secret);
-		EncryptDTO encryptDTO = encryptDTO(dto);
-
-		JSONObject json = JSONObject.fromObject(encryptDTO);
-
-		String response = null;
-		try {
-			response = h.sendPostRestful(url, json.toString());
-		} catch (Exception e) {
-			log.error("Update access token error, appId: " + appId + ", e: " + e.getLocalizedMessage());
+		SaveAccessTokenDTO dto = decryptEncryptDTO(encryptedDTO, SaveAccessTokenDTO.class);
+		if (dto == null) {
+			r.setMessage("DTO decrypt fail or parameter error");
+			encryptedResult = encryptDTO(r);
+			return encryptedResult;
 		}
 
-		try {
-			GetWechatAccessTokenResult result = new Gson().fromJson(response, GetWechatAccessTokenResult.class);
-			if (result.isFail()) {
-				sendTelegramMessage("Update wechat access token failed, appId: " + appId + ", msg: "
-						+ result.getMessage() + ", code: " + result.getCode());
-			}
-
-			WechatAccessToken po = accessTokenMapper.selectByPrimaryKey(appId);
-			if (po == null) {
-				po = new WechatAccessToken();
-				po.setAppId(appId);
-				po.setToken(result.getAccessToken());
-				accessTokenMapper.insertSelective(po);
-			} else {
-				po.setToken(result.getAccessToken());
-				po.setCreateTime(LocalDateTime.now());
-				accessTokenMapper.updateByPrimaryKeySelective(po);
-			}
-		} catch (Exception e) {
-			sendTelegramMessage(
-					"Update wechat access token failed, appId: " + appId + ", msg: " + e.getLocalizedMessage());
+		if (StringUtils.isAnyBlank(dto.getAccessToken(), dto.getAppId())) {
+			r.setMessage("Parameter error");
+			encryptedResult = encryptDTO(r);
+			return encryptedResult;
 		}
+
+		WechatAccessToken po = accessTokenMapper.selectByPrimaryKey(dto.getAppId());
+		int updateCount = 0;
+		if (po == null) {
+			po = new WechatAccessToken();
+			po.setAppId(dto.getAppId());
+			po.setToken(dto.getAccessToken());
+			po.setCreateTime(LocalDateTime.now().minusMinutes(5));
+			updateCount = accessTokenMapper.insert(po);
+		} else {
+			po.setToken(dto.getAccessToken());
+			po.setCreateTime(LocalDateTime.now().minusMinutes(5));
+			updateCount = accessTokenMapper.updateByPrimaryKey(po);
+		}
+
+		if (updateCount < 1) {
+			r.setMessage("Saving error");
+			encryptedResult = encryptDTO(r);
+			return encryptedResult;
+		}
+
+		r.setIsSuccess();
+		encryptedResult = encryptDTO(r);
+		return encryptedResult;
+
 	}
 
 	@Override
-	public String getAccessToken() {
-		String appId = wechatOptionService.getAppId1();
-
+	public EncryptDTO getAccessToken(EncryptDTO encryptDTO) {
+		GetWechatAccessTokenResult r = new GetWechatAccessTokenResult();
+		EncryptDTO encryptedResult = null;
+		
+		String appId = decryptEncryptDTO(encryptDTO, String.class);
+		if(StringUtils.isBlank(appId)) {
+			r.setMessage("Token NOT exists, please update it by yourself");
+			encryptedResult = encryptDTO(r);
+			return encryptedResult;
+		}
+		
 		WechatAccessToken po = accessTokenMapper.selectByPrimaryKey(appId);
 		if (po == null) {
-			updateAccessToken();
-			po = accessTokenMapper.selectByPrimaryKey(appId);
-			if (po == null) {
-				return null;
-			}
-			
-			return po.getToken();
+			r.setMessage("Token NOT exists, please update it by yourself");
+			encryptedResult = encryptDTO(r);
+			return encryptedResult;
 		}
-		
+
 		LocalDateTime now = LocalDateTime.now();
-		if(po.getCreateTime().plusSeconds(wechatOptionService.getAccessTokenLivingSecond()).isBefore(now)) {
-			updateAccessToken();
-			po = accessTokenMapper.selectByPrimaryKey(appId);
-			if (po == null) {
-				return null;
-			}
-			
-			return po.getToken();
+		if (po.getCreateTime().plusSeconds(wechatOptionService.getAccessTokenLivingSecond()).isBefore(now)) {
+			r.setMessage("Token expired, please update it by yourself");
+			encryptedResult = encryptDTO(r);
+			return encryptedResult;
 		}
-		
-		return po.getToken();
+
+		r.setIsSuccess();
+		r.setAccessToken(po.getToken());
+		encryptedResult = encryptDTO(r);
+		return encryptedResult;
+
 	}
 }

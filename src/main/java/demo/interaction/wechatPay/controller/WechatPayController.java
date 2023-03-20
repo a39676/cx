@@ -23,4 +23,16 @@ public class WechatPayController {
 	public EncryptDTO getOption(@RequestBody EncryptDTO dto) {
 		return wechatPayService.getWechatPayOptionDTO(dto);
 	}
+	
+	@PostMapping(value = WechatPaySdkUrlConstant.GET_TICKET)
+	@ResponseBody
+	public EncryptDTO getJsApiTicket(@RequestBody EncryptDTO dto) {
+		return wechatPayService.getJsApiTicket(dto);
+	}
+
+	@PostMapping(value = WechatPaySdkUrlConstant.UPDATE_TICKET)
+	@ResponseBody
+	public EncryptDTO updateJsApiTicket(@RequestBody EncryptDTO dto) {
+		return wechatPayService.updateJsApiTicket(dto);
+	}
 }

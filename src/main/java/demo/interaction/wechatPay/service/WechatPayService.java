@@ -6,4 +6,8 @@ public interface WechatPayService {
 
 	EncryptDTO getWechatPayOptionDTO(EncryptDTO encrypt);
 
+	EncryptDTO getJsApiTicket(EncryptDTO encryptDTO);
+
+	EncryptDTO updateJsApiTicket(EncryptDTO encryptedDTO);
+
 }

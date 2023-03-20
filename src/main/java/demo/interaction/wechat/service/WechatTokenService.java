@@ -1,9 +1,11 @@
 package demo.interaction.wechat.service;
 
+import auxiliaryCommon.pojo.dto.EncryptDTO;
+
 public interface WechatTokenService {
 
-	void updateAccessToken();
+	EncryptDTO getAccessToken(EncryptDTO encryptDTO);
 
-	String getAccessToken();
+	EncryptDTO updateAccessToken(EncryptDTO encryptedDTO);
 
 }

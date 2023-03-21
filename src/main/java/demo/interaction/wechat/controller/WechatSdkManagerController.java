@@ -29,10 +29,10 @@ public class WechatSdkManagerController {
 		return wechatSdkManagerService.refreshWechatSdkWechatOption();
 	}
 
-	@GetMapping(value = WechatSdkUrlConstant.GET_WECHAT_SDK_WECHAT_OPTION)
+	@PostMapping(value = WechatSdkUrlConstant.GET_WECHAT_SDK_WECHAT_OPTION)
 	@ResponseBody
-	public EncryptDTO getWechatSdkWechatOption() {
-		return wechatSdkManagerService.getWechatSdkWechatOption();
+	public EncryptDTO getWechatSdkWechatOption(EncryptDTO dto) {
+		return wechatSdkManagerService.getWechatSdkWechatOption(dto);
 	}
 
 	@PostMapping(value = WechatSdkUrlConstant.UPDATE_ACCESS_TOKEN)

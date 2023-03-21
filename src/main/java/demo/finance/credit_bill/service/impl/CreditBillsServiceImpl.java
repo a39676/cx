@@ -38,7 +38,7 @@ public class CreditBillsServiceImpl extends CommonService implements CreditBills
 	}
 	
 	public int insertCreditBill(CreditBills creditBill) {
-		String marker = encryptUtil.Sha1(encryptUtil.ToMd5String(getCreditBillInfos(creditBill)));
+		String marker = encryptUtil.sha1(encryptUtil.toMd5String(getCreditBillInfos(creditBill)));
 		creditBill.setMarker(marker);
 		
 		return creditBillsMapper.insert(creditBill);
@@ -51,7 +51,7 @@ public class CreditBillsServiceImpl extends CommonService implements CreditBills
 		}
 
 		return creditBill.getMarker()
-				.equals(encryptUtil.Sha1(encryptUtil.ToMd5String(getCreditBillInfos(creditBill))));
+				.equals(encryptUtil.sha1(encryptUtil.toMd5String(getCreditBillInfos(creditBill))));
 	}
 	
 	@Override

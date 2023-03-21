@@ -44,7 +44,7 @@ public class TradingInsertServiceImpl extends CommonService implements TradingIn
 	}
 	
 	private String getTradingRecorderMarker(TradingRecorder po) {
-		return encryptUtil.Sha1(encryptUtil.ToMd5String(getTradingRecorderInfos(po)));
+		return encryptUtil.sha1(encryptUtil.toMd5String(getTradingRecorderInfos(po)));
 	}
 	
 	private String getTradingRecorderInfos(TradingRecorder po) {

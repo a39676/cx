@@ -7,6 +7,6 @@ public interface WechatSdkManagerService {
 
 	CommonResult refreshWechatSdkWechatOption();
 
-	EncryptDTO getWechatSdkWechatOption();
+	EncryptDTO getWechatSdkWechatOption(EncryptDTO dto);
 
 }

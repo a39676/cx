@@ -732,7 +732,7 @@ public class AccountInfoServiceImpl extends CommonService implements AccountInfo
 	}
 
 	private String createAccountInfoMarker(AccountInfo accountInfo) {
-		return encryptUtil.Sha1(encryptUtil.Sha1(encryptUtil.ToMd5String(getAccountInfoInfos(accountInfo))));
+		return encryptUtil.sha1(encryptUtil.sha1(encryptUtil.toMd5String(getAccountInfoInfos(accountInfo))));
 	}
 
 	private String getAccountInfoInfos(AccountInfo po) {

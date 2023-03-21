@@ -46,8 +46,12 @@ public class WechatSdkManagerServiceImpl extends WechatCommonService implements 
 	}
 
 	@Override
-	public EncryptDTO getWechatSdkWechatOption() {
+	public EncryptDTO getWechatSdkWechatOption(EncryptDTO encryptedDTO) {
+		String managerCode = decryptEncryptDTO(encryptedDTO, String.class);
 		UpdateWechatOptionDTO dto = new UpdateWechatOptionDTO();
+		if(!wechatOptionService.getManagerCode().equals(managerCode)) {
+			return encryptDTO(dto);
+		}
 		dto.setAppId(wechatOptionService.getAppId1());
 		dto.setAppSecret(wechatOptionService.getAppSecret1());
 

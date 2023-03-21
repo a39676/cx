@@ -46,6 +46,7 @@ import demo.test.pojo.constant.TestUrl;
 import demo.tool.other.pojo.constant.ToolUrlConstant;
 import image.pojo.constant.ImageInteractionUrl;
 import wechatPaySdk.jsApi.pojo.constant.WechatPaySdkUrlConstant;
+import wechatSdk.pojo.constant.WechatSdkUrlConstant;
 
 @SuppressWarnings("deprecation")
 @Configuration
@@ -169,6 +170,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	    .antMatchers(ImageInteractionUrl.ROOT + "/**")
 	    .antMatchers(AiChatFromWechatSdkUrlConstant.ROOT + "/**")
 	    .antMatchers(WechatPaySdkUrlConstant.ROOT + "/**")
+	    .antMatchers(WechatSdkUrlConstant.ROOT + "/**")
 	    ;
 	}
 	

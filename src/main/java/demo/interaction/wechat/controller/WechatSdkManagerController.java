@@ -2,20 +2,18 @@ package demo.interaction.wechat.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import auxiliaryCommon.pojo.dto.EncryptDTO;
-import auxiliaryCommon.pojo.result.CommonResult;
 import demo.interaction.wechat.service.WechatSdkManagerService;
 import demo.interaction.wechat.service.WechatTokenService;
 import wechatSdk.pojo.constant.WechatSdkUrlConstant;
 
 @Controller
-@RequestMapping(value = WechatSdkUrlConstant.WECHAT_MANAGER)
+@RequestMapping(value = WechatSdkUrlConstant.ROOT)
 public class WechatSdkManagerController {
 
 	@Autowired
@@ -23,15 +21,9 @@ public class WechatSdkManagerController {
 	@Autowired
 	private WechatTokenService tokenService;
 
-	@GetMapping(value = "/refreshWechatSdkWechatOption")
-	@ResponseBody
-	public CommonResult refreshWechatSdkWechatOption() {
-		return wechatSdkManagerService.refreshWechatSdkWechatOption();
-	}
-
 	@PostMapping(value = WechatSdkUrlConstant.GET_WECHAT_SDK_WECHAT_OPTION)
 	@ResponseBody
-	public EncryptDTO getWechatSdkWechatOption(EncryptDTO dto) {
+	public EncryptDTO getWechatSdkWechatOption(@RequestBody EncryptDTO dto) {
 		return wechatSdkManagerService.getWechatSdkWechatOption(dto);
 	}
 

@@ -35,16 +35,21 @@
   <a href="/optionConstant/refreshMailOption" target="_blank">refreshMailOption</a><br>
   <a href="/optionConstant/refreshCloudinaryOption" target="_blank">refreshCloudinaryOption</a><br>
   <a href="/optionConstant/refreshAutomationTestOption" target="_blank">refreshAutomationTestOption</a><br>
+  
   <a href="/optionConstant/refreshCryptoCoinOption" target="_blank">refreshCryptoCoinOption</a><br>
   <a href="/optionConstant/refreshCurrencyExchangeRateOption" target="_blank">refreshCurrencyExchangeRateOption</a><br>
+  
   <a href="/optionConstant/refreshTelegramOption" target="_blank">refreshTelegramOption</a><br>
   <a href="/optionConstant/refreshEducateOption" target="_blank">refreshEducateOption</a><br>
+  
   <a href="/optionConstant/refreshJoyOption" target="_blank">refreshJoyOption</a><br>
   <a href="/optionConstant/refreshJoyGardenOption" target="_blank">refreshJoyGardenOption</a><br>
   <a href="/optionConstant/refreshOpenAiOption" target="_blank">refreshOpenAiOption</a><br>
-  <a href="/optionConstant/refreshWechatOption" target="_blank">refreshWechatOption</a><br>
   <a href="/optionConstant/refreshAiChatOption" target="_blank">refreshAiChatOption</a><br>
   <a href="/optionConstant/refreshCloudFlareOption" target="_blank">refreshCloudFlareOption</a><br>
+  
+  <a href="/optionConstant/refreshWechatOption" target="_blank">refreshWechatOption</a><br>
+  <a href="/optionConstant/refreshWechatPayOption" target="_blank">refreshWechatPayOption</a><br>
 </div>
 
 <hr>

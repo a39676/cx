@@ -15,6 +15,7 @@ import demo.base.system.service.impl.SystemOptionService;
 import demo.finance.cryptoCoin.common.service.CryptoCoinOptionService;
 import demo.finance.currencyExchangeRate.data.service.impl.CurrencyExchangeRateOptionService;
 import demo.interaction.wechat.service.impl.WechatOptionService;
+import demo.interaction.wechatPay.service.impl.WechatPayOptionService;
 import demo.joy.common.service.JoyOptionService;
 import demo.joy.garden.service.impl.JoyGardenOptionService;
 import demo.thirdPartyAPI.cloudFlare.service.impl.CloudFlareOptionService;
@@ -60,6 +61,8 @@ public class OptionConstantController {
 	private AiChatOptionService aichatOptionService;
 	@Autowired
 	private CloudFlareOptionService cloudFlareOptionService;
+	@Autowired
+	private WechatPayOptionService wechatPayOptionService;
 
 	@GetMapping(value = "/refreshSystemOption")
 	@ResponseBody
@@ -169,6 +172,13 @@ public class OptionConstantController {
 	@ResponseBody
 	public String refreshCloudFlareOption() {
 		cloudFlareOptionService.refreshOption();
+		return "done";
+	}
+
+	@GetMapping(value = "/refreshWechatPayOption")
+	@ResponseBody
+	public String refreshWechatPayOption() {
+		wechatPayOptionService.refreshOption();
 		return "done";
 	}
 }

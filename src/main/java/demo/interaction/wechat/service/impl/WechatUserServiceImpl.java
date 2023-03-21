@@ -26,11 +26,12 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 	private static final String FAKE_UID_PREFIX = "FakeUid_";
 
 	@Override
-	public GetTmpKeyByOpenIdResult getTmpKeyByOpenId(EncryptDTO dto) {
+	public EncryptDTO getTmpKeyByOpenId(EncryptDTO dto) {
 		GetTmpKeyByOpenIdResult r = new GetTmpKeyByOpenIdResult();
 		String oid = decryptEncryptDTO(dto, String.class);
 		if (oid == null) {
-			return r;
+			r.setMessage("Oid = null");
+			return encryptDTO(r);
 		}
 
 		WechatUserDetailExample example = new WechatUserDetailExample();
@@ -39,13 +40,14 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		if (!wechatUserList.isEmpty()) {
 			WechatUserDetail detail = wechatUserList.get(0);
 			if (detail.getIsBlock()) {
-				return r;
+				r.setMessage("Blocked user");
+				return encryptDTO(r);
 			}
 
 			Long tmpKey = aiChatUserService.createNewTmpKey(detail.getId(), oid);
 			r.setTmpKey(tmpKey);
 			r.setIsSuccess();
-			return r;
+			return encryptDTO(r);
 		}
 
 		WechatUserDetail detail = createWechatUserDetailWithOnlyOpenId(oid);
@@ -53,7 +55,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 				.createAiChatUserDetailByWechatUid(detail.getId(), oid);
 		r.setTmpKey(createAiChatUserResult.getTmpKey());
 		r.setIsSuccess();
-		return r;
+		return encryptDTO(r);
 	}
 
 	private WechatUserDetail createWechatUserDetailWithOnlyOpenId(String oid) {

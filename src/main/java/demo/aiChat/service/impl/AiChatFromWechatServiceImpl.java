@@ -9,6 +9,7 @@ import aiChat.pojo.result.AiChatSendNewMessageResult;
 import aiChat.pojo.result.GetAiChatHistoryResult;
 import demo.aiChat.service.AiChatFromWechatService;
 import demo.aiChat.service.AiChatService;
+import wechatSdk.pojo.type.WechatSdkCommonResultType;
 
 @Service
 public class AiChatFromWechatServiceImpl extends AiChatCommonService implements AiChatFromWechatService {
@@ -22,7 +23,7 @@ public class AiChatFromWechatServiceImpl extends AiChatCommonService implements 
 
 		if (StringUtils.isBlank(dto.getTemporaryKey())) {
 			r = new AiChatSendNewMessageResult();
-			r.setMessage("Temporary key expired");
+			r.setResultByType(WechatSdkCommonResultType.TMP_KEY_EXPIRED);
 			return r;
 		}
 
@@ -31,14 +32,14 @@ public class AiChatFromWechatServiceImpl extends AiChatCommonService implements 
 			tmpK = Long.parseLong(dto.getTemporaryKey());
 		} catch (Exception e) {
 			r = new AiChatSendNewMessageResult();
-			r.setMessage("Temporary key expired");
+			r.setResultByType(WechatSdkCommonResultType.TMP_KEY_EXPIRED);
 			return r;
 		}
 
 		Long aiChatUserId = getAiChatUserIdByTempKey(tmpK);
 		if (aiChatUserId == null) {
 			r = new AiChatSendNewMessageResult();
-			r.setMessage("Temporary key expired");
+			r.setResultByType(WechatSdkCommonResultType.TMP_KEY_EXPIRED);
 			return r;
 		}
 

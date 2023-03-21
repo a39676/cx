@@ -9,6 +9,7 @@ import aiChat.pojo.result.GetAiChatHistoryResult;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import demo.aiChat.service.AiChatFromWechatService;
 import demo.interaction.wechat.service.WechatAiChatService;
+import wechatSdk.pojo.type.WechatSdkCommonResultType;
 
 @Service
 public class WechatAiChatServiceImpl extends WechatCommonService implements WechatAiChatService {
@@ -23,7 +24,7 @@ public class WechatAiChatServiceImpl extends WechatCommonService implements Wech
 		AiChatSendNewMsgDTO dto = decryptEncryptDTO(encryptedDTO, AiChatSendNewMsgDTO.class);
 		if(dto == null) {
 			r = new AiChatSendNewMessageResult();
-			r.setMessage("Temporary key expired");
+			r.setResultByType(WechatSdkCommonResultType.TMP_KEY_EXPIRED);
 			encryptedResult = encryptDTO(r);
 			return encryptedResult;
 		}

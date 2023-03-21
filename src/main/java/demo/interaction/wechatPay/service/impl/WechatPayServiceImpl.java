@@ -111,6 +111,7 @@ public class WechatPayServiceImpl extends WechatCommonService implements WechatP
 
 		r.setIsSuccess();
 		r.setJsApiTicket(po.getTicket());
+		r.setTicketCreateTimeStr(localDateTimeHandler.dateToStr(po.getCreateTime()));
 		encryptedResult = encryptDTO(r);
 		return encryptedResult;
 	}

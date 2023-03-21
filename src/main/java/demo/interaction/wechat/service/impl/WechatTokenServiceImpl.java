@@ -92,6 +92,7 @@ public class WechatTokenServiceImpl extends WechatCommonService implements Wecha
 
 		r.setIsSuccess();
 		r.setAccessToken(po.getToken());
+		r.setAccessTokenCreateTimeStr(localDateTimeHandler.dateToStr(po.getCreateTime()));
 		encryptedResult = encryptDTO(r);
 		return encryptedResult;
 

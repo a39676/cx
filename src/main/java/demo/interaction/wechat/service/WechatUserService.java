@@ -6,4 +6,6 @@ public interface WechatUserService {
 
 	EncryptDTO getTmpKeyByOpenId(EncryptDTO dto);
 
+	void extendTmpKeyValidity(EncryptDTO dto);
+
 }

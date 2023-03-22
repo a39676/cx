@@ -39,4 +39,9 @@ public class WechatSdkInteractionController extends CommonController {
 	public EncryptDTO getChatHistory(@RequestBody EncryptDTO dto) {
 		return wechatAiChatService.findChatHistoryByAiChatUserIdToFrontEnd(dto);
 	}
+	
+	@PostMapping(value = AiChatFromWechatSdkUrlConstant.EXTEND_TMP_KEY_VALIDITY)
+	public void extendTmpKeyValidity(@RequestBody EncryptDTO dto) {
+		wechatUserService.extendTmpKeyValidity(dto);
+	}
 }

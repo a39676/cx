@@ -69,4 +69,9 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		return po;
 	}
 
+	@Override
+	public void extendTmpKeyValidity(EncryptDTO dto) {
+		Long tmpKey = decryptEncryptDTO(dto, Long.class);
+		aiChatUserService.extendTmpKeyValidity(tmpKey);
+	}
 }

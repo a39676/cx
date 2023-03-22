@@ -10,4 +10,6 @@ public interface AiChatUserService {
 
 	Long createNewTmpKey(Long wechatUserId, String openId);
 
+	void extendTmpKeyValidity(Long tmpKey);
+
 }

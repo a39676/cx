@@ -26,6 +26,7 @@ public class WechatPayOptionService extends CommonService {
 	private String merchantId;
 	private String merchantSerialNumber;
 	private Long jsApiTicketLivingSecond;
+	private Long certificateLivingSecond;
 
 	public String getPrivateKey() {
 		return privateKey;
@@ -67,11 +68,19 @@ public class WechatPayOptionService extends CommonService {
 		this.jsApiTicketLivingSecond = jsApiTicketLivingSecond;
 	}
 
+	public Long getCertificateLivingSecond() {
+		return certificateLivingSecond;
+	}
+
+	public void setCertificateLivingSecond(Long certificateLivingSecond) {
+		this.certificateLivingSecond = certificateLivingSecond;
+	}
+
 	@Override
 	public String toString() {
 		return "WechatPayOptionService [privateKey=" + privateKey + ", apiV3Key=" + apiV3Key + ", merchantId="
 				+ merchantId + ", merchantSerialNumber=" + merchantSerialNumber + ", jsApiTicketLivingSecond="
-				+ jsApiTicketLivingSecond + "]";
+				+ jsApiTicketLivingSecond + ", certificateLivingSecond=" + certificateLivingSecond + "]";
 	}
 
 	@PostConstruct

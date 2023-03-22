@@ -54,9 +54,9 @@
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="wechat_pay_js_api_ticket">
-        	<property name="tableName" value="wechat_pay_js_api_ticket"></property>
-        	<property name="domainObjectName" value="wechat_pay_js_api_ticket"></property>
+        <table tableName="wechat_pay_certificate">
+        	<property name="tableName" value="wechat_pay_certificate"></property>
+        	<property name="domainObjectName" value="wechat_pay_certificate"></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

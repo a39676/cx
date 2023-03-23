@@ -104,7 +104,9 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 			r.setMessage("付款异常, 已通知客服跟进, 请稍后");
 			return encryptDTO(r);
 		}
-		r = aiChatMembershipService.buyMembershipFromWechat(dto);
+		String openId = dto.getFeedback().getPayer().getOpenId();
+		Long wechatUserId = __getWechatUserIdByOpenId(openId);
+		r = aiChatMembershipService.buyMembershipFromWechat(dto, wechatUserId);
 		return encryptDTO(r);
 	}
 	

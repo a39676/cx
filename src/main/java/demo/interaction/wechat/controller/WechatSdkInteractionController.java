@@ -50,4 +50,5 @@ public class WechatSdkInteractionController extends CommonController {
 	public EncryptDTO buyMembershipFromWechat(@RequestBody EncryptDTO dto) {
 		return wechatUserService.buyMembershipFromWechat(dto);
 	}
+	
 }

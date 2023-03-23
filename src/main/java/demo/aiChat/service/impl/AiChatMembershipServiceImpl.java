@@ -89,7 +89,7 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 	}
 
 	@Override
-	public CommonResult buyMembershipFromWechat(BuyMembershipFromWechatDTO dto) {
+	public CommonResult buyMembershipFromWechat(BuyMembershipFromWechatDTO dto, Long wechatUserId) {
 		CommonResult r = new CommonResult();
 		if (dto == null) {
 			r.setMessage("Decrypt error");
@@ -109,12 +109,12 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 		}
 
 		Long membershipId = systemOptionService.decryptPrivateKey(dto.getMembershipPk());
-		if(membershipId == null) {
+		if (membershipId == null) {
 			sendTelegramMessage("收到付款失败回调: " + dto.toString());
 			r.setMessage("付款异常, 已通知客服, 请稍后 0x2");
 			return r;
 		}
-		
+
 		AiChatUserMembershipLevelDetailDTO membershipLevelDetail = getMembershipLevelMap().get(membershipId);
 		if (membershipLevelDetail == null) {
 			sendTelegramMessage("收到付款失败回调: " + dto.toString());
@@ -122,14 +122,20 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 			return r;
 		}
 
-		Long aiChatUserId = userService.__getAiChatUserIdByOpenId(dto.getFeedback().getPayer().getOpenId());
+		Long aiChatUserId = userService.__getAiChatUserIdByWechatUserId(wechatUserId);
+		if (aiChatUserId == null) {
+			sendTelegramMessage("收到付款失败回调: " + dto.toString());
+			r.setMessage("付款异常, 已通知客服, 请稍后 0x4");
+			return r;
+		}
 		AiChatUserMembership memberShipPO = new AiChatUserMembership();
 		memberShipPO.setAiChatUserId(aiChatUserId);
 		memberShipPO.setMembershipLevel(membershipId);
 		mapper.insertSelective(memberShipPO);
 
-		userService.recharge(aiChatUserId, AiChatAmountType.BONUS, new BigDecimal(membershipLevelDetail.getDailyBonus()));
-		
+		userService.recharge(aiChatUserId, AiChatAmountType.BONUS,
+				new BigDecimal(membershipLevelDetail.getDailyBonus()));
+
 		AiChatUserMembershipDetailSummaryDTO membershipDetailSummary = cacheService.getMembershipCacheMap()
 				.get(aiChatUserId);
 		if (membershipDetailSummary == null) {

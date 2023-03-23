@@ -16,8 +16,8 @@ public interface AiChatUserService {
 
 	void extendTmpKeyValidity(Long tmpKey);
 
-	Long __getAiChatUserIdByOpenId(String openId);
-
 	CommonResult recharge(Long aiChatUserId, AiChatAmountType amountType, BigDecimal amount);
+
+	Long __getAiChatUserIdByWechatUserId(Long wechatUserId);
 
 }

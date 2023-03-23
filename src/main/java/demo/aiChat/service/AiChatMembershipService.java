@@ -13,6 +13,6 @@ public interface AiChatMembershipService {
 
 	AiChatUserMembershipDetailSummaryDTO findMembershipDetailSummaryByUserId(Long aiChatUserId);
 
-	CommonResult buyMembershipFromWechat(BuyMembershipFromWechatDTO dto);
+	CommonResult buyMembershipFromWechat(BuyMembershipFromWechatDTO dto, Long wechatUserId);
 
 }

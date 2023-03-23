@@ -18,7 +18,6 @@ import demo.aiChat.pojo.po.SystemUserAssociateAiChatUserExample;
 import demo.aiChat.pojo.po.SystemUserAssociateAiChatUserKey;
 import demo.aiChat.pojo.result.CreateAiChatUserResult;
 import demo.aiChat.service.AiChatUserService;
-import demo.interaction.wechat.service.WechatUserService;
 
 @Service
 public class AiChatUserServiceImpl extends AiChatCommonService implements AiChatUserService {
@@ -29,8 +28,6 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 	private SystemUserAssociateAiChatUserMapper systemUserAssociateMapper;
 	@Autowired
 	private AiChatUserAssociateWechatUidMapper aiChatUserAssociateWechatUidMapper;
-	@Autowired
-	private WechatUserService wechatUserService;
 
 	@Override
 	public CreateAiChatUserResult createAiChatUserDetailBySystemUserId(Long systemUserId) {
@@ -138,8 +135,7 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 	}
 
 	@Override
-	public Long __getAiChatUserIdByOpenId(String openId) {
-		Long wechatUserId = wechatUserService.__getWechatUserIdByOpenId(openId);
+	public Long __getAiChatUserIdByWechatUserId(Long wechatUserId) {
 		if (wechatUserId == null) {
 			return null;
 		}
@@ -153,8 +149,7 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 	}
 
 	@Override
-	public CommonResult recharge(Long aiChatUserId, AiChatAmountType amountType,
-			BigDecimal amount) {
+	public CommonResult recharge(Long aiChatUserId, AiChatAmountType amountType, BigDecimal amount) {
 		CommonResult r = new CommonResult();
 		if (aiChatUserId == null || amountType == null || amount == null || amount.compareTo(BigDecimal.ZERO) < 0) {
 			r.setMessage("Param error");
@@ -181,7 +176,7 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 					+ amountType.getName() + ", amount: " + amount);
 			return r;
 		}
-		
+
 		r.setIsSuccess();
 		return r;
 	}

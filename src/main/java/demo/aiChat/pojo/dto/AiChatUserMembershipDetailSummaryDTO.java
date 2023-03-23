@@ -1,6 +1,6 @@
 package demo.aiChat.pojo.dto;
 
-public class AiChatUserMembershipDetailSummaryDTO extends AiChatUserMembershipLevelDetailDTO {
+public class AiChatUserMembershipDetailSummaryDTO extends AiChatUserMembershipDetailDTO {
 
 	private Long aiChatUserId;
 

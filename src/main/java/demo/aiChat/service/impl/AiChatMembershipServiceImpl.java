@@ -2,6 +2,8 @@ package demo.aiChat.service.impl;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,12 +14,14 @@ import org.springframework.stereotype.Service;
 import aiChat.pojo.type.AiChatAmountType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiChat.mapper.AiChatUserMembershipMapper;
+import demo.aiChat.pojo.dto.AiChatUserMembershipDetailDTO;
 import demo.aiChat.pojo.dto.AiChatUserMembershipDetailSummaryDTO;
-import demo.aiChat.pojo.dto.AiChatUserMembershipLevelDetailDTO;
 import demo.aiChat.pojo.po.AiChatUserMembership;
 import demo.aiChat.pojo.po.AiChatUserMembershipExample;
+import demo.aiChat.pojo.po.AiChatUserMembershipKey;
 import demo.aiChat.service.AiChatMembershipService;
 import demo.aiChat.service.AiChatUserService;
+import net.sf.json.JSONObject;
 import wechatSdk.pojo.dto.BuyMembershipFromWechatDTO;
 
 @Service
@@ -28,11 +32,11 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 	@Autowired
 	private AiChatUserService userService;
 
-	private Map<Long, AiChatUserMembershipLevelDetailDTO> getMembershipLevelMap() {
-		List<AiChatUserMembershipLevelDetailDTO> membershipList = optionService.getMembershipLevelDetail();
-		Map<Long, AiChatUserMembershipLevelDetailDTO> map = new HashMap<>();
-		for (AiChatUserMembershipLevelDetailDTO membership : membershipList) {
-			map.put(membership.getLevel(), membership);
+	private Map<Long, AiChatUserMembershipDetailDTO> getMembershipLevelMap() {
+		List<AiChatUserMembershipDetailDTO> membershipList = optionService.getMembershipLDetails();
+		Map<Long, AiChatUserMembershipDetailDTO> map = new HashMap<>();
+		for (AiChatUserMembershipDetailDTO membership : membershipList) {
+			map.put(membership.getId(), membership);
 		}
 		return map;
 	}
@@ -56,18 +60,18 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 		AiChatUserMembershipDetailSummaryDTO summaryDTO = new AiChatUserMembershipDetailSummaryDTO();
 		summaryDTO.setAiChatUserId(aiChatUserId);
 
-		Map<Long, AiChatUserMembershipLevelDetailDTO> membershipLevelMap = getMembershipLevelMap();
+		Map<Long, AiChatUserMembershipDetailDTO> membershipLevelMap = getMembershipLevelMap();
 		if (membershipList == null || membershipList.isEmpty()) {
-			AiChatUserMembershipLevelDetailDTO levelZero = membershipLevelMap.get(0L);
+			AiChatUserMembershipDetailDTO levelZero = membershipLevelMap.get(0L);
 			summaryDTO.setLevel(levelZero.getLevel());
 			summaryDTO.setDailyBonus(levelZero.getDailyBonus());
 			summaryDTO.setChatHistoryCountLimit(levelZero.getChatHistoryCountLimit());
 			return summaryDTO;
 		}
 
-		AiChatUserMembershipLevelDetailDTO membershipLevelDetail = null;
+		AiChatUserMembershipDetailDTO membershipLevelDetail = null;
 		for (AiChatUserMembership memberShip : membershipList) {
-			membershipLevelDetail = membershipLevelMap.get(memberShip.getMembershipLevel());
+			membershipLevelDetail = membershipLevelMap.get(memberShip.getMembershipId());
 			if (membershipLevelDetail != null) {
 				if (summaryDTO.getLevel() == null || summaryDTO.getLevel() < membershipLevelDetail.getLevel()) {
 					summaryDTO.setLevel(membershipLevelDetail.getLevel());
@@ -110,49 +114,86 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 
 		Long membershipId = systemOptionService.decryptPrivateKey(dto.getMembershipPk());
 		if (membershipId == null) {
-			sendTelegramMessage("收到付款失败回调 无对应 membership ID: " + dto.toString());
+			sendTelegramMessage("收到付款失败回调 无对应 membership ID: " + JSONObject.fromObject(membershipId));
 			r.setMessage("付款异常, 已通知客服, 请稍后 0x2");
 			return r;
 		}
 
-		AiChatUserMembershipLevelDetailDTO membershipLevelDetail = getMembershipLevelMap().get(membershipId);
-		if (membershipLevelDetail == null) {
-			sendTelegramMessage("收到付款失败回调 无对应 membership level detail: " + dto.toString());
+		AiChatUserMembershipDetailDTO membershipDetail = getMembershipLevelMap().get(membershipId);
+		if (membershipDetail == null) {
+			sendTelegramMessage("收到付款失败回调 无对应 membership level detail: " + JSONObject.fromObject(membershipId));
 			r.setMessage("付款异常, 已通知客服, 请稍后 0x3");
 			return r;
 		}
 
 		Long aiChatUserId = userService.__getAiChatUserIdByWechatUserId(wechatUserId);
 		if (aiChatUserId == null) {
-			sendTelegramMessage("收到付款失败回调 无对应 AI chat user ID: " + dto.toString());
+			sendTelegramMessage("收到付款失败回调 无对应 AI chat user ID: " + JSONObject.fromObject(membershipId));
 			r.setMessage("付款异常, 已通知客服, 请稍后 0x4");
 			return r;
 		}
-		AiChatUserMembership memberShipPO = new AiChatUserMembership();
-		memberShipPO.setAiChatUserId(aiChatUserId);
-		memberShipPO.setMembershipLevel(membershipId);
-		mapper.insertSelective(memberShipPO);
+		AiChatUserMembershipKey key = new AiChatUserMembershipKey();
+		key.setAiChatUserId(aiChatUserId);
+		key.setMembershipId(membershipId);
+		AiChatUserMembership memberShipPO = mapper.selectByPrimaryKey(key);
+		
+		if(memberShipPO == null) {
+			memberShipPO = new AiChatUserMembership();
+			memberShipPO.setAiChatUserId(aiChatUserId);
+			memberShipPO.setMembershipId(membershipId);
+			LocalDateTime expiredTime = LocalDateTime.now().with(LocalTime.MAX).plusDays(membershipDetail.getEffectiveDays() - 1);
+			memberShipPO.setExpiredTime(expiredTime);
+			mapper.insertSelective(memberShipPO);
+		} else {
+			LocalDateTime expiredTime = memberShipPO.getExpiredTime().with(LocalTime.MAX).plusDays(membershipDetail.getEffectiveDays());
+			memberShipPO.setExpiredTime(expiredTime);
+			mapper.updateByPrimaryKeySelective(memberShipPO);
+		}
 
 		userService.recharge(aiChatUserId, AiChatAmountType.BONUS,
-				new BigDecimal(membershipLevelDetail.getDailyBonus()));
+				new BigDecimal(membershipDetail.getDailyBonus()));
+		userService.recharge(aiChatUserId, AiChatAmountType.RECHARGE,
+				new BigDecimal(membershipDetail.getRecharge()));
 
 		AiChatUserMembershipDetailSummaryDTO membershipDetailSummary = cacheService.getMembershipCacheMap()
 				.get(aiChatUserId);
 		if (membershipDetailSummary == null) {
 			membershipDetailSummary = new AiChatUserMembershipDetailSummaryDTO();
 			membershipDetailSummary.setAiChatUserId(aiChatUserId);
-			membershipDetailSummary.setChatHistoryCountLimit(membershipLevelDetail.getChatHistoryCountLimit());
-			membershipDetailSummary.setDailyBonus(membershipLevelDetail.getDailyBonus());
+			membershipDetailSummary.setChatHistoryCountLimit(membershipDetail.getChatHistoryCountLimit());
+			membershipDetailSummary.setDailyBonus(membershipDetail.getDailyBonus());
 			cacheService.getMembershipCacheMap().put(aiChatUserId, membershipDetailSummary);
 		} else {
-			if (membershipDetailSummary.getChatHistoryCountLimit() < membershipLevelDetail.getChatHistoryCountLimit()) {
-				membershipDetailSummary.setChatHistoryCountLimit(membershipLevelDetail.getChatHistoryCountLimit());
+			if (membershipDetailSummary.getChatHistoryCountLimit() < membershipDetail.getChatHistoryCountLimit()) {
+				membershipDetailSummary.setChatHistoryCountLimit(membershipDetail.getChatHistoryCountLimit());
 			}
 			membershipDetailSummary
-					.setDailyBonus(membershipDetailSummary.getDailyBonus() + membershipLevelDetail.getDailyBonus());
+					.setDailyBonus(membershipDetailSummary.getDailyBonus() + membershipDetail.getDailyBonus());
 			cacheService.getMembershipCacheMap().put(aiChatUserId, membershipDetailSummary);
 		}
 
 		return r;
+	}
+
+	@Override
+	public void rechargeDailyBonusByMemberShip() {
+		Map<Long, AiChatUserMembershipDetailDTO> membershipMap = getMembershipLevelMap();
+		for(AiChatUserMembershipDetailDTO membership : membershipMap.values()) {
+			batchRechargeDailyBonusByMemberId(membership);
+		}
+	}
+	
+	private void batchRechargeDailyBonusByMemberId(AiChatUserMembershipDetailDTO membershipDetail) {
+		AiChatUserMembershipExample example = new AiChatUserMembershipExample();
+		example.createCriteria().andMembershipIdEqualTo(membershipDetail.getId());
+		List<AiChatUserMembership> userMemberList = mapper.selectByExample(example);
+		if(userMemberList.isEmpty()) {
+			return;
+		}
+		List<Long> userIdList = new ArrayList<>();
+		for(AiChatUserMembership membership : userMemberList) {
+			userIdList.add(membership.getAiChatUserId());
+		}
+		userService.batchRecharge(userIdList, AiChatAmountType.BONUS, new BigDecimal(membershipDetail.getDailyBonus()));
 	}
 }

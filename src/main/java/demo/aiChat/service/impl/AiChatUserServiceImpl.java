@@ -180,4 +180,32 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 		r.setIsSuccess();
 		return r;
 	}
+
+	@Override
+	public CommonResult batchRecharge(List<Long> aiChatUserIdList, AiChatAmountType amountType, BigDecimal amount) {
+		CommonResult r = new CommonResult();
+		if (amountType == null) {
+			return r;
+		}
+
+		int updateCount = 0;
+		if (AiChatAmountType.BONUS.equals(amountType)) {
+			updateCount = userDetailMapper.batchRecharge(aiChatUserIdList, amount, null);
+		} else if (AiChatAmountType.RECHARGE.equals(amountType)) {
+			updateCount = userDetailMapper.batchRecharge(aiChatUserIdList, null, amount);
+		}
+
+		if (aiChatUserIdList.size() == updateCount) {
+			r.setIsSuccess();
+		} else {
+			log.error("AI chat 批量充值SQL执行异常, userIdListSize: " + aiChatUserIdList.size() + ", updateCount: "
+					+ updateCount + ", user id List: " + aiChatUserIdList + ", amount type: " + amountType.getName()
+					+ ", amount: " + amount);
+			sendTelegramMessage("AI chat 批量充值SQL执行异常, userIdListSize: " + aiChatUserIdList.size() + ", updateCount: "
+					+ updateCount + ", user id List: " + aiChatUserIdList + ", amount type: " + amountType.getName()
+					+ ", amount: " + amount);
+			r.setMessage("更新条数不正确");
+		}
+		return r;
+	}
 }

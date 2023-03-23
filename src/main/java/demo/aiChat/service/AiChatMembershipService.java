@@ -15,4 +15,6 @@ public interface AiChatMembershipService {
 
 	CommonResult buyMembershipFromWechat(BuyMembershipFromWechatDTO dto, Long wechatUserId);
 
+	void rechargeDailyBonusByMemberShip();
+
 }

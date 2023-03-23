@@ -3,7 +3,7 @@ package demo.aiChat.pojo.po;
 public class AiChatUserMembershipKey {
     private Long aiChatUserId;
 
-    private Long membershipLevel;
+    private Long membershipId;
 
     public Long getAiChatUserId() {
         return aiChatUserId;
@@ -13,11 +13,11 @@ public class AiChatUserMembershipKey {
         this.aiChatUserId = aiChatUserId;
     }
 
-    public Long getMembershipLevel() {
-        return membershipLevel;
+    public Long getMembershipId() {
+        return membershipId;
     }
 
-    public void setMembershipLevel(Long membershipLevel) {
-        this.membershipLevel = membershipLevel;
+    public void setMembershipId(Long membershipId) {
+        this.membershipId = membershipId;
     }
 }

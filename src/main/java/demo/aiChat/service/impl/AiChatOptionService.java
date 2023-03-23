@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
-import demo.aiChat.pojo.dto.AiChatUserMembershipLevelDetailDTO;
+import demo.aiChat.pojo.dto.AiChatUserMembershipDetailDTO;
 import demo.common.service.CommonService;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -24,7 +24,7 @@ public class AiChatOptionService extends CommonService {
 	private String optionFilePath;
 	private String chatStorePrefixPath;
 	private Integer chatHistorySaveCountingLimit = 100;
-	private List<AiChatUserMembershipLevelDetailDTO> membershipLevelDetail;
+	private List<AiChatUserMembershipDetailDTO> membershipLDetails;
 
 	public String getChatStorePrefixPath() {
 		return chatStorePrefixPath;
@@ -42,18 +42,18 @@ public class AiChatOptionService extends CommonService {
 		this.chatHistorySaveCountingLimit = chatHistorySaveCountingLimit;
 	}
 
-	public List<AiChatUserMembershipLevelDetailDTO> getMembershipLevelDetail() {
-		return membershipLevelDetail;
-	}
-
-	public void setMembershipLevelDetail(List<AiChatUserMembershipLevelDetailDTO> membershipLevelDetail) {
-		this.membershipLevelDetail = membershipLevelDetail;
-	}
-
 	@Override
 	public String toString() {
 		return "AiChatOptionService [chatStorePrefixPath=" + chatStorePrefixPath + ", chatHistorySaveCountingLimit="
-				+ chatHistorySaveCountingLimit + ", membershipLevelDetail=" + membershipLevelDetail + "]";
+				+ chatHistorySaveCountingLimit + ", membershipLDetails=" + membershipLDetails + "]";
+	}
+
+	public List<AiChatUserMembershipDetailDTO> getMembershipLDetails() {
+		return membershipLDetails;
+	}
+
+	public void setMembershipLDetails(List<AiChatUserMembershipDetailDTO> membershipLDetails) {
+		this.membershipLDetails = membershipLDetails;
 	}
 
 	@PostConstruct

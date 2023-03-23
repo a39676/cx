@@ -1,6 +1,7 @@
 package demo.aiChat.service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import aiChat.pojo.type.AiChatAmountType;
 import auxiliaryCommon.pojo.result.CommonResult;
@@ -19,5 +20,7 @@ public interface AiChatUserService {
 	CommonResult recharge(Long aiChatUserId, AiChatAmountType amountType, BigDecimal amount);
 
 	Long __getAiChatUserIdByWechatUserId(Long wechatUserId);
+
+	CommonResult batchRecharge(List<Long> aiChatUserIdList, AiChatAmountType amountType, BigDecimal amount);
 
 }

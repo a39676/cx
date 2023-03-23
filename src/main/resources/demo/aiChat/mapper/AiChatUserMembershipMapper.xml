@@ -3,8 +3,7 @@
 <mapper namespace="demo.aiChat.mapper.AiChatUserMembershipMapper">
   <resultMap id="BaseResultMap" type="demo.aiChat.pojo.po.AiChatUserMembership">
     <id column="ai_chat_user_id" jdbcType="BIGINT" property="aiChatUserId" />
-    <id column="membership_level" jdbcType="BIGINT" property="membershipLevel" />
-    <result column="membership_version" jdbcType="INTEGER" property="membershipVersion" />
+    <id column="membership_id" jdbcType="BIGINT" property="membershipId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="expired_time" jdbcType="TIMESTAMP" property="expiredTime" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
@@ -68,8 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    ai_chat_user_id, membership_level, membership_version, create_time, expired_time, 
-    is_delete
+    ai_chat_user_id, membership_id, create_time, expired_time, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.aiChat.pojo.po.AiChatUserMembershipExample" resultMap="BaseResultMap">
     select
@@ -90,12 +88,12 @@
     <include refid="Base_Column_List" />
     from ai_chat_user_membership
     where ai_chat_user_id = #{aiChatUserId,jdbcType=BIGINT}
-      and membership_level = #{membershipLevel,jdbcType=BIGINT}
+      and membership_id = #{membershipId,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="demo.aiChat.pojo.po.AiChatUserMembershipKey">
     delete from ai_chat_user_membership
     where ai_chat_user_id = #{aiChatUserId,jdbcType=BIGINT}
-      and membership_level = #{membershipLevel,jdbcType=BIGINT}
+      and membership_id = #{membershipId,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="demo.aiChat.pojo.po.AiChatUserMembershipExample">
     delete from ai_chat_user_membership
@@ -104,12 +102,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="demo.aiChat.pojo.po.AiChatUserMembership">
-    insert into ai_chat_user_membership (ai_chat_user_id, membership_level, membership_version, 
-      create_time, expired_time, is_delete
-      )
-    values (#{aiChatUserId,jdbcType=BIGINT}, #{membershipLevel,jdbcType=BIGINT}, #{membershipVersion,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{expiredTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
-      )
+    insert into ai_chat_user_membership (ai_chat_user_id, membership_id, create_time, 
+      expired_time, is_delete)
+    values (#{aiChatUserId,jdbcType=BIGINT}, #{membershipId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{expiredTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="demo.aiChat.pojo.po.AiChatUserMembership">
     insert into ai_chat_user_membership
@@ -117,11 +113,8 @@
       <if test="aiChatUserId != null">
         ai_chat_user_id,
       </if>
-      <if test="membershipLevel != null">
-        membership_level,
-      </if>
-      <if test="membershipVersion != null">
-        membership_version,
+      <if test="membershipId != null">
+        membership_id,
       </if>
       <if test="createTime != null">
         create_time,
@@ -137,11 +130,8 @@
       <if test="aiChatUserId != null">
         #{aiChatUserId,jdbcType=BIGINT},
       </if>
-      <if test="membershipLevel != null">
-        #{membershipLevel,jdbcType=BIGINT},
-      </if>
-      <if test="membershipVersion != null">
-        #{membershipVersion,jdbcType=INTEGER},
+      <if test="membershipId != null">
+        #{membershipId,jdbcType=BIGINT},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -166,11 +156,8 @@
       <if test="row.aiChatUserId != null">
         ai_chat_user_id = #{row.aiChatUserId,jdbcType=BIGINT},
       </if>
-      <if test="row.membershipLevel != null">
-        membership_level = #{row.membershipLevel,jdbcType=BIGINT},
-      </if>
-      <if test="row.membershipVersion != null">
-        membership_version = #{row.membershipVersion,jdbcType=INTEGER},
+      <if test="row.membershipId != null">
+        membership_id = #{row.membershipId,jdbcType=BIGINT},
       </if>
       <if test="row.createTime != null">
         create_time = #{row.createTime,jdbcType=TIMESTAMP},
@@ -189,8 +176,7 @@
   <update id="updateByExample" parameterType="map">
     update ai_chat_user_membership
     set ai_chat_user_id = #{row.aiChatUserId,jdbcType=BIGINT},
-      membership_level = #{row.membershipLevel,jdbcType=BIGINT},
-      membership_version = #{row.membershipVersion,jdbcType=INTEGER},
+      membership_id = #{row.membershipId,jdbcType=BIGINT},
       create_time = #{row.createTime,jdbcType=TIMESTAMP},
       expired_time = #{row.expiredTime,jdbcType=TIMESTAMP},
       is_delete = #{row.isDelete,jdbcType=BIT}
@@ -201,9 +187,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="demo.aiChat.pojo.po.AiChatUserMembership">
     update ai_chat_user_membership
     <set>
-      <if test="membershipVersion != null">
-        membership_version = #{membershipVersion,jdbcType=INTEGER},
-      </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -215,16 +198,15 @@
       </if>
     </set>
     where ai_chat_user_id = #{aiChatUserId,jdbcType=BIGINT}
-      and membership_level = #{membershipLevel,jdbcType=BIGINT}
+      and membership_id = #{membershipId,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="demo.aiChat.pojo.po.AiChatUserMembership">
     update ai_chat_user_membership
-    set membership_version = #{membershipVersion,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
+    set create_time = #{createTime,jdbcType=TIMESTAMP},
       expired_time = #{expiredTime,jdbcType=TIMESTAMP},
       is_delete = #{isDelete,jdbcType=BIT}
     where ai_chat_user_id = #{aiChatUserId,jdbcType=BIGINT}
-      and membership_level = #{membershipLevel,jdbcType=BIGINT}
+      and membership_id = #{membershipId,jdbcType=BIGINT}
   </update>
   <select id="selectByExampleWithRowbounds" parameterType="demo.aiChat.pojo.po.AiChatUserMembershipExample" resultMap="BaseResultMap">
     select

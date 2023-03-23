@@ -88,6 +88,12 @@
       <li>
         <a href="/bookmark/manager" target="_blank">bookmark</a>
       </li>
+      <li>
+        <a href="/tool/encryptId?id=1" target="_blank">encryptId</a>
+      </li>
+      <li>
+        <a href="/tool/decryptPK?pk=cDfhyLRYBULovb3aTdGBRA%3D%3D" target="_blank">decryptPK</a>
+      </li>
     </ul><!-- Tools -->
 
     <ul class="main-menu visible-on-click" id="notes">

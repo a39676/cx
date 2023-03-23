@@ -1,6 +1,6 @@
 package demo.aiChat.pojo.dto;
 
-public class AiChatUserMembershipLevelDetailDTO {
+public class AiChatUserMembershipDetailDTO {
 
 	private Long id;
 	private String description;
@@ -8,6 +8,7 @@ public class AiChatUserMembershipLevelDetailDTO {
 	private Integer chatHistoryCountLimit;
 	private Integer dailyBonus;
 	private Integer recharge;
+	private Integer effectiveDays;
 	private Double price;
 
 	public Long getId() {
@@ -58,6 +59,14 @@ public class AiChatUserMembershipLevelDetailDTO {
 		this.recharge = recharge;
 	}
 
+	public Integer getEffectiveDays() {
+		return effectiveDays;
+	}
+
+	public void setEffectiveDays(Integer effectiveDays) {
+		this.effectiveDays = effectiveDays;
+	}
+
 	public Double getPrice() {
 		return price;
 	}
@@ -68,9 +77,9 @@ public class AiChatUserMembershipLevelDetailDTO {
 
 	@Override
 	public String toString() {
-		return "AiChatUserMembershipLevelDetailDTO [id=" + id + ", description=" + description + ", level=" + level
+		return "AiChatUserMembershipDetailDTO [id=" + id + ", description=" + description + ", level=" + level
 				+ ", chatHistoryCountLimit=" + chatHistoryCountLimit + ", dailyBonus=" + dailyBonus + ", recharge="
-				+ recharge + ", price=" + price + "]";
+				+ recharge + ", effectiveDays=" + effectiveDays + ", price=" + price + "]";
 	}
 
 }

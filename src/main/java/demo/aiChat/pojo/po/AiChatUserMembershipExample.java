@@ -165,123 +165,63 @@ public class AiChatUserMembershipExample {
             return (Criteria) this;
         }
 
-        public Criteria andMembershipLevelIsNull() {
-            addCriterion("membership_level is null");
+        public Criteria andMembershipIdIsNull() {
+            addCriterion("membership_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andMembershipLevelIsNotNull() {
-            addCriterion("membership_level is not null");
+        public Criteria andMembershipIdIsNotNull() {
+            addCriterion("membership_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andMembershipLevelEqualTo(Long value) {
-            addCriterion("membership_level =", value, "membershipLevel");
+        public Criteria andMembershipIdEqualTo(Long value) {
+            addCriterion("membership_id =", value, "membershipId");
             return (Criteria) this;
         }
 
-        public Criteria andMembershipLevelNotEqualTo(Long value) {
-            addCriterion("membership_level <>", value, "membershipLevel");
+        public Criteria andMembershipIdNotEqualTo(Long value) {
+            addCriterion("membership_id <>", value, "membershipId");
             return (Criteria) this;
         }
 
-        public Criteria andMembershipLevelGreaterThan(Long value) {
-            addCriterion("membership_level >", value, "membershipLevel");
+        public Criteria andMembershipIdGreaterThan(Long value) {
+            addCriterion("membership_id >", value, "membershipId");
             return (Criteria) this;
         }
 
-        public Criteria andMembershipLevelGreaterThanOrEqualTo(Long value) {
-            addCriterion("membership_level >=", value, "membershipLevel");
+        public Criteria andMembershipIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("membership_id >=", value, "membershipId");
             return (Criteria) this;
         }
 
-        public Criteria andMembershipLevelLessThan(Long value) {
-            addCriterion("membership_level <", value, "membershipLevel");
+        public Criteria andMembershipIdLessThan(Long value) {
+            addCriterion("membership_id <", value, "membershipId");
             return (Criteria) this;
         }
 
-        public Criteria andMembershipLevelLessThanOrEqualTo(Long value) {
-            addCriterion("membership_level <=", value, "membershipLevel");
+        public Criteria andMembershipIdLessThanOrEqualTo(Long value) {
+            addCriterion("membership_id <=", value, "membershipId");
             return (Criteria) this;
         }
 
-        public Criteria andMembershipLevelIn(List<Long> values) {
-            addCriterion("membership_level in", values, "membershipLevel");
+        public Criteria andMembershipIdIn(List<Long> values) {
+            addCriterion("membership_id in", values, "membershipId");
             return (Criteria) this;
         }
 
-        public Criteria andMembershipLevelNotIn(List<Long> values) {
-            addCriterion("membership_level not in", values, "membershipLevel");
+        public Criteria andMembershipIdNotIn(List<Long> values) {
+            addCriterion("membership_id not in", values, "membershipId");
             return (Criteria) this;
         }
 
-        public Criteria andMembershipLevelBetween(Long value1, Long value2) {
-            addCriterion("membership_level between", value1, value2, "membershipLevel");
+        public Criteria andMembershipIdBetween(Long value1, Long value2) {
+            addCriterion("membership_id between", value1, value2, "membershipId");
             return (Criteria) this;
         }
 
-        public Criteria andMembershipLevelNotBetween(Long value1, Long value2) {
-            addCriterion("membership_level not between", value1, value2, "membershipLevel");
-            return (Criteria) this;
-        }
-
-        public Criteria andMembershipVersionIsNull() {
-            addCriterion("membership_version is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andMembershipVersionIsNotNull() {
-            addCriterion("membership_version is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andMembershipVersionEqualTo(Integer value) {
-            addCriterion("membership_version =", value, "membershipVersion");
-            return (Criteria) this;
-        }
-
-        public Criteria andMembershipVersionNotEqualTo(Integer value) {
-            addCriterion("membership_version <>", value, "membershipVersion");
-            return (Criteria) this;
-        }
-
-        public Criteria andMembershipVersionGreaterThan(Integer value) {
-            addCriterion("membership_version >", value, "membershipVersion");
-            return (Criteria) this;
-        }
-
-        public Criteria andMembershipVersionGreaterThanOrEqualTo(Integer value) {
-            addCriterion("membership_version >=", value, "membershipVersion");
-            return (Criteria) this;
-        }
-
-        public Criteria andMembershipVersionLessThan(Integer value) {
-            addCriterion("membership_version <", value, "membershipVersion");
-            return (Criteria) this;
-        }
-
-        public Criteria andMembershipVersionLessThanOrEqualTo(Integer value) {
-            addCriterion("membership_version <=", value, "membershipVersion");
-            return (Criteria) this;
-        }
-
-        public Criteria andMembershipVersionIn(List<Integer> values) {
-            addCriterion("membership_version in", values, "membershipVersion");
-            return (Criteria) this;
-        }
-
-        public Criteria andMembershipVersionNotIn(List<Integer> values) {
-            addCriterion("membership_version not in", values, "membershipVersion");
-            return (Criteria) this;
-        }
-
-        public Criteria andMembershipVersionBetween(Integer value1, Integer value2) {
-            addCriterion("membership_version between", value1, value2, "membershipVersion");
-            return (Criteria) this;
-        }
-
-        public Criteria andMembershipVersionNotBetween(Integer value1, Integer value2) {
-            addCriterion("membership_version not between", value1, value2, "membershipVersion");
+        public Criteria andMembershipIdNotBetween(Long value1, Long value2) {
+            addCriterion("membership_id not between", value1, value2, "membershipId");
             return (Criteria) this;
         }
 

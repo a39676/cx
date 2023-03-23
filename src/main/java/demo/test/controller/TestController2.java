@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import demo.aiChat.service.AiChatMembershipService;
 import demo.common.service.CommonService;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.dto.TestDTO;
@@ -32,9 +33,13 @@ public class TestController2 extends CommonService {
 		return "{\"k\":\"v\"}";
 	}
 
+	@Autowired
+	private AiChatMembershipService aiChatMembershipService;
+	
 	@GetMapping(value = "/t3")
 	@ResponseBody
 	public String t3() {
+		aiChatMembershipService.rechargeDailyBonusByMemberShip();
 		return "done";
 	}
 

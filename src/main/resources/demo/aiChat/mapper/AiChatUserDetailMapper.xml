@@ -239,4 +239,19 @@
       order by ${orderByClause}
     </if>
   </select>
+  <update id="batchRecharge">
+    update ai_chat_user_detail
+    <set>
+      <if test="bonusAmount != null">
+        bonus_amount = bonus_amount + #{bonusAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="rechargeAmount != null">
+        recharge_amount = recharge_amount + #{rechargeAmount,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id in 
+    <foreach close=")" collection="aiChatUserIdList" item="id" open="(" separator=",">
+      #{id}
+    </foreach>
+  </update>
 </mapper>

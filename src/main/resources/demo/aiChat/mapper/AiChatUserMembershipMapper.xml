@@ -3,7 +3,7 @@
 <mapper namespace="demo.aiChat.mapper.AiChatUserMembershipMapper">
   <resultMap id="BaseResultMap" type="demo.aiChat.pojo.po.AiChatUserMembership">
     <id column="ai_chat_user_id" jdbcType="BIGINT" property="aiChatUserId" />
-    <id column="membership_level" jdbcType="INTEGER" property="membershipLevel" />
+    <id column="membership_level" jdbcType="BIGINT" property="membershipLevel" />
     <result column="membership_version" jdbcType="INTEGER" property="membershipVersion" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="expired_time" jdbcType="TIMESTAMP" property="expiredTime" />
@@ -90,12 +90,12 @@
     <include refid="Base_Column_List" />
     from ai_chat_user_membership
     where ai_chat_user_id = #{aiChatUserId,jdbcType=BIGINT}
-      and membership_level = #{membershipLevel,jdbcType=INTEGER}
+      and membership_level = #{membershipLevel,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="demo.aiChat.pojo.po.AiChatUserMembershipKey">
     delete from ai_chat_user_membership
     where ai_chat_user_id = #{aiChatUserId,jdbcType=BIGINT}
-      and membership_level = #{membershipLevel,jdbcType=INTEGER}
+      and membership_level = #{membershipLevel,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="demo.aiChat.pojo.po.AiChatUserMembershipExample">
     delete from ai_chat_user_membership
@@ -107,7 +107,7 @@
     insert into ai_chat_user_membership (ai_chat_user_id, membership_level, membership_version, 
       create_time, expired_time, is_delete
       )
-    values (#{aiChatUserId,jdbcType=BIGINT}, #{membershipLevel,jdbcType=INTEGER}, #{membershipVersion,jdbcType=INTEGER}, 
+    values (#{aiChatUserId,jdbcType=BIGINT}, #{membershipLevel,jdbcType=BIGINT}, #{membershipVersion,jdbcType=INTEGER}, 
       #{createTime,jdbcType=TIMESTAMP}, #{expiredTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
       )
   </insert>
@@ -138,7 +138,7 @@
         #{aiChatUserId,jdbcType=BIGINT},
       </if>
       <if test="membershipLevel != null">
-        #{membershipLevel,jdbcType=INTEGER},
+        #{membershipLevel,jdbcType=BIGINT},
       </if>
       <if test="membershipVersion != null">
         #{membershipVersion,jdbcType=INTEGER},
@@ -167,7 +167,7 @@
         ai_chat_user_id = #{row.aiChatUserId,jdbcType=BIGINT},
       </if>
       <if test="row.membershipLevel != null">
-        membership_level = #{row.membershipLevel,jdbcType=INTEGER},
+        membership_level = #{row.membershipLevel,jdbcType=BIGINT},
       </if>
       <if test="row.membershipVersion != null">
         membership_version = #{row.membershipVersion,jdbcType=INTEGER},
@@ -189,7 +189,7 @@
   <update id="updateByExample" parameterType="map">
     update ai_chat_user_membership
     set ai_chat_user_id = #{row.aiChatUserId,jdbcType=BIGINT},
-      membership_level = #{row.membershipLevel,jdbcType=INTEGER},
+      membership_level = #{row.membershipLevel,jdbcType=BIGINT},
       membership_version = #{row.membershipVersion,jdbcType=INTEGER},
       create_time = #{row.createTime,jdbcType=TIMESTAMP},
       expired_time = #{row.expiredTime,jdbcType=TIMESTAMP},
@@ -215,7 +215,7 @@
       </if>
     </set>
     where ai_chat_user_id = #{aiChatUserId,jdbcType=BIGINT}
-      and membership_level = #{membershipLevel,jdbcType=INTEGER}
+      and membership_level = #{membershipLevel,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="demo.aiChat.pojo.po.AiChatUserMembership">
     update ai_chat_user_membership
@@ -224,7 +224,7 @@
       expired_time = #{expiredTime,jdbcType=TIMESTAMP},
       is_delete = #{isDelete,jdbcType=BIT}
     where ai_chat_user_id = #{aiChatUserId,jdbcType=BIGINT}
-      and membership_level = #{membershipLevel,jdbcType=INTEGER}
+      and membership_level = #{membershipLevel,jdbcType=BIGINT}
   </update>
   <select id="selectByExampleWithRowbounds" parameterType="demo.aiChat.pojo.po.AiChatUserMembershipExample" resultMap="BaseResultMap">
     select

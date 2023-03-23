@@ -44,4 +44,10 @@ public class WechatSdkInteractionController extends CommonController {
 	public void extendTmpKeyValidity(@RequestBody EncryptDTO dto) {
 		wechatUserService.extendTmpKeyValidity(dto);
 	}
+	
+	@PostMapping(value = AiChatFromWechatSdkUrlConstant.BUY_MEMBERSHIP_FROM_WECHAT)
+	@ResponseBody
+	public EncryptDTO buyMembershipFromWechat(@RequestBody EncryptDTO dto) {
+		return wechatUserService.buyMembershipFromWechat(dto);
+	}
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import auxiliaryCommon.pojo.dto.EncryptDTO;
+import demo.interaction.wechat.service.WechatNotifyService;
 import demo.interaction.wechat.service.WechatSdkManagerService;
 import demo.interaction.wechat.service.WechatTokenService;
 import wechatSdk.pojo.constant.WechatSdkUrlConstant;
@@ -20,6 +21,8 @@ public class WechatSdkManagerController {
 	private WechatSdkManagerService wechatSdkManagerService;
 	@Autowired
 	private WechatTokenService tokenService;
+	@Autowired
+	private WechatNotifyService notifyService;
 
 	@PostMapping(value = WechatSdkUrlConstant.GET_WECHAT_SDK_WECHAT_OPTION)
 	@ResponseBody
@@ -39,4 +42,8 @@ public class WechatSdkManagerController {
 		return tokenService.getAccessToken(dto);
 	}
 
+	@PostMapping(value = WechatSdkUrlConstant.SEND_NOTIFY)
+	public void sendNotify(@RequestBody EncryptDTO dto) {
+		notifyService.sendNotify(dto);
+	}
 }

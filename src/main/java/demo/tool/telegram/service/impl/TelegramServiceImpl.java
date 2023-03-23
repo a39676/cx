@@ -120,7 +120,7 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 		} catch (UnsupportedEncodingException e1) {
 			msg = "msg trans error";
 		}
-		if (msg.length() > 3072) {
+		if (msg.length() > 1024 * 10) {
 			r.failWithMessage("msg too long");
 			return r;
 		}

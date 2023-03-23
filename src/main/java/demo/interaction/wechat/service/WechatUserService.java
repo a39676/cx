@@ -8,4 +8,8 @@ public interface WechatUserService {
 
 	void extendTmpKeyValidity(EncryptDTO dto);
 
+	Long __getWechatUserIdByOpenId(String openId);
+
+	EncryptDTO buyMembershipFromWechat(EncryptDTO encryptedDTO);
+
 }

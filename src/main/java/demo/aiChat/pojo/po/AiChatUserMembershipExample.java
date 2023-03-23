@@ -175,52 +175,52 @@ public class AiChatUserMembershipExample {
             return (Criteria) this;
         }
 
-        public Criteria andMembershipLevelEqualTo(Integer value) {
+        public Criteria andMembershipLevelEqualTo(Long value) {
             addCriterion("membership_level =", value, "membershipLevel");
             return (Criteria) this;
         }
 
-        public Criteria andMembershipLevelNotEqualTo(Integer value) {
+        public Criteria andMembershipLevelNotEqualTo(Long value) {
             addCriterion("membership_level <>", value, "membershipLevel");
             return (Criteria) this;
         }
 
-        public Criteria andMembershipLevelGreaterThan(Integer value) {
+        public Criteria andMembershipLevelGreaterThan(Long value) {
             addCriterion("membership_level >", value, "membershipLevel");
             return (Criteria) this;
         }
 
-        public Criteria andMembershipLevelGreaterThanOrEqualTo(Integer value) {
+        public Criteria andMembershipLevelGreaterThanOrEqualTo(Long value) {
             addCriterion("membership_level >=", value, "membershipLevel");
             return (Criteria) this;
         }
 
-        public Criteria andMembershipLevelLessThan(Integer value) {
+        public Criteria andMembershipLevelLessThan(Long value) {
             addCriterion("membership_level <", value, "membershipLevel");
             return (Criteria) this;
         }
 
-        public Criteria andMembershipLevelLessThanOrEqualTo(Integer value) {
+        public Criteria andMembershipLevelLessThanOrEqualTo(Long value) {
             addCriterion("membership_level <=", value, "membershipLevel");
             return (Criteria) this;
         }
 
-        public Criteria andMembershipLevelIn(List<Integer> values) {
+        public Criteria andMembershipLevelIn(List<Long> values) {
             addCriterion("membership_level in", values, "membershipLevel");
             return (Criteria) this;
         }
 
-        public Criteria andMembershipLevelNotIn(List<Integer> values) {
+        public Criteria andMembershipLevelNotIn(List<Long> values) {
             addCriterion("membership_level not in", values, "membershipLevel");
             return (Criteria) this;
         }
 
-        public Criteria andMembershipLevelBetween(Integer value1, Integer value2) {
+        public Criteria andMembershipLevelBetween(Long value1, Long value2) {
             addCriterion("membership_level between", value1, value2, "membershipLevel");
             return (Criteria) this;
         }
 
-        public Criteria andMembershipLevelNotBetween(Integer value1, Integer value2) {
+        public Criteria andMembershipLevelNotBetween(Long value1, Long value2) {
             addCriterion("membership_level not between", value1, value2, "membershipLevel");
             return (Criteria) this;
         }

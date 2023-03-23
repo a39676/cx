@@ -2,17 +2,21 @@ package demo.interaction.wechat.service.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import aiChat.pojo.result.GetTmpKeyByOpenIdResult;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiChat.pojo.result.CreateAiChatUserResult;
+import demo.aiChat.service.AiChatMembershipService;
 import demo.aiChat.service.AiChatUserService;
 import demo.interaction.wechat.mapper.WechatUserDetailMapper;
 import demo.interaction.wechat.pojo.po.WechatUserDetail;
 import demo.interaction.wechat.pojo.po.WechatUserDetailExample;
 import demo.interaction.wechat.service.WechatUserService;
+import wechatSdk.pojo.dto.BuyMembershipFromWechatDTO;
 import wechatSdk.pojo.type.WechatOfficialAccountType;
 
 @Service
@@ -22,7 +26,9 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 	private WechatUserDetailMapper wechatUserDetailMapper;
 	@Autowired
 	private AiChatUserService aiChatUserService;
-
+	@Autowired
+	private AiChatMembershipService aiChatMembershipService;
+	
 	private static final String FAKE_UID_PREFIX = "FakeUid_";
 
 	@Override
@@ -74,4 +80,32 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		Long tmpKey = decryptEncryptDTO(dto, Long.class);
 		aiChatUserService.extendTmpKeyValidity(tmpKey);
 	}
+
+	@Override
+	public Long __getWechatUserIdByOpenId(String openId) {
+		if(StringUtils.isBlank(openId)) {
+			return null;
+		}
+		WechatUserDetailExample example = new WechatUserDetailExample();
+		example.createCriteria().andOpenIdEqualTo(openId);
+		List<WechatUserDetail> wechatUserList = wechatUserDetailMapper.selectByExample(example);
+		if(wechatUserList.isEmpty()) {
+			return null;
+		}
+		return wechatUserList.get(0).getId();
+	}
+
+	@Override
+	public EncryptDTO buyMembershipFromWechat(EncryptDTO encryptedDTO) {
+		CommonResult r = new CommonResult();
+		BuyMembershipFromWechatDTO dto = decryptEncryptDTO(encryptedDTO, BuyMembershipFromWechatDTO.class);
+		if(dto == null) {
+			sendTelegramMessage("收到购买会员信息, 解码失败, text: " + encryptedDTO.getEncryptedStr());
+			r.setMessage("付款异常, 已通知客服跟进, 请稍后");
+			return encryptDTO(r);
+		}
+		r = aiChatMembershipService.buyMembershipFromWechat(dto);
+		return encryptDTO(r);
+	}
+	
 }

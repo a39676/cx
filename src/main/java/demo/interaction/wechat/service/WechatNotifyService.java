@@ -4,6 +4,6 @@ import auxiliaryCommon.pojo.dto.EncryptDTO;
 
 public interface WechatNotifyService {
 
-	void sendNotify(EncryptDTO dto);
+	void forwardNotifyFromWechatSdk(EncryptDTO dto);
 
 }

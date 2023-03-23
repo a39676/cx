@@ -43,7 +43,7 @@ public class WechatSdkManagerController {
 	}
 
 	@PostMapping(value = WechatSdkUrlConstant.SEND_NOTIFY)
-	public void sendNotify(@RequestBody EncryptDTO dto) {
-		notifyService.sendNotify(dto);
+	public void forwardNotifyFromWechatSdk(@RequestBody EncryptDTO dto) {
+		notifyService.forwardNotifyFromWechatSdk(dto);
 	}
 }

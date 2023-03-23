@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 
 import aiChat.pojo.result.AiChatSendNewMessageResult;
 import aiChat.pojo.result.GetAiChatHistoryResult;
+import aiChat.pojo.type.AiChatAmountType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiChat.mapper.AiChatUserAmountHistoryMapper;
 import demo.aiChat.mapper.AiChatUserChatHistoryMapper;
@@ -31,7 +32,6 @@ import demo.aiChat.service.AiChatService;
 import net.sf.json.JSONObject;
 import openAi.pojo.dto.OpanAiChatCompletionMessageDTO;
 import openAi.pojo.result.OpenAiChatCompletionSendMessageResult;
-import openAi.pojo.type.OpenAiAmountType;
 import openAi.pojo.type.OpenAiChatCompletionFinishType;
 import openAi.pojo.type.OpenAiChatCompletionMessageRoleType;
 import toolPack.ioHandle.FileUtilCustom;
@@ -88,7 +88,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 
 		// if success, debit amount, refresh history, send feedback
 		Integer totalTokens = apiResult.getDto().getUsage().getTotal_tokens();
-		debitAmount(userDetail, new BigDecimal(totalTokens));
+		debitAmountAndAddTokenUsage(userDetail, new BigDecimal(totalTokens));
 		CommonResult refreshHistoryResult = refreshChatHistory(aiChatUserId, msg,
 				OpenAiChatCompletionMessageRoleType.USER);
 		if (refreshHistoryResult.isFail()) {
@@ -250,7 +250,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		return r;
 	}
 
-	private CommonResult debitAmount(AiChatUserDetail detail, BigDecimal debitAmount) {
+	private CommonResult debitAmountAndAddTokenUsage(AiChatUserDetail detail, BigDecimal debitAmount) {
 		CommonResult r = new CommonResult();
 		if (debitAmount.compareTo(BigDecimal.ZERO) < 1) {
 			r.setMessage("输入消耗额异常");
@@ -259,6 +259,8 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 
 		AiChatUserAmountHistory bonusAmountHistory = null;
 		BigDecimal restDebitAmount = new BigDecimal(debitAmount.doubleValue());
+		
+		detail.setUsedTokens(detail.getUsedTokens() + debitAmount.intValue());
 
 		if (detail.getBonusAmount().compareTo(BigDecimal.ZERO) > 0) {
 			restDebitAmount = debitAmount.subtract(detail.getBonusAmount());
@@ -271,8 +273,8 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 
 			bonusAmountHistory = new AiChatUserAmountHistory();
 			bonusAmountHistory.setId(snowFlake.getNextId());
-			bonusAmountHistory.setAmountType(OpenAiAmountType.BONUS.getCode());
-			bonusAmountHistory.setAmountChange(debitAmount);
+			bonusAmountHistory.setAmountType(AiChatAmountType.BONUS.getCode());
+			bonusAmountHistory.setAmountChange(BigDecimal.ZERO.subtract(debitAmount));
 			bonusAmountHistory.setUserId(detail.getId());
 		}
 
@@ -290,8 +292,8 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 
 		AiChatUserAmountHistory rechargeAmountHistory = new AiChatUserAmountHistory();
 		rechargeAmountHistory.setId(snowFlake.getNextId());
-		rechargeAmountHistory.setAmountType(OpenAiAmountType.RECHARGE.getCode());
-		rechargeAmountHistory.setAmountChange(debitAmount.subtract(detail.getBonusAmount()));
+		rechargeAmountHistory.setAmountType(AiChatAmountType.RECHARGE.getCode());
+		rechargeAmountHistory.setAmountChange(BigDecimal.ZERO.subtract(debitAmount.subtract(detail.getBonusAmount())));
 		rechargeAmountHistory.setUserId(detail.getId());
 		amountHistoryMapper.insertSelective(rechargeAmountHistory);
 		r.setIsSuccess();

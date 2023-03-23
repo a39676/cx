@@ -1,10 +1,13 @@
 package demo.aiChat.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import aiChat.pojo.type.AiChatAmountType;
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiChat.mapper.AiChatUserAssociateWechatUidMapper;
 import demo.aiChat.mapper.AiChatUserDetailMapper;
 import demo.aiChat.mapper.SystemUserAssociateAiChatUserMapper;
@@ -15,6 +18,7 @@ import demo.aiChat.pojo.po.SystemUserAssociateAiChatUserExample;
 import demo.aiChat.pojo.po.SystemUserAssociateAiChatUserKey;
 import demo.aiChat.pojo.result.CreateAiChatUserResult;
 import demo.aiChat.service.AiChatUserService;
+import demo.interaction.wechat.service.WechatUserService;
 
 @Service
 public class AiChatUserServiceImpl extends AiChatCommonService implements AiChatUserService {
@@ -25,6 +29,8 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 	private SystemUserAssociateAiChatUserMapper systemUserAssociateMapper;
 	@Autowired
 	private AiChatUserAssociateWechatUidMapper aiChatUserAssociateWechatUidMapper;
+	@Autowired
+	private WechatUserService wechatUserService;
 
 	@Override
 	public CreateAiChatUserResult createAiChatUserDetailBySystemUserId(Long systemUserId) {
@@ -95,12 +101,12 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 	public Long createNewTmpKey(Long wechatUserId, String openId) {
 		Long tmpKey = null;
 		Long aiChatUserId = cacheService.getOpenIdMatchAiChatUserIdMap().get(openId);
-		if(aiChatUserId != null) {
+		if (aiChatUserId != null) {
 			tmpKey = snowFlake.getNextId();
 			tmpKeyInsertOrUpdateLiveTime(tmpKey, aiChatUserId);
 			return tmpKey;
 		}
-		
+
 		AiChatUserAssociateWechatUidExample associateExample = new AiChatUserAssociateWechatUidExample();
 		associateExample.createCriteria().andWechatIdEqualTo(wechatUserId);
 		List<AiChatUserAssociateWechatUidKey> associateList = aiChatUserAssociateWechatUidMapper
@@ -121,13 +127,62 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 	@Override
 	public void extendTmpKeyValidity(Long tmpKey) {
 		log.error("Receive tmp key extend request, tmp key: " + tmpKey);
-		if(tmpKey == null) {
+		if (tmpKey == null) {
 			return;
 		}
 		Long aiChatUserId = getAiChatUserIdByTempKey(tmpKey);
-		if(aiChatUserId != null) {
+		if (aiChatUserId != null) {
 			log.error("Extended, tmp key: " + tmpKey + ", ai chat user id: " + aiChatUserId);
 			tmpKeyInsertOrUpdateLiveTime(tmpKey, aiChatUserId);
 		}
+	}
+
+	@Override
+	public Long __getAiChatUserIdByOpenId(String openId) {
+		Long wechatUserId = wechatUserService.__getWechatUserIdByOpenId(openId);
+		if (wechatUserId == null) {
+			return null;
+		}
+		AiChatUserAssociateWechatUidExample example = new AiChatUserAssociateWechatUidExample();
+		example.createCriteria().andWechatIdEqualTo(wechatUserId);
+		List<AiChatUserAssociateWechatUidKey> associate = aiChatUserAssociateWechatUidMapper.selectByExample(example);
+		if (associate.isEmpty()) {
+			return null;
+		}
+		return associate.get(0).getAiChatUserId();
+	}
+
+	@Override
+	public CommonResult recharge(Long aiChatUserId, AiChatAmountType amountType,
+			BigDecimal amount) {
+		CommonResult r = new CommonResult();
+		if (aiChatUserId == null || amountType == null || amount == null || amount.compareTo(BigDecimal.ZERO) < 0) {
+			r.setMessage("Param error");
+			return r;
+		}
+		AiChatUserDetail userDetail = userDetailMapper.selectByPrimaryKey(aiChatUserId);
+		if (userDetail == null) {
+			r.setMessage("Param error");
+			return r;
+		}
+
+		switch (amountType) {
+		case BONUS:
+			userDetail.setBonusAmount(userDetail.getBonusAmount().add(amount));
+			break;
+		case RECHARGE:
+			userDetail.setRechargeAmount(userDetail.getRechargeAmount().add(amount));
+			break;
+		}
+
+		int updateCount = userDetailMapper.updateByPrimaryKeySelective(userDetail);
+		if (updateCount < 1) {
+			r.setMessage("Update amount failed, AI chat user ID: " + aiChatUserId + ", amount type: "
+					+ amountType.getName() + ", amount: " + amount);
+			return r;
+		}
+		
+		r.setIsSuccess();
+		return r;
 	}
 }

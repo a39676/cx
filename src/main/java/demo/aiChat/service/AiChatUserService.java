@@ -1,5 +1,9 @@
 package demo.aiChat.service;
 
+import java.math.BigDecimal;
+
+import aiChat.pojo.type.AiChatAmountType;
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiChat.pojo.result.CreateAiChatUserResult;
 
 public interface AiChatUserService {
@@ -11,5 +15,9 @@ public interface AiChatUserService {
 	Long createNewTmpKey(Long wechatUserId, String openId);
 
 	void extendTmpKeyValidity(Long tmpKey);
+
+	Long __getAiChatUserIdByOpenId(String openId);
+
+	CommonResult recharge(Long aiChatUserId, AiChatAmountType amountType, BigDecimal amount);
 
 }

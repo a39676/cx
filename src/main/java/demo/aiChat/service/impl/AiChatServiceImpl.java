@@ -68,7 +68,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 
 //		find chat saving limit counting
 		AiChatUserMembershipDetailSummaryDTO membershipDetail = membershipService
-				.findMembershipDetailSummaryByUserId(aiChatUserId);
+				.findMembershipDetailSummaryFromCacheByUserIdWithoutRefresh(aiChatUserId);
 		Integer historyCountingLimit = membershipDetail.getChatHistoryCountLimit();
 
 		// find history and cut history with limit

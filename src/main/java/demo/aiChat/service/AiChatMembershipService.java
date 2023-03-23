@@ -11,10 +11,14 @@ public interface AiChatMembershipService {
 
 	List<AiChatUserMembership> findMembershipDetailListByUserId(Long aiChatUserId);
 
-	AiChatUserMembershipDetailSummaryDTO findMembershipDetailSummaryByUserId(Long aiChatUserId);
+	AiChatUserMembershipDetailSummaryDTO findMembershipDetailSummaryByUserId(Long aiChatUserId, boolean refresh);
+	
+	AiChatUserMembershipDetailSummaryDTO findMembershipDetailSummaryFromCacheByUserIdWithoutRefresh(Long aiChatUserId);
 
 	CommonResult buyMembershipFromWechat(BuyMembershipFromWechatDTO dto, Long wechatUserId);
 
 	void rechargeDailyBonusByMemberShip();
+
+	void updateDeleteMarkByExpiredTime();
 
 }

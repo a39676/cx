@@ -198,7 +198,7 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 		findMembershipDetailSummaryByUserId(aiChatUserId, true);
 		
 //		TODO 保存交易流水到数据库 + 本地 json 文件
-		r.setOpenId(decryptDTO.getPayer().getOpenId());
+		r.setOpenId(decryptDTO.getPayer().getOpenid());
 		r.setOutTradeNo(decryptDTO.getOut_trade_no());
 		r.setIsSuccess();
 		return r;

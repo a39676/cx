@@ -119,7 +119,6 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 	@Override
 	public AiChatBuyMembershipFromWechatResult buyMembershipFromWechat(WechatPayJsApiFeedbackDTO completeDTO, Long wechatUserId) {
 //		TODO
-		
 		AiChatBuyMembershipFromWechatResult r = new AiChatBuyMembershipFromWechatResult();
 		if (completeDTO == null || completeDTO.getResource() == null || completeDTO.getResource().getDecrypt() == null) {
 			r.setMessage("Decrypt error");
@@ -156,21 +155,21 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 		
 		Long membershipId = systemOptionService.decryptPrivateKey(atta.getMembershipPk());
 		if (membershipId == null) {
-			sendTelegramMessage("收到付款失败回调 无对应 membership ID: " + JSONObject.fromObject(membershipId));
+			sendTelegramMessage("收到付款失败回调 无对应 membership ID: " + membershipId);
 			r.setMessage("付款异常, 已通知客服, 请稍后 0x2");
 			return r;
 		}
 
 		AiChatUserMembershipDetailDTO membershipDetail = getMembershipConfigMap().get(membershipId);
 		if (membershipDetail == null) {
-			sendTelegramMessage("收到付款失败回调 无对应 membership level detail, membershipId: " + JSONObject.fromObject(membershipId));
+			sendTelegramMessage("收到付款失败回调 无对应 membership level detail, membershipId: " + membershipId);
 			r.setMessage("付款异常, 已通知客服, 请稍后 0x3");
 			return r;
 		}
 
 		Long aiChatUserId = userService.__getAiChatUserIdByWechatUserId(wechatUserId);
 		if (aiChatUserId == null) {
-			sendTelegramMessage("收到付款失败回调 无对应 AI chat user ID: " + JSONObject.fromObject(membershipId));
+			sendTelegramMessage("收到付款失败回调 无对应 AI chat user ID from weChatUserId: " + wechatUserId);
 			r.setMessage("付款异常, 已通知客服, 请稍后 0x4");
 			return r;
 		}

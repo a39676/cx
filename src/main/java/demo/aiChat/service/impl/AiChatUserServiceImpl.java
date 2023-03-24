@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 
 import aiChat.pojo.type.AiChatAmountType;
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.aiChat.mapper.AiChatUserAmountHistoryMapper;
 import demo.aiChat.mapper.AiChatUserAssociateWechatUidMapper;
 import demo.aiChat.mapper.AiChatUserDetailMapper;
 import demo.aiChat.mapper.SystemUserAssociateAiChatUserMapper;
+import demo.aiChat.pojo.po.AiChatUserAmountHistory;
 import demo.aiChat.pojo.po.AiChatUserAssociateWechatUidExample;
 import demo.aiChat.pojo.po.AiChatUserAssociateWechatUidKey;
 import demo.aiChat.pojo.po.AiChatUserDetail;
@@ -28,6 +30,8 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 	private SystemUserAssociateAiChatUserMapper systemUserAssociateMapper;
 	@Autowired
 	private AiChatUserAssociateWechatUidMapper aiChatUserAssociateWechatUidMapper;
+	@Autowired
+	private AiChatUserAmountHistoryMapper amountHistoryMapper;
 
 	@Override
 	public CreateAiChatUserResult createAiChatUserDetailBySystemUserId(Long systemUserId) {
@@ -173,6 +177,18 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 		int updateCount = userDetailMapper.updateByPrimaryKeySelective(userDetail);
 		if (updateCount < 1) {
 			r.setMessage("Update amount failed, AI chat user ID: " + aiChatUserId + ", amount type: "
+					+ amountType.getName() + ", amount: " + amount);
+			return r;
+		}
+
+		AiChatUserAmountHistory amountHistory = new AiChatUserAmountHistory();
+		amountHistory.setId(snowFlake.getNextId());
+		amountHistory.setUserId(aiChatUserId);
+		amountHistory.setAmountChange(amount);
+		amountHistory.setAmountType(amountType.getCode());
+		updateCount = amountHistoryMapper.insertSelective(amountHistory);
+		if (updateCount < 1) {
+			r.setMessage("Update amount history failed, AI chat user ID: " + aiChatUserId + ", amount type: "
 					+ amountType.getName() + ", amount: " + amount);
 			return r;
 		}

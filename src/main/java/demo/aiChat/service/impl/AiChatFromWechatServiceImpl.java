@@ -52,24 +52,14 @@ public class AiChatFromWechatServiceImpl extends AiChatCommonService implements 
 	@Override
 	public GetAiChatHistoryResult findChatHistoryByAiChatUserIdToFrontEnd(String tmpKeyStr) {
 		GetAiChatHistoryResult r = null;
-		Long tmpKey = getTmpKeyNum(tmpKeyStr);
-		if (tmpKey == null) {
+		Long aiChatUserId = getAiChatUserIdByTempKey(tmpKeyStr);
+		if (aiChatUserId == null) {
 			r = new GetAiChatHistoryResult();
 			r.setMessage("登录过期, 请重新登录后再试");
 			return r;
 		}
 
-		Long aiChatUserId = getAiChatUserIdByTempKey(tmpKey);
-
 		r = aiChatService.findChatHistoryByAiChatUserIdToFrontEnd(aiChatUserId);
 		return r;
-	}
-
-	private Long getTmpKeyNum(String tmpKeyStr) {
-		try {
-			return Long.parseLong(tmpKeyStr);
-		} catch (Exception e) {
-			return null;
-		}
 	}
 }

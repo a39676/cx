@@ -9,9 +9,13 @@ import org.springframework.stereotype.Service;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.interaction.wechat.service.impl.WechatCommonService;
+import demo.interaction.wechatPay.mapper.WechatPayJsApiHistoryMapper;
 import demo.interaction.wechatPay.mapper.WechatPayJsApiTicketMapper;
+import demo.interaction.wechatPay.pojo.po.WechatPayJsApiHistory;
 import demo.interaction.wechatPay.pojo.po.WechatPayJsApiTicket;
 import demo.interaction.wechatPay.service.WechatPayService;
+import wechatPayApi.jsApi.pojo.dto.WechatPayJsApiFeedbackDTO;
+import wechatPayApi.jsApi.pojo.dto.WechatPayJsApiFeedbackDecryptDTO;
 import wechatPaySdk.jsApi.pojo.dto.SaveJsApiTicketDTO;
 import wechatPaySdk.jsApi.pojo.dto.WechatPayOptionDTO;
 import wechatPaySdk.jsApi.pojo.result.GetWechatPayJsApiTicketResult;
@@ -23,6 +27,8 @@ public class WechatPayServiceImpl extends WechatCommonService implements WechatP
 	private WechatPayOptionService wechatPayOptionService;
 	@Autowired
 	private WechatPayJsApiTicketMapper wechatPayJsApiTicketMapper;
+	@Autowired
+	private WechatPayJsApiHistoryMapper wechatPayJsApiHistoryMapper;
 
 	@Override
 	public EncryptDTO getWechatPayOptionDTO(EncryptDTO encrypt) {
@@ -118,4 +124,46 @@ public class WechatPayServiceImpl extends WechatCommonService implements WechatP
 		return encryptedResult;
 	}
 
+	@Override
+	public CommonResult _insertPayHistoryBeforeAiChatHandle(WechatPayJsApiFeedbackDTO dto) {
+		CommonResult r = new CommonResult();
+		try {
+			WechatPayJsApiFeedbackDecryptDTO decrypt = dto.getResource().getDecrypt();
+			Long orderId = Long.parseLong(decrypt.getOut_trade_no());
+			WechatPayJsApiHistory po = new WechatPayJsApiHistory();
+			po.setId(orderId);
+			po.setOpenId(decrypt.getPayer().getOpenid());
+			po.setIsPaySuccess("success".equals(String.valueOf(decrypt.getTrade_state()).toLowerCase()));
+			po.setIsHandleSuccess(false);
+			
+			int editCounting = wechatPayJsApiHistoryMapper.insertSelective(po);
+
+			r.setSuccess(editCounting > 0);
+		} catch (Exception e) {
+			r.setMessage("Insert Wechat pay history error: " + e.getLocalizedMessage());
+		}
+		return r;
+	}
+
+	@Override
+	public boolean hadHandleSuccess(Long orderId) {
+		WechatPayJsApiHistory po = wechatPayJsApiHistoryMapper.selectByPrimaryKey(orderId);
+		return po != null && po.getIsHandleSuccess();
+	}
+	
+	@Override
+	public CommonResult updateHandleStatus(Long orderId, boolean flag) {
+		CommonResult r = new CommonResult();
+		
+		WechatPayJsApiHistory po = wechatPayJsApiHistoryMapper.selectByPrimaryKey(orderId);
+		if(po == null) {
+			r.setMessage("Record NOT exists");
+			return r;
+		}
+		
+		po.setIsHandleSuccess(flag);
+		int updateCount = wechatPayJsApiHistoryMapper.updateByPrimaryKeySelective(po);
+		r.setSuccess(updateCount > 0);
+		return r;
+	}
 }

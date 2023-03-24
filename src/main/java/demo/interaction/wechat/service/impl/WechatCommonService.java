@@ -1,11 +1,15 @@
 package demo.interaction.wechat.service.impl;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import demo.common.service.ToolCommonService;
 import demo.tool.telegram.service.TelegramService;
-import net.sf.json.JSONObject;
 import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
 
@@ -40,13 +44,15 @@ public abstract class WechatCommonService extends ToolCommonService {
 		EncryptDTO dto = new EncryptDTO();
 		String strNeedEncrypt = null;
 
-		if (isBasicDataTypes(obj)) {
+		if (isBasicDataTypesOrString(obj)) {
 			strNeedEncrypt = String.valueOf(obj);
 		} else {
 			try {
-				JSONObject json = JSONObject.fromObject(obj);
-				strNeedEncrypt = json.toString();
+				Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, localDateTimeAdapter)
+						.setPrettyPrinting().create();
+				strNeedEncrypt = gson.toJson(obj);
 			} catch (Exception e) {
+				e.printStackTrace();
 				strNeedEncrypt = String.valueOf(obj);
 			}
 		}
@@ -59,9 +65,9 @@ public abstract class WechatCommonService extends ToolCommonService {
 		return dto;
 	}
 	
-	private boolean isBasicDataTypes(Object obj) {
+	private boolean isBasicDataTypesOrString(Object obj) {
 		return obj instanceof Boolean || obj instanceof Byte || obj instanceof Short
 		|| obj instanceof Integer || obj instanceof Long || obj instanceof Float
-		|| obj instanceof Double || obj instanceof Character;
+		|| obj instanceof Double || obj instanceof Character || obj instanceof String;
 	}
 }

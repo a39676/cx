@@ -49,6 +49,17 @@ public abstract class AiChatCommonService extends ToolCommonService{
 		redisConnectService.setValByName(String.valueOf(tmpKey), String.valueOf(aiChatUserId), 5, TimeUnit.MINUTES);
 	}
 	
+	protected Long getAiChatUserIdByTempKey(String tmpKeyStr) {
+		Long tmpKey = null;
+		try {
+			tmpKey = Long.parseLong(tmpKeyStr);
+		} catch (Exception e) {
+			return null;
+		}
+		
+		return getAiChatUserIdByTempKey(tmpKey);
+	}
+	
 	protected Long getAiChatUserIdByTempKey(Long tmpKey) {
 		String aiChatUserIdStr = redisConnectService.getValByName(String.valueOf(tmpKey));
 		try {

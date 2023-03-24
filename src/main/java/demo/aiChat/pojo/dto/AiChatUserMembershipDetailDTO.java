@@ -4,7 +4,6 @@ public class AiChatUserMembershipDetailDTO {
 
 	private Long id;
 	private String description;
-	private Long level;
 	private Integer chatHistoryCountLimit;
 	private Integer dailyBonus;
 	private Integer recharge;
@@ -25,14 +24,6 @@ public class AiChatUserMembershipDetailDTO {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public Long getLevel() {
-		return level;
-	}
-
-	public void setLevel(Long level) {
-		this.level = level;
 	}
 
 	public Integer getChatHistoryCountLimit() {
@@ -77,9 +68,9 @@ public class AiChatUserMembershipDetailDTO {
 
 	@Override
 	public String toString() {
-		return "AiChatUserMembershipDetailDTO [id=" + id + ", description=" + description + ", level=" + level
-				+ ", chatHistoryCountLimit=" + chatHistoryCountLimit + ", dailyBonus=" + dailyBonus + ", recharge="
-				+ recharge + ", effectiveDays=" + effectiveDays + ", price=" + price + "]";
+		return "AiChatUserMembershipDetailDTO [id=" + id + ", description=" + description + ", chatHistoryCountLimit="
+				+ chatHistoryCountLimit + ", dailyBonus=" + dailyBonus + ", recharge=" + recharge + ", effectiveDays="
+				+ effectiveDays + ", price=" + price + "]";
 	}
 
 }

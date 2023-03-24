@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import aiChat.pojo.result.GetAiChatMembershipResult;
 import aiChat.pojo.result.GetTmpKeyByOpenIdResult;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
@@ -16,6 +17,7 @@ import demo.interaction.wechat.mapper.WechatUserDetailMapper;
 import demo.interaction.wechat.pojo.po.WechatUserDetail;
 import demo.interaction.wechat.pojo.po.WechatUserDetailExample;
 import demo.interaction.wechat.service.WechatUserService;
+import demo.interaction.wechatPay.service.WechatPayService;
 import wechatPayApi.jsApi.pojo.dto.WechatPayJsApiFeedbackDTO;
 import wechatSdk.pojo.type.WechatOfficialAccountType;
 
@@ -23,12 +25,14 @@ import wechatSdk.pojo.type.WechatOfficialAccountType;
 public class WechatUserServiceImpl extends WechatCommonService implements WechatUserService {
 
 	@Autowired
-	private WechatUserDetailMapper wechatUserDetailMapper;
-	@Autowired
 	private AiChatUserService aiChatUserService;
 	@Autowired
 	private AiChatMembershipService aiChatMembershipService;
-	
+	@Autowired
+	private WechatUserDetailMapper wechatUserDetailMapper;
+	@Autowired
+	private WechatPayService wechatPayService;
+
 	private static final String FAKE_UID_PREFIX = "FakeUid_";
 
 	@Override
@@ -83,13 +87,13 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 
 	@Override
 	public Long __getWechatUserIdByOpenId(String openId) {
-		if(StringUtils.isBlank(openId)) {
+		if (StringUtils.isBlank(openId)) {
 			return null;
 		}
 		WechatUserDetailExample example = new WechatUserDetailExample();
 		example.createCriteria().andOpenIdEqualTo(openId);
 		List<WechatUserDetail> wechatUserList = wechatUserDetailMapper.selectByExample(example);
-		if(wechatUserList.isEmpty()) {
+		if (wechatUserList.isEmpty()) {
 			return null;
 		}
 		return wechatUserList.get(0).getId();
@@ -99,15 +103,45 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 	public EncryptDTO buyMembershipFromWechat(EncryptDTO encryptedDTO) {
 		CommonResult r = new CommonResult();
 		WechatPayJsApiFeedbackDTO dto = decryptEncryptDTO(encryptedDTO, WechatPayJsApiFeedbackDTO.class);
-		if(dto == null) {
+		if (dto == null) {
 			sendTelegramMessage("收到购买会员信息, 解码失败, text: " + encryptedDTO.getEncryptedStr());
 			r.setMessage("付款异常, 已通知客服跟进, 请稍后");
 			return encryptDTO(r);
 		}
+
+		Long orderId = null;
+		try {
+			orderId = Long.parseLong(dto.getResource().getDecrypt().getOut_trade_no());
+			boolean hadPaySuccess = wechatPayService.hadHandleSuccess(orderId);
+			if (hadPaySuccess) {
+				r.setIsSuccess();
+				r.setMessage("已经处理此付款请求");
+				return encryptDTO(r);
+			}
+		} catch (Exception e) {
+			sendTelegramMessage("收到购买会员信息, 解码失败, 无法判断是否付款成功, text: " + encryptedDTO.getEncryptedStr());
+			r.setMessage("付款异常, 已通知客服跟进, 请稍后");
+			return encryptDTO(r);
+		}
+
+		wechatPayService._insertPayHistoryBeforeAiChatHandle(dto);
+
 		String openId = dto.getResource().getDecrypt().getPayer().getOpenid();
 		Long wechatUserId = __getWechatUserIdByOpenId(openId);
 		r = aiChatMembershipService.buyMembershipFromWechat(dto, wechatUserId);
+
+		if (r.isSuccess()) {
+			wechatPayService.updateHandleStatus(orderId, r.isSuccess());
+		}
+
 		return encryptDTO(r);
 	}
-	
+
+	@Override
+	public EncryptDTO getMembershipListFromWechat(EncryptDTO encryptedDTO) {
+		String tmpKeyStr = decryptEncryptDTO(encryptedDTO, String.class);
+		GetAiChatMembershipResult getAiChatMembershipResult = aiChatMembershipService
+				.getMembershipListFromWechat(tmpKeyStr);
+		return encryptDTO(getAiChatMembershipResult);
+	}
 }

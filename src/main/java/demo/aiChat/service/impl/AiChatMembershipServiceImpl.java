@@ -1,9 +1,14 @@
 package demo.aiChat.service.impl;
 
+import java.io.File;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,17 +17,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import aiChat.pojo.result.AiChatBuyMembershipFromWechatResult;
+import aiChat.pojo.result.GetAiChatMembershipResult;
 import aiChat.pojo.type.AiChatAmountType;
+import aiChat.pojo.vo.AiChatUserMembershipDetailSummaryVO;
+import aiChat.pojo.vo.AiChatUserMembershipDetailVO;
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiChat.mapper.AiChatUserMembershipMapper;
 import demo.aiChat.pojo.dto.AiChatUserMembershipDetailDTO;
 import demo.aiChat.pojo.dto.AiChatUserMembershipDetailSummaryDTO;
 import demo.aiChat.pojo.po.AiChatUserMembership;
 import demo.aiChat.pojo.po.AiChatUserMembershipExample;
 import demo.aiChat.pojo.po.AiChatUserMembershipKey;
-import demo.aiChat.pojo.vo.AiChatUserMembershipDetailVO;
 import demo.aiChat.service.AiChatMembershipService;
 import demo.aiChat.service.AiChatUserService;
 import net.sf.json.JSONObject;
+import toolPack.ioHandle.FileUtilCustom;
 import wechatPayApi.jsApi.pojo.dto.WechatPayJsApiFeedbackDTO;
 import wechatPayApi.jsApi.pojo.dto.WechatPayJsApiFeedbackDecryptDTO;
 import wechatSdk.pojo.dto.BuyMembershipFromWechatAttachmentDTO;
@@ -74,7 +83,6 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 		Map<Long, AiChatUserMembershipDetailDTO> membershipConfigMap = getMembershipConfigMap();
 		if (membershipPoList == null || membershipPoList.isEmpty()) {
 			AiChatUserMembershipDetailDTO levelZero = membershipConfigMap.get(0L);
-			summaryDTO.setLevel(levelZero.getLevel());
 			summaryDTO.setDailyBonus(levelZero.getDailyBonus());
 			summaryDTO.setChatHistoryCountLimit(levelZero.getChatHistoryCountLimit());
 			return summaryDTO;
@@ -91,15 +99,15 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 					membershipDetailVO.setPk(systemOptionService.encryptId(membershipDetail.getId()));
 					membershipDetailVO.setDailyBonus(membershipDetail.getDailyBonus());
 					membershipDetailVO.setDescription(membershipDetail.getDescription());
-					membershipDetailVO.setExpiredDateTime(membershipPO.getExpiredTime());
+					membershipDetailVO.setExpiredDatetime(membershipPO.getExpiredTime());
 				} else {
-					if (membershipDetailVO.getExpiredDateTime().isBefore(membershipPO.getExpiredTime())) {
-						membershipDetailVO.setExpiredDateTime(membershipPO.getExpiredTime());
+					if (membershipDetailVO.getExpiredDatetime().isBefore(membershipPO.getExpiredTime())) {
+						membershipDetailVO.setExpiredDatetime(membershipPO.getExpiredTime());
 					}
 				}
 				membershipDetailVO.setChatHistoryCountLimit(membershipDetail.getChatHistoryCountLimit());
 				membershipDetailVO
-						.setExpiredDateTimeStr(localDateTimeHandler.dateToStr(membershipDetailVO.getExpiredDateTime()));
+						.setExpiredTimeStr(localDateTimeHandler.dateToStr(membershipDetailVO.getExpiredDatetime()));
 				summaryDTO.getMembershipMap().put(membershipDetail.getId(), membershipDetailVO);
 			}
 		}
@@ -117,25 +125,27 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 	}
 
 	@Override
-	public AiChatBuyMembershipFromWechatResult buyMembershipFromWechat(WechatPayJsApiFeedbackDTO completeDTO, Long wechatUserId) {
-//		TODO
+	public AiChatBuyMembershipFromWechatResult buyMembershipFromWechat(WechatPayJsApiFeedbackDTO completeDTO,
+			Long wechatUserId) {
 		AiChatBuyMembershipFromWechatResult r = new AiChatBuyMembershipFromWechatResult();
-		if (completeDTO == null || completeDTO.getResource() == null || completeDTO.getResource().getDecrypt() == null) {
+		if (completeDTO == null || completeDTO.getResource() == null
+				|| completeDTO.getResource().getDecrypt() == null) {
 			r.setMessage("Decrypt error");
 			return r;
 		}
 
 		WechatPayJsApiFeedbackDecryptDTO decryptDTO = completeDTO.getResource().getDecrypt();
-		if(decryptDTO == null) {
+		if (decryptDTO == null) {
 			sendTelegramMessage("收到付款失败回调 无法获取 decryptDTO part: " + JSONObject.fromObject(completeDTO));
 			r.setMessage("付款异常, 已通知客服, 请稍后 0x6");
 			return r;
 		}
-		
+
 		try {
 			if (!"success".equals(decryptDTO.getTrade_state().toLowerCase())) {
 				sendTelegramMessage("收到付款失败回调, 付款失败: " + completeDTO.toString());
-				r.setMessage("付款异常, 已通知客服, 请稍后 0x0");
+				r.setIsSuccess();
+				r.setMessage("付款失败 0x00");
 				return r;
 			}
 		} catch (Exception e) {
@@ -196,8 +206,9 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 		userService.recharge(aiChatUserId, AiChatAmountType.RECHARGE, new BigDecimal(membershipDetail.getRecharge()));
 
 		findMembershipDetailSummaryByUserId(aiChatUserId, true);
-		
-//		TODO 保存交易流水到数据库 + 本地 json 文件
+
+		savePayResult(completeDTO, aiChatUserId);
+
 		r.setOpenId(decryptDTO.getPayer().getOpenid());
 		r.setOutTradeNo(decryptDTO.getOut_trade_no());
 		r.setIsSuccess();
@@ -235,5 +246,85 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 		AiChatUserMembership row = new AiChatUserMembership();
 		row.setIsDelete(true);
 		membershipMapper.updateByExampleSelective(row, example);
+	}
+
+	public CommonResult savePayResult(WechatPayJsApiFeedbackDTO completeDTO, Long aiChatUserId) {
+		CommonResult r = new CommonResult();
+		String storePrefixPath = optionService.getPayResultStorePrefixPath();
+		LocalDate today = LocalDate.now();
+		Long orderId = Long.parseLong(completeDTO.getResource().getDecrypt().getOut_trade_no());
+		String outputFilePath = storePrefixPath + File.separator + today.getYear() + today.getMonthValue()
+				+ today.getDayOfMonth() + File.separator + aiChatUserId + File.separator + orderId + ".json";
+		File outputFile = new File(outputFilePath);
+		File parentFolder = outputFile.getParentFile();
+		if (!parentFolder.exists()) {
+			if (!parentFolder.mkdirs()) {
+				r.setMessage("保存交易数据 JSON 文件失败, 无法创建文件夹: " + parentFolder.getAbsolutePath());
+				sendTelegramMessage("保存交易数据 JSON 文件失败, 无法创建文件夹: " + parentFolder.getAbsolutePath() + ", data: "
+						+ JSONObject.fromObject(completeDTO).toString());
+				return r;
+			}
+		}
+
+		FileUtilCustom fileUtil = new FileUtilCustom();
+		fileUtil.byteToFile(JSONObject.fromObject(completeDTO).toString().getBytes(StandardCharsets.UTF_8),
+				outputFilePath);
+		if (!outputFile.exists()) {
+			r.setMessage("保存交易数据 JSON 文件失败, 无法写入文件: " + parentFolder.getAbsolutePath());
+			sendTelegramMessage("保存交易数据 JSON 文件失败, 无法写入文件: " + parentFolder.getAbsolutePath() + ", data: "
+					+ JSONObject.fromObject(completeDTO).toString());
+		} else {
+			r.setIsSuccess();
+		}
+		return r;
+	}
+
+	@Override
+	public GetAiChatMembershipResult getMembershipListFromWechat(String tmpKeyStr) {
+		GetAiChatMembershipResult r = new GetAiChatMembershipResult();
+		Long aiChatUserId = getAiChatUserIdByTempKey(tmpKeyStr);
+		if (aiChatUserId == null) {
+			r.setMessage("无此用户");
+			return r;
+		}
+
+		AiChatUserMembershipDetailSummaryDTO membershipSummaryDetailDTO = findMembershipDetailSummaryByUserId(aiChatUserId,
+				false);
+		AiChatUserMembershipDetailSummaryVO membershipSummaryDetailVO = new AiChatUserMembershipDetailSummaryVO();
+		membershipSummaryDetailVO.setChatHistoryCountLimit(membershipSummaryDetailDTO.getChatHistoryCountLimit());
+		membershipSummaryDetailVO.setDailyBonus(membershipSummaryDetailDTO.getDailyBonus());
+		membershipSummaryDetailVO.setDescription(membershipSummaryDetailDTO.getDescription());
+		membershipSummaryDetailVO.setMembershipMap(membershipSummaryDetailDTO.getMembershipMap());
+		r.setMembershipSummaryDetailVO(membershipSummaryDetailVO);
+		
+		Map<Long, AiChatUserMembershipDetailDTO> membershipConfigMap = getMembershipConfigMap();
+		List<Long> membershipIdList = new ArrayList<>();
+		membershipIdList.addAll(membershipConfigMap.keySet());
+		Collections.sort(membershipIdList);
+
+		AiChatUserMembershipDetailVO vo = null;
+		AiChatUserMembershipDetailDTO membershipDetail = null;
+		AiChatUserMembershipDetailVO summaryVoFromCache = null;
+		for (Long id : membershipIdList) {
+			vo = new AiChatUserMembershipDetailVO();
+			summaryVoFromCache = membershipSummaryDetailDTO.getMembershipMap().get(id);
+			membershipDetail = membershipConfigMap.get(id);
+			vo.setPk(URLEncoder.encode(systemOptionService.encryptId(id), StandardCharsets.UTF_8));
+			vo.setDescription(membershipDetail.getDescription());
+			vo.setChatHistoryCountLimit(membershipDetail.getChatHistoryCountLimit());
+			vo.setDailyBonus(membershipDetail.getDailyBonus());
+			vo.setPrice(membershipDetail.getPrice());
+			if (summaryVoFromCache != null) {
+				vo.setIsValid(true);
+				vo.setExpiredDatetime(summaryVoFromCache.getExpiredDatetime());
+				vo.setExpiredTimeStr(summaryVoFromCache.getExpiredTimeStr());
+			} else {
+				vo.setIsValid(false);
+			}
+			r.getMembershipList().add(vo);
+		}
+		
+		r.setIsSuccess();
+		return r;
 	}
 }

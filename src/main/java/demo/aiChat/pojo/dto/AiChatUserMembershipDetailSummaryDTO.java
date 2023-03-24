@@ -3,13 +3,12 @@ package demo.aiChat.pojo.dto;
 import java.util.HashMap;
 import java.util.Map;
 
-import demo.aiChat.pojo.vo.AiChatUserMembershipDetailVO;
+import aiChat.pojo.vo.AiChatUserMembershipDetailVO;
 
 public class AiChatUserMembershipDetailSummaryDTO {
 
 	private Long aiChatUserId;
 	private String description;
-	private Long level;
 	private Integer chatHistoryCountLimit = 0;
 	private Integer dailyBonus = 0;
 	private Map<Long, AiChatUserMembershipDetailVO> membershipMap = new HashMap<>();
@@ -28,14 +27,6 @@ public class AiChatUserMembershipDetailSummaryDTO {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public Long getLevel() {
-		return level;
-	}
-
-	public void setLevel(Long level) {
-		this.level = level;
 	}
 
 	public Integer getChatHistoryCountLimit() {
@@ -65,8 +56,8 @@ public class AiChatUserMembershipDetailSummaryDTO {
 	@Override
 	public String toString() {
 		return "AiChatUserMembershipDetailSummaryDTO [aiChatUserId=" + aiChatUserId + ", description=" + description
-				+ ", level=" + level + ", chatHistoryCountLimit=" + chatHistoryCountLimit + ", dailyBonus=" + dailyBonus
-				+ ", membershipMap=" + membershipMap + "]";
+				+ ", chatHistoryCountLimit=" + chatHistoryCountLimit + ", dailyBonus=" + dailyBonus + ", membershipMap="
+				+ membershipMap + "]";
 	}
 
 }

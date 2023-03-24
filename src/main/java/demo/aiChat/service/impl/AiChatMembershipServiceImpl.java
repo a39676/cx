@@ -144,15 +144,7 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 			return r;
 		}
 
-		BuyMembershipFromWechatAttachmentDTO atta = null;
-		try {
-			atta = buildObjFromJsonCustomization(decryptDTO.getAttach(), BuyMembershipFromWechatAttachmentDTO.class);
-		} catch (Exception e) {
-			sendTelegramMessage("收到付款失败回调 无法获取 atta part: " + JSONObject.fromObject(decryptDTO));
-			r.setMessage("付款异常, 已通知客服, 请稍后 0x5");
-			return r;
-		}
-		
+		BuyMembershipFromWechatAttachmentDTO atta = decryptDTO.getAttach();
 		Long membershipId = systemOptionService.decryptPrivateKey(atta.getMembershipPk());
 		if (membershipId == null) {
 			sendTelegramMessage("收到付款失败回调 无对应 membership ID: " + membershipId);

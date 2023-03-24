@@ -2,10 +2,10 @@ package demo.aiChat.service;
 
 import java.util.List;
 
-import auxiliaryCommon.pojo.result.CommonResult;
+import aiChat.pojo.result.AiChatBuyMembershipFromWechatResult;
 import demo.aiChat.pojo.dto.AiChatUserMembershipDetailSummaryDTO;
 import demo.aiChat.pojo.po.AiChatUserMembership;
-import wechatSdk.pojo.dto.BuyMembershipFromWechatDTO;
+import wechatPayApi.jsApi.pojo.dto.WechatPayJsApiFeedbackDTO;
 
 public interface AiChatMembershipService {
 
@@ -15,7 +15,7 @@ public interface AiChatMembershipService {
 	
 	AiChatUserMembershipDetailSummaryDTO findMembershipDetailSummaryFromCacheByUserIdWithoutRefresh(Long aiChatUserId);
 
-	CommonResult buyMembershipFromWechat(BuyMembershipFromWechatDTO dto, Long wechatUserId);
+	AiChatBuyMembershipFromWechatResult buyMembershipFromWechat(WechatPayJsApiFeedbackDTO dto, Long wechatUserId);
 
 	void rechargeDailyBonusByMemberShip();
 

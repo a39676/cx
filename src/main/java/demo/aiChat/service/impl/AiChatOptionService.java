@@ -23,6 +23,7 @@ public class AiChatOptionService extends CommonService {
 	@Value("${optionFilePath.aiChat}")
 	private String optionFilePath;
 	private String chatStorePrefixPath;
+	private String payResultStorePrefixPath;
 	private Integer chatHistorySaveCountingLimit = 100;
 	private List<AiChatUserMembershipDetailDTO> membershipLDetails;
 
@@ -32,6 +33,14 @@ public class AiChatOptionService extends CommonService {
 
 	public void setChatStorePrefixPath(String chatStorePrefixPath) {
 		this.chatStorePrefixPath = chatStorePrefixPath;
+	}
+
+	public final String getPayResultStorePrefixPath() {
+		return payResultStorePrefixPath;
+	}
+
+	public final void setPayResultStorePrefixPath(String payResultStorePrefixPath) {
+		this.payResultStorePrefixPath = payResultStorePrefixPath;
 	}
 
 	public Integer getChatHistorySaveCountingLimit() {
@@ -44,8 +53,9 @@ public class AiChatOptionService extends CommonService {
 
 	@Override
 	public String toString() {
-		return "AiChatOptionService [chatStorePrefixPath=" + chatStorePrefixPath + ", chatHistorySaveCountingLimit="
-				+ chatHistorySaveCountingLimit + ", membershipLDetails=" + membershipLDetails + "]";
+		return "AiChatOptionService [chatStorePrefixPath=" + chatStorePrefixPath + ", payResultStorePrefixPath="
+				+ payResultStorePrefixPath + ", chatHistorySaveCountingLimit=" + chatHistorySaveCountingLimit
+				+ ", membershipLDetails=" + membershipLDetails + "]";
 	}
 
 	public List<AiChatUserMembershipDetailDTO> getMembershipLDetails() {

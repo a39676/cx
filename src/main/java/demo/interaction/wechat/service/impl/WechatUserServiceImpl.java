@@ -16,7 +16,7 @@ import demo.interaction.wechat.mapper.WechatUserDetailMapper;
 import demo.interaction.wechat.pojo.po.WechatUserDetail;
 import demo.interaction.wechat.pojo.po.WechatUserDetailExample;
 import demo.interaction.wechat.service.WechatUserService;
-import wechatSdk.pojo.dto.BuyMembershipFromWechatDTO;
+import wechatPayApi.jsApi.pojo.dto.WechatPayJsApiFeedbackDTO;
 import wechatSdk.pojo.type.WechatOfficialAccountType;
 
 @Service
@@ -98,13 +98,13 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 	@Override
 	public EncryptDTO buyMembershipFromWechat(EncryptDTO encryptedDTO) {
 		CommonResult r = new CommonResult();
-		BuyMembershipFromWechatDTO dto = decryptEncryptDTO(encryptedDTO, BuyMembershipFromWechatDTO.class);
+		WechatPayJsApiFeedbackDTO dto = decryptEncryptDTO(encryptedDTO, WechatPayJsApiFeedbackDTO.class);
 		if(dto == null) {
 			sendTelegramMessage("收到购买会员信息, 解码失败, text: " + encryptedDTO.getEncryptedStr());
 			r.setMessage("付款异常, 已通知客服跟进, 请稍后");
 			return encryptDTO(r);
 		}
-		String openId = dto.getFeedback().getPayer().getOpenId();
+		String openId = dto.getResource().getDecrypt().getPayer().getOpenId();
 		Long wechatUserId = __getWechatUserIdByOpenId(openId);
 		r = aiChatMembershipService.buyMembershipFromWechat(dto, wechatUserId);
 		return encryptDTO(r);

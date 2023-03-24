@@ -11,8 +11,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import aiChat.pojo.result.AiChatBuyMembershipFromWechatResult;
 import aiChat.pojo.type.AiChatAmountType;
-import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiChat.mapper.AiChatUserMembershipMapper;
 import demo.aiChat.pojo.dto.AiChatUserMembershipDetailDTO;
 import demo.aiChat.pojo.dto.AiChatUserMembershipDetailSummaryDTO;
@@ -23,7 +23,9 @@ import demo.aiChat.pojo.vo.AiChatUserMembershipDetailVO;
 import demo.aiChat.service.AiChatMembershipService;
 import demo.aiChat.service.AiChatUserService;
 import net.sf.json.JSONObject;
-import wechatSdk.pojo.dto.BuyMembershipFromWechatDTO;
+import wechatPayApi.jsApi.pojo.dto.WechatPayJsApiFeedbackDTO;
+import wechatPayApi.jsApi.pojo.dto.WechatPayJsApiFeedbackDecryptDTO;
+import wechatSdk.pojo.dto.BuyMembershipFromWechatAttachmentDTO;
 
 @Service
 public class AiChatMembershipServiceImpl extends AiChatCommonService implements AiChatMembershipService {
@@ -115,26 +117,44 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 	}
 
 	@Override
-	public CommonResult buyMembershipFromWechat(BuyMembershipFromWechatDTO dto, Long wechatUserId) {
-		CommonResult r = new CommonResult();
-		if (dto == null) {
+	public AiChatBuyMembershipFromWechatResult buyMembershipFromWechat(WechatPayJsApiFeedbackDTO completeDTO, Long wechatUserId) {
+//		TODO
+		
+		AiChatBuyMembershipFromWechatResult r = new AiChatBuyMembershipFromWechatResult();
+		if (completeDTO == null || completeDTO.getResource() == null || completeDTO.getResource().getDecrypt() == null) {
 			r.setMessage("Decrypt error");
 			return r;
 		}
 
+		WechatPayJsApiFeedbackDecryptDTO decryptDTO = completeDTO.getResource().getDecrypt();
+		if(decryptDTO == null) {
+			sendTelegramMessage("收到付款失败回调 无法获取 decryptDTO part: " + JSONObject.fromObject(completeDTO));
+			r.setMessage("付款异常, 已通知客服, 请稍后 0x6");
+			return r;
+		}
+		
 		try {
-			if (!"success".equals(dto.getFeedback().getTrade_state().toLowerCase())) {
-				sendTelegramMessage("收到付款失败回调, 付款失败: " + dto.toString());
+			if (!"success".equals(decryptDTO.getTrade_state().toLowerCase())) {
+				sendTelegramMessage("收到付款失败回调, 付款失败: " + completeDTO.toString());
 				r.setMessage("付款异常, 已通知客服, 请稍后 0x0");
 				return r;
 			}
 		} catch (Exception e) {
-			sendTelegramMessage("解读付款异常: " + dto.toString());
+			sendTelegramMessage("解读付款异常: " + completeDTO.toString());
 			r.setMessage("付款异常, 已通知客服, 请稍后 0x1");
 			return r;
 		}
 
-		Long membershipId = systemOptionService.decryptPrivateKey(dto.getMembershipPk());
+		BuyMembershipFromWechatAttachmentDTO atta = null;
+		try {
+			atta = buildObjFromJsonCustomization(decryptDTO.getAttach(), BuyMembershipFromWechatAttachmentDTO.class);
+		} catch (Exception e) {
+			sendTelegramMessage("收到付款失败回调 无法获取 atta part: " + JSONObject.fromObject(decryptDTO));
+			r.setMessage("付款异常, 已通知客服, 请稍后 0x5");
+			return r;
+		}
+		
+		Long membershipId = systemOptionService.decryptPrivateKey(atta.getMembershipPk());
 		if (membershipId == null) {
 			sendTelegramMessage("收到付款失败回调 无对应 membership ID: " + JSONObject.fromObject(membershipId));
 			r.setMessage("付款异常, 已通知客服, 请稍后 0x2");
@@ -143,7 +163,7 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 
 		AiChatUserMembershipDetailDTO membershipDetail = getMembershipConfigMap().get(membershipId);
 		if (membershipDetail == null) {
-			sendTelegramMessage("收到付款失败回调 无对应 membership level detail: " + JSONObject.fromObject(membershipId));
+			sendTelegramMessage("收到付款失败回调 无对应 membership level detail, membershipId: " + JSONObject.fromObject(membershipId));
 			r.setMessage("付款异常, 已通知客服, 请稍后 0x3");
 			return r;
 		}
@@ -185,7 +205,11 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 		userService.recharge(aiChatUserId, AiChatAmountType.RECHARGE, new BigDecimal(membershipDetail.getRecharge()));
 
 		findMembershipDetailSummaryByUserId(aiChatUserId, true);
-
+		
+//		TODO 保存交易流水到数据库 + 本地 json 文件
+		r.setOpenId(decryptDTO.getPayer().getOpenId());
+		r.setOutTradeNo(decryptDTO.getOut_trade_no());
+		r.setIsSuccess();
 		return r;
 	}
 

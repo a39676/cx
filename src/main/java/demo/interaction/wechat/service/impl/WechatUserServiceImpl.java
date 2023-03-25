@@ -6,7 +6,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import aiChat.pojo.result.GetAiChatAmountResult;
 import aiChat.pojo.result.GetAiChatMembershipResult;
+import aiChat.pojo.result.GetAiChatUserDetailResult;
 import aiChat.pojo.result.GetTmpKeyByOpenIdResult;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
@@ -138,10 +140,20 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 	}
 
 	@Override
-	public EncryptDTO getMembershipListFromWechat(EncryptDTO encryptedDTO) {
+	public EncryptDTO getAiChatUserDetail(EncryptDTO encryptedDTO) {
 		String tmpKeyStr = decryptEncryptDTO(encryptedDTO, String.class);
-		GetAiChatMembershipResult getAiChatMembershipResult = aiChatMembershipService
-				.getMembershipListFromWechat(tmpKeyStr);
-		return encryptDTO(getAiChatMembershipResult);
+		GetAiChatUserDetailResult r = new GetAiChatUserDetailResult();
+		GetAiChatMembershipResult aiChatMembershipResult = aiChatMembershipService.getMembershipListFromWechat(tmpKeyStr);
+		if(aiChatMembershipResult.isFail()) {
+			r.setMessage(aiChatMembershipResult.getMessage());
+			return encryptDTO(r);
+		}
+		r.setMembershipList(aiChatMembershipResult.getMembershipList());
+		r.setMembershipSummaryDetailVO(aiChatMembershipResult.getMembershipSummaryDetailVO());
+		
+		GetAiChatAmountResult amountResult = aiChatUserService.getAiChatAmount(tmpKeyStr);
+		r.setAmount(amountResult.getAmount());
+		r.setIsSuccess();
+		return encryptDTO(r);
 	}
 }

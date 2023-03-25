@@ -51,10 +51,10 @@ public class WechatSdkInteractionController extends CommonController {
 		return wechatUserService.buyMembershipFromWechat(dto);
 	}
 	
-	@PostMapping(value = AiChatFromWechatSdkUrlConstant.GET_MEMBERSHIP_FROM_WECHAT)
+	@PostMapping(value = AiChatFromWechatSdkUrlConstant.GET_MY_DETAIL)
 	@ResponseBody
 	public EncryptDTO getMembershipListFromWechat(@RequestBody EncryptDTO dto) {
-		return wechatUserService.getMembershipListFromWechat(dto);
+		return wechatUserService.getAiChatUserDetail(dto);
 	}
 	
 }

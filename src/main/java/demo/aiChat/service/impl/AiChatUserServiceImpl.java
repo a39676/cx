@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import aiChat.pojo.result.GetAiChatAmountResult;
 import aiChat.pojo.type.AiChatAmountType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiChat.mapper.AiChatUserAmountHistoryMapper;
@@ -222,6 +223,24 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 					+ ", amount: " + amount);
 			r.setMessage("更新条数不正确");
 		}
+		return r;
+	}
+
+	@Override
+	public GetAiChatAmountResult getAiChatAmount(String tmpKeyStr) {
+		GetAiChatAmountResult r = new GetAiChatAmountResult();
+		Long aiChatUserId = getAiChatUserIdByTempKey(tmpKeyStr);
+		if (aiChatUserId == null) {
+			r.setMessage("无法查找此用户, 请重新登录");
+			return r;
+		}
+		AiChatUserDetail po = userDetailMapper.selectByPrimaryKey(aiChatUserId);
+		if (po == null) {
+			r.setMessage("无法查找此用户");
+			return r;
+		}
+		r.setAmount(po.getBonusAmount().intValue() + po.getRechargeAmount().intValue());
+		r.setIsSuccess();
 		return r;
 	}
 }

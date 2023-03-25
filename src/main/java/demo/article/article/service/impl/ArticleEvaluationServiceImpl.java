@@ -197,10 +197,11 @@ public class ArticleEvaluationServiceImpl extends ArticleCommonService implement
 
 	/*
 	 * 从redis中查找
+	 * 2023-03-25 删除方法中的 todo, 此功能亦可能荒废而不再维护
 	 */
+	@Deprecated
 	public CommonResult insertArticleCommentEvaluation(InsertArticleCommentEvaluationParam inputParam,
 			Long evaluationVoterId) {
-//		TODO
 		CommonResult result = new CommonResult();
 		if (evaluationVoterId == null) {
 			result.setMessage("Please login");

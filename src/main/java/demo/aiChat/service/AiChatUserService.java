@@ -3,6 +3,7 @@ package demo.aiChat.service;
 import java.math.BigDecimal;
 import java.util.List;
 
+import aiChat.pojo.result.GetAiChatAmountResult;
 import aiChat.pojo.type.AiChatAmountType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiChat.pojo.result.CreateAiChatUserResult;
@@ -22,5 +23,7 @@ public interface AiChatUserService {
 	Long __getAiChatUserIdByWechatUserId(Long wechatUserId);
 
 	CommonResult batchRecharge(List<Long> aiChatUserIdList, AiChatAmountType amountType, BigDecimal amount);
+
+	GetAiChatAmountResult getAiChatAmount(String tmpKeyStr);
 
 }

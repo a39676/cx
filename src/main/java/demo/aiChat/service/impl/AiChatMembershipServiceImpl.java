@@ -31,6 +31,7 @@ import demo.aiChat.pojo.po.AiChatUserMembershipKey;
 import demo.aiChat.service.AiChatMembershipService;
 import demo.aiChat.service.AiChatUserService;
 import net.sf.json.JSONObject;
+import toolPack.dateTimeHandle.DateTimeUtilCommon;
 import toolPack.ioHandle.FileUtilCustom;
 import wechatPayApi.jsApi.pojo.dto.WechatPayJsApiFeedbackDTO;
 import wechatPayApi.jsApi.pojo.dto.WechatPayJsApiFeedbackDecryptDTO;
@@ -107,7 +108,7 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 				}
 				membershipDetailVO.setChatHistoryCountLimit(membershipDetail.getChatHistoryCountLimit());
 				membershipDetailVO
-						.setExpiredTimeStr(localDateTimeHandler.dateToStr(membershipDetailVO.getExpiredDatetime()));
+						.setExpiredTimeStr(localDateTimeHandler.dateToStr(membershipDetailVO.getExpiredDatetime(), DateTimeUtilCommon.normalDateFormat));
 				summaryDTO.getMembershipMap().put(membershipDetail.getId(), membershipDetailVO);
 			}
 		}
@@ -175,15 +176,39 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 			r.setMessage("付款异常, 已通知客服, 请稍后 0x4");
 			return r;
 		}
+
+		if (membershipDetail.getEffectiveDays() > 0) {
+			insertOrUpdateMembershipRecord(aiChatUserId, membershipDetail);
+		}
+		if (membershipDetail.getDailyBonus() > 0) {
+			userService.recharge(aiChatUserId, AiChatAmountType.BONUS,
+					new BigDecimal(membershipDetail.getDailyBonus()));
+		}
+		if (membershipDetail.getRecharge() > 0) {
+			userService.recharge(aiChatUserId, AiChatAmountType.RECHARGE,
+					new BigDecimal(membershipDetail.getRecharge()));
+		}
+
+		findMembershipDetailSummaryByUserId(aiChatUserId, true);
+
+		savePayResult(completeDTO, aiChatUserId);
+
+		r.setOpenId(decryptDTO.getPayer().getOpenid());
+		r.setOutTradeNo(decryptDTO.getOut_trade_no());
+		r.setIsSuccess();
+		return r;
+	}
+
+	private void insertOrUpdateMembershipRecord(Long aiChatUserId, AiChatUserMembershipDetailDTO membershipDetail) {
 		AiChatUserMembershipKey key = new AiChatUserMembershipKey();
 		key.setAiChatUserId(aiChatUserId);
-		key.setMembershipId(membershipId);
+		key.setMembershipId(membershipDetail.getId());
 		AiChatUserMembership memberShipPO = membershipMapper.selectByPrimaryKey(key);
 
 		if (memberShipPO == null) {
 			memberShipPO = new AiChatUserMembership();
 			memberShipPO.setAiChatUserId(aiChatUserId);
-			memberShipPO.setMembershipId(membershipId);
+			memberShipPO.setMembershipId(membershipDetail.getId());
 			LocalDateTime expiredTime = LocalDateTime.now().with(LocalTime.MAX)
 					.plusDays(membershipDetail.getEffectiveDays() - 1);
 			memberShipPO.setExpiredTime(expiredTime);
@@ -201,18 +226,6 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 			}
 			membershipMapper.updateByPrimaryKeySelective(memberShipPO);
 		}
-
-		userService.recharge(aiChatUserId, AiChatAmountType.BONUS, new BigDecimal(membershipDetail.getDailyBonus()));
-		userService.recharge(aiChatUserId, AiChatAmountType.RECHARGE, new BigDecimal(membershipDetail.getRecharge()));
-
-		findMembershipDetailSummaryByUserId(aiChatUserId, true);
-
-		savePayResult(completeDTO, aiChatUserId);
-
-		r.setOpenId(decryptDTO.getPayer().getOpenid());
-		r.setOutTradeNo(decryptDTO.getOut_trade_no());
-		r.setIsSuccess();
-		return r;
 	}
 
 	@Override
@@ -288,15 +301,15 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 			return r;
 		}
 
-		AiChatUserMembershipDetailSummaryDTO membershipSummaryDetailDTO = findMembershipDetailSummaryByUserId(aiChatUserId,
-				false);
+		AiChatUserMembershipDetailSummaryDTO membershipSummaryDetailDTO = findMembershipDetailSummaryByUserId(
+				aiChatUserId, false);
 		AiChatUserMembershipDetailSummaryVO membershipSummaryDetailVO = new AiChatUserMembershipDetailSummaryVO();
 		membershipSummaryDetailVO.setChatHistoryCountLimit(membershipSummaryDetailDTO.getChatHistoryCountLimit());
 		membershipSummaryDetailVO.setDailyBonus(membershipSummaryDetailDTO.getDailyBonus());
 		membershipSummaryDetailVO.setDescription(membershipSummaryDetailDTO.getDescription());
 		membershipSummaryDetailVO.setMembershipMap(membershipSummaryDetailDTO.getMembershipMap());
 		r.setMembershipSummaryDetailVO(membershipSummaryDetailVO);
-		
+
 		Map<Long, AiChatUserMembershipDetailDTO> membershipConfigMap = getMembershipConfigMap();
 		List<Long> membershipIdList = new ArrayList<>();
 		membershipIdList.addAll(membershipConfigMap.keySet());
@@ -323,7 +336,7 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 			}
 			r.getMembershipList().add(vo);
 		}
-		
+
 		r.setIsSuccess();
 		return r;
 	}

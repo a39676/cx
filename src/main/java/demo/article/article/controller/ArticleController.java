@@ -125,7 +125,7 @@ public class ArticleController extends CommonController {
 
 	public CommonResult insertArticleLongCommentEvaluation(@RequestBody InsertArticleLongEvaluationParam param) {
 		/*
-		 * TODO 2019-06-08 发现 未明用途 待确认
+		 * TODO 2019-06-08 发现 未明用途 2023-03-25 准备删除
 		 */
 		param.setEvaluationType(ArticleEvaluationType.articleCommentEvaluation.getCode());
 		CommonResult serviceResult = articleEvaluationService.insertArticleLongEvaluationRedis(param);

@@ -12,6 +12,7 @@ public interface WechatUserService {
 
 	EncryptDTO buyMembershipFromWechat(EncryptDTO encryptedDTO);
 
-	EncryptDTO getMembershipListFromWechat(EncryptDTO encryptedDTO);
+	EncryptDTO getAiChatUserDetail(EncryptDTO encryptedDTO);
+
 
 }

@@ -169,6 +169,18 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 			r.setMessage("付款异常, 已通知客服, 请稍后 0x3");
 			return r;
 		}
+		
+		try {
+			if(!membershipDetail.getPrice().equals(decryptDTO.getAmount().getTotal().doubleValue() / 100)) {
+				sendTelegramMessage("收到付款异常, membership 售价: " + membershipDetail.getPrice() + ", 但付款(分)为: " + decryptDTO.getAmount().getTotal());
+				r.setMessage("付款异常, 已通知客服, 请稍后 0x7");
+				return r;
+			}
+		} catch (Exception e) {
+			sendTelegramMessage("获取付款参数失败: " + decryptDTO);
+			r.setMessage("付款异常, 已通知客服, 请稍后 0x8");
+			return r;
+		}
 
 		Long aiChatUserId = userService.__getAiChatUserIdByWechatUserId(wechatUserId);
 		if (aiChatUserId == null) {

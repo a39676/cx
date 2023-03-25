@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +56,12 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 	public AiChatSendNewMessageResult sendNewChatMessage(Long aiChatUserId, String msg) {
 		AiChatSendNewMessageResult r = new AiChatSendNewMessageResult();
 
+		msg = sanitize(msg);
+		if(StringUtils.isBlank(msg)) {
+			r.setMessage("请勿发送空消息 或者脚本");
+			return r;
+		}
+		
 		// check amount
 		AiChatUserDetail userDetail = detailMapper.selectByPrimaryKey(aiChatUserId);
 		if (userDetail == null) {
@@ -76,7 +83,6 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 				historyCountingLimit);
 
 		// send history + new msg, wait feedback
-		msg = sanitize(msg);
 		OpenAiChatCompletionSendMessageResult apiResult = util.sendChatCompletion(chatHistory, msg);
 
 		// if fail, send fail response

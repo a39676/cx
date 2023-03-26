@@ -291,4 +291,42 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 
 		return hadDailySignUp(aiChatUserId);
 	}
+
+	@Override
+	public CommonResult blockUser(String aiChatUserIdStr) {
+		CommonResult r = new CommonResult();
+		Long aiChatUserId = null;
+		try {
+			aiChatUserId = Long.parseLong(aiChatUserIdStr);
+		} catch (Exception e) {
+			r.setMessage("Wrong id");
+			return r;
+		}
+		
+		AiChatUserDetail row = new AiChatUserDetail();
+		row.setId(aiChatUserId);
+		row.setIsBlock(true);
+		int updateCount = userDetailMapper.updateByPrimaryKeySelective(row);
+		r.setSuccess(updateCount == 1);
+		return r;
+	}
+	
+	@Override
+	public CommonResult unlockUser(String aiChatUserIdStr) {
+		CommonResult r = new CommonResult();
+		Long aiChatUserId = null;
+		try {
+			aiChatUserId = Long.parseLong(aiChatUserIdStr);
+		} catch (Exception e) {
+			r.setMessage("Wrong id");
+			return r;
+		}
+		
+		AiChatUserDetail row = new AiChatUserDetail();
+		row.setId(aiChatUserId);
+		row.setIsBlock(false);
+		int updateCount = userDetailMapper.updateByPrimaryKeySelective(row);
+		r.setSuccess(updateCount == 1);
+		return r;
+	}
 }

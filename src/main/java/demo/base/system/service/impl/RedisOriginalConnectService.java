@@ -19,7 +19,6 @@ public class RedisOriginalConnectService extends RedisConnectCommonService {
 	
 	public String getValByName(String constantName) {
 		if(StringUtils.isBlank(constantName)) {
-			log.error("constant name was empty");
 			return "";
 		}
 		if(redisTemplate.hasKey(constantName)) {
@@ -110,4 +109,7 @@ public class RedisOriginalConnectService extends RedisConnectCommonService {
 		return keys.size();
 	}
 
+	public Set<String> findKeys(String pattern) {
+		return redisTemplate.keys(pattern);
+	}
 }

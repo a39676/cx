@@ -8,6 +8,7 @@
     <result column="used_tokens" jdbcType="INTEGER" property="usedTokens" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
+    <result column="is_block" jdbcType="BIT" property="isBlock" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -68,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, bonus_amount, recharge_amount, used_tokens, create_time, is_delete
+    id, bonus_amount, recharge_amount, used_tokens, create_time, is_delete, is_block
   </sql>
   <select id="selectByExample" parameterType="demo.aiChat.pojo.po.AiChatUserDetailExample" resultMap="BaseResultMap">
     select
@@ -102,11 +103,11 @@
   </delete>
   <insert id="insert" parameterType="demo.aiChat.pojo.po.AiChatUserDetail">
     insert into ai_chat_user_detail (id, bonus_amount, recharge_amount, 
-      used_tokens, create_time, is_delete
-      )
+      used_tokens, create_time, is_delete, 
+      is_block)
     values (#{id,jdbcType=BIGINT}, #{bonusAmount,jdbcType=DECIMAL}, #{rechargeAmount,jdbcType=DECIMAL}, 
-      #{usedTokens,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
-      )
+      #{usedTokens,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}, 
+      #{isBlock,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="demo.aiChat.pojo.po.AiChatUserDetail">
     insert into ai_chat_user_detail
@@ -129,6 +130,9 @@
       <if test="isDelete != null">
         is_delete,
       </if>
+      <if test="isBlock != null">
+        is_block,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -148,6 +152,9 @@
       </if>
       <if test="isDelete != null">
         #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="isBlock != null">
+        #{isBlock,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -178,6 +185,9 @@
       <if test="row.isDelete != null">
         is_delete = #{row.isDelete,jdbcType=BIT},
       </if>
+      <if test="row.isBlock != null">
+        is_block = #{row.isBlock,jdbcType=BIT},
+      </if>
     </set>
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -190,7 +200,8 @@
       recharge_amount = #{row.rechargeAmount,jdbcType=DECIMAL},
       used_tokens = #{row.usedTokens,jdbcType=INTEGER},
       create_time = #{row.createTime,jdbcType=TIMESTAMP},
-      is_delete = #{row.isDelete,jdbcType=BIT}
+      is_delete = #{row.isDelete,jdbcType=BIT},
+      is_block = #{row.isBlock,jdbcType=BIT}
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -213,6 +224,9 @@
       <if test="isDelete != null">
         is_delete = #{isDelete,jdbcType=BIT},
       </if>
+      <if test="isBlock != null">
+        is_block = #{isBlock,jdbcType=BIT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -222,7 +236,8 @@
       recharge_amount = #{rechargeAmount,jdbcType=DECIMAL},
       used_tokens = #{usedTokens,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      is_delete = #{isDelete,jdbcType=BIT}
+      is_delete = #{isDelete,jdbcType=BIT},
+      is_block = #{isBlock,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByExampleWithRowbounds" parameterType="demo.aiChat.pojo.po.AiChatUserDetailExample" resultMap="BaseResultMap">

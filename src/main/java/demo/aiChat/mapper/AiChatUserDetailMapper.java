@@ -36,4 +36,5 @@ public interface AiChatUserDetailMapper {
 
 	int batchRecharge(@Param("aiChatUserIdList") List<Long> aiChatUserIdList,
 			@Param("bonusAmount") BigDecimal bonusAmount, @Param("rechargeAmount") BigDecimal rechargeAmount);
+
 }

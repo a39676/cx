@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import aiChat.pojo.constant.AiChatFromWechatSdkUrlConstant;
+import demo.aiChat.pojo.constant.AiChatUrlConstant;
 import demo.article.article.pojo.constant.ArticleAdminUrlConstant;
 import demo.article.articleComment.pojo.constant.ArticleAdminCommentUrlConstant;
 import demo.base.admin.pojo.constant.AdminUrlConstant;
@@ -121,6 +122,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             	.permitAll()
             .antMatchers(CryptoCoinSharingUrl.ROOT + "/**")
             	.access("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')")
+            .antMatchers(AiChatUrlConstant.ROOT + "/**")
+            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
             // joy url start
             .antMatchers(JoyUrl.ROOT + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_USER_ACTIVE))

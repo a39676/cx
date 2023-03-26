@@ -62,4 +62,6 @@ public class AiChatFromWechatServiceImpl extends AiChatCommonService implements 
 		r = aiChatService.findChatHistoryByAiChatUserIdToFrontEnd(aiChatUserId);
 		return r;
 	}
+
+	
 }

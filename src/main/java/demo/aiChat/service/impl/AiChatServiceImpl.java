@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +24,14 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiChat.mapper.AiChatUserAmountHistoryMapper;
 import demo.aiChat.mapper.AiChatUserChatHistoryMapper;
 import demo.aiChat.mapper.AiChatUserDetailMapper;
+import demo.aiChat.pojo.constant.AiChatUrlConstant;
 import demo.aiChat.pojo.dto.AiChatUserMembershipDetailSummaryDTO;
 import demo.aiChat.pojo.po.AiChatUserAmountHistory;
 import demo.aiChat.pojo.po.AiChatUserChatHistory;
 import demo.aiChat.pojo.po.AiChatUserDetail;
 import demo.aiChat.service.AiChatMembershipService;
 import demo.aiChat.service.AiChatService;
+import demo.base.system.service.HostnameService;
 import net.sf.json.JSONObject;
 import openAi.pojo.dto.OpanAiChatCompletionMessageDTO;
 import openAi.pojo.result.OpenAiChatCompletionSendMessageResult;
@@ -49,16 +52,45 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 	private AiChatMembershipService membershipService;
 
 	@Autowired
+	private HostnameService hostnameService;
+
+	@Autowired
 	private FileUtilCustom ioUtil;
 
 	@Override
 	public AiChatSendNewMessageResult sendNewChatMessage(Long aiChatUserId, String msg) {
 		AiChatSendNewMessageResult r = new AiChatSendNewMessageResult();
 
+		msg = sanitize(msg);
+		if (StringUtils.isBlank(msg)) {
+			r.setMessage("请勿发送空白消息或网页脚本");
+			return r;
+		}
+
+		int sensitiveWordCounting = sensitiveWordCount(msg);
+		if (sensitiveWordCounting > 0) {
+			insertSensitiveWordHitCountingToRedis(aiChatUserId, sensitiveWordCounting,
+					optionService.getSensitiveWordsTriggerInMinutes());
+
+			Integer sensitiveWordHitCount = findSensitiveWordHitCount(aiChatUserId);
+			if (sensitiveWordHitCount > optionService.getSensitiveWordsTriggerMaxCount()) {
+				String hostname = hostnameService.findMainHostname();
+				sendTelegramMessage("Send too many sensitive words, history: " //
+						+ "https://" + hostname + AiChatUrlConstant.ROOT + AiChatUrlConstant.CHECK_CHAT_HISTORY
+						+ "?aiChatUserId=" + aiChatUserId //
+						+ ", block: " + "https://" + hostname + AiChatUrlConstant.ROOT + AiChatUrlConstant.BLOCK_USER
+						+ "?aiChatUserId=" + aiChatUserId);
+			}
+		}
+
 		// check amount
 		AiChatUserDetail userDetail = detailMapper.selectByPrimaryKey(aiChatUserId);
 		if (userDetail == null) {
 			r.setMessage("请刷新页面后登录, 或者输入 API key, 如仍旧异常, 请联系管理员");
+			return r;
+		}
+		if (userDetail.getIsBlock()) {
+			r.setMessage("暂时无法发送消息, 请联系管理员");
 			return r;
 		}
 		if (userDetail.getBonusAmount().doubleValue() + userDetail.getRechargeAmount().doubleValue() <= 0) {
@@ -76,7 +108,6 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 				historyCountingLimit);
 
 		// send history + new msg, wait feedback
-		msg = sanitize(msg);
 		OpenAiChatCompletionSendMessageResult apiResult = util.sendChatCompletion(chatHistory, msg);
 
 		// if fail, send fail response
@@ -177,7 +208,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		File targetFile = null;
 		AiChatUserChatHistory historyPO = chatHistoryMapper.selectByPrimaryKey(aiChatUserId);
 		if (historyPO == null) {
-			
+
 			String fileName = aiChatUserId + ".txt";
 			File mainFolder = new File(optionService.getChatStorePrefixPath() + File.separator + aiChatUserId);
 			finalFilePath = mainFolder + File.separator + fileName;
@@ -191,7 +222,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 					return r;
 				}
 			}
-			
+
 			historyPO = new AiChatUserChatHistory();
 			historyPO.setHistoryFilePath(finalFilePath);
 			historyPO.setUserId(aiChatUserId);
@@ -200,7 +231,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 			finalFilePath = historyPO.getHistoryFilePath();
 			targetFile = new File(finalFilePath);
 		}
-		
+
 		Path path = Paths.get(finalFilePath);
 
 		OpanAiChatCompletionMessageDTO msgDTO = new OpanAiChatCompletionMessageDTO();
@@ -259,7 +290,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 
 		AiChatUserAmountHistory bonusAmountHistory = null;
 		BigDecimal restDebitAmount = new BigDecimal(debitAmount.doubleValue());
-		
+
 		detail.setUsedTokens(detail.getUsedTokens() + debitAmount.intValue());
 
 		if (detail.getBonusAmount().compareTo(BigDecimal.ZERO) > 0) {
@@ -300,4 +331,13 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		return r;
 	}
 
+	private int sensitiveWordCount(String msg) {
+		int count = 0;
+		for (String word : optionService.getSensitiveWords()) {
+			if (msg.contains(word)) {
+				count += 0;
+			}
+		}
+		return count;
+	}
 }

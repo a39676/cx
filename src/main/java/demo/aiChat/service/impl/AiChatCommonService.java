@@ -2,6 +2,7 @@ package demo.aiChat.service.impl;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.owasp.html.PolicyFactory;
@@ -34,7 +35,8 @@ public abstract class AiChatCommonService extends ToolCommonService {
 	@Autowired
 	private TextFilter textFilter;
 
-	private String dailySignUpRedisKey = "aiChatDailySignUp";
+	private final String dailySignUpRedisKey = "aiChatDailySignUp";
+	private final String sensitiveWordHitCountingRedisKeyPrefix = "senWordHitCount_";
 
 	protected CommonResult notEnoughtAmount() {
 		CommonResult r = new CommonResult();
@@ -89,4 +91,27 @@ public abstract class AiChatCommonService extends ToolCommonService {
 		return filter.sanitize(content);
 	}
 
+	protected void insertSensitiveWordHitCountingToRedis(Long aiChatUserId, Integer hitCount, Integer livingMinutes) {
+		String key = sensitiveWordHitCountingRedisKeyPrefix + aiChatUserId + "_" + snowFlake.getNextId();
+		redisConnectService.setValByName(key, String.valueOf(hitCount), livingMinutes.longValue(), TimeUnit.MINUTES);
+	}
+
+	protected Integer findSensitiveWordHitCount(Long aiChatUserId) {
+		Set<String> keys = redisConnectService.findKeys(sensitiveWordHitCountingRedisKeyPrefix + aiChatUserId + "_*");
+		if (keys.isEmpty()) {
+			return 0;
+		}
+		int total = 0;
+		String countStr = null;
+		Integer tmpCount = null;
+		for (String key : keys) {
+			countStr = redisConnectService.getValByName(key);
+			try {
+				tmpCount = Integer.parseInt(countStr);
+				total = total + tmpCount;
+			} catch (Exception e) {
+			}
+		}
+		return total;
+	}
 }

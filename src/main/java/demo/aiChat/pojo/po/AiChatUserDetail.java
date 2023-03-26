@@ -16,6 +16,8 @@ public class AiChatUserDetail {
 
     private Boolean isDelete;
 
+    private Boolean isBlock;
+
     public Long getId() {
         return id;
     }
@@ -62,5 +64,13 @@ public class AiChatUserDetail {
 
     public void setIsDelete(Boolean isDelete) {
         this.isDelete = isDelete;
+    }
+
+    public Boolean getIsBlock() {
+        return isBlock;
+    }
+
+    public void setIsBlock(Boolean isBlock) {
+        this.isBlock = isBlock;
     }
 }

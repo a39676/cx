@@ -1,10 +1,18 @@
 package demo.aiChat.service.impl;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -26,7 +34,12 @@ public class AiChatOptionService extends CommonService {
 	private String payResultStorePrefixPath;
 	private Integer chatHistorySaveCountingLimit = 100;
 	private Integer dailySignUpBonus;
+	private String sensitiveWordsPathStr;
+	private Integer sensitiveWordsTriggerInMinutes;
+	private Integer sensitiveWordsTriggerMaxCount;
+
 	private List<AiChatUserMembershipDetailDTO> membershipLDetails;
+	private Set<String> sensitiveWords = new HashSet<>();
 
 	public String getChatStorePrefixPath() {
 		return chatStorePrefixPath;
@@ -60,11 +73,46 @@ public class AiChatOptionService extends CommonService {
 		this.dailySignUpBonus = dailySignUpBonus;
 	}
 
+	public String getSensitiveWordsPathStr() {
+		return sensitiveWordsPathStr;
+	}
+
+	public void setSensitiveWordsPathStr(String sensitiveWordsPathStr) {
+		this.sensitiveWordsPathStr = sensitiveWordsPathStr;
+	}
+
+	public Integer getSensitiveWordsTriggerInMinutes() {
+		return sensitiveWordsTriggerInMinutes;
+	}
+
+	public void setSensitiveWordsTriggerInMinutes(Integer sensitiveWordsTriggerInMinutes) {
+		this.sensitiveWordsTriggerInMinutes = sensitiveWordsTriggerInMinutes;
+	}
+
+	public Integer getSensitiveWordsTriggerMaxCount() {
+		return sensitiveWordsTriggerMaxCount;
+	}
+
+	public void setSensitiveWordsTriggerMaxCount(Integer sensitiveWordsTriggerMaxCount) {
+		this.sensitiveWordsTriggerMaxCount = sensitiveWordsTriggerMaxCount;
+	}
+
+	public Set<String> getSensitiveWords() {
+		return sensitiveWords;
+	}
+
+	public void setSensitiveWords(Set<String> sensitiveWords) {
+		this.sensitiveWords = sensitiveWords;
+	}
+
 	@Override
 	public String toString() {
 		return "AiChatOptionService [chatStorePrefixPath=" + chatStorePrefixPath + ", payResultStorePrefixPath="
 				+ payResultStorePrefixPath + ", chatHistorySaveCountingLimit=" + chatHistorySaveCountingLimit
-				+ ", dailySignUpBonus=" + dailySignUpBonus + ", membershipLDetails=" + membershipLDetails + "]";
+				+ ", dailySignUpBonus=" + dailySignUpBonus + ", sensitiveWordsPathStr=" + sensitiveWordsPathStr
+				+ ", sensitiveWordsTriggerInMinutes=" + sensitiveWordsTriggerInMinutes
+				+ ", sensitiveWordsTriggerMaxCount=" + sensitiveWordsTriggerMaxCount + ", membershipLDetails="
+				+ membershipLDetails + ", sensitiveWords=" + sensitiveWords + "]";
 	}
 
 	public List<AiChatUserMembershipDetailDTO> getMembershipLDetails() {
@@ -86,6 +134,19 @@ public class AiChatOptionService extends CommonService {
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
 			AiChatOptionService tmp = new Gson().fromJson(jsonStr, AiChatOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
+
+			if (StringUtils.isNotBlank(sensitiveWordsPathStr)) {
+				log.error("Loading sensitive words");
+				Path path = Paths.get(sensitiveWordsPathStr);
+				BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8);
+				String currentLine = null;
+				while ((currentLine = reader.readLine()) != null) {
+					sensitiveWords.add(currentLine);
+				}
+			} else {
+				log.error("Can NOT find sensitive words");
+			}
+
 			log.error("AI chat option loaded");
 		} catch (Exception e) {
 			log.error("AI chat option loading error: " + e.getLocalizedMessage());

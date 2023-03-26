@@ -25,6 +25,7 @@ public class AiChatOptionService extends CommonService {
 	private String chatStorePrefixPath;
 	private String payResultStorePrefixPath;
 	private Integer chatHistorySaveCountingLimit = 100;
+	private Integer dailySignUpBonus;
 	private List<AiChatUserMembershipDetailDTO> membershipLDetails;
 
 	public String getChatStorePrefixPath() {
@@ -51,11 +52,19 @@ public class AiChatOptionService extends CommonService {
 		this.chatHistorySaveCountingLimit = chatHistorySaveCountingLimit;
 	}
 
+	public Integer getDailySignUpBonus() {
+		return dailySignUpBonus;
+	}
+
+	public void setDailySignUpBonus(Integer dailySignUpBonus) {
+		this.dailySignUpBonus = dailySignUpBonus;
+	}
+
 	@Override
 	public String toString() {
 		return "AiChatOptionService [chatStorePrefixPath=" + chatStorePrefixPath + ", payResultStorePrefixPath="
 				+ payResultStorePrefixPath + ", chatHistorySaveCountingLimit=" + chatHistorySaveCountingLimit
-				+ ", membershipLDetails=" + membershipLDetails + "]";
+				+ ", dailySignUpBonus=" + dailySignUpBonus + ", membershipLDetails=" + membershipLDetails + "]";
 	}
 
 	public List<AiChatUserMembershipDetailDTO> getMembershipLDetails() {

@@ -153,7 +153,16 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		
 		GetAiChatAmountResult amountResult = aiChatUserService.getAiChatAmount(tmpKeyStr);
 		r.setAmount(amountResult.getAmount());
+		
+		r.setSignedUpToday(aiChatUserService.hadDailySignUp(tmpKeyStr));
 		r.setIsSuccess();
+		return encryptDTO(r);
+	}
+	
+	@Override
+	public EncryptDTO dailySignUp(EncryptDTO encryptedDTO) {
+		String tmpKeyStr = decryptEncryptDTO(encryptedDTO, String.class);
+		CommonResult r = aiChatUserService.dailySignUpFromWechat(tmpKeyStr);
 		return encryptDTO(r);
 	}
 }

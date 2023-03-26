@@ -57,4 +57,10 @@ public class WechatSdkInteractionController extends CommonController {
 		return wechatUserService.getAiChatUserDetail(dto);
 	}
 	
+	@PostMapping(value = AiChatFromWechatSdkUrlConstant.DAILY_SIGN_UP)
+	@ResponseBody
+	public EncryptDTO dailySignUp(@RequestBody EncryptDTO dto) {
+		return wechatUserService.dailySignUp(dto);
+	}
+	
 }

@@ -14,5 +14,7 @@ public interface WechatUserService {
 
 	EncryptDTO getAiChatUserDetail(EncryptDTO encryptedDTO);
 
+	EncryptDTO dailySignUp(EncryptDTO encryptedDTO);
+
 
 }

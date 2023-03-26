@@ -297,7 +297,7 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 		GetAiChatMembershipResult r = new GetAiChatMembershipResult();
 		Long aiChatUserId = getAiChatUserIdByTempKey(tmpKeyStr);
 		if (aiChatUserId == null) {
-			r.setMessage("无此用户");
+			r.setMessage("登录已过期, 请重新登录");
 			return r;
 		}
 

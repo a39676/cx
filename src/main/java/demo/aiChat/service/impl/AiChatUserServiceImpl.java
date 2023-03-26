@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import aiChat.pojo.result.AiChatDailySignUpResult;
 import aiChat.pojo.result.GetAiChatAmountResult;
 import aiChat.pojo.type.AiChatAmountType;
 import auxiliaryCommon.pojo.result.CommonResult;
@@ -231,16 +232,63 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 		GetAiChatAmountResult r = new GetAiChatAmountResult();
 		Long aiChatUserId = getAiChatUserIdByTempKey(tmpKeyStr);
 		if (aiChatUserId == null) {
-			r.setMessage("无法查找此用户, 请重新登录");
+			r.setMessage("登录已过期, 请重新登录");
 			return r;
 		}
 		AiChatUserDetail po = userDetailMapper.selectByPrimaryKey(aiChatUserId);
 		if (po == null) {
-			r.setMessage("无法查找此用户");
+			r.setMessage("登录已过期, 请重新登录 0x2");
 			return r;
 		}
+		extendTmpKeyValidity(Long.parseLong(tmpKeyStr));
 		r.setAmount(po.getBonusAmount().intValue() + po.getRechargeAmount().intValue());
 		r.setIsSuccess();
 		return r;
+	}
+
+	@Override
+	public AiChatDailySignUpResult dailySignUpFromWechat(String tmpKeyStr) {
+		AiChatDailySignUpResult r = new AiChatDailySignUpResult();
+
+		Long aiChatUserId = getAiChatUserIdByTempKey(tmpKeyStr);
+		if (aiChatUserId == null) {
+			r.setMessage("请重新登录");
+			return r;
+		}
+		AiChatUserDetail po = userDetailMapper.selectByPrimaryKey(aiChatUserId);
+		if (po == null) {
+			r.setMessage("登录已过期 请重新登录 0x3");
+			return r;
+		}
+
+		if (hadDailySignUp(aiChatUserId)) {
+			r.setMessage("今天已经签到, 明天再来吧");
+			return r;
+		}
+		
+		extendTmpKeyValidity(Long.parseLong(tmpKeyStr));
+
+		po.setBonusAmount(po.getBonusAmount().add(new BigDecimal(optionService.getDailySignUpBonus())));
+		userDetailMapper.updateByPrimaryKeySelective(po);
+		addAiChatUserIdDailySigned(po.getId());
+		
+		r.setNewAmount(po.getBonusAmount().add(po.getRechargeAmount()).intValue());
+		r.setIsSuccess();
+		r.setMessage("签到成功, 获得" + optionService.getDailySignUpBonus() + "电量");
+		return r;
+	}
+
+	@Override
+	public Boolean hadDailySignUp(String tmpKeyStr) {
+		Long aiChatUserId = getAiChatUserIdByTempKey(tmpKeyStr);
+		if (aiChatUserId == null) {
+			return true;
+		}
+		AiChatUserDetail po = userDetailMapper.selectByPrimaryKey(aiChatUserId);
+		if (po == null) {
+			return true;
+		}
+
+		return hadDailySignUp(aiChatUserId);
 	}
 }

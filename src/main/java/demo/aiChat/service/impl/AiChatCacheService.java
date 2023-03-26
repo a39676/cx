@@ -21,7 +21,7 @@ public class AiChatCacheService extends CommonService {
 	 * value:AiChatUserMembershipDetailSummaryDTO
 	 */
 	private Map<Long, AiChatUserMembershipDetailSummaryDTO> membershipCacheMap = new HashMap<>();
-
+	
 
 	public Map<String, Long> getOpenIdMatchAiChatUserIdMap() {
 		return openIdMatchAiChatUserIdMap;

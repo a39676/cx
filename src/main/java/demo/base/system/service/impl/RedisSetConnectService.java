@@ -1,5 +1,6 @@
 package demo.base.system.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -44,6 +45,15 @@ public class RedisSetConnectService extends RedisConnectCommonService {
 	
 	public void add(String redisKey, String value) {
 		redisTemplate.opsForSet().add(redisKey, value);
+	}
+	
+	public void add(String redisKey, String value, LocalDateTime expiredTime) {
+		redisTemplate.opsForSet().add(redisKey, value);
+		redisTemplate.expireAt(redisKey, dateHandler.localDateTimeToDate(expiredTime));
+	}
+	
+	public boolean isMember(String redisKey, String value) {
+		return redisTemplate.opsForSet().isMember(redisKey, value);
 	}
 	
 	public void add(String redisKey, List<String> values) {

@@ -11,10 +11,17 @@ public class AiChatTaskService {
 
 	@Autowired
 	private AiChatMembershipService aiChatMembershipService;
+	@Autowired
+	private AiChatCacheService aiChatCacheService;
 	
 	@Scheduled(cron = "20 03 00 * * *")
 	public void rechargeDailyBonusByMemberShip() {
 		aiChatMembershipService.updateDeleteMarkByExpiredTime();
 		aiChatMembershipService.rechargeDailyBonusByMemberShip();
+	}
+	
+	@Scheduled(cron = "22 58 23 * * *")
+	public void clearMembershipMapInAiChatCache() {
+		aiChatCacheService.getMembershipCacheMap().clear();
 	}
 }

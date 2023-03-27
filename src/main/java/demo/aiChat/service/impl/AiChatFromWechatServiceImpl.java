@@ -45,7 +45,7 @@ public class AiChatFromWechatServiceImpl extends AiChatCommonService implements 
 
 		tmpKeyInsertOrUpdateLiveTime(tmpK, aiChatUserId);
 
-		r = aiChatService.sendNewChatMessage(aiChatUserId, dto.getMsg());
+		r = aiChatService.sendNewChatMessage(aiChatUserId, dto);
 		return r;
 	}
 

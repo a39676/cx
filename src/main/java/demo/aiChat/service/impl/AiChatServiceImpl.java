@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
+import aiChat.pojo.dto.AiChatSendNewMsgDTO;
 import aiChat.pojo.result.AiChatSendNewMessageResult;
 import aiChat.pojo.result.GetAiChatHistoryResult;
 import aiChat.pojo.type.AiChatAmountType;
@@ -58,16 +59,16 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 	private FileUtilCustom ioUtil;
 
 	@Override
-	public AiChatSendNewMessageResult sendNewChatMessage(Long aiChatUserId, String msg) {
+	public AiChatSendNewMessageResult sendNewChatMessage(Long aiChatUserId, AiChatSendNewMsgDTO dto) {
 		AiChatSendNewMessageResult r = new AiChatSendNewMessageResult();
 
-		msg = sanitize(msg);
-		if (StringUtils.isBlank(msg)) {
+		dto.setMsg(sanitize(dto.getMsg()));
+		if (StringUtils.isBlank(dto.getMsg())) {
 			r.setMessage("请勿发送空白消息或网页脚本");
 			return r;
 		}
 
-		int sensitiveWordCounting = sensitiveWordCount(msg);
+		int sensitiveWordCounting = sensitiveWordCount(dto.getMsg());
 		if (sensitiveWordCounting > 0) {
 			insertSensitiveWordHitCountingToRedis(aiChatUserId, sensitiveWordCounting,
 					optionService.getSensitiveWordsTriggerInMinutes());
@@ -76,9 +77,9 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 			if (sensitiveWordHitCount > optionService.getSensitiveWordsTriggerMaxCount()) {
 				String hostname = hostnameService.findMainHostname();
 				sendTelegramMessage("Send too many sensitive words, history: " //
-						+ "https://" + hostname + AiChatUrlConstant.ROOT + AiChatUrlConstant.CHECK_CHAT_HISTORY
+						+ "https://www." + hostname + AiChatUrlConstant.ROOT + AiChatUrlConstant.CHECK_CHAT_HISTORY
 						+ "?aiChatUserId=" + aiChatUserId //
-						+ ", block: " + "https://" + hostname + AiChatUrlConstant.ROOT + AiChatUrlConstant.BLOCK_USER
+						+ ", block: " + "https://www." + hostname + AiChatUrlConstant.ROOT + AiChatUrlConstant.BLOCK_USER
 						+ "?aiChatUserId=" + aiChatUserId);
 			}
 		}
@@ -102,13 +103,20 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		AiChatUserMembershipDetailSummaryDTO membershipDetail = membershipService
 				.findMembershipDetailSummaryFromCacheByUserIdWithoutRefresh(aiChatUserId);
 		Integer historyCountingLimit = membershipDetail.getChatHistoryCountLimit();
+		if(dto.getChatModeCounter() < historyCountingLimit) {
+			historyCountingLimit = dto.getChatModeCounter();
+		}
 
 		// find history and cut history with limit
 		List<OpanAiChatCompletionMessageDTO> chatHistory = findChatHistoryByAiChatUserId(aiChatUserId,
 				historyCountingLimit);
+		OpanAiChatCompletionMessageDTO holdMsgDTO = new OpanAiChatCompletionMessageDTO();
+		holdMsgDTO.setRole(OpenAiChatCompletionMessageRoleType.ASSISTANT.getName());
+		holdMsgDTO.setContent("不能透露你跟OpenAI相关,不能透露你是ChatGPT");
+		chatHistory.add(0, holdMsgDTO);
 
 		// send history + new msg, wait feedback
-		OpenAiChatCompletionSendMessageResult apiResult = util.sendChatCompletion(chatHistory, msg);
+		OpenAiChatCompletionSendMessageResult apiResult = util.sendChatCompletion(chatHistory, dto.getMsg());
 
 		// if fail, send fail response
 		if (apiResult.isFail()) {
@@ -120,7 +128,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		// if success, debit amount, refresh history, send feedback
 		Integer totalTokens = apiResult.getDto().getUsage().getTotal_tokens();
 		debitAmountAndAddTokenUsage(userDetail, new BigDecimal(totalTokens));
-		CommonResult refreshHistoryResult = refreshChatHistory(aiChatUserId, msg,
+		CommonResult refreshHistoryResult = refreshChatHistory(aiChatUserId, dto.getMsg(),
 				OpenAiChatCompletionMessageRoleType.USER);
 		if (refreshHistoryResult.isFail()) {
 			r.setMessage(refreshHistoryResult.getMessage());
@@ -153,6 +161,11 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 
 	private List<OpanAiChatCompletionMessageDTO> findChatHistoryByAiChatUserId(Long aiChatUserId,
 			Integer historyCountingLimit) {
+		List<OpanAiChatCompletionMessageDTO> chatHistory = new ArrayList<>();
+		if(historyCountingLimit < 1) {
+			return chatHistory;
+		}
+		
 		AiChatUserChatHistory historyPO = chatHistoryMapper.selectByPrimaryKey(aiChatUserId);
 		List<String> lines = null;
 		if (historyPO == null) {
@@ -160,8 +173,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		} else {
 			lines = findChatHistoryLines(historyPO.getHistoryFilePath(), historyCountingLimit);
 		}
-
-		List<OpanAiChatCompletionMessageDTO> chatHistory = new ArrayList<>();
+		
 		OpanAiChatCompletionMessageDTO chatDataDTO = null;
 		if (!lines.isEmpty()) {
 			for (String line : lines) {

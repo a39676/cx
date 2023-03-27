@@ -335,7 +335,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		int count = 0;
 		for (String word : optionService.getSensitiveWords()) {
 			if (msg.contains(word)) {
-				count += 0;
+				count += 1;
 			}
 		}
 		return count;

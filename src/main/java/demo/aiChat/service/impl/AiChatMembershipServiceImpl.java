@@ -82,11 +82,8 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 		summaryDTO.setAiChatUserId(aiChatUserId);
 
 		Map<Long, AiChatUserMembershipDetailDTO> membershipConfigMap = getMembershipConfigMap();
-		if (membershipPoList == null || membershipPoList.isEmpty()) {
-			AiChatUserMembershipDetailDTO levelZero = membershipConfigMap.get(0L);
-			summaryDTO.setDailyBonus(levelZero.getDailyBonus());
-			summaryDTO.setChatHistoryCountLimit(levelZero.getChatHistoryCountLimit());
-			return summaryDTO;
+		if (membershipPoList == null) {
+			membershipPoList = new ArrayList<>();
 		}
 
 		AiChatUserMembershipDetailDTO membershipDetail = null;

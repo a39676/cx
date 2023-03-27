@@ -91,7 +91,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 			return r;
 		}
 		if (userDetail.getIsBlock()) {
-			r.setMessage("暂时无法发送消息, 请联系管理员");
+			r.setCode("-10");
 			return r;
 		}
 		if (userDetail.getBonusAmount().doubleValue() + userDetail.getRechargeAmount().doubleValue() <= 0) {

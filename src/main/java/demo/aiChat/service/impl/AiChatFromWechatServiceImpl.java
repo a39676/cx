@@ -46,6 +46,10 @@ public class AiChatFromWechatServiceImpl extends AiChatCommonService implements 
 		tmpKeyInsertOrUpdateLiveTime(tmpK, aiChatUserId);
 
 		r = aiChatService.sendNewChatMessage(aiChatUserId, dto);
+		if("-10".equals(r.getCode())) {
+			r.setMessage("暂时无法发送消息, 请返回公众号界面联系管理员");
+		}
+		
 		return r;
 	}
 

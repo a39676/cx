@@ -6,8 +6,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -37,8 +39,12 @@ public class AiChatOptionService extends CommonService {
 	private String sensitiveWordsPathStr;
 	private Integer sensitiveWordsTriggerInMinutes;
 	private Integer sensitiveWordsTriggerMaxCount;
-
 	private List<AiChatUserMembershipDetailDTO> membershipLDetails;
+	private Map<String, String> promptOfActAs = new HashMap<>();
+	private Integer inputMaxLength;
+	private String announcementStr;
+	private Integer bonusForNewUser;
+
 	private Set<String> sensitiveWords = new HashSet<>();
 
 	public String getChatStorePrefixPath() {
@@ -105,6 +111,46 @@ public class AiChatOptionService extends CommonService {
 		this.sensitiveWords = sensitiveWords;
 	}
 
+	public List<AiChatUserMembershipDetailDTO> getMembershipLDetails() {
+		return membershipLDetails;
+	}
+
+	public void setMembershipLDetails(List<AiChatUserMembershipDetailDTO> membershipLDetails) {
+		this.membershipLDetails = membershipLDetails;
+	}
+
+	public Map<String, String> getPromptOfActAs() {
+		return promptOfActAs;
+	}
+
+	public void setPromptOfActAs(Map<String, String> promptOfActAs) {
+		this.promptOfActAs = promptOfActAs;
+	}
+
+	public Integer getInputMaxLength() {
+		return inputMaxLength;
+	}
+
+	public void setInputMaxLength(Integer inputMaxLength) {
+		this.inputMaxLength = inputMaxLength;
+	}
+
+	public String getAnnouncementStr() {
+		return announcementStr;
+	}
+
+	public void setAnnouncementStr(String announcementStr) {
+		this.announcementStr = announcementStr;
+	}
+
+	public Integer getBonusForNewUser() {
+		return bonusForNewUser;
+	}
+
+	public void setBonusForNewUser(Integer bonusForNewUser) {
+		this.bonusForNewUser = bonusForNewUser;
+	}
+
 	@Override
 	public String toString() {
 		return "AiChatOptionService [chatStorePrefixPath=" + chatStorePrefixPath + ", payResultStorePrefixPath="
@@ -112,15 +158,9 @@ public class AiChatOptionService extends CommonService {
 				+ ", dailySignUpBonus=" + dailySignUpBonus + ", sensitiveWordsPathStr=" + sensitiveWordsPathStr
 				+ ", sensitiveWordsTriggerInMinutes=" + sensitiveWordsTriggerInMinutes
 				+ ", sensitiveWordsTriggerMaxCount=" + sensitiveWordsTriggerMaxCount + ", membershipLDetails="
-				+ membershipLDetails + ", sensitiveWords=" + sensitiveWords + "]";
-	}
-
-	public List<AiChatUserMembershipDetailDTO> getMembershipLDetails() {
-		return membershipLDetails;
-	}
-
-	public void setMembershipLDetails(List<AiChatUserMembershipDetailDTO> membershipLDetails) {
-		this.membershipLDetails = membershipLDetails;
+				+ membershipLDetails + ", promptOfActAs=" + promptOfActAs + ", inputMaxLength=" + inputMaxLength
+				+ ", announcementStr=" + announcementStr + ", bonusForNewUser=" + bonusForNewUser + ", sensitiveWords="
+				+ sensitiveWords + "]";
 	}
 
 	@PostConstruct

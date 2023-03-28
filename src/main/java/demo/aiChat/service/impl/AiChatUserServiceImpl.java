@@ -58,6 +58,8 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 		AiChatUserDetail aiChatUserDetailPO = new AiChatUserDetail();
 		aiChatUserDetailPO.setId(newAiChatUserId);
 		userDetailMapper.insertSelective(aiChatUserDetailPO);
+		
+		recharge(newAiChatUserId, AiChatAmountType.BONUS, new BigDecimal(optionService.getBonusForNewUser()));
 
 		cacheService.getSystemUserIdMatchAiChatUserIdMap().put(systemUserId, newAiChatUserId);
 		r.setAiChatUserId(newAiChatUserId);
@@ -89,6 +91,8 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 		aiChatUserDetailPO.setId(newAiChatUserId);
 		userDetailMapper.insertSelective(aiChatUserDetailPO);
 
+		recharge(newAiChatUserId, AiChatAmountType.BONUS, new BigDecimal(optionService.getBonusForNewUser()));
+		
 		cacheService.getOpenIdMatchAiChatUserIdMap().put(wechatOid, newAiChatUserId);
 
 		Long tmpKey = snowFlake.getNextId();

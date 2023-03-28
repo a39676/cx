@@ -62,6 +62,11 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 	public AiChatSendNewMessageResult sendNewChatMessage(Long aiChatUserId, AiChatSendNewMsgDTO dto) {
 		AiChatSendNewMessageResult r = new AiChatSendNewMessageResult();
 
+		if(dto.getMsg().length() > optionService.getInputMaxLength()) {
+			r.setMessage("问题过长, 请将问题控制在1200字符以内, 目前问题长度: " + dto.getMsg().length());
+			return r;
+		}
+		
 		dto.setMsg(sanitize(dto.getMsg()));
 		if (StringUtils.isBlank(dto.getMsg())) {
 			r.setMessage("请勿发送空白消息或网页脚本");
@@ -111,9 +116,18 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		List<OpanAiChatCompletionMessageDTO> chatHistory = findChatHistoryByAiChatUserId(aiChatUserId,
 				historyCountingLimit);
 		OpanAiChatCompletionMessageDTO holdMsgDTO = new OpanAiChatCompletionMessageDTO();
-		holdMsgDTO.setRole(OpenAiChatCompletionMessageRoleType.ASSISTANT.getName());
+		holdMsgDTO.setRole(OpenAiChatCompletionMessageRoleType.SYSTEM.getName());
 		holdMsgDTO.setContent("不能透露你跟OpenAI相关,不能透露你是ChatGPT");
 		chatHistory.add(0, holdMsgDTO);
+		
+		// Add "act as"
+		String actAs = optionService.getPromptOfActAs().get(dto.getNameOfActAs());
+		if(StringUtils.isNotBlank(actAs)) {
+			holdMsgDTO = new OpanAiChatCompletionMessageDTO();
+			holdMsgDTO.setRole(OpenAiChatCompletionMessageRoleType.SYSTEM.getName());
+			holdMsgDTO.setContent(actAs);
+			chatHistory.add(1, holdMsgDTO);
+		}
 
 		// send history + new msg, wait feedback
 		OpenAiChatCompletionSendMessageResult apiResult = util.sendChatCompletion(chatHistory, dto.getMsg());

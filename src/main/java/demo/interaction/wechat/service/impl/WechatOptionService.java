@@ -30,14 +30,13 @@ public class WechatOptionService extends CommonService {
 	private Long accessTokenLivingSecond;
 	private String aesKey;
 	private String aesInitVector;
-	private String developerOpenId;
 
 	@Override
 	public String toString() {
 		return "WechatOptionService [managerCode=" + managerCode + ", sdkMainUrl=" + sdkMainUrl + ", appTestId="
 				+ appTestId + ", appTestSecret=" + appTestSecret + ", appId1=" + appId1 + ", appSecret1=" + appSecret1
 				+ ", accessTokenLivingSecond=" + accessTokenLivingSecond + ", aesKey=" + aesKey + ", aesInitVector="
-				+ aesInitVector + ", developerOpenId=" + developerOpenId + "]";
+				+ aesInitVector + "]";
 	}
 
 	public String getManagerCode() {
@@ -110,14 +109,6 @@ public class WechatOptionService extends CommonService {
 
 	public void setAesInitVector(String aesInitVector) {
 		this.aesInitVector = aesInitVector;
-	}
-
-	public String getDeveloperOpenId() {
-		return developerOpenId;
-	}
-
-	public void setDeveloperOpenId(String developerOpenId) {
-		this.developerOpenId = developerOpenId;
 	}
 
 	@PostConstruct

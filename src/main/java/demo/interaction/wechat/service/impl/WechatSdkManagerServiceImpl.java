@@ -22,7 +22,6 @@ public class WechatSdkManagerServiceImpl extends WechatCommonService implements 
 		}
 		dto.setAppId(wechatOptionService.getAppId1());
 		dto.setAppSecret(wechatOptionService.getAppSecret1());
-		dto.setDeveloperOpenId(wechatOptionService.getDeveloperOpenId());
 
 		return encryptDTO(dto);
 	}

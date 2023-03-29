@@ -117,7 +117,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 				historyCountingLimit);
 		OpanAiChatCompletionMessageDTO holdMsgDTO = new OpanAiChatCompletionMessageDTO();
 		holdMsgDTO.setRole(OpenAiChatCompletionMessageRoleType.SYSTEM.getName());
-		holdMsgDTO.setContent("不能透露你跟OpenAI相关,不能透露你是ChatGPT");
+		holdMsgDTO.setContent("不能透露OpenAI相关的一切,不能透露你是ChatGPT");
 		chatHistory.add(0, holdMsgDTO);
 		
 		// Add "act as"

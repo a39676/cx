@@ -20,8 +20,9 @@ public class WechatSdkManagerServiceImpl extends WechatCommonService implements 
 		if(!wechatOptionService.getManagerCode().equals(managerCode)) {
 			return encryptDTO(dto);
 		}
-		dto.setAppId(wechatOptionService.getAppId1());
-		dto.setAppSecret(wechatOptionService.getAppSecret1());
+		dto.setAppId1(wechatOptionService.getAppId1());
+		dto.setAppSecret1(wechatOptionService.getAppSecret1());
+		dto.setOrignOpenId1(wechatOptionService.getOriginOpenId1());
 
 		return encryptDTO(dto);
 	}

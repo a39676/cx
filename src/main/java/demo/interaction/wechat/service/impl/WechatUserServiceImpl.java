@@ -15,12 +15,18 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiChat.pojo.result.CreateAiChatUserResult;
 import demo.aiChat.service.AiChatMembershipService;
 import demo.aiChat.service.AiChatUserService;
+import demo.interaction.wechat.mapper.WechatQrcodeDetailMapper;
 import demo.interaction.wechat.mapper.WechatUserDetailMapper;
+import demo.interaction.wechat.mapper.WechatUserFromQrcodeMapper;
+import demo.interaction.wechat.pojo.po.WechatQrcodeDetail;
+import demo.interaction.wechat.pojo.po.WechatQrcodeDetailExample;
 import demo.interaction.wechat.pojo.po.WechatUserDetail;
 import demo.interaction.wechat.pojo.po.WechatUserDetailExample;
+import demo.interaction.wechat.pojo.po.WechatUserFromQrcode;
 import demo.interaction.wechat.service.WechatUserService;
 import demo.interaction.wechatPay.service.WechatPayService;
 import wechatPayApi.jsApi.pojo.dto.WechatPayJsApiFeedbackDTO;
+import wechatSdk.pojo.dto.RecordingWechatUserFromParameterizedQrCodeDTO;
 import wechatSdk.pojo.type.WechatOfficialAccountType;
 
 @Service
@@ -34,6 +40,10 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 	private WechatUserDetailMapper wechatUserDetailMapper;
 	@Autowired
 	private WechatPayService wechatPayService;
+	@Autowired
+	private WechatQrcodeDetailMapper qrcodeMapper;
+	@Autowired
+	private WechatUserFromQrcodeMapper userFromQrcodeMapper;
 
 	private static final String FAKE_UID_PREFIX = "FakeUid_";
 
@@ -49,8 +59,16 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		WechatUserDetailExample example = new WechatUserDetailExample();
 		example.createCriteria().andOpenIdEqualTo(oid);
 		List<WechatUserDetail> wechatUserList = wechatUserDetailMapper.selectByExample(example);
-		if (!wechatUserList.isEmpty()) {
-			WechatUserDetail detail = wechatUserList.get(0);
+		WechatUserDetail detail = null;
+		if (wechatUserList.isEmpty()) {
+			detail = createWechatUserDetailWithOpenIdForSuiShou(oid);
+			CreateAiChatUserResult createAiChatUserResult = aiChatUserService
+					.createAiChatUserDetailByWechatOpenId(detail.getId(), oid);
+			r.setTmpKey(createAiChatUserResult.getTmpKey());
+			r.setIsSuccess();
+
+		} else {
+			detail = wechatUserList.get(0);
 			if (detail.getIsBlock()) {
 				r.setMessage("Blocked user");
 				return encryptDTO(r);
@@ -59,18 +77,12 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 			Long tmpKey = aiChatUserService.createNewTmpKey(detail.getId(), oid);
 			r.setTmpKey(tmpKey);
 			r.setIsSuccess();
-			return encryptDTO(r);
 		}
 
-		WechatUserDetail detail = createWechatUserDetailWithOnlyOpenId(oid);
-		CreateAiChatUserResult createAiChatUserResult = aiChatUserService
-				.createAiChatUserDetailByWechatUid(detail.getId(), oid);
-		r.setTmpKey(createAiChatUserResult.getTmpKey());
-		r.setIsSuccess();
 		return encryptDTO(r);
 	}
 
-	private WechatUserDetail createWechatUserDetailWithOnlyOpenId(String oid) {
+	private WechatUserDetail createWechatUserDetailWithOpenIdForSuiShou(String oid) {
 		WechatUserDetail po = new WechatUserDetail();
 		po.setId(snowFlake.getNextId());
 		po.setUnionId(FAKE_UID_PREFIX + po.getId());
@@ -143,26 +155,86 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 	public EncryptDTO getAiChatUserDetail(EncryptDTO encryptedDTO) {
 		String tmpKeyStr = decryptEncryptDTO(encryptedDTO, String.class);
 		GetAiChatUserDetailResult r = new GetAiChatUserDetailResult();
-		GetAiChatMembershipResult aiChatMembershipResult = aiChatMembershipService.getMembershipListFromWechat(tmpKeyStr);
-		if(aiChatMembershipResult.isFail()) {
+		GetAiChatMembershipResult aiChatMembershipResult = aiChatMembershipService
+				.getMembershipListFromWechat(tmpKeyStr);
+		if (aiChatMembershipResult.isFail()) {
 			r.setMessage(aiChatMembershipResult.getMessage());
 			return encryptDTO(r);
 		}
 		r.setMembershipList(aiChatMembershipResult.getMembershipList());
 		r.setMembershipSummaryDetailVO(aiChatMembershipResult.getMembershipSummaryDetailVO());
-		
+
 		GetAiChatAmountResult amountResult = aiChatUserService.getAiChatAmount(tmpKeyStr);
 		r.setAmount(amountResult.getAmount());
-		
+
 		r.setSignedUpToday(aiChatUserService.hadDailySignUp(tmpKeyStr));
 		r.setIsSuccess();
 		return encryptDTO(r);
 	}
-	
+
 	@Override
 	public EncryptDTO dailySignUp(EncryptDTO encryptedDTO) {
 		String tmpKeyStr = decryptEncryptDTO(encryptedDTO, String.class);
 		CommonResult r = aiChatUserService.dailySignUpFromWechat(tmpKeyStr);
+		return encryptDTO(r);
+	}
+
+	@Override
+	public EncryptDTO recordingWechatUserFromParameterizedQrCode(EncryptDTO encrypedDTO) {
+		CommonResult r = new CommonResult();
+		RecordingWechatUserFromParameterizedQrCodeDTO dto = decryptEncryptDTO(encrypedDTO,
+				RecordingWechatUserFromParameterizedQrCodeDTO.class);
+		if (dto == null || StringUtils.isAnyBlank(dto.getOriginOpenId(), dto.getUserOpenId(), dto.getParameter())) {
+			r.setMessage("RecordingWechatUserFromParameterizedQrCode Decrypt error");
+			return encryptDTO(r);
+		}
+
+		String sceneName = dto.getParameter().replaceAll("qrscene_", "");
+		String orginOpenId = dto.getOriginOpenId();
+		String userOpenId = dto.getUserOpenId();
+
+		WechatUserDetailExample wechatUserExample = new WechatUserDetailExample();
+		wechatUserExample.createCriteria().andOpenIdEqualTo(userOpenId);
+		List<WechatUserDetail> wechatUserList = wechatUserDetailMapper.selectByExample(wechatUserExample);
+		if (!wechatUserList.isEmpty()) {
+			r.setMessage("User exists, userOpenId: " + userOpenId);
+			return encryptDTO(r);
+		}
+
+		WechatOfficialAccountType officialAccountType = null;
+		if (wechatOptionService.getOriginOpenId1().equals(orginOpenId)) {
+			officialAccountType = WechatOfficialAccountType.SUI_SHOU;
+		}
+
+		if (officialAccountType == null) {
+			r.setMessage("Can NOT find official account detail");
+			return encryptDTO(r);
+		}
+
+		WechatQrcodeDetailExample qrCodeExample = new WechatQrcodeDetailExample();
+		qrCodeExample.createCriteria().andSourceOfficialAccountEqualTo(officialAccountType.getCode())
+				.andSceneNameEqualTo(sceneName);
+		List<WechatQrcodeDetail> qrCodeList = qrcodeMapper.selectByExample(qrCodeExample);
+		if (qrCodeList.isEmpty()) {
+			r.setMessage("Can NOT find QR code, sceneName: " + sceneName);
+			return encryptDTO(r);
+		}
+
+		WechatQrcodeDetail qrCode = qrCodeList.get(0);
+		WechatUserDetail newUser = createWechatUserDetailWithOpenIdForSuiShou(userOpenId);
+		CreateAiChatUserResult createAiChatUserResult = aiChatUserService
+				.createAiChatUserDetailByWechatOpenId(newUser.getId(), userOpenId);
+		if (createAiChatUserResult.isFail()) {
+			r.setMessage(createAiChatUserResult.getMessage());
+			return encryptDTO(r);
+		}
+
+		WechatUserFromQrcode userFromQrCodeRecord = new WechatUserFromQrcode();
+		userFromQrCodeRecord.setQrcodeId(qrCode.getId());
+		userFromQrCodeRecord.setWechatUserId(newUser.getId());
+		userFromQrcodeMapper.insertSelective(userFromQrCodeRecord);
+
+		r.setIsSuccess();
 		return encryptDTO(r);
 	}
 }

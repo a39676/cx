@@ -63,4 +63,9 @@ public class WechatSdkInteractionController extends CommonController {
 		return wechatUserService.dailySignUp(dto);
 	}
 	
+	@PostMapping(value = AiChatFromWechatSdkUrlConstant.RECORDING_WECHAT_USER_FROM_PARAMETERIZED_QR_CODE)
+	@ResponseBody
+	public EncryptDTO recordingWechatUserFromParameterizedQrCode(@RequestBody EncryptDTO dto) {
+		return wechatUserService.recordingWechatUserFromParameterizedQrCode(dto);
+	}
 }

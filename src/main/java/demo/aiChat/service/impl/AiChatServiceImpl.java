@@ -168,6 +168,12 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		GetAiChatHistoryResult r = new GetAiChatHistoryResult();
 		List<OpanAiChatCompletionMessageDTO> list = findChatHistoryByAiChatUserId(aiChatUserId,
 				optionService.getChatHistorySaveCountingLimit());
+		if(list.isEmpty()) {
+			OpanAiChatCompletionMessageDTO dto = new OpanAiChatCompletionMessageDTO();
+			dto.setContent("你好, 有什么可以帮到您?");
+			dto.setRole(OpenAiChatCompletionMessageRoleType.ASSISTANT.getName());
+			list.add(dto);
+		}
 		r.setMsgList(list);
 		r.setIsSuccess();
 		return r;

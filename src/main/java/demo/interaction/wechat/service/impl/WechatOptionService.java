@@ -23,20 +23,21 @@ public class WechatOptionService extends CommonService {
 
 	private String managerCode;
 	private String sdkMainUrl;
+	private Long accessTokenLivingSecond;
+	private String aesKey;
+	private String aesInitVector;
 	private String appTestId;
 	private String appTestSecret;
 	private String appId1;
 	private String appSecret1;
-	private Long accessTokenLivingSecond;
-	private String aesKey;
-	private String aesInitVector;
+	private String originOpenId1;
 
 	@Override
 	public String toString() {
-		return "WechatOptionService [managerCode=" + managerCode + ", sdkMainUrl=" + sdkMainUrl + ", appTestId="
-				+ appTestId + ", appTestSecret=" + appTestSecret + ", appId1=" + appId1 + ", appSecret1=" + appSecret1
+		return "WechatOptionService [managerCode=" + managerCode + ", sdkMainUrl=" + sdkMainUrl
 				+ ", accessTokenLivingSecond=" + accessTokenLivingSecond + ", aesKey=" + aesKey + ", aesInitVector="
-				+ aesInitVector + "]";
+				+ aesInitVector + ", appTestId=" + appTestId + ", appTestSecret=" + appTestSecret + ", appId1=" + appId1
+				+ ", appSecret1=" + appSecret1 + ", orignOpenId1=" + originOpenId1 + "]";
 	}
 
 	public String getManagerCode() {
@@ -109,6 +110,14 @@ public class WechatOptionService extends CommonService {
 
 	public void setAesInitVector(String aesInitVector) {
 		this.aesInitVector = aesInitVector;
+	}
+
+	public String getOriginOpenId1() {
+		return originOpenId1;
+	}
+
+	public void setOriginOpenId1(String originOpenId1) {
+		this.originOpenId1 = originOpenId1;
 	}
 
 	@PostConstruct

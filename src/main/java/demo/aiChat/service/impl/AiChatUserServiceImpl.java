@@ -58,7 +58,7 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 		AiChatUserDetail aiChatUserDetailPO = new AiChatUserDetail();
 		aiChatUserDetailPO.setId(newAiChatUserId);
 		userDetailMapper.insertSelective(aiChatUserDetailPO);
-		
+
 		recharge(newAiChatUserId, AiChatAmountType.BONUS, new BigDecimal(optionService.getBonusForNewUser()));
 
 		cacheService.getSystemUserIdMatchAiChatUserIdMap().put(systemUserId, newAiChatUserId);
@@ -68,7 +68,8 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 	}
 
 	@Override
-	public CreateAiChatUserResult createAiChatUserDetailByWechatUid(Long wechatUserId, String wechatOid) {
+	public CreateAiChatUserResult createAiChatUserDetailByWechatOpenId(Long wechatUserId, String wechatOpenId,
+			Integer specialBonus) {
 		CreateAiChatUserResult r = new CreateAiChatUserResult();
 
 		AiChatUserAssociateWechatUidExample associateExample = new AiChatUserAssociateWechatUidExample();
@@ -91,9 +92,13 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 		aiChatUserDetailPO.setId(newAiChatUserId);
 		userDetailMapper.insertSelective(aiChatUserDetailPO);
 
-		recharge(newAiChatUserId, AiChatAmountType.BONUS, new BigDecimal(optionService.getBonusForNewUser()));
-		
-		cacheService.getOpenIdMatchAiChatUserIdMap().put(wechatOid, newAiChatUserId);
+		if (specialBonus == null) {
+			recharge(newAiChatUserId, AiChatAmountType.BONUS, new BigDecimal(optionService.getBonusForNewUser()));
+		} else {
+			recharge(newAiChatUserId, AiChatAmountType.BONUS, new BigDecimal(specialBonus));
+		}
+
+		cacheService.getOpenIdMatchAiChatUserIdMap().put(wechatOpenId, newAiChatUserId);
 
 		Long tmpKey = snowFlake.getNextId();
 		tmpKeyInsertOrUpdateLiveTime(tmpKey, newAiChatUserId);
@@ -102,6 +107,11 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 		r.setAiChatUserId(newAiChatUserId);
 		r.setIsSuccess();
 		return r;
+	}
+
+	@Override
+	public CreateAiChatUserResult createAiChatUserDetailByWechatOpenId(Long wechatUserId, String wechatOpenId) {
+		return createAiChatUserDetailByWechatOpenId(wechatUserId, wechatOpenId, null);
 	}
 
 	@Override
@@ -119,7 +129,7 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 		List<AiChatUserAssociateWechatUidKey> associateList = aiChatUserAssociateWechatUidMapper
 				.selectByExample(associateExample);
 		if (associateList.isEmpty()) {
-			CreateAiChatUserResult createUserResult = createAiChatUserDetailByWechatUid(wechatUserId, openId);
+			CreateAiChatUserResult createUserResult = createAiChatUserDetailByWechatOpenId(wechatUserId, openId);
 			return createUserResult.getTmpKey();
 		}
 		AiChatUserAssociateWechatUidKey associate = associateList.get(0);
@@ -269,13 +279,13 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 			r.setMessage("今天已经签到, 明天再来吧");
 			return r;
 		}
-		
+
 		extendTmpKeyValidity(Long.parseLong(tmpKeyStr));
 
 		po.setBonusAmount(po.getBonusAmount().add(new BigDecimal(optionService.getDailySignUpBonus())));
 		userDetailMapper.updateByPrimaryKeySelective(po);
 		addAiChatUserIdDailySigned(po.getId());
-		
+
 		r.setNewAmount(po.getBonusAmount().add(po.getRechargeAmount()).intValue());
 		r.setIsSuccess();
 		r.setMessage("签到成功, 获得" + optionService.getDailySignUpBonus() + "电量");
@@ -306,7 +316,7 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 			r.setMessage("Wrong id");
 			return r;
 		}
-		
+
 		AiChatUserDetail row = new AiChatUserDetail();
 		row.setId(aiChatUserId);
 		row.setIsBlock(true);
@@ -314,7 +324,7 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 		r.setSuccess(updateCount == 1);
 		return r;
 	}
-	
+
 	@Override
 	public CommonResult unlockUser(String aiChatUserIdStr) {
 		CommonResult r = new CommonResult();
@@ -325,7 +335,7 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 			r.setMessage("Wrong id");
 			return r;
 		}
-		
+
 		AiChatUserDetail row = new AiChatUserDetail();
 		row.setId(aiChatUserId);
 		row.setIsBlock(false);

@@ -34,7 +34,7 @@
         </javaTypeResolver>  
           
         <!-- 生成模型的包名和位置-->    
-        <javaModelGenerator targetPackage="demo.aiChat.pojo.po" targetProject="cx">    
+        <javaModelGenerator targetPackage="demo.interaction.wechat.pojo.po" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
             <property name="trimStrings" value="true"/> 
             <!-- for MyBatis3 / MyBatis3Simple
@@ -45,18 +45,18 @@
         </javaModelGenerator>    
         
         <!-- 生成映射文件的包名和位置-->    
-        <sqlMapGenerator targetPackage="demo.aiChat.mapper" targetProject="cx">    
+        <sqlMapGenerator targetPackage="demo.interaction.wechat.mapper" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
         </sqlMapGenerator>    
         
         <!-- 生成DAO的包名和位置-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.aiChat.mapper" targetProject="cx">    
+        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.interaction.wechat.mapper" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="ai_chat_user_detail">
-        	<property name="tableName" value="ai_chat_user_detail"></property>
-        	<property name="domainObjectName" value="ai_chat_user_detail"></property>
+        <table tableName="wechat_qrcode_detail">
+        	<property name="tableName" value="wechat_qrcode_detail"></property>
+        	<property name="domainObjectName" value="wechat_qrcode_detail"></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

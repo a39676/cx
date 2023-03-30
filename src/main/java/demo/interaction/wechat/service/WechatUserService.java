@@ -16,5 +16,7 @@ public interface WechatUserService {
 
 	EncryptDTO dailySignUp(EncryptDTO encryptedDTO);
 
+	EncryptDTO recordingWechatUserFromParameterizedQrCode(EncryptDTO encrypedDTO);
+
 
 }

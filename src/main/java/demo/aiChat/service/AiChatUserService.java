@@ -13,7 +13,7 @@ public interface AiChatUserService {
 
 	CreateAiChatUserResult createAiChatUserDetailBySystemUserId(Long systemUserId);
 
-	CreateAiChatUserResult createAiChatUserDetailByWechatUid(Long wechatUserLongId, String wechatOid);
+	CreateAiChatUserResult createAiChatUserDetailByWechatOpenId(Long wechatUserLongId, String wechatOpenId);
 
 	Long createNewTmpKey(Long wechatUserId, String openId);
 
@@ -34,5 +34,7 @@ public interface AiChatUserService {
 	CommonResult blockUser(String aiChatUserIdStr);
 
 	CommonResult unlockUser(String aiChatUserIdStr);
+
+	CreateAiChatUserResult createAiChatUserDetailByWechatOpenId(Long wechatUserId, String wechatOid, Integer specialBonus);
 
 }

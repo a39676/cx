@@ -11,7 +11,7 @@ public interface WechatQrcodeDetailMapper {
 
     int deleteByExample(WechatQrcodeDetailExample example);
 
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(Long id);
 
     int insert(WechatQrcodeDetail row);
 
@@ -21,7 +21,7 @@ public interface WechatQrcodeDetailMapper {
 
     List<WechatQrcodeDetail> selectByExample(WechatQrcodeDetailExample example);
 
-    WechatQrcodeDetail selectByPrimaryKey(Integer id);
+    WechatQrcodeDetail selectByPrimaryKey(Long id);
 
     int updateByExampleSelective(@Param("row") WechatQrcodeDetail row, @Param("example") WechatQrcodeDetailExample example);
 

@@ -3,7 +3,7 @@ package demo.interaction.wechat.pojo.po;
 public class WechatUserFromQrcode {
     private Long wechatUserId;
 
-    private Integer qrcodeId;
+    private Long qrcodeId;
 
     public Long getWechatUserId() {
         return wechatUserId;
@@ -13,11 +13,11 @@ public class WechatUserFromQrcode {
         this.wechatUserId = wechatUserId;
     }
 
-    public Integer getQrcodeId() {
+    public Long getQrcodeId() {
         return qrcodeId;
     }
 
-    public void setQrcodeId(Integer qrcodeId) {
+    public void setQrcodeId(Long qrcodeId) {
         this.qrcodeId = qrcodeId;
     }
 }

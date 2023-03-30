@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="demo.interaction.wechat.mapper.WechatQrcodeDetailMapper">
   <resultMap id="BaseResultMap" type="demo.interaction.wechat.pojo.po.WechatQrcodeDetail">
-    <id column="id" jdbcType="INTEGER" property="id" />
+    <id column="id" jdbcType="BIGINT" property="id" />
     <result column="source_official_account" jdbcType="INTEGER" property="sourceOfficialAccount" />
     <result column="scene_name" jdbcType="CHAR" property="sceneName" />
     <result column="remark" jdbcType="CHAR" property="remark" />
@@ -85,15 +85,15 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from wechat_qrcode_detail
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from wechat_qrcode_detail
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="demo.interaction.wechat.pojo.po.WechatQrcodeDetailExample">
     delete from wechat_qrcode_detail
@@ -105,7 +105,7 @@
     insert into wechat_qrcode_detail (id, source_official_account, scene_name, 
       remark, url, create_time, 
       is_delete)
-    values (#{id,jdbcType=INTEGER}, #{sourceOfficialAccount,jdbcType=INTEGER}, #{sceneName,jdbcType=CHAR}, 
+    values (#{id,jdbcType=BIGINT}, #{sourceOfficialAccount,jdbcType=INTEGER}, #{sceneName,jdbcType=CHAR}, 
       #{remark,jdbcType=CHAR}, #{url,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{isDelete,jdbcType=BIT})
   </insert>
@@ -136,7 +136,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
-        #{id,jdbcType=INTEGER},
+        #{id,jdbcType=BIGINT},
       </if>
       <if test="sourceOfficialAccount != null">
         #{sourceOfficialAccount,jdbcType=INTEGER},
@@ -168,7 +168,7 @@
     update wechat_qrcode_detail
     <set>
       <if test="row.id != null">
-        id = #{row.id,jdbcType=INTEGER},
+        id = #{row.id,jdbcType=BIGINT},
       </if>
       <if test="row.sourceOfficialAccount != null">
         source_official_account = #{row.sourceOfficialAccount,jdbcType=INTEGER},
@@ -195,7 +195,7 @@
   </update>
   <update id="updateByExample" parameterType="map">
     update wechat_qrcode_detail
-    set id = #{row.id,jdbcType=INTEGER},
+    set id = #{row.id,jdbcType=BIGINT},
       source_official_account = #{row.sourceOfficialAccount,jdbcType=INTEGER},
       scene_name = #{row.sceneName,jdbcType=CHAR},
       remark = #{row.remark,jdbcType=CHAR},
@@ -228,7 +228,7 @@
         is_delete = #{isDelete,jdbcType=BIT},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="demo.interaction.wechat.pojo.po.WechatQrcodeDetail">
     update wechat_qrcode_detail
@@ -238,7 +238,7 @@
       url = #{url,jdbcType=CHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       is_delete = #{isDelete,jdbcType=BIT}
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByExampleWithRowbounds" parameterType="demo.interaction.wechat.pojo.po.WechatQrcodeDetailExample" resultMap="BaseResultMap">
     select

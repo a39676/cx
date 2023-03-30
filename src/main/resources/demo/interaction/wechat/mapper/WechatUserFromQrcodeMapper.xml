@@ -3,7 +3,7 @@
 <mapper namespace="demo.interaction.wechat.mapper.WechatUserFromQrcodeMapper">
   <resultMap id="BaseResultMap" type="demo.interaction.wechat.pojo.po.WechatUserFromQrcode">
     <id column="wechat_user_id" jdbcType="BIGINT" property="wechatUserId" />
-    <result column="qrcode_id" jdbcType="INTEGER" property="qrcodeId" />
+    <result column="qrcode_id" jdbcType="BIGINT" property="qrcodeId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -98,7 +98,7 @@
   </delete>
   <insert id="insert" parameterType="demo.interaction.wechat.pojo.po.WechatUserFromQrcode">
     insert into wechat_user_from_qrcode (wechat_user_id, qrcode_id)
-    values (#{wechatUserId,jdbcType=BIGINT}, #{qrcodeId,jdbcType=INTEGER})
+    values (#{wechatUserId,jdbcType=BIGINT}, #{qrcodeId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="demo.interaction.wechat.pojo.po.WechatUserFromQrcode">
     insert into wechat_user_from_qrcode
@@ -115,7 +115,7 @@
         #{wechatUserId,jdbcType=BIGINT},
       </if>
       <if test="qrcodeId != null">
-        #{qrcodeId,jdbcType=INTEGER},
+        #{qrcodeId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -132,7 +132,7 @@
         wechat_user_id = #{row.wechatUserId,jdbcType=BIGINT},
       </if>
       <if test="row.qrcodeId != null">
-        qrcode_id = #{row.qrcodeId,jdbcType=INTEGER},
+        qrcode_id = #{row.qrcodeId,jdbcType=BIGINT},
       </if>
     </set>
     <if test="example != null">
@@ -142,7 +142,7 @@
   <update id="updateByExample" parameterType="map">
     update wechat_user_from_qrcode
     set wechat_user_id = #{row.wechatUserId,jdbcType=BIGINT},
-      qrcode_id = #{row.qrcodeId,jdbcType=INTEGER}
+      qrcode_id = #{row.qrcodeId,jdbcType=BIGINT}
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -151,14 +151,14 @@
     update wechat_user_from_qrcode
     <set>
       <if test="qrcodeId != null">
-        qrcode_id = #{qrcodeId,jdbcType=INTEGER},
+        qrcode_id = #{qrcodeId,jdbcType=BIGINT},
       </if>
     </set>
     where wechat_user_id = #{wechatUserId,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="demo.interaction.wechat.pojo.po.WechatUserFromQrcode">
     update wechat_user_from_qrcode
-    set qrcode_id = #{qrcodeId,jdbcType=INTEGER}
+    set qrcode_id = #{qrcodeId,jdbcType=BIGINT}
     where wechat_user_id = #{wechatUserId,jdbcType=BIGINT}
   </update>
   <select id="selectByExampleWithRowbounds" parameterType="demo.interaction.wechat.pojo.po.WechatUserFromQrcodeExample" resultMap="BaseResultMap">

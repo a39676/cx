@@ -54,9 +54,9 @@
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="wechat_qrcode_detail">
-        	<property name="tableName" value="wechat_qrcode_detail"></property>
-        	<property name="domainObjectName" value="wechat_qrcode_detail"></property>
+        <table tableName="wechat_user_from_qrcode">
+        	<property name="tableName" value="wechat_user_from_qrcode"></property>
+        	<property name="domainObjectName" value="wechat_user_from_qrcode"></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

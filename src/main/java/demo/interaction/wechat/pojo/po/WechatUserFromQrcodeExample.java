@@ -174,52 +174,52 @@ public class WechatUserFromQrcodeExample {
             return (Criteria) this;
         }
 
-        public Criteria andQrcodeIdEqualTo(Integer value) {
+        public Criteria andQrcodeIdEqualTo(Long value) {
             addCriterion("qrcode_id =", value, "qrcodeId");
             return (Criteria) this;
         }
 
-        public Criteria andQrcodeIdNotEqualTo(Integer value) {
+        public Criteria andQrcodeIdNotEqualTo(Long value) {
             addCriterion("qrcode_id <>", value, "qrcodeId");
             return (Criteria) this;
         }
 
-        public Criteria andQrcodeIdGreaterThan(Integer value) {
+        public Criteria andQrcodeIdGreaterThan(Long value) {
             addCriterion("qrcode_id >", value, "qrcodeId");
             return (Criteria) this;
         }
 
-        public Criteria andQrcodeIdGreaterThanOrEqualTo(Integer value) {
+        public Criteria andQrcodeIdGreaterThanOrEqualTo(Long value) {
             addCriterion("qrcode_id >=", value, "qrcodeId");
             return (Criteria) this;
         }
 
-        public Criteria andQrcodeIdLessThan(Integer value) {
+        public Criteria andQrcodeIdLessThan(Long value) {
             addCriterion("qrcode_id <", value, "qrcodeId");
             return (Criteria) this;
         }
 
-        public Criteria andQrcodeIdLessThanOrEqualTo(Integer value) {
+        public Criteria andQrcodeIdLessThanOrEqualTo(Long value) {
             addCriterion("qrcode_id <=", value, "qrcodeId");
             return (Criteria) this;
         }
 
-        public Criteria andQrcodeIdIn(List<Integer> values) {
+        public Criteria andQrcodeIdIn(List<Long> values) {
             addCriterion("qrcode_id in", values, "qrcodeId");
             return (Criteria) this;
         }
 
-        public Criteria andQrcodeIdNotIn(List<Integer> values) {
+        public Criteria andQrcodeIdNotIn(List<Long> values) {
             addCriterion("qrcode_id not in", values, "qrcodeId");
             return (Criteria) this;
         }
 
-        public Criteria andQrcodeIdBetween(Integer value1, Integer value2) {
+        public Criteria andQrcodeIdBetween(Long value1, Long value2) {
             addCriterion("qrcode_id between", value1, value2, "qrcodeId");
             return (Criteria) this;
         }
 
-        public Criteria andQrcodeIdNotBetween(Integer value1, Integer value2) {
+        public Criteria andQrcodeIdNotBetween(Long value1, Long value2) {
             addCriterion("qrcode_id not between", value1, value2, "qrcodeId");
             return (Criteria) this;
         }

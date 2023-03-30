@@ -3,7 +3,7 @@ package demo.interaction.wechat.pojo.po;
 import java.time.LocalDateTime;
 
 public class WechatQrcodeDetail {
-    private Integer id;
+    private Long id;
 
     private Integer sourceOfficialAccount;
 
@@ -17,11 +17,11 @@ public class WechatQrcodeDetail {
 
     private Boolean isDelete;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

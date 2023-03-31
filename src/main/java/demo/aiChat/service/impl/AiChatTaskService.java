@@ -1,5 +1,7 @@
 package demo.aiChat.service.impl;
 
+import java.util.HashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -22,6 +24,6 @@ public class AiChatTaskService {
 	
 	@Scheduled(cron = "22 58 23 * * *")
 	public void clearMembershipMapInAiChatCache() {
-		aiChatCacheService.getMembershipCacheMap().clear();
+		aiChatCacheService.setMembershipCacheMap(new HashMap<>());
 	}
 }

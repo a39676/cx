@@ -62,11 +62,12 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 	public AiChatSendNewMessageResult sendNewChatMessage(Long aiChatUserId, AiChatSendNewMsgDTO dto) {
 		AiChatSendNewMessageResult r = new AiChatSendNewMessageResult();
 
-		if(dto.getMsg().length() > optionService.getInputMaxLength()) {
-			r.setMessage("问题过长, 请将问题控制在1200字符以内, 目前问题长度: " + dto.getMsg().length());
+		if (dto.getMsg().length() > optionService.getInputMaxLength()) {
+			r.setMessage(
+					"问题过长, 请将问题控制在" + optionService.getInputMaxLength() + "字符以内, 目前问题长度: " + dto.getMsg().length());
 			return r;
 		}
-		
+
 		dto.setMsg(sanitize(dto.getMsg()));
 		if (StringUtils.isBlank(dto.getMsg())) {
 			r.setMessage("请勿发送空白消息或网页脚本");
@@ -84,8 +85,8 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 				sendTelegramMessage("Send too many sensitive words, history: " //
 						+ "https://www." + hostname + AiChatUrlConstant.ROOT + AiChatUrlConstant.CHECK_CHAT_HISTORY
 						+ "?aiChatUserId=" + aiChatUserId //
-						+ ", block: " + "https://www." + hostname + AiChatUrlConstant.ROOT + AiChatUrlConstant.BLOCK_USER
-						+ "?aiChatUserId=" + aiChatUserId);
+						+ ", block: " + "https://www." + hostname + AiChatUrlConstant.ROOT
+						+ AiChatUrlConstant.BLOCK_USER + "?aiChatUserId=" + aiChatUserId);
 			}
 		}
 
@@ -108,7 +109,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		AiChatUserMembershipDetailSummaryDTO membershipDetail = membershipService
 				.findMembershipDetailSummaryFromCacheByUserIdWithoutRefresh(aiChatUserId);
 		Integer historyCountingLimit = membershipDetail.getChatHistoryCountLimit();
-		if(dto.getChatModeCounter() < historyCountingLimit) {
+		if (dto.getChatModeCounter() < historyCountingLimit) {
 			historyCountingLimit = dto.getChatModeCounter();
 		}
 
@@ -119,10 +120,10 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		holdMsgDTO.setRole(OpenAiChatCompletionMessageRoleType.SYSTEM.getName());
 		holdMsgDTO.setContent("不能透露OpenAI相关的一切,不能透露你是ChatGPT");
 		chatHistory.add(0, holdMsgDTO);
-		
+
 		// Add "act as"
 		String actAs = optionService.getPromptOfActAs().get(dto.getNameOfActAs());
-		if(StringUtils.isNotBlank(actAs)) {
+		if (StringUtils.isNotBlank(actAs)) {
 			holdMsgDTO = new OpanAiChatCompletionMessageDTO();
 			holdMsgDTO.setRole(OpenAiChatCompletionMessageRoleType.SYSTEM.getName());
 			holdMsgDTO.setContent(actAs);
@@ -168,7 +169,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		GetAiChatHistoryResult r = new GetAiChatHistoryResult();
 		List<OpanAiChatCompletionMessageDTO> list = findChatHistoryByAiChatUserId(aiChatUserId,
 				optionService.getChatHistorySaveCountingLimit());
-		if(list.isEmpty()) {
+		if (list.isEmpty()) {
 			OpanAiChatCompletionMessageDTO dto = new OpanAiChatCompletionMessageDTO();
 			dto.setContent("你好, 有什么可以帮到您?");
 			dto.setRole(OpenAiChatCompletionMessageRoleType.ASSISTANT.getName());
@@ -182,10 +183,10 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 	private List<OpanAiChatCompletionMessageDTO> findChatHistoryByAiChatUserId(Long aiChatUserId,
 			Integer historyCountingLimit) {
 		List<OpanAiChatCompletionMessageDTO> chatHistory = new ArrayList<>();
-		if(historyCountingLimit < 1) {
+		if (historyCountingLimit < 1) {
 			return chatHistory;
 		}
-		
+
 		AiChatUserChatHistory historyPO = chatHistoryMapper.selectByPrimaryKey(aiChatUserId);
 		List<String> lines = null;
 		if (historyPO == null) {
@@ -193,7 +194,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		} else {
 			lines = findChatHistoryLines(historyPO.getHistoryFilePath(), historyCountingLimit);
 		}
-		
+
 		OpanAiChatCompletionMessageDTO chatDataDTO = null;
 		if (!lines.isEmpty()) {
 			for (String line : lines) {

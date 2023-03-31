@@ -44,6 +44,7 @@ public class AiChatOptionService extends CommonService {
 	private Integer inputMaxLength;
 	private String announcementStr;
 	private Integer bonusForNewUser;
+	private Integer chatHistoryCountLimitForFreeUser;
 
 	private Set<String> sensitiveWords = new HashSet<>();
 
@@ -151,6 +152,14 @@ public class AiChatOptionService extends CommonService {
 		this.bonusForNewUser = bonusForNewUser;
 	}
 
+	public Integer getChatHistoryCountLimitForFreeUser() {
+		return chatHistoryCountLimitForFreeUser;
+	}
+
+	public void setChatHistoryCountLimitForFreeUser(Integer chatHistoryCountLimitForFreeUser) {
+		this.chatHistoryCountLimitForFreeUser = chatHistoryCountLimitForFreeUser;
+	}
+
 	@Override
 	public String toString() {
 		return "AiChatOptionService [chatStorePrefixPath=" + chatStorePrefixPath + ", payResultStorePrefixPath="
@@ -159,7 +168,8 @@ public class AiChatOptionService extends CommonService {
 				+ ", sensitiveWordsTriggerInMinutes=" + sensitiveWordsTriggerInMinutes
 				+ ", sensitiveWordsTriggerMaxCount=" + sensitiveWordsTriggerMaxCount + ", membershipLDetails="
 				+ membershipLDetails + ", promptOfActAs=" + promptOfActAs + ", inputMaxLength=" + inputMaxLength
-				+ ", announcementStr=" + announcementStr + ", bonusForNewUser=" + bonusForNewUser + ", sensitiveWords="
+				+ ", announcementStr=" + announcementStr + ", bonusForNewUser=" + bonusForNewUser
+				+ ", chatHistoryCountLimitForFreeUser=" + chatHistoryCountLimitForFreeUser + ", sensitiveWords="
 				+ sensitiveWords + "]";
 	}
 

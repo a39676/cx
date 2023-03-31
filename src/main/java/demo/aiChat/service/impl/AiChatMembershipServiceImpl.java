@@ -104,8 +104,8 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 					}
 				}
 				membershipDetailVO.setChatHistoryCountLimit(membershipDetail.getChatHistoryCountLimit());
-				membershipDetailVO
-						.setExpiredTimeStr(localDateTimeHandler.dateToStr(membershipDetailVO.getExpiredDatetime(), DateTimeUtilCommon.normalDateFormat));
+				membershipDetailVO.setExpiredTimeStr(localDateTimeHandler
+						.dateToStr(membershipDetailVO.getExpiredDatetime(), DateTimeUtilCommon.normalDateFormat));
 				summaryDTO.getMembershipMap().put(membershipDetail.getId(), membershipDetailVO);
 			}
 		}
@@ -117,6 +117,10 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 			}
 		}
 
+		if (membershipPoList.isEmpty()
+				&& summaryDTO.getChatHistoryCountLimit() < optionService.getChatHistoryCountLimitForFreeUser()) {
+			summaryDTO.setChatHistoryCountLimit(optionService.getChatHistoryCountLimitForFreeUser());
+		}
 		cacheService.getMembershipCacheMap().put(aiChatUserId, summaryDTO);
 
 		return summaryDTO;

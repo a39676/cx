@@ -8,4 +8,6 @@ public interface WechatAiChatService {
 
 	EncryptDTO findChatHistoryByAiChatUserIdToFrontEnd(EncryptDTO encryptedDTO);
 
+	EncryptDTO getPromptOfActAs();
+
 }

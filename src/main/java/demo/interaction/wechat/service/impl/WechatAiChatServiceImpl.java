@@ -1,5 +1,7 @@
 package demo.interaction.wechat.service.impl;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +10,7 @@ import aiChat.pojo.result.AiChatSendNewMessageResult;
 import aiChat.pojo.result.GetAiChatHistoryResult;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import demo.aiChat.service.AiChatFromWechatService;
+import demo.aiChat.service.impl.AiChatOptionService;
 import demo.interaction.wechat.service.WechatAiChatService;
 import wechatSdk.pojo.type.WechatSdkCommonResultType;
 
@@ -16,6 +19,8 @@ public class WechatAiChatServiceImpl extends WechatCommonService implements Wech
 
 	@Autowired
 	private AiChatFromWechatService aiChatService;
+	@Autowired
+	private AiChatOptionService aiChatOptionService;
 	
 	@Override
 	public EncryptDTO sendNewMessage(EncryptDTO encryptedDTO) {
@@ -43,4 +48,9 @@ public class WechatAiChatServiceImpl extends WechatCommonService implements Wech
 		return encryptedResult;
 	}
 	
+	@Override
+	public EncryptDTO getPromptOfActAs() {
+		Map<String, String> promptOfActAs = aiChatOptionService.getPromptOfActAs();
+		return encryptDTO(promptOfActAs);
+	}
 }

@@ -77,4 +77,10 @@ public class WechatSdkInteractionController extends CommonController {
 	public EncryptDTO receiveLongLiveQrCodeResult(@RequestBody EncryptDTO dto) {
 		return wechatQrCodeService.receiveLongLiveQrCodeResult(dto);
 	}
+
+	@PostMapping(value = AiChatFromWechatSdkUrlConstant.GET_PROMPT_OF_ACT_AS)
+	@ResponseBody
+	public EncryptDTO getPromptOfActAs() {
+		return wechatAiChatService.getPromptOfActAs();
+	}
 }

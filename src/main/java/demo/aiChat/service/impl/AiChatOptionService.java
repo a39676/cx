@@ -33,6 +33,7 @@ public class AiChatOptionService extends CommonService {
 	@Value("${optionFilePath.aiChat}")
 	private String optionFilePath;
 	private String chatStorePrefixPath;
+	private String extendDetailStorePrefixPath;
 	private String payResultStorePrefixPath;
 	private Integer chatHistorySaveCountingLimit = 100;
 	private Integer dailySignUpBonus;
@@ -54,6 +55,14 @@ public class AiChatOptionService extends CommonService {
 
 	public void setChatStorePrefixPath(String chatStorePrefixPath) {
 		this.chatStorePrefixPath = chatStorePrefixPath;
+	}
+
+	public String getExtendDetailStorePrefixPath() {
+		return extendDetailStorePrefixPath;
+	}
+
+	public void setExtendDetailStorePrefixPath(String extendDetailStorePrefixPath) {
+		this.extendDetailStorePrefixPath = extendDetailStorePrefixPath;
 	}
 
 	public final String getPayResultStorePrefixPath() {
@@ -162,9 +171,10 @@ public class AiChatOptionService extends CommonService {
 
 	@Override
 	public String toString() {
-		return "AiChatOptionService [chatStorePrefixPath=" + chatStorePrefixPath + ", payResultStorePrefixPath="
-				+ payResultStorePrefixPath + ", chatHistorySaveCountingLimit=" + chatHistorySaveCountingLimit
-				+ ", dailySignUpBonus=" + dailySignUpBonus + ", sensitiveWordsPathStr=" + sensitiveWordsPathStr
+		return "AiChatOptionService [chatStorePrefixPath=" + chatStorePrefixPath + ", extendDetailStorePrefixPath="
+				+ extendDetailStorePrefixPath + ", payResultStorePrefixPath=" + payResultStorePrefixPath
+				+ ", chatHistorySaveCountingLimit=" + chatHistorySaveCountingLimit + ", dailySignUpBonus="
+				+ dailySignUpBonus + ", sensitiveWordsPathStr=" + sensitiveWordsPathStr
 				+ ", sensitiveWordsTriggerInMinutes=" + sensitiveWordsTriggerInMinutes
 				+ ", sensitiveWordsTriggerMaxCount=" + sensitiveWordsTriggerMaxCount + ", membershipLDetails="
 				+ membershipLDetails + ", promptOfActAs=" + promptOfActAs + ", inputMaxLength=" + inputMaxLength

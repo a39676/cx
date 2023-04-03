@@ -117,9 +117,6 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		List<OpanAiChatCompletionMessageDTO> chatHistory = findChatHistoryByAiChatUserId(aiChatUserId,
 				historyCountingLimit);
 		OpanAiChatCompletionMessageDTO holdMsgDTO = new OpanAiChatCompletionMessageDTO();
-		holdMsgDTO.setRole(OpenAiChatCompletionMessageRoleType.SYSTEM.getName());
-		holdMsgDTO.setContent("不能透露OpenAI相关的一切,不能透露你是ChatGPT");
-		chatHistory.add(0, holdMsgDTO);
 
 		// Add "act as"
 		String actAs = optionService.getPromptOfActAs().get(dto.getNameOfActAs());
@@ -127,7 +124,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 			holdMsgDTO = new OpanAiChatCompletionMessageDTO();
 			holdMsgDTO.setRole(OpenAiChatCompletionMessageRoleType.SYSTEM.getName());
 			holdMsgDTO.setContent(actAs);
-			chatHistory.add(1, holdMsgDTO);
+			chatHistory.add(0, holdMsgDTO);
 		}
 
 		// send history + new msg, wait feedback
@@ -188,17 +185,18 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		}
 
 		AiChatUserChatHistory historyPO = chatHistoryMapper.selectByPrimaryKey(aiChatUserId);
-		List<String> lines = null;
+		List<String> msgList = null;
 		if (historyPO == null) {
-			lines = new ArrayList<>();
+			msgList = new ArrayList<>();
 		} else {
-			lines = findChatHistoryLines(historyPO.getHistoryFilePath(), historyCountingLimit);
+			msgList = findChatHistoryLines(historyPO.getHistoryFilePath(), historyCountingLimit);
 		}
 
 		OpanAiChatCompletionMessageDTO chatDataDTO = null;
-		if (!lines.isEmpty()) {
-			for (String line : lines) {
+		if (!msgList.isEmpty()) {
+			for (String line : msgList) {
 				chatDataDTO = new Gson().fromJson(line, OpanAiChatCompletionMessageDTO.class);
+				chatDataDTO.setContent(chatDataDTO.getContent().replaceAll("\\n", "<br>"));
 				chatHistory.add(chatDataDTO);
 			}
 		}

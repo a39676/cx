@@ -107,7 +107,7 @@ public class OpenAiUtil extends CommonService {
 			r.setIsSuccess();
 			OpanAiChatCompletionResponseDTO dto = new OpanAiChatCompletionResponseDTO();
 			OpanAiChatCompletionResponseChoiceDTO c = new OpanAiChatCompletionResponseChoiceDTO();
-			c.setFinish_reason(OpenAiChatCompletionFinishType.STOP.getName());
+			c.setFinish_reason(OpenAiChatCompletionFinishType.LENGTH.getName());
 			c.setIndex(0);
 			OpanAiChatCompletionMessageDTO msgDTO = new OpanAiChatCompletionMessageDTO();
 			msgDTO.setContent(msg + ", feedback");

@@ -1,6 +1,8 @@
 package demo.tool.telegram.service.impl;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -142,6 +144,14 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 //			httpUtil.sendGet(url);
 			URL url = new URL(urlStr);
 			InputStream inputSteam = url.openStream();
+			
+			BufferedReader in = new BufferedReader(new InputStreamReader(inputSteam, StandardCharsets.UTF_8));
+			String inputLine;
+
+			while ((inputLine = in.readLine()) != null) {
+				log.error("receive: " + inputLine);
+			}
+			in.close();
 			inputSteam.close();
 		} catch (Exception e) {
 			log.error("telegram NOT sending message: " + msg);

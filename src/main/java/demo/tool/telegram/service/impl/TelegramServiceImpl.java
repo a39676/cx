@@ -145,6 +145,7 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 			inputSteam.close();
 		} catch (Exception e) {
 			log.error("telegram NOT sending message: " + msg);
+			log.error(e.getLocalizedMessage());
 			log.error("bot: " + botType.getName());
 			r.failWithMessage("net work error");
 			return r;

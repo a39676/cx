@@ -93,7 +93,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		newPO.setTelegramBotName(TelegramBotType.BBT_MESSAGE.getName());
 		newPO.setCoinType(dto.getCoinTypeCode());
 		newPO.setCurrencyType(dto.getCurrencyType());
-		newPO.setTelegramChatId(systemOptionService.decryptPrivateKey(dto.getTelegramChatPK()));
+		newPO.setTelegramChatRecordId(systemOptionService.decryptPrivateKey(dto.getTelegramChatPK()));
 		newPO.setNoticeCount(dto.getNoticeCount());
 		newPO.setMaxPrice(dto.getMaxPrice());
 		newPO.setMinPrice(dto.getMinPrice());
@@ -134,7 +134,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		newPO.setTelegramBotName(TelegramBotType.CRYPTO_COIN_LOW_PRICE_NOTICE_BOT.getName());
 		newPO.setCoinType(dto.getCoinTypeCode());
 		newPO.setCurrencyType(dto.getCurrencyType());
-		newPO.setTelegramChatId(systemOptionService.decryptPrivateKey(dto.getTelegramChatPK()));
+		newPO.setTelegramChatRecordId(systemOptionService.decryptPrivateKey(dto.getTelegramChatPK()));
 		newPO.setNoticeCount(dto.getNoticeCount());
 		newPO.setMaxPrice(dto.getMaxPrice());
 		newPO.setMinPrice(dto.getMinPrice());
@@ -367,7 +367,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		if (StringUtils.isNotBlank(content)) {
 			if (!"dev".equals(systemOptionService.getEnvName())) {
-				telegramService.sendMessageByTelegramChatId(TelegramBotType.getType(noticeSetting.getTelegramBotName()), content, noticeSetting.getTelegramChatId());
+				telegramService.sendMessageByChatRecordId(TelegramBotType.getType(noticeSetting.getTelegramBotName()), content, noticeSetting.getTelegramChatRecordId());
 			}
 
 			noticeSetting.setNoticeTime(LocalDateTime.now());
@@ -528,7 +528,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		Criteria criteria = example.createCriteria();
 		criteria.andIsDeleteEqualTo(false).andNoticeCountGreaterThan(0).andValidTimeGreaterThan(LocalDateTime.now());
 		if (chatId != null) {
-			criteria.andTelegramChatIdEqualTo(chatId);
+			criteria.andTelegramChatRecordIdEqualTo(chatId);
 		}
 		if (StringUtils.isNotBlank(dto.getCryptoCoinType())) {
 			CryptoCoinCatalog catalog = coinCatalogService.findCatalog(dto.getCryptoCoinType());
@@ -583,7 +583,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		vo.setValidTime(localDateTimeHandler.dateToStr(po.getValidTime()));
 		vo.setNoticeTime(localDateTimeHandler.dateToStr(po.getNoticeTime()));
 		vo.setNextNoticeTime(localDateTimeHandler.dateToStr(po.getNextNoticeTime()));
-		TelegramChatId chatIdPO = telegramService.getChatID(po.getTelegramChatId());
+		TelegramChatId chatIdPO = telegramService.getChatID(po.getTelegramChatRecordId());
 		TelegramChatIdVO chatIdVO = telegramService.buildChatIdVO(chatIdPO);
 		vo.setNoticeReciver(chatIdVO.getUsername());
 		vo.setNoticeReciverPK(chatIdVO.getPk());

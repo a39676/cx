@@ -1,37 +1,40 @@
 package demo.finance.cryptoCoin.notice.mapper;
 
-import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNotice;
-import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNoticeExample;
-
 import java.time.LocalDateTime;
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
+import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNotice;
+import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNoticeExample;
+
 public interface CryptoCoinPriceNoticeMapper {
-    long countByExample(CryptoCoinPriceNoticeExample example);
+	long countByExample(CryptoCoinPriceNoticeExample example);
 
-    int deleteByExample(CryptoCoinPriceNoticeExample example);
+	int deleteByExample(CryptoCoinPriceNoticeExample example);
 
-    int deleteByPrimaryKey(Long id);
+	int deleteByPrimaryKey(Long id);
 
-    int insert(CryptoCoinPriceNotice record);
+	int insert(CryptoCoinPriceNotice row);
 
-    int insertSelective(CryptoCoinPriceNotice record);
+	int insertSelective(CryptoCoinPriceNotice row);
 
-    List<CryptoCoinPriceNotice> selectByExampleWithRowbounds(CryptoCoinPriceNoticeExample example, RowBounds rowBounds);
+	List<CryptoCoinPriceNotice> selectByExampleWithRowbounds(CryptoCoinPriceNoticeExample example, RowBounds rowBounds);
 
-    List<CryptoCoinPriceNotice> selectByExample(CryptoCoinPriceNoticeExample example);
+	List<CryptoCoinPriceNotice> selectByExample(CryptoCoinPriceNoticeExample example);
 
-    CryptoCoinPriceNotice selectByPrimaryKey(Long id);
+	CryptoCoinPriceNotice selectByPrimaryKey(Long id);
 
-    int updateByExampleSelective(@Param("record") CryptoCoinPriceNotice record, @Param("example") CryptoCoinPriceNoticeExample example);
+	int updateByExampleSelective(@Param("row") CryptoCoinPriceNotice row,
+			@Param("example") CryptoCoinPriceNoticeExample example);
 
-    int updateByExample(@Param("record") CryptoCoinPriceNotice record, @Param("example") CryptoCoinPriceNoticeExample example);
+	int updateByExample(@Param("row") CryptoCoinPriceNotice row,
+			@Param("example") CryptoCoinPriceNoticeExample example);
 
-    int updateByPrimaryKeySelective(CryptoCoinPriceNotice record);
+	int updateByPrimaryKeySelective(CryptoCoinPriceNotice row);
 
-    int updateByPrimaryKey(CryptoCoinPriceNotice record);
+	int updateByPrimaryKey(CryptoCoinPriceNotice row);
 
 	List<CryptoCoinPriceNotice> selectValidNoticeSetting(LocalDateTime now);
 }

@@ -10,7 +10,7 @@
     <result column="time_unit_of_data_watch" jdbcType="INTEGER" property="timeUnitOfDataWatch" />
     <result column="time_range_of_data_watch" jdbcType="INTEGER" property="timeRangeOfDataWatch" />
     <result column="fluctuation_speed_percentage" jdbcType="DECIMAL" property="fluctuationSpeedPercentage" />
-    <result column="telegram_chat_id" jdbcType="BIGINT" property="telegramChatId" />
+    <result column="telegram_chat_record_id" jdbcType="BIGINT" property="telegramChatRecordId" />
     <result column="telegram_bot_name" jdbcType="CHAR" property="telegramBotName" />
     <result column="notice_count" jdbcType="INTEGER" property="noticeCount" />
     <result column="time_unit_of_notice_interval" jdbcType="INTEGER" property="timeUnitOfNoticeInterval" />
@@ -81,7 +81,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, coin_type, currency_type, max_price, min_price, time_unit_of_data_watch, time_range_of_data_watch, 
-    fluctuation_speed_percentage, telegram_chat_id, telegram_bot_name, notice_count, 
+    fluctuation_speed_percentage, telegram_chat_record_id, telegram_bot_name, notice_count, 
     time_unit_of_notice_interval, time_range_of_notice_interval, valid_time, notice_time, 
     next_notice_time, create_time, is_delete
   </sql>
@@ -119,14 +119,14 @@
     insert into crypto_coin_price_notice (id, coin_type, currency_type, 
       max_price, min_price, time_unit_of_data_watch, 
       time_range_of_data_watch, fluctuation_speed_percentage, 
-      telegram_chat_id, telegram_bot_name, notice_count, 
+      telegram_chat_record_id, telegram_bot_name, notice_count, 
       time_unit_of_notice_interval, time_range_of_notice_interval, 
       valid_time, notice_time, next_notice_time, 
       create_time, is_delete)
     values (#{id,jdbcType=BIGINT}, #{coinType,jdbcType=BIGINT}, #{currencyType,jdbcType=INTEGER}, 
       #{maxPrice,jdbcType=DECIMAL}, #{minPrice,jdbcType=DECIMAL}, #{timeUnitOfDataWatch,jdbcType=INTEGER}, 
       #{timeRangeOfDataWatch,jdbcType=INTEGER}, #{fluctuationSpeedPercentage,jdbcType=DECIMAL}, 
-      #{telegramChatId,jdbcType=BIGINT}, #{telegramBotName,jdbcType=CHAR}, #{noticeCount,jdbcType=INTEGER}, 
+      #{telegramChatRecordId,jdbcType=BIGINT}, #{telegramBotName,jdbcType=CHAR}, #{noticeCount,jdbcType=INTEGER}, 
       #{timeUnitOfNoticeInterval,jdbcType=INTEGER}, #{timeRangeOfNoticeInterval,jdbcType=INTEGER}, 
       #{validTime,jdbcType=TIMESTAMP}, #{noticeTime,jdbcType=TIMESTAMP}, #{nextNoticeTime,jdbcType=TIMESTAMP}, 
       #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
@@ -158,8 +158,8 @@
       <if test="fluctuationSpeedPercentage != null">
         fluctuation_speed_percentage,
       </if>
-      <if test="telegramChatId != null">
-        telegram_chat_id,
+      <if test="telegramChatRecordId != null">
+        telegram_chat_record_id,
       </if>
       <if test="telegramBotName != null">
         telegram_bot_name,
@@ -214,8 +214,8 @@
       <if test="fluctuationSpeedPercentage != null">
         #{fluctuationSpeedPercentage,jdbcType=DECIMAL},
       </if>
-      <if test="telegramChatId != null">
-        #{telegramChatId,jdbcType=BIGINT},
+      <if test="telegramChatRecordId != null">
+        #{telegramChatRecordId,jdbcType=BIGINT},
       </if>
       <if test="telegramBotName != null">
         #{telegramBotName,jdbcType=CHAR},
@@ -255,86 +255,86 @@
   <update id="updateByExampleSelective" parameterType="map">
     update crypto_coin_price_notice
     <set>
-      <if test="record.id != null">
-        id = #{record.id,jdbcType=BIGINT},
+      <if test="row.id != null">
+        id = #{row.id,jdbcType=BIGINT},
       </if>
-      <if test="record.coinType != null">
-        coin_type = #{record.coinType,jdbcType=BIGINT},
+      <if test="row.coinType != null">
+        coin_type = #{row.coinType,jdbcType=BIGINT},
       </if>
-      <if test="record.currencyType != null">
-        currency_type = #{record.currencyType,jdbcType=INTEGER},
+      <if test="row.currencyType != null">
+        currency_type = #{row.currencyType,jdbcType=INTEGER},
       </if>
-      <if test="record.maxPrice != null">
-        max_price = #{record.maxPrice,jdbcType=DECIMAL},
+      <if test="row.maxPrice != null">
+        max_price = #{row.maxPrice,jdbcType=DECIMAL},
       </if>
-      <if test="record.minPrice != null">
-        min_price = #{record.minPrice,jdbcType=DECIMAL},
+      <if test="row.minPrice != null">
+        min_price = #{row.minPrice,jdbcType=DECIMAL},
       </if>
-      <if test="record.timeUnitOfDataWatch != null">
-        time_unit_of_data_watch = #{record.timeUnitOfDataWatch,jdbcType=INTEGER},
+      <if test="row.timeUnitOfDataWatch != null">
+        time_unit_of_data_watch = #{row.timeUnitOfDataWatch,jdbcType=INTEGER},
       </if>
-      <if test="record.timeRangeOfDataWatch != null">
-        time_range_of_data_watch = #{record.timeRangeOfDataWatch,jdbcType=INTEGER},
+      <if test="row.timeRangeOfDataWatch != null">
+        time_range_of_data_watch = #{row.timeRangeOfDataWatch,jdbcType=INTEGER},
       </if>
-      <if test="record.fluctuationSpeedPercentage != null">
-        fluctuation_speed_percentage = #{record.fluctuationSpeedPercentage,jdbcType=DECIMAL},
+      <if test="row.fluctuationSpeedPercentage != null">
+        fluctuation_speed_percentage = #{row.fluctuationSpeedPercentage,jdbcType=DECIMAL},
       </if>
-      <if test="record.telegramChatId != null">
-        telegram_chat_id = #{record.telegramChatId,jdbcType=BIGINT},
+      <if test="row.telegramChatRecordId != null">
+        telegram_chat_record_id = #{row.telegramChatRecordId,jdbcType=BIGINT},
       </if>
-      <if test="record.telegramBotName != null">
-        telegram_bot_name = #{record.telegramBotName,jdbcType=CHAR},
+      <if test="row.telegramBotName != null">
+        telegram_bot_name = #{row.telegramBotName,jdbcType=CHAR},
       </if>
-      <if test="record.noticeCount != null">
-        notice_count = #{record.noticeCount,jdbcType=INTEGER},
+      <if test="row.noticeCount != null">
+        notice_count = #{row.noticeCount,jdbcType=INTEGER},
       </if>
-      <if test="record.timeUnitOfNoticeInterval != null">
-        time_unit_of_notice_interval = #{record.timeUnitOfNoticeInterval,jdbcType=INTEGER},
+      <if test="row.timeUnitOfNoticeInterval != null">
+        time_unit_of_notice_interval = #{row.timeUnitOfNoticeInterval,jdbcType=INTEGER},
       </if>
-      <if test="record.timeRangeOfNoticeInterval != null">
-        time_range_of_notice_interval = #{record.timeRangeOfNoticeInterval,jdbcType=INTEGER},
+      <if test="row.timeRangeOfNoticeInterval != null">
+        time_range_of_notice_interval = #{row.timeRangeOfNoticeInterval,jdbcType=INTEGER},
       </if>
-      <if test="record.validTime != null">
-        valid_time = #{record.validTime,jdbcType=TIMESTAMP},
+      <if test="row.validTime != null">
+        valid_time = #{row.validTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.noticeTime != null">
-        notice_time = #{record.noticeTime,jdbcType=TIMESTAMP},
+      <if test="row.noticeTime != null">
+        notice_time = #{row.noticeTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.nextNoticeTime != null">
-        next_notice_time = #{record.nextNoticeTime,jdbcType=TIMESTAMP},
+      <if test="row.nextNoticeTime != null">
+        next_notice_time = #{row.nextNoticeTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.createTime != null">
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      <if test="row.createTime != null">
+        create_time = #{row.createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.isDelete != null">
-        is_delete = #{record.isDelete,jdbcType=BIT},
+      <if test="row.isDelete != null">
+        is_delete = #{row.isDelete,jdbcType=BIT},
       </if>
     </set>
-    <if test="_parameter != null">
+    <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
     update crypto_coin_price_notice
-    set id = #{record.id,jdbcType=BIGINT},
-      coin_type = #{record.coinType,jdbcType=BIGINT},
-      currency_type = #{record.currencyType,jdbcType=INTEGER},
-      max_price = #{record.maxPrice,jdbcType=DECIMAL},
-      min_price = #{record.minPrice,jdbcType=DECIMAL},
-      time_unit_of_data_watch = #{record.timeUnitOfDataWatch,jdbcType=INTEGER},
-      time_range_of_data_watch = #{record.timeRangeOfDataWatch,jdbcType=INTEGER},
-      fluctuation_speed_percentage = #{record.fluctuationSpeedPercentage,jdbcType=DECIMAL},
-      telegram_chat_id = #{record.telegramChatId,jdbcType=BIGINT},
-      telegram_bot_name = #{record.telegramBotName,jdbcType=CHAR},
-      notice_count = #{record.noticeCount,jdbcType=INTEGER},
-      time_unit_of_notice_interval = #{record.timeUnitOfNoticeInterval,jdbcType=INTEGER},
-      time_range_of_notice_interval = #{record.timeRangeOfNoticeInterval,jdbcType=INTEGER},
-      valid_time = #{record.validTime,jdbcType=TIMESTAMP},
-      notice_time = #{record.noticeTime,jdbcType=TIMESTAMP},
-      next_notice_time = #{record.nextNoticeTime,jdbcType=TIMESTAMP},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      is_delete = #{record.isDelete,jdbcType=BIT}
-    <if test="_parameter != null">
+    set id = #{row.id,jdbcType=BIGINT},
+      coin_type = #{row.coinType,jdbcType=BIGINT},
+      currency_type = #{row.currencyType,jdbcType=INTEGER},
+      max_price = #{row.maxPrice,jdbcType=DECIMAL},
+      min_price = #{row.minPrice,jdbcType=DECIMAL},
+      time_unit_of_data_watch = #{row.timeUnitOfDataWatch,jdbcType=INTEGER},
+      time_range_of_data_watch = #{row.timeRangeOfDataWatch,jdbcType=INTEGER},
+      fluctuation_speed_percentage = #{row.fluctuationSpeedPercentage,jdbcType=DECIMAL},
+      telegram_chat_record_id = #{row.telegramChatRecordId,jdbcType=BIGINT},
+      telegram_bot_name = #{row.telegramBotName,jdbcType=CHAR},
+      notice_count = #{row.noticeCount,jdbcType=INTEGER},
+      time_unit_of_notice_interval = #{row.timeUnitOfNoticeInterval,jdbcType=INTEGER},
+      time_range_of_notice_interval = #{row.timeRangeOfNoticeInterval,jdbcType=INTEGER},
+      valid_time = #{row.validTime,jdbcType=TIMESTAMP},
+      notice_time = #{row.noticeTime,jdbcType=TIMESTAMP},
+      next_notice_time = #{row.nextNoticeTime,jdbcType=TIMESTAMP},
+      create_time = #{row.createTime,jdbcType=TIMESTAMP},
+      is_delete = #{row.isDelete,jdbcType=BIT}
+    <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
@@ -362,8 +362,8 @@
       <if test="fluctuationSpeedPercentage != null">
         fluctuation_speed_percentage = #{fluctuationSpeedPercentage,jdbcType=DECIMAL},
       </if>
-      <if test="telegramChatId != null">
-        telegram_chat_id = #{telegramChatId,jdbcType=BIGINT},
+      <if test="telegramChatRecordId != null">
+        telegram_chat_record_id = #{telegramChatRecordId,jdbcType=BIGINT},
       </if>
       <if test="telegramBotName != null">
         telegram_bot_name = #{telegramBotName,jdbcType=CHAR},
@@ -404,7 +404,7 @@
       time_unit_of_data_watch = #{timeUnitOfDataWatch,jdbcType=INTEGER},
       time_range_of_data_watch = #{timeRangeOfDataWatch,jdbcType=INTEGER},
       fluctuation_speed_percentage = #{fluctuationSpeedPercentage,jdbcType=DECIMAL},
-      telegram_chat_id = #{telegramChatId,jdbcType=BIGINT},
+      telegram_chat_record_id = #{telegramChatRecordId,jdbcType=BIGINT},
       telegram_bot_name = #{telegramBotName,jdbcType=CHAR},
       notice_count = #{noticeCount,jdbcType=INTEGER},
       time_unit_of_notice_interval = #{timeUnitOfNoticeInterval,jdbcType=INTEGER},

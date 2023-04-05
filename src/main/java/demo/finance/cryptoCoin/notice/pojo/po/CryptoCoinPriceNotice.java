@@ -20,7 +20,7 @@ public class CryptoCoinPriceNotice {
 
     private BigDecimal fluctuationSpeedPercentage;
 
-    private Long telegramChatId;
+    private Long telegramChatRecordId;
 
     private String telegramBotName;
 
@@ -104,12 +104,12 @@ public class CryptoCoinPriceNotice {
         this.fluctuationSpeedPercentage = fluctuationSpeedPercentage;
     }
 
-    public Long getTelegramChatId() {
-        return telegramChatId;
+    public Long getTelegramChatRecordId() {
+        return telegramChatRecordId;
     }
 
-    public void setTelegramChatId(Long telegramChatId) {
-        this.telegramChatId = telegramChatId;
+    public void setTelegramChatRecordId(Long telegramChatRecordId) {
+        this.telegramChatRecordId = telegramChatRecordId;
     }
 
     public String getTelegramBotName() {

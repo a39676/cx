@@ -5,7 +5,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import aiChat.pojo.dto.AiChatSendNewMsgDTO;
+import aiChat.pojo.dto.AiChatSendNewMsgFromWechatDTO;
 import aiChat.pojo.result.AiChatSendNewMessageResult;
 import aiChat.pojo.result.GetAiChatHistoryResult;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
@@ -26,7 +26,7 @@ public class WechatAiChatServiceImpl extends WechatCommonService implements Wech
 	public EncryptDTO sendNewMessage(EncryptDTO encryptedDTO) {
 		AiChatSendNewMessageResult r = null;
 		EncryptDTO encryptedResult = null;
-		AiChatSendNewMsgDTO dto = decryptEncryptDTO(encryptedDTO, AiChatSendNewMsgDTO.class);
+		AiChatSendNewMsgFromWechatDTO dto = decryptEncryptDTO(encryptedDTO, AiChatSendNewMsgFromWechatDTO.class);
 		if(dto == null) {
 			r = new AiChatSendNewMessageResult();
 			r.setResultByType(WechatSdkCommonResultType.TMP_KEY_EXPIRED);

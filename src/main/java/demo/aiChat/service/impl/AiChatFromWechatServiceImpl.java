@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import aiChat.pojo.dto.AiChatSendNewMsgDTO;
+import aiChat.pojo.dto.AiChatSendNewMsgFromWechatDTO;
 import aiChat.pojo.result.AiChatSendNewMessageResult;
 import aiChat.pojo.result.GetAiChatHistoryResult;
 import demo.aiChat.service.AiChatFromWechatService;
@@ -18,7 +18,7 @@ public class AiChatFromWechatServiceImpl extends AiChatCommonService implements 
 	private AiChatService aiChatService;
 
 	@Override
-	public AiChatSendNewMessageResult sendNewChatFromWechat(AiChatSendNewMsgDTO dto) {
+	public AiChatSendNewMessageResult sendNewChatFromWechat(AiChatSendNewMsgFromWechatDTO dto) {
 		AiChatSendNewMessageResult r = null;
 
 		if (StringUtils.isBlank(dto.getTemporaryKey())) {
@@ -45,7 +45,7 @@ public class AiChatFromWechatServiceImpl extends AiChatCommonService implements 
 
 		tmpKeyInsertOrUpdateLiveTime(tmpK, aiChatUserId);
 
-		r = aiChatService.sendNewChatMessage(aiChatUserId, dto);
+		r = aiChatService.sendNewChatMessageWithHistory(aiChatUserId, dto);
 		if("-10".equals(r.getCode())) {
 			r.setMessage("暂时无法发送消息, 请返回公众号界面联系管理员");
 		}

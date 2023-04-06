@@ -17,7 +17,8 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
-import aiChat.pojo.dto.AiChatSendNewMsgDTO;
+import aiChat.pojo.dto.AiChatSendNewMsgFromApiDTO;
+import aiChat.pojo.dto.AiChatSendNewMsgFromWechatDTO;
 import aiChat.pojo.result.AiChatSendNewMessageResult;
 import aiChat.pojo.result.GetAiChatHistoryResult;
 import aiChat.pojo.type.AiChatAmountType;
@@ -59,14 +60,82 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 	private FileUtilCustom ioUtil;
 
 	@Override
-	public AiChatSendNewMessageResult sendNewChatMessage(Long aiChatUserId, AiChatSendNewMsgDTO dto) {
+	public AiChatSendNewMessageResult sendNewChatMessageFromApi(Long aiChatUserId, AiChatSendNewMsgFromApiDTO dto) {
 		AiChatSendNewMessageResult r = new AiChatSendNewMessageResult();
 
-		if (dto.getMsg().length() > optionService.getInputMaxLength()) {
-			r.setMessage(
-					"问题过长, 请将问题控制在" + optionService.getInputMaxLength() + "字符以内, 目前问题长度: " + dto.getMsg().length());
+		int sensitiveWordCounting = 0;
+		for (OpanAiChatCompletionMessageDTO msg : dto.getMsgList()) {
+			sensitiveWordCounting = sensitiveWordCounting + sensitiveWordCount(msg.getContent());
+		}
+		if (sensitiveWordCounting > 0) {
+			insertSensitiveWordHitCountingToRedis(aiChatUserId, sensitiveWordCounting,
+					optionService.getSensitiveWordsTriggerInMinutes());
+
+			Integer sensitiveWordHitCount = findSensitiveWordHitCount(aiChatUserId);
+			if (sensitiveWordHitCount > optionService.getSensitiveWordsTriggerMaxCount()) {
+				String hostname = hostnameService.findMainHostname();
+				sendTelegramMessage("Send too many sensitive words, history: " //
+						+ "https://www." + hostname + AiChatUrlConstant.ROOT + AiChatUrlConstant.CHECK_CHAT_HISTORY
+						+ "?aiChatUserId=" + aiChatUserId //
+						+ ", block: " + "https://www." + hostname + AiChatUrlConstant.ROOT
+						+ AiChatUrlConstant.BLOCK_USER + "?aiChatUserId=" + aiChatUserId);
+			}
+		}
+
+		// check amount
+		AiChatUserDetail userDetail = detailMapper.selectByPrimaryKey(aiChatUserId);
+		if (userDetail == null) {
+			r.setMessage("请刷新页面后登录, 或者输入 API key, 如仍旧异常, 请联系管理员");
 			return r;
 		}
+		if (userDetail.getIsBlock()) {
+			r.setCode("-10");
+			return r;
+		}
+		int totalAmount = userDetail.getBonusAmount().intValue() + userDetail.getRechargeAmount().intValue();
+		if (totalAmount <= 0) {
+			r.setUsage(0);
+			OpanAiChatCompletionMessageDTO feedbackMsgDTO = new OpanAiChatCompletionMessageDTO();
+			feedbackMsgDTO.setContent("电量不足, 请充电或留意签到活动");
+			feedbackMsgDTO.setRole(OpenAiChatCompletionMessageRoleType.ASSISTANT.getName());
+			r.setMsgDTO(feedbackMsgDTO);
+			r.setFinishType(OpenAiChatCompletionFinishType.STOP);
+			r.setIsSuccess();
+			return r;
+		}
+
+		int maxTokens = optionService.getInputMaxLength();
+		if (maxTokens > totalAmount) {
+			maxTokens = totalAmount;
+		}
+
+		// send history + new msg, wait feedback
+		OpenAiChatCompletionSendMessageResult apiResult = util.sendChatCompletion(dto.getMsgList(), maxTokens);
+
+		// if fail, send fail response
+		if (apiResult.isFail()) {
+			r.setMessage("运算异常, 正在排查故障");
+			sendTelegramMessage(apiResult.getMessage());
+			return r;
+		}
+
+		// if success, debit amount, send feedback
+		Integer totalTokens = apiResult.getDto().getUsage().getTotal_tokens();
+		debitAmountAndAddTokenUsage(userDetail, new BigDecimal(totalTokens));
+		OpanAiChatCompletionMessageDTO feedbackMsgDTO = apiResult.getDto().getChoices().get(0).getMessage();
+
+		r.setUsage(apiResult.getDto().getUsage().getTotal_tokens());
+		r.setMsgDTO(feedbackMsgDTO);
+		r.setFinishType(
+				OpenAiChatCompletionFinishType.getType(apiResult.getDto().getChoices().get(0).getFinish_reason()));
+		r.setIsSuccess();
+		return r;
+	}
+
+	@Override
+	public AiChatSendNewMessageResult sendNewChatMessageWithHistory(Long aiChatUserId,
+			AiChatSendNewMsgFromWechatDTO dto) {
+		AiChatSendNewMessageResult r = new AiChatSendNewMessageResult();
 
 		dto.setMsg(sanitize(dto.getMsg()));
 		if (StringUtils.isBlank(dto.getMsg())) {
@@ -100,9 +169,21 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 			r.setCode("-10");
 			return r;
 		}
-		if (userDetail.getBonusAmount().doubleValue() + userDetail.getRechargeAmount().doubleValue() <= 0) {
-			r.setMessage(notEnoughtAmount().getMessage());
+		int totalAmount = userDetail.getBonusAmount().intValue() + userDetail.getRechargeAmount().intValue();
+		if (totalAmount <= 0) {
+			r.setUsage(0);
+			OpanAiChatCompletionMessageDTO feedbackMsgDTO = new OpanAiChatCompletionMessageDTO();
+			feedbackMsgDTO.setContent("电量不足, 请充电或留意签到活动");
+			feedbackMsgDTO.setRole(OpenAiChatCompletionMessageRoleType.ASSISTANT.getName());
+			r.setMsgDTO(feedbackMsgDTO);
+			r.setFinishType(OpenAiChatCompletionFinishType.STOP);
+			r.setIsSuccess();
 			return r;
+		}
+
+		int maxTokens = optionService.getInputMaxLength();
+		if (maxTokens > totalAmount) {
+			maxTokens = totalAmount;
 		}
 
 //		find chat saving limit counting
@@ -128,7 +209,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		}
 
 		// send history + new msg, wait feedback
-		OpenAiChatCompletionSendMessageResult apiResult = util.sendChatCompletion(chatHistory, dto.getMsg());
+		OpenAiChatCompletionSendMessageResult apiResult = util.sendChatCompletion(chatHistory, dto.getMsg(), maxTokens);
 
 		// if fail, send fail response
 		if (apiResult.isFail()) {

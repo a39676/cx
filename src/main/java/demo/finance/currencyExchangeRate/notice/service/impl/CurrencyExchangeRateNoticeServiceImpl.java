@@ -312,7 +312,7 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 
 		if (StringUtils.isNotBlank(content)) {
 			if (!"dev".equals(systemOptionService.getEnvName())) {
-				telegramService.sendMessageByTelegramChatId(TelegramBotType.getType(notice.getTelegramBotName()),
+				telegramService.sendMessageByChatRecordId(TelegramBotType.getType(notice.getTelegramBotName()),
 						content, notice.getTelegramChatId());
 			} else {
 				log.error("In dev env, will NOT send msg: " + content + ", chat ID: " + notice.getTelegramChatId()

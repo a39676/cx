@@ -51,7 +51,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 	public EncryptDTO getTmpKeyByOpenId(EncryptDTO dto) {
 		GetTmpKeyByOpenIdResult r = new GetTmpKeyByOpenIdResult();
 		String oid = decryptEncryptDTO(dto, String.class);
-		if (oid == null) {
+		if (StringUtils.isBlank(oid) || "null" == oid) {
 			r.setMessage("Oid = null");
 			return encryptDTO(r);
 		}
@@ -62,6 +62,10 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		WechatUserDetail detail = null;
 		if (wechatUserList.isEmpty()) {
 			detail = createWechatUserDetailWithOpenIdForSuiShou(oid);
+			if (detail == null) {
+				r.setMessage("Create user failed");
+				return encryptDTO(r);
+			}
 			CreateAiChatUserResult createAiChatUserResult = aiChatUserService
 					.createAiChatUserDetailByWechatOpenId(detail.getId(), oid);
 			r.setTmpKey(createAiChatUserResult.getTmpKey());
@@ -83,6 +87,9 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 	}
 
 	private WechatUserDetail createWechatUserDetailWithOpenIdForSuiShou(String oid) {
+		if (StringUtils.isBlank(oid)) {
+			return null;
+		}
 		WechatUserDetail po = new WechatUserDetail();
 		po.setId(snowFlake.getNextId());
 		po.setUnionId(FAKE_UID_PREFIX + po.getId());
@@ -184,7 +191,8 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		CommonResult r = new CommonResult();
 		RecordingWechatUserFromParameterizedQrCodeDTO dto = decryptEncryptDTO(encrypedDTO,
 				RecordingWechatUserFromParameterizedQrCodeDTO.class);
-		if (dto == null || StringUtils.isAnyBlank(dto.getOriginOpenId(), dto.getUserOpenId(), dto.getParameter())) {
+		if (dto == null || StringUtils.isAnyBlank(dto.getOriginOpenId(), dto.getUserOpenId(), dto.getParameter())
+				|| "null" == dto.getUserOpenId()) {
 			r.setMessage("RecordingWechatUserFromParameterizedQrCode Decrypt error");
 			return encryptDTO(r);
 		}
@@ -222,6 +230,10 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 
 		WechatQrcodeDetail qrCode = qrCodeList.get(0);
 		WechatUserDetail newUser = createWechatUserDetailWithOpenIdForSuiShou(userOpenId);
+		if (newUser == null) {
+			r.setMessage("Get oid failed: " + sceneName);
+			return encryptDTO(r);
+		}
 		CreateAiChatUserResult createAiChatUserResult = aiChatUserService
 				.createAiChatUserDetailByWechatOpenId(newUser.getId(), userOpenId);
 		if (createAiChatUserResult.isFail()) {

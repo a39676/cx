@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -96,7 +97,12 @@ public class OpenAiUtil extends CommonService {
 		return sendChatCompletion(null, msg, optionService.getMaxTokens());
 	}
 
-	private OpenAiChatCompletionSendMessageResult sendChatCompletion(List<OpanAiChatCompletionMessageDTO> chatHistory,
+	public OpenAiChatCompletionSendMessageResult sendChatCompletion(List<OpanAiChatCompletionMessageDTO> chatHistory,
+			Integer maxToken) {
+		return sendChatCompletion(chatHistory, null, maxToken);
+	}
+
+	public OpenAiChatCompletionSendMessageResult sendChatCompletion(List<OpanAiChatCompletionMessageDTO> chatHistory,
 			String msg, Integer maxToken) {
 		OpenAiChatCompletionSendMessageResult r = new OpenAiChatCompletionSendMessageResult();
 		if (chatHistory == null) {
@@ -126,15 +132,22 @@ public class OpenAiUtil extends CommonService {
 			return r;
 		}
 
+		if (maxToken == null) {
+			maxToken = optionService.getMaxTokens();
+		}
+
 		try {
 			URL url = new URL(MAIN_URL + CHAT + COMPLETIONS);
 
 			JSONObject parameterJson = null;
-			OpanAiChatCompletionMessageDTO newChatMsg = new OpanAiChatCompletionMessageDTO();
-			newChatMsg.setRole(OpenAiChatCompletionMessageRoleType.USER.getName());
-			newChatMsg.setContent(msg);
+			if (StringUtils.isNotBlank(msg)) {
+				OpanAiChatCompletionMessageDTO newChatMsg = new OpanAiChatCompletionMessageDTO();
+				newChatMsg.setRole(OpenAiChatCompletionMessageRoleType.USER.getName());
+				newChatMsg.setContent(msg);
+				chatHistory.add(newChatMsg);
+			}
 
-			parameterJson = buildChatCompletionsParamJson(chatHistory, newChatMsg, maxToken);
+			parameterJson = buildChatCompletionsParamJson(chatHistory, maxToken);
 
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("POST");
@@ -229,7 +242,7 @@ public class OpenAiUtil extends CommonService {
 	}
 
 	private JSONObject buildChatCompletionsParamJson(List<OpanAiChatCompletionMessageDTO> chatHistory,
-			OpanAiChatCompletionMessageDTO newChatMessage, Integer maxToken) {
+			Integer maxToken) {
 		/* Reference: https://platform.openai.com/docs/api-reference/chat/create */
 		JSONObject parameterJson = new JSONObject();
 		parameterJson.put("model", OpenAiModelType.GPT_V_3_5.getName());
@@ -241,11 +254,6 @@ public class OpenAiUtil extends CommonService {
 			subChatMsg.put("content", dto.getContent());
 			messageArray.add(subChatMsg);
 		}
-
-		subChatMsg = new JSONObject();
-		subChatMsg.put("role", newChatMessage.getRole());
-		subChatMsg.put("content", newChatMessage.getContent());
-		messageArray.add(subChatMsg);
 
 		parameterJson.put("messages", messageArray);
 

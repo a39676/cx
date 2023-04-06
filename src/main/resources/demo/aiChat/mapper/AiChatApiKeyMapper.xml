@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.aiChat.mapper.AiChatApiKeyMapper">
+  <resultMap id="BaseResultMap" type="demo.aiChat.pojo.po.AiChatApiKey">
+    <id column="api_key_decrypt" jdbcType="BIGINT" property="apiKeyDecrypt" />
+    <result column="ai_chat_user_id" jdbcType="BIGINT" property="aiChatUserId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="last_used_time" jdbcType="TIMESTAMP" property="lastUsedTime" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    api_key_decrypt, ai_chat_user_id, create_time, last_used_time, is_delete
+  </sql>
+  <select id="selectByExample" parameterType="demo.aiChat.pojo.po.AiChatApiKeyExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ai_chat_api_key
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ai_chat_api_key
+    where api_key_decrypt = #{apiKeyDecrypt,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from ai_chat_api_key
+    where api_key_decrypt = #{apiKeyDecrypt,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.aiChat.pojo.po.AiChatApiKeyExample">
+    delete from ai_chat_api_key
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="demo.aiChat.pojo.po.AiChatApiKey">
+    insert into ai_chat_api_key (api_key_decrypt, ai_chat_user_id, create_time, 
+      last_used_time, is_delete)
+    values (#{apiKeyDecrypt,jdbcType=BIGINT}, #{aiChatUserId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{lastUsedTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="demo.aiChat.pojo.po.AiChatApiKey">
+    insert into ai_chat_api_key
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="apiKeyDecrypt != null">
+        api_key_decrypt,
+      </if>
+      <if test="aiChatUserId != null">
+        ai_chat_user_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="lastUsedTime != null">
+        last_used_time,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="apiKeyDecrypt != null">
+        #{apiKeyDecrypt,jdbcType=BIGINT},
+      </if>
+      <if test="aiChatUserId != null">
+        #{aiChatUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUsedTime != null">
+        #{lastUsedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="demo.aiChat.pojo.po.AiChatApiKeyExample" resultType="java.lang.Long">
+    select count(*) from ai_chat_api_key
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update ai_chat_api_key
+    <set>
+      <if test="row.apiKeyDecrypt != null">
+        api_key_decrypt = #{row.apiKeyDecrypt,jdbcType=BIGINT},
+      </if>
+      <if test="row.aiChatUserId != null">
+        ai_chat_user_id = #{row.aiChatUserId,jdbcType=BIGINT},
+      </if>
+      <if test="row.createTime != null">
+        create_time = #{row.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.lastUsedTime != null">
+        last_used_time = #{row.lastUsedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.isDelete != null">
+        is_delete = #{row.isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update ai_chat_api_key
+    set api_key_decrypt = #{row.apiKeyDecrypt,jdbcType=BIGINT},
+      ai_chat_user_id = #{row.aiChatUserId,jdbcType=BIGINT},
+      create_time = #{row.createTime,jdbcType=TIMESTAMP},
+      last_used_time = #{row.lastUsedTime,jdbcType=TIMESTAMP},
+      is_delete = #{row.isDelete,jdbcType=BIT}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.aiChat.pojo.po.AiChatApiKey">
+    update ai_chat_api_key
+    <set>
+      <if test="aiChatUserId != null">
+        ai_chat_user_id = #{aiChatUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUsedTime != null">
+        last_used_time = #{lastUsedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    where api_key_decrypt = #{apiKeyDecrypt,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="demo.aiChat.pojo.po.AiChatApiKey">
+    update ai_chat_api_key
+    set ai_chat_user_id = #{aiChatUserId,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      last_used_time = #{lastUsedTime,jdbcType=TIMESTAMP},
+      is_delete = #{isDelete,jdbcType=BIT}
+    where api_key_decrypt = #{apiKeyDecrypt,jdbcType=BIGINT}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="demo.aiChat.pojo.po.AiChatApiKeyExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ai_chat_api_key
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

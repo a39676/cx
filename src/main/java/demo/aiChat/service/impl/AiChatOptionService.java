@@ -46,6 +46,8 @@ public class AiChatOptionService extends CommonService {
 	private String announcementStr;
 	private Integer bonusForNewUser;
 	private Integer chatHistoryCountLimitForFreeUser;
+	private Integer maxCountOfApiKey = 5;
+	private Integer maxCountOfapiKeyOperations = 10;
 
 	private Set<String> sensitiveWords = new HashSet<>();
 
@@ -169,6 +171,22 @@ public class AiChatOptionService extends CommonService {
 		this.chatHistoryCountLimitForFreeUser = chatHistoryCountLimitForFreeUser;
 	}
 
+	public Integer getMaxCountOfApiKey() {
+		return maxCountOfApiKey;
+	}
+
+	public void setMaxCountOfApiKey(Integer maxCountOfApiKey) {
+		this.maxCountOfApiKey = maxCountOfApiKey;
+	}
+
+	public Integer getMaxCountOfapiKeyOperations() {
+		return maxCountOfapiKeyOperations;
+	}
+
+	public void setMaxCountOfapiKeyOperations(Integer maxCountOfapiKeyOperations) {
+		this.maxCountOfapiKeyOperations = maxCountOfapiKeyOperations;
+	}
+
 	@Override
 	public String toString() {
 		return "AiChatOptionService [chatStorePrefixPath=" + chatStorePrefixPath + ", extendDetailStorePrefixPath="
@@ -179,7 +197,8 @@ public class AiChatOptionService extends CommonService {
 				+ ", sensitiveWordsTriggerMaxCount=" + sensitiveWordsTriggerMaxCount + ", membershipLDetails="
 				+ membershipLDetails + ", promptOfActAs=" + promptOfActAs + ", inputMaxLength=" + inputMaxLength
 				+ ", announcementStr=" + announcementStr + ", bonusForNewUser=" + bonusForNewUser
-				+ ", chatHistoryCountLimitForFreeUser=" + chatHistoryCountLimitForFreeUser + ", sensitiveWords="
+				+ ", chatHistoryCountLimitForFreeUser=" + chatHistoryCountLimitForFreeUser + ", maxCountOfApiKey="
+				+ maxCountOfApiKey + ", maxCountOfapiKeyOperations=" + maxCountOfapiKeyOperations + ", sensitiveWords="
 				+ sensitiveWords + "]";
 	}
 

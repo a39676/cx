@@ -129,6 +129,8 @@ public class OpenAiUtil extends CommonService {
 			}
 
 			parameterJson = buildChatCompletionsParamJson(chatHistory, maxToken);
+//			TODO
+			log.error(parameterJson.toString());
 
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("POST");

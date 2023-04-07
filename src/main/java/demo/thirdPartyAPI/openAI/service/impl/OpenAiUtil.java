@@ -236,7 +236,7 @@ public class OpenAiUtil extends CommonService {
 		for (OpanAiChatCompletionMessageDTO dto : chatHistory) {
 			subChatMsg = new JSONObject();
 			subChatMsg.put("role", dto.getRole());
-			subChatMsg.put("content", dto.getContent());
+			subChatMsg.put("content", dto.getContent().replaceAll("\\\\", "\\\\\\\\"));
 			messageArray.add(subChatMsg);
 		}
 

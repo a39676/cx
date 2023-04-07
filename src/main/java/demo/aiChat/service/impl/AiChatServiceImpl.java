@@ -208,7 +208,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		}
 
 		// send history + new msg, wait feedback
-		OpenAiChatCompletionSendMessageResult apiResult = util.sendChatCompletion(chatHistory, dto.getMsg(), maxTokens);
+		OpenAiChatCompletionSendMessageResult apiResult = util.sendChatCompletionWithSdk(chatHistory, dto.getMsg(), maxTokens);
 
 		// if fail, send fail response
 		if (apiResult.isFail()) {

@@ -109,9 +109,10 @@ public class OpenAiUtil extends CommonService {
 			chatHistory = new ArrayList<>();
 		}
 
-		if (systemOptionService.isDev()) {
-			return createFakeMessageResult(msg);
-		}
+//		TODO
+//		if (systemOptionService.isDev()) {
+//			return createFakeMessageResult(msg);
+//		}
 
 		if (maxToken == null) {
 			maxToken = optionService.getMaxTokens();
@@ -136,6 +137,7 @@ public class OpenAiUtil extends CommonService {
 			con.setRequestMethod("POST");
 			con.setRequestProperty("Content-Type", "application/json");
 			con.setRequestProperty("Authorization", "Bearer " + optionService.getApiKey());
+			log.error(optionService.getApiKey());
 			con.setDoOutput(true);
 			OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
 			writer.write(parameterJson.toString());

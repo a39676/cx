@@ -258,10 +258,8 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		}
 		
 		for (OpanAiChatCompletionMessageDTO msgDTO : sourceList) {
+			msgDTO.setContent(sanitize(msgDTO.getContent()));
 			msgDTO.setContent(msgDTO.getContent().replaceAll("\\n", "<br>"));
-			if(OpenAiChatCompletionMessageRoleType.USER.getName().equals( msgDTO.getRole())) {
-				msgDTO.setContent(sanitize(msgDTO.getContent()));
-			}
 			resultList.add(msgDTO);
 		}
 		r.setMsgList(resultList);

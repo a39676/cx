@@ -5,7 +5,6 @@ import java.time.LocalTime;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import auxiliaryCommon.pojo.result.CommonResult;
@@ -32,6 +31,7 @@ public abstract class AiChatCommonService extends ToolCommonService {
 	private RedisOriginalConnectService redisConnectService;
 	@Autowired
 	private RedisSetConnectService redisSetService;
+	@SuppressWarnings("unused")
 	@Autowired
 	private TextFilter textFilter;
 
@@ -89,8 +89,8 @@ public abstract class AiChatCommonService extends ToolCommonService {
 	protected String sanitize(String content) {
 //		PolicyFactory filter = textFilter.getArticleFilter();
 //		return filter.sanitize(content);
-//		TODO
-		return Jsoup.parse(content).text();
+//		return Jsoup.parse(content).text();
+		return content.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("&", "&amp;");
 	}
 
 	protected void insertSensitiveWordHitCountingToRedis(Long aiChatUserId, Integer hitCount, Integer livingMinutes) {

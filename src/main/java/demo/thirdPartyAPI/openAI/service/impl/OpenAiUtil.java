@@ -33,19 +33,19 @@ public class OpenAiUtil extends CommonService {
 
 	@Autowired
 	private OpenAiOptionService optionService;
+	@SuppressWarnings("unused")
 	@Autowired
 	private SystemOptionService systemOptionService;
 
-	private static final String MAIN_URL = "https://api.openai.com/v1";
-	@SuppressWarnings("unused")
-	private static final String ENGINES = "/engines";
-	private static final String CHAT = "/chat";
-	private static final String COMPLETIONS = "/completions";
-	private static final String MODELS = "/models";
+//	private static final String MAIN_URL = "https://api.openai.com/v1";
+//	private static final String ENGINES = "https://api.openai.com/v1/engines";
+	private static final String COMPLETIONS = "https://api.openai.com/v1/completions";
+	private static final String MODELS = "https://api.openai.com/v1/models";
+	private static final String CHAT_API = "https://api.openai.com/v1/chat/completions";
 
 	public String NotFinishYet_sendCompletion(String msg) {
 		try {
-			URL url = new URL(MAIN_URL + COMPLETIONS);
+			URL url = new URL(COMPLETIONS);
 
 			JSONObject parameterJson = null;
 			parameterJson = buildCompletionsParamJson(msg, optionService.getMaxTokens());
@@ -119,7 +119,7 @@ public class OpenAiUtil extends CommonService {
 		}
 
 		try {
-			URL url = new URL(MAIN_URL + CHAT + COMPLETIONS);
+			URL url = new URL(CHAT_API);
 
 			JSONObject parameterJson = null;
 			if (StringUtils.isNotBlank(msg)) {
@@ -130,14 +130,11 @@ public class OpenAiUtil extends CommonService {
 			}
 
 			parameterJson = buildChatCompletionsParamJson(chatHistory, maxToken);
-//			TODO
-			log.error(parameterJson.toString());
 
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("POST");
 			con.setRequestProperty("Content-Type", "application/json");
 			con.setRequestProperty("Authorization", "Bearer " + optionService.getApiKey());
-			log.error(optionService.getApiKey());
 			con.setDoOutput(true);
 			OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
 			writer.write(parameterJson.toString());
@@ -152,7 +149,7 @@ public class OpenAiUtil extends CommonService {
 			while ((inputLine = in.readLine()) != null) {
 				response.append(inputLine);
 			}
-			
+
 			int responseCode = con.getResponseCode();
 			if (responseCode != HttpURLConnection.HTTP_OK) {
 				log.error("OpenAI request failed: " + response.toString());
@@ -178,7 +175,7 @@ public class OpenAiUtil extends CommonService {
 
 	public String notFinishYet_queryModels() {
 		try {
-			URL url = new URL(MAIN_URL + MODELS);
+			URL url = new URL(MODELS);
 
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET");
@@ -246,6 +243,7 @@ public class OpenAiUtil extends CommonService {
 		return parameterJson;
 	}
 
+	@SuppressWarnings("unused")
 	private OpenAiChatCompletionSendMessageResult createFakeMessageResult(String msg) {
 		OpenAiChatCompletionSendMessageResult r = new OpenAiChatCompletionSendMessageResult();
 
@@ -270,4 +268,5 @@ public class OpenAiUtil extends CommonService {
 		r.setDto(dto);
 		return r;
 	}
+
 }

@@ -42,9 +42,10 @@ public class TestController2 extends CommonService {
 	@GetMapping(value = "/t3")
 	@ResponseBody
 	public AiChatSendNewMessageResult t3(@RequestParam(value = "userId", defaultValue = "1") Long userId,
-			@RequestParam(value = "msg", defaultValue = "test") String msg) {
+			@RequestParam(value = "msg", defaultValue = "test") String msg,
+			@RequestParam(value = "counter", defaultValue = "6") Integer counter) {
 		AiChatSendNewMsgFromWechatDTO dto = new AiChatSendNewMsgFromWechatDTO();
-		dto.setChatModeCounter(6);
+		dto.setChatModeCounter(counter);
 		dto.setMsg(msg);
 		return aiChatService.sendNewChatMessageWithHistory(userId, dto);
 	}

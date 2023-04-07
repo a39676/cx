@@ -39,7 +39,6 @@ public class OpenAiUtil extends CommonService {
 
 	@Autowired
 	private OpenAiOptionService optionService;
-	@SuppressWarnings("unused")
 	@Autowired
 	private SystemOptionService systemOptionService;
 
@@ -115,10 +114,9 @@ public class OpenAiUtil extends CommonService {
 			chatHistory = new ArrayList<>();
 		}
 
-//		TODO
-//		if (systemOptionService.isDev()) {
-//			return createFakeMessageResult(msg);
-//		}
+		if (systemOptionService.isDev()) {
+			return createFakeMessageResult(msg);
+		}
 
 		if (maxToken == null) {
 			maxToken = optionService.getMaxTokens();
@@ -249,7 +247,6 @@ public class OpenAiUtil extends CommonService {
 		return parameterJson;
 	}
 
-	@SuppressWarnings("unused")
 	private OpenAiChatCompletionSendMessageResult createFakeMessageResult(String msg) {
 		OpenAiChatCompletionSendMessageResult r = new OpenAiChatCompletionSendMessageResult();
 
@@ -282,10 +279,9 @@ public class OpenAiUtil extends CommonService {
 			chatHistory = new ArrayList<>();
 		}
 
-//		TODO
-//		if (systemOptionService.isDev()) {
-//			return createFakeMessageResult(msg);
-//		}
+		if (systemOptionService.isDev()) {
+			return createFakeMessageResult(msg);
+		}
 
 		if (maxToken == null) {
 			maxToken = optionService.getMaxTokens();
@@ -314,7 +310,7 @@ public class OpenAiUtil extends CommonService {
 				    .model(OpenAiModelType.GPT_V_3_5.getName())
 				    .temperature(0.8)
 				    .messages(sdkMsgList)
-				    .maxTokens(maxToken)
+//				    .maxTokens(maxToken) // TODO
 				    .n(1)
 				    .build();
 			

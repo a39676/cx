@@ -109,7 +109,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 			maxTokens = totalAmount;
 		}
 
-		// send history + new msg, wait feedback
+		// send new msg, wait feedback
 		OpenAiChatCompletionSendMessageResult apiResult = util.sendChatCompletion(dto.getMsgList(), maxTokens);
 
 		// if fail, send fail response

@@ -110,26 +110,7 @@ public class OpenAiUtil extends CommonService {
 		}
 
 		if (systemOptionService.isDev()) {
-			r.setIsSuccess();
-			OpanAiChatCompletionResponseDTO dto = new OpanAiChatCompletionResponseDTO();
-			OpanAiChatCompletionResponseChoiceDTO c = new OpanAiChatCompletionResponseChoiceDTO();
-			c.setFinish_reason(OpenAiChatCompletionFinishType.LENGTH.getName());
-			c.setIndex(0);
-			OpanAiChatCompletionMessageDTO msgDTO = new OpanAiChatCompletionMessageDTO();
-			msgDTO.setContent(msg + ", feedback");
-			msgDTO.setRole(OpenAiChatCompletionMessageRoleType.ASSISTANT.getName());
-			c.setMessage(msgDTO);
-			dto.setChoices(Arrays.asList(c));
-			dto.setCreated(1L);
-			dto.setId("id");
-			dto.setModel(OpenAiModelType.GPT_V_3_5.getName());
-			OpanAiChatCompletionResponseUsageDTO usage = new OpanAiChatCompletionResponseUsageDTO();
-			usage.setCompletion_tokens(1);
-			usage.setPrompt_tokens(2);
-			usage.setTotal_tokens(3);
-			dto.setUsage(usage);
-			r.setDto(dto);
-			return r;
+			return createFakeMessageResult(msg);
 		}
 
 		if (maxToken == null) {
@@ -183,6 +164,8 @@ public class OpenAiUtil extends CommonService {
 			return r;
 
 		} catch (Exception e) {
+			log.error("Open AI error: " + e.getLocalizedMessage());
+			e.printStackTrace();
 			r.setMessage("Open AI error: " + e.getLocalizedMessage());
 		}
 
@@ -261,4 +244,28 @@ public class OpenAiUtil extends CommonService {
 		return parameterJson;
 	}
 
+	private OpenAiChatCompletionSendMessageResult createFakeMessageResult(String msg) {
+		OpenAiChatCompletionSendMessageResult r = new OpenAiChatCompletionSendMessageResult();
+
+		r.setIsSuccess();
+		OpanAiChatCompletionResponseDTO dto = new OpanAiChatCompletionResponseDTO();
+		OpanAiChatCompletionResponseChoiceDTO c = new OpanAiChatCompletionResponseChoiceDTO();
+		c.setFinish_reason(OpenAiChatCompletionFinishType.LENGTH.getName());
+		c.setIndex(0);
+		OpanAiChatCompletionMessageDTO msgDTO = new OpanAiChatCompletionMessageDTO();
+		msgDTO.setContent(msg + ", feedback");
+		msgDTO.setRole(OpenAiChatCompletionMessageRoleType.ASSISTANT.getName());
+		c.setMessage(msgDTO);
+		dto.setChoices(Arrays.asList(c));
+		dto.setCreated(1L);
+		dto.setId("id");
+		dto.setModel(OpenAiModelType.GPT_V_3_5.getName());
+		OpanAiChatCompletionResponseUsageDTO usage = new OpanAiChatCompletionResponseUsageDTO();
+		usage.setCompletion_tokens(1);
+		usage.setPrompt_tokens(2);
+		usage.setTotal_tokens(3);
+		dto.setUsage(usage);
+		r.setDto(dto);
+		return r;
+	}
 }

@@ -5,7 +5,7 @@ import java.time.LocalTime;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import org.owasp.html.PolicyFactory;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import auxiliaryCommon.pojo.result.CommonResult;
@@ -87,8 +87,10 @@ public abstract class AiChatCommonService extends ToolCommonService {
 	}
 
 	protected String sanitize(String content) {
-		PolicyFactory filter = textFilter.getArticleFilter();
-		return filter.sanitize(content);
+//		PolicyFactory filter = textFilter.getArticleFilter();
+//		return filter.sanitize(content);
+//		TODO
+		return Jsoup.parse(content).text();
 	}
 
 	protected void insertSensitiveWordHitCountingToRedis(Long aiChatUserId, Integer hitCount, Integer livingMinutes) {

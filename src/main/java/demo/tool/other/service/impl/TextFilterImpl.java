@@ -39,4 +39,5 @@ public class TextFilterImpl extends CommonService implements TextFilter {
 			    .toFactory();
 		return policy;
 	}
+	
 }

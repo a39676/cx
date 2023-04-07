@@ -298,7 +298,7 @@ public class OpenAiUtil extends CommonService {
 			for(OpanAiChatCompletionMessageDTO chat : chatHistory) {
 				ChatMessage sdkDto = new ChatMessage();
 				sdkDto.setContent(chat.getContent());
-				sdkDto.setRole(chat.getContent());
+				sdkDto.setRole(chat.getRole());
 				sdkMsgList.add(sdkDto);
 			}
 			

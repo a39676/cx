@@ -137,9 +137,8 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 			AiChatSendNewMsgFromWechatDTO dto) {
 		AiChatSendNewMessageResult r = new AiChatSendNewMessageResult();
 
-		dto.setMsg(sanitize(dto.getMsg()));
 		if (StringUtils.isBlank(dto.getMsg())) {
-			r.setMessage("请勿发送空白消息或网页脚本");
+			r.setMessage("请勿发送空白消息");
 			return r;
 		}
 
@@ -245,15 +244,23 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 	@Override
 	public GetAiChatHistoryResult findChatHistoryByAiChatUserIdToFrontEnd(Long aiChatUserId) {
 		GetAiChatHistoryResult r = new GetAiChatHistoryResult();
-		List<OpanAiChatCompletionMessageDTO> list = findChatHistoryByAiChatUserId(aiChatUserId,
+		List<OpanAiChatCompletionMessageDTO> sourceList = findChatHistoryByAiChatUserId(aiChatUserId,
 				optionService.getChatHistorySaveCountingLimit());
-		if (list.isEmpty()) {
+		List<OpanAiChatCompletionMessageDTO> resultList = new ArrayList<>();
+		if (sourceList.isEmpty()) {
 			OpanAiChatCompletionMessageDTO dto = new OpanAiChatCompletionMessageDTO();
 			dto.setContent("你好, 有什么可以帮到您?");
 			dto.setRole(OpenAiChatCompletionMessageRoleType.ASSISTANT.getName());
-			list.add(dto);
+			resultList.add(dto);
+		} else {
+			for (OpanAiChatCompletionMessageDTO msgDTO : sourceList) {
+				if(OpenAiChatCompletionMessageRoleType.USER.getName().equals( msgDTO.getRole())) {
+					msgDTO.setContent(sanitize(msgDTO.getContent()));
+				}
+				resultList.add(msgDTO);
+			}
 		}
-		r.setMsgList(list);
+		r.setMsgList(resultList);
 		r.setIsSuccess();
 		return r;
 	}

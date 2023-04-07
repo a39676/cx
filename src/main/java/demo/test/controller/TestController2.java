@@ -13,7 +13,6 @@ import demo.common.service.CommonService;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.dto.TestDTO;
 import demo.test.service.TestService2;
-import demo.thirdPartyAPI.openAI.service.impl.OpenAiOptionService;
 
 @Controller
 @RequestMapping(value = { TestUrl.root2 })
@@ -31,14 +30,5 @@ public class TestController2 extends CommonService {
 	@ResponseBody
 	public String t2(@RequestBody TestDTO dto) {
 		return "{\"k\":\"v\"}";
-	}
-
-	@Autowired
-	private OpenAiOptionService optionService;
-	
-	@GetMapping(value = "/t3")
-	@ResponseBody
-	public String t3() {
-		return optionService.getApiKey();
 	}
 }

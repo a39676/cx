@@ -145,6 +145,16 @@ public class OpenAiUtil extends CommonService {
 
 			if (responseCode != HttpURLConnection.HTTP_OK) {
 				r.setMessage("Http : " + responseCode);
+				
+//				TODO
+				BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+				String line;
+				StringBuilder response = new StringBuilder();
+				while ((line = in.readLine()) != null) {
+					response.append(line);
+					response.append(System.lineSeparator());
+				}
+				log.error(response.toString());
 				return r;
 			}
 

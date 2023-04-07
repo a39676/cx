@@ -95,19 +95,19 @@ public class OpenAiUtil extends CommonService {
 
 	public OpenAiChatCompletionSendMessageResult sendChatCompletion(List<OpanAiChatCompletionMessageDTO> chatHistory,
 			String msg) {
-		return sendChatCompletionWithSdk(chatHistory, msg, optionService.getMaxTokens());
+		return sendChatCompletion(chatHistory, msg, optionService.getMaxTokens());
 	}
 
 	public OpenAiChatCompletionSendMessageResult sendChatCompletion(String msg) {
-		return sendChatCompletionWithSdk(null, msg, optionService.getMaxTokens());
+		return sendChatCompletion(null, msg, optionService.getMaxTokens());
 	}
 
 	public OpenAiChatCompletionSendMessageResult sendChatCompletion(List<OpanAiChatCompletionMessageDTO> chatHistory,
 			Integer maxToken) {
-		return sendChatCompletionWithSdk(chatHistory, null, maxToken);
+		return sendChatCompletion(chatHistory, null, maxToken);
 	}
 
-	public OpenAiChatCompletionSendMessageResult sendChatCompletion_backup(List<OpanAiChatCompletionMessageDTO> chatHistory,
+	public OpenAiChatCompletionSendMessageResult sendChatCompletion(List<OpanAiChatCompletionMessageDTO> chatHistory,
 			String msg, Integer maxToken) {
 		OpenAiChatCompletionSendMessageResult r = new OpenAiChatCompletionSendMessageResult();
 		if (chatHistory == null) {
@@ -243,7 +243,7 @@ public class OpenAiUtil extends CommonService {
 
 		parameterJson.put("messages", messageArray);
 
-		parameterJson.put("max_tokens", maxToken);
+//		parameterJson.put("max_tokens", maxToken); // TODO
 		return parameterJson;
 	}
 

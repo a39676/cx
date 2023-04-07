@@ -243,7 +243,8 @@ public class OpenAiUtil extends CommonService {
 
 		parameterJson.put("messages", messageArray);
 
-//		parameterJson.put("max_tokens", maxToken); // TODO
+//		parameterJson.put("max_tokens", maxToken); 
+		// 暂时无法计算输入部分的 tokens, chat GPT 3.5 默认最大收发 4000 tokens, 单次超额计费不多, 暂时停止处理此参数
 		return parameterJson;
 	}
 
@@ -289,31 +290,27 @@ public class OpenAiUtil extends CommonService {
 
 		try {
 			OpenAiService openAiService = new OpenAiService(optionService.getApiKey(), Duration.ofSeconds(10));
-			
+
 			List<ChatMessage> sdkMsgList = new ArrayList<>();
-			for(OpanAiChatCompletionMessageDTO chat : chatHistory) {
+			for (OpanAiChatCompletionMessageDTO chat : chatHistory) {
 				ChatMessage sdkDto = new ChatMessage();
 				sdkDto.setContent(chat.getContent());
 				sdkDto.setRole(chat.getRole());
 				sdkMsgList.add(sdkDto);
 			}
-			
+
 			if (StringUtils.isNotBlank(msg)) {
 				ChatMessage sdkDto = new ChatMessage();
 				sdkDto.setContent(msg);
 				sdkDto.setRole(OpenAiChatCompletionMessageRoleType.USER.getName());
 				sdkMsgList.add(sdkDto);
 			}
-			
-			ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest
-					.builder()
-				    .model(OpenAiModelType.GPT_V_3_5.getName())
-				    .temperature(0.8)
-				    .messages(sdkMsgList)
+
+			ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder()
+					.model(OpenAiModelType.GPT_V_3_5.getName()).temperature(0.8).messages(sdkMsgList)
 //				    .maxTokens(maxToken) // TODO
-				    .n(1)
-				    .build();
-			
+					.n(1).build();
+
 			ChatCompletionResult result = openAiService.createChatCompletion(chatCompletionRequest);
 
 			OpanAiChatCompletionResponseDTO resultDto = new OpanAiChatCompletionResponseDTO();
@@ -338,7 +335,7 @@ public class OpenAiUtil extends CommonService {
 			dtoUsage.setPrompt_tokens(sdkUsage.getPrompt_tokens());
 			dtoUsage.setTotal_tokens(sdkUsage.getTotal_tokens());
 			resultDto.setUsage(dtoUsage);
-			
+
 			r.setDto(resultDto);
 			r.setIsSuccess();
 			return r;

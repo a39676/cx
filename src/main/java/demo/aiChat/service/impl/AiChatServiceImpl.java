@@ -252,13 +252,17 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 			dto.setContent("你好, 有什么可以帮到您?");
 			dto.setRole(OpenAiChatCompletionMessageRoleType.ASSISTANT.getName());
 			resultList.add(dto);
-		} else {
-			for (OpanAiChatCompletionMessageDTO msgDTO : sourceList) {
-				if(OpenAiChatCompletionMessageRoleType.USER.getName().equals( msgDTO.getRole())) {
-					msgDTO.setContent(sanitize(msgDTO.getContent()));
-				}
-				resultList.add(msgDTO);
+			r.setMsgList(resultList);
+			r.setIsSuccess();
+			return r;
+		}
+		
+		for (OpanAiChatCompletionMessageDTO msgDTO : sourceList) {
+			msgDTO.setContent(msgDTO.getContent().replaceAll("\\n", "<br>"));
+			if(OpenAiChatCompletionMessageRoleType.USER.getName().equals( msgDTO.getRole())) {
+				msgDTO.setContent(sanitize(msgDTO.getContent()));
 			}
+			resultList.add(msgDTO);
 		}
 		r.setMsgList(resultList);
 		r.setIsSuccess();
@@ -267,9 +271,9 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 
 	private List<OpanAiChatCompletionMessageDTO> findChatHistoryByAiChatUserId(Long aiChatUserId,
 			Integer historyCountingLimit) {
-		List<OpanAiChatCompletionMessageDTO> chatHistory = new ArrayList<>();
+		List<OpanAiChatCompletionMessageDTO> chatDtoHistory = new ArrayList<>();
 		if (historyCountingLimit < 1) {
-			return chatHistory;
+			return chatDtoHistory;
 		}
 
 		AiChatUserChatHistory historyPO = chatHistoryMapper.selectByPrimaryKey(aiChatUserId);
@@ -284,12 +288,11 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		if (!msgList.isEmpty()) {
 			for (String line : msgList) {
 				chatDataDTO = new Gson().fromJson(line, OpanAiChatCompletionMessageDTO.class);
-				chatDataDTO.setContent(chatDataDTO.getContent().replaceAll("\\n", "<br>"));
-				chatHistory.add(chatDataDTO);
+				chatDtoHistory.add(chatDataDTO);
 			}
 		}
 
-		return chatHistory;
+		return chatDtoHistory;
 	}
 
 	private List<String> findChatHistoryLines(String filePathStr, Integer limit) {

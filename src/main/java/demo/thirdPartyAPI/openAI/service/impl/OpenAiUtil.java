@@ -143,29 +143,19 @@ public class OpenAiUtil extends CommonService {
 			writer.close();
 			con.getOutputStream().close();
 
-			int responseCode = con.getResponseCode();
-
-			if (responseCode != HttpURLConnection.HTTP_OK) {
-				r.setMessage("Http : " + responseCode);
-				
-//				TODO
-				BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-				String line;
-				StringBuilder response = new StringBuilder();
-				while ((line = in.readLine()) != null) {
-					response.append(line);
-					response.append(System.lineSeparator());
-				}
-				log.error(response.toString());
-				return r;
-			}
-
 			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 			String inputLine;
 			StringBuffer response = new StringBuffer();
 
 			while ((inputLine = in.readLine()) != null) {
 				response.append(inputLine);
+			}
+			
+			int responseCode = con.getResponseCode();
+			if (responseCode != HttpURLConnection.HTTP_OK) {
+				log.error("OpenAI request failed: " + response.toString());
+				r.setMessage("Http : " + responseCode);
+				return r;
 			}
 			in.close();
 

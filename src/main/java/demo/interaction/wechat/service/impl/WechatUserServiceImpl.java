@@ -250,7 +250,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		userFromQrcodeMapper.insertSelective(userFromQrCodeRecord);
 
 		WechatQrCodeSceneType sceneType = WechatQrCodeSceneType.getType(sceneName);
-		if (WechatQrCodeSceneType.FRANKIE.equals(sceneType) || WechatQrCodeSceneType.FANG_ZHENG_CHANNEL_1.equals(sceneType)
+		if (WechatQrCodeSceneType.FANG_ZHENG_FRANKIE.equals(sceneType) || WechatQrCodeSceneType.FANG_ZHENG_CHANNEL_1.equals(sceneType)
 				|| WechatQrCodeSceneType.FANG_ZHENG_CHANNEL_2.equals(sceneType) || WechatQrCodeSceneType.FANG_ZHENG_CHANNEL_3.equals(sceneType)) {
 			newUserFromFangZheng(newUser.getId(), 6L);
 		}

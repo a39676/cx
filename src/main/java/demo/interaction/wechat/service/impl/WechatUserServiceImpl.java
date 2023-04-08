@@ -30,6 +30,7 @@ import wechatSdk.pojo.dto.GetUserOpenIdListDTO;
 import wechatSdk.pojo.dto.RecordingWechatUserFromParameterizedQrCodeDTO;
 import wechatSdk.pojo.result.GetUserOpenIdListResult;
 import wechatSdk.pojo.type.WechatOfficialAccountType;
+import wechatSdk.pojo.type.WechatQrCodeSceneType;
 
 @Service
 public class WechatUserServiceImpl extends WechatCommonService implements WechatUserService {
@@ -248,6 +249,12 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		userFromQrCodeRecord.setWechatUserId(newUser.getId());
 		userFromQrcodeMapper.insertSelective(userFromQrCodeRecord);
 
+		WechatQrCodeSceneType sceneType = WechatQrCodeSceneType.getType(sceneName);
+		if (WechatQrCodeSceneType.FRANKIE.equals(sceneType) || WechatQrCodeSceneType.FANG_ZHENG_CHANNEL_1.equals(sceneType)
+				|| WechatQrCodeSceneType.FANG_ZHENG_CHANNEL_2.equals(sceneType) || WechatQrCodeSceneType.FANG_ZHENG_CHANNEL_3.equals(sceneType)) {
+			newUserFromFangZheng(newUser.getId(), 6L);
+		}
+
 		r.setIsSuccess();
 		return encryptDTO(r);
 	}
@@ -255,19 +262,19 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 	@Override
 	public EncryptDTO getUserOpenIdList(EncryptDTO encryptedDTO) {
 		GetUserOpenIdListResult result = new GetUserOpenIdListResult();
-		
+
 		GetUserOpenIdListDTO dto = decryptEncryptDTO(encryptedDTO, GetUserOpenIdListDTO.class);
-		if(dto == null) {
+		if (dto == null) {
 			return encryptDTO(result);
 		}
-		
+
 		if (dto.getSize() == null || dto.getSize() > 10000) {
 			dto.setSize(10000);
 		}
 		List<String> openIdList = wechatUserDetailMapper.findOpenIdList(dto.getIndex(), dto.getSize());
-		if(!openIdList.isEmpty()) {
+		if (!openIdList.isEmpty()) {
 			String lastOpenId = openIdList.get(openIdList.size() - 1);
-			WechatUserDetailExample example  =new WechatUserDetailExample();
+			WechatUserDetailExample example = new WechatUserDetailExample();
 			example.createCriteria().andOpenIdEqualTo(lastOpenId);
 			List<WechatUserDetail> poList = wechatUserDetailMapper.selectByExample(example);
 			result.setIndex(poList.get(0).getId());
@@ -275,5 +282,9 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		result.setOpenIdList(openIdList);
 		result.setIsSuccess();
 		return encryptDTO(result);
+	}
+
+	public void newUserFromFangZheng(Long wechatUserId, Long membershipId) {
+		aiChatMembershipService.__giftMembership(wechatUserId, membershipId);
 	}
 }

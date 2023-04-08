@@ -43,7 +43,6 @@ public class AiChatOptionService extends CommonService {
 	private List<AiChatUserMembershipDetailDTO> membershipLDetails;
 	private Map<String, String> promptOfActAs = new HashMap<>();
 	private Integer inputMaxLength;
-	private String announcementStr;
 	private Integer bonusForNewUser;
 	private Integer chatHistoryCountLimitForFreeUser;
 	private Integer maxCountOfApiKey = 5;
@@ -147,14 +146,6 @@ public class AiChatOptionService extends CommonService {
 		this.inputMaxLength = inputMaxLength;
 	}
 
-	public String getAnnouncementStr() {
-		return announcementStr;
-	}
-
-	public void setAnnouncementStr(String announcementStr) {
-		this.announcementStr = announcementStr;
-	}
-
 	public Integer getBonusForNewUser() {
 		return bonusForNewUser;
 	}
@@ -196,10 +187,10 @@ public class AiChatOptionService extends CommonService {
 				+ ", sensitiveWordsTriggerInMinutes=" + sensitiveWordsTriggerInMinutes
 				+ ", sensitiveWordsTriggerMaxCount=" + sensitiveWordsTriggerMaxCount + ", membershipLDetails="
 				+ membershipLDetails + ", promptOfActAs=" + promptOfActAs + ", inputMaxLength=" + inputMaxLength
-				+ ", announcementStr=" + announcementStr + ", bonusForNewUser=" + bonusForNewUser
-				+ ", chatHistoryCountLimitForFreeUser=" + chatHistoryCountLimitForFreeUser + ", maxCountOfApiKey="
-				+ maxCountOfApiKey + ", maxCountOfapiKeyOperations=" + maxCountOfapiKeyOperations + ", sensitiveWords="
-				+ sensitiveWords + "]";
+				+ ", bonusForNewUser=" + bonusForNewUser + ", chatHistoryCountLimitForFreeUser="
+				+ chatHistoryCountLimitForFreeUser + ", maxCountOfApiKey=" + maxCountOfApiKey
+				+ ", maxCountOfapiKeyOperations=" + maxCountOfapiKeyOperations + ", sensitiveWords=" + sensitiveWords
+				+ "]";
 	}
 
 	@PostConstruct

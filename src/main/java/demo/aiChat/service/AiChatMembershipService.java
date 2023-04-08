@@ -24,4 +24,6 @@ public interface AiChatMembershipService {
 
 	GetAiChatMembershipResult getMembershipListFromWechat(String tmpKeyStr);
 
+	AiChatBuyMembershipFromWechatResult __giftMembership(Long wechatUserId, Long membershipId);
+
 }

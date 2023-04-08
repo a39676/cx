@@ -41,7 +41,7 @@ import wechatSdk.pojo.dto.BuyMembershipFromWechatAttachmentDTO;
 public class AiChatMembershipServiceImpl extends AiChatCommonService implements AiChatMembershipService {
 
 	@Autowired
-	private AiChatUserMembershipMapper membershipMapper;
+	private AiChatUserMembershipMapper userMembershipMapper;
 	@Autowired
 	private AiChatUserService userService;
 
@@ -59,7 +59,7 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 		AiChatUserMembershipExample example = new AiChatUserMembershipExample();
 		example.createCriteria().andAiChatUserIdEqualTo(aiChatUserId).andIsDeleteEqualTo(false)
 				.andExpiredTimeGreaterThan(LocalDateTime.now());
-		List<AiChatUserMembership> membershipList = membershipMapper.selectByExample(example);
+		List<AiChatUserMembership> membershipList = userMembershipMapper.selectByExample(example);
 		return membershipList;
 	}
 
@@ -204,7 +204,7 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 		AiChatUserMembershipKey key = new AiChatUserMembershipKey();
 		key.setAiChatUserId(aiChatUserId);
 		key.setMembershipId(membershipDetail.getId());
-		AiChatUserMembership memberShipPO = membershipMapper.selectByPrimaryKey(key);
+		AiChatUserMembership memberShipPO = userMembershipMapper.selectByPrimaryKey(key);
 
 		if (memberShipPO == null) {
 			memberShipPO = new AiChatUserMembership();
@@ -213,7 +213,7 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 			LocalDateTime expiredTime = LocalDateTime.now().with(LocalTime.MAX)
 					.plusDays(membershipDetail.getEffectiveDays() - 1);
 			memberShipPO.setExpiredTime(expiredTime);
-			membershipMapper.insertSelective(memberShipPO);
+			userMembershipMapper.insertSelective(memberShipPO);
 		} else {
 			if (memberShipPO.getIsDelete()) {
 				memberShipPO.setIsDelete(false);
@@ -225,7 +225,7 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 						.plusDays(membershipDetail.getEffectiveDays());
 				memberShipPO.setExpiredTime(expiredTime);
 			}
-			membershipMapper.updateByPrimaryKeySelective(memberShipPO);
+			userMembershipMapper.updateByPrimaryKeySelective(memberShipPO);
 		}
 	}
 
@@ -241,7 +241,7 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 		AiChatUserMembershipExample example = new AiChatUserMembershipExample();
 		example.createCriteria().andMembershipIdEqualTo(membershipDetail.getId()).andIsDeleteEqualTo(false)
 				.andExpiredTimeGreaterThan(LocalDateTime.now());
-		List<AiChatUserMembership> userMemberList = membershipMapper.selectByExample(example);
+		List<AiChatUserMembership> userMemberList = userMembershipMapper.selectByExample(example);
 		if (userMemberList.isEmpty()) {
 			return;
 		}
@@ -259,7 +259,7 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 				.andExpiredTimeLessThan(LocalDateTime.now().with(LocalTime.MIN));
 		AiChatUserMembership row = new AiChatUserMembership();
 		row.setIsDelete(true);
-		membershipMapper.updateByExampleSelective(row, example);
+		userMembershipMapper.updateByExampleSelective(row, example);
 	}
 
 	public CommonResult savePayResult(WechatPayJsApiFeedbackDTO completeDTO, Long aiChatUserId) {
@@ -341,4 +341,61 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 		r.setIsSuccess();
 		return r;
 	}
+
+	@Override
+	public AiChatBuyMembershipFromWechatResult __giftMembership(Long wechatUserId, Long membershipId) {
+		AiChatBuyMembershipFromWechatResult r = new AiChatBuyMembershipFromWechatResult();
+
+		if (membershipId == null) {
+			sendTelegramMessage("赠送会员失败 无对应 membership ID: " + membershipId);
+			r.setMessage("赠送异常, 已通知客服, 请稍后 1x2");
+			return r;
+		}
+
+		AiChatUserMembershipDetailDTO membershipDetail = getMembershipConfigMap().get(membershipId);
+		if (membershipDetail == null) {
+			sendTelegramMessage("赠送会员失败 无对应 membership level detail, membershipId: " + membershipId);
+			r.setMessage("赠送异常, 已通知客服, 请稍后 1x3");
+			return r;
+		}
+
+		Long aiChatUserId = userService.__getAiChatUserIdByWechatUserId(wechatUserId);
+		if (aiChatUserId == null) {
+			sendTelegramMessage("赠送会员失败 无对应 AI chat user ID from weChatUserId: " + wechatUserId);
+			r.setMessage("赠送异常, 已通知客服, 请稍后 1x4");
+			return r;
+		}
+
+		AiChatUserMembershipKey key = new AiChatUserMembershipKey();
+		key.setAiChatUserId(aiChatUserId);
+		key.setMembershipId(membershipId);
+		AiChatUserMembership po = userMembershipMapper.selectByPrimaryKey(key);
+		if (po != null && !po.getIsDelete() && po.getExpiredTime().isAfter(LocalDateTime.now())) {
+			r.setMessage("已经获得赠送");
+			return r;
+		}
+
+		if (membershipDetail.getEffectiveDays() > 0) {
+			insertOrUpdateMembershipRecord(aiChatUserId, membershipDetail);
+		}
+		if (membershipDetail.getDailyBonus() > 0) {
+			userService.recharge(aiChatUserId, AiChatAmountType.BONUS,
+					new BigDecimal(membershipDetail.getDailyBonus()));
+		}
+		if (membershipDetail.getRecharge() > 0) {
+			userService.recharge(aiChatUserId, AiChatAmountType.BONUS, new BigDecimal(membershipDetail.getRecharge()));
+		}
+		if (membershipDetail.getValidDays() != null) {
+//			TODO 未确定如何实现有效期赠送额度 难在实现过期日清理赠送额度, 赠送额度应独立计算, 并优先使用
+		}
+		if (membershipDetail.getBonus() > 0) {
+			userService.recharge(aiChatUserId, AiChatAmountType.BONUS, new BigDecimal(membershipDetail.getBonus()));
+		}
+
+		findMembershipDetailSummaryByUserId(aiChatUserId, true);
+
+		r.setIsSuccess();
+		return r;
+	}
+
 }

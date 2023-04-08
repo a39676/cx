@@ -6,9 +6,12 @@ public class AiChatUserMembershipDetailDTO {
 	private String description;
 	private Integer chatHistoryCountLimit;
 	private Integer dailyBonus;
+	private Integer bonus;
 	private Integer recharge;
 	private Integer effectiveDays;
 	private Double price;
+	private boolean isNormalPlan = false;
+	private Integer validDays;
 
 	public Long getId() {
 		return id;
@@ -66,11 +69,36 @@ public class AiChatUserMembershipDetailDTO {
 		this.price = price;
 	}
 
+	public Integer getBonus() {
+		return bonus;
+	}
+
+	public void setBonus(Integer bonus) {
+		this.bonus = bonus;
+	}
+
+	public boolean getIsNormalPlan() {
+		return isNormalPlan;
+	}
+
+	public void setIsNormalPlan(boolean isNormalPlan) {
+		this.isNormalPlan = isNormalPlan;
+	}
+
+	public Integer getValidDays() {
+		return validDays;
+	}
+
+	public void setValidDays(Integer validDays) {
+		this.validDays = validDays;
+	}
+
 	@Override
 	public String toString() {
 		return "AiChatUserMembershipDetailDTO [id=" + id + ", description=" + description + ", chatHistoryCountLimit="
-				+ chatHistoryCountLimit + ", dailyBonus=" + dailyBonus + ", recharge=" + recharge + ", effectiveDays="
-				+ effectiveDays + ", price=" + price + "]";
+				+ chatHistoryCountLimit + ", dailyBonus=" + dailyBonus + ", bonus=" + bonus + ", recharge=" + recharge
+				+ ", effectiveDays=" + effectiveDays + ", price=" + price + ", isNormalPlan=" + isNormalPlan
+				+ ", validDays=" + validDays + "]";
 	}
 
 }

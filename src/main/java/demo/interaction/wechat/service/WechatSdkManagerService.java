@@ -6,6 +6,4 @@ public interface WechatSdkManagerService {
 
 	EncryptDTO getWechatSdkWechatOption(EncryptDTO dto);
 
-	EncryptDTO getAnnouncement();
-
 }

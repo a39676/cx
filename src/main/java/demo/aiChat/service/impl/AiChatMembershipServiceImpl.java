@@ -328,6 +328,7 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 			vo.setChatHistoryCountLimit(membershipDetail.getChatHistoryCountLimit());
 			vo.setDailyBonus(membershipDetail.getDailyBonus());
 			vo.setPrice(membershipDetail.getPrice());
+			vo.setIsNormalPlan(membershipDetail.getIsNormalPlan());
 			if (summaryVoFromCache != null) {
 				vo.setIsValid(true);
 				vo.setExpiredDatetime(summaryVoFromCache.getExpiredDatetime());

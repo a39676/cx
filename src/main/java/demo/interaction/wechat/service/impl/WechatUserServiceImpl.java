@@ -284,7 +284,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		return encryptDTO(result);
 	}
 
-	public void newUserFromFangZheng(Long wechatUserId, Long membershipId) {
+	private void newUserFromFangZheng(Long wechatUserId, Long membershipId) {
 		aiChatMembershipService.__giftMembership(wechatUserId, membershipId);
 	}
 }

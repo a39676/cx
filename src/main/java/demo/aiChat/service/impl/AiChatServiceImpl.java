@@ -285,8 +285,10 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		OpanAiChatCompletionMessageDTO chatDataDTO = null;
 		if (!msgList.isEmpty()) {
 			for (String line : msgList) {
-				chatDataDTO = new Gson().fromJson(line, OpanAiChatCompletionMessageDTO.class);
-				chatDtoHistory.add(chatDataDTO);
+				if(StringUtils.isNotBlank(line)) {
+					chatDataDTO = new Gson().fromJson(line, OpanAiChatCompletionMessageDTO.class);
+					chatDtoHistory.add(chatDataDTO);
+				}
 			}
 		}
 
@@ -309,7 +311,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		try {
 			BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8);
 			String currentLine = null;
-			while ((currentLine = reader.readLine()) != null) {
+			while (StringUtils.isNotBlank(currentLine = reader.readLine())) {
 				lines.add(currentLine);
 				if (lines.size() > limit) {
 					lines.remove(0);

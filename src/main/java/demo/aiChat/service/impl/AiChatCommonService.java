@@ -90,7 +90,7 @@ public abstract class AiChatCommonService extends ToolCommonService {
 //		PolicyFactory filter = textFilter.getArticleFilter();
 //		return filter.sanitize(content);
 //		return Jsoup.parse(content).text();
-		return content.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("&", "&amp;");
+		return content.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 	}
 
 	protected void insertSensitiveWordHitCountingToRedis(Long aiChatUserId, Integer hitCount, Integer livingMinutes) {

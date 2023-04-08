@@ -302,4 +302,16 @@
       order by ${orderByClause}
     </if>
   </select>
+  <select id="findOpenIdList" resultType="String">
+    select
+      open_id
+    from 
+      wechat_user_detail
+    <where>
+      <if test="index != null">
+        and id &gt; #{index}
+      </if>
+    </where>
+    limit #{limit}
+  </select>
 </mapper>

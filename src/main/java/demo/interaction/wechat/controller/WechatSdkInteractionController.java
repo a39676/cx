@@ -83,4 +83,10 @@ public class WechatSdkInteractionController extends CommonController {
 	public EncryptDTO getPromptOfActAs() {
 		return wechatAiChatService.getPromptOfActAs();
 	}
+
+	@PostMapping(value = AiChatFromWechatSdkUrlConstant.GET_USER_OPEN_ID_LIST)
+	@ResponseBody
+	public EncryptDTO getUserOpenIdList(@RequestBody EncryptDTO dto) {
+		return wechatUserService.getUserOpenIdList(dto);
+	}
 }

@@ -18,5 +18,7 @@ public interface WechatUserService {
 
 	EncryptDTO recordingWechatUserFromParameterizedQrCode(EncryptDTO encrypedDTO);
 
+	EncryptDTO getUserOpenIdList(EncryptDTO encryptedDTO);
+
 
 }

@@ -308,13 +308,12 @@ public class OpenAiUtil extends CommonService {
 
 			ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder()
 					.model(OpenAiModelType.GPT_V_3_5.getName()).temperature(0.8).messages(sdkMsgList)
-//				    .maxTokens(maxToken) // TODO
 					.n(1).build();
 
-			ChatCompletionResult result = openAiService.createChatCompletion(chatCompletionRequest);
+			ChatCompletionResult sdkResult = openAiService.createChatCompletion(chatCompletionRequest);
 
 			OpanAiChatCompletionResponseDTO resultDto = new OpanAiChatCompletionResponseDTO();
-			List<ChatCompletionChoice> sdkChoices = result.getChoices();
+			List<ChatCompletionChoice> sdkChoices = sdkResult.getChoices();
 			ChatCompletionChoice sdkChoice = sdkChoices.get(0);
 			OpanAiChatCompletionResponseChoiceDTO choice = new OpanAiChatCompletionResponseChoiceDTO();
 			choice.setFinish_reason(sdkChoice.getFinishReason());

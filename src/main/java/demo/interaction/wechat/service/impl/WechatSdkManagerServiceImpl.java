@@ -26,4 +26,9 @@ public class WechatSdkManagerServiceImpl extends WechatCommonService implements 
 
 		return encryptDTO(dto);
 	}
+	
+	@Override
+	public EncryptDTO getAnnouncement() {
+		return encryptDTO(wechatOptionService.getAnnouncementStr());
+	}
 }

@@ -31,13 +31,15 @@ public class WechatOptionService extends CommonService {
 	private String appId1;
 	private String appSecret1;
 	private String originOpenId1;
+	private String announcementStr;
 
 	@Override
 	public String toString() {
 		return "WechatOptionService [managerCode=" + managerCode + ", sdkMainUrl=" + sdkMainUrl
 				+ ", accessTokenLivingSecond=" + accessTokenLivingSecond + ", aesKey=" + aesKey + ", aesInitVector="
 				+ aesInitVector + ", appTestId=" + appTestId + ", appTestSecret=" + appTestSecret + ", appId1=" + appId1
-				+ ", appSecret1=" + appSecret1 + ", orignOpenId1=" + originOpenId1 + "]";
+				+ ", appSecret1=" + appSecret1 + ", originOpenId1=" + originOpenId1 + ", announcementStr="
+				+ announcementStr + "]";
 	}
 
 	public String getManagerCode() {
@@ -118,6 +120,14 @@ public class WechatOptionService extends CommonService {
 
 	public void setOriginOpenId1(String originOpenId1) {
 		this.originOpenId1 = originOpenId1;
+	}
+
+	public String getAnnouncementStr() {
+		return announcementStr;
+	}
+
+	public void setAnnouncementStr(String announcementStr) {
+		this.announcementStr = announcementStr;
 	}
 
 	@PostConstruct

@@ -6,6 +6,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -95,12 +96,13 @@ public class OpenAiUtil extends CommonService {
 		return "";
 	}
 
-	public OpenAiChatCompletionSendMessageResult sendChatCompletionFromUI(List<OpanAiChatCompletionMessageDTO> chatHistory) {
+	public OpenAiChatCompletionSendMessageResult sendChatCompletionFromUI(
+			List<OpanAiChatCompletionMessageDTO> chatHistory) {
 		return sendChatCompletionFromUI(chatHistory, null);
 	}
 
-	public OpenAiChatCompletionSendMessageResult sendChatCompletionFromUI(List<OpanAiChatCompletionMessageDTO> chatHistory,
-			String msg) {
+	public OpenAiChatCompletionSendMessageResult sendChatCompletionFromUI(
+			List<OpanAiChatCompletionMessageDTO> chatHistory, String msg) {
 		OpenAiChatCompletionSendMessageResult r = new OpenAiChatCompletionSendMessageResult();
 		if (chatHistory == null) {
 			chatHistory = new ArrayList<>();
@@ -164,20 +166,21 @@ public class OpenAiUtil extends CommonService {
 
 		return r;
 	}
-	
+
 	public JSONObject sendChatCompletionFromApi(AiChatSendNewMsgFromApiDTO inputDTO) {
 		JSONObject j = new JSONObject();
-		
+
 		if (systemOptionService.isDev()) {
-			OpenAiChatCompletionSendMessageResult mockResult = createFakeMessageResult("demo msg");
+			OpenAiChatCompletionSendMessageResult mockResult = createFakeMessageResult(
+					"demo msg at: " + LocalDateTime.now());
 			OpanAiChatCompletionResponseDTO mockMsg = mockResult.getDto();
 			j = JSONObject.fromObject(mockMsg);
 			return j;
 		}
-		
+
 		AiChatSendNewMsgFromApiDTO newDTO = new AiChatSendNewMsgFromApiDTO();
 		newDTO.setApiKey(null);
-		newDTO.setModel(inputDTO.getModel());
+		newDTO.setModel(OpenAiModelType.GPT_V_3_5.getName());
 		newDTO.setMessages(inputDTO.getMessages());
 		newDTO.setTemperature(inputDTO.getTemperature());
 		newDTO.setTop_p(inputDTO.getTop_p());
@@ -218,7 +221,7 @@ public class OpenAiUtil extends CommonService {
 			}
 			in.close();
 			j = JSONObject.fromObject(response);
-			
+
 			return j;
 
 		} catch (Exception e) {
@@ -357,8 +360,7 @@ public class OpenAiUtil extends CommonService {
 			}
 
 			ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder()
-					.model(OpenAiModelType.GPT_V_3_5.getName()).temperature(0.8).messages(sdkMsgList)
-					.n(1).build();
+					.model(OpenAiModelType.GPT_V_3_5.getName()).temperature(0.8).messages(sdkMsgList).n(1).build();
 
 			ChatCompletionResult sdkResult = openAiService.createChatCompletion(chatCompletionRequest);
 

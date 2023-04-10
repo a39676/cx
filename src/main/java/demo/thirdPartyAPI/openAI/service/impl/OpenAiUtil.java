@@ -179,7 +179,6 @@ public class OpenAiUtil extends CommonService {
 		}
 
 		AiChatSendNewMsgFromApiDTO newDTO = new AiChatSendNewMsgFromApiDTO();
-		newDTO.setApiKey(null);
 		newDTO.setModel(OpenAiModelType.GPT_V_3_5.getName());
 		newDTO.setMessages(inputDTO.getMessages());
 		newDTO.setTemperature(inputDTO.getTemperature());
@@ -195,6 +194,7 @@ public class OpenAiUtil extends CommonService {
 			URL url = new URL(CHAT_API);
 
 			JSONObject parameterJson = JSONObject.fromObject(newDTO);
+			parameterJson.remove("apiKey");
 			if (inputDTO.getTemperature() == null) {
 				parameterJson.remove("temperature");
 			}
@@ -351,7 +351,7 @@ public class OpenAiUtil extends CommonService {
 		return r;
 	}
 
-	public OpenAiChatCompletionSendMessageResult sendChatCompletionWithSdk(
+	public OpenAiChatCompletionSendMessageResult sendChatCompletionFromUIWithSdk(
 			List<OpanAiChatCompletionMessageDTO> chatHistory, String msg, Integer maxToken) {
 		OpenAiChatCompletionSendMessageResult r = new OpenAiChatCompletionSendMessageResult();
 		if (chatHistory == null) {
@@ -423,5 +423,60 @@ public class OpenAiUtil extends CommonService {
 		}
 
 		return r;
+	}
+	
+	public void sendChatCompletionFromUIWithSdk(AiChatSendNewMsgFromApiDTO inputDTO) {
+		try {
+			OpenAiService openAiService = new OpenAiService(optionService.getApiKey(), Duration.ofSeconds(10));
+
+			List<ChatMessage> sdkMsgList = new ArrayList<>();
+			for (OpanAiChatCompletionMessageDTO chat : inputDTO.getMessages()) {
+				ChatMessage sdkDto = new ChatMessage();
+				sdkDto.setContent(chat.getContent());
+				sdkDto.setRole(chat.getRole());
+				sdkMsgList.add(sdkDto);
+			}
+
+			ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder()
+					.model(OpenAiModelType.GPT_V_3_5.getName())
+					.temperature(inputDTO.getTemperature())
+					.messages(sdkMsgList).topP(inputDTO.getTop_p())
+					.frequencyPenalty(inputDTO.getFrequency_penalty())
+					.presencePenalty(inputDTO.getPresence_penalty())
+					.logitBias(inputDTO.getLogit_bias())
+					.n(1).build();
+
+			ChatCompletionResult sdkResult = openAiService.createChatCompletion(chatCompletionRequest);
+			log.error(sdkResult.toString());
+
+			OpanAiChatCompletionResponseDTO resultDto = new OpanAiChatCompletionResponseDTO();
+			List<ChatCompletionChoice> sdkChoices = sdkResult.getChoices();
+			ChatCompletionChoice sdkChoice = sdkChoices.get(0);
+			OpanAiChatCompletionResponseChoiceDTO choice = new OpanAiChatCompletionResponseChoiceDTO();
+			choice.setFinish_reason(sdkChoice.getFinishReason());
+			choice.setIndex(sdkChoice.getIndex());
+			ChatMessage sdkMsg = sdkChoice.getMessage();
+			OpanAiChatCompletionMessageDTO dtoMsg = new OpanAiChatCompletionMessageDTO();
+			dtoMsg.setContent(sdkMsg.getContent());
+			dtoMsg.setRole(sdkMsg.getRole());
+			choice.setMessage(dtoMsg);
+			resultDto.addChoices(choice);
+			resultDto.setCreated(resultDto.getCreated());
+			resultDto.setId(resultDto.getId());
+			resultDto.setModel(resultDto.getModel());
+			resultDto.setObject(resultDto.getObject());
+			OpanAiChatCompletionResponseUsageDTO sdkUsage = resultDto.getUsage();
+			OpanAiChatCompletionResponseUsageDTO dtoUsage = new OpanAiChatCompletionResponseUsageDTO();
+			dtoUsage.setCompletion_tokens(sdkUsage.getCompletion_tokens());
+			dtoUsage.setPrompt_tokens(sdkUsage.getPrompt_tokens());
+			dtoUsage.setTotal_tokens(sdkUsage.getTotal_tokens());
+			resultDto.setUsage(dtoUsage);
+
+
+		} catch (Exception e) {
+			log.error("Open AI error: " + e.getLocalizedMessage());
+			e.printStackTrace();
+		}
+
 	}
 }

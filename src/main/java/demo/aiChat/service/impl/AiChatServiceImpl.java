@@ -98,7 +98,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		// check amount
 		int totalAmount = userDetail.getBonusAmount().intValue() + userDetail.getRechargeAmount().intValue();
 		if (totalAmount <= 0) {
-			errorMsg.put("message", "电量不足, 请充电或留意签到活动");
+			errorMsg.put("message", "电量不足, 请到个人中心购买充电包 签到, 或留意其他活动");
 			r.put("error", errorMsg);
 			return r;
 		}
@@ -173,7 +173,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		if (totalAmount <= 0) {
 			r.setUsage(0);
 			OpanAiChatCompletionMessageDTO feedbackMsgDTO = new OpanAiChatCompletionMessageDTO();
-			feedbackMsgDTO.setContent("电量不足, 请充电或留意签到活动");
+			feedbackMsgDTO.setContent("电量不足, 请到个人中心购买充电包 签到, 或留意其他活动");
 			feedbackMsgDTO.setRole(OpenAiChatCompletionMessageRoleType.ASSISTANT.getName());
 			r.setMsgDTO(feedbackMsgDTO);
 			r.setFinishType(OpenAiChatCompletionFinishType.STOP);

@@ -182,19 +182,36 @@ public class OpenAiUtil extends CommonService {
 		newDTO.setApiKey(null);
 		newDTO.setModel(OpenAiModelType.GPT_V_3_5.getName());
 		newDTO.setMessages(inputDTO.getMessages());
-		newDTO.setTemperature(inputDTO.getTemperature());
-		newDTO.setTop_p(inputDTO.getTop_p());
-		newDTO.setN(inputDTO.getN());
-		newDTO.setStop(inputDTO.getStop());
-		newDTO.setMax_tokens(inputDTO.getMax_tokens());
-		newDTO.setPresence_penalty(inputDTO.getPresence_penalty());
-		newDTO.setFrequency_penalty(inputDTO.getFrequency_penalty());
-		newDTO.setLogit_bias(inputDTO.getLogit_bias());
+		if (inputDTO.getTemperature() != null) {
+			newDTO.setTemperature(inputDTO.getTemperature());
+		}
+		if (inputDTO.getTop_p() != null) {
+			newDTO.setTop_p(inputDTO.getTop_p());
+		}
+		if (inputDTO.getN() != null) {
+			newDTO.setN(inputDTO.getN());
+		}
+		if (inputDTO.getStop() != null) {
+			newDTO.setStop(inputDTO.getStop());
+		}
+		if (inputDTO.getMax_tokens() != null) {
+			newDTO.setMax_tokens(inputDTO.getMax_tokens());
+		}
+		if (inputDTO.getPresence_penalty() != null) {
+			newDTO.setPresence_penalty(inputDTO.getPresence_penalty());
+		}
+		if (inputDTO.getFrequency_penalty() != null) {
+			newDTO.setFrequency_penalty(inputDTO.getFrequency_penalty());
+		}
+		if (inputDTO.getLogit_bias() != null) {
+			newDTO.setLogit_bias(inputDTO.getLogit_bias());
+		}
 
 		try {
 			URL url = new URL(CHAT_API);
 
 			JSONObject parameterJson = JSONObject.fromObject(newDTO);
+			log.error("parameter json: " + parameterJson);
 
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("POST");

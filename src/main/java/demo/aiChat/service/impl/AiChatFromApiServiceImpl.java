@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import aiChat.pojo.dto.AiChatSendNewMsgFromApiDTO;
-import aiChat.pojo.result.AiChatSendNewMessageResult;
 import aiChat.pojo.result.FindAllApiKeysResult;
 import aiChat.pojo.result.GenerateNewApiKeyResult;
 import auxiliaryCommon.pojo.result.CommonResult;
@@ -18,6 +17,7 @@ import demo.aiChat.pojo.po.AiChatApiKey;
 import demo.aiChat.pojo.po.AiChatApiKeyExample;
 import demo.aiChat.service.AiChatFromApiService;
 import demo.aiChat.service.AiChatService;
+import net.sf.json.JSONObject;
 
 @Service
 public class AiChatFromApiServiceImpl extends AiChatCommonService implements AiChatFromApiService {
@@ -28,47 +28,15 @@ public class AiChatFromApiServiceImpl extends AiChatCommonService implements AiC
 	private AiChatApiKeyMapper apiKeyMapper;
 
 	@Override
-	public AiChatSendNewMessageResult sendNewChatMessage(AiChatSendNewMsgFromApiDTO dto) {
-		AiChatSendNewMessageResult r = new AiChatSendNewMessageResult();
-		if (StringUtils.isBlank(dto.getApiKey())) {
-			r.setMessage("API key error");
-			return r;
-		}
-
-		Long aiChatUserId = cacheService.getApiKeyCacheMap().get(dto.getApiKey());
-		AiChatApiKey po = null;
-		if (aiChatUserId == null) {
-			Long apiKeyDecrypt = systemOptionService.decryptPrivateKey(dto.getApiKey());
-			if (apiKeyDecrypt == null) {
-				r.setMessage("API key expired, please generate a new one");
-				return r;
-			}
-
-			po = apiKeyMapper.selectByPrimaryKey(apiKeyDecrypt);
-			if (po == null) {
-				r.setMessage("API key expired, please generate a new one");
-				return r;
-			}
-
-			cacheService.getApiKeyCacheMap().put(dto.getApiKey(), aiChatUserId);
-		}
-
-		po.setLastUsedTime(LocalDateTime.now());
-		apiKeyMapper.updateByPrimaryKeySelective(po);
-
-		return aiChatService.sendNewChatMessageFromApi(aiChatUserId, dto);
-	}
-
-	@Override
 	public GenerateNewApiKeyResult generateNewApiKey(String tmpKey) {
 		GenerateNewApiKeyResult r = new GenerateNewApiKeyResult();
 
 		Long aiChatUserId = getAiChatUserIdByTempKey(tmpKey);
-		if(aiChatUserId == null) {
+		if (aiChatUserId == null) {
 			r.setMessage("过期 ID, 请先退出后重新登录");
 			return r;
 		}
-		
+
 		Integer operationsCounter = cacheService.getApiKeyOperationCounterDaily().get(aiChatUserId);
 		if (operationsCounter == null) {
 			operationsCounter = 0;
@@ -117,9 +85,9 @@ public class AiChatFromApiServiceImpl extends AiChatCommonService implements AiC
 			r.setIsSuccess();
 			return r;
 		}
-		
+
 		Long aiChatUserId = getAiChatUserIdByTempKey(tmpKey);
-		if(aiChatUserId == null) {
+		if (aiChatUserId == null) {
 			r.setMessage("过期 ID, 请先重新登录");
 			return r;
 		}
@@ -152,13 +120,13 @@ public class AiChatFromApiServiceImpl extends AiChatCommonService implements AiC
 	@Override
 	public FindAllApiKeysResult findAllApiKeysByAiChatUserId(String tmpKey) {
 		FindAllApiKeysResult r = new FindAllApiKeysResult();
-		
+
 		Long aiChatUserId = getAiChatUserIdByTempKey(tmpKey);
-		if(aiChatUserId == null) {
+		if (aiChatUserId == null) {
 			r.setMessage("过期 ID, 请先退出后重新登录");
 			return r;
 		}
-		
+
 		AiChatApiKeyExample example = new AiChatApiKeyExample();
 		example.createCriteria().andAiChatUserIdEqualTo(aiChatUserId).andIsDeleteEqualTo(false);
 		List<AiChatApiKey> apiKeyPoList = apiKeyMapper.selectByExample(example);
@@ -177,5 +145,44 @@ public class AiChatFromApiServiceImpl extends AiChatCommonService implements AiC
 		r.setApiKeyList(apiKeyList);
 		r.setIsSuccess();
 		return r;
+	}
+
+	@Override
+	public JSONObject sendNewChatMessage(AiChatSendNewMsgFromApiDTO dto) {
+		JSONObject r = new JSONObject();
+		JSONObject errorMsg = new JSONObject();
+
+		if (StringUtils.isBlank(dto.getApiKey())) {
+			errorMsg.put("message", "API key error");
+			r.put("error", errorMsg);
+			return r;
+		}
+
+		Long aiChatUserId = cacheService.getApiKeyCacheMap().get(dto.getApiKey());
+		AiChatApiKey po = null;
+		Long apiKeyDecrypt = systemOptionService.decryptPrivateKey(dto.getApiKey());
+
+		if (aiChatUserId == null) {
+			if (apiKeyDecrypt == null) {
+				errorMsg.put("message", "API key expired, please generate a new one");
+				r.put("error", errorMsg);
+				return r;
+			}
+
+			po = apiKeyMapper.selectByPrimaryKey(apiKeyDecrypt);
+			if (po == null || po.getIsDelete()) {
+				errorMsg.put("message", "API key expired, please generate a new one");
+				r.put("error", errorMsg);
+				return r;
+			}
+			aiChatUserId = po.getAiChatUserId();
+			cacheService.getApiKeyCacheMap().put(dto.getApiKey(), aiChatUserId);
+		}
+
+		po = apiKeyMapper.selectByPrimaryKey(apiKeyDecrypt);
+		po.setLastUsedTime(LocalDateTime.now());
+		apiKeyMapper.updateByPrimaryKeySelective(po);
+
+		return aiChatService.sendNewChatMessageFromApi(aiChatUserId, dto);
 	}
 }

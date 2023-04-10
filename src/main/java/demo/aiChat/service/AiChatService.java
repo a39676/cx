@@ -4,6 +4,7 @@ import aiChat.pojo.dto.AiChatSendNewMsgFromApiDTO;
 import aiChat.pojo.dto.AiChatSendNewMsgFromWechatDTO;
 import aiChat.pojo.result.AiChatSendNewMessageResult;
 import aiChat.pojo.result.GetAiChatHistoryResult;
+import net.sf.json.JSONObject;
 
 public interface AiChatService {
 
@@ -11,6 +12,6 @@ public interface AiChatService {
 
 	GetAiChatHistoryResult findChatHistoryByAiChatUserIdToFrontEnd(Long aiChatUserId);
 
-	AiChatSendNewMessageResult sendNewChatMessageFromApi(Long aiChatUserId, AiChatSendNewMsgFromApiDTO dto);
+	JSONObject sendNewChatMessageFromApi(Long aiChatUserId, AiChatSendNewMsgFromApiDTO dto);
 
 }

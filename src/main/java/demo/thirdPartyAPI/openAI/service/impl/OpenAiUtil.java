@@ -8,6 +8,7 @@ import java.net.URL;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +22,7 @@ import com.theokanning.openai.completion.chat.ChatCompletionResult;
 import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.service.OpenAiService;
 
+import aiChat.pojo.dto.AiChatSendNewMsgFromApiDTO;
 import demo.base.system.service.impl.SystemOptionService;
 import demo.common.service.CommonService;
 import net.sf.json.JSONArray;
@@ -93,22 +95,12 @@ public class OpenAiUtil extends CommonService {
 		return "";
 	}
 
-	public OpenAiChatCompletionSendMessageResult sendChatCompletion(List<OpanAiChatCompletionMessageDTO> chatHistory,
+	public OpenAiChatCompletionSendMessageResult sendChatCompletionFromUI(List<OpanAiChatCompletionMessageDTO> chatHistory) {
+		return sendChatCompletionFromUI(chatHistory, null);
+	}
+
+	public OpenAiChatCompletionSendMessageResult sendChatCompletionFromUI(List<OpanAiChatCompletionMessageDTO> chatHistory,
 			String msg) {
-		return sendChatCompletion(chatHistory, msg, optionService.getMaxTokens());
-	}
-
-	public OpenAiChatCompletionSendMessageResult sendChatCompletion(String msg) {
-		return sendChatCompletion(null, msg, optionService.getMaxTokens());
-	}
-
-	public OpenAiChatCompletionSendMessageResult sendChatCompletion(List<OpanAiChatCompletionMessageDTO> chatHistory,
-			Integer maxToken) {
-		return sendChatCompletion(chatHistory, null, maxToken);
-	}
-
-	public OpenAiChatCompletionSendMessageResult sendChatCompletion(List<OpanAiChatCompletionMessageDTO> chatHistory,
-			String msg, Integer maxToken) {
 		OpenAiChatCompletionSendMessageResult r = new OpenAiChatCompletionSendMessageResult();
 		if (chatHistory == null) {
 			chatHistory = new ArrayList<>();
@@ -116,10 +108,6 @@ public class OpenAiUtil extends CommonService {
 
 		if (systemOptionService.isDev()) {
 			return createFakeMessageResult(msg);
-		}
-
-		if (maxToken == null) {
-			maxToken = optionService.getMaxTokens();
 		}
 
 		try {
@@ -133,7 +121,7 @@ public class OpenAiUtil extends CommonService {
 				chatHistory.add(newChatMsg);
 			}
 
-			parameterJson = buildChatCompletionsParamJson(chatHistory, maxToken);
+			parameterJson = buildChatCompletionsParamJson(chatHistory);
 
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("POST");
@@ -175,6 +163,70 @@ public class OpenAiUtil extends CommonService {
 		}
 
 		return r;
+	}
+	
+	public JSONObject sendChatCompletionFromApi(AiChatSendNewMsgFromApiDTO inputDTO) {
+		JSONObject j = new JSONObject();
+		
+		if (systemOptionService.isDev()) {
+			OpenAiChatCompletionSendMessageResult mockResult = createFakeMessageResult("demo msg");
+			OpanAiChatCompletionResponseDTO mockMsg = mockResult.getDto();
+			j = JSONObject.fromObject(mockMsg);
+			return j;
+		}
+		
+		AiChatSendNewMsgFromApiDTO newDTO = new AiChatSendNewMsgFromApiDTO();
+		newDTO.setApiKey(null);
+		newDTO.setModel(inputDTO.getModel());
+		newDTO.setMessages(inputDTO.getMessages());
+		newDTO.setTemperature(inputDTO.getTemperature());
+		newDTO.setTop_p(inputDTO.getTop_p());
+		newDTO.setN(inputDTO.getN());
+		newDTO.setStop(inputDTO.getStop());
+		newDTO.setMax_tokens(inputDTO.getMax_tokens());
+		newDTO.setPresence_penalty(inputDTO.getPresence_penalty());
+		newDTO.setFrequency_penalty(inputDTO.getFrequency_penalty());
+		newDTO.setLogit_bias(inputDTO.getLogit_bias());
+
+		try {
+			URL url = new URL(CHAT_API);
+
+			JSONObject parameterJson = JSONObject.fromObject(newDTO);
+
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			con.setRequestMethod("POST");
+			con.setRequestProperty("Content-Type", "application/json");
+			con.setRequestProperty("Authorization", "Bearer " + optionService.getApiKey());
+			con.setDoOutput(true);
+			OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
+			writer.write(parameterJson.toString());
+			writer.flush();
+			writer.close();
+			con.getOutputStream().close();
+
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuffer response = new StringBuffer();
+
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+
+			int responseCode = con.getResponseCode();
+			if (responseCode != HttpURLConnection.HTTP_OK) {
+				log.error("OpenAI message from API request failed: " + response.toString());
+			}
+			in.close();
+			j = JSONObject.fromObject(response);
+			
+			return j;
+
+		} catch (Exception e) {
+			log.error("Open AI message from API error: " + e.getLocalizedMessage());
+			e.printStackTrace();
+			j.put("error", "service error, please call admin");
+			return j;
+		}
 	}
 
 	public String notFinishYet_queryModels() {
@@ -229,8 +281,7 @@ public class OpenAiUtil extends CommonService {
 		return json;
 	}
 
-	private JSONObject buildChatCompletionsParamJson(List<OpanAiChatCompletionMessageDTO> chatHistory,
-			Integer maxToken) {
+	private JSONObject buildChatCompletionsParamJson(List<OpanAiChatCompletionMessageDTO> chatHistory) {
 		/* Reference: https://platform.openai.com/docs/api-reference/chat/create */
 		JSONObject parameterJson = new JSONObject();
 		parameterJson.put("model", OpenAiModelType.GPT_V_3_5.getName());
@@ -243,8 +294,6 @@ public class OpenAiUtil extends CommonService {
 
 		parameterJson.put("messages", messageArray);
 
-//		parameterJson.put("max_tokens", maxToken); 
-		// 暂时无法计算输入部分的 tokens, chat GPT 3.5 默认最大收发 4000 tokens, 单次超额计费不多, 暂时停止处理此参数
 		return parameterJson;
 	}
 
@@ -269,6 +318,7 @@ public class OpenAiUtil extends CommonService {
 		usage.setPrompt_tokens(2);
 		usage.setTotal_tokens(3);
 		dto.setUsage(usage);
+		dto.setCreated(new Date().getTime() / 1000);
 		r.setDto(dto);
 		return r;
 	}

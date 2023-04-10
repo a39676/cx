@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.rememberme.JdbcTokenRepos
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import aiChat.pojo.constant.AiChatApiUrlConstant;
 import aiChat.pojo.constant.AiChatFromWechatSdkUrlConstant;
 import demo.aiChat.pojo.constant.AiChatUrlConstant;
 import demo.article.article.pojo.constant.ArticleAdminUrlConstant;
@@ -174,6 +175,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	    .antMatchers(AiChatFromWechatSdkUrlConstant.ROOT + "/**")
 	    .antMatchers(WechatPaySdkUrlConstant.ROOT + "/**")
 	    .antMatchers(WechatSdkUrlConstant.ROOT + "/**")
+	    .antMatchers(AiChatApiUrlConstant.ROOT + "/**")
 	    ;
 	}
 	

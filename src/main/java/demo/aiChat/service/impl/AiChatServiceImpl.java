@@ -36,6 +36,7 @@ import demo.aiChat.service.AiChatService;
 import demo.base.system.service.HostnameService;
 import net.sf.json.JSONObject;
 import openAi.pojo.dto.OpanAiChatCompletionMessageDTO;
+import openAi.pojo.dto.OpanAiChatCompletionResponseDTO;
 import openAi.pojo.result.OpenAiChatCompletionSendMessageResult;
 import openAi.pojo.type.OpenAiChatCompletionFinishType;
 import openAi.pojo.type.OpenAiChatCompletionMessageRoleType;
@@ -60,11 +61,12 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 	private FileUtilCustom ioUtil;
 
 	@Override
-	public AiChatSendNewMessageResult sendNewChatMessageFromApi(Long aiChatUserId, AiChatSendNewMsgFromApiDTO dto) {
-		AiChatSendNewMessageResult r = new AiChatSendNewMessageResult();
+	public JSONObject sendNewChatMessageFromApi(Long aiChatUserId, AiChatSendNewMsgFromApiDTO dto) {
+		JSONObject r = new JSONObject();
+		JSONObject errorMsg = new JSONObject();
 
 		int sensitiveWordCounting = 0;
-		for (OpanAiChatCompletionMessageDTO msg : dto.getMsgList()) {
+		for (OpanAiChatCompletionMessageDTO msg : dto.getMessages()) {
 			sensitiveWordCounting = sensitiveWordCounting + sensitiveWordCount(msg.getContent());
 		}
 		if (sensitiveWordCounting > 0) {
@@ -82,53 +84,51 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 			}
 		}
 
-		// check amount
 		AiChatUserDetail userDetail = detailMapper.selectByPrimaryKey(aiChatUserId);
 		if (userDetail == null) {
-			r.setMessage("请刷新页面后登录, 或者输入 API key, 如仍旧异常, 请联系管理员");
+			errorMsg.put("message", "请输入正确 API key");
+			r.put("error", errorMsg);
 			return r;
 		}
 		if (userDetail.getIsBlock()) {
-			r.setCode("-10");
+			errorMsg.put("message", "Profile error, 请联系管理员");
+			r.put("error", errorMsg);
 			return r;
 		}
+		// check amount
 		int totalAmount = userDetail.getBonusAmount().intValue() + userDetail.getRechargeAmount().intValue();
 		if (totalAmount <= 0) {
-			r.setUsage(0);
-			OpanAiChatCompletionMessageDTO feedbackMsgDTO = new OpanAiChatCompletionMessageDTO();
-			feedbackMsgDTO.setContent("电量不足, 请充电或留意签到活动");
-			feedbackMsgDTO.setRole(OpenAiChatCompletionMessageRoleType.ASSISTANT.getName());
-			r.setMsgDTO(feedbackMsgDTO);
-			r.setFinishType(OpenAiChatCompletionFinishType.STOP);
-			r.setIsSuccess();
+			errorMsg.put("message", "电量不足, 请充电或留意签到活动");
+			r.put("error", errorMsg);
 			return r;
-		}
-
-		int maxTokens = optionService.getInputMaxLength();
-		if (maxTokens > totalAmount) {
-			maxTokens = totalAmount;
 		}
 
 		// send new msg, wait feedback
-		OpenAiChatCompletionSendMessageResult apiResult = util.sendChatCompletion(dto.getMsgList(), maxTokens);
+		JSONObject apiResult = util.sendChatCompletionFromApi(dto);
 
 		// if fail, send fail response
-		if (apiResult.isFail()) {
-			r.setMessage("运算异常, 正在排查故障");
-			sendTelegramMessage(apiResult.getMessage());
+		if (apiResult.containsKey("error")) {
+			errorMsg.put("message", "运算异常, 正在排查故障");
+			r.put("error", errorMsg);
+			sendTelegramMessage("AI chat from API failed: " + apiResult.toString());
+			return r;
+		}
+
+		OpanAiChatCompletionResponseDTO apiFeedbackDTO = null;
+		try {
+			apiFeedbackDTO = new Gson().fromJson(apiResult.toString(), OpanAiChatCompletionResponseDTO.class);
+		} catch (Exception e) {
+			errorMsg.put("message", "运算异常, 正在排查故障");
+			r.put("error", errorMsg);
+			sendTelegramMessage("AI chat from API result convent to DTO failed: " + apiResult.toString());
 			return r;
 		}
 
 		// if success, debit amount, send feedback
-		Integer totalTokens = apiResult.getDto().getUsage().getTotal_tokens();
+		Integer totalTokens = apiFeedbackDTO.getUsage().getTotal_tokens();
 		debitAmountAndAddTokenUsage(userDetail, new BigDecimal(totalTokens));
-		OpanAiChatCompletionMessageDTO feedbackMsgDTO = apiResult.getDto().getChoices().get(0).getMessage();
 
-		r.setUsage(apiResult.getDto().getUsage().getTotal_tokens());
-		r.setMsgDTO(feedbackMsgDTO);
-		r.setFinishType(
-				OpenAiChatCompletionFinishType.getType(apiResult.getDto().getChoices().get(0).getFinish_reason()));
-		r.setIsSuccess();
+		r = JSONObject.fromObject(apiResult);
 		return r;
 	}
 
@@ -180,11 +180,6 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 			return r;
 		}
 
-		int maxTokens = optionService.getInputMaxLength();
-		if (maxTokens > totalAmount) {
-			maxTokens = totalAmount;
-		}
-
 //		find chat saving limit counting
 		AiChatUserMembershipDetailSummaryDTO membershipDetail = membershipService
 				.findMembershipDetailSummaryFromCacheByUserIdWithoutRefresh(aiChatUserId);
@@ -208,7 +203,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		}
 
 		// send history + new msg, wait feedback
-		OpenAiChatCompletionSendMessageResult apiResult = util.sendChatCompletion(chatHistory, dto.getMsg(), maxTokens);
+		OpenAiChatCompletionSendMessageResult apiResult = util.sendChatCompletionFromUI(chatHistory, dto.getMsg());
 
 		// if fail, send fail response
 		if (apiResult.isFail()) {
@@ -256,7 +251,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 			r.setIsSuccess();
 			return r;
 		}
-		
+
 		for (OpanAiChatCompletionMessageDTO msgDTO : sourceList) {
 			msgDTO.setContent(sanitize(msgDTO.getContent()));
 			msgDTO.setContent(msgDTO.getContent().replaceAll("\\n", "<br>"));
@@ -285,7 +280,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		OpanAiChatCompletionMessageDTO chatDataDTO = null;
 		if (!msgList.isEmpty()) {
 			for (String line : msgList) {
-				if(StringUtils.isNotBlank(line)) {
+				if (StringUtils.isNotBlank(line)) {
 					chatDataDTO = new Gson().fromJson(line, OpanAiChatCompletionMessageDTO.class);
 					chatDtoHistory.add(chatDataDTO);
 				}

@@ -20,5 +20,10 @@ public interface WechatUserService {
 
 	EncryptDTO getUserOpenIdList(EncryptDTO encryptedDTO);
 
+	EncryptDTO generateNewApiKey(EncryptDTO encryptedDTO);
+
+	EncryptDTO deleteApiKey(EncryptDTO encryptedDTO);
+
+	EncryptDTO findAllApiKeysByAiChatUserId(EncryptDTO encryptedDTO);
 
 }

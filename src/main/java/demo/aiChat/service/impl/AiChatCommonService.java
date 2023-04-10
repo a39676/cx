@@ -40,7 +40,7 @@ public abstract class AiChatCommonService extends ToolCommonService {
 
 	protected CommonResult notEnoughtAmount() {
 		CommonResult r = new CommonResult();
-		r.setMessage("电量不足, 请充电或留意签到活动");
+		r.setMessage("电量不足, 请到\"个人中心\"充电或留意签到活动");
 		return r;
 	}
 

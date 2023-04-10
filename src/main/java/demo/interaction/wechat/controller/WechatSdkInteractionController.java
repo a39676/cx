@@ -89,4 +89,22 @@ public class WechatSdkInteractionController extends CommonController {
 	public EncryptDTO getUserOpenIdList(@RequestBody EncryptDTO dto) {
 		return wechatUserService.getUserOpenIdList(dto);
 	}
+
+	@PostMapping(value = AiChatFromWechatSdkUrlConstant.GETNERATE_NEW_API_KEY)
+	@ResponseBody
+	public EncryptDTO generateNewApiKey(@RequestBody EncryptDTO dto) {
+		return wechatUserService.generateNewApiKey(dto);
+	}
+
+	@PostMapping(value = AiChatFromWechatSdkUrlConstant.DELETE_API_KEY)
+	@ResponseBody
+	public EncryptDTO deleteApiKey(@RequestBody EncryptDTO dto) {
+		return wechatUserService.deleteApiKey(dto);
+	}
+
+	@PostMapping(value = AiChatFromWechatSdkUrlConstant.FIND_ALL_API_KEYS)
+	@ResponseBody
+	public EncryptDTO findAllApiKeysByAiChatUserId(@RequestBody EncryptDTO dto) {
+		return wechatUserService.findAllApiKeysByAiChatUserId(dto);
+	}
 }

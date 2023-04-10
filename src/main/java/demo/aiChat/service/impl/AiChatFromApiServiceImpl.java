@@ -60,14 +60,20 @@ public class AiChatFromApiServiceImpl extends AiChatCommonService implements AiC
 	}
 
 	@Override
-	public GenerateNewApiKeyResult generateNewApiKey(Long aiChatUserId) {
+	public GenerateNewApiKeyResult generateNewApiKey(String tmpKey) {
 		GenerateNewApiKeyResult r = new GenerateNewApiKeyResult();
 
+		Long aiChatUserId = getAiChatUserIdByTempKey(tmpKey);
+		if(aiChatUserId == null) {
+			r.setMessage("过期 ID, 请先退出后重新登录");
+			return r;
+		}
+		
 		Integer operationsCounter = cacheService.getApiKeyOperationCounterDaily().get(aiChatUserId);
 		if (operationsCounter == null) {
 			operationsCounter = 0;
 		} else if (operationsCounter > optionService.getMaxCountOfapiKeyOperations()) {
-			r.setMessage("请勿频繁创建/删除API key");
+			r.setMessage("无法频繁创建/删除API key, 请明天再尝试");
 			return r;
 		}
 
@@ -105,10 +111,16 @@ public class AiChatFromApiServiceImpl extends AiChatCommonService implements AiC
 	}
 
 	@Override
-	public CommonResult deleteApiKey(Long aiChatUserId, String apiKey) {
+	public CommonResult deleteApiKey(String tmpKey, String apiKey) {
 		CommonResult r = new CommonResult();
 		if (StringUtils.isBlank(apiKey)) {
 			r.setIsSuccess();
+			return r;
+		}
+		
+		Long aiChatUserId = getAiChatUserIdByTempKey(tmpKey);
+		if(aiChatUserId == null) {
+			r.setMessage("过期 ID, 请先重新登录");
 			return r;
 		}
 
@@ -138,10 +150,17 @@ public class AiChatFromApiServiceImpl extends AiChatCommonService implements AiC
 	}
 
 	@Override
-	public FindAllApiKeysResult findAllApiKeysByAiChatUserId(Long aiChatUserId) {
+	public FindAllApiKeysResult findAllApiKeysByAiChatUserId(String tmpKey) {
 		FindAllApiKeysResult r = new FindAllApiKeysResult();
+		
+		Long aiChatUserId = getAiChatUserIdByTempKey(tmpKey);
+		if(aiChatUserId == null) {
+			r.setMessage("过期 ID, 请先退出后重新登录");
+			return r;
+		}
+		
 		AiChatApiKeyExample example = new AiChatApiKeyExample();
-		example.createCriteria().andAiChatUserIdEqualTo(aiChatUserId);
+		example.createCriteria().andAiChatUserIdEqualTo(aiChatUserId).andIsDeleteEqualTo(false);
 		List<AiChatApiKey> apiKeyPoList = apiKeyMapper.selectByExample(example);
 		if (apiKeyPoList.isEmpty()) {
 			r.setIsSuccess();

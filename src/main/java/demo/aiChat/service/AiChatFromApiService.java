@@ -10,10 +10,10 @@ public interface AiChatFromApiService {
 
 	AiChatSendNewMessageResult sendNewChatMessage(AiChatSendNewMsgFromApiDTO dto);
 
-	GenerateNewApiKeyResult generateNewApiKey(Long aiChatUserId);
+	GenerateNewApiKeyResult generateNewApiKey(String tmpKey);
 
-	CommonResult deleteApiKey(Long aiChatUserId, String apiKey);
+	FindAllApiKeysResult findAllApiKeysByAiChatUserId(String tmpKey);
 
-	FindAllApiKeysResult findAllApiKeysByAiChatUserId(Long aiChatUserId);
+	CommonResult deleteApiKey(String tmpKey, String apiKey);
 
 }

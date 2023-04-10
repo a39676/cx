@@ -6,6 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import aiChat.pojo.result.FindAllApiKeysResult;
+import aiChat.pojo.result.GenerateNewApiKeyResult;
 import aiChat.pojo.result.GetAiChatAmountResult;
 import aiChat.pojo.result.GetAiChatMembershipResult;
 import aiChat.pojo.result.GetAiChatUserDetailResult;
@@ -13,6 +15,7 @@ import aiChat.pojo.result.GetTmpKeyByOpenIdResult;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiChat.pojo.result.CreateAiChatUserResult;
+import demo.aiChat.service.AiChatFromApiService;
 import demo.aiChat.service.AiChatMembershipService;
 import demo.aiChat.service.AiChatUserService;
 import demo.interaction.wechat.mapper.WechatQrcodeDetailMapper;
@@ -26,6 +29,7 @@ import demo.interaction.wechat.pojo.po.WechatUserFromQrcode;
 import demo.interaction.wechat.service.WechatUserService;
 import demo.interaction.wechatPay.service.WechatPayService;
 import wechatPayApi.jsApi.pojo.dto.WechatPayJsApiFeedbackDTO;
+import wechatSdk.pojo.dto.DeleteAiChatApiKeyDTO;
 import wechatSdk.pojo.dto.GetUserOpenIdListDTO;
 import wechatSdk.pojo.dto.RecordingWechatUserFromParameterizedQrCodeDTO;
 import wechatSdk.pojo.result.GetUserOpenIdListResult;
@@ -35,6 +39,8 @@ import wechatSdk.pojo.type.WechatQrCodeSceneType;
 @Service
 public class WechatUserServiceImpl extends WechatCommonService implements WechatUserService {
 
+	@Autowired
+	private AiChatFromApiService aiChatFromApiService;
 	@Autowired
 	private AiChatUserService aiChatUserService;
 	@Autowired
@@ -250,8 +256,10 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		userFromQrcodeMapper.insertSelective(userFromQrCodeRecord);
 
 		WechatQrCodeSceneType sceneType = WechatQrCodeSceneType.getType(sceneName);
-		if (WechatQrCodeSceneType.FANG_ZHENG_FRANKIE.equals(sceneType) || WechatQrCodeSceneType.FANG_ZHENG_CHANNEL_1.equals(sceneType)
-				|| WechatQrCodeSceneType.FANG_ZHENG_CHANNEL_2.equals(sceneType) || WechatQrCodeSceneType.FANG_ZHENG_CHANNEL_3.equals(sceneType)) {
+		if (WechatQrCodeSceneType.FANG_ZHENG_FRANKIE.equals(sceneType)
+				|| WechatQrCodeSceneType.FANG_ZHENG_CHANNEL_1.equals(sceneType)
+				|| WechatQrCodeSceneType.FANG_ZHENG_CHANNEL_2.equals(sceneType)
+				|| WechatQrCodeSceneType.FANG_ZHENG_CHANNEL_3.equals(sceneType)) {
 			newUserFromFangZheng(newUser.getId(), 6L);
 		}
 
@@ -286,5 +294,44 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 
 	private void newUserFromFangZheng(Long wechatUserId, Long membershipId) {
 		aiChatMembershipService.__giftMembership(wechatUserId, membershipId);
+	}
+
+	@Override
+	public EncryptDTO generateNewApiKey(EncryptDTO encryptedDTO) {
+		GenerateNewApiKeyResult r = new GenerateNewApiKeyResult();
+		String tmpKeyStr = decryptEncryptDTO(encryptedDTO, String.class);
+		if (tmpKeyStr == null) {
+			r.setMessage("Generate API key failed, decrypt error");
+			return encryptDTO(r);
+		}
+
+		r = aiChatFromApiService.generateNewApiKey(tmpKeyStr);
+		return encryptDTO(r);
+	}
+
+	@Override
+	public EncryptDTO deleteApiKey(EncryptDTO encryptedDTO) {
+		CommonResult r = new CommonResult();
+		DeleteAiChatApiKeyDTO dto = decryptEncryptDTO(encryptedDTO, DeleteAiChatApiKeyDTO.class);
+		if (dto == null || StringUtils.isAnyBlank(dto.getTmpKeyStr(), dto.getApiKey())) {
+			r.setMessage("Delete API key failed, decrypt error");
+			return encryptDTO(r);
+		}
+
+		r = aiChatFromApiService.deleteApiKey(dto.getTmpKeyStr(), dto.getApiKey());
+		return encryptDTO(r);
+	}
+
+	@Override
+	public EncryptDTO findAllApiKeysByAiChatUserId(EncryptDTO encryptedDTO) {
+		FindAllApiKeysResult r = new FindAllApiKeysResult();
+		String tmpKeyStr = decryptEncryptDTO(encryptedDTO, String.class);
+		if (tmpKeyStr == null) {
+			r.setMessage("Find API key list failed, decrypt error");
+			return encryptDTO(r);
+		}
+
+		r = aiChatFromApiService.findAllApiKeysByAiChatUserId(tmpKeyStr);
+		return encryptDTO(r);
 	}
 }

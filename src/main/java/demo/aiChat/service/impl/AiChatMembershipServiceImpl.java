@@ -387,7 +387,10 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 			userService.recharge(aiChatUserId, AiChatAmountType.BONUS, new BigDecimal(membershipDetail.getRecharge()));
 		}
 		if (membershipDetail.getValidDays() != null) {
-//			TODO 未确定如何实现有效期赠送额度 难在实现过期日清理赠送额度, 赠送额度应独立计算, 并优先使用
+			/*
+			 * TODO 未确定如何实现有效期赠送额度 难在实现过期日清理赠送额度, 赠送额度应独立计算, 并优先使用
+			 * 待后续实现"子帐号"再实现此部分逻辑, 目前以简单的赠金额度计算
+			 */
 		}
 		if (membershipDetail.getBonus() > 0) {
 			userService.recharge(aiChatUserId, AiChatAmountType.BONUS, new BigDecimal(membershipDetail.getBonus()));

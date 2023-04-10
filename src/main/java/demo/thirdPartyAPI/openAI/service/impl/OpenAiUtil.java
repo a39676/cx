@@ -182,35 +182,43 @@ public class OpenAiUtil extends CommonService {
 		newDTO.setApiKey(null);
 		newDTO.setModel(OpenAiModelType.GPT_V_3_5.getName());
 		newDTO.setMessages(inputDTO.getMessages());
-		if (inputDTO.getTemperature() != null) {
-			newDTO.setTemperature(inputDTO.getTemperature());
-		}
-		if (inputDTO.getTop_p() != null) {
-			newDTO.setTop_p(inputDTO.getTop_p());
-		}
-		if (inputDTO.getN() != null) {
-			newDTO.setN(inputDTO.getN());
-		}
-		if (inputDTO.getStop() != null) {
-			newDTO.setStop(inputDTO.getStop());
-		}
-		if (inputDTO.getMax_tokens() != null) {
-			newDTO.setMax_tokens(inputDTO.getMax_tokens());
-		}
-		if (inputDTO.getPresence_penalty() != null) {
-			newDTO.setPresence_penalty(inputDTO.getPresence_penalty());
-		}
-		if (inputDTO.getFrequency_penalty() != null) {
-			newDTO.setFrequency_penalty(inputDTO.getFrequency_penalty());
-		}
-		if (inputDTO.getLogit_bias() != null) {
-			newDTO.setLogit_bias(inputDTO.getLogit_bias());
-		}
+		newDTO.setTemperature(inputDTO.getTemperature());
+		newDTO.setTop_p(inputDTO.getTop_p());
+		newDTO.setN(inputDTO.getN());
+		newDTO.setStop(inputDTO.getStop());
+		newDTO.setMax_tokens(inputDTO.getMax_tokens());
+		newDTO.setPresence_penalty(inputDTO.getPresence_penalty());
+		newDTO.setFrequency_penalty(inputDTO.getFrequency_penalty());
+		newDTO.setLogit_bias(inputDTO.getLogit_bias());
 
 		try {
 			URL url = new URL(CHAT_API);
 
 			JSONObject parameterJson = JSONObject.fromObject(newDTO);
+			if (inputDTO.getTemperature() == null) {
+				parameterJson.remove("temperature");
+			}
+			if (inputDTO.getTop_p() == null) {
+				parameterJson.remove("top_p");
+			}
+			if (inputDTO.getN() == null) {
+				parameterJson.remove("n");
+			}
+			if (inputDTO.getStop() == null) {
+				parameterJson.remove("stop");
+			}
+			if (inputDTO.getMax_tokens() == null) {
+				parameterJson.remove("max_tokens");
+			}
+			if (inputDTO.getPresence_penalty() == null) {
+				parameterJson.remove("presence_penalty");
+			}
+			if (inputDTO.getFrequency_penalty() == null) {
+				parameterJson.remove("frequency_penalty");
+			}
+			if (inputDTO.getLogit_bias() == null) {
+				parameterJson.remove("logit_bias");
+			}
 			log.error("parameter json: " + parameterJson);
 
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();

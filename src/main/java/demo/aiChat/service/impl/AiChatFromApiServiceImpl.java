@@ -152,7 +152,6 @@ public class AiChatFromApiServiceImpl extends AiChatCommonService implements AiC
 		JSONObject r = new JSONObject();
 		JSONObject errorMsg = new JSONObject();
 
-		log.error("Receive dto: " + dto.toString());
 		
 		if (StringUtils.isBlank(dto.getApiKey())) {
 			errorMsg.put("message", "API key error");
@@ -161,7 +160,6 @@ public class AiChatFromApiServiceImpl extends AiChatCommonService implements AiC
 		}
 
 		Long aiChatUserId = cacheService.getApiKeyCacheMap().get(dto.getApiKey());
-		log.error("get ai chat ueser id from cache: " + aiChatUserId);
 		AiChatApiKey po = null;
 		Long apiKeyDecrypt = systemOptionService.decryptPrivateKey(dto.getApiKey());
 

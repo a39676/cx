@@ -104,11 +104,9 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		}
 
 		// send new msg, wait feedback
-//		TODO
-		JSONObject apiResult = new JSONObject();
-		apiResult.put("error", "debug");
-		util.sendChatCompletionFromUIWithSdk(dto);
-
+		JSONObject apiResult = util.sendChatCompletionFromApi(dto);
+		log.error("api result: " + apiResult.toString());
+		
 		// if fail, send fail response
 		if (apiResult.containsKey("error")) {
 			errorMsg.put("message", "运算异常, 正在排查故障");

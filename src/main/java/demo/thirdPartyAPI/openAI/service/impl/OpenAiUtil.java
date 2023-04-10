@@ -245,14 +245,14 @@ public class OpenAiUtil extends CommonService {
 				log.error("OpenAI message from API request failed: " + response.toString());
 			}
 			in.close();
-			j = JSONObject.fromObject(response);
+			j = JSONObject.fromObject(response.toString());
 
 			return j;
 
 		} catch (Exception e) {
 			log.error("Open AI message from API error: " + e.getLocalizedMessage());
 			e.printStackTrace();
-			j.put("error", "service error, please call admin");
+			j.put("error", "Source API error error");
 			return j;
 		}
 	}

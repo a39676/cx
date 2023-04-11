@@ -14,8 +14,8 @@ import demo.toyParts.educate.pojo.po.StudentExerciseHistory;
 import demo.toyParts.educate.pojo.po.StudentExerciseHistoryExample;
 import demo.toyParts.educate.service.EducateCommonService;
 import demo.toyParts.educate.service.EducateOldDataDeleteService;
-import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
+import telegram.pojo.type.TelegramBotType;
 
 @Service
 public class EducateOldDataDeleteServiceImpl extends EducateCommonService implements EducateOldDataDeleteService {

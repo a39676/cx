@@ -39,8 +39,8 @@ import demo.tool.bookmark.service.impl.BookmarkTaskService;
 import demo.tool.calendarNotice.pojo.type.CalendarNoticeTaskType;
 import demo.tool.calendarNotice.service.impl.CalendarNoticeTaskService;
 import demo.tool.telegram.service.TelegramService;
-import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
+import telegram.pojo.type.TelegramBotType;
 
 @Service
 public class TaskHandlerServiceImpl extends CommonService implements TaskHandlerService {

@@ -48,8 +48,8 @@ import demo.tool.other.service.ValidRegexToolService;
 import demo.tool.telegram.service.TelegramService;
 import demo.toyParts.educate.pojo.type.GradeType;
 import demo.toyParts.educate.service.StudentService;
-import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
+import telegram.pojo.type.TelegramBotType;
 import tool.pojo.bo.IpRecordBO;
 import toolPack.numericHandel.NumericUtilCustom;
 

@@ -7,6 +7,7 @@ import aiChat.pojo.result.AiChatDailySignUpResult;
 import aiChat.pojo.result.GetAiChatAmountResult;
 import aiChat.pojo.type.AiChatAmountType;
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.aiChat.pojo.dto.NewPositiveAiChatUserDTO;
 import demo.aiChat.pojo.result.CreateAiChatUserResult;
 
 public interface AiChatUserService {
@@ -35,6 +36,9 @@ public interface AiChatUserService {
 
 	CommonResult unlockUser(String aiChatUserIdStr);
 
-	CreateAiChatUserResult createAiChatUserDetailByWechatOpenId(Long wechatUserId, String wechatOid, Integer specialBonus);
+	CreateAiChatUserResult createAiChatUserDetailByWechatOpenId(Long wechatUserId, String wechatOid,
+			Integer specialBonus);
+
+	List<NewPositiveAiChatUserDTO> __findNewPositiveAiChatUserDtoListInYesterday();
 
 }

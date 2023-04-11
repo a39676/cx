@@ -16,8 +16,8 @@ import demo.toyParts.vcode.pojo.po.Vcode;
 import demo.toyParts.vcode.pojo.po.VcodeExample;
 import demo.toyParts.vcode.pojo.po.VcodeHistory;
 import demo.toyParts.vcode.service.VCodeService;
-import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
+import telegram.pojo.type.TelegramBotType;
 
 @Service
 public class VCodeServiceImpl extends CommonService implements VCodeService {

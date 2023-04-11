@@ -31,7 +31,7 @@ import demo.finance.currencyExchangeRate.notice.service.CurrencyExchangeRateNoti
 import demo.tool.telegram.pojo.po.TelegramChatId;
 import demo.tool.telegram.pojo.vo.TelegramChatIdVO;
 import demo.tool.telegram.service.TelegramService;
-import telegram.pojo.constant.TelegramBotType;
+import telegram.pojo.type.TelegramBotType;
 
 @Service
 public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService

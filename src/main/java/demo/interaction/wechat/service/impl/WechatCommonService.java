@@ -10,8 +10,8 @@ import com.google.gson.GsonBuilder;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import demo.common.service.ToolCommonService;
 import demo.tool.telegram.service.TelegramService;
-import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
+import telegram.pojo.type.TelegramBotType;
 
 public abstract class WechatCommonService extends ToolCommonService {
 
@@ -22,7 +22,7 @@ public abstract class WechatCommonService extends ToolCommonService {
 	private TelegramService telegramService;
 
 	protected void sendTelegramMessage(String msg) {
-		telegramService.sendMessageByChatRecordId(TelegramBotType.CX_MESSAGE, msg, TelegramStaticChatID.MY_ID);
+		telegramService.sendMessageByChatRecordId(TelegramBotType.AI_CHAT_NOTICE, msg, TelegramStaticChatID.MY_ID);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -31,7 +31,7 @@ public abstract class WechatCommonService extends ToolCommonService {
 			String encryptedStr = encryptedDTO.getEncryptedStr();
 			String decryptedStr = encryptUtil.aesDecrypt(wechatOptionService.getAesKey(),
 					wechatOptionService.getAesInitVector(), encryptedStr);
-			if(String.class.equals(clazz)) {
+			if (String.class.equals(clazz)) {
 				return (T) decryptedStr;
 			}
 			return buildObjFromJsonCustomization(decryptedStr, clazz);
@@ -64,10 +64,5 @@ public abstract class WechatCommonService extends ToolCommonService {
 		}
 		return dto;
 	}
-	
-	private boolean isBasicDataTypesOrString(Object obj) {
-		return obj instanceof Boolean || obj instanceof Byte || obj instanceof Short
-		|| obj instanceof Integer || obj instanceof Long || obj instanceof Float
-		|| obj instanceof Double || obj instanceof Character || obj instanceof String;
-	}
+
 }

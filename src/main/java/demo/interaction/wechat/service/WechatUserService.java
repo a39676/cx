@@ -1,6 +1,7 @@
 package demo.interaction.wechat.service;
 
 import auxiliaryCommon.pojo.dto.EncryptDTO;
+import auxiliaryCommon.pojo.result.CommonResult;
 
 public interface WechatUserService {
 
@@ -25,5 +26,7 @@ public interface WechatUserService {
 	EncryptDTO deleteApiKey(EncryptDTO encryptedDTO);
 
 	EncryptDTO findAllApiKeysByAiChatUserId(EncryptDTO encryptedDTO);
+
+	CommonResult bonusForNewPositiveUserInYesterday();
 
 }

@@ -14,8 +14,8 @@ import demo.common.service.ToolCommonService;
 import demo.thirdPartyAPI.openAI.service.impl.OpenAiUtil;
 import demo.tool.other.service.TextFilter;
 import demo.tool.telegram.service.TelegramService;
-import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
+import telegram.pojo.type.TelegramBotType;
 
 public abstract class AiChatCommonService extends ToolCommonService {
 

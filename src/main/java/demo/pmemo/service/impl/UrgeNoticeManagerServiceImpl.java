@@ -12,7 +12,7 @@ import demo.pmemo.pojo.constant.UrgeNoticeConstant;
 import demo.pmemo.pojo.constant.UrgeNoticeUrl;
 import demo.pmemo.service.UrgeNoticeManagerService;
 import demo.tool.telegram.service.TelegramService;
-import telegram.pojo.constant.TelegramBotType;
+import telegram.pojo.type.TelegramBotType;
 
 @Service
 public class UrgeNoticeManagerServiceImpl extends ArticleCommonService implements UrgeNoticeManagerService {

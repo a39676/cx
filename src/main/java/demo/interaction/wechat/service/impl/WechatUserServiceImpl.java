@@ -1,6 +1,10 @@
 package demo.interaction.wechat.service.impl;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +16,19 @@ import aiChat.pojo.result.GetAiChatAmountResult;
 import aiChat.pojo.result.GetAiChatMembershipResult;
 import aiChat.pojo.result.GetAiChatUserDetailResult;
 import aiChat.pojo.result.GetTmpKeyByOpenIdResult;
+import aiChat.pojo.type.AiChatAmountType;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.aiChat.pojo.dto.NewPositiveAiChatUserDTO;
 import demo.aiChat.pojo.result.CreateAiChatUserResult;
 import demo.aiChat.service.AiChatFromApiService;
 import demo.aiChat.service.AiChatMembershipService;
 import demo.aiChat.service.AiChatUserService;
+import demo.aiChat.service.impl.AiChatOptionService;
 import demo.interaction.wechat.mapper.WechatQrcodeDetailMapper;
 import demo.interaction.wechat.mapper.WechatUserDetailMapper;
 import demo.interaction.wechat.mapper.WechatUserFromQrcodeMapper;
+import demo.interaction.wechat.mq.producer.SendBonusRechargeTemplateMessageProducer;
 import demo.interaction.wechat.pojo.po.WechatQrcodeDetail;
 import demo.interaction.wechat.pojo.po.WechatQrcodeDetailExample;
 import demo.interaction.wechat.pojo.po.WechatUserDetail;
@@ -32,6 +40,7 @@ import wechatPayApi.jsApi.pojo.dto.WechatPayJsApiFeedbackDTO;
 import wechatSdk.pojo.dto.DeleteAiChatApiKeyDTO;
 import wechatSdk.pojo.dto.GetUserOpenIdListDTO;
 import wechatSdk.pojo.dto.RecordingWechatUserFromParameterizedQrCodeDTO;
+import wechatSdk.pojo.dto.SendTemplateMessageBonusRechargeDTO;
 import wechatSdk.pojo.result.GetUserOpenIdListResult;
 import wechatSdk.pojo.type.WechatOfficialAccountType;
 import wechatSdk.pojo.type.WechatQrCodeSceneType;
@@ -46,6 +55,8 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 	@Autowired
 	private AiChatMembershipService aiChatMembershipService;
 	@Autowired
+	private AiChatOptionService aiChatOptionService;
+	@Autowired
 	private WechatUserDetailMapper wechatUserDetailMapper;
 	@Autowired
 	private WechatPayService wechatPayService;
@@ -53,6 +64,9 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 	private WechatQrcodeDetailMapper qrcodeMapper;
 	@Autowired
 	private WechatUserFromQrcodeMapper userFromQrcodeMapper;
+
+	@Autowired
+	private SendBonusRechargeTemplateMessageProducer sendBonusRechargeTemplateMessageProducer;
 
 	private static final String FAKE_UID_PREFIX = "FakeUid_";
 
@@ -333,5 +347,52 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 
 		r = aiChatFromApiService.findAllApiKeysByAiChatUserId(tmpKeyStr);
 		return encryptDTO(r);
+	}
+
+	@Override
+	public CommonResult bonusForNewPositiveUserInYesterday() {
+		CommonResult r = new CommonResult();
+		// 获取缺少 OpenID 的 DTO list
+		List<NewPositiveAiChatUserDTO> aiChatUserDtoList = aiChatUserService
+				.__findNewPositiveAiChatUserDtoListInYesterday();
+		if (aiChatUserDtoList.isEmpty()) {
+			r.setIsSuccess();
+			return r;
+		}
+
+		// 获取 Wechat user list, 为了获取 OpenID
+		List<Long> wechatUserIdList = new ArrayList<>();
+		for (NewPositiveAiChatUserDTO dto : aiChatUserDtoList) {
+			wechatUserIdList.add(dto.getWechatUserId());
+		}
+		WechatUserDetailExample example = new WechatUserDetailExample();
+		example.createCriteria().andIdIn(wechatUserIdList);
+		List<WechatUserDetail> wechatUserList = wechatUserDetailMapper.selectByExample(example);
+
+		// 组装 Map, Wechat user ID : Wechat user detail
+		Map<Long, WechatUserDetail> map = new HashMap<>();
+		for (WechatUserDetail wechatUser : wechatUserList) {
+			map.put(wechatUser.getId(), wechatUser);
+		}
+
+		// 为 DTO list 补充 open ID 属性
+		for (NewPositiveAiChatUserDTO dto : aiChatUserDtoList) {
+			dto.setOpenId(map.get(dto.getWechatUserId()).getOpenId());
+		}
+
+		for (NewPositiveAiChatUserDTO dto : aiChatUserDtoList) {
+			r = aiChatUserService.recharge(dto.getAiChatUserId(), AiChatAmountType.BONUS,
+					new BigDecimal(aiChatOptionService.getBonusForNewUser()));
+			if (r.isSuccess()) {
+				SendTemplateMessageBonusRechargeDTO templateMessageDTO = new SendTemplateMessageBonusRechargeDTO();
+				templateMessageDTO.setBonusAmountStr(String.valueOf(aiChatOptionService.getBonusForNewUser()));
+				templateMessageDTO.setBonusDescription("新用户特惠赠送电量");
+				templateMessageDTO.setManagerCode(wechatOptionService.getManagerCode());
+				templateMessageDTO.setReciverOpenId(dto.getOpenId());
+				sendBonusRechargeTemplateMessageProducer.send(templateMessageDTO);
+			}
+		}
+
+		return r;
 	}
 }

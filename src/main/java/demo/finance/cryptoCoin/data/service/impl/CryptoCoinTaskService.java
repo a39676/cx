@@ -14,8 +14,8 @@ import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import demo.finance.cryptoCoin.data.webSocket.BinanceWSClient;
 import demo.finance.cryptoCoin.data.webSocket.CryptoCompareWSClient;
 import demo.tool.telegram.service.TelegramService;
-import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
+import telegram.pojo.type.TelegramBotType;
 
 @Component
 public class CryptoCoinTaskService extends CommonTaskService {

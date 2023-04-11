@@ -12,8 +12,8 @@ import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.ExceptionService;
 import demo.tool.telegram.service.TelegramService;
-import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
+import telegram.pojo.type.TelegramBotType;
 
 @Service
 public class ExceptionServiceImpl extends SystemCommonService implements ExceptionService {

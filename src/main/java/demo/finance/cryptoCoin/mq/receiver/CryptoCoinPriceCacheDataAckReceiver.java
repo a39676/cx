@@ -14,8 +14,8 @@ import demo.common.service.CommonMessageQueueReceiverService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinMQConstant;
-import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
+import telegram.pojo.type.TelegramBotType;
 
 @Component
 @RabbitListener(queues = CryptoCoinMQConstant.CRYPTO_COIN_PRICE_CACHE_QUEUE)

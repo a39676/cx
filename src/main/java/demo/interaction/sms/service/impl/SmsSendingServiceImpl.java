@@ -25,8 +25,8 @@ import demo.interaction.sms.service.SmsSendingService;
 import demo.interaction.sms.service.SmsVerificationService;
 import demo.tool.telegram.service.TelegramService;
 import net.sf.json.JSONObject;
-import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
+import telegram.pojo.type.TelegramBotType;
 import toolPack.encryptHandle.EncryptUtil;
 import toolPack.httpHandel.HttpUtil;
 

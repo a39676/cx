@@ -1,6 +1,7 @@
 package demo.aiChat.service.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import demo.aiChat.mapper.AiChatUserAmountHistoryMapper;
 import demo.aiChat.mapper.AiChatUserAssociateWechatUidMapper;
 import demo.aiChat.mapper.AiChatUserDetailMapper;
 import demo.aiChat.mapper.SystemUserAssociateAiChatUserMapper;
+import demo.aiChat.pojo.dto.NewPositiveAiChatUserDTO;
 import demo.aiChat.pojo.po.AiChatUserAmountHistory;
 import demo.aiChat.pojo.po.AiChatUserAssociateWechatUidExample;
 import demo.aiChat.pojo.po.AiChatUserAssociateWechatUidKey;
@@ -343,4 +345,47 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 		r.setSuccess(updateCount == 1);
 		return r;
 	}
+
+	@Override
+	public List<NewPositiveAiChatUserDTO> __findNewPositiveAiChatUserDtoListInYesterday() {
+//		LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
+//		AiChatUserDetailExample example = new AiChatUserDetailExample();
+//		example.createCriteria().andIsBlockEqualTo(false).andIsDeleteEqualTo(false)
+//				.andCreateTimeBetween(yesterday.with(LocalTime.MIN), yesterday.with(LocalTime.MAX))
+//				.andUsedTokensGreaterThan(optionService.getBonusForNewUser());
+//		List<AiChatUserDetail> userDetailList = userDetailMapper.selectByExample(example);
+//		if (userDetailList.isEmpty()) {
+//			return new ArrayList<>();
+//		}
+//
+//		List<Long> aiChatUserIdList = new ArrayList<>();
+//		for (AiChatUserDetail userDetail : userDetailList) {
+//			aiChatUserIdList.add(userDetail.getId());
+//		}
+//
+//		AiChatUserAssociateWechatUidExample associateExample = new AiChatUserAssociateWechatUidExample();
+//		associateExample.createCriteria().andAiChatUserIdIn(aiChatUserIdList);
+//		List<AiChatUserAssociateWechatUidKey> associateList = aiChatUserAssociateWechatUidMapper
+//				.selectByExample(associateExample);
+//
+//		List<NewPositiveAiChatUserDTO> dtoList = new ArrayList<>();
+//		List<Long> wechatUserId = new ArrayList<>();
+//		NewPositiveAiChatUserDTO dto = null;
+//		for (AiChatUserAssociateWechatUidKey associate : associateList) {
+//			wechatUserId.add(associate.getWechatId());
+//			dto = new NewPositiveAiChatUserDTO();
+//			dto.setAiChatUserId(associate.getAiChatUserId());
+//			dto.setWechatUserId(associate.getWechatId());
+//			dtoList.add(dto);
+//		}
+		
+		List<NewPositiveAiChatUserDTO> dtoList = new ArrayList<>();
+		NewPositiveAiChatUserDTO dto = new NewPositiveAiChatUserDTO();
+		dto.setAiChatUserId(1086648908790239232L);
+		dto.setWechatUserId(1086648908697964544L);
+		dtoList.add(dto);
+		
+		return dtoList;
+	}
+
 }

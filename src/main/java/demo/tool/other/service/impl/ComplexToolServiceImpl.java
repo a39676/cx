@@ -10,8 +10,8 @@ import demo.common.service.ToolCommonService;
 import demo.tool.other.pojo.vo.EncryptIdVO;
 import demo.tool.other.service.ComplexToolService;
 import demo.tool.telegram.service.TelegramService;
-import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
+import telegram.pojo.type.TelegramBotType;
 
 @Service
 public class ComplexToolServiceImpl extends ToolCommonService implements ComplexToolService {

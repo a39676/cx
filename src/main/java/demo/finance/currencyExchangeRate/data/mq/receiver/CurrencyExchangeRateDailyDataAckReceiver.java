@@ -15,8 +15,8 @@ import demo.common.service.CommonMessageQueueReceiverService;
 import demo.finance.currencyExchangeRate.data.service.CurrencyExchangeRateService;
 import finance.currencyExchangeRate.pojo.constant.CurrencyExchangeRateMQConstant;
 import finance.currencyExchangeRate.pojo.result.CurrencyExchageRateCollectResult;
-import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
+import telegram.pojo.type.TelegramBotType;
 
 @Component
 @RabbitListener(queues = CurrencyExchangeRateMQConstant.CURRENCY_EXCHANGE_RATE_DAILY_DATA)

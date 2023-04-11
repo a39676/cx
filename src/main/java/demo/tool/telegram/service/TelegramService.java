@@ -6,7 +6,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.tool.telegram.pojo.dto.TelegramGetUpdatesDTO;
 import demo.tool.telegram.pojo.po.TelegramChatId;
 import demo.tool.telegram.pojo.vo.TelegramChatIdVO;
-import telegram.pojo.constant.TelegramBotType;
+import telegram.pojo.type.TelegramBotType;
 
 public interface TelegramService {
 

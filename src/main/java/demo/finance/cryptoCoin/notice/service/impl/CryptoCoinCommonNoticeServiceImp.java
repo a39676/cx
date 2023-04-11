@@ -38,7 +38,7 @@ import demo.tool.telegram.pojo.vo.TelegramChatIdVO;
 import demo.tool.telegram.service.TelegramService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
-import telegram.pojo.constant.TelegramBotType;
+import telegram.pojo.type.TelegramBotType;
 
 @Service
 public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService implements CryptoCoinCommonNoticeService {

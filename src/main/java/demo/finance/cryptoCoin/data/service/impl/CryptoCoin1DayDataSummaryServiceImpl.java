@@ -34,8 +34,8 @@ import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataSubDTO;
 import finance.cryptoCoin.pojo.type.CryptoCoinDataSourceType;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
-import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
+import telegram.pojo.type.TelegramBotType;
 
 @Service
 public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonService

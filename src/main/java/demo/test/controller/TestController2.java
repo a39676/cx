@@ -1,5 +1,7 @@
 package demo.test.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import demo.aiChat.pojo.dto.NewPositiveAiChatUserDTO;
 import demo.aiChat.service.AiChatUserService;
 import demo.common.service.CommonService;
 import demo.interaction.wechat.mq.producer.SendBonusRechargeTemplateMessageProducer;
@@ -34,7 +37,7 @@ public class TestController2 extends CommonService {
 	public String t2(@RequestBody TestDTO dto) {
 		return "{\"k\":\"v\"}";
 	}
-	
+
 	@Autowired
 	private SendBonusRechargeTemplateMessageProducer sender;
 	@Autowired
@@ -51,11 +54,19 @@ public class TestController2 extends CommonService {
 		sender.send(dto);
 		return "Done";
 	}
-	
+
 	@GetMapping(value = "/t4")
 	@ResponseBody
 	public String t4() {
-		aiChatUserService.__findNewPositiveAiChatUserDtoListInYesterday();
+		List<NewPositiveAiChatUserDTO> list = aiChatUserService.__findNewPositiveAiChatUserDtoListInYesterday();
+		for (NewPositiveAiChatUserDTO userDTO : list) {
+			SendTemplateMessageBonusRechargeDTO dto = new SendTemplateMessageBonusRechargeDTO();
+			dto.setBonusAmountStr("test amount");
+			dto.setBonusDescription("testing");
+			dto.setManagerCode("LqHvN5DTjlqMHtt2Jg539wDma7MlvopMnjmCp6j5g8T");
+			dto.setReciverOpenId(userDTO.getOpenId());
+			sender.send(dto);
+		}
 		return "Done";
 	}
 }

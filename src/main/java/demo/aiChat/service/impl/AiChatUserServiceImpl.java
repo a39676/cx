@@ -576,6 +576,15 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 		List<AiChatUserVO> userVoList = new ArrayList<>();
 		AiChatUserVO vo = null;
 		Long wechatUserId = null;
+		if(userDetailList.isEmpty()) {
+			vo = new AiChatUserVO();
+			vo.setNickname("Empty result");
+			userVoList.add(vo);
+			r.setUserList(userVoList);
+			r.setIsSuccess();
+			return r;
+		}
+		
 		for (AiChatUserDetail user : userDetailList) {
 			vo = new AiChatUserVO();
 			vo.setBonusAmount(user.getBonusAmount().doubleValue());

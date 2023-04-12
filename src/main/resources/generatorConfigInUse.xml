@@ -54,9 +54,9 @@
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="ai_chat_api_key">
-        	<property name="tableName" value="ai_chat_api_key"></property>
-        	<property name="domainObjectName" value="ai_chat_api_key"></property>
+        <table tableName="ai_chat_user_detail">
+        	<property name="tableName" value="ai_chat_user_detail"></property>
+        	<property name="domainObjectName" value="ai_chat_user_detail"></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

@@ -3,9 +3,11 @@
 <mapper namespace="demo.aiChat.mapper.AiChatUserDetailMapper">
   <resultMap id="BaseResultMap" type="demo.aiChat.pojo.po.AiChatUserDetail">
     <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="nickname" jdbcType="CHAR" property="nickname" />
     <result column="bonus_amount" jdbcType="DECIMAL" property="bonusAmount" />
     <result column="recharge_amount" jdbcType="DECIMAL" property="rechargeAmount" />
     <result column="used_tokens" jdbcType="INTEGER" property="usedTokens" />
+    <result column="last_update" jdbcType="TIMESTAMP" property="lastUpdate" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
     <result column="is_block" jdbcType="BIT" property="isBlock" />
@@ -69,7 +71,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, bonus_amount, recharge_amount, used_tokens, create_time, is_delete, is_block
+    id, nickname, bonus_amount, recharge_amount, used_tokens, last_update, create_time, 
+    is_delete, is_block
   </sql>
   <select id="selectByExample" parameterType="demo.aiChat.pojo.po.AiChatUserDetailExample" resultMap="BaseResultMap">
     select
@@ -102,18 +105,23 @@
     </if>
   </delete>
   <insert id="insert" parameterType="demo.aiChat.pojo.po.AiChatUserDetail">
-    insert into ai_chat_user_detail (id, bonus_amount, recharge_amount, 
-      used_tokens, create_time, is_delete, 
-      is_block)
-    values (#{id,jdbcType=BIGINT}, #{bonusAmount,jdbcType=DECIMAL}, #{rechargeAmount,jdbcType=DECIMAL}, 
-      #{usedTokens,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}, 
-      #{isBlock,jdbcType=BIT})
+    insert into ai_chat_user_detail (id, nickname, bonus_amount, 
+      recharge_amount, used_tokens, last_update, 
+      create_time, is_delete, is_block
+      )
+    values (#{id,jdbcType=BIGINT}, #{nickname,jdbcType=CHAR}, #{bonusAmount,jdbcType=DECIMAL}, 
+      #{rechargeAmount,jdbcType=DECIMAL}, #{usedTokens,jdbcType=INTEGER}, #{lastUpdate,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}, #{isBlock,jdbcType=BIT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="demo.aiChat.pojo.po.AiChatUserDetail">
     insert into ai_chat_user_detail
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
+      </if>
+      <if test="nickname != null">
+        nickname,
       </if>
       <if test="bonusAmount != null">
         bonus_amount,
@@ -123,6 +131,9 @@
       </if>
       <if test="usedTokens != null">
         used_tokens,
+      </if>
+      <if test="lastUpdate != null">
+        last_update,
       </if>
       <if test="createTime != null">
         create_time,
@@ -138,6 +149,9 @@
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
+      <if test="nickname != null">
+        #{nickname,jdbcType=CHAR},
+      </if>
       <if test="bonusAmount != null">
         #{bonusAmount,jdbcType=DECIMAL},
       </if>
@@ -146,6 +160,9 @@
       </if>
       <if test="usedTokens != null">
         #{usedTokens,jdbcType=INTEGER},
+      </if>
+      <if test="lastUpdate != null">
+        #{lastUpdate,jdbcType=TIMESTAMP},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -170,6 +187,9 @@
       <if test="row.id != null">
         id = #{row.id,jdbcType=BIGINT},
       </if>
+      <if test="row.nickname != null">
+        nickname = #{row.nickname,jdbcType=CHAR},
+      </if>
       <if test="row.bonusAmount != null">
         bonus_amount = #{row.bonusAmount,jdbcType=DECIMAL},
       </if>
@@ -178,6 +198,9 @@
       </if>
       <if test="row.usedTokens != null">
         used_tokens = #{row.usedTokens,jdbcType=INTEGER},
+      </if>
+      <if test="row.lastUpdate != null">
+        last_update = #{row.lastUpdate,jdbcType=TIMESTAMP},
       </if>
       <if test="row.createTime != null">
         create_time = #{row.createTime,jdbcType=TIMESTAMP},
@@ -196,9 +219,11 @@
   <update id="updateByExample" parameterType="map">
     update ai_chat_user_detail
     set id = #{row.id,jdbcType=BIGINT},
+      nickname = #{row.nickname,jdbcType=CHAR},
       bonus_amount = #{row.bonusAmount,jdbcType=DECIMAL},
       recharge_amount = #{row.rechargeAmount,jdbcType=DECIMAL},
       used_tokens = #{row.usedTokens,jdbcType=INTEGER},
+      last_update = #{row.lastUpdate,jdbcType=TIMESTAMP},
       create_time = #{row.createTime,jdbcType=TIMESTAMP},
       is_delete = #{row.isDelete,jdbcType=BIT},
       is_block = #{row.isBlock,jdbcType=BIT}
@@ -209,6 +234,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="demo.aiChat.pojo.po.AiChatUserDetail">
     update ai_chat_user_detail
     <set>
+      <if test="nickname != null">
+        nickname = #{nickname,jdbcType=CHAR},
+      </if>
       <if test="bonusAmount != null">
         bonus_amount = #{bonusAmount,jdbcType=DECIMAL},
       </if>
@@ -217,6 +245,9 @@
       </if>
       <if test="usedTokens != null">
         used_tokens = #{usedTokens,jdbcType=INTEGER},
+      </if>
+      <if test="lastUpdate != null">
+        last_update = #{lastUpdate,jdbcType=TIMESTAMP},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -232,9 +263,11 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="demo.aiChat.pojo.po.AiChatUserDetail">
     update ai_chat_user_detail
-    set bonus_amount = #{bonusAmount,jdbcType=DECIMAL},
+    set nickname = #{nickname,jdbcType=CHAR},
+      bonus_amount = #{bonusAmount,jdbcType=DECIMAL},
       recharge_amount = #{rechargeAmount,jdbcType=DECIMAL},
       used_tokens = #{usedTokens,jdbcType=INTEGER},
+      last_update = #{lastUpdate,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       is_delete = #{isDelete,jdbcType=BIT},
       is_block = #{isBlock,jdbcType=BIT}

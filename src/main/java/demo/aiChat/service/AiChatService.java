@@ -14,4 +14,6 @@ public interface AiChatService {
 
 	JSONObject sendNewChatMessageFromApi(Long aiChatUserId, AiChatSendNewMsgFromApiDTO dto);
 
+	GetAiChatHistoryResult findChatHistoryByAiChatUserIdToFrontEnd(String aiChatUserPk);
+
 }

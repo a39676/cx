@@ -166,6 +166,76 @@ public class AiChatUserDetailExample {
             return (Criteria) this;
         }
 
+        public Criteria andNicknameIsNull() {
+            addCriterion("nickname is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameIsNotNull() {
+            addCriterion("nickname is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameEqualTo(String value) {
+            addCriterion("nickname =", value, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameNotEqualTo(String value) {
+            addCriterion("nickname <>", value, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameGreaterThan(String value) {
+            addCriterion("nickname >", value, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameGreaterThanOrEqualTo(String value) {
+            addCriterion("nickname >=", value, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameLessThan(String value) {
+            addCriterion("nickname <", value, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameLessThanOrEqualTo(String value) {
+            addCriterion("nickname <=", value, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameLike(String value) {
+            addCriterion("nickname like", value, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameNotLike(String value) {
+            addCriterion("nickname not like", value, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameIn(List<String> values) {
+            addCriterion("nickname in", values, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameNotIn(List<String> values) {
+            addCriterion("nickname not in", values, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameBetween(String value1, String value2) {
+            addCriterion("nickname between", value1, value2, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameNotBetween(String value1, String value2) {
+            addCriterion("nickname not between", value1, value2, "nickname");
+            return (Criteria) this;
+        }
+
         public Criteria andBonusAmountIsNull() {
             addCriterion("bonus_amount is null");
             return (Criteria) this;
@@ -343,6 +413,66 @@ public class AiChatUserDetailExample {
 
         public Criteria andUsedTokensNotBetween(Integer value1, Integer value2) {
             addCriterion("used_tokens not between", value1, value2, "usedTokens");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastUpdateIsNull() {
+            addCriterion("last_update is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastUpdateIsNotNull() {
+            addCriterion("last_update is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastUpdateEqualTo(LocalDateTime value) {
+            addCriterion("last_update =", value, "lastUpdate");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastUpdateNotEqualTo(LocalDateTime value) {
+            addCriterion("last_update <>", value, "lastUpdate");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastUpdateGreaterThan(LocalDateTime value) {
+            addCriterion("last_update >", value, "lastUpdate");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastUpdateGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("last_update >=", value, "lastUpdate");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastUpdateLessThan(LocalDateTime value) {
+            addCriterion("last_update <", value, "lastUpdate");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastUpdateLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("last_update <=", value, "lastUpdate");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastUpdateIn(List<LocalDateTime> values) {
+            addCriterion("last_update in", values, "lastUpdate");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastUpdateNotIn(List<LocalDateTime> values) {
+            addCriterion("last_update not in", values, "lastUpdate");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastUpdateBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("last_update between", value1, value2, "lastUpdate");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastUpdateNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("last_update not between", value1, value2, "lastUpdate");
             return (Criteria) this;
         }
 

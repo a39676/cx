@@ -39,6 +39,13 @@
       </li>
     </ul><!-- system -->
 
+    <ul class="main-menu visible-on-click" id="aiChat">
+      <li style="background-color:yellow;">AI chat</li>
+      <li>
+        <a href="/aiChatManager/userList" target="_blank">user list</a>
+      </li>
+    </ul><!-- aiChat -->
+
     <ul class="main-menu visible-on-click" id="telegramTool">
       <li style="background-color:yellow;">TelegramTool</li>
       <li>

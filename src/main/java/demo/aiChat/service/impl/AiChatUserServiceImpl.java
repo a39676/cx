@@ -4,10 +4,15 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 import aiChat.pojo.result.AiChatDailySignUpResult;
 import aiChat.pojo.result.GetAiChatAmountResult;
@@ -17,16 +22,24 @@ import demo.aiChat.mapper.AiChatUserAmountHistoryMapper;
 import demo.aiChat.mapper.AiChatUserAssociateWechatUidMapper;
 import demo.aiChat.mapper.AiChatUserDetailMapper;
 import demo.aiChat.mapper.SystemUserAssociateAiChatUserMapper;
+import demo.aiChat.pojo.dto.AiChatUserEditNicknameDTO;
+import demo.aiChat.pojo.dto.GetAiChatUserListDTO;
 import demo.aiChat.pojo.dto.NewPositiveAiChatUserDTO;
 import demo.aiChat.pojo.po.AiChatUserAmountHistory;
 import demo.aiChat.pojo.po.AiChatUserAssociateWechatUidExample;
 import demo.aiChat.pojo.po.AiChatUserAssociateWechatUidKey;
 import demo.aiChat.pojo.po.AiChatUserDetail;
 import demo.aiChat.pojo.po.AiChatUserDetailExample;
+import demo.aiChat.pojo.po.AiChatUserDetailExample.Criteria;
 import demo.aiChat.pojo.po.SystemUserAssociateAiChatUserExample;
 import demo.aiChat.pojo.po.SystemUserAssociateAiChatUserKey;
 import demo.aiChat.pojo.result.CreateAiChatUserResult;
+import demo.aiChat.pojo.result.GetAiChatUserListResult;
+import demo.aiChat.pojo.vo.AiChatUserVO;
 import demo.aiChat.service.AiChatUserService;
+import demo.interaction.wechat.pojo.po.WechatQrcodeDetail;
+import demo.interaction.wechat.pojo.vo.WechatQrcodeVO;
+import demo.interaction.wechat.service.WechatSdkForInterService;
 
 @Service
 public class AiChatUserServiceImpl extends AiChatCommonService implements AiChatUserService {
@@ -39,6 +52,9 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 	private AiChatUserAssociateWechatUidMapper aiChatUserAssociateWechatUidMapper;
 	@Autowired
 	private AiChatUserAmountHistoryMapper amountHistoryMapper;
+
+	@Autowired
+	private WechatSdkForInterService wechatSdkForInterService;
 
 	@Override
 	public CreateAiChatUserResult createAiChatUserDetailBySystemUserId(Long systemUserId) {
@@ -312,6 +328,15 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 	}
 
 	@Override
+	public CommonResult blockUserByPk(String aiChatUserPk) {
+		if (StringUtils.isBlank(aiChatUserPk)) {
+			return new CommonResult();
+		}
+		Long aiChatUserId = systemOptionService.decryptPrivateKey(aiChatUserPk);
+		return blockUser(aiChatUserId);
+	}
+
+	@Override
 	public CommonResult blockUser(String aiChatUserIdStr) {
 		CommonResult r = new CommonResult();
 		Long aiChatUserId = null;
@@ -321,12 +346,38 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 			r.setMessage("Wrong id");
 			return r;
 		}
+		return blockUser(aiChatUserId);
+	}
 
+	private CommonResult blockUser(Long aiChatUserId) {
+		CommonResult r = new CommonResult();
 		AiChatUserDetail row = new AiChatUserDetail();
 		row.setId(aiChatUserId);
 		row.setIsBlock(true);
 		int updateCount = userDetailMapper.updateByPrimaryKeySelective(row);
-		r.setSuccess(updateCount == 1);
+		if (updateCount == 1) {
+			r.setIsSuccess();
+		}
+		return r;
+	}
+
+	@Override
+	public CommonResult unlockUserByPk(String aiChatUserPk) {
+		CommonResult r = new CommonResult();
+		Long aiChatUserId = systemOptionService.decryptPrivateKey(aiChatUserPk);
+
+		if (aiChatUserId == null) {
+			r.setMessage("Wrong pk");
+			return r;
+		}
+
+		AiChatUserDetail row = new AiChatUserDetail();
+		row.setId(aiChatUserId);
+		row.setIsBlock(false);
+		int updateCount = userDetailMapper.updateByPrimaryKeySelective(row);
+		if (updateCount == 1) {
+			r.setIsSuccess();
+		}
 		return r;
 	}
 
@@ -381,8 +432,211 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 			dto.setWechatUserId(associate.getWechatId());
 			dtoList.add(dto);
 		}
-		
+
 		return dtoList;
+	}
+
+	@Override
+	public GetAiChatUserListResult getAiChatUserList(GetAiChatUserListDTO dto) {
+		GetAiChatUserListResult r = new GetAiChatUserListResult();
+
+		RowBounds rowBounds = new RowBounds(0, 10);
+		AiChatUserDetailExample example = new AiChatUserDetailExample();
+		Criteria criteria = example.createCriteria();
+
+		if (StringUtils.isNotBlank(dto.getStartPk())) {
+			Long startId = systemOptionService.decryptPrivateKey(dto.getStartPk());
+			if (startId != null) {
+				criteria.andIdGreaterThanOrEqualTo(startId);
+			}
+		}
+		if (StringUtils.isNotBlank(dto.getNickname())) {
+			criteria.andNicknameLike("%" + dto.getNickname() + "%");
+		}
+		if (StringUtils.isNotBlank(dto.getCreateTimeMinStr())) {
+			try {
+				criteria.andCreateTimeGreaterThan(
+						localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getCreateTimeMinStr()));
+			} catch (Exception e) {
+			}
+		}
+		if (StringUtils.isNotBlank(dto.getCreateTimeMaxStr())) {
+			try {
+				criteria.andCreateTimeLessThan(
+						localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getCreateTimeMaxStr()));
+			} catch (Exception e) {
+			}
+		}
+		if (dto.getIsDelete() != null) {
+			criteria.andIsDeleteEqualTo(dto.getIsDelete());
+		}
+		if (dto.getIsBlock() != null) {
+			criteria.andIsBlockEqualTo(dto.getIsBlock());
+		}
+		if (dto.getBonusAmountMin() != null) {
+			criteria.andBonusAmountGreaterThanOrEqualTo(new BigDecimal(dto.getBonusAmountMin()));
+		}
+		if (dto.getBonusAmountMax() != null) {
+			criteria.andBonusAmountLessThanOrEqualTo(new BigDecimal(dto.getBonusAmountMax()));
+		}
+		if (dto.getRechargeAmountMin() != null) {
+			criteria.andRechargeAmountGreaterThanOrEqualTo(new BigDecimal(dto.getRechargeAmountMin()));
+		}
+		if (dto.getRechargeAmountMax() != null) {
+			criteria.andRechargeAmountLessThanOrEqualTo(new BigDecimal(dto.getRechargeAmountMax()));
+		}
+		if (dto.getUsedTokensMin() != null) {
+			criteria.andUsedTokensGreaterThanOrEqualTo(dto.getUsedTokensMin());
+		}
+		if (dto.getUsedTokensMax() != null) {
+			criteria.andUsedTokensLessThanOrEqualTo(dto.getUsedTokensMax());
+		}
+		if (StringUtils.isNotBlank(dto.getLastUpdateTimeMaxStr())) {
+			try {
+				criteria.andLastUpdateLessThanOrEqualTo(
+						localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getLastUpdateTimeMaxStr()));
+			} catch (Exception e) {
+			}
+		}
+		if (StringUtils.isNotBlank(dto.getLastUpdateTimeMinStr())) {
+			try {
+				criteria.andLastUpdateGreaterThanOrEqualTo(
+						localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getLastUpdateTimeMinStr()));
+			} catch (Exception e) {
+			}
+		}
+		if (StringUtils.isNotBlank(dto.getSourceQrCodePk())) {
+			Long qrCodeId = systemOptionService.decryptPrivateKey(dto.getSourceQrCodePk());
+			List<Long> aiChatUserIdList = new ArrayList<>();
+			if (qrCodeId == null) {
+				r.setUserList(new ArrayList<>());
+				r.setIsSuccess();
+				return r;
+			}
+			List<Long> wechatUserIdList = wechatSdkForInterService.__getWechatUserIdListByQrCodeId(qrCodeId);
+			if (wechatUserIdList.isEmpty()) {
+				r.setUserList(new ArrayList<>());
+				r.setIsSuccess();
+				return r;
+			}
+			AiChatUserAssociateWechatUidExample associateExample = new AiChatUserAssociateWechatUidExample();
+			associateExample.createCriteria().andWechatIdIn(wechatUserIdList);
+			List<AiChatUserAssociateWechatUidKey> associateList = aiChatUserAssociateWechatUidMapper
+					.selectByExample(associateExample);
+			for (AiChatUserAssociateWechatUidKey associate : associateList) {
+				aiChatUserIdList.add(associate.getAiChatUserId());
+			}
+			if (!aiChatUserIdList.isEmpty()) {
+				criteria.andIdIn(aiChatUserIdList);
+			}
+		}
+		if (StringUtils.isNotBlank(dto.getOrderBy())) {
+			example.setOrderByClause(dto.getOrderBy());
+		}
+		if (dto.getIsAesc() != null) {
+			if (dto.getIsAesc()) {
+			} else {
+				example.setOrderByClause(example.getOrderByClause() + " desc");
+			}
+		}
+		if (dto.getLimit() != null) {
+			if (dto.getLimit() < 0 || dto.getLimit() > 10) {
+				dto.setLimit(10);
+			}
+			rowBounds = new RowBounds(0, dto.getLimit());
+		}
+
+		List<AiChatUserDetail> userDetailList = userDetailMapper.selectByExampleWithRowbounds(example, rowBounds);
+		if (userDetailList.isEmpty()) {
+			r.setUserList(new ArrayList<>());
+			r.setIsSuccess();
+			return r;
+		}
+
+		List<Long> aiChatUserIdList = new ArrayList<>();
+		for (AiChatUserDetail user : userDetailList) {
+			aiChatUserIdList.add(user.getId());
+		}
+
+		AiChatUserAssociateWechatUidExample associateExample = new AiChatUserAssociateWechatUidExample();
+		associateExample.createCriteria().andAiChatUserIdIn(aiChatUserIdList);
+		List<AiChatUserAssociateWechatUidKey> associateList = aiChatUserAssociateWechatUidMapper
+				.selectByExample(associateExample);
+
+		// aiChatUserId : wechatUserId
+		Map<Long, Long> associateMap = new HashMap<>();
+		for (AiChatUserAssociateWechatUidKey associate : associateList) {
+			associateMap.put(associate.getAiChatUserId(), associate.getWechatId());
+		}
+
+		List<AiChatUserVO> userVoList = new ArrayList<>();
+		AiChatUserVO vo = null;
+		Long wechatUserId = null;
+		for (AiChatUserDetail user : userDetailList) {
+			vo = new AiChatUserVO();
+			vo.setBonusAmount(user.getBonusAmount().doubleValue());
+			vo.setCreateTime(localDateTimeHandler.dateToStr(user.getCreateTime()));
+			if (user.getLastUpdate() != null) {
+				vo.setLastUpdateTime(localDateTimeHandler.dateToStr(user.getLastUpdate()));
+			}
+			vo.setIsBlock(user.getIsBlock());
+			vo.setIsDelete(user.getIsDelete());
+			vo.setNickname(user.getNickname());
+			vo.setRechargeAmount(user.getRechargeAmount().doubleValue());
+			vo.setUsedTokens(user.getUsedTokens());
+			vo.setUserPk(systemOptionService.encryptId(user.getId()));
+			wechatUserId = associateMap.get(user.getId());
+			if (wechatUserId != null) {
+				vo.setWechatUserPk(systemOptionService.encryptId(wechatUserId));
+			}
+			userVoList.add(vo);
+		}
+
+		r.setUserList(userVoList);
+		r.setIsSuccess();
+		return r;
+	}
+
+	@Override
+	public ModelAndView getAiChatUserListView() {
+		ModelAndView view = new ModelAndView("aiChatJSP/userList");
+		List<WechatQrcodeDetail> qrCodeList = wechatSdkForInterService.__getAllQrCode();
+		List<WechatQrcodeVO> qrCodeVoList = new ArrayList<>();
+		WechatQrcodeVO vo = null;
+		if (!qrCodeList.isEmpty()) {
+			for (WechatQrcodeDetail po : qrCodeList) {
+				vo = new WechatQrcodeVO();
+				vo.setPk(systemOptionService.encryptId(po.getId()));
+				vo.setRemark(po.getRemark());
+				vo.setSceneName(po.getSceneName());
+				qrCodeVoList.add(vo);
+			}
+		}
+		view.addObject("qrCodeList", qrCodeVoList);
+		return view;
+	}
+
+	@Override
+	public CommonResult editNickname(AiChatUserEditNicknameDTO dto) {
+		if (StringUtils.isBlank(dto.getUserPk())) {
+			return new CommonResult();
+		}
+		Long aiChatUserId = systemOptionService.decryptPrivateKey(dto.getUserPk());
+		if (aiChatUserId == null) {
+			return new CommonResult();
+		}
+
+		AiChatUserDetail po = userDetailMapper.selectByPrimaryKey(aiChatUserId);
+
+		if (po == null) {
+			return new CommonResult();
+		}
+
+		po.setNickname(dto.getNickname());
+		userDetailMapper.updateByPrimaryKeySelective(po);
+		CommonResult r = new CommonResult();
+		r.setIsSuccess();
+		return r;
 	}
 
 }

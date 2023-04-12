@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiChat.mapper.AiChatUserAmountHistoryMapper;
 import demo.aiChat.mapper.AiChatUserChatHistoryMapper;
 import demo.aiChat.mapper.AiChatUserDetailMapper;
-import demo.aiChat.pojo.constant.AiChatUrlConstant;
+import demo.aiChat.pojo.constant.AiChatManagerUrlConstant;
 import demo.aiChat.pojo.dto.AiChatUserMembershipDetailSummaryDTO;
 import demo.aiChat.pojo.po.AiChatUserAmountHistory;
 import demo.aiChat.pojo.po.AiChatUserChatHistory;
@@ -77,10 +78,10 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 			if (sensitiveWordHitCount > optionService.getSensitiveWordsTriggerMaxCount()) {
 				String hostname = hostnameService.findMainHostname();
 				sendTelegramMessage("Send too many sensitive words, history: " //
-						+ "https://www." + hostname + AiChatUrlConstant.ROOT + AiChatUrlConstant.CHECK_CHAT_HISTORY
-						+ "?aiChatUserId=" + aiChatUserId //
-						+ ", block: " + "https://www." + hostname + AiChatUrlConstant.ROOT
-						+ AiChatUrlConstant.BLOCK_USER + "?aiChatUserId=" + aiChatUserId);
+						+ "https://www." + hostname + AiChatManagerUrlConstant.ROOT
+						+ AiChatManagerUrlConstant.CHECK_CHAT_HISTORY + "?aiChatUserId=" + aiChatUserId //
+						+ ", block: " + "https://www." + hostname + AiChatManagerUrlConstant.ROOT
+						+ AiChatManagerUrlConstant.BLOCK_USER + "?aiChatUserId=" + aiChatUserId);
 			}
 		}
 
@@ -106,7 +107,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		// send new msg, wait feedback
 		JSONObject apiResult = util.sendChatCompletionFromApi(dto);
 		log.error("api result: " + apiResult.toString());
-		
+
 		// if fail, send fail response
 		if (apiResult.containsKey("error")) {
 			errorMsg.put("message", "运算异常, 正在排查故障");
@@ -152,10 +153,10 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 			if (sensitiveWordHitCount > optionService.getSensitiveWordsTriggerMaxCount()) {
 				String hostname = hostnameService.findMainHostname();
 				sendTelegramMessage("Send too many sensitive words, history: " //
-						+ "https://www." + hostname + AiChatUrlConstant.ROOT + AiChatUrlConstant.CHECK_CHAT_HISTORY
-						+ "?aiChatUserId=" + aiChatUserId //
-						+ ", block: " + "https://www." + hostname + AiChatUrlConstant.ROOT
-						+ AiChatUrlConstant.BLOCK_USER + "?aiChatUserId=" + aiChatUserId);
+						+ "https://www." + hostname + AiChatManagerUrlConstant.ROOT
+						+ AiChatManagerUrlConstant.CHECK_CHAT_HISTORY + "?aiChatUserId=" + aiChatUserId //
+						+ ", block: " + "https://www." + hostname + AiChatManagerUrlConstant.ROOT
+						+ AiChatManagerUrlConstant.BLOCK_USER + "?aiChatUserId=" + aiChatUserId);
 			}
 		}
 
@@ -235,6 +236,20 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 				OpenAiChatCompletionFinishType.getType(apiResult.getDto().getChoices().get(0).getFinish_reason()));
 		r.setIsSuccess();
 		return r;
+	}
+
+	@Override
+	public GetAiChatHistoryResult findChatHistoryByAiChatUserIdToFrontEnd(String aiChatUserPk) {
+		if (StringUtils.isBlank(aiChatUserPk)) {
+			return new GetAiChatHistoryResult();
+		}
+
+		Long aiChatUserId = systemOptionService.decryptPrivateKey(aiChatUserPk);
+		if (aiChatUserId == null) {
+			return new GetAiChatHistoryResult();
+		}
+
+		return findChatHistoryByAiChatUserIdToFrontEnd(aiChatUserId);
 	}
 
 	@Override
@@ -410,6 +425,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		BigDecimal restDebitAmount = new BigDecimal(debitAmount.doubleValue());
 
 		detail.setUsedTokens(detail.getUsedTokens() + debitAmount.intValue());
+		detail.setLastUpdate(LocalDateTime.now());
 
 		if (detail.getBonusAmount().compareTo(BigDecimal.ZERO) > 0) {
 			restDebitAmount = debitAmount.subtract(detail.getBonusAmount());

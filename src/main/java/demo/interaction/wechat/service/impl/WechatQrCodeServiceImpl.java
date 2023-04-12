@@ -38,8 +38,9 @@ public class WechatQrCodeServiceImpl extends WechatCommonService implements Wech
 		row.setUrl(decryptResult.getUrl());
 		row.setSourceOfficialAccount(decryptResult.getSourceOfficialAccountCode());
 		qrCodeMapper.insertSelective(row);
-		
+
 		result.setIsSuccess();
 		return encryptDTO(result);
 	}
+
 }

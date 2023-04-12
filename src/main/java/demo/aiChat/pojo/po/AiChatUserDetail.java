@@ -6,11 +6,15 @@ import java.time.LocalDateTime;
 public class AiChatUserDetail {
     private Long id;
 
+    private String nickname;
+
     private BigDecimal bonusAmount;
 
     private BigDecimal rechargeAmount;
 
     private Integer usedTokens;
+
+    private LocalDateTime lastUpdate;
 
     private LocalDateTime createTime;
 
@@ -24,6 +28,14 @@ public class AiChatUserDetail {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname == null ? null : nickname.trim();
     }
 
     public BigDecimal getBonusAmount() {
@@ -48,6 +60,14 @@ public class AiChatUserDetail {
 
     public void setUsedTokens(Integer usedTokens) {
         this.usedTokens = usedTokens;
+    }
+
+    public LocalDateTime getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(LocalDateTime lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
     public LocalDateTime getCreateTime() {

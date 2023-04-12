@@ -10,6 +10,7 @@ import demo.aiChat.pojo.po.AiChatUserDetail;
 import demo.aiChat.pojo.po.AiChatUserDetailExample;
 
 public interface AiChatUserDetailMapper {
+
 	long countByExample(AiChatUserDetailExample example);
 
 	int deleteByExample(AiChatUserDetailExample example);

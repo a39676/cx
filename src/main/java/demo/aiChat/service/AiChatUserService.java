@@ -3,12 +3,17 @@ package demo.aiChat.service;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.springframework.web.servlet.ModelAndView;
+
 import aiChat.pojo.result.AiChatDailySignUpResult;
 import aiChat.pojo.result.GetAiChatAmountResult;
 import aiChat.pojo.type.AiChatAmountType;
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.aiChat.pojo.dto.AiChatUserEditNicknameDTO;
+import demo.aiChat.pojo.dto.GetAiChatUserListDTO;
 import demo.aiChat.pojo.dto.NewPositiveAiChatUserDTO;
 import demo.aiChat.pojo.result.CreateAiChatUserResult;
+import demo.aiChat.pojo.result.GetAiChatUserListResult;
 
 public interface AiChatUserService {
 
@@ -40,5 +45,15 @@ public interface AiChatUserService {
 			Integer specialBonus);
 
 	List<NewPositiveAiChatUserDTO> __findNewPositiveAiChatUserDtoListInYesterday();
+
+	GetAiChatUserListResult getAiChatUserList(GetAiChatUserListDTO dto);
+
+	ModelAndView getAiChatUserListView();
+
+	CommonResult blockUserByPk(String aiChatUserPk);
+
+	CommonResult unlockUserByPk(String aiChatUserPk);
+
+	CommonResult editNickname(AiChatUserEditNicknameDTO dto);
 
 }

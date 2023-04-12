@@ -27,14 +27,13 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiChat.mapper.AiChatUserAmountHistoryMapper;
 import demo.aiChat.mapper.AiChatUserChatHistoryMapper;
 import demo.aiChat.mapper.AiChatUserDetailMapper;
-import demo.aiChat.pojo.constant.AiChatManagerUrlConstant;
 import demo.aiChat.pojo.dto.AiChatUserMembershipDetailSummaryDTO;
 import demo.aiChat.pojo.po.AiChatUserAmountHistory;
 import demo.aiChat.pojo.po.AiChatUserChatHistory;
 import demo.aiChat.pojo.po.AiChatUserDetail;
 import demo.aiChat.service.AiChatMembershipService;
 import demo.aiChat.service.AiChatService;
-import demo.base.system.service.HostnameService;
+import demo.aiChat.service.AiChatUserService;
 import net.sf.json.JSONObject;
 import openAi.pojo.dto.OpanAiChatCompletionMessageDTO;
 import openAi.pojo.dto.OpanAiChatCompletionResponseDTO;
@@ -54,9 +53,8 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 	private AiChatUserDetailMapper detailMapper;
 	@Autowired
 	private AiChatMembershipService membershipService;
-
 	@Autowired
-	private HostnameService hostnameService;
+	private AiChatUserService aiChatUserService;
 
 	@Autowired
 	private FileUtilCustom ioUtil;
@@ -76,12 +74,8 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 
 			Integer sensitiveWordHitCount = findSensitiveWordHitCount(aiChatUserId);
 			if (sensitiveWordHitCount > optionService.getSensitiveWordsTriggerMaxCount()) {
-				String hostname = hostnameService.findMainHostname();
-				sendTelegramMessage("Send too many sensitive words, history: " //
-						+ "https://www." + hostname + AiChatManagerUrlConstant.ROOT
-						+ AiChatManagerUrlConstant.CHECK_CHAT_HISTORY + "?aiChatUserId=" + aiChatUserId //
-						+ ", block: " + "https://www." + hostname + AiChatManagerUrlConstant.ROOT
-						+ AiChatManagerUrlConstant.BLOCK_USER + "?aiChatUserId=" + aiChatUserId);
+				aiChatUserService.__giveUserWarningMark(aiChatUserId);
+				sendTelegramMessage("Detected too many sensitive words aiChatUserId=" + aiChatUserId);
 			}
 		}
 
@@ -151,12 +145,8 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 
 			Integer sensitiveWordHitCount = findSensitiveWordHitCount(aiChatUserId);
 			if (sensitiveWordHitCount > optionService.getSensitiveWordsTriggerMaxCount()) {
-				String hostname = hostnameService.findMainHostname();
-				sendTelegramMessage("Send too many sensitive words, history: " //
-						+ "https://www." + hostname + AiChatManagerUrlConstant.ROOT
-						+ AiChatManagerUrlConstant.CHECK_CHAT_HISTORY + "?aiChatUserId=" + aiChatUserId //
-						+ ", block: " + "https://www." + hostname + AiChatManagerUrlConstant.ROOT
-						+ AiChatManagerUrlConstant.BLOCK_USER + "?aiChatUserId=" + aiChatUserId);
+				aiChatUserService.__giveUserWarningMark(aiChatUserId);
+				sendTelegramMessage("Detected too many sensitive words aiChatUserId=" + aiChatUserId);
 			}
 		}
 

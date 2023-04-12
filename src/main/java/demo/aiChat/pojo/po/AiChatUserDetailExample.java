@@ -655,6 +655,66 @@ public class AiChatUserDetailExample {
             addCriterion("is_block not between", value1, value2, "isBlock");
             return (Criteria) this;
         }
+
+        public Criteria andIsWarningIsNull() {
+            addCriterion("is_warning is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsWarningIsNotNull() {
+            addCriterion("is_warning is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsWarningEqualTo(Boolean value) {
+            addCriterion("is_warning =", value, "isWarning");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsWarningNotEqualTo(Boolean value) {
+            addCriterion("is_warning <>", value, "isWarning");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsWarningGreaterThan(Boolean value) {
+            addCriterion("is_warning >", value, "isWarning");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsWarningGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_warning >=", value, "isWarning");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsWarningLessThan(Boolean value) {
+            addCriterion("is_warning <", value, "isWarning");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsWarningLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_warning <=", value, "isWarning");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsWarningIn(List<Boolean> values) {
+            addCriterion("is_warning in", values, "isWarning");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsWarningNotIn(List<Boolean> values) {
+            addCriterion("is_warning not in", values, "isWarning");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsWarningBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_warning between", value1, value2, "isWarning");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsWarningNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_warning not between", value1, value2, "isWarning");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

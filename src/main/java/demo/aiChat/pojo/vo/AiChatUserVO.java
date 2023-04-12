@@ -12,6 +12,7 @@ public class AiChatUserVO {
 	private Integer usedTokens;
 	private Boolean isDelete;
 	private Boolean isBlock;
+	private Boolean isWarning;
 
 	public String getUserPk() {
 		return userPk;
@@ -93,12 +94,20 @@ public class AiChatUserVO {
 		this.lastUpdateTime = lastUpdateTime;
 	}
 
+	public Boolean getIsWarning() {
+		return isWarning;
+	}
+
+	public void setIsWarning(Boolean isWarning) {
+		this.isWarning = isWarning;
+	}
+
 	@Override
 	public String toString() {
 		return "AiChatUserVO [userPk=" + userPk + ", nickname=" + nickname + ", wechatUserPk=" + wechatUserPk
 				+ ", bonusAmount=" + bonusAmount + ", rechargeAmount=" + rechargeAmount + ", createTime=" + createTime
 				+ ", lastUpdateTime=" + lastUpdateTime + ", usedTokens=" + usedTokens + ", isDelete=" + isDelete
-				+ ", isBlock=" + isBlock + "]";
+				+ ", isBlock=" + isBlock + ", isWarning=" + isWarning + "]";
 	}
 
 }

@@ -56,4 +56,8 @@ public interface AiChatUserService {
 
 	CommonResult editNickname(AiChatUserEditNicknameDTO dto);
 
+	CommonResult __giveUserWarningMark(Long aiChatUserId);
+
+	CommonResult cleanUserWarningMark(String userPk);
+
 }

@@ -473,6 +473,9 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 		if (dto.getIsBlock() != null) {
 			criteria.andIsBlockEqualTo(dto.getIsBlock());
 		}
+		if (dto.getIsWarning() != null) {
+			criteria.andIsWarningEqualTo(dto.getIsWarning());
+		}
 		if (dto.getBonusAmountMin() != null) {
 			criteria.andBonusAmountGreaterThanOrEqualTo(new BigDecimal(dto.getBonusAmountMin()));
 		}
@@ -585,6 +588,7 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 			vo.setRechargeAmount(user.getRechargeAmount().doubleValue());
 			vo.setUsedTokens(user.getUsedTokens());
 			vo.setUserPk(systemOptionService.encryptId(user.getId()));
+			vo.setIsWarning(user.getIsWarning());
 			wechatUserId = associateMap.get(user.getId());
 			if (wechatUserId != null) {
 				vo.setWechatUserPk(systemOptionService.encryptId(wechatUserId));
@@ -639,4 +643,41 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 		return r;
 	}
 
+	@Override
+	public CommonResult __giveUserWarningMark(Long aiChatUserId) {
+		AiChatUserDetail po = userDetailMapper.selectByPrimaryKey(aiChatUserId);
+		if (po == null) {
+			return new CommonResult();
+		}
+		po.setIsWarning(true);
+		int updateCount = userDetailMapper.updateByPrimaryKeySelective(po);
+		CommonResult r = new CommonResult();
+		if (updateCount == 1) {
+			r.setIsSuccess();
+		}
+		return r;
+	}
+
+	@Override
+	public CommonResult cleanUserWarningMark(String userPk) {
+		if (StringUtils.isBlank(userPk)) {
+			return new CommonResult();
+		}
+		Long aiChatUserId = systemOptionService.decryptPrivateKey(userPk);
+		if (aiChatUserId == null) {
+			return new CommonResult();
+		}
+		AiChatUserDetail row = new AiChatUserDetail();
+		row.setId(aiChatUserId);
+		row.setIsWarning(false);
+		int updateCount = userDetailMapper.updateByPrimaryKeySelective(row);
+		CommonResult r = new CommonResult();
+		if (updateCount == 1) {
+			r.setIsSuccess();
+		} else {
+			r.setMessage("ORM update error");
+		}
+		return r;
+
+	}
 }

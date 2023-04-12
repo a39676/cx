@@ -11,6 +11,7 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
     <result column="is_block" jdbcType="BIT" property="isBlock" />
+    <result column="is_warning" jdbcType="BIT" property="isWarning" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -72,7 +73,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, nickname, bonus_amount, recharge_amount, used_tokens, last_update, create_time, 
-    is_delete, is_block
+    is_delete, is_block, is_warning
   </sql>
   <select id="selectByExample" parameterType="demo.aiChat.pojo.po.AiChatUserDetailExample" resultMap="BaseResultMap">
     select
@@ -107,12 +108,12 @@
   <insert id="insert" parameterType="demo.aiChat.pojo.po.AiChatUserDetail">
     insert into ai_chat_user_detail (id, nickname, bonus_amount, 
       recharge_amount, used_tokens, last_update, 
-      create_time, is_delete, is_block
-      )
+      create_time, is_delete, is_block, 
+      is_warning)
     values (#{id,jdbcType=BIGINT}, #{nickname,jdbcType=CHAR}, #{bonusAmount,jdbcType=DECIMAL}, 
       #{rechargeAmount,jdbcType=DECIMAL}, #{usedTokens,jdbcType=INTEGER}, #{lastUpdate,jdbcType=TIMESTAMP}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}, #{isBlock,jdbcType=BIT}
-      )
+      #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}, #{isBlock,jdbcType=BIT}, 
+      #{isWarning,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="demo.aiChat.pojo.po.AiChatUserDetail">
     insert into ai_chat_user_detail
@@ -144,6 +145,9 @@
       <if test="isBlock != null">
         is_block,
       </if>
+      <if test="isWarning != null">
+        is_warning,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -172,6 +176,9 @@
       </if>
       <if test="isBlock != null">
         #{isBlock,jdbcType=BIT},
+      </if>
+      <if test="isWarning != null">
+        #{isWarning,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -211,6 +218,9 @@
       <if test="row.isBlock != null">
         is_block = #{row.isBlock,jdbcType=BIT},
       </if>
+      <if test="row.isWarning != null">
+        is_warning = #{row.isWarning,jdbcType=BIT},
+      </if>
     </set>
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -226,7 +236,8 @@
       last_update = #{row.lastUpdate,jdbcType=TIMESTAMP},
       create_time = #{row.createTime,jdbcType=TIMESTAMP},
       is_delete = #{row.isDelete,jdbcType=BIT},
-      is_block = #{row.isBlock,jdbcType=BIT}
+      is_block = #{row.isBlock,jdbcType=BIT},
+      is_warning = #{row.isWarning,jdbcType=BIT}
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -258,6 +269,9 @@
       <if test="isBlock != null">
         is_block = #{isBlock,jdbcType=BIT},
       </if>
+      <if test="isWarning != null">
+        is_warning = #{isWarning,jdbcType=BIT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -270,7 +284,8 @@
       last_update = #{lastUpdate,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       is_delete = #{isDelete,jdbcType=BIT},
-      is_block = #{isBlock,jdbcType=BIT}
+      is_block = #{isBlock,jdbcType=BIT},
+      is_warning = #{isWarning,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByExampleWithRowbounds" parameterType="demo.aiChat.pojo.po.AiChatUserDetailExample" resultMap="BaseResultMap">

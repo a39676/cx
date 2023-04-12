@@ -22,37 +22,33 @@
               <td>
                 <label>createTimeMinStr</label>
                 <input type="text" name="" id="createTimeMinStrInput" placeholder="createTimeMinStr">
-              </td>
-              <td>
                 <label>createTimeMaxStr</label>
-                <input type="text" name="" id="createTimeMaxStrInput" placeholder="createTimeMaxStr">
+                <input type="text" name="" id="createTimeMaxStrInput" placeholder="createTimeMaxStr"><br>
+                <label>lastUpdateTimeMinStr</label>
+                <input type="text" name="" id="lastUpdateTimeMinStrInput" placeholder="lastUpdateTimeMinStr">
+                <label>lastUpdateTimeMaxStr</label>
+                <input type="text" name="" id="lastUpdateTimeMaxStrInput" placeholder="lastUpdateTimeMaxStr">
               </td>
               <td>
                 <label>bonusAmountMin</label>
                 <input type="text" name="" id="bonusAmountMinInput" placeholder="bonusAmountMin">
-              </td>
-              <td>
                 <label>bonusAmountMax</label>
                 <input type="text" name="" id="bonusAmountMaxInput" placeholder="bonusAmountMax">
               </td>
               <td>
                 <label>rechargeAmountMin</label>
                 <input type="text" name="" id="rechargeAmountMinInput" placeholder="rechargeAmountMin">
-              </td>
-              <td>
                 <label>rechargeAmountMax</label>
                 <input type="text" name="" id="rechargeAmountMaxInput" placeholder="rechargeAmountMax">
               </td>
-            </tr>
-            <tr>
               <td>
                 <label>usedTokensMin</label>
                 <input type="text" name="" id="usedTokensMinInput" placeholder="usedTokensMin">
-              </td>
-              <td>
                 <label>usedTokensMax</label>
                 <input type="text" name="" id="usedTokensMaxInput" placeholder="usedTokensMax">
               </td>
+            </tr>
+            <tr>
               <td>
                 <label>isDelete</label>
                 <div class="form-check">
@@ -84,34 +80,27 @@
                 </div>
               </td>
               <td>
-                <label>aesc</label>
+                <label>isWarning</label>
                 <div class="form-check">
-                  <input value="true" class="form-check-input" type="radio" name="isAescRadio" id="isAesc">
-                  <label class="form-check-label" for="isAesc">
-                    isAesc
+                  <input value="true" class="form-check-input" type="radio" name="isWarningRadio" id="isWarning">
+                  <label class="form-check-label" for="isWarning">
+                    isWarning
                   </label>
                 </div>
                 <div class="form-check">
-                  <input value="false" class="form-check-input" type="radio" name="isAescRadio" id="isDesc" checked>
-                  <label class="form-check-label" for="isDesc">
-                    isDesc
+                  <input value="false" class="form-check-input" type="radio" name="isWarningRadio" id="isNotWarning" checked>
+                  <label class="form-check-label" for="isNotWarning">
+                    isNotWarning
                   </label>
                 </div>
               </td>
+              
               <td>
                 <label>nickname</label>
                 <input type="text" name="" id="nicknameInput" placeholder="nickname">
               </td>
             </tr>
             <tr>
-              <td>
-                <label>lastUpdateTimeMinStr</label>
-                <input type="text" name="" id="lastUpdateTimeMinStrInput" placeholder="lastUpdateTimeMinStr">
-              </td>
-              <td>
-                <label>lastUpdateTimeMaxStr</label>
-                <input type="text" name="" id="lastUpdateTimeMaxStrInput" placeholder="lastUpdateTimeMaxStr">
-              </td>
               <td>
                 <label>Source QR code</label>
                 <select id="sourceQrCodeSelector">
@@ -134,7 +123,23 @@
                   <option value="create_time">create_time</option>
                   <option value="is_delete">is_delete</option>
                   <option value="is_block">is_block</option>
+                  <option value="is_warning">is_warning</option>
                 </select>
+              </td>
+              <td>
+                <label>aesc</label>
+                <div class="form-check">
+                  <input value="true" class="form-check-input" type="radio" name="isAescRadio" id="isAesc">
+                  <label class="form-check-label" for="isAesc">
+                    isAesc
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input value="false" class="form-check-input" type="radio" name="isAescRadio" id="isDesc" checked>
+                  <label class="form-check-label" for="isDesc">
+                    isDesc
+                  </label>
+                </div>
               </td>
               <td>
                 <label>limit</label>
@@ -166,6 +171,7 @@
               <td>createTime</td>
               <td>isDelete</td>
               <td>isBlock</td>
+              <td>isWarning</td>
             </tr>
           </thead>
           <tbody id="userList" lastUserPk="">
@@ -202,6 +208,7 @@
         $("input[name='isDeleteRadio']").filter('[value=false]').prop('checked', true);
         $("input[name='isBlockRadio']").filter('[value=false]').prop('checked', true);
         $("input[name='isAescRadio']").filter('[value=false]').prop('checked', true);
+        $("input[name='isWarningRadio']").filter('[value=false]').prop('checked', true);
         $("#nicknameInput").val("");
         $("#sourceQrCodeSelector").val("");
         $("#orderBySelector").val("");
@@ -230,6 +237,7 @@
         var usedTokensMax = $("#usedTokensMaxInput").val();
         var isDelete = $("input[name='isDeleteRadio']:checked").val();
         var isBlock = $("input[name='isBlockRadio']:checked").val();
+        var isWarning = $("input[name='isWarningRadio']:checked").val();
         var isAesc = $("input[name='isAescRadio']:checked").val();
         var nickname = $("#nicknameInput").val();
         var sourceQrCode = $("#sourceQrCodeSelector").val();
@@ -250,6 +258,7 @@
           usedTokensMax:usedTokensMax,
           isDelete:isDelete,
           isBlock:isBlock,
+          isWarning:isWarning,
           isAesc:isAesc,
           nickname:nickname,
           sourceQrCodePk: sourceQrCode,
@@ -299,6 +308,7 @@
         tr += "<td>"+userVO.createTime+"</td>";
         tr += "<td>"+userVO.isDelete+"<br> </td>";
         tr += "<td> <label name='blockStatus' userPk='"+userVO.userPk+"'>"+userVO.isBlock+"</label><br> <button class='btn btn-sm btn-success' name='unlockUser' userPk='"+userVO.userPk+"'>Unlock</button> <button class='btn btn-sm btn-danger' name='blockUser' userPk='"+userVO.userPk+"'>Block</button></td>";
+        tr += "<td> <label name='warningStatus' userPk='"+userVO.userPk+"'>"+userVO.isWarning+"</label><br> <button class='btn btn-sm btn-success' name='unwarningUser' userPk='"+userVO.userPk+"'>Unwarning</button></td>";
         tr += "</tr>";
 
         var userList = $("#userList");
@@ -313,6 +323,9 @@
         });
         $("button[name='editNickname'][userPk='"+userVO.userPk+"']").bind("click", function() {
           editNickname(userVO.userPk);
+        });
+        $("button[name='unwarningUser'][userPk='"+userVO.userPk+"']").bind("click", function() {
+          unwarningUser(userVO.userPk);
         });
         
       }
@@ -417,6 +430,38 @@
         });
       }
 
+      function unwarningUser(userPk){
+        var url = "/aiChatManager/unwarningUserByPk";
+
+        var jsonOutput = {
+          pk:userPk,
+        };
+
+        console.log(jsonOutput);
+  
+        $.ajax({
+          type : "POST",
+          async : true,
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          cache : false,
+          contentType: "application/json",
+          dataType: "json",
+          timeout:50000,
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          success:function(datas){
+            console.log(datas);
+            if (datas.code == 0) {
+              $("label[name='warningStatus'][userPk='"+userPk+"']").text("false");
+            }
+          },
+          error: function(datas) {
+            
+          }
+        });
+      }
     });
   </script>
 

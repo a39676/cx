@@ -22,6 +22,8 @@ public class AiChatUserDetail {
 
     private Boolean isBlock;
 
+    private Boolean isWarning;
+
     public Long getId() {
         return id;
     }
@@ -92,5 +94,13 @@ public class AiChatUserDetail {
 
     public void setIsBlock(Boolean isBlock) {
         this.isBlock = isBlock;
+    }
+
+    public Boolean getIsWarning() {
+        return isWarning;
+    }
+
+    public void setIsWarning(Boolean isWarning) {
+        this.isWarning = isWarning;
     }
 }

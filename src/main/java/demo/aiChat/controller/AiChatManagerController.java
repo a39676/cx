@@ -60,6 +60,12 @@ public class AiChatManagerController extends CommonController {
 	public CommonResult unlockUserByPk(@RequestBody BaseDTO dto) {
 		return userService.unlockUserByPk(dto.getPk());
 	}
+	
+	@PostMapping(value = AiChatManagerUrlConstant.UNWARNING_USER_BY_PK)
+	@ResponseBody
+	public CommonResult cleanUserWarningMark(@RequestBody BaseDTO dto) {
+		return userService.cleanUserWarningMark(dto.getPk());
+	}
 
 	@GetMapping(value = AiChatManagerUrlConstant.CHECK_CHAT_HISTORY)
 	@ResponseBody

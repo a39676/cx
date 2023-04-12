@@ -10,6 +10,7 @@ public class GetAiChatUserListDTO {
 	private String lastUpdateTimeMaxStr;
 	private Boolean isDelete;
 	private Boolean isBlock;
+	private Boolean isWarning;
 	private Double bonusAmountMin;
 	private Double bonusAmountMax;
 	private Double rechargeAmountMin;
@@ -165,15 +166,24 @@ public class GetAiChatUserListDTO {
 		this.sourceQrCodePk = sourceQrCodePk;
 	}
 
+	public Boolean getIsWarning() {
+		return isWarning;
+	}
+
+	public void setIsWarning(Boolean isWarning) {
+		this.isWarning = isWarning;
+	}
+
 	@Override
 	public String toString() {
 		return "GetAiChatUserListDTO [startPk=" + startPk + ", nickname=" + nickname + ", createTimeMinStr="
 				+ createTimeMinStr + ", createTimeMaxStr=" + createTimeMaxStr + ", lastUpdateTimeMinStr="
 				+ lastUpdateTimeMinStr + ", lastUpdateTimeMaxStr=" + lastUpdateTimeMaxStr + ", isDelete=" + isDelete
-				+ ", isBlock=" + isBlock + ", bonusAmountMin=" + bonusAmountMin + ", bonusAmountMax=" + bonusAmountMax
-				+ ", rechargeAmountMin=" + rechargeAmountMin + ", rechargeAmountMax=" + rechargeAmountMax
-				+ ", usedTokensMin=" + usedTokensMin + ", usedTokensMax=" + usedTokensMax + ", sourceQrCodePk="
-				+ sourceQrCodePk + ", limit=" + limit + ", orderBy=" + orderBy + ", isAesc=" + isAesc + "]";
+				+ ", isBlock=" + isBlock + ", isWarning=" + isWarning + ", bonusAmountMin=" + bonusAmountMin
+				+ ", bonusAmountMax=" + bonusAmountMax + ", rechargeAmountMin=" + rechargeAmountMin
+				+ ", rechargeAmountMax=" + rechargeAmountMax + ", usedTokensMin=" + usedTokensMin + ", usedTokensMax="
+				+ usedTokensMax + ", sourceQrCodePk=" + sourceQrCodePk + ", limit=" + limit + ", orderBy=" + orderBy
+				+ ", isAesc=" + isAesc + "]";
 	}
 
 }

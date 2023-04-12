@@ -444,12 +444,6 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 		AiChatUserDetailExample example = new AiChatUserDetailExample();
 		Criteria criteria = example.createCriteria();
 
-		if (StringUtils.isNotBlank(dto.getStartPk())) {
-			Long startId = systemOptionService.decryptPrivateKey(dto.getStartPk());
-			if (startId != null) {
-				criteria.andIdGreaterThanOrEqualTo(startId);
-			}
-		}
 		if (StringUtils.isNotBlank(dto.getNickname())) {
 			criteria.andNicknameLike("%" + dto.getNickname() + "%");
 		}
@@ -533,7 +527,14 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 				criteria.andIdIn(aiChatUserIdList);
 			}
 		}
-		if (StringUtils.isNotBlank(dto.getOrderBy())) {
+		// 若没有排序条件
+		if (StringUtils.isBlank(dto.getOrderBy())) {
+			Long startId = systemOptionService.decryptPrivateKey(dto.getStartPk());
+			if (startId != null) {
+				criteria.andIdGreaterThanOrEqualTo(startId);
+			}
+		//	若有排序条件
+		} else {
 			example.setOrderByClause(dto.getOrderBy());
 		}
 		if (dto.getIsAesc() != null) {
@@ -543,7 +544,7 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 			}
 		}
 		if (dto.getLimit() != null) {
-			if (dto.getLimit() < 0 || dto.getLimit() > 10) {
+			if (dto.getLimit() < 0 || dto.getLimit() > 50) {
 				dto.setLimit(10);
 			}
 			rowBounds = new RowBounds(0, dto.getLimit());

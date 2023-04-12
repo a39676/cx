@@ -114,16 +114,16 @@
                 <label>orderBy</label>
                 <select id="orderBySelector">
                   <option value=""></option>
-                  <option value="id">id</option>
-                  <option value="nickname">nickname</option>
+                  <%-- <option value="id">id</option> --%>
+                  <%-- <option value="nickname">nickname</option> --%>
+                  <%-- <option value="is_delete">is_delete</option> --%>
+                  <%-- <option value="is_block">is_block</option> --%>
+                  <%-- <option value="is_warning">is_warning</option> --%>
+                  <option value="create_time">create_time</option>
+                  <option value="last_update">last_update</option>
+                  <option value="used_tokens">used_tokens</option>
                   <option value="bonus_amount">bonus_amount</option>
                   <option value="recharge_amount">recharge_amount</option>
-                  <option value="used_tokens">used_tokens</option>
-                  <option value="last_update">last_update</option>
-                  <option value="create_time">create_time</option>
-                  <option value="is_delete">is_delete</option>
-                  <option value="is_block">is_block</option>
-                  <option value="is_warning">is_warning</option>
                 </select>
               </td>
               <td>
@@ -149,7 +149,8 @@
             <tr>
               <td>
                 <button class="btn btn-primary" id="serach">Search</button>
-                <button class="btn btn-primary" id="clear">Clear</button>
+                <button class="btn btn-primary" id="clearCondition">Clear condition</button>
+                <button class="btn btn-primary" id="clearResult">Clear result</button>
               </td>
             </tr>
           </tbody>
@@ -164,9 +165,11 @@
             <tr>
               <td>nickname</td>
               <td>Chat history</td>
-              <td>bonusAmount</td>
-              <td>rechargeAmount</td>
-              <td>usedTokens</td>
+              <td>
+                bonusAmount<br>
+                rechargeAmount<br>
+                usedTokens<br>
+              </td>
               <td>lastUpdateTime</td>
               <td>createTime</td>
               <td>isDelete</td>
@@ -192,8 +195,7 @@
         getAiChatUserList();
       });
 
-      $("#clear").click(function() {
-        $("#userList").html("");
+      $("#clearCondition").click(function() {
         $("#userList").attr("lastUserPk", "");
         $("#createTimeMinStrInput").val("");
         $("#createTimeMaxStrInput").val("");
@@ -215,13 +217,15 @@
         $("#limitInput").val("");
       });
 
+      $("#clearResult").click(function() {
+        $("#userList").html("");
+      });
+
       $("#searchCondition").change(function() {
         $("#userList").attr("lastUserPk", "");
       }).change();
 
       function getAiChatUserList() {
-        $("#userList").html("");
-
         var url = "/aiChatManager/userList";
 
         var lastUserPk = $("#userList").attr("lastUserPk");
@@ -288,6 +292,7 @@
             for(i=0;i<datas.userList.length;i++){
               appendUserTr(datas.userList[i]);
             }
+            fillConditionForNextPage(datas.userList[datas.userList.length-1]);
           },
           error: function(datas) {
   
@@ -301,9 +306,9 @@
         tr += "<tr name='userInfo' userPk='"+userVO.userPk+"' wechatUserPk='"+userVO.wechatUserPk+"'>";
         tr += "<td><input type='text' name='nicknameEdit' userPk='"+userVO.userPk+"' value='"+userVO.nickname+"'> <br> <button class='btn btn-sm btn-primary' name='editNickname' userPk='"+userVO.userPk+"'>editNickname</button><br> <label name='nicknameEditResult' userPk='"+userVO.userPk+"'></label> </td>";
         tr += "<td><a href='/aiChatManager/checkChatHistoryByPk?aiChatUserPk="+encodeURIComponent(userVO.userPk)+"' target='_blank'>chatHistory</a></td>";
-        tr += "<td>"+userVO.bonusAmount+"</td>";
-        tr += "<td>"+userVO.rechargeAmount+"</td>";
-        tr += "<td>"+userVO.usedTokens+"</td>";
+        tr += "<td>"+userVO.bonusAmount+"<br>";
+        tr += userVO.rechargeAmount+"<br>";
+        tr += userVO.usedTokens+"</td>";
         tr += "<td>"+userVO.lastUpdateTime+"</td>";
         tr += "<td>"+userVO.createTime+"</td>";
         tr += "<td>"+userVO.isDelete+"<br> </td>";
@@ -461,6 +466,46 @@
             
           }
         });
+      }
+    
+      function fillConditionForNextPage(userVO) {
+        var orderBy = $("#orderBySelector").val();
+        var isAesc = $("input[name='isAescRadio']:checked").val();
+        if(!orderBy) {
+          return;
+        }
+
+        if("create_time" == orderBy){
+          if("true" == isAesc){
+            $("#createTimeMinStrInput").val(userVO.createTime);
+          } else {
+            $("#createTimeMaxStrInput").val(userVO.createTime);
+          }
+        }else if ("last_update" == orderBy) {
+          if("true" == isAesc){
+            $("#lastUpdateTimeMinStrInput").val(userVO.lastUpdateTime);
+          } else {
+            $("#lastUpdateTimeMaxStrInput").val(userVO.lastUpdateTime);
+          }
+        }else if ("used_tokens" == orderBy) {
+          if("true" == isAesc){
+            $("#bonusAmountMinInput").val(userVO.bonusAmount);
+          } else {
+            $("#bonusAmountMaxInput").val(userVO.bonusAmount);
+          }
+        }else if ("bonus_amount" == orderBy) {
+          if("true" == isAesc){
+            $("#rechargeAmountMinInput").val(userVO.rechargeAmount);
+          } else {
+            $("#rechargeAmountMaxInput").val(userVO.rechargeAmount);
+          }
+        }else if ("recharge_amount" == orderBy) {
+          if("true" == isAesc){
+            $("#usedTokensMinInput").val(userVO.usedTokens);
+          } else {
+            $("#usedTokensMaxInput").val(userVO.usedTokens);
+          }
+        }
       }
     });
   </script>

@@ -37,45 +37,28 @@ public class AiChatManagerController extends CommonController {
 	@Autowired
 	private AiChatUserService aiChatUserService;
 
-	@GetMapping(value = AiChatManagerUrlConstant.BLOCK_USER)
-	@ResponseBody
-	public CommonResult blockUser(@RequestParam(value = "aiChatUserId") String aiChatUserId) {
-		return userService.blockUser(aiChatUserId);
-	}
-	
 	@PostMapping(value = AiChatManagerUrlConstant.BLOCK_USER_BY_PK)
 	@ResponseBody
 	public CommonResult blockUser(@RequestBody BaseDTO dto) {
 		return userService.blockUserByPk(dto.getPk());
 	}
 
-	@GetMapping(value = AiChatManagerUrlConstant.UNLOCK_USER)
-	@ResponseBody
-	public CommonResult unlockUser(@RequestParam(value = "aiChatUserId") String aiChatUserId) {
-		return userService.unlockUser(aiChatUserId);
-	}
-	
 	@PostMapping(value = AiChatManagerUrlConstant.UNLOCK_USER_BY_PK)
 	@ResponseBody
 	public CommonResult unlockUserByPk(@RequestBody BaseDTO dto) {
 		return userService.unlockUserByPk(dto.getPk());
 	}
-	
+
 	@PostMapping(value = AiChatManagerUrlConstant.UNWARNING_USER_BY_PK)
 	@ResponseBody
 	public CommonResult cleanUserWarningMark(@RequestBody BaseDTO dto) {
 		return userService.cleanUserWarningMark(dto.getPk());
 	}
 
-	@GetMapping(value = AiChatManagerUrlConstant.CHECK_CHAT_HISTORY)
-	@ResponseBody
-	public GetAiChatHistoryResult findChatHistoryByAiChatUserIdToFrontEnd(@RequestParam(value = "aiChatUserId") Long aiChatUserId) {
-		return chatService.findChatHistoryByAiChatUserIdToFrontEnd(aiChatUserId);
-	}
-	
 	@GetMapping(value = AiChatManagerUrlConstant.CHECK_CHAT_HISTORY_BY_PK)
 	@ResponseBody
-	public GetAiChatHistoryResult findChatHistoryByAiChatUserIdToFrontEnd(@RequestParam(value = "aiChatUserPk") String aiChatUserPk) {
+	public GetAiChatHistoryResult findChatHistoryByAiChatUserIdToFrontEnd(
+			@RequestParam(value = "aiChatUserPk") String aiChatUserPk) {
 		return chatService.findChatHistoryByAiChatUserIdToFrontEnd(aiChatUserPk);
 	}
 
@@ -98,7 +81,7 @@ public class AiChatManagerController extends CommonController {
 	public ModelAndView userListView() {
 		return aiChatUserService.getAiChatUserListView();
 	}
-	
+
 	@PostMapping(value = AiChatManagerUrlConstant.EDIT_NICKNAME)
 	@ResponseBody
 	public CommonResult userList(@RequestBody AiChatUserEditNicknameDTO dto) {

@@ -104,7 +104,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 
 		// if fail, send fail response
 		if (apiResult.containsKey("error")) {
-			errorMsg.put("message", "运算异常, 正在排查故障");
+			errorMsg.put("message", "运算异常, 可能是使用高峰时间段, 正在排查故障");
 			r.put("error", errorMsg);
 			sendTelegramMessage("AI chat from API failed: " + apiResult.toString());
 			return r;

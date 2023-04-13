@@ -37,10 +37,6 @@ public interface AiChatUserService {
 
 	Boolean hadDailySignUp(String tmpKeyStr);
 
-	CommonResult blockUser(String aiChatUserIdStr);
-
-	CommonResult unlockUser(String aiChatUserIdStr);
-
 	CreateAiChatUserResult createAiChatUserDetailByWechatOpenId(Long wechatUserId, String wechatOid,
 			Integer specialBonus);
 

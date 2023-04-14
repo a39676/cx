@@ -33,6 +33,7 @@ public class AiChatOptionService extends CommonService {
 	@Value("${optionFilePath.aiChat}")
 	private String optionFilePath;
 	private String chatStorePrefixPath;
+	private String chatFromApiStorePrefixPath;
 	private String extendDetailStorePrefixPath;
 	private String payResultStorePrefixPath;
 	private Integer chatHistorySaveCountingLimit = 100;
@@ -56,6 +57,14 @@ public class AiChatOptionService extends CommonService {
 
 	public void setChatStorePrefixPath(String chatStorePrefixPath) {
 		this.chatStorePrefixPath = chatStorePrefixPath;
+	}
+
+	public String getChatFromApiStorePrefixPath() {
+		return chatFromApiStorePrefixPath;
+	}
+
+	public void setChatFromApiStorePrefixPath(String chatFromApiStorePrefixPath) {
+		this.chatFromApiStorePrefixPath = chatFromApiStorePrefixPath;
 	}
 
 	public String getExtendDetailStorePrefixPath() {
@@ -180,11 +189,11 @@ public class AiChatOptionService extends CommonService {
 
 	@Override
 	public String toString() {
-		return "AiChatOptionService [chatStorePrefixPath=" + chatStorePrefixPath + ", extendDetailStorePrefixPath="
-				+ extendDetailStorePrefixPath + ", payResultStorePrefixPath=" + payResultStorePrefixPath
-				+ ", chatHistorySaveCountingLimit=" + chatHistorySaveCountingLimit + ", dailySignUpBonus="
-				+ dailySignUpBonus + ", sensitiveWordsPathStr=" + sensitiveWordsPathStr
-				+ ", sensitiveWordsTriggerInMinutes=" + sensitiveWordsTriggerInMinutes
+		return "AiChatOptionService [chatStorePrefixPath=" + chatStorePrefixPath + ", chatFromApiStorePrefixPath="
+				+ chatFromApiStorePrefixPath + ", extendDetailStorePrefixPath=" + extendDetailStorePrefixPath
+				+ ", payResultStorePrefixPath=" + payResultStorePrefixPath + ", chatHistorySaveCountingLimit="
+				+ chatHistorySaveCountingLimit + ", dailySignUpBonus=" + dailySignUpBonus + ", sensitiveWordsPathStr="
+				+ sensitiveWordsPathStr + ", sensitiveWordsTriggerInMinutes=" + sensitiveWordsTriggerInMinutes
 				+ ", sensitiveWordsTriggerMaxCount=" + sensitiveWordsTriggerMaxCount + ", membershipLDetails="
 				+ membershipLDetails + ", promptOfActAs=" + promptOfActAs + ", inputMaxLength=" + inputMaxLength
 				+ ", bonusForNewUser=" + bonusForNewUser + ", chatHistoryCountLimitForFreeUser="

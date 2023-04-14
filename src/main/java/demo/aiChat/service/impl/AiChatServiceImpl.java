@@ -250,7 +250,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		List<OpanAiChatCompletionMessageDTO> resultList = new ArrayList<>();
 		if (sourceList.isEmpty()) {
 			OpanAiChatCompletionMessageDTO dto = new OpanAiChatCompletionMessageDTO();
-			dto.setContent("你好, 有什么可以帮到您?");
+			dto.setContent("你好, 有什么可以帮到您? 请直接向我提问~");
 			dto.setRole(OpenAiChatCompletionMessageRoleType.ASSISTANT.getName());
 			resultList.add(dto);
 			r.setMsgList(resultList);

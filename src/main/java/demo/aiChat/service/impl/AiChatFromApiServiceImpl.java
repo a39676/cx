@@ -1,5 +1,6 @@
 package demo.aiChat.service.impl;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,8 @@ import demo.aiChat.pojo.po.AiChatApiKeyExample;
 import demo.aiChat.service.AiChatFromApiService;
 import demo.aiChat.service.AiChatService;
 import net.sf.json.JSONObject;
+import toolPack.dateTimeHandle.DateTimeUtilCommon;
+import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class AiChatFromApiServiceImpl extends AiChatCommonService implements AiChatFromApiService {
@@ -152,7 +155,6 @@ public class AiChatFromApiServiceImpl extends AiChatCommonService implements AiC
 		JSONObject r = new JSONObject();
 		JSONObject errorMsg = new JSONObject();
 
-		
 		if (StringUtils.isBlank(dto.getApiKey())) {
 			errorMsg.put("message", "API key error");
 			r.put("error", errorMsg);
@@ -185,6 +187,24 @@ public class AiChatFromApiServiceImpl extends AiChatCommonService implements AiC
 		po.setLastUsedTime(LocalDateTime.now());
 		apiKeyMapper.updateByPrimaryKeySelective(po);
 
-		return aiChatService.sendNewChatMessageFromApi(aiChatUserId, dto);
+		JSONObject apiResult = aiChatService.sendNewChatMessageFromApi(aiChatUserId, dto);
+
+		if (!apiResult.containsKey("error")) {
+			LocalDateTime now = LocalDateTime.now();
+			String storePrefixPath = optionService.getChatFromApiStorePrefixPath();
+			String storePathStr = storePrefixPath + File.separator + aiChatUserId + File.separator
+					+ localDateTimeHandler.dateToStr(now, DateTimeUtilCommon.dateTimeFormatNoSymbol) + File.separator
+					+ snowFlake.getNextId() + ".txt";
+
+			JSONObject inputDTO = JSONObject.fromObject(dto);
+			JSONObject jsonForStore = new JSONObject();
+			jsonForStore.put("input", inputDTO);
+			jsonForStore.put("output", apiResult);
+
+			FileUtilCustom fileUtil = new FileUtilCustom();
+			fileUtil.byteToFile(jsonForStore.toString(), storePathStr);
+		}
+
+		return apiResult;
 	}
 }

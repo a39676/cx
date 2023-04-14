@@ -100,7 +100,6 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 
 		// send new msg, wait feedback
 		JSONObject apiResult = util.sendChatCompletionFromApi(dto);
-		log.error("api result: " + apiResult.toString());
 
 		// if fail, send fail response
 		if (apiResult.containsKey("error")) {
@@ -361,6 +360,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		msgDTO.setContent(msg);
 		msgDTO.setRole(roleType.getName());
 		JSONObject newMsgJson = JSONObject.fromObject(msgDTO);
+		newMsgJson.put("createTime", localDateTimeHandler.dateToStr(LocalDateTime.now()));
 		Integer chatHistorySaveCountingLimit = optionService.getChatHistorySaveCountingLimit();
 
 		if (!targetFile.exists()) {

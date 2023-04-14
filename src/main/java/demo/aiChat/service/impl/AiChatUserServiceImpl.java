@@ -501,13 +501,16 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 			if (startId != null) {
 				criteria.andIdGreaterThanOrEqualTo(startId);
 			}
-		//	若有排序条件
+			// 若有排序条件
 		} else {
 			example.setOrderByClause(dto.getOrderBy());
 		}
-		if (dto.getIsAesc() != null) {
-			if (dto.getIsAesc()) {
-			} else {
+		if (StringUtils.isNotBlank(dto.getOrderBy())) {
+			if (dto.getIsAesc() != null && !dto.getIsAesc()) {
+				example.setOrderByClause(example.getOrderByClause() + " desc");
+			}
+		} else {
+			if (dto.getIsAesc() != null && !dto.getIsAesc()) {
 				example.setOrderByClause(example.getOrderByClause() + " desc");
 			}
 		}
@@ -544,7 +547,7 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 		List<AiChatUserVO> userVoList = new ArrayList<>();
 		AiChatUserVO vo = null;
 		Long wechatUserId = null;
-		if(userDetailList.isEmpty()) {
+		if (userDetailList.isEmpty()) {
 			vo = new AiChatUserVO();
 			vo.setNickname("Empty result");
 			userVoList.add(vo);
@@ -552,7 +555,7 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 			r.setIsSuccess();
 			return r;
 		}
-		
+
 		for (AiChatUserDetail user : userDetailList) {
 			vo = new AiChatUserVO();
 			vo.setBonusAmount(user.getBonusAmount().doubleValue());

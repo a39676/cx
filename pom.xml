@@ -285,6 +285,7 @@
 			<version>0.4.8</version>
 		</dependency>
 
+		<!-- Open AI SDK start -->
 		<dependency>
 			<groupId>com.theokanning.openai-gpt3-java</groupId>
 			<artifactId>client</artifactId>
@@ -302,6 +303,15 @@
 			<artifactId>service</artifactId>
 			<version>0.12.0</version>
 		</dependency>
+		<!-- Open AI SDK end -->
+
+		<!-- AI art start -->
+		<!-- For String data to byte -->
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			</dependency>
+		<!-- AI art end -->
 
 		<dependency>
 			<groupId>com.demo</groupId>

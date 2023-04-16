@@ -309,7 +309,7 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 
 		r.setNewAmount(po.getBonusAmount().add(po.getRechargeAmount()).intValue());
 		r.setIsSuccess();
-		r.setMessage("签到成功, 获得" + optionService.getDailySignUpBonus() + "电量");
+		r.setMessage("签到成功, 获得" + optionService.getDailySignUpBonus() + "电力");
 		return r;
 	}
 

@@ -386,7 +386,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 			if (r.isSuccess()) {
 				SendTemplateMessageBonusRechargeDTO templateMessageDTO = new SendTemplateMessageBonusRechargeDTO();
 				templateMessageDTO.setBonusAmountStr(String.valueOf(aiChatOptionService.getBonusForNewUser()));
-				templateMessageDTO.setBonusDescription("新用户特惠赠送电力");
+				templateMessageDTO.setBonusDescription("新用户特惠赠送");
 				templateMessageDTO.setManagerCode(wechatOptionService.getManagerCode());
 				templateMessageDTO.setReciverOpenId(dto.getOpenId());
 				sendBonusRechargeTemplateMessageProducer.send(templateMessageDTO);

@@ -40,7 +40,7 @@ public abstract class AiChatCommonService extends ToolCommonService {
 
 	protected CommonResult notEnoughtAmount() {
 		CommonResult r = new CommonResult();
-		r.setMessage("电量不足, 请到\"个人中心\"充电或留意签到活动");
+		r.setMessage("计算电力不足, 请到\"个人中心\"充电或留意签到活动");
 		return r;
 	}
 
@@ -51,7 +51,7 @@ public abstract class AiChatCommonService extends ToolCommonService {
 	}
 
 	protected void sendTelegramMessage(String msg) {
-		telegramService.sendMessageByChatRecordId(TelegramBotType.CX_MESSAGE, msg, TelegramStaticChatID.MY_ID);
+		telegramService.sendMessageByChatRecordId(TelegramBotType.AI_CHAT_NOTICE, msg, TelegramStaticChatID.MY_ID);
 	}
 
 	protected void tmpKeyInsertOrUpdateLiveTime(Long tmpKey, Long aiChatUserId) {

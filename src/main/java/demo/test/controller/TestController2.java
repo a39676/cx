@@ -38,4 +38,25 @@ public class TestController2 extends CommonService {
 		return "Done";
 	}
 
+//	@Autowired
+//	private AiArtService aiArtService;
+//	@Autowired
+//	private AiChatUserService aiChatUserService;
+//
+//	@GetMapping(value = "/t4")
+//	@ResponseBody
+//	public String t4() {
+//		FileUtilCustom f = new FileUtilCustom();
+//		String content = f.getStringFromFile("d:/tmp/tmp.json");
+//
+//		TextToImageDTO dto = buildObjFromJsonCustomization(content, TextToImageDTO.class);
+//		dto.setTmpKey(String.valueOf(getTmpKey()));
+//		aiArtService.sendDtoToMq(dto);
+//		return "Done";
+//	}
+//
+//	private Long getTmpKey() {
+//		Long tmpKey = aiChatUserService.createNewTmpKey(1L, "oXt5d5l_w5Fjl7IyaQ1SF7fTjS1g");
+//		return tmpKey;
+//	}
 }

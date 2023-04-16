@@ -51,7 +51,7 @@ public abstract class AiChatCommonService extends ToolCommonService {
 	}
 
 	protected void sendTelegramMessage(String msg) {
-		telegramService.sendMessageByChatRecordId(TelegramBotType.CX_MESSAGE, msg, TelegramStaticChatID.MY_ID);
+		telegramService.sendMessageByChatRecordId(TelegramBotType.AI_CHAT_NOTICE, msg, TelegramStaticChatID.MY_ID);
 	}
 
 	protected void tmpKeyInsertOrUpdateLiveTime(Long tmpKey, Long aiChatUserId) {

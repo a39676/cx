@@ -2,9 +2,9 @@ package demo.aiArt.pojo.result;
 
 import java.util.List;
 
-import auxiliaryCommon.pojo.result.CommonResult;
+import wechatSdk.pojo.result.WechatSdkCommonResult;
 
-public class TextToImageFromApiResult extends CommonResult {
+public class TextToImageFromApiResult extends WechatSdkCommonResult {
 
 	/** image data in base64 */
 	private List<String> imageList;

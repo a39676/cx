@@ -22,11 +22,14 @@ public class AiArtOptionService extends CommonService {
 	private String optionFilePath;
 	private String mainUrl;
 	private String imageSavingFolder;
+	private String textToImageParameterSavingFolder;
 	private Integer maxHeight;
 	private Integer maxWidth;
 	private Integer maxBatch;
 	private Integer maxCfgScale;
 	private Integer maxSteps;
+	private Integer dailyFreeGenerateCount;
+	private Integer maxPromptLength;
 
 	public String getMainUrl() {
 		return mainUrl;
@@ -42,6 +45,14 @@ public class AiArtOptionService extends CommonService {
 
 	public void setImageSavingFolder(String imageSavingFolder) {
 		this.imageSavingFolder = imageSavingFolder;
+	}
+
+	public String getTextToImageParameterSavingFolder() {
+		return textToImageParameterSavingFolder;
+	}
+
+	public void setTextToImageParameterSavingFolder(String textToImageParameterSavingFolder) {
+		this.textToImageParameterSavingFolder = textToImageParameterSavingFolder;
 	}
 
 	public Integer getMaxHeight() {
@@ -84,11 +95,29 @@ public class AiArtOptionService extends CommonService {
 		this.maxSteps = maxSteps;
 	}
 
+	public Integer getDailyFreeGenerateCount() {
+		return dailyFreeGenerateCount;
+	}
+
+	public void setDailyFreeGenerateCount(Integer dailyFreeGenerateCount) {
+		this.dailyFreeGenerateCount = dailyFreeGenerateCount;
+	}
+
+	public Integer getMaxPromptLength() {
+		return maxPromptLength;
+	}
+
+	public void setMaxPromptLength(Integer maxPromptLength) {
+		this.maxPromptLength = maxPromptLength;
+	}
+
 	@Override
 	public String toString() {
-		return "AiArtOptionService [mainUrl=" + mainUrl + ", imageSavingFolder=" + imageSavingFolder + ", maxHeight="
-				+ maxHeight + ", maxWidth=" + maxWidth + ", maxBatch=" + maxBatch + ", maxCfgScale=" + maxCfgScale
-				+ ", maxSteps=" + maxSteps + "]";
+		return "AiArtOptionService [mainUrl=" + mainUrl + ", imageSavingFolder=" + imageSavingFolder
+				+ ", textToImageParameterSavingFolder=" + textToImageParameterSavingFolder + ", maxHeight=" + maxHeight
+				+ ", maxWidth=" + maxWidth + ", maxBatch=" + maxBatch + ", maxCfgScale=" + maxCfgScale + ", maxSteps="
+				+ maxSteps + ", dailyFreeGenerateCount=" + dailyFreeGenerateCount + ", maxPromptLength="
+				+ maxPromptLength + "]";
 	}
 
 	@PostConstruct

@@ -2,9 +2,7 @@ package demo.aiArt.pojo.dto;
 
 import demo.aiArt.pojo.type.AiArtSamplerType;
 
-public class TextToImageDTO {
-
-	private String tmpKey;
+public abstract class TextToImageFromDTO {
 	private String prompts;
 	private String negativePrompts;
 	/** {@link AiArtSamplerType} */
@@ -16,14 +14,6 @@ public class TextToImageDTO {
 	private Integer batchSize = 1;
 	private Long seed = Long.parseLong("-1");
 	private Long jobId;
-
-	public String getTmpKey() {
-		return tmpKey;
-	}
-
-	public void setTmpKey(String tmpKey) {
-		this.tmpKey = tmpKey;
-	}
 
 	public String getPrompts() {
 		return prompts;
@@ -107,9 +97,9 @@ public class TextToImageDTO {
 
 	@Override
 	public String toString() {
-		return "TextToImageDTO [tmpKey=" + tmpKey + ", prompts=" + prompts + ", negativePrompts=" + negativePrompts
-				+ ", sampler=" + sampler + ", wedith=" + wedith + ", height=" + height + ", cfgScale=" + cfgScale
-				+ ", steps=" + steps + ", batchSize=" + batchSize + ", seed=" + seed + ", jobId=" + jobId + "]";
+		return "TextToImageFromDTO [prompts=" + prompts + ", negativePrompts=" + negativePrompts + ", sampler="
+				+ sampler + ", wedith=" + wedith + ", height=" + height + ", cfgScale=" + cfgScale + ", steps=" + steps
+				+ ", batchSize=" + batchSize + ", seed=" + seed + ", jobId=" + jobId + "]";
 	}
 
 }

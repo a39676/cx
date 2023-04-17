@@ -6,6 +6,7 @@ public enum ImageTagType {
 	AUTO_TEST_IMG_TO_CLOUDINARY("autoTestImgToCloudinary", 12L),
 	IMAGE_SAVING("imageSaving", 13L),
 	JOY_IMAGE_SAVING("joyImageSaving", 14L),
+	AI_ART("aiArt", 15L),
 	
 	;
 	

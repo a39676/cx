@@ -12,6 +12,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiChat.pojo.dto.AiChatUserEditNicknameDTO;
 import demo.aiChat.pojo.dto.GetAiChatUserListDTO;
 import demo.aiChat.pojo.dto.NewPositiveAiChatUserDTO;
+import demo.aiChat.pojo.po.AiChatUserDetail;
 import demo.aiChat.pojo.result.CreateAiChatUserResult;
 import demo.aiChat.pojo.result.GetAiChatUserListResult;
 
@@ -55,5 +56,9 @@ public interface AiChatUserService {
 	CommonResult __giveUserWarningMark(Long aiChatUserId);
 
 	CommonResult cleanUserWarningMark(String userPk);
+
+	AiChatUserDetail __getUserDetail(Long aiUserId);
+
+	CommonResult __debitAmountAndAddTokenUsage(Long aiUserId, BigDecimal debitAmount);
 
 }

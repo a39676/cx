@@ -3,7 +3,7 @@ package demo.aiArt.service.impl;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import demo.aiArt.pojo.dto.TextToImageDTO;
+import demo.aiArt.pojo.dto.TextToImageFromDTO;
 import demo.aiArt.service.AiArtCommonService;
 import net.sf.json.JSONObject;
 import toolPack.httpHandel.HttpUtil;
@@ -12,7 +12,7 @@ import toolPack.httpHandel.HttpUtil;
 @Service
 public class AiArtUtil extends AiArtCommonService {
 
-	public JSONObject sendTxtToImgRequest(TextToImageDTO dto) {
+	public JSONObject sendTxtToImgRequest(TextToImageFromDTO dto) {
 		JSONObject json = JSONObject.fromObject(
 				"{\"enable_hr\": false,\"denoising_strength\": 0,\"firstphase_width\": 0,\"firstphase_height\": 0,\"hr_scale\": 2,\"hr_upscaler\": \"string\",\"hr_second_pass_steps\": 0,\"hr_resize_x\": 0,\"hr_resize_y\": 0,\"prompt\": \"\",\"styles\": [],\"seed\": -1,\"subseed\": -1,\"subseed_strength\": 0,\"seed_resize_from_h\": -1,\"seed_resize_from_w\": -1,\"sampler_name\": \"Euler a\",\"batch_size\": 1,\"n_iter\": 1,\"steps\": 20,\"cfg_scale\": 7,\"width\": 512,\"height\": 512,\"restore_faces\": false,\"tiling\": false,\"negative_prompt\": \"\",\"eta\": 0,\"s_churn\": 0,\"s_tmax\": 0,\"s_tmin\": 0,\"s_noise\": 1,\"override_settings\": {},\"override_settings_restore_afterwards\": true,\"script_args\": [],}");
 		json.put("prompt", dto.getPrompts());

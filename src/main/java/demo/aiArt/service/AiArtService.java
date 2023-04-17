@@ -1,13 +1,20 @@
 package demo.aiArt.service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.aiArt.pojo.dto.TextToImageDTO;
-import demo.aiArt.pojo.result.TextToImageFromApiResult;
+import demo.aiArt.pojo.dto.TextToImageFromApiDTO;
+import demo.aiArt.pojo.dto.TextToImageFromWechatDTO;
+import demo.aiArt.pojo.result.GetJobResultList;
 
 public interface AiArtService {
 
-	CommonResult sendDtoToMq(TextToImageDTO dto);
+	CommonResult sendTextToImgFromWechatDtoToMq(TextToImageFromWechatDTO dto);
 
-	TextToImageFromApiResult txtToImgByJobId(Long jobId);
+	CommonResult txtToImgByJobId(Long jobId);
+
+	void rerun();
+
+	GetJobResultList getJobResultListByTmpKey(String userTmpKey);
+
+	CommonResult sendTextToImgFromApiDtoToMq(TextToImageFromApiDTO dto);
 
 }

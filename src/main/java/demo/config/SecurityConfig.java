@@ -21,6 +21,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import ai.aiArt.pojo.constant.AiArtApiUrlConstant;
 import ai.aiChat.pojo.constant.AiChatApiUrlConstant;
 import ai.aiChat.pojo.constant.AiChatFromWechatSdkUrlConstant;
+import demo.aiArt.pojo.constant.AiArtMangerUrl;
 import demo.aiChat.pojo.constant.AiChatManagerUrlConstant;
 import demo.article.article.pojo.constant.ArticleAdminUrlConstant;
 import demo.article.articleComment.pojo.constant.ArticleAdminCommentUrlConstant;
@@ -125,6 +126,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(CryptoCoinSharingUrl.ROOT + "/**")
             	.access("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')")
             .antMatchers(AiChatManagerUrlConstant.ROOT + "/**")
+            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+            .antMatchers(AiArtMangerUrl.ROOT + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
             // joy url start
             .antMatchers(JoyUrl.ROOT + "/**")

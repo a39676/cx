@@ -46,6 +46,13 @@
       </li>
     </ul><!-- aiChat -->
 
+    <ul class="main-menu visible-on-click" id="aiArt">
+      <li style="background-color:yellow;">AI art</li>
+      <li>
+        <a href="/aiArtManager/view" target="_blank">AI art manager</a>
+      </li>
+    </ul><!-- aiArt -->
+
     <ul class="main-menu visible-on-click" id="telegramTool">
       <li style="background-color:yellow;">TelegramTool</li>
       <li>

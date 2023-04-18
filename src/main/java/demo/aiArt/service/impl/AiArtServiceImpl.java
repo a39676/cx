@@ -459,7 +459,12 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 	private AiArtGenerateImageResult getJobResult(Long jobId) {
 		String resultJsonSavePath = getJobResultStrPath(jobId);
-		String content = fileUtilCustom.getStringFromFile(resultJsonSavePath);
+		String content = null;
+		try {
+			content = fileUtilCustom.getStringFromFile(resultJsonSavePath);
+		} catch (Exception e) {
+			return null;
+		}
 		AiArtGenerateImageResult result = buildObjFromJsonCustomization(content, AiArtGenerateImageResult.class);
 		return result;
 	}

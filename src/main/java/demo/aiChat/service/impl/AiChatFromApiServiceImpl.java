@@ -9,9 +9,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import aiChat.pojo.dto.AiChatSendNewMsgFromApiDTO;
-import aiChat.pojo.result.FindAllApiKeysResult;
-import aiChat.pojo.result.GenerateNewApiKeyResult;
+import ai.aiChat.pojo.dto.AiChatSendNewMsgFromApiDTO;
+import ai.aiChat.pojo.result.FindAllApiKeysResult;
+import ai.aiChat.pojo.result.GenerateNewApiKeyResult;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiChat.pojo.po.AiChatApiKey;
 import demo.aiChat.pojo.po.AiChatApiKeyExample;

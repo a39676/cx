@@ -3,14 +3,14 @@ package demo.aiArt.service.impl;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import demo.aiArt.pojo.dto.TextToImageFromDTO;
+import ai.aiArt.pojo.dto.TextToImageFromDTO;
 import demo.aiArt.service.AiArtCommonService;
 import net.sf.json.JSONObject;
 import toolPack.httpHandel.HttpUtil;
 
 @Scope("singleton")
 @Service
-public class AiArtUtil extends AiArtCommonService {
+public class AiArtColabUtil extends AiArtCommonService {
 
 	public JSONObject sendTxtToImgRequest(TextToImageFromDTO dto) {
 		JSONObject json = JSONObject.fromObject(

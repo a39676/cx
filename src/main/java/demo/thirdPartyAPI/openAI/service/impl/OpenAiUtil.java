@@ -23,7 +23,7 @@ import com.theokanning.openai.completion.chat.ChatCompletionResult;
 import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.service.OpenAiService;
 
-import aiChat.pojo.dto.AiChatSendNewMsgFromApiDTO;
+import ai.aiChat.pojo.dto.AiChatSendNewMsgFromApiDTO;
 import demo.base.system.service.impl.SystemOptionService;
 import demo.common.service.CommonService;
 import net.sf.json.JSONArray;

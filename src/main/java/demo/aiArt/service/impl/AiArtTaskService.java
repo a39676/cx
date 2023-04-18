@@ -28,4 +28,9 @@ public class AiArtTaskService extends ToolCommonService {
 		}
 	}
 
+	@Scheduled(cron = "06 05 04 * * *")
+	public void deleteParameterFile() {
+		aiArtService.deleteParameterFile();
+	}
+
 }

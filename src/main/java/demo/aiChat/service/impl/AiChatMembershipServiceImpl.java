@@ -16,11 +16,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import aiChat.pojo.result.AiChatBuyMembershipFromWechatResult;
-import aiChat.pojo.result.GetAiChatMembershipResult;
-import aiChat.pojo.type.AiChatAmountType;
-import aiChat.pojo.vo.AiChatUserMembershipDetailSummaryVO;
-import aiChat.pojo.vo.AiChatUserMembershipDetailVO;
+import ai.aiChat.pojo.result.AiChatBuyMembershipFromWechatResult;
+import ai.aiChat.pojo.result.GetAiChatMembershipResult;
+import ai.aiChat.pojo.type.AiChatAmountType;
+import ai.aiChat.pojo.vo.AiChatUserMembershipDetailSummaryVO;
+import ai.aiChat.pojo.vo.AiChatUserMembershipDetailVO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiChat.mapper.AiChatUserMembershipMapper;
 import demo.aiChat.pojo.dto.AiChatUserMembershipDetailDTO;

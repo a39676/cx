@@ -5,29 +5,35 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import aiChat.pojo.dto.AiChatSendNewMsgFromWechatDTO;
-import aiChat.pojo.result.AiChatSendNewMessageResult;
-import aiChat.pojo.result.GetAiChatHistoryResult;
+import ai.aiArt.pojo.dto.TextToImageFromWechatDTO;
+import ai.aiArt.pojo.result.GetJobResultList;
+import ai.aiChat.pojo.dto.AiChatSendNewMsgFromWechatDTO;
+import ai.aiChat.pojo.result.AiChatSendNewMessageResult;
+import ai.aiChat.pojo.result.GetAiChatHistoryResult;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
+import auxiliaryCommon.pojo.result.CommonResult;
+import demo.aiArt.service.AiArtService;
 import demo.aiChat.service.AiChatFromWechatService;
 import demo.aiChat.service.impl.AiChatOptionService;
-import demo.interaction.wechat.service.WechatAiChatService;
+import demo.interaction.wechat.service.WechatAiService;
 import wechatSdk.pojo.type.WechatSdkCommonResultType;
 
 @Service
-public class WechatAiChatServiceImpl extends WechatCommonService implements WechatAiChatService {
+public class WechatAiServiceImpl extends WechatCommonService implements WechatAiService {
 
 	@Autowired
 	private AiChatFromWechatService aiChatService;
 	@Autowired
 	private AiChatOptionService aiChatOptionService;
-	
+	@Autowired
+	private AiArtService aiArtService;
+
 	@Override
 	public EncryptDTO sendNewMessage(EncryptDTO encryptedDTO) {
 		AiChatSendNewMessageResult r = null;
 		EncryptDTO encryptedResult = null;
 		AiChatSendNewMsgFromWechatDTO dto = decryptEncryptDTO(encryptedDTO, AiChatSendNewMsgFromWechatDTO.class);
-		if(dto == null) {
+		if (dto == null) {
 			r = new AiChatSendNewMessageResult();
 			r.setResultByType(WechatSdkCommonResultType.TMP_KEY_EXPIRED);
 			encryptedResult = encryptDTO(r);
@@ -42,15 +48,39 @@ public class WechatAiChatServiceImpl extends WechatCommonService implements Wech
 	public EncryptDTO findChatHistoryByAiChatUserIdToFrontEnd(EncryptDTO encryptedDTO) {
 		EncryptDTO encryptedResult = null;
 		String tmpKeyStr = decryptEncryptDTO(encryptedDTO, String.class);
-		
+
 		GetAiChatHistoryResult getHistoryResult = aiChatService.findChatHistoryByAiChatUserIdToFrontEnd(tmpKeyStr);
-		encryptedResult =  encryptDTO(getHistoryResult);
+		encryptedResult = encryptDTO(getHistoryResult);
 		return encryptedResult;
 	}
-	
+
 	@Override
 	public EncryptDTO getPromptOfActAs() {
 		Map<String, String> promptOfActAs = aiChatOptionService.getPromptOfActAs();
 		return encryptDTO(promptOfActAs);
+	}
+
+	@Override
+	public EncryptDTO sendTextToImg(EncryptDTO encryptedDTO) {
+		CommonResult r = new CommonResult();
+		TextToImageFromWechatDTO dto = decryptEncryptDTO(encryptedDTO, TextToImageFromWechatDTO.class);
+		if (dto == null) {
+			r.setMessage("Decrypt error");
+			return encryptDTO(r);
+		}
+		r = aiArtService.sendTextToImgFromWechatDtoToMq(dto);
+		return encryptDTO(r);
+	}
+	
+	@Override
+	public EncryptDTO getJobResultListByTmpKey(EncryptDTO encryptedDTO) {
+		GetJobResultList r = new GetJobResultList();
+		String tmpKey = decryptEncryptDTO(encryptedDTO, String.class);
+		if (tmpKey == null) {
+			r.setMessage("Decrypt error");
+			return encryptDTO(r);
+		}
+		r = aiArtService.getJobResultListByTmpKey(tmpKey);
+		return encryptDTO(r);
 	}
 }

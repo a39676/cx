@@ -18,10 +18,10 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
-import aiChat.pojo.dto.AiChatSendNewMsgFromApiDTO;
-import aiChat.pojo.dto.AiChatSendNewMsgFromWechatDTO;
-import aiChat.pojo.result.AiChatSendNewMessageResult;
-import aiChat.pojo.result.GetAiChatHistoryResult;
+import ai.aiChat.pojo.dto.AiChatSendNewMsgFromApiDTO;
+import ai.aiChat.pojo.dto.AiChatSendNewMsgFromWechatDTO;
+import ai.aiChat.pojo.result.AiChatSendNewMessageResult;
+import ai.aiChat.pojo.result.GetAiChatHistoryResult;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiChat.mapper.AiChatUserChatHistoryMapper;
 import demo.aiChat.pojo.dto.AiChatUserMembershipDetailSummaryDTO;

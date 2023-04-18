@@ -14,9 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
-import aiChat.pojo.result.AiChatDailySignUpResult;
-import aiChat.pojo.result.GetAiChatAmountResult;
-import aiChat.pojo.type.AiChatAmountType;
+import ai.aiChat.pojo.result.AiChatDailySignUpResult;
+import ai.aiChat.pojo.result.GetAiChatAmountResult;
+import ai.aiChat.pojo.type.AiChatAmountType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiChat.mapper.AiChatUserAmountHistoryMapper;
 import demo.aiChat.mapper.AiChatUserAssociateWechatUidMapper;

@@ -355,53 +355,113 @@ public class AiArtTextToImageJobRecordExample {
             return (Criteria) this;
         }
 
-        public Criteria andJobStatusEqualTo(Boolean value) {
+        public Criteria andJobStatusEqualTo(Byte value) {
             addCriterion("job_status =", value, "jobStatus");
             return (Criteria) this;
         }
 
-        public Criteria andJobStatusNotEqualTo(Boolean value) {
+        public Criteria andJobStatusNotEqualTo(Byte value) {
             addCriterion("job_status <>", value, "jobStatus");
             return (Criteria) this;
         }
 
-        public Criteria andJobStatusGreaterThan(Boolean value) {
+        public Criteria andJobStatusGreaterThan(Byte value) {
             addCriterion("job_status >", value, "jobStatus");
             return (Criteria) this;
         }
 
-        public Criteria andJobStatusGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andJobStatusGreaterThanOrEqualTo(Byte value) {
             addCriterion("job_status >=", value, "jobStatus");
             return (Criteria) this;
         }
 
-        public Criteria andJobStatusLessThan(Boolean value) {
+        public Criteria andJobStatusLessThan(Byte value) {
             addCriterion("job_status <", value, "jobStatus");
             return (Criteria) this;
         }
 
-        public Criteria andJobStatusLessThanOrEqualTo(Boolean value) {
+        public Criteria andJobStatusLessThanOrEqualTo(Byte value) {
             addCriterion("job_status <=", value, "jobStatus");
             return (Criteria) this;
         }
 
-        public Criteria andJobStatusIn(List<Boolean> values) {
+        public Criteria andJobStatusIn(List<Byte> values) {
             addCriterion("job_status in", values, "jobStatus");
             return (Criteria) this;
         }
 
-        public Criteria andJobStatusNotIn(List<Boolean> values) {
+        public Criteria andJobStatusNotIn(List<Byte> values) {
             addCriterion("job_status not in", values, "jobStatus");
             return (Criteria) this;
         }
 
-        public Criteria andJobStatusBetween(Boolean value1, Boolean value2) {
+        public Criteria andJobStatusBetween(Byte value1, Byte value2) {
             addCriterion("job_status between", value1, value2, "jobStatus");
             return (Criteria) this;
         }
 
-        public Criteria andJobStatusNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andJobStatusNotBetween(Byte value1, Byte value2) {
             addCriterion("job_status not between", value1, value2, "jobStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andRunCountIsNull() {
+            addCriterion("run_count is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRunCountIsNotNull() {
+            addCriterion("run_count is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRunCountEqualTo(Integer value) {
+            addCriterion("run_count =", value, "runCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRunCountNotEqualTo(Integer value) {
+            addCriterion("run_count <>", value, "runCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRunCountGreaterThan(Integer value) {
+            addCriterion("run_count >", value, "runCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRunCountGreaterThanOrEqualTo(Integer value) {
+            addCriterion("run_count >=", value, "runCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRunCountLessThan(Integer value) {
+            addCriterion("run_count <", value, "runCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRunCountLessThanOrEqualTo(Integer value) {
+            addCriterion("run_count <=", value, "runCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRunCountIn(List<Integer> values) {
+            addCriterion("run_count in", values, "runCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRunCountNotIn(List<Integer> values) {
+            addCriterion("run_count not in", values, "runCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRunCountBetween(Integer value1, Integer value2) {
+            addCriterion("run_count between", value1, value2, "runCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRunCountNotBetween(Integer value1, Integer value2) {
+            addCriterion("run_count not between", value1, value2, "runCount");
             return (Criteria) this;
         }
     }

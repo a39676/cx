@@ -46,10 +46,12 @@
   <a href="/optionConstant/refreshJoyGardenOption" target="_blank">refreshJoyGardenOption</a><br>
   <a href="/optionConstant/refreshOpenAiOption" target="_blank">refreshOpenAiOption</a><br>
   <a href="/optionConstant/refreshAiChatOption" target="_blank">refreshAiChatOption</a><br>
+  <a href="/optionConstant/refreshAiArtOption" target="_blank">refreshAiArtOption</a><br>
   <a href="/optionConstant/refreshCloudFlareOption" target="_blank">refreshCloudFlareOption</a><br>
   
   <a href="/optionConstant/refreshWechatOption" target="_blank">refreshWechatOption</a><br>
   <a href="/optionConstant/refreshWechatPayOption" target="_blank">refreshWechatPayOption</a><br>
+  
 </div>
 
 <hr>

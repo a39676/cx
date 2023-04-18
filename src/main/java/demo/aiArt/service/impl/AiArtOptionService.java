@@ -21,7 +21,7 @@ public class AiArtOptionService extends CommonService {
 	@Value("${optionFilePath.aiArt}")
 	private String optionFilePath;
 	private String mainUrl;
-	private String imageSavingFolder;
+	private String generateImageResultFolder;
 	private String textToImageParameterSavingFolder;
 	private Integer maxHeight;
 	private Integer maxWidth;
@@ -30,6 +30,11 @@ public class AiArtOptionService extends CommonService {
 	private Integer maxSteps;
 	private Integer dailyFreeGenerateCount;
 	private Integer maxPromptLength;
+	private Integer maxFailCountForJob;
+	private Boolean isRunning;
+	private Integer maxShowJob;
+	private Integer maxJobLivingDay;
+	private Integer maxDailyFreeJobCount;
 
 	public String getMainUrl() {
 		return mainUrl;
@@ -39,12 +44,12 @@ public class AiArtOptionService extends CommonService {
 		this.mainUrl = mainUrl;
 	}
 
-	public String getImageSavingFolder() {
-		return imageSavingFolder;
+	public String getGenerateImageResultFolder() {
+		return generateImageResultFolder;
 	}
 
-	public void setImageSavingFolder(String imageSavingFolder) {
-		this.imageSavingFolder = imageSavingFolder;
+	public void setGenerateImageResultFolder(String generateImageResultFolder) {
+		this.generateImageResultFolder = generateImageResultFolder;
 	}
 
 	public String getTextToImageParameterSavingFolder() {
@@ -111,13 +116,55 @@ public class AiArtOptionService extends CommonService {
 		this.maxPromptLength = maxPromptLength;
 	}
 
+	public Integer getMaxFailCountForJob() {
+		return maxFailCountForJob;
+	}
+
+	public void setMaxFailCountForJob(Integer maxFailCountForJob) {
+		this.maxFailCountForJob = maxFailCountForJob;
+	}
+
+	public Boolean getIsRunning() {
+		return isRunning;
+	}
+
+	public void setIsRunning(Boolean isRunning) {
+		this.isRunning = isRunning;
+	}
+
+	public Integer getMaxShowJob() {
+		return maxShowJob;
+	}
+
+	public void setMaxShowJob(Integer maxShowJob) {
+		this.maxShowJob = maxShowJob;
+	}
+
+	public Integer getMaxJobLivingDay() {
+		return maxJobLivingDay;
+	}
+
+	public void setMaxJobLivingDay(Integer maxJobLivingDay) {
+		this.maxJobLivingDay = maxJobLivingDay;
+	}
+
+	public Integer getMaxDailyFreeJobCount() {
+		return maxDailyFreeJobCount;
+	}
+
+	public void setMaxDailyFreeJobCount(Integer maxDailyFreeJobCount) {
+		this.maxDailyFreeJobCount = maxDailyFreeJobCount;
+	}
+
 	@Override
 	public String toString() {
-		return "AiArtOptionService [mainUrl=" + mainUrl + ", imageSavingFolder=" + imageSavingFolder
+		return "AiArtOptionService [mainUrl=" + mainUrl + ", generateImageResultFolder=" + generateImageResultFolder
 				+ ", textToImageParameterSavingFolder=" + textToImageParameterSavingFolder + ", maxHeight=" + maxHeight
 				+ ", maxWidth=" + maxWidth + ", maxBatch=" + maxBatch + ", maxCfgScale=" + maxCfgScale + ", maxSteps="
 				+ maxSteps + ", dailyFreeGenerateCount=" + dailyFreeGenerateCount + ", maxPromptLength="
-				+ maxPromptLength + "]";
+				+ maxPromptLength + ", maxFailCountForJob=" + maxFailCountForJob + ", isRunning=" + isRunning
+				+ ", maxShowJob=" + maxShowJob + ", maxJobLivingDay=" + maxJobLivingDay + ", maxDailyFreeJobCount="
+				+ maxDailyFreeJobCount + "]";
 	}
 
 	@PostConstruct
@@ -131,10 +178,10 @@ public class AiArtOptionService extends CommonService {
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
 			AiArtOptionService tmp = new Gson().fromJson(jsonStr, AiArtOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
-			log.error("Open AI option loaded");
+			log.error("AI art option loaded");
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.error("Open AI option loading error: " + e.getLocalizedMessage());
+			log.error("AI art option loading error: " + e.getLocalizedMessage());
 		}
 	}
 }

@@ -1,8 +1,8 @@
 package demo.aiChat.service;
 
-import aiChat.pojo.dto.AiChatSendNewMsgFromApiDTO;
-import aiChat.pojo.result.FindAllApiKeysResult;
-import aiChat.pojo.result.GenerateNewApiKeyResult;
+import ai.aiChat.pojo.dto.AiChatSendNewMsgFromApiDTO;
+import ai.aiChat.pojo.result.FindAllApiKeysResult;
+import ai.aiChat.pojo.result.GenerateNewApiKeyResult;
 import auxiliaryCommon.pojo.result.CommonResult;
 import net.sf.json.JSONObject;
 

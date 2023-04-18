@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import aiChat.pojo.result.GetAiChatHistoryResult;
+import ai.aiChat.pojo.result.GetAiChatHistoryResult;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiChat.pojo.constant.AiChatManagerUrlConstant;
 import demo.aiChat.pojo.dto.AiChatUserEditNicknameDTO;

@@ -14,9 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
-import aiChat.pojo.result.AiChatDailySignUpResult;
-import aiChat.pojo.result.GetAiChatAmountResult;
-import aiChat.pojo.type.AiChatAmountType;
+import ai.aiChat.pojo.result.AiChatDailySignUpResult;
+import ai.aiChat.pojo.result.GetAiChatAmountResult;
+import ai.aiChat.pojo.type.AiChatAmountType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiChat.mapper.AiChatUserAmountHistoryMapper;
 import demo.aiChat.mapper.AiChatUserAssociateWechatUidMapper;
@@ -660,5 +660,68 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 		}
 		return r;
 
+	}
+
+	@Override
+	public CommonResult __debitAmountAndAddTokenUsage(Long aiUserId, BigDecimal debitAmount) {
+		CommonResult r = new CommonResult();
+		if (debitAmount.compareTo(BigDecimal.ZERO) < 1) {
+			r.setMessage("输入消耗额异常");
+			return r;
+		}
+		
+		AiChatUserDetail detail = userDetailMapper.selectByPrimaryKey(aiUserId);
+		if(detail == null) {
+			r.setMessage("Can NOT found correct AI user ID: " + aiUserId);
+			return r;
+		}
+
+		AiChatUserAmountHistory bonusAmountHistory = null;
+		BigDecimal restDebitAmount = new BigDecimal(debitAmount.doubleValue());
+
+		detail.setUsedTokens(detail.getUsedTokens() + debitAmount.intValue());
+		detail.setLastUpdate(LocalDateTime.now());
+
+		if (detail.getBonusAmount().compareTo(BigDecimal.ZERO) > 0) {
+			restDebitAmount = debitAmount.subtract(detail.getBonusAmount());
+
+			if (detail.getBonusAmount().compareTo(debitAmount) <= 0) {
+				detail.setBonusAmount(BigDecimal.ZERO);
+			} else {
+				detail.setBonusAmount(detail.getBonusAmount().subtract(debitAmount));
+			}
+
+			bonusAmountHistory = new AiChatUserAmountHistory();
+			bonusAmountHistory.setId(snowFlake.getNextId());
+			bonusAmountHistory.setAmountType(AiChatAmountType.BONUS.getCode());
+			bonusAmountHistory.setAmountChange(BigDecimal.ZERO.subtract(debitAmount));
+			bonusAmountHistory.setUserId(detail.getId());
+		}
+
+		if (restDebitAmount.doubleValue() <= 0) {
+			userDetailMapper.updateByPrimaryKeySelective(detail);
+			if (bonusAmountHistory != null) {
+				amountHistoryMapper.insertSelective(bonusAmountHistory);
+			}
+			r.setIsSuccess();
+			return r;
+		}
+
+		detail.setRechargeAmount(detail.getRechargeAmount().subtract(restDebitAmount));
+		userDetailMapper.updateByPrimaryKeySelective(detail);
+
+		AiChatUserAmountHistory rechargeAmountHistory = new AiChatUserAmountHistory();
+		rechargeAmountHistory.setId(snowFlake.getNextId());
+		rechargeAmountHistory.setAmountType(AiChatAmountType.RECHARGE.getCode());
+		rechargeAmountHistory.setAmountChange(BigDecimal.ZERO.subtract(debitAmount.subtract(detail.getBonusAmount())));
+		rechargeAmountHistory.setUserId(detail.getId());
+		amountHistoryMapper.insertSelective(rechargeAmountHistory);
+		r.setIsSuccess();
+		return r;
+	}
+	
+	@Override
+	public AiChatUserDetail __getUserDetail(Long aiUserId) {
+		return userDetailMapper.selectByPrimaryKey(aiUserId);
 	}
 }

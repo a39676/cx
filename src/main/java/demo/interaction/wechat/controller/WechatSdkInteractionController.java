@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import aiChat.pojo.constant.AiChatFromWechatSdkUrlConstant;
+import ai.aiChat.pojo.constant.AiChatFromWechatSdkUrlConstant;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import demo.common.controller.CommonController;
-import demo.interaction.wechat.service.WechatAiChatService;
+import demo.interaction.wechat.service.WechatAiService;
 import demo.interaction.wechat.service.WechatQrCodeService;
 import demo.interaction.wechat.service.WechatUserService;
 
@@ -21,7 +21,7 @@ public class WechatSdkInteractionController extends CommonController {
 	@Autowired
 	private WechatUserService wechatUserService;
 	@Autowired
-	private WechatAiChatService wechatAiChatService;
+	private WechatAiService wechatAiChatService;
 	@Autowired
 	private WechatQrCodeService wechatQrCodeService;
 
@@ -106,5 +106,17 @@ public class WechatSdkInteractionController extends CommonController {
 	@ResponseBody
 	public EncryptDTO findAllApiKeysByAiChatUserId(@RequestBody EncryptDTO dto) {
 		return wechatUserService.findAllApiKeysByAiChatUserId(dto);
+	}
+
+	@PostMapping(value = AiChatFromWechatSdkUrlConstant.TEXT_TO_IMAGE)
+	@ResponseBody
+	public EncryptDTO sendTextToImg(@RequestBody EncryptDTO dto) {
+		return wechatAiChatService.sendTextToImg(dto);
+	}
+	
+	@PostMapping(value = AiChatFromWechatSdkUrlConstant.FIND_TEXT_TO_IMAGE_JOB_LIST)
+	@ResponseBody
+	public EncryptDTO getJobResultListByTmpKey(@RequestBody EncryptDTO dto) {
+		return wechatAiChatService.getJobResultListByTmpKey(dto);
 	}
 }

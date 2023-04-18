@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import aiChat.pojo.constant.AiChatApiUrlConstant;
-import aiChat.pojo.dto.AiChatSendNewMsgFromApiDTO;
+import ai.aiChat.pojo.constant.AiChatApiUrlConstant;
+import ai.aiChat.pojo.dto.AiChatSendNewMsgFromApiDTO;
 import demo.aiChat.service.AiChatFromApiService;
 import net.sf.json.JSONObject;
 

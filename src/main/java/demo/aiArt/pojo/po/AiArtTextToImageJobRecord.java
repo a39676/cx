@@ -3,53 +3,63 @@ package demo.aiArt.pojo.po;
 import java.time.LocalDateTime;
 
 public class AiArtTextToImageJobRecord {
-	private Long id;
+    private Long id;
 
-	private Long aiUserId;
+    private Long aiUserId;
 
-	private LocalDateTime createTime;
+    private LocalDateTime createTime;
 
-	private Boolean isDelete;
+    private Boolean isDelete;
 
-	private Byte jobStatus;
+    private Byte jobStatus;
 
-	public Long getId() {
-		return id;
-	}
+    private Integer runCount;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Long getAiUserId() {
-		return aiUserId;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setAiUserId(Long aiUserId) {
-		this.aiUserId = aiUserId;
-	}
+    public Long getAiUserId() {
+        return aiUserId;
+    }
 
-	public LocalDateTime getCreateTime() {
-		return createTime;
-	}
+    public void setAiUserId(Long aiUserId) {
+        this.aiUserId = aiUserId;
+    }
 
-	public void setCreateTime(LocalDateTime createTime) {
-		this.createTime = createTime;
-	}
+    public LocalDateTime getCreateTime() {
+        return createTime;
+    }
 
-	public Boolean getIsDelete() {
-		return isDelete;
-	}
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
+    }
 
-	public void setIsDelete(Boolean isDelete) {
-		this.isDelete = isDelete;
-	}
+    public Boolean getIsDelete() {
+        return isDelete;
+    }
 
-	public Byte getJobStatus() {
-		return jobStatus;
-	}
+    public void setIsDelete(Boolean isDelete) {
+        this.isDelete = isDelete;
+    }
 
-	public void setJobStatus(Byte jobStatus) {
-		this.jobStatus = jobStatus;
-	}
+    public Byte getJobStatus() {
+        return jobStatus;
+    }
+
+    public void setJobStatus(Byte jobStatus) {
+        this.jobStatus = jobStatus;
+    }
+
+    public Integer getRunCount() {
+        return runCount;
+    }
+
+    public void setRunCount(Integer runCount) {
+        this.runCount = runCount;
+    }
 }

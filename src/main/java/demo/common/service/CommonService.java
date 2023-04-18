@@ -153,6 +153,7 @@ public abstract class CommonService {
 			return gson.fromJson(jsonStr, clazz);
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			String msg = String.format("Build gson error, param name: %s ", className);
 			log.error(msg);
 		}

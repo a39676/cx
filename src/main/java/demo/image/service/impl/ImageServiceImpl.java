@@ -56,8 +56,10 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 	@Autowired
 	private AutomationTestOptionService automationTestConstantService;
 	@Autowired
-	protected ArticleOptionService articleOptionService;
-	
+	private ArticleOptionService articleOptionService;
+
+	private final String DEFAULT_IMG_SAVING_FOLDER = "/home/u2/cx/images";
+
 	@Override
 	public void getImage(HttpServletResponse response, String imgPK) {
 		if (StringUtils.isBlank(imgPK)) {
@@ -71,14 +73,15 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 
 		getImage(response, imgId);
 	}
-	
+
 	private void getImage(HttpServletResponse response, Long imgId) {
 		if (imgId == null) {
 			return;
 		}
 
 		ImageStore imgPO = imgMapper.selectByPrimaryKey(imgId);
-		if (imgPO == null || StringUtils.isBlank(imgPO.getImageUrl())) {
+		if (imgPO == null || imgPO.getValidTime().isBefore(LocalDateTime.now())
+				|| StringUtils.isBlank(imgPO.getImageUrl())) {
 			return;
 		}
 
@@ -191,18 +194,21 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 			String imageStorePrefixPath = null;
 			if (ImageTagType.IMAGE_SAVING.equals(imgTagType)) {
 				imageStorePrefixPath = automationTestConstantService.getImageStorePrefixPath();
-			} else if(ImageTagType.FROM_ARTICLE.equals(imgTagType)) {
+			} else if (ImageTagType.FROM_ARTICLE.equals(imgTagType)) {
 				imageStorePrefixPath = articleOptionService.getArticleImageSavingFolder();
 				dto.setValidTime(LocalDateTime.of(2999, 12, 31, 23, 59, 59));
-			}
-
-			if (imageStorePrefixPath == null) {
-				r.failWithMessage("error data");
-				return r;
+			} else {
+				imageStorePrefixPath = DEFAULT_IMG_SAVING_FOLDER;
 			}
 
 			newImgFilePath = imageStorePrefixPath + File.separator + dto.getImgName();
 			File imgFile = new File(newImgFilePath);
+			if(!imgFile.getParentFile().exists()) {
+				if(!imgFile.getParentFile().mkdirs()) {
+					r.setMessage("Can NOT create saving folder");
+					return r;
+				}
+			}
 
 			String base64Image = dto.getImgBase64Str(); // .split(",")[1];
 			byte[] imageBytes = Base64.getDecoder().decode(base64Image);
@@ -319,7 +325,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 
 			byte[] imageBytes = Base64.getDecoder().decode(imageBase64Str);
 			FileUtils.writeByteArrayToFile(outputfile, imageBytes);
-			
+
 			return true;
 		} catch (IOException e) {
 			return false;
@@ -347,4 +353,11 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 		return r;
 	}
 
+	@Override
+	public void setImageInvalidAndWaitingDelete(Long imgId) {
+		ImageStore record = new ImageStore();
+		record.setImageId(imgId);
+		record.setValidTime(LocalDateTime.now().minusMinutes(1));
+		imgMapper.updateByPrimaryKeySelective(record);
+	}
 }

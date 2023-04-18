@@ -9,11 +9,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import aiChat.pojo.dto.AiChatSendNewMsgFromApiDTO;
-import aiChat.pojo.result.FindAllApiKeysResult;
-import aiChat.pojo.result.GenerateNewApiKeyResult;
+import ai.aiChat.pojo.dto.AiChatSendNewMsgFromApiDTO;
+import ai.aiChat.pojo.result.FindAllApiKeysResult;
+import ai.aiChat.pojo.result.GenerateNewApiKeyResult;
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.aiChat.mapper.AiChatApiKeyMapper;
 import demo.aiChat.pojo.po.AiChatApiKey;
 import demo.aiChat.pojo.po.AiChatApiKeyExample;
 import demo.aiChat.service.AiChatFromApiService;
@@ -27,8 +26,6 @@ public class AiChatFromApiServiceImpl extends AiChatCommonService implements AiC
 
 	@Autowired
 	private AiChatService aiChatService;
-	@Autowired
-	private AiChatApiKeyMapper apiKeyMapper;
 
 	@Override
 	public GenerateNewApiKeyResult generateNewApiKey(String tmpKey) {
@@ -161,26 +158,14 @@ public class AiChatFromApiServiceImpl extends AiChatCommonService implements AiC
 			return r;
 		}
 
-		Long aiChatUserId = cacheService.getApiKeyCacheMap().get(dto.getApiKey());
+		Long aiChatUserId = getAiUserIdByApiKey(dto.getApiKey());
 		AiChatApiKey po = null;
 		Long apiKeyDecrypt = systemOptionService.decryptPrivateKey(dto.getApiKey());
 
 		if (aiChatUserId == null) {
-			if (apiKeyDecrypt == null) {
-				errorMsg.put("message", "API key expired, please generate a new one");
-				r.put("error", errorMsg);
-				return r;
-			}
-
-			po = apiKeyMapper.selectByPrimaryKey(apiKeyDecrypt);
-			if (po == null || po.getIsDelete()) {
-				log.error("API key record is null or is delete");
-				errorMsg.put("message", "API key expired, please generate a new one");
-				r.put("error", errorMsg);
-				return r;
-			}
-			aiChatUserId = po.getAiChatUserId();
-			cacheService.getApiKeyCacheMap().put(dto.getApiKey(), aiChatUserId);
+			errorMsg.put("message", "API key expired, please generate a new one");
+			r.put("error", errorMsg);
+			return r;
 		}
 
 		po = apiKeyMapper.selectByPrimaryKey(apiKeyDecrypt);

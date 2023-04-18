@@ -18,17 +18,13 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
-import aiChat.pojo.dto.AiChatSendNewMsgFromApiDTO;
-import aiChat.pojo.dto.AiChatSendNewMsgFromWechatDTO;
-import aiChat.pojo.result.AiChatSendNewMessageResult;
-import aiChat.pojo.result.GetAiChatHistoryResult;
-import aiChat.pojo.type.AiChatAmountType;
+import ai.aiChat.pojo.dto.AiChatSendNewMsgFromApiDTO;
+import ai.aiChat.pojo.dto.AiChatSendNewMsgFromWechatDTO;
+import ai.aiChat.pojo.result.AiChatSendNewMessageResult;
+import ai.aiChat.pojo.result.GetAiChatHistoryResult;
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.aiChat.mapper.AiChatUserAmountHistoryMapper;
 import demo.aiChat.mapper.AiChatUserChatHistoryMapper;
-import demo.aiChat.mapper.AiChatUserDetailMapper;
 import demo.aiChat.pojo.dto.AiChatUserMembershipDetailSummaryDTO;
-import demo.aiChat.pojo.po.AiChatUserAmountHistory;
 import demo.aiChat.pojo.po.AiChatUserChatHistory;
 import demo.aiChat.pojo.po.AiChatUserDetail;
 import demo.aiChat.service.AiChatMembershipService;
@@ -46,11 +42,7 @@ import toolPack.ioHandle.FileUtilCustom;
 public class AiChatServiceImpl extends AiChatCommonService implements AiChatService {
 
 	@Autowired
-	private AiChatUserAmountHistoryMapper amountHistoryMapper;
-	@Autowired
 	private AiChatUserChatHistoryMapper chatHistoryMapper;
-	@Autowired
-	private AiChatUserDetailMapper detailMapper;
 	@Autowired
 	private AiChatMembershipService membershipService;
 	@Autowired
@@ -79,7 +71,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 			}
 		}
 
-		AiChatUserDetail userDetail = detailMapper.selectByPrimaryKey(aiChatUserId);
+		AiChatUserDetail userDetail = aiChatUserService.__getUserDetail(aiChatUserId);
 		if (userDetail == null) {
 			errorMsg.put("message", "请输入正确 API key");
 			r.put("error", errorMsg);
@@ -121,7 +113,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 
 		// if success, debit amount, send feedback
 		Integer totalTokens = apiFeedbackDTO.getUsage().getTotal_tokens();
-		debitAmountAndAddTokenUsage(userDetail, new BigDecimal(totalTokens));
+		aiChatUserService.__debitAmountAndAddTokenUsage(userDetail.getId(), new BigDecimal(totalTokens));
 
 		r = JSONObject.fromObject(apiResult);
 		return r;
@@ -150,7 +142,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		}
 
 		// check amount
-		AiChatUserDetail userDetail = detailMapper.selectByPrimaryKey(aiChatUserId);
+		AiChatUserDetail userDetail = aiChatUserService.__getUserDetail(aiChatUserId);
 		if (userDetail == null) {
 			r.setMessage("请刷新页面后登录, 或者输入 API key, 如仍旧异常, 请联系管理员");
 			return r;
@@ -205,7 +197,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 
 		// if success, debit amount, refresh history, send feedback
 		Integer totalTokens = apiResult.getDto().getUsage().getTotal_tokens();
-		debitAmountAndAddTokenUsage(userDetail, new BigDecimal(totalTokens));
+		aiChatUserService.__debitAmountAndAddTokenUsage(userDetail.getId(), new BigDecimal(totalTokens));
 		CommonResult refreshHistoryResult = refreshChatHistory(aiChatUserId, dto.getMsg(),
 				OpenAiChatCompletionMessageRoleType.USER);
 		if (refreshHistoryResult.isFail()) {
@@ -400,57 +392,6 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		}
 		ioUtil.byteToFile(sb.toString().getBytes(StandardCharsets.UTF_8), finalFilePath);
 
-		r.setIsSuccess();
-		return r;
-	}
-
-	private CommonResult debitAmountAndAddTokenUsage(AiChatUserDetail detail, BigDecimal debitAmount) {
-		CommonResult r = new CommonResult();
-		if (debitAmount.compareTo(BigDecimal.ZERO) < 1) {
-			r.setMessage("输入消耗额异常");
-			return r;
-		}
-
-		AiChatUserAmountHistory bonusAmountHistory = null;
-		BigDecimal restDebitAmount = new BigDecimal(debitAmount.doubleValue());
-
-		detail.setUsedTokens(detail.getUsedTokens() + debitAmount.intValue());
-		detail.setLastUpdate(LocalDateTime.now());
-
-		if (detail.getBonusAmount().compareTo(BigDecimal.ZERO) > 0) {
-			restDebitAmount = debitAmount.subtract(detail.getBonusAmount());
-
-			if (detail.getBonusAmount().compareTo(debitAmount) <= 0) {
-				detail.setBonusAmount(BigDecimal.ZERO);
-			} else {
-				detail.setBonusAmount(detail.getBonusAmount().subtract(debitAmount));
-			}
-
-			bonusAmountHistory = new AiChatUserAmountHistory();
-			bonusAmountHistory.setId(snowFlake.getNextId());
-			bonusAmountHistory.setAmountType(AiChatAmountType.BONUS.getCode());
-			bonusAmountHistory.setAmountChange(BigDecimal.ZERO.subtract(debitAmount));
-			bonusAmountHistory.setUserId(detail.getId());
-		}
-
-		if (restDebitAmount.doubleValue() <= 0) {
-			detailMapper.updateByPrimaryKeySelective(detail);
-			if (bonusAmountHistory != null) {
-				amountHistoryMapper.insertSelective(bonusAmountHistory);
-			}
-			r.setIsSuccess();
-			return r;
-		}
-
-		detail.setRechargeAmount(detail.getRechargeAmount().subtract(restDebitAmount));
-		detailMapper.updateByPrimaryKeySelective(detail);
-
-		AiChatUserAmountHistory rechargeAmountHistory = new AiChatUserAmountHistory();
-		rechargeAmountHistory.setId(snowFlake.getNextId());
-		rechargeAmountHistory.setAmountType(AiChatAmountType.RECHARGE.getCode());
-		rechargeAmountHistory.setAmountChange(BigDecimal.ZERO.subtract(debitAmount.subtract(detail.getBonusAmount())));
-		rechargeAmountHistory.setUserId(detail.getId());
-		amountHistoryMapper.insertSelective(rechargeAmountHistory);
 		r.setIsSuccess();
 		return r;
 	}

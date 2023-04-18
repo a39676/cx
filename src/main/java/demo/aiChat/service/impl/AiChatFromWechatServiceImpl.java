@@ -4,9 +4,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import aiChat.pojo.dto.AiChatSendNewMsgFromWechatDTO;
-import aiChat.pojo.result.AiChatSendNewMessageResult;
-import aiChat.pojo.result.GetAiChatHistoryResult;
+import ai.aiChat.pojo.dto.AiChatSendNewMsgFromWechatDTO;
+import ai.aiChat.pojo.result.AiChatSendNewMessageResult;
+import ai.aiChat.pojo.result.GetAiChatHistoryResult;
 import demo.aiChat.service.AiChatFromWechatService;
 import demo.aiChat.service.AiChatService;
 import wechatSdk.pojo.type.WechatSdkCommonResultType;

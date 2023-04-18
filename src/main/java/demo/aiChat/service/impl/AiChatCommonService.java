@@ -8,6 +8,8 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.aiChat.mapper.AiChatApiKeyMapper;
+import demo.aiChat.pojo.po.AiChatApiKey;
 import demo.base.system.service.impl.RedisOriginalConnectService;
 import demo.base.system.service.impl.RedisSetConnectService;
 import demo.common.service.ToolCommonService;
@@ -37,6 +39,9 @@ public abstract class AiChatCommonService extends ToolCommonService {
 
 	private final String dailySignUpRedisKey = "aiChatDailySignUp";
 	private final String sensitiveWordHitCountingRedisKeyPrefix = "senWordHitCount_";
+
+	@Autowired
+	protected AiChatApiKeyMapper apiKeyMapper;
 
 	protected CommonResult notEnoughtAmount() {
 		CommonResult r = new CommonResult();
@@ -115,5 +120,28 @@ public abstract class AiChatCommonService extends ToolCommonService {
 			}
 		}
 		return total;
+	}
+
+	protected Long getAiUserIdByApiKey(String apiKey) {
+		Long aiUserId = cacheService.getApiKeyCacheMap().get(apiKey);
+		if (aiUserId != null) {
+			return aiUserId;
+		}
+
+		AiChatApiKey po = null;
+		Long apiKeyDecrypt = systemOptionService.decryptPrivateKey(apiKey);
+
+		if (apiKeyDecrypt == null) {
+			return null;
+		}
+
+		po = apiKeyMapper.selectByPrimaryKey(apiKeyDecrypt);
+		if (po == null || po.getIsDelete()) {
+			return null;
+		}
+		aiUserId = po.getAiChatUserId();
+		cacheService.getApiKeyCacheMap().put(apiKey, aiUserId);
+
+		return aiUserId;
 	}
 }

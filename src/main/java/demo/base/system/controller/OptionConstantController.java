@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import demo.aiArt.service.impl.AiArtOptionService;
 import demo.aiChat.service.impl.AiChatOptionService;
 import demo.article.article.service.impl.ArticleOptionService;
 import demo.article.articleComment.service.impl.ArticleCommentOptionService;
@@ -63,6 +64,8 @@ public class OptionConstantController {
 	private CloudFlareOptionService cloudFlareOptionService;
 	@Autowired
 	private WechatPayOptionService wechatPayOptionService;
+	@Autowired
+	private AiArtOptionService aiArtOptionService;
 
 	@GetMapping(value = "/refreshSystemOption")
 	@ResponseBody
@@ -179,6 +182,13 @@ public class OptionConstantController {
 	@ResponseBody
 	public String refreshWechatPayOption() {
 		wechatPayOptionService.refreshOption();
+		return "done";
+	}
+	
+	@GetMapping(value = "/refreshAiArtOption")
+	@ResponseBody
+	public String refreshAiArtOption() {
+		aiArtOptionService.refreshOption();
 		return "done";
 	}
 }

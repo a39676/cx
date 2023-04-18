@@ -3,7 +3,7 @@ package demo.aiChat.pojo.dto;
 import java.util.HashMap;
 import java.util.Map;
 
-import aiChat.pojo.vo.AiChatUserMembershipDetailVO;
+import ai.aiChat.pojo.vo.AiChatUserMembershipDetailVO;
 
 public class AiChatUserMembershipDetailSummaryDTO {
 

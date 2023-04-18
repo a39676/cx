@@ -2,8 +2,8 @@ package demo.aiChat.service;
 
 import java.util.List;
 
-import aiChat.pojo.result.AiChatBuyMembershipFromWechatResult;
-import aiChat.pojo.result.GetAiChatMembershipResult;
+import ai.aiChat.pojo.result.AiChatBuyMembershipFromWechatResult;
+import ai.aiChat.pojo.result.GetAiChatMembershipResult;
 import demo.aiChat.pojo.dto.AiChatUserMembershipDetailSummaryDTO;
 import demo.aiChat.pojo.po.AiChatUserMembership;
 import wechatPayApi.jsApi.pojo.dto.WechatPayJsApiFeedbackDTO;

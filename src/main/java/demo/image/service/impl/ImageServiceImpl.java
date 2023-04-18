@@ -80,7 +80,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 		}
 
 		ImageStore imgPO = imgMapper.selectByPrimaryKey(imgId);
-		if (imgPO == null || imgPO.getValidTime().isBefore(LocalDateTime.now())
+		if (imgPO == null || (imgPO.getValidTime() != null && imgPO.getValidTime().isBefore(LocalDateTime.now()))
 				|| StringUtils.isBlank(imgPO.getImageUrl())) {
 			return;
 		}
@@ -203,8 +203,8 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 
 			newImgFilePath = imageStorePrefixPath + File.separator + dto.getImgName();
 			File imgFile = new File(newImgFilePath);
-			if(!imgFile.getParentFile().exists()) {
-				if(!imgFile.getParentFile().mkdirs()) {
+			if (!imgFile.getParentFile().exists()) {
+				if (!imgFile.getParentFile().mkdirs()) {
 					r.setMessage("Can NOT create saving folder");
 					return r;
 				}

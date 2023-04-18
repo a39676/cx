@@ -6,13 +6,10 @@ import org.springframework.stereotype.Component;
 
 import demo.aiArt.service.AiArtService;
 import demo.common.service.ToolCommonService;
-import demo.test.controller.TestController2;
 
 @Component
 public class AiArtTaskService extends ToolCommonService {
 
-	@Autowired
-	private TestController2 t;
 	@Autowired
 	private AiArtService aiArtService;
 
@@ -24,7 +21,8 @@ public class AiArtTaskService extends ToolCommonService {
 	@Scheduled(fixedDelay = 1000L * 60 * 2)
 	public void insertJobToKeepLive() {
 		if (!systemOptionService.isDev()) {
-			t.t4();
+//			t.t4();
+//			TODO
 		}
 	}
 

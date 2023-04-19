@@ -1,6 +1,7 @@
 package demo.image.service;
 
 import java.awt.image.BufferedImage;
+import java.time.LocalDateTime;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,7 +15,7 @@ public interface ImageService {
 
 	ImageSavingResult __saveImgFromBBT(ImageSavingTransDTO dto);
 
-	void imageClean();
+	void imageCleanAndDeleteFile();
 
 	BufferedImage base64ToBufferedImg(String base64);
 
@@ -36,11 +37,13 @@ public interface ImageService {
 	 */
 	ImgHandleSrcDataResult imgHandleSrcData(String src);
 
-	void getImageByPath(HttpServletResponse response, String path);
+	void __getImageByPath(HttpServletResponse response, String path);
 
 	void getImage(HttpServletResponse response, String imgPK);
 
 	/** 修改 valid_time 字段, 等待定时任务执行删除 */
 	void setImageInvalidAndWaitingDelete(Long imgId);
+
+	void shortenImageValidTime(Long imgId, LocalDateTime invalidTime);
 
 }

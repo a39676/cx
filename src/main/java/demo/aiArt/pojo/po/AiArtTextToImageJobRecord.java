@@ -15,6 +15,8 @@ public class AiArtTextToImageJobRecord {
 
     private Integer runCount;
 
+    private Boolean isFromApi;
+
     public Long getId() {
         return id;
     }
@@ -61,5 +63,13 @@ public class AiArtTextToImageJobRecord {
 
     public void setRunCount(Integer runCount) {
         this.runCount = runCount;
+    }
+
+    public Boolean getIsFromApi() {
+        return isFromApi;
+    }
+
+    public void setIsFromApi(Boolean isFromApi) {
+        this.isFromApi = isFromApi;
     }
 }

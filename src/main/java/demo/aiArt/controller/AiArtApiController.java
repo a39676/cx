@@ -29,8 +29,8 @@ public class AiArtApiController {
 	
 	@PostMapping(value = AiArtApiUrlConstant.GET_JOB_RESULT_BY_JOB_PK)
 	@ResponseBody
-	public GetJobResultList getJobResultVoByPk(@RequestBody BaseDTO dto) {
-		return aiArtService.getJobResultVoByPk(dto);
+	public GetJobResultList getJobResultVoByJobPk(@RequestBody BaseDTO dto) {
+		return aiArtService.getJobResultVoByJobPk(dto);
 	}
 	
 	

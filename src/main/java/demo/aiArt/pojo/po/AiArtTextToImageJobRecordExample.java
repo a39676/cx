@@ -464,6 +464,66 @@ public class AiArtTextToImageJobRecordExample {
             addCriterion("run_count not between", value1, value2, "runCount");
             return (Criteria) this;
         }
+
+        public Criteria andIsFromApiIsNull() {
+            addCriterion("is_from_api is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsFromApiIsNotNull() {
+            addCriterion("is_from_api is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsFromApiEqualTo(Boolean value) {
+            addCriterion("is_from_api =", value, "isFromApi");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsFromApiNotEqualTo(Boolean value) {
+            addCriterion("is_from_api <>", value, "isFromApi");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsFromApiGreaterThan(Boolean value) {
+            addCriterion("is_from_api >", value, "isFromApi");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsFromApiGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_from_api >=", value, "isFromApi");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsFromApiLessThan(Boolean value) {
+            addCriterion("is_from_api <", value, "isFromApi");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsFromApiLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_from_api <=", value, "isFromApi");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsFromApiIn(List<Boolean> values) {
+            addCriterion("is_from_api in", values, "isFromApi");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsFromApiNotIn(List<Boolean> values) {
+            addCriterion("is_from_api not in", values, "isFromApi");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsFromApiBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_from_api between", value1, value2, "isFromApi");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsFromApiNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_from_api not between", value1, value2, "isFromApi");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

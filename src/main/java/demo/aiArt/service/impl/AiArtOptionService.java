@@ -1,6 +1,7 @@
 package demo.aiArt.service.impl;
 
 import java.io.File;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
@@ -35,6 +36,9 @@ public class AiArtOptionService extends CommonService {
 	private Integer maxShowJob;
 	private Integer maxJobLivingDay;
 	private Integer maxDailyFreeJobCount;
+	private Integer maxLivingMinuteOfApiImageAfterFirstVisit = 10;
+	private List<String> nsfwPrompt;
+	private Double consumptionCoefficient;
 
 	public String getMainUrl() {
 		return mainUrl;
@@ -156,6 +160,30 @@ public class AiArtOptionService extends CommonService {
 		this.maxDailyFreeJobCount = maxDailyFreeJobCount;
 	}
 
+	public Integer getMaxLivingMinuteOfApiImageAfterFirstVisit() {
+		return maxLivingMinuteOfApiImageAfterFirstVisit;
+	}
+
+	public void setMaxLivingMinuteOfApiImageAfterFirstVisit(Integer maxLivingMinuteOfApiImageAfterFirstVisit) {
+		this.maxLivingMinuteOfApiImageAfterFirstVisit = maxLivingMinuteOfApiImageAfterFirstVisit;
+	}
+
+	public List<String> getNsfwPrompt() {
+		return nsfwPrompt;
+	}
+
+	public void setNsfwPrompt(List<String> nsfwPrompt) {
+		this.nsfwPrompt = nsfwPrompt;
+	}
+
+	public Double getConsumptionCoefficient() {
+		return consumptionCoefficient;
+	}
+
+	public void setConsumptionCoefficient(Double consumptionCoefficient) {
+		this.consumptionCoefficient = consumptionCoefficient;
+	}
+
 	@Override
 	public String toString() {
 		return "AiArtOptionService [mainUrl=" + mainUrl + ", generateImageResultFolder=" + generateImageResultFolder
@@ -164,7 +192,9 @@ public class AiArtOptionService extends CommonService {
 				+ maxSteps + ", dailyFreeGenerateCount=" + dailyFreeGenerateCount + ", maxPromptLength="
 				+ maxPromptLength + ", maxFailCountForJob=" + maxFailCountForJob + ", isRunning=" + isRunning
 				+ ", maxShowJob=" + maxShowJob + ", maxJobLivingDay=" + maxJobLivingDay + ", maxDailyFreeJobCount="
-				+ maxDailyFreeJobCount + "]";
+				+ maxDailyFreeJobCount + ", maxLivingMinuteOfApiImageAfterFirstVisit="
+				+ maxLivingMinuteOfApiImageAfterFirstVisit + ", nsfwPrompt=" + nsfwPrompt + ", consumptionCoefficient="
+				+ consumptionCoefficient + "]";
 	}
 
 	@PostConstruct

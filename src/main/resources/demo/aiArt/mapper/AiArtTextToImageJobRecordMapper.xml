@@ -8,6 +8,7 @@
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
     <result column="job_status" jdbcType="BIT" property="jobStatus" />
     <result column="run_count" jdbcType="INTEGER" property="runCount" />
+    <result column="is_from_api" jdbcType="BIT" property="isFromApi" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -68,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, ai_user_id, create_time, is_delete, job_status, run_count
+    id, ai_user_id, create_time, is_delete, job_status, run_count, is_from_api
   </sql>
   <select id="selectByExample" parameterType="demo.aiArt.pojo.po.AiArtTextToImageJobRecordExample" resultMap="BaseResultMap">
     select
@@ -102,11 +103,11 @@
   </delete>
   <insert id="insert" parameterType="demo.aiArt.pojo.po.AiArtTextToImageJobRecord">
     insert into ai_art_text_to_image_job_record (id, ai_user_id, create_time, 
-      is_delete, job_status, run_count
-      )
+      is_delete, job_status, run_count, 
+      is_from_api)
     values (#{id,jdbcType=BIGINT}, #{aiUserId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{isDelete,jdbcType=BIT}, #{jobStatus,jdbcType=BIT}, #{runCount,jdbcType=INTEGER}
-      )
+      #{isDelete,jdbcType=BIT}, #{jobStatus,jdbcType=BIT}, #{runCount,jdbcType=INTEGER}, 
+      #{isFromApi,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="demo.aiArt.pojo.po.AiArtTextToImageJobRecord">
     insert into ai_art_text_to_image_job_record
@@ -129,6 +130,9 @@
       <if test="runCount != null">
         run_count,
       </if>
+      <if test="isFromApi != null">
+        is_from_api,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -148,6 +152,9 @@
       </if>
       <if test="runCount != null">
         #{runCount,jdbcType=INTEGER},
+      </if>
+      <if test="isFromApi != null">
+        #{isFromApi,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -178,6 +185,9 @@
       <if test="row.runCount != null">
         run_count = #{row.runCount,jdbcType=INTEGER},
       </if>
+      <if test="row.isFromApi != null">
+        is_from_api = #{row.isFromApi,jdbcType=BIT},
+      </if>
     </set>
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -190,7 +200,8 @@
       create_time = #{row.createTime,jdbcType=TIMESTAMP},
       is_delete = #{row.isDelete,jdbcType=BIT},
       job_status = #{row.jobStatus,jdbcType=BIT},
-      run_count = #{row.runCount,jdbcType=INTEGER}
+      run_count = #{row.runCount,jdbcType=INTEGER},
+      is_from_api = #{row.isFromApi,jdbcType=BIT}
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -213,6 +224,9 @@
       <if test="runCount != null">
         run_count = #{runCount,jdbcType=INTEGER},
       </if>
+      <if test="isFromApi != null">
+        is_from_api = #{isFromApi,jdbcType=BIT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -222,7 +236,8 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       is_delete = #{isDelete,jdbcType=BIT},
       job_status = #{jobStatus,jdbcType=BIT},
-      run_count = #{runCount,jdbcType=INTEGER}
+      run_count = #{runCount,jdbcType=INTEGER},
+      is_from_api = #{isFromApi,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByExampleWithRowbounds" parameterType="demo.aiArt.pojo.po.AiArtTextToImageJobRecordExample" resultMap="BaseResultMap">

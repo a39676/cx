@@ -18,7 +18,7 @@ public class AiArtColabUtil extends AiArtCommonService {
 		json.put("prompt", dto.getPrompts());
 		json.put("negative_prompt", dto.getNegativePrompts());
 		json.put("sampler_name", dto.getSampler());
-		json.put("width", dto.getWedith());
+		json.put("width", dto.getWidth());
 		json.put("height", dto.getHeight());
 		json.put("cfg_scale", dto.getCfgScale());
 		json.put("steps", dto.getSteps());
@@ -39,4 +39,20 @@ public class AiArtColabUtil extends AiArtCommonService {
 		return responseJson;
 	}
 
+	public JSONObject getModelList() {
+		String uri = "/sdapi/v1/sd-models";
+		HttpUtil h = new HttpUtil();
+		String url = aiArtOptionService.getMainUrl() + uri;
+		String response = null;
+		try {
+			response = h.sendGet(url);
+//			TODO not a stander JSON
+//			[{"title":"chilled_re-generic.safetensors [7282703625]","model_name":"chilled_re-generic","hash":"7282703625","sha256":"7282703625bb79973e5e0d7493d4569f208e3fc3d26ddb0dbaf455ce171c2be2","filename":"/content/stable-diffusion-webui/models/Stable-diffusion/chilled_re-generic.safetensors","config":null}]
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("Get model list request error: " + e.getLocalizedMessage());
+		}
+		JSONObject responseJson = JSONObject.fromObject(response);
+		return responseJson;
+	}
 }

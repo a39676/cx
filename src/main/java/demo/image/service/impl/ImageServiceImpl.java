@@ -59,6 +59,8 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 	private ArticleOptionService articleOptionService;
 
 	private final String DEFAULT_IMG_SAVING_FOLDER = "/home/u2/cx/images";
+	private final Integer PHYSICS_DELETE_DELAY_DAYS = 5;
+	private final Integer DEFAULT_IMG_LIVING_DAYS = 30;
 
 	@Override
 	public void getImage(HttpServletResponse response, String imgPK) {
@@ -94,7 +96,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 	}
 
 	@Override
-	public void getImageByPath(HttpServletResponse response, String path) {
+	public void __getImageByPath(HttpServletResponse response, String path) {
 		if (StringUtils.isBlank(path)) {
 			return;
 		}
@@ -149,7 +151,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 
 		if (dto.getValidTime() == null) {
 			if (!isBigUser()) {
-				dto.setValidTime(LocalDateTime.now().plusMonths(1));
+				dto.setValidTime(LocalDateTime.now().plusDays(DEFAULT_IMG_LIVING_DAYS));
 			}
 		} else {
 			if (dto.getValidTime().isBefore(LocalDateTime.now())) {
@@ -254,14 +256,15 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 	}
 
 	@Override
-	public void imageClean() {
+	public void imageCleanAndDeleteFile() {
 		ImageStoreExample imgStoreExample = new ImageStoreExample();
-		imgStoreExample.createCriteria().andValidTimeLessThan(LocalDateTime.now());
+		imgStoreExample.createCriteria().andValidTimeLessThan(LocalDateTime.now().minusDays(PHYSICS_DELETE_DELAY_DAYS));
 		List<ImageStore> targetImgList = imgMapper.selectByExample(imgStoreExample);
 		if (targetImgList == null || targetImgList.isEmpty()) {
 			return;
 		}
 
+		// Collect into map(imgUrl : imgId)
 		Map<String, Long> imgPathMap = new HashMap<String, Long>();
 		for (ImageStore po : targetImgList) {
 			if (!po.getImageUrl().startsWith("http")) {
@@ -269,6 +272,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 			}
 		}
 
+		// Collect imgId that deleted
 		File tmpFile = null;
 		List<Long> targetImgIdList = new ArrayList<Long>();
 		for (Entry<String, Long> m : imgPathMap.entrySet()) {
@@ -285,10 +289,10 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 			return;
 		}
 
+		// Delete image tag that image deleted
 		ImageTagExample imgTagExample = new ImageTagExample();
 		imgTagExample.createCriteria().andImageIdIn(targetImgIdList);
 		imageTagMapper.deleteByExample(imgTagExample);
-
 	}
 
 	@Override
@@ -359,5 +363,18 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 		record.setImageId(imgId);
 		record.setValidTime(LocalDateTime.now().minusMinutes(1));
 		imgMapper.updateByPrimaryKeySelective(record);
+	}
+
+	@Override
+	public void shortenImageValidTime(Long imgId, LocalDateTime invalidTime) {
+		ImageStore image = imgMapper.selectByPrimaryKey(imgId);
+		if (image == null) {
+			return;
+		}
+		if (image.getValidTime().isBefore(invalidTime)) {
+			return;
+		}
+		image.setValidTime(invalidTime);
+		imgMapper.updateByPrimaryKeySelective(image);
 	}
 }

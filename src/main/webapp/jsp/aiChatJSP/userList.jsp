@@ -119,7 +119,7 @@
                   <%-- <option value="is_delete">is_delete</option> --%>
                   <%-- <option value="is_block">is_block</option> --%>
                   <%-- <option value="is_warning">is_warning</option> --%>
-                  <option value="create_time" checked>create_time</option>
+                  <option value="create_time" selected="selected">create_time</option>
                   <option value="last_update">last_update</option>
                   <option value="used_tokens">used_tokens</option>
                   <option value="bonus_amount">bonus_amount</option>

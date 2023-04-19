@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import ai.aiArt.pojo.result.GetJobResultList;
+import auxiliaryCommon.pojo.dto.BasePkDTO;
 import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiArt.pojo.constant.AiArtMangerUrl;
@@ -36,6 +38,18 @@ public class AiArtManagerController {
 	@ResponseBody
 	public CommonResult setStopColab() {
 		return aiArtManagerService.setStopColab();
+	}
+
+	@PostMapping(value = AiArtMangerUrl.GET_JOB_RESULT_LIST)
+	@ResponseBody
+	public GetJobResultList setStopColab(@RequestBody BasePkDTO dto) {
+		return aiArtManagerService.getAiArtJobList(dto);
+	}
+	
+	@PostMapping(value = AiArtMangerUrl.SET_INVALID_IMG)
+	@ResponseBody
+	public CommonResult setImgInvalid(@RequestBody BasePkDTO dto) {
+		return aiArtManagerService.setImgInvalid(dto);
 	}
 
 }

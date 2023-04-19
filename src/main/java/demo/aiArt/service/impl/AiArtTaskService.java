@@ -12,17 +12,20 @@ public class AiArtTaskService extends ToolCommonService {
 
 	@Autowired
 	private AiArtService aiArtService;
+	@Autowired
+	private AiArtOptionService aiArtOptionService;
+	@Autowired
+	private AiArtColabUtil aiArtColabUtil;
 
 	@Scheduled(fixedDelay = 1000L * 60 * 2)
 	public void rerun() {
 		aiArtService.rerun();
 	}
 
-	@Scheduled(fixedDelay = 1000L * 60 * 2)
+	@Scheduled(fixedDelay = 1000L * 60 * 5)
 	public void insertJobToKeepLive() {
-		if (!systemOptionService.isDev()) {
-//			t.t4();
-//			TODO
+		if (aiArtOptionService.getIsRunning()) {
+			aiArtColabUtil.getModelList();
 		}
 	}
 

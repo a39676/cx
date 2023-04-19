@@ -73,7 +73,7 @@ public class OldDataDeleteServiceImpl extends CommonTaskService {
 	}
 
 	public void imageClean() {
-		imgService.imageClean();
+		imgService.imageCleanAndDeleteFile();
 		ocrService.cleanOldOcrImg();
 	}
 	

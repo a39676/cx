@@ -1,5 +1,10 @@
 package demo.aiArt.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
@@ -7,21 +12,39 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ai.aiArt.pojo.dto.TextToImageFromDTO;
 import ai.aiArt.pojo.result.AiArtGenerateImageResult;
+import ai.aiArt.pojo.result.GetJobResultList;
 import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
+import auxiliaryCommon.pojo.result.CommonResult;
+import demo.aiArt.mapper.AiArtGeneratingRecordMapper;
+import demo.aiArt.mapper.AiArtTextToImageJobRecordMapper;
 import demo.aiArt.pojo.po.AiArtTextToImageJobRecord;
 import demo.aiArt.service.impl.AiArtOptionService;
+import demo.aiChat.service.AiChatUserService;
 import demo.aiChat.service.impl.AiChatCommonService;
 import demo.base.system.service.impl.RedisOriginalConnectService;
+import demo.image.service.ImageService;
+import net.sf.json.JSONObject;
 import toolPack.ioHandle.FileUtilCustom;
 
 public abstract class AiArtCommonService extends AiChatCommonService {
 
 	@Autowired
 	protected AiArtOptionService aiArtOptionService;
+	@Autowired
+	protected AiArtGeneratingRecordMapper aiArtGeneratingRecordMapper;
+	@Autowired
+	protected AiArtTextToImageJobRecordMapper aiArtTextToImageJobRecordMapper;
+	@Autowired
+	protected ImageService imageService;
+
+	@Autowired
+	protected AiChatUserService aiChatUserService;
 
 	@Autowired
 	private FileUtilCustom fileUtilCustom;
@@ -61,12 +84,12 @@ public abstract class AiArtCommonService extends AiChatCommonService {
 
 		if (subResult != null) {
 			List<String> imgUrlList = new ArrayList<>();
-			if (!subResult.getImgUrlList().isEmpty()) {
-				for (String imgUrl : subResult.getImgUrlList()) {
+			if (subResult.getImgPkList() != null && !subResult.getImgPkList().isEmpty()) {
+				for (String imgUrl : subResult.getImgPkList()) {
 					imgUrlList.add(imgUrl);
 				}
 			}
-			vo.setImgUrlList(imgUrlList);
+			vo.setImgPkList(imgUrlList);
 			TextToImageFromDTO subParam = subResult.getParameter();
 			subParam.setJobId(null);
 			vo.setParameter(subParam);
@@ -89,5 +112,86 @@ public abstract class AiArtCommonService extends AiChatCommonService {
 	protected String getJobResultStrPath(Long jobId) {
 		String resultJsonSavePath = aiArtOptionService.getGenerateImageResultFolder() + "/" + jobId + ".json";
 		return resultJsonSavePath;
+	}
+
+	protected BigDecimal calculateTokenCost(TextToImageFromDTO dto) {
+		return new BigDecimal(dto.getWidth().longValue() * dto.getHeight().longValue() * dto.getSteps().longValue()
+				* dto.getBatchSize() * aiArtOptionService.getConsumptionCoefficient())
+				.setScale(0, RoundingMode.CEILING);
+	}
+
+	protected CommonResult saveAiArtGenerateImgResultJson(TextToImageFromDTO dto, List<String> imgPkList) {
+		CommonResult r = new CommonResult();
+		AiArtGenerateImageResult result = new AiArtGenerateImageResult();
+		result.setParameter(dto);
+		result.setImgPkList(imgPkList);
+
+		String resultJsonSavePath = getJobResultStrPath(dto.getJobId());
+		File resultJsonFile = new File(resultJsonSavePath);
+
+		File parentFolder = new File(aiArtOptionService.getGenerateImageResultFolder());
+		if (!parentFolder.exists()) {
+			if (!parentFolder.mkdirs()) {
+				sendTelegramMessage("AI生成图片异常, 无法创建保存设定数据文件夹: " + parentFolder.getAbsolutePath());
+				return r;
+			}
+		}
+
+		JSONObject resultJson = JSONObject.fromObject(result);
+		try {
+			FileUtils.writeByteArrayToFile(resultJsonFile, resultJson.toString().getBytes(StandardCharsets.UTF_8));
+		} catch (IOException e) {
+			e.printStackTrace();
+			sendTelegramMessage("AI生成图片异常, 无法保存设定数据: " + e.getLocalizedMessage());
+			return r;
+		}
+
+		r.setIsSuccess();
+		return r;
+	}
+
+	protected GetJobResultList getJobResultVoByJobPk(String jobPk) {
+		GetJobResultList r = new GetJobResultList();
+		if (StringUtils.isBlank(jobPk)) {
+			r.setMessage("Please fill the job PK");
+			return r;
+		}
+
+		Long jobId = systemOptionService.decryptPrivateKey(jobPk);
+		if (jobId == null) {
+			r.setMessage("Please fill correct job PK");
+			return r;
+		}
+
+		AiArtTextToImageJobRecord po = aiArtTextToImageJobRecordMapper.selectByPrimaryKey(jobId);
+		if (po == null) {
+			r.setMessage("Job expired or NOT exists");
+			return r;
+		}
+
+		AiArtGenerateImageResult jobResult = getJobResult(jobId);
+		if (jobResult != null) {
+			List<String> newImgPkList = new ArrayList<>();
+			for (String imgPk : jobResult.getImgPkList()) {
+				updateImageInvalidTimeByImgUrl(imgPk);
+				newImgPkList.add(imgPk);
+			}
+			jobResult.setImgPkList(newImgPkList);
+		}
+
+		AiArtGenerateImageVO vo = buildAiArtGenerateImageVO(po, jobResult, jobPk);
+		r.setJobResultList(new ArrayList<>());
+		r.getJobResultList().add(vo);
+		r.setIsSuccess();
+		return r;
+	}
+
+	protected void updateImageInvalidTimeByImgUrl(String imgPk) {
+		if (aiArtOptionService.getImagePkInsteadOfNsfw().equals(imgPk)) {
+			return;
+		}
+		Long imgId = systemOptionService.decryptPrivateKey(imgPk);
+		imageService.shortenImageValidTime(imgId,
+				LocalDateTime.now().plusMinutes(aiArtOptionService.getMaxLivingMinuteOfApiImageAfterFirstVisit()));
 	}
 }

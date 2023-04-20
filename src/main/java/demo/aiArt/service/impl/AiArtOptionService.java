@@ -39,6 +39,8 @@ public class AiArtOptionService extends CommonService {
 	private Integer maxLivingMinuteOfApiImageAfterFirstVisit = 10;
 	private List<String> nsfwPrompt;
 	private Double consumptionCoefficient;
+	private String imagePkInsteadOfNsfw;
+	private Integer maxWaitingJobCount;
 
 	public String getMainUrl() {
 		return mainUrl;
@@ -184,17 +186,34 @@ public class AiArtOptionService extends CommonService {
 		this.consumptionCoefficient = consumptionCoefficient;
 	}
 
+	public String getImagePkInsteadOfNsfw() {
+		return imagePkInsteadOfNsfw;
+	}
+
+	public void setImagePkInsteadOfNsfw(String imagePkInsteadOfNsfw) {
+		this.imagePkInsteadOfNsfw = imagePkInsteadOfNsfw;
+	}
+
+	public Integer getMaxWaitingJobCount() {
+		return maxWaitingJobCount;
+	}
+
+	public void setMaxWaitingJobCount(Integer maxWaitingJobCount) {
+		this.maxWaitingJobCount = maxWaitingJobCount;
+	}
+
 	@Override
 	public String toString() {
-		return "AiArtOptionService [mainUrl=" + mainUrl + ", generateImageResultFolder=" + generateImageResultFolder
-				+ ", textToImageParameterSavingFolder=" + textToImageParameterSavingFolder + ", maxHeight=" + maxHeight
-				+ ", maxWidth=" + maxWidth + ", maxBatch=" + maxBatch + ", maxCfgScale=" + maxCfgScale + ", maxSteps="
-				+ maxSteps + ", dailyFreeGenerateCount=" + dailyFreeGenerateCount + ", maxPromptLength="
-				+ maxPromptLength + ", maxFailCountForJob=" + maxFailCountForJob + ", isRunning=" + isRunning
-				+ ", maxShowJob=" + maxShowJob + ", maxJobLivingDay=" + maxJobLivingDay + ", maxDailyFreeJobCount="
-				+ maxDailyFreeJobCount + ", maxLivingMinuteOfApiImageAfterFirstVisit="
-				+ maxLivingMinuteOfApiImageAfterFirstVisit + ", nsfwPrompt=" + nsfwPrompt + ", consumptionCoefficient="
-				+ consumptionCoefficient + "]";
+		return "AiArtOptionService [optionFilePath=" + optionFilePath + ", mainUrl=" + mainUrl
+				+ ", generateImageResultFolder=" + generateImageResultFolder + ", textToImageParameterSavingFolder="
+				+ textToImageParameterSavingFolder + ", maxHeight=" + maxHeight + ", maxWidth=" + maxWidth
+				+ ", maxBatch=" + maxBatch + ", maxCfgScale=" + maxCfgScale + ", maxSteps=" + maxSteps
+				+ ", dailyFreeGenerateCount=" + dailyFreeGenerateCount + ", maxPromptLength=" + maxPromptLength
+				+ ", maxFailCountForJob=" + maxFailCountForJob + ", isRunning=" + isRunning + ", maxShowJob="
+				+ maxShowJob + ", maxJobLivingDay=" + maxJobLivingDay + ", maxDailyFreeJobCount=" + maxDailyFreeJobCount
+				+ ", maxLivingMinuteOfApiImageAfterFirstVisit=" + maxLivingMinuteOfApiImageAfterFirstVisit
+				+ ", nsfwPrompt=" + nsfwPrompt + ", consumptionCoefficient=" + consumptionCoefficient
+				+ ", imagePkInsteadOfNsfw=" + imagePkInsteadOfNsfw + ", maxWaitingJobCount=" + maxWaitingJobCount + "]";
 	}
 
 	@PostConstruct

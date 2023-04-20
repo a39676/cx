@@ -4,14 +4,19 @@ import ai.aiArt.pojo.dto.TextToImageFromDTO;
 
 public class TextToImageFromApiDTO extends TextToImageFromDTO {
 
-	private String ApiKey;
+	private String apiKey;
 
 	public String getApiKey() {
-		return ApiKey;
+		return apiKey;
 	}
 
 	public void setApiKey(String apiKey) {
-		ApiKey = apiKey;
+		this.apiKey = apiKey;
+	}
+
+	@Override
+	public String toString() {
+		return "TextToImageFromApiDTO [apiKey=" + apiKey + "]";
 	}
 
 }

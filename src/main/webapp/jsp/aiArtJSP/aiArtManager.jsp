@@ -65,21 +65,23 @@
 
   <script type="text/javascript">
     function imgFlod(ele) {
-      if(ele.getAttribute("flod") == 0){
-        ele.setAttribute("flod", '1');
-        ele.setAttribute("style", "");
+      var src = ele.getAttribute("src");
+      if(src.includes("/getImage")){
+        ele.setAttribute("src", src.replace("/getImage", "/getThumbnail"));
       } else {
-        ele.setAttribute("flod", '0');
-        ele.setAttribute("style", "width=100px; height:100px;");
+        ele.setAttribute("src", src.replace("/getThumbnail", "/getImage"));
       }
     }
 
     function setInvalidImg(ele){
-      var url = "/aiArtManager/setInvalidImg";
+      var url = "/aiArtManager/setInvalidImageAndRetunTokens";
 
-      var imgPk = ele.getAttribute("imgPk")
+      var imgPk = ele.getAttribute("imgPk");
+      var jobPk = ele.getAttribute("jobPk");
+
       var jsonOutput = {
-        pk:imgPk,
+        imgPk:imgPk,
+        jobPk:jobPk,
       };
       console.log(jsonOutput);  
       $.ajax({
@@ -232,18 +234,15 @@
       function appendJobResult(vo) {
         var tr = "";
         var parameter = vo.parameter;
-        var imgPkList = [];
         tr += "<tr>";
-        if(vo.imgUrlList){
-          for(j=0;j<vo.imgUrlList.length;j++){
-            var srcUrl = vo.imgUrlList[j];
-            var imgPk = srcUrl.substring(srcUrl.indexOf("imgPK=") + 6, srcUrl.length);
+        if(vo.imgPkList){
+          for(j=0;j<vo.imgPkList.length;j++){
+            var imgPk = vo.imgPkList[j];
             tr += "<td>";
-            tr += "<img src='"+srcUrl+"' imgPk='"+imgPk+"' style='width=100px; height:100px;' name='aiArtImg' flod='0' onclick='imgFlod(this)'> <br>";
+            tr += "<img src='/image/getThumbnail?imgPK="+encodeURIComponent(imgPk)+"' imgPk='"+imgPk+"' name='aiArtImg' onclick='imgFlod(this)'> <br>";
             tr += "<label>"+imgPk.substring(0, 10)+"</label> <br>";
-            tr += "<button name='setInvalidImg' imgPK='"+imgPk+"' onclick='setInvalidImg(this)'>setInvalidImg</button>"
+            tr += "<button name='setInvalidImg' jobPk='"+vo.jobPk+"' imgPK='"+imgPk+"' onclick='setInvalidImg(this)'>setInvalidImg</button>"
             tr += "</td>";
-            imgPkList.push(imgPk);
           }
         }
         tr += "</tr>";

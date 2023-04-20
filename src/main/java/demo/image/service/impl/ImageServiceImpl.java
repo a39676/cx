@@ -1,5 +1,6 @@
 package demo.image.service.impl;
 
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -89,9 +90,84 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 
 		try {
 			File f = new File(imgPO.getImageUrl());
+			BufferedImage originalImage = ImageIO.read(f);
+
 			InputStream in = new FileInputStream(f);
 			IOUtils.copy(in, response.getOutputStream());
+
+			response.setContentType("image/jpeg");
+			ImageIO.write(originalImage, "jpeg", response.getOutputStream());
 		} catch (Exception e) {
+		}
+	}
+
+	@Override
+	public void getThumbnail(HttpServletResponse response, String imgPK) {
+		if (StringUtils.isBlank(imgPK)) {
+			return;
+		}
+
+		Long imgId = systemOptionService.decryptPrivateKey(imgPK);
+		if (imgId == null) {
+			return;
+		}
+
+		getThumbnail(response, imgId);
+	}
+
+	private void getThumbnail(HttpServletResponse response, Long imgId) {
+		if (imgId == null) {
+			return;
+		}
+
+		ImageStore imgPO = imgMapper.selectByPrimaryKey(imgId);
+		if (imgPO == null || (imgPO.getValidTime() != null && imgPO.getValidTime().isBefore(LocalDateTime.now()))
+				|| StringUtils.isBlank(imgPO.getImageUrl())) {
+			return;
+		}
+
+		try {
+			File f = new File(imgPO.getImageUrl());
+			BufferedImage originalImage = ImageIO.read(f);
+
+			Double coe = 0D;
+			Double maxWidth = 100D;
+			Double maxHeight = 100D;
+
+			Integer oWidth = originalImage.getWidth();
+			Integer oHeight = originalImage.getHeight();
+
+			Double outputWidth = null;
+			Double outputHeight = null;
+
+			if (oWidth < maxWidth && oHeight < maxHeight) {
+				outputWidth = oWidth.doubleValue();
+				outputHeight = oHeight.doubleValue();
+			} else {
+				if (oWidth > oHeight) {
+					coe = oWidth / maxWidth;
+					outputWidth = maxWidth;
+					outputHeight = oHeight / coe;
+				} else {
+					coe = oHeight / maxHeight;
+					outputHeight = maxHeight;
+					outputWidth = oWidth / coe;
+				}
+			}
+
+			// 创建缩略图
+			int thumbnailWidth = outputWidth.intValue();
+			int thumbnailHeight = outputHeight.intValue();
+			int thumbnailHint = BufferedImage.TYPE_INT_RGB;
+			Image thumbnailImage = originalImage.getScaledInstance(thumbnailWidth, thumbnailHeight, thumbnailHint);
+			BufferedImage thumbnailBufferedImage = new BufferedImage(thumbnailWidth, thumbnailHeight, thumbnailHint);
+			thumbnailBufferedImage.getGraphics().drawImage(thumbnailImage, 0, 0, null);
+
+			// 将缩略图写入文件或输出到输出流中
+			response.setContentType("image/jpeg");
+			ImageIO.write(thumbnailBufferedImage, "jpeg", response.getOutputStream());
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -245,7 +321,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 		String imgPK = systemOptionService.encryptId(newImgId);
 		try {
 			String urlEncodeImgPk = URLEncoder.encode(imgPK, StandardCharsets.UTF_8.toString());
-			r.setImgUrl(ImageUrl.root + ImageUrl.getImage + "/?imgPK=" + urlEncodeImgPk);
+			r.setImgUrl(ImageUrl.ROOT + ImageUrl.GET_IMAGE + "/?imgPK=" + urlEncodeImgPk);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}

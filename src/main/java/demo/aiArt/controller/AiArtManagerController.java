@@ -14,6 +14,7 @@ import auxiliaryCommon.pojo.dto.BasePkDTO;
 import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiArt.pojo.constant.AiArtMangerUrl;
+import demo.aiArt.pojo.dto.SetInvalidImageAndRetunTokensDTO;
 import demo.aiArt.service.AiArtManagerService;
 
 @Controller
@@ -46,10 +47,10 @@ public class AiArtManagerController {
 		return aiArtManagerService.getAiArtJobList(dto);
 	}
 	
-	@PostMapping(value = AiArtMangerUrl.SET_INVALID_IMG)
+	@PostMapping(value = AiArtMangerUrl.SET_INVALID_IMAGE_AND_RETURN_TOKENS)
 	@ResponseBody
-	public CommonResult setImgInvalid(@RequestBody BasePkDTO dto) {
-		return aiArtManagerService.setImgInvalid(dto);
+	public CommonResult setImgInvalid(@RequestBody SetInvalidImageAndRetunTokensDTO dto) {
+		return aiArtManagerService.setInvalidImageAndRetunTokens(dto);
 	}
 
 }

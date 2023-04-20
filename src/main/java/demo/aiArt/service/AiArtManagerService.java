@@ -6,6 +6,7 @@ import ai.aiArt.pojo.result.GetJobResultList;
 import auxiliaryCommon.pojo.dto.BasePkDTO;
 import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.aiArt.pojo.dto.SetInvalidImageAndRetunTokensDTO;
 
 public interface AiArtManagerService {
 
@@ -17,6 +18,6 @@ public interface AiArtManagerService {
 
 	GetJobResultList getAiArtJobList(BasePkDTO dto);
 
-	CommonResult setImgInvalid(BasePkDTO dto);
+	CommonResult setInvalidImageAndRetunTokens(SetInvalidImageAndRetunTokensDTO dto);
 
 }

@@ -14,14 +14,19 @@ import demo.image.pojo.constant.ImageUrl;
 import demo.image.service.ImageService;
 
 @Controller
-@RequestMapping(value = ImageUrl.root)
+@RequestMapping(value = ImageUrl.ROOT)
 public class ImageController extends CommonController {
 
 	@Autowired
 	private ImageService imgService;
 	
-	@GetMapping(value = ImageUrl.getImage, produces = MediaType.IMAGE_JPEG_VALUE)
+	@GetMapping(value = ImageUrl.GET_IMAGE, produces = MediaType.IMAGE_JPEG_VALUE)
 	public void getImage(HttpServletResponse response, @RequestParam(value = "imgPK", defaultValue = "") String imgPK) {
 		imgService.getImage(response, imgPK);
+	}
+	
+	@GetMapping(value = ImageUrl.GET_THUMBNAIL, produces = MediaType.IMAGE_JPEG_VALUE)
+	public void getThumbnail(HttpServletResponse response, @RequestParam(value = "imgPK", defaultValue = "") String imgPK) {
+		imgService.getThumbnail(response, imgPK);
 	}
 }

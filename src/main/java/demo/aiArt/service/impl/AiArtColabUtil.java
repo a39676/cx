@@ -33,6 +33,7 @@ public class AiArtColabUtil extends AiArtCommonService {
 			response = h.sendPostRestful(url, json.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
+			sendTelegramMessage("AI art colab generate image error: " + e.getLocalizedMessage());
 			log.error("AI art text to image request error: " + e.getLocalizedMessage());
 		}
 		JSONObject responseJson = JSONObject.fromObject(response);

@@ -13,8 +13,8 @@ import ai.aiChat.pojo.result.GetAiChatHistoryResult;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.service.AiArtService;
-import demo.aiChat.service.AiChatFromWechatService;
-import demo.aiChat.service.impl.AiChatOptionService;
+import demo.ai.aiChat.service.AiChatFromWechatService;
+import demo.ai.aiChat.service.impl.AiChatOptionService;
 import demo.interaction.wechat.service.WechatAiService;
 import wechatSdk.pojo.type.WechatSdkCommonResultType;
 

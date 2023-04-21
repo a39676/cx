@@ -34,7 +34,7 @@ import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecordExample.Criteria;
 import demo.ai.aiArt.pojo.result.SendTextToImgJobResult;
 import demo.ai.aiArt.service.AiArtCommonService;
 import demo.ai.aiArt.service.AiArtService;
-import demo.aiChat.pojo.po.AiChatUserDetail;
+import demo.ai.aiChat.pojo.po.AiChatUserDetail;
 import demo.common.pojo.dto.BaseDTO;
 import demo.image.pojo.type.ImageTagType;
 import image.pojo.dto.ImageSavingTransDTO;

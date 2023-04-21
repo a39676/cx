@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.ai.aiArt.service.impl.AiArtOptionService;
-import demo.aiChat.service.impl.AiChatOptionService;
+import demo.ai.aiChat.service.impl.AiChatOptionService;
 import demo.article.article.service.impl.ArticleOptionService;
 import demo.article.articleComment.service.impl.ArticleCommentOptionService;
 import demo.automationTest.service.impl.AutomationTestOptionService;

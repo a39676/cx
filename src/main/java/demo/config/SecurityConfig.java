@@ -22,7 +22,7 @@ import ai.aiArt.pojo.constant.AiArtApiUrlConstant;
 import ai.aiChat.pojo.constant.AiChatApiUrlConstant;
 import ai.aiChat.pojo.constant.AiChatFromWechatSdkUrlConstant;
 import demo.ai.aiArt.pojo.constant.AiArtMangerUrl;
-import demo.aiChat.pojo.constant.AiChatManagerUrlConstant;
+import demo.ai.aiChat.pojo.constant.AiChatManagerUrlConstant;
 import demo.article.article.pojo.constant.ArticleAdminUrlConstant;
 import demo.article.articleComment.pojo.constant.ArticleAdminCommentUrlConstant;
 import demo.base.admin.pojo.constant.AdminUrlConstant;

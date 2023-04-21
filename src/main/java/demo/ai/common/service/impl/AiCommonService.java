@@ -8,10 +8,10 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.aiChat.mapper.AiChatApiKeyMapper;
-import demo.aiChat.pojo.po.AiChatApiKey;
-import demo.aiChat.service.impl.AiChatCacheService;
-import demo.aiChat.service.impl.AiChatOptionService;
+import demo.ai.aiChat.mapper.AiChatApiKeyMapper;
+import demo.ai.aiChat.pojo.po.AiChatApiKey;
+import demo.ai.aiChat.service.impl.AiChatCacheService;
+import demo.ai.aiChat.service.impl.AiChatOptionService;
 import demo.base.system.service.impl.RedisOriginalConnectService;
 import demo.base.system.service.impl.RedisSetConnectService;
 import demo.common.service.ToolCommonService;

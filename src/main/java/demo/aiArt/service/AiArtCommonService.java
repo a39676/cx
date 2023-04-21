@@ -24,6 +24,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.aiArt.mapper.AiArtGeneratingRecordMapper;
 import demo.aiArt.mapper.AiArtTextToImageJobRecordMapper;
 import demo.aiArt.pojo.po.AiArtTextToImageJobRecord;
+import demo.aiArt.service.impl.AiArtCacheService;
 import demo.aiArt.service.impl.AiArtOptionService;
 import demo.aiChat.service.AiChatUserService;
 import demo.aiChat.service.impl.AiChatCommonService;
@@ -36,6 +37,8 @@ public abstract class AiArtCommonService extends AiChatCommonService {
 
 	@Autowired
 	protected AiArtOptionService aiArtOptionService;
+	@Autowired
+	protected AiArtCacheService aiArtCacheService;
 	@Autowired
 	protected AiArtGeneratingRecordMapper aiArtGeneratingRecordMapper;
 	@Autowired

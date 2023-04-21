@@ -48,4 +48,6 @@ public interface ImageService {
 
 	void shortenImageValidTime(Long imgId, LocalDateTime invalidTime);
 
+	void setImageValidTime(Long imgId, LocalDateTime invalidTime);
+
 }

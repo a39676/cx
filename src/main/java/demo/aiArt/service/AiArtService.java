@@ -2,6 +2,7 @@ package demo.aiArt.service;
 
 import java.util.List;
 
+import ai.aiArt.pojo.dto.AiArtImageWallDTO;
 import ai.aiArt.pojo.dto.TextToImageFromWechatDTO;
 import ai.aiArt.pojo.result.GetJobResultList;
 import auxiliaryCommon.pojo.result.CommonResult;
@@ -27,5 +28,13 @@ public interface AiArtService {
 	void deleteParameterFile();
 
 	List<AiArtTextToImageJobRecord> __getJobResultPage(String lastJobPk);
+
+	void refreshImageWallJsonFile();
+
+	void loadImageWallToCache();
+
+	AiArtImageWallDTO getImageWall();
+
+	AiArtImageWallDTO getImageWall(Boolean refresh);
 
 }

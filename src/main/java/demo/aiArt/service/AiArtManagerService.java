@@ -20,4 +20,8 @@ public interface AiArtManagerService {
 
 	CommonResult setInvalidImageAndRetunTokens(SetInvalidImageAndRetunTokensDTO dto);
 
+	void addToImageWall(String jobPk, String imgPk);
+
+	CommonResult removeFromImageWall(String imgPk);
+
 }

@@ -17,6 +17,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ai.aiArt.pojo.dto.AiArtImageWallDTO;
 import ai.aiArt.pojo.dto.TextToImageFromDTO;
 import ai.aiArt.pojo.dto.TextToImageFromWechatDTO;
 import ai.aiArt.pojo.result.AiArtGenerateImageResult;
@@ -500,5 +501,42 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 				rowBounds);
 		return poList;
 	}
+	
+	@Override
+	public void refreshImageWallJsonFile() {
+		AiArtImageWallDTO dto = aiArtCacheService.getImageWall();
+		JSONObject json = JSONObject.fromObject(dto);
+		fileUtilCustom.byteToFile(json.toString(), aiArtOptionService.getImageWallFilePath());
+	}
 
+	@Override
+	public void loadImageWallToCache() {
+		try {
+			String content = fileUtilCustom.getStringFromFile(aiArtOptionService.getImageWallFilePath());
+			AiArtImageWallDTO dto = buildObjFromJsonCustomization(content, AiArtImageWallDTO.class);
+			if (dto != null) {
+				aiArtCacheService.setImageWall(dto);
+			}
+		} catch (Exception e) {
+			sendTelegramMessage("Load image wall DTO to cache failed: " + e.getLocalizedMessage());
+		}
+	}
+
+	@Override
+	public AiArtImageWallDTO getImageWall() {
+		return getImageWall(false);
+	}
+
+	@Override
+	public AiArtImageWallDTO getImageWall(Boolean refresh) {
+		if (refresh != null && refresh) {
+			loadImageWallToCache();
+		}
+		AiArtImageWallDTO dto = aiArtCacheService.getImageWall();
+		if (dto != null) {
+			return dto;
+		}
+		loadImageWallToCache();
+		return aiArtCacheService.getImageWall();
+	}
 }

@@ -24,9 +24,9 @@ public abstract class AiChatCommonService extends ToolCommonService {
 	@Autowired
 	protected OpenAiUtil util;
 	@Autowired
-	protected AiChatOptionService optionService;
+	protected AiChatOptionService aiChatOptionService;
 	@Autowired
-	protected AiChatCacheService cacheService;
+	protected AiChatCacheService aiChatCacheService;
 	@Autowired
 	private TelegramService telegramService;
 	@Autowired
@@ -123,7 +123,7 @@ public abstract class AiChatCommonService extends ToolCommonService {
 	}
 
 	protected Long getAiUserIdByApiKey(String apiKey) {
-		Long aiUserId = cacheService.getApiKeyCacheMap().get(apiKey);
+		Long aiUserId = aiChatCacheService.getApiKeyCacheMap().get(apiKey);
 		if (aiUserId != null) {
 			return aiUserId;
 		}
@@ -140,7 +140,7 @@ public abstract class AiChatCommonService extends ToolCommonService {
 			return null;
 		}
 		aiUserId = po.getAiChatUserId();
-		cacheService.getApiKeyCacheMap().put(apiKey, aiUserId);
+		aiChatCacheService.getApiKeyCacheMap().put(apiKey, aiUserId);
 
 		return aiUserId;
 	}

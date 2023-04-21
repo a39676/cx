@@ -46,7 +46,7 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 	private AiChatUserService userService;
 
 	private Map<Long, AiChatUserMembershipDetailDTO> getMembershipConfigMap() {
-		List<AiChatUserMembershipDetailDTO> membershipList = optionService.getMembershipLDetails();
+		List<AiChatUserMembershipDetailDTO> membershipList = aiChatOptionService.getMembershipLDetails();
 		Map<Long, AiChatUserMembershipDetailDTO> map = new HashMap<>();
 		for (AiChatUserMembershipDetailDTO membership : membershipList) {
 			map.put(membership.getId(), membership);
@@ -72,8 +72,8 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 	@Override
 	public AiChatUserMembershipDetailSummaryDTO findMembershipDetailSummaryByUserId(Long aiChatUserId,
 			boolean refresh) {
-		if (!refresh && cacheService.getMembershipCacheMap().containsKey(aiChatUserId)) {
-			return cacheService.getMembershipCacheMap().get(aiChatUserId);
+		if (!refresh && aiChatCacheService.getMembershipCacheMap().containsKey(aiChatUserId)) {
+			return aiChatCacheService.getMembershipCacheMap().get(aiChatUserId);
 		}
 
 		List<AiChatUserMembership> membershipPoList = findMembershipDetailListByUserId(aiChatUserId);
@@ -118,10 +118,10 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 		}
 
 		if (membershipPoList.isEmpty()
-				&& summaryDTO.getChatHistoryCountLimit() < optionService.getChatHistoryCountLimitForFreeUser()) {
-			summaryDTO.setChatHistoryCountLimit(optionService.getChatHistoryCountLimitForFreeUser());
+				&& summaryDTO.getChatHistoryCountLimit() < aiChatOptionService.getChatHistoryCountLimitForFreeUser()) {
+			summaryDTO.setChatHistoryCountLimit(aiChatOptionService.getChatHistoryCountLimitForFreeUser());
 		}
-		cacheService.getMembershipCacheMap().put(aiChatUserId, summaryDTO);
+		aiChatCacheService.getMembershipCacheMap().put(aiChatUserId, summaryDTO);
 
 		return summaryDTO;
 	}
@@ -264,7 +264,7 @@ public class AiChatMembershipServiceImpl extends AiChatCommonService implements 
 
 	public CommonResult savePayResult(WechatPayJsApiFeedbackDTO completeDTO, Long aiChatUserId) {
 		CommonResult r = new CommonResult();
-		String storePrefixPath = optionService.getPayResultStorePrefixPath();
+		String storePrefixPath = aiChatOptionService.getPayResultStorePrefixPath();
 		LocalDate today = LocalDate.now();
 		Long orderId = Long.parseLong(completeDTO.getResource().getDecrypt().getOut_trade_no());
 		String outputFilePath = storePrefixPath + File.separator + today.getYear() + today.getMonthValue()

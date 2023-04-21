@@ -62,10 +62,10 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		}
 		if (sensitiveWordCounting > 0) {
 			insertSensitiveWordHitCountingToRedis(aiChatUserId, sensitiveWordCounting,
-					optionService.getSensitiveWordsTriggerInMinutes());
+					aiChatOptionService.getSensitiveWordsTriggerInMinutes());
 
 			Integer sensitiveWordHitCount = findSensitiveWordHitCount(aiChatUserId);
-			if (sensitiveWordHitCount > optionService.getSensitiveWordsTriggerMaxCount()) {
+			if (sensitiveWordHitCount > aiChatOptionService.getSensitiveWordsTriggerMaxCount()) {
 				aiChatUserService.__giveUserWarningMark(aiChatUserId);
 				sendTelegramMessage("Detected too many sensitive words aiChatUserId=" + aiChatUserId);
 			}
@@ -132,10 +132,10 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		int sensitiveWordCounting = sensitiveWordCount(dto.getMsg());
 		if (sensitiveWordCounting > 0) {
 			insertSensitiveWordHitCountingToRedis(aiChatUserId, sensitiveWordCounting,
-					optionService.getSensitiveWordsTriggerInMinutes());
+					aiChatOptionService.getSensitiveWordsTriggerInMinutes());
 
 			Integer sensitiveWordHitCount = findSensitiveWordHitCount(aiChatUserId);
-			if (sensitiveWordHitCount > optionService.getSensitiveWordsTriggerMaxCount()) {
+			if (sensitiveWordHitCount > aiChatOptionService.getSensitiveWordsTriggerMaxCount()) {
 				aiChatUserService.__giveUserWarningMark(aiChatUserId);
 				sendTelegramMessage("Detected too many sensitive words aiChatUserId=" + aiChatUserId);
 			}
@@ -177,7 +177,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		OpanAiChatCompletionMessageDTO holdMsgDTO = new OpanAiChatCompletionMessageDTO();
 
 		// Add "act as"
-		String actAs = optionService.getPromptOfActAs().get(dto.getNameOfActAs());
+		String actAs = aiChatOptionService.getPromptOfActAs().get(dto.getNameOfActAs());
 		if (StringUtils.isNotBlank(actAs)) {
 			holdMsgDTO = new OpanAiChatCompletionMessageDTO();
 			holdMsgDTO.setRole(OpenAiChatCompletionMessageRoleType.SYSTEM.getName());
@@ -237,7 +237,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 	public GetAiChatHistoryResult findChatHistoryByAiChatUserIdToFrontEnd(Long aiChatUserId) {
 		GetAiChatHistoryResult r = new GetAiChatHistoryResult();
 		List<OpanAiChatCompletionMessageDTO> sourceList = findChatHistoryByAiChatUserId(aiChatUserId,
-				optionService.getChatHistorySaveCountingLimit());
+				aiChatOptionService.getChatHistorySaveCountingLimit());
 		List<OpanAiChatCompletionMessageDTO> resultList = new ArrayList<>();
 		if (sourceList.isEmpty()) {
 			OpanAiChatCompletionMessageDTO dto = new OpanAiChatCompletionMessageDTO();
@@ -289,7 +289,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 
 	private List<String> findChatHistoryLines(String filePathStr, Integer limit) {
 		if (limit == null) {
-			limit = optionService.getChatHistorySaveCountingLimit();
+			limit = aiChatOptionService.getChatHistorySaveCountingLimit();
 		}
 
 		List<String> lines = new ArrayList<>();
@@ -324,7 +324,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		if (historyPO == null) {
 
 			String fileName = aiChatUserId + ".txt";
-			File mainFolder = new File(optionService.getChatStorePrefixPath() + File.separator + aiChatUserId);
+			File mainFolder = new File(aiChatOptionService.getChatStorePrefixPath() + File.separator + aiChatUserId);
 			finalFilePath = mainFolder + File.separator + fileName;
 
 			targetFile = new File(finalFilePath);
@@ -353,7 +353,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 		msgDTO.setRole(roleType.getName());
 		JSONObject newMsgJson = JSONObject.fromObject(msgDTO);
 		newMsgJson.put("createTime", localDateTimeHandler.dateToStr(LocalDateTime.now()));
-		Integer chatHistorySaveCountingLimit = optionService.getChatHistorySaveCountingLimit();
+		Integer chatHistorySaveCountingLimit = aiChatOptionService.getChatHistorySaveCountingLimit();
 
 		if (!targetFile.exists()) {
 			try {
@@ -398,7 +398,7 @@ public class AiChatServiceImpl extends AiChatCommonService implements AiChatServ
 
 	private int sensitiveWordCount(String msg) {
 		int count = 0;
-		for (String word : optionService.getSensitiveWords()) {
+		for (String word : aiChatOptionService.getSensitiveWords()) {
 			if (msg.contains(word)) {
 				count += 1;
 			}

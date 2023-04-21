@@ -2,6 +2,7 @@ package demo.aiArt.service.impl;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,11 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import ai.aiArt.pojo.dto.AiArtImageWallDTO;
 import ai.aiArt.pojo.dto.TextToImageFromDTO;
 import ai.aiArt.pojo.result.AiArtGenerateImageResult;
 import ai.aiArt.pojo.result.GetJobResultList;
 import ai.aiArt.pojo.type.AiArtJobStatusType;
 import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
+import ai.aiArt.pojo.vo.AiArtImageOnWallVO;
 import ai.aiChat.pojo.type.AiChatAmountType;
 import auxiliaryCommon.pojo.dto.BasePkDTO;
 import auxiliaryCommon.pojo.dto.BaseStrDTO;
@@ -150,4 +153,69 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 		r.setIsSuccess();
 		return r;
 	}
+
+	@Override
+	public void addToImageWall(String jobPk, String imgPk) {
+		AiArtImageOnWallVO vo = new AiArtImageOnWallVO();
+		vo.setJobPk(jobPk);
+		vo.setImgPk(imgPk);
+		AiArtImageWallDTO dto = aiArtCacheService.getImageWall();
+		if (dto == null) {
+			dto = new AiArtImageWallDTO();
+		}
+		List<AiArtImageOnWallVO> voList = dto.getImgVoList();
+		if (voList == null) {
+			voList = new ArrayList<>();
+		}
+		voList.add(0, vo);
+		while (voList.size() > aiArtOptionService.getImageWallMaxSize()) {
+			voList.remove(voList.size() - 1);
+		}
+
+		dto.setImgVoList(voList);
+		aiArtCacheService.setImageWall(dto);
+
+		Long imgId = systemOptionService.decryptPrivateKey(imgPk);
+		if (imgId != null) {
+			imageService.setImageValidTime(imgId, LocalDateTime.of(2999, 12, 31, 23, 59));
+		}
+	}
+
+	@Override
+	public CommonResult removeFromImageWall(String imgPk) {
+		CommonResult r = new CommonResult();
+		AiArtImageWallDTO dto = aiArtCacheService.getImageWall();
+		if (dto == null) {
+			dto = new AiArtImageWallDTO();
+			aiArtCacheService.setImageWall(dto);
+			r.setIsSuccess();
+			return r;
+		}
+		List<AiArtImageOnWallVO> voList = dto.getImgVoList();
+		if (voList == null || voList.isEmpty()) {
+			dto.setImgVoList(new ArrayList<>());
+			aiArtCacheService.setImageWall(dto);
+			r.setIsSuccess();
+			return r;
+		}
+
+		boolean matchFlag = false;
+		for (int i = 0; i < voList.size() && !matchFlag; i++) {
+			matchFlag = voList.get(i).getImgPk().equals(imgPk);
+			if (matchFlag) {
+				voList.remove(i);
+			}
+		}
+
+		if (matchFlag) {
+			Long imgId = systemOptionService.decryptPrivateKey(imgPk);
+			if (imgId != null) {
+				imageService.setImageValidTime(imgId, LocalDateTime.now().plusMonths(1));
+			}
+		}
+
+		r.setIsSuccess();
+		return r;
+	}
+
 }

@@ -453,4 +453,15 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 		image.setValidTime(invalidTime);
 		imgMapper.updateByPrimaryKeySelective(image);
 	}
+
+	@Override
+	public void setImageValidTime(Long imgId, LocalDateTime invalidTime) {
+		if (!isBigUser()) {
+			return;
+		}
+		ImageStore po = new ImageStore();
+		po.setImageId(imgId);
+		po.setValidTime(invalidTime);
+		imgMapper.updateByPrimaryKeySelective(po);
+	}
 }

@@ -80,9 +80,9 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 		aiChatUserDetailPO.setId(newAiChatUserId);
 		userDetailMapper.insertSelective(aiChatUserDetailPO);
 
-		recharge(newAiChatUserId, AiChatAmountType.BONUS, new BigDecimal(optionService.getBonusForNewUser()));
+		recharge(newAiChatUserId, AiChatAmountType.BONUS, new BigDecimal(aiChatOptionService.getBonusForNewUser()));
 
-		cacheService.getSystemUserIdMatchAiChatUserIdMap().put(systemUserId, newAiChatUserId);
+		aiChatCacheService.getSystemUserIdMatchAiChatUserIdMap().put(systemUserId, newAiChatUserId);
 		r.setAiChatUserId(newAiChatUserId);
 		r.setIsSuccess();
 		return r;
@@ -114,12 +114,12 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 		userDetailMapper.insertSelective(aiChatUserDetailPO);
 
 		if (specialBonus == null) {
-			recharge(newAiChatUserId, AiChatAmountType.BONUS, new BigDecimal(optionService.getBonusForNewUser()));
+			recharge(newAiChatUserId, AiChatAmountType.BONUS, new BigDecimal(aiChatOptionService.getBonusForNewUser()));
 		} else {
 			recharge(newAiChatUserId, AiChatAmountType.BONUS, new BigDecimal(specialBonus));
 		}
 
-		cacheService.getOpenIdMatchAiChatUserIdMap().put(wechatOpenId, newAiChatUserId);
+		aiChatCacheService.getOpenIdMatchAiChatUserIdMap().put(wechatOpenId, newAiChatUserId);
 
 		Long tmpKey = snowFlake.getNextId();
 		tmpKeyInsertOrUpdateLiveTime(tmpKey, newAiChatUserId);
@@ -138,7 +138,7 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 	@Override
 	public Long createNewTmpKey(Long wechatUserId, String openId) {
 		Long tmpKey = null;
-		Long aiChatUserId = cacheService.getOpenIdMatchAiChatUserIdMap().get(openId);
+		Long aiChatUserId = aiChatCacheService.getOpenIdMatchAiChatUserIdMap().get(openId);
 		if (aiChatUserId != null) {
 			tmpKey = snowFlake.getNextId();
 			tmpKeyInsertOrUpdateLiveTime(tmpKey, aiChatUserId);
@@ -155,7 +155,7 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 		}
 		AiChatUserAssociateWechatUidKey associate = associateList.get(0);
 
-		cacheService.getOpenIdMatchAiChatUserIdMap().put(openId, associate.getAiChatUserId());
+		aiChatCacheService.getOpenIdMatchAiChatUserIdMap().put(openId, associate.getAiChatUserId());
 
 		tmpKey = snowFlake.getNextId();
 		tmpKeyInsertOrUpdateLiveTime(tmpKey, associate.getAiChatUserId());
@@ -303,13 +303,13 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 
 		extendTmpKeyValidity(Long.parseLong(tmpKeyStr));
 
-		po.setBonusAmount(po.getBonusAmount().add(new BigDecimal(optionService.getDailySignUpBonus())));
+		po.setBonusAmount(po.getBonusAmount().add(new BigDecimal(aiChatOptionService.getDailySignUpBonus())));
 		userDetailMapper.updateByPrimaryKeySelective(po);
 		addAiChatUserIdDailySigned(po.getId());
 
 		r.setNewAmount(po.getBonusAmount().add(po.getRechargeAmount()).intValue());
 		r.setIsSuccess();
-		r.setMessage("签到成功, 获得" + optionService.getDailySignUpBonus() + "");
+		r.setMessage("签到成功, 获得" + aiChatOptionService.getDailySignUpBonus() + "");
 		return r;
 	}
 
@@ -374,7 +374,7 @@ public class AiChatUserServiceImpl extends AiChatCommonService implements AiChat
 		AiChatUserDetailExample example = new AiChatUserDetailExample();
 		example.createCriteria().andIsBlockEqualTo(false).andIsDeleteEqualTo(false)
 				.andCreateTimeBetween(yesterday.with(LocalTime.MIN), yesterday.with(LocalTime.MAX))
-				.andUsedTokensGreaterThan(optionService.getBonusForNewUser());
+				.andUsedTokensGreaterThan(aiChatOptionService.getBonusForNewUser());
 		List<AiChatUserDetail> userDetailList = userDetailMapper.selectByExample(example);
 		if (userDetailList.isEmpty()) {
 			return new ArrayList<>();

@@ -37,10 +37,10 @@ public class AiChatFromApiServiceImpl extends AiChatCommonService implements AiC
 			return r;
 		}
 
-		Integer operationsCounter = cacheService.getApiKeyOperationCounterDaily().get(aiChatUserId);
+		Integer operationsCounter = aiChatCacheService.getApiKeyOperationCounterDaily().get(aiChatUserId);
 		if (operationsCounter == null) {
 			operationsCounter = 0;
-		} else if (operationsCounter > optionService.getMaxCountOfapiKeyOperations()) {
+		} else if (operationsCounter > aiChatOptionService.getMaxCountOfapiKeyOperations()) {
 			r.setMessage("无法频繁创建/删除API key, 请明天再尝试");
 			return r;
 		}
@@ -48,7 +48,7 @@ public class AiChatFromApiServiceImpl extends AiChatCommonService implements AiC
 		AiChatApiKeyExample example = new AiChatApiKeyExample();
 		example.createCriteria().andAiChatUserIdEqualTo(aiChatUserId).andIsDeleteEqualTo(false);
 		List<AiChatApiKey> apiKeyPoList = apiKeyMapper.selectByExample(example);
-		if (apiKeyPoList.size() >= optionService.getMaxCountOfApiKey()) {
+		if (apiKeyPoList.size() >= aiChatOptionService.getMaxCountOfApiKey()) {
 			r.setMessage("Too many API keys. Please delete one of them before generate new one");
 			return r;
 		}
@@ -67,10 +67,10 @@ public class AiChatFromApiServiceImpl extends AiChatCommonService implements AiC
 			return r;
 		}
 
-		cacheService.getApiKeyOperationCounterDaily().put(aiChatUserId, operationsCounter + 1);
-		cacheService.getApiKeyCacheMap().put(newApiKey, aiChatUserId);
+		aiChatCacheService.getApiKeyOperationCounterDaily().put(aiChatUserId, operationsCounter + 1);
+		aiChatCacheService.getApiKeyCacheMap().put(newApiKey, aiChatUserId);
 
-		if (operationsCounter > optionService.getMaxCountOfapiKeyOperations() / 2) {
+		if (operationsCounter > aiChatOptionService.getMaxCountOfapiKeyOperations() / 2) {
 			r.setMessage("请勿频繁创建/删除API key");
 		}
 		r.setApiKey(newApiKey);
@@ -105,12 +105,12 @@ public class AiChatFromApiServiceImpl extends AiChatCommonService implements AiC
 		row.setIsDelete(true);
 		int deleteCount = apiKeyMapper.updateByExampleSelective(row, example);
 		if (deleteCount == 1) {
-			Integer operationsCounter = cacheService.getApiKeyOperationCounterDaily().get(aiChatUserId);
+			Integer operationsCounter = aiChatCacheService.getApiKeyOperationCounterDaily().get(aiChatUserId);
 			if (operationsCounter == null) {
 				operationsCounter = 0;
 			}
-			cacheService.getApiKeyOperationCounterDaily().put(aiChatUserId, operationsCounter + 1);
-			cacheService.getApiKeyCacheMap().remove(apiKey);
+			aiChatCacheService.getApiKeyOperationCounterDaily().put(aiChatUserId, operationsCounter + 1);
+			aiChatCacheService.getApiKeyCacheMap().remove(apiKey);
 		}
 
 		r.setIsSuccess();
@@ -140,7 +140,7 @@ public class AiChatFromApiServiceImpl extends AiChatCommonService implements AiC
 		for (AiChatApiKey po : apiKeyPoList) {
 			apiKeyEncrypted = systemOptionService.encryptId(po.getApiKeyDecrypt());
 			apiKeyList.add(apiKeyEncrypted);
-			cacheService.getApiKeyCacheMap().put(apiKeyEncrypted, aiChatUserId);
+			aiChatCacheService.getApiKeyCacheMap().put(apiKeyEncrypted, aiChatUserId);
 		}
 		r.setApiKeyList(apiKeyList);
 		r.setIsSuccess();
@@ -176,7 +176,7 @@ public class AiChatFromApiServiceImpl extends AiChatCommonService implements AiC
 
 		if (!apiResult.containsKey("error")) {
 			LocalDateTime now = LocalDateTime.now();
-			String storePrefixPath = optionService.getChatFromApiStorePrefixPath();
+			String storePrefixPath = aiChatOptionService.getChatFromApiStorePrefixPath();
 			String storePathStr = storePrefixPath + File.separator + aiChatUserId + File.separator
 					+ localDateTimeHandler.dateToStr(now, DateTimeUtilCommon.dateTimeFormatNoSymbol) + File.separator
 					+ snowFlake.getNextId() + ".txt";

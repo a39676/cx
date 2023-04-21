@@ -247,6 +247,8 @@
 			<version>1.5.6</version>
 		</dependency>
 
+		<!-- image handle start -->
+
 		<!-- cloudinary start -->
 		<dependency>
 			<groupId>com.cloudinary</groupId>
@@ -264,6 +266,7 @@
 			<version>1.0.14</version>
 		</dependency>
 		<!-- cloudinary end -->
+		<!-- image handle end -->
 
 		<!-- QR code start -->
 		<dependency>
@@ -310,7 +313,7 @@
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
-			</dependency>
+		</dependency>
 		<!-- AI art end -->
 
 		<dependency>

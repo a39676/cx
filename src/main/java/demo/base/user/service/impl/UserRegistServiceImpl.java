@@ -15,7 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.GenderType;
-import demo.aiChat.service.AiChatUserService;
+import demo.ai.aiChat.service.AiChatUserService;
 import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.impl.SystemCommonService;

@@ -34,7 +34,7 @@
         </javaTypeResolver>  
           
         <!-- 生成模型的包名和位置-->    
-        <javaModelGenerator targetPackage="demo.aiArt.pojo.po" targetProject="cx">    
+        <javaModelGenerator targetPackage="demo.ai.aiChat.pojo.po" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
             <property name="trimStrings" value="true"/> 
             <!-- for MyBatis3 / MyBatis3Simple
@@ -45,18 +45,18 @@
         </javaModelGenerator>    
         
         <!-- 生成映射文件的包名和位置-->    
-        <sqlMapGenerator targetPackage="demo.aiArt.mapper" targetProject="cx">    
+        <sqlMapGenerator targetPackage="demo.ai.aiChat.mapper" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
         </sqlMapGenerator>    
         
         <!-- 生成DAO的包名和位置-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.aiArt.mapper" targetProject="cx">    
+        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.ai.aiChat.mapper" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="ai_art_text_to_image_job_record">
-        	<property name="tableName" value="ai_art_text_to_image_job_record"></property>
-        	<property name="domainObjectName" value="ai_art_text_to_image_job_record"></property>
+        <table tableName="system_user_associate_ai_chat_user">
+        	<property name="tableName" value="system_user_associate_ai_chat_user"></property>
+        	<property name="domainObjectName" value="system_user_associate_ai_chat_user"></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

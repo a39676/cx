@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import ai.aiArt.pojo.constant.AiArtApiUrlConstant;
 import ai.aiArt.pojo.result.GetJobResultList;
+import ai.aiArt.pojo.result.SendTextToImgJobResult;
 import demo.ai.aiArt.pojo.dto.TextToImageFromApiDTO;
-import demo.ai.aiArt.pojo.result.SendTextToImgJobResult;
 import demo.ai.aiArt.service.AiArtService;
 import demo.common.pojo.dto.BaseDTO;
 

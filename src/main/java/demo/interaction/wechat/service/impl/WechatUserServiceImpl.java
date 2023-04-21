@@ -37,10 +37,10 @@ import demo.interaction.wechat.pojo.po.WechatUserFromQrcode;
 import demo.interaction.wechat.service.WechatUserService;
 import demo.interaction.wechatPay.service.WechatPayService;
 import wechatPayApi.jsApi.pojo.dto.WechatPayJsApiFeedbackDTO;
-import wechatSdk.pojo.dto.DeleteAiChatApiKeyDTO;
-import wechatSdk.pojo.dto.GetUserOpenIdListDTO;
-import wechatSdk.pojo.dto.RecordingWechatUserFromParameterizedQrCodeDTO;
-import wechatSdk.pojo.dto.SendTemplateMessageBonusRechargeDTO;
+import wechatSdk.pojo.dto.AiServiceDeleteApiKeyDTO;
+import wechatSdk.pojo.dto.WechatGetUserOpenIdListDTO;
+import wechatSdk.pojo.dto.WechatRecordingUserFromParameterizedQrCodeDTO;
+import wechatSdk.pojo.dto.WechatSendTemplateMessageBonusRechargeDTO;
 import wechatSdk.pojo.result.GetUserOpenIdListResult;
 import wechatSdk.pojo.type.WechatOfficialAccountType;
 import wechatSdk.pojo.type.WechatQrCodeSceneType;
@@ -212,8 +212,8 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 	@Override
 	public EncryptDTO recordingWechatUserFromParameterizedQrCode(EncryptDTO encrypedDTO) {
 		CommonResult r = new CommonResult();
-		RecordingWechatUserFromParameterizedQrCodeDTO dto = decryptEncryptDTO(encrypedDTO,
-				RecordingWechatUserFromParameterizedQrCodeDTO.class);
+		WechatRecordingUserFromParameterizedQrCodeDTO dto = decryptEncryptDTO(encrypedDTO,
+				WechatRecordingUserFromParameterizedQrCodeDTO.class);
 		if (dto == null || StringUtils.isAnyBlank(dto.getOriginOpenId(), dto.getUserOpenId(), dto.getParameter())
 				|| "null" == dto.getUserOpenId()) {
 			r.setMessage("RecordingWechatUserFromParameterizedQrCode Decrypt error");
@@ -285,7 +285,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 	public EncryptDTO getUserOpenIdList(EncryptDTO encryptedDTO) {
 		GetUserOpenIdListResult result = new GetUserOpenIdListResult();
 
-		GetUserOpenIdListDTO dto = decryptEncryptDTO(encryptedDTO, GetUserOpenIdListDTO.class);
+		WechatGetUserOpenIdListDTO dto = decryptEncryptDTO(encryptedDTO, WechatGetUserOpenIdListDTO.class);
 		if (dto == null) {
 			return encryptDTO(result);
 		}
@@ -326,7 +326,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 	@Override
 	public EncryptDTO deleteApiKey(EncryptDTO encryptedDTO) {
 		CommonResult r = new CommonResult();
-		DeleteAiChatApiKeyDTO dto = decryptEncryptDTO(encryptedDTO, DeleteAiChatApiKeyDTO.class);
+		AiServiceDeleteApiKeyDTO dto = decryptEncryptDTO(encryptedDTO, AiServiceDeleteApiKeyDTO.class);
 		if (dto == null || StringUtils.isAnyBlank(dto.getTmpKeyStr(), dto.getApiKey())) {
 			r.setMessage("Delete API key failed, decrypt error");
 			return encryptDTO(r);
@@ -384,7 +384,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 			r = aiChatUserService.recharge(dto.getAiChatUserId(), AiChatAmountType.BONUS,
 					new BigDecimal(aiChatOptionService.getBonusForNewUser()));
 			if (r.isSuccess()) {
-				SendTemplateMessageBonusRechargeDTO templateMessageDTO = new SendTemplateMessageBonusRechargeDTO();
+				WechatSendTemplateMessageBonusRechargeDTO templateMessageDTO = new WechatSendTemplateMessageBonusRechargeDTO();
 				templateMessageDTO.setBonusAmountStr(String.valueOf(aiChatOptionService.getBonusForNewUser()));
 				templateMessageDTO.setBonusDescription("新用户特惠赠送");
 				templateMessageDTO.setManagerCode(wechatOptionService.getManagerCode());

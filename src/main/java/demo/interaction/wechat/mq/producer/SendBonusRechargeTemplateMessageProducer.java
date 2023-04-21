@@ -11,7 +11,7 @@ import com.google.gson.GsonBuilder;
 
 import demo.common.service.CommonService;
 import wechatSdk.pojo.constant.WechatSdkMqConstant;
-import wechatSdk.pojo.dto.SendTemplateMessageBonusRechargeDTO;
+import wechatSdk.pojo.dto.WechatSendTemplateMessageBonusRechargeDTO;
 
 @Component
 public class SendBonusRechargeTemplateMessageProducer extends CommonService {
@@ -19,7 +19,7 @@ public class SendBonusRechargeTemplateMessageProducer extends CommonService {
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
 
-	public void send(SendTemplateMessageBonusRechargeDTO dto) {
+	public void send(WechatSendTemplateMessageBonusRechargeDTO dto) {
 		if (dto == null) {
 			return;
 		}

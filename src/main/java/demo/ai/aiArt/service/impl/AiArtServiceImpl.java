@@ -22,6 +22,7 @@ import ai.aiArt.pojo.dto.TextToImageFromWechatDTO;
 import ai.aiArt.pojo.result.AiArtGenerateImageResult;
 import ai.aiArt.pojo.result.AiArtImageWallResult;
 import ai.aiArt.pojo.result.GetJobResultList;
+import ai.aiArt.pojo.result.SendTextToImgJobResult;
 import ai.aiArt.pojo.type.AiArtJobStatusType;
 import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
 import auxiliaryCommon.pojo.result.CommonResult;
@@ -31,7 +32,6 @@ import demo.ai.aiArt.pojo.po.AiArtGeneratingRecord;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecord;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecordExample;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecordExample.Criteria;
-import demo.ai.aiArt.pojo.result.SendTextToImgJobResult;
 import demo.ai.aiArt.service.AiArtCommonService;
 import demo.ai.aiArt.service.AiArtService;
 import demo.ai.aiChat.pojo.po.AiChatUserDetail;
@@ -42,6 +42,7 @@ import image.pojo.result.ImageSavingResult;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import toolPack.ioHandle.FileUtilCustom;
+import wechatSdk.pojo.dto.AiArtGenerateOtherLikeThatDTO;
 import wechatSdk.pojo.type.WechatSdkCommonResultType;
 
 @Service
@@ -56,8 +57,8 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	private FileUtilCustom fileUtilCustom;
 
 	@Override
-	public CommonResult sendTextToImgFromWechatDtoToMq(TextToImageFromWechatDTO dto) {
-		CommonResult r = new CommonResult();
+	public SendTextToImgJobResult sendTextToImgFromWechatDtoToMq(TextToImageFromWechatDTO dto) {
+		SendTextToImgJobResult r = new SendTextToImgJobResult();
 		if (StringUtils.isBlank(dto.getTmpKey())) {
 			r.setMessage(WechatSdkCommonResultType.TMP_KEY_EXPIRED.getName());
 			r.setCode(String.valueOf(WechatSdkCommonResultType.TMP_KEY_EXPIRED.getCode()));
@@ -252,10 +253,10 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	}
 
 	private CommonResult sendTxtToImgRequestWhenDev(TextToImageFromDTO dto) {
-		AiArtTextToImageJobRecord row = aiArtTextToImageJobRecordMapper.selectByPrimaryKey(dto.getJobId());
-		row.setJobStatus(AiArtJobStatusType.SUCCESS.getCode().byteValue());
-		row.setRunCount(row.getRunCount() + 1);
-		aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(row);
+		AiArtTextToImageJobRecord jobPO = aiArtTextToImageJobRecordMapper.selectByPrimaryKey(dto.getJobId());
+		jobPO.setJobStatus(AiArtJobStatusType.SUCCESS.getCode().byteValue());
+		jobPO.setRunCount(jobPO.getRunCount() + 1);
+		aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
 
 //		Need old DTO for save, bug send SFW DTO to generate images
 		@SuppressWarnings("unused")
@@ -271,6 +272,8 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			imagePkList.add("gw/wq6+gbZ2IZkn1CJ+dm7+wwR5sL+ta0qgCzZ1YJIw=");
 		}
 		saveAiArtGenerateImgResultJson(dto, imagePkList);
+
+		addJobCounting(jobPO.getAiUserId());
 
 		CommonResult r = new CommonResult();
 		r.setIsSuccess();
@@ -539,4 +542,42 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		return aiArtCacheService.getImageWall();
 	}
 
+	@Override
+	public SendTextToImgJobResult generateOtherLikeThat(AiArtGenerateOtherLikeThatDTO dto) {
+		SendTextToImgJobResult r = new SendTextToImgJobResult();
+
+		if (StringUtils.isBlank(dto.getJobPk())) {
+			r.setMessage("key error");
+			return r;
+		}
+
+		Long jobId = systemOptionService.decryptPrivateKey(dto.getJobPk());
+		if (jobId == null) {
+			r.setMessage("Job pk error");
+			return r;
+		}
+
+		AiArtGenerateImageResult jobResult = getJobResult(jobId);
+		if (jobResult == null || jobResult.getParameter() == null) {
+			r.setMessage("Job data error");
+			return r;
+		}
+
+		TextToImageFromDTO oldParameter = jobResult.getParameter();
+		oldParameter.setBatchSize(1);
+
+		if (isBigUser()) {
+			TextToImageFromApiDTO paramDTO = new TextToImageFromApiDTO();
+			BeanUtils.copyProperties(oldParameter, paramDTO);
+			paramDTO.setApiKey(aiArtOptionService.getApiKeyOfAdmin());
+			r = sendTextToImgFromApiDtoToMq(paramDTO);
+
+		} else {
+			TextToImageFromWechatDTO paramDTO = new TextToImageFromWechatDTO();
+			BeanUtils.copyProperties(oldParameter, paramDTO);
+			paramDTO.setTmpKey(dto.getTmpKey());
+			r = sendTextToImgFromWechatDtoToMq(paramDTO);
+		}
+		return r;
+	}
 }

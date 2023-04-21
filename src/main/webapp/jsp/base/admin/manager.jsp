@@ -51,6 +51,9 @@
       <li>
         <a href="/aiArtManager/view" target="_blank">AI art manager</a>
       </li>
+      <li>
+        <a href="/aiArtManager/imageWallManager" target="_blank">AI art image wall</a>
+      </li>
     </ul><!-- aiArt -->
 
     <ul class="main-menu visible-on-click" id="telegramTool">

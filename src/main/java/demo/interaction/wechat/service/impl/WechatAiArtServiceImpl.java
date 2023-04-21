@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ai.aiArt.pojo.result.AiArtImageWallResult;
+import ai.aiArt.pojo.result.SendTextToImgJobResult;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import demo.ai.aiArt.service.AiArtService;
 import demo.interaction.wechat.service.WechatAiArtService;
+import wechatSdk.pojo.dto.AiArtGenerateOtherLikeThatDTO;
 
 @Service
 public class WechatAiArtServiceImpl extends WechatCommonService implements WechatAiArtService {
@@ -22,5 +24,15 @@ public class WechatAiArtServiceImpl extends WechatCommonService implements Wecha
 		}
 
 		return encryptDTO(aiArtService.getImageWall());
+	}
+
+	@Override
+	public EncryptDTO generateOtherLikeThat(EncryptDTO encryptedDTO) {
+		AiArtGenerateOtherLikeThatDTO dto = decryptEncryptDTO(encryptedDTO, AiArtGenerateOtherLikeThatDTO.class);
+		if (dto == null) {
+			return encryptDTO(new SendTextToImgJobResult());
+		}
+
+		return encryptDTO(aiArtService.generateOtherLikeThat(dto));
 	}
 }

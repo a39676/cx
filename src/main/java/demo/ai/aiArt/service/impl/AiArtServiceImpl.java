@@ -17,10 +17,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ai.aiArt.pojo.dto.AiArtImageWallDTO;
 import ai.aiArt.pojo.dto.TextToImageFromDTO;
 import ai.aiArt.pojo.dto.TextToImageFromWechatDTO;
 import ai.aiArt.pojo.result.AiArtGenerateImageResult;
+import ai.aiArt.pojo.result.AiArtImageWallResult;
 import ai.aiArt.pojo.result.GetJobResultList;
 import ai.aiArt.pojo.type.AiArtJobStatusType;
 import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
@@ -153,7 +153,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 				.andRunCountLessThan(aiArtOptionService.getMaxFailCountForJob());
 		example.or(failButWillRerun);
 		List<AiArtTextToImageJobRecord> waitingJobList = aiArtTextToImageJobRecordMapper.selectByExample(example);
-		if(waitingJobList.size() > aiArtOptionService.getMaxWaitingJobCount()) {
+		if (waitingJobList.size() > aiArtOptionService.getMaxWaitingJobCount()) {
 			r.setMessage("You have too many waiting jobs, please insert later");
 			return r;
 		}
@@ -234,8 +234,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		} else {
 			txtToImgResult = sendTxtToImgRequest(dto);
 		}
-		
-		
+
 		if (txtToImgResult.isSuccess()) {
 			AiArtGeneratingRecord imgGeneratingRecord = new AiArtGeneratingRecord();
 			imgGeneratingRecord.setAiUserId(po.getAiUserId());
@@ -489,22 +488,22 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 	@Override
 	public List<AiArtTextToImageJobRecord> __getJobResultPage(String lastJobPk) {
-		Long jobId = systemOptionService.decryptPrivateKey(lastJobPk);
+		Long lastjobId = systemOptionService.decryptPrivateKey(lastJobPk);
 		RowBounds rowBounds = new RowBounds(0, 20);
 		AiArtTextToImageJobRecordExample example = new AiArtTextToImageJobRecordExample();
 		Criteria criteria = example.createCriteria();
-		if (jobId != null) {
-			criteria.andIdGreaterThan(jobId);
+		if (lastjobId != null) {
+			criteria.andIdLessThan(lastjobId);
 		}
 		example.setOrderByClause("id desc");
 		List<AiArtTextToImageJobRecord> poList = aiArtTextToImageJobRecordMapper.selectByExampleWithRowbounds(example,
 				rowBounds);
 		return poList;
 	}
-	
+
 	@Override
 	public void refreshImageWallJsonFile() {
-		AiArtImageWallDTO dto = aiArtCacheService.getImageWall();
+		AiArtImageWallResult dto = aiArtCacheService.getImageWall();
 		JSONObject json = JSONObject.fromObject(dto);
 		fileUtilCustom.byteToFile(json.toString(), aiArtOptionService.getImageWallFilePath());
 	}
@@ -513,7 +512,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	public void loadImageWallToCache() {
 		try {
 			String content = fileUtilCustom.getStringFromFile(aiArtOptionService.getImageWallFilePath());
-			AiArtImageWallDTO dto = buildObjFromJsonCustomization(content, AiArtImageWallDTO.class);
+			AiArtImageWallResult dto = buildObjFromJsonCustomization(content, AiArtImageWallResult.class);
 			if (dto != null) {
 				aiArtCacheService.setImageWall(dto);
 			}
@@ -523,20 +522,21 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	}
 
 	@Override
-	public AiArtImageWallDTO getImageWall() {
+	public AiArtImageWallResult getImageWall() {
 		return getImageWall(false);
 	}
 
 	@Override
-	public AiArtImageWallDTO getImageWall(Boolean refresh) {
+	public AiArtImageWallResult getImageWall(Boolean refresh) {
 		if (refresh != null && refresh) {
 			loadImageWallToCache();
 		}
-		AiArtImageWallDTO dto = aiArtCacheService.getImageWall();
+		AiArtImageWallResult dto = aiArtCacheService.getImageWall();
 		if (dto != null) {
 			return dto;
 		}
 		loadImageWallToCache();
 		return aiArtCacheService.getImageWall();
 	}
+
 }

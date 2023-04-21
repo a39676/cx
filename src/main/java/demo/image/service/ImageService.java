@@ -41,7 +41,7 @@ public interface ImageService {
 
 	void getImage(HttpServletResponse response, String imgPK);
 
-	void getThumbnail(HttpServletResponse response, String imgPK);
+	void getThumbnailImage(HttpServletResponse response, String imgPK);
 
 	/** 修改 valid_time 字段, 等待定时任务执行删除 */
 	void setImageInvalidAndWaitingDelete(Long imgId);
@@ -49,5 +49,7 @@ public interface ImageService {
 	void shortenImageValidTime(Long imgId, LocalDateTime invalidTime);
 
 	void setImageValidTime(Long imgId, LocalDateTime invalidTime);
+
+	void getThumbnailImage(HttpServletResponse response, String imgPK, Integer width, Integer height);
 
 }

@@ -6,6 +6,7 @@ import ai.aiArt.pojo.result.GetJobResultList;
 import auxiliaryCommon.pojo.dto.BasePkDTO;
 import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.ai.aiArt.pojo.dto.AddToImageWallDTO;
 import demo.ai.aiArt.pojo.dto.SetInvalidImageAndRetunTokensDTO;
 
 public interface AiArtManagerService {
@@ -20,8 +21,10 @@ public interface AiArtManagerService {
 
 	CommonResult setInvalidImageAndRetunTokens(SetInvalidImageAndRetunTokensDTO dto);
 
-	void addToImageWall(String jobPk, String imgPk);
+	CommonResult addToImageWall(AddToImageWallDTO dto);
 
 	CommonResult removeFromImageWall(String imgPk);
+
+	ModelAndView getImageManagerView();
 
 }

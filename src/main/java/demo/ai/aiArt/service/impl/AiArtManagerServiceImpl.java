@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
-import ai.aiArt.pojo.dto.AiArtImageWallDTO;
 import ai.aiArt.pojo.dto.TextToImageFromDTO;
 import ai.aiArt.pojo.result.AiArtGenerateImageResult;
+import ai.aiArt.pojo.result.AiArtImageWallResult;
 import ai.aiArt.pojo.result.GetJobResultList;
 import ai.aiArt.pojo.type.AiArtJobStatusType;
 import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
@@ -22,6 +22,7 @@ import ai.aiChat.pojo.type.AiChatAmountType;
 import auxiliaryCommon.pojo.dto.BasePkDTO;
 import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.ai.aiArt.pojo.dto.AddToImageWallDTO;
 import demo.ai.aiArt.pojo.dto.SetInvalidImageAndRetunTokensDTO;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecord;
 import demo.ai.aiArt.service.AiArtCommonService;
@@ -155,15 +156,16 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 	}
 
 	@Override
-	public void addToImageWall(String jobPk, String imgPk) {
+	public CommonResult addToImageWall(AddToImageWallDTO dto) {
+		CommonResult r = new CommonResult();
 		AiArtImageOnWallVO vo = new AiArtImageOnWallVO();
-		vo.setJobPk(jobPk);
-		vo.setImgPk(imgPk);
-		AiArtImageWallDTO dto = aiArtCacheService.getImageWall();
-		if (dto == null) {
-			dto = new AiArtImageWallDTO();
+		vo.setJobPk(dto.getJobPk());
+		vo.setImgPk(dto.getImgPk());
+		AiArtImageWallResult imageWallDTO = aiArtCacheService.getImageWall();
+		if (imageWallDTO == null) {
+			imageWallDTO = new AiArtImageWallResult();
 		}
-		List<AiArtImageOnWallVO> voList = dto.getImgVoList();
+		List<AiArtImageOnWallVO> voList = imageWallDTO.getImgVoList();
 		if (voList == null) {
 			voList = new ArrayList<>();
 		}
@@ -172,21 +174,25 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 			voList.remove(voList.size() - 1);
 		}
 
-		dto.setImgVoList(voList);
-		aiArtCacheService.setImageWall(dto);
+		imageWallDTO.setImgVoList(voList);
+		aiArtCacheService.setImageWall(imageWallDTO);
 
-		Long imgId = systemOptionService.decryptPrivateKey(imgPk);
+		Long imgId = systemOptionService.decryptPrivateKey(dto.getImgPk());
 		if (imgId != null) {
 			imageService.setImageValidTime(imgId, LocalDateTime.of(2999, 12, 31, 23, 59));
+			aiArtService.refreshImageWallJsonFile();
 		}
+
+		r.setIsSuccess();
+		return r;
 	}
 
 	@Override
 	public CommonResult removeFromImageWall(String imgPk) {
 		CommonResult r = new CommonResult();
-		AiArtImageWallDTO dto = aiArtCacheService.getImageWall();
+		AiArtImageWallResult dto = aiArtCacheService.getImageWall();
 		if (dto == null) {
-			dto = new AiArtImageWallDTO();
+			dto = new AiArtImageWallResult();
 			aiArtCacheService.setImageWall(dto);
 			r.setIsSuccess();
 			return r;
@@ -211,6 +217,7 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 			Long imgId = systemOptionService.decryptPrivateKey(imgPk);
 			if (imgId != null) {
 				imageService.setImageValidTime(imgId, LocalDateTime.now().plusMonths(1));
+				aiArtService.refreshImageWallJsonFile();
 			}
 		}
 
@@ -218,4 +225,11 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 		return r;
 	}
 
+	@Override
+	public ModelAndView getImageManagerView() {
+		ModelAndView v = new ModelAndView("aiArtJSP/aiArtImageWallManager");
+		AiArtImageWallResult wall = aiArtService.getImageWall();
+		v.addObject("imgVoList", wall.getImgVoList());
+		return v;
+	}
 }

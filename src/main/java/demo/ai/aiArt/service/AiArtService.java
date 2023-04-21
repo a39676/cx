@@ -2,8 +2,8 @@ package demo.ai.aiArt.service;
 
 import java.util.List;
 
-import ai.aiArt.pojo.dto.AiArtImageWallDTO;
 import ai.aiArt.pojo.dto.TextToImageFromWechatDTO;
+import ai.aiArt.pojo.result.AiArtImageWallResult;
 import ai.aiArt.pojo.result.GetJobResultList;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.pojo.dto.TextToImageFromApiDTO;
@@ -33,8 +33,8 @@ public interface AiArtService {
 
 	void loadImageWallToCache();
 
-	AiArtImageWallDTO getImageWall();
+	AiArtImageWallResult getImageWall();
 
-	AiArtImageWallDTO getImageWall(Boolean refresh);
+	AiArtImageWallResult getImageWall(Boolean refresh);
 
 }

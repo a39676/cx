@@ -102,7 +102,12 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 	}
 
 	@Override
-	public void getThumbnail(HttpServletResponse response, String imgPK) {
+	public void getThumbnailImage(HttpServletResponse response, String imgPK) {
+		getThumbnailImage(response, imgPK, null, null);
+	}
+
+	@Override
+	public void getThumbnailImage(HttpServletResponse response, String imgPK, Integer width, Integer height) {
 		if (StringUtils.isBlank(imgPK)) {
 			return;
 		}
@@ -112,10 +117,10 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 			return;
 		}
 
-		getThumbnail(response, imgId);
+		getThumbnail(response, imgId, width, height);
 	}
 
-	private void getThumbnail(HttpServletResponse response, Long imgId) {
+	private void getThumbnail(HttpServletResponse response, Long imgId, Integer widthInput, Integer heightInput) {
 		if (imgId == null) {
 			return;
 		}
@@ -126,13 +131,20 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 			return;
 		}
 
+		Double maxWidth = 100D;
+		if (widthInput != null) {
+			maxWidth = widthInput.doubleValue();
+		}
+		Double maxHeight = 100D;
+		if (heightInput != null) {
+			maxHeight = heightInput.doubleValue();
+		}
+
 		try {
 			File f = new File(imgPO.getImageUrl());
 			BufferedImage originalImage = ImageIO.read(f);
 
 			Double coe = 0D;
-			Double maxWidth = 100D;
-			Double maxHeight = 100D;
 
 			Integer oWidth = originalImage.getWidth();
 			Integer oHeight = originalImage.getHeight();

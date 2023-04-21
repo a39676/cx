@@ -14,6 +14,7 @@ import auxiliaryCommon.pojo.dto.BasePkDTO;
 import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.pojo.constant.AiArtMangerUrl;
+import demo.ai.aiArt.pojo.dto.AddToImageWallDTO;
 import demo.ai.aiArt.pojo.dto.SetInvalidImageAndRetunTokensDTO;
 import demo.ai.aiArt.service.AiArtManagerService;
 
@@ -46,11 +47,28 @@ public class AiArtManagerController {
 	public GetJobResultList setStopColab(@RequestBody BasePkDTO dto) {
 		return aiArtManagerService.getAiArtJobList(dto);
 	}
-	
+
 	@PostMapping(value = AiArtMangerUrl.SET_INVALID_IMAGE_AND_RETURN_TOKENS)
 	@ResponseBody
 	public CommonResult setImgInvalid(@RequestBody SetInvalidImageAndRetunTokensDTO dto) {
 		return aiArtManagerService.setInvalidImageAndRetunTokens(dto);
+	}
+
+	@GetMapping(value = AiArtMangerUrl.IMAGE_WALL_MANAGER)
+	public ModelAndView getImageManagerView() {
+		return aiArtManagerService.getImageManagerView();
+	}
+
+	@PostMapping(value = AiArtMangerUrl.ADD_TO_IMAGE_WALL)
+	@ResponseBody
+	public CommonResult setImgInvalid(@RequestBody AddToImageWallDTO dto) {
+		return aiArtManagerService.addToImageWall(dto);
+	}
+
+	@PostMapping(value = AiArtMangerUrl.REMVOE_FROM_IMAGE_WALL)
+	@ResponseBody
+	public CommonResult removeFromImageWall(@RequestBody BasePkDTO dto) {
+		return aiArtManagerService.removeFromImageWall(dto.getPk());
 	}
 
 }

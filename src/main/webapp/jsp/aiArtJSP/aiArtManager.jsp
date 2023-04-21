@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt"  prefix="fmt"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %> 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 
@@ -110,6 +111,43 @@
         }
       });
     }
+
+    function addToImageWall(ele){
+      var url = "/aiArtManager/addToImageWall";
+
+      var imgPk = ele.getAttribute("imgPk");
+      var jobPk = ele.getAttribute("jobPk");
+
+      var jsonOutput = {
+        imgPk:imgPk,
+        jobPk:jobPk,
+      };
+      console.log(jsonOutput);  
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          console.log(datas);
+          if (datas.code == 0) {
+            $("#result").text("Image add to image wall success, imgPk: " + imgPk);
+          } else {
+            $("#result").text(datas.message);
+          }
+        },
+        error: function(datas) {            
+        }
+      });
+    }
+
 
     $(document).ready(function() {
 
@@ -241,7 +279,8 @@
             tr += "<td>";
             tr += "<img src='/image/getThumbnail?imgPK="+encodeURIComponent(imgPk)+"' imgPk='"+imgPk+"' name='aiArtImg' onclick='imgFlod(this)'> <br>";
             tr += "<label>"+imgPk.substring(0, 10)+"</label> <br>";
-            tr += "<button name='setInvalidImg' jobPk='"+vo.jobPk+"' imgPK='"+imgPk+"' onclick='setInvalidImg(this)'>setInvalidImg</button>"
+            tr += "<button class='btn btn-md btn-danger' name='setInvalidImg' jobPk='"+vo.jobPk+"' imgPK='"+imgPk+"' onclick='setInvalidImg(this)'>setInvalidImg</button><br>"
+            tr += "<button class='btn btn-md btn-success' name='addToImageWall' jobPk='"+vo.jobPk+"' imgPK='"+imgPk+"' onclick='addToImageWall(this)'>addToImageWall</button><br>"
             tr += "</td>";
           }
         }

@@ -3,20 +3,20 @@ package demo.ai.aiArt.service.impl;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import ai.aiArt.pojo.dto.AiArtImageWallDTO;
+import ai.aiArt.pojo.result.AiArtImageWallResult;
 import demo.common.service.CommonService;
 
 @Scope("singleton")
 @Service
 public class AiArtCacheService extends CommonService {
 
-	private AiArtImageWallDTO imageWall;
+	private AiArtImageWallResult imageWall;
 
-	public AiArtImageWallDTO getImageWall() {
+	public AiArtImageWallResult getImageWall() {
 		return imageWall;
 	}
 
-	public void setImageWall(AiArtImageWallDTO imageWall) {
+	public void setImageWall(AiArtImageWallResult imageWall) {
 		this.imageWall = imageWall;
 	}
 

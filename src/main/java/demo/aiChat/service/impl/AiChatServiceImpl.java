@@ -23,6 +23,7 @@ import ai.aiChat.pojo.dto.AiChatSendNewMsgFromWechatDTO;
 import ai.aiChat.pojo.result.AiChatSendNewMessageResult;
 import ai.aiChat.pojo.result.GetAiChatHistoryResult;
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.ai.common.service.impl.AiCommonService;
 import demo.aiChat.mapper.AiChatUserChatHistoryMapper;
 import demo.aiChat.pojo.dto.AiChatUserMembershipDetailSummaryDTO;
 import demo.aiChat.pojo.po.AiChatUserChatHistory;
@@ -39,7 +40,7 @@ import openAi.pojo.type.OpenAiChatCompletionMessageRoleType;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
-public class AiChatServiceImpl extends AiChatCommonService implements AiChatService {
+public class AiChatServiceImpl extends AiCommonService implements AiChatService {
 
 	@Autowired
 	private AiChatUserChatHistoryMapper chatHistoryMapper;

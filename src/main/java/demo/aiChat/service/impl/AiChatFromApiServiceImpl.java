@@ -13,6 +13,7 @@ import ai.aiChat.pojo.dto.AiChatSendNewMsgFromApiDTO;
 import ai.aiChat.pojo.result.FindAllApiKeysResult;
 import ai.aiChat.pojo.result.GenerateNewApiKeyResult;
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.ai.common.service.impl.AiCommonService;
 import demo.aiChat.pojo.po.AiChatApiKey;
 import demo.aiChat.pojo.po.AiChatApiKeyExample;
 import demo.aiChat.service.AiChatFromApiService;
@@ -22,7 +23,7 @@ import toolPack.dateTimeHandle.DateTimeUtilCommon;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
-public class AiChatFromApiServiceImpl extends AiChatCommonService implements AiChatFromApiService {
+public class AiChatFromApiServiceImpl extends AiCommonService implements AiChatFromApiService {
 
 	@Autowired
 	private AiChatService aiChatService;

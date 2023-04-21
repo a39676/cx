@@ -7,12 +7,13 @@ import org.springframework.stereotype.Service;
 import ai.aiChat.pojo.dto.AiChatSendNewMsgFromWechatDTO;
 import ai.aiChat.pojo.result.AiChatSendNewMessageResult;
 import ai.aiChat.pojo.result.GetAiChatHistoryResult;
+import demo.ai.common.service.impl.AiCommonService;
 import demo.aiChat.service.AiChatFromWechatService;
 import demo.aiChat.service.AiChatService;
 import wechatSdk.pojo.type.WechatSdkCommonResultType;
 
 @Service
-public class AiChatFromWechatServiceImpl extends AiChatCommonService implements AiChatFromWechatService {
+public class AiChatFromWechatServiceImpl extends AiCommonService implements AiChatFromWechatService {
 
 	@Autowired
 	private AiChatService aiChatService;

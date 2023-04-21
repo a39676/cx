@@ -22,6 +22,7 @@ import ai.aiChat.pojo.type.AiChatAmountType;
 import ai.aiChat.pojo.vo.AiChatUserMembershipDetailSummaryVO;
 import ai.aiChat.pojo.vo.AiChatUserMembershipDetailVO;
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.ai.common.service.impl.AiCommonService;
 import demo.aiChat.mapper.AiChatUserMembershipMapper;
 import demo.aiChat.pojo.dto.AiChatUserMembershipDetailDTO;
 import demo.aiChat.pojo.dto.AiChatUserMembershipDetailSummaryDTO;
@@ -38,7 +39,7 @@ import wechatPayApi.jsApi.pojo.dto.WechatPayJsApiFeedbackDecryptDTO;
 import wechatSdk.pojo.dto.BuyMembershipFromWechatAttachmentDTO;
 
 @Service
-public class AiChatMembershipServiceImpl extends AiChatCommonService implements AiChatMembershipService {
+public class AiChatMembershipServiceImpl extends AiCommonService implements AiChatMembershipService {
 
 	@Autowired
 	private AiChatUserMembershipMapper userMembershipMapper;

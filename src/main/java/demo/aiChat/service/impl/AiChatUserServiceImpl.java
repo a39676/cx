@@ -18,6 +18,7 @@ import ai.aiChat.pojo.result.AiChatDailySignUpResult;
 import ai.aiChat.pojo.result.GetAiChatAmountResult;
 import ai.aiChat.pojo.type.AiChatAmountType;
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.ai.common.service.impl.AiCommonService;
 import demo.aiChat.mapper.AiChatUserAmountHistoryMapper;
 import demo.aiChat.mapper.AiChatUserAssociateWechatUidMapper;
 import demo.aiChat.mapper.AiChatUserDetailMapper;
@@ -42,7 +43,7 @@ import demo.interaction.wechat.pojo.vo.WechatQrcodeVO;
 import demo.interaction.wechat.service.WechatSdkForInterService;
 
 @Service
-public class AiChatUserServiceImpl extends AiChatCommonService implements AiChatUserService {
+public class AiChatUserServiceImpl extends AiCommonService implements AiChatUserService {
 
 	@Autowired
 	private AiChatUserDetailMapper userDetailMapper;

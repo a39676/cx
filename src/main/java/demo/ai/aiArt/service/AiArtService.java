@@ -7,6 +7,7 @@ import ai.aiArt.pojo.result.AiArtImageWallResult;
 import ai.aiArt.pojo.result.GetJobResultList;
 import ai.aiArt.pojo.result.SendTextToImgJobResult;
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.ai.aiArt.pojo.dto.AiArtJobListFilterDTO;
 import demo.ai.aiArt.pojo.dto.TextToImageFromApiDTO;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecord;
 import demo.common.pojo.dto.BaseDTO;
@@ -28,8 +29,6 @@ public interface AiArtService {
 
 	void deleteParameterFile();
 
-	List<AiArtTextToImageJobRecord> __getJobResultPage(String lastJobPk);
-
 	void refreshImageWallJsonFile();
 
 	void loadImageWallToCache();
@@ -39,5 +38,15 @@ public interface AiArtService {
 	AiArtImageWallResult getImageWall(Boolean refresh);
 
 	SendTextToImgJobResult generateOtherLikeThat(AiArtGenerateOtherLikeThatDTO dto);
+
+	void __sendRandomGenerateJob();
+
+	List<AiArtTextToImageJobRecord> getJobResultPage(AiArtJobListFilterDTO dto, Long aiUserId);
+
+	List<AiArtTextToImageJobRecord> getJobResultPageForWechatUser(String lastJobPk, String tmpKey);
+
+	List<AiArtTextToImageJobRecord> getJobResultPage(AiArtJobListFilterDTO dto);
+
+	void sendNoticeIfAnyJobsWaitingForReview();
 
 }

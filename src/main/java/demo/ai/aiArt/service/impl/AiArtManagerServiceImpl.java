@@ -19,12 +19,13 @@ import ai.aiArt.pojo.type.AiArtJobStatusType;
 import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
 import ai.aiArt.pojo.vo.AiArtImageOnWallVO;
 import ai.aiChat.pojo.type.AiChatAmountType;
-import auxiliaryCommon.pojo.dto.BasePkDTO;
 import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.pojo.dto.AddToImageWallDTO;
+import demo.ai.aiArt.pojo.dto.AiArtJobListFilterDTO;
 import demo.ai.aiArt.pojo.dto.SetInvalidImageAndRetunTokensDTO;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecord;
+import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecordExample;
 import demo.ai.aiArt.service.AiArtCommonService;
 import demo.ai.aiArt.service.AiArtManagerService;
 import demo.ai.aiArt.service.AiArtService;
@@ -50,6 +51,10 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 		if (dto == null || StringUtils.isBlank(dto.getStr())) {
 			return new CommonResult();
 		}
+
+		if (!dto.getStr().startsWith("http")) {
+			dto.setStr("http://" + dto.getStr());
+		}
 		aiArtOptionService.setMainUrl(dto.getStr());
 		aiArtOptionService.setIsRunning(true);
 
@@ -68,9 +73,9 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 	}
 
 	@Override
-	public GetJobResultList getAiArtJobList(BasePkDTO dto) {
+	public GetJobResultList __getAiArtJobListForReview(AiArtJobListFilterDTO dto) {
 		GetJobResultList r = new GetJobResultList();
-		List<AiArtTextToImageJobRecord> jobPoList = aiArtService.__getJobResultPage(dto.getPk());
+		List<AiArtTextToImageJobRecord> jobPoList = aiArtService.getJobResultPage(dto);
 		if (jobPoList.isEmpty()) {
 			r.setIsSuccess();
 			return r;
@@ -144,12 +149,13 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 		parameter.setJobId(jobId);
 		saveAiArtGenerateImgResultJson(parameter, imgPkList);
 
-		BigDecimal totalTokens = calculateTokenCost(parameter);
-
-		BigDecimal returnTokens = totalTokens.divide(new BigDecimal(parameter.getBatchSize()), RoundingMode.FLOOR)
-				.multiply(new BigDecimal(0.95));
-
-		aiChatUserService.recharge(userId, AiChatAmountType.BONUS, returnTokens);
+		AiArtTextToImageJobRecord jobPO = aiArtTextToImageJobRecordMapper.selectByPrimaryKey(jobId);
+		if (!jobPO.getIsFreeJob()) {
+			BigDecimal totalTokens = calculateTokenCost(parameter);
+			BigDecimal returnTokens = totalTokens.divide(new BigDecimal(parameter.getBatchSize()), RoundingMode.FLOOR)
+					.multiply(new BigDecimal(0.95));
+			aiChatUserService.recharge(userId, AiChatAmountType.BONUS, returnTokens);
+		}
 
 		r.setIsSuccess();
 		return r;
@@ -171,7 +177,7 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 		}
 		voList.add(0, vo);
 		while (voList.size() > aiArtOptionService.getImageWallMaxSize()) {
-			voList.remove(voList.size() - 1);
+			removeFromImageWall(voList.get(voList.size() - 1).getImgPk());
 		}
 
 		imageWallDTO.setImgVoList(voList);
@@ -231,5 +237,46 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 		AiArtImageWallResult wall = aiArtService.getImageWall();
 		v.addObject("imgVoList", wall.getImgVoList());
 		return v;
+	}
+
+	@Override
+	public CommonResult setHadReview(String jobPk) {
+		CommonResult r = new CommonResult();
+		if (StringUtils.isBlank(jobPk)) {
+			r.setMessage("PK error");
+			return r;
+		}
+		Long jobId = systemOptionService.decryptPrivateKey(jobPk);
+
+		return setHadReview(jobId);
+	}
+
+	@Override
+	public CommonResult setHadReview(Long jobId) {
+		CommonResult r = new CommonResult();
+		if (jobId == null) {
+			r.setMessage("Pk decrypt error");
+			return r;
+		}
+
+		AiArtTextToImageJobRecord jobPO = new AiArtTextToImageJobRecord();
+		jobPO.setId(jobId);
+		jobPO.setHasReview(true);
+		int updateCount = aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
+
+		if (updateCount == 1) {
+			r.setIsSuccess();
+		}
+
+		return r;
+	}
+
+	@Override
+	public void setReviewBatchForAdmin() {
+		AiArtTextToImageJobRecordExample example = new AiArtTextToImageJobRecordExample();
+		example.createCriteria().andAiUserIdEqualTo(aiArtOptionService.getIdOfAdmin()).andHasReviewEqualTo(false);
+		AiArtTextToImageJobRecord row = new AiArtTextToImageJobRecord();
+		row.setHasReview(true);
+		aiArtTextToImageJobRecordMapper.updateByExampleSelective(row, example);
 	}
 }

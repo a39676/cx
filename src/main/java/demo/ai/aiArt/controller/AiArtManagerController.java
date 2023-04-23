@@ -15,6 +15,7 @@ import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.pojo.constant.AiArtMangerUrl;
 import demo.ai.aiArt.pojo.dto.AddToImageWallDTO;
+import demo.ai.aiArt.pojo.dto.AiArtJobListFilterDTO;
 import demo.ai.aiArt.pojo.dto.SetInvalidImageAndRetunTokensDTO;
 import demo.ai.aiArt.service.AiArtManagerService;
 
@@ -44,8 +45,8 @@ public class AiArtManagerController {
 
 	@PostMapping(value = AiArtMangerUrl.GET_JOB_RESULT_LIST)
 	@ResponseBody
-	public GetJobResultList setStopColab(@RequestBody BasePkDTO dto) {
-		return aiArtManagerService.getAiArtJobList(dto);
+	public GetJobResultList getAiArtJobList(@RequestBody AiArtJobListFilterDTO dto) {
+		return aiArtManagerService.__getAiArtJobListForReview(dto);
 	}
 
 	@PostMapping(value = AiArtMangerUrl.SET_INVALID_IMAGE_AND_RETURN_TOKENS)
@@ -69,6 +70,12 @@ public class AiArtManagerController {
 	@ResponseBody
 	public CommonResult removeFromImageWall(@RequestBody BasePkDTO dto) {
 		return aiArtManagerService.removeFromImageWall(dto.getPk());
+	}
+
+	@PostMapping(value = AiArtMangerUrl.SET_HAD_REVIEW)
+	@ResponseBody
+	public CommonResult setHadReview(@RequestBody BasePkDTO dto) {
+		return aiArtManagerService.setHadReview(dto.getPk());
 	}
 
 }

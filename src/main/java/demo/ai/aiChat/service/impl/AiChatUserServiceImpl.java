@@ -165,15 +165,7 @@ public class AiChatUserServiceImpl extends AiCommonService implements AiChatUser
 
 	@Override
 	public void extendTmpKeyValidity(Long tmpKey) {
-		log.error("Receive tmp key extend request, tmp key: " + tmpKey);
-		if (tmpKey == null) {
-			return;
-		}
-		Long aiChatUserId = getAiChatUserIdByTempKey(tmpKey);
-		if (aiChatUserId != null) {
-			log.error("Extended, tmp key: " + tmpKey + ", ai chat user id: " + aiChatUserId);
-			tmpKeyInsertOrUpdateLiveTime(tmpKey, aiChatUserId);
-		}
+		super.extendTmpKeyValidity(tmpKey);
 	}
 
 	@Override

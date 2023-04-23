@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 
 import ai.aiArt.pojo.dto.TextToImageFromWechatDTO;
 import ai.aiArt.pojo.result.GetJobResultList;
+import ai.aiArt.pojo.result.SendTextToImgJobResult;
 import ai.aiChat.pojo.dto.AiChatSendNewMsgFromWechatDTO;
 import ai.aiChat.pojo.result.AiChatSendNewMessageResult;
 import ai.aiChat.pojo.result.GetAiChatHistoryResult;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
-import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.service.AiArtService;
 import demo.ai.aiChat.service.AiChatFromWechatService;
 import demo.ai.aiChat.service.impl.AiChatOptionService;
@@ -62,7 +62,7 @@ public class WechatAiServiceImpl extends WechatCommonService implements WechatAi
 
 	@Override
 	public EncryptDTO sendTextToImg(EncryptDTO encryptedDTO) {
-		CommonResult r = new CommonResult();
+		SendTextToImgJobResult r = new SendTextToImgJobResult();
 		TextToImageFromWechatDTO dto = decryptEncryptDTO(encryptedDTO, TextToImageFromWechatDTO.class);
 		if (dto == null) {
 			r.setMessage("Decrypt error");

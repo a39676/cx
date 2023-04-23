@@ -12,9 +12,9 @@
     <%@ include file="../baseElementJSP/normalJSPart.jsp" %>
   </head>
 
-  <div class="container-fluid" style="width: 100%; max-width: 600px;">
+  <div class="container-fluid">
     <div class="row">
-      <div class="col-sm-12">
+      <div class="col-lg-12">
         <table class="table">
           <tbody>
             <c:forEach items="${imgVoList}" var="imgVO" varStatus="status">

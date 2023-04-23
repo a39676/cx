@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
@@ -25,8 +26,10 @@ import ai.aiArt.pojo.result.GetJobResultList;
 import ai.aiArt.pojo.result.SendTextToImgJobResult;
 import ai.aiArt.pojo.type.AiArtJobStatusType;
 import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
+import ai.aiArt.pojo.vo.AiArtImageOnWallVO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.mq.producer.AiArtTextToImageProducer;
+import demo.ai.aiArt.pojo.dto.AiArtJobListFilterDTO;
 import demo.ai.aiArt.pojo.dto.TextToImageFromApiDTO;
 import demo.ai.aiArt.pojo.po.AiArtGeneratingRecord;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecord;
@@ -72,6 +75,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			return r;
 		}
 
+		extendTmpKeyValidity(Long.parseLong(dto.getTmpKey()));
 		return sendTextToImgDtoToMq(aiChatUserId, dto, false);
 	}
 
@@ -96,7 +100,8 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		SendTextToImgJobResult r = new SendTextToImgJobResult();
 
 		Integer jobCounting = getJobCounting(aiUserId);
-		if (jobCounting >= aiArtOptionService.getMaxDailyFreeJobCount()) {
+		boolean isFreeJobFlag = (jobCounting <= aiArtOptionService.getMaxDailyFreeJobCount());
+		if (!isFreeJobFlag) {
 			AiChatUserDetail userDetail = aiChatUserService.__getUserDetail(aiUserId);
 			int totalAmount = userDetail.getBonusAmount().intValue() + userDetail.getRechargeAmount().intValue();
 			if (totalAmount <= 0) {
@@ -162,12 +167,13 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		Long jobId = snowFlake.getNextId();
 		dto.setJobId(jobId);
 		dto.setIsFromApi(isFromApi);
-		AiArtTextToImageJobRecord row = new AiArtTextToImageJobRecord();
-		row.setAiUserId(aiUserId);
-		row.setId(jobId);
-		row.setJobStatus(AiArtJobStatusType.WAITING.getCode().byteValue());
-		row.setIsFromApi(isFromApi);
-		aiArtTextToImageJobRecordMapper.insertSelective(row);
+		AiArtTextToImageJobRecord newJobPO = new AiArtTextToImageJobRecord();
+		newJobPO.setId(jobId);
+		newJobPO.setIsFreeJob(isFreeJobFlag);
+		newJobPO.setAiUserId(aiUserId);
+		newJobPO.setJobStatus(AiArtJobStatusType.WAITING.getCode().byteValue());
+		newJobPO.setIsFromApi(isFromApi);
+		aiArtTextToImageJobRecordMapper.insertSelective(newJobPO);
 
 		CommonResult saveParameterResult = saveTextToImgParameterDTO(dto);
 		if (saveParameterResult.isFail()) {
@@ -176,9 +182,22 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		}
 
 		aiArtTextToImageProducer.send(jobId);
-		r.setJobPk(systemOptionService.encryptId(jobId));
-		r.setIsSuccess();
 
+		if (!aiArtOptionService.getIdOfAdmin().equals(aiUserId)) {
+			sendTelegramMessage("New AI art job recive, ready for review please");
+		}
+
+		addJobCounting(aiUserId);
+		r.setJobPk(systemOptionService.encryptId(jobId));
+		r.setIsFreeJob(isFreeJobFlag);
+		if (isFreeJobFlag) {
+			r.setFreeJobCountLeft(aiArtOptionService.getDailyFreeGenerateCount() - jobCounting);
+		} else {
+			r.setFreeJobCountLeft(0);
+		}
+
+		r.setIsRunning(aiArtOptionService.getIsRunning());
+		r.setIsSuccess();
 		return r;
 	}
 
@@ -220,32 +239,40 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 	@Override
 	public CommonResult txtToImgByJobId(Long jobId) {
-		AiArtTextToImageJobRecord po = aiArtTextToImageJobRecordMapper.selectByPrimaryKey(jobId);
-		if (po == null || AiArtJobStatusType.SUCCESS.getCode().byteValue() == po.getJobStatus()) {
+		AiArtTextToImageJobRecord jobPO = aiArtTextToImageJobRecordMapper.selectByPrimaryKey(jobId);
+		if (jobPO == null || AiArtJobStatusType.SUCCESS.getCode().byteValue() == jobPO.getJobStatus()) {
 			CommonResult r = new CommonResult();
 			r.setMessage("Job had done");
 			return r;
 		}
 		String parameterPathStr = getParameterPathByJobId(jobId);
 		String content = fileUtilCustom.getStringFromFile(parameterPathStr);
-		TextToImageFromDTO dto = buildObjFromJsonCustomization(content, TextToImageFromDTO.class);
+		TextToImageFromDTO parameterDTO = buildObjFromJsonCustomization(content, TextToImageFromDTO.class);
 		CommonResult txtToImgResult = null;
 		if (systemOptionService.isDev() && !aiArtOptionService.getIsRunning()) {
-			txtToImgResult = sendTxtToImgRequestWhenDev(dto);
+			txtToImgResult = sendTxtToImgRequestWhenDev(parameterDTO);
 		} else {
-			txtToImgResult = sendTxtToImgRequest(dto);
+			txtToImgResult = sendTxtToImgRequest(parameterDTO);
 		}
 
 		if (txtToImgResult.isSuccess()) {
 			AiArtGeneratingRecord imgGeneratingRecord = new AiArtGeneratingRecord();
-			imgGeneratingRecord.setAiUserId(po.getAiUserId());
-			imgGeneratingRecord.setId(dto.getJobId());
-			imgGeneratingRecord.setTokens(calculateTokenCost(dto));
+			imgGeneratingRecord.setAiUserId(jobPO.getAiUserId());
+			imgGeneratingRecord.setId(parameterDTO.getJobId());
+			imgGeneratingRecord.setTokens(calculateTokenCost(parameterDTO));
 			aiArtGeneratingRecordMapper.insertSelective(imgGeneratingRecord);
 
-			Integer jobCounting = getJobCounting(po.getAiUserId());
+			Integer jobCounting = getJobCounting(jobPO.getAiUserId());
 			if (jobCounting > aiArtOptionService.getMaxDailyFreeJobCount()) {
-				aiChatUserService.__debitAmountAndAddTokenUsage(po.getAiUserId(), imgGeneratingRecord.getTokens());
+				aiChatUserService.__debitAmountAndAddTokenUsage(jobPO.getAiUserId(), imgGeneratingRecord.getTokens());
+			}
+
+		} else {
+			if (jobPO.getRunCount() + 1 == aiArtOptionService.getMaxFailCountForJob()) {
+				jobPO.setRunCount(jobPO.getRunCount() + 1);
+				jobPO.setHasReview(true);
+				aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
+				minusJobCounting(jobPO.getAiUserId());
 			}
 		}
 
@@ -273,8 +300,6 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		}
 		saveAiArtGenerateImgResultJson(dto, imagePkList);
 
-		addJobCounting(jobPO.getAiUserId());
-
 		CommonResult r = new CommonResult();
 		r.setIsSuccess();
 		return r;
@@ -293,10 +318,11 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 		JSONObject responseJson = aiArtColabUtil.sendTxtToImgRequest(dtoForSending);
 		if (responseJson == null || !responseJson.containsKey("images")) {
-			AiArtTextToImageJobRecord row = aiArtTextToImageJobRecordMapper.selectByPrimaryKey(dto.getJobId());
-			row.setJobStatus(AiArtJobStatusType.FAILED.getCode().byteValue());
-			row.setRunCount(row.getRunCount() + 1);
-			aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(row);
+			AiArtTextToImageJobRecord jobPO = aiArtTextToImageJobRecordMapper.selectByPrimaryKey(dto.getJobId());
+			jobPO.setId(dto.getJobId());
+			jobPO.setJobStatus(AiArtJobStatusType.FAILED.getCode().byteValue());
+			jobPO.setRunCount(jobPO.getRunCount() + 1);
+			aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
 			r.setMessage("Can NOT create image, please try again later");
 			return r;
 		}
@@ -323,8 +349,6 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		jobPO.setJobStatus(AiArtJobStatusType.SUCCESS.getCode().byteValue());
 		jobPO.setRunCount(jobPO.getRunCount() + 1);
 		aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
-
-		addJobCounting(jobPO.getAiUserId());
 
 		r.setIsSuccess();
 		return r;
@@ -449,6 +473,8 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		}
 		r.setJobResultList(voList);
 		r.setIsSuccess();
+
+		extendTmpKeyValidity(Long.parseLong(userTmpKey));
 		return r;
 	}
 
@@ -490,15 +516,64 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	}
 
 	@Override
-	public List<AiArtTextToImageJobRecord> __getJobResultPage(String lastJobPk) {
-		Long lastjobId = systemOptionService.decryptPrivateKey(lastJobPk);
-		RowBounds rowBounds = new RowBounds(0, 20);
+	public List<AiArtTextToImageJobRecord> getJobResultPageForWechatUser(String lastJobPk, String tmpKey) {
+		AiArtJobListFilterDTO dto = new AiArtJobListFilterDTO();
+		Long aiUserId = getAiChatUserIdByTempKey(tmpKey);
+		if (aiUserId == null) {
+			return new ArrayList<>();
+		}
+		dto.setLastJobPk(lastJobPk);
+		return getJobResultPage(dto, aiUserId);
+	}
+
+	@Override
+	public List<AiArtTextToImageJobRecord> getJobResultPage(AiArtJobListFilterDTO dto) {
+		return getJobResultPage(dto, null);
+	}
+
+	@Override
+	public List<AiArtTextToImageJobRecord> getJobResultPage(AiArtJobListFilterDTO dto, Long aiUserId) {
+		Long lastjobId = systemOptionService.decryptPrivateKey(dto.getLastJobPk());
+		if (!isBigUser()) {
+			dto.setHasReview(null);
+			dto.setIsFromApi(null);
+			dto.setOrderBy(null);
+		}
+		RowBounds rowBounds = new RowBounds(0, aiArtOptionService.getMaxShowJob());
 		AiArtTextToImageJobRecordExample example = new AiArtTextToImageJobRecordExample();
 		Criteria criteria = example.createCriteria();
+		if (aiUserId != null) {
+			criteria.andAiUserIdEqualTo(aiUserId);
+		}
 		if (lastjobId != null) {
 			criteria.andIdLessThan(lastjobId);
 		}
-		example.setOrderByClause("id desc");
+		if (dto.getHasReview() != null) {
+			criteria.andHasReviewEqualTo(dto.getHasReview());
+		}
+		if (dto.getIsFreeJob() != null) {
+			criteria.andIsFreeJobEqualTo(dto.getIsFreeJob());
+		}
+		if (dto.getJobStatus() != null) {
+			criteria.andJobStatusEqualTo(dto.getJobStatus().byteValue());
+		}
+		if (StringUtils.isNotBlank(dto.getCreateTimeStartStr())) {
+			criteria.andCreateTimeGreaterThan(
+					localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getCreateTimeStartStr()));
+		}
+		if (StringUtils.isNotBlank(dto.getCreateTimeEndStr())) {
+			criteria.andCreateTimeLessThan(
+					localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getCreateTimeEndStr()));
+		}
+		if (dto.getIsFromApi() != null) {
+			criteria.andIsFromApiEqualTo(dto.getIsFromApi());
+		}
+
+		if (StringUtils.isNotBlank(dto.getOrderBy())) {
+			example.setOrderByClause(dto.getOrderBy());
+		} else {
+			example.setOrderByClause("id desc");
+		}
 		List<AiArtTextToImageJobRecord> poList = aiArtTextToImageJobRecordMapper.selectByExampleWithRowbounds(example,
 				rowBounds);
 		return poList;
@@ -577,7 +652,52 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			BeanUtils.copyProperties(oldParameter, paramDTO);
 			paramDTO.setTmpKey(dto.getTmpKey());
 			r = sendTextToImgFromWechatDtoToMq(paramDTO);
+			extendTmpKeyValidity(Long.parseLong(dto.getTmpKey()));
 		}
+
 		return r;
+	}
+
+	@Override
+	public void __sendRandomGenerateJob() {
+		AiArtImageWallResult imageWall = getImageWall();
+		if (imageWall.getImgVoList().isEmpty()) {
+			return;
+		}
+
+		List<AiArtImageOnWallVO> voList = imageWall.getImgVoList();
+		Random random = new Random();
+		int randomInt = random.nextInt(voList.size());
+
+		AiArtImageOnWallVO vo = voList.get(randomInt);
+
+		Long jobId = systemOptionService.decryptPrivateKey(vo.getJobPk());
+		if (jobId == null) {
+			return;
+		}
+
+		AiArtGenerateImageResult jobResult = getJobResult(jobId);
+		if (jobResult == null || jobResult.getParameter() == null) {
+			return;
+		}
+
+		TextToImageFromDTO oldParameter = jobResult.getParameter();
+		oldParameter.setBatchSize(4);
+
+		TextToImageFromApiDTO paramDTO = new TextToImageFromApiDTO();
+		BeanUtils.copyProperties(oldParameter, paramDTO);
+		paramDTO.setApiKey(aiArtOptionService.getApiKeyOfAdmin());
+		sendTextToImgFromApiDtoToMq(paramDTO);
+	}
+
+	@Override
+	public void sendNoticeIfAnyJobsWaitingForReview() {
+		AiArtTextToImageJobRecordExample example = new AiArtTextToImageJobRecordExample();
+		example.createCriteria().andJobStatusEqualTo(AiArtJobStatusType.SUCCESS.getCode().byteValue())
+				.andHasReviewEqualTo(false).andIsFromApiEqualTo(false);
+		List<AiArtTextToImageJobRecord> list = aiArtTextToImageJobRecordMapper.selectByExample(example);
+		if (!list.isEmpty()) {
+			sendTelegramMessage(list.size() + " jobs waiting for review");
+		}
 	}
 }

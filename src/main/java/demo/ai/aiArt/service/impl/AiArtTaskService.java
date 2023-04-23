@@ -15,6 +15,8 @@ public class AiArtTaskService extends ToolCommonService {
 	private AiArtService aiArtService;
 	@Autowired
 	private AiArtManagerService aiArtManagerService;
+	@Autowired
+	private AiArtOptionService aiArtOptionService;
 
 	@Scheduled(fixedDelay = 1000L * 60 * 2)
 	public void rerun() {
@@ -24,8 +26,10 @@ public class AiArtTaskService extends ToolCommonService {
 
 	@Scheduled(fixedDelay = 1000L * 60 * 10)
 	public void insertJobToKeepLive() {
-		aiArtService.__sendRandomGenerateJob();
-		aiArtManagerService.setReviewBatchForAdmin();
+		if(aiArtOptionService.getIsRunning()) {
+			aiArtService.__sendRandomGenerateJob();
+			aiArtManagerService.setReviewBatchForAdmin();
+		}
 	}
 
 	@Scheduled(cron = "06 05 04 * * *")

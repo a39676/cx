@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ai.aiArt.pojo.dto.TextToImageFromDTO;
 import ai.aiArt.pojo.result.AiArtGenerateImageResult;
 import ai.aiArt.pojo.result.GetJobResultList;
+import ai.aiArt.pojo.type.AiArtJobStatusType;
 import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.mapper.AiArtGeneratingRecordMapper;
@@ -62,6 +63,15 @@ public abstract class AiArtCommonService extends AiCommonService {
 		redisConnectService.setValByName(String.valueOf(aiUserId), String.valueOf(count + 1), minutes,
 				TimeUnit.MINUTES);
 	}
+	
+	protected void minusJobCounting(Long aiUserId) {
+		Integer count = getJobCounting(aiUserId);
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime todayMax = now.with(LocalTime.MAX);
+		long minutes = ChronoUnit.MINUTES.between(now, todayMax);
+		redisConnectService.setValByName(String.valueOf(aiUserId), String.valueOf(count - 1), minutes,
+				TimeUnit.MINUTES);
+	}
 
 	protected Integer getJobCounting(Long aiUserId) {
 		String countStr = redisConnectService.getValByName(String.valueOf(aiUserId));
@@ -75,17 +85,33 @@ public abstract class AiArtCommonService extends AiCommonService {
 
 	protected AiArtGenerateImageVO buildAiArtGenerateImageVO(AiArtTextToImageJobRecord po,
 			AiArtGenerateImageResult subResult, String jobPk) {
+		return __buildAiArtGenerateImageVO(po, subResult, jobPk);
+	}
+
+	private AiArtGenerateImageVO __buildAiArtGenerateImageVO(AiArtTextToImageJobRecord po,
+			AiArtGenerateImageResult subResult, String jobPk) {
 		AiArtGenerateImageVO vo = new AiArtGenerateImageVO();
+		boolean forAdmin = isBigUser();
 		vo = new AiArtGenerateImageVO();
 		vo.setJobPk(jobPk);
 		vo.setAiUserPk(systemOptionService.encryptId(po.getAiUserId()));
-		vo.setJobStatus(po.getJobStatus().intValue());
 		vo.setRunCount(po.getRunCount());
 		vo.setCreateTimeStr(localDateTimeHandler.dateToStr(po.getCreateTime()));
 		vo.setIsDelete(po.getIsDelete());
 		vo.setIsFromApi(po.getIsFromApi());
+		if (forAdmin) {
+			vo.setIsFreeJob(po.getIsFreeJob());
+			vo.setHasReview(po.getHasReview());
+			vo.setJobStatus(po.getJobStatus().intValue());
+		} else {
+			if (!po.getHasReview()) {
+				vo.setJobStatus(AiArtJobStatusType.WAITING.getCode());
+			} else {
+				vo.setJobStatus(po.getJobStatus().intValue());
+			}
+		}
 
-		if (subResult != null) {
+		if (subResult != null && (forAdmin || po.getHasReview())) {
 			List<String> imgUrlList = new ArrayList<>();
 			if (subResult.getImgPkList() != null && !subResult.getImgPkList().isEmpty()) {
 				for (String imgUrl : subResult.getImgPkList()) {
@@ -103,11 +129,11 @@ public abstract class AiArtCommonService extends AiCommonService {
 	protected AiArtGenerateImageResult getJobResult(Long jobId) {
 		String resultJsonSavePath = getJobResultStrPath(jobId);
 		String content = null;
-		try {
-			content = fileUtilCustom.getStringFromFile(resultJsonSavePath);
-		} catch (Exception e) {
+		File resultFile = new File(resultJsonSavePath);
+		if(!resultFile.exists()) {
 			return null;
 		}
+		content = fileUtilCustom.getStringFromFile(resultJsonSavePath);
 		AiArtGenerateImageResult result = buildObjFromJsonCustomization(content, AiArtGenerateImageResult.class);
 		return result;
 	}

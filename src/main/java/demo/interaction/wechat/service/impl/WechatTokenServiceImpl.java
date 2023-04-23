@@ -11,7 +11,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.interaction.wechat.mapper.WechatAccessTokenMapper;
 import demo.interaction.wechat.pojo.po.WechatAccessToken;
 import demo.interaction.wechat.service.WechatTokenService;
-import wechatSdk.pojo.dto.SaveAccessTokenDTO;
+import wechatSdk.pojo.dto.WechatSaveAccessTokenDTO;
 import wechatSdk.pojo.result.GetWechatAccessTokenResult;
 
 @Service
@@ -25,7 +25,7 @@ public class WechatTokenServiceImpl extends WechatCommonService implements Wecha
 		CommonResult r = new CommonResult();
 		EncryptDTO encryptedResult = null;
 
-		SaveAccessTokenDTO dto = decryptEncryptDTO(encryptedDTO, SaveAccessTokenDTO.class);
+		WechatSaveAccessTokenDTO dto = decryptEncryptDTO(encryptedDTO, WechatSaveAccessTokenDTO.class);
 		if (dto == null) {
 			r.setMessage("DTO decrypt fail or parameter error");
 			encryptedResult = encryptDTO(r);

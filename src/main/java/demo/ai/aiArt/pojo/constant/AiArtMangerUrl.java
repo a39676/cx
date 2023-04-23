@@ -11,4 +11,5 @@ public class AiArtMangerUrl {
 	public static final String IMAGE_WALL_MANAGER = "/imageWallManager";
 	public static final String ADD_TO_IMAGE_WALL = "/addToImageWall";
 	public static final String REMVOE_FROM_IMAGE_WALL = "/removeFromImageWall";
+	public static final String SET_HAD_REVIEW = "/setHadReview";
 }

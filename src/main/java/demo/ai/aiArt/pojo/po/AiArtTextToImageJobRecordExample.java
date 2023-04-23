@@ -524,6 +524,126 @@ public class AiArtTextToImageJobRecordExample {
             addCriterion("is_from_api not between", value1, value2, "isFromApi");
             return (Criteria) this;
         }
+
+        public Criteria andIsFreeJobIsNull() {
+            addCriterion("is_free_job is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsFreeJobIsNotNull() {
+            addCriterion("is_free_job is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsFreeJobEqualTo(Boolean value) {
+            addCriterion("is_free_job =", value, "isFreeJob");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsFreeJobNotEqualTo(Boolean value) {
+            addCriterion("is_free_job <>", value, "isFreeJob");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsFreeJobGreaterThan(Boolean value) {
+            addCriterion("is_free_job >", value, "isFreeJob");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsFreeJobGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_free_job >=", value, "isFreeJob");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsFreeJobLessThan(Boolean value) {
+            addCriterion("is_free_job <", value, "isFreeJob");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsFreeJobLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_free_job <=", value, "isFreeJob");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsFreeJobIn(List<Boolean> values) {
+            addCriterion("is_free_job in", values, "isFreeJob");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsFreeJobNotIn(List<Boolean> values) {
+            addCriterion("is_free_job not in", values, "isFreeJob");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsFreeJobBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_free_job between", value1, value2, "isFreeJob");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsFreeJobNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_free_job not between", value1, value2, "isFreeJob");
+            return (Criteria) this;
+        }
+
+        public Criteria andHasReviewIsNull() {
+            addCriterion("has_review is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHasReviewIsNotNull() {
+            addCriterion("has_review is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHasReviewEqualTo(Boolean value) {
+            addCriterion("has_review =", value, "hasReview");
+            return (Criteria) this;
+        }
+
+        public Criteria andHasReviewNotEqualTo(Boolean value) {
+            addCriterion("has_review <>", value, "hasReview");
+            return (Criteria) this;
+        }
+
+        public Criteria andHasReviewGreaterThan(Boolean value) {
+            addCriterion("has_review >", value, "hasReview");
+            return (Criteria) this;
+        }
+
+        public Criteria andHasReviewGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("has_review >=", value, "hasReview");
+            return (Criteria) this;
+        }
+
+        public Criteria andHasReviewLessThan(Boolean value) {
+            addCriterion("has_review <", value, "hasReview");
+            return (Criteria) this;
+        }
+
+        public Criteria andHasReviewLessThanOrEqualTo(Boolean value) {
+            addCriterion("has_review <=", value, "hasReview");
+            return (Criteria) this;
+        }
+
+        public Criteria andHasReviewIn(List<Boolean> values) {
+            addCriterion("has_review in", values, "hasReview");
+            return (Criteria) this;
+        }
+
+        public Criteria andHasReviewNotIn(List<Boolean> values) {
+            addCriterion("has_review not in", values, "hasReview");
+            return (Criteria) this;
+        }
+
+        public Criteria andHasReviewBetween(Boolean value1, Boolean value2) {
+            addCriterion("has_review between", value1, value2, "hasReview");
+            return (Criteria) this;
+        }
+
+        public Criteria andHasReviewNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("has_review not between", value1, value2, "hasReview");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

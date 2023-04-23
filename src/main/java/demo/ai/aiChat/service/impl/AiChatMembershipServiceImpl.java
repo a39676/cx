@@ -36,7 +36,7 @@ import toolPack.dateTimeHandle.DateTimeUtilCommon;
 import toolPack.ioHandle.FileUtilCustom;
 import wechatPayApi.jsApi.pojo.dto.WechatPayJsApiFeedbackDTO;
 import wechatPayApi.jsApi.pojo.dto.WechatPayJsApiFeedbackDecryptDTO;
-import wechatSdk.pojo.dto.BuyMembershipFromWechatAttachmentDTO;
+import wechatSdk.pojo.dto.AiServiceBuyMembershipFromWechatAttachmentDTO;
 
 @Service
 public class AiChatMembershipServiceImpl extends AiCommonService implements AiChatMembershipService {
@@ -157,7 +157,7 @@ public class AiChatMembershipServiceImpl extends AiCommonService implements AiCh
 			return r;
 		}
 
-		BuyMembershipFromWechatAttachmentDTO atta = decryptDTO.getAttach();
+		AiServiceBuyMembershipFromWechatAttachmentDTO atta = decryptDTO.getAttach();
 		Long membershipId = systemOptionService.decryptPrivateKey(atta.getMembershipPk());
 		if (membershipId == null) {
 			sendTelegramMessage("收到付款失败回调 无对应 membership ID: " + membershipId);

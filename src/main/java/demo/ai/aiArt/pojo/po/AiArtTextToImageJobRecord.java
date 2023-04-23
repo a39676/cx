@@ -17,6 +17,10 @@ public class AiArtTextToImageJobRecord {
 
     private Boolean isFromApi;
 
+    private Boolean isFreeJob;
+
+    private Boolean hasReview;
+
     public Long getId() {
         return id;
     }
@@ -71,5 +75,21 @@ public class AiArtTextToImageJobRecord {
 
     public void setIsFromApi(Boolean isFromApi) {
         this.isFromApi = isFromApi;
+    }
+
+    public Boolean getIsFreeJob() {
+        return isFreeJob;
+    }
+
+    public void setIsFreeJob(Boolean isFreeJob) {
+        this.isFreeJob = isFreeJob;
+    }
+
+    public Boolean getHasReview() {
+        return hasReview;
+    }
+
+    public void setHasReview(Boolean hasReview) {
+        this.hasReview = hasReview;
     }
 }

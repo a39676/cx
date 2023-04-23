@@ -6,4 +6,6 @@ public interface WechatAiArtService {
 
 	EncryptDTO getImageWall(EncryptDTO encryptedDTO);
 
+	EncryptDTO generateOtherLikeThat(EncryptDTO encryptedDTO);
+
 }

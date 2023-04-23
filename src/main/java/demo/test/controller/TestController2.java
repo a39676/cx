@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import ai.aiArt.pojo.dto.TextToImageFromWechatDTO;
+import ai.aiArt.pojo.result.AiArtImageWallResult;
 import ai.aiArt.pojo.result.GetJobResultList;
+import ai.aiArt.pojo.result.SendTextToImgJobResult;
 import ai.aiArt.pojo.type.AiArtSamplerType;
 import demo.ai.aiArt.controller.AiArtApiController;
 import demo.ai.aiArt.pojo.dto.TextToImageFromApiDTO;
-import demo.ai.aiArt.pojo.result.SendTextToImgJobResult;
 import demo.ai.aiArt.service.AiArtService;
 import demo.ai.aiChat.service.AiChatUserService;
 import demo.common.pojo.dto.BaseDTO;
@@ -105,5 +106,18 @@ public class TestController2 extends ToolCommonService {
 		}
 		dto.setPk(pk);
 		return aiArtService.getJobResultVoByJobPk(dto);
+	}
+
+	@GetMapping(value = "/t8")
+	@ResponseBody
+	public AiArtImageWallResult t8() {
+		aiArtService.refreshImageWallJsonFile();
+		return aiArtService.getImageWall();
+	}
+
+	@GetMapping(value = "/t9")
+	@ResponseBody
+	public AiArtImageWallResult t9() {
+		return aiArtService.getImageWall(true);
 	}
 }

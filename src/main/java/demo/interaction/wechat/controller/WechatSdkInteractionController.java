@@ -128,4 +128,10 @@ public class WechatSdkInteractionController extends CommonController {
 	public EncryptDTO getImageWall(@RequestBody EncryptDTO dto) {
 		return wechatAiArtService.getImageWall(dto);
 	}
+
+	@PostMapping(value = AiChatFromWechatSdkUrlConstant.GENERATE_OTHER_LIKE_THAT)
+	@ResponseBody
+	public EncryptDTO generateOtherLikeThat(@RequestBody EncryptDTO dto) {
+		return wechatAiArtService.generateOtherLikeThat(dto);
+	}
 }

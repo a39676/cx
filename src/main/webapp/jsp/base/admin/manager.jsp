@@ -1,11 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%-- <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> --%>
-<%-- <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt"  prefix="fmt"%> --%>
-<%-- <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%> --%>
-<%-- <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %> --%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt"  prefix="fmt"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
+<head>
+  <%@ include file="../../baseElementJSP/normalHeader.jsp" %>
+  <%@ include file="../../baseElementJSP/normalJSPart.jsp" %>
+</head>
 
-<header>
+<body>
   <div class="container-fluid position-relative no-side-padding">
     <div class="menu-nav-icon" data-nav-menu="#main-menu"><i class="ion-navicon"></i></div>
     <ul class="main-menu visible-on-click" id="main-menu">
@@ -50,6 +54,9 @@
       <li style="background-color:yellow;">AI art</li>
       <li>
         <a href="/aiArtManager/view" target="_blank">AI art manager</a>
+      </li>
+      <li>
+        <a href="/aiArtManager/imageWallManager" target="_blank">AI art image wall</a>
       </li>
     </ul><!-- aiArt -->
 
@@ -177,4 +184,27 @@
 
 
   </div>
-</header>
+
+  <script type="text/javascript">
+    // keep alive request
+    var intervalId = window.setInterval(function(){
+      $.ajax({
+        type : "GET",
+        async : true,
+        url : "/1jlbdmb",
+        data: "",
+        cache : false,
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+        },
+        error: function(datas) {
+        }
+      });
+    }, 5000);
+  </script>
+</body>
+
+

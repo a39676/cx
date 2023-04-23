@@ -65,6 +65,18 @@ public abstract class AiCommonService extends ToolCommonService {
 		redisConnectService.setValByName(String.valueOf(tmpKey), String.valueOf(aiChatUserId), 10, TimeUnit.MINUTES);
 	}
 
+	protected void extendTmpKeyValidity(Long tmpKey) {
+		log.error("Receive tmp key extend request, tmp key: " + tmpKey);
+		if (tmpKey == null) {
+			return;
+		}
+		Long aiChatUserId = getAiChatUserIdByTempKey(tmpKey);
+		if (aiChatUserId != null) {
+			log.error("Extended, tmp key: " + tmpKey + ", ai chat user id: " + aiChatUserId);
+			tmpKeyInsertOrUpdateLiveTime(tmpKey, aiChatUserId);
+		}
+	}
+	
 	protected void addAiChatUserIdDailySigned(Long aiChatUserId) {
 		redisSetService.add(dailySignUpRedisKey, String.valueOf(aiChatUserId), LocalDateTime.now().with(LocalTime.MAX));
 	}

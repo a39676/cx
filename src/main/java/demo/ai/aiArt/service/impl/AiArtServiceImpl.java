@@ -191,7 +191,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		r.setJobPk(systemOptionService.encryptId(jobId));
 		r.setIsFreeJob(isFreeJobFlag);
 		if (isFreeJobFlag) {
-			r.setFreeJobCountLeft(aiArtOptionService.getDailyFreeGenerateCount() - jobCounting);
+			r.setFreeJobCountLeft(aiArtOptionService.getMaxDailyFreeJobCount() - jobCounting);
 		} else {
 			r.setFreeJobCountLeft(0);
 		}

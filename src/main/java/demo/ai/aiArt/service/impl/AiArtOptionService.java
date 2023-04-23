@@ -31,13 +31,12 @@ public class AiArtOptionService extends CommonService {
 	private Integer maxBatch;
 	private Integer maxCfgScale;
 	private Integer maxSteps;
-	private Integer dailyFreeGenerateCount;
+	private Integer maxDailyFreeJobCount;
 	private Integer maxPromptLength;
 	private Integer maxFailCountForJob;
 	private Boolean isRunning;
 	private Integer maxShowJob;
 	private Integer maxJobLivingDay;
-	private Integer maxDailyFreeJobCount;
 	private Integer maxLivingMinuteOfApiImageAfterFirstVisit = 10;
 	private Double consumptionCoefficient;
 	private String imagePkInsteadOfNsfw;
@@ -132,14 +131,6 @@ public class AiArtOptionService extends CommonService {
 
 	public void setMaxSteps(Integer maxSteps) {
 		this.maxSteps = maxSteps;
-	}
-
-	public Integer getDailyFreeGenerateCount() {
-		return dailyFreeGenerateCount;
-	}
-
-	public void setDailyFreeGenerateCount(Integer dailyFreeGenerateCount) {
-		this.dailyFreeGenerateCount = dailyFreeGenerateCount;
 	}
 
 	public Integer getMaxPromptLength() {
@@ -244,10 +235,9 @@ public class AiArtOptionService extends CommonService {
 				+ ", textToImageParameterSavingFolder=" + textToImageParameterSavingFolder + ", imageWallFilePath="
 				+ imageWallFilePath + ", imageWallMaxSize=" + imageWallMaxSize + ", maxHeight=" + maxHeight
 				+ ", maxWidth=" + maxWidth + ", maxBatch=" + maxBatch + ", maxCfgScale=" + maxCfgScale + ", maxSteps="
-				+ maxSteps + ", dailyFreeGenerateCount=" + dailyFreeGenerateCount + ", maxPromptLength="
-				+ maxPromptLength + ", maxFailCountForJob=" + maxFailCountForJob + ", isRunning=" + isRunning
-				+ ", maxShowJob=" + maxShowJob + ", maxJobLivingDay=" + maxJobLivingDay + ", maxDailyFreeJobCount="
-				+ maxDailyFreeJobCount + ", maxLivingMinuteOfApiImageAfterFirstVisit="
+				+ maxSteps + ", maxDailyFreeJobCount=" + maxDailyFreeJobCount + ", maxPromptLength=" + maxPromptLength
+				+ ", maxFailCountForJob=" + maxFailCountForJob + ", isRunning=" + isRunning + ", maxShowJob="
+				+ maxShowJob + ", maxJobLivingDay=" + maxJobLivingDay + ", maxLivingMinuteOfApiImageAfterFirstVisit="
 				+ maxLivingMinuteOfApiImageAfterFirstVisit + ", consumptionCoefficient=" + consumptionCoefficient
 				+ ", imagePkInsteadOfNsfw=" + imagePkInsteadOfNsfw + ", apiKeyOfAdmin=" + apiKeyOfAdmin + ", idOfAdmin="
 				+ idOfAdmin + ", maxWaitingJobCount=" + maxWaitingJobCount + ", nsfwPrompt=" + nsfwPrompt + "]";

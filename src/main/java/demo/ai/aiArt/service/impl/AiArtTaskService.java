@@ -20,13 +20,15 @@ public class AiArtTaskService extends ToolCommonService {
 
 	@Scheduled(fixedDelay = 1000L * 60 * 2)
 	public void rerun() {
-		aiArtService.rerun();
-		aiArtService.sendNoticeIfAnyJobsWaitingForReview();
+		if (aiArtOptionService.getIsRunning()) {
+			aiArtService.rerun();
+			aiArtService.sendNoticeIfAnyJobsWaitingForReview();
+		}
 	}
 
 	@Scheduled(fixedDelay = 1000L * 60 * 10)
 	public void insertJobToKeepLive() {
-		if(aiArtOptionService.getIsRunning()) {
+		if (aiArtOptionService.getIsRunning()) {
 			aiArtService.__sendRandomGenerateJob();
 			aiArtManagerService.setReviewBatchForAdmin();
 		}

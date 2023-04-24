@@ -30,9 +30,9 @@ import demo.ai.aiChat.pojo.po.AiChatUserAssociateWechatUidExample;
 import demo.ai.aiChat.pojo.po.AiChatUserAssociateWechatUidKey;
 import demo.ai.aiChat.pojo.po.AiChatUserDetail;
 import demo.ai.aiChat.pojo.po.AiChatUserDetailExample;
+import demo.ai.aiChat.pojo.po.AiChatUserDetailExample.Criteria;
 import demo.ai.aiChat.pojo.po.SystemUserAssociateAiChatUserExample;
 import demo.ai.aiChat.pojo.po.SystemUserAssociateAiChatUserKey;
-import demo.ai.aiChat.pojo.po.AiChatUserDetailExample.Criteria;
 import demo.ai.aiChat.pojo.result.CreateAiChatUserResult;
 import demo.ai.aiChat.pojo.result.GetAiChatUserListResult;
 import demo.ai.aiChat.pojo.vo.AiChatUserVO;
@@ -40,7 +40,6 @@ import demo.ai.aiChat.service.AiChatUserService;
 import demo.ai.common.service.impl.AiCommonService;
 import demo.interaction.wechat.pojo.po.WechatQrcodeDetail;
 import demo.interaction.wechat.pojo.vo.WechatQrcodeVO;
-import demo.interaction.wechat.service.WechatSdkForInterService;
 
 @Service
 public class AiChatUserServiceImpl extends AiCommonService implements AiChatUserService {
@@ -53,9 +52,6 @@ public class AiChatUserServiceImpl extends AiCommonService implements AiChatUser
 	private AiChatUserAssociateWechatUidMapper aiChatUserAssociateWechatUidMapper;
 	@Autowired
 	private AiChatUserAmountHistoryMapper amountHistoryMapper;
-
-	@Autowired
-	private WechatSdkForInterService wechatSdkForInterService;
 
 	@Override
 	public CreateAiChatUserResult createAiChatUserDetailBySystemUserId(Long systemUserId) {
@@ -662,9 +658,9 @@ public class AiChatUserServiceImpl extends AiCommonService implements AiChatUser
 			r.setMessage("输入消耗额异常");
 			return r;
 		}
-		
+
 		AiChatUserDetail detail = userDetailMapper.selectByPrimaryKey(aiUserId);
-		if(detail == null) {
+		if (detail == null) {
 			r.setMessage("Can NOT found correct AI user ID: " + aiUserId);
 			return r;
 		}
@@ -712,7 +708,7 @@ public class AiChatUserServiceImpl extends AiCommonService implements AiChatUser
 		r.setIsSuccess();
 		return r;
 	}
-	
+
 	@Override
 	public AiChatUserDetail __getUserDetail(Long aiUserId) {
 		return userDetailMapper.selectByPrimaryKey(aiUserId);

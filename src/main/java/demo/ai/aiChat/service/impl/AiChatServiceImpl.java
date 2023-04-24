@@ -188,10 +188,15 @@ public class AiChatServiceImpl extends AiCommonService implements AiChatService 
 
 		// send history + new msg, wait feedback
 		OpenAiChatCompletionSendMessageResult apiResult = util.sendChatCompletionFromUI(chatHistory, dto.getMsg());
+		if (apiResult.isFail()) {
+			for (int i = 0; i < 2 && apiResult.isFail(); i++) {
+				apiResult = util.sendChatCompletionFromUI(chatHistory, dto.getMsg());
+			}
+		}
 
 		// if fail, send fail response
 		if (apiResult.isFail()) {
-			r.setMessage("运算异常, 正在排查故障");
+			r.setMessage("运算异常, 当前可能是使用高峰期, 请尝试重新提问");
 			sendTelegramMessage(apiResult.getMessage());
 			return r;
 		}

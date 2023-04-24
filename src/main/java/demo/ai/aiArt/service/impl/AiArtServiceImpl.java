@@ -37,6 +37,9 @@ import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecordExample;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecordExample.Criteria;
 import demo.ai.aiArt.service.AiArtCommonService;
 import demo.ai.aiArt.service.AiArtService;
+import demo.ai.aiChat.mapper.AiChatUserAssociateWechatUidMapper;
+import demo.ai.aiChat.pojo.po.AiChatUserAssociateWechatUidExample;
+import demo.ai.aiChat.pojo.po.AiChatUserAssociateWechatUidKey;
 import demo.ai.aiChat.pojo.po.AiChatUserDetail;
 import demo.common.pojo.dto.BaseDTO;
 import demo.image.pojo.type.ImageTagType;
@@ -59,6 +62,9 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	@Autowired
 	private FileUtilCustom fileUtilCustom;
 
+	@Autowired
+	private AiChatUserAssociateWechatUidMapper aiChatUserAssociateWechatUidMapper;
+
 	@Override
 	public SendTextToImgJobResult sendTextToImgFromWechatDtoToMq(TextToImageFromWechatDTO dto) {
 		SendTextToImgJobResult r = new SendTextToImgJobResult();
@@ -73,6 +79,17 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			r.setMessage(WechatSdkCommonResultType.TMP_KEY_EXPIRED.getName());
 			r.setCode(String.valueOf(WechatSdkCommonResultType.TMP_KEY_EXPIRED.getCode()));
 			return r;
+		}
+
+		noticeTag: if (dto.getNoticeWhenComplete() != null && dto.getNoticeWhenComplete()) {
+			AiChatUserAssociateWechatUidExample associateExample = new AiChatUserAssociateWechatUidExample();
+			associateExample.createCriteria().andAiChatUserIdEqualTo(aiChatUserId);
+			List<AiChatUserAssociateWechatUidKey> associateList = aiChatUserAssociateWechatUidMapper
+					.selectByExample(associateExample);
+			if (associateList.isEmpty()) {
+				break noticeTag;
+			}
+			wechatSdkForInterService.sendTemplateMessageAiArtTxtToImgComplete(associateList.get(0).getWechatId());
 		}
 
 		extendTmpKeyValidity(Long.parseLong(dto.getTmpKey()));

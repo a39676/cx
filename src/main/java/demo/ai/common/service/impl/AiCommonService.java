@@ -15,6 +15,7 @@ import demo.ai.aiChat.service.impl.AiChatOptionService;
 import demo.base.system.service.impl.RedisOriginalConnectService;
 import demo.base.system.service.impl.RedisSetConnectService;
 import demo.common.service.ToolCommonService;
+import demo.interaction.wechat.service.WechatSdkForInterService;
 import demo.thirdPartyAPI.openAI.service.impl.OpenAiUtil;
 import demo.tool.other.service.TextFilter;
 import demo.tool.telegram.service.TelegramService;
@@ -29,6 +30,9 @@ public abstract class AiCommonService extends ToolCommonService {
 	protected AiChatOptionService aiChatOptionService;
 	@Autowired
 	protected AiChatCacheService aiChatCacheService;
+	@Autowired
+	protected WechatSdkForInterService wechatSdkForInterService;
+	
 	@Autowired
 	private TelegramService telegramService;
 	@Autowired
@@ -76,7 +80,7 @@ public abstract class AiCommonService extends ToolCommonService {
 			tmpKeyInsertOrUpdateLiveTime(tmpKey, aiChatUserId);
 		}
 	}
-	
+
 	protected void addAiChatUserIdDailySigned(Long aiChatUserId) {
 		redisSetService.add(dailySignUpRedisKey, String.valueOf(aiChatUserId), LocalDateTime.now().with(LocalTime.MAX));
 	}

@@ -4,7 +4,7 @@ import auxiliaryCommon.pojo.dto.EncryptDTO;
 
 public interface WechatAiArtService {
 
-	EncryptDTO getImageWall(EncryptDTO encryptedDTO);
+	EncryptDTO getImageWallForWechat(EncryptDTO encryptedDTO);
 
 	EncryptDTO generateOtherLikeThat(EncryptDTO encryptedDTO);
 

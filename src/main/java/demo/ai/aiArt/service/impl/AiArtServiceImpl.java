@@ -607,22 +607,45 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	public void loadImageWallToCache() {
 		try {
 			String content = fileUtilCustom.getStringFromFile(aiArtOptionService.getImageWallFilePath());
-			AiArtImageWallResult dto = buildObjFromJsonCustomization(content, AiArtImageWallResult.class);
-			if (dto != null) {
-				aiArtCacheService.setImageWall(dto);
+			AiArtImageWallResult dto = null;
+			if (content == null || StringUtils.isBlank(content)) {
+				dto = buildObjFromJsonCustomization(content, AiArtImageWallResult.class);
+			} else {
+				dto = new AiArtImageWallResult();
 			}
+			if (dto.getImgVoList() == null) {
+				dto.setImgVoList(new ArrayList<>());
+			}
+			aiArtCacheService.setImageWall(dto);
 		} catch (Exception e) {
 			sendTelegramMessage("Load image wall DTO to cache failed: " + e.getLocalizedMessage());
 		}
 	}
 
 	@Override
-	public AiArtImageWallResult getImageWall() {
-		return getImageWall(false);
+	public AiArtImageWallResult getImageWallRandomSub() {
+		AiArtImageWallResult fullResult = getImageWallFull(false);
+		List<AiArtImageOnWallVO> voList = fullResult.getImgVoList();
+		if (fullResult.getImgVoList().isEmpty()
+				&& aiArtOptionService.getImageWallOnShowMaxSize() > fullResult.getImgVoList().size()) {
+			return fullResult;
+		}
+
+		List<AiArtImageOnWallVO> resultVoList = new ArrayList<>();
+		Random random = new Random();
+		Integer randomIndex = null;
+		for (int i = 0; i < aiArtOptionService.getImageWallOnShowMaxSize() && !voList.isEmpty(); i++) {
+			randomIndex = random.nextInt(voList.size());
+			resultVoList.add(voList.get(randomIndex));
+			voList.remove(randomIndex.intValue());
+		}
+
+		fullResult.setImgVoList(resultVoList);
+		return fullResult;
 	}
 
 	@Override
-	public AiArtImageWallResult getImageWall(Boolean refresh) {
+	public AiArtImageWallResult getImageWallFull(Boolean refresh) {
 		if (refresh != null && refresh) {
 			loadImageWallToCache();
 		}
@@ -677,7 +700,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 	@Override
 	public void __sendRandomGenerateJob() {
-		AiArtImageWallResult imageWall = getImageWall();
+		AiArtImageWallResult imageWall = getImageWallRandomSub();
 		if (imageWall.getImgVoList().isEmpty()) {
 			return;
 		}

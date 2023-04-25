@@ -126,7 +126,7 @@ public class WechatSdkInteractionController extends CommonController {
 	@PostMapping(value = AiChatFromWechatSdkUrlConstant.AI_ART_IMAGE_WALL)
 	@ResponseBody
 	public EncryptDTO getImageWall(@RequestBody EncryptDTO dto) {
-		return wechatAiArtService.getImageWall(dto);
+		return wechatAiArtService.getImageWallForWechat(dto);
 	}
 
 	@PostMapping(value = AiChatFromWechatSdkUrlConstant.GENERATE_OTHER_LIKE_THAT)

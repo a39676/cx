@@ -17,13 +17,13 @@ public class WechatAiArtServiceImpl extends WechatCommonService implements Wecha
 	private AiArtService aiArtService;
 
 	@Override
-	public EncryptDTO getImageWall(EncryptDTO encryptedDTO) {
+	public EncryptDTO getImageWallForWechat(EncryptDTO encryptedDTO) {
 		String randomStr = decryptEncryptDTO(encryptedDTO, String.class);
 		if (randomStr == null) {
 			return encryptDTO(new AiArtImageWallResult());
 		}
 
-		return encryptDTO(aiArtService.getImageWall());
+		return encryptDTO(aiArtService.getImageWallRandomSub());
 	}
 
 	@Override

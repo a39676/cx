@@ -234,7 +234,7 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 	@Override
 	public ModelAndView getImageManagerView() {
 		ModelAndView v = new ModelAndView("aiArtJSP/aiArtImageWallManager");
-		AiArtImageWallResult wall = aiArtService.getImageWall();
+		AiArtImageWallResult wall = aiArtService.getImageWallRandomSub();
 		v.addObject("imgVoList", wall.getImgVoList());
 		return v;
 	}

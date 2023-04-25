@@ -26,6 +26,7 @@ public class AiArtOptionService extends CommonService {
 	private String textToImageParameterSavingFolder;
 	private String imageWallFilePath;
 	private Integer imageWallMaxSize;
+	private Integer imageWallOnShowMaxSize;
 	private Integer maxHeight;
 	private Integer maxWidth;
 	private Integer maxBatch;
@@ -91,6 +92,14 @@ public class AiArtOptionService extends CommonService {
 
 	public void setImageWallMaxSize(Integer imageWallMaxSize) {
 		this.imageWallMaxSize = imageWallMaxSize;
+	}
+
+	public Integer getImageWallOnShowMaxSize() {
+		return imageWallOnShowMaxSize;
+	}
+
+	public void setImageWallOnShowMaxSize(Integer imageWallOnShowMaxSize) {
+		this.imageWallOnShowMaxSize = imageWallOnShowMaxSize;
 	}
 
 	public Integer getMaxHeight() {
@@ -233,11 +242,12 @@ public class AiArtOptionService extends CommonService {
 	public String toString() {
 		return "AiArtOptionService [mainUrl=" + mainUrl + ", generateImageResultFolder=" + generateImageResultFolder
 				+ ", textToImageParameterSavingFolder=" + textToImageParameterSavingFolder + ", imageWallFilePath="
-				+ imageWallFilePath + ", imageWallMaxSize=" + imageWallMaxSize + ", maxHeight=" + maxHeight
-				+ ", maxWidth=" + maxWidth + ", maxBatch=" + maxBatch + ", maxCfgScale=" + maxCfgScale + ", maxSteps="
-				+ maxSteps + ", maxDailyFreeJobCount=" + maxDailyFreeJobCount + ", maxPromptLength=" + maxPromptLength
-				+ ", maxFailCountForJob=" + maxFailCountForJob + ", isRunning=" + isRunning + ", maxShowJob="
-				+ maxShowJob + ", maxJobLivingDay=" + maxJobLivingDay + ", maxLivingMinuteOfApiImageAfterFirstVisit="
+				+ imageWallFilePath + ", imageWallMaxSize=" + imageWallMaxSize + ", imageWallOnShowMaxSize="
+				+ imageWallOnShowMaxSize + ", maxHeight=" + maxHeight + ", maxWidth=" + maxWidth + ", maxBatch="
+				+ maxBatch + ", maxCfgScale=" + maxCfgScale + ", maxSteps=" + maxSteps + ", maxDailyFreeJobCount="
+				+ maxDailyFreeJobCount + ", maxPromptLength=" + maxPromptLength + ", maxFailCountForJob="
+				+ maxFailCountForJob + ", isRunning=" + isRunning + ", maxShowJob=" + maxShowJob + ", maxJobLivingDay="
+				+ maxJobLivingDay + ", maxLivingMinuteOfApiImageAfterFirstVisit="
 				+ maxLivingMinuteOfApiImageAfterFirstVisit + ", consumptionCoefficient=" + consumptionCoefficient
 				+ ", imagePkInsteadOfNsfw=" + imagePkInsteadOfNsfw + ", apiKeyOfAdmin=" + apiKeyOfAdmin + ", idOfAdmin="
 				+ idOfAdmin + ", maxWaitingJobCount=" + maxWaitingJobCount + ", nsfwPrompt=" + nsfwPrompt + "]";

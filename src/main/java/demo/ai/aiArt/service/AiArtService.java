@@ -33,9 +33,9 @@ public interface AiArtService {
 
 	void loadImageWallToCache();
 
-	AiArtImageWallResult getImageWall();
+	AiArtImageWallResult getImageWallRandomSub();
 
-	AiArtImageWallResult getImageWall(Boolean refresh);
+	AiArtImageWallResult getImageWallFull(Boolean refresh);
 
 	SendTextToImgJobResult generateOtherLikeThat(AiArtGenerateOtherLikeThatDTO dto);
 

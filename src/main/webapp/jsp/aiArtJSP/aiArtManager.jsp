@@ -9,6 +9,7 @@
 <html>
 
   <head>
+    <title>${ title }AI art manager</title>
     <%@ include file="../baseElementJSP/normalHeader.jsp" %>
     <%@ include file="../baseElementJSP/normalJSPart.jsp" %>
   </head>
@@ -423,8 +424,10 @@
         tr += "<td>";
         tr += "<label>jobPk: "+vo.jobPk+"</label><br>";
         tr += "<label>aiUserPk: "+vo.aiUserPk+"</label><br>";
+        tr += "<label>user nsfw today counting: "+vo.nsfwJobCounting+"</label><br>";
+        tr += "<label><button class='btn btn-sm btn-success' name='unlockUser' userPk='"+vo.aiUserPk+"'>Unlock</button> <button class='btn btn-sm btn-danger' name='blockUser' userPk='"+vo.aiUserPk+"'>Block</button></label><br>";
         tr += "<label>createTimeStr: "+vo.createTimeStr+"</label><br>";
-        tr += "<label>job status: " + vo.jobStatus + "</label><br>";
+        tr += "<label>job status: " + vo.jobStatus + " run count: " + vo.runCount + "</label><br>";
         tr += "<label>is free job: " + vo.isFreeJob + "</label><br>";
         if(vo.hasReview == false){
           tr += "<label class='badge badge-sm badge-danger'>has review: " + vo.hasReview + "</label><br>";
@@ -432,7 +435,6 @@
         } else {
           tr += "<label class='badge badge-sm'>has review: " + vo.hasReview + "</label><br>";
         }
-        tr += "<label>run count: " + vo.runCount + "</label><br>";
         tr += "<label>is delete: " + vo.isDelete + "</label><br>";
         if(vo.isFromApi == false){
           tr += "<label class='badge badge-sm badge-danger'>is from API: " + vo.isFromApi + "</label><br>";
@@ -442,8 +444,10 @@
         tr += "</td>";
         if(parameter){
           tr += "<td>";
-          tr += "<label>prompts: "+parameter.prompts+"</label><br>";
-          tr += "<label>negativePrompts: "+parameter.negativePrompts+"</label><br>";
+          var prompts = parameter.prompts.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+          tr += "<label>prompts: "+prompts+"</label><br>";
+          var negativePrompts = parameter.negativePrompts.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+          tr += "<label>negativePrompts: "+negativePrompts+"</label><br>";
           tr += "</td>";
           tr += "<td>";
           tr += "<label>sampler: "+parameter.sampler+"</label><br>";
@@ -474,6 +478,83 @@
         var jobResultList = $("#jobResult");
         jobResultList.append(tr);
         jobResultList.attr("lastJobPk", vo.jobPk);
+
+        $("button[name='blockUser'][userPk='"+vo.aiUserPk+"']").bind("click", function() {
+          blockUser(vo.aiUserPk);
+        });
+        $("button[name='unlockUser'][userPk='"+vo.aiUserPk+"']").bind("click", function() {
+          unlockUser(vo.aiUserPk);
+        });
+      }
+
+      function blockUser(userPk){
+        var url = "/aiChatManager/blockUserByPk";
+
+        var jsonOutput = {
+          pk:userPk,
+        };
+
+        console.log(jsonOutput);
+  
+        $.ajax({
+          type : "POST",
+          async : true,
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          cache : false,
+          contentType: "application/json",
+          dataType: "json",
+          timeout:50000,
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          success:function(datas){
+            console.log(datas);
+            if (datas.code == 0) {
+              $("#result").text("Block: " + userPk);
+            } else {
+              $("#result").text(datas.message);
+            }
+          },
+          error: function(datas) {
+            
+          }
+        });
+      }
+
+      function unlockUser(userPk){
+        var url = "/aiChatManager/unlockUserByPk";
+
+        var jsonOutput = {
+          pk:userPk,
+        };
+
+        console.log(jsonOutput);
+  
+        $.ajax({
+          type : "POST",
+          async : true,
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          cache : false,
+          contentType: "application/json",
+          dataType: "json",
+          timeout:50000,
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          success:function(datas){
+            console.log(datas);
+            if (datas.code == 0) {
+              $("#result").text("Unlock: " + userPk);
+            } else {
+              $("#result").text(datas.message);
+            }
+          },
+          error: function(datas) {
+            
+          }
+        });
       }
 
 

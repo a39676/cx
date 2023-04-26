@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
-import ai.aiArt.pojo.dto.TextToImageFromDTO;
+import ai.aiArt.pojo.dto.TextToImageDTO;
 import ai.aiArt.pojo.result.AiArtGenerateImageResult;
 import ai.aiArt.pojo.result.AiArtImageWallResult;
 import ai.aiArt.pojo.result.GetJobResultList;
@@ -29,6 +29,9 @@ import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecordExample;
 import demo.ai.aiArt.service.AiArtCommonService;
 import demo.ai.aiArt.service.AiArtManagerService;
 import demo.ai.aiArt.service.AiArtService;
+import demo.ai.aiChat.mapper.AiChatUserAssociateWechatUidMapper;
+import demo.ai.aiChat.pojo.po.AiChatUserAssociateWechatUidExample;
+import demo.ai.aiChat.pojo.po.AiChatUserAssociateWechatUidKey;
 import demo.image.service.ImageService;
 
 @Service
@@ -38,6 +41,9 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 	private AiArtService aiArtService;
 	@Autowired
 	private ImageService imageService;
+
+	@Autowired
+	private AiChatUserAssociateWechatUidMapper aiChatUserAssociateWechatUidMapper;
 
 	@Override
 	public ModelAndView getManagerView() {
@@ -122,7 +128,7 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 		}
 
 		AiArtGenerateImageVO jobResultVO = jobResultList.getJobResultList().get(0);
-		TextToImageFromDTO parameter = jobResultVO.getParameter();
+		TextToImageDTO parameter = jobResultVO.getParameter();
 
 		Long imgId = systemOptionService.decryptPrivateKey(dto.getImgPk());
 		Long jobId = systemOptionService.decryptPrivateKey(dto.getJobPk());
@@ -146,6 +152,8 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 			}
 		}
 
+		addNsfwJobCounting(userId);
+
 		parameter.setJobId(jobId);
 		saveAiArtGenerateImgResultJson(parameter, imgPkList);
 
@@ -153,7 +161,7 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 		if (!jobPO.getIsFreeJob()) {
 			BigDecimal totalTokens = calculateTokenCost(parameter);
 			BigDecimal returnTokens = totalTokens.divide(new BigDecimal(parameter.getBatchSize()), RoundingMode.FLOOR)
-					.multiply(new BigDecimal(0.95));
+					.multiply(new BigDecimal(0.98));
 			aiChatUserService.recharge(userId, AiChatAmountType.BONUS, returnTokens);
 		}
 
@@ -167,7 +175,7 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 		AiArtImageOnWallVO vo = new AiArtImageOnWallVO();
 		vo.setJobPk(dto.getJobPk());
 		vo.setImgPk(dto.getImgPk());
-		AiArtImageWallResult imageWallDTO = aiArtCacheService.getImageWall();
+		AiArtImageWallResult imageWallDTO = aiArtService.getImageWallFull(true);
 		if (imageWallDTO == null) {
 			imageWallDTO = new AiArtImageWallResult();
 		}
@@ -266,6 +274,17 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 
 		if (updateCount == 1) {
 			r.setIsSuccess();
+		}
+
+		noticeTag: if (hasNoticeWhenCompleteMark(jobPO.getAiUserId(), jobId)) {
+			AiChatUserAssociateWechatUidExample associateExample = new AiChatUserAssociateWechatUidExample();
+			associateExample.createCriteria().andAiChatUserIdEqualTo(jobPO.getAiUserId());
+			List<AiChatUserAssociateWechatUidKey> associateList = aiChatUserAssociateWechatUidMapper
+					.selectByExample(associateExample);
+			if (associateList.isEmpty()) {
+				break noticeTag;
+			}
+			wechatSdkForInterService.sendTemplateMessageAiArtTxtToImgComplete(associateList.get(0).getWechatId());
 		}
 
 		return r;

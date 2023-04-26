@@ -22,6 +22,7 @@ public class AiArtTaskService extends ToolCommonService {
 	public void rerun() {
 		if (aiArtOptionService.getIsRunning()) {
 			aiArtService.rerun();
+			aiArtManagerService.setReviewBatchForAdmin();
 			aiArtService.sendNoticeIfAnyJobsWaitingForReview();
 		}
 	}
@@ -30,7 +31,6 @@ public class AiArtTaskService extends ToolCommonService {
 	public void insertJobToKeepLive() {
 		if (aiArtOptionService.getIsRunning()) {
 			aiArtService.__sendRandomGenerateJob();
-			aiArtManagerService.setReviewBatchForAdmin();
 		}
 	}
 

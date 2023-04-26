@@ -18,13 +18,14 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ai.aiArt.pojo.dto.TextToImageFromDTO;
+import ai.aiArt.pojo.dto.TextToImageDTO;
 import ai.aiArt.pojo.dto.TextToImageFromWechatDTO;
 import ai.aiArt.pojo.result.AiArtGenerateImageResult;
 import ai.aiArt.pojo.result.AiArtImageWallResult;
 import ai.aiArt.pojo.result.GetJobResultList;
 import ai.aiArt.pojo.result.SendTextToImgJobResult;
 import ai.aiArt.pojo.type.AiArtJobStatusType;
+import ai.aiArt.pojo.type.AiArtSamplerType;
 import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
 import ai.aiArt.pojo.vo.AiArtImageOnWallVO;
 import auxiliaryCommon.pojo.result.CommonResult;
@@ -37,9 +38,6 @@ import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecordExample;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecordExample.Criteria;
 import demo.ai.aiArt.service.AiArtCommonService;
 import demo.ai.aiArt.service.AiArtService;
-import demo.ai.aiChat.mapper.AiChatUserAssociateWechatUidMapper;
-import demo.ai.aiChat.pojo.po.AiChatUserAssociateWechatUidExample;
-import demo.ai.aiChat.pojo.po.AiChatUserAssociateWechatUidKey;
 import demo.ai.aiChat.pojo.po.AiChatUserDetail;
 import demo.common.pojo.dto.BaseDTO;
 import demo.image.pojo.type.ImageTagType;
@@ -55,15 +53,12 @@ import wechatSdk.pojo.type.WechatSdkCommonResultType;
 public class AiArtServiceImpl extends AiArtCommonService implements AiArtService {
 
 	@Autowired
-	private AiArtColabUtil aiArtColabUtil;
+	private AiArtAutomaticUtil aiArtColabUtil;
 
 	@Autowired
 	private AiArtTextToImageProducer aiArtTextToImageProducer;
 	@Autowired
 	private FileUtilCustom fileUtilCustom;
-
-	@Autowired
-	private AiChatUserAssociateWechatUidMapper aiChatUserAssociateWechatUidMapper;
 
 	@Override
 	public SendTextToImgJobResult sendTextToImgFromWechatDtoToMq(TextToImageFromWechatDTO dto) {
@@ -81,19 +76,19 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			return r;
 		}
 
-		noticeTag: if (dto.getNoticeWhenComplete() != null && dto.getNoticeWhenComplete()) {
-			AiChatUserAssociateWechatUidExample associateExample = new AiChatUserAssociateWechatUidExample();
-			associateExample.createCriteria().andAiChatUserIdEqualTo(aiChatUserId);
-			List<AiChatUserAssociateWechatUidKey> associateList = aiChatUserAssociateWechatUidMapper
-					.selectByExample(associateExample);
-			if (associateList.isEmpty()) {
-				break noticeTag;
-			}
-			wechatSdkForInterService.sendTemplateMessageAiArtTxtToImgComplete(associateList.get(0).getWechatId());
+		AiChatUserDetail aiUser = aiChatUserService.__getUserDetail(aiChatUserId);
+		if (aiUser == null || aiUser.getIsBlock() || aiUser.getIsDelete()) {
+			r.setMessage("暂时无法为您新增绘图任务, 请返回微信给管理员留言; 请勿频繁生成违规内容, 谢谢!");
+			return r;
 		}
 
 		extendTmpKeyValidity(Long.parseLong(dto.getTmpKey()));
-		return sendTextToImgDtoToMq(aiChatUserId, dto, false);
+		SendTextToImgJobResult addJobResult = sendTextToImgDtoToMq(aiChatUserId, dto, false);
+
+		if (dto.getNoticeWhenComplete() != null && dto.getNoticeWhenComplete() && addJobResult.isSuccess()) {
+			addNoticeWhenCompleteMark(aiChatUserId, systemOptionService.decryptPrivateKey(addJobResult.getJobPk()));
+		}
+		return addJobResult;
 	}
 
 	@Override
@@ -113,7 +108,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		return sendTextToImgDtoToMq(aiChatUserId, dto, true);
 	}
 
-	private SendTextToImgJobResult sendTextToImgDtoToMq(Long aiUserId, TextToImageFromDTO dto, boolean isFromApi) {
+	private SendTextToImgJobResult sendTextToImgDtoToMq(Long aiUserId, TextToImageDTO dto, boolean isFromApi) {
 		SendTextToImgJobResult r = new SendTextToImgJobResult();
 
 		Integer jobCounting = getJobCounting(aiUserId);
@@ -167,6 +162,12 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			}
 		}
 
+		AiArtSamplerType samplerType = AiArtSamplerType.getType(dto.getSampler());
+		if (samplerType == null) {
+			samplerType = AiArtSamplerType.Euler_A;
+			dto.setSampler(samplerType.getName());
+		}
+
 		AiArtTextToImageJobRecordExample example = new AiArtTextToImageJobRecordExample();
 		Criteria waiting = example.createCriteria();
 		waiting.andAiUserIdEqualTo(aiUserId).andJobStatusEqualTo(AiArtJobStatusType.WAITING.getCode().byteValue());
@@ -218,7 +219,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		return r;
 	}
 
-	private CommonResult saveTextToImgParameterDTO(TextToImageFromDTO dto) {
+	private CommonResult saveTextToImgParameterDTO(TextToImageDTO dto) {
 		CommonResult r = new CommonResult();
 		String folderPathStr = aiArtOptionService.getTextToImageParameterSavingFolder();
 		File mainFolder = new File(folderPathStr);
@@ -264,7 +265,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		}
 		String parameterPathStr = getParameterPathByJobId(jobId);
 		String content = fileUtilCustom.getStringFromFile(parameterPathStr);
-		TextToImageFromDTO parameterDTO = buildObjFromJsonCustomization(content, TextToImageFromDTO.class);
+		TextToImageDTO parameterDTO = buildObjFromJsonCustomization(content, TextToImageDTO.class);
 		CommonResult txtToImgResult = null;
 		if (systemOptionService.isDev() && !aiArtOptionService.getIsRunning()) {
 			txtToImgResult = sendTxtToImgRequestWhenDev(parameterDTO);
@@ -296,7 +297,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		return txtToImgResult;
 	}
 
-	private CommonResult sendTxtToImgRequestWhenDev(TextToImageFromDTO dto) {
+	private CommonResult sendTxtToImgRequestWhenDev(TextToImageDTO dto) {
 		AiArtTextToImageJobRecord jobPO = aiArtTextToImageJobRecordMapper.selectByPrimaryKey(dto.getJobId());
 		jobPO.setJobStatus(AiArtJobStatusType.SUCCESS.getCode().byteValue());
 		jobPO.setRunCount(jobPO.getRunCount() + 1);
@@ -304,7 +305,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 //		Need old DTO for save, bug send SFW DTO to generate images
 		@SuppressWarnings("unused")
-		TextToImageFromDTO dtoForSending = null;
+		TextToImageDTO dtoForSending = null;
 		if (!dto.getIsFromApi()) {
 			dtoForSending = handleParamaterDTOFromWechat(dto);
 		} else {
@@ -322,11 +323,11 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		return r;
 	}
 
-	private CommonResult sendTxtToImgRequest(TextToImageFromDTO dto) {
+	private CommonResult sendTxtToImgRequest(TextToImageDTO dto) {
 		CommonResult r = new CommonResult();
 
 		// Need old DTO for save, bug send SFW DTO to generate images
-		TextToImageFromDTO dtoForSending = null;
+		TextToImageDTO dtoForSending = null;
 		if (!dto.getIsFromApi()) {
 			dtoForSending = handleParamaterDTOFromWechat(dto);
 		} else {
@@ -372,8 +373,8 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 	}
 
-	private TextToImageFromDTO handleParamaterDTOFromWechat(TextToImageFromDTO dto) {
-		TextToImageFromDTO newDTO = new TextToImageFromDTO();
+	private TextToImageDTO handleParamaterDTOFromWechat(TextToImageDTO dto) {
+		TextToImageDTO newDTO = new TextToImageDTO();
 		BeanUtils.copyProperties(dto, newDTO);
 
 		String filterPrompts = promptsNsfwFilter(dto.getPrompts());
@@ -505,7 +506,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		Set<Long> targetIdSet = new HashSet<>();
 		AiArtTextToImageJobRecordExample example = new AiArtTextToImageJobRecordExample();
 		example.createCriteria().andJobStatusEqualTo(AiArtJobStatusType.SUCCESS.getCode().byteValue())
-				.andCreateTimeGreaterThan(LocalDateTime.now().minusDays(3));
+				.andHasReviewEqualTo(true).andCreateTimeGreaterThan(LocalDateTime.now().minusDays(3));
 		List<AiArtTextToImageJobRecord> list = aiArtTextToImageJobRecordMapper.selectByExample(example);
 		for (AiArtTextToImageJobRecord po : list) {
 			targetIdSet.add(po.getId());
@@ -609,9 +610,9 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			String content = fileUtilCustom.getStringFromFile(aiArtOptionService.getImageWallFilePath());
 			AiArtImageWallResult dto = null;
 			if (content == null || StringUtils.isBlank(content)) {
-				dto = buildObjFromJsonCustomization(content, AiArtImageWallResult.class);
-			} else {
 				dto = new AiArtImageWallResult();
+			} else {
+				dto = buildObjFromJsonCustomization(content, AiArtImageWallResult.class);
 			}
 			if (dto.getImgVoList() == null) {
 				dto.setImgVoList(new ArrayList<>());
@@ -624,7 +625,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 	@Override
 	public AiArtImageWallResult getImageWallRandomSub() {
-		AiArtImageWallResult fullResult = getImageWallFull(false);
+		AiArtImageWallResult fullResult = getImageWallFull(null);
 		List<AiArtImageOnWallVO> voList = fullResult.getImgVoList();
 		if (fullResult.getImgVoList().isEmpty()
 				&& aiArtOptionService.getImageWallOnShowMaxSize() > fullResult.getImgVoList().size()) {
@@ -678,8 +679,10 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			return r;
 		}
 
-		TextToImageFromDTO oldParameter = jobResult.getParameter();
-		oldParameter.setBatchSize(1);
+		TextToImageDTO oldParameter = jobResult.getParameter();
+		oldParameter.setBatchSize(2);
+		// Generate two images, in case of a terrible output, there will be an other
+		// better one
 
 		if (isBigUser()) {
 			TextToImageFromApiDTO paramDTO = new TextToImageFromApiDTO();
@@ -721,7 +724,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			return;
 		}
 
-		TextToImageFromDTO oldParameter = jobResult.getParameter();
+		TextToImageDTO oldParameter = jobResult.getParameter();
 		oldParameter.setBatchSize(4);
 
 		TextToImageFromApiDTO paramDTO = new TextToImageFromApiDTO();
@@ -740,4 +743,5 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			sendTelegramMessage(list.size() + " jobs waiting for review");
 		}
 	}
+
 }

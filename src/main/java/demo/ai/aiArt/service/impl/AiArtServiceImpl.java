@@ -199,6 +199,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			return r;
 		}
 
+		addJobInQueueMark(jobId);
 		aiArtTextToImageProducer.send(jobId);
 
 		if (!aiArtOptionService.getIdOfAdmin().equals(aiUserId)) {
@@ -258,14 +259,28 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	@Override
 	public CommonResult txtToImgByJobId(Long jobId) {
 		AiArtTextToImageJobRecord jobPO = aiArtTextToImageJobRecordMapper.selectByPrimaryKey(jobId);
+		CommonResult r = new CommonResult();
 		if (jobPO == null || AiArtJobStatusType.SUCCESS.getCode().byteValue() == jobPO.getJobStatus()) {
-			CommonResult r = new CommonResult();
 			r.setMessage("Job had done");
 			return r;
 		}
 		String parameterPathStr = getParameterPathByJobId(jobId);
 		String content = fileUtilCustom.getStringFromFile(parameterPathStr);
 		TextToImageDTO parameterDTO = buildObjFromJsonCustomization(content, TextToImageDTO.class);
+
+		Long aiUserId = jobPO.getAiUserId();
+		AiChatUserDetail userDetail = aiChatUserService.__getUserDetail(aiUserId);
+		int totalAmount = userDetail.getBonusAmount().intValue() + userDetail.getRechargeAmount().intValue();
+		if (totalAmount <= 0) {
+			r.setMessage("余额不足, 请到个人中心购买充值包 签到, 或留意其他活动");
+			jobPO.setRunCount(aiArtOptionService.getMaxFailCountForJob());
+			jobPO.setJobStatus(AiArtJobStatusType.FAILED_BY_AMOUNT_NOT_ENOUGH.getCode().byteValue());
+			jobPO.setHasReview(true);
+			aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
+			minusJobCounting(jobPO.getAiUserId());
+			return r;
+		}
+
 		CommonResult txtToImgResult = null;
 		if (systemOptionService.isDev() && !aiArtOptionService.getIsRunning()) {
 			txtToImgResult = sendTxtToImgRequestWhenDev(parameterDTO);
@@ -284,6 +299,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			if (jobCounting > aiArtOptionService.getMaxDailyFreeJobCount()) {
 				aiChatUserService.__debitAmountAndAddTokenUsage(jobPO.getAiUserId(), imgGeneratingRecord.getTokens());
 			}
+			removeJobInQueueMark(jobId);
 
 		} else {
 			if (jobPO.getRunCount() + 1 == aiArtOptionService.getMaxFailCountForJob()) {
@@ -452,7 +468,10 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			return;
 		}
 		for (AiArtTextToImageJobRecord po : poList) {
-			aiArtTextToImageProducer.send(po.getId());
+			if (!isJobInQueue(po.getId())) {
+				addJobInQueueMark(po.getId());
+				aiArtTextToImageProducer.send(po.getId());
+			}
 		}
 	}
 

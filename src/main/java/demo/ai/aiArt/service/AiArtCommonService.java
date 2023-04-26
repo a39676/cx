@@ -56,6 +56,7 @@ public abstract class AiArtCommonService extends AiCommonService {
 	private RedisOriginalConnectService redisConnectService;
 
 	private final String AI_ART_JOB_COUNTING_REDIS_KEY_PREFIX = "aiArtJobCounting_";
+	private final String AI_ART_JOB_IN_QUEUE_KEY_PREFIX = "aiArtJobInQueue_";
 	private final String AI_ART_NSFW_JOB_COUNTING_REDIS_KEY_PREFIX = "aiArtNsfwJobCounting_";
 	private final String AI_ART_NOTICE_WHEN_COMPLETE_PREFIX = "aiArtNoticeWhenComplete_";
 
@@ -112,6 +113,24 @@ public abstract class AiArtCommonService extends AiCommonService {
 		redisConnectService.setValByName(
 				AI_ART_NOTICE_WHEN_COMPLETE_PREFIX + String.valueOf(aiUserId) + "_" + String.valueOf(jobId), "", 3,
 				TimeUnit.DAYS);
+	}
+
+	protected void removeNoticeWhenCompleteMark(Long aiUserId, Long jobId) {
+		redisConnectService.deleteValByName(
+				AI_ART_NOTICE_WHEN_COMPLETE_PREFIX + String.valueOf(aiUserId) + "_" + String.valueOf(jobId));
+	}
+
+	protected void addJobInQueueMark(Long jobId) {
+		redisConnectService.setValByName(AI_ART_JOB_IN_QUEUE_KEY_PREFIX + "_" + String.valueOf(jobId), "", 1,
+				TimeUnit.DAYS);
+	}
+	
+	protected void removeJobInQueueMark(Long jobId) {
+		redisConnectService.deleteValByName(AI_ART_JOB_IN_QUEUE_KEY_PREFIX + "_" + String.valueOf(jobId));
+	}
+	
+	protected boolean isJobInQueue(Long jobId) {
+		return redisConnectService.hasKey(AI_ART_JOB_IN_QUEUE_KEY_PREFIX + "_" + String.valueOf(jobId));
 	}
 
 	protected boolean hasNoticeWhenCompleteMark(Long aiUserId, Long jobId) {

@@ -284,6 +284,7 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 			if (associateList.isEmpty()) {
 				break noticeTag;
 			}
+			removeNoticeWhenCompleteMark(jobPO.getAiUserId(), jobId);
 			wechatSdkForInterService.sendTemplateMessageAiArtTxtToImgComplete(associateList.get(0).getWechatId());
 		}
 

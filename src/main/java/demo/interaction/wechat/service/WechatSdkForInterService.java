@@ -10,4 +10,6 @@ public interface WechatSdkForInterService {
 
 	List<WechatQrcodeDetail> __getAllQrCode();
 
+	void sendTemplateMessageAiArtTxtToImgComplete(Long wechatUserId);
+
 }

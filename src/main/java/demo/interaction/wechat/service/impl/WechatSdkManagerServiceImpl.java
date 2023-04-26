@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import demo.interaction.wechat.service.WechatSdkManagerService;
-import wechatSdk.pojo.dto.UpdateWechatOptionDTO;
+import wechatSdk.pojo.dto.WechatUpdateOptionDTO;
 
 @Service
 public class WechatSdkManagerServiceImpl extends WechatCommonService implements WechatSdkManagerService {
@@ -16,7 +16,7 @@ public class WechatSdkManagerServiceImpl extends WechatCommonService implements 
 	@Override
 	public EncryptDTO getWechatSdkWechatOption(EncryptDTO encryptedDTO) {
 		String managerCode = decryptEncryptDTO(encryptedDTO, String.class);
-		UpdateWechatOptionDTO dto = new UpdateWechatOptionDTO();
+		WechatUpdateOptionDTO dto = new WechatUpdateOptionDTO();
 		if(!wechatOptionService.getManagerCode().equals(managerCode)) {
 			return encryptDTO(dto);
 		}

@@ -4,11 +4,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+
+import auxiliaryCommon.pojo.result.CommonResult;
+
 public interface ExceptionService {
 
-	ModelAndView handleCommonException(HttpServletRequest request, Exception e);
-
-	ModelAndView handleCommonException(HttpServletRequest request);
+	CommonResult handleCommonException(HttpServletRequest request, Exception e);
 
 	ModelAndView handle404Exception(HttpServletRequest request);
 
@@ -19,5 +21,9 @@ public interface ExceptionService {
 	void handleSQLErrorException(HttpServletRequest request, Exception e);
 
 	void handleRequestRejectedException(HttpServletRequest request, Exception e);
+
+	CommonResult handle415Exception(HttpServletRequest request);
+
+	CommonResult hadleUnrecognizedPropertyException(HttpServletRequest request, UnrecognizedPropertyException e);
 
 }

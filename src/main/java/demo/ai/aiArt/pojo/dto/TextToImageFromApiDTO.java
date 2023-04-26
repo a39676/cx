@@ -1,8 +1,8 @@
 package demo.ai.aiArt.pojo.dto;
 
-import ai.aiArt.pojo.dto.TextToImageFromDTO;
+import ai.aiArt.pojo.dto.TextToImageDTO;
 
-public class TextToImageFromApiDTO extends TextToImageFromDTO {
+public class TextToImageFromApiDTO extends TextToImageDTO {
 
 	private String apiKey;
 

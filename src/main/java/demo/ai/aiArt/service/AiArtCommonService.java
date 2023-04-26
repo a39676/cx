@@ -16,7 +16,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ai.aiArt.pojo.dto.TextToImageFromDTO;
+import ai.aiArt.pojo.dto.TextToImageDTO;
 import ai.aiArt.pojo.result.AiArtGenerateImageResult;
 import ai.aiArt.pojo.result.GetJobResultList;
 import ai.aiArt.pojo.type.AiArtJobStatusType;
@@ -55,15 +55,28 @@ public abstract class AiArtCommonService extends AiCommonService {
 	@Autowired
 	private RedisOriginalConnectService redisConnectService;
 
+	private final String AI_ART_JOB_COUNTING_REDIS_KEY_PREFIX = "aiArtJobCounting_";
+	private final String AI_ART_NSFW_JOB_COUNTING_REDIS_KEY_PREFIX = "aiArtNsfwJobCounting_";
+	private final String AI_ART_NOTICE_WHEN_COMPLETE_PREFIX = "aiArtNoticeWhenComplete_";
+
 	protected void addJobCounting(Long aiUserId) {
 		Integer count = getJobCounting(aiUserId);
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime todayMax = now.with(LocalTime.MAX);
 		long minutes = ChronoUnit.MINUTES.between(now, todayMax);
-		redisConnectService.setValByName(String.valueOf(aiUserId), String.valueOf(count + 1), minutes,
-				TimeUnit.MINUTES);
+		redisConnectService.setValByName(AI_ART_JOB_COUNTING_REDIS_KEY_PREFIX + String.valueOf(aiUserId),
+				String.valueOf(count + 1), minutes, TimeUnit.MINUTES);
 	}
-	
+
+	protected void addNsfwJobCounting(Long aiUserId) {
+		Integer count = getNsfwJobCounting(aiUserId);
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime todayMax = now.with(LocalTime.MAX);
+		long minutes = ChronoUnit.MINUTES.between(now, todayMax);
+		redisConnectService.setValByName(AI_ART_NSFW_JOB_COUNTING_REDIS_KEY_PREFIX + String.valueOf(aiUserId),
+				String.valueOf(count + 1), minutes, TimeUnit.MINUTES);
+	}
+
 	protected void minusJobCounting(Long aiUserId) {
 		Integer count = getJobCounting(aiUserId);
 		LocalDateTime now = LocalDateTime.now();
@@ -74,13 +87,36 @@ public abstract class AiArtCommonService extends AiCommonService {
 	}
 
 	protected Integer getJobCounting(Long aiUserId) {
-		String countStr = redisConnectService.getValByName(String.valueOf(aiUserId));
+		String countStr = redisConnectService
+				.getValByName(AI_ART_JOB_COUNTING_REDIS_KEY_PREFIX + String.valueOf(aiUserId));
 		Integer count = 0;
 		try {
 			count = Integer.parseInt(countStr);
 		} catch (Exception e) {
 		}
 		return count;
+	}
+
+	protected Integer getNsfwJobCounting(Long aiUserId) {
+		String countStr = redisConnectService
+				.getValByName(AI_ART_NSFW_JOB_COUNTING_REDIS_KEY_PREFIX + String.valueOf(aiUserId));
+		Integer count = 0;
+		try {
+			count = Integer.parseInt(countStr);
+		} catch (Exception e) {
+		}
+		return count;
+	}
+
+	protected void addNoticeWhenCompleteMark(Long aiUserId, Long jobId) {
+		redisConnectService.setValByName(
+				AI_ART_NOTICE_WHEN_COMPLETE_PREFIX + String.valueOf(aiUserId) + "_" + String.valueOf(jobId), "", 3,
+				TimeUnit.DAYS);
+	}
+
+	protected boolean hasNoticeWhenCompleteMark(Long aiUserId, Long jobId) {
+		return redisConnectService
+				.hasKey(AI_ART_NOTICE_WHEN_COMPLETE_PREFIX + String.valueOf(aiUserId) + "_" + String.valueOf(jobId));
 	}
 
 	protected AiArtGenerateImageVO buildAiArtGenerateImageVO(AiArtTextToImageJobRecord po,
@@ -103,6 +139,7 @@ public abstract class AiArtCommonService extends AiCommonService {
 			vo.setIsFreeJob(po.getIsFreeJob());
 			vo.setHasReview(po.getHasReview());
 			vo.setJobStatus(po.getJobStatus().intValue());
+			vo.setNsfwJobCounting(getNsfwJobCounting(po.getAiUserId()));
 		} else {
 			if (!po.getHasReview()) {
 				vo.setJobStatus(AiArtJobStatusType.WAITING.getCode());
@@ -119,8 +156,14 @@ public abstract class AiArtCommonService extends AiCommonService {
 				}
 			}
 			vo.setImgPkList(imgUrlList);
-			TextToImageFromDTO subParam = subResult.getParameter();
+			TextToImageDTO subParam = subResult.getParameter();
 			subParam.setJobId(null);
+//			if (subParam.getPrompts() != null) {
+//				subParam.setPrompts(
+//						subParam.getPrompts().replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+//				subParam.setNegativePrompts(subParam.getNegativePrompts().replaceAll("&", "&amp;")
+//						.replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+//			}
 			vo.setParameter(subParam);
 		}
 		return vo;
@@ -130,7 +173,7 @@ public abstract class AiArtCommonService extends AiCommonService {
 		String resultJsonSavePath = getJobResultStrPath(jobId);
 		String content = null;
 		File resultFile = new File(resultJsonSavePath);
-		if(!resultFile.exists()) {
+		if (!resultFile.exists()) {
 			return null;
 		}
 		content = fileUtilCustom.getStringFromFile(resultJsonSavePath);
@@ -143,13 +186,13 @@ public abstract class AiArtCommonService extends AiCommonService {
 		return resultJsonSavePath;
 	}
 
-	protected BigDecimal calculateTokenCost(TextToImageFromDTO dto) {
+	protected BigDecimal calculateTokenCost(TextToImageDTO dto) {
 		return new BigDecimal(dto.getWidth().longValue() * dto.getHeight().longValue() * dto.getSteps().longValue()
 				* dto.getBatchSize() * aiArtOptionService.getConsumptionCoefficient())
 				.setScale(0, RoundingMode.CEILING);
 	}
 
-	protected CommonResult saveAiArtGenerateImgResultJson(TextToImageFromDTO dto, List<String> imgPkList) {
+	protected CommonResult saveAiArtGenerateImgResultJson(TextToImageDTO dto, List<String> imgPkList) {
 		CommonResult r = new CommonResult();
 		AiArtGenerateImageResult result = new AiArtGenerateImageResult();
 		result.setParameter(dto);

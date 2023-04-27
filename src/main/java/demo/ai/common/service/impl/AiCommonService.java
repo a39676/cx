@@ -45,6 +45,8 @@ public abstract class AiCommonService extends ToolCommonService {
 
 	private final String dailySignUpRedisKey = "aiChatDailySignUp";
 	private final String sensitiveWordHitCountingRedisKeyPrefix = "senWordHitCount_";
+	private final String AI_SERVCIE_RECHARGE_REDIS_KEY_PREFIX = "aiServiceRecharge_";
+	
 
 	@Autowired
 	protected AiChatApiKeyMapper apiKeyMapper;
@@ -59,6 +61,15 @@ public abstract class AiCommonService extends ToolCommonService {
 		CommonResult r = new CommonResult();
 		r.setMessage("服务器正在拼命运算, 请稍后再试");
 		return r;
+	}
+	
+	protected void addRechargeMarkLiveAWeek(Long aiUserId) {
+		redisConnectService.setValByName(AI_SERVCIE_RECHARGE_REDIS_KEY_PREFIX + String.valueOf(aiUserId), "1", 7,
+				TimeUnit.DAYS);
+	}
+
+	protected Boolean checkRechargeMarkThisWeek(Long aiUserId) {
+		return redisConnectService.hasKey(AI_SERVCIE_RECHARGE_REDIS_KEY_PREFIX + String.valueOf(aiUserId));
 	}
 
 	protected void sendTelegramMessage(String msg) {

@@ -10,25 +10,19 @@ import org.springframework.stereotype.Component;
 
 import com.rabbitmq.client.Channel;
 
-import demo.ai.aiArt.pojo.constant.AiArtMqConstant;
+import ai.aiArt.pojo.constant.AiArtMqConstant;
 import demo.ai.aiArt.service.AiArtService;
 import demo.common.service.CommonService;
 
 @Component
-@RabbitListener(queues = AiArtMqConstant.AI_ART_TEXT_TO_IMAGE)
-public class AiArtTextToImageReceiver extends CommonService {
+@RabbitListener(queues = AiArtMqConstant.AI_ART_IMAGE_FEEDBACK)
+public class AutomaticImageFeedbackAckReceiver extends CommonService {
 
 	@Autowired
 	private AiArtService aiArtService;
 
 	@RabbitHandler
 	public void process(String messageStr, Channel channel, Message message) throws IOException {
-		try {
-			Long jobId = Long.parseLong(messageStr);
-			aiArtService.txtToImgByJobId(jobId);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		aiArtService.receiveImgJobResult(messageStr);
 	}
-
 }

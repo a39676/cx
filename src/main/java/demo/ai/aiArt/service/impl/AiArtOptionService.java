@@ -21,7 +21,6 @@ public class AiArtOptionService extends CommonService {
 
 	@Value("${optionFilePath.aiArt}")
 	private String optionFilePath;
-	private String mainUrl;
 	private String generateImageResultFolder;
 	private String textToImageParameterSavingFolder;
 	private String imageWallFilePath;
@@ -35,7 +34,6 @@ public class AiArtOptionService extends CommonService {
 	private Integer maxDailyFreeJobCount;
 	private Integer maxPromptLength;
 	private Integer maxFailCountForJob;
-	private Boolean isRunning;
 	private Integer maxShowJob;
 	private Integer maxJobLivingDay;
 	private Integer maxLivingMinuteOfApiImageAfterFirstVisit = 10;
@@ -52,14 +50,6 @@ public class AiArtOptionService extends CommonService {
 
 	public void setApiKeyOfAdmin(String apiKeyOfAdmin) {
 		this.apiKeyOfAdmin = apiKeyOfAdmin;
-	}
-
-	public String getMainUrl() {
-		return mainUrl;
-	}
-
-	public void setMainUrl(String mainUrl) {
-		this.mainUrl = mainUrl;
 	}
 
 	public String getGenerateImageResultFolder() {
@@ -158,14 +148,6 @@ public class AiArtOptionService extends CommonService {
 		this.maxFailCountForJob = maxFailCountForJob;
 	}
 
-	public Boolean getIsRunning() {
-		return isRunning;
-	}
-
-	public void setIsRunning(Boolean isRunning) {
-		this.isRunning = isRunning;
-	}
-
 	public Integer getMaxShowJob() {
 		return maxShowJob;
 	}
@@ -240,17 +222,17 @@ public class AiArtOptionService extends CommonService {
 
 	@Override
 	public String toString() {
-		return "AiArtOptionService [mainUrl=" + mainUrl + ", generateImageResultFolder=" + generateImageResultFolder
+		return "AiArtOptionService [generateImageResultFolder=" + generateImageResultFolder
 				+ ", textToImageParameterSavingFolder=" + textToImageParameterSavingFolder + ", imageWallFilePath="
 				+ imageWallFilePath + ", imageWallMaxSize=" + imageWallMaxSize + ", imageWallOnShowMaxSize="
 				+ imageWallOnShowMaxSize + ", maxHeight=" + maxHeight + ", maxWidth=" + maxWidth + ", maxBatch="
 				+ maxBatch + ", maxCfgScale=" + maxCfgScale + ", maxSteps=" + maxSteps + ", maxDailyFreeJobCount="
 				+ maxDailyFreeJobCount + ", maxPromptLength=" + maxPromptLength + ", maxFailCountForJob="
-				+ maxFailCountForJob + ", isRunning=" + isRunning + ", maxShowJob=" + maxShowJob + ", maxJobLivingDay="
-				+ maxJobLivingDay + ", maxLivingMinuteOfApiImageAfterFirstVisit="
-				+ maxLivingMinuteOfApiImageAfterFirstVisit + ", consumptionCoefficient=" + consumptionCoefficient
-				+ ", imagePkInsteadOfNsfw=" + imagePkInsteadOfNsfw + ", apiKeyOfAdmin=" + apiKeyOfAdmin + ", idOfAdmin="
-				+ idOfAdmin + ", maxWaitingJobCount=" + maxWaitingJobCount + ", nsfwPrompt=" + nsfwPrompt + "]";
+				+ maxFailCountForJob + ", maxShowJob=" + maxShowJob + ", maxJobLivingDay=" + maxJobLivingDay
+				+ ", maxLivingMinuteOfApiImageAfterFirstVisit=" + maxLivingMinuteOfApiImageAfterFirstVisit
+				+ ", consumptionCoefficient=" + consumptionCoefficient + ", imagePkInsteadOfNsfw="
+				+ imagePkInsteadOfNsfw + ", apiKeyOfAdmin=" + apiKeyOfAdmin + ", idOfAdmin=" + idOfAdmin
+				+ ", maxWaitingJobCount=" + maxWaitingJobCount + ", nsfwPrompt=" + nsfwPrompt + "]";
 	}
 
 	@PostConstruct

@@ -17,7 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ai.aiArt.pojo.dto.TextToImageDTO;
-import ai.aiArt.pojo.result.AiArtGenerateImageResult;
+import ai.aiArt.pojo.result.AiArtGenerateImageQueryResult;
 import ai.aiArt.pojo.result.GetJobResultList;
 import ai.aiArt.pojo.type.AiArtJobStatusType;
 import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
@@ -55,17 +55,18 @@ public abstract class AiArtCommonService extends AiCommonService {
 	@Autowired
 	private RedisOriginalConnectService redisConnectService;
 
-	private final String AI_ART_JOB_COUNTING_REDIS_KEY_PREFIX = "aiArtJobCounting_";
-	private final String AI_ART_JOB_IN_QUEUE_KEY_PREFIX = "aiArtJobInQueue_";
+	private final String AI_ART_FREE_JOB_COUNTING_OF_TODAY_REDIS_KEY_PREFIX = "aiArtFreeJobCountingOfToday_";
+	private final String AI_ART_FREE_JOB_COUNTING_OF_LAST_THREE_DAYS_REDIS_KEY_PREFIX = "aiArtFreeJobCountingOfLastThreeDays_";
+	private final String AI_ART_JOB_IN_QUEUE_REDIS_KEY_PREFIX = "aiArtJobInQueue_";
 	private final String AI_ART_NSFW_JOB_COUNTING_REDIS_KEY_PREFIX = "aiArtNsfwJobCounting_";
-	private final String AI_ART_NOTICE_WHEN_COMPLETE_PREFIX = "aiArtNoticeWhenComplete_";
+	private final String AI_ART_NOTICE_WHEN_COMPLETE_REDIS_KEY_PREFIX = "aiArtNoticeWhenComplete_";
 
-	protected void addJobCounting(Long aiUserId) {
-		Integer count = getJobCounting(aiUserId);
+	protected void addFreeJobCountingOfToday(Long aiUserId) {
+		Integer count = getFreeJobCountingOfToday(aiUserId);
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime todayMax = now.with(LocalTime.MAX);
 		long minutes = ChronoUnit.MINUTES.between(now, todayMax);
-		redisConnectService.setValByName(AI_ART_JOB_COUNTING_REDIS_KEY_PREFIX + String.valueOf(aiUserId),
+		redisConnectService.setValByName(AI_ART_FREE_JOB_COUNTING_OF_TODAY_REDIS_KEY_PREFIX + String.valueOf(aiUserId),
 				String.valueOf(count + 1), minutes, TimeUnit.MINUTES);
 	}
 
@@ -79,7 +80,7 @@ public abstract class AiArtCommonService extends AiCommonService {
 	}
 
 	protected void minusJobCounting(Long aiUserId) {
-		Integer count = getJobCounting(aiUserId);
+		Integer count = getFreeJobCountingOfToday(aiUserId);
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime todayMax = now.with(LocalTime.MAX);
 		long minutes = ChronoUnit.MINUTES.between(now, todayMax);
@@ -87,9 +88,27 @@ public abstract class AiArtCommonService extends AiCommonService {
 				TimeUnit.MINUTES);
 	}
 
-	protected Integer getJobCounting(Long aiUserId) {
+	protected Integer getFreeJobCountingOfToday(Long aiUserId) {
 		String countStr = redisConnectService
-				.getValByName(AI_ART_JOB_COUNTING_REDIS_KEY_PREFIX + String.valueOf(aiUserId));
+				.getValByName(AI_ART_FREE_JOB_COUNTING_OF_TODAY_REDIS_KEY_PREFIX + String.valueOf(aiUserId));
+		Integer count = 0;
+		try {
+			count = Integer.parseInt(countStr);
+		} catch (Exception e) {
+		}
+		return count;
+	}
+
+	protected void addFreeJobCountingOfLastThreeDays(Long aiUserId) {
+		Integer count = getFreeJobCountingOfLastThreeDays(aiUserId);
+		redisConnectService.setValByName(
+				AI_ART_FREE_JOB_COUNTING_OF_LAST_THREE_DAYS_REDIS_KEY_PREFIX + String.valueOf(aiUserId),
+				String.valueOf(count + 1), 3, TimeUnit.DAYS);
+	}
+
+	protected Integer getFreeJobCountingOfLastThreeDays(Long aiUserId) {
+		String countStr = redisConnectService
+				.getValByName(AI_ART_FREE_JOB_COUNTING_OF_LAST_THREE_DAYS_REDIS_KEY_PREFIX + String.valueOf(aiUserId));
 		Integer count = 0;
 		try {
 			count = Integer.parseInt(countStr);
@@ -111,40 +130,40 @@ public abstract class AiArtCommonService extends AiCommonService {
 
 	protected void addNoticeWhenCompleteMark(Long aiUserId, Long jobId) {
 		redisConnectService.setValByName(
-				AI_ART_NOTICE_WHEN_COMPLETE_PREFIX + String.valueOf(aiUserId) + "_" + String.valueOf(jobId), "", 3,
-				TimeUnit.DAYS);
+				AI_ART_NOTICE_WHEN_COMPLETE_REDIS_KEY_PREFIX + String.valueOf(aiUserId) + "_" + String.valueOf(jobId),
+				"", 3, TimeUnit.DAYS);
 	}
 
 	protected void removeNoticeWhenCompleteMark(Long aiUserId, Long jobId) {
 		redisConnectService.deleteValByName(
-				AI_ART_NOTICE_WHEN_COMPLETE_PREFIX + String.valueOf(aiUserId) + "_" + String.valueOf(jobId));
+				AI_ART_NOTICE_WHEN_COMPLETE_REDIS_KEY_PREFIX + String.valueOf(aiUserId) + "_" + String.valueOf(jobId));
 	}
 
 	protected void addJobInQueueMark(Long jobId) {
-		redisConnectService.setValByName(AI_ART_JOB_IN_QUEUE_KEY_PREFIX + "_" + String.valueOf(jobId), "", 1,
+		redisConnectService.setValByName(AI_ART_JOB_IN_QUEUE_REDIS_KEY_PREFIX + "_" + String.valueOf(jobId), "", 1,
 				TimeUnit.DAYS);
 	}
-	
+
 	protected void removeJobInQueueMark(Long jobId) {
-		redisConnectService.deleteValByName(AI_ART_JOB_IN_QUEUE_KEY_PREFIX + "_" + String.valueOf(jobId));
+		redisConnectService.deleteValByName(AI_ART_JOB_IN_QUEUE_REDIS_KEY_PREFIX + "_" + String.valueOf(jobId));
 	}
-	
+
 	protected boolean isJobInQueue(Long jobId) {
-		return redisConnectService.hasKey(AI_ART_JOB_IN_QUEUE_KEY_PREFIX + "_" + String.valueOf(jobId));
+		return redisConnectService.hasKey(AI_ART_JOB_IN_QUEUE_REDIS_KEY_PREFIX + "_" + String.valueOf(jobId));
 	}
 
 	protected boolean hasNoticeWhenCompleteMark(Long aiUserId, Long jobId) {
-		return redisConnectService
-				.hasKey(AI_ART_NOTICE_WHEN_COMPLETE_PREFIX + String.valueOf(aiUserId) + "_" + String.valueOf(jobId));
+		return redisConnectService.hasKey(
+				AI_ART_NOTICE_WHEN_COMPLETE_REDIS_KEY_PREFIX + String.valueOf(aiUserId) + "_" + String.valueOf(jobId));
 	}
 
 	protected AiArtGenerateImageVO buildAiArtGenerateImageVO(AiArtTextToImageJobRecord po,
-			AiArtGenerateImageResult subResult, String jobPk) {
+			AiArtGenerateImageQueryResult subResult, String jobPk) {
 		return __buildAiArtGenerateImageVO(po, subResult, jobPk);
 	}
 
 	private AiArtGenerateImageVO __buildAiArtGenerateImageVO(AiArtTextToImageJobRecord po,
-			AiArtGenerateImageResult subResult, String jobPk) {
+			AiArtGenerateImageQueryResult subResult, String jobPk) {
 		AiArtGenerateImageVO vo = new AiArtGenerateImageVO();
 		boolean forAdmin = isBigUser();
 		vo = new AiArtGenerateImageVO();
@@ -188,7 +207,7 @@ public abstract class AiArtCommonService extends AiCommonService {
 		return vo;
 	}
 
-	protected AiArtGenerateImageResult getJobResult(Long jobId) {
+	protected AiArtGenerateImageQueryResult getJobResult(Long jobId) {
 		String resultJsonSavePath = getJobResultStrPath(jobId);
 		String content = null;
 		File resultFile = new File(resultJsonSavePath);
@@ -196,7 +215,8 @@ public abstract class AiArtCommonService extends AiCommonService {
 			return null;
 		}
 		content = fileUtilCustom.getStringFromFile(resultJsonSavePath);
-		AiArtGenerateImageResult result = buildObjFromJsonCustomization(content, AiArtGenerateImageResult.class);
+		AiArtGenerateImageQueryResult result = buildObjFromJsonCustomization(content,
+				AiArtGenerateImageQueryResult.class);
 		return result;
 	}
 
@@ -213,7 +233,7 @@ public abstract class AiArtCommonService extends AiCommonService {
 
 	protected CommonResult saveAiArtGenerateImgResultJson(TextToImageDTO dto, List<String> imgPkList) {
 		CommonResult r = new CommonResult();
-		AiArtGenerateImageResult result = new AiArtGenerateImageResult();
+		AiArtGenerateImageQueryResult result = new AiArtGenerateImageQueryResult();
 		result.setParameter(dto);
 		result.setImgPkList(imgPkList);
 
@@ -260,8 +280,8 @@ public abstract class AiArtCommonService extends AiCommonService {
 			return r;
 		}
 
-		AiArtGenerateImageResult jobResult = getJobResult(jobId);
-		if (jobResult != null) {
+		AiArtGenerateImageQueryResult jobResult = getJobResult(jobId);
+		if (po.getIsFromApi() && jobResult != null) {
 			List<String> newImgPkList = new ArrayList<>();
 			for (String imgPk : jobResult.getImgPkList()) {
 				updateImageInvalidTimeByImgUrl(imgPk);
@@ -272,6 +292,11 @@ public abstract class AiArtCommonService extends AiCommonService {
 
 		AiArtGenerateImageVO vo = buildAiArtGenerateImageVO(po, jobResult, jobPk);
 		r.setJobResultList(new ArrayList<>());
+		if (!po.getIsFromApi() && !po.getHasReview()) {
+			vo.setJobStatus(AiArtJobStatusType.WAITING.getCode());
+			vo.setImgPkList(new ArrayList<>());
+		}
+
 		r.getJobResultList().add(vo);
 		r.setIsSuccess();
 		return r;

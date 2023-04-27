@@ -6,7 +6,6 @@ import ai.aiArt.pojo.dto.TextToImageFromWechatDTO;
 import ai.aiArt.pojo.result.AiArtImageWallResult;
 import ai.aiArt.pojo.result.GetJobResultList;
 import ai.aiArt.pojo.result.SendTextToImgJobResult;
-import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.pojo.dto.AiArtJobListFilterDTO;
 import demo.ai.aiArt.pojo.dto.TextToImageFromApiDTO;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecord;
@@ -16,8 +15,6 @@ import wechatSdk.pojo.dto.AiArtGenerateOtherLikeThatDTO;
 public interface AiArtService {
 
 	SendTextToImgJobResult sendTextToImgFromWechatDtoToMq(TextToImageFromWechatDTO dto);
-
-	CommonResult txtToImgByJobId(Long jobId);
 
 	void rerun();
 
@@ -48,5 +45,7 @@ public interface AiArtService {
 	List<AiArtTextToImageJobRecord> getJobResultPage(AiArtJobListFilterDTO dto);
 
 	void sendNoticeIfAnyJobsWaitingForReview();
+
+	void receiveImgJobResult(String txtToImgResultStr);
 
 }

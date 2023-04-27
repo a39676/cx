@@ -12,14 +12,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import ai.aiArt.pojo.dto.TextToImageDTO;
-import ai.aiArt.pojo.result.AiArtGenerateImageResult;
+import ai.aiArt.pojo.result.AiArtGenerateImageQueryResult;
 import ai.aiArt.pojo.result.AiArtImageWallResult;
 import ai.aiArt.pojo.result.GetJobResultList;
 import ai.aiArt.pojo.type.AiArtJobStatusType;
 import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
 import ai.aiArt.pojo.vo.AiArtImageOnWallVO;
 import ai.aiChat.pojo.type.AiChatAmountType;
-import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.pojo.dto.AddToImageWallDTO;
 import demo.ai.aiArt.pojo.dto.AiArtJobListFilterDTO;
@@ -48,34 +47,8 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 	@Override
 	public ModelAndView getManagerView() {
 		ModelAndView v = new ModelAndView("aiArtJSP/aiArtManager");
-		v.addObject("isRunning", aiArtOptionService.getIsRunning());
+		v.addObject("isRunning", aiArtCacheService.getIsRunning());
 		return v;
-	}
-
-	@Override
-	public CommonResult setRunningColab(BaseStrDTO dto) {
-		if (dto == null || StringUtils.isBlank(dto.getStr())) {
-			return new CommonResult();
-		}
-
-		if (!dto.getStr().startsWith("http")) {
-			dto.setStr("http://" + dto.getStr());
-		}
-		aiArtOptionService.setMainUrl(dto.getStr());
-		aiArtOptionService.setIsRunning(true);
-
-		CommonResult r = new CommonResult();
-		r.setIsSuccess();
-		return r;
-	}
-
-	@Override
-	public CommonResult setStopColab() {
-		aiArtOptionService.setMainUrl(null);
-		aiArtOptionService.setIsRunning(false);
-		CommonResult r = new CommonResult();
-		r.setIsSuccess();
-		return r;
 	}
 
 	@Override
@@ -86,7 +59,7 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 			r.setIsSuccess();
 			return r;
 		}
-		AiArtGenerateImageResult jobResult = null;
+		AiArtGenerateImageQueryResult jobResult = null;
 		List<AiArtGenerateImageVO> voList = new ArrayList<>();
 		for (AiArtTextToImageJobRecord po : jobPoList) {
 			if (AiArtJobStatusType.SUCCESS.getCode().equals(po.getJobStatus().intValue())) {

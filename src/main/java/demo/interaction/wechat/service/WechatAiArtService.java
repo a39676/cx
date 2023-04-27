@@ -8,4 +8,6 @@ public interface WechatAiArtService {
 
 	EncryptDTO generateOtherLikeThat(EncryptDTO encryptedDTO);
 
+	EncryptDTO getParameterByJobPk(EncryptDTO encryptedDTO);
+
 }

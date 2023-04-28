@@ -4,7 +4,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +26,11 @@ import ai.aiChat.pojo.type.AiChatAmountType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.pojo.dto.AddToImageWallDTO;
 import demo.ai.aiArt.pojo.dto.AiArtJobListFilterDTO;
+import demo.ai.aiArt.pojo.dto.AiUserDetailInRedisDTO;
 import demo.ai.aiArt.pojo.dto.SetInvalidImageAndRetunTokensDTO;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecord;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecordExample;
+import demo.ai.aiArt.pojo.result.GetJobResultListForReivew;
 import demo.ai.aiArt.service.AiArtCommonService;
 import demo.ai.aiArt.service.AiArtManagerService;
 import demo.ai.aiArt.service.AiArtService;
@@ -52,8 +58,8 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 	}
 
 	@Override
-	public GetJobResultList __getAiArtJobListForReview(AiArtJobListFilterDTO dto) {
-		GetJobResultList r = new GetJobResultList();
+	public GetJobResultListForReivew __getAiArtJobListForReview(AiArtJobListFilterDTO dto) {
+		GetJobResultListForReivew r = new GetJobResultListForReivew();
 		List<AiArtTextToImageJobRecord> jobPoList = aiArtService.getJobResultPage(dto);
 		if (jobPoList.isEmpty()) {
 			r.setIsSuccess();
@@ -61,13 +67,29 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 		}
 		AiArtGenerateImageQueryResult jobResult = null;
 		List<AiArtGenerateImageVO> voList = new ArrayList<>();
+		Set<Long> aiUserIdSet = new HashSet<>();
 		for (AiArtTextToImageJobRecord po : jobPoList) {
 			if (AiArtJobStatusType.SUCCESS.getCode().equals(po.getJobStatus().intValue())) {
 				jobResult = getJobResult(po.getId());
 			}
+			aiUserIdSet.add(po.getAiUserId());
 			voList.add(buildAiArtGenerateImageVO(po, jobResult, systemOptionService.encryptId(po.getId())));
 			jobResult = null;
 		}
+		
+		AiUserDetailInRedisDTO userDetailDTO = null;
+		Map<String, AiUserDetailInRedisDTO> userDetailInRedisMap = new HashMap<>();
+		for(Long aiUserId : aiUserIdSet) {
+			userDetailDTO = new AiUserDetailInRedisDTO();
+			userDetailDTO.setUserId(aiUserId);
+			userDetailDTO.setFreeJobCountingLastThreeDays(getFreeJobCountingOfLastThreeDays(aiUserId));
+			userDetailDTO.setFreeJobCountingToday(getFreeJobCountingOfToday(aiUserId));
+			userDetailDTO.setRechargeMarkThisWeek(getRechargeMarkThisWeek(aiUserId));
+			userDetailInRedisMap.put(systemOptionService.encryptId(aiUserId), userDetailDTO);
+		}
+		
+		r.setUserDetailInRedisMap(userDetailInRedisMap);
+		
 		r.setJobResultList(voList);
 		r.setIsSuccess();
 		return r;

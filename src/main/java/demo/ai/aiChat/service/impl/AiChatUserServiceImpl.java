@@ -224,9 +224,11 @@ public class AiChatUserServiceImpl extends AiCommonService implements AiChatUser
 					+ amountType.getName() + ", amount: " + amount);
 			return r;
 		}
-
-		addRechargeMarkLiveAWeek(aiChatUserId);
-
+		
+		if(AiChatAmountType.RECHARGE.equals(amountType)) {
+			addRechargeMarkLiveAWeek(aiChatUserId);
+		}
+		
 		r.setIsSuccess();
 		return r;
 	}

@@ -2,17 +2,17 @@ package demo.ai.aiArt.service;
 
 import org.springframework.web.servlet.ModelAndView;
 
-import ai.aiArt.pojo.result.GetJobResultList;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.pojo.dto.AddToImageWallDTO;
 import demo.ai.aiArt.pojo.dto.AiArtJobListFilterDTO;
 import demo.ai.aiArt.pojo.dto.SetInvalidImageAndRetunTokensDTO;
+import demo.ai.aiArt.pojo.result.GetJobResultListForReivew;
 
 public interface AiArtManagerService {
 
 	ModelAndView getManagerView();
 
-	GetJobResultList __getAiArtJobListForReview(AiArtJobListFilterDTO dto);
+	GetJobResultListForReivew __getAiArtJobListForReview(AiArtJobListFilterDTO dto);
 
 	CommonResult setInvalidImageAndRetunTokens(SetInvalidImageAndRetunTokensDTO dto);
 

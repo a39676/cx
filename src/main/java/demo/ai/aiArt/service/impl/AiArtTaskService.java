@@ -43,7 +43,8 @@ public class AiArtTaskService extends AiArtCommonService {
 
 	@Scheduled(fixedDelay = 1000L * 60)
 	public void checkAutomaticHeartBeat() {
-		if (aiArtCacheService.getLastHearBeatTime().isBefore(LocalDateTime.now().minusSeconds(90))) {
+		if (aiArtCacheService.getLastHearBeatTime() == null
+				|| aiArtCacheService.getLastHearBeatTime().isBefore(LocalDateTime.now().minusSeconds(90))) {
 			aiArtCacheService.setIsRunning(false);
 			sendTelegramMessage("Automatic SDK down");
 		}

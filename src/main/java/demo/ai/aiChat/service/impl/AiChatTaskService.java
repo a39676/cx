@@ -30,7 +30,7 @@ public class AiChatTaskService {
 		aiChatCacheService.setMembershipCacheMap(new HashMap<>());
 	}
 
-	@Scheduled(cron = "21 03 40 * * *")
+	@Scheduled(cron = "21 03 04 * * *")
 	public void tidyAiUserExtraDetail() {
 		aiChatUserService.tidyAiUserExtraDetail();
 	}

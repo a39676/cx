@@ -68,4 +68,6 @@ public interface AiChatUserService {
 
 	void tidyAiUserExtraDetail();
 
+	void updateUsedTokenToDetailInJson();
+
 }

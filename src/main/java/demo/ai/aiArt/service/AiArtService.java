@@ -36,8 +36,6 @@ public interface AiArtService {
 
 	SendTextToImgJobResult generateOtherLikeThat(AiArtGenerateOtherLikeThatDTO dto);
 
-	void __sendRandomGenerateJob();
-
 	List<AiArtTextToImageJobRecord> getJobResultPage(AiArtJobListFilterDTO dto, Long aiUserId);
 
 	List<AiArtTextToImageJobRecord> getJobResultPageForWechatUser(String lastJobPk, String tmpKey);

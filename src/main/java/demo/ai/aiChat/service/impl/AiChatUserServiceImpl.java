@@ -224,11 +224,11 @@ public class AiChatUserServiceImpl extends AiCommonService implements AiChatUser
 					+ amountType.getName() + ", amount: " + amount);
 			return r;
 		}
-		
-		if(AiChatAmountType.RECHARGE.equals(amountType)) {
+
+		if (AiChatAmountType.RECHARGE.equals(amountType)) {
 			addRechargeMarkLiveAWeek(aiChatUserId);
 		}
-		
+
 		r.setIsSuccess();
 		return r;
 	}
@@ -786,5 +786,36 @@ public class AiChatUserServiceImpl extends AiCommonService implements AiChatUser
 //			}
 //			refreshFlag = false;
 //		}
+	}
+
+	@Override
+	public void updateUsedTokenToDetailInJson() {
+		AiChatUserDetailExample example = new AiChatUserDetailExample();
+		example.createCriteria().andUsedTokensNotEqualTo(0);
+		List<AiChatUserDetail> userPoList = userDetailMapper.selectByExample(example);
+		if(userPoList.isEmpty()) {
+			return;
+		}
+		LocalDateTime now = LocalDateTime.now();
+		String yyyyMM = String.valueOf("" + now.getYear() + now.getMonthValue());
+		for(AiChatUserDetail user :userPoList) {
+			updateUsedTokenToDetailInJson(user.getId(), yyyyMM);
+		}
+	}
+
+	private void updateUsedTokenToDetailInJson(Long aiUserId, String yyyyMM) {
+		AiUserDetailInJsonDTO detailDTO = getAiUserDetailInJson(aiUserId);
+		AiChatUserDetail userDetail = userDetailMapper.selectByPrimaryKey(aiUserId);
+		Integer usedToken = userDetail.getUsedTokens();
+		if (usedToken == 0) {
+			return;
+		}
+		Map<String, Double> usedTokenMap = detailDTO.getUsedTokenMap();
+		if (usedTokenMap == null) {
+			usedTokenMap = new HashMap<>();
+		}
+		usedTokenMap.put(yyyyMM, usedToken.doubleValue());
+		detailDTO.setUsedTokenMap(usedTokenMap);
+		refreshAiUserDetailInJson(detailDTO);
 	}
 }

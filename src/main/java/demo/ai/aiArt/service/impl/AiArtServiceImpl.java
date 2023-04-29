@@ -708,7 +708,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		return r;
 	}
 
-	@Override
+	// 2023-04-29 转为自有服务器后 可能删除
 	public void __sendRandomGenerateJob() {
 		AiArtImageWallResult imageWall = getImageWallRandomSub();
 		if (imageWall.getImgVoList().isEmpty()) {

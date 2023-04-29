@@ -29,13 +29,6 @@ public class AiArtTaskService extends AiArtCommonService {
 		}
 	}
 
-	@Scheduled(fixedDelay = 1000L * 60 * 10)
-	public void insertJobToKeepLive() {
-		if (aiArtCacheService.getIsRunning()) {
-			aiArtService.__sendRandomGenerateJob();
-		}
-	}
-
 	@Scheduled(cron = "06 05 04 * * *")
 	public void deleteParameterFile() {
 		aiArtService.deleteParameterFile();

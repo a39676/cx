@@ -390,7 +390,7 @@
             if (datas.code == 0) {
               $("#result").text("Load job result success");
               for(i=0;i<datas.jobResultList.length;i++){
-                appendJobResult(datas.jobResultList[i]);
+                appendJobResult(datas.jobResultList[i], datas.userDetailInRedisMap);
               }
             } else {
               $("#result").text(datas.message);
@@ -404,7 +404,7 @@
 
       getJobResultList();
 
-      function appendJobResult(vo) {
+      function appendJobResult(vo, userDetailInRedisMap) {
         var tr = "";
         var parameter = vo.parameter;
         tr += "<tr>";
@@ -424,6 +424,9 @@
         tr += "<td>";
         tr += "<label>jobPk: "+vo.jobPk+"</label><br>";
         tr += "<label>aiUserPk: "+vo.aiUserPk+"</label><br>";
+        tr += "<label>rechargeMarkThisWeek: "+userDetailInRedisMap[vo.aiUserPk].rechargeMarkThisWeek+"</label><br>";
+        tr += "<label>freeJobCountingToday: "+userDetailInRedisMap[vo.aiUserPk].freeJobCountingToday+"</label><br>";
+        tr += "<label>freeJobCountingLastThreeDays: "+userDetailInRedisMap[vo.aiUserPk].freeJobCountingLastThreeDays+"</label><br>";
         tr += "<label>user nsfw today counting: "+vo.nsfwJobCounting+"</label><br>";
         tr += "<label><button class='btn btn-sm btn-success' name='unlockUser' userPk='"+vo.aiUserPk+"'>Unlock</button> <button class='btn btn-sm btn-danger' name='blockUser' userPk='"+vo.aiUserPk+"'>Block</button></label><br>";
         tr += "<label>createTimeStr: "+vo.createTimeStr+"</label><br>";

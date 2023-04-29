@@ -3,10 +3,14 @@ package demo.interaction.wechat.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ai.aiArt.pojo.dto.TextToImageDTO;
 import ai.aiArt.pojo.result.AiArtImageWallResult;
+import ai.aiArt.pojo.result.GetJobResultList;
 import ai.aiArt.pojo.result.SendTextToImgJobResult;
+import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import demo.ai.aiArt.service.AiArtService;
+import demo.common.pojo.dto.BaseDTO;
 import demo.interaction.wechat.service.WechatAiArtService;
 import wechatSdk.pojo.dto.AiArtGenerateOtherLikeThatDTO;
 
@@ -34,5 +38,22 @@ public class WechatAiArtServiceImpl extends WechatCommonService implements Wecha
 		}
 
 		return encryptDTO(aiArtService.generateOtherLikeThat(dto));
+	}
+
+	@Override
+	public EncryptDTO getParameterByJobPk(EncryptDTO encryptedDTO) {
+		BaseDTO dto = decryptEncryptDTO(encryptedDTO, BaseDTO.class);
+		if (dto == null) {
+			return encryptDTO(new GetJobResultList());
+		}
+
+		try {
+			GetJobResultList jobResult = aiArtService.getJobResultVoByJobPk(dto);
+			AiArtGenerateImageVO subResult = jobResult.getJobResultList().get(0);
+			TextToImageDTO parameterDTO = subResult.getParameter();
+			return encryptDTO(parameterDTO);
+		} catch (Exception e) {
+			return encryptDTO(new TextToImageDTO());
+		}
 	}
 }

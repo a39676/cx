@@ -9,14 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import ai.aiArt.pojo.result.GetJobResultList;
 import auxiliaryCommon.pojo.dto.BasePkDTO;
-import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.pojo.constant.AiArtMangerUrl;
 import demo.ai.aiArt.pojo.dto.AddToImageWallDTO;
 import demo.ai.aiArt.pojo.dto.AiArtJobListFilterDTO;
 import demo.ai.aiArt.pojo.dto.SetInvalidImageAndRetunTokensDTO;
+import demo.ai.aiArt.pojo.result.GetJobResultListForReivew;
 import demo.ai.aiArt.service.AiArtManagerService;
 
 @Controller
@@ -31,21 +30,9 @@ public class AiArtManagerController {
 		return aiArtManagerService.getManagerView();
 	}
 
-	@PostMapping(value = AiArtMangerUrl.SET_RUNNING_COLAB)
-	@ResponseBody
-	public CommonResult setRunningColab(@RequestBody BaseStrDTO dto) {
-		return aiArtManagerService.setRunningColab(dto);
-	}
-
-	@PostMapping(value = AiArtMangerUrl.SET_STOP_COLAB)
-	@ResponseBody
-	public CommonResult setStopColab() {
-		return aiArtManagerService.setStopColab();
-	}
-
 	@PostMapping(value = AiArtMangerUrl.GET_JOB_RESULT_LIST)
 	@ResponseBody
-	public GetJobResultList getAiArtJobList(@RequestBody AiArtJobListFilterDTO dto) {
+	public GetJobResultListForReivew getAiArtJobList(@RequestBody AiArtJobListFilterDTO dto) {
 		return aiArtManagerService.__getAiArtJobListForReview(dto);
 	}
 

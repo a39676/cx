@@ -87,4 +87,11 @@ public class AiChatManagerController extends CommonController {
 	public CommonResult userList(@RequestBody AiChatUserEditNicknameDTO dto) {
 		return aiChatUserService.editNickname(dto);
 	}
+	
+	@GetMapping(value = AiChatManagerUrlConstant.UPDATE_USED_TOKEN_TO_DETAIL_IN_JSON)
+	@ResponseBody
+	public String updateUsedTokenToDetailInJson() {
+		aiChatUserService.updateUsedTokenToDetailInJson();
+		return "done";
+	}
 }

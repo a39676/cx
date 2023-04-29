@@ -13,4 +13,6 @@ public class AiChatManagerUrlConstant {
 	public static final String CLEAR_MEMBERSHIP_CACHE_DATA = "/cleanMembershipCacheData";
 	
 	public static final String USER_LIST = "/userList";
+	
+	public static final String UPDATE_USED_TOKEN_TO_DETAIL_IN_JSON = "/updateUsedTokenToDetailInJson";
 }

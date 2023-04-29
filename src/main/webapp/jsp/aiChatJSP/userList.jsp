@@ -154,6 +154,13 @@
                 <button class="btn btn-primary" id="clearResult">Clear result</button>
               </td>
             </tr>
+            <tr>
+              <td>
+                <a href="/aiChatManager/updateUsedTokenToDetailInJson">
+                  updateUsedTokenToDetailInJson(Monthly job)
+                </a>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>

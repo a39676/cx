@@ -134,4 +134,11 @@ public class WechatSdkInteractionController extends CommonController {
 	public EncryptDTO generateOtherLikeThat(@RequestBody EncryptDTO dto) {
 		return wechatAiArtService.generateOtherLikeThat(dto);
 	}
+
+	@PostMapping(value = AiChatFromWechatSdkUrlConstant.GET_PARAMETER_BY_JOB_PK)
+	@ResponseBody
+	public EncryptDTO getParameterByJobPk(@RequestBody EncryptDTO dto) {
+		return wechatAiArtService.getParameterByJobPk(dto);
+	}
+
 }

@@ -9,6 +9,7 @@ import ai.aiChat.pojo.result.AiChatDailySignUpResult;
 import ai.aiChat.pojo.result.GetAiChatAmountResult;
 import ai.aiChat.pojo.type.AiChatAmountType;
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.ai.aiArt.pojo.dto.AiUserDetailInJsonDTO;
 import demo.ai.aiChat.pojo.dto.AiChatUserEditNicknameDTO;
 import demo.ai.aiChat.pojo.dto.GetAiChatUserListDTO;
 import demo.ai.aiChat.pojo.dto.NewPositiveAiChatUserDTO;
@@ -60,5 +61,13 @@ public interface AiChatUserService {
 	AiChatUserDetail __getUserDetail(Long aiUserId);
 
 	CommonResult __debitAmountAndAddTokenUsage(Long aiUserId, BigDecimal debitAmount);
+
+	AiUserDetailInJsonDTO getAiUserDetailInJson(Long userId);
+
+	CommonResult refreshAiUserDetailInJson(AiUserDetailInJsonDTO dto);
+
+	void tidyAiUserExtraDetail();
+
+	void updateUsedTokenToDetailInJson();
 
 }

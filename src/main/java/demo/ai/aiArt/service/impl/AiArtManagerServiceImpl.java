@@ -4,7 +4,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,20 +16,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import ai.aiArt.pojo.dto.TextToImageDTO;
-import ai.aiArt.pojo.result.AiArtGenerateImageResult;
+import ai.aiArt.pojo.result.AiArtGenerateImageQueryResult;
 import ai.aiArt.pojo.result.AiArtImageWallResult;
 import ai.aiArt.pojo.result.GetJobResultList;
 import ai.aiArt.pojo.type.AiArtJobStatusType;
 import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
 import ai.aiArt.pojo.vo.AiArtImageOnWallVO;
 import ai.aiChat.pojo.type.AiChatAmountType;
-import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.pojo.dto.AddToImageWallDTO;
 import demo.ai.aiArt.pojo.dto.AiArtJobListFilterDTO;
+import demo.ai.aiArt.pojo.dto.AiUserDetailInRedisDTO;
 import demo.ai.aiArt.pojo.dto.SetInvalidImageAndRetunTokensDTO;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecord;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecordExample;
+import demo.ai.aiArt.pojo.result.GetJobResultListForReivew;
 import demo.ai.aiArt.service.AiArtCommonService;
 import demo.ai.aiArt.service.AiArtManagerService;
 import demo.ai.aiArt.service.AiArtService;
@@ -48,53 +53,43 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 	@Override
 	public ModelAndView getManagerView() {
 		ModelAndView v = new ModelAndView("aiArtJSP/aiArtManager");
-		v.addObject("isRunning", aiArtOptionService.getIsRunning());
+		v.addObject("isRunning", aiArtCacheService.getIsRunning());
 		return v;
 	}
 
 	@Override
-	public CommonResult setRunningColab(BaseStrDTO dto) {
-		if (dto == null || StringUtils.isBlank(dto.getStr())) {
-			return new CommonResult();
-		}
-
-		if (!dto.getStr().startsWith("http")) {
-			dto.setStr("http://" + dto.getStr());
-		}
-		aiArtOptionService.setMainUrl(dto.getStr());
-		aiArtOptionService.setIsRunning(true);
-
-		CommonResult r = new CommonResult();
-		r.setIsSuccess();
-		return r;
-	}
-
-	@Override
-	public CommonResult setStopColab() {
-		aiArtOptionService.setMainUrl(null);
-		aiArtOptionService.setIsRunning(false);
-		CommonResult r = new CommonResult();
-		r.setIsSuccess();
-		return r;
-	}
-
-	@Override
-	public GetJobResultList __getAiArtJobListForReview(AiArtJobListFilterDTO dto) {
-		GetJobResultList r = new GetJobResultList();
+	public GetJobResultListForReivew __getAiArtJobListForReview(AiArtJobListFilterDTO dto) {
+		GetJobResultListForReivew r = new GetJobResultListForReivew();
 		List<AiArtTextToImageJobRecord> jobPoList = aiArtService.getJobResultPage(dto);
 		if (jobPoList.isEmpty()) {
 			r.setIsSuccess();
 			return r;
 		}
-		AiArtGenerateImageResult jobResult = null;
+		AiArtGenerateImageQueryResult jobResult = null;
 		List<AiArtGenerateImageVO> voList = new ArrayList<>();
+		Set<Long> aiUserIdSet = new HashSet<>();
 		for (AiArtTextToImageJobRecord po : jobPoList) {
 			if (AiArtJobStatusType.SUCCESS.getCode().equals(po.getJobStatus().intValue())) {
 				jobResult = getJobResult(po.getId());
 			}
+			aiUserIdSet.add(po.getAiUserId());
 			voList.add(buildAiArtGenerateImageVO(po, jobResult, systemOptionService.encryptId(po.getId())));
 			jobResult = null;
 		}
+		
+		AiUserDetailInRedisDTO userDetailDTO = null;
+		Map<String, AiUserDetailInRedisDTO> userDetailInRedisMap = new HashMap<>();
+		for(Long aiUserId : aiUserIdSet) {
+			userDetailDTO = new AiUserDetailInRedisDTO();
+			userDetailDTO.setUserId(aiUserId);
+			userDetailDTO.setFreeJobCountingLastThreeDays(getFreeJobCountingOfLastThreeDays(aiUserId));
+			userDetailDTO.setFreeJobCountingToday(getFreeJobCountingOfToday(aiUserId));
+			userDetailDTO.setRechargeMarkThisWeek(getRechargeMarkThisWeek(aiUserId));
+			userDetailInRedisMap.put(systemOptionService.encryptId(aiUserId), userDetailDTO);
+		}
+		
+		r.setUserDetailInRedisMap(userDetailInRedisMap);
+		
 		r.setJobResultList(voList);
 		r.setIsSuccess();
 		return r;
@@ -284,6 +279,7 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 			if (associateList.isEmpty()) {
 				break noticeTag;
 			}
+			removeNoticeWhenCompleteMark(jobPO.getAiUserId(), jobId);
 			wechatSdkForInterService.sendTemplateMessageAiArtTxtToImgComplete(associateList.get(0).getWechatId());
 		}
 

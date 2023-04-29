@@ -1,5 +1,6 @@
 package demo.ai.aiChat.service.impl;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -18,6 +19,7 @@ import ai.aiChat.pojo.result.AiChatDailySignUpResult;
 import ai.aiChat.pojo.result.GetAiChatAmountResult;
 import ai.aiChat.pojo.type.AiChatAmountType;
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.ai.aiArt.pojo.dto.AiUserDetailInJsonDTO;
 import demo.ai.aiChat.mapper.AiChatUserAmountHistoryMapper;
 import demo.ai.aiChat.mapper.AiChatUserAssociateWechatUidMapper;
 import demo.ai.aiChat.mapper.AiChatUserDetailMapper;
@@ -40,6 +42,8 @@ import demo.ai.aiChat.service.AiChatUserService;
 import demo.ai.common.service.impl.AiCommonService;
 import demo.interaction.wechat.pojo.po.WechatQrcodeDetail;
 import demo.interaction.wechat.pojo.vo.WechatQrcodeVO;
+import net.sf.json.JSONObject;
+import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class AiChatUserServiceImpl extends AiCommonService implements AiChatUserService {
@@ -52,6 +56,8 @@ public class AiChatUserServiceImpl extends AiCommonService implements AiChatUser
 	private AiChatUserAssociateWechatUidMapper aiChatUserAssociateWechatUidMapper;
 	@Autowired
 	private AiChatUserAmountHistoryMapper amountHistoryMapper;
+	@Autowired
+	private FileUtilCustom fileUtil;
 
 	@Override
 	public CreateAiChatUserResult createAiChatUserDetailBySystemUserId(Long systemUserId) {
@@ -217,6 +223,10 @@ public class AiChatUserServiceImpl extends AiCommonService implements AiChatUser
 			r.setMessage("Update amount history failed, AI chat user ID: " + aiChatUserId + ", amount type: "
 					+ amountType.getName() + ", amount: " + amount);
 			return r;
+		}
+
+		if (AiChatAmountType.RECHARGE.equals(amountType)) {
+			addRechargeMarkLiveAWeek(aiChatUserId);
 		}
 
 		r.setIsSuccess();
@@ -712,5 +722,100 @@ public class AiChatUserServiceImpl extends AiCommonService implements AiChatUser
 	@Override
 	public AiChatUserDetail __getUserDetail(Long aiUserId) {
 		return userDetailMapper.selectByPrimaryKey(aiUserId);
+	}
+
+	@Override
+	public AiUserDetailInJsonDTO getAiUserDetailInJson(Long userId) {
+		String pathPrefix = aiChatOptionService.getUserExtraJsonDetailStorePrefixPath();
+		try {
+			String content = fileUtil.getStringFromFile(pathPrefix + File.separator + userId + ".json");
+			AiUserDetailInJsonDTO detailDTO = buildObjFromJsonCustomization(content, AiUserDetailInJsonDTO.class);
+			return detailDTO;
+		} catch (Exception e) {
+			return new AiUserDetailInJsonDTO();
+		}
+	}
+
+	@Override
+	public CommonResult refreshAiUserDetailInJson(AiUserDetailInJsonDTO dto) {
+		CommonResult r = new CommonResult();
+
+		String pathPrefix = aiChatOptionService.getUserExtraJsonDetailStorePrefixPath();
+		try {
+			File parentFolder = new File(pathPrefix);
+			if (!parentFolder.exists()) {
+				if (!parentFolder.mkdirs()) {
+					r.setMessage("Save detail failed, can NOT create folder, error");
+					return r;
+				}
+			}
+			JSONObject json = JSONObject.fromObject(dto);
+			fileUtil.byteToFile(json.toString(), pathPrefix + File.separator + dto.getUserId() + ".json");
+			r.setIsSuccess();
+			return r;
+		} catch (Exception e) {
+			r.setMessage(e.getLocalizedMessage());
+			return r;
+		}
+	}
+
+	@Override
+	public void tidyAiUserExtraDetail() {
+//		String pathPrefix = aiChatOptionService.getUserExtraJsonDetailStorePrefixPath();
+//		File parentFolder = new File(pathPrefix);
+//		if (!parentFolder.exists()) {
+//			parentFolder.mkdirs();
+//			return;
+//		}
+//		File[] files = parentFolder.listFiles();
+//		String content;
+//		AiUserDetailInJsonDTO dto = null;
+//		boolean refreshFlag = false;
+//		for (File f : files) {
+//			if (!f.getName().endsWith(".json")) {
+//				continue;
+//			}
+//			content = fileUtil.getStringFromFile(f.getAbsolutePath());
+//			dto = buildObjFromJsonCustomization(content, AiUserDetailInJsonDTO.class);
+//
+//			/*
+//			 * waiting
+//			 */
+//			if (refreshFlag) {
+//				refreshAiUserDetailInJson(dto);
+//			}
+//			refreshFlag = false;
+//		}
+	}
+
+	@Override
+	public void updateUsedTokenToDetailInJson() {
+		AiChatUserDetailExample example = new AiChatUserDetailExample();
+		example.createCriteria().andUsedTokensNotEqualTo(0);
+		List<AiChatUserDetail> userPoList = userDetailMapper.selectByExample(example);
+		if(userPoList.isEmpty()) {
+			return;
+		}
+		LocalDateTime now = LocalDateTime.now();
+		String yyyyMM = String.valueOf("" + now.getYear() + now.getMonthValue());
+		for(AiChatUserDetail user :userPoList) {
+			updateUsedTokenToDetailInJson(user.getId(), yyyyMM);
+		}
+	}
+
+	private void updateUsedTokenToDetailInJson(Long aiUserId, String yyyyMM) {
+		AiUserDetailInJsonDTO detailDTO = getAiUserDetailInJson(aiUserId);
+		AiChatUserDetail userDetail = userDetailMapper.selectByPrimaryKey(aiUserId);
+		Integer usedToken = userDetail.getUsedTokens();
+		if (usedToken == 0) {
+			return;
+		}
+		Map<String, Double> usedTokenMap = detailDTO.getUsedTokenMap();
+		if (usedTokenMap == null) {
+			usedTokenMap = new HashMap<>();
+		}
+		usedTokenMap.put(yyyyMM, usedToken.doubleValue());
+		detailDTO.setUsedTokenMap(usedTokenMap);
+		refreshAiUserDetailInJson(detailDTO);
 	}
 }

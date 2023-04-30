@@ -817,5 +817,8 @@ public class AiChatUserServiceImpl extends AiCommonService implements AiChatUser
 		usedTokenMap.put(yyyyMM, usedToken.doubleValue());
 		detailDTO.setUsedTokenMap(usedTokenMap);
 		refreshAiUserDetailInJson(detailDTO);
+		
+		userDetail.setUsedTokens(0);
+		userDetailMapper.updateByPrimaryKeySelective(userDetail);
 	}
 }

@@ -39,7 +39,7 @@ public class AiArtTaskService extends AiArtCommonService {
 		if (aiArtCacheService.getLastHearBeatTime() == null
 				|| aiArtCacheService.getLastHearBeatTime().isBefore(LocalDateTime.now().minusSeconds(90))) {
 			aiArtCacheService.setIsRunning(false);
-			sendTelegramMessage("Automatic SDK down");
+//			sendTelegramMessage("Automatic SDK down, last heart beat: " + aiArtCacheService.getLastHearBeatTime());
 		}
 	}
 }

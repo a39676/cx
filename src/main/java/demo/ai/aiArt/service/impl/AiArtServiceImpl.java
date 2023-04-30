@@ -166,7 +166,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		AiArtSamplerType samplerType = AiArtSamplerType.getType(dto.getSampler());
 		if (samplerType == null) {
 			samplerType = AiArtSamplerType.Euler_A;
-			dto.setSampler(samplerType.getName());
+			dto.setSampler(samplerType.getCode());
 		}
 
 		AiArtTextToImageJobRecordExample example = new AiArtTextToImageJobRecordExample();

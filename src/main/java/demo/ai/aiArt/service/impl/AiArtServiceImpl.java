@@ -31,6 +31,7 @@ import ai.aiArt.pojo.type.AiArtSamplerType;
 import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
 import ai.aiArt.pojo.vo.AiArtImageOnWallVO;
 import ai.aiChat.pojo.type.AiChatAmountType;
+import ai.automatic1111.pojo.type.AiArtModelType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.mq.producer.AiArtTextToImageProducer;
 import demo.ai.aiArt.pojo.dto.AiArtJobListFilterDTO;
@@ -165,8 +166,14 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 		AiArtSamplerType samplerType = AiArtSamplerType.getType(dto.getSampler());
 		if (samplerType == null) {
-			samplerType = AiArtSamplerType.Euler_A;
+			samplerType = AiArtSamplerType.DPM_2M_Karras;
 			dto.setSampler(samplerType.getCode());
+		}
+
+		AiArtModelType modelType = AiArtModelType.getType(dto.getModel());
+		if (modelType == null) {
+			modelType = AiArtModelType.CHILLOUTMIX_NI_PRUNED_FP_32_FIX;
+			dto.setModel(modelType.getCode());
 		}
 
 		AiArtTextToImageJobRecordExample example = new AiArtTextToImageJobRecordExample();

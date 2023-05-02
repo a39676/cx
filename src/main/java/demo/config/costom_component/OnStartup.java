@@ -7,6 +7,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import demo.ai.aiArt.service.AiArtService;
 import demo.base.task.service.TaskHandlerService;
 import demo.base.user.pojo.po.Users;
 import demo.base.user.pojo.type.SystemRolesType;
@@ -36,6 +37,8 @@ public class OnStartup extends CommonService implements ApplicationListener<Appl
 	private TaskHandlerService taskHandlerServiceImpl;
 	@Autowired
 	private UrgeNoticeManagerService urgeNoticeService;
+	@Autowired
+	private AiArtService aiArtService;
 
 	/*
 	 * ContextStartedEvent ContextStoppedEvent ContextRefreshedEvent
@@ -78,9 +81,9 @@ public class OnStartup extends CommonService implements ApplicationListener<Appl
 		}
 
 		log.error("data base filler end");
-		
+
 		log.error("Check OS");
-		if(isWindows()) {
+		if (isWindows()) {
 			log.error("OS: Windows, will set proxy");
 			String proxyHost = "127.0.0.1";
 			String proxyPort = "10809";
@@ -90,19 +93,22 @@ public class OnStartup extends CommonService implements ApplicationListener<Appl
 
 			System.setProperty("https.proxyHost", proxyHost);
 			System.setProperty("https.proxyPort", proxyPort);
-			
+
 			log.error("Had set proxy");
 		}
-		
+
 		log.error("taskHandlerServiceImpl.fixRuningEventStatus();");
 		taskHandlerServiceImpl.fixRuningTaskStatus();
-		
+
 		log.error("taskHandlerServiceImpl.setBreakFlag(0);");
 		taskHandlerServiceImpl.setBreakFlag(0);
-		
+
 		log.error("urge notice service, update message web hook secret token");
 		urgeNoticeService.setUpdateMsgWebhook();
-		
+
+		log.error("AI art service load image wall to cache");
+		aiArtService.loadImageWallToCache();
+
 		log.error("DatabaseFillerOnStartup end");
 	}
 

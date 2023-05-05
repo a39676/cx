@@ -8,7 +8,7 @@ public interface WechatAiService {
 
 	EncryptDTO findChatHistoryByAiChatUserIdToFrontEnd(EncryptDTO encryptedDTO);
 
-	EncryptDTO getPromptOfActAs();
+	EncryptDTO getAiServiceCache();
 
 	EncryptDTO sendTextToImg(EncryptDTO encryptedDTO);
 

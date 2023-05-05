@@ -1,5 +1,6 @@
 package demo.interaction.wechat.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import ai.aiArt.pojo.result.SendTextToImgJobResult;
 import ai.aiChat.pojo.dto.AiChatSendNewMsgFromWechatDTO;
 import ai.aiChat.pojo.result.AiChatSendNewMessageResult;
 import ai.aiChat.pojo.result.GetAiChatHistoryResult;
+import ai.pojo.result.AiServiceCacheResult;
+import ai.pojo.vo.AiArtModelVO;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import demo.ai.aiArt.service.AiArtService;
 import demo.ai.aiChat.service.AiChatFromWechatService;
@@ -55,9 +58,14 @@ public class WechatAiServiceImpl extends WechatCommonService implements WechatAi
 	}
 
 	@Override
-	public EncryptDTO getPromptOfActAs() {
+	public EncryptDTO getAiServiceCache() {
+		AiServiceCacheResult r = new AiServiceCacheResult();
 		Map<String, String> promptOfActAs = aiChatOptionService.getPromptOfActAs();
-		return encryptDTO(promptOfActAs);
+		r.setPromptOfActAs(promptOfActAs);
+		List<AiArtModelVO> modelList = aiArtService.getAiArtModelVoList();
+		r.setAiArtModelList(modelList);
+		r.setIsSuccess();
+		return encryptDTO(r);
 	}
 
 	@Override

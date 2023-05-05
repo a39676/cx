@@ -81,10 +81,10 @@ public class WechatSdkInteractionController extends CommonController {
 		return wechatQrCodeService.receiveLongLiveQrCodeResult(dto);
 	}
 
-	@PostMapping(value = AiChatFromWechatSdkUrlConstant.GET_PROMPT_OF_ACT_AS)
+	@PostMapping(value = AiChatFromWechatSdkUrlConstant.GET_AI_SERVCIE_CACHE)
 	@ResponseBody
-	public EncryptDTO getPromptOfActAs() {
-		return wechatAiChatService.getPromptOfActAs();
+	public EncryptDTO getAiServiceCache() {
+		return wechatAiChatService.getAiServiceCache();
 	}
 
 	@PostMapping(value = AiChatFromWechatSdkUrlConstant.GET_USER_OPEN_ID_LIST)

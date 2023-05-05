@@ -6,6 +6,7 @@ import ai.aiArt.pojo.dto.TextToImageFromWechatDTO;
 import ai.aiArt.pojo.result.AiArtImageWallResult;
 import ai.aiArt.pojo.result.GetJobResultList;
 import ai.aiArt.pojo.result.SendTextToImgJobResult;
+import ai.pojo.vo.AiArtModelVO;
 import demo.ai.aiArt.pojo.dto.AiArtJobListFilterDTO;
 import demo.ai.aiArt.pojo.dto.TextToImageFromApiDTO;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecord;
@@ -45,5 +46,7 @@ public interface AiArtService {
 	void sendNoticeIfAnyJobsWaitingForReview();
 
 	void receiveImgJobResult(String txtToImgResultStr);
+
+	List<AiArtModelVO> getAiArtModelVoList();
 
 }

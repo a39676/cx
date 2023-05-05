@@ -31,11 +31,16 @@ import ai.aiArt.pojo.type.AiArtSamplerType;
 import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
 import ai.aiArt.pojo.vo.AiArtImageOnWallVO;
 import ai.aiChat.pojo.type.AiChatAmountType;
+import ai.automatic1111.pojo.type.AiArtDefaultModelType;
+import ai.pojo.vo.AiArtModelVO;
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.ai.aiArt.mapper.AiArtModelMapper;
 import demo.ai.aiArt.mq.producer.AiArtTextToImageProducer;
 import demo.ai.aiArt.pojo.dto.AiArtJobListFilterDTO;
 import demo.ai.aiArt.pojo.dto.TextToImageFromApiDTO;
 import demo.ai.aiArt.pojo.po.AiArtGeneratingRecord;
+import demo.ai.aiArt.pojo.po.AiArtModel;
+import demo.ai.aiArt.pojo.po.AiArtModelExample;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecord;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecordExample;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecordExample.Criteria;
@@ -58,6 +63,8 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	private AiArtTextToImageProducer aiArtTextToImageProducer;
 	@Autowired
 	private FileUtilCustom fileUtilCustom;
+	@Autowired
+	private AiArtModelMapper aiArtModelMapper;
 
 	@Override
 	public SendTextToImgJobResult sendTextToImgFromWechatDtoToMq(TextToImageFromWechatDTO dto) {
@@ -165,8 +172,22 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 		AiArtSamplerType samplerType = AiArtSamplerType.getType(dto.getSampler());
 		if (samplerType == null) {
-			samplerType = AiArtSamplerType.Euler_A;
+			samplerType = AiArtSamplerType.DPM_2M_Karras;
 			dto.setSampler(samplerType.getCode());
+		}
+
+		if (dto.getModel() == null) {
+			dto.setModel(AiArtDefaultModelType.chilloutmix_NiPrunedFp32Fix.getCode());
+		} else {
+			AiArtModel model = aiArtModelMapper.selectByPrimaryKey(dto.getModel().longValue());
+			if (model == null) {
+				r.setMessage("Model 不存在, 请输入正确参数");
+				return r;
+			}
+			if (!model.getPublicModel() && !aiArtOptionService.getIdOfAdmin().equals(aiUserId)) {
+				r.setMessage("Model 不存在, 请输入正确参数");
+				return r;
+			}
 		}
 
 		AiArtTextToImageJobRecordExample example = new AiArtTextToImageJobRecordExample();
@@ -751,4 +772,22 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		}
 	}
 
+	@Override
+	public List<AiArtModelVO> getAiArtModelVoList() {
+		AiArtModelExample example = new AiArtModelExample();
+		example.createCriteria().andIsDeleteEqualTo(false).andPublicModelEqualTo(true);
+		List<AiArtModel> modelList = aiArtModelMapper.selectByExample(example);
+		AiArtModelVO vo = null;
+		List<AiArtModelVO> voList = new ArrayList<>();
+		if (modelList.isEmpty()) {
+			return voList;
+		}
+		for (AiArtModel po : modelList) {
+			vo = new AiArtModelVO();
+			vo.setModelId(po.getId().intValue());
+			vo.setModelName(po.getDisplayName());
+			voList.add(vo);
+		}
+		return voList;
+	}
 }

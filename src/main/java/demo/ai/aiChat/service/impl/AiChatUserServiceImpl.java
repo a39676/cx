@@ -17,7 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import ai.aiChat.pojo.result.AiChatDailySignUpResult;
 import ai.aiChat.pojo.result.GetAiChatAmountResult;
-import ai.aiChat.pojo.type.AiChatAmountType;
+import ai.aiChat.pojo.type.AiServiceAmountType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.pojo.dto.AiUserDetailInJsonDTO;
 import demo.ai.aiChat.mapper.AiChatUserAmountHistoryMapper;
@@ -83,7 +83,7 @@ public class AiChatUserServiceImpl extends AiCommonService implements AiChatUser
 		aiChatUserDetailPO.setId(newAiChatUserId);
 		userDetailMapper.insertSelective(aiChatUserDetailPO);
 
-		recharge(newAiChatUserId, AiChatAmountType.BONUS, new BigDecimal(aiChatOptionService.getBonusForNewUser()));
+		recharge(newAiChatUserId, AiServiceAmountType.BONUS, new BigDecimal(aiChatOptionService.getBonusForNewUser()));
 
 		aiChatCacheService.getSystemUserIdMatchAiChatUserIdMap().put(systemUserId, newAiChatUserId);
 		r.setAiChatUserId(newAiChatUserId);
@@ -117,9 +117,9 @@ public class AiChatUserServiceImpl extends AiCommonService implements AiChatUser
 		userDetailMapper.insertSelective(aiChatUserDetailPO);
 
 		if (specialBonus == null) {
-			recharge(newAiChatUserId, AiChatAmountType.BONUS, new BigDecimal(aiChatOptionService.getBonusForNewUser()));
+			recharge(newAiChatUserId, AiServiceAmountType.BONUS, new BigDecimal(aiChatOptionService.getBonusForNewUser()));
 		} else {
-			recharge(newAiChatUserId, AiChatAmountType.BONUS, new BigDecimal(specialBonus));
+			recharge(newAiChatUserId, AiServiceAmountType.BONUS, new BigDecimal(specialBonus));
 		}
 
 		aiChatCacheService.getOpenIdMatchAiChatUserIdMap().put(wechatOpenId, newAiChatUserId);
@@ -185,7 +185,7 @@ public class AiChatUserServiceImpl extends AiCommonService implements AiChatUser
 	}
 
 	@Override
-	public CommonResult recharge(Long aiChatUserId, AiChatAmountType amountType, BigDecimal amount) {
+	public CommonResult recharge(Long aiChatUserId, AiServiceAmountType amountType, BigDecimal amount) {
 		CommonResult r = new CommonResult();
 		if (aiChatUserId == null || amountType == null || amount == null || amount.compareTo(BigDecimal.ZERO) < 0) {
 			r.setMessage("Param error");
@@ -225,7 +225,7 @@ public class AiChatUserServiceImpl extends AiCommonService implements AiChatUser
 			return r;
 		}
 
-		if (AiChatAmountType.RECHARGE.equals(amountType)) {
+		if (AiServiceAmountType.RECHARGE.equals(amountType)) {
 			addRechargeMarkLiveAWeek(aiChatUserId);
 		}
 
@@ -234,16 +234,16 @@ public class AiChatUserServiceImpl extends AiCommonService implements AiChatUser
 	}
 
 	@Override
-	public CommonResult batchRecharge(List<Long> aiChatUserIdList, AiChatAmountType amountType, BigDecimal amount) {
+	public CommonResult batchRecharge(List<Long> aiChatUserIdList, AiServiceAmountType amountType, BigDecimal amount) {
 		CommonResult r = new CommonResult();
 		if (amountType == null) {
 			return r;
 		}
 
 		int updateCount = 0;
-		if (AiChatAmountType.BONUS.equals(amountType)) {
+		if (AiServiceAmountType.BONUS.equals(amountType)) {
 			updateCount = userDetailMapper.batchRecharge(aiChatUserIdList, amount, null);
-		} else if (AiChatAmountType.RECHARGE.equals(amountType)) {
+		} else if (AiServiceAmountType.RECHARGE.equals(amountType)) {
 			updateCount = userDetailMapper.batchRecharge(aiChatUserIdList, null, amount);
 		}
 
@@ -692,7 +692,7 @@ public class AiChatUserServiceImpl extends AiCommonService implements AiChatUser
 
 			bonusAmountHistory = new AiChatUserAmountHistory();
 			bonusAmountHistory.setId(snowFlake.getNextId());
-			bonusAmountHistory.setAmountType(AiChatAmountType.BONUS.getCode());
+			bonusAmountHistory.setAmountType(AiServiceAmountType.BONUS.getCode());
 			bonusAmountHistory.setAmountChange(BigDecimal.ZERO.subtract(debitAmount));
 			bonusAmountHistory.setUserId(detail.getId());
 		}
@@ -711,7 +711,7 @@ public class AiChatUserServiceImpl extends AiCommonService implements AiChatUser
 
 		AiChatUserAmountHistory rechargeAmountHistory = new AiChatUserAmountHistory();
 		rechargeAmountHistory.setId(snowFlake.getNextId());
-		rechargeAmountHistory.setAmountType(AiChatAmountType.RECHARGE.getCode());
+		rechargeAmountHistory.setAmountType(AiServiceAmountType.RECHARGE.getCode());
 		rechargeAmountHistory.setAmountChange(BigDecimal.ZERO.subtract(debitAmount.subtract(detail.getBonusAmount())));
 		rechargeAmountHistory.setUserId(detail.getId());
 		amountHistoryMapper.insertSelective(rechargeAmountHistory);

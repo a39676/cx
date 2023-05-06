@@ -1,5 +1,6 @@
 package demo.ai.aiChat.controller;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import ai.aiChat.pojo.result.GetAiChatHistoryResult;
+import ai.aiChat.pojo.type.AiServiceAmountType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiChat.pojo.constant.AiChatManagerUrlConstant;
 import demo.ai.aiChat.pojo.dto.AiChatUserEditNicknameDTO;
@@ -87,11 +89,24 @@ public class AiChatManagerController extends CommonController {
 	public CommonResult userList(@RequestBody AiChatUserEditNicknameDTO dto) {
 		return aiChatUserService.editNickname(dto);
 	}
-	
+
 	@GetMapping(value = AiChatManagerUrlConstant.UPDATE_USED_TOKEN_TO_DETAIL_IN_JSON)
 	@ResponseBody
 	public String updateUsedTokenToDetailInJson() {
 		aiChatUserService.updateUsedTokenToDetailInJson();
+		return "done";
+	}
+
+	@GetMapping(value = AiChatManagerUrlConstant.RECHARGE_BY_ADMIN)
+	@ResponseBody
+	public String rechargeByAdmin(@RequestParam("amount") Integer amount,
+			@RequestParam("amountType") Integer amountType, @RequestParam("aiUserId") String userIdStr) {
+		try {
+			aiChatUserService.recharge(Long.parseLong(userIdStr), AiServiceAmountType.getType(amountType),
+					new BigDecimal(amount));
+		} catch (Exception e) {
+			return e.getLocalizedMessage();
+		}
 		return "done";
 	}
 }

@@ -7,7 +7,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import ai.aiChat.pojo.result.AiChatDailySignUpResult;
 import ai.aiChat.pojo.result.GetAiChatAmountResult;
-import ai.aiChat.pojo.type.AiChatAmountType;
+import ai.aiChat.pojo.type.AiServiceAmountType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.pojo.dto.AiUserDetailInJsonDTO;
 import demo.ai.aiChat.pojo.dto.AiChatUserEditNicknameDTO;
@@ -27,11 +27,11 @@ public interface AiChatUserService {
 
 	void extendTmpKeyValidity(Long tmpKey);
 
-	CommonResult recharge(Long aiChatUserId, AiChatAmountType amountType, BigDecimal amount);
+	CommonResult recharge(Long aiChatUserId, AiServiceAmountType amountType, BigDecimal amount);
 
 	Long __getAiChatUserIdByWechatUserId(Long wechatUserId);
 
-	CommonResult batchRecharge(List<Long> aiChatUserIdList, AiChatAmountType amountType, BigDecimal amount);
+	CommonResult batchRecharge(List<Long> aiChatUserIdList, AiServiceAmountType amountType, BigDecimal amount);
 
 	GetAiChatAmountResult getAiChatAmount(String tmpKeyStr);
 

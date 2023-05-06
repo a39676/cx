@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 import ai.aiChat.pojo.result.AiChatBuyMembershipFromWechatResult;
 import ai.aiChat.pojo.result.GetAiChatMembershipResult;
-import ai.aiChat.pojo.type.AiChatAmountType;
+import ai.aiChat.pojo.type.AiServiceAmountType;
 import ai.aiChat.pojo.vo.AiChatUserMembershipDetailSummaryVO;
 import ai.aiChat.pojo.vo.AiChatUserMembershipDetailVO;
 import auxiliaryCommon.pojo.result.CommonResult;
@@ -183,11 +183,11 @@ public class AiChatMembershipServiceImpl extends AiCommonService implements AiCh
 			insertOrUpdateMembershipRecord(aiChatUserId, membershipDetail);
 		}
 		if (membershipDetail.getDailyBonus() > 0) {
-			userService.recharge(aiChatUserId, AiChatAmountType.BONUS,
+			userService.recharge(aiChatUserId, AiServiceAmountType.BONUS,
 					new BigDecimal(membershipDetail.getDailyBonus()));
 		}
 		if (membershipDetail.getRecharge() > 0) {
-			userService.recharge(aiChatUserId, AiChatAmountType.RECHARGE,
+			userService.recharge(aiChatUserId, AiServiceAmountType.RECHARGE,
 					new BigDecimal(membershipDetail.getRecharge()));
 		}
 
@@ -250,7 +250,7 @@ public class AiChatMembershipServiceImpl extends AiCommonService implements AiCh
 		for (AiChatUserMembership membership : userMemberList) {
 			userIdList.add(membership.getAiChatUserId());
 		}
-		userService.batchRecharge(userIdList, AiChatAmountType.BONUS, new BigDecimal(membershipDetail.getDailyBonus()));
+		userService.batchRecharge(userIdList, AiServiceAmountType.BONUS, new BigDecimal(membershipDetail.getDailyBonus()));
 	}
 
 	@Override
@@ -381,11 +381,11 @@ public class AiChatMembershipServiceImpl extends AiCommonService implements AiCh
 			insertOrUpdateMembershipRecord(aiChatUserId, membershipDetail);
 		}
 		if (membershipDetail.getDailyBonus() > 0) {
-			userService.recharge(aiChatUserId, AiChatAmountType.BONUS,
+			userService.recharge(aiChatUserId, AiServiceAmountType.BONUS,
 					new BigDecimal(membershipDetail.getDailyBonus()));
 		}
 		if (membershipDetail.getRecharge() > 0) {
-			userService.recharge(aiChatUserId, AiChatAmountType.BONUS, new BigDecimal(membershipDetail.getRecharge()));
+			userService.recharge(aiChatUserId, AiServiceAmountType.BONUS, new BigDecimal(membershipDetail.getRecharge()));
 		}
 		if (membershipDetail.getValidDays() != null) {
 			/*
@@ -394,7 +394,7 @@ public class AiChatMembershipServiceImpl extends AiCommonService implements AiCh
 			 */
 		}
 		if (membershipDetail.getBonus() > 0) {
-			userService.recharge(aiChatUserId, AiChatAmountType.BONUS, new BigDecimal(membershipDetail.getBonus()));
+			userService.recharge(aiChatUserId, AiServiceAmountType.BONUS, new BigDecimal(membershipDetail.getBonus()));
 		}
 
 		findMembershipDetailSummaryByUserId(aiChatUserId, true);

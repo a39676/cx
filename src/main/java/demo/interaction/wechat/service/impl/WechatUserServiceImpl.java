@@ -16,7 +16,7 @@ import ai.aiChat.pojo.result.GetAiChatAmountResult;
 import ai.aiChat.pojo.result.GetAiChatMembershipResult;
 import ai.aiChat.pojo.result.GetAiChatUserDetailResult;
 import ai.aiChat.pojo.result.GetTmpKeyByOpenIdResult;
-import ai.aiChat.pojo.type.AiChatAmountType;
+import ai.aiChat.pojo.type.AiServiceAmountType;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiChat.pojo.dto.NewPositiveAiChatUserDTO;
@@ -381,7 +381,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		}
 
 		for (NewPositiveAiChatUserDTO dto : aiChatUserDtoList) {
-			r = aiChatUserService.recharge(dto.getAiChatUserId(), AiChatAmountType.BONUS,
+			r = aiChatUserService.recharge(dto.getAiChatUserId(), AiServiceAmountType.BONUS,
 					new BigDecimal(aiChatOptionService.getBonusForNewUser()));
 			if (r.isSuccess()) {
 				WechatSendTemplateMessageBonusRechargeDTO templateMessageDTO = new WechatSendTemplateMessageBonusRechargeDTO();

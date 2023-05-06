@@ -15,4 +15,6 @@ public class AiChatManagerUrlConstant {
 	public static final String USER_LIST = "/userList";
 	
 	public static final String UPDATE_USED_TOKEN_TO_DETAIL_IN_JSON = "/updateUsedTokenToDetailInJson";
+	
+	public static final String RECHARGE_BY_ADMIN = "/rechargeByAdmin";
 }

@@ -22,7 +22,7 @@ import ai.aiArt.pojo.result.GetJobResultList;
 import ai.aiArt.pojo.type.AiArtJobStatusType;
 import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
 import ai.aiArt.pojo.vo.AiArtImageOnWallVO;
-import ai.aiChat.pojo.type.AiChatAmountType;
+import ai.aiChat.pojo.type.AiServiceAmountType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.pojo.dto.AddToImageWallDTO;
 import demo.ai.aiArt.pojo.dto.AiArtJobListFilterDTO;
@@ -157,7 +157,7 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 			BigDecimal totalTokens = calculateTokenCost(parameter);
 			BigDecimal returnTokens = totalTokens.divide(new BigDecimal(parameter.getBatchSize()), RoundingMode.FLOOR)
 					.multiply(new BigDecimal(0.98));
-			aiChatUserService.recharge(userId, AiChatAmountType.BONUS, returnTokens);
+			aiChatUserService.recharge(userId, AiServiceAmountType.BONUS, returnTokens);
 		}
 
 		r.setIsSuccess();

@@ -30,7 +30,7 @@ import ai.aiArt.pojo.type.AiArtJobStatusType;
 import ai.aiArt.pojo.type.AiArtSamplerType;
 import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
 import ai.aiArt.pojo.vo.AiArtImageOnWallVO;
-import ai.aiChat.pojo.type.AiChatAmountType;
+import ai.aiChat.pojo.type.AiServiceAmountType;
 import ai.automatic1111.pojo.type.AiArtDefaultModelType;
 import ai.pojo.vo.AiArtModelVO;
 import auxiliaryCommon.pojo.result.CommonResult;
@@ -237,7 +237,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		if (isFreeJobFlag) {
 			addFreeJobCountingOfToday(aiUserId);
 			addFreeJobCountingOfLastThreeDays(aiUserId);
-			aiChatUserService.recharge(aiUserId, AiChatAmountType.BONUS, cost);
+			aiChatUserService.recharge(aiUserId, AiServiceAmountType.BONUS, cost);
 			r.setFreeJobCountLeft(aiArtOptionService.getMaxDailyFreeJobCount() - freeJobCounting);
 		} else {
 			r.setFreeJobCountLeft(0);
@@ -349,7 +349,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 			if (jobPO.getRunCount() + 1 == aiArtOptionService.getMaxFailCountForJob()) {
 				BigDecimal cost = calculateTokenCost(parameterDTO);
-				aiChatUserService.recharge(jobPO.getAiUserId(), AiChatAmountType.BONUS, cost);
+				aiChatUserService.recharge(jobPO.getAiUserId(), AiServiceAmountType.BONUS, cost);
 				jobPO.setRunCount(jobPO.getRunCount() + 1);
 				jobPO.setHasReview(true);
 				aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);

@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import ai.aiChat.pojo.result.GetAiChatHistoryResult;
 import ai.aiChat.pojo.type.AiServiceAmountType;
+import auxiliaryCommon.pojo.dto.BasePkDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiChat.pojo.constant.AiChatManagerUrlConstant;
 import demo.ai.aiChat.pojo.dto.AiChatUserEditNicknameDTO;
@@ -24,7 +25,6 @@ import demo.ai.aiChat.service.AiChatService;
 import demo.ai.aiChat.service.AiChatUserService;
 import demo.ai.aiChat.service.impl.AiChatCacheService;
 import demo.common.controller.CommonController;
-import demo.common.pojo.dto.BaseDTO;
 
 @Controller
 @RequestMapping(value = AiChatManagerUrlConstant.ROOT)
@@ -41,19 +41,19 @@ public class AiChatManagerController extends CommonController {
 
 	@PostMapping(value = AiChatManagerUrlConstant.BLOCK_USER_BY_PK)
 	@ResponseBody
-	public CommonResult blockUser(@RequestBody BaseDTO dto) {
+	public CommonResult blockUser(@RequestBody BasePkDTO dto) {
 		return userService.blockUserByPk(dto.getPk());
 	}
 
 	@PostMapping(value = AiChatManagerUrlConstant.UNLOCK_USER_BY_PK)
 	@ResponseBody
-	public CommonResult unlockUserByPk(@RequestBody BaseDTO dto) {
+	public CommonResult unlockUserByPk(@RequestBody BasePkDTO dto) {
 		return userService.unlockUserByPk(dto.getPk());
 	}
 
 	@PostMapping(value = AiChatManagerUrlConstant.UNWARNING_USER_BY_PK)
 	@ResponseBody
-	public CommonResult cleanUserWarningMark(@RequestBody BaseDTO dto) {
+	public CommonResult cleanUserWarningMark(@RequestBody BasePkDTO dto) {
 		return userService.cleanUserWarningMark(dto.getPk());
 	}
 

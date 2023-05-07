@@ -8,9 +8,9 @@ import ai.aiArt.pojo.result.AiArtImageWallResult;
 import ai.aiArt.pojo.result.GetJobResultList;
 import ai.aiArt.pojo.result.SendTextToImgJobResult;
 import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
+import auxiliaryCommon.pojo.dto.BasePkDTO;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import demo.ai.aiArt.service.AiArtService;
-import demo.common.pojo.dto.BaseDTO;
 import demo.interaction.wechat.service.WechatAiArtService;
 import wechatSdk.pojo.dto.AiArtGenerateOtherLikeThatDTO;
 
@@ -42,7 +42,7 @@ public class WechatAiArtServiceImpl extends WechatCommonService implements Wecha
 
 	@Override
 	public EncryptDTO getParameterByJobPk(EncryptDTO encryptedDTO) {
-		BaseDTO dto = decryptEncryptDTO(encryptedDTO, BaseDTO.class);
+		BasePkDTO dto = decryptEncryptDTO(encryptedDTO, BasePkDTO.class);
 		if (dto == null) {
 			return encryptDTO(new GetJobResultList());
 		}

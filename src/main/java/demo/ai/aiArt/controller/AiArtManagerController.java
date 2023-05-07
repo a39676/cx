@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.dto.BasePkDTO;
+import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.ai.aiArt.mq.producer.AiArtJobQueueSettingProducer;
 import demo.ai.aiArt.pojo.constant.AiArtMangerUrl;
 import demo.ai.aiArt.pojo.dto.AddToImageWallDTO;
 import demo.ai.aiArt.pojo.dto.AiArtJobListFilterDTO;
@@ -24,6 +26,8 @@ public class AiArtManagerController {
 
 	@Autowired
 	private AiArtManagerService aiArtManagerService;
+	@Autowired
+	private AiArtJobQueueSettingProducer aiArtJobQueueSettingProducer;
 
 	@GetMapping(value = AiArtMangerUrl.VIEW)
 	public ModelAndView getManagerView() {
@@ -65,4 +69,12 @@ public class AiArtManagerController {
 		return aiArtManagerService.setHadReview(dto.getPk());
 	}
 
+	@PostMapping(value = AiArtMangerUrl.AI_ART_JOB_QUEUE_SETTING)
+	@ResponseBody
+	public CommonResult setAiArtJobQueueSetting(@RequestBody BaseStrDTO dto) {
+		aiArtJobQueueSettingProducer.send(dto.getStr());
+		CommonResult r = new CommonResult();
+		r.setIsSuccess();
+		return r;
+	}
 }

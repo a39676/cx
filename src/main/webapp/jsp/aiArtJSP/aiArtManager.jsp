@@ -26,9 +26,8 @@
                 <label id="result"></label>
               </th>
               <td>
-                <input type="text" name="" id="colabUrl" placeholder="colabUrl"><br>
-                <button id="submitColabUrl">submitColabUrl</button>
-                <button id="stopColabUrl">stopColabUrl</button>
+                <button id="startJobQueue">startJobQueue</button>
+                <button id="stopJobQueue">stopJobQueue</button>
               </td>
             </tr>
           </thead>
@@ -249,79 +248,16 @@
 
     $(document).ready(function() {
 
-      $("#submitColabUrl").click(function() {
+      $("#startJobQueue").click(function() {
         $("#result").text("");
-        setRunningColab();
+        aiArtJobQueueSetting("1");
       })
 
-      function setRunningColab(){
-        var url = "/aiArtManager/setRunningColab";
-
-        var colabUrl = $("#colabUrl").val();
-
-        var jsonOutput = {
-          str:colabUrl,
-        };
-
-        console.log(jsonOutput);
-  
-        $.ajax({
-          type : "POST",
-          async : true,
-          url : url,
-          data: JSON.stringify(jsonOutput),
-          cache : false,
-          contentType: "application/json",
-          dataType: "json",
-          timeout:50000,
-          beforeSend: function(xhr) {
-            xhr.setRequestHeader(csrfHeader, csrfToken);
-          },
-          success:function(datas){
-            console.log(datas);
-            if (datas.code == 0) {
-              $("#result").text("Set colab running success");
-            } else {
-              $("#result").text(datas.message);
-            }
-          },
-          error: function(datas) {
-            
-          }
-        });
-      }
-
-      $("#stopColabUrl").click(function() {
+      $("#stopJobQueue").click(function() {
         $("#result").text("");
-        setStopColab();
+        aiArtJobQueueSetting("0");
       })
 
-      function setStopColab(){
-        var url = "/aiArtManager/setStopColab";
-
-        $.ajax({
-          type : "POST",
-          async : true,
-          url : url,
-          cache : false,
-          timeout:50000,
-          beforeSend: function(xhr) {
-            xhr.setRequestHeader(csrfHeader, csrfToken);
-          },
-          success:function(datas){
-            console.log(datas);
-            if (datas.code == 0) {
-              $("#result").text("Set stop colab success");
-            } else {
-              $("#result").text(datas.message);
-            }
-          },
-          error: function(datas) {
-            
-          }
-        });
-      }
-    
       $("#loadMoreJobResult").click(function (){
         getJobResultList();
       })
@@ -553,6 +489,37 @@
             } else {
               $("#result").text(datas.message);
             }
+          },
+          error: function(datas) {
+            
+          }
+        });
+      }
+
+      function aiArtJobQueueSetting(jobQueueStatus){
+        var url = "/aiArtManager/aiArtJobQueueSetting";
+
+        var jsonOutput = {
+          str:jobQueueStatus,
+        };
+
+        console.log(jsonOutput);
+  
+        $.ajax({
+          type : "POST",
+          async : true,
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          cache : false,
+          contentType: "application/json",
+          dataType: "json",
+          timeout:50000,
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          success:function(datas){
+            console.log(datas);
+            $("#result").text(datas.code + ", " + datas.message);
           },
           error: function(datas) {
             

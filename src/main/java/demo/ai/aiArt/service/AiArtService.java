@@ -7,10 +7,10 @@ import ai.aiArt.pojo.result.AiArtImageWallResult;
 import ai.aiArt.pojo.result.GetJobResultList;
 import ai.aiArt.pojo.result.SendTextToImgJobResult;
 import ai.pojo.vo.AiArtModelVO;
+import auxiliaryCommon.pojo.dto.BasePkDTO;
 import demo.ai.aiArt.pojo.dto.AiArtJobListFilterDTO;
 import demo.ai.aiArt.pojo.dto.TextToImageFromApiDTO;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecord;
-import demo.common.pojo.dto.BaseDTO;
 import wechatSdk.pojo.dto.AiArtGenerateOtherLikeThatDTO;
 
 public interface AiArtService {
@@ -23,7 +23,7 @@ public interface AiArtService {
 
 	SendTextToImgJobResult sendTextToImgFromApiDtoToMq(TextToImageFromApiDTO dto);
 
-	GetJobResultList getJobResultVoByJobPk(BaseDTO dto);
+	GetJobResultList getJobResultVoByJobPk(BasePkDTO dto);
 
 	void deleteParameterFile();
 

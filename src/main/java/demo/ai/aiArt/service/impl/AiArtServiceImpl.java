@@ -33,6 +33,7 @@ import ai.aiArt.pojo.vo.AiArtImageOnWallVO;
 import ai.aiChat.pojo.type.AiServiceAmountType;
 import ai.automatic1111.pojo.type.AiArtDefaultModelType;
 import ai.pojo.vo.AiArtModelVO;
+import auxiliaryCommon.pojo.dto.BasePkDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.mapper.AiArtModelMapper;
 import demo.ai.aiArt.mq.producer.AiArtTextToImageProducer;
@@ -47,7 +48,6 @@ import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecordExample.Criteria;
 import demo.ai.aiArt.service.AiArtCommonService;
 import demo.ai.aiArt.service.AiArtService;
 import demo.ai.aiChat.pojo.po.AiChatUserDetail;
-import demo.common.pojo.dto.BaseDTO;
 import demo.image.pojo.type.ImageTagType;
 import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.result.ImageSavingResult;
@@ -525,7 +525,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	}
 
 	@Override
-	public GetJobResultList getJobResultVoByJobPk(BaseDTO dto) {
+	public GetJobResultList getJobResultVoByJobPk(BasePkDTO dto) {
 		return super.getJobResultVoByJobPk(dto.getPk());
 	}
 

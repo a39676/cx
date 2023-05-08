@@ -176,10 +176,11 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			dto.setSampler(samplerType.getCode());
 		}
 
-		if (dto.getModel() == null) {
-			dto.setModel(AiArtDefaultModelType.chilloutmix_NiPrunedFp32Fix.getCode());
+		if (dto.getModelCode() == null) {
+			dto.setModelCode(AiArtDefaultModelType.chilloutmix_NiPrunedFp32Fix.getCode());
+			dto.setModelName(AiArtDefaultModelType.chilloutmix_NiPrunedFp32Fix.getName());
 		} else {
-			AiArtModel model = aiArtModelMapper.selectByPrimaryKey(dto.getModel().longValue());
+			AiArtModel model = aiArtModelMapper.selectByPrimaryKey(dto.getModelCode().longValue());
 			if (model == null) {
 				r.setMessage("Model 不存在, 请输入正确参数");
 				return r;
@@ -188,6 +189,8 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 				r.setMessage("Model 不存在, 请输入正确参数");
 				return r;
 			}
+
+			dto.setModelName(model.getFileName());
 		}
 
 		AiArtTextToImageJobRecordExample example = new AiArtTextToImageJobRecordExample();
@@ -307,6 +310,8 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		Long jobId = txtToImgResult.getJobId();
 		TextToImageDTO parameterDTO = getParameterByJobId(jobId);
 
+		removeJobInQueueMark(jobId);
+
 		if (txtToImgResult.isSuccess()) {
 			AiArtGeneratingRecord imgGeneratingRecord = new AiArtGeneratingRecord();
 			imgGeneratingRecord.setAiUserId(jobPO.getAiUserId());
@@ -338,8 +343,6 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			jobPO.setJobStatus(AiArtJobStatusType.SUCCESS.getCode().byteValue());
 			jobPO.setRunCount(jobPO.getRunCount() + 1);
 			aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
-
-			removeJobInQueueMark(jobId);
 
 		} else {
 

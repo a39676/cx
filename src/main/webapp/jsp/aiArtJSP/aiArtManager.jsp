@@ -389,7 +389,8 @@
           tr += "<label>negativePrompts: "+negativePrompts+"</label><br>";
           tr += "</td>";
           tr += "<td>";
-          tr += "<label>sampler: "+parameter.sampler+"</label><br>";
+          tr += "<label>modelName: "+parameter.modelName+"</label><br>";
+          tr += "<label>sampler: "+vo.samplerName+"</label><br>";
           tr += "<label>width: "+parameter.width+"</label><br>";
           tr += "<label>height: "+parameter.height+"</label><br>";
           tr += "<label>step: "+parameter.steps+"</label><br>";

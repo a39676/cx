@@ -20,9 +20,11 @@ import ai.aiArt.pojo.dto.TextToImageDTO;
 import ai.aiArt.pojo.result.AiArtGenerateImageQueryResult;
 import ai.aiArt.pojo.result.GetJobResultList;
 import ai.aiArt.pojo.type.AiArtJobStatusType;
+import ai.aiArt.pojo.type.AiArtSamplerType;
 import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.mapper.AiArtGeneratingRecordMapper;
+import demo.ai.aiArt.mapper.AiArtModelMapper;
 import demo.ai.aiArt.mapper.AiArtTextToImageJobRecordMapper;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecord;
 import demo.ai.aiArt.service.impl.AiArtCacheService;
@@ -44,6 +46,8 @@ public abstract class AiArtCommonService extends AiCommonService {
 	protected AiArtGeneratingRecordMapper aiArtGeneratingRecordMapper;
 	@Autowired
 	protected AiArtTextToImageJobRecordMapper aiArtTextToImageJobRecordMapper;
+	@Autowired
+	protected AiArtModelMapper aiArtModelMapper;
 	@Autowired
 	protected ImageService imageService;
 
@@ -173,6 +177,7 @@ public abstract class AiArtCommonService extends AiCommonService {
 		vo.setCreateTimeStr(localDateTimeHandler.dateToStr(po.getCreateTime()));
 		vo.setIsDelete(po.getIsDelete());
 		vo.setIsFromApi(po.getIsFromApi());
+
 		if (forAdmin) {
 			vo.setIsFreeJob(po.getIsFreeJob());
 			vo.setHasReview(po.getHasReview());
@@ -203,6 +208,13 @@ public abstract class AiArtCommonService extends AiCommonService {
 //						.replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
 //			}
 			vo.setParameter(subParam);
+
+			AiArtSamplerType samplerType = AiArtSamplerType.getType(subParam.getSampler());
+			if (samplerType != null) {
+				vo.setSamplerName(samplerType.getName());
+			}
+			
+			vo.setModelName(subParam.getModelName());
 		}
 		return vo;
 	}

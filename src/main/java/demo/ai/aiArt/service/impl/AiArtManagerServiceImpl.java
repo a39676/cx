@@ -38,6 +38,7 @@ import demo.ai.aiChat.mapper.AiChatUserAssociateWechatUidMapper;
 import demo.ai.aiChat.pojo.po.AiChatUserAssociateWechatUidExample;
 import demo.ai.aiChat.pojo.po.AiChatUserAssociateWechatUidKey;
 import demo.image.service.ImageService;
+import demo.interaction.wechat.mq.producer.SendAiArtJobCompleteTemplateMessageProducer;
 
 @Service
 public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArtManagerService {
@@ -46,6 +47,8 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 	private AiArtService aiArtService;
 	@Autowired
 	private ImageService imageService;
+	@Autowired
+	private SendAiArtJobCompleteTemplateMessageProducer sendAiArtJobCompleteTemplateMessageProducer;
 
 	@Autowired
 	private AiChatUserAssociateWechatUidMapper aiChatUserAssociateWechatUidMapper;
@@ -76,10 +79,10 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 			voList.add(buildAiArtGenerateImageVO(po, jobResult, systemOptionService.encryptId(po.getId())));
 			jobResult = null;
 		}
-		
+
 		AiUserDetailInRedisDTO userDetailDTO = null;
 		Map<String, AiUserDetailInRedisDTO> userDetailInRedisMap = new HashMap<>();
-		for(Long aiUserId : aiUserIdSet) {
+		for (Long aiUserId : aiUserIdSet) {
 			userDetailDTO = new AiUserDetailInRedisDTO();
 			userDetailDTO.setUserId(aiUserId);
 			userDetailDTO.setFreeJobCountingLastThreeDays(getFreeJobCountingOfLastThreeDays(aiUserId));
@@ -87,9 +90,9 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 			userDetailDTO.setRechargeMarkThisWeek(getRechargeMarkThisWeek(aiUserId));
 			userDetailInRedisMap.put(systemOptionService.encryptId(aiUserId), userDetailDTO);
 		}
-		
+
 		r.setUserDetailInRedisMap(userDetailInRedisMap);
-		
+
 		r.setJobResultList(voList);
 		r.setIsSuccess();
 		return r;
@@ -280,7 +283,8 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 				break noticeTag;
 			}
 			removeNoticeWhenCompleteMark(jobPO.getAiUserId(), jobId);
-			wechatSdkForInterService.sendTemplateMessageAiArtTxtToImgComplete(associateList.get(0).getWechatId());
+			String openId = wechatSdkForInterService.getWechatOpenIdByWechatUserId(associateList.get(0).getWechatId());
+			sendAiArtJobCompleteTemplateMessageProducer.send(openId);
 		}
 
 		return r;

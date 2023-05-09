@@ -274,17 +274,17 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 			r.setIsSuccess();
 		}
 
-		noticeTag: if (hasNoticeWhenCompleteMark(jobPO.getAiUserId(), jobId)) {
+		if (hasNoticeWhenCompleteMark(jobPO.getAiUserId(), jobId)) {
 			AiChatUserAssociateWechatUidExample associateExample = new AiChatUserAssociateWechatUidExample();
 			associateExample.createCriteria().andAiChatUserIdEqualTo(jobPO.getAiUserId());
 			List<AiChatUserAssociateWechatUidKey> associateList = aiChatUserAssociateWechatUidMapper
 					.selectByExample(associateExample);
-			if (associateList.isEmpty()) {
-				break noticeTag;
+			if (!associateList.isEmpty()) {
+				removeNoticeWhenCompleteMark(jobPO.getAiUserId(), jobId);
+				String openId = wechatSdkForInterService
+						.getWechatOpenIdByWechatUserId(associateList.get(0).getWechatId());
+				sendAiArtJobCompleteTemplateMessageProducer.send(openId);
 			}
-			removeNoticeWhenCompleteMark(jobPO.getAiUserId(), jobId);
-			String openId = wechatSdkForInterService.getWechatOpenIdByWechatUserId(associateList.get(0).getWechatId());
-			sendAiArtJobCompleteTemplateMessageProducer.send(openId);
 		}
 
 		return r;

@@ -273,18 +273,27 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 		if (updateCount == 1) {
 			r.setIsSuccess();
 		}
-
+		
+		log.error("ai user id: " + jobPO.getAiUserId());
+		log.error("job id: " + jobId);
 		if (hasNoticeWhenCompleteMark(jobPO.getAiUserId(), jobId)) {
+			log.error("has notice mark");
 			AiChatUserAssociateWechatUidExample associateExample = new AiChatUserAssociateWechatUidExample();
 			associateExample.createCriteria().andAiChatUserIdEqualTo(jobPO.getAiUserId());
 			List<AiChatUserAssociateWechatUidKey> associateList = aiChatUserAssociateWechatUidMapper
 					.selectByExample(associateExample);
 			if (!associateList.isEmpty()) {
+				log.error("before remove mark");
 				removeNoticeWhenCompleteMark(jobPO.getAiUserId(), jobId);
 				String openId = wechatSdkForInterService
 						.getWechatOpenIdByWechatUserId(associateList.get(0).getWechatId());
+				log.error("openId : " + openId);
 				sendAiArtJobCompleteTemplateMessageProducer.send(openId);
+			} else {
+				log.error("associate list empty");
 			}
+		} else {
+			log.error("had NOT noticek mark");
 		}
 
 		return r;

@@ -32,6 +32,7 @@ import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
 import ai.aiArt.pojo.vo.AiArtImageOnWallVO;
 import ai.aiChat.pojo.type.AiServiceAmountType;
 import ai.automatic1111.pojo.type.AiArtDefaultModelType;
+import ai.automatic1111.pojo.type.AiArtUpscalerType;
 import ai.pojo.vo.AiArtModelVO;
 import auxiliaryCommon.pojo.dto.BasePkDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
@@ -191,6 +192,60 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			}
 
 			dto.setModelName(model.getFileName());
+		}
+
+		if (dto.getEnableHr()) {
+			if (dto.getHrUpscalerCode() == null) {
+				r.setMessage("Please select a highres upscaler");
+				return r;
+			}
+			AiArtUpscalerType upscalerType = AiArtUpscalerType.getType(dto.getHrUpscalerCode());
+			if (upscalerType == null) {
+				r.setMessage("Please select a highres upscaler");
+				return r;
+			}
+			dto.setHrUpscalerName(upscalerType.getName());
+			if (dto.getDenoisingStrength() < 0 || dto.getDenoisingStrength() > 1) {
+				r.setMessage("Denoising strength should between 0 to 1");
+				return r;
+			}
+			if (dto.getHrScale() == null && (dto.getHrResizeX() == null || dto.getHrResizeY() == null)) {
+				r.setMessage(
+						"Please set a highres scaler condition, (Highres scale) or (Highres resize X & Highres resize Y)");
+				return r;
+			}
+			if (dto.getHrResizeX() != null && dto.getHrResizeY() != null) {
+				if (dto.getHrResizeX() > aiArtOptionService.getHigerFixMaxWidth()
+						|| dto.getHrResizeY() > aiArtOptionService.getHigerFixMaxHeight()) {
+					r.setMessage(
+							"Highres scale size length should less than " + aiArtOptionService.getHigerFixMaxWidth());
+					return r;
+				}
+				if (dto.getHrResizeX() < 1 || dto.getHrResizeY() < 1) {
+					r.setMessage("Highres resize length should bigger than 1");
+					return r;
+				}
+			} else {
+				if (dto.getHrScale() < 1) {
+					r.setMessage("Highres scale should bigger than 1");
+					return r;
+				}
+				double highresHeight = dto.getHrScale() * dto.getHeight();
+				double highresWidth = dto.getHrScale() * dto.getWidth();
+				if (highresHeight > aiArtOptionService.getHigerFixMaxHeight()
+						|| highresWidth > aiArtOptionService.getHigerFixMaxWidth()) {
+					r.setMessage(
+							"Highres scale size length should less than " + aiArtOptionService.getHigerFixMaxWidth());
+					return r;
+				}
+
+			}
+
+			if (dto.getHrSecondPassSteps() == null || dto.getHrSecondPassSteps() < 1
+					|| dto.getHrSecondPassSteps() > aiArtOptionService.getHigerFixMaxStep()) {
+				r.setMessage("Highres steps should between 1 to " + aiArtOptionService.getHigerFixMaxStep());
+				return r;
+			}
 		}
 
 		AiArtTextToImageJobRecordExample example = new AiArtTextToImageJobRecordExample();

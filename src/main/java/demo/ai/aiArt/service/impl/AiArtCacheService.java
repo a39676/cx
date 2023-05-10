@@ -1,6 +1,7 @@
 package demo.ai.aiArt.service.impl;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -13,10 +14,10 @@ import demo.common.service.CommonService;
 public class AiArtCacheService extends CommonService {
 
 	private AiArtImageWallResult imageWall;
-
 	private Boolean isRunning = false;
-
 	private LocalDateTime lastHearBeatTime;
+	private LocalTime serviceStartTime;
+	private LocalTime serviceEndTime;
 
 	public AiArtImageWallResult getImageWall() {
 		return imageWall;
@@ -42,10 +43,27 @@ public class AiArtCacheService extends CommonService {
 		this.lastHearBeatTime = lastHearBeatTime;
 	}
 
+	public LocalTime getServiceStartTime() {
+		return serviceStartTime;
+	}
+
+	public void setServiceStartTime(LocalTime serviceStartTime) {
+		this.serviceStartTime = serviceStartTime;
+	}
+
+	public LocalTime getServiceEndTime() {
+		return serviceEndTime;
+	}
+
+	public void setServiceEndTime(LocalTime serviceEndTime) {
+		this.serviceEndTime = serviceEndTime;
+	}
+
 	@Override
 	public String toString() {
 		return "AiArtCacheService [imageWall=" + imageWall + ", isRunning=" + isRunning + ", lastHearBeatTime="
-				+ lastHearBeatTime + "]";
+				+ lastHearBeatTime + ", serviceStartTime=" + serviceStartTime + ", serviceEndTime=" + serviceEndTime
+				+ "]";
 	}
 
 }

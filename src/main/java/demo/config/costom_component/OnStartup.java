@@ -106,8 +106,8 @@ public class OnStartup extends CommonService implements ApplicationListener<Appl
 		log.error("urge notice service, update message web hook secret token");
 		urgeNoticeService.setUpdateMsgWebhook();
 
-		log.error("AI art service load image wall to cache");
-		aiArtService.loadImageWallToCache();
+		log.error("AI art service loading cache");
+		aiArtService.loadingCache();
 
 		log.error("DatabaseFillerOnStartup end");
 	}

@@ -43,6 +43,9 @@ public class AiArtOptionService extends CommonService {
 	private Long idOfAdmin;
 	private Integer maxWaitingJobCount;
 	private List<String> nsfwPrompt;
+	private String serviceStartTimeStr;
+	private String serviceEndTimeStr;
+	private Integer freeJobDelaySeconds;
 
 	public String getApiKeyOfAdmin() {
 		return apiKeyOfAdmin;
@@ -220,6 +223,30 @@ public class AiArtOptionService extends CommonService {
 		this.idOfAdmin = idOfAdmin;
 	}
 
+	public String getServiceStartTimeStr() {
+		return serviceStartTimeStr;
+	}
+
+	public void setServiceStartTimeStr(String serviceStartTimeStr) {
+		this.serviceStartTimeStr = serviceStartTimeStr;
+	}
+
+	public String getServiceEndTimeStr() {
+		return serviceEndTimeStr;
+	}
+
+	public void setServiceEndTimeStr(String serviceEndTimeStr) {
+		this.serviceEndTimeStr = serviceEndTimeStr;
+	}
+
+	public Integer getFreeJobDelaySeconds() {
+		return freeJobDelaySeconds;
+	}
+
+	public void setFreeJobDelaySeconds(Integer freeJobDelaySeconds) {
+		this.freeJobDelaySeconds = freeJobDelaySeconds;
+	}
+
 	@Override
 	public String toString() {
 		return "AiArtOptionService [generateImageResultFolder=" + generateImageResultFolder
@@ -232,7 +259,9 @@ public class AiArtOptionService extends CommonService {
 				+ ", maxLivingMinuteOfApiImageAfterFirstVisit=" + maxLivingMinuteOfApiImageAfterFirstVisit
 				+ ", consumptionCoefficient=" + consumptionCoefficient + ", imagePkInsteadOfNsfw="
 				+ imagePkInsteadOfNsfw + ", apiKeyOfAdmin=" + apiKeyOfAdmin + ", idOfAdmin=" + idOfAdmin
-				+ ", maxWaitingJobCount=" + maxWaitingJobCount + ", nsfwPrompt=" + nsfwPrompt + "]";
+				+ ", maxWaitingJobCount=" + maxWaitingJobCount + ", nsfwPrompt=" + nsfwPrompt + ", serviceStartTimeStr="
+				+ serviceStartTimeStr + ", serviceEndTimeStr=" + serviceEndTimeStr + ", freeJobDelaySeconds="
+				+ freeJobDelaySeconds + "]";
 	}
 
 	@PostConstruct

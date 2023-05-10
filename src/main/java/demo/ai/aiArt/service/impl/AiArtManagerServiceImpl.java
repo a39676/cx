@@ -34,11 +34,7 @@ import demo.ai.aiArt.pojo.result.GetJobResultListForReivew;
 import demo.ai.aiArt.service.AiArtCommonService;
 import demo.ai.aiArt.service.AiArtManagerService;
 import demo.ai.aiArt.service.AiArtService;
-import demo.ai.aiChat.mapper.AiChatUserAssociateWechatUidMapper;
-import demo.ai.aiChat.pojo.po.AiChatUserAssociateWechatUidExample;
-import demo.ai.aiChat.pojo.po.AiChatUserAssociateWechatUidKey;
 import demo.image.service.ImageService;
-import demo.interaction.wechat.mq.producer.SendAiArtJobCompleteTemplateMessageProducer;
 
 @Service
 public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArtManagerService {
@@ -47,11 +43,6 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 	private AiArtService aiArtService;
 	@Autowired
 	private ImageService imageService;
-	@Autowired
-	private SendAiArtJobCompleteTemplateMessageProducer sendAiArtJobCompleteTemplateMessageProducer;
-
-	@Autowired
-	private AiChatUserAssociateWechatUidMapper aiChatUserAssociateWechatUidMapper;
 
 	@Override
 	public ModelAndView getManagerView() {
@@ -277,18 +268,7 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 			r.setIsSuccess();
 		}
 
-		if (hasNoticeWhenCompleteMark(jobPO.getAiUserId(), jobId)) {
-			AiChatUserAssociateWechatUidExample associateExample = new AiChatUserAssociateWechatUidExample();
-			associateExample.createCriteria().andAiChatUserIdEqualTo(jobPO.getAiUserId());
-			List<AiChatUserAssociateWechatUidKey> associateList = aiChatUserAssociateWechatUidMapper
-					.selectByExample(associateExample);
-			if (!associateList.isEmpty()) {
-				removeNoticeWhenCompleteMark(jobPO.getAiUserId(), jobId);
-				String openId = wechatSdkForInterService
-						.getWechatOpenIdByWechatUserId(associateList.get(0).getWechatId());
-				sendAiArtJobCompleteTemplateMessageProducer.send(openId);
-			}
-		}
+		sendAiArtJobCompleteNoticeIfNecessary(jobPO.getAiUserId(), jobId);
 
 		return r;
 	}

@@ -226,7 +226,6 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 		Boolean rechargeFlag = checkRechargeMarkThisWeek(aiUserId);
 		if (!isFreeJobFlag || rechargeFlag) {
-			addJobInQueueMark(jobId);
 			aiArtTextToImageProducer.send(dto);
 
 			if (!aiArtOptionService.getIdOfAdmin().equals(aiUserId)) {
@@ -310,8 +309,6 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		Long jobId = txtToImgResult.getJobId();
 		TextToImageDTO parameterDTO = getParameterByJobId(jobId);
 
-		removeJobInQueueMark(jobId);
-
 		if (txtToImgResult.isSuccess()) {
 			AiArtGeneratingRecord imgGeneratingRecord = new AiArtGeneratingRecord();
 			imgGeneratingRecord.setAiUserId(jobPO.getAiUserId());
@@ -345,12 +342,11 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
 
 		} else {
-
 			jobPO.setJobStatus(AiArtJobStatusType.FAILED.getCode().byteValue());
 			jobPO.setRunCount(jobPO.getRunCount() + 1);
 			aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
 
-			if (jobPO.getRunCount() + 1 == aiArtOptionService.getMaxFailCountForJob()) {
+			if (jobPO.getRunCount() + 1 == aiArtOptionService.getMaxFailCountForJob() && !jobPO.getIsFreeJob()) {
 				BigDecimal cost = calculateTokenCost(parameterDTO);
 				aiChatUserService.recharge(jobPO.getAiUserId(), AiServiceAmountType.BONUS, cost);
 				jobPO.setRunCount(jobPO.getRunCount() + 1);
@@ -359,6 +355,8 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 				minusJobCounting(jobPO.getAiUserId());
 			}
 		}
+		
+		removeJobInQueueMark(jobId);
 
 	}
 
@@ -480,7 +478,6 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 						}
 					}
 				}
-				addJobInQueueMark(po.getId());
 				TextToImageDTO dto = getParameterByJobId(po.getId());
 				aiArtTextToImageProducer.send(dto);
 			}

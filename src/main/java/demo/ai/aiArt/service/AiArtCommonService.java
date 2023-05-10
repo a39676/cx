@@ -29,10 +29,14 @@ import demo.ai.aiArt.mapper.AiArtTextToImageJobRecordMapper;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecord;
 import demo.ai.aiArt.service.impl.AiArtCacheService;
 import demo.ai.aiArt.service.impl.AiArtOptionService;
+import demo.ai.aiChat.mapper.AiChatUserAssociateWechatUidMapper;
+import demo.ai.aiChat.pojo.po.AiChatUserAssociateWechatUidExample;
+import demo.ai.aiChat.pojo.po.AiChatUserAssociateWechatUidKey;
 import demo.ai.aiChat.service.AiChatUserService;
 import demo.ai.common.service.impl.AiCommonService;
 import demo.base.system.service.impl.RedisOriginalConnectService;
 import demo.image.service.ImageService;
+import demo.interaction.wechat.mq.producer.SendAiArtJobCompleteTemplateMessageProducer;
 import net.sf.json.JSONObject;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -53,6 +57,12 @@ public abstract class AiArtCommonService extends AiCommonService {
 
 	@Autowired
 	protected AiChatUserService aiChatUserService;
+	
+	@Autowired
+	private SendAiArtJobCompleteTemplateMessageProducer sendAiArtJobCompleteTemplateMessageProducer;
+	@Autowired
+	private AiChatUserAssociateWechatUidMapper aiChatUserAssociateWechatUidMapper;
+
 
 	@Autowired
 	private FileUtilCustom fileUtilCustom;
@@ -321,5 +331,20 @@ public abstract class AiArtCommonService extends AiCommonService {
 		Long imgId = systemOptionService.decryptPrivateKey(imgPk);
 		imageService.shortenImageValidTime(imgId,
 				LocalDateTime.now().plusMinutes(aiArtOptionService.getMaxLivingMinuteOfApiImageAfterFirstVisit()));
+	}
+
+	protected void sendAiArtJobCompleteNoticeIfNecessary(Long aiUserId, Long jobId) {
+		if (hasNoticeWhenCompleteMark(aiUserId, jobId)) {
+			AiChatUserAssociateWechatUidExample associateExample = new AiChatUserAssociateWechatUidExample();
+			associateExample.createCriteria().andAiChatUserIdEqualTo(aiUserId);
+			List<AiChatUserAssociateWechatUidKey> associateList = aiChatUserAssociateWechatUidMapper
+					.selectByExample(associateExample);
+			if (!associateList.isEmpty()) {
+				removeNoticeWhenCompleteMark(aiUserId, jobId);
+				String openId = wechatSdkForInterService
+						.getWechatOpenIdByWechatUserId(associateList.get(0).getWechatId());
+				sendAiArtJobCompleteTemplateMessageProducer.send(openId);
+			}
+		}
 	}
 }

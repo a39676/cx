@@ -214,7 +214,18 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 						"Please set a highres scaler condition, (Highres scale) or (Highres resize X & Highres resize Y)");
 				return r;
 			}
-			if (dto.getHrScale() != null) {
+			if (dto.getHrResizeX() != null && dto.getHrResizeY() != null) {
+				if (dto.getHrResizeX() > aiArtOptionService.getHigerFixMaxWidth()
+						|| dto.getHrResizeY() > aiArtOptionService.getHigerFixMaxHeight()) {
+					r.setMessage(
+							"Highres scale size length should less than " + aiArtOptionService.getHigerFixMaxWidth());
+					return r;
+				}
+				if (dto.getHrResizeX() < 1 || dto.getHrResizeY() < 1) {
+					r.setMessage("Highres resize length should bigger than 1");
+					return r;
+				}
+			} else {
 				if (dto.getHrScale() < 1) {
 					r.setMessage("Highres scale should bigger than 1");
 					return r;
@@ -227,17 +238,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 							"Highres scale size length should less than " + aiArtOptionService.getHigerFixMaxWidth());
 					return r;
 				}
-			} else {
-				if (dto.getHrResizeX() > aiArtOptionService.getHigerFixMaxWidth()
-						|| dto.getHrResizeY() > aiArtOptionService.getHigerFixMaxHeight()) {
-					r.setMessage(
-							"Highres scale size length should less than " + aiArtOptionService.getHigerFixMaxWidth());
-					return r;
-				}
-				if (dto.getHrResizeX() < 1 || dto.getHrResizeY() < 1) {
-					r.setMessage("Highres resize should bigger than 1");
-					return r;
-				}
+
 			}
 
 			if (dto.getHrSecondPassSteps() == null || dto.getHrSecondPassSteps() < 1

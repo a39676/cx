@@ -57,12 +57,11 @@ public abstract class AiArtCommonService extends AiCommonService {
 
 	@Autowired
 	protected AiChatUserService aiChatUserService;
-	
+
 	@Autowired
 	private SendAiArtJobCompleteTemplateMessageProducer sendAiArtJobCompleteTemplateMessageProducer;
 	@Autowired
 	private AiChatUserAssociateWechatUidMapper aiChatUserAssociateWechatUidMapper;
-
 
 	@Autowired
 	private FileUtilCustom fileUtilCustom;
@@ -223,7 +222,7 @@ public abstract class AiArtCommonService extends AiCommonService {
 			if (samplerType != null) {
 				vo.setSamplerName(samplerType.getName());
 			}
-			
+
 			vo.setModelName(subParam.getModelName());
 		}
 		return vo;
@@ -248,9 +247,22 @@ public abstract class AiArtCommonService extends AiCommonService {
 	}
 
 	protected BigDecimal calculateTokenCost(TextToImageDTO dto) {
-		return new BigDecimal(dto.getWidth().longValue() * dto.getHeight().longValue() * dto.getSteps().longValue()
-				* dto.getBatchSize() * aiArtOptionService.getConsumptionCoefficient())
+		BigDecimal cost = new BigDecimal(dto.getWidth().longValue() * dto.getHeight().longValue()
+				* dto.getSteps().longValue() * dto.getBatchSize() * aiArtOptionService.getConsumptionCoefficient())
 				.setScale(0, RoundingMode.CEILING);
+		if (dto.getEnableHr()) {
+			Double pixelArea = 0D;
+			if (dto.getHrScale() != null) {
+				pixelArea = dto.getWidth() * dto.getHeight() * dto.getHrScale();
+			} else {
+				pixelArea = dto.getHrResizeX() * dto.getHrResizeY().doubleValue();
+			}
+
+			Double highresCost = pixelArea * dto.getHrSecondPassSteps() * dto.getDenoisingStrength()
+					* aiArtOptionService.getConsumptionCoefficient();
+			cost = cost.add(new BigDecimal(highresCost));
+		}
+		return cost;
 	}
 
 	protected CommonResult saveAiArtGenerateImgResultJson(TextToImageDTO dto, List<String> imgPkList) {

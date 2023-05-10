@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -355,7 +355,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 				minusJobCounting(jobPO.getAiUserId());
 			}
 		}
-		
+
 		removeJobInQueueMark(jobId);
 
 	}
@@ -454,32 +454,29 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		if (!aiArtCacheService.getIsRunning()) {
 			return;
 		}
-		AiArtTextToImageJobRecordExample example = new AiArtTextToImageJobRecordExample();
-		example.createCriteria()
-				.andJobStatusIn(Arrays.asList(AiArtJobStatusType.WAITING.getCode().byteValue(),
-						AiArtJobStatusType.FAILED.getCode().byteValue()))
-				.andIsDeleteEqualTo(false).andRunCountLessThan(aiArtOptionService.getMaxFailCountForJob());
-
-		List<AiArtTextToImageJobRecord> poList = aiArtTextToImageJobRecordMapper.selectByExample(example);
+		List<AiArtTextToImageJobRecord> poList = aiArtTextToImageJobRecordMapper
+				.findWaitingJobs(aiArtOptionService.getMaxFailCountForJob());
 		if (poList.isEmpty()) {
 			return;
 		}
 		for (AiArtTextToImageJobRecord po : poList) {
-			if (!isJobInQueue(po.getId())) {
-				if (po.getIsFreeJob()) {
-					Long aiUserId = po.getAiUserId();
-					Boolean rechargeFlag = checkRechargeMarkThisWeek(aiUserId);
-					if (!rechargeFlag) {
-						Integer freeJobCountingIntLastThreeDays = getFreeJobCountingOfLastThreeDays(aiUserId);
-						int delaySeconds = freeJobCountingIntLastThreeDays * 12;
-						LocalDateTime startTime = po.getCreateTime().plusSeconds(delaySeconds);
-						if (startTime.isBefore(LocalDateTime.now())) {
-							continue;
-						}
-					}
-				}
+			if (isJobInQueue(po.getId())) {
+				continue;
+			}
+			if (!po.getIsFreeJob()) {
 				TextToImageDTO dto = getParameterByJobId(po.getId());
 				aiArtTextToImageProducer.send(dto);
+			}
+			Long aiUserId = po.getAiUserId();
+			Boolean rechargeFlag = checkRechargeMarkThisWeek(aiUserId);
+			if (!rechargeFlag) {
+				Integer freeJobCountingIntLastThreeDays = getFreeJobCountingOfLastThreeDays(aiUserId);
+				int delaySeconds = freeJobCountingIntLastThreeDays * aiArtOptionService.getFreeJobDelaySeconds();
+				LocalDateTime startTime = po.getCreateTime().plusSeconds(delaySeconds);
+				if (startTime.isAfter(LocalDateTime.now())) {
+					TextToImageDTO dto = getParameterByJobId(po.getId());
+					aiArtTextToImageProducer.send(dto);
+				}
 			}
 		}
 	}
@@ -633,7 +630,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	}
 
 	@Override
-	public void loadImageWallToCache() {
+	public void loadingCache() {
 		try {
 			String content = fileUtilCustom.getStringFromFile(aiArtOptionService.getImageWallFilePath());
 			AiArtImageWallResult dto = null;
@@ -646,8 +643,12 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 				dto.setImgVoList(new ArrayList<>());
 			}
 			aiArtCacheService.setImageWall(dto);
+			LocalTime startTime = LocalTime.parse(aiArtOptionService.getServiceStartTimeStr());
+			LocalTime endTime = LocalTime.parse(aiArtOptionService.getServiceEndTimeStr());
+			aiArtCacheService.setServiceStartTime(startTime);
+			aiArtCacheService.setServiceEndTime(endTime);
 		} catch (Exception e) {
-			sendTelegramMessage("Load image wall DTO to cache failed: " + e.getLocalizedMessage());
+			sendTelegramMessage("AI art loading cache failed: " + e.getLocalizedMessage());
 		}
 	}
 
@@ -676,13 +677,13 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	@Override
 	public AiArtImageWallResult getImageWallFull(Boolean refresh) {
 		if (refresh != null && refresh) {
-			loadImageWallToCache();
+			loadingCache();
 		}
 		AiArtImageWallResult dto = aiArtCacheService.getImageWall();
 		if (dto != null) {
 			return dto;
 		}
-		loadImageWallToCache();
+		loadingCache();
 		return aiArtCacheService.getImageWall();
 	}
 

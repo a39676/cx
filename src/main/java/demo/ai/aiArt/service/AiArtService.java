@@ -29,7 +29,7 @@ public interface AiArtService {
 
 	void refreshImageWallJsonFile();
 
-	void loadImageWallToCache();
+	void loadingCache();
 
 	AiArtImageWallResult getImageWallRandomSub();
 

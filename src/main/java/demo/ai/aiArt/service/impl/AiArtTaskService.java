@@ -1,6 +1,7 @@
 package demo.ai.aiArt.service.impl;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -36,10 +37,15 @@ public class AiArtTaskService extends AiArtCommonService {
 
 	@Scheduled(fixedDelay = 1000L * 60)
 	public void checkAutomaticHeartBeat() {
+		LocalTime now = LocalTime.now();
+		if (now.isBefore(aiArtCacheService.getServiceStartTime())
+				|| now.isAfter(aiArtCacheService.getServiceEndTime())) {
+			return;
+		}
 		if (aiArtCacheService.getLastHearBeatTime() == null
 				|| aiArtCacheService.getLastHearBeatTime().isBefore(LocalDateTime.now().minusSeconds(90))) {
 			aiArtCacheService.setIsRunning(false);
-//			sendTelegramMessage("Automatic SDK down, last heart beat: " + aiArtCacheService.getLastHearBeatTime());
+			sendTelegramMessage("Automatic SDK down, last heart beat: " + aiArtCacheService.getLastHearBeatTime());
 		}
 	}
 }

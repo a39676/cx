@@ -32,4 +32,5 @@ public class ImageController extends CommonController {
 			@RequestParam(value = "height", defaultValue = "100") Integer height) {
 		imgService.getThumbnailImage(response, imgPK, width, height);
 	}
+
 }

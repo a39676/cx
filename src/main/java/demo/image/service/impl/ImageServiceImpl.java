@@ -93,17 +93,22 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 			return;
 		}
 
-		try {
-			File f = new File(imgPO.getImageUrl());
-			BufferedImage originalImage = ImageIO.read(f);
+		if (imgPO.getImageUrl().startsWith("http")) {
+//			TODO
+		} else {
+			try {
+				File f = new File(imgPO.getImageUrl());
+				BufferedImage originalImage = ImageIO.read(f);
 
-			InputStream in = new FileInputStream(f);
-			IOUtils.copy(in, response.getOutputStream());
+				InputStream in = new FileInputStream(f);
+				IOUtils.copy(in, response.getOutputStream());
 
-			response.setContentType("image/jpeg");
-			ImageIO.write(originalImage, "jpeg", response.getOutputStream());
-		} catch (Exception e) {
+				response.setContentType("image/jpeg");
+				ImageIO.write(originalImage, "jpeg", response.getOutputStream());
+			} catch (Exception e) {
+			}
 		}
+
 	}
 
 	@Override

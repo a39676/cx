@@ -28,8 +28,11 @@ import demo.image.pojo.po.ImageTag;
 import demo.image.pojo.type.ImageTagType;
 import demo.interaction.image.service.ImageInteractionService;
 import demo.thirdPartyAPI.cloudinary.service.CloudinaryService;
+import demo.tool.telegram.service.TelegramService;
 import image.pojo.dto.UploadImageToCloudinaryDTO;
 import image.pojo.result.UploadImageToCloudinaryResult;
+import telegram.pojo.constant.TelegramStaticChatID;
+import telegram.pojo.type.TelegramBotType;
 import toolPack.cloudinary.pojo.constant.CloudinaryConstant;
 import toolPack.cloudinary.pojo.result.CloudinaryDeleteResult;
 import toolPack.cloudinary.pojo.result.CloudinaryUploadResult;
@@ -49,120 +52,135 @@ public class ImageInteractionServiceImpl extends CommonService implements ImageI
 	private ImageComplexMapper imageComplexMapper;
 	@Autowired
 	private CloudinaryService cloudinaryService;
+	@Autowired
+	private TelegramService telegramService;
 
 	@Override
 	public UploadImageToCloudinaryResult uploadImageToCloudinary(UploadImageToCloudinaryDTO dto) {
 		UploadImageToCloudinaryResult r = new UploadImageToCloudinaryResult();
-		
-		if("dev".equals(systemConstantService.getEnvName())) {
+
+		if ("dev".equals(systemConstantService.getEnvName())) {
 			return r;
 		}
-		
-		if(StringUtils.isBlank(dto.getFilePath())) {
+
+		if (StringUtils.isBlank(dto.getFilePath())) {
 			r.failWithMessage("null param");
 			return r;
 		}
-		
+
 		File imgFile = new File(dto.getFilePath());
-		if(!imgFile.exists()) {
+		if (!imgFile.exists()) {
 			r.failWithMessage("file not exists");
 			return r;
 		}
-		
+
 		CloudinaryUploadResult uploadResult = cloudinaryService.uploadCore(imgFile);
-		if(!uploadResult.isSuccess()) {
+		if (!uploadResult.isSuccess()) {
 			r.failWithMessage("cloudinary upload fail");
 			return r;
 		}
-		
+
 		ImageStore imgPO = new ImageStore();
 		Long imgId = snowFlake.getNextId();
 		imgPO.setImageId(imgId);
 		imgPO.setImageName(imgFile.getName());
 		imgPO.setImageUrl(uploadResult.getSecureUrl());
 		imageStoreMapper.insertSelective(imgPO);
-		
+
 		ImageCloudinary imgCloudPO = new ImageCloudinary();
 		imgCloudPO.setImageId(imgId);
 		imgCloudPO.setCloudinaryPublicId(uploadResult.getPublicId());
 		imageCloudinaryMapper.insertSelective(imgCloudPO);
-		
+
 		ImageTag imgTagPO = new ImageTag();
 		imgTagPO.setImageId(imgId);
 		imgTagPO.setTagId(ImageTagType.AUTO_TEST_IMG_TO_CLOUDINARY.getCode().longValue());
 		imageTagMapper.insertSelective(imgTagPO);
-		
+
 		r.setImgId(imgId);
 		r.setImgUrl(uploadResult.getSecureUrl());
 		r.setIsSuccess();
-		
+
 		return r;
 	}
-	
+
 	@Override
 	public void cleanOldAutoTestUploadImage() {
-		
+
 		LocalDateTime deadLine = LocalDateTime.now().minusDays(ImageConstant.autoTestUploadImageMaxLifeDays);
-		
+
 		FindOldAutoTestImageOnCloudinaryDTO findOldAutoTestImageOnCloudinaryDTO = new FindOldAutoTestImageOnCloudinaryDTO();
 		findOldAutoTestImageOnCloudinaryDTO.setEndTime(deadLine);
 		findOldAutoTestImageOnCloudinaryDTO.setTagId(ImageTagType.AUTO_TEST_IMG_TO_CLOUDINARY.getCode().longValue());
-		List<ImageCloudinary> imgCloudinaryPOList = imageComplexMapper.findOldAutoTestImageOnCloudinary(findOldAutoTestImageOnCloudinaryDTO);
-		
-		if(imgCloudinaryPOList == null || imgCloudinaryPOList.size() < 1) {
+		List<ImageCloudinary> imgCloudinaryPOList = imageComplexMapper
+				.findOldAutoTestImageOnCloudinary(findOldAutoTestImageOnCloudinaryDTO);
+
+		if (imgCloudinaryPOList == null || imgCloudinaryPOList.size() < 1) {
 			return;
 		}
-		
+
 		List<String> sourceCloudinaryPublicIdList = new ArrayList<String>();
 		Map<String, Long> cloudinaryPublicIdMapImgStoreId = new HashMap<String, Long>();
-		
-		for(ImageCloudinary po : imgCloudinaryPOList) {
-			if(po == null) {
+
+		for (ImageCloudinary po : imgCloudinaryPOList) {
+			if (po == null) {
 				continue;
 			}
 			sourceCloudinaryPublicIdList.add(po.getCloudinaryPublicId());
 			cloudinaryPublicIdMapImgStoreId.put(po.getCloudinaryPublicId(), po.getImageId());
 		}
-		
-		if(sourceCloudinaryPublicIdList.size() > 100) {
+
+		if (sourceCloudinaryPublicIdList.size() > 100) {
 			int step = CloudinaryConstant.deleteIdListMaxSize;
 			List<String> tmpList = null;
-			for(int i = 0; i < sourceCloudinaryPublicIdList.size(); i = i + step) {
+			for (int i = 0; i < sourceCloudinaryPublicIdList.size(); i = i + step) {
 				tmpList = new ArrayList<String>();
-				if(i + step > sourceCloudinaryPublicIdList.size()) {
+				if (i + step > sourceCloudinaryPublicIdList.size()) {
 					tmpList = sourceCloudinaryPublicIdList.subList(i, sourceCloudinaryPublicIdList.size());
 				} else {
 					tmpList = sourceCloudinaryPublicIdList.subList(i, i + step);
 				}
 				cleanOldAutoTestUploadImageSubHandle(tmpList, cloudinaryPublicIdMapImgStoreId);
 			}
-			
+
 		} else {
 			cleanOldAutoTestUploadImageSubHandle(sourceCloudinaryPublicIdList, cloudinaryPublicIdMapImgStoreId);
 		}
 	}
-	
-	private void cleanOldAutoTestUploadImageSubHandle(List<String> sourceCloudinaryPublicIdList, Map<String, Long> cloudinaryPublicIdMapImgStoreId) {
+
+	private void cleanOldAutoTestUploadImageSubHandle(List<String> sourceCloudinaryPublicIdList,
+			Map<String, Long> cloudinaryPublicIdMapImgStoreId) {
 		CloudinaryDeleteResult cloudinaryDeleteResult = cloudinaryService.delete(sourceCloudinaryPublicIdList);
-		
+
 		@SuppressWarnings("unchecked")
 		Set<String> keys = cloudinaryDeleteResult.getDeleted().keySet();
 		String tmpValue = null;
 		List<Long> targetImgStoreIdList = new ArrayList<Long>();
-		for(String key : keys) {
+		for (String key : keys) {
 			tmpValue = cloudinaryDeleteResult.getDeleted().getString(key);
-			if("deleted".equals(tmpValue)) {
+			if ("deleted".equals(tmpValue)) {
 				targetImgStoreIdList.add(cloudinaryPublicIdMapImgStoreId.get(key));
 			}
 		}
-		
+
 		BatchUpdateDeleteFlagDTO imageCloudinaryBatchUpdateDeleteFlagDTO = new BatchUpdateDeleteFlagDTO();
 		imageCloudinaryBatchUpdateDeleteFlagDTO.setIsDelete(true);
 		imageCloudinaryBatchUpdateDeleteFlagDTO.setImageIdList(targetImgStoreIdList);
 		imageCloudinaryMapper.batchUpdateDeleteFlag(imageCloudinaryBatchUpdateDeleteFlagDTO);
-		
+
+		log.error(
+				"Call image store delete sql by ImageInteractionServiceImpl.cleanOldAutoTestUploadImageSubHandle, targetImgStoreIdList: "
+						+ targetImgStoreIdList);
+		sendTelegramMessage(
+				"Call image store delete sql by ImageInteractionServiceImpl.cleanOldAutoTestUploadImageSubHandle, targetImgStoreIdList: "
+						+ targetImgStoreIdList);
 		ImageStoreExample iamgeStoreDeleteExample = new ImageStoreExample();
 		iamgeStoreDeleteExample.createCriteria().andImageIdIn(targetImgStoreIdList);
 		imageStoreMapper.deleteByExample(iamgeStoreDeleteExample);
+
+	}
+
+	private void sendTelegramMessage(String msg) {
+		telegramService.sendMessageByChatRecordId(TelegramBotType.CX_MESSAGE, msg, TelegramStaticChatID.MY_ID);
 	}
 }

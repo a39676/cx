@@ -73,6 +73,7 @@ logging:
     # demo.test.controller: DEBUG
     demo.test.mapper: ERROR
     demo.tool.mapper: ERROR
+    demo.image.mapper: ERROR
     # demo.finance.cryptoCoin.notice.mapper: DEBUG
     # demo.finance.cryptoCoin.data.mapper: DEBUG
     # demo.mapper: DEBUG

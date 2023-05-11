@@ -549,15 +549,19 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			}
 			Long aiUserId = po.getAiUserId();
 			Boolean rechargeFlag = checkRechargeMarkThisWeek(aiUserId);
-			if (!rechargeFlag) {
-				Integer freeJobCountingIntLastThreeDays = getFreeJobCountingOfLastThreeDays(aiUserId);
-				int delaySeconds = freeJobCountingIntLastThreeDays * aiArtOptionService.getFreeJobDelaySeconds();
-				LocalDateTime startTime = po.getCreateTime().plusSeconds(delaySeconds);
-				if (startTime.isAfter(LocalDateTime.now())) {
-					TextToImageDTO dto = getParameterByJobId(po.getId());
-					aiArtTextToImageProducer.send(dto);
-				}
+			if (rechargeFlag) {
+				TextToImageDTO dto = getParameterByJobId(po.getId());
+				aiArtTextToImageProducer.send(dto);
 			}
+
+			Integer freeJobCountingInLastThreeDays = getFreeJobCountingOfLastThreeDays(aiUserId);
+			int delaySeconds = freeJobCountingInLastThreeDays * aiArtOptionService.getFreeJobDelaySeconds();
+			LocalDateTime startTime = po.getCreateTime().plusSeconds(delaySeconds);
+			if (startTime.isAfter(LocalDateTime.now())) {
+				TextToImageDTO dto = getParameterByJobId(po.getId());
+				aiArtTextToImageProducer.send(dto);
+			}
+
 		}
 	}
 

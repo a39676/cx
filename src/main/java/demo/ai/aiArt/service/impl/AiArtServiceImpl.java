@@ -537,10 +537,12 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		List<AiArtTextToImageJobRecord> poList = aiArtTextToImageJobRecordMapper
 				.findWaitingJobs(aiArtOptionService.getMaxFailCountForJob());
 		if (poList.isEmpty()) {
+			log.error("Can NOT find any AI art task waiting");
 			return;
 		}
 		for (AiArtTextToImageJobRecord po : poList) {
 			if (isJobInQueue(po.getId())) {
+				log.error("Job is already waiting: " + po.getId());
 				continue;
 			}
 			if (!po.getIsFreeJob()) {
@@ -554,12 +556,17 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 				aiArtTextToImageProducer.send(dto);
 			}
 
+			log.error("It is a freejob for free user, check waiting time");
 			Integer freeJobCountingInLastThreeDays = getFreeJobCountingOfLastThreeDays(aiUserId);
 			int delaySeconds = freeJobCountingInLastThreeDays * aiArtOptionService.getFreeJobDelaySeconds();
 			LocalDateTime startTime = po.getCreateTime().plusSeconds(delaySeconds);
+			log.error("Job : " + po.getId() + ", should start at: " + startTime);
 			if (startTime.isAfter(LocalDateTime.now())) {
+				log.error("Will start free job: " + po.getId());
 				TextToImageDTO dto = getParameterByJobId(po.getId());
 				aiArtTextToImageProducer.send(dto);
+			} else {
+				log.error("Job keep waiting: " + po.getId());
 			}
 
 		}

@@ -23,6 +23,7 @@ public class AiArtTaskService extends AiArtCommonService {
 
 	@Scheduled(fixedDelay = 1000L * 60 * 2)
 	public void rerun() {
+		log.error("AI art rerun task");
 		if (aiArtCacheService.getIsRunning()) {
 			aiArtService.rerun();
 			aiArtManagerService.setReviewBatchForAdmin();

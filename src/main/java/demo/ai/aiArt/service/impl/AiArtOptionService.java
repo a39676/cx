@@ -43,6 +43,12 @@ public class AiArtOptionService extends CommonService {
 	private Long idOfAdmin;
 	private Integer maxWaitingJobCount;
 	private List<String> nsfwPrompt;
+	private String serviceStartTimeStr;
+	private String serviceEndTimeStr;
+	private Integer freeJobDelaySeconds;
+	private Integer higerFixMaxHeight;
+	private Integer higerFixMaxWidth;
+	private Integer higerFixMaxStep;
 
 	public String getApiKeyOfAdmin() {
 		return apiKeyOfAdmin;
@@ -220,6 +226,54 @@ public class AiArtOptionService extends CommonService {
 		this.idOfAdmin = idOfAdmin;
 	}
 
+	public String getServiceStartTimeStr() {
+		return serviceStartTimeStr;
+	}
+
+	public void setServiceStartTimeStr(String serviceStartTimeStr) {
+		this.serviceStartTimeStr = serviceStartTimeStr;
+	}
+
+	public String getServiceEndTimeStr() {
+		return serviceEndTimeStr;
+	}
+
+	public void setServiceEndTimeStr(String serviceEndTimeStr) {
+		this.serviceEndTimeStr = serviceEndTimeStr;
+	}
+
+	public Integer getFreeJobDelaySeconds() {
+		return freeJobDelaySeconds;
+	}
+
+	public void setFreeJobDelaySeconds(Integer freeJobDelaySeconds) {
+		this.freeJobDelaySeconds = freeJobDelaySeconds;
+	}
+
+	public Integer getHigerFixMaxHeight() {
+		return higerFixMaxHeight;
+	}
+
+	public void setHigerFixMaxHeight(Integer higerFixMaxHeight) {
+		this.higerFixMaxHeight = higerFixMaxHeight;
+	}
+
+	public Integer getHigerFixMaxWidth() {
+		return higerFixMaxWidth;
+	}
+
+	public void setHigerFixMaxWidth(Integer higerFixMaxWidth) {
+		this.higerFixMaxWidth = higerFixMaxWidth;
+	}
+
+	public Integer getHigerFixMaxStep() {
+		return higerFixMaxStep;
+	}
+
+	public void setHigerFixMaxStep(Integer higerFixMaxStep) {
+		this.higerFixMaxStep = higerFixMaxStep;
+	}
+
 	@Override
 	public String toString() {
 		return "AiArtOptionService [generateImageResultFolder=" + generateImageResultFolder
@@ -232,7 +286,10 @@ public class AiArtOptionService extends CommonService {
 				+ ", maxLivingMinuteOfApiImageAfterFirstVisit=" + maxLivingMinuteOfApiImageAfterFirstVisit
 				+ ", consumptionCoefficient=" + consumptionCoefficient + ", imagePkInsteadOfNsfw="
 				+ imagePkInsteadOfNsfw + ", apiKeyOfAdmin=" + apiKeyOfAdmin + ", idOfAdmin=" + idOfAdmin
-				+ ", maxWaitingJobCount=" + maxWaitingJobCount + ", nsfwPrompt=" + nsfwPrompt + "]";
+				+ ", maxWaitingJobCount=" + maxWaitingJobCount + ", nsfwPrompt=" + nsfwPrompt + ", serviceStartTimeStr="
+				+ serviceStartTimeStr + ", serviceEndTimeStr=" + serviceEndTimeStr + ", freeJobDelaySeconds="
+				+ freeJobDelaySeconds + ", higerFixMaxHeight=" + higerFixMaxHeight + ", higerFixMaxWidth="
+				+ higerFixMaxWidth + ", higerFixMaxStep=" + higerFixMaxStep + "]";
 	}
 
 	@PostConstruct

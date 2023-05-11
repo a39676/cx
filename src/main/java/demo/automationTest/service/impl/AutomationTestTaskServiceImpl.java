@@ -27,7 +27,7 @@ public class AutomationTestTaskServiceImpl extends CommonTaskService {
 	@Autowired
 	private AutomationTestConstantService constantService;
 	
-	@Scheduled(cron="0 */10 * * * ?")
+	@Scheduled(fixedDelay = 1000L * 120)
 	public void checkBbtHeartBeat() {
 		LocalDateTime heartBeatTime = constantService.getLastHeartBeat();
 		if(heartBeatTime == null) {

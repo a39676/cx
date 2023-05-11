@@ -287,4 +287,15 @@
       order by ${orderByClause}
     </if>
   </select>
+
+  <select id="findWaitingJobs" resultMap="BaseResultMap">
+    select
+      *
+    from 
+      ai_art_text_to_image_job_record
+    where
+      is_delete = false
+      and run_count &lt; #{runCount}
+      and job_status in (0, -1)
+  </select>
 </mapper>

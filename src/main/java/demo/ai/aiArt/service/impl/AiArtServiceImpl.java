@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -32,6 +32,7 @@ import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
 import ai.aiArt.pojo.vo.AiArtImageOnWallVO;
 import ai.aiChat.pojo.type.AiServiceAmountType;
 import ai.automatic1111.pojo.type.AiArtDefaultModelType;
+import ai.automatic1111.pojo.type.AiArtUpscalerType;
 import ai.pojo.vo.AiArtModelVO;
 import auxiliaryCommon.pojo.dto.BasePkDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
@@ -119,13 +120,59 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 		Integer freeJobCounting = getFreeJobCountingOfToday(aiUserId);
 		boolean isFreeJobFlag = (freeJobCounting <= aiArtOptionService.getMaxDailyFreeJobCount());
-		BigDecimal cost = calculateTokenCost(dto);
-		if (!isFreeJobFlag) {
-			AiChatUserDetail userDetail = aiChatUserService.__getUserDetail(aiUserId);
-			int totalAmount = userDetail.getBonusAmount().intValue() + userDetail.getRechargeAmount().intValue();
 
-			if (cost.intValue() > totalAmount) {
-				r.setMessage("余额不足, 请到个人中心购买充值包 签到, 或留意其他活动");
+		if (dto.getEnableHr()) {
+			if (dto.getHrUpscalerCode() == null) {
+				r.setMessage("Please select a highres upscaler");
+				return r;
+			}
+			AiArtUpscalerType upscalerType = AiArtUpscalerType.getType(dto.getHrUpscalerCode());
+			if (upscalerType == null) {
+				r.setMessage("Please select a highres upscaler");
+				return r;
+			}
+			dto.setHrUpscalerName(upscalerType.getName());
+			if (dto.getDenoisingStrength() < 0 || dto.getDenoisingStrength() > 1) {
+				r.setMessage("Denoising strength should between 0 to 1");
+				return r;
+			}
+			if (dto.getHrScale() == null && (dto.getHrResizeX() == null || dto.getHrResizeY() == null)) {
+				r.setMessage(
+						"Please set a highres scaler condition, (Highres scale) or (Highres resize X & Highres resize Y) \n"
+								+ "请设置高清修复比例 或者设置 高清修复尺寸(hrResizeX(宽) 和 hrResizeY(高))");
+				return r;
+			}
+			if (dto.getHrResizeX() != null && dto.getHrResizeY() != null) {
+				if (dto.getHrResizeX() > aiArtOptionService.getHigerFixMaxWidth()
+						|| dto.getHrResizeY() > aiArtOptionService.getHigerFixMaxHeight()) {
+					r.setMessage("Highres scale size length should less than "
+							+ aiArtOptionService.getHigerFixMaxWidth() + "\n" + "输入的高清修复尺寸过大");
+					return r;
+				}
+				if (dto.getHrResizeX() < 1 || dto.getHrResizeY() < 1) {
+					r.setMessage("Highres resize length should bigger than 1 \n 输入的高清修复尺寸过大");
+					return r;
+				}
+			} else {
+				if (dto.getHrScale() < 1) {
+					r.setMessage("Highres scale should bigger than 1 \n 输入的高清修复尺寸过大");
+					return r;
+				}
+				double highresHeight = dto.getHrScale() * dto.getHeight();
+				double highresWidth = dto.getHrScale() * dto.getWidth();
+				if (highresHeight > aiArtOptionService.getHigerFixMaxHeight()
+						|| highresWidth > aiArtOptionService.getHigerFixMaxWidth()) {
+					r.setMessage("Highres scale size length should less than "
+							+ aiArtOptionService.getHigerFixMaxWidth() + "\n" + "输入的高清修复尺寸过大");
+					return r;
+				}
+
+			}
+
+			if (dto.getHrSecondPassSteps() == null || dto.getHrSecondPassSteps() < 1
+					|| dto.getHrSecondPassSteps() > aiArtOptionService.getHigerFixMaxStep()) {
+				r.setMessage("Highres steps should between 1 to " + aiArtOptionService.getHigerFixMaxStep()
+						+ "\n 高清修复步数应为 1~30步");
 				return r;
 			}
 		}
@@ -141,39 +188,60 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			return r;
 		}
 
-		if (dto.getWidth() != null && dto.getWidth() > 0) {
-			if (dto.getWidth() > aiArtOptionService.getMaxWidth()) {
-				dto.setWidth(aiArtOptionService.getMaxWidth());
+		if (dto.getWidth() != null) {
+			if (dto.getWidth() < 1 || dto.getWidth() > aiArtOptionService.getMaxWidth()) {
+				r.setMessage("请设置初始宽度介于 1 ~ " + aiArtOptionService.getMaxWidth());
+				return r;
 			}
-		}
-		if (dto.getHeight() != null && dto.getHeight() > 0) {
-			if (dto.getHeight() > aiArtOptionService.getMaxHeight()) {
-				dto.setHeight(aiArtOptionService.getMaxHeight());
-			}
-		}
-		if (dto.getCfgScale() != null && dto.getCfgScale() > 0) {
-			if (dto.getCfgScale() > aiArtOptionService.getMaxCfgScale()) {
-				dto.setCfgScale(aiArtOptionService.getMaxCfgScale());
-			}
-		}
-		if (dto.getSteps() != null && dto.getSteps() > 0) {
-			if (dto.getSteps() > aiArtOptionService.getMaxSteps()) {
-				dto.setSteps(aiArtOptionService.getMaxSteps());
-			}
-		}
-		if (dto.getBatchSize() != null) {
-			if (dto.getBatchSize() > aiArtOptionService.getMaxBatch()) {
-				dto.setBatchSize(aiArtOptionService.getMaxBatch());
-			}
-			if (dto.getBatchSize() < 0) {
-				dto.setBatchSize(1);
-			}
+		} else {
+			dto.setWidth(512);
 		}
 
-		AiArtSamplerType samplerType = AiArtSamplerType.getType(dto.getSampler());
-		if (samplerType == null) {
-			samplerType = AiArtSamplerType.DPM_2M_Karras;
-			dto.setSampler(samplerType.getCode());
+		if (dto.getHeight() != null) {
+			if (dto.getHeight() < 1 || dto.getHeight() > aiArtOptionService.getMaxHeight()) {
+				r.setMessage("请设置初始高度介于 1 ~ " + aiArtOptionService.getMaxHeight());
+				return r;
+			}
+		} else {
+			dto.setHeight(512);
+		}
+
+		if (dto.getCfgScale() != null) {
+			if (dto.getCfgScale() < 1 || dto.getCfgScale() > aiArtOptionService.getMaxCfgScale()) {
+				r.setMessage("Cfg scale 请设置于 1 ~ " + aiArtOptionService.getMaxCfgScale());
+				return r;
+			}
+		} else {
+			dto.setCfgScale(7);
+		}
+
+		if (dto.getSteps() != null) {
+			if (dto.getSteps() < 1 || dto.getSteps() > aiArtOptionService.getMaxSteps()) {
+				r.setMessage("采样步数应为 1~" + aiArtOptionService.getMaxSteps());
+				return r;
+			}
+		} else {
+			dto.setSteps(20);
+		}
+
+		if (dto.getBatchSize() != null) {
+			if (dto.getBatchSize() < 1 || dto.getBatchSize() > aiArtOptionService.getMaxBatch()) {
+				dto.setBatchSize(aiArtOptionService.getMaxBatch());
+				r.setMessage("batch size should be 1~" + aiArtOptionService.getMaxBatch());
+				return r;
+			}
+		} else {
+			dto.setBatchSize(1);
+		}
+
+		if (dto.getSampler() == null) {
+			dto.setSampler(AiArtSamplerType.Euler_A.getCode());
+		} else {
+			AiArtSamplerType samplerType = AiArtSamplerType.getType(dto.getSampler());
+			if (samplerType == null) {
+				r.setMessage("Please input correct samplerCode");
+				return r;
+			}
 		}
 
 		if (dto.getModelCode() == null) {
@@ -191,6 +259,18 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			}
 
 			dto.setModelName(model.getFileName());
+		}
+
+		// 计费之前需要保证计费用的数据正确,
+		BigDecimal cost = calculateTokenCost(dto);
+		if (!isFreeJobFlag) {
+			AiChatUserDetail userDetail = aiChatUserService.__getUserDetail(aiUserId);
+			int totalAmount = userDetail.getBonusAmount().intValue() + userDetail.getRechargeAmount().intValue();
+
+			if (cost.intValue() > totalAmount) {
+				r.setMessage("余额不足, 请到个人中心购买充值包 签到, 或留意其他活动");
+				return r;
+			}
 		}
 
 		AiArtTextToImageJobRecordExample example = new AiArtTextToImageJobRecordExample();
@@ -226,7 +306,6 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 		Boolean rechargeFlag = checkRechargeMarkThisWeek(aiUserId);
 		if (!isFreeJobFlag || rechargeFlag) {
-			addJobInQueueMark(jobId);
 			aiArtTextToImageProducer.send(dto);
 
 			if (!aiArtOptionService.getIdOfAdmin().equals(aiUserId)) {
@@ -310,8 +389,6 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		Long jobId = txtToImgResult.getJobId();
 		TextToImageDTO parameterDTO = getParameterByJobId(jobId);
 
-		removeJobInQueueMark(jobId);
-
 		if (txtToImgResult.isSuccess()) {
 			AiArtGeneratingRecord imgGeneratingRecord = new AiArtGeneratingRecord();
 			imgGeneratingRecord.setAiUserId(jobPO.getAiUserId());
@@ -343,14 +420,17 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			jobPO.setJobStatus(AiArtJobStatusType.SUCCESS.getCode().byteValue());
 			jobPO.setRunCount(jobPO.getRunCount() + 1);
 			aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
+			
+			String parameterPathStr = getParameterPathByJobId(jobId);
+			File f = new File(parameterPathStr);
+			f.deleteOnExit();
 
 		} else {
-
 			jobPO.setJobStatus(AiArtJobStatusType.FAILED.getCode().byteValue());
 			jobPO.setRunCount(jobPO.getRunCount() + 1);
 			aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
 
-			if (jobPO.getRunCount() + 1 == aiArtOptionService.getMaxFailCountForJob()) {
+			if (jobPO.getRunCount() + 1 == aiArtOptionService.getMaxFailCountForJob() && !jobPO.getIsFreeJob()) {
 				BigDecimal cost = calculateTokenCost(parameterDTO);
 				aiChatUserService.recharge(jobPO.getAiUserId(), AiServiceAmountType.BONUS, cost);
 				jobPO.setRunCount(jobPO.getRunCount() + 1);
@@ -360,6 +440,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			}
 		}
 
+		removeJobInQueueMark(jobId);
 	}
 
 	@SuppressWarnings("unused")
@@ -456,34 +537,34 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		if (!aiArtCacheService.getIsRunning()) {
 			return;
 		}
-		AiArtTextToImageJobRecordExample example = new AiArtTextToImageJobRecordExample();
-		example.createCriteria()
-				.andJobStatusIn(Arrays.asList(AiArtJobStatusType.WAITING.getCode().byteValue(),
-						AiArtJobStatusType.FAILED.getCode().byteValue()))
-				.andIsDeleteEqualTo(false).andRunCountLessThan(aiArtOptionService.getMaxFailCountForJob());
-
-		List<AiArtTextToImageJobRecord> poList = aiArtTextToImageJobRecordMapper.selectByExample(example);
+		List<AiArtTextToImageJobRecord> poList = aiArtTextToImageJobRecordMapper
+				.findWaitingJobs(aiArtOptionService.getMaxFailCountForJob());
 		if (poList.isEmpty()) {
 			return;
 		}
 		for (AiArtTextToImageJobRecord po : poList) {
-			if (!isJobInQueue(po.getId())) {
-				if (po.getIsFreeJob()) {
-					Long aiUserId = po.getAiUserId();
-					Boolean rechargeFlag = checkRechargeMarkThisWeek(aiUserId);
-					if (!rechargeFlag) {
-						Integer freeJobCountingIntLastThreeDays = getFreeJobCountingOfLastThreeDays(aiUserId);
-						int delaySeconds = freeJobCountingIntLastThreeDays * 12;
-						LocalDateTime startTime = po.getCreateTime().plusSeconds(delaySeconds);
-						if (startTime.isBefore(LocalDateTime.now())) {
-							continue;
-						}
-					}
-				}
-				addJobInQueueMark(po.getId());
+			if (isJobInQueue(po.getId())) {
+				continue;
+			}
+			if (!po.getIsFreeJob()) {
 				TextToImageDTO dto = getParameterByJobId(po.getId());
 				aiArtTextToImageProducer.send(dto);
 			}
+			Long aiUserId = po.getAiUserId();
+			Boolean rechargeFlag = checkRechargeMarkThisWeek(aiUserId);
+			if (rechargeFlag) {
+				TextToImageDTO dto = getParameterByJobId(po.getId());
+				aiArtTextToImageProducer.send(dto);
+			}
+
+			Integer freeJobCountingInLastThreeDays = getFreeJobCountingOfLastThreeDays(aiUserId);
+			int delaySeconds = freeJobCountingInLastThreeDays * aiArtOptionService.getFreeJobDelaySeconds();
+			LocalDateTime startTime = po.getCreateTime().plusSeconds(delaySeconds);
+			if (startTime.isBefore(LocalDateTime.now())) {
+				TextToImageDTO dto = getParameterByJobId(po.getId());
+				aiArtTextToImageProducer.send(dto);
+			}
+
 		}
 	}
 
@@ -636,7 +717,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	}
 
 	@Override
-	public void loadImageWallToCache() {
+	public void loadingCache() {
 		try {
 			String content = fileUtilCustom.getStringFromFile(aiArtOptionService.getImageWallFilePath());
 			AiArtImageWallResult dto = null;
@@ -649,8 +730,12 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 				dto.setImgVoList(new ArrayList<>());
 			}
 			aiArtCacheService.setImageWall(dto);
+			LocalTime startTime = LocalTime.parse(aiArtOptionService.getServiceStartTimeStr());
+			LocalTime endTime = LocalTime.parse(aiArtOptionService.getServiceEndTimeStr());
+			aiArtCacheService.setServiceStartTime(startTime);
+			aiArtCacheService.setServiceEndTime(endTime);
 		} catch (Exception e) {
-			sendTelegramMessage("Load image wall DTO to cache failed: " + e.getLocalizedMessage());
+			sendTelegramMessage("AI art loading cache failed: " + e.getLocalizedMessage());
 		}
 	}
 
@@ -679,13 +764,13 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	@Override
 	public AiArtImageWallResult getImageWallFull(Boolean refresh) {
 		if (refresh != null && refresh) {
-			loadImageWallToCache();
+			loadingCache();
 		}
 		AiArtImageWallResult dto = aiArtCacheService.getImageWall();
 		if (dto != null) {
 			return dto;
 		}
-		loadImageWallToCache();
+		loadingCache();
 		return aiArtCacheService.getImageWall();
 	}
 

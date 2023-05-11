@@ -16,7 +16,7 @@
 
   <div class="container-fluid">
   
-    <div class="row">
+    <div class="row" id="searchCondition" isLock="1">
       <div class="col-lg-12 fixed-top">
         <table class="table">
           <thead>
@@ -264,6 +264,7 @@
 
       $("#cleanSearch").click(function() {
         cleanSearch();
+        $("#searchCondition").attr("isLock", "1");
       })
 
       function cleanSearch() {
@@ -325,6 +326,12 @@
             console.log(datas);
             if (datas.code == 0) {
               $("#result").text("Load job result success");
+              if(datas.jobResultList && datas.jobResultList.length > 1){
+                $("#searchCondition").attr("isLock", "0");
+              }
+              if(!datas.jobResultList){
+                return;
+              }
               for(i=0;i<datas.jobResultList.length;i++){
                 appendJobResult(datas.jobResultList[i], datas.userDetailInRedisMap);
               }
@@ -528,7 +535,22 @@
         });
       }
 
-
+      var lastScrollTop = 0;
+      $(window).scroll(function(event){
+        var st = $(this).scrollTop();
+        var searchCondition = $("#searchCondition");
+        var lockFlag = searchCondition.attr("isLock");
+        if (st > lastScrollTop){
+          console.log("downscroll");
+          if("1" != lockFlag){
+            searchCondition.hide();
+          }
+        } else {
+          console.log("upscroll");
+          searchCondition.show();
+        }
+        lastScrollTop = st;
+      });
     });
   </script>
 

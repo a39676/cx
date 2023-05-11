@@ -420,6 +420,10 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			jobPO.setJobStatus(AiArtJobStatusType.SUCCESS.getCode().byteValue());
 			jobPO.setRunCount(jobPO.getRunCount() + 1);
 			aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
+			
+			String parameterPathStr = getParameterPathByJobId(jobId);
+			File f = new File(parameterPathStr);
+			f.deleteOnExit();
 
 		} else {
 			jobPO.setJobStatus(AiArtJobStatusType.FAILED.getCode().byteValue());
@@ -437,7 +441,6 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		}
 
 		removeJobInQueueMark(jobId);
-
 	}
 
 	@SuppressWarnings("unused")

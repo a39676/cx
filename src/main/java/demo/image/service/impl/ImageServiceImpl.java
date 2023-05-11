@@ -42,8 +42,11 @@ import demo.image.pojo.po.ImageTagExample;
 import demo.image.pojo.result.ImgHandleSrcDataResult;
 import demo.image.pojo.type.ImageTagType;
 import demo.image.service.ImageService;
+import demo.tool.telegram.service.TelegramService;
 import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.result.ImageSavingResult;
+import telegram.pojo.constant.TelegramStaticChatID;
+import telegram.pojo.type.TelegramBotType;
 import toolPack.constant.FileSuffixNameConstant;
 
 @Service
@@ -58,6 +61,8 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 	private AutomationTestOptionService automationTestConstantService;
 	@Autowired
 	private ArticleOptionService articleOptionService;
+	@Autowired
+	private TelegramService telegramService;
 
 	private final String DEFAULT_IMG_SAVING_FOLDER = "/home/u2/cx/images";
 	private final Integer PHYSICS_DELETE_DELAY_DAYS = 5;
@@ -360,6 +365,9 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 			}
 		}
 
+		log.error("Before delete image file, imgPathMap: " + imgPathMap);
+		sendTelegramMessage("Before delete image file, imgPathMap: " + imgPathMap);
+
 		// Collect imgId that deleted
 		File tmpFile = null;
 		List<Long> targetImgIdList = new ArrayList<Long>();
@@ -368,6 +376,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 			if (tmpFile.exists()) {
 				if (tmpFile.delete()) {
 					targetImgIdList.add(m.getValue());
+					log.error("Call imageStoreMapper.deleteByPrimaryKey in ImageServiceImpl.imageCleanAndDeleteFile");
 					imgMapper.deleteByPrimaryKey(m.getValue());
 				}
 			}
@@ -475,5 +484,9 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 		po.setImageId(imgId);
 		po.setValidTime(invalidTime);
 		imgMapper.updateByPrimaryKeySelective(po);
+	}
+
+	private void sendTelegramMessage(String msg) {
+		telegramService.sendMessageByChatRecordId(TelegramBotType.CX_MESSAGE, msg, TelegramStaticChatID.MY_ID);
 	}
 }

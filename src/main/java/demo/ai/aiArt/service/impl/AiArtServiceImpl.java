@@ -558,7 +558,6 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			int delaySeconds = freeJobCountingInLastThreeDays * aiArtOptionService.getFreeJobDelaySeconds();
 			LocalDateTime startTime = po.getCreateTime().plusSeconds(delaySeconds);
 			if (startTime.isBefore(LocalDateTime.now())) {
-				log.error("Will start free job: " + po.getId());
 				TextToImageDTO dto = getParameterByJobId(po.getId());
 				aiArtTextToImageProducer.send(dto);
 			}

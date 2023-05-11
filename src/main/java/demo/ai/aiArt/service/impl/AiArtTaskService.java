@@ -38,6 +38,9 @@ public class AiArtTaskService extends AiArtCommonService {
 
 	@Scheduled(fixedDelay = 1000L * 60)
 	public void checkAutomaticHeartBeat() {
+		if (aiArtCacheService.getServiceStartTime() == null) {
+			return;
+		}
 		LocalTime now = LocalTime.now();
 		if (now.isBefore(aiArtCacheService.getServiceStartTime())
 				|| now.isAfter(aiArtCacheService.getServiceEndTime())) {

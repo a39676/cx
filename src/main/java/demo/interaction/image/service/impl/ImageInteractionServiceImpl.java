@@ -150,6 +150,7 @@ public class ImageInteractionServiceImpl extends CommonService implements ImageI
 
 	private void cleanOldAutoTestUploadImageSubHandle(List<String> sourceCloudinaryPublicIdList,
 			Map<String, Long> cloudinaryPublicIdMapImgStoreId) {
+		log.error("Get in cleanOldAutoTestUploadImageSubHandle, may going to delete image");
 		CloudinaryDeleteResult cloudinaryDeleteResult = cloudinaryService.delete(sourceCloudinaryPublicIdList);
 
 		@SuppressWarnings("unchecked")

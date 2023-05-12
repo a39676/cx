@@ -7,7 +7,6 @@
 <html>
 <head>
   <%@ include file="../../baseElementJSP/normalHeader.jsp" %>
-  <script type="text/javascript" async="" src="https://ssl.google-analytics.com/ga.js"></script>
   <style>
     a:link {
       color: black;

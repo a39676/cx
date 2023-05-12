@@ -154,23 +154,24 @@ public class AutomationTestReportServiceImpl extends AutomationTestCommonService
 			testEventIdList.add(po.getId());
 		}
 
-		File tmpFile = null;
-		for (String filePath : reportPathStrList) {
+		File tmpReportFile = null;
+		for (String reportFilePath : reportPathStrList) {
 			try {
-				tmpFile = new File(filePath);
-				tmpFile.delete();
-				File[] tmpFileList = tmpFile.getParentFile().listFiles();
+				tmpReportFile = new File(reportFilePath);
+				tmpReportFile.delete();
+				File[] tmpFileList = tmpReportFile.getParentFile().listFiles();
 				if (tmpFileList == null || tmpFileList.length == 0) {
-					tmpFile.getParentFile().delete();
+					tmpReportFile.getParentFile().delete();
 				}
 			} catch (Exception e) {
 			}
 		}
 
-		for (String filePath : paramPathStrList) {
+		File tmpParamFile;
+		for (String paramFilePath : paramPathStrList) {
 			try {
-				tmpFile = new File(filePath);
-				tmpFile.delete();
+				tmpParamFile = new File(paramFilePath);
+				tmpParamFile.delete();
 			} catch (Exception e) {
 			}
 		}

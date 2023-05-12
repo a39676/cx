@@ -355,6 +355,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 
 	@Override
 	public void imageCleanAndDeleteFile() {
+		log.error("Get in imageCleanAndDeleteFile()");
 		ImageStoreExample imgStoreExample = new ImageStoreExample();
 		imgStoreExample.createCriteria().andValidTimeLessThan(LocalDateTime.now().minusDays(PHYSICS_DELETE_DELAY_DAYS));
 		List<ImageStore> targetImgList = imgMapper.selectByExample(imgStoreExample);

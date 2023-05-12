@@ -44,6 +44,9 @@ import demo.ai.aiArt.pojo.po.AiArtModelExample;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecord;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecordExample;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecordExample.Criteria;
+import demo.ai.aiArt.pojo.result.GetAiArtAllModelListResult;
+import demo.ai.aiArt.pojo.result.GetAiArtAllSamplerResult;
+import demo.ai.aiArt.pojo.result.GetAiArtAllUpscalerResult;
 import demo.ai.aiArt.service.AiArtCommonService;
 import demo.ai.aiArt.service.AiArtService;
 import demo.ai.aiChat.pojo.po.AiChatUserDetail;
@@ -119,7 +122,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		Integer freeJobCounting = getFreeJobCountingOfToday(aiUserId);
 		boolean isFreeJobFlag = (freeJobCounting <= aiArtOptionService.getMaxDailyFreeJobCount());
 
-		if (dto.getEnableHr()) {
+		if (dto.getEnableHr() != null && dto.getEnableHr()) {
 			if (dto.getHrUpscalerCode() == null) {
 				r.setMessage("Please select a highres upscaler");
 				return r;
@@ -167,11 +170,13 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 			}
 
-			if (dto.getHrSecondPassSteps() == null || dto.getHrSecondPassSteps() < 1
+			if (dto.getHrSecondPassSteps() < 1
 					|| dto.getHrSecondPassSteps() > aiArtOptionService.getHigerFixMaxStep()) {
 				r.setMessage("Highres steps should between 1 to " + aiArtOptionService.getHigerFixMaxStep()
-						+ "\n 高清修复步数应为 1~30步");
+						+ "\n 高清修复步数应为 1~" + aiArtOptionService.getHigerFixMaxStep() + "步");
 				return r;
+			} else {
+				dto.setHrSecondPassSteps(1);
 			}
 		}
 
@@ -849,5 +854,38 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			voList.add(vo);
 		}
 		return voList;
+	}
+
+	@Override
+	public GetAiArtAllModelListResult getAllModelList() {
+		GetAiArtAllModelListResult r = new GetAiArtAllModelListResult();
+		r.setIsSuccess();
+		List<AiArtModelVO> modelList = getAiArtModelVoList();
+		r.setModelList(modelList);
+		return r;
+	}
+
+	@Override
+	public GetAiArtAllSamplerResult getAllSamplerList() {
+		GetAiArtAllSamplerResult r = new GetAiArtAllSamplerResult();
+		r.setIsSuccess();
+		r.setSamplerList(new ArrayList<>());
+		AiArtSamplerType[] values = AiArtSamplerType.values();
+		for (int i = 0; i < values.length; i++) {
+			r.getSamplerList().add(values[i]);
+		}
+		return r;
+	}
+
+	@Override
+	public GetAiArtAllUpscalerResult getAllUpsalerList() {
+		GetAiArtAllUpscalerResult r = new GetAiArtAllUpscalerResult();
+		r.setIsSuccess();
+		r.setUpscalerList(new ArrayList<>());
+		AiArtUpscalerType[] values = AiArtUpscalerType.values();
+		for (int i = 0; i < values.length; i++) {
+			r.getUpscalerList().add(values[i]);
+		}
+		return r;
 	}
 }

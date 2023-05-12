@@ -11,6 +11,9 @@ import auxiliaryCommon.pojo.dto.BasePkDTO;
 import demo.ai.aiArt.pojo.dto.AiArtJobListFilterDTO;
 import demo.ai.aiArt.pojo.dto.TextToImageFromApiDTO;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecord;
+import demo.ai.aiArt.pojo.result.GetAiArtAllModelListResult;
+import demo.ai.aiArt.pojo.result.GetAiArtAllSamplerResult;
+import demo.ai.aiArt.pojo.result.GetAiArtAllUpscalerResult;
 import wechatSdk.pojo.dto.AiArtGenerateOtherLikeThatDTO;
 
 public interface AiArtService {
@@ -46,5 +49,11 @@ public interface AiArtService {
 	void receiveImgJobResult(String txtToImgResultStr);
 
 	List<AiArtModelVO> getAiArtModelVoList();
+
+	GetAiArtAllModelListResult getAllModelList();
+
+	GetAiArtAllSamplerResult getAllSamplerList();
+
+	GetAiArtAllUpscalerResult getAllUpsalerList();
 
 }

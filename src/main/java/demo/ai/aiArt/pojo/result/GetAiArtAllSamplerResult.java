@@ -2,18 +2,18 @@ package demo.ai.aiArt.pojo.result;
 
 import java.util.List;
 
-import ai.aiArt.pojo.type.AiArtSamplerType;
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.ai.aiArt.pojo.vo.AiArtSamplerVO;
 
 public class GetAiArtAllSamplerResult extends CommonResult {
 
-	private List<AiArtSamplerType> samplerList;
+	private List<AiArtSamplerVO> samplerList;
 
-	public List<AiArtSamplerType> getSamplerList() {
+	public List<AiArtSamplerVO> getSamplerList() {
 		return samplerList;
 	}
 
-	public void setSamplerList(List<AiArtSamplerType> samplerList) {
+	public void setSamplerList(List<AiArtSamplerVO> samplerList) {
 		this.samplerList = samplerList;
 	}
 

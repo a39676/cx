@@ -47,6 +47,8 @@ import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecordExample.Criteria;
 import demo.ai.aiArt.pojo.result.GetAiArtAllModelListResult;
 import demo.ai.aiArt.pojo.result.GetAiArtAllSamplerResult;
 import demo.ai.aiArt.pojo.result.GetAiArtAllUpscalerResult;
+import demo.ai.aiArt.pojo.vo.AiArtSamplerVO;
+import demo.ai.aiArt.pojo.vo.AiArtUpscalerVO;
 import demo.ai.aiArt.service.AiArtCommonService;
 import demo.ai.aiArt.service.AiArtService;
 import demo.ai.aiChat.pojo.po.AiChatUserDetail;
@@ -871,8 +873,12 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		r.setIsSuccess();
 		r.setSamplerList(new ArrayList<>());
 		AiArtSamplerType[] values = AiArtSamplerType.values();
+		AiArtSamplerVO vo = null;
 		for (int i = 0; i < values.length; i++) {
-			r.getSamplerList().add(values[i]);
+			vo = new AiArtSamplerVO();
+			vo.setCode(values[i].getCode());
+			vo.setName(values[i].getName());
+			r.getSamplerList().add(vo);
 		}
 		return r;
 	}
@@ -883,8 +889,12 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		r.setIsSuccess();
 		r.setUpscalerList(new ArrayList<>());
 		AiArtUpscalerType[] values = AiArtUpscalerType.values();
+		AiArtUpscalerVO vo = null;
 		for (int i = 0; i < values.length; i++) {
-			r.getUpscalerList().add(values[i]);
+			vo = new AiArtUpscalerVO();
+			vo.setCode(values[i].getCode());
+			vo.setName(values[i].getName());
+			r.getUpscalerList().add(vo);
 		}
 		return r;
 	}

@@ -193,14 +193,14 @@ public abstract class AiArtCommonService extends AiCommonService {
 			vo.setJobStatus(po.getJobStatus().intValue());
 			vo.setNsfwJobCounting(getNsfwJobCounting(po.getAiUserId()));
 		} else {
-			if (!po.getHasReview()) {
+			if (!po.getHasReview() && !po.getIsFromApi()) {
 				vo.setJobStatus(AiArtJobStatusType.WAITING.getCode());
 			} else {
 				vo.setJobStatus(po.getJobStatus().intValue());
 			}
 		}
 
-		if (subResult != null && (forAdmin || po.getHasReview())) {
+		if (subResult != null && (forAdmin || po.getHasReview() || po.getIsFromApi())) {
 			List<String> imgUrlList = new ArrayList<>();
 			if (subResult.getImgPkList() != null && !subResult.getImgPkList().isEmpty()) {
 				for (String imgUrl : subResult.getImgPkList()) {

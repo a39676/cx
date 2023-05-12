@@ -21,11 +21,7 @@ import demo.common.service.CommonService;
 import demo.finance.cryptoCoin.data.pojo.type.CryptoCoinCatalogTaskType;
 import demo.finance.cryptoCoin.data.pojo.type.CryptoCoinDataTaskType;
 import demo.finance.cryptoCoin.data.pojo.type.CryptoCoinTaskType;
-import demo.finance.cryptoCoin.data.service.impl.CryptoCoinCatalogTaskService;
-import demo.finance.cryptoCoin.data.service.impl.CryptoCoinDataTaskService;
-import demo.finance.cryptoCoin.data.service.impl.CryptoCoinTaskService;
 import demo.finance.cryptoCoin.notice.pojo.type.CryptoCoinNoticeTaskType;
-import demo.finance.cryptoCoin.notice.service.impl.CryptoCoinNoticeTaskService;
 import demo.finance.currencyExchangeRate.data.pojo.type.CurrencyExchangeRateDataTaskType;
 import demo.finance.currencyExchangeRate.data.service.impl.CurrencyExchangeRateDataTaskService;
 import demo.finance.currencyExchangeRate.notice.pojo.type.CurrencyExchangeRateNoticeTaskType;
@@ -63,18 +59,18 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 	private CalendarNoticeTaskService calendarNoticeTaskService;
 	@Autowired
 	private OldDataDeleteServiceImpl oldDataDeleteService;
-	@Autowired
-	private CryptoCoinTaskService cryptoCoinTaskService;
+//	@Autowired
+//	private CryptoCoinTaskService cryptoCoinTaskService;
+//	@Autowired
+//	private CryptoCoinCatalogTaskService cryptoCoinCatalogTaskService;
+//	@Autowired
+//	private CryptoCoinDataTaskService cryptoCoinDataTaskService;
+//	@Autowired
+//	private CryptoCoinNoticeTaskService cryptoCoinNoticeTaskService;
 	@Autowired
 	private JoyTaskService joyTaskService;
 	@Autowired
 	private UrgeNoticeTaskService urgeNoticeTaskService;
-	@Autowired
-	private CryptoCoinCatalogTaskService cryptoCoinCatalogTaskService;
-	@Autowired
-	private CryptoCoinDataTaskService cryptoCoinDataTaskService;
-	@Autowired
-	private CryptoCoinNoticeTaskService cryptoCoinNoticeTaskService;
 	@Autowired
 	private CurrencyExchangeRateDataTaskService currencyExchangeRateDataTaskService;
 	@Autowired
@@ -225,17 +221,57 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 				}
 				break;
 			}
-			case CRYPTO_COIN: {
-				CryptoCoinTaskType secondTaskType = CryptoCoinTaskType.getType(dto.getTaskSecondCode());
-				secondTaskName = secondTaskType.getName();
-
-				if (CryptoCoinTaskType.CHECK_WEB_SOCKET_STATUS.getCode().equals(dto.getTaskSecondCode())) {
-					cryptoCoinTaskService.checkWebSocketStatus();
-				} else if (CryptoCoinTaskType.CLEAN_OLD_HISTORY_DATA.getCode().equals(dto.getTaskSecondCode())) {
-					cryptoCoinTaskService.cleanOldHistoryData();
-				}
-				break;
-			}
+//			case CRYPTO_COIN: {
+//				CryptoCoinTaskType secondTaskType = CryptoCoinTaskType.getType(dto.getTaskSecondCode());
+//				secondTaskName = secondTaskType.getName();
+//
+//				if (CryptoCoinTaskType.CHECK_WEB_SOCKET_STATUS.getCode().equals(dto.getTaskSecondCode())) {
+//					cryptoCoinTaskService.checkWebSocketStatus();
+//				} else if (CryptoCoinTaskType.CLEAN_OLD_HISTORY_DATA.getCode().equals(dto.getTaskSecondCode())) {
+//					cryptoCoinTaskService.cleanOldHistoryData();
+//				}
+//				break;
+//			}
+//			case CRYPTO_COIN_CATALOG: {
+//				CryptoCoinCatalogTaskType secondTaskType = CryptoCoinCatalogTaskType.getType(dto.getTaskSecondCode());
+//				secondTaskName = secondTaskType.getName();
+//
+//				if (CryptoCoinCatalogTaskType.ADD_SUBSCRIPTION_CATALOG.getCode().equals(dto.getTaskSecondCode())) {
+//					cryptoCoinCatalogTaskService.addSubscriptionCatalog();
+//				}
+//				break;
+//			}
+//			case CRYPTO_COIN_DATA: {
+//				CryptoCoinDataTaskType secondTaskType = CryptoCoinDataTaskType.getType(dto.getTaskSecondCode());
+//				secondTaskName = secondTaskType.getName();
+//
+//				if (CryptoCoinDataTaskType.DELETE_EXPIRED_CACHE_DATA.getCode().equals(dto.getTaskSecondCode())) {
+//					cryptoCoinDataTaskService.deleteExpiredCacheData();
+//				} else if (CryptoCoinDataTaskType.RESET_DAILY_DATA_WAITING_QUERY_SET.getCode()
+//						.equals(dto.getTaskSecondCode())) {
+//					cryptoCoinDataTaskService.resetDailyDataWaitingQuerySet();
+//				} else if (CryptoCoinDataTaskType.SEND_CRYPTO_COIN_DAILY_DATA_QUERY_MSG.getCode()
+//						.equals(dto.getTaskSecondCode())) {
+//					cryptoCoinDataTaskService.sendCryptoCoinDailyDataQueryMsg();
+//				} else if (CryptoCoinDataTaskType.SUMMARY_HISTORY_DATA.getCode().equals(dto.getTaskSecondCode())) {
+//					cryptoCoinDataTaskService.summaryHistoryData();
+//				} else if (CryptoCoinDataTaskType.SUMMARY_MINUTE_DATA.getCode().equals(dto.getTaskSecondCode())) {
+//					cryptoCoinDataTaskService.summaryMinuteData();
+//				}
+//				break;
+//			}
+//			case CRYPTO_COIN_NOTICE: {
+//				CryptoCoinNoticeTaskType secondTaskType = CryptoCoinNoticeTaskType.getType(dto.getTaskSecondCode());
+//				secondTaskName = secondTaskType.getName();
+//
+//				if (CryptoCoinNoticeTaskType.CRYPTO_COIN_PRICE_NOTICE_HANDLER.getCode()
+//						.equals(dto.getTaskSecondCode())) {
+//					cryptoCoinNoticeTaskService.cryptoCoinPriceNoticeHandler();
+//				} else if (CryptoCoinNoticeTaskType.DELETE_OLD_NOTICE.getCode().equals(dto.getTaskSecondCode())) {
+//					cryptoCoinDataTaskService.deleteExpiredCacheData();
+//				}
+//				break;
+//			}
 			case JOY: {
 				JoyTaskType secondTaskType = JoyTaskType.getType(dto.getTaskSecondCode());
 				secondTaskName = secondTaskType.getName();
@@ -251,46 +287,6 @@ public class TaskHandlerServiceImpl extends CommonService implements TaskHandler
 
 				if (UrgeNoticeTaskType.SEND_URGE_NOTICE.getCode().equals(dto.getTaskSecondCode())) {
 					urgeNoticeTaskService.sendUrgeNotice();
-				}
-				break;
-			}
-			case CRYPTO_COIN_CATALOG: {
-				CryptoCoinCatalogTaskType secondTaskType = CryptoCoinCatalogTaskType.getType(dto.getTaskSecondCode());
-				secondTaskName = secondTaskType.getName();
-
-				if (CryptoCoinCatalogTaskType.ADD_SUBSCRIPTION_CATALOG.getCode().equals(dto.getTaskSecondCode())) {
-					cryptoCoinCatalogTaskService.addSubscriptionCatalog();
-				}
-				break;
-			}
-			case CRYPTO_COIN_DATA: {
-				CryptoCoinDataTaskType secondTaskType = CryptoCoinDataTaskType.getType(dto.getTaskSecondCode());
-				secondTaskName = secondTaskType.getName();
-
-				if (CryptoCoinDataTaskType.DELETE_EXPIRED_CACHE_DATA.getCode().equals(dto.getTaskSecondCode())) {
-					cryptoCoinDataTaskService.deleteExpiredCacheData();
-				} else if (CryptoCoinDataTaskType.RESET_DAILY_DATA_WAITING_QUERY_SET.getCode()
-						.equals(dto.getTaskSecondCode())) {
-					cryptoCoinDataTaskService.resetDailyDataWaitingQuerySet();
-				} else if (CryptoCoinDataTaskType.SEND_CRYPTO_COIN_DAILY_DATA_QUERY_MSG.getCode()
-						.equals(dto.getTaskSecondCode())) {
-					cryptoCoinDataTaskService.sendCryptoCoinDailyDataQueryMsg();
-				} else if (CryptoCoinDataTaskType.SUMMARY_HISTORY_DATA.getCode().equals(dto.getTaskSecondCode())) {
-					cryptoCoinDataTaskService.summaryHistoryData();
-				} else if (CryptoCoinDataTaskType.SUMMARY_MINUTE_DATA.getCode().equals(dto.getTaskSecondCode())) {
-					cryptoCoinDataTaskService.summaryMinuteData();
-				}
-				break;
-			}
-			case CRYPTO_COIN_NOTICE: {
-				CryptoCoinNoticeTaskType secondTaskType = CryptoCoinNoticeTaskType.getType(dto.getTaskSecondCode());
-				secondTaskName = secondTaskType.getName();
-
-				if (CryptoCoinNoticeTaskType.CRYPTO_COIN_PRICE_NOTICE_HANDLER.getCode()
-						.equals(dto.getTaskSecondCode())) {
-					cryptoCoinNoticeTaskService.cryptoCoinPriceNoticeHandler();
-				} else if (CryptoCoinNoticeTaskType.DELETE_OLD_NOTICE.getCode().equals(dto.getTaskSecondCode())) {
-					cryptoCoinDataTaskService.deleteExpiredCacheData();
 				}
 				break;
 			}

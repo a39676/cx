@@ -2,18 +2,18 @@ package demo.ai.aiArt.pojo.result;
 
 import java.util.List;
 
-import ai.automatic1111.pojo.type.AiArtUpscalerType;
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.ai.aiArt.pojo.vo.AiArtUpscalerVO;
 
 public class GetAiArtAllUpscalerResult extends CommonResult {
 
-	private List<AiArtUpscalerType> upscalerList;
+	private List<AiArtUpscalerVO> upscalerList;
 
-	public List<AiArtUpscalerType> getUpscalerList() {
+	public List<AiArtUpscalerVO> getUpscalerList() {
 		return upscalerList;
 	}
 
-	public void setUpscalerList(List<AiArtUpscalerType> upscalerList) {
+	public void setUpscalerList(List<AiArtUpscalerVO> upscalerList) {
 		this.upscalerList = upscalerList;
 	}
 

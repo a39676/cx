@@ -110,7 +110,9 @@
           </tbody>
         </table>
         <button id="loadMoreJobResult">load more</button>
+        <button id="notFromAPI">notFromAPI</button>
         <button id="cleanSearch">cleanSearch</button>
+
       </div>
     </div>
     
@@ -259,11 +261,13 @@
       })
 
       $("#loadMoreJobResult").click(function (){
+        $("#result").text("");
         getJobResultList();
       })
 
       $("#cleanSearch").click(function() {
         cleanSearch();
+        $("#result").text("");
         $("#searchCondition").attr("isLock", "1");
       })
 
@@ -278,6 +282,30 @@
         $("input[name='jobStatusRadio']").filter('[value=0]').prop('checked', false);
         $("input[name='jobStatusRadio']").filter('[value=1]').prop('checked', false);
         $("input[name='fromApiRadio']").filter('[value=false]').prop('checked', false);
+        $("input[name='fromApiRadio']").filter('[value=true]').prop('checked', false);
+        $("#createTimeStartStr").val("");
+        $("#createTimeEndStr").val("");
+
+        $("#jobResult").html("");
+      }
+
+      $("#notFromAPI").click(function() {
+        notFromAPI();
+        $("#result").text("");
+        $("#searchCondition").attr("isLock", "1");
+      })
+
+      function notFromAPI() {
+        $("#jobResult").attr("lastJobPk", "");
+        $("#orderBy").val("");
+        $("input[name='hasReviewRadio']").filter('[value=true]').prop('checked', false);
+        $("input[name='hasReviewRadio']").filter('[value=false]').prop('checked', true);
+        $("input[name='isFreeJobRadio']").filter('[value=false]').prop('checked', false);
+        $("input[name='isFreeJobRadio']").filter('[value=true]').prop('checked', false);
+        $("input[name='jobStatusRadio']").filter('[value=-1]').prop('checked', false);
+        $("input[name='jobStatusRadio']").filter('[value=0]').prop('checked', false);
+        $("input[name='jobStatusRadio']").filter('[value=1]').prop('checked', false);
+        $("input[name='fromApiRadio']").filter('[value=false]').prop('checked', true);
         $("input[name='fromApiRadio']").filter('[value=true]').prop('checked', false);
         $("#createTimeStartStr").val("");
         $("#createTimeEndStr").val("");
@@ -541,12 +569,10 @@
         var searchCondition = $("#searchCondition");
         var lockFlag = searchCondition.attr("isLock");
         if (st > lastScrollTop){
-          console.log("downscroll");
           if("1" != lockFlag){
             searchCondition.hide();
           }
         } else {
-          console.log("upscroll");
           searchCondition.show();
         }
         lastScrollTop = st;

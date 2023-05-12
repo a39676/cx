@@ -7,10 +7,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -420,7 +418,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			jobPO.setJobStatus(AiArtJobStatusType.SUCCESS.getCode().byteValue());
 			jobPO.setRunCount(jobPO.getRunCount() + 1);
 			aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
-			
+
 			String parameterPathStr = getParameterPathByJobId(jobId);
 			File f = new File(parameterPathStr);
 			f.deleteOnExit();
@@ -430,13 +428,19 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			jobPO.setRunCount(jobPO.getRunCount() + 1);
 			aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
 
-			if (jobPO.getRunCount() + 1 == aiArtOptionService.getMaxFailCountForJob() && !jobPO.getIsFreeJob()) {
-				BigDecimal cost = calculateTokenCost(parameterDTO);
-				aiChatUserService.recharge(jobPO.getAiUserId(), AiServiceAmountType.BONUS, cost);
-				jobPO.setRunCount(jobPO.getRunCount() + 1);
-				jobPO.setHasReview(true);
-				aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
-				minusJobCounting(jobPO.getAiUserId());
+			if (jobPO.getRunCount() + 1 == aiArtOptionService.getMaxFailCountForJob()) {
+				String parameterPathStr = getParameterPathByJobId(jobId);
+				File f = new File(parameterPathStr);
+				f.deleteOnExit();
+
+				if (!jobPO.getIsFreeJob()) {
+					BigDecimal cost = calculateTokenCost(parameterDTO);
+					aiChatUserService.recharge(jobPO.getAiUserId(), AiServiceAmountType.BONUS, cost);
+					jobPO.setRunCount(jobPO.getRunCount() + 1);
+					jobPO.setHasReview(true);
+					aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
+					minusJobCounting(jobPO.getAiUserId());
+				}
 			}
 		}
 
@@ -611,38 +615,6 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	@Override
 	public GetJobResultList getJobResultVoByJobPk(BasePkDTO dto) {
 		return super.getJobResultVoByJobPk(dto.getPk());
-	}
-
-	@Override
-	public void deleteParameterFile() {
-		Set<Long> targetIdSet = new HashSet<>();
-		AiArtTextToImageJobRecordExample example = new AiArtTextToImageJobRecordExample();
-		example.createCriteria().andJobStatusEqualTo(AiArtJobStatusType.SUCCESS.getCode().byteValue())
-				.andHasReviewEqualTo(true).andCreateTimeGreaterThan(LocalDateTime.now().minusDays(3));
-		List<AiArtTextToImageJobRecord> list = aiArtTextToImageJobRecordMapper.selectByExample(example);
-		for (AiArtTextToImageJobRecord po : list) {
-			targetIdSet.add(po.getId());
-		}
-		example.createCriteria().andRunCountGreaterThanOrEqualTo(aiArtOptionService.getMaxFailCountForJob())
-				.andCreateTimeGreaterThan(LocalDateTime.now().minusDays(3));
-		list = aiArtTextToImageJobRecordMapper.selectByExample(example);
-		for (AiArtTextToImageJobRecord po : list) {
-			targetIdSet.add(po.getId());
-		}
-
-		if (targetIdSet.isEmpty()) {
-			return;
-		}
-
-		String resultJsonSavePath = null;
-		File file = null;
-		for (Long id : targetIdSet) {
-			resultJsonSavePath = getJobResultStrPath(id);
-			file = new File(resultJsonSavePath);
-			if (file.exists()) {
-				file.deleteOnExit();
-			}
-		}
 	}
 
 	@Override

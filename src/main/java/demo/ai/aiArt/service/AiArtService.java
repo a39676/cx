@@ -25,8 +25,6 @@ public interface AiArtService {
 
 	GetJobResultList getJobResultVoByJobPk(BasePkDTO dto);
 
-	void deleteParameterFile();
-
 	void refreshImageWallJsonFile();
 
 	void loadingCache();

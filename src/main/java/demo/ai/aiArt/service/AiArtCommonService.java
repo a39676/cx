@@ -318,7 +318,7 @@ public abstract class AiArtCommonService extends AiCommonService {
 		if (po.getIsFromApi() && jobResult != null) {
 			List<String> newImgPkList = new ArrayList<>();
 			for (String imgPk : jobResult.getImgPkList()) {
-				updateImageInvalidTimeByImgUrl(imgPk);
+				updateImageInvalidTimeByImgPk(imgPk);
 				newImgPkList.add(imgPk);
 			}
 			jobResult.setImgPkList(newImgPkList);
@@ -336,7 +336,7 @@ public abstract class AiArtCommonService extends AiCommonService {
 		return r;
 	}
 
-	protected void updateImageInvalidTimeByImgUrl(String imgPk) {
+	protected void updateImageInvalidTimeByImgPk(String imgPk) {
 		if (aiArtOptionService.getImagePkInsteadOfNsfw().equals(imgPk)) {
 			return;
 		}

@@ -22,7 +22,6 @@ public class AiArtOptionService extends CommonService {
 	@Value("${optionFilePath.aiArt}")
 	private String optionFilePath;
 	private String generateImageResultFolder;
-	private String textToImageParameterSavingFolder;
 	private String imageWallFilePath;
 	private Integer imageWallMaxSize;
 	private Integer imageWallOnShowMaxSize;
@@ -64,14 +63,6 @@ public class AiArtOptionService extends CommonService {
 
 	public void setGenerateImageResultFolder(String generateImageResultFolder) {
 		this.generateImageResultFolder = generateImageResultFolder;
-	}
-
-	public String getTextToImageParameterSavingFolder() {
-		return textToImageParameterSavingFolder;
-	}
-
-	public void setTextToImageParameterSavingFolder(String textToImageParameterSavingFolder) {
-		this.textToImageParameterSavingFolder = textToImageParameterSavingFolder;
 	}
 
 	public String getImageWallFilePath() {
@@ -276,8 +267,7 @@ public class AiArtOptionService extends CommonService {
 
 	@Override
 	public String toString() {
-		return "AiArtOptionService [generateImageResultFolder=" + generateImageResultFolder
-				+ ", textToImageParameterSavingFolder=" + textToImageParameterSavingFolder + ", imageWallFilePath="
+		return "AiArtOptionService [generateImageResultFolder=" + generateImageResultFolder + ", imageWallFilePath="
 				+ imageWallFilePath + ", imageWallMaxSize=" + imageWallMaxSize + ", imageWallOnShowMaxSize="
 				+ imageWallOnShowMaxSize + ", maxHeight=" + maxHeight + ", maxWidth=" + maxWidth + ", maxBatch="
 				+ maxBatch + ", maxCfgScale=" + maxCfgScale + ", maxSteps=" + maxSteps + ", maxDailyFreeJobCount="

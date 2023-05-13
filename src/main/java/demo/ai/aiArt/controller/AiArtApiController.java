@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import ai.aiArt.pojo.constant.AiArtApiUrlConstant;
-import ai.aiArt.pojo.result.AiArtTxtToImgResult;
 import ai.aiArt.pojo.result.GetJobResultList;
 import ai.aiArt.pojo.result.SendTextToImgJobResult;
 import auxiliaryCommon.pojo.dto.BasePkDTO;
@@ -18,6 +17,7 @@ import demo.ai.aiArt.pojo.result.GetAiArtAllModelListResult;
 import demo.ai.aiArt.pojo.result.GetAiArtAllSamplerResult;
 import demo.ai.aiArt.pojo.result.GetAiArtAllUpscalerResult;
 import demo.ai.aiArt.service.AiArtService;
+import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping(value = AiArtApiUrlConstant.ROOT)
@@ -55,13 +55,16 @@ public class AiArtApiController {
 	public GetAiArtAllUpscalerResult getAllUpsalerList() {
 		return aiArtService.getAllUpsalerList();
 	}
-
+	
+	
 	@PostMapping(value = AiArtApiUrlConstant.RECEIVE_IMAGE_JOB_RESULT)
 	@ResponseBody
-	public void receiveImgJobResultForApi(@RequestBody AiArtTxtToImgResult result) {
-		aiArtService.receiveImgJobResultForApi(result);
+	public String receiveImgJobResultForApi(@RequestBody JSONObject json) {
+		aiArtService.receiveImgJobResultForApi(json);
+		return "{}";
 	}
-	
+
+
 	@PostMapping(value = AiArtApiUrlConstant.HEART_BEAT)
 	@ResponseBody
 	public void heartBeatReciver() {

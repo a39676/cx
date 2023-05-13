@@ -387,6 +387,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	
 	@Override
 	public void receiveImgJobResultForApi(JSONObject json) {
+		log.error("Receive AI art json result: " + json.toString());
 		AiArtTxtToImgResult r = buildObjFromJsonCustomization(json.toString(), AiArtTxtToImgResult.class);
 		receiveImgJobResult(r);
 	}

@@ -6,12 +6,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.common.service.ToolCommonService;
-import demo.interaction.wechat.mq.producer.SendAiArtJobCompleteTemplateMessageProducer;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.dto.TestDTO;
 import demo.test.service.TestService2;
@@ -40,13 +38,10 @@ public class TestController2 extends ToolCommonService {
 		return "Done";
 	}
 
-	@Autowired
-	private SendAiArtJobCompleteTemplateMessageProducer sendAiArtJobCompleteTemplateMessageProducer;
-	
-	@GetMapping(value = "/t4")
+	@PostMapping(value = "/t4")
 	@ResponseBody
-	public String t4(@RequestParam("openId") String openId) {
-		sendAiArtJobCompleteTemplateMessageProducer.send(openId);
+	public String t4(@RequestBody String s) {
+		System.out.println(s);
 		return "Done";
 	}
 

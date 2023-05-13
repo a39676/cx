@@ -382,11 +382,16 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	public void receiveImgJobResultForMQ(String txtToImgResultStr) {
 		AiArtTxtToImgResult txtToImgResult = buildObjFromJsonCustomization(txtToImgResultStr,
 				AiArtTxtToImgResult.class);
-		receiveImgJobResultForApi(txtToImgResult);
+		receiveImgJobResult(txtToImgResult);
 	}
 	
 	@Override
-	public void receiveImgJobResultForApi(AiArtTxtToImgResult txtToImgResult) {
+	public void receiveImgJobResultForApi(JSONObject json) {
+		AiArtTxtToImgResult r = buildObjFromJsonCustomization(json.toString(), AiArtTxtToImgResult.class);
+		receiveImgJobResult(r);
+	}
+	
+	public void receiveImgJobResult(AiArtTxtToImgResult txtToImgResult) {
 		if (txtToImgResult == null || txtToImgResult.getJobId() == null) {
 			log.error("Text to image feedback error");
 			return;

@@ -4,7 +4,6 @@ import java.util.List;
 
 import ai.aiArt.pojo.dto.TextToImageFromWechatDTO;
 import ai.aiArt.pojo.result.AiArtImageWallResult;
-import ai.aiArt.pojo.result.AiArtTxtToImgResult;
 import ai.aiArt.pojo.result.GetJobResultList;
 import ai.aiArt.pojo.result.SendTextToImgJobResult;
 import ai.pojo.vo.AiArtModelVO;
@@ -15,6 +14,7 @@ import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecord;
 import demo.ai.aiArt.pojo.result.GetAiArtAllModelListResult;
 import demo.ai.aiArt.pojo.result.GetAiArtAllSamplerResult;
 import demo.ai.aiArt.pojo.result.GetAiArtAllUpscalerResult;
+import net.sf.json.JSONObject;
 import wechatSdk.pojo.dto.AiArtGenerateOtherLikeThatDTO;
 
 public interface AiArtService {
@@ -57,8 +57,8 @@ public interface AiArtService {
 
 	GetAiArtAllUpscalerResult getAllUpsalerList();
 
-	void receiveImgJobResultForApi(AiArtTxtToImgResult txtToImgResult);
-
 	void heartBeatReciver();
+
+	void receiveImgJobResultForApi(JSONObject json);
 
 }

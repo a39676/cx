@@ -23,6 +23,6 @@ public class AutomaticImageFeedbackAckReceiver extends CommonService {
 
 	@RabbitHandler
 	public void process(String messageStr, Channel channel, Message message) throws IOException {
-		aiArtService.receiveImgJobResult(messageStr);
+		aiArtService.receiveImgJobResultForMQ(messageStr);
 	}
 }

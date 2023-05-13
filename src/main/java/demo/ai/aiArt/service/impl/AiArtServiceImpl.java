@@ -379,9 +379,14 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	}
 
 	@Override
-	public void receiveImgJobResult(String txtToImgResultStr) {
+	public void receiveImgJobResultForMQ(String txtToImgResultStr) {
 		AiArtTxtToImgResult txtToImgResult = buildObjFromJsonCustomization(txtToImgResultStr,
 				AiArtTxtToImgResult.class);
+		receiveImgJobResultForApi(txtToImgResult);
+	}
+	
+	@Override
+	public void receiveImgJobResultForApi(AiArtTxtToImgResult txtToImgResult) {
 		if (txtToImgResult == null || txtToImgResult.getJobId() == null) {
 			log.error("Text to image feedback error");
 			return;
@@ -897,5 +902,11 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			r.getUpscalerList().add(vo);
 		}
 		return r;
+	}
+	
+	@Override
+	public void heartBeatReciver() {
+		aiArtCacheService.setIsRunning(true);
+		aiArtCacheService.setLastHearBeatTime(LocalDateTime.now());
 	}
 }

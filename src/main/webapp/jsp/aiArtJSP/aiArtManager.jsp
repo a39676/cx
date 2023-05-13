@@ -111,6 +111,7 @@
         </table>
         <button id="loadMoreJobResult">load more</button>
         <button id="notFromAPI">notFromAPI</button>
+        <button id="ApiJobs">ApiJobs</button>
         <button id="cleanSearch">cleanSearch</button>
 
       </div>
@@ -312,6 +313,32 @@
 
         $("#jobResult").html("");
       }
+
+      $("#ApiJobs").click(function() {
+        ApiJobs();
+        $("#result").text("");
+        $("#searchCondition").attr("isLock", "1");
+      })
+
+      function ApiJobs() {
+        $("#jobResult").attr("lastJobPk", "");
+        $("#orderBy").val("");
+        $("input[name='hasReviewRadio']").filter('[value=true]').prop('checked', false);
+        $("input[name='hasReviewRadio']").filter('[value=false]').prop('checked', true);
+        $("input[name='isFreeJobRadio']").filter('[value=false]').prop('checked', false);
+        $("input[name='isFreeJobRadio']").filter('[value=true]').prop('checked', false);
+        $("input[name='jobStatusRadio']").filter('[value=-1]').prop('checked', false);
+        $("input[name='jobStatusRadio']").filter('[value=0]').prop('checked', false);
+        $("input[name='jobStatusRadio']").filter('[value=1]').prop('checked', false);
+        $("input[name='fromApiRadio']").filter('[value=false]').prop('checked', false);
+        $("input[name='fromApiRadio']").filter('[value=true]').prop('checked', true);
+        $("#createTimeStartStr").val("");
+        $("#createTimeEndStr").val("");
+
+        $("#jobResult").html("");
+      }
+
+      
 
       function getJobResultList(){
         var url = "/aiArtManager/getJobResultList";

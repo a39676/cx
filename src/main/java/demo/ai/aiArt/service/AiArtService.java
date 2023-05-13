@@ -21,7 +21,7 @@ public interface AiArtService {
 
 	SendTextToImgJobResult sendTextToImgFromWechatDtoToMq(TextToImageFromWechatDTO dto);
 
-	void rerun();
+	void rerunAllWaitingJobs();
 
 	GetJobResultList getJobResultListByTmpKey(String userTmpKey);
 

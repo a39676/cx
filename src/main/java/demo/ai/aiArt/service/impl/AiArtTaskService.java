@@ -21,10 +21,10 @@ public class AiArtTaskService extends AiArtCommonService {
 	@Autowired
 	private AiArtCacheService aiArtCacheService;
 
-	@Scheduled(fixedDelay = 1000L * 60 * 2)
+	@Scheduled(fixedDelay = 1000L * 5)
 	public void rerun() {
 		if (aiArtCacheService.getIsRunning()) {
-			aiArtService.rerun();
+			aiArtService.rerunAllWaitingJobs();
 			aiArtManagerService.setReviewBatchForAdmin();
 			aiArtService.sendNoticeIfAnyJobsWaitingForReview();
 		}

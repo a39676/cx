@@ -558,6 +558,41 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			}
 		}
 	}
+	
+	@Override
+	public TextToImageDTO findRerunJobWhenSdkAsk() {
+		List<AiArtTextToImageJobRecord> poList = aiArtTextToImageJobRecordMapper
+				.findWaitingJobs(aiArtOptionService.getMaxFailCountForJob());
+		if (poList.isEmpty()) {
+			return null;
+		}
+
+		for (AiArtTextToImageJobRecord po : poList) {
+			if (isJobInQueue(po.getId())) {
+				continue;
+			}
+			if (!po.getIsFreeJob()) {
+				TextToImageDTO dto = getParameterByJobId(po.getId());
+				return dto;
+			}
+			Long aiUserId = po.getAiUserId();
+			Boolean rechargeFlag = checkRechargeMarkThisWeek(aiUserId);
+			if (rechargeFlag) {
+				TextToImageDTO dto = getParameterByJobId(po.getId());
+				return dto;
+			}
+
+			Integer freeJobCountingInLastThreeDays = getFreeJobCountingOfLastThreeDays(aiUserId);
+			int delaySeconds = freeJobCountingInLastThreeDays * aiArtOptionService.getFreeJobDelaySeconds();
+			LocalDateTime startTime = po.getCreateTime().plusSeconds(delaySeconds);
+			if (startTime.isBefore(LocalDateTime.now())) {
+				TextToImageDTO dto = getParameterByJobId(po.getId());
+				return dto;
+			}
+		}
+		
+		return null;
+	}
 
 	@Override
 	public GetJobResultList getJobResultListByTmpKey(String userTmpKey) {

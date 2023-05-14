@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import ai.aiArt.pojo.constant.AiArtApiUrlConstant;
+import ai.aiArt.pojo.dto.TextToImageDTO;
 import ai.aiArt.pojo.result.GetJobResultList;
 import ai.aiArt.pojo.result.SendTextToImgJobResult;
 import auxiliaryCommon.pojo.dto.BasePkDTO;
@@ -69,5 +70,11 @@ public class AiArtApiController {
 	@ResponseBody
 	public void heartBeatReciver() {
 		aiArtService.heartBeatReciver();
+	}
+	
+	@PostMapping(value = AiArtApiUrlConstant.GET_RERUN_JOB)
+	@ResponseBody
+	public TextToImageDTO findRerunJobWhenSdkAsk() {
+		return aiArtService.findRerunJobWhenSdkAsk();
 	}
 }

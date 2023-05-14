@@ -200,7 +200,30 @@ public abstract class AiArtCommonService extends AiCommonService {
 			}
 		}
 
-		if (subResult != null && (forAdmin || po.getHasReview() || po.getIsFromApi())) {
+		if (subResult == null) {
+			return vo;
+		}
+
+		TextToImageDTO subParam = subResult.getParameter();
+		subParam.setJobId(null);
+//		if (subParam.getPrompts() != null) {
+//			subParam.setPrompts(
+//					subParam.getPrompts().replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+//			subParam.setNegativePrompts(subParam.getNegativePrompts().replaceAll("&", "&amp;")
+//					.replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+//		}
+		vo.setParameter(subParam);
+
+		AiArtSamplerType samplerType = AiArtSamplerType.getType(subParam.getSampler());
+		if (samplerType != null) {
+			vo.setSamplerName(samplerType.getName());
+		}
+
+		vo.setModelName(subParam.getModelName());
+
+		if (forAdmin || (!po.getIsFromApi() && po.getHasReview())
+				|| (po.getIsFromApi() && subResult.getImgPkList().size() == subResult.getParameter().getBatchSize())) {
+
 			List<String> imgUrlList = new ArrayList<>();
 			if (subResult.getImgPkList() != null && !subResult.getImgPkList().isEmpty()) {
 				for (String imgUrl : subResult.getImgPkList()) {
@@ -208,22 +231,6 @@ public abstract class AiArtCommonService extends AiCommonService {
 				}
 			}
 			vo.setImgPkList(imgUrlList);
-			TextToImageDTO subParam = subResult.getParameter();
-			subParam.setJobId(null);
-//			if (subParam.getPrompts() != null) {
-//				subParam.setPrompts(
-//						subParam.getPrompts().replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
-//				subParam.setNegativePrompts(subParam.getNegativePrompts().replaceAll("&", "&amp;")
-//						.replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
-//			}
-			vo.setParameter(subParam);
-
-			AiArtSamplerType samplerType = AiArtSamplerType.getType(subParam.getSampler());
-			if (samplerType != null) {
-				vo.setSamplerName(samplerType.getName());
-			}
-
-			vo.setModelName(subParam.getModelName());
 		}
 		return vo;
 	}

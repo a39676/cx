@@ -389,7 +389,17 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 				if (tmpFile.delete()) {
 					targetImgIdList.add(m.getValue());
 					log.error("Call imageStoreMapper.deleteByPrimaryKey in ImageServiceImpl.imageCleanAndDeleteFile");
-					imgMapper.deleteByPrimaryKey(m.getValue());
+					int deleteCount = imgMapper.deleteByPrimaryKey(m.getValue());
+					if(deleteCount != 1) {
+						log.error(m.getValue() + ", delete failed");
+					}
+				}
+			} else {
+				targetImgIdList.add(m.getValue());
+				log.error("Call imageStoreMapper.deleteByPrimaryKey in ImageServiceImpl.imageCleanAndDeleteFile");
+				int deleteCount = imgMapper.deleteByPrimaryKey(m.getValue());
+				if(deleteCount != 1) {
+					log.error(m.getValue() + ", delete failed");
 				}
 			}
 		}

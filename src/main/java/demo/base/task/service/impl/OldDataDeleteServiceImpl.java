@@ -38,6 +38,8 @@ public class OldDataDeleteServiceImpl extends CommonTaskService {
 		OldDataDeleteTaskType oldDataDeleteTaskType = OldDataDeleteTaskType.CLEAN_OLD_AUTO_TEST_UPLOAD_IMAGE;
 		dto.setTaskSecondCode(oldDataDeleteTaskType.getCode());
 		dto.setTaskSecondName(oldDataDeleteTaskType.getName());
+		
+		taskInsertAckProducer.send(dto);
 	}
 
 	public void cleanOldAutoTestUploadImage() {
@@ -54,6 +56,8 @@ public class OldDataDeleteServiceImpl extends CommonTaskService {
 		OldDataDeleteTaskType oldDataDeleteTaskType = OldDataDeleteTaskType.CLEAN_EXPIRED_ARTICLE_BURN;
 		dto.setTaskSecondCode(oldDataDeleteTaskType.getCode());
 		dto.setTaskSecondName(oldDataDeleteTaskType.getName());
+		
+		taskInsertAckProducer.send(dto);
 	}
 
 	public void cleanExpiredArticleBurn() {
@@ -70,6 +74,8 @@ public class OldDataDeleteServiceImpl extends CommonTaskService {
 		OldDataDeleteTaskType oldDataDeleteTaskType = OldDataDeleteTaskType.IMAGE_CLEAN;
 		dto.setTaskSecondCode(oldDataDeleteTaskType.getCode());
 		dto.setTaskSecondName(oldDataDeleteTaskType.getName());
+		
+		taskInsertAckProducer.send(dto);
 	}
 
 	public void imageClean() {
@@ -87,6 +93,8 @@ public class OldDataDeleteServiceImpl extends CommonTaskService {
 		OldDataDeleteTaskType oldDataDeleteTaskType = OldDataDeleteTaskType.DELETE_OLD_EXERCISE_FILE;
 		dto.setTaskSecondCode(oldDataDeleteTaskType.getCode());
 		dto.setTaskSecondName(oldDataDeleteTaskType.getName());
+		
+		taskInsertAckProducer.send(dto);
 	}
 
 	public void deleteOldExerciseFile() {

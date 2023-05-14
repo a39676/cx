@@ -342,6 +342,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		AiArtTxtToImgResult r = buildObjFromJsonCustomization(json.toString(), AiArtTxtToImgResult.class);
 		log.error("Receive AI art result: " + r.getJobId() + ", code: " + r.getCode() + ", message: " + r.getMessage());
 		receiveImgJobResult(r);
+		heartBeatReciver();
 	}
 
 	public void receiveImgJobResult(AiArtTxtToImgResult txtToImgResult) {

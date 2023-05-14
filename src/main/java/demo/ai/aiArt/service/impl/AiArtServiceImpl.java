@@ -561,23 +561,28 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	
 	@Override
 	public TextToImageDTO findRerunJobWhenSdkAsk() {
+		log.error("in findRerunJobWhenSdkAsk");
 		List<AiArtTextToImageJobRecord> poList = aiArtTextToImageJobRecordMapper
 				.findWaitingJobs(aiArtOptionService.getMaxFailCountForJob());
 		if (poList.isEmpty()) {
+			log.error("NO job waiting for rerun");
 			return null;
 		}
 
 		for (AiArtTextToImageJobRecord po : poList) {
 			if (isJobInQueue(po.getId())) {
+				log.error(po.getId() + ", already in queue, skip");
 				continue;
 			}
 			if (!po.getIsFreeJob()) {
+				log.error("Find a NOT free job, sending, jobId: " + po.getId());
 				TextToImageDTO dto = getParameterByJobId(po.getId());
 				return dto;
 			}
 			Long aiUserId = po.getAiUserId();
 			Boolean rechargeFlag = checkRechargeMarkThisWeek(aiUserId);
 			if (rechargeFlag) {
+				log.error("Find a free job from recharge user, sending, jobId: " + po.getId());
 				TextToImageDTO dto = getParameterByJobId(po.getId());
 				return dto;
 			}
@@ -586,6 +591,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			int delaySeconds = freeJobCountingInLastThreeDays * aiArtOptionService.getFreeJobDelaySeconds();
 			LocalDateTime startTime = po.getCreateTime().plusSeconds(delaySeconds);
 			if (startTime.isBefore(LocalDateTime.now())) {
+				log.error("Find a free job from free user, sending, jobId: " + po.getId());
 				TextToImageDTO dto = getParameterByJobId(po.getId());
 				return dto;
 			}

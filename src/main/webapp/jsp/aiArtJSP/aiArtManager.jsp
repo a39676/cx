@@ -338,8 +338,6 @@
         $("#jobResult").html("");
       }
 
-      
-
       function getJobResultList(){
         var url = "/aiArtManager/getJobResultList";
 
@@ -459,6 +457,16 @@
           tr += "<label>cfg scale: "+parameter.cfgScale+"</label><br>";
           tr += "<label>batch size: "+parameter.batchSize+"</label><br>";
           tr += "<label>seed: "+parameter.seed+"</label><br>";
+          if(parameter.enableHr){
+            tr += "<label>enableHr: "+parameter.enableHr+"</label><br>";
+            tr += "<label>denoisingStrength: "+parameter.denoisingStrength+"</label><br>";
+            tr += "<label>hrScale: "+parameter.hrScale+"</label><br>";
+            tr += "<label>hrUpscalerName: "+parameter.hrUpscalerName+"</label><br>";
+            tr += "<label>hrUpscalerCode: "+parameter.hrUpscalerCode+"</label><br>";
+            tr += "<label>hrSecondPassSteps: "+parameter.hrSecondPassSteps+"</label><br>";
+            tr += "<label>hrResizeX: "+parameter.hrResizeX+"</label><br>";
+            tr += "<label>hrResizeY: "+parameter.hrResizeY+"</label><br>";
+          }
           tr += "</td>";
         } else {
           tr += "<td>";

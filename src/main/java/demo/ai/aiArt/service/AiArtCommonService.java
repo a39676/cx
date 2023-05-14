@@ -68,8 +68,7 @@ public abstract class AiArtCommonService extends AiCommonService {
 	@Autowired
 	private RedisOriginalConnectService redisConnectService;
 
-	private final String AI_ART_FREE_JOB_COUNTING_OF_TODAY_REDIS_KEY_PREFIX = "aiArtFreeJobCountingOfToday_";
-	private final String AI_ART_FREE_JOB_COUNTING_OF_LAST_THREE_DAYS_REDIS_KEY_PREFIX = "aiArtFreeJobCountingOfLastThreeDays_";
+	private final String AI_ART_FREE_JOB_COUNTING_BY_DATE_REDIS_KEY_PREFIX = "aiArtFreeJobCountingByDate_";
 	private final String AI_ART_JOB_IN_QUEUE_REDIS_KEY_PREFIX = "aiArtJobInQueue_";
 	private final String AI_ART_NSFW_JOB_COUNTING_REDIS_KEY_PREFIX = "aiArtNsfwJobCounting_";
 	private final String AI_ART_NOTICE_WHEN_COMPLETE_REDIS_KEY_PREFIX = "aiArtNoticeWhenComplete_";
@@ -77,10 +76,9 @@ public abstract class AiArtCommonService extends AiCommonService {
 	protected void addFreeJobCountingOfToday(Long aiUserId) {
 		Integer count = getFreeJobCountingOfToday(aiUserId);
 		LocalDateTime now = LocalDateTime.now();
-		LocalDateTime todayMax = now.with(LocalTime.MAX);
-		long minutes = ChronoUnit.MINUTES.between(now, todayMax);
-		redisConnectService.setValByName(AI_ART_FREE_JOB_COUNTING_OF_TODAY_REDIS_KEY_PREFIX + String.valueOf(aiUserId),
-				String.valueOf(count + 1), minutes, TimeUnit.MINUTES);
+		String key = AI_ART_FREE_JOB_COUNTING_BY_DATE_REDIS_KEY_PREFIX + now.getMonthValue() + now.getDayOfMonth() + "_"
+				+ String.valueOf(aiUserId);
+		redisConnectService.setValByName(key, String.valueOf(count + 1), 3, TimeUnit.DAYS);
 	}
 
 	protected void addNsfwJobCounting(Long aiUserId) {
@@ -102,8 +100,10 @@ public abstract class AiArtCommonService extends AiCommonService {
 	}
 
 	protected Integer getFreeJobCountingOfToday(Long aiUserId) {
-		String countStr = redisConnectService
-				.getValByName(AI_ART_FREE_JOB_COUNTING_OF_TODAY_REDIS_KEY_PREFIX + String.valueOf(aiUserId));
+		LocalDateTime now = LocalDateTime.now();
+		String key = AI_ART_FREE_JOB_COUNTING_BY_DATE_REDIS_KEY_PREFIX + now.getMonthValue() + now.getDayOfMonth() + "_"
+				+ String.valueOf(aiUserId);
+		String countStr = redisConnectService.getValByName(key);
 		Integer count = 0;
 		try {
 			count = Integer.parseInt(countStr);
@@ -112,19 +112,32 @@ public abstract class AiArtCommonService extends AiCommonService {
 		return count;
 	}
 
-	protected void addFreeJobCountingOfLastThreeDays(Long aiUserId) {
-		Integer count = getFreeJobCountingOfLastThreeDays(aiUserId);
-		redisConnectService.setValByName(
-				AI_ART_FREE_JOB_COUNTING_OF_LAST_THREE_DAYS_REDIS_KEY_PREFIX + String.valueOf(aiUserId),
-				String.valueOf(count + 1), 3, TimeUnit.DAYS);
-	}
-
 	protected Integer getFreeJobCountingOfLastThreeDays(Long aiUserId) {
-		String countStr = redisConnectService
-				.getValByName(AI_ART_FREE_JOB_COUNTING_OF_LAST_THREE_DAYS_REDIS_KEY_PREFIX + String.valueOf(aiUserId));
+		LocalDateTime now = LocalDateTime.now();
+		String todayKey = AI_ART_FREE_JOB_COUNTING_BY_DATE_REDIS_KEY_PREFIX + now.getMonthValue() + now.getDayOfMonth()
+				+ "_" + String.valueOf(aiUserId);
+		LocalDateTime yesterday = now.minusDays(1);
+		String yesterdayKey = AI_ART_FREE_JOB_COUNTING_BY_DATE_REDIS_KEY_PREFIX + yesterday.getMonthValue()
+				+ yesterday.getDayOfMonth() + "_" + String.valueOf(aiUserId);
+		LocalDateTime towDaysAgo = now.minusDays(2);
+		String towDaysAgoKey = AI_ART_FREE_JOB_COUNTING_BY_DATE_REDIS_KEY_PREFIX + towDaysAgo.getMonthValue()
+				+ towDaysAgo.getDayOfMonth() + "_" + String.valueOf(aiUserId);
+
+		String countStr = null;
 		Integer count = 0;
 		try {
-			count = Integer.parseInt(countStr);
+			countStr = redisConnectService.getValByName(todayKey);
+			count += Integer.parseInt(countStr);
+		} catch (Exception e) {
+		}
+		try {
+			countStr = redisConnectService.getValByName(yesterdayKey);
+			count += Integer.parseInt(countStr);
+		} catch (Exception e) {
+		}
+		try {
+			countStr = redisConnectService.getValByName(towDaysAgoKey);
+			count += Integer.parseInt(countStr);
 		} catch (Exception e) {
 		}
 		return count;

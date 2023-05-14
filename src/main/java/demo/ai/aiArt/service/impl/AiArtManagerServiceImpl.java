@@ -19,7 +19,6 @@ import ai.aiArt.pojo.dto.TextToImageDTO;
 import ai.aiArt.pojo.result.AiArtGenerateImageQueryResult;
 import ai.aiArt.pojo.result.AiArtImageWallResult;
 import ai.aiArt.pojo.result.GetJobResultList;
-import ai.aiArt.pojo.type.AiArtJobStatusType;
 import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
 import ai.aiArt.pojo.vo.AiArtImageOnWallVO;
 import ai.aiChat.pojo.type.AiServiceAmountType;
@@ -63,9 +62,7 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 		List<AiArtGenerateImageVO> voList = new ArrayList<>();
 		Set<Long> aiUserIdSet = new HashSet<>();
 		for (AiArtTextToImageJobRecord po : jobPoList) {
-			if (AiArtJobStatusType.SUCCESS.getCode().equals(po.getJobStatus().intValue())) {
-				jobResult = getJobResult(po.getId());
-			}
+			jobResult = getJobResult(po.getId());
 			aiUserIdSet.add(po.getAiUserId());
 			voList.add(buildAiArtGenerateImageVO(po, jobResult, systemOptionService.encryptId(po.getId())));
 			jobResult = null;

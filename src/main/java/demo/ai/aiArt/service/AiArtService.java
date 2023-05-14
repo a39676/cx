@@ -2,6 +2,7 @@ package demo.ai.aiArt.service;
 
 import java.util.List;
 
+import ai.aiArt.pojo.dto.TextToImageDTO;
 import ai.aiArt.pojo.dto.TextToImageFromWechatDTO;
 import ai.aiArt.pojo.result.AiArtImageWallResult;
 import ai.aiArt.pojo.result.GetJobResultList;
@@ -60,5 +61,7 @@ public interface AiArtService {
 	void heartBeatReciver();
 
 	void receiveImgJobResultForApi(JSONObject json);
+
+	TextToImageDTO findRerunJobWhenSdkAsk();
 
 }

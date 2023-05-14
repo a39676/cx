@@ -24,7 +24,7 @@ public class AiArtTaskService extends AiArtCommonService {
 	@Scheduled(fixedDelay = 1000L * 5)
 	public void rerun() {
 		if (aiArtCacheService.getIsRunning()) {
-			aiArtService.rerunAllWaitingJobs();
+//			aiArtService.rerunAllWaitingJobs();
 			aiArtManagerService.setReviewBatchForAdmin();
 			aiArtService.sendNoticeIfAnyJobsWaitingForReview();
 		}

@@ -310,7 +310,6 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		aiChatUserService.__debitAmountAndAddTokenUsage(aiUserId, cost);
 		if (isFreeJobFlag) {
 			addFreeJobCountingOfToday(aiUserId);
-			addFreeJobCountingOfLastThreeDays(aiUserId);
 			aiChatUserService.recharge(aiUserId, AiServiceAmountType.BONUS, cost);
 			r.setFreeJobCountLeft(aiArtOptionService.getMaxDailyFreeJobCount() - freeJobCounting);
 		} else {

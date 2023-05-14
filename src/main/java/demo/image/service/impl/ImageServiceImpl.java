@@ -357,17 +357,23 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 	public void imageCleanAndDeleteFile() {
 		log.error("Get in imageCleanAndDeleteFile()");
 		ImageStoreExample imgStoreExample = new ImageStoreExample();
-		imgStoreExample.createCriteria().andValidTimeLessThan(LocalDateTime.now().minusDays(PHYSICS_DELETE_DELAY_DAYS));
+		LocalDateTime limitDate = LocalDateTime.now().minusDays(PHYSICS_DELETE_DELAY_DAYS);
+		log.error("Image limit date: " + limitDate);
+		imgStoreExample.createCriteria().andValidTimeLessThan(limitDate);
 		List<ImageStore> targetImgList = imgMapper.selectByExample(imgStoreExample);
 		if (targetImgList == null || targetImgList.isEmpty()) {
+			log.error("NO image will delete");
 			return;
 		}
+		
+		log.error("May delete " + targetImgList.size() + " images");
 
 		// Collect into map(imgUrl : imgId)
 		Map<String, Long> imgPathMap = new HashMap<String, Long>();
 		for (ImageStore po : targetImgList) {
 			if (!po.getImageUrl().startsWith("http")) {
 				imgPathMap.put(po.getImageUrl(), po.getImageId());
+				log.error("Will delete image id: " + po.getImageId());
 			}
 		}
 

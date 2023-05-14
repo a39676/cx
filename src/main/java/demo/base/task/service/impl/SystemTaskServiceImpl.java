@@ -88,6 +88,8 @@ public class SystemTaskServiceImpl extends CommonTaskService {
 		SystemTaskType systemTaskType = SystemTaskType.CLEAN_ATTEMPTS;
 		dto.setTaskSecondCode(systemTaskType.getCode());
 		dto.setTaskSecondName(systemTaskType.getName());
+		
+		taskInsertAckProducer.send(dto);
 	}
 
 	public void cleanAttempts() {
@@ -104,6 +106,8 @@ public class SystemTaskServiceImpl extends CommonTaskService {
 		SystemTaskType systemTaskType = SystemTaskType.CLEAN_MAIL_RECORD;
 		dto.setTaskSecondCode(systemTaskType.getCode());
 		dto.setTaskSecondName(systemTaskType.getName());
+		
+		taskInsertAckProducer.send(dto);
 	}
 
 	public void cleanMailRecord() {
@@ -130,6 +134,8 @@ public class SystemTaskServiceImpl extends CommonTaskService {
 		SystemTaskType systemTaskType = SystemTaskType.EVALUATION_CACHE_TO_STORE;
 		dto.setTaskSecondCode(systemTaskType.getCode());
 		dto.setTaskSecondName(systemTaskType.getName());
+		
+//		taskInsertAckProducer.send(dto);
 	}
 
 	public void evaluationCacheToStore() {
@@ -148,6 +154,8 @@ public class SystemTaskServiceImpl extends CommonTaskService {
 		SystemTaskType systemTaskType = SystemTaskType.EVALUATION_CACHE_STATISTICS;
 		dto.setTaskSecondCode(systemTaskType.getCode());
 		dto.setTaskSecondName(systemTaskType.getName());
+		
+//		taskInsertAckProducer.send(dto);
 	}
 
 	public void evaluationCacheStatistics() {
@@ -166,6 +174,8 @@ public class SystemTaskServiceImpl extends CommonTaskService {
 		SystemTaskType systemTaskType = SystemTaskType.REFILL_ARTICLE_LONG_REVIEW_CREATOR_ID;
 		dto.setTaskSecondCode(systemTaskType.getCode());
 		dto.setTaskSecondName(systemTaskType.getName());
+		
+//		taskInsertAckProducer.send(dto);
 	}
 
 	public void refillArticleLongReviewCreatorId() {
@@ -182,6 +192,8 @@ public class SystemTaskServiceImpl extends CommonTaskService {
 		SystemTaskType systemTaskType = SystemTaskType.CREATE_FAKE_EVALUATION_STORE;
 		dto.setTaskSecondCode(systemTaskType.getCode());
 		dto.setTaskSecondName(systemTaskType.getName());
+		
+//		taskInsertAckProducer.send(dto);
 	}
 
 	public void createFakeEvaluationStore() {
@@ -202,6 +214,8 @@ public class SystemTaskServiceImpl extends CommonTaskService {
 		SystemTaskType systemTaskType = SystemTaskType.AUTO_PASS;
 		dto.setTaskSecondCode(systemTaskType.getCode());
 		dto.setTaskSecondName(systemTaskType.getName());
+		
+//		taskInsertAckProducer.send(dto);
 	}
 
 	public void autoPass() throws Exception {
@@ -218,6 +232,8 @@ public class SystemTaskServiceImpl extends CommonTaskService {
 		SystemTaskType systemTaskType = SystemTaskType.VISIT_COUNT_REDIS_TO_ORM;
 		dto.setTaskSecondCode(systemTaskType.getCode());
 		dto.setTaskSecondName(systemTaskType.getName());
+		
+		taskInsertAckProducer.send(dto);
 	}
 
 	public void visitCountRedisToOrm() {
@@ -237,6 +253,8 @@ public class SystemTaskServiceImpl extends CommonTaskService {
 		SystemTaskType systemTaskType = SystemTaskType.DELETE_EXPIRED_DENY_RECORD;
 		dto.setTaskSecondCode(systemTaskType.getCode());
 		dto.setTaskSecondName(systemTaskType.getName());
+		
+		taskInsertAckProducer.send(dto);
 	}
 
 	public void deleteExpiredDenyRecord() {

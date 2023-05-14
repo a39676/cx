@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.common.service.ToolCommonService;
+import demo.image.service.ImageService;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.dto.TestDTO;
 import demo.test.service.TestService2;
@@ -38,10 +39,14 @@ public class TestController2 extends ToolCommonService {
 		return "Done";
 	}
 
-	@PostMapping(value = "/t4")
+	@Autowired
+	private ImageService imageService;
+	
+	@GetMapping(value = "/t4")
 	@ResponseBody
-	public String t4(@RequestBody String s) {
-		System.out.println(s);
+	public String t4() {
+		log.error("Call imageService.imageCleanAndDeleteFile();");
+		imageService.imageCleanAndDeleteFile();
 		return "Done";
 	}
 

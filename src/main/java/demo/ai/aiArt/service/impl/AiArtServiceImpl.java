@@ -561,6 +561,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	
 	@Override
 	public TextToImageDTO findRerunJobWhenSdkAsk() {
+		heartBeatReciver();
 		List<AiArtTextToImageJobRecord> poList = aiArtTextToImageJobRecordMapper
 				.findWaitingJobs(aiArtOptionService.getMaxFailCountForJob());
 		if (poList.isEmpty()) {

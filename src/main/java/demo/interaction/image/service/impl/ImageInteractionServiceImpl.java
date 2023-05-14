@@ -130,7 +130,7 @@ public class ImageInteractionServiceImpl extends CommonService implements ImageI
 			cloudinaryPublicIdMapImgStoreId.put(po.getCloudinaryPublicId(), po.getImageId());
 		}
 
-		if (sourceCloudinaryPublicIdList.size() > 100) {
+		if (sourceCloudinaryPublicIdList.size() > CloudinaryConstant.deleteIdListMaxSize) {
 			int step = CloudinaryConstant.deleteIdListMaxSize;
 			List<String> tmpList = null;
 			for (int i = 0; i < sourceCloudinaryPublicIdList.size(); i = i + step) {

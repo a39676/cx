@@ -351,14 +351,11 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			return;
 		}
 
-		if (txtToImgResult.getImgBase64List() == null || txtToImgResult.getImgBase64List().isEmpty()) {
-			return;
-		}
-
 		AiArtTextToImageJobRecord jobPO = aiArtTextToImageJobRecordMapper.selectByPrimaryKey(txtToImgResult.getJobId());
 		if (jobPO == null || AiArtJobStatusType.SUCCESS.getCode().byteValue() == jobPO.getJobStatus()) {
 			return;
 		}
+
 		Long jobId = txtToImgResult.getJobId();
 
 		AiArtGenerateImageQueryResult jobResult = getJobResult(jobId);
@@ -368,6 +365,12 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 		TextToImageDTO parameterDTO = jobResult.getParameter();
 		if (parameterDTO == null) {
+			return;
+		}
+
+		if (txtToImgResult.isFail() || txtToImgResult.getImgBase64List() == null
+				|| txtToImgResult.getImgBase64List().isEmpty()) {
+			updateAiArtJobFailCount(jobPO, parameterDTO);
 			return;
 		}
 
@@ -413,23 +416,27 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
 
 		} else {
-			jobPO.setJobStatus(AiArtJobStatusType.FAILED.getCode().byteValue());
-			jobPO.setRunCount(jobPO.getRunCount() + 1);
-			aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
-
-			if (jobPO.getRunCount() + 1 == aiArtOptionService.getMaxFailCountForJob()) {
-				if (!jobPO.getIsFreeJob()) {
-					BigDecimal cost = calculateTokenCost(parameterDTO);
-					aiChatUserService.recharge(jobPO.getAiUserId(), AiServiceAmountType.BONUS, cost);
-					jobPO.setRunCount(jobPO.getRunCount() + 1);
-					jobPO.setHasReview(true);
-					aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
-					minusJobCounting(jobPO.getAiUserId());
-				}
-			}
+			updateAiArtJobFailCount(jobPO, parameterDTO);
 		}
 
 		removeJobInQueueMark(jobId);
+	}
+
+	private void updateAiArtJobFailCount(AiArtTextToImageJobRecord jobPO, TextToImageDTO parameterDTO) {
+		jobPO.setJobStatus(AiArtJobStatusType.FAILED.getCode().byteValue());
+		jobPO.setRunCount(jobPO.getRunCount() + 1);
+		aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
+
+		if (jobPO.getRunCount() + 1 == aiArtOptionService.getMaxFailCountForJob()) {
+			if (!jobPO.getIsFreeJob()) {
+				BigDecimal cost = calculateTokenCost(parameterDTO);
+				aiChatUserService.recharge(jobPO.getAiUserId(), AiServiceAmountType.BONUS, cost);
+				jobPO.setRunCount(jobPO.getRunCount() + 1);
+				jobPO.setHasReview(true);
+				aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
+				minusJobCounting(jobPO.getAiUserId());
+			}
+		}
 	}
 
 	@SuppressWarnings("unused")
@@ -558,7 +565,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			}
 		}
 	}
-	
+
 	@Override
 	public TextToImageDTO findRerunJobWhenSdkAsk() {
 		heartBeatReciver();
@@ -595,7 +602,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 				return dto;
 			}
 		}
-		
+
 		return null;
 	}
 

@@ -19,9 +19,11 @@ import ai.aiArt.pojo.dto.TextToImageDTO;
 import ai.aiArt.pojo.result.AiArtGenerateImageQueryResult;
 import ai.aiArt.pojo.result.AiArtImageWallResult;
 import ai.aiArt.pojo.result.GetJobResultList;
+import ai.aiArt.pojo.result.SendTextToImgJobResult;
 import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
 import ai.aiArt.pojo.vo.AiArtImageOnWallVO;
 import ai.aiChat.pojo.type.AiServiceAmountType;
+import auxiliaryCommon.pojo.dto.BasePkDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.pojo.dto.AddToImageWallDTO;
 import demo.ai.aiArt.pojo.dto.AiArtJobListFilterDTO;
@@ -34,6 +36,7 @@ import demo.ai.aiArt.service.AiArtCommonService;
 import demo.ai.aiArt.service.AiArtManagerService;
 import demo.ai.aiArt.service.AiArtService;
 import demo.image.service.ImageService;
+import wechatSdk.pojo.dto.AiArtGenerateOtherLikeThatDTO;
 
 @Service
 public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArtManagerService {
@@ -229,6 +232,10 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 	public ModelAndView getImageManagerView() {
 		ModelAndView v = new ModelAndView("aiArtJSP/aiArtImageWallManager");
 		AiArtImageWallResult wall = aiArtService.getImageWallFull(true);
+		for (AiArtImageOnWallVO vo : wall.getImgVoList()) {
+			vo.setJobId(systemOptionService.decryptPrivateKey(vo.getJobPk()));
+			vo.setImgId(systemOptionService.decryptPrivateKey(vo.getImgPk()));
+		}
 		v.addObject("imgVoList", wall.getImgVoList());
 		return v;
 	}
@@ -277,5 +284,12 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 		AiArtTextToImageJobRecord row = new AiArtTextToImageJobRecord();
 		row.setHasReview(true);
 		aiArtTextToImageJobRecordMapper.updateByExampleSelective(row, example);
+	}
+	
+	@Override
+	public SendTextToImgJobResult generateOtherLikeThat(BasePkDTO dto) {
+		AiArtGenerateOtherLikeThatDTO dataDTO = new AiArtGenerateOtherLikeThatDTO();
+		dataDTO.setJobPk(dto.getPk());
+		return aiArtService.generateOtherLikeThat(dataDTO);
 	}
 }

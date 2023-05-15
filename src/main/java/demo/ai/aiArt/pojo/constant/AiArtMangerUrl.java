@@ -11,4 +11,5 @@ public class AiArtMangerUrl {
 	public static final String REMVOE_FROM_IMAGE_WALL = "/removeFromImageWall";
 	public static final String SET_HAD_REVIEW = "/setHadReview";
 	public static final String AI_ART_JOB_QUEUE_SETTING = "aiArtJobQueueSetting";
+	public static final String GENERATE_OTHER_LIKE_THAT = "/generateOtherLikeThat";
 }

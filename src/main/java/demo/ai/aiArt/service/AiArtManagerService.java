@@ -2,6 +2,8 @@ package demo.ai.aiArt.service;
 
 import org.springframework.web.servlet.ModelAndView;
 
+import ai.aiArt.pojo.result.SendTextToImgJobResult;
+import auxiliaryCommon.pojo.dto.BasePkDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.pojo.dto.AddToImageWallDTO;
 import demo.ai.aiArt.pojo.dto.AiArtJobListFilterDTO;
@@ -27,5 +29,7 @@ public interface AiArtManagerService {
 	CommonResult setHadReview(Long jobId);
 
 	void setReviewBatchForAdmin();
+
+	SendTextToImgJobResult generateOtherLikeThat(BasePkDTO dto);
 
 }

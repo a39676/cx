@@ -49,6 +49,7 @@ import demo.ai.aiArt.service.AiArtCommonService;
 import demo.ai.aiArt.service.AiArtService;
 import demo.ai.aiChat.pojo.po.AiChatUserDetail;
 import demo.image.pojo.type.ImageTagType;
+import demo.image.service.ImageService;
 import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.result.ImageSavingResult;
 import net.sf.json.JSONObject;
@@ -65,6 +66,8 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	private FileUtilCustom fileUtilCustom;
 	@Autowired
 	private AiArtModelMapper aiArtModelMapper;
+	@Autowired
+	private ImageService imageService;
 
 	@Override
 	public SendTextToImgJobResult sendTextToImgFromWechatDtoToMq(TextToImageFromWechatDTO dto) {
@@ -377,6 +380,15 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		saveResultTag: if (txtToImgResult.isSuccess()) {
 			if (jobResult.getImgPkList().size() >= parameterDTO.getBatchSize()) {
 				break saveResultTag;
+			}
+			
+			if(jobResult.getImgPkList() != null && !jobResult.getImgPkList().isEmpty()) {
+				String lastImgPk = jobResult.getImgPkList().get(jobResult.getImgPkList().size() - 1);
+				String imgContent = imageService.getImageBase64(lastImgPk);
+				String inputImg = txtToImgResult.getImgBase64List().get(0);
+				if(imgContent.equals(inputImg)) {
+					return;
+				}
 			}
 
 			List<String> imageListInBase64 = txtToImgResult.getImgBase64List();

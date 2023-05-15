@@ -52,4 +52,6 @@ public interface ImageService {
 
 	void getThumbnailImage(HttpServletResponse response, String imgPK, Integer width, Integer height);
 
+	String getImageBase64(String imgPk);
+
 }

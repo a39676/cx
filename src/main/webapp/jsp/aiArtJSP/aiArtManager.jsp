@@ -133,12 +133,57 @@
   <script type="text/javascript">
     function imgFlod(ele) {
       var src = ele.getAttribute("src");
-      if(src.includes("/getImage")){
-        ele.setAttribute("src", src.replace("/getImage", "/getThumbnail"));
-      } else {
-        ele.setAttribute("src", src.replace("/getThumbnail", "/getImage"));
+      var imgPk = ele.getAttribute("imgPk");
+
+      var sourceImg = document.querySelector("img[imgPk='"+imgPk+"'][name='sourceImg']");
+      var sourceImgSrc = sourceImg.getAttribute("src");
+      if('' == sourceImgSrc || 0 == sourceImgSrc.length){
+        var sourceSrc = src.replace("/getThumbnail", "/getImage");  
+        sourceImg.setAttribute("src", sourceSrc);
       }
+      ele.style.display = "none";
+      sourceImg.style.display = "block";
     }
+
+    function imgUnflod(ele) {
+      var imgPk = ele.getAttribute("imgPk");
+      var thumbnail = document.querySelector("img[imgPk='"+imgPk+"'][name='thumbnailImg']");
+      ele.style.display = "none";
+      thumbnail.style.display = "block";
+    }
+
+    function genLikeThat(ele){
+        var url = "/aiArtManager/generateOtherLikeThat";
+
+        var jobPk = ele.getAttribute("jobPk");
+
+        var jsonOutput = {
+          pk:jobPk,
+        };
+
+        console.log(jsonOutput);
+  
+        $.ajax({
+          type : "POST",
+          async : true,
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          cache : false,
+          contentType: "application/json",
+          dataType: "json",
+          timeout:50000,
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          success:function(datas){
+            console.log(datas);
+            $("#result").text(datas.code + ", " + datas.message);
+          },
+          error: function(datas) {
+            console.log(datas);
+          }
+        });
+      }
 
     function setInvalidImg(ele){
       var url = "/aiArtManager/setInvalidImageAndRetunTokens";
@@ -408,7 +453,8 @@
           for(j=0;j<vo.imgPkList.length;j++){
             var imgPk = vo.imgPkList[j];
             tr += "<td>";
-            tr += "<img src='/image/getThumbnail?imgPK="+encodeURIComponent(imgPk)+"' imgPk='"+imgPk+"' name='aiArtImg' onclick='imgFlod(this)'> <br>";
+            tr += "<img name='thumbnailImg' src='/image/getThumbnail?imgPK="+encodeURIComponent(imgPk)+"' imgPk='"+imgPk+"' name='aiArtImg' onclick='imgFlod(this)'> <br>";
+            tr += "<img name='sourceImg' src='' imgPk='"+imgPk+"' name='aiArtImg' display='display: none;' onclick='imgUnflod(this)'> <br>";
             tr += "<label>"+imgPk.substring(0, 10)+"</label> <br>";
             tr += "<button class='btn btn-sm btn-danger' name='setInvalidImg' jobPk='"+vo.jobPk+"' imgPK='"+imgPk+"' onclick='setInvalidImg(this)'>setInvalidImg</button><br>"
             tr += "<button class='btn btn-sm btn-success' name='addToImageWall' jobPk='"+vo.jobPk+"' imgPK='"+imgPk+"' onclick='addToImageWall(this)'>addToImageWall</button><br>"
@@ -418,6 +464,7 @@
         tr += "</tr>";
         tr += "<tr>";
         tr += "<td>";
+        tr += "<button class='btn btn-sm btn-primary' jobPk='"+vo.jobPk+"' onclick='genLikeThat(this)'>genLikeThat</button><br>";
         tr += "<label>jobPk: "+vo.jobPk+"</label><br>";
         tr += "<label>aiUserPk: "+vo.aiUserPk+"</label><br>";
         tr += "<label>rechargeMarkThisWeek: "+userDetailInRedisMap[vo.aiUserPk].rechargeMarkThisWeek+"</label><br>";

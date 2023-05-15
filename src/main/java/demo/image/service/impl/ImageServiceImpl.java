@@ -48,7 +48,6 @@ import image.pojo.result.ImageSavingResult;
 import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.type.TelegramBotType;
 import toolPack.constant.FileSuffixNameConstant;
-import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class ImageServiceImpl extends ToolCommonService implements ImageService {
@@ -533,9 +532,14 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 		if (imgPO.getImageUrl().startsWith("http")) {
 			return null;
 		} else {
-			FileUtilCustom f = new FileUtilCustom();
-			String content = f.getStringFromFile(imgPO.getImageUrl());
-			return content;
+			byte[] fileContent = null;
+			try {
+				fileContent = FileUtils.readFileToByteArray(new File(imgPO.getImageUrl()));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			String encodedString = Base64.getEncoder().encodeToString(fileContent);
+			return encodedString;
 		}
 
 	}

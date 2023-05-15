@@ -48,6 +48,7 @@ import image.pojo.result.ImageSavingResult;
 import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.type.TelegramBotType;
 import toolPack.constant.FileSuffixNameConstant;
+import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class ImageServiceImpl extends ToolCommonService implements ImageService {
@@ -365,7 +366,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 			log.error("NO image will delete");
 			return;
 		}
-		
+
 		log.error("May delete " + targetImgList.size() + " images");
 
 		// Collect into map(imgUrl : imgId)
@@ -390,7 +391,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 					targetImgIdList.add(m.getValue());
 					log.error("Call imageStoreMapper.deleteByPrimaryKey in ImageServiceImpl.imageCleanAndDeleteFile");
 					int deleteCount = imgMapper.deleteByPrimaryKey(m.getValue());
-					if(deleteCount != 1) {
+					if (deleteCount != 1) {
 						log.error(m.getValue() + ", delete failed");
 					}
 				}
@@ -398,7 +399,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 				targetImgIdList.add(m.getValue());
 				log.error("Call imageStoreMapper.deleteByPrimaryKey in ImageServiceImpl.imageCleanAndDeleteFile");
 				int deleteCount = imgMapper.deleteByPrimaryKey(m.getValue());
-				if(deleteCount != 1) {
+				if (deleteCount != 1) {
 					log.error(m.getValue() + ", delete failed");
 				}
 			}
@@ -510,5 +511,32 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 
 	private void sendTelegramMessage(String msg) {
 		telegramService.sendMessageByChatRecordId(TelegramBotType.CX_MESSAGE, msg, TelegramStaticChatID.MY_ID);
+	}
+
+	@Override
+	public String getImageBase64(String imgPk) {
+		Long imgId = systemOptionService.decryptPrivateKey(imgPk);
+		return getImageBase64(imgId);
+	}
+
+	private String getImageBase64(Long imgId) {
+		if (imgId == null) {
+			return null;
+		}
+
+		ImageStore imgPO = imgMapper.selectByPrimaryKey(imgId);
+		if (imgPO == null || (imgPO.getValidTime() != null && imgPO.getValidTime().isBefore(LocalDateTime.now()))
+				|| StringUtils.isBlank(imgPO.getImageUrl())) {
+			return null;
+		}
+
+		if (imgPO.getImageUrl().startsWith("http")) {
+			return null;
+		} else {
+			FileUtilCustom f = new FileUtilCustom();
+			String content = f.getStringFromFile(imgPO.getImageUrl());
+			return content;
+		}
+
 	}
 }

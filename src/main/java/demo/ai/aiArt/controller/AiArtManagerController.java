@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import ai.aiArt.pojo.result.SendTextToImgJobResult;
 import auxiliaryCommon.pojo.dto.BasePkDTO;
 import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
@@ -77,4 +78,11 @@ public class AiArtManagerController {
 		r.setIsSuccess();
 		return r;
 	}
+	
+	@PostMapping(value = AiArtMangerUrl.GENERATE_OTHER_LIKE_THAT)
+	@ResponseBody
+	public SendTextToImgJobResult setAiArtJobQueueSetting(@RequestBody BasePkDTO dto) {
+		return aiArtManagerService.generateOtherLikeThat(dto);
+	}
+	
 }

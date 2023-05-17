@@ -12,8 +12,8 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.image.service.ImageService;
-import demo.interaction.wechat.service.WechatUserService;
 import demo.interaction.wechat.service.impl.WechatCommonService;
+import demo.interaction.wechat.service.impl.WechatUserServiceImpl;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.dto.TestDTO;
 import demo.test.service.TestService2;
@@ -55,7 +55,7 @@ public class TestController2 extends WechatCommonService {
 	}
 
 	@Autowired
-	private WechatUserService wechatUserService;
+	private WechatUserServiceImpl wechatUserService;
 
 	@GetMapping(value = "/t5")
 	@ResponseBody

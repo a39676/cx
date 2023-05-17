@@ -6,9 +6,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.image.service.ImageService;
 import demo.interaction.wechat.service.impl.WechatCommonService;
 import demo.interaction.wechat.service.impl.WechatUserServiceImpl;
@@ -194,5 +196,15 @@ public class TestController2 extends WechatCommonService {
 		dto.setUserOpenId("oXt5d5lDP3vBwnWbE0jqBmBj0ERU");
 		wechatUserService.recordingWechatUserFromParameterizedQrCode(dto);
 		return "Done";
+	}
+
+	@GetMapping(value = "/t6")
+	@ResponseBody
+	public CommonResult t6(@RequestParam("openId") String openId) {
+		WechatRecordingUserFromParameterizedQrCodeDTO dto = new WechatRecordingUserFromParameterizedQrCodeDTO();
+		dto.setOriginOpenId(wechatOptionService.getOriginOpenId1());
+		dto.setParameter("");
+		dto.setUserOpenId(openId);
+		return wechatUserService.recordingWechatUserFromParameterizedQrCode(dto);
 	}
 }

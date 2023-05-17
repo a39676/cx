@@ -231,6 +231,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		if (!wechatUserList.isEmpty()) {
 			r.setCode(WechatSdkCommonResultType.USER_ALREADY_EXISTS.getCode().toString());
 			r.setMessage("User exists, userOpenId: " + userOpenId);
+			log.error("User exists, userOpenId: " + userOpenId);
 			return encryptDTO(r);
 		}
 
@@ -241,6 +242,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 
 		if (officialAccountType == null) {
 			r.setMessage("Can NOT find official account detail");
+			log.error("Can NOT find official account detail");
 			return encryptDTO(r);
 		}
 
@@ -249,6 +251,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 				.andSceneNameEqualTo(sceneName);
 		List<WechatQrcodeDetail> qrCodeList = qrcodeMapper.selectByExample(qrCodeExample);
 		if (qrCodeList.isEmpty()) {
+			log.error("Can NOT find QR code, sceneName: " + sceneName);
 //			r.setMessage("Can NOT find QR code, sceneName: " + sceneName);
 //			return encryptDTO(r);
 			// 可能是从原始二维码过来 TODO
@@ -257,12 +260,14 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		WechatQrcodeDetail qrCode = qrCodeList.get(0);
 		WechatUserDetail newUser = createWechatUserDetailWithOpenIdForSuiShou(userOpenId);
 		if (newUser == null) {
+			log.error("Get oid failed: " + sceneName);
 			r.setMessage("Get oid failed: " + sceneName);
 			return encryptDTO(r);
 		}
 		CreateAiChatUserResult createAiChatUserResult = aiChatUserService
 				.createAiChatUserDetailByWechatOpenId(newUser.getId(), userOpenId);
 		if (createAiChatUserResult.isFail()) {
+			log.error("Create AI chat user failed: " + createAiChatUserResult.getMessage());
 			r.setMessage(createAiChatUserResult.getMessage());
 			return encryptDTO(r);
 		}

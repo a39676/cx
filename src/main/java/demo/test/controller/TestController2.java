@@ -9,15 +9,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import demo.common.service.ToolCommonService;
+import auxiliaryCommon.pojo.dto.EncryptDTO;
 import demo.image.service.ImageService;
+import demo.interaction.wechat.service.WechatUserService;
+import demo.interaction.wechat.service.impl.WechatCommonService;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.dto.TestDTO;
 import demo.test.service.TestService2;
+import wechatSdk.pojo.dto.WechatRecordingUserFromParameterizedQrCodeDTO;
 
 @Controller
 @RequestMapping(value = { TestUrl.root2 })
-public class TestController2 extends ToolCommonService {
+public class TestController2 extends WechatCommonService {
 
 	@Autowired
 	private TestService2 testService2;
@@ -47,6 +50,52 @@ public class TestController2 extends ToolCommonService {
 	public String t4() {
 		log.error("Call imageService.imageCleanAndDeleteFile();");
 		imageService.imageCleanAndDeleteFile();
+		return "Done";
+	}
+	
+	@Autowired
+	private WechatUserService wechatUserService;
+	
+	@GetMapping(value = "/t5")
+	@ResponseBody
+	public String t5() {
+		EncryptDTO eDto = null;
+		WechatRecordingUserFromParameterizedQrCodeDTO dto = new WechatRecordingUserFromParameterizedQrCodeDTO();
+		dto.setParameter("");
+		dto.setOriginOpenId(wechatOptionService.getOriginOpenId1());
+		dto.setUserOpenId("oXt5d5l7x85vMLfNEyxvkHuGMpjI");
+		eDto = encryptDTO(dto);
+		wechatUserService.recordingWechatUserFromParameterizedQrCode(eDto);
+		dto = new WechatRecordingUserFromParameterizedQrCodeDTO();
+		dto.setParameter("");
+		dto.setOriginOpenId(wechatOptionService.getOriginOpenId1());
+		dto.setUserOpenId("oXt5d5srZ3qW0vplLYtlt1xNdsfU");
+		eDto = encryptDTO(dto);
+		wechatUserService.recordingWechatUserFromParameterizedQrCode(eDto);
+		dto = new WechatRecordingUserFromParameterizedQrCodeDTO();
+		dto.setParameter("");
+		dto.setOriginOpenId(wechatOptionService.getOriginOpenId1());
+		dto.setUserOpenId("oXt5d5nlKlrD2BtWq1Cvifu33-kA");
+		eDto = encryptDTO(dto);
+		wechatUserService.recordingWechatUserFromParameterizedQrCode(eDto);
+		dto = new WechatRecordingUserFromParameterizedQrCodeDTO();
+		dto.setParameter("");
+		dto.setOriginOpenId(wechatOptionService.getOriginOpenId1());
+		dto.setUserOpenId("oXt5d5sSUkuW7BASGtHGIRbDHVpQ");
+		eDto = encryptDTO(dto);
+		wechatUserService.recordingWechatUserFromParameterizedQrCode(eDto);
+		dto = new WechatRecordingUserFromParameterizedQrCodeDTO();
+		dto.setParameter("");
+		dto.setOriginOpenId(wechatOptionService.getOriginOpenId1());
+		dto.setUserOpenId("oXt5d5js6j5XWCg3ONJDBCLFI_w0");
+		eDto = encryptDTO(dto);
+		wechatUserService.recordingWechatUserFromParameterizedQrCode(eDto);
+		dto = new WechatRecordingUserFromParameterizedQrCodeDTO();
+		dto.setParameter("");
+		dto.setOriginOpenId(wechatOptionService.getOriginOpenId1());
+		dto.setUserOpenId("oXt5d5irvNz39BrBgFH-Z8X3X2HI");
+		eDto = encryptDTO(dto);
+		wechatUserService.recordingWechatUserFromParameterizedQrCode(eDto);
 		return "Done";
 	}
 

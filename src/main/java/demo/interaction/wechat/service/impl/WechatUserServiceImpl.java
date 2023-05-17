@@ -218,7 +218,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		r = recordingWechatUserFromParameterizedQrCode(dto);
 		return encryptDTO(r);
 	}
-	
+
 	private CommonResult recordingWechatUserFromParameterizedQrCode(WechatRecordingUserFromParameterizedQrCodeDTO dto) {
 		CommonResult r = new CommonResult();
 		if (dto == null || StringUtils.isAnyBlank(dto.getOriginOpenId(), dto.getUserOpenId(), dto.getParameter())
@@ -243,6 +243,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 
 		WechatOfficialAccountType officialAccountType = null;
 		if (wechatOptionService.getOriginOpenId1().equals(orginOpenId)) {
+			log.error("New user for sui shou");
 			officialAccountType = WechatOfficialAccountType.SUI_SHOU;
 		}
 
@@ -265,10 +266,11 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 
 		WechatUserDetail newUser = createWechatUserDetailWithOpenIdForSuiShou(userOpenId);
 		if (newUser == null) {
-			log.error("Get oid failed: " + sceneName);
-			r.setMessage("Get oid failed: " + sceneName);
+			log.error("Get oid failed: " + sceneName + ", open ID: " + userOpenId);
+			r.setMessage("Get oid failed: " + sceneName + ", open ID: " + userOpenId);
 			return r;
 		}
+		
 		CreateAiChatUserResult createAiChatUserResult = aiChatUserService
 				.createAiChatUserDetailByWechatOpenId(newUser.getId(), userOpenId);
 		if (createAiChatUserResult.isFail()) {
@@ -277,13 +279,13 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 			return r;
 		}
 
-		if(!qrCodeList.isEmpty()) {
+		if (!qrCodeList.isEmpty()) {
 			WechatQrcodeDetail qrCode = qrCodeList.get(0);
 			WechatUserFromQrcode userFromQrCodeRecord = new WechatUserFromQrcode();
 			userFromQrCodeRecord.setWechatUserId(newUser.getId());
 			userFromQrCodeRecord.setQrcodeId(qrCode.getId());
 			userFromQrcodeMapper.insertSelective(userFromQrCodeRecord);
-			
+
 			WechatQrCodeSceneType sceneType = WechatQrCodeSceneType.getType(sceneName);
 			if (WechatQrCodeSceneType.FANG_ZHENG_FRANKIE.equals(sceneType)
 					|| WechatQrCodeSceneType.FANG_ZHENG_CHANNEL_1.equals(sceneType)

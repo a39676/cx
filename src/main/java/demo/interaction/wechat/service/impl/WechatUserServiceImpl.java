@@ -215,81 +215,11 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		CommonResult r = new CommonResult();
 		WechatRecordingUserFromParameterizedQrCodeDTO dto = decryptEncryptDTO(encrypedDTO,
 				WechatRecordingUserFromParameterizedQrCodeDTO.class);
-		if (dto == null || StringUtils.isAnyBlank(dto.getOriginOpenId(), dto.getUserOpenId(), dto.getParameter())
-				|| "null" == dto.getUserOpenId()) {
-			r.setMessage("RecordingWechatUserFromParameterizedQrCode Decrypt error");
-			return encryptDTO(r);
-		}
-
-		String sceneName = dto.getParameter().replaceAll("qrscene_", "");
-		String orginOpenId = dto.getOriginOpenId();
-		String userOpenId = dto.getUserOpenId();
-
-		WechatUserDetailExample wechatUserExample = new WechatUserDetailExample();
-		wechatUserExample.createCriteria().andOpenIdEqualTo(userOpenId);
-		List<WechatUserDetail> wechatUserList = wechatUserDetailMapper.selectByExample(wechatUserExample);
-		if (!wechatUserList.isEmpty()) {
-			r.setCode(WechatSdkCommonResultType.USER_ALREADY_EXISTS.getCode().toString());
-			r.setMessage("User exists, userOpenId: " + userOpenId);
-			log.error("User exists, userOpenId: " + userOpenId);
-			return encryptDTO(r);
-		}
-
-		WechatOfficialAccountType officialAccountType = null;
-		if (wechatOptionService.getOriginOpenId1().equals(orginOpenId)) {
-			officialAccountType = WechatOfficialAccountType.SUI_SHOU;
-		}
-
-		if (officialAccountType == null) {
-			r.setMessage("Can NOT find official account detail");
-			log.error("Can NOT find official account detail");
-			return encryptDTO(r);
-		}
-
-		WechatQrcodeDetailExample qrCodeExample = new WechatQrcodeDetailExample();
-		qrCodeExample.createCriteria().andSourceOfficialAccountEqualTo(officialAccountType.getCode())
-				.andSceneNameEqualTo(sceneName);
-		List<WechatQrcodeDetail> qrCodeList = qrcodeMapper.selectByExample(qrCodeExample);
-		if (qrCodeList.isEmpty()) {
-			log.error("Can NOT find QR code, sceneName: " + sceneName);
-//			r.setMessage("Can NOT find QR code, sceneName: " + sceneName);
-//			return encryptDTO(r);
-			// 可能是从原始二维码过来 TODO
-		}
-
-		WechatQrcodeDetail qrCode = qrCodeList.get(0);
-		WechatUserDetail newUser = createWechatUserDetailWithOpenIdForSuiShou(userOpenId);
-		if (newUser == null) {
-			log.error("Get oid failed: " + sceneName);
-			r.setMessage("Get oid failed: " + sceneName);
-			return encryptDTO(r);
-		}
-		CreateAiChatUserResult createAiChatUserResult = aiChatUserService
-				.createAiChatUserDetailByWechatOpenId(newUser.getId(), userOpenId);
-		if (createAiChatUserResult.isFail()) {
-			log.error("Create AI chat user failed: " + createAiChatUserResult.getMessage());
-			r.setMessage(createAiChatUserResult.getMessage());
-			return encryptDTO(r);
-		}
-
-		WechatUserFromQrcode userFromQrCodeRecord = new WechatUserFromQrcode();
-		userFromQrCodeRecord.setQrcodeId(qrCode.getId());
-		userFromQrCodeRecord.setWechatUserId(newUser.getId());
-		userFromQrcodeMapper.insertSelective(userFromQrCodeRecord);
-
-		WechatQrCodeSceneType sceneType = WechatQrCodeSceneType.getType(sceneName);
-		if (WechatQrCodeSceneType.FANG_ZHENG_FRANKIE.equals(sceneType)
-				|| WechatQrCodeSceneType.FANG_ZHENG_CHANNEL_1.equals(sceneType)
-				|| WechatQrCodeSceneType.FANG_ZHENG_CHANNEL_2.equals(sceneType)
-				|| WechatQrCodeSceneType.FANG_ZHENG_CHANNEL_3.equals(sceneType)) {
-			newUserFromFangZheng(newUser.getId(), 6L);
-		}
-
-		r.setIsSuccess();
+		r = recordingWechatUserFromParameterizedQrCode(dto);
 		return encryptDTO(r);
 	}
 	
-	public CommonResult recordingWechatUserFromParameterizedQrCode(WechatRecordingUserFromParameterizedQrCodeDTO dto) {
+	private CommonResult recordingWechatUserFromParameterizedQrCode(WechatRecordingUserFromParameterizedQrCodeDTO dto) {
 		CommonResult r = new CommonResult();
 		if (dto == null || StringUtils.isAnyBlank(dto.getOriginOpenId(), dto.getUserOpenId(), dto.getParameter())
 				|| "null" == dto.getUserOpenId()) {
@@ -362,7 +292,6 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 				newUserFromFangZheng(newUser.getId(), 6L);
 			}
 		}
-
 
 		r.setIsSuccess();
 		return r;

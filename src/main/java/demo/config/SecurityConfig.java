@@ -27,7 +27,6 @@ import demo.article.article.pojo.constant.ArticleAdminUrlConstant;
 import demo.article.articleComment.pojo.constant.ArticleAdminCommentUrlConstant;
 import demo.base.admin.pojo.constant.AdminUrlConstant;
 import demo.base.system.pojo.constant.BaseUrl;
-import demo.base.task.pojo.constant.TaskUrl;
 import demo.base.user.pojo.constant.LoginUrlConstant;
 import demo.base.user.pojo.constant.UsersUrl;
 import demo.base.user.pojo.type.OrganzationRolesType;
@@ -118,8 +117,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(PMemoUrl.ROOT + PMemoUrl.SET)
             	.access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
             .antMatchers(UrgeNoticeManagerUrl.ROOT + "/**")
-            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
-            .antMatchers(TaskUrl.ROOT + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
             .antMatchers(CryptoCoinSharingUrl.ROOT + CryptoCoinSharingUrl.CALCULATE_DETAIL)
             	.permitAll()

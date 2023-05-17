@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import demo.ai.aiArt.service.AiArtService;
 import demo.base.system.service.ShutdownService;
-import demo.base.task.service.TaskHandlerService;
 import demo.common.service.CommonService;
 import demo.joy.common.service.JoyTaskService;
 
@@ -19,8 +18,6 @@ public class ShutdownServiceImpl extends CommonService implements ShutdownServic
 	private ApplicationContext context;
 	@Autowired
 	private JoyTaskService JoyTaskServiceImpl;
-	@Autowired
-	private TaskHandlerService taskHandlerServiceImpl;
 	@Autowired
 	private AiArtService aiArtService;
 
@@ -35,11 +32,9 @@ public class ShutdownServiceImpl extends CommonService implements ShutdownServic
 		if (!baseUtilCustom.hasSuperAdminRole()) {
 			return "";
 		}
-		
+
 		JoyTaskServiceImpl.cacheToDatabase();
-		
-		taskHandlerServiceImpl.setBreakFlag(true);
-		
+
 		aiArtService.refreshImageWallJsonFile();
 
 		((ConfigurableApplicationContext) context).close();

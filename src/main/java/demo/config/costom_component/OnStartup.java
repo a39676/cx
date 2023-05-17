@@ -8,7 +8,6 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import demo.ai.aiArt.service.AiArtService;
-import demo.base.task.service.TaskHandlerService;
 import demo.base.user.pojo.po.Users;
 import demo.base.user.pojo.type.SystemRolesType;
 import demo.base.user.service.RoleService;
@@ -33,8 +32,6 @@ public class OnStartup extends CommonService implements ApplicationListener<Appl
 	private UserRegistService userRegistService;
 	@Autowired
 	private JoySceneManagerService joySceneOperationService;
-	@Autowired
-	private TaskHandlerService taskHandlerServiceImpl;
 	@Autowired
 	private UrgeNoticeManagerService urgeNoticeService;
 	@Autowired
@@ -96,12 +93,6 @@ public class OnStartup extends CommonService implements ApplicationListener<Appl
 
 			log.error("Had set proxy");
 		}
-
-		log.error("taskHandlerServiceImpl.fixRuningEventStatus();");
-		taskHandlerServiceImpl.fixRuningTaskStatus();
-
-		log.error("taskHandlerServiceImpl.setBreakFlag(0);");
-		taskHandlerServiceImpl.setBreakFlag(0);
 
 		log.error("urge notice service, update message web hook secret token");
 		urgeNoticeService.setUpdateMsgWebhook();

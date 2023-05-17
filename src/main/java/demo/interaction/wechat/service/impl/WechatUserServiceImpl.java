@@ -219,7 +219,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		return encryptDTO(r);
 	}
 
-	private CommonResult recordingWechatUserFromParameterizedQrCode(WechatRecordingUserFromParameterizedQrCodeDTO dto) {
+	public CommonResult recordingWechatUserFromParameterizedQrCode(WechatRecordingUserFromParameterizedQrCodeDTO dto) {
 		CommonResult r = new CommonResult();
 		if (dto == null || StringUtils.isAnyBlank(dto.getOriginOpenId(), dto.getUserOpenId(), dto.getParameter())
 				|| "null" == dto.getUserOpenId()) {

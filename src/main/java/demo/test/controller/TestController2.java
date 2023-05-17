@@ -60,14 +60,14 @@ public class TestController2 extends WechatCommonService {
 	@ResponseBody
 	public String t5() {
 		WechatRecordingUserFromParameterizedQrCodeDTO dto = new WechatRecordingUserFromParameterizedQrCodeDTO();
-		dto.setParameter("");
+		dto.setParameter("_");
 		dto.setOriginOpenId(wechatOptionService.getOriginOpenId1());
 		dto.setUserOpenId("oXt5d5l7x85vMLfNEyxvkHuGMpjI");
 		CommonResult r = wechatUserService.recordingWechatUserFromParameterizedQrCode(dto);
 		log.error(r.getCode() + r.getMessage());
 		
 		dto = new WechatRecordingUserFromParameterizedQrCodeDTO();
-		dto.setParameter("");
+		dto.setParameter("_");
 		dto.setOriginOpenId(wechatOptionService.getOriginOpenId1());
 		dto.setUserOpenId("oXt5d5srZ3qW0vplLYtlt1xNdsfU");
 		wechatUserService.recordingWechatUserFromParameterizedQrCode(dto);
@@ -75,7 +75,7 @@ public class TestController2 extends WechatCommonService {
 		log.error(r.getCode() + r.getMessage());
 		
 		dto = new WechatRecordingUserFromParameterizedQrCodeDTO();
-		dto.setParameter("");
+		dto.setParameter("_");
 		dto.setOriginOpenId(wechatOptionService.getOriginOpenId1());
 		dto.setUserOpenId("oXt5d5nlKlrD2BtWq1Cvifu33-kA");
 		wechatUserService.recordingWechatUserFromParameterizedQrCode(dto);
@@ -84,7 +84,7 @@ public class TestController2 extends WechatCommonService {
 		
 		
 		dto = new WechatRecordingUserFromParameterizedQrCodeDTO();
-		dto.setParameter("");
+		dto.setParameter("_");
 		dto.setOriginOpenId(wechatOptionService.getOriginOpenId1());
 		dto.setUserOpenId("oXt5d5sSUkuW7BASGtHGIRbDHVpQ");
 		wechatUserService.recordingWechatUserFromParameterizedQrCode(dto);
@@ -93,7 +93,7 @@ public class TestController2 extends WechatCommonService {
 		
 		
 		dto = new WechatRecordingUserFromParameterizedQrCodeDTO();
-		dto.setParameter("");
+		dto.setParameter("_");
 		dto.setOriginOpenId(wechatOptionService.getOriginOpenId1());
 		dto.setUserOpenId("oXt5d5js6j5XWCg3ONJDBCLFI_w0");
 		wechatUserService.recordingWechatUserFromParameterizedQrCode(dto);
@@ -101,9 +101,17 @@ public class TestController2 extends WechatCommonService {
 		log.error(r.getCode() + r.getMessage());
 		
 		dto = new WechatRecordingUserFromParameterizedQrCodeDTO();
-		dto.setParameter("");
+		dto.setParameter("_");
 		dto.setOriginOpenId(wechatOptionService.getOriginOpenId1());
 		dto.setUserOpenId("oXt5d5irvNz39BrBgFH-Z8X3X2HI");
+		wechatUserService.recordingWechatUserFromParameterizedQrCode(dto);
+		r = wechatUserService.recordingWechatUserFromParameterizedQrCode(dto);
+		log.error(r.getCode() + r.getMessage());
+		
+		dto = new WechatRecordingUserFromParameterizedQrCodeDTO();
+		dto.setParameter("_");
+		dto.setOriginOpenId(wechatOptionService.getOriginOpenId1());
+		dto.setUserOpenId("oXt5d5mAZJ1fOg8SVL3AqzTr2jFo");
 		wechatUserService.recordingWechatUserFromParameterizedQrCode(dto);
 		r = wechatUserService.recordingWechatUserFromParameterizedQrCode(dto);
 		log.error(r.getCode() + r.getMessage());

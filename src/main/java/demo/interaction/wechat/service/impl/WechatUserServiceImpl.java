@@ -333,7 +333,6 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 			// 可能是从原始二维码过来 TODO
 		}
 
-		WechatQrcodeDetail qrCode = qrCodeList.get(0);
 		WechatUserDetail newUser = createWechatUserDetailWithOpenIdForSuiShou(userOpenId);
 		if (newUser == null) {
 			log.error("Get oid failed: " + sceneName);
@@ -349,8 +348,11 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		}
 
 		WechatUserFromQrcode userFromQrCodeRecord = new WechatUserFromQrcode();
-		userFromQrCodeRecord.setQrcodeId(qrCode.getId());
 		userFromQrCodeRecord.setWechatUserId(newUser.getId());
+		if(!qrCodeList.isEmpty()) {
+			WechatQrcodeDetail qrCode = qrCodeList.get(0);
+			userFromQrCodeRecord.setQrcodeId(qrCode.getId());
+		}
 		userFromQrcodeMapper.insertSelective(userFromQrCodeRecord);
 
 		WechatQrCodeSceneType sceneType = WechatQrCodeSceneType.getType(sceneName);

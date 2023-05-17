@@ -30,7 +30,7 @@ public class AiArtTaskService extends AiArtCommonService {
 		}
 	}
 
-	@Scheduled(fixedDelay = 1000L * 90)
+	@Scheduled(fixedDelay = 1000L * 60)
 	public void checkAutomaticHeartBeat() {
 		if (aiArtCacheService.getServiceStartTime() == null) {
 			return;

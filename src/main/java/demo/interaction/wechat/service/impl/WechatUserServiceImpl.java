@@ -44,6 +44,7 @@ import wechatSdk.pojo.dto.WechatSendTemplateMessageBonusRechargeDTO;
 import wechatSdk.pojo.result.GetUserOpenIdListResult;
 import wechatSdk.pojo.type.WechatOfficialAccountType;
 import wechatSdk.pojo.type.WechatQrCodeSceneType;
+import wechatSdk.pojo.type.WechatSdkCommonResultType;
 
 @Service
 public class WechatUserServiceImpl extends WechatCommonService implements WechatUserService {
@@ -228,6 +229,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		wechatUserExample.createCriteria().andOpenIdEqualTo(userOpenId);
 		List<WechatUserDetail> wechatUserList = wechatUserDetailMapper.selectByExample(wechatUserExample);
 		if (!wechatUserList.isEmpty()) {
+			r.setCode(WechatSdkCommonResultType.USER_ALREADY_EXISTS.getCode().toString());
 			r.setMessage("User exists, userOpenId: " + userOpenId);
 			return encryptDTO(r);
 		}
@@ -247,8 +249,9 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 				.andSceneNameEqualTo(sceneName);
 		List<WechatQrcodeDetail> qrCodeList = qrcodeMapper.selectByExample(qrCodeExample);
 		if (qrCodeList.isEmpty()) {
-			r.setMessage("Can NOT find QR code, sceneName: " + sceneName);
-			return encryptDTO(r);
+//			r.setMessage("Can NOT find QR code, sceneName: " + sceneName);
+//			return encryptDTO(r);
+			// 可能是从原始二维码过来 TODO
 		}
 
 		WechatQrcodeDetail qrCode = qrCodeList.get(0);

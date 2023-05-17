@@ -347,21 +347,22 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 			return r;
 		}
 
-		WechatUserFromQrcode userFromQrCodeRecord = new WechatUserFromQrcode();
-		userFromQrCodeRecord.setWechatUserId(newUser.getId());
 		if(!qrCodeList.isEmpty()) {
 			WechatQrcodeDetail qrCode = qrCodeList.get(0);
+			WechatUserFromQrcode userFromQrCodeRecord = new WechatUserFromQrcode();
+			userFromQrCodeRecord.setWechatUserId(newUser.getId());
 			userFromQrCodeRecord.setQrcodeId(qrCode.getId());
+			userFromQrcodeMapper.insertSelective(userFromQrCodeRecord);
+			
+			WechatQrCodeSceneType sceneType = WechatQrCodeSceneType.getType(sceneName);
+			if (WechatQrCodeSceneType.FANG_ZHENG_FRANKIE.equals(sceneType)
+					|| WechatQrCodeSceneType.FANG_ZHENG_CHANNEL_1.equals(sceneType)
+					|| WechatQrCodeSceneType.FANG_ZHENG_CHANNEL_2.equals(sceneType)
+					|| WechatQrCodeSceneType.FANG_ZHENG_CHANNEL_3.equals(sceneType)) {
+				newUserFromFangZheng(newUser.getId(), 6L);
+			}
 		}
-		userFromQrcodeMapper.insertSelective(userFromQrCodeRecord);
 
-		WechatQrCodeSceneType sceneType = WechatQrCodeSceneType.getType(sceneName);
-		if (WechatQrCodeSceneType.FANG_ZHENG_FRANKIE.equals(sceneType)
-				|| WechatQrCodeSceneType.FANG_ZHENG_CHANNEL_1.equals(sceneType)
-				|| WechatQrCodeSceneType.FANG_ZHENG_CHANNEL_2.equals(sceneType)
-				|| WechatQrCodeSceneType.FANG_ZHENG_CHANNEL_3.equals(sceneType)) {
-			newUserFromFangZheng(newUser.getId(), 6L);
-		}
 
 		r.setIsSuccess();
 		return r;

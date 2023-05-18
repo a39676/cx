@@ -15,7 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.GenderType;
-import demo.ai.aiChat.service.AiChatUserService;
+import demo.ai.aiChat.service.AiUserService;
 import demo.base.system.pojo.constant.SystemRedisKey;
 import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.impl.SystemCommonService;
@@ -81,7 +81,7 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 	@Autowired
 	private TelegramService telegramService;
 	@Autowired
-	private AiChatUserService aiChatUserService;
+	private AiUserService aiChatUserService;
 	@Autowired
 	private CloudFlareService cloudFlareService;
 	@Autowired

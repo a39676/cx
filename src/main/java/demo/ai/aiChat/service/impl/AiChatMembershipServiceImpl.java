@@ -29,7 +29,7 @@ import demo.ai.aiChat.pojo.po.AiChatUserMembership;
 import demo.ai.aiChat.pojo.po.AiChatUserMembershipExample;
 import demo.ai.aiChat.pojo.po.AiChatUserMembershipKey;
 import demo.ai.aiChat.service.AiChatMembershipService;
-import demo.ai.aiChat.service.AiChatUserService;
+import demo.ai.aiChat.service.AiUserService;
 import demo.ai.common.service.impl.AiCommonService;
 import net.sf.json.JSONObject;
 import toolPack.dateTimeHandle.DateTimeUtilCommon;
@@ -44,7 +44,7 @@ public class AiChatMembershipServiceImpl extends AiCommonService implements AiCh
 	@Autowired
 	private AiChatUserMembershipMapper userMembershipMapper;
 	@Autowired
-	private AiChatUserService userService;
+	private AiUserService userService;
 
 	private Map<Long, AiChatUserMembershipDetailDTO> getMembershipConfigMap() {
 		List<AiChatUserMembershipDetailDTO> membershipList = aiChatOptionService.getMembershipLDetails();

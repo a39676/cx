@@ -1,4 +1,4 @@
-package demo.ai.aiChat.service.impl;
+package demo.ai.common.service.impl;
 
 import java.util.HashMap;
 
@@ -7,17 +7,18 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import demo.ai.aiChat.service.AiChatMembershipService;
-import demo.ai.aiChat.service.AiChatUserService;
+import demo.ai.aiChat.service.AiUserService;
+import demo.ai.aiChat.service.impl.AiChatCacheService;
 
 @Component
-public class AiChatTaskService {
+public class AiTaskService {
 
 	@Autowired
 	private AiChatMembershipService aiChatMembershipService;
 	@Autowired
 	private AiChatCacheService aiChatCacheService;
 	@Autowired
-	private AiChatUserService aiChatUserService;
+	private AiUserService aiChatUserService;
 
 	@Scheduled(cron = "20 03 00 * * *")
 	public void rechargeDailyBonusByMemberShip() {

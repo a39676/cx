@@ -1,6 +1,6 @@
-package demo.ai.aiChat.pojo.dto;
+package demo.ai.manager.pojo.dto;
 
-public class GetAiChatUserListDTO {
+public class GetAiUserListDTO {
 
 	private String startPk;
 	private String nickname;

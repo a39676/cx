@@ -32,7 +32,7 @@ import demo.ai.aiArt.service.impl.AiArtOptionService;
 import demo.ai.aiChat.mapper.AiChatUserAssociateWechatUidMapper;
 import demo.ai.aiChat.pojo.po.AiChatUserAssociateWechatUidExample;
 import demo.ai.aiChat.pojo.po.AiChatUserAssociateWechatUidKey;
-import demo.ai.aiChat.service.AiChatUserService;
+import demo.ai.aiChat.service.AiUserService;
 import demo.ai.common.service.impl.AiCommonService;
 import demo.base.system.service.impl.RedisOriginalConnectService;
 import demo.image.service.ImageService;
@@ -56,7 +56,7 @@ public abstract class AiArtCommonService extends AiCommonService {
 	protected ImageService imageService;
 
 	@Autowired
-	protected AiChatUserService aiChatUserService;
+	protected AiUserService aiChatUserService;
 
 	@Autowired
 	private SendAiArtJobCompleteTemplateMessageProducer sendAiArtJobCompleteTemplateMessageProducer;

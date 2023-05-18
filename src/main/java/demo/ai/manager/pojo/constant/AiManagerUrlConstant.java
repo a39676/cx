@@ -1,8 +1,8 @@
-package demo.ai.aiChat.pojo.constant;
+package demo.ai.manager.pojo.constant;
 
-public class AiChatManagerUrlConstant {
+public class AiManagerUrlConstant {
 
-	public static final String ROOT = "/aiChatManager";
+	public static final String ROOT = "/aiManager";
 
 	public static final String BLOCK_USER_BY_PK = "/blockUserByPk";
 	public static final String UNLOCK_USER_BY_PK = "/unlockUserByPk";

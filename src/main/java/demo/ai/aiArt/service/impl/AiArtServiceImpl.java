@@ -403,14 +403,6 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 					break saveResultTag;
 				}
 				
-//				if(jobResult.getImgPkList() != null && !jobResult.getImgPkList().isEmpty()) {
-//					String lastImgPk = jobResult.getImgPkList().get(jobResult.getImgPkList().size() - 1);
-//					String lastImgContent = imageService.getImageBase64(lastImgPk);
-//					String newImgContent = imageService.getImageBase64(imgSavingResult.getImgPK());
-//					if(lastImgContent.equals(newImgContent)) {
-//						return;
-//					}
-//				}
 				imagePkList.add(imgSavingResult.getImgPK());
 			}
 			jobResult.getImgPkList().addAll(imagePkList);

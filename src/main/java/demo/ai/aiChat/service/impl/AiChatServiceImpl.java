@@ -29,7 +29,7 @@ import demo.ai.aiChat.pojo.po.AiChatUserChatHistory;
 import demo.ai.aiChat.pojo.po.AiChatUserDetail;
 import demo.ai.aiChat.service.AiChatMembershipService;
 import demo.ai.aiChat.service.AiChatService;
-import demo.ai.aiChat.service.AiChatUserService;
+import demo.ai.aiChat.service.AiUserService;
 import demo.ai.common.service.impl.AiCommonService;
 import net.sf.json.JSONObject;
 import openAi.pojo.dto.OpanAiChatCompletionMessageDTO;
@@ -47,7 +47,7 @@ public class AiChatServiceImpl extends AiCommonService implements AiChatService 
 	@Autowired
 	private AiChatMembershipService membershipService;
 	@Autowired
-	private AiChatUserService aiChatUserService;
+	private AiUserService aiChatUserService;
 
 	@Autowired
 	private FileUtilCustom ioUtil;

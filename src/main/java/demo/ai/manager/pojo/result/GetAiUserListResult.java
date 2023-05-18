@@ -1,11 +1,11 @@
-package demo.ai.aiChat.pojo.result;
+package demo.ai.manager.pojo.result;
 
 import java.util.List;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiChat.pojo.vo.AiChatUserVO;
 
-public class GetAiChatUserListResult extends CommonResult {
+public class GetAiUserListResult extends CommonResult {
 
 	private List<AiChatUserVO> userList;
 

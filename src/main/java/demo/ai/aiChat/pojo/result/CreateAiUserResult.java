@@ -2,7 +2,7 @@ package demo.ai.aiChat.pojo.result;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 
-public class CreateAiChatUserResult extends CommonResult {
+public class CreateAiUserResult extends CommonResult {
 
 	private Long aiChatUserId;
 

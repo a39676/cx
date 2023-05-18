@@ -1,6 +1,6 @@
 package demo.ai.aiChat.pojo.dto;
 
-public class NewPositiveAiChatUserDTO {
+public class NewPositiveAiUserDTO {
 
 	private Long aiChatUserId;
 	private Long wechatUserId;

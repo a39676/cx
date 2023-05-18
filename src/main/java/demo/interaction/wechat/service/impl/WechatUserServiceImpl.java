@@ -19,11 +19,11 @@ import ai.aiChat.pojo.result.GetTmpKeyByOpenIdResult;
 import ai.aiChat.pojo.type.AiServiceAmountType;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.ai.aiChat.pojo.dto.NewPositiveAiChatUserDTO;
-import demo.ai.aiChat.pojo.result.CreateAiChatUserResult;
+import demo.ai.aiChat.pojo.dto.NewPositiveAiUserDTO;
+import demo.ai.aiChat.pojo.result.CreateAiUserResult;
 import demo.ai.aiChat.service.AiChatFromApiService;
 import demo.ai.aiChat.service.AiChatMembershipService;
-import demo.ai.aiChat.service.AiChatUserService;
+import demo.ai.aiChat.service.AiUserService;
 import demo.ai.aiChat.service.impl.AiChatOptionService;
 import demo.interaction.wechat.mapper.WechatQrcodeDetailMapper;
 import demo.interaction.wechat.mapper.WechatUserDetailMapper;
@@ -52,7 +52,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 	@Autowired
 	private AiChatFromApiService aiChatFromApiService;
 	@Autowired
-	private AiChatUserService aiChatUserService;
+	private AiUserService aiChatUserService;
 	@Autowired
 	private AiChatMembershipService aiChatMembershipService;
 	@Autowired
@@ -90,7 +90,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 				r.setMessage("Create user failed");
 				return encryptDTO(r);
 			}
-			CreateAiChatUserResult createAiChatUserResult = aiChatUserService
+			CreateAiUserResult createAiChatUserResult = aiChatUserService
 					.createAiChatUserDetailByWechatOpenId(detail.getId(), oid);
 			r.setTmpKey(createAiChatUserResult.getTmpKey());
 			r.setIsSuccess();
@@ -271,7 +271,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 			return r;
 		}
 		
-		CreateAiChatUserResult createAiChatUserResult = aiChatUserService
+		CreateAiUserResult createAiChatUserResult = aiChatUserService
 				.createAiChatUserDetailByWechatOpenId(newUser.getId(), userOpenId);
 		if (createAiChatUserResult.isFail()) {
 			log.error("Create AI chat user failed: " + createAiChatUserResult.getMessage());
@@ -371,7 +371,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 	public CommonResult bonusForNewPositiveUserInYesterday() {
 		CommonResult r = new CommonResult();
 		// 获取缺少 OpenID 的 DTO list
-		List<NewPositiveAiChatUserDTO> aiChatUserDtoList = aiChatUserService
+		List<NewPositiveAiUserDTO> aiChatUserDtoList = aiChatUserService
 				.__findNewPositiveAiChatUserDtoListInYesterday();
 		if (aiChatUserDtoList.isEmpty()) {
 			r.setIsSuccess();
@@ -380,7 +380,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 
 		// 获取 Wechat user list, 为了获取 OpenID
 		List<Long> wechatUserIdList = new ArrayList<>();
-		for (NewPositiveAiChatUserDTO dto : aiChatUserDtoList) {
+		for (NewPositiveAiUserDTO dto : aiChatUserDtoList) {
 			wechatUserIdList.add(dto.getWechatUserId());
 		}
 		WechatUserDetailExample example = new WechatUserDetailExample();
@@ -394,11 +394,11 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		}
 
 		// 为 DTO list 补充 open ID 属性
-		for (NewPositiveAiChatUserDTO dto : aiChatUserDtoList) {
+		for (NewPositiveAiUserDTO dto : aiChatUserDtoList) {
 			dto.setOpenId(map.get(dto.getWechatUserId()).getOpenId());
 		}
 
-		for (NewPositiveAiChatUserDTO dto : aiChatUserDtoList) {
+		for (NewPositiveAiUserDTO dto : aiChatUserDtoList) {
 			r = aiChatUserService.recharge(dto.getAiChatUserId(), AiServiceAmountType.BONUS,
 					new BigDecimal(aiChatOptionService.getBonusForNewUser()));
 			if (r.isSuccess()) {

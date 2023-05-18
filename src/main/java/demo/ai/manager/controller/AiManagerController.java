@@ -1,4 +1,4 @@
-package demo.ai.aiChat.controller;
+package demo.ai.manager.controller;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -17,54 +17,57 @@ import ai.aiChat.pojo.result.GetAiChatHistoryResult;
 import ai.aiChat.pojo.type.AiServiceAmountType;
 import auxiliaryCommon.pojo.dto.BasePkDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.ai.aiChat.pojo.constant.AiChatManagerUrlConstant;
-import demo.ai.aiChat.pojo.dto.AiChatUserEditNicknameDTO;
-import demo.ai.aiChat.pojo.dto.GetAiChatUserListDTO;
-import demo.ai.aiChat.pojo.result.GetAiChatUserListResult;
 import demo.ai.aiChat.service.AiChatService;
-import demo.ai.aiChat.service.AiChatUserService;
+import demo.ai.aiChat.service.AiUserService;
 import demo.ai.aiChat.service.impl.AiChatCacheService;
+import demo.ai.manager.pojo.constant.AiManagerUrlConstant;
+import demo.ai.manager.pojo.dto.AiChatUserEditNicknameDTO;
+import demo.ai.manager.pojo.dto.GetAiUserListDTO;
+import demo.ai.manager.pojo.result.GetAiUserListResult;
+import demo.ai.manager.service.AiUserManagerService;
 import demo.common.controller.CommonController;
 
 @Controller
-@RequestMapping(value = AiChatManagerUrlConstant.ROOT)
-public class AiChatManagerController extends CommonController {
+@RequestMapping(value = AiManagerUrlConstant.ROOT)
+public class AiManagerController extends CommonController {
 
 	@Autowired
-	private AiChatUserService userService;
+	private AiUserService userService;
+	@Autowired
+	private AiUserManagerService userManagerService;
 	@Autowired
 	private AiChatService chatService;
 	@Autowired
 	private AiChatCacheService aiChatCacheService;
 	@Autowired
-	private AiChatUserService aiChatUserService;
+	private AiUserService aiChatUserService;
 
-	@PostMapping(value = AiChatManagerUrlConstant.BLOCK_USER_BY_PK)
+	@PostMapping(value = AiManagerUrlConstant.BLOCK_USER_BY_PK)
 	@ResponseBody
 	public CommonResult blockUser(@RequestBody BasePkDTO dto) {
-		return userService.blockUserByPk(dto.getPk());
+		return userManagerService.blockUserByPk(dto.getPk());
 	}
 
-	@PostMapping(value = AiChatManagerUrlConstant.UNLOCK_USER_BY_PK)
+	@PostMapping(value = AiManagerUrlConstant.UNLOCK_USER_BY_PK)
 	@ResponseBody
 	public CommonResult unlockUserByPk(@RequestBody BasePkDTO dto) {
-		return userService.unlockUserByPk(dto.getPk());
+		return userManagerService.unlockUserByPk(dto.getPk());
 	}
 
-	@PostMapping(value = AiChatManagerUrlConstant.UNWARNING_USER_BY_PK)
+	@PostMapping(value = AiManagerUrlConstant.UNWARNING_USER_BY_PK)
 	@ResponseBody
 	public CommonResult cleanUserWarningMark(@RequestBody BasePkDTO dto) {
 		return userService.cleanUserWarningMark(dto.getPk());
 	}
 
-	@GetMapping(value = AiChatManagerUrlConstant.CHECK_CHAT_HISTORY_BY_PK)
+	@GetMapping(value = AiManagerUrlConstant.CHECK_CHAT_HISTORY_BY_PK)
 	@ResponseBody
 	public GetAiChatHistoryResult findChatHistoryByAiChatUserIdToFrontEnd(
 			@RequestParam(value = "aiChatUserPk") String aiChatUserPk) {
 		return chatService.findChatHistoryByAiChatUserIdToFrontEnd(aiChatUserPk);
 	}
 
-	@GetMapping(value = AiChatManagerUrlConstant.CLEAR_MEMBERSHIP_CACHE_DATA)
+	@GetMapping(value = AiManagerUrlConstant.CLEAR_MEMBERSHIP_CACHE_DATA)
 	@ResponseBody
 	public CommonResult cleanMembershipCacheData() {
 		aiChatCacheService.setMembershipCacheMap(new HashMap<>());
@@ -73,31 +76,31 @@ public class AiChatManagerController extends CommonController {
 		return r;
 	}
 
-	@PostMapping(value = AiChatManagerUrlConstant.USER_LIST)
+	@PostMapping(value = AiManagerUrlConstant.USER_LIST)
 	@ResponseBody
-	public GetAiChatUserListResult userList(@RequestBody GetAiChatUserListDTO dto) {
-		return aiChatUserService.getAiChatUserList(dto);
+	public GetAiUserListResult userList(@RequestBody GetAiUserListDTO dto) {
+		return userManagerService.getAiChatUserList(dto);
 	}
 
-	@GetMapping(value = AiChatManagerUrlConstant.USER_LIST)
+	@GetMapping(value = AiManagerUrlConstant.USER_LIST)
 	public ModelAndView userListView() {
 		return aiChatUserService.getAiChatUserListView();
 	}
 
-	@PostMapping(value = AiChatManagerUrlConstant.EDIT_NICKNAME)
+	@PostMapping(value = AiManagerUrlConstant.EDIT_NICKNAME)
 	@ResponseBody
 	public CommonResult userList(@RequestBody AiChatUserEditNicknameDTO dto) {
 		return aiChatUserService.editNickname(dto);
 	}
 
-	@GetMapping(value = AiChatManagerUrlConstant.UPDATE_USED_TOKEN_TO_DETAIL_IN_JSON)
+	@GetMapping(value = AiManagerUrlConstant.UPDATE_USED_TOKEN_TO_DETAIL_IN_JSON)
 	@ResponseBody
 	public String updateUsedTokenToDetailInJson() {
 		aiChatUserService.updateUsedTokenToDetailInJson();
 		return "done";
 	}
 
-	@GetMapping(value = AiChatManagerUrlConstant.RECHARGE_BY_ADMIN)
+	@GetMapping(value = AiManagerUrlConstant.RECHARGE_BY_ADMIN)
 	@ResponseBody
 	public String rechargeByAdmin(@RequestParam("amount") Integer amount,
 			@RequestParam("amountType") Integer amountType, @RequestParam("aiUserId") String userIdStr) {

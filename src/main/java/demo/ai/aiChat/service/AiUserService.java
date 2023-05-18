@@ -10,18 +10,16 @@ import ai.aiChat.pojo.result.GetAiChatAmountResult;
 import ai.aiChat.pojo.type.AiServiceAmountType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.pojo.dto.AiUserDetailInJsonDTO;
-import demo.ai.aiChat.pojo.dto.AiChatUserEditNicknameDTO;
-import demo.ai.aiChat.pojo.dto.GetAiChatUserListDTO;
-import demo.ai.aiChat.pojo.dto.NewPositiveAiChatUserDTO;
+import demo.ai.aiChat.pojo.dto.NewPositiveAiUserDTO;
 import demo.ai.aiChat.pojo.po.AiChatUserDetail;
-import demo.ai.aiChat.pojo.result.CreateAiChatUserResult;
-import demo.ai.aiChat.pojo.result.GetAiChatUserListResult;
+import demo.ai.aiChat.pojo.result.CreateAiUserResult;
+import demo.ai.manager.pojo.dto.AiChatUserEditNicknameDTO;
 
-public interface AiChatUserService {
+public interface AiUserService {
 
-	CreateAiChatUserResult createAiChatUserDetailBySystemUserId(Long systemUserId);
+	CreateAiUserResult createAiChatUserDetailBySystemUserId(Long systemUserId);
 
-	CreateAiChatUserResult createAiChatUserDetailByWechatOpenId(Long wechatUserLongId, String wechatOpenId);
+	CreateAiUserResult createAiChatUserDetailByWechatOpenId(Long wechatUserLongId, String wechatOpenId);
 
 	Long createNewTmpKey(Long wechatUserId, String openId);
 
@@ -39,18 +37,12 @@ public interface AiChatUserService {
 
 	Boolean hadDailySignUp(String tmpKeyStr);
 
-	CreateAiChatUserResult createAiChatUserDetailByWechatOpenId(Long wechatUserId, String wechatOid,
+	CreateAiUserResult createAiChatUserDetailByWechatOpenId(Long wechatUserId, String wechatOid,
 			Integer specialBonus);
 
-	List<NewPositiveAiChatUserDTO> __findNewPositiveAiChatUserDtoListInYesterday();
-
-	GetAiChatUserListResult getAiChatUserList(GetAiChatUserListDTO dto);
+	List<NewPositiveAiUserDTO> __findNewPositiveAiChatUserDtoListInYesterday();
 
 	ModelAndView getAiChatUserListView();
-
-	CommonResult blockUserByPk(String aiChatUserPk);
-
-	CommonResult unlockUserByPk(String aiChatUserPk);
 
 	CommonResult editNickname(AiChatUserEditNicknameDTO dto);
 

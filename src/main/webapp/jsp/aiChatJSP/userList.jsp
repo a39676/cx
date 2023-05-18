@@ -156,7 +156,7 @@
             </tr>
             <tr>
               <td>
-                <a href="/aiChatManager/updateUsedTokenToDetailInJson">
+                <a href="/aiManager/updateUsedTokenToDetailInJson">
                   updateUsedTokenToDetailInJson(Monthly job)
                 </a>
               </td>
@@ -234,7 +234,7 @@
       }).change();
 
       function getAiChatUserList() {
-        var url = "/aiChatManager/userList";
+        var url = "/aiManager/userList";
 
         var lastUserPk = $("#userList").attr("lastUserPk");
         var createTimeMinStr = $("#createTimeMinStrInput").val();
@@ -313,7 +313,7 @@
         var tr = "";
         tr += "<tr name='userInfo' userPk='"+userVO.userPk+"' wechatUserPk='"+userVO.wechatUserPk+"'>";
         tr += "<td><input type='text' name='nicknameEdit' userPk='"+userVO.userPk+"' value='"+userVO.nickname+"'> <br> <button class='btn btn-sm btn-primary' name='editNickname' userPk='"+userVO.userPk+"'>editNickname</button><br> <label name='nicknameEditResult' userPk='"+userVO.userPk+"'></label> </td>";
-        tr += "<td><a href='/aiChatManager/checkChatHistoryByPk?aiChatUserPk="+encodeURIComponent(userVO.userPk)+"' target='_blank'>chatHistory</a></td>";
+        tr += "<td><a href='/aiManager/checkChatHistoryByPk?aiChatUserPk="+encodeURIComponent(userVO.userPk)+"' target='_blank'>chatHistory</a></td>";
         tr += "<td>"+userVO.bonusAmount+"<br>";
         tr += userVO.rechargeAmount+"<br>";
         tr += userVO.usedTokens+"</td>";
@@ -344,7 +344,7 @@
       }
 
       function blockUser(userPk){
-        var url = "/aiChatManager/blockUserByPk";
+        var url = "/aiManager/blockUserByPk";
 
         var jsonOutput = {
           pk:userPk,
@@ -377,7 +377,7 @@
       }
 
       function unlockUser(userPk){
-        var url = "/aiChatManager/unlockUserByPk";
+        var url = "/aiManager/unlockUserByPk";
 
         var jsonOutput = {
           pk:userPk,
@@ -410,7 +410,7 @@
       }
 
       function editNickname(userPk){
-        var url = "/aiChatManager/editNickname";
+        var url = "/aiManager/editNickname";
 
         var nickname = $("input[name='nicknameEdit'][userPk='"+userPk+"']").val();
 
@@ -444,7 +444,7 @@
       }
 
       function unwarningUser(userPk){
-        var url = "/aiChatManager/unwarningUserByPk";
+        var url = "/aiManager/unwarningUserByPk";
 
         var jsonOutput = {
           pk:userPk,

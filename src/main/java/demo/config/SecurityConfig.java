@@ -22,7 +22,7 @@ import ai.aiArt.pojo.constant.AiArtApiUrlConstant;
 import ai.aiChat.pojo.constant.AiChatApiUrlConstant;
 import ai.aiChat.pojo.constant.AiChatFromWechatSdkUrlConstant;
 import demo.ai.aiArt.pojo.constant.AiArtMangerUrl;
-import demo.ai.aiChat.pojo.constant.AiChatManagerUrlConstant;
+import demo.ai.manager.pojo.constant.AiManagerUrlConstant;
 import demo.article.article.pojo.constant.ArticleAdminUrlConstant;
 import demo.article.articleComment.pojo.constant.ArticleAdminCommentUrlConstant;
 import demo.base.admin.pojo.constant.AdminUrlConstant;
@@ -122,7 +122,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             	.permitAll()
             .antMatchers(CryptoCoinSharingUrl.ROOT + "/**")
             	.access("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')")
-            .antMatchers(AiChatManagerUrlConstant.ROOT + "/**")
+            .antMatchers(AiManagerUrlConstant.ROOT + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
             .antMatchers(AiArtMangerUrl.ROOT + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))

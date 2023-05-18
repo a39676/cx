@@ -1,4 +1,4 @@
-package demo.ai.aiChat.pojo.dto;
+package demo.ai.manager.pojo.dto;
 
 public class AiChatUserEditNicknameDTO {
 

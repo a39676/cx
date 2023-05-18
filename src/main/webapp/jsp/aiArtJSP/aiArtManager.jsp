@@ -545,7 +545,7 @@
       }
 
       function blockUser(userPk){
-        var url = "/aiChatManager/blockUserByPk";
+        var url = "/aiManager/blockUserByPk";
 
         var jsonOutput = {
           pk:userPk,
@@ -580,7 +580,7 @@
       }
 
       function unlockUser(userPk){
-        var url = "/aiChatManager/unlockUserByPk";
+        var url = "/aiManager/unlockUserByPk";
 
         var jsonOutput = {
           pk:userPk,

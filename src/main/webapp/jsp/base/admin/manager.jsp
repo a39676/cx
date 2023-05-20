@@ -48,6 +48,9 @@
       <li>
         <a href="/aiManager/userList" target="_blank">user list</a>
       </li>
+      <li>
+        <a href="/aiManager/rechargeByAdmin?amount=1%26amountType=1%26aiUserId=1" target="_blank">rechargeByAdmin</a>
+      </li>
     </ul><!-- aiChat -->
 
     <ul class="main-menu visible-on-click" id="aiArt">

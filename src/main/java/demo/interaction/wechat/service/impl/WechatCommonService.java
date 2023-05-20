@@ -10,8 +10,10 @@ import com.google.gson.GsonBuilder;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import demo.common.service.ToolCommonService;
 import demo.tool.telegram.service.TelegramService;
+import net.sf.json.JSONObject;
 import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.type.TelegramBotType;
+import toolPack.httpHandel.HttpUtil;
 
 public abstract class WechatCommonService extends ToolCommonService {
 
@@ -65,4 +67,30 @@ public abstract class WechatCommonService extends ToolCommonService {
 		return dto;
 	}
 
+	protected EncryptDTO postToWechatSdk(Object obj, String uri) {
+		EncryptDTO dto = null;
+		if (obj != null) {
+			dto = encryptDTO(obj);
+		}
+		return postToWechatSdk(dto, uri);
+	}
+
+	protected EncryptDTO postToWechatSdk(EncryptDTO dto, String uri) {
+		HttpUtil http = new HttpUtil();
+		String urlStr = wechatOptionService.getSdkMainUrl() + uri;
+		try {
+			JSONObject json = null;
+			String response = null;
+			if (dto != null) {
+				json = JSONObject.fromObject(dto);
+				response = http.sendPostRestful(urlStr, json.toString());
+			} else {
+				response = http.sendPostRestful(urlStr, "{}");
+			}
+			EncryptDTO responseDTO = buildObjFromJsonCustomization(response, EncryptDTO.class);
+			return responseDTO;
+		} catch (Exception e) {
+			return null;
+		}
+	}
 }

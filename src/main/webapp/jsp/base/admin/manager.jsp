@@ -49,9 +49,17 @@
         <a href="/aiManager/userList" target="_blank">user list</a>
       </li>
       <li>
-        <a href="/aiManager/rechargeByAdmin?amount=1%26amountType=1%26aiUserId=1" target="_blank">rechargeByAdmin</a>
+        <a href="/aiManager/rechargeByAdmin?amount=1&amountType=1&aiUserId=1" target="_blank">rechargeByAdmin</a>
       </li>
     </ul><!-- aiChat -->
+
+    <ul class="main-menu visible-on-click" id="wechatManager">
+      <li style="background-color:yellow;">Wechat manager</li>
+      <li>
+        <a href="/wechatManager/compareLocalOpenIdListWithWechatOpenIdList" target="_blank">compareLocalOpenIdListWithWechatOpenIdList</a>
+        <a href="/wechatManager/regOpenIdManual?openId=" target="_blank">regOpenIdManual</a>
+      </li>
+    </ul><!-- wechatManager -->
 
     <ul class="main-menu visible-on-click" id="aiArt">
       <li style="background-color:yellow;">AI art</li>

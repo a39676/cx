@@ -2,6 +2,7 @@ package demo.interaction.wechat.service;
 
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
+import wechatSdk.pojo.result.GetUserOpenIdListResult;
 
 public interface WechatUserService {
 
@@ -19,7 +20,7 @@ public interface WechatUserService {
 
 	EncryptDTO recordingWechatUserFromParameterizedQrCode(EncryptDTO encrypedDTO);
 
-	EncryptDTO getUserOpenIdList(EncryptDTO encryptedDTO);
+	EncryptDTO getUserOpenIdListFromLocal(EncryptDTO encryptedDTO);
 
 	EncryptDTO generateNewApiKey(EncryptDTO encryptedDTO);
 
@@ -28,5 +29,11 @@ public interface WechatUserService {
 	EncryptDTO findAllApiKeysByAiChatUserId(EncryptDTO encryptedDTO);
 
 	CommonResult bonusForNewPositiveUserInYesterday();
+
+	void compareLocalOpenIdListWithWechatOpenIdList();
+
+	GetUserOpenIdListResult getOpenIdListFromWechatSdk();
+
+	CommonResult __regOpenIdManual(String openId);
 
 }

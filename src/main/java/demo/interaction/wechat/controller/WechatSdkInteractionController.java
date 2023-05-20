@@ -90,7 +90,7 @@ public class WechatSdkInteractionController extends CommonController {
 	@PostMapping(value = AiChatFromWechatSdkUrlConstant.GET_USER_OPEN_ID_LIST)
 	@ResponseBody
 	public EncryptDTO getUserOpenIdList(@RequestBody EncryptDTO dto) {
-		return wechatUserService.getUserOpenIdList(dto);
+		return wechatUserService.getUserOpenIdListFromLocal(dto);
 	}
 
 	@PostMapping(value = AiChatFromWechatSdkUrlConstant.GETNERATE_NEW_API_KEY)

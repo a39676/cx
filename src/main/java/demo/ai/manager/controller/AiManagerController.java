@@ -112,4 +112,5 @@ public class AiManagerController extends CommonController {
 		}
 		return "done";
 	}
+
 }

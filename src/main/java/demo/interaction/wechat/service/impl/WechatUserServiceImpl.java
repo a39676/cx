@@ -37,6 +37,7 @@ import demo.interaction.wechat.pojo.po.WechatUserFromQrcode;
 import demo.interaction.wechat.service.WechatUserService;
 import demo.interaction.wechatPay.service.WechatPayService;
 import wechatPayApi.jsApi.pojo.dto.WechatPayJsApiFeedbackDTO;
+import wechatSdk.pojo.constant.WechatSdkUrlConstant;
 import wechatSdk.pojo.dto.AiServiceDeleteApiKeyDTO;
 import wechatSdk.pojo.dto.WechatGetUserOpenIdListDTO;
 import wechatSdk.pojo.dto.WechatRecordingUserFromParameterizedQrCodeDTO;
@@ -70,6 +71,8 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 	private SendBonusRechargeTemplateMessageProducer sendBonusRechargeTemplateMessageProducer;
 
 	private static final String FAKE_UID_PREFIX = "FakeUid_";
+	/** Hard code before grow up */
+	private static final int MAX_OPEN_ID_LIST_SIZE = 10000;
 
 	@Override
 	public EncryptDTO getTmpKeyByOpenId(EncryptDTO dto) {
@@ -219,7 +222,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		return encryptDTO(r);
 	}
 
-	public CommonResult recordingWechatUserFromParameterizedQrCode(WechatRecordingUserFromParameterizedQrCodeDTO dto) {
+	private CommonResult recordingWechatUserFromParameterizedQrCode(WechatRecordingUserFromParameterizedQrCodeDTO dto) {
 		CommonResult r = new CommonResult();
 		if (dto == null || StringUtils.isAnyBlank(dto.getOriginOpenId(), dto.getUserOpenId(), dto.getParameter())
 				|| "null" == dto.getUserOpenId()) {
@@ -270,7 +273,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 			r.setMessage("Get oid failed: " + sceneName + ", open ID: " + userOpenId);
 			return r;
 		}
-		
+
 		CreateAiUserResult createAiChatUserResult = aiChatUserService
 				.createAiChatUserDetailByWechatOpenId(newUser.getId(), userOpenId);
 		if (createAiChatUserResult.isFail()) {
@@ -300,7 +303,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 	}
 
 	@Override
-	public EncryptDTO getUserOpenIdList(EncryptDTO encryptedDTO) {
+	public EncryptDTO getUserOpenIdListFromLocal(EncryptDTO encryptedDTO) {
 		GetUserOpenIdListResult result = new GetUserOpenIdListResult();
 
 		WechatGetUserOpenIdListDTO dto = decryptEncryptDTO(encryptedDTO, WechatGetUserOpenIdListDTO.class);
@@ -308,8 +311,8 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 			return encryptDTO(result);
 		}
 
-		if (dto.getSize() == null || dto.getSize() > 10000) {
-			dto.setSize(10000);
+		if (dto.getSize() == null || dto.getSize() > MAX_OPEN_ID_LIST_SIZE) {
+			dto.setSize(MAX_OPEN_ID_LIST_SIZE);
 		}
 		List<String> openIdList = wechatUserDetailMapper.findOpenIdList(dto.getIndex(), dto.getSize());
 		if (!openIdList.isEmpty()) {
@@ -412,5 +415,51 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		}
 
 		return r;
+	}
+
+	@Override
+	public GetUserOpenIdListResult getOpenIdListFromWechatSdk() {
+		EncryptDTO encryptedResult = postToWechatSdk(wechatOptionService.getManagerCode(),
+				WechatSdkUrlConstant.ROOT + WechatSdkUrlConstant.GET_OPEN_ID_LIST_FROM_WECHAT);
+		GetUserOpenIdListResult result = decryptEncryptDTO(encryptedResult, GetUserOpenIdListResult.class);
+		if (result == null) {
+			log.error("Get open ID list from wechat SDK error");
+			result = new GetUserOpenIdListResult();
+		}
+		return result;
+	}
+
+	@Override
+	public void compareLocalOpenIdListWithWechatOpenIdList() {
+		GetUserOpenIdListResult getOpenIdListFromWechatSdkResult = getOpenIdListFromWechatSdk();
+		if (getOpenIdListFromWechatSdkResult.isFail()) {
+			return;
+		}
+
+		List<String> wechatOpenIdList = getOpenIdListFromWechatSdkResult.getOpenIdList();
+		if (wechatOpenIdList == null || wechatOpenIdList.isEmpty()) {
+			return;
+		}
+		List<String> localOpenIdList = wechatUserDetailMapper.findOpenIdList(0L, MAX_OPEN_ID_LIST_SIZE);
+
+		WechatRecordingUserFromParameterizedQrCodeDTO createUserDTO = null;
+		for (String openId : wechatOpenIdList) {
+			if (!localOpenIdList.contains(openId)) {
+				createUserDTO = new WechatRecordingUserFromParameterizedQrCodeDTO();
+				createUserDTO.setOriginOpenId(wechatOptionService.getOriginOpenId1());
+				createUserDTO.setParameter("");
+				createUserDTO.setUserOpenId(openId);
+				recordingWechatUserFromParameterizedQrCode(createUserDTO);
+			}
+		}
+	}
+	
+	@Override
+	public CommonResult __regOpenIdManual(String openId) {
+		WechatRecordingUserFromParameterizedQrCodeDTO dto = new WechatRecordingUserFromParameterizedQrCodeDTO();
+		dto.setOriginOpenId(wechatOptionService.getOriginOpenId1());
+		dto.setParameter("");
+		dto.setUserOpenId(openId);
+		return recordingWechatUserFromParameterizedQrCode(dto);
 	}
 }

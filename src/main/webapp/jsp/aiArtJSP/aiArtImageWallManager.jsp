@@ -29,12 +29,12 @@
                 <tr>
               </c:if>
               <td name="imgTd" imgPk="${imgVO.imgPk}">
-                <c:url value="/image/getThumbnail" var="url">
+                <c:url value="/image/getThumbnail" var="thumbnailUrl">
                   <c:param name="imgPK" value="${imgVO.imgPk}" />
                   <c:param name="width" value="200" />
                   <c:param name="height" value="200" />
                 </c:url>
-                <img name="thumbnail" imgPk="${imgVO.imgPk}" src="${url}"><br>
+                <img name="thumbnail" imgPk="${imgVO.imgPk}" src="${thumbnailUrl}"><br>
                 <img name="sourceImg" imgPk="${imgVO.imgPk}" src=""><br>
                 <label>jobId: ${imgVO.jobId}</label><br>
                 <label>imgId: ${imgVO.imgId}</label><br>

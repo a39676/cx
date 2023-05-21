@@ -40,7 +40,7 @@ import demo.image.pojo.po.ImageStore;
 import demo.image.pojo.po.ImageStoreExample;
 import demo.image.pojo.po.ImageTag;
 import demo.image.pojo.po.ImageTagExample;
-import demo.image.pojo.result.GetImgUrlInBatchResult;
+import demo.image.pojo.result.GetImgThirdPartyUrlInBatchResult;
 import demo.image.pojo.result.ImgHandleSrcDataResult;
 import demo.image.pojo.type.ImageTagType;
 import demo.image.service.ImageService;
@@ -91,7 +91,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 			try {
 				PrintWriter out = response.getWriter();
 				if (imgPO.getImageUrl() != null && imgPO.getImageUrl().startsWith("http")) {
-					out.println(imgPO.getImageUrl());
+					out.println("redirect:/" + imgPO.getImageUrl());
 				}
 				out.close();
 			} catch (IOException ex) {
@@ -551,8 +551,8 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 	}
 
 	@Override
-	public GetImgUrlInBatchResult transImgUrlBatchResult(List<String> imgPkList) {
-		GetImgUrlInBatchResult r = new GetImgUrlInBatchResult();
+	public GetImgThirdPartyUrlInBatchResult getImgThirdPartyUrlBatchResult(List<String> imgPkList) {
+		GetImgThirdPartyUrlInBatchResult r = new GetImgThirdPartyUrlInBatchResult();
 
 		if (imgPkList == null || imgPkList.isEmpty()) {
 			return r;
@@ -560,20 +560,18 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 
 		List<Long> imgIdList = systemOptionService.decryptPrivateKey(imgPkList);
 
-		List<String> listOfImgPkOrUrl = new ArrayList<>();
+		Map<String, String> imgPkMatchUrl = new HashMap<>();
 		ImageStoreExample example = new ImageStoreExample();
 		example.createCriteria().andImageIdIn(imgIdList);
 		List<ImageStore> poList = imgMapper.selectByExample(example);
 
 		for (ImageStore po : poList) {
 			if (po.getImageUrl().startsWith("http")) {
-				listOfImgPkOrUrl.add(po.getImageUrl());
-			} else {
-				listOfImgPkOrUrl.add(systemOptionService.encryptId(po.getImageId()));
+				imgPkMatchUrl.put(systemOptionService.encryptId(po.getImageId()), po.getImageUrl());
 			}
 		}
 
-		r.setListOfImgPkOrUrl(listOfImgPkOrUrl);
+		r.setImgPkMatchUrl(imgPkMatchUrl);
 		r.setIsSuccess();
 		return r;
 	}

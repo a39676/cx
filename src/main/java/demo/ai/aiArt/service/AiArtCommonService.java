@@ -35,7 +35,6 @@ import demo.ai.aiChat.pojo.po.AiChatUserAssociateWechatUidKey;
 import demo.ai.aiChat.service.AiUserService;
 import demo.ai.common.service.impl.AiCommonService;
 import demo.base.system.service.impl.RedisOriginalConnectService;
-import demo.image.pojo.result.GetImgUrlInBatchResult;
 import demo.image.service.ImageService;
 import demo.interaction.wechat.mq.producer.SendAiArtJobCompleteTemplateMessageProducer;
 import net.sf.json.JSONObject;
@@ -238,16 +237,13 @@ public abstract class AiArtCommonService extends AiCommonService {
 		if (forAdmin || (!po.getIsFromApi() && po.getHasReview())
 				|| (po.getIsFromApi() && subResult.getImgPkList().size() == subResult.getParameter().getBatchSize())) {
 
-			List<String> imgPkList = new ArrayList<>();
+			List<String> imgUrlList = new ArrayList<>();
 			if (subResult.getImgPkList() != null && !subResult.getImgPkList().isEmpty()) {
 				for (String imgUrl : subResult.getImgPkList()) {
-					imgPkList.add(imgUrl);
+					imgUrlList.add(imgUrl);
 				}
 			}
-			
-			GetImgUrlInBatchResult getImageUrlResult = imageService.transImgUrlBatchResult(imgPkList);
-			
-			vo.setImgPkList(getImageUrlResult.getListOfImgPkOrUrl());
+			vo.setImgPkList(imgUrlList);
 		}
 		return vo;
 	}

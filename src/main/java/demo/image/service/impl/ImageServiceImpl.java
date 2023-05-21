@@ -41,6 +41,7 @@ import demo.image.pojo.po.ImageStoreExample;
 import demo.image.pojo.po.ImageTag;
 import demo.image.pojo.po.ImageTagExample;
 import demo.image.pojo.result.GetImgThirdPartyUrlInBatchResult;
+import demo.image.pojo.result.GetImgThirdPartyUrlResult;
 import demo.image.pojo.result.ImgHandleSrcDataResult;
 import demo.image.pojo.type.ImageTagType;
 import demo.image.service.ImageService;
@@ -551,14 +552,24 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 	}
 
 	@Override
-	public GetImgThirdPartyUrlInBatchResult getImgThirdPartyUrlBatchResult(List<String> imgPkList) {
-		GetImgThirdPartyUrlInBatchResult r = new GetImgThirdPartyUrlInBatchResult();
+	public GetImgThirdPartyUrlInBatchResult getImgThirdPartyUrlBatchResultByPk(List<String> imgPkList) {
 
 		if (imgPkList == null || imgPkList.isEmpty()) {
-			return r;
+			return new GetImgThirdPartyUrlInBatchResult();
 		}
 
 		List<Long> imgIdList = systemOptionService.decryptPrivateKey(imgPkList);
+
+		return getImgThirdPartyUrlBatchResultById(imgIdList);
+	}
+
+	@Override
+	public GetImgThirdPartyUrlInBatchResult getImgThirdPartyUrlBatchResultById(List<Long> imgIdList) {
+		GetImgThirdPartyUrlInBatchResult r = new GetImgThirdPartyUrlInBatchResult();
+
+		if (imgIdList == null || imgIdList.isEmpty()) {
+			return r;
+		}
 
 		Map<String, String> imgPkMatchUrl = new HashMap<>();
 		ImageStoreExample example = new ImageStoreExample();
@@ -573,6 +584,23 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 
 		r.setImgPkMatchUrl(imgPkMatchUrl);
 		r.setIsSuccess();
+		return r;
+	}
+
+	@Override
+	public GetImgThirdPartyUrlResult getImgThirdPartyUrlByPk(String imgPk) {
+		GetImgThirdPartyUrlResult r = new GetImgThirdPartyUrlResult();
+		Long imgId = systemOptionService.decryptPrivateKey(imgPk);
+		if (imgId == null) {
+			return r;
+		}
+
+		ImageStore po = imgMapper.selectByPrimaryKey(imgId);
+		if (po.getImageUrl().startsWith("http")) {
+			r.setImgThirdPartyUrl(po.getImageUrl());
+			r.setIsSuccess();
+		}
+
 		return r;
 	}
 }

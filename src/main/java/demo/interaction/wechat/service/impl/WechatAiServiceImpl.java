@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ai.aiArt.pojo.dto.TextToImageFromWechatDTO;
-import ai.aiArt.pojo.result.GetJobResultList;
+import ai.aiArt.pojo.result.GetJobResultListForUser;
 import ai.aiArt.pojo.result.SendTextToImgJobResult;
 import ai.aiChat.pojo.dto.AiChatSendNewMsgFromWechatDTO;
 import ai.aiChat.pojo.result.AiChatSendNewMessageResult;
@@ -82,7 +82,7 @@ public class WechatAiServiceImpl extends WechatCommonService implements WechatAi
 	
 	@Override
 	public EncryptDTO getJobResultListByTmpKey(EncryptDTO encryptedDTO) {
-		GetJobResultList r = new GetJobResultList();
+		GetJobResultListForUser r = new GetJobResultListForUser();
 		String tmpKey = decryptEncryptDTO(encryptedDTO, String.class);
 		if (tmpKey == null) {
 			r.setMessage("Decrypt error");

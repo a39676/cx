@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service;
 
 import ai.aiArt.pojo.dto.TextToImageDTO;
 import ai.aiArt.pojo.result.AiArtImageWallResult;
-import ai.aiArt.pojo.result.GetJobResultList;
+import ai.aiArt.pojo.result.GetJobResultListForUser;
 import ai.aiArt.pojo.result.SendTextToImgJobResult;
-import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
+import ai.aiArt.pojo.vo.AiArtGenerateImageUserVO;
 import auxiliaryCommon.pojo.dto.BasePkDTO;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import demo.ai.aiArt.service.AiArtService;
@@ -44,12 +44,12 @@ public class WechatAiArtServiceImpl extends WechatCommonService implements Wecha
 	public EncryptDTO getParameterByJobPk(EncryptDTO encryptedDTO) {
 		BasePkDTO dto = decryptEncryptDTO(encryptedDTO, BasePkDTO.class);
 		if (dto == null) {
-			return encryptDTO(new GetJobResultList());
+			return encryptDTO(new GetJobResultListForUser());
 		}
 
 		try {
-			GetJobResultList jobResult = aiArtService.getJobResultVoByJobPk(dto);
-			AiArtGenerateImageVO subResult = jobResult.getJobResultList().get(0);
+			GetJobResultListForUser jobResult = aiArtService.getJobResultVoByJobPk(dto);
+			AiArtGenerateImageUserVO subResult = jobResult.getJobResultList().get(0);
 			TextToImageDTO parameterDTO = subResult.getParameter();
 			return encryptDTO(parameterDTO);
 		} catch (Exception e) {

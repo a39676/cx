@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.apache.commons.lang3.StringUtils;
@@ -18,12 +19,13 @@ import ai.aiArt.pojo.dto.TextToImageFromWechatDTO;
 import ai.aiArt.pojo.result.AiArtGenerateImageQueryResult;
 import ai.aiArt.pojo.result.AiArtImageWallResult;
 import ai.aiArt.pojo.result.AiArtTxtToImgResult;
-import ai.aiArt.pojo.result.GetJobResultList;
+import ai.aiArt.pojo.result.GetJobResultListForUser;
 import ai.aiArt.pojo.result.SendTextToImgJobResult;
 import ai.aiArt.pojo.type.AiArtJobStatusType;
 import ai.aiArt.pojo.type.AiArtSamplerType;
-import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
+import ai.aiArt.pojo.vo.AiArtGenerateImageUserVO;
 import ai.aiArt.pojo.vo.AiArtImageOnWallVO;
+import ai.aiArt.pojo.vo.ImgVO;
 import ai.aiChat.pojo.type.AiServiceAmountType;
 import ai.automatic1111.pojo.type.AiArtDefaultModelType;
 import ai.automatic1111.pojo.type.AiArtUpscalerType;
@@ -48,6 +50,7 @@ import demo.ai.aiArt.pojo.vo.AiArtUpscalerVO;
 import demo.ai.aiArt.service.AiArtCommonService;
 import demo.ai.aiArt.service.AiArtService;
 import demo.ai.aiChat.pojo.po.AiChatUserDetail;
+import demo.image.pojo.result.GetImgThirdPartyUrlInBatchResult;
 import demo.image.pojo.type.ImageTagType;
 import demo.image.service.ImageService;
 import image.pojo.dto.ImageSavingTransDTO;
@@ -379,16 +382,16 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		}
 
 		saveResultTag: if (txtToImgResult.isSuccess()) {
-			if (jobResult.getImgPkList().size() >= parameterDTO.getBatchSize()) {
+			if (jobResult.getImgVoList().size() >= parameterDTO.getBatchSize()) {
 				break saveResultTag;
 			}
 
 			List<String> imageListInBase64 = txtToImgResult.getImgBase64List();
-			List<String> imagePkList = new ArrayList<>();
+			List<ImgVO> imageVoList = new ArrayList<>();
 			for (int i = 0; i < imageListInBase64.size(); i++) {
 
-				if (jobResult.getImgPkList() != null && !jobResult.getImgPkList().isEmpty()) {
-					String lastImgPk = jobResult.getImgPkList().get(jobResult.getImgPkList().size() - 1);
+				if (jobResult.getImgVoList() != null && !jobResult.getImgVoList().isEmpty()) {
+					String lastImgPk = jobResult.getImgVoList().get(jobResult.getImgVoList().size() - 1).getImgPk();
 					String imgContent = imageService.getImageBase64(lastImgPk);
 					String inputImg = txtToImgResult.getImgBase64List().get(0);
 					if (imgContent.equals(inputImg)) {
@@ -404,8 +407,10 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 					log.error("Can NOT save image job ID: " + jobId);
 					break saveResultTag;
 				}
-
-				imagePkList.add(imgSavingResult.getImgPK());
+				
+				ImgVO imgVo = new ImgVO();
+				imgVo.setImgPk(imgSavingResult.getImgPK());
+				imageVoList.add(imgVo);
 			}
 
 			List<String> imageUrlList = txtToImgResult.getImgUrlList();
@@ -419,19 +424,22 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 					break saveResultTag;
 				}
 				
-				imagePkList.add(imgSavingResult.getImgPK());
+				ImgVO imgVo = new ImgVO();
+				imgVo.setImgPk(imgSavingResult.getImgPK());
+				imgVo.setImgUrl(imgSavingResult.getImgUrl());
+				imageVoList.add(imgVo);
 			}
 
-			jobResult.getImgPkList().addAll(imagePkList);
+			jobResult.getImgVoList().addAll(imageVoList);
 			CommonResult saveGenerateImgResultJsonResult = saveAiArtGenerateImgResultJson(parameterDTO,
-					jobResult.getImgPkList());
+					jobResult.getImgVoList());
 			if (saveGenerateImgResultJsonResult.isFail()) {
 				log.error("Job result saving error, jobID : " + jobId + ", error: "
 						+ saveGenerateImgResultJsonResult.getMessage());
 				break saveResultTag;
 			}
 
-			if (jobResult.getImgPkList().size() < parameterDTO.getBatchSize()) {
+			if (jobResult.getImgVoList().size() < parameterDTO.getBatchSize()) {
 				break saveResultTag;
 			}
 
@@ -484,9 +492,11 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			dtoForSending = dto;
 		}
 
-		List<String> imagePkList = new ArrayList<>();
+		List<ImgVO> imagePkList = new ArrayList<>();
 		for (int i = 0; i < dto.getBatchSize(); i++) {
-			imagePkList.add("gw/wq6+gbZ2IZkn1CJ+dm7+wwR5sL+ta0qgCzZ1YJIw=");
+			ImgVO vo = new ImgVO();
+			vo.setImgPk("gw/wq6+gbZ2IZkn1CJ+dm7+wwR5sL+ta0qgCzZ1YJIw=");
+			imagePkList.add(vo);
 		}
 		saveAiArtGenerateImgResultJson(dto, imagePkList);
 
@@ -652,8 +662,8 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	}
 
 	@Override
-	public GetJobResultList getJobResultListByTmpKey(String userTmpKey) {
-		GetJobResultList r = new GetJobResultList();
+	public GetJobResultListForUser getJobResultListByTmpKey(String userTmpKey) {
+		GetJobResultListForUser r = new GetJobResultListForUser();
 		if (StringUtils.isBlank(userTmpKey)) {
 			r.setMessage(WechatSdkCommonResultType.TMP_KEY_EXPIRED.getName());
 			r.setCode(String.valueOf(WechatSdkCommonResultType.TMP_KEY_EXPIRED.getCode()));
@@ -676,15 +686,16 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		RowBounds rowBounds = new RowBounds(0, aiArtOptionService.getMaxShowJob());
 		List<AiArtTextToImageJobRecord> jobResultPoList = aiArtTextToImageJobRecordMapper
 				.selectByExampleWithRowbounds(example, rowBounds);
-		List<AiArtGenerateImageVO> voList = new ArrayList<>();
-		AiArtGenerateImageVO vo = null;
+		List<AiArtGenerateImageUserVO> jobResultVoList = new ArrayList<>();
+		AiArtGenerateImageUserVO jobResultVO = null;
 		AiArtGenerateImageQueryResult jobResult = null;
 		for (AiArtTextToImageJobRecord po : jobResultPoList) {
 			jobResult = getJobResult(po.getId());
-			vo = buildAiArtGenerateImageVO(po, jobResult, systemOptionService.encryptId(po.getId()));
-			voList.add(vo);
+			jobResultVO = buildAiArtGenerateImageVoForUser(po, jobResult, systemOptionService.encryptId(po.getId()));
+			jobResultVoList.add(jobResultVO);
 		}
-		r.setJobResultList(voList);
+		
+		r.setJobResultList(jobResultVoList);
 		r.setIsSuccess();
 
 		extendTmpKeyValidity(Long.parseLong(userTmpKey));
@@ -692,7 +703,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	}
 
 	@Override
-	public GetJobResultList getJobResultVoByJobPk(BasePkDTO dto) {
+	public GetJobResultListForUser getJobResultVoByJobPk(BasePkDTO dto) {
 		return super.getJobResultVoByJobPk(dto.getPk());
 	}
 
@@ -799,16 +810,31 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			return fullResult;
 		}
 
-		List<AiArtImageOnWallVO> resultVoList = new ArrayList<>();
+		List<AiArtImageOnWallVO> subResultVoList = new ArrayList<>();
 		Random random = new Random();
 		Integer randomIndex = null;
+		List<String> imgPkList = new ArrayList<>();
 		for (int i = 0; i < aiArtOptionService.getImageWallOnShowMaxSize() && !voList.isEmpty(); i++) {
 			randomIndex = random.nextInt(voList.size());
-			resultVoList.add(voList.get(randomIndex));
+			AiArtImageOnWallVO vo = voList.get(randomIndex);
+			subResultVoList.add(vo);
+			imgPkList.add(vo.getImgPk());
 			voList.remove(randomIndex.intValue());
 		}
+		
+		GetImgThirdPartyUrlInBatchResult urlResult = imageService.getImgThirdPartyUrlBatchResultByPk(imgPkList);
+		if(urlResult.isFail()) {
+			return fullResult;
+		}
+		
+		Map<String, String> urlMap = urlResult.getImgPkMatchUrl();
+		for (AiArtImageOnWallVO vo : subResultVoList) {
+			if(urlMap.containsKey(vo.getImgPk())) {
+				vo.setImgUrl(urlMap.get(vo.getImgPk()));
+			}
+		}
 
-		fullResult.setImgVoList(resultVoList);
+		fullResult.setImgVoList(subResultVoList);
 		return fullResult;
 	}
 

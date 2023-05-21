@@ -30,7 +30,7 @@
                 <tr>
               </c:if>
               <td name="imgTd" imgPk="${imgVO.imgPk}">
-                <c:if test="${imgVO.imgUrl != null}">
+                <c:if test="${imgVO.imgUrl != null && imgVO.imgUrl != ''}">
                   <img name="thumbnail" imgPk="${imgVO.imgPk}" src="${imgVO.imgUrl}" style="width:200px; height:200px"><br>
                   <img name="sourceImg" imgPk="${imgVO.imgPk}" src="${imgVO.imgUrl}" style="display: none;"><br>
                 </c:if>
@@ -40,7 +40,6 @@
                     <c:param name="width" value="200" />
                     <c:param name="height" value="200" />
                   </c:url>
-                  ${thumbnailUrl}
                   <img name="thumbnail" imgPk="${imgVO.imgPk}" src="${thumbnailUrl}"><br>
                   <img name="sourceImg" imgPk="${imgVO.imgPk}" src="" style="display: none;"><br>
                 </c:if>

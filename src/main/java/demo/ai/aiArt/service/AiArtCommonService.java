@@ -37,6 +37,7 @@ import demo.ai.aiChat.pojo.po.AiChatUserAssociateWechatUidKey;
 import demo.ai.aiChat.service.AiUserService;
 import demo.ai.common.service.impl.AiCommonService;
 import demo.base.system.service.impl.RedisOriginalConnectService;
+import demo.image.pojo.result.GetImgThirdPartyUrlInBatchResult;
 import demo.image.service.ImageService;
 import demo.interaction.wechat.mq.producer.SendAiArtJobCompleteTemplateMessageProducer;
 import net.sf.json.JSONObject;
@@ -255,14 +256,25 @@ public abstract class AiArtCommonService extends AiCommonService {
 		if (forAdmin || (!po.getIsFromApi() && po.getHasReview())
 				|| (po.getIsFromApi() && subResult.getImgVoList().size() == subResult.getParameter().getBatchSize())) {
 
-			List<ImgVO> imgVoList = new ArrayList<>();
 			if (subResult.getImgVoList() != null && !subResult.getImgVoList().isEmpty()) {
+				GetImgThirdPartyUrlInBatchResult imgUrlThirdPartyResult = imageService
+						.getImgThirdPartyUrlBatchResultByPk(subResult.getImgPkList());
+
+				if (imgUrlThirdPartyResult.isFail()) {
+					jobResultVO.setImgVoList(subResult.getImgVoList());
+					return jobResultVO;
+				}
+
+				List<ImgVO> imgVoList = new ArrayList<>();
 				for (ImgVO imgVO : subResult.getImgVoList()) {
+					if (imgUrlThirdPartyResult.getImgPkMatchUrl().containsKey(imgVO.getImgPk())) {
+						imgVO.setImgUrl(imgUrlThirdPartyResult.getImgPkMatchUrl().get(imgVO.getImgPk()));
+					}
 					imgVoList.add(imgVO);
 				}
+				jobResultVO.setImgVoList(imgVoList);
 			}
 
-			jobResultVO.setImgVoList(imgVoList);
 		}
 		return jobResultVO;
 	}
@@ -277,6 +289,16 @@ public abstract class AiArtCommonService extends AiCommonService {
 		content = fileUtilCustom.getStringFromFile(resultJsonSavePath);
 		AiArtGenerateImageQueryResult result = buildObjFromJsonCustomization(content,
 				AiArtGenerateImageQueryResult.class);
+//		TODO imageHostUpdate delete it
+		if (result.getImgVoList() == null) {
+			result.setImgVoList(new ArrayList<>());
+		}
+		for (String imgPk : result.getImgPkList()) {
+			ImgVO vo = new ImgVO();
+			vo.setImgPk(imgPk);
+			result.getImgVoList().add(vo);
+		}
+
 		return result;
 	}
 

@@ -454,15 +454,14 @@
             var imgVO = vo.imgVoList[j];
             var imgUrl = imgVO.imgUrl;
             var imgPk = imgVO.imgPk;
-
             tr += "<td>";
-            if(imgUrl != ''){
+            if(imgUrl && imgUrl.length != 0){
               tr += "<img name='thumbnailImg' src='"+imgUrl+"' imgPk='"+imgPk+"' name='aiArtImg' onclick='imgFlod(this)' style='width:200px; height:200px;'> <br>";
-              tr += "<img name='sourceImg' src='"+imgUrl+"' imgPk='"+imgPk+"' name='aiArtImg' display='display: none;' onclick='imgUnflod(this)'> <br>";
+              tr += "<img name='sourceImg' src='"+imgUrl+"' imgPk='"+imgPk+"' name='aiArtImg' style='display: none;' onclick='imgUnflod(this)'> <br>";
               
             } else {
               tr += "<img name='thumbnailImg' src='/image/getThumbnail?imgPK="+encodeURIComponent(imgPk)+"' imgPk='"+imgPk+"' name='aiArtImg' onclick='imgFlod(this)'> <br>";
-              tr += "<img name='sourceImg' src='' imgPk='"+imgPk+"' name='aiArtImg' display='display: none;' onclick='imgUnflod(this)'> <br>";
+              tr += "<img name='sourceImg' src='' imgPk='"+imgPk+"' name='aiArtImg' style='display: none;' onclick='imgUnflod(this)'> <br>";
             }
 
             tr += "<label>"+imgPk.substring(0, 10)+"</label> <br>";

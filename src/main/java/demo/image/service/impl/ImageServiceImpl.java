@@ -350,7 +350,11 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 		String imgPK = systemOptionService.encryptId(newImgId);
 		try {
 			String urlEncodeImgPk = URLEncoder.encode(imgPK, StandardCharsets.UTF_8.toString());
-			r.setImgUrl(ImageUrl.ROOT + ImageUrl.GET_IMAGE + "/?imgPK=" + urlEncodeImgPk);
+			if(newImgPath.startsWith("http")) {
+				r.setImgUrl(newImgPath);
+			} else {
+				r.setImgUrl(ImageUrl.ROOT + ImageUrl.GET_IMAGE + "/?imgPK=" + urlEncodeImgPk);
+			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}

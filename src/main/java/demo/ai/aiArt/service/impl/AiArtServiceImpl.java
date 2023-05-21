@@ -371,8 +371,9 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			return;
 		}
 
-		if (txtToImgResult.isFail() || txtToImgResult.getImgBase64List() == null
-				|| txtToImgResult.getImgBase64List().isEmpty()) {
+		if (txtToImgResult.isFail()
+				|| ((txtToImgResult.getImgBase64List() == null || txtToImgResult.getImgBase64List().isEmpty())
+						&& (txtToImgResult.getImgUrlList() == null || txtToImgResult.getImgUrlList().isEmpty()))) {
 			updateAiArtJobFailCount(jobPO, parameterDTO);
 			return;
 		}
@@ -381,12 +382,12 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			if (jobResult.getImgPkList().size() >= parameterDTO.getBatchSize()) {
 				break saveResultTag;
 			}
-			
-			if(jobResult.getImgPkList() != null && !jobResult.getImgPkList().isEmpty()) {
+
+			if (jobResult.getImgPkList() != null && !jobResult.getImgPkList().isEmpty()) {
 				String lastImgPk = jobResult.getImgPkList().get(jobResult.getImgPkList().size() - 1);
 				String imgContent = imageService.getImageBase64(lastImgPk);
 				String inputImg = txtToImgResult.getImgBase64List().get(0);
-				if(imgContent.equals(inputImg)) {
+				if (imgContent.equals(inputImg)) {
 					return;
 				}
 			}
@@ -394,7 +395,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			List<String> imageListInBase64 = txtToImgResult.getImgBase64List();
 			List<String> imagePkList = new ArrayList<>();
 			for (int i = 0; i < imageListInBase64.size(); i++) {
-				ImageSavingResult imgSavingResult = saveImg(imageListInBase64.get(i));
+				ImageSavingResult imgSavingResult = saveImgInBase64Str(imageListInBase64.get(i));
 				if (imgSavingResult.isFail()) {
 					jobPO.setJobStatus(AiArtJobStatusType.FAILED.getCode().byteValue());
 					jobPO.setRunCount(jobPO.getRunCount() + 1);
@@ -402,9 +403,22 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 					log.error("Can NOT save image job ID: " + jobId);
 					break saveResultTag;
 				}
-				
+
 				imagePkList.add(imgSavingResult.getImgPK());
 			}
+			
+			List<String> imageUrlList = txtToImgResult.getImgUrlList();
+			for(int i = 0; i < imageUrlList.size(); i++) {
+				ImageSavingResult imgSavingResult = saveImgInUrl(imageUrlList.get(i));
+				if (imgSavingResult.isFail()) {
+					jobPO.setJobStatus(AiArtJobStatusType.FAILED.getCode().byteValue());
+					jobPO.setRunCount(jobPO.getRunCount() + 1);
+					aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
+					log.error("Can NOT save image job ID: " + jobId);
+					break saveResultTag;
+				}
+			}
+			
 			jobResult.getImgPkList().addAll(imagePkList);
 			CommonResult saveGenerateImgResultJsonResult = saveAiArtGenerateImgResultJson(parameterDTO,
 					jobResult.getImgPkList());
@@ -526,10 +540,25 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		return sb.toString();
 	}
 
-	private ImageSavingResult saveImg(String data) {
+	private ImageSavingResult saveImgInUrl(String imgUrl) {
 		ImageSavingTransDTO imgSavingDTO = new ImageSavingTransDTO();
-		imgSavingDTO.setImgBase64Str(data);
-		imgSavingDTO.setImgName(snowFlake.getNextId() + ".jpg");
+		imgSavingDTO.setImgUrl(imgUrl);
+		imgSavingDTO.setImgName(snowFlake.getNextId() + ".png");
+		imgSavingDTO.setImgTagCode(ImageTagType.AI_ART.getCode());
+		imgSavingDTO.setValidTime(LocalDateTime.now().plusDays(aiArtOptionService.getMaxJobLivingDay()));
+		ImageSavingResult imgSavingResult = imageService.imageSaving(imgSavingDTO);
+
+		if (imgSavingResult.isFail()) {
+			sendTelegramMessage("AI生成图片异常, 无法保存图片: " + imgSavingResult.getMessage());
+		}
+
+		return imgSavingResult;
+	}
+	
+	private ImageSavingResult saveImgInBase64Str(String imgInBase64Str) {
+		ImageSavingTransDTO imgSavingDTO = new ImageSavingTransDTO();
+		imgSavingDTO.setImgBase64Str(imgInBase64Str);
+		imgSavingDTO.setImgName(snowFlake.getNextId() + ".png");
 		imgSavingDTO.setImgTagCode(ImageTagType.AI_ART.getCode());
 		imgSavingDTO.setValidTime(LocalDateTime.now().plusDays(aiArtOptionService.getMaxJobLivingDay()));
 		ImageSavingResult imgSavingResult = imageService.imageSaving(imgSavingDTO);

@@ -651,10 +651,10 @@
         var searchCondition = $("#searchCondition");
         var lockFlag = searchCondition.attr("isLock");
         if (st > lastScrollTop){
-          if("1" != lockFlag){
+          if ("1" != lockFlag){
             searchCondition.hide();
           }
-        } else {
+        } else if (st < lastScrollTop) {
           searchCondition.show();
         }
         lastScrollTop = st;

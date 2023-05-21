@@ -418,6 +418,8 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 					log.error("Can NOT save image job ID: " + jobId);
 					break saveResultTag;
 				}
+				
+				imagePkList.add(imgSavingResult.getImgPK());
 			}
 
 			jobResult.getImgPkList().addAll(imagePkList);

@@ -383,18 +383,19 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 				break saveResultTag;
 			}
 
-			if (jobResult.getImgPkList() != null && !jobResult.getImgPkList().isEmpty()) {
-				String lastImgPk = jobResult.getImgPkList().get(jobResult.getImgPkList().size() - 1);
-				String imgContent = imageService.getImageBase64(lastImgPk);
-				String inputImg = txtToImgResult.getImgBase64List().get(0);
-				if (imgContent.equals(inputImg)) {
-					return;
-				}
-			}
-
 			List<String> imageListInBase64 = txtToImgResult.getImgBase64List();
 			List<String> imagePkList = new ArrayList<>();
 			for (int i = 0; i < imageListInBase64.size(); i++) {
+
+				if (jobResult.getImgPkList() != null && !jobResult.getImgPkList().isEmpty()) {
+					String lastImgPk = jobResult.getImgPkList().get(jobResult.getImgPkList().size() - 1);
+					String imgContent = imageService.getImageBase64(lastImgPk);
+					String inputImg = txtToImgResult.getImgBase64List().get(0);
+					if (imgContent.equals(inputImg)) {
+						return;
+					}
+				}
+
 				ImageSavingResult imgSavingResult = saveImgInBase64Str(imageListInBase64.get(i));
 				if (imgSavingResult.isFail()) {
 					jobPO.setJobStatus(AiArtJobStatusType.FAILED.getCode().byteValue());
@@ -406,9 +407,9 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 				imagePkList.add(imgSavingResult.getImgPK());
 			}
-			
+
 			List<String> imageUrlList = txtToImgResult.getImgUrlList();
-			for(int i = 0; i < imageUrlList.size(); i++) {
+			for (int i = 0; i < imageUrlList.size(); i++) {
 				ImageSavingResult imgSavingResult = saveImgInUrl(imageUrlList.get(i));
 				if (imgSavingResult.isFail()) {
 					jobPO.setJobStatus(AiArtJobStatusType.FAILED.getCode().byteValue());
@@ -418,7 +419,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 					break saveResultTag;
 				}
 			}
-			
+
 			jobResult.getImgPkList().addAll(imagePkList);
 			CommonResult saveGenerateImgResultJsonResult = saveAiArtGenerateImgResultJson(parameterDTO,
 					jobResult.getImgPkList());
@@ -554,7 +555,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 		return imgSavingResult;
 	}
-	
+
 	private ImageSavingResult saveImgInBase64Str(String imgInBase64Str) {
 		ImageSavingTransDTO imgSavingDTO = new ImageSavingTransDTO();
 		imgSavingDTO.setImgBase64Str(imgInBase64Str);

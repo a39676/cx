@@ -40,6 +40,7 @@
                     <c:param name="width" value="200" />
                     <c:param name="height" value="200" />
                   </c:url>
+                  ${thumbnailUrl}
                   <img name="thumbnail" imgPk="${imgVO.imgPk}" src="${thumbnailUrl}"><br>
                   <img name="sourceImg" imgPk="${imgVO.imgPk}" src="" style="display: none;"><br>
                 </c:if>

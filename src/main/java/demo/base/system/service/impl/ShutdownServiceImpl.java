@@ -35,6 +35,7 @@ public class ShutdownServiceImpl extends CommonService implements ShutdownServic
 
 		JoyTaskServiceImpl.cacheToDatabase();
 
+		log.error("Refresh AI art image wall json file in shutdown service");
 		aiArtService.refreshImageWallJsonFile();
 
 		((ConfigurableApplicationContext) context).close();

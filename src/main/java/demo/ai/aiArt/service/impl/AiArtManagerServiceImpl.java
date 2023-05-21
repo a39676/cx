@@ -70,7 +70,8 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 		for (AiArtTextToImageJobRecord po : jobPoList) {
 			jobResult = getJobResult(po.getId());
 			aiUserIdSet.add(po.getAiUserId());
-			AiArtGenerateImageAdminVO jobVO = buildAiArtGenerateImageVoForAdmin(po, jobResult, systemOptionService.encryptId(po.getId()));
+			AiArtGenerateImageAdminVO jobVO = buildAiArtGenerateImageVoForAdmin(po, jobResult,
+					systemOptionService.encryptId(po.getId()));
 			jobResultVoList.add(jobVO);
 			jobResult = null;
 		}
@@ -134,7 +135,7 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 		if (r.isFail()) {
 			return r;
 		}
-		
+
 		AiArtTextToImageJobRecord jobPO = aiArtTextToImageJobRecordMapper.selectByPrimaryKey(jobId);
 		Long userId = jobPO.getAiUserId();
 
@@ -181,6 +182,8 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 		}
 		voList.add(0, vo);
 		while (voList.size() > aiArtOptionService.getImageWallMaxSize()) {
+			log.error("AI art image wall over size: " + voList.size() + ", max size in option: "
+					+ aiArtOptionService.getImageWallMaxSize());
 			removeFromImageWall(voList.get(voList.size() - 1).getImgPk());
 		}
 
@@ -200,17 +203,17 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 	@Override
 	public CommonResult removeFromImageWall(String imgPk) {
 		CommonResult r = new CommonResult();
-		AiArtImageWallResult dto = aiArtCacheService.getImageWall();
-		if (dto == null) {
-			dto = new AiArtImageWallResult();
-			aiArtCacheService.setImageWall(dto);
+		AiArtImageWallResult imageWallDTO = aiArtCacheService.getImageWall();
+		if (imageWallDTO == null) {
+			imageWallDTO = new AiArtImageWallResult();
+			aiArtCacheService.setImageWall(imageWallDTO);
 			r.setIsSuccess();
 			return r;
 		}
-		List<AiArtImageOnWallVO> voList = dto.getImgVoList();
+		List<AiArtImageOnWallVO> voList = imageWallDTO.getImgVoList();
 		if (voList == null || voList.isEmpty()) {
-			dto.setImgVoList(new ArrayList<>());
-			aiArtCacheService.setImageWall(dto);
+			imageWallDTO.setImgVoList(new ArrayList<>());
+			aiArtCacheService.setImageWall(imageWallDTO);
 			r.setIsSuccess();
 			return r;
 		}
@@ -253,13 +256,13 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 			imgIdList.add(vo.getImgId());
 		}
 		GetImgThirdPartyUrlInBatchResult urlResult = imageService.getImgThirdPartyUrlBatchResultById(imgIdList);
-		if(urlResult.isFail()) {
+		if (urlResult.isFail()) {
 			return v;
 		}
-		
+
 		Map<String, String> urlMap = urlResult.getImgPkMatchUrl();
 		for (AiArtImageOnWallVO vo : wall.getImgVoList()) {
-			if(urlMap.containsKey(vo.getImgPk())) {
+			if (urlMap.containsKey(vo.getImgPk())) {
 				vo.setImgUrl(urlMap.get(vo.getImgPk()));
 			}
 		}

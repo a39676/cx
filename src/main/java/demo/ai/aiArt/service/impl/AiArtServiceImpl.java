@@ -407,7 +407,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 					log.error("Can NOT save image job ID: " + jobId);
 					break saveResultTag;
 				}
-				
+
 				ImgVO imgVo = new ImgVO();
 				imgVo.setImgPk(imgSavingResult.getImgPK());
 				imageVoList.add(imgVo);
@@ -423,7 +423,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 					log.error("Can NOT save image job ID: " + jobId);
 					break saveResultTag;
 				}
-				
+
 				ImgVO imgVo = new ImgVO();
 				imgVo.setImgPk(imgSavingResult.getImgPK());
 				imgVo.setImgUrl(imgSavingResult.getImgUrl());
@@ -692,7 +692,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			jobResultVO = buildAiArtGenerateImageVoForUser(po, jobResult, systemOptionService.encryptId(po.getId()));
 			jobResultVoList.add(jobResultVO);
 		}
-		
+
 		r.setJobResultList(jobResultVoList);
 		r.setIsSuccess();
 
@@ -772,6 +772,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	@Override
 	public void refreshImageWallJsonFile() {
 		AiArtImageWallResult dto = aiArtCacheService.getImageWall();
+		log.error("Referesh AI art image wall json file, wall size in cache: " + dto.getImgVoList().size());
 		JSONObject json = JSONObject.fromObject(dto);
 		fileUtilCustom.byteToFile(json.toString(), aiArtOptionService.getImageWallFilePath());
 	}
@@ -803,8 +804,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	public AiArtImageWallResult getImageWallRandomSub() {
 		AiArtImageWallResult fullResult = getImageWallFull(null);
 		List<AiArtImageOnWallVO> voList = fullResult.getImgVoList();
-		if (fullResult.getImgVoList().isEmpty()
-				&& aiArtOptionService.getImageWallOnShowMaxSize() > fullResult.getImgVoList().size()) {
+		if (aiArtOptionService.getImageWallOnShowMaxSize() >= fullResult.getImgVoList().size()) {
 			return fullResult;
 		}
 
@@ -819,15 +819,15 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			imgPkList.add(vo.getImgPk());
 			voList.remove(randomIndex.intValue());
 		}
-		
+
 		GetImgThirdPartyUrlInBatchResult urlResult = imageService.getImgThirdPartyUrlBatchResultByPk(imgPkList);
-		if(urlResult.isFail()) {
+		if (urlResult.isFail()) {
 			return fullResult;
 		}
-		
+
 		Map<String, String> urlMap = urlResult.getImgPkMatchUrl();
 		for (AiArtImageOnWallVO vo : subResultVoList) {
-			if(urlMap.containsKey(vo.getImgPk())) {
+			if (urlMap.containsKey(vo.getImgPk())) {
 				vo.setImgUrl(urlMap.get(vo.getImgPk()));
 			}
 		}

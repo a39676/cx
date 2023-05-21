@@ -293,10 +293,12 @@ public abstract class AiArtCommonService extends AiCommonService {
 		if (result.getImgVoList() == null) {
 			result.setImgVoList(new ArrayList<>());
 		}
-		for (String imgPk : result.getImgPkList()) {
-			ImgVO vo = new ImgVO();
-			vo.setImgPk(imgPk);
-			result.getImgVoList().add(vo);
+		if(result.getImgPkList() != null && !result.getImgPkList().isEmpty()) {
+			for (String imgPk : result.getImgPkList()) {
+				ImgVO vo = new ImgVO();
+				vo.setImgPk(imgPk);
+				result.getImgVoList().add(vo);
+			}
 		}
 
 		return result;

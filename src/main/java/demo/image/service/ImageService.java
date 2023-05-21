@@ -2,9 +2,11 @@ package demo.image.service;
 
 import java.awt.image.BufferedImage;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import demo.image.pojo.result.GetImgUrlInBatchResult;
 import demo.image.pojo.result.ImgHandleSrcDataResult;
 import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.result.ImageSavingResult;
@@ -53,5 +55,7 @@ public interface ImageService {
 	void getThumbnailImage(HttpServletResponse response, String imgPK, Integer width, Integer height);
 
 	String getImageBase64(String imgPk);
+
+	GetImgUrlInBatchResult transImgUrlBatchResult(List<String> imgPkList);
 
 }

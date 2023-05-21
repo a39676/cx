@@ -40,6 +40,7 @@ import demo.image.pojo.po.ImageStore;
 import demo.image.pojo.po.ImageStoreExample;
 import demo.image.pojo.po.ImageTag;
 import demo.image.pojo.po.ImageTagExample;
+import demo.image.pojo.result.GetImgUrlInBatchResult;
 import demo.image.pojo.result.ImgHandleSrcDataResult;
 import demo.image.pojo.type.ImageTagType;
 import demo.image.service.ImageService;
@@ -302,7 +303,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 				imageStorePrefixPath = DEFAULT_IMG_SAVING_FOLDER;
 			}
 
-			if(StringUtils.isNotBlank(dto.getImgBase64Str())) {
+			if (StringUtils.isNotBlank(dto.getImgBase64Str())) {
 				newImgPath = imageStorePrefixPath + File.separator + dto.getImgName();
 				File imgFile = new File(newImgPath);
 				if (!imgFile.getParentFile().exists()) {
@@ -311,7 +312,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 						return r;
 					}
 				}
-				
+
 				String base64Image = dto.getImgBase64Str(); // .split(",")[1];
 				byte[] imageBytes = Base64.getDecoder().decode(base64Image);
 				FileUtils.writeByteArrayToFile(imgFile, imageBytes);
@@ -547,5 +548,33 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 			return encodedString;
 		}
 
+	}
+
+	@Override
+	public GetImgUrlInBatchResult transImgUrlBatchResult(List<String> imgPkList) {
+		GetImgUrlInBatchResult r = new GetImgUrlInBatchResult();
+
+		if (imgPkList == null || imgPkList.isEmpty()) {
+			return r;
+		}
+
+		List<Long> imgIdList = systemOptionService.decryptPrivateKey(imgPkList);
+
+		List<String> listOfImgPkOrUrl = new ArrayList<>();
+		ImageStoreExample example = new ImageStoreExample();
+		example.createCriteria().andImageIdIn(imgIdList);
+		List<ImageStore> poList = imgMapper.selectByExample(example);
+
+		for (ImageStore po : poList) {
+			if (po.getImageUrl().startsWith("http")) {
+				listOfImgPkOrUrl.add(po.getImageUrl());
+			} else {
+				listOfImgPkOrUrl.add(systemOptionService.encryptId(po.getImageId()));
+			}
+		}
+
+		r.setListOfImgPkOrUrl(listOfImgPkOrUrl);
+		r.setIsSuccess();
+		return r;
 	}
 }

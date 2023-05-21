@@ -2,10 +2,10 @@ package demo.ai.aiArt.pojo.result;
 
 import java.util.Map;
 
-import ai.aiArt.pojo.result.GetJobResultList;
+import ai.aiArt.pojo.result.GetJobResultListForAdmin;
 import demo.ai.aiArt.pojo.dto.AiUserDetailInRedisDTO;
 
-public class GetJobResultListForReivew extends GetJobResultList {
+public class GetJobResultListForReivew extends GetJobResultListForAdmin {
 
 	private Map<String, AiUserDetailInRedisDTO> userDetailInRedisMap;
 

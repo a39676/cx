@@ -18,10 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ai.aiArt.pojo.dto.TextToImageDTO;
 import ai.aiArt.pojo.result.AiArtGenerateImageQueryResult;
-import ai.aiArt.pojo.result.GetJobResultList;
+import ai.aiArt.pojo.result.GetJobResultListForUser;
 import ai.aiArt.pojo.type.AiArtJobStatusType;
 import ai.aiArt.pojo.type.AiArtSamplerType;
-import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
+import ai.aiArt.pojo.vo.AiArtGenerateImageAdminVO;
+import ai.aiArt.pojo.vo.AiArtGenerateImageUserVO;
+import ai.aiArt.pojo.vo.ImgVO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.mapper.AiArtGeneratingRecordMapper;
 import demo.ai.aiArt.mapper.AiArtModelMapper;
@@ -183,38 +185,54 @@ public abstract class AiArtCommonService extends AiCommonService {
 				AI_ART_NOTICE_WHEN_COMPLETE_REDIS_KEY_PREFIX + String.valueOf(aiUserId) + "_" + String.valueOf(jobId));
 	}
 
-	protected AiArtGenerateImageVO buildAiArtGenerateImageVO(AiArtTextToImageJobRecord po,
+	protected AiArtGenerateImageUserVO buildAiArtGenerateImageVoForUser(AiArtTextToImageJobRecord po,
+			AiArtGenerateImageQueryResult subResult, String jobPk) {
+		AiArtGenerateImageAdminVO adminVO = buildAiArtGenerateImageVoForAdmin(po, subResult, jobPk);
+		AiArtGenerateImageUserVO userVO = new AiArtGenerateImageUserVO();
+		userVO.setCreateTimeStr(adminVO.getCreateTimeStr());
+		userVO.setImgVoList(adminVO.getImgVoList());
+		userVO.setIsFreeJob(adminVO.getIsFreeJob());
+		userVO.setJobPk(adminVO.getJobPk());
+		userVO.setJobStatus(adminVO.getJobStatus());
+		userVO.setModelName(adminVO.getModelName());
+		userVO.setParameter(adminVO.getParameter());
+		userVO.setRunCount(adminVO.getRunCount());
+		userVO.setSamplerName(adminVO.getSamplerName());
+		return userVO;
+	}
+
+	protected AiArtGenerateImageAdminVO buildAiArtGenerateImageVoForAdmin(AiArtTextToImageJobRecord po,
 			AiArtGenerateImageQueryResult subResult, String jobPk) {
 		return __buildAiArtGenerateImageVO(po, subResult, jobPk);
 	}
 
-	private AiArtGenerateImageVO __buildAiArtGenerateImageVO(AiArtTextToImageJobRecord po,
+	private AiArtGenerateImageAdminVO __buildAiArtGenerateImageVO(AiArtTextToImageJobRecord po,
 			AiArtGenerateImageQueryResult subResult, String jobPk) {
-		AiArtGenerateImageVO vo = new AiArtGenerateImageVO();
+		AiArtGenerateImageAdminVO jobResultVO = new AiArtGenerateImageAdminVO();
 		boolean forAdmin = isBigUser();
-		vo = new AiArtGenerateImageVO();
-		vo.setJobPk(jobPk);
-		vo.setAiUserPk(systemOptionService.encryptId(po.getAiUserId()));
-		vo.setRunCount(po.getRunCount());
-		vo.setCreateTimeStr(localDateTimeHandler.dateToStr(po.getCreateTime()));
-		vo.setIsDelete(po.getIsDelete());
-		vo.setIsFromApi(po.getIsFromApi());
+		jobResultVO = new AiArtGenerateImageAdminVO();
+		jobResultVO.setJobPk(jobPk);
+		jobResultVO.setAiUserPk(systemOptionService.encryptId(po.getAiUserId()));
+		jobResultVO.setRunCount(po.getRunCount());
+		jobResultVO.setCreateTimeStr(localDateTimeHandler.dateToStr(po.getCreateTime()));
+		jobResultVO.setIsDelete(po.getIsDelete());
+		jobResultVO.setIsFromApi(po.getIsFromApi());
 
 		if (forAdmin) {
-			vo.setIsFreeJob(po.getIsFreeJob());
-			vo.setHasReview(po.getHasReview());
-			vo.setJobStatus(po.getJobStatus().intValue());
-			vo.setNsfwJobCounting(getNsfwJobCounting(po.getAiUserId()));
+			jobResultVO.setIsFreeJob(po.getIsFreeJob());
+			jobResultVO.setHasReview(po.getHasReview());
+			jobResultVO.setJobStatus(po.getJobStatus().intValue());
+			jobResultVO.setNsfwJobCounting(getNsfwJobCounting(po.getAiUserId()));
 		} else {
 			if (!po.getHasReview() && !po.getIsFromApi()) {
-				vo.setJobStatus(AiArtJobStatusType.WAITING.getCode());
+				jobResultVO.setJobStatus(AiArtJobStatusType.WAITING.getCode());
 			} else {
-				vo.setJobStatus(po.getJobStatus().intValue());
+				jobResultVO.setJobStatus(po.getJobStatus().intValue());
 			}
 		}
 
 		if (subResult == null) {
-			return vo;
+			return jobResultVO;
 		}
 
 		TextToImageDTO subParam = subResult.getParameter();
@@ -225,27 +243,28 @@ public abstract class AiArtCommonService extends AiCommonService {
 //			subParam.setNegativePrompts(subParam.getNegativePrompts().replaceAll("&", "&amp;")
 //					.replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
 //		}
-		vo.setParameter(subParam);
+		jobResultVO.setParameter(subParam);
 
 		AiArtSamplerType samplerType = AiArtSamplerType.getType(subParam.getSampler());
 		if (samplerType != null) {
-			vo.setSamplerName(samplerType.getName());
+			jobResultVO.setSamplerName(samplerType.getName());
 		}
 
-		vo.setModelName(subParam.getModelName());
+		jobResultVO.setModelName(subParam.getModelName());
 
 		if (forAdmin || (!po.getIsFromApi() && po.getHasReview())
-				|| (po.getIsFromApi() && subResult.getImgPkList().size() == subResult.getParameter().getBatchSize())) {
+				|| (po.getIsFromApi() && subResult.getImgVoList().size() == subResult.getParameter().getBatchSize())) {
 
-			List<String> imgUrlList = new ArrayList<>();
-			if (subResult.getImgPkList() != null && !subResult.getImgPkList().isEmpty()) {
-				for (String imgUrl : subResult.getImgPkList()) {
-					imgUrlList.add(imgUrl);
+			List<ImgVO> imgVoList = new ArrayList<>();
+			if (subResult.getImgVoList() != null && !subResult.getImgVoList().isEmpty()) {
+				for (ImgVO imgVO : subResult.getImgVoList()) {
+					imgVoList.add(imgVO);
 				}
 			}
-			vo.setImgPkList(imgUrlList);
+
+			jobResultVO.setImgVoList(imgVoList);
 		}
-		return vo;
+		return jobResultVO;
 	}
 
 	protected AiArtGenerateImageQueryResult getJobResult(Long jobId) {
@@ -285,11 +304,11 @@ public abstract class AiArtCommonService extends AiCommonService {
 		return cost;
 	}
 
-	protected CommonResult saveAiArtGenerateImgResultJson(TextToImageDTO dto, List<String> imgPkList) {
+	protected CommonResult saveAiArtGenerateImgResultJson(TextToImageDTO dto, List<ImgVO> imgVoList) {
 		CommonResult r = new CommonResult();
 		AiArtGenerateImageQueryResult result = new AiArtGenerateImageQueryResult();
 		result.setParameter(dto);
-		result.setImgPkList(imgPkList);
+		result.setImgVoList(imgVoList);
 
 		String resultJsonSavePath = getJobResultStrPath(dto.getJobId());
 		File resultJsonFile = new File(resultJsonSavePath);
@@ -315,8 +334,8 @@ public abstract class AiArtCommonService extends AiCommonService {
 		return r;
 	}
 
-	protected GetJobResultList getJobResultVoByJobPk(String jobPk) {
-		GetJobResultList r = new GetJobResultList();
+	protected GetJobResultListForUser getJobResultVoByJobPk(String jobPk) {
+		GetJobResultListForUser r = new GetJobResultListForUser();
 		if (StringUtils.isBlank(jobPk)) {
 			r.setMessage("Please fill the job PK");
 			return r;
@@ -336,19 +355,16 @@ public abstract class AiArtCommonService extends AiCommonService {
 
 		AiArtGenerateImageQueryResult jobResult = getJobResult(jobId);
 		if (po.getIsFromApi() && jobResult != null) {
-			List<String> newImgPkList = new ArrayList<>();
-			for (String imgPk : jobResult.getImgPkList()) {
-				updateImageInvalidTimeByImgPk(imgPk);
-				newImgPkList.add(imgPk);
+			for (ImgVO imgVO : jobResult.getImgVoList()) {
+				updateImageInvalidTimeByImgPk(imgVO.getImgPk());
 			}
-			jobResult.setImgPkList(newImgPkList);
 		}
 
-		AiArtGenerateImageVO vo = buildAiArtGenerateImageVO(po, jobResult, jobPk);
+		AiArtGenerateImageUserVO vo = buildAiArtGenerateImageVoForUser(po, jobResult, jobPk);
 		r.setJobResultList(new ArrayList<>());
 		if (!po.getIsFromApi() && !po.getHasReview()) {
 			vo.setJobStatus(AiArtJobStatusType.WAITING.getCode());
-			vo.setImgPkList(new ArrayList<>());
+			vo.setImgVoList(new ArrayList<>());
 		}
 
 		r.getJobResultList().add(vo);

@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import demo.image.pojo.result.GetImgThirdPartyUrlInBatchResult;
+import demo.image.pojo.result.GetImgThirdPartyUrlResult;
 import demo.image.pojo.result.ImgHandleSrcDataResult;
 import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.result.ImageSavingResult;
@@ -56,6 +57,10 @@ public interface ImageService {
 
 	String getImageBase64(String imgPk);
 
-	GetImgThirdPartyUrlInBatchResult getImgThirdPartyUrlBatchResult(List<String> imgPkList);
+	GetImgThirdPartyUrlInBatchResult getImgThirdPartyUrlBatchResultByPk(List<String> imgPkList);
+
+	GetImgThirdPartyUrlInBatchResult getImgThirdPartyUrlBatchResultById(List<Long> imgIdList);
+
+	GetImgThirdPartyUrlResult getImgThirdPartyUrlByPk(String imgPk);
 
 }

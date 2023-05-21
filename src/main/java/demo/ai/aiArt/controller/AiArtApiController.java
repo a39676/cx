@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import ai.aiArt.pojo.constant.AiArtApiUrlConstant;
 import ai.aiArt.pojo.dto.TextToImageDTO;
-import ai.aiArt.pojo.result.GetJobResultList;
+import ai.aiArt.pojo.result.GetJobResultListForUser;
 import ai.aiArt.pojo.result.SendTextToImgJobResult;
 import auxiliaryCommon.pojo.dto.BasePkDTO;
 import demo.ai.aiArt.pojo.dto.TextToImageFromApiDTO;
@@ -35,7 +35,7 @@ public class AiArtApiController {
 
 	@PostMapping(value = AiArtApiUrlConstant.GET_JOB_RESULT_BY_JOB_PK)
 	@ResponseBody
-	public GetJobResultList getJobResultVoByJobPk(@RequestBody BasePkDTO dto) {
+	public GetJobResultListForUser getJobResultVoByJobPk(@RequestBody BasePkDTO dto) {
 		return aiArtService.getJobResultVoByJobPk(dto);
 	}
 

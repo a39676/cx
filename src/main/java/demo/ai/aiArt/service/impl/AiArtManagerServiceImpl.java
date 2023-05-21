@@ -18,10 +18,12 @@ import org.springframework.web.servlet.ModelAndView;
 import ai.aiArt.pojo.dto.TextToImageDTO;
 import ai.aiArt.pojo.result.AiArtGenerateImageQueryResult;
 import ai.aiArt.pojo.result.AiArtImageWallResult;
-import ai.aiArt.pojo.result.GetJobResultList;
+import ai.aiArt.pojo.result.GetJobResultListForUser;
 import ai.aiArt.pojo.result.SendTextToImgJobResult;
-import ai.aiArt.pojo.vo.AiArtGenerateImageVO;
+import ai.aiArt.pojo.vo.AiArtGenerateImageAdminVO;
+import ai.aiArt.pojo.vo.AiArtGenerateImageUserVO;
 import ai.aiArt.pojo.vo.AiArtImageOnWallVO;
+import ai.aiArt.pojo.vo.ImgVO;
 import ai.aiChat.pojo.type.AiServiceAmountType;
 import auxiliaryCommon.pojo.dto.BasePkDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
@@ -35,6 +37,7 @@ import demo.ai.aiArt.pojo.result.GetJobResultListForReivew;
 import demo.ai.aiArt.service.AiArtCommonService;
 import demo.ai.aiArt.service.AiArtManagerService;
 import demo.ai.aiArt.service.AiArtService;
+import demo.image.pojo.result.GetImgThirdPartyUrlInBatchResult;
 import demo.image.service.ImageService;
 import wechatSdk.pojo.dto.AiArtGenerateOtherLikeThatDTO;
 
@@ -62,12 +65,13 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 			return r;
 		}
 		AiArtGenerateImageQueryResult jobResult = null;
-		List<AiArtGenerateImageVO> voList = new ArrayList<>();
+		List<AiArtGenerateImageAdminVO> jobResultVoList = new ArrayList<>();
 		Set<Long> aiUserIdSet = new HashSet<>();
 		for (AiArtTextToImageJobRecord po : jobPoList) {
 			jobResult = getJobResult(po.getId());
 			aiUserIdSet.add(po.getAiUserId());
-			voList.add(buildAiArtGenerateImageVO(po, jobResult, systemOptionService.encryptId(po.getId())));
+			AiArtGenerateImageAdminVO jobVO = buildAiArtGenerateImageVoForAdmin(po, jobResult, systemOptionService.encryptId(po.getId()));
+			jobResultVoList.add(jobVO);
 			jobResult = null;
 		}
 
@@ -84,7 +88,7 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 
 		r.setUserDetailInRedisMap(userDetailInRedisMap);
 
-		r.setJobResultList(voList);
+		r.setJobResultList(jobResultVoList);
 		r.setIsSuccess();
 		return r;
 	}
@@ -104,7 +108,7 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 			return r;
 		}
 
-		GetJobResultList jobResultList = getJobResultVoByJobPk(dto.getJobPk());
+		GetJobResultListForUser jobResultList = getJobResultVoByJobPk(dto.getJobPk());
 		if (jobResultList.isFail()) {
 			r.setMessage(jobResultList.getMessage());
 			return r;
@@ -116,13 +120,12 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 			return r;
 		}
 
-		AiArtGenerateImageVO jobResultVO = jobResultList.getJobResultList().get(0);
+		AiArtGenerateImageUserVO jobResultVO = jobResultList.getJobResultList().get(0);
 		TextToImageDTO parameter = jobResultVO.getParameter();
 
 		Long imgId = systemOptionService.decryptPrivateKey(dto.getImgPk());
 		Long jobId = systemOptionService.decryptPrivateKey(dto.getJobPk());
-		Long userId = systemOptionService.decryptPrivateKey(jobResultVO.getAiUserPk());
-		if (imgId == null || jobId == null || userId == null) {
+		if (imgId == null || jobId == null) {
 			r.setMessage("Decrypt ID error");
 			return r;
 		}
@@ -131,22 +134,26 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 		if (r.isFail()) {
 			return r;
 		}
+		
+		AiArtTextToImageJobRecord jobPO = aiArtTextToImageJobRecordMapper.selectByPrimaryKey(jobId);
+		Long userId = jobPO.getAiUserId();
 
-		List<String> imgPkList = jobResultVO.getImgPkList();
+		List<ImgVO> imgVoList = jobResultVO.getImgVoList();
 		boolean flag = false;
-		for (int i = 0; i < imgPkList.size() && !flag; i++) {
-			flag = imgPkList.get(i).equals(dto.getImgPk());
+		for (int i = 0; i < imgVoList.size() && !flag; i++) {
+			flag = imgVoList.get(i).getImgPk().equals(dto.getImgPk());
 			if (flag) {
-				imgPkList.set(i, aiArtOptionService.getImagePkInsteadOfNsfw());
+				ImgVO newImgVo = new ImgVO();
+				newImgVo.setImgPk(aiArtOptionService.getImagePkInsteadOfNsfw());
+				imgVoList.set(i, newImgVo);
 			}
 		}
 
 		addNsfwJobCounting(userId);
 
 		parameter.setJobId(jobId);
-		saveAiArtGenerateImgResultJson(parameter, imgPkList);
+		saveAiArtGenerateImgResultJson(parameter, imgVoList);
 
-		AiArtTextToImageJobRecord jobPO = aiArtTextToImageJobRecordMapper.selectByPrimaryKey(jobId);
 		if (!jobPO.getIsFreeJob()) {
 			BigDecimal totalTokens = calculateTokenCost(parameter);
 			BigDecimal returnTokens = totalTokens.divide(new BigDecimal(parameter.getBatchSize()), RoundingMode.FLOOR)
@@ -233,10 +240,30 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 		ModelAndView v = new ModelAndView("aiArtJSP/aiArtImageWallManager");
 		AiArtImageWallResult wall = aiArtService.getImageWallFull(true);
 		for (AiArtImageOnWallVO vo : wall.getImgVoList()) {
-			vo.setJobId(systemOptionService.decryptPrivateKey(vo.getJobPk()));
-			vo.setImgId(systemOptionService.decryptPrivateKey(vo.getImgPk()));
+			if (vo.getJobId() == null || vo.getJobId() == 0) {
+				vo.setJobId(systemOptionService.decryptPrivateKey(vo.getJobPk()));
+			}
+			if (vo.getImgId() == null || vo.getImgId() == 0) {
+				vo.setImgId(systemOptionService.decryptPrivateKey(vo.getImgPk()));
+			}
 		}
 		v.addObject("imgVoList", wall.getImgVoList());
+		List<Long> imgIdList = new ArrayList<>();
+		for (AiArtImageOnWallVO vo : wall.getImgVoList()) {
+			imgIdList.add(vo.getImgId());
+		}
+		GetImgThirdPartyUrlInBatchResult urlResult = imageService.getImgThirdPartyUrlBatchResultById(imgIdList);
+		if(urlResult.isFail()) {
+			return v;
+		}
+		
+		Map<String, String> urlMap = urlResult.getImgPkMatchUrl();
+		for (AiArtImageOnWallVO vo : wall.getImgVoList()) {
+			if(urlMap.containsKey(vo.getImgPk())) {
+				vo.setImgUrl(urlMap.get(vo.getImgPk()));
+			}
+		}
+
 		return v;
 	}
 
@@ -285,7 +312,7 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 		row.setHasReview(true);
 		aiArtTextToImageJobRecordMapper.updateByExampleSelective(row, example);
 	}
-	
+
 	@Override
 	public SendTextToImgJobResult generateOtherLikeThat(BasePkDTO dto) {
 		AiArtGenerateOtherLikeThatDTO dataDTO = new AiArtGenerateOtherLikeThatDTO();

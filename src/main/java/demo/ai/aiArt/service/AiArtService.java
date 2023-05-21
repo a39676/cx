@@ -5,7 +5,7 @@ import java.util.List;
 import ai.aiArt.pojo.dto.TextToImageDTO;
 import ai.aiArt.pojo.dto.TextToImageFromWechatDTO;
 import ai.aiArt.pojo.result.AiArtImageWallResult;
-import ai.aiArt.pojo.result.GetJobResultList;
+import ai.aiArt.pojo.result.GetJobResultListForUser;
 import ai.aiArt.pojo.result.SendTextToImgJobResult;
 import ai.pojo.vo.AiArtModelVO;
 import auxiliaryCommon.pojo.dto.BasePkDTO;
@@ -24,11 +24,11 @@ public interface AiArtService {
 
 	void rerunAllWaitingJobs();
 
-	GetJobResultList getJobResultListByTmpKey(String userTmpKey);
+	GetJobResultListForUser getJobResultListByTmpKey(String userTmpKey);
 
 	SendTextToImgJobResult sendTextToImgFromApiDtoToMq(TextToImageFromApiDTO dto);
 
-	GetJobResultList getJobResultVoByJobPk(BasePkDTO dto);
+	GetJobResultListForUser getJobResultVoByJobPk(BasePkDTO dto);
 
 	void refreshImageWallJsonFile();
 

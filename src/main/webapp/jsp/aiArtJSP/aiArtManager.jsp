@@ -449,12 +449,22 @@
         var tr = "";
         var parameter = vo.parameter;
         tr += "<tr>";
-        if(vo.imgPkList){
-          for(j=0;j<vo.imgPkList.length;j++){
-            var imgPk = vo.imgPkList[j];
+        if(vo.imgVoList){
+          for(j=0;j<vo.imgVoList.length;j++){
+            var imgVO = vo.imgVoList[j];
+            var imgUrl = imgVO.imgUrl;
+            var imgPk = imgVO.imgPk;
+
             tr += "<td>";
-            tr += "<img name='thumbnailImg' src='/image/getThumbnail?imgPK="+encodeURIComponent(imgPk)+"' imgPk='"+imgPk+"' name='aiArtImg' onclick='imgFlod(this)'> <br>";
-            tr += "<img name='sourceImg' src='' imgPk='"+imgPk+"' name='aiArtImg' display='display: none;' onclick='imgUnflod(this)'> <br>";
+            if(imgUrl != ''){
+              tr += "<img name='thumbnailImg' src='"+imgUrl+"' imgPk='"+imgPk+"' name='aiArtImg' onclick='imgFlod(this)' style='width:200px; height:200px;'> <br>";
+              tr += "<img name='sourceImg' src='"+imgUrl+"' imgPk='"+imgPk+"' name='aiArtImg' display='display: none;' onclick='imgUnflod(this)'> <br>";
+              
+            } else {
+              tr += "<img name='thumbnailImg' src='/image/getThumbnail?imgPK="+encodeURIComponent(imgPk)+"' imgPk='"+imgPk+"' name='aiArtImg' onclick='imgFlod(this)'> <br>";
+              tr += "<img name='sourceImg' src='' imgPk='"+imgPk+"' name='aiArtImg' display='display: none;' onclick='imgUnflod(this)'> <br>";
+            }
+
             tr += "<label>"+imgPk.substring(0, 10)+"</label> <br>";
             tr += "<button class='btn btn-sm btn-danger' name='setInvalidImg' jobPk='"+vo.jobPk+"' imgPK='"+imgPk+"' onclick='setInvalidImg(this)'>setInvalidImg</button><br>"
             tr += "<button class='btn btn-sm btn-success' name='addToImageWall' jobPk='"+vo.jobPk+"' imgPK='"+imgPk+"' onclick='addToImageWall(this)'>addToImageWall</button><br>"

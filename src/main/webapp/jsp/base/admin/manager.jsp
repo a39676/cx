@@ -53,14 +53,6 @@
       </li>
     </ul><!-- aiChat -->
 
-    <ul class="main-menu visible-on-click" id="wechatManager">
-      <li style="background-color:yellow;">Wechat manager</li>
-      <li>
-        <a href="/wechatManager/compareLocalOpenIdListWithWechatOpenIdList" target="_blank">compareLocalOpenIdListWithWechatOpenIdList</a>
-        <a href="/wechatManager/regOpenIdManual?openId=" target="_blank">regOpenIdManual</a>
-      </li>
-    </ul><!-- wechatManager -->
-
     <ul class="main-menu visible-on-click" id="aiArt">
       <li style="background-color:yellow;">AI art</li>
       <li>
@@ -70,6 +62,16 @@
         <a href="/aiArtManager/imageWallManager" target="_blank">AI art image wall</a>
       </li>
     </ul><!-- aiArt -->
+
+    <ul class="main-menu visible-on-click" id="wechatManager">
+      <li style="background-color:yellow;">Wechat manager</li>
+      <li>
+        <a href="/wechatManager/compareLocalOpenIdListWithWechatOpenIdList" target="_blank">compareLocalOpenIdListWithWechatOpenIdList</a>
+      </li>
+      <li>
+        <a href="/wechatManager/regOpenIdManual?openId=" target="_blank">regOpenIdManual</a>
+      </li>
+    </ul><!-- wechatManager -->
 
     <ul class="main-menu visible-on-click" id="telegramTool">
       <li style="background-color:yellow;">TelegramTool</li>

@@ -453,8 +453,6 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			jobPO.setRunCount(jobPO.getRunCount() + 1);
 			aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
 
-		} else {
-			updateAiArtJobFailCount(jobPO, parameterDTO);
 		}
 
 		removeJobInQueueMark(jobId);

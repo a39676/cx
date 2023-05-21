@@ -40,6 +40,7 @@ import demo.image.pojo.po.ImageStore;
 import demo.image.pojo.po.ImageStoreExample;
 import demo.image.pojo.po.ImageTag;
 import demo.image.pojo.po.ImageTagExample;
+import demo.image.pojo.result.GetImgThirdPartyUrlInBatchResult;
 import demo.image.pojo.result.ImgHandleSrcDataResult;
 import demo.image.pojo.type.ImageTagType;
 import demo.image.service.ImageService;
@@ -90,7 +91,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 			try {
 				PrintWriter out = response.getWriter();
 				if (imgPO.getImageUrl() != null && imgPO.getImageUrl().startsWith("http")) {
-					out.println(imgPO.getImageUrl());
+					out.println("redirect:/" + imgPO.getImageUrl());
 				}
 				out.close();
 			} catch (IOException ex) {
@@ -302,7 +303,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 				imageStorePrefixPath = DEFAULT_IMG_SAVING_FOLDER;
 			}
 
-			if(StringUtils.isNotBlank(dto.getImgBase64Str())) {
+			if (StringUtils.isNotBlank(dto.getImgBase64Str())) {
 				newImgPath = imageStorePrefixPath + File.separator + dto.getImgName();
 				File imgFile = new File(newImgPath);
 				if (!imgFile.getParentFile().exists()) {
@@ -311,7 +312,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 						return r;
 					}
 				}
-				
+
 				String base64Image = dto.getImgBase64Str(); // .split(",")[1];
 				byte[] imageBytes = Base64.getDecoder().decode(base64Image);
 				FileUtils.writeByteArrayToFile(imgFile, imageBytes);
@@ -547,5 +548,31 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 			return encodedString;
 		}
 
+	}
+
+	@Override
+	public GetImgThirdPartyUrlInBatchResult getImgThirdPartyUrlBatchResult(List<String> imgPkList) {
+		GetImgThirdPartyUrlInBatchResult r = new GetImgThirdPartyUrlInBatchResult();
+
+		if (imgPkList == null || imgPkList.isEmpty()) {
+			return r;
+		}
+
+		List<Long> imgIdList = systemOptionService.decryptPrivateKey(imgPkList);
+
+		Map<String, String> imgPkMatchUrl = new HashMap<>();
+		ImageStoreExample example = new ImageStoreExample();
+		example.createCriteria().andImageIdIn(imgIdList);
+		List<ImageStore> poList = imgMapper.selectByExample(example);
+
+		for (ImageStore po : poList) {
+			if (po.getImageUrl().startsWith("http")) {
+				imgPkMatchUrl.put(systemOptionService.encryptId(po.getImageId()), po.getImageUrl());
+			}
+		}
+
+		r.setImgPkMatchUrl(imgPkMatchUrl);
+		r.setIsSuccess();
+		return r;
 	}
 }

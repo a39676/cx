@@ -451,7 +451,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 			if (!localOpenIdList.contains(openId)) {
 				createUserDTO = new WechatRecordingUserFromParameterizedQrCodeDTO();
 				createUserDTO.setOriginOpenId(wechatOptionService.getOriginOpenId1());
-				createUserDTO.setParameter("");
+				createUserDTO.setParameter("_");
 				createUserDTO.setUserOpenId(openId);
 				log.error("Recording new open ID: " + openId);
 				CommonResult subR = recordingWechatUserFromParameterizedQrCode(createUserDTO);

@@ -702,7 +702,13 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 	@Override
 	public GetJobResultListForUser getJobResultVoByJobPk(BasePkDTO dto) {
-		return super.getJobResultVoByJobPk(dto.getPk());
+		GetJobResultListForUser r = super.getJobResultVoByJobPk(dto.getPk());
+		List<ImgVO> imgVoList = r.getJobResultList().get(0).getImgVoList();
+		for(ImgVO imgVO : imgVoList) {
+			imgVO.setImgUrl(null);
+		}
+		r.getJobResultList().get(0).setImgVoList(imgVoList);
+		return r;
 	}
 
 	@Override

@@ -144,6 +144,9 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 	}
 
 	private void getThumbnail(HttpServletResponse response, ImageStore imgPO, Integer widthInput, Integer heightInput) {
+		if (imgPO.getImageUrl().startsWith("http")) {
+			return;
+		}
 		Double maxWidth = 100D;
 		if (widthInput != null) {
 			maxWidth = widthInput.doubleValue();
@@ -350,7 +353,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 		String imgPK = systemOptionService.encryptId(newImgId);
 		try {
 			String urlEncodeImgPk = URLEncoder.encode(imgPK, StandardCharsets.UTF_8.toString());
-			if(newImgPath.startsWith("http")) {
+			if (newImgPath.startsWith("http")) {
 				r.setImgUrl(newImgPath);
 			} else {
 				r.setImgUrl(ImageUrl.ROOT + ImageUrl.GET_IMAGE + "/?imgPK=" + urlEncodeImgPk);

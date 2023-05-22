@@ -17,7 +17,7 @@
   <div class="container-fluid">
   
     <div class="row" id="searchCondition" isLock="1">
-      <div class="col-lg-12 fixed-top">
+      <div class="col-lg-12 fixed-top"  style="word-break:break-word;">
         <table class="table">
           <thead>
             <tr>

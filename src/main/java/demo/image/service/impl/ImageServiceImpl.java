@@ -92,7 +92,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 			try {
 				PrintWriter out = response.getWriter();
 				if (imgPO.getImageUrl() != null && imgPO.getImageUrl().startsWith("http")) {
-					out.println("redirect:/" + imgPO.getImageUrl());
+					out.println(imgPO.getImageUrl());
 				}
 				out.close();
 			} catch (IOException ex) {

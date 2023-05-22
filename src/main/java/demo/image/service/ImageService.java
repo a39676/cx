@@ -63,4 +63,6 @@ public interface ImageService {
 
 	GetImgThirdPartyUrlResult getImgThirdPartyUrlByPk(String imgPk);
 
+	GetImgThirdPartyUrlResult getImgThirdPartyUrlById(Long imgId);
+
 }

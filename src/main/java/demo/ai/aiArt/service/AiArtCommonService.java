@@ -26,6 +26,7 @@ import ai.aiArt.pojo.vo.AiArtGenerateImageUserVO;
 import ai.aiArt.pojo.vo.ImgVO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.mapper.AiArtGeneratingRecordMapper;
+import demo.ai.aiArt.mapper.AiArtImageWallMapper;
 import demo.ai.aiArt.mapper.AiArtModelMapper;
 import demo.ai.aiArt.mapper.AiArtTextToImageJobRecordMapper;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecord;
@@ -55,6 +56,8 @@ public abstract class AiArtCommonService extends AiCommonService {
 	protected AiArtTextToImageJobRecordMapper aiArtTextToImageJobRecordMapper;
 	@Autowired
 	protected AiArtModelMapper aiArtModelMapper;
+	@Autowired
+	protected AiArtImageWallMapper aiArtImageWallMapper;
 	@Autowired
 	protected ImageService imageService;
 

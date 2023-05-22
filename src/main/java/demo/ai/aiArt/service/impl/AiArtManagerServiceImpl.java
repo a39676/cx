@@ -31,6 +31,7 @@ import demo.ai.aiArt.pojo.dto.AddToImageWallDTO;
 import demo.ai.aiArt.pojo.dto.AiArtJobListFilterDTO;
 import demo.ai.aiArt.pojo.dto.AiUserDetailInRedisDTO;
 import demo.ai.aiArt.pojo.dto.SetInvalidImageAndRetunTokensDTO;
+import demo.ai.aiArt.pojo.po.AiArtImageWall;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecord;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecordExample;
 import demo.ai.aiArt.pojo.result.GetJobResultListForReivew;
@@ -169,32 +170,26 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 	@Override
 	public CommonResult addToImageWall(AddToImageWallDTO dto) {
 		CommonResult r = new CommonResult();
+		Long imgId = systemOptionService.decryptPrivateKey(dto.getImgPk());
+		if (imgId == null) {
+			return r;
+		}
+
 		AiArtImageOnWallVO vo = new AiArtImageOnWallVO();
 		vo.setJobPk(dto.getJobPk());
 		vo.setImgPk(dto.getImgPk());
-		AiArtImageWallResult imageWallDTO = aiArtService.getImageWallFull(true);
-		if (imageWallDTO == null) {
-			imageWallDTO = new AiArtImageWallResult();
-		}
-		List<AiArtImageOnWallVO> voList = imageWallDTO.getImgVoList();
-		if (voList == null) {
-			voList = new ArrayList<>();
-		}
-		voList.add(0, vo);
-		while (voList.size() > aiArtOptionService.getImageWallMaxSize()) {
-			log.error("AI art image wall over size: " + voList.size() + ", max size in option: "
-					+ aiArtOptionService.getImageWallMaxSize());
-			removeFromImageWall(voList.get(voList.size() - 1).getImgPk());
-		}
+		vo.setJobId(systemOptionService.decryptPrivateKey(dto.getJobPk()));
+		vo.setImgId(imgId);
+		vo.setImgUrl(imageService.getImgThirdPartyUrlById(vo.getImgId()).getImgThirdPartyUrl());
 
-		imageWallDTO.setImgVoList(voList);
-		aiArtCacheService.setImageWall(imageWallDTO);
+		aiArtCacheService.getImageWall().add(vo);
 
-		Long imgId = systemOptionService.decryptPrivateKey(dto.getImgPk());
-		if (imgId != null) {
-			imageService.setImageValidTime(imgId, LocalDateTime.of(2999, 12, 31, 23, 59));
-			aiArtService.refreshImageWallJsonFile();
-		}
+		AiArtImageWall row = new AiArtImageWall();
+		row.setImgId(vo.getImgId());
+		row.setJobId(vo.getJobId());
+		aiArtImageWallMapper.insertSelective(row);
+
+		imageService.setImageValidTime(imgId, LocalDateTime.of(2999, 12, 31, 23, 59));
 
 		r.setIsSuccess();
 		return r;
@@ -203,36 +198,23 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 	@Override
 	public CommonResult removeFromImageWall(String imgPk) {
 		CommonResult r = new CommonResult();
-		AiArtImageWallResult imageWallDTO = aiArtCacheService.getImageWall();
-		if (imageWallDTO == null) {
-			imageWallDTO = new AiArtImageWallResult();
-			aiArtCacheService.setImageWall(imageWallDTO);
-			r.setIsSuccess();
-			return r;
-		}
-		List<AiArtImageOnWallVO> voList = imageWallDTO.getImgVoList();
-		if (voList == null || voList.isEmpty()) {
-			imageWallDTO.setImgVoList(new ArrayList<>());
-			aiArtCacheService.setImageWall(imageWallDTO);
-			r.setIsSuccess();
+		Long imgId = systemOptionService.decryptPrivateKey(imgPk);
+		if (imgId == null) {
 			return r;
 		}
 
-		boolean matchFlag = false;
-		for (int i = 0; i < voList.size() && !matchFlag; i++) {
-			matchFlag = voList.get(i).getImgPk().equals(imgPk);
-			if (matchFlag) {
-				voList.remove(i);
+		List<AiArtImageOnWallVO> wall = aiArtCacheService.getImageWall();
+		if (wall != null && !wall.isEmpty()) {
+			for (int i = 0; i < wall.size(); i++) {
+				if (wall.get(i).getImgId() == imgId) {
+					wall.remove(i);
+					i = wall.size();
+				}
 			}
 		}
 
-		if (matchFlag) {
-			Long imgId = systemOptionService.decryptPrivateKey(imgPk);
-			if (imgId != null) {
-				imageService.setImageValidTime(imgId, LocalDateTime.now().plusMonths(1));
-				aiArtService.refreshImageWallJsonFile();
-			}
-		}
+		aiArtImageWallMapper.deleteByPrimaryKey(imgId);
+		imageService.setImageValidTime(imgId, LocalDateTime.now().plusMonths(1));
 
 		r.setIsSuccess();
 		return r;

@@ -30,8 +30,6 @@ public interface AiArtService {
 
 	GetJobResultListForUser getJobResultVoByJobPk(BasePkDTO dto);
 
-	void refreshImageWallJsonFile();
-
 	void loadingCache();
 
 	AiArtImageWallResult getImageWallRandomSub();

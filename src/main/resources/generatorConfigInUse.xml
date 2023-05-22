@@ -54,9 +54,9 @@
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="ai_art_model">
-        	<property name="tableName" value="ai_art_model"></property>
-        	<property name="domainObjectName" value="ai_art_model"></property>
+        <table tableName="ai_art_image_wall">
+        	<property name="tableName" value="ai_art_image_wall"></property>
+        	<property name="domainObjectName" value="ai_art_image_wall"></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

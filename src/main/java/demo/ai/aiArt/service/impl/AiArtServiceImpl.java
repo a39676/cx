@@ -6,8 +6,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import org.apache.commons.lang3.StringUtils;
@@ -39,6 +39,8 @@ import demo.ai.aiArt.mq.producer.AiArtTextToImageProducer;
 import demo.ai.aiArt.pojo.dto.AiArtJobListFilterDTO;
 import demo.ai.aiArt.pojo.dto.TextToImageFromApiDTO;
 import demo.ai.aiArt.pojo.po.AiArtGeneratingRecord;
+import demo.ai.aiArt.pojo.po.AiArtImageWall;
+import demo.ai.aiArt.pojo.po.AiArtImageWallExample;
 import demo.ai.aiArt.pojo.po.AiArtModel;
 import demo.ai.aiArt.pojo.po.AiArtModelExample;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecord;
@@ -52,13 +54,11 @@ import demo.ai.aiArt.pojo.vo.AiArtUpscalerVO;
 import demo.ai.aiArt.service.AiArtCommonService;
 import demo.ai.aiArt.service.AiArtService;
 import demo.ai.aiChat.pojo.po.AiChatUserDetail;
-import demo.image.pojo.result.GetImgThirdPartyUrlInBatchResult;
 import demo.image.pojo.type.ImageTagType;
 import demo.image.service.ImageService;
 import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.result.ImageSavingResult;
 import net.sf.json.JSONObject;
-import toolPack.ioHandle.FileUtilCustom;
 import wechatSdk.pojo.dto.AiArtGenerateOtherLikeThatDTO;
 import wechatSdk.pojo.type.WechatSdkCommonResultType;
 
@@ -67,8 +67,6 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 	@Autowired
 	private AiArtTextToImageProducer aiArtTextToImageProducer;
-	@Autowired
-	private FileUtilCustom fileUtilCustom;
 	@Autowired
 	private AiArtModelMapper aiArtModelMapper;
 	@Autowired
@@ -781,34 +779,29 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	}
 
 	@Override
-	public void refreshImageWallJsonFile() {
-		AiArtImageWallResult dto = aiArtCacheService.getImageWall();
-		log.error("Referesh AI art image wall json file, wall size in cache: " + dto.getImgVoList().size());
-		JSONObject json = JSONObject.fromObject(dto);
-		fileUtilCustom.byteToFile(json.toString(), aiArtOptionService.getImageWallFilePath());
-	}
-
-	@Override
 	public void loadingCache() {
-		try {
-			String content = fileUtilCustom.getStringFromFile(aiArtOptionService.getImageWallFilePath());
-			AiArtImageWallResult dto = null;
-			if (content == null || StringUtils.isBlank(content)) {
-				dto = new AiArtImageWallResult();
-			} else {
-				dto = buildObjFromJsonCustomization(content, AiArtImageWallResult.class);
+		AiArtImageWallExample example = new AiArtImageWallExample();
+		example.createCriteria().andImgIdGreaterThan(0L);
+		List<AiArtImageWall> imageWallDataList = aiArtImageWallMapper.selectByExample(example);
+
+		aiArtCacheService.setImageWall(new ArrayList<>());
+		if (imageWallDataList != null && !imageWallDataList.isEmpty()) {
+			AiArtImageOnWallVO vo = null;
+			for (AiArtImageWall imageWallPO : imageWallDataList) {
+				vo = new AiArtImageOnWallVO();
+				vo.setImgId(imageWallPO.getImgId());
+				vo.setJobId(imageWallPO.getJobId());
+				vo.setImgPk(systemOptionService.encryptId(imageWallPO.getImgId()));
+				vo.setJobPk(systemOptionService.encryptId(imageWallPO.getJobId()));
+				vo.setImgUrl(imageService.getImgThirdPartyUrlById(imageWallPO.getImgId()).getImgThirdPartyUrl());
+				aiArtCacheService.getImageWall().add(vo);
 			}
-			if (dto.getImgVoList() == null) {
-				dto.setImgVoList(new ArrayList<>());
-			}
-			aiArtCacheService.setImageWall(dto);
-			LocalTime startTime = LocalTime.parse(aiArtOptionService.getServiceStartTimeStr());
-			LocalTime endTime = LocalTime.parse(aiArtOptionService.getServiceEndTimeStr());
-			aiArtCacheService.setServiceStartTime(startTime);
-			aiArtCacheService.setServiceEndTime(endTime);
-		} catch (Exception e) {
-			sendTelegramMessage("AI art loading cache failed: " + e.getLocalizedMessage());
 		}
+
+		LocalTime startTime = LocalTime.parse(aiArtOptionService.getServiceStartTimeStr());
+		LocalTime endTime = LocalTime.parse(aiArtOptionService.getServiceEndTimeStr());
+		aiArtCacheService.setServiceStartTime(startTime);
+		aiArtCacheService.setServiceEndTime(endTime);
 	}
 
 	@Override
@@ -820,28 +813,9 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		}
 
 		List<AiArtImageOnWallVO> subResultVoList = new ArrayList<>();
-		Random random = new Random();
-		Integer randomIndex = null;
-		List<String> imgPkList = new ArrayList<>();
-		for (int i = 0; i < aiArtOptionService.getImageWallOnShowMaxSize() && !voList.isEmpty(); i++) {
-			randomIndex = random.nextInt(voList.size());
-			AiArtImageOnWallVO vo = voList.get(randomIndex);
-			subResultVoList.add(vo);
-			imgPkList.add(vo.getImgPk());
-			voList.remove(randomIndex.intValue());
-		}
 
-		GetImgThirdPartyUrlInBatchResult urlResult = imageService.getImgThirdPartyUrlBatchResultByPk(imgPkList);
-		if (urlResult.isFail()) {
-			return fullResult;
-		}
-
-		Map<String, String> urlMap = urlResult.getImgPkMatchUrl();
-		for (AiArtImageOnWallVO vo : subResultVoList) {
-			if (urlMap.containsKey(vo.getImgPk())) {
-				vo.setImgUrl(urlMap.get(vo.getImgPk()));
-			}
-		}
+		Collections.shuffle(voList);
+		subResultVoList.addAll(voList.subList(0, aiArtOptionService.getImageWallOnShowMaxSize()));
 
 		fullResult.setImgVoList(subResultVoList);
 		return fullResult;
@@ -849,15 +823,20 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 	@Override
 	public AiArtImageWallResult getImageWallFull(Boolean refresh) {
+		AiArtImageWallResult r = new AiArtImageWallResult();
 		if (refresh != null && refresh) {
 			loadingCache();
 		}
-		AiArtImageWallResult dto = aiArtCacheService.getImageWall();
-		if (dto != null) {
-			return dto;
+		List<AiArtImageOnWallVO> list = aiArtCacheService.getImageWall();
+		if (list != null) {
+			r.setIsSuccess();
+			r.setImgVoList(list);
+			return r;
 		}
 		loadingCache();
-		return aiArtCacheService.getImageWall();
+		r.setIsSuccess();
+		r.setImgVoList(list);
+		return r;
 	}
 
 	@Override

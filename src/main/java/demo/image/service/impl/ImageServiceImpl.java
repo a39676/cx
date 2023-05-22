@@ -602,6 +602,16 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 			return r;
 		}
 
+		return getImgThirdPartyUrlById(imgId);
+	}
+
+	@Override
+	public GetImgThirdPartyUrlResult getImgThirdPartyUrlById(Long imgId) {
+		GetImgThirdPartyUrlResult r = new GetImgThirdPartyUrlResult();
+		if (imgId == null) {
+			return r;
+		}
+
 		ImageStore po = imgMapper.selectByPrimaryKey(imgId);
 		if (po.getImageUrl().startsWith("http")) {
 			r.setImgThirdPartyUrl(po.getImageUrl());

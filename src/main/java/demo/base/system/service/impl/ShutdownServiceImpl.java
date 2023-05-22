@@ -7,7 +7,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Service;
 
-import demo.ai.aiArt.service.AiArtService;
 import demo.base.system.service.ShutdownService;
 import demo.common.service.CommonService;
 import demo.joy.common.service.JoyTaskService;
@@ -18,8 +17,6 @@ public class ShutdownServiceImpl extends CommonService implements ShutdownServic
 	private ApplicationContext context;
 	@Autowired
 	private JoyTaskService JoyTaskServiceImpl;
-	@Autowired
-	private AiArtService aiArtService;
 
 	@Override
 	public void setApplicationContext(ApplicationContext ctx) throws BeansException {
@@ -34,9 +31,6 @@ public class ShutdownServiceImpl extends CommonService implements ShutdownServic
 		}
 
 		JoyTaskServiceImpl.cacheToDatabase();
-
-		log.error("Refresh AI art image wall json file in shutdown service");
-		aiArtService.refreshImageWallJsonFile();
 
 		((ConfigurableApplicationContext) context).close();
 		// if context close success, will NOT return anything

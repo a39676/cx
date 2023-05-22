@@ -706,9 +706,11 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	public GetJobResultListForUser getJobResultVoByJobPk(BasePkDTO dto) {
 		GetJobResultListForUser r = super.getJobResultVoByJobPk(dto.getPk());
 		List<ImgVO> imgVoList = r.getJobResultList().get(0).getImgVoList();
-		for (ImgVO imgVO : imgVoList) {
-			imgVO.setImgUrl(null);
-			imgVO.setImgPk(URLEncoder.encode(imgVO.getImgPk(), StandardCharsets.UTF_8));
+		if (imgVoList != null) {
+			for (ImgVO imgVO : imgVoList) {
+				imgVO.setImgUrl(null);
+				imgVO.setImgPk(URLEncoder.encode(imgVO.getImgPk(), StandardCharsets.UTF_8));
+			}
 		}
 		r.getJobResultList().get(0).setImgVoList(imgVoList);
 		return r;

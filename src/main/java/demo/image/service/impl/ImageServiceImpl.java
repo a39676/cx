@@ -127,6 +127,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 
 		Long imgId = systemOptionService.decryptPrivateKey(imgPK);
 		if (imgId == null) {
+			log.error("image proxy error, imgPK: " + imgPK);
 			return;
 		}
 

@@ -394,7 +394,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 					String lastImgPk = jobResult.getImgVoList().get(jobResult.getImgVoList().size() - 1).getImgPk();
 					String imgContent = imageService.getImageBase64(lastImgPk);
 					String inputImg = txtToImgResult.getImgBase64List().get(0);
-					if (imgContent.equals(inputImg)) {
+					if (imgContent!= null && imgContent.equals(inputImg)) {
 						return;
 					}
 				}

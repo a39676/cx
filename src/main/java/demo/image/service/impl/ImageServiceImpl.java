@@ -134,10 +134,12 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 		ImageStore imgPO = imgMapper.selectByPrimaryKey(imgId);
 		if (imgPO == null || (imgPO.getValidTime() != null && imgPO.getValidTime().isBefore(LocalDateTime.now()))
 				|| StringUtils.isBlank(imgPO.getImageUrl())) {
+			log.error("image proxy error, img id: " + imgId);
 			return;
 		}
 
 		if (imgPO.getImageUrl().startsWith("http")) {
+			log.error("img proxy for: " + imgPO.getImageUrl());
 			try {
 				response.setContentType("image/jpeg");
 				String urlStr = imgPO.getImageUrl();
@@ -148,6 +150,9 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		} else {
+			log.error("img from local path: " + imgPO.getImageUrl());
+			getImageInBase64(response, imgPO);
 		}
 	}
 

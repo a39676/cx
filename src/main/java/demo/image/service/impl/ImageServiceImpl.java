@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -105,16 +106,47 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 
 	private void getImageInBase64(HttpServletResponse response, ImageStore imgPO) {
 		try {
+			response.setContentType("image/jpeg");
 			File f = new File(imgPO.getImageUrl());
-			BufferedImage originalImage = ImageIO.read(f);
+//			BufferedImage originalImage = ImageIO.read(f);
 
 			InputStream in = new FileInputStream(f);
 			IOUtils.copy(in, response.getOutputStream());
 
-			response.setContentType("image/jpeg");
-			ImageIO.write(originalImage, "jpeg", response.getOutputStream());
+//			ImageIO.write(originalImage, "jpeg", response.getOutputStream());
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void imgProxy(HttpServletResponse response, String imgPK) {
+		if (StringUtils.isBlank(imgPK)) {
+			return;
+		}
+
+		Long imgId = systemOptionService.decryptPrivateKey(imgPK);
+		if (imgId == null) {
+			return;
+		}
+
+		ImageStore imgPO = imgMapper.selectByPrimaryKey(imgId);
+		if (imgPO == null || (imgPO.getValidTime() != null && imgPO.getValidTime().isBefore(LocalDateTime.now()))
+				|| StringUtils.isBlank(imgPO.getImageUrl())) {
+			return;
+		}
+
+		if (imgPO.getImageUrl().startsWith("http")) {
+			try {
+				response.setContentType("image/jpeg");
+				String urlStr = imgPO.getImageUrl();
+				
+				InputStream input = new URL(urlStr).openStream();
+				
+				IOUtils.copy(input, response.getOutputStream());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

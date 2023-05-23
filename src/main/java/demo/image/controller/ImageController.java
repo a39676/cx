@@ -25,6 +25,12 @@ public class ImageController extends CommonController {
 		imgService.getImage(response, imgPK);
 	}
 
+	@GetMapping(value = ImageUrl.IMAGE_PROXY, produces = MediaType.IMAGE_JPEG_VALUE)
+	public void imageProxy(HttpServletResponse response,
+			@RequestParam(value = "imgPK", defaultValue = "") String imgPK) {
+		imgService.imgProxy(response, imgPK);
+	}
+
 	@GetMapping(value = ImageUrl.GET_THUMBNAIL, produces = MediaType.IMAGE_JPEG_VALUE)
 	public void getThumbnail(HttpServletResponse response,
 			@RequestParam(value = "imgPK", defaultValue = "") String imgPK,

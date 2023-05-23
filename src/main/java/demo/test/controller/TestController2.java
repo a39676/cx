@@ -49,5 +49,4 @@ public class TestController2 extends WechatCommonService {
 		imageService.imageCleanAndDeleteFile();
 		return "Done";
 	}
-
 }

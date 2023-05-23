@@ -65,4 +65,6 @@ public interface ImageService {
 
 	GetImgThirdPartyUrlResult getImgThirdPartyUrlById(Long imgId);
 
+	void imgProxy(HttpServletResponse response, String imgPK);
+
 }

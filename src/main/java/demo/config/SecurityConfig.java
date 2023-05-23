@@ -40,6 +40,7 @@ import demo.config.costom_component.LimitLoginAuthenticationProvider;
 import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinManagerUrl;
 import demo.finance.cryptoCoin.sharing.pojo.constant.CryptoCoinSharingUrl;
 import demo.finance.currencyExchangeRate.notice.pojo.constant.CurrencyExchangeRateNoticeUrl;
+import demo.image.pojo.constant.ImageUrl;
 import demo.joy.common.pojo.constant.JoyManagerUrl;
 import demo.joy.common.pojo.constant.JoyUrl;
 import demo.pmemo.pojo.constant.PMemoUrl;
@@ -178,6 +179,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	    .antMatchers(WechatSdkUrlConstant.ROOT + "/**")
 	    .antMatchers(AiChatApiUrlConstant.ROOT + "/**")
 	    .antMatchers(AiArtApiUrlConstant.ROOT + "/**")
+	    .antMatchers(ImageUrl.ROOT + "/**")
 	    ;
 	}
 	

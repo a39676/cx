@@ -122,6 +122,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 	@Override
 	public void imgProxy(HttpServletResponse response, String imgPK) {
 		if (StringUtils.isBlank(imgPK)) {
+			log.error("Empty imgPK");
 			return;
 		}
 

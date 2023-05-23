@@ -386,31 +386,33 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 				break saveResultTag;
 			}
 
-			List<String> imageListInBase64 = txtToImgResult.getImgBase64List();
 			List<ImgVO> imageVoList = new ArrayList<>();
-			for (int i = 0; i < imageListInBase64.size(); i++) {
 
-				if (jobResult.getImgVoList() != null && !jobResult.getImgVoList().isEmpty()) {
-					String lastImgPk = jobResult.getImgVoList().get(jobResult.getImgVoList().size() - 1).getImgPk();
-					String imgContent = imageService.getImageBase64(lastImgPk);
-					String inputImg = txtToImgResult.getImgBase64List().get(0);
-					if (imgContent.equals(inputImg)) {
-						return;
+			if(txtToImgResult.getImgBase64List() != null && !txtToImgResult.getImgBase64List().isEmpty()) {
+				List<String> imageListInBase64 = txtToImgResult.getImgBase64List();
+				for (int i = 0; i < imageListInBase64.size(); i++) {
+					if (jobResult.getImgVoList() != null && !jobResult.getImgVoList().isEmpty()) {
+						String lastImgPk = jobResult.getImgVoList().get(jobResult.getImgVoList().size() - 1).getImgPk();
+						String imgContent = imageService.getImageBase64(lastImgPk);
+						String inputImg = txtToImgResult.getImgBase64List().get(0);
+						if (imgContent!= null && imgContent.equals(inputImg)) {
+							return;
+						}
 					}
+					
+					ImageSavingResult imgSavingResult = saveImgInBase64Str(imageListInBase64.get(i));
+					if (imgSavingResult.isFail()) {
+						jobPO.setJobStatus(AiArtJobStatusType.FAILED.getCode().byteValue());
+						jobPO.setRunCount(jobPO.getRunCount() + 1);
+						aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
+						log.error("Can NOT save image job ID: " + jobId);
+						break saveResultTag;
+					}
+					
+					ImgVO imgVo = new ImgVO();
+					imgVo.setImgPk(imgSavingResult.getImgPK());
+					imageVoList.add(imgVo);
 				}
-
-				ImageSavingResult imgSavingResult = saveImgInBase64Str(imageListInBase64.get(i));
-				if (imgSavingResult.isFail()) {
-					jobPO.setJobStatus(AiArtJobStatusType.FAILED.getCode().byteValue());
-					jobPO.setRunCount(jobPO.getRunCount() + 1);
-					aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
-					log.error("Can NOT save image job ID: " + jobId);
-					break saveResultTag;
-				}
-
-				ImgVO imgVo = new ImgVO();
-				imgVo.setImgPk(imgSavingResult.getImgPK());
-				imageVoList.add(imgVo);
 			}
 
 			List<String> imageUrlList = txtToImgResult.getImgUrlList();

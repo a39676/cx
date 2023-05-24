@@ -7,7 +7,7 @@ import ai.aiArt.pojo.dto.TextToImageDTO;
 import ai.aiArt.pojo.result.AiArtImageWallResult;
 import ai.aiArt.pojo.result.GetJobResultListForUser;
 import ai.aiArt.pojo.result.SendTextToImgJobResult;
-import ai.aiArt.pojo.vo.AiArtGenerateImageUserVO;
+import ai.aiArt.pojo.vo.AiArtGenerateImageBaseVO;
 import auxiliaryCommon.pojo.dto.BasePkDTO;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import demo.ai.aiArt.service.AiArtService;
@@ -49,7 +49,7 @@ public class WechatAiArtServiceImpl extends WechatCommonService implements Wecha
 
 		try {
 			GetJobResultListForUser jobResult = aiArtService.getJobResultVoByJobPk(dto);
-			AiArtGenerateImageUserVO subResult = jobResult.getJobResultList().get(0);
+			AiArtGenerateImageBaseVO subResult = jobResult.getJobResultList().get(0);
 			TextToImageDTO parameterDTO = subResult.getParameter();
 			return encryptDTO(parameterDTO);
 		} catch (Exception e) {

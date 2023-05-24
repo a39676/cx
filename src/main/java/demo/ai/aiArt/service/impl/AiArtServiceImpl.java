@@ -268,6 +268,8 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			dto.setModelName(model.getFileName());
 		}
 
+		dto.setIsFromAdmin(aiUserId.equals(aiArtOptionService.getIdOfAdmin()));
+
 		// 计费之前需要保证计费用的数据正确,
 		BigDecimal cost = calculateTokenCost(dto);
 		if (!isFreeJobFlag) {
@@ -388,18 +390,18 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 			List<ImgVO> imageVoList = new ArrayList<>();
 
-			if(txtToImgResult.getImgBase64List() != null && !txtToImgResult.getImgBase64List().isEmpty()) {
+			if (txtToImgResult.getImgBase64List() != null && !txtToImgResult.getImgBase64List().isEmpty()) {
 				List<String> imageListInBase64 = txtToImgResult.getImgBase64List();
 				for (int i = 0; i < imageListInBase64.size(); i++) {
 					if (jobResult.getImgVoList() != null && !jobResult.getImgVoList().isEmpty()) {
 						String lastImgPk = jobResult.getImgVoList().get(jobResult.getImgVoList().size() - 1).getImgPk();
 						String imgContent = imageService.getImageBase64(lastImgPk);
 						String inputImg = txtToImgResult.getImgBase64List().get(0);
-						if (imgContent!= null && imgContent.equals(inputImg)) {
+						if (imgContent != null && imgContent.equals(inputImg)) {
 							return;
 						}
 					}
-					
+
 					ImageSavingResult imgSavingResult = saveImgInBase64Str(imageListInBase64.get(i));
 					if (imgSavingResult.isFail()) {
 						jobPO.setJobStatus(AiArtJobStatusType.FAILED.getCode().byteValue());
@@ -408,7 +410,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 						log.error("Can NOT save image job ID: " + jobId);
 						break saveResultTag;
 					}
-					
+
 					ImgVO imgVo = new ImgVO();
 					imgVo.setImgPk(imgSavingResult.getImgPK());
 					imageVoList.add(imgVo);

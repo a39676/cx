@@ -25,7 +25,7 @@ import ai.aiArt.pojo.result.GetJobResultListForUser;
 import ai.aiArt.pojo.result.SendTextToImgJobResult;
 import ai.aiArt.pojo.type.AiArtJobStatusType;
 import ai.aiArt.pojo.type.AiArtSamplerType;
-import ai.aiArt.pojo.vo.AiArtGenerateImageUserVO;
+import ai.aiArt.pojo.vo.AiArtGenerateImageBaseVO;
 import ai.aiArt.pojo.vo.AiArtImageOnWallVO;
 import ai.aiArt.pojo.vo.ImgVO;
 import ai.aiChat.pojo.type.AiServiceAmountType;
@@ -688,8 +688,8 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		RowBounds rowBounds = new RowBounds(0, aiArtOptionService.getMaxShowJob());
 		List<AiArtTextToImageJobRecord> jobResultPoList = aiArtTextToImageJobRecordMapper
 				.selectByExampleWithRowbounds(example, rowBounds);
-		List<AiArtGenerateImageUserVO> jobResultVoList = new ArrayList<>();
-		AiArtGenerateImageUserVO jobResultVO = null;
+		List<AiArtGenerateImageBaseVO> jobResultVoList = new ArrayList<>();
+		AiArtGenerateImageBaseVO jobResultVO = null;
 		AiArtGenerateImageQueryResult jobResult = null;
 		for (AiArtTextToImageJobRecord po : jobResultPoList) {
 			jobResult = getJobResult(po.getId());

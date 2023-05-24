@@ -21,7 +21,7 @@ import ai.aiArt.pojo.result.AiArtImageWallResult;
 import ai.aiArt.pojo.result.GetJobResultListForUser;
 import ai.aiArt.pojo.result.SendTextToImgJobResult;
 import ai.aiArt.pojo.vo.AiArtGenerateImageAdminVO;
-import ai.aiArt.pojo.vo.AiArtGenerateImageUserVO;
+import ai.aiArt.pojo.vo.AiArtGenerateImageBaseVO;
 import ai.aiArt.pojo.vo.AiArtImageOnWallVO;
 import ai.aiArt.pojo.vo.ImgVO;
 import ai.aiChat.pojo.type.AiServiceAmountType;
@@ -122,7 +122,7 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 			return r;
 		}
 
-		AiArtGenerateImageUserVO jobResultVO = jobResultList.getJobResultList().get(0);
+		AiArtGenerateImageBaseVO jobResultVO = jobResultList.getJobResultList().get(0);
 		TextToImageDTO parameter = jobResultVO.getParameter();
 
 		Long imgId = systemOptionService.decryptPrivateKey(dto.getImgPk());

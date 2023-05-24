@@ -234,6 +234,7 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 		String orginOpenId = dto.getOriginOpenId();
 		String userOpenId = dto.getUserOpenId();
 
+		log.error("New user come from " + sceneName + ", orgin id: " + orginOpenId + ", open ID: " + userOpenId);
 		WechatUserDetailExample wechatUserExample = new WechatUserDetailExample();
 		wechatUserExample.createCriteria().andOpenIdEqualTo(userOpenId);
 		List<WechatUserDetail> wechatUserList = wechatUserDetailMapper.selectByExample(wechatUserExample);
@@ -269,17 +270,21 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 
 		WechatUserDetail newUser = createWechatUserDetailWithOpenIdForSuiShou(userOpenId);
 		if (newUser == null) {
-			log.error("Get oid failed: " + sceneName + ", open ID: " + userOpenId);
-			r.setMessage("Get oid failed: " + sceneName + ", open ID: " + userOpenId);
+			log.error("Create wechat user id failed: " + sceneName + ", open ID: " + userOpenId);
+			r.setMessage("Create wechat user id failed: " + sceneName + ", open ID: " + userOpenId);
 			return r;
+		} else {
+			log.error("Create wechat user id, open ID: " + userOpenId);
 		}
 
 		CreateAiUserResult createAiChatUserResult = aiChatUserService
 				.createAiChatUserDetailByWechatOpenId(newUser.getId(), userOpenId);
 		if (createAiChatUserResult.isFail()) {
-			log.error("Create AI chat user failed: " + createAiChatUserResult.getMessage());
+			log.error("Create AI user failed: " + createAiChatUserResult.getMessage());
 			r.setMessage(createAiChatUserResult.getMessage());
 			return r;
+		} else {
+			log.error("Create AI user, open ID: " + userOpenId);
 		}
 
 		if (!qrCodeList.isEmpty()) {

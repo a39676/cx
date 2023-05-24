@@ -22,7 +22,7 @@ import ai.aiArt.pojo.result.GetJobResultListForUser;
 import ai.aiArt.pojo.type.AiArtJobStatusType;
 import ai.aiArt.pojo.type.AiArtSamplerType;
 import ai.aiArt.pojo.vo.AiArtGenerateImageAdminVO;
-import ai.aiArt.pojo.vo.AiArtGenerateImageUserVO;
+import ai.aiArt.pojo.vo.AiArtGenerateImageBaseVO;
 import ai.aiArt.pojo.vo.ImgVO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.mapper.AiArtGeneratingRecordMapper;
@@ -38,7 +38,6 @@ import demo.ai.aiChat.pojo.po.AiChatUserAssociateWechatUidKey;
 import demo.ai.aiChat.service.AiUserService;
 import demo.ai.common.service.impl.AiCommonService;
 import demo.base.system.service.impl.RedisOriginalConnectService;
-import demo.image.pojo.result.GetImgThirdPartyUrlInBatchResult;
 import demo.image.service.ImageService;
 import demo.interaction.wechat.mq.producer.SendAiArtJobCompleteTemplateMessageProducer;
 import net.sf.json.JSONObject;
@@ -189,19 +188,9 @@ public abstract class AiArtCommonService extends AiCommonService {
 				AI_ART_NOTICE_WHEN_COMPLETE_REDIS_KEY_PREFIX + String.valueOf(aiUserId) + "_" + String.valueOf(jobId));
 	}
 
-	protected AiArtGenerateImageUserVO buildAiArtGenerateImageVoForUser(AiArtTextToImageJobRecord po,
+	protected AiArtGenerateImageBaseVO buildAiArtGenerateImageVoForUser(AiArtTextToImageJobRecord po,
 			AiArtGenerateImageQueryResult subResult, String jobPk) {
-		AiArtGenerateImageAdminVO adminVO = buildAiArtGenerateImageVoForAdmin(po, subResult, jobPk);
-		AiArtGenerateImageUserVO userVO = new AiArtGenerateImageUserVO();
-		userVO.setCreateTimeStr(adminVO.getCreateTimeStr());
-		userVO.setImgVoList(adminVO.getImgVoList());
-		userVO.setIsFreeJob(adminVO.getIsFreeJob());
-		userVO.setJobPk(adminVO.getJobPk());
-		userVO.setJobStatus(adminVO.getJobStatus());
-		userVO.setModelName(adminVO.getModelName());
-		userVO.setParameter(adminVO.getParameter());
-		userVO.setRunCount(adminVO.getRunCount());
-		userVO.setSamplerName(adminVO.getSamplerName());
+		AiArtGenerateImageBaseVO userVO = __buildAiArtGenerateImageVO(po, subResult, jobPk);
 		return userVO;
 	}
 
@@ -260,22 +249,7 @@ public abstract class AiArtCommonService extends AiCommonService {
 				|| (po.getIsFromApi() && subResult.getImgVoList().size() == subResult.getParameter().getBatchSize())) {
 
 			if (subResult.getImgVoList() != null && !subResult.getImgVoList().isEmpty()) {
-				GetImgThirdPartyUrlInBatchResult imgUrlThirdPartyResult = imageService
-						.getImgThirdPartyUrlBatchResultByPk(subResult.getImgPkList());
-
-				if (imgUrlThirdPartyResult.isFail()) {
-					jobResultVO.setImgVoList(subResult.getImgVoList());
-					return jobResultVO;
-				}
-
-				List<ImgVO> imgVoList = new ArrayList<>();
-				for (ImgVO imgVO : subResult.getImgVoList()) {
-					if (imgUrlThirdPartyResult.getImgPkMatchUrl().containsKey(imgVO.getImgPk())) {
-						imgVO.setImgUrl(imgUrlThirdPartyResult.getImgPkMatchUrl().get(imgVO.getImgPk()));
-					}
-					imgVoList.add(imgVO);
-				}
-				jobResultVO.setImgVoList(imgVoList);
+				jobResultVO.setImgVoList(subResult.getImgVoList());
 			}
 
 		}
@@ -295,13 +269,6 @@ public abstract class AiArtCommonService extends AiCommonService {
 //		TODO imageHostUpdate delete it
 		if (result.getImgVoList() == null) {
 			result.setImgVoList(new ArrayList<>());
-		}
-		if (result.getImgPkList() != null && !result.getImgPkList().isEmpty()) {
-			for (String imgPk : result.getImgPkList()) {
-				ImgVO vo = new ImgVO();
-				vo.setImgPk(imgPk);
-				result.getImgVoList().add(vo);
-			}
 		}
 
 		return result;
@@ -387,7 +354,7 @@ public abstract class AiArtCommonService extends AiCommonService {
 			}
 		}
 
-		AiArtGenerateImageUserVO vo = buildAiArtGenerateImageVoForUser(po, jobResult, jobPk);
+		AiArtGenerateImageBaseVO vo = buildAiArtGenerateImageVoForUser(po, jobResult, jobPk);
 		r.setJobResultList(new ArrayList<>());
 		if (!po.getIsFromApi() && !po.getHasReview()) {
 			vo.setJobStatus(AiArtJobStatusType.WAITING.getCode());

@@ -12,6 +12,7 @@ import auxiliaryCommon.pojo.dto.BasePkDTO;
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import demo.ai.aiArt.service.AiArtService;
 import demo.interaction.wechat.service.WechatAiArtService;
+import net.sf.json.JSONObject;
 import wechatSdk.pojo.dto.AiArtGenerateOtherLikeThatDTO;
 
 @Service
@@ -50,7 +51,8 @@ public class WechatAiArtServiceImpl extends WechatCommonService implements Wecha
 		try {
 			GetJobResultListForUser jobResult = aiArtService.getJobResultVoByJobPk(dto);
 			AiArtGenerateImageBaseVO subResult = jobResult.getJobResultList().get(0);
-			TextToImageDTO parameterDTO = subResult.getParameter();
+			JSONObject paramInJson = subResult.getParameter();
+			TextToImageDTO parameterDTO = buildObjFromJsonCustomization(paramInJson.toString(), TextToImageDTO.class);
 			return encryptDTO(parameterDTO);
 		} catch (Exception e) {
 			return encryptDTO(new TextToImageDTO());

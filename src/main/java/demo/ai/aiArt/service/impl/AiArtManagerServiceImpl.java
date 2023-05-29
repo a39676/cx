@@ -15,8 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import ai.aiArt.pojo.dto.ImageToImageDTO;
 import ai.aiArt.pojo.dto.TextToImageDTO;
-import ai.aiArt.pojo.result.AiArtGenerateImageQueryResult;
 import ai.aiArt.pojo.result.AiArtImageWallResult;
 import ai.aiArt.pojo.result.GetJobResultListForUser;
 import ai.aiArt.pojo.result.SendTextToImgJobResult;
@@ -34,12 +34,14 @@ import demo.ai.aiArt.pojo.dto.SetInvalidImageAndRetunTokensDTO;
 import demo.ai.aiArt.pojo.po.AiArtImageWall;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecord;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecordExample;
+import demo.ai.aiArt.pojo.result.AiArtGenerateImageQueryResult;
 import demo.ai.aiArt.pojo.result.GetJobResultListForReivew;
 import demo.ai.aiArt.service.AiArtCommonService;
 import demo.ai.aiArt.service.AiArtManagerService;
 import demo.ai.aiArt.service.AiArtService;
 import demo.image.pojo.result.GetImgThirdPartyUrlInBatchResult;
 import demo.image.service.ImageService;
+import net.sf.json.JSONObject;
 import wechatSdk.pojo.dto.AiArtGenerateOtherLikeThatDTO;
 
 @Service
@@ -123,7 +125,7 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 		}
 
 		AiArtGenerateImageBaseVO jobResultVO = jobResultList.getJobResultList().get(0);
-		TextToImageDTO parameter = jobResultVO.getParameter();
+		JSONObject parameterInJson = jobResultVO.getParameter();
 
 		Long imgId = systemOptionService.decryptPrivateKey(dto.getImgPk());
 		Long jobId = systemOptionService.decryptPrivateKey(dto.getJobPk());
@@ -153,12 +155,24 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 
 		addNsfwJobCounting(userId);
 
-		parameter.setJobId(jobId);
-		saveAiArtGenerateImgResultJson(parameter, imgVoList);
+		parameterInJson.put("jobId", jobId);
+		saveAiArtGenerateImgResultJson(parameterInJson, imgVoList);
 
 		if (!jobPO.getIsFreeJob()) {
-			BigDecimal totalTokens = calculateTokenCost(parameter);
-			BigDecimal returnTokens = totalTokens.divide(new BigDecimal(parameter.getBatchSize()), RoundingMode.FLOOR)
+			BigDecimal cost = null;
+			Integer batcheSize = 0;
+			if (parameterInJson.containsKey("init_images")) {
+				TextToImageDTO parameterDTO = buildObjFromJsonCustomization(parameterInJson.toString(),
+						TextToImageDTO.class);
+				batcheSize = parameterDTO.getBatchSize();
+				cost = calculateTokenCost(parameterDTO);
+			} else {
+				ImageToImageDTO parameterDTO = buildObjFromJsonCustomization(parameterInJson.toString(),
+						ImageToImageDTO.class);
+				batcheSize = parameterDTO.getBatchSize();
+				cost = calculateTokenCost(parameterDTO);
+			}
+			BigDecimal returnTokens = cost.divide(new BigDecimal(batcheSize), RoundingMode.FLOOR)
 					.multiply(new BigDecimal(0.98));
 			aiChatUserService.recharge(userId, AiServiceAmountType.BONUS, returnTokens);
 		}

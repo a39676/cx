@@ -16,8 +16,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import ai.aiArt.pojo.dto.ImageToImageDTO;
 import ai.aiArt.pojo.dto.TextToImageDTO;
-import ai.aiArt.pojo.result.AiArtGenerateImageQueryResult;
 import ai.aiArt.pojo.result.GetJobResultListForUser;
 import ai.aiArt.pojo.type.AiArtJobStatusType;
 import ai.aiArt.pojo.type.AiArtSamplerType;
@@ -30,6 +30,7 @@ import demo.ai.aiArt.mapper.AiArtImageWallMapper;
 import demo.ai.aiArt.mapper.AiArtModelMapper;
 import demo.ai.aiArt.mapper.AiArtTextToImageJobRecordMapper;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecord;
+import demo.ai.aiArt.pojo.result.AiArtGenerateImageQueryResult;
 import demo.ai.aiArt.service.impl.AiArtCacheService;
 import demo.ai.aiArt.service.impl.AiArtOptionService;
 import demo.ai.aiChat.mapper.AiChatUserAssociateWechatUidMapper;
@@ -228,25 +229,25 @@ public abstract class AiArtCommonService extends AiCommonService {
 			return jobResultVO;
 		}
 
-		TextToImageDTO subParam = subResult.getParameter();
-		subParam.setJobId(null);
+		JSONObject paramInJson = subResult.getParameter();
+		paramInJson.remove("jobId");
 //		if (subParam.getPrompts() != null) {
 //			subParam.setPrompts(
 //					subParam.getPrompts().replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
 //			subParam.setNegativePrompts(subParam.getNegativePrompts().replaceAll("&", "&amp;")
 //					.replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
 //		}
-		jobResultVO.setParameter(subParam);
+		jobResultVO.setParameter(paramInJson);
 
-		AiArtSamplerType samplerType = AiArtSamplerType.getType(subParam.getSampler());
+		AiArtSamplerType samplerType = AiArtSamplerType.getType(paramInJson.getInt("sampler"));
 		if (samplerType != null) {
 			jobResultVO.setSamplerName(samplerType.getName());
 		}
 
-		jobResultVO.setModelName(subParam.getModelName());
+		jobResultVO.setModelName(paramInJson.getString("modelName"));
 
 		if (forAdmin || (!po.getIsFromApi() && po.getHasReview())
-				|| (po.getIsFromApi() && subResult.getImgVoList().size() == subResult.getParameter().getBatchSize())) {
+				|| (po.getIsFromApi() && subResult.getImgVoList().size() == paramInJson.getInt("batchSize"))) {
 
 			if (subResult.getImgVoList() != null && !subResult.getImgVoList().isEmpty()) {
 				jobResultVO.setImgVoList(subResult.getImgVoList());
@@ -297,14 +298,21 @@ public abstract class AiArtCommonService extends AiCommonService {
 		}
 		return cost;
 	}
+	
+	protected BigDecimal calculateTokenCost(ImageToImageDTO dto) {
+		BigDecimal cost = new BigDecimal(dto.getWidth().longValue() * dto.getHeight().longValue()
+				* dto.getSteps().longValue() * dto.getBatchSize() * aiArtOptionService.getConsumptionCoefficient())
+				.setScale(0, RoundingMode.CEILING);
+		return cost;
+	}
 
-	protected CommonResult saveAiArtGenerateImgResultJson(TextToImageDTO dto, List<ImgVO> imgVoList) {
+	protected CommonResult saveAiArtGenerateImgResultJson(JSONObject json, List<ImgVO> imgVoList) {
 		CommonResult r = new CommonResult();
 		AiArtGenerateImageQueryResult result = new AiArtGenerateImageQueryResult();
-		result.setParameter(dto);
+		result.setParameter(json);
 		result.setImgVoList(imgVoList);
 
-		String resultJsonSavePath = getJobResultStrPath(dto.getJobId());
+		String resultJsonSavePath = getJobResultStrPath(json.getLong("jobId"));
 		File resultJsonFile = new File(resultJsonSavePath);
 
 		File parentFolder = new File(aiArtOptionService.getGenerateImageResultFolder());

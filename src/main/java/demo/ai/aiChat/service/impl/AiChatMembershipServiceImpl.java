@@ -239,6 +239,9 @@ public class AiChatMembershipServiceImpl extends AiCommonService implements AiCh
 	}
 
 	private void batchRechargeDailyBonusByMemberId(AiChatUserMembershipDetailDTO membershipDetail) {
+		if (membershipDetail.getDailyBonus() <= 0) {
+			return;
+		}
 		AiChatUserMembershipExample example = new AiChatUserMembershipExample();
 		example.createCriteria().andMembershipIdEqualTo(membershipDetail.getId()).andIsDeleteEqualTo(false)
 				.andExpiredTimeGreaterThan(LocalDateTime.now());
@@ -250,7 +253,8 @@ public class AiChatMembershipServiceImpl extends AiCommonService implements AiCh
 		for (AiChatUserMembership membership : userMemberList) {
 			userIdList.add(membership.getAiChatUserId());
 		}
-		userService.batchRecharge(userIdList, AiServiceAmountType.BONUS, new BigDecimal(membershipDetail.getDailyBonus()));
+		userService.batchRecharge(userIdList, AiServiceAmountType.BONUS,
+				new BigDecimal(membershipDetail.getDailyBonus()));
 	}
 
 	@Override
@@ -385,12 +389,13 @@ public class AiChatMembershipServiceImpl extends AiCommonService implements AiCh
 					new BigDecimal(membershipDetail.getDailyBonus()));
 		}
 		if (membershipDetail.getRecharge() > 0) {
-			userService.recharge(aiChatUserId, AiServiceAmountType.BONUS, new BigDecimal(membershipDetail.getRecharge()));
+			userService.recharge(aiChatUserId, AiServiceAmountType.BONUS,
+					new BigDecimal(membershipDetail.getRecharge()));
 		}
 		if (membershipDetail.getValidDays() != null) {
 			/*
-			 * TODO 未确定如何实现有效期赠送额度 难在实现过期日清理赠送额度, 赠送额度应独立计算, 并优先使用
-			 * 待后续实现"子帐号"再实现此部分逻辑, 目前以简单的赠金额度计算
+			 * TODO 未确定如何实现有效期赠送额度 难在实现过期日清理赠送额度, 赠送额度应独立计算, 并优先使用 待后续实现"子帐号"再实现此部分逻辑,
+			 * 目前以简单的赠金额度计算
 			 */
 		}
 		if (membershipDetail.getBonus() > 0) {

@@ -9,6 +9,7 @@ import ai.aiArt.pojo.result.SendTextToImgJobResult;
 import ai.pojo.vo.AiArtModelVO;
 import auxiliaryCommon.pojo.dto.BasePkDTO;
 import demo.ai.aiArt.pojo.dto.AiArtJobListFilterDTO;
+import demo.ai.aiArt.pojo.dto.ImageToImageFromApiDTO;
 import demo.ai.aiArt.pojo.dto.TextToImageFromApiDTO;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecord;
 import demo.ai.aiArt.pojo.result.GetAiArtAllModelListResult;
@@ -60,5 +61,7 @@ public interface AiArtService {
 	void receiveImgJobResultForApi(JSONObject json);
 
 	JSONObject findRerunJobWhenSdkAsk();
+
+	SendTextToImgJobResult sendImgToImgFromApiDtoToMq(ImageToImageFromApiDTO dto);
 
 }

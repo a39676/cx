@@ -224,7 +224,9 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 
 	private CommonResult recordingWechatUserFromParameterizedQrCode(WechatRecordingUserFromParameterizedQrCodeDTO dto) {
 		CommonResult r = new CommonResult();
-		if (dto == null || StringUtils.isAnyBlank(dto.getOriginOpenId(), dto.getUserOpenId(), dto.getParameter())
+		log.error("recordingWechatUserFromParameterizedQrCode, openId: " + dto.getUserOpenId() + ", parameter: "
+				+ dto.getParameter());
+		if (dto == null || StringUtils.isAnyBlank(dto.getOriginOpenId(), dto.getUserOpenId())
 				|| "null" == dto.getUserOpenId()) {
 			r.setMessage("RecordingWechatUserFromParameterizedQrCode Decrypt error");
 			return r;

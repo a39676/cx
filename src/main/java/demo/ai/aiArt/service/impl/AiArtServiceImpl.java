@@ -36,6 +36,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.mapper.AiArtModelMapper;
 import demo.ai.aiArt.mq.producer.AiArtTextToImageProducer;
 import demo.ai.aiArt.pojo.dto.AiArtJobListFilterDTO;
+import demo.ai.aiArt.pojo.dto.ImageToImageFromApiDTO;
 import demo.ai.aiArt.pojo.dto.TextToImageFromApiDTO;
 import demo.ai.aiArt.pojo.po.AiArtGeneratingRecord;
 import demo.ai.aiArt.pojo.po.AiArtImageWall;
@@ -330,6 +331,181 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		return r;
 	}
 
+	@Override
+	public SendTextToImgJobResult sendImgToImgFromApiDtoToMq(ImageToImageFromApiDTO dto) {
+		SendTextToImgJobResult r = new SendTextToImgJobResult();
+		if (StringUtils.isBlank(dto.getApiKey())) {
+			r.setMessage("请输入正确 API key");
+			return r;
+		}
+
+		Long aiChatUserId = getAiUserIdByApiKey(dto.getApiKey());
+		if (aiChatUserId == null) {
+			r.setMessage("请输入正确 API key");
+			return r;
+		}
+
+		return sendImgToImgDtoToMq(aiChatUserId, dto, true);
+	}
+	
+	private SendTextToImgJobResult sendImgToImgDtoToMq(Long aiUserId, ImageToImageDTO dto, boolean isFromApi) {
+		SendTextToImgJobResult r = new SendTextToImgJobResult();
+
+		AiChatUserDetail aiUser = aiChatUserService.__getUserDetail(aiUserId);
+		if (aiUser == null || aiUser.getIsBlock() || aiUser.getIsDelete()) {
+			r.setMessage("暂时无法为您新增绘图任务, 请返回微信给管理员留言; 请勿频繁生成违规内容, 谢谢!");
+			return r;
+		}
+
+		Integer freeJobCounting = getFreeJobCountingOfToday(aiUserId);
+		boolean isFreeJobFlag = (freeJobCounting <= aiArtOptionService.getMaxDailyFreeJobCount());
+
+		if (StringUtils.isBlank(dto.getPrompts())) {
+			r.setMessage("请输入 prompts");
+			return r;
+		}
+
+		if (dto.getPrompts().length() + dto.getNegativePrompts().length() > aiArtOptionService.getMaxPromptLength()) {
+			r.setMessage("Too much prompts, prompts + nagative prompts should less than "
+					+ aiArtOptionService.getMaxPromptLength());
+			return r;
+		}
+
+		if (dto.getWidth() != null) {
+			if (dto.getWidth() < 1 || dto.getWidth() > aiArtOptionService.getMaxWidth()) {
+				r.setMessage("请设置初始宽度介于 1 ~ " + aiArtOptionService.getMaxWidth());
+				return r;
+			}
+		} else {
+			dto.setWidth(-1);
+		}
+
+		if (dto.getHeight() != null) {
+			if (dto.getHeight() < 1 || dto.getHeight() > aiArtOptionService.getMaxHeight()) {
+				r.setMessage("请设置初始高度介于 1 ~ " + aiArtOptionService.getMaxHeight());
+				return r;
+			}
+		} else {
+			dto.setHeight(-1);
+		}
+
+		if (dto.getCfgScale() != null) {
+			if (dto.getCfgScale() < 1 || dto.getCfgScale() > aiArtOptionService.getMaxCfgScale()) {
+				r.setMessage("Cfg scale 请设置于 1 ~ " + aiArtOptionService.getMaxCfgScale());
+				return r;
+			}
+		} else {
+			dto.setCfgScale(7);
+		}
+
+		if (dto.getSteps() != null) {
+			if (dto.getSteps() < 1 || dto.getSteps() > aiArtOptionService.getMaxSteps()) {
+				r.setMessage("采样步数应为 1~" + aiArtOptionService.getMaxSteps());
+				return r;
+			}
+		} else {
+			dto.setSteps(20);
+		}
+
+		if (dto.getBatchSize() != null) {
+			if (dto.getBatchSize() < 1 || dto.getBatchSize() > aiArtOptionService.getMaxBatch()) {
+				dto.setBatchSize(aiArtOptionService.getMaxBatch());
+				r.setMessage("batch size should be 1~" + aiArtOptionService.getMaxBatch());
+				return r;
+			}
+		} else {
+			dto.setBatchSize(1);
+		}
+
+		if (dto.getSampler() == null) {
+			dto.setSampler(AiArtSamplerType.Euler_A.getCode());
+		} else {
+			AiArtSamplerType samplerType = AiArtSamplerType.getType(dto.getSampler());
+			if (samplerType == null) {
+				r.setMessage("Please input correct samplerCode");
+				return r;
+			}
+		}
+
+		if (dto.getModelCode() == null) {
+			dto.setModelCode(AiArtDefaultModelType.chilloutmix_NiPrunedFp32Fix.getCode());
+			dto.setModelName(AiArtDefaultModelType.chilloutmix_NiPrunedFp32Fix.getName());
+		} else {
+			AiArtModel model = aiArtModelMapper.selectByPrimaryKey(dto.getModelCode().longValue());
+			if (model == null) {
+				r.setMessage("Model 不存在, 请输入正确参数");
+				return r;
+			}
+			if (!model.getPublicModel() && !aiArtOptionService.getIdOfAdmin().equals(aiUserId)) {
+				r.setMessage("Model 不存在, 请输入正确参数");
+				return r;
+			}
+
+			dto.setModelName(model.getFileName());
+		}
+
+		dto.setIsFromAdmin(aiUserId.equals(aiArtOptionService.getIdOfAdmin()));
+
+		// 计费之前需要保证计费用的数据正确,
+		BigDecimal cost = calculateTokenCost(dto);
+		if (!isFreeJobFlag) {
+			AiChatUserDetail userDetail = aiChatUserService.__getUserDetail(aiUserId);
+			int totalAmount = userDetail.getBonusAmount().intValue() + userDetail.getRechargeAmount().intValue();
+
+			if (cost.intValue() > totalAmount) {
+				r.setMessage("余额不足, 请到个人中心购买充值包 签到, 或留意其他活动");
+				return r;
+			}
+		}
+
+		AiArtTextToImageJobRecordExample example = new AiArtTextToImageJobRecordExample();
+		Criteria waiting = example.createCriteria();
+		waiting.andAiUserIdEqualTo(aiUserId).andJobStatusEqualTo(AiArtJobStatusType.WAITING.getCode().byteValue());
+		Criteria failButWillRerun = example.createCriteria();
+		failButWillRerun.andAiUserIdEqualTo(aiUserId)
+				.andJobStatusEqualTo(AiArtJobStatusType.FAILED.getCode().byteValue())
+				.andRunCountLessThan(aiArtOptionService.getMaxFailCountForJob());
+		example.or(failButWillRerun);
+		List<AiArtTextToImageJobRecord> waitingJobList = aiArtTextToImageJobRecordMapper.selectByExample(example);
+		if (waitingJobList.size() > aiArtOptionService.getMaxWaitingJobCount()) {
+			r.setMessage("You have too many waiting jobs, please insert later");
+			return r;
+		}
+
+		Long jobId = snowFlake.getNextId();
+		dto.setJobId(jobId);
+		dto.setIsFromApi(isFromApi);
+		AiArtTextToImageJobRecord newJobPO = new AiArtTextToImageJobRecord();
+		newJobPO.setId(jobId);
+		newJobPO.setIsFreeJob(isFreeJobFlag);
+		newJobPO.setAiUserId(aiUserId);
+		newJobPO.setJobStatus(AiArtJobStatusType.WAITING.getCode().byteValue());
+		newJobPO.setIsFromApi(isFromApi);
+		aiArtTextToImageJobRecordMapper.insertSelective(newJobPO);
+
+		JSONObject json = JSONObject.fromObject(dto);
+		CommonResult saveParameterResult = saveAiArtGenerateImgResultJson(json, new ArrayList<>());
+		if (saveParameterResult.isFail()) {
+			r.setMessage(saveParameterResult.getMessage());
+			return r;
+		}
+
+		r.setJobPk(systemOptionService.encryptId(jobId));
+		r.setIsFreeJob(isFreeJobFlag);
+		aiChatUserService.__debitAmountAndAddTokenUsage(aiUserId, cost);
+		if (isFreeJobFlag) {
+			addFreeJobCountingOfToday(aiUserId);
+			aiChatUserService.recharge(aiUserId, AiServiceAmountType.BONUS, cost);
+			r.setFreeJobCountLeft(aiArtOptionService.getMaxDailyFreeJobCount() - freeJobCounting);
+		} else {
+			r.setFreeJobCountLeft(0);
+		}
+
+		r.setIsRunning(aiArtCacheService.getIsRunning());
+		r.setIsSuccess();
+		return r;
+	}
+	
 	private JSONObject getParameterByJobId(Long jobId) {
 		AiArtGenerateImageQueryResult jobResult = getJobResult(jobId);
 		if (jobResult == null) {

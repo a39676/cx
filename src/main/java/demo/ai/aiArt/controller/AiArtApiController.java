@@ -12,6 +12,7 @@ import ai.aiArt.pojo.constant.AiArtApiUrlConstant;
 import ai.aiArt.pojo.result.GetJobResultListForUser;
 import ai.aiArt.pojo.result.SendTextToImgJobResult;
 import auxiliaryCommon.pojo.dto.BasePkDTO;
+import demo.ai.aiArt.pojo.dto.ImageToImageFromApiDTO;
 import demo.ai.aiArt.pojo.dto.TextToImageFromApiDTO;
 import demo.ai.aiArt.pojo.result.GetAiArtAllModelListResult;
 import demo.ai.aiArt.pojo.result.GetAiArtAllSamplerResult;
@@ -30,6 +31,12 @@ public class AiArtApiController {
 	@ResponseBody
 	public SendTextToImgJobResult sendTextToImgFromApiDtoToMq(@RequestBody TextToImageFromApiDTO dto) {
 		return aiArtService.sendTextToImgFromApiDtoToMq(dto);
+	}
+
+	@PostMapping(value = AiArtApiUrlConstant.IMAGE_TO_IMAGE)
+	@ResponseBody
+	public SendTextToImgJobResult sendImgToImgFromApiDtoToMq(@RequestBody ImageToImageFromApiDTO dto) {
+		return aiArtService.sendImgToImgFromApiDtoToMq(dto);
 	}
 
 	@PostMapping(value = AiArtApiUrlConstant.GET_JOB_RESULT_BY_JOB_PK)
@@ -55,8 +62,7 @@ public class AiArtApiController {
 	public GetAiArtAllUpscalerResult getAllUpsalerList() {
 		return aiArtService.getAllUpsalerList();
 	}
-	
-	
+
 	@PostMapping(value = AiArtApiUrlConstant.RECEIVE_IMAGE_JOB_RESULT)
 	@ResponseBody
 	public String receiveImgJobResultForApi(@RequestBody JSONObject json) {
@@ -64,13 +70,12 @@ public class AiArtApiController {
 		return "{}";
 	}
 
-
 	@PostMapping(value = AiArtApiUrlConstant.HEART_BEAT)
 	@ResponseBody
 	public void heartBeatReciver() {
 		aiArtService.heartBeatReciver();
 	}
-	
+
 	@PostMapping(value = AiArtApiUrlConstant.GET_RERUN_JOB)
 	@ResponseBody
 	public JSONObject findRerunJobWhenSdkAsk() {

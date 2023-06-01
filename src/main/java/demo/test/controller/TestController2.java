@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import demo.image.service.ImageService;
 import demo.interaction.wechat.service.impl.WechatCommonService;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.dto.TestDTO;
@@ -39,14 +38,4 @@ public class TestController2 extends WechatCommonService {
 		return "Done";
 	}
 
-	@Autowired
-	private ImageService imageService;
-
-	@GetMapping(value = "/t4")
-	@ResponseBody
-	public String t4() {
-		log.error("Call imageService.imageCleanAndDeleteFile();");
-		imageService.imageCleanAndDeleteFile();
-		return "Done";
-	}
 }

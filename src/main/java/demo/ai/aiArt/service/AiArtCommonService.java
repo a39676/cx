@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ai.aiArt.pojo.dto.ImageToImageDTO;
 import ai.aiArt.pojo.dto.TextToImageDTO;
+import ai.aiArt.pojo.result.GetJobResultListForAdmin;
 import ai.aiArt.pojo.result.GetJobResultListForUser;
 import ai.aiArt.pojo.type.AiArtJobStatusType;
 import ai.aiArt.pojo.type.AiArtSamplerType;
@@ -217,6 +218,8 @@ public abstract class AiArtCommonService extends AiCommonService {
 			jobResultVO.setHasReview(po.getHasReview());
 			jobResultVO.setJobStatus(po.getJobStatus().intValue());
 			jobResultVO.setNsfwJobCounting(getNsfwJobCounting(po.getAiUserId()));
+			jobResultVO.setAiUserIdStr(String.valueOf(po.getAiUserId()));
+			jobResultVO.setJobIdStr(String.valueOf(po.getId()));
 		} else {
 			if (!po.getHasReview() && !po.getIsFromApi()) {
 				jobResultVO.setJobStatus(AiArtJobStatusType.WAITING.getCode());
@@ -267,7 +270,6 @@ public abstract class AiArtCommonService extends AiCommonService {
 		content = fileUtilCustom.getStringFromFile(resultJsonSavePath);
 		AiArtGenerateImageQueryResult result = buildObjFromJsonCustomization(content,
 				AiArtGenerateImageQueryResult.class);
-//		TODO imageHostUpdate delete it
 		if (result.getImgVoList() == null) {
 			result.setImgVoList(new ArrayList<>());
 		}
@@ -298,7 +300,7 @@ public abstract class AiArtCommonService extends AiCommonService {
 		}
 		return cost;
 	}
-	
+
 	protected BigDecimal calculateTokenCost(ImageToImageDTO dto) {
 		BigDecimal cost = new BigDecimal(dto.getWidth().longValue() * dto.getHeight().longValue()
 				* dto.getSteps().longValue() * dto.getBatchSize() * aiArtOptionService.getConsumptionCoefficient())
@@ -306,13 +308,13 @@ public abstract class AiArtCommonService extends AiCommonService {
 		return cost;
 	}
 
-	protected CommonResult saveAiArtGenerateImgResultJson(JSONObject json, List<ImgVO> imgVoList) {
+	protected CommonResult saveAiArtGenerateImgResultJson(JSONObject parameterJson, List<ImgVO> imgVoList) {
 		CommonResult r = new CommonResult();
 		AiArtGenerateImageQueryResult result = new AiArtGenerateImageQueryResult();
-		result.setParameter(json);
+		result.setParameter(parameterJson);
 		result.setImgVoList(imgVoList);
 
-		String resultJsonSavePath = getJobResultStrPath(json.getLong("jobId"));
+		String resultJsonSavePath = getJobResultStrPath(parameterJson.getLong("jobId"));
 		File resultJsonFile = new File(resultJsonSavePath);
 
 		File parentFolder = new File(aiArtOptionService.getGenerateImageResultFolder());
@@ -336,7 +338,7 @@ public abstract class AiArtCommonService extends AiCommonService {
 		return r;
 	}
 
-	protected GetJobResultListForUser getJobResultVoByJobPk(String jobPk) {
+	protected GetJobResultListForUser getJobResultVoForUserByJobPk(String jobPk) {
 		GetJobResultListForUser r = new GetJobResultListForUser();
 		if (StringUtils.isBlank(jobPk)) {
 			r.setMessage("Please fill the job PK");
@@ -368,6 +370,35 @@ public abstract class AiArtCommonService extends AiCommonService {
 			vo.setJobStatus(AiArtJobStatusType.WAITING.getCode());
 			vo.setImgVoList(new ArrayList<>());
 		}
+
+		r.getJobResultList().add(vo);
+		r.setIsSuccess();
+		return r;
+	}
+
+	protected GetJobResultListForAdmin getJobResultVoForAdminByJobPk(String jobPk) {
+		GetJobResultListForAdmin r = new GetJobResultListForAdmin();
+		if (StringUtils.isBlank(jobPk)) {
+			r.setMessage("Please fill the job PK");
+			return r;
+		}
+
+		Long jobId = systemOptionService.decryptPrivateKey(jobPk);
+		if (jobId == null) {
+			r.setMessage("Please fill correct job PK");
+			return r;
+		}
+
+		AiArtTextToImageJobRecord po = aiArtTextToImageJobRecordMapper.selectByPrimaryKey(jobId);
+		if (po == null) {
+			r.setMessage("Job expired or NOT exists");
+			return r;
+		}
+
+		AiArtGenerateImageQueryResult jobResult = getJobResult(jobId);
+
+		AiArtGenerateImageAdminVO vo = buildAiArtGenerateImageVoForAdmin(po, jobResult, jobPk);
+		r.setJobResultList(new ArrayList<>());
 
 		r.getJobResultList().add(vo);
 		r.setIsSuccess();

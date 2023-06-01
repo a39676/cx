@@ -215,10 +215,13 @@ public class WechatUserServiceImpl extends WechatCommonService implements Wechat
 
 	@Override
 	public EncryptDTO recordingWechatUserFromParameterizedQrCode(EncryptDTO encrypedDTO) {
+		log.error("Get into recordingWechatUserFromParameterizedQrCode");
 		CommonResult r = new CommonResult();
 		WechatRecordingUserFromParameterizedQrCodeDTO dto = decryptEncryptDTO(encrypedDTO,
 				WechatRecordingUserFromParameterizedQrCodeDTO.class);
 		r = recordingWechatUserFromParameterizedQrCode(dto);
+		log.error("recordingWechatUserFromParameterizedQrCode result message: " + r.getMessage() + ", code: "
+				+ r.getCode());
 		return encryptDTO(r);
 	}
 

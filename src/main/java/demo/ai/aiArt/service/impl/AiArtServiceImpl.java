@@ -120,6 +120,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 		AiChatUserDetail aiUser = aiChatUserService.__getUserDetail(aiUserId);
 		if (aiUser == null || aiUser.getIsBlock() || aiUser.getIsDelete()) {
+			log.error("Strange user, ID: " + aiUserId);
 			r.setMessage("暂时无法为您新增绘图任务, 请返回微信给管理员留言; 请勿频繁生成违规内容, 谢谢!");
 			return r;
 		}
@@ -188,6 +189,10 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		if (StringUtils.isBlank(dto.getPrompts())) {
 			r.setMessage("请输入 prompts");
 			return r;
+		}
+
+		if (dto.getNegativePrompts() == null) {
+			dto.setNegativePrompts("");
 		}
 
 		if (dto.getPrompts().length() + dto.getNegativePrompts().length() > aiArtOptionService.getMaxPromptLength()) {
@@ -347,12 +352,13 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 		return sendImgToImgDtoToMq(aiChatUserId, dto, true);
 	}
-	
+
 	private SendTextToImgJobResult sendImgToImgDtoToMq(Long aiUserId, ImageToImageDTO dto, boolean isFromApi) {
 		SendTextToImgJobResult r = new SendTextToImgJobResult();
 
 		AiChatUserDetail aiUser = aiChatUserService.__getUserDetail(aiUserId);
 		if (aiUser == null || aiUser.getIsBlock() || aiUser.getIsDelete()) {
+			log.error("Strange user, ID: " + aiUserId);
 			r.setMessage("暂时无法为您新增绘图任务, 请返回微信给管理员留言; 请勿频繁生成违规内容, 谢谢!");
 			return r;
 		}
@@ -505,7 +511,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		r.setIsSuccess();
 		return r;
 	}
-	
+
 	private JSONObject getParameterByJobId(Long jobId) {
 		AiArtGenerateImageQueryResult jobResult = getJobResult(jobId);
 		if (jobResult == null) {
@@ -650,12 +656,10 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			imgGeneratingRecord.setId(parameterInJson.getLong("jobId"));
 			BigDecimal cost = null;
 			if (parameterInJson.containsKey("init_images")) {
-				TextToImageDTO dto = buildObjFromJsonCustomization(parameterInJson.toString(),
-						TextToImageDTO.class);
+				TextToImageDTO dto = buildObjFromJsonCustomization(parameterInJson.toString(), TextToImageDTO.class);
 				cost = calculateTokenCost(dto);
 			} else {
-				ImageToImageDTO dto = buildObjFromJsonCustomization(parameterInJson.toString(),
-						ImageToImageDTO.class);
+				ImageToImageDTO dto = buildObjFromJsonCustomization(parameterInJson.toString(), ImageToImageDTO.class);
 				cost = calculateTokenCost(dto);
 			}
 			imgGeneratingRecord.setTokens(cost);
@@ -904,7 +908,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 	@Override
 	public GetJobResultListForUser getJobResultVoByJobPk(BasePkDTO dto) {
-		GetJobResultListForUser r = super.getJobResultVoByJobPk(dto.getPk());
+		GetJobResultListForUser r = super.getJobResultVoForUserByJobPk(dto.getPk());
 		List<ImgVO> imgVoList = r.getJobResultList().get(0).getImgVoList();
 		if (imgVoList != null) {
 			for (ImgVO imgVO : imgVoList) {
@@ -982,11 +986,13 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 	@Override
 	public void loadingCache() {
+		log.error("Loading AI art cache");
 		AiArtImageWallExample example = new AiArtImageWallExample();
 		example.createCriteria().andImgIdGreaterThan(0L);
 		List<AiArtImageWall> imageWallDataList = aiArtImageWallMapper.selectByExample(example);
 
 		aiArtCacheService.setImageWall(new ArrayList<>());
+
 		if (imageWallDataList != null && !imageWallDataList.isEmpty()) {
 			AiArtImageOnWallVO vo = null;
 			for (AiArtImageWall imageWallPO : imageWallDataList) {
@@ -1000,6 +1006,8 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			}
 		}
 
+		log.error("New AI art image wall size: " + aiArtCacheService.getImageWall().size());
+
 		LocalTime startTime = LocalTime.parse(aiArtOptionService.getServiceStartTimeStr());
 		LocalTime endTime = LocalTime.parse(aiArtOptionService.getServiceEndTimeStr());
 		aiArtCacheService.setServiceStartTime(startTime);
@@ -1008,7 +1016,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 	@Override
 	public AiArtImageWallResult getImageWallRandomSub() {
-		AiArtImageWallResult fullResult = getImageWallFull(null);
+		AiArtImageWallResult fullResult = getImageWallFull(false);
 		List<AiArtImageOnWallVO> voList = fullResult.getImgVoList();
 		if (aiArtOptionService.getImageWallOnShowMaxSize() >= fullResult.getImgVoList().size()) {
 			return fullResult;

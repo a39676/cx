@@ -18,7 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import ai.aiArt.pojo.dto.ImageToImageDTO;
 import ai.aiArt.pojo.dto.TextToImageDTO;
 import ai.aiArt.pojo.result.AiArtImageWallResult;
-import ai.aiArt.pojo.result.GetJobResultListForUser;
+import ai.aiArt.pojo.result.GetJobResultListForAdmin;
 import ai.aiArt.pojo.result.SendTextToImgJobResult;
 import ai.aiArt.pojo.vo.AiArtGenerateImageAdminVO;
 import ai.aiArt.pojo.vo.AiArtGenerateImageBaseVO;
@@ -112,7 +112,7 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 			return r;
 		}
 
-		GetJobResultListForUser jobResultList = getJobResultVoByJobPk(dto.getJobPk());
+		GetJobResultListForAdmin jobResultList = getJobResultVoForAdminByJobPk(dto.getJobPk());
 		if (jobResultList.isFail()) {
 			r.setMessage(jobResultList.getMessage());
 			return r;

@@ -475,7 +475,9 @@
         tr += "<td>";
         tr += "<button class='btn btn-sm btn-primary' jobPk='"+vo.jobPk+"' onclick='genLikeThat(this)'>genLikeThat</button><br>";
         tr += "<label>jobPk: "+vo.jobPk+"</label><br>";
+        tr += "<label>jobID: "+vo.jobIdStr+"</label><br>";
         tr += "<label>aiUserPk: "+vo.aiUserPk+"</label><br>";
+        tr += "<label>aiUserID: "+vo.aiUserIdStr+"</label><br>";
         tr += "<label>rechargeMarkThisWeek: "+userDetailInRedisMap[vo.aiUserPk].rechargeMarkThisWeek+"</label><br>";
         tr += "<label>freeJobCountingToday: "+userDetailInRedisMap[vo.aiUserPk].freeJobCountingToday+"</label><br>";
         tr += "<label>freeJobCountingLastThreeDays: "+userDetailInRedisMap[vo.aiUserPk].freeJobCountingLastThreeDays+"</label><br>";

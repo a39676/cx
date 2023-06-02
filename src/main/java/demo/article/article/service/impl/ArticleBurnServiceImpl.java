@@ -294,7 +294,7 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 			tmpFile = new File(po.getFilePath());
 			if (tmpFile.exists()) {
 				try {
-					tmpFile.deleteOnExit();
+					tmpFile.delete();
 				} catch (Exception e) {
 
 				}

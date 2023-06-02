@@ -1,12 +1,18 @@
 package demo.ai.aiArt.service.impl;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.attribute.FileTime;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -60,6 +66,7 @@ import demo.image.service.ImageService;
 import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.result.ImageSavingResult;
 import net.sf.json.JSONObject;
+import toolPack.ioHandle.FileUtilCustom;
 import wechatSdk.pojo.dto.AiArtGenerateOtherLikeThatDTO;
 import wechatSdk.pojo.type.WechatSdkCommonResultType;
 
@@ -1173,5 +1180,86 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	public void heartBeatReciver() {
 		aiArtCacheService.setIsRunning(true);
 		aiArtCacheService.setLastHearBeatTime(LocalDateTime.now());
+	}
+
+	@Override
+	public void deleteOldData() {
+		File folder = new File(aiArtOptionService.getGenerateImageResultFolder());
+		if (!folder.exists()) {
+			return;
+		}
+
+		File[] fileArray = folder.listFiles();
+		if (fileArray == null || fileArray.length < 1) {
+			return;
+		}
+
+		AiArtImageWallExample example = new AiArtImageWallExample();
+		example.createCriteria().andImgIdGreaterThan(1L);
+		List<AiArtImageWall> poList = aiArtImageWallMapper.selectByExample(example);
+
+		List<Long> imgIdOnWall = new ArrayList<>();
+		for (AiArtImageWall po : poList) {
+			imgIdOnWall.add(po.getImgId());
+		}
+
+		FileUtilCustom fileUtilCustom = new FileUtilCustom();
+
+		for (int i = 0; i < fileArray.length; i++) {
+			File file = fileArray[i];
+			String content = fileUtilCustom.getStringFromFile(file.getAbsolutePath());
+			AiArtGenerateImageQueryResult result = buildObjFromJsonCustomization(content,
+					AiArtGenerateImageQueryResult.class);
+			if (result.getImgVoList() == null || result.getImgVoList().isEmpty()) {
+				file.delete();
+				continue;
+			}
+
+			List<ImgVO> imgVoList = result.getImgVoList();
+			if (imgVoList == null || imgVoList.isEmpty()) {
+				file.delete();
+				continue;
+			}
+
+			if (!imgOnWall(imgVoList, imgIdOnWall)) {
+				try {
+					FileTime creationTime = (FileTime) Files.getAttribute(Paths.get(file.getAbsolutePath()),
+							"creationTime");
+					Date fileCreateDate = new Date(creationTime.toMillis());
+					LocalDateTime fileCreateTime = localDateTimeHandler.dateToLocalDateTime(fileCreateDate);
+
+					LocalDateTime now = LocalDateTime.now();
+					LocalDateTime limitDay = now.minusDays(aiArtOptionService.getMaxJobLivingDay());
+
+					if (fileCreateTime.isBefore(limitDay)) {
+						file.delete();
+					}
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+			}
+		}
+	}
+
+	private boolean imgOnWall(List<ImgVO> imgVoList, List<Long> imgOnWallId) {
+		List<String> imgPkList = new ArrayList<>();
+
+		for (ImgVO vo : imgVoList) {
+			imgPkList.add(vo.getImgPk());
+		}
+
+		List<Long> imgIdList = systemOptionService.decryptPrivateKey(imgPkList);
+
+		if (imgIdList == null || imgIdList.isEmpty()) {
+			return false;
+		}
+
+		for (Long id : imgIdList) {
+			if (imgOnWallId.contains(id)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

@@ -46,4 +46,9 @@ public class AiArtTaskService extends AiArtCommonService {
 			sendTelegramMessage("Automatic SDK down, last heart beat: " + aiArtCacheService.getLastHearBeatTime());
 		}
 	}
+
+	@Scheduled(cron = "36 28 04 * * *")
+	public void deleteOldData() {
+		aiArtService.deleteOldData();
+	}
 }

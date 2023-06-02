@@ -31,12 +31,12 @@ public class OcrServiceImpl extends CommonService implements OcrService {
 
 	private String getOcrImgTmpStorePath() {
 		if (isLinux()) {
-			return MAIN_FOLDER_PATH  + "/ocrImg";
+			return MAIN_FOLDER_PATH + "/ocrImg";
 		} else {
 			return "d:" + MAIN_FOLDER_PATH + "/ocrImg";
 		}
 	}
-	
+
 	@Override
 	public ModelAndView ocrView() {
 		ModelAndView view = new ModelAndView(OcrView.OCR_VIEW);
@@ -55,7 +55,7 @@ public class OcrServiceImpl extends CommonService implements OcrService {
 		Path p = null;
 		BasicFileAttributes attr = null;
 		for (File f : storeFolder.listFiles()) {
-			if(f.isFile()) {
+			if (f.isFile()) {
 				p = Path.of(f.getAbsolutePath());
 				try {
 					attr = Files.readAttributes(p, BasicFileAttributes.class);
@@ -64,7 +64,7 @@ public class OcrServiceImpl extends CommonService implements OcrService {
 				}
 				fileCreatetime = LocalDateTime.ofInstant(attr.creationTime().toInstant(), ZoneId.systemDefault());
 				if (thirtyMinsAgo.isAfter(fileCreatetime)) {
-					f.deleteOnExit();
+					f.delete();
 				}
 			}
 		}
@@ -100,5 +100,5 @@ public class OcrServiceImpl extends CommonService implements OcrService {
 		r.setIsSuccess();
 		return r;
 	}
-	
+
 }

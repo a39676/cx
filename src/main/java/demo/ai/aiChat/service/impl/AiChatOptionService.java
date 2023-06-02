@@ -49,6 +49,7 @@ public class AiChatOptionService extends CommonService {
 	private Integer chatHistoryCountLimitForFreeUser;
 	private Integer maxCountOfApiKey = 5;
 	private Integer maxCountOfapiKeyOperations = 10;
+	private Integer maxBonusForDailySignUp;
 
 	private Set<String> sensitiveWords = new HashSet<>();
 
@@ -196,6 +197,14 @@ public class AiChatOptionService extends CommonService {
 		this.maxCountOfapiKeyOperations = maxCountOfapiKeyOperations;
 	}
 
+	public Integer getMaxBonusForDailySignUp() {
+		return maxBonusForDailySignUp;
+	}
+
+	public void setMaxBonusForDailySignUp(Integer maxBonusForDailySignUp) {
+		this.maxBonusForDailySignUp = maxBonusForDailySignUp;
+	}
+
 	@Override
 	public String toString() {
 		return "AiChatOptionService [chatStorePrefixPath=" + chatStorePrefixPath + ", chatFromApiStorePrefixPath="
@@ -208,8 +217,8 @@ public class AiChatOptionService extends CommonService {
 				+ membershipLDetails + ", promptOfActAs=" + promptOfActAs + ", inputMaxLength=" + inputMaxLength
 				+ ", bonusForNewUser=" + bonusForNewUser + ", chatHistoryCountLimitForFreeUser="
 				+ chatHistoryCountLimitForFreeUser + ", maxCountOfApiKey=" + maxCountOfApiKey
-				+ ", maxCountOfapiKeyOperations=" + maxCountOfapiKeyOperations + ", sensitiveWords=" + sensitiveWords
-				+ "]";
+				+ ", maxCountOfapiKeyOperations=" + maxCountOfapiKeyOperations + ", maxBonusForDailySignUp="
+				+ maxBonusForDailySignUp + ", sensitiveWords=" + sensitiveWords + "]";
 	}
 
 	@PostConstruct

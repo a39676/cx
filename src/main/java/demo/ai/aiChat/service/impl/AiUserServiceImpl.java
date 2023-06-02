@@ -296,6 +296,11 @@ public class AiUserServiceImpl extends AiCommonService implements AiUserService 
 			return r;
 		}
 
+		if (aiChatOptionService.getMaxBonusForDailySignUp() < po.getBonusAmount().intValue()) {
+			r.setMessage("已经囤了不少了...先使用一部分再来签到吧");
+			return r;
+		}
+
 		extendTmpKeyValidity(Long.parseLong(tmpKeyStr));
 
 		po.setBonusAmount(po.getBonusAmount().add(new BigDecimal(aiChatOptionService.getDailySignUpBonus())));
@@ -357,8 +362,6 @@ public class AiUserServiceImpl extends AiCommonService implements AiUserService 
 
 		return dtoList;
 	}
-
-	
 
 	@Override
 	public ModelAndView getAiChatUserListView() {

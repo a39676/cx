@@ -64,4 +64,6 @@ public interface AiArtService {
 
 	SendTextToImgJobResult sendImgToImgFromApiDtoToMq(ImageToImageFromApiDTO dto);
 
+	void deleteOldData();
+
 }

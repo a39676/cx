@@ -1262,4 +1262,5 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 		return false;
 	}
+
 }

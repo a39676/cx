@@ -7,6 +7,7 @@ import auxiliaryCommon.pojo.dto.BasePkDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.pojo.dto.AddToImageWallDTO;
 import demo.ai.aiArt.pojo.dto.AiArtJobListFilterDTO;
+import demo.ai.aiArt.pojo.dto.RegenerateImageDTO;
 import demo.ai.aiArt.pojo.dto.SetInvalidImageAndRetunTokensDTO;
 import demo.ai.aiArt.pojo.result.GetJobResultListForReivew;
 
@@ -31,5 +32,7 @@ public interface AiArtManagerService {
 	void setReviewBatchForAdmin();
 
 	SendTextToImgJobResult generateOtherLikeThat(BasePkDTO dto);
+
+	CommonResult regenerateImg(RegenerateImageDTO dto);
 
 }

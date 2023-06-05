@@ -18,10 +18,9 @@ import org.springframework.web.servlet.ModelAndView;
 import ai.aiArt.pojo.dto.ImageToImageDTO;
 import ai.aiArt.pojo.dto.TextToImageDTO;
 import ai.aiArt.pojo.result.AiArtImageWallResult;
-import ai.aiArt.pojo.result.GetJobResultListForAdmin;
 import ai.aiArt.pojo.result.SendTextToImgJobResult;
+import ai.aiArt.pojo.type.AiArtJobStatusType;
 import ai.aiArt.pojo.vo.AiArtGenerateImageAdminVO;
-import ai.aiArt.pojo.vo.AiArtGenerateImageBaseVO;
 import ai.aiArt.pojo.vo.AiArtImageOnWallVO;
 import ai.aiArt.pojo.vo.ImgVO;
 import ai.aiChat.pojo.type.AiServiceAmountType;
@@ -30,6 +29,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.ai.aiArt.pojo.dto.AddToImageWallDTO;
 import demo.ai.aiArt.pojo.dto.AiArtJobListFilterDTO;
 import demo.ai.aiArt.pojo.dto.AiUserDetailInRedisDTO;
+import demo.ai.aiArt.pojo.dto.RegenerateImageDTO;
 import demo.ai.aiArt.pojo.dto.SetInvalidImageAndRetunTokensDTO;
 import demo.ai.aiArt.pojo.po.AiArtImageWall;
 import demo.ai.aiArt.pojo.po.AiArtTextToImageJobRecord;
@@ -112,27 +112,21 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 			return r;
 		}
 
-		GetJobResultListForAdmin jobResultList = getJobResultVoForAdminByJobPk(dto.getJobPk());
-		if (jobResultList.isFail()) {
-			r.setMessage(jobResultList.getMessage());
-			return r;
-		}
-
-		if (jobResultList.getJobResultList().isEmpty()
-				|| jobResultList.getJobResultList().get(0).getParameter() == null) {
-			r.setMessage("Job result data error");
-			return r;
-		}
-
-		AiArtGenerateImageBaseVO jobResultVO = jobResultList.getJobResultList().get(0);
-		JSONObject parameterInJson = jobResultVO.getParameter();
-
 		Long imgId = systemOptionService.decryptPrivateKey(dto.getImgPk());
 		Long jobId = systemOptionService.decryptPrivateKey(dto.getJobPk());
 		if (imgId == null || jobId == null) {
 			r.setMessage("Decrypt ID error");
 			return r;
 		}
+
+		AiArtGenerateImageQueryResult jobResult = getJobResult(jobId);
+
+		if (jobResult.isFail()) {
+			r.setMessage(jobResult.getMessage());
+			return r;
+		}
+
+		JSONObject parameterInJson = jobResult.getParameter();
 
 		r = setImgInvalid(imgId);
 		if (r.isFail()) {
@@ -142,7 +136,7 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 		AiArtTextToImageJobRecord jobPO = aiArtTextToImageJobRecordMapper.selectByPrimaryKey(jobId);
 		Long userId = jobPO.getAiUserId();
 
-		List<ImgVO> imgVoList = jobResultVO.getImgVoList();
+		List<ImgVO> imgVoList = jobResult.getImgVoList();
 		boolean flag = false;
 		for (int i = 0; i < imgVoList.size() && !flag; i++) {
 			flag = imgVoList.get(i).getImgPk().equals(dto.getImgPk());
@@ -317,5 +311,70 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 		AiArtGenerateOtherLikeThatDTO dataDTO = new AiArtGenerateOtherLikeThatDTO();
 		dataDTO.setJobPk(dto.getPk());
 		return aiArtService.generateOtherLikeThat(dataDTO);
+	}
+
+	@Override
+	public CommonResult regenerateImg(RegenerateImageDTO dto) {
+		CommonResult r = new CommonResult();
+
+		if (StringUtils.isBlank(dto.getJobPk())) {
+			r.setMessage("key error");
+			return r;
+		}
+
+		Long jobId = systemOptionService.decryptPrivateKey(dto.getJobPk());
+		if (jobId == null) {
+			r.setMessage("Job pk error");
+			return r;
+		}
+
+		AiArtGenerateImageQueryResult jobResult = getJobResult(jobId);
+		if (jobResult == null || jobResult.getParameter() == null) {
+			r.setMessage("Job data error");
+			return r;
+		}
+
+		JSONObject parameterInJson = jobResult.getParameter();
+		if (parameterInJson.containsKey("init_images")) {
+			r.setMessage("It's NOT a text to image job, can NOT regenerate an other by parameter");
+			return r;
+		}
+
+		Long imgId = systemOptionService.decryptPrivateKey(dto.getImgPk());
+		if (imgId == null || jobId == null) {
+			r.setMessage("Decrypt ID error");
+			return r;
+		}
+
+		List<ImgVO> imgVoList = jobResult.getImgVoList();
+		boolean flag = false;
+		for (int i = 0; i < imgVoList.size() && !flag; i++) {
+			flag = imgVoList.get(i).getImgPk().equals(dto.getImgPk());
+			if (flag) {
+				ImgVO newImgVo = new ImgVO();
+				newImgVo.setImgPk(aiArtOptionService.getImagePkInsteadOfNsfw());
+				imgVoList.set(i, newImgVo);
+			}
+		}
+
+		r = saveAiArtGenerateImgResultJson(parameterInJson, imgVoList);
+		if (r.isFail()) {
+			log.error("Can NOT update result json file, jobID: " + jobId);
+			r.setMessage("Can NOT update result json file");
+			return r;
+		}
+
+		r = setImgInvalid(imgId);
+		if (r.isFail()) {
+			log.error("Can NOT update image invalid, imgID: " + imgId);
+			return r;
+		}
+
+		AiArtTextToImageJobRecord jobPO = aiArtTextToImageJobRecordMapper.selectByPrimaryKey(jobId);
+		jobPO.setJobStatus(AiArtJobStatusType.WAITING.getCode().byteValue());
+		jobPO.setRunCount(jobPO.getRunCount() - 1);
+		aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
+
+		return r;
 	}
 }

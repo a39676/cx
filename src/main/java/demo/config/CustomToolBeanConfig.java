@@ -15,6 +15,7 @@ import toolPack.dateTimeHandle.LocalDateTimeAdapter;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
 import toolPack.encryptHandle.EncryptUtil;
 import toolPack.httpHandel.HttpUtil;
+import toolPack.imgbb.service.ImgbbUtil;
 import toolPack.ioHandle.FileUtilCustom;
 import toolPack.numericHandel.NumericUtilCustom;
 import toolPack.qrcode.QrCodeDecode;
@@ -104,5 +105,10 @@ public class CustomToolBeanConfig {
 	public Tess getTess() {
 		Tess t = new Tess();
 		return t;
+	}
+	
+	@Bean
+	public ImgbbUtil getImgbbUtil() {
+		return new ImgbbUtil();
 	}
 }

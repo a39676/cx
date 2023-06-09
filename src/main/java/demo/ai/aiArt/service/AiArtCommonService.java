@@ -324,7 +324,8 @@ public abstract class AiArtCommonService extends AiCommonService {
 				return r;
 			}
 		}
-
+		
+		result.setIsSuccess();
 		JSONObject resultJson = JSONObject.fromObject(result);
 		try {
 			FileUtils.writeByteArrayToFile(resultJsonFile, resultJson.toString().getBytes(StandardCharsets.UTF_8));

@@ -66,4 +66,6 @@ public interface AiArtService {
 
 	void deleteOldData();
 
+	JSONObject receiveImgJobResultAndGetNewJobForApi(JSONObject json);
+
 }

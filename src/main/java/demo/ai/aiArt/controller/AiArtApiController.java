@@ -81,4 +81,10 @@ public class AiArtApiController {
 	public JSONObject findRerunJobWhenSdkAsk() {
 		return aiArtService.findRerunJobWhenSdkAsk();
 	}
+	
+	@PostMapping(value = AiArtApiUrlConstant.RECEIVE_IMAGE_JOB_RESULT_AND_GET_RERUN_JOB)
+	@ResponseBody
+	public JSONObject receiveImgJobResultAndGetNewJobForApi(@RequestBody JSONObject json) {
+		return aiArtService.receiveImgJobResultAndGetNewJobForApi(json);
+	}
 }

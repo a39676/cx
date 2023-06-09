@@ -1,6 +1,7 @@
 package demo.tool.service.impl;
 
 import java.io.File;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
@@ -22,6 +23,7 @@ public class ToolOptionService extends CommonService {
 	private String optionFilePath;
 
 	private String promoteImgUrl;
+	private List<String> imgbbApiKeyList;
 
 	@PostConstruct
 	public void refreshOption() {
@@ -48,9 +50,17 @@ public class ToolOptionService extends CommonService {
 		this.promoteImgUrl = promoteImgUrl;
 	}
 
+	public List<String> getImgbbApiKeyList() {
+		return imgbbApiKeyList;
+	}
+
+	public void setImgbbApiKeyList(List<String> imgbbApiKeyList) {
+		this.imgbbApiKeyList = imgbbApiKeyList;
+	}
+
 	@Override
 	public String toString() {
-		return "ToolOptionsService [promoteImgUrl=" + promoteImgUrl + "]";
+		return "ToolOptionService [promoteImgUrl=" + promoteImgUrl + ", imgbbApiKeyList=" + imgbbApiKeyList + "]";
 	}
 
 }

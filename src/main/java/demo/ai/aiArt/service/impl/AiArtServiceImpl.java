@@ -63,9 +63,12 @@ import demo.ai.aiArt.service.AiArtService;
 import demo.ai.aiChat.pojo.po.AiChatUserDetail;
 import demo.image.pojo.type.ImageTagType;
 import demo.image.service.ImageService;
+import demo.thirdPartyAPI.imgbb.dto.result.ImgbbUploadResult;
+import demo.thirdPartyAPI.imgbb.service.ImgbbUploadService;
 import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.result.ImageSavingResult;
 import net.sf.json.JSONObject;
+import toolPack.httpHandel.HttpUtil;
 import toolPack.ioHandle.FileUtilCustom;
 import wechatSdk.pojo.dto.AiArtGenerateOtherLikeThatDTO;
 import wechatSdk.pojo.type.WechatSdkCommonResultType;
@@ -79,6 +82,8 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 	private AiArtModelMapper aiArtModelMapper;
 	@Autowired
 	private ImageService imageService;
+	@Autowired
+	private ImgbbUploadService imgbbUploadService;
 
 	@Override
 	public SendTextToImgJobResult sendTextToImgFromWechatDtoToMq(TextToImageFromWechatDTO dto) {
@@ -471,6 +476,39 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			}
 		}
 
+		if (dto.getImagesInBase64() == null || dto.getMaskImageInBase64() == null) {
+			r.setMessage("Please upload source image and mask image");
+			return r;
+		}
+
+		if (!dto.getImagesInBase64().startsWith("http")) {
+			ImgbbUploadResult uploadResult = imgbbUploadService.uploadImg(dto.getImagesInBase64(), false);
+			if (uploadResult.isFail()) {
+				r.setMessage(uploadResult.getMessage());
+				return r;
+			}
+			if (!uploadResult.getResponseData().getSuccess()) {
+				r.setMessage("Source image upload failed");
+				return r;
+			}
+
+			dto.setImagesInBase64(uploadResult.getResponseData().getData().getUrl());
+		}
+
+		if (!dto.getMaskImageInBase64().startsWith("http")) {
+			ImgbbUploadResult uploadResult = imgbbUploadService.uploadImg(dto.getMaskImageInBase64(), false);
+			if (uploadResult.isFail()) {
+				r.setMessage(uploadResult.getMessage());
+				return r;
+			}
+			if (!uploadResult.getResponseData().getSuccess()) {
+				r.setMessage("Mask image upload failed");
+				return r;
+			}
+
+			dto.setMaskImageInBase64(uploadResult.getResponseData().getData().getUrl());
+		}
+
 		AiArtTextToImageJobRecordExample example = new AiArtTextToImageJobRecordExample();
 		Criteria waiting = example.createCriteria();
 		waiting.andAiUserIdEqualTo(aiUserId).andJobStatusEqualTo(AiArtJobStatusType.WAITING.getCode().byteValue());
@@ -675,6 +713,26 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			jobPO.setJobStatus(AiArtJobStatusType.SUCCESS.getCode().byteValue());
 			jobPO.setRunCount(jobPO.getRunCount() + 1);
 			aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
+
+			if (jobResult.getParameter().containsKey("apiKey")
+					&& !StringUtils.isNotBlank(jobResult.getParameter().getString("callBack"))) {
+				HttpUtil http = new HttpUtil();
+				String urlStr = jobResult.getParameter().getString("callback");
+
+				BasePkDTO baseDTO = new BasePkDTO();
+				baseDTO.setPk(systemOptionService.encryptId(jobId));
+				GetJobResultListForUser jobResultForUser = getJobResultVoByJobPk(baseDTO);
+
+//				TODO send feedback in MQ 
+
+				JSONObject jsonResponse = JSONObject.fromObject(jobResultForUser);
+
+				try {
+					http.sendPost(urlStr, jsonResponse.toString());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 
 		}
 

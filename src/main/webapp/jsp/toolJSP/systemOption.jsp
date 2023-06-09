@@ -30,6 +30,7 @@
 
 <div>
   <a href="/optionConstant/refreshSystemOption" target="_blank">refreshSystemOption</a><br>
+  <a href="/optionConstant/refreshToolOption" target="_blank">refreshToolOption</a><br>
   <a href="/optionConstant/refreshArticleOption" target="_blank">refreshArticleOption</a><br>
   <a href="/optionConstant/refreshArticleCommentOption" target="_blank">refreshArticleCommentOption</a><br>
   <a href="/optionConstant/refreshMailOption" target="_blank">refreshMailOption</a><br>

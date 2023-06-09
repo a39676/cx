@@ -16,13 +16,15 @@ import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")
 @Service
-public class ToolConstantService extends CommonService {
+public class ToolOptionService extends CommonService {
 
 	@Value("${optionFilePath.tool}")
 	private String optionFilePath;
 
+	private String promoteImgUrl;
+
 	@PostConstruct
-	public void refreshConstant() {
+	public void refreshOption() {
 		File optionFile = new File(optionFilePath);
 		if (!optionFile.exists()) {
 			return;
@@ -30,12 +32,25 @@ public class ToolConstantService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
-			ToolConstantService tmp = new Gson().fromJson(jsonStr, ToolConstantService.class);
+			ToolOptionService tmp = new Gson().fromJson(jsonStr, ToolOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
 		} catch (Exception e) {
 			log.error("tool option loading error: " + e.getLocalizedMessage());
 		}
 		log.error("tool option loaded");
+	}
+
+	public String getPromoteImgUrl() {
+		return promoteImgUrl;
+	}
+
+	public void setPromoteImgUrl(String promoteImgUrl) {
+		this.promoteImgUrl = promoteImgUrl;
+	}
+
+	@Override
+	public String toString() {
+		return "ToolOptionsService [promoteImgUrl=" + promoteImgUrl + "]";
 	}
 
 }

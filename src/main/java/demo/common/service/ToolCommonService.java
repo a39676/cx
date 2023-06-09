@@ -9,7 +9,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import demo.base.system.service.HostnameService;
 import demo.base.system.service.impl.RedisHashConnectService;
 import demo.base.system.service.impl.SystemOptionService;
-import demo.tool.service.impl.ToolConstantService;
+import demo.tool.service.impl.ToolOptionService;
 
 public abstract class ToolCommonService extends CommonService {
 
@@ -20,7 +20,7 @@ public abstract class ToolCommonService extends CommonService {
 	@Autowired
 	protected RedisHashConnectService redisHashConnectService;
 	@Autowired
-	protected ToolConstantService toolConstantService;
+	protected ToolOptionService toolConstantService;
 
 	protected String findHostnameFromRequest() {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())

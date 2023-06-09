@@ -23,6 +23,7 @@ import demo.thirdPartyAPI.cloudFlare.service.impl.CloudFlareOptionService;
 import demo.thirdPartyAPI.cloudinary.service.impl.CloudinaryOptionService;
 import demo.thirdPartyAPI.openAI.service.impl.OpenAiOptionService;
 import demo.tool.mail.service.impl.MailOptionService;
+import demo.tool.service.impl.ToolOptionService;
 import demo.tool.telegram.service.impl.TelegramOptionService;
 import demo.toyParts.educate.service.impl.EducateOptionService;
 
@@ -66,6 +67,8 @@ public class OptionConstantController {
 	private WechatPayOptionService wechatPayOptionService;
 	@Autowired
 	private AiArtOptionService aiArtOptionService;
+	@Autowired
+	private ToolOptionService toolOptionService;
 
 	@GetMapping(value = "/refreshSystemOption")
 	@ResponseBody
@@ -73,7 +76,7 @@ public class OptionConstantController {
 		systemConstantService.refreshOption();
 		return "done";
 	}
-	
+
 	@GetMapping(value = "/refreshArticleOption")
 	@ResponseBody
 	public String refreshArticleOption() {
@@ -122,55 +125,55 @@ public class OptionConstantController {
 		telegramOptionService.refreshOption();
 		return "done";
 	}
-	
+
 	@GetMapping(value = "/refreshEducateOption")
 	@ResponseBody
 	public String refreshEducateOption() {
 		return educateOptionService.refreshOption();
 	}
-	
+
 	@GetMapping(value = "/refreshJoyOption")
 	@ResponseBody
 	public String refreshJoyOption() {
 		joyOptionService.refreshOption();
 		return "done";
 	}
-	
+
 	@GetMapping(value = "/refreshJoyGardenOption")
 	@ResponseBody
 	public String refreshJoyGardenOption() {
 		joyGardenOptionService.refreshOption();
 		return "done";
 	}
-	
+
 	@GetMapping(value = "/refreshCurrencyExchangeRateOption")
 	@ResponseBody
 	public String refreshCurrencyExchangeRateOption() {
 		currencyExchangeRateOptionService.refreshOption();
 		return "done";
 	}
-	
+
 	@GetMapping(value = "/refreshOpenAiOption")
 	@ResponseBody
 	public String refreshOpenAiOption() {
 		openAiOptionService.refreshOption();
 		return "done";
 	}
-	
+
 	@GetMapping(value = "/refreshWechatOption")
 	@ResponseBody
 	public String refreshWechatOption() {
 		wechatOptionService.refreshOption();
 		return "done";
 	}
-	
+
 	@GetMapping(value = "/refreshAiChatOption")
 	@ResponseBody
 	public String refreshAiChatOption() {
 		aichatOptionService.refreshOption();
 		return "done";
 	}
-	
+
 	@GetMapping(value = "/refreshCloudFlareOption")
 	@ResponseBody
 	public String refreshCloudFlareOption() {
@@ -184,11 +187,18 @@ public class OptionConstantController {
 		wechatPayOptionService.refreshOption();
 		return "done";
 	}
-	
+
 	@GetMapping(value = "/refreshAiArtOption")
 	@ResponseBody
 	public String refreshAiArtOption() {
 		aiArtOptionService.refreshOption();
+		return "done";
+	}
+
+	@GetMapping(value = "/refreshToolOption")
+	@ResponseBody
+	public String refreshToolOption() {
+		toolOptionService.refreshOption();
 		return "done";
 	}
 }

@@ -573,11 +573,11 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 
 	@Override
 	public void receiveImgJobResultForApi(JSONObject json) {
+		heartBeatReciver();
 		log.error("Receive AI art json result");
 		AiArtImgResult r = buildObjFromJsonCustomization(json.toString(), AiArtImgResult.class);
 		log.error("Receive AI art result: " + r.getJobId() + ", code: " + r.getCode() + ", message: " + r.getMessage());
 		receiveImgJobResult(r);
-		heartBeatReciver();
 	}
 
 	public void receiveImgJobResult(AiArtImgResult generateImgResult) {
@@ -1321,4 +1321,9 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 		return false;
 	}
 
+	@Override
+	public JSONObject receiveImgJobResultAndGetNewJobForApi(JSONObject json) {
+		receiveImgJobResultForApi(json);
+		return findRerunJobWhenSdkAsk();
+	}
 }

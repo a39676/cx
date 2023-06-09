@@ -5,7 +5,7 @@ import ai.aiArt.pojo.dto.TextToImageDTO;
 public class TextToImageFromApiDTO extends TextToImageDTO {
 
 	private String apiKey;
-	private String callBack;
+	private String callBack = "";
 
 	public String getApiKey() {
 		return apiKey;

@@ -623,7 +623,6 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 					}
 					aiChatUserService.recharge(jobPO.getAiUserId(), AiServiceAmountType.BONUS, cost);
 					jobPO.setRunCount(jobPO.getRunCount() + 1);
-					jobPO.setHasReview(true);
 					aiArtTextToImageJobRecordMapper.updateByPrimaryKeySelective(jobPO);
 					minusJobCounting(jobPO.getAiUserId());
 				}
@@ -923,6 +922,10 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			if (startTime.isBefore(LocalDateTime.now())) {
 				log.error("Find a free job from free user, sending, jobId: " + po.getId());
 				JSONObject parameterInJson = getParameterByJobId(po.getId());
+				if (parameterInJson == null) {
+					po.setJobStatus(AiArtJobStatusType.FAILED.getCode().byteValue());
+					po.setRunCount(po.getRunCount() + 1);
+				}
 				return parameterInJson;
 			}
 		}
@@ -1269,6 +1272,14 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			AiArtGenerateImageQueryResult result = buildObjFromJsonCustomization(content,
 					AiArtGenerateImageQueryResult.class);
 			if (result.getImgVoList() == null || result.getImgVoList().isEmpty()) {
+				Long id = Long.parseLong(file.getName().replaceAll(".json", ""));
+				AiArtTextToImageJobRecord job = aiArtTextToImageJobRecordMapper.selectByPrimaryKey(id);
+				if (AiArtJobStatusType.WAITING.getCode().equals(job.getJobStatus().intValue())
+						|| (AiArtJobStatusType.FAILED.getCode().equals(job.getJobStatus().intValue())
+								&& job.getRunCount() < aiArtOptionService.getMaxFailCountForJob())) {
+					continue;
+				}
+
 				file.delete();
 				continue;
 			}

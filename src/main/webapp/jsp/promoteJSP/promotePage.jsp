@@ -8,14 +8,19 @@
 <html>
 <head>
 <%@ include file="../baseElementJSP/normalHeader.jsp" %>
+
+  <style type="text/css">
+    .container-fluid{
+      width: 100%;
+    }
+  </style>
+
 </head>
 <body>
   <div class="container-fluid">
-    <div class="row d-flex justify-content-center">
+    <div class="row">
       <div class="col-sm-12">
-        <div style="object-fit: contain;">
-          <img src="${promoteImgUrl}">
-        </div>
+        <img src="${promoteImgUrl}" style="width: 100%; object-fit: contain;">
       </div>
     </div>
   </div>
@@ -25,8 +30,6 @@
 <script type="text/javascript">
 
   $(document).ready(function() {
-
-    
 
   });
 

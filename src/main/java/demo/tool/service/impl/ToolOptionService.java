@@ -22,7 +22,6 @@ public class ToolOptionService extends CommonService {
 	@Value("${optionFilePath.tool}")
 	private String optionFilePath;
 
-	private String promoteImgUrl;
 	private List<String> imgbbApiKeyList;
 
 	@PostConstruct
@@ -42,14 +41,6 @@ public class ToolOptionService extends CommonService {
 		log.error("tool option loaded");
 	}
 
-	public String getPromoteImgUrl() {
-		return promoteImgUrl;
-	}
-
-	public void setPromoteImgUrl(String promoteImgUrl) {
-		this.promoteImgUrl = promoteImgUrl;
-	}
-
 	public List<String> getImgbbApiKeyList() {
 		return imgbbApiKeyList;
 	}
@@ -60,7 +51,7 @@ public class ToolOptionService extends CommonService {
 
 	@Override
 	public String toString() {
-		return "ToolOptionService [promoteImgUrl=" + promoteImgUrl + ", imgbbApiKeyList=" + imgbbApiKeyList + "]";
+		return "ToolOptionService [imgbbApiKeyList=" + imgbbApiKeyList + "]";
 	}
 
 }

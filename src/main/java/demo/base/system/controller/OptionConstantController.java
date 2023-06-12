@@ -19,6 +19,7 @@ import demo.interaction.wechat.service.impl.WechatOptionService;
 import demo.interaction.wechatPay.service.impl.WechatPayOptionService;
 import demo.joy.common.service.JoyOptionService;
 import demo.joy.garden.service.impl.JoyGardenOptionService;
+import demo.promote.service.impl.PromoteOptionService;
 import demo.thirdPartyAPI.cloudFlare.service.impl.CloudFlareOptionService;
 import demo.thirdPartyAPI.cloudinary.service.impl.CloudinaryOptionService;
 import demo.thirdPartyAPI.openAI.service.impl.OpenAiOptionService;
@@ -69,6 +70,8 @@ public class OptionConstantController {
 	private AiArtOptionService aiArtOptionService;
 	@Autowired
 	private ToolOptionService toolOptionService;
+	@Autowired
+	private PromoteOptionService promoteOptionService;
 
 	@GetMapping(value = "/refreshSystemOption")
 	@ResponseBody
@@ -199,6 +202,13 @@ public class OptionConstantController {
 	@ResponseBody
 	public String refreshToolOption() {
 		toolOptionService.refreshOption();
+		return "done";
+	}
+
+	@GetMapping(value = "/refreshPromoteOption")
+	@ResponseBody
+	public String refreshPromoteOption() {
+		promoteOptionService.refreshOption();
 		return "done";
 	}
 }

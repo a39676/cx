@@ -64,6 +64,7 @@ optionFilePath:
   cloudFlare: "/home/u2/cx/optionFile/cloudFlare/option.json"
   wechatPay: "/home/u2/cx/optionFile/wechatPay/option.json"
   aiArt: "/home/u2/cx/optionFile/aiArt/option.json"
+  promote: "/home/u2/cx/optionFile/promote/option.json"
   
     
 logging:

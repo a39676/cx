@@ -34,7 +34,7 @@
         </javaTypeResolver>  
           
         <!-- 生成模型的包名和位置-->    
-        <javaModelGenerator targetPackage="demo.ai.aiArt.pojo.po" targetProject="cx">    
+        <javaModelGenerator targetPackage="demo.promote.pojo.po" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
             <property name="trimStrings" value="true"/> 
             <!-- for MyBatis3 / MyBatis3Simple
@@ -45,18 +45,18 @@
         </javaModelGenerator>    
         
         <!-- 生成映射文件的包名和位置-->    
-        <sqlMapGenerator targetPackage="demo.ai.aiArt.mapper" targetProject="cx">    
+        <sqlMapGenerator targetPackage="demo.promote.mapper" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
         </sqlMapGenerator>    
         
         <!-- 生成DAO的包名和位置-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.ai.aiArt.mapper" targetProject="cx">    
+        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.promote.mapper" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="ai_art_image_wall">
-        	<property name="tableName" value="ai_art_image_wall"></property>
-        	<property name="domainObjectName" value="ai_art_image_wall"></property>
+        <table tableName="promote_visit_history">
+        	<property name="tableName" value="promote_visit_history"></property>
+        	<property name="domainObjectName" value="promote_visit_history"></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

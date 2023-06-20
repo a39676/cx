@@ -180,6 +180,10 @@ public class WordHelperServiceImpl extends CommonService implements WordHelperSe
 		for (int i = 0; i < dto.getWordCount(); i++) {
 			randomIndex = random.nextInt(dictionary.getWordDateLineList().size());
 			WordDayLineDTO wordRecord = dictionary.getWordDateLineList().get(randomIndex);
+			if (wordRecord.getWordList().isEmpty()) {
+				i--;
+				continue;
+			}
 			randomIndex = random.nextInt(wordRecord.getWordList().size());
 			WordDTO word = wordRecord.getWordList().get(randomIndex);
 			if (!dto.getPrintEn()) {
@@ -192,6 +196,35 @@ public class WordHelperServiceImpl extends CommonService implements WordHelperSe
 		}
 		r.setWordList(wordList);
 		r.setIsSuccess();
+		return r;
+	}
+
+	@Override
+	public CommonResult deleteWord(WordDTO dto) {
+		CommonResult r = new CommonResult();
+		CustomerDictionaryDTO dictionary = getCustomerDictionaryDTO();
+
+		List<WordDayLineDTO> wordRecordList = dictionary.getWordDateLineList();
+		for (int lineIndex = 0; lineIndex < wordRecordList.size(); lineIndex++) {
+			List<WordDTO> wordList = wordRecordList.get(lineIndex).getWordList();
+			for (int wordIndex = 0; wordIndex < wordList.size(); wordIndex++) {
+				WordDTO word = wordList.get(wordIndex);
+				if (word.getEn().equals(dto.getEn())) {
+					wordList.remove(wordIndex);
+
+					Gson gson = new GsonBuilder().setPrettyPrinting().create();
+					String jsonString = gson.toJson(dictionary);
+
+					save(jsonString);
+
+					r.setMessage("Delete: " + word.toString());
+					r.setIsSuccess();
+					return r;
+				}
+			}
+		}
+
+		r.setMessage("Can NOT find: " + dto.getEn());
 		return r;
 	}
 }

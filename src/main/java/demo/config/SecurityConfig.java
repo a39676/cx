@@ -48,6 +48,7 @@ import demo.pmemo.pojo.constant.UrgeNoticeManagerUrl;
 import demo.pmemo.pojo.constant.UrgeNoticeUrl;
 import demo.test.pojo.constant.TestUrl;
 import demo.tool.other.pojo.constant.ToolUrlConstant;
+import demo.tool.wordHelper.pojo.constant.WordHelperUrl;
 import image.pojo.constant.ImageInteractionUrl;
 import wechatPaySdk.jsApi.pojo.constant.WechatPaySdkUrlConstant;
 import wechatSdk.pojo.constant.WechatSdkUrlConstant;
@@ -127,6 +128,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
             .antMatchers(AiArtMangerUrl.ROOT + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+            .antMatchers(WordHelperUrl.ROOT + "/**")
+            	.access(hasAnyRole(SystemRolesType.ROLE_USER_ACTIVE))
             // joy url start
             .antMatchers(JoyUrl.ROOT + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_USER_ACTIVE))

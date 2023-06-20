@@ -18,4 +18,6 @@ public interface WordHelperService {
 
 	CommonResult addNewWord(WordDTO inputWord);
 
+	CommonResult deleteWord(WordDTO dto);
+
 }

@@ -21,6 +21,7 @@
         <input type="text" id="cnInput" name="">
 
         <button id="addWord">Add word</button>
+        <button id="deleteWord">Delete word</button>
       </div>
     </div>
 
@@ -81,6 +82,45 @@
         var jsonOutput = {
           en:enInput,
           cn:cnInput,
+        };
+
+        console.log(jsonOutput);
+  
+        $.ajax({
+          type : "POST",
+          async : true,
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          cache : false,
+          contentType: "application/json",
+          dataType: "json",
+          timeout:50000,
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          success:function(datas){
+            console.log(datas);
+            $("#result").text(datas.code + ", " + datas.message);
+          },
+          error: function(datas) {
+            console.log(datas);
+          }
+        });
+      }
+
+      $("#deleteWord").click(function() {
+        deleteWord();
+      })
+
+      function deleteWord(){
+        $("#result").text("Delete word");
+
+        var url = "/wordHelper/deleteWord";
+
+        var enInput = $("#enInput").val();
+
+        var jsonOutput = {
+          en:enInput,
         };
 
         console.log(jsonOutput);

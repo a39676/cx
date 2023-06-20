@@ -2,10 +2,12 @@ package demo.tool.wordHelper.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.tool.wordHelper.pojo.dto.GetRandomWordDTO;
@@ -20,6 +22,11 @@ public class WordHelperController {
 
 	@Autowired
 	private WordHelperService wordHelperService;
+	
+	@GetMapping(value = "/wordHelper")
+	public ModelAndView wordHelper() {
+		return wordHelperService.wordHelper();
+	}
 
 	@PostMapping(value = "/addNewWord")
 	@ResponseBody

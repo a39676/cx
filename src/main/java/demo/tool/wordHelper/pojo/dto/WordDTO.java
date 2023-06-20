@@ -5,11 +5,6 @@ public class WordDTO {
 	private String en;
 	private String cn;
 
-	public WordDTO(String en, String cn) {
-		this.en = en;
-		this.cn = cn;
-	}
-
 	public String getEn() {
 		return en;
 	}

@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -26,6 +28,12 @@ public class WordHelperServiceImpl extends CommonService implements WordHelperSe
 
 	private String dictionarySavingFolderPathStr = "/home/u2/cx/wordHelper";
 
+	@Override
+	public ModelAndView wordHelper() {
+		ModelAndView v = new ModelAndView("wordHelperJSP/wordHelper");
+		return v;
+	}
+
 	private CustomerDictionaryDTO getCustomerDictionaryDTO() {
 		Long userId = baseUtilCustom.getUserId();
 		FileUtilCustom fileUtil = new FileUtilCustom();
@@ -33,8 +41,13 @@ public class WordHelperServiceImpl extends CommonService implements WordHelperSe
 		try {
 			content = fileUtil.getStringFromFile(dictionarySavingFolderPathStr + "/" + userId + ".json");
 		} catch (Exception e) {
-			content = "{}";
+			return new CustomerDictionaryDTO();
 		}
+
+		if (StringUtils.isBlank(content)) {
+			return new CustomerDictionaryDTO();
+		}
+
 		Gson gson = new GsonBuilder().create();
 		return gson.fromJson(content, CustomerDictionaryDTO.class);
 	}
@@ -131,7 +144,7 @@ public class WordHelperServiceImpl extends CommonService implements WordHelperSe
 					if (dto.getUpdate()) {
 						word.setCn(dto.getInputWord().getCn());
 					} else {
-						word.setCn(word.getCn() + dto.getInputWord().getCn());
+						word.setCn(word.getCn() + "; " + dto.getInputWord().getCn());
 					}
 
 					Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -142,12 +155,6 @@ public class WordHelperServiceImpl extends CommonService implements WordHelperSe
 					r.setMessage("Update: " + word.toString());
 					r.setIsSuccess();
 					return r;
-//					wordList.set(wordIndex, word);
-//					String dateStr = wordRecordList.get(lineIndex).getDateStr();
-//					WordDayLineDTO newWordDayLine = new WordDayLineDTO();
-//					newWordDayLine.setDateStr(dateStr);
-//					newWordDayLine.setWordList(wordList);
-//					wordRecordList.set(lineIndex, newWordDayLine);
 				}
 			}
 		}

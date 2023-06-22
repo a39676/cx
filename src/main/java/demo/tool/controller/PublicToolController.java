@@ -11,11 +11,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import autoTest.testEvent.scheduleClawing.hsbc.pojo.dto.HsbcWechatPreregistDTO;
 import autoTest.testEvent.scheduleClawing.searchingDemo.pojo.dto.UnderWayMonthTestDTO;
+import autoTest.testEvent.scheduleClawing.searchingDemo.pojo.dto.UnderWayTrainProjectDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.controller.CommonController;
 import demo.tool.bbtOrder.hsbc.pojo.vo.RandomIdDataVO;
 import demo.tool.bbtOrder.hsbc.service.HsbcService;
-import demo.tool.bbtOrder.underWayMonthTest.service.UnderWayMonthTestService;
+import demo.tool.bbtOrder.underWayMonthTest.service.UnderWayService;
 
 @RequestMapping(value = "/publicTool")
 @Controller
@@ -25,7 +26,7 @@ public class PublicToolController extends CommonController {
 	private HsbcService hsbcService;
 	
 	@Autowired
-	private UnderWayMonthTestService underWayMonthTestService;
+	private UnderWayService underWayService;
 	
 	@GetMapping(value = "/hsbc/hsbcWechatPreregist_")
 	public ModelAndView hsbcWechatPreregistView() {
@@ -51,12 +52,23 @@ public class PublicToolController extends CommonController {
 	
 	@GetMapping(value = "/freeYourTime/monthTest")
 	public ModelAndView monthTestView() {
-		return underWayMonthTestService.monthTestView();
+		return underWayService.monthTestView();
 	}
 	
 	@PostMapping(value = "/freeYourTime/addMonthTest")
 	@ResponseBody
-	public CommonResult monthTestView(@RequestBody UnderWayMonthTestDTO dto) {
-		return underWayMonthTestService.monthTest(dto);
+	public CommonResult monthTest(@RequestBody UnderWayMonthTestDTO dto) {
+		return underWayService.monthTest(dto);
+	}
+	
+	@GetMapping(value = "/freeYourTime/trainProject")
+	public ModelAndView trainProjectView() {
+		return underWayService.trainProject();
+	}
+	
+	@PostMapping(value = "/freeYourTime/trainProject")
+	@ResponseBody
+	public CommonResult trainProject(@RequestBody UnderWayTrainProjectDTO dto) {
+		return underWayService.trainProject(dto);
 	}
 }

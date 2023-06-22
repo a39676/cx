@@ -128,6 +128,15 @@
       <li>
         <a href="/tool/decryptPK?pk=cDfhyLRYBULovb3aTdGBRA%3D%3D" target="_blank">decryptPK</a>
       </li>
+      <li>
+        <a href="/wordHelper/wordHelper" target="_blank">word helper</a>
+      </li>
+      <li>
+        <a href="/publicTool/freeYourTime/trainProject" target="_blank">under way trainProject</a>
+      </li>
+      <li>
+        <a href="/publicTool/hsbc/hsbcWechatPreregist" target="_blank">hsbcWechatPreregist</a>
+      </li>
     </ul><!-- Tools -->
 
     <ul class="main-menu visible-on-click" id="notes">

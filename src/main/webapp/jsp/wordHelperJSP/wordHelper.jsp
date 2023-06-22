@@ -8,7 +8,7 @@
 <html>
 
   <head>
-    <title>${ title }AI art image wall manager</title>
+    <title>${ title }Word helper</title>
     <%@ include file="../baseElementJSP/normalHeader.jsp" %>
     <%@ include file="../baseElementJSP/normalJSPart.jsp" %>
   </head>

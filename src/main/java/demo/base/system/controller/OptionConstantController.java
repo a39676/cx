@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import demo.ai.aiArt.service.AiArtService;
 import demo.ai.aiArt.service.impl.AiArtOptionService;
 import demo.ai.aiChat.service.impl.AiChatOptionService;
 import demo.article.article.service.impl.ArticleOptionService;
@@ -68,6 +69,8 @@ public class OptionConstantController {
 	private WechatPayOptionService wechatPayOptionService;
 	@Autowired
 	private AiArtOptionService aiArtOptionService;
+	@Autowired
+	private AiArtService aiArtService;
 	@Autowired
 	private ToolOptionService toolOptionService;
 	@Autowired
@@ -195,6 +198,7 @@ public class OptionConstantController {
 	@ResponseBody
 	public String refreshAiArtOption() {
 		aiArtOptionService.refreshOption();
+		aiArtService.loadingCache();
 		return "done";
 	}
 

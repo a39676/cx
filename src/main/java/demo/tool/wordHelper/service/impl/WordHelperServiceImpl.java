@@ -186,12 +186,6 @@ public class WordHelperServiceImpl extends CommonService implements WordHelperSe
 			}
 			randomIndex = random.nextInt(wordRecord.getWordList().size());
 			WordDTO word = wordRecord.getWordList().get(randomIndex);
-			if (!dto.getPrintEn()) {
-				word.setEn("");
-			}
-			if (!dto.getPrintCn()) {
-				word.setCn("");
-			}
 			wordList.add(word);
 		}
 		r.setWordList(wordList);

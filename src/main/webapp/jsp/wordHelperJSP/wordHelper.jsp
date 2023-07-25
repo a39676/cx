@@ -36,21 +36,22 @@
       <div class="col-lg-12">
         <input type="number" id="randomWordsCounting" name="" value="10">
         <button id="printRandomWord">Print random word</button><br>
-        <div class="form-check">
+        <div class="form-check" onclick="enToggler()">
           <input class="form-check-input" type="checkbox" value="" id="showEN" checked>
           <label class="form-check-label" for="showEN">
             showEN
           </label>
         </div>
 
-        <div class="form-check">
+        <div class="form-check" onclick="cnToggler()">
           <input class="form-check-input" type="checkbox" value="" id="showCN">
           <label class="form-check-label" for="showCN">
             showCN
           </label>
         </div>
 
-        <label id="randomWords"></label>
+        <table class="table" id="randomWords">
+        </table>
       </div>
     </div>
 
@@ -64,6 +65,42 @@
   </div>
 
   <script type="text/javascript">
+
+    function enToggler(){
+      var enToggleFlag = document.getElementById('showEN').checked;
+      enToggle(enToggleFlag);
+    }
+
+    function enToggle(flag) {
+      var enArray = document.getElementsByClassName("wordEn");
+      if(!flag){
+        for (let i = 0; i < enArray.length; i++) {
+          enArray[i].style.display = "none";
+        }
+      } else {
+        for (let i = 0; i < enArray.length; i++) {
+          enArray[i].style.display = "block";
+        }
+      }
+    }
+
+    function cnToggler(){
+      var cnToggleFlag = document.getElementById('showCN').checked;
+      cnToggle(cnToggleFlag);
+    }
+
+    function cnToggle(flag) {
+      var cnArray = document.getElementsByClassName("wordCn");
+      if(!flag){
+        for (let i = 0; i < cnArray.length; i++) {
+          cnArray[i].style.display = "none";
+        }
+      } else {
+        for (let i = 0; i < cnArray.length; i++) {
+          cnArray[i].style.display = "block";
+        }
+      }
+    }
     
     $(document).ready(function() {
 
@@ -208,12 +245,10 @@
         var url = "/wordHelper/printRandomWords";
 
         var randomWordsCounting = $("#randomWordsCounting").val();
-        var printEn = $("#showEN").prop("checked");;
-        var printCn = $("#showCN").prop("checked");;
+        var printEn = $("#showEN").prop("checked");
+        var printCn = $("#showCN").prop("checked");
 
         var jsonOutput = {
-          printEn:printEn,
-          printCn:printCn,
           wordCount:randomWordsCounting,
         };
 
@@ -236,15 +271,15 @@
             $("#result").text(datas.code + ", " + datas.message);
             var wordResult = "";
             for(var i = 0; i < datas.wordList.length; i++){
-              wordResult = wordResult + "<br>";
-              if(printEn){
-                wordResult = wordResult + datas.wordList[i].en;
-              }
-              if(printCn){
-                wordResult = wordResult + ": " + datas.wordList[i].cn;
-              }
+              wordResult = wordResult + "<tr>";
+              wordResult = wordResult + "<td><label class='wordEn'>" + datas.wordList[i].en + "</label></td>";
+              wordResult = wordResult + "<td><label class='wordCn'>" + datas.wordList[i].cn + "</label></td>";
+              wordResult = wordResult + "</tr>";
             }
-            $("#randomWords").html(wordResult);
+            var head = "<tr> <td>EN</td> <td>CN</td> </tr>"
+            $("#randomWords").html(head + wordResult);
+            enToggle(printEn);
+            cnToggle(printCn);
           },
           error: function(datas) {
             console.log(datas);

@@ -116,6 +116,11 @@
         <a id="startExerciseLink" href="#" target="_blank">开始习题</a>
       </div>
     </div>
+    <div class="row">
+      <div class="col-md-12">
+        <a id="wordHelper" target="/wordHelper/wordHelper">背单词</a>
+      </div>
+    </div>
   </div>
 
   <!-- SCIPTS -->

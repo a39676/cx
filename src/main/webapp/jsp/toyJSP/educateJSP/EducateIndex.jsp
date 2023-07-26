@@ -118,7 +118,7 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <a id="wordHelper" target="/wordHelper/wordHelper">背单词</a>
+        <a id="wordHelper" href="/wordHelper/wordHelper">背单词</a>
       </div>
     </div>
   </div>

@@ -37,7 +37,6 @@ public class AiArtOptionService extends CommonService {
 	private Double consumptionCoefficient;
 	private String imagePkInsteadOfNsfw;
 	private String apiKeyOfAdmin;
-	private Long idOfAdmin;
 	private Integer maxWaitingJobCount;
 	private List<String> nsfwPrompt;
 	private String serviceStartTimeStr;
@@ -191,14 +190,6 @@ public class AiArtOptionService extends CommonService {
 		this.maxWaitingJobCount = maxWaitingJobCount;
 	}
 
-	public Long getIdOfAdmin() {
-		return idOfAdmin;
-	}
-
-	public void setIdOfAdmin(Long idOfAdmin) {
-		this.idOfAdmin = idOfAdmin;
-	}
-
 	public String getServiceStartTimeStr() {
 		return serviceStartTimeStr;
 	}
@@ -256,11 +247,11 @@ public class AiArtOptionService extends CommonService {
 				+ ", maxFailCountForJob=" + maxFailCountForJob + ", maxShowJob=" + maxShowJob + ", maxJobLivingDay="
 				+ maxJobLivingDay + ", maxLivingMinuteOfApiImageAfterFirstVisit="
 				+ maxLivingMinuteOfApiImageAfterFirstVisit + ", consumptionCoefficient=" + consumptionCoefficient
-				+ ", imagePkInsteadOfNsfw=" + imagePkInsteadOfNsfw + ", apiKeyOfAdmin=" + apiKeyOfAdmin + ", idOfAdmin="
-				+ idOfAdmin + ", maxWaitingJobCount=" + maxWaitingJobCount + ", nsfwPrompt=" + nsfwPrompt
-				+ ", serviceStartTimeStr=" + serviceStartTimeStr + ", serviceEndTimeStr=" + serviceEndTimeStr
-				+ ", freeJobDelaySeconds=" + freeJobDelaySeconds + ", higerFixMaxHeight=" + higerFixMaxHeight
-				+ ", higerFixMaxWidth=" + higerFixMaxWidth + ", higerFixMaxStep=" + higerFixMaxStep + "]";
+				+ ", imagePkInsteadOfNsfw=" + imagePkInsteadOfNsfw + ", apiKeyOfAdmin=" + apiKeyOfAdmin
+				+ ", maxWaitingJobCount=" + maxWaitingJobCount + ", nsfwPrompt=" + nsfwPrompt + ", serviceStartTimeStr="
+				+ serviceStartTimeStr + ", serviceEndTimeStr=" + serviceEndTimeStr + ", freeJobDelaySeconds="
+				+ freeJobDelaySeconds + ", higerFixMaxHeight=" + higerFixMaxHeight + ", higerFixMaxWidth="
+				+ higerFixMaxWidth + ", higerFixMaxStep=" + higerFixMaxStep + "]";
 	}
 
 	@PostConstruct

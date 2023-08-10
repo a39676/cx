@@ -278,7 +278,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 				r.setMessage("Model 不存在, 请输入正确参数");
 				return r;
 			}
-			if (!model.getPublicModel() && !aiArtOptionService.getIdOfAdmin().equals(aiUserId)) {
+			if (!model.getPublicModel() && !aiCommonOptionService.getIdOfAdmin().equals(aiUserId)) {
 				r.setMessage("Model 不存在, 请输入正确参数");
 				return r;
 			}
@@ -286,7 +286,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			dto.setModelName(model.getFileName());
 		}
 
-		dto.setIsFromAdmin(aiUserId.equals(aiArtOptionService.getIdOfAdmin()));
+		dto.setIsFromAdmin(aiUserId.equals(aiCommonOptionService.getIdOfAdmin()));
 
 		// 计费之前需要保证计费用的数据正确,
 		BigDecimal cost = calculateTokenCost(dto);
@@ -454,7 +454,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 				r.setMessage("Model 不存在, 请输入正确参数");
 				return r;
 			}
-			if (!model.getPublicModel() && !aiArtOptionService.getIdOfAdmin().equals(aiUserId)) {
+			if (!model.getPublicModel() && !aiCommonOptionService.getIdOfAdmin().equals(aiUserId)) {
 				r.setMessage("Model 不存在, 请输入正确参数");
 				return r;
 			}
@@ -462,7 +462,7 @@ public class AiArtServiceImpl extends AiArtCommonService implements AiArtService
 			dto.setModelName(model.getFileName());
 		}
 
-		dto.setIsFromAdmin(aiUserId.equals(aiArtOptionService.getIdOfAdmin()));
+		dto.setIsFromAdmin(aiUserId.equals(aiCommonOptionService.getIdOfAdmin()));
 
 		// 计费之前需要保证计费用的数据正确,
 		BigDecimal cost = calculateTokenCost(dto);

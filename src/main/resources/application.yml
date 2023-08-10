@@ -60,9 +60,10 @@ optionFilePath:
   joyGarden: "/home/u2/cx/optionFile/joy/gardenOption.json"
   openAI: "/home/u2/cx/optionFile/openAI/option.json"
   wechat: "/home/u2/cx/optionFile/wechat/option.json"
-  aiChat: "/home/u2/cx/optionFile/aiChat/option.json"
   cloudFlare: "/home/u2/cx/optionFile/cloudFlare/option.json"
   wechatPay: "/home/u2/cx/optionFile/wechatPay/option.json"
+  aiCommon: "/home/u2/cx/optionFile/aiCommon/option.json"
+  aiChat: "/home/u2/cx/optionFile/aiChat/option.json"
   aiArt: "/home/u2/cx/optionFile/aiArt/option.json"
   promote: "/home/u2/cx/optionFile/promote/option.json"
   

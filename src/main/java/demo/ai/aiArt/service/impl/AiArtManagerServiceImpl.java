@@ -300,7 +300,7 @@ public class AiArtManagerServiceImpl extends AiArtCommonService implements AiArt
 	@Override
 	public void setReviewBatchForAdmin() {
 		AiArtTextToImageJobRecordExample example = new AiArtTextToImageJobRecordExample();
-		example.createCriteria().andAiUserIdEqualTo(aiArtOptionService.getIdOfAdmin()).andHasReviewEqualTo(false);
+		example.createCriteria().andAiUserIdEqualTo(aiCommonOptionService.getIdOfAdmin()).andHasReviewEqualTo(false);
 		AiArtTextToImageJobRecord row = new AiArtTextToImageJobRecord();
 		row.setHasReview(true);
 		aiArtTextToImageJobRecordMapper.updateByExampleSelective(row, example);

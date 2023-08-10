@@ -10,6 +10,6 @@ public class AiComplexToolServiceImpl extends AiArtCommonService implements AiCo
 
 	@Override
 	public void setRecharMarkForAdmin() {
-		addRechargeMarkLiveAWeek(aiArtOptionService.getIdOfAdmin());
+		addRechargeMarkLiveAWeek(aiCommonOptionService.getIdOfAdmin());
 	}
 }

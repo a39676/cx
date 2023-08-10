@@ -27,6 +27,8 @@ public abstract class AiCommonService extends ToolCommonService {
 	@Autowired
 	protected OpenAiUtil util;
 	@Autowired
+	protected AiCommonOptionService aiCommonOptionService;
+	@Autowired
 	protected AiChatOptionService aiChatOptionService;
 	@Autowired
 	protected AiChatCacheService aiChatCacheService;

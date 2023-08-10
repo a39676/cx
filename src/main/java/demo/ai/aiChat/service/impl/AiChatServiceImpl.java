@@ -10,7 +10,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,7 @@ import openAi.pojo.dto.OpanAiChatCompletionResponseDTO;
 import openAi.pojo.result.OpenAiChatCompletionSendMessageResult;
 import openAi.pojo.type.OpenAiChatCompletionFinishType;
 import openAi.pojo.type.OpenAiChatCompletionMessageRoleType;
+import openAi.pojo.type.OpenAiModelType;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -93,6 +96,20 @@ public class AiChatServiceImpl extends AiCommonService implements AiChatService 
 
 		// send new msg, wait feedback
 		JSONObject apiResult = util.sendChatCompletionFromApi(dto);
+
+		// default setting, add forbidden words
+		if (!aiChatUserId.equals(aiCommonOptionService.getIdOfAdmin())) {
+			Map<String, Integer> defaultLogitBias = dto.getLogit_bias();
+			if (defaultLogitBias == null) {
+				defaultLogitBias = new HashMap<>();
+			}
+			defaultLogitBias.put("openAI", -100);
+			for (OpenAiModelType type : OpenAiModelType.values()) {
+				defaultLogitBias.put(type.getName(), -100);
+			}
+			defaultLogitBias.put("chatGPT", -100);
+			dto.setLogit_bias(defaultLogitBias);
+		}
 
 		// if fail, send fail response
 		if (apiResult.containsKey("error")) {

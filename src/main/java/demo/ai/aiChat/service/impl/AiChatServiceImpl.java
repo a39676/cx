@@ -94,9 +94,6 @@ public class AiChatServiceImpl extends AiCommonService implements AiChatService 
 			return r;
 		}
 
-		// send new msg, wait feedback
-		JSONObject apiResult = util.sendChatCompletionFromApi(dto);
-
 		// default setting, add forbidden words
 		if (!aiChatUserId.equals(aiCommonOptionService.getIdOfAdmin())) {
 			Map<String, Integer> defaultLogitBias = dto.getLogit_bias();
@@ -110,6 +107,9 @@ public class AiChatServiceImpl extends AiCommonService implements AiChatService 
 			defaultLogitBias.put("chatGPT", -100);
 			dto.setLogit_bias(defaultLogitBias);
 		}
+
+		// send new msg, wait feedback
+		JSONObject apiResult = util.sendChatCompletionFromApi(dto);
 
 		// if fail, send fail response
 		if (apiResult.containsKey("error")) {

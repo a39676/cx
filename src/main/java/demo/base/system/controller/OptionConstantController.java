@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.ai.aiArt.service.AiArtService;
+import demo.ai.aiArt.service.impl.AiArtCacheService;
 import demo.ai.aiArt.service.impl.AiArtOptionService;
 import demo.ai.aiChat.service.impl.AiChatOptionService;
 import demo.ai.common.service.impl.AiCommonOptionService;
@@ -74,6 +75,8 @@ public class OptionConstantController {
 	private AiArtOptionService aiArtOptionService;
 	@Autowired
 	private AiArtService aiArtService;
+	@Autowired
+	private AiArtCacheService aiArtCacheService;
 	@Autowired
 	private ToolOptionService toolOptionService;
 	@Autowired
@@ -209,7 +212,7 @@ public class OptionConstantController {
 	public String refreshAiArtOption() {
 		aiArtOptionService.refreshOption();
 		aiArtService.loadingCache();
-		return "done";
+		return aiArtOptionService.toString() + ", " + aiArtCacheService.toString();
 	}
 
 	@GetMapping(value = "/refreshToolOption")

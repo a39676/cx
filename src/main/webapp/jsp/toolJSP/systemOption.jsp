@@ -46,6 +46,7 @@
   <a href="/optionConstant/refreshJoyOption" target="_blank">refreshJoyOption</a><br>
   <a href="/optionConstant/refreshJoyGardenOption" target="_blank">refreshJoyGardenOption</a><br>
   <a href="/optionConstant/refreshOpenAiOption" target="_blank">refreshOpenAiOption</a><br>
+  <a href="/optionConstant/refreshAiCommonOption" target="_blank">refreshAiCommonOption</a><br>
   <a href="/optionConstant/refreshAiChatOption" target="_blank">refreshAiChatOption</a><br>
   <a href="/optionConstant/refreshAiArtOption" target="_blank">refreshAiArtOption</a><br>
   <a href="/optionConstant/refreshCloudFlareOption" target="_blank">refreshCloudFlareOption</a><br>

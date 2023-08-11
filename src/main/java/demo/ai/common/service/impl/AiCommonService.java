@@ -72,9 +72,9 @@ public abstract class AiCommonService extends ToolCommonService {
 	protected Boolean checkRechargeMarkThisWeek(Long aiUserId) {
 		return redisConnectService.hasKey(AI_SERVCIE_RECHARGE_REDIS_KEY_PREFIX + String.valueOf(aiUserId));
 	}
-	
+
 	protected String getRechargeMarkThisWeek(Long aiUserId) {
-		return redisConnectService.getValByName(AI_SERVCIE_RECHARGE_REDIS_KEY_PREFIX+ String.valueOf(aiUserId));
+		return redisConnectService.getValByName(AI_SERVCIE_RECHARGE_REDIS_KEY_PREFIX + String.valueOf(aiUserId));
 	}
 
 	protected void sendTelegramMessage(String msg) {
@@ -177,5 +177,20 @@ public abstract class AiCommonService extends ToolCommonService {
 		aiChatCacheService.getApiKeyCacheMap().put(apiKey, aiUserId);
 
 		return aiUserId;
+	}
+
+	protected String replaceForbiddenWordsForAiChat(String content) {
+		Set<String> forbiddenWords = aiChatOptionService.getForbiddenWords();
+		StringBuffer sb = new StringBuffer(content);
+		int i = -1;
+		for (String word : forbiddenWords) {
+			i = content.toLowerCase().indexOf(word);
+			if (i == -1) {
+				continue;
+			}
+			sb.replace(i, i + word.length(), "*".repeat(word.length()));
+			i = -1;
+		}
+		return sb.toString();
 	}
 }

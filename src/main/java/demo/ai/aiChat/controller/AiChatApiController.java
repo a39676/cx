@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ai.aiChat.pojo.constant.AiChatApiUrlConstant;
 import ai.aiChat.pojo.dto.AiChatSendNewMsgFromApiDTO;
 import demo.ai.aiChat.service.AiChatFromApiService;
-import net.sf.json.JSONObject;
+import openAi.pojo.dto.OpenAiChatCompletionResponseDTO;
 
 @Controller
 @RequestMapping(value = AiChatApiUrlConstant.ROOT)
@@ -21,7 +21,7 @@ public class AiChatApiController {
 
 	@PostMapping(value = AiChatApiUrlConstant.SEND_CHAT_COMPLETION)
 	@ResponseBody
-	public JSONObject sendChatCompletion(@RequestBody AiChatSendNewMsgFromApiDTO dto) {
+	public OpenAiChatCompletionResponseDTO sendChatCompletion(@RequestBody AiChatSendNewMsgFromApiDTO dto) {
 		return aiChatFromApiService.sendNewChatMessage(dto);
 	}
 }

@@ -212,6 +212,7 @@ public class AiChatServiceImpl extends AiCommonService implements AiChatService 
 		OpenAiChatCompletionMessageDTO feedbackMsgDTO = apiResult.getDto().getChoices().get(0).getMessage();
 		if (!aiChatUserId.equals(aiCommonOptionService.getIdOfAdmin())) {
 			feedbackMsgDTO.setContent(replaceForbiddenWordsForAiChat(feedbackMsgDTO.getContent()));
+			apiResult.getDto().getChoices().get(0).setMessage(feedbackMsgDTO);
 		}
 
 		OpenAiChatCompletionMessageRoleType feedbackMsgRoleType = OpenAiChatCompletionMessageRoleType

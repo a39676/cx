@@ -181,6 +181,7 @@ public abstract class AiCommonService extends ToolCommonService {
 
 	protected String replaceForbiddenWordsForAiChat(String content) {
 		Set<String> forbiddenWords = aiChatOptionService.getForbiddenWords();
+		log.error("forbidden words: " + forbiddenWords);
 		StringBuffer sb = new StringBuffer(content);
 		int i = -1;
 		for (String word : forbiddenWords) {
@@ -189,6 +190,7 @@ public abstract class AiCommonService extends ToolCommonService {
 				continue;
 			}
 			sb.replace(i, i + word.length(), "*".repeat(word.length()));
+			log.error("New content after replace: " + sb.toString());
 			i = -1;
 		}
 		return sb.toString();

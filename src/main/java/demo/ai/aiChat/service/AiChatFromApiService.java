@@ -4,7 +4,7 @@ import ai.aiChat.pojo.dto.AiChatSendNewMsgFromApiDTO;
 import ai.aiChat.pojo.result.FindAllApiKeysResult;
 import ai.aiChat.pojo.result.GenerateNewApiKeyResult;
 import auxiliaryCommon.pojo.result.CommonResult;
-import net.sf.json.JSONObject;
+import openAi.pojo.dto.OpenAiChatCompletionResponseDTO;
 
 public interface AiChatFromApiService {
 
@@ -14,6 +14,6 @@ public interface AiChatFromApiService {
 
 	CommonResult deleteApiKey(String tmpKey, String apiKey);
 
-	JSONObject sendNewChatMessage(AiChatSendNewMsgFromApiDTO dto);
+	OpenAiChatCompletionResponseDTO sendNewChatMessage(AiChatSendNewMsgFromApiDTO dto);
 
 }

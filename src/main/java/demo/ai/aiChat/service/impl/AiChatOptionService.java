@@ -40,6 +40,7 @@ public class AiChatOptionService extends CommonService {
 	private Integer chatHistorySaveCountingLimit = 100;
 	private Integer dailySignUpBonus;
 	private String sensitiveWordsPathStr;
+	private String forbiddenWordsPathStr;
 	private Integer sensitiveWordsTriggerInMinutes;
 	private Integer sensitiveWordsTriggerMaxCount;
 	private List<AiChatUserMembershipDetailDTO> membershipLDetails;
@@ -52,6 +53,7 @@ public class AiChatOptionService extends CommonService {
 	private Integer maxBonusForDailySignUp;
 
 	private Set<String> sensitiveWords = new HashSet<>();
+	private Set<String> forbiddenWords = new HashSet<>();
 
 	public String getChatStorePrefixPath() {
 		return chatStorePrefixPath;
@@ -117,6 +119,14 @@ public class AiChatOptionService extends CommonService {
 		this.sensitiveWordsPathStr = sensitiveWordsPathStr;
 	}
 
+	public String getForbiddenWordsPathStr() {
+		return forbiddenWordsPathStr;
+	}
+
+	public void setForbiddenWordsPathStr(String forbiddenWordsPathStr) {
+		this.forbiddenWordsPathStr = forbiddenWordsPathStr;
+	}
+
 	public Integer getSensitiveWordsTriggerInMinutes() {
 		return sensitiveWordsTriggerInMinutes;
 	}
@@ -139,6 +149,14 @@ public class AiChatOptionService extends CommonService {
 
 	public void setSensitiveWords(Set<String> sensitiveWords) {
 		this.sensitiveWords = sensitiveWords;
+	}
+
+	public Set<String> getForbiddenWords() {
+		return forbiddenWords;
+	}
+
+	public void setForbiddenWords(Set<String> forbiddenWords) {
+		this.forbiddenWords = forbiddenWords;
 	}
 
 	public List<AiChatUserMembershipDetailDTO> getMembershipLDetails() {
@@ -212,13 +230,14 @@ public class AiChatOptionService extends CommonService {
 				+ ", payResultStorePrefixPath=" + payResultStorePrefixPath + ", userExtraJsonDetailStorePrefixPath="
 				+ userExtraJsonDetailStorePrefixPath + ", chatHistorySaveCountingLimit=" + chatHistorySaveCountingLimit
 				+ ", dailySignUpBonus=" + dailySignUpBonus + ", sensitiveWordsPathStr=" + sensitiveWordsPathStr
-				+ ", sensitiveWordsTriggerInMinutes=" + sensitiveWordsTriggerInMinutes
-				+ ", sensitiveWordsTriggerMaxCount=" + sensitiveWordsTriggerMaxCount + ", membershipLDetails="
-				+ membershipLDetails + ", promptOfActAs=" + promptOfActAs + ", inputMaxLength=" + inputMaxLength
-				+ ", bonusForNewUser=" + bonusForNewUser + ", chatHistoryCountLimitForFreeUser="
-				+ chatHistoryCountLimitForFreeUser + ", maxCountOfApiKey=" + maxCountOfApiKey
-				+ ", maxCountOfapiKeyOperations=" + maxCountOfapiKeyOperations + ", maxBonusForDailySignUp="
-				+ maxBonusForDailySignUp + ", sensitiveWords=" + sensitiveWords + "]";
+				+ ", forbiddenWordsPathStr=" + forbiddenWordsPathStr + ", sensitiveWordsTriggerInMinutes="
+				+ sensitiveWordsTriggerInMinutes + ", sensitiveWordsTriggerMaxCount=" + sensitiveWordsTriggerMaxCount
+				+ ", membershipLDetails=" + membershipLDetails + ", promptOfActAs=" + promptOfActAs
+				+ ", inputMaxLength=" + inputMaxLength + ", bonusForNewUser=" + bonusForNewUser
+				+ ", chatHistoryCountLimitForFreeUser=" + chatHistoryCountLimitForFreeUser + ", maxCountOfApiKey="
+				+ maxCountOfApiKey + ", maxCountOfapiKeyOperations=" + maxCountOfapiKeyOperations
+				+ ", maxBonusForDailySignUp=" + maxBonusForDailySignUp + ", sensitiveWords=" + sensitiveWords
+				+ ", forbiddenWords=" + forbiddenWords + "]";
 	}
 
 	@PostConstruct
@@ -243,6 +262,18 @@ public class AiChatOptionService extends CommonService {
 				}
 			} else {
 				log.error("Can NOT find sensitive words");
+			}
+
+			if (StringUtils.isNotBlank(forbiddenWordsPathStr)) {
+				log.error("Loading forbidden words");
+				Path path = Paths.get(forbiddenWordsPathStr);
+				BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8);
+				String currentLine = null;
+				while ((currentLine = reader.readLine()) != null) {
+					forbiddenWords.add(currentLine);
+				}
+			} else {
+				log.error("Can NOT find forbidden words");
 			}
 
 			log.error("AI chat option loaded");

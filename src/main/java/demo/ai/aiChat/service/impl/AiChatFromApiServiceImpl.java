@@ -19,6 +19,8 @@ import demo.ai.aiChat.service.AiChatFromApiService;
 import demo.ai.aiChat.service.AiChatService;
 import demo.ai.common.service.impl.AiCommonService;
 import net.sf.json.JSONObject;
+import openAi.pojo.dto.OpenAiChatCompletionErrorResponseErrorDTO;
+import openAi.pojo.dto.OpenAiChatCompletionResponseDTO;
 import toolPack.dateTimeHandle.DateTimeUtilCommon;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -149,13 +151,13 @@ public class AiChatFromApiServiceImpl extends AiCommonService implements AiChatF
 	}
 
 	@Override
-	public JSONObject sendNewChatMessage(AiChatSendNewMsgFromApiDTO dto) {
-		JSONObject r = new JSONObject();
-		JSONObject errorMsg = new JSONObject();
+	public OpenAiChatCompletionResponseDTO sendNewChatMessage(AiChatSendNewMsgFromApiDTO dto) {
+		OpenAiChatCompletionResponseDTO r = new OpenAiChatCompletionResponseDTO();
+		OpenAiChatCompletionErrorResponseErrorDTO errorMsg = new OpenAiChatCompletionErrorResponseErrorDTO();
 
 		if (StringUtils.isBlank(dto.getApiKey())) {
-			errorMsg.put("message", "API key error");
-			r.put("error", errorMsg);
+			errorMsg.setMessage("API key error");
+			r.setError(errorMsg);
 			return r;
 		}
 
@@ -164,8 +166,8 @@ public class AiChatFromApiServiceImpl extends AiCommonService implements AiChatF
 		Long apiKeyDecrypt = systemOptionService.decryptPrivateKey(dto.getApiKey());
 
 		if (aiChatUserId == null) {
-			errorMsg.put("message", "API key expired, please generate a new one");
-			r.put("error", errorMsg);
+			errorMsg.setMessage("API key expired, please generate a new one");
+			r.setError(errorMsg);
 			return r;
 		}
 
@@ -173,9 +175,9 @@ public class AiChatFromApiServiceImpl extends AiCommonService implements AiChatF
 		po.setLastUsedTime(LocalDateTime.now());
 		apiKeyMapper.updateByPrimaryKeySelective(po);
 
-		JSONObject apiResult = aiChatService.sendNewChatMessageFromApi(aiChatUserId, dto);
+		OpenAiChatCompletionResponseDTO apiResult = aiChatService.sendNewChatMessageFromApi(aiChatUserId, dto);
 
-		if (!apiResult.containsKey("error")) {
+		if (apiResult.getError() != null) {
 			LocalDateTime now = LocalDateTime.now();
 			String storePrefixPath = aiChatOptionService.getChatFromApiStorePrefixPath();
 			String storePathStr = storePrefixPath + File.separator + aiChatUserId + File.separator

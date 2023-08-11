@@ -28,10 +28,10 @@ import demo.base.system.service.impl.SystemOptionService;
 import demo.common.service.CommonService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import openAi.pojo.dto.OpanAiChatCompletionMessageDTO;
-import openAi.pojo.dto.OpanAiChatCompletionResponseChoiceDTO;
-import openAi.pojo.dto.OpanAiChatCompletionResponseDTO;
-import openAi.pojo.dto.OpanAiChatCompletionResponseUsageDTO;
+import openAi.pojo.dto.OpenAiChatCompletionMessageDTO;
+import openAi.pojo.dto.OpenAiChatCompletionResponseChoiceDTO;
+import openAi.pojo.dto.OpenAiChatCompletionResponseDTO;
+import openAi.pojo.dto.OpenAiChatCompletionResponseUsageDTO;
 import openAi.pojo.result.OpenAiChatCompletionSendMessageResult;
 import openAi.pojo.type.OpenAiChatCompletionFinishType;
 import openAi.pojo.type.OpenAiChatCompletionMessageRoleType;
@@ -97,12 +97,12 @@ public class OpenAiUtil extends CommonService {
 	}
 
 	public OpenAiChatCompletionSendMessageResult sendChatCompletionFromUI(
-			List<OpanAiChatCompletionMessageDTO> chatHistory) {
+			List<OpenAiChatCompletionMessageDTO> chatHistory) {
 		return sendChatCompletionFromUI(chatHistory, null);
 	}
 
 	public OpenAiChatCompletionSendMessageResult sendChatCompletionFromUI(
-			List<OpanAiChatCompletionMessageDTO> chatHistory, String msg) {
+			List<OpenAiChatCompletionMessageDTO> chatHistory, String msg) {
 		OpenAiChatCompletionSendMessageResult r = new OpenAiChatCompletionSendMessageResult();
 		if (chatHistory == null) {
 			chatHistory = new ArrayList<>();
@@ -117,7 +117,7 @@ public class OpenAiUtil extends CommonService {
 
 			JSONObject parameterJson = null;
 			if (StringUtils.isNotBlank(msg)) {
-				OpanAiChatCompletionMessageDTO newChatMsg = new OpanAiChatCompletionMessageDTO();
+				OpenAiChatCompletionMessageDTO newChatMsg = new OpenAiChatCompletionMessageDTO();
 				newChatMsg.setRole(OpenAiChatCompletionMessageRoleType.USER.getName());
 				newChatMsg.setContent(msg);
 				chatHistory.add(newChatMsg);
@@ -152,8 +152,8 @@ public class OpenAiUtil extends CommonService {
 			}
 			in.close();
 
-			OpanAiChatCompletionResponseDTO dto = new Gson().fromJson(response.toString(),
-					OpanAiChatCompletionResponseDTO.class);
+			OpenAiChatCompletionResponseDTO dto = new Gson().fromJson(response.toString(),
+					OpenAiChatCompletionResponseDTO.class);
 			r.setDto(dto);
 			r.setIsSuccess();
 			return r;
@@ -173,7 +173,7 @@ public class OpenAiUtil extends CommonService {
 		if (systemOptionService.isDev()) {
 			OpenAiChatCompletionSendMessageResult mockResult = createFakeMessageResult(
 					"demo msg at: " + LocalDateTime.now());
-			OpanAiChatCompletionResponseDTO mockMsg = mockResult.getDto();
+			OpenAiChatCompletionResponseDTO mockMsg = mockResult.getDto();
 			j = JSONObject.fromObject(mockMsg);
 			return j;
 		}
@@ -309,13 +309,13 @@ public class OpenAiUtil extends CommonService {
 		return json;
 	}
 
-	private JSONObject buildChatCompletionsParamJson(List<OpanAiChatCompletionMessageDTO> chatHistory) {
+	private JSONObject buildChatCompletionsParamJson(List<OpenAiChatCompletionMessageDTO> chatHistory) {
 		/* Reference: https://platform.openai.com/docs/api-reference/chat/create */
 		JSONObject parameterJson = new JSONObject();
 		parameterJson.put("model", OpenAiModelType.GPT_V_3_5.getName());
 		JSONArray messageArray = new JSONArray();
 		JSONObject subChatMsg = null;
-		for (OpanAiChatCompletionMessageDTO dto : chatHistory) {
+		for (OpenAiChatCompletionMessageDTO dto : chatHistory) {
 			subChatMsg = JSONObject.fromObject(dto);
 			messageArray.add(subChatMsg);
 		}
@@ -329,11 +329,11 @@ public class OpenAiUtil extends CommonService {
 		OpenAiChatCompletionSendMessageResult r = new OpenAiChatCompletionSendMessageResult();
 
 		r.setIsSuccess();
-		OpanAiChatCompletionResponseDTO dto = new OpanAiChatCompletionResponseDTO();
-		OpanAiChatCompletionResponseChoiceDTO c = new OpanAiChatCompletionResponseChoiceDTO();
+		OpenAiChatCompletionResponseDTO dto = new OpenAiChatCompletionResponseDTO();
+		OpenAiChatCompletionResponseChoiceDTO c = new OpenAiChatCompletionResponseChoiceDTO();
 		c.setFinish_reason(OpenAiChatCompletionFinishType.LENGTH.getName());
 		c.setIndex(0);
-		OpanAiChatCompletionMessageDTO msgDTO = new OpanAiChatCompletionMessageDTO();
+		OpenAiChatCompletionMessageDTO msgDTO = new OpenAiChatCompletionMessageDTO();
 		msgDTO.setContent(msg + ", feedback");
 		msgDTO.setRole(OpenAiChatCompletionMessageRoleType.ASSISTANT.getName());
 		c.setMessage(msgDTO);
@@ -341,7 +341,7 @@ public class OpenAiUtil extends CommonService {
 		dto.setCreated(1L);
 		dto.setId("id");
 		dto.setModel(OpenAiModelType.GPT_V_3_5.getName());
-		OpanAiChatCompletionResponseUsageDTO usage = new OpanAiChatCompletionResponseUsageDTO();
+		OpenAiChatCompletionResponseUsageDTO usage = new OpenAiChatCompletionResponseUsageDTO();
 		usage.setCompletion_tokens(1);
 		usage.setPrompt_tokens(2);
 		usage.setTotal_tokens(3);
@@ -352,7 +352,7 @@ public class OpenAiUtil extends CommonService {
 	}
 
 	public OpenAiChatCompletionSendMessageResult sendChatCompletionFromUIWithSdk(
-			List<OpanAiChatCompletionMessageDTO> chatHistory, String msg, Integer maxToken) {
+			List<OpenAiChatCompletionMessageDTO> chatHistory, String msg, Integer maxToken) {
 		OpenAiChatCompletionSendMessageResult r = new OpenAiChatCompletionSendMessageResult();
 		if (chatHistory == null) {
 			chatHistory = new ArrayList<>();
@@ -370,7 +370,7 @@ public class OpenAiUtil extends CommonService {
 			OpenAiService openAiService = new OpenAiService(optionService.getApiKey(), Duration.ofSeconds(10));
 
 			List<ChatMessage> sdkMsgList = new ArrayList<>();
-			for (OpanAiChatCompletionMessageDTO chat : chatHistory) {
+			for (OpenAiChatCompletionMessageDTO chat : chatHistory) {
 				ChatMessage sdkDto = new ChatMessage();
 				sdkDto.setContent(chat.getContent());
 				sdkDto.setRole(chat.getRole());
@@ -389,14 +389,14 @@ public class OpenAiUtil extends CommonService {
 
 			ChatCompletionResult sdkResult = openAiService.createChatCompletion(chatCompletionRequest);
 
-			OpanAiChatCompletionResponseDTO resultDto = new OpanAiChatCompletionResponseDTO();
+			OpenAiChatCompletionResponseDTO resultDto = new OpenAiChatCompletionResponseDTO();
 			List<ChatCompletionChoice> sdkChoices = sdkResult.getChoices();
 			ChatCompletionChoice sdkChoice = sdkChoices.get(0);
-			OpanAiChatCompletionResponseChoiceDTO choice = new OpanAiChatCompletionResponseChoiceDTO();
+			OpenAiChatCompletionResponseChoiceDTO choice = new OpenAiChatCompletionResponseChoiceDTO();
 			choice.setFinish_reason(sdkChoice.getFinishReason());
 			choice.setIndex(sdkChoice.getIndex());
 			ChatMessage sdkMsg = sdkChoice.getMessage();
-			OpanAiChatCompletionMessageDTO dtoMsg = new OpanAiChatCompletionMessageDTO();
+			OpenAiChatCompletionMessageDTO dtoMsg = new OpenAiChatCompletionMessageDTO();
 			dtoMsg.setContent(sdkMsg.getContent());
 			dtoMsg.setRole(sdkMsg.getRole());
 			choice.setMessage(dtoMsg);
@@ -405,8 +405,8 @@ public class OpenAiUtil extends CommonService {
 			resultDto.setId(resultDto.getId());
 			resultDto.setModel(resultDto.getModel());
 			resultDto.setObject(resultDto.getObject());
-			OpanAiChatCompletionResponseUsageDTO sdkUsage = resultDto.getUsage();
-			OpanAiChatCompletionResponseUsageDTO dtoUsage = new OpanAiChatCompletionResponseUsageDTO();
+			OpenAiChatCompletionResponseUsageDTO sdkUsage = resultDto.getUsage();
+			OpenAiChatCompletionResponseUsageDTO dtoUsage = new OpenAiChatCompletionResponseUsageDTO();
 			dtoUsage.setCompletion_tokens(sdkUsage.getCompletion_tokens());
 			dtoUsage.setPrompt_tokens(sdkUsage.getPrompt_tokens());
 			dtoUsage.setTotal_tokens(sdkUsage.getTotal_tokens());
@@ -430,7 +430,7 @@ public class OpenAiUtil extends CommonService {
 			OpenAiService openAiService = new OpenAiService(optionService.getApiKey(), Duration.ofSeconds(10));
 
 			List<ChatMessage> sdkMsgList = new ArrayList<>();
-			for (OpanAiChatCompletionMessageDTO chat : inputDTO.getMessages()) {
+			for (OpenAiChatCompletionMessageDTO chat : inputDTO.getMessages()) {
 				ChatMessage sdkDto = new ChatMessage();
 				sdkDto.setContent(chat.getContent());
 				sdkDto.setRole(chat.getRole());
@@ -449,14 +449,14 @@ public class OpenAiUtil extends CommonService {
 			ChatCompletionResult sdkResult = openAiService.createChatCompletion(chatCompletionRequest);
 			log.error(sdkResult.toString());
 
-			OpanAiChatCompletionResponseDTO resultDto = new OpanAiChatCompletionResponseDTO();
+			OpenAiChatCompletionResponseDTO resultDto = new OpenAiChatCompletionResponseDTO();
 			List<ChatCompletionChoice> sdkChoices = sdkResult.getChoices();
 			ChatCompletionChoice sdkChoice = sdkChoices.get(0);
-			OpanAiChatCompletionResponseChoiceDTO choice = new OpanAiChatCompletionResponseChoiceDTO();
+			OpenAiChatCompletionResponseChoiceDTO choice = new OpenAiChatCompletionResponseChoiceDTO();
 			choice.setFinish_reason(sdkChoice.getFinishReason());
 			choice.setIndex(sdkChoice.getIndex());
 			ChatMessage sdkMsg = sdkChoice.getMessage();
-			OpanAiChatCompletionMessageDTO dtoMsg = new OpanAiChatCompletionMessageDTO();
+			OpenAiChatCompletionMessageDTO dtoMsg = new OpenAiChatCompletionMessageDTO();
 			dtoMsg.setContent(sdkMsg.getContent());
 			dtoMsg.setRole(sdkMsg.getRole());
 			choice.setMessage(dtoMsg);
@@ -465,8 +465,8 @@ public class OpenAiUtil extends CommonService {
 			resultDto.setId(resultDto.getId());
 			resultDto.setModel(resultDto.getModel());
 			resultDto.setObject(resultDto.getObject());
-			OpanAiChatCompletionResponseUsageDTO sdkUsage = resultDto.getUsage();
-			OpanAiChatCompletionResponseUsageDTO dtoUsage = new OpanAiChatCompletionResponseUsageDTO();
+			OpenAiChatCompletionResponseUsageDTO sdkUsage = resultDto.getUsage();
+			OpenAiChatCompletionResponseUsageDTO dtoUsage = new OpenAiChatCompletionResponseUsageDTO();
 			dtoUsage.setCompletion_tokens(sdkUsage.getCompletion_tokens());
 			dtoUsage.setPrompt_tokens(sdkUsage.getPrompt_tokens());
 			dtoUsage.setTotal_tokens(sdkUsage.getTotal_tokens());

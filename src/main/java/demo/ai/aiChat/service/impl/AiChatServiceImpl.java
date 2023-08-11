@@ -10,9 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +32,12 @@ import demo.ai.aiChat.service.AiChatService;
 import demo.ai.aiChat.service.AiUserService;
 import demo.ai.common.service.impl.AiCommonService;
 import net.sf.json.JSONObject;
-import openAi.pojo.dto.OpanAiChatCompletionMessageDTO;
-import openAi.pojo.dto.OpanAiChatCompletionResponseDTO;
+import openAi.pojo.dto.OpenAiChatCompletionErrorResponseErrorDTO;
+import openAi.pojo.dto.OpenAiChatCompletionMessageDTO;
+import openAi.pojo.dto.OpenAiChatCompletionResponseDTO;
 import openAi.pojo.result.OpenAiChatCompletionSendMessageResult;
 import openAi.pojo.type.OpenAiChatCompletionFinishType;
 import openAi.pojo.type.OpenAiChatCompletionMessageRoleType;
-import openAi.pojo.type.OpenAiModelType;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -56,12 +54,13 @@ public class AiChatServiceImpl extends AiCommonService implements AiChatService 
 	private FileUtilCustom ioUtil;
 
 	@Override
-	public JSONObject sendNewChatMessageFromApi(Long aiChatUserId, AiChatSendNewMsgFromApiDTO dto) {
-		JSONObject r = new JSONObject();
-		JSONObject errorMsg = new JSONObject();
+	public OpenAiChatCompletionResponseDTO sendNewChatMessageFromApi(Long aiChatUserId,
+			AiChatSendNewMsgFromApiDTO dto) {
+		OpenAiChatCompletionResponseDTO r = new OpenAiChatCompletionResponseDTO();
+		OpenAiChatCompletionErrorResponseErrorDTO errorMsg = new OpenAiChatCompletionErrorResponseErrorDTO();
 
 		int sensitiveWordCounting = 0;
-		for (OpanAiChatCompletionMessageDTO msg : dto.getMessages()) {
+		for (OpenAiChatCompletionMessageDTO msg : dto.getMessages()) {
 			sensitiveWordCounting = sensitiveWordCounting + sensitiveWordCount(msg.getContent());
 		}
 		if (sensitiveWordCounting > 0) {
@@ -77,63 +76,47 @@ public class AiChatServiceImpl extends AiCommonService implements AiChatService 
 
 		AiChatUserDetail userDetail = aiChatUserService.__getUserDetail(aiChatUserId);
 		if (userDetail == null) {
-			errorMsg.put("message", "请输入正确 API key");
-			r.put("error", errorMsg);
+			errorMsg.setMessage("请输入正确 API key");
+			r.setError(errorMsg);
 			return r;
 		}
 		if (userDetail.getIsBlock()) {
-			errorMsg.put("message", "Profile error, 请联系管理员");
-			r.put("error", errorMsg);
+			errorMsg.setMessage("Profile error, 请联系管理员");
+			r.setError(errorMsg);
 			return r;
 		}
 		// check amount
 		int totalAmount = userDetail.getBonusAmount().intValue() + userDetail.getRechargeAmount().intValue();
 		if (totalAmount <= 0) {
-			errorMsg.put("message", "余额不足, 请到个人中心购买充值包 签到, 或留意其他活动");
-			r.put("error", errorMsg);
+			errorMsg.setMessage("余额不足, 请到个人中心购买充值包 签到, 或留意其他活动");
+			r.setError(errorMsg);
 			return r;
-		}
-
-		// default setting, add forbidden words
-		if (!aiChatUserId.equals(aiCommonOptionService.getIdOfAdmin())) {
-			Map<String, Integer> defaultLogitBias = dto.getLogit_bias();
-			if (defaultLogitBias == null) {
-				defaultLogitBias = new HashMap<>();
-			}
-			defaultLogitBias.put("openAI", -100);
-			for (OpenAiModelType type : OpenAiModelType.values()) {
-				defaultLogitBias.put(type.getName(), -100);
-			}
-			defaultLogitBias.put("chatGPT", -100);
-			dto.setLogit_bias(defaultLogitBias);
 		}
 
 		// send new msg, wait feedback
-		JSONObject apiResult = util.sendChatCompletionFromApi(dto);
+		JSONObject apiResultInJson = util.sendChatCompletionFromApi(dto);
 
 		// if fail, send fail response
-		if (apiResult.containsKey("error")) {
-			errorMsg.put("message", "运算异常, 可能是使用高峰时间段, 正在排查故障");
-			r.put("error", errorMsg);
-			sendTelegramMessage("AI chat from API failed: " + apiResult.toString());
+		if (apiResultInJson.containsKey("error")) {
+			errorMsg.setMessage("运算异常, 可能是使用高峰时间段, 正在排查故障");
+			r.setError(errorMsg);
+			sendTelegramMessage("AI chat from API failed: " + apiResultInJson.toString());
 			return r;
 		}
 
-		OpanAiChatCompletionResponseDTO apiFeedbackDTO = null;
 		try {
-			apiFeedbackDTO = new Gson().fromJson(apiResult.toString(), OpanAiChatCompletionResponseDTO.class);
+			r = new Gson().fromJson(apiResultInJson.toString(), OpenAiChatCompletionResponseDTO.class);
 		} catch (Exception e) {
-			errorMsg.put("message", "运算异常, 正在排查故障");
-			r.put("error", errorMsg);
-			sendTelegramMessage("AI chat from API result convent to DTO failed: " + apiResult.toString());
+			errorMsg.setMessage("运算异常, 正在排查故障");
+			r.setError(errorMsg);
+			sendTelegramMessage("AI chat from API result convent to DTO failed: " + apiResultInJson.toString());
 			return r;
 		}
 
 		// if success, debit amount, send feedback
-		Integer totalTokens = apiFeedbackDTO.getUsage().getTotal_tokens();
+		Integer totalTokens = r.getUsage().getTotal_tokens();
 		aiChatUserService.__debitAmountAndAddTokenUsage(userDetail.getId(), new BigDecimal(totalTokens));
 
-		r = JSONObject.fromObject(apiResult);
 		return r;
 	}
 
@@ -172,7 +155,7 @@ public class AiChatServiceImpl extends AiCommonService implements AiChatService 
 		int totalAmount = userDetail.getBonusAmount().intValue() + userDetail.getRechargeAmount().intValue();
 		if (totalAmount <= 0) {
 			r.setUsage(0);
-			OpanAiChatCompletionMessageDTO feedbackMsgDTO = new OpanAiChatCompletionMessageDTO();
+			OpenAiChatCompletionMessageDTO feedbackMsgDTO = new OpenAiChatCompletionMessageDTO();
 			feedbackMsgDTO.setContent("余额不足, 请到个人中心购买充值包 签到, 或留意其他活动");
 			feedbackMsgDTO.setRole(OpenAiChatCompletionMessageRoleType.ASSISTANT.getName());
 			r.setMsgDTO(feedbackMsgDTO);
@@ -190,14 +173,14 @@ public class AiChatServiceImpl extends AiCommonService implements AiChatService 
 		}
 
 		// find history and cut history with limit
-		List<OpanAiChatCompletionMessageDTO> chatHistory = findChatHistoryByAiChatUserId(aiChatUserId,
+		List<OpenAiChatCompletionMessageDTO> chatHistory = findChatHistoryByAiChatUserId(aiChatUserId,
 				historyCountingLimit);
-		OpanAiChatCompletionMessageDTO holdMsgDTO = new OpanAiChatCompletionMessageDTO();
+		OpenAiChatCompletionMessageDTO holdMsgDTO = new OpenAiChatCompletionMessageDTO();
 
 		// Add "act as"
 		String actAs = aiChatOptionService.getPromptOfActAs().get(dto.getNameOfActAs());
 		if (StringUtils.isNotBlank(actAs)) {
-			holdMsgDTO = new OpanAiChatCompletionMessageDTO();
+			holdMsgDTO = new OpenAiChatCompletionMessageDTO();
 			holdMsgDTO.setRole(OpenAiChatCompletionMessageRoleType.SYSTEM.getName());
 			holdMsgDTO.setContent(actAs);
 			chatHistory.add(0, holdMsgDTO);
@@ -226,7 +209,11 @@ public class AiChatServiceImpl extends AiCommonService implements AiChatService 
 		if (refreshHistoryResult.isFail()) {
 			r.setMessage(refreshHistoryResult.getMessage());
 		}
-		OpanAiChatCompletionMessageDTO feedbackMsgDTO = apiResult.getDto().getChoices().get(0).getMessage();
+		OpenAiChatCompletionMessageDTO feedbackMsgDTO = apiResult.getDto().getChoices().get(0).getMessage();
+		if (!aiChatUserId.equals(aiCommonOptionService.getIdOfAdmin())) {
+			feedbackMsgDTO.setContent(replaceForbiddenWordsForAiChat(feedbackMsgDTO.getContent()));
+		}
+
 		OpenAiChatCompletionMessageRoleType feedbackMsgRoleType = OpenAiChatCompletionMessageRoleType
 				.getType(feedbackMsgDTO.getRole());
 		if (feedbackMsgRoleType == null) {
@@ -259,11 +246,11 @@ public class AiChatServiceImpl extends AiCommonService implements AiChatService 
 	@Override
 	public GetAiChatHistoryResult findChatHistoryByAiChatUserIdToFrontEnd(Long aiChatUserId) {
 		GetAiChatHistoryResult r = new GetAiChatHistoryResult();
-		List<OpanAiChatCompletionMessageDTO> sourceList = findChatHistoryByAiChatUserId(aiChatUserId,
+		List<OpenAiChatCompletionMessageDTO> sourceList = findChatHistoryByAiChatUserId(aiChatUserId,
 				aiChatOptionService.getChatHistorySaveCountingLimit());
-		List<OpanAiChatCompletionMessageDTO> resultList = new ArrayList<>();
+		List<OpenAiChatCompletionMessageDTO> resultList = new ArrayList<>();
 		if (sourceList.isEmpty()) {
-			OpanAiChatCompletionMessageDTO dto = new OpanAiChatCompletionMessageDTO();
+			OpenAiChatCompletionMessageDTO dto = new OpenAiChatCompletionMessageDTO();
 			dto.setContent("你好, 有什么可以帮到您? 请直接向我提问~");
 			dto.setRole(OpenAiChatCompletionMessageRoleType.ASSISTANT.getName());
 			resultList.add(dto);
@@ -272,7 +259,7 @@ public class AiChatServiceImpl extends AiCommonService implements AiChatService 
 			return r;
 		}
 
-		for (OpanAiChatCompletionMessageDTO msgDTO : sourceList) {
+		for (OpenAiChatCompletionMessageDTO msgDTO : sourceList) {
 			msgDTO.setContent(sanitize(msgDTO.getContent()));
 			msgDTO.setContent(msgDTO.getContent().replaceAll("\\n", "<br>"));
 			resultList.add(msgDTO);
@@ -282,9 +269,9 @@ public class AiChatServiceImpl extends AiCommonService implements AiChatService 
 		return r;
 	}
 
-	private List<OpanAiChatCompletionMessageDTO> findChatHistoryByAiChatUserId(Long aiChatUserId,
+	private List<OpenAiChatCompletionMessageDTO> findChatHistoryByAiChatUserId(Long aiChatUserId,
 			Integer historyCountingLimit) {
-		List<OpanAiChatCompletionMessageDTO> chatDtoHistory = new ArrayList<>();
+		List<OpenAiChatCompletionMessageDTO> chatDtoHistory = new ArrayList<>();
 		if (historyCountingLimit < 1) {
 			return chatDtoHistory;
 		}
@@ -297,11 +284,11 @@ public class AiChatServiceImpl extends AiCommonService implements AiChatService 
 			msgList = findChatHistoryLines(historyPO.getHistoryFilePath(), historyCountingLimit);
 		}
 
-		OpanAiChatCompletionMessageDTO chatDataDTO = null;
+		OpenAiChatCompletionMessageDTO chatDataDTO = null;
 		if (!msgList.isEmpty()) {
 			for (String line : msgList) {
 				if (StringUtils.isNotBlank(line)) {
-					chatDataDTO = new Gson().fromJson(line, OpanAiChatCompletionMessageDTO.class);
+					chatDataDTO = new Gson().fromJson(line, OpenAiChatCompletionMessageDTO.class);
 					chatDtoHistory.add(chatDataDTO);
 				}
 			}
@@ -371,7 +358,7 @@ public class AiChatServiceImpl extends AiCommonService implements AiChatService 
 
 		Path path = Paths.get(finalFilePath);
 
-		OpanAiChatCompletionMessageDTO msgDTO = new OpanAiChatCompletionMessageDTO();
+		OpenAiChatCompletionMessageDTO msgDTO = new OpenAiChatCompletionMessageDTO();
 		msgDTO.setContent(msg);
 		msgDTO.setRole(roleType.getName());
 		JSONObject newMsgJson = JSONObject.fromObject(msgDTO);

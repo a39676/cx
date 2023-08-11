@@ -184,7 +184,7 @@ public abstract class AiCommonService extends ToolCommonService {
 		StringBuffer sb = new StringBuffer(content);
 		int i = -1;
 		for (String word : forbiddenWords) {
-			i = content.toLowerCase().indexOf(word);
+			i = content.toLowerCase().indexOf(word.toLowerCase());
 			if (i == -1) {
 				continue;
 			}

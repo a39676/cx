@@ -211,11 +211,8 @@ public class AiChatServiceImpl extends AiCommonService implements AiChatService 
 		}
 		OpenAiChatCompletionMessageDTO feedbackMsgDTO = apiResult.getDto().getChoices().get(0).getMessage();
 		if (!aiChatUserId.equals(aiCommonOptionService.getIdOfAdmin())) {
-			log.error("NOT admin, replace content: " + feedbackMsgDTO.getContent());
 			feedbackMsgDTO.setContent(replaceForbiddenWordsForAiChat(feedbackMsgDTO.getContent()));
-			log.error("New content after replace: " + feedbackMsgDTO.getContent());
 			apiResult.getDto().getChoices().get(0).setMessage(feedbackMsgDTO);
-			log.error("New content in DTO now: " + apiResult.getDto().getChoices().get(0).getMessage().getContent());
 		}
 
 		OpenAiChatCompletionMessageRoleType feedbackMsgRoleType = OpenAiChatCompletionMessageRoleType

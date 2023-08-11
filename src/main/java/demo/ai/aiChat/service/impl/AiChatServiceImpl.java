@@ -213,7 +213,7 @@ public class AiChatServiceImpl extends AiCommonService implements AiChatService 
 		if (!aiChatUserId.equals(aiCommonOptionService.getIdOfAdmin())) {
 			log.error("NOT admin, replace content: " + feedbackMsgDTO.getContent());
 			feedbackMsgDTO.setContent(replaceForbiddenWordsForAiChat(feedbackMsgDTO.getContent()));
-			log.error("New content: " + feedbackMsgDTO.getContent());
+			log.error("New content after replace: " + feedbackMsgDTO.getContent());
 			apiResult.getDto().getChoices().get(0).setMessage(feedbackMsgDTO);
 			log.error("New content: " + apiResult.getDto().getChoices().get(0).getMessage().getContent());
 		}

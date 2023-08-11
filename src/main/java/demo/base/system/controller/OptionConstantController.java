@@ -183,7 +183,7 @@ public class OptionConstantController {
 	@ResponseBody
 	public String refreshAiChatOption() {
 		aiChatOptionService.refreshOption();
-		return "done";
+		return aiChatOptionService.toString();
 	}
 
 	@GetMapping(value = "/refreshAiCommonOption")

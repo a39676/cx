@@ -185,11 +185,10 @@ public abstract class AiCommonService extends ToolCommonService {
 		int i = -1;
 		for (String word : forbiddenWords) {
 			i = content.toLowerCase().indexOf(word.toLowerCase());
-			if (i == -1) {
-				continue;
+			while (i != -1) {
+				sb.replace(i, i + word.length(), "*".repeat(word.length()));
+				i = content.toLowerCase().indexOf(word.toLowerCase());
 			}
-			sb.replace(i, i + word.length(), "*".repeat(word.length()));
-			i = -1;
 		}
 		return sb.toString();
 	}

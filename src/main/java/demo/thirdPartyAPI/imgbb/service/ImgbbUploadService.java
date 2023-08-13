@@ -31,8 +31,21 @@ public class ImgbbUploadService extends CommonService {
 
 		String filename = String.valueOf(snowFlake.getNextId());
 
-		ImgbbUploadResponseDTO uploadResponse = imgbbUtil.uploadImg(imgbbApiKey, filename, imgInBase64Str,
-				saveForLongTime);
+		ImgbbUploadResponseDTO uploadResponse = null;
+		int uploadCount = 0;
+		while (uploadResponse == null && uploadCount < 5) {
+			log.error("Upload image count: " + uploadCount);
+			try {
+				uploadResponse = imgbbUtil.uploadImg(imgbbApiKey, filename, imgInBase64Str, saveForLongTime);
+				uploadCount++;
+			} catch (Exception e) {
+				uploadCount++;
+				e.printStackTrace();
+			}
+			randomIndex = random.nextInt(apiKeyList.size());
+			imgbbApiKey = apiKeyList.get(randomIndex);
+			log.error("Will use " + randomIndex + " of " + apiKeyList.size() + " in key list");
+		}
 
 		log.error("Upload image result: " + uploadResponse.toString());
 

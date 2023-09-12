@@ -1,7 +1,5 @@
 package demo.base.system.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,16 +26,14 @@ public class BasePageController extends CommonController {
 //	}
 	
 	@GetMapping(value = { BaseUrl.ROOT })
-	public ModelAndView welcomePageV4(@RequestParam(value = "vcode", defaultValue = "") String vcode,
-			HttpServletRequest request) {
-		ModelAndView view = basePageService.baseRootHandlerV4(vcode, request);
+	public ModelAndView welcomePageV4(@RequestParam(value = "vcode", defaultValue = "") String vcode) {
+		ModelAndView view = basePageService.baseRootHandlerV4(vcode);
 		return view;
 	}
 	
 	@GetMapping(value = { BaseUrl.ABOUT_ME })
-	public ModelAndView aboutMe(@RequestParam(value = "vcode", defaultValue = "") String vcode,
-			HttpServletRequest request) {
-		ModelAndView view = basePageService.aboutMeHandler(vcode, request);
+	public ModelAndView aboutMe(@RequestParam(value = "vcode", defaultValue = "") String vcode) {
+		ModelAndView view = basePageService.aboutMeHandler(vcode);
 		return view;
 	}
 	

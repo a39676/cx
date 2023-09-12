@@ -38,13 +38,11 @@ public class BasePageServiceImpl extends SystemCommonService implements BasePage
 		ModelAndView view = new ModelAndView();
 
 		if (hostnameType == null) {
-			if (!systemOptionService.isDev()) {
-				if (hostnameType == null) {
-					view.setViewName(BaseViewConstant.empty);
-					return view;
-				}
-			} else {
+			if (systemOptionService.isDev()) {
 				view = buildHomeViewForNormal();
+			} else {
+				view.setViewName(BaseViewConstant.empty);
+				return view;
 			}
 		} else {
 			if (HostnameType.zhang3.equals(hostnameType)) {
@@ -79,13 +77,11 @@ public class BasePageServiceImpl extends SystemCommonService implements BasePage
 		ModelAndView view = new ModelAndView();
 
 		if (hostnameType == null) {
-			if (!systemOptionService.isDev()) {
-				if (hostnameType == null) {
-					view.setViewName(BaseViewConstant.empty);
-					return view;
-				}
+			if (systemOptionService.isDev()) {
+				view = buildHomeViewForNormal3G();
 			} else {
-				view = buildHomeViewForNormalV4();
+				view.setViewName(BaseViewConstant.empty);
+				return view;
 			}
 		} else {
 			if (HostnameType.zhang3.equals(hostnameType)) {
@@ -129,7 +125,7 @@ public class BasePageServiceImpl extends SystemCommonService implements BasePage
 
 		return view;
 	}
-	
+
 	private ModelAndView buildHomeViewForNormal3G() {
 		ModelAndView view = new ModelAndView("base/home/index3G");
 		view.addObject("title", systemOptionService.getNormalWebSiteTitle());

@@ -31,73 +31,24 @@
       background-color: transparent;
       text-decoration: underline;
     }
+
   </style>
 </head>
 
 <body>
   <!-- Page Header -->
-  <header class="" style="background-image: url('${headerImg}'); height:150px;">
-    <nav class="navbar fixed-top navbar-expand-lg navbar-success bg-light " style="opacity: 0.85;">
-
-      <a class="navbar-brand" href="#"></a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse">
-        <ul class="navbar-nav mr-auto">
-          <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
-            <li class="nav-item active">
-              <a class="nav-link" href="/admin/manager" target="_blank">Admin</a>
-            </li>
-          </sec:authorize>
-          <li class="nav-item active font-weight-bold">
-            <a class="nav-link" href="/">Home</a>
-          </li>
-          <li class="nav-item active font-weight-bold">
-            <a class="nav-link" href="/aboutMe">关于我/联系方式</a>
-          </li>
-          <li class="nav-item active font-weight-bold" id="autoTestDemo">
-          </li>
-          <li class="nav-item active font-weight-bold" id="articleBurn">
-          </li>
-          <li class="nav-item active font-weight-bold">
-            <a class="nav-link" target="_blank" href="/publicTool/qrcode/">QR Code 生成 / 解码</a>
-          </li>
-        </ul>
-
-        <c:if test="${isHomePage == true}">
-          <form class="form-inline my-2 my-lg-0">
-            <input type="text" class="form-control" placeholder="根据标题搜索" aria-label="" id="searchKeyWord" aria-describedby="searchByTitle">
-            <button class="btn btn-outline-success my-2 my-sm-0" id="searchByTitle" type="submit">
-              <svg class="octicon octicon-search" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">
-                <path fill-rule="evenodd" d="M15.7 13.3l-3.81-3.83A5.93 5.93 0 0013 6c0-3.31-2.69-6-6-6S1 2.69 1 6s2.69 6 6 6c1.3 0 2.48-.41 3.47-1.11l3.83 3.81c.19.2.45.3.7.3.25 0 .52-.09.7-.3a.996.996 0 000-1.41v.01zM7 10.7c-2.59 0-4.7-2.11-4.7-4.7 0-2.59 2.11-4.7  4.7-4.7 2.59 0 4.7 2.11 4.7 4.7 0 2.59-2.11 4.7-4.7 4.7z">
-                </path>
-              </svg>
-            </button>
-          </form>
-        </c:if>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-1">
+        <a href="/">Home</a>
       </div>
-    </nav>
-    <div class="overlay"></div>
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12 mx-auto">
-          <br>
-          <br>
-          <br>
-        </div>
+      <div class="col-md-1" id="articleBurn">
       </div>
-      <div class="row">
-        <div class="col-md-12 mx-auto">
-          <div class="site-heading">
-            <h2>${title}</h2>
-            <span class="subheading">${subheading}</span>
-          </div>
-        </div>
+      <div class="col-md-1">
+        <a href="/publicTool/qrcode/" target="_blank">QR Code 生成 / 解码</a>
       </div>
     </div>
-  </header>
+  </div>
 
   <!-- Main Content -->
   <div class="container-fluid" style="margin-top:20px; margin-bottom:20px;">
@@ -158,6 +109,21 @@
 
   <script type="text/javascript">
     $(document).ready(function() {
+
+      var toolDropdownMenu = $("#toolDropdownMenu");
+      var toolDropdownMenuContent = $("#toolDropdownMenuContent");
+
+      toolDropdownMenu.mouseenter(function() {
+        toolDropdownMenuContent.show();
+      }).mouseleave(function() {
+        toolDropdownMenuContent.hide();
+      });
+
+      toolDropdownMenuContent.mouseenter(function() {
+        toolDropdownMenuContent.show();
+      }).mouseleave(function() {
+        toolDropdownMenuContent.hide();
+      });
 
       var getUrlParameter = function getUrlParameter(sParam) {
         var sPageURL = decodeURIComponent(window.location.search.substring(1)),

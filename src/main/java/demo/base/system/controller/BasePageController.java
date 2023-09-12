@@ -26,6 +26,12 @@ public class BasePageController extends CommonController {
 //	}
 	
 	@GetMapping(value = { BaseUrl.ROOT })
+	public ModelAndView welcomePage3G(@RequestParam(value = "vcode", defaultValue = "") String vcode) {
+		ModelAndView view = basePageService.baseRootHandler3G(vcode);
+		return view;
+	}
+	
+	@GetMapping(value = { "/v4" })
 	public ModelAndView welcomePageV4(@RequestParam(value = "vcode", defaultValue = "") String vcode) {
 		ModelAndView view = basePageService.baseRootHandlerV4(vcode);
 		return view;

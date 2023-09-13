@@ -152,7 +152,7 @@
       })
 
       function findWords(){
-        $("#result").text("Adding word");
+        $("#result").text("Finding word");
 
         var url = "/wordHelper/findWords";
 

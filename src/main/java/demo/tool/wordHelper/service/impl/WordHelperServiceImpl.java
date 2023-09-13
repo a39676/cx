@@ -58,20 +58,38 @@ public class WordHelperServiceImpl extends CommonService implements WordHelperSe
 		fileUtil.byteToFile(content, dictionarySavingFolderPathStr + "/" + userId + ".json");
 	}
 
-	private boolean containWord(CustomerDictionaryDTO dictionary, WordDTO word) {
+	private WordDTO findWordByEnEqual(CustomerDictionaryDTO dictionary, WordDTO word) {
 		if (dictionary.getWordDateLineList() == null || dictionary.getWordDateLineList().isEmpty()) {
-			return false;
+			return null;
 		}
 
 		for (WordDayLineDTO wordDateLine : dictionary.getWordDateLineList()) {
 			for (WordDTO wordExists : wordDateLine.getWordList()) {
 				if (wordExists.getEn().equals(word.getEn())) {
-					return true;
+					return wordExists;
 				}
 			}
 		}
 
-		return false;
+		return null;
+	}
+
+	private List<WordDTO> findWordsByContains(CustomerDictionaryDTO dictionary, WordDTO word) {
+		List<WordDTO> wordList = new ArrayList<>();
+		if (dictionary.getWordDateLineList() == null || dictionary.getWordDateLineList().isEmpty()) {
+			return wordList;
+		}
+
+		for (WordDayLineDTO wordDateLine : dictionary.getWordDateLineList()) {
+			for (WordDTO wordExists : wordDateLine.getWordList()) {
+				if ((StringUtils.isNotBlank(word.getEn()) && wordExists.getEn().contains(word.getEn()))
+						|| (StringUtils.isNotBlank(word.getCn()) && wordExists.getCn().contains(word.getCn()))) {
+					wordList.add(wordExists);
+				}
+			}
+		}
+
+		return wordList;
 	}
 
 	@Override
@@ -81,8 +99,9 @@ public class WordHelperServiceImpl extends CommonService implements WordHelperSe
 
 		CustomerDictionaryDTO dictionary = getCustomerDictionaryDTO();
 
-		if (containWord(dictionary, inputWord)) {
-			r.setMessage("Contain this word, update or append?");
+		WordDTO wordExists = findWordByEnEqual(dictionary, inputWord);
+		if (wordExists != null) {
+			r.setMessage("Contain this word, " + wordExists.getEn() + ", " + wordExists.getCn() + "update or append?");
 			return r;
 		}
 
@@ -127,6 +146,24 @@ public class WordHelperServiceImpl extends CommonService implements WordHelperSe
 
 		r.setMessage("Input: " + inputWord.getEn());
 		r.setIsSuccess();
+		return r;
+	}
+
+	@Override
+	public GetRandomWordResult findWords(WordDTO inputWord) {
+		GetRandomWordResult r = new GetRandomWordResult();
+
+		CustomerDictionaryDTO dictionary = getCustomerDictionaryDTO();
+
+		List<WordDTO> wordList = findWordsByContains(dictionary, inputWord);
+		if (wordList.isEmpty()) {
+			r.setMessage("Can NOT find words by: " + inputWord.getEn() + ", " + inputWord.getCn());
+			r.setIsSuccess();
+		} else {
+			r.setMessage("Find " + wordList.size() + " words");
+			r.setWordList(wordList);
+			r.setIsSuccess();
+		}
 		return r;
 	}
 

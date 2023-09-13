@@ -24,7 +24,7 @@ public class BasePageServiceImpl extends SystemCommonService implements BasePage
 	private ArticleOptionService articleOptionService;
 
 	@Override
-	public ModelAndView baseRootHandlerV3(String vcode, HttpServletRequest request) {
+	public ModelAndView baseRootHandlerCleanBlog(String vcode, HttpServletRequest request) {
 
 		if(StringUtils.isBlank(vcode)) {
 			visitDataService.insertVisitData(request);
@@ -45,11 +45,11 @@ public class BasePageServiceImpl extends SystemCommonService implements BasePage
 					return view;
 				}
 			} else {
-				view = buildHomeViewForNormal();
+				view = buildHomeViewForNormalCleanBlog();
 			}
 		} else {
 			if (HostnameType.zhang3.equals(hostnameType)) {
-				view = buildHomeViewForNormal();
+				view = buildHomeViewForNormalCleanBlog();
 			} else if (HostnameType.dtro.equals(hostnameType)) {
 				view = buildHomeViewForFake();
 			}
@@ -107,7 +107,7 @@ public class BasePageServiceImpl extends SystemCommonService implements BasePage
 		return view;
 	}
 	
-	private ModelAndView buildHomeViewForNormal() {
+	private ModelAndView buildHomeViewForNormalCleanBlog() {
 		ModelAndView view = new ModelAndView(BlogViewConstant.HOME);
 		view.addObject("title", systemOptionService.getNormalWebSiteTitle());
 		view.addObject("headerImg", BaseStaticResourcesUrl.IMG_YELLOW_GRASS_LAND);

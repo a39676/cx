@@ -97,6 +97,11 @@ public class WordHelperServiceImpl extends CommonService implements WordHelperSe
 		CommonResult r = new CommonResult();
 		WordDayLineDTO lastLine = null;
 
+		if (StringUtils.isAnyBlank(inputWord.getEn(), inputWord.getCn())) {
+			r.setMessage("Please fill EN and CN field");
+			return r;
+		}
+
 		CustomerDictionaryDTO dictionary = getCustomerDictionaryDTO();
 
 		WordDTO wordExists = findWordByEnEqual(dictionary, inputWord);
@@ -170,6 +175,11 @@ public class WordHelperServiceImpl extends CommonService implements WordHelperSe
 	@Override
 	public CommonResult updateOrAppendWord(UpdateOrAppendWordDTO dto) {
 		CommonResult r = new CommonResult();
+		if (StringUtils.isAnyBlank(dto.getInputWord().getEn(), dto.getInputWord().getCn())) {
+			r.setMessage("Please fill EN and CN field");
+			return r;
+		}
+
 		CustomerDictionaryDTO dictionary = getCustomerDictionaryDTO();
 
 		List<WordDayLineDTO> wordRecordList = dictionary.getWordDateLineList();

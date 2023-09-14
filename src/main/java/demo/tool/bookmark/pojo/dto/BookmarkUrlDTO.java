@@ -11,6 +11,8 @@ public class BookmarkUrlDTO implements Comparable<BookmarkUrlDTO> {
 
 	private String url;
 
+	private String iconImgBase64;
+
 	private List<BookmarkTagDTO> tagList = new ArrayList<>();
 
 	private Double weight = 0D;
@@ -43,6 +45,14 @@ public class BookmarkUrlDTO implements Comparable<BookmarkUrlDTO> {
 		this.url = url;
 	}
 
+	public String getIconImgBase64() {
+		return iconImgBase64;
+	}
+
+	public void setIconImgBase64(String iconImgBase64) {
+		this.iconImgBase64 = iconImgBase64;
+	}
+
 	public List<BookmarkTagDTO> getTagList() {
 		return tagList;
 	}
@@ -61,8 +71,8 @@ public class BookmarkUrlDTO implements Comparable<BookmarkUrlDTO> {
 
 	@Override
 	public String toString() {
-		return "BookmarkUrlDTO [id=" + id + ", name=" + name + ", url=" + url + ", tagList=" + tagList + ", weight="
-				+ weight + "]";
+		return "BookmarkUrlDTO [id=" + id + ", name=" + name + ", url=" + url + ", iconImgBase64=" + iconImgBase64
+				+ ", tagList=" + tagList + ", weight=" + weight + "]";
 	}
 
 	@Override

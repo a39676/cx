@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -44,7 +45,7 @@ public class CloudFlareServiceImpl extends CommonService implements CloudFlareSe
 
 		try {
 
-			URL myurl = new URL(urlStr);
+			URL myurl = new URI(urlStr).toURL();
 			con = (HttpURLConnection) myurl.openConnection();
 
 			con.setDoOutput(true);

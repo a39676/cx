@@ -3,6 +3,8 @@ package demo.tool.other.service.impl;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -103,12 +105,12 @@ public class QrCodeServiceImpl extends ToolCommonService implements QrCodeServic
 
 	@Override
 	public String decodeByImageUrl(String urlStr) throws IOException {
-		URL url = new URL(urlStr);
-		BufferedImage image = ImageIO.read(url);
 
 		try {
+			URL url = new URI(urlStr).toURL();
+			BufferedImage image = ImageIO.read(url);
 			return decode.decode(image);
-		} catch (NotFoundException e) {
+		} catch (NotFoundException | URISyntaxException e) {
 			e.printStackTrace();
 		}
 

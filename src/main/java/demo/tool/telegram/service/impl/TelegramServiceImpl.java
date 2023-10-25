@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -85,18 +86,18 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 			r.failWithMessage("param error");
 			return r;
 		}
-		
+
 		TelegramChatId po = chatIdMapper.selectByPrimaryKey(id);
 		if (po == null) {
 			r.failWithMessage("param error");
 			return r;
 		}
-		
+
 		r = sendMessageByTelegramChatId(botType, msg, Long.parseLong(po.getChatId()));
 
 		return r;
 	}
-	
+
 	@Override
 	public CommonResult sendMessageByTelegramChatId(TelegramBotType botType, String msg, Long telegramChatId) {
 		CommonResult r = new CommonResult();
@@ -142,9 +143,9 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 		try {
 //			HttpUtil httpUtil = new HttpUtil();
 //			httpUtil.sendGet(url);
-			URL url = new URL(urlStr);
+			URL url = new URI(urlStr).toURL();
 			InputStream inputSteam = url.openStream();
-			
+
 			BufferedReader in = new BufferedReader(new InputStreamReader(inputSteam, StandardCharsets.UTF_8));
 			String inputLine;
 

@@ -87,18 +87,23 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		question.setQuestionNumber(questionNumber);
 		exerciseDTO.getQuestionList().add(question);
 		questionNumber++;
-		
+
 		question = createWordProblemModule6();
 		question.setQuestionNumber(questionNumber);
 		exerciseDTO.getQuestionList().add(question);
 		questionNumber++;
-		
+
 		question = createWordProblemModule7();
 		question.setQuestionNumber(questionNumber);
 		exerciseDTO.getQuestionList().add(question);
 		questionNumber++;
-		
+
 		question = createWordProblemModule8();
+		question.setQuestionNumber(questionNumber);
+		exerciseDTO.getQuestionList().add(question);
+		questionNumber++;
+		
+		question = createWordProblemModule9();
 		question.setQuestionNumber(questionNumber);
 		exerciseDTO.getQuestionList().add(question);
 		questionNumber++;
@@ -321,9 +326,7 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 	}
 
 	private MathQuestionBaseDTO createWordProblemModule2() {
-		String moduleStr = "%s今年%d岁, %s今年%d岁, 小朋友比%s%s%d岁.<br>"
-				+ "(1)%s比%s大多少岁 <br>"
-				+ "(2)小朋友今年多少岁 ";
+		String moduleStr = "%s今年%d岁, %s今年%d岁, 小朋友比%s%s%d岁.<br>" + "(1)%s比%s大多少岁 <br>" + "(2)小朋友今年多少岁 ";
 		List<String[]> dynamicKeyWord = new ArrayList<>();
 		dynamicKeyWord.add(new String[] { "爷爷", "表姑", "-" });
 		dynamicKeyWord.add(new String[] { "大舅", "姐姐", "-" });
@@ -337,7 +340,7 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
 		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
-		
+
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		int randomKeyWordIndex = t.nextInt(0, dynamicKeyWord.size());
@@ -366,9 +369,7 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 	}
 
 	private MathQuestionBaseDTO createWordProblemModule3() {
-		String moduleStr = "一%s%s, 可以买%d%s%s, 如果每%s%s%d元,<br>"
-				+ "(1)每%s%s几元?<br>"
-				+ "(2)一%s%s比一%s%s便宜多少元?";
+		String moduleStr = "一%s%s, 可以买%d%s%s, 如果每%s%s%d元,<br>" + "(1)每%s%s几元?<br>" + "(2)一%s%s比一%s%s便宜多少元?";
 		List<String[]> dynamicKeyWord = new ArrayList<>();
 		dynamicKeyWord.add(new String[] { "衣服", "件", "帽子", "顶" });
 		dynamicKeyWord.add(new String[] { "大衣", "件", "短袖", "件" });
@@ -383,7 +384,7 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
 		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
-		
+
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		int randomKeyWordIndex = t.nextInt(0, dynamicKeyWord.size());
@@ -421,7 +422,7 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
 		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
-		
+
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		int randomKeyWordIndex = t.nextInt(0, dynamicKeyWord.size());
@@ -484,13 +485,11 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 	}
 
 	private MathQuestionBaseDTO createWordProblemModule5() {
-		String moduleStr = "一场篮球赛分为上半场和下半场, A班上半场得了%d分, 全场总分是%d分, %s,<br>"
-				+ "B班的全场总分是%d分,<br>"
-				+ "(1)B班下半场得了多少分";
+		String moduleStr = "一场篮球赛分为上半场和下半场, A班上半场得了%d分, 全场总分是%d分, %s,<br>" + "B班的全场总分是%d分,<br>" + "(1)B班下半场得了多少分";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
 		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
-		
+
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		int classAFirstHalfScore = t.nextInt(12, 50 + 1);
@@ -523,7 +522,7 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
 		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
-		
+
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		int randomHour = t.nextInt(0, 23 + 1);
@@ -532,7 +531,7 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		int randomPass = 0;
 		boolean isBefore = t.nextInt(0, 1 + 1) > 0;
 		LocalTime time2 = null;
-		if(isBefore) {
+		if (isBefore) {
 			randomPass = t.nextInt(randomMinute, 59 + 1);
 			time2 = startTime.minusMinutes(randomPass);
 			moduleStr = moduleStr + startTime + ", " + randomPass + "分钟之前, 是____";
@@ -548,13 +547,13 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 
 		return q;
 	}
-	
+
 	private MathQuestionBaseDTO createWordProblemModule7() {
 		String moduleStr = "?÷%d=%d......__，__里最大可以填";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
 		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
-		
+
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		int i1 = t.nextInt(3, 9 + 1);
@@ -566,13 +565,13 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 
 		return q;
 	}
-	
+
 	private MathQuestionBaseDTO createWordProblemModule8() {
 		String moduleStr = "?÷__=%d...%d，当__里填最小的数时，?等于( )";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
 		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
-		
+
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
 		int i1 = t.nextInt(3, 9 + 1);
@@ -581,6 +580,50 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		q.setExpression(String.format(moduleStr, i1, i2));
 
 		q.addStandardAnswer(String.valueOf((i2 + 1) * i1 + i2));
+
+		return q;
+	}
+
+	private MathQuestionBaseDTO createWordProblemModule9() {
+		String moduleStr = "一条%s长%d米, 分割成%d米一段, 需要%d秒, 分割成%d段需要多少秒?";
+
+		List<String> dynamicKeyWord = new ArrayList<>();
+		dynamicKeyWord.add("钢管");
+		dynamicKeyWord.add("木柱");
+		dynamicKeyWord.add("竹子");
+		dynamicKeyWord.add("电缆");
+		dynamicKeyWord.add("水管");
+
+		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+
+		int randomKeyWordIndex = t.nextInt(0, dynamicKeyWord.size());
+		String keyWord = dynamicKeyWord.get(randomKeyWordIndex);
+
+		List<Integer> primeNumbers = new ArrayList<>(PRIME_NUMBERS_UNDER_100.subList(3, 11));
+		int primeNumberIndex = t.nextInt(0, primeNumbers.size());
+		int subLong1 = primeNumbers.get(primeNumberIndex);
+		primeNumbers.remove(primeNumberIndex);
+		primeNumberIndex = t.nextInt(0, primeNumbers.size());
+		int subCounting1 = primeNumbers.get(primeNumberIndex);
+		primeNumbers.remove(primeNumberIndex);
+		primeNumberIndex = t.nextInt(0, primeNumbers.size());
+		int subLong2 = primeNumbers.get(primeNumberIndex);
+		primeNumbers.remove(primeNumberIndex);
+
+		int materialLong = subLong1 * subCounting1;
+		int cuttingTimeInSecond = t.nextInt(5, 12);
+		int cuttingTimeTotalInSubLong1 = cuttingTimeInSecond * (subCounting1 - 1);
+		int cuttingTimeTotalInSubLong2 = materialLong / subLong2 * cuttingTimeInSecond;
+		int subCounting2 = materialLong / subLong2 - 1;
+
+//		String moduleStr = "一条%s长%d米, 分割成%d米一段, 需要%d秒, 分割成%d段需要多少秒?";
+		q.setExpression(
+				String.format(moduleStr, keyWord, materialLong, subLong1, cuttingTimeTotalInSubLong1, subCounting2));
+
+		q.addStandardAnswer(String.valueOf(cuttingTimeTotalInSubLong2));
 
 		return q;
 	}

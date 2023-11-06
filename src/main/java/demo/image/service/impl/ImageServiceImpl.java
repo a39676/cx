@@ -9,7 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -144,10 +145,10 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 				response.setContentType("image/jpeg");
 				String urlStr = imgPO.getImageUrl();
 				
-				InputStream input = new URL(urlStr).openStream();
+				InputStream input = new URI(urlStr).toURL().openStream();
 				
 				IOUtils.copy(input, response.getOutputStream());
-			} catch (IOException e) {
+			} catch (IOException | URISyntaxException e) {
 				e.printStackTrace();
 			}
 		} else {

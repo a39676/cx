@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -53,7 +54,7 @@ public class OpenAiUtil extends CommonService {
 
 	public String NotFinishYet_sendCompletion(String msg) {
 		try {
-			URL url = new URL(COMPLETIONS);
+			URL url = new URI(COMPLETIONS).toURL();
 
 			JSONObject parameterJson = null;
 			parameterJson = buildCompletionsParamJson(msg, optionService.getMaxTokens());
@@ -113,7 +114,7 @@ public class OpenAiUtil extends CommonService {
 		}
 
 		try {
-			URL url = new URL(CHAT_API);
+			URL url = new URI(CHAT_API).toURL();
 
 			JSONObject parameterJson = null;
 			if (StringUtils.isNotBlank(msg)) {
@@ -191,7 +192,7 @@ public class OpenAiUtil extends CommonService {
 		newDTO.setLogit_bias(inputDTO.getLogit_bias());
 
 		try {
-			URL url = new URL(CHAT_API);
+			URL url = new URI(CHAT_API).toURL();
 
 			JSONObject parameterJson = JSONObject.fromObject(newDTO);
 			parameterJson.remove("apiKey");
@@ -259,7 +260,7 @@ public class OpenAiUtil extends CommonService {
 
 	public String notFinishYet_queryModels() {
 		try {
-			URL url = new URL(MODELS);
+			URL url = new URI(MODELS).toURL();
 
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET");
@@ -424,7 +425,7 @@ public class OpenAiUtil extends CommonService {
 
 		return r;
 	}
-	
+
 	public void sendChatCompletionFromUIWithSdk(AiChatSendNewMsgFromApiDTO inputDTO) {
 		try {
 			OpenAiService openAiService = new OpenAiService(optionService.getApiKey(), Duration.ofSeconds(10));
@@ -438,13 +439,9 @@ public class OpenAiUtil extends CommonService {
 			}
 
 			ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder()
-					.model(OpenAiModelType.GPT_V_3_5.getName())
-					.temperature(inputDTO.getTemperature())
-					.messages(sdkMsgList).topP(inputDTO.getTop_p())
-					.frequencyPenalty(inputDTO.getFrequency_penalty())
-					.presencePenalty(inputDTO.getPresence_penalty())
-					.logitBias(inputDTO.getLogit_bias())
-					.n(1).build();
+					.model(OpenAiModelType.GPT_V_3_5.getName()).temperature(inputDTO.getTemperature())
+					.messages(sdkMsgList).topP(inputDTO.getTop_p()).frequencyPenalty(inputDTO.getFrequency_penalty())
+					.presencePenalty(inputDTO.getPresence_penalty()).logitBias(inputDTO.getLogit_bias()).n(1).build();
 
 			ChatCompletionResult sdkResult = openAiService.createChatCompletion(chatCompletionRequest);
 			log.error(sdkResult.toString());
@@ -471,7 +468,6 @@ public class OpenAiUtil extends CommonService {
 			dtoUsage.setPrompt_tokens(sdkUsage.getPrompt_tokens());
 			dtoUsage.setTotal_tokens(sdkUsage.getTotal_tokens());
 			resultDto.setUsage(dtoUsage);
-
 
 		} catch (Exception e) {
 			log.error("Open AI error: " + e.getLocalizedMessage());

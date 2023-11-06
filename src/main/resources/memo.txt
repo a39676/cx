@@ -3,15 +3,6 @@ Spring Boot update to 3.0.3
 	Try update Security.java code
 	 
 
-定义书签
-	可选凭密码访问
-
-open ai
-vps 上尚未建立对应的 option.json
-
-
-是否需要保留 ServiceMQConstant.BBT_SEND_MESSAGE_QUEUE
-每款微服务设立一个 telegram queue ? 共用一条?
 
 自定义书签
 	url 图标

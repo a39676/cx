@@ -203,11 +203,16 @@ public abstract class ExerciseMathCommonService extends EducateCommonService {
 		}
 		return lcm;
 	}
+	
+//	protected Integer getLowestCommonMultiple(List<Integer> input) {
+//		Integer greastestCommonDivisor = findGreastestCommonDivisorUnder10000(input);
+//		
+//	}
 
 	protected Integer findGreastestCommonDivisorUnder10000(List<Integer> integers) {
 		List<Integer> factors = findCommonFactorsUnder10000(integers);
 		if (factors == null || factors.isEmpty()) {
-			return null;
+			return 1;
 		}
 
 		Integer result = 1;
@@ -263,7 +268,7 @@ public abstract class ExerciseMathCommonService extends EducateCommonService {
 			tmpFactor = factorsOfMinInt.get(i);
 			for (int j = 0; j < tmpList.size() && divisible; j++) {
 				tmpInt = tmpList.get(j);
-				divisible = (tmpInt != 2 && (tmpInt == tmpFactor || tmpInt % tmpFactor == 0));
+				divisible = (tmpInt == tmpFactor || tmpInt % tmpFactor == 0);
 			}
 			if (!divisible) {
 				divisible = true;

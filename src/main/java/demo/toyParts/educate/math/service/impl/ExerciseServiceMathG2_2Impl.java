@@ -3,6 +3,7 @@ package demo.toyParts.educate.math.service.impl;
 import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -628,4 +629,10 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		return q;
 	}
 
+	public static void main(String[] args) {
+		ExerciseServiceMathG2_2Impl t = new ExerciseServiceMathG2_2Impl();
+		List<Integer> list = new ArrayList<>(Arrays.asList(180, 24, 60, 240));
+		Integer greatestCommonDivisor = t.findGreastestCommonDivisorUnder10000(list);
+		System.out.println(greatestCommonDivisor);
+	}
 }

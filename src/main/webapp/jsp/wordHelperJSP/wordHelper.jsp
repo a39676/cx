@@ -22,6 +22,7 @@
 
         <button id="addWord">Add word</button>
         <button id="deleteWord">Delete word</button>
+        <button id="findWords">Find words</button>
       </div>
     </div>
 
@@ -29,6 +30,13 @@
       <div class="col-lg-12">
         <button id="append">Append</button>
         <button id="update">Update</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <label>Result: </label>
+        <label id="result"></label>
       </div>
     </div>
 
@@ -55,12 +63,6 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-lg-12">
-        <label>Result: </label>
-        <label id="result"></label>
-      </div>
-    </div>
 
   </div>
 
@@ -138,6 +140,58 @@
           success:function(datas){
             console.log(datas);
             $("#result").text(datas.code + ", " + datas.message);
+          },
+          error: function(datas) {
+            console.log(datas);
+          }
+        });
+      }
+
+      $("#findWords").click(function() {
+        findWords();
+      })
+
+      function findWords(){
+        $("#result").text("Finding word");
+
+        var url = "/wordHelper/findWords";
+
+        var enInput = $("#enInput").val();
+        var cnInput = $("#cnInput").val();
+
+        var jsonOutput = {
+          en:enInput,
+          cn:cnInput,
+        };
+
+        console.log(jsonOutput);
+  
+        $.ajax({
+          type : "POST",
+          async : true,
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          cache : false,
+          contentType: "application/json",
+          dataType: "json",
+          timeout:50000,
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          success:function(datas){
+            console.log(datas);
+            $("#result").text(datas.code + ", " + datas.message);
+            var wordResult = "";
+            for(var i = 0; i < datas.wordList.length; i++){
+              wordResult = wordResult + "<tr>";
+              wordResult = wordResult + "<td><label class='wordEn'>" + datas.wordList[i].en + "</label></td>";
+              wordResult = wordResult + "<td><label class='wordCn'>" + datas.wordList[i].cn + "</label></td>";
+              wordResult = wordResult + "</tr>";
+            }
+            var head = "<tr> <td>EN</td> <td>CN</td> </tr>"
+            $("#randomWords").html(head + wordResult);
+            enToggle(true);
+            cnToggle(true);
           },
           error: function(datas) {
             console.log(datas);

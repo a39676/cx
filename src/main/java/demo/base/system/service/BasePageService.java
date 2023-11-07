@@ -6,7 +6,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 public interface BasePageService {
 
-	ModelAndView baseRootHandlerV3(String vcode, HttpServletRequest request);
+	ModelAndView baseRootHandlerCleanBlog(String vcode, HttpServletRequest request);
 
 	ModelAndView aboutMeHandler(String vcode, HttpServletRequest request);
 

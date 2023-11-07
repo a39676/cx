@@ -192,15 +192,15 @@ public class ExerciseServiceMathG3_1Impl extends ExerciseMathCommonService imple
 
 		int r = t.nextInt(2, 5 + 1);
 
-		Integer lmcOfCodition1 = getLowestCommonMultiple(i2, (i1 * r + i2));
+		Integer lmcOfCodition1 = findLowestCommonMultiple(i2, (i1 * r + i2));
 		int c1_i2_count = lmcOfCodition1 / i2;
 		int c1_group_count = lmcOfCodition1 / (i1 * r + i2);
 
-		Integer lmcOfCodition2 = getLowestCommonMultiple(i2, i3);
+		Integer lmcOfCodition2 = findLowestCommonMultiple(i2, i3);
 		int c2_i2_count = lmcOfCodition2 / i2;
 		int c2_i3_count = lmcOfCodition2 / i3;
 
-		Integer lmcOfCodition3 = getLowestCommonMultiple(i1, i3);
+		Integer lmcOfCodition3 = findLowestCommonMultiple(i1, i3);
 		int c3_i1_count = lmcOfCodition3 / i1;
 		int c3_i3_count = lmcOfCodition3 / i3;
 

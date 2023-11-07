@@ -631,8 +631,13 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 
 	public static void main(String[] args) {
 		ExerciseServiceMathG2_2Impl t = new ExerciseServiceMathG2_2Impl();
-		List<Integer> list = new ArrayList<>(Arrays.asList(180, 24, 60, 240));
+		List<Integer> list = new ArrayList<>(Arrays.asList(1, 180, 24, 60, 240));
 		Integer greatestCommonDivisor = t.findGreastestCommonDivisorUnder10000(list);
 		System.out.println(greatestCommonDivisor);
+		list = new ArrayList<>(Arrays.asList(180, 24, 60, -240));
+		greatestCommonDivisor = t.findGreastestCommonDivisorUnder10000(list);
+		System.out.println(greatestCommonDivisor);
+		Integer lowestCommonMultiple = t.findLowestCommonMultiple(list);
+		System.out.println(lowestCommonMultiple);
 	}
 }

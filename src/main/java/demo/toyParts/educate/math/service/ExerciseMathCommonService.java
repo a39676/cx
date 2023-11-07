@@ -189,7 +189,7 @@ public abstract class ExerciseMathCommonService extends EducateCommonService {
 		return BigDecimal.valueOf(d).setScale(scaleIndex, RoundingMode.HALF_UP).doubleValue();
 	}
 
-	protected Integer getLowestCommonMultiple(int i1, int i2) {
+	protected Integer findLowestCommonMultiple(int i1, int i2) {
 		if (i1 == 0 || i2 == 0) {
 			return 0;
 		}
@@ -203,11 +203,75 @@ public abstract class ExerciseMathCommonService extends EducateCommonService {
 		}
 		return lcm;
 	}
-	
-//	protected Integer getLowestCommonMultiple(List<Integer> input) {
-//		Integer greastestCommonDivisor = findGreastestCommonDivisorUnder10000(input);
-//		
-//	}
+
+	protected Integer findLowestCommonMultiple(List<Integer> input) {
+		Integer greastestCommonDivisor = findGreastestCommonDivisorUnder10000(input);
+		List<Integer> tmpDivideResult = divideByTheSameNumber(input, greastestCommonDivisor);
+
+		Collections.sort(tmpDivideResult);
+		List<Integer> inputAfterFilter = new ArrayList<>();
+		for (int i = 0; i < input.size(); i++) {
+			inputAfterFilter.add(Math.abs(tmpDivideResult.get(i)));
+		}
+
+		Integer tmpFactor = findFacotrForMoreThanOneInteger(inputAfterFilter);
+		List<Integer> factorList = new ArrayList<>();
+		if (tmpFactor > 1) {
+			factorList.add(tmpFactor);
+			inputAfterFilter = divideByTheSameNumberIfDivisible(inputAfterFilter, tmpFactor);
+		}
+		while (tmpFactor > 1) {
+			tmpFactor = findFacotrForMoreThanOneInteger(inputAfterFilter);
+			if (tmpFactor > 1) {
+				factorList.add(tmpFactor);
+				inputAfterFilter = divideByTheSameNumberIfDivisible(inputAfterFilter, tmpFactor);
+			}
+		}
+
+		Integer result = 1 * greastestCommonDivisor;
+		for (int i = 0; i < factorList.size(); i++) {
+			result = result * factorList.get(i);
+		}
+		for (int i = 0; i < inputAfterFilter.size(); i++) {
+			result = result * inputAfterFilter.get(i);
+		}
+		return result;
+	}
+
+	private Integer findFacotrForMoreThanOneInteger(List<Integer> integers) {
+		boolean divisibleForOneInteger = false;
+		boolean divisibleForTwoInteger = false;
+		Integer tmpFactor = 1;
+		Integer tmpInt = null;
+		Integer maxInt = integers.get(integers.size() - 1);
+		Integer factorLimit = maxInt / 2 + 1;
+
+		for (int i = 0; i < PRIME_NUMBERS_UNDER_10000.size() && !divisibleForTwoInteger; i++) {
+			tmpFactor = PRIME_NUMBERS_UNDER_10000.get(i);
+			if (tmpFactor > factorLimit) {
+				i = PRIME_NUMBERS_UNDER_10000.size();
+				continue;
+			}
+			divisibleForOneInteger = false;
+			divisibleForTwoInteger = false;
+			for (int j = 0; j < integers.size() && !divisibleForTwoInteger; j++) {
+				tmpInt = integers.get(j);
+				if (tmpInt % tmpFactor == 0) {
+					if (!divisibleForOneInteger) {
+						divisibleForOneInteger = true;
+					} else {
+						divisibleForTwoInteger = true;
+					}
+				}
+			}
+		}
+
+		if (divisibleForTwoInteger) {
+			return tmpFactor;
+		} else {
+			return 1;
+		}
+	}
 
 	protected Integer findGreastestCommonDivisorUnder10000(List<Integer> integers) {
 		List<Integer> factors = findCommonFactorsUnder10000(integers);
@@ -231,7 +295,7 @@ public abstract class ExerciseMathCommonService extends EducateCommonService {
 		List<Integer> integersAfterFilter = new ArrayList<>();
 		for (int i = 0; i < integers.size(); i++) {
 			if (integers.get(i) != null && !integersAfterFilter.contains(integers.get(i))) {
-				integersAfterFilter.add(integers.get(i));
+				integersAfterFilter.add(Math.abs(integers.get(i)));
 			}
 		}
 		if (integersAfterFilter.isEmpty()) {
@@ -254,10 +318,9 @@ public abstract class ExerciseMathCommonService extends EducateCommonService {
 			}
 		}
 
+		Collections.sort(integersAfterFilter);
 		Integer minInt = integersAfterFilter.get(0);
-		for (int i = 1; i < integersAfterFilter.size(); i++) {
-			minInt = Math.min(minInt, integersAfterFilter.get(i));
-		}
+
 		List<Integer> factorsOfMinInt = findFactorsUnder10000(minInt);
 		List<Integer> tmpList = new ArrayList<>(integersAfterFilter);
 		Integer tmpFactor = null;
@@ -286,6 +349,18 @@ public abstract class ExerciseMathCommonService extends EducateCommonService {
 		List<Integer> resultList = new ArrayList<>();
 		for (int i = 0; i < list.size(); i++) {
 			resultList.add(i, list.get(i) / num);
+		}
+		return resultList;
+	}
+
+	private List<Integer> divideByTheSameNumberIfDivisible(List<Integer> list, Integer num) {
+		List<Integer> resultList = new ArrayList<>();
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i) % num == 0) {
+				resultList.add(i, list.get(i) / num);
+			} else {
+				resultList.add(list.get(i));
+			}
 		}
 		return resultList;
 	}

@@ -103,7 +103,7 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		question.setQuestionNumber(questionNumber);
 		exerciseDTO.getQuestionList().add(question);
 		questionNumber++;
-		
+
 		question = createWordProblemModule9();
 		question.setQuestionNumber(questionNumber);
 		exerciseDTO.getQuestionList().add(question);
@@ -586,7 +586,7 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 	}
 
 	private MathQuestionBaseDTO createWordProblemModule9() {
-		String moduleStr = "一条%s长%d米, 分割成%d米一段, 需要%d秒, 分割成%d段需要多少秒?";
+		String moduleStr = "一条%s长%d米, 分割成%d米一段, 需要%d秒, 分割成%d米一段需要多少秒?";
 
 		List<String> dynamicKeyWord = new ArrayList<>();
 		dynamicKeyWord.add("钢管");
@@ -603,41 +603,24 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		int randomKeyWordIndex = t.nextInt(0, dynamicKeyWord.size());
 		String keyWord = dynamicKeyWord.get(randomKeyWordIndex);
 
-		List<Integer> primeNumbers = new ArrayList<>(PRIME_NUMBERS_UNDER_100.subList(3, 11));
-		int primeNumberIndex = t.nextInt(0, primeNumbers.size());
-		int subLong1 = primeNumbers.get(primeNumberIndex);
-		primeNumbers.remove(primeNumberIndex);
-		primeNumberIndex = t.nextInt(0, primeNumbers.size());
-		int subCounting1 = primeNumbers.get(primeNumberIndex);
-		primeNumbers.remove(primeNumberIndex);
-		primeNumberIndex = t.nextInt(0, primeNumbers.size());
-		int subLong2 = primeNumbers.get(primeNumberIndex);
-		primeNumbers.remove(primeNumberIndex);
-
-		int materialLong = subLong1 * subCounting1;
 		int cuttingTimeInSecond = t.nextInt(5, 12);
-		int cuttingTimeTotalInSubLong1 = cuttingTimeInSecond * (subCounting1 - 1);
-		int cuttingTimeTotalInSubLong2 = materialLong / subLong2 * cuttingTimeInSecond;
-		int subCounting2 = materialLong / subLong2 - 1;
+		int subLong1 = t.nextInt(3, 8);
+		int subLong2 = t.nextInt(9, 12);
 
-//		String moduleStr = "一条%s长%d米, 分割成%d米一段, 需要%d秒, 分割成%d段需要多少秒?";
+		int materialLong = findLowestCommonMultiple(Arrays.asList(subLong1, subLong2, t.nextInt(6, 10)));
+		int subCounting1 = materialLong / subLong1;
+
+		int cuttingTimeTotalInSubLong1 = cuttingTimeInSecond * (subCounting1 - 1);
+		int subCounting2 = materialLong / subLong2;
+		int cuttingTimeTotalInSubLong2 = (subCounting2 - 1) * cuttingTimeInSecond;
+
+//		String moduleStr = "一条%s长%d米, 分割成%d米一段, 需要%d秒, 分割成%d米一段需要多少秒?";
 		q.setExpression(
-				String.format(moduleStr, keyWord, materialLong, subLong1, cuttingTimeTotalInSubLong1, subCounting2));
+				String.format(moduleStr, keyWord, materialLong, subLong1, cuttingTimeTotalInSubLong1, subLong2));
 
 		q.addStandardAnswer(String.valueOf(cuttingTimeTotalInSubLong2));
 
 		return q;
 	}
 
-	public static void main(String[] args) {
-		ExerciseServiceMathG2_2Impl t = new ExerciseServiceMathG2_2Impl();
-		List<Integer> list = new ArrayList<>(Arrays.asList(1, 180, 24, 60, 240));
-		Integer greatestCommonDivisor = t.findGreastestCommonDivisorUnder10000(list);
-		System.out.println(greatestCommonDivisor);
-		list = new ArrayList<>(Arrays.asList(180, 24, 60, -240));
-		greatestCommonDivisor = t.findGreastestCommonDivisorUnder10000(list);
-		System.out.println(greatestCommonDivisor);
-		Integer lowestCommonMultiple = t.findLowestCommonMultiple(list);
-		System.out.println(lowestCommonMultiple);
-	}
 }

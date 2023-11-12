@@ -108,6 +108,11 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		question.setQuestionNumber(questionNumber);
 		exerciseDTO.getQuestionList().add(question);
 		questionNumber++;
+		
+		question = createWordProblemModule10();
+		question.setQuestionNumber(questionNumber);
+		exerciseDTO.getQuestionList().add(question);
+		questionNumber++;
 
 		return exerciseDTO;
 	}
@@ -619,6 +624,44 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 				String.format(moduleStr, keyWord, materialLong, subLong1, cuttingTimeTotalInSubLong1, subLong2));
 
 		q.addStandardAnswer(String.valueOf(cuttingTimeTotalInSubLong2));
+
+		return q;
+	}
+
+	private MathQuestionBaseDTO createWordProblemModule10() {
+		String moduleStr = "为了丰富同学们的课外生活, %s老师买了%d%s%s和%d%s%s, 共付了%d元, 按价钱算, 一%s%s可以换%d%s%s, <br>那么一%s%s需要多少钱呢?";
+		List<String[]> dynamicKeyWord = new ArrayList<>();
+		dynamicKeyWord.add(new String[] { "李", "副", "象棋", "跳棋" });
+		dynamicKeyWord.add(new String[] { "张", "套", "水彩笔", "蜡笔" });
+		dynamicKeyWord.add(new String[] { "王", "本", "小说", "画册" });
+		dynamicKeyWord.add(new String[] { "何", "套", "乐高", "玩偶" });
+
+		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+
+		int randomKeyWordIndex = t.nextInt(0, dynamicKeyWord.size());
+		String[] keyWords = dynamicKeyWord.get(randomKeyWordIndex);
+
+		int priceOfObjB = t.nextInt(12, 24);
+		int times = t.nextInt(3, 12);
+		int priceOfObjA = priceOfObjB * times;
+
+		int countingOfObjA = t.nextInt(3, 8);
+		int countingOfObjB = t.nextInt(8, 15);
+
+		int totalAmount = priceOfObjA * countingOfObjA + priceOfObjB * countingOfObjB;
+
+		String unit = keyWords[1];
+		String objAName = keyWords[2];
+		String objBName = keyWords[3];
+
+//		为了丰富同学们的课外生活, %s老师买了%d%s%s和%d%s%s, 共付了%d元, 按价钱算, 一%s%s可以换%d%s%s, 那么一%s%s需要多少钱呢?;
+		q.setExpression(String.format(moduleStr, keyWords[0], countingOfObjA, unit, objAName, countingOfObjB, unit,
+				objBName, totalAmount, unit, objAName, times, unit, objBName, unit, objBName));
+
+		q.addStandardAnswer(String.valueOf(priceOfObjB));
 
 		return q;
 	}

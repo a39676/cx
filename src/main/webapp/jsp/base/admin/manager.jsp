@@ -145,7 +145,8 @@
         <a href="/pNote/edit" target="_blank">note edit</a>
       </li>
       <li>
-        <a href="/pMemo/get?key=key" target="_blank">pmemo</a>
+        <a href="/pMemo/get?key=key" target="_blank">pmemo(get)</a>
+        <a href="/pMemo/set" target="_blank">pmemo(set)</a>
       </li>
       <li>
         <a href="/urgeNoticeManager/setUpdateMsgWebhook" target="_blank">

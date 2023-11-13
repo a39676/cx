@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.stereotype.Service;
@@ -113,8 +115,13 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		question.setQuestionNumber(questionNumber);
 		exerciseDTO.getQuestionList().add(question);
 		questionNumber++;
-		
+
 		question = createWordProblemModule11();
+		question.setQuestionNumber(questionNumber);
+		exerciseDTO.getQuestionList().add(question);
+		questionNumber++;
+
+		question = createWordProblemModule12();
 		question.setQuestionNumber(questionNumber);
 		exerciseDTO.getQuestionList().add(question);
 		questionNumber++;
@@ -722,4 +729,62 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		return q;
 	}
 
+	private MathQuestionBaseDTO createWordProblemModule12() {
+		String moduleStr = "一道除法题, 除数是%d, 小华把被除数的%s位数字和%s位数字颠倒了, 结果除得的商是%d%s; 这道题的正确商应该是?";
+		List<String> keyWord = new ArrayList<>(Arrays.asList("万", "千", "百", "十", "个"));
+
+		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+
+		int randomDivisor = t.nextInt(13, 39);
+		int randomMultiplier = t.nextInt(257, 7693);
+		int correctNum = 0;
+		while (correctNum < 10000 || correctNum > 99999 || hadSameNum(correctNum)) {
+			randomDivisor = t.nextInt(13, 39);
+			randomMultiplier = t.nextInt(257, 7693);
+			correctNum = randomDivisor * randomMultiplier;
+		}
+		int randomIndexA = t.nextInt(0, 5);
+		int randomIndexB = t.nextInt(0, 5);
+		while (randomIndexB == randomIndexA) {
+			randomIndexB = t.nextInt(0, 5);
+		}
+
+		String indexACnName = keyWord.get(randomIndexA);
+		String indexBCnName = keyWord.get(randomIndexB);
+
+		char[] errorNumStrArray = String.valueOf(correctNum).toCharArray();
+		char numCharA = errorNumStrArray[randomIndexA];
+		errorNumStrArray[randomIndexA] = errorNumStrArray[randomIndexB];
+		errorNumStrArray[randomIndexB] = numCharA;
+		String errorNumStr = "";
+		for (int i = 0; i < errorNumStrArray.length; i++) {
+			errorNumStr = errorNumStr + String.valueOf(errorNumStrArray[i]);
+		}
+		Integer errorNum = Integer.parseInt(errorNumStr);
+		int errorResult = errorNum / randomDivisor;
+		int errorRemainder = errorNum % randomDivisor;
+		String subDescript = "";
+		if (errorRemainder != 0) {
+			subDescript = ", 余" + errorRemainder;
+		}
+
+//		一道除法题, 除数是%d, 小华把被除数的%s位数字和%s位数字颠倒了, 结果除得的商是%d%s; 这道题的正确商应该是?
+		q.setExpression(String.format(moduleStr, randomDivisor, indexACnName, indexBCnName, errorResult, subDescript));
+
+		q.addStandardAnswer(String.valueOf(correctNum / randomDivisor));
+
+		return q;
+	}
+
+	private boolean hadSameNum(int num) {
+		String numStr = String.valueOf(num);
+		Set<Character> set = new HashSet<>();
+		for (int i = 0; i < numStr.length(); i++) {
+			set.add(numStr.charAt(i));
+		}
+		return set.size() != numStr.length();
+	}
 }

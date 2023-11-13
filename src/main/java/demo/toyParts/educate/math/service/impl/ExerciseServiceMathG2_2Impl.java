@@ -108,8 +108,13 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		question.setQuestionNumber(questionNumber);
 		exerciseDTO.getQuestionList().add(question);
 		questionNumber++;
-		
+
 		question = createWordProblemModule10();
+		question.setQuestionNumber(questionNumber);
+		exerciseDTO.getQuestionList().add(question);
+		questionNumber++;
+		
+		question = createWordProblemModule11();
 		question.setQuestionNumber(questionNumber);
 		exerciseDTO.getQuestionList().add(question);
 		questionNumber++;
@@ -662,6 +667,57 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 				objBName, totalAmount, unit, objAName, times, unit, objBName, unit, objBName));
 
 		q.addStandardAnswer(String.valueOf(priceOfObjB));
+
+		return q;
+	}
+
+	private MathQuestionBaseDTO createWordProblemModule11() {
+		String moduleStr = "%s和%s比赛%s%s, %s%d分钟%s%d%s, %s%d分钟%s%d%s. 他们俩谁%s得比较快?";
+		List<String[]> dynamicKeyWord = new ArrayList<>();
+		dynamicKeyWord.add(new String[] { "小红", "小明", "写", "字", "个" });
+		dynamicKeyWord.add(new String[] { "小王", "小枫", "做", "题", "道" });
+		dynamicKeyWord.add(new String[] { "小英", "小雪", "擦", "桌子", "张" });
+		dynamicKeyWord.add(new String[] { "大明", "胖虎", "砍", "树", "棵" });
+		dynamicKeyWord.add(new String[] { "小丽", "小星", "插", "花", "扎" });
+
+		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+
+		int randomKeyWordIndex = t.nextInt(0, dynamicKeyWord.size());
+		String[] keyWords = dynamicKeyWord.get(randomKeyWordIndex);
+
+		int aCountingPerMin = t.nextInt(12, 24);
+		int bCountingPerMin = t.nextInt(12, 24);
+		while (bCountingPerMin == aCountingPerMin) {
+			bCountingPerMin = t.nextInt(12, 24);
+		}
+
+		int minOfA = t.nextInt(12, 24);
+		int minOfB = t.nextInt(12, 24);
+		while (minOfB == minOfA) {
+			minOfB = t.nextInt(12, 24);
+		}
+		int totalOfA = aCountingPerMin * minOfA;
+		int totalOfB = bCountingPerMin * minOfB;
+
+		String answer = keyWords[0];
+		if (aCountingPerMin < bCountingPerMin) {
+			answer = keyWords[1];
+		}
+
+		String roleAName = keyWords[0];
+		String roleBName = keyWords[1];
+		String actionWord = keyWords[2];
+		String objName = keyWords[3];
+		String unit = keyWords[4];
+
+//		"%s和%s比赛%s%s, %s%d分钟%s%d%s, %s%d分钟%s%d%s. 他们俩谁%s得比较快?";
+		q.setExpression(String.format(moduleStr, roleAName, roleBName, actionWord, objName, roleAName, minOfA,
+				actionWord, totalOfA, unit, roleBName, minOfB, actionWord, totalOfB, unit, actionWord));
+
+		q.addStandardAnswer(String.valueOf(answer));
 
 		return q;
 	}

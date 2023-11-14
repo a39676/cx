@@ -126,6 +126,11 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		exerciseDTO.getQuestionList().add(question);
 		questionNumber++;
 
+		question = createWordProblemModule13();
+		question.setQuestionNumber(questionNumber);
+		exerciseDTO.getQuestionList().add(question);
+		questionNumber++;
+
 		return exerciseDTO;
 	}
 
@@ -786,5 +791,55 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 			set.add(numStr.charAt(i));
 		}
 		return set.size() != numStr.length();
+	}
+
+	private MathQuestionBaseDTO createWordProblemModule13() {
+		String moduleStr = "求以下數字的最大公約數, %d, %d, %d";
+
+		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+
+		int randomCommon = t.nextInt(30, 98);
+		while (PRIME_NUMBERS_UNDER_100.contains(randomCommon)) {
+			randomCommon = t.nextInt(30, 98);
+		}
+		List<Integer> subPrimeNumberList = PRIME_NUMBERS_UNDER_100.subList(0, 6);
+		int intA = randomCommon;
+		int intB = randomCommon;
+		int intC = randomCommon;
+		int randomPrimeNumberIndex = 0;
+		int minInt = 3000;
+		int maxInt = 10000;
+		while (intA < maxInt) {
+			randomPrimeNumberIndex = t.nextInt(0, 5);
+			intA = intA * subPrimeNumberList.get(randomPrimeNumberIndex);
+			if (intA > minInt) {
+				break;
+			}
+		}
+		while (intB < maxInt) {
+			randomPrimeNumberIndex = t.nextInt(0, 5);
+			intB = intB * subPrimeNumberList.get(randomPrimeNumberIndex);
+			if (intB > minInt) {
+				break;
+			}
+		}
+		while (intC < maxInt) {
+			randomPrimeNumberIndex = t.nextInt(0, 5);
+			intC = intC * subPrimeNumberList.get(randomPrimeNumberIndex);
+			if (intC > minInt) {
+				break;
+			}
+		}
+
+		Integer greastestCommonDivisor = findGreastestCommonDivisorUnder10000(Arrays.asList(intA, intB, intC));
+
+		q.setExpression(String.format(moduleStr, intA, intB, intC));
+
+		q.addStandardAnswer(String.valueOf(greastestCommonDivisor));
+
+		return q;
 	}
 }

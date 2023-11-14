@@ -131,6 +131,11 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		exerciseDTO.getQuestionList().add(question);
 		questionNumber++;
 
+		question = createWordProblemModule14();
+		question.setQuestionNumber(questionNumber);
+		exerciseDTO.getQuestionList().add(question);
+		questionNumber++;
+
 		return exerciseDTO;
 	}
 
@@ -839,6 +844,38 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		q.setExpression(String.format(moduleStr, intA, intB, intC));
 
 		q.addStandardAnswer(String.valueOf(greastestCommonDivisor));
+
+		return q;
+	}
+
+	private MathQuestionBaseDTO createWordProblemModule14() {
+		String moduleStr = "求以下數字的最小公倍數, %d, %d, %d";
+
+		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
+		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+
+		ThreadLocalRandom t = ThreadLocalRandom.current();
+
+		List<Integer> subPrimeNumberList = PRIME_NUMBERS_UNDER_100.subList(0, 6);
+
+		int intA = 1;
+		int intB = 1;
+		int intC = 1;
+		for (int i = 0; i < 2; i++) {
+			intA = intA * subPrimeNumberList.get(t.nextInt(0, 6));
+		}
+		for (int i = 0; i < 2; i++) {
+			intB = intB * subPrimeNumberList.get(t.nextInt(0, 6));
+		}
+		for (int i = 0; i < 2; i++) {
+			intC = intC * subPrimeNumberList.get(t.nextInt(0, 6));
+		}
+
+		Integer lowestCommonMultiple = findLowestCommonMultiple(Arrays.asList(intA, intB, intC));
+
+		q.setExpression(String.format(moduleStr, intA, intB, intC));
+
+		q.addStandardAnswer(String.valueOf(lowestCommonMultiple));
 
 		return q;
 	}

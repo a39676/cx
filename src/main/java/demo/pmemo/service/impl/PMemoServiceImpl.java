@@ -6,16 +6,25 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.article.service.impl.ArticleCommonService;
 import demo.pmemo.pojo.constant.PMemoConstant;
+import demo.pmemo.pojo.constant.PMemoView;
 import demo.pmemo.pojo.dto.SetPMemoDTO;
 import demo.pmemo.service.PMemoService;
 
 @Service
 public class PMemoServiceImpl extends ArticleCommonService implements PMemoService {
 
+	@Override
+	public ModelAndView setMemoPage() {
+		ModelAndView view = new ModelAndView(PMemoView.createPMemo);
+		view.addObject("defaultValidDateTime", localDateTimeHandler.dateToStr(LocalDateTime.now().plusMinutes(5)));
+		return view;
+	}
+	
 	@Override
 	public String getMemo(String key) {
 		if(StringUtils.isBlank(key)) {

@@ -23,7 +23,7 @@
 
 <div class="row">
   <div class="col-sm-12">
-    <input type="text" name="" id="validDateStr" placeholder="validDateStr"><br>
+    <input type="text" name="" id="validDateStr" value="${defaultValidDateTime}"><br>
     <input type="text" name="" id="redisKeyValue" placeholder="redisKeyValue">
   </div>
 </div>

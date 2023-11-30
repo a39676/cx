@@ -41,7 +41,9 @@ public class ZulipToolServiceImpl extends CommonService implements ZulipToolServ
 					for (int j = 0; j < recipients.size(); j++) {
 						recipient = recipients.get(j);
 						if (zulipOptionService.getTargetUserEmailList().contains(recipient.getEmail())) {
-							msgTimestamp = LocalDateTime.ofInstant(msg.getTimestamp(), ZoneId.of("UTC"));
+							msgTimestamp = LocalDateTime.ofInstant(msg.getTimestamp(), ZoneId.of("UTC+8"));
+							System.out.println(msg.getTimestamp());
+							System.out.println(msgTimestamp);
 							if (msgTimestamp.plusMinutes(zulipOptionService.getMessageLivingMinutes()).isBefore(now)) {
 								deleteMsg(z, msg.getId());
 							}

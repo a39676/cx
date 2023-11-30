@@ -29,6 +29,7 @@ import demo.thirdPartyAPI.openAI.service.impl.OpenAiOptionService;
 import demo.tool.mail.service.impl.MailOptionService;
 import demo.tool.service.impl.ToolOptionService;
 import demo.tool.telegram.service.impl.TelegramOptionService;
+import demo.tool.zulip.service.impl.ZulipOptionService;
 import demo.toyParts.educate.service.impl.EducateOptionService;
 
 @Controller
@@ -81,6 +82,8 @@ public class OptionConstantController {
 	private ToolOptionService toolOptionService;
 	@Autowired
 	private PromoteOptionService promoteOptionService;
+	@Autowired
+	private ZulipOptionService zulipOptionService;
 
 	@GetMapping(value = "/refreshSystemOption")
 	@ResponseBody
@@ -226,6 +229,14 @@ public class OptionConstantController {
 	@ResponseBody
 	public String refreshPromoteOption() {
 		promoteOptionService.refreshOption();
+		return "done";
+	}
+	
+
+	@GetMapping(value = "/zulipOptionService")
+	@ResponseBody
+	public String zulipOptionService() {
+		zulipOptionService.refreshOption();
 		return "done";
 	}
 }

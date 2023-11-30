@@ -66,6 +66,7 @@ optionFilePath:
   aiChat: "/home/u2/cx/optionFile/aiChat/option.json"
   aiArt: "/home/u2/cx/optionFile/aiArt/option.json"
   promote: "/home/u2/cx/optionFile/promote/option.json"
+  zulip: "/home/u2/cx/optionFile/zulip/option.json"
   
     
 logging:

@@ -55,6 +55,8 @@
   <a href="/optionConstant/refreshWechatPayOption" target="_blank">refreshWechatPayOption</a><br>
 
   <a href="/optionConstant/refreshPromoteOption" target="_blank">refreshPromoteOption</a><br>
+
+  <a href="/optionConstant/zulipOptionService" target="_blank">zulipOptionService</a><br>
   
 </div>
 

@@ -315,6 +315,12 @@
 			<artifactId>jaxb-api</artifactId>
 		</dependency>
 		<!-- AI art end -->
+		
+		<dependency>
+			<groupId>com.github.jamesnetherton</groupId>
+			<artifactId>zulip-java-client</artifactId>
+			<version>0.5.2</version>
+		</dependency>
 
 		<dependency>
 			<groupId>com.demo</groupId>

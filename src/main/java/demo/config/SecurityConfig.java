@@ -130,6 +130,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
             .antMatchers(WordHelperUrl.ROOT + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_USER_ACTIVE, SystemRolesType.ROLE_STUDENT))
+            .antMatchers(WordHelperUrl.ROOT + "/**")
+            	.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN))
             // joy url start
             .antMatchers(JoyUrl.ROOT + "/**")
             	.access(hasAnyRole(SystemRolesType.ROLE_USER_ACTIVE))

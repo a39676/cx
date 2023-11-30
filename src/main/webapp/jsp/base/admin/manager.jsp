@@ -205,6 +205,13 @@
       </li>
     </ul><!-- joy -->
 
+    <ul class="main-menu visible-on-click" id="zulip">
+      <li style="background-color:yellow;">zulip</li>
+      <li>
+        <a href="/zulip/deleteMessageHistoryAutomation" target="_blank">deleteMessageHistoryAutomation</a>
+      </li>
+    </ul><!-- zulip -->
+
 
   </div>
 

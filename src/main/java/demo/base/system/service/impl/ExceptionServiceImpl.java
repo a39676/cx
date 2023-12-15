@@ -100,6 +100,7 @@ public class ExceptionServiceImpl extends SystemCommonService implements Excepti
 	@Override
 	public ModelAndView handle403CommonException(HttpServletRequest request) {
 		log.error("Http 403: " + request.getServerName() + "/" + request.getRequestURI());
+		log.error("Role: " + baseUtilCustom.getRoles());
 		visitDataService.insertVisitData(request, "catch 403 exception");
 		ModelAndView view = new ModelAndView("baseJSP/errorCustom");
 		view.addObject("message", "很抱歉,居然出现了" + description[getRan()] + "的异常");

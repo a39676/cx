@@ -132,11 +132,11 @@ public class BaseUtilCustom {
 	public MyUserPrincipal getUserPrincipal() {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
 		if (securityContext == null || securityContext.getAuthentication() == null
-				|| securityContext.getAuthentication().getPrincipal() == null) {
+				|| securityContext.getAuthentication().getDetails() == null) {
 			return new MyUserPrincipal();
 		}
 
-		Object obj = securityContext.getAuthentication().getPrincipal();
+		Object obj = securityContext.getAuthentication().getDetails();
 		if (obj instanceof MyUserPrincipal) {
 			return (MyUserPrincipal) obj;
 		} else {

@@ -3,7 +3,7 @@ package demo.tool.other.service;
 import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 public interface QrCodeService {
 

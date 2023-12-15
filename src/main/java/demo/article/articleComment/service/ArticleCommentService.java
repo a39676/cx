@@ -3,13 +3,12 @@ package demo.article.articleComment.service;
 import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.article.articleComment.pojo.dto.CreateArticleCommentDTO;
 import demo.article.articleComment.pojo.dto.FindArticleCommentPageDTO;
 import demo.article.articleComment.pojo.po.ArticleCommentCount;
 import demo.article.articleComment.pojo.result.FindArticleCommentPageResult;
+import jakarta.servlet.http.HttpServletRequest;
 
 public interface ArticleCommentService {
 

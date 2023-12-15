@@ -3,8 +3,6 @@ package demo.promote.service.impl;
 import java.io.File;
 import java.util.HashMap;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -14,6 +12,7 @@ import com.google.gson.Gson;
 
 import demo.common.service.CommonService;
 import demo.promote.pojo.dto.PromoteImgDTO;
+import jakarta.annotation.PostConstruct;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")

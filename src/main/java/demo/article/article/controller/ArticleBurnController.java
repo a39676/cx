@@ -1,6 +1,6 @@
 package demo.article.article.controller;
 
-import javax.servlet.http.HttpServletRequest;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +20,7 @@ import demo.article.article.pojo.result.ArticleBurnResult;
 import demo.article.article.pojo.result.CreatingBurnMessageResult;
 import demo.article.article.service.ArticleBurnService;
 import demo.common.controller.CommonController;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping( value = ArticleBurnUrlConstant.root)

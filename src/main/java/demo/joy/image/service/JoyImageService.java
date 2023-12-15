@@ -1,11 +1,10 @@
 package demo.joy.image.service;
 
-import javax.servlet.http.HttpServletResponse;
-
 import demo.joy.common.pojo.result.JoyCommonResult;
 import demo.joy.common.pojo.type.JoyModuleType;
 import demo.joy.image.pojo.dto.JoyImageUploadDTO;
 import demo.joy.image.pojo.result.JoyImageUploadResult;
+import jakarta.servlet.http.HttpServletResponse;
 
 public interface JoyImageService {
 

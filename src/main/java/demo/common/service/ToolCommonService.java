@@ -1,6 +1,6 @@
 package demo.common.service;
 
-import javax.servlet.http.HttpServletRequest;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -10,6 +10,7 @@ import demo.base.system.service.HostnameService;
 import demo.base.system.service.impl.RedisHashConnectService;
 import demo.base.system.service.impl.SystemOptionService;
 import demo.tool.service.impl.ToolOptionService;
+import jakarta.servlet.http.HttpServletRequest;
 
 public abstract class ToolCommonService extends CommonService {
 

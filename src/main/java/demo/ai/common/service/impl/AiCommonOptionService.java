@@ -2,13 +2,12 @@ package demo.ai.common.service.impl;
 
 import java.io.File;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import demo.common.service.CommonService;
+import jakarta.annotation.PostConstruct;
 
 @Scope("singleton")
 @Service

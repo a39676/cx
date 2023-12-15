@@ -4,9 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -17,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import demo.base.system.pojo.constant.BaseUrl;
 import demo.base.system.service.AuxiliaryService;
 import demo.common.controller.CommonController;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class AuxiliaryController extends CommonController {

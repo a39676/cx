@@ -71,43 +71,44 @@ public class HttpSecurityConfig extends CommonService {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/welcome**").permitAll().antMatchers(LoginUrlConstant.LOGIN + "/**")
-				.permitAll().antMatchers(UsersUrl.root + "/**").permitAll().antMatchers("/static_resources/**")
-				.permitAll().antMatchers("/tHome/**").permitAll()
+		http.authorizeRequests();
+		http.authorizeRequests().requestMatchers("/welcome**").permitAll().requestMatchers(LoginUrlConstant.LOGIN + "/**")
+				.permitAll().requestMatchers(UsersUrl.root + "/**").permitAll().requestMatchers("/static_resources/**")
+				.permitAll().requestMatchers("/tHome/**").permitAll()
 				// used to allow anonymous access
 				// .antMatchers("/welcome**").access("IS_AUTHENTICATED_ANONYMOUSLY")
 //            .antMatchers(ArticleUrlConstant.root + "/**").access("hasAnyRole('" + RolesType.ROLE_ADMIN.getRoleName() + "','" + RolesType.ROLE_USER.getRoleName() + "')")
-				.antMatchers(BaseUrl.SHUTDOWN + "/**").access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
-				.antMatchers(BaseUrl.OPTION_CONSTANT + "/**").access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
-				.antMatchers(TestUrl.root + "/**").access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
-				.antMatchers("/holder/**")
+				.requestMatchers(BaseUrl.SHUTDOWN + "/**").access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
+				.requestMatchers(BaseUrl.OPTION_CONSTANT + "/**").access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
+				.requestMatchers(TestUrl.root + "/**").access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
+				.requestMatchers("/holder/**")
 				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_USER))
-				.antMatchers("/accountInfo/**").access(hasAnyRole(SystemRolesType.ROLE_USER))
-				.antMatchers(AdminUrlConstant.root + "/**").access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN))
-				.antMatchers(ArticleAdminUrlConstant.root + "/**").access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN))
-				.antMatchers(ArticleAdminCommentUrlConstant.root + "/**")
-				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN)).antMatchers("/dba/**")
+				.requestMatchers("/accountInfo/**").access(hasAnyRole(SystemRolesType.ROLE_USER))
+				.requestMatchers(AdminUrlConstant.root + "/**").access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN))
+				.requestMatchers(ArticleAdminUrlConstant.root + "/**").access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN))
+				.requestMatchers(ArticleAdminCommentUrlConstant.root + "/**")
+				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN)).requestMatchers("/dba/**")
 				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DBA))
-				.antMatchers(ToolUrlConstant.root + "/**").access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
-				.antMatchers(CryptoCoinManagerUrl.ROOT + "/**")
+				.requestMatchers(ToolUrlConstant.root + "/**").access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
+				.requestMatchers(CryptoCoinManagerUrl.ROOT + "/**")
 				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
-				.antMatchers(CurrencyExchangeRateNoticeUrl.ROOT + "/**")
+				.requestMatchers(CurrencyExchangeRateNoticeUrl.ROOT + "/**")
 				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
-				.antMatchers(PMemoUrl.ROOT + PMemoUrl.SET).access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
-				.antMatchers(UrgeNoticeManagerUrl.ROOT + "/**")
+				.requestMatchers(PMemoUrl.ROOT + PMemoUrl.SET).access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
+				.requestMatchers(UrgeNoticeManagerUrl.ROOT + "/**")
 				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
-				.antMatchers(CryptoCoinSharingUrl.ROOT + CryptoCoinSharingUrl.CALCULATE_DETAIL).permitAll()
-				.antMatchers(CryptoCoinSharingUrl.ROOT + "/**")
+				.requestMatchers(CryptoCoinSharingUrl.ROOT + CryptoCoinSharingUrl.CALCULATE_DETAIL).permitAll()
+				.requestMatchers(CryptoCoinSharingUrl.ROOT + "/**")
 				.access("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')")
-				.antMatchers(AiManagerUrlConstant.ROOT + "/**")
+				.requestMatchers(AiManagerUrlConstant.ROOT + "/**")
 				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
-				.antMatchers(AiArtMangerUrl.ROOT + "/**")
+				.requestMatchers(AiArtMangerUrl.ROOT + "/**")
 				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
-				.antMatchers(WordHelperUrl.ROOT + "/**")
+				.requestMatchers(WordHelperUrl.ROOT + "/**")
 				.access(hasAnyRole(SystemRolesType.ROLE_USER_ACTIVE, SystemRolesType.ROLE_STUDENT))
 				// joy url start
-				.antMatchers(JoyUrl.ROOT + "/**").access(hasAnyRole(SystemRolesType.ROLE_USER_ACTIVE))
-				.antMatchers(JoyManagerUrl.ROOT + "/**")
+				.requestMatchers(JoyUrl.ROOT + "/**").access(hasAnyRole(SystemRolesType.ROLE_USER_ACTIVE))
+				.requestMatchers(JoyManagerUrl.ROOT + "/**")
 				.access(hasAnyRole(SystemRolesType.ROLE_ADMIN, SystemRolesType.ROLE_SUPER_ADMIN))
 				// joy url end
 				.and().formLogin().loginPage("/login/login").failureUrl("/login/login?error")
@@ -116,17 +117,17 @@ public class HttpSecurityConfig extends CommonService {
 				.and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/login/logout")).and()
 				.exceptionHandling().accessDeniedPage("/403").and().rememberMe()
 				.tokenRepository(persistentTokenRepository()).tokenValiditySeconds(3600).and().authorizeRequests().and()
-				.csrf().ignoringAntMatchers(UrgeNoticeUrl.ROOT + "/**");
+				.csrf().ignoringRequestMatchers(UrgeNoticeUrl.ROOT + "/**");
 		return http.build();
 	}
 
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
-		return (web) -> web.ignoring().antMatchers("/test/testIgnoring").antMatchers(ImageInteractionUrl.ROOT + "/**")
-				.antMatchers(AiChatFromWechatSdkUrlConstant.ROOT + "/**")
-				.antMatchers(WechatPaySdkUrlConstant.ROOT + "/**").antMatchers(WechatSdkUrlConstant.ROOT + "/**")
-				.antMatchers(AiChatApiUrlConstant.ROOT + "/**").antMatchers(AiArtApiUrlConstant.ROOT + "/**")
-				.antMatchers(ImageUrl.ROOT + "/**");
+		return (web) -> web.ignoring().requestMatchers("/test/testIgnoring").requestMatchers(ImageInteractionUrl.ROOT + "/**")
+				.requestMatchers(AiChatFromWechatSdkUrlConstant.ROOT + "/**")
+				.requestMatchers(WechatPaySdkUrlConstant.ROOT + "/**").requestMatchers(WechatSdkUrlConstant.ROOT + "/**")
+				.requestMatchers(AiChatApiUrlConstant.ROOT + "/**").requestMatchers(AiArtApiUrlConstant.ROOT + "/**")
+				.requestMatchers(ImageUrl.ROOT + "/**");
 	}
 
 	@Bean

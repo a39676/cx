@@ -1,6 +1,6 @@
 package demo.base.user.service;
 
-import javax.servlet.http.HttpServletRequest;
+
 
 import org.springframework.web.servlet.ModelAndView;
 
@@ -9,6 +9,7 @@ import demo.base.user.pojo.dto.StudentRegistDTO;
 import demo.base.user.pojo.dto.UserRegistDTO;
 import demo.base.user.pojo.result.NewUserRegistResult;
 import demo.base.user.pojo.result.__baseSuperAdminRegistResult;
+import jakarta.servlet.http.HttpServletRequest;
 
 public interface UserRegistService {
 	ModelAndView userRegistView(HttpServletRequest request);

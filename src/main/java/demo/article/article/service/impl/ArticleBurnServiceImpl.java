@@ -8,8 +8,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +27,7 @@ import demo.article.article.pojo.result.CreatingBurnMessageResult;
 import demo.article.article.pojo.result.jsonRespon.ArticleFileSaveResult;
 import demo.article.article.service.ArticleBurnService;
 import demo.base.system.pojo.constant.SystemRedisKey;
+import jakarta.servlet.http.HttpServletRequest;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -258,19 +257,19 @@ public class ArticleBurnServiceImpl extends ArticleCommonService implements Arti
 		if (burnId == null) {
 			return;
 		}
-		
+
 		ArticleBurnExample example = new ArticleBurnExample();
 		example.createCriteria().andBurnIdEqualTo(burnId).andIsBurnedEqualTo(false);
 		List<ArticleBurn> poList = articleBurnMapper.selectByExample(example);
-		
-		if(poList != null && !poList.isEmpty()) {
-			for(ArticleBurn po : poList ) {
+
+		if (poList != null && !poList.isEmpty()) {
+			for (ArticleBurn po : poList) {
 				burnMessageAndDeleteFile(po);
 			}
 		}
-		
+
 	}
-	
+
 	private void burnMessageAndDeleteFile(ArticleBurn po) {
 		File tmpFile = new File(po.getFilePath());
 		try {

@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -17,6 +15,7 @@ import demo.base.system.pojo.po.HostnameExample;
 import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.HostnameService;
 import demo.common.service.CommonService;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Scope("singleton")
 @Service

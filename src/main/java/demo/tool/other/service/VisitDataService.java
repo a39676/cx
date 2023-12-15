@@ -1,8 +1,9 @@
 package demo.tool.other.service;
 
-import javax.servlet.http.HttpServletRequest;
+
 
 import demo.base.user.pojo.po.UserIp;
+import jakarta.servlet.http.HttpServletRequest;
 
 public interface VisitDataService {
 

@@ -7,9 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +33,8 @@ import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.article.article.service.ArticleChannelService;
 import demo.base.system.pojo.po.Hostname;
 import demo.base.system.pojo.result.HostnameType;
+import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -60,7 +59,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		List<Hostname> hostnameList = hostnameService.findHostnames();
 		List<ArticleChannelVO> allPublicChannelVoList = getPublicChannels();
 		HostnameType hostnameType = null;
-		
+
 		for (Hostname hostname : hostnameList) {
 			ArticleChannelKeyHostnameExample channelKeyHostnameExample = new ArticleChannelKeyHostnameExample();
 			channelKeyHostnameExample.createCriteria().andIsDeleteEqualTo(false).andHostIdEqualTo(hostname.getId());
@@ -77,7 +76,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 					channelBanList.add(i.getChannelId());
 				}
 			}
-			
+
 			List<ArticleChannelVO> tmpChannelList = new ArrayList<ArticleChannelVO>();
 			tmpChannelList.add(createTheAllChannel());
 			tmpChannelList.addAll(removeChannels(allPublicChannelVoList, channelBanList, channelPassList));
@@ -105,7 +104,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 
 	@Override
 	public List<ArticleChannelVO> getPrivateChannels(Long userId) {
-		if(userId == null) {
+		if (userId == null) {
 			return new ArrayList<ArticleChannelVO>();
 		}
 		ArticleUserDetailExample privateChannelConnectExample = new ArticleUserDetailExample();
@@ -161,7 +160,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		result.getChannelList().addAll(bo.getPrivateChannels());
 		result.getChannelList().addAll(bo.getFlashChannels());
 		Collections.sort(result.getChannelList());
-		
+
 		result.setIsSuccess();
 		return result;
 	}
@@ -521,7 +520,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 			r.failWithMessage("更新失败");
 			return r;
 		}
-		
+
 		loadPublicChannels();
 
 		r.successWithMessage("成功更新");

@@ -2,8 +2,6 @@ package demo.base.system.service.impl;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,6 +14,7 @@ import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.ExceptionService;
 import demo.base.user.pojo.bo.MyUserPrincipal;
 import demo.tool.telegram.service.TelegramService;
+import jakarta.servlet.http.HttpServletRequest;
 import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.type.TelegramBotType;
 

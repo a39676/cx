@@ -4,13 +4,12 @@ import java.awt.image.BufferedImage;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-
 import demo.image.pojo.result.GetImgThirdPartyUrlInBatchResult;
 import demo.image.pojo.result.GetImgThirdPartyUrlResult;
 import demo.image.pojo.result.ImgHandleSrcDataResult;
 import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.result.ImageSavingResult;
+import jakarta.servlet.http.HttpServletResponse;
 
 public interface ImageService {
 

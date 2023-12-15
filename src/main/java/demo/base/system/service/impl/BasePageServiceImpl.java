@@ -2,8 +2,6 @@ package demo.base.system.service.impl;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +14,7 @@ import demo.base.system.pojo.constant.BlogViewConstant;
 import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.BasePageService;
 import demo.base.user.pojo.type.SystemRolesType;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class BasePageServiceImpl extends SystemCommonService implements BasePageService {

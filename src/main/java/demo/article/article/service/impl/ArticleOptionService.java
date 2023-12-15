@@ -4,10 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -16,14 +13,13 @@ import com.google.gson.Gson;
 import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.base.system.pojo.result.HostnameType;
 import demo.common.service.CommonService;
+import demo.config.costom_component.OptionFilePathConfigurer;
+import jakarta.annotation.PostConstruct;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")
 @Service
 public class ArticleOptionService extends CommonService {
-
-	@Value("${optionFilePath.article}")
-	private String optionFilePath;
 
 	private Long maxArticleLength = 0L;
 	private Integer defaultPageSize = 6;
@@ -59,13 +55,13 @@ public class ArticleOptionService extends CommonService {
 
 	@PostConstruct
 	public void refreshOption() {
-		File optionFile = new File(optionFilePath);
+		File optionFile = new File(OptionFilePathConfigurer.ARTICLE);
 		if (!optionFile.exists()) {
 			return;
 		}
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
-			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
+			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.ARTICLE);
 			ArticleOptionService tmp = new Gson().fromJson(jsonStr, ArticleOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
 			log.error("article option loaded");

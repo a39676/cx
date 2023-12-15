@@ -14,6 +14,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.ExceptionService;
+import demo.base.user.pojo.bo.MyUserPrincipal;
 import demo.tool.telegram.service.TelegramService;
 import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.type.TelegramBotType;
@@ -99,8 +100,9 @@ public class ExceptionServiceImpl extends SystemCommonService implements Excepti
 
 	@Override
 	public ModelAndView handle403CommonException(HttpServletRequest request) {
-		log.error("Http 403: " + request.getServerName() + "/" + request.getRequestURI());
-		log.error("Role: " + baseUtilCustom.getRoles());
+		MyUserPrincipal user = baseUtilCustom.getCurrentUser();
+		log.error("Http 403: " + request.getServerName() + "/" + request.getRequestURI() + ", username:"
+				+ user.getUsername() + ", Role: " + baseUtilCustom.getRoles());
 		visitDataService.insertVisitData(request, "catch 403 exception");
 		ModelAndView view = new ModelAndView("baseJSP/errorCustom");
 		view.addObject("message", "很抱歉,居然出现了" + description[getRan()] + "的异常");

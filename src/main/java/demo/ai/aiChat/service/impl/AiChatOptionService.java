@@ -14,7 +14,6 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +21,7 @@ import com.google.gson.Gson;
 
 import demo.ai.aiChat.pojo.dto.AiChatUserMembershipDetailDTO;
 import demo.common.service.CommonService;
+import demo.config.costom_component.OptionFilePathConfigurer;
 import jakarta.annotation.PostConstruct;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -29,8 +29,6 @@ import toolPack.ioHandle.FileUtilCustom;
 @Service
 public class AiChatOptionService extends CommonService {
 
-	@Value("${optionFilePath.aiChat}")
-	private String optionFilePath;
 	private String chatStorePrefixPath;
 	private String chatFromApiStorePrefixPath;
 	private String extendDetailStorePrefixPath;
@@ -241,13 +239,13 @@ public class AiChatOptionService extends CommonService {
 
 	@PostConstruct
 	public void refreshOption() {
-		File optionFile = new File(optionFilePath);
+		File optionFile = new File(OptionFilePathConfigurer.AI_CHAT);
 		if (!optionFile.exists()) {
 			return;
 		}
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
-			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
+			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.AI_CHAT);
 			AiChatOptionService tmp = new Gson().fromJson(jsonStr, AiChatOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
 

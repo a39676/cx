@@ -3,20 +3,17 @@ package demo.automationTest.service.impl;
 import java.io.File;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
 import demo.common.service.CommonService;
+import demo.config.costom_component.OptionFilePathConfigurer;
 import jakarta.annotation.PostConstruct;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class AutomationTestOptionService extends CommonService {
-
-	@Value("${optionFilePath.automationTest}")
-	private String optionFilePath;
 
 	private String inputParamStorePrefixPath;
 
@@ -32,13 +29,13 @@ public class AutomationTestOptionService extends CommonService {
 
 	@PostConstruct
 	public void refreshOption() {
-		File optionFile = new File(optionFilePath);
+		File optionFile = new File(OptionFilePathConfigurer.AUTOMATION_TEST);
 		if (!optionFile.exists()) {
 			return;
 		}
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
-			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
+			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.AUTOMATION_TEST);
 			AutomationTestOptionService tmp = new Gson().fromJson(jsonStr, AutomationTestOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
 			log.error("automation test option loaded");
@@ -61,10 +58,6 @@ public class AutomationTestOptionService extends CommonService {
 
 	public void setReportStorePrefixPath(String reportStorePrefixPath) {
 		this.reportStorePrefixPath = reportStorePrefixPath;
-	}
-
-	public String getOptionFilePath() {
-		return optionFilePath;
 	}
 
 	public String getParamStorePrefixPath() {
@@ -101,11 +94,10 @@ public class AutomationTestOptionService extends CommonService {
 
 	@Override
 	public String toString() {
-		return "AutomationTestOptionService [optionFilePath=" + optionFilePath + ", inputParamStorePrefixPath="
-				+ inputParamStorePrefixPath + ", reportStorePrefixPath=" + reportStorePrefixPath
-				+ ", paramStorePrefixPath=" + paramStorePrefixPath + ", imageStorePrefixPath=" + imageStorePrefixPath
-				+ ", testEventLiveLimitMonth=" + testEventLiveLimitMonth + ", maxWaitingRunHour=" + maxWaitingRunHour
-				+ "]";
+		return "AutomationTestOptionService [inputParamStorePrefixPath=" + inputParamStorePrefixPath
+				+ ", reportStorePrefixPath=" + reportStorePrefixPath + ", paramStorePrefixPath=" + paramStorePrefixPath
+				+ ", imageStorePrefixPath=" + imageStorePrefixPath + ", testEventLiveLimitMonth="
+				+ testEventLiveLimitMonth + ", maxWaitingRunHour=" + maxWaitingRunHour + "]";
 	}
 
 }

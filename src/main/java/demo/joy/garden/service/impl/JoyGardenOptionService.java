@@ -4,22 +4,19 @@ import java.io.File;
 import java.util.HashMap;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
 import demo.common.service.CommonService;
+import demo.config.costom_component.OptionFilePathConfigurer;
 import jakarta.annotation.PostConstruct;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")
 @Service
 public class JoyGardenOptionService extends CommonService {
-
-	@Value("${optionFilePath.joyGarden}")
-	private String optionFilePath;
 
 	private HashMap<Integer, Integer> createFieldConsumePointMap;
 
@@ -32,21 +29,21 @@ public class JoyGardenOptionService extends CommonService {
 
 	@Override
 	public String toString() {
-		return "JoyGardenOptionService [optionFilePath=" + optionFilePath + ", createFieldConsumePointMap="
-				+ createFieldConsumePointMap + ", fieldMaxSize=" + fieldMaxSize + ", backgroundImgPath="
-				+ backgroundImgPath + ", fieldlandImgPath=" + fieldlandImgPath + ", fieldlandNotDevelopImgPath="
-				+ fieldlandNotDevelopImgPath + ", gardenNpcImgPath=" + gardenNpcImgPath + "]";
+		return "JoyGardenOptionService [createFieldConsumePointMap=" + createFieldConsumePointMap + ", fieldMaxSize="
+				+ fieldMaxSize + ", backgroundImgPath=" + backgroundImgPath + ", fieldlandImgPath=" + fieldlandImgPath
+				+ ", fieldlandNotDevelopImgPath=" + fieldlandNotDevelopImgPath + ", gardenNpcImgPath="
+				+ gardenNpcImgPath + "]";
 	}
 
 	@PostConstruct
 	public void refreshOption() {
-		File optionFile = new File(optionFilePath);
+		File optionFile = new File(OptionFilePathConfigurer.JOY_GRADEN);
 		if (!optionFile.exists()) {
 			return;
 		}
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
-			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
+			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.JOY_GRADEN);
 			JoyGardenOptionService tmp = new Gson().fromJson(jsonStr, JoyGardenOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
 			log.error("Joy Garden option loaded");

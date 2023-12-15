@@ -46,13 +46,16 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 			UserIp ui = new UserIp();
 			JSONObject j = null;
 			IpRecordBO record = getIp(request);
-			
+
 //			if(!record.getForwardAddr().matches(IPV6_REGEX) || !record.getRemoteAddr().matches(IPV6_REGEX)) {
 //				log.error("Recive strange IP: " + record.toString());
 //			}
-			
+
 			String ipStr = record.getForwardAddr();
-			if(ipStr.contains(", ")) {
+			if (ipStr == null) {
+				ipStr = String.valueOf(record.getRemoteAddr());
+			}
+			if (ipStr.contains(", ")) {
 				String[] arr = ipStr.split(", ");
 				ui.setIp(arr[0]);
 				ui.setForwardIp(arr[1]);
@@ -62,7 +65,7 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 
 			ui.setCreateTime(LocalDateTime.now());
 			ui.setServerName(request.getServerName());
-			if(StringUtils.isNotBlank(customInfo)) {
+			if (StringUtils.isNotBlank(customInfo)) {
 				ui.setUri(request.getRequestURI() + "/?customInfo=" + customInfo);
 			} else {
 				ui.setUri(request.getRequestURI());
@@ -71,12 +74,12 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 
 			j = JSONObject.fromObject(ui);
 			j.put("createTime", localDateTimeHandler.dateToStr(ui.getCreateTime()));
-			if(ui.getUserId() == null) {
+			if (ui.getUserId() == null) {
 				j.put("userId", "null");
 			}
 
 			redisTemplate.opsForList().leftPush(SystemRedisKey.VISIT_DATA_REDIS_KEY, j.toString());
-			
+
 			return ui;
 		} catch (Exception e) {
 			log.error("Get strange visit data: " + e.getLocalizedMessage());
@@ -93,7 +96,7 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 	public void addVisitCounting(HttpServletRequest request) {
 		IpRecordBO record = getIp(request);
 		String ip = record.getRemoteAddr();
-		if(StringUtils.isBlank(ip)) {
+		if (StringUtils.isBlank(ip)) {
 			ip = record.getForwardAddr();
 		}
 		redisTemplate.opsForSet().add(SystemRedisKey.VISIT_COUNTING_REDIS_KEY, ip);
@@ -115,12 +118,12 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 	@Override
 	public void visitDataRedisToOrm() {
 		long size = redisTemplate.opsForList().size(SystemRedisKey.VISIT_DATA_REDIS_KEY);
-		if(size < 1) {
+		if (size < 1) {
 			return;
 		}
 
 		long maxSize = 100000;
-		if(size > maxSize) {
+		if (size > maxSize) {
 			size = maxSize;
 		}
 
@@ -129,7 +132,7 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 		JSONObject j = null;
 		UserIp ui = null;
 
-		for(int i = 0; i < size; i++) {
+		for (int i = 0; i < size; i++) {
 			str = (String) redisTemplate.opsForList().rightPop(SystemRedisKey.VISIT_DATA_REDIS_KEY);
 			j = JSONObject.fromObject(str);
 			ui = new UserIp();
@@ -140,7 +143,7 @@ public class VisitDataServiceImpl extends CommonService implements VisitDataServ
 			ui.setIp(j.getString("ip"));
 			ui.setServerName(j.getString("serverName"));
 			ui.setUri(j.getString("uri"));
-			if(numberUtil.matchInteger(j.getString("userId"))) {
+			if (numberUtil.matchInteger(j.getString("userId"))) {
 				ui.setUserId(j.getLong("userId"));
 			}
 			poList.add(ui);

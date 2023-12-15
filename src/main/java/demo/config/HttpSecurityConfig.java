@@ -8,7 +8,6 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -33,11 +32,9 @@ import demo.base.user.pojo.type.OrganzationRolesType;
 import demo.base.user.pojo.type.SystemRolesType;
 import demo.base.user.service.impl.CustomAuthenticationFailHandler;
 import demo.base.user.service.impl.CustomAuthenticationSuccessHandler;
-import demo.base.user.service.impl.CustomUserDetailsService;
 import demo.common.service.CommonService;
 import demo.config.costom_component.CustomAuthenticationProvider;
 import demo.config.costom_component.CustomPasswordEncoder;
-import demo.config.costom_component.LimitLoginAuthenticationProvider;
 import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinManagerUrl;
 import demo.finance.cryptoCoin.sharing.pojo.constant.CryptoCoinSharingUrl;
 import demo.finance.currencyExchangeRate.notice.pojo.constant.CurrencyExchangeRateNoticeUrl;
@@ -66,8 +63,6 @@ public class HttpSecurityConfig extends CommonService {
 	private CustomAuthenticationFailHandler customAuthenticationFailHandler;
 	@Autowired
 	private CustomAuthenticationProvider authProvider;
-	@Autowired
-	private CustomUserDetailsService customUserDetailsService;
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -133,15 +128,6 @@ public class HttpSecurityConfig extends CommonService {
 				.antMatchers(WechatPaySdkUrlConstant.ROOT + "/**").antMatchers(WechatSdkUrlConstant.ROOT + "/**")
 				.antMatchers(AiChatApiUrlConstant.ROOT + "/**").antMatchers(AiArtApiUrlConstant.ROOT + "/**")
 				.antMatchers(ImageUrl.ROOT + "/**");
-	}
-
-	@Bean
-	public AuthenticationManagerBuilder securityAuthenticationProvider(AuthenticationManagerBuilder auth)
-			throws Exception {
-		DaoAuthenticationProvider authProvider = new LimitLoginAuthenticationProvider();
-		authProvider.setUserDetailsService(customUserDetailsService);
-		authProvider.setPasswordEncoder(passwordEncoder());
-		return auth.authenticationProvider(authProvider);
 	}
 
 	@Bean

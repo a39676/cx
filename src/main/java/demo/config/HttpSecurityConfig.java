@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -12,33 +13,16 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import ai.aiArt.pojo.constant.AiArtApiUrlConstant;
 import ai.aiChat.pojo.constant.AiChatApiUrlConstant;
 import ai.aiChat.pojo.constant.AiChatFromWechatSdkUrlConstant;
-import demo.ai.aiArt.pojo.constant.AiArtMangerUrl;
-import demo.ai.manager.pojo.constant.AiManagerUrlConstant;
-import demo.article.article.pojo.constant.ArticleAdminUrlConstant;
-import demo.base.admin.pojo.constant.AdminUrlConstant;
-import demo.base.system.pojo.constant.BaseUrl;
-import demo.base.user.pojo.type.SystemRolesType;
 import demo.base.user.service.impl.CustomAuthenticationFailHandler;
 import demo.base.user.service.impl.CustomAuthenticationSuccessHandler;
 import demo.common.service.CommonService;
 import demo.config.costom_component.CustomAuthenticationProvider;
 import demo.config.costom_component.CustomPasswordEncoder;
-import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinManagerUrl;
-import demo.finance.cryptoCoin.sharing.pojo.constant.CryptoCoinSharingUrl;
-import demo.finance.currencyExchangeRate.notice.pojo.constant.CurrencyExchangeRateNoticeUrl;
 import demo.image.pojo.constant.ImageUrl;
-import demo.joy.common.pojo.constant.JoyManagerUrl;
-import demo.joy.common.pojo.constant.JoyUrl;
-import demo.pmemo.pojo.constant.PMemoUrl;
-import demo.pmemo.pojo.constant.UrgeNoticeManagerUrl;
-import demo.test.pojo.constant.TestUrl;
-import demo.tool.other.pojo.constant.ToolUrlConstant;
-import demo.tool.wordHelper.pojo.constant.WordHelperUrl;
 import image.pojo.constant.ImageInteractionUrl;
 import wechatPaySdk.jsApi.pojo.constant.WechatPaySdkUrlConstant;
 import wechatSdk.pojo.constant.WechatSdkUrlConstant;
@@ -63,6 +47,9 @@ public class HttpSecurityConfig extends CommonService {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http
+		.authorizeRequests().requestMatchers("").hasAnyRole("");
+		;
 		http.securityMatcher(BaseUrl.SHUTDOWN + "/**")
 				.authorizeHttpRequests(
 						authorize -> authorize.anyRequest().hasRole("SUPER_ADMIN"))

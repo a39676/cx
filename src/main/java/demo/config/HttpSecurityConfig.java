@@ -8,10 +8,12 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
@@ -71,35 +73,55 @@ public class HttpSecurityConfig extends CommonService {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http
-		.authorizeRequests()
-		.requestMatchers("/welcome**").permitAll()
-		.requestMatchers(LoginUrlConstant.LOGIN + "/**") .permitAll()
-		.requestMatchers(UsersUrl.root + "/**").permitAll()
-		.requestMatchers("/static_resources/**") .permitAll()
-		.requestMatchers("/tHome/**").permitAll()
+		Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> authManReqMatR = new Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry>() {
+			
+			@Override
+			public void customize(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry t) {
+				// TODO Auto-generated method stub
+				
+			}
+		};
+		http.authorizeHttpRequests(authManReqMatR);
+		
+		http.authorizeRequests().requestMatchers("/welcome**").permitAll().requestMatchers(LoginUrlConstant.LOGIN + "/**")
+		.permitAll().requestMatchers(UsersUrl.root + "/**").permitAll().requestMatchers("/static_resources/**")
+		.permitAll().requestMatchers("/tHome/**").permitAll()
+		// used to allow anonymous access
+		// .requestMatchers("/welcome**").access("IS_AUTHENTICATED_ANONYMOUSLY")
+//    .requestMatchers(ArticleUrlConstant.root + "/**").access("hasAnyRole('" + RolesType.ROLE_ADMIN.getRoleName() + "','" + RolesType.ROLE_USER.getRoleName() + "')")
 		.requestMatchers(BaseUrl.SHUTDOWN + "/**").access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
 		.requestMatchers(BaseUrl.OPTION_CONSTANT + "/**").access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
 		.requestMatchers(TestUrl.root + "/**").access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
-		.requestMatchers("/holder/**") .access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_USER))
+		.requestMatchers("/holder/**")
+		.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_USER))
 		.requestMatchers("/accountInfo/**").access(hasAnyRole(SystemRolesType.ROLE_USER))
 		.requestMatchers(AdminUrlConstant.root + "/**").access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN))
 		.requestMatchers(ArticleAdminUrlConstant.root + "/**").access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN))
-		.requestMatchers(ArticleAdminCommentUrlConstant.root + "/**").access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN))
-		.requestMatchers("/dba/**").access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DBA))
+		.requestMatchers(ArticleAdminCommentUrlConstant.root + "/**")
+		.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN)).requestMatchers("/dba/**")
+		.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DBA))
 		.requestMatchers(ToolUrlConstant.root + "/**").access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
-		.requestMatchers(CryptoCoinManagerUrl.ROOT + "/**").access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
-		.requestMatchers(CurrencyExchangeRateNoticeUrl.ROOT + "/**").access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+		.requestMatchers(CryptoCoinManagerUrl.ROOT + "/**")
+		.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+		.requestMatchers(CurrencyExchangeRateNoticeUrl.ROOT + "/**")
+		.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
 		.requestMatchers(PMemoUrl.ROOT + PMemoUrl.SET).access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
-		.requestMatchers(UrgeNoticeManagerUrl.ROOT + "/**").access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+		.requestMatchers(UrgeNoticeManagerUrl.ROOT + "/**")
+		.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
 		.requestMatchers(CryptoCoinSharingUrl.ROOT + CryptoCoinSharingUrl.CALCULATE_DETAIL).permitAll()
-		.requestMatchers(CryptoCoinSharingUrl.ROOT + "/**").access("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')")
-		.requestMatchers(AiManagerUrlConstant.ROOT + "/**").access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
-		.requestMatchers(AiArtMangerUrl.ROOT + "/**").access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
-		.requestMatchers(WordHelperUrl.ROOT + "/**").access(hasAnyRole(SystemRolesType.ROLE_USER_ACTIVE, SystemRolesType.ROLE_STUDENT))
+		.requestMatchers(CryptoCoinSharingUrl.ROOT + "/**")
+		.access("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')")
+		.requestMatchers(AiManagerUrlConstant.ROOT + "/**")
+		.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+		.requestMatchers(AiArtMangerUrl.ROOT + "/**")
+		.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+		.requestMatchers(WordHelperUrl.ROOT + "/**")
+		.access(hasAnyRole(SystemRolesType.ROLE_USER_ACTIVE, SystemRolesType.ROLE_STUDENT))
+		// joy url start
 		.requestMatchers(JoyUrl.ROOT + "/**").access(hasAnyRole(SystemRolesType.ROLE_USER_ACTIVE))
-		.requestMatchers(JoyManagerUrl.ROOT + "/**").access(hasAnyRole(SystemRolesType.ROLE_ADMIN, SystemRolesType.ROLE_SUPER_ADMIN))
-		
+		.requestMatchers(JoyManagerUrl.ROOT + "/**")
+		.access(hasAnyRole(SystemRolesType.ROLE_ADMIN, SystemRolesType.ROLE_SUPER_ADMIN))
+		// joy url end
 		.and().formLogin().loginPage("/login/login").failureUrl("/login/login?error")
 		.loginProcessingUrl("/auth/login_check").successHandler(customAuthenticationSuccessHandler)
 		.failureHandler(customAuthenticationFailHandler).usernameParameter("user_name").passwordParameter("pwd")
@@ -107,82 +129,6 @@ public class HttpSecurityConfig extends CommonService {
 		.exceptionHandling().accessDeniedPage("/403").and().rememberMe()
 		.tokenRepository(persistentTokenRepository()).tokenValiditySeconds(3600).and().authorizeRequests().and()
 		.csrf();
-		;
-//		http.securityMatcher(BaseUrl.SHUTDOWN + "/**")
-//				.authorizeHttpRequests(
-//						authorize -> authorize.anyRequest().hasRole("SUPER_ADMIN"))
-//				.securityMatcher(BaseUrl.OPTION_CONSTANT + "/**")
-//				.authorizeHttpRequests(
-//						authorize -> authorize.anyRequest().hasAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName()))
-//				.securityMatcher(TestUrl.root + "/**")
-//				.authorizeHttpRequests(
-//						authorize -> authorize.anyRequest().hasAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName()))
-//				.securityMatcher("/holder/**")
-//				.authorizeHttpRequests(authorize -> authorize.anyRequest()
-//						.hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_USER.getName()))
-//				.securityMatcher("/accountInfo/**")
-//				.authorizeHttpRequests(authorize -> authorize.anyRequest().hasAuthority(SystemRolesType.ROLE_USER.getName()))
-//				.securityMatcher(AdminUrlConstant.root + "/**")
-//				.authorizeHttpRequests(
-//						authorize -> authorize.anyRequest().hasAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName()))
-//				.securityMatcher(ArticleAdminUrlConstant.root + "/**")
-//				.authorizeHttpRequests(
-//						authorize -> authorize.anyRequest().hasAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName()))
-//				.securityMatcher("/dba/**")
-//				.authorizeHttpRequests(authorize -> authorize.anyRequest()
-//						.hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_DBA.getName()))
-//				.securityMatcher(ToolUrlConstant.root + "/**")
-//				.authorizeHttpRequests(
-//						authorize -> authorize.anyRequest().hasAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName()))
-//				.securityMatcher(CryptoCoinManagerUrl.ROOT + "/**")
-//				.authorizeHttpRequests(authorize -> authorize.anyRequest()
-//						.hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_ADMIN.getName()))
-//				.securityMatcher(CurrencyExchangeRateNoticeUrl.ROOT + "/**")
-//				.authorizeHttpRequests(
-//						authorize -> authorize.anyRequest().hasAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName()))
-//				.securityMatcher(PMemoUrl.ROOT + PMemoUrl.SET)
-//				.authorizeHttpRequests(
-//						authorize -> authorize.anyRequest().hasAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName()))
-//				.securityMatcher(UrgeNoticeManagerUrl.ROOT + "/**")
-//				.authorizeHttpRequests(
-//						authorize -> authorize.anyRequest().hasAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName()))
-//				.securityMatcher(CryptoCoinSharingUrl.ROOT + "/**")
-//				.authorizeHttpRequests(
-//						authorize -> authorize.anyRequest().hasAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName()))
-//				.securityMatcher(AiManagerUrlConstant.ROOT + "/**")
-//				.authorizeHttpRequests(
-//						authorize -> authorize.anyRequest().hasAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName()))
-//				.securityMatcher(AiArtMangerUrl.ROOT + "/**")
-//				.authorizeHttpRequests(
-//						authorize -> authorize.anyRequest().hasAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName()))
-//				.securityMatcher(WordHelperUrl.ROOT + "/**")
-//				.authorizeHttpRequests(authorize -> authorize.anyRequest()
-//						.hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_STUDENT.getName()))
-//				.securityMatcher(JoyUrl.ROOT + "/**")
-//				.authorizeHttpRequests(
-//						authorize -> authorize.anyRequest().hasAuthority(SystemRolesType.ROLE_USER_ACTIVE.getName()))
-//				.securityMatcher(JoyManagerUrl.ROOT + "/**")
-//				.authorizeHttpRequests(authorize -> authorize.anyRequest()
-//						.hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_ADMIN.getName()))
-//				.formLogin(authorize -> authorize.loginPage("/login/login").failureUrl("/login/login?error")
-//						.loginProcessingUrl("/auth/login_check").successHandler(customAuthenticationSuccessHandler)
-//						.failureHandler(customAuthenticationFailHandler).usernameParameter("user_name")
-//						.passwordParameter("pwd"))
-//				.logout(authorize -> authorize.logoutRequestMatcher(new AntPathRequestMatcher("/login/logout")))
-//				.exceptionHandling(authorize -> authorize.accessDeniedPage("/403"));
-		
-//		http.authorizeRequests().requestMatchers("/welcome**").permitAll()
-//				.requestMatchers(LoginUrlConstant.LOGIN + "/**").permitAll().requestMatchers(UsersUrl.root + "/**")
-//				.permitAll().requestMatchers("/static_resources/**").permitAll().requestMatchers("/tHome/**")
-//				// joy url start
-//				// joy url end
-//				.and().formLogin().loginPage("/login/login").failureUrl().loginProcessingUrl("/auth/login_check")
-//				.successHandler(customAuthenticationSuccessHandler).failureHandler(customAuthenticationFailHandler)
-//				.usernameParameter("user_name").passwordParameter("pwd").and().logout()
-//				.logoutRequestMatcher(new AntPathRequestMatcher("/login/logout")).and().exceptionHandling()
-//				.accessDeniedPage("/403").and().rememberMe().tokenRepository(persistentTokenRepository())
-//				.tokenValiditySeconds(3600).and().authorizeRequests().and().csrf()
-//				.ignoringRequestMatchers(UrgeNoticeUrl.ROOT + "/**");
 		return http.build();
 	}
 

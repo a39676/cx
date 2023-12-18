@@ -6,21 +6,19 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
 import demo.common.service.CommonService;
+import demo.config.costom_component.OptionFilePathConfigurer;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")
 @Service
 public class AiArtOptionService extends CommonService {
 
-	@Value("${optionFilePath.aiArt}")
-	private String optionFilePath;
 	private String generateImageResultFolder;
 	private Integer imageWallOnShowMaxSize;
 	private Integer maxHeight;
@@ -256,13 +254,13 @@ public class AiArtOptionService extends CommonService {
 
 	@PostConstruct
 	public void refreshOption() {
-		File optionFile = new File(optionFilePath);
+		File optionFile = new File(OptionFilePathConfigurer.AI_ART);
 		if (!optionFile.exists()) {
 			return;
 		}
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
-			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
+			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.AI_ART);
 			AiArtOptionService tmp = new Gson().fromJson(jsonStr, AiArtOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
 			log.error("AI art option loaded");

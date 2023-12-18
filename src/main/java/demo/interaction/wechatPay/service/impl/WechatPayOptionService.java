@@ -5,21 +5,18 @@ import java.io.File;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
 import demo.common.service.CommonService;
+import demo.config.costom_component.OptionFilePathConfigurer;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")
 @Service
 public class WechatPayOptionService extends CommonService {
-
-	@Value("${optionFilePath.wechatPay}")
-	private String optionFilePath;
 
 	private String privateKey;
 	private String apiV3Key;
@@ -85,13 +82,13 @@ public class WechatPayOptionService extends CommonService {
 
 	@PostConstruct
 	public void refreshOption() {
-		File optionFile = new File(optionFilePath);
+		File optionFile = new File(OptionFilePathConfigurer.WECHAT_PAY);
 		if (!optionFile.exists()) {
 			return;
 		}
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
-			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
+			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.WECHAT_PAY);
 			WechatPayOptionService tmp = new Gson().fromJson(jsonStr, WechatPayOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
 			log.error("Wechat Payoption loaded");

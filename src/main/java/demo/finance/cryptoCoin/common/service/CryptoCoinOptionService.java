@@ -7,19 +7,16 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
 import demo.common.service.CommonService;
+import demo.config.costom_component.OptionFilePathConfigurer;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class CryptoCoinOptionService extends CommonService {
-
-	@Value("${optionFilePath.cryptoCoin}")
-	private String optionFilePath;
 
 	private String defaultCoinCatalog;
 	private Integer cryptoCompareApiDataMaxLength = 2000;
@@ -42,13 +39,13 @@ public class CryptoCoinOptionService extends CommonService {
 
 	@PostConstruct
 	public void refreshOption() {
-		File optionFile = new File(optionFilePath);
+		File optionFile = new File(OptionFilePathConfigurer.CRYPTO_COIN);
 		if (!optionFile.exists()) {
 			return;
 		}
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
-			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
+			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.CRYPTO_COIN);
 			CryptoCoinOptionService tmp = new Gson().fromJson(jsonStr, CryptoCoinOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
 			log.error("crypto coin option loaded");
@@ -152,10 +149,6 @@ public class CryptoCoinOptionService extends CommonService {
 
 	public void setBinanceWebSocketTurnOn(boolean binanceWebSocketTurnOn) {
 		this.binanceWebSocketTurnOn = binanceWebSocketTurnOn;
-	}
-
-	public String getOptionFilePath() {
-		return optionFilePath;
 	}
 
 	@Override

@@ -20,6 +20,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import ai.aiArt.pojo.constant.AiArtApiUrlConstant;
 import ai.aiChat.pojo.constant.AiChatApiUrlConstant;
 import ai.aiChat.pojo.constant.AiChatFromWechatSdkUrlConstant;
+import autoTest.pojo.constant.AutoTestUrl;
 import demo.ai.aiArt.pojo.constant.AiArtMangerUrl;
 import demo.ai.manager.pojo.constant.AiManagerUrlConstant;
 import demo.article.article.pojo.constant.ArticleAdminUrlConstant;
@@ -126,7 +127,7 @@ public class HttpSecurityConfig extends CommonService {
 				.antMatchers(AiChatFromWechatSdkUrlConstant.ROOT + "/**")
 				.antMatchers(WechatPaySdkUrlConstant.ROOT + "/**").antMatchers(WechatSdkUrlConstant.ROOT + "/**")
 				.antMatchers(AiChatApiUrlConstant.ROOT + "/**").antMatchers(AiArtApiUrlConstant.ROOT + "/**")
-				.antMatchers(ImageUrl.ROOT + "/**");
+				.antMatchers(ImageUrl.ROOT + "/**").antMatchers(AutoTestUrl.ROOT + AutoTestUrl.BBT_HEART_BEAT);
 	}
 
 	@Bean

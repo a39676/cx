@@ -255,7 +255,7 @@ public class AutomationTestHomepageServiceImpl extends AutomationTestCommonServi
 			redisOriginalConnectService.insertFunctionalModuleVisitData(request, SystemRedisKey.searchingDemoInsertCountingKeyPrefix);
 			r.setHasInsertCount(count + 1);
 			r.setMaxInsertCount(SearchingDemoConstant.maxInsertCountIn30Minutes);
-			r.setMessage(AutoTestUrl.root + AutoTestInteractionUrl.FIND_REPORT_BY_TEST_EVENT_ID + "?testEventId=" + r.getEventId());
+			r.setMessage(AutoTestUrl.ROOT + AutoTestInteractionUrl.FIND_REPORT_BY_TEST_EVENT_ID + "?testEventId=" + r.getEventId());
 
 		} catch (Exception e) {
 			log.error(e.getLocalizedMessage());

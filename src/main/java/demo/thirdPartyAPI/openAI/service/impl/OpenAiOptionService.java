@@ -5,21 +5,19 @@ import java.io.File;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
 import demo.common.service.CommonService;
+import demo.config.costom_component.OptionFilePathConfigurer;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")
 @Service
 public class OpenAiOptionService extends CommonService {
 
-	@Value("${optionFilePath.openAI}")
-	private String optionFilePath;
 	private String apiKey;
 	private String orgId;
 	private Integer maxTokens = 500;
@@ -55,13 +53,13 @@ public class OpenAiOptionService extends CommonService {
 
 	@PostConstruct
 	public void refreshOption() {
-		File optionFile = new File(optionFilePath);
+		File optionFile = new File(OptionFilePathConfigurer.OPEN_AI);
 		if (!optionFile.exists()) {
 			return;
 		}
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
-			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
+			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.OPEN_AI);
 			OpenAiOptionService tmp = new Gson().fromJson(jsonStr, OpenAiOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
 			log.error("Open AI option loaded");

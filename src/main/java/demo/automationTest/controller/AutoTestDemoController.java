@@ -27,7 +27,7 @@ import demo.automationTest.service.impl.AutomationTestConstantService;
 import demo.common.controller.CommonController;
 
 @Controller
-@RequestMapping(value = AutoTestUrl.root)
+@RequestMapping(value = AutoTestUrl.ROOT)
 public class AutoTestDemoController extends CommonController {
 
 	@Autowired

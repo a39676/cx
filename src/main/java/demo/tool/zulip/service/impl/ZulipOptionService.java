@@ -6,21 +6,19 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
 import demo.common.service.CommonService;
+import demo.config.costom_component.OptionFilePathConfigurer;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")
 @Service
 public class ZulipOptionService extends CommonService {
 
-	@Value("${optionFilePath.zulip}")
-	private String optionFilePath;
 	private String apiKey;
 	private String host;
 	private String email;
@@ -29,13 +27,13 @@ public class ZulipOptionService extends CommonService {
 
 	@PostConstruct
 	public void refreshOption() {
-		File optionFile = new File(optionFilePath);
+		File optionFile = new File(OptionFilePathConfigurer.ZULIP);
 		if (!optionFile.exists()) {
 			return;
 		}
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
-			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
+			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.ZULIP);
 			ZulipOptionService tmp = new Gson().fromJson(jsonStr, ZulipOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
 			log.error("Zulip option loaded");

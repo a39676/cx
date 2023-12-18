@@ -4,18 +4,15 @@ import java.io.File;
 
 import javax.annotation.PostConstruct;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import demo.common.service.CommonService;
+import demo.config.costom_component.OptionFilePathConfigurer;
 
 @Scope("singleton")
 @Service
 public class AiCommonOptionService extends CommonService {
-
-	@Value("${optionFilePath.aiCommon}")
-	private String optionFilePath;
 
 	private Long idOfAdmin;
 
@@ -34,7 +31,7 @@ public class AiCommonOptionService extends CommonService {
 
 	@PostConstruct
 	public void refreshOption() {
-		File optionFile = new File(optionFilePath);
+		File optionFile = new File(OptionFilePathConfigurer.AI_COMMON);
 		if (!optionFile.exists()) {
 			return;
 		}

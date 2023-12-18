@@ -5,34 +5,31 @@ import java.io.File;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
 import demo.common.service.CommonService;
+import demo.config.costom_component.OptionFilePathConfigurer;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")
 @Service
 public class MailOptionService extends CommonService {
 
-	@Value("${optionFilePath.mail}")
-	private String optionFilePath;
-
 	private String adminMailName = "adminMailName";
 	private String adminMailPwd = "adminMailPwd";
 
 	@PostConstruct
 	public void refreshOption() {
-		File optionFile = new File(optionFilePath);
+		File optionFile = new File(OptionFilePathConfigurer.MAIL);
 		if (!optionFile.exists()) {
 			return;
 		}
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
-			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
+			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.MAIL);
 			MailOptionService tmp = new Gson().fromJson(jsonStr, MailOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
 			log.error("mail option loaded");
@@ -55,12 +52,6 @@ public class MailOptionService extends CommonService {
 
 	public void setAdminMailPwd(String adminMailPwd) {
 		this.adminMailPwd = adminMailPwd;
-	}
-
-	@Override
-	public String toString() {
-		return "MailConstantService [optionFilePath=" + optionFilePath + ", adminMailName=" + adminMailName
-				+ ", adminMailPwd=" + adminMailPwd + "]";
 	}
 
 }

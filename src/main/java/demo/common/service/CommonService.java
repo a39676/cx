@@ -91,10 +91,6 @@ public abstract class CommonService {
 		return record;
 	}
 
-	protected String buildRedisKeyPrefix(IpRecordBO record, String redisKeyPrefix) {
-		return redisKeyPrefix + "_" + record.getForwardAddr() + "_" + record.getRemoteAddr();
-	}
-
 	protected LocalDateTime getNextSettingTime(LocalDateTime datetime, TimeUnitType timeUnit, Long step) {
 		LocalDateTime nextNoticeTime = null;
 		if (datetime == null || timeUnit == null || step == null) {

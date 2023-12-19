@@ -49,6 +49,7 @@ import demo.test.pojo.constant.TestUrl;
 import demo.tool.other.pojo.constant.ToolUrlConstant;
 import demo.tool.wordHelper.pojo.constant.WordHelperUrl;
 import image.pojo.constant.ImageInteractionUrl;
+import tool.pojo.constant.TextMessageForwardUrl;
 import wechatPaySdk.jsApi.pojo.constant.WechatPaySdkUrlConstant;
 import wechatSdk.pojo.constant.WechatSdkUrlConstant;
 
@@ -127,7 +128,8 @@ public class HttpSecurityConfig extends CommonService {
 				.antMatchers(AiChatFromWechatSdkUrlConstant.ROOT + "/**")
 				.antMatchers(WechatPaySdkUrlConstant.ROOT + "/**").antMatchers(WechatSdkUrlConstant.ROOT + "/**")
 				.antMatchers(AiChatApiUrlConstant.ROOT + "/**").antMatchers(AiArtApiUrlConstant.ROOT + "/**")
-				.antMatchers(ImageUrl.ROOT + "/**").antMatchers(AutoTestUrl.ROOT + AutoTestUrl.BBT_HEART_BEAT);
+				.antMatchers(ImageUrl.ROOT + "/**").antMatchers(AutoTestUrl.ROOT + AutoTestUrl.BBT_HEART_BEAT)
+				.antMatchers(TextMessageForwardUrl.ROOT + "/**");
 	}
 
 	@Bean

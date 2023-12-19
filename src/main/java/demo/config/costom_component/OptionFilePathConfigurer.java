@@ -2,7 +2,7 @@ package demo.config.costom_component;
 
 public class OptionFilePathConfigurer {
 	
-	public static final String ROOT = "/home/u2/cx/optionFile";
+	private static final String ROOT = "/home/u2/cx/optionFile";
 
 	public static final String SYSTEM = ROOT + "/system/option.json";
 	public static final String ARTICLE = ROOT + "/article/option.json";

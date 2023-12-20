@@ -36,7 +36,6 @@ public class AutomationTestTaskServiceImpl extends CommonTaskService {
 		}
 	}
 	
-	
 	@Scheduled(cron="0 2 3 * * *")
 	public void deleteOldData() {
 		reportService.deleteOldData(null);

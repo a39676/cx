@@ -23,10 +23,10 @@ import demo.pmemo.pojo.dto.UpdateMessageStoreDTO;
 import demo.pmemo.pojo.type.UrgeNoticeBotCommandType;
 import demo.pmemo.service.UrgeNoticeManagerService;
 import demo.pmemo.service.UrgeNoticeService;
-import demo.tool.telegram.pojo.dto.TelegramUpdateMessageDTO;
-import demo.tool.telegram.pojo.dto.telegramDTO.TelegramMessageDTO;
-import demo.tool.telegram.pojo.po.TelegramChatId;
-import demo.tool.telegram.service.TelegramService;
+import demo.tool.textMessageForward.telegram.pojo.dto.TelegramUpdateMessageDTO;
+import demo.tool.textMessageForward.telegram.pojo.dto.telegramDTO.TelegramMessageDTO;
+import demo.tool.textMessageForward.telegram.pojo.po.TelegramChatId;
+import demo.tool.textMessageForward.telegram.service.TelegramService;
 import telegram.pojo.type.TelegramBotType;
 import toolPack.ioHandle.FileUtilCustom;
 

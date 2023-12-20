@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import demo.common.controller.CommonController;
 import demo.pmemo.pojo.constant.UrgeNoticeUrl;
 import demo.pmemo.service.UrgeNoticeService;
-import demo.tool.telegram.pojo.dto.TelegramUpdateMessageDTO;
+import demo.tool.textMessageForward.telegram.pojo.dto.TelegramUpdateMessageDTO;
 
 @Controller
 @RequestMapping(value = UrgeNoticeUrl.ROOT)

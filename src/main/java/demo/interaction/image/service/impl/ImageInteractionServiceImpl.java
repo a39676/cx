@@ -28,7 +28,7 @@ import demo.image.pojo.po.ImageTag;
 import demo.image.pojo.type.ImageTagType;
 import demo.interaction.image.service.ImageInteractionService;
 import demo.thirdPartyAPI.cloudinary.service.CloudinaryService;
-import demo.tool.telegram.service.TelegramService;
+import demo.tool.textMessageForward.telegram.service.TelegramService;
 import image.pojo.dto.UploadImageToCloudinaryDTO;
 import image.pojo.result.UploadImageToCloudinaryResult;
 import telegram.pojo.constant.TelegramStaticChatID;

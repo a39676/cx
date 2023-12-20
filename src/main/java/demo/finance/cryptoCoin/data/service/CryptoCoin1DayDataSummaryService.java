@@ -18,23 +18,20 @@ public interface CryptoCoin1DayDataSummaryService {
 	List<CryptoCoinPrice1day> getDataList(CryptoCoinCatalog coinType, CurrencyTypeForCryptoCoin currencyType,
 			LocalDateTime startTime, LocalDateTime endTime);
 
-	List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinCatalog coinType, CurrencyTypeForCryptoCoin currencyType,
-			LocalDateTime startTime);
+	List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinCatalog coinType,
+			CurrencyTypeForCryptoCoin currencyType, LocalDateTime startTime);
 
 	List<CryptoCoinPriceCommonDataBO> getCommonDataListFillWithCache(CryptoCoinCatalog coinType,
 			CurrencyTypeForCryptoCoin currencyType, LocalDateTime startTime);
 
-	List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinCatalog coinType, CurrencyTypeForCryptoCoin currencyType,
-			LocalDateTime startTime, LocalDateTime endTime);
+	List<CryptoCoinPriceCommonDataBO> getCommonDataList(CryptoCoinCatalog coinType,
+			CurrencyTypeForCryptoCoin currencyType, LocalDateTime startTime, LocalDateTime endTime);
 
 	/** 为单币种刷新数据 */
 	CommonResult receiveDailyData(CryptoCoinDataDTO dto);
 
 	CryptoCoinPriceCommonDataBO getCommonData(CryptoCoinCatalog coinType, CurrencyTypeForCryptoCoin currencyType,
 			LocalDateTime datetime);
-
-	/** 留给手动启动 */
-	void sendCryptoCoinDailyDataQueryMsg(String coinName, String currencyName, Integer counting);
 
 	void sendAllCryptoCoinDailyDataQueryMsg();
 

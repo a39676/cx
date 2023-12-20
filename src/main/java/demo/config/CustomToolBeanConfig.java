@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import demo.config.costom_component.BaseUtilCustom;
 import demo.config.costom_component.SnowFlake;
 import demo.config.costom_component.Tess;
-import demo.tool.other.service.impl.RandomChineseNameGenerator;
 import mail.service.MailToolService;
 import toolPack.complexTool.ChinaMainLandIdNumGenerator;
 import toolPack.dateTimeHandle.DateHandler;
@@ -20,6 +19,7 @@ import toolPack.ioHandle.FileUtilCustom;
 import toolPack.numericHandel.NumericUtilCustom;
 import toolPack.qrcode.QrCodeDecode;
 import toolPack.qrcode.QrCodeGenerator;
+import toolPack.stringHandle.RandomChineseNameGenerator;
 import toolPack.stringHandle.StringUtilCustom;
 
 @Component

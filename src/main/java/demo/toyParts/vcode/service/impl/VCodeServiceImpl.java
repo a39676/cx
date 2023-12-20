@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.service.CommonService;
-import demo.tool.telegram.service.TelegramService;
+import demo.tool.textMessageForward.telegram.service.TelegramService;
 import demo.toyParts.vcode.mapper.VcodeHistoryMapper;
 import demo.toyParts.vcode.mapper.VcodeMapper;
 import demo.toyParts.vcode.pojo.po.Vcode;

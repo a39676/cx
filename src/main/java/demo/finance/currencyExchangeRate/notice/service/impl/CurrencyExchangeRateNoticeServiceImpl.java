@@ -28,9 +28,9 @@ import demo.finance.currencyExchangeRate.notice.pojo.po.CurrencyExchangeRateNoti
 import demo.finance.currencyExchangeRate.notice.pojo.po.CurrencyExchangeRateNoticeExample.Criteria;
 import demo.finance.currencyExchangeRate.notice.pojo.result.CurrencyExchangeRateNoticeDTOCheckResult;
 import demo.finance.currencyExchangeRate.notice.service.CurrencyExchangeRateNoticeService;
-import demo.tool.telegram.pojo.po.TelegramChatId;
-import demo.tool.telegram.pojo.vo.TelegramChatIdVO;
-import demo.tool.telegram.service.TelegramService;
+import demo.tool.textMessageForward.telegram.pojo.po.TelegramChatId;
+import demo.tool.textMessageForward.telegram.pojo.vo.TelegramChatIdVO;
+import demo.tool.textMessageForward.telegram.service.TelegramService;
 import telegram.pojo.type.TelegramBotType;
 
 @Service

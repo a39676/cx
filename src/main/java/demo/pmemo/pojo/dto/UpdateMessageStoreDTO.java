@@ -1,6 +1,6 @@
 package demo.pmemo.pojo.dto;
 
-import demo.tool.telegram.pojo.dto.TelegramUpdateMessageDTO;
+import demo.tool.textMessageForward.telegram.pojo.dto.TelegramUpdateMessageDTO;
 
 public class UpdateMessageStoreDTO extends TelegramUpdateMessageDTO implements Comparable<UpdateMessageStoreDTO>{
 

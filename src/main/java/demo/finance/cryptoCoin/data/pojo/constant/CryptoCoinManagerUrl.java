@@ -12,8 +12,6 @@ public class CryptoCoinManagerUrl {
 	
 	public static final String REMOVE_ALL_SUBSCRIPTION_CATALOG = "/removeAllSubscriptionCatalog";
 	
-	public static final String SEND_CRYPTO_COIN_DAILY_DATA_QUERY_MSG = "/sendCryptoCoinDailyDataQueryMsg";
-	
 	public static final String CRYPTO_COIN_WEB_SOCKET_MANAGER = "/cryptoCoinWebSocketManager";
 	
 	public static final String RESTART_COIN_COMPARE_WEB_SOCKET = "/restartCoinCompareWS";

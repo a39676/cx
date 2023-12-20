@@ -27,8 +27,8 @@ public class CryptoCoinManagerController extends CommonController {
 	private CryptoCoinPriceCacheService priceCacheService;
 	@Autowired
 	private CryptoCoinCatalogService catalogService;
-	@Autowired
-	private CryptoCoin1DayDataSummaryService dailyDataService;
+//	@Autowired
+//	private CryptoCoin1DayDataSummaryService dailyDataService;
 	@Autowired
 	private CryptoCompareWSClient cryptoCompareWSClient;
 	@Autowired
@@ -37,8 +37,6 @@ public class CryptoCoinManagerController extends CommonController {
 	private CryptoCoin1DayDataSummaryService cryptoCoin1DayDataSummaryService;
 	@Autowired
 	private CryptoCoinConstantService constantService;
-	
-	
 
 	@GetMapping(value = CryptoCoinManagerUrl.CHECK_DATA_API)
 	@ResponseBody
@@ -68,52 +66,43 @@ public class CryptoCoinManagerController extends CommonController {
 		return "done";
 	}
 
-	@GetMapping(value = CryptoCoinManagerUrl.SEND_CRYPTO_COIN_DAILY_DATA_QUERY_MSG)
-	@ResponseBody
-	public String sendCryptoCoinDailyDataQueryMsg(@RequestParam("coinName") String coinName,
-			@RequestParam(value = "currencyName",  required=false) String currencyName, 
-			@RequestParam("counting") Integer counting) {
-		dailyDataService.sendCryptoCoinDailyDataQueryMsg(coinName, currencyName, counting);
-		return "done";
-	}
-	
 	@GetMapping(value = CryptoCoinManagerUrl.CRYPTO_COIN_WEB_SOCKET_MANAGER)
 	public ModelAndView cryptoCoinWebSocketManager() {
 		return new ModelAndView("finance/cryptoCoin/CryptoCoinWebSocketManager");
 	}
-	
+
 	@GetMapping(value = CryptoCoinManagerUrl.RESTART_COIN_COMPARE_WEB_SOCKET)
 	@ResponseBody
 	public String restartCoinCompareWS() {
 		cryptoCompareWSClient.restart();
 		return "done";
 	}
-	
+
 	@GetMapping(value = CryptoCoinManagerUrl.RESTART_BINANCE_WEB_SOCKET)
 	@ResponseBody
 	public String restartBinanceWS() {
 		binanceWSClient.restartWebSocket();
 		return "done";
 	}
-	
+
 	@GetMapping(value = "/resetDailyDataWaitingQuerySet")
 	@ResponseBody
 	public String resetDailyDataWaitingQuerySet() {
 		cryptoCoin1DayDataSummaryService.resetDailyDataWaitingQuerySet();
 		return "done";
 	}
-	
+
 	@GetMapping(value = "/sendAllCryptoCoinDailyDataQueryMsg")
 	@ResponseBody
 	public String sendAllCryptoCoinDailyDataQueryMsg() {
 		cryptoCoin1DayDataSummaryService.sendAllCryptoCoinDailyDataQueryMsg();
 		return "done";
 	}
-	
+
 	@GetMapping(value = "/getDailyDataWaitingQuerySet")
 	@ResponseBody
 	public Set<String> getDailyDataWaitingQuerySet() {
 		return constantService.getDailyDataWaitingQuerySet();
 	}
-	
+
 }

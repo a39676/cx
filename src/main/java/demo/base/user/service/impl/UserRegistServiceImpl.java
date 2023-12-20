@@ -45,7 +45,7 @@ import demo.tool.mail.pojo.type.MailType;
 import demo.tool.mail.service.MailService;
 import demo.tool.other.service.TextFilter;
 import demo.tool.other.service.ValidRegexToolService;
-import demo.tool.telegram.service.TelegramService;
+import demo.tool.textMessageForward.telegram.service.TelegramService;
 import demo.toyParts.educate.pojo.type.GradeType;
 import demo.toyParts.educate.service.StudentService;
 import telegram.pojo.constant.TelegramStaticChatID;

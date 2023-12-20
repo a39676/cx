@@ -9,17 +9,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import autoTest.testEvent.common.pojo.dto.AutomationTestInsertEventDTO;
-import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
-import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.TimeUnitType;
-import demo.automationTest.mq.producer.TestEventInsertAckProducer;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1dayMapper;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
@@ -29,7 +24,6 @@ import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
-import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataSubDTO;
 import finance.cryptoCoin.pojo.type.CryptoCoinDataSourceType;
@@ -50,8 +44,6 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 	@Autowired
 	private CryptoCoinPriceCacheService cacheService;
 
-	@Autowired
-	private TestEventInsertAckProducer testEventInsertAckProducer;
 
 	@Override
 	public CommonResult receiveDailyData(CryptoCoinDataDTO dto) {
@@ -74,8 +66,9 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 					TelegramStaticChatID.MY_ID);
 
 			if (CryptoCoinDataSourceType.CRYPTO_COMPARE.equals(dataSourceType)) {
-				sendDailyDataQuery(dto.getCryptoCoinTypeName(), optionService.getDefaultCurrency(),
-						optionService.getDefaultDailyDataQueryLenth(), CryptoCoinDataSourceType.BINANCE);
+//				sendDailyDataQuery(dto.getCryptoCoinTypeName(), optionService.getDefaultCurrency(),
+//						optionService.getDefaultDailyDataQueryLenth(), CryptoCoinDataSourceType.BINANCE);
+//				TODO rebuild API if need
 			} else if (CryptoCoinDataSourceType.BINANCE.equals(dataSourceType)) {
 				constantService.getDailyDataWaitingQuerySet().remove(coinType.getCoinNameEnShort());
 			}
@@ -361,8 +354,9 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		for (String catalogName : waitingQuerySet) {
 			catalog = coinCatalogService.findCatalog(catalogName);
 			if (catalog != null) {
-				sendDailyDataQuery(catalog.getCoinNameEnShort(), optionService.getDefaultCurrency(),
-						optionService.getDefaultDailyDataQueryLenth(), CryptoCoinDataSourceType.CRYPTO_COMPARE);
+//				sendDailyDataQuery(catalog.getCoinNameEnShort(), optionService.getDefaultCurrency(),
+//						optionService.getDefaultDailyDataQueryLenth(), CryptoCoinDataSourceType.CRYPTO_COMPARE);
+//				TODO rebuild API if need
 			}
 		}
 	}
@@ -375,35 +369,4 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 				.addAll(allCatalogList.stream().map(po -> po.getCoinNameEnShort()).collect(Collectors.toSet()));
 	}
 
-	@Override
-	public void sendCryptoCoinDailyDataQueryMsg(String coinName, String currencyName, Integer counting) {
-		if (StringUtils.isBlank(coinName) || counting < 1) {
-			return;
-		}
-
-		if (StringUtils.isBlank(currencyName)) {
-			currencyName = optionService.getDefaultCurrency();
-		}
-
-		sendDailyDataQuery(coinName, currencyName, counting, CryptoCoinDataSourceType.CRYPTO_COMPARE);
-	}
-
-	private void sendDailyDataQuery(String coinName, String currencyName, Integer counting,
-			CryptoCoinDataSourceType dataSource) {
-		AutomationTestInsertEventDTO dto = new AutomationTestInsertEventDTO();
-		dto.setTestModuleType(TestModuleType.SCHEDULE_CLAWING.getId());
-		dto.setFlowType(ScheduleClawingType.CRYPTO_COIN.getId());
-		dto.setTestEventId(snowFlake.getNextId());
-
-		CryptoCoinDailyDataQueryDTO paramDTO = new CryptoCoinDailyDataQueryDTO();
-		paramDTO.setApiKey(optionService.getCryptoCompareApiKey());
-		paramDTO.setCoinName(coinName);
-		paramDTO.setCurrencyName(optionService.getDefaultCurrency());
-		paramDTO.setCounting(counting);
-		paramDTO.setDataSourceCode(CryptoCoinDataSourceType.CRYPTO_COMPARE.getCode());
-
-		dto = automationTestInsertEventDtoAddParamStr(dto, paramDTO);
-
-		testEventInsertAckProducer.send(dto);
-	}
 }

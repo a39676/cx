@@ -68,7 +68,9 @@ public class AutoTestDemoController extends CommonController {
 	}
 
 	@GetMapping(value = AutoTestUrl.BBT_HEART_BEAT)
-	public void bbtHeartBeat() {
+	@ResponseBody
+	public String bbtHeartBeat() {
 		automationTestConstantService.setLastHeartBeat(LocalDateTime.now());
+		return "Done";
 	}
 }

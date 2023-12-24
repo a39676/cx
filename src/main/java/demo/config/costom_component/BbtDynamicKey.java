@@ -28,7 +28,7 @@ public class BbtDynamicKey extends CommonService {
 		String nowStr = localDateTimeHandler.dateToStr(time);
 		String keyStr = KEY_FORMAT + nowStr;
 		String keyEncode = passwordEncoder.encode(SALT, keyStr);
-		redisOriginalConnectService.setValByName(keyStr, keyEncode, 3, TimeUnit.SECONDS);
+		redisOriginalConnectService.setValByName(keyStr, keyEncode, 6, TimeUnit.SECONDS);
 		return keyEncode;
 	}
 

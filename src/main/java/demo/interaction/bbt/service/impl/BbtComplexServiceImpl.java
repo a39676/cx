@@ -26,7 +26,8 @@ public class BbtComplexServiceImpl extends BbtCommonService implements BbtComple
 		if (!bbtDynamicKey.isCorrectKey(keyInput)) {
 			return r;
 		}
-
+		
+		log.error("Fowrawd msg: " + dto.toString());
 		return msgForwardServcie.textMessageForwarding(dto);
 	}
 	

@@ -34,6 +34,7 @@ public class BbtDynamicKey extends CommonService {
 
 	public boolean isCorrectKey(String encodeStr) {
 		if (StringUtils.isBlank(encodeStr)) {
+			log.error("Input incorrect key: " + encodeStr);
 			return false;
 		}
 
@@ -55,6 +56,7 @@ public class BbtDynamicKey extends CommonService {
 			}
 		}
 
+		log.error("Input incorrect key: " + encodeStr);
 		return false;
 	}
 

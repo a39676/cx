@@ -71,7 +71,8 @@ public class CurrencyExchangeRateServiceImpl extends FinanceCommonService implem
 	@Override
 	public CommonResult receiveDailyData(CurrencyExchageRateCollectResult inputDataResult) {
 		CommonResult r = new CommonResult();
-
+		
+		log.error("Receive currency exchange rate data");
 		List<CurrencyExchageRateDataDTO> dataList = inputDataResult.getDataList();
 		for(CurrencyExchageRateDataDTO dataDTO : dataList) {
 			updateTodayDayData(dataDTO);

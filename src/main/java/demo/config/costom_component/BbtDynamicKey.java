@@ -1,6 +1,8 @@
 package demo.config.costom_component;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
@@ -20,15 +22,16 @@ public class BbtDynamicKey extends CommonService {
 
 	private static final String SALT = "BBT";
 	private static final String KEY_FORMAT = SALT + "_";
+	private static final int KEY_TOLERANCE_SECONDS = 3;
 
 	public String createKey(LocalDateTime time) {
 		if (time == null) {
-			time = LocalDateTime.now().plusSeconds(3);
+			time = LocalDateTime.now().plusSeconds(KEY_TOLERANCE_SECONDS);
 		}
 		String nowStr = localDateTimeHandler.dateToStr(time);
 		String keyStr = KEY_FORMAT + nowStr;
 		String keyEncode = passwordEncoder.encode(SALT, keyStr);
-		redisOriginalConnectService.setValByName(keyStr, keyEncode, 6, TimeUnit.SECONDS);
+		redisOriginalConnectService.setValByName(keyStr, keyEncode, KEY_TOLERANCE_SECONDS * 2 + 1, TimeUnit.SECONDS);
 		return keyEncode;
 	}
 
@@ -47,17 +50,19 @@ public class BbtDynamicKey extends CommonService {
 			return true;
 		}
 
+		List<String> redisKeys = new ArrayList<>();
 		for (int i = -3; i <= 3; i++) {
 			nowStr = localDateTimeHandler.dateToStr(now.plusSeconds(i));
 			keyStr = KEY_FORMAT + nowStr;
-			keyInRedis = redisOriginalConnectService.getValByName(keyStr);
-			if (keyInRedis.equals(encodeStr)) {
-				return true;
-			}
+			redisKeys.add(keyStr);
 		}
+		List<String> encodeKeysInRedis = redisOriginalConnectService.getValuesByKeys(redisKeys);
+		boolean flag = encodeKeysInRedis.contains(encodeStr);
 
-		log.error("Input incorrect key: " + encodeStr);
-		return false;
+		if (!flag) {
+			log.error("Input incorrect key: " + encodeStr);
+		}
+		return flag;
 	}
 
 }

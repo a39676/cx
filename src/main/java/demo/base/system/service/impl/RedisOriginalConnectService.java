@@ -1,6 +1,8 @@
 package demo.base.system.service.impl;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -111,5 +113,14 @@ public class RedisOriginalConnectService extends RedisConnectCommonService {
 
 	public Set<String> findKeys(String pattern) {
 		return redisTemplate.keys(pattern);
+	}
+
+	public List<String> getValuesByKeys(List<String> keys) {
+		List<Object> values = redisTemplate.opsForValue().multiGet(keys);
+		List<String> result = new ArrayList<>();
+		for(Object value : values) {
+			result.add(String.valueOf(value));
+		}
+		return result;
 	}
 }

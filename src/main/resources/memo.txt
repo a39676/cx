@@ -1,5 +1,4 @@
 ImageInteractionController
-bbt heart beat
 	未作校验
 
 Spring Boot update to 3.0.3

@@ -1,6 +1,5 @@
 package demo.automationTest.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +22,6 @@ import autoTest.testEvent.scheduleClawing.searchingDemo.pojo.dto.BingSearchInHom
 import demo.automationTest.pojo.result.InsertSearchingDemoEventResult;
 import demo.automationTest.pojo.vo.TestReportSummaryVO;
 import demo.automationTest.service.AutomationTestHomepageService;
-import demo.automationTest.service.impl.AutomationTestConstantService;
 import demo.common.controller.CommonController;
 
 @Controller
@@ -32,8 +30,6 @@ public class AutoTestDemoController extends CommonController {
 
 	@Autowired
 	private AutomationTestHomepageService atDemoService;
-	@Autowired
-	private AutomationTestConstantService automationTestConstantService;
 
 	@PostMapping(value = AutoTestUrl.LINK_TO_AT_HOME)
 	public ModelAndView linkToATHome(HttpServletRequest request) {
@@ -67,10 +63,4 @@ public class AutoTestDemoController extends CommonController {
 		return atDemoService.insertSearchingDemoTestEvent(dto, request);
 	}
 
-	@GetMapping(value = AutoTestUrl.BBT_HEART_BEAT)
-	@ResponseBody
-	public String bbtHeartBeat() {
-		automationTestConstantService.setLastHeartBeat(LocalDateTime.now());
-		return "Done";
-	}
 }

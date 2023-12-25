@@ -5,11 +5,12 @@ import java.time.LocalDateTime;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import demo.common.service.CommonService;
+import auxiliaryCommon.pojo.dto.BaseStrDTO;
+import demo.interaction.bbt.service.BbtCommonService;
 
 @Scope("singleton")
 @Service
-public class AutomationTestConstantService extends CommonService {
+public class AutomationTestConstantService extends BbtCommonService {
 
 	private LocalDateTime lastHeartBeat = LocalDateTime.now();
 
@@ -19,6 +20,12 @@ public class AutomationTestConstantService extends CommonService {
 
 	public void setLastHeartBeat(LocalDateTime lastHeartBeat) {
 		this.lastHeartBeat = lastHeartBeat;
+	}
+
+	public void setLastHeartBeat(BaseStrDTO dto) {
+		if (bbtDynamicKey.isCorrectKey(dto.getStr())) {
+			setLastHeartBeat(LocalDateTime.now());
+		}
 	}
 
 	@Override

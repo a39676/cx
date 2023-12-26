@@ -7,12 +7,6 @@ spring:
   application:
     name: cx
     
-  datasource:
-    cx:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://127.0.0.1:3306/financeclear?characterEncoding=utf8&useUnicode=true&useLegacyDatetimeCode=false&useTimezone=true&serverTimezone=GMT%2B8&autoReconnect=true&useSSL=false&useServerPrepStmts=true&allowMultiQueries=true
-      username: root
-      password: test
   http:
     encoding:
       charset: UTF-8
@@ -43,31 +37,6 @@ spring:
 endpoints:
   shutdown:
     enabled: true
-    
-optionFilePath:
-  system: "/home/u2/cx/optionFile/system/option.json"
-  article: "/home/u2/cx/optionFile/article/option.json"
-  articleComment: "/home/u2/cx/optionFile/articleComment/option.json"
-  mail: "/home/u2/cx/optionFile/mail/option.json"
-  cloudinary: "/home/u2/cx/optionFile/cloudinary/option.json"
-  automationTest: "/home/u2/cx/optionFile/automationTest/option.json"
-  cryptoCoin: "/home/u2/cx/optionFile/cryptoCoin/option.json"
-  currencyExchangeRate: "/home/u2/cx/optionFile/currencyExchangeRate/option.json"
-  telegram: "/home/u2/cx/optionFile/telegram/option.json"
-  tool: "/home/u2/cx/optionFile/tool/option.json"
-  educate: "/home/u2/cx/optionFile/educate/option.json"
-  joy: "/home/u2/cx/optionFile/joy/option.json"
-  joyGarden: "/home/u2/cx/optionFile/joy/gardenOption.json"
-  openAI: "/home/u2/cx/optionFile/openAI/option.json"
-  wechat: "/home/u2/cx/optionFile/wechat/option.json"
-  cloudFlare: "/home/u2/cx/optionFile/cloudFlare/option.json"
-  wechatPay: "/home/u2/cx/optionFile/wechatPay/option.json"
-  aiCommon: "/home/u2/cx/optionFile/aiCommon/option.json"
-  aiChat: "/home/u2/cx/optionFile/aiChat/option.json"
-  aiArt: "/home/u2/cx/optionFile/aiArt/option.json"
-  promote: "/home/u2/cx/optionFile/promote/option.json"
-  zulip: "/home/u2/cx/optionFile/zulip/option.json"
-  
     
 logging:
   level: 

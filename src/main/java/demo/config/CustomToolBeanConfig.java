@@ -24,12 +24,12 @@ import toolPack.stringHandle.StringUtilCustom;
 
 @Component
 public class CustomToolBeanConfig {
-	
+
 	@Bean
 	public BaseUtilCustom getBaseUtilCustom() {
 		return new BaseUtilCustom();
 	}
-	
+
 	@Bean
 	public SnowFlake getSnowFlake() {
 		return new SnowFlake();
@@ -39,76 +39,77 @@ public class CustomToolBeanConfig {
 	public StringUtilCustom getStringUtilCustom() {
 		return new StringUtilCustom();
 	}
-	
+
 	@Bean
 	public NumericUtilCustom getNumericUtilCustom() {
 		return new NumericUtilCustom();
 	}
-	
+
 	@Bean
 	public FileUtilCustom getFileUtilCustom() {
 		return new FileUtilCustom();
 	}
-	
+
 	@Bean
 	public HttpUtil getHttpUtil() {
 		return new HttpUtil();
 	}
-	
+
 	@Bean
 	public DateHandler getDateHandler() {
 		return new DateHandler();
 	}
-	
+
 	@Bean
 	public LocalDateTimeHandler getLocalDateTimeHandler() {
 		return new LocalDateTimeHandler();
 	}
-	
-	@Bean 
+
+	@Bean
 	public MailToolService getMailToolService() {
 		return new MailToolService();
 	}
-	
+
 	@Bean
 	public QrCodeGenerator getQrCodeGenerator() {
 		return new QrCodeGenerator();
 	}
-	
+
 	@Bean
 	public QrCodeDecode getQrCodeDecode() {
 		return new QrCodeDecode();
 	}
-	
+
 	@Bean
 	public LocalDateTimeAdapter getLocalDateTimeAdapter() {
 		return new LocalDateTimeAdapter();
 	}
-	
+
 	@Bean
 	public RandomChineseNameGenerator getRandomChineseNameGenerator() {
 		return new RandomChineseNameGenerator();
 	}
-	
+
 	@Bean
 	public ChinaMainLandIdNumGenerator getChinaMainLandIdNumGenerator() {
 		return new ChinaMainLandIdNumGenerator();
 	}
-	
+
 	@Bean
 	public EncryptUtil getEncryptUtil() {
 		return new EncryptUtil();
 	}
-	
+
 	@Bean
 	@Scope("singleton")
 	public Tess getTess() {
 		Tess t = new Tess();
 		return t;
 	}
-	
+
 	@Bean
 	public ImgbbUtil getImgbbUtil() {
 		return new ImgbbUtil();
 	}
+
 }

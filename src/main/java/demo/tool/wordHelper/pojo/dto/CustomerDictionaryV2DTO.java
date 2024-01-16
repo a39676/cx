@@ -2,18 +2,9 @@ package demo.tool.wordHelper.pojo.dto;
 
 import java.util.List;
 
-public class WordDayLineDTO {
+public class CustomerDictionaryV2DTO {
 
-	private String dateStr;
 	private List<WordDTO> wordList;
-
-	public String getDateStr() {
-		return dateStr;
-	}
-
-	public void setDateStr(String dateStr) {
-		this.dateStr = dateStr;
-	}
 
 	public List<WordDTO> getWordList() {
 		return wordList;
@@ -25,7 +16,7 @@ public class WordDayLineDTO {
 
 	@Override
 	public String toString() {
-		return "WordDayLineDTO [dateStr=" + dateStr + ", wordList=" + wordList + "]";
+		return "CustomerDictionaryV2DTO [wordList=" + wordList + "]";
 	}
 
 }

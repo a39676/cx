@@ -223,6 +223,7 @@ public class WordHelperServiceImpl extends CommonService implements WordHelperSe
 			WordDTO word = dictionary.getWordList().get(randomIndex);
 			wordSet.add(word);
 		}
+		wordList.addAll(wordSet);
 		r.setWordList(wordList);
 		r.setIsSuccess();
 		return r;

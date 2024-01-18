@@ -14,7 +14,9 @@ public class CashFlowRecord {
 
     private BigDecimal flowAmount;
 
-    private Boolean timeUnitCode;
+    private Integer currencyCode;
+
+    private Integer timeUnitCode;
 
     private Integer timeCounting;
 
@@ -62,11 +64,19 @@ public class CashFlowRecord {
         this.flowAmount = flowAmount;
     }
 
-    public Boolean getTimeUnitCode() {
+    public Integer getCurrencyCode() {
+        return currencyCode;
+    }
+
+    public void setCurrencyCode(Integer currencyCode) {
+        this.currencyCode = currencyCode;
+    }
+
+    public Integer getTimeUnitCode() {
         return timeUnitCode;
     }
 
-    public void setTimeUnitCode(Boolean timeUnitCode) {
+    public void setTimeUnitCode(Integer timeUnitCode) {
         this.timeUnitCode = timeUnitCode;
     }
 

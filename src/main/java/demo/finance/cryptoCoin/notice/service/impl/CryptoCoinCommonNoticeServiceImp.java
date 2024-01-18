@@ -64,8 +64,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		currencyTypeList.addAll(Arrays.asList(CurrencyTypeForCryptoCoin.values()));
 		view.addObject("currencyType", currencyTypeList);
 
-		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.minute, TimeUnitType.hour, TimeUnitType.day,
-				TimeUnitType.week, TimeUnitType.month };
+		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.MINUTE, TimeUnitType.HOUR, TimeUnitType.DAY,
+				TimeUnitType.WEEK, TimeUnitType.MONTH };
 		view.addObject("timeUnitType", timeUnitTypes);
 
 		List<TelegramChatId> chatIDPOList = telegramService.getChatIDList();
@@ -518,8 +518,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		ModelAndView view = new ModelAndView("finance/cryptoCoin/CryptoCoinPriceNoticeSearchResult");
 
 		view.addObject("currencyType", CurrencyTypeForCryptoCoin.values());
-		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.minute, TimeUnitType.hour, TimeUnitType.day,
-				TimeUnitType.week, TimeUnitType.month };
+		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.MINUTE, TimeUnitType.HOUR, TimeUnitType.DAY,
+				TimeUnitType.WEEK, TimeUnitType.MONTH };
 		view.addObject("timeUnitType", timeUnitTypes);
 
 		Long chatId = systemOptionService.decryptPrivateKey(dto.getReciverPK());

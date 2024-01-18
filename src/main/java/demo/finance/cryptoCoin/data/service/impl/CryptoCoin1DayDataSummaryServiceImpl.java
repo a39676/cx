@@ -283,7 +283,7 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		}
 
 		List<CryptoCoinPriceCommonDataBO> resultDataList = mergePODataWithCache(poDataList, cacheDataList, startTime,
-				DAY_STEP_LONG, TimeUnitType.day);
+				DAY_STEP_LONG, TimeUnitType.DAY);
 
 		return resultDataList;
 

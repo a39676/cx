@@ -406,6 +406,66 @@ public class CashFlowRecordExample {
             return (Criteria) this;
         }
 
+        public Criteria andCurrencyCodeIsNull() {
+            addCriterion("currency_code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrencyCodeIsNotNull() {
+            addCriterion("currency_code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrencyCodeEqualTo(Integer value) {
+            addCriterion("currency_code =", value, "currencyCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrencyCodeNotEqualTo(Integer value) {
+            addCriterion("currency_code <>", value, "currencyCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrencyCodeGreaterThan(Integer value) {
+            addCriterion("currency_code >", value, "currencyCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrencyCodeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("currency_code >=", value, "currencyCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrencyCodeLessThan(Integer value) {
+            addCriterion("currency_code <", value, "currencyCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrencyCodeLessThanOrEqualTo(Integer value) {
+            addCriterion("currency_code <=", value, "currencyCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrencyCodeIn(List<Integer> values) {
+            addCriterion("currency_code in", values, "currencyCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrencyCodeNotIn(List<Integer> values) {
+            addCriterion("currency_code not in", values, "currencyCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrencyCodeBetween(Integer value1, Integer value2) {
+            addCriterion("currency_code between", value1, value2, "currencyCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrencyCodeNotBetween(Integer value1, Integer value2) {
+            addCriterion("currency_code not between", value1, value2, "currencyCode");
+            return (Criteria) this;
+        }
+
         public Criteria andTimeUnitCodeIsNull() {
             addCriterion("time_unit_code is null");
             return (Criteria) this;
@@ -416,52 +476,52 @@ public class CashFlowRecordExample {
             return (Criteria) this;
         }
 
-        public Criteria andTimeUnitCodeEqualTo(Boolean value) {
+        public Criteria andTimeUnitCodeEqualTo(Integer value) {
             addCriterion("time_unit_code =", value, "timeUnitCode");
             return (Criteria) this;
         }
 
-        public Criteria andTimeUnitCodeNotEqualTo(Boolean value) {
+        public Criteria andTimeUnitCodeNotEqualTo(Integer value) {
             addCriterion("time_unit_code <>", value, "timeUnitCode");
             return (Criteria) this;
         }
 
-        public Criteria andTimeUnitCodeGreaterThan(Boolean value) {
+        public Criteria andTimeUnitCodeGreaterThan(Integer value) {
             addCriterion("time_unit_code >", value, "timeUnitCode");
             return (Criteria) this;
         }
 
-        public Criteria andTimeUnitCodeGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andTimeUnitCodeGreaterThanOrEqualTo(Integer value) {
             addCriterion("time_unit_code >=", value, "timeUnitCode");
             return (Criteria) this;
         }
 
-        public Criteria andTimeUnitCodeLessThan(Boolean value) {
+        public Criteria andTimeUnitCodeLessThan(Integer value) {
             addCriterion("time_unit_code <", value, "timeUnitCode");
             return (Criteria) this;
         }
 
-        public Criteria andTimeUnitCodeLessThanOrEqualTo(Boolean value) {
+        public Criteria andTimeUnitCodeLessThanOrEqualTo(Integer value) {
             addCriterion("time_unit_code <=", value, "timeUnitCode");
             return (Criteria) this;
         }
 
-        public Criteria andTimeUnitCodeIn(List<Boolean> values) {
+        public Criteria andTimeUnitCodeIn(List<Integer> values) {
             addCriterion("time_unit_code in", values, "timeUnitCode");
             return (Criteria) this;
         }
 
-        public Criteria andTimeUnitCodeNotIn(List<Boolean> values) {
+        public Criteria andTimeUnitCodeNotIn(List<Integer> values) {
             addCriterion("time_unit_code not in", values, "timeUnitCode");
             return (Criteria) this;
         }
 
-        public Criteria andTimeUnitCodeBetween(Boolean value1, Boolean value2) {
+        public Criteria andTimeUnitCodeBetween(Integer value1, Integer value2) {
             addCriterion("time_unit_code between", value1, value2, "timeUnitCode");
             return (Criteria) this;
         }
 
-        public Criteria andTimeUnitCodeNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andTimeUnitCodeNotBetween(Integer value1, Integer value2) {
             addCriterion("time_unit_code not between", value1, value2, "timeUnitCode");
             return (Criteria) this;
         }

@@ -190,19 +190,19 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 		Collections.sort(cacheDataList);
 
 		LocalDateTime endTime = null;
-		if (TimeUnitType.minute.equals(timeUnitType)) {
+		if (TimeUnitType.MINUTE.equals(timeUnitType)) {
 			endTime = nextStepStartTimeByMinute(LocalDateTime.now(), timeRange);
 			return mergeMinutePODataWithCache(poDataList, cacheDataList, startTime, endTime, timeRange);
-		} else if (TimeUnitType.hour.equals(timeUnitType)) {
+		} else if (TimeUnitType.HOUR.equals(timeUnitType)) {
 			endTime = LocalDateTime.now().withMinute(0).withSecond(0).withNano(0).plusHours(1);
 			return mergeHourPODataWithCache(poDataList, cacheDataList, startTime, endTime);
-		} else if (TimeUnitType.day.equals(timeUnitType)) {
+		} else if (TimeUnitType.DAY.equals(timeUnitType)) {
 			endTime = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0).plusDays(1);
 			return mergeDayPODataWithCache(poDataList, cacheDataList, startTime, endTime);
-		} else if (TimeUnitType.week.equals(timeUnitType)) {
+		} else if (TimeUnitType.WEEK.equals(timeUnitType)) {
 			endTime = localDateTimeHandler.findNextDayOfWeek(LocalDateTime.now(), DayOfWeek.SUNDAY).withHour(0).withMinute(0).withSecond(0).withNano(0);
 			return mergeWeekPODataWithCache(poDataList, cacheDataList, startTime, endTime);
-		} else if (TimeUnitType.month.equals(timeUnitType)) {
+		} else if (TimeUnitType.MONTH.equals(timeUnitType)) {
 			endTime = LocalDateTime.now().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0).plusMonths(1);
 			return mergeMonthPODataWithCache(poDataList, cacheDataList, startTime, endTime);
 		}

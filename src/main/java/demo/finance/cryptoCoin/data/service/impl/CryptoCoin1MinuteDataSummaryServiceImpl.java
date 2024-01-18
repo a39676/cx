@@ -257,7 +257,7 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 		Collections.sort(cacheDataList);
 
 		List<CryptoCoinPriceCommonDataBO> resultDataList = mergePODataWithCache(poDataList, cacheDataList, startTime,
-				minuteStepLong, TimeUnitType.minute);
+				minuteStepLong, TimeUnitType.MINUTE);
 
 		return resultDataList;
 	}

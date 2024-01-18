@@ -160,7 +160,7 @@ public class CryptoCoin60MinuteDataSummaryServiceImpl extends CryptoCoinCommonSe
 			return poDataList;
 		}
 
-		List<CryptoCoinPriceCommonDataBO> resultDataList = mergePODataWithCache(poDataList, cacheDataList, startTime, minuteStepLong / 60, TimeUnitType.hour);
+		List<CryptoCoinPriceCommonDataBO> resultDataList = mergePODataWithCache(poDataList, cacheDataList, startTime, minuteStepLong / 60, TimeUnitType.HOUR);
 
 		return resultDataList;
 	}

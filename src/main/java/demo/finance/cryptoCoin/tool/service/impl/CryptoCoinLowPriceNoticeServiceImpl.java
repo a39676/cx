@@ -222,9 +222,9 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 			dto.setNoticeCount(999999);
 			dto.setFluctuationSpeedPercentage(1.2);
 			dto.setTimeRangeOfDataWatch(3);
-			dto.setTimeUnitOfDataWatch(TimeUnitType.minute.getCode());
+			dto.setTimeUnitOfDataWatch(TimeUnitType.MINUTE.getCode());
 			dto.setTimeRangeOfNoticeInterval(10);
-			dto.setTimeUnitOfNoticeInterval(TimeUnitType.minute.getCode());
+			dto.setTimeUnitOfNoticeInterval(TimeUnitType.MINUTE.getCode());
 			dto.setStartNoticeTime(localDateTimeHandler.dateToStr(LocalDateTime.now()));
 			dto.setValidTime(localDateTimeHandler.dateToStr(LocalDateTime.now().plusHours(8)));
 			noticeService.insertNewCryptoCoinLowPriceNoticeSetting(dto);

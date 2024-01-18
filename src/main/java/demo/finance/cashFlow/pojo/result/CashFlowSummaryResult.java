@@ -1,6 +1,9 @@
 package demo.finance.cashFlow.pojo.result;
 
+import java.util.List;
+
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.finance.cashFlow.pojo.vo.CashFlowRecordVO;
 
 public class CashFlowSummaryResult extends CommonResult {
 
@@ -8,7 +11,7 @@ public class CashFlowSummaryResult extends CommonResult {
 	private Double monthlyFlowSummary;
 	private Double annualFlowSummary;
 
-	private Double annualTotal;
+	private List<CashFlowRecordVO> recordList;
 
 	public Double getDailyFlowSummary() {
 		return dailyFlowSummary;
@@ -34,19 +37,18 @@ public class CashFlowSummaryResult extends CommonResult {
 		this.annualFlowSummary = annualFlowSummary;
 	}
 
-	public Double getAnnualTotal() {
-		return annualTotal;
+	public List<CashFlowRecordVO> getRecordList() {
+		return recordList;
 	}
 
-	public void setAnnualTotal(Double annualTotal) {
-		this.annualTotal = annualTotal;
+	public void setRecordList(List<CashFlowRecordVO> recordList) {
+		this.recordList = recordList;
 	}
 
 	@Override
 	public String toString() {
 		return "CashFlowSummaryResult [dailyFlowSummary=" + dailyFlowSummary + ", monthlyFlowSummary="
-				+ monthlyFlowSummary + ", annualFlowSummary=" + annualFlowSummary + ", annualTotal=" + annualTotal
-				+ "]";
+				+ monthlyFlowSummary + ", annualFlowSummary=" + annualFlowSummary + ", recordList=" + recordList + "]";
 	}
 
 }

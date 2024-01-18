@@ -53,8 +53,8 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 		currencyTypeList.addAll(Arrays.asList(CurrencyType.values()));
 		view.addObject("currencyType", currencyTypeList);
 
-		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.minute, TimeUnitType.hour, TimeUnitType.day,
-				TimeUnitType.week, TimeUnitType.month };
+		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.MINUTE, TimeUnitType.HOUR, TimeUnitType.DAY,
+				TimeUnitType.WEEK, TimeUnitType.MONTH };
 		view.addObject("timeUnitType", timeUnitTypes);
 
 		List<TelegramChatId> chatIDPOList = telegramService.getChatIDList();

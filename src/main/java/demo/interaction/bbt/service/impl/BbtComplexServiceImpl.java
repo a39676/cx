@@ -39,7 +39,7 @@ public class BbtComplexServiceImpl extends BbtCommonService implements BbtComple
 			return r;
 		}
 		
-		log.error("Receive currency exchange rate daily data from BbtController, DTO:" + dto.toString());
+		log.error("Receive currency exchange rate daily data from BbtController");
 		return currencyExchangeRate1DayDataService.receiveDailyData(dto);
 	}
 }

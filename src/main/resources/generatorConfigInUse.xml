@@ -63,6 +63,7 @@
             <property name="enableDeleteByPrimaryKey" value="true"></property>
             <property name="enableUpdateByExample" value="true"></property>
             <!-- 
+        	<columnOverride column="columnName" javaType="Integer" />  
             <generatedKey column="id" sqlStatement="MySql"/>
              -->
         </table>

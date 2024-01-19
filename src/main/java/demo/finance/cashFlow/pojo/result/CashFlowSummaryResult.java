@@ -11,6 +11,10 @@ public class CashFlowSummaryResult extends CommonResult {
 	private Double monthlyFlowSummary;
 	private Double annualFlowSummary;
 
+	private Double annualSummary;
+	private Double annualIncomeSummary;
+	private Double annualConsumeSummary;
+
 	private List<CashFlowRecordVO> recordList;
 
 	public Double getDailyFlowSummary() {
@@ -37,6 +41,30 @@ public class CashFlowSummaryResult extends CommonResult {
 		this.annualFlowSummary = annualFlowSummary;
 	}
 
+	public Double getAnnualSummary() {
+		return annualSummary;
+	}
+
+	public void setAnnualSummary(Double annualSummary) {
+		this.annualSummary = annualSummary;
+	}
+
+	public Double getAnnualIncomeSummary() {
+		return annualIncomeSummary;
+	}
+
+	public void setAnnualIncomeSummary(Double annualIncomeSummary) {
+		this.annualIncomeSummary = annualIncomeSummary;
+	}
+
+	public Double getAnnualConsumeSummary() {
+		return annualConsumeSummary;
+	}
+
+	public void setAnnualConsumeSummary(Double annualConsumeSummary) {
+		this.annualConsumeSummary = annualConsumeSummary;
+	}
+
 	public List<CashFlowRecordVO> getRecordList() {
 		return recordList;
 	}
@@ -48,7 +76,9 @@ public class CashFlowSummaryResult extends CommonResult {
 	@Override
 	public String toString() {
 		return "CashFlowSummaryResult [dailyFlowSummary=" + dailyFlowSummary + ", monthlyFlowSummary="
-				+ monthlyFlowSummary + ", annualFlowSummary=" + annualFlowSummary + ", recordList=" + recordList + "]";
+				+ monthlyFlowSummary + ", annualFlowSummary=" + annualFlowSummary + ", annualSummary=" + annualSummary
+				+ ", annualIncomeSummary=" + annualIncomeSummary + ", annualConsumeSummary=" + annualConsumeSummary
+				+ ", recordList=" + recordList + "]";
 	}
 
 }

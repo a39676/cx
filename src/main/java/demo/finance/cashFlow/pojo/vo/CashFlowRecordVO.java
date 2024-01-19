@@ -14,6 +14,8 @@ public class CashFlowRecordVO {
 
 	private Integer timeCounting;
 
+	private String remark;
+
 	public BigDecimal getFlowAmount() {
 		return flowAmount;
 	}
@@ -62,11 +64,19 @@ public class CashFlowRecordVO {
 		this.timeCounting = timeCounting;
 	}
 
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
 	@Override
 	public String toString() {
 		return "CashFlowRecordVO [flowAmount=" + flowAmount + ", currencyCode=" + currencyCode + ", currencyName="
 				+ currencyName + ", timeUnitCode=" + timeUnitCode + ", timeUnitName=" + timeUnitName + ", timeCounting="
-				+ timeCounting + "]";
+				+ timeCounting + ", remark=" + remark + "]";
 	}
 
 }

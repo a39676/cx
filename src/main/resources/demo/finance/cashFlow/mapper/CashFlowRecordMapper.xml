@@ -10,6 +10,8 @@
     <result column="currency_code" jdbcType="INTEGER" property="currencyCode" />
     <result column="time_unit_code" jdbcType="BIT" property="timeUnitCode" />
     <result column="time_counting" jdbcType="INTEGER" property="timeCounting" />
+    <result column="is_prepaid" jdbcType="BIT" property="isPrepaid" />
+    <result column="remark" jdbcType="CHAR" property="remark" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
   </resultMap>
@@ -73,7 +75,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, user_id, active_time, expired_time, flow_amount, currency_code, time_unit_code, 
-    time_counting, create_time, is_delete
+    time_counting, is_prepaid, remark, create_time, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.finance.cashFlow.pojo.po.CashFlowRecordExample" resultMap="BaseResultMap">
     select
@@ -108,12 +110,14 @@
   <insert id="insert" parameterType="demo.finance.cashFlow.pojo.po.CashFlowRecord">
     insert into cash_flow_record (id, user_id, active_time, 
       expired_time, flow_amount, currency_code, 
-      time_unit_code, time_counting, create_time, 
-      is_delete)
+      time_unit_code, time_counting, is_prepaid, 
+      remark, create_time, is_delete
+      )
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{activeTime,jdbcType=TIMESTAMP}, 
       #{expiredTime,jdbcType=TIMESTAMP}, #{flowAmount,jdbcType=DECIMAL}, #{currencyCode,jdbcType=INTEGER}, 
-      #{timeUnitCode,jdbcType=BIT}, #{timeCounting,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{isDelete,jdbcType=BIT})
+      #{timeUnitCode,jdbcType=BIT}, #{timeCounting,jdbcType=INTEGER}, #{isPrepaid,jdbcType=BIT}, 
+      #{remark,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="demo.finance.cashFlow.pojo.po.CashFlowRecord">
     insert into cash_flow_record
@@ -141,6 +145,12 @@
       </if>
       <if test="timeCounting != null">
         time_counting,
+      </if>
+      <if test="isPrepaid != null">
+        is_prepaid,
+      </if>
+      <if test="remark != null">
+        remark,
       </if>
       <if test="createTime != null">
         create_time,
@@ -173,6 +183,12 @@
       </if>
       <if test="timeCounting != null">
         #{timeCounting,jdbcType=INTEGER},
+      </if>
+      <if test="isPrepaid != null">
+        #{isPrepaid,jdbcType=BIT},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=CHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -215,6 +231,12 @@
       <if test="row.timeCounting != null">
         time_counting = #{row.timeCounting,jdbcType=INTEGER},
       </if>
+      <if test="row.isPrepaid != null">
+        is_prepaid = #{row.isPrepaid,jdbcType=BIT},
+      </if>
+      <if test="row.remark != null">
+        remark = #{row.remark,jdbcType=CHAR},
+      </if>
       <if test="row.createTime != null">
         create_time = #{row.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -236,6 +258,8 @@
       currency_code = #{row.currencyCode,jdbcType=INTEGER},
       time_unit_code = #{row.timeUnitCode,jdbcType=BIT},
       time_counting = #{row.timeCounting,jdbcType=INTEGER},
+      is_prepaid = #{row.isPrepaid,jdbcType=BIT},
+      remark = #{row.remark,jdbcType=CHAR},
       create_time = #{row.createTime,jdbcType=TIMESTAMP},
       is_delete = #{row.isDelete,jdbcType=BIT}
     <if test="example != null">
@@ -266,6 +290,12 @@
       <if test="timeCounting != null">
         time_counting = #{timeCounting,jdbcType=INTEGER},
       </if>
+      <if test="isPrepaid != null">
+        is_prepaid = #{isPrepaid,jdbcType=BIT},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=CHAR},
+      </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -284,6 +314,8 @@
       currency_code = #{currencyCode,jdbcType=INTEGER},
       time_unit_code = #{timeUnitCode,jdbcType=BIT},
       time_counting = #{timeCounting,jdbcType=INTEGER},
+      is_prepaid = #{isPrepaid,jdbcType=BIT},
+      remark = #{remark,jdbcType=CHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       is_delete = #{isDelete,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}

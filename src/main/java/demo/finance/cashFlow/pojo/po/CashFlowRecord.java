@@ -20,6 +20,10 @@ public class CashFlowRecord {
 
     private Integer timeCounting;
 
+    private Boolean isPrepaid;
+
+    private String remark;
+
     private LocalDateTime createTime;
 
     private Boolean isDelete;
@@ -86,6 +90,22 @@ public class CashFlowRecord {
 
     public void setTimeCounting(Integer timeCounting) {
         this.timeCounting = timeCounting;
+    }
+
+    public Boolean getIsPrepaid() {
+        return isPrepaid;
+    }
+
+    public void setIsPrepaid(Boolean isPrepaid) {
+        this.isPrepaid = isPrepaid;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
     }
 
     public LocalDateTime getCreateTime() {

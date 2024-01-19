@@ -28,18 +28,18 @@ public class CurrencyExchangeRateServiceImpl extends FinanceCommonService implem
 
 	@Autowired
 	private CurrencyExchangeRateOptionService optionService;
-	
+
 	@Autowired
 	private TestEventInsertAckProducer testEventInsertAckProducer;
-	
+
 	@Autowired
 	private CurrencyExchangeRate1dayMapper mapper;
-	
+
 	@Override
 	public void sendDailyDataQuery() {
 		sendDataQuery(true);
 	}
-	
+
 	@Override
 	public void sendDataQuery(Boolean isDailyQuery) {
 		AutomationTestInsertEventDTO eventDTO = new AutomationTestInsertEventDTO();
@@ -50,53 +50,60 @@ public class CurrencyExchangeRateServiceImpl extends FinanceCommonService implem
 
 		CurrencyExchangeRateCollectDTO paramDTO = new CurrencyExchangeRateCollectDTO();
 		paramDTO.setIsDailyQuery(isDailyQuery);
-		
+
 		paramDTO.setExchangerateApiApiKey(optionService.getExchangerateApiApiKey());
 		List<CurrencyExchangeRatePairDTO> currencyPairList = optionService.getPairList();
-		
+
 		CurrencyExchangeRatePairDTO dataPair = null;
-		
-		for(CurrencyExchangeRatePairDTO cp : currencyPairList) {
+
+		for (CurrencyExchangeRatePairDTO cp : currencyPairList) {
 			dataPair = new CurrencyExchangeRatePairDTO();
 			dataPair.setCurrencyFromCode(cp.getCurrencyFromCode());
 			dataPair.setCurrencyToCode(cp.getCurrencyToCode());
 			paramDTO.addDataPair(dataPair);
 		}
-		
+
 		eventDTO = automationTestInsertEventDtoAddParamStr(eventDTO, paramDTO);
-		
+
 		testEventInsertAckProducer.send(eventDTO);
 	}
-	
+
 	@Override
 	public CommonResult receiveDailyData(CurrencyExchageRateCollectResult inputDataResult) {
 		CommonResult r = new CommonResult();
-		
+
 		log.error("Receive currency exchange rate data");
 		List<CurrencyExchageRateDataDTO> dataList = inputDataResult.getDataList();
-		for(CurrencyExchageRateDataDTO dataDTO : dataList) {
+		for (CurrencyExchageRateDataDTO dataDTO : dataList) {
 			updateTodayDayData(dataDTO);
-			if(inputDataResult.getIsDailyQuery()) {
+			if (inputDataResult.getIsDailyQuery()) {
 				updateYesterDayData(dataDTO);
 			}
 		}
-		
+
 		r.setIsSuccess();
 		return r;
 	}
-	
+
 	private void updateYesterDayData(CurrencyExchageRateDataDTO dto) {
 		Integer currencyCodeFrom = dto.getCurrencyCodeFrom();
 		Integer currencyCodeTo = dto.getCurrencyCodeTo();
-		
+		log.error("updateYesterDayData, currencyCodeFrom: " + dto.getCurrencyCodeFrom() + ", currencyCodeTo"
+				+ dto.getCurrencyCodeTo());
+
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime yesterday = now.with(LocalTime.MIN).minusDays(1);
-		
+
 		CurrencyExchangeRate1dayExample example = new CurrencyExchangeRate1dayExample();
-		example.createCriteria().andCurrencyFromEqualTo(currencyCodeFrom).andCurrencyToEqualTo(currencyCodeTo).andStartTimeEqualTo(yesterday);
+		example.createCriteria().andCurrencyFromEqualTo(currencyCodeFrom).andCurrencyToEqualTo(currencyCodeTo)
+				.andStartTimeEqualTo(yesterday);
 		List<CurrencyExchangeRate1day> poList = mapper.selectByExample(example);
+		log.error("Query data of yesterday, currencyCodeFrom: " + dto.getCurrencyCodeFrom() + ", currencyCodeTo"
+				+ dto.getCurrencyCodeTo());
 		CurrencyExchangeRate1day po = null;
-		if(poList == null || poList.isEmpty()) {
+		if (poList == null || poList.isEmpty()) {
+			log.error("No data of yesterday, currencyCodeFrom: " + dto.getCurrencyCodeFrom() + ", currencyCodeTo"
+					+ dto.getCurrencyCodeTo());
 			po = new CurrencyExchangeRate1day();
 			po.setCurrencyFrom(currencyCodeFrom);
 			po.setCurrencyTo(currencyCodeTo);
@@ -106,34 +113,39 @@ public class CurrencyExchangeRateServiceImpl extends FinanceCommonService implem
 		} else {
 			po = poList.get(0);
 		}
-		
+
 		po.setBuyHighPrice(dto.getYesterdayBuyHigh());
 		po.setBuyLowPrice(dto.getYesterdayBuyLow());
 		po.setSellHighPrice(dto.getYesterdaySellHigh());
 		po.setSellLowPrice(dto.getYesterdaySellLow());
 		po.setBuyAvgPrice(dto.getYesterdayBuyAvg());
 		po.setSellAvgPrice(dto.getYesterdaySellAvg());
-		
-		if(poList == null || poList.isEmpty()) {
+
+		if (poList == null || poList.isEmpty()) {
+			log.error("Insert new data of yesterday, currencyCodeFrom: " + dto.getCurrencyCodeFrom() + ", currencyCodeTo"
+					+ dto.getCurrencyCodeTo());
 			mapper.insertSelective(po);
 		} else {
+			log.error("Update data of yesterday, currencyCodeFrom: " + dto.getCurrencyCodeFrom() + ", currencyCodeTo"
+					+ dto.getCurrencyCodeTo());
 			mapper.updateByPrimaryKeySelective(po);
 		}
 	}
-	
+
 	private void updateTodayDayData(CurrencyExchageRateDataDTO dto) {
 		Integer currencyCodeFrom = dto.getCurrencyCodeFrom();
 		Integer currencyCodeTo = dto.getCurrencyCodeTo();
-		
+
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime todayStart = now.with(LocalTime.MIN);
 		LocalDateTime todayEnd = now.with(LocalTime.MAX);
-		
+
 		CurrencyExchangeRate1dayExample example = new CurrencyExchangeRate1dayExample();
-		example.createCriteria().andCurrencyFromEqualTo(currencyCodeFrom).andCurrencyToEqualTo(currencyCodeTo).andStartTimeEqualTo(todayStart);
+		example.createCriteria().andCurrencyFromEqualTo(currencyCodeFrom).andCurrencyToEqualTo(currencyCodeTo)
+				.andStartTimeEqualTo(todayStart);
 		List<CurrencyExchangeRate1day> poList = mapper.selectByExample(example);
 		CurrencyExchangeRate1day po = null;
-		if(poList == null || poList.isEmpty()) {
+		if (poList == null || poList.isEmpty()) {
 			po = new CurrencyExchangeRate1day();
 			po.setId(snowFlake.getNextId());
 			po.setCurrencyFrom(currencyCodeFrom);
@@ -143,25 +155,25 @@ public class CurrencyExchangeRateServiceImpl extends FinanceCommonService implem
 		} else {
 			po = poList.get(0);
 		}
-		
-		if(po.getBuyHighPrice() == null || dto.getCurrencyAmountTo().compareTo(po.getBuyHighPrice()) > 0) {
+
+		if (po.getBuyHighPrice() == null || dto.getCurrencyAmountTo().compareTo(po.getBuyHighPrice()) > 0) {
 			po.setBuyHighPrice(dto.getCurrencyAmountTo());
 		}
-		if(po.getBuyLowPrice() == null || dto.getCurrencyAmountTo().compareTo(po.getBuyLowPrice()) < 0) {
+		if (po.getBuyLowPrice() == null || dto.getCurrencyAmountTo().compareTo(po.getBuyLowPrice()) < 0) {
 			po.setBuyLowPrice(dto.getCurrencyAmountTo());
 		}
-		if(po.getSellHighPrice() == null || dto.getCurrencyAmountTo().compareTo(po.getSellHighPrice()) > 0) {
+		if (po.getSellHighPrice() == null || dto.getCurrencyAmountTo().compareTo(po.getSellHighPrice()) > 0) {
 			po.setSellHighPrice(dto.getCurrencyAmountTo());
 		}
-		if(po.getSellLowPrice() == null || dto.getCurrencyAmountTo().compareTo(po.getSellLowPrice()) < 0) {
+		if (po.getSellLowPrice() == null || dto.getCurrencyAmountTo().compareTo(po.getSellLowPrice()) < 0) {
 			po.setSellLowPrice(dto.getCurrencyAmountTo());
 		}
 		po.setBuyAvgPrice(dto.getCurrencyAmountTo());
-		
+
 		po.setBuyAvgPrice(BigDecimal.ZERO);
 		po.setSellAvgPrice(BigDecimal.ZERO);
-		
-		if(poList == null || poList.isEmpty()) {
+
+		if (poList == null || poList.isEmpty()) {
 			mapper.insertSelective(po);
 		} else {
 			mapper.updateByPrimaryKeySelective(po);

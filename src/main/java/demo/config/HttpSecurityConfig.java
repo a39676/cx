@@ -128,7 +128,7 @@ public class HttpSecurityConfig extends CommonService {
 				.antMatchers(WechatPaySdkUrlConstant.ROOT + "/**").antMatchers(WechatSdkUrlConstant.ROOT + "/**")
 				.antMatchers(AiChatApiUrlConstant.ROOT + "/**").antMatchers(AiArtApiUrlConstant.ROOT + "/**")
 				.antMatchers(ImageUrl.ROOT + "/**").antMatchers(BbtInteractionUrl.ROOT + "/**")
-				.antMatchers(BbtInteractionUrl.ROOT + BbtInteractionUrl.RECEIVE_CURRENCY_EXCHANGE_RATE_DAILY_DATA);
+				;
 	}
 
 	@Bean

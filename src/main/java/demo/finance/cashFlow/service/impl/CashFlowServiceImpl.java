@@ -60,6 +60,7 @@ public class CashFlowServiceImpl extends CommonService implements CashFlowServic
 		example.or(criteria2);
 		List<CashFlowRecord> recordList = cashFlowRecordMapper.selectByExample(example);
 
+		log.error("Find " + recordList.size() + " cash flow records");
 		CashFlowSubSummaryBO summary = new CashFlowSubSummaryBO();
 		CashFlowSubSummaryBO tmpSummary = null;
 		for (CashFlowRecord po : recordList) {
@@ -67,6 +68,7 @@ public class CashFlowServiceImpl extends CommonService implements CashFlowServic
 			summary.setDailyFlow(summary.getDailyFlow() + tmpSummary.getDailyFlow());
 			summary.setMonthlyFlow(summary.getMonthlyFlow() + tmpSummary.getMonthlyFlow());
 			summary.setAnnualFlow(summary.getAnnualFlow() + tmpSummary.getAnnualFlow());
+			log.error("Tmp summary: " + tmpSummary.toString());
 		}
 
 		r.setDailyFlowSummary(summary.getDailyFlow());

@@ -14,6 +14,7 @@ import autoTest.testEvent.scheduleClawing.currencyExchangeRate.pojo.dto.Currency
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.result.CommonResult;
+import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.automationTest.mq.producer.TestEventInsertAckProducer;
 import demo.finance.common.service.impl.FinanceCommonService;
 import demo.finance.currencyExchangeRate.data.mapper.CurrencyExchangeRate1dayMapper;
@@ -122,8 +123,8 @@ public class CurrencyExchangeRateServiceImpl extends FinanceCommonService implem
 		po.setSellAvgPrice(dto.getYesterdaySellAvg());
 
 		if (poList == null || poList.isEmpty()) {
-			log.error("Insert new data of yesterday, currencyCodeFrom: " + dto.getCurrencyCodeFrom() + ", currencyCodeTo"
-					+ dto.getCurrencyCodeTo());
+			log.error("Insert new data of yesterday, currencyCodeFrom: " + dto.getCurrencyCodeFrom()
+					+ ", currencyCodeTo" + dto.getCurrencyCodeTo());
 			mapper.insertSelective(po);
 		} else {
 			log.error("Update data of yesterday, currencyCodeFrom: " + dto.getCurrencyCodeFrom() + ", currencyCodeTo"
@@ -180,4 +181,16 @@ public class CurrencyExchangeRateServiceImpl extends FinanceCommonService implem
 		}
 	}
 
+	@Override
+	public Double getRate(CurrencyType from, CurrencyType to) {
+		CurrencyExchangeRate1dayExample example = new CurrencyExchangeRate1dayExample();
+		example.createCriteria().andCurrencyFromEqualTo(from.getCode()).andCurrencyToEqualTo(to.getCode());
+		example.setOrderByClause(" start_time desc ");
+		List<CurrencyExchangeRate1day> list = mapper.selectByExample(example);
+		if (list == null || list.isEmpty()) {
+			return 0D;
+		}
+		CurrencyExchangeRate1day po = list.get(0);
+		return po.getBuyHighPrice().doubleValue();
+	}
 }

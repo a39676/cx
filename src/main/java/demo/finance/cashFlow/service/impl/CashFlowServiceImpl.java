@@ -23,12 +23,15 @@ import demo.finance.cashFlow.pojo.po.CashFlowRecordExample.Criteria;
 import demo.finance.cashFlow.pojo.result.CashFlowSummaryResult;
 import demo.finance.cashFlow.pojo.vo.CashFlowRecordVO;
 import demo.finance.cashFlow.service.CashFlowService;
+import demo.finance.currencyExchangeRate.data.service.CurrencyExchangeRateService;
 
 @Service
 public class CashFlowServiceImpl extends CommonService implements CashFlowService {
 
 	@Autowired
 	private CashFlowRecordMapper cashFlowRecordMapper;
+	@Autowired
+	private CurrencyExchangeRateService currencyExchangeRateService;
 
 	private Integer dayToWeek = 7;
 	private Double dayToMonth = 30.42;
@@ -93,6 +96,14 @@ public class CashFlowServiceImpl extends CommonService implements CashFlowServic
 	}
 
 	private BigDecimal getDailyFlowSummary(CashFlowRecord po) {
+		if (po.getCurrencyCode() == null) {
+			return BigDecimal.ZERO;
+		}
+		CurrencyType currencyType = CurrencyType.getType(po.getCurrencyCode());
+		if (currencyType == null) {
+			return BigDecimal.ZERO;
+		}
+
 		LocalDateTime todayStart = LocalDateTime.now().with(LocalTime.MIN);
 		if (po.getExpiredTime() != null && po.getExpiredTime().isBefore(todayStart)) {
 			return BigDecimal.ZERO;
@@ -117,6 +128,14 @@ public class CashFlowServiceImpl extends CommonService implements CashFlowServic
 		} else {
 			long days = ChronoUnit.DAYS.between(po.getActiveTime(), LocalDateTime.now());
 			amount = amount.divide(new BigDecimal(days), 2, RoundingMode.HALF_UP);
+		}
+
+		if (!CurrencyType.CNY.equals(currencyType)) {
+			Double rate = currencyExchangeRateService.getRate(currencyType, CurrencyType.CNY);
+			if (rate == null) {
+				return BigDecimal.ZERO;
+			}
+			amount = amount.multiply(new BigDecimal(rate));
 		}
 
 		return amount;

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import demo.finance.currencyExchangeRate.notice.service.CurrencyExchangeRateNoticeService;
 import demo.interaction.wechat.service.impl.WechatCommonService;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.dto.TestDTO;
@@ -31,10 +32,14 @@ public class TestController2 extends WechatCommonService {
 	public String t2(@RequestBody TestDTO dto) {
 		return "{\"k\":\"v\"}";
 	}
+	
+	@Autowired
+	private CurrencyExchangeRateNoticeService currencyExchangeRateNoticeService;
 
 	@GetMapping(value = "/t3")
 	@ResponseBody
 	public String t3() {
+		currencyExchangeRateNoticeService.noticeHandler();
 		return "Done";
 	}
 

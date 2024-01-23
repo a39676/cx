@@ -307,6 +307,9 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 			handleResult = rateConditionNoticeHandle(notice, currencyFrom, currencyTo);
 			if (handleResult.isSuccess()) {
 				content += handleResult.getMessage();
+			} else {
+				log.error(notice.getId() + ", currency from: " + notice.getCurrencyFrom() + ", currency to: "
+						+ notice.getCurrencyTo() + ", error: " + handleResult.getMessage());
 			}
 		}
 		if (rateFluctuationSpeedConditionHadSet(notice)) {
@@ -315,6 +318,9 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 			handleResult = rateFluctuationSpeedNoticeHandle(notice, currencyFrom, currencyTo);
 			if (handleResult.isSuccess()) {
 				content += handleResult.getMessage();
+			} else {
+				log.error(notice.getId() + ", currency from: " + notice.getCurrencyFrom() + ", currency to: "
+						+ notice.getCurrencyTo() + ", error: " + handleResult.getMessage());
 			}
 		}
 
@@ -370,6 +376,8 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 		}
 
 		FilterDataResult maxMinPriceResult = filterData(historyDataList);
+		log.error(noticeSetting.getId() + ", currency from: " + noticeSetting.getCurrencyFrom() + ", currency to: "
+				+ noticeSetting.getCurrencyTo() + ", max min price result: " + maxMinPriceResult.toString());
 		if (maxMinPriceResult.isFail()) {
 			r.addMessage(maxMinPriceResult.getMessage());
 			return r;
@@ -418,6 +426,8 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 		}
 
 		FilterDataResult maxMinPriceResult = filterData(historyDataList);
+		log.error(noticeSetting.getId() + ", currency from: " + noticeSetting.getCurrencyFrom() + ", currency to: "
+				+ noticeSetting.getCurrencyTo() + ", max min price result: " + maxMinPriceResult.toString());
 		if (maxMinPriceResult.isFail()) {
 			r.addMessage(maxMinPriceResult.getMessage());
 			return r;

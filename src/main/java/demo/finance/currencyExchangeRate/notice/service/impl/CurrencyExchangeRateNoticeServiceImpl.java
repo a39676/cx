@@ -260,6 +260,7 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 				.andValidTimeGreaterThan(now).andNextNoticeTimeLessThan(now);
 
 		List<CurrencyExchangeRateNotice> noticeList = noticeMapper.selectByExample(noticeExample);
+		log.error("Find " + noticeList.size() + " currency exchange rate notice setting.");
 		if (noticeList == null || noticeList.isEmpty()) {
 			return;
 		}
@@ -280,7 +281,8 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 		CurrencyType currencyFrom = CurrencyType.getType(notice.getCurrencyFrom());
 		CurrencyType currencyTo = CurrencyType.getType(notice.getCurrencyTo());
 		if (currencyFrom == null || currencyTo == null) {
-			log.error(notice.getId() + ", currency type setting error");
+			log.error(notice.getId() + ", currency from: " + notice.getCurrencyFrom() + ", currency to: "
+					+ notice.getCurrencyTo() + ", currency type setting error");
 			r.failWithMessage("currency type setting error");
 			return r;
 		}
@@ -291,6 +293,8 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 		 */
 		LocalDateTime nextNoticeTime = notice.getNextNoticeTime();
 		if (nextNoticeTime == null || nextNoticeTime.isAfter(LocalDateTime.now())) {
+			log.error(notice.getId() + ", currency from: " + notice.getCurrencyFrom() + ", currency to: "
+					+ notice.getCurrencyTo() + ", next notice time NOT match");
 			return r;
 		}
 
@@ -312,8 +316,8 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 
 		if (StringUtils.isNotBlank(content)) {
 			if (!"dev".equals(systemOptionService.getEnvName())) {
-				telegramService.sendMessageByChatRecordId(TelegramBotType.getType(notice.getTelegramBotName()),
-						content, notice.getTelegramChatId());
+				telegramService.sendMessageByChatRecordId(TelegramBotType.getType(notice.getTelegramBotName()), content,
+						notice.getTelegramChatId());
 			} else {
 				log.error("In dev env, will NOT send msg: " + content + ", chat ID: " + notice.getTelegramChatId()
 						+ ", bot name: " + notice.getTelegramBotName());
@@ -336,7 +340,9 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 			r.successWithMessage("notice sended");
 			return r;
 		} else {
-			r.failWithMessage("didn't hit any notice setting");
+			log.error(notice.getId() + ", currency from: " + notice.getCurrencyFrom() + ", currency to: "
+					+ notice.getCurrencyTo() + ", didn't hit any notice setting");
+			r.failWithMessage("Didn't hit any notice setting");
 			return r;
 		}
 

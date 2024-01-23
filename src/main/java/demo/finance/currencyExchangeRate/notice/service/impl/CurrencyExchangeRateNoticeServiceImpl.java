@@ -302,12 +302,16 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 		CommonResult handleResult = null;
 
 		if (rateConditionHadSet(notice)) {
+			log.error(notice.getId() + ", currency from: " + notice.getCurrencyFrom() + ", currency to: "
+					+ notice.getCurrencyTo() + ", rate condition had set");
 			handleResult = rateConditionNoticeHandle(notice, currencyFrom, currencyTo);
 			if (handleResult.isSuccess()) {
 				content += handleResult.getMessage();
 			}
 		}
 		if (rateFluctuationSpeedConditionHadSet(notice)) {
+			log.error(notice.getId() + ", currency from: " + notice.getCurrencyFrom() + ", currency to: "
+					+ notice.getCurrencyTo() + ", rate fluctuation speed condition had set");
 			handleResult = rateFluctuationSpeedNoticeHandle(notice, currencyFrom, currencyTo);
 			if (handleResult.isSuccess()) {
 				content += handleResult.getMessage();

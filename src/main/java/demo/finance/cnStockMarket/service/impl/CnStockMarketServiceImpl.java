@@ -10,7 +10,6 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cnStockMarket.pojo.dto.CnStockMarketNoticeSettingDTO;
 import demo.finance.cnStockMarket.service.CnStockMarketService;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
-import demo.finance.cryptoCoin.data.pojo.result.FilterBODataResult;
 import demo.tool.textMessageForward.telegram.service.TelegramService;
 import finance.cnStockMarket.pojo.bo.CnStockMarketDataBO;
 import finance.cnStockMarket.pojo.dto.CnStockMarketDataDTO;
@@ -42,21 +41,40 @@ public class CnStockMarketServiceImpl extends CryptoCoinCommonService implements
 		}
 
 		List<CnStockMarketDataBO> datas = dto.getData();
-		FilterBODataResult maxMinPriceResult = filterData(datas);
+		if (datas == null || datas.isEmpty()) {
+			r.setMessage("NO datas found");
+			return r;
+		}
+
+//		FilterBODataResult maxMinPriceResult = filterData(datas);
+//		if (maxMinPriceResult.isFail()) {
+//			return r;
+//		}
+//		String msg = "";
+//		if (noticeSetting.getMaxPrice() != null
+//				&& maxMinPriceResult.getMaxPrice().doubleValue() > noticeSetting.getMaxPrice().doubleValue()) {
+//			msg += ", higher than: " + maxMinPriceResult.getMaxPrice() + ", at "
+//					+ maxMinPriceResult.getMaxPriceDateTime() + "; ";
+//		}
+//		if (noticeSetting.getMinPrice() != null
+//				&& maxMinPriceResult.getMinPrice().doubleValue() < noticeSetting.getMinPrice().doubleValue()) {
+//			msg += ", lower than: " + maxMinPriceResult.getMinPrice() + ", at "
+//					+ maxMinPriceResult.getMinPriceDateTime() + "; ";
+//		}
+
+		CnStockMarketDataBO lastData = datas.get(datas.size() - 1);
 		String msg = "";
 		if (noticeSetting.getMaxPrice() != null
-				&& maxMinPriceResult.getMaxPrice().doubleValue() > noticeSetting.getMaxPrice().doubleValue()) {
-			msg += ", higher than: " + maxMinPriceResult.getMaxPrice() + ", at "
-					+ maxMinPriceResult.getMaxPriceDateTime() + "; ";
+				&& lastData.getHighPrice().doubleValue() > noticeSetting.getMaxPrice().doubleValue()) {
+			msg += ", higheset: " + lastData.getHighPrice() + ", at " + lastData.getStartTime() + "; ";
 		}
 		if (noticeSetting.getMinPrice() != null
-				&& maxMinPriceResult.getMinPrice().doubleValue() < noticeSetting.getMinPrice().doubleValue()) {
-			msg += ", lower than: " + maxMinPriceResult.getMinPrice() + ", at "
-					+ maxMinPriceResult.getMinPriceDateTime() + "; ";
+				&& lastData.getLowPrice().doubleValue() < noticeSetting.getMinPrice().doubleValue()) {
+			msg += ", lowest: " + lastData.getLowPrice() + ", at " + lastData.getStartTime() + "; ";
 		}
 
 		if (msg.length() > 0) {
-			msg = dto.getStockCode() + ", " + msg;
+			msg = dto.getStockCode() + ", now: " + lastData.getEndPrice() + ", " + msg;
 			telegramService.sendMessageByChatRecordId(TelegramBotType.CX_MESSAGE, msg, TelegramStaticChatID.MY_ID);
 			noticeSetting.setNoticed(true);
 			r.setMessage(msg);

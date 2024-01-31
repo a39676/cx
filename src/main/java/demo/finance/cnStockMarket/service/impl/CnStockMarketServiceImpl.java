@@ -45,12 +45,12 @@ public class CnStockMarketServiceImpl extends CryptoCoinCommonService implements
 		FilterBODataResult maxMinPriceResult = filterData(datas);
 		String msg = "";
 		if (noticeSetting.getMaxPrice() != null
-				&& maxMinPriceResult.getMaxPrice().doubleValue() < noticeSetting.getMaxPrice().doubleValue()) {
+				&& maxMinPriceResult.getMaxPrice().doubleValue() > noticeSetting.getMaxPrice().doubleValue()) {
 			msg += ", higher than: " + maxMinPriceResult.getMaxPrice() + ", at "
 					+ maxMinPriceResult.getMaxPriceDateTime() + "; ";
 		}
 		if (noticeSetting.getMinPrice() != null
-				&& maxMinPriceResult.getMinPrice().doubleValue() > noticeSetting.getMinPrice().doubleValue()) {
+				&& maxMinPriceResult.getMinPrice().doubleValue() < noticeSetting.getMinPrice().doubleValue()) {
 			msg += ", lower than: " + maxMinPriceResult.getMinPrice() + ", at "
 					+ maxMinPriceResult.getMinPriceDateTime() + "; ";
 		}

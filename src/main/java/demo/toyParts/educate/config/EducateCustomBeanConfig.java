@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import demo.toyParts.educate.math.service.impl.SimpleAlgorithmGenerator;
 
 @Component
-public class EduacateCustomBeanConfig {
+public class EducateCustomBeanConfig {
 
 	@Bean
 	public SimpleAlgorithmGenerator getSimpleAlgorithmGenerator() {

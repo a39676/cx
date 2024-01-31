@@ -26,5 +26,6 @@ public class OptionFilePathConfigurer {
 	public static final String AI_ART = ROOT + "/aiArt/option.json";
 	public static final String PROMOTE = ROOT + "/promote/option.json";
 	public static final String ZULIP = ROOT + "/zulip/option.json";
+	public static final String CN_STOCK_MARKET = ROOT + "/cnStockMarket/option.json";
 
 }

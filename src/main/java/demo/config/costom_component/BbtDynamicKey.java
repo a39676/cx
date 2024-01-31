@@ -24,6 +24,10 @@ public class BbtDynamicKey extends CommonService {
 	private static final String KEY_FORMAT = SALT + "_";
 	private static final int KEY_TOLERANCE_SECONDS = 3;
 
+	public String createKey() {
+		return createKey(LocalDateTime.now());
+	}
+
 	public String createKey(LocalDateTime time) {
 		if (time == null) {
 			time = LocalDateTime.now().plusSeconds(KEY_TOLERANCE_SECONDS);

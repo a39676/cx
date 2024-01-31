@@ -117,6 +117,9 @@
         <a href="/tool/canlendarNotice/manager" target="_blank">canlendarNoticeManager</a>
       </li>
       <li>
+        <a href="/cashFlow/getSummary" target="_blank">cashFlow</a>
+      </li>
+      <li>
         <a href="/ocr/uploadImg" target="_blank">ocr</a>
       </li>
       <li>

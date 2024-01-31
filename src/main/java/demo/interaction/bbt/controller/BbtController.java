@@ -13,6 +13,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.automationTest.service.impl.AutomationTestConstantService;
 import demo.common.controller.CommonController;
 import demo.interaction.bbt.service.BbtComplexService;
+import finance.cnStockMarket.pojo.dto.CnStockMarketDataDTO;
 import finance.currencyExchangeRate.pojo.result.CurrencyExchageRateCollectResult;
 import tool.pojo.constant.BbtInteractionUrl;
 
@@ -41,6 +42,13 @@ public class BbtController extends CommonController {
 	@ResponseBody
 	public String bbtHeartBeat(@RequestBody BaseStrDTO dto) {
 		automationTestConstantService.setLastHeartBeat(dto);
+		return "Done";
+	}
+
+	@PostMapping(value = BbtInteractionUrl.CN_STOCK_MARKET_DATA)
+	@ResponseBody
+	public String bbtHeartBeat(@RequestBody CnStockMarketDataDTO dto) {
+		bbtComplexService.receiveCnStockMarketData(dto);
 		return "Done";
 	}
 }

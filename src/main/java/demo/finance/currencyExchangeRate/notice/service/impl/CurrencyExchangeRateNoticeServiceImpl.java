@@ -375,7 +375,7 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 			return r;
 		}
 
-		FilterDataResult maxMinPriceResult = filterData(historyDataList);
+		FilterDataResult maxMinPriceResult = filterDataForCurrencyExchangeRate(historyDataList);
 		log.error(noticeSetting.getId() + ", currency from: " + noticeSetting.getCurrencyFrom() + ", currency to: "
 				+ noticeSetting.getCurrencyTo() + ", max min price result: " + maxMinPriceResult.toString());
 		if (maxMinPriceResult.isFail()) {
@@ -425,7 +425,7 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 			return r;
 		}
 
-		FilterDataResult maxMinPriceResult = filterData(historyDataList);
+		FilterDataResult maxMinPriceResult = filterDataForCurrencyExchangeRate(historyDataList);
 		log.error(noticeSetting.getId() + ", currency from: " + noticeSetting.getCurrencyFrom() + ", currency to: "
 				+ noticeSetting.getCurrencyTo() + ", max min price result: " + maxMinPriceResult.toString());
 		if (maxMinPriceResult.isFail()) {
@@ -476,7 +476,7 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 		return r;
 	}
 
-	private FilterDataResult filterData(List<CurrencyExchangeRate1day> list) {
+	private FilterDataResult filterDataForCurrencyExchangeRate(List<CurrencyExchangeRate1day> list) {
 		FilterDataResult r = new FilterDataResult();
 
 		if (list == null || list.isEmpty()) {

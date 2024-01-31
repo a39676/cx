@@ -56,7 +56,9 @@
 
   <a href="/optionConstant/refreshPromoteOption" target="_blank">refreshPromoteOption</a><br>
 
-  <a href="/optionConstant/zulipOptionService" target="_blank">zulipOptionService</a><br>
+  <a href="/optionConstant/refreshZulipOption" target="_blank">refreshZulipOption</a><br>
+  
+  <a href="/optionConstant/refreshCnStockMarketOption" target="_blank">refreshCnStockMarketOption</a><br>
   
 </div>
 

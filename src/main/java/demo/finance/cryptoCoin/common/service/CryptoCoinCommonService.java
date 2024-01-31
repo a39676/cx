@@ -14,7 +14,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.common.service.impl.FinanceCommonService;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
-import demo.finance.cryptoCoin.data.pojo.result.FilterBODataResult;
 import demo.finance.cryptoCoin.data.pojo.vo.CryptoCoinCatalogVO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
@@ -30,52 +29,6 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 	protected CryptoCoinOptionService optionService;
 
 	
-	protected FilterBODataResult filterData(List<CryptoCoinPriceCommonDataBO> list) {
-		FilterBODataResult r = new FilterBODataResult();
-
-		if (list == null || list.isEmpty()) {
-			r.setMessage("empty history data");
-			return r;
-		}
-
-		double maxPrice = Double.MIN_VALUE;
-		double minPrice = Double.MAX_VALUE;
-		LocalDateTime maxPriceDateTime = null;
-		LocalDateTime minPriceDateTime = null;
-		LocalDateTime startTime = null;
-		LocalDateTime endTime = null;
-		for (CryptoCoinPriceCommonDataBO bo : list) {
-			if(bo.getHighPrice() != null && bo.getHighPrice().doubleValue() > maxPrice) {
-				maxPrice = bo.getHighPrice().doubleValue();
-				maxPriceDateTime = bo.getStartTime();
-			}
-			
-			if(bo.getLowPrice() != null && bo.getLowPrice().doubleValue() < minPrice) {
-				minPrice = bo.getLowPrice().doubleValue();
-				minPriceDateTime = bo.getStartTime();
-			}
-
-			if(bo.getStartTime() != null) {
-				if (startTime == null || startTime.isAfter(bo.getStartTime())) {
-					startTime = bo.getStartTime();
-				}
-			}
-			if(bo.getEndTime() != null) {
-				if (endTime == null || endTime.isBefore(bo.getEndTime())) {
-					endTime = bo.getEndTime();
-				}
-			}
-
-		}
-
-		r.setMaxPrice(new BigDecimal(maxPrice));
-		r.setMinPrice(new BigDecimal(minPrice));
-		r.setMaxPriceDateTime(maxPriceDateTime);
-		r.setMinPriceDateTime(minPriceDateTime);
-		r.setIsSuccess();
-		return r;
-	}
-
 	protected CryptoCoinPriceCommonDataBO mergerData(CryptoCoinPriceCommonDataBO resultTarget, CryptoCoinPriceCommonDataBO otherData) {
 		if (resultTarget == null || otherData == null) {
 			return resultTarget;

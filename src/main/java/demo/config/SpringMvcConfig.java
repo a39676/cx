@@ -22,10 +22,10 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
+import demo.config.costom_component.LocalDateTimeDeserializerCustomer;
 import toolPack.dateTimeHandle.DateTimeUtilCommon;
 
 @EnableWebMvc // <mvc:annotation-driven />
@@ -44,23 +44,25 @@ public class SpringMvcConfig implements WebMvcConfigurer {
 	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
 		MappingJackson2HttpMessageConverter jackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
 		ObjectMapper objectMapper = new ObjectMapper();
+
 		SimpleModule simpleModule = new SimpleModule();
 		simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
 		simpleModule.addSerializer(Long.TYPE, ToStringSerializer.instance);
 		simpleModule.addSerializer(BigInteger.class, ToStringSerializer.instance);
 		objectMapper.registerModule(simpleModule);
-		jackson2HttpMessageConverter.setObjectMapper(objectMapper);
-		converters.add(jackson2HttpMessageConverter);
-		
-		 
-		objectMapper = new ObjectMapper();
+
 		JavaTimeModule javaTimeModule = new JavaTimeModule();
-		javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DateTimeUtilCommon.normalDateTimeFormat)));
-		javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(DateTimeUtilCommon.normalDateTimeFormat)));
-		javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DateTimeUtilCommon.normalDateFormat)));
-		javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DateTimeUtilCommon.normalDateFormat)));
+
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DateTimeUtilCommon.normalDateTimeFormat);
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(DateTimeUtilCommon.normalDateFormat);
+		javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(dateTimeFormatter));
+		javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializerCustomer());
+		javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(dateFormatter));
+		javaTimeModule.addDeserializer(LocalDate.class, LocalDateDeserializer.INSTANCE);
 		objectMapper.registerModule(javaTimeModule);
+
 		jackson2HttpMessageConverter.setObjectMapper(objectMapper);
+
 		converters.add(jackson2HttpMessageConverter);
 	}
 

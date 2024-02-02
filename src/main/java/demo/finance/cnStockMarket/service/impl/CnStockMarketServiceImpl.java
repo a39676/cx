@@ -1,12 +1,19 @@
 package demo.finance.cnStockMarket.service.impl;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.config.costom_component.OptionFilePathConfigurer;
 import demo.finance.cnStockMarket.pojo.dto.CnStockMarketNoticeSettingDTO;
 import demo.finance.cnStockMarket.service.CnStockMarketService;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
@@ -15,6 +22,7 @@ import finance.cnStockMarket.pojo.bo.CnStockMarketDataBO;
 import finance.cnStockMarket.pojo.dto.CnStockMarketDataDTO;
 import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.type.TelegramBotType;
+import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class CnStockMarketServiceImpl extends CryptoCoinCommonService implements CnStockMarketService {
@@ -73,12 +81,27 @@ public class CnStockMarketServiceImpl extends CryptoCoinCommonService implements
 			msg += ", lowest: " + lastData.getLowPrice() + ", at " + lastData.getStartTime() + "; ";
 		}
 
-		if (msg.length() > 0) {
-			msg = dto.getStockCode() + ", now: " + lastData.getEndPrice() + ", " + msg;
-			telegramService.sendMessageByChatRecordId(TelegramBotType.CX_MESSAGE, msg, TelegramStaticChatID.MY_ID);
-			noticeSetting.setNoticed(true);
-			r.setMessage(msg);
+		if (msg.length() < 1) {
+			return r;
 		}
+
+		msg = dto.getStockCode() + ", now: " + lastData.getEndPrice() + ", " + msg;
+		telegramService.sendMessageByChatRecordId(TelegramBotType.CX_MESSAGE, msg, TelegramStaticChatID.MY_ID);
+//		noticeSetting.setNoticed(true);
+
+
+		noticeSetting.setMaxPrice(
+				lastData.getEndPrice().multiply(new BigDecimal(1.1)).setScale(2, RoundingMode.HALF_UP).doubleValue());
+		noticeSetting.setMinPrice(
+				lastData.getEndPrice().multiply(new BigDecimal(0.9)).setScale(2, RoundingMode.HALF_UP).doubleValue());
+
+		FileUtilCustom ioUtil = new FileUtilCustom();
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		String jsonString = gson.toJson(cnStockMarketOptionService);
+		ioUtil.byteToFile(jsonString.toString().getBytes(StandardCharsets.UTF_8),
+				OptionFilePathConfigurer.CN_STOCK_MARKET);;
+
+		r.setMessage(msg);
 		r.setIsSuccess();
 		return r;
 	}

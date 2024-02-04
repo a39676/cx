@@ -42,8 +42,9 @@
 
     <div class="row">
       <div class="col-lg-12">
-        <input type="number" id="randomWordsCounting" name="" value="10">
-        <button id="printRandomWord">Print random word</button><br>
+        <input type="number" id="printWordsCounting" name="" value="10">
+        <button id="printRandomWord">Print random word</button>
+        <button id="printNewWord">Print new word</button><br>
         <div class="form-check" onclick="enToggler()">
           <input class="form-check-input" type="checkbox" value="" id="showEN" checked>
           <label class="form-check-label" for="showEN">
@@ -298,12 +299,12 @@
 
         var url = "/wordHelper/printRandomWords";
 
-        var randomWordsCounting = $("#randomWordsCounting").val();
+        var printWordsCounting = $("#printWordsCounting").val();
         var printEn = $("#showEN").prop("checked");
         var printCn = $("#showCN").prop("checked");
 
         var jsonOutput = {
-          wordCount:randomWordsCounting,
+          wordCount:printWordsCounting,
         };
 
         console.log(jsonOutput);
@@ -322,23 +323,69 @@
           },
           success:function(datas){
             console.log(datas);
-            $("#result").text(datas.code + ", " + datas.message);
-            var wordResult = "";
-            for(var i = 0; i < datas.wordList.length; i++){
-              wordResult = wordResult + "<tr>";
-              wordResult = wordResult + "<td><label class='wordEn'>" + datas.wordList[i].en + "</label></td>";
-              wordResult = wordResult + "<td><label class='wordCn'>" + datas.wordList[i].cn + "</label></td>";
-              wordResult = wordResult + "</tr>";
-            }
-            var head = "<tr> <td>EN</td> <td>CN</td> </tr>"
-            $("#randomWords").html(head + wordResult);
-            enToggle(printEn);
-            cnToggle(printCn);
+            printWords(datas);
           },
           error: function(datas) {
             console.log(datas);
           }
         });
+      }
+
+      $("#printNewWord").click(function() {
+        printNewWord();
+      });
+
+      function printNewWord(){
+        $("#result").text("Finding random words");
+
+        var url = "/wordHelper/printNewWords";
+
+        var printWordsCounting = $("#printWordsCounting").val();
+        var printEn = $("#showEN").prop("checked");
+        var printCn = $("#showCN").prop("checked");
+
+        var jsonOutput = {
+          wordCount:printWordsCounting,
+        };
+
+        console.log(jsonOutput);
+  
+        $.ajax({
+          type : "POST",
+          async : true,
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          cache : false,
+          contentType: "application/json",
+          dataType: "json",
+          timeout:50000,
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          success:function(datas){
+            console.log(datas);
+            printWords(datas);
+          },
+          error: function(datas) {
+            console.log(datas);
+          }
+        });
+      }
+
+      function printWords(datas){
+        var printEn = $("#showEN").prop("checked");
+        var printCn = $("#showCN").prop("checked");
+        var wordResult = "";
+        for(var i = 0; i < datas.wordList.length; i++){
+          wordResult = wordResult + "<tr>";
+          wordResult = wordResult + "<td><label class='wordEn'>" + datas.wordList[i].en + "</label></td>";
+          wordResult = wordResult + "<td><label class='wordCn'>" + datas.wordList[i].cn + "</label></td>";
+          wordResult = wordResult + "</tr>";
+        }
+        var head = "<tr> <td>EN</td> <td>CN</td> </tr>"
+        $("#randomWords").html(head + wordResult);
+        enToggle(printEn);
+        cnToggle(printCn);
       }
 
     });

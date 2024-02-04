@@ -34,7 +34,7 @@ public class WordHelperController {
 	public CommonResult addNewWord(@RequestBody WordDTO dto) {
 		return wordHelperService.addNewWord(dto);
 	}
-	
+
 	@PostMapping(value = WordHelperUrl.FIND)
 	@ResponseBody
 	public GetRandomWordResult findWord(@RequestBody WordDTO dto) {
@@ -51,6 +51,12 @@ public class WordHelperController {
 	@ResponseBody
 	public GetRandomWordResult printRandomWords(@RequestBody GetRandomWordDTO dto) {
 		return wordHelperService.printRandomWords(dto);
+	}
+
+	@PostMapping(value = WordHelperUrl.PRINT_NEW)
+	@ResponseBody
+	public GetRandomWordResult printNewWords(@RequestBody GetRandomWordDTO dto) {
+		return wordHelperService.printNewWords(dto);
 	}
 
 	@PostMapping(value = WordHelperUrl.DELETE)

@@ -22,4 +22,6 @@ public interface WordHelperService {
 
 	CommonResult deleteWord(WordDTO dto);
 
+	GetRandomWordResult printNewWords(GetRandomWordDTO dto);
+
 }

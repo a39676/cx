@@ -230,6 +230,40 @@ public class WordHelperServiceImpl extends CommonService implements WordHelperSe
 	}
 
 	@Override
+	public GetRandomWordResult printNewWords(GetRandomWordDTO dto) {
+		GetRandomWordResult r = new GetRandomWordResult();
+
+		CustomerDictionaryV2DTO dictionary = getCustomerDictionaryV2DTO();
+		if (dictionary == null || dictionary.getWordList() == null || dictionary.getWordList().isEmpty()) {
+			return r;
+		}
+
+		List<WordDTO> wordList = new ArrayList<>();
+
+		int wordCounting = 0;
+		if (dictionary.getWordList() != null) {
+			wordCounting = dictionary.getWordList().size();
+		}
+		boolean dictionaryCountsMoreThanRequirement = wordCounting > dto.getWordCount();
+
+		if (!dictionaryCountsMoreThanRequirement) {
+			wordList.addAll(dictionary.getWordList());
+			r.setWordList(wordList);
+			r.setIsSuccess();
+			return r;
+		}
+
+		for (int i = dictionary.getWordList().size() - 1; i >= 0 && wordList.size() < dto.getWordCount(); i--) {
+			WordDTO word = dictionary.getWordList().get(i);
+			wordList.add(word);
+		}
+
+		r.setWordList(wordList);
+		r.setIsSuccess();
+		return r;
+	}
+
+	@Override
 	public CommonResult deleteWord(WordDTO dto) {
 		CommonResult r = new CommonResult();
 		CustomerDictionaryV2DTO dictionary = getCustomerDictionaryV2DTO();

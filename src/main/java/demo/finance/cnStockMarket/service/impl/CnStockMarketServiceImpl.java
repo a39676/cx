@@ -91,9 +91,9 @@ public class CnStockMarketServiceImpl extends CryptoCoinCommonService implements
 
 
 		noticeSetting.setMaxPrice(
-				lastData.getEndPrice().multiply(new BigDecimal(1.1)).setScale(2, RoundingMode.HALF_UP).doubleValue());
+				lastData.getEndPrice().multiply(new BigDecimal(1.02)).setScale(2, RoundingMode.HALF_UP).doubleValue());
 		noticeSetting.setMinPrice(
-				lastData.getEndPrice().multiply(new BigDecimal(0.9)).setScale(2, RoundingMode.HALF_UP).doubleValue());
+				lastData.getEndPrice().multiply(new BigDecimal(0.98)).setScale(2, RoundingMode.HALF_UP).doubleValue());
 
 		FileUtilCustom ioUtil = new FileUtilCustom();
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();

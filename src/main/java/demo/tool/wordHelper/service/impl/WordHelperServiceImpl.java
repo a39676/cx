@@ -6,8 +6,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -17,10 +19,12 @@ import com.google.gson.GsonBuilder;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.service.CommonService;
 import demo.tool.wordHelper.pojo.dto.CustomerDictionaryV2DTO;
-import demo.tool.wordHelper.pojo.dto.GetRandomWordDTO;
+import demo.tool.wordHelper.pojo.dto.GetWordDTO;
 import demo.tool.wordHelper.pojo.dto.UpdateOrAppendWordDTO;
 import demo.tool.wordHelper.pojo.dto.WordDTO;
-import demo.tool.wordHelper.pojo.result.GetRandomWordResult;
+import demo.tool.wordHelper.pojo.result.GetWordResult;
+import demo.tool.wordHelper.pojo.type.GetWordsResultType;
+import demo.tool.wordHelper.pojo.vo.WordVO;
 import demo.tool.wordHelper.service.WordHelperService;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -140,8 +144,8 @@ public class WordHelperServiceImpl extends CommonService implements WordHelperSe
 	}
 
 	@Override
-	public GetRandomWordResult findWords(WordDTO inputWord) {
-		GetRandomWordResult r = new GetRandomWordResult();
+	public GetWordResult findWords(WordDTO inputWord) {
+		GetWordResult r = new GetWordResult();
 
 		CustomerDictionaryV2DTO dictionary = getCustomerDictionaryV2DTO();
 
@@ -151,7 +155,7 @@ public class WordHelperServiceImpl extends CommonService implements WordHelperSe
 			r.setIsSuccess();
 		} else {
 			r.setMessage("Find " + wordList.size() + " words");
-			r.setWordList(wordList);
+			r.setWordList(wordListToVoList(wordList));
 			r.setIsSuccess();
 		}
 		return r;
@@ -190,19 +194,15 @@ public class WordHelperServiceImpl extends CommonService implements WordHelperSe
 		return addNewWord(dto.getInputWord());
 	}
 
-	@Override
-	public GetRandomWordResult printRandomWords(GetRandomWordDTO dto) {
-		GetRandomWordResult r = new GetRandomWordResult();
+	private GetWordResult beforeGetWords(GetWordDTO dto, CustomerDictionaryV2DTO dictionary) {
+		GetWordResult r = new GetWordResult();
 
-		Random random = new Random();
-		int randomIndex = 0;
-
-		CustomerDictionaryV2DTO dictionary = getCustomerDictionaryV2DTO();
 		if (dictionary == null || dictionary.getWordList() == null || dictionary.getWordList().isEmpty()) {
+			GetWordsResultType resultType = GetWordsResultType.NO_WORDS;
+			r.setCode(String.valueOf(resultType.getCode()));
+			r.setMessage(resultType.getName());
 			return r;
 		}
-
-		List<WordDTO> wordList = new ArrayList<>();
 
 		int wordCounting = 0;
 		if (dictionary.getWordList() != null) {
@@ -211,54 +211,57 @@ public class WordHelperServiceImpl extends CommonService implements WordHelperSe
 		boolean dictionaryCountsMoreThanRequirement = wordCounting > dto.getWordCount();
 
 		if (!dictionaryCountsMoreThanRequirement) {
-			wordList.addAll(dictionary.getWordList());
-			r.setWordList(wordList);
+			GetWordsResultType resultType = GetWordsResultType.NOT_ENOUGH_WORDS;
+			r.setCode(String.valueOf(resultType.getCode()));
+			r.setMessage(resultType.getName());
+		} else {
 			r.setIsSuccess();
+		}
+		return r;
+	}
+
+	@Override
+	public GetWordResult printRandomWords(GetWordDTO dto) {
+		CustomerDictionaryV2DTO dictionary = getCustomerDictionaryV2DTO();
+		GetWordResult r = beforeGetWords(dto, dictionary);
+		if (r.isFail()) {
+			if (r.getCode().equals(String.valueOf(GetWordsResultType.NO_WORDS.getCode()))) {
+				return r;
+
+			} else if (r.getCode().equals(String.valueOf(GetWordsResultType.NOT_ENOUGH_WORDS.getCode()))) {
+				List<WordDTO> wordList = new ArrayList<>();
+				wordList.addAll(dictionary.getWordList());
+				r.setWordList(wordListToVoList(wordList));
+				return r;
+			}
 			return r;
 		}
 
-		Set<WordDTO> wordSet = new HashSet<>();
-		while (wordSet.size() < dto.getWordCount()) {
-			randomIndex = random.nextInt(dictionary.getWordList().size());
-			WordDTO word = dictionary.getWordList().get(randomIndex);
-			wordSet.add(word);
-		}
-		wordList.addAll(wordSet);
-		r.setWordList(wordList);
+		List<WordDTO> wordList = getRandomWords(dictionary, dto.getWordCount());
+		r.setWordList(wordListToVoList(wordList));
 		r.setIsSuccess();
 		return r;
 	}
 
 	@Override
-	public GetRandomWordResult printNewWords(GetRandomWordDTO dto) {
-		GetRandomWordResult r = new GetRandomWordResult();
-
+	public GetWordResult printNewWords(GetWordDTO dto) {
 		CustomerDictionaryV2DTO dictionary = getCustomerDictionaryV2DTO();
-		if (dictionary == null || dictionary.getWordList() == null || dictionary.getWordList().isEmpty()) {
+		GetWordResult r = beforeGetWords(dto, dictionary);
+		if (r.isFail()) {
+			if (r.getCode().equals(String.valueOf(GetWordsResultType.NO_WORDS.getCode()))) {
+				return r;
+
+			} else if (r.getCode().equals(String.valueOf(GetWordsResultType.NOT_ENOUGH_WORDS.getCode()))) {
+				List<WordDTO> wordList = new ArrayList<>();
+				wordList.addAll(dictionary.getWordList());
+				r.setWordList(wordListToVoList(wordList));
+				return r;
+			}
 			return r;
 		}
 
-		List<WordDTO> wordList = new ArrayList<>();
-
-		int wordCounting = 0;
-		if (dictionary.getWordList() != null) {
-			wordCounting = dictionary.getWordList().size();
-		}
-		boolean dictionaryCountsMoreThanRequirement = wordCounting > dto.getWordCount();
-
-		if (!dictionaryCountsMoreThanRequirement) {
-			wordList.addAll(dictionary.getWordList());
-			r.setWordList(wordList);
-			r.setIsSuccess();
-			return r;
-		}
-
-		for (int i = dictionary.getWordList().size() - 1; i >= 0 && wordList.size() < dto.getWordCount(); i--) {
-			WordDTO word = dictionary.getWordList().get(i);
-			wordList.add(word);
-		}
-
-		r.setWordList(wordList);
+		List<WordDTO> wordList = getNewWords(dictionary, dto.getWordCount());
+		r.setWordList(wordListToVoList(wordList));
 		r.setIsSuccess();
 		return r;
 	}
@@ -287,4 +290,128 @@ public class WordHelperServiceImpl extends CommonService implements WordHelperSe
 		r.setMessage("Can NOT find: " + dto.getEn());
 		return r;
 	}
+
+	@Override
+	public GetWordResult printNewWordsInMarks(GetWordDTO dto) {
+		CustomerDictionaryV2DTO dictionary = getCustomerDictionaryV2DTO();
+		GetWordResult r = beforeGetWords(dto, dictionary);
+		if (r.getCode().equals(String.valueOf(GetWordsResultType.NO_WORDS.getCode()))) {
+			return r;
+
+		}
+
+		List<WordDTO> wordList = new ArrayList<>();
+		if (r.getCode().equals(String.valueOf(GetWordsResultType.NOT_ENOUGH_WORDS.getCode()))) {
+			wordList.addAll(dictionary.getWordList());
+		}
+
+		wordList = getNewWords(dictionary, dto.getWordCount());
+
+		r.setWordList(wordListToVoList(wordList, true));
+		r.setIsSuccess();
+		return r;
+	}
+
+	@Override
+	public GetWordResult printRandomWordsInMarks(GetWordDTO dto) {
+		CustomerDictionaryV2DTO dictionary = getCustomerDictionaryV2DTO();
+		GetWordResult r = beforeGetWords(dto, dictionary);
+		if (r.getCode().equals(String.valueOf(GetWordsResultType.NO_WORDS.getCode()))) {
+			return r;
+
+		}
+
+		List<WordDTO> wordList = new ArrayList<>();
+		if (r.getCode().equals(String.valueOf(GetWordsResultType.NOT_ENOUGH_WORDS.getCode()))) {
+			wordList.addAll(dictionary.getWordList());
+		}
+
+		wordList = getRandomWords(dictionary, dto.getWordCount());
+
+		r.setWordList(wordListToVoList(wordList, true));
+		r.setIsSuccess();
+		return r;
+	}
+
+	private List<WordDTO> getRandomWords(CustomerDictionaryV2DTO dictionary, Integer wordCounting) {
+		List<WordDTO> wordList = new ArrayList<>();
+
+		Random random = new Random();
+		int randomIndex = 0;
+
+		Set<WordDTO> wordSet = new HashSet<>();
+		while (wordSet.size() < wordCounting) {
+			randomIndex = random.nextInt(dictionary.getWordList().size());
+			WordDTO word = dictionary.getWordList().get(randomIndex);
+			wordSet.add(word);
+		}
+		wordList.addAll(wordSet);
+		return wordList;
+	}
+
+	private List<WordDTO> getNewWords(CustomerDictionaryV2DTO dictionary, Integer wordCounting) {
+		List<WordDTO> wordList = new ArrayList<>();
+
+		for (int i = dictionary.getWordList().size() - 1; i >= 0 && wordList.size() < wordCounting; i--) {
+			WordDTO word = dictionary.getWordList().get(i);
+			wordList.add(word);
+		}
+
+		return wordList;
+	}
+
+//	private WordVO wordToVo(WordDTO dto) {
+//		return wordToVo(dto, false);
+//	}
+
+	private WordVO wordToVo(WordDTO dto, boolean enInMark) {
+		WordVO vo = new WordVO();
+		BeanUtils.copyProperties(dto, vo);
+		if (enInMark) {
+			String underLine = "﹎";
+			StringBuffer sb = new StringBuffer(dto.getEn());
+			if (sb.length() <= 3) {
+				for (int i = 0; i < sb.length(); i++) {
+					sb.setCharAt(i, underLine.charAt(0));
+				}
+			}
+			int length = sb.length();
+			// Keep about 33% characters or at last 3 characters
+			int notReplaceCounting = length / 3;
+			if (notReplaceCounting < 3) {
+				notReplaceCounting = 3;
+			}
+			int replaceCount = length - notReplaceCounting;
+			int randomIndex = 0;
+			for (int i = 0; i < replaceCount; i++) {
+				randomIndex = ThreadLocalRandom.current().nextInt(0, sb.length());
+				char tmpChar = sb.charAt(randomIndex);
+				if (Character.isLetter(tmpChar)) {
+					sb.replace(randomIndex, randomIndex + 1, underLine);
+//				} else if (" ".equals(String.valueOf(tmpChar))) {
+//					sb.replace(randomIndex, randomIndex + 1, "  ");
+//					i++;
+//					replaceCount++;
+				} else {
+					i--;
+					continue;
+				}
+			}
+			vo.setEnInMark(sb.toString());
+		}
+		return vo;
+	}
+
+	private List<WordVO> wordListToVoList(List<WordDTO> wordList) {
+		return wordListToVoList(wordList, false);
+	}
+
+	private List<WordVO> wordListToVoList(List<WordDTO> wordList, boolean enInMark) {
+		List<WordVO> voList = new ArrayList<>();
+		for (int i = 0; i < wordList.size(); i++) {
+			voList.add(wordToVo(wordList.get(i), enInMark));
+		}
+		return voList;
+	}
+
 }

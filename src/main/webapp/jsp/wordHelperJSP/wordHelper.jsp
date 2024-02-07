@@ -14,7 +14,7 @@
   </head>
 
   <div class="container-fluid">
-    <div class="row">
+    <div class="row operationRow">
       <div class="col-lg-12">
 
         <input type="text" id="enInput" name="">
@@ -26,25 +26,28 @@
       </div>
     </div>
 
-    <div class="row">
+    <div class="row operationRow">
       <div class="col-lg-12">
         <button id="append">Append</button>
         <button id="update">Update</button>
       </div>
     </div>
 
-    <div class="row">
+    <div class="row operationRow">
       <div class="col-lg-12">
         <label>Result: </label>
         <label id="result"></label>
       </div>
     </div>
 
-    <div class="row">
+    <div class="row operationRow">
       <div class="col-lg-12">
-        <input type="number" id="printWordsCounting" name="" value="10">
         <button id="printRandomWord">Print random word</button>
         <button id="printNewWord">Print new word</button><br>
+        <button id="printRandomWordsInMarks">Print random word (EN in marks)</button>
+        <button id="printNewWordsInMarks">Print new word (EN in marks)</button><br>
+        <input type="number" id="printWordsCounting" name="" value="10"><br>
+
         <div class="form-check" onclick="enToggler()">
           <input class="form-check-input" type="checkbox" value="" id="showEN" checked>
           <label class="form-check-label" for="showEN">
@@ -59,15 +62,47 @@
           </label>
         </div>
 
+        <div class="form-check" onclick="enInMarkToggler()">
+          <input class="form-check-input" type="checkbox" value="" id="showEnInMark">
+          <label class="form-check-label" for="showEnInMark">
+            showEnInMark
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <button id="operationRowSwitch" flag="1">operationRowSwitch</button>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-lg-12">
         <table class="table" id="randomWords">
         </table>
       </div>
     </div>
-
-
   </div>
 
   <script type="text/javascript">
+
+    $("#operationRowSwitch").click(function() {
+      operationRowSwitch();
+    });
+
+    function operationRowSwitch() {
+      console.log("in operationRowSwitch");
+      var switchButton = $("#operationRowSwitch");
+      console.log("flag: " + switchButton.attr("flag"));
+      if("1" == switchButton.attr("flag")){
+        $(".operationRow").hide();
+        switchButton.attr("flag", "0");
+      } else {
+        $(".operationRow").show();
+        switchButton.attr("flag", "1");
+      }
+    }
 
     function enToggler(){
       var enToggleFlag = document.getElementById('showEN').checked;
@@ -101,6 +136,24 @@
       } else {
         for (let i = 0; i < cnArray.length; i++) {
           cnArray[i].style.display = "block";
+        }
+      }
+    }
+
+    function enInMarkToggler(){
+      var enInMarkToggleFlag = document.getElementById('showEnInMark').checked;
+      enInMarkToggle(enInMarkToggleFlag);
+    }
+
+    function enInMarkToggle(flag) {
+      var enInMarksArray = document.getElementsByClassName("wordEnInMarks");
+      if(!flag){
+        for (let i = 0; i < enInMarksArray.length; i++) {
+          enInMarksArray[i].style.display = "none";
+        }
+      } else {
+        for (let i = 0; i < enInMarksArray.length; i++) {
+          enInMarksArray[i].style.display = "block";
         }
       }
     }
@@ -296,12 +349,13 @@
 
       function printRandomWord(){
         $("#result").text("Finding random words");
+        $("#showEN").prop('checked', true);
+        $("#showCN").prop('checked', false);
+        $("#showEnInMark").prop('checked', false);
 
         var url = "/wordHelper/printRandomWords";
 
         var printWordsCounting = $("#printWordsCounting").val();
-        var printEn = $("#showEN").prop("checked");
-        var printCn = $("#showCN").prop("checked");
 
         var jsonOutput = {
           wordCount:printWordsCounting,
@@ -337,12 +391,97 @@
 
       function printNewWord(){
         $("#result").text("Finding random words");
+        $("#showEN").prop('checked', true);
+        $("#showCN").prop('checked', false);
+        $("#showEnInMark").prop('checked', false);
 
         var url = "/wordHelper/printNewWords";
 
         var printWordsCounting = $("#printWordsCounting").val();
-        var printEn = $("#showEN").prop("checked");
-        var printCn = $("#showCN").prop("checked");
+
+        var jsonOutput = {
+          wordCount:printWordsCounting,
+        };
+
+        console.log(jsonOutput);
+  
+        $.ajax({
+          type : "POST",
+          async : true,
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          cache : false,
+          contentType: "application/json",
+          dataType: "json",
+          timeout:50000,
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          success:function(datas){
+            console.log(datas);
+            printWords(datas);
+          },
+          error: function(datas) {
+            console.log(datas);
+          }
+        });
+      }
+
+      $("#printRandomWordsInMarks").click(function() {
+        printRandomWordsInMarks();
+      });
+
+      function printRandomWordsInMarks(){
+        $("#result").text("Finding random words");
+        $("#showEN").prop('checked', false);
+        $("#showCN").prop('checked', true);
+        $("#showEnInMark").prop('checked', true);
+
+        var url = "/wordHelper/printRandomWordsInMarks";
+
+        var printWordsCounting = $("#printWordsCounting").val();
+
+        var jsonOutput = {
+          wordCount:printWordsCounting,
+        };
+
+        console.log(jsonOutput);
+  
+        $.ajax({
+          type : "POST",
+          async : true,
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          cache : false,
+          contentType: "application/json",
+          dataType: "json",
+          timeout:50000,
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          success:function(datas){
+            console.log(datas);
+            printWords(datas);
+          },
+          error: function(datas) {
+            console.log(datas);
+          }
+        });
+      }
+
+      $("#printNewWordsInMarks").click(function() {
+        printNewWordsInMarks();
+      });
+
+      function printNewWordsInMarks(){
+        $("#result").text("Finding random words");
+        $("#showEN").prop('checked', false);
+        $("#showCN").prop('checked', true);
+        $("#showEnInMark").prop('checked', true);
+
+        var url = "/wordHelper/printNewWordsInMarks";
+
+        var printWordsCounting = $("#printWordsCounting").val();
 
         var jsonOutput = {
           wordCount:printWordsCounting,
@@ -375,17 +514,28 @@
       function printWords(datas){
         var printEn = $("#showEN").prop("checked");
         var printCn = $("#showCN").prop("checked");
+        var printEnInMarks = $("#showEnInMark").prop("checked");
         var wordResult = "";
+        var tdSize = 5;
         for(var i = 0; i < datas.wordList.length; i++){
-          wordResult = wordResult + "<tr>";
-          wordResult = wordResult + "<td><label class='wordEn'>" + datas.wordList[i].en + "</label></td>";
-          wordResult = wordResult + "<td><label class='wordCn'>" + datas.wordList[i].cn + "</label></td>";
-          wordResult = wordResult + "</tr>";
+          if(i % tdSize == 0){
+            wordResult = wordResult + "<tr>";  
+          }
+          wordResult = wordResult + "<td style='text-align: center;'>";
+          wordResult = wordResult + "<label class='wordEn'>" + datas.wordList[i].en + "</label><br>";
+          wordResult = wordResult + "<label class='wordEnInMarks' style='font-size: 28px;'>" 
+          // wordResult = wordResult + "<label style='font-size: 16px;'>"+"("+(i+1)+")"+"</label>"
+          wordResult = wordResult + datas.wordList[i].enInMark + "</label><br>";
+          wordResult = wordResult + "<label class='wordCn'>" + datas.wordList[i].cn + "</label>";
+          wordResult = wordResult + "</td>";
+          if(i % tdSize == 4 || i == datas.wordList.length - 1){
+            wordResult = wordResult + "</tr>";
+          }
         }
-        var head = "<tr> <td>EN</td> <td>CN</td> </tr>"
-        $("#randomWords").html(head + wordResult);
+        $("#randomWords").html(wordResult);
         enToggle(printEn);
         cnToggle(printCn);
+        enInMarkToggle(printEnInMarks);
       }
 
     });

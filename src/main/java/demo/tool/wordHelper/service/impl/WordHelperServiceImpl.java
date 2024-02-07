@@ -368,10 +368,11 @@ public class WordHelperServiceImpl extends CommonService implements WordHelperSe
 		WordVO vo = new WordVO();
 		BeanUtils.copyProperties(dto, vo);
 		if (enInMark) {
+			String underLine = "﹎";
 			StringBuffer sb = new StringBuffer(dto.getEn());
 			if (sb.length() <= 3) {
 				for (int i = 0; i < sb.length(); i++) {
-					sb.setCharAt(i, '_');
+					sb.setCharAt(i, underLine.charAt(0));
 				}
 			}
 			int length = sb.length();
@@ -386,7 +387,11 @@ public class WordHelperServiceImpl extends CommonService implements WordHelperSe
 				randomIndex = ThreadLocalRandom.current().nextInt(0, sb.length());
 				char tmpChar = sb.charAt(randomIndex);
 				if (Character.isLetter(tmpChar)) {
-					sb.replace(randomIndex, randomIndex + 1, "_ ");
+					sb.replace(randomIndex, randomIndex + 1, underLine);
+//				} else if (" ".equals(String.valueOf(tmpChar))) {
+//					sb.replace(randomIndex, randomIndex + 1, "  ");
+//					i++;
+//					replaceCount++;
 				} else {
 					i--;
 					continue;

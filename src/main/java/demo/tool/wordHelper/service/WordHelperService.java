@@ -3,25 +3,29 @@ package demo.tool.wordHelper.service;
 import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.tool.wordHelper.pojo.dto.GetRandomWordDTO;
+import demo.tool.wordHelper.pojo.dto.GetWordDTO;
 import demo.tool.wordHelper.pojo.dto.UpdateOrAppendWordDTO;
 import demo.tool.wordHelper.pojo.dto.WordDTO;
-import demo.tool.wordHelper.pojo.result.GetRandomWordResult;
+import demo.tool.wordHelper.pojo.result.GetWordResult;
 
 public interface WordHelperService {
 
 	ModelAndView wordHelper();
 
-	GetRandomWordResult printRandomWords(GetRandomWordDTO dto);
+	GetWordResult printRandomWords(GetWordDTO dto);
 
 	CommonResult updateOrAppendWord(UpdateOrAppendWordDTO dto);
 
 	CommonResult addNewWord(WordDTO inputWord);
 
-	GetRandomWordResult findWords(WordDTO inputWord);
+	GetWordResult findWords(WordDTO inputWord);
 
 	CommonResult deleteWord(WordDTO dto);
 
-	GetRandomWordResult printNewWords(GetRandomWordDTO dto);
+	GetWordResult printNewWords(GetWordDTO dto);
+
+	GetWordResult printNewWordsInMarks(GetWordDTO dto);
+
+	GetWordResult printRandomWordsInMarks(GetWordDTO dto);
 
 }

@@ -522,10 +522,10 @@
             wordResult = wordResult + "<tr>";  
           }
           wordResult = wordResult + "<td style='text-align: center;'>";
-          wordResult = wordResult + "<label class='wordEn'>" + datas.wordList[i].en + "</label><br>";
+          wordResult = wordResult + "<label class='wordEn'>" + datas.wordList[i].en + "</label>";
           wordResult = wordResult + "<label class='wordEnInMarks' style='font-size: 28px;'>" 
           // wordResult = wordResult + "<label style='font-size: 16px;'>"+"("+(i+1)+")"+"</label>"
-          wordResult = wordResult + datas.wordList[i].enInMark + "</label><br>";
+          wordResult = wordResult + datas.wordList[i].enInMark + "</label>";
           wordResult = wordResult + "<label class='wordCn'>" + datas.wordList[i].cn + "</label>";
           wordResult = wordResult + "</td>";
           if(i % tdSize == 4 || i == datas.wordList.length - 1){

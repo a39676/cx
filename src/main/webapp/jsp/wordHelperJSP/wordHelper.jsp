@@ -493,17 +493,19 @@
         var tdSize = 5;
         var longWordFlag = false;
         var tdCounting = 1;
+        var characterCountForTd = 7;
         for(var i = 0; i < datas.wordList.length; i++){
           var word = datas.wordList[i];
-          longWordFlag = !(null === word.enInMark) && word.enInMark.length > 10;
+          longWordFlag = !(null === word.enInMark) && word.enInMark.length > characterCountForTd;
           
           if(tdCounting % tdSize == 1) {
             wordResult = wordResult + "<tr>";  
           }
 
           if(longWordFlag){
-            wordResult = wordResult + "<td style='text-align: center;' colspan='2'>";
-            tdCounting++;
+            var colSpan = Math.round(word.enInMark.length / characterCountForTd);
+            tdCounting += colSpan;
+            wordResult = wordResult + "<td style='text-align: center;' colspan='"+tdCounting+"'>";
           } else {
             wordResult = wordResult + "<td style='text-align: center;'>";
           }
@@ -526,17 +528,19 @@
           }
 
           var nextWord = datas.wordList[i + 1];
-          longWordFlag = !(null === nextWord.enInMark) && nextWord.enInMark.length > 10;
+          longWordFlag = !(null === nextWord.enInMark) && nextWord.enInMark.length > characterCountForTd;
           if(!longWordFlag){
             tdCounting++;
             continue;
-          }            
-          if (tdCounting + 2 > tdSize){
+          }
+          var colSpan = Math.round(word.enInMark.length / characterCountForTd);
+          tdCounting += colSpan;
+          if (tdCounting + colSpan > tdSize){
             wordResult = wordResult + "</tr>";
             tdCounting = 1;
             continue;
           }
-          tdCounting += 2;
+          tdCounting += colSpan;
         }
 
         $("#randomWords").html(wordResult);

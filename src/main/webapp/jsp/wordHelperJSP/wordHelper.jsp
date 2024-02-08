@@ -46,7 +46,7 @@
         <button id="printNewWord">Print new word</button><br>
         <button id="printRandomWordsInMarks">Print random word (EN in marks)</button>
         <button id="printNewWordsInMarks">Print new word (EN in marks)</button><br>
-        <input type="number" id="printWordsCounting" name="" value="10"><br>
+        <input type="number" id="printWordsCounting" name="" value="50"><br>
 
         <div class="form-check" onclick="enToggler()">
           <input class="form-check-input" type="checkbox" value="" id="showEN" checked>
@@ -92,9 +92,7 @@
     });
 
     function operationRowSwitch() {
-      console.log("in operationRowSwitch");
       var switchButton = $("#operationRowSwitch");
-      console.log("flag: " + switchButton.attr("flag"));
       if("1" == switchButton.attr("flag")){
         $(".operationRow").hide();
         switchButton.attr("flag", "0");
@@ -177,7 +175,6 @@
           cn:cnInput,
         };
 
-        console.log(jsonOutput);
   
         $.ajax({
           type : "POST",
@@ -192,11 +189,9 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-            console.log(datas);
             $("#result").text(datas.code + ", " + datas.message);
           },
           error: function(datas) {
-            console.log(datas);
           }
         });
       }
@@ -218,7 +213,6 @@
           cn:cnInput,
         };
 
-        console.log(jsonOutput);
   
         $.ajax({
           type : "POST",
@@ -233,7 +227,6 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-            console.log(datas);
             $("#result").text(datas.code + ", " + datas.message);
             var wordResult = "";
             for(var i = 0; i < datas.wordList.length; i++){
@@ -248,7 +241,6 @@
             cnToggle(true);
           },
           error: function(datas) {
-            console.log(datas);
           }
         });
       }
@@ -268,7 +260,6 @@
           en:enInput,
         };
 
-        console.log(jsonOutput);
   
         $.ajax({
           type : "POST",
@@ -283,11 +274,9 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-            console.log(datas);
             $("#result").text(datas.code + ", " + datas.message);
           },
           error: function(datas) {
-            console.log(datas);
           }
         });
       }
@@ -318,7 +307,6 @@
           update:updateFlag,
         };
 
-        console.log(jsonOutput);
   
         $.ajax({
           type : "POST",
@@ -333,11 +321,9 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-            console.log(datas);
             $("#result").text(datas.code + ", " + datas.message);
           },
           error: function(datas) {
-            console.log(datas);
           }
         });
       }
@@ -361,7 +347,6 @@
           wordCount:printWordsCounting,
         };
 
-        console.log(jsonOutput);
   
         $.ajax({
           type : "POST",
@@ -376,11 +361,9 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-            console.log(datas);
             printWords(datas);
           },
           error: function(datas) {
-            console.log(datas);
           }
         });
       }
@@ -403,7 +386,6 @@
           wordCount:printWordsCounting,
         };
 
-        console.log(jsonOutput);
   
         $.ajax({
           type : "POST",
@@ -418,11 +400,9 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-            console.log(datas);
             printWords(datas);
           },
           error: function(datas) {
-            console.log(datas);
           }
         });
       }
@@ -445,7 +425,6 @@
           wordCount:printWordsCounting,
         };
 
-        console.log(jsonOutput);
   
         $.ajax({
           type : "POST",
@@ -460,11 +439,9 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-            console.log(datas);
             printWords(datas);
           },
           error: function(datas) {
-            console.log(datas);
           }
         });
       }
@@ -487,7 +464,6 @@
           wordCount:printWordsCounting,
         };
 
-        console.log(jsonOutput);
   
         $.ajax({
           type : "POST",
@@ -502,11 +478,9 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-            console.log(datas);
             printWords(datas);
           },
           error: function(datas) {
-            console.log(datas);
           }
         });
       }
@@ -518,16 +492,15 @@
         var wordResult = "";
         var tdSize = 5;
         var longWordFlag = false;
-        var tdCounting = 0;
-        for(var i = 0; i < datas.wordList.length; i++, tdCounting++){
+        var tdCounting = 1;
+        for(var i = 0; i < datas.wordList.length; i++){
           var word = datas.wordList[i];
-          longWordFlag = word.enInMark && word.enInMark.length > 10;
-          if(tdCounting % tdSize == 0){
+          longWordFlag = !(null === word.enInMark) && word.enInMark.length > 10;
+          
+          if(tdCounting % tdSize == 1) {
             wordResult = wordResult + "<tr>";  
-          } else if(longWordFlag && tdCounting == (tdSize - 1)) {
-            wordResult = wordResult + "</tr><tr>";
-            tdCounting++;
           }
+
           if(longWordFlag){
             wordResult = wordResult + "<td style='text-align: center;' colspan='2'>";
             tdCounting++;
@@ -540,11 +513,32 @@
           wordResult = wordResult + word.enInMark + "</label>";
           wordResult = wordResult + "<label class='wordCn'>" + word.cn + "</label>";
           wordResult = wordResult + "</td>";
-          if(tdCounting % tdSize == (tdSize - 1) || tdCounting == datas.wordList.length - 1){
+
+          if(i == datas.wordList.length - 1){
             wordResult = wordResult + "</tr>";
-            tdCounting = 0;
+            continue;
           }
+
+          if(tdCounting % tdSize == 0){
+            wordResult = wordResult + "</tr>";
+            tdCounting = 1;
+            continue;
+          }
+
+          var nextWord = datas.wordList[i + 1];
+          longWordFlag = !(null === nextWord.enInMark) && nextWord.enInMark.length > 10;
+          if(!longWordFlag){
+            tdCounting++;
+            continue;
+          }            
+          if (tdCounting + 2 > tdSize){
+            wordResult = wordResult + "</tr>";
+            tdCounting = 1;
+            continue;
+          }
+          tdCounting += 2;
         }
+
         $("#randomWords").html(wordResult);
         enToggle(printEn);
         cnToggle(printCn);

@@ -521,14 +521,19 @@
           if(i % tdSize == 0){
             wordResult = wordResult + "<tr>";  
           }
-          wordResult = wordResult + "<td style='text-align: center;'>";
+          if(datas.wordList[i].enInMark.length > 10){
+            wordResult = wordResult + "<td style='text-align: center;' colspan='2'>";
+            i++;
+          } else {
+            wordResult = wordResult + "<td style='text-align: center;'>";
+          }
           wordResult = wordResult + "<label class='wordEn'>" + datas.wordList[i].en + "</label>";
           wordResult = wordResult + "<label class='wordEnInMarks' style='font-size: 28px;'>" 
           // wordResult = wordResult + "<label style='font-size: 16px;'>"+"("+(i+1)+")"+"</label>"
           wordResult = wordResult + datas.wordList[i].enInMark + "</label>";
           wordResult = wordResult + "<label class='wordCn'>" + datas.wordList[i].cn + "</label>";
           wordResult = wordResult + "</td>";
-          if(i % tdSize == 4 || i == datas.wordList.length - 1){
+          if(i % tdSize == (tdSize - 1) || i == datas.wordList.length - 1){
             wordResult = wordResult + "</tr>";
           }
         }

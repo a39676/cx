@@ -517,24 +517,32 @@
         var printEnInMarks = $("#showEnInMark").prop("checked");
         var wordResult = "";
         var tdSize = 5;
-        for(var i = 0; i < datas.wordList.length; i++){
-          if(i % tdSize == 0){
+        var longWordFlag = false;
+        var tdCounting = 0;
+        for(var i = 0; i < datas.wordList.length; i++, tdCounting++){
+          var word = datas.wordList[i];
+          longWordFlag = word.enInMark && word.enInMark.length > 10;
+          if(tdCounting % tdSize == 0){
             wordResult = wordResult + "<tr>";  
+          } else if(longWordFlag && tdCounting == (tdSize - 1)) {
+            wordResult = wordResult + "</tr><tr>";
+            tdCounting++;
           }
-          if(datas.wordList[i].enInMark.length > 10){
+          if(longWordFlag){
             wordResult = wordResult + "<td style='text-align: center;' colspan='2'>";
-            i++;
+            tdCounting++;
           } else {
             wordResult = wordResult + "<td style='text-align: center;'>";
           }
-          wordResult = wordResult + "<label class='wordEn'>" + datas.wordList[i].en + "</label>";
+          wordResult = wordResult + "<label class='wordEn'>" + word.en + "</label>";
           wordResult = wordResult + "<label class='wordEnInMarks' style='font-size: 28px;'>" 
           // wordResult = wordResult + "<label style='font-size: 16px;'>"+"("+(i+1)+")"+"</label>"
-          wordResult = wordResult + datas.wordList[i].enInMark + "</label>";
-          wordResult = wordResult + "<label class='wordCn'>" + datas.wordList[i].cn + "</label>";
+          wordResult = wordResult + word.enInMark + "</label>";
+          wordResult = wordResult + "<label class='wordCn'>" + word.cn + "</label>";
           wordResult = wordResult + "</td>";
-          if(i % tdSize == (tdSize - 1) || i == datas.wordList.length - 1){
+          if(tdCounting % tdSize == (tdSize - 1) || tdCounting == datas.wordList.length - 1){
             wordResult = wordResult + "</tr>";
+            tdCounting = 0;
           }
         }
         $("#randomWords").html(wordResult);

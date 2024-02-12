@@ -20,6 +20,7 @@ import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.tool.textMessageForward.telegram.service.TelegramService;
 import finance.cnStockMarket.pojo.bo.CnStockMarketDataBO;
 import finance.cnStockMarket.pojo.dto.CnStockMarketDataDTO;
+import net.sf.json.JSONObject;
 import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.type.TelegramBotType;
 import toolPack.ioHandle.FileUtilCustom;
@@ -89,7 +90,6 @@ public class CnStockMarketServiceImpl extends CryptoCoinCommonService implements
 		telegramService.sendMessageByChatRecordId(TelegramBotType.CX_MESSAGE, msg, TelegramStaticChatID.MY_ID);
 //		noticeSetting.setNoticed(true);
 
-
 		noticeSetting.setMaxPrice(
 				lastData.getEndPrice().multiply(new BigDecimal(1.02)).setScale(2, RoundingMode.HALF_UP).doubleValue());
 		noticeSetting.setMinPrice(
@@ -97,9 +97,12 @@ public class CnStockMarketServiceImpl extends CryptoCoinCommonService implements
 
 		FileUtilCustom ioUtil = new FileUtilCustom();
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		String jsonString = gson.toJson(cnStockMarketOptionService);
+		JSONObject newJson = new JSONObject();
+		newJson.put("noticeSettings", noticeSetting);
+		String jsonString = gson.toJson(newJson);
 		ioUtil.byteToFile(jsonString.toString().getBytes(StandardCharsets.UTF_8),
-				OptionFilePathConfigurer.CN_STOCK_MARKET);;
+				OptionFilePathConfigurer.CN_STOCK_MARKET);
+		;
 
 		r.setMessage(msg);
 		r.setIsSuccess();

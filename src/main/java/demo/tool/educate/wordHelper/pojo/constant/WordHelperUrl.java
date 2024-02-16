@@ -1,4 +1,4 @@
-package demo.tool.wordHelper.pojo.constant;
+package demo.tool.educate.wordHelper.pojo.constant;
 
 public class WordHelperUrl {
 

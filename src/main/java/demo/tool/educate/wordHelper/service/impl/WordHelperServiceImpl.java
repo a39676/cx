@@ -1,4 +1,4 @@
-package demo.tool.wordHelper.service.impl;
+package demo.tool.educate.wordHelper.service.impl;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,14 +18,14 @@ import com.google.gson.GsonBuilder;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.service.CommonService;
-import demo.tool.wordHelper.pojo.dto.CustomerDictionaryV2DTO;
-import demo.tool.wordHelper.pojo.dto.GetWordDTO;
-import demo.tool.wordHelper.pojo.dto.UpdateOrAppendWordDTO;
-import demo.tool.wordHelper.pojo.dto.WordDTO;
-import demo.tool.wordHelper.pojo.result.GetWordResult;
-import demo.tool.wordHelper.pojo.type.GetWordsResultType;
-import demo.tool.wordHelper.pojo.vo.WordVO;
-import demo.tool.wordHelper.service.WordHelperService;
+import demo.tool.educate.wordHelper.pojo.dto.CustomerDictionaryV2DTO;
+import demo.tool.educate.wordHelper.pojo.dto.GetWordDTO;
+import demo.tool.educate.wordHelper.pojo.dto.UpdateOrAppendWordDTO;
+import demo.tool.educate.wordHelper.pojo.dto.WordDTO;
+import demo.tool.educate.wordHelper.pojo.result.GetWordResult;
+import demo.tool.educate.wordHelper.pojo.type.GetWordsResultType;
+import demo.tool.educate.wordHelper.pojo.vo.WordVO;
+import demo.tool.educate.wordHelper.service.WordHelperService;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service

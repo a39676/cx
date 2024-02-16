@@ -1,4 +1,4 @@
-package demo.tool.wordHelper.controller;
+package demo.tool.educate.wordHelper.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.tool.wordHelper.pojo.constant.WordHelperUrl;
-import demo.tool.wordHelper.pojo.dto.GetWordDTO;
-import demo.tool.wordHelper.pojo.dto.UpdateOrAppendWordDTO;
-import demo.tool.wordHelper.pojo.dto.WordDTO;
-import demo.tool.wordHelper.pojo.result.GetWordResult;
-import demo.tool.wordHelper.service.WordHelperService;
+import demo.tool.educate.wordHelper.pojo.constant.WordHelperUrl;
+import demo.tool.educate.wordHelper.pojo.dto.GetWordDTO;
+import demo.tool.educate.wordHelper.pojo.dto.UpdateOrAppendWordDTO;
+import demo.tool.educate.wordHelper.pojo.dto.WordDTO;
+import demo.tool.educate.wordHelper.pojo.result.GetWordResult;
+import demo.tool.educate.wordHelper.service.WordHelperService;
 
 @Controller
 @RequestMapping(value = WordHelperUrl.ROOT)

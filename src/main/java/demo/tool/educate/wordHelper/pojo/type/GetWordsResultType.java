@@ -1,4 +1,4 @@
-package demo.tool.wordHelper.pojo.type;
+package demo.tool.educate.wordHelper.pojo.type;
 
 public enum GetWordsResultType {
 	

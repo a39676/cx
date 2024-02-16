@@ -1,9 +1,9 @@
-package demo.tool.wordHelper.pojo.result;
+package demo.tool.educate.wordHelper.pojo.result;
 
 import java.util.List;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.tool.wordHelper.pojo.vo.WordVO;
+import demo.tool.educate.wordHelper.pojo.vo.WordVO;
 
 public class GetWordResult extends CommonResult {
 

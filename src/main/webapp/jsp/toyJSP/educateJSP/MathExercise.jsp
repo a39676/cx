@@ -15,6 +15,7 @@
       <div class="col-md-12" id="detail" pk=${exercise.exercisePK}>
         <h3><span class="badge badge-primary">学期: ${exercise.gradeType.name}</span></h3>
         <h3><span class="badge badge-primary">科目: ${exercise.subjectType.cnName}</span></h3>
+        <h3><span class="badge badge-primary">开始时间: ${exercise.startTimeStr}</span></h3>
       </div>
     </div>
 
@@ -142,6 +143,7 @@
         <h3><span class="badge badge-success" id="resultSpan"></span></h3>
         <h3><span class="badge badge-success" id="score">分数</span></h3>
         <h3><span class="badge badge-success" id="point">积分</span></h3>
+        <h3><span class="badge badge-success" id="timeConsumingMinute">耗时(分钟)</span></h3>
       </div>
     </div>
 
@@ -212,6 +214,8 @@
             $("#resultSpan").text(datas.message);
             $("#score").text("本份习题获得分数: " + datas.totalScore);
             $("#point").text("本份习题获得积分: " + datas.points);
+            $("#timeConsumingMinute").text("本份习耗时(分钟): " + datas.timeConsumingMinute);
+            
 
             $("#submitAnswer").prop('disabled', true);
 

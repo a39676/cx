@@ -2,8 +2,10 @@ package demo.tool.educate.service.impl;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.tool.educate.pojo.dto.EducateHomepageDataSummaryDTO;
+import demo.tool.educate.pojo.dto.EducateHomepageNewDataDTO;
+import demo.tool.educate.pojo.dto.EducateHomepageNewDataSubDTO;
 import demo.tool.educate.pojo.dto.EducateHomepageSubjectDataSummaryDTO;
 import demo.tool.educate.pojo.po.StudentDetail;
 import demo.tool.educate.pojo.po.StudentExerciseHistory;
@@ -43,8 +47,11 @@ public class ExerciseHomepageServiceImpl extends EducateCommonService implements
 		List<StudentExerciseHistory> exerciseHistoryPOList = exerciseHistoryMapper
 				.selectByExample(exerciseHistoryExample);
 
-		EducateHomepageDataSummaryDTO exerciseData = dataSummary(exerciseHistoryPOList);
-		view.addObject("exerciseData", exerciseData);
+		EducateHomepageDataSummaryDTO exerciseDataSummary = dataSummary(exerciseHistoryPOList);
+		view.addObject("exerciseDataSummary", exerciseDataSummary);
+
+		EducateHomepageNewDataDTO exerciseNewData = filterNewData(exerciseHistoryPOList);
+		view.addObject("exerciseNewData", exerciseNewData);
 
 		StudentDetail detailPO = studentDetailMapper.selectByPrimaryKey(userId);
 		GradeType gradeType = GradeType.getType(detailPO.getGradeType().intValue());
@@ -59,6 +66,62 @@ public class ExerciseHomepageServiceImpl extends EducateCommonService implements
 		view.addObject("leaderboardOrderTypeList", EducateLeaderboardOrderType.values());
 
 		return view;
+	}
+
+	private EducateHomepageNewDataDTO filterNewData(List<StudentExerciseHistory> exerciseHistoryPOList) {
+		EducateHomepageNewDataDTO dto = new EducateHomepageNewDataDTO();
+		ExerciseSubjectType subject = null;
+		int listMaxSize = 10;
+		List<EducateHomepageNewDataSubDTO> mathDataList = new ArrayList<>();
+		List<EducateHomepageNewDataSubDTO> chineseDataList = new ArrayList<>();
+		List<EducateHomepageNewDataSubDTO> englishDataList = new ArrayList<>();
+		LocalDate today = LocalDate.now();
+
+		for (StudentExerciseHistory po : exerciseHistoryPOList) {
+			LocalDate createDate = po.getCreateTime().toLocalDate();
+			if (!today.equals(createDate)) {
+				continue;
+			}
+
+			try {
+				subject = ExerciseSubjectType.getType(po.getSubjectType().intValue());
+				if (subject == null) {
+					continue;
+				}
+			} catch (Exception e) {
+				continue;
+			}
+
+			if (ExerciseSubjectType.MATH.equals(subject) && mathDataList.size() < listMaxSize) {
+				mathDataList.add(buildEducateHomepageNewDataSubDTO(po));
+			} else if (ExerciseSubjectType.CHINESE.equals(subject) && chineseDataList.size() < listMaxSize) {
+				chineseDataList.add(buildEducateHomepageNewDataSubDTO(po));
+			} else if (ExerciseSubjectType.ENGLISH.equals(subject) && englishDataList.size() < listMaxSize) {
+				englishDataList.add(buildEducateHomepageNewDataSubDTO(po));
+			}
+		}
+		dto.setChineseDataList(chineseDataList);
+		dto.setEnglishDataList(englishDataList);
+		dto.setMathDataList(mathDataList);
+
+		return dto;
+	}
+
+	private EducateHomepageNewDataSubDTO buildEducateHomepageNewDataSubDTO(StudentExerciseHistory po) {
+		EducateHomepageNewDataSubDTO dto = new EducateHomepageNewDataSubDTO();
+		dto.setScore(po.getScore());
+		dto.setStartTimeStr(localDateTimeHandler.dateToStr(po.getCreateTime()));
+		if (po.getCompeletionTime() != null) {
+			dto.setEndTimeStr(localDateTimeHandler.dateToStr(po.getCompeletionTime()));
+			Long minutes = ChronoUnit.MINUTES.between(po.getCreateTime(), po.getCompeletionTime());
+			dto.setTimeConsumInMinute(minutes);
+		}
+		dto.setSubjectType(ExerciseSubjectType.getType(po.getSubjectType().intValue()));
+		try {
+			dto.setGradeType(GradeType.getType(po.getGradeType().intValue()));
+		} catch (Exception e) {
+		}
+		return dto;
 	}
 
 	private EducateHomepageDataSummaryDTO dataSummary(List<StudentExerciseHistory> exerciseHistoryPOList) {
@@ -125,7 +188,6 @@ public class ExerciseHomepageServiceImpl extends EducateCommonService implements
 			dto.setAvgScoreThirtyDays(BigDecimal.valueOf(thirtyDayScoreTotal / thirtyDayCounting)
 					.setScale(3, RoundingMode.HALF_UP).doubleValue());
 		}
-		
 
 		dto.setExerciseCountToday(todayCounting);
 		dto.setExerciseCountSevenDays(sevenDayCounting);

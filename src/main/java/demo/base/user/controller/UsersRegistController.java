@@ -29,7 +29,7 @@ import demo.base.user.pojo.type.SystemRolesType;
 import demo.base.user.service.UserRegistService;
 import demo.common.controller.CommonController;
 import demo.config.costom_component.BaseUtilCustom;
-import demo.toyParts.educate.pojo.type.GradeType;
+import demo.tool.educate.pojo.type.GradeType;
 
 @Controller
 @RequestMapping(value = UsersUrl.root)

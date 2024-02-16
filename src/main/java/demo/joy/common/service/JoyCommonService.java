@@ -8,8 +8,8 @@ import demo.base.system.service.impl.SystemOptionService;
 import demo.base.user.service.UserDetailService;
 import demo.common.service.CommonService;
 import demo.joy.image.service.JoyImageService;
+import demo.tool.educate.service.StudentService;
 import demo.tool.other.service.TextFilter;
-import demo.toyParts.educate.service.StudentService;
 
 public abstract class JoyCommonService extends CommonService {
 

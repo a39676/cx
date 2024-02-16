@@ -27,11 +27,11 @@ import demo.promote.service.impl.PromoteOptionService;
 import demo.thirdPartyAPI.cloudFlare.service.impl.CloudFlareOptionService;
 import demo.thirdPartyAPI.cloudinary.service.impl.CloudinaryOptionService;
 import demo.thirdPartyAPI.openAI.service.impl.OpenAiOptionService;
+import demo.tool.educate.service.impl.EducateOptionService;
 import demo.tool.mail.service.impl.MailOptionService;
 import demo.tool.service.impl.ToolOptionService;
 import demo.tool.textMessageForward.telegram.service.impl.TelegramOptionService;
 import demo.tool.zulip.service.impl.ZulipOptionService;
-import demo.toyParts.educate.service.impl.EducateOptionService;
 
 @Controller
 @RequestMapping(value = BaseUrl.OPTION_CONSTANT)

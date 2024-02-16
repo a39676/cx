@@ -4,6 +4,12 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<style type="text/css">
+  .dataTD{
+    text-align: center;
+    vertical-align: middle;
+  }
+</style>
 <head>
   <%@ include file="../../baseElementJSP/normalHeader.jsp" %>
 </head>
@@ -43,10 +49,10 @@
       <table class="table table-hover table-bordered table-striped table-light">
         <thead class="">
           <tr class="table-primary">
-            <td>科目</td>
-            <td colspan="4" style="text-align: center; vertical-align: middle;">今日</td>
-            <td colspan="3" style="text-align: center; vertical-align: middle;">近7日</td>
-            <td colspan="3" style="text-align: center; vertical-align: middle;">近30日</td>
+            <td class="dataTD">科目</td>
+            <td class="dataTD" colspan="4">今日</td>
+            <td class="dataTD" colspan="3">近7日</td>
+            <td class="dataTD" colspan="3">近30日</td>
           </tr>
           <tr class="table-secondary">
             <td></td>
@@ -63,7 +69,7 @@
           </tr>
         </thead>
         <tbody>
-          <c:forEach items="${exerciseData.subjectDataList}" var="subjectData">
+          <c:forEach items="${exerciseDataSummary.subjectDataList}" var="subjectData">
             <tr>
               <td><span>${subjectData.subjectType.cnName}</span></td>
               <td><span>${subjectData.lastScore}</span></td>
@@ -80,6 +86,57 @@
           </c:forEach>
         </tbody>
       </table>
+    </div>
+
+    <hr>
+
+    <div class="row">
+      <div class="col-md-12">
+        <table class="table table-hover table-bordered table-striped table-light">
+          <thead class="">
+            <tr class="table-primary">
+              <td class="dataTD">科目</td>
+              <td class="dataTD"></td>
+              <td class="dataTD">分數</td>
+              <td class="dataTD">耗時(分鐘)</td>
+              <td class="dataTD">開始時間</td>
+              <td class="dataTD">結束時間</td>
+            </tr>
+          </thead>
+          <tbody>
+            <c:forEach items="${exerciseNewData.mathDataList}" var="mathData">
+              <tr>
+                <td class="dataTD"><span>${mathData.subjectType.cnName}</span></td>
+                <td class="dataTD"><span>${mathData.gradeType.name}</span></td>
+                <td class="dataTD"><span>${mathData.score}</span></td>
+                <td class="dataTD"><span>${mathData.timeConsumInMinute}</span></td>
+                <td class="dataTD"><span>${mathData.startTimeStr}</span></td>
+                <td class="dataTD"><span>${mathData.endTimeStr}</span></td>
+              </tr>
+            </c:forEach>
+            <c:forEach items="${exerciseNewData.chineseDataList}" var="chineseData">
+              <tr>
+                <td class="dataTD"><span>${chineseData.subjectType.cnName}</span></td>
+                <td class="dataTD"><span>${chineseData.gradeType.name}</span></td>
+                <td class="dataTD"><span>${chineseData.score}</span></td>
+                <td class="dataTD"><span>${chineseData.timeConsumInMinute}</span></td>
+                <td class="dataTD"><span>${chineseData.startTimeStr}</span></td>
+                <td class="dataTD"><span>${chineseData.endTimeStr}</span></td>
+              </tr>
+            </c:forEach>
+            <c:forEach items="${exerciseNewData.englishDataList}" var="englishData">
+              <tr>
+                <td class="dataTD"><span>${englishData.subjectType.cnName}</span></td>
+                <td class="dataTD"><span>${englishData.gradeType.name}</span></td>
+                <td class="dataTD"><span>${englishData.score}</span></td>
+                <td class="dataTD"><span>${englishData.timeConsumInMinute}</span></td>
+                <td class="dataTD"><span>${englishData.startTimeStr}</span></td>
+                <td class="dataTD"><span>${englishData.endTimeStr}</span></td>
+              </tr>
+            </c:forEach>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <hr>

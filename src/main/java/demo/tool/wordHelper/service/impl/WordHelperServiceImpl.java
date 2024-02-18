@@ -370,18 +370,26 @@ public class WordHelperServiceImpl extends CommonService implements WordHelperSe
 		if (enInMark) {
 			String underLine = "﹎";
 			StringBuffer sb = new StringBuffer(dto.getEn());
-			if (sb.length() <= 3) {
+			int characterLength = 0;
+			for(int i = 0; i < sb.length(); i++) {
+				char tmpChar = sb.charAt(i);
+				if(Character.isLetter(tmpChar)) {
+					characterLength++;
+				}
+			}
+			
+			if (characterLength <= 3) {
 				for (int i = 0; i < sb.length(); i++) {
 					sb.setCharAt(i, underLine.charAt(0));
 				}
 			}
-			int length = sb.length();
+			
 			// Keep about 33% characters or at last 3 characters
-			int notReplaceCounting = length / 3;
+			int notReplaceCounting = characterLength / 3;
 			if (notReplaceCounting < 3) {
 				notReplaceCounting = 3;
 			}
-			int replaceCount = length - notReplaceCounting;
+			int replaceCount = characterLength - notReplaceCounting;
 			int randomIndex = 0;
 			for (int i = 0; i < replaceCount; i++) {
 				randomIndex = ThreadLocalRandom.current().nextInt(0, sb.length());

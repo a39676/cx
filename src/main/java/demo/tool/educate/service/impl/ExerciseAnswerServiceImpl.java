@@ -27,6 +27,9 @@ import demo.tool.educate.pojo.type.GradeType;
 import demo.tool.educate.pojo.type.MatchGradeType;
 import demo.tool.educate.service.EducateCommonService;
 import demo.tool.educate.service.ExerciseAnswerService;
+import demo.tool.textMessageForward.telegram.service.TelegramService;
+import telegram.pojo.constant.TelegramStaticChatID;
+import telegram.pojo.type.TelegramBotType;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -34,6 +37,8 @@ public class ExerciseAnswerServiceImpl extends EducateCommonService implements E
 
 	@Autowired
 	private FileUtilCustom ioUtil;
+	@Autowired
+	private TelegramService telegramService;
 
 	@Override
 	public ExerciseAnswerMatchResult answerSubmit(ExerciseAnswerDTO dto) {
@@ -76,14 +81,14 @@ public class ExerciseAnswerServiceImpl extends EducateCommonService implements E
 		exercisePO.setScore(answerResult.getTotalScore());
 		exercisePO.setMatchGradeType(answerResult.getMatchGradeType().getCode());
 		exerciseHistoryMapper.updateByPrimaryKeySelective(exercisePO);
-		
+
 		long minutes = ChronoUnit.MINUTES.between(exercisePO.getCreateTime(), LocalDateTime.now());
 		answerResult.setTimeConsumingMinute(minutes);
 
 		detail.setPointsSummary(detail.getPointsSummary().add(exercisePO.getPoints()));
 		studentDetailMapper.updateByPrimaryKeySelective(detail);
-		
-		if(answerResult.getPoints().compareTo(BigDecimal.ZERO) != 0) {
+
+		if (answerResult.getPoints().compareTo(BigDecimal.ZERO) != 0) {
 			StudentPointHistory studentPointHistory = new StudentPointHistory();
 			studentPointHistory.setId(snowFlake.getNextId());
 			studentPointHistory.setPoints(answerResult.getPoints());
@@ -91,6 +96,18 @@ public class ExerciseAnswerServiceImpl extends EducateCommonService implements E
 			studentPointHistory.setUserId(userId);
 			studentPointHistoryMapper.insertSelective(studentPointHistory);
 		}
+
+		String msgStr = "Exercise done, by: " + baseUtilCustom.getCurrentUserName() + ", score: "
+				+ answerResult.getTotalScore() + ", minute: " + answerResult.getTimeConsumingMinute();
+		GradeType gradeType = GradeType.getType(exercisePO.getGradeType().intValue());
+		if (gradeType != null) {
+			msgStr += ", Grade: " + gradeType.getName();
+		}
+		ExerciseSubjectType subjectType = ExerciseSubjectType.getType(exercisePO.getSubjectType().intValue());
+		if (subjectType != null) {
+			msgStr += ", Subject: " + subjectType.getName();
+		}
+		telegramService.sendMessageByChatRecordId(TelegramBotType.CX_MESSAGE, msgStr, TelegramStaticChatID.MY_ID);
 
 		return answerResult;
 	}
@@ -125,9 +142,10 @@ public class ExerciseAnswerServiceImpl extends EducateCommonService implements E
 			if (!hasMaxScoreToday(detail.getId(), studentGrade, exerciseDTO.getSubjectType())) {
 				randomAwardCoefficient = randomMaxAwardCoefficient;
 				randomAwardPoints = randomAwardCoefficient.multiply(inherentPoints).doubleValue();
-				BigDecimal total = inherentPoints.add(new BigDecimal(randomAwardPoints)).setScale(2, RoundingMode.HALF_UP);
-				answerResult.addMessage("今日首次获得本学期的 " + exerciseDTO.getSubjectType().getCnName() + " 满分习题! 获得最高积分: "
-						+ (total));
+				BigDecimal total = inherentPoints.add(new BigDecimal(randomAwardPoints)).setScale(2,
+						RoundingMode.HALF_UP);
+				answerResult.addMessage(
+						"今日首次获得本学期的 " + exerciseDTO.getSubjectType().getCnName() + " 满分习题! 获得最高积分: " + (total));
 				answerResult.setPoints(total);
 				return answerResult;
 			}
@@ -170,7 +188,8 @@ public class ExerciseAnswerServiceImpl extends EducateCommonService implements E
 
 		BigDecimal totalScore = BigDecimal.ZERO;
 		BigDecimal maxScore = optionService.getMaxScore();
-		BigDecimal scoreOfSubQuestion = maxScore.divide(new BigDecimal(exerciseDTO.getQuestionList().size()), RoundingMode.HALF_UP);
+		BigDecimal scoreOfSubQuestion = maxScore.divide(new BigDecimal(exerciseDTO.getQuestionList().size()),
+				RoundingMode.HALF_UP);
 
 		List<String> gavenAnswer = null;
 		List<String> standarAnswer = null;
@@ -185,7 +204,7 @@ public class ExerciseAnswerServiceImpl extends EducateCommonService implements E
 				r.getAnswerMap().put(dto.getAnswerList().get(i).getQuestionNumber(), standarAnswer);
 			}
 		}
-		
+
 		r.setQuestionListSize(exerciseDTO.getQuestionList().size());
 		r.setTotalScore(totalScore);
 		r.setIsSuccess();

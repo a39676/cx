@@ -491,7 +491,7 @@
         var printCn = $("#showCN").prop("checked");
         var printEnInMarks = $("#showEnInMark").prop("checked");
         var wordResult = "";
-        var lineMaxLength = 40;
+        var lineMaxLength = 33;
         var wordLengthCouting = 0;
         for(var i = 0; i < datas.wordList.length; i++){
           var word = datas.wordList[i];

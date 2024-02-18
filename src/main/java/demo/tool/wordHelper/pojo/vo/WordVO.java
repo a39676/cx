@@ -1,6 +1,6 @@
-package demo.tool.educate.wordHelper.pojo.vo;
+package demo.tool.wordHelper.pojo.vo;
 
-import demo.tool.educate.wordHelper.pojo.dto.WordDTO;
+import demo.tool.wordHelper.pojo.dto.WordDTO;
 
 public class WordVO extends WordDTO {
 

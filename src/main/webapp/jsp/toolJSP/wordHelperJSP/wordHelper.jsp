@@ -9,8 +9,8 @@
 
   <head>
     <title>${ title }Word helper</title>
-    <%@ include file="../baseElementJSP/normalHeader.jsp" %>
-    <%@ include file="../baseElementJSP/normalJSPart.jsp" %>
+    <%@ include file="../../baseElementJSP/normalHeader.jsp" %>
+    <%@ include file="../../baseElementJSP/normalJSPart.jsp" %>
   </head>
 
   <div class="container-fluid">
@@ -78,9 +78,8 @@
     </div>
     
     <div class="row">
-      <div class="col-lg-12">
-        <table class="table" id="randomWords">
-        </table>
+      <div class="col-lg-12" id="randomWords">
+        
       </div>
     </div>
   </div>
@@ -486,61 +485,49 @@
       }
 
       function printWords(datas){
+        // <table class='table'>
+        // </table>
         var printEn = $("#showEN").prop("checked");
         var printCn = $("#showCN").prop("checked");
         var printEnInMarks = $("#showEnInMark").prop("checked");
         var wordResult = "";
-        var tdSize = 5;
-        var longWordFlag = false;
-        var tdCounting = 1;
-        var characterCountForTd = 7;
+        var lineMaxLength = 28;
+        var wordLengthCouting = 0;
         for(var i = 0; i < datas.wordList.length; i++){
           var word = datas.wordList[i];
-          longWordFlag = !(null === word.enInMark) && word.enInMark.length > characterCountForTd;
           
-          if(tdCounting % tdSize == 1) {
-            wordResult = wordResult + "<tr>";  
+          if(i == 0){
+            wordResult = wordResult + "<table class='table'><tr>";
           }
 
-          if(longWordFlag){
-            var colSpan = Math.round(word.enInMark.length / characterCountForTd);
-            tdCounting += colSpan;
-            wordResult = wordResult + "<td style='text-align: center;' colspan='"+tdCounting+"'>";
-          } else {
-            wordResult = wordResult + "<td style='text-align: center;'>";
-          }
+          wordLengthCouting += word.en.length;
+
+          wordResult = wordResult + "<td style='text-align: center;'>";
           wordResult = wordResult + "<label class='wordEn'>" + word.en + "</label>";
           wordResult = wordResult + "<label class='wordEnInMarks' style='font-size: 28px;'>" 
-          // wordResult = wordResult + "<label style='font-size: 16px;'>"+"("+(i+1)+")"+"</label>"
           wordResult = wordResult + word.enInMark + "</label>";
           wordResult = wordResult + "<label class='wordCn'>" + word.cn + "</label>";
           wordResult = wordResult + "</td>";
 
-          if(i == datas.wordList.length - 1){
-            wordResult = wordResult + "</tr>";
+          if(wordLengthCouting > lineMaxLength) {
+            wordResult = wordResult + "</tr></table><table class='table'><tr>";
+            wordLengthCouting = 0;
             continue;
           }
 
-          if(tdCounting % tdSize == 0){
-            wordResult = wordResult + "</tr>";
-            tdCounting = 1;
+          if(i == datas.wordList.length - 1){
+            wordResult = wordResult + "</tr></table>";
+            wordLengthCouting = 0;
             continue;
           }
 
           var nextWord = datas.wordList[i + 1];
-          longWordFlag = !(null === nextWord.enInMark) && nextWord.enInMark.length > characterCountForTd;
-          if(!longWordFlag){
-            tdCounting++;
+          var longWordFlag = !(null === nextWord.en) && (nextWord.en.length + wordLengthCouting) > lineMaxLength;
+          if(longWordFlag){
+            wordResult = wordResult + "</tr></table><table class='table'><tr>";
+            wordLengthCouting = 0;
             continue;
           }
-          var colSpan = Math.round(word.enInMark.length / characterCountForTd);
-          tdCounting += colSpan;
-          if (tdCounting + colSpan > tdSize){
-            wordResult = wordResult + "</tr>";
-            tdCounting = 1;
-            continue;
-          }
-          tdCounting += colSpan;
         }
 
         $("#randomWords").html(wordResult);

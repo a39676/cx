@@ -31,7 +31,7 @@ public class ExerciseHomepageServiceImpl extends EducateCommonService implements
 
 	@Override
 	public ModelAndView homepage() {
-		ModelAndView view = new ModelAndView("toyJSP/educateJSP/EducateIndex");
+		ModelAndView view = new ModelAndView("toolJSP/educateJSP/EducateIndex");
 
 		Long userId = baseUtilCustom.getUserId();
 		if (userId == null) {

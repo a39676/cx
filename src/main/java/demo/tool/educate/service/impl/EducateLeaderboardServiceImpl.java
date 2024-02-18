@@ -33,7 +33,7 @@ public class EducateLeaderboardServiceImpl extends EducateCommonService implemen
 
 	@Override
 	public ModelAndView getLeaderboard(GetExerciseLeaderboardDTO dto) {
-		ModelAndView view = new ModelAndView("toyJSP/educateJSP/leaderboard");
+		ModelAndView view = new ModelAndView("toolJSP/educateJSP/leaderboard");
 		if (dto == null || dto.getDays() == null || dto.getOrderType() == null) {
 			return view;
 		}

@@ -46,7 +46,7 @@
         <button id="printNewWord">Print new word</button><br>
         <button id="printRandomWordsInMarks">Print random word (EN in marks)</button>
         <button id="printNewWordsInMarks">Print new word (EN in marks)</button><br>
-        <input type="number" id="printWordsCounting" name="" value="50"><br>
+        <input type="number" id="printWordsCounting" name="" value="90"><br>
 
         <div class="form-check" onclick="enToggler()">
           <input class="form-check-input" type="checkbox" value="" id="showEN" checked>
@@ -491,7 +491,7 @@
         var printCn = $("#showCN").prop("checked");
         var printEnInMarks = $("#showEnInMark").prop("checked");
         var wordResult = "";
-        var lineMaxLength = 28;
+        var lineMaxLength = 40;
         var wordLengthCouting = 0;
         for(var i = 0; i < datas.wordList.length; i++){
           var word = datas.wordList[i];

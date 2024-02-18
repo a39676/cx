@@ -84,7 +84,7 @@ public class UsersRegistController extends CommonController {
 	@GetMapping(value = UsersUrl.STUDENT_REGIST)
 	public ModelAndView studentRegistView(HttpServletRequest request) {
 		ModelAndView view = new ModelAndView();
-		view.setViewName("toyJSP/educateJSP/studentRegist");
+		view.setViewName("toolJSP/educateJSP/studentRegist");
 		view.addObject("gradeTypeList", GradeType.values());
 		view.addObject("title", "Student sign up");
 		return view;

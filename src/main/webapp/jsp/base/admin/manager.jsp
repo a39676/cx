@@ -132,9 +132,6 @@
         <a href="/tool/decryptPK?pk=cDfhyLRYBULovb3aTdGBRA%3D%3D" target="_blank">decryptPK</a>
       </li>
       <li>
-        <a href="/wordHelper/wordHelper" target="_blank">word helper</a>
-      </li>
-      <li>
         <a href="/publicTool/freeYourTime/trainProject" target="_blank">under way trainProject</a>
       </li>
       <li>
@@ -183,6 +180,9 @@
       </li>
       <li>
         <a href="/educate/forParent" target="_blank">For parent</a>
+      </li>
+      <li>
+        <a href="/wordHelper/wordHelper" target="_blank">word helper</a>
       </li>
     </ul><!-- educate -->
 

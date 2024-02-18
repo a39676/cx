@@ -1,4 +1,4 @@
-package demo.tool.educate.wordHelper.pojo.dto;
+package demo.tool.wordHelper.pojo.dto;
 
 import java.util.List;
 

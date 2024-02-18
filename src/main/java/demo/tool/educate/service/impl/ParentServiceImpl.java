@@ -39,7 +39,7 @@ public class ParentServiceImpl extends EducateCommonService implements ParentSer
 
 		List<StudentDetailVO> studentDetailVoList = findStudent(loginParentId);
 
-		ModelAndView view = new ModelAndView("toyJSP/educateJSP/searchStudentByParent");
+		ModelAndView view = new ModelAndView("toolJSP/educateJSP/searchStudentByParent");
 
 		view.addObject("studentList", studentDetailVoList);
 

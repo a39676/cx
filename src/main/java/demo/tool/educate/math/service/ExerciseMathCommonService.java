@@ -148,7 +148,7 @@ public abstract class ExerciseMathCommonService extends EducateCommonService {
 	}
 
 	protected ModelAndView buildExerciseView(ExerciseBuildResult exercise) {
-		ModelAndView v = new ModelAndView("toyJSP/educateJSP/MathExercise");
+		ModelAndView v = new ModelAndView("toolJSP/educateJSP/MathExercise");
 		v.addObject("exercise", exercise);
 		v.addObject("questionListSize", exercise.getQuestionList().size());
 		return v;

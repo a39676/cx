@@ -119,7 +119,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void imgProxy(HttpServletResponse response, String imgPK) {
 		if (StringUtils.isBlank(imgPK)) {
@@ -144,9 +144,9 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 			try {
 				response.setContentType("image/jpeg");
 				String urlStr = imgPO.getImageUrl();
-				
+
 				InputStream input = new URI(urlStr).toURL().openStream();
-				
+
 				IOUtils.copy(input, response.getOutputStream());
 			} catch (IOException | URISyntaxException e) {
 				e.printStackTrace();
@@ -652,7 +652,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 		}
 
 		ImageStore po = imgMapper.selectByPrimaryKey(imgId);
-		if (po.getImageUrl().startsWith("http")) {
+		if (po != null && po.getImageUrl().startsWith("http")) {
 			r.setImgThirdPartyUrl(po.getImageUrl());
 			r.setIsSuccess();
 		}

@@ -124,6 +124,9 @@ public class ExerciseAnswerServiceImpl extends EducateCommonService implements E
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		Double randomAwardPoints = 0D;
 		BigDecimal inherentPoints = optionService.getGardePointMap().get(exerciseDTO.getGradeType().getCode());
+		if (inherentPoints == null) {
+			inherentPoints = BigDecimal.ZERO;
+		}
 
 		GradeType studentGrade = GradeType.getType(detail.getGradeType().intValue());
 

@@ -2,6 +2,7 @@ package demo.tool.educate.pojo.type;
 
 public enum GradeType {
 	
+	GRADE_CUSTOM("自定义", 0),
 	GRADE_1_1("1年级_上学期", 1),
 	GRADE_1_2("1年级_下学期", 2),
 	GRADE_2_1("2年级_上学期", 3),

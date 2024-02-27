@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.common.controller.CommonController;
+import demo.tool.educate.math.service.ExerciesServiceMathCustom;
 import demo.tool.educate.math.service.ExerciseServiceMathG1_1;
 import demo.tool.educate.math.service.ExerciseServiceMathG1_2;
 import demo.tool.educate.math.service.ExerciseServiceMathG2_1;
@@ -41,6 +42,8 @@ public class ExerciseQuestionController extends CommonController {
 	private ExerciseServiceMathG4_1 g4_1_math;
 	@Autowired
 	private ExerciseServiceMathG4_2 g4_2_math;
+	@Autowired
+	private ExerciesServiceMathCustom gCustom_math;
 
 	@GetMapping(value = EducateUrl.QUESTION)
 	@ResponseBody
@@ -110,6 +113,14 @@ public class ExerciseQuestionController extends CommonController {
 
 			} else if (ExerciseSubjectType.MATH.equals(subjectType)) {
 				return g4_2_math.getExercise();
+			} else if (ExerciseSubjectType.ENGLISH.equals(subjectType)) {
+
+			}
+		} else if(GradeType.GRADE_CUSTOM.equals(gradeType)) {
+			if (ExerciseSubjectType.CHINESE.equals(subjectType)) {
+
+			} else if (ExerciseSubjectType.MATH.equals(subjectType)) {
+				return gCustom_math.getExercise();
 			} else if (ExerciseSubjectType.ENGLISH.equals(subjectType)) {
 
 			}

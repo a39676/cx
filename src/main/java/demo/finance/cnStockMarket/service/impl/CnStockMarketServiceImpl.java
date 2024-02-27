@@ -98,7 +98,9 @@ public class CnStockMarketServiceImpl extends CryptoCoinCommonService implements
 		FileUtilCustom ioUtil = new FileUtilCustom();
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		JSONObject newJson = new JSONObject();
-		newJson.put("noticeSettings", noticeSetting);
+		JSONObject subNoticeJson = new JSONObject();
+		subNoticeJson.put(noticeSetting.getStockCode(), noticeSetting);
+		newJson.put("noticeSettings", subNoticeJson);
 		String jsonString = gson.toJson(newJson);
 		ioUtil.byteToFile(jsonString.toString().getBytes(StandardCharsets.UTF_8),
 				OptionFilePathConfigurer.CN_STOCK_MARKET);

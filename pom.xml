@@ -242,7 +242,6 @@
 			<version>2.12</version>
 		</dependency>
 
-
 		<dependency>
 			<groupId>com.sun.mail</groupId>
 			<artifactId>javax.mail</artifactId>
@@ -322,6 +321,12 @@
 			<groupId>com.github.jamesnetherton</groupId>
 			<artifactId>zulip-java-client</artifactId>
 			<version>0.5.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.binance</groupId>
+			<artifactId>binance-connector-java</artifactId>
+			<version>3.2.0</version>
 		</dependency>
 
 		<dependency>

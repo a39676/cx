@@ -16,7 +16,7 @@ import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinManagerUrl;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
-import demo.finance.cryptoCoin.data.webSocket.BinanceWSClient;
+import demo.finance.cryptoCoin.data.webSocket.BinanceWSClient2;
 import demo.finance.cryptoCoin.data.webSocket.CryptoCompareWSClient;
 
 @Controller
@@ -32,7 +32,7 @@ public class CryptoCoinManagerController extends CommonController {
 	@Autowired
 	private CryptoCompareWSClient cryptoCompareWSClient;
 	@Autowired
-	private BinanceWSClient binanceWSClient;
+	private BinanceWSClient2 binanceWSClient;
 	@Autowired
 	private CryptoCoin1DayDataSummaryService cryptoCoin1DayDataSummaryService;
 	@Autowired

@@ -37,13 +37,13 @@ public class BinanceWSClient2 extends CryptoCoinWebSocketCommonClient {
 		wsStreamClient = null;
 		createWebSocket();
 	}
-	
+
 	public void createWebSocket() {
 		createWebSorkcetIfNecessary();
 		List<String> symbolList = new ArrayList<>(getSubscriptionList());
 		for (String symbol : symbolList) {
 			if (StringUtils.isNotBlank(symbol)) {
-				addNewSubcript(symbol, defaultInterval);
+				addNewSubcript(symbol + CurrencyTypeForCryptoCoin.USDT.getName(), defaultInterval);
 			}
 		}
 	}

@@ -366,9 +366,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		}
 
 		if (StringUtils.isNotBlank(content)) {
-			if (!"dev".equals(systemOptionService.getEnvName())) {
-				telegramService.sendMessageByChatRecordId(TelegramBotType.getType(noticeSetting.getTelegramBotName()), content, noticeSetting.getTelegramChatRecordId());
-			}
+			telegramService.sendMessageByChatRecordId(TelegramBotType.getType(noticeSetting.getTelegramBotName()), content, noticeSetting.getTelegramChatRecordId());
 
 			noticeSetting.setNoticeTime(LocalDateTime.now());
 			noticeSetting.setNoticeCount(noticeSetting.getNoticeCount() - 1);

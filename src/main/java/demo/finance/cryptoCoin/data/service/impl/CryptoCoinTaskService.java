@@ -8,7 +8,7 @@ import demo.base.system.service.impl.SystemOptionService;
 import demo.base.task.service.CommonTaskService;
 import demo.finance.cryptoCoin.common.service.CryptoCoinOptionService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
-import demo.finance.cryptoCoin.data.webSocket.BinanceWSClient;
+import demo.finance.cryptoCoin.data.webSocket.BinanceWSClient2;
 import demo.finance.cryptoCoin.data.webSocket.CryptoCompareWSClient;
 import demo.tool.textMessageForward.telegram.service.TelegramService;
 import telegram.pojo.constant.TelegramStaticChatID;
@@ -22,14 +22,13 @@ public class CryptoCoinTaskService extends CommonTaskService {
 	@Autowired
 	private TelegramService telegramService;
 	@Autowired
-	private BinanceWSClient binanceWSClient;
+	private BinanceWSClient2 binanceWSClient;
 	@Autowired
 	private CryptoCompareWSClient cryptoCompareWSClient;
 	@Autowired
 	private CryptoCoinPriceCacheService cacheService;
 	@Autowired
 	protected CryptoCoinOptionService optionService;
-	
 	
 
 	@Scheduled(fixedDelay = 1000L * 60 * 10)
@@ -53,6 +52,7 @@ public class CryptoCoinTaskService extends CommonTaskService {
 					cryptoCompareWSClient.restart();
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}

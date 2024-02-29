@@ -75,11 +75,13 @@ public class CnStockMarketServiceImpl extends CryptoCoinCommonService implements
 		String msg = "";
 		if (noticeSetting.getMaxPrice() != null
 				&& lastData.getHighPrice().doubleValue() > noticeSetting.getMaxPrice().doubleValue()) {
-			msg += ", higheset: " + lastData.getHighPrice() + ", at " + lastData.getStartTime() + "; ";
+			msg += ", higheset: " + lastData.getHighPrice().setScale(2, RoundingMode.HALF_UP) + ", at "
+					+ lastData.getStartTime() + "; ";
 		}
 		if (noticeSetting.getMinPrice() != null
 				&& lastData.getLowPrice().doubleValue() < noticeSetting.getMinPrice().doubleValue()) {
-			msg += ", lowest: " + lastData.getLowPrice() + ", at " + lastData.getStartTime() + "; ";
+			msg += ", lowest: " + lastData.getLowPrice().setScale(2, RoundingMode.HALF_UP) + ", at "
+					+ lastData.getStartTime() + "; ";
 		}
 
 		if (msg.length() < 1) {

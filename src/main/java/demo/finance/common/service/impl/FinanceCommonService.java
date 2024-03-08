@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import demo.base.system.service.impl.SystemOptionService;
 import demo.common.service.CommonService;
-import demo.finance.cryptoCoin.data.pojo.result.FilterBODataResult;
 import demo.tool.mail.service.MailService;
 import demo.tool.other.service.ValidRegexToolService;
 import demo.tool.textMessageForward.telegram.service.TelegramService;
+import finance.common.pojo.bo.FilterPriceResult;
 import finance.common.pojo.bo.KLineCommonDataBO;
 
 public abstract class FinanceCommonService extends CommonService {
@@ -47,8 +47,8 @@ public abstract class FinanceCommonService extends CommonService {
 		return time.plusMinutes(addMinute).withSecond(0).withNano(0);
 	}
 
-	protected <E extends KLineCommonDataBO> FilterBODataResult filterData(List<E> list) {
-		FilterBODataResult r = new FilterBODataResult();
+	protected <E extends KLineCommonDataBO> FilterPriceResult filterData(List<E> list) {
+		FilterPriceResult r = new FilterPriceResult();
 
 		if (list == null || list.isEmpty()) {
 			r.setMessage("empty history data");

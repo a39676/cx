@@ -1,3 +1,16 @@
+多个单独心跳校验
+
+binance
+	全币种异动监听
+		启动时 全订阅
+		另设定时任务 扫描 k line cache, 监视异动
+		需redis 配合, 统计最近异动数量
+			N分钟内, >x 个上升异动, >y 个下跌异动
+	币种上线 下线监听
+		
+	
+日历提醒的跳过本次提前提醒异常
+
 ImageInteractionController
 	未作校验
 

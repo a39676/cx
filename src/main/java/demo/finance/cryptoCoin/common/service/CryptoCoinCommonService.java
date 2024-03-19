@@ -14,10 +14,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.common.service.impl.FinanceCommonService;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
-import demo.finance.cryptoCoin.data.pojo.vo.CryptoCoinCatalogVO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
+import finance.cryptoCoin.pojo.vo.CryptoCoinCatalogVO;
 
 public abstract class CryptoCoinCommonService extends FinanceCommonService {
 

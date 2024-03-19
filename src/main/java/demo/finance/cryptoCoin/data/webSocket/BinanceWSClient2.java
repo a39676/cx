@@ -19,7 +19,7 @@ import com.binance.connector.client.impl.WebSocketStreamClientImpl;
 import com.binance.connector.client.utils.websocketcallback.WebSocketMessageCallback;
 
 import demo.finance.cryptoCoin.data.webSocket.common.CryptoCoinWebSocketCommonClient;
-import demo.finance.cryptoCoin.data.webSocket.pojo.bo.BinanceWebScoketConnetionKeyBO;
+import finance.cryptoCoin.pojo.bo.BinanceWebScoketConnetionKeyBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinWebSocketConstant;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
@@ -138,7 +138,8 @@ public class BinanceWSClient2 extends CryptoCoinWebSocketCommonClient {
 
 			JSONObject kDataJson = sourceMsgJson.getJSONObject("k");
 			String symbol = sourceMsgJson.getString("s").toLowerCase();
-
+			bo.setSymbol(symbol);
+			
 			if (symbol.contains("usdt")) {
 				bo.setCurrencyType(CurrencyTypeForCryptoCoin.USD.getCode());
 				bo.setCoinType(symbol.replaceAll("usdt", ""));

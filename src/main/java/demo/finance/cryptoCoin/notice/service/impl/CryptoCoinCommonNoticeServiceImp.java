@@ -21,7 +21,6 @@ import demo.finance.cryptoCoin.data.pojo.dto.InsertCryptoCoinLowPriceNoticeSetti
 import demo.finance.cryptoCoin.data.pojo.dto.InsertCryptoCoinPriceNoticeSettingDTO;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinNoticeDTOCheckResult;
-import demo.finance.cryptoCoin.data.pojo.result.FilterBODataResult;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinHistoryDataService;
@@ -36,6 +35,7 @@ import demo.finance.cryptoCoin.notice.service.CryptoCoinCommonNoticeService;
 import demo.tool.textMessageForward.telegram.pojo.po.TelegramChatId;
 import demo.tool.textMessageForward.telegram.pojo.vo.TelegramChatIdVO;
 import demo.tool.textMessageForward.telegram.service.TelegramService;
+import finance.common.pojo.bo.FilterPriceResult;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 import telegram.pojo.type.TelegramBotType;
@@ -403,7 +403,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			return r;
 		}
 
-		FilterBODataResult maxMinPriceResult = filterData(historyDataList);
+		FilterPriceResult maxMinPriceResult = filterData(historyDataList);
 		if (maxMinPriceResult.isFail()) {
 			r.addMessage(maxMinPriceResult.getMessage());
 			return r;
@@ -449,7 +449,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		Collections.sort(historyBOList);
 
-		FilterBODataResult maxMinPriceResult = filterData(historyBOList);
+		FilterPriceResult maxMinPriceResult = filterData(historyBOList);
 		if (maxMinPriceResult.isFail()) {
 			r.addMessage(maxMinPriceResult.getMessage());
 			return r;

@@ -14,8 +14,8 @@ import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinCatalogMapper;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalogExample;
-import demo.finance.cryptoCoin.data.pojo.vo.CryptoCoinCatalogVO;
 import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
+import finance.cryptoCoin.pojo.vo.CryptoCoinCatalogVO;
 
 @Service
 public class CryptoCoinCatalogServiceImpl extends CryptoCoinCommonService implements CryptoCoinCatalogService {

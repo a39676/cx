@@ -1,3 +1,10 @@
+多个单独心跳校验
+
+crypto coin
+	CryptoCoinPriceCommonDataBO delete field coinType
+	
+日历提醒的跳过本次提前提醒异常
+
 ImageInteractionController
 	未作校验
 

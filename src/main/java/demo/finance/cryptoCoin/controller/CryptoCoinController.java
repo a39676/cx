@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.common.controller.CommonController;
-import demo.finance.cryptoCoin.data.pojo.vo.CryptoCoinCatalogVO;
 import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
 import demo.finance.cryptoCoin.tool.service.CryptoCoinLowPriceNoticeService;
 import finance.cryptoCoin.pojo.constant.CryptoCoinPriceCommonUrl;
+import finance.cryptoCoin.pojo.vo.CryptoCoinCatalogVO;
 
 @Controller
 @RequestMapping(value = CryptoCoinPriceCommonUrl.ROOT)

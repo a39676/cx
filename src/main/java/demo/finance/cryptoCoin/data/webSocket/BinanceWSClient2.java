@@ -138,7 +138,8 @@ public class BinanceWSClient2 extends CryptoCoinWebSocketCommonClient {
 
 			JSONObject kDataJson = sourceMsgJson.getJSONObject("k");
 			String symbol = sourceMsgJson.getString("s").toLowerCase();
-
+			bo.setSymbol(symbol);
+			
 			if (symbol.contains("usdt")) {
 				bo.setCurrencyType(CurrencyTypeForCryptoCoin.USD.getCode());
 				bo.setCoinType(symbol.replaceAll("usdt", ""));

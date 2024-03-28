@@ -49,7 +49,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	private CryptoCoinHistoryDataService cryptoCoinHistoryDataService;
 	@Autowired
 	private CryptoCoin1MinuteDataSummaryService minuteDataService;
-	
+
 	@Autowired
 	protected CryptoCoinPriceNoticeMapper noticeMapper;
 
@@ -117,7 +117,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		}
 		return r;
 	}
-	
+
 	@Override
 	public CommonResult insertNewCryptoCoinLowPriceNoticeSetting(InsertCryptoCoinLowPriceNoticeSettingDTO dto) {
 		CommonResult r = new CommonResult();
@@ -262,7 +262,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		return dto;
 	}
-	
+
 	private InsertCryptoCoinLowPriceNoticeSettingDTO dtoPrefixHandle(InsertCryptoCoinLowPriceNoticeSettingDTO dto) {
 		if (!priceRangeConditionHadSet(dto)) {
 			return dto;
@@ -366,7 +366,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		}
 
 		if (StringUtils.isNotBlank(content)) {
-			telegramService.sendMessageByChatRecordId(TelegramBotType.getType(noticeSetting.getTelegramBotName()), content, noticeSetting.getTelegramChatRecordId());
+			telegramService.sendMessageByChatRecordId(TelegramBotType.getType(noticeSetting.getTelegramBotName()),
+					content, noticeSetting.getTelegramChatRecordId());
 
 			noticeSetting.setNoticeTime(LocalDateTime.now());
 			noticeSetting.setNoticeCount(noticeSetting.getNoticeCount() - 1);
@@ -403,7 +404,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			return r;
 		}
 
-		FilterPriceResult maxMinPriceResult = filterData(historyDataList);
+		FilterPriceResult maxMinPriceResult = kLineToolUnit.filterData(historyDataList);
 		if (maxMinPriceResult.isFail()) {
 			r.addMessage(maxMinPriceResult.getMessage());
 			return r;
@@ -433,15 +434,15 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		return r;
 	}
-	
+
 	private CommonResult priceFluctuationSpeedNoticeHandle(CryptoCoinPriceNotice noticeSetting,
 			CryptoCoinCatalog coinType, CurrencyTypeForCryptoCoin currencyType) {
 		CommonResult r = new CommonResult();
 
 		TimeUnitType timeUnit = TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch());
 
-		List<CryptoCoinPriceCommonDataBO> historyBOList = cryptoCoinHistoryDataService.getHistoryDataList(coinType, currencyType, timeUnit,
-				noticeSetting.getTimeRangeOfDataWatch());
+		List<CryptoCoinPriceCommonDataBO> historyBOList = cryptoCoinHistoryDataService.getHistoryDataList(coinType,
+				currencyType, timeUnit, noticeSetting.getTimeRangeOfDataWatch());
 		if (historyBOList == null || historyBOList.isEmpty()) {
 			log.error(noticeSetting.getId() + ", can NOT find any history data of: " + coinType.getCoinNameEnShort());
 			return r;
@@ -449,7 +450,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		Collections.sort(historyBOList);
 
-		FilterPriceResult maxMinPriceResult = filterData(historyBOList);
+		FilterPriceResult maxMinPriceResult = kLineToolUnit.filterData(historyBOList);
 		if (maxMinPriceResult.isFail()) {
 			r.addMessage(maxMinPriceResult.getMessage());
 			return r;

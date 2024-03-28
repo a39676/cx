@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import demo.config.costom_component.BaseUtilCustom;
 import demo.config.costom_component.SnowFlake;
 import demo.config.costom_component.Tess;
+import finance.common.tool.KLineToolUnit;
 import mail.service.MailToolService;
 import toolPack.complexTool.ChinaMainLandIdNumGenerator;
 import toolPack.dateTimeHandle.DateHandler;
@@ -110,6 +111,11 @@ public class CustomToolBeanConfig {
 	@Bean
 	public ImgbbUtil getImgbbUtil() {
 		return new ImgbbUtil();
+	}
+	
+	@Bean
+	public KLineToolUnit getKLineToolUnit() {
+		return new KLineToolUnit();
 	}
 
 }

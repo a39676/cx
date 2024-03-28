@@ -82,7 +82,7 @@ public class CryptoCoinLocalDataToolImpl extends CryptoCoinAnalysisService imple
 			Double upApmlitude, Double downApmlitude) {
 		List<CryptoCoinPriceCommonDataBO> dataList = _1DayDataService.getCommonDataList(catalog, CurrencyTypeForCryptoCoin.USD,
 				startDatetime, endDatetime);
-		FilterPriceResult maxMinPriceResult = filterData(dataList);
+		FilterPriceResult maxMinPriceResult = kLineToolUnit.filterData(dataList);
 
 		if (maxMinPriceResult.isFail()) {
 			return false;

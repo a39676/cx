@@ -91,7 +91,7 @@ public class BbtComplexServiceImpl extends BbtCommonService implements BbtComple
 //			return;
 //		}
 		String url = "http://" + systemOptionService.getWorkerClone_1() + CxBbtInteractionUrl.ROOT
-				+ CxBbtInteractionUrl.MAKR_SURE_ALIVE_WITH_CTHULHU;
+				+ CxBbtInteractionUrl.WORKER_PING;
 		HttpUtil h = new HttpUtil();
 		String response = null;
 		try {

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.dto.ServiceMsgDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.base.system.service.impl.SystemOptionService;
 import demo.config.costom_component.OptionFilePathConfigurer;
 import demo.finance.cnStockMarket.service.CnStockMarketService;
 import demo.finance.currencyExchangeRate.data.service.CurrencyExchangeRateService;
@@ -17,6 +18,8 @@ import demo.tool.textMessageForward.service.TextMessageForwardService;
 import finance.cnStockMarket.pojo.dto.CnStockMarketDataDTO;
 import finance.currencyExchangeRate.pojo.result.CurrencyExchageRateCollectResult;
 import net.sf.json.JSONObject;
+import tool.pojo.constant.CxBbtInteractionUrl;
+import toolPack.httpHandel.HttpUtil;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -28,6 +31,8 @@ public class BbtComplexServiceImpl extends BbtCommonService implements BbtComple
 	private CurrencyExchangeRateService currencyExchangeRate1DayDataService;
 	@Autowired
 	private CnStockMarketService cnStockMarketService;
+	@Autowired
+	private SystemOptionService systemOptionService;
 
 	@Override
 	public CommonResult textMessageForwarding(ServiceMsgDTO dto) {
@@ -78,5 +83,43 @@ public class BbtComplexServiceImpl extends BbtCommonService implements BbtComple
 		FileUtilCustom fileUtil = new FileUtilCustom();
 		String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.CRYPTO_COIN_FOR_BBT);
 		return JSONObject.fromObject(jsonStr);
+	}
+
+	@Override
+	public void makeSureWorkerClong1Alive() {
+//		if (systemOptionService.isDev()) {
+//			return;
+//		}
+		String url = "http://" + systemOptionService.getWorkerClone_1() + CxBbtInteractionUrl.ROOT
+				+ CxBbtInteractionUrl.MAKR_SURE_ALIVE_WITH_CTHULHU;
+		HttpUtil h = new HttpUtil();
+		String response = null;
+		try {
+			response = h.sendGet(url);
+			systemOptionService.setWorkerClone_1IsAlive(response != null && response.contains("pong"));
+		} catch (Exception e) {
+			systemOptionService.setWorkerClone_1IsAlive(false);
+		}
+	}
+
+	@Override
+	public CommonResult workerClone1IsAlive(BaseStrDTO dto) {
+		CommonResult r = new CommonResult();
+		String keyInput = dto.getStr();
+		if (!bbtDynamicKey.isCorrectKey(keyInput)) {
+			r.setIsSuccess();
+			r.setMessage("Greeting.");
+			return r;
+		}
+
+		if (systemOptionService.getWorkerClone_1IsAlive()) {
+			r.setIsSuccess();
+			return r;
+		}
+
+		ServiceMsgDTO msgDTO = new ServiceMsgDTO();
+		msgDTO.setMsg("Worker 1 was offline");
+		msgForwardServcie.textMessageForwarding(msgDTO);
+		return r;
 	}
 }

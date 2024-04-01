@@ -16,10 +16,10 @@ import demo.interaction.bbt.service.BbtComplexService;
 import finance.cnStockMarket.pojo.dto.CnStockMarketDataDTO;
 import finance.currencyExchangeRate.pojo.result.CurrencyExchageRateCollectResult;
 import net.sf.json.JSONObject;
-import tool.pojo.constant.BbtInteractionUrl;
+import tool.pojo.constant.CxBbtInteractionUrl;
 
 @Controller
-@RequestMapping(value = BbtInteractionUrl.ROOT)
+@RequestMapping(value = CxBbtInteractionUrl.ROOT)
 public class BbtController extends CommonController {
 
 	@Autowired
@@ -27,35 +27,41 @@ public class BbtController extends CommonController {
 	@Autowired
 	private AutomationTestConstantService automationTestConstantService;
 
-	@PostMapping(value = BbtInteractionUrl.TEXT_MESSAGE_FORWARD)
+	@PostMapping(value = CxBbtInteractionUrl.TEXT_MESSAGE_FORWARD)
 	@ResponseBody
 	public CommonResult textMessageForwarding(@RequestBody ServiceMsgDTO dto) {
 		return bbtComplexService.textMessageForwarding(dto);
 	}
 
-	@PostMapping(value = BbtInteractionUrl.RECEIVE_CURRENCY_EXCHANGE_RATE_DAILY_DATA)
+	@PostMapping(value = CxBbtInteractionUrl.RECEIVE_CURRENCY_EXCHANGE_RATE_DAILY_DATA)
 	@ResponseBody
 	public CommonResult receiveCurrencyExchangeRateDailyData(@RequestBody CurrencyExchageRateCollectResult dto) {
 		return bbtComplexService.receiveCurrencyExchangeRateDailyData(dto);
 	}
 
-	@PostMapping(value = BbtInteractionUrl.BBT_HEART_BEAT)
+	@PostMapping(value = CxBbtInteractionUrl.BBT_HEART_BEAT)
 	@ResponseBody
 	public String bbtHeartBeat(@RequestBody BaseStrDTO dto) {
 		automationTestConstantService.setLastHeartBeat(dto);
 		return "Done";
 	}
 
-	@PostMapping(value = BbtInteractionUrl.CN_STOCK_MARKET_DATA)
+	@PostMapping(value = CxBbtInteractionUrl.CN_STOCK_MARKET_DATA)
 	@ResponseBody
 	public String receiveCnStockMarketData(@RequestBody CnStockMarketDataDTO dto) {
 		bbtComplexService.receiveCnStockMarketData(dto);
 		return "Done";
 	}
 	
-	@PostMapping(value = BbtInteractionUrl.GET_CRYPTO_COIN_OPTION)
+	@PostMapping(value = CxBbtInteractionUrl.GET_CRYPTO_COIN_OPTION)
 	@ResponseBody
 	public JSONObject textMessageForwarding(@RequestBody BaseStrDTO dto) {
 		return bbtComplexService.getCryptoCoinOption(dto);
+	}
+	
+	@PostMapping(value = CxBbtInteractionUrl.MAKR_SURE_ALIVE_WITH_CTHULHU)
+	@ResponseBody
+	public CommonResult workerClone1IsAlive(@RequestBody BaseStrDTO dto) {
+		return bbtComplexService.workerClone1IsAlive(dto);
 	}
 }

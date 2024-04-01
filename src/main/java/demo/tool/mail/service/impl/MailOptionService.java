@@ -30,7 +30,7 @@ public class MailOptionService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.MAIL);
-			MailOptionService tmp = new Gson().fromJson(jsonStr, MailOptionService.class);
+			MailOptionService tmp = new Gson().fromJson(jsonStr, this.getClass());
 			BeanUtils.copyProperties(tmp, this);
 			log.error("mail option loaded");
 		} catch (Exception e) {

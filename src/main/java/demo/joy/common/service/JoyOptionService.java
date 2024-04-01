@@ -74,7 +74,7 @@ public class JoyOptionService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.JOY);
-			JoyOptionService tmp = new Gson().fromJson(jsonStr, JoyOptionService.class);
+			JoyOptionService tmp = new Gson().fromJson(jsonStr, this.getClass());
 			BeanUtils.copyProperties(tmp, this);
 			log.error("article option loaded");
 		} catch (Exception e) {

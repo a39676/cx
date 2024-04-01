@@ -22,7 +22,6 @@ import toolPack.ioHandle.FileUtilCustom;
 @Service
 public class SystemOptionService extends CommonService {
 
-
 	private String aesKey = null;
 	private String aesInitVector = null;
 	private String envName = null;
@@ -37,6 +36,8 @@ public class SystemOptionService extends CommonService {
 	private Boolean isDebuging = null;
 	private String fakeFTPHome = null;
 	private String homepageAnnouncementStr = null;
+	private String workerClone_1 = null;
+	private Boolean workerClone_1IsAlive = true;
 
 	public String encryptId(Long id) {
 		List<String> encryptIdList = encryptId(Arrays.asList(id));
@@ -230,6 +231,32 @@ public class SystemOptionService extends CommonService {
 		this.homepageAnnouncementStr = homepageAnnouncementStr;
 	}
 
+	public String getWorkerClone_1() {
+		return workerClone_1;
+	}
+
+	public void setWorkerClone_1(String workerClone_1) {
+		this.workerClone_1 = workerClone_1;
+	}
+
+	public Boolean getWorkerClone_1IsAlive() {
+		return workerClone_1IsAlive;
+	}
+
+	public void setWorkerClone_1IsAlive(Boolean workerClone_1IsAlive) {
+		this.workerClone_1IsAlive = workerClone_1IsAlive;
+	}
+
+	@Override
+	public String toString() {
+		return "SystemOptionService [aesKey=" + aesKey + ", aesInitVector=" + aesInitVector + ", envName=" + envName
+				+ ", emailD=" + emailD + ", emailC=" + emailC + ", maxAttempts=" + maxAttempts + ", normalWebSiteTitle="
+				+ normalWebSiteTitle + ", normalSubheading=" + normalSubheading + ", webSiteTitle2=" + webSiteTitle2
+				+ ", subheading2=" + subheading2 + ", isJobing=" + isJobing + ", isDebuging=" + isDebuging
+				+ ", fakeFTPHome=" + fakeFTPHome + ", homepageAnnouncementStr=" + homepageAnnouncementStr
+				+ ", workerClone_1=" + workerClone_1 + ", workerClone_1IsAlive=" + workerClone_1IsAlive + "]";
+	}
+
 	@PostConstruct
 	public void refreshOption() {
 		File optionFile = new File(OptionFilePathConfigurer.SYSTEM);
@@ -239,7 +266,7 @@ public class SystemOptionService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.SYSTEM);
-			SystemOptionService tmp = new Gson().fromJson(jsonStr, SystemOptionService.class);
+			SystemOptionService tmp = new Gson().fromJson(jsonStr, this.getClass());
 			BeanUtils.copyProperties(tmp, this);
 			log.error("system constant loaded");
 		} catch (Exception e) {

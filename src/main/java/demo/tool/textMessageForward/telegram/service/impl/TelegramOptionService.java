@@ -43,7 +43,7 @@ public class TelegramOptionService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.TELEGRAM);
-			TelegramOptionService tmp = new Gson().fromJson(jsonStr, TelegramOptionService.class);
+			TelegramOptionService tmp = new Gson().fromJson(jsonStr, this.getClass());
 			BeanUtils.copyProperties(tmp, this);
 			log.error("telegram constant loaded");
 		} catch (Exception e) {

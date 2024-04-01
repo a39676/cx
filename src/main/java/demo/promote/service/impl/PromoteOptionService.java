@@ -44,7 +44,7 @@ public class PromoteOptionService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.PROMOTE);
-			PromoteOptionService tmp = new Gson().fromJson(jsonStr, PromoteOptionService.class);
+			PromoteOptionService tmp = new Gson().fromJson(jsonStr, this.getClass());
 			BeanUtils.copyProperties(tmp, this);
 		} catch (Exception e) {
 			log.error("promote option loading error: " + e.getLocalizedMessage());

@@ -60,7 +60,7 @@ public class OpenAiOptionService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.OPEN_AI);
-			OpenAiOptionService tmp = new Gson().fromJson(jsonStr, OpenAiOptionService.class);
+			OpenAiOptionService tmp = new Gson().fromJson(jsonStr, this.getClass());
 			BeanUtils.copyProperties(tmp, this);
 			log.error("Open AI option loaded");
 		} catch (Exception e) {

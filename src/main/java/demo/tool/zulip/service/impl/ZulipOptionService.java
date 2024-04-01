@@ -34,7 +34,7 @@ public class ZulipOptionService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.ZULIP);
-			ZulipOptionService tmp = new Gson().fromJson(jsonStr, ZulipOptionService.class);
+			ZulipOptionService tmp = new Gson().fromJson(jsonStr, this.getClass());
 			BeanUtils.copyProperties(tmp, this);
 			log.error("Zulip option loaded");
 		} catch (Exception e) {

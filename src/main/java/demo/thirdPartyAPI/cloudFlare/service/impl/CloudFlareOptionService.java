@@ -51,7 +51,7 @@ public class CloudFlareOptionService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.CLOUD_FLARE);
-			CloudFlareOptionService tmp = new Gson().fromJson(jsonStr, CloudFlareOptionService.class);
+			CloudFlareOptionService tmp = new Gson().fromJson(jsonStr, this.getClass());
 			BeanUtils.copyProperties(tmp, this);
 			log.error("Cloud Flare option loaded");
 		} catch (Exception e) {

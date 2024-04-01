@@ -31,7 +31,7 @@ public class ArticleCommentOptionService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.ARTICLE_COMMENT);
-			ArticleCommentOptionService tmp = new Gson().fromJson(jsonStr, ArticleCommentOptionService.class);
+			ArticleCommentOptionService tmp = new Gson().fromJson(jsonStr, this.getClass());
 			BeanUtils.copyProperties(tmp, this);
 			log.error("educate option loaded");
 		} catch (Exception e) {

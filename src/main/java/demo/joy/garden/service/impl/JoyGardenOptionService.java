@@ -38,7 +38,7 @@ public class JoyGardenOptionService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.JOY_GARDEN);
-			JoyGardenOptionService tmp = new Gson().fromJson(jsonStr, JoyGardenOptionService.class);
+			JoyGardenOptionService tmp = new Gson().fromJson(jsonStr, this.getClass());
 			BeanUtils.copyProperties(tmp, this);
 			log.error("Joy Garden option loaded");
 		} catch (Exception e) {

@@ -44,7 +44,7 @@ public class CnStockMarketOptionService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.CN_STOCK_MARKET);
-			CnStockMarketOptionService tmp = new Gson().fromJson(jsonStr, CnStockMarketOptionService.class);
+			CnStockMarketOptionService tmp = new Gson().fromJson(jsonStr, this.getClass());
 			BeanUtils.copyProperties(tmp, this);
 			log.error("CN stock market option loaded");
 		} catch (Exception e) {

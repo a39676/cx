@@ -37,7 +37,7 @@ public class EducateOptionService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.EDUCATE);
-			EducateOptionService tmp = new Gson().fromJson(jsonStr, EducateOptionService.class);
+			EducateOptionService tmp = new Gson().fromJson(jsonStr, this.getClass());
 			BeanUtils.copyProperties(tmp, this);
 			log.error("educate option loaded");
 			return jsonStr;

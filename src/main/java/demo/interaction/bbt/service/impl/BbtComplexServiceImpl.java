@@ -87,10 +87,10 @@ public class BbtComplexServiceImpl extends BbtCommonService implements BbtComple
 
 	@Override
 	public void makeSureWorkerClong1Alive() {
-//		if (systemOptionService.isDev()) {
-//			return;
-//		}
-		String url = "http://" + systemOptionService.getWorkerClone_1() + CxBbtInteractionUrl.ROOT
+		if (systemOptionService.isDev()) {
+			return;
+		}
+		String url = "https://" + systemOptionService.getWorkerClone_1() + CxBbtInteractionUrl.ROOT
 				+ CxBbtInteractionUrl.WORKER_PING;
 		HttpUtil h = new HttpUtil();
 		String response = null;

@@ -97,6 +97,7 @@ public class BbtComplexServiceImpl extends BbtCommonService implements BbtComple
 		try {
 			response = h.sendGet(url);
 			systemOptionService.setWorkerClone_1IsAlive(response != null && response.contains("pong"));
+			systemOptionService.setWorkerOffLineCounter(0);
 		} catch (Exception e) {
 			systemOptionService.setWorkerOffLineCounter(systemOptionService.getWorkerOffLineCounter() + 1);
 			if (systemOptionService.getWorkerOffLineCounter() > systemOptionService.getWorkerMaxOffLineCounter()) {

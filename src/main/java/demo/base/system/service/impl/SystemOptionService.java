@@ -38,6 +38,8 @@ public class SystemOptionService extends CommonService {
 	private String homepageAnnouncementStr = null;
 	private String workerClone_1 = null;
 	private Boolean workerClone_1IsAlive = true;
+	private Integer workerOffLineCounter = 0;
+	private Integer workerMaxOffLineCounter = 10;
 
 	public String encryptId(Long id) {
 		List<String> encryptIdList = encryptId(Arrays.asList(id));
@@ -247,6 +249,22 @@ public class SystemOptionService extends CommonService {
 		this.workerClone_1IsAlive = workerClone_1IsAlive;
 	}
 
+	public Integer getWorkerOffLineCounter() {
+		return workerOffLineCounter;
+	}
+
+	public void setWorkerOffLineCounter(Integer workerOffLineCounter) {
+		this.workerOffLineCounter = workerOffLineCounter;
+	}
+
+	public Integer getWorkerMaxOffLineCounter() {
+		return workerMaxOffLineCounter;
+	}
+
+	public void setWorkerMaxOffLineCounter(Integer workerMaxOffLineCounter) {
+		this.workerMaxOffLineCounter = workerMaxOffLineCounter;
+	}
+
 	@Override
 	public String toString() {
 		return "SystemOptionService [aesKey=" + aesKey + ", aesInitVector=" + aesInitVector + ", envName=" + envName
@@ -254,7 +272,9 @@ public class SystemOptionService extends CommonService {
 				+ normalWebSiteTitle + ", normalSubheading=" + normalSubheading + ", webSiteTitle2=" + webSiteTitle2
 				+ ", subheading2=" + subheading2 + ", isJobing=" + isJobing + ", isDebuging=" + isDebuging
 				+ ", fakeFTPHome=" + fakeFTPHome + ", homepageAnnouncementStr=" + homepageAnnouncementStr
-				+ ", workerClone_1=" + workerClone_1 + ", workerClone_1IsAlive=" + workerClone_1IsAlive + "]";
+				+ ", workerClone_1=" + workerClone_1 + ", workerClone_1IsAlive=" + workerClone_1IsAlive
+				+ ", workerOffLineCounter=" + workerOffLineCounter + ", workerMaxOffLineCounter="
+				+ workerMaxOffLineCounter + "]";
 	}
 
 	@PostConstruct

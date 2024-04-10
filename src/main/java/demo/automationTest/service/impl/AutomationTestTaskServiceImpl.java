@@ -29,7 +29,7 @@ public class AutomationTestTaskServiceImpl extends CommonTaskService {
 	public void checkHeartBeat() {
 		LocalDateTime heartBeatTime = constantService.getBbtLastHeartBeat();
 		sendServiceDownNotificationIfNecessary(heartBeatTime, HeartBeatType.BBT);
-
+		
 		heartBeatTime = constantService.getWorkerLastHeartBeat();
 		sendServiceDownNotificationIfNecessary(heartBeatTime, HeartBeatType.WORKER1);
 	}
@@ -37,11 +37,11 @@ public class AutomationTestTaskServiceImpl extends CommonTaskService {
 	private void sendServiceDownNotificationIfNecessary(LocalDateTime heartBeatTime, HeartBeatType heartBeatType) {
 		int maxHeartBeatGap = 10;
 		if (heartBeatTime == null) {
-			complexToolService.notificationServiceDown(HeartBeatType.WORKER1);
+			complexToolService.notificationServiceDown(heartBeatType);
 		}
 		long minutes = ChronoUnit.MINUTES.between(heartBeatTime, LocalDateTime.now());
 		if (minutes > maxHeartBeatGap) {
-			complexToolService.notificationServiceDown(HeartBeatType.WORKER1);
+			complexToolService.notificationServiceDown(heartBeatType);
 		}
 	}
 

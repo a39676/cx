@@ -12,25 +12,38 @@ import demo.interaction.bbt.service.BbtCommonService;
 @Service
 public class AutomationTestConstantService extends BbtCommonService {
 
-	private LocalDateTime lastHeartBeat = LocalDateTime.now();
+	private LocalDateTime bbtLastHeartBeat = LocalDateTime.now();
+	private LocalDateTime workerLastHeartBeat = LocalDateTime.now();
 
-	public LocalDateTime getLastHeartBeat() {
-		return lastHeartBeat;
+	public LocalDateTime getBbtLastHeartBeat() {
+		return bbtLastHeartBeat;
 	}
 
-	public void setLastHeartBeat(LocalDateTime lastHeartBeat) {
-		this.lastHeartBeat = lastHeartBeat;
+	public void setBbtLastHeartBeat(LocalDateTime bbtLastHeartBeat) {
+		this.bbtLastHeartBeat = bbtLastHeartBeat;
 	}
 
-	public void setLastHeartBeat(BaseStrDTO dto) {
+	public LocalDateTime getWorkerLastHeartBeat() {
+		return workerLastHeartBeat;
+	}
+
+	public void setWorkerLastHeartBeat(LocalDateTime workerLastHeartBeat) {
+		this.workerLastHeartBeat = workerLastHeartBeat;
+	}
+
+	public void setBbtLastHeartBeat(BaseStrDTO dto) {
 		if (bbtDynamicKey.isCorrectKey(dto.getStr())) {
-			setLastHeartBeat(LocalDateTime.now());
+			setBbtLastHeartBeat(LocalDateTime.now());
 		}
+	}
+
+	public void setWorkerLastHeartBeat() {
+		setWorkerLastHeartBeat(LocalDateTime.now());
 	}
 
 	@Override
 	public String toString() {
-		return "AutomationTestConstantService [lastHeartBeat=" + lastHeartBeat + "]";
+		return "AutomationTestConstantService [lastHeartBeat=" + bbtLastHeartBeat + "]";
 	}
 
 }

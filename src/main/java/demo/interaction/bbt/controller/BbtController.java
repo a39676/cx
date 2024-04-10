@@ -42,7 +42,7 @@ public class BbtController extends CommonController {
 	@PostMapping(value = CxBbtInteractionUrl.BBT_HEART_BEAT)
 	@ResponseBody
 	public String bbtHeartBeat(@RequestBody BaseStrDTO dto) {
-		automationTestConstantService.setLastHeartBeat(dto);
+		automationTestConstantService.setBbtLastHeartBeat(dto);
 		return "Done";
 	}
 

@@ -71,7 +71,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 			List<Long> channelBanList = new ArrayList<Long>();
 
 			for (ArticleChannelKeyHostname i : channelKeyHostnameList) {
-				if (ArticleChannelKeyHostnameType.pass.getCode().equals(i.getKeyType())) {
+				if (ArticleChannelKeyHostnameType.PASS.getCode().equals(i.getKeyType())) {
 					channelPassList.add(i.getChannelId());
 				} else {
 					channelBanList.add(i.getChannelId());
@@ -549,7 +549,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 		List<Long> channelBanList = new ArrayList<Long>();
 
 		for (ArticleChannelKeyHostname i : channelKeyHostnameList) {
-			if (ArticleChannelKeyHostnameType.pass.getCode().equals(i.getKeyType())) {
+			if (ArticleChannelKeyHostnameType.PASS.getCode().equals(i.getKeyType())) {
 				channelPassList.add(i.getChannelId());
 			} else {
 				channelBanList.add(i.getChannelId());
@@ -598,7 +598,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 			List<ArticleChannelKeyHostname> channelKeyHostnamePOList, Long channelId, Integer hostnameId) {
 		if (channelKeyHostnamePOList == null || channelKeyHostnamePOList.size() < 1 || channelId == null
 				|| hostnameId == null) {
-			return ArticleChannelKeyHostnameType.ban;
+			return ArticleChannelKeyHostnameType.BAN;
 		}
 
 		for (ArticleChannelKeyHostname i : channelKeyHostnamePOList) {
@@ -607,7 +607,7 @@ public class ArticleChannelServiceImpl extends ArticleCommonService implements A
 			}
 		}
 
-		return ArticleChannelKeyHostnameType.ban;
+		return ArticleChannelKeyHostnameType.BAN;
 	}
 
 	@Override

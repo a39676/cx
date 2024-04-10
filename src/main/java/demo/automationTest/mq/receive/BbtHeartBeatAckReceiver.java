@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 
 import com.rabbitmq.client.Channel;
 
-import autoTest.testEvent.common.pojo.constant.AutomationTestMQConstant;
+import auxiliaryCommon.pojo.constant.ServiceMQConstant;
 import demo.automationTest.service.impl.AutomationTestCommonService;
 
 @Component
-@RabbitListener(queues = AutomationTestMQConstant.HEART_BEAT)
+@RabbitListener(queues = ServiceMQConstant.HEART_BEAT)
 public class BbtHeartBeatAckReceiver extends AutomationTestCommonService {
 
 	@RabbitHandler

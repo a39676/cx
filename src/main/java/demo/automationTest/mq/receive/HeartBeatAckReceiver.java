@@ -20,6 +20,7 @@ public class HeartBeatAckReceiver extends AutomationTestCommonService {
 
 	@RabbitHandler
 	public void process(String messageStr, Channel channel, Message message) throws IOException {
+		System.out.println("Debug: " + message);
 		HeartBeatType heartBeatType = HeartBeatType.getType(String.valueOf(message));
 		if (HeartBeatType.BBT.equals(heartBeatType)) {
 			constantService.setBbtLastHeartBeat(LocalDateTime.now());

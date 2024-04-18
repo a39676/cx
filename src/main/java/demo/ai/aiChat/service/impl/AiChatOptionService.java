@@ -246,7 +246,7 @@ public class AiChatOptionService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.AI_CHAT);
-			AiChatOptionService tmp = new Gson().fromJson(jsonStr, AiChatOptionService.class);
+			AiChatOptionService tmp = new Gson().fromJson(jsonStr, this.getClass());
 			BeanUtils.copyProperties(tmp, this);
 
 			if (StringUtils.isNotBlank(sensitiveWordsPathStr)) {

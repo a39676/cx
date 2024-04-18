@@ -1,7 +1,16 @@
+多个单独心跳校验
+
+crypto coin
+	CryptoCoinPriceCommonDataBO delete field coinType
+	
+日历提醒的跳过本次提前提醒异常
+
+ImageInteractionController
+	未作校验
+
 Spring Boot update to 3.0.3
 	Spring Security update, WebSecurityConfigurerAdapter was deprecated
 	Try update Security.java code
-	 
 
 
 自定义书签

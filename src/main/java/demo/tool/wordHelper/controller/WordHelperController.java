@@ -11,10 +11,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.tool.wordHelper.pojo.constant.WordHelperUrl;
-import demo.tool.wordHelper.pojo.dto.GetRandomWordDTO;
+import demo.tool.wordHelper.pojo.dto.GetWordDTO;
 import demo.tool.wordHelper.pojo.dto.UpdateOrAppendWordDTO;
 import demo.tool.wordHelper.pojo.dto.WordDTO;
-import demo.tool.wordHelper.pojo.result.GetRandomWordResult;
+import demo.tool.wordHelper.pojo.result.GetWordResult;
 import demo.tool.wordHelper.service.WordHelperService;
 
 @Controller
@@ -34,10 +34,10 @@ public class WordHelperController {
 	public CommonResult addNewWord(@RequestBody WordDTO dto) {
 		return wordHelperService.addNewWord(dto);
 	}
-	
+
 	@PostMapping(value = WordHelperUrl.FIND)
 	@ResponseBody
-	public GetRandomWordResult findWord(@RequestBody WordDTO dto) {
+	public GetWordResult findWord(@RequestBody WordDTO dto) {
 		return wordHelperService.findWords(dto);
 	}
 
@@ -49,13 +49,31 @@ public class WordHelperController {
 
 	@PostMapping(value = WordHelperUrl.PRINT_RANDOM)
 	@ResponseBody
-	public GetRandomWordResult printRandomWords(@RequestBody GetRandomWordDTO dto) {
+	public GetWordResult printRandomWords(@RequestBody GetWordDTO dto) {
 		return wordHelperService.printRandomWords(dto);
+	}
+
+	@PostMapping(value = WordHelperUrl.PRINT_NEW)
+	@ResponseBody
+	public GetWordResult printNewWords(@RequestBody GetWordDTO dto) {
+		return wordHelperService.printNewWords(dto);
 	}
 
 	@PostMapping(value = WordHelperUrl.DELETE)
 	@ResponseBody
 	public CommonResult deleteWord(@RequestBody WordDTO dto) {
 		return wordHelperService.deleteWord(dto);
+	}
+	
+	@PostMapping(value = WordHelperUrl.PRINT_RANDOM_IN_MARKS)
+	@ResponseBody
+	public GetWordResult printRandomWordsInMarks(@RequestBody GetWordDTO dto) {
+		return wordHelperService.printRandomWordsInMarks(dto);
+	}
+
+	@PostMapping(value = WordHelperUrl.PRINT_NEW_IN_MARKS)
+	@ResponseBody
+	public GetWordResult printNewWordsInMarks(@RequestBody GetWordDTO dto) {
+		return wordHelperService.printNewWordsInMarks(dto);
 	}
 }

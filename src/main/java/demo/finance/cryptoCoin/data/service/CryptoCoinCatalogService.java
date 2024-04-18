@@ -5,7 +5,7 @@ import java.util.Set;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
-import demo.finance.cryptoCoin.data.pojo.vo.CryptoCoinCatalogVO;
+import finance.cryptoCoin.pojo.vo.CryptoCoinCatalogVO;
 
 public interface CryptoCoinCatalogService {
 

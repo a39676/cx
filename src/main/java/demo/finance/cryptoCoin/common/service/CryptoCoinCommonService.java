@@ -14,11 +14,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.common.service.impl.FinanceCommonService;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
-import demo.finance.cryptoCoin.data.pojo.result.FilterBODataResult;
-import demo.finance.cryptoCoin.data.pojo.vo.CryptoCoinCatalogVO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
+import finance.cryptoCoin.pojo.vo.CryptoCoinCatalogVO;
 
 public abstract class CryptoCoinCommonService extends FinanceCommonService {
 
@@ -30,52 +29,6 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 	protected CryptoCoinOptionService optionService;
 
 	
-	protected FilterBODataResult filterData(List<CryptoCoinPriceCommonDataBO> list) {
-		FilterBODataResult r = new FilterBODataResult();
-
-		if (list == null || list.isEmpty()) {
-			r.setMessage("empty history data");
-			return r;
-		}
-
-		double maxPrice = Double.MIN_VALUE;
-		double minPrice = Double.MAX_VALUE;
-		LocalDateTime maxPriceDateTime = null;
-		LocalDateTime minPriceDateTime = null;
-		LocalDateTime startTime = null;
-		LocalDateTime endTime = null;
-		for (CryptoCoinPriceCommonDataBO bo : list) {
-			if(bo.getHighPrice() != null && bo.getHighPrice().doubleValue() > maxPrice) {
-				maxPrice = bo.getHighPrice().doubleValue();
-				maxPriceDateTime = bo.getStartTime();
-			}
-			
-			if(bo.getLowPrice() != null && bo.getLowPrice().doubleValue() < minPrice) {
-				minPrice = bo.getLowPrice().doubleValue();
-				minPriceDateTime = bo.getStartTime();
-			}
-
-			if(bo.getStartTime() != null) {
-				if (startTime == null || startTime.isAfter(bo.getStartTime())) {
-					startTime = bo.getStartTime();
-				}
-			}
-			if(bo.getEndTime() != null) {
-				if (endTime == null || endTime.isBefore(bo.getEndTime())) {
-					endTime = bo.getEndTime();
-				}
-			}
-
-		}
-
-		r.setMaxPrice(new BigDecimal(maxPrice));
-		r.setMinPrice(new BigDecimal(minPrice));
-		r.setMaxPriceDateTime(maxPriceDateTime);
-		r.setMinPriceDateTime(minPriceDateTime);
-		r.setIsSuccess();
-		return r;
-	}
-
 	protected CryptoCoinPriceCommonDataBO mergerData(CryptoCoinPriceCommonDataBO resultTarget, CryptoCoinPriceCommonDataBO otherData) {
 		if (resultTarget == null || otherData == null) {
 			return resultTarget;
@@ -190,19 +143,19 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 		Collections.sort(cacheDataList);
 
 		LocalDateTime endTime = null;
-		if (TimeUnitType.minute.equals(timeUnitType)) {
+		if (TimeUnitType.MINUTE.equals(timeUnitType)) {
 			endTime = nextStepStartTimeByMinute(LocalDateTime.now(), timeRange);
 			return mergeMinutePODataWithCache(poDataList, cacheDataList, startTime, endTime, timeRange);
-		} else if (TimeUnitType.hour.equals(timeUnitType)) {
+		} else if (TimeUnitType.HOUR.equals(timeUnitType)) {
 			endTime = LocalDateTime.now().withMinute(0).withSecond(0).withNano(0).plusHours(1);
 			return mergeHourPODataWithCache(poDataList, cacheDataList, startTime, endTime);
-		} else if (TimeUnitType.day.equals(timeUnitType)) {
+		} else if (TimeUnitType.DAY.equals(timeUnitType)) {
 			endTime = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0).plusDays(1);
 			return mergeDayPODataWithCache(poDataList, cacheDataList, startTime, endTime);
-		} else if (TimeUnitType.week.equals(timeUnitType)) {
+		} else if (TimeUnitType.WEEK.equals(timeUnitType)) {
 			endTime = localDateTimeHandler.findNextDayOfWeek(LocalDateTime.now(), DayOfWeek.SUNDAY).withHour(0).withMinute(0).withSecond(0).withNano(0);
 			return mergeWeekPODataWithCache(poDataList, cacheDataList, startTime, endTime);
-		} else if (TimeUnitType.month.equals(timeUnitType)) {
+		} else if (TimeUnitType.MONTH.equals(timeUnitType)) {
 			endTime = LocalDateTime.now().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0).plusMonths(1);
 			return mergeMonthPODataWithCache(poDataList, cacheDataList, startTime, endTime);
 		}

@@ -11,10 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
-import demo.finance.cryptoCoin.data.pojo.bo.CacheMapBO;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
+import finance.cryptoCoin.pojo.bo.CryptoCoinDataCacheMapKeyBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
@@ -30,7 +30,7 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 	@Override
 	public void reciveData(CryptoCoinPriceCommonDataBO newBO) {
 		CryptoCoinCatalog coinType = coinCatalogService.findCatalog(newBO.getCoinType());
-		CacheMapBO key = buildCacheMapKey(coinType, CurrencyTypeForCryptoCoin.getType(newBO.getCurrencyType()),
+		CryptoCoinDataCacheMapKeyBO key = buildCacheMapKey(coinType, CurrencyTypeForCryptoCoin.getType(newBO.getCurrencyType()),
 				newBO.getStartTime());
 
 		CryptoCoinPriceCommonDataBO oldBO = constantService.getCacheMap().get(key);
@@ -107,7 +107,7 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 		if (startTime == null) {
 			startTime = now.minusMinutes(CryptoCoinDataConstant.CRYPTO_COIN_CACHE_DATA_LIVE_MINUTES);
 		}
-		CacheMapBO tmpKey = null;
+		CryptoCoinDataCacheMapKeyBO tmpKey = null;
 
 		while (!startTime.isAfter(now)) {
 			tmpKey = buildCacheMapKey(coinType, currencyType, startTime);
@@ -125,11 +125,11 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 	@Override
 	public boolean isSocketAlive() {
 
-		Set<CacheMapBO> keySet = constantService.getCacheMap().keySet();
+		Set<CryptoCoinDataCacheMapKeyBO> keySet = constantService.getCacheMap().keySet();
 		boolean flag = false;
 
 		LocalDateTime now = LocalDateTime.now();
-		keySetLoop: for (CacheMapBO key : keySet) {
+		keySetLoop: for (CryptoCoinDataCacheMapKeyBO key : keySet) {
 			if (ChronoUnit.MINUTES.between(key.getStartTime(), now) <= 1) {
 				flag = true;
 				break keySetLoop;
@@ -143,9 +143,9 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 		return flag;
 	}
 
-	private CacheMapBO buildCacheMapKey(CryptoCoinCatalog coinType, CurrencyTypeForCryptoCoin currencyType,
+	private CryptoCoinDataCacheMapKeyBO buildCacheMapKey(CryptoCoinCatalog coinType, CurrencyTypeForCryptoCoin currencyType,
 			LocalDateTime datetime) {
-		CacheMapBO bo = new CacheMapBO();
+		CryptoCoinDataCacheMapKeyBO bo = new CryptoCoinDataCacheMapKeyBO();
 		bo.setCoinTypeCode(coinType.getId().intValue());
 		bo.setCurrencyCode(currencyType.getCode());
 		bo.setStartTime(datetime.withSecond(0).withNano(0));
@@ -157,15 +157,15 @@ public class CryptoCoinPriceCacheServiceImpl extends CryptoCoinCommonService imp
 		LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
 		LocalDateTime limitDateTime = now.minusMinutes(CryptoCoinDataConstant.CRYPTO_COIN_CACHE_DATA_LIVE_MINUTES);
 
-		Set<CacheMapBO> keySet = constantService.getCacheMap().keySet();
-		Set<CacheMapBO> targetKey = new HashSet<>();
-		for (CacheMapBO key : keySet) {
+		Set<CryptoCoinDataCacheMapKeyBO> keySet = constantService.getCacheMap().keySet();
+		Set<CryptoCoinDataCacheMapKeyBO> targetKey = new HashSet<>();
+		for (CryptoCoinDataCacheMapKeyBO key : keySet) {
 			if (key.getStartTime().isBefore(limitDateTime)) {
 				targetKey.add(key);
 			}
 		}
 
-		for (CacheMapBO key : targetKey) {
+		for (CryptoCoinDataCacheMapKeyBO key : targetKey) {
 			constantService.getCacheMap().remove(key);
 		}
 

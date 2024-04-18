@@ -96,10 +96,10 @@ public class JoyImageServiceImpl extends CommonService implements JoyImageServic
 			return;
 		}
 	}
-	
+
 	@Override
 	public String getImageInBase64Str(String path) {
-		if(StringUtils.isBlank(path)) {
+		if (StringUtils.isBlank(path)) {
 			return null;
 		}
 		byte[] fileContent;

@@ -9,7 +9,7 @@ import com.google.gson.GsonBuilder;
 
 import auxiliaryCommon.pojo.dto.EncryptDTO;
 import demo.common.service.ToolCommonService;
-import demo.tool.telegram.service.TelegramService;
+import demo.tool.textMessageForward.telegram.service.TelegramService;
 import net.sf.json.JSONObject;
 import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.type.TelegramBotType;

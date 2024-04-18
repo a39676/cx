@@ -117,6 +117,9 @@
         <a href="/tool/canlendarNotice/manager" target="_blank">canlendarNoticeManager</a>
       </li>
       <li>
+        <a href="/cashFlow/getSummary" target="_blank">cashFlow</a>
+      </li>
+      <li>
         <a href="/ocr/uploadImg" target="_blank">ocr</a>
       </li>
       <li>
@@ -127,9 +130,6 @@
       </li>
       <li>
         <a href="/tool/decryptPK?pk=cDfhyLRYBULovb3aTdGBRA%3D%3D" target="_blank">decryptPK</a>
-      </li>
-      <li>
-        <a href="/wordHelper/wordHelper" target="_blank">word helper</a>
       </li>
       <li>
         <a href="/publicTool/freeYourTime/trainProject" target="_blank">under way trainProject</a>
@@ -181,6 +181,9 @@
       <li>
         <a href="/educate/forParent" target="_blank">For parent</a>
       </li>
+      <li>
+        <a href="/wordHelper/wordHelper" target="_blank">word helper</a>
+      </li>
     </ul><!-- educate -->
 
     <ul class="main-menu visible-on-click" id="joy">
@@ -211,7 +214,6 @@
         <a href="/zulip/deleteMessageHistoryAutomation" target="_blank">deleteMessageHistoryAutomation</a>
       </li>
     </ul><!-- zulip -->
-
 
   </div>
 

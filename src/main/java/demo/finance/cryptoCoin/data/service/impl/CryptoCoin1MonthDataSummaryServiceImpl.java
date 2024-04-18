@@ -151,7 +151,7 @@ public class CryptoCoin1MonthDataSummaryServiceImpl extends CryptoCoinCommonServ
 			return poDataList;
 		}
 
-		List<CryptoCoinPriceCommonDataBO> resultDataList = mergePODataWithCache(poDataList, cacheDataList, startTime, MONTH_STEP_LONG, TimeUnitType.month);
+		List<CryptoCoinPriceCommonDataBO> resultDataList = mergePODataWithCache(poDataList, cacheDataList, startTime, MONTH_STEP_LONG, TimeUnitType.MONTH);
 
 		return resultDataList;
 	}

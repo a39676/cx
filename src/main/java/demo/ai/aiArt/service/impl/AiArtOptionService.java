@@ -260,8 +260,9 @@ public class AiArtOptionService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.AI_ART);
-			AiArtOptionService tmp = new Gson().fromJson(jsonStr, AiArtOptionService.class);
+			AiArtOptionService tmp = new Gson().fromJson(jsonStr, this.getClass());
 			BeanUtils.copyProperties(tmp, this);
+			System.out.println(this.toString());
 			log.error("AI art option loaded");
 		} catch (Exception e) {
 			e.printStackTrace();

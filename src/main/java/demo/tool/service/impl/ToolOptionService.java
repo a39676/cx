@@ -18,7 +18,6 @@ import toolPack.ioHandle.FileUtilCustom;
 @Service
 public class ToolOptionService extends CommonService {
 
-
 	private List<String> imgbbApiKeyList;
 
 	@PostConstruct
@@ -30,7 +29,7 @@ public class ToolOptionService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.TOOL);
-			ToolOptionService tmp = new Gson().fromJson(jsonStr, ToolOptionService.class);
+			ToolOptionService tmp = new Gson().fromJson(jsonStr, this.getClass());
 			BeanUtils.copyProperties(tmp, this);
 		} catch (Exception e) {
 			log.error("tool option loading error: " + e.getLocalizedMessage());

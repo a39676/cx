@@ -36,7 +36,7 @@ public class AutomationTestOptionService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.AUTOMATION_TEST);
-			AutomationTestOptionService tmp = new Gson().fromJson(jsonStr, AutomationTestOptionService.class);
+			AutomationTestOptionService tmp = new Gson().fromJson(jsonStr, this.getClass());
 			BeanUtils.copyProperties(tmp, this);
 			log.error("automation test option loaded");
 		} catch (Exception e) {

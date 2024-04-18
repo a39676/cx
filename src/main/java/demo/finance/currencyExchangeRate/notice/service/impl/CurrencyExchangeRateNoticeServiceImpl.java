@@ -28,9 +28,9 @@ import demo.finance.currencyExchangeRate.notice.pojo.po.CurrencyExchangeRateNoti
 import demo.finance.currencyExchangeRate.notice.pojo.po.CurrencyExchangeRateNoticeExample.Criteria;
 import demo.finance.currencyExchangeRate.notice.pojo.result.CurrencyExchangeRateNoticeDTOCheckResult;
 import demo.finance.currencyExchangeRate.notice.service.CurrencyExchangeRateNoticeService;
-import demo.tool.telegram.pojo.po.TelegramChatId;
-import demo.tool.telegram.pojo.vo.TelegramChatIdVO;
-import demo.tool.telegram.service.TelegramService;
+import demo.tool.textMessageForward.telegram.pojo.po.TelegramChatId;
+import demo.tool.textMessageForward.telegram.pojo.vo.TelegramChatIdVO;
+import demo.tool.textMessageForward.telegram.service.TelegramService;
 import telegram.pojo.type.TelegramBotType;
 
 @Service
@@ -53,8 +53,8 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 		currencyTypeList.addAll(Arrays.asList(CurrencyType.values()));
 		view.addObject("currencyType", currencyTypeList);
 
-		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.minute, TimeUnitType.hour, TimeUnitType.day,
-				TimeUnitType.week, TimeUnitType.month };
+		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.MINUTE, TimeUnitType.HOUR, TimeUnitType.DAY,
+				TimeUnitType.WEEK, TimeUnitType.MONTH };
 		view.addObject("timeUnitType", timeUnitTypes);
 
 		List<TelegramChatId> chatIDPOList = telegramService.getChatIDList();
@@ -260,6 +260,7 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 				.andValidTimeGreaterThan(now).andNextNoticeTimeLessThan(now);
 
 		List<CurrencyExchangeRateNotice> noticeList = noticeMapper.selectByExample(noticeExample);
+		log.error("Find " + noticeList.size() + " currency exchange rate notice setting.");
 		if (noticeList == null || noticeList.isEmpty()) {
 			return;
 		}
@@ -280,7 +281,8 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 		CurrencyType currencyFrom = CurrencyType.getType(notice.getCurrencyFrom());
 		CurrencyType currencyTo = CurrencyType.getType(notice.getCurrencyTo());
 		if (currencyFrom == null || currencyTo == null) {
-			log.error(notice.getId() + ", currency type setting error");
+			log.error(notice.getId() + ", currency from: " + notice.getCurrencyFrom() + ", currency to: "
+					+ notice.getCurrencyTo() + ", currency type setting error");
 			r.failWithMessage("currency type setting error");
 			return r;
 		}
@@ -291,6 +293,8 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 		 */
 		LocalDateTime nextNoticeTime = notice.getNextNoticeTime();
 		if (nextNoticeTime == null || nextNoticeTime.isAfter(LocalDateTime.now())) {
+			log.error(notice.getId() + ", currency from: " + notice.getCurrencyFrom() + ", currency to: "
+					+ notice.getCurrencyTo() + ", next notice time NOT match");
 			return r;
 		}
 
@@ -298,22 +302,32 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 		CommonResult handleResult = null;
 
 		if (rateConditionHadSet(notice)) {
+			log.error(notice.getId() + ", currency from: " + notice.getCurrencyFrom() + ", currency to: "
+					+ notice.getCurrencyTo() + ", rate condition had set");
 			handleResult = rateConditionNoticeHandle(notice, currencyFrom, currencyTo);
 			if (handleResult.isSuccess()) {
 				content += handleResult.getMessage();
+			} else {
+				log.error(notice.getId() + ", currency from: " + notice.getCurrencyFrom() + ", currency to: "
+						+ notice.getCurrencyTo() + ", error: " + handleResult.getMessage());
 			}
 		}
 		if (rateFluctuationSpeedConditionHadSet(notice)) {
+			log.error(notice.getId() + ", currency from: " + notice.getCurrencyFrom() + ", currency to: "
+					+ notice.getCurrencyTo() + ", rate fluctuation speed condition had set");
 			handleResult = rateFluctuationSpeedNoticeHandle(notice, currencyFrom, currencyTo);
 			if (handleResult.isSuccess()) {
 				content += handleResult.getMessage();
+			} else {
+				log.error(notice.getId() + ", currency from: " + notice.getCurrencyFrom() + ", currency to: "
+						+ notice.getCurrencyTo() + ", error: " + handleResult.getMessage());
 			}
 		}
 
 		if (StringUtils.isNotBlank(content)) {
 			if (!"dev".equals(systemOptionService.getEnvName())) {
-				telegramService.sendMessageByChatRecordId(TelegramBotType.getType(notice.getTelegramBotName()),
-						content, notice.getTelegramChatId());
+				telegramService.sendMessageByChatRecordId(TelegramBotType.getType(notice.getTelegramBotName()), content,
+						notice.getTelegramChatId());
 			} else {
 				log.error("In dev env, will NOT send msg: " + content + ", chat ID: " + notice.getTelegramChatId()
 						+ ", bot name: " + notice.getTelegramBotName());
@@ -336,7 +350,9 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 			r.successWithMessage("notice sended");
 			return r;
 		} else {
-			r.failWithMessage("didn't hit any notice setting");
+			log.error(notice.getId() + ", currency from: " + notice.getCurrencyFrom() + ", currency to: "
+					+ notice.getCurrencyTo() + ", didn't hit any notice setting");
+			r.failWithMessage("Didn't hit any notice setting");
 			return r;
 		}
 
@@ -359,7 +375,9 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 			return r;
 		}
 
-		FilterDataResult maxMinPriceResult = filterData(historyDataList);
+		FilterDataResult maxMinPriceResult = filterDataForCurrencyExchangeRate(historyDataList);
+		log.error(noticeSetting.getId() + ", currency from: " + noticeSetting.getCurrencyFrom() + ", currency to: "
+				+ noticeSetting.getCurrencyTo() + ", max min price result: " + maxMinPriceResult.toString());
 		if (maxMinPriceResult.isFail()) {
 			r.addMessage(maxMinPriceResult.getMessage());
 			return r;
@@ -407,7 +425,9 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 			return r;
 		}
 
-		FilterDataResult maxMinPriceResult = filterData(historyDataList);
+		FilterDataResult maxMinPriceResult = filterDataForCurrencyExchangeRate(historyDataList);
+		log.error(noticeSetting.getId() + ", currency from: " + noticeSetting.getCurrencyFrom() + ", currency to: "
+				+ noticeSetting.getCurrencyTo() + ", max min price result: " + maxMinPriceResult.toString());
 		if (maxMinPriceResult.isFail()) {
 			r.addMessage(maxMinPriceResult.getMessage());
 			return r;
@@ -456,7 +476,7 @@ public class CurrencyExchangeRateNoticeServiceImpl extends FinanceCommonService
 		return r;
 	}
 
-	private FilterDataResult filterData(List<CurrencyExchangeRate1day> list) {
+	private FilterDataResult filterDataForCurrencyExchangeRate(List<CurrencyExchangeRate1day> list) {
 		FilterDataResult r = new FilterDataResult();
 
 		if (list == null || list.isEmpty()) {

@@ -21,7 +21,6 @@ import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalogExample;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1day;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample;
 import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinMAResult;
-import demo.finance.cryptoCoin.data.pojo.vo.CryptoCoinCatalogVO;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
@@ -29,6 +28,7 @@ import demo.finance.cryptoCoin.notice.service.CryptoCoinCommonNoticeService;
 import demo.finance.cryptoCoin.tool.service.CryptoCoinLowPriceNoticeService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
+import finance.cryptoCoin.pojo.vo.CryptoCoinCatalogVO;
 import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.type.TelegramBotType;
 
@@ -222,9 +222,9 @@ public class CryptoCoinLowPriceNoticeServiceImpl extends CryptoCoinAnalysisServi
 			dto.setNoticeCount(999999);
 			dto.setFluctuationSpeedPercentage(1.2);
 			dto.setTimeRangeOfDataWatch(3);
-			dto.setTimeUnitOfDataWatch(TimeUnitType.minute.getCode());
+			dto.setTimeUnitOfDataWatch(TimeUnitType.MINUTE.getCode());
 			dto.setTimeRangeOfNoticeInterval(10);
-			dto.setTimeUnitOfNoticeInterval(TimeUnitType.minute.getCode());
+			dto.setTimeUnitOfNoticeInterval(TimeUnitType.MINUTE.getCode());
 			dto.setStartNoticeTime(localDateTimeHandler.dateToStr(LocalDateTime.now()));
 			dto.setValidTime(localDateTimeHandler.dateToStr(LocalDateTime.now().plusHours(8)));
 			noticeService.insertNewCryptoCoinLowPriceNoticeSetting(dto);

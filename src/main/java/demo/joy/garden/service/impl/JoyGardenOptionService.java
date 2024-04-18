@@ -27,24 +27,16 @@ public class JoyGardenOptionService extends CommonService {
 	private String fieldlandNotDevelopImgPath;
 	private String gardenNpcImgPath;
 
-	@Override
-	public String toString() {
-		return "JoyGardenOptionService [createFieldConsumePointMap=" + createFieldConsumePointMap + ", fieldMaxSize="
-				+ fieldMaxSize + ", backgroundImgPath=" + backgroundImgPath + ", fieldlandImgPath=" + fieldlandImgPath
-				+ ", fieldlandNotDevelopImgPath=" + fieldlandNotDevelopImgPath + ", gardenNpcImgPath="
-				+ gardenNpcImgPath + "]";
-	}
-
 	@PostConstruct
 	public void refreshOption() {
-		File optionFile = new File(OptionFilePathConfigurer.JOY_GRADEN);
+		File optionFile = new File(OptionFilePathConfigurer.JOY_GARDEN);
 		if (!optionFile.exists()) {
 			return;
 		}
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
-			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.JOY_GRADEN);
-			JoyGardenOptionService tmp = new Gson().fromJson(jsonStr, JoyGardenOptionService.class);
+			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.JOY_GARDEN);
+			JoyGardenOptionService tmp = new Gson().fromJson(jsonStr, this.getClass());
 			BeanUtils.copyProperties(tmp, this);
 			log.error("Joy Garden option loaded");
 		} catch (Exception e) {

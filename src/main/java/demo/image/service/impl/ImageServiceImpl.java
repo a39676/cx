@@ -23,8 +23,8 @@ import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -46,7 +46,7 @@ import demo.image.pojo.result.GetImgThirdPartyUrlResult;
 import demo.image.pojo.result.ImgHandleSrcDataResult;
 import demo.image.pojo.type.ImageTagType;
 import demo.image.service.ImageService;
-import demo.tool.telegram.service.TelegramService;
+import demo.tool.textMessageForward.telegram.service.TelegramService;
 import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.result.ImageSavingResult;
 import jakarta.servlet.http.HttpServletResponse;
@@ -119,7 +119,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void imgProxy(HttpServletResponse response, String imgPK) {
 		if (StringUtils.isBlank(imgPK)) {
@@ -144,9 +144,9 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 			try {
 				response.setContentType("image/jpeg");
 				String urlStr = imgPO.getImageUrl();
-				
+
 				InputStream input = new URI(urlStr).toURL().openStream();
-				
+
 				IOUtils.copy(input, response.getOutputStream());
 			} catch (IOException | URISyntaxException e) {
 				e.printStackTrace();
@@ -652,7 +652,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 		}
 
 		ImageStore po = imgMapper.selectByPrimaryKey(imgId);
-		if (po.getImageUrl().startsWith("http")) {
+		if (po != null && po.getImageUrl().startsWith("http")) {
 			r.setImgThirdPartyUrl(po.getImageUrl());
 			r.setIsSuccess();
 		}

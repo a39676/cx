@@ -90,33 +90,29 @@ public abstract class CommonService {
 		return record;
 	}
 
-	protected String buildRedisKeyPrefix(IpRecordBO record, String redisKeyPrefix) {
-		return redisKeyPrefix + "_" + record.getForwardAddr() + "_" + record.getRemoteAddr();
-	}
-
 	protected LocalDateTime getNextSettingTime(LocalDateTime datetime, TimeUnitType timeUnit, Long step) {
 		LocalDateTime nextNoticeTime = null;
 		if (datetime == null || timeUnit == null || step == null) {
 			return nextNoticeTime;
 		}
 
-		if (timeUnit.equals(TimeUnitType.nanoSecond)) {
+		if (timeUnit.equals(TimeUnitType.NANO_SECOND)) {
 			nextNoticeTime = datetime.plusNanos(step);
-		} else if (timeUnit.equals(TimeUnitType.milliSecond)) {
+		} else if (timeUnit.equals(TimeUnitType.MILLION_SECOND)) {
 			nextNoticeTime = datetime.plusNanos(step * 1000);
-		} else if (timeUnit.equals(TimeUnitType.second)) {
+		} else if (timeUnit.equals(TimeUnitType.SECOND)) {
 			nextNoticeTime = datetime.plusSeconds(step);
-		} else if (timeUnit.equals(TimeUnitType.minute)) {
+		} else if (timeUnit.equals(TimeUnitType.MINUTE)) {
 			nextNoticeTime = datetime.plusMinutes(step);
-		} else if (timeUnit.equals(TimeUnitType.hour)) {
+		} else if (timeUnit.equals(TimeUnitType.HOUR)) {
 			nextNoticeTime = datetime.plusHours(step);
-		} else if (timeUnit.equals(TimeUnitType.day)) {
+		} else if (timeUnit.equals(TimeUnitType.DAY)) {
 			nextNoticeTime = datetime.plusDays(step);
-		} else if (timeUnit.equals(TimeUnitType.week)) {
+		} else if (timeUnit.equals(TimeUnitType.WEEK)) {
 			nextNoticeTime = datetime.plusDays(step * 7);
-		} else if (timeUnit.equals(TimeUnitType.month)) {
+		} else if (timeUnit.equals(TimeUnitType.MONTH)) {
 			nextNoticeTime = datetime.plusMonths(step);
-		} else if (timeUnit.equals(TimeUnitType.year)) {
+		} else if (timeUnit.equals(TimeUnitType.YEAR)) {
 			nextNoticeTime = datetime.plusYears(step);
 		}
 

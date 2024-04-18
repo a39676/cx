@@ -28,11 +28,11 @@ import demo.automationTest.service.impl.AutomationTestCommonService;
 import demo.tool.bbtOrder.hsbc.pojo.vo.HsbcWechatPreregistReportVO;
 import demo.tool.bbtOrder.hsbc.pojo.vo.RandomIdDataVO;
 import demo.tool.bbtOrder.hsbc.service.HsbcService;
-import demo.tool.other.service.impl.RandomChineseNameGenerator;
 import net.sf.json.JSONObject;
 import tool.pojo.type.InternationalityType;
 import toolPack.complexTool.ChinaMainLandIdNumGenerator;
 import toolPack.ioHandle.FileUtilCustom;
+import toolPack.stringHandle.RandomChineseNameGenerator;
 
 @Service
 public class HsbcServiceImpl extends AutomationTestCommonService implements HsbcService {

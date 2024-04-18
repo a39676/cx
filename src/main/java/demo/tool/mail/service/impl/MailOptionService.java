@@ -17,7 +17,6 @@ import toolPack.ioHandle.FileUtilCustom;
 @Service
 public class MailOptionService extends CommonService {
 
-
 	private String adminMailName = "adminMailName";
 	private String adminMailPwd = "adminMailPwd";
 
@@ -30,7 +29,7 @@ public class MailOptionService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.MAIL);
-			MailOptionService tmp = new Gson().fromJson(jsonStr, MailOptionService.class);
+			MailOptionService tmp = new Gson().fromJson(jsonStr, this.getClass());
 			BeanUtils.copyProperties(tmp, this);
 			log.error("mail option loaded");
 		} catch (Exception e) {
@@ -52,11 +51,6 @@ public class MailOptionService extends CommonService {
 
 	public void setAdminMailPwd(String adminMailPwd) {
 		this.adminMailPwd = adminMailPwd;
-	}
-
-	@Override
-	public String toString() {
-		return "MailOptionService [adminMailName=" + adminMailName + ", adminMailPwd=" + adminMailPwd + "]";
 	}
 
 }

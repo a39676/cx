@@ -8,8 +8,8 @@ import demo.article.article.service.ArticleBurnService;
 import demo.base.task.service.CommonTaskService;
 import demo.image.service.ImageService;
 import demo.interaction.image.service.ImageInteractionService;
+import demo.tool.educate.service.EducateOldDataDeleteService;
 import demo.tool.ocr.service.OcrService;
-import demo.toyParts.educate.service.EducateOldDataDeleteService;
 
 @Component
 public class OldDataDeleteServiceImpl extends CommonTaskService {

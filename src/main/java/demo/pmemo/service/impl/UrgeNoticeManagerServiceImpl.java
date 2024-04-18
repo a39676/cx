@@ -11,7 +11,7 @@ import demo.article.article.service.impl.ArticleCommonService;
 import demo.pmemo.pojo.constant.UrgeNoticeConstant;
 import demo.pmemo.pojo.constant.UrgeNoticeUrl;
 import demo.pmemo.service.UrgeNoticeManagerService;
-import demo.tool.telegram.service.TelegramService;
+import demo.tool.textMessageForward.telegram.service.TelegramService;
 import telegram.pojo.type.TelegramBotType;
 
 @Service

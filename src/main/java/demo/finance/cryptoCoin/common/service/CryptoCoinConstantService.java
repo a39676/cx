@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import demo.common.service.CommonService;
-import demo.finance.cryptoCoin.data.pojo.bo.CacheMapBO;
+import finance.cryptoCoin.pojo.bo.CryptoCoinDataCacheMapKeyBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 
 @Scope("singleton")
@@ -24,7 +24,7 @@ public class CryptoCoinConstantService extends CommonService {
 	private Set<String> lowPriceSubscriptionSet = new HashSet<>();
 	private Set<String> dailyDataWaitingQuerySet = new HashSet<>();
 
-	private Map<CacheMapBO, CryptoCoinPriceCommonDataBO> cacheMap = new HashMap<>();
+	private Map<CryptoCoinDataCacheMapKeyBO, CryptoCoinPriceCommonDataBO> cacheMap = new HashMap<>();
 
 	private Map<String, List<LocalDateTime>> hitNoDataCountingMap = new HashMap<>();
 
@@ -60,11 +60,11 @@ public class CryptoCoinConstantService extends CommonService {
 		this.dailyDataWaitingQuerySet = dailyDataWaitingQuerySet;
 	}
 
-	public Map<CacheMapBO, CryptoCoinPriceCommonDataBO> getCacheMap() {
+	public Map<CryptoCoinDataCacheMapKeyBO, CryptoCoinPriceCommonDataBO> getCacheMap() {
 		return cacheMap;
 	}
 
-	public void setCacheMap(Map<CacheMapBO, CryptoCoinPriceCommonDataBO> cacheMap) {
+	public void setCacheMap(Map<CryptoCoinDataCacheMapKeyBO, CryptoCoinPriceCommonDataBO> cacheMap) {
 		this.cacheMap = cacheMap;
 	}
 

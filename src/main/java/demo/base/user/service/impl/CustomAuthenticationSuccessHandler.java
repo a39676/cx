@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import demo.base.user.pojo.type.SystemRolesType;
 import demo.config.costom_component.BaseUtilCustom;
 import demo.finance.cryptoCoin.sharing.pojo.constant.CryptoCoinSharingUrl;
-import demo.toyParts.educate.pojo.constant.EducateUrl;
+import demo.tool.educate.pojo.constant.EducateUrl;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

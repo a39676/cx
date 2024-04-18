@@ -172,7 +172,7 @@ public class CryptoCoin5MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 			return poDataList;
 		}
 		List<CryptoCoinPriceCommonDataBO> resultDataList = mergePODataWithCache(poDataList, cacheDataList, startTime,
-				minuteStepLong, TimeUnitType.minute);
+				minuteStepLong, TimeUnitType.MINUTE);
 
 		return resultDataList;
 	}

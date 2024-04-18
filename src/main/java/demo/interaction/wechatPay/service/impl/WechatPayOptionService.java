@@ -88,7 +88,7 @@ public class WechatPayOptionService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.WECHAT_PAY);
-			WechatPayOptionService tmp = new Gson().fromJson(jsonStr, WechatPayOptionService.class);
+			WechatPayOptionService tmp = new Gson().fromJson(jsonStr, this.getClass());
 			BeanUtils.copyProperties(tmp, this);
 			log.error("Wechat Payoption loaded");
 		} catch (Exception e) {

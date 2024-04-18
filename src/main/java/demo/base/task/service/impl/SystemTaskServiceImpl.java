@@ -14,6 +14,7 @@ import demo.base.system.service.IpRecordService;
 import demo.base.task.service.CommonTaskService;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.type.SystemRolesType;
+import demo.config.costom_component.BbtDynamicKey;
 import demo.tool.mail.mapper.MailRecordMapper;
 import demo.tool.other.service.VisitDataService;
 
@@ -32,15 +33,14 @@ public class SystemTaskServiceImpl extends CommonTaskService {
 	private VisitDataService visitDataService;
 	@Autowired
 	private IpRecordService ipRecordService;
-
 	@Autowired
 	private UsersMapper usersMapper;
-
 	@Autowired
 	private MailRecordMapper mailRecordMapper;
-
 	@Autowired
 	private BaseMapper baseMapper;
+	@Autowired
+	private BbtDynamicKey bbtDynamicKey;
 
 //	*/31 * * * * ? // 每31秒执行一次
 //	@Scheduled(cron="0 */30 * * * ?")   //每30分钟的0秒
@@ -150,6 +150,11 @@ public class SystemTaskServiceImpl extends CommonTaskService {
 	@Scheduled(cron = "40 12 01 * * *") // 每天01:12:40执行
 	public void deleteExpiredDenyRecordTask() {
 		ipRecordService.deleteExpiredDenyRecord();
+	}
+
+	@Scheduled(cron = "*/1 */1 */1 * * ?")
+	public void test() {
+		bbtDynamicKey.createKey(null);
 	}
 
 }

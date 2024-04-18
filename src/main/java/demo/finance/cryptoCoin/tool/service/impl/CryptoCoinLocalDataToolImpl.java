@@ -17,10 +17,10 @@ import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalogExample;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1day;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample;
 import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinMAResult;
-import demo.finance.cryptoCoin.data.pojo.result.FilterBODataResult;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
 import demo.finance.cryptoCoin.tool.pojo.result.CryptoCoinLocalDataFinderResult;
 import demo.finance.cryptoCoin.tool.service.CryptoCoinLocalDataTool;
+import finance.common.pojo.bo.FilterPriceResult;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 
@@ -82,7 +82,7 @@ public class CryptoCoinLocalDataToolImpl extends CryptoCoinAnalysisService imple
 			Double upApmlitude, Double downApmlitude) {
 		List<CryptoCoinPriceCommonDataBO> dataList = _1DayDataService.getCommonDataList(catalog, CurrencyTypeForCryptoCoin.USD,
 				startDatetime, endDatetime);
-		FilterBODataResult maxMinPriceResult = filterData(dataList);
+		FilterPriceResult maxMinPriceResult = kLineToolUnit.filterData(dataList);
 
 		if (maxMinPriceResult.isFail()) {
 			return false;

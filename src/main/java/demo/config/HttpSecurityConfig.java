@@ -50,6 +50,7 @@ import demo.test.pojo.constant.TestUrl;
 import demo.tool.other.pojo.constant.ToolUrlConstant;
 import demo.tool.wordHelper.pojo.constant.WordHelperUrl;
 import image.pojo.constant.ImageInteractionUrl;
+import tool.pojo.constant.CxBbtInteractionUrl;
 import wechatPaySdk.jsApi.pojo.constant.WechatPaySdkUrlConstant;
 import wechatSdk.pojo.constant.WechatSdkUrlConstant;
 
@@ -134,6 +135,7 @@ public class HttpSecurityConfig extends CommonService {
 
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
+<<<<<<< HEAD
 		return (web) -> web.ignoring().requestMatchers("/test/testIgnoring")
 				.requestMatchers(ImageInteractionUrl.ROOT + "/**")
 				.requestMatchers(AiChatFromWechatSdkUrlConstant.ROOT + "/**")
@@ -141,6 +143,13 @@ public class HttpSecurityConfig extends CommonService {
 				.requestMatchers(WechatSdkUrlConstant.ROOT + "/**").requestMatchers(AiChatApiUrlConstant.ROOT + "/**")
 				.requestMatchers(AiArtApiUrlConstant.ROOT + "/**").requestMatchers(ImageUrl.ROOT + "/**")
 				.requestMatchers(UrgeNoticeUrl.ROOT + "/**")
+=======
+		return (web) -> web.ignoring().antMatchers("/test/testIgnoring").antMatchers(ImageInteractionUrl.ROOT + "/**")
+				.antMatchers(AiChatFromWechatSdkUrlConstant.ROOT + "/**")
+				.antMatchers(WechatPaySdkUrlConstant.ROOT + "/**").antMatchers(WechatSdkUrlConstant.ROOT + "/**")
+				.antMatchers(AiChatApiUrlConstant.ROOT + "/**").antMatchers(AiArtApiUrlConstant.ROOT + "/**")
+				.antMatchers(ImageUrl.ROOT + "/**").antMatchers(CxBbtInteractionUrl.ROOT + "/**")
+>>>>>>> refs/heads/main
 				;
 	}
 

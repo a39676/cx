@@ -1,8 +1,9 @@
 package demo.config.costom_component;
 
 public class OptionFilePathConfigurer {
-	
-	public static final String ROOT = "/home/u2/cx/optionFile";
+
+	private static final String ROOT = "/home/u2/cx/optionFile";
+	private static final String ROOT_FOR_BBT = "/home/u2/bbt/optionFile";
 
 	public static final String SYSTEM = ROOT + "/system/option.json";
 	public static final String ARTICLE = ROOT + "/article/option.json";
@@ -16,7 +17,7 @@ public class OptionFilePathConfigurer {
 	public static final String TOOL = ROOT + "/tool/option.json";
 	public static final String EDUCATE = ROOT + "/educate/option.json";
 	public static final String JOY = ROOT + "/joy/option.json";
-	public static final String JOY_GRADEN = ROOT + "/joy/gardenOption.json";
+	public static final String JOY_GARDEN = ROOT + "/joy/gardenOption.json";
 	public static final String OPEN_AI = ROOT + "/openAI/option.json";
 	public static final String WECHAT = ROOT + "/wechat/option.json";
 	public static final String CLOUD_FLARE = ROOT + "/cloudFlare/option.json";
@@ -26,5 +27,7 @@ public class OptionFilePathConfigurer {
 	public static final String AI_ART = ROOT + "/aiArt/option.json";
 	public static final String PROMOTE = ROOT + "/promote/option.json";
 	public static final String ZULIP = ROOT + "/zulip/option.json";
+	public static final String CN_STOCK_MARKET = ROOT + "/cnStockMarket/option.json";
 
+	public static final String CRYPTO_COIN_FOR_BBT = ROOT_FOR_BBT + "/cryptoCoin/option.json";
 }

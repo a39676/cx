@@ -125,7 +125,7 @@ public class WechatOptionService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.WECHAT);
-			WechatOptionService tmp = new Gson().fromJson(jsonStr, WechatOptionService.class);
+			WechatOptionService tmp = new Gson().fromJson(jsonStr, this.getClass());
 			BeanUtils.copyProperties(tmp, this);
 			log.error("WechatOptionService option loaded");
 		} catch (Exception e) {

@@ -11,7 +11,7 @@ import com.google.gson.Gson;
 
 import demo.common.service.CommonService;
 import demo.config.costom_component.OptionFilePathConfigurer;
-import demo.tool.telegram.pojo.bo.TelegramConstantBO;
+import demo.tool.textMessageForward.telegram.pojo.bo.TelegramConstantBO;
 import jakarta.annotation.PostConstruct;
 import toolPack.ioHandle.FileUtilCustom;
 

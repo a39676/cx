@@ -16,6 +16,7 @@ import demo.article.articleComment.service.impl.ArticleCommentOptionService;
 import demo.automationTest.service.impl.AutomationTestOptionService;
 import demo.base.system.pojo.constant.BaseUrl;
 import demo.base.system.service.impl.SystemOptionService;
+import demo.finance.cnStockMarket.service.impl.CnStockMarketOptionService;
 import demo.finance.cryptoCoin.common.service.CryptoCoinOptionService;
 import demo.finance.currencyExchangeRate.data.service.impl.CurrencyExchangeRateOptionService;
 import demo.interaction.wechat.service.impl.WechatOptionService;
@@ -26,11 +27,11 @@ import demo.promote.service.impl.PromoteOptionService;
 import demo.thirdPartyAPI.cloudFlare.service.impl.CloudFlareOptionService;
 import demo.thirdPartyAPI.cloudinary.service.impl.CloudinaryOptionService;
 import demo.thirdPartyAPI.openAI.service.impl.OpenAiOptionService;
+import demo.tool.educate.service.impl.EducateOptionService;
 import demo.tool.mail.service.impl.MailOptionService;
 import demo.tool.service.impl.ToolOptionService;
-import demo.tool.telegram.service.impl.TelegramOptionService;
+import demo.tool.textMessageForward.telegram.service.impl.TelegramOptionService;
 import demo.tool.zulip.service.impl.ZulipOptionService;
-import demo.toyParts.educate.service.impl.EducateOptionService;
 
 @Controller
 @RequestMapping(value = BaseUrl.OPTION_CONSTANT)
@@ -84,6 +85,8 @@ public class OptionConstantController {
 	private PromoteOptionService promoteOptionService;
 	@Autowired
 	private ZulipOptionService zulipOptionService;
+	@Autowired
+	private CnStockMarketOptionService cnStockMarketOptionService;
 
 	@GetMapping(value = "/refreshSystemOption")
 	@ResponseBody
@@ -233,10 +236,19 @@ public class OptionConstantController {
 	}
 	
 
-	@GetMapping(value = "/zulipOptionService")
+	@GetMapping(value = "/refreshZulipOption")
 	@ResponseBody
 	public String zulipOptionService() {
 		zulipOptionService.refreshOption();
 		return "done";
 	}
+	
+	@GetMapping(value = "/refreshCnStockMarketOption")
+	@ResponseBody
+	public String cnStockMarketOptionService() {
+		cnStockMarketOptionService.refreshOption();
+		return "done";
+	}
+	
+	
 }

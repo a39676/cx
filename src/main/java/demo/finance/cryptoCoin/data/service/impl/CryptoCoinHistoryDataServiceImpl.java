@@ -39,7 +39,7 @@ public class CryptoCoinHistoryDataServiceImpl extends CryptoCoinCommonService im
 	public List<CryptoCoinPriceCommonDataBO> getHistoryDataList(CryptoCoinCatalog coinType, CurrencyTypeForCryptoCoin currencyType,
 			TimeUnitType timeUnit, Integer timeRange) {
 		LocalDateTime startTime = null;
-		if (TimeUnitType.minute.equals(timeUnit)) {
+		if (TimeUnitType.MINUTE.equals(timeUnit)) {
 			if (CryptoCoinDataConstant.CRYPTO_COIN_1MINUTE_DATA_LIVE_HOURS * 60 > timeRange) {
 				startTime = LocalDateTime.now().minusMinutes(timeRange).withSecond(0).withNano(0);
 				return minuteDataService.getCommonDataListFillWithCache(coinType, currencyType, startTime);
@@ -47,13 +47,13 @@ public class CryptoCoinHistoryDataServiceImpl extends CryptoCoinCommonService im
 				startTime = nextStepStartTimeByMinute(LocalDateTime.now(), timeRange).minusMinutes(timeRange.longValue());
 				return _5MinDataService.getCommonDataListFillWithCache(coinType, currencyType, startTime);
 			}
-		} else if (TimeUnitType.hour.equals(timeUnit)) {
+		} else if (TimeUnitType.HOUR.equals(timeUnit)) {
 			startTime = LocalDateTime.now().minusHours(timeRange).withMinute(0).withSecond(0).withNano(0);
 			return hourDataService.getCommonDataList(coinType, currencyType, startTime);
-		} else if (TimeUnitType.day.equals(timeUnit)) {
+		} else if (TimeUnitType.DAY.equals(timeUnit)) {
 			startTime = LocalDateTime.now().minusDays(timeRange).withHour(0).withMinute(0).withSecond(0).withNano(0);
 			return dailyDataService.getCommonDataList(coinType, currencyType, startTime);
-		} else if (TimeUnitType.month.equals(timeUnit)) {
+		} else if (TimeUnitType.MONTH.equals(timeUnit)) {
 			startTime = LocalDateTime.now().withDayOfMonth(1).minusMonths(timeRange - 1).withSecond(0).withNano(0);
 			return monthlyDataService.getCommonDataList(coinType, currencyType, startTime);
 		}

@@ -136,3 +136,5 @@ Temporary Items
 /build/
 
 nohup.out
+
+/src/main/resources/properties/database/vpsFinancer.properties

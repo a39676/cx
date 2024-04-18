@@ -1,8 +1,6 @@
 package demo.pmemo.service;
 
-
-
-import demo.tool.telegram.pojo.dto.TelegramUpdateMessageDTO;
+import demo.tool.textMessageForward.telegram.pojo.dto.TelegramUpdateMessageDTO;
 import jakarta.servlet.http.HttpServletRequest;
 
 public interface UrgeNoticeService {

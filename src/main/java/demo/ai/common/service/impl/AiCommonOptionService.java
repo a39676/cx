@@ -13,7 +13,6 @@ import jakarta.annotation.PostConstruct;
 @Service
 public class AiCommonOptionService extends CommonService {
 
-
 	private Long idOfAdmin;
 
 	public Long getIdOfAdmin() {

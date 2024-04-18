@@ -33,7 +33,7 @@ import demo.tool.calendarNotice.pojo.po.CalendarPreNoticeExample;
 import demo.tool.calendarNotice.pojo.vo.CalendarNoticeVO;
 import demo.tool.calendarNotice.service.CalendarNoticeService;
 import demo.tool.calendarNotice.service.CalendarNoticeStrongNoticeService;
-import demo.tool.telegram.service.TelegramService;
+import demo.tool.textMessageForward.telegram.service.TelegramService;
 import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.type.TelegramBotType;
 import toolPack.dateTimeHandle.Lunar;
@@ -54,8 +54,8 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 	public ModelAndView getManagerView() {
 		ModelAndView v = new ModelAndView("toolJSP/CalendarNotice/CalendarNoticeSettingManager");
 
-		List<TimeUnitType> timeUnitTypeList = Arrays.asList(TimeUnitType.year, TimeUnitType.month, TimeUnitType.week,
-				TimeUnitType.day, TimeUnitType.hour, TimeUnitType.minute);
+		List<TimeUnitType> timeUnitTypeList = Arrays.asList(TimeUnitType.YEAR, TimeUnitType.MONTH, TimeUnitType.WEEK,
+				TimeUnitType.DAY, TimeUnitType.HOUR, TimeUnitType.MINUTE);
 		v.addObject("timeUnitTypeList", timeUnitTypeList);
 
 		List<CalendarNotice> noticeList = findNoticesToSend();
@@ -121,8 +121,8 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 					r.addMessage("Time range must >= 0");
 				}
 				TimeUnitType timeUnitType = TimeUnitType.getType(dto.getRepeatTimeUnit());
-				if (timeUnitType == null || timeUnitType.equals(TimeUnitType.nanoSecond)
-						|| timeUnitType.equals(TimeUnitType.milliSecond)) {
+				if (timeUnitType == null || timeUnitType.equals(TimeUnitType.NANO_SECOND)
+						|| timeUnitType.equals(TimeUnitType.MILLION_SECOND)) {
 					r.addMessage("Invalid time unit");
 				}
 			}
@@ -151,7 +151,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 
 			if (needRepeat) {
 				TimeUnitType timeUnitType = TimeUnitType.getType(dto.getRepeatTimeUnit());
-				if (timeUnitType == null || timeUnitType.getCode() < TimeUnitType.day.getCode()) {
+				if (timeUnitType == null || timeUnitType.getCode() < TimeUnitType.DAY.getCode()) {
 					r.addMessage("Invalid time unit for lunar calendar notice");
 
 				} else {
@@ -175,7 +175,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 				if (dto.getPreNoticeRepeatTimeRange() == null || dto.getPreNoticeRepeatTimeUnit() == null) {
 					r.addMessage("Please set pre notice repeat time range and time unit, if set pre notice");
 				} else {
-					if (dto.getPreNoticeRepeatTimeUnit() < TimeUnitType.minute.getCode()) {
+					if (dto.getPreNoticeRepeatTimeUnit() < TimeUnitType.MINUTE.getCode()) {
 						r.addMessage("Repettition period must be greater than 1 minute");
 					}
 					if (dto.getPreNoticeRepeatTimeRange() < 1) {
@@ -194,7 +194,7 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 
 	private Lunar getNextLunarDate(Lunar lunar, TimeUnitType timeUnitType, Integer timeRange) {
 
-		if (timeUnitType.equals(TimeUnitType.day)) {
+		if (timeUnitType.equals(TimeUnitType.DAY)) {
 			lunar.setLunarDay(lunar.getLunarDay() + timeRange);
 			return lunar;
 		}
@@ -212,10 +212,10 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 			lunar.setIsleap(false);
 		}
 
-		if (timeUnitType.equals(TimeUnitType.month)) {
+		if (timeUnitType.equals(TimeUnitType.MONTH)) {
 			lunar.setLunarMonth(lunar.getLunarMonth() + timeRange);
 
-		} else if (timeUnitType.equals(TimeUnitType.year)) {
+		} else if (timeUnitType.equals(TimeUnitType.YEAR)) {
 			lunar.setLunarYear(lunar.getLunarYear() + timeRange);
 		}
 
@@ -235,17 +235,17 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 
 	private LocalDateTime getPreNoticeTime(LocalDateTime noticeTime, TimeUnitType timeUnitType, Integer timeRange,
 			Integer preNoticeCount) {
-		if (TimeUnitType.year.equals(timeUnitType)) {
+		if (TimeUnitType.YEAR.equals(timeUnitType)) {
 			return noticeTime.minusYears(timeRange * preNoticeCount);
-		} else if (TimeUnitType.month.equals(timeUnitType)) {
+		} else if (TimeUnitType.MONTH.equals(timeUnitType)) {
 			return noticeTime.minusMonths(timeRange * preNoticeCount);
-		} else if (TimeUnitType.week.equals(timeUnitType)) {
+		} else if (TimeUnitType.WEEK.equals(timeUnitType)) {
 			return noticeTime.minusWeeks(timeRange * preNoticeCount);
-		} else if (TimeUnitType.day.equals(timeUnitType)) {
+		} else if (TimeUnitType.DAY.equals(timeUnitType)) {
 			return noticeTime.minusDays(timeRange * preNoticeCount);
-		} else if (TimeUnitType.hour.equals(timeUnitType)) {
+		} else if (TimeUnitType.HOUR.equals(timeUnitType)) {
 			return noticeTime.minusHours(timeRange * preNoticeCount);
-		} else if (TimeUnitType.minute.equals(timeUnitType)) {
+		} else if (TimeUnitType.MINUTE.equals(timeUnitType)) {
 			return noticeTime.minusMinutes(timeRange * preNoticeCount);
 		}
 		return LocalDateTime.now();
@@ -253,19 +253,19 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 
 	private LocalDateTime getNextLocalDateTime(LocalDateTime datetime, TimeUnitType timeUnitType, Integer timeRange) {
 
-		if (timeUnitType.equals(TimeUnitType.second)) {
+		if (timeUnitType.equals(TimeUnitType.SECOND)) {
 			datetime = datetime.plusSeconds(timeRange);
-		} else if (timeUnitType.equals(TimeUnitType.minute)) {
+		} else if (timeUnitType.equals(TimeUnitType.MINUTE)) {
 			datetime = datetime.plusMinutes(timeRange);
-		} else if (timeUnitType.equals(TimeUnitType.hour)) {
+		} else if (timeUnitType.equals(TimeUnitType.HOUR)) {
 			datetime = datetime.plusHours(timeRange);
-		} else if (timeUnitType.equals(TimeUnitType.day)) {
+		} else if (timeUnitType.equals(TimeUnitType.DAY)) {
 			datetime = datetime.plusDays(timeRange);
-		} else if (timeUnitType.equals(TimeUnitType.week)) {
+		} else if (timeUnitType.equals(TimeUnitType.WEEK)) {
 			datetime = datetime.plusWeeks(timeRange);
-		} else if (timeUnitType.equals(TimeUnitType.month)) {
+		} else if (timeUnitType.equals(TimeUnitType.MONTH)) {
 			datetime = datetime.plusMonths(timeRange);
-		} else if (timeUnitType.equals(TimeUnitType.year)) {
+		} else if (timeUnitType.equals(TimeUnitType.YEAR)) {
 			datetime = datetime.plusYears(timeRange);
 		}
 
@@ -537,8 +537,8 @@ public class CalendarNoticeServiceImpl extends CalendarNoticeCommonService imple
 
 		view.addObject("noticeVOList", noticeVOList);
 
-		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.minute, TimeUnitType.hour, TimeUnitType.day,
-				TimeUnitType.week, TimeUnitType.month };
+		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.MINUTE, TimeUnitType.HOUR, TimeUnitType.DAY,
+				TimeUnitType.WEEK, TimeUnitType.MONTH };
 		view.addObject("timeUnitType", timeUnitTypes);
 
 		return view;

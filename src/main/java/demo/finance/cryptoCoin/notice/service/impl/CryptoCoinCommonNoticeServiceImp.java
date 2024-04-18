@@ -21,7 +21,6 @@ import demo.finance.cryptoCoin.data.pojo.dto.InsertCryptoCoinLowPriceNoticeSetti
 import demo.finance.cryptoCoin.data.pojo.dto.InsertCryptoCoinPriceNoticeSettingDTO;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinNoticeDTOCheckResult;
-import demo.finance.cryptoCoin.data.pojo.result.FilterBODataResult;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinHistoryDataService;
@@ -33,9 +32,10 @@ import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNoticeExample;
 import demo.finance.cryptoCoin.notice.pojo.po.CryptoCoinPriceNoticeExample.Criteria;
 import demo.finance.cryptoCoin.notice.pojo.vo.CryptoCoinNoticeVO;
 import demo.finance.cryptoCoin.notice.service.CryptoCoinCommonNoticeService;
-import demo.tool.telegram.pojo.po.TelegramChatId;
-import demo.tool.telegram.pojo.vo.TelegramChatIdVO;
-import demo.tool.telegram.service.TelegramService;
+import demo.tool.textMessageForward.telegram.pojo.po.TelegramChatId;
+import demo.tool.textMessageForward.telegram.pojo.vo.TelegramChatIdVO;
+import demo.tool.textMessageForward.telegram.service.TelegramService;
+import finance.common.pojo.bo.FilterPriceResult;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 import telegram.pojo.type.TelegramBotType;
@@ -49,7 +49,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 	private CryptoCoinHistoryDataService cryptoCoinHistoryDataService;
 	@Autowired
 	private CryptoCoin1MinuteDataSummaryService minuteDataService;
-	
+
 	@Autowired
 	protected CryptoCoinPriceNoticeMapper noticeMapper;
 
@@ -64,8 +64,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		currencyTypeList.addAll(Arrays.asList(CurrencyTypeForCryptoCoin.values()));
 		view.addObject("currencyType", currencyTypeList);
 
-		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.minute, TimeUnitType.hour, TimeUnitType.day,
-				TimeUnitType.week, TimeUnitType.month };
+		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.MINUTE, TimeUnitType.HOUR, TimeUnitType.DAY,
+				TimeUnitType.WEEK, TimeUnitType.MONTH };
 		view.addObject("timeUnitType", timeUnitTypes);
 
 		List<TelegramChatId> chatIDPOList = telegramService.getChatIDList();
@@ -117,7 +117,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		}
 		return r;
 	}
-	
+
 	@Override
 	public CommonResult insertNewCryptoCoinLowPriceNoticeSetting(InsertCryptoCoinLowPriceNoticeSettingDTO dto) {
 		CommonResult r = new CommonResult();
@@ -262,7 +262,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		return dto;
 	}
-	
+
 	private InsertCryptoCoinLowPriceNoticeSettingDTO dtoPrefixHandle(InsertCryptoCoinLowPriceNoticeSettingDTO dto) {
 		if (!priceRangeConditionHadSet(dto)) {
 			return dto;
@@ -366,9 +366,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		}
 
 		if (StringUtils.isNotBlank(content)) {
-			if (!"dev".equals(systemOptionService.getEnvName())) {
-				telegramService.sendMessageByChatRecordId(TelegramBotType.getType(noticeSetting.getTelegramBotName()), content, noticeSetting.getTelegramChatRecordId());
-			}
+			telegramService.sendMessageByChatRecordId(TelegramBotType.getType(noticeSetting.getTelegramBotName()),
+					content, noticeSetting.getTelegramChatRecordId());
 
 			noticeSetting.setNoticeTime(LocalDateTime.now());
 			noticeSetting.setNoticeCount(noticeSetting.getNoticeCount() - 1);
@@ -405,7 +404,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 			return r;
 		}
 
-		FilterBODataResult maxMinPriceResult = filterData(historyDataList);
+		FilterPriceResult maxMinPriceResult = kLineToolUnit.filterData(historyDataList);
 		if (maxMinPriceResult.isFail()) {
 			r.addMessage(maxMinPriceResult.getMessage());
 			return r;
@@ -435,15 +434,15 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		return r;
 	}
-	
+
 	private CommonResult priceFluctuationSpeedNoticeHandle(CryptoCoinPriceNotice noticeSetting,
 			CryptoCoinCatalog coinType, CurrencyTypeForCryptoCoin currencyType) {
 		CommonResult r = new CommonResult();
 
 		TimeUnitType timeUnit = TimeUnitType.getType(noticeSetting.getTimeUnitOfDataWatch());
 
-		List<CryptoCoinPriceCommonDataBO> historyBOList = cryptoCoinHistoryDataService.getHistoryDataList(coinType, currencyType, timeUnit,
-				noticeSetting.getTimeRangeOfDataWatch());
+		List<CryptoCoinPriceCommonDataBO> historyBOList = cryptoCoinHistoryDataService.getHistoryDataList(coinType,
+				currencyType, timeUnit, noticeSetting.getTimeRangeOfDataWatch());
 		if (historyBOList == null || historyBOList.isEmpty()) {
 			log.error(noticeSetting.getId() + ", can NOT find any history data of: " + coinType.getCoinNameEnShort());
 			return r;
@@ -451,7 +450,7 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 
 		Collections.sort(historyBOList);
 
-		FilterBODataResult maxMinPriceResult = filterData(historyBOList);
+		FilterPriceResult maxMinPriceResult = kLineToolUnit.filterData(historyBOList);
 		if (maxMinPriceResult.isFail()) {
 			r.addMessage(maxMinPriceResult.getMessage());
 			return r;
@@ -518,8 +517,8 @@ public class CryptoCoinCommonNoticeServiceImp extends CryptoCoinCommonService im
 		ModelAndView view = new ModelAndView("finance/cryptoCoin/CryptoCoinPriceNoticeSearchResult");
 
 		view.addObject("currencyType", CurrencyTypeForCryptoCoin.values());
-		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.minute, TimeUnitType.hour, TimeUnitType.day,
-				TimeUnitType.week, TimeUnitType.month };
+		TimeUnitType[] timeUnitTypes = new TimeUnitType[] { TimeUnitType.MINUTE, TimeUnitType.HOUR, TimeUnitType.DAY,
+				TimeUnitType.WEEK, TimeUnitType.MONTH };
 		view.addObject("timeUnitType", timeUnitTypes);
 
 		Long chatId = systemOptionService.decryptPrivateKey(dto.getReciverPK());

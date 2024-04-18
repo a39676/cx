@@ -23,7 +23,7 @@ import demo.interaction.sms.pojo.po.SmsSendingHistory;
 import demo.interaction.sms.pojo.result.QuerySendingFrequencyResult;
 import demo.interaction.sms.service.SmsSendingService;
 import demo.interaction.sms.service.SmsVerificationService;
-import demo.tool.telegram.service.TelegramService;
+import demo.tool.textMessageForward.telegram.service.TelegramService;
 import net.sf.json.JSONObject;
 import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.type.TelegramBotType;

@@ -2,8 +2,8 @@ package demo.article.article.pojo.type;
 
 public enum ArticleChannelKeyHostnameType {
 	
-	pass("pass", 1),
-	ban("ban", 2),
+	PASS("pass", 1),
+	BAN("ban", 2),
 	;
 	
 	private String name;

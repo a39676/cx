@@ -1,11 +1,11 @@
 package demo.interaction.wechat.mq.producer;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import demo.common.service.CommonService;
-import io.micrometer.core.instrument.util.StringUtils;
 import wechatSdk.pojo.constant.WechatSdkMqConstant;
 
 @Component

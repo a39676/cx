@@ -17,7 +17,6 @@ import toolPack.ioHandle.FileUtilCustom;
 @Service
 public class CloudinaryOptionService extends CommonService {
 
-
 	private String cloudinaryName;
 	private String cloudinaryApiKey;
 	private String cloudinaryApiSecret;
@@ -31,7 +30,7 @@ public class CloudinaryOptionService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.CLOUDINARY);
-			CloudinaryOptionService tmp = new Gson().fromJson(jsonStr, CloudinaryOptionService.class);
+			CloudinaryOptionService tmp = new Gson().fromJson(jsonStr, this.getClass());
 			BeanUtils.copyProperties(tmp, this);
 			log.error("cloudinary option loaded");
 		} catch (Exception e) {
@@ -68,5 +67,4 @@ public class CloudinaryOptionService extends CommonService {
 		return "CloudinaryOptionService [cloudinaryName=" + cloudinaryName + ", cloudinaryApiKey=" + cloudinaryApiKey
 				+ ", cloudinaryApiSecret=" + cloudinaryApiSecret + "]";
 	}
-
 }

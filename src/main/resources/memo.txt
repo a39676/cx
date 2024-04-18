@@ -1,5 +1,3 @@
-多个单独心跳校验
-
 crypto coin
 	CryptoCoinPriceCommonDataBO delete field coinType
 	

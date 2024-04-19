@@ -50,7 +50,6 @@ import demo.test.pojo.constant.TestUrl;
 import demo.tool.other.pojo.constant.ToolUrlConstant;
 import demo.tool.wordHelper.pojo.constant.WordHelperUrl;
 import image.pojo.constant.ImageInteractionUrl;
-import tool.pojo.constant.CxBbtInteractionUrl;
 import wechatPaySdk.jsApi.pojo.constant.WechatPaySdkUrlConstant;
 import wechatSdk.pojo.constant.WechatSdkUrlConstant;
 
@@ -75,82 +74,76 @@ public class HttpSecurityConfig extends CommonService {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> authManReqMatR = new Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry>() {
-			
+
 			@Override
-			public void customize(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry t) {
+			public void customize(
+					AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry t) {
 				// TODO Auto-generated method stub
-				
+
 			}
 		};
 		http.authorizeHttpRequests(authManReqMatR);
-		
-		http.authorizeRequests().requestMatchers("/welcome**").permitAll().requestMatchers(LoginUrlConstant.LOGIN + "/**")
-		.permitAll().requestMatchers(UsersUrl.root + "/**").permitAll().requestMatchers("/static_resources/**")
-		.permitAll().requestMatchers("/tHome/**").permitAll()
-		// used to allow anonymous access
-		// .requestMatchers("/welcome**").access("IS_AUTHENTICATED_ANONYMOUSLY")
+
+		http.authorizeRequests().requestMatchers("/welcome**").permitAll()
+				.requestMatchers(LoginUrlConstant.LOGIN + "/**").permitAll().requestMatchers(UsersUrl.root + "/**")
+				.permitAll().requestMatchers("/static_resources/**").permitAll().requestMatchers("/tHome/**")
+				.permitAll()
+				// used to allow anonymous access
+				// .requestMatchers("/welcome**").access("IS_AUTHENTICATED_ANONYMOUSLY")
 //    .requestMatchers(ArticleUrlConstant.root + "/**").access("hasAnyRole('" + RolesType.ROLE_ADMIN.getRoleName() + "','" + RolesType.ROLE_USER.getRoleName() + "')")
-		.requestMatchers(BaseUrl.SHUTDOWN + "/**").access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
-		.requestMatchers(BaseUrl.OPTION_CONSTANT + "/**").access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
-		.requestMatchers(TestUrl.root + "/**").access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
-		.requestMatchers("/holder/**")
-		.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_USER))
-		.requestMatchers("/accountInfo/**").access(hasAnyRole(SystemRolesType.ROLE_USER))
-		.requestMatchers(AdminUrlConstant.root + "/**").access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN))
-		.requestMatchers(ArticleAdminUrlConstant.root + "/**").access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN))
-		.requestMatchers(ArticleAdminCommentUrlConstant.root + "/**")
-		.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN)).requestMatchers("/dba/**")
-		.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DBA))
-		.requestMatchers(ToolUrlConstant.root + "/**").access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
-		.requestMatchers(CryptoCoinManagerUrl.ROOT + "/**")
-		.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
-		.requestMatchers(CurrencyExchangeRateNoticeUrl.ROOT + "/**")
-		.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
-		.requestMatchers(PMemoUrl.ROOT + PMemoUrl.SET).access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
-		.requestMatchers(UrgeNoticeManagerUrl.ROOT + "/**")
-		.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
-		.requestMatchers(CryptoCoinSharingUrl.ROOT + CryptoCoinSharingUrl.CALCULATE_DETAIL).permitAll()
-		.requestMatchers(CryptoCoinSharingUrl.ROOT + "/**")
-		.access("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')")
-		.requestMatchers(AiManagerUrlConstant.ROOT + "/**")
-		.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
-		.requestMatchers(AiArtMangerUrl.ROOT + "/**")
-		.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
-		.requestMatchers(WordHelperUrl.ROOT + "/**")
-		.access(hasAnyRole(SystemRolesType.ROLE_USER_ACTIVE, SystemRolesType.ROLE_STUDENT))
-		// joy url start
-		.requestMatchers(JoyUrl.ROOT + "/**").access(hasAnyRole(SystemRolesType.ROLE_USER_ACTIVE))
-		.requestMatchers(JoyManagerUrl.ROOT + "/**")
-		.access(hasAnyRole(SystemRolesType.ROLE_ADMIN, SystemRolesType.ROLE_SUPER_ADMIN))
-		// joy url end
-		.and().formLogin().loginPage("/login/login").failureUrl("/login/login?error")
-		.loginProcessingUrl("/auth/login_check").successHandler(customAuthenticationSuccessHandler)
-		.failureHandler(customAuthenticationFailHandler).usernameParameter("user_name").passwordParameter("pwd")
-		.and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/login/logout")).and()
-		.exceptionHandling().accessDeniedPage("/403").and().rememberMe()
-		.tokenRepository(persistentTokenRepository()).tokenValiditySeconds(3600).and().authorizeRequests().and()
-		.csrf();
+				.requestMatchers(BaseUrl.SHUTDOWN + "/**").access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
+				.requestMatchers(BaseUrl.OPTION_CONSTANT + "/**").access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
+				.requestMatchers(TestUrl.root + "/**").access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
+				.requestMatchers("/holder/**")
+				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_USER))
+				.requestMatchers("/accountInfo/**").access(hasAnyRole(SystemRolesType.ROLE_USER))
+				.requestMatchers(AdminUrlConstant.root + "/**").access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN))
+				.requestMatchers(ArticleAdminUrlConstant.root + "/**")
+				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN))
+				.requestMatchers(ArticleAdminCommentUrlConstant.root + "/**")
+				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN)).requestMatchers("/dba/**")
+				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DBA))
+				.requestMatchers(ToolUrlConstant.root + "/**").access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
+				.requestMatchers(CryptoCoinManagerUrl.ROOT + "/**")
+				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+				.requestMatchers(CurrencyExchangeRateNoticeUrl.ROOT + "/**")
+				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+				.requestMatchers(PMemoUrl.ROOT + PMemoUrl.SET).access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
+				.requestMatchers(UrgeNoticeManagerUrl.ROOT + "/**")
+				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+				.requestMatchers(CryptoCoinSharingUrl.ROOT + CryptoCoinSharingUrl.CALCULATE_DETAIL).permitAll()
+				.requestMatchers(CryptoCoinSharingUrl.ROOT + "/**")
+				.access("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')")
+				.requestMatchers(AiManagerUrlConstant.ROOT + "/**")
+				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+				.requestMatchers(AiArtMangerUrl.ROOT + "/**")
+				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+				.requestMatchers(WordHelperUrl.ROOT + "/**")
+				.access(hasAnyRole(SystemRolesType.ROLE_USER_ACTIVE, SystemRolesType.ROLE_STUDENT))
+				// joy url start
+				.requestMatchers(JoyUrl.ROOT + "/**").access(hasAnyRole(SystemRolesType.ROLE_USER_ACTIVE))
+				.requestMatchers(JoyManagerUrl.ROOT + "/**")
+				.access(hasAnyRole(SystemRolesType.ROLE_ADMIN, SystemRolesType.ROLE_SUPER_ADMIN))
+				// joy url end
+				.and().formLogin().loginPage("/login/login").failureUrl("/login/login?error")
+				.loginProcessingUrl("/auth/login_check").successHandler(customAuthenticationSuccessHandler)
+				.failureHandler(customAuthenticationFailHandler).usernameParameter("user_name").passwordParameter("pwd")
+				.and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/login/logout")).and()
+				.exceptionHandling().accessDeniedPage("/403").and().rememberMe()
+				.tokenRepository(persistentTokenRepository()).tokenValiditySeconds(3600).and().authorizeRequests().and()
+				.csrf();
 		return http.build();
 	}
 
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
-<<<<<<< HEAD
 		return (web) -> web.ignoring().requestMatchers("/test/testIgnoring")
 				.requestMatchers(ImageInteractionUrl.ROOT + "/**")
 				.requestMatchers(AiChatFromWechatSdkUrlConstant.ROOT + "/**")
 				.requestMatchers(WechatPaySdkUrlConstant.ROOT + "/**")
 				.requestMatchers(WechatSdkUrlConstant.ROOT + "/**").requestMatchers(AiChatApiUrlConstant.ROOT + "/**")
 				.requestMatchers(AiArtApiUrlConstant.ROOT + "/**").requestMatchers(ImageUrl.ROOT + "/**")
-				.requestMatchers(UrgeNoticeUrl.ROOT + "/**")
-=======
-		return (web) -> web.ignoring().antMatchers("/test/testIgnoring").antMatchers(ImageInteractionUrl.ROOT + "/**")
-				.antMatchers(AiChatFromWechatSdkUrlConstant.ROOT + "/**")
-				.antMatchers(WechatPaySdkUrlConstant.ROOT + "/**").antMatchers(WechatSdkUrlConstant.ROOT + "/**")
-				.antMatchers(AiChatApiUrlConstant.ROOT + "/**").antMatchers(AiArtApiUrlConstant.ROOT + "/**")
-				.antMatchers(ImageUrl.ROOT + "/**").antMatchers(CxBbtInteractionUrl.ROOT + "/**")
->>>>>>> refs/heads/main
-				;
+				.requestMatchers(UrgeNoticeUrl.ROOT + "/**");
 	}
 
 	@Bean

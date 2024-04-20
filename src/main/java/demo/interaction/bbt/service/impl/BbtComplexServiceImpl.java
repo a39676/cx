@@ -1,6 +1,7 @@
 package demo.interaction.bbt.service.impl;
 
 import java.io.File;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.dto.ServiceMsgDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.automationTest.service.impl.AutomationTestConstantService;
 import demo.base.system.service.impl.SystemOptionService;
 import demo.config.costom_component.OptionFilePathConfigurer;
 import demo.finance.cnStockMarket.service.CnStockMarketService;
@@ -33,6 +35,8 @@ public class BbtComplexServiceImpl extends BbtCommonService implements BbtComple
 	private CnStockMarketService cnStockMarketService;
 	@Autowired
 	private SystemOptionService systemOptionService;
+	@Autowired
+	private AutomationTestConstantService automationTestConstantService;
 
 	@Override
 	public CommonResult textMessageForwarding(ServiceMsgDTO dto) {
@@ -98,6 +102,7 @@ public class BbtComplexServiceImpl extends BbtCommonService implements BbtComple
 			response = h.sendGet(url);
 			systemOptionService.setWorkerClone_1IsAlive(response != null && response.contains("pong"));
 			systemOptionService.setWorkerOffLineCounter(0);
+			automationTestConstantService.setBbtLastHeartBeat(LocalDateTime.now());
 		} catch (Exception e) {
 			systemOptionService.setWorkerOffLineCounter(systemOptionService.getWorkerOffLineCounter() + 1);
 			if (systemOptionService.getWorkerOffLineCounter() > systemOptionService.getWorkerMaxOffLineCounter()) {

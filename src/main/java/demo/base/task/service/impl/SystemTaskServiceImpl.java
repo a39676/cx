@@ -14,7 +14,7 @@ import demo.base.system.service.IpRecordService;
 import demo.base.task.service.CommonTaskService;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.type.SystemRolesType;
-import demo.config.costom_component.BbtDynamicKey;
+import demo.config.customComponent.BbtDynamicKey;
 import demo.tool.mail.mapper.MailRecordMapper;
 import demo.tool.other.service.VisitDataService;
 

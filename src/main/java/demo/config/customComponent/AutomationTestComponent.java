@@ -1,4 +1,4 @@
-package demo.config.costom_component;
+package demo.config.customComponent;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,5 @@
 crypto coin
+	delete CryptoCoinDataSubDTO.java
 	CryptoCoinPriceCommonDataBO delete field coinType
 	
 日历提醒的跳过本次提前提醒异常

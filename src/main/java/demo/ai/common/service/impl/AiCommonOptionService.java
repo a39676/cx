@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import demo.common.service.CommonService;
-import demo.config.costom_component.OptionFilePathConfigurer;
+import demo.config.customComponent.OptionFilePathConfigurer;
 
 @Scope("singleton")
 @Service

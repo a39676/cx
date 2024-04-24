@@ -1,4 +1,4 @@
-package demo.config.costom_component;
+package demo.config.customComponent;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

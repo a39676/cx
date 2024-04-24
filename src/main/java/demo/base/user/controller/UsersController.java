@@ -20,7 +20,7 @@ import demo.base.user.pojo.result.FindUserByConditionResult;
 import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.UsersService;
 import demo.common.controller.CommonController;
-import demo.config.costom_component.BaseUtilCustom;
+import demo.config.customComponent.BaseUtilCustom;
 
 @Controller
 @RequestMapping(value = UsersUrl.root)

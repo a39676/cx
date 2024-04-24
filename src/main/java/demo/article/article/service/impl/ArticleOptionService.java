@@ -15,7 +15,7 @@ import com.google.gson.Gson;
 import demo.article.article.pojo.vo.ArticleChannelVO;
 import demo.base.system.pojo.result.HostnameType;
 import demo.common.service.CommonService;
-import demo.config.costom_component.OptionFilePathConfigurer;
+import demo.config.customComponent.OptionFilePathConfigurer;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")

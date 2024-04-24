@@ -4,9 +4,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import demo.config.costom_component.BaseUtilCustom;
-import demo.config.costom_component.SnowFlake;
-import demo.config.costom_component.Tess;
+import demo.config.customComponent.BaseUtilCustom;
+import demo.config.customComponent.SnowFlake;
+import demo.config.customComponent.Tess;
 import finance.common.tool.KLineToolUnit;
 import mail.service.MailToolService;
 import toolPack.complexTool.ChinaMainLandIdNumGenerator;

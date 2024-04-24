@@ -1,4 +1,4 @@
-package demo.config.costomAnnotation;
+package demo.config.customAnnotation;
 
 import java.util.Arrays;
 import java.util.List;

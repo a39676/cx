@@ -13,7 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.config.costom_component.OptionFilePathConfigurer;
+import demo.config.customComponent.OptionFilePathConfigurer;
 import demo.finance.cnStockMarket.pojo.dto.CnStockMarketNoticeSettingDTO;
 import demo.finance.cnStockMarket.service.CnStockMarketService;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;

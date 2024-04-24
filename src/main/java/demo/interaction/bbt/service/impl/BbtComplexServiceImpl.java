@@ -11,7 +11,7 @@ import auxiliaryCommon.pojo.dto.ServiceMsgDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.automationTest.service.impl.AutomationTestConstantService;
 import demo.base.system.service.impl.SystemOptionService;
-import demo.config.costom_component.OptionFilePathConfigurer;
+import demo.config.customComponent.OptionFilePathConfigurer;
 import demo.finance.cnStockMarket.service.CnStockMarketService;
 import demo.finance.currencyExchangeRate.data.service.CurrencyExchangeRateService;
 import demo.interaction.bbt.service.BbtCommonService;

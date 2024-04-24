@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 
 import demo.common.service.CommonService;
-import demo.config.costom_component.OptionFilePathConfigurer;
+import demo.config.customComponent.OptionFilePathConfigurer;
 import demo.tool.textMessageForward.telegram.pojo.bo.TelegramConstantBO;
 import toolPack.ioHandle.FileUtilCustom;
 

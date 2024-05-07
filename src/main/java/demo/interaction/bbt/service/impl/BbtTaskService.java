@@ -13,7 +13,7 @@ public class BbtTaskService {
 	private BbtComplexService bbtComplexService;
 
 	@Scheduled(fixedDelay = 1000L * 30)
-	public void makeSureWorkerClong1Alive() {
-		bbtComplexService.makeSureWorkerClong1Alive();
+	public void makeSureWorkerClone1Alive() {
+		bbtComplexService.makeSureWorkerClone1Alive();
 	}
 }

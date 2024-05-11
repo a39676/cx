@@ -2,7 +2,6 @@ package demo.finance.cryptoCoin.data.webSocket;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,7 +20,6 @@ import com.binance.connector.client.utils.websocketcallback.WebSocketMessageCall
 import demo.finance.cryptoCoin.data.webSocket.common.CryptoCoinWebSocketCommonClient;
 import finance.cryptoCoin.pojo.bo.BinanceWebScoketConnetionKeyBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
-import finance.cryptoCoin.pojo.constant.CryptoCoinWebSocketConstant;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 import net.sf.json.JSONObject;
 
@@ -80,8 +78,6 @@ public class BinanceWSClient2 extends CryptoCoinWebSocketCommonClient {
 
 			@Override
 			public void onMessage(String message) {
-				refreshLastActiveTime();
-
 				CryptoCoinPriceCommonDataBO dataBO = buildCommonDataFromMsg(message);
 				if (dataBO != null) {
 					cacheService.reciveData(dataBO);
@@ -94,10 +90,6 @@ public class BinanceWSClient2 extends CryptoCoinWebSocketCommonClient {
 	public void killStream() {
 		createWebSorkcetIfNecessary();
 		wsStreamClient.closeAllConnections();
-	}
-
-	private void refreshLastActiveTime() {
-		constantService.setBinanceWebSocketLastActiveTime(LocalDateTime.now());
 	}
 
 //	   binance web scoket kline respon exaple 
@@ -169,15 +161,5 @@ public class BinanceWSClient2 extends CryptoCoinWebSocketCommonClient {
 			return null;
 		}
 		return bo;
-	}
-
-	public boolean getSocketLiveFlag() {
-		LocalDateTime lastActiveTime = constantService.getBinanceWebSocketLastActiveTime();
-		if (lastActiveTime == null) {
-			return false;
-		}
-		long seconds = ChronoUnit.SECONDS.between(lastActiveTime, LocalDateTime.now());
-
-		return CryptoCoinWebSocketConstant.BINANCE_SOCKET_INACTIVE_JUDGMENT_SECOND > seconds;
 	}
 }

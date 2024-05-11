@@ -3,7 +3,6 @@ package demo.finance.cryptoCoin.data.webSocket;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +21,6 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.data.pojo.type.CryptoCompareWebSocketMsgType;
 import demo.finance.cryptoCoin.data.webSocket.common.CryptoCoinWebSocketCommonClient;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
-import finance.cryptoCoin.pojo.constant.CryptoCoinWebSocketConstant;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -125,7 +123,6 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 					ws.disconnect();
 				} else if (connectionType.getCode() < 400
 						|| CryptoCompareWebSocketMsgType.HEARTBEAT.equals(connectionType)) {
-					refreshLastActiveTime();
 
 				} else if (connectionType.getCode() == 500) {
 					if (CryptoCompareWebSocketMsgType.FORCE_DISCONNECT.equals(connectionType)) {
@@ -135,18 +132,15 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 					} else if (CryptoCompareWebSocketMsgType.RATE_LIMIT_OPENING_SOCKETS_TOO_FAST
 							.equals(connectionType)) {
 						log.error("crypto compare web socket error: " + connectionType.getName());
-						refreshLastActiveTime();
 						return;
 					} else {
 						log.error("crypto compare web socket error: " + connectionType.getName());
-						refreshLastActiveTime();
 						return;
 					}
 
 				} else if (CryptoCompareWebSocketMsgType.TOO_MANY_SOCKETS_MAX_.getCode()
 						.equals(connectionType.getCode())) {
 					log.error("crypto compare web socket error: " + connectionType.getName());
-					refreshLastActiveTime();
 					return;
 
 				} else {
@@ -168,20 +162,6 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 			}
 		});
 		return ws;
-	}
-
-	private void refreshLastActiveTime() {
-		constantService.setCryptoCompareWebSocketLastActiveTime(LocalDateTime.now());
-	}
-
-	public boolean getSocketLiveFlag() {
-		LocalDateTime lastActiveTime = constantService.getCryptoCompareWebSocketLastActiveTime();
-		if (lastActiveTime == null) {
-			return false;
-		}
-		long seconds = ChronoUnit.SECONDS.between(lastActiveTime, LocalDateTime.now());
-
-		return CryptoCoinWebSocketConstant.CRYPTO_COMPARE_SOCKET_INACTIVE_JUDGMENT_SECOND > seconds;
 	}
 
 	public CommonResult startWebSocket() {

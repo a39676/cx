@@ -34,20 +34,30 @@ public class CryptoCoinDataComplexServiceImpl extends CommonService implements C
 			return;
 		}
 		CryptoCoinBigMoveDataBO bo = buildObjFromJsonCustomization(msg, CryptoCoinBigMoveDataBO.class);
+		if (StringUtils.isBlank(bo.getSymbol())) {
+			return;
+		}
 
 		CryptoCoinBigMove po = new CryptoCoinBigMove();
+		TimeUnitType timeUnit = TimeUnitType.getType(bo.getTimeUnitTypeCode());
+		if (timeUnit == null) {
+			return;
+		}
 		try {
 			po.setEventTime(localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(bo.getBigMoveTimeStr()));
 		} catch (Exception e) {
 			return;
 		}
-		if (StringUtils.isBlank(bo.getSymbol())) {
+
+		CryptoCoinBigMoveExample example = new CryptoCoinBigMoveExample();
+		example.createCriteria().andSymbolEqualTo(bo.getSymbol()).andRateEqualTo(bo.getRate())
+				.andTimeRangeEqualTo(bo.getTimeRange()).andTimeUnitCodeEqualTo(bo.getTimeUnitTypeCode())
+				.andEventTimeEqualTo(po.getEventTime());
+		List<CryptoCoinBigMove> oldDataList = cryptoCoinBigMoveMapper.selectByExample(example);
+		if (!oldDataList.isEmpty()) {
 			return;
 		}
-		TimeUnitType timeUnit = TimeUnitType.getType(bo.getTimeUnitTypeCode());
-		if (timeUnit == null) {
-			return;
-		}
+
 		po.setRate(bo.getRate());
 		po.setSymbol(bo.getSymbol());
 		po.setTimeRange(bo.getTimeRange());

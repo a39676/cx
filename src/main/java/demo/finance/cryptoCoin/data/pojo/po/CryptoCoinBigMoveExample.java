@@ -176,66 +176,6 @@ public class CryptoCoinBigMoveExample {
             return (Criteria) this;
         }
 
-        public Criteria andEventTimeIsNull() {
-            addCriterion("event_time is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andEventTimeIsNotNull() {
-            addCriterion("event_time is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andEventTimeEqualTo(LocalDateTime value) {
-            addCriterion("event_time =", value, "eventTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andEventTimeNotEqualTo(LocalDateTime value) {
-            addCriterion("event_time <>", value, "eventTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andEventTimeGreaterThan(LocalDateTime value) {
-            addCriterion("event_time >", value, "eventTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andEventTimeGreaterThanOrEqualTo(LocalDateTime value) {
-            addCriterion("event_time >=", value, "eventTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andEventTimeLessThan(LocalDateTime value) {
-            addCriterion("event_time <", value, "eventTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andEventTimeLessThanOrEqualTo(LocalDateTime value) {
-            addCriterion("event_time <=", value, "eventTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andEventTimeIn(List<LocalDateTime> values) {
-            addCriterion("event_time in", values, "eventTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andEventTimeNotIn(List<LocalDateTime> values) {
-            addCriterion("event_time not in", values, "eventTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andEventTimeBetween(LocalDateTime value1, LocalDateTime value2) {
-            addCriterion("event_time between", value1, value2, "eventTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andEventTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
-            addCriterion("event_time not between", value1, value2, "eventTime");
-            return (Criteria) this;
-        }
-
         public Criteria andRateIsNull() {
             addCriterion("rate is null");
             return (Criteria) this;
@@ -413,6 +353,66 @@ public class CryptoCoinBigMoveExample {
 
         public Criteria andTimeUnitCodeNotBetween(Integer value1, Integer value2) {
             addCriterion("time_unit_code not between", value1, value2, "timeUnitCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andEventTimeIsNull() {
+            addCriterion("event_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEventTimeIsNotNull() {
+            addCriterion("event_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEventTimeEqualTo(LocalDateTime value) {
+            addCriterion("event_time =", value, "eventTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEventTimeNotEqualTo(LocalDateTime value) {
+            addCriterion("event_time <>", value, "eventTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEventTimeGreaterThan(LocalDateTime value) {
+            addCriterion("event_time >", value, "eventTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEventTimeGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("event_time >=", value, "eventTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEventTimeLessThan(LocalDateTime value) {
+            addCriterion("event_time <", value, "eventTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEventTimeLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("event_time <=", value, "eventTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEventTimeIn(List<LocalDateTime> values) {
+            addCriterion("event_time in", values, "eventTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEventTimeNotIn(List<LocalDateTime> values) {
+            addCriterion("event_time not in", values, "eventTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEventTimeBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("event_time between", value1, value2, "eventTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEventTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("event_time not between", value1, value2, "eventTime");
             return (Criteria) this;
         }
 

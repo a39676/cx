@@ -90,7 +90,7 @@ public class BbtComplexServiceImpl extends BbtCommonService implements BbtComple
 	}
 
 	@Override
-	public void makeSureWorkerClong1Alive() {
+	public void makeSureWorkerClone1Alive() {
 		if (systemOptionService.isDev()) {
 			return;
 		}
@@ -111,24 +111,4 @@ public class BbtComplexServiceImpl extends BbtCommonService implements BbtComple
 		}
 	}
 
-	@Override
-	public CommonResult workerClone1IsAlive(BaseStrDTO dto) {
-		CommonResult r = new CommonResult();
-		String keyInput = dto.getStr();
-		if (!bbtDynamicKey.isCorrectKey(keyInput)) {
-			r.setIsSuccess();
-			r.setMessage("Greeting.");
-			return r;
-		}
-
-		if (systemOptionService.getWorkerClone_1IsAlive()) {
-			r.setIsSuccess();
-			return r;
-		}
-
-		ServiceMsgDTO msgDTO = new ServiceMsgDTO();
-		msgDTO.setMsg("Worker 1 was offline");
-		msgForwardServcie.textMessageForwarding(msgDTO);
-		return r;
-	}
 }

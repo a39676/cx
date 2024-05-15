@@ -1,20 +1,18 @@
 package demo.finance.cryptoCoin.data.pojo.bo;
 
-import java.time.LocalDateTime;
-
 public class CryptoCoinBigMoveDailySummaryBO implements Comparable<CryptoCoinBigMoveDailySummaryBO> {
 
-	private LocalDateTime datetime;
+	private Integer dayGap = 0;
 	private Integer total = 0;
 	private Integer binanceCounting = 0;
 	private Integer gateIoCounting = 0;
 
-	public LocalDateTime getDatetime() {
-		return datetime;
+	public Integer getDayGap() {
+		return dayGap;
 	}
 
-	public void setDatetime(LocalDateTime datetime) {
-		this.datetime = datetime;
+	public void setDayGap(Integer dayGap) {
+		this.dayGap = dayGap;
 	}
 
 	public Integer getTotal() {
@@ -43,7 +41,7 @@ public class CryptoCoinBigMoveDailySummaryBO implements Comparable<CryptoCoinBig
 
 	@Override
 	public String toString() {
-		return "CryptoCoinBigMoveDailySummaryBO [datetime=" + datetime + ", total=" + total + ", binanceCounting="
+		return "CryptoCoinBigMoveDailySummaryBO [dayGap=" + dayGap + ", total=" + total + ", binanceCounting="
 				+ binanceCounting + ", gateIoCounting=" + gateIoCounting + "]";
 	}
 
@@ -53,16 +51,16 @@ public class CryptoCoinBigMoveDailySummaryBO implements Comparable<CryptoCoinBig
 	}
 
 	private int compare(CryptoCoinBigMoveDailySummaryBO o, CryptoCoinBigMoveDailySummaryBO t) {
-		if (o.getDatetime() == null && t.getDatetime() == null) {
+		if (o.getDayGap() == null && t.getDayGap() == null) {
 			return 0;
-		} else if (o.getDatetime() == null) {
+		} else if (o.getDayGap() == null) {
 			return 1;
-		} else if (t.getDatetime() == null) {
+		} else if (t.getDayGap() == null) {
 			return -1;
 		}
-		if (o.getDatetime().isBefore(t.getDatetime())) {
+		if (o.getDayGap() < t.getDayGap()) {
 			return 1;
-		} else if (o.getDatetime().isEqual(t.getDatetime())) {
+		} else if (o.getDayGap().equals(t.getDayGap())) {
 			return 0;
 		} else {
 			return -1;

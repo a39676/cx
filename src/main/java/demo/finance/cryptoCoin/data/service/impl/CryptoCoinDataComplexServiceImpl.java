@@ -2,7 +2,7 @@ package demo.finance.cryptoCoin.data.service.impl;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -221,13 +221,15 @@ public class CryptoCoinDataComplexServiceImpl extends CommonService implements C
 		if (bigMoveDataList == null || bigMoveDataList.isEmpty()) {
 			return v;
 		}
-		Map<LocalDateTime, CryptoCoinBigMoveDailySummaryBO> countingMap = new HashMap<>();
+		Map<Long, CryptoCoinBigMoveDailySummaryBO> countingMap = new HashMap<>();
 		CryptoCoinBigMoveDailySummaryBO tmpBO = null;
+		LocalDateTime now = LocalDateTime.now();
+		Long dayGap = null;
 		for (int i = 0; i < bigMoveDataList.size(); i++) {
 			CryptoCoinBigMove data = bigMoveDataList.get(i);
-			LocalDateTime startTime = data.getEventTime().with(LocalTime.MIN);
-			if (countingMap.containsKey(startTime)) {
-				tmpBO = countingMap.get(startTime);
+			dayGap = ChronoUnit.DAYS.between(data.getEventTime(), now);
+			if (countingMap.containsKey(dayGap)) {
+				tmpBO = countingMap.get(dayGap);
 				tmpBO.setTotal(tmpBO.getTotal() + 1);
 				if (data.getSymbol().contains("_")) {
 					tmpBO.setGateIoCounting(tmpBO.getGateIoCounting() + 1);
@@ -236,9 +238,9 @@ public class CryptoCoinDataComplexServiceImpl extends CommonService implements C
 				}
 			} else {
 				tmpBO = new CryptoCoinBigMoveDailySummaryBO();
-				tmpBO.setDatetime(data.getEventTime());
+				tmpBO.setDayGap(dayGap.intValue());
 				tmpBO.setTotal(tmpBO.getTotal() + 1);
-				countingMap.put(startTime, tmpBO);
+				countingMap.put(dayGap, tmpBO);
 			}
 		}
 		List<CryptoCoinBigMoveDailySummaryBO> resultList = new ArrayList<>();

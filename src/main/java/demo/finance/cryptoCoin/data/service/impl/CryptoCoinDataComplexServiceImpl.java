@@ -221,9 +221,6 @@ public class CryptoCoinDataComplexServiceImpl extends CommonService implements C
 		if (bigMoveDataList == null || bigMoveDataList.isEmpty()) {
 			return v;
 		}
-		LocalDateTime todayStart = LocalDateTime.now().with(LocalTime.MIN);
-		LocalDateTime start = todayStart.minusMonths(1);
-		LocalDateTime tmpDateTime = start;
 		Map<LocalDateTime, CryptoCoinBigMoveDailySummaryBO> countingMap = new HashMap<>();
 		CryptoCoinBigMoveDailySummaryBO tmpBO = null;
 		for (int i = 0; i < bigMoveDataList.size(); i++) {
@@ -239,7 +236,7 @@ public class CryptoCoinDataComplexServiceImpl extends CommonService implements C
 				}
 			} else {
 				tmpBO = new CryptoCoinBigMoveDailySummaryBO();
-				tmpBO.setDatetime(tmpDateTime);
+				tmpBO.setDatetime(data.getEventTime());
 				tmpBO.setTotal(tmpBO.getTotal() + 1);
 				countingMap.put(startTime, tmpBO);
 			}

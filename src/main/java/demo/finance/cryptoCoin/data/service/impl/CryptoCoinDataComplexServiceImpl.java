@@ -2,6 +2,7 @@ package demo.finance.cryptoCoin.data.service.impl;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.common.service.CommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinBigMoveMapper;
+import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinBigMoveDailySummaryBO;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigMove;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigMoveExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoinDataComplexService;
@@ -84,6 +86,7 @@ public class CryptoCoinDataComplexServiceImpl extends CommonService implements C
 		v = handleRecentBigMoveDataSummary(v, bigMoveDataList);
 		v = handle24hBigMoveDataSummary(v, bigMoveDataList);
 		v = handleLastWeekBigMoveDataSummary(v, bigMoveDataList);
+		v = handleLastMonthBigMoveDataChart(v, bigMoveDataList);
 
 		return v;
 	}
@@ -174,7 +177,7 @@ public class CryptoCoinDataComplexServiceImpl extends CommonService implements C
 		v.addObject("bigMoveIn24H", bigMoveList);
 		return v;
 	}
-	
+
 	private ModelAndView handleLastWeekBigMoveDataSummary(ModelAndView v, List<CryptoCoinBigMove> bigMoveDataList) {
 		if (bigMoveDataList == null || bigMoveDataList.isEmpty()) {
 			return v;
@@ -187,6 +190,42 @@ public class CryptoCoinDataComplexServiceImpl extends CommonService implements C
 			return v;
 		}
 		v.addObject("bigMoveInLastWeek", bigMoveList);
+		return v;
+	}
+
+	private ModelAndView handleLastMonthBigMoveDataChart(ModelAndView v, List<CryptoCoinBigMove> bigMoveDataList) {
+		if (bigMoveDataList == null || bigMoveDataList.isEmpty()) {
+			return v;
+		}
+		LocalDateTime todayStart = LocalDateTime.now().with(LocalTime.MIN);
+		LocalDateTime start = todayStart.minusMonths(1);
+		LocalDateTime tmpDateTime = start;
+		Map<LocalDateTime, CryptoCoinBigMoveDailySummaryBO> countingMap = new HashMap<>();
+		CryptoCoinBigMoveDailySummaryBO tmpBO = null;
+		for (int i = 0; i < bigMoveDataList.size(); i++) {
+			CryptoCoinBigMove data = bigMoveDataList.get(i);
+			LocalDateTime startTime = data.getEventTime().with(LocalTime.MIN);
+			if (countingMap.containsKey(startTime)) {
+				tmpBO = countingMap.get(startTime);
+				tmpBO.setTotal(tmpBO.getTotal() + 1);
+				if (data.getSymbol().contains("_")) {
+					tmpBO.setGateIoCounting(tmpBO.getGateIoCounting() + 1);
+				} else {
+					tmpBO.setBinanceCounting(tmpBO.getBinanceCounting() + 1);
+				}
+			} else {
+				tmpBO = new CryptoCoinBigMoveDailySummaryBO();
+				tmpBO.setDatetime(tmpDateTime);
+				tmpBO.setTotal(tmpBO.getTotal() + 1);
+				countingMap.put(startTime, tmpBO);
+			}
+		}
+		List<CryptoCoinBigMoveDailySummaryBO> resultList = new ArrayList<>();
+		resultList.addAll(countingMap.values());
+		Collections.sort(resultList);
+
+		v.addObject("bigMoveDailySummaryData", resultList);
+
 		return v;
 	}
 

@@ -54,16 +54,16 @@ public class CryptoCoinBigMoveDailySummaryBO implements Comparable<CryptoCoinBig
 		if (o.getDayGap() == null && t.getDayGap() == null) {
 			return 0;
 		} else if (o.getDayGap() == null) {
-			return 1;
-		} else if (t.getDayGap() == null) {
 			return -1;
+		} else if (t.getDayGap() == null) {
+			return 1;
 		}
 		if (o.getDayGap() < t.getDayGap()) {
-			return 1;
+			return -1;
 		} else if (o.getDayGap().equals(t.getDayGap())) {
 			return 0;
 		} else {
-			return -1;
+			return 1;
 		}
 	}
 

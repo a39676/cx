@@ -56,16 +56,16 @@ public class CryptoCoinBigMoveDailySummaryBO implements Comparable<CryptoCoinBig
 		if (o.getDatetime() == null && t.getDatetime() == null) {
 			return 0;
 		} else if (o.getDatetime() == null) {
-			return -1;
-		} else if (t.getDatetime() == null) {
 			return 1;
+		} else if (t.getDatetime() == null) {
+			return -1;
 		}
 		if (o.getDatetime().isBefore(t.getDatetime())) {
-			return -1;
+			return 1;
 		} else if (o.getDatetime().isEqual(t.getDatetime())) {
 			return 0;
 		} else {
-			return 1;
+			return -1;
 		}
 	}
 

@@ -23,9 +23,9 @@
   </div>
 
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
       ${todayBigMoveMsg}
-      <p>24h</p>
+      <p>0-24h</p>
       <table>
         <c:forEach items="${bigMoveIn24H}" var="subData">
           <tr>
@@ -45,7 +45,31 @@
       </table>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-6">
+      ${yesterdayBigMoveMsg}
+      <p>24-48h</p>
+      <table>
+        <c:forEach items="${bigMoveIn48H}" var="subData">
+          <tr>
+            <td>
+              ${subData.symbol}_${subData.totalRate}%_${subData.totalCounter}
+              <c:if test = "${subData.totalRate > 0}">
+                🟢
+              </c:if>
+              <c:if test = "${subData.totalRate < 0}">
+                🔴
+              </c:if>
+            </td>
+            <td>${subData.totalRiseRate}%_${subData.riseCounter}</td>
+            <td>${subData.totalFallRate}%_${subData.fallCounter}</td>
+          </tr>
+        </c:forEach>
+      </table>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-5">
       ${lastWeekBigMoveMsg}
       <p>last week</p>
       <table>
@@ -67,7 +91,7 @@
       </table>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-2">
       ${recentBigMoveMsg}
       <p>recent</p>
       <table>

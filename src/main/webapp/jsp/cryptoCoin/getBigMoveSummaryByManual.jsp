@@ -17,6 +17,12 @@
 
   ${msg}
   <div class="row">
+    <div class="col-md-12" id="chart_div">
+      
+    </div>
+  </div>
+
+  <div class="row">
     <div class="col-md-4">
       ${todayBigMoveMsg}
       <p>24h</p>
@@ -91,9 +97,66 @@
 </footer>
 <%@ include file="../baseElementJSP/normalJSPart.jsp"%>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?" async defer></script>
+<script type="text/javascript" src="/static_resources/js/chartJS/gstatic/loader.js"></script>
 <script type="text/javascript">
   $(document).ready(function() {
 
 
   });
+</script>
+
+<script type="text/javascript">
+  google.charts.load('current', {packages: ['corechart', 'line']});
+  google.charts.setOnLoadCallback(drawAxisTickColors);
+
+  function drawAxisTickColors() {
+    var data = new google.visualization.DataTable();
+    data.addColumn('number', 'X');
+    data.addColumn('number', 'Total');
+    data.addColumn('number', 'Binance');
+    data.addColumn('number', 'GateIO');
+
+    data.addRows([
+      <c:forEach items="${bigMoveDailySummaryData}" var="subData" varStatus="loop">
+        [${loop.index}, ${subData.total}, ${subData.binanceCounting}, ${subData.gateIoCounting}],
+      </c:forEach>
+    ]);
+
+    var options = {
+      hAxis: {
+        title: 'Title for X',
+        textStyle: {
+          color: '#01579b',
+          fontSize: 20,
+          fontName: 'Arial',
+          bold: true,
+          italic: true
+        },
+        titleTextStyle: {
+          color: '#01579b',
+          fontSize: 16,
+          fontName: 'Arial',
+          bold: false,
+          italic: true
+        }
+      },
+      vAxis: {
+        title: 'Title for Y',
+        textStyle: {
+          color: '#1a237e',
+          fontSize: 24,
+          bold: true
+        },
+        titleTextStyle: {
+          color: '#1a237e',
+          fontSize: 24,
+          bold: true
+        }
+      },
+      colors: ['#1a237e', '#a52714', '#097138']
+    };
+    var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+    chart.draw(data, options);
+  }
+
 </script>

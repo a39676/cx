@@ -85,6 +85,7 @@ public class CryptoCoinDataComplexServiceImpl extends CommonService implements C
 
 		v = handleRecentBigMoveDataSummary(v, bigMoveDataList);
 		v = handle24hBigMoveDataSummary(v, bigMoveDataList);
+		v = handle24To48hBigMoveDataSummary(v, bigMoveDataList);
 		v = handleLastWeekBigMoveDataSummary(v, bigMoveDataList);
 		v = handleLastMonthBigMoveDataChart(v, bigMoveDataList);
 
@@ -129,12 +130,18 @@ public class CryptoCoinDataComplexServiceImpl extends CommonService implements C
 		return v;
 	}
 
-	private List<CryptoCoinBigMoveSummaryDataBO> buildSummaryListByStartTime(List<CryptoCoinBigMove> bigMoveDataList,
-			LocalDateTime startTime) {
+	private List<CryptoCoinBigMoveSummaryDataBO> buildSummaryListByStartTimeRange(
+			List<CryptoCoinBigMove> bigMoveDataList, LocalDateTime startTime) {
+		LocalDateTime endTime = LocalDateTime.now();
+		return buildSummaryListByStartTimeRange(bigMoveDataList, startTime, endTime);
+	}
+
+	private List<CryptoCoinBigMoveSummaryDataBO> buildSummaryListByStartTimeRange(
+			List<CryptoCoinBigMove> bigMoveDataList, LocalDateTime startTime, LocalDateTime endTime) {
 		List<CryptoCoinBigMoveSummaryDataBO> summaryList = new ArrayList<>();
 		Map<String, CryptoCoinBigMoveSummaryDataBO> summaryMap = new HashMap<>();
 		for (CryptoCoinBigMove po : bigMoveDataList) {
-			if (po.getEventTime().isBefore(startTime)) {
+			if (po.getEventTime().isBefore(startTime) || po.getEventTime().isAfter(endTime)) {
 				continue;
 			}
 			CryptoCoinBigMoveSummaryDataBO summaryBO = summaryMap.get(po.getSymbol());
@@ -168,7 +175,7 @@ public class CryptoCoinDataComplexServiceImpl extends CommonService implements C
 			return v;
 		}
 		LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
-		List<CryptoCoinBigMoveSummaryDataBO> bigMoveList = buildSummaryListByStartTime(bigMoveDataList, yesterday);
+		List<CryptoCoinBigMoveSummaryDataBO> bigMoveList = buildSummaryListByStartTimeRange(bigMoveDataList, yesterday);
 
 		if (bigMoveList.isEmpty()) {
 			v.addObject("todayBigMoveMsg", "Can NOT found any 24h big move");
@@ -178,12 +185,29 @@ public class CryptoCoinDataComplexServiceImpl extends CommonService implements C
 		return v;
 	}
 
+	private ModelAndView handle24To48hBigMoveDataSummary(ModelAndView v, List<CryptoCoinBigMove> bigMoveDataList) {
+		if (bigMoveDataList == null || bigMoveDataList.isEmpty()) {
+			return v;
+		}
+		LocalDateTime start = LocalDateTime.now().minusDays(2);
+		LocalDateTime end = LocalDateTime.now().minusDays(1);
+		List<CryptoCoinBigMoveSummaryDataBO> bigMoveList = buildSummaryListByStartTimeRange(bigMoveDataList, start,
+				end);
+
+		if (bigMoveList.isEmpty()) {
+			v.addObject("yesterdayBigMoveMsg", "Can NOT found any 24-48h big move");
+			return v;
+		}
+		v.addObject("bigMoveIn48H", bigMoveList);
+		return v;
+	}
+
 	private ModelAndView handleLastWeekBigMoveDataSummary(ModelAndView v, List<CryptoCoinBigMove> bigMoveDataList) {
 		if (bigMoveDataList == null || bigMoveDataList.isEmpty()) {
 			return v;
 		}
 		LocalDateTime lastWeek = LocalDateTime.now().minusDays(7);
-		List<CryptoCoinBigMoveSummaryDataBO> bigMoveList = buildSummaryListByStartTime(bigMoveDataList, lastWeek);
+		List<CryptoCoinBigMoveSummaryDataBO> bigMoveList = buildSummaryListByStartTimeRange(bigMoveDataList, lastWeek);
 
 		if (bigMoveList.isEmpty()) {
 			v.addObject("lastWeekBigMoveMsg", "Can NOT found any last week big move");

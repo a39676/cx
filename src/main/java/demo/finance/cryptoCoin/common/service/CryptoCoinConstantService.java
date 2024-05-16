@@ -18,31 +18,12 @@ import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 @Service
 public class CryptoCoinConstantService extends CommonService {
 
-	private LocalDateTime cryptoCompareWebSocketLastActiveTime;
-	private LocalDateTime binanceWebSocketLastActiveTime;
-
 	private Set<String> lowPriceSubscriptionSet = new HashSet<>();
 	private Set<String> dailyDataWaitingQuerySet = new HashSet<>();
 
 	private Map<CryptoCoinDataCacheMapKeyBO, CryptoCoinPriceCommonDataBO> cacheMap = new HashMap<>();
 
 	private Map<String, List<LocalDateTime>> hitNoDataCountingMap = new HashMap<>();
-
-	public LocalDateTime getCryptoCompareWebSocketLastActiveTime() {
-		return cryptoCompareWebSocketLastActiveTime;
-	}
-
-	public void setCryptoCompareWebSocketLastActiveTime(LocalDateTime cryptoCompareWebSocketLastActiveTime) {
-		this.cryptoCompareWebSocketLastActiveTime = cryptoCompareWebSocketLastActiveTime;
-	}
-
-	public LocalDateTime getBinanceWebSocketLastActiveTime() {
-		return binanceWebSocketLastActiveTime;
-	}
-
-	public void setBinanceWebSocketLastActiveTime(LocalDateTime binanceWebSocketLastActiveTime) {
-		this.binanceWebSocketLastActiveTime = binanceWebSocketLastActiveTime;
-	}
 
 	public Set<String> getLowPriceSubscriptionSet() {
 		return lowPriceSubscriptionSet;
@@ -78,10 +59,9 @@ public class CryptoCoinConstantService extends CommonService {
 
 	@Override
 	public String toString() {
-		return "CryptoCoinConstantService [cryptoCompareWebSocketLastActiveTime=" + cryptoCompareWebSocketLastActiveTime
-				+ ", binanceWebSocketLastActiveTime=" + binanceWebSocketLastActiveTime + ", lowPriceSubscriptionSet="
-				+ lowPriceSubscriptionSet + ", dailyDataWaitingQuerySet=" + dailyDataWaitingQuerySet + ", cacheMap="
-				+ cacheMap + ", hitNoDataCountingMap=" + hitNoDataCountingMap + "]";
+		return "CryptoCoinConstantService [lowPriceSubscriptionSet=" + lowPriceSubscriptionSet
+				+ ", dailyDataWaitingQuerySet=" + dailyDataWaitingQuerySet + ", cacheMap=" + cacheMap
+				+ ", hitNoDataCountingMap=" + hitNoDataCountingMap + "]";
 	}
 
 }

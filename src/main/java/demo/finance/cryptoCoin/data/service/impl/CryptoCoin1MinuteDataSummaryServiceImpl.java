@@ -21,10 +21,10 @@ import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1minuteExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1MinuteDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
+import finance.common.pojo.bo.KLineCommonDataBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
-import finance.cryptoCoin.pojo.dto.CryptoCoinDataSubDTO;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 
 @Service
@@ -46,13 +46,15 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 	public CommonResult reciveMinuteData(CryptoCoinDataDTO dto) {
 		CommonResult r = new CommonResult();
 
-		List<CryptoCoinDataSubDTO> dataList = dto.getPriceHistoryData();
+		List<CryptoCoinPriceCommonDataBO> dataList = dto.getPriceHistoryData();
 		if (dataList == null || dataList.isEmpty()) {
 			return r;
 		}
 
-		CryptoCoinCatalog coinType = coinCatalogService.findCatalog(dto.getCryptoCoinTypeName());
-		CurrencyTypeForCryptoCoin currencyType = CurrencyTypeForCryptoCoin.getType(dto.getCurrencyName());
+		String symbol = dto.getSymbol();
+		CryptoCoinCatalog coinType = coinCatalogService
+				.findCatalog(symbol.replaceAll(defaultCyrrencyTypeForCryptoCoin.getName(), ""));
+		CurrencyTypeForCryptoCoin currencyType = defaultCyrrencyTypeForCryptoCoin;
 		if (coinType == null || currencyType == null) {
 			return r;
 		}
@@ -82,12 +84,11 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 		}
 	}
 
-	private void updateSummaryData(List<CryptoCoinDataSubDTO> dataList, CryptoCoinCatalog coinType,
+	private <E extends KLineCommonDataBO> void updateSummaryData(List<E> dataList, CryptoCoinCatalog coinType,
 			CurrencyTypeForCryptoCoin currencyType) {
 
-		LocalDateTime dataStartTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dataList.get(0).getTime());
-		LocalDateTime dataEndime = localDateTimeHandler
-				.stringToLocalDateTimeUnkonwFormat(dataList.get(dataList.size() - 1).getTime());
+		LocalDateTime dataStartTime = dataList.get(0).getStartTime();
+		LocalDateTime dataEndime = dataList.get(dataList.size() - 1).getEndTime();
 
 		CryptoCoinPrice1minuteExample example = new CryptoCoinPrice1minuteExample();
 		example.createCriteria().andCoinTypeEqualTo(coinType.getId()).andCurrencyTypeEqualTo(currencyType.getCode())
@@ -95,14 +96,12 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 
 		List<CryptoCoinPrice1minute> poList = summaryMapper.selectByExample(example);
 
-		LocalDateTime tmpDataTime = null;
 		boolean dataTimeMatchFlag = false;
-		CryptoCoinDataSubDTO tmpNewData = null;
+		KLineCommonDataBO tmpNewData = null;
 		for (int dataIndex = 0; dataIndex < dataList.size(); dataIndex++) {
 			tmpNewData = dataList.get(dataIndex);
-			tmpDataTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(tmpNewData.getTime());
 			mergeLoop: for (CryptoCoinPrice1minute po : poList) {
-				if (po.getStartTime().isEqual(tmpDataTime)) {
+				if (po.getStartTime().isEqual(tmpNewData.getStartTime())) {
 					dataTimeMatchFlag = true;
 					mergeDataPair(po, tmpNewData);
 					break mergeLoop;
@@ -301,13 +300,13 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 		return target;
 	}
 
-	private CryptoCoinPrice1minute mergeDataPair(CryptoCoinPrice1minute target, CryptoCoinDataSubDTO data) {
-		target.setStartPrice(new BigDecimal(data.getStart()));
-		target.setEndPrice(new BigDecimal(data.getEnd()));
-		target.setHighPrice(new BigDecimal(data.getHigh()));
-		target.setLowPrice(new BigDecimal(data.getLow()));
-		if (data.getVolume() != null && data.getVolume() > 0) {
-			target.setVolume(new BigDecimal(data.getVolume()));
+	private CryptoCoinPrice1minute mergeDataPair(CryptoCoinPrice1minute target, KLineCommonDataBO data) {
+		target.setStartPrice(data.getStartPrice());
+		target.setEndPrice(data.getEndPrice());
+		target.setHighPrice(data.getHighPrice());
+		target.setLowPrice(data.getLowPrice());
+		if (data.getVolume() != null && data.getVolume().compareTo(BigDecimal.ZERO) > 0) {
+			target.setVolume(data.getVolume());
 		}
 
 		summaryMapper.updateByPrimaryKeySelective(target);
@@ -335,19 +334,19 @@ public class CryptoCoin1MinuteDataSummaryServiceImpl extends CryptoCoinCommonSer
 		return target;
 	}
 
-	private void insertNewData(CryptoCoinDataSubDTO data, CryptoCoinCatalog coinType,
+	private void insertNewData(KLineCommonDataBO data, CryptoCoinCatalog coinType,
 			CurrencyTypeForCryptoCoin currencyType) {
 		CryptoCoinPrice1minute po = new CryptoCoinPrice1minute();
 		po.setId(snowFlake.getNextId());
-		po.setStartTime(localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(data.getTime()));
+		po.setStartTime(data.getStartTime());
 		po.setEndTime(po.getStartTime().plusMinutes(minuteStepLong));
 		po.setCoinType(coinType.getId());
 		po.setCurrencyType(currencyType.getCode());
-		po.setStartPrice(new BigDecimal(data.getStart()));
-		po.setEndPrice(new BigDecimal(data.getEnd()));
-		po.setHighPrice(new BigDecimal(data.getHigh()));
-		po.setLowPrice(new BigDecimal(data.getLow()));
-		po.setVolume(new BigDecimal(data.getVolume()));
+		po.setStartPrice(data.getStartPrice());
+		po.setEndPrice(data.getEndPrice());
+		po.setHighPrice(data.getHighPrice());
+		po.setLowPrice(data.getLowPrice());
+		po.setVolume(data.getVolume());
 
 		summaryMapper.insertSelective(po);
 	}

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 
 import demo.common.service.CommonService;
-import demo.config.costom_component.OptionFilePathConfigurer;
+import demo.config.customComponent.OptionFilePathConfigurer;
 import jakarta.annotation.PostConstruct;
 import toolPack.ioHandle.FileUtilCustom;
 

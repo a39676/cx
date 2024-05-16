@@ -320,6 +320,7 @@ public class AiChatServiceImpl extends AiCommonService implements AiChatService 
 					lines.remove(0);
 				}
 			}
+			reader.close();
 		} catch (IOException ex) {
 		}
 		return lines;
@@ -383,6 +384,7 @@ public class AiChatServiceImpl extends AiCommonService implements AiChatService 
 			while ((currentLine = reader.readLine()) != null) {
 				lines.add(currentLine);
 			}
+			reader.close();
 		} catch (IOException ex) {
 			r.setMessage("对话记录存储异常, 本次对话可能没有正确存档 03");
 			return r;

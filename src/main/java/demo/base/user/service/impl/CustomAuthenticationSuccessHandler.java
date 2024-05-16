@@ -13,7 +13,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 import demo.base.user.pojo.type.SystemRolesType;
-import demo.config.costom_component.BaseUtilCustom;
+import demo.config.customComponent.BaseUtilCustom;
 import demo.finance.cryptoCoin.sharing.pojo.constant.CryptoCoinSharingUrl;
 import demo.tool.educate.pojo.constant.EducateUrl;
 import jakarta.servlet.ServletException;

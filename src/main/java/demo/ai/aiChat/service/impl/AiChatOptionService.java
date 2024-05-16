@@ -21,7 +21,7 @@ import com.google.gson.Gson;
 
 import demo.ai.aiChat.pojo.dto.AiChatUserMembershipDetailDTO;
 import demo.common.service.CommonService;
-import demo.config.costom_component.OptionFilePathConfigurer;
+import demo.config.customComponent.OptionFilePathConfigurer;
 import jakarta.annotation.PostConstruct;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -257,6 +257,7 @@ public class AiChatOptionService extends CommonService {
 				while ((currentLine = reader.readLine()) != null) {
 					sensitiveWords.add(currentLine);
 				}
+				reader.close();
 			} else {
 				log.error("Can NOT find sensitive words");
 			}
@@ -269,6 +270,7 @@ public class AiChatOptionService extends CommonService {
 				while ((currentLine = reader.readLine()) != null) {
 					forbiddenWords.add(currentLine);
 				}
+				reader.close();
 			} else {
 				log.error("Can NOT find forbidden words");
 			}

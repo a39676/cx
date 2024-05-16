@@ -52,16 +52,11 @@ public class BbtController extends CommonController {
 		bbtComplexService.receiveCnStockMarketData(dto);
 		return "Done";
 	}
-	
+
 	@PostMapping(value = CxBbtInteractionUrl.GET_CRYPTO_COIN_OPTION)
 	@ResponseBody
 	public JSONObject textMessageForwarding(@RequestBody BaseStrDTO dto) {
 		return bbtComplexService.getCryptoCoinOption(dto);
 	}
-	
-	@PostMapping(value = CxBbtInteractionUrl.MAKR_SURE_ALIVE_WITH_CTHULHU)
-	@ResponseBody
-	public CommonResult workerClone1IsAlive(@RequestBody BaseStrDTO dto) {
-		return bbtComplexService.workerClone1IsAlive(dto);
-	}
+
 }

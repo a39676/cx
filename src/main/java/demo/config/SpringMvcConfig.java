@@ -25,7 +25,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
-import demo.config.costom_component.LocalDateTimeDeserializerCustomer;
+import demo.config.customComponent.LocalDateTimeDeserializerCustomer;
 import toolPack.dateTimeHandle.DateTimeUtilCommon;
 
 @EnableWebMvc // <mvc:annotation-driven />

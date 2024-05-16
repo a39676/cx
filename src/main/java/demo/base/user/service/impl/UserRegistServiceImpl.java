@@ -32,7 +32,7 @@ import demo.base.user.pojo.result.__baseSuperAdminRegistResult;
 import demo.base.user.service.UserDetailService;
 import demo.base.user.service.UserRegistService;
 import demo.base.user.service.UserRoleService;
-import demo.config.costom_component.CustomPasswordEncoder;
+import demo.config.customComponent.CustomPasswordEncoder;
 import demo.thirdPartyAPI.cloudFlare.service.CloudFlareService;
 import demo.thirdPartyAPI.cloudFlare.service.impl.CloudFlareOptionService;
 import demo.tool.educate.pojo.type.GradeType;

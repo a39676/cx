@@ -23,9 +23,9 @@ import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinCatalogService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinPriceCacheService;
+import finance.common.pojo.bo.KLineCommonDataBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
-import finance.cryptoCoin.pojo.dto.CryptoCoinDataSubDTO;
 import finance.cryptoCoin.pojo.type.CryptoCoinDataSourceType;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 import telegram.pojo.constant.TelegramStaticChatID;
@@ -44,25 +44,26 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 	@Autowired
 	private CryptoCoinPriceCacheService cacheService;
 
-
 	@Override
 	public CommonResult receiveDailyData(CryptoCoinDataDTO dto) {
 		CommonResult r = new CommonResult();
-		List<CryptoCoinDataSubDTO> dataList = dto.getPriceHistoryData();
+		List<CryptoCoinPriceCommonDataBO> dataList = dto.getPriceHistoryData();
 		CryptoCoinDataSourceType dataSourceType = CryptoCoinDataSourceType.getType(dto.getDataSourceCode());
 		if (dataSourceType == null) {
 			dataSourceType = CryptoCoinDataSourceType.CRYPTO_COMPARE;
 		}
 
-		CryptoCoinCatalog coinType = coinCatalogService.findCatalog(dto.getCryptoCoinTypeName());
-		CurrencyTypeForCryptoCoin currencyType = CurrencyTypeForCryptoCoin.getType(dto.getCurrencyName());
+		String symbol = dto.getSymbol();
+		CryptoCoinCatalog coinType = coinCatalogService
+				.findCatalog(symbol.replaceAll(defaultCyrrencyTypeForCryptoCoin.getName(), ""));
+		CurrencyTypeForCryptoCoin currencyType = defaultCyrrencyTypeForCryptoCoin;
 		if (coinType == null || currencyType == null) {
 			return r;
 		}
 
 		if (!isValidData(dataList)) {
 			telegramService.sendMessageByChatRecordId(TelegramBotType.BBT_MESSAGE,
-					dto.getCryptoCoinTypeName() + ", get error data(all zero) from: " + dataSourceType.getName(),
+					dto.getSymbol() + ", get error data(all zero) from: " + dataSourceType.getName(),
 					TelegramStaticChatID.MY_ID);
 
 			if (CryptoCoinDataSourceType.CRYPTO_COMPARE.equals(dataSourceType)) {
@@ -87,28 +88,29 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 	/*
 	 * 2021-04-14 crypto compare 有时会返回全0数据 暂不处理此类数据 dto 应该附带数据源
 	 */
-	private boolean isValidData(List<CryptoCoinDataSubDTO> dataList) {
+	private <E extends KLineCommonDataBO> boolean isValidData(List<E> dataList) {
 		if (dataList == null || dataList.isEmpty()) {
 			return false;
 		}
 		int zeroDataCountDown = dataList.size();
-		CryptoCoinDataSubDTO tmpData = null;
+		KLineCommonDataBO tmpData = null;
 		for (int i = 0; i < dataList.size() && zeroDataCountDown > 0; i++) {
 			tmpData = dataList.get(i);
-			if (tmpData.getStart() == 0 && tmpData.getEnd() == 0 && tmpData.getHigh() == 0 && tmpData.getLow() == 0) {
+			if (tmpData.getStartPrice().equals(BigDecimal.ZERO) && tmpData.getEndPrice().equals(BigDecimal.ZERO)
+					&& tmpData.getHighPrice().equals(BigDecimal.ZERO)
+					&& tmpData.getLowPrice().equals(BigDecimal.ZERO)) {
 				zeroDataCountDown--;
 			}
 		}
 		return zeroDataCountDown > 0;
 	}
 
-	private void updateSummaryData(List<CryptoCoinDataSubDTO> dataList, CryptoCoinCatalog coinType,
+	private <E extends KLineCommonDataBO> void updateSummaryData(List<E> dataList, CryptoCoinCatalog coinType,
 			CurrencyTypeForCryptoCoin currencyType) {
 
-		LocalDateTime dataStartTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dataList.get(0).getTime());
+		LocalDateTime dataStartTime = dataList.get(0).getStartTime();
 		dataStartTime = dataStartTime.with(LocalTime.MIN);
-		LocalDateTime dataEndime = localDateTimeHandler
-				.stringToLocalDateTimeUnkonwFormat(dataList.get(dataList.size() - 1).getTime());
+		LocalDateTime dataEndime = dataList.get(dataList.size() - 1).getStartTime();
 
 		CryptoCoinPrice1dayExample example = new CryptoCoinPrice1dayExample();
 		example.createCriteria().andCoinTypeEqualTo(coinType.getId()).andCurrencyTypeEqualTo(currencyType.getCode())
@@ -116,16 +118,13 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 
 		List<CryptoCoinPrice1day> poList = dataMapper.selectByExample(example);
 
-		LocalDateTime tmpDataTime = null;
 		boolean dataTimeMatchFlag = false;
-		CryptoCoinDataSubDTO tmpNewData = null;
+		KLineCommonDataBO tmpNewData = null;
 		for (int dataIndex = 0; dataIndex < dataList.size(); dataIndex++) {
 			tmpNewData = dataList.get(dataIndex);
-			tmpDataTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(tmpNewData.getTime());
-			tmpDataTime = tmpDataTime.with(LocalTime.MIN);
 			for (int i = 0; i < poList.size() && !dataTimeMatchFlag; i++) {
 				CryptoCoinPrice1day po = poList.get(i);
-				if (po.getStartTime().isEqual(tmpDataTime)) {
+				if (po.getStartTime().isEqual(tmpNewData.getStartTime().with(LocalTime.MIN))) {
 					dataTimeMatchFlag = true;
 					mergeDataPair(po, tmpNewData);
 				}
@@ -139,13 +138,13 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 
 	}
 
-	private CryptoCoinPrice1day mergeDataPair(CryptoCoinPrice1day target, CryptoCoinDataSubDTO data) {
-		target.setStartPrice(new BigDecimal(data.getStart()));
-		target.setEndPrice(new BigDecimal(data.getEnd()));
-		target.setHighPrice(new BigDecimal(data.getHigh()));
-		target.setLowPrice(new BigDecimal(data.getLow()));
-		if (data.getVolume() != null && data.getVolume() > 0) {
-			target.setVolume(new BigDecimal(data.getVolume()));
+	private CryptoCoinPrice1day mergeDataPair(CryptoCoinPrice1day target, KLineCommonDataBO data) {
+		target.setStartPrice(data.getStartPrice());
+		target.setEndPrice(data.getEndPrice());
+		target.setHighPrice(data.getHighPrice());
+		target.setLowPrice(data.getLowPrice());
+		if (data.getVolume() != null && data.getVolume().compareTo(BigDecimal.ZERO) > 0) {
+			target.setVolume(data.getVolume());
 		}
 
 		dataMapper.updateByPrimaryKeySelective(target);
@@ -173,20 +172,19 @@ public class CryptoCoin1DayDataSummaryServiceImpl extends CryptoCoinCommonServic
 		return target;
 	}
 
-	private void insertNewData(CryptoCoinDataSubDTO data, CryptoCoinCatalog coinType,
+	private void insertNewData(KLineCommonDataBO data, CryptoCoinCatalog coinType,
 			CurrencyTypeForCryptoCoin currencyType) {
 		CryptoCoinPrice1day po = new CryptoCoinPrice1day();
 		po.setId(snowFlake.getNextId());
-		po.setStartTime(localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(data.getTime()).withHour(0).withMinute(0)
-				.withSecond(0).withNano(0));
+		po.setStartTime(data.getStartTime().with(LocalTime.MIN));
 		po.setEndTime(po.getStartTime().plusDays(DAY_STEP_LONG));
 		po.setCoinType(coinType.getId());
 		po.setCurrencyType(currencyType.getCode());
-		po.setStartPrice(new BigDecimal(data.getStart()));
-		po.setEndPrice(new BigDecimal(data.getEnd()));
-		po.setHighPrice(new BigDecimal(data.getHigh()));
-		po.setLowPrice(new BigDecimal(data.getLow()));
-		po.setVolume(new BigDecimal(data.getVolume()));
+		po.setStartPrice(data.getStartPrice());
+		po.setEndPrice(data.getEndPrice());
+		po.setHighPrice(data.getHighPrice());
+		po.setLowPrice(data.getLowPrice());
+		po.setVolume(data.getVolume());
 
 		dataMapper.insertSelective(po);
 	}

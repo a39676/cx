@@ -1,6 +1,7 @@
 package demo.interaction.bbt.service.impl;
 
 import java.io.File;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,8 +9,9 @@ import org.springframework.stereotype.Service;
 import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.dto.ServiceMsgDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.automationTest.service.impl.AutomationTestConstantService;
 import demo.base.system.service.impl.SystemOptionService;
-import demo.config.costom_component.OptionFilePathConfigurer;
+import demo.config.customComponent.OptionFilePathConfigurer;
 import demo.finance.cnStockMarket.service.CnStockMarketService;
 import demo.finance.currencyExchangeRate.data.service.CurrencyExchangeRateService;
 import demo.interaction.bbt.service.BbtCommonService;
@@ -33,6 +35,8 @@ public class BbtComplexServiceImpl extends BbtCommonService implements BbtComple
 	private CnStockMarketService cnStockMarketService;
 	@Autowired
 	private SystemOptionService systemOptionService;
+	@Autowired
+	private AutomationTestConstantService automationTestConstantService;
 
 	@Override
 	public CommonResult textMessageForwarding(ServiceMsgDTO dto) {
@@ -86,7 +90,7 @@ public class BbtComplexServiceImpl extends BbtCommonService implements BbtComple
 	}
 
 	@Override
-	public void makeSureWorkerClong1Alive() {
+	public void makeSureWorkerClone1Alive() {
 		if (systemOptionService.isDev()) {
 			return;
 		}
@@ -98,6 +102,7 @@ public class BbtComplexServiceImpl extends BbtCommonService implements BbtComple
 			response = h.sendGet(url);
 			systemOptionService.setWorkerClone_1IsAlive(response != null && response.contains("pong"));
 			systemOptionService.setWorkerOffLineCounter(0);
+			automationTestConstantService.setBbtLastHeartBeat(LocalDateTime.now());
 		} catch (Exception e) {
 			systemOptionService.setWorkerOffLineCounter(systemOptionService.getWorkerOffLineCounter() + 1);
 			if (systemOptionService.getWorkerOffLineCounter() > systemOptionService.getWorkerMaxOffLineCounter()) {
@@ -106,24 +111,4 @@ public class BbtComplexServiceImpl extends BbtCommonService implements BbtComple
 		}
 	}
 
-	@Override
-	public CommonResult workerClone1IsAlive(BaseStrDTO dto) {
-		CommonResult r = new CommonResult();
-		String keyInput = dto.getStr();
-		if (!bbtDynamicKey.isCorrectKey(keyInput)) {
-			r.setIsSuccess();
-			r.setMessage("Greeting.");
-			return r;
-		}
-
-		if (systemOptionService.getWorkerClone_1IsAlive()) {
-			r.setIsSuccess();
-			return r;
-		}
-
-		ServiceMsgDTO msgDTO = new ServiceMsgDTO();
-		msgDTO.setMsg("Worker 1 was offline");
-		msgForwardServcie.textMessageForwarding(msgDTO);
-		return r;
-	}
 }

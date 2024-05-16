@@ -12,8 +12,8 @@ import com.google.gson.GsonBuilder;
 
 import autoTest.testEvent.common.pojo.dto.AutomationTestInsertEventDTO;
 import auxiliaryCommon.pojo.type.TimeUnitType;
-import demo.config.costom_component.BaseUtilCustom;
-import demo.config.costom_component.SnowFlake;
+import demo.config.customComponent.BaseUtilCustom;
+import demo.config.customComponent.SnowFlake;
 import jakarta.servlet.http.HttpServletRequest;
 import net.sf.json.JSONObject;
 import tool.pojo.bo.IpRecordBO;

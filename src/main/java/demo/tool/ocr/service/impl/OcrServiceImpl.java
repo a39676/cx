@@ -15,7 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.service.CommonService;
-import demo.config.costom_component.Tess;
+import demo.config.customComponent.Tess;
 import demo.tool.ocr.pojo.constant.OcrView;
 import demo.tool.ocr.pojo.result.UploadResult;
 import demo.tool.ocr.pojo.type.TessLanguageType;

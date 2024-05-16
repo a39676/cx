@@ -29,7 +29,7 @@ import com.google.gson.GsonBuilder;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.service.impl.SystemOptionService;
 import demo.common.service.CommonService;
-import demo.config.costom_component.CustomPasswordEncoder;
+import demo.config.customComponent.CustomPasswordEncoder;
 import demo.image.pojo.constant.ImageConstant;
 import demo.tool.bookmark.mapper.BookmarkMapper;
 import demo.tool.bookmark.pojo.dto.BookmarkDTO;

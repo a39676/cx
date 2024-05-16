@@ -26,7 +26,7 @@ import demo.base.user.pojo.result.NewUserRegistResult;
 import demo.base.user.pojo.type.SystemRolesType;
 import demo.base.user.service.UserRegistService;
 import demo.common.controller.CommonController;
-import demo.config.costom_component.BaseUtilCustom;
+import demo.config.customComponent.BaseUtilCustom;
 import demo.tool.educate.pojo.type.GradeType;
 import jakarta.servlet.http.HttpServletRequest;
 

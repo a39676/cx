@@ -7,6 +7,5 @@ public class TerminateBean {
 	@PreDestroy
 	public void onDestroy() throws Exception {
 //		TODO
-		
 	}
 }

@@ -15,7 +15,7 @@ public class CryptoCoinDailyDataQueryAckProducer extends CommonService {
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
 
-	public void send(CryptoCoinDailyDataQueryDTO dto) {
+	public void sendCryptoCoinDailyDataQueryForTest(CryptoCoinDailyDataQueryDTO dto) {
 		JSONObject json = JSONObject.fromObject(dto);
 		rabbitTemplate.convertAndSend(CryptoCoinMQConstant.CRYPTO_COIN_DAILY_DATA_QUERY, json.toString());
 	}

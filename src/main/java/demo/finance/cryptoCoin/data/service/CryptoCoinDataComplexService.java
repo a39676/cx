@@ -2,10 +2,15 @@ package demo.finance.cryptoCoin.data.service;
 
 import org.springframework.web.servlet.ModelAndView;
 
+import demo.finance.cryptoCoin.data.pojo.dto.GetBigMoveSummaryDataDTO;
+import demo.finance.cryptoCoin.data.pojo.result.GetBigMoveSummaryDataResult;
+
 public interface CryptoCoinDataComplexService {
 
-	void getNewBigMoveDataMessage(String msg);
+	void receiveNewBigMoveDataMessage(String msg);
 
-	ModelAndView getBigMoveSummaryByManual();
+	ModelAndView getBigMoveSummaryView();
+
+	GetBigMoveSummaryDataResult getBigMoveSummaryData(GetBigMoveSummaryDataDTO dto);
 
 }

@@ -26,7 +26,7 @@ public class CryptoCoinBigMoveDataAckReceiver extends CommonMessageQueueReceiver
 	@RabbitHandler
 	public void process(String messageStr, Channel channel, Message message) throws IOException {
 		try {
-			cryptoCoinDataComplexService.getNewBigMoveDataMessage(messageStr);
+			cryptoCoinDataComplexService.receiveNewBigMoveDataMessage(messageStr);
 		} catch (Exception e) {
 			log.error("mq error, " + CryptoCoinMQConstant.CRYPTO_COIN_BIG_MOVE_DATA + ", e:" + e.getLocalizedMessage());
 			telegramService.sendMessageByChatRecordId(TelegramBotType.CRYPTO_COIN_LOW_PRICE_NOTICE_BOT,

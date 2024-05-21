@@ -4,5 +4,7 @@ public class CryptoCoinTestUrl {
 
 	public static final String ROOT = "/ct";
 	
-	public static final String BIG_MOVE = "/bigMove";
+	public static final String BIG_MOVE_VIEW = "/bigMove";
+	
+	public static final String BIG_MOVE_DATA = "/bigMoveData";
 }

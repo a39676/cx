@@ -56,7 +56,7 @@ public class TestController2 extends CommonService {
 		
 		dto.setStartTime(startTime.getTime());
 		dto.setEndTime(endTime.getTime());
-		cryptoCoinDailyDataQueryAckProducer.send(dto);
+		cryptoCoinDailyDataQueryAckProducer.sendCryptoCoinDailyDataQueryForTest(dto);
 		return "Done";
 	}
 

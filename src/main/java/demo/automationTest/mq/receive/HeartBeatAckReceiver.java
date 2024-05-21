@@ -24,7 +24,9 @@ public class HeartBeatAckReceiver extends AutomationTestCommonService {
 		if (HeartBeatType.BBT.equals(heartBeatType)) {
 			constantService.setBbtLastHeartBeat(LocalDateTime.now());
 		} else if (HeartBeatType.WORKER1.equals(heartBeatType)) {
-			constantService.setWorkerLastHeartBeat();
+			constantService.setWorker1LastHeartBeat(LocalDateTime.now());
+		} else if (HeartBeatType.MONITOR.equals(heartBeatType)) {
+			constantService.setMonitorLastHeartBeat(LocalDateTime.now());
 		}
 	}
 }

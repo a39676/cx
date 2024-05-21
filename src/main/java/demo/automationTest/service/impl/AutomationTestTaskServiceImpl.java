@@ -29,9 +29,12 @@ public class AutomationTestTaskServiceImpl extends CommonTaskService {
 	public void checkHeartBeat() {
 		LocalDateTime heartBeatTime = constantService.getBbtLastHeartBeat();
 		sendServiceDownNotificationIfNecessary(heartBeatTime, HeartBeatType.BBT);
-		
-		heartBeatTime = constantService.getWorkerLastHeartBeat();
+
+		heartBeatTime = constantService.getWorker1LastHeartBeat();
 		sendServiceDownNotificationIfNecessary(heartBeatTime, HeartBeatType.WORKER1);
+
+		heartBeatTime = constantService.getMonitorLastHeartBeat();
+		sendServiceDownNotificationIfNecessary(heartBeatTime, HeartBeatType.MONITOR);
 	}
 
 	private void sendServiceDownNotificationIfNecessary(LocalDateTime heartBeatTime, HeartBeatType heartBeatType) {

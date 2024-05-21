@@ -17,18 +17,17 @@ import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.type.TelegramBotType;
 
 @Component
-@RabbitListener(queues = ServiceMQConstant.MID_SMALL_CAPITALIZATION_CRYPTO_COIN_MSG)
-public class MidSmallCapCryptoCoinMsgReceiver extends CommonMessageQueueReceiverService {
+@RabbitListener(queues = ServiceMQConstant.CRYPTO_COIN_PRICE_RANGE_MSG)
+public class CryptoCoinPriceRangeMsgReceiver extends CommonMessageQueueReceiverService {
 
 	@RabbitHandler
 	public void process(String messageStr, Channel channel, Message message) throws IOException {
 		try {
 			ServiceMsgDTO dto = new Gson().fromJson(messageStr, ServiceMsgDTO.class);
-			telegramService.sendMessageByChatRecordId(TelegramBotType.CRYPTO_COIN_LOW_PRICE_NOTICE_BOT, dto.getMsg(),
+			telegramService.sendMessageByChatRecordId(TelegramBotType.CCM_NOTICE, dto.getMsg(),
 					TelegramStaticChatID.MY_ID);
 		} catch (Exception e) {
-			log.error("mq error, " + ServiceMQConstant.MID_SMALL_CAPITALIZATION_CRYPTO_COIN_MSG + ", e:"
-					+ e.getLocalizedMessage());
+			log.error("mq error, " + ServiceMQConstant.CRYPTO_COIN_PRICE_RANGE_MSG + ", e:" + e.getLocalizedMessage());
 			log.error(messageStr);
 		}
 	}

@@ -17,8 +17,8 @@ import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.type.TelegramBotType;
 
 @Component
-@RabbitListener(queues = ServiceMQConstant.NORMAL_MESSAGE_QUEUE)
-public class NormalMsgReceiver extends CommonMessageQueueReceiverService {
+@RabbitListener(queues = ServiceMQConstant.CRYPTO_COIN_NORMAL_MESSAGE_QUEUE)
+public class CryptoCoinNormalMsgReceiver extends CommonMessageQueueReceiverService {
 
 	@RabbitHandler
 	public void process(String messageStr, Channel channel, Message message) throws IOException {
@@ -27,7 +27,7 @@ public class NormalMsgReceiver extends CommonMessageQueueReceiverService {
 			telegramService.sendMessageByChatRecordId(TelegramBotType.NORMAL_MSG, dto.getMsg(),
 					TelegramStaticChatID.MY_ID);
 		} catch (Exception e) {
-			log.error("mq error, " + ServiceMQConstant.NORMAL_MESSAGE_QUEUE + ", e:" + e.getLocalizedMessage());
+			log.error("mq error, " + ServiceMQConstant.CRYPTO_COIN_NORMAL_MESSAGE_QUEUE + ", e:" + e.getLocalizedMessage());
 			log.error(messageStr);
 		}
 	}

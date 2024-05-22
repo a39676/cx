@@ -17,7 +17,7 @@ import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.type.TelegramBotType;
 
 @Component
-@RabbitListener(queues = ServiceMQConstant.CRYPTO_COIN_PRICE_RANGE_MSG)
+@RabbitListener(queues = { ServiceMQConstant.CRYPTO_COIN_PRICE_RANGE_MSG, ServiceMQConstant.CCM_NOTICE })
 public class CryptoCoinPriceRangeMsgReceiver extends CommonMessageQueueReceiverService {
 
 	@RabbitHandler
@@ -27,7 +27,7 @@ public class CryptoCoinPriceRangeMsgReceiver extends CommonMessageQueueReceiverS
 			telegramService.sendMessageByChatRecordId(TelegramBotType.CCM_NOTICE, dto.getMsg(),
 					TelegramStaticChatID.MY_ID);
 		} catch (Exception e) {
-			log.error("mq error, " + ServiceMQConstant.CRYPTO_COIN_PRICE_RANGE_MSG + ", e:" + e.getLocalizedMessage());
+			log.error("mq error, " + ServiceMQConstant.CCM_NOTICE + ", e:" + e.getLocalizedMessage());
 			log.error(messageStr);
 		}
 	}

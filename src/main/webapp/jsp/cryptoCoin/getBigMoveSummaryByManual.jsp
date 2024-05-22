@@ -190,14 +190,14 @@
       targetDiv += '    </tr>';
       for(i=0;i<datas.dataList.length;i++){
         var subData = datas.dataList[i];
+        targetDiv += '        <tr>';
         if (subData.totalRate > 0) {
-          targetDiv += '        <tr class="table-success">';
-        } else if (subData.totalRate > 0){
-          targetDiv += '        <tr class="table-light">';
+          targetDiv += '        <td style="text-align: center;" class="table-success">';
+        } else if (subData.totalRate < 0){
+          targetDiv += '        <td style="text-align: center;" class="table-danger">';
         } else {
-          targetDiv += '        <tr class="table-danger">';
+          targetDiv += '        <td style="text-align: center;" class="table-light">';
         }
-        targetDiv += '        <td style="text-align: center;">';
         targetDiv += subData.symbol;
         targetDiv += '        </td>';
         targetDiv += '        <td style="text-align: center;">';
@@ -206,13 +206,13 @@
         targetDiv += '        <td style="text-align: center;">';
         targetDiv += subData.totalCounter;
         targetDiv += '        </td>';
-        targetDiv += '        <td style="text-align: center;">';
+        targetDiv += '        <td style="text-align: center;" class="table-success">';
         targetDiv += subData.totalRiseRate;
         targetDiv += '        </td>';
         targetDiv += '        <td style="text-align: center;">';
         targetDiv += subData.riseCounter;
         targetDiv += '        </td>';
-        targetDiv += '        <td style="text-align: center;">';
+        targetDiv += '        <td style="text-align: center;" class="table-danger">';
         targetDiv += subData.totalFallRate;
         targetDiv += '        </td>';
         targetDiv += '        <td style="text-align: center;">';

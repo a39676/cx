@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.common.service.CommonService;
+import demo.finance.cryptoCoin.data.webSocket.CryptoCompareWSClient;
 import demo.finance.cryptoCoin.mq.producer.CryptoCoinDailyDataQueryAckProducer;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.dto.TestDTO;
@@ -31,6 +32,8 @@ public class TestController2 extends CommonService {
 	private TestService2 testService2;
 	@Autowired
 	private CryptoCoinDailyDataQueryAckProducer cryptoCoinDailyDataQueryAckProducer;
+	@Autowired
+	private CryptoCompareWSClient cryptoCompareWSClient;
 
 	@GetMapping(value = "/t1")
 	public ModelAndView testView() {
@@ -53,11 +56,22 @@ public class TestController2 extends CommonService {
 		LocalDateTime now = LocalDateTime.now();
 		Date startTime = localDateTimeHandler.localDateTimeToDate(now.minusDays(200).with(LocalTime.MIN));
 		Date endTime = localDateTimeHandler.localDateTimeToDate(now.with(LocalTime.MAX));
-		
+
 		dto.setStartTime(startTime.getTime());
 		dto.setEndTime(endTime.getTime());
 		cryptoCoinDailyDataQueryAckProducer.sendCryptoCoinDailyDataQueryForTest(dto);
 		return "Done";
 	}
 
+	@GetMapping(value = "/t4")
+	@ResponseBody
+	public String t4() {
+		cryptoCompareWSClient.startWebSocket();
+		cryptoCompareWSClient.addSubscription("BTC");
+		cryptoCompareWSClient.addSubscription("ETH");
+		cryptoCompareWSClient.addSubscription("DOGE");
+		cryptoCompareWSClient.addSubscription("FIL");
+		cryptoCompareWSClient.addSubscription("UNI");
+		return "Done";
+	}
 }

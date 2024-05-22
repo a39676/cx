@@ -116,7 +116,7 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 		ws.addListener(new WebSocketAdapter() {
 			@Override
 			public void onTextMessage(WebSocket websocket, String message) throws Exception {
-//				System.out.println(message);
+				System.out.println(message);
 
 				CryptoCompareWebSocketMsgType connectionType = checkConnection(message);
 				if (connectionType == null) {
@@ -176,7 +176,7 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 		ws = setListener(ws);
 		try {
 			ws.connect();
-			addSubscription(new ArrayList<String>(getSubscriptionList()));
+//			addSubscription(new ArrayList<String>(getSubscriptionList()));
 			r.normalSuccess();
 		} catch (WebSocketException e) {
 			log.error("crypto compare socket connect error: " + e.getLocalizedMessage());

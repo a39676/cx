@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -22,10 +23,12 @@ import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinBigMoveDailySummaryBO;
 import demo.finance.cryptoCoin.data.pojo.dto.GetBigMoveSummaryDataDTO;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigMove;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigMoveExample;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigMoveExample.Criteria;
 import demo.finance.cryptoCoin.data.pojo.result.GetBigMoveSummaryDataResult;
 import demo.finance.cryptoCoin.data.service.CryptoCoinDataComplexService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigMoveDataBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigMoveSummaryDataBO;
+import net.sf.json.JSONObject;
 
 @Service
 public class CryptoCoinDataComplexServiceImpl extends CommonService implements CryptoCoinDataComplexService {
@@ -102,7 +105,13 @@ public class CryptoCoinDataComplexServiceImpl extends CommonService implements C
 		LocalDateTime endTime = now.minusHours(dto.getHourRangeStart());
 
 		CryptoCoinBigMoveExample example = new CryptoCoinBigMoveExample();
-		example.createCriteria().andEventTimeBetween(startTime, endTime);
+		Criteria criteria = example.createCriteria();
+		criteria.andEventTimeBetween(startTime, endTime);
+		if (StringUtils.isNotBlank(dto.getSymbols())) {
+			List<String> symbolList = new ArrayList<>();
+			symbolList.addAll(Arrays.asList(dto.getSymbols().split(",")));
+			criteria.andSymbolIn(symbolList);
+		}
 		List<CryptoCoinBigMove> bigMoveDataList = cryptoCoinBigMoveMapper.selectByExample(example);
 
 		r = buildSummaryListByStartTimeRange(bigMoveDataList, startTime, endTime);
@@ -214,7 +223,8 @@ public class CryptoCoinDataComplexServiceImpl extends CommonService implements C
 			v.addObject("todayBigMoveMsg", "Can NOT found any 24h big move");
 			return v;
 		}
-		v.addObject("dataIn24H", result);
+		JSONObject json = JSONObject.fromObject(result);
+		v.addObject("dataIn24H", json);
 		return v;
 	}
 
@@ -230,7 +240,8 @@ public class CryptoCoinDataComplexServiceImpl extends CommonService implements C
 			v.addObject("yesterdayBigMoveMsg", "Can NOT found any 24-48h big move");
 			return v;
 		}
-		v.addObject("dataIn48H", result);
+		JSONObject json = JSONObject.fromObject(result);
+		v.addObject("dataIn48H", json);
 		return v;
 	}
 
@@ -245,7 +256,8 @@ public class CryptoCoinDataComplexServiceImpl extends CommonService implements C
 			v.addObject("lastWeekBigMoveMsg", "Can NOT found any last week big move");
 			return v;
 		}
-		v.addObject("dataInLastWeek", result);
+		JSONObject json = JSONObject.fromObject(result);
+		v.addObject("dataInLastWeek", json);
 		return v;
 	}
 

@@ -4,6 +4,7 @@ public class GetBigMoveSummaryDataDTO {
 
 	private Integer hourRangeStart = 0;
 	private Integer hourRangeEnd = 24;
+	private String symbols;
 
 	public Integer getHourRangeStart() {
 		return hourRangeStart;
@@ -21,9 +22,18 @@ public class GetBigMoveSummaryDataDTO {
 		this.hourRangeEnd = hourRangeEnd;
 	}
 
+	public String getSymbols() {
+		return symbols;
+	}
+
+	public void setSymbols(String symbols) {
+		this.symbols = symbols;
+	}
+
 	@Override
 	public String toString() {
-		return "GetBigMoveSummaryDataDTO [hourRangeStart=" + hourRangeStart + ", hourRangeEnd=" + hourRangeEnd + "]";
+		return "GetBigMoveSummaryDataDTO [hourRangeStart=" + hourRangeStart + ", hourRangeEnd=" + hourRangeEnd
+				+ ", symbols=" + symbols + "]";
 	}
 
 }

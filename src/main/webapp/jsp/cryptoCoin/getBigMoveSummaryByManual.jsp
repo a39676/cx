@@ -31,53 +31,7 @@
   </div>
 
   <div class="row">
-    <div class="col-md-11">
-      <div style="height: 200px; overflow: auto;">
-        <table class="table table-striped table-sm">
-          <tr>
-            <td style="text-align: center;">Symbol</td>
-            <td style="text-align: center;">Total Rate</td>
-            <td style="text-align: center;">Total count</td>
-            <td style="text-align: center;">Rising rate</td>
-            <td style="text-align: center;">Rising count</td>
-            <td style="text-align: center;">Falling rate</td>
-            <td style="text-align: center;">Falling count</td>
-          </tr>
-          <c:forEach items="${dataIn24H.dataList}" var="subData">
-            <c:if test = "${subData.totalRate > 0}">
-              <tr class="table-success">
-            </c:if>
-            <c:if test = "${subData.totalRate == 0}">
-              <tr class="table-light">
-            </c:if>
-            <c:if test = "${subData.totalRate < 0}">
-              <tr class="table-danger">
-            </c:if>
-              <td style="text-align: center;">
-                ${subData.symbol}
-              </td>
-              <td style="text-align: center;">
-                ${subData.totalRate}%
-              </td>
-              <td style="text-align: center;">
-                ${subData.totalCounter}
-              </td>
-              <td style="text-align: center;">
-                ${subData.totalRiseRate}%
-              </td>
-              <td style="text-align: center;">
-                ${subData.riseCounter}
-              </td>
-              <td style="text-align: center;">
-                ${subData.totalFallRate}%
-              </td>
-              <td style="text-align: center;">
-                ${subData.fallCounter}
-              </td>
-            </tr>
-          </c:forEach>
-        </table>
-      </div>
+    <div class="col-md-11" id="dataIn24H">
     </div>
   </div>
 
@@ -89,53 +43,7 @@
   </div>
 
   <div class="row">
-    <div class="col-md-11">
-      <div style="height: 200px; overflow: auto;">
-        <table class="table table-striped table-sm">
-          <tr>
-            <td style="text-align: center;">Symbol</td>
-            <td style="text-align: center;">Total Rate</td>
-            <td style="text-align: center;">Total count</td>
-            <td style="text-align: center;">Rising rate</td>
-            <td style="text-align: center;">Rising count</td>
-            <td style="text-align: center;">Falling rate</td>
-            <td style="text-align: center;">Falling count</td>
-          </tr>
-          <c:forEach items="${dataIn48H.dataList}" var="subData">
-            <c:if test = "${subData.totalRate > 0}">
-              <tr class="table-success">
-            </c:if>
-            <c:if test = "${subData.totalRate == 0}">
-              <tr class="table-light">
-            </c:if>
-            <c:if test = "${subData.totalRate < 0}">
-              <tr class="table-danger">
-            </c:if>
-              <td style="text-align: center;">
-                ${subData.symbol}
-              </td>
-              <td style="text-align: center;">
-                ${subData.totalRate}%
-              </td>
-              <td style="text-align: center;">
-                ${subData.totalCounter}
-              </td>
-              <td style="text-align: center;">
-                ${subData.totalRiseRate}%
-              </td>
-              <td style="text-align: center;">
-                ${subData.riseCounter}
-              </td>
-              <td style="text-align: center;">
-                ${subData.totalFallRate}%
-              </td>
-              <td style="text-align: center;">
-                ${subData.fallCounter}
-              </td>
-            </tr>
-          </c:forEach>
-        </table>
-      </div>
+    <div class="col-md-11" id="dataIn48H">
     </div>
   </div>
 
@@ -147,53 +55,7 @@
   </div>
 
   <div class="row">
-    <div class="col-md-11">
-      <div style="height: 200px; overflow: auto;">
-        <table class="table table-striped table-sm">
-          <tr>
-            <td style="text-align: center;">Symbol</td>
-            <td style="text-align: center;">Total Rate</td>
-            <td style="text-align: center;">Total count</td>
-            <td style="text-align: center;">Rising rate</td>
-            <td style="text-align: center;">Rising count</td>
-            <td style="text-align: center;">Falling rate</td>
-            <td style="text-align: center;">Falling count</td>
-          </tr>
-          <c:forEach items="${dataInLastWeek.dataList}" var="subData">
-            <c:if test = "${subData.totalRate > 0}">
-              <tr class="table-success">
-            </c:if>
-            <c:if test = "${subData.totalRate == 0}">
-              <tr class="table-light">
-            </c:if>
-            <c:if test = "${subData.totalRate < 0}">
-              <tr class="table-danger">
-            </c:if>
-              <td style="text-align: center;">
-                ${subData.symbol}
-              </td>
-              <td style="text-align: center;">
-                ${subData.totalRate}%
-              </td>
-              <td style="text-align: center;">
-                ${subData.totalCounter}
-              </td>
-              <td style="text-align: center;">
-                ${subData.totalRiseRate}%
-              </td>
-              <td style="text-align: center;">
-                ${subData.riseCounter}
-              </td>
-              <td style="text-align: center;">
-                ${subData.totalFallRate}%
-              </td>
-              <td style="text-align: center;">
-                ${subData.fallCounter}
-              </td>
-            </tr>
-          </c:forEach>
-        </table>
-      </div>
+    <div class="col-md-11" id="dataInLastWeek">
     </div>
   </div>
 
@@ -221,12 +83,24 @@
 
   <div class="row">
     <div class="col-md-12">
+      <button id="twelveHours">12 Hours</button>
+      <button id="today">24 Hours</button>
+      <button id="thirdDay">48-72 Hours</button>
+      <button id="threeToSevenDays">3-7 Days</button>
+      <button id="thisWeek">This week</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
       <label>hourRangeStart</label> 
-      <input type="number" id="hourRangeStart" 
+      <input type="number" id="hourRangeStart" style="width: 60px;" 
         placeholder="hourRangeStart" value="0">
       <label>hourRangeEnd</label> 
-      <input type="number" id="hourRangeEnd" 
+      <input type="number" id="hourRangeEnd" style="width: 60px;" 
         placeholder="hourRangeEnd" value="24">
+      <input type="text" id="symbols" style="width: 120px;" 
+        placeholder="BTCUSDT, ETHUSDT">
       <button id="QueryBigMoveData">Submit</button>
     </div>
   </div>
@@ -263,10 +137,13 @@
 
       var hourRangeStart = $("#hourRangeStart").val();
       var hourRangeEnd = $("#hourRangeEnd").val();
+      var symbols = $("#symbols").val();
+      
 
       var jsonOutput = {
         hourRangeStart:hourRangeStart,
         hourRangeEnd:hourRangeEnd,
+        symbols:symbols,
       };
       $("#customQueryResultMsg").text("Querying");
       $("#customQueryResult").html("");
@@ -287,57 +164,109 @@
           if(datas.code != 0){
             return;
           }
-          var targetDiv = "";
-          targetDiv += '<div style="height: 200px; overflow: auto;">';
-          targetDiv += '  <table class="table table-striped table-sm">';
-          targetDiv += '    <tr>';
-          targetDiv += '      <td style="text-align: center;">Symbol</td>';
-          targetDiv += '      <td style="text-align: center;">Total Rate</td>';
-          targetDiv += '      <td style="text-align: center;">Total count</td>';
-          targetDiv += '      <td style="text-align: center;">Rising rate</td>';
-          targetDiv += '      <td style="text-align: center;">Rising count</td>';
-          targetDiv += '      <td style="text-align: center;">Falling rate</td>';
-          targetDiv += '      <td style="text-align: center;">Falling count</td>';
-          targetDiv += '    </tr>';
-          for(i=0;i<datas.dataList.length;i++){
-            var subData = datas.dataList[i];
-            if (subData.totalRate > 0) {
-              targetDiv += '        <tr class="table-success">';
-            } else if (subData.totalRate > 0){
-              targetDiv += '        <tr class="table-light">';
-            } else {
-              targetDiv += '        <tr class="table-danger">';
-            }
-            targetDiv += '        <td style="text-align: center;">';
-            targetDiv += subData.symbol;
-            targetDiv += '        </td>';
-            targetDiv += '        <td style="text-align: center;">';
-            targetDiv += subData.totalRate;
-            targetDiv += '        </td>';
-            targetDiv += '        <td style="text-align: center;">';
-            targetDiv += subData.totalCounter;
-            targetDiv += '        </td>';
-            targetDiv += '        <td style="text-align: center;">';
-            targetDiv += subData.totalRiseRate;
-            targetDiv += '        </td>';
-            targetDiv += '        <td style="text-align: center;">';
-            targetDiv += subData.riseCounter;
-            targetDiv += '        </td>';
-            targetDiv += '        <td style="text-align: center;">';
-            targetDiv += subData.totalFallRate;
-            targetDiv += '        </td>';
-            targetDiv += '        <td style="text-align: center;">';
-            targetDiv += subData.fallCounter;
-            targetDiv += '        </td>';
-            targetDiv += '      </tr>';
-          }
-          targetDiv += '  </table>';
-          targetDiv += '</div>';
+          var targetDiv = buildBigMoveDataTable(datas);
           $("#customQueryResult").html(targetDiv);
         },
         error: function(datas) {            
         }
       });
+    }
+
+    function buildBigMoveDataTable(datas){
+      if(datas.code != 0){
+        return;
+      }
+      var targetDiv = "";
+      targetDiv += '<div style="height: 200px; overflow: auto;">';
+      targetDiv += '  <table class="table table-striped table-sm">';
+      targetDiv += '    <tr>';
+      targetDiv += '      <td style="text-align: center;">Symbol</td>';
+      targetDiv += '      <td style="text-align: center;">Total Rate</td>';
+      targetDiv += '      <td style="text-align: center;">Total count</td>';
+      targetDiv += '      <td style="text-align: center;">Rising rate</td>';
+      targetDiv += '      <td style="text-align: center;">Rising count</td>';
+      targetDiv += '      <td style="text-align: center;">Falling rate</td>';
+      targetDiv += '      <td style="text-align: center;">Falling count</td>';
+      targetDiv += '    </tr>';
+      for(i=0;i<datas.dataList.length;i++){
+        var subData = datas.dataList[i];
+        if (subData.totalRate > 0) {
+          targetDiv += '        <tr class="table-success">';
+        } else if (subData.totalRate > 0){
+          targetDiv += '        <tr class="table-light">';
+        } else {
+          targetDiv += '        <tr class="table-danger">';
+        }
+        targetDiv += '        <td style="text-align: center;">';
+        targetDiv += subData.symbol;
+        targetDiv += '        </td>';
+        targetDiv += '        <td style="text-align: center;">';
+        targetDiv += subData.totalRate;
+        targetDiv += '        </td>';
+        targetDiv += '        <td style="text-align: center;">';
+        targetDiv += subData.totalCounter;
+        targetDiv += '        </td>';
+        targetDiv += '        <td style="text-align: center;">';
+        targetDiv += subData.totalRiseRate;
+        targetDiv += '        </td>';
+        targetDiv += '        <td style="text-align: center;">';
+        targetDiv += subData.riseCounter;
+        targetDiv += '        </td>';
+        targetDiv += '        <td style="text-align: center;">';
+        targetDiv += subData.totalFallRate;
+        targetDiv += '        </td>';
+        targetDiv += '        <td style="text-align: center;">';
+        targetDiv += subData.fallCounter;
+        targetDiv += '        </td>';
+        targetDiv += '      </tr>';
+      }
+      targetDiv += '  </table>';
+      targetDiv += '</div>';
+      return targetDiv;
+    }
+
+    function fillDataIn24H() {
+      var targetDiv = buildBigMoveDataTable(${dataIn24H});
+      $("#dataIn24H").html(targetDiv);
+    }
+    fillDataIn24H();
+
+    function fillDataIn48H() {
+      var targetDiv = buildBigMoveDataTable(${dataIn48H});
+      $("#dataIn48H").html(targetDiv);
+    }
+    fillDataIn48H();
+
+    function fillDataInLastWeek() {
+      var targetDiv = buildBigMoveDataTable(${dataInLastWeek});
+      $("#dataInLastWeek").html(targetDiv);
+    }
+    fillDataInLastWeek();
+  });
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("#twelveHours").click(function () {
+      setHourRange(0, 12);
+    });
+    $("#today").click(function () {
+      setHourRange(0, 24);
+    });
+    $("#thirdDay").click(function () {
+      setHourRange(48, 72);
+    });
+    $("#threeToSevenDays").click(function () {
+      setHourRange(72, 168);
+    });
+    $("#thisWeek").click(function () {
+      setHourRange(0, 168);
+    });
+    
+    
+    function setHourRange(start, end) {
+      $("#hourRangeStart").val(start);
+      $("#hourRangeEnd").val(end);
     }
   });
 </script>

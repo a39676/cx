@@ -219,10 +219,6 @@ public class CryptoCoinDataComplexServiceImpl extends CommonService implements C
 		LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
 		GetBigMoveSummaryDataResult result = buildSummaryListByStartTimeRange(bigMoveDataList, yesterday);
 
-		if (result.getDataList().isEmpty()) {
-			v.addObject("todayBigMoveMsg", "Can NOT found any 24h big move");
-			return v;
-		}
 		JSONObject json = JSONObject.fromObject(result);
 		v.addObject("dataIn24H", json);
 		return v;
@@ -236,10 +232,6 @@ public class CryptoCoinDataComplexServiceImpl extends CommonService implements C
 		LocalDateTime end = LocalDateTime.now().minusDays(1);
 		GetBigMoveSummaryDataResult result = buildSummaryListByStartTimeRange(bigMoveDataList, start, end);
 
-		if (result.getDataList().isEmpty()) {
-			v.addObject("yesterdayBigMoveMsg", "Can NOT found any 24-48h big move");
-			return v;
-		}
 		JSONObject json = JSONObject.fromObject(result);
 		v.addObject("dataIn48H", json);
 		return v;
@@ -252,10 +244,6 @@ public class CryptoCoinDataComplexServiceImpl extends CommonService implements C
 		LocalDateTime lastWeek = LocalDateTime.now().minusDays(7);
 		GetBigMoveSummaryDataResult result = buildSummaryListByStartTimeRange(bigMoveDataList, lastWeek);
 
-		if (result.getDataList().isEmpty()) {
-			v.addObject("lastWeekBigMoveMsg", "Can NOT found any last week big move");
-			return v;
-		}
 		JSONObject json = JSONObject.fromObject(result);
 		v.addObject("dataInLastWeek", json);
 		return v;

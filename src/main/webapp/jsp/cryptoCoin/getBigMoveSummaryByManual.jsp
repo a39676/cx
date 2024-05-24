@@ -31,7 +31,9 @@
   </div>
 
   <div class="row">
-    <div class="col-md-11" id="dataIn24H">
+    <div class="col-md-11">
+      <div id="dataIn24H" style="height: 200px; overflow: auto;">
+      </div>
     </div>
   </div>
 
@@ -43,7 +45,9 @@
   </div>
 
   <div class="row">
-    <div class="col-md-11" id="dataIn48H">
+    <div class="col-md-11">
+      <div id="dataIn48H" style="height: 200px; overflow: auto;">
+      </div>
     </div>
   </div>
 
@@ -55,7 +59,9 @@
   </div>
 
   <div class="row">
-    <div class="col-md-11" id="dataInLastWeek">
+    <div class="col-md-11">
+      <div id="dataInLastWeek" style="height: 200px; overflow: auto;">
+      </div>
     </div>
   </div>
 
@@ -112,7 +118,10 @@
   </div>
 
   <div class="row">
-    <div class="col-md-11" id="customQueryResult">
+    <div class="col-md-11">
+      <div id="customQueryResult">
+        
+      </div>
     </div>
   </div>
 
@@ -172,12 +181,11 @@
       });
     }
 
-    function buildBigMoveDataTable(datas){
-      if(datas.code != 0){
+    function buildBigMoveDataTable(argument){
+      if(argument.code != 0){
         return;
       }
       var targetDiv = "";
-      targetDiv += '<div style="height: 200px; overflow: auto;">';
       targetDiv += '  <table class="table table-striped table-sm">';
       targetDiv += '    <tr>';
       targetDiv += '      <td style="text-align: center;">Symbol</td>';
@@ -188,8 +196,8 @@
       targetDiv += '      <td style="text-align: center;">Falling rate</td>';
       targetDiv += '      <td style="text-align: center;">Falling count</td>';
       targetDiv += '    </tr>';
-      for(i=0;i<datas.dataList.length;i++){
-        var subData = datas.dataList[i];
+      for(i=0;i<argument.dataList.length;i++){
+        var subData = argument.dataList[i];
         targetDiv += '        <tr>';
         if (subData.totalRate > 0) {
           targetDiv += '        <td style="text-align: center;" class="table-success">';
@@ -221,7 +229,6 @@
         targetDiv += '      </tr>';
       }
       targetDiv += '  </table>';
-      targetDiv += '</div>';
       return targetDiv;
     }
 

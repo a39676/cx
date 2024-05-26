@@ -20,7 +20,7 @@
   <div>
     <div class="row">
       <div class="col-md-12">
-        <canvas id="myChart" style="width:100%;"></canvas>
+        <canvas id="myChart" style="width:90%;"></canvas>
       </div>
     </div>
   </div>

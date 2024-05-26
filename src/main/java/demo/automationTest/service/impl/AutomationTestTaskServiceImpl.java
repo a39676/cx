@@ -39,6 +39,7 @@ public class AutomationTestTaskServiceImpl extends CommonTaskService {
 		int maxHeartBeatGap = 10;
 		if (heartBeatTime == null) {
 			complexToolService.notificationServiceDown(heartBeatType);
+			return;
 		}
 		long minutes = ChronoUnit.MINUTES.between(heartBeatTime, LocalDateTime.now());
 		if (minutes > maxHeartBeatGap) {

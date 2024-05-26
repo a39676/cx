@@ -175,11 +175,7 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 	}
 
 	private String getStorePath(Long id) {
-		if (isWindows()) {
-			return "d:" + MAIN_FOLDER_PATH + "/bookmark/" + String.valueOf(id) + ".json";
-		} else {
-			return MAIN_FOLDER_PATH + "/bookmark/" + String.valueOf(id) + ".json";
-		}
+		return MAIN_FOLDER_PATH + "/bookmark/" + String.valueOf(id) + ".json";
 	}
 
 	private BookmarkVO buildBookVO(BookmarkDTO dto) {
@@ -341,7 +337,7 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 		if (!removedTagNameList.isEmpty()) {
 			po.setUpdateTime(LocalDateTime.now());
 			mapper.updateByPrimaryKeySelective(po);
-			
+
 			r.setMessage("Tag :\"" + removedTagNameList + "\" deleted");
 		} else {
 			r.setMessage("Tag deleted");
@@ -421,7 +417,7 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 		bookmarkDTO.addTag(tagDTO);
 
 		rewiriteBookmarkFile(bookmarkDTO);
-		
+
 		po.setUpdateTime(LocalDateTime.now());
 		mapper.updateByPrimaryKeySelective(po);
 
@@ -483,7 +479,7 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 		bookmarkDTO.addTag(tagDTO);
 
 		rewiriteBookmarkFile(bookmarkDTO);
-		
+
 		po.setUpdateTime(LocalDateTime.now());
 		mapper.updateByPrimaryKeySelective(po);
 
@@ -587,10 +583,10 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 
 			bookmarkDTO.addUrl(urlDTO);
 			rewiriteBookmarkFile(bookmarkDTO);
-			
+
 			po.setUpdateTime(LocalDateTime.now());
 			mapper.updateByPrimaryKeySelective(po);
-			
+
 			r.setMessage("Edited bookmark: " + dto.getBookmarkUrlName());
 			r.setIsSuccess();
 			return r;
@@ -623,10 +619,10 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 
 		if (deleteBookmark != null) {
 			rewiriteBookmarkFile(bookmarkDTO);
-			
+
 			po.setUpdateTime(LocalDateTime.now());
 			mapper.updateByPrimaryKeySelective(po);
-			
+
 			r.setMessage("\"" + deleteBookmark.getName() + "\", " + deleteBookmark.getUrl() + ", " + "deleted");
 			r.setIsSuccess();
 		}
@@ -709,10 +705,10 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 
 		if (hadUpdate) {
 			rewiriteBookmarkFile(bookmarkDTO);
-			
+
 			po.setUpdateTime(LocalDateTime.now());
 			mapper.updateByPrimaryKeySelective(po);
-			
+
 			r.setIsSuccess();
 		}
 
@@ -760,7 +756,7 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 
 		if (!allTagList.isEmpty()) {
 			rewiriteBookmarkFile(bookmarkDTO);
-			
+
 			po.setUpdateTime(LocalDateTime.now());
 			mapper.updateByPrimaryKeySelective(po);
 		}
@@ -831,7 +827,7 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 	@Override
 	public CommonResult importFromBookmarkFile(UploadBookmarkDTO dto) {
 		CommonResult r = new CommonResult();
-		
+
 		if (dto.getBookmarkHtmlInBase64() == null) {
 			r.setMessage("Please upload an HTML file");
 			return r;
@@ -844,21 +840,21 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 		}
 
 		BookmarkDTO bookmarkDTO = buildBookmarkDtoFromHtmlLines(dto.getBookmarkHtmlInBase64(), dto.getBookmarkName());
-		if(bookmarkDTO == null) {
+		if (bookmarkDTO == null) {
 			r.setMessage("Please upload bookmark export from Chrome or Firefox and DO NOT edit it");
 			return r;
 		}
-		
+
 		Long userId = baseUtilCustom.getUserId();
 		Bookmark newBookmarkPO = new Bookmark();
 		newBookmarkPO.setUserId(userId);
 		newBookmarkPO.setBookmarkName(dto.getBookmarkName());
 		newBookmarkPO.setId(bookmarkDTO.getId());
-		if(StringUtils.isNotBlank(dto.getPwd())) {
+		if (StringUtils.isNotBlank(dto.getPwd())) {
 			newBookmarkPO.setPwd(passwordEncoder.encode(dto.getPwd()));
 		}
 		mapper.insertSelective(newBookmarkPO);
-		
+
 		rewiriteBookmarkFile(bookmarkDTO);
 
 		r.setIsSuccess();
@@ -869,59 +865,59 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 	private BookmarkDTO buildBookmarkDtoFromHtmlLines(String htmlStrInBase64, String bookmarkName) {
 		try {
 			htmlStrInBase64 = htmlStrInBase64.split(",")[1];
-			
+
 			byte[] htmlByte = Base64.getDecoder().decode(htmlStrInBase64);
 			String htmlStr = new String(htmlByte);
-			
-			if(!baseUtilCustom.hasSuperAdminRole()) {
+
+			if (!baseUtilCustom.hasSuperAdminRole()) {
 				htmlStr = sanitize(htmlStr);
 			}
-			
+
 			BookmarkDTO dto = new BookmarkDTO();
 			dto.setId(snowFlake.getNextId());
 			dto.setBookmarkName(bookmarkName);
-			
+
 			BookmarkTagDTO tagDTO = null;
 			BookmarkUrlDTO urlDTO = null;
 			List<BookmarkTagDTO> tmpTagList = null;
 			Map<String, BookmarkTagDTO> tagMap = new HashMap<>();
-			
+
 			Document doc = Jsoup.parse(htmlStr);
-			
+
 			Elements bodyList = doc.getElementsByTag("body");
 			Element body = bodyList.get(0);
-			
+
 			Elements childrenOfBody = body.children();
 			Element targetDL = null;
-			for(int i = 0; i < childrenOfBody.size() && targetDL == null; i++) {
-				if("dl".equals(childrenOfBody.get(i).tagName())) {
+			for (int i = 0; i < childrenOfBody.size() && targetDL == null; i++) {
+				if ("dl".equals(childrenOfBody.get(i).tagName())) {
 					targetDL = childrenOfBody.get(i);
 				}
 			}
 
 			Elements aList = doc.getElementsByTag("a");
-			for(Element a : aList) {
+			for (Element a : aList) {
 				urlDTO = new BookmarkUrlDTO();
 				urlDTO.setId(snowFlake.getNextId());
 				urlDTO.setName(a.text());
 				String url = a.attr("href");
-				if(!url.startsWith("http")) {
+				if (!url.startsWith("http")) {
 					urlDTO.setUrl("https://" + url);
 				} else {
 					urlDTO.setUrl(url);
 				}
 
 				tmpTagList = new ArrayList<>();
-				
+
 				Element parent = null;
 				while (a.hasParent() && ("dt".equals(a.parent().tagName()) || "dl".equals(a.parent().tagName()))) {
 					parent = a.parent();
-					if("dt".equals(parent.tagName())) {
+					if ("dt".equals(parent.tagName())) {
 						Elements children = parent.children();
-						for(int i = 0; i < children.size(); i++) {
-							if("h3".equals(children.get(i).tagName())) {
+						for (int i = 0; i < children.size(); i++) {
+							if ("h3".equals(children.get(i).tagName())) {
 								String bookmarkTagName = children.get(i).text();
-								if(tagMap.containsKey(bookmarkTagName)) {
+								if (tagMap.containsKey(bookmarkTagName)) {
 									tagDTO = tagMap.get(bookmarkTagName);
 								} else {
 									tagDTO = new BookmarkTagDTO();
@@ -938,10 +934,10 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 				urlDTO.setTagList(tmpTagList);
 				dto.addUrl(urlDTO);
 			}
-			
+
 			dto.getAllTagList().addAll(tagMap.values());
 			return dto;
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -956,28 +952,28 @@ public class BookmarkServiceImpl extends CommonService implements BookmarkServic
 			r.setMessage("It doesn't look like your bookmark");
 			return r;
 		}
-		
+
 		po.setUpdateTime(LocalDateTime.now());
 		po.setIsDelete(true);
-		
+
 		mapper.updateByPrimaryKeySelective(po);
-		
+
 		r.setMessage(po.getBookmarkName() + " deleted.");
 		r.setIsSuccess();
 		return r;
 	}
-	
+
 	@Override
 	public void cleanOldFile() {
 		int maxLivingMonth = 1;
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime oldestTime = now.minusMonths(maxLivingMonth);
-		
+
 		BookmarkExample example = new BookmarkExample();
 		example.createCriteria().andIsDeleteEqualTo(true).andUpdateTimeLessThan(oldestTime);
 		List<Bookmark> poList = mapper.selectByExample(example);
-		
-		for(Bookmark po : poList) {
+
+		for (Bookmark po : poList) {
 			String filePath = getStorePath(po.getId());
 			File f = new File(filePath);
 			f.delete();

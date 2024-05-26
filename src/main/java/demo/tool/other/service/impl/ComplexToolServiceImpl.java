@@ -22,7 +22,7 @@ public class ComplexToolServiceImpl extends ToolCommonService implements Complex
 
 	@Override
 	public void notificationServiceDown(HeartBeatType heartBeatType) {
-		telegramService.sendMessageByChatRecordId(TelegramBotType.BBT_MESSAGE, heartBeatType.getName() + " down",
+		telegramService.sendMessageByChatRecordId(TelegramBotType.NORMAL_MSG, heartBeatType.getName() + " down",
 				TelegramStaticChatID.MY_ID);
 	}
 

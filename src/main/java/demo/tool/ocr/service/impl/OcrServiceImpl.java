@@ -30,11 +30,7 @@ public class OcrServiceImpl extends CommonService implements OcrService {
 	private Tess tess;
 
 	private String getOcrImgTmpStorePath() {
-		if (isLinux()) {
-			return MAIN_FOLDER_PATH + "/ocrImg";
-		} else {
-			return "d:" + MAIN_FOLDER_PATH + "/ocrImg";
-		}
+		return MAIN_FOLDER_PATH + "/ocrImg";
 	}
 
 	@Override

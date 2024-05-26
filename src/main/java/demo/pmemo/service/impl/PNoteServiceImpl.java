@@ -118,11 +118,7 @@ public class PNoteServiceImpl extends ArticleCommonService implements PNoteServi
 	}
 
 	private String getPNoteStorePrefixPath() {
-		if (isWindows()) {
-			return "d:" + MAIN_FOLDER_PATH + "/pNote";
-		} else {
-			return MAIN_FOLDER_PATH + "/pNote";
-		}
+		return MAIN_FOLDER_PATH + "/pNote";
 	}
 
 	private PNote findPNote(Long userId) {

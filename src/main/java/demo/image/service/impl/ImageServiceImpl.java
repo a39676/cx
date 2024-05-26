@@ -69,7 +69,7 @@ public class ImageServiceImpl extends ToolCommonService implements ImageService 
 	@Autowired
 	private TelegramService telegramService;
 
-	private final String DEFAULT_IMG_SAVING_FOLDER = "/home/u2/cx/images";
+	private final String DEFAULT_IMG_SAVING_FOLDER = MAIN_FOLDER_PATH + "/images";
 	private final Integer PHYSICS_DELETE_DELAY_DAYS = 5;
 	private final Integer DEFAULT_IMG_LIVING_DAYS = 30;
 

@@ -31,7 +31,7 @@ import toolPack.ioHandle.FileUtilCustom;
 @Service
 public class WordHelperServiceImpl extends CommonService implements WordHelperService {
 
-	private String dictionarySavingFolderPathStr = "/home/u2/cx/wordHelper";
+	private String dictionarySavingFolderPathStr = MAIN_FOLDER_PATH + "/wordHelper";
 
 	@Override
 	public ModelAndView wordHelper() {

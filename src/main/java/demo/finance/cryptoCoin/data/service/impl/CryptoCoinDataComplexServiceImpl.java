@@ -93,7 +93,7 @@ public class CryptoCoinDataComplexServiceImpl extends CommonService implements C
 		v = handle24hBigMoveDataSummary(v, bigMoveDataList);
 		v = handle24To48hBigMoveDataSummary(v, bigMoveDataList);
 		v = handleLastWeekBigMoveDataSummary(v, bigMoveDataList);
-		v = handleLastMonthBigMoveDataChart(v, bigMoveDataList);
+		v = handleLastTwoWeeksBigMoveDataChart(v, bigMoveDataList);
 
 		return v;
 	}
@@ -250,16 +250,20 @@ public class CryptoCoinDataComplexServiceImpl extends CommonService implements C
 		return v;
 	}
 
-	private ModelAndView handleLastMonthBigMoveDataChart(ModelAndView v, List<CryptoCoinBigMove> bigMoveDataList) {
+	private ModelAndView handleLastTwoWeeksBigMoveDataChart(ModelAndView v, List<CryptoCoinBigMove> bigMoveDataList) {
 		if (bigMoveDataList == null || bigMoveDataList.isEmpty()) {
 			return v;
 		}
 		Map<Long, CryptoCoinBigMoveDailySummaryBO> countingMap = new HashMap<>();
 		CryptoCoinBigMoveDailySummaryBO tmpBO = null;
 		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime twoWeeksAgo = now.minusDays(14);
 		Long hourGap = null;
 		for (int i = 0; i < bigMoveDataList.size(); i++) {
 			CryptoCoinBigMove data = bigMoveDataList.get(i);
+			if (data.getEventTime().isBefore(twoWeeksAgo)) {
+				continue;
+			}
 			hourGap = ChronoUnit.HOURS.between(data.getEventTime(), now);
 			if (countingMap.containsKey(hourGap)) {
 				tmpBO = countingMap.get(hourGap);

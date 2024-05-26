@@ -9,6 +9,7 @@ import autoTest.testModule.pojo.type.TestModuleType;
 import demo.article.article.service.impl.ArticleCommonService;
 import demo.automationTest.mapper.TestEventMapper;
 import demo.automationTest.mq.producer.TestEventInsertAckProducer;
+import demo.common.service.HeartBeatService;
 import demo.tool.other.service.VisitDataService;
 import toolPack.dateTimeHandle.DateTimeUtilCommon;
 import toolPack.ioHandle.FileUtilCustom;
@@ -22,7 +23,7 @@ public abstract class AutomationTestCommonService extends ArticleCommonService {
 	@Autowired
 	protected AutomationTestOptionService optionService;
 	@Autowired
-	protected AutomationTestConstantService constantService;
+	protected HeartBeatService heartBeatService;
 	@Autowired
 	protected TestEventInsertAckProducer testEventInsertAckProducer;
 	@Autowired

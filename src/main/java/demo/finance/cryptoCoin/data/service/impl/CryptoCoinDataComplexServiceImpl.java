@@ -28,6 +28,7 @@ import demo.finance.cryptoCoin.data.pojo.result.GetBigMoveSummaryDataResult;
 import demo.finance.cryptoCoin.data.service.CryptoCoinDataComplexService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigMoveDataBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigMoveSummaryDataBO;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Service
@@ -256,12 +257,12 @@ public class CryptoCoinDataComplexServiceImpl extends CommonService implements C
 		Map<Long, CryptoCoinBigMoveDailySummaryBO> countingMap = new HashMap<>();
 		CryptoCoinBigMoveDailySummaryBO tmpBO = null;
 		LocalDateTime now = LocalDateTime.now();
-		Long dayGap = null;
+		Long hourGap = null;
 		for (int i = 0; i < bigMoveDataList.size(); i++) {
 			CryptoCoinBigMove data = bigMoveDataList.get(i);
-			dayGap = ChronoUnit.DAYS.between(data.getEventTime(), now);
-			if (countingMap.containsKey(dayGap)) {
-				tmpBO = countingMap.get(dayGap);
+			hourGap = ChronoUnit.HOURS.between(data.getEventTime(), now);
+			if (countingMap.containsKey(hourGap)) {
+				tmpBO = countingMap.get(hourGap);
 				tmpBO.setTotal(tmpBO.getTotal() + 1);
 				if (data.getSymbol().contains("_")) {
 					tmpBO.setGateIoCounting(tmpBO.getGateIoCounting() + 1);
@@ -270,16 +271,33 @@ public class CryptoCoinDataComplexServiceImpl extends CommonService implements C
 				}
 			} else {
 				tmpBO = new CryptoCoinBigMoveDailySummaryBO();
-				tmpBO.setDayGap(dayGap.intValue());
+				tmpBO.setStartTime(now.minusHours(hourGap));
+				tmpBO.setStartTimeStr(localDateTimeHandler.dateToStr(tmpBO.getStartTime(), "MM-dd HH:mm"));
 				tmpBO.setTotal(tmpBO.getTotal() + 1);
-				countingMap.put(dayGap, tmpBO);
+				countingMap.put(hourGap, tmpBO);
 			}
 		}
 		List<CryptoCoinBigMoveDailySummaryBO> resultList = new ArrayList<>();
 		resultList.addAll(countingMap.values());
 		Collections.sort(resultList);
 
-		v.addObject("bigMoveDailySummaryData", resultList);
+		v.addObject("bigMoveDailySummaryData", JSONArray.fromObject(resultList));
+
+		List<String> xValueList = new ArrayList<>();
+		List<Integer> total = new ArrayList<>();
+		List<Integer> binance = new ArrayList<>();
+		List<Integer> binance1 = new ArrayList<>();
+		for (CryptoCoinBigMoveDailySummaryBO data : resultList) {
+			xValueList.add(data.getStartTimeStr());
+			total.add(data.getTotal());
+			binance.add(data.getBinanceCounting());
+			binance1.add(data.getGateIoCounting());
+		}
+
+		v.addObject("xValues", xValueList);
+		v.addObject("total", total);
+		v.addObject("binance", binance);
+		v.addObject("binance1", binance1);
 
 		return v;
 	}

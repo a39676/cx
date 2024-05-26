@@ -17,6 +17,4 @@ public interface BbtComplexService {
 
 	JSONObject getCryptoCoinOption(BaseStrDTO dto);
 
-	void makeSureWorkerClone1Alive();
-
 }

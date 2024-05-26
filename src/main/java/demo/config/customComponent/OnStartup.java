@@ -1,5 +1,6 @@
 package demo.config.customComponent;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import auxiliaryCommon.pojo.type.HeartBeatType;
 import demo.ai.aiArt.service.AiArtService;
 import demo.base.user.pojo.po.Users;
 import demo.base.user.pojo.type.SystemRolesType;
@@ -15,6 +17,7 @@ import demo.base.user.service.UserRegistService;
 import demo.base.user.service.UsersService;
 import demo.base.user.service.impl.UserRoleConstantService;
 import demo.common.service.CommonService;
+import demo.common.service.HeartBeatService;
 import demo.joy.scene.service.JoySceneManagerService;
 import demo.pmemo.service.UrgeNoticeManagerService;
 
@@ -36,6 +39,8 @@ public class OnStartup extends CommonService implements ApplicationListener<Appl
 	private UrgeNoticeManagerService urgeNoticeService;
 	@Autowired
 	private AiArtService aiArtService;
+	@Autowired
+	private HeartBeatService heartBeatService;
 
 	/*
 	 * ContextStartedEvent ContextStoppedEvent ContextRefreshedEvent
@@ -101,6 +106,11 @@ public class OnStartup extends CommonService implements ApplicationListener<Appl
 		aiArtService.loadingCache();
 
 		log.error("DatabaseFillerOnStartup end");
+
+		for (HeartBeatType heartBeatType : HeartBeatType.values()) {
+			heartBeatService.getHeartBeatMap().put(heartBeatType.getName(), LocalDateTime.now());
+		}
+		log.error("Heart beat init");
 	}
 
 }

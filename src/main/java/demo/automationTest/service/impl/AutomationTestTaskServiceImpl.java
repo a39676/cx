@@ -11,6 +11,7 @@ import auxiliaryCommon.pojo.type.HeartBeatType;
 import demo.automationTest.service.AutomationTestReportService;
 import demo.automationTest.service.TestEventService;
 import demo.base.task.service.CommonTaskService;
+import demo.common.service.HeartBeatService;
 import demo.tool.other.service.ComplexToolService;
 
 @Component
@@ -23,18 +24,15 @@ public class AutomationTestTaskServiceImpl extends CommonTaskService {
 	@Autowired
 	private AutomationTestReportService reportService;
 	@Autowired
-	private AutomationTestConstantService constantService;
+	private HeartBeatService heartBeatService;
 
 	@Scheduled(fixedDelay = 1000L * 120)
 	public void checkHeartBeat() {
-		LocalDateTime heartBeatTime = constantService.getBbtLastHeartBeat();
-		sendServiceDownNotificationIfNecessary(heartBeatTime, HeartBeatType.BBT);
-
-		heartBeatTime = constantService.getWorker1LastHeartBeat();
-		sendServiceDownNotificationIfNecessary(heartBeatTime, HeartBeatType.WORKER1);
-
-		heartBeatTime = constantService.getMonitorLastHeartBeat();
-		sendServiceDownNotificationIfNecessary(heartBeatTime, HeartBeatType.MONITOR);
+		LocalDateTime heartBeatTime = null;
+		for (HeartBeatType heartBeatType : HeartBeatType.values()) {
+			heartBeatTime = heartBeatService.getHeartBeatMap().get(heartBeatType.getName());
+			sendServiceDownNotificationIfNecessary(heartBeatTime, heartBeatType);
+		}
 	}
 
 	private void sendServiceDownNotificationIfNecessary(LocalDateTime heartBeatTime, HeartBeatType heartBeatType) {

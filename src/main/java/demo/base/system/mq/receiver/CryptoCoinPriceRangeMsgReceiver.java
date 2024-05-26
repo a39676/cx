@@ -17,7 +17,7 @@ import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.type.TelegramBotType;
 
 @Component
-@RabbitListener(queues = { ServiceMQConstant.CRYPTO_COIN_PRICE_RANGE_MSG, ServiceMQConstant.CCM_NOTICE })
+@RabbitListener(queues = { ServiceMQConstant.CCM_NOTICE })
 public class CryptoCoinPriceRangeMsgReceiver extends CommonMessageQueueReceiverService {
 
 	@RabbitHandler

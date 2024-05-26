@@ -6,7 +6,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.FileSystemResource;
 
 @Configuration
-public class ConfigFromOutSourceProperties {
+public class Config {
 
 	private static final String MAIN_FOLDER_PATH = "/home/u2/cx/optionFile";
 

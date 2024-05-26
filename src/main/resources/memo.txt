@@ -1,5 +1,8 @@
 crypto coin
 	CryptoCoinPriceCommonDataBO delete field coinType
+	CryptoCoinBigMoveDailySummaryBO update
+		delete gateIoCounting?
+		add binance1 counting
 	
 日历提醒的跳过本次提前提醒异常
 

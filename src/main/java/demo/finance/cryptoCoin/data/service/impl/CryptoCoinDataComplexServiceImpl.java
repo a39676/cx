@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.type.TimeUnitType;
-import demo.common.service.CommonService;
+import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinBigMoveMapper;
 import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinBigMoveDailySummaryBO;
 import demo.finance.cryptoCoin.data.pojo.dto.GetBigMoveSummaryDataDTO;
@@ -32,7 +32,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Service
-public class CryptoCoinDataComplexServiceImpl extends CommonService implements CryptoCoinDataComplexService {
+public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService implements CryptoCoinDataComplexService {
 
 	@Autowired
 	private CryptoCoinBigMoveMapper cryptoCoinBigMoveMapper;
@@ -268,10 +268,10 @@ public class CryptoCoinDataComplexServiceImpl extends CommonService implements C
 			if (countingMap.containsKey(hourGap)) {
 				tmpBO = countingMap.get(hourGap);
 				tmpBO.setTotal(tmpBO.getTotal() + 1);
-				if (data.getSymbol().contains("_")) {
-					tmpBO.setGateIoCounting(tmpBO.getGateIoCounting() + 1);
-				} else {
+				if (optionService.getBinanceMainList().contains(data.getSymbol())) {
 					tmpBO.setBinanceCounting(tmpBO.getBinanceCounting() + 1);
+				} else {
+					tmpBO.setGateIoCounting(tmpBO.getGateIoCounting() + 1);
 				}
 			} else {
 				tmpBO = new CryptoCoinBigMoveDailySummaryBO();

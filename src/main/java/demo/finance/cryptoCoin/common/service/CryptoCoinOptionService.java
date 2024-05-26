@@ -2,6 +2,7 @@ package demo.finance.cryptoCoin.common.service;
 
 import java.io.File;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -36,6 +37,8 @@ public class CryptoCoinOptionService extends CommonService {
 
 	private boolean cryptoCompareWebSocketTurnOn = true;
 	private boolean binanceWebSocketTurnOn = true;
+
+	private List<String> binanceMainList;
 
 	@PostConstruct
 	public void refreshOption() {
@@ -151,6 +154,14 @@ public class CryptoCoinOptionService extends CommonService {
 		this.binanceWebSocketTurnOn = binanceWebSocketTurnOn;
 	}
 
+	public List<String> getBinanceMainList() {
+		return binanceMainList;
+	}
+
+	public void setBinanceMainList(List<String> binanceMainList) {
+		this.binanceMainList = binanceMainList;
+	}
+
 	@Override
 	public String toString() {
 		return "CryptoCoinOptionService [defaultCoinCatalog=" + defaultCoinCatalog + ", cryptoCompareApiDataMaxLength="
@@ -159,7 +170,8 @@ public class CryptoCoinOptionService extends CommonService {
 				+ ", cryptoCompareUri=" + cryptoCompareUri + ", binanceUri=" + binanceUri + ", scaleOfSharingCalculate="
 				+ scaleOfSharingCalculate + ", sharingCalculateResultSavingPath=" + sharingCalculateResultSavingPath
 				+ ", subscriptionSet=" + subscriptionSet + ", cryptoCompareWebSocketTurnOn="
-				+ cryptoCompareWebSocketTurnOn + ", binanceWebSocketTurnOn=" + binanceWebSocketTurnOn + "]";
+				+ cryptoCompareWebSocketTurnOn + ", binanceWebSocketTurnOn=" + binanceWebSocketTurnOn
+				+ ", binanceMainList=" + binanceMainList + "]";
 	}
 
 }

@@ -8,7 +8,7 @@ public class CryptoCoinBigMoveDailySummaryBO implements Comparable<CryptoCoinBig
 	private String startTimeStr;
 	private Integer total = 0;
 	private Integer binanceCounting = 0;
-	private Integer gateIoCounting = 0;
+	private Integer binance1Counting = 0;
 
 	public LocalDateTime getStartTime() {
 		return startTime;
@@ -42,18 +42,18 @@ public class CryptoCoinBigMoveDailySummaryBO implements Comparable<CryptoCoinBig
 		this.binanceCounting = binanceCounting;
 	}
 
-	public Integer getGateIoCounting() {
-		return gateIoCounting;
+	public Integer getBinance1Counting() {
+		return binance1Counting;
 	}
 
-	public void setGateIoCounting(Integer gateIoCounting) {
-		this.gateIoCounting = gateIoCounting;
+	public void setBinance1Counting(Integer binance1Counting) {
+		this.binance1Counting = binance1Counting;
 	}
 
 	@Override
 	public String toString() {
 		return "CryptoCoinBigMoveDailySummaryBO [startTime=" + startTime + ", startTimeStr=" + startTimeStr + ", total="
-				+ total + ", binanceCounting=" + binanceCounting + ", gateIoCounting=" + gateIoCounting + "]";
+				+ total + ", binanceCounting=" + binanceCounting + ", gateIoCounting=" + binance1Counting + "]";
 	}
 
 	@Override

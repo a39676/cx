@@ -271,7 +271,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 				if (optionService.getBinanceMainList().contains(data.getSymbol())) {
 					tmpBO.setBinanceCounting(tmpBO.getBinanceCounting() + 1);
 				} else {
-					tmpBO.setGateIoCounting(tmpBO.getGateIoCounting() + 1);
+					tmpBO.setBinance1Counting(tmpBO.getBinance1Counting() + 1);
 				}
 			} else {
 				tmpBO = new CryptoCoinBigMoveDailySummaryBO();
@@ -295,7 +295,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 			xValueList.add(data.getStartTimeStr());
 			total.add(data.getTotal());
 			binance.add(data.getBinanceCounting());
-			binance1.add(data.getGateIoCounting());
+			binance1.add(data.getBinance1Counting());
 		}
 
 		v.addObject("xValues", xValueList);

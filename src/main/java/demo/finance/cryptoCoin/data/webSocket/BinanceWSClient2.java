@@ -18,7 +18,7 @@ import com.binance.connector.client.impl.WebSocketStreamClientImpl;
 import com.binance.connector.client.utils.websocketcallback.WebSocketMessageCallback;
 
 import demo.finance.cryptoCoin.data.webSocket.common.CryptoCoinWebSocketCommonClient;
-import finance.cryptoCoin.pojo.bo.BinanceWebScoketConnetionKeyBO;
+import finance.cryptoCoin.binance.pojo.bo.CryptoCoinBinanceWebScoketConnetionKeyBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 import net.sf.json.JSONObject;
@@ -28,7 +28,7 @@ import net.sf.json.JSONObject;
 public class BinanceWSClient2 extends CryptoCoinWebSocketCommonClient {
 
 	private WebSocketStreamClient wsStreamClient = null;
-	private Map<BinanceWebScoketConnetionKeyBO, Integer> connectionIdMap = new HashMap<>();
+	private Map<CryptoCoinBinanceWebScoketConnetionKeyBO, Integer> connectionIdMap = new HashMap<>();
 	private String defaultInterval = "1m";
 
 	public void restartWebSocket() {
@@ -56,7 +56,7 @@ public class BinanceWSClient2 extends CryptoCoinWebSocketCommonClient {
 
 	public void addNewSubcript(String symbol, String interval) {
 		createWebSorkcetIfNecessary();
-		BinanceWebScoketConnetionKeyBO keyBO = new BinanceWebScoketConnetionKeyBO();
+		CryptoCoinBinanceWebScoketConnetionKeyBO keyBO = new CryptoCoinBinanceWebScoketConnetionKeyBO();
 		keyBO.setInterval(interval);
 		keyBO.setSymbol(symbol);
 		Integer connectionId = connectionIdMap.get(keyBO);

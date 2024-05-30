@@ -19,8 +19,12 @@
   ${msg}
   <div>
     <div class="row">
-      <div class="col-md-12">
-        <canvas id="myChart" style="width:80%;"></canvas>
+      <div class="col-md-1">
+      </div>
+      <div class="col-md-10">
+        <canvas id="myChart" style="width:100%;"></canvas>
+      </div>
+      <div class="col-md-1">
       </div>
     </div>
   </div>

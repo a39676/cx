@@ -10,14 +10,14 @@ import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
 
-import auxiliaryCommon.pojo.constant.ServiceMQConstant;
 import auxiliaryCommon.pojo.dto.ServiceMsgDTO;
 import demo.common.service.CommonMessageQueueReceiverService;
+import finance.cryptoCoin.pojo.constant.CryptoCoinMQConstant;
 import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.type.TelegramBotType;
 
 @Component
-@RabbitListener(queues = ServiceMQConstant.CRYPTO_COIN_NORMAL_MESSAGE_QUEUE)
+@RabbitListener(queues = CryptoCoinMQConstant.NORMAL_MESSAGE_QUEUE)
 public class CryptoCoinNormalMsgReceiver extends CommonMessageQueueReceiverService {
 
 	@RabbitHandler
@@ -27,7 +27,8 @@ public class CryptoCoinNormalMsgReceiver extends CommonMessageQueueReceiverServi
 			telegramService.sendMessageByChatRecordId(TelegramBotType.NORMAL_MSG, dto.getMsg(),
 					TelegramStaticChatID.MY_ID);
 		} catch (Exception e) {
-			log.error("mq error, " + ServiceMQConstant.CRYPTO_COIN_NORMAL_MESSAGE_QUEUE + ", e:" + e.getLocalizedMessage());
+			log.error("mq error, " + CryptoCoinMQConstant.NORMAL_MESSAGE_QUEUE + ", e:"
+					+ e.getLocalizedMessage());
 			log.error(messageStr);
 		}
 	}

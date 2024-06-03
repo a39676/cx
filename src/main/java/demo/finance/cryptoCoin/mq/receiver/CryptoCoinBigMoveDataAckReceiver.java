@@ -17,7 +17,7 @@ import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.type.TelegramBotType;
 
 @Component
-@RabbitListener(queues = CryptoCoinMQConstant.CRYPTO_COIN_BIG_MOVE_DATA)
+@RabbitListener(queues = CryptoCoinMQConstant.BIG_MOVE_DATA)
 public class CryptoCoinBigMoveDataAckReceiver extends CommonMessageQueueReceiverService {
 
 	@Autowired
@@ -28,7 +28,7 @@ public class CryptoCoinBigMoveDataAckReceiver extends CommonMessageQueueReceiver
 		try {
 			cryptoCoinDataComplexService.receiveNewBigMoveDataMessage(messageStr);
 		} catch (Exception e) {
-			log.error("mq error, " + CryptoCoinMQConstant.CRYPTO_COIN_BIG_MOVE_DATA + ", e:" + e.getLocalizedMessage());
+			log.error("mq error, " + CryptoCoinMQConstant.BIG_MOVE_DATA + ", e:" + e.getLocalizedMessage());
 			telegramService.sendMessageByChatRecordId(TelegramBotType.CRYPTO_COIN_LOW_PRICE_NOTICE_BOT,
 					"Crypto big move data error: " + e.getLocalizedMessage() + ", msgStr: " + messageStr,
 					TelegramStaticChatID.MY_ID);

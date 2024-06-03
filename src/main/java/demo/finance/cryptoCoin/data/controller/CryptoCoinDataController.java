@@ -32,4 +32,5 @@ public class CryptoCoinDataController extends CommonController {
 	public GetBigMoveSummaryDataResult getBigMoveSummaryData(@RequestBody GetBigMoveSummaryDataDTO dto) {
 		return cryptoCoinDataComplexService.getBigMoveSummaryData(dto);
 	}
+
 }

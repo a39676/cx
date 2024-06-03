@@ -13,4 +13,6 @@ public interface CryptoCoinDataComplexService {
 
 	GetBigMoveSummaryDataResult getBigMoveSummaryData(GetBigMoveSummaryDataDTO dto);
 
+	void sendBigMoveDataCrossResult();
+
 }

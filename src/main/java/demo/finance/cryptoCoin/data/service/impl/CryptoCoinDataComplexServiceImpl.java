@@ -24,18 +24,24 @@ import demo.finance.cryptoCoin.data.pojo.dto.GetBigMoveSummaryDataDTO;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigMove;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigMoveExample;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigMoveExample.Criteria;
+import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinFilterBigMoveDataInTimeRangeResult;
 import demo.finance.cryptoCoin.data.pojo.result.GetBigMoveSummaryDataResult;
 import demo.finance.cryptoCoin.data.service.CryptoCoinDataComplexService;
+import demo.finance.cryptoCoin.mq.producer.CryptoCoinSetOrderProducer;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigMoveDataBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigMoveSummaryDataBO;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import telegram.pojo.constant.TelegramStaticChatID;
+import telegram.pojo.type.TelegramBotType;
 
 @Service
 public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService implements CryptoCoinDataComplexService {
 
 	@Autowired
 	private CryptoCoinBigMoveMapper cryptoCoinBigMoveMapper;
+	@Autowired
+	private CryptoCoinSetOrderProducer cryptoCoinSetOrderProducer;
 
 	@Override
 	public void receiveNewBigMoveDataMessage(String msg) {
@@ -92,29 +98,24 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 			return v;
 		}
 
-		LocalDateTime yesterDayEnd = now.minusHours(24);
-		LocalDateTime yesterDayStart = now.minusHours(48);
-		LocalDateTime thisWeekStart = now.minusDays(7);
+		CryptoCoinFilterBigMoveDataInTimeRangeResult filterBigMoveDataInTimeRangeResult = filterBigMoveDataInTimeRangeResult(
+				bigMoveDataList);
 
 		v = handleRecentBigMoveDataSummary(v, bigMoveDataList);
-		GetBigMoveSummaryDataResult todayBigDataFilterResult = buildSummaryListByStartTimeRange(bigMoveDataList,
-				yesterDayEnd);
-		JSONObject bigDataFilterJson = JSONObject.fromObject(todayBigDataFilterResult);
+		JSONObject bigDataFilterJson = JSONObject
+				.fromObject(filterBigMoveDataInTimeRangeResult.getTodayBigDataFilterResult());
 		v.addObject("dataIn24H", bigDataFilterJson);
 
-		GetBigMoveSummaryDataResult yesterdayBigDataFilterResult = buildSummaryListByStartTimeRange(bigMoveDataList,
-				yesterDayStart, yesterDayEnd);
-		bigDataFilterJson = JSONObject.fromObject(yesterdayBigDataFilterResult);
+		bigDataFilterJson = JSONObject.fromObject(filterBigMoveDataInTimeRangeResult.getYesterdayBigDataFilterResult());
 		v.addObject("dataIn48H", bigDataFilterJson);
 
-		GetBigMoveSummaryDataResult lastweekBigDataFilterResult = buildSummaryListByStartTimeRange(bigMoveDataList,
-				thisWeekStart);
-		bigDataFilterJson = JSONObject.fromObject(lastweekBigDataFilterResult);
+		bigDataFilterJson = JSONObject.fromObject(filterBigMoveDataInTimeRangeResult.getLastweekBigDataFilterResult());
 		v.addObject("dataInLastWeek", bigDataFilterJson);
 
 		v = handleLastTwoWeeksBigMoveDataChart(v, bigMoveDataList);
-		v = handleCrossBigMoveData(v, todayBigDataFilterResult, yesterdayBigDataFilterResult,
-				lastweekBigDataFilterResult);
+
+		List<String> resultSymbolList = getBigMoveDataCrossResult(filterBigMoveDataInTimeRangeResult);
+		v.addObject("crossList", resultSymbolList);
 
 		return v;
 	}
@@ -282,57 +283,6 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		return v;
 	}
 
-	private ModelAndView handleCrossBigMoveData(ModelAndView v, GetBigMoveSummaryDataResult todayBigDataFilterResult,
-			GetBigMoveSummaryDataResult yesterdayBigDataFilterResult,
-			GetBigMoveSummaryDataResult lastweekBigDataFilterResult) {
-
-		if (yesterdayBigDataFilterResult.getDataList().isEmpty() || todayBigDataFilterResult.getDataList().isEmpty()) {
-			return v;
-		}
-
-		int minRisingCounting = 4;
-
-		List<CryptoCoinBigMoveSummaryDataBO> today = todayBigDataFilterResult.getDataList();
-		List<CryptoCoinBigMoveSummaryDataBO> yesterday = yesterdayBigDataFilterResult.getDataList();
-
-		List<String> yesterdaySymbolList = new ArrayList<>();
-		for (int i = 0; i < yesterday.size(); i++) {
-			CryptoCoinBigMoveSummaryDataBO data = yesterday.get(i);
-			if (data.getRiseCounter() >= minRisingCounting && data.getTotalRate().compareTo(BigDecimal.ZERO) > 0) {
-				yesterdaySymbolList.add(data.getSymbol());
-			}
-		}
-		if (yesterdaySymbolList.isEmpty()) {
-			return v;
-		}
-
-		List<String> todaySymbolList = new ArrayList<>();
-		for (int i = 0; i < today.size(); i++) {
-			CryptoCoinBigMoveSummaryDataBO data = today.get(i);
-			if (data.getRiseCounter() >= minRisingCounting && yesterdaySymbolList.contains(data.getSymbol())
-					&& data.getTotalRate().compareTo(BigDecimal.ZERO) > 0) {
-				todaySymbolList.add(data.getSymbol());
-			}
-		}
-		if (todaySymbolList.isEmpty()) {
-			return v;
-		}
-
-		List<CryptoCoinBigMoveSummaryDataBO> thisWeek = lastweekBigDataFilterResult.getDataList();
-		List<String> resultSymbolList = new ArrayList<>();
-		for (int i = 0; i < thisWeek.size(); i++) {
-			CryptoCoinBigMoveSummaryDataBO data = thisWeek.get(i);
-			if (data.getRiseCounter() >= minRisingCounting && todaySymbolList.contains(data.getSymbol())
-					&& data.getTotalRate().compareTo(BigDecimal.ZERO) > 0) {
-				resultSymbolList.add(data.getSymbol());
-			}
-		}
-
-		v.addObject("crossList", resultSymbolList);
-
-		return v;
-	}
-
 	private Map<Long, CryptoCoinBigMoveDailySummaryBO> bigMoveDataListToCountingMap(
 			List<CryptoCoinBigMove> bigMoveDataList) {
 		Map<Long, CryptoCoinBigMoveDailySummaryBO> countingMap = new HashMap<>();
@@ -403,5 +353,95 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 			bo.setRedirect("🔴");
 		}
 		return bo;
+	}
+
+	public CryptoCoinFilterBigMoveDataInTimeRangeResult filterBigMoveDataInTimeRangeResult(
+			List<CryptoCoinBigMove> bigMoveDataList) {
+		CryptoCoinFilterBigMoveDataInTimeRangeResult r = new CryptoCoinFilterBigMoveDataInTimeRangeResult();
+
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime yesterDayEnd = now.minusHours(24);
+		LocalDateTime yesterDayStart = now.minusHours(48);
+		LocalDateTime thisWeekStart = now.minusDays(7);
+
+		GetBigMoveSummaryDataResult todayBigDataFilterResult = buildSummaryListByStartTimeRange(bigMoveDataList,
+				yesterDayEnd);
+
+		GetBigMoveSummaryDataResult yesterdayBigDataFilterResult = buildSummaryListByStartTimeRange(bigMoveDataList,
+				yesterDayStart, yesterDayEnd);
+
+		GetBigMoveSummaryDataResult lastweekBigDataFilterResult = buildSummaryListByStartTimeRange(bigMoveDataList,
+				thisWeekStart);
+
+		r.setTodayBigDataFilterResult(todayBigDataFilterResult);
+		r.setYesterdayBigDataFilterResult(yesterdayBigDataFilterResult);
+		r.setLastweekBigDataFilterResult(lastweekBigDataFilterResult);
+
+		r.setIsSuccess();
+		return r;
+	}
+
+	private List<String> getBigMoveDataCrossResult(CryptoCoinFilterBigMoveDataInTimeRangeResult bigMoveData) {
+		List<String> result = new ArrayList<>();
+		if (bigMoveData.getTodayBigDataFilterResult().getDataList().isEmpty()
+				|| bigMoveData.getYesterdayBigDataFilterResult().getDataList().isEmpty()) {
+			return result;
+		}
+
+		int minRisingCounting = 4;
+
+		List<CryptoCoinBigMoveSummaryDataBO> today = bigMoveData.getTodayBigDataFilterResult().getDataList();
+		List<CryptoCoinBigMoveSummaryDataBO> yesterday = bigMoveData.getYesterdayBigDataFilterResult().getDataList();
+
+		List<String> yesterdaySymbolList = new ArrayList<>();
+		for (int i = 0; i < yesterday.size(); i++) {
+			CryptoCoinBigMoveSummaryDataBO data = yesterday.get(i);
+			if (data.getRiseCounter() >= minRisingCounting && data.getTotalRate().compareTo(BigDecimal.ZERO) > 0) {
+				yesterdaySymbolList.add(data.getSymbol());
+			}
+		}
+		if (yesterdaySymbolList.isEmpty()) {
+			return result;
+		}
+
+		List<String> todaySymbolList = new ArrayList<>();
+		for (int i = 0; i < today.size(); i++) {
+			CryptoCoinBigMoveSummaryDataBO data = today.get(i);
+			if (data.getRiseCounter() >= minRisingCounting && yesterdaySymbolList.contains(data.getSymbol())
+					&& data.getTotalRate().compareTo(BigDecimal.ZERO) > 0) {
+				todaySymbolList.add(data.getSymbol());
+			}
+		}
+		if (todaySymbolList.isEmpty()) {
+			return result;
+		}
+
+		List<CryptoCoinBigMoveSummaryDataBO> thisWeek = bigMoveData.getLastweekBigDataFilterResult().getDataList();
+		for (int i = 0; i < thisWeek.size(); i++) {
+			CryptoCoinBigMoveSummaryDataBO data = thisWeek.get(i);
+			if (data.getRiseCounter() >= minRisingCounting && todaySymbolList.contains(data.getSymbol())
+					&& data.getTotalRate().compareTo(BigDecimal.ZERO) > 0) {
+				result.add(data.getSymbol());
+			}
+		}
+
+		return result;
+	}
+
+	@Override
+	public void sendBigMoveDataCrossResult() {
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime oneWeekAgo = now.minusDays(7);
+		CryptoCoinBigMoveExample example = new CryptoCoinBigMoveExample();
+		example.createCriteria().andEventTimeBetween(oneWeekAgo, now);
+		List<CryptoCoinBigMove> bigMoveDataList = cryptoCoinBigMoveMapper.selectByExample(example);
+		CryptoCoinFilterBigMoveDataInTimeRangeResult filterBigMoveDataInTimeRangeResult = filterBigMoveDataInTimeRangeResult(
+				bigMoveDataList);
+		List<String> result = getBigMoveDataCrossResult(filterBigMoveDataInTimeRangeResult);
+		JSONArray ja = JSONArray.fromObject(result);
+		cryptoCoinSetOrderProducer.sendCryptoCoinDailyDataQueryForTest(ja.toString());
+
+		String msg = "Big move data cross result: " + String.valueOf(result);
+		telegramService.sendMessageByChatRecordId(TelegramBotType.NORMAL_MSG, msg, TelegramStaticChatID.MY_ID);
 	}
 }

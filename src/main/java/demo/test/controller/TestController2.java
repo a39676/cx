@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.common.service.CommonService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinDataComplexService;
 import demo.finance.cryptoCoin.data.webSocket.CryptoCompareWSClient;
 import demo.finance.cryptoCoin.mq.producer.CryptoCoinDailyDataQueryAckProducer;
 import demo.test.pojo.constant.TestUrl;
@@ -34,6 +35,8 @@ public class TestController2 extends CommonService {
 	private CryptoCoinDailyDataQueryAckProducer cryptoCoinDailyDataQueryAckProducer;
 	@Autowired
 	private CryptoCompareWSClient cryptoCompareWSClient;
+	@Autowired
+	private CryptoCoinDataComplexService cryptoCoinDataComplexService;
 
 	@GetMapping(value = "/t1")
 	public ModelAndView testView() {
@@ -72,6 +75,13 @@ public class TestController2 extends CommonService {
 		cryptoCompareWSClient.addSubscription("DOGE");
 		cryptoCompareWSClient.addSubscription("FIL");
 		cryptoCompareWSClient.addSubscription("UNI");
+		return "Done";
+	}
+
+	@GetMapping(value = "/t5")
+	@ResponseBody
+	public String sendBigMoveDataCrossResult() {
+		cryptoCoinDataComplexService.sendBigMoveDataCrossResult();
 		return "Done";
 	}
 }

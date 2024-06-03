@@ -22,7 +22,16 @@
       <div class="col-md-1">
       </div>
       <div class="col-md-10">
-        <canvas id="myChart" style="width:100%;"></canvas>
+        <canvas id="countingChart" style="width:100%;"></canvas>
+      </div>
+      <div class="col-md-1">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-1">
+      </div>
+      <div class="col-md-10">
+        <canvas id="countingChart2" style="width:100%;"></canvas>
       </div>
       <div class="col-md-1">
       </div>
@@ -296,27 +305,67 @@
   <c:forEach items="${xValues}" var="subData" varStatus="loop">
     xValues.push("${subData}");
   </c:forEach>
-  console.log(xValues);
   
-  new Chart("myChart", {
+  new Chart("countingChart", {
     type: "line",
     data: {
       labels: xValues,
       datasets: [{
         data: ${total},
-        borderColor: "blue",
+        borderColor: "#fad7a0",
         fill: false,
         label: "total"
       },{
-        data: ${binance},
-        borderColor: "red",
+        data: ${mainCounting},
+        borderColor: "#f9e79f",
         fill: false,
-        label: "binance"
+        label: "mainCounting"
       },{
-        data: ${binance1},
-        borderColor: "green",
+        data: ${otherCounting},
+        borderColor: "#d2b4de",
         fill: false,
-        label: "binance1"
+        label: "otherCounting"
+      }]
+    },
+    options: {
+      legend: {display: true}
+    }
+  });
+
+  new Chart("countingChart2", {
+    type: "line",
+    data: {
+      labels: xValues,
+      datasets: [{
+        data: ${mainSummaryCounting},
+        borderColor: "#d4ac0d",
+        fill: false,
+        label: "mainSummaryCounting"
+      },{
+        data: ${mainRisingCounting},
+        borderColor: "#28b463",
+        fill: false,
+        label: "mainRisingCounting"
+      },{
+        data: ${mainFallingCounting},
+        borderColor: "#cb4335",
+        fill: false,
+        label: "mainFallingCounting"
+      },{
+        data: ${otherSummaryCounting},
+        borderColor: "#f7dc6f",
+        fill: false,
+        label: "otherSummaryCounting"
+      },{
+        data: ${otherRisingCounting},
+        borderColor: "#82e0aa",
+        fill: false,
+        label: "otherRisingCounting"
+      },{
+        data: ${otherFallingCounting},
+        borderColor: "#f1948a",
+        fill: false,
+        label: "otherFallingCounting"
       }]
     },
     options: {

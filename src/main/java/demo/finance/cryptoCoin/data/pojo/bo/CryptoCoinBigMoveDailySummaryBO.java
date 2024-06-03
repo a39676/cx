@@ -7,8 +7,14 @@ public class CryptoCoinBigMoveDailySummaryBO implements Comparable<CryptoCoinBig
 	private LocalDateTime startTime;
 	private String startTimeStr;
 	private Integer total = 0;
-	private Integer binanceCounting = 0;
-	private Integer binance1Counting = 0;
+	private Integer mainCounting = 0;
+	private Integer mainSummaryCounting = 0;
+	private Integer mainRisingCounting = 0;
+	private Integer mainFallingCounting = 0;
+	private Integer otherCounting = 0;
+	private Integer otherSummaryCounting = 0;
+	private Integer otherRisingCounting = 0;
+	private Integer otherFallingCounting = 0;
 
 	public LocalDateTime getStartTime() {
 		return startTime;
@@ -34,26 +40,78 @@ public class CryptoCoinBigMoveDailySummaryBO implements Comparable<CryptoCoinBig
 		this.total = total;
 	}
 
-	public Integer getBinanceCounting() {
-		return binanceCounting;
+	public Integer getMainCounting() {
+		return mainCounting;
 	}
 
-	public void setBinanceCounting(Integer binanceCounting) {
-		this.binanceCounting = binanceCounting;
+	public void setMainCounting(Integer mainCounting) {
+		this.mainCounting = mainCounting;
 	}
 
-	public Integer getBinance1Counting() {
-		return binance1Counting;
+	public Integer getMainSummaryCounting() {
+		return mainSummaryCounting;
 	}
 
-	public void setBinance1Counting(Integer binance1Counting) {
-		this.binance1Counting = binance1Counting;
+	public void setMainSummaryCounting(Integer mainSummaryCounting) {
+		this.mainSummaryCounting = mainSummaryCounting;
+	}
+
+	public Integer getMainRisingCounting() {
+		return mainRisingCounting;
+	}
+
+	public void setMainRisingCounting(Integer mainRisingCounting) {
+		this.mainRisingCounting = mainRisingCounting;
+	}
+
+	public Integer getMainFallingCounting() {
+		return mainFallingCounting;
+	}
+
+	public void setMainFallingCounting(Integer mainFallingCounting) {
+		this.mainFallingCounting = mainFallingCounting;
+	}
+
+	public Integer getOtherCounting() {
+		return otherCounting;
+	}
+
+	public void setOtherCounting(Integer otherCounting) {
+		this.otherCounting = otherCounting;
+	}
+
+	public Integer getOtherSummaryCounting() {
+		return otherSummaryCounting;
+	}
+
+	public void setOtherSummaryCounting(Integer otherSummaryCounting) {
+		this.otherSummaryCounting = otherSummaryCounting;
+	}
+
+	public Integer getOtherRisingCounting() {
+		return otherRisingCounting;
+	}
+
+	public void setOtherRisingCounting(Integer otherRisingCounting) {
+		this.otherRisingCounting = otherRisingCounting;
+	}
+
+	public Integer getOtherFallingCounting() {
+		return otherFallingCounting;
+	}
+
+	public void setOtherFallingCounting(Integer otherFallingCounting) {
+		this.otherFallingCounting = otherFallingCounting;
 	}
 
 	@Override
 	public String toString() {
 		return "CryptoCoinBigMoveDailySummaryBO [startTime=" + startTime + ", startTimeStr=" + startTimeStr + ", total="
-				+ total + ", binanceCounting=" + binanceCounting + ", gateIoCounting=" + binance1Counting + "]";
+				+ total + ", mainCounting=" + mainCounting + ", mainSummaryCounting=" + mainSummaryCounting
+				+ ", mainRisingCounting=" + mainRisingCounting + ", mainFallingCounting=" + mainFallingCounting
+				+ ", otherCounting=" + otherCounting + ", otherSummaryCounting=" + otherSummaryCounting
+				+ ", otherRisingCounting=" + otherRisingCounting + ", otherFallingCounting=" + otherFallingCounting
+				+ "]";
 	}
 
 	@Override

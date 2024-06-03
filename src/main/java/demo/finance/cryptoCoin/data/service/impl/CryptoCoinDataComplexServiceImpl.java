@@ -267,19 +267,32 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 			hourGap = ChronoUnit.HOURS.between(data.getEventTime(), now);
 			if (countingMap.containsKey(hourGap)) {
 				tmpBO = countingMap.get(hourGap);
-				tmpBO.setTotal(tmpBO.getTotal() + 1);
-				if (optionService.getBinanceMainList().contains(data.getSymbol())) {
-					tmpBO.setBinanceCounting(tmpBO.getBinanceCounting() + 1);
-				} else {
-					tmpBO.setBinance1Counting(tmpBO.getBinance1Counting() + 1);
-				}
 			} else {
 				tmpBO = new CryptoCoinBigMoveDailySummaryBO();
 				tmpBO.setStartTime(now.minusHours(hourGap));
 				tmpBO.setStartTimeStr(localDateTimeHandler.dateToStr(tmpBO.getStartTime(), "MM-dd HH:mm"));
-				tmpBO.setTotal(tmpBO.getTotal() + 1);
-				countingMap.put(hourGap, tmpBO);
 			}
+			tmpBO.setTotal(tmpBO.getTotal() + 1);
+			if (optionService.getBinanceMainList().contains(data.getSymbol())) {
+				tmpBO.setMainCounting(tmpBO.getMainCounting() + 1);
+				if (data.getRate().compareTo(BigDecimal.ZERO) > 0) {
+					tmpBO.setMainRisingCounting(tmpBO.getMainRisingCounting() + 1);
+					tmpBO.setMainSummaryCounting(tmpBO.getMainSummaryCounting() + 1);
+				} else {
+					tmpBO.setMainFallingCounting(tmpBO.getMainFallingCounting() - 1);
+					tmpBO.setMainSummaryCounting(tmpBO.getMainSummaryCounting() - 1);
+				}
+			} else {
+				tmpBO.setOtherCounting(tmpBO.getOtherCounting() + 1);
+				if (data.getRate().compareTo(BigDecimal.ZERO) > 0) {
+					tmpBO.setOtherRisingCounting(tmpBO.getOtherRisingCounting() + 1);
+					tmpBO.setOtherSummaryCounting(tmpBO.getOtherSummaryCounting() + 1);
+				} else {
+					tmpBO.setOtherFallingCounting(tmpBO.getOtherFallingCounting() - 1);
+					tmpBO.setOtherSummaryCounting(tmpBO.getOtherSummaryCounting() - 1);
+				}
+			}
+			countingMap.put(hourGap, tmpBO);
 		}
 		List<CryptoCoinBigMoveDailySummaryBO> resultList = new ArrayList<>();
 		resultList.addAll(countingMap.values());
@@ -289,19 +302,37 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 
 		List<String> xValueList = new ArrayList<>();
 		List<Integer> total = new ArrayList<>();
-		List<Integer> binance = new ArrayList<>();
-		List<Integer> binance1 = new ArrayList<>();
+		List<Integer> mainCounting = new ArrayList<>();
+		List<Integer> otherCounting = new ArrayList<>();
+		List<Integer> mainSummaryCounting = new ArrayList<>();
+		List<Integer> mainRisingCounting = new ArrayList<>();
+		List<Integer> mainFallingCounting = new ArrayList<>();
+		List<Integer> otherSummaryCounting = new ArrayList<>();
+		List<Integer> otherRisingCounting = new ArrayList<>();
+		List<Integer> otherFallingCounting = new ArrayList<>();
 		for (CryptoCoinBigMoveDailySummaryBO data : resultList) {
 			xValueList.add(data.getStartTimeStr());
 			total.add(data.getTotal());
-			binance.add(data.getBinanceCounting());
-			binance1.add(data.getBinance1Counting());
+			mainCounting.add(data.getMainCounting());
+			otherCounting.add(data.getOtherCounting());
+			mainSummaryCounting.add(data.getMainSummaryCounting());
+			mainRisingCounting.add(data.getMainRisingCounting());
+			mainFallingCounting.add(data.getMainFallingCounting());
+			otherSummaryCounting.add(data.getOtherSummaryCounting());
+			otherRisingCounting.add(data.getOtherRisingCounting());
+			otherFallingCounting.add(data.getOtherFallingCounting());
 		}
 
 		v.addObject("xValues", xValueList);
 		v.addObject("total", total);
-		v.addObject("binance", binance);
-		v.addObject("binance1", binance1);
+		v.addObject("mainCounting", mainCounting);
+		v.addObject("otherCounting", otherCounting);
+		v.addObject("mainSummaryCounting", mainSummaryCounting);
+		v.addObject("mainRisingCounting", mainRisingCounting);
+		v.addObject("mainFallingCounting", mainFallingCounting);
+		v.addObject("otherSummaryCounting", otherSummaryCounting);
+		v.addObject("otherRisingCounting", otherRisingCounting);
+		v.addObject("otherFallingCounting", otherFallingCounting);
 
 		return v;
 	}

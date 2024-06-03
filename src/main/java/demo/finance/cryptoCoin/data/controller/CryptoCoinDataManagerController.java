@@ -21,7 +21,7 @@ import demo.finance.cryptoCoin.data.webSocket.CryptoCompareWSClient;
 
 @Controller
 @RequestMapping(value = CryptoCoinManagerUrl.ROOT)
-public class CryptoCoinManagerController extends CommonController {
+public class CryptoCoinDataManagerController extends CommonController {
 
 	@Autowired
 	private CryptoCoinPriceCacheService priceCacheService;

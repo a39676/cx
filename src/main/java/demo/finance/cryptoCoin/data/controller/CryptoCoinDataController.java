@@ -17,7 +17,7 @@ import demo.finance.cryptoCoin.data.service.CryptoCoinDataComplexService;
 
 @Controller
 @RequestMapping(value = CryptoCoinTestUrl.ROOT)
-public class CryptoCoinTestController extends CommonController {
+public class CryptoCoinDataController extends CommonController {
 
 	@Autowired
 	private CryptoCoinDataComplexService cryptoCoinDataComplexService;

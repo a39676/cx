@@ -38,6 +38,12 @@
     </div>
   </div>
 
+  <div class="row">
+    <div class="col-md-12">
+      ${crossList}
+    </div>
+  </div>
+
   <div>
     <div class="row">
       <div class="col-md-12">

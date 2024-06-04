@@ -103,7 +103,8 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 				bigMoveDataList);
 
 		v = handleRecentBigMoveDataSummary(v, bigMoveDataList);
-		v = handleLastTwoWeeksBigMoveDataChart(v, bigMoveDataList);
+		ModelAndView chartView = handleBigMoveDataChart(v, bigMoveDataList, 14);
+		v.addObject("chartView", chartView);
 
 		JSONObject bigDataFilterJson = JSONObject
 				.fromObject(filterBigMoveDataInTimeRangeResult.getTodayBigDataFilterResult());
@@ -236,11 +237,29 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		return r;
 	}
 
-	private ModelAndView handleLastTwoWeeksBigMoveDataChart(ModelAndView v, List<CryptoCoinBigMove> bigMoveDataList) {
+	@Override
+	public ModelAndView getBigMoveDataChart(Integer days) {
+		ModelAndView v = new ModelAndView("cryptoCoin/getBigMoveChart");
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime startDay = now.minusDays(days);
+		CryptoCoinBigMoveExample example = new CryptoCoinBigMoveExample();
+		example.createCriteria().andEventTimeBetween(startDay, now);
+		List<CryptoCoinBigMove> bigMoveDataList = cryptoCoinBigMoveMapper.selectByExample(example);
 		if (bigMoveDataList == null || bigMoveDataList.isEmpty()) {
 			return v;
 		}
-		Map<Long, CryptoCoinBigMoveDailySummaryBO> countingMap = bigMoveDataListToCountingMap(bigMoveDataList);
+
+		return handleBigMoveDataChart(v, bigMoveDataList, days);
+	}
+
+	private ModelAndView handleBigMoveDataChart(ModelAndView v, List<CryptoCoinBigMove> bigMoveDataList, Integer days) {
+		if (v == null) {
+			v = new ModelAndView("cryptoCoin/getBigMoveChart");
+		}
+		if (bigMoveDataList == null || bigMoveDataList.isEmpty()) {
+			return v;
+		}
+		Map<Long, CryptoCoinBigMoveDailySummaryBO> countingMap = bigMoveDataListToCountingMap(bigMoveDataList, days);
 		List<CryptoCoinBigMoveDailySummaryBO> resultList = new ArrayList<>();
 		resultList.addAll(countingMap.values());
 		Collections.sort(resultList);
@@ -251,16 +270,24 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		List<Integer> total = new ArrayList<>();
 		List<Integer> mainCounting = new ArrayList<>();
 		List<Integer> otherCounting = new ArrayList<>();
+		List<Integer> mainTotalList = new ArrayList<>();
+		List<Integer> otherTotalList = new ArrayList<>();
 		List<Integer> mainSummaryCounting = new ArrayList<>();
 		List<Integer> mainRisingCounting = new ArrayList<>();
 		List<Integer> mainFallingCounting = new ArrayList<>();
 		List<Integer> otherSummaryCounting = new ArrayList<>();
 		List<Integer> otherRisingCounting = new ArrayList<>();
 		List<Integer> otherFallingCounting = new ArrayList<>();
+		Integer mainTotal = 0;
+		Integer otherTotal = 0;
 		for (CryptoCoinBigMoveDailySummaryBO data : resultList) {
 			xValueList.add(data.getStartTimeStr());
 			total.add(data.getTotal());
 			mainCounting.add(data.getMainCounting());
+			mainTotal = Integer.valueOf(mainTotal + data.getMainRisingCounting() + data.getMainFallingCounting());
+			mainTotalList.add(mainTotal);
+			otherTotal = Integer.valueOf(otherTotal + data.getOtherRisingCounting() + data.getOtherFallingCounting());
+			otherTotalList.add(otherTotal);
 			otherCounting.add(data.getOtherCounting());
 			mainSummaryCounting.add(data.getMainSummaryCounting());
 			mainRisingCounting.add(data.getMainRisingCounting());
@@ -273,7 +300,9 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		v.addObject("xValues", xValueList);
 		v.addObject("total", total);
 		v.addObject("mainCounting", mainCounting);
+		v.addObject("mainTotalList", mainTotalList);
 		v.addObject("otherCounting", otherCounting);
+		v.addObject("otherTotalList", otherTotalList);
 		v.addObject("mainSummaryCounting", mainSummaryCounting);
 		v.addObject("mainRisingCounting", mainRisingCounting);
 		v.addObject("mainFallingCounting", mainFallingCounting);
@@ -285,18 +314,23 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 	}
 
 	private Map<Long, CryptoCoinBigMoveDailySummaryBO> bigMoveDataListToCountingMap(
-			List<CryptoCoinBigMove> bigMoveDataList) {
+			List<CryptoCoinBigMove> bigMoveDataList, Integer days) {
 		Map<Long, CryptoCoinBigMoveDailySummaryBO> countingMap = new HashMap<>();
 		if (bigMoveDataList == null || bigMoveDataList.isEmpty()) {
 			return countingMap;
 		}
 		CryptoCoinBigMoveDailySummaryBO tmpBO = null;
 		LocalDateTime now = LocalDateTime.now();
-		LocalDateTime twoWeeksAgo = now.minusDays(14);
+		LocalDateTime startTime = null;
+		if (days == null) {
+			startTime = now.minusDays(14);
+		} else {
+			startTime = now.minusDays(days);
+		}
 		Long hourGap = null;
 		for (int i = 0; i < bigMoveDataList.size(); i++) {
 			CryptoCoinBigMove data = bigMoveDataList.get(i);
-			if (data.getEventTime().isBefore(twoWeeksAgo)) {
+			if (data.getEventTime().isBefore(startTime)) {
 				continue;
 			}
 			hourGap = ChronoUnit.HOURS.between(data.getEventTime(), now);

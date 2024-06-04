@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import demo.common.controller.CommonController;
 import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinTestUrl;
 import demo.finance.cryptoCoin.data.pojo.dto.GetBigMoveSummaryDataDTO;
@@ -31,6 +32,12 @@ public class CryptoCoinDataController extends CommonController {
 	@ResponseBody
 	public GetBigMoveSummaryDataResult getBigMoveSummaryData(@RequestBody GetBigMoveSummaryDataDTO dto) {
 		return cryptoCoinDataComplexService.getBigMoveSummaryData(dto);
+	}
+
+	@PostMapping(value = CryptoCoinTestUrl.BIG_MOVE_CHART)
+	@ResponseBody
+	public ModelAndView getBigMoveSummaryChart(@RequestBody BaseStrDTO dto) {
+		return cryptoCoinDataComplexService.getBigMoveDataChart(Integer.valueOf(dto.getStr()));
 	}
 
 }

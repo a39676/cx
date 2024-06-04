@@ -18,23 +18,12 @@
 
   ${msg}
   <div>
-    <div class="row">
-      <div class="col-md-1">
-      </div>
-      <div class="col-md-10">
-        <canvas id="countingChart" style="width:100%;"></canvas>
-      </div>
-      <div class="col-md-1">
-      </div>
+    <div>
+      <input type="number" name="" value="14" id="chartDays">
+      <button id="updateChartDays">updateChartDays</button>
     </div>
-    <div class="row">
-      <div class="col-md-1">
-      </div>
-      <div class="col-md-10">
-        <canvas id="countingChart2" style="width:100%;"></canvas>
-      </div>
-      <div class="col-md-1">
-      </div>
+    <div id="chartDiv">
+      <%@ include file="./getBigMoveChart.jsp"%>
     </div>
   </div>
 
@@ -162,7 +151,6 @@
 </footer>
 <%@ include file="../baseElementJSP/normalJSPart.jsp"%>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?" async defer></script>
-<script type="text/javascript" src="/static_resources/js/chartJS/chartJS/chartJs_v_2_9_4.js"></script>
 <script type="text/javascript">
   $(document).ready(function() {
     $("#QueryBigMoveData").click(function() {
@@ -307,76 +295,41 @@
 </script>
 
 <script type="text/javascript">
-  const xValues = [];
-  <c:forEach items="${xValues}" var="subData" varStatus="loop">
-    xValues.push("${subData}");
-  </c:forEach>
-  
-  new Chart("countingChart", {
-    type: "line",
-    data: {
-      labels: xValues,
-      datasets: [{
-        data: ${total},
-        borderColor: "#fad7a0",
-        fill: false,
-        label: "total"
-      },{
-        data: ${mainCounting},
-        borderColor: "#f9e79f",
-        fill: false,
-        label: "mainCounting"
-      },{
-        data: ${otherCounting},
-        borderColor: "#d2b4de",
-        fill: false,
-        label: "otherCounting"
-      }]
-    },
-    options: {
-      legend: {display: true}
-    }
-  });
+  $(document).ready(function() {
+    $("#updateChartDays").click(function () {
+      updateChartDays();
+    });
 
-  new Chart("countingChart2", {
-    type: "line",
-    data: {
-      labels: xValues,
-      datasets: [{
-        data: ${mainSummaryCounting},
-        borderColor: "#d4ac0d",
-        fill: false,
-        label: "mainSummaryCounting"
-      },{
-        data: ${mainRisingCounting},
-        borderColor: "#28b463",
-        fill: false,
-        label: "mainRisingCounting"
-      },{
-        data: ${mainFallingCounting},
-        borderColor: "#cb4335",
-        fill: false,
-        label: "mainFallingCounting"
-      },{
-        data: ${otherSummaryCounting},
-        borderColor: "#f7dc6f",
-        fill: false,
-        label: "otherSummaryCounting"
-      },{
-        data: ${otherRisingCounting},
-        borderColor: "#82e0aa",
-        fill: false,
-        label: "otherRisingCounting"
-      },{
-        data: ${otherFallingCounting},
-        borderColor: "#f1948a",
-        fill: false,
-        label: "otherFallingCounting"
-      }]
-    },
-    options: {
-      legend: {display: true}
+    function updateChartDays(){
+      var url = "/ct/bigMoveChart";
+
+      var chartDays = $("#chartDays").val();
+
+      var jsonOutput = {
+        str:chartDays,
+      };
+      $("#chartDiv").html("");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        <%-- dataType: "json", --%>
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          console.log(datas);
+          $("#chartDiv").html(datas);
+        },
+        error: function(datas) {            
+        }
+      });
     }
   });
+</script>    
 
 </script>

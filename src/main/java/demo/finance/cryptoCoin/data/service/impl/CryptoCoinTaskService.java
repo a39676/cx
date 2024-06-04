@@ -21,8 +21,9 @@ public class CryptoCoinTaskService extends CommonTaskService {
 		cacheService.cleanOldHistoryData();
 	}
 
-	@Scheduled(cron = "59 59 07 * * ?")
+	@Scheduled(cron = "0 0 * * * ?")
 	public void sendBigMoveDataCrossResult() {
 		cryptoCoinDataComplexService.sendBigMoveDataCrossResult();
 	}
+
 }

@@ -40,6 +40,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 
 	@Autowired
 	private CryptoCoinBigMoveMapper cryptoCoinBigMoveMapper;
+	@SuppressWarnings("unused")
 	@Autowired
 	private CryptoCoinSetOrderProducer cryptoCoinSetOrderProducer;
 
@@ -102,6 +103,8 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 				bigMoveDataList);
 
 		v = handleRecentBigMoveDataSummary(v, bigMoveDataList);
+		v = handleLastTwoWeeksBigMoveDataChart(v, bigMoveDataList);
+
 		JSONObject bigDataFilterJson = JSONObject
 				.fromObject(filterBigMoveDataInTimeRangeResult.getTodayBigDataFilterResult());
 		v.addObject("dataIn24H", bigDataFilterJson);
@@ -111,8 +114,6 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 
 		bigDataFilterJson = JSONObject.fromObject(filterBigMoveDataInTimeRangeResult.getLastweekBigDataFilterResult());
 		v.addObject("dataInLastWeek", bigDataFilterJson);
-
-		v = handleLastTwoWeeksBigMoveDataChart(v, bigMoveDataList);
 
 		List<String> resultSymbolList = getBigMoveDataCrossResult(filterBigMoveDataInTimeRangeResult);
 		v.addObject("crossList", resultSymbolList);
@@ -438,8 +439,8 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		CryptoCoinFilterBigMoveDataInTimeRangeResult filterBigMoveDataInTimeRangeResult = filterBigMoveDataInTimeRangeResult(
 				bigMoveDataList);
 		List<String> result = getBigMoveDataCrossResult(filterBigMoveDataInTimeRangeResult);
-		JSONArray ja = JSONArray.fromObject(result);
-		cryptoCoinSetOrderProducer.sendCryptoCoinDailyDataQueryForTest(ja.toString());
+//		JSONArray ja = JSONArray.fromObject(result);
+//		cryptoCoinSetOrderProducer.sendCryptoCoinDailyDataQueryForTest(ja.toString());
 
 		String msg = "Big move data cross result: " + String.valueOf(result);
 		telegramService.sendMessageByChatRecordId(TelegramBotType.NORMAL_MSG, msg, TelegramStaticChatID.MY_ID);

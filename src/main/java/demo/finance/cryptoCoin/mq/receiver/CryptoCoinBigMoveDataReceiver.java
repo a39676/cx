@@ -18,7 +18,7 @@ import telegram.pojo.type.TelegramBotType;
 
 @Component
 @RabbitListener(queues = CryptoCoinMQConstant.BIG_MOVE_DATA)
-public class CryptoCoinBigMoveDataAckReceiver extends CommonMessageQueueReceiverService {
+public class CryptoCoinBigMoveDataReceiver extends CommonMessageQueueReceiverService {
 
 	@Autowired
 	private CryptoCoinDataComplexService cryptoCoinDataComplexService;

@@ -1,14 +1,10 @@
 package demo.interaction.bbt.service.impl;
 
-import java.io.File;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.dto.ServiceMsgDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.config.customComponent.OptionFilePathConfigurer;
 import demo.finance.cnStockMarket.service.CnStockMarketService;
 import demo.finance.currencyExchangeRate.data.service.CurrencyExchangeRateService;
 import demo.interaction.bbt.service.BbtCommonService;
@@ -16,8 +12,6 @@ import demo.interaction.bbt.service.BbtComplexService;
 import demo.tool.textMessageForward.service.TextMessageForwardService;
 import finance.cnStockMarket.pojo.dto.CnStockMarketDataDTO;
 import finance.currencyExchangeRate.pojo.result.CurrencyExchageRateCollectResult;
-import net.sf.json.JSONObject;
-import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class BbtComplexServiceImpl extends BbtCommonService implements BbtComplexService {
@@ -62,22 +56,6 @@ public class BbtComplexServiceImpl extends BbtCommonService implements BbtComple
 		}
 
 		return cnStockMarketService.receiveCnStockMarketData(dto);
-	}
-
-	@Override
-	public JSONObject getCryptoCoinOption(BaseStrDTO dto) {
-		String keyInput = dto.getStr();
-		if (!bbtDynamicKey.isCorrectKey(keyInput)) {
-			return new JSONObject();
-		}
-
-		File optionFile = new File(OptionFilePathConfigurer.CRYPTO_COIN_FOR_BBT);
-		if (!optionFile.exists()) {
-			return new JSONObject();
-		}
-		FileUtilCustom fileUtil = new FileUtilCustom();
-		String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.CRYPTO_COIN_FOR_BBT);
-		return JSONObject.fromObject(jsonStr);
 	}
 
 }

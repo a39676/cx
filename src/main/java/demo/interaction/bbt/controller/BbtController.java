@@ -15,7 +15,6 @@ import demo.common.service.HeartBeatService;
 import demo.interaction.bbt.service.BbtComplexService;
 import finance.cnStockMarket.pojo.dto.CnStockMarketDataDTO;
 import finance.currencyExchangeRate.pojo.result.CurrencyExchageRateCollectResult;
-import net.sf.json.JSONObject;
 import tool.pojo.constant.CxBbtInteractionUrl;
 
 @Controller
@@ -51,12 +50,6 @@ public class BbtController extends CommonController {
 	public String receiveCnStockMarketData(@RequestBody CnStockMarketDataDTO dto) {
 		bbtComplexService.receiveCnStockMarketData(dto);
 		return "Done";
-	}
-
-	@PostMapping(value = CxBbtInteractionUrl.GET_CRYPTO_COIN_OPTION)
-	@ResponseBody
-	public JSONObject textMessageForwarding(@RequestBody BaseStrDTO dto) {
-		return bbtComplexService.getCryptoCoinOption(dto);
 	}
 
 }

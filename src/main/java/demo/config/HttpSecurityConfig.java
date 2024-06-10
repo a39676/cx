@@ -39,6 +39,7 @@ import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinManagerUrl;
 import demo.finance.cryptoCoin.sharing.pojo.constant.CryptoCoinSharingUrl;
 import demo.finance.currencyExchangeRate.notice.pojo.constant.CurrencyExchangeRateNoticeUrl;
 import demo.image.pojo.constant.ImageUrl;
+import demo.interaction.ccm.pojo.constant.CcmManageUrl;
 import demo.joy.common.pojo.constant.JoyManagerUrl;
 import demo.joy.common.pojo.constant.JoyUrl;
 import demo.pmemo.pojo.constant.PMemoUrl;
@@ -98,10 +99,9 @@ public class HttpSecurityConfig extends CommonService {
 				.antMatchers(UrgeNoticeManagerUrl.ROOT + "/**")
 				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
 				.antMatchers(CryptoCoinSharingUrl.ROOT + CryptoCoinSharingUrl.CALCULATE_DETAIL).permitAll()
-				.antMatchers(CryptoCoinSharingUrl.ROOT + "/**")
-				.access("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')")
-				.antMatchers(AiManagerUrlConstant.ROOT + "/**")
-				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+				.antMatchers(CryptoCoinSharingUrl.ROOT + "/**").access("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')")
+				.antMatchers(CcmManageUrl.ROOT + "/**").access("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')")
+				.antMatchers(AiManagerUrlConstant.ROOT + "/**").access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
 				.antMatchers(AiArtMangerUrl.ROOT + "/**")
 				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
 				.antMatchers(WordHelperUrl.ROOT + "/**")

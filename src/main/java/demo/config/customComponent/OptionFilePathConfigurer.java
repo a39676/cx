@@ -3,7 +3,7 @@ package demo.config.customComponent;
 public class OptionFilePathConfigurer {
 
 	public static final String ROOT = "../../optionFile/cx";
-	private static final String ROOT_FOR_BBT = "../../optionFile/bbt";
+//	private static final String ROOT_FOR_BBT = "../../optionFile/bbt";
 
 	public static final String SYSTEM = ROOT + "/system/option.json";
 	public static final String ARTICLE = ROOT + "/article/option.json";
@@ -29,5 +29,4 @@ public class OptionFilePathConfigurer {
 	public static final String ZULIP = ROOT + "/zulip/option.json";
 	public static final String CN_STOCK_MARKET = ROOT + "/cnStockMarket/option.json";
 
-	public static final String CRYPTO_COIN_FOR_BBT = ROOT_FOR_BBT + "/cryptoCoin/option.json";
 }

@@ -449,9 +449,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 				continue;
 			}
 			hourGap = ChronoUnit.HOURS.between(data.getEventTime(), now);
-			if (countingMap.containsKey(hourGap)) {
-				tmpBO = countingMap.get(hourGap);
-			}
+			tmpBO = countingMap.get(hourGap);
 			if (data.getRate().compareTo(BigDecimal.ZERO) > 0) {
 				tmpBO.setRisingCounting(tmpBO.getRisingCounting() + 1);
 				tmpBO.setCounting(tmpBO.getCounting() + 1);
@@ -461,6 +459,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 			}
 			tmpBO.setSummaryRatio(tmpBO.getSummaryRatio().add(data.getRate()));
 			countingMap.put(hourGap, tmpBO);
+			tmpBO = null;
 		}
 
 		return countingMap;

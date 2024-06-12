@@ -114,31 +114,52 @@
   
     <div class="row">
       <div class="col-md-12">
-        <label>hourRangeStart</label> 
-        <input type="number" id="hourRangeStart" style="width: 60px;" 
-          placeholder="hourRangeStart" value="0">
-        <label>hourRangeEnd</label> 
-        <input type="number" id="hourRangeEnd" style="width: 60px;" 
-          placeholder="hourRangeEnd" value="24">
+        <label>bigMoveDataQueryHourRangeStart</label> 
+        <input type="number" id="bigMoveDataQueryHourRangeStart" style="width: 60px;" 
+          placeholder="bigMoveDataQueryHourRangeStart" value="24">
+        <label>bigMoveDataQueryHourRangeEnd</label> 
+        <input type="number" id="bigMoveDataQueryHourRangeEnd" style="width: 60px;" 
+          placeholder="bigMoveDataQueryHourRangeEnd" value="0">
         <input type="text" id="symbols" style="width: 120px;" 
           placeholder="BTCUSDT, ETHUSDT">
-        <button id="QueryBigMoveData">Submit</button>
+        <button id="QueryBigMoveDataTable">BigMoveDataTableQuery</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <button id="QueryBigMoveDataChart">BigMoveDataChartQuery</button>
       </div>
     </div>
   
     <div class="row">
       <div class="col-md-11">
-        <label id="customQueryResultMsg"></label>
+        <label id="bigMoveDataTableQueryResultMsg"></label>
       </div>
     </div>
   
     <div class="row">
       <div class="col-md-11">
-        <div id="customQueryResult">
+        <div id="bigMoveDataTableQueryResult">
           
         </div>
       </div>
     </div>
+
+    <div class="row">
+      <div class="col-md-11">
+        <label id="bigMoveDataChartResultMsg"></label>
+      </div>
+    </div>
+  
+    <div class="row">
+      <div class="col-md-11">
+        <div id="bigMoveDataChartQueryResult">
+          
+        </div>
+      </div>
+    </div>
+
   </div>
 
 
@@ -153,25 +174,25 @@
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?" async defer></script>
 <script type="text/javascript">
   $(document).ready(function() {
-    $("#QueryBigMoveData").click(function() {
+    $("#QueryBigMoveDataTable").click(function() {
       queryBigMoveData();
     });
 
     function queryBigMoveData(){
-      var url = "/ct/bigMoveData";
+      var url = "/ct/bigMoveDataTable";
 
-      var hourRangeStart = $("#hourRangeStart").val();
-      var hourRangeEnd = $("#hourRangeEnd").val();
+      var bigMoveDataQueryHourRangeStart = $("#bigMoveDataQueryHourRangeStart").val();
+      var bigMoveDataQueryHourRangeEnd = $("#bigMoveDataQueryHourRangeEnd").val();
       var symbols = $("#symbols").val();
       
 
       var jsonOutput = {
-        hourRangeStart:hourRangeStart,
-        hourRangeEnd:hourRangeEnd,
+        hourRangeStart:bigMoveDataQueryHourRangeStart,
+        hourRangeEnd:bigMoveDataQueryHourRangeEnd,
         symbols:symbols,
       };
-      $("#customQueryResultMsg").text("Querying");
-      $("#customQueryResult").html("");
+      $("#bigMoveDataTableQueryResultMsg").text("Querying");
+      $("#bigMoveDataTableQueryResult").html("");
       $.ajax({
         type : "POST",
         async : true,
@@ -185,12 +206,12 @@
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          $("#customQueryResultMsg").text(datas.message + " Total:" + datas.total + ", Rising: " +datas.risingCounting + ", Falling: "+ datas.fallingCounting);
+          $("#bigMoveDataTableQueryResultMsg").text(datas.message + " Total:" + datas.total + ", Rising: " +datas.risingCounting + ", Falling: "+ datas.fallingCounting);
           if(datas.code != 0){
             return;
           }
           var targetDiv = buildBigMoveDataTable(datas);
-          $("#customQueryResult").html(targetDiv);
+          $("#bigMoveDataTableQueryResult").html(targetDiv);
         },
         error: function(datas) {            
         }
@@ -270,26 +291,71 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
+    $("#QueryBigMoveDataChart").click(function() {
+      queryBigMoveDataChart();
+    });
+
+    function queryBigMoveDataChart(){
+      var url = "/ct/bigMoveChartBySymbol";
+
+      var bigMoveDataQueryHourRangeStart = $("#bigMoveDataQueryHourRangeStart").val();
+      var bigMoveDataQueryHourRangeEnd = $("#bigMoveDataQueryHourRangeEnd").val();
+      var symbols = $("#symbols").val();
+
+      var jsonOutput = {
+        hourRangeStart:bigMoveDataQueryHourRangeStart,
+        hourRangeEnd:bigMoveDataQueryHourRangeEnd,
+        symbols:symbols,
+      };
+
+
+      $("#bigMoveDataChartResultMsg").text("Querying");
+      $("#bigMoveDataChartQueryResult").html("");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        <%-- dataType: "json", --%>
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          $("#bigMoveDataChartQueryResult").html(datas);
+        },
+        error: function(datas) {            
+        }
+      });
+    }
+
+  });
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
     $("#twelveHours").click(function () {
-      setHourRange(0, 12);
+      setHourRange(12, 0);
     });
     $("#today").click(function () {
-      setHourRange(0, 24);
+      setHourRange(24, 0);
     });
     $("#thirdDay").click(function () {
-      setHourRange(48, 72);
+      setHourRange(72, 48);
     });
     $("#threeToSevenDays").click(function () {
-      setHourRange(72, 168);
+      setHourRange(168, 72);
     });
     $("#thisWeek").click(function () {
-      setHourRange(0, 168);
+      setHourRange(168, 0);
     });
     
     
     function setHourRange(start, end) {
-      $("#hourRangeStart").val(start);
-      $("#hourRangeEnd").val(end);
+      $("#bigMoveDataQueryHourRangeStart").val(start);
+      $("#bigMoveDataQueryHourRangeEnd").val(end);
     }
   });
 </script>
@@ -322,7 +388,6 @@
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          console.log(datas);
           $("#chartDiv").html(datas);
         },
         error: function(datas) {            

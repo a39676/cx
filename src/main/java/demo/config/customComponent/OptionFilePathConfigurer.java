@@ -2,8 +2,8 @@ package demo.config.customComponent;
 
 public class OptionFilePathConfigurer {
 
-	public static final String ROOT = "../../optionFile/cx";
-//	private static final String ROOT_FOR_BBT = "../../optionFile/bbt";
+	public static final String ROOT = System.getProperty("user.home") + "/optionFile/cx";
+//	private static final String ROOT_FOR_BBT = System.getProperty("user.home") + "/optionFile/bbt";
 
 	public static final String SYSTEM = ROOT + "/system/option.json";
 	public static final String ARTICLE = ROOT + "/article/option.json";

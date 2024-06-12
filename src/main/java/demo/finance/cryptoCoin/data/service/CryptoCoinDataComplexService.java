@@ -11,10 +11,12 @@ public interface CryptoCoinDataComplexService {
 
 	ModelAndView getBigMoveSummaryView();
 
-	GetBigMoveSummaryDataResult getBigMoveSummaryData(GetBigMoveSummaryDataDTO dto);
+	GetBigMoveSummaryDataResult getBigMoveSummaryDataTable(GetBigMoveSummaryDataDTO dto);
 
 	void sendBigMoveDataCrossResult();
 
 	ModelAndView getBigMoveDataChart(Integer days);
+
+	ModelAndView getBigMoveDataChartBySymbol(GetBigMoveSummaryDataDTO dto);
 
 }

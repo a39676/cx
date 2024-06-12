@@ -28,16 +28,22 @@ public class CryptoCoinDataController extends CommonController {
 		return cryptoCoinDataComplexService.getBigMoveSummaryView();
 	}
 
-	@PostMapping(value = CryptoCoinTestUrl.BIG_MOVE_DATA)
+	@PostMapping(value = CryptoCoinTestUrl.BIG_MOVE_DATA_TABLE)
 	@ResponseBody
 	public GetBigMoveSummaryDataResult getBigMoveSummaryData(@RequestBody GetBigMoveSummaryDataDTO dto) {
-		return cryptoCoinDataComplexService.getBigMoveSummaryData(dto);
+		return cryptoCoinDataComplexService.getBigMoveSummaryDataTable(dto);
 	}
 
 	@PostMapping(value = CryptoCoinTestUrl.BIG_MOVE_CHART)
 	@ResponseBody
 	public ModelAndView getBigMoveSummaryChart(@RequestBody BaseStrDTO dto) {
 		return cryptoCoinDataComplexService.getBigMoveDataChart(Integer.valueOf(dto.getStr()));
+	}
+
+	@PostMapping(value = CryptoCoinTestUrl.BIG_MOVE_CHART_BY_SYMBOL)
+	@ResponseBody
+	public ModelAndView getBigMoveSummaryChartBySymbol(@RequestBody GetBigMoveSummaryDataDTO dto) {
+		return cryptoCoinDataComplexService.getBigMoveDataChartBySymbol(dto);
 	}
 
 }

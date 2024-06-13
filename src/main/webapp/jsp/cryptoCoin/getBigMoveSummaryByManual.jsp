@@ -325,6 +325,7 @@
         },
         success:function(datas){
           $("#bigMoveDataChartQueryResult").html(datas);
+          $("#bigMoveDataChartResultMsg").text("");
         },
         error: function(datas) {            
         }

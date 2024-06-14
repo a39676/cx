@@ -116,8 +116,11 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		bigDataFilterJson = JSONObject.fromObject(filterBigMoveDataInTimeRangeResult.getLastweekBigDataFilterResult());
 		v.addObject("dataInLastWeek", bigDataFilterJson);
 
-		List<String> resultSymbolList = getBigMoveRisingDataCrossResult(filterBigMoveDataInTimeRangeResult);
-		v.addObject("crossList", resultSymbolList);
+		List<String> risingResultSymbolList = getBigMoveRisingDataCrossResult(filterBigMoveDataInTimeRangeResult);
+		v.addObject("risingCrossList", risingResultSymbolList);
+		
+		List<String> fallingResultSymbolList = getBigMoveFallingDataCrossResult(filterBigMoveDataInTimeRangeResult);
+		v.addObject("fallingCrossList", fallingResultSymbolList);
 
 		return v;
 	}

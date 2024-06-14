@@ -29,7 +29,8 @@
 
   <div class="row">
     <div class="col-md-12">
-      ${crossList}
+      <label> rising: ${risingCrossList} </label><br>
+      <label> falling: ${fallingCrossList} </label>
     </div>
   </div>
 

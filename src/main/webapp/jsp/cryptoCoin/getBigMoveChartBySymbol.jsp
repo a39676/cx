@@ -64,12 +64,12 @@
         label: "countingList"
       },{
         data: ${raisingCounting},
-        borderColor: "#f9e79f",
+        borderColor: "#28b463",
         fill: false,
         label: "raisingCounting"
       },{
         data: ${fallingCounting},
-        borderColor: "#d2b4de",
+        borderColor: "#cb4335",
         fill: false,
         label: "fallingCounting"
       }]

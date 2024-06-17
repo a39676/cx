@@ -207,7 +207,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 			summaryBO.setTotalCounter(summaryBO.getTotalCounter() + 1);
 			summaryBO.setTotalRate(summaryBO.getTotalRate().add(po.getRate()));
 			if (po.getRate().compareTo(BigDecimal.ZERO) > 0) {
-				summaryBO.setRiseCounter(summaryBO.getFallCounter() + 1);
+				summaryBO.setRiseCounter(summaryBO.getRiseCounter() + 1);
 				summaryBO.setTotalRiseRate(summaryBO.getTotalRiseRate().add(po.getRate()));
 			} else {
 				summaryBO.setFallCounter(summaryBO.getFallCounter() + 1);

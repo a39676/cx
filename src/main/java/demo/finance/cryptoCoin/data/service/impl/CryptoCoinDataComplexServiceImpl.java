@@ -118,7 +118,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 
 		List<String> risingResultSymbolList = getBigMoveRisingDataCrossResult(filterBigMoveDataInTimeRangeResult);
 		v.addObject("risingCrossList", risingResultSymbolList);
-		
+
 		List<String> fallingResultSymbolList = getBigMoveFallingDataCrossResult(filterBigMoveDataInTimeRangeResult);
 		v.addObject("fallingCrossList", fallingResultSymbolList);
 
@@ -438,12 +438,16 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		CryptoCoinBigMoveSummaryBySymbolBO tmpBO = null;
 		LocalDateTime now = LocalDateTime.now();
 
-		Long hourGap = ChronoUnit.HOURS.between(startTime, now);
-		for (Long i = 0L; i < hourGap; i++) {
+		Long hourGap = 0L;
+		LocalDateTime tmpTime = now.minusHours(hourGap);
+		for (; tmpTime.isAfter(startTime);) {
 			tmpBO = new CryptoCoinBigMoveSummaryBySymbolBO();
-			tmpBO.setStartTime(startTime.plusHours(i));
+			tmpBO.setStartTime(tmpTime);
 			tmpBO.setStartTimeStr(localDateTimeHandler.dateToStr(tmpBO.getStartTime(), "MM-dd HH:mm"));
-			countingMap.put(i, tmpBO);
+			countingMap.put(hourGap, tmpBO);
+			hourGap++;
+			tmpTime = now.minusHours(hourGap);
+
 		}
 
 		for (int i = 0; i < bigMoveDataList.size(); i++) {

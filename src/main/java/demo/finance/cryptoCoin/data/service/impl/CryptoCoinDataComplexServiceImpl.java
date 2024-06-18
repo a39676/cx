@@ -103,7 +103,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 				bigMoveDataList);
 
 		v = handleRecentBigMoveDataSummary(v, bigMoveDataList);
-		ModelAndView chartView = handleBigMoveDataChart(v, bigMoveDataList, 14);
+		ModelAndView chartView = handleBigMoveDataChart(v, bigMoveDataList, 7);
 		v.addObject("chartView", chartView);
 
 		JSONObject bigDataFilterJson = JSONObject

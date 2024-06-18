@@ -19,7 +19,7 @@
   ${msg}
   <div>
     <div>
-      <input type="number" name="" value="14" id="chartDays">
+      <input type="number" name="" value="7" id="chartDays">
       <button id="updateChartDays">updateChartDays</button>
     </div>
     <div id="chartDiv">

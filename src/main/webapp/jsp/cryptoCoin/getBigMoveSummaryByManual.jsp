@@ -18,12 +18,68 @@
 
   ${msg}
   <div>
-    <div>
-      <input type="number" name="" value="7" id="chartDays">
-      <button id="updateChartDays">updateChartDays</button>
-    </div>
     <div id="chartDiv">
       <%@ include file="./getBigMoveChart.jsp"%>
+    </div>
+  </div>
+
+  <div>
+    <div class="row">
+      <div class="col-md-12">
+        <button id="twelveHours">12 Hours</button>
+        <button id="today">24 Hours</button>
+        <button id="thirdDay">48-72 Hours</button>
+        <button id="threeToSevenDays">3-7 Days</button>
+        <button id="thisWeek">This week</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <label>bigMoveDataQueryHourRangeStart</label> 
+        <input type="number" id="bigMoveDataQueryHourRangeStart" style="width: 60px;" 
+          placeholder="bigMoveDataQueryHourRangeStart" value="24">
+        <label>bigMoveDataQueryHourRangeEnd</label> 
+        <input type="number" id="bigMoveDataQueryHourRangeEnd" style="width: 60px;" 
+          placeholder="bigMoveDataQueryHourRangeEnd" value="0">
+        <input type="text" id="symbols" style="width: 120px;" 
+          placeholder="BTCUSDT, ETHUSDT">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <button id="updateMainChart">updateMainChart</button>
+        <button id="QueryBigMoveDataTable">BigMoveDataTableQuery</button>
+        <button id="QueryBigMoveDataChart">BigMoveDataChartQuery</button>
+      </div>
+    </div>
+  
+    <div class="row">
+      <div class="col-md-11">
+        <label id="bigMoveDataTableQueryResultMsg"></label>
+      </div>
+    </div>
+  
+    <div class="row">
+      <div class="col-md-11">
+        <div id="bigMoveDataTableQueryResult">
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-11">
+        <label id="bigMoveDataChartResultMsg"></label>
+      </div>
+    </div>
+  
+    <div class="row">
+      <div class="col-md-11">
+        <div id="bigMoveDataChartQueryResult">
+          
+        </div>
+      </div>
     </div>
   </div>
 
@@ -78,90 +134,7 @@
     </div>
   </div>
 
-  <div>
-    <div class="row">
-      <div class="col-md-12">
-        ${recentBigMoveMsg}
-        <p>recent</p>
-        <table>
-          <c:forEach items="${recentTimeKeyList}" var="settingName">
-            <tr>
-              <td style="background: yellow;">
-                ${settingName}
-              </td>
-            </tr>
-            <c:forEach items="${recentDataMap[settingName]}" var="subData">
-              <%-- <td>${subData}</td> --%>
-              <tr>
-                <td>${subData.symbol}_${subData.rate}%_${subData.redirect}</td>
-              </tr>
-            </c:forEach>
-          </c:forEach>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <div>
-    <div class="row">
-      <div class="col-md-12">
-        <button id="twelveHours">12 Hours</button>
-        <button id="today">24 Hours</button>
-        <button id="thirdDay">48-72 Hours</button>
-        <button id="threeToSevenDays">3-7 Days</button>
-        <button id="thisWeek">This week</button>
-      </div>
-    </div>
   
-    <div class="row">
-      <div class="col-md-12">
-        <label>bigMoveDataQueryHourRangeStart</label> 
-        <input type="number" id="bigMoveDataQueryHourRangeStart" style="width: 60px;" 
-          placeholder="bigMoveDataQueryHourRangeStart" value="24">
-        <label>bigMoveDataQueryHourRangeEnd</label> 
-        <input type="number" id="bigMoveDataQueryHourRangeEnd" style="width: 60px;" 
-          placeholder="bigMoveDataQueryHourRangeEnd" value="0">
-        <input type="text" id="symbols" style="width: 120px;" 
-          placeholder="BTCUSDT, ETHUSDT">
-        <button id="QueryBigMoveDataTable">BigMoveDataTableQuery</button>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-12">
-        <button id="QueryBigMoveDataChart">BigMoveDataChartQuery</button>
-      </div>
-    </div>
-  
-    <div class="row">
-      <div class="col-md-11">
-        <label id="bigMoveDataTableQueryResultMsg"></label>
-      </div>
-    </div>
-  
-    <div class="row">
-      <div class="col-md-11">
-        <div id="bigMoveDataTableQueryResult">
-          
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-11">
-        <label id="bigMoveDataChartResultMsg"></label>
-      </div>
-    </div>
-  
-    <div class="row">
-      <div class="col-md-11">
-        <div id="bigMoveDataChartQueryResult">
-          
-        </div>
-      </div>
-    </div>
-
-  </div>
 
 
 </body>
@@ -364,17 +337,19 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-    $("#updateChartDays").click(function () {
-      updateChartDays();
+    $("#updateMainChart").click(function () {
+      updateMainChart();
     });
 
-    function updateChartDays(){
+    function updateMainChart(){
       var url = "/ct/bigMoveChart";
 
-      var chartDays = $("#chartDays").val();
+      var bigMoveDataQueryHourRangeStart = $("#bigMoveDataQueryHourRangeStart").val();
+      var bigMoveDataQueryHourRangeEnd = $("#bigMoveDataQueryHourRangeEnd").val();
 
       var jsonOutput = {
-        str:chartDays,
+        hourRangeStart:bigMoveDataQueryHourRangeStart,
+        hourRangeEnd:bigMoveDataQueryHourRangeEnd,
       };
       $("#chartDiv").html("");
       $.ajax({

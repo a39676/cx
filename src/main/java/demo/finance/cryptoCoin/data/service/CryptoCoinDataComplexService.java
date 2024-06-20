@@ -15,8 +15,8 @@ public interface CryptoCoinDataComplexService {
 
 	void sendBigMoveDataCrossResult();
 
-	ModelAndView getBigMoveDataChart(Integer days);
-
 	ModelAndView getBigMoveDataChartBySymbol(GetBigMoveSummaryDataDTO dto);
+
+	ModelAndView getBigMoveDataChart(GetBigMoveSummaryDataDTO dto);
 
 }

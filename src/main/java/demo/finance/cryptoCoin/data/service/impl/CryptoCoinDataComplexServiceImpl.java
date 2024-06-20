@@ -102,8 +102,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		CryptoCoinFilterBigMoveDataInTimeRangeResult filterBigMoveDataInTimeRangeResult = filterBigMoveDataInTimeRangeResult(
 				bigMoveDataList);
 
-		v = handleRecentBigMoveDataSummary(v, bigMoveDataList);
-		ModelAndView chartView = handleBigMoveDataChart(v, bigMoveDataList, 7);
+		ModelAndView chartView = handleBigMoveDataChart(v, bigMoveDataList, now.minusDays(7));
 		v.addObject("chartView", chartView);
 
 		JSONObject bigDataFilterJson = JSONObject
@@ -144,44 +143,6 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 
 		r = buildSummaryListByStartTimeRange(bigMoveDataList, startTime, endTime);
 		return r;
-	}
-
-	private ModelAndView handleRecentBigMoveDataSummary(ModelAndView v, List<CryptoCoinBigMove> bigMoveDataList) {
-		if (bigMoveDataList == null || bigMoveDataList.isEmpty()) {
-			return v;
-		}
-		LocalDateTime tenMinAgo = LocalDateTime.now().minusMinutes(10);
-		List<String> timingKeyList = new ArrayList<>();
-		Map<String, List<CryptoCoinBigMoveDataBO>> recentDataMap = new HashMap<>();
-		for (CryptoCoinBigMove po : bigMoveDataList) {
-			if (po.getEventTime().isBefore(tenMinAgo)) {
-				continue;
-			}
-			String timingKey = getTimingKey(po);
-			if (!timingKeyList.contains(timingKey)) {
-				timingKeyList.add(timingKey);
-			}
-			CryptoCoinBigMoveDataBO bo = poToBo(po);
-
-			List<CryptoCoinBigMoveDataBO> subDataList = recentDataMap.get(timingKey);
-			if (subDataList == null) {
-				subDataList = new ArrayList<>();
-				recentDataMap.put(timingKey, subDataList);
-			}
-			subDataList.add(bo);
-		}
-
-		v.addObject("recentTimeKeyList", timingKeyList);
-		if (recentDataMap.isEmpty()) {
-			v.addObject("recentBigMoveMsg", "Can NOT found any recent big move");
-		}
-
-		for (String key : recentDataMap.keySet()) {
-			Collections.sort(recentDataMap.get(key));
-		}
-
-		v.addObject("recentDataMap", recentDataMap);
-		return v;
 	}
 
 	private GetBigMoveSummaryDataResult buildSummaryListByStartTimeRange(List<CryptoCoinBigMove> bigMoveDataList,
@@ -241,31 +202,29 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 	}
 
 	@Override
-	public ModelAndView getBigMoveDataChart(Integer days) {
+	public ModelAndView getBigMoveDataChart(GetBigMoveSummaryDataDTO dto) {
 		ModelAndView v = new ModelAndView("cryptoCoin/getBigMoveChart");
 		LocalDateTime now = LocalDateTime.now();
-		LocalDateTime startDay = now.minusDays(days);
+		LocalDateTime startTime = now.minusHours(dto.getHourRangeStart());
+		LocalDateTime endTime = now.minusHours(dto.getHourRangeEnd());
 		CryptoCoinBigMoveExample example = new CryptoCoinBigMoveExample();
-		example.createCriteria().andEventTimeBetween(startDay, now);
+		example.createCriteria().andEventTimeBetween(startTime, endTime);
 		List<CryptoCoinBigMove> bigMoveDataList = cryptoCoinBigMoveMapper.selectByExample(example);
 		if (bigMoveDataList == null || bigMoveDataList.isEmpty()) {
 			return v;
 		}
 
-		return handleBigMoveDataChart(v, bigMoveDataList, days);
+		return handleBigMoveDataChart(v, bigMoveDataList, startTime);
 	}
 
-	private ModelAndView handleBigMoveDataChart(ModelAndView v, List<CryptoCoinBigMove> bigMoveDataList, Integer days) {
+	private ModelAndView handleBigMoveDataChart(ModelAndView v, List<CryptoCoinBigMove> bigMoveDataList,
+			LocalDateTime startTime) {
 		if (v == null) {
 			v = new ModelAndView("cryptoCoin/getBigMoveChart");
 		}
 		if (bigMoveDataList == null || bigMoveDataList.isEmpty()) {
 			return v;
 		}
-		if (days == null) {
-			days = 14;
-		}
-		LocalDateTime startTime = LocalDateTime.now().minusDays(days);
 		Map<Long, CryptoCoinBigMoveDailySummaryBO> countingMap = bigMoveDataListToCountingMap(bigMoveDataList,
 				startTime);
 		List<CryptoCoinBigMoveDailySummaryBO> resultList = new ArrayList<>();
@@ -389,7 +348,18 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		if (startTime == null) {
 			startTime = now.minusDays(14);
 		}
-		Long hourGap = null;
+		
+		Long hourGap = ChronoUnit.HOURS.between(startTime, now);
+		LocalDateTime tmpTime = startTime;
+		for (; tmpTime.isAfter(startTime);) {
+			tmpBO = new CryptoCoinBigMoveDailySummaryBO();
+			tmpBO.setStartTime(tmpTime);
+			tmpBO.setStartTimeStr(localDateTimeHandler.dateToStr(tmpBO.getStartTime(), "MM-dd HH:mm"));
+			countingMap.put(hourGap, tmpBO);
+			hourGap++;
+			tmpTime = now.minusHours(hourGap);
+		}
+		
 		for (int i = 0; i < bigMoveDataList.size(); i++) {
 			CryptoCoinBigMove data = bigMoveDataList.get(i);
 			if (data.getEventTime().isBefore(startTime)) {
@@ -447,7 +417,6 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 			countingMap.put(hourGap, tmpBO);
 			hourGap++;
 			tmpTime = now.minusHours(hourGap);
-
 		}
 
 		for (int i = 0; i < bigMoveDataList.size(); i++) {
@@ -470,29 +439,6 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		}
 
 		return countingMap;
-	}
-
-	private String getTimingKey(CryptoCoinBigMove po) {
-		TimeUnitType timeUnitType = TimeUnitType.getType(po.getTimeUnitCode());
-		if (timeUnitType == null) {
-			return null;
-		}
-		return po.getTimeRange() + "_" + timeUnitType.getName();
-	}
-
-	private CryptoCoinBigMoveDataBO poToBo(CryptoCoinBigMove po) {
-		CryptoCoinBigMoveDataBO bo = new CryptoCoinBigMoveDataBO();
-		bo.setBigMoveTimeStr(localDateTimeHandler.dateToStr(po.getEventTime()));
-		bo.setRate(po.getRate());
-		bo.setSymbol(po.getSymbol());
-		bo.setTimeRange(po.getTimeRange());
-		bo.setTimeUnitTypeCode(po.getTimeUnitCode());
-		if (po.getRate().compareTo(BigDecimal.ZERO) > 0) {
-			bo.setRedirect("🟢");
-		} else {
-			bo.setRedirect("🔴");
-		}
-		return bo;
 	}
 
 	public CryptoCoinFilterBigMoveDataInTimeRangeResult filterBigMoveDataInTimeRangeResult(

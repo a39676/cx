@@ -27,17 +27,18 @@
     <div class="row">
       <div class="col-md-12">
         <button id="twelveHours">12 Hours</button>
-        <button id="today">24 Hours</button>
-        <button id="thirdDay">48-72 Hours</button>
-        <button id="threeToSevenDays">3-7 Days</button>
+        <button id="today">1 Day</button>
+        <button id="twoDays">2 Days</button>
+        <button id="threedDay">3 Days</button>
         <button id="thisWeek">This week</button>
+        <button id="twoWeeks">Two Weeks</button>
       </div>
     </div>
     <div class="row">
       <div class="col-md-12">
         <label>bigMoveDataQueryHourRangeStart</label> 
         <input type="number" id="bigMoveDataQueryHourRangeStart" style="width: 60px;" 
-          placeholder="bigMoveDataQueryHourRangeStart" value="24">
+          placeholder="bigMoveDataQueryHourRangeStart" value="168">
         <label>bigMoveDataQueryHourRangeEnd</label> 
         <input type="number" id="bigMoveDataQueryHourRangeEnd" style="width: 60px;" 
           placeholder="bigMoveDataQueryHourRangeEnd" value="0">
@@ -317,14 +318,17 @@
     $("#today").click(function () {
       setHourRange(24, 0);
     });
-    $("#thirdDay").click(function () {
-      setHourRange(72, 48);
+    $("#twoDays").click(function () {
+      setHourRange(48, 0);
     });
-    $("#threeToSevenDays").click(function () {
-      setHourRange(168, 72);
+    $("#threedDay").click(function () {
+      setHourRange(72, 0);
     });
     $("#thisWeek").click(function () {
       setHourRange(168, 0);
+    });
+    $("#twoWeeks").click(function () {
+      setHourRange(336, 0);
     });
     
     

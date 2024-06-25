@@ -23,6 +23,7 @@ public class ZulipOptionService extends CommonService {
 	private String host;
 	private String email;
 	private List<String> targetUserEmailList;
+	private List<String> targetStreamList;
 	private Integer messageLivingMinutes;
 
 	@PostConstruct
@@ -75,6 +76,14 @@ public class ZulipOptionService extends CommonService {
 		this.targetUserEmailList = targetUserEmailList;
 	}
 
+	public List<String> getTargetStreamList() {
+		return targetStreamList;
+	}
+
+	public void setTargetStreamList(List<String> targetStreamList) {
+		this.targetStreamList = targetStreamList;
+	}
+
 	public Integer getMessageLivingMinutes() {
 		return messageLivingMinutes;
 	}
@@ -86,7 +95,8 @@ public class ZulipOptionService extends CommonService {
 	@Override
 	public String toString() {
 		return "ZulipOptionService [apiKey=" + apiKey + ", host=" + host + ", email=" + email + ", targetUserEmailList="
-				+ targetUserEmailList + ", messageLivingMinutes=" + messageLivingMinutes + "]";
+				+ targetUserEmailList + ", targetStreamList=" + targetStreamList + ", messageLivingMinutes="
+				+ messageLivingMinutes + "]";
 	}
 
 }

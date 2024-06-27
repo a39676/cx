@@ -68,7 +68,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		CryptoCoinBigMoveExample example = new CryptoCoinBigMoveExample();
 		example.createCriteria().andSymbolEqualTo(bo.getSymbol()).andRateEqualTo(bo.getRate())
 				.andTimeRangeEqualTo(bo.getTimeRange()).andTimeUnitCodeEqualTo(bo.getTimeUnitTypeCode())
-				.andEventTimeEqualTo(po.getEventTime());
+				.andEventTimeEqualTo(po.getEventTime()).andVersionEqualTo(bo.getVersion());
 		List<CryptoCoinBigMove> oldDataList = cryptoCoinBigMoveMapper.selectByExample(example);
 		if (!oldDataList.isEmpty()) {
 			return;
@@ -78,6 +78,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		po.setSymbol(bo.getSymbol());
 		po.setTimeRange(bo.getTimeRange());
 		po.setTimeUnitCode(bo.getTimeUnitTypeCode());
+		po.setVersion(bo.getVersion());
 		try {
 			cryptoCoinBigMoveMapper.insertSelective(po);
 		} catch (DataIntegrityViolationException e) {
@@ -93,7 +94,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		CryptoCoinBigMoveExample example = new CryptoCoinBigMoveExample();
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime oneMonthAgo = now.minusMonths(1);
-		example.createCriteria().andEventTimeBetween(oneMonthAgo, now);
+		example.createCriteria().andEventTimeBetween(oneMonthAgo, now).andVersionEqualTo(1);
 		List<CryptoCoinBigMove> bigMoveDataList = cryptoCoinBigMoveMapper.selectByExample(example);
 		if (bigMoveDataList == null || bigMoveDataList.isEmpty()) {
 			return v;
@@ -133,7 +134,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 
 		CryptoCoinBigMoveExample example = new CryptoCoinBigMoveExample();
 		Criteria criteria = example.createCriteria();
-		criteria.andEventTimeBetween(startTime, endTime);
+		criteria.andEventTimeBetween(startTime, endTime).andVersionEqualTo(dto.getVersion());
 		if (StringUtils.isNotBlank(dto.getSymbols())) {
 			List<String> symbolList = new ArrayList<>();
 			symbolList.addAll(Arrays.asList(dto.getSymbols().split(",")));
@@ -208,7 +209,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		LocalDateTime startTime = now.minusHours(dto.getHourRangeStart());
 		LocalDateTime endTime = now.minusHours(dto.getHourRangeEnd());
 		CryptoCoinBigMoveExample example = new CryptoCoinBigMoveExample();
-		example.createCriteria().andEventTimeBetween(startTime, endTime);
+		example.createCriteria().andEventTimeBetween(startTime, endTime).andVersionEqualTo(dto.getVersion());
 		List<CryptoCoinBigMove> bigMoveDataList = cryptoCoinBigMoveMapper.selectByExample(example);
 		if (bigMoveDataList == null || bigMoveDataList.isEmpty()) {
 			return v;
@@ -288,7 +289,8 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		LocalDateTime startTime = now.minusHours(dto.getHourRangeStart());
 		LocalDateTime endTime = now.minusHours(dto.getHourRangeEnd());
 		CryptoCoinBigMoveExample example = new CryptoCoinBigMoveExample();
-		example.createCriteria().andEventTimeBetween(startTime, endTime).andSymbolEqualTo(dto.getSymbols());
+		example.createCriteria().andEventTimeBetween(startTime, endTime).andSymbolEqualTo(dto.getSymbols())
+				.andVersionEqualTo(dto.getVersion());
 		List<CryptoCoinBigMove> bigMoveDataList = cryptoCoinBigMoveMapper.selectByExample(example);
 		if (bigMoveDataList == null || bigMoveDataList.isEmpty()) {
 			return v;
@@ -348,18 +350,17 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		if (startTime == null) {
 			startTime = now.minusDays(14);
 		}
-		
+
 		Long hourGap = ChronoUnit.HOURS.between(startTime, now);
-		LocalDateTime tmpTime = startTime;
-		for (; tmpTime.isAfter(startTime);) {
+		LocalDateTime tmpTime = null;
+		for (Long i = 0L; i < hourGap; i++) {
+			tmpTime = now.minusHours(i);
 			tmpBO = new CryptoCoinBigMoveDailySummaryBO();
 			tmpBO.setStartTime(tmpTime);
 			tmpBO.setStartTimeStr(localDateTimeHandler.dateToStr(tmpBO.getStartTime(), "MM-dd HH:mm"));
-			countingMap.put(hourGap, tmpBO);
-			hourGap++;
-			tmpTime = now.minusHours(hourGap);
+			countingMap.put(i, tmpBO);
 		}
-		
+
 		for (int i = 0; i < bigMoveDataList.size(); i++) {
 			CryptoCoinBigMove data = bigMoveDataList.get(i);
 			if (data.getEventTime().isBefore(startTime)) {

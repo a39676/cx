@@ -36,14 +36,18 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <label>bigMoveDataQueryHourRangeStart</label> 
+        <label>HourRangeStart</label> 
         <input type="number" id="bigMoveDataQueryHourRangeStart" style="width: 60px;" 
           placeholder="bigMoveDataQueryHourRangeStart" value="168">
-        <label>bigMoveDataQueryHourRangeEnd</label> 
+        <label>HourRangeEnd</label> 
         <input type="number" id="bigMoveDataQueryHourRangeEnd" style="width: 60px;" 
           placeholder="bigMoveDataQueryHourRangeEnd" value="0">
         <input type="text" id="symbols" style="width: 120px;" 
           placeholder="BTCUSDT, ETHUSDT">
+        <select id="bigMoveDataVersion">
+          <option value="1">1</option>
+          <option value="2">2</option>
+        </select>
       </div>
     </div>
 
@@ -158,6 +162,7 @@
 
       var bigMoveDataQueryHourRangeStart = $("#bigMoveDataQueryHourRangeStart").val();
       var bigMoveDataQueryHourRangeEnd = $("#bigMoveDataQueryHourRangeEnd").val();
+      var version = $('#bigMoveDataVersion').find(":selected").val();
       var symbols = $("#symbols").val();
       
 
@@ -165,6 +170,7 @@
         hourRangeStart:bigMoveDataQueryHourRangeStart,
         hourRangeEnd:bigMoveDataQueryHourRangeEnd,
         symbols:symbols,
+        version:version,
       };
       $("#bigMoveDataTableQueryResultMsg").text("Querying");
       $("#bigMoveDataTableQueryResult").html("");
@@ -275,12 +281,14 @@
 
       var bigMoveDataQueryHourRangeStart = $("#bigMoveDataQueryHourRangeStart").val();
       var bigMoveDataQueryHourRangeEnd = $("#bigMoveDataQueryHourRangeEnd").val();
+      var version = $('#bigMoveDataVersion').find(":selected").val();
       var symbols = $("#symbols").val();
 
       var jsonOutput = {
         hourRangeStart:bigMoveDataQueryHourRangeStart,
         hourRangeEnd:bigMoveDataQueryHourRangeEnd,
         symbols:symbols,
+        version:version,
       };
 
 
@@ -350,10 +358,12 @@
 
       var bigMoveDataQueryHourRangeStart = $("#bigMoveDataQueryHourRangeStart").val();
       var bigMoveDataQueryHourRangeEnd = $("#bigMoveDataQueryHourRangeEnd").val();
+      var version = $('#bigMoveDataVersion').find(":selected").val();
 
       var jsonOutput = {
         hourRangeStart:bigMoveDataQueryHourRangeStart,
         hourRangeEnd:bigMoveDataQueryHourRangeEnd,
+        version:version,
       };
       $("#chartDiv").html("");
       $.ajax({

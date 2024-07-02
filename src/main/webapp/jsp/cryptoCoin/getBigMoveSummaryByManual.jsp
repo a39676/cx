@@ -388,4 +388,23 @@
   });
 </script>    
 
+<script type="text/javascript">
+  // keep alive request
+  var intervalId = window.setInterval(function(){
+    $.ajax({
+      type : "GET",
+      async : true,
+      url : "/1jlbdmb",
+      data: "",
+      cache : false,
+      timeout:50000,
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader(csrfHeader, csrfToken);
+      },
+      success:function(datas){
+      },
+      error: function(datas) {
+      }
+    });
+  }, 5000);
 </script>

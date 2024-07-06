@@ -19,6 +19,12 @@
   <label id="msg"></label>
 
   <div>
+    <div id="chartDiv">
+      <%@ include file="./btcAndLowCapIndexGapChart.jsp"%>
+    </div>
+  </div>
+
+  <div>
     <div class="row">
       <div class="col-md-12">
         <input type="text" name="" placeholder="symbol" id="singleOrderSymbol">

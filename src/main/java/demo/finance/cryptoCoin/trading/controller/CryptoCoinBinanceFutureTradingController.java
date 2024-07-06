@@ -24,8 +24,7 @@ public class CryptoCoinBinanceFutureTradingController {
 
 	@GetMapping(value = CryptoCoinBinanceTradingUrl.VIEW)
 	public ModelAndView tradingView() {
-		ModelAndView v = new ModelAndView("cryptoCoin/setFutureOrder");
-		return v;
+		return binanceFutureTradingService.tradingView();
 	}
 
 	@PostMapping(value = CryptoCoinBinanceTradingUrl.BINANCE_FUTURE_UM_SEND_ORDER)
@@ -33,7 +32,7 @@ public class CryptoCoinBinanceFutureTradingController {
 	public CommonResult sendFutureOrder(@RequestBody CryptoCoinBinanceFutureOrderDTO dto) {
 		return binanceFutureTradingService.sendFutureOrder(dto);
 	}
-	
+
 	@PostMapping(value = CryptoCoinBinanceTradingUrl.BINANCE_FUTURE_UM_BTC_ARBITRAGE_BATCH_ORDER)
 	@ResponseBody
 	public CommonResult sendBtcArbitrageWithBatchOrder(@RequestBody CryptoCoinBinanceBtArbitrageWithBatchDTO dto) {

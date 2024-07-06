@@ -20,6 +20,7 @@ public class CryptoCoinIndexDataServiceImpl extends CryptoCoinCommonService impl
 
 	@Autowired
 	private CryptoCoinPrice1minuteMapper mapper;
+	@Autowired
 	private CryptoCoinCatalogService coinCatalogService;
 
 	@Override
@@ -52,7 +53,7 @@ public class CryptoCoinIndexDataServiceImpl extends CryptoCoinCommonService impl
 			po.setStartPrice(bo.getEndPrice());
 			po.setEndPrice(bo.getEndPrice());
 			po.setHighPrice(bo.getEndPrice());
-			po.setLowPrice(bo.getLowPrice());
+			po.setLowPrice(bo.getEndPrice());
 			mapper.insertSelective(po);
 			return;
 		}

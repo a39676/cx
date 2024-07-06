@@ -13,7 +13,7 @@ public class CryptoCoinSetOrderProducer extends CommonService {
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
 
-	public void sendCryptoCoinDailyDataQueryForTest(String str) {
+	public void setOrder(String str) {
 		rabbitTemplate.convertAndSend(CryptoCoinMQConstant.SET_ORDER, str);
 	}
 

@@ -105,6 +105,12 @@
     <ul class="main-menu visible-on-click" id="cryptoCoinTool">
       <li style="background-color:yellow;">CryptoCoinTool</li>
       <li>
+        <a href="/ct/bigMove" target="_blank">bigMove</a>
+      </li>
+      <li>
+        <a href="/cryptoTrading/view" target="_blank">trading</a>
+      </li>
+      <li>
         <a href="/cryptoCoin/insertCryptoCoinNoticeSetting" target="_blank">insertCryptoCoinNoticeSetting</a>
       </li>
       <li>

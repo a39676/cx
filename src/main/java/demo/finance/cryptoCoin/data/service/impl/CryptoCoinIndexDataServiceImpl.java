@@ -51,7 +51,7 @@ public class CryptoCoinIndexDataServiceImpl extends CryptoCoinCommonService impl
 			po.setId(snowFlake.getNextId());
 			po.setCoinType(coinType.getId());
 			po.setCurrencyType(currencyType.getCode());
-			po.setVolume(bo.getVolume());
+//			po.setVolume(bo.getVolume()); // huge number and did NOT used
 			po.setStartTime(bo.getStartTime());
 			po.setEndTime(po.getStartTime().plusMinutes(1));
 			po.setStartPrice(bo.getEndPrice());
@@ -63,7 +63,7 @@ public class CryptoCoinIndexDataServiceImpl extends CryptoCoinCommonService impl
 		}
 
 		po = poList.get(0);
-		po.setVolume(bo.getVolume());
+//		po.setVolume(bo.getVolume()); // huge number and did NOT used
 		po.setEndPrice(bo.getEndPrice());
 		if (po.getHighPrice().compareTo(bo.getEndPrice()) < 0) {
 			po.setHighPrice(bo.getEndPrice());

@@ -32,6 +32,6 @@
 	on
 		btc.start_time = low.start_time
 	order by
-		btc.start_time desc
+		btc.start_time
   </select>
 </mapper>

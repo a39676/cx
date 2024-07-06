@@ -36,7 +36,7 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 	public ModelAndView tradingView() {
 		ModelAndView v = new ModelAndView("cryptoCoin/setFutureOrder");
 
-		List<CryptoCoinBtcAndLowIndexGapDTO> dataList = complexToolMapper.selectGaps(LocalDateTime.now().minusHours(2));
+		List<CryptoCoinBtcAndLowIndexGapDTO> dataList = complexToolMapper.selectGaps(LocalDateTime.now().minusHours(8));
 		List<String> xValues = new ArrayList<>();
 		List<Double> gap = new ArrayList<>();
 		for(CryptoCoinBtcAndLowIndexGapDTO dto : dataList) {

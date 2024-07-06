@@ -29,7 +29,12 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 	protected CryptoCoinOptionService optionService;
 
 	protected static final CurrencyTypeForCryptoCoin defaultCyrrencyTypeForCryptoCoin = CurrencyTypeForCryptoCoin.USDT;
-
+	protected static final int SCALE_FOR_PRICE_DISPLAY = 8;
+	protected static final int SCALE_FOR_PRICE_CALCULATE = 12;
+	protected static final int SCALE_FOR_RATE_DISPLAY = 2;
+	protected static final int SCALE_FOR_RATE_CALCULATE = 4;
+	protected static final int BINANCE_BIG_CAP_GROUP_ID = 1;
+	
 	protected CryptoCoinPriceCommonDataBO mergerData(CryptoCoinPriceCommonDataBO resultTarget,
 			CryptoCoinPriceCommonDataBO otherData) {
 		if (resultTarget == null || otherData == null) {

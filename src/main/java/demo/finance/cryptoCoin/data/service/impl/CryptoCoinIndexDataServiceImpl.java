@@ -1,5 +1,6 @@
 package demo.finance.cryptoCoin.data.service.impl;
 
+import java.math.RoundingMode;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,9 @@ public class CryptoCoinIndexDataServiceImpl extends CryptoCoinCommonService impl
 		example.createCriteria().andCoinTypeEqualTo(coinType.getId()).andCurrencyTypeEqualTo(currencyType.getCode())
 				.andStartTimeEqualTo(bo.getStartTime());
 
+		bo.setVolume(bo.getVolume().setScale(SCALE_FOR_PRICE_CALCULATE, RoundingMode.HALF_UP));
+		bo.setEndPrice(bo.getEndPrice().setScale(SCALE_FOR_PRICE_CALCULATE, RoundingMode.HALF_UP));
+		
 		List<CryptoCoinPrice1minute> poList = mapper.selectByExample(example);
 		CryptoCoinPrice1minute po = null;
 		if (poList == null || poList.isEmpty()) {

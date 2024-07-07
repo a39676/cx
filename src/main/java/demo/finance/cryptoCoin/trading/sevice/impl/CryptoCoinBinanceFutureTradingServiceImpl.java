@@ -15,6 +15,7 @@ import demo.finance.cryptoCoin.data.mapper.CryptoCoinComplexToolMapper;
 import demo.finance.cryptoCoin.data.pojo.dto.CryptoCoinBtcAndLowIndexGapDTO;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmBtcArbitrageWithBatchProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmFutureOrderProducer;
+import demo.finance.cryptoCoin.trading.po.dto.CryptoCoinBinanceFutureUmOrdersDTO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureTradingService;
 import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceBtArbitrageWithBatchDTO;
 import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceFutureOrderDTO;
@@ -53,9 +54,9 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 	}
 
 	@Override
-	public CommonResult sendFutureOrder(CryptoCoinBinanceFutureOrderDTO dto) {
+	public CommonResult sendFutureOrder(CryptoCoinBinanceFutureUmOrdersDTO dto) {
 		CommonResult r = new CommonResult();
-		if (StringUtils.isBlank(dto.getSymbol())) {
+		if (dto.getSymbols() == null || dto.getSymbols().isEmpty()) {
 			r.failWithMessage("Symbol invalid");
 			return r;
 		}
@@ -71,7 +72,19 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 			r.failWithMessage("Position side invalid");
 			return r;
 		}
-		umFutureOrderProducer.binanceUmFutureOrder(dto);
+
+		CryptoCoinBinanceFutureOrderDTO mqDTO = null;
+		for (String symbol : dto.getSymbols()) {
+			if (StringUtils.isBlank(symbol)) {
+				continue;
+			}
+			mqDTO = new CryptoCoinBinanceFutureOrderDTO();
+			mqDTO.setAmount(dto.getAmount());
+			mqDTO.setOrderSideCode(dto.getOrderSideCode());
+			mqDTO.setPositionSideCode(dto.getPositionSideCode());
+			mqDTO.setSymbol(symbol);
+			umFutureOrderProducer.binanceUmFutureOrder(mqDTO);
+		}
 		r.setIsSuccess();
 		return r;
 	}

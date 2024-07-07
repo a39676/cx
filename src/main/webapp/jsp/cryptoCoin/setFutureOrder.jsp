@@ -27,8 +27,8 @@
   <div>
     <div class="row">
       <div class="col-md-12">
-        <input type="text" name="" placeholder="symbol" id="singleOrderSymbol">
-        <input type="number" name="" id="singleOrderAmount">
+        <input type="text" name="" placeholder="symbols" id="orderSymbols">
+        <input type="number" name="" id="orderAmount" placeholder="orderAmount">
         <select id="orderSide">
           <option value="1">Buy</option>
           <option value="2">Sell</option>
@@ -44,7 +44,7 @@
     <div class="row">
       <div class="col-md-12">
         <input type="text" name="" placeholder="symbols" id="btcArbitrageSymbols">
-        <input type="number" name="" id="btcArbitrageAmount">
+        <input type="number" name="" id="btcArbitrageAmount" placeholder="btcArbitrageAmount">
         <button id="submitBtcArbitrageBatchOrder">submitBtcArbitrageBatchOrder</button>
       </div>
     </div>
@@ -67,15 +67,16 @@
     function sendFutureOrder(){
       var url = "/cryptoTrading/binanceFutureUmSendOrder";
 
-      var singleOrderSymbol = $("#singleOrderSymbol").val();
-      var singleOrderAmount = $("#singleOrderAmount").val();
+      var orderSymbolsStr = $("#orderSymbols").val();
+      var orderAmount = $("#orderAmount").val();
       var orderSide = $('#orderSide').find(":selected").val();
       var positionSide = $('#positionSide').find(":selected").val();
       
+      var orderSymbols = orderSymbolsStr.split(",");
 
       var jsonOutput = {
-        symbol:singleOrderSymbol,
-        amount:singleOrderAmount,
+        symbols:orderSymbols,
+        amount:orderAmount,
         orderSideCode:orderSide,
         positionSideCode:positionSide,
       };
@@ -125,8 +126,6 @@
         symbols:symbolArray,
         singleAmount:singleAmount,
       };
-
-      console.log(jsonOutput);
 
       $("#msg").text("sending");
       $.ajax({

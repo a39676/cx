@@ -53,16 +53,6 @@
         borderColor: "#fad7a0",
         fill: false,
         label: "gap"
-      },{
-        data: ${btcPriceData},
-        borderColor: "green",
-        fill: false,
-        label: "btc"
-      },{
-        data: ${lowCapPriceDataList},
-        borderColor: "blue",
-        fill: false,
-        label: "lowCap"
       }]
     },
     options: {

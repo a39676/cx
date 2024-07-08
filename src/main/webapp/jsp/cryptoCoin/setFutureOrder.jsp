@@ -27,6 +27,12 @@
   <div>
     <div class="row">
       <div class="col-md-12">
+        <button id="startLong">开多</button>|<button id="startShort">开空</button><br>
+        <button id="stopLong">平多</button>|<button id="stopShort">平空</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
         <input type="text" name="" placeholder="symbols" id="orderSymbols">
         <input type="number" name="" id="orderAmount" placeholder="orderAmount">
         <select id="orderSide">
@@ -37,7 +43,12 @@
           <option value="1">Long</option>
           <option value="2">Short</option>
         </select>
-        <button id="submitSingleOrder">submitSingleOrder</button>
+        <select id="orderType">
+          <option value="1">Limit</option>
+          <option value="2">Market</option>
+        </select>
+        <input type="number" name="" id="preOrderRatio" placeholder="preOrderRatio %">
+        <button id="submitUmFutureOrder">submitUmFutureOrder</button>
       </div>
     </div>
 
@@ -60,7 +71,7 @@
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?" async defer></script>
 <script type="text/javascript">
   $(document).ready(function() {
-    $("#submitSingleOrder").click(function() {
+    $("#submitUmFutureOrder").click(function() {
       sendFutureOrder();
     });
 
@@ -69,16 +80,20 @@
 
       var orderSymbolsStr = $("#orderSymbols").val();
       var orderAmount = $("#orderAmount").val();
-      var orderSide = $('#orderSide').find(":selected").val();
-      var positionSide = $('#positionSide').find(":selected").val();
+      var orderSideCode = $('#orderSide').find(":selected").val();
+      var positionSideCode = $('#positionSide').find(":selected").val();
+      var orderTypeCode = $('#orderType').find(":selected").val();
+      var preOrderRatio = $("#preOrderRatio").val();
       
       var orderSymbols = orderSymbolsStr.split(",");
 
       var jsonOutput = {
         symbols:orderSymbols,
         amount:orderAmount,
-        orderSideCode:orderSide,
-        positionSideCode:positionSide,
+        orderSideCode:orderSideCode,
+        positionSideCode:positionSideCode,
+        orderTypeCode:orderTypeCode,
+        preOrderRatio:preOrderRatio,
       };
       $("#msg").text("sending");
       $.ajax({
@@ -154,3 +169,25 @@
     }
   });
 </script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("#startLong").click(function () {
+      $("#orderSide").val("1").change();
+      $("#positionSide").val("1").change();
+    });
+    $("#startShort").click(function () {
+      $("#orderSide").val("2").change();
+      $("#positionSide").val("2").change();
+    });
+    $("#stopLong").click(function () {
+      $("#orderSide").val("2").change();
+      $("#positionSide").val("1").change();
+    });
+    $("#stopShort").click(function () {
+      $("#orderSide").val("1").change();
+      $("#positionSide").val("2").change();
+    });
+  });
+</script>
+

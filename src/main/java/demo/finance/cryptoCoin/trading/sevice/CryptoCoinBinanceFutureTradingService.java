@@ -3,8 +3,8 @@ package demo.finance.cryptoCoin.trading.sevice;
 import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.finance.cryptoCoin.trading.po.dto.CryptoCoinBinanceFutureUmOrdersDTO;
 import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceBtArbitrageWithBatchDTO;
+import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceFutureBatchOrderDTO;
 
 public interface CryptoCoinBinanceFutureTradingService {
 
@@ -12,6 +12,6 @@ public interface CryptoCoinBinanceFutureTradingService {
 
 	ModelAndView tradingView();
 
-	CommonResult sendFutureOrder(CryptoCoinBinanceFutureUmOrdersDTO dto);
+	CommonResult sendFutureOrder(CryptoCoinBinanceFutureBatchOrderDTO dto);
 
 }

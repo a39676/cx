@@ -11,9 +11,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.trading.po.constant.CryptoCoinBinanceTradingUrl;
-import demo.finance.cryptoCoin.trading.po.dto.CryptoCoinBinanceFutureUmOrdersDTO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureTradingService;
 import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceBtArbitrageWithBatchDTO;
+import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceFutureBatchOrderDTO;
 
 @Controller
 @RequestMapping(value = CryptoCoinBinanceTradingUrl.ROOT)
@@ -29,7 +29,7 @@ public class CryptoCoinBinanceFutureTradingController {
 
 	@PostMapping(value = CryptoCoinBinanceTradingUrl.BINANCE_FUTURE_UM_SEND_ORDER)
 	@ResponseBody
-	public CommonResult sendFutureOrder(@RequestBody CryptoCoinBinanceFutureUmOrdersDTO dto) {
+	public CommonResult sendFutureOrder(@RequestBody CryptoCoinBinanceFutureBatchOrderDTO dto) {
 		return binanceFutureTradingService.sendFutureOrder(dto);
 	}
 

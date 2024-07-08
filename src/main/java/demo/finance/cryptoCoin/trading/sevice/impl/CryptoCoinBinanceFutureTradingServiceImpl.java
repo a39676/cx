@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
@@ -15,11 +14,11 @@ import demo.finance.cryptoCoin.data.mapper.CryptoCoinComplexToolMapper;
 import demo.finance.cryptoCoin.data.pojo.dto.CryptoCoinBtcAndLowIndexGapDTO;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmBtcArbitrageWithBatchProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmFutureOrderProducer;
-import demo.finance.cryptoCoin.trading.po.dto.CryptoCoinBinanceFutureUmOrdersDTO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureTradingService;
 import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceBtArbitrageWithBatchDTO;
-import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceFutureOrderDTO;
+import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceFutureBatchOrderDTO;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderSideType;
+import finance.cryptoCoin.binance.pojo.type.BinanceOrderTypeType;
 import finance.cryptoCoin.binance.pojo.type.BinancePositionSideType;
 
 @Service
@@ -54,7 +53,7 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 	}
 
 	@Override
-	public CommonResult sendFutureOrder(CryptoCoinBinanceFutureUmOrdersDTO dto) {
+	public CommonResult sendFutureOrder(CryptoCoinBinanceFutureBatchOrderDTO dto) {
 		CommonResult r = new CommonResult();
 		if (dto.getSymbols() == null || dto.getSymbols().isEmpty()) {
 			r.failWithMessage("Symbol invalid");
@@ -72,19 +71,15 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 			r.failWithMessage("Position side invalid");
 			return r;
 		}
-
-		CryptoCoinBinanceFutureOrderDTO mqDTO = null;
-		for (String symbol : dto.getSymbols()) {
-			if (StringUtils.isBlank(symbol)) {
-				continue;
-			}
-			mqDTO = new CryptoCoinBinanceFutureOrderDTO();
-			mqDTO.setAmount(dto.getAmount());
-			mqDTO.setOrderSideCode(dto.getOrderSideCode());
-			mqDTO.setPositionSideCode(dto.getPositionSideCode());
-			mqDTO.setSymbol(symbol);
-			umFutureOrderProducer.binanceUmFutureOrder(mqDTO);
+		if (BinanceOrderTypeType.getType(dto.getOrderTypeCode()) == null) {
+			dto.setOrderSideCode(BinanceOrderTypeType.MARKET.getCode());
+		} else if (BinanceOrderTypeType.getType(dto.getOrderTypeCode()).equals(BinanceOrderTypeType.LIMIT)
+				&& dto.getPreOrderRatio() == null) {
+			r.failWithMessage("Order ratio invalid");
+			return r;
 		}
+
+		umFutureOrderProducer.binanceUmFutureOrder(dto);
 		r.setIsSuccess();
 		return r;
 	}

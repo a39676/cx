@@ -1,9 +1,11 @@
 package demo.finance.cryptoCoin.trading.sevice.impl;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,8 +15,10 @@ import demo.common.service.CommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinComplexToolMapper;
 import demo.finance.cryptoCoin.data.pojo.dto.CryptoCoinBtcAndLowIndexGapDTO;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmBtcArbitrageWithBatchProducer;
+import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmFutureOrderModifyProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmFutureOrderProducer;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureTradingService;
+import finance.cryptoCoin.binance.pojo.dto.BinanceUpdateOrderDTO;
 import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceBtArbitrageWithBatchDTO;
 import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceFutureBatchOrderDTO;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderSideType;
@@ -31,6 +35,8 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 	private CryptoCoinBinanceUmFutureOrderProducer umFutureOrderProducer;
 	@Autowired
 	private CryptoCoinBinanceUmBtcArbitrageWithBatchProducer umBtcArbitrageWithBatchProducer;
+	@Autowired
+	private CryptoCoinBinanceUmFutureOrderModifyProducer umFutureOrderModifyProducer;
 
 	@Override
 	public ModelAndView tradingView() {
@@ -97,6 +103,53 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 		}
 		umBtcArbitrageWithBatchProducer.binanceUmBtcArbitrageWithBatch(dto);
 
+		r.setIsSuccess();
+		return r;
+	}
+
+	@Override
+	public CommonResult batchOrderModify(BinanceUpdateOrderDTO dto) {
+		CommonResult r = new CommonResult();
+		BinanceOrderSideType orderSide = BinanceOrderSideType.getType(dto.getTargetOrderSideCode());
+		BinancePositionSideType positionType = BinancePositionSideType.getType(dto.getTargetPositionSideCode());
+
+		if (orderSide == null || positionType == null) {
+			String msg = "Can NOT update order, " + dto.toString();
+			log.error(msg);
+			r.failWithMessage(msg);
+			return r;
+		}
+
+		if (dto.getQuantityRatio() != null && (dto.getQuantityRatio().compareTo(BigDecimal.ZERO) <= 0
+				|| dto.getQuantityRatio().compareTo(new BigDecimal(100)) > 0)) {
+			String msg = "Can NOT update order, quantity ratio invalid, " + dto.toString();
+			log.error(msg);
+			r.failWithMessage(msg);
+			return r;
+		}
+
+		if (dto.getPriceRatio() == null || (dto.getPriceRatio().compareTo(BigDecimal.ZERO) <= 0
+				|| dto.getPriceRatio().compareTo(new BigDecimal(100)) > 0)) {
+			String msg = "Can NOT update order, price ratio invalid, " + dto.toString();
+			log.error(msg);
+			r.failWithMessage(msg);
+			return r;
+		}
+
+		if (StringUtils.isBlank(dto.getOrderId())) {
+			dto.setOrderId(null);
+		}
+		
+		if (dto.getSymbols() != null) {
+			for (int i = 0; i < dto.getSymbols().size(); i++) {
+				if (StringUtils.isBlank(dto.getSymbols().get(i))) {
+					dto.getSymbols().remove(i);
+					i--;
+				}
+			}
+		}
+
+		umFutureOrderModifyProducer.binanceUmFutureOrder(dto);
 		r.setIsSuccess();
 		return r;
 	}

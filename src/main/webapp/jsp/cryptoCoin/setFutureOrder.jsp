@@ -51,6 +51,15 @@
         <button id="submitUmFutureOrder">submitUmFutureOrder</button>
       </div>
     </div>
+    <div class="row">
+      <div class="col-md-12">
+        <input type="text" name="" placeholder="modifyOrderSymbols" id="modifyOrderSymbols">
+        <input type="text" name="" placeholder="modifyOrderId" id="modifyOrderId">
+        <input type="number" name="" id="modifyOrderPriceRatio" placeholder="modifyOrderPriceRatio">
+        <input type="number" name="" id="modifyOrderQuantityRatio" placeholder="modifyOrderQuantityRatio" value="100">
+        <button id="submitUmFutureOrderModify">submitUmFutureOrderModify</button>
+      </div>
+    </div>
 
     <div class="row">
       <div class="col-md-12">
@@ -95,6 +104,61 @@
         orderTypeCode:orderTypeCode,
         preOrderRatio:preOrderRatio,
       };
+      $("#msg").text("sending");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          if(datas.code != 0){
+            $("#msg").text("Done: " + datas.message);
+          } else {
+            $("#msg").text(datas.message);
+          }
+        },
+        error: function(datas) {
+          $("#msg").text(datas.message);
+        }
+      });
+    }
+  });
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("#submitUmFutureOrderModify").click(function() {
+      sendFutureOrderModify();
+    });
+
+    function sendFutureOrderModify(){
+      var url = "/cryptoTrading/binanceUmBatchOrderModify";
+
+      var modifyOrderSymbolsStr = $("#modifyOrderSymbols").val();
+      var modifyOrderId = $("#modifyOrderId").val();
+      var orderSideCode = $('#orderSide').find(":selected").val();
+      var positionSideCode = $('#positionSide').find(":selected").val();
+      var modifyOrderPriceRatio = $("#modifyOrderPriceRatio").val();
+      var modifyOrderQuantityRatio = $("#modifyOrderQuantityRatio").val();
+      
+      var modifyOrderSymbols = modifyOrderSymbolsStr.split(",");
+
+      var jsonOutput = {
+        symbols:modifyOrderSymbols,
+        orderId:modifyOrderId,
+        targetOrderSideCode:orderSideCode,
+        targetPositionSideCode:positionSideCode,
+        priceRatio:modifyOrderPriceRatio,
+        quantityRatio:modifyOrderQuantityRatio,
+      };
+
       $("#msg").text("sending");
       $.ajax({
         type : "POST",

@@ -128,7 +128,7 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 			return r;
 		}
 
-		if (dto.getPriceRatio() == null || (dto.getPriceRatio().compareTo(BigDecimal.ZERO) <= 0
+		if (dto.getPriceRatio() == null || (dto.getPriceRatio().compareTo(new BigDecimal(-100)) <= 0
 				|| dto.getPriceRatio().compareTo(new BigDecimal(100)) > 0)) {
 			String msg = "Can NOT update order, price ratio invalid, " + dto.toString();
 			log.error(msg);
@@ -139,7 +139,7 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 		if (StringUtils.isBlank(dto.getOrderId())) {
 			dto.setOrderId(null);
 		}
-		
+
 		if (dto.getSymbols() != null) {
 			for (int i = 0; i < dto.getSymbols().size(); i++) {
 				if (StringUtils.isBlank(dto.getSymbols().get(i))) {

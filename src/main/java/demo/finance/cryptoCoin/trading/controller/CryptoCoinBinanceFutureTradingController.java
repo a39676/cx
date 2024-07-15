@@ -39,10 +39,16 @@ public class CryptoCoinBinanceFutureTradingController {
 	public CommonResult sendBtcArbitrageWithBatchOrder(@RequestBody CryptoCoinBinanceBtArbitrageWithBatchDTO dto) {
 		return binanceFutureTradingService.sendBtcArbitrageWithBatchOrder(dto);
 	}
-	
+
 	@PostMapping(value = CryptoCoinBinanceTradingUrl.BINANCE_FUTURE_UM_BATCH_ORDER_MODIFY)
 	@ResponseBody
 	public CommonResult batchOrderModify(@RequestBody BinanceUpdateOrderDTO dto) {
 		return binanceFutureTradingService.batchOrderModify(dto);
+	}
+
+	@PostMapping(value = CryptoCoinBinanceTradingUrl.BINANCE_FUTURE_UM_CLOSE_POSITION_BY_RATIO)
+	@ResponseBody
+	public CommonResult closePositionByRatio(@RequestBody CryptoCoinBinanceFutureBatchOrderDTO dto) {
+		return binanceFutureTradingService.closePositionByRatio(dto);
 	}
 }

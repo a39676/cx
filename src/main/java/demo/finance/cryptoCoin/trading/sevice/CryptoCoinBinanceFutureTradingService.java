@@ -17,4 +17,6 @@ public interface CryptoCoinBinanceFutureTradingService {
 
 	CommonResult batchOrderModify(BinanceUpdateOrderDTO dto);
 
+	CommonResult closePositionByRatio(CryptoCoinBinanceFutureBatchOrderDTO dto);
+
 }

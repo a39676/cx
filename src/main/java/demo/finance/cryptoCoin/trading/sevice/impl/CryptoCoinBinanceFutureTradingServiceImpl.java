@@ -1,9 +1,6 @@
 package demo.finance.cryptoCoin.trading.sevice.impl;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +9,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.service.CommonService;
-import demo.finance.cryptoCoin.data.mapper.CryptoCoinComplexToolMapper;
-import demo.finance.cryptoCoin.data.pojo.dto.CryptoCoinBtcAndLowIndexGapDTO;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmBtcArbitrageWithBatchProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmFutureOrderModifyProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmFutureOrderProducer;
@@ -29,8 +24,8 @@ import finance.cryptoCoin.binance.pojo.type.BinancePositionSideType;
 public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 		implements CryptoCoinBinanceFutureTradingService {
 
-	@Autowired
-	private CryptoCoinComplexToolMapper complexToolMapper;
+//	@Autowired
+//	private CryptoCoinComplexToolMapper complexToolMapper;
 	@Autowired
 	private CryptoCoinBinanceUmFutureOrderProducer umFutureOrderProducer;
 	@Autowired
@@ -42,18 +37,18 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 	public ModelAndView tradingView() {
 		ModelAndView v = new ModelAndView("cryptoCoin/setFutureOrder");
 
-		LocalDateTime defaultStartTime = LocalDateTime.now().minusHours(8);
-
-		List<CryptoCoinBtcAndLowIndexGapDTO> dataList = complexToolMapper.selectGaps(defaultStartTime);
-		List<String> xValues = new ArrayList<>();
-		List<Double> gap = new ArrayList<>();
-		for (CryptoCoinBtcAndLowIndexGapDTO dto : dataList) {
-			xValues.add(localDateTimeHandler.dateToStr(dto.getStartTime()));
-			gap.add(dto.getGap());
-		}
-
-		v.addObject("xValues", xValues);
-		v.addObject("gap", gap);
+//		LocalDateTime defaultStartTime = LocalDateTime.now().minusHours(8);
+//
+//		List<CryptoCoinBtcAndLowIndexGapDTO> dataList = complexToolMapper.selectGaps(defaultStartTime);
+//		List<String> xValues = new ArrayList<>();
+//		List<Double> gap = new ArrayList<>();
+//		for (CryptoCoinBtcAndLowIndexGapDTO dto : dataList) {
+//			xValues.add(localDateTimeHandler.dateToStr(dto.getStartTime()));
+//			gap.add(dto.getGap());
+//		}
+//
+//		v.addObject("xValues", xValues);
+//		v.addObject("gap", gap);
 
 		return v;
 	}
@@ -149,7 +144,39 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 			}
 		}
 
-		umFutureOrderModifyProducer.binanceUmFutureOrder(dto);
+		umFutureOrderModifyProducer.updateOrder(dto);
+		r.setIsSuccess();
+		return r;
+	}
+
+	@Override
+	public CommonResult closePositionByRatio(CryptoCoinBinanceFutureBatchOrderDTO dto) {
+		CommonResult r = new CommonResult();
+
+		if (BinanceOrderSideType.getType(dto.getOrderSideCode()) == null) {
+			r.failWithMessage("Order side invalid");
+			return r;
+		}
+		if (BinancePositionSideType.getType(dto.getPositionSideCode()) == null) {
+			r.failWithMessage("Position side invalid");
+			return r;
+		}
+		if (dto.getSymbols() == null || dto.getSymbols().isEmpty()) {
+			r.failWithMessage("Symbol list invalid");
+			return r;
+		}
+		if (BinanceOrderTypeType.getType(dto.getOrderTypeCode()) == null) {
+			r.failWithMessage("Order type invalid; Please set \"LIMIT\" or \"MARKET\"");
+			return r;
+		}
+		if (dto.getClosePositionQuantityRatio() == null
+				|| dto.getClosePositionQuantityRatio().compareTo(BigDecimal.ZERO) < 0
+				|| dto.getClosePositionQuantityRatio().compareTo(new BigDecimal(100)) > 100) {
+			r.failWithMessage("Quantity ratio invalid");
+			return r;
+		}
+
+		umFutureOrderProducer.binanceUmFutureOrder(dto);
 		r.setIsSuccess();
 		return r;
 	}

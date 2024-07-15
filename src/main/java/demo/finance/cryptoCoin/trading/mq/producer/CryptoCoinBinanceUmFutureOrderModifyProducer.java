@@ -15,7 +15,7 @@ public class CryptoCoinBinanceUmFutureOrderModifyProducer extends CommonService 
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
 
-	public void binanceUmFutureOrder(BinanceUpdateOrderDTO dto) {
+	public void updateOrder(BinanceUpdateOrderDTO dto) {
 		JSONObject json = JSONObject.fromObject(dto);
 		rabbitTemplate.convertAndSend(CryptoCoinMQConstant.BINANCE_UM_FUTURE_ORDER_MODIFY, json.toString());
 	}

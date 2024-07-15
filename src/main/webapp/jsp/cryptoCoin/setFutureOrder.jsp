@@ -20,7 +20,7 @@
 
   <div>
     <div id="chartDiv">
-      <%@ include file="./btcAndLowCapIndexGapChart.jsp"%>
+      <%-- <%@ include file="./btcAndLowCapIndexGapChart.jsp"%> --%>
     </div>
   </div>
 
@@ -48,7 +48,7 @@
           <option value="2">Market</option>
         </select>
         <input type="number" name="" id="preOrderRatio" placeholder="preOrderRatio %">
-        <button id="submitUmFutureOrder">submitUmFutureOrder</button>
+        <button id="submitUmFutureOrder">Create order(UM)</button>
       </div>
     </div>
     <div class="row">
@@ -57,7 +57,14 @@
         <input type="text" name="" placeholder="modifyOrderId" id="modifyOrderId">
         <input type="number" name="" id="modifyOrderPriceRatio" placeholder="modifyOrderPriceRatio">
         <input type="number" name="" id="modifyOrderQuantityRatio" placeholder="modifyOrderQuantityRatio" value="100">
-        <button id="submitUmFutureOrderModify">submitUmFutureOrderModify</button>
+        <button id="submitUmFutureOrderModify">Update order(UM)</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <input type="text" name="" placeholder="closePositionByRatioSymbols" id="closePositionByRatioSymbols">
+        <input type="number" name="" id="closePositionByRatioQuantityRatio" placeholder="closePositionByRatioQuantityRatio" value="0">
+        <button id="submitClosePositionByRatio">Close position by ratio(UM)</button>
       </div>
     </div>
 
@@ -159,6 +166,58 @@
         quantityRatio:modifyOrderQuantityRatio,
       };
 
+      $("#msg").text("sending");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          if(datas.code != 0){
+            $("#msg").text("Done: " + datas.message);
+          } else {
+            $("#msg").text(datas.message);
+          }
+        },
+        error: function(datas) {
+          $("#msg").text(datas.message);
+        }
+      });
+    }
+  });
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("#submitClosePositionByRatio").click(function() {
+      closePositionByQuantityRatio();
+    });
+
+    function closePositionByQuantityRatio(){
+      var url = "/cryptoTrading/binanceUmClosePositionByQuantityRatio";
+
+      var orderSymbolsStr = $("#closePositionByRatioSymbols").val();
+      var orderSideCode = $('#orderSide').find(":selected").val();
+      var positionSideCode = $('#positionSide').find(":selected").val();
+      var orderTypeCode = $('#orderType').find(":selected").val();
+      var closePositionQuantityRatio = $("#closePositionByRatioQuantityRatio").val();
+      
+      var orderSymbols = orderSymbolsStr.split(",");
+
+      var jsonOutput = {
+        symbols:orderSymbols,
+        orderSideCode:orderSideCode,
+        positionSideCode:positionSideCode,
+        orderTypeCode:orderTypeCode,
+        closePositionQuantityRatio:closePositionQuantityRatio,
+      };
       $("#msg").text("sending");
       $.ajax({
         type : "POST",

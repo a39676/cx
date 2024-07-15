@@ -169,6 +169,11 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 			r.failWithMessage("Order type invalid; Please set \"LIMIT\" or \"MARKET\"");
 			return r;
 		}
+		if (BinanceOrderTypeType.LIMIT.equals(BinanceOrderTypeType.getType(dto.getOrderTypeCode()))
+				&& dto.getPreOrderRatio() == null) {
+			r.failWithMessage("Order ratio invalid");
+			return r;
+		}
 		if (dto.getClosePositionQuantityRatio() == null
 				|| dto.getClosePositionQuantityRatio().compareTo(BigDecimal.ZERO) < 0
 				|| dto.getClosePositionQuantityRatio().compareTo(new BigDecimal(100)) > 100) {

@@ -64,6 +64,7 @@
       <div class="col-md-12">
         <input type="text" name="" placeholder="closePositionByRatioSymbols" id="closePositionByRatioSymbols">
         <input type="number" name="" id="closePositionByRatioQuantityRatio" placeholder="closePositionByRatioQuantityRatio" value="0">
+        <input type="number" name="" id="closePositionByRatioPreOrderRatio" placeholder="PreOrderRatio %">
         <button id="submitClosePositionByRatio">Close position by ratio(UM)</button>
       </div>
     </div>
@@ -207,6 +208,7 @@
       var orderSideCode = $('#orderSide').find(":selected").val();
       var positionSideCode = $('#positionSide').find(":selected").val();
       var orderTypeCode = $('#orderType').find(":selected").val();
+      var closePositionByRatioPreOrderRatio = $("#closePositionByRatioPreOrderRatio").val();
       var closePositionQuantityRatio = $("#closePositionByRatioQuantityRatio").val();
       
       var orderSymbols = orderSymbolsStr.split(",");
@@ -216,6 +218,7 @@
         orderSideCode:orderSideCode,
         positionSideCode:positionSideCode,
         orderTypeCode:orderTypeCode,
+        preOrderRatio:closePositionByRatioPreOrderRatio,
         closePositionQuantityRatio:closePositionQuantityRatio,
       };
       $("#msg").text("sending");

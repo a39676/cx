@@ -27,8 +27,10 @@
   <div>
     <div class="row">
       <div class="col-md-12">
-        <button id="startLong">开多</button>|<button id="startShort">开空</button><br>
-        <button id="stopLong">平多</button>|<button id="stopShort">平空</button>
+        <button id="startLong" class="btn btn-sm btn-success">开多</button> |
+        <button id="startShort" class="btn btn-sm btn-danger">开空</button><br>
+        <button id="stopLong" class="btn btn-sm btn-danger">平多</button> |
+        <button id="stopShort" class="btn btn-sm btn-success">平空</button>
       </div>
     </div>
     <div class="row">
@@ -74,6 +76,12 @@
         <input type="text" name="" placeholder="symbols" id="btcArbitrageSymbols">
         <input type="number" name="" id="btcArbitrageAmount" placeholder="btcArbitrageAmount">
         <button id="submitBtcArbitrageBatchOrder">submitBtcArbitrageBatchOrder</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <%@ include file="./shortingSymbolData.jsp"%> 
       </div>
     </div>
   

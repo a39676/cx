@@ -1,12 +1,18 @@
 package demo.finance.cryptoCoin.trading.sevice.impl;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.service.CommonService;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmBtcArbitrageWithBatchProducer;
@@ -19,6 +25,8 @@ import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceFutureBatchOrderDTO;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderSideType;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderTypeType;
 import finance.cryptoCoin.binance.pojo.type.BinancePositionSideType;
+import net.sf.json.JSONArray;
+import toolPack.dateTimeHandle.DateTimeUtilCommon;
 
 @Service
 public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
@@ -32,6 +40,10 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 	private CryptoCoinBinanceUmBtcArbitrageWithBatchProducer umBtcArbitrageWithBatchProducer;
 	@Autowired
 	private CryptoCoinBinanceUmFutureOrderModifyProducer umFutureOrderModifyProducer;
+	@Autowired
+	private RedisTemplate<String, Object> redisTemplate;
+
+	private static final String SHORTING_SYMBOL_LIST_KEY_PREFIX = "crypto_coin_shorting_symbol_list";
 
 	@Override
 	public ModelAndView tradingView() {
@@ -49,6 +61,8 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 //
 //		v.addObject("xValues", xValues);
 //		v.addObject("gap", gap);
+
+		v.addObject("shortingSymbolData", findShortingSymbolData());
 
 		return v;
 	}
@@ -184,5 +198,61 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 		umFutureOrderProducer.binanceUmFutureOrder(dto);
 		r.setIsSuccess();
 		return r;
+	}
+
+	@Override
+	public CommonResult addShortingSymbolList(BaseStrDTO dto) {
+		CommonResult r = new CommonResult();
+		if (StringUtils.isBlank(dto.getStr())) {
+			r.failWithMessage("Empty symbol list");
+			return r;
+		}
+
+		JSONArray jsonArray = new JSONArray();
+		dto.setStr(dto.getStr().replaceAll(" ", ""));
+		String[] symbolArray = dto.getStr().split(",");
+		for (int i = 0; i < symbolArray.length; i++) {
+			jsonArray.add(symbolArray[i]);
+		}
+		String redisKey = buildShortingSymbolListKey(LocalDateTime.now());
+		redisTemplate.opsForValue().set(redisKey, jsonArray);
+		r.successWithMessage(dto.getStr());
+		return r;
+	}
+
+	@Override
+	public CommonResult deleteShortingSymbolList(BaseStrDTO dto) {
+		CommonResult r = new CommonResult();
+		if (StringUtils.isBlank(dto.getStr())) {
+			r.failWithMessage("Param invalid");
+			return r;
+		}
+
+		String redisKey = buildShortingSymbolListKey(dto.getStr());
+		redisTemplate.delete(redisKey);
+		r.successWithMessage("Deleted: " + dto.getStr());
+		return r;
+	}
+
+	private Map<String, String> findShortingSymbolData() {
+		Set<String> keys = redisTemplate.keys(SHORTING_SYMBOL_LIST_KEY_PREFIX + "*");
+		Map<String, String> symbolListMap = new HashMap<>();
+		if (keys == null || keys.isEmpty()) {
+			return symbolListMap;
+		}
+		for (String key : keys) {
+			symbolListMap.put(key.replace(SHORTING_SYMBOL_LIST_KEY_PREFIX, ""),
+					String.valueOf(redisTemplate.opsForValue().get(key)));
+		}
+		return symbolListMap;
+	}
+
+	private String buildShortingSymbolListKey(LocalDateTime localDateTime) {
+		String dateStr = localDateTimeHandler.dateToStr(localDateTime, DateTimeUtilCommon.dateFormatNoSymbol);
+		return buildShortingSymbolListKey(dateStr);
+	}
+
+	private String buildShortingSymbolListKey(String dateStr) {
+		return SHORTING_SYMBOL_LIST_KEY_PREFIX + "_" + dateStr;
 	}
 }

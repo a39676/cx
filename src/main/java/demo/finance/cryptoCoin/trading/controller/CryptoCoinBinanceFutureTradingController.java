@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.trading.po.constant.CryptoCoinBinanceTradingUrl;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureTradingService;
@@ -50,5 +51,17 @@ public class CryptoCoinBinanceFutureTradingController {
 	@ResponseBody
 	public CommonResult closePositionByRatio(@RequestBody CryptoCoinBinanceFutureBatchOrderDTO dto) {
 		return binanceFutureTradingService.closePositionByRatio(dto);
+	}
+	
+	@PostMapping(value = CryptoCoinBinanceTradingUrl.ADD_SHORTING_SYMBOL_DATA)
+	@ResponseBody
+	public CommonResult addShortingSymbolList(@RequestBody BaseStrDTO dto) {
+		return binanceFutureTradingService.addShortingSymbolList(dto);
+	}
+	
+	@PostMapping(value = CryptoCoinBinanceTradingUrl.DEL_SHORTING_SYMBOL_DATA)
+	@ResponseBody
+	public CommonResult deleteShortingSymbolList(@RequestBody BaseStrDTO dto) {
+		return binanceFutureTradingService.deleteShortingSymbolList(dto);
 	}
 }

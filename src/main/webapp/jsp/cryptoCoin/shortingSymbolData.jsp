@@ -41,7 +41,7 @@
 
   <div class="row">
     <div class="col-md-12">
-      <label id="showShortingSymbolData"></label>
+      <textarea type="text" name="" id="showShortingSymbolData" disabled></textarea>
     </div>
   </div>
 
@@ -139,7 +139,8 @@
     });
     function clickShortingSymbolDataButton(buttonName) {
       var targetButton = $(".shortingSymbolData[name='"+buttonName+"']");
-      $("#showShortingSymbolData").text(targetButton.attr("symbols").replaceAll("\"", "").replace("[","").replace("]",""));
+      var symbolsStr = targetButton.attr("symbols").replaceAll("\"", "").replace("[","").replace("]","");
+      $("#showShortingSymbolData").val(symbolsStr);
     }
   
   });

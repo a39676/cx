@@ -68,8 +68,9 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 		v.addObject("shortingSymbolData", shortingSymbolDataMap);
 		Set<String> allShortingSymbols = new HashSet<>();
 		for (Entry<String, String> entry : shortingSymbolDataMap.entrySet()) {
+			entry.setValue(entry.getValue().replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\"", ""));
 			String dataListStr = entry.getValue();
-			String[] symbolArray = dataListStr.replaceAll("\\[", "").replaceAll("\\]", "").split(",");
+			String[] symbolArray = dataListStr.split(",");
 			for (String symbol : symbolArray) {
 				allShortingSymbols.add(symbol);
 			}

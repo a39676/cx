@@ -42,6 +42,15 @@
 
   <div class="row">
     <div class="col-md-12">
+      <button id="toCreate">toCreate</button>
+      <button id="toModify">toModify</button>
+      <button id="toClose">toClose</button>
+      <button id="toArbitrage">toArbitrage</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
       <textarea type="text" name="" id="showShortingSymbolData" disabled></textarea>
     </div>
   </div>
@@ -134,21 +143,41 @@
       });
     }
 
-
     $(".shortingSymbolData").click(function() {
+      console.log("clickShortingSymbolDataButton");
       clickShortingSymbolDataButton($(this).attr("name"));
     });
+
     function clickShortingSymbolDataButton(buttonName) {
       var targetButton = $(".shortingSymbolData[name='"+buttonName+"']");
-      var symbolsStr = targetButton.attr("symbols").replaceAll("\"", "").replaceAll("[","").replaceAll("]","");
+      var symbolsStr = targetButton.attr("symbols");
       $("#showShortingSymbolData").val(symbolsStr);
     }
 
     $("#allShortingSymbolData").click(function() {
-      var symbolsStr = $(this).attr("symbols").replaceAll("\"", "").replaceAll("[","").replaceAll("]","");
+      var symbolsStr = $(this).attr("symbols");
       $("#showShortingSymbolData").val(symbolsStr);
     });
-  
+
+    function copyShortingSymbols(targetId) {
+      var targetInput = $("#"+targetId);
+      var symbolsStr = $("#showShortingSymbolData").val();
+      targetInput.val(symbolsStr);
+    }
+
+    $("#toCreate").click(function() {
+      copyShortingSymbols("orderSymbols");
+    });
+    $("#toModify").click(function() {
+      copyShortingSymbols("modifyOrderSymbols");
+    });
+    $("#toClose").click(function() {
+      copyShortingSymbols("closePositionByRatioSymbols");
+    });
+    $("#toArbitrage").click(function() {
+      copyShortingSymbols("btcArbitrageSymbols");
+    });
+
   });
 </script>
 

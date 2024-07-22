@@ -75,8 +75,8 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 				allShortingSymbols.add(symbol);
 			}
 		}
-		v.addObject("allShortingSymbols",
-				String.valueOf(allShortingSymbols).replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\"", ""));
+		v.addObject("allShortingSymbols", String.valueOf(allShortingSymbols).replaceAll("\\[", "").replaceAll("\\]", "")
+				.replaceAll("\"", "").replaceAll(" ", ""));
 
 		return v;
 	}

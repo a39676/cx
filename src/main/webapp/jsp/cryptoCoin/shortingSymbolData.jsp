@@ -17,6 +17,7 @@
 
   <div class="row">
     <div class="col-md-12">
+      <button id="allShortingSymbolData" symbols='${allShortingSymbols}'>AllSymbol</button>
       <c:forEach items="${shortingSymbolData}" var="subData" varStatus="loop">
         <button class="shortingSymbolData" name="${subData.key}" symbols='${subData.value}'>
           ${subData.key}
@@ -139,9 +140,14 @@
     });
     function clickShortingSymbolDataButton(buttonName) {
       var targetButton = $(".shortingSymbolData[name='"+buttonName+"']");
-      var symbolsStr = targetButton.attr("symbols").replaceAll("\"", "").replace("[","").replace("]","");
+      var symbolsStr = targetButton.attr("symbols").replaceAll("\"", "").replaceAll("[","").replaceAll("]","");
       $("#showShortingSymbolData").val(symbolsStr);
     }
+
+    $("#allShortingSymbolData").click(function() {
+      var symbolsStr = $(this).attr("symbols").replaceAll("\"", "").replaceAll("[","").replaceAll("]","");
+      $("#showShortingSymbolData").val(symbolsStr);
+    });
   
   });
 </script>

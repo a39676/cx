@@ -3,7 +3,9 @@ package demo.finance.cryptoCoin.trading.sevice.impl;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -62,7 +64,17 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 //		v.addObject("xValues", xValues);
 //		v.addObject("gap", gap);
 
-		v.addObject("shortingSymbolData", findShortingSymbolData());
+		Map<String, String> shortingSymbolDataMap = findShortingSymbolData();
+		v.addObject("shortingSymbolData", shortingSymbolDataMap);
+		Set<String> allShortingSymbols = new HashSet<>();
+		for (Entry<String, String> entry : shortingSymbolDataMap.entrySet()) {
+			String dataListStr = entry.getValue();
+			String[] symbolArray = dataListStr.replaceAll("\\[", "").replaceAll("\\]", "").split(",");
+			for (String symbol : symbolArray) {
+				allShortingSymbols.add(symbol);
+			}
+		}
+		v.addObject("allShortingSymbols", allShortingSymbols);
 
 		return v;
 	}

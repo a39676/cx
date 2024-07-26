@@ -24,6 +24,7 @@ import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureTradingServ
 import finance.cryptoCoin.binance.pojo.dto.BinanceUpdateOrderDTO;
 import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceBtArbitrageWithBatchDTO;
 import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceFutureBatchOrderDTO;
+import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceFutureOrderDTO;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderSideType;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderTypeType;
 import finance.cryptoCoin.binance.pojo.type.BinancePositionSideType;
@@ -181,14 +182,22 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 	public CommonResult closePositionByRatio(CryptoCoinBinanceFutureBatchOrderDTO dto) {
 		CommonResult r = new CommonResult();
 
-		if (BinanceOrderSideType.getType(dto.getOrderSideCode()) == null) {
+		BinanceOrderSideType orderSide = BinanceOrderSideType.getType(dto.getOrderSideCode());
+		if (orderSide == null) {
 			r.failWithMessage("Order side invalid");
 			return r;
 		}
-		if (BinancePositionSideType.getType(dto.getPositionSideCode()) == null) {
+		BinancePositionSideType positionSideType = BinancePositionSideType.getType(dto.getPositionSideCode());
+		if (positionSideType == null) {
 			r.failWithMessage("Position side invalid");
 			return r;
 		}
+
+		if (!isClosePosition(dto)) {
+			r.failWithMessage("Is NOT close position order");
+			return r;
+		}
+
 		if (dto.getSymbols() == null || dto.getSymbols().isEmpty()) {
 			r.failWithMessage("Symbol list invalid");
 			return r;
@@ -268,5 +277,12 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 
 	private String buildShortingSymbolListKey(String dateStr) {
 		return SHORTING_SYMBOL_LIST_KEY_PREFIX + "_" + dateStr;
+	}
+
+	private boolean isClosePosition(CryptoCoinBinanceFutureOrderDTO dto) {
+		return (BinanceOrderSideType.SELL.getCode().equals(dto.getOrderSideCode())
+				&& BinancePositionSideType.LONG.getCode().equals(dto.getPositionSideCode()))
+				|| (BinanceOrderSideType.BUY.getCode().equals(dto.getOrderSideCode())
+						&& BinancePositionSideType.SHORT.getCode().equals(dto.getPositionSideCode()));
 	}
 }

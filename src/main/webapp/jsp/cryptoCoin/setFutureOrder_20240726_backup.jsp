@@ -27,93 +27,55 @@
   <div>
     <div class="row">
       <div class="col-md-12">
-        <table class="table">
-          <tr>
-            <td>
-              <button id="startLong" class="btn btn-sm btn-success">开多</button>
-              <button id="startShort" class="btn btn-sm btn-danger">开空</button>
-              <button id="stopLong" class="btn btn-sm btn-danger">平多</button>
-              <button id="stopShort" class="btn btn-sm btn-success">平空</button>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label>Symbols</label>
-            </td>
-            <td>
-              <label>OrderAmount</label>
-            </td>
-            <td>
-              <label>preOrderRatio</label>
-            </td>
-            <td>
-              <label>orderQuantityRatio</label>
-            </td>
-            <td>
-              <label>orderSide</label>
-            </td>
-            <td>
-              <label>positionSide</label>
-            </td>
-            <td>
-              <label>orderType</label>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <input type="text" name="" placeholder="symbols" id="orderSymbols">
-            </td>
-            <td>
-              <input type="number" name="" id="orderAmount" placeholder="orderAmount">
-            </td>
-            <td>
-              <input type="number" name="" id="preOrderRatio" placeholder="preOrderRatio %">
-            </td>
-            <td>
-              <input type="number" name="" id="orderQuantityRatio" placeholder="orderQuantityRatio" value="100">
-            </td>
-            <td>
-              <select id="orderSide">
-                <option value="1">Buy</option>
-                <option value="2">Sell</option>
-              </select>
-            </td>
-            <td>
-              <select id="positionSide">
-                <option value="1">Long</option>
-                <option value="2">Short</option>
-              </select>
-            </td>
-            <td>
-              <select id="orderType">
-                <option value="1">Limit</option>
-                <option value="2">Market</option>
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label>modifyOrderId</label>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <input type="text" name="" placeholder="modifyOrderId" id="modifyOrderId">
-            </td>
-          </tr>
+        <button id="startLong" class="btn btn-sm btn-success">开多</button> |
+        <button id="startShort" class="btn btn-sm btn-danger">开空</button><br>
+        <button id="stopLong" class="btn btn-sm btn-danger">平多</button> |
+        <button id="stopShort" class="btn btn-sm btn-success">平空</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <input type="text" name="" placeholder="symbols" id="orderSymbols">
+        <input type="number" name="" id="orderAmount" placeholder="orderAmount">
+        <select id="orderSide">
+          <option value="1">Buy</option>
+          <option value="2">Sell</option>
+        </select>
+        <select id="positionSide">
+          <option value="1">Long</option>
+          <option value="2">Short</option>
+        </select>
+        <select id="orderType">
+          <option value="1">Limit</option>
+          <option value="2">Market</option>
+        </select>
+        <input type="number" name="" id="preOrderRatio" placeholder="preOrderRatio %">
+        <button id="submitUmFutureOrder">Create order(UM)</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <input type="text" name="" placeholder="modifyOrderSymbols" id="modifyOrderSymbols">
+        <input type="text" name="" placeholder="modifyOrderId" id="modifyOrderId">
+        <input type="number" name="" id="modifyOrderPriceRatio" placeholder="modifyOrderPriceRatio">
+        <input type="number" name="" id="modifyOrderQuantityRatio" placeholder="modifyOrderQuantityRatio" value="100">
+        <button id="submitUmFutureOrderModify">Update order(UM)</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <input type="text" name="" placeholder="closePositionByRatioSymbols" id="closePositionByRatioSymbols">
+        <input type="number" name="" id="closePositionByRatioQuantityRatio" placeholder="closePositionByRatioQuantityRatio" value="0">
+        <input type="number" name="" id="closePositionByRatioPreOrderRatio" placeholder="PreOrderRatio %">
+        <button id="submitClosePositionByRatio">Close position by ratio(UM)</button>
+      </div>
+    </div>
 
-          <tr>
-            <td>
-              <button id="submitUmFutureOrder">Create order(UM)</button>
-            </td>
-            <td>
-              <button id="submitUmFutureOrderModify">Update order(UM)</button>
-            </td>
-            <td>
-              <button id="submitClosePositionByRatio">Close position by ratio(UM)</button>
-            </td>
-          </tr>
-        </table>
+    <div class="row">
+      <div class="col-md-12">
+        <input type="text" name="" placeholder="symbols" id="btcArbitrageSymbols">
+        <input type="number" name="" id="btcArbitrageAmount" placeholder="btcArbitrageAmount">
+        <button id="submitBtcArbitrageBatchOrder">submitBtcArbitrageBatchOrder</button>
       </div>
     </div>
 
@@ -195,12 +157,12 @@
     function sendFutureOrderModify(){
       var url = "/cryptoTrading/binanceUmBatchOrderModify";
 
-      var modifyOrderSymbolsStr = $("#orderSymbols").val();
+      var modifyOrderSymbolsStr = $("#modifyOrderSymbols").val();
       var modifyOrderId = $("#modifyOrderId").val();
       var orderSideCode = $('#orderSide').find(":selected").val();
       var positionSideCode = $('#positionSide').find(":selected").val();
-      var modifyOrderPriceRatio = $("#preOrderRatio").val();
-      var modifyOrderQuantityRatio = $("#orderQuantityRatio").val();
+      var modifyOrderPriceRatio = $("#modifyOrderPriceRatio").val();
+      var modifyOrderQuantityRatio = $("#modifyOrderQuantityRatio").val();
       
       var modifyOrderSymbols = modifyOrderSymbolsStr.split(",");
 
@@ -250,12 +212,12 @@
     function closePositionByQuantityRatio(){
       var url = "/cryptoTrading/binanceUmClosePositionByQuantityRatio";
 
-      var orderSymbolsStr = $("#orderSymbols").val();
+      var orderSymbolsStr = $("#closePositionByRatioSymbols").val();
       var orderSideCode = $('#orderSide').find(":selected").val();
       var positionSideCode = $('#positionSide').find(":selected").val();
       var orderTypeCode = $('#orderType').find(":selected").val();
-      var closePositionByRatioPreOrderRatio = $("#preOrderRatio").val();
-      var closePositionQuantityRatio = $("#orderQuantityRatio").val();
+      var closePositionByRatioPreOrderRatio = $("#closePositionByRatioPreOrderRatio").val();
+      var closePositionQuantityRatio = $("#closePositionByRatioQuantityRatio").val();
       
       var orderSymbols = orderSymbolsStr.split(",");
 
@@ -267,6 +229,53 @@
         preOrderRatio:closePositionByRatioPreOrderRatio,
         closePositionQuantityRatio:closePositionQuantityRatio,
       };
+      $("#msg").text("sending");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          if(datas.code != 0){
+            $("#msg").text("Done: " + datas.message);
+          } else {
+            $("#msg").text(datas.message);
+          }
+        },
+        error: function(datas) {
+          $("#msg").text(datas.message);
+        }
+      });
+    }
+  });
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("#submitBtcArbitrageBatchOrder").click(function() {
+      binanceUmBtcArbitrageBatchOrder();
+    });
+
+    function binanceUmBtcArbitrageBatchOrder(){
+      var url = "/cryptoTrading/binanceUmBtcArbitrageBatchOrder";
+
+      var btcArbitrageSymbols = $("#btcArbitrageSymbols").val();
+      var singleAmount = $("#btcArbitrageAmount").val();
+
+      var symbolArray = btcArbitrageSymbols.split(",");
+
+      var jsonOutput = {
+        symbols:symbolArray,
+        singleAmount:singleAmount,
+      };
+
       $("#msg").text("sending");
       $.ajax({
         type : "POST",

@@ -17,44 +17,33 @@
 
   <div class="row">
     <div class="col-md-12">
-      <button id="allShortingSymbolData" symbols='${allShortingSymbols}'>AllSymbol</button>
-      <c:forEach items="${shortingSymbolData}" var="subData" varStatus="loop">
-        <button class="shortingSymbolData" name="${subData.key}" symbols='${subData.value}'>
-          ${subData.key}
-        </button>
-      </c:forEach>
+      <table class="table">
+        <tr>
+          <td>
+            <button id="allShortingSymbolData" symbols='${allShortingSymbols}'>AllSymbol</button>  
+          </td>
+          <c:forEach items="${shortingSymbolData}" var="subData" varStatus="loop">
+            <td>
+              <button class="shortingSymbolData" name="${subData.key}" symbols='${subData.value}'>
+                ${subData.key}
+              </button>
+            </td>
+          </c:forEach>
+        </tr>
+        <tr>
+          <td>
+            <input type="text" name="" id="shortingSymbol" placeholder="shortingSymbol">
+            <button id="addShortingSymbol">addShortingSymbol</button>
+          </td>
+          <td>
+            <input type="text" name="" id="delShortingSymbolByKey" placeholder="delShortingSymbolByKey">
+            <button id="delShortingSymbol">delShortingSymbol</button>
+          </td>
+        </tr>
+      </table>
+      
     </div>
   </div>
-
-  <div class="row">
-    <div class="col-md-12">
-      <input type="text" name="" id="shortingSymbol" placeholder="shortingSymbol">
-      <button id="addShortingSymbol">addShortingSymbol</button>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-12">
-      <input type="text" name="" id="delShortingSymbolByKey" placeholder="delShortingSymbolByKey">
-      <button id="delShortingSymbol">delShortingSymbol</button>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-12">
-      <button id="toCreate">toCreate</button>
-      <button id="toModify">toModify</button>
-      <button id="toClose">toClose</button>
-      <button id="toArbitrage">toArbitrage</button>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-12">
-      <textarea type="text" name="" id="showShortingSymbolData" disabled></textarea>
-    </div>
-  </div>
-
 
 </body>
 
@@ -144,38 +133,18 @@
     }
 
     $(".shortingSymbolData").click(function() {
-      console.log("clickShortingSymbolDataButton");
       clickShortingSymbolDataButton($(this).attr("name"));
     });
 
     function clickShortingSymbolDataButton(buttonName) {
       var targetButton = $(".shortingSymbolData[name='"+buttonName+"']");
       var symbolsStr = targetButton.attr("symbols");
-      $("#showShortingSymbolData").val(symbolsStr);
+      $("#orderSymbols").val(symbolsStr);
     }
 
     $("#allShortingSymbolData").click(function() {
       var symbolsStr = $(this).attr("symbols");
-      $("#showShortingSymbolData").val(symbolsStr);
-    });
-
-    function copyShortingSymbols(targetId) {
-      var targetInput = $("#"+targetId);
-      var symbolsStr = $("#showShortingSymbolData").val();
-      targetInput.val(symbolsStr);
-    }
-
-    $("#toCreate").click(function() {
-      copyShortingSymbols("orderSymbols");
-    });
-    $("#toModify").click(function() {
-      copyShortingSymbols("modifyOrderSymbols");
-    });
-    $("#toClose").click(function() {
-      copyShortingSymbols("closePositionByRatioSymbols");
-    });
-    $("#toArbitrage").click(function() {
-      copyShortingSymbols("btcArbitrageSymbols");
+      $("#orderSymbols").val(symbolsStr);
     });
 
   });

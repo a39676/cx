@@ -1,7 +1,6 @@
 package demo.finance.cryptoCoin.trading.sevice.impl;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -30,7 +29,6 @@ import finance.cryptoCoin.binance.pojo.type.BinanceOrderSideType;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderTypeType;
 import finance.cryptoCoin.binance.pojo.type.BinancePositionSideType;
 import net.sf.json.JSONArray;
-import toolPack.dateTimeHandle.DateTimeUtilCommon;
 
 @Service
 public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
@@ -66,7 +64,7 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 //		v.addObject("xValues", xValues);
 //		v.addObject("gap", gap);
 
-		Map<String, String> shortingSymbolDataMap = findShortingSymbolData();
+		Map<String, String> shortingSymbolDataMap = findSymbolGroupData();
 		v.addObject("shortingSymbolData", shortingSymbolDataMap);
 		Set<String> allShortingSymbols = new HashSet<>();
 		for (Entry<String, String> entry : shortingSymbolDataMap.entrySet()) {
@@ -242,7 +240,7 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 		for (int i = 0; i < symbolArray.length; i++) {
 			jsonArray.add(symbolArray[i]);
 		}
-		String redisKey = buildShortingSymbolListKey(LocalDateTime.now());
+		String redisKey = buildSymbolGroupKey(dto.getGroupName());
 		redisTemplate.opsForValue().set(redisKey, jsonArray);
 		r.successWithMessage(dto.getSymbolGroupStr());
 		return r;
@@ -256,13 +254,13 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 			return r;
 		}
 
-		String redisKey = buildShortingSymbolListKey(dto.getStr());
+		String redisKey = buildSymbolGroupKey(dto.getStr());
 		redisTemplate.delete(redisKey);
 		r.successWithMessage("Deleted: " + dto.getStr());
 		return r;
 	}
 
-	private Map<String, String> findShortingSymbolData() {
+	private Map<String, String> findSymbolGroupData() {
 		Set<String> keys = redisTemplate.keys(SHORTING_SYMBOL_LIST_KEY_PREFIX + "*");
 		Map<String, String> symbolListMap = new HashMap<>();
 		if (keys == null || keys.isEmpty()) {
@@ -275,13 +273,8 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 		return symbolListMap;
 	}
 
-	private String buildShortingSymbolListKey(LocalDateTime localDateTime) {
-		String dateStr = localDateTimeHandler.dateToStr(localDateTime, DateTimeUtilCommon.dateFormatNoSymbol);
-		return buildShortingSymbolListKey(dateStr);
-	}
-
-	private String buildShortingSymbolListKey(String dateStr) {
-		return SHORTING_SYMBOL_LIST_KEY_PREFIX + "_" + dateStr;
+	private String buildSymbolGroupKey(String keyReadingPart) {
+		return SHORTING_SYMBOL_LIST_KEY_PREFIX + "_" + keyReadingPart;
 	}
 
 	private boolean isClosePosition(CryptoCoinBinanceFutureOrderDTO dto) {

@@ -69,7 +69,7 @@
 
       var jsonOutput = {
         symbolGroupStr:newSymbolGroup,
-        groupName:newSymbolGroupName ,
+        groupName:newSymbolGroupName,
       };
       $("#msg").text("sending shorting symbol(s)");
       $.ajax({

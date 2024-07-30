@@ -20,6 +20,7 @@ import demo.common.service.CommonService;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmBtcArbitrageWithBatchProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmFutureOrderModifyProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmFutureOrderProducer;
+import demo.finance.cryptoCoin.trading.po.dto.AddSymbolGroupDTO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureTradingService;
 import finance.cryptoCoin.binance.pojo.dto.BinanceUpdateOrderDTO;
 import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceBtArbitrageWithBatchDTO;
@@ -224,27 +225,31 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
 	}
 
 	@Override
-	public CommonResult addShortingSymbolList(BaseStrDTO dto) {
+	public CommonResult addSymbolGroup(AddSymbolGroupDTO dto) {
 		CommonResult r = new CommonResult();
-		if (StringUtils.isBlank(dto.getStr())) {
+		if (StringUtils.isBlank(dto.getSymbolGroupStr())) {
 			r.failWithMessage("Empty symbol list");
+			return r;
+		}
+		if (StringUtils.isBlank(dto.getGroupName())) {
+			r.failWithMessage("Empty symbol list name");
 			return r;
 		}
 
 		JSONArray jsonArray = new JSONArray();
-		dto.setStr(dto.getStr().replaceAll(" ", ""));
-		String[] symbolArray = dto.getStr().split(",");
+		dto.setSymbolGroupStr(dto.getSymbolGroupStr().replaceAll(" ", ""));
+		String[] symbolArray = dto.getSymbolGroupStr().split(",");
 		for (int i = 0; i < symbolArray.length; i++) {
 			jsonArray.add(symbolArray[i]);
 		}
 		String redisKey = buildShortingSymbolListKey(LocalDateTime.now());
 		redisTemplate.opsForValue().set(redisKey, jsonArray);
-		r.successWithMessage(dto.getStr());
+		r.successWithMessage(dto.getSymbolGroupStr());
 		return r;
 	}
 
 	@Override
-	public CommonResult deleteShortingSymbolList(BaseStrDTO dto) {
+	public CommonResult deleteSymbolGroup(BaseStrDTO dto) {
 		CommonResult r = new CommonResult();
 		if (StringUtils.isBlank(dto.getStr())) {
 			r.failWithMessage("Param invalid");

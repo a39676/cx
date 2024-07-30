@@ -119,7 +119,7 @@
 
     <div class="row">
       <div class="col-md-12">
-        <%@ include file="./shortingSymbolData.jsp"%> 
+        <%@ include file="./symbolGroupData.jsp"%> 
       </div>
     </div>
   

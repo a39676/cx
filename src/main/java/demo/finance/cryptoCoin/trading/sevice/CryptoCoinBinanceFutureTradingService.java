@@ -4,6 +4,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.finance.cryptoCoin.trading.po.dto.AddSymbolGroupDTO;
 import finance.cryptoCoin.binance.pojo.dto.BinanceUpdateOrderDTO;
 import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceBtArbitrageWithBatchDTO;
 import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceFutureBatchOrderDTO;
@@ -20,8 +21,8 @@ public interface CryptoCoinBinanceFutureTradingService {
 
 	CommonResult closePositionByRatio(CryptoCoinBinanceFutureBatchOrderDTO dto);
 
-	CommonResult addShortingSymbolList(BaseStrDTO dto);
+	CommonResult addSymbolGroup(AddSymbolGroupDTO dto);
 
-	CommonResult deleteShortingSymbolList(BaseStrDTO dto);
+	CommonResult deleteSymbolGroup(BaseStrDTO dto);
 
 }

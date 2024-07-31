@@ -9,13 +9,12 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.common.service.CommonService;
+import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmBtcArbitrageWithBatchProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmFutureOrderModifyProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmFutureOrderProducer;
@@ -31,19 +30,15 @@ import finance.cryptoCoin.binance.pojo.type.BinancePositionSideType;
 import net.sf.json.JSONArray;
 
 @Service
-public class CryptoCoinBinanceFutureTradingServiceImpl extends CommonService
+public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonService
 		implements CryptoCoinBinanceFutureTradingService {
 
-//	@Autowired
-//	private CryptoCoinComplexToolMapper complexToolMapper;
 	@Autowired
 	private CryptoCoinBinanceUmFutureOrderProducer umFutureOrderProducer;
 	@Autowired
 	private CryptoCoinBinanceUmBtcArbitrageWithBatchProducer umBtcArbitrageWithBatchProducer;
 	@Autowired
 	private CryptoCoinBinanceUmFutureOrderModifyProducer umFutureOrderModifyProducer;
-	@Autowired
-	private RedisTemplate<String, Object> redisTemplate;
 
 	private static final String SHORTING_SYMBOL_LIST_KEY_PREFIX = "crypto_coin_shorting_symbol_list";
 

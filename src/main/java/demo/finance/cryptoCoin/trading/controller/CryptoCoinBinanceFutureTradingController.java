@@ -12,11 +12,11 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.trading.po.constant.CryptoCoinBinanceTradingUrl;
-import demo.finance.cryptoCoin.trading.po.dto.AddSymbolGroupDTO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureTradingService;
 import finance.cryptoCoin.binance.pojo.dto.BinanceUpdateOrderDTO;
 import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceBtArbitrageWithBatchDTO;
 import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceFutureBatchOrderDTO;
+import finance.cryptoCoin.pojo.dto.CryptoCoinAddSymbolGroupDTO;
 
 @Controller
 @RequestMapping(value = CryptoCoinBinanceTradingUrl.ROOT)
@@ -56,7 +56,7 @@ public class CryptoCoinBinanceFutureTradingController {
 	
 	@PostMapping(value = CryptoCoinBinanceTradingUrl.ADD_SYMBOL_GROUP_DATA)
 	@ResponseBody
-	public CommonResult addShortingSymbolList(@RequestBody AddSymbolGroupDTO dto) {
+	public CommonResult addShortingSymbolList(@RequestBody CryptoCoinAddSymbolGroupDTO dto) {
 		return binanceFutureTradingService.addSymbolGroup(dto);
 	}
 	

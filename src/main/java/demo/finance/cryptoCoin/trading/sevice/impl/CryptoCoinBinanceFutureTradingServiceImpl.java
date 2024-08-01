@@ -1,8 +1,9 @@
 package demo.finance.cryptoCoin.trading.sevice.impl;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -12,13 +13,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.config.customComponent.OptionFilePathConfigurer;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmBtcArbitrageWithBatchProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmFutureOrderModifyProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmFutureOrderProducer;
-import demo.finance.cryptoCoin.trading.po.dto.AddSymbolGroupDTO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureTradingService;
 import finance.cryptoCoin.binance.pojo.dto.BinanceUpdateOrderDTO;
 import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceBtArbitrageWithBatchDTO;
@@ -27,7 +31,9 @@ import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceFutureOrderDTO;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderSideType;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderTypeType;
 import finance.cryptoCoin.binance.pojo.type.BinancePositionSideType;
-import net.sf.json.JSONArray;
+import finance.cryptoCoin.pojo.dto.CryptoCoinAddSymbolGroupDTO;
+import finance.cryptoCoin.pojo.dto.CryptoCoinSymbolGroupSettingDTO;
+import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonService
@@ -39,8 +45,6 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 	private CryptoCoinBinanceUmBtcArbitrageWithBatchProducer umBtcArbitrageWithBatchProducer;
 	@Autowired
 	private CryptoCoinBinanceUmFutureOrderModifyProducer umFutureOrderModifyProducer;
-
-	private static final String SHORTING_SYMBOL_LIST_KEY_PREFIX = "crypto_coin_shorting_symbol_list";
 
 	@Override
 	public ModelAndView tradingView() {
@@ -218,7 +222,7 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 	}
 
 	@Override
-	public CommonResult addSymbolGroup(AddSymbolGroupDTO dto) {
+	public CommonResult addSymbolGroup(CryptoCoinAddSymbolGroupDTO dto) {
 		CommonResult r = new CommonResult();
 		if (StringUtils.isBlank(dto.getSymbolGroupStr())) {
 			r.failWithMessage("Empty symbol list");
@@ -229,14 +233,16 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 			return r;
 		}
 
-		JSONArray jsonArray = new JSONArray();
 		dto.setSymbolGroupStr(dto.getSymbolGroupStr().replaceAll(" ", ""));
-		String[] symbolArray = dto.getSymbolGroupStr().split(",");
-		for (int i = 0; i < symbolArray.length; i++) {
-			jsonArray.add(symbolArray[i]);
-		}
-		String redisKey = buildSymbolGroupKey(dto.getGroupName());
-		redisTemplate.opsForValue().set(redisKey, jsonArray);
+
+		CryptoCoinSymbolGroupSettingDTO symbolGroupData = getSymbolGroupData();
+		CryptoCoinAddSymbolGroupDTO newSetting = new CryptoCoinAddSymbolGroupDTO();
+		newSetting.setGroupName(dto.getGroupName());
+		newSetting.setSymbolGroupStr(dto.getSymbolGroupStr());
+		symbolGroupData.getSettings().add(newSetting);
+
+		refreshSymbolGroupData(symbolGroupData);
+
 		r.successWithMessage(dto.getSymbolGroupStr());
 		return r;
 	}
@@ -249,27 +255,59 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 			return r;
 		}
 
-		String redisKey = buildSymbolGroupKey(dto.getStr());
-		redisTemplate.delete(redisKey);
+		CryptoCoinSymbolGroupSettingDTO symbolGroupData = getSymbolGroupData();
+		if (symbolGroupData.getSettings() == null || symbolGroupData.getSettings().isEmpty()) {
+			r.setIsSuccess();
+			return r;
+		}
+
+		for (int i = 0; i < symbolGroupData.getSettings().size(); i++) {
+			CryptoCoinAddSymbolGroupDTO setting = symbolGroupData.getSettings().get(i);
+			if (setting.getGroupName().equals(dto.getStr())) {
+				symbolGroupData.getSettings().remove(i);
+				refreshSymbolGroupData(symbolGroupData);
+				r.successWithMessage("Deleted: " + dto.getStr());
+				return r;
+			}
+		}
+
 		r.successWithMessage("Deleted: " + dto.getStr());
 		return r;
 	}
 
-	private Map<String, String> findSymbolGroupData() {
-		Set<String> keys = redisTemplate.keys(SHORTING_SYMBOL_LIST_KEY_PREFIX + "*");
-		Map<String, String> symbolListMap = new HashMap<>();
-		if (keys == null || keys.isEmpty()) {
-			return symbolListMap;
+	@Override
+	public CryptoCoinSymbolGroupSettingDTO getSymbolGroupData() {
+		FileUtilCustom ioUtil = new FileUtilCustom();
+		String str = ioUtil.getStringFromFile(OptionFilePathConfigurer.CRYPTO_COIN_SYMBOL_GROUP);
+		CryptoCoinSymbolGroupSettingDTO dto = null;
+		if (StringUtils.isBlank(str)) {
+			dto = new CryptoCoinSymbolGroupSettingDTO();
+		} else {
+			dto = buildObjFromJsonCustomization(str, CryptoCoinSymbolGroupSettingDTO.class);
 		}
-		for (String key : keys) {
-			symbolListMap.put(key.replace(SHORTING_SYMBOL_LIST_KEY_PREFIX, ""),
-					String.valueOf(redisTemplate.opsForValue().get(key)));
-		}
-		return symbolListMap;
+		return dto;
 	}
 
-	private String buildSymbolGroupKey(String keyReadingPart) {
-		return SHORTING_SYMBOL_LIST_KEY_PREFIX + "_" + keyReadingPart;
+	private void refreshSymbolGroupData(CryptoCoinSymbolGroupSettingDTO dto) {
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		String jsonString = gson.toJson(dto);
+		FileUtilCustom ioUtil = new FileUtilCustom();
+		ioUtil.byteToFile(jsonString.toString().getBytes(StandardCharsets.UTF_8),
+				OptionFilePathConfigurer.CRYPTO_COIN_SYMBOL_GROUP);
+	}
+
+	private Map<String, String> findSymbolGroupData() {
+		CryptoCoinSymbolGroupSettingDTO symbolGroupData = getSymbolGroupData();
+		Map<String, String> symbolListMap = new LinkedHashMap<>();
+		if (symbolGroupData.getSettings() == null || symbolGroupData.getSettings().isEmpty()) {
+			return symbolListMap;
+		}
+
+		for (int i = 0; i < symbolGroupData.getSettings().size(); i++) {
+			CryptoCoinAddSymbolGroupDTO setting = symbolGroupData.getSettings().get(i);
+			symbolListMap.put(setting.getGroupName(), setting.getSymbolGroupStr());
+		}
+		return symbolListMap;
 	}
 
 	private boolean isClosePosition(CryptoCoinBinanceFutureOrderDTO dto) {

@@ -49,6 +49,7 @@ import demo.pmemo.pojo.constant.UrgeNoticeUrl;
 import demo.test.pojo.constant.TestUrl;
 import demo.tool.other.pojo.constant.ToolUrlConstant;
 import demo.tool.wordHelper.pojo.constant.WordHelperUrl;
+import finance.cryptoCoin.pojo.constant.CryptoCoinBinanceTradingCommonUrl;
 import image.pojo.constant.ImageInteractionUrl;
 import tool.pojo.constant.CxBbtInteractionUrl;
 import wechatPaySdk.jsApi.pojo.constant.WechatPaySdkUrlConstant;
@@ -100,10 +101,14 @@ public class HttpSecurityConfig extends CommonService {
 				.antMatchers(UrgeNoticeManagerUrl.ROOT + "/**")
 				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
 				.antMatchers(CryptoCoinSharingUrl.ROOT + CryptoCoinSharingUrl.CALCULATE_DETAIL).permitAll()
-				.antMatchers(CryptoCoinSharingUrl.ROOT + "/**").access("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')")
-				.antMatchers(CcmManageUrl.ROOT + "/**").access("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')")
-				.antMatchers(AiManagerUrlConstant.ROOT + "/**").access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
-				.antMatchers(CryptoCoinBinanceTradingUrl.ROOT + "/**").access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+				.antMatchers(CryptoCoinSharingUrl.ROOT + "/**")
+				.access("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')")
+				.antMatchers(CcmManageUrl.ROOT + "/**")
+				.access("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')")
+				.antMatchers(AiManagerUrlConstant.ROOT + "/**")
+				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+				.antMatchers(CryptoCoinBinanceTradingUrl.ROOT + "/**")
+				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
 				.antMatchers(AiArtMangerUrl.ROOT + "/**")
 				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
 				.antMatchers(WordHelperUrl.ROOT + "/**")
@@ -130,7 +135,7 @@ public class HttpSecurityConfig extends CommonService {
 				.antMatchers(WechatPaySdkUrlConstant.ROOT + "/**").antMatchers(WechatSdkUrlConstant.ROOT + "/**")
 				.antMatchers(AiChatApiUrlConstant.ROOT + "/**").antMatchers(AiArtApiUrlConstant.ROOT + "/**")
 				.antMatchers(ImageUrl.ROOT + "/**").antMatchers(CxBbtInteractionUrl.ROOT + "/**")
-				;
+				.antMatchers(CryptoCoinBinanceTradingCommonUrl.ROOT + "/**");
 	}
 
 	@Bean

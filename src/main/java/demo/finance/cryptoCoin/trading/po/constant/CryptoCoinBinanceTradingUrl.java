@@ -10,6 +10,6 @@ public class CryptoCoinBinanceTradingUrl {
 	public static final String BINANCE_FUTURE_UM_BTC_ARBITRAGE_BATCH_ORDER = "/binanceUmBtcArbitrageBatchOrder";
 	public static final String BINANCE_FUTURE_UM_BATCH_ORDER_MODIFY = "/binanceUmBatchOrderModify";
 	public static final String BINANCE_FUTURE_UM_CLOSE_POSITION_BY_RATIO = "/binanceUmClosePositionByQuantityRatio";
-	public static final String ADD_SHORTING_SYMBOL_DATA = "/addShortingSymbolData";
-	public static final String DEL_SHORTING_SYMBOL_DATA = "/delShortingSymbolData";
+	public static final String ADD_SYMBOL_GROUP_DATA = "/addSymbolGroupData";
+	public static final String DEL_SYMBOL_GROUP_DATA = "/delSymbolGroupData";
 }

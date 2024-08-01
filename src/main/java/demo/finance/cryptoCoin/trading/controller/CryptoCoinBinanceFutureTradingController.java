@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.trading.po.constant.CryptoCoinBinanceTradingUrl;
+import demo.finance.cryptoCoin.trading.po.dto.AddSymbolGroupDTO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureTradingService;
 import finance.cryptoCoin.binance.pojo.dto.BinanceUpdateOrderDTO;
 import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceBtArbitrageWithBatchDTO;
@@ -53,15 +54,15 @@ public class CryptoCoinBinanceFutureTradingController {
 		return binanceFutureTradingService.closePositionByRatio(dto);
 	}
 	
-	@PostMapping(value = CryptoCoinBinanceTradingUrl.ADD_SHORTING_SYMBOL_DATA)
+	@PostMapping(value = CryptoCoinBinanceTradingUrl.ADD_SYMBOL_GROUP_DATA)
 	@ResponseBody
-	public CommonResult addShortingSymbolList(@RequestBody BaseStrDTO dto) {
-		return binanceFutureTradingService.addShortingSymbolList(dto);
+	public CommonResult addShortingSymbolList(@RequestBody AddSymbolGroupDTO dto) {
+		return binanceFutureTradingService.addSymbolGroup(dto);
 	}
 	
-	@PostMapping(value = CryptoCoinBinanceTradingUrl.DEL_SHORTING_SYMBOL_DATA)
+	@PostMapping(value = CryptoCoinBinanceTradingUrl.DEL_SYMBOL_GROUP_DATA)
 	@ResponseBody
 	public CommonResult deleteShortingSymbolList(@RequestBody BaseStrDTO dto) {
-		return binanceFutureTradingService.deleteShortingSymbolList(dto);
+		return binanceFutureTradingService.deleteSymbolGroup(dto);
 	}
 }

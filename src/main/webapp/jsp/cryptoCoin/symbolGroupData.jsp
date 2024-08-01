@@ -32,12 +32,13 @@
         </tr>
         <tr>
           <td>
-            <input type="text" name="" id="shortingSymbol" placeholder="shortingSymbol">
-            <button id="addShortingSymbol">addShortingSymbol</button>
+            <input type="text" name="" id="newSymbolGroup" placeholder="newSymbolGroup">
+            <input type="text" name="" id="newSymbolGroupName" placeholder="newSymbolGroupName">
+            <button id="addSymbolGroup">addSymbolGroup</button>
           </td>
           <td>
             <input type="text" name="" id="delShortingSymbolByKey" placeholder="delShortingSymbolByKey">
-            <button id="delShortingSymbol">delShortingSymbol</button>
+            <button id="delSymbolGroup">delSymbolGroup</button>
           </td>
         </tr>
       </table>
@@ -56,17 +57,19 @@
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?" async defer></script>
 <script type="text/javascript">
   $(document).ready(function() {
-    $("#addShortingSymbol").click(function() {
-      addShortingSymbol();
+    $("#addSymbolGroup").click(function() {
+      addSymbolGroup();
     });
 
-    function addShortingSymbol(){
-      var url = "/cryptoTrading/addShortingSymbolData";
+    function addSymbolGroup(){
+      var url = "/cryptoTrading/addSymbolGroupData";
 
-      var shortingSymbol = $("#shortingSymbol").val();
+      var newSymbolGroup = $("#newSymbolGroup").val();
+      var newSymbolGroupName = $("#newSymbolGroupName").val();
 
       var jsonOutput = {
-        str:shortingSymbol,
+        symbolGroupStr:newSymbolGroup,
+        groupName:newSymbolGroupName,
       };
       $("#msg").text("sending shorting symbol(s)");
       $.ajax({
@@ -94,12 +97,12 @@
       });
     }
 
-    $("#delShortingSymbol").click(function() {
-      delShortingSymbol();
+    $("#delSymbolGroup").click(function() {
+      delSymbolGroup();
     });
 
-    function delShortingSymbol(){
-      var url = "/cryptoTrading/delShortingSymbolData";
+    function delSymbolGroup(){
+      var url = "/cryptoTrading/delSymbolGroupData";
 
       var delShortingSymbolByKey = $("#delShortingSymbolByKey").val();
 

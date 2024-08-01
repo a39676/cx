@@ -70,7 +70,7 @@
               <input type="number" name="" id="preOrderRatio" placeholder="preOrderRatio %">
             </td>
             <td>
-              <input type="number" name="" id="orderQuantityRatio" placeholder="orderQuantityRatio" value="100">
+              <input type="number" name="" id="orderQuantityRatio" placeholder="orderQuantityRatio">
             </td>
             <td>
               <select id="orderSide">

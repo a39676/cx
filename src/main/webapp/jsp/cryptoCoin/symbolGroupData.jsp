@@ -19,16 +19,17 @@
     <div class="col-md-12">
       <table class="table">
         <tr>
-          <td>
-            <button id="allShortingSymbolData" symbols='${allShortingSymbols}'>AllSymbol</button>  
-          </td>
-          <c:forEach items="${shortingSymbolData}" var="subData" varStatus="loop">
-            <td>
-              <button class="shortingSymbolData" name="${subData.key}" symbols='${subData.value}'>
+          <td colspan=100%>
+            <button id="allShortingSymbolData" symbols='${allShortingSymbols}'>
+              AllSymbol
+            </button>
+            <c:forEach items="${shortingSymbolData}" var="subData" varStatus="loop">
+              <button class="shortingSymbolData" 
+              name="${subData.key}" symbols='${subData.value}'>
                 ${subData.key}
               </button>
-            </td>
-          </c:forEach>
+            </c:forEach>
+          </td>
         </tr>
         <tr>
           <td>

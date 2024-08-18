@@ -10,4 +10,5 @@ public class CcmManageUrl {
 	public static final String RESTART_CRYPTO_COIN_WEB_SOCKET_CLIENT = "/restartCryptoCoinWebSocketClient";
 	public static final String CLEAN_ALL_OLD_REDIS_KEY = "/clearAllOldRedisKey";
 	public static final String REFRESH_BINANCE_TRADING_OPTION = "/refreshBinanceTradingOption";
+	public static final String REFRESH_CRYPTO_COIN_INDEX_GAP_OPTION = "/refreshCryptoCoinIndexGapOption";
 }

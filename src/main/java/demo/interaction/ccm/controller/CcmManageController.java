@@ -71,4 +71,13 @@ public class CcmManageController {
 		ccmManageProducer.sendCcmManageDTO(dto);
 		return "Done";
 	}
+
+	@GetMapping(value = CcmManageUrl.REFRESH_CRYPTO_COIN_INDEX_GAP_OPTION)
+	@ResponseBody
+	public String refreshCryptoCoinIndexGapOption() {
+		CryptoCoinMonitorManagerDTO dto = new CryptoCoinMonitorManagerDTO();
+		dto.setCode(CryptoCoinMonitorManagerType.REFRESH_CRYPTO_COIN_INDEX_GAP_OPTION.getCode());
+		ccmManageProducer.sendCcmManageDTO(dto);
+		return "Done";
+	}
 }

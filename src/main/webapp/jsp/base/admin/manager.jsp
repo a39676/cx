@@ -100,6 +100,9 @@
       <li>
         <a href="/ccmManage/refreshBinanceTradingOption" target="_blank">refreshBinanceTradingOption</a>
       </li>
+      <li>
+        <a href="/ccmManage/refreshCryptoCoinIndexGapOption" target="_blank">refreshCryptoCoinIndexGapOption</a>
+      </li>
     </ul> <%-- CcmTool --%>
 
     <ul class="main-menu visible-on-click" id="cryptoCoinTool">

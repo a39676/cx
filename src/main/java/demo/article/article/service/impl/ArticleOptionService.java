@@ -22,7 +22,6 @@ import toolPack.ioHandle.FileUtilCustom;
 @Service
 public class ArticleOptionService extends CommonService {
 
-
 	private Long maxArticleLength = 0L;
 	private Integer defaultPageSize = 6;
 	private Integer maxPageSize = 30;
@@ -121,7 +120,7 @@ public class ArticleOptionService extends CommonService {
 	}
 
 	public String getArticleBurnStorePrefixPath() {
-		return articleBurnStorePrefixPath;
+		return System.getProperty("user.home") + articleBurnStorePrefixPath;
 	}
 
 	public void setArticleBurnStorePrefixPath(String articleBurnStorePrefixPath) {
@@ -129,7 +128,7 @@ public class ArticleOptionService extends CommonService {
 	}
 
 	public String getArticleStorePrefixPath() {
-		return articleStorePrefixPath;
+		return System.getProperty("user.home") + articleStorePrefixPath;
 	}
 
 	public void setArticleStorePrefixPath(String articleStorePrefixPath) {
@@ -137,7 +136,7 @@ public class ArticleOptionService extends CommonService {
 	}
 
 	public String getArticleImageSavingFolder() {
-		return articleImageSavingFolder;
+		return System.getProperty("user.home") + articleImageSavingFolder;
 	}
 
 	public void setArticleImageSavingFolder(String articleImageSavingFolder) {
@@ -145,7 +144,7 @@ public class ArticleOptionService extends CommonService {
 	}
 
 	public String getArticleSummaryStorePrefixPath() {
-		return articleSummaryStorePrefixPath;
+		return System.getProperty("user.home") + articleSummaryStorePrefixPath;
 	}
 
 	public void setArticleSummaryStorePrefixPath(String articleSummaryStorePrefixPath) {
@@ -153,7 +152,7 @@ public class ArticleOptionService extends CommonService {
 	}
 
 	public String getArticleChannelPrefixStorePath() {
-		return articleChannelPrefixStorePath;
+		return System.getProperty("user.home") + articleChannelPrefixStorePath;
 	}
 
 	public void setArticleChannelPrefixStorePath(String articleChannelPrefixStorePath) {

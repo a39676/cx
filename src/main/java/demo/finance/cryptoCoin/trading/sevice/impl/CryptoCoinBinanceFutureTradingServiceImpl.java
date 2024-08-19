@@ -24,10 +24,10 @@ import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmBtcArbitra
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmFutureOrderModifyProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmFutureOrderProducer;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureTradingService;
-import finance.cryptoCoin.binance.pojo.dto.BinanceUpdateOrderDTO;
-import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceBtArbitrageWithBatchDTO;
-import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceFutureBatchOrderDTO;
-import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceFutureOrderDTO;
+import finance.cryptoCoin.binance.future.um.pojo.dto.BinanceUpdateOrderDTO;
+import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBatchOrderDTO;
+import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBtcArbitrageWithBatchDTO;
+import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmOrderDTO;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderSideType;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderTypeType;
 import finance.cryptoCoin.binance.pojo.type.BinancePositionSideType;
@@ -81,7 +81,7 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 	}
 
 	@Override
-	public CommonResult sendFutureOrder(CryptoCoinBinanceFutureBatchOrderDTO dto) {
+	public CommonResult sendFutureOrder(CryptoCoinBinanceFutureUmBatchOrderDTO dto) {
 		CommonResult r = new CommonResult();
 		if (dto.getSymbols() == null || dto.getSymbols().isEmpty()) {
 			r.failWithMessage("Symbol invalid");
@@ -113,7 +113,7 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 	}
 
 	@Override
-	public CommonResult sendBtcArbitrageWithBatchOrder(CryptoCoinBinanceBtArbitrageWithBatchDTO dto) {
+	public CommonResult sendBtcArbitrageWithBatchOrder(CryptoCoinBinanceFutureUmBtcArbitrageWithBatchDTO dto) {
 		CommonResult r = new CommonResult();
 		if (dto.getSingleAmount() == null || dto.getSingleAmount() < 0) {
 			r.failWithMessage("Amount invalid");
@@ -177,7 +177,7 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 	}
 
 	@Override
-	public CommonResult closePositionByRatio(CryptoCoinBinanceFutureBatchOrderDTO dto) {
+	public CommonResult closePositionByRatio(CryptoCoinBinanceFutureUmBatchOrderDTO dto) {
 		CommonResult r = new CommonResult();
 
 		BinanceOrderSideType orderSide = BinanceOrderSideType.getType(dto.getOrderSideCode());
@@ -310,7 +310,7 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 		return symbolListMap;
 	}
 
-	private boolean isClosePosition(CryptoCoinBinanceFutureOrderDTO dto) {
+	private boolean isClosePosition(CryptoCoinBinanceFutureUmOrderDTO dto) {
 		return (BinanceOrderSideType.SELL.getCode().equals(dto.getOrderSideCode())
 				&& BinancePositionSideType.LONG.getCode().equals(dto.getPositionSideCode()))
 				|| (BinanceOrderSideType.BUY.getCode().equals(dto.getOrderSideCode())

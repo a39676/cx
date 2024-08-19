@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import demo.common.service.CommonService;
-import finance.cryptoCoin.binance.pojo.dto.BinanceUpdateOrderDTO;
+import finance.cryptoCoin.binance.future.um.pojo.dto.BinanceUpdateOrderDTO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinMQConstant;
 import net.sf.json.JSONObject;
 

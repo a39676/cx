@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import demo.common.service.CommonService;
-import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceFutureBatchOrderDTO;
+import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBatchOrderDTO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinMQConstant;
 import net.sf.json.JSONObject;
 
@@ -15,7 +15,7 @@ public class CryptoCoinBinanceUmFutureOrderProducer extends CommonService {
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
 
-	public void binanceUmFutureOrder(CryptoCoinBinanceFutureBatchOrderDTO dto) {
+	public void binanceUmFutureOrder(CryptoCoinBinanceFutureUmBatchOrderDTO dto) {
 		JSONObject json = JSONObject.fromObject(dto);
 		rabbitTemplate.convertAndSend(CryptoCoinMQConstant.BINANCE_UM_FUTURE_ORDER, json.toString());
 	}

@@ -4,23 +4,23 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
-import finance.cryptoCoin.binance.pojo.dto.BinanceUpdateOrderDTO;
-import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceBtArbitrageWithBatchDTO;
-import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceFutureBatchOrderDTO;
+import finance.cryptoCoin.binance.future.um.pojo.dto.BinanceUpdateOrderDTO;
+import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBatchOrderDTO;
+import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBtcArbitrageWithBatchDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinAddSymbolGroupDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinSymbolGroupSettingDTO;
 
 public interface CryptoCoinBinanceFutureTradingService {
 
-	CommonResult sendBtcArbitrageWithBatchOrder(CryptoCoinBinanceBtArbitrageWithBatchDTO dto);
+	CommonResult sendBtcArbitrageWithBatchOrder(CryptoCoinBinanceFutureUmBtcArbitrageWithBatchDTO dto);
 
 	ModelAndView tradingView();
 
-	CommonResult sendFutureOrder(CryptoCoinBinanceFutureBatchOrderDTO dto);
+	CommonResult sendFutureOrder(CryptoCoinBinanceFutureUmBatchOrderDTO dto);
 
 	CommonResult batchOrderModify(BinanceUpdateOrderDTO dto);
 
-	CommonResult closePositionByRatio(CryptoCoinBinanceFutureBatchOrderDTO dto);
+	CommonResult closePositionByRatio(CryptoCoinBinanceFutureUmBatchOrderDTO dto);
 
 	CommonResult addSymbolGroup(CryptoCoinAddSymbolGroupDTO dto);
 

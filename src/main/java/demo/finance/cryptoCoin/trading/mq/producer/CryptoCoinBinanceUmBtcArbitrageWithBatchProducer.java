@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import demo.common.service.CommonService;
-import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceBtArbitrageWithBatchDTO;
+import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBtcArbitrageWithBatchDTO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinMQConstant;
 import net.sf.json.JSONObject;
 
@@ -15,7 +15,7 @@ public class CryptoCoinBinanceUmBtcArbitrageWithBatchProducer extends CommonServ
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
 
-	public void binanceUmBtcArbitrageWithBatch(CryptoCoinBinanceBtArbitrageWithBatchDTO dto) {
+	public void binanceUmBtcArbitrageWithBatch(CryptoCoinBinanceFutureUmBtcArbitrageWithBatchDTO dto) {
 		JSONObject json = JSONObject.fromObject(dto);
 		rabbitTemplate.convertAndSend(CryptoCoinMQConstant.BINANCE_UM_BTC_ARBITRAGE_WITH_BATCH, json.toString());
 	}

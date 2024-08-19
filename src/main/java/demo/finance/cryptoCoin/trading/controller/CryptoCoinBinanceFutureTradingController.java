@@ -13,9 +13,9 @@ import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.trading.po.constant.CryptoCoinBinanceTradingUrl;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureTradingService;
-import finance.cryptoCoin.binance.pojo.dto.BinanceUpdateOrderDTO;
-import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceBtArbitrageWithBatchDTO;
-import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceFutureBatchOrderDTO;
+import finance.cryptoCoin.binance.future.um.pojo.dto.BinanceUpdateOrderDTO;
+import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBatchOrderDTO;
+import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBtcArbitrageWithBatchDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinAddSymbolGroupDTO;
 
 @Controller
@@ -32,13 +32,13 @@ public class CryptoCoinBinanceFutureTradingController {
 
 	@PostMapping(value = CryptoCoinBinanceTradingUrl.BINANCE_FUTURE_UM_SEND_ORDER)
 	@ResponseBody
-	public CommonResult sendFutureOrder(@RequestBody CryptoCoinBinanceFutureBatchOrderDTO dto) {
+	public CommonResult sendFutureOrder(@RequestBody CryptoCoinBinanceFutureUmBatchOrderDTO dto) {
 		return binanceFutureTradingService.sendFutureOrder(dto);
 	}
 
 	@PostMapping(value = CryptoCoinBinanceTradingUrl.BINANCE_FUTURE_UM_BTC_ARBITRAGE_BATCH_ORDER)
 	@ResponseBody
-	public CommonResult sendBtcArbitrageWithBatchOrder(@RequestBody CryptoCoinBinanceBtArbitrageWithBatchDTO dto) {
+	public CommonResult sendBtcArbitrageWithBatchOrder(@RequestBody CryptoCoinBinanceFutureUmBtcArbitrageWithBatchDTO dto) {
 		return binanceFutureTradingService.sendBtcArbitrageWithBatchOrder(dto);
 	}
 
@@ -50,7 +50,7 @@ public class CryptoCoinBinanceFutureTradingController {
 
 	@PostMapping(value = CryptoCoinBinanceTradingUrl.BINANCE_FUTURE_UM_CLOSE_POSITION_BY_RATIO)
 	@ResponseBody
-	public CommonResult closePositionByRatio(@RequestBody CryptoCoinBinanceFutureBatchOrderDTO dto) {
+	public CommonResult closePositionByRatio(@RequestBody CryptoCoinBinanceFutureUmBatchOrderDTO dto) {
 		return binanceFutureTradingService.closePositionByRatio(dto);
 	}
 	

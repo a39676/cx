@@ -19,18 +19,22 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinBigMoveMapper;
+import demo.finance.cryptoCoin.data.mapper.CryptoCoinBigTradeMapper;
 import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinBigMoveDailySummaryBO;
 import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinBigMoveSummaryBySymbolBO;
 import demo.finance.cryptoCoin.data.pojo.dto.GetBigMoveSummaryDataDTO;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigMove;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigMoveExample;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigMoveExample.Criteria;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigTrade;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigTradeExample;
 import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinFilterBigMoveDataInTimeRangeResult;
 import demo.finance.cryptoCoin.data.pojo.result.GetBigMoveSummaryDataResult;
 import demo.finance.cryptoCoin.data.service.CryptoCoinDataComplexService;
 import demo.finance.cryptoCoin.mq.producer.CryptoCoinSetOrderProducer;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigMoveDataBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigMoveSummaryDataBO;
+import finance.cryptoCoin.pojo.bo.CryptoCoinBigTradeDataBO;
 import net.sf.json.JSONObject;
 import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.type.TelegramBotType;
@@ -40,12 +44,53 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 
 	@Autowired
 	private CryptoCoinBigMoveMapper cryptoCoinBigMoveMapper;
+	@Autowired
+	private CryptoCoinBigTradeMapper cryptoCoinBigTradeMapper;
 	@SuppressWarnings("unused")
 	@Autowired
 	private CryptoCoinSetOrderProducer cryptoCoinSetOrderProducer;
 
 	@Override
-	public void receiveNewBigMoveDataMessage(String msg) {
+	public void receiveNewBigTradeFutureUmDataMessage(String msg) {
+		if (StringUtils.isBlank(msg)) {
+			return;
+		}
+		CryptoCoinBigTradeDataBO bo = buildObjFromJsonCustomization(msg, CryptoCoinBigTradeDataBO.class);
+		if (StringUtils.isBlank(bo.getSymbol())) {
+			return;
+		}
+
+		CryptoCoinBigTrade po = new CryptoCoinBigTrade();
+
+		try {
+			po.setEventTime(localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(bo.getBigTradeTimeStr()));
+		} catch (Exception e) {
+			return;
+		}
+		CryptoCoinBigTradeExample example = new CryptoCoinBigTradeExample();
+		example.createCriteria().andSymbolEqualTo(bo.getSymbol()).andEventTimeEqualTo(po.getEventTime())
+				.andAmountEqualTo(bo.getAmount()).andQuantityEqualTo(bo.getQuantity()).andPriceEqualTo(bo.getPrice())
+				.andIsMakerEqualTo(bo.getIsMaker());
+		List<CryptoCoinBigTrade> oldDataList = cryptoCoinBigTradeMapper.selectByExample(example);
+		if (!oldDataList.isEmpty()) {
+			return;
+		}
+
+		po.setAmount(bo.getAmount());
+		po.setPrice(bo.getPrice());
+		po.setQuantity(bo.getQuantity());
+		po.setIsMaker(bo.getIsMaker());
+		po.setSymbol(bo.getSymbol());
+
+		try {
+			cryptoCoinBigTradeMapper.insertSelective(po);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void receiveNewBigMoveSpotDataMessage(String msg) {
 		if (StringUtils.isBlank(msg)) {
 			return;
 		}

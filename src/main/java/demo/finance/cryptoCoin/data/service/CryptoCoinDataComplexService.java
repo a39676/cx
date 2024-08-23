@@ -7,7 +7,7 @@ import demo.finance.cryptoCoin.data.pojo.result.GetBigMoveSummaryDataResult;
 
 public interface CryptoCoinDataComplexService {
 
-	void receiveNewBigMoveDataMessage(String msg);
+	void receiveNewBigMoveSpotDataMessage(String msg);
 
 	ModelAndView getBigMoveSummaryView();
 
@@ -18,5 +18,7 @@ public interface CryptoCoinDataComplexService {
 	ModelAndView getBigMoveDataChartBySymbol(GetBigMoveSummaryDataDTO dto);
 
 	ModelAndView getBigMoveDataChart(GetBigMoveSummaryDataDTO dto);
+
+	void receiveNewBigTradeFutureUmDataMessage(String msg);
 
 }

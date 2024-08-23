@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.finance.cryptoCoin.data.mapper.CryptoCoinBigTradeMapper">
+  <resultMap id="BaseResultMap" type="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigTrade">
+    <result column="symbol" jdbcType="CHAR" property="symbol" />
+    <result column="amount" jdbcType="DECIMAL" property="amount" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="quantity" jdbcType="DECIMAL" property="quantity" />
+    <result column="is_maker" jdbcType="BIT" property="isMaker" />
+    <result column="event_time" jdbcType="TIMESTAMP" property="eventTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    symbol, amount, price, quantity, is_maker, event_time, create_time
+  </sql>
+  <select id="selectByExample" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigTradeExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from crypto_coin_big_trade
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigTradeExample">
+    delete from crypto_coin_big_trade
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigTrade">
+    insert into crypto_coin_big_trade (symbol, amount, price, 
+      quantity, is_maker, event_time, 
+      create_time)
+    values (#{symbol,jdbcType=CHAR}, #{amount,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL}, 
+      #{quantity,jdbcType=DECIMAL}, #{isMaker,jdbcType=BIT}, #{eventTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigTrade">
+    insert into crypto_coin_big_trade
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="symbol != null">
+        symbol,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="quantity != null">
+        quantity,
+      </if>
+      <if test="isMaker != null">
+        is_maker,
+      </if>
+      <if test="eventTime != null">
+        event_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="symbol != null">
+        #{symbol,jdbcType=CHAR},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="quantity != null">
+        #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="isMaker != null">
+        #{isMaker,jdbcType=BIT},
+      </if>
+      <if test="eventTime != null">
+        #{eventTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigTradeExample" resultType="java.lang.Long">
+    select count(*) from crypto_coin_big_trade
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update crypto_coin_big_trade
+    <set>
+      <if test="row.symbol != null">
+        symbol = #{row.symbol,jdbcType=CHAR},
+      </if>
+      <if test="row.amount != null">
+        amount = #{row.amount,jdbcType=DECIMAL},
+      </if>
+      <if test="row.price != null">
+        price = #{row.price,jdbcType=DECIMAL},
+      </if>
+      <if test="row.quantity != null">
+        quantity = #{row.quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="row.isMaker != null">
+        is_maker = #{row.isMaker,jdbcType=BIT},
+      </if>
+      <if test="row.eventTime != null">
+        event_time = #{row.eventTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.createTime != null">
+        create_time = #{row.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update crypto_coin_big_trade
+    set symbol = #{row.symbol,jdbcType=CHAR},
+      amount = #{row.amount,jdbcType=DECIMAL},
+      price = #{row.price,jdbcType=DECIMAL},
+      quantity = #{row.quantity,jdbcType=DECIMAL},
+      is_maker = #{row.isMaker,jdbcType=BIT},
+      event_time = #{row.eventTime,jdbcType=TIMESTAMP},
+      create_time = #{row.createTime,jdbcType=TIMESTAMP}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigTradeExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from crypto_coin_big_trade
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

@@ -93,6 +93,9 @@
         <a href="/ct/bigMoveSpot" target="_blank">bigMoveSpot</a>
       </li>
       <li>
+        <a href="/ct/bigTradeFutureUmChartBySymbol" target="_blank">bigTradeFutureUmChartBySymbol</a>
+      </li>
+      <li>
         <a href="/cryptoTrading/view" target="_blank">trading</a>
       </li>
       <li>

@@ -4,6 +4,8 @@ public class CcmManageUrl {
 
 	public static final String ROOT = "/ccmManage";
 
+	public static final String HOME = "/home";
+	
 	public static final String REFRESH_OPTION = "/refreshOption";
 	public static final String REFRESH_CRYPTO_COIN_OPTION = "/refreshCryptoCoinOption";
 	public static final String REFRESH_CRYPTO_COIN_PRICE_RANGE_OPTION = "/refreshCryptoCoinPriceRangeOption";
@@ -11,4 +13,5 @@ public class CcmManageUrl {
 	public static final String CLEAN_ALL_OLD_REDIS_KEY = "/clearAllOldRedisKey";
 	public static final String REFRESH_BINANCE_TRADING_OPTION = "/refreshBinanceTradingOption";
 	public static final String REFRESH_CRYPTO_COIN_INDEX_GAP_OPTION = "/refreshCryptoCoinIndexGapOption";
+	public static final String RECONNECT_BINANCE_BIG_TRADE_STREAM = "/reconnectBinanceBigTradeStream";
 }

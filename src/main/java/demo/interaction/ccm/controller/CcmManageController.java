@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import demo.interaction.ccm.mq.producer.CcmManageProducer;
 import demo.interaction.ccm.pojo.constant.CcmManageUrl;
@@ -17,6 +19,12 @@ public class CcmManageController {
 
 	@Autowired
 	private CcmManageProducer ccmManageProducer;
+
+	@GetMapping(value = { "/", CcmManageUrl.HOME })
+	public ModelAndView home() {
+		ModelAndView v = new ModelAndView("cryptoCoin/ccmManager");
+		return v;
+	}
 
 	@GetMapping(value = CcmManageUrl.REFRESH_OPTION)
 	@ResponseBody
@@ -77,6 +85,16 @@ public class CcmManageController {
 	public String refreshCryptoCoinIndexGapOption() {
 		CryptoCoinMonitorManagerDTO dto = new CryptoCoinMonitorManagerDTO();
 		dto.setCode(CryptoCoinMonitorManagerType.REFRESH_CRYPTO_COIN_INDEX_GAP_OPTION.getCode());
+		ccmManageProducer.sendCcmManageDTO(dto);
+		return "Done";
+	}
+
+	@GetMapping(value = CcmManageUrl.RECONNECT_BINANCE_BIG_TRADE_STREAM)
+	@ResponseBody
+	public String reconnectBinanceBigTradeStream(@RequestParam(name = "symbol") String symbol) {
+		CryptoCoinMonitorManagerDTO dto = new CryptoCoinMonitorManagerDTO();
+		dto.setCode(CryptoCoinMonitorManagerType.RECONNECT_BINANCE_BIG_TRADE_STREAM.getCode());
+		dto.setParamJsonStr(symbol);
 		ccmManageProducer.sendCcmManageDTO(dto);
 		return "Done";
 	}

@@ -14,7 +14,6 @@
 <sec:csrfMetaTags />
 
 <body>
-test2 2 3
   <div>
     <div class="row">
       <div class="col-md-1">
@@ -26,6 +25,7 @@ test2 2 3
       </div>
     </div>
   </div>
+
 
 </body>
 
@@ -44,17 +44,29 @@ test2 2 3
     type: "bubble",
     data: {
       datasets: [{
-        label: 'First Dataset',
-        data: [{
-          x: 20,
-          y: 30,
-          r: 15
-        }, {
-          x: 40,
-          y: 10,
-          r: 10
-        }],
-        backgroundColor: 'rgba(255, 99, 132, 0.2)'
+        label: 'Falling',
+        data: [
+          <c:forEach items="${saleList}" var="subData" varStatus="loop">
+            {
+              x: ${subData.timeGap},
+              y: ${subData.price},
+              r: ${subData.r},
+            },
+          </c:forEach>
+        ],
+        backgroundColor: 'rgba(255, 99, 132, 0.6)'
+      },{
+        label: 'Buying',
+        data: [
+          <c:forEach items="${buyList}" var="subData" varStatus="loop">
+            {
+              x: ${subData.timeGap},
+              y: ${subData.price},
+              r: ${subData.r},
+            },
+          </c:forEach>
+        ],
+        backgroundColor: 'rgba(46, 204, 113, 0.6)'
       }]
     },
     options: {

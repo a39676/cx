@@ -1,6 +1,7 @@
 package demo.finance.cryptoCoin.data.service.impl;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigTrade;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigTradeExample;
 import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinFilterBigMoveDataInTimeRangeResult;
 import demo.finance.cryptoCoin.data.pojo.result.GetBigMoveSummaryDataResult;
+import demo.finance.cryptoCoin.data.pojo.vo.CryptoCoinBigTradeBubbleChartVO;
 import demo.finance.cryptoCoin.data.service.CryptoCoinDataComplexService;
 import demo.finance.cryptoCoin.mq.producer.CryptoCoinSetOrderProducer;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigMoveDataBO;
@@ -54,15 +56,35 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 	@Override
 	public ModelAndView getBigTradeDataChartBySymbol(String symbol) {
 		ModelAndView v = new ModelAndView("cryptoCoin/getBigTradeChartBySymbol");
-		
+
 		LocalDateTime now = LocalDateTime.now();
 		CryptoCoinBigTradeExample example = new CryptoCoinBigTradeExample();
 		example.createCriteria().andSymbolEqualTo(symbol).andEventTimeGreaterThanOrEqualTo(now.minusMinutes(180));
 		List<CryptoCoinBigTrade> dataList = cryptoCoinBigTradeMapper.selectByExample(example);
-		
-//		TODO
-		v.addObject("TODO", dataList);
-//		TODO
+
+		List<CryptoCoinBigTradeBubbleChartVO> saleList = new ArrayList<>();
+		List<CryptoCoinBigTradeBubbleChartVO> buyList = new ArrayList<>();
+		CryptoCoinBigTrade data = null;
+		CryptoCoinBigTradeBubbleChartVO vo = null;
+		for (int i = 0; i < dataList.size(); i++) {
+			data = dataList.get(i);
+			vo = new CryptoCoinBigTradeBubbleChartVO();
+			vo.setPrice(data.getPrice().doubleValue());
+			Long timeGap = ChronoUnit.MINUTES.between(now, data.getEventTime());
+			vo.setTimeGap(timeGap.intValue());
+			int r = data.getAmount().divide(new BigDecimal(500000), 0, RoundingMode.HALF_UP).intValue();
+			r += 3;
+			r *= 3;
+			vo.setR(r);
+			if (data.getIsMaker()) {
+				saleList.add(vo);
+			} else {
+				buyList.add(vo);
+			}
+		}
+
+		v.addObject("saleList", saleList);
+		v.addObject("buyList", buyList);
 
 		return v;
 	}

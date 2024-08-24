@@ -83,25 +83,7 @@
     <ul class="main-menu visible-on-click" id="CcmTool">
       <li style="background-color:yellow;">CCM tool</li>
       <li>
-        <a href="/ccmManage/refreshOption" target="_blank">refreshOption</a>
-      </li>
-      <li>
-        <a href="/ccmManage/refreshCryptoCoinOption" target="_blank">refreshCryptoCoinOption</a>
-      </li>
-      <li>
-        <a href="/ccmManage/refreshCryptoCoinPriceRangeOption" target="_blank">refreshCryptoCoinPriceRangeOption</a>
-      </li>
-      <li>
-        <a href="/ccmManage/restartCryptoCoinWebSocketClient" target="_blank">restartCryptoCoinWebSocketClient</a>
-      </li>
-      <li>
-        <a href="/ccmManage/clearAllOldRedisKey" target="_blank">clearAllOldRedisKey</a>
-      </li>
-      <li>
-        <a href="/ccmManage/refreshBinanceTradingOption" target="_blank">refreshBinanceTradingOption</a>
-      </li>
-      <li>
-        <a href="/ccmManage/refreshCryptoCoinIndexGapOption" target="_blank">refreshCryptoCoinIndexGapOption</a>
+        <a href="/ccmManage/home" target="_blank">ccmManage</a>
       </li>
     </ul> <%-- CcmTool --%>
 

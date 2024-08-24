@@ -416,6 +416,66 @@ public class CryptoCoinBigTradeExample {
             return (Criteria) this;
         }
 
+        public Criteria andDataTypeIsNull() {
+            addCriterion("data_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDataTypeIsNotNull() {
+            addCriterion("data_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDataTypeEqualTo(Integer value) {
+            addCriterion("data_type =", value, "dataType");
+            return (Criteria) this;
+        }
+
+        public Criteria andDataTypeNotEqualTo(Integer value) {
+            addCriterion("data_type <>", value, "dataType");
+            return (Criteria) this;
+        }
+
+        public Criteria andDataTypeGreaterThan(Integer value) {
+            addCriterion("data_type >", value, "dataType");
+            return (Criteria) this;
+        }
+
+        public Criteria andDataTypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("data_type >=", value, "dataType");
+            return (Criteria) this;
+        }
+
+        public Criteria andDataTypeLessThan(Integer value) {
+            addCriterion("data_type <", value, "dataType");
+            return (Criteria) this;
+        }
+
+        public Criteria andDataTypeLessThanOrEqualTo(Integer value) {
+            addCriterion("data_type <=", value, "dataType");
+            return (Criteria) this;
+        }
+
+        public Criteria andDataTypeIn(List<Integer> values) {
+            addCriterion("data_type in", values, "dataType");
+            return (Criteria) this;
+        }
+
+        public Criteria andDataTypeNotIn(List<Integer> values) {
+            addCriterion("data_type not in", values, "dataType");
+            return (Criteria) this;
+        }
+
+        public Criteria andDataTypeBetween(Integer value1, Integer value2) {
+            addCriterion("data_type between", value1, value2, "dataType");
+            return (Criteria) this;
+        }
+
+        public Criteria andDataTypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("data_type not between", value1, value2, "dataType");
+            return (Criteria) this;
+        }
+
         public Criteria andEventTimeIsNull() {
             addCriterion("event_time is null");
             return (Criteria) this;

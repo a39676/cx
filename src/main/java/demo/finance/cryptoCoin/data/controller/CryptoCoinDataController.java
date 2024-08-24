@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -22,12 +23,12 @@ public class CryptoCoinDataController extends CommonController {
 	@Autowired
 	private CryptoCoinDataComplexService cryptoCoinDataComplexService;
 
-	@GetMapping(value = CryptoCoinTestUrl.BIG_MOVE_VIEW)
+	@GetMapping(value = CryptoCoinTestUrl.BIG_MOVE_SPOT_VIEW)
 	public ModelAndView getBigMoveSummaryView() {
-		return cryptoCoinDataComplexService.getBigMoveSummaryView();
+		return cryptoCoinDataComplexService.getBigMoveSpotSummaryView();
 	}
 
-	@PostMapping(value = CryptoCoinTestUrl.BIG_MOVE_DATA_TABLE)
+	@PostMapping(value = CryptoCoinTestUrl.BIG_MOVE_SPOT_DATA_TABLE)
 	@ResponseBody
 	public GetBigMoveSummaryDataResult getBigMoveSummaryData(@RequestBody GetBigMoveSummaryDataDTO dto) {
 		return cryptoCoinDataComplexService.getBigMoveSummaryDataTable(dto);
@@ -43,6 +44,11 @@ public class CryptoCoinDataController extends CommonController {
 	@ResponseBody
 	public ModelAndView getBigMoveSummaryChartBySymbol(@RequestBody GetBigMoveSummaryDataDTO dto) {
 		return cryptoCoinDataComplexService.getBigMoveDataChartBySymbol(dto);
+	}
+
+	@GetMapping(value = CryptoCoinTestUrl.BIG_TRADE_FUTURE_UM_CHART_BY_SYMBOL)
+	public ModelAndView getBigMoveSummaryChartBySymbol(@RequestParam(name = "symbol") String symbol) {
+		return cryptoCoinDataComplexService.getBigTradeDataChartBySymbol(symbol);
 	}
 
 }

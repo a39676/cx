@@ -7,6 +7,7 @@
     <result column="price" jdbcType="DECIMAL" property="price" />
     <result column="quantity" jdbcType="DECIMAL" property="quantity" />
     <result column="is_maker" jdbcType="BIT" property="isMaker" />
+    <result column="data_type" jdbcType="INTEGER" property="dataType" />
     <result column="event_time" jdbcType="TIMESTAMP" property="eventTime" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
@@ -69,7 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    symbol, amount, price, quantity, is_maker, event_time, create_time
+    symbol, amount, price, quantity, is_maker, data_type, event_time, create_time
   </sql>
   <select id="selectByExample" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigTradeExample" resultMap="BaseResultMap">
     select
@@ -93,11 +94,11 @@
   </delete>
   <insert id="insert" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigTrade">
     insert into crypto_coin_big_trade (symbol, amount, price, 
-      quantity, is_maker, event_time, 
-      create_time)
+      quantity, is_maker, data_type, 
+      event_time, create_time)
     values (#{symbol,jdbcType=CHAR}, #{amount,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL}, 
-      #{quantity,jdbcType=DECIMAL}, #{isMaker,jdbcType=BIT}, #{eventTime,jdbcType=TIMESTAMP}, 
-      #{createTime,jdbcType=TIMESTAMP})
+      #{quantity,jdbcType=DECIMAL}, #{isMaker,jdbcType=BIT}, #{dataType,jdbcType=INTEGER}, 
+      #{eventTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigTrade">
     insert into crypto_coin_big_trade
@@ -116,6 +117,9 @@
       </if>
       <if test="isMaker != null">
         is_maker,
+      </if>
+      <if test="dataType != null">
+        data_type,
       </if>
       <if test="eventTime != null">
         event_time,
@@ -139,6 +143,9 @@
       </if>
       <if test="isMaker != null">
         #{isMaker,jdbcType=BIT},
+      </if>
+      <if test="dataType != null">
+        #{dataType,jdbcType=INTEGER},
       </if>
       <if test="eventTime != null">
         #{eventTime,jdbcType=TIMESTAMP},
@@ -172,6 +179,9 @@
       <if test="row.isMaker != null">
         is_maker = #{row.isMaker,jdbcType=BIT},
       </if>
+      <if test="row.dataType != null">
+        data_type = #{row.dataType,jdbcType=INTEGER},
+      </if>
       <if test="row.eventTime != null">
         event_time = #{row.eventTime,jdbcType=TIMESTAMP},
       </if>
@@ -190,6 +200,7 @@
       price = #{row.price,jdbcType=DECIMAL},
       quantity = #{row.quantity,jdbcType=DECIMAL},
       is_maker = #{row.isMaker,jdbcType=BIT},
+      data_type = #{row.dataType,jdbcType=INTEGER},
       event_time = #{row.eventTime,jdbcType=TIMESTAMP},
       create_time = #{row.createTime,jdbcType=TIMESTAMP}
     <if test="example != null">

@@ -9,7 +9,7 @@ public interface CryptoCoinDataComplexService {
 
 	void receiveNewBigMoveSpotDataMessage(String msg);
 
-	ModelAndView getBigMoveSummaryView();
+	ModelAndView getBigMoveSpotSummaryView();
 
 	GetBigMoveSummaryDataResult getBigMoveSummaryDataTable(GetBigMoveSummaryDataDTO dto);
 
@@ -20,5 +20,7 @@ public interface CryptoCoinDataComplexService {
 	ModelAndView getBigMoveDataChart(GetBigMoveSummaryDataDTO dto);
 
 	void receiveNewBigTradeFutureUmDataMessage(String msg);
+
+	ModelAndView getBigTradeDataChartBySymbol(String symbol);
 
 }

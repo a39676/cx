@@ -1,5 +1,13 @@
 crypto coin
 	CryptoCoinPriceCommonDataBO delete field coinType
+	big move 增加 spot / future UM / future CM 字段, 区分数据
+	update table crypto_coin_big_move
+		ALTER TABLE financeclear.crypto_coin_big_move ADD data_type INT NOT NULL;
+		ALTER TABLE financeclear.crypto_coin_big_move CHANGE data_type data_type INT NOT NULL AFTER event_time;
+	indexByModel
+		如果时间超出20日 改为 按日给出统计图
+		如果时间超出 N 日, 改为 按月给出统计图
+		
 	
 日历提醒的跳过本次提前提醒异常
 

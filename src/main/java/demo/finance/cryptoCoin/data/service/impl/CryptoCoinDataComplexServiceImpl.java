@@ -35,6 +35,7 @@ import demo.finance.cryptoCoin.mq.producer.CryptoCoinSetOrderProducer;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigMoveDataBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigMoveSummaryDataBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigTradeDataBO;
+import finance.cryptoCoin.pojo.type.CryptoCoinBigMoveDataType;
 import net.sf.json.JSONObject;
 import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.type.TelegramBotType;
@@ -51,12 +52,31 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 	private CryptoCoinSetOrderProducer cryptoCoinSetOrderProducer;
 
 	@Override
+	public ModelAndView getBigTradeDataChartBySymbol(String symbol) {
+		ModelAndView v = new ModelAndView("cryptoCoin/getBigTradeChartBySymbol");
+		
+		LocalDateTime now = LocalDateTime.now();
+		CryptoCoinBigTradeExample example = new CryptoCoinBigTradeExample();
+		example.createCriteria().andSymbolEqualTo(symbol).andEventTimeGreaterThanOrEqualTo(now.minusMinutes(180));
+		List<CryptoCoinBigTrade> dataList = cryptoCoinBigTradeMapper.selectByExample(example);
+		
+//		TODO
+		v.addObject("TODO", dataList);
+//		TODO
+
+		return v;
+	}
+
+	@Override
 	public void receiveNewBigTradeFutureUmDataMessage(String msg) {
 		if (StringUtils.isBlank(msg)) {
 			return;
 		}
 		CryptoCoinBigTradeDataBO bo = buildObjFromJsonCustomization(msg, CryptoCoinBigTradeDataBO.class);
 		if (StringUtils.isBlank(bo.getSymbol())) {
+			return;
+		}
+		if (CryptoCoinBigMoveDataType.getType(bo.getDataType()) == null) {
 			return;
 		}
 
@@ -70,7 +90,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		CryptoCoinBigTradeExample example = new CryptoCoinBigTradeExample();
 		example.createCriteria().andSymbolEqualTo(bo.getSymbol()).andEventTimeEqualTo(po.getEventTime())
 				.andAmountEqualTo(bo.getAmount()).andQuantityEqualTo(bo.getQuantity()).andPriceEqualTo(bo.getPrice())
-				.andIsMakerEqualTo(bo.getIsMaker());
+				.andIsMakerEqualTo(bo.getIsMaker()).andDataTypeEqualTo(bo.getDataType());
 		List<CryptoCoinBigTrade> oldDataList = cryptoCoinBigTradeMapper.selectByExample(example);
 		if (!oldDataList.isEmpty()) {
 			return;
@@ -81,6 +101,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		po.setQuantity(bo.getQuantity());
 		po.setIsMaker(bo.getIsMaker());
 		po.setSymbol(bo.getSymbol());
+		po.setDataType(bo.getDataType());
 
 		try {
 			cryptoCoinBigTradeMapper.insertSelective(po);
@@ -132,7 +153,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 	}
 
 	@Override
-	public ModelAndView getBigMoveSummaryView() {
+	public ModelAndView getBigMoveSpotSummaryView() {
 		ModelAndView v = new ModelAndView("cryptoCoin/getBigMoveSummaryByManual");
 		v.addObject("title", "getBigMoveSummaryByManual");
 

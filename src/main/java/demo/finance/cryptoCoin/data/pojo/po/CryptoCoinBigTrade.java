@@ -14,6 +14,8 @@ public class CryptoCoinBigTrade {
 
     private Boolean isMaker;
 
+    private Integer dataType;
+
     private LocalDateTime eventTime;
 
     private LocalDateTime createTime;
@@ -56,6 +58,14 @@ public class CryptoCoinBigTrade {
 
     public void setIsMaker(Boolean isMaker) {
         this.isMaker = isMaker;
+    }
+
+    public Integer getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(Integer dataType) {
+        this.dataType = dataType;
     }
 
     public LocalDateTime getEventTime() {

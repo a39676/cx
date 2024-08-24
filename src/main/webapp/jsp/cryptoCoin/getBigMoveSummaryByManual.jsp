@@ -158,7 +158,7 @@
     });
 
     function queryBigMoveData(){
-      var url = "/ct/bigMoveDataTable";
+      var url = "/ct/bigMoveSpotDataTable";
 
       var bigMoveDataQueryHourRangeStart = $("#bigMoveDataQueryHourRangeStart").val();
       var bigMoveDataQueryHourRangeEnd = $("#bigMoveDataQueryHourRangeEnd").val();
@@ -277,7 +277,7 @@
     });
 
     function queryBigMoveDataChart(){
-      var url = "/ct/bigMoveChartBySymbol";
+      var url = "/ct/bigMoveSpotChartBySymbol";
 
       var bigMoveDataQueryHourRangeStart = $("#bigMoveDataQueryHourRangeStart").val();
       var bigMoveDataQueryHourRangeEnd = $("#bigMoveDataQueryHourRangeEnd").val();
@@ -354,7 +354,7 @@
     });
 
     function updateMainChart(){
-      var url = "/ct/bigMoveChart";
+      var url = "/ct/bigMoveSpotChart";
 
       var bigMoveDataQueryHourRangeStart = $("#bigMoveDataQueryHourRangeStart").val();
       var bigMoveDataQueryHourRangeEnd = $("#bigMoveDataQueryHourRangeEnd").val();

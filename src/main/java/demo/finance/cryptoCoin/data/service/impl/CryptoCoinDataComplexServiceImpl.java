@@ -76,6 +76,9 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 			r += 3;
 			r *= 3;
 			vo.setR(r);
+			vo.setAmount(data.getAmount().doubleValue());
+			vo.setEventTime(localDateTimeHandler.dateToStr(data.getEventTime()));
+			vo.setQuantity(data.getQuantity().doubleValue());
 			if (data.getIsMaker()) {
 				saleList.add(vo);
 			} else {

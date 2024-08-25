@@ -2,7 +2,7 @@ package demo.finance.cryptoCoin.data.pojo.constant;
 
 public class CryptoCoinTestUrl {
 
-	public static final String ROOT = "/ct";
+	public static final String ROOT = "/cryptoCoinData";
 
 	public static final String BIG_MOVE_SPOT_VIEW = "/bigMoveSpot";
 

@@ -90,10 +90,10 @@
     <ul class="main-menu visible-on-click" id="cryptoCoinTool">
       <li style="background-color:yellow;">CryptoCoinTool</li>
       <li>
-        <a href="/ct/bigMoveSpot" target="_blank">bigMoveSpot</a>
+        <a href="/cryptoCoinData/bigMoveSpot" target="_blank">bigMoveSpot</a>
       </li>
       <li>
-        <a href="/ct/bigTradeFutureUmChartBySymbol" target="_blank">bigTradeFutureUmChartBySymbol</a>
+        <a href="/cryptoCoinData/bigTradeFutureUmChartBySymbol" target="_blank">bigTradeFutureUmChartBySymbol</a>
       </li>
       <li>
         <a href="/cryptoTrading/view" target="_blank">trading</a>

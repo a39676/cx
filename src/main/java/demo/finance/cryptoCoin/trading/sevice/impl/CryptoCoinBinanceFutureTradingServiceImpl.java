@@ -49,6 +49,7 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 	@Override
 	public ModelAndView tradingView() {
 		ModelAndView v = new ModelAndView("cryptoCoin/setFutureOrder");
+		v.addObject("title", "Binance trading(Future UM)");
 
 //		LocalDateTime defaultStartTime = LocalDateTime.now().minusHours(8);
 //

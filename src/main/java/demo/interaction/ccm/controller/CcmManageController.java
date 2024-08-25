@@ -23,6 +23,7 @@ public class CcmManageController {
 	@GetMapping(value = { "/", CcmManageUrl.HOME })
 	public ModelAndView home() {
 		ModelAndView v = new ModelAndView("cryptoCoin/ccmManager");
+		v.addObject("title", "CCM manager");
 		return v;
 	}
 

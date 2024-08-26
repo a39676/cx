@@ -1,8 +1,11 @@
 package demo.finance.cryptoCoin.common.service;
 
 import java.io.File;
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -14,6 +17,7 @@ import com.google.gson.Gson;
 
 import demo.common.service.CommonService;
 import demo.config.customComponent.OptionFilePathConfigurer;
+import net.sf.json.JSONObject;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -39,6 +43,8 @@ public class CryptoCoinOptionService extends CommonService {
 	private boolean binanceWebSocketTurnOn = true;
 
 	private List<String> binanceMainList;
+	private JSONObject binanceFutureUmSymbolBigStepJson = new JSONObject();
+	private Map<String, BigDecimal> binanceFutureUmSymbolBigStepMap = new HashMap<>();
 
 	@PostConstruct
 	public void refreshOption() {
@@ -51,6 +57,14 @@ public class CryptoCoinOptionService extends CommonService {
 			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.CRYPTO_COIN);
 			CryptoCoinOptionService tmp = new Gson().fromJson(jsonStr, CryptoCoinOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
+
+			@SuppressWarnings("unchecked")
+			Set<String> symbols = this.binanceFutureUmSymbolBigStepJson.keySet();
+			for (String symbol : symbols) {
+				this.binanceFutureUmSymbolBigStepMap.put(symbol,
+						new BigDecimal(this.binanceFutureUmSymbolBigStepJson.getString(symbol)));
+			}
+
 			log.error("crypto coin option loaded");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -162,6 +176,22 @@ public class CryptoCoinOptionService extends CommonService {
 		this.binanceMainList = binanceMainList;
 	}
 
+	public JSONObject getBinanceFutureUmSymbolBigStepJson() {
+		return binanceFutureUmSymbolBigStepJson;
+	}
+
+	public void setBinanceFutureUmSymbolBigStepJson(JSONObject binanceFutureUmSymbolBigStepJson) {
+		this.binanceFutureUmSymbolBigStepJson = binanceFutureUmSymbolBigStepJson;
+	}
+
+	public Map<String, BigDecimal> getBinanceFutureUmSymbolBigStepMap() {
+		return binanceFutureUmSymbolBigStepMap;
+	}
+
+	public void setBinanceFutureUmSymbolBigStepMap(Map<String, BigDecimal> binanceFutureUmSymbolBigStepMap) {
+		this.binanceFutureUmSymbolBigStepMap = binanceFutureUmSymbolBigStepMap;
+	}
+
 	@Override
 	public String toString() {
 		return "CryptoCoinOptionService [defaultCoinCatalog=" + defaultCoinCatalog + ", cryptoCompareApiDataMaxLength="
@@ -171,7 +201,9 @@ public class CryptoCoinOptionService extends CommonService {
 				+ scaleOfSharingCalculate + ", sharingCalculateResultSavingPath=" + sharingCalculateResultSavingPath
 				+ ", subscriptionSet=" + subscriptionSet + ", cryptoCompareWebSocketTurnOn="
 				+ cryptoCompareWebSocketTurnOn + ", binanceWebSocketTurnOn=" + binanceWebSocketTurnOn
-				+ ", binanceMainList=" + binanceMainList + "]";
+				+ ", binanceMainList=" + binanceMainList + ", binanceFutureUmSymbolBigStepJson="
+				+ binanceFutureUmSymbolBigStepJson + ", binanceFutureUmSymbolBigStepMap="
+				+ binanceFutureUmSymbolBigStepMap + "]";
 	}
 
 }

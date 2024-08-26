@@ -67,13 +67,14 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		List<CryptoCoinBigTradeBubbleChartVO> buyList = new ArrayList<>();
 		CryptoCoinBigTrade data = null;
 		CryptoCoinBigTradeBubbleChartVO vo = null;
+		BigDecimal bigStep = optionService.getBinanceFutureUmSymbolBigStepMap().get(symbol);
 		for (int i = 0; i < dataList.size(); i++) {
 			data = dataList.get(i);
 			vo = new CryptoCoinBigTradeBubbleChartVO();
 			vo.setPrice(data.getPrice().doubleValue());
 			Long timeGap = ChronoUnit.MINUTES.between(now, data.getEventTime());
 			vo.setTimeGap(timeGap.intValue());
-			int r = data.getAmount().divide(new BigDecimal(500000), 0, RoundingMode.HALF_UP).intValue();
+			int r = data.getAmount().divide(bigStep, 0, RoundingMode.HALF_UP).intValue();
 			r += 3;
 			r *= 3;
 			vo.setR(r);

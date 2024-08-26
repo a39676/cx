@@ -45,6 +45,7 @@ public class CryptoCoinOptionService extends CommonService {
 	private List<String> binanceMainList;
 	private JSONObject binanceFutureUmSymbolBigStepJson = new JSONObject();
 	private Map<String, BigDecimal> binanceFutureUmSymbolBigStepMap = new HashMap<>();
+	private BigDecimal bigTradeMinAmount = new BigDecimal(100000);
 
 	@PostConstruct
 	public void refreshOption() {
@@ -60,9 +61,16 @@ public class CryptoCoinOptionService extends CommonService {
 
 			@SuppressWarnings("unchecked")
 			Set<String> symbols = this.binanceFutureUmSymbolBigStepJson.keySet();
+			BigDecimal step = null;
 			for (String symbol : symbols) {
-				this.binanceFutureUmSymbolBigStepMap.put(symbol,
-						new BigDecimal(this.binanceFutureUmSymbolBigStepJson.getString(symbol)));
+				step = new BigDecimal(this.binanceFutureUmSymbolBigStepJson.getString(symbol));
+
+				if (step.compareTo(this.bigTradeMinAmount) < 0) {
+					this.binanceFutureUmSymbolBigStepMap.put(symbol, this.bigTradeMinAmount);
+				} else {
+					this.binanceFutureUmSymbolBigStepMap.put(symbol, step);
+				}
+
 			}
 
 			log.error("crypto coin option loaded");
@@ -192,6 +200,14 @@ public class CryptoCoinOptionService extends CommonService {
 		this.binanceFutureUmSymbolBigStepMap = binanceFutureUmSymbolBigStepMap;
 	}
 
+	public BigDecimal getBigTradeMinAmount() {
+		return bigTradeMinAmount;
+	}
+
+	public void setBigTradeMinAmount(BigDecimal bigTradeMinAmount) {
+		this.bigTradeMinAmount = bigTradeMinAmount;
+	}
+
 	@Override
 	public String toString() {
 		return "CryptoCoinOptionService [defaultCoinCatalog=" + defaultCoinCatalog + ", cryptoCompareApiDataMaxLength="
@@ -203,7 +219,7 @@ public class CryptoCoinOptionService extends CommonService {
 				+ cryptoCompareWebSocketTurnOn + ", binanceWebSocketTurnOn=" + binanceWebSocketTurnOn
 				+ ", binanceMainList=" + binanceMainList + ", binanceFutureUmSymbolBigStepJson="
 				+ binanceFutureUmSymbolBigStepJson + ", binanceFutureUmSymbolBigStepMap="
-				+ binanceFutureUmSymbolBigStepMap + "]";
+				+ binanceFutureUmSymbolBigStepMap + ", bigTradeMinAmount=" + bigTradeMinAmount + "]";
 	}
 
 }

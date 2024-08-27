@@ -237,6 +237,13 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 		dto.setSymbolGroupStr(dto.getSymbolGroupStr().replaceAll(" ", ""));
 
 		CryptoCoinSymbolGroupSettingDTO symbolGroupData = getSymbolGroupData();
+		for (int i = 0; i < symbolGroupData.getSettings().size(); i++) {
+			if (symbolGroupData.getSettings().get(i).getGroupName().equals(dto.getGroupName())) {
+				symbolGroupData.getSettings().remove(i);
+				i--;
+			}
+		}
+
 		CryptoCoinAddSymbolGroupDTO newSetting = new CryptoCoinAddSymbolGroupDTO();
 		newSetting.setGroupName(dto.getGroupName());
 		newSetting.setSymbolGroupStr(dto.getSymbolGroupStr());

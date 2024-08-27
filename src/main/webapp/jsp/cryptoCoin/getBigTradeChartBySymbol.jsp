@@ -16,6 +16,13 @@
 <body>
   <div>
     <div class="row">
+      <div class="col-md-12">
+        <label>${symbol}</label>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="row">
       <div class="col-md-1">
       </div>
       <div class="col-md-10">
@@ -44,7 +51,7 @@
     type: "bubble",
     data: {
       datasets: [{
-        label: 'Falling',
+        label: 'Sale',
         data: [
           <c:forEach items="${saleList}" var="subData" varStatus="loop">
             {
@@ -56,7 +63,7 @@
         ],
         backgroundColor: 'rgba(255, 99, 132, 0.6)'
       },{
-        label: 'Buying',
+        label: 'Buy',
         data: [
           <c:forEach items="${buyList}" var="subData" varStatus="loop">
             {

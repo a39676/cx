@@ -56,7 +56,8 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 	@Override
 	public ModelAndView getBigTradeDataChartBySymbol(String symbol) {
 		ModelAndView v = new ModelAndView("cryptoCoin/getBigTradeChartBySymbol");
-		v.addObject("title", "Big trade chart");
+		v.addObject("title", (symbol + ", Big trade"));
+		v.addObject("symbol", symbol);
 
 		LocalDateTime now = LocalDateTime.now();
 		CryptoCoinBigTradeExample example = new CryptoCoinBigTradeExample();

@@ -17,8 +17,8 @@ import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.type.TelegramBotType;
 
 @Component
-@RabbitListener(queues = CryptoCoinMQConstant.BIG_MOVE_SPOT_DATA)
-public class CryptoCoinBigMoveSpotDataReceiver extends CommonMessageQueueReceiverService {
+@RabbitListener(queues = CryptoCoinMQConstant.BIG_TRADE_DATA)
+public class CryptoCoinBigTradeDataReceiver extends CommonMessageQueueReceiverService {
 
 	@Autowired
 	private CryptoCoinDataComplexService cryptoCoinDataComplexService;
@@ -26,11 +26,11 @@ public class CryptoCoinBigMoveSpotDataReceiver extends CommonMessageQueueReceive
 	@RabbitHandler
 	public void process(String messageStr, Channel channel, Message message) throws IOException {
 		try {
-			cryptoCoinDataComplexService.receiveNewBigMoveSpotDataMessage(messageStr);
+			cryptoCoinDataComplexService.receiveNewBigTradeFutureUmDataMessage(messageStr);
 		} catch (Exception e) {
-			log.error("mq error, " + CryptoCoinMQConstant.BIG_MOVE_SPOT_DATA + ", e:" + e.getLocalizedMessage());
+			log.error("mq error, " + CryptoCoinMQConstant.BIG_TRADE_DATA + ", e:" + e.getLocalizedMessage());
 			telegramService.sendMessageByChatRecordId(TelegramBotType.CRYPTO_COIN_LOW_PRICE_NOTICE_BOT,
-					"Crypto big move (spot) data error: " + e.getLocalizedMessage() + ", msgStr: " + messageStr,
+					"Crypto big move (future UM) data error: " + e.getLocalizedMessage() + ", msgStr: " + messageStr,
 					TelegramStaticChatID.MY_ID);
 		}
 	}

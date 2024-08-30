@@ -11,44 +11,49 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.common.controller.CommonController;
-import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinTestUrl;
+import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinDataUrl;
 import demo.finance.cryptoCoin.data.pojo.dto.GetBigMoveSummaryDataDTO;
 import demo.finance.cryptoCoin.data.pojo.result.GetBigMoveSummaryDataResult;
 import demo.finance.cryptoCoin.data.service.CryptoCoinDataComplexService;
 
 @Controller
-@RequestMapping(value = CryptoCoinTestUrl.ROOT)
+@RequestMapping(value = CryptoCoinDataUrl.ROOT)
 public class CryptoCoinDataController extends CommonController {
 
 	@Autowired
 	private CryptoCoinDataComplexService cryptoCoinDataComplexService;
 
-	@GetMapping(value = CryptoCoinTestUrl.BIG_MOVE_SPOT_VIEW)
+	@GetMapping(value = CryptoCoinDataUrl.BIG_MOVE_SPOT_VIEW)
 	public ModelAndView getBigMoveSummaryView() {
 		return cryptoCoinDataComplexService.getBigMoveSpotSummaryView();
 	}
 
-	@PostMapping(value = CryptoCoinTestUrl.BIG_MOVE_SPOT_DATA_TABLE)
+	@PostMapping(value = CryptoCoinDataUrl.BIG_MOVE_SPOT_DATA_TABLE)
 	@ResponseBody
 	public GetBigMoveSummaryDataResult getBigMoveSummaryData(@RequestBody GetBigMoveSummaryDataDTO dto) {
 		return cryptoCoinDataComplexService.getBigMoveSummaryDataTable(dto);
 	}
 
-	@PostMapping(value = CryptoCoinTestUrl.BIG_MOVE_CHART)
+	@PostMapping(value = CryptoCoinDataUrl.BIG_MOVE_CHART)
 	@ResponseBody
 	public ModelAndView getBigMoveSummaryChart(@RequestBody GetBigMoveSummaryDataDTO dto) {
 		return cryptoCoinDataComplexService.getBigMoveDataChart(dto);
 	}
 
-	@PostMapping(value = CryptoCoinTestUrl.BIG_MOVE_CHART_BY_SYMBOL)
+	@PostMapping(value = CryptoCoinDataUrl.BIG_MOVE_CHART_BY_SYMBOL)
 	@ResponseBody
 	public ModelAndView getBigMoveSummaryChartBySymbol(@RequestBody GetBigMoveSummaryDataDTO dto) {
 		return cryptoCoinDataComplexService.getBigMoveDataChartBySymbol(dto);
 	}
 
-	@GetMapping(value = CryptoCoinTestUrl.BIG_TRADE_FUTURE_UM_CHART_BY_SYMBOL)
+	@GetMapping(value = CryptoCoinDataUrl.BIG_TRADE_FUTURE_UM_CHART_BY_SYMBOL)
 	public ModelAndView getBigMoveSummaryChartBySymbol(@RequestParam(name = "symbol") String symbol) {
 		return cryptoCoinDataComplexService.getBigTradeDataChartBySymbol(symbol);
 	}
-
+	
+	@GetMapping(value = CryptoCoinDataUrl.BIG_FORCE_ORDER_FUTURE_UM_CHART_BY_SYMBOL)
+	public ModelAndView getBigForceOrderDataChartBySymbol(@RequestParam(name = "symbol") String symbol) {
+		return cryptoCoinDataComplexService.getBigForceOrderDataChartBySymbol(symbol);
+	}
+	
 }

@@ -23,7 +23,7 @@
         	driverClass="com.mysql.cj.jdbc.Driver" 
         	connectionURL="jdbc:mysql://localhost:3306/financeclear?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC" 
         	userId="u1"
-        	password="test">    
+        	password="test">
         </jdbcConnection> 
            
         <javaTypeResolver>    
@@ -54,9 +54,9 @@
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="crypto_coin_big_trade">
-        	<property name="tableName" value="crypto_coin_big_trade"></property>
-        	<property name="domainObjectName" value="crypto_coin_big_trade"></property>
+        <table tableName="crypto_coin_big_force_order">
+        	<property name="tableName" value="crypto_coin_big_force_order"></property>
+        	<property name="domainObjectName" value="crypto_coin_big_force_order"></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

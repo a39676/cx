@@ -23,4 +23,8 @@ public interface CryptoCoinDataComplexService {
 
 	ModelAndView getBigTradeDataChartBySymbol(String symbol);
 
+	void receiveNewForceOrderFutureUmDataMessage(String msg);
+
+	ModelAndView getBigForceOrderDataChartBySymbol(String symbol);
+
 }

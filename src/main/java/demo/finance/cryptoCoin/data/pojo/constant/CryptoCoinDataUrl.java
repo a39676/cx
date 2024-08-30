@@ -1,6 +1,6 @@
 package demo.finance.cryptoCoin.data.pojo.constant;
 
-public class CryptoCoinTestUrl {
+public class CryptoCoinDataUrl {
 
 	public static final String ROOT = "/cryptoCoinData";
 
@@ -12,4 +12,5 @@ public class CryptoCoinTestUrl {
 	public static final String BIG_MOVE_CHART_BY_SYMBOL = "/bigMoveSpotChartBySymbol";
 
 	public static final String BIG_TRADE_FUTURE_UM_CHART_BY_SYMBOL = "/bigTradeFutureUmChartBySymbol";
+	public static final String BIG_FORCE_ORDER_FUTURE_UM_CHART_BY_SYMBOL = "/bigForceOrderFutureUmChartBySymbol";
 }

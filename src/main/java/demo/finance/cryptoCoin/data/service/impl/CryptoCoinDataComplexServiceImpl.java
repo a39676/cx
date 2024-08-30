@@ -19,11 +19,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
+import demo.finance.cryptoCoin.data.mapper.CryptoCoinBigForceOrderMapper;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinBigMoveMapper;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinBigTradeMapper;
 import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinBigMoveDailySummaryBO;
 import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinBigMoveSummaryBySymbolBO;
 import demo.finance.cryptoCoin.data.pojo.dto.GetBigMoveSummaryDataDTO;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigForceOrder;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigForceOrderExample;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigMove;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigMoveExample;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigMoveExample.Criteria;
@@ -34,6 +37,10 @@ import demo.finance.cryptoCoin.data.pojo.result.GetBigMoveSummaryDataResult;
 import demo.finance.cryptoCoin.data.pojo.vo.CryptoCoinBigTradeBubbleChartVO;
 import demo.finance.cryptoCoin.data.service.CryptoCoinDataComplexService;
 import demo.finance.cryptoCoin.mq.producer.CryptoCoinSetOrderProducer;
+import finance.cryptoCoin.binance.pojo.bo.CryptoCoinBinanceFutureUmForceOrderBO;
+import finance.cryptoCoin.binance.pojo.bo.CryptoCoinBinanceFutureUmForceOrderDetailBO;
+import finance.cryptoCoin.binance.pojo.type.BinanceOrderExecutionType;
+import finance.cryptoCoin.binance.pojo.type.BinanceOrderSideType;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigMoveDataBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigMoveSummaryDataBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigTradeDataBO;
@@ -49,6 +56,8 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 	private CryptoCoinBigMoveMapper cryptoCoinBigMoveMapper;
 	@Autowired
 	private CryptoCoinBigTradeMapper cryptoCoinBigTradeMapper;
+	@Autowired
+	private CryptoCoinBigForceOrderMapper cryptoCoinBigForceOrderMapper;
 	@SuppressWarnings("unused")
 	@Autowired
 	private CryptoCoinSetOrderProducer cryptoCoinSetOrderProducer;
@@ -83,6 +92,49 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 			vo.setEventTime(localDateTimeHandler.dateToStr(data.getEventTime()));
 			vo.setQuantity(data.getQuantity().doubleValue());
 			if (data.getIsMaker()) {
+				saleList.add(vo);
+			} else {
+				buyList.add(vo);
+			}
+		}
+
+		v.addObject("saleList", saleList);
+		v.addObject("buyList", buyList);
+
+		return v;
+	}
+
+	@Override
+	public ModelAndView getBigForceOrderDataChartBySymbol(String symbol) {
+		ModelAndView v = new ModelAndView("cryptoCoin/getBigTradeChartBySymbol");
+		v.addObject("title", (symbol + ", Big force order"));
+		v.addObject("symbol", symbol);
+
+		LocalDateTime now = LocalDateTime.now();
+		CryptoCoinBigForceOrderExample example = new CryptoCoinBigForceOrderExample();
+		example.createCriteria().andSymbolEqualTo(symbol).andEventTimeGreaterThanOrEqualTo(now.minusMinutes(180));
+		List<CryptoCoinBigForceOrder> dataList = cryptoCoinBigForceOrderMapper.selectByExample(example);
+
+		List<CryptoCoinBigTradeBubbleChartVO> saleList = new ArrayList<>();
+		List<CryptoCoinBigTradeBubbleChartVO> buyList = new ArrayList<>();
+		CryptoCoinBigForceOrder data = null;
+		CryptoCoinBigTradeBubbleChartVO vo = null;
+		BigDecimal bigStep = optionService.getBinanceFutureUmSymbolBigStepMap().get(symbol);
+		for (int i = 0; i < dataList.size(); i++) {
+			data = dataList.get(i);
+			vo = new CryptoCoinBigTradeBubbleChartVO();
+			vo.setPrice(data.getPrice().doubleValue());
+			Long timeGap = ChronoUnit.MINUTES.between(now, data.getEventTime());
+			vo.setTimeGap(timeGap.intValue());
+			int r = data.getAmount().divide(bigStep, 0, RoundingMode.HALF_UP).intValue();
+			r += 3;
+			r *= 3;
+			vo.setR(r);
+			vo.setAmount(data.getAmount().doubleValue());
+			vo.setEventTime(localDateTimeHandler.dateToStr(data.getEventTime()));
+			vo.setQuantity(data.getQuantity().doubleValue());
+
+			if (BinanceOrderSideType.SELL.getCode() == data.getOrderSide()) {
 				saleList.add(vo);
 			} else {
 				buyList.add(vo);
@@ -674,5 +726,62 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		String msg = "Big move data rising cross result: " + String.valueOf(risingResult) + ", \n"
 				+ "falling cross result: " + fallingResult;
 		telegramService.sendMessageByChatRecordId(TelegramBotType.NORMAL_MSG, msg, TelegramStaticChatID.MY_ID);
+	}
+
+	@Override
+	public void receiveNewForceOrderFutureUmDataMessage(String msg) {
+		if (StringUtils.isBlank(msg)) {
+			return;
+		}
+		CryptoCoinBinanceFutureUmForceOrderBO bo = buildObjFromJsonCustomization(msg,
+				CryptoCoinBinanceFutureUmForceOrderBO.class);
+		if (bo.getDetail() == null) {
+			return;
+		}
+		CryptoCoinBinanceFutureUmForceOrderDetailBO detail = bo.getDetail();
+		if (StringUtils.isBlank(detail.getSymbol())) {
+			return;
+		}
+		BinanceOrderExecutionType executionType = BinanceOrderExecutionType.getType(detail.getExecutionTypeCode());
+		if (!BinanceOrderExecutionType.FILLED.equals(executionType)) {
+			// save filled order ONLY
+			return;
+		}
+		BigDecimal minBigTrade = optionService.getBinanceFutureUmSymbolBigStepMap().get(detail.getSymbol());
+		if (minBigTrade == null) {
+			return;
+		}
+		if (detail.getOrderPrice().multiply(detail.getQuantity()).compareTo(minBigTrade) < 0) {
+			return;
+		}
+
+		CryptoCoinBigForceOrder po = new CryptoCoinBigForceOrder();
+
+		try {
+			po.setEventTime(localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(bo.getEventName()));
+		} catch (Exception e) {
+			return;
+		}
+		CryptoCoinBigForceOrderExample example = new CryptoCoinBigForceOrderExample();
+		example.createCriteria().andSymbolEqualTo(detail.getSymbol()).andEventTimeEqualTo(po.getEventTime())
+				.andOrderSideEqualTo(detail.getOrderSideCode()).andQuantityEqualTo(detail.getQuantity())
+				.andPriceEqualTo(detail.getOrderPrice());
+
+		List<CryptoCoinBigForceOrder> oldDataList = cryptoCoinBigForceOrderMapper.selectByExample(example);
+		if (!oldDataList.isEmpty()) {
+			return;
+		}
+
+		po.setAmount(detail.getAvgPrice().multiply(detail.getQuantity()));
+		po.setPrice(detail.getAvgPrice());
+		po.setQuantity(detail.getQuantity());
+		po.setOrderSide(detail.getOrderSideCode());
+		po.setSymbol(detail.getSymbol());
+
+		try {
+			cryptoCoinBigForceOrderMapper.insertSelective(po);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

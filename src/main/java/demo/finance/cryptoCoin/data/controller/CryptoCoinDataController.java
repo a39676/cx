@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.common.controller.CommonController;
 import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinDataUrl;
+import demo.finance.cryptoCoin.data.pojo.dto.CryptoCoinBigTradeQueryDTO;
 import demo.finance.cryptoCoin.data.pojo.dto.GetBigMoveSummaryDataDTO;
 import demo.finance.cryptoCoin.data.pojo.result.GetBigMoveSummaryDataResult;
 import demo.finance.cryptoCoin.data.service.CryptoCoinDataComplexService;
@@ -47,13 +47,23 @@ public class CryptoCoinDataController extends CommonController {
 	}
 
 	@GetMapping(value = CryptoCoinDataUrl.BIG_TRADE_FUTURE_UM_CHART_BY_SYMBOL)
-	public ModelAndView getBigMoveSummaryChartBySymbol(@RequestParam(name = "symbol") String symbol) {
-		return cryptoCoinDataComplexService.getBigTradeDataChartBySymbol(symbol);
+	public ModelAndView getBigMoveSummaryChartBySymbol() {
+		return cryptoCoinDataComplexService.getBigTradeDataChartBySymbol();
 	}
-	
+
+	@PostMapping(value = CryptoCoinDataUrl.BIG_TRADE_FUTURE_UM_CHART_BY_SYMBOL)
+	public ModelAndView getBigMoveSummaryChartBySymbol(@RequestBody CryptoCoinBigTradeQueryDTO dto) {
+		return cryptoCoinDataComplexService.getBigTradeDataChartBySymbol(dto);
+	}
+
 	@GetMapping(value = CryptoCoinDataUrl.BIG_FORCE_ORDER_FUTURE_UM_CHART_BY_SYMBOL)
-	public ModelAndView getBigForceOrderDataChartBySymbol(@RequestParam(name = "symbol") String symbol) {
-		return cryptoCoinDataComplexService.getBigForceOrderDataChartBySymbol(symbol);
+	public ModelAndView getBigForceOrderDataChartBySymbol() {
+		return cryptoCoinDataComplexService.getBigForceOrderDataChartBySymbol();
 	}
-	
+
+	@PostMapping(value = CryptoCoinDataUrl.BIG_FORCE_ORDER_FUTURE_UM_CHART_BY_SYMBOL)
+	public ModelAndView getBigForceOrderDataChartBySymbol(@RequestBody CryptoCoinBigTradeQueryDTO dto) {
+		return cryptoCoinDataComplexService.getBigForceOrderDataChartBySymbol(dto);
+	}
+
 }

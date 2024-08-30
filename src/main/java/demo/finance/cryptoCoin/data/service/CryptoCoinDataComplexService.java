@@ -2,6 +2,7 @@ package demo.finance.cryptoCoin.data.service;
 
 import org.springframework.web.servlet.ModelAndView;
 
+import demo.finance.cryptoCoin.data.pojo.dto.CryptoCoinBigTradeQueryDTO;
 import demo.finance.cryptoCoin.data.pojo.dto.GetBigMoveSummaryDataDTO;
 import demo.finance.cryptoCoin.data.pojo.result.GetBigMoveSummaryDataResult;
 
@@ -21,10 +22,16 @@ public interface CryptoCoinDataComplexService {
 
 	void receiveNewBigTradeFutureUmDataMessage(String msg);
 
-	ModelAndView getBigTradeDataChartBySymbol(String symbol);
+	ModelAndView getBigTradeDataChartBySymbol();
 
+	ModelAndView getBigTradeDataChartBySymbol(CryptoCoinBigTradeQueryDTO dto);
+	
 	void receiveNewForceOrderFutureUmDataMessage(String msg);
 
-	ModelAndView getBigForceOrderDataChartBySymbol(String symbol);
+	ModelAndView getBigForceOrderDataChartBySymbol();
+
+	ModelAndView getBigForceOrderDataChartBySymbol(CryptoCoinBigTradeQueryDTO dto);
+
+	
 
 }

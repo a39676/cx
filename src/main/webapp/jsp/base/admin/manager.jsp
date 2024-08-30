@@ -93,10 +93,10 @@
         <a href="/cryptoCoinData/bigMoveSpot" target="_blank">bigMoveSpot</a>
       </li>
       <li>
-        <a href="/cryptoCoinData/bigTradeFutureUmChartBySymbol?symbol=ETHUSDT" target="_blank">bigTradeFutureUmChartBySymbol(ETH)</a>
+        <a href="/cryptoCoinData/bigTradeFutureUmChartBySymbol" target="_blank">bigTradeFutureUmChartBySymbol</a>
       </li>
       <li>
-        <a href="/cryptoCoinData/bigForceOrderFutureUmChartBySymbol?symbol=ETHUSDT" target="_blank">bigForceOrderFutureUmChartBySymbol(ETH)</a>
+        <a href="/cryptoCoinData/bigForceOrderFutureUmChartBySymbol" target="_blank">bigForceOrderFutureUmChartBySymbol</a>
       </li>
       <li>
         <a href="/cryptoTrading/view" target="_blank">trading</a>

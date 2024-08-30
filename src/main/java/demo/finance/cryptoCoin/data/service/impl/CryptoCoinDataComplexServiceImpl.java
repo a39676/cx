@@ -24,6 +24,8 @@ import demo.finance.cryptoCoin.data.mapper.CryptoCoinBigMoveMapper;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinBigTradeMapper;
 import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinBigMoveDailySummaryBO;
 import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinBigMoveSummaryBySymbolBO;
+import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinDataUrl;
+import demo.finance.cryptoCoin.data.pojo.dto.CryptoCoinBigTradeQueryDTO;
 import demo.finance.cryptoCoin.data.pojo.dto.GetBigMoveSummaryDataDTO;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigForceOrder;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigForceOrderExample;
@@ -63,21 +65,31 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 	private CryptoCoinSetOrderProducer cryptoCoinSetOrderProducer;
 
 	@Override
-	public ModelAndView getBigTradeDataChartBySymbol(String symbol) {
+	public ModelAndView getBigTradeDataChartBySymbol() {
+		ModelAndView v = new ModelAndView("cryptoCoin/bigTradeChartBySymbolView");
+		v.addObject("title", "Big trade");
+		v.addObject("targetUrl", CryptoCoinDataUrl.BIG_TRADE_FUTURE_UM_CHART_BY_SYMBOL);
+		return v;
+	}
+
+	@Override
+	public ModelAndView getBigTradeDataChartBySymbol(CryptoCoinBigTradeQueryDTO dto) {
 		ModelAndView v = new ModelAndView("cryptoCoin/getBigTradeChartBySymbol");
-		v.addObject("title", (symbol + ", Big trade"));
-		v.addObject("symbol", symbol);
+		v.addObject("title", (dto.getSymbol() + ", Big trade"));
+		v.addObject("symbol", dto.getSymbol());
 
 		LocalDateTime now = LocalDateTime.now();
 		CryptoCoinBigTradeExample example = new CryptoCoinBigTradeExample();
-		example.createCriteria().andSymbolEqualTo(symbol).andEventTimeGreaterThanOrEqualTo(now.minusMinutes(180));
+		example.createCriteria().andSymbolEqualTo(dto.getSymbol())
+				.andEventTimeGreaterThanOrEqualTo(now.minusHours(dto.getStart()))
+				.andEventTimeLessThanOrEqualTo(now.minusHours(dto.getEnd()));
 		List<CryptoCoinBigTrade> dataList = cryptoCoinBigTradeMapper.selectByExample(example);
 
 		List<CryptoCoinBigTradeBubbleChartVO> saleList = new ArrayList<>();
 		List<CryptoCoinBigTradeBubbleChartVO> buyList = new ArrayList<>();
 		CryptoCoinBigTrade data = null;
 		CryptoCoinBigTradeBubbleChartVO vo = null;
-		BigDecimal bigStep = optionService.getBinanceFutureUmSymbolBigStepMap().get(symbol);
+		BigDecimal bigStep = optionService.getBinanceFutureUmSymbolBigStepMap().get(dto.getSymbol());
 		for (int i = 0; i < dataList.size(); i++) {
 			data = dataList.get(i);
 			vo = new CryptoCoinBigTradeBubbleChartVO();
@@ -105,21 +117,30 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 	}
 
 	@Override
-	public ModelAndView getBigForceOrderDataChartBySymbol(String symbol) {
+	public ModelAndView getBigForceOrderDataChartBySymbol() {
+		ModelAndView v = new ModelAndView("cryptoCoin/bigTradeChartBySymbolView");
+		v.addObject("targetUrl", CryptoCoinDataUrl.BIG_FORCE_ORDER_FUTURE_UM_CHART_BY_SYMBOL);
+		return v;
+	}
+
+	@Override
+	public ModelAndView getBigForceOrderDataChartBySymbol(CryptoCoinBigTradeQueryDTO dto) {
 		ModelAndView v = new ModelAndView("cryptoCoin/getBigTradeChartBySymbol");
-		v.addObject("title", (symbol + ", Big force order"));
-		v.addObject("symbol", symbol);
+		v.addObject("title", "Big force order");
+		v.addObject("symbol", dto.getSymbol());
 
 		LocalDateTime now = LocalDateTime.now();
 		CryptoCoinBigForceOrderExample example = new CryptoCoinBigForceOrderExample();
-		example.createCriteria().andSymbolEqualTo(symbol).andEventTimeGreaterThanOrEqualTo(now.minusMinutes(180));
+		example.createCriteria().andSymbolEqualTo(dto.getSymbol())
+				.andEventTimeGreaterThanOrEqualTo(now.minusHours(dto.getStart()))
+				.andEventTimeLessThanOrEqualTo(now.minusHours(dto.getEnd()));
 		List<CryptoCoinBigForceOrder> dataList = cryptoCoinBigForceOrderMapper.selectByExample(example);
 
 		List<CryptoCoinBigTradeBubbleChartVO> saleList = new ArrayList<>();
 		List<CryptoCoinBigTradeBubbleChartVO> buyList = new ArrayList<>();
 		CryptoCoinBigForceOrder data = null;
 		CryptoCoinBigTradeBubbleChartVO vo = null;
-		BigDecimal bigStep = optionService.getBinanceFutureUmSymbolBigStepMap().get(symbol);
+		BigDecimal bigStep = optionService.getBinanceFutureUmSymbolBigStepMap().get(dto.getSymbol());
 		for (int i = 0; i < dataList.size(); i++) {
 			data = dataList.get(i);
 			vo = new CryptoCoinBigTradeBubbleChartVO();

@@ -35,13 +35,20 @@
           placeholder="dataQueryHourRangeEnd" value="0">
         <input type="text" id="symbol" style="width: 100px;" 
           placeholder="symbol">
-        <button id="submit">submit</button>
+        <button id="submitForBubble">submitForBubble</button>
+        <button id="submitForLine">submitForLine</button>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-12">
-        <div id="chartDiv"></div>
+        <div id="bubbleChartDiv"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div id="lineChartDiv"></div>
       </div>
     </div>
   </div>
@@ -58,12 +65,12 @@
 <script type="text/javascript">
 
   $(document).ready(function() {
-    $("#submit").click(function () {
-      queryData();
+    $("#submitForLine").click(function () {
+      queryLineData();
     });
 
-    function queryData(){
-      var url = "/cryptoCoinData${targetUrl}";
+    function queryLineData(){
+      var url = "/cryptoCoinData${lineChartUrl}";
 
       var dataQueryHourRangeStart = $("#dataQueryHourRangeStart").val();
       var dataQueryHourRangeEnd = $("#dataQueryHourRangeEnd").val();
@@ -75,7 +82,7 @@
         symbol:symbol,
       };
 
-      $("#chartDiv").html("");
+      $("#lineChartDiv").html("");
       $.ajax({
         type : "POST",
         async : true,
@@ -89,14 +96,52 @@
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          $("#chartDiv").html(datas);
+          $("#lineChartDiv").html(datas);
         },
         error: function(datas) {            
         }
       });
     }
-  });
 
+    $("#submitForBubble").click(function () {
+      queryBubbleData();
+    });
+
+    function queryBubbleData(){
+      var url = "/cryptoCoinData${bubbleChartUrl}";
+
+      var dataQueryHourRangeStart = $("#dataQueryHourRangeStart").val();
+      var dataQueryHourRangeEnd = $("#dataQueryHourRangeEnd").val();
+      var symbol = $("#symbol").val();
+
+      var jsonOutput = {
+        start:dataQueryHourRangeStart,
+        end:dataQueryHourRangeEnd,
+        symbol:symbol,
+      };
+
+      $("#bubbleChartDiv").html("");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        <%-- dataType: "json", --%>
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          $("#bubbleChartDiv").html(datas);
+        },
+        error: function(datas) {            
+        }
+      });
+    }
+
+  });
 </script>
 
 <script type="text/javascript">
@@ -119,7 +164,6 @@
     $("#twoWeeks").click(function () {
       setHourRange(336, 0);
     });
-    
     
     function setHourRange(start, end) {
       $("#dataQueryHourRangeStart").val(start);

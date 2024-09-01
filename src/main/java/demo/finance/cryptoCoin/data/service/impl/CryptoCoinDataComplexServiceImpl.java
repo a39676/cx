@@ -65,16 +65,17 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 	private CryptoCoinSetOrderProducer cryptoCoinSetOrderProducer;
 
 	@Override
-	public ModelAndView getBigTradeDataChartBySymbol() {
+	public ModelAndView getBigTradeDataBubbleChartBySymbol() {
 		ModelAndView v = new ModelAndView("cryptoCoin/bigTradeChartBySymbolView");
 		v.addObject("title", "Big trade");
-		v.addObject("targetUrl", CryptoCoinDataUrl.BIG_TRADE_FUTURE_UM_CHART_BY_SYMBOL);
+		v.addObject("bubbleChartUrl", CryptoCoinDataUrl.BIG_TRADE_FUTURE_UM_BUBBLE_CHART_BY_SYMBOL);
+		v.addObject("lineChartUrl", CryptoCoinDataUrl.BIG_TRADE_FUTURE_UM_LINE_CHART_BY_SYMBOL);
 		return v;
 	}
 
 	@Override
-	public ModelAndView getBigTradeDataChartBySymbol(CryptoCoinBigTradeQueryDTO dto) {
-		ModelAndView v = new ModelAndView("cryptoCoin/getBigTradeChartBySymbol");
+	public ModelAndView getBigTradeBubbleChartBySymbol(CryptoCoinBigTradeQueryDTO dto) {
+		ModelAndView v = new ModelAndView("cryptoCoin/getBigTradeBubbleChartBySymbol");
 		v.addObject("title", (dto.getSymbol() + ", Big trade"));
 		v.addObject("symbol", dto.getSymbol());
 
@@ -117,8 +118,95 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 	}
 
 	@Override
+	public ModelAndView getBigTradeLineChartBySymbol(CryptoCoinBigTradeQueryDTO dto) {
+		ModelAndView v = new ModelAndView("cryptoCoin/getBigTradeLineChartBySymbol");
+		v.addObject("title", (dto.getSymbol() + ", Big trade"));
+		v.addObject("symbol", dto.getSymbol());
+
+		LocalDateTime now = LocalDateTime.now().withMinute(0).withSecond(0).withNano(0);
+		LocalDateTime startTime = now.minusHours(dto.getStart());
+		LocalDateTime endTime = now.minusHours(dto.getEnd());
+		CryptoCoinBigTradeExample example = new CryptoCoinBigTradeExample();
+		example.createCriteria().andSymbolEqualTo(dto.getSymbol()).andEventTimeGreaterThanOrEqualTo(startTime)
+				.andEventTimeLessThanOrEqualTo(endTime);
+		List<CryptoCoinBigTrade> dataList = cryptoCoinBigTradeMapper.selectByExample(example);
+
+		// for debug
+//		BigDecimal total = BigDecimal.ZERO;
+//		for (CryptoCoinBigTrade data : dataList) {
+//			if (data.getIsMaker()) {
+//				total = total.add(data.getAmount().negate());
+//			} else {
+//				total = total.add(data.getAmount());
+//			}
+//		}
+//		System.out.println(total);
+
+		List<String> timeStringXLine = new ArrayList<>();
+		LocalDateTime indexTime = now.minusHours(dto.getStart());
+		for (int i = 0; !indexTime.isAfter(endTime); i++) {
+			indexTime = startTime.plusHours(i);
+			timeStringXLine.add(localDateTimeHandler.dateToStr(indexTime, DATE_FORMAT_FOR_INDEX_CHART_IN_HOUR));
+		}
+
+		v.addObject("xValues", timeStringXLine);
+
+		Map<LocalDateTime, CryptoCoinBigTrade> summaryDataMap = new HashMap<>();
+		for (int i = 0; i < dataList.size(); i++) {
+			CryptoCoinBigTrade dataInList = dataList.get(i);
+			CryptoCoinBigTrade dataInMap = summaryDataMap
+					.get(dataInList.getEventTime().withMinute(0).withSecond(0).withNano(0));
+
+			if (dataInMap == null) {
+				dataInMap = new CryptoCoinBigTrade();
+				dataInMap.setIsMaker(dataInList.getIsMaker());
+				if (dataInList.getIsMaker()) {
+					dataInMap.setAmount(dataInList.getAmount().negate());
+				} else {
+					dataInMap.setAmount(dataInList.getAmount());
+				}
+				summaryDataMap.put(dataInList.getEventTime().withMinute(0).withSecond(0).withNano(0), dataInMap);
+			} else {
+				if (dataInList.getIsMaker()) {
+					dataInMap.setAmount(dataInMap.getAmount().subtract(dataInList.getAmount()));
+				} else {
+					dataInMap.setAmount(dataInMap.getAmount().add(dataInList.getAmount()));
+				}
+			}
+		}
+		
+//		for debug
+//		total = BigDecimal.ZERO;
+//		for(Entry<LocalDateTime, CryptoCoinBigTrade> dataInMap : summaryDataMap.entrySet()) {
+//			CryptoCoinBigTrade data = dataInMap.getValue();
+//			total = total.add(data.getAmount());
+//		}
+//		System.out.println(total);
+		
+		List<BigDecimal> totalList = new ArrayList<>();
+		indexTime = now.minusHours(dto.getStart());
+		BigDecimal lastAmount = BigDecimal.ZERO;
+		for (int i = 0; !indexTime.isAfter(endTime); i++) {
+			indexTime = startTime.plusHours(i);
+			CryptoCoinBigTrade dataInMap = summaryDataMap.get(indexTime);
+			if (dataInMap == null) {
+				totalList.add(lastAmount);
+			} else {
+				BigDecimal amount = dataInMap.getAmount();
+				lastAmount = lastAmount.add(amount);
+				totalList.add(lastAmount);
+			}
+		}
+
+		v.addObject("line", totalList);
+
+		return v;
+	}
+
+	@Override
 	public ModelAndView getBigForceOrderDataChartBySymbol() {
 		ModelAndView v = new ModelAndView("cryptoCoin/bigTradeChartBySymbolView");
+		v.addObject("title", "Big force order");
 		v.addObject("targetUrl", CryptoCoinDataUrl.BIG_FORCE_ORDER_FUTURE_UM_CHART_BY_SYMBOL);
 		return v;
 	}

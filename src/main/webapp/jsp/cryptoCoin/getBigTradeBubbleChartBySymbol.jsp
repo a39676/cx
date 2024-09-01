@@ -26,7 +26,7 @@
       <div class="col-md-1">
       </div>
       <div class="col-md-10">
-        <canvas id="bigMoveBySymbomCountingChart" style="width:100%;"></canvas>
+        <canvas id="bigTradeBubbleChart" style="width:100%;"></canvas>
       </div>
       <div class="col-md-1">
       </div>
@@ -47,7 +47,7 @@
 
 <script type="text/javascript">
 
-  new Chart("bigMoveBySymbomCountingChart", {
+  new Chart("bigTradeBubbleChart", {
     type: "bubble",
     data: {
       datasets: [{

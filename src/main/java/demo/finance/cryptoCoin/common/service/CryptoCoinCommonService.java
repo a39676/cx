@@ -34,6 +34,9 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 	protected static final int SCALE_FOR_RATE_DISPLAY = 2;
 	protected static final int SCALE_FOR_RATE_CALCULATE = 4;
 	protected static final int BINANCE_BIG_CAP_GROUP_ID = 1;
+	protected static final String DATE_FORMAT_FOR_INDEX_CHART_IN_HOUR = "MM-dd HH:mm";
+	protected static final String DATE_FORMAT_FOR_INDEX_CHART_IN_DAY = "MM-dd";
+
 	
 	protected CryptoCoinPriceCommonDataBO mergerData(CryptoCoinPriceCommonDataBO resultTarget,
 			CryptoCoinPriceCommonDataBO otherData) {

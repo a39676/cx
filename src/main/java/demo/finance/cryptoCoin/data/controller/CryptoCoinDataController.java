@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -47,15 +48,15 @@ public class CryptoCoinDataController extends CommonController {
 	}
 
 	@GetMapping(value = CryptoCoinDataUrl.BIG_TRADE_FUTURE_UM_CHART_BY_SYMBOL)
-	public ModelAndView getBigMoveSummaryChartBySymbol() {
-		return cryptoCoinDataComplexService.getBigTradeDataBubbleChartBySymbol();
+	public ModelAndView getBigMoveSummaryChartBySymbol(@RequestParam(name = "symbol", required = false) String symbol) {
+		return cryptoCoinDataComplexService.getBigTradeDataBubbleChartBySymbol(symbol);
 	}
 
 	@PostMapping(value = CryptoCoinDataUrl.BIG_TRADE_FUTURE_UM_BUBBLE_CHART_BY_SYMBOL)
 	public ModelAndView getBigTradeBubbleChartBySymbol(@RequestBody CryptoCoinBigTradeQueryDTO dto) {
 		return cryptoCoinDataComplexService.getBigTradeBubbleChartBySymbol(dto);
 	}
-	
+
 	@PostMapping(value = CryptoCoinDataUrl.BIG_TRADE_FUTURE_UM_LINE_CHART_BY_SYMBOL)
 	public ModelAndView getBigTradeLineChartBySymbol(@RequestBody CryptoCoinBigTradeQueryDTO dto) {
 		return cryptoCoinDataComplexService.getBigTradeLineChartBySymbol(dto);

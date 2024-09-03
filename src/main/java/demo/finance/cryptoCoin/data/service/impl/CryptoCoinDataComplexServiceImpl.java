@@ -65,11 +65,14 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 	private static final String FORCE_ORDER_TOTAL_KEY = "allTotal";
 
 	@Override
-	public ModelAndView getBigTradeDataBubbleChartBySymbol() {
+	public ModelAndView getBigTradeDataBubbleChartBySymbol(String symbol) {
 		ModelAndView v = new ModelAndView("cryptoCoin/bigTradeChartBySymbolView");
 		v.addObject("title", "Big trade");
 		v.addObject("bubbleChartUrl", CryptoCoinDataUrl.BIG_TRADE_FUTURE_UM_BUBBLE_CHART_BY_SYMBOL);
 		v.addObject("lineChartUrl", CryptoCoinDataUrl.BIG_TRADE_FUTURE_UM_LINE_CHART_BY_SYMBOL);
+		if (StringUtils.isNotBlank(symbol)) {
+			v.addObject("preSetSymbol", symbol);
+		}
 		return v;
 	}
 

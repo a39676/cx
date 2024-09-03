@@ -2,6 +2,7 @@ package demo.finance.cryptoCoin.common.service;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import demo.common.service.CommonService;
 import demo.config.customComponent.OptionFilePathConfigurer;
@@ -55,7 +57,8 @@ public class CryptoCoinOptionService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.CRYPTO_COIN);
-			CryptoCoinOptionService tmp = new Gson().fromJson(jsonStr, CryptoCoinOptionService.class);
+			Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, localDateTimeAdapter).create();
+			CryptoCoinOptionService tmp = gson.fromJson(jsonStr, CryptoCoinOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
 
 			BigDecimal step = null;

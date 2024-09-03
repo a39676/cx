@@ -72,6 +72,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		v.addObject("lineChartUrl", CryptoCoinDataUrl.BIG_TRADE_FUTURE_UM_LINE_CHART_BY_SYMBOL);
 		if (StringUtils.isNotBlank(symbol)) {
 			v.addObject("preSetSymbol", symbol);
+			v.addObject("title", "Big trade" + symbol);
 		}
 		return v;
 	}

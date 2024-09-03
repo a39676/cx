@@ -34,9 +34,9 @@
         <input type="number" id="dataQueryHourRangeEnd" style="width: 60px;" 
           placeholder="dataQueryHourRangeEnd" value="0">
         <input type="text" id="symbol" style="width: 100px;" 
-          placeholder="symbol">
-        <button id="submitForBubble">submitForBubble</button>
+          placeholder="symbol" value="${preSetSymbol}">
         <button id="submitForLine">submitForLine</button>
+        <button id="submitForBubble">submitForBubble</button>
       </div>
     </div>
 

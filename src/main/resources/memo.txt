@@ -9,9 +9,6 @@ crypto coin
 		add
 			force order level
 			"hour" : minimum amount
-	CryptoCoinDataController.getBigMoveSummaryChartBySymbol
-		set default symbol from URL
-			JSP update
 		
 		
 		

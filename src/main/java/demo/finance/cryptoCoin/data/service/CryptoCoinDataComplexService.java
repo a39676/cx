@@ -34,4 +34,6 @@ public interface CryptoCoinDataComplexService {
 
 	ModelAndView getBigForceOrderDataChartBySymbol(CryptoCoinBigTradeQueryDTO dto);
 
+	void checkMostRecentForceOrderSummary();
+
 }

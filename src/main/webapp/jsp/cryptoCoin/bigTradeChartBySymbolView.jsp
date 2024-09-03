@@ -42,15 +42,16 @@
 
     <div class="row">
       <div class="col-md-12">
-        <div id="bubbleChartDiv"></div>
+        <div id="lineChartDiv"></div>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-12">
-        <div id="lineChartDiv"></div>
+        <div id="bubbleChartDiv"></div>
       </div>
     </div>
+    
   </div>
 
 

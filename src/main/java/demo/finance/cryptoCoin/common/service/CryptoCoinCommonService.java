@@ -24,8 +24,6 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 	@Autowired
 	protected RedisTemplate<String, Object> redisTemplate;
 	@Autowired
-	protected CryptoCoinConstantService constantService;
-	@Autowired
 	protected CryptoCoinOptionService optionService;
 
 	protected static final CurrencyTypeForCryptoCoin defaultCyrrencyTypeForCryptoCoin = CurrencyTypeForCryptoCoin.USDT;

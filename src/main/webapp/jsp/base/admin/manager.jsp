@@ -105,22 +105,7 @@
         <a href="/cryptoCoin/insertCryptoCoinNoticeSetting" target="_blank">insertCryptoCoinNoticeSetting</a>
       </li>
       <li>
-        <a href="/cryptoCoinManager/checkDataAPI" target="_blank">checkDataAPI</a>
-      </li>
-      <li>
         <a href="/cryptoCoin/dataCompare/CryptoCoinDailyDataComparetor" target="_blank">CryptoCoinDailyDataComparetor</a>
-      </li>
-      <li>
-        <a href="/cryptoCoinManager/cryptoCoinWebSocketManager" target="_blank">cryptoCoinWebSocketManager</a>
-      </li>
-      <li>
-        <a href="/cryptoCoinManager/getDailyDataWaitingQuerySet" target="_blank">getDailyDataWaitingQuerySet</a>
-      </li>
-      <li>
-        <a href="/cryptoCoinManager/resetDailyDataWaitingQuerySet" target="_blank">resetDailyDataWaitingQuerySet</a>
-      </li>
-      <li>
-        <a href="/cryptoCoinManager/sendAllCryptoCoinDailyDataQueryMsg" target="_blank">sendAllCryptoCoinDailyDataQueryMsg</a>
       </li>
       <li>
         <a href="/cryptoCoinSharingCalculate/home" target="_blank">Sharing manager</a>

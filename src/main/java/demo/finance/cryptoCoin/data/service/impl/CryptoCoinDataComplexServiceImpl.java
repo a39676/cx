@@ -26,6 +26,7 @@ import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinBigMoveDailySummaryBO;
 import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinBigMoveSummaryBySymbolBO;
 import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinDataUrl;
 import demo.finance.cryptoCoin.data.pojo.dto.CryptoCoinBigTradeQueryDTO;
+import demo.finance.cryptoCoin.data.pojo.dto.CryptoCoinForceOrderSummaryDTO;
 import demo.finance.cryptoCoin.data.pojo.dto.GetBigMoveSummaryDataDTO;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigForceOrder;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigForceOrderExample;
@@ -38,7 +39,6 @@ import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinFilterBigMoveDataInTim
 import demo.finance.cryptoCoin.data.pojo.result.GetBigMoveSummaryDataResult;
 import demo.finance.cryptoCoin.data.pojo.vo.CryptoCoinBigTradeBubbleChartVO;
 import demo.finance.cryptoCoin.data.service.CryptoCoinDataComplexService;
-import demo.finance.cryptoCoin.mq.producer.CryptoCoinSetOrderProducer;
 import finance.cryptoCoin.binance.pojo.bo.CryptoCoinBinanceFutureUmForceOrderBO;
 import finance.cryptoCoin.binance.pojo.bo.CryptoCoinBinanceFutureUmForceOrderDetailBO;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderExecutionType;
@@ -46,6 +46,7 @@ import finance.cryptoCoin.binance.pojo.type.BinanceOrderSideType;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigMoveDataBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigMoveSummaryDataBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigTradeDataBO;
+import finance.cryptoCoin.pojo.dto.CryptoCoinForceOrderNoticeSettingDTO;
 import finance.cryptoCoin.pojo.type.CryptoCoinBigMoveDataType;
 import net.sf.json.JSONObject;
 import telegram.pojo.constant.TelegramStaticChatID;
@@ -60,9 +61,8 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 	private CryptoCoinBigTradeMapper cryptoCoinBigTradeMapper;
 	@Autowired
 	private CryptoCoinBigForceOrderMapper cryptoCoinBigForceOrderMapper;
-	@SuppressWarnings("unused")
-	@Autowired
-	private CryptoCoinSetOrderProducer cryptoCoinSetOrderProducer;
+
+	private static final String FORCE_ORDER_TOTAL_KEY = "allTotal";
 
 	@Override
 	public ModelAndView getBigTradeDataBubbleChartBySymbol() {
@@ -174,7 +174,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 				}
 			}
 		}
-		
+
 //		for debug
 //		total = BigDecimal.ZERO;
 //		for(Entry<LocalDateTime, CryptoCoinBigTrade> dataInMap : summaryDataMap.entrySet()) {
@@ -182,7 +182,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 //			total = total.add(data.getAmount());
 //		}
 //		System.out.println(total);
-		
+
 		List<BigDecimal> totalList = new ArrayList<>();
 		indexTime = now.minusHours(dto.getStart());
 		BigDecimal lastAmount = BigDecimal.ZERO;
@@ -856,16 +856,8 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 			// save filled order ONLY
 			return;
 		}
-		BigDecimal minBigTrade = optionService.getBinanceFutureUmSymbolBigStepMap().get(detail.getSymbol());
-		if (minBigTrade == null) {
-			return;
-		}
-		if (detail.getOrderPrice().multiply(detail.getQuantity()).compareTo(minBigTrade) < 0) {
-			return;
-		}
 
 		CryptoCoinBigForceOrder po = new CryptoCoinBigForceOrder();
-
 		try {
 			po.setEventTime(localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(bo.getEventName()));
 		} catch (Exception e) {
@@ -892,5 +884,66 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void checkMostRecentForceOrderSummary() {
+		LocalDateTime now = LocalDateTime.now();
+		List<CryptoCoinForceOrderNoticeSettingDTO> settings = optionService.getForceOrderNoticeSetting();
+
+		for (CryptoCoinForceOrderNoticeSettingDTO setting : settings) {
+			LocalDateTime startTime = now.minusHours(setting.getHourCounting());
+			Map<String, CryptoCoinForceOrderSummaryDTO> mostRecentForceOrderSummary = getMostRecentForceOrderSummary(
+					startTime);
+			CryptoCoinForceOrderSummaryDTO totalData = mostRecentForceOrderSummary.get(FORCE_ORDER_TOTAL_KEY);
+			if (setting.getLastNoticeTime() != null
+					&& setting.getLastNoticeTime().plusMinutes(setting.getNoticeGapInMinute()).isAfter(now)) {
+				continue;
+			}
+
+			if (totalData.getForceBuy().add(totalData.getForceSell()).compareTo(setting.getMinimumAmount()) > 0) {
+				String msg = "In last " + setting.getHourCounting() + " hours, force buy amount: "
+						+ totalData.getForceBuy() + ", force sell amount: " + totalData.getForceSell() + ",\n"
+						+ " total: " + totalData.getForceBuy().add(totalData.getForceSell());
+				telegramService.sendMessageByChatRecordId(TelegramBotType.CCM_NOTICE, msg, TelegramStaticChatID.MY_ID);
+				setting.setLastNoticeTime(now);
+			}
+		}
+	}
+
+	private Map<String, CryptoCoinForceOrderSummaryDTO> getMostRecentForceOrderSummary(LocalDateTime startTime) {
+		Map<String, CryptoCoinForceOrderSummaryDTO> summaryMap = new HashMap<>();
+		CryptoCoinBigForceOrderExample example = new CryptoCoinBigForceOrderExample();
+		example.createCriteria().andEventTimeGreaterThanOrEqualTo(startTime);
+		List<CryptoCoinBigForceOrder> dataList = cryptoCoinBigForceOrderMapper.selectByExample(example);
+		if (dataList == null || dataList.isEmpty()) {
+			return summaryMap;
+		}
+
+		CryptoCoinForceOrderSummaryDTO allTotal = new CryptoCoinForceOrderSummaryDTO();
+		allTotal.setSymbol(FORCE_ORDER_TOTAL_KEY);
+
+		for (CryptoCoinBigForceOrder data : dataList) {
+			CryptoCoinForceOrderSummaryDTO dataInMap = summaryMap.get(data.getSymbol());
+			if (dataInMap == null) {
+				dataInMap = new CryptoCoinForceOrderSummaryDTO();
+				dataInMap.setSymbol(data.getSymbol());
+			}
+			if (BinanceOrderSideType.BUY.getCode() == data.getOrderSide()) {
+				dataInMap.setForceBuy(dataInMap.getForceBuy().add(data.getAmount()));
+				dataInMap.setForceBuyCounting(dataInMap.getForceBuyCounting() + 1);
+				allTotal.setForceBuy(allTotal.getForceBuy().add(data.getAmount()));
+				allTotal.setForceBuyCounting(allTotal.getForceBuyCounting() + 1);
+			} else {
+				dataInMap.setForceSell(dataInMap.getForceSell().add(data.getAmount()));
+				dataInMap.setForceSellCounting(dataInMap.getForceSellCounting() + 1);
+				allTotal.setForceSell(allTotal.getForceSell().add(data.getAmount()));
+				allTotal.setForceSellCounting(allTotal.getForceSellCounting() + 1);
+			}
+			summaryMap.put(data.getSymbol(), dataInMap);
+		}
+
+		summaryMap.put(FORCE_ORDER_TOTAL_KEY, allTotal);
+		return summaryMap;
 	}
 }

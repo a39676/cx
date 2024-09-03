@@ -1,12 +1,16 @@
 crypto coin
 	CryptoCoinPriceCommonDataBO delete field coinType
-	big move 增加 spot / future UM / future CM 字段, 区分数据
-	update table crypto_coin_big_move
-		ALTER TABLE financeclear.crypto_coin_big_move ADD data_type INT NOT NULL;
-		ALTER TABLE financeclear.crypto_coin_big_move CHANGE data_type data_type INT NOT NULL AFTER event_time;
-	big move
-		逐渐过渡到纯 futurn UM 		
-	
+	force order
+		定期查询, 汇总数据超出 N 则发送消息提示?
+	big trade
+		提供 根据时间区段 汇总查询?
+	CryptoCoinOptionService
+		del binanceFutureUmSymbolBigStepJson
+		add
+			force order level
+			"hour" : minimum amount
+		
+		
 日历提醒的跳过本次提前提醒异常
 
 ImageInteractionController

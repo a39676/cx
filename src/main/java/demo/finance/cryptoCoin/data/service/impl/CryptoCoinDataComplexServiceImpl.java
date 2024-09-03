@@ -129,7 +129,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 
 		LocalDateTime now = LocalDateTime.now().withMinute(0).withSecond(0).withNano(0);
 		LocalDateTime startTime = now.minusHours(dto.getStart());
-		LocalDateTime endTime = now.minusHours(dto.getEnd());
+		LocalDateTime endTime = now.minusHours(dto.getEnd() - 1);
 		CryptoCoinBigTradeExample example = new CryptoCoinBigTradeExample();
 		example.createCriteria().andSymbolEqualTo(dto.getSymbol()).andEventTimeGreaterThanOrEqualTo(startTime)
 				.andEventTimeLessThanOrEqualTo(endTime);

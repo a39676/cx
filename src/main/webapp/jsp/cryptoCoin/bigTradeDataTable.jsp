@@ -61,7 +61,7 @@
 <script type="text/javascript">
 
   $(document).ready(function() {
-    $("#getLine").click(function () {
+    $("#submit").click(function () {
       queryDataTable();
     });
 

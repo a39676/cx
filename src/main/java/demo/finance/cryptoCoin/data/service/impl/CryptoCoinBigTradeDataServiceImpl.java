@@ -268,6 +268,10 @@ public class CryptoCoinBigTradeDataServiceImpl extends CryptoCoinCommonService
 
 		List<CryptoCoinBigTradeSummaryVO> resultList = new ArrayList<>();
 		for (Entry<String, CryptoCoinBigTradeSummaryVO> entry : summaryMap.entrySet()) {
+			CryptoCoinBigTradeSummaryVO value = entry.getValue();
+			value.setAmountTotal(value.getAmountTotal().setScale(0, RoundingMode.HALF_UP));
+			value.setAmountBuy(value.getAmountBuy().setScale(0, RoundingMode.HALF_UP));
+			value.setAmountSell(value.getAmountSell().setScale(0, RoundingMode.HALF_UP));
 			resultList.add(entry.getValue());
 		}
 

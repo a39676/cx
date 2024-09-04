@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import com.rabbitmq.client.Channel;
 
 import demo.common.service.CommonMessageQueueReceiverService;
-import demo.finance.cryptoCoin.data.service.CryptoCoinDataComplexService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinForceOrderDataService;
 import finance.cryptoCoin.pojo.constant.CryptoCoinMQConstant;
 import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.type.TelegramBotType;
@@ -21,14 +21,14 @@ import telegram.pojo.type.TelegramBotType;
 public class CryptoCoinForceOrderDataReceiver extends CommonMessageQueueReceiverService {
 
 	@Autowired
-	private CryptoCoinDataComplexService cryptoCoinDataComplexService;
+	private CryptoCoinForceOrderDataService cryptoCoinForceOrderDataService;
 
 	@RabbitHandler
 	public void process(String messageStr, Channel channel, Message message) throws IOException {
 		try {
-			cryptoCoinDataComplexService.receiveNewForceOrderFutureUmDataMessage(messageStr);
+			cryptoCoinForceOrderDataService.receiveNewForceOrderFutureUmDataMessage(messageStr);
 		} catch (Exception e) {
-			log.error("mq error, " + CryptoCoinMQConstant.FORCE_ORDER_DATA + ", e:" + e.getLocalizedMessage());
+			log.error("MQ error, " + CryptoCoinMQConstant.FORCE_ORDER_DATA + ", e:" + e.getLocalizedMessage());
 			telegramService.sendMessageByChatRecordId(TelegramBotType.CRYPTO_COIN_LOW_PRICE_NOTICE_BOT,
 					"Crypto big force order (future UM) data error: " + e.getLocalizedMessage() + ", msgStr: "
 							+ messageStr,

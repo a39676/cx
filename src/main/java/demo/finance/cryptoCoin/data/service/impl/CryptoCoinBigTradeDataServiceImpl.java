@@ -254,12 +254,14 @@ public class CryptoCoinBigTradeDataServiceImpl extends CryptoCoinCommonService
 				dataInMap.setSymbol(data.getSymbol());
 				summaryMap.put(data.getSymbol(), dataInMap);
 			}
-			dataInMap.setCountingTotal(dataInMap.getCountingTotal() + 1);
+			
 			if (data.getIsMaker()) {
+				dataInMap.setCountingTotal(dataInMap.getCountingTotal() - 1);
 				dataInMap.setAmountSell(data.getAmount());
 				dataInMap.setCountingSell(dataInMap.getCountingSell() + 1);
 				dataInMap.setAmountTotal(dataInMap.getAmountTotal().subtract(data.getAmount()));
 			} else {
+				dataInMap.setCountingTotal(dataInMap.getCountingTotal() + 1);
 				dataInMap.setAmountBuy(data.getAmount());
 				dataInMap.setCountingBuy(dataInMap.getCountingBuy() + 1);
 				dataInMap.setAmountTotal(dataInMap.getAmountTotal().add(data.getAmount()));

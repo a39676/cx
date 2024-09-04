@@ -17,6 +17,7 @@ import demo.finance.cryptoCoin.data.pojo.dto.GetBigMoveSummaryDataDTO;
 import demo.finance.cryptoCoin.data.pojo.result.GetBigMoveSummaryDataResult;
 import demo.finance.cryptoCoin.data.service.CryptoCoinBigTradeDataService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinDataComplexService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinForceOrderDataService;
 
 @Controller
 @RequestMapping(value = CryptoCoinDataUrl.ROOT)
@@ -26,6 +27,8 @@ public class CryptoCoinDataController extends CommonController {
 	private CryptoCoinDataComplexService cryptoCoinDataComplexService;
 	@Autowired
 	private CryptoCoinBigTradeDataService cryptoCoinBigTradeDataService;
+	@Autowired
+	private CryptoCoinForceOrderDataService cryptoCoinForceOrderDataService;
 
 	@GetMapping(value = CryptoCoinDataUrl.BIG_MOVE_SPOT_VIEW)
 	public ModelAndView getBigMoveSummaryView() {
@@ -67,12 +70,12 @@ public class CryptoCoinDataController extends CommonController {
 
 	@GetMapping(value = CryptoCoinDataUrl.BIG_FORCE_ORDER_FUTURE_UM_CHART_BY_SYMBOL)
 	public ModelAndView getBigForceOrderDataChartBySymbol() {
-		return cryptoCoinDataComplexService.getBigForceOrderDataChartBySymbol();
+		return cryptoCoinForceOrderDataService.getBigForceOrderDataChartBySymbol();
 	}
 
 	@PostMapping(value = CryptoCoinDataUrl.BIG_FORCE_ORDER_FUTURE_UM_CHART_BY_SYMBOL)
 	public ModelAndView getBigForceOrderDataChartBySymbol(@RequestBody CryptoCoinBigTradeQueryDTO dto) {
-		return cryptoCoinDataComplexService.getBigForceOrderDataChartBySymbol(dto);
+		return cryptoCoinForceOrderDataService.getBigForceOrderDataChartBySymbol(dto);
 	}
 
 	@GetMapping(value = CryptoCoinDataUrl.BIG_TRADE_DATA_TABLE)

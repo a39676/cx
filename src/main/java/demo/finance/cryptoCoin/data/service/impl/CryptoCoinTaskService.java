@@ -5,22 +5,24 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import demo.base.task.service.CommonTaskService;
-import demo.finance.cryptoCoin.data.service.CryptoCoinDataComplexService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinForceOrderDataService;
 
 @Component
 public class CryptoCoinTaskService extends CommonTaskService {
 
+//	@Autowired
+//	private CryptoCoinDataComplexService cryptoCoinDataComplexService;
 	@Autowired
-	private CryptoCoinDataComplexService cryptoCoinDataComplexService;
+	private CryptoCoinForceOrderDataService cryptoCoinForceOrderDataService;
 
-	@Scheduled(cron = "0 0 * * * ?")
-	public void sendBigMoveDataCrossResult() {
-		cryptoCoinDataComplexService.sendBigMoveDataCrossResult();
-	}
+//	@Scheduled(cron = "0 0 * * * ?")
+//	public void sendBigMoveDataCrossResult() {
+//		cryptoCoinDataComplexService.sendBigMoveDataCrossResult();
+//	}
 
 	@Scheduled(cron = "* */15 * * * ?")
 	public void checkMostRecentForceOrderSummary() {
-		cryptoCoinDataComplexService.checkMostRecentForceOrderSummary();
+		cryptoCoinForceOrderDataService.checkMostRecentForceOrderSummary();
 	}
 
 }

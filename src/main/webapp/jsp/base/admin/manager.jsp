@@ -110,7 +110,7 @@
         <a href="/cryptoCoinData/bigTradeDataTable" target="_blank">bigTradeDataTable</a>
       </li>
       <li>
-        <a href="/cryptoCoinData/bigForceOrderFutureUmChartBySymbol" target="_blank">bigForceOrderFutureUmChartBySymbol</a>
+        <a href="/cryptoCoinData/forceOrderFutureUmChartBySymbol" target="_blank">forceOrderFutureUmChartBySymbol</a>
       </li>
       <li>
         <a href="/cryptoTrading/view" target="_blank">trading</a>

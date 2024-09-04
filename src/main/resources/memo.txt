@@ -1,9 +1,5 @@
 crypto coin
 	CryptoCoinPriceCommonDataBO delete field coinType
-	big trade
-		提供 根据时间区段 汇总查询?
-	delete 
-		task: Big move data rising cross result		
 		
 日历提醒的跳过本次提前提醒异常
 

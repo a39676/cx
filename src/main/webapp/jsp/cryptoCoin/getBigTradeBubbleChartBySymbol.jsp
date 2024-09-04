@@ -61,7 +61,7 @@
             },
           </c:forEach>
         ],
-        backgroundColor: 'rgba(255, 99, 132, 0.23)'
+        backgroundColor: 'rgba(255, 99, 132, 0.1)'
       },{
         label: 'Buy',
         data: [
@@ -73,7 +73,7 @@
             },
           </c:forEach>
         ],
-        backgroundColor: 'rgba(46, 204, 113, 0.23)'
+        backgroundColor: 'rgba(46, 204, 113, 0.1)'
       }]
     },
     options: {

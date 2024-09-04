@@ -37,9 +37,9 @@ public class CryptoCoinForceOrderDataServiceImpl extends CryptoCoinCommonService
 
 	@Autowired
 	private CryptoCoinBigForceOrderMapper cryptoCoinBigForceOrderMapper;
-	
+
 	private static final String FORCE_ORDER_TOTAL_KEY = "allTotal";
-	
+
 	@Override
 	public void checkMostRecentForceOrderSummary() {
 		LocalDateTime now = LocalDateTime.now();
@@ -103,10 +103,10 @@ public class CryptoCoinForceOrderDataServiceImpl extends CryptoCoinCommonService
 		summaryMap.put(FORCE_ORDER_TOTAL_KEY, allTotal);
 		return summaryMap;
 	}
-	
+
 	@Override
 	public ModelAndView getBigForceOrderDataChartBySymbol(CryptoCoinBigTradeQueryDTO dto) {
-		ModelAndView v = new ModelAndView("cryptoCoin/getBigTradeChartBySymbol");
+		ModelAndView v = new ModelAndView("cryptoCoin/getBigTradeBubbleChartBySymbol");
 		v.addObject("title", "Big force order");
 		v.addObject("symbol", dto.getSymbol());
 
@@ -148,7 +148,7 @@ public class CryptoCoinForceOrderDataServiceImpl extends CryptoCoinCommonService
 
 		return v;
 	}
-	
+
 	@Override
 	public void receiveNewForceOrderFutureUmDataMessage(String msg) {
 		if (StringUtils.isBlank(msg)) {
@@ -197,13 +197,13 @@ public class CryptoCoinForceOrderDataServiceImpl extends CryptoCoinCommonService
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public ModelAndView getBigForceOrderDataChartBySymbol() {
 		ModelAndView v = new ModelAndView("cryptoCoin/bigTradeChartBySymbolView");
 		v.addObject("title", "Big force order");
-//		v.addObject("bubbleChartUrl", CryptoCoinDataUrl.);
-		v.addObject("lineChartUrl", CryptoCoinDataUrl.BIG_FORCE_ORDER_FUTURE_UM_CHART_BY_SYMBOL);
+		v.addObject("bubbleChartUrl", CryptoCoinDataUrl.FORCE_ORDER_FUTURE_UM_CHART_BY_SYMBOL);
+//		v.addObject("lineChartUrl", CryptoCoinDataUrl.FORCE_ORDER_FUTURE_UM_CHART_BY_SYMBOL);
 		return v;
 	}
 }

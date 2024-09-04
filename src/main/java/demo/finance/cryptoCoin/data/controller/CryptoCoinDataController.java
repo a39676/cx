@@ -68,12 +68,12 @@ public class CryptoCoinDataController extends CommonController {
 		return cryptoCoinBigTradeDataService.getBigTradeLineChartBySymbol(dto);
 	}
 
-	@GetMapping(value = CryptoCoinDataUrl.BIG_FORCE_ORDER_FUTURE_UM_CHART_BY_SYMBOL)
+	@GetMapping(value = CryptoCoinDataUrl.FORCE_ORDER_FUTURE_UM_CHART_BY_SYMBOL)
 	public ModelAndView getBigForceOrderDataChartBySymbol() {
 		return cryptoCoinForceOrderDataService.getBigForceOrderDataChartBySymbol();
 	}
 
-	@PostMapping(value = CryptoCoinDataUrl.BIG_FORCE_ORDER_FUTURE_UM_CHART_BY_SYMBOL)
+	@PostMapping(value = CryptoCoinDataUrl.FORCE_ORDER_FUTURE_UM_CHART_BY_SYMBOL)
 	public ModelAndView getBigForceOrderDataChartBySymbol(@RequestBody CryptoCoinBigTradeQueryDTO dto) {
 		return cryptoCoinForceOrderDataService.getBigForceOrderDataChartBySymbol(dto);
 	}

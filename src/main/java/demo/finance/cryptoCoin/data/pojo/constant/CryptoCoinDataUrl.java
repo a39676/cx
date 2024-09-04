@@ -15,5 +15,5 @@ public class CryptoCoinDataUrl {
 	public static final String BIG_TRADE_FUTURE_UM_CHART_BY_SYMBOL = "/bigTradeFutureUmChartBySymbol";
 	public static final String BIG_TRADE_FUTURE_UM_BUBBLE_CHART_BY_SYMBOL = "/bigTradeFutureUmBubbleChartBySymbol";
 	public static final String BIG_TRADE_FUTURE_UM_LINE_CHART_BY_SYMBOL = "/bigTradeFutureUmLineChartBySymbol";
-	public static final String BIG_FORCE_ORDER_FUTURE_UM_CHART_BY_SYMBOL = "/bigForceOrderFutureUmChartBySymbol";
+	public static final String FORCE_ORDER_FUTURE_UM_CHART_BY_SYMBOL = "/forceOrderFutureUmChartBySymbol";
 }

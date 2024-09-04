@@ -93,7 +93,18 @@
         <a href="/cryptoCoinData/bigMoveSpot" target="_blank">bigMoveSpot</a>
       </li>
       <li>
-        <a href="/cryptoCoinData/bigTradeFutureUmChartBySymbol" target="_blank">bigTradeFutureUmChartBySymbol</a>
+        <a href="/cryptoCoinData/bigTradeFutureUmChartBySymbol" target="_blank">
+          bigTradeFutureUmChartBySymbol
+        </a>
+        <a href="/cryptoCoinData/bigTradeFutureUmChartBySymbol?symbol=BTCUSDT" target="_blank">
+          BTCUSDT
+        </a>
+        <a href="/cryptoCoinData/bigTradeFutureUmChartBySymbol?symbol=ETHUSDT" target="_blank">
+          ETHUSDT
+        </a>
+        <a href="/cryptoCoinData/bigTradeFutureUmChartBySymbol?symbol=SOLUSDT" target="_blank">
+          SOLUSDT
+        </a>
       </li>
       <li>
         <a href="/cryptoCoinData/bigForceOrderFutureUmChartBySymbol" target="_blank">bigForceOrderFutureUmChartBySymbol</a>

@@ -1,15 +1,7 @@
 crypto coin
 	CryptoCoinPriceCommonDataBO delete field coinType
-	force order
-		定期查询, 汇总数据超出 N 则发送消息提示?
 	big trade
 		提供 根据时间区段 汇总查询?
-	CryptoCoinOptionService
-		del binanceFutureUmSymbolBigStepJson
-		add
-			force order level
-			"hour" : minimum amount
-		
 		
 日历提醒的跳过本次提前提醒异常
 

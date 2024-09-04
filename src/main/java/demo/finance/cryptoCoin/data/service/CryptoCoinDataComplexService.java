@@ -20,14 +20,6 @@ public interface CryptoCoinDataComplexService {
 
 	ModelAndView getBigMoveDataChart(GetBigMoveSummaryDataDTO dto);
 
-	void receiveNewBigTradeFutureUmDataMessage(String msg);
-
-	ModelAndView getBigTradeDataBubbleChartBySymbol(String symbol);
-
-	ModelAndView getBigTradeBubbleChartBySymbol(CryptoCoinBigTradeQueryDTO dto);
-
-	ModelAndView getBigTradeLineChartBySymbol(CryptoCoinBigTradeQueryDTO dto);
-
 	void receiveNewForceOrderFutureUmDataMessage(String msg);
 
 	ModelAndView getBigForceOrderDataChartBySymbol();

@@ -21,7 +21,6 @@ import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinBigForceOrderMapper;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinBigMoveMapper;
-import demo.finance.cryptoCoin.data.mapper.CryptoCoinBigTradeMapper;
 import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinBigMoveDailySummaryBO;
 import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinBigMoveSummaryBySymbolBO;
 import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinDataUrl;
@@ -33,8 +32,6 @@ import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigForceOrderExample;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigMove;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigMoveExample;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigMoveExample.Criteria;
-import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigTrade;
-import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigTradeExample;
 import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinFilterBigMoveDataInTimeRangeResult;
 import demo.finance.cryptoCoin.data.pojo.result.GetBigMoveSummaryDataResult;
 import demo.finance.cryptoCoin.data.pojo.vo.CryptoCoinBigTradeBubbleChartVO;
@@ -45,9 +42,7 @@ import finance.cryptoCoin.binance.pojo.type.BinanceOrderExecutionType;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderSideType;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigMoveDataBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigMoveSummaryDataBO;
-import finance.cryptoCoin.pojo.bo.CryptoCoinBigTradeDataBO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinForceOrderNoticeSettingDTO;
-import finance.cryptoCoin.pojo.type.CryptoCoinBigMoveDataType;
 import net.sf.json.JSONObject;
 import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.type.TelegramBotType;
@@ -58,154 +53,9 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 	@Autowired
 	private CryptoCoinBigMoveMapper cryptoCoinBigMoveMapper;
 	@Autowired
-	private CryptoCoinBigTradeMapper cryptoCoinBigTradeMapper;
-	@Autowired
 	private CryptoCoinBigForceOrderMapper cryptoCoinBigForceOrderMapper;
 
 	private static final String FORCE_ORDER_TOTAL_KEY = "allTotal";
-
-	@Override
-	public ModelAndView getBigTradeDataBubbleChartBySymbol(String symbol) {
-		ModelAndView v = new ModelAndView("cryptoCoin/bigTradeChartBySymbolView");
-		v.addObject("title", "Big trade");
-		v.addObject("bubbleChartUrl", CryptoCoinDataUrl.BIG_TRADE_FUTURE_UM_BUBBLE_CHART_BY_SYMBOL);
-		v.addObject("lineChartUrl", CryptoCoinDataUrl.BIG_TRADE_FUTURE_UM_LINE_CHART_BY_SYMBOL);
-		if (StringUtils.isNotBlank(symbol)) {
-			v.addObject("preSetSymbol", symbol);
-			v.addObject("title", "Big trade" + symbol);
-		}
-		return v;
-	}
-
-	@Override
-	public ModelAndView getBigTradeBubbleChartBySymbol(CryptoCoinBigTradeQueryDTO dto) {
-		ModelAndView v = new ModelAndView("cryptoCoin/getBigTradeBubbleChartBySymbol");
-		v.addObject("title", (dto.getSymbol() + ", Big trade"));
-		v.addObject("symbol", dto.getSymbol());
-
-		LocalDateTime now = LocalDateTime.now();
-		CryptoCoinBigTradeExample example = new CryptoCoinBigTradeExample();
-		example.createCriteria().andSymbolEqualTo(dto.getSymbol())
-				.andEventTimeGreaterThanOrEqualTo(now.minusHours(dto.getStart()))
-				.andEventTimeLessThanOrEqualTo(now.minusHours(dto.getEnd()));
-		List<CryptoCoinBigTrade> dataList = cryptoCoinBigTradeMapper.selectByExample(example);
-
-		List<CryptoCoinBigTradeBubbleChartVO> saleList = new ArrayList<>();
-		List<CryptoCoinBigTradeBubbleChartVO> buyList = new ArrayList<>();
-		CryptoCoinBigTrade data = null;
-		CryptoCoinBigTradeBubbleChartVO vo = null;
-		BigDecimal bigStep = optionService.getBinanceFutureUmSymbolBigStepMap().get(dto.getSymbol());
-		for (int i = 0; i < dataList.size(); i++) {
-			data = dataList.get(i);
-			vo = new CryptoCoinBigTradeBubbleChartVO();
-			vo.setPrice(data.getPrice().doubleValue());
-			Long timeGap = ChronoUnit.MINUTES.between(now, data.getEventTime());
-			vo.setTimeGap(timeGap.intValue());
-			int r = data.getAmount().divide(bigStep, 0, RoundingMode.HALF_UP).intValue();
-			r += 3;
-			r *= 3;
-			vo.setR(r);
-			vo.setAmount(data.getAmount().doubleValue());
-			vo.setEventTime(localDateTimeHandler.dateToStr(data.getEventTime()));
-			vo.setQuantity(data.getQuantity().doubleValue());
-			if (data.getIsMaker()) {
-				saleList.add(vo);
-			} else {
-				buyList.add(vo);
-			}
-		}
-
-		v.addObject("saleList", saleList);
-		v.addObject("buyList", buyList);
-
-		return v;
-	}
-
-	@Override
-	public ModelAndView getBigTradeLineChartBySymbol(CryptoCoinBigTradeQueryDTO dto) {
-		ModelAndView v = new ModelAndView("cryptoCoin/getBigTradeLineChartBySymbol");
-		v.addObject("title", (dto.getSymbol() + ", Big trade"));
-		v.addObject("symbol", dto.getSymbol());
-
-		LocalDateTime now = LocalDateTime.now().withMinute(0).withSecond(0).withNano(0);
-		LocalDateTime startTime = now.minusHours(dto.getStart());
-		LocalDateTime endTime = now.minusHours(dto.getEnd() - 1);
-		CryptoCoinBigTradeExample example = new CryptoCoinBigTradeExample();
-		example.createCriteria().andSymbolEqualTo(dto.getSymbol()).andEventTimeGreaterThanOrEqualTo(startTime)
-				.andEventTimeLessThanOrEqualTo(endTime);
-		List<CryptoCoinBigTrade> dataList = cryptoCoinBigTradeMapper.selectByExample(example);
-
-		// for debug
-//		BigDecimal total = BigDecimal.ZERO;
-//		for (CryptoCoinBigTrade data : dataList) {
-//			if (data.getIsMaker()) {
-//				total = total.add(data.getAmount().negate());
-//			} else {
-//				total = total.add(data.getAmount());
-//			}
-//		}
-//		System.out.println(total);
-
-		List<String> timeStringXLine = new ArrayList<>();
-		LocalDateTime indexTime = now.minusHours(dto.getStart());
-		for (int i = 0; !indexTime.isAfter(endTime); i++) {
-			indexTime = startTime.plusHours(i);
-			timeStringXLine.add(localDateTimeHandler.dateToStr(indexTime, DATE_FORMAT_FOR_INDEX_CHART_IN_HOUR));
-		}
-
-		v.addObject("xValues", timeStringXLine);
-
-		Map<LocalDateTime, CryptoCoinBigTrade> summaryDataMap = new HashMap<>();
-		for (int i = 0; i < dataList.size(); i++) {
-			CryptoCoinBigTrade dataInList = dataList.get(i);
-			CryptoCoinBigTrade dataInMap = summaryDataMap
-					.get(dataInList.getEventTime().withMinute(0).withSecond(0).withNano(0));
-
-			if (dataInMap == null) {
-				dataInMap = new CryptoCoinBigTrade();
-				dataInMap.setIsMaker(dataInList.getIsMaker());
-				if (dataInList.getIsMaker()) {
-					dataInMap.setAmount(dataInList.getAmount().negate());
-				} else {
-					dataInMap.setAmount(dataInList.getAmount());
-				}
-				summaryDataMap.put(dataInList.getEventTime().withMinute(0).withSecond(0).withNano(0), dataInMap);
-			} else {
-				if (dataInList.getIsMaker()) {
-					dataInMap.setAmount(dataInMap.getAmount().subtract(dataInList.getAmount()));
-				} else {
-					dataInMap.setAmount(dataInMap.getAmount().add(dataInList.getAmount()));
-				}
-			}
-		}
-
-//		for debug
-//		total = BigDecimal.ZERO;
-//		for(Entry<LocalDateTime, CryptoCoinBigTrade> dataInMap : summaryDataMap.entrySet()) {
-//			CryptoCoinBigTrade data = dataInMap.getValue();
-//			total = total.add(data.getAmount());
-//		}
-//		System.out.println(total);
-
-		List<BigDecimal> totalList = new ArrayList<>();
-		indexTime = now.minusHours(dto.getStart());
-		BigDecimal lastAmount = BigDecimal.ZERO;
-		for (int i = 0; !indexTime.isAfter(endTime); i++) {
-			indexTime = startTime.plusHours(i);
-			CryptoCoinBigTrade dataInMap = summaryDataMap.get(indexTime);
-			if (dataInMap == null) {
-				totalList.add(lastAmount);
-			} else {
-				BigDecimal amount = dataInMap.getAmount();
-				lastAmount = lastAmount.add(amount);
-				totalList.add(lastAmount);
-			}
-		}
-
-		v.addObject("line", totalList);
-
-		return v;
-	}
 
 	@Override
 	public ModelAndView getBigForceOrderDataChartBySymbol() {
@@ -258,49 +108,6 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		v.addObject("buyList", buyList);
 
 		return v;
-	}
-
-	@Override
-	public void receiveNewBigTradeFutureUmDataMessage(String msg) {
-		if (StringUtils.isBlank(msg)) {
-			return;
-		}
-		CryptoCoinBigTradeDataBO bo = buildObjFromJsonCustomization(msg, CryptoCoinBigTradeDataBO.class);
-		if (StringUtils.isBlank(bo.getSymbol())) {
-			return;
-		}
-		if (CryptoCoinBigMoveDataType.getType(bo.getDataType()) == null) {
-			return;
-		}
-
-		CryptoCoinBigTrade po = new CryptoCoinBigTrade();
-
-		try {
-			po.setEventTime(localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(bo.getBigTradeTimeStr()));
-		} catch (Exception e) {
-			return;
-		}
-		CryptoCoinBigTradeExample example = new CryptoCoinBigTradeExample();
-		example.createCriteria().andSymbolEqualTo(bo.getSymbol()).andEventTimeEqualTo(po.getEventTime())
-				.andAmountEqualTo(bo.getAmount()).andQuantityEqualTo(bo.getQuantity()).andPriceEqualTo(bo.getPrice())
-				.andIsMakerEqualTo(bo.getIsMaker()).andDataTypeEqualTo(bo.getDataType());
-		List<CryptoCoinBigTrade> oldDataList = cryptoCoinBigTradeMapper.selectByExample(example);
-		if (!oldDataList.isEmpty()) {
-			return;
-		}
-
-		po.setAmount(bo.getAmount());
-		po.setPrice(bo.getPrice());
-		po.setQuantity(bo.getQuantity());
-		po.setIsMaker(bo.getIsMaker());
-		po.setSymbol(bo.getSymbol());
-		po.setDataType(bo.getDataType());
-
-		try {
-			cryptoCoinBigTradeMapper.insertSelective(po);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
@@ -401,17 +208,17 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		}
 		List<CryptoCoinBigMove> bigMoveDataList = cryptoCoinBigMoveMapper.selectByExample(example);
 
-		r = buildSummaryListByStartTimeRange(bigMoveDataList, startTime, endTime);
+		r = buildBigMoveSummaryListByStartTimeRange(bigMoveDataList, startTime, endTime);
 		return r;
 	}
 
-	private GetBigMoveSummaryDataResult buildSummaryListByStartTimeRange(List<CryptoCoinBigMove> bigMoveDataList,
+	private GetBigMoveSummaryDataResult buildBigMoveSummaryListByStartTimeRange(List<CryptoCoinBigMove> bigMoveDataList,
 			LocalDateTime startTime) {
 		LocalDateTime endTime = LocalDateTime.now();
-		return buildSummaryListByStartTimeRange(bigMoveDataList, startTime, endTime);
+		return buildBigMoveSummaryListByStartTimeRange(bigMoveDataList, startTime, endTime);
 	}
 
-	private GetBigMoveSummaryDataResult buildSummaryListByStartTimeRange(List<CryptoCoinBigMove> bigMoveDataList,
+	private GetBigMoveSummaryDataResult buildBigMoveSummaryListByStartTimeRange(List<CryptoCoinBigMove> bigMoveDataList,
 			LocalDateTime startTime, LocalDateTime endTime) {
 		GetBigMoveSummaryDataResult r = new GetBigMoveSummaryDataResult();
 		List<CryptoCoinBigMoveSummaryDataBO> summaryList = new ArrayList<>();
@@ -710,13 +517,13 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		LocalDateTime yesterDayStart = now.minusHours(48);
 		LocalDateTime thisWeekStart = now.minusDays(7);
 
-		GetBigMoveSummaryDataResult todayBigDataFilterResult = buildSummaryListByStartTimeRange(bigMoveDataList,
+		GetBigMoveSummaryDataResult todayBigDataFilterResult = buildBigMoveSummaryListByStartTimeRange(bigMoveDataList,
 				yesterDayEnd);
 
-		GetBigMoveSummaryDataResult yesterdayBigDataFilterResult = buildSummaryListByStartTimeRange(bigMoveDataList,
+		GetBigMoveSummaryDataResult yesterdayBigDataFilterResult = buildBigMoveSummaryListByStartTimeRange(bigMoveDataList,
 				yesterDayStart, yesterDayEnd);
 
-		GetBigMoveSummaryDataResult lastweekBigDataFilterResult = buildSummaryListByStartTimeRange(bigMoveDataList,
+		GetBigMoveSummaryDataResult lastweekBigDataFilterResult = buildBigMoveSummaryListByStartTimeRange(bigMoveDataList,
 				thisWeekStart);
 
 		r.setTodayBigDataFilterResult(todayBigDataFilterResult);
@@ -909,8 +716,8 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 			}
 
 			if (totalData.getForceBuy().add(totalData.getForceSell()).compareTo(setting.getMinimumAmount()) > 0) {
-				String msg = "In last " + setting.getHourCounting() + " hours, force buy amount: "
-						+ totalData.getForceBuy() + ", force sell amount: " + totalData.getForceSell() + ",\n"
+				String msg = "In last " + setting.getHourCounting() + " hours, \n" + "force buy amount: "
+						+ totalData.getForceBuy() + ", \n" + "force sell amount: " + totalData.getForceSell() + ",\n"
 						+ " total: " + totalData.getForceBuy().add(totalData.getForceSell());
 				telegramService.sendMessageByChatRecordId(TelegramBotType.CCM_NOTICE, msg, TelegramStaticChatID.MY_ID);
 				setting.setLastNoticeTime(now);

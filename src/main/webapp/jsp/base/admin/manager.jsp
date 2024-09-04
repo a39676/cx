@@ -107,6 +107,9 @@
         </a>
       </li>
       <li>
+        <a href="/cryptoCoinData/bigTradeDataTable" target="_blank">bigTradeDataTable</a>
+      </li>
+      <li>
         <a href="/cryptoCoinData/bigForceOrderFutureUmChartBySymbol" target="_blank">bigForceOrderFutureUmChartBySymbol</a>
       </li>
       <li>

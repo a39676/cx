@@ -37,20 +37,13 @@
           placeholder="dataQueryHourRangeEnd" value="0">
         <input type="text" id="symbol" style="width: 100px;" 
           placeholder="symbol" value="${preSetSymbol}">
-        <button id="getLine">getLine</button>
-        <button id="getBubble">getBubble</button>
+        <button id="submit">submit</button>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-12">
-        <div id="lineChartDiv"></div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-12">
-        <div id="bubbleChartDiv"></div>
+        <div id="dataTable"></div>
       </div>
     </div>
     
@@ -69,11 +62,11 @@
 
   $(document).ready(function() {
     $("#getLine").click(function () {
-      queryLineData();
+      queryDataTable();
     });
 
-    function queryLineData(){
-      var url = "/cryptoCoinData${lineChartUrl}";
+    function queryDataTable(){
+      var url = "/cryptoCoinData/bigTradeDataTable";
 
       var dataQueryHourRangeStart = $("#dataQueryHourRangeStart").val();
       var dataQueryHourRangeEnd = $("#dataQueryHourRangeEnd").val();
@@ -85,7 +78,7 @@
         symbol:symbol,
       };
 
-      $("#lineChartDiv").html("");
+      $("#dataTable").html("");
       $.ajax({
         type : "POST",
         async : true,
@@ -99,45 +92,7 @@
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          $("#lineChartDiv").html(datas);
-        },
-        error: function(datas) {            
-        }
-      });
-    }
-
-    $("#getBubble").click(function () {
-      queryBubbleData();
-    });
-
-    function queryBubbleData(){
-      var url = "/cryptoCoinData${bubbleChartUrl}";
-
-      var dataQueryHourRangeStart = $("#dataQueryHourRangeStart").val();
-      var dataQueryHourRangeEnd = $("#dataQueryHourRangeEnd").val();
-      var symbol = $("#symbol").val();
-
-      var jsonOutput = {
-        start:dataQueryHourRangeStart,
-        end:dataQueryHourRangeEnd,
-        symbol:symbol,
-      };
-
-      $("#bubbleChartDiv").html("");
-      $.ajax({
-        type : "POST",
-        async : true,
-        url : url,
-        data: JSON.stringify(jsonOutput),
-        cache : false,
-        contentType: "application/json",
-        <%-- dataType: "json", --%>
-        timeout:50000,
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader(csrfHeader, csrfToken);
-        },
-        success:function(datas){
-          $("#bubbleChartDiv").html(datas);
+          $("#dataTable").html(datas);
         },
         error: function(datas) {            
         }

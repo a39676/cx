@@ -863,7 +863,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 
 		CryptoCoinBigForceOrder po = new CryptoCoinBigForceOrder();
 		try {
-			po.setEventTime(localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(bo.getEventName()));
+			po.setEventTime(bo.getEventTime());
 		} catch (Exception e) {
 			return;
 		}
@@ -899,6 +899,9 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 			LocalDateTime startTime = now.minusHours(setting.getHourCounting());
 			Map<String, CryptoCoinForceOrderSummaryDTO> mostRecentForceOrderSummary = getMostRecentForceOrderSummary(
 					startTime);
+			if (!mostRecentForceOrderSummary.containsKey(FORCE_ORDER_TOTAL_KEY)) {
+				continue;
+			}
 			CryptoCoinForceOrderSummaryDTO totalData = mostRecentForceOrderSummary.get(FORCE_ORDER_TOTAL_KEY);
 			if (setting.getLastNoticeTime() != null
 					&& setting.getLastNoticeTime().plusMinutes(setting.getNoticeGapInMinute()).isAfter(now)) {

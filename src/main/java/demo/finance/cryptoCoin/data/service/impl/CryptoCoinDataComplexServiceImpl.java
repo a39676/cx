@@ -65,11 +65,15 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 	private static final String FORCE_ORDER_TOTAL_KEY = "allTotal";
 
 	@Override
-	public ModelAndView getBigTradeDataBubbleChartBySymbol() {
+	public ModelAndView getBigTradeDataBubbleChartBySymbol(String symbol) {
 		ModelAndView v = new ModelAndView("cryptoCoin/bigTradeChartBySymbolView");
 		v.addObject("title", "Big trade");
 		v.addObject("bubbleChartUrl", CryptoCoinDataUrl.BIG_TRADE_FUTURE_UM_BUBBLE_CHART_BY_SYMBOL);
 		v.addObject("lineChartUrl", CryptoCoinDataUrl.BIG_TRADE_FUTURE_UM_LINE_CHART_BY_SYMBOL);
+		if (StringUtils.isNotBlank(symbol)) {
+			v.addObject("preSetSymbol", symbol);
+			v.addObject("title", "Big trade" + symbol);
+		}
 		return v;
 	}
 
@@ -125,7 +129,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 
 		LocalDateTime now = LocalDateTime.now().withMinute(0).withSecond(0).withNano(0);
 		LocalDateTime startTime = now.minusHours(dto.getStart());
-		LocalDateTime endTime = now.minusHours(dto.getEnd());
+		LocalDateTime endTime = now.minusHours(dto.getEnd() - 1);
 		CryptoCoinBigTradeExample example = new CryptoCoinBigTradeExample();
 		example.createCriteria().andSymbolEqualTo(dto.getSymbol()).andEventTimeGreaterThanOrEqualTo(startTime)
 				.andEventTimeLessThanOrEqualTo(endTime);
@@ -859,7 +863,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 
 		CryptoCoinBigForceOrder po = new CryptoCoinBigForceOrder();
 		try {
-			po.setEventTime(localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(bo.getEventName()));
+			po.setEventTime(bo.getEventTime());
 		} catch (Exception e) {
 			return;
 		}
@@ -895,6 +899,9 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 			LocalDateTime startTime = now.minusHours(setting.getHourCounting());
 			Map<String, CryptoCoinForceOrderSummaryDTO> mostRecentForceOrderSummary = getMostRecentForceOrderSummary(
 					startTime);
+			if (!mostRecentForceOrderSummary.containsKey(FORCE_ORDER_TOTAL_KEY)) {
+				continue;
+			}
 			CryptoCoinForceOrderSummaryDTO totalData = mostRecentForceOrderSummary.get(FORCE_ORDER_TOTAL_KEY);
 			if (setting.getLastNoticeTime() != null
 					&& setting.getLastNoticeTime().plusMinutes(setting.getNoticeGapInMinute()).isAfter(now)) {

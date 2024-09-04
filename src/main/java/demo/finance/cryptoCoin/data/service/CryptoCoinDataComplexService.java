@@ -22,7 +22,7 @@ public interface CryptoCoinDataComplexService {
 
 	void receiveNewBigTradeFutureUmDataMessage(String msg);
 
-	ModelAndView getBigTradeDataBubbleChartBySymbol();
+	ModelAndView getBigTradeDataBubbleChartBySymbol(String symbol);
 
 	ModelAndView getBigTradeBubbleChartBySymbol(CryptoCoinBigTradeQueryDTO dto);
 

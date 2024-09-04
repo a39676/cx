@@ -17,6 +17,8 @@
   <div>
     <div class="row">
       <div class="col-md-12">
+        <button id="oneHour">1 Hours</button>
+        <button id="threeHours">3 Hours</button>
         <button id="twelveHours">12 Hours</button>
         <button id="today">1 Day</button>
         <button id="twoDays">2 Days</button>
@@ -34,9 +36,9 @@
         <input type="number" id="dataQueryHourRangeEnd" style="width: 60px;" 
           placeholder="dataQueryHourRangeEnd" value="0">
         <input type="text" id="symbol" style="width: 100px;" 
-          placeholder="symbol">
-        <button id="submitForBubble">submitForBubble</button>
+          placeholder="symbol" value="${preSetSymbol}">
         <button id="submitForLine">submitForLine</button>
+        <button id="submitForBubble">submitForBubble</button>
       </div>
     </div>
 
@@ -147,6 +149,12 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
+    $("#oneHour").click(function () {
+      setHourRange(1, 0);
+    });
+    $("#threeHours").click(function () {
+      setHourRange(3, 0);
+    });
     $("#twelveHours").click(function () {
       setHourRange(12, 0);
     });

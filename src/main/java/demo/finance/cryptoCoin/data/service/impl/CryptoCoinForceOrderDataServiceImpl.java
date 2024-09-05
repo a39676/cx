@@ -59,9 +59,17 @@ public class CryptoCoinForceOrderDataServiceImpl extends CryptoCoinCommonService
 			}
 
 			if (totalData.getForceBuy().add(totalData.getForceSell()).compareTo(setting.getMinimumAmount()) > 0) {
-				String msg = "In last " + setting.getHourCounting() + " hours, \n" + "force buy amount: "
-						+ totalData.getForceBuy() + ", \n" + "force sell amount: " + totalData.getForceSell() + ",\n"
-						+ " total: " + totalData.getForceBuy().add(totalData.getForceSell());
+				String msg = "In last " + setting.getHourCounting() + " hours, \n";
+				msg += "force buy amount: " + totalData.getForceBuy().setScale(0, RoundingMode.HALF_UP) + ", \n";
+				msg += "force sell amount: " + totalData.getForceSell().setScale(0, RoundingMode.HALF_UP) + ",\n";
+				msg += " total: "
+						+ totalData.getForceBuy().add(totalData.getForceSell()).setScale(0, RoundingMode.HALF_UP)
+						+ ",\n";
+				if (totalData.getForceBuy().compareTo(totalData.getForceSell()) > 0) {
+					msg += "🟢";
+				} else {
+					msg += "🔴";
+				}
 				telegramService.sendMessageByChatRecordId(TelegramBotType.CCM_NOTICE, msg, TelegramStaticChatID.MY_ID);
 				setting.setLastNoticeTime(now);
 			}

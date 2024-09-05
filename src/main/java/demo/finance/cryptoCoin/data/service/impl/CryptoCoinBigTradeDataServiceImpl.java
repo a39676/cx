@@ -225,6 +225,7 @@ public class CryptoCoinBigTradeDataServiceImpl extends CryptoCoinCommonService
 	@Override
 	public ModelAndView getBigTradeSummaryDataTable() {
 		ModelAndView v = new ModelAndView("cryptoCoin/bigTradeDataTable");
+		v.addObject("title", "BigTradeTable");
 		return v;
 	}
 
@@ -254,7 +255,7 @@ public class CryptoCoinBigTradeDataServiceImpl extends CryptoCoinCommonService
 				dataInMap.setSymbol(data.getSymbol());
 				summaryMap.put(data.getSymbol(), dataInMap);
 			}
-			
+
 			if (data.getIsMaker()) {
 				dataInMap.setCountingTotal(dataInMap.getCountingTotal() - 1);
 				dataInMap.setAmountSell(data.getAmount());

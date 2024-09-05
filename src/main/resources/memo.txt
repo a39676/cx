@@ -1,5 +1,6 @@
 crypto coin
 	CryptoCoinPriceCommonDataBO delete field coinType
+	big trade data table 数据统计异常 total != buy + sell
 		
 日历提醒的跳过本次提前提醒异常
 

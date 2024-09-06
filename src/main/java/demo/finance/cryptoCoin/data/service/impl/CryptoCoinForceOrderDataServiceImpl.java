@@ -209,7 +209,7 @@ public class CryptoCoinForceOrderDataServiceImpl extends CryptoCoinCommonService
 	@Override
 	public ModelAndView getBigForceOrderDataChartBySymbol() {
 		ModelAndView v = new ModelAndView("cryptoCoin/bigTradeChartBySymbolView");
-		v.addObject("title", "Big force order");
+		v.addObject("title", "BigForceOrder");
 		v.addObject("bubbleChartUrl", CryptoCoinDataUrl.FORCE_ORDER_FUTURE_UM_CHART_BY_SYMBOL);
 //		v.addObject("lineChartUrl", CryptoCoinDataUrl.FORCE_ORDER_FUTURE_UM_CHART_BY_SYMBOL);
 		return v;

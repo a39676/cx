@@ -6,7 +6,6 @@ crypto coin
 		order
 			open orders
 			order history	
-	big trade data table 数据统计异常 total != buy + sell
 	big trade line chart X line, 2 more extra element
 	force order summary
 		设置 N 小时 : 多个阶梯提醒

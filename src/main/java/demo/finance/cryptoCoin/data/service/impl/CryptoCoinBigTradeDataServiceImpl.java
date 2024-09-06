@@ -257,25 +257,25 @@ public class CryptoCoinBigTradeDataServiceImpl extends CryptoCoinCommonService
 			}
 
 			if (data.getIsMaker()) {
+				dataInMap.setCountingSell(dataInMap.getCountingSell() + 1);
 				dataInMap.setCountingTotal(dataInMap.getCountingTotal() - 1);
 				dataInMap.setAmountSell(data.getAmount());
-				dataInMap.setCountingSell(dataInMap.getCountingSell() + 1);
 				dataInMap.setAmountTotal(dataInMap.getAmountTotal().subtract(data.getAmount()));
 			} else {
+				dataInMap.setCountingBuy(dataInMap.getCountingBuy() + 1);
 				dataInMap.setCountingTotal(dataInMap.getCountingTotal() + 1);
 				dataInMap.setAmountBuy(data.getAmount());
-				dataInMap.setCountingBuy(dataInMap.getCountingBuy() + 1);
 				dataInMap.setAmountTotal(dataInMap.getAmountTotal().add(data.getAmount()));
 			}
 		}
 
 		List<CryptoCoinBigTradeSummaryVO> resultList = new ArrayList<>();
 		for (Entry<String, CryptoCoinBigTradeSummaryVO> entry : summaryMap.entrySet()) {
-			CryptoCoinBigTradeSummaryVO value = entry.getValue();
-			value.setAmountTotal(value.getAmountTotal().setScale(0, RoundingMode.HALF_UP));
-			value.setAmountBuy(value.getAmountBuy().setScale(0, RoundingMode.HALF_UP));
-			value.setAmountSell(value.getAmountSell().setScale(0, RoundingMode.HALF_UP));
-			resultList.add(entry.getValue());
+			CryptoCoinBigTradeSummaryVO vo = entry.getValue();
+			vo.setAmountTotal(vo.getAmountTotal().setScale(0, RoundingMode.HALF_UP));
+			vo.setAmountBuy(vo.getAmountBuy().setScale(0, RoundingMode.HALF_UP));
+			vo.setAmountSell(vo.getAmountSell().setScale(0, RoundingMode.HALF_UP));
+			resultList.add(vo);
 		}
 
 		Collections.sort(resultList);

@@ -62,14 +62,16 @@ public class CryptoCoinOptionService extends CommonService {
 			BeanUtils.copyProperties(tmp, this);
 
 			BigDecimal step = null;
-			for (CryptoCoinSymbolStreamDetailDTO symbol : binanceSymbolList) {
-				step = symbol.getBigStep();
+			for (CryptoCoinSymbolStreamDetailDTO symbolDetail : binanceSymbolList) {
+				step = symbolDetail.getBigStep();
 				if (step.compareTo(this.bigTradeMinAmount) < 0) {
-					this.binanceFutureUmSymbolBigStepMap.put(symbol.getSymbol(), this.bigTradeMinAmount);
+					this.binanceFutureUmSymbolBigStepMap.put(symbolDetail.getSymbol(), this.bigTradeMinAmount);
 				} else {
-					this.binanceFutureUmSymbolBigStepMap.put(symbol.getSymbol(), step);
+					this.binanceFutureUmSymbolBigStepMap.put(symbolDetail.getSymbol(), step);
 				}
-				binanceMainList.add(symbol.getSymbol());
+				if (symbolDetail.getScriptStreamGroupId() <= 1) {
+					binanceMainList.add(symbolDetail.getSymbol());
+				}
 			}
 
 			log.error("crypto coin option loaded");

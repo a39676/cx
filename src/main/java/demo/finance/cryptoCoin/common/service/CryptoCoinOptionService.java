@@ -18,6 +18,7 @@ import com.google.gson.GsonBuilder;
 
 import demo.common.service.CommonService;
 import demo.config.customComponent.OptionFilePathConfigurer;
+import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceUserKeysDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinForceOrderNoticeSettingDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinSymbolStreamDetailDTO;
 import toolPack.ioHandle.FileUtilCustom;
@@ -47,6 +48,7 @@ public class CryptoCoinOptionService extends CommonService {
 	private Map<String, BigDecimal> binanceFutureUmSymbolBigStepMap = new HashMap<>();
 	private BigDecimal bigTradeMinAmount = new BigDecimal(100000);
 	private List<CryptoCoinForceOrderNoticeSettingDTO> forceOrderNoticeSetting;
+	private List<CryptoCoinBinanceUserKeysDTO> userMetaData;
 
 	@PostConstruct
 	public void refreshOption() {
@@ -209,6 +211,14 @@ public class CryptoCoinOptionService extends CommonService {
 		this.forceOrderNoticeSetting = forceOrderNoticeSetting;
 	}
 
+	public List<CryptoCoinBinanceUserKeysDTO> getUserMetaData() {
+		return userMetaData;
+	}
+
+	public void setUserMetaData(List<CryptoCoinBinanceUserKeysDTO> userMetaData) {
+		this.userMetaData = userMetaData;
+	}
+
 	@Override
 	public String toString() {
 		return "CryptoCoinOptionService [defaultCoinCatalog=" + defaultCoinCatalog + ", cryptoCompareApiDataMaxLength="
@@ -220,7 +230,7 @@ public class CryptoCoinOptionService extends CommonService {
 				+ binanceWebSocketTurnOn + ", binanceMainList=" + binanceMainList + ", binanceSymbolList="
 				+ binanceSymbolList + ", binanceFutureUmSymbolBigStepMap=" + binanceFutureUmSymbolBigStepMap
 				+ ", bigTradeMinAmount=" + bigTradeMinAmount + ", forceOrderNoticeSetting=" + forceOrderNoticeSetting
-				+ "]";
+				+ ", userMetaData=" + userMetaData + "]";
 	}
 
 }

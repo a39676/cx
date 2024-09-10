@@ -36,6 +36,7 @@ public class SystemOptionService extends CommonService {
 	private Boolean isDebuging = null;
 	private String fakeFTPHome = null;
 	private String homepageAnnouncementStr = null;
+	private String totpSecretKey = null;
 
 	public String encryptId(Long id) {
 		List<String> encryptIdList = encryptId(Arrays.asList(id));
@@ -229,13 +230,22 @@ public class SystemOptionService extends CommonService {
 		this.homepageAnnouncementStr = homepageAnnouncementStr;
 	}
 
+	public String getTotpSecretKey() {
+		return totpSecretKey;
+	}
+
+	public void setTotpSecretKey(String totpSecretKey) {
+		this.totpSecretKey = totpSecretKey;
+	}
+
 	@Override
 	public String toString() {
 		return "SystemOptionService [aesKey=" + aesKey + ", aesInitVector=" + aesInitVector + ", envName=" + envName
 				+ ", emailD=" + emailD + ", emailC=" + emailC + ", maxAttempts=" + maxAttempts + ", normalWebSiteTitle="
 				+ normalWebSiteTitle + ", normalSubheading=" + normalSubheading + ", webSiteTitle2=" + webSiteTitle2
 				+ ", subheading2=" + subheading2 + ", isJobing=" + isJobing + ", isDebuging=" + isDebuging
-				+ ", fakeFTPHome=" + fakeFTPHome + ", homepageAnnouncementStr=" + homepageAnnouncementStr + "]";
+				+ ", fakeFTPHome=" + fakeFTPHome + ", homepageAnnouncementStr=" + homepageAnnouncementStr
+				+ ", totpSecretKey=" + totpSecretKey + "]";
 	}
 
 	@PostConstruct

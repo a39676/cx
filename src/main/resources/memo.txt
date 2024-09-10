@@ -1,5 +1,6 @@
 crypto coin
 	CryptoCoinPriceCommonDataBO delete field coinType
+			
 	帐号监控
 		资金
 		持仓

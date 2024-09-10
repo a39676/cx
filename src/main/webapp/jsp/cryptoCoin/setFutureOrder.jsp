@@ -35,6 +35,16 @@
               <button id="stopLong" class="btn btn-sm btn-danger">平多</button>
               <button id="stopShort" class="btn btn-sm btn-success">平空</button>
             </td>
+            <td>
+              <select id="userSelector">
+                <option>Please select user</option>
+                <c:forEach items="${userList}" var="subUser" varStatus="loop">
+                  <option value="${subUser.localUserId}" userNickname="${subUser.nickname}">
+                    ${subUser.nickname}
+                  </option>
+                </c:forEach>
+              </select>
+            </td>
           </tr>
           <tr>
             <td>
@@ -147,6 +157,9 @@
       var positionSideCode = $('#positionSide').find(":selected").val();
       var orderTypeCode = $('#orderType').find(":selected").val();
       var preOrderRatio = $("#preOrderRatio").val();
+      var selectedUser = $('#userSelector').find(":selected");
+      var selectedUserId = selectedUser.val();
+      var selectedUserNickname = selectedUser.attr("userNickname");
       
       var orderSymbols = orderSymbolsStr.split(",");
 
@@ -157,7 +170,10 @@
         positionSideCode:positionSideCode,
         orderTypeCode:orderTypeCode,
         preOrderRatio:preOrderRatio,
+        userId:selectedUserId,
+        userNickname:selectedUserNickname,
       };
+
       $("#msg").text("sending");
       $.ajax({
         type : "POST",
@@ -201,6 +217,9 @@
       var positionSideCode = $('#positionSide').find(":selected").val();
       var modifyOrderPriceRatio = $("#preOrderRatio").val();
       var modifyOrderQuantityRatio = $("#orderQuantityRatio").val();
+      var selectedUser = $('#userSelector').find(":selected");
+      var selectedUserId = selectedUser.val();
+      var selectedUserNickname = selectedUser.attr("userNickname");
       
       var modifyOrderSymbols = modifyOrderSymbolsStr.split(",");
 
@@ -211,6 +230,8 @@
         targetPositionSideCode:positionSideCode,
         priceRatio:modifyOrderPriceRatio,
         quantityRatio:modifyOrderQuantityRatio,
+        userId:selectedUserId,
+        userNickname:selectedUserNickname,
       };
 
       $("#msg").text("sending");
@@ -256,6 +277,9 @@
       var orderTypeCode = $('#orderType').find(":selected").val();
       var closePositionByRatioPreOrderRatio = $("#preOrderRatio").val();
       var closePositionQuantityRatio = $("#orderQuantityRatio").val();
+      var selectedUser = $('#userSelector').find(":selected");
+      var selectedUserId = selectedUser.val();
+      var selectedUserNickname = selectedUser.attr("userNickname");
       
       var orderSymbols = orderSymbolsStr.split(",");
 
@@ -266,6 +290,8 @@
         orderTypeCode:orderTypeCode,
         preOrderRatio:closePositionByRatioPreOrderRatio,
         closePositionQuantityRatio:closePositionQuantityRatio,
+        userId:selectedUserId,
+        userNickname:selectedUserNickname,
       };
       $("#msg").text("sending");
       $.ajax({

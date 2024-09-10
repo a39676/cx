@@ -50,6 +50,7 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 	public ModelAndView tradingView() {
 		ModelAndView v = new ModelAndView("cryptoCoin/setFutureOrder");
 		v.addObject("title", "Binance trading(Future UM)");
+		v.addObject("userList", optionService.getUserMetaData());
 
 //		LocalDateTime defaultStartTime = LocalDateTime.now().minusHours(8);
 //
@@ -84,6 +85,10 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 	@Override
 	public CommonResult sendFutureOrder(CryptoCoinBinanceFutureUmBatchOrderDTO dto) {
 		CommonResult r = new CommonResult();
+		if (dto.getUserId() == null || StringUtils.isBlank(dto.getUserNickname())) {
+			r.failWithMessage("User invalid");
+			return r;
+		}
 		if (dto.getSymbols() == null || dto.getSymbols().isEmpty()) {
 			r.failWithMessage("Symbol invalid");
 			return r;
@@ -108,6 +113,7 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 			return r;
 		}
 
+		dto.setTotpCode(genTotpCode());
 		umFutureOrderProducer.binanceUmFutureOrder(dto);
 		r.setIsSuccess();
 		return r;
@@ -116,6 +122,11 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 	@Override
 	public CommonResult sendBtcArbitrageWithBatchOrder(CryptoCoinBinanceFutureUmBtcArbitrageWithBatchDTO dto) {
 		CommonResult r = new CommonResult();
+		if (dto.getUserId() == null || StringUtils.isBlank(dto.getUserNickname())) {
+			r.failWithMessage("User invalid");
+			return r;
+		}
+		
 		if (dto.getSingleAmount() == null || dto.getSingleAmount() < 0) {
 			r.failWithMessage("Amount invalid");
 			return r;
@@ -124,6 +135,7 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 			r.failWithMessage("Symbol invalid");
 			return r;
 		}
+		dto.setTotpCode(genTotpCode());
 		umBtcArbitrageWithBatchProducer.binanceUmBtcArbitrageWithBatch(dto);
 
 		r.setIsSuccess();
@@ -136,6 +148,11 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 		BinanceOrderSideType orderSide = BinanceOrderSideType.getType(dto.getTargetOrderSideCode());
 		BinancePositionSideType positionType = BinancePositionSideType.getType(dto.getTargetPositionSideCode());
 
+		if (dto.getUserId() == null || StringUtils.isBlank(dto.getUserNickname())) {
+			r.failWithMessage("User invalid");
+			return r;
+		}
+		
 		if (orderSide == null || positionType == null) {
 			String msg = "Can NOT update order, " + dto.toString();
 			log.error(msg);
@@ -172,6 +189,7 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 			}
 		}
 
+		dto.setTotpCode(genTotpCode());
 		umFutureOrderModifyProducer.updateOrder(dto);
 		r.setIsSuccess();
 		return r;
@@ -181,6 +199,11 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 	public CommonResult closePositionByRatio(CryptoCoinBinanceFutureUmBatchOrderDTO dto) {
 		CommonResult r = new CommonResult();
 
+		if (dto.getUserId() == null || StringUtils.isBlank(dto.getUserNickname())) {
+			r.failWithMessage("User invalid");
+			return r;
+		}
+		
 		BinanceOrderSideType orderSide = BinanceOrderSideType.getType(dto.getOrderSideCode());
 		if (orderSide == null) {
 			r.failWithMessage("Order side invalid");
@@ -217,6 +240,7 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 			return r;
 		}
 
+		dto.setTotpCode(genTotpCode());
 		umFutureOrderProducer.binanceUmFutureOrder(dto);
 		r.setIsSuccess();
 		return r;
@@ -324,4 +348,5 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 				|| (BinanceOrderSideType.BUY.getCode().equals(dto.getOrderSideCode())
 						&& BinancePositionSideType.SHORT.getCode().equals(dto.getPositionSideCode()));
 	}
+
 }

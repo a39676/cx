@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -18,6 +19,7 @@ import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 import finance.cryptoCoin.pojo.vo.CryptoCoinCatalogVO;
+import tool.service.TimeBasedOneTimePassword;
 
 public abstract class CryptoCoinCommonService extends FinanceCommonService {
 
@@ -25,6 +27,8 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 	protected RedisTemplate<String, Object> redisTemplate;
 	@Autowired
 	protected CryptoCoinOptionService optionService;
+	@Autowired
+	protected TimeBasedOneTimePassword timeBasedOneTimePassword;
 
 	protected static final CurrencyTypeForCryptoCoin defaultCyrrencyTypeForCryptoCoin = CurrencyTypeForCryptoCoin.USDT;
 	protected static final int SCALE_FOR_PRICE_DISPLAY = 8;
@@ -494,5 +498,17 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 		vo.setPk(systemOptionService.encryptId(po.getId()));
 		vo.setEnShortname(po.getCoinNameEnShort());
 		return vo;
+	}
+	
+	protected boolean isValidTotpCode(String code) {
+		if (StringUtils.isBlank(code)) {
+			return false;
+		}
+		String key = systemOptionService.getTotpSecretKey();
+		return timeBasedOneTimePassword.isValid(key, code);
+	}
+
+	protected String genTotpCode() {
+		return timeBasedOneTimePassword.generatorCode(systemOptionService.getTotpSecretKey());
 	}
 }

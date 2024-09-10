@@ -56,10 +56,20 @@
     data: {
       labels: xValues,
       datasets: [{
-        data: ${line},
+        data: ${total},
         borderColor: "#fad7a0",
         fill: false,
-        label: "line"
+        label: "total"
+      },{
+        data: ${buy},
+        borderColor: "#fad7a0",
+        fill: false,
+        label: "buy"
+      },{
+        data: ${sell},
+        borderColor: "#fad7a0",
+        fill: false,
+        label: "sell"
       }]
     },
     options: {

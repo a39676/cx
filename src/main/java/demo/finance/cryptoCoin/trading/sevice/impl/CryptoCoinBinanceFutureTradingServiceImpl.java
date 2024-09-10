@@ -2,8 +2,10 @@ package demo.finance.cryptoCoin.trading.sevice.impl;
 
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -27,12 +29,19 @@ import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureTradingServ
 import finance.cryptoCoin.binance.future.um.pojo.dto.BinanceUpdateOrderDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBatchOrderDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBtcArbitrageWithBatchDTO;
+import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmOpenOrderResponseSubDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmOrderDTO;
+import finance.cryptoCoin.binance.future.um.pojo.result.CryptoCoinBinanceUmFuturePositionInfoResult;
+import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderSideType;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderTypeType;
 import finance.cryptoCoin.binance.pojo.type.BinancePositionSideType;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinOrderCommonDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinAddSymbolGroupDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinSymbolGroupSettingDTO;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import toolPack.httpHandel.HttpUtil;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -126,7 +135,7 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 			r.failWithMessage("User invalid");
 			return r;
 		}
-		
+
 		if (dto.getSingleAmount() == null || dto.getSingleAmount() < 0) {
 			r.failWithMessage("Amount invalid");
 			return r;
@@ -152,7 +161,7 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 			r.failWithMessage("User invalid");
 			return r;
 		}
-		
+
 		if (orderSide == null || positionType == null) {
 			String msg = "Can NOT update order, " + dto.toString();
 			log.error(msg);
@@ -203,7 +212,7 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 			r.failWithMessage("User invalid");
 			return r;
 		}
-		
+
 		BinanceOrderSideType orderSide = BinanceOrderSideType.getType(dto.getOrderSideCode());
 		if (orderSide == null) {
 			r.failWithMessage("Order side invalid");
@@ -349,4 +358,48 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 						&& BinancePositionSideType.SHORT.getCode().equals(dto.getPositionSideCode()));
 	}
 
+	@Override
+	public CryptoCoinBinanceUmFuturePositionInfoResult getPositionInfo(CryptoCoinOrderCommonDTO dto) {
+		CryptoCoinBinanceUmFuturePositionInfoResult r = null;
+		HttpUtil h = new HttpUtil();
+		String url = "https://" + optionService.getCcmHost() + CcmUrlConstant.ROOT + CcmUrlConstant.POSITION_INFO;
+		JSONObject json = JSONObject.fromObject(dto);
+
+		try {
+			String response = h.sendPostRestful(url, json.toString());
+			r = buildObjFromJsonCustomization(response, CryptoCoinBinanceUmFuturePositionInfoResult.class);
+			return r;
+		} catch (Exception e) {
+			e.printStackTrace();
+			r = new CryptoCoinBinanceUmFuturePositionInfoResult();
+			r.setMessage(e.getLocalizedMessage());
+			return r;
+		}
+	}
+
+	@Override
+	public List<CryptoCoinBinanceFutureUmOpenOrderResponseSubDTO> getOpenOrders(CryptoCoinOrderCommonDTO dto) {
+		List<CryptoCoinBinanceFutureUmOpenOrderResponseSubDTO> list = new ArrayList<>();
+		HttpUtil h = new HttpUtil();
+		String url = "https://" + optionService.getCcmHost() + CcmUrlConstant.ROOT + CcmUrlConstant.GET_OPEN_ORDERS;
+		JSONObject json = JSONObject.fromObject(dto);
+
+		try {
+			String response = h.sendPostRestful(url, json.toString());
+			JSONArray jsonArray = JSONArray.fromObject(response);
+			CryptoCoinBinanceFutureUmOpenOrderResponseSubDTO data = null;
+			for (int i = 0; i < jsonArray.size(); i++) {
+				try {
+					data = buildObjFromJsonCustomization(jsonArray.getString(i),
+							CryptoCoinBinanceFutureUmOpenOrderResponseSubDTO.class);
+					list.add(data);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
 }

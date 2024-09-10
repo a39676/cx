@@ -1,4 +1,4 @@
-package demo.finance.cryptoCoin.trading.po.constant;
+package demo.finance.cryptoCoin.trading.pojo.constant;
 
 public class CryptoCoinBinanceTradingUrl {
 

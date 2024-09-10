@@ -49,6 +49,7 @@ public class CryptoCoinOptionService extends CommonService {
 	private BigDecimal bigTradeMinAmount = new BigDecimal(100000);
 	private List<CryptoCoinForceOrderNoticeSettingDTO> forceOrderNoticeSetting;
 	private List<CryptoCoinBinanceUserKeysDTO> userMetaData;
+	private String ccmHost;
 
 	@PostConstruct
 	public void refreshOption() {
@@ -219,6 +220,14 @@ public class CryptoCoinOptionService extends CommonService {
 		this.userMetaData = userMetaData;
 	}
 
+	public String getCcmHost() {
+		return ccmHost;
+	}
+
+	public void setCcmHost(String ccmHost) {
+		this.ccmHost = ccmHost;
+	}
+
 	@Override
 	public String toString() {
 		return "CryptoCoinOptionService [defaultCoinCatalog=" + defaultCoinCatalog + ", cryptoCompareApiDataMaxLength="
@@ -230,7 +239,7 @@ public class CryptoCoinOptionService extends CommonService {
 				+ binanceWebSocketTurnOn + ", binanceMainList=" + binanceMainList + ", binanceSymbolList="
 				+ binanceSymbolList + ", binanceFutureUmSymbolBigStepMap=" + binanceFutureUmSymbolBigStepMap
 				+ ", bigTradeMinAmount=" + bigTradeMinAmount + ", forceOrderNoticeSetting=" + forceOrderNoticeSetting
-				+ ", userMetaData=" + userMetaData + "]";
+				+ ", userMetaData=" + userMetaData + ", ccmHost=" + ccmHost + "]";
 	}
 
 }

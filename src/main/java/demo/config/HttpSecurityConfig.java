@@ -36,7 +36,7 @@ import demo.common.service.CommonService;
 import demo.config.customComponent.CustomAuthenticationProvider;
 import demo.config.customComponent.CustomPasswordEncoder;
 import demo.finance.cryptoCoin.sharing.pojo.constant.CryptoCoinSharingUrl;
-import demo.finance.cryptoCoin.trading.po.constant.CryptoCoinBinanceTradingUrl;
+import demo.finance.cryptoCoin.trading.pojo.constant.CryptoCoinBinanceTradingUrl;
 import demo.finance.currencyExchangeRate.notice.pojo.constant.CurrencyExchangeRateNoticeUrl;
 import demo.image.pojo.constant.ImageUrl;
 import demo.interaction.ccm.pojo.constant.CcmManageUrl;

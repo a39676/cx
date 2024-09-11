@@ -132,6 +132,13 @@
         <%@ include file="./symbolGroupData.jsp"%> 
       </div>
     </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <button id="getPositionInfo">getPositionInfo</button>
+        <div id="getPositionInfoDiv"></div>
+      </div>
+    </div>
   
 </body>
 

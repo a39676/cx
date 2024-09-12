@@ -32,14 +32,9 @@
       </div>
     </div>
   </div>
-
-
 </body>
 
-
-
 <footer>
-  
 </footer>
 <%@ include file="../baseElementJSP/normalJSPart.jsp"%>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?" async defer></script>

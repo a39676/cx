@@ -39,6 +39,7 @@
           placeholder="symbol" value="${preSetSymbol}">
         <button id="getLine">getLine</button>
         <button id="getBubble">getBubble</button>
+        <button id="getLastHourBubble">getLastHourBubble</button>
       </div>
     </div>
 
@@ -115,6 +116,44 @@
 
       var dataQueryHourRangeStart = $("#dataQueryHourRangeStart").val();
       var dataQueryHourRangeEnd = $("#dataQueryHourRangeEnd").val();
+      var symbol = $("#symbol").val();
+
+      var jsonOutput = {
+        start:dataQueryHourRangeStart,
+        end:dataQueryHourRangeEnd,
+        symbol:symbol,
+      };
+
+      $("#bubbleChartDiv").html("");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        <%-- dataType: "json", --%>
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          $("#bubbleChartDiv").html(datas);
+        },
+        error: function(datas) {            
+        }
+      });
+    }
+
+    $("#getLastHourBubble").click(function () {
+      queryBubbleDataForLastHour();
+    });
+
+    function queryBubbleDataForLastHour(){
+      var url = "/cryptoCoinData${bubbleChartUrl}";
+
+      var dataQueryHourRangeStart = 1;
+      var dataQueryHourRangeEnd = 0;
       var symbol = $("#symbol").val();
 
       var jsonOutput = {

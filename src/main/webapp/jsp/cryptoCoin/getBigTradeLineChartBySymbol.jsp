@@ -57,12 +57,12 @@
         label: "total"
       },{
         data: ${buy},
-        borderColor: "#fad7a0",
+        borderColor: "green",
         fill: false,
         label: "buy"
       },{
         data: ${sell},
-        borderColor: "#fad7a0",
+        borderColor: "red",
         fill: false,
         label: "sell"
       }]

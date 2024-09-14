@@ -207,26 +207,22 @@ public class CryptoCoinBigTradeDataServiceImpl extends CryptoCoinCommonService
 		List<BigDecimal> sellList = new ArrayList<>();
 		indexTime = now.minusHours(dto.getStart());
 		BigDecimal lastAmount = BigDecimal.ZERO;
-		BigDecimal lastBuyAmount = BigDecimal.ZERO;
-		BigDecimal lastSellAmount = BigDecimal.ZERO;
 		for (int i = 0; !indexTime.isAfter(endTime); i++) {
 			indexTime = startTime.plusHours(i);
 			CryptoCoinBigTrade dataInMap = summaryDataMap.get(indexTime);
 			if (dataInMap == null) {
 				totalList.add(lastAmount);
-				buyList.add(lastBuyAmount);
-				sellList.add(lastSellAmount);
+				buyList.add(BigDecimal.ZERO);
+				sellList.add(BigDecimal.ZERO);
 			} else {
 				BigDecimal amount = dataInMap.getAmount();
 				lastAmount = lastAmount.add(amount);
 				totalList.add(lastAmount);
 				if (amount.compareTo(BigDecimal.ZERO) > 0) {
-					lastBuyAmount = lastBuyAmount.add(amount);
+					buyList.add(amount);
 				} else {
-					lastSellAmount = lastSellAmount.add(amount);
+					sellList.add(amount);
 				}
-				buyList.add(lastBuyAmount);
-				sellList.add(lastSellAmount);
 			}
 		}
 

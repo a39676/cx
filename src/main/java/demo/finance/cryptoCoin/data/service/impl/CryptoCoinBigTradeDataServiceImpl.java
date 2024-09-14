@@ -221,9 +221,9 @@ public class CryptoCoinBigTradeDataServiceImpl extends CryptoCoinCommonService
 				lastAmount = lastAmount.add(amount);
 				totalList.add(lastAmount);
 				if (amount.compareTo(BigDecimal.ZERO) > 0) {
-					lastBuyAmount.add(amount);
+					lastBuyAmount = lastBuyAmount.add(amount);
 				} else {
-					lastSellAmount.add(amount);
+					lastSellAmount = lastSellAmount.add(amount);
 				}
 				buyList.add(lastBuyAmount);
 				sellList.add(lastSellAmount);

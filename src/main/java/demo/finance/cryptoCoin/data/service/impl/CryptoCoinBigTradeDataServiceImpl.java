@@ -170,26 +170,41 @@ public class CryptoCoinBigTradeDataServiceImpl extends CryptoCoinCommonService
 
 		v.addObject("xValues", timeStringXLine);
 
-		Map<LocalDateTime, CryptoCoinBigTrade> summaryDataMap = new HashMap<>();
+		Map<LocalDateTime, CryptoCoinBigTrade> buySummaryDataMap = new HashMap<>();
+		Map<LocalDateTime, CryptoCoinBigTrade> saleSummaryDataMap = new HashMap<>();
 		for (int i = 0; i < dataList.size(); i++) {
 			CryptoCoinBigTrade dataInList = dataList.get(i);
-			CryptoCoinBigTrade dataInMap = summaryDataMap
-					.get(dataInList.getEventTime().withMinute(0).withSecond(0).withNano(0));
+			LocalDateTime timeOfData = dataInList.getEventTime().withMinute(0).withSecond(0).withNano(0);
+			CryptoCoinBigTrade buyDataInMap = buySummaryDataMap.get(timeOfData);
+			CryptoCoinBigTrade saleDataInMap = saleSummaryDataMap.get(timeOfData);
 
-			if (dataInMap == null) {
-				dataInMap = new CryptoCoinBigTrade();
-				dataInMap.setIsMaker(dataInList.getIsMaker());
+			if (buyDataInMap == null) {
+				buyDataInMap = new CryptoCoinBigTrade();
+				buyDataInMap.setIsMaker(dataInList.getIsMaker());
 				if (dataInList.getIsMaker()) {
-					dataInMap.setAmount(dataInList.getAmount().negate());
+					buyDataInMap.setAmount(BigDecimal.ZERO);
 				} else {
-					dataInMap.setAmount(dataInList.getAmount());
+					buyDataInMap.setAmount(dataInList.getAmount());
 				}
-				summaryDataMap.put(dataInList.getEventTime().withMinute(0).withSecond(0).withNano(0), dataInMap);
+				buySummaryDataMap.put(timeOfData, buyDataInMap);
+			} else {
+				if (!dataInList.getIsMaker()) {
+					buyDataInMap.setAmount(buyDataInMap.getAmount().add(dataInList.getAmount()));
+				}
+			}
+
+			if (saleDataInMap == null) {
+				saleDataInMap = new CryptoCoinBigTrade();
+				saleDataInMap.setIsMaker(dataInList.getIsMaker());
+				if (dataInList.getIsMaker()) {
+					saleDataInMap.setAmount(dataInList.getAmount().negate());
+				} else {
+					saleDataInMap.setAmount(BigDecimal.ZERO);
+				}
+				saleSummaryDataMap.put(timeOfData, saleDataInMap);
 			} else {
 				if (dataInList.getIsMaker()) {
-					dataInMap.setAmount(dataInMap.getAmount().subtract(dataInList.getAmount()));
-				} else {
-					dataInMap.setAmount(dataInMap.getAmount().add(dataInList.getAmount()));
+					saleDataInMap.setAmount(saleDataInMap.getAmount().subtract(dataInList.getAmount()));
 				}
 			}
 		}
@@ -209,23 +224,21 @@ public class CryptoCoinBigTradeDataServiceImpl extends CryptoCoinCommonService
 		BigDecimal lastAmount = BigDecimal.ZERO;
 		for (int i = 0; !indexTime.isAfter(endTime); i++) {
 			indexTime = startTime.plusHours(i);
-			CryptoCoinBigTrade dataInMap = summaryDataMap.get(indexTime);
-			if (dataInMap == null) {
-				totalList.add(lastAmount);
-				buyList.add(BigDecimal.ZERO);
-				sellList.add(BigDecimal.ZERO);
-			} else {
-				BigDecimal amount = dataInMap.getAmount();
-				lastAmount = lastAmount.add(amount);
-				totalList.add(lastAmount);
-				if (amount.compareTo(BigDecimal.ZERO) > 0) {
-					buyList.add(amount);
-					sellList.add(BigDecimal.ZERO);
-				} else {
-					sellList.add(amount);
-					buyList.add(BigDecimal.ZERO);
-				}
+			CryptoCoinBigTrade buyDataInMap = buySummaryDataMap.get(indexTime);
+			CryptoCoinBigTrade saleDataInMap = saleSummaryDataMap.get(indexTime);
+			if (buyDataInMap == null) {
+				buyDataInMap = new CryptoCoinBigTrade();
+				buyDataInMap.setAmount(BigDecimal.ZERO);
 			}
+			if (saleDataInMap == null) {
+				saleDataInMap = new CryptoCoinBigTrade();
+				saleDataInMap.setAmount(BigDecimal.ZERO);
+			}
+			BigDecimal summaryAmount = buyDataInMap.getAmount().add(saleDataInMap.getAmount());
+			lastAmount = lastAmount.add(summaryAmount);
+			totalList.add(lastAmount);
+			buyList.add(buyDataInMap.getAmount());
+			sellList.add(saleDataInMap.getAmount());
 		}
 
 		v.addObject("total", totalList);

@@ -34,8 +34,28 @@
             <c:forEach items="${dataList}" var="subData" varStatus="loop">
               <tr>
                 <td>${subData.symbol}</td>
-                <td>${subData.amountTotal}</td>
-                <td>${subData.countingTotal}</td>
+                <c:choose>
+                  <c:when test="${subData.amountTotal > 0}">
+                    <td class="table-success">${subData.amountTotal}</td>  
+                  </c:when>
+                  <c:when test="${subData.amountTotal < 0}">
+                    <td class="table-danger">${subData.amountTotal}</td>  
+                  </c:when>
+                  <c:otherwise>
+                    <td>${subData.amountTotal}</td>  
+                  </c:otherwise>
+                </c:choose>
+                <c:choose>
+                  <c:when test="${subData.countingTotal > 0}">
+                    <td class="table-success">${subData.countingTotal}</td>  
+                  </c:when>
+                  <c:when test="${subData.countingTotal < 0}">
+                    <td class="table-danger">${subData.countingTotal}</td>  
+                  </c:when>
+                  <c:otherwise>
+                    <td>${subData.countingTotal}</td>
+                  </c:otherwise>
+                </c:choose>
                 <td>${subData.amountBuy}</td>
                 <td>${subData.amountSell}</td>
                 <td>${subData.countingBuy}</td>

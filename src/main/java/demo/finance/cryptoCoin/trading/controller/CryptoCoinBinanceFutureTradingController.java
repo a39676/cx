@@ -74,12 +74,14 @@ public class CryptoCoinBinanceFutureTradingController {
 	}
 	
 	@PostMapping(value = CcmUrlConstant.POSITION_INFO)
-	public CryptoCoinBinanceUmFuturePositionInfoResult getPositionInfo(@RequestBody CryptoCoinOrderCommonDTO dto) {
+	@ResponseBody
+	public ModelAndView getPositionInfo(@RequestBody CryptoCoinOrderCommonDTO dto) {
 		return binanceFutureTradingService.getPositionInfo(dto);
 	}
 
 	@PostMapping(value = CcmUrlConstant.GET_OPEN_ORDERS)
-	public List<CryptoCoinBinanceFutureUmOpenOrderResponseSubDTO> getOpenOrders(
+	@ResponseBody
+	public ModelAndView getOpenOrders(
 			@RequestBody CryptoCoinOrderCommonDTO dto) {
 		return binanceFutureTradingService.getOpenOrders(dto);
 	}

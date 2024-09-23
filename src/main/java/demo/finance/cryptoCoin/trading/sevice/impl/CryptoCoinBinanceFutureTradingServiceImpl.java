@@ -3,6 +3,7 @@ package demo.finance.cryptoCoin.trading.sevice.impl;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -25,11 +26,11 @@ import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmBtcArbitrageWithBatchProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmFutureOrderModifyProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmFutureOrderProducer;
+import demo.finance.cryptoCoin.trading.pojo.vo.CryptoCoinBinanceFutureUmOpenOrderResponseSubVO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureTradingService;
 import finance.cryptoCoin.binance.future.um.pojo.dto.BinanceUpdateOrderDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBatchOrderDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBtcArbitrageWithBatchDTO;
-import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmOpenOrderResponseSubDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmOrderDTO;
 import finance.cryptoCoin.binance.future.um.pojo.result.CryptoCoinBinanceUmFuturePositionInfoResult;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
@@ -359,40 +360,68 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 	}
 
 	@Override
-	public CryptoCoinBinanceUmFuturePositionInfoResult getPositionInfo(CryptoCoinOrderCommonDTO dto) {
-		CryptoCoinBinanceUmFuturePositionInfoResult r = null;
+	public ModelAndView getPositionInfo(CryptoCoinOrderCommonDTO dto) {
+		ModelAndView v = new ModelAndView("cryptoCoin/getPositionTable");
 		HttpUtil h = new HttpUtil();
-		String url = "https://" + optionService.getCcmHost() + CcmUrlConstant.ROOT + CcmUrlConstant.POSITION_INFO;
+		String url = optionService.getCcmHost() + CcmUrlConstant.ROOT + CcmUrlConstant.POSITION_INFO;
+		dto.setTotpCode(genTotpCode());
 		JSONObject json = JSONObject.fromObject(dto);
 
+		CryptoCoinBinanceUmFuturePositionInfoResult r;
 		try {
 			String response = h.sendPostRestful(url, json.toString());
 			r = buildObjFromJsonCustomization(response, CryptoCoinBinanceUmFuturePositionInfoResult.class);
-			return r;
+			if (r.isFail()) {
+				v.addObject("msg", r.getMessage());
+				return v;
+			}
+			v.addObject("dataList", r.getPositionList());
+			return v;
 		} catch (Exception e) {
 			e.printStackTrace();
-			r = new CryptoCoinBinanceUmFuturePositionInfoResult();
-			r.setMessage(e.getLocalizedMessage());
-			return r;
+			v.addObject("msg", e.getLocalizedMessage());
+			return v;
 		}
 	}
 
 	@Override
-	public List<CryptoCoinBinanceFutureUmOpenOrderResponseSubDTO> getOpenOrders(CryptoCoinOrderCommonDTO dto) {
-		List<CryptoCoinBinanceFutureUmOpenOrderResponseSubDTO> list = new ArrayList<>();
+	public ModelAndView getOpenOrders(CryptoCoinOrderCommonDTO dto) {
+		ModelAndView v = new ModelAndView("cryptoCoin/getOpenOrdersTable");
+		List<CryptoCoinBinanceFutureUmOpenOrderResponseSubVO> list = new ArrayList<>();
 		HttpUtil h = new HttpUtil();
-		String url = "https://" + optionService.getCcmHost() + CcmUrlConstant.ROOT + CcmUrlConstant.GET_OPEN_ORDERS;
+		String url = optionService.getCcmHost() + CcmUrlConstant.ROOT + CcmUrlConstant.GET_OPEN_ORDERS;
+		dto.setTotpCode(genTotpCode());
 		JSONObject json = JSONObject.fromObject(dto);
 
 		try {
 			String response = h.sendPostRestful(url, json.toString());
 			JSONArray jsonArray = JSONArray.fromObject(response);
-			CryptoCoinBinanceFutureUmOpenOrderResponseSubDTO data = null;
+			CryptoCoinBinanceFutureUmOpenOrderResponseSubVO dataVO = null;
 			for (int i = 0; i < jsonArray.size(); i++) {
 				try {
-					data = buildObjFromJsonCustomization(jsonArray.getString(i),
-							CryptoCoinBinanceFutureUmOpenOrderResponseSubDTO.class);
-					list.add(data);
+					dataVO = buildObjFromJsonCustomization(jsonArray.getString(i),
+							CryptoCoinBinanceFutureUmOpenOrderResponseSubVO.class);
+					dataVO.setOrderTimeStr(localDateTimeHandler
+							.dateToStr(localDateTimeHandler.dateToLocalDateTime(new Date(dataVO.getTime()))));
+					dataVO.setUpdateTimeStr(localDateTimeHandler
+							.dateToStr(localDateTimeHandler.dateToLocalDateTime(new Date(dataVO.getUpdateTime()))));
+					if (BinanceOrderSideType.BUY.equals(dataVO.getSide())
+							&& BinancePositionSideType.LONG.equals(dataVO.getPositionSide())) {
+						dataVO.setOrderTypeInSimpleWord("开多");
+					} else if (BinanceOrderSideType.BUY.equals(dataVO.getSide())
+							&& BinancePositionSideType.SHORT.equals(dataVO.getPositionSide())) {
+						dataVO.setOrderTypeInSimpleWord("平空");
+					} else if (BinanceOrderSideType.SELL.equals(dataVO.getSide())
+							&& BinancePositionSideType.LONG.equals(dataVO.getPositionSide())) {
+						dataVO.setOrderTypeInSimpleWord("平多");
+					} else if (BinanceOrderSideType.SELL.equals(dataVO.getSide())
+							&& BinancePositionSideType.SHORT.equals(dataVO.getPositionSide())) {
+						dataVO.setOrderTypeInSimpleWord("开空");
+					} else {
+						dataVO.setOrderTypeInSimpleWord(
+								dataVO.getSide().getName() + "," + dataVO.getPositionSide().getName());
+					}
+					list.add(dataVO);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -400,6 +429,7 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return list;
+		v.addObject("dataList", list);
+		return v;
 	}
 }

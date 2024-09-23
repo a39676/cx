@@ -37,7 +37,7 @@
             </td>
             <td>
               <select id="userSelector">
-                <option>Please select user</option>
+                <option value="">Please select user</option>
                 <c:forEach items="${userList}" var="subUser" varStatus="loop">
                   <option value="${subUser.localUserId}" userNickname="${subUser.nickname}">
                     ${subUser.nickname}
@@ -136,11 +136,20 @@
     <div class="row">
       <div class="col-md-12">
         <button id="getPositionInfo">getPositionInfo</button>
-        <div id="getPositionInfoDiv"></div>
       </div>
       <div class="col-md-12">
         <button id="getOpenOrders">getOpenOrders</button>
-        <div id="getOpenOrdersDiv"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div id="positionInfoResult">
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div id="openOrdersResult">
+        </div>
       </div>
     </div>
   
@@ -353,3 +362,86 @@
   });
 </script>
 
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("#getPositionInfo").click(function() {
+      getPositionInfo();
+    });
+
+    function getPositionInfo(){
+      var url = "/cryptoTrading/positionInfo";
+
+      var selectedUser = $('#userSelector').find(":selected");
+      var selectedUserId = selectedUser.val();
+      var selectedUserNickname = selectedUser.attr("userNickname");
+      
+      var jsonOutput = {
+        userId:selectedUserId,
+        userNickname:selectedUserNickname,
+      };
+
+      $("#msg").text("sending");
+      $("#positionInfoResult").html("");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        <%-- dataType: "json", --%>
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          $("#positionInfoResult").html(datas);
+          $("#msg").text("");
+        },
+        error: function(datas) {
+          $("#msg").text(datas.message);
+        }
+      });
+    }
+
+    $("#getOpenOrders").click(function() {
+      openOrdersResult();
+    });
+
+    function openOrdersResult(){
+      var url = "/cryptoTrading/getOpenOrders";
+
+      var selectedUser = $('#userSelector').find(":selected");
+      var selectedUserId = selectedUser.val();
+      var selectedUserNickname = selectedUser.attr("userNickname");
+      
+      var jsonOutput = {
+        userId:selectedUserId,
+        userNickname:selectedUserNickname,
+      };
+
+      $("#msg").text("sending");
+      $("#openOrdersResult").html("");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        <%-- dataType: "json", --%>
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          $("#openOrdersResult").html(datas);
+          $("#msg").text("");
+        },
+        error: function(datas) {
+          $("#msg").text(datas.message);
+        }
+      });
+    }
+  });
+</script>

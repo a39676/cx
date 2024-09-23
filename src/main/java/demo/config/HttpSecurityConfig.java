@@ -35,6 +35,7 @@ import demo.base.user.service.impl.CustomAuthenticationSuccessHandler;
 import demo.common.service.CommonService;
 import demo.config.customComponent.CustomAuthenticationProvider;
 import demo.config.customComponent.CustomPasswordEncoder;
+import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinDataUrl;
 import demo.finance.cryptoCoin.sharing.pojo.constant.CryptoCoinSharingUrl;
 import demo.finance.cryptoCoin.trading.pojo.constant.CryptoCoinBinanceTradingUrl;
 import demo.finance.currencyExchangeRate.notice.pojo.constant.CurrencyExchangeRateNoticeUrl;
@@ -105,6 +106,8 @@ public class HttpSecurityConfig extends CommonService {
 				.antMatchers(AiManagerUrlConstant.ROOT + "/**")
 				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
 				.antMatchers(CryptoCoinBinanceTradingUrl.ROOT + "/**")
+				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+				.antMatchers(CryptoCoinDataUrl.ROOT + "/**")
 				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
 				.antMatchers(AiArtMangerUrl.ROOT + "/**")
 				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))

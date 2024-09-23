@@ -138,6 +138,10 @@
         <button id="getPositionInfo">getPositionInfo</button>
         <div id="getPositionInfoDiv"></div>
       </div>
+      <div class="col-md-12">
+        <button id="getOpenOrders">getOpenOrders</button>
+        <div id="getOpenOrdersDiv"></div>
+      </div>
     </div>
   
 </body>

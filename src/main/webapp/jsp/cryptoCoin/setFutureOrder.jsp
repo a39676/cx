@@ -369,7 +369,7 @@
     });
 
     function getPositionInfo(){
-      var url = "/cryptoTrading/positionInfo";
+      var url = "/cryptoTrading/positionInfoUm";
 
       var selectedUser = $('#userSelector').find(":selected");
       var selectedUserId = selectedUser.val();
@@ -409,7 +409,7 @@
     });
 
     function openOrdersResult(){
-      var url = "/cryptoTrading/getOpenOrders";
+      var url = "/cryptoTrading/getOpenOrdersUm";
 
       var selectedUser = $('#userSelector').find(":selected");
       var selectedUserId = selectedUser.val();

@@ -17,7 +17,7 @@ import finance.cryptoCoin.binance.future.um.pojo.dto.BinanceUpdateOrderDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBatchOrderDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBtcArbitrageWithBatchDTO;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
-import finance.cryptoCoin.common.pojo.dto.CryptoCoinOrderCommonDTO;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinAddSymbolGroupDTO;
 
 @Controller
@@ -69,16 +69,16 @@ public class CryptoCoinBinanceFutureTradingController {
 		return binanceFutureTradingService.deleteSymbolGroup(dto);
 	}
 	
-	@PostMapping(value = CcmUrlConstant.POSITION_INFO)
+	@PostMapping(value = CcmUrlConstant.POSITION_INFO_UM)
 	@ResponseBody
-	public ModelAndView getPositionInfo(@RequestBody CryptoCoinOrderCommonDTO dto) {
+	public ModelAndView getPositionInfoUm(@RequestBody CryptoCoinInteractionCommonDTO dto) {
 		return binanceFutureTradingService.getPositionInfo(dto);
 	}
 
-	@PostMapping(value = CcmUrlConstant.GET_OPEN_ORDERS)
+	@PostMapping(value = CcmUrlConstant.GET_OPEN_ORDERS_UM)
 	@ResponseBody
-	public ModelAndView getOpenOrders(
-			@RequestBody CryptoCoinOrderCommonDTO dto) {
+	public ModelAndView getOpenOrdersUm(
+			@RequestBody CryptoCoinInteractionCommonDTO dto) {
 		return binanceFutureTradingService.getOpenOrders(dto);
 	}
 }

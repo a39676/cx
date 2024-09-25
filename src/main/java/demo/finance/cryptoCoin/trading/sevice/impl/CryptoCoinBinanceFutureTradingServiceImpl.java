@@ -37,7 +37,7 @@ import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderSideType;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderTypeType;
 import finance.cryptoCoin.binance.pojo.type.BinancePositionSideType;
-import finance.cryptoCoin.common.pojo.dto.CryptoCoinOrderCommonDTO;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinAddSymbolGroupDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinSymbolGroupSettingDTO;
 import net.sf.json.JSONArray;
@@ -360,10 +360,10 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 	}
 
 	@Override
-	public ModelAndView getPositionInfo(CryptoCoinOrderCommonDTO dto) {
+	public ModelAndView getPositionInfo(CryptoCoinInteractionCommonDTO dto) {
 		ModelAndView v = new ModelAndView("cryptoCoin/getPositionTable");
 		HttpUtil h = new HttpUtil();
-		String url = optionService.getCcmHost() + CcmUrlConstant.ROOT + CcmUrlConstant.POSITION_INFO;
+		String url = optionService.getCcmHost() + CcmUrlConstant.ROOT + CcmUrlConstant.POSITION_INFO_UM;
 		dto.setTotpCode(genTotpCode());
 		JSONObject json = JSONObject.fromObject(dto);
 
@@ -385,11 +385,11 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 	}
 
 	@Override
-	public ModelAndView getOpenOrders(CryptoCoinOrderCommonDTO dto) {
+	public ModelAndView getOpenOrders(CryptoCoinInteractionCommonDTO dto) {
 		ModelAndView v = new ModelAndView("cryptoCoin/getOpenOrdersTable");
 		List<CryptoCoinBinanceFutureUmOpenOrderResponseSubVO> list = new ArrayList<>();
 		HttpUtil h = new HttpUtil();
-		String url = optionService.getCcmHost() + CcmUrlConstant.ROOT + CcmUrlConstant.GET_OPEN_ORDERS;
+		String url = optionService.getCcmHost() + CcmUrlConstant.ROOT + CcmUrlConstant.GET_OPEN_ORDERS_UM;
 		dto.setTotpCode(genTotpCode());
 		JSONObject json = JSONObject.fromObject(dto);
 

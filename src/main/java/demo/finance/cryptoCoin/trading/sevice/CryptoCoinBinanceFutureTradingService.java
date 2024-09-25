@@ -7,7 +7,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import finance.cryptoCoin.binance.future.um.pojo.dto.BinanceUpdateOrderDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBatchOrderDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBtcArbitrageWithBatchDTO;
-import finance.cryptoCoin.common.pojo.dto.CryptoCoinOrderCommonDTO;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinAddSymbolGroupDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinSymbolGroupSettingDTO;
 
@@ -29,8 +29,8 @@ public interface CryptoCoinBinanceFutureTradingService {
 
 	CryptoCoinSymbolGroupSettingDTO getSymbolGroupData();
 
-	ModelAndView getPositionInfo(CryptoCoinOrderCommonDTO dto);
+	ModelAndView getPositionInfo(CryptoCoinInteractionCommonDTO dto);
 
-	ModelAndView getOpenOrders(CryptoCoinOrderCommonDTO dto);
+	ModelAndView getOpenOrders(CryptoCoinInteractionCommonDTO dto);
 
 }

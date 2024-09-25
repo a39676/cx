@@ -33,7 +33,11 @@
           <tbody>
             <c:forEach items="${dataList}" var="subData" varStatus="loop">
               <tr>
-                <td>${subData.symbol}</td>
+                <td>
+                  <a href="https://www.zhang3.xyz/cryptoCoinData/bigTradeFutureUmChartBySymbol?symbol=${subData.symbol}">
+                    ${subData.symbol}
+                  </a>
+                </td>
                 <c:choose>
                   <c:when test="${subData.amountTotal > 0}">
                     <td class="table-success">${subData.amountTotal}</td>  

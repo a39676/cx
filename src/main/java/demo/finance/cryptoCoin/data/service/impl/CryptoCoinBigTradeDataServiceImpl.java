@@ -296,15 +296,24 @@ public class CryptoCoinBigTradeDataServiceImpl extends CryptoCoinCommonService
 		}
 
 		List<CryptoCoinBigTradeSummaryVO> resultList = new ArrayList<>();
+		CryptoCoinBigTradeSummaryVO total = new CryptoCoinBigTradeSummaryVO();
 		for (Entry<String, CryptoCoinBigTradeSummaryVO> entry : summaryMap.entrySet()) {
 			CryptoCoinBigTradeSummaryVO vo = entry.getValue();
 			vo.setAmountTotal(vo.getAmountTotal().setScale(0, RoundingMode.HALF_UP));
 			vo.setAmountBuy(vo.getAmountBuy().setScale(0, RoundingMode.HALF_UP));
 			vo.setAmountSell(vo.getAmountSell().setScale(0, RoundingMode.HALF_UP));
 			resultList.add(vo);
+			total.setAmountTotal(total.getAmountTotal().add(vo.getAmountTotal()));
+			total.setAmountBuy(total.getAmountBuy().add(vo.getAmountBuy()));
+			total.setAmountSell(total.getAmountSell().add(vo.getAmountSell()));
 		}
 
 		Collections.sort(resultList);
+		total.setSymbol("");
+		total.setAmountTotal(total.getAmountTotal().setScale(0, RoundingMode.HALF_UP));
+		total.setAmountBuy(total.getAmountBuy().setScale(0, RoundingMode.HALF_UP));
+		total.setAmountSell(total.getAmountSell().setScale(0, RoundingMode.HALF_UP));
+		resultList.add(total);
 		v.addObject("dataList", resultList);
 		return v;
 	}

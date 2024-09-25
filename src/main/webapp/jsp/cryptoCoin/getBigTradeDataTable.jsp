@@ -34,7 +34,8 @@
             <c:forEach items="${dataList}" var="subData" varStatus="loop">
               <tr>
                 <td>
-                  <a href="https://www.zhang3.xyz/cryptoCoinData/bigTradeFutureUmChartBySymbol?symbol=${subData.symbol}">
+                  <a href="https://www.zhang3.xyz/cryptoCoinData/bigTradeFutureUmChartBySymbol?symbol=${subData.symbol}"
+                   target="_blank">
                     ${subData.symbol}
                   </a>
                 </td>

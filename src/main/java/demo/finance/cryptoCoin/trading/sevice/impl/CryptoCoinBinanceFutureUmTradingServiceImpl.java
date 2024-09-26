@@ -27,7 +27,7 @@ import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmBtcArbitra
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmFutureOrderModifyProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmFutureOrderProducer;
 import demo.finance.cryptoCoin.trading.pojo.vo.CryptoCoinBinanceFutureUmOpenOrderResponseSubVO;
-import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureTradingService;
+import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureUmTradingService;
 import finance.cryptoCoin.binance.future.um.pojo.dto.BinanceUpdateOrderDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBatchOrderDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBtcArbitrageWithBatchDTO;
@@ -46,8 +46,8 @@ import toolPack.httpHandel.HttpUtil;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
-public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonService
-		implements CryptoCoinBinanceFutureTradingService {
+public class CryptoCoinBinanceFutureUmTradingServiceImpl extends CryptoCoinCommonService
+		implements CryptoCoinBinanceFutureUmTradingService {
 
 	@Autowired
 	private CryptoCoinBinanceUmFutureOrderProducer umFutureOrderProducer;
@@ -59,7 +59,7 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 	@Override
 	public ModelAndView tradingView() {
 		ModelAndView v = new ModelAndView("cryptoCoin/setFutureOrder");
-		v.addObject("title", "Binance trading(Future UM)");
+		v.addObject("title", "BinanceTrading(Future UM)");
 		v.addObject("userList", optionService.getUserMetaData());
 
 //		LocalDateTime defaultStartTime = LocalDateTime.now().minusHours(8);
@@ -361,7 +361,7 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 
 	@Override
 	public ModelAndView getPositionInfo(CryptoCoinInteractionCommonDTO dto) {
-		ModelAndView v = new ModelAndView("cryptoCoin/getPositionTable");
+		ModelAndView v = new ModelAndView("cryptoCoin/getFutureUmPositionTable");
 		HttpUtil h = new HttpUtil();
 		String url = optionService.getCcmHost() + CcmUrlConstant.ROOT + CcmUrlConstant.POSITION_INFO_UM;
 		dto.setTotpCode(genTotpCode());
@@ -386,7 +386,7 @@ public class CryptoCoinBinanceFutureTradingServiceImpl extends CryptoCoinCommonS
 
 	@Override
 	public ModelAndView getOpenOrders(CryptoCoinInteractionCommonDTO dto) {
-		ModelAndView v = new ModelAndView("cryptoCoin/getOpenOrdersTable");
+		ModelAndView v = new ModelAndView("cryptoCoin/getFutureUmOpenOrdersTable");
 		List<CryptoCoinBinanceFutureUmOpenOrderResponseSubVO> list = new ArrayList<>();
 		HttpUtil h = new HttpUtil();
 		String url = optionService.getCcmHost() + CcmUrlConstant.ROOT + CcmUrlConstant.GET_OPEN_ORDERS_UM;

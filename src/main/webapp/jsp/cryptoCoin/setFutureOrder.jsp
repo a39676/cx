@@ -169,7 +169,7 @@
     });
 
     function sendFutureOrder(){
-      var url = "/cryptoTrading/binanceFutureUmSendOrder";
+      var url = "/cryptoTradingFutureUm/binanceFutureUmSendOrder";
 
       var orderSymbolsStr = $("#orderSymbols").val();
       var orderAmount = $("#orderAmount").val();
@@ -229,7 +229,7 @@
     });
 
     function sendFutureOrderModify(){
-      var url = "/cryptoTrading/binanceUmBatchOrderModify";
+      var url = "/cryptoTradingFutureUm/binanceUmBatchOrderModify";
 
       var modifyOrderSymbolsStr = $("#orderSymbols").val();
       var modifyOrderId = $("#modifyOrderId").val();
@@ -289,7 +289,7 @@
     });
 
     function closePositionByQuantityRatio(){
-      var url = "/cryptoTrading/binanceUmClosePositionByQuantityRatio";
+      var url = "/cryptoTradingFutureUm/binanceUmClosePositionByQuantityRatio";
 
       var orderSymbolsStr = $("#orderSymbols").val();
       var orderSideCode = $('#orderSide').find(":selected").val();
@@ -369,7 +369,7 @@
     });
 
     function getPositionInfo(){
-      var url = "/cryptoTrading/positionInfoUm";
+      var url = "/cryptoTradingFutureUm/positionInfoUm";
 
       var selectedUser = $('#userSelector').find(":selected");
       var selectedUserId = selectedUser.val();
@@ -409,7 +409,7 @@
     });
 
     function openOrdersResult(){
-      var url = "/cryptoTrading/getOpenOrdersUm";
+      var url = "/cryptoTradingFutureUm/getOpenOrdersUm";
 
       var selectedUser = $('#userSelector').find(":selected");
       var selectedUserId = selectedUser.val();

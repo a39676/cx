@@ -63,7 +63,7 @@
     });
 
     function addSymbolGroup(){
-      var url = "/cryptoTrading/addSymbolGroupData";
+      var url = "/cryptoTradingFutureUm/addSymbolGroupData";
 
       var newSymbolGroup = $("#newSymbolGroup").val();
       var newSymbolGroupName = $("#newSymbolGroupName").val();
@@ -103,7 +103,7 @@
     });
 
     function delSymbolGroup(){
-      var url = "/cryptoTrading/delSymbolGroupData";
+      var url = "/cryptoTradingFutureUm/delSymbolGroupData";
 
       var delShortingSymbolByKey = $("#delShortingSymbolByKey").val();
 

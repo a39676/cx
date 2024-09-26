@@ -12,7 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.trading.pojo.constant.CryptoCoinBinanceTradingUrl;
-import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureTradingService;
+import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureUmTradingService;
 import finance.cryptoCoin.binance.future.um.pojo.dto.BinanceUpdateOrderDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBatchOrderDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBtcArbitrageWithBatchDTO;
@@ -21,64 +21,63 @@ import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinAddSymbolGroupDTO;
 
 @Controller
-@RequestMapping(value = CryptoCoinBinanceTradingUrl.ROOT)
+@RequestMapping(value = CryptoCoinBinanceTradingUrl.FUTURE_UM_ROOT)
 public class CryptoCoinBinanceFutureTradingController {
 
 	@Autowired
-	private CryptoCoinBinanceFutureTradingService binanceFutureTradingService;
+	private CryptoCoinBinanceFutureUmTradingService binanceFutureUmTradingService;
 
-	@GetMapping(value = CryptoCoinBinanceTradingUrl.VIEW)
+	@GetMapping(value = CryptoCoinBinanceTradingUrl.FUTURE_UM_VIEW)
 	public ModelAndView tradingView() {
-		return binanceFutureTradingService.tradingView();
+		return binanceFutureUmTradingService.tradingView();
 	}
 
 	@PostMapping(value = CryptoCoinBinanceTradingUrl.BINANCE_FUTURE_UM_SEND_ORDER)
 	@ResponseBody
 	public CommonResult sendFutureOrder(@RequestBody CryptoCoinBinanceFutureUmBatchOrderDTO dto) {
-		return binanceFutureTradingService.sendFutureOrder(dto);
+		return binanceFutureUmTradingService.sendFutureOrder(dto);
 	}
 
 	@PostMapping(value = CryptoCoinBinanceTradingUrl.BINANCE_FUTURE_UM_BTC_ARBITRAGE_BATCH_ORDER)
 	@ResponseBody
 	public CommonResult sendBtcArbitrageWithBatchOrder(
 			@RequestBody CryptoCoinBinanceFutureUmBtcArbitrageWithBatchDTO dto) {
-		return binanceFutureTradingService.sendBtcArbitrageWithBatchOrder(dto);
+		return binanceFutureUmTradingService.sendBtcArbitrageWithBatchOrder(dto);
 	}
 
 	@PostMapping(value = CryptoCoinBinanceTradingUrl.BINANCE_FUTURE_UM_BATCH_ORDER_MODIFY)
 	@ResponseBody
 	public CommonResult batchOrderModify(@RequestBody BinanceUpdateOrderDTO dto) {
-		return binanceFutureTradingService.batchOrderModify(dto);
+		return binanceFutureUmTradingService.batchOrderModify(dto);
 	}
 
 	@PostMapping(value = CryptoCoinBinanceTradingUrl.BINANCE_FUTURE_UM_CLOSE_POSITION_BY_RATIO)
 	@ResponseBody
 	public CommonResult closePositionByRatio(@RequestBody CryptoCoinBinanceFutureUmBatchOrderDTO dto) {
-		return binanceFutureTradingService.closePositionByRatio(dto);
+		return binanceFutureUmTradingService.closePositionByRatio(dto);
 	}
 
 	@PostMapping(value = CryptoCoinBinanceTradingUrl.ADD_SYMBOL_GROUP_DATA)
 	@ResponseBody
 	public CommonResult addShortingSymbolList(@RequestBody CryptoCoinAddSymbolGroupDTO dto) {
-		return binanceFutureTradingService.addSymbolGroup(dto);
+		return binanceFutureUmTradingService.addSymbolGroup(dto);
 	}
 
 	@PostMapping(value = CryptoCoinBinanceTradingUrl.DEL_SYMBOL_GROUP_DATA)
 	@ResponseBody
 	public CommonResult deleteShortingSymbolList(@RequestBody BaseStrDTO dto) {
-		return binanceFutureTradingService.deleteSymbolGroup(dto);
+		return binanceFutureUmTradingService.deleteSymbolGroup(dto);
 	}
-	
+
 	@PostMapping(value = CcmUrlConstant.POSITION_INFO_UM)
 	@ResponseBody
 	public ModelAndView getPositionInfoUm(@RequestBody CryptoCoinInteractionCommonDTO dto) {
-		return binanceFutureTradingService.getPositionInfo(dto);
+		return binanceFutureUmTradingService.getPositionInfo(dto);
 	}
 
 	@PostMapping(value = CcmUrlConstant.GET_OPEN_ORDERS_UM)
 	@ResponseBody
-	public ModelAndView getOpenOrdersUm(
-			@RequestBody CryptoCoinInteractionCommonDTO dto) {
-		return binanceFutureTradingService.getOpenOrders(dto);
+	public ModelAndView getOpenOrdersUm(@RequestBody CryptoCoinInteractionCommonDTO dto) {
+		return binanceFutureUmTradingService.getOpenOrders(dto);
 	}
 }

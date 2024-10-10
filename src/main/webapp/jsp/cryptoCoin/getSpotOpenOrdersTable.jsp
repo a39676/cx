@@ -26,56 +26,57 @@
         <table class="table table-striped table-bordered table-hover">
           <thead>
             <tr>
+              <td>timeStr</td>
               <td>symbol</td>
+              <td>side</td>
               <td>price</td>
-              <td>origQty</td>
-              <td>executedQty</td>
-              <td>cummulativeQuoteQty</td>
+              <td>type</td>
+              <td>下单数量</td> <%-- (origQty) --%>
+              <td>已执行</td> <%-- (executedQty) --%>
+              <td>累计报价数量</td> <%-- (cummulativeQuoteQty) --%>
               <td>status</td>
               <td>timeInForce</td>
-              <td>type</td>
-              <td>side</td>
+              <td>更新时间</td>
+              <td>workingTimeStr</td>
               <td>stopPrice</td>
               <td>icebergQty</td>
-              <td>time</td>
               <td>updateTime</td>
               <td>isWorking</td>
               <td>workingTime</td>
-              <td>origQuoteOrderQty</td>
+              <td>原始报价数量</td> <%-- (origQuoteOrderQty) --%>
               <td>selfTradePreventionMode</td>
+              <td>time</td>
               <td>orderId</td>
               <td>orderListId</td>
               <td>clientOrderId</td>
             </tr>
           </thead>
           <tbody>
-            <c:forEach items="${dataList}" var="subData" varStatus="loop">
+            <c:forEach items="${orderList}" var="subData" varStatus="loop">
               <tr>
+                <td>${subData.timeStr}</td>
                 <td>${subData.symbol}</td>
-                <td>${subData.orderTimeStr}</td>
-                <td>${subData.updateTimeStr}</td>
-                <td>${subData.orderTypeInSimpleWord}</td>
-                <td>${subData.origQty}</td>
+                <td>${subData.side}</td>
                 <td>${subData.price}</td>
-                <td>${subData.stopPrice}</td>
-                <td>${subData.avgPrice}</td>
-                <td>${subData.executedQty}</td>
-                <td>${subData.cumQuote}</td>
-                <td>${subData.status}</td>
-                <td>${subData.timeInForce.cnName}(${subData.timeInForce})</td>
-                <td>${subData.origType}</td>
-                <td>${subData.reduceOnly}</td>
-                <td>${subData.closePosition}</td>
                 <td>${subData.type}</td>
-                <td>${subData.activatePrice}</td>
-                <td>${subData.priceRate}</td>
-                <td>${subData.workingType}</td>
-                <td>${subData.priceProtect}</td>
-                <td>${subData.priceMatch}</td>
+                <td>${subData.origQty}</td>
+                <td>${subData.executedQty}</td>
+                <td>${subData.cummulativeQuoteQty}</td>
+                <td>${subData.status}</td>
+                <td>${subData.timeInForce}</td>
+                <td>${subData.updateTimeStr}</td>
+                <td>${subData.workingTimeStr}</td>
+                <td>${subData.stopPrice}</td>
+                <td>${subData.icebergQty}</td>
+                <td>${subData.updateTime}</td>
+                <td>${subData.isWorking}</td>
+                <td>${subData.workingTime}</td>
+                <td>${subData.origQuoteOrderQty}</td>
                 <td>${subData.selfTradePreventionMode}</td>
-                <td>${subData.goodTillDate}</td>
-                <td>${subData.clientOrderId}</td>
+                <td>${subData.time}</td>
                 <td>${subData.orderId}</td>
+                <td>${subData.orderListId}</td>
+                <td>${subData.clientOrderId}</td>
               </tr>
             </c:forEach>
           </tbody>

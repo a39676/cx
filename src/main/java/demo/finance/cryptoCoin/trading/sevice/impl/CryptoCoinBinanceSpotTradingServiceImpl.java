@@ -85,6 +85,7 @@ public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonSer
 						.dateToStr(localDateTimeHandler.dateToLocalDateTime(new Date(order.getUpdateTime()))));
 				vo.setWorkingTimeStr(localDateTimeHandler
 						.dateToStr(localDateTimeHandler.dateToLocalDateTime(new Date(order.getWorkingTime()))));
+				
 				voList.add(vo);
 			}
 			v.addObject("orderList", voList);

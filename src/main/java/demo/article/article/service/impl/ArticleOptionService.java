@@ -120,6 +120,9 @@ public class ArticleOptionService extends CommonService {
 	}
 
 	public String getArticleBurnStorePrefixPath() {
+		if (articleBurnStorePrefixPath.startsWith(System.getProperty("user.home"))) {
+			return articleBurnStorePrefixPath;
+		}
 		return System.getProperty("user.home") + articleBurnStorePrefixPath;
 	}
 
@@ -128,6 +131,9 @@ public class ArticleOptionService extends CommonService {
 	}
 
 	public String getArticleStorePrefixPath() {
+		if (articleStorePrefixPath.startsWith(System.getProperty("user.home"))) {
+			return articleStorePrefixPath;
+		}
 		return System.getProperty("user.home") + articleStorePrefixPath;
 	}
 
@@ -136,6 +142,9 @@ public class ArticleOptionService extends CommonService {
 	}
 
 	public String getArticleImageSavingFolder() {
+		if (articleImageSavingFolder.startsWith(System.getProperty("user.home"))) {
+			return articleImageSavingFolder;
+		}
 		return System.getProperty("user.home") + articleImageSavingFolder;
 	}
 
@@ -144,6 +153,9 @@ public class ArticleOptionService extends CommonService {
 	}
 
 	public String getArticleSummaryStorePrefixPath() {
+		if (articleSummaryStorePrefixPath.startsWith(System.getProperty("user.home"))) {
+			return articleSummaryStorePrefixPath;
+		}
 		return System.getProperty("user.home") + articleSummaryStorePrefixPath;
 	}
 
@@ -152,6 +164,9 @@ public class ArticleOptionService extends CommonService {
 	}
 
 	public String getArticleChannelPrefixStorePath() {
+		if (articleChannelPrefixStorePath.startsWith(System.getProperty("user.home"))) {
+			return articleChannelPrefixStorePath;
+		}
 		return System.getProperty("user.home") + articleChannelPrefixStorePath;
 	}
 

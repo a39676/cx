@@ -29,8 +29,8 @@ public interface CryptoCoinBinanceFutureUmTradingService {
 
 	CryptoCoinSymbolGroupSettingDTO getSymbolGroupData();
 
-	ModelAndView getPositionInfo(CryptoCoinInteractionCommonDTO dto);
+	ModelAndView getFutureUmPositionInfo(CryptoCoinInteractionCommonDTO dto);
 
-	ModelAndView getOpenOrders(CryptoCoinInteractionCommonDTO dto);
+	ModelAndView getFutureUmOpenOrders(CryptoCoinInteractionCommonDTO dto);
 
 }

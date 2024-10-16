@@ -113,6 +113,9 @@
         <a href="/cryptoCoinData/forceOrderFutureUmChartBySymbol" target="_blank">forceOrderFutureUmChartBySymbol</a>
       </li>
       <li>
+        <a href="/cryptoTradingFutureCm/futureCmView" target="_blank">trading(future CM)</a>
+      </li>
+      <li>
         <a href="/cryptoTradingFutureUm/futureUmView" target="_blank">trading(future UM)</a>
       </li>
       <li>

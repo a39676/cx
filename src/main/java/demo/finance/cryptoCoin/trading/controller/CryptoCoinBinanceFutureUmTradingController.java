@@ -22,7 +22,7 @@ import finance.cryptoCoin.pojo.dto.CryptoCoinAddSymbolGroupDTO;
 
 @Controller
 @RequestMapping(value = CryptoCoinBinanceTradingUrl.FUTURE_UM_ROOT)
-public class CryptoCoinBinanceFutureTradingController {
+public class CryptoCoinBinanceFutureUmTradingController {
 
 	@Autowired
 	private CryptoCoinBinanceFutureUmTradingService binanceFutureUmTradingService;
@@ -72,12 +72,12 @@ public class CryptoCoinBinanceFutureTradingController {
 	@PostMapping(value = CcmUrlConstant.POSITION_INFO_UM)
 	@ResponseBody
 	public ModelAndView getPositionInfoUm(@RequestBody CryptoCoinInteractionCommonDTO dto) {
-		return binanceFutureUmTradingService.getPositionInfo(dto);
+		return binanceFutureUmTradingService.getFutureUmPositionInfo(dto);
 	}
 
 	@PostMapping(value = CcmUrlConstant.GET_OPEN_ORDERS_UM)
 	@ResponseBody
 	public ModelAndView getOpenOrdersUm(@RequestBody CryptoCoinInteractionCommonDTO dto) {
-		return binanceFutureUmTradingService.getOpenOrders(dto);
+		return binanceFutureUmTradingService.getFutureUmOpenOrders(dto);
 	}
 }

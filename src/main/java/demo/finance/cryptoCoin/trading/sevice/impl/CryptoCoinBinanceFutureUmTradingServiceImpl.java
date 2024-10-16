@@ -58,7 +58,7 @@ public class CryptoCoinBinanceFutureUmTradingServiceImpl extends CryptoCoinCommo
 
 	@Override
 	public ModelAndView tradingView() {
-		ModelAndView v = new ModelAndView("cryptoCoin/setFutureOrder");
+		ModelAndView v = new ModelAndView("cryptoCoin/setFutureUmOrder");
 		v.addObject("title", "BinanceTrading(Future UM)");
 		v.addObject("userList", optionService.getUserMetaData());
 
@@ -360,7 +360,7 @@ public class CryptoCoinBinanceFutureUmTradingServiceImpl extends CryptoCoinCommo
 	}
 
 	@Override
-	public ModelAndView getPositionInfo(CryptoCoinInteractionCommonDTO dto) {
+	public ModelAndView getFutureUmPositionInfo(CryptoCoinInteractionCommonDTO dto) {
 		ModelAndView v = new ModelAndView("cryptoCoin/getFutureUmPositionTable");
 		HttpUtil h = new HttpUtil();
 		String url = optionService.getCcmHost() + CcmUrlConstant.ROOT + CcmUrlConstant.POSITION_INFO_UM;
@@ -385,7 +385,7 @@ public class CryptoCoinBinanceFutureUmTradingServiceImpl extends CryptoCoinCommo
 	}
 
 	@Override
-	public ModelAndView getOpenOrders(CryptoCoinInteractionCommonDTO dto) {
+	public ModelAndView getFutureUmOpenOrders(CryptoCoinInteractionCommonDTO dto) {
 		ModelAndView v = new ModelAndView("cryptoCoin/getFutureUmOpenOrdersTable");
 		List<CryptoCoinBinanceFutureUmOpenOrderResponseSubVO> list = new ArrayList<>();
 		HttpUtil h = new HttpUtil();
@@ -432,4 +432,5 @@ public class CryptoCoinBinanceFutureUmTradingServiceImpl extends CryptoCoinCommo
 		v.addObject("dataList", list);
 		return v;
 	}
+
 }

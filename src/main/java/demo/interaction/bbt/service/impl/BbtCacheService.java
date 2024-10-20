@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 public class BbtCacheService {
 
 	private boolean isAlive = true;
+	private int bbtFailedCounting = 0;
+	private int bbtMaxFailed = 3;
 
 	public boolean getIsAlive() {
 		return isAlive;
@@ -17,9 +19,26 @@ public class BbtCacheService {
 		this.isAlive = isAlive;
 	}
 
+	public int getBbtFailedCounting() {
+		return bbtFailedCounting;
+	}
+
+	public void setBbtFailedCounting(int bbtFailedCounting) {
+		this.bbtFailedCounting = bbtFailedCounting;
+	}
+
+	public int getBbtMaxFailed() {
+		return bbtMaxFailed;
+	}
+
+	public void setBbtMaxFailed(int bbtMaxFailed) {
+		this.bbtMaxFailed = bbtMaxFailed;
+	}
+
 	@Override
 	public String toString() {
-		return "BbtCacheService [isAlive=" + isAlive + "]";
+		return "BbtCacheService [isAlive=" + isAlive + ", bbtFailedCounting=" + bbtFailedCounting + ", bbtMaxFailed="
+				+ bbtMaxFailed + "]";
 	}
 
 }

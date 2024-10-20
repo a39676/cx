@@ -81,11 +81,18 @@ public class BbtComplexServiceImpl extends BbtCommonService implements BbtComple
 			String response = h.sendGet(url);
 			if (response != null && response.contains("pong")) {
 				bbtCacheService.setIsAlive(true);
+				bbtCacheService.setBbtFailedCounting(0);
 			} else {
-				bbtCacheService.setIsAlive(false);
+				bbtCacheService.setBbtFailedCounting(bbtCacheService.getBbtFailedCounting() + 1);
+				if (bbtCacheService.getBbtFailedCounting() >= bbtCacheService.getBbtMaxFailed()) {
+					bbtCacheService.setIsAlive(false);
+				}
 			}
 		} catch (Exception e) {
-			bbtCacheService.setIsAlive(false);
+			bbtCacheService.setBbtFailedCounting(bbtCacheService.getBbtFailedCounting() + 1);
+			if (bbtCacheService.getBbtFailedCounting() >= bbtCacheService.getBbtMaxFailed()) {
+				bbtCacheService.setIsAlive(false);
+			}
 		}
 	}
 }

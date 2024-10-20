@@ -52,4 +52,9 @@ public class BbtController extends CommonController {
 		return "Done";
 	}
 
+	@PostMapping(value = CxBbtInteractionUrl.WORKER_PING)
+	@ResponseBody
+	public CommonResult workerPing() {
+		return bbtComplexService.getBbtIsAlive();
+	}
 }

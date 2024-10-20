@@ -13,4 +13,8 @@ public interface BbtComplexService {
 
 	CommonResult receiveCnStockMarketData(CnStockMarketDataDTO dto);
 
+	CommonResult getBbtIsAlive();
+
+	void checkBbtIsAlive();
+
 }

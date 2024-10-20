@@ -36,6 +36,7 @@ public class SystemOptionService extends CommonService {
 	private Boolean isDebuging = null;
 	private String fakeFTPHome = null;
 	private String homepageAnnouncementStr = null;
+	private String bbtHost = null;
 	private String totpSecretKey = null;
 
 	public String encryptId(Long id) {
@@ -238,14 +239,22 @@ public class SystemOptionService extends CommonService {
 		this.totpSecretKey = totpSecretKey;
 	}
 
+	public String getBbtHost() {
+		return bbtHost;
+	}
+
+	public void setBbtHost(String bbtHost) {
+		this.bbtHost = bbtHost;
+	}
+
 	@Override
 	public String toString() {
 		return "SystemOptionService [aesKey=" + aesKey + ", aesInitVector=" + aesInitVector + ", envName=" + envName
 				+ ", emailD=" + emailD + ", emailC=" + emailC + ", maxAttempts=" + maxAttempts + ", normalWebSiteTitle="
 				+ normalWebSiteTitle + ", normalSubheading=" + normalSubheading + ", webSiteTitle2=" + webSiteTitle2
 				+ ", subheading2=" + subheading2 + ", isJobing=" + isJobing + ", isDebuging=" + isDebuging
-				+ ", fakeFTPHome=" + fakeFTPHome + ", homepageAnnouncementStr=" + homepageAnnouncementStr
-				+ ", totpSecretKey=" + totpSecretKey + "]";
+				+ ", fakeFTPHome=" + fakeFTPHome + ", homepageAnnouncementStr=" + homepageAnnouncementStr + ", bbtHost="
+				+ bbtHost + ", totpSecretKey=" + totpSecretKey + "]";
 	}
 
 	@PostConstruct

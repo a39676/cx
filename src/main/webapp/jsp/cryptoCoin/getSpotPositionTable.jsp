@@ -34,7 +34,11 @@
           <tbody>
             <c:forEach items="${accountInfo.balances}" var="balance" varStatus="loop">
               <tr>
-                <td>${balance.asset}</td>
+                <td>
+                  ${balance.asset}
+                  <a href="/cryptoTradingSpot/getOrdersBySymbolSpot?symbol=${balance.asset}USDT&userId=${userId}&nickname=${nickname}" target="_blank">USDT</a>
+                  <a href="/cryptoTradingSpot/getOrdersBySymbolSpot?symbol=${balance.asset}USDC&userId=${userId}&nickname=${nickname}" target="_blank">USDC</a>
+                </td>
                 <td>${balance.free}</td>
                 <td>${balance.locked}</td>
               </tr>

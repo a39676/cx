@@ -12,6 +12,7 @@ import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.trading.pojo.vo.CryptoCoinBinanceSpotOrderVO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceSpotTradingService;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
+import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceQueryOrdersDTO;
 import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceSpotOrderDTO;
 import finance.cryptoCoin.binance.spot.pojo.result.CryptoCoinBinanceSpotAccountInfoResult;
 import finance.cryptoCoin.binance.spot.pojo.result.CryptoCoinBinanceSpotOrderListResult;
@@ -49,6 +50,8 @@ public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonSer
 				return v;
 			}
 			v.addObject("accountInfo", r.getInfo());
+			v.addObject("userId", dto.getUserId());
+			v.addObject("nickname", dto.getUserNickname());
 			return v;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -85,7 +88,7 @@ public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonSer
 						.dateToStr(localDateTimeHandler.dateToLocalDateTime(new Date(order.getUpdateTime()))));
 				vo.setWorkingTimeStr(localDateTimeHandler
 						.dateToStr(localDateTimeHandler.dateToLocalDateTime(new Date(order.getWorkingTime()))));
-				
+
 				voList.add(vo);
 			}
 			v.addObject("orderList", voList);
@@ -95,4 +98,44 @@ public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonSer
 			return v;
 		}
 	}
+
+	@Override
+	public ModelAndView getOrdersBySymbol(CryptoCoinBinanceQueryOrdersDTO dto) {
+		ModelAndView v = new ModelAndView("cryptoCoin/getSpotOpenOrdersTable");
+
+		HttpUtil h = new HttpUtil();
+		String url = optionService.getCcmHost() + CcmUrlConstant.ROOT + CcmUrlConstant.GET_ORDERS_BY_SYMBOL_SPOT;
+		dto.setTotpCode(genTotpCode());
+		JSONObject json = JSONObject.fromObject(dto);
+
+		CryptoCoinBinanceSpotOrderListResult r = null;
+		try {
+			String response = h.sendPostRestful(url, json.toString());
+			r = buildObjFromJsonCustomization(response, CryptoCoinBinanceSpotOrderListResult.class);
+			if (r.isFail()) {
+				v.addObject("msg", r.getMessage());
+				return v;
+			}
+			List<CryptoCoinBinanceSpotOrderVO> voList = new ArrayList<>();
+			for (int i = 0; i < r.getOrderList().size(); i++) {
+				CryptoCoinBinanceSpotOrderVO vo = new CryptoCoinBinanceSpotOrderVO();
+				CryptoCoinBinanceSpotOrderDTO order = r.getOrderList().get(i);
+				BeanUtils.copyProperties(order, vo);
+				vo.setTimeStr(localDateTimeHandler
+						.dateToStr(localDateTimeHandler.dateToLocalDateTime(new Date(order.getTime()))));
+				vo.setUpdateTimeStr(localDateTimeHandler
+						.dateToStr(localDateTimeHandler.dateToLocalDateTime(new Date(order.getUpdateTime()))));
+				vo.setWorkingTimeStr(localDateTimeHandler
+						.dateToStr(localDateTimeHandler.dateToLocalDateTime(new Date(order.getWorkingTime()))));
+
+				voList.add(vo);
+			}
+			v.addObject("orderList", voList);
+			return v;
+		} catch (Exception e) {
+			v.addObject("msg", e.getLocalizedMessage());
+			return v;
+		}
+	}
+
 }

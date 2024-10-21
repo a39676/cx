@@ -1,5 +1,10 @@
 crypto coin
 	CryptoCoinPriceCommonDataBO delete field coinType
+	
+	CryptoCoinBinanceSpotTradingController
+		getOpenOrdersUm 
+			因前端技术所限, 临时粗糙实现
+			应使用 POST , 并在页面局部刷新
 			
 	帐号监控
 		资金

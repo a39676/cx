@@ -6,12 +6,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.finance.cryptoCoin.trading.pojo.constant.CryptoCoinBinanceTradingUrl;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceSpotTradingService;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
+import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceQueryOrdersDTO;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
 
 @Controller
@@ -36,5 +38,22 @@ public class CryptoCoinBinanceSpotTradingController {
 	@ResponseBody
 	public ModelAndView getOpenOrdersUm(@RequestBody CryptoCoinInteractionCommonDTO dto) {
 		return binanceSpotTradingService.getOpenOrders(dto);
+	}
+
+//	@PostMapping(value = CcmUrlConstant.GET_ORDERS_BY_SYMBOL_SPOT)
+//	@ResponseBody
+//	public ModelAndView getOpenOrdersUm(@RequestBody CryptoCoinBinanceQueryOrdersDTO dto) {
+//		return binanceSpotTradingService.getOrdersBySymbol(dto);
+//	}
+
+	@GetMapping(value = CcmUrlConstant.GET_ORDERS_BY_SYMBOL_SPOT)
+	@ResponseBody
+	public ModelAndView getOpenOrdersUm(@RequestParam("symbol") String symbol, @RequestParam("userId") Integer userId,
+			@RequestParam("nickname") String nickname) {
+		CryptoCoinBinanceQueryOrdersDTO dto = new CryptoCoinBinanceQueryOrdersDTO();
+		dto.setSymbol(symbol);
+		dto.setUserId(userId);
+		dto.setUserNickname(nickname);
+		return binanceSpotTradingService.getOrdersBySymbol(dto);
 	}
 }

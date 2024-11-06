@@ -18,7 +18,7 @@ import com.google.gson.GsonBuilder;
 
 import demo.common.service.CommonService;
 import demo.config.customComponent.OptionFilePathConfigurer;
-import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceUserKeysDTO;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinUserKeysDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinForceOrderNoticeSettingDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinSymbolStreamDetailDTO;
 import toolPack.ioHandle.FileUtilCustom;
@@ -48,7 +48,7 @@ public class CryptoCoinOptionService extends CommonService {
 	private Map<String, BigDecimal> binanceFutureUmSymbolBigStepMap = new HashMap<>();
 	private BigDecimal bigTradeMinAmount = new BigDecimal(100000);
 	private List<CryptoCoinForceOrderNoticeSettingDTO> forceOrderNoticeSetting;
-	private List<CryptoCoinBinanceUserKeysDTO> userMetaData;
+	private List<CryptoCoinUserKeysDTO> userMetaData;
 	private String ccmHost;
 
 	@PostConstruct
@@ -212,11 +212,11 @@ public class CryptoCoinOptionService extends CommonService {
 		this.forceOrderNoticeSetting = forceOrderNoticeSetting;
 	}
 
-	public List<CryptoCoinBinanceUserKeysDTO> getUserMetaData() {
+	public List<CryptoCoinUserKeysDTO> getUserMetaData() {
 		return userMetaData;
 	}
 
-	public void setUserMetaData(List<CryptoCoinBinanceUserKeysDTO> userMetaData) {
+	public void setUserMetaData(List<CryptoCoinUserKeysDTO> userMetaData) {
 		this.userMetaData = userMetaData;
 	}
 

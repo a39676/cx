@@ -48,7 +48,10 @@
             <c:forEach items="${dataList}" var="subData" varStatus="loop">
               <tr>
                 <td>${subData.symbol}</td>
-                <td>${subData.positionAmt}</td>
+                <td>
+                  ${subData.positionAmt}<br>
+                  ${subData.positionAmt * subData.entryPrice} (USDT)
+                </td>
                 <td>${subData.entryPrice}</td>
                 <td>${subData.breakEvenPrice}</td>
                 <td>${subData.markPrice}</td>

@@ -1,5 +1,7 @@
 package demo.finance.cryptoCoin.trading.sevice.impl;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,6 +16,7 @@ import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceSpotTradingServic
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
 import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceQueryOrdersDTO;
 import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceSpotOrderDTO;
+import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceWalletExtendDetailDTO;
 import finance.cryptoCoin.binance.spot.pojo.result.CryptoCoinBinanceSpotAccountInfoResult;
 import finance.cryptoCoin.binance.spot.pojo.result.CryptoCoinBinanceSpotOrderListResult;
 import finance.cryptoCoin.binance.spot.pojo.result.CryptoCoinBinanceWalletResult;
@@ -156,6 +159,29 @@ public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonSer
 				v.addObject("msg", r.getMessage());
 				return v;
 			}
+
+			BigDecimal total = BigDecimal.ZERO;
+			for (int i = 0; i < r.getDetailList().size(); i++) {
+				CryptoCoinBinanceWalletExtendDetailDTO detail = r.getDetailList().get(i);
+				if (detail.getBalance() != null) {
+					total = total.add(detail.getBalance());
+					detail.setBalance(detail.getBalance().setScale(SCALE_FOR_PRICE_DISPLAY, RoundingMode.HALF_UP));
+					if (detail.getBalanceInUSDT() != null) {
+						detail.setBalanceInUSDT(detail.getBalanceInUSDT().setScale(2, RoundingMode.HALF_UP));
+					}
+				}
+			}
+
+			for (int i = 0; i < r.getDetailList().size(); i++) {
+				CryptoCoinBinanceWalletExtendDetailDTO detail = r.getDetailList().get(i);
+				if (detail.getBalance() != null) {
+					detail.setPercentOfAmountInAccount(
+							detail.getBalance().divide(total, 4, RoundingMode.HALF_UP).multiply(new BigDecimal(100)));
+				} else {
+					detail.setPercentOfAmountInAccount(BigDecimal.ZERO);
+				}
+			}
+
 			v.addObject("detailList", r.getDetailList());
 			return v;
 		} catch (Exception e) {

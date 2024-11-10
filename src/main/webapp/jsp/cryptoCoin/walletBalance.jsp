@@ -41,7 +41,8 @@
                 <td>${subData.activate}</td>
                 <td>
                   ${subData.balance}<br>
-                  ${subData.balanceInUSDT}
+                  ${subData.balanceInUSDT}<br>
+                  ${subData.percentOfAmountInAccount}%
                 </td>
               </tr>
             </c:forEach>

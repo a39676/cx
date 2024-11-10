@@ -186,6 +186,7 @@ public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonSer
 
 			CryptoCoinBinanceWalletExtendDetailDTO detail = new CryptoCoinBinanceWalletExtendDetailDTO();
 			detail.setActivate(true);
+			detail.setWalletName("Total");
 			detail.setBalance(total);
 			detail.setBalanceInUSDT(totalInUSDT);
 			detail.setPercentOfAmountInAccount(new BigDecimal(100));

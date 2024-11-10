@@ -54,8 +54,10 @@ public class CryptoCoinDataController extends CommonController {
 	}
 
 	@GetMapping(value = CryptoCoinDataUrl.BIG_TRADE_FUTURE_UM_CHART_BY_SYMBOL)
-	public ModelAndView getBigMoveSummaryChartBySymbol(@RequestParam(name = "symbol", required = false) String symbol) {
-		return cryptoCoinBigTradeDataService.getBigTradeDataBubbleChartBySymbol(symbol);
+	public ModelAndView getBigMoveSummaryChartBySymbol(@RequestParam(name = "symbol", required = false) String symbol,
+			@RequestParam(name = "start", required = false, defaultValue = "0") Integer hourRangeStart,
+			@RequestParam(name = "end", required = false, defaultValue = "0") Integer hourRangeEnd) {
+		return cryptoCoinBigTradeDataService.getBigTradeDataBubbleChartBySymbol(symbol, hourRangeStart, hourRangeEnd);
 	}
 
 	@PostMapping(value = CryptoCoinDataUrl.BIG_TRADE_FUTURE_UM_BUBBLE_CHART_BY_SYMBOL)

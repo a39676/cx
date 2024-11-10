@@ -31,10 +31,10 @@
       <div class="col-md-12">
         <label>HourRangeStart</label> 
         <input type="number" id="dataQueryHourRangeStart" style="width: 60px;" 
-          placeholder="dataQueryHourRangeStart" value="24">
+          placeholder="dataQueryHourRangeStart" value="${hourRangeStart}">
         <label>HourRangeEnd</label> 
         <input type="number" id="dataQueryHourRangeEnd" style="width: 60px;" 
-          placeholder="dataQueryHourRangeEnd" value="0">
+          placeholder="dataQueryHourRangeEnd" value="${hourRangeEnd}">
         <input type="text" id="symbol" style="width: 100px;" 
           placeholder="symbol" value="${preSetSymbol}">
         <button id="getLine">getLine</button>

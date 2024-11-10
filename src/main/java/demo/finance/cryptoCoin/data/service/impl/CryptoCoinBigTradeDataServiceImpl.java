@@ -80,14 +80,27 @@ public class CryptoCoinBigTradeDataServiceImpl extends CryptoCoinCommonService
 	}
 
 	@Override
-	public ModelAndView getBigTradeDataBubbleChartBySymbol(String symbol) {
+	public ModelAndView getBigTradeDataBubbleChartBySymbol(String symbol, Integer hourRangeStart,
+			Integer hourRangeEnd) {
 		ModelAndView v = new ModelAndView("cryptoCoin/bigTradeChartBySymbolView");
 		v.addObject("title", "BigTrade");
 		v.addObject("bubbleChartUrl", CryptoCoinDataUrl.BIG_TRADE_FUTURE_UM_BUBBLE_CHART_BY_SYMBOL);
 		v.addObject("lineChartUrl", CryptoCoinDataUrl.BIG_TRADE_FUTURE_UM_LINE_CHART_BY_SYMBOL);
 		if (StringUtils.isNotBlank(symbol)) {
 			v.addObject("preSetSymbol", symbol);
-			v.addObject("title", "Big trade" + symbol);
+			v.addObject("title", "BigTrade" + symbol);
+		}
+		
+		if (hourRangeStart != null) {
+			v.addObject("hourRangeStart", hourRangeStart);
+		} else {
+			v.addObject("hourRangeStart", 24);
+		}
+		
+		if (hourRangeEnd != null) {
+			v.addObject("hourRangeEnd", hourRangeEnd);
+		} else {
+			v.addObject("hourRangeEnd", 0);
 		}
 		return v;
 	}
@@ -258,7 +271,9 @@ public class CryptoCoinBigTradeDataServiceImpl extends CryptoCoinCommonService
 	@Override
 	public ModelAndView getBigTradeSummaryDataTable(CryptoCoinBigTradeQueryDTO dto) {
 		ModelAndView v = new ModelAndView("cryptoCoin/getBigTradeDataTable");
-
+		v.addObject("start", dto.getStart());
+		v.addObject("end", dto.getEnd());
+		
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime startTime = now.minusHours(dto.getStart());
 		LocalDateTime endTime = now.minusHours(dto.getEnd());

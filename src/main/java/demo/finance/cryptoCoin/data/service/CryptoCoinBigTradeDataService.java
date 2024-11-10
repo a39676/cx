@@ -12,7 +12,7 @@ public interface CryptoCoinBigTradeDataService {
 
 	ModelAndView getBigTradeLineChartBySymbol(CryptoCoinBigTradeQueryDTO dto);
 
-	ModelAndView getBigTradeDataBubbleChartBySymbol(String symbol);
+	ModelAndView getBigTradeDataBubbleChartBySymbol(String symbol, Integer hourRangeStart, Integer hourRangeEnd);
 
 	ModelAndView getBigTradeSummaryDataTable();
 

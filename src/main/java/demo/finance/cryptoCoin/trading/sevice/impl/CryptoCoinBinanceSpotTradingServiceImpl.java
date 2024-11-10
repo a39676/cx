@@ -161,12 +161,14 @@ public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonSer
 			}
 
 			BigDecimal total = BigDecimal.ZERO;
+			BigDecimal totalInUSDT = BigDecimal.ZERO;
 			for (int i = 0; i < r.getDetailList().size(); i++) {
 				CryptoCoinBinanceWalletExtendDetailDTO detail = r.getDetailList().get(i);
 				if (detail.getBalance() != null) {
 					total = total.add(detail.getBalance());
 					detail.setBalance(detail.getBalance().setScale(SCALE_FOR_PRICE_DISPLAY, RoundingMode.HALF_UP));
 					if (detail.getBalanceInUSDT() != null) {
+						totalInUSDT = totalInUSDT.add(detail.getBalanceInUSDT());
 						detail.setBalanceInUSDT(detail.getBalanceInUSDT().setScale(2, RoundingMode.HALF_UP));
 					}
 				}
@@ -181,6 +183,13 @@ public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonSer
 					detail.setPercentOfAmountInAccount(BigDecimal.ZERO);
 				}
 			}
+
+			CryptoCoinBinanceWalletExtendDetailDTO detail = new CryptoCoinBinanceWalletExtendDetailDTO();
+			detail.setActivate(true);
+			detail.setBalance(total);
+			detail.setBalanceInUSDT(totalInUSDT);
+			detail.setPercentOfAmountInAccount(new BigDecimal(100));
+			r.getDetailList().add(detail);
 
 			v.addObject("detailList", r.getDetailList());
 			return v;

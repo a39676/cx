@@ -16,6 +16,7 @@ import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceQueryOrdersDTO;
 import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceSpotOrderDTO;
 import finance.cryptoCoin.binance.spot.pojo.result.CryptoCoinBinanceSpotAccountInfoResult;
 import finance.cryptoCoin.binance.spot.pojo.result.CryptoCoinBinanceSpotOrderListResult;
+import finance.cryptoCoin.binance.spot.pojo.result.CryptoCoinBinanceWalletResult;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
 import net.sf.json.JSONObject;
 import toolPack.httpHandel.HttpUtil;
@@ -131,6 +132,31 @@ public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonSer
 				voList.add(vo);
 			}
 			v.addObject("orderList", voList);
+			return v;
+		} catch (Exception e) {
+			v.addObject("msg", e.getLocalizedMessage());
+			return v;
+		}
+	}
+
+	@Override
+	public ModelAndView getWalletBalance(CryptoCoinInteractionCommonDTO dto) {
+		ModelAndView v = new ModelAndView("cryptoCoin/walletBalance");
+
+		HttpUtil h = new HttpUtil();
+		String url = optionService.getCcmHost() + CcmUrlConstant.ROOT + CcmUrlConstant.GET_WALLET_BALANCE;
+		dto.setTotpCode(genTotpCode());
+		JSONObject json = JSONObject.fromObject(dto);
+
+		CryptoCoinBinanceWalletResult r = null;
+		try {
+			String response = h.sendPostRestful(url, json.toString());
+			r = buildObjFromJsonCustomization(response, CryptoCoinBinanceWalletResult.class);
+			if (r.isFail()) {
+				v.addObject("msg", r.getMessage());
+				return v;
+			}
+			v.addObject("detailList", r.getDetailList());
 			return v;
 		} catch (Exception e) {
 			v.addObject("msg", e.getLocalizedMessage());

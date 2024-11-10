@@ -51,6 +51,9 @@
       <div class="col-md-12">
         <button id="getOpenOrders">getOpenOrders</button>
       </div>
+      <div class="col-md-12">
+        <button id="getWalletBalance">getWalletBalance</button>
+      </div>
     </div>
 
     <div class="row">
@@ -60,6 +63,10 @@
       </div>
       <div class="col-md-12">
         <div id="openOrdersResult">
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div id="openWalletBalanceResult">
         </div>
       </div>
     </div>
@@ -148,6 +155,46 @@
         },
         success:function(datas){
           $("#openOrdersResult").html(datas);
+          $("#msg").text("");
+        },
+        error: function(datas) {
+          $("#msg").text(datas.message);
+        }
+      });
+    }
+
+    $("#getWalletBalance").click(function() {
+      walletBalanceResult();
+    });
+
+    function walletBalanceResult(){
+      var url = "/cryptoTradingSpot/getWalletBalance";
+
+      var selectedUser = $('#userSelector').find(":selected");
+      var selectedUserId = selectedUser.val();
+      var selectedUserNickname = selectedUser.attr("userNickname");
+      
+      var jsonOutput = {
+        userId:selectedUserId,
+        userNickname:selectedUserNickname,
+      };
+
+      $("#msg").text("sending");
+      $("#openWalletBalanceResult").html("");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        <%-- dataType: "json", --%>
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          $("#openWalletBalanceResult").html(datas);
           $("#msg").text("");
         },
         error: function(datas) {

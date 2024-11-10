@@ -45,6 +45,12 @@ public class CryptoCoinBinanceSpotTradingController {
 //	public ModelAndView getOpenOrdersUm(@RequestBody CryptoCoinBinanceQueryOrdersDTO dto) {
 //		return binanceSpotTradingService.getOrdersBySymbol(dto);
 //	}
+	
+	@PostMapping(value = CcmUrlConstant.GET_WALLET_BALANCE)
+	@ResponseBody
+	public ModelAndView getWalletBalance(@RequestBody CryptoCoinInteractionCommonDTO dto) {
+		return binanceSpotTradingService.getWalletBalance(dto);
+	}
 
 	@GetMapping(value = CcmUrlConstant.GET_ORDERS_BY_SYMBOL_SPOT)
 	@ResponseBody

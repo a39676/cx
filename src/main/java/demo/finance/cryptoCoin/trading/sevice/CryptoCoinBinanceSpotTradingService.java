@@ -15,4 +15,6 @@ public interface CryptoCoinBinanceSpotTradingService {
 
 	ModelAndView getOrdersBySymbol(CryptoCoinBinanceQueryOrdersDTO dto);
 
+	ModelAndView getWalletBalance(CryptoCoinInteractionCommonDTO dto);
+
 }

@@ -90,13 +90,13 @@ public class CryptoCoinBigTradeDataServiceImpl extends CryptoCoinCommonService
 			v.addObject("preSetSymbol", symbol);
 			v.addObject("title", "BigTrade" + symbol);
 		}
-		
+
 		if (hourRangeStart != null) {
 			v.addObject("hourRangeStart", hourRangeStart);
 		} else {
 			v.addObject("hourRangeStart", 24);
 		}
-		
+
 		if (hourRangeEnd != null) {
 			v.addObject("hourRangeEnd", hourRangeEnd);
 		} else {
@@ -159,8 +159,11 @@ public class CryptoCoinBigTradeDataServiceImpl extends CryptoCoinCommonService
 		LocalDateTime startTime = now.minusHours(dto.getStart());
 		LocalDateTime endTime = now.minusHours(dto.getEnd() - 1);
 		CryptoCoinBigTradeExample example = new CryptoCoinBigTradeExample();
-		example.createCriteria().andSymbolEqualTo(dto.getSymbol()).andEventTimeGreaterThanOrEqualTo(startTime)
-				.andEventTimeLessThanOrEqualTo(endTime);
+		Criteria criteria = example.createCriteria();
+		criteria.andEventTimeGreaterThanOrEqualTo(startTime).andEventTimeLessThanOrEqualTo(endTime);
+		if (StringUtils.isNotBlank(dto.getSymbol())) {
+			criteria.andSymbolEqualTo(dto.getSymbol());
+		}
 		List<CryptoCoinBigTrade> dataList = cryptoCoinBigTradeMapper.selectByExample(example);
 
 		// for debug
@@ -273,7 +276,7 @@ public class CryptoCoinBigTradeDataServiceImpl extends CryptoCoinCommonService
 		ModelAndView v = new ModelAndView("cryptoCoin/getBigTradeDataTable");
 		v.addObject("start", dto.getStart());
 		v.addObject("end", dto.getEnd());
-		
+
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime startTime = now.minusHours(dto.getStart());
 		LocalDateTime endTime = now.minusHours(dto.getEnd());

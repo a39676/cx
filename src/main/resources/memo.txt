@@ -1,11 +1,12 @@
 crypto coin
 	CryptoCoinForceOrderDataServiceImpl.receiveNewForceOrderFutureUmDataMessage
 		SQL update to "insert or update"
+			该表没有主键, 目前信息价值有限, 但数据量巨大, 先搁置
 		
 	CryptoCoinPriceCommonDataBO delete field coinType
 	
 	CryptoCoinBinanceSpotTradingController
-		getOpenOrdersUm 
+		getOrderHistory()
 			因前端技术所限, 临时粗糙实现
 			应使用 POST , 并在页面局部刷新
 			

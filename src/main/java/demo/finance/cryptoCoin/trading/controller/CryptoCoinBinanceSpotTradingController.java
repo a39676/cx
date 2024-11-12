@@ -54,7 +54,7 @@ public class CryptoCoinBinanceSpotTradingController {
 
 	@GetMapping(value = CcmUrlConstant.GET_ORDERS_BY_SYMBOL_SPOT)
 	@ResponseBody
-	public ModelAndView getOpenOrdersUm(@RequestParam("symbol") String symbol, @RequestParam("userId") Integer userId,
+	public ModelAndView getOrderHistory(@RequestParam("symbol") String symbol, @RequestParam("userId") Integer userId,
 			@RequestParam("nickname") String nickname) {
 		CryptoCoinBinanceSpotQueryOrdersDTO dto = new CryptoCoinBinanceSpotQueryOrdersDTO();
 		dto.setSymbol(symbol);

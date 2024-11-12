@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.trading.pojo.constant.CryptoCoinBinanceTradingUrl;
+import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureUmGetOrderBySymbolDTO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureUmTradingService;
 import finance.cryptoCoin.binance.future.um.pojo.dto.BinanceUpdateOrderDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBatchOrderDTO;
@@ -80,4 +81,11 @@ public class CryptoCoinBinanceFutureUmTradingController {
 	public ModelAndView getOpenOrdersUm(@RequestBody CryptoCoinInteractionCommonDTO dto) {
 		return binanceFutureUmTradingService.getFutureUmOpenOrders(dto);
 	}
+
+	@PostMapping(value = CcmUrlConstant.GET_ORDERS_BY_SYMBOL_UM)
+	@ResponseBody
+	public ModelAndView getOpenOrdersUm(@RequestBody CryptoCoinBinanceFutureUmGetOrderBySymbolDTO dto) {
+		return binanceFutureUmTradingService.getOrdersBySymbol(dto);
+	}
+
 }

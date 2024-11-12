@@ -47,7 +47,11 @@
           <tbody>
             <c:forEach items="${dataList}" var="subData" varStatus="loop">
               <tr>
-                <td>${subData.symbol}</td>
+                <td>
+                  <button class="symbolInOpenOrderList" symbol='${subData.symbol}'>
+                    ${subData.symbol}
+                  </button>
+                </td>
                 <td>
                   ${subData.positionAmt}<br>
                   ${subData.positionAmt * subData.entryPrice} (USDT)
@@ -105,6 +109,48 @@
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?" async defer></script>
 
 <script type="text/javascript">
-  
+  $(document).ready(function() {
+
+    $(".symbolInOpenOrderList").click(function () {
+      var url = "/cryptoTradingFutureUm/getOrdersBySymbolUm";
+
+      var selectedUser = $('#userSelector').find(":selected");
+      var selectedUserId = selectedUser.val();
+      var selectedUserNickname = selectedUser.attr("userNickname");
+      var symbol = $(this).attr("symbol");
+
+      var jsonOutput = {
+        symbol:symbol,
+        userId:selectedUserId,
+        userNickname:selectedUserNickname,
+      };
+      console.log(jsonOutput);
+
+      $("#msg").text("sending");
+      $("#ordersHistoryBySymbolResult").html("");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        <%-- dataType: "json", --%>
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          console.log(datas);
+          $("#ordersHistoryBySymbolResult").html(datas);
+          $("#msg").text("");
+        },
+        error: function(datas) {
+          $("#msg").text(datas.message);
+        }
+      });
+    });
+
+  });
 
 </script>

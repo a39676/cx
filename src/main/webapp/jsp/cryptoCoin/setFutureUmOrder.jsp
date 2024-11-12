@@ -137,6 +137,8 @@
       <div class="col-md-12">
         <button id="getPositionInfo">getPositionInfo</button>
       </div>
+    </div>
+    <div class="row">
       <div class="col-md-12">
         <button id="getOpenOrders">getOpenOrders</button>
       </div>
@@ -147,8 +149,16 @@
         <div id="positionInfoResult">
         </div>
       </div>
+    </div>
+    <div class="row">
       <div class="col-md-12">
         <div id="openOrdersResult">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div id="ordersHistoryBySymbolResult">
         </div>
       </div>
     </div>

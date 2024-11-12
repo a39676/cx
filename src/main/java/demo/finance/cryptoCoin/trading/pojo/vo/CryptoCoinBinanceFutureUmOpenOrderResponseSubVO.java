@@ -1,8 +1,8 @@
 package demo.finance.cryptoCoin.trading.pojo.vo;
 
-import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmOpenOrderResponseSubDTO;
+import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmOrderDTO;
 
-public class CryptoCoinBinanceFutureUmOpenOrderResponseSubVO extends CryptoCoinBinanceFutureUmOpenOrderResponseSubDTO {
+public class CryptoCoinBinanceFutureUmOpenOrderResponseSubVO extends CryptoCoinBinanceFutureUmOrderDTO {
 
 	private String orderTimeStr;
 	private String updateTimeStr;

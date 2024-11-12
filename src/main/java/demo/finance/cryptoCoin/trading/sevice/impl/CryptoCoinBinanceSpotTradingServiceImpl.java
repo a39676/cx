@@ -14,7 +14,7 @@ import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.trading.pojo.vo.CryptoCoinBinanceSpotOrderVO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceSpotTradingService;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
-import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceQueryOrdersDTO;
+import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceSpotQueryOrdersDTO;
 import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceSpotOrderDTO;
 import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceWalletExtendDetailDTO;
 import finance.cryptoCoin.binance.spot.pojo.result.CryptoCoinBinanceSpotAccountInfoResult;
@@ -104,7 +104,7 @@ public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonSer
 	}
 
 	@Override
-	public ModelAndView getOrdersBySymbol(CryptoCoinBinanceQueryOrdersDTO dto) {
+	public ModelAndView getOrdersBySymbol(CryptoCoinBinanceSpotQueryOrdersDTO dto) {
 		ModelAndView v = new ModelAndView("cryptoCoin/getSpotOpenOrdersTable");
 
 		HttpUtil h = new HttpUtil();

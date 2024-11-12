@@ -4,6 +4,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureUmGetOrderBySymbolDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.BinanceUpdateOrderDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBatchOrderDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBtcArbitrageWithBatchDTO;
@@ -32,5 +33,7 @@ public interface CryptoCoinBinanceFutureUmTradingService {
 	ModelAndView getFutureUmPositionInfo(CryptoCoinInteractionCommonDTO dto);
 
 	ModelAndView getFutureUmOpenOrders(CryptoCoinInteractionCommonDTO dto);
+
+	ModelAndView getOrdersBySymbol(CryptoCoinBinanceFutureUmGetOrderBySymbolDTO dto);
 
 }

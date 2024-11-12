@@ -13,7 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import demo.finance.cryptoCoin.trading.pojo.constant.CryptoCoinBinanceTradingUrl;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceSpotTradingService;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
-import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceQueryOrdersDTO;
+import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceSpotQueryOrdersDTO;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
 
 @Controller
@@ -56,7 +56,7 @@ public class CryptoCoinBinanceSpotTradingController {
 	@ResponseBody
 	public ModelAndView getOpenOrdersUm(@RequestParam("symbol") String symbol, @RequestParam("userId") Integer userId,
 			@RequestParam("nickname") String nickname) {
-		CryptoCoinBinanceQueryOrdersDTO dto = new CryptoCoinBinanceQueryOrdersDTO();
+		CryptoCoinBinanceSpotQueryOrdersDTO dto = new CryptoCoinBinanceSpotQueryOrdersDTO();
 		dto.setSymbol(symbol);
 		dto.setUserId(userId);
 		dto.setUserNickname(nickname);

@@ -47,12 +47,9 @@
     <div class="row">
       <div class="col-md-12">
         <button id="getPositionInfo">getPositionInfo</button>
-      </div>
-      <div class="col-md-12">
         <button id="getOpenOrders">getOpenOrders</button>
-      </div>
-      <div class="col-md-12">
         <button id="getWalletBalance">getWalletBalance</button>
+        <button id="getAccountSummary">getAccountSummary</button>
       </div>
     </div>
 
@@ -61,12 +58,25 @@
         <div id="positionInfoResult">
         </div>
       </div>
+    </div>
+    <div class="row">
       <div class="col-md-12">
         <div id="openOrdersResult">
         </div>
       </div>
+    </div>
+    <div class="row">
       <div class="col-md-12">
         <div id="openWalletBalanceResult">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div>
+          <textarea id="accountSummaryResult">
+            
+          </textarea>
         </div>
       </div>
     </div>
@@ -195,6 +205,47 @@
         },
         success:function(datas){
           $("#openWalletBalanceResult").html(datas);
+          $("#msg").text("");
+        },
+        error: function(datas) {
+          $("#msg").text(datas.message);
+        }
+      });
+    }
+
+    $("#getAccountSummary").click(function() {
+      accountSummaryResult();
+    });
+
+    function accountSummaryResult(){
+      var url = "/ccm/getAccountSummary";
+
+      var selectedUser = $('#userSelector').find(":selected");
+      var selectedUserId = selectedUser.val();
+      var selectedUserNickname = selectedUser.attr("userNickname");
+      
+      var jsonOutput = {
+        userId:selectedUserId,
+        userNickname:selectedUserNickname,
+      };
+
+      $("#msg").text("sending");
+      $("#accountSummaryResult").val("");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        <%-- dataType: "json", --%>
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          console.log(datas);
+          $("#accountSummaryResult").val(datas.summary);
           $("#msg").text("");
         },
         error: function(datas) {

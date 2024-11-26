@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import demo.common.controller.CommonController;
 import demo.finance.cryptoCoin.trading.pojo.constant.CryptoCoinBinanceTradingUrl;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceSpotTradingService;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
@@ -18,7 +19,7 @@ import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
 
 @Controller
 @RequestMapping(value = CryptoCoinBinanceTradingUrl.SPOT_ROOT)
-public class CryptoCoinBinanceSpotTradingController {
+public class CryptoCoinBinanceSpotTradingController extends CommonController {
 
 	@Autowired
 	private CryptoCoinBinanceSpotTradingService binanceSpotTradingService;
@@ -45,7 +46,7 @@ public class CryptoCoinBinanceSpotTradingController {
 //	public ModelAndView getOpenOrdersUm(@RequestBody CryptoCoinBinanceQueryOrdersDTO dto) {
 //		return binanceSpotTradingService.getOrdersBySymbol(dto);
 //	}
-	
+
 	@PostMapping(value = CcmUrlConstant.GET_WALLET_BALANCE)
 	@ResponseBody
 	public ModelAndView getWalletBalance(@RequestBody CryptoCoinInteractionCommonDTO dto) {

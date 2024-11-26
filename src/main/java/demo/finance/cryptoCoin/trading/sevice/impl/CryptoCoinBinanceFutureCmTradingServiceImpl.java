@@ -4,18 +4,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.trading.pojo.vo.CryptoCoinBinanceFutureCmOpenOrderResponseSubVO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureCmTradingService;
+import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmOpenOrderResponseSubDTO;
+import finance.cryptoCoin.binance.future.cm.pojo.result.CryptoCoinBinanceFutureCmQueryOrderResult;
 import finance.cryptoCoin.binance.future.um.pojo.result.CryptoCoinBinanceCmFuturePositionInfoResult;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderSideType;
 import finance.cryptoCoin.binance.pojo.type.BinancePositionSideType;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import toolPack.httpHandel.HttpUtil;
 
@@ -59,20 +61,23 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 	@Override
 	public ModelAndView getFutureCmOpenOrders(CryptoCoinInteractionCommonDTO dto) {
 		ModelAndView v = new ModelAndView("cryptoCoin/getFutureCmOpenOrdersTable");
-		List<CryptoCoinBinanceFutureCmOpenOrderResponseSubVO> list = new ArrayList<>();
 		HttpUtil h = new HttpUtil();
 		String url = optionService.getCcmHost() + CcmUrlConstant.ROOT + CcmUrlConstant.GET_OPEN_ORDERS_CM;
 		dto.setTotpCode(genTotpCode());
 		JSONObject json = JSONObject.fromObject(dto);
+		List<CryptoCoinBinanceFutureCmOpenOrderResponseSubVO> list = new ArrayList<>();
 
 		try {
 			String response = h.sendPostRestful(url, json.toString());
-			JSONArray jsonArray = JSONArray.fromObject(response);
+			CryptoCoinBinanceFutureCmQueryOrderResult r = buildObjFromJsonCustomization(response,
+					CryptoCoinBinanceFutureCmQueryOrderResult.class);
+			List<CryptoCoinBinanceFutureCmOpenOrderResponseSubDTO> orderList = r.getOrderList();
 			CryptoCoinBinanceFutureCmOpenOrderResponseSubVO dataVO = null;
-			for (int i = 0; i < jsonArray.size(); i++) {
+			for (int i = 0; i < orderList.size(); i++) {
+				CryptoCoinBinanceFutureCmOpenOrderResponseSubDTO order = orderList.get(i);
 				try {
-					dataVO = buildObjFromJsonCustomization(jsonArray.getString(i),
-							CryptoCoinBinanceFutureCmOpenOrderResponseSubVO.class);
+					dataVO = new CryptoCoinBinanceFutureCmOpenOrderResponseSubVO();
+					BeanUtils.copyProperties(order, dataVO);
 					dataVO.setOrderTimeStr(localDateTimeHandler
 							.dateToStr(localDateTimeHandler.dateToLocalDateTime(new Date(dataVO.getTime()))));
 					dataVO.setUpdateTimeStr(localDateTimeHandler
@@ -100,6 +105,7 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			v.addObject("msg", e.getLocalizedMessage());
 		}
 		v.addObject("dataList", list);
 		return v;

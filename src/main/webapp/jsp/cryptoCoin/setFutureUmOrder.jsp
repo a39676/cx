@@ -30,12 +30,6 @@
         <table class="table">
           <tr>
             <td>
-              <button id="startLong" class="btn btn-sm btn-success">开多</button>
-              <button id="startShort" class="btn btn-sm btn-danger">开空</button>
-              <button id="stopLong" class="btn btn-sm btn-danger">平多</button>
-              <button id="stopShort" class="btn btn-sm btn-success">平空</button>
-            </td>
-            <td>
               <select id="userSelector">
                 <option value="">Please select user</option>
                 <c:forEach items="${userList}" var="subUser" varStatus="loop">
@@ -44,6 +38,12 @@
                   </option>
                 </c:forEach>
               </select>
+            </td>
+            <td>
+              <button id="startLong" class="btn btn-sm btn-success">开多</button>
+              <button id="startShort" class="btn btn-sm btn-danger">开空</button>
+              <button id="stopLong" class="btn btn-sm btn-danger">平多</button>
+              <button id="stopShort" class="btn btn-sm btn-success">平空</button>
             </td>
           </tr>
           <tr>

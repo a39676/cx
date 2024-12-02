@@ -74,9 +74,9 @@
     <div class="row">
       <div class="col-md-12">
         <div>
-          <textarea id="accountSummaryResult">
+          <div id="accountSummaryResult">
             
-          </textarea>
+          </div>
         </div>
       </div>
     </div>
@@ -230,7 +230,7 @@
       };
 
       $("#msg").text("sending");
-      $("#accountSummaryResult").val("");
+      $("#accountSummaryResult").html("");
       $.ajax({
         type : "POST",
         async : true,
@@ -245,7 +245,7 @@
         },
         success:function(datas){
           console.log(datas);
-          $("#accountSummaryResult").val(datas.summary);
+          $("#accountSummaryResult").html(datas.summary);
           $("#msg").text("");
         },
         error: function(datas) {

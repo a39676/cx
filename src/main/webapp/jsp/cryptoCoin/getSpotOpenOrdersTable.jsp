@@ -31,9 +31,9 @@
               <td>side</td>
               <td>price</td>
               <td>type</td>
-              <td>下单数量</td> <%-- (origQty) --%>
+              <td>下单数量(币)</td> <%-- (origQty) --%>
               <td>已执行</td> <%-- (executedQty) --%>
-              <td>累计报价数量</td> <%-- (cummulativeQuoteQty) --%>
+              <td>下单数量(U)</td> <%-- (cummulativeQuoteQty) --%>
               <td>status</td>
               <td>timeInForce</td>
               <td>更新时间</td>

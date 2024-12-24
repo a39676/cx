@@ -21,6 +21,7 @@ import finance.cryptoCoin.binance.spot.pojo.result.CryptoCoinBinanceSpotAccountI
 import finance.cryptoCoin.binance.spot.pojo.result.CryptoCoinBinanceSpotOrderListResult;
 import finance.cryptoCoin.binance.spot.pojo.result.CryptoCoinBinanceWalletResult;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
+import finance.cryptoCoin.common.pojo.type.CryptoExchangeType;
 import net.sf.json.JSONObject;
 import toolPack.httpHandel.HttpUtil;
 
@@ -33,6 +34,7 @@ public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonSer
 		ModelAndView v = new ModelAndView("cryptoCoin/setSpotOrder");
 		v.addObject("title", "BinanceTrading(Spot)");
 		v.addObject("userList", optionService.getUserMetaData());
+		v.addObject("exchangeList", CryptoExchangeType.values());
 
 		return v;
 	}

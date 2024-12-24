@@ -5,8 +5,9 @@ import org.springframework.stereotype.Service;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinAccountInfoQueryService;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
-import finance.cryptoCoin.binance.pojo.result.CryptoCoinBinanceAccountSummaryResult;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
+import finance.cryptoCoin.common.pojo.result.CryptoCoinAccountSummaryResult;
+import finance.cryptoCoin.common.pojo.type.CryptoExchangeType;
 import net.sf.json.JSONObject;
 import toolPack.httpHandel.HttpUtil;
 
@@ -15,8 +16,15 @@ public class CryptoCoinAccountInfoQueryServiceImpl extends CryptoCoinCommonServi
 		implements CryptoCoinAccountInfoQueryService {
 
 	@Override
-	public CryptoCoinBinanceAccountSummaryResult getAccountSummary(CryptoCoinInteractionCommonDTO dto) {
-		CryptoCoinBinanceAccountSummaryResult r = new CryptoCoinBinanceAccountSummaryResult();
+	public CryptoCoinAccountSummaryResult getAccountSummary(CryptoCoinInteractionCommonDTO dto) {
+		CryptoCoinAccountSummaryResult r = new CryptoCoinAccountSummaryResult();
+
+		CryptoExchangeType exchangeType = CryptoExchangeType.getType(dto.getExchangeCode());
+		if (exchangeType == null) {
+			r.setMessage("Please select exchange");
+			return r;
+		}
+
 		HttpUtil h = new HttpUtil();
 		String url = optionService.getCcmHost() + CcmUrlConstant.ROOT + CcmUrlConstant.GET_ACCOUNT_SUMMARY;
 		dto.setTotpCode(genTotpCode());
@@ -24,7 +32,7 @@ public class CryptoCoinAccountInfoQueryServiceImpl extends CryptoCoinCommonServi
 
 		try {
 			String response = h.sendPostRestful(url, json.toString());
-			r = buildObjFromJsonCustomization(response, CryptoCoinBinanceAccountSummaryResult.class);
+			r = buildObjFromJsonCustomization(response, CryptoCoinAccountSummaryResult.class);
 		} catch (Exception e) {
 			r.setMessage(e.getLocalizedMessage());
 		}

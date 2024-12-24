@@ -1,10 +1,10 @@
 package demo.finance.cryptoCoin.data.service;
 
-import finance.cryptoCoin.binance.pojo.result.CryptoCoinBinanceAccountSummaryResult;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
+import finance.cryptoCoin.common.pojo.result.CryptoCoinAccountSummaryResult;
 
 public interface CryptoCoinAccountInfoQueryService {
 
-	CryptoCoinBinanceAccountSummaryResult getAccountSummary(CryptoCoinInteractionCommonDTO dto);
+	CryptoCoinAccountSummaryResult getAccountSummary(CryptoCoinInteractionCommonDTO dto);
 
 }

@@ -18,6 +18,7 @@ import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderSideType;
 import finance.cryptoCoin.binance.pojo.type.BinancePositionSideType;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
+import finance.cryptoCoin.common.pojo.type.CryptoExchangeType;
 import net.sf.json.JSONObject;
 import toolPack.httpHandel.HttpUtil;
 
@@ -30,6 +31,7 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 		ModelAndView v = new ModelAndView("cryptoCoin/setFutureCmOrder");
 		v.addObject("title", "BinanceTrading(Future CM)");
 		v.addObject("userList", optionService.getUserMetaData());
+		v.addObject("exchangeList", CryptoExchangeType.values());
 		return v;
 	}
 

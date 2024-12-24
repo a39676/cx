@@ -21,20 +21,7 @@
   <div>
     <div class="row">
       <div class="col-md-12">
-        <table class="table">
-          <tr>
-            <td>
-              <select id="userSelector">
-                <option value="">Please select user</option>
-                <c:forEach items="${userList}" var="subUser" varStatus="loop">
-                  <option value="${subUser.localUserId}" userNickname="${subUser.nickname}">
-                    ${subUser.nickname}
-                  </option>
-                </c:forEach>
-              </select>
-            </td>
-          </tr>
-        </table>
+        <%@ include file="./userSelector.jsp"%>
       </div>
     </div>
 

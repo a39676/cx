@@ -21,20 +21,7 @@
   <div>
     <div class="row">
       <div class="col-md-12">
-        <table class="table">
-          <tr>
-            <td>
-              <select id="userSelector">
-                <option value="">Please select user</option>
-                <c:forEach items="${userList}" var="subUser" varStatus="loop">
-                  <option value="${subUser.localUserId}" userNickname="${subUser.nickname}">
-                    ${subUser.nickname}
-                  </option>
-                </c:forEach>
-              </select>
-            </td>
-          </tr>
-        </table>
+        <%@ include file="./userSelector.jsp"%>
       </div>
     </div>
 
@@ -223,10 +210,13 @@
       var selectedUser = $('#userSelector').find(":selected");
       var selectedUserId = selectedUser.val();
       var selectedUserNickname = selectedUser.attr("userNickname");
+      var selectedExchange = $('#exchangeSelector').find(":selected");
+      var selectedExchangeCode = selectedExchange.val();
       
       var jsonOutput = {
         userId:selectedUserId,
         userNickname:selectedUserNickname,
+        exchangeCode:selectedExchangeCode,
       };
 
       $("#msg").text("sending");
@@ -244,7 +234,7 @@
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          console.log(datas);
+          <%-- TODO multiple exchange --%>
           $("#accountSummaryResult").html(datas.summary);
           $("#msg").text("");
         },

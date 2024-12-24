@@ -41,6 +41,7 @@ import finance.cryptoCoin.binance.pojo.type.BinanceOrderSideType;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderTypeType;
 import finance.cryptoCoin.binance.pojo.type.BinancePositionSideType;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
+import finance.cryptoCoin.common.pojo.type.CryptoExchangeType;
 import finance.cryptoCoin.pojo.dto.CryptoCoinAddSymbolGroupDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinSymbolGroupSettingDTO;
 import net.sf.json.JSONObject;
@@ -63,6 +64,7 @@ public class CryptoCoinBinanceFutureUmTradingServiceImpl extends CryptoCoinCommo
 		ModelAndView v = new ModelAndView("cryptoCoin/setFutureUmOrder");
 		v.addObject("title", "BinanceTrading(Future UM)");
 		v.addObject("userList", optionService.getUserMetaData());
+		v.addObject("exchangeList", CryptoExchangeType.values());
 
 //		LocalDateTime defaultStartTime = LocalDateTime.now().minusHours(8);
 //

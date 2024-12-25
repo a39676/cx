@@ -185,6 +185,8 @@
       var selectedUser = $('#userSelector').find(":selected");
       var selectedUserId = selectedUser.val();
       var selectedUserNickname = selectedUser.attr("userNickname");
+      var selectedExchange = $('#exchangeSelector').find(":selected");
+      var selectedExchangeCode = selectedExchange.val();
       
       var orderSymbols = orderSymbolsStr.split(",");
 
@@ -197,6 +199,7 @@
         preOrderRatio:preOrderRatio,
         userId:selectedUserId,
         userNickname:selectedUserNickname,
+        exchangeCode:selectedExchangeCode,
       };
 
       $("#msg").text("sending");
@@ -245,6 +248,8 @@
       var selectedUser = $('#userSelector').find(":selected");
       var selectedUserId = selectedUser.val();
       var selectedUserNickname = selectedUser.attr("userNickname");
+      var selectedExchange = $('#exchangeSelector').find(":selected");
+      var selectedExchangeCode = selectedExchange.val();
       
       var modifyOrderSymbols = modifyOrderSymbolsStr.split(",");
 
@@ -257,6 +262,7 @@
         quantityRatio:modifyOrderQuantityRatio,
         userId:selectedUserId,
         userNickname:selectedUserNickname,
+        exchangeCode:selectedExchangeCode,
       };
 
       $("#msg").text("sending");
@@ -305,6 +311,8 @@
       var selectedUser = $('#userSelector').find(":selected");
       var selectedUserId = selectedUser.val();
       var selectedUserNickname = selectedUser.attr("userNickname");
+      var selectedExchange = $('#exchangeSelector').find(":selected");
+      var selectedExchangeCode = selectedExchange.val();
       
       var orderSymbols = orderSymbolsStr.split(",");
 
@@ -317,6 +325,7 @@
         closePositionQuantityRatio:closePositionQuantityRatio,
         userId:selectedUserId,
         userNickname:selectedUserNickname,
+        exchangeCode:selectedExchangeCode,
       };
       $("#msg").text("sending");
       $.ajax({
@@ -379,10 +388,13 @@
       var selectedUser = $('#userSelector').find(":selected");
       var selectedUserId = selectedUser.val();
       var selectedUserNickname = selectedUser.attr("userNickname");
+      var selectedExchange = $('#exchangeSelector').find(":selected");
+      var selectedExchangeCode = selectedExchange.val();
       
       var jsonOutput = {
         userId:selectedUserId,
         userNickname:selectedUserNickname,
+        exchangeCode:selectedExchangeCode,
       };
 
       $("#msg").text("sending");
@@ -419,10 +431,13 @@
       var selectedUser = $('#userSelector').find(":selected");
       var selectedUserId = selectedUser.val();
       var selectedUserNickname = selectedUser.attr("userNickname");
-      
+      var selectedExchange = $('#exchangeSelector').find(":selected");
+      var selectedExchangeCode = selectedExchange.val();
+
       var jsonOutput = {
         userId:selectedUserId,
         userNickname:selectedUserNickname,
+        exchangeCode:selectedExchangeCode,
       };
 
       $("#msg").text("sending");

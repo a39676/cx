@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.finance.cryptoCoin.trading.pojo.constant.CryptoCoinBinanceTradingUrl;
+import demo.finance.cryptoCoin.trading.pojo.constant.CryptoCoinTradingUrl;
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureUmGetOrderBySymbolDTO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureUmTradingService;
 import finance.cryptoCoin.binance.future.um.pojo.dto.BinanceUpdateOrderDTO;
@@ -22,49 +22,49 @@ import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinAddSymbolGroupDTO;
 
 @Controller
-@RequestMapping(value = CryptoCoinBinanceTradingUrl.FUTURE_UM_ROOT)
-public class CryptoCoinBinanceFutureUmTradingController {
+@RequestMapping(value = CryptoCoinTradingUrl.FUTURE_UM_ROOT)
+public class CryptoCoinFutureUmTradingController {
 
 	@Autowired
 	private CryptoCoinBinanceFutureUmTradingService binanceFutureUmTradingService;
 
-	@GetMapping(value = CryptoCoinBinanceTradingUrl.FUTURE_UM_VIEW)
+	@GetMapping(value = CryptoCoinTradingUrl.FUTURE_UM_VIEW)
 	public ModelAndView tradingView() {
 		return binanceFutureUmTradingService.tradingView();
 	}
 
-	@PostMapping(value = CryptoCoinBinanceTradingUrl.BINANCE_FUTURE_UM_SEND_ORDER)
+	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_UM_SEND_ORDER)
 	@ResponseBody
 	public CommonResult sendFutureOrder(@RequestBody CryptoCoinBinanceFutureUmBatchOrderDTO dto) {
 		return binanceFutureUmTradingService.sendFutureOrder(dto);
 	}
 
-	@PostMapping(value = CryptoCoinBinanceTradingUrl.BINANCE_FUTURE_UM_BTC_ARBITRAGE_BATCH_ORDER)
+	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_UM_BTC_ARBITRAGE_BATCH_ORDER)
 	@ResponseBody
 	public CommonResult sendBtcArbitrageWithBatchOrder(
 			@RequestBody CryptoCoinBinanceFutureUmBtcArbitrageWithBatchDTO dto) {
 		return binanceFutureUmTradingService.sendBtcArbitrageWithBatchOrder(dto);
 	}
 
-	@PostMapping(value = CryptoCoinBinanceTradingUrl.BINANCE_FUTURE_UM_BATCH_ORDER_MODIFY)
+	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_UM_BATCH_ORDER_MODIFY)
 	@ResponseBody
 	public CommonResult batchOrderModify(@RequestBody BinanceUpdateOrderDTO dto) {
 		return binanceFutureUmTradingService.batchOrderModify(dto);
 	}
 
-	@PostMapping(value = CryptoCoinBinanceTradingUrl.BINANCE_FUTURE_UM_CLOSE_POSITION_BY_RATIO)
+	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_UM_CLOSE_POSITION_BY_RATIO)
 	@ResponseBody
 	public CommonResult closePositionByRatio(@RequestBody CryptoCoinBinanceFutureUmBatchOrderDTO dto) {
 		return binanceFutureUmTradingService.closePositionByRatio(dto);
 	}
 
-	@PostMapping(value = CryptoCoinBinanceTradingUrl.ADD_SYMBOL_GROUP_DATA)
+	@PostMapping(value = CryptoCoinTradingUrl.ADD_SYMBOL_GROUP_DATA)
 	@ResponseBody
 	public CommonResult addShortingSymbolList(@RequestBody CryptoCoinAddSymbolGroupDTO dto) {
 		return binanceFutureUmTradingService.addSymbolGroup(dto);
 	}
 
-	@PostMapping(value = CryptoCoinBinanceTradingUrl.DEL_SYMBOL_GROUP_DATA)
+	@PostMapping(value = CryptoCoinTradingUrl.DEL_SYMBOL_GROUP_DATA)
 	@ResponseBody
 	public CommonResult deleteShortingSymbolList(@RequestBody BaseStrDTO dto) {
 		return binanceFutureUmTradingService.deleteSymbolGroup(dto);

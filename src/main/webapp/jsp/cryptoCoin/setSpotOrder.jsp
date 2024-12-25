@@ -234,9 +234,14 @@
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          <%-- TODO multiple exchange --%>
-          $("#accountSummaryResult").html(datas.summary);
+          if (datas.success){
+            $("#accountSummaryResult").html(datas.summary);
+          } else {
+            $("#accountSummaryResult").html(datas.message);
+          }
           $("#msg").text("");
+          <%-- TODO multiple exchange --%>
+          
         },
         error: function(datas) {
           $("#msg").text(datas.message);

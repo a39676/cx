@@ -11,20 +11,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.common.controller.CommonController;
-import demo.finance.cryptoCoin.trading.pojo.constant.CryptoCoinBinanceTradingUrl;
+import demo.finance.cryptoCoin.trading.pojo.constant.CryptoCoinTradingUrl;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceSpotTradingService;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
 import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceSpotQueryOrdersDTO;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
 
 @Controller
-@RequestMapping(value = CryptoCoinBinanceTradingUrl.SPOT_ROOT)
-public class CryptoCoinBinanceSpotTradingController extends CommonController {
+@RequestMapping(value = CryptoCoinTradingUrl.SPOT_ROOT)
+public class CryptoCoinSpotTradingController extends CommonController {
 
 	@Autowired
 	private CryptoCoinBinanceSpotTradingService binanceSpotTradingService;
 
-	@GetMapping(value = CryptoCoinBinanceTradingUrl.SPOT_VIEW)
+	@GetMapping(value = CryptoCoinTradingUrl.SPOT_VIEW)
 	public ModelAndView tradingView() {
 		return binanceSpotTradingService.tradingView();
 	}

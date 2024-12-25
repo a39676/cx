@@ -68,10 +68,13 @@
       var selectedUser = $('#userSelector').find(":selected");
       var selectedUserId = selectedUser.val();
       var selectedUserNickname = selectedUser.attr("userNickname");
+      var selectedExchange = $('#exchangeSelector').find(":selected");
+      var selectedExchangeCode = selectedExchange.val();
       
       var jsonOutput = {
         userId:selectedUserId,
         userNickname:selectedUserNickname,
+        exchangeCode:selectedExchangeCode,
       };
 
       $("#msg").text("sending");
@@ -108,10 +111,13 @@
       var selectedUser = $('#userSelector').find(":selected");
       var selectedUserId = selectedUser.val();
       var selectedUserNickname = selectedUser.attr("userNickname");
+      var selectedExchange = $('#exchangeSelector').find(":selected");
+      var selectedExchangeCode = selectedExchange.val();
       
       var jsonOutput = {
         userId:selectedUserId,
         userNickname:selectedUserNickname,
+        exchangeCode:selectedExchangeCode,
       };
 
       $("#msg").text("sending");

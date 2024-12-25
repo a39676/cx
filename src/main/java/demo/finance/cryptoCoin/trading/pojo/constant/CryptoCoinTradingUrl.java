@@ -1,6 +1,6 @@
 package demo.finance.cryptoCoin.trading.pojo.constant;
 
-public class CryptoCoinBinanceTradingUrl {
+public class CryptoCoinTradingUrl {
 
 	public static final String FUTURE_CM_ROOT = "/cryptoTradingFutureCm";
 	public static final String FUTURE_UM_ROOT = "/cryptoTradingFutureUm";

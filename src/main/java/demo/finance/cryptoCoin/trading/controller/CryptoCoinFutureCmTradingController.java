@@ -9,19 +9,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import demo.finance.cryptoCoin.trading.pojo.constant.CryptoCoinBinanceTradingUrl;
+import demo.finance.cryptoCoin.trading.pojo.constant.CryptoCoinTradingUrl;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureCmTradingService;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
 
 @Controller
-@RequestMapping(value = CryptoCoinBinanceTradingUrl.FUTURE_CM_ROOT)
-public class CryptoCoinBinanceFutureCmTradingController {
+@RequestMapping(value = CryptoCoinTradingUrl.FUTURE_CM_ROOT)
+public class CryptoCoinFutureCmTradingController {
 
 	@Autowired
 	private CryptoCoinBinanceFutureCmTradingService binanceFutureCmTradingService;
 
-	@GetMapping(value = CryptoCoinBinanceTradingUrl.FUTURE_CM_VIEW)
+	@GetMapping(value = CryptoCoinTradingUrl.FUTURE_CM_VIEW)
 	public ModelAndView tradingView() {
 		return binanceFutureCmTradingService.tradingView();
 	}

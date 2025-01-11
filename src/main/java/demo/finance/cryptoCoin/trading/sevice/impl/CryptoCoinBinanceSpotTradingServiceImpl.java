@@ -6,17 +6,24 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
+import demo.finance.cryptoCoin.mq.producer.CryptoCoinSpotSetOrderProducer;
 import demo.finance.cryptoCoin.trading.pojo.vo.CryptoCoinBinanceSpotOrderVO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceSpotTradingService;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
-import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceSpotQueryOrdersDTO;
+import finance.cryptoCoin.binance.pojo.type.BinanceOrderSideType;
+import finance.cryptoCoin.binance.pojo.type.BinanceOrderTypeType;
 import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceSpotOrderDTO;
+import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceSpotQueryOrdersDTO;
 import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceWalletExtendDetailDTO;
+import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinSpotSetOrderDTO;
 import finance.cryptoCoin.binance.spot.pojo.result.CryptoCoinBinanceSpotAccountInfoResult;
 import finance.cryptoCoin.binance.spot.pojo.result.CryptoCoinBinanceSpotOrderListResult;
 import finance.cryptoCoin.binance.spot.pojo.result.CryptoCoinBinanceWalletResult;
@@ -28,6 +35,9 @@ import toolPack.httpHandel.HttpUtil;
 @Service
 public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonService
 		implements CryptoCoinBinanceSpotTradingService {
+
+	@Autowired
+	private CryptoCoinSpotSetOrderProducer spotSetOrderProducer;
 
 	@Override
 	public ModelAndView tradingView() {
@@ -202,4 +212,45 @@ public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonSer
 		}
 	}
 
+	@Override
+	public CommonResult sendOrder(CryptoCoinSpotSetOrderDTO dto) {
+		CommonResult r = new CommonResult();
+		if (dto.getUserId() == null || StringUtils.isBlank(dto.getUserNickname())) {
+			r.failWithMessage("User invalid");
+			return r;
+		}
+		CryptoExchangeType exchangeType = CryptoExchangeType.getType(dto.getExchangeCode());
+		if (exchangeType == null) {
+			r.failWithMessage("exchange invalid");
+			return r;
+		}
+		if (dto.getSymbol() == null || dto.getSymbol().isEmpty()) {
+			r.failWithMessage("Symbol invalid");
+			return r;
+		}
+		if (dto.getQuantity() == null) {
+			r.failWithMessage("Quantity invalid");
+			return r;
+		}
+		if (BinanceOrderSideType.getType(dto.getSideCode()) == null) {
+			r.failWithMessage("Order side invalid");
+			return r;
+		}
+		if (BinanceOrderTypeType.getType(dto.getTypeCode()) == null) {
+			dto.setTypeCode(BinanceOrderTypeType.MARKET.getCode());
+		} else if (BinanceOrderTypeType.getType(dto.getTypeCode()).equals(BinanceOrderTypeType.LIMIT)
+				&& dto.getPrice() == null) {
+			r.failWithMessage("Price invalid");
+			return r;
+		}
+		dto.setTotpCode(genTotpCode());
+		if (CryptoExchangeType.BINANCE.equals(exchangeType)) {
+			spotSetOrderProducer.setOrder(dto);
+			r.setIsSuccess();
+			return r;
+		} else {
+			r.failWithMessage("Other exchange API still dev progress");
+			return r;
+		}
+	}
 }

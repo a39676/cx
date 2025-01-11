@@ -27,7 +27,60 @@
 
     <div class="row">
       <div class="col-md-12">
-        <%@ include file="./symbolGroupData.jsp"%> 
+        <table class="table">
+          <tr>
+            <td>
+              <button id="buy" class="btn btn-sm btn-success">买入</button>
+              <button id="sell" class="btn btn-sm btn-danger">卖出</button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label>Symbols</label>
+            </td>
+            <td>
+              <label>Price</label>
+            </td>
+            <td>
+              <label>quantity</label>
+            </td>
+            <td>
+              <label>orderSide</label>
+            </td>
+            <td>
+              <label>orderType</label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <input type="text" name="" placeholder="symbols" id="symbol">
+            </td>
+            <td>
+              <input type="number" name="" id="price" placeholder="price">
+            </td>
+            <td>
+              <input type="number" name="" id="quantity" placeholder="quantity">
+            </td>
+            <td>
+              <select id="orderSide">
+                <option value="1">Buy</option>
+                <option value="2">Sell</option>
+              </select>
+            </td>
+            <td>
+              <select id="orderType">
+                <option value="1">Limit</option>
+                <option value="2">Market</option>
+              </select>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <button id="submitSpotOrder">Create order</button>
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
 
@@ -35,6 +88,11 @@
       <div class="col-md-12">
         <button id="getPositionInfo">getPositionInfo</button>
         <button id="getOpenOrders">getOpenOrders</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
         <button id="getWalletBalance">getWalletBalance</button>
         <button id="getAccountSummary">getAccountSummary</button>
       </div>
@@ -80,6 +138,63 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
+
+    $("#submitSpotOrder").click(function() {
+      sendSpotOrder();
+    });
+
+    function sendSpotOrder(){
+      var url = "/cryptoTradingSpot/spotSendOrder";
+
+      var symbol = $("#symbol").val();
+      var price = $("#price").val();
+      var quantity = $("#quantity").val();
+      var sideCode = $('#orderSide').find(":selected").val();
+      var typeCode = $('#orderType').find(":selected").val();
+      var selectedUser = $('#userSelector').find(":selected");
+      var selectedUserId = selectedUser.val();
+      var selectedUserNickname = selectedUser.attr("userNickname");
+      var selectedExchange = $('#exchangeSelector').find(":selected");
+      var selectedExchangeCode = selectedExchange.val();
+      
+
+      var jsonOutput = {
+        symbol:symbol,
+        price:price,
+        sideCode:sideCode,
+        typeCode:typeCode,
+        quantity:quantity,
+        userId:selectedUserId,
+        userNickname:selectedUserNickname,
+        exchangeCode:selectedExchangeCode,
+      };
+
+      $("#msg").text("sending");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          if(datas.code != 0){
+            $("#msg").text("Done: " + datas.message);
+          } else {
+            $("#msg").text(datas.message);
+          }
+        },
+        error: function(datas) {
+          $("#msg").text(datas.message);
+        }
+      });
+    }
+
     $("#getPositionInfo").click(function() {
       getPositionInfo();
     });

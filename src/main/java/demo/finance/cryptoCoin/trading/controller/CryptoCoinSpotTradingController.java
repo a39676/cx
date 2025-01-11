@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.controller.CommonController;
 import demo.finance.cryptoCoin.trading.pojo.constant.CryptoCoinTradingUrl;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceSpotTradingService;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
 import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceSpotQueryOrdersDTO;
+import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinSpotSetOrderDTO;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
 
 @Controller
@@ -41,12 +43,6 @@ public class CryptoCoinSpotTradingController extends CommonController {
 		return binanceSpotTradingService.getOpenOrders(dto);
 	}
 
-//	@PostMapping(value = CcmUrlConstant.GET_ORDERS_BY_SYMBOL_SPOT)
-//	@ResponseBody
-//	public ModelAndView getOpenOrdersUm(@RequestBody CryptoCoinBinanceQueryOrdersDTO dto) {
-//		return binanceSpotTradingService.getOrdersBySymbol(dto);
-//	}
-
 	@PostMapping(value = CcmUrlConstant.GET_WALLET_BALANCE)
 	@ResponseBody
 	public ModelAndView getWalletBalance(@RequestBody CryptoCoinInteractionCommonDTO dto) {
@@ -62,5 +58,11 @@ public class CryptoCoinSpotTradingController extends CommonController {
 		dto.setUserId(userId);
 		dto.setUserNickname(nickname);
 		return binanceSpotTradingService.getOrdersBySymbol(dto);
+	}
+
+	@PostMapping(value = CryptoCoinTradingUrl.SPOT_SEND_ORDER)
+	@ResponseBody
+	public CommonResult binanceSpotSendOrder(@RequestBody CryptoCoinSpotSetOrderDTO dto) {
+		return binanceSpotTradingService.sendOrder(dto);
 	}
 }

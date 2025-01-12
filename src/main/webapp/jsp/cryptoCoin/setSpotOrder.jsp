@@ -32,6 +32,8 @@
             <td>
               <button id="buy" class="btn btn-sm btn-success">买入</button>
               <button id="sell" class="btn btn-sm btn-danger">卖出</button>
+              <button id="limit" class="btn btn-sm">限价</button>
+              <button id="market" class="btn btn-sm">市价</button>
             </td>
           </tr>
           <tr>
@@ -136,6 +138,25 @@
 <%@ include file="../baseElementJSP/normalJSPart.jsp"%>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?" async defer></script>
 
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("#buy").click(function () {
+      $("#orderSide").val("1").change();
+    });
+    $("#sell").click(function () {
+      $("#orderSide").val("2").change();
+    }); 
+    $("#limit").click(function () {
+      $("#orderType").val("1").change();
+    });
+    $("#market").click(function () {
+      $("#orderType").val("2").change();
+    });  
+  });
+</script>
+
+
 <script type="text/javascript">
   $(document).ready(function() {
 
@@ -205,10 +226,13 @@
       var selectedUser = $('#userSelector').find(":selected");
       var selectedUserId = selectedUser.val();
       var selectedUserNickname = selectedUser.attr("userNickname");
+      var selectedExchange = $('#exchangeSelector').find(":selected");
+      var selectedExchangeCode = selectedExchange.val();
       
       var jsonOutput = {
         userId:selectedUserId,
         userNickname:selectedUserNickname,
+        exchangeCode:selectedExchangeCode,
       };
 
       $("#msg").text("sending");
@@ -245,10 +269,13 @@
       var selectedUser = $('#userSelector').find(":selected");
       var selectedUserId = selectedUser.val();
       var selectedUserNickname = selectedUser.attr("userNickname");
+      var selectedExchange = $('#exchangeSelector').find(":selected");
+      var selectedExchangeCode = selectedExchange.val();
       
       var jsonOutput = {
         userId:selectedUserId,
         userNickname:selectedUserNickname,
+        exchangeCode:selectedExchangeCode,
       };
 
       $("#msg").text("sending");
@@ -285,10 +312,13 @@
       var selectedUser = $('#userSelector').find(":selected");
       var selectedUserId = selectedUser.val();
       var selectedUserNickname = selectedUser.attr("userNickname");
+      var selectedExchange = $('#exchangeSelector').find(":selected");
+      var selectedExchangeCode = selectedExchange.val();
       
       var jsonOutput = {
         userId:selectedUserId,
         userNickname:selectedUserNickname,
+        exchangeCode:selectedExchangeCode,
       };
 
       $("#msg").text("sending");

@@ -243,6 +243,9 @@ public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonSer
 			r.failWithMessage("Price invalid");
 			return r;
 		}
+		if (BinanceOrderTypeType.MARKET.getCode().equals(dto.getTypeCode())) {
+			dto.setTimeInForceCode(null);
+		}
 		dto.setTotpCode(genTotpCode());
 		if (CryptoExchangeType.BINANCE.equals(exchangeType)) {
 			spotSetOrderProducer.setOrder(dto);

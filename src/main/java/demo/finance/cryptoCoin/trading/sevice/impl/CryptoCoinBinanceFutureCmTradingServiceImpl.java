@@ -1,21 +1,28 @@
 package demo.finance.cryptoCoin.trading.sevice.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
+import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceCmFutureOrderProducer;
 import demo.finance.cryptoCoin.trading.pojo.vo.CryptoCoinBinanceFutureCmOpenOrderResponseSubVO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureCmTradingService;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmOpenOrderResponseSubDTO;
+import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmSetOrderDTO;
 import finance.cryptoCoin.binance.future.cm.pojo.result.CryptoCoinBinanceFutureCmQueryOrderResult;
 import finance.cryptoCoin.binance.future.um.pojo.result.CryptoCoinBinanceCmFuturePositionInfoResult;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderSideType;
+import finance.cryptoCoin.binance.pojo.type.BinanceOrderTypeType;
 import finance.cryptoCoin.binance.pojo.type.BinancePositionSideType;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
 import finance.cryptoCoin.common.pojo.type.CryptoExchangeType;
@@ -25,6 +32,9 @@ import toolPack.httpHandel.HttpUtil;
 @Service
 public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommonService
 		implements CryptoCoinBinanceFutureCmTradingService {
+
+	@Autowired
+	private CryptoCoinBinanceCmFutureOrderProducer cmFutureOrderProducer;
 
 	@Override
 	public ModelAndView tradingView() {
@@ -113,4 +123,49 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 		return v;
 	}
 
+	@Override
+	public CommonResult sendFutureOrder(CryptoCoinBinanceFutureCmSetOrderDTO dto) {
+		CommonResult r = new CommonResult();
+		if (dto.getUserId() == null || StringUtils.isBlank(dto.getUserNickname())) {
+			r.failWithMessage("User invalid");
+			return r;
+		}
+		if (StringUtils.isBlank(dto.getSymbol())) {
+			r.failWithMessage("Symbol invalid");
+			return r;
+		}
+		if (dto.getQuantity() == null || dto.getQuantity().compareTo(BigDecimal.ZERO) < 0) {
+			r.failWithMessage("Quantity invalid");
+			return r;
+		}
+		if (dto.getReduceOnly() == null) {
+			r.failWithMessage("Reduce only invalid");
+			return r;
+		}
+		
+		BinanceOrderSideType sideType = BinanceOrderSideType.getType(dto.getOrderSideCode());
+		if (sideType == null) {
+			r.failWithMessage("Order side invalid");
+			return r;
+		}
+
+		BinancePositionSideType positionSide = BinancePositionSideType.getType(dto.getPositionSideCode());
+		if (positionSide == null) {
+			r.failWithMessage("Position side invalid");
+			return r;
+		}
+
+		BinanceOrderTypeType orderType = BinanceOrderTypeType.getType(dto.getOrderTypeCode());
+		if (orderType == null) {
+			dto.setOrderSideCode(BinanceOrderTypeType.MARKET.getCode());
+		} else if (orderType.equals(BinanceOrderTypeType.LIMIT) && dto.getPrice() == null) {
+			r.failWithMessage("Price invalid");
+			return r;
+		}
+
+		dto.setTotpCode(genTotpCode());
+		cmFutureOrderProducer.binanceCmFutureOrder(dto);
+		r.setIsSuccess();
+		return r;
+	}
 }

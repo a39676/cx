@@ -82,6 +82,15 @@
               <button id="submitSpotOrder">Create order</button>
             </td>
           </tr>
+
+          <tr>
+            <td>
+              <button class="symbolButton" symbol="BTCUSDT">BTCUSDT</button>
+              <button class="symbolButton" symbol="XRPUSDT">XRPUSDT</button>
+              <button class="symbolButton" symbol="SOLUSDT">SOLUSDT</button>
+              <button class="symbolButton" symbol="ETHUSDT">ETHUSDT</button>
+            </td>
+          </tr>
         </table>
       </div>
     </div>
@@ -394,5 +403,13 @@
       });
     }
 
+  });
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $(".symbolButton").click(function () {
+      $("#symbol").val($(this).attr("symbol"));
+    });
   });
 </script>

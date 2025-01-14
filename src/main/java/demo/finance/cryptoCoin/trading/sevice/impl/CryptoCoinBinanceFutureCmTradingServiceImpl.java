@@ -24,6 +24,7 @@ import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderSideType;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderTypeType;
 import finance.cryptoCoin.binance.pojo.type.BinancePositionSideType;
+import finance.cryptoCoin.binance.pojo.type.BinanceTimeInForceType;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
 import finance.cryptoCoin.common.pojo.type.CryptoExchangeType;
 import net.sf.json.JSONObject;
@@ -138,11 +139,7 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 			r.failWithMessage("Quantity invalid");
 			return r;
 		}
-		if (dto.getReduceOnly() == null) {
-			r.failWithMessage("Reduce only invalid");
-			return r;
-		}
-		
+
 		BinanceOrderSideType sideType = BinanceOrderSideType.getType(dto.getOrderSideCode());
 		if (sideType == null) {
 			r.failWithMessage("Order side invalid");
@@ -158,9 +155,19 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 		BinanceOrderTypeType orderType = BinanceOrderTypeType.getType(dto.getOrderTypeCode());
 		if (orderType == null) {
 			dto.setOrderSideCode(BinanceOrderTypeType.MARKET.getCode());
-		} else if (orderType.equals(BinanceOrderTypeType.LIMIT) && dto.getPrice() == null) {
-			r.failWithMessage("Price invalid");
-			return r;
+		} else {
+//			if (orderType.equals(BinanceOrderTypeType.LIMIT)) {
+//				if (dto.getPrice() == null) {
+//					r.failWithMessage("Price invalid");
+//					return r;
+//				} else if (dto.getTimeInForceCode() == null) {
+//					r.failWithMessage("Time in force type invalid");
+//					return r;
+//				}
+//			}
+		}
+		if (!BinanceOrderTypeType.MARKET.equals(orderType)) {
+			dto.setTimeInForceCode(BinanceTimeInForceType.GTC.getCode());
 		}
 
 		dto.setTotpCode(genTotpCode());

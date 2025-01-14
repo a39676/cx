@@ -18,7 +18,9 @@ public class CryptoCoinTradingUrl {
 	public static final String BINANCE_FUTURE_UM_CLOSE_POSITION_BY_RATIO = "/binanceUmClosePositionByQuantityRatio";
 	public static final String ADD_SYMBOL_GROUP_DATA = "/addSymbolGroupData";
 	public static final String DEL_SYMBOL_GROUP_DATA = "/delSymbolGroupData";
-	
+
 	public static final String SPOT_SEND_ORDER = "/spotSendOrder";
+
+	public static final String BINANCE_FUTURE_CM_SEND_ORDER = "/binanceFutureCmSendOrder";
 
 }

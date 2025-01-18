@@ -32,8 +32,8 @@
             <td>
               <button id="buy" class="btn btn-sm btn-success">买入</button>
               <button id="sell" class="btn btn-sm btn-danger">卖出</button>
-              <button id="limit" class="btn btn-sm">限价</button>
-              <button id="market" class="btn btn-sm">市价</button>
+              <button id="orderByLimit" class="btn btn-sm">限价</button>
+              <button id="orderByMarket" class="btn btn-sm">市价</button>
             </td>
           </tr>
           <tr>
@@ -156,10 +156,10 @@
     $("#sell").click(function () {
       $("#orderSide").val("2").change();
     }); 
-    $("#limit").click(function () {
+    $("#orderByLimit").click(function () {
       $("#orderType").val("1").change();
     });
-    $("#market").click(function () {
+    $("#orderByMarket").click(function () {
       $("#orderType").val("2").change();
     });  
   });

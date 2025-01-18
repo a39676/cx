@@ -30,21 +30,27 @@
         <table class="table">
           <tr>
             <td>
-              <button id="startLong" class="btn btn-sm btn-success">开多</button>
-              <button id="startShort" class="btn btn-sm btn-danger">开空</button>
-              <button id="stopLong" class="btn btn-sm btn-danger">平多</button>
-              <button id="stopShort" class="btn btn-sm btn-success">平空</button>
+              <label>限价:</label>
+              <button id="startLongByLimit" class="btn btn-sm btn-success">开多</button>
+              <button id="startShortByLimit" class="btn btn-sm btn-danger">开空</button>
+              <button id="stopLongByLimit" class="btn btn-sm btn-danger">平多</button>
+              <button id="stopShortByLimit" class="btn btn-sm btn-success">平空</button><br>
+              <label>市价:</label>
+              <button id="startLongByMarket" class="btn btn-sm btn-success">开多</button>
+              <button id="startShortByMarket" class="btn btn-sm btn-danger">开空</button>
+              <button id="stopLongByMarket" class="btn btn-sm btn-danger">平多</button>
+              <button id="stopShortByMarket" class="btn btn-sm btn-success">平空</button>
             </td>
           </tr>
           <tr>
             <td>
-              <label>Symbol</label>
+              <label>Symbol(标的)</label>
             </td>
             <td>
-              <label>quantity</label>
+              <label>quantity[数量(张)]</label>
             </td>
             <td>
-              <label>price</label>
+              <label>price(价格)</label>
             </td>
             <td>
               <label>orderSide</label>
@@ -85,26 +91,35 @@
               </select>
             </td>
           </tr>
-
           <tr>
             <td>
-              <button id="submitCmFutureOrder">Create order(CM)</button>
-              <button id="submitCmFutureOrderForMultipleUser">Create order(CM) multiple user</button>
+              <button id="submitCmFutureOrder" class="btn btn-sm btn-primary">
+                Create order<br>
+                创建订单
+              </button>
+              <button id="submitCmFutureOrderForMultipleUser" class="btn btn-sm btn-primary">
+                Create order multiple user<br>
+                创建订单(多用户)
+              </button>
             </td>
             <td>
-              <button id="submitCmFutureOrderModify" disabled>Update order(CM)</button>
-            </td>
-            <td>
-              <button id="submitClosePositionByRatio" disabled>Close position by ratio(CM)</button>
+              <button id="submitCmFutureCancelOrder" class="btn btn-sm btn-primary">
+                Cancel order<br>
+                取消订单
+              </button><br>
+              <button id="cmFutureCancleOrderForMultipleUser" class="btn btn-sm btn-primary">
+                Cancel order multiple user<br>
+                取消订单(多用户)
+              </button>
             </td>
           </tr>
-
           <tr>
             <td>
               <button class="symbolButton" symbol="BTCUSD_PERP">BTCUSD_PERP</button>
               <button class="symbolButton" symbol="XRPUSD_PERP">XRPUSD_PERP</button>
               <button class="symbolButton" symbol="SOLUSD_PERP">SOLUSD_PERP</button>
               <button class="symbolButton" symbol="ETHUSD_PERP">ETHUSD_PERP</button>
+              <button class="symbolButton" symbol="DOGEUSD_PERP">DOGEUSD_PERP</button>
             </td>
           </tr>
         </table>
@@ -113,10 +128,14 @@
 
     <div class="row">
       <div class="col-md-12">
-        <button id="getPositionInfo">getPositionInfo</button>
-      </div>
-      <div class="col-md-12">
-        <button id="getOpenOrders">getOpenOrders</button>
+        <button id="getPositionInfo">
+          <label>getPositionInfo</label><br>
+          <label>获取持仓信息</label>
+        </button>
+        <button id="getOpenOrders">
+          <label>getOpenOrders</label><br>
+          <label>获取挂单</label>
+        </button>
       </div>
     </div>
 
@@ -125,6 +144,8 @@
         <div id="positionInfoResult">
         </div>
       </div>
+    </div>
+    <div class="row">
       <div class="col-md-12">
         <div id="openOrdersResult">
         </div>
@@ -166,7 +187,6 @@
       var jsonOutput = {
         symbol:symbol,
         quantity:quantity,
-        price:price,
         orderSideCode:orderSideCode,
         positionSideCode:positionSideCode,
         orderTypeCode:orderTypeCode,
@@ -174,6 +194,9 @@
         userNickname:selectedUserNickname,
         exchangeCode:selectedExchangeCode,
       };
+      if(orderTypeCode == 1){
+        jsonOutput["price"] = price;
+      }
 
       $("#msg").text("sending");
       $.ajax({
@@ -235,8 +258,6 @@
       };
       
       for (var i = 0; i < userNicknameList.length; i++) {
-        console.log("userIdList: " + i + ": " + userIdList[i]);
-        console.log("userNicknameList: " + i + ": " + userNicknameList[i]);
         jsonOutput["userId"] = userIdList[i];
         jsonOutput["userNickname"] = userNicknameList[i];
 
@@ -265,7 +286,122 @@
           }
         });
       }
+    }
 
+    $("#submitCmFutureCancelOrder").click(function() {
+      cancelFutureOrder();
+    });
+
+    function cancelFutureOrder(){
+      var url = "/cryptoTradingFutureCm/binanceFutureCmCancelOrder";
+
+      var symbol = $("#symbol").val();
+      var orderSideCode = $('#orderSide').find(":selected").val();
+      var positionSideCode = $('#positionSide').find(":selected").val();
+      var orderTypeCode = $('#orderType').find(":selected").val();
+      var selectedUser = $('#userSelector').find(":selected");
+      var selectedUserId = selectedUser.val();
+      var selectedUserNickname = selectedUser.attr("userNickname");
+      var selectedExchange = $('#exchangeSelector').find(":selected");
+      var selectedExchangeCode = selectedExchange.val();
+
+      var jsonOutput = {
+        symbol:symbol,
+        orderSideCode:orderSideCode,
+        positionSideCode:positionSideCode,
+        orderTypeCode:orderTypeCode,
+        userId:selectedUserId,
+        userNickname:selectedUserNickname,
+        exchangeCode:selectedExchangeCode,
+      };
+      
+      $("#msg").text("sending");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          if(datas.code != 0){
+            $("#msg").text("Done: " + datas.message);
+          } else {
+            $("#msg").text(datas.message);
+          }
+        },
+        error: function(datas) {
+          $("#msg").text(datas.message);
+        }
+      });
+    }
+
+    $("#cmFutureCancleOrderForMultipleUser").click(function() {
+      cancelFutureOrderForMultipleUser();
+    });
+
+    function cancelFutureOrderForMultipleUser(){
+      var url = "/cryptoTradingFutureCm/binanceFutureCmCancelOrder";
+
+      var userNicknameList = [];
+      var userIdList = [];
+      $(':checkbox.userCheckbox:checked').each(function(i){
+        userIdList[i] = $(this).attr("localUserId");
+        userNicknameList[i] = $(this).attr("userNickname");
+      });
+
+      var symbol = $("#symbol").val();
+      var orderSideCode = $('#orderSide').find(":selected").val();
+      var positionSideCode = $('#positionSide').find(":selected").val();
+      var orderTypeCode = $('#orderType').find(":selected").val();
+      var selectedExchange = $('#exchangeSelector').find(":selected");
+      var selectedExchangeCode = selectedExchange.val();
+
+      var jsonOutput = {
+        symbol:symbol,
+        orderSideCode:orderSideCode,
+        positionSideCode:positionSideCode,
+        orderTypeCode:orderTypeCode,
+        exchangeCode:selectedExchangeCode,
+      };
+
+      for (var i = 0; i < userNicknameList.length; i++) {
+        jsonOutput["userId"] = userIdList[i];
+        jsonOutput["userNickname"] = userNicknameList[i];
+
+        console.log(jsonOutput);
+        
+        <%-- $("#msg").text("sending");
+        $.ajax({
+          type : "POST",
+          async : true,
+          url : url,
+          data: JSON.stringify(jsonOutput),
+          cache : false,
+          contentType: "application/json",
+          dataType: "json",
+          timeout:50000,
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          success:function(datas){
+            if(datas.code != 0){
+              $("#msg").text("Done: " + datas.message);
+            } else {
+              $("#msg").text(datas.message);
+            }
+          },
+          error: function(datas) {
+            $("#msg").text(datas.message);
+          }
+        }); --%>
+      }
+      
     }
   });
 </script>
@@ -370,21 +506,46 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-    $("#startLong").click(function () {
+    $("#startLongByLimit").click(function () {
       $("#orderSide").val("1").change();
       $("#positionSide").val("1").change();
+      $("#orderType").val("1").change();
     });
-    $("#startShort").click(function () {
+    $("#startShortByLimit").click(function () {
       $("#orderSide").val("2").change();
       $("#positionSide").val("2").change();
+      $("#orderType").val("1").change();
     });
-    $("#stopLong").click(function () {
+    $("#stopLongByLimit").click(function () {
       $("#orderSide").val("2").change();
       $("#positionSide").val("1").change();
+      $("#orderType").val("1").change();
     });
-    $("#stopShort").click(function () {
+    $("#stopShortByLimit").click(function () {
       $("#orderSide").val("1").change();
       $("#positionSide").val("2").change();
+      $("#orderType").val("1").change();
+    });
+
+    $("#startLongByMarket").click(function () {
+      $("#orderSide").val("1").change();
+      $("#positionSide").val("1").change();
+      $("#orderType").val("2").change();
+    });
+    $("#startShortByMarket").click(function () {
+      $("#orderSide").val("2").change();
+      $("#positionSide").val("2").change();
+      $("#orderType").val("2").change();
+    });
+    $("#stopLongByMarket").click(function () {
+      $("#orderSide").val("2").change();
+      $("#positionSide").val("1").change();
+      $("#orderType").val("2").change();
+    });
+    $("#stopShortByMarket").click(function () {
+      $("#orderSide").val("1").change();
+      $("#positionSide").val("2").change();
+      $("#orderType").val("2").change();
     });
   });
 </script>

@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.trading.pojo.constant.CryptoCoinTradingUrl;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureCmTradingService;
+import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelOrderDTO;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmSetOrderDTO;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
@@ -39,10 +40,16 @@ public class CryptoCoinFutureCmTradingController {
 	public ModelAndView getOpenOrdersCm(@RequestBody CryptoCoinInteractionCommonDTO dto) {
 		return binanceFutureCmTradingService.getFutureCmOpenOrders(dto);
 	}
-	
+
 	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_CM_SEND_ORDER)
 	@ResponseBody
 	public CommonResult getOpenOrdersCm(@RequestBody CryptoCoinBinanceFutureCmSetOrderDTO dto) {
 		return binanceFutureCmTradingService.sendFutureOrder(dto);
+	}
+
+	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_CM_CANCEL_ORDER)
+	@ResponseBody
+	public CommonResult cancleOrderCm(@RequestBody CryptoCoinBinanceFutureCmCancelOrderDTO dto) {
+		return binanceFutureCmTradingService.cancleFutureOrder(dto);
 	}
 }

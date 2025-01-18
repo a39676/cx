@@ -29,9 +29,12 @@
               <td>Symbol</td>
               <td>持仓</td>
               <td>持仓方向</td>
-              <td>进入价</td>
-              <td>损益平衡价</td>
-              <td>目前报价</td>
+              <td>
+                进入价<br>
+                /损益平衡价<br>
+                /目前报价<br>
+                /价差(%)
+              </td>
               <td>未实现损益</td>
               <td>清算价</td>
               <td>杠杆数</td>
@@ -63,20 +66,28 @@
                     <td>${subData.unRealizedProfit}</td>
                   </c:otherwise>
                 </c:choose>
-                <td>${subData.entryPrice}</td>
-                <td>${subData.breakEvenPrice}</td>
-                <td>${subData.markPrice}</td>
+                <td>
+                  ${subData.entryPrice} <br>
+                  / ${subData.breakEvenPrice} <br>
+                  / ${subData.markPrice} <br>
+                  / <fmt:formatNumber type = "number" maxIntegerDigits = "3" 
+                      value = "${(subData.markPrice / subData.entryPrice - 1) * 100}"/>%
+                </td>
                 <c:choose>
                   <c:when test="${subData.unRealizedProfit > 0}">
                     <td class="table-success">
-                      ${subData.unRealizedProfit}<br>
-                      ${subData.unRealizedProfit * subData.markPrice}(USD)
+                      <fmt:formatNumber type = "number" maxIntegerDigits = "2" 
+                      value = "${subData.unRealizedProfit}" /><br>
+                      <fmt:formatNumber type = "number" maxIntegerDigits = "2" 
+                      value = "${subData.unRealizedProfit * subData.markPrice}"/>(USD)
                     </td>
                   </c:when>
                   <c:when test="${subData.unRealizedProfit < 0}">
                     <td class="table-danger">
-                      ${subData.unRealizedProfit}<br>
-                      ${subData.unRealizedProfit * subData.markPrice}(USD)
+                      <fmt:formatNumber type = "number" maxIntegerDigits = "2" 
+                      value = "${subData.unRealizedProfit}" /><br>
+                      <fmt:formatNumber type = "number" maxIntegerDigits = "2" 
+                      value = "${subData.unRealizedProfit * subData.markPrice}"/>(USD)
                     </td>
                   </c:when>
                   <c:otherwise>

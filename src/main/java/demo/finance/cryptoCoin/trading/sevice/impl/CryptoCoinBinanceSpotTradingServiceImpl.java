@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
-import demo.finance.cryptoCoin.mq.producer.CryptoCoinSpotSetOrderProducer;
+import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinSpotSetOrderProducer;
 import demo.finance.cryptoCoin.trading.pojo.vo.CryptoCoinBinanceSpotOrderVO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceSpotTradingService;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;

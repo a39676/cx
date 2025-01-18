@@ -14,8 +14,10 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceCmFutureOrderProducer;
+import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceFutureCmCancelOrderProducer;
 import demo.finance.cryptoCoin.trading.pojo.vo.CryptoCoinBinanceFutureCmOpenOrderResponseSubVO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureCmTradingService;
+import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelOrderDTO;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmOpenOrderResponseSubDTO;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmSetOrderDTO;
 import finance.cryptoCoin.binance.future.cm.pojo.result.CryptoCoinBinanceFutureCmQueryOrderResult;
@@ -36,6 +38,8 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 
 	@Autowired
 	private CryptoCoinBinanceCmFutureOrderProducer cmFutureOrderProducer;
+	@Autowired
+	private CryptoCoinBinanceFutureCmCancelOrderProducer binanceFutureCmCancelOrderProducer;
 
 	@Override
 	public ModelAndView tradingView() {
@@ -172,6 +176,26 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 
 		dto.setTotpCode(genTotpCode());
 		cmFutureOrderProducer.binanceCmFutureOrder(dto);
+		r.setIsSuccess();
+		return r;
+	}
+
+	@Override
+	public CommonResult cancleFutureOrder(CryptoCoinBinanceFutureCmCancelOrderDTO dto) {
+		CommonResult r = new CommonResult();
+		if (dto.getUserId() == null || StringUtils.isBlank(dto.getUserNickname())) {
+			r.failWithMessage("User invalid");
+			return r;
+		}
+		if (StringUtils.isBlank(dto.getSymbol())) {
+			r.failWithMessage("Symbol invalid");
+			return r;
+		}
+		if (dto.getCancelIfOrderPriceHigherThan() == null) {
+			dto.setCancelIfOrderPriceHigherThan(new BigDecimal(Integer.MAX_VALUE));
+		}
+		dto.setTotpCode(genTotpCode());
+		binanceFutureCmCancelOrderProducer.sendCancleOrder(dto);
 		r.setIsSuccess();
 		return r;
 	}

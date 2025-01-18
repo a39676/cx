@@ -34,8 +34,7 @@
       <c:forEach items="${userList}" var="subUser" varStatus="loop">
         <input type="checkbox" id="userCheckbox${subUser.localUserId}" class="userCheckbox" 
           userNickname="${subUser.nickname}" localUserId="${subUser.localUserId}">
-        <label for="userCheckbox${subUser.localUserId}">${subUser.nickname}</label>
-        </option>
+        <label for="userCheckbox${subUser.localUserId}">${subUser.nickname}||</label>
       </c:forEach>
     </td>
   </tr>

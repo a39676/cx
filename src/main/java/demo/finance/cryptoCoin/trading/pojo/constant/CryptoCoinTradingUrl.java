@@ -22,5 +22,6 @@ public class CryptoCoinTradingUrl {
 	public static final String SPOT_SEND_ORDER = "/spotSendOrder";
 
 	public static final String BINANCE_FUTURE_CM_SEND_ORDER = "/binanceFutureCmSendOrder";
+	public static final String BINANCE_FUTURE_CM_CANCEL_ORDER = "/binanceFutureCmCancelOrder";
 
 }

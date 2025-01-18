@@ -2,6 +2,7 @@ package demo.finance.cryptoCoin.trading.sevice.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -14,10 +15,12 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceCmFutureOrderProducer;
-import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceFutureCmCancelOrderProducer;
+import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceFutureCmCancelMultipleOrderProducer;
+import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceFutureCmCancelOrderByIdProducer;
 import demo.finance.cryptoCoin.trading.pojo.vo.CryptoCoinBinanceFutureCmOpenOrderResponseSubVO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureCmTradingService;
-import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelOrderDTO;
+import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelMultipleOrderDTO;
+import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelOrderByIdDTO;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmOpenOrderResponseSubDTO;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmSetOrderDTO;
 import finance.cryptoCoin.binance.future.cm.pojo.result.CryptoCoinBinanceFutureCmQueryOrderResult;
@@ -39,7 +42,9 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 	@Autowired
 	private CryptoCoinBinanceCmFutureOrderProducer cmFutureOrderProducer;
 	@Autowired
-	private CryptoCoinBinanceFutureCmCancelOrderProducer binanceFutureCmCancelOrderProducer;
+	private CryptoCoinBinanceFutureCmCancelMultipleOrderProducer binanceFutureCmCancelMultipleOrderProducer;
+	@Autowired
+	private CryptoCoinBinanceFutureCmCancelOrderByIdProducer binanceFutureCmCancelOrderByIdProducer;
 
 	@Override
 	public ModelAndView tradingView() {
@@ -82,7 +87,7 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 		String url = optionService.getCcmHost() + CcmUrlConstant.ROOT + CcmUrlConstant.GET_OPEN_ORDERS_CM;
 		dto.setTotpCode(genTotpCode());
 		JSONObject json = JSONObject.fromObject(dto);
-		List<CryptoCoinBinanceFutureCmOpenOrderResponseSubVO> list = new ArrayList<>();
+		List<CryptoCoinBinanceFutureCmOpenOrderResponseSubVO> openOrderVoList = new ArrayList<>();
 
 		try {
 			String response = h.sendPostRestful(url, json.toString());
@@ -115,7 +120,7 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 						dataVO.setOrderTypeInSimpleWord(
 								dataVO.getSide().getName() + "," + dataVO.getPositionSide().getName());
 					}
-					list.add(dataVO);
+					openOrderVoList.add(dataVO);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -124,7 +129,11 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 			e.printStackTrace();
 			v.addObject("msg", e.getLocalizedMessage());
 		}
-		v.addObject("dataList", list);
+		Collections.sort(openOrderVoList);
+		v.addObject("dataList", openOrderVoList);
+		v.addObject("userId", dto.getUserId());
+		v.addObject("userNickname", dto.getUserNickname());
+		v.addObject("exchangeCode", dto.getExchangeCode());
 		return v;
 	}
 
@@ -173,6 +182,9 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 		if (!BinanceOrderTypeType.MARKET.equals(orderType)) {
 			dto.setTimeInForceCode(BinanceTimeInForceType.GTC.getCode());
 		}
+		if (BinanceOrderTypeType.MARKET.equals(orderType)) {
+			dto.setPrice(null);
+		}
 
 		dto.setTotpCode(genTotpCode());
 		cmFutureOrderProducer.binanceCmFutureOrder(dto);
@@ -181,21 +193,54 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 	}
 
 	@Override
-	public CommonResult cancleFutureOrder(CryptoCoinBinanceFutureCmCancelOrderDTO dto) {
+	public CommonResult cancleMultipleOrder(CryptoCoinBinanceFutureCmCancelMultipleOrderDTO dto) {
 		CommonResult r = new CommonResult();
 		if (dto.getUserId() == null || StringUtils.isBlank(dto.getUserNickname())) {
 			r.failWithMessage("User invalid");
+			return r;
+		}
+		CryptoExchangeType exchangeType = CryptoExchangeType.getType(dto.getExchangeCode());
+		if (exchangeType == null) {
+			r.failWithMessage("Exchange invalid");
+			return r;
+		}
+
+		if (StringUtils.isBlank(dto.getSymbol())) {
+			r.failWithMessage("Symbol invalid");
+			return r;
+		}
+
+		if (dto.getCancelIfOrderPriceHigherThan() == null) {
+			dto.setCancelIfOrderPriceHigherThan(new BigDecimal(Integer.MAX_VALUE));
+		}
+		dto.setTotpCode(genTotpCode());
+		binanceFutureCmCancelMultipleOrderProducer.sendCancleOrder(dto);
+		r.setIsSuccess();
+		return r;
+	}
+
+	@Override
+	public CommonResult cancleOrderById(CryptoCoinBinanceFutureCmCancelOrderByIdDTO dto) {
+		CommonResult r = new CommonResult();
+		if (dto.getUserId() == null || StringUtils.isBlank(dto.getUserNickname())) {
+			r.failWithMessage("User invalid");
+			return r;
+		}
+		CryptoExchangeType exchangeType = CryptoExchangeType.getType(dto.getExchangeCode());
+		if (exchangeType == null) {
+			r.failWithMessage("Exchange invalid");
 			return r;
 		}
 		if (StringUtils.isBlank(dto.getSymbol())) {
 			r.failWithMessage("Symbol invalid");
 			return r;
 		}
-		if (dto.getCancelIfOrderPriceHigherThan() == null) {
-			dto.setCancelIfOrderPriceHigherThan(new BigDecimal(Integer.MAX_VALUE));
+		if (StringUtils.isBlank(dto.getOrderId())) {
+			r.failWithMessage("Order ID invalid");
+			return r;
 		}
 		dto.setTotpCode(genTotpCode());
-		binanceFutureCmCancelOrderProducer.sendCancleOrder(dto);
+		binanceFutureCmCancelOrderByIdProducer.sendCancleOrder(dto);
 		r.setIsSuccess();
 		return r;
 	}

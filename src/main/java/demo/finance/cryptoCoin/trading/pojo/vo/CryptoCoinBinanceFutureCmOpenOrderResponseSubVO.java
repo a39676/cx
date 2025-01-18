@@ -2,7 +2,8 @@ package demo.finance.cryptoCoin.trading.pojo.vo;
 
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmOpenOrderResponseSubDTO;
 
-public class CryptoCoinBinanceFutureCmOpenOrderResponseSubVO extends CryptoCoinBinanceFutureCmOpenOrderResponseSubDTO {
+public class CryptoCoinBinanceFutureCmOpenOrderResponseSubVO extends CryptoCoinBinanceFutureCmOpenOrderResponseSubDTO
+		implements Comparable<CryptoCoinBinanceFutureCmOpenOrderResponseSubVO> {
 
 	private String orderTimeStr;
 	private String updateTimeStr;
@@ -49,4 +50,44 @@ public class CryptoCoinBinanceFutureCmOpenOrderResponseSubVO extends CryptoCoinB
 				+ getClass() + ", hashCode()=" + hashCode() + "]";
 	}
 
+	@Override
+	public int compareTo(CryptoCoinBinanceFutureCmOpenOrderResponseSubVO o) {
+		int c = compareWithSymbol(o);
+		if (c != 0) {
+			return c;
+		}
+		c = compareWithOrderSide(o);
+		if (c != 0) {
+			return c;
+		}
+		c = compareWithPositionSide(o);
+		if (c != 0) {
+			return c;
+		}
+		c = compareWithStatus(o);
+		if (c != 0) {
+			return c;
+		}
+		return compareWithPrice(o);
+	}
+
+	private int compareWithSymbol(CryptoCoinBinanceFutureCmOpenOrderResponseSubVO o) {
+		return getSymbol().compareTo(o.getSymbol());
+	}
+
+	private int compareWithOrderSide(CryptoCoinBinanceFutureCmOpenOrderResponseSubVO o) {
+		return getSide().compareTo(o.getSide());
+	}
+
+	private int compareWithPositionSide(CryptoCoinBinanceFutureCmOpenOrderResponseSubVO o) {
+		return getPositionSide().compareTo(o.getPositionSide());
+	}
+
+	private int compareWithStatus(CryptoCoinBinanceFutureCmOpenOrderResponseSubVO o) {
+		return getStatus().compareTo(o.getStatus());
+	}
+
+	private int compareWithPrice(CryptoCoinBinanceFutureCmOpenOrderResponseSubVO o) {
+		return getPrice().compareTo(o.getPrice());
+	}
 }

@@ -98,17 +98,17 @@
                 创建订单
               </button>
               <button id="submitCmFutureOrderForMultipleUser" class="btn btn-sm btn-primary">
-                Create order multiple user<br>
+                Create order (multiple users)<br>
                 创建订单(多用户)
               </button>
             </td>
             <td>
-              <button id="submitCmFutureCancelOrder" class="btn btn-sm btn-primary">
-                Cancel order<br>
+              <button id="binanceFutureCmCancelMultipleOrder" class="btn btn-sm btn-primary">
+                Cancel multiple order<br>
                 取消订单
               </button><br>
-              <button id="cmFutureCancleOrderForMultipleUser" class="btn btn-sm btn-primary">
-                Cancel order multiple user<br>
+              <button id="cmFutureCancleMultipleOrderForMultipleUser" class="btn btn-sm btn-primary">
+                Cancel multiple order (multiple users)<br>
                 取消订单(多用户)
               </button>
             </td>
@@ -194,6 +194,7 @@
         userNickname:selectedUserNickname,
         exchangeCode:selectedExchangeCode,
       };
+
       if(orderTypeCode == 1){
         jsonOutput["price"] = price;
       }
@@ -288,12 +289,12 @@
       }
     }
 
-    $("#submitCmFutureCancelOrder").click(function() {
+    $("#binanceFutureCmCancelMultipleOrder").click(function() {
       cancelFutureOrder();
     });
 
     function cancelFutureOrder(){
-      var url = "/cryptoTradingFutureCm/binanceFutureCmCancelOrder";
+      var url = "/cryptoTradingFutureCm/binanceFutureCmCancelMultipleOrder";
 
       var symbol = $("#symbol").val();
       var orderSideCode = $('#orderSide').find(":selected").val();
@@ -341,12 +342,12 @@
       });
     }
 
-    $("#cmFutureCancleOrderForMultipleUser").click(function() {
-      cancelFutureOrderForMultipleUser();
+    $("#cmFutureCancleMultipleOrderForMultipleUser").click(function() {
+      cancelFutureMultipleOrderForMultipleUser();
     });
 
-    function cancelFutureOrderForMultipleUser(){
-      var url = "/cryptoTradingFutureCm/binanceFutureCmCancelOrder";
+    function cancelFutureMultipleOrderForMultipleUser(){
+      var url = "/cryptoTradingFutureCm/binanceFutureCmCancelMultipleOrder";
 
       var userNicknameList = [];
       var userIdList = [];

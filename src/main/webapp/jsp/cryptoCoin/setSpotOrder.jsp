@@ -30,10 +30,12 @@
         <table class="table">
           <tr>
             <td>
-              <button id="buy" class="btn btn-sm btn-success">买入</button>
-              <button id="sell" class="btn btn-sm btn-danger">卖出</button>
-              <button id="orderByLimit" class="btn btn-sm">限价</button>
-              <button id="orderByMarket" class="btn btn-sm">市价</button>
+              <label>限价</label>
+              <button id="buyByLimit" class="btn btn-sm btn-success">买入</button>
+              <button id="sellByLimit" class="btn btn-sm btn-danger">卖出</button><br>
+              <label>市价</label>
+              <button id="buyByMarket" class="btn btn-sm btn-success">买入</button>
+              <button id="sellByMarket" class="btn btn-sm btn-danger">卖出</button>
             </td>
           </tr>
           <tr>
@@ -150,18 +152,22 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-    $("#buy").click(function () {
+    $("#buyByLimit").click(function () {
       $("#orderSide").val("1").change();
-    });
-    $("#sell").click(function () {
-      $("#orderSide").val("2").change();
-    }); 
-    $("#orderByLimit").click(function () {
       $("#orderType").val("1").change();
     });
-    $("#orderByMarket").click(function () {
+    $("#sellByLimit").click(function () {
+      $("#orderSide").val("2").change();
+      $("#orderType").val("1").change();
+    });
+    $("#buyByMarket").click(function () {
+      $("#orderSide").val("1").change();
       $("#orderType").val("2").change();
-    });  
+    });
+    $("#sellByMarket").click(function () {
+      $("#orderSide").val("2").change();
+      $("#orderType").val("2").change();
+    });
   });
 </script>
 

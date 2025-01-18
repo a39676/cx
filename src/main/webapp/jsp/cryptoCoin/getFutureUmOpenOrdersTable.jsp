@@ -27,8 +27,10 @@
           <thead>
             <tr>
               <td>symbol</td>
-              <td>下单时间</td>
-              <td>更新时间</td>
+              <td>
+                下单时间<br>
+                更新时间
+              </td>
               <td>orderType</td>
               <td>下单数量</td>
               <td>下单价格</td>
@@ -49,16 +51,20 @@
               <td>priceMatch</td>
               <td>selfTradePreventionMode</td>
               <td>goodTillDate</td>
-              <td>clientOrderId</td>
-              <td>orderId</td>
+              <td>
+                clientOrderId<br>
+                orderId
+              </td>
             </tr>
           </thead>
           <tbody>
             <c:forEach items="${dataList}" var="subData" varStatus="loop">
               <tr>
                 <td>${subData.symbol}</td>
-                <td>${subData.orderTimeStr}</td>
-                <td>${subData.updateTimeStr}</td>
+                <td>
+                  ${subData.orderTimeStr}<br>
+                  ${subData.updateTimeStr}
+                </td>
                 <td>${subData.orderTypeInSimpleWord}</td>
                 <td>${subData.origQty}</td>
                 <td>${subData.price}</td>
@@ -79,8 +85,10 @@
                 <td>${subData.priceMatch}</td>
                 <td>${subData.selfTradePreventionMode}</td>
                 <td>${subData.goodTillDate}</td>
-                <td>${subData.clientOrderId}</td>
-                <td>${subData.orderId}</td>
+                <td>
+                  ${subData.clientOrderId}<br>
+                  ${subData.orderId}
+                </td>
               </tr>
             </c:forEach>
           </tbody>

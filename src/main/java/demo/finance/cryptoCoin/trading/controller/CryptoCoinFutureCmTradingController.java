@@ -12,7 +12,8 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.trading.pojo.constant.CryptoCoinTradingUrl;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureCmTradingService;
-import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelOrderDTO;
+import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelMultipleOrderDTO;
+import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelOrderByIdDTO;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmSetOrderDTO;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
@@ -47,9 +48,15 @@ public class CryptoCoinFutureCmTradingController {
 		return binanceFutureCmTradingService.sendFutureOrder(dto);
 	}
 
-	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_CM_CANCEL_ORDER)
+	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_CM_CANCEL_MULTIPLE_ORDER)
 	@ResponseBody
-	public CommonResult cancleOrderCm(@RequestBody CryptoCoinBinanceFutureCmCancelOrderDTO dto) {
-		return binanceFutureCmTradingService.cancleFutureOrder(dto);
+	public CommonResult cancleMultipleOrder(@RequestBody CryptoCoinBinanceFutureCmCancelMultipleOrderDTO dto) {
+		return binanceFutureCmTradingService.cancleMultipleOrder(dto);
+	}
+
+	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_CM_CANCEL_ORDER_BY_ID)
+	@ResponseBody
+	public CommonResult cancleOrderById(@RequestBody CryptoCoinBinanceFutureCmCancelOrderByIdDTO dto) {
+		return binanceFutureCmTradingService.cancleOrderById(dto);
 	}
 }

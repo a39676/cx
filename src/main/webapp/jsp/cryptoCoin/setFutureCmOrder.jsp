@@ -374,9 +374,7 @@
         jsonOutput["userId"] = userIdList[i];
         jsonOutput["userNickname"] = userNicknameList[i];
 
-        console.log(jsonOutput);
-        
-        <%-- $("#msg").text("sending");
+        $("#msg").text("sending");
         $.ajax({
           type : "POST",
           async : true,
@@ -399,7 +397,7 @@
           error: function(datas) {
             $("#msg").text(datas.message);
           }
-        }); --%>
+        });
       }
       
     }

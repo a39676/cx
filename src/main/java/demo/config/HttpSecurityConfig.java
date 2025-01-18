@@ -105,6 +105,8 @@ public class HttpSecurityConfig extends CommonService {
 				.access("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')")
 				.antMatchers(AiManagerUrlConstant.ROOT + "/**")
 				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+				.antMatchers(CryptoCoinTradingUrl.FUTURE_CM_ROOT + "/**")
+				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
 				.antMatchers(CryptoCoinTradingUrl.FUTURE_UM_ROOT + "/**")
 				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
 				.antMatchers(CryptoCoinTradingUrl.SPOT_ROOT + "/**")

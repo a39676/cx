@@ -93,33 +93,35 @@
           </tr>
           <tr>
             <td>
-              <button id="submitCmFutureOrder" class="btn btn-sm btn-primary">
-                Create order<br>
-                创建订单
-              </button>
-              <button id="submitCmFutureOrderForMultipleUser" class="btn btn-sm btn-primary">
-                Create order (multiple users)<br>
-                创建订单(多用户)
-              </button>
+              <div class="btn-group">
+                <button id="submitCmFutureOrder" class="btn btn-sm btn-primary">
+                  Create order<br>
+                  创建订单
+                </button>
+                <button id="submitCmFutureOrderForMultipleUser" class="btn btn-sm btn-success">
+                  多用户
+                </button>
+              </div>
             </td>
             <td>
-              <button id="binanceFutureCmCancelMultipleOrder" class="btn btn-sm btn-primary">
-                Cancel multiple order<br>
-                取消订单
-              </button><br>
-              <button id="cmFutureCancleMultipleOrderForMultipleUser" class="btn btn-sm btn-primary">
-                Cancel multiple order (multiple users)<br>
-                取消订单(多用户)
-              </button>
+              <div class="btn-group">
+                <button id="binanceFutureCmCancelMultipleOrder" class="btn btn-sm btn-primary">
+                  Cancel multiple order<br>
+                  取消订单
+                </button><br>
+                <button id="cmFutureCancleMultipleOrderForMultipleUser" class="btn btn-sm btn-success">
+                  多用户
+                </button>
+              </div>
             </td>
           </tr>
           <tr>
-            <td>
-              <button class="symbolButton" symbol="BTCUSD_PERP">BTCUSD_PERP</button>
-              <button class="symbolButton" symbol="XRPUSD_PERP">XRPUSD_PERP</button>
-              <button class="symbolButton" symbol="SOLUSD_PERP">SOLUSD_PERP</button>
-              <button class="symbolButton" symbol="ETHUSD_PERP">ETHUSD_PERP</button>
-              <button class="symbolButton" symbol="DOGEUSD_PERP">DOGEUSD_PERP</button>
+            <td colspan="2">
+              <button class="symbolButton btn btn-sm btn-secondary" symbol="BTCUSD_PERP">BTCUSD_PERP</button>
+              <button class="symbolButton btn btn-sm btn-secondary" symbol="XRPUSD_PERP">XRPUSD_PERP</button>
+              <button class="symbolButton btn btn-sm btn-secondary" symbol="SOLUSD_PERP">SOLUSD_PERP</button>
+              <button class="symbolButton btn btn-sm btn-secondary" symbol="ETHUSD_PERP">ETHUSD_PERP</button>
+              <button class="symbolButton btn btn-sm btn-secondary" symbol="DOGEUSD_PERP">DOGEUSD_PERP</button>
             </td>
           </tr>
         </table>
@@ -128,11 +130,11 @@
 
     <div class="row">
       <div class="col-md-12">
-        <button id="getPositionInfo">
+        <button id="getPositionInfo" class="btn btn-sm btn-secondary">
           <label>getPositionInfo</label><br>
           <label>获取持仓信息</label>
         </button>
-        <button id="getOpenOrders">
+        <button id="getOpenOrders" class="btn btn-sm btn-secondary">
           <label>getOpenOrders</label><br>
           <label>获取挂单</label>
         </button>

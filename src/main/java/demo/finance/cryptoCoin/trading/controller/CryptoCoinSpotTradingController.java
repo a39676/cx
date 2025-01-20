@@ -19,6 +19,7 @@ import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
 import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceSpotQueryOrdersDTO;
 import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinSpotSetOrderDTO;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionSingleUserCommonDTO;
+import finance.cryptoCoin.common.pojo.type.CryptoExchangeType;
 
 @Controller
 @RequestMapping(value = CryptoCoinTradingUrl.SPOT_ROOT)
@@ -58,6 +59,7 @@ public class CryptoCoinSpotTradingController extends CommonController {
 		dto.setSymbol(symbol);
 		dto.setUserId(userId);
 		dto.setUserNickname(nickname);
+		dto.setExchangeCode(CryptoExchangeType.BINANCE.getCode());
 		return binanceSpotTradingService.getOrdersBySymbol(dto);
 	}
 

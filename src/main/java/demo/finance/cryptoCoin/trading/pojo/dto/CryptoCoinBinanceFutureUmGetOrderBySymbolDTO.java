@@ -1,8 +1,8 @@
 package demo.finance.cryptoCoin.trading.pojo.dto;
 
-import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionSingleUserCommonDTO;
 
-public class CryptoCoinBinanceFutureUmGetOrderBySymbolDTO extends CryptoCoinInteractionCommonDTO {
+public class CryptoCoinBinanceFutureUmGetOrderBySymbolDTO extends CryptoCoinInteractionSingleUserCommonDTO {
 
 	private String symbol;
 

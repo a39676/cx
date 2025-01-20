@@ -40,7 +40,7 @@ import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderSideType;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderTypeType;
 import finance.cryptoCoin.binance.pojo.type.BinancePositionSideType;
-import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionSingleUserCommonDTO;
 import finance.cryptoCoin.common.pojo.type.CryptoExchangeType;
 import finance.cryptoCoin.pojo.dto.CryptoCoinAddSymbolGroupDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinSymbolGroupSettingDTO;
@@ -364,7 +364,7 @@ public class CryptoCoinBinanceFutureUmTradingServiceImpl extends CryptoCoinCommo
 	}
 
 	@Override
-	public ModelAndView getFutureUmPositionInfo(CryptoCoinInteractionCommonDTO dto) {
+	public ModelAndView getFutureUmPositionInfo(CryptoCoinInteractionSingleUserCommonDTO dto) {
 		ModelAndView v = new ModelAndView("cryptoCoin/getFutureUmPositionTable");
 		HttpUtil h = new HttpUtil();
 		String url = optionService.getCcmHost() + CcmUrlConstant.ROOT + CcmUrlConstant.POSITION_INFO_UM;
@@ -393,7 +393,7 @@ public class CryptoCoinBinanceFutureUmTradingServiceImpl extends CryptoCoinCommo
 	}
 
 	@Override
-	public ModelAndView getFutureUmOpenOrders(CryptoCoinInteractionCommonDTO dto) {
+	public ModelAndView getFutureUmOpenOrders(CryptoCoinInteractionSingleUserCommonDTO dto) {
 		ModelAndView v = new ModelAndView("cryptoCoin/getFutureUmOpenOrdersTable");
 		List<CryptoCoinBinanceFutureUmOpenOrderResponseSubVO> list = new ArrayList<>();
 		HttpUtil h = new HttpUtil();

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import demo.common.controller.CommonController;
 import demo.finance.cryptoCoin.data.service.CryptoCoinAccountInfoQueryService;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
-import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionSingleUserCommonDTO;
 import finance.cryptoCoin.common.pojo.result.CryptoCoinAccountSummaryResult;
 
 @Controller
@@ -22,7 +22,7 @@ public class CryptoCoinCcmInteractionController extends CommonController {
 
 	@PostMapping(value = CcmUrlConstant.GET_ACCOUNT_SUMMARY)
 	@ResponseBody
-	public CryptoCoinAccountSummaryResult getAccountSummary(@RequestBody CryptoCoinInteractionCommonDTO dto) {
+	public CryptoCoinAccountSummaryResult getAccountSummary(@RequestBody CryptoCoinInteractionSingleUserCommonDTO dto) {
 		return cryptoCoinAccountInfoQueryService.getAccountSummary(dto);
 	}
 

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.service.CryptoCoinAccountInfoQueryService;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
-import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionSingleUserCommonDTO;
 import finance.cryptoCoin.common.pojo.result.CryptoCoinAccountSummaryResult;
 import finance.cryptoCoin.common.pojo.type.CryptoExchangeType;
 import net.sf.json.JSONObject;
@@ -16,7 +16,7 @@ public class CryptoCoinAccountInfoQueryServiceImpl extends CryptoCoinCommonServi
 		implements CryptoCoinAccountInfoQueryService {
 
 	@Override
-	public CryptoCoinAccountSummaryResult getAccountSummary(CryptoCoinInteractionCommonDTO dto) {
+	public CryptoCoinAccountSummaryResult getAccountSummary(CryptoCoinInteractionSingleUserCommonDTO dto) {
 		CryptoCoinAccountSummaryResult r = new CryptoCoinAccountSummaryResult();
 
 		CryptoExchangeType exchangeType = CryptoExchangeType.getType(dto.getExchangeCode());

@@ -37,11 +37,13 @@
               <td>cumBase</td>  <!-- "0", -->
               <td>已执行</td>  <!-- "0", -->
               <td>原下单数量</td>  <!-- "0.40", -->
-              <td>origType</td>  <!-- "TRAILING_STOP_MARKET", -->
+              <td>
+                origType<br> <!-- "TRAILING_STOP_MARKET", -->
+                side<br> <!-- "BUY", -->
+                positionSide<br> <!-- "SHORT", -->
+                status <!-- "NEW", -->
+              </td>
               <td>是否平仓</td>  <!-- false, -->
-              <td>side</td>  <!-- "BUY", -->
-              <td>positionSide</td>  <!-- "SHORT", -->
-              <td>status</td>  <!-- "NEW", -->
               <td>stopPrice</td>  <!-- "9300", // please ignore when order type is TRAILING_STOP_MARKET -->
               <td>closePosition</td>  <!-- false, // if Close-All -->
               <td>timeInForce</td>  <!-- "GTC", -->
@@ -80,11 +82,13 @@
                 <td>${subData.cumBase}</td>  <!-- "0", -->
                 <td>${subData.executedQty}</td>  <!-- "0", -->
                 <td>${subData.origQty}</td>  <!-- "0.40", -->
-                <td>${subData.origType}</td>  <!-- "TRAILING_STOP_MARKET", -->
+                <td>
+                  ${subData.origType}<br>  <!-- "TRAILING_STOP_MARKET", -->
+                  ${subData.side}<br>  <!-- "BUY", -->
+                  ${subData.positionSide}<br>  <!-- "SHORT", -->
+                  ${subData.status}  <!-- "NEW", -->
+                </td>
                 <td>${subData.reduceOnly}</td>  <!-- false, -->
-                <td>${subData.side}</td>  <!-- "BUY", -->
-                <td>${subData.positionSide}</td>  <!-- "SHORT", -->
-                <td>${subData.status}</td>  <!-- "NEW", -->
                 <td>${subData.stopPrice}</td>  <!-- "9300", // please ignore when order type is TRAILING_STOP_MARKET -->
                 <td>${subData.closePosition}</td>  <!-- false, // if Close-All -->
                 <td>${subData.timeInForce}</td>  <!-- "GTC", -->

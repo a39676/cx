@@ -20,8 +20,10 @@ public class CryptoCoinTradingUrl {
 	public static final String DEL_SYMBOL_GROUP_DATA = "/delSymbolGroupData";
 
 	public static final String SPOT_SEND_ORDER = "/spotSendOrder";
+	public static final String SPOT_SEND_ORDER_MULTIPLE = "/spotSendOrderMultipleUser";
 
 	public static final String BINANCE_FUTURE_CM_SEND_ORDER = "/binanceFutureCmSendOrder";
+	public static final String BINANCE_FUTURE_CM_SEND_ORDER_MULTIPLE_USER = "/binanceFutureCmSendOrderMultipleUser";
 	public static final String BINANCE_FUTURE_CM_CANCEL_MULTIPLE_ORDER = "/binanceFutureCmCancelMultipleOrder";
 	public static final String BINANCE_FUTURE_CM_CANCEL_ORDER_BY_ID = "/binanceFutureCmCancelOrderByID";
 

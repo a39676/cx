@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinSpotSetOrderProducer;
+import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinSpotSetOrderForMultipleUserDTO;
 import demo.finance.cryptoCoin.trading.pojo.vo.CryptoCoinBinanceSpotOrderVO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceSpotTradingService;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
@@ -27,7 +28,7 @@ import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinSpotSetOrderDTO;
 import finance.cryptoCoin.binance.spot.pojo.result.CryptoCoinBinanceSpotAccountInfoResult;
 import finance.cryptoCoin.binance.spot.pojo.result.CryptoCoinBinanceSpotOrderListResult;
 import finance.cryptoCoin.binance.spot.pojo.result.CryptoCoinBinanceWalletResult;
-import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionSingleUserCommonDTO;
 import finance.cryptoCoin.common.pojo.type.CryptoExchangeType;
 import net.sf.json.JSONObject;
 import toolPack.httpHandel.HttpUtil;
@@ -50,7 +51,7 @@ public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonSer
 	}
 
 	@Override
-	public ModelAndView getPositionInfo(CryptoCoinInteractionCommonDTO dto) {
+	public ModelAndView getPositionInfo(CryptoCoinInteractionSingleUserCommonDTO dto) {
 		ModelAndView v = new ModelAndView("cryptoCoin/getSpotPositionTable");
 		HttpUtil h = new HttpUtil();
 		String url = optionService.getCcmHost() + CcmUrlConstant.ROOT + CcmUrlConstant.POSITION_INFO_SPOT;
@@ -77,7 +78,7 @@ public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonSer
 	}
 
 	@Override
-	public ModelAndView getOpenOrders(CryptoCoinInteractionCommonDTO dto) {
+	public ModelAndView getOpenOrders(CryptoCoinInteractionSingleUserCommonDTO dto) {
 		ModelAndView v = new ModelAndView("cryptoCoin/getSpotOpenOrdersTable");
 
 		HttpUtil h = new HttpUtil();
@@ -155,7 +156,7 @@ public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonSer
 	}
 
 	@Override
-	public ModelAndView getWalletBalance(CryptoCoinInteractionCommonDTO dto) {
+	public ModelAndView getWalletBalance(CryptoCoinInteractionSingleUserCommonDTO dto) {
 		ModelAndView v = new ModelAndView("cryptoCoin/walletBalance");
 
 		HttpUtil h = new HttpUtil();
@@ -255,5 +256,63 @@ public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonSer
 			r.failWithMessage("Other exchange API still dev progress");
 			return r;
 		}
+	}
+
+	@Override
+	public CommonResult sendOrderForMultipleUser(CryptoCoinSpotSetOrderForMultipleUserDTO dto) {
+		CommonResult r = new CommonResult();
+		if (!checkCryptoCoinInteractionMultipleUserCommonDTO(dto)) {
+			r.failWithMessage("User invalid");
+			return r;
+		}
+		CryptoExchangeType exchangeType = CryptoExchangeType.getType(dto.getExchangeCode());
+		if (exchangeType == null) {
+			r.failWithMessage("exchange invalid");
+			return r;
+		}
+		if (!CryptoExchangeType.BINANCE.equals(exchangeType)) {
+			r.failWithMessage("Other exchange API still dev progress");
+			return r;
+		}
+		
+		if (dto.getSymbol() == null || dto.getSymbol().isEmpty()) {
+			r.failWithMessage("Symbol invalid");
+			return r;
+		}
+		if (dto.getQuantity() == null) {
+			r.failWithMessage("Quantity invalid");
+			return r;
+		}
+		if (BinanceOrderSideType.getType(dto.getSideCode()) == null) {
+			r.failWithMessage("Order side invalid");
+			return r;
+		}
+		if (BinanceOrderTypeType.getType(dto.getTypeCode()) == null) {
+			dto.setTypeCode(BinanceOrderTypeType.MARKET.getCode());
+		} else if (BinanceOrderTypeType.getType(dto.getTypeCode()).equals(BinanceOrderTypeType.LIMIT)
+				&& dto.getPrice() == null) {
+			r.failWithMessage("Price invalid");
+			return r;
+		}
+		if (BinanceOrderTypeType.MARKET.getCode().equals(dto.getTypeCode())) {
+			dto.setTimeInForceCode(null);
+		}
+
+		CryptoCoinSpotSetOrderDTO singleUserDTO = new CryptoCoinSpotSetOrderDTO();
+		singleUserDTO.setExchangeCode(dto.getExchangeCode());
+		singleUserDTO.setPrice(dto.getPrice());
+		singleUserDTO.setQuantity(dto.getQuantity());
+		singleUserDTO.setSideCode(dto.getSideCode());
+		singleUserDTO.setSymbol(dto.getSymbol());
+		singleUserDTO.setTimeInForceCode(singleUserDTO.getTimeInForceCode());
+		singleUserDTO.setTypeCode(dto.getTypeCode());
+		for (int i = 0; i < dto.getUserIdList().size(); i++) {
+			singleUserDTO.setUserId(dto.getUserIdList().get(i));
+			singleUserDTO.setUserNickname(dto.getUserNicknameList().get(i));
+			singleUserDTO.setTotpCode(genTotpCode());
+			spotSetOrderProducer.setOrder(singleUserDTO);
+		}
+		r.setIsSuccess();
+		return r;
 	}
 }

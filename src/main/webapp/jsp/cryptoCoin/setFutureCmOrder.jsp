@@ -232,14 +232,8 @@
     });
 
     function sendFutureOrderForMultipleUser(){
-      var userNicknameList = [];
-      var userIdList = [];
-      $(':checkbox.userCheckbox:checked').each(function(i){
-        userIdList[i] = $(this).attr("localUserId");
-        userNicknameList[i] = $(this).attr("userNickname");
-      });
 
-      var url = "/cryptoTradingFutureCm/binanceFutureCmSendOrder";
+      var url = "/cryptoTradingFutureCm/binanceFutureCmSendOrderMultipleUser";
 
       var symbol = $("#symbol").val();
       var quantity = $("#quantity").val();
@@ -249,6 +243,12 @@
       var orderTypeCode = $('#orderType').find(":selected").val();
       var selectedExchange = $('#exchangeSelector').find(":selected");
       var selectedExchangeCode = selectedExchange.val();
+      var userIdList = [];
+      var userNicknameList = [];
+      $(':checkbox.userCheckbox:checked').each(function(i){
+        userIdList[i] = Number($(this).attr("localUserId"));
+        userNicknameList[i] = $(this).attr("userNickname");
+      });
 
       var jsonOutput = {
         symbol:symbol,
@@ -258,37 +258,34 @@
         positionSideCode:positionSideCode,
         orderTypeCode:orderTypeCode,
         exchangeCode:selectedExchangeCode,
+        userIdList:userIdList,
+        userNicknameList:userNicknameList,
       };
       
-      for (var i = 0; i < userNicknameList.length; i++) {
-        jsonOutput["userId"] = userIdList[i];
-        jsonOutput["userNickname"] = userNicknameList[i];
-
-        $("#msg").text("sending");
-        $.ajax({
-          type : "POST",
-          async : true,
-          url : url,
-          data: JSON.stringify(jsonOutput),
-          cache : false,
-          contentType: "application/json",
-          dataType: "json",
-          timeout:50000,
-          beforeSend: function(xhr) {
-            xhr.setRequestHeader(csrfHeader, csrfToken);
-          },
-          success:function(datas){
-            if(datas.code != 0){
-              $("#msg").text("Done: " + datas.message);
-            } else {
-              $("#msg").text(datas.message);
-            }
-          },
-          error: function(datas) {
+      $("#msg").text("sending");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          if(datas.code != 0){
+            $("#msg").text("Done: " + datas.message);
+          } else {
             $("#msg").text(datas.message);
           }
-        });
-      }
+        },
+        error: function(datas) {
+          $("#msg").text(datas.message);
+        }
+      });
     }
 
     $("#binanceFutureCmCancelMultipleOrder").click(function() {

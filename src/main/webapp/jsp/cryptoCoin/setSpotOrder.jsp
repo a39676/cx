@@ -81,7 +81,10 @@
 
           <tr>
             <td>
-              <button id="submitSpotOrder">Create order</button>
+              <div class="btn-group">
+                <button class="btn btn-sm btn-primary" id="submitSpotOrder">Create order</button>
+                <button class="btn btn-sm btn-success" id="submitSpotOrderMultipleUser">多用户</button>
+              </div>
             </td>
           </tr>
 
@@ -203,6 +206,65 @@
         userId:selectedUserId,
         userNickname:selectedUserNickname,
         exchangeCode:selectedExchangeCode,
+      };
+
+      $("#msg").text("sending");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          if(datas.code != 0){
+            $("#msg").text("Done: " + datas.message);
+          } else {
+            $("#msg").text(datas.message);
+          }
+        },
+        error: function(datas) {
+          $("#msg").text(datas.message);
+        }
+      });
+    }
+
+    $("#submitSpotOrderMultipleUser").click(function() {
+      sendSpotOrderMultipleUser();
+    });
+
+    function sendSpotOrderMultipleUser(){
+      var url = "/cryptoTradingSpot/spotSendOrderMultipleUser";
+
+      var symbol = $("#symbol").val();
+      var price = $("#price").val();
+      var quantity = $("#quantity").val();
+      var sideCode = $('#orderSide').find(":selected").val();
+      var typeCode = $('#orderType').find(":selected").val();
+      var selectedExchange = $('#exchangeSelector').find(":selected");
+      var selectedExchangeCode = selectedExchange.val();
+      var userIdList = [];
+      var userNicknameList = [];
+      $(':checkbox.userCheckbox:checked').each(function(i){
+        userIdList[i] = Number($(this).attr("localUserId"));
+        userNicknameList[i] = $(this).attr("userNickname");
+      });
+      
+
+      var jsonOutput = {
+        symbol:symbol,
+        price:price,
+        sideCode:sideCode,
+        typeCode:typeCode,
+        quantity:quantity,
+        exchangeCode:selectedExchangeCode,
+        userIdList:userIdList,
+        userNicknameList:userNicknameList,
       };
 
       $("#msg").text("sending");

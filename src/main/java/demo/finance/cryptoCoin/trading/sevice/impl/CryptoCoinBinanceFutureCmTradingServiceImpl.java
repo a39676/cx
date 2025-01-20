@@ -17,6 +17,7 @@ import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceCmFutureOrderProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceFutureCmCancelMultipleOrderProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceFutureCmCancelOrderByIdProducer;
+import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureCmSetOrderForMultipleUserDTO;
 import demo.finance.cryptoCoin.trading.pojo.vo.CryptoCoinBinanceFutureCmOpenOrderResponseSubVO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureCmTradingService;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelMultipleOrderDTO;
@@ -30,7 +31,7 @@ import finance.cryptoCoin.binance.pojo.type.BinanceOrderSideType;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderTypeType;
 import finance.cryptoCoin.binance.pojo.type.BinancePositionSideType;
 import finance.cryptoCoin.binance.pojo.type.BinanceTimeInForceType;
-import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionSingleUserCommonDTO;
 import finance.cryptoCoin.common.pojo.type.CryptoExchangeType;
 import net.sf.json.JSONObject;
 import toolPack.httpHandel.HttpUtil;
@@ -56,7 +57,7 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 	}
 
 	@Override
-	public ModelAndView getFutureCmPositionInfo(CryptoCoinInteractionCommonDTO dto) {
+	public ModelAndView getFutureCmPositionInfo(CryptoCoinInteractionSingleUserCommonDTO dto) {
 		ModelAndView v = new ModelAndView("cryptoCoin/getFutureCmPositionTable");
 		HttpUtil h = new HttpUtil();
 		String url = optionService.getCcmHost() + CcmUrlConstant.ROOT + CcmUrlConstant.POSITION_INFO_CM;
@@ -81,7 +82,7 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 	}
 
 	@Override
-	public ModelAndView getFutureCmOpenOrders(CryptoCoinInteractionCommonDTO dto) {
+	public ModelAndView getFutureCmOpenOrders(CryptoCoinInteractionSingleUserCommonDTO dto) {
 		ModelAndView v = new ModelAndView("cryptoCoin/getFutureCmOpenOrdersTable");
 		HttpUtil h = new HttpUtil();
 		String url = optionService.getCcmHost() + CcmUrlConstant.ROOT + CcmUrlConstant.GET_OPEN_ORDERS_CM;
@@ -188,6 +189,74 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 
 		dto.setTotpCode(genTotpCode());
 		cmFutureOrderProducer.binanceCmFutureOrder(dto);
+		r.setIsSuccess();
+		return r;
+	}
+
+	@Override
+	public CommonResult sendFutureOrderForMultipleUser(CryptoCoinBinanceFutureCmSetOrderForMultipleUserDTO dto) {
+		CommonResult r = new CommonResult();
+		if (!checkCryptoCoinInteractionMultipleUserCommonDTO(dto)) {
+			r.failWithMessage("User invalid");
+			return r;
+		}
+		if (StringUtils.isBlank(dto.getSymbol())) {
+			r.failWithMessage("Symbol invalid");
+			return r;
+		}
+		if (dto.getQuantity() == null || dto.getQuantity().compareTo(BigDecimal.ZERO) < 0) {
+			r.failWithMessage("Quantity invalid");
+			return r;
+		}
+
+		BinanceOrderSideType sideType = BinanceOrderSideType.getType(dto.getOrderSideCode());
+		if (sideType == null) {
+			r.failWithMessage("Order side invalid");
+			return r;
+		}
+
+		BinancePositionSideType positionSide = BinancePositionSideType.getType(dto.getPositionSideCode());
+		if (positionSide == null) {
+			r.failWithMessage("Position side invalid");
+			return r;
+		}
+
+		BinanceOrderTypeType orderType = BinanceOrderTypeType.getType(dto.getOrderTypeCode());
+		if (orderType == null) {
+			dto.setOrderSideCode(BinanceOrderTypeType.MARKET.getCode());
+		} else {
+//			if (orderType.equals(BinanceOrderTypeType.LIMIT)) {
+//				if (dto.getPrice() == null) {
+//					r.failWithMessage("Price invalid");
+//					return r;
+//				} else if (dto.getTimeInForceCode() == null) {
+//					r.failWithMessage("Time in force type invalid");
+//					return r;
+//				}
+//			}
+		}
+		if (!BinanceOrderTypeType.MARKET.equals(orderType)) {
+			dto.setTimeInForceCode(BinanceTimeInForceType.GTC.getCode());
+		}
+		if (BinanceOrderTypeType.MARKET.equals(orderType)) {
+			dto.setPrice(null);
+		}
+
+		CryptoCoinBinanceFutureCmSetOrderDTO singleUserDTO = new CryptoCoinBinanceFutureCmSetOrderDTO();
+		singleUserDTO.setExchangeCode(dto.getExchangeCode());
+		singleUserDTO.setOrderSideCode(dto.getOrderSideCode());
+		singleUserDTO.setOrderTypeCode(dto.getOrderTypeCode());
+		singleUserDTO.setPositionSideCode(dto.getPositionSideCode());
+		singleUserDTO.setPrice(dto.getPrice());
+		singleUserDTO.setQuantity(dto.getQuantity());
+		singleUserDTO.setSymbol(dto.getSymbol());
+		singleUserDTO.setTimeInForceCode(dto.getTimeInForceCode());
+		for (int i = 0; i < dto.getUserIdList().size(); i++) {
+			singleUserDTO.setUserId(dto.getUserIdList().get(i));
+			singleUserDTO.setUserNickname(dto.getUserNicknameList().get(i));
+			singleUserDTO.setTotpCode(genTotpCode());
+			cmFutureOrderProducer.binanceCmFutureOrder(singleUserDTO);
+		}
 		r.setIsSuccess();
 		return r;
 	}

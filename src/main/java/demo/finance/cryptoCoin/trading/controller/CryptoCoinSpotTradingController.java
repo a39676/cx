@@ -13,11 +13,12 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.controller.CommonController;
 import demo.finance.cryptoCoin.trading.pojo.constant.CryptoCoinTradingUrl;
+import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinSpotSetOrderForMultipleUserDTO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceSpotTradingService;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
 import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceSpotQueryOrdersDTO;
 import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinSpotSetOrderDTO;
-import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionSingleUserCommonDTO;
 
 @Controller
 @RequestMapping(value = CryptoCoinTradingUrl.SPOT_ROOT)
@@ -33,19 +34,19 @@ public class CryptoCoinSpotTradingController extends CommonController {
 
 	@PostMapping(value = CcmUrlConstant.POSITION_INFO_SPOT)
 	@ResponseBody
-	public ModelAndView getPositionInfoUm(@RequestBody CryptoCoinInteractionCommonDTO dto) {
+	public ModelAndView getPositionInfoUm(@RequestBody CryptoCoinInteractionSingleUserCommonDTO dto) {
 		return binanceSpotTradingService.getPositionInfo(dto);
 	}
 
 	@PostMapping(value = CcmUrlConstant.GET_OPEN_ORDERS_SPOT)
 	@ResponseBody
-	public ModelAndView getOpenOrdersUm(@RequestBody CryptoCoinInteractionCommonDTO dto) {
+	public ModelAndView getOpenOrdersUm(@RequestBody CryptoCoinInteractionSingleUserCommonDTO dto) {
 		return binanceSpotTradingService.getOpenOrders(dto);
 	}
 
 	@PostMapping(value = CcmUrlConstant.GET_WALLET_BALANCE)
 	@ResponseBody
-	public ModelAndView getWalletBalance(@RequestBody CryptoCoinInteractionCommonDTO dto) {
+	public ModelAndView getWalletBalance(@RequestBody CryptoCoinInteractionSingleUserCommonDTO dto) {
 		return binanceSpotTradingService.getWalletBalance(dto);
 	}
 
@@ -62,7 +63,13 @@ public class CryptoCoinSpotTradingController extends CommonController {
 
 	@PostMapping(value = CryptoCoinTradingUrl.SPOT_SEND_ORDER)
 	@ResponseBody
-	public CommonResult binanceSpotSendOrder(@RequestBody CryptoCoinSpotSetOrderDTO dto) {
+	public CommonResult sendOrder(@RequestBody CryptoCoinSpotSetOrderDTO dto) {
 		return binanceSpotTradingService.sendOrder(dto);
+	}
+	
+	@PostMapping(value = CryptoCoinTradingUrl.SPOT_SEND_ORDER_MULTIPLE)
+	@ResponseBody
+	public CommonResult sendOrderForMultipleUser(@RequestBody CryptoCoinSpotSetOrderForMultipleUserDTO dto) {
+		return binanceSpotTradingService.sendOrderForMultipleUser(dto);
 	}
 }

@@ -11,12 +11,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.trading.pojo.constant.CryptoCoinTradingUrl;
+import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureCmSetOrderForMultipleUserDTO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureCmTradingService;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelMultipleOrderDTO;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelOrderByIdDTO;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmSetOrderDTO;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
-import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionCommonDTO;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionSingleUserCommonDTO;
 
 @Controller
 @RequestMapping(value = CryptoCoinTradingUrl.FUTURE_CM_ROOT)
@@ -32,20 +33,26 @@ public class CryptoCoinFutureCmTradingController {
 
 	@PostMapping(value = CcmUrlConstant.POSITION_INFO_CM)
 	@ResponseBody
-	public ModelAndView getPositionInfoCm(@RequestBody CryptoCoinInteractionCommonDTO dto) {
+	public ModelAndView getPositionInfoCm(@RequestBody CryptoCoinInteractionSingleUserCommonDTO dto) {
 		return binanceFutureCmTradingService.getFutureCmPositionInfo(dto);
 	}
 
 	@PostMapping(value = CcmUrlConstant.GET_OPEN_ORDERS_CM)
 	@ResponseBody
-	public ModelAndView getOpenOrdersCm(@RequestBody CryptoCoinInteractionCommonDTO dto) {
+	public ModelAndView getOpenOrdersCm(@RequestBody CryptoCoinInteractionSingleUserCommonDTO dto) {
 		return binanceFutureCmTradingService.getFutureCmOpenOrders(dto);
 	}
 
 	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_CM_SEND_ORDER)
 	@ResponseBody
-	public CommonResult getOpenOrdersCm(@RequestBody CryptoCoinBinanceFutureCmSetOrderDTO dto) {
+	public CommonResult sendFutureOrder(@RequestBody CryptoCoinBinanceFutureCmSetOrderDTO dto) {
 		return binanceFutureCmTradingService.sendFutureOrder(dto);
+	}
+	
+	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_CM_SEND_ORDER_MULTIPLE_USER)
+	@ResponseBody
+	public CommonResult sendFutureOrderForMultipleUser(@RequestBody CryptoCoinBinanceFutureCmSetOrderForMultipleUserDTO dto) {
+		return binanceFutureCmTradingService.sendFutureOrderForMultipleUser(dto);
 	}
 
 	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_CM_CANCEL_MULTIPLE_ORDER)

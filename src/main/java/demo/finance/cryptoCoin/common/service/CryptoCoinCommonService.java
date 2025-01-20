@@ -6,7 +6,9 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.common.service.impl.FinanceCommonService;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionMultipleUserCommonDTO;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinUserKeysDTO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
@@ -39,7 +43,6 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 	protected static final String DATE_FORMAT_FOR_INDEX_CHART_IN_HOUR = "MM-dd HH:mm";
 	protected static final String DATE_FORMAT_FOR_INDEX_CHART_IN_DAY = "MM-dd";
 
-	
 	protected CryptoCoinPriceCommonDataBO mergerData(CryptoCoinPriceCommonDataBO resultTarget,
 			CryptoCoinPriceCommonDataBO otherData) {
 		if (resultTarget == null || otherData == null) {
@@ -499,7 +502,7 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 		vo.setEnShortname(po.getCoinNameEnShort());
 		return vo;
 	}
-	
+
 	protected boolean isValidTotpCode(String code) {
 		if (StringUtils.isBlank(code)) {
 			return false;
@@ -510,5 +513,29 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 
 	protected String genTotpCode() {
 		return timeBasedOneTimePassword.generatorCode(systemOptionService.getTotpSecretKey());
+	}
+
+	public <E extends CryptoCoinInteractionMultipleUserCommonDTO> boolean checkCryptoCoinInteractionMultipleUserCommonDTO(
+			CryptoCoinInteractionMultipleUserCommonDTO dto) {
+		if (dto.getUserIdList() == null || dto.getUserIdList().isEmpty() || dto.getUserNicknameList() == null
+				|| dto.getUserNicknameList().isEmpty() || dto.getExchangeCode() == null) {
+			return false;
+		}
+		if (dto.getUserIdList().size() != dto.getUserNicknameList().size()) {
+			return false;
+		}
+		List<CryptoCoinUserKeysDTO> userMetaDataList = optionService.getUserMetaData();
+		Map<Integer, String> userMetaData = new HashMap<>();
+		for (CryptoCoinUserKeysDTO user : userMetaDataList) {
+			userMetaData.put(user.getLocalUserId(), user.getNickname());
+		}
+		for (int i = 0; i < dto.getUserIdList().size(); i++) {
+			Integer id = dto.getUserIdList().get(i);
+			String nickname = userMetaData.get(id);
+			if (!dto.getUserNicknameList().get(i).equals(nickname)) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

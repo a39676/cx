@@ -19,6 +19,7 @@ import demo.finance.common.service.impl.FinanceCommonService;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionMultipleUserCommonDTO;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinUserKeysDTO;
+import finance.cryptoCoin.common.pojo.type.CryptoExchangeType;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
@@ -522,6 +523,10 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 			return false;
 		}
 		if (dto.getUserIdList().size() != dto.getUserNicknameList().size()) {
+			return false;
+		}
+		CryptoExchangeType exchangeType = CryptoExchangeType.getType(dto.getExchangeCode());
+		if (exchangeType == null) {
 			return false;
 		}
 		List<CryptoCoinUserKeysDTO> userMetaDataList = optionService.getUserMetaData();

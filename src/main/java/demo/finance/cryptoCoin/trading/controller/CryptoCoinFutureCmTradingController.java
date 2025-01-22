@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.trading.pojo.constant.CryptoCoinTradingUrl;
+import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureCmCancelMultipleOrderMultipleUserDTO;
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureCmSetOrderForMultipleUserDTO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureCmTradingService;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelMultipleOrderDTO;
@@ -48,10 +49,11 @@ public class CryptoCoinFutureCmTradingController {
 	public CommonResult sendFutureOrder(@RequestBody CryptoCoinBinanceFutureCmSetOrderDTO dto) {
 		return binanceFutureCmTradingService.sendFutureOrder(dto);
 	}
-	
+
 	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_CM_SEND_ORDER_MULTIPLE_USER)
 	@ResponseBody
-	public CommonResult sendFutureOrderForMultipleUser(@RequestBody CryptoCoinBinanceFutureCmSetOrderForMultipleUserDTO dto) {
+	public CommonResult sendFutureOrderForMultipleUser(
+			@RequestBody CryptoCoinBinanceFutureCmSetOrderForMultipleUserDTO dto) {
 		return binanceFutureCmTradingService.sendFutureOrderForMultipleUser(dto);
 	}
 
@@ -59,6 +61,13 @@ public class CryptoCoinFutureCmTradingController {
 	@ResponseBody
 	public CommonResult cancleMultipleOrder(@RequestBody CryptoCoinBinanceFutureCmCancelMultipleOrderDTO dto) {
 		return binanceFutureCmTradingService.cancleMultipleOrder(dto);
+	}
+
+	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_CM_CANCEL_MULTIPLE_ORDER_MULTIPLE_USER)
+	@ResponseBody
+	public CommonResult cancleMultipleOrderForMultipleUser(
+			@RequestBody CryptoCoinBinanceFutureCmCancelMultipleOrderMultipleUserDTO dto) {
+		return binanceFutureCmTradingService.cancleMultipleOrderForMultipleUser(dto);
 	}
 
 	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_CM_CANCEL_ORDER_BY_ID)

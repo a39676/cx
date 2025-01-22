@@ -17,6 +17,7 @@ import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceCmFutureOrderProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceFutureCmCancelMultipleOrderProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceFutureCmCancelOrderByIdProducer;
+import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureCmCancelMultipleOrderMultipleUserDTO;
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureCmSetOrderForMultipleUserDTO;
 import demo.finance.cryptoCoin.trading.pojo.vo.CryptoCoinBinanceFutureCmOpenOrderResponseSubVO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureCmTradingService;
@@ -273,17 +274,55 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 			r.failWithMessage("Exchange invalid");
 			return r;
 		}
-
 		if (StringUtils.isBlank(dto.getSymbol())) {
 			r.failWithMessage("Symbol invalid");
 			return r;
 		}
-
 		if (dto.getCancelIfOrderPriceHigherThan() == null) {
 			dto.setCancelIfOrderPriceHigherThan(new BigDecimal(Integer.MAX_VALUE));
 		}
 		dto.setTotpCode(genTotpCode());
 		binanceFutureCmCancelMultipleOrderProducer.sendCancleOrder(dto);
+		r.setIsSuccess();
+		return r;
+	}
+
+	@Override
+	public CommonResult cancleMultipleOrderForMultipleUser(
+			CryptoCoinBinanceFutureCmCancelMultipleOrderMultipleUserDTO dto) {
+		CommonResult r = new CommonResult();
+		if (!checkCryptoCoinInteractionMultipleUserCommonDTO(dto)) {
+			r.failWithMessage("User invalid");
+			return r;
+		}
+		if (StringUtils.isBlank(dto.getSymbol())) {
+			r.failWithMessage("Symbol invalid");
+			return r;
+		}
+		CryptoExchangeType exchangeType = CryptoExchangeType.getType(dto.getExchangeCode());
+		if (exchangeType == null) {
+			r.failWithMessage("Exchange invalid");
+			return r;
+		}
+		if (dto.getCancelIfOrderPriceHigherThan() == null) {
+			dto.setCancelIfOrderPriceHigherThan(new BigDecimal(Integer.MAX_VALUE));
+		}
+
+		for (int i = 0; i < dto.getUserIdList().size(); i++) {
+			CryptoCoinBinanceFutureCmCancelMultipleOrderDTO singleUserDTO = new CryptoCoinBinanceFutureCmCancelMultipleOrderDTO();
+			singleUserDTO.setCancelAllOpenOrder(dto.getCancelAllOpenOrder());
+			singleUserDTO.setCancelIfOrderPriceHigherThan(dto.getCancelIfOrderPriceHigherThan());
+			singleUserDTO.setCancelIfOrderPriceLowerThan(dto.getCancelIfOrderPriceLowerThan());
+			singleUserDTO.setExchangeCode(dto.getExchangeCode());
+			singleUserDTO.setOrderSideCode(dto.getOrderSideCode());
+			singleUserDTO.setOrderTypeCode(dto.getOrderTypeCode());
+			singleUserDTO.setPositionSideCode(dto.getPositionSideCode());
+			singleUserDTO.setSymbol(dto.getSymbol());
+			singleUserDTO.setTotpCode(genTotpCode());
+			singleUserDTO.setUserId(dto.getUserIdList().get(i));
+			singleUserDTO.setUserNickname(dto.getUserNicknameList().get(i));
+			binanceFutureCmCancelMultipleOrderProducer.sendCancleOrder(singleUserDTO);
+		}
 		r.setIsSuccess();
 		return r;
 	}

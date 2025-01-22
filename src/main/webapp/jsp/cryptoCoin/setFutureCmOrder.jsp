@@ -346,10 +346,10 @@
     });
 
     function cancelFutureMultipleOrderForMultipleUser(){
-      var url = "/cryptoTradingFutureCm/binanceFutureCmCancelMultipleOrder";
+      var url = "/cryptoTradingFutureCm/binanceFutureCmCancelMultipleOrderMultiple";
 
-      var userNicknameList = [];
       var userIdList = [];
+      var userNicknameList = [];
       $(':checkbox.userCheckbox:checked').each(function(i){
         userIdList[i] = $(this).attr("localUserId");
         userNicknameList[i] = $(this).attr("userNickname");
@@ -368,37 +368,34 @@
         positionSideCode:positionSideCode,
         orderTypeCode:orderTypeCode,
         exchangeCode:selectedExchangeCode,
+        userIdList:userIdList,
+        userNicknameList:userNicknameList,
       };
 
-      for (var i = 0; i < userNicknameList.length; i++) {
-        jsonOutput["userId"] = userIdList[i];
-        jsonOutput["userNickname"] = userNicknameList[i];
-
-        $("#msg").text("sending");
-        $.ajax({
-          type : "POST",
-          async : true,
-          url : url,
-          data: JSON.stringify(jsonOutput),
-          cache : false,
-          contentType: "application/json",
-          dataType: "json",
-          timeout:50000,
-          beforeSend: function(xhr) {
-            xhr.setRequestHeader(csrfHeader, csrfToken);
-          },
-          success:function(datas){
-            if(datas.code != 0){
-              $("#msg").text("Done: " + datas.message);
-            } else {
-              $("#msg").text(datas.message);
-            }
-          },
-          error: function(datas) {
+      $("#msg").text("sending");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          if(datas.code != 0){
+            $("#msg").text("Done: " + datas.message);
+          } else {
             $("#msg").text(datas.message);
           }
-        });
-      }
+        },
+        error: function(datas) {
+          $("#msg").text(datas.message);
+        }
+      });
       
     }
   });

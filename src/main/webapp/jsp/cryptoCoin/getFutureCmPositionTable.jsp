@@ -76,17 +76,17 @@
                 <c:choose>
                   <c:when test="${subData.unRealizedProfit > 0}">
                     <td class="table-success">
-                      <fmt:formatNumber type = "number" maxIntegerDigits = "2" 
+                      <fmt:formatNumber type = "number" maxFractionDigits = "3" 
                       value = "${subData.unRealizedProfit}" /><br>
-                      <fmt:formatNumber type = "number" maxIntegerDigits = "2" 
+                      <fmt:formatNumber type = "number" maxFractionDigits = "3" 
                       value = "${subData.unRealizedProfit * subData.markPrice}"/>(USD)
                     </td>
                   </c:when>
                   <c:when test="${subData.unRealizedProfit < 0}">
                     <td class="table-danger">
-                      <fmt:formatNumber type = "number" maxIntegerDigits = "2" 
+                      <fmt:formatNumber type = "number" maxFractionDigits = "3" 
                       value = "${subData.unRealizedProfit}" /><br>
-                      <fmt:formatNumber type = "number" maxIntegerDigits = "2" 
+                      <fmt:formatNumber type = "number" maxFractionDigits = "3" 
                       value = "${subData.unRealizedProfit * subData.markPrice}"/>(USD)
                     </td>
                   </c:when>

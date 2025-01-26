@@ -65,6 +65,7 @@ public class CryptoCoinBinanceFutureUmTradingServiceImpl extends CryptoCoinCommo
 		v.addObject("title", "BinanceTrading(Future UM)");
 		v.addObject("userList", optionService.getUserMetaData());
 		v.addObject("exchangeList", CryptoExchangeType.values());
+		v.addObject("tradingSymbolList", optionService.getTradingSymbolList());
 
 //		LocalDateTime defaultStartTime = LocalDateTime.now().minusHours(8);
 //

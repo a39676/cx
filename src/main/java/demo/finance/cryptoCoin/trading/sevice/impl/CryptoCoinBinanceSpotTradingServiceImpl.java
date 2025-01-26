@@ -46,7 +46,8 @@ public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonSer
 		v.addObject("title", "BinanceTrading(Spot)");
 		v.addObject("userList", optionService.getUserMetaData());
 		v.addObject("exchangeList", CryptoExchangeType.values());
-
+		v.addObject("tradingSymbolList", optionService.getTradingSymbolList());
+		
 		return v;
 	}
 

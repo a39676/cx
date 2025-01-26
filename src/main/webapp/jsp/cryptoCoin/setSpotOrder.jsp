@@ -90,10 +90,9 @@
 
           <tr>
             <td>
-              <button class="symbolButton" symbol="BTCUSDT">BTCUSDT</button>
-              <button class="symbolButton" symbol="XRPUSDT">XRPUSDT</button>
-              <button class="symbolButton" symbol="SOLUSDT">SOLUSDT</button>
-              <button class="symbolButton" symbol="ETHUSDT">ETHUSDT</button>
+              <c:forEach items="${tradingSymbolList}" var="symbol" varStatus="loop">
+                <button class="symbolButton btn btn-sm btn-secondary" symbol="${symbol}USDT">${symbol}USDT</button>
+              </c:forEach>
             </td>
           </tr>
         </table>

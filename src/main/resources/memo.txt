@@ -1,8 +1,4 @@
 crypto coin
-	future CM order view
-		cancel order for multiple users
-			未优化后端 API
-	
 	CryptoCoinForceOrderDataServiceImpl.receiveNewForceOrderFutureUmDataMessage
 		SQL update to "insert or update"
 			该表没有主键, 目前信息价值有限, 但数据量巨大, 先搁置

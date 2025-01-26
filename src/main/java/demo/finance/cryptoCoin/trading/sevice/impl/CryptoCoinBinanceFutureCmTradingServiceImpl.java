@@ -54,6 +54,7 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 		v.addObject("title", "BinanceTrading(Future CM)");
 		v.addObject("userList", optionService.getUserMetaData());
 		v.addObject("exchangeList", CryptoExchangeType.values());
+		v.addObject("tradingSymbolList", optionService.getTradingSymbolList());
 		return v;
 	}
 

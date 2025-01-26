@@ -117,11 +117,9 @@
           </tr>
           <tr>
             <td colspan="2">
-              <button class="symbolButton btn btn-sm btn-secondary" symbol="BTCUSD_PERP">BTCUSD_PERP</button>
-              <button class="symbolButton btn btn-sm btn-secondary" symbol="XRPUSD_PERP">XRPUSD_PERP</button>
-              <button class="symbolButton btn btn-sm btn-secondary" symbol="SOLUSD_PERP">SOLUSD_PERP</button>
-              <button class="symbolButton btn btn-sm btn-secondary" symbol="ETHUSD_PERP">ETHUSD_PERP</button>
-              <button class="symbolButton btn btn-sm btn-secondary" symbol="DOGEUSD_PERP">DOGEUSD_PERP</button>
+              <c:forEach items="${tradingSymbolList}" var="symbol" varStatus="loop">
+                <button class="symbolButton btn btn-sm btn-secondary" symbol="${symbol}USD_PERP">${symbol}USD_PERP</button>
+              </c:forEach>
             </td>
           </tr>
         </table>

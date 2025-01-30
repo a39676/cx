@@ -34,7 +34,6 @@
 
     $("button[name='submitPointConsume']").click(function() {
       var pk = $(this).attr("studentPK");
-      console.log(pk);
       submitPointConsume(pk);
     });
 

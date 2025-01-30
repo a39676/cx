@@ -14,7 +14,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
+import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinSpotCancelOrderByIdProducer;
+import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinSpotCancelOrderProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinSpotSetOrderProducer;
+import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureCmCancelMultipleOrderMultipleUserDTO;
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinSpotSetOrderForMultipleUserDTO;
 import demo.finance.cryptoCoin.trading.pojo.vo.CryptoCoinBinanceSpotOrderVO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceSpotTradingService;
@@ -24,6 +27,8 @@ import finance.cryptoCoin.binance.pojo.type.BinanceOrderTypeType;
 import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceSpotOrderDTO;
 import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceSpotQueryOrdersDTO;
 import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceWalletExtendDetailDTO;
+import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinSpotCancelMultipleOrderDTO;
+import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinSpotCancelOrderByIdDTO;
 import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinSpotSetOrderDTO;
 import finance.cryptoCoin.binance.spot.pojo.result.CryptoCoinBinanceSpotAccountInfoResult;
 import finance.cryptoCoin.binance.spot.pojo.result.CryptoCoinBinanceSpotOrderListResult;
@@ -39,6 +44,10 @@ public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonSer
 
 	@Autowired
 	private CryptoCoinSpotSetOrderProducer spotSetOrderProducer;
+	@Autowired
+	private CryptoCoinSpotCancelOrderProducer spotCancelOrderProducer;
+	@Autowired
+	private CryptoCoinSpotCancelOrderByIdProducer spotCancelOrderByIdProducer;
 
 	@Override
 	public ModelAndView tradingView() {
@@ -47,7 +56,7 @@ public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonSer
 		v.addObject("userList", optionService.getUserMetaData());
 		v.addObject("exchangeList", CryptoExchangeType.values());
 		v.addObject("tradingSymbolList", optionService.getTradingSymbolList());
-		
+
 		return v;
 	}
 
@@ -110,6 +119,9 @@ public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonSer
 				voList.add(vo);
 			}
 			v.addObject("orderList", voList);
+			v.addObject("userId", dto.getUserId());
+			v.addObject("userNickname", dto.getUserNickname());
+			v.addObject("exchangeCode", dto.getExchangeCode());
 			return v;
 		} catch (Exception e) {
 			v.addObject("msg", e.getLocalizedMessage());
@@ -247,6 +259,7 @@ public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonSer
 		}
 		if (BinanceOrderTypeType.MARKET.getCode().equals(dto.getTypeCode())) {
 			dto.setTimeInForceCode(null);
+			dto.setPrice(null);
 		}
 		dto.setTotpCode(genTotpCode());
 		if (CryptoExchangeType.BINANCE.equals(exchangeType)) {
@@ -275,7 +288,7 @@ public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonSer
 			r.failWithMessage("Other exchange API still dev progress");
 			return r;
 		}
-		
+
 		if (dto.getSymbol() == null || dto.getSymbol().isEmpty()) {
 			r.failWithMessage("Symbol invalid");
 			return r;
@@ -313,6 +326,96 @@ public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonSer
 			singleUserDTO.setTotpCode(genTotpCode());
 			spotSetOrderProducer.setOrder(singleUserDTO);
 		}
+		r.setIsSuccess();
+		return r;
+	}
+
+	@Override
+	public CommonResult cancleMultipleOrder(CryptoCoinSpotCancelMultipleOrderDTO dto) {
+		CommonResult r = new CommonResult();
+		if (dto.getUserId() == null || StringUtils.isBlank(dto.getUserNickname())) {
+			r.failWithMessage("User invalid");
+			return r;
+		}
+		CryptoExchangeType exchangeType = CryptoExchangeType.getType(dto.getExchangeCode());
+		if (exchangeType == null) {
+			r.failWithMessage("Exchange invalid");
+			return r;
+		}
+		if (StringUtils.isBlank(dto.getSymbol())) {
+			r.failWithMessage("Symbol invalid");
+			return r;
+		}
+		if (dto.getCancelIfOrderPriceHigherThan() == null) {
+			dto.setCancelIfOrderPriceHigherThan(new BigDecimal(Integer.MAX_VALUE));
+		}
+		dto.setTotpCode(genTotpCode());
+		spotCancelOrderProducer.cancelMultipleOrder(dto);
+		r.setIsSuccess();
+		return r;
+	}
+
+	@Override
+	public CommonResult cancleMultipleOrderForMultipleUser(
+			CryptoCoinBinanceFutureCmCancelMultipleOrderMultipleUserDTO dto) {
+		CommonResult r = new CommonResult();
+		if (!checkCryptoCoinInteractionMultipleUserCommonDTO(dto)) {
+			r.failWithMessage("User invalid");
+			return r;
+		}
+		if (StringUtils.isBlank(dto.getSymbol())) {
+			r.failWithMessage("Symbol invalid");
+			return r;
+		}
+		CryptoExchangeType exchangeType = CryptoExchangeType.getType(dto.getExchangeCode());
+		if (exchangeType == null) {
+			r.failWithMessage("Exchange invalid");
+			return r;
+		}
+		if (dto.getCancelIfOrderPriceHigherThan() == null) {
+			dto.setCancelIfOrderPriceHigherThan(new BigDecimal(Integer.MAX_VALUE));
+		}
+
+		for (int i = 0; i < dto.getUserIdList().size(); i++) {
+			CryptoCoinSpotCancelMultipleOrderDTO singleUserDTO = new CryptoCoinSpotCancelMultipleOrderDTO();
+			singleUserDTO.setCancelAllOpenOrder(dto.getCancelAllOpenOrder());
+			singleUserDTO.setCancelIfOrderPriceHigherThan(dto.getCancelIfOrderPriceHigherThan());
+			singleUserDTO.setCancelIfOrderPriceLowerThan(dto.getCancelIfOrderPriceLowerThan());
+			singleUserDTO.setExchangeCode(dto.getExchangeCode());
+			singleUserDTO.setOrderSideCode(dto.getOrderSideCode());
+			singleUserDTO.setOrderTypeCode(dto.getOrderTypeCode());
+			singleUserDTO.setSymbol(dto.getSymbol());
+			singleUserDTO.setTotpCode(genTotpCode());
+			singleUserDTO.setUserId(dto.getUserIdList().get(i));
+			singleUserDTO.setUserNickname(dto.getUserNicknameList().get(i));
+			spotCancelOrderProducer.cancelMultipleOrder(singleUserDTO);
+		}
+		r.setIsSuccess();
+		return r;
+	}
+
+	@Override
+	public CommonResult cancleOrderById(CryptoCoinSpotCancelOrderByIdDTO dto) {
+		CommonResult r = new CommonResult();
+		if (dto.getUserId() == null || StringUtils.isBlank(dto.getUserNickname())) {
+			r.failWithMessage("User invalid");
+			return r;
+		}
+		CryptoExchangeType exchangeType = CryptoExchangeType.getType(dto.getExchangeCode());
+		if (exchangeType == null) {
+			r.failWithMessage("Exchange invalid");
+			return r;
+		}
+		if (StringUtils.isBlank(dto.getSymbol())) {
+			r.failWithMessage("Symbol invalid");
+			return r;
+		}
+		if (StringUtils.isBlank(dto.getOrderId())) {
+			r.failWithMessage("Order ID invalid");
+			return r;
+		}
+		dto.setTotpCode(genTotpCode());
+		spotCancelOrderByIdProducer.cancelOrderById(dto);
 		r.setIsSuccess();
 		return r;
 	}

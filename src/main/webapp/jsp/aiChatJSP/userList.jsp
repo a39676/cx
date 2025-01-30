@@ -281,8 +281,6 @@
         if(lastUserPk){
           jsonOutput.startPk = lastUserPk;
         }
-        console.log(jsonOutput);
-  
         $.ajax({
           type : "POST",
           async : true,
@@ -296,7 +294,6 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-            console.log(datas);
             for(i=0;i<datas.userList.length;i++){
               appendUserTr(datas.userList[i]);
             }
@@ -350,8 +347,6 @@
           pk:userPk,
         };
 
-        console.log(jsonOutput);
-  
         $.ajax({
           type : "POST",
           async : true,
@@ -365,7 +360,6 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-            console.log(datas);
             if (datas.code == 0) {
               $("label[name='blockStatus'][userPk='"+userPk+"']").text("true");
             }
@@ -383,8 +377,6 @@
           pk:userPk,
         };
 
-        console.log(jsonOutput);
-  
         $.ajax({
           type : "POST",
           async : true,
@@ -398,7 +390,6 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-            console.log(datas);
             if (datas.code == 0) {
               $("label[name='blockStatus'][userPk='"+userPk+"']").text("false");
             }
@@ -419,8 +410,6 @@
           nickname:nickname,
         };
 
-        console.log(jsonOutput);
-  
         $.ajax({
           type : "POST",
           async : true,
@@ -434,7 +423,6 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-            console.log(datas);
             $("label[name='nicknameEditResult'][userPk='"+userPk+"']").text(datas.code);
           },
           error: function(datas) {
@@ -450,8 +438,6 @@
           pk:userPk,
         };
 
-        console.log(jsonOutput);
-  
         $.ajax({
           type : "POST",
           async : true,
@@ -465,7 +451,6 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-            console.log(datas);
             if (datas.code == 0) {
               $("label[name='warningStatus'][userPk='"+userPk+"']").text("false");
             }

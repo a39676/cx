@@ -72,8 +72,6 @@
 
       url = url + "?symbol=" + symbol;
 
-      console.log(url);
-
       $("#msg").text("sending");
       $.ajax({
         type : "GET",

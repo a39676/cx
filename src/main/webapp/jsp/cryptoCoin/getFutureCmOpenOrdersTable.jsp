@@ -143,8 +143,6 @@
         userNickname:userNickname,
         exchangeCode:exchangeCode,
       };
-
-      console.log(jsonOutput);
       
       $("#msg").text("sending");
       $.ajax({

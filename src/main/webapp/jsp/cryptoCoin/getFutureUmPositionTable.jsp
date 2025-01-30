@@ -124,8 +124,6 @@
         userId:selectedUserId,
         userNickname:selectedUserNickname,
       };
-      console.log(jsonOutput);
-
       $("#msg").text("sending");
       $("#ordersHistoryBySymbolResult").html("");
       $.ajax({
@@ -141,7 +139,6 @@
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          console.log(datas);
           $("#ordersHistoryBySymbolResult").html(datas);
           $("#msg").text("");
         },

@@ -13,10 +13,13 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.controller.CommonController;
 import demo.finance.cryptoCoin.trading.pojo.constant.CryptoCoinTradingUrl;
+import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureCmCancelMultipleOrderMultipleUserDTO;
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinSpotSetOrderForMultipleUserDTO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceSpotTradingService;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
 import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceSpotQueryOrdersDTO;
+import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinSpotCancelMultipleOrderDTO;
+import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinSpotCancelOrderByIdDTO;
 import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinSpotSetOrderDTO;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionSingleUserCommonDTO;
 import finance.cryptoCoin.common.pojo.type.CryptoExchangeType;
@@ -68,10 +71,29 @@ public class CryptoCoinSpotTradingController extends CommonController {
 	public CommonResult sendOrder(@RequestBody CryptoCoinSpotSetOrderDTO dto) {
 		return binanceSpotTradingService.sendOrder(dto);
 	}
-	
+
 	@PostMapping(value = CryptoCoinTradingUrl.SPOT_SEND_ORDER_MULTIPLE)
 	@ResponseBody
 	public CommonResult sendOrderForMultipleUser(@RequestBody CryptoCoinSpotSetOrderForMultipleUserDTO dto) {
 		return binanceSpotTradingService.sendOrderForMultipleUser(dto);
+	}
+
+	@PostMapping(value = CryptoCoinTradingUrl.SPOT_CANCEL_MULTIPLE_ORDER)
+	@ResponseBody
+	public CommonResult cancleMultipleOrder(@RequestBody CryptoCoinSpotCancelMultipleOrderDTO dto) {
+		return binanceSpotTradingService.cancleMultipleOrder(dto);
+	}
+
+	@PostMapping(value = CryptoCoinTradingUrl.SPOT_CANCEL_MULTIPLE_ORDER_MULTIPLE_USER)
+	@ResponseBody
+	public CommonResult cancleMultipleOrderForMultipleUser(
+			@RequestBody CryptoCoinBinanceFutureCmCancelMultipleOrderMultipleUserDTO dto) {
+		return binanceSpotTradingService.cancleMultipleOrderForMultipleUser(dto);
+	}
+
+	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_SPOT_CANCEL_ORDER_BY_ID)
+	@ResponseBody
+	public CommonResult cancleOrderById(@RequestBody CryptoCoinSpotCancelOrderByIdDTO dto) {
+		return binanceSpotTradingService.cancleOrderById(dto);
 	}
 }

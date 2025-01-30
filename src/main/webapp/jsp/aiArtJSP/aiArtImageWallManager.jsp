@@ -79,8 +79,6 @@
           pk:imgPk,
         };
 
-        console.log(jsonOutput);
-  
         $.ajax({
           type : "POST",
           async : true,
@@ -94,7 +92,6 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-            console.log(datas);
             if (datas.code == 0) {
               $("td[name='imgTd'][imgPk='"+imgPk+"']").hide();
             } else {
@@ -102,7 +99,6 @@
             }
           },
           error: function(datas) {
-            console.log(datas);
           }
         });
       }
@@ -119,8 +115,6 @@
           pk:jobPk,
         };
 
-        console.log(jsonOutput);
-  
         $.ajax({
           type : "POST",
           async : true,
@@ -134,11 +128,9 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-            console.log(datas);
             $("#result").text(datas.code + ", " + datas.message);
           },
           error: function(datas) {
-            console.log(datas);
           }
         });
       }
@@ -147,7 +139,6 @@
         var imgPk = $(this).attr("imgPk");
         var sourceImg = $("img[name='sourceImg'][imgPk='"+imgPk+"']");
         var sourceImgSrc = sourceImg.attr("src");
-        console.log(sourceImgSrc);
         if('' == sourceImgSrc || 0 == sourceImgSrc.length){
           var imgPk = $(this).attr("imgPk");
           var imgPkUrlEncode = encodeURIComponent(imgPk);

@@ -161,8 +161,6 @@
           pk:jobPk,
         };
 
-        console.log(jsonOutput);
-  
         $.ajax({
           type : "POST",
           async : true,
@@ -176,11 +174,9 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-            console.log(datas);
             $("#result").text(datas.code + ", " + datas.message);
           },
           error: function(datas) {
-            console.log(datas);
           }
         });
       }
@@ -195,7 +191,6 @@
         imgPk:imgPk,
         jobPk:jobPk,
       };
-      console.log(jsonOutput);  
       $.ajax({
         type : "POST",
         async : true,
@@ -209,7 +204,6 @@
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          console.log(datas);
           if (datas.code == 0) {
             $("#result").text("Img invalid success, imgPk: " + imgPk);
             var img = document.querySelector('img[imgPk="'+imgPk+'"]');
@@ -232,7 +226,6 @@
         pk:jobPk,
       };
 
-      console.log(jsonOutput);  
       $.ajax({
         type : "POST",
         async : true,
@@ -246,7 +239,6 @@
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          console.log(datas);
           if (datas.code == 0) {
             $("#result").text("Review success, jobPk: " + jobPk);
           } else {
@@ -268,7 +260,6 @@
         imgPk:imgPk,
         jobPk:jobPk,
       };
-      console.log(jsonOutput);  
       $.ajax({
         type : "POST",
         async : true,
@@ -282,7 +273,6 @@
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          console.log(datas);
           if (datas.code == 0) {
             $("#result").text("Image add to image wall success, imgPk: " + imgPk);
           } else {
@@ -406,8 +396,6 @@
           createTimeEndStr:createTimeEndStr,
         };
 
-        console.log(jsonOutput);
-  
         $.ajax({
           type : "POST",
           async : true,
@@ -421,7 +409,6 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-            console.log(datas);
             if (datas.code == 0) {
               $("#result").text("Load job result success");
               if(datas.jobResultList && datas.jobResultList.length > 1){
@@ -562,8 +549,6 @@
           pk:userPk,
         };
 
-        console.log(jsonOutput);
-  
         $.ajax({
           type : "POST",
           async : true,
@@ -577,7 +562,6 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-            console.log(datas);
             if (datas.code == 0) {
               $("#result").text("Block: " + userPk);
             } else {
@@ -597,8 +581,6 @@
           pk:userPk,
         };
 
-        console.log(jsonOutput);
-  
         $.ajax({
           type : "POST",
           async : true,
@@ -612,7 +594,6 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-            console.log(datas);
             if (datas.code == 0) {
               $("#result").text("Unlock: " + userPk);
             } else {
@@ -632,8 +613,6 @@
           str:jobQueueStatus,
         };
 
-        console.log(jsonOutput);
-  
         $.ajax({
           type : "POST",
           async : true,
@@ -647,7 +626,6 @@
             xhr.setRequestHeader(csrfHeader, csrfToken);
           },
           success:function(datas){
-            console.log(datas);
             $("#result").text(datas.code + ", " + datas.message);
           },
           error: function(datas) {

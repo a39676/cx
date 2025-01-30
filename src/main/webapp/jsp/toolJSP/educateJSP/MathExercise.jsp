@@ -239,11 +239,8 @@
 
       $(".answerInputForTrueOrFalse").click(function () {
         var flag = $(this).attr("value");
-        console.log(flag);
         var questionNumber = $(this).attr("questionNumber");
-        console.log(questionNumber);
         $(".answerInput[questionNumber='"+questionNumber+"']").attr("value", flag);
-        console.log($(".answerInput[questionNumber='"+questionNumber+"']").attr("value"));
       })
       
       // keep alive request

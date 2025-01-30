@@ -32,7 +32,6 @@
 <script type="text/javascript">
 
   function cfCallBack() {
-    console.log("get into turnstile");
     turnstile.render('#captcha', {
       sitekey : '${siteKey}',
       callback : function(token) {

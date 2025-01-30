@@ -344,7 +344,7 @@
     });
 
     function cancelFutureMultipleOrderForMultipleUser(){
-      var url = "/cryptoTradingFutureCm/binanceFutureCmCancelMultipleOrderMultiple";
+      var url = "/cryptoTradingFutureCm/binanceFutureCmCancelMultipleOrderMultipleUser";
 
       var userIdList = [];
       var userNicknameList = [];

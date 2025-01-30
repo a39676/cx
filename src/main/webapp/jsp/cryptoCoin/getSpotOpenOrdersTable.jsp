@@ -28,9 +28,11 @@
             <tr>
               <td>timeStr</td>
               <td>symbol</td>
-              <td>side</td>
+              <td>
+                side<br>
+                type
+              </td>
               <td>price</td>
-              <td>type</td>
               <td>下单数量(币)</td> <%-- (origQty) --%>
               <td>已执行</td> <%-- (executedQty) --%>
               <td>下单数量(U)</td> <%-- (cummulativeQuoteQty) --%>
@@ -46,9 +48,11 @@
               <td>原始报价数量</td> <%-- (origQuoteOrderQty) --%>
               <td>selfTradePreventionMode</td>
               <td>time</td>
-              <td>orderId</td>
-              <td>orderListId</td>
-              <td>clientOrderId</td>
+              <td>
+                orderId<br>
+                orderListId<br>
+                clientOrderId
+              </td>
             </tr>
           </thead>
           <tbody>
@@ -64,9 +68,11 @@
                     CancelOrder
                   </button>
                 </td>
-                <td>${subData.side}</td>
+                <td>
+                  ${subData.side}<br>
+                  ${subData.type}
+                </td>
                 <td>${subData.price}</td>
-                <td>${subData.type}</td>
                 <td>${subData.origQty}</td>
                 <td>${subData.executedQty}</td>
                 <td>${subData.cummulativeQuoteQty}</td>
@@ -82,9 +88,11 @@
                 <td>${subData.origQuoteOrderQty}</td>
                 <td>${subData.selfTradePreventionMode}</td>
                 <td>${subData.time}</td>
-                <td>${subData.orderId}</td>
-                <td>${subData.orderListId}</td>
-                <td>${subData.clientOrderId}</td>
+                <td>
+                  ${subData.orderId}<br>
+                  ${subData.orderListId}<br>
+                  ${subData.clientOrderId}
+                </td>
               </tr>
             </c:forEach>
           </tbody>

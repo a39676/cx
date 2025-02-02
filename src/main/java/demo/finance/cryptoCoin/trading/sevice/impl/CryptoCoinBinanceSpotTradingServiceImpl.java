@@ -3,6 +3,7 @@ package demo.finance.cryptoCoin.trading.sevice.impl;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -118,6 +119,7 @@ public class CryptoCoinBinanceSpotTradingServiceImpl extends CryptoCoinCommonSer
 
 				voList.add(vo);
 			}
+			Collections.sort(voList);
 			v.addObject("orderList", voList);
 			v.addObject("userId", dto.getUserId());
 			v.addObject("userNickname", dto.getUserNickname());

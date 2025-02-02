@@ -2,7 +2,8 @@ package demo.finance.cryptoCoin.trading.pojo.vo;
 
 import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceSpotOrderDTO;
 
-public class CryptoCoinBinanceSpotOrderVO extends CryptoCoinBinanceSpotOrderDTO {
+public class CryptoCoinBinanceSpotOrderVO extends CryptoCoinBinanceSpotOrderDTO
+		implements Comparable<CryptoCoinBinanceSpotOrderVO> {
 
 	private String timeStr;
 	private String updateTimeStr;
@@ -38,4 +39,36 @@ public class CryptoCoinBinanceSpotOrderVO extends CryptoCoinBinanceSpotOrderDTO 
 				+ ", workingTimeStr=" + workingTimeStr + "]";
 	}
 
+	@Override
+	public int compareTo(CryptoCoinBinanceSpotOrderVO o) {
+		int c = compareWithSymbol(o);
+		if (c != 0) {
+			return c;
+		}
+		c = compareWithSide(o);
+		if (c != 0) {
+			return c;
+		}
+		c = compareWithStatus(o);
+		if (c != 0) {
+			return c;
+		}
+		return compareWithPrice(o);
+	}
+
+	private int compareWithSymbol(CryptoCoinBinanceSpotOrderVO o) {
+		return getSymbol().compareTo(o.getSymbol());
+	}
+
+	private int compareWithSide(CryptoCoinBinanceSpotOrderVO o) {
+		return getSide().compareTo(o.getSide());
+	}
+
+	private int compareWithStatus(CryptoCoinBinanceSpotOrderVO o) {
+		return getStatus().compareTo(o.getStatus());
+	}
+
+	private int compareWithPrice(CryptoCoinBinanceSpotOrderVO o) {
+		return getPrice().compareTo(o.getPrice());
+	}
 }

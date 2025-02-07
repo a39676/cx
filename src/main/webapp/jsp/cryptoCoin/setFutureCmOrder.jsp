@@ -114,9 +114,12 @@
                 </button>
               </div>
             </td>
+            <td>
+              <button id="resetOrderSetting">ResetOrderSetting</button>
+            </td>
           </tr>
           <tr>
-            <td colspan="2">
+            <td colspan="3">
               <c:forEach items="${tradingSymbolList}" var="symbol" varStatus="loop">
                 <button class="symbolButton btn btn-sm btn-secondary" symbol="${symbol}USD_PERP">${symbol}USD_PERP</button>
               </c:forEach>
@@ -540,5 +543,14 @@
       $("#positionSide").val("2").change();
       $("#orderType").val("2").change();
     });
+
+    $("#resetOrderSetting").click(function () {
+      $("#orderSide").val("1").change();
+      $("#positionSide").val("1").change();
+      $("#orderType").val("1").change();
+      $("#symbol").val("");
+      $("#quantity").val("");
+      $("#price").val("");
+    })
   });
 </script>

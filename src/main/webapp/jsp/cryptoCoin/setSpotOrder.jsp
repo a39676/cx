@@ -97,6 +97,9 @@
                 </button>
               </div>
             </td>
+            <td>
+              <button id="resetOrderSetting">ResetOrderSetting</button>
+            </td>
           </tr>
 
           <tr>
@@ -181,6 +184,14 @@
       $("#orderSide").val("2").change();
       $("#orderType").val("2").change();
     });
+
+    $("#resetOrderSetting").click(function () {
+      $("#orderSide").val("1").change();
+      $("#orderType").val("1").change();
+      $("#symbol").val("");
+      $("#quantity").val("");
+      $("#price").val("");
+    })
   });
 </script>
 

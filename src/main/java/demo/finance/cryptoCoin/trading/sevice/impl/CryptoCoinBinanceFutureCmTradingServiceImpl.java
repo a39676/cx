@@ -20,12 +20,14 @@ import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceFutureCmCanc
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureCmCancelMultipleOrderMultipleUserDTO;
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureCmSetOrderForMultipleUserDTO;
 import demo.finance.cryptoCoin.trading.pojo.vo.CryptoCoinBinanceFutureCmOpenOrderResponseSubVO;
+import demo.finance.cryptoCoin.trading.pojo.vo.CryptoCoinBinanceFutureCmPositionDetailVO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureCmTradingService;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelMultipleOrderDTO;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelOrderByIdDTO;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmOpenOrderResponseSubDTO;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmSetOrderDTO;
 import finance.cryptoCoin.binance.future.cm.pojo.result.CryptoCoinBinanceFutureCmQueryOrderResult;
+import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureCmPositionDetailDTO;
 import finance.cryptoCoin.binance.future.um.pojo.result.CryptoCoinBinanceCmFuturePositionInfoResult;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderSideType;
@@ -74,7 +76,14 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 				v.addObject("msg", r.getMessage());
 				return v;
 			}
-			v.addObject("dataList", r.getPositionList());
+			List<CryptoCoinBinanceFutureCmPositionDetailVO> voList = new ArrayList<>();
+			for (CryptoCoinBinanceFutureCmPositionDetailDTO positionDTO : r.getPositionList()) {
+				CryptoCoinBinanceFutureCmPositionDetailVO vo = new CryptoCoinBinanceFutureCmPositionDetailVO();
+				BeanUtils.copyProperties(positionDTO, vo);
+				voList.add(vo);
+			}
+			Collections.sort(voList);
+			v.addObject("dataList", voList);
 			return v;
 		} catch (Exception e) {
 			e.printStackTrace();

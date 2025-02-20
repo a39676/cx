@@ -18,6 +18,7 @@ import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceCmFutureOrde
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceFutureCmCancelMultipleOrderProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceFutureCmCancelOrderByIdProducer;
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureCmCancelMultipleOrderMultipleUserDTO;
+import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureCmSetOrderCxDTO;
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureCmSetOrderForMultipleUserDTO;
 import demo.finance.cryptoCoin.trading.pojo.vo.CryptoCoinBinanceFutureCmOpenOrderResponseSubVO;
 import demo.finance.cryptoCoin.trading.pojo.vo.CryptoCoinBinanceFutureCmPositionDetailVO;
@@ -150,7 +151,21 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 	}
 
 	@Override
-	public CommonResult sendFutureOrder(CryptoCoinBinanceFutureCmSetOrderDTO dto) {
+	public CommonResult sendFutureOrder(CryptoCoinBinanceFutureCmSetOrderCxDTO dto) {
+		if (dto.getOrderRepeatCounting() == null) {
+			return sendFutureOrder_(dto);
+		}
+		CommonResult r = null;
+		for (int i = 0; i < dto.getOrderRepeatCounting(); i++) {
+			r = sendFutureOrder_(dto);
+			if (r.isFail()) {
+				return r;
+			}
+		}
+		return r;
+	}
+
+	private CommonResult sendFutureOrder_(CryptoCoinBinanceFutureCmSetOrderDTO dto) {
 		CommonResult r = new CommonResult();
 		if (dto.getUserId() == null || StringUtils.isBlank(dto.getUserNickname())) {
 			r.failWithMessage("User invalid");
@@ -206,6 +221,20 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 
 	@Override
 	public CommonResult sendFutureOrderForMultipleUser(CryptoCoinBinanceFutureCmSetOrderForMultipleUserDTO dto) {
+		if (dto.getOrderRepeatCounting() == null) {
+			return sendFutureOrderForMultipleUser_(dto);
+		}
+		CommonResult r = null;
+		for (int i = 0; i < dto.getOrderRepeatCounting(); i++) {
+			r = sendFutureOrderForMultipleUser_(dto);
+			if (r.isFail()) {
+				return r;
+			}
+		}
+		return r;
+	}
+
+	private CommonResult sendFutureOrderForMultipleUser_(CryptoCoinBinanceFutureCmSetOrderForMultipleUserDTO dto) {
 		CommonResult r = new CommonResult();
 		if (!checkCryptoCoinInteractionMultipleUserCommonDTO(dto)) {
 			r.failWithMessage("User invalid");

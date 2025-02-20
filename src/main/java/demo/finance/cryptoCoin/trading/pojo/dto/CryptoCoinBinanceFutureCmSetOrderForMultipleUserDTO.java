@@ -21,6 +21,7 @@ public class CryptoCoinBinanceFutureCmSetOrderForMultipleUserDTO extends CryptoC
 	/** {@link BinanceTimeInForceType} */
 	private Integer timeInForceCode = BinanceTimeInForceType.GTC.getCode();
 	private BigDecimal price;
+	private Integer orderRepeatCounting;
 
 	public String getSymbol() {
 		return symbol;
@@ -78,13 +79,20 @@ public class CryptoCoinBinanceFutureCmSetOrderForMultipleUserDTO extends CryptoC
 		this.price = price;
 	}
 
+	public Integer getOrderRepeatCounting() {
+		return orderRepeatCounting;
+	}
+
+	public void setOrderRepeatCounting(Integer orderRepeatCounting) {
+		this.orderRepeatCounting = orderRepeatCounting;
+	}
+
 	@Override
 	public String toString() {
 		return "CryptoCoinBinanceFutureCmSetOrderForMultipleUserDTO [symbol=" + symbol + ", quantity=" + quantity
 				+ ", orderSideCode=" + orderSideCode + ", positionSideCode=" + positionSideCode + ", orderTypeCode="
-				+ orderTypeCode + ", timeInForceCode=" + timeInForceCode + ", price=" + price + ", userIdList="
-				+ userIdList + ", userNicknameList=" + userNicknameList + ", totpCode=" + totpCode + ", exchangeCode="
-				+ exchangeCode + "]";
+				+ orderTypeCode + ", timeInForceCode=" + timeInForceCode + ", price=" + price + ", orderRepeatCounting="
+				+ orderRepeatCounting + "]";
 	}
 
 }

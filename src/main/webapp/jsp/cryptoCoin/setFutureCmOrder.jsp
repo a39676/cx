@@ -68,6 +68,8 @@
             </td>
             <td>
               <input type="number" name="" id="quantity" placeholder="quantity">
+              <input type="number" name="" id="orderRepeatCounting" placeholder="orderRepeatCounting" 
+              style="color:red;font-weight:bold;">
             </td>
             <td>
               <input type="number" name="" id="price" placeholder="price">
@@ -176,6 +178,7 @@
 
       var symbol = $("#symbol").val();
       var quantity = $("#quantity").val();
+      var orderRepeatCounting = $("#orderRepeatCounting").val();
       var price = $("#price").val();
       var orderSideCode = $('#orderSide').find(":selected").val();
       var positionSideCode = $('#positionSide').find(":selected").val();
@@ -190,6 +193,7 @@
       var jsonOutput = {
         symbol:symbol,
         quantity:quantity,
+        orderRepeatCounting: orderRepeatCounting,
         orderSideCode:orderSideCode,
         positionSideCode:positionSideCode,
         orderTypeCode:orderTypeCode,
@@ -238,6 +242,7 @@
 
       var symbol = $("#symbol").val();
       var quantity = $("#quantity").val();
+      var orderRepeatCounting = $("#orderRepeatCounting").val();
       var price = $("#price").val();
       var orderSideCode = $('#orderSide').find(":selected").val();
       var positionSideCode = $('#positionSide').find(":selected").val();
@@ -254,6 +259,7 @@
       var jsonOutput = {
         symbol:symbol,
         quantity:quantity,
+        orderRepeatCounting:orderRepeatCounting,
         price:price,
         orderSideCode:orderSideCode,
         positionSideCode:positionSideCode,
@@ -550,6 +556,7 @@
       $("#orderType").val("1").change();
       $("#symbol").val("");
       $("#quantity").val("");
+      $("#orderRepeatCounting").val("");
       $("#price").val("");
     })
   });

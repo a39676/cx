@@ -50,6 +50,9 @@
               <label>quantity[数量(张)]</label>
             </td>
             <td>
+              <label>repeat(重复次数)</label>
+            </td>
+            <td>
               <label>price(价格)</label>
             </td>
             <td>
@@ -68,6 +71,8 @@
             </td>
             <td>
               <input type="number" name="" id="quantity" placeholder="quantity">
+            </td>
+            <td>
               <input type="number" name="" id="orderRepeatCounting" placeholder="orderRepeatCounting" 
               style="color:red;font-weight:bold;">
             </td>

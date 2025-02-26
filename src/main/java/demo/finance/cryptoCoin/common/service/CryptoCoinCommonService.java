@@ -6,7 +6,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +15,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.common.service.impl.FinanceCommonService;
+import demo.finance.cryptoCoin.common.pojo.dto.CryptoCoinUserKeysCxDTO;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionMultipleUserCommonDTO;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinUserKeysDTO;
@@ -529,14 +529,14 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 		if (exchangeType == null) {
 			return false;
 		}
-		List<CryptoCoinUserKeysDTO> userMetaDataList = optionService.getUserMetaData();
-		Map<Integer, String> userMetaData = new HashMap<>();
-		for (CryptoCoinUserKeysDTO user : userMetaDataList) {
-			userMetaData.put(user.getLocalUserId(), user.getNickname());
-		}
+		Map<Integer, CryptoCoinUserKeysCxDTO> userMetaDataMap = optionService.getUserMetaDataMap();
 		for (int i = 0; i < dto.getUserIdList().size(); i++) {
 			Integer id = dto.getUserIdList().get(i);
-			String nickname = userMetaData.get(id);
+			CryptoCoinUserKeysDTO userMetaData = userMetaDataMap.get(id);
+			if (userMetaData == null) {
+				return false;
+			}
+			String nickname = userMetaData.getNickname();
 			if (!dto.getUserNicknameList().get(i).equals(nickname)) {
 				return false;
 			}

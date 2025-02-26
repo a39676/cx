@@ -1,6 +1,7 @@
 package demo.finance.cryptoCoin.trading.sevice.impl;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.finance.cryptoCoin.common.pojo.dto.CryptoCoinUserKeysCxDTO;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceCmFutureOrderProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceFutureCmCancelMultipleOrderProducer;
@@ -36,6 +38,7 @@ import finance.cryptoCoin.binance.pojo.type.BinanceOrderTypeType;
 import finance.cryptoCoin.binance.pojo.type.BinancePositionSideType;
 import finance.cryptoCoin.binance.pojo.type.BinanceTimeInForceType;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionSingleUserCommonDTO;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinUserSymbolRateDTO;
 import finance.cryptoCoin.common.pojo.type.CryptoExchangeType;
 import net.sf.json.JSONObject;
 import toolPack.httpHandel.HttpUtil;
@@ -288,13 +291,33 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 		singleUserDTO.setOrderTypeCode(dto.getOrderTypeCode());
 		singleUserDTO.setPositionSideCode(dto.getPositionSideCode());
 		singleUserDTO.setPrice(dto.getPrice());
-		singleUserDTO.setQuantity(dto.getQuantity());
 		singleUserDTO.setSymbol(dto.getSymbol());
 		singleUserDTO.setTimeInForceCode(dto.getTimeInForceCode());
 		for (int i = 0; i < dto.getUserIdList().size(); i++) {
+			CryptoCoinUserKeysCxDTO userMetaData = optionService.getUserMetaDataMap().get(dto.getUserIdList().get(i));
+			if (userMetaData == null) {
+				continue;
+			}
+			if (userMetaData.getSymbolRateMap() == null || userMetaData.getSymbolRateMap().isEmpty()) {
+				singleUserDTO.setQuantity(dto.getQuantity());
+			} else {
+				CryptoCoinUserSymbolRateDTO quantityRate = userMetaData.getSymbolRateMap().get(dto.getSymbol());
+				if (quantityRate == null) {
+					singleUserDTO.setQuantity(dto.getQuantity());
+				} else {
+					BigDecimal targetQuantity = dto.getQuantity().multiply(quantityRate.getRate()).setScale(0,
+							RoundingMode.FLOOR);
+					if (targetQuantity.equals(BigDecimal.ZERO)) {
+						continue;
+					}
+					singleUserDTO.setQuantity(targetQuantity);
+				}
+			}
+
 			singleUserDTO.setUserId(dto.getUserIdList().get(i));
 			singleUserDTO.setUserNickname(dto.getUserNicknameList().get(i));
 			singleUserDTO.setTotpCode(genTotpCode());
+
 			cmFutureOrderProducer.binanceCmFutureOrder(singleUserDTO);
 		}
 		r.setIsSuccess();

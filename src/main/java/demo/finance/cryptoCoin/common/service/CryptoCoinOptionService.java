@@ -18,7 +18,8 @@ import com.google.gson.GsonBuilder;
 
 import demo.common.service.CommonService;
 import demo.config.customComponent.OptionFilePathConfigurer;
-import finance.cryptoCoin.common.pojo.dto.CryptoCoinUserKeysDTO;
+import demo.finance.cryptoCoin.common.pojo.dto.CryptoCoinUserKeysCxDTO;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinUserSymbolRateDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinForceOrderNoticeSettingDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinSymbolStreamDetailDTO;
 import toolPack.ioHandle.FileUtilCustom;
@@ -48,7 +49,8 @@ public class CryptoCoinOptionService extends CommonService {
 	private Map<String, BigDecimal> binanceFutureUmSymbolBigStepMap = new HashMap<>();
 	private BigDecimal bigTradeMinAmount = new BigDecimal(100000);
 	private List<CryptoCoinForceOrderNoticeSettingDTO> forceOrderNoticeSetting;
-	private List<CryptoCoinUserKeysDTO> userMetaData;
+	private List<CryptoCoinUserKeysCxDTO> userMetaData = new ArrayList<>();
+	private Map<Integer, CryptoCoinUserKeysCxDTO> userMetaDataMap;
 	private String ccmHost;
 	private List<String> tradingSymbolList;
 
@@ -76,6 +78,21 @@ public class CryptoCoinOptionService extends CommonService {
 				if (symbolDetail.getScriptStreamGroupId() <= 1) {
 					binanceMainList.add(symbolDetail.getSymbol());
 				}
+			}
+
+			userMetaDataMap = new HashMap<Integer, CryptoCoinUserKeysCxDTO>();
+			for (int i = 0; i < userMetaData.size(); i++) {
+				CryptoCoinUserKeysCxDTO subUserMetaData = userMetaData.get(i);
+				Map<String, CryptoCoinUserSymbolRateDTO> symbolRateMap = new HashMap<>();
+				List<CryptoCoinUserSymbolRateDTO> rateSttingList = subUserMetaData.getSymbolRateSettingList();
+				if (rateSttingList != null && !rateSttingList.isEmpty()) {
+					for (int j = 0; j < rateSttingList.size(); j++) {
+						CryptoCoinUserSymbolRateDTO symbolRate = rateSttingList.get(j);
+						symbolRateMap.put(symbolRate.getSymbol(), symbolRate);
+					}
+				}
+				subUserMetaData.setSymbolRateMap(symbolRateMap);
+				userMetaDataMap.put(subUserMetaData.getLocalUserId(), subUserMetaData);
 			}
 
 			log.error("crypto coin option loaded");
@@ -213,11 +230,11 @@ public class CryptoCoinOptionService extends CommonService {
 		this.forceOrderNoticeSetting = forceOrderNoticeSetting;
 	}
 
-	public List<CryptoCoinUserKeysDTO> getUserMetaData() {
+	public List<CryptoCoinUserKeysCxDTO> getUserMetaData() {
 		return userMetaData;
 	}
 
-	public void setUserMetaData(List<CryptoCoinUserKeysDTO> userMetaData) {
+	public void setUserMetaData(List<CryptoCoinUserKeysCxDTO> userMetaData) {
 		this.userMetaData = userMetaData;
 	}
 
@@ -237,6 +254,14 @@ public class CryptoCoinOptionService extends CommonService {
 		this.tradingSymbolList = tradingSymbolList;
 	}
 
+	public Map<Integer, CryptoCoinUserKeysCxDTO> getUserMetaDataMap() {
+		return userMetaDataMap;
+	}
+
+	public void setUserMetaDataMap(Map<Integer, CryptoCoinUserKeysCxDTO> userMetaDataMap) {
+		this.userMetaDataMap = userMetaDataMap;
+	}
+
 	@Override
 	public String toString() {
 		return "CryptoCoinOptionService [defaultCoinCatalog=" + defaultCoinCatalog + ", cryptoCompareApiDataMaxLength="
@@ -248,8 +273,8 @@ public class CryptoCoinOptionService extends CommonService {
 				+ binanceWebSocketTurnOn + ", binanceMainList=" + binanceMainList + ", binanceSymbolList="
 				+ binanceSymbolList + ", binanceFutureUmSymbolBigStepMap=" + binanceFutureUmSymbolBigStepMap
 				+ ", bigTradeMinAmount=" + bigTradeMinAmount + ", forceOrderNoticeSetting=" + forceOrderNoticeSetting
-				+ ", userMetaData=" + userMetaData + ", ccmHost=" + ccmHost + ", tradingSymbolList=" + tradingSymbolList
-				+ "]";
+				+ ", userMetaData=" + userMetaData + ", userMetaDataMap=" + userMetaDataMap + ", ccmHost=" + ccmHost
+				+ ", tradingSymbolList=" + tradingSymbolList + "]";
 	}
 
 }

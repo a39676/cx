@@ -1,11 +1,12 @@
 package demo.finance.cryptoCoin.trading.sevice.impl;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.finance.cryptoCoin.common.pojo.dto.CryptoCoinUserKeysCxDTO;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceCmFutureOrderProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceFutureCmCancelMultipleOrderProducer;
@@ -22,6 +22,8 @@ import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceFutureCmCanc
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureCmCancelMultipleOrderMultipleUserDTO;
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureCmSetOrderCxDTO;
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureCmSetOrderForMultipleUserDTO;
+import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinCloseLongShortPositionByMarketOrderDTO;
+import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinCloseLongShortPositionByMarketOrderForMultipleUsersDTO;
 import demo.finance.cryptoCoin.trading.pojo.vo.CryptoCoinBinanceFutureCmOpenOrderResponseSubVO;
 import demo.finance.cryptoCoin.trading.pojo.vo.CryptoCoinBinanceFutureCmPositionDetailVO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureCmTradingService;
@@ -38,7 +40,6 @@ import finance.cryptoCoin.binance.pojo.type.BinanceOrderTypeType;
 import finance.cryptoCoin.binance.pojo.type.BinancePositionSideType;
 import finance.cryptoCoin.binance.pojo.type.BinanceTimeInForceType;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionSingleUserCommonDTO;
-import finance.cryptoCoin.common.pojo.dto.CryptoCoinUserSymbolRateDTO;
 import finance.cryptoCoin.common.pojo.type.CryptoExchangeType;
 import net.sf.json.JSONObject;
 import toolPack.httpHandel.HttpUtil;
@@ -294,25 +295,12 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 		singleUserDTO.setSymbol(dto.getSymbol());
 		singleUserDTO.setTimeInForceCode(dto.getTimeInForceCode());
 		for (int i = 0; i < dto.getUserIdList().size(); i++) {
-			CryptoCoinUserKeysCxDTO userMetaData = optionService.getUserMetaDataMap().get(dto.getUserIdList().get(i));
-			if (userMetaData == null) {
+			BigDecimal fixedQuantity = fixQuantityByUserSetting(dto.getUserIdList().get(i),
+					dto.getUserNicknameList().get(i), dto.getSymbol(), dto.getQuantity());
+			if (fixedQuantity.equals(BigDecimal.ZERO)) {
 				continue;
 			}
-			if (userMetaData.getSymbolRateMap() == null || userMetaData.getSymbolRateMap().isEmpty()) {
-				singleUserDTO.setQuantity(dto.getQuantity());
-			} else {
-				CryptoCoinUserSymbolRateDTO quantityRate = userMetaData.getSymbolRateMap().get(dto.getSymbol());
-				if (quantityRate == null) {
-					singleUserDTO.setQuantity(dto.getQuantity());
-				} else {
-					BigDecimal targetQuantity = dto.getQuantity().multiply(quantityRate.getRate()).setScale(0,
-							RoundingMode.FLOOR);
-					if (targetQuantity.equals(BigDecimal.ZERO)) {
-						continue;
-					}
-					singleUserDTO.setQuantity(targetQuantity);
-				}
-			}
+			singleUserDTO.setQuantity(fixedQuantity);
 
 			singleUserDTO.setUserId(dto.getUserIdList().get(i));
 			singleUserDTO.setUserNickname(dto.getUserNicknameList().get(i));
@@ -411,6 +399,80 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 		}
 		dto.setTotpCode(genTotpCode());
 		binanceFutureCmCancelOrderByIdProducer.sendCancleOrder(dto);
+		r.setIsSuccess();
+		return r;
+	}
+
+	@Override
+	public CommonResult closeBothLongShortPositionByMarket(CryptoCoinCloseLongShortPositionByMarketOrderDTO dto) {
+		CommonResult r = new CommonResult();
+
+		if (dto.getOrderRepeatCounting() == null) {
+			dto.setOrderRepeatCounting(1);
+		}
+
+		CryptoCoinBinanceFutureCmSetOrderCxDTO orderDTO = new CryptoCoinBinanceFutureCmSetOrderCxDTO();
+		orderDTO.setSymbol(dto.getSymbol());
+		orderDTO.setExchangeCode(dto.getExchangeCode());
+		orderDTO.setOrderTypeCode(BinanceOrderTypeType.MARKET.getCode());
+		orderDTO.setQuantity(dto.getQuantity());
+		orderDTO.setUserId(dto.getUserId());
+		orderDTO.setUserNickname(dto.getUserNickname());
+		for (int i = 0; i < dto.getOrderRepeatCounting(); i++) {
+			orderDTO.setOrderSideCode(BinanceOrderSideType.BUY.getCode());
+			orderDTO.setPositionSideCode(BinancePositionSideType.SHORT.getCode());
+			sendFutureOrder(orderDTO);
+			orderDTO.setOrderSideCode(BinanceOrderSideType.SELL.getCode());
+			orderDTO.setPositionSideCode(BinancePositionSideType.LONG.getCode());
+			sendFutureOrder(orderDTO);
+		}
+		r.setIsSuccess();
+		return r;
+	}
+
+	@Override
+	public CommonResult closeBothLongShortPositionByMarketForMultipleUser(
+			CryptoCoinCloseLongShortPositionByMarketOrderForMultipleUsersDTO dto) {
+		CommonResult r = new CommonResult();
+
+		if (dto.getOrderRepeatCounting() == null) {
+			dto.setOrderRepeatCounting(1);
+		}
+
+		CryptoCoinBinanceFutureCmSetOrderCxDTO orderDTO = new CryptoCoinBinanceFutureCmSetOrderCxDTO();
+		orderDTO.setSymbol(dto.getSymbol());
+		orderDTO.setExchangeCode(dto.getExchangeCode());
+		orderDTO.setOrderTypeCode(BinanceOrderTypeType.MARKET.getCode());
+
+		Map<Integer, BigDecimal> userIdMatchQuantity = new HashMap<>();
+		for (int userIndex = 0; userIndex < dto.getUserIdList().size(); userIndex++) {
+			BigDecimal fixedQuantity = fixQuantityByUserSetting(dto.getUserIdList().get(userIndex),
+					dto.getUserNicknameList().get(userIndex), dto.getSymbol(), dto.getQuantity());
+			if (fixedQuantity.equals(BigDecimal.ZERO)) {
+				continue;
+			}
+			userIdMatchQuantity.put(dto.getUserIdList().get(userIndex), fixedQuantity);
+		}
+
+		for (int repeatCount = 0; repeatCount < dto.getOrderRepeatCounting(); repeatCount++) {
+			for (int userIndex = 0; userIndex < dto.getUserIdList().size(); userIndex++) {
+				BigDecimal fixedQuantity = userIdMatchQuantity.get(dto.getUserIdList().get(userIndex));
+				if (fixedQuantity == null) {
+					continue;
+				}
+				orderDTO.setQuantity(fixedQuantity);
+
+				orderDTO.setUserId(dto.getUserIdList().get(userIndex));
+				orderDTO.setUserNickname(dto.getUserNicknameList().get(userIndex));
+
+				orderDTO.setOrderSideCode(BinanceOrderSideType.BUY.getCode());
+				orderDTO.setPositionSideCode(BinancePositionSideType.SHORT.getCode());
+				sendFutureOrder(orderDTO);
+				orderDTO.setOrderSideCode(BinanceOrderSideType.SELL.getCode());
+				orderDTO.setPositionSideCode(BinancePositionSideType.LONG.getCode());
+				sendFutureOrder(orderDTO);
+			}
+		}
 		r.setIsSuccess();
 		return r;
 	}

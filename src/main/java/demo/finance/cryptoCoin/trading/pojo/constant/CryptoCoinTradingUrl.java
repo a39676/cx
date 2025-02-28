@@ -29,6 +29,8 @@ public class CryptoCoinTradingUrl {
 	public static final String BINANCE_FUTURE_CM_SEND_ORDER_MULTIPLE_USER = "/binanceFutureCmSendOrderMultipleUser";
 	public static final String BINANCE_FUTURE_CM_CANCEL_MULTIPLE_ORDER = "/binanceFutureCmCancelMultipleOrder";
 	public static final String BINANCE_FUTURE_CM_CANCEL_MULTIPLE_ORDER_MULTIPLE_USER = "/binanceFutureCmCancelMultipleOrderMultipleUser";
+	public static final String BINANCE_FUTURE_CM_CLOSE_BOTH_LONG_SHORT_POSITION_BY_MARKET = "/binanceFutureCmCloseBothLongShortPositionByMarket";
+	public static final String BINANCE_FUTURE_CM_CLOSE_BOTH_LONG_SHORT_POSITION_BY_MARKET_MULTIPLE_USER = "/binanceFutureCmCloseBothLongShortPositionByMarketMultipleUser";
 	public static final String BINANCE_FUTURE_CM_CANCEL_ORDER_BY_ID = "/binanceFutureCmCancelOrderByID";
 
 }

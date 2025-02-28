@@ -19,6 +19,7 @@ import demo.finance.cryptoCoin.common.pojo.dto.CryptoCoinUserKeysCxDTO;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionMultipleUserCommonDTO;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinUserKeysDTO;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinUserSymbolRateDTO;
 import finance.cryptoCoin.common.pojo.type.CryptoExchangeType;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
@@ -542,5 +543,24 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 			}
 		}
 		return true;
+	}
+
+	protected BigDecimal fixQuantityByUserSetting(Integer localUserId, String userNickname, String symbol,
+			BigDecimal sourceQuantity) {
+		CryptoCoinUserKeysCxDTO userMetaData = optionService.getUserMetaDataMap().get(localUserId);
+		if (userMetaData == null) {
+			return BigDecimal.ZERO;
+		}
+
+		if (userMetaData.getSymbolRateMap() == null || userMetaData.getSymbolRateMap().isEmpty()) {
+			return sourceQuantity;
+		} else {
+			CryptoCoinUserSymbolRateDTO quantityRate = userMetaData.getSymbolRateMap().get(symbol);
+			if (quantityRate == null) {
+				return sourceQuantity;
+			}
+			BigDecimal outputQuantity = sourceQuantity.multiply(quantityRate.getRate()).setScale(0, RoundingMode.FLOOR);
+			return outputQuantity;
+		}
 	}
 }

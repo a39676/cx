@@ -14,6 +14,8 @@ import demo.finance.cryptoCoin.trading.pojo.constant.CryptoCoinTradingUrl;
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureCmCancelMultipleOrderMultipleUserDTO;
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureCmSetOrderCxDTO;
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureCmSetOrderForMultipleUserDTO;
+import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinCloseLongShortPositionByMarketOrderDTO;
+import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinCloseLongShortPositionByMarketOrderForMultipleUsersDTO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureCmTradingService;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelMultipleOrderDTO;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelOrderByIdDTO;
@@ -68,6 +70,20 @@ public class CryptoCoinFutureCmTradingController {
 	public CommonResult cancleMultipleOrderForMultipleUser(
 			@RequestBody CryptoCoinBinanceFutureCmCancelMultipleOrderMultipleUserDTO dto) {
 		return binanceFutureCmTradingService.cancleMultipleOrderForMultipleUser(dto);
+	}
+
+	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_CM_CLOSE_BOTH_LONG_SHORT_POSITION_BY_MARKET)
+	@ResponseBody
+	public CommonResult closeBothLongShortPositionByMarket(
+			@RequestBody CryptoCoinCloseLongShortPositionByMarketOrderDTO dto) {
+		return binanceFutureCmTradingService.closeBothLongShortPositionByMarket(dto);
+	}
+
+	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_CM_CLOSE_BOTH_LONG_SHORT_POSITION_BY_MARKET_MULTIPLE_USER)
+	@ResponseBody
+	public CommonResult closeBothLongShortPositionByMarketForMultipleUser(
+			@RequestBody CryptoCoinCloseLongShortPositionByMarketOrderForMultipleUsersDTO dto) {
+		return binanceFutureCmTradingService.closeBothLongShortPositionByMarketForMultipleUser(dto);
 	}
 
 	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_CM_CANCEL_ORDER_BY_ID)

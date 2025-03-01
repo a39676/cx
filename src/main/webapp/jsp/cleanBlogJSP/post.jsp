@@ -84,7 +84,7 @@
         <div class="col-md-3">
         </div>
         <div class="col-md-9">
-          <span style="color: rgb(255, 156, 0); background-color: rgb(255, 255, 255);">打赏Doge coin</span>
+          <span style="color: rgb(255, 156, 0); background-color: rgb(255, 255, 255);">Donate 打赏</span>
           <img src="${donateImgUrl}" alt="" style="width:100px; height:100px;">
         </div>
       </div>

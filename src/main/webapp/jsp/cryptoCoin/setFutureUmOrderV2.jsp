@@ -47,7 +47,7 @@
               <label>Symbol(标的)</label>
             </td>
             <td>
-              <label>quantity[数量(张)]</label><br>
+              <label>quantity[数量(个)]</label><br>
               <label>repeat(重复次数)</label>
             </td>
             <td>
@@ -97,11 +97,11 @@
           <tr>
             <td>
               <div class="btn-group">
-                <button id="submitCmFutureOrder" class="btn btn-sm btn-primary">
+                <button id="submitUmFutureOrder" class="btn btn-sm btn-primary">
                   Create order<br>
                   创建订单
                 </button>
-                <button id="submitCmFutureOrderForMultipleUser" class="btn btn-sm btn-success">
+                <button id="submitUmFutureOrderForMultipleUser" class="btn btn-sm btn-success">
                   多用户
                 </button>
               </div>
@@ -135,7 +135,7 @@
           <tr>
             <td colspan="3">
               <c:forEach items="${tradingSymbolList}" var="symbol" varStatus="loop">
-                <button class="symbolButton btn btn-sm btn-secondary" symbol="${symbol}USD_PERP">${symbol}USD_PERP</button>
+                <button class="symbolButton btn btn-sm btn-secondary" symbol="${symbol}USDT">${symbol}USDT</button>
               </c:forEach>
             </td>
           </tr>
@@ -145,14 +145,12 @@
 
     <div class="row">
       <div class="col-md-12">
-        <button id="getPositionInfo" class="btn btn-sm btn-secondary">
-          <label>getPositionInfo</label><br>
-          <label>获取持仓信息</label>
-        </button>
-        <button id="getOpenOrders" class="btn btn-sm btn-secondary">
-          <label>getOpenOrders</label><br>
-          <label>获取挂单</label>
-        </button>
+        <button id="getPositionInfo">getPositionInfo</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <button id="getOpenOrders">getOpenOrders</button>
       </div>
     </div>
 
@@ -168,9 +166,14 @@
         </div>
       </div>
     </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div id="ordersHistoryBySymbolResult">
+        </div>
+      </div>
+    </div>
   
 </body>
-
 
 
 <footer>
@@ -178,15 +181,14 @@
 </footer>
 <%@ include file="../baseElementJSP/normalJSPart.jsp"%>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?" async defer></script>
-
 <script type="text/javascript">
   $(document).ready(function() {
-    $("#submitCmFutureOrder").click(function() {
+    $("#submitUmFutureOrder").click(function() {
       sendFutureOrder();
     });
 
     function sendFutureOrder(){
-      var url = "/cryptoTradingFutureCm/binanceFutureCmSendOrder";
+      var url = "/cryptoTradingFutureUm/binanceFutureUmSendOrderV2";
 
       var symbol = $("#symbol").val();
       var quantity = $("#quantity").val();
@@ -244,13 +246,13 @@
       });
     }
 
-    $("#submitCmFutureOrderForMultipleUser").click(function() {
+    $("#submitUmFutureOrderForMultipleUser").click(function() {
       sendFutureOrderForMultipleUser();
     });
 
     function sendFutureOrderForMultipleUser(){
 
-      var url = "/cryptoTradingFutureCm/binanceFutureCmSendOrderMultipleUser";
+      var url = "/cryptoTradingFutureUm/binanceFutureUmSendOrderMultipleUser";
 
       var symbol = $("#symbol").val();
       var quantity = $("#quantity").val();
@@ -306,314 +308,9 @@
         }
       });
     }
-
-    $("#binanceFutureCmCancelMultipleOrder").click(function() {
-      cancelFutureOrder();
-    });
-
-    function cancelFutureOrder(){
-      var url = "/cryptoTradingFutureCm/binanceFutureCmCancelMultipleOrder";
-
-      var symbol = $("#symbol").val();
-      var orderSideCode = $('#orderSide').find(":selected").val();
-      var positionSideCode = $('#positionSide').find(":selected").val();
-      var orderTypeCode = $('#orderType').find(":selected").val();
-      var selectedUser = $('#userSelector').find(":selected");
-      var selectedUserId = selectedUser.val();
-      var selectedUserNickname = selectedUser.attr("userNickname");
-      var selectedExchange = $('#exchangeSelector').find(":selected");
-      var selectedExchangeCode = selectedExchange.val();
-
-      var jsonOutput = {
-        symbol:symbol,
-        orderSideCode:orderSideCode,
-        positionSideCode:positionSideCode,
-        orderTypeCode:orderTypeCode,
-        userId:selectedUserId,
-        userNickname:selectedUserNickname,
-        exchangeCode:selectedExchangeCode,
-      };
-      
-      $("#msg").text("sending");
-      $.ajax({
-        type : "POST",
-        async : true,
-        url : url,
-        data: JSON.stringify(jsonOutput),
-        cache : false,
-        contentType: "application/json",
-        dataType: "json",
-        timeout:50000,
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader(csrfHeader, csrfToken);
-        },
-        success:function(datas){
-          if(datas.code != 0){
-            $("#msg").text("Done: " + datas.message);
-          } else {
-            $("#msg").text(datas.message);
-          }
-        },
-        error: function(datas) {
-          $("#msg").text(datas.message);
-        }
-      });
-    }
-
-    $("#cmFutureCancleMultipleOrderForMultipleUser").click(function() {
-      cancelFutureMultipleOrderForMultipleUser();
-    });
-
-    function cancelFutureMultipleOrderForMultipleUser(){
-      var url = "/cryptoTradingFutureCm/binanceFutureCmCancelMultipleOrderMultipleUser";
-
-      var userIdList = [];
-      var userNicknameList = [];
-      $(':checkbox.userCheckbox:checked').each(function(i){
-        userIdList[i] = $(this).attr("localUserId");
-        userNicknameList[i] = $(this).attr("userNickname");
-      });
-
-      var symbol = $("#symbol").val();
-      var orderSideCode = $('#orderSide').find(":selected").val();
-      var positionSideCode = $('#positionSide').find(":selected").val();
-      var orderTypeCode = $('#orderType').find(":selected").val();
-      var selectedExchange = $('#exchangeSelector').find(":selected");
-      var selectedExchangeCode = selectedExchange.val();
-
-      var jsonOutput = {
-        symbol:symbol,
-        orderSideCode:orderSideCode,
-        positionSideCode:positionSideCode,
-        orderTypeCode:orderTypeCode,
-        exchangeCode:selectedExchangeCode,
-        userIdList:userIdList,
-        userNicknameList:userNicknameList,
-      };
-
-      $("#msg").text("sending");
-      $.ajax({
-        type : "POST",
-        async : true,
-        url : url,
-        data: JSON.stringify(jsonOutput),
-        cache : false,
-        contentType: "application/json",
-        dataType: "json",
-        timeout:50000,
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader(csrfHeader, csrfToken);
-        },
-        success:function(datas){
-          if(datas.code != 0){
-            $("#msg").text("Done: " + datas.message);
-          } else {
-            $("#msg").text(datas.message);
-          }
-        },
-        error: function(datas) {
-          $("#msg").text(datas.message);
-        }
-      });
-    }
-
-    $("#binanceFutureCmCloseBothLongShortPositionByMarket").click(function() {
-      binanceFutureCmCloseBothLongShortPositionByMarket();
-    });
-
-    function binanceFutureCmCloseBothLongShortPositionByMarket(){
-      var url = "/cryptoTradingFutureCm/binanceFutureCmCloseBothLongShortPositionByMarket";
-
-      var symbol = $("#symbol").val();
-      var quantity = $("#quantity").val();
-      var orderRepeatCounting = $("#orderRepeatCounting").val();
-      var selectedUser = $('#userSelector').find(":selected");
-      var selectedUserId = selectedUser.val();
-      var selectedUserNickname = selectedUser.attr("userNickname");
-      var selectedExchange = $('#exchangeSelector').find(":selected");
-      var selectedExchangeCode = selectedExchange.val();
-
-      var jsonOutput = {
-        symbol:symbol,
-        quantity:quantity,
-        orderRepeatCounting:orderRepeatCounting,
-        userId:selectedUserId,
-        userNickname:selectedUserNickname,
-        exchangeCode:selectedExchangeCode,
-      };
-
-      $("#msg").text("sending");
-      $.ajax({
-        type : "POST",
-        async : true,
-        url : url,
-        data: JSON.stringify(jsonOutput),
-        cache : false,
-        contentType: "application/json",
-        dataType: "json",
-        timeout:50000,
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader(csrfHeader, csrfToken);
-        },
-        success:function(datas){
-          if(datas.code != 0){
-            $("#msg").text("Done: " + datas.message);
-          } else {
-            $("#msg").text(datas.message);
-          }
-        },
-        error: function(datas) {
-          $("#msg").text(datas.message);
-        }
-      });
-    }
-
-    $("#binanceFutureCmCloseBothLongShortPositionByMarketMultipleUser").click(function() {
-      binanceFutureCmCloseBothLongShortPositionByMarketMultipleUser();
-    });
-
-    function binanceFutureCmCloseBothLongShortPositionByMarketMultipleUser(){
-      var url = "/cryptoTradingFutureCm/binanceFutureCmCloseBothLongShortPositionByMarketMultipleUser";
-
-      var userIdList = [];
-      var userNicknameList = [];
-      $(':checkbox.userCheckbox:checked').each(function(i){
-        userIdList[i] = $(this).attr("localUserId");
-        userNicknameList[i] = $(this).attr("userNickname");
-      });
-      
-      var symbol = $("#symbol").val();
-      var quantity = $("#quantity").val();
-      var orderRepeatCounting = $("#orderRepeatCounting").val();
-      var selectedExchange = $('#exchangeSelector').find(":selected");
-      var selectedExchangeCode = selectedExchange.val();
-
-      var jsonOutput = {
-        symbol:symbol,
-        quantity:quantity,
-        orderRepeatCounting:orderRepeatCounting,
-        userIdList:userIdList,
-        userNicknameList:userNicknameList,
-        exchangeCode:selectedExchangeCode,
-      };
-
-      $("#msg").text("sending");
-      $.ajax({
-        type : "POST",
-        async : true,
-        url : url,
-        data: JSON.stringify(jsonOutput),
-        cache : false,
-        contentType: "application/json",
-        dataType: "json",
-        timeout:50000,
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader(csrfHeader, csrfToken);
-        },
-        success:function(datas){
-          if(datas.code != 0){
-            $("#msg").text("Done: " + datas.message);
-          } else {
-            $("#msg").text(datas.message);
-          }
-        },
-        error: function(datas) {
-          $("#msg").text(datas.message);
-        }
-      });
-    }
   });
 </script>
 
-<script type="text/javascript">
-  $(document).ready(function() {
-    $("#getPositionInfo").click(function() {
-      getPositionInfo();
-    });
-
-    function getPositionInfo(){
-      var url = "/cryptoTradingFutureCm/positionInfoCm";
-
-      var selectedUser = $('#userSelector').find(":selected");
-      var selectedUserId = selectedUser.val();
-      var selectedUserNickname = selectedUser.attr("userNickname");
-      var selectedExchange = $('#exchangeSelector').find(":selected");
-      var selectedExchangeCode = selectedExchange.val();
-      
-      var jsonOutput = {
-        userId:selectedUserId,
-        userNickname:selectedUserNickname,
-        exchangeCode:selectedExchangeCode,
-      };
-
-      $("#msg").text("sending");
-      $("#positionInfoResult").html("");
-      $.ajax({
-        type : "POST",
-        async : true,
-        url : url,
-        data: JSON.stringify(jsonOutput),
-        cache : false,
-        contentType: "application/json",
-        <%-- dataType: "json", --%>
-        timeout:50000,
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader(csrfHeader, csrfToken);
-        },
-        success:function(datas){
-          $("#positionInfoResult").html(datas);
-          $("#msg").text("");
-        },
-        error: function(datas) {
-          $("#msg").text(datas.message);
-        }
-      });
-    }
-
-    $("#getOpenOrders").click(function() {
-      openOrdersResult();
-    });
-
-    function openOrdersResult(){
-      var url = "/cryptoTradingFutureCm/getOpenOrdersCm";
-
-      var selectedUser = $('#userSelector').find(":selected");
-      var selectedUserId = selectedUser.val();
-      var selectedUserNickname = selectedUser.attr("userNickname");
-      var selectedExchange = $('#exchangeSelector').find(":selected");
-      var selectedExchangeCode = selectedExchange.val();
-      
-      var jsonOutput = {
-        userId:selectedUserId,
-        userNickname:selectedUserNickname,
-        exchangeCode:selectedExchangeCode,
-      };
-
-      $("#msg").text("sending");
-      $("#openOrdersResult").html("");
-      $.ajax({
-        type : "POST",
-        async : true,
-        url : url,
-        data: JSON.stringify(jsonOutput),
-        cache : false,
-        contentType: "application/json",
-        <%-- dataType: "json", --%>
-        timeout:50000,
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader(csrfHeader, csrfToken);
-        },
-        success:function(datas){
-          $("#openOrdersResult").html(datas);
-          $("#msg").text("");
-        },
-        error: function(datas) {
-          $("#msg").text(datas.message);
-        }
-      });
-    }
-  });
-</script>
 
 <script type="text/javascript">
   $(document).ready(function() {

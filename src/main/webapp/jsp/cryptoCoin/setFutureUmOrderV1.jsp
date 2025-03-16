@@ -174,7 +174,7 @@
     });
 
     function sendFutureOrder(){
-      var url = "/cryptoTradingFutureUm/binanceFutureUmSendOrder";
+      var url = "/cryptoTradingFutureUm/binanceFutureUmSendOrderV1";
 
       var orderSymbolsStr = $("#orderSymbols").val();
       var orderAmount = $("#orderAmount").val();

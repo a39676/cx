@@ -8,7 +8,7 @@ import finance.cryptoCoin.binance.pojo.type.BinancePositionSideType;
 import finance.cryptoCoin.binance.pojo.type.BinanceTimeInForceType;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionMultipleUserCommonDTO;
 
-public class CryptoCoinBinanceFutureCmSetOrderForMultipleUserDTO extends CryptoCoinInteractionMultipleUserCommonDTO {
+public class CryptoCoinBinanceFutureUmSetOrderForMultipleUserDTO extends CryptoCoinInteractionMultipleUserCommonDTO {
 
 	private String symbol;
 	private BigDecimal quantity;
@@ -89,7 +89,7 @@ public class CryptoCoinBinanceFutureCmSetOrderForMultipleUserDTO extends CryptoC
 
 	@Override
 	public String toString() {
-		return "CryptoCoinBinanceFutureCmSetOrderForMultipleUserDTO [symbol=" + symbol + ", quantity=" + quantity
+		return "CryptoCoinBinanceFutureUmSetOrderForMultipleUserDTO [symbol=" + symbol + ", quantity=" + quantity
 				+ ", orderSideCode=" + orderSideCode + ", positionSideCode=" + positionSideCode + ", orderTypeCode="
 				+ orderTypeCode + ", timeInForceCode=" + timeInForceCode + ", price=" + price + ", orderRepeatCounting="
 				+ orderRepeatCounting + ", userIdList=" + userIdList + ", userNicknameList=" + userNicknameList

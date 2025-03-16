@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureUmTradingService;
+import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureUmSingleUserGroupOrderTradingService;
 import finance.cryptoCoin.pojo.constant.CryptoCoinBinanceTradingCommonUrl;
 import finance.cryptoCoin.pojo.dto.CryptoCoinSymbolGroupSettingDTO;
 
@@ -15,7 +15,7 @@ import finance.cryptoCoin.pojo.dto.CryptoCoinSymbolGroupSettingDTO;
 public class CcmInteractionController {
 
 	@Autowired
-	private CryptoCoinBinanceFutureUmTradingService cryptoCoinBinanceFutureTradingService;
+	private CryptoCoinBinanceFutureUmSingleUserGroupOrderTradingService cryptoCoinBinanceFutureTradingService;
 
 	@GetMapping(value = CryptoCoinBinanceTradingCommonUrl.GET_SYMBOL_GROUP_DATA)
 	@ResponseBody

@@ -116,7 +116,10 @@
         <a href="/cryptoTradingFutureCm/futureCmView" target="_blank">trading(future CM)</a>
       </li>
       <li>
-        <a href="/cryptoTradingFutureUm/futureUmView" target="_blank">trading(future UM)</a>
+        <a href="/cryptoTradingFutureUm/futureUmViewV2" target="_blank">trading(future UM V2)</a>
+      </li>
+      <li>
+        <a href="/cryptoTradingFutureUm/futureUmViewV1" target="_blank">trading(future UM V1)</a>
       </li>
       <li>
         <a href="/cryptoTradingSpot/spotView" target="_blank">trading(Spot)</a>

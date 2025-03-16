@@ -58,7 +58,7 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 	@Override
 	public ModelAndView tradingView() {
 		ModelAndView v = new ModelAndView("cryptoCoin/setFutureCmOrder");
-		v.addObject("title", "BinanceTrading(Future CM)");
+		v.addObject("title", "Future CM(Binance) V1");
 		v.addObject("userList", optionService.getUserMetaData());
 		v.addObject("exchangeList", CryptoExchangeType.values());
 		v.addObject("tradingSymbolList", optionService.getTradingSymbolList());

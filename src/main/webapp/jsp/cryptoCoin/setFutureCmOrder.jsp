@@ -62,6 +62,9 @@
             <td>
               <label>orderType</label>
             </td>
+            <td>
+              <label>timeRange</label>
+            </td>
           </tr>
           <tr>
             <td>
@@ -92,6 +95,10 @@
                 <option value="1">Limit</option>
                 <option value="2">Market</option>
               </select>
+            </td>
+            <td>
+              <input type="text" name="" id="startTime" placeholder="startTime: 20251231">
+              <input type="text" name="" id="endTime" placeholder="endTime: 20251231">
             </td>
           </tr>
           <tr>
@@ -153,6 +160,10 @@
           <label>getOpenOrders</label><br>
           <label>获取挂单</label>
         </button>
+        <button id="queryOrdersHistory" class="btn btn-sm btn-secondary">
+          <label>queryOrdersHistory</label><br>
+          <label>获取挂单历史</label>
+        </button>
       </div>
     </div>
 
@@ -164,7 +175,7 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <div id="openOrdersResult">
+        <div id="queryOrdersResult">
         </div>
       </div>
     </div>
@@ -571,10 +582,10 @@
     }
 
     $("#getOpenOrders").click(function() {
-      openOrdersResult();
+      queryOpenOrders();
     });
 
-    function openOrdersResult(){
+    function queryOpenOrders(){
       var url = "/cryptoTradingFutureCm/getOpenOrdersCm";
 
       var selectedUser = $('#userSelector').find(":selected");
@@ -590,7 +601,7 @@
       };
 
       $("#msg").text("sending");
-      $("#openOrdersResult").html("");
+      $("#queryOrdersResult").html("");
       $.ajax({
         type : "POST",
         async : true,
@@ -604,7 +615,56 @@
           xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success:function(datas){
-          $("#openOrdersResult").html(datas);
+          $("#queryOrdersResult").html(datas);
+          $("#msg").text("");
+        },
+        error: function(datas) {
+          $("#msg").text(datas.message);
+        }
+      });
+    }
+
+    $("#queryOrdersHistory").click(function() {
+      queryOrdersHistory();
+    });
+
+    function queryOrdersHistory(){
+      var url = "/cryptoTradingFutureCm/getOrdersBySymbolCm";
+
+      var symbol = $("#symbol").val();
+      var selectedUser = $('#userSelector').find(":selected");
+      var selectedUserId = selectedUser.val();
+      var selectedUserNickname = selectedUser.attr("userNickname");
+      var selectedExchange = $('#exchangeSelector').find(":selected");
+      var selectedExchangeCode = selectedExchange.val();
+      var startTime = $("#startTime").val();
+      var endTime = $("#endTime").val();
+      
+      var jsonOutput = {
+        symbol:symbol,
+        userId:selectedUserId,
+        userNickname:selectedUserNickname,
+        exchangeCode:selectedExchangeCode,
+        startTime:startTime,
+        endTime:endTime,
+      };
+
+      $("#msg").text("sending");
+      $("#queryOrdersResult").html("");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        <%-- dataType: "json", --%>
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          $("#queryOrdersResult").html(datas);
           $("#msg").text("");
         },
         error: function(datas) {

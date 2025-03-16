@@ -10,6 +10,7 @@ import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinCloseLongShortPosition
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinCloseLongShortPositionByMarketOrderForMultipleUsersDTO;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelMultipleOrderDTO;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelOrderByIdDTO;
+import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceSpotQueryOrdersDTO;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionSingleUserCommonDTO;
 
 public interface CryptoCoinBinanceFutureCmTradingService {
@@ -34,5 +35,7 @@ public interface CryptoCoinBinanceFutureCmTradingService {
 
 	CommonResult closeBothLongShortPositionByMarketForMultipleUser(
 			CryptoCoinCloseLongShortPositionByMarketOrderForMultipleUsersDTO dto);
+
+	ModelAndView getOrdersBySymbol(CryptoCoinBinanceSpotQueryOrdersDTO dto);
 
 }

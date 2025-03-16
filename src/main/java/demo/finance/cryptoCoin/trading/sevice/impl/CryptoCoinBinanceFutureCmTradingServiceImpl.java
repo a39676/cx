@@ -1,6 +1,7 @@
 package demo.finance.cryptoCoin.trading.sevice.impl;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -26,19 +27,24 @@ import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinCloseLongShortPosition
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinCloseLongShortPositionByMarketOrderForMultipleUsersDTO;
 import demo.finance.cryptoCoin.trading.pojo.vo.CryptoCoinBinanceFutureCmOpenOrderResponseSubVO;
 import demo.finance.cryptoCoin.trading.pojo.vo.CryptoCoinBinanceFutureCmPositionDetailVO;
+import demo.finance.cryptoCoin.trading.pojo.vo.CryptoCoinBinanceFutureUmOpenOrderResponseSubVO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureCmTradingService;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelMultipleOrderDTO;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelOrderByIdDTO;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmOpenOrderResponseSubDTO;
+import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmQueryOrderFeedbackDTO;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmSetOrderDTO;
+import finance.cryptoCoin.binance.future.cm.pojo.result.CryptoCoinBinanceFutureCmQueryOpenOrderResult;
 import finance.cryptoCoin.binance.future.cm.pojo.result.CryptoCoinBinanceFutureCmQueryOrderResult;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureCmPositionDetailDTO;
 import finance.cryptoCoin.binance.future.um.pojo.result.CryptoCoinBinanceCmFuturePositionInfoResult;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
+import finance.cryptoCoin.binance.pojo.type.BinanceOrderExecutionType;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderSideType;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderTypeType;
 import finance.cryptoCoin.binance.pojo.type.BinancePositionSideType;
 import finance.cryptoCoin.binance.pojo.type.BinanceTimeInForceType;
+import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceSpotQueryOrdersDTO;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionSingleUserCommonDTO;
 import finance.cryptoCoin.common.pojo.type.CryptoExchangeType;
 import net.sf.json.JSONObject;
@@ -108,8 +114,8 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 
 		try {
 			String response = h.sendPostRestful(url, json.toString());
-			CryptoCoinBinanceFutureCmQueryOrderResult r = buildObjFromJsonCustomization(response,
-					CryptoCoinBinanceFutureCmQueryOrderResult.class);
+			CryptoCoinBinanceFutureCmQueryOpenOrderResult r = buildObjFromJsonCustomization(response,
+					CryptoCoinBinanceFutureCmQueryOpenOrderResult.class);
 			List<CryptoCoinBinanceFutureCmOpenOrderResponseSubDTO> orderList = r.getOrderList();
 			CryptoCoinBinanceFutureCmOpenOrderResponseSubVO dataVO = null;
 			for (int i = 0; i < orderList.size(); i++) {
@@ -475,5 +481,79 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 		}
 		r.setIsSuccess();
 		return r;
+	}
+
+	@Override
+	public ModelAndView getOrdersBySymbol(CryptoCoinBinanceSpotQueryOrdersDTO dto) {
+		ModelAndView v = new ModelAndView("cryptoCoin/getFutureUmOpenOrdersTable");
+		List<CryptoCoinBinanceFutureUmOpenOrderResponseSubVO> list = new ArrayList<>();
+		if (dto.getStartTime() != null) {
+			try {
+				LocalDateTime startTimeInLocalDateTime = localDateTimeHandler
+						.stringToLocalDateTimeUnkonwFormat(String.valueOf(dto.getStartTime()));
+				long startTime = localDateTimeHandler.localDateTimeToDate(startTimeInLocalDateTime).getTime();
+				dto.setStartTime(startTime);
+			} catch (Exception e) {
+			}
+		}
+		if (dto.getEndTime() != null) {
+			try {
+				LocalDateTime endTimeInLocalDateTime = localDateTimeHandler
+						.stringToLocalDateTimeUnkonwFormat(String.valueOf(dto.getEndTime()));
+				long endTime = localDateTimeHandler.localDateTimeToDate(endTimeInLocalDateTime).getTime();
+				dto.setEndTime(endTime);
+			} catch (Exception e) {
+			}
+		}
+		HttpUtil h = new HttpUtil();
+		String url = optionService.getCcmHost() + CcmUrlConstant.ROOT + CcmUrlConstant.GET_ORDERS_BY_SYMBOL_CM;
+		dto.setTotpCode(genTotpCode());
+		JSONObject json = JSONObject.fromObject(dto);
+
+		try {
+			String response = h.sendPostRestful(url, json.toString());
+			CryptoCoinBinanceFutureCmQueryOrderResult r = buildObjFromJsonCustomization(response,
+					CryptoCoinBinanceFutureCmQueryOrderResult.class);
+			if (r == null || r.isFail()) {
+				return v;
+			}
+			CryptoCoinBinanceFutureCmQueryOrderFeedbackDTO orderDTO = null;
+			CryptoCoinBinanceFutureUmOpenOrderResponseSubVO dataVO = null;
+			for (int i = 0; i < r.getOrderHistory().size(); i++) {
+				orderDTO = r.getOrderHistory().get(i);
+				try {
+					dataVO = new CryptoCoinBinanceFutureUmOpenOrderResponseSubVO();
+					BeanUtils.copyProperties(orderDTO, dataVO);
+					dataVO.setSide(BinanceOrderSideType.getType(orderDTO.getSide()));
+					dataVO.setStatus(BinanceOrderExecutionType.getType(orderDTO.getStatus()));
+					dataVO.setOrderTimeStr(localDateTimeHandler
+							.dateToStr(localDateTimeHandler.dateToLocalDateTime(new Date(orderDTO.getTime()))));
+					dataVO.setUpdateTimeStr(localDateTimeHandler
+							.dateToStr(localDateTimeHandler.dateToLocalDateTime(new Date(orderDTO.getUpdateTime()))));
+					if (BinanceOrderSideType.BUY.equals(dataVO.getSide()) && !dataVO.getReduceOnly()) {
+						dataVO.setOrderTypeInSimpleWord("开多");
+					} else if (BinanceOrderSideType.BUY.equals(dataVO.getSide()) && dataVO.getReduceOnly()) {
+						dataVO.setOrderTypeInSimpleWord("平空");
+					} else if (BinanceOrderSideType.SELL.equals(dataVO.getSide()) && dataVO.getReduceOnly()) {
+						dataVO.setOrderTypeInSimpleWord("平多");
+						dataVO.setOrigQty(dataVO.getOrigQty().negate());
+						dataVO.setExecutedQty(dataVO.getExecutedQty().negate());
+					} else if (BinanceOrderSideType.SELL.equals(dataVO.getSide()) && !dataVO.getReduceOnly()) {
+						dataVO.setOrderTypeInSimpleWord("开空");
+						dataVO.setOrigQty(dataVO.getOrigQty().negate());
+						dataVO.setExecutedQty(dataVO.getExecutedQty().negate());
+					} else {
+						dataVO.setOrderTypeInSimpleWord(dataVO.getSide() + "," + dataVO.getPositionSide());
+					}
+					list.add(dataVO);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		v.addObject("dataList", list);
+		return v;
 	}
 }

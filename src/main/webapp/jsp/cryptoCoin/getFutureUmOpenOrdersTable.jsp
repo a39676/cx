@@ -92,6 +92,28 @@
               </tr>
             </c:forEach>
           </tbody>
+          <tbody>
+            <c:forEach items="${dataList}" var="subData" varStatus="loop">
+              <c:choose>
+                <c:when test="${subData.status.code == 8}">
+                  <tr>
+                    <td>${subData.avgPrice}</td>
+                    <td>${subData.executedQty}</td>
+                    <%-- <td>${subData.status.code}</td> --%>
+                  </tr>  
+                </c:when>
+                <c:when test="${subData.status.code == 9}">
+                  <tr>
+                    <td>${subData.avgPrice}</td>
+                    <td>${subData.executedQty}</td>
+                    <%-- <td>${subData.status.code}</td> --%>
+                  </tr>  
+                </c:when>
+                <c:otherwise>
+                </c:otherwise>
+              </c:choose>
+            </c:forEach>
+          </tbody>
         </table>
       </div>
     </div>

@@ -84,7 +84,7 @@ public class CryptoCoinFutureUmTradingV1Controller {
 
 	@PostMapping(value = CcmUrlConstant.GET_ORDERS_BY_SYMBOL_UM)
 	@ResponseBody
-	public ModelAndView getOpenOrdersUm(@RequestBody CryptoCoinBinanceFutureUmGetOrderBySymbolDTO dto) {
+	public ModelAndView getOrdersBySymbol(@RequestBody CryptoCoinBinanceFutureUmGetOrderBySymbolDTO dto) {
 		return binanceFutureUmSingleUserGroupOrderTradingService.getOrdersBySymbol(dto);
 	}
 

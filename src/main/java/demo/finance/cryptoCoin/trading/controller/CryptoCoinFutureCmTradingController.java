@@ -20,6 +20,7 @@ import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureCmTradingSe
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelMultipleOrderDTO;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelOrderByIdDTO;
 import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
+import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceSpotQueryOrdersDTO;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionSingleUserCommonDTO;
 
 @Controller
@@ -44,6 +45,12 @@ public class CryptoCoinFutureCmTradingController {
 	@ResponseBody
 	public ModelAndView getOpenOrdersCm(@RequestBody CryptoCoinInteractionSingleUserCommonDTO dto) {
 		return binanceFutureCmTradingService.getFutureCmOpenOrders(dto);
+	}
+
+	@PostMapping(value = CcmUrlConstant.GET_ORDERS_BY_SYMBOL_CM)
+	@ResponseBody
+	public ModelAndView getOrdersBySymbol(@RequestBody CryptoCoinBinanceSpotQueryOrdersDTO dto) {
+		return binanceFutureCmTradingService.getOrdersBySymbol(dto);
 	}
 
 	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_CM_SEND_ORDER)

@@ -1,6 +1,6 @@
 crypto coin
-	Future CM
-		新建同时双向平仓功能
+	Future UM
+		多用户下单, 需要 option 中配置用户下单比例
 
 	CryptoCoinForceOrderDataServiceImpl.receiveNewForceOrderFutureUmDataMessage
 		SQL update to "insert or update"

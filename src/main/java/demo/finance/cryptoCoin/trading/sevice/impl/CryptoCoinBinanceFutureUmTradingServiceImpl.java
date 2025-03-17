@@ -159,8 +159,6 @@ public class CryptoCoinBinanceFutureUmTradingServiceImpl extends CryptoCoinCommo
 		}
 		if (BinanceOrderTypeType.MARKET.equals(orderType)) {
 			dto.setTimeInForceCode(null);
-		}
-		if (BinanceOrderTypeType.MARKET.equals(orderType)) {
 			dto.setPrice(null);
 		}
 

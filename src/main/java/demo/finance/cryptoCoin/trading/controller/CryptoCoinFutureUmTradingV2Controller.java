@@ -11,9 +11,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.trading.pojo.constant.CryptoCoinTradingUrl;
+import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureCmCancelMultipleOrderMultipleUserDTO;
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureUmSetOrderForMultipleUserDTO;
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureUmSetOrderV2CxDTO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureUmTradingService;
+import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelOrderByIdDTO;
+import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmCancelMultipleOrderDTO;
 
 @Controller
 @RequestMapping(value = CryptoCoinTradingUrl.FUTURE_UM_ROOT)
@@ -32,12 +35,31 @@ public class CryptoCoinFutureUmTradingV2Controller {
 	public CommonResult sendFutureOrder(@RequestBody CryptoCoinBinanceFutureUmSetOrderV2CxDTO dto) {
 		return umTradingService.sendOrder(dto);
 	}
-	
+
 	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_UM_SEND_ORDER_MULTIPLE_USER)
 	@ResponseBody
 	public CommonResult sendFutureOrderForMultipleUser(
 			@RequestBody CryptoCoinBinanceFutureUmSetOrderForMultipleUserDTO dto) {
 		return umTradingService.sendFutureOrderForMultipleUser(dto);
+	}
+
+	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_UM_CANCEL_MULTIPLE_ORDER)
+	@ResponseBody
+	public CommonResult cancleMultipleOrder(@RequestBody CryptoCoinBinanceFutureUmCancelMultipleOrderDTO dto) {
+		return umTradingService.cancleMultipleOrder(dto);
+	}
+
+	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_UM_CANCEL_MULTIPLE_ORDER_MULTIPLE_USER)
+	@ResponseBody
+	public CommonResult cancleMultipleOrderForMultipleUser(
+			@RequestBody CryptoCoinBinanceFutureCmCancelMultipleOrderMultipleUserDTO dto) {
+		return umTradingService.cancleMultipleOrderForMultipleUser(dto);
+	}
+
+	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_UM_CANCEL_ORDER_BY_ID)
+	@ResponseBody
+	public CommonResult cancleOrderById(@RequestBody CryptoCoinBinanceFutureCmCancelOrderByIdDTO dto) {
+		return umTradingService.cancleOrderById(dto);
 	}
 
 }

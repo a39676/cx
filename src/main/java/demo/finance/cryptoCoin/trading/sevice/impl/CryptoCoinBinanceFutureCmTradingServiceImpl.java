@@ -301,7 +301,7 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 		singleUserDTO.setSymbol(dto.getSymbol());
 		singleUserDTO.setTimeInForceCode(dto.getTimeInForceCode());
 		for (int i = 0; i < dto.getUserIdList().size(); i++) {
-			BigDecimal fixedQuantity = fixQuantityByUserSetting(dto.getUserIdList().get(i),
+			BigDecimal fixedQuantity = cmOrderFixQuantityByUserSetting(dto.getUserIdList().get(i),
 					dto.getUserNicknameList().get(i), dto.getSymbol(), dto.getQuantity());
 			if (fixedQuantity.equals(BigDecimal.ZERO)) {
 				continue;
@@ -452,7 +452,7 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 
 		Map<Integer, BigDecimal> userIdMatchQuantity = new HashMap<>();
 		for (int userIndex = 0; userIndex < dto.getUserIdList().size(); userIndex++) {
-			BigDecimal fixedQuantity = fixQuantityByUserSetting(dto.getUserIdList().get(userIndex),
+			BigDecimal fixedQuantity = cmOrderFixQuantityByUserSetting(dto.getUserIdList().get(userIndex),
 					dto.getUserNicknameList().get(userIndex), dto.getSymbol(), dto.getQuantity());
 			if (fixedQuantity.equals(BigDecimal.ZERO)) {
 				continue;

@@ -1,6 +1,8 @@
 crypto coin
 	Future UM
 		多用户下单, 需要 option 中配置用户下单比例
+		cancel order by ID 未完成
+		双向平仓 未完成
 
 	CryptoCoinForceOrderDataServiceImpl.receiveNewForceOrderFutureUmDataMessage
 		SQL update to "insert or update"

@@ -108,22 +108,22 @@
             </td>
             <td>
               <div class="btn-group">
-                <button id="binanceFutureCmCancelMultipleOrder" class="btn btn-sm btn-primary">
+                <button id="binanceFutureUmCancelMultipleOrder" class="btn btn-sm btn-primary">
                   Cancel multiple order<br>
                   取消订单
                 </button><br>
-                <button id="cmFutureCancleMultipleOrderForMultipleUser" class="btn btn-sm btn-success">
+                <button id="umFutureCancleMultipleOrderForMultipleUser" class="btn btn-sm btn-success">
                   多用户
                 </button>
               </div>
             </td>
             <td>
               <div class="btn-group">
-                <button id="binanceFutureCmCloseBothLongShortPositionByMarket" class="btn btn-sm btn-primary">
+                <button id="binanceFutureUmCloseBothLongShortPositionByMarket" disabled class="btn btn-sm btn-primary">
                   CloseBothLongShortPosition<br>
                   同时市价平仓
                 </button><br>
-                <button id="binanceFutureCmCloseBothLongShortPositionByMarketMultipleUser" class="btn btn-sm btn-success">
+                <button id="binanceFutureUmCloseBothLongShortPositionByMarketMultipleUser" disabled class="btn btn-sm btn-success">
                   多用户
                 </button>
               </div>
@@ -283,6 +283,116 @@
         userNicknameList:userNicknameList,
       };
       
+      $("#msg").text("sending");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          if(datas.code != 0){
+            $("#msg").text("Done: " + datas.message);
+          } else {
+            $("#msg").text(datas.message);
+          }
+        },
+        error: function(datas) {
+          $("#msg").text(datas.message);
+        }
+      });
+    }
+
+    $("#binanceFutureUmCancelMultipleOrder").click(function() {
+      cancelFutureOrder();
+    });
+
+    function cancelFutureOrder(){
+      var url = "/cryptoTradingFutureUm/binanceFutureUmCancelMultipleOrder";
+
+      var symbol = $("#symbol").val();
+      var orderSideCode = $('#orderSide').find(":selected").val();
+      var positionSideCode = $('#positionSide').find(":selected").val();
+      var orderTypeCode = $('#orderType').find(":selected").val();
+      var selectedUser = $('#userSelector').find(":selected");
+      var selectedUserId = selectedUser.val();
+      var selectedUserNickname = selectedUser.attr("userNickname");
+      var selectedExchange = $('#exchangeSelector').find(":selected");
+      var selectedExchangeCode = selectedExchange.val();
+
+      var jsonOutput = {
+        symbol:symbol,
+        orderSideCode:orderSideCode,
+        positionSideCode:positionSideCode,
+        orderTypeCode:orderTypeCode,
+        userId:selectedUserId,
+        userNickname:selectedUserNickname,
+        exchangeCode:selectedExchangeCode,
+      };
+      
+      $("#msg").text("sending");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          if(datas.code != 0){
+            $("#msg").text("Done: " + datas.message);
+          } else {
+            $("#msg").text(datas.message);
+          }
+        },
+        error: function(datas) {
+          $("#msg").text(datas.message);
+        }
+      });
+    }
+
+    $("#umFutureCancleMultipleOrderForMultipleUser").click(function() {
+      cancelFutureMultipleOrderForMultipleUser();
+    });
+
+    function cancelFutureMultipleOrderForMultipleUser(){
+      var url = "/cryptoTradingFutureUm/binanceFutureUmCancelMultipleOrderMultipleUser";
+
+      var userIdList = [];
+      var userNicknameList = [];
+      $(':checkbox.userCheckbox:checked').each(function(i){
+        userIdList[i] = $(this).attr("localUserId");
+        userNicknameList[i] = $(this).attr("userNickname");
+      });
+
+      var symbol = $("#symbol").val();
+      var orderSideCode = $('#orderSide').find(":selected").val();
+      var positionSideCode = $('#positionSide').find(":selected").val();
+      var orderTypeCode = $('#orderType').find(":selected").val();
+      var selectedExchange = $('#exchangeSelector').find(":selected");
+      var selectedExchangeCode = selectedExchange.val();
+
+      var jsonOutput = {
+        symbol:symbol,
+        orderSideCode:orderSideCode,
+        positionSideCode:positionSideCode,
+        orderTypeCode:orderTypeCode,
+        exchangeCode:selectedExchangeCode,
+        userIdList:userIdList,
+        userNicknameList:userNicknameList,
+      };
+
       $("#msg").text("sending");
       $.ajax({
         type : "POST",

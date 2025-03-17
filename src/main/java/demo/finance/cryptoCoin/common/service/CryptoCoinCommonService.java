@@ -545,7 +545,7 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 		return true;
 	}
 
-	protected BigDecimal fixQuantityByUserSetting(Integer localUserId, String userNickname, String symbol,
+	protected BigDecimal cmOrderFixQuantityByUserSetting(Integer localUserId, String userNickname, String symbol,
 			BigDecimal sourceQuantity) {
 		CryptoCoinUserKeysCxDTO userMetaData = optionService.getUserMetaDataMap().get(localUserId);
 		if (userMetaData == null) {
@@ -562,5 +562,21 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 			BigDecimal outputQuantity = sourceQuantity.multiply(quantityRate.getRate()).setScale(0, RoundingMode.FLOOR);
 			return outputQuantity;
 		}
+	}
+
+	protected BigDecimal umOrderFixQuantityByUserSetting(Integer localUserId, String userNickname,
+			BigDecimal sourceQuantity) {
+		CryptoCoinUserKeysCxDTO userMetaData = optionService.getUserMetaDataMap().get(localUserId);
+		if (userMetaData == null) {
+			return BigDecimal.ZERO;
+		}
+
+		BigDecimal quantityRate = userMetaData.getFutureUmRateSetting();
+		if (quantityRate == null) {
+			return BigDecimal.ZERO;
+		}
+
+		BigDecimal outputQuantity = sourceQuantity.multiply(quantityRate).setScale(0, RoundingMode.FLOOR);
+		return outputQuantity;
 	}
 }

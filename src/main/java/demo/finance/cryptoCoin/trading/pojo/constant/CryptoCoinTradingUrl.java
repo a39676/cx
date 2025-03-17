@@ -21,6 +21,9 @@ public class CryptoCoinTradingUrl {
 	public static final String ADD_SYMBOL_GROUP_DATA = "/addSymbolGroupData";
 	public static final String DEL_SYMBOL_GROUP_DATA = "/delSymbolGroupData";
 	public static final String BINANCE_FUTURE_UM_SEND_ORDER_MULTIPLE_USER = "/binanceFutureUmSendOrderMultipleUser";
+	public static final String BINANCE_FUTURE_UM_CANCEL_MULTIPLE_ORDER = "/binanceFutureUmCancelMultipleOrder";
+	public static final String BINANCE_FUTURE_UM_CANCEL_MULTIPLE_ORDER_MULTIPLE_USER = "/binanceFutureUmCancelMultipleOrderMultipleUser";
+	public static final String BINANCE_FUTURE_UM_CANCEL_ORDER_BY_ID = "/binanceFutureUmCancelOrderByID";
 
 	public static final String SPOT_SEND_ORDER = "/spotSendOrder";
 	public static final String SPOT_SEND_ORDER_MULTIPLE = "/spotSendOrderMultipleUser";

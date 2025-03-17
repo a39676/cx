@@ -90,6 +90,9 @@ public class CryptoCoinBinanceFutureUmTradingServiceImpl extends CryptoCoinCommo
 			r.failWithMessage("Price invalid");
 			return r;
 		}
+		if (BinanceOrderTypeType.LIMIT.getCode().equals(dto.getOrderSideCode())) {
+			dto.setTimeInForceCode(BinanceTimeInForceType.GTC.getCode());
+		}
 
 		dto.setTotpCode(genTotpCode());
 		umFutureOrderProducer.binanceUmFutureOrder(dto);
@@ -166,6 +169,7 @@ public class CryptoCoinBinanceFutureUmTradingServiceImpl extends CryptoCoinCommo
 		singleUserDTO.setOrderSideCode(dto.getOrderSideCode());
 		singleUserDTO.setOrderTypeCode(dto.getOrderTypeCode());
 		singleUserDTO.setPositionSideCode(dto.getPositionSideCode());
+		singleUserDTO.setTimeInForceCode(dto.getTimeInForceCode());
 		singleUserDTO.setPrice(dto.getPrice());
 		singleUserDTO.setSymbol(dto.getSymbol());
 		for (int i = 0; i < dto.getUserIdList().size(); i++) {

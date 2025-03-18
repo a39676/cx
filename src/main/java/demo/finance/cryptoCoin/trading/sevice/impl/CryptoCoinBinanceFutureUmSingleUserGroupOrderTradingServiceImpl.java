@@ -1,6 +1,7 @@
 package demo.finance.cryptoCoin.trading.sevice.impl;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -33,6 +34,7 @@ import finance.cryptoCoin.binance.future.um.pojo.dto.BinanceUpdateOrderDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBatchOrderV1DTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBtcArbitrageWithBatchDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmOrderDTO;
+import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmPositionDetailDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmSetOrderV1DTO;
 import finance.cryptoCoin.binance.future.um.pojo.result.CryptoCoinBinanceFutureUmQueryOrderResult;
 import finance.cryptoCoin.binance.future.um.pojo.result.CryptoCoinBinanceUmFuturePositionInfoResult;
@@ -383,6 +385,11 @@ public class CryptoCoinBinanceFutureUmSingleUserGroupOrderTradingServiceImpl ext
 			if (r.isFail()) {
 				v.addObject("msg", r.getMessage());
 				return v;
+			}
+			for (int i = 0; i < r.getPositionList().size(); i++) {
+				CryptoCoinBinanceFutureUmPositionDetailDTO position = r.getPositionList().get(i);
+				position.setUnRealizedPriceGap(position.getMarkPrice().divide(position.getEntryPrice(),
+						SCALE_FOR_PRICE_CALCULATE, RoundingMode.HALF_UP));
 			}
 			v.addObject("dataList", r.getPositionList());
 			return v;

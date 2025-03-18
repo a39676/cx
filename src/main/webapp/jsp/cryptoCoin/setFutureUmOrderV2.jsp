@@ -145,12 +145,14 @@
 
     <div class="row">
       <div class="col-md-12">
-        <button id="getPositionInfo">getPositionInfo</button>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <button id="getOpenOrders">getOpenOrders</button>
+        <div class="btn-group">
+          <button id="getPositionInfo" class="btn btn-sm btn-secondary">
+            getPositionInfo
+          </button>
+          <button id="getOpenOrders" class="btn btn-sm btn-secondary">
+            getOpenOrders
+          </button>
+        </div>
       </div>
     </div>
 
@@ -421,6 +423,95 @@
   });
 </script>
 
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("#getPositionInfo").click(function() {
+      getPositionInfo();
+    });
+
+    function getPositionInfo(){
+      var url = "/cryptoTradingFutureUm/positionInfoUm";
+
+      var selectedUser = $('#userSelector').find(":selected");
+      var selectedUserId = selectedUser.val();
+      var selectedUserNickname = selectedUser.attr("userNickname");
+      var selectedExchange = $('#exchangeSelector').find(":selected");
+      var selectedExchangeCode = selectedExchange.val();
+      
+      var jsonOutput = {
+        userId:selectedUserId,
+        userNickname:selectedUserNickname,
+        exchangeCode:selectedExchangeCode,
+      };
+
+      $("#msg").text("sending");
+      $("#positionInfoResult").html("");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        <%-- dataType: "json", --%>
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          $("#positionInfoResult").html(datas);
+          $("#msg").text("");
+        },
+        error: function(datas) {
+          $("#msg").text(datas.message);
+        }
+      });
+    }
+
+    $("#getOpenOrders").click(function() {
+      openOrdersResult();
+    });
+
+    function openOrdersResult(){
+      var url = "/cryptoTradingFutureUm/getOpenOrdersUm";
+
+      var selectedUser = $('#userSelector').find(":selected");
+      var selectedUserId = selectedUser.val();
+      var selectedUserNickname = selectedUser.attr("userNickname");
+      var selectedExchange = $('#exchangeSelector').find(":selected");
+      var selectedExchangeCode = selectedExchange.val();
+
+      var jsonOutput = {
+        userId:selectedUserId,
+        userNickname:selectedUserNickname,
+        exchangeCode:selectedExchangeCode,
+      };
+
+      $("#msg").text("sending");
+      $("#openOrdersResult").html("");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        <%-- dataType: "json", --%>
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          $("#openOrdersResult").html(datas);
+          $("#msg").text("");
+        },
+        error: function(datas) {
+          $("#msg").text(datas.message);
+        }
+      });
+    }
+  });
+</script>
 
 <script type="text/javascript">
   $(document).ready(function() {

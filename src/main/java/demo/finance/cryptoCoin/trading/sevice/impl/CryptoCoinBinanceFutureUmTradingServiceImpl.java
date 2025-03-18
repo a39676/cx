@@ -90,7 +90,7 @@ public class CryptoCoinBinanceFutureUmTradingServiceImpl extends CryptoCoinCommo
 			r.failWithMessage("Price invalid");
 			return r;
 		}
-		if (BinanceOrderTypeType.LIMIT.getCode().equals(dto.getOrderSideCode())) {
+		if (BinanceOrderTypeType.LIMIT.getCode().equals(dto.getOrderTypeCode())) {
 			dto.setTimeInForceCode(BinanceTimeInForceType.GTC.getCode());
 		}
 

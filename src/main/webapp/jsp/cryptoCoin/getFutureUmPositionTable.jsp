@@ -27,10 +27,13 @@
           <thead>
             <tr>
               <td>Symbol</td>
+              <td>持仓方向</td>
               <td>数量</td>
-              <td>开仓均价</td>
-              <td>盈亏平衡价</td>
-              <td>当前价格</td>
+              <td>
+                开仓均价<br>
+                盈亏平衡价<br>
+                当前价格
+              </td>
               <td>未实现盈亏</td>
               <td>参考强平价</td>
               <td>杠杆倍数</td>
@@ -38,7 +41,6 @@
               <td>逐仓/全仓</td>
               <td>逐仓保证金</td>
               <%-- <td>isAutoAddMargin</td> --%>
-              <td>持仓方向</td>
               <%-- <td>notional</td> --%>
               <%-- <td>isolatedWallet</td> --%>
               <%-- <td>更新时间</td> --%>
@@ -52,13 +54,28 @@
                     ${subData.symbol}
                   </button>
                 </td>
+                <c:choose>
+                  <c:when test="${subData.positionSide == 'LONG'}">
+                    <td class="table-success">${subData.positionSide}</td>    
+                  </c:when>
+                  <c:when test="${subData.positionSide == 'SHORT'}">
+                    <td class="table-danger">${subData.positionSide}</td>    
+                  </c:when>
+                  <c:otherwise>
+                    <td>${subData.positionSide}</td>
+                  </c:otherwise>
+                </c:choose>
                 <td>
                   ${subData.positionAmt}<br>
                   ${subData.positionAmt * subData.entryPrice} (USDT)
                 </td>
-                <td>${subData.entryPrice}</td>
-                <td>${subData.breakEvenPrice}</td>
-                <td>${subData.markPrice}</td>
+                <td>
+                  ${subData.entryPrice}<br>
+                  ${subData.breakEvenPrice}<br>
+                  ${subData.markPrice}<br>
+                  <fmt:formatNumber type = "number" maxIntegerDigits = "3" 
+                      value = "${(subData.markPrice / subData.entryPrice - 1) * 100}"/>%
+                </td>
                 <c:choose>
                   <c:when test="${subData.unRealizedProfit > 0}">
                     <td class="table-success">${subData.unRealizedProfit}</td>    
@@ -76,17 +93,6 @@
                 <td>${subData.marginType}</td>
                 <td>${subData.isolatedMargin}</td>
                 <%-- <td>${subData.isAutoAddMargin}</td> --%>
-                <c:choose>
-                  <c:when test="${subData.positionSide == 'LONG'}">
-                    <td class="table-success">${subData.positionSide}</td>    
-                  </c:when>
-                  <c:when test="${subData.positionSide == 'SHORT'}">
-                    <td class="table-danger">${subData.positionSide}</td>    
-                  </c:when>
-                  <c:otherwise>
-                    <td>${subData.positionSide}</td>
-                  </c:otherwise>
-                </c:choose>
                 <%-- <td>${subData.notional}</td> --%>
                 <%-- <td>${subData.isolatedWallet}</td> --%>
                 <%-- <td>${subData.updateTime}</td> --%>

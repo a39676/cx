@@ -444,6 +444,9 @@ public class CryptoCoinBinanceFutureUmSingleUserGroupOrderTradingServiceImpl ext
 			e.printStackTrace();
 		}
 		v.addObject("dataList", list);
+		v.addObject("userId", dto.getUserId());
+		v.addObject("userNickname", dto.getUserNickname());
+		v.addObject("exchangeCode", dto.getExchangeCode());
 		return v;
 	}
 

@@ -60,7 +60,15 @@
           <tbody>
             <c:forEach items="${dataList}" var="subData" varStatus="loop">
               <tr>
-                <td>${subData.symbol}</td>
+                <td>
+                  ${subData.symbol}<br>
+                  <button class="cancelOrderFutureUM btn btn-sm btn-danger"
+                    symbol="${subData.symbol}" orderId="${subData.orderId}" 
+                    userId="${userId}" userNickname="${userNickname}"
+                    exchangeCode="${exchangeCode}">
+                    CancelOrder
+                  </button>
+                </td>
                 <td>
                   ${subData.orderTimeStr}<br>
                   ${subData.updateTimeStr}
@@ -130,6 +138,52 @@
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?" async defer></script>
 
 <script type="text/javascript">
-  
+  $(document).ready(function() {
+    $(".cancelOrderFutureUM").click(function() {
+      cancelOrderById($(this));
+    });
 
+    function cancelOrderById(ele){
+      var url = "/cryptoTradingFutureUm/binanceFutureUmCancelOrderByID";
+
+      var symbol = ele.attr("symbol");
+      var orderId = ele.attr("orderId");
+      var userId = ele.attr("userId");
+      var userNickname = ele.attr("userNickname");
+      var exchangeCode = ele.attr("exchangeCode");
+
+      var jsonOutput = {
+        symbol:symbol,
+        orderId:orderId,
+        userId:userId,
+        userNickname:userNickname,
+        exchangeCode:exchangeCode,
+      };
+      
+      $("#msg").text("sending");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          if(datas.code != 0){
+            $("#msg").text("Done: " + datas.message);
+          } else {
+            $("#msg").text(datas.message);
+          }
+        },
+        error: function(datas) {
+          $("#msg").text(datas.message);
+        }
+      });
+    }
+  });
 </script>

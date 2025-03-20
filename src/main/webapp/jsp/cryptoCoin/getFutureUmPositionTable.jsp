@@ -168,12 +168,9 @@
     $(".symbolButton").click(function () {
       $("#symbol").val($(this).attr("symbol"));
       $("#orderType").val("2").change();
+      $("#orderRepeatCounting").val("");
 
       var sourcePositionSide = $(this).attr("positionSide");
-
-      console.log(sourcePositionSide);
-      console.log(sourcePositionSide == "SHORT");
-      console.log(sourcePositionSide == "LONG");
 
       if(sourcePositionSide == "SHORT") {
         $("#quantity").val(0 - $(this).attr("amt"));

@@ -50,7 +50,8 @@
             <c:forEach items="${dataList}" var="subData" varStatus="loop">
               <tr>
                 <td>
-                  <button class="symbolInOpenOrderList" symbol='${subData.symbol}'>
+                  <button class="symbolButton" symbol='${subData.symbol}' positionSide='${subData.positionSide}' 
+                  amt='${subData.positionAmt}' >
                     ${subData.symbol}
                   </button>
                 </td>
@@ -117,43 +118,25 @@
 <script type="text/javascript">
   $(document).ready(function() {
 
-    $(".symbolInOpenOrderList").click(function () {
-      var url = "/cryptoTradingFutureUm/getOrdersBySymbolUm";
+    $(".symbolButton").click(function () {
+      $("#symbol").val($(this).attr("symbol"));
+      $("#orderType").val("2").change();
 
-      var selectedUser = $('#userSelector').find(":selected");
-      var selectedUserId = selectedUser.val();
-      var selectedUserNickname = selectedUser.attr("userNickname");
-      var symbol = $(this).attr("symbol");
+      var sourcePositionSide = $(this).attr("positionSide");
 
-      var jsonOutput = {
-        symbol:symbol,
-        userId:selectedUserId,
-        userNickname:selectedUserNickname,
-      };
-      $("#msg").text("sending");
-      $("#ordersHistoryBySymbolResult").html("");
-      $.ajax({
-        type : "POST",
-        async : true,
-        url : url,
-        data: JSON.stringify(jsonOutput),
-        cache : false,
-        contentType: "application/json",
-        <%-- dataType: "json", --%>
-        timeout:50000,
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader(csrfHeader, csrfToken);
-        },
-        success:function(datas){
-          $("#ordersHistoryBySymbolResult").html(datas);
-          $("#msg").text("");
-        },
-        error: function(datas) {
-          $("#msg").text(datas.message);
-        }
-      });
+      console.log(sourcePositionSide);
+      console.log(sourcePositionSide == "SHORT");
+      console.log(sourcePositionSide == "LONG");
+
+      if(sourcePositionSide == "SHORT") {
+        $("#quantity").val(0 - $(this).attr("amt"));
+        $("#orderSide").val("1").change();
+        $("#positionSide").val("2").change();
+      } else {
+        $("#quantity").val($(this).attr("amt"));
+        $("#orderSide").val("2").change();
+        $("#positionSide").val("1").change();
+      }
     });
-
   });
-
 </script>

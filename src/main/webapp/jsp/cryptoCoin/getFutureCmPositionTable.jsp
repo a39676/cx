@@ -49,7 +49,12 @@
           <tbody>
             <c:forEach items="${dataList}" var="subData" varStatus="loop">
               <tr>
-                <td>${subData.symbol}</td>
+                <td>
+                  <button class="symbolButton" symbol='${subData.symbol}' positionSide='${subData.positionSide}' 
+                  amt='${subData.positionAmt}' >
+                    ${subData.symbol}
+                  </button>
+                </td>
                 <td>${subData.positionAmt}(张)<br>${subData.positionAmt*100}(USD)</td>
                 <c:choose>
                   <c:when test="${subData.positionSide == 'LONG'}">
@@ -121,6 +126,27 @@
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?" async defer></script>
 
 <script type="text/javascript">
-  
+  $(document).ready(function() {
 
+    $(".symbolButton").click(function () {
+      $("#symbol").val($(this).attr("symbol"));
+      $("#orderType").val("2").change();
+
+      var sourcePositionSide = $(this).attr("positionSide");
+
+      console.log(sourcePositionSide);
+      console.log(sourcePositionSide == "SHORT");
+      console.log(sourcePositionSide == "LONG");
+
+      if(sourcePositionSide == "SHORT") {
+        $("#quantity").val(0 - $(this).attr("amt"));
+        $("#orderSide").val("1").change();
+        $("#positionSide").val("2").change();
+      } else {
+        $("#quantity").val($(this).attr("amt"));
+        $("#orderSide").val("2").change();
+        $("#positionSide").val("1").change();
+      }
+    });
+  });
 </script>

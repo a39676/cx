@@ -576,7 +576,9 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 			return BigDecimal.ZERO;
 		}
 
-		BigDecimal outputQuantity = sourceQuantity.multiply(quantityRate).setScale(0, RoundingMode.FLOOR);
+		/* Handle scale by receiver */
+//		BigDecimal outputQuantity = sourceQuantity.multiply(quantityRate).setScale(0, RoundingMode.FLOOR);
+		BigDecimal outputQuantity = sourceQuantity.multiply(quantityRate);
 		return outputQuantity;
 	}
 }

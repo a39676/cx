@@ -577,6 +577,9 @@
   $(document).ready(function() {
     $(".symbolButton").click(function () {
       $("#symbol").val($(this).attr("symbol"));
+      $("#quantity").val("");
+      $("#orderRepeatCounting").val("");
+      $("#price").val("");
     });
   });
 </script>

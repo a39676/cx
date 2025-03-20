@@ -87,14 +87,70 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 				v.addObject("msg", r.getMessage());
 				return v;
 			}
+
+			CryptoCoinBinanceFutureCmPositionDetailDTO summary = new CryptoCoinBinanceFutureCmPositionDetailDTO();
+			summary.setSymbol("Summary");
+			summary.setPositionSide(BinancePositionSideType.BOTH.getName());
+			summary.setEntryPrice(BigDecimal.ONE);
+			summary.setMarkPrice(BigDecimal.ONE);
+			summary.setPositionAmt(BigDecimal.ZERO);
+			summary.setUnRealizedProfit(BigDecimal.ZERO);
+			summary.setPositionAmt(BigDecimal.ZERO);
+			CryptoCoinBinanceFutureCmPositionDetailDTO longSummary = new CryptoCoinBinanceFutureCmPositionDetailDTO();
+			longSummary.setSymbol("LongSummary");
+			longSummary.setPositionSide(BinancePositionSideType.LONG.getName());
+			longSummary.setEntryPrice(BigDecimal.ONE);
+			longSummary.setMarkPrice(BigDecimal.ONE);
+			longSummary.setPositionAmt(BigDecimal.ZERO);
+			longSummary.setUnRealizedProfit(BigDecimal.ZERO);
+			longSummary.setPositionAmt(BigDecimal.ZERO);
+			CryptoCoinBinanceFutureCmPositionDetailDTO shortSummary = new CryptoCoinBinanceFutureCmPositionDetailDTO();
+			shortSummary.setSymbol("ShortSummary");
+			shortSummary.setPositionSide(BinancePositionSideType.SHORT.getName());
+			shortSummary.setEntryPrice(BigDecimal.ONE);
+			shortSummary.setMarkPrice(BigDecimal.ONE);
+			shortSummary.setPositionAmt(BigDecimal.ZERO);
+			shortSummary.setUnRealizedProfit(BigDecimal.ZERO);
+			shortSummary.setPositionAmt(BigDecimal.ZERO);
+
 			List<CryptoCoinBinanceFutureCmPositionDetailVO> voList = new ArrayList<>();
 			for (CryptoCoinBinanceFutureCmPositionDetailDTO positionDTO : r.getPositionList()) {
 				CryptoCoinBinanceFutureCmPositionDetailVO vo = new CryptoCoinBinanceFutureCmPositionDetailVO();
 				BeanUtils.copyProperties(positionDTO, vo);
 				voList.add(vo);
+
+				summary.setUnRealizedProfit(summary.getUnRealizedProfit().add(positionDTO.getUnRealizedProfit()));
+				if (BinancePositionSideType.LONG.name().equals(positionDTO.getPositionSide())) {
+					summary.setPositionAmt(summary.getPositionAmt()
+							.add(positionDTO.getPositionAmt().abs().multiply(positionDTO.getMarkPrice())));
+					longSummary.setUnRealizedProfit(
+							longSummary.getUnRealizedProfit().add(positionDTO.getUnRealizedProfit()));
+					longSummary.setPositionAmt(longSummary.getPositionAmt()
+							.add(positionDTO.getPositionAmt().multiply(positionDTO.getMarkPrice())));
+				} else if (BinancePositionSideType.SHORT.name().equals(positionDTO.getPositionSide())) {
+					summary.setPositionAmt(summary.getPositionAmt()
+							.add(positionDTO.getPositionAmt().abs().multiply(positionDTO.getMarkPrice())));
+					shortSummary.setUnRealizedProfit(
+							shortSummary.getUnRealizedProfit().add(positionDTO.getUnRealizedProfit()));
+					shortSummary.setPositionAmt(shortSummary.getPositionAmt()
+							.add(positionDTO.getPositionAmt().multiply(positionDTO.getMarkPrice())));
+				}
 			}
 			Collections.sort(voList);
 			v.addObject("dataList", voList);
+			
+			List<CryptoCoinBinanceFutureCmPositionDetailVO> summaryVoList = new ArrayList<>();
+			CryptoCoinBinanceFutureCmPositionDetailVO vo = new CryptoCoinBinanceFutureCmPositionDetailVO();
+			BeanUtils.copyProperties(summary, vo);
+			summaryVoList.add(vo);
+			vo = new CryptoCoinBinanceFutureCmPositionDetailVO();
+			BeanUtils.copyProperties(longSummary, vo);
+			summaryVoList.add(vo);
+			vo = new CryptoCoinBinanceFutureCmPositionDetailVO();
+			BeanUtils.copyProperties(shortSummary, vo);
+			summaryVoList.add(vo);
+			v.addObject("summaryVoList", summaryVoList);
+			
 			return v;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -288,7 +344,7 @@ public class CryptoCoinBinanceFutureCmTradingServiceImpl extends CryptoCoinCommo
 		if (!BinanceOrderTypeType.MARKET.equals(orderType)) {
 			dto.setTimeInForceCode(BinanceTimeInForceType.GTC.getCode());
 		}
-		
+
 		if (BinanceOrderTypeType.MARKET.equals(orderType)) {
 			dto.setPrice(null);
 		}

@@ -109,6 +109,68 @@
                 <td>${subData.updateTime}</td>
               </tr>
             </c:forEach>
+            <c:forEach items="${summaryVoList}" var="subData" varStatus="loop">
+              <tr>
+                <td>
+                  <button class="symbolButton" symbol='${subData.symbol}' positionSide='${subData.positionSide}' 
+                  amt='${subData.positionAmt}' >
+                    ${subData.symbol}
+                  </button>
+                </td>
+                <td>${subData.positionAmt}(张)<br>${subData.positionAmt*100}(USD)</td>
+                <c:choose>
+                  <c:when test="${subData.positionSide == 'LONG'}">
+                    <td class="table-success">
+                      ${subData.positionSide}
+                    </td>
+                  </c:when>
+                  <c:when test="${subData.positionSide == 'SHORT'}">
+                    <td class="table-danger">
+                      ${subData.positionSide}
+                    </td>
+                  </c:when>
+                  <c:otherwise>
+                    <td>${subData.unRealizedProfit}</td>
+                  </c:otherwise>
+                </c:choose>
+                <td>
+                  ${subData.entryPrice} <br>
+                  / ${subData.breakEvenPrice} <br>
+                  / ${subData.markPrice} <br>
+                  / <fmt:formatNumber type = "number" maxIntegerDigits = "3" 
+                      value = "${(subData.markPrice / subData.entryPrice - 1) * 100}"/>%
+                </td>
+                <c:choose>
+                  <c:when test="${subData.unRealizedProfit > 0}">
+                    <td class="table-success">
+                      <fmt:formatNumber type = "number" maxFractionDigits = "3" 
+                      value = "${subData.unRealizedProfit}" /><br>
+                      <fmt:formatNumber type = "number" maxFractionDigits = "3" 
+                      value = "${subData.unRealizedProfit * subData.markPrice}"/>(USD)
+                    </td>
+                  </c:when>
+                  <c:when test="${subData.unRealizedProfit < 0}">
+                    <td class="table-danger">
+                      <fmt:formatNumber type = "number" maxFractionDigits = "3" 
+                      value = "${subData.unRealizedProfit}" /><br>
+                      <fmt:formatNumber type = "number" maxFractionDigits = "3" 
+                      value = "${subData.unRealizedProfit * subData.markPrice}"/>(USD)
+                    </td>
+                  </c:when>
+                  <c:otherwise>
+                    <td>${subData.unRealizedProfit}</td>
+                  </c:otherwise>
+                </c:choose>
+                <td>${subData.liquidationPrice}</td>
+                <td>${subData.leverage}</td>
+                <td>${subData.maxQty}</td>
+                <td>${subData.marginType}</td>
+                <td>${subData.isolatedMargin}</td>
+                <td>${subData.isAutoAddMargin}</td>
+                <td>${subData.notionalValue}</td>
+                <td>${subData.updateTime}</td>
+              </tr>
+            </c:forEach>
           </tbody>
         </table>
       </div>

@@ -1,6 +1,8 @@
 crypto coin
 	Future UM
 		双向平仓 未完成
+		Fix
+			仓位 多空 统计
 
 	CryptoCoinForceOrderDataServiceImpl.receiveNewForceOrderFutureUmDataMessage
 		SQL update to "insert or update"

@@ -3,6 +3,7 @@ package demo.finance.cryptoCoin.trading.sevice.impl;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -27,12 +28,12 @@ import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmBtcArbitrageWithBatchProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmFutureOrderModifyProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmFutureSingleUserGroupOrderProducer;
-import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureUmGetOrderBySymbolDTO;
 import demo.finance.cryptoCoin.trading.pojo.vo.CryptoCoinBinanceFutureUmOpenOrderResponseSubVO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureUmSingleUserGroupOrderTradingService;
 import finance.cryptoCoin.binance.future.um.pojo.dto.BinanceUpdateOrderDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBatchOrderV1DTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmBtcArbitrageWithBatchDTO;
+import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmGetOrderBySymbolDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmOrderDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmPositionDetailDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmSetOrderV1DTO;
@@ -461,6 +462,24 @@ public class CryptoCoinBinanceFutureUmSingleUserGroupOrderTradingServiceImpl ext
 	public ModelAndView getOrdersBySymbol(CryptoCoinBinanceFutureUmGetOrderBySymbolDTO dto) {
 		ModelAndView v = new ModelAndView("cryptoCoin/getFutureUmOpenOrdersTable");
 		List<CryptoCoinBinanceFutureUmOpenOrderResponseSubVO> list = new ArrayList<>();
+		if (dto.getStartTime() != null) {
+			try {
+				LocalDateTime startTimeInLocalDateTime = localDateTimeHandler
+						.stringToLocalDateTimeUnkonwFormat(String.valueOf(dto.getStartTime()));
+				long startTime = localDateTimeHandler.localDateTimeToDate(startTimeInLocalDateTime).getTime();
+				dto.setStartTime(startTime);
+			} catch (Exception e) {
+			}
+		}
+		if (dto.getEndTime() != null) {
+			try {
+				LocalDateTime endTimeInLocalDateTime = localDateTimeHandler
+						.stringToLocalDateTimeUnkonwFormat(String.valueOf(dto.getEndTime()));
+				long endTime = localDateTimeHandler.localDateTimeToDate(endTimeInLocalDateTime).getTime();
+				dto.setEndTime(endTime);
+			} catch (Exception e) {
+			}
+		}
 		HttpUtil h = new HttpUtil();
 		String url = optionService.getCcmHost() + CcmUrlConstant.ROOT + CcmUrlConstant.GET_ORDERS_BY_SYMBOL_UM;
 		dto.setTotpCode(genTotpCode());

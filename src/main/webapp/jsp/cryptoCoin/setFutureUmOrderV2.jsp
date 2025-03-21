@@ -140,7 +140,7 @@
             </td>
           </tr>
           <tr>
-            <td colspan="3">
+            <td colspan="999">
               <c:forEach items="${tradingSymbolList}" var="symbol" varStatus="loop">
                 <button class="symbolButton btn btn-sm btn-secondary" symbol="${symbol}USDT">${symbol}USDT</button>
               </c:forEach>

@@ -50,7 +50,9 @@
             <c:forEach items="${dataList}" var="subData" varStatus="loop">
               <tr>
                 <td>
-                  <button class="positionSymbolButton" symbol='${subData.symbol}' positionSide='${subData.positionSide}' 
+                  <button class="positionSymbolButton btn btn-sm btn-secondary" 
+                  symbol='${subData.symbol}' 
+                  positionSide='${subData.positionSide}' 
                   amt='${subData.positionAmt}' >
                     ${subData.symbol}
                   </button>
@@ -112,7 +114,10 @@
             <c:forEach items="${summaryVoList}" var="subData" varStatus="loop">
               <tr>
                 <td>
-                  <button class="positionSymbolButton" symbol='${subData.symbol}' positionSide='${subData.positionSide}' 
+                  <button class="positionSymbolButton btn btn-sm btn-secondary" 
+                  disabled 
+                  symbol='${subData.symbol}' 
+                  positionSide='${subData.positionSide}' 
                   amt='${subData.positionAmt}' >
                     ${subData.symbol}
                   </button>

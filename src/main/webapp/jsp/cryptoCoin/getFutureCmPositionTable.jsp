@@ -50,7 +50,7 @@
             <c:forEach items="${dataList}" var="subData" varStatus="loop">
               <tr>
                 <td>
-                  <button class="symbolButton" symbol='${subData.symbol}' positionSide='${subData.positionSide}' 
+                  <button class="positionSymbolButton" symbol='${subData.symbol}' positionSide='${subData.positionSide}' 
                   amt='${subData.positionAmt}' >
                     ${subData.symbol}
                   </button>
@@ -112,7 +112,7 @@
             <c:forEach items="${summaryVoList}" var="subData" varStatus="loop">
               <tr>
                 <td>
-                  <button class="symbolButton" symbol='${subData.symbol}' positionSide='${subData.positionSide}' 
+                  <button class="positionSymbolButton" symbol='${subData.symbol}' positionSide='${subData.positionSide}' 
                   amt='${subData.positionAmt}' >
                     ${subData.symbol}
                   </button>
@@ -190,7 +190,7 @@
 <script type="text/javascript">
   $(document).ready(function() {
 
-    $(".symbolButton").click(function () {
+    $(".positionSymbolButton").click(function () {
       $("#symbol").val($(this).attr("symbol"));
       $("#orderType").val("2").change();
       $("#orderRepeatCounting").val("");

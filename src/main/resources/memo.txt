@@ -4,6 +4,19 @@ crypto coin
 		只平空单 / 多单
 	Future UM
 		查询 Binance 限制低杠杆 symbol
+			需要数据库
+			系统启动时, 将所有 symbol 最新数据 load 到 cache service
+				避免后续若有多个 CCM 定时返回数据时, 大量查询数据库
+			所有 symbol 全部登记
+			每小时 CCM 查询并发回一次
+			需要 top code
+			配置 option 文件
+				过滤部分不在 UM 挂牌交易 symbol
+				过滤部分已经发通知准备摘牌 symbol
+				配置重点监控(10) 或以下杠杆的 symbol
+					杠杆 7 以下面临摘牌
+			监控本次降低的变动, (升杠杆忽略)
+			
 		双向平仓 未完成
 
 	CryptoCoinForceOrderDataServiceImpl.receiveNewForceOrderFutureUmDataMessage

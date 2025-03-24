@@ -28,6 +28,7 @@ import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigMoveExample.Criteria;
 import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinFilterBigMoveDataInTimeRangeResult;
 import demo.finance.cryptoCoin.data.pojo.result.GetBigMoveSummaryDataResult;
 import demo.finance.cryptoCoin.data.service.CryptoCoinDataComplexService;
+import finance.cryptoCoin.common.pojo.result.CryptoCoinSymbolMaxLeverageResult;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigMoveDataBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigMoveSummaryDataBO;
 import net.sf.json.JSONObject;
@@ -578,4 +579,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		telegramService.sendMessageByChatRecordId(TelegramBotType.NORMAL_MSG, msg, TelegramStaticChatID.MY_ID);
 	}
 
+	public void receiveSymbolMaxLeverageInfo(CryptoCoinSymbolMaxLeverageResult result) {
+		
+	}
 }

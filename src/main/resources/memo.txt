@@ -4,7 +4,7 @@ crypto coin
 		只平空单 / 多单
 	Future UM
 		查询 Binance 限制低杠杆 symbol
-			需要数据库
+			需要数据库, 新建表 crypto_coin_symbol_leverage
 			系统启动时, 将所有 symbol 最新数据 load 到 cache service
 				避免后续若有多个 CCM 定时返回数据时, 大量查询数据库
 			所有 symbol 全部登记

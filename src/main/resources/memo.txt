@@ -3,9 +3,8 @@ crypto coin
 		全部平仓
 		只平空单 / 多单
 	Future UM
+		查询 Binance 限制低杠杆 symbol
 		双向平仓 未完成
-		Fix
-			仓位 多空 统计
 
 	CryptoCoinForceOrderDataServiceImpl.receiveNewForceOrderFutureUmDataMessage
 		SQL update to "insert or update"

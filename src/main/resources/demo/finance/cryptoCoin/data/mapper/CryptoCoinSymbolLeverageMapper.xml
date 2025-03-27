@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.finance.cryptoCoin.data.mapper.CryptoCoinSymbolLeverageMapper">
+  <resultMap id="BaseResultMap" type="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinSymbolLeverage">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="symbol" jdbcType="CHAR" property="symbol" />
+    <result column="exchange_code" jdbcType="INTEGER" property="exchangeCode" />
+    <result column="leverage" jdbcType="INTEGER" property="leverage" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, symbol, exchange_code, leverage, create_time
+  </sql>
+  <select id="selectByExample" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinSymbolLeverageExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from crypto_coin_symbol_leverage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from crypto_coin_symbol_leverage
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from crypto_coin_symbol_leverage
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinSymbolLeverageExample">
+    delete from crypto_coin_symbol_leverage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinSymbolLeverage">
+    insert into crypto_coin_symbol_leverage (id, symbol, exchange_code, 
+      leverage, create_time)
+    values (#{id,jdbcType=BIGINT}, #{symbol,jdbcType=CHAR}, #{exchangeCode,jdbcType=INTEGER}, 
+      #{leverage,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinSymbolLeverage">
+    insert into crypto_coin_symbol_leverage
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="symbol != null">
+        symbol,
+      </if>
+      <if test="exchangeCode != null">
+        exchange_code,
+      </if>
+      <if test="leverage != null">
+        leverage,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="symbol != null">
+        #{symbol,jdbcType=CHAR},
+      </if>
+      <if test="exchangeCode != null">
+        #{exchangeCode,jdbcType=INTEGER},
+      </if>
+      <if test="leverage != null">
+        #{leverage,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinSymbolLeverageExample" resultType="java.lang.Long">
+    select count(*) from crypto_coin_symbol_leverage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update crypto_coin_symbol_leverage
+    <set>
+      <if test="row.id != null">
+        id = #{row.id,jdbcType=BIGINT},
+      </if>
+      <if test="row.symbol != null">
+        symbol = #{row.symbol,jdbcType=CHAR},
+      </if>
+      <if test="row.exchangeCode != null">
+        exchange_code = #{row.exchangeCode,jdbcType=INTEGER},
+      </if>
+      <if test="row.leverage != null">
+        leverage = #{row.leverage,jdbcType=INTEGER},
+      </if>
+      <if test="row.createTime != null">
+        create_time = #{row.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update crypto_coin_symbol_leverage
+    set id = #{row.id,jdbcType=BIGINT},
+      symbol = #{row.symbol,jdbcType=CHAR},
+      exchange_code = #{row.exchangeCode,jdbcType=INTEGER},
+      leverage = #{row.leverage,jdbcType=INTEGER},
+      create_time = #{row.createTime,jdbcType=TIMESTAMP}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinSymbolLeverage">
+    update crypto_coin_symbol_leverage
+    <set>
+      <if test="symbol != null">
+        symbol = #{symbol,jdbcType=CHAR},
+      </if>
+      <if test="exchangeCode != null">
+        exchange_code = #{exchangeCode,jdbcType=INTEGER},
+      </if>
+      <if test="leverage != null">
+        leverage = #{leverage,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinSymbolLeverage">
+    update crypto_coin_symbol_leverage
+    set symbol = #{symbol,jdbcType=CHAR},
+      exchange_code = #{exchangeCode,jdbcType=INTEGER},
+      leverage = #{leverage,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinSymbolLeverageExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from crypto_coin_symbol_leverage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+
+
+  <select id="selectLastLeverage" resultMap="BaseResultMap">
+    SELECT 
+      t1.*
+    FROM 
+      crypto_coin_symbol_leverage t1
+    INNER JOIN (
+      SELECT 
+        symbol, 
+        MAX(create_time) AS max_create_time
+      FROM 
+        crypto_coin_symbol_leverage
+      GROUP BY 
+        symbol
+    ) t2 
+    ON 
+      t1.symbol = t2.symbol AND t1.create_time = t2.max_create_time;
+  </select>
+</mapper>

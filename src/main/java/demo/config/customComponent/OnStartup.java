@@ -18,6 +18,7 @@ import demo.base.user.service.UsersService;
 import demo.base.user.service.impl.UserRoleConstantService;
 import demo.common.service.CommonService;
 import demo.common.service.HeartBeatService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinDataComplexService;
 import demo.joy.scene.service.JoySceneManagerService;
 import demo.pmemo.service.UrgeNoticeManagerService;
 
@@ -41,6 +42,8 @@ public class OnStartup extends CommonService implements ApplicationListener<Appl
 	private AiArtService aiArtService;
 	@Autowired
 	private HeartBeatService heartBeatService;
+	@Autowired
+	private CryptoCoinDataComplexService cryptoCoinDataComplexService;
 
 	/*
 	 * ContextStartedEvent ContextStoppedEvent ContextRefreshedEvent
@@ -111,6 +114,9 @@ public class OnStartup extends CommonService implements ApplicationListener<Appl
 			heartBeatService.getHeartBeatMap().put(heartBeatType.getName(), LocalDateTime.now());
 		}
 		log.error("Heart beat init");
+		
+		cryptoCoinDataComplexService.loadSymbolMaxLeverageInfoToCache();
+		log.error("loadSymbolMaxLeverageInfoToCache");
 	}
 
 }

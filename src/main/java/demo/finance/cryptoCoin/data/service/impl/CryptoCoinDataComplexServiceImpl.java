@@ -17,18 +17,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.type.TimeUnitType;
+import demo.finance.cryptoCoin.common.service.CryptoCoinCacheService;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinBigMoveMapper;
+import demo.finance.cryptoCoin.data.mapper.CryptoCoinSymbolLeverageMapper;
 import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinBigMoveDailySummaryBO;
 import demo.finance.cryptoCoin.data.pojo.bo.CryptoCoinBigMoveSummaryBySymbolBO;
 import demo.finance.cryptoCoin.data.pojo.dto.GetBigMoveSummaryDataDTO;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigMove;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigMoveExample;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigMoveExample.Criteria;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinSymbolLeverage;
 import demo.finance.cryptoCoin.data.pojo.result.CryptoCoinFilterBigMoveDataInTimeRangeResult;
 import demo.finance.cryptoCoin.data.pojo.result.GetBigMoveSummaryDataResult;
 import demo.finance.cryptoCoin.data.service.CryptoCoinDataComplexService;
+import demo.tool.textMessageForward.telegram.service.TelegramService;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinSymbolMaxLeverageDTO;
 import finance.cryptoCoin.common.pojo.result.CryptoCoinSymbolMaxLeverageResult;
+import finance.cryptoCoin.common.pojo.type.CryptoExchangeType;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigMoveDataBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigMoveSummaryDataBO;
 import net.sf.json.JSONObject;
@@ -40,6 +46,12 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 
 	@Autowired
 	private CryptoCoinBigMoveMapper cryptoCoinBigMoveMapper;
+	@Autowired
+	private CryptoCoinCacheService cacheService;
+	@Autowired
+	private CryptoCoinSymbolLeverageMapper symbolLeverageMapper;
+	@Autowired
+	private TelegramService telegramService;
 
 	@Override
 	public void receiveNewBigMoveSpotDataMessage(String msg) {
@@ -579,7 +591,71 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		telegramService.sendMessageByChatRecordId(TelegramBotType.NORMAL_MSG, msg, TelegramStaticChatID.MY_ID);
 	}
 
+	@Override
 	public void receiveSymbolMaxLeverageInfo(CryptoCoinSymbolMaxLeverageResult result) {
-		
+		if (!isValidTotpCode(result.getTotpCode())) {
+			return;
+		}
+		CryptoExchangeType exchangeType = CryptoExchangeType.getType(result.getExchangeCode());
+		if (exchangeType == null) {
+			return;
+		}
+		final int binanceWarningLeverage = 7;
+		final int binanceWatchingL2Leverage = 8;
+		final int binanceWatchingL1Leverage = 10;
+		List<CryptoCoinSymbolMaxLeverageDTO> inputList = result.getList();
+		List<CryptoCoinSymbolLeverage> listInCache = cacheService.getLastLeverageList();
+		if (listInCache == null) {
+			listInCache = new ArrayList<CryptoCoinSymbolLeverage>();
+			cacheService.setLastLeverageList(listInCache);
+		}
+
+		for (int i = 0; i < inputList.size(); i++) {
+			CryptoCoinSymbolMaxLeverageDTO inputData = inputList.get(i);
+			CryptoCoinSymbolLeverage dataInCache = findLeverage(inputData.getSymbol(), inputData.getExchangeCode());
+			if (dataInCache == null) {
+				CryptoCoinSymbolLeverage newData = new CryptoCoinSymbolLeverage();
+				newData.setId(snowFlake.getNextId());
+				newData.setSymbol(inputData.getSymbol());
+				newData.setExchangeCode(inputData.getExchangeCode());
+				newData.setLeverage(inputData.getMaxLeverage());
+				symbolLeverageMapper.insertSelective(newData);
+				cacheService.getLastLeverageList().add(newData);
+			} else if (inputData.getMaxLeverage() < dataInCache.getExchangeCode()) {
+				dataInCache.setLeverage(inputData.getMaxLeverage());
+				dataInCache.setCreateTime(LocalDateTime.now());
+				dataInCache.setId(snowFlake.getNextId());
+				symbolLeverageMapper.insertSelective(dataInCache);
+				cacheService.getLastLeverageList().add(dataInCache);
+			}
+
+			String msg = "Symbol: %s, max leverage: %s, Exchange code: %s";
+			if (inputData.getMaxLeverage() < binanceWatchingL1Leverage) {
+				msg = String.format(msg, inputData.getSymbol(), inputData.getMaxLeverage(), exchangeType.getName());
+				telegramService.sendMessageByChatRecordId(TelegramBotType.CCM_NOTICE, msg, TelegramStaticChatID.MY_ID);
+			} else if (inputData.getMaxLeverage() < binanceWatchingL2Leverage) {
+				msg = String.format(msg, inputData.getSymbol(), inputData.getMaxLeverage(), exchangeType.getName());
+				telegramService.sendMessageByChatRecordId(TelegramBotType.CCM_NOTICE, msg, TelegramStaticChatID.MY_ID);
+			} else if (inputData.getMaxLeverage() < binanceWarningLeverage) {
+				msg = String.format(msg, inputData.getSymbol(), inputData.getMaxLeverage(), exchangeType.getName());
+				telegramService.sendMessageByChatRecordId(TelegramBotType.CCM_NOTICE, msg, TelegramStaticChatID.MY_ID);
+			}
+		}
+	}
+
+	private CryptoCoinSymbolLeverage findLeverage(String symbol, Integer exhcnageCode) {
+		List<CryptoCoinSymbolLeverage> list = cacheService.getLastLeverageList();
+		for (CryptoCoinSymbolLeverage dataInCache : list) {
+			if (dataInCache.getSymbol().equals(symbol) && dataInCache.getExchangeCode().equals(exhcnageCode)) {
+				return dataInCache;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public void loadSymbolMaxLeverageInfoToCache() {
+		List<CryptoCoinSymbolLeverage> list = symbolLeverageMapper.selectLastLeverage();
+		cacheService.setLastLeverageList(list);
 	}
 }

@@ -617,8 +617,10 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 					|| optionService.getBinanceFutureUmAlreadyWarningRemoved().contains(symbol)) {
 				continue;
 			}
+			boolean updateFlag = false;
 			CryptoCoinSymbolLeverage dataInCache = findLeverage(inputData.getSymbol(), inputData.getExchangeCode());
 			if (dataInCache == null) {
+				updateFlag = true;
 				CryptoCoinSymbolLeverage newData = new CryptoCoinSymbolLeverage();
 				newData.setId(snowFlake.getNextId());
 				newData.setSymbol(inputData.getSymbol());
@@ -627,6 +629,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 				symbolLeverageMapper.insertSelective(newData);
 				cacheService.getLastLeverageList().add(newData);
 			} else if (inputData.getMaxLeverage() < dataInCache.getLeverage()) {
+				updateFlag = true;
 				dataInCache.setLeverage(inputData.getMaxLeverage());
 				dataInCache.setCreateTime(LocalDateTime.now());
 				dataInCache.setId(snowFlake.getNextId());
@@ -634,7 +637,9 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 				cacheService.getLastLeverageList().add(dataInCache);
 			}
 
-			
+			if (!updateFlag) {
+				continue;
+			}
 			String msg = "Symbol: %s, max leverage: %s, Exchange code: %s";
 			if (inputData.getMaxLeverage() < binanceWatchingL1Leverage) {
 				msg = String.format(msg, inputData.getSymbol(), inputData.getMaxLeverage(), exchangeType.getName());

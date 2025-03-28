@@ -33,7 +33,7 @@ import demo.finance.cryptoCoin.data.pojo.result.GetBigMoveSummaryDataResult;
 import demo.finance.cryptoCoin.data.service.CryptoCoinDataComplexService;
 import demo.tool.textMessageForward.telegram.service.TelegramService;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinSymbolMaxLeverageDTO;
-import finance.cryptoCoin.common.pojo.result.CryptoCoinSymbolMaxLeverageResult;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinSymbolMaxLeverageMainDTO;
 import finance.cryptoCoin.common.pojo.type.CryptoExchangeType;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigMoveDataBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinBigMoveSummaryDataBO;
@@ -592,7 +592,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 	}
 
 	@Override
-	public void receiveSymbolMaxLeverageInfo(CryptoCoinSymbolMaxLeverageResult result) {
+	public void receiveSymbolMaxLeverageInfo(CryptoCoinSymbolMaxLeverageMainDTO result) {
 		if (!isValidTotpCode(result.getTotpCode())) {
 			return;
 		}
@@ -612,6 +612,11 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 
 		for (int i = 0; i < inputList.size(); i++) {
 			CryptoCoinSymbolMaxLeverageDTO inputData = inputList.get(i);
+			String symbol = inputData.getSymbol();
+			if (optionService.getBinanceFutureUmNotListing().contains(symbol)
+					|| optionService.getBinanceFutureUmAlreadyWarningRemoved().contains(symbol)) {
+				continue;
+			}
 			CryptoCoinSymbolLeverage dataInCache = findLeverage(inputData.getSymbol(), inputData.getExchangeCode());
 			if (dataInCache == null) {
 				CryptoCoinSymbolLeverage newData = new CryptoCoinSymbolLeverage();
@@ -621,7 +626,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 				newData.setLeverage(inputData.getMaxLeverage());
 				symbolLeverageMapper.insertSelective(newData);
 				cacheService.getLastLeverageList().add(newData);
-			} else if (inputData.getMaxLeverage() < dataInCache.getExchangeCode()) {
+			} else if (inputData.getMaxLeverage() < dataInCache.getLeverage()) {
 				dataInCache.setLeverage(inputData.getMaxLeverage());
 				dataInCache.setCreateTime(LocalDateTime.now());
 				dataInCache.setId(snowFlake.getNextId());
@@ -629,6 +634,7 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 				cacheService.getLastLeverageList().add(dataInCache);
 			}
 
+			
 			String msg = "Symbol: %s, max leverage: %s, Exchange code: %s";
 			if (inputData.getMaxLeverage() < binanceWatchingL1Leverage) {
 				msg = String.format(msg, inputData.getSymbol(), inputData.getMaxLeverage(), exchangeType.getName());

@@ -53,6 +53,8 @@ public class CryptoCoinOptionService extends CommonService {
 	private Map<Integer, CryptoCoinUserKeysCxDTO> userMetaDataMap;
 	private String ccmHost;
 	private List<String> tradingSymbolList;
+	private List<String> binanceFutureUmNotListing;
+	private List<String> binanceFutureUmAlreadyWarningRemoved;
 
 	@PostConstruct
 	public void refreshOption() {
@@ -260,6 +262,22 @@ public class CryptoCoinOptionService extends CommonService {
 
 	public void setUserMetaDataMap(Map<Integer, CryptoCoinUserKeysCxDTO> userMetaDataMap) {
 		this.userMetaDataMap = userMetaDataMap;
+	}
+
+	public List<String> getBinanceFutureUmNotListing() {
+		return binanceFutureUmNotListing;
+	}
+
+	public void setBinanceFutureUmNotListing(List<String> binanceFutureUmNotListing) {
+		this.binanceFutureUmNotListing = binanceFutureUmNotListing;
+	}
+
+	public List<String> getBinanceFutureUmAlreadyWarningRemoved() {
+		return binanceFutureUmAlreadyWarningRemoved;
+	}
+
+	public void setBinanceFutureUmAlreadyWarningRemoved(List<String> binanceFutureUmAlreadyWarningRemoved) {
+		this.binanceFutureUmAlreadyWarningRemoved = binanceFutureUmAlreadyWarningRemoved;
 	}
 
 	@Override

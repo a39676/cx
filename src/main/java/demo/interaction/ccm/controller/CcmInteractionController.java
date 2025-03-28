@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.finance.cryptoCoin.data.service.CryptoCoinDataComplexService;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureUmSingleUserGroupOrderTradingService;
-import finance.cryptoCoin.common.pojo.result.CryptoCoinSymbolMaxLeverageResult;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinSymbolMaxLeverageMainDTO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinBinanceTradingCommonUrl;
 import finance.cryptoCoin.pojo.dto.CryptoCoinSymbolGroupSettingDTO;
 
@@ -31,7 +31,7 @@ public class CcmInteractionController {
 
 	@PostMapping(value = CryptoCoinBinanceTradingCommonUrl.SYMBOL_MAX_LEVERAGE_DATA)
 	@ResponseBody
-	public void receiveSymbolMaxLeverageInfo(@RequestBody CryptoCoinSymbolMaxLeverageResult result) {
+	public void receiveSymbolMaxLeverageInfo(@RequestBody CryptoCoinSymbolMaxLeverageMainDTO result) {
 		cryptoCoinDataComplexService.receiveSymbolMaxLeverageInfo(result);
 	}
 }

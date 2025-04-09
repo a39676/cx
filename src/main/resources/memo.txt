@@ -3,14 +3,6 @@ crypto coin
 		全部平仓
 		只平空单 / 多单
 	Future UM
-		查询 Binance 限制低杠杆 symbol
-			所有 symbol 全部登记
-			每小时 CCM 查询并发回一次
-			配置 option 文件
-				过滤部分不在 UM 挂牌交易 symbol
-				过滤部分已经发通知准备摘牌 symbol
-			监控本次降低的变动, (升杠杆忽略)
-			
 		双向平仓 未完成
 
 	CryptoCoinForceOrderDataServiceImpl.receiveNewForceOrderFutureUmDataMessage

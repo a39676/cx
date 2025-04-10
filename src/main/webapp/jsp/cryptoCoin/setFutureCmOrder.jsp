@@ -146,7 +146,7 @@
     <div class="row">
       <div class="col-md-6">
         <c:forEach items="${tradingSymbolList}" var="symbol" varStatus="loop">
-          <button class="symbolButton btn btn-sm btn-secondary" symbol="${symbol}USDT">${symbol}USDT
+          <button class="symbolButton btn btn-sm btn-secondary" symbol="${symbol}USD_PERP">${symbol}USD_PERP
           </button>
         </c:forEach>
       </div>

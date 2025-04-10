@@ -136,17 +136,30 @@
               </div>
             </td>
             <td>
+              <div class="btn-group">
+                <button id="binanceFutureUmCloseAllPosition" class="btn btn-sm btn-primary">
+                  CloseAssPosition<br>
+                  全部平仓
+                </button><br>
+                <button id="binanceFutureUmCloseAllPositionMultipleUser" class="btn btn-sm btn-success">
+                  多用户
+                </button>
+              </div>
+            </td>
+            <td>
               <button id="resetOrderSetting">ResetOrderSetting</button>
             </td>
           </tr>
-          <tr>
-            <td colspan="999">
-              <c:forEach items="${tradingSymbolList}" var="symbol" varStatus="loop">
-                <button class="symbolButton btn btn-sm btn-secondary" symbol="${symbol}USDT">${symbol}USDT</button>
-              </c:forEach>
-            </td>
-          </tr>
         </table>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <c:forEach items="${tradingSymbolList}" var="symbol" varStatus="loop">
+          <button class="symbolButton btn btn-sm btn-secondary" symbol="${symbol}USDT">${symbol}USDT
+          </button>
+        </c:forEach>
       </div>
     </div>
 
@@ -474,6 +487,106 @@
         success:function(datas){
           $("#queryOrdersResult").html(datas);
           $("#msg").text("");
+        },
+        error: function(datas) {
+          $("#msg").text(datas.message);
+        }
+      });
+    }
+
+    $("#binanceFutureUmCloseAllPosition").click(function() {
+      closeAllPosition();
+    });
+
+    function closeAllPosition(){
+      var url = "/cryptoTradingFutureUm/binanceFutureUmCloseAllPosition";
+
+      var positionSideCode = $('#positionSide').find(":selected").val();
+      var selectedUser = $('#userSelector').find(":selected");
+      var selectedUserId = selectedUser.val();
+      var selectedUserNickname = selectedUser.attr("userNickname");
+      var selectedExchange = $('#exchangeSelector').find(":selected");
+      var selectedExchangeCode = selectedExchange.val();
+
+      var jsonOutput = {
+        positionSideCode:positionSideCode,
+        userId:selectedUserId,
+        userNickname:selectedUserNickname,
+        exchangeCode:selectedExchangeCode,
+      };
+      
+      $("#msg").text("sending close all position");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          if(datas.code != 0){
+            $("#msg").text("Done: " + datas.message);
+          } else {
+            $("#msg").text(datas.message);
+          }
+        },
+        error: function(datas) {
+          $("#msg").text(datas.message);
+        }
+      });
+    }
+
+    $("#binanceFutureUmCloseAllPositionMultipleUser").click(function() {
+      binanceFutureUmCloseAllPositionMultipleUser();
+    });
+
+    function binanceFutureUmCloseAllPositionMultipleUser(){
+      var url = "/cryptoTradingFutureUm/binanceFutureUmCloseAllPositionMultipleUser";
+
+      var userIdList = [];
+      var userNicknameList = [];
+      $(':checkbox.userCheckbox:checked').each(function(i){
+        userIdList[i] = $(this).attr("localUserId");
+        userNicknameList[i] = $(this).attr("userNickname");
+      });
+
+      var positionSideCode = $('#positionSide').find(":selected").val();
+      var selectedExchange = $('#exchangeSelector').find(":selected");
+      var selectedExchangeCode = selectedExchange.val();
+
+      var jsonOutput = {
+        positionSideCode:positionSideCode,
+        exchangeCode:selectedExchangeCode,
+        userIdList:userIdList,
+        userNicknameList:userNicknameList,
+      };
+
+      console.log(positionSideCode);
+
+      $("#msg").text("sending FutureUmCloseAllPositionMultipleUser");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          if(datas.code != 0){
+            $("#msg").text("Done: " + datas.message);
+          } else {
+            $("#msg").text(datas.message);
+          }
         },
         error: function(datas) {
           $("#msg").text(datas.message);

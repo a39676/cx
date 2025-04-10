@@ -11,12 +11,15 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceFutureUmCancelMultipleOrderProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceFutureUmCancelOrderByIdProducer;
+import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceFutureUmCloseAllPositionProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmFutureOrderProducer;
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureCmCancelMultipleOrderMultipleUserDTO;
+import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureUmCloseAllPositionForMultipleUserDTO;
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureUmSetOrderForMultipleUserDTO;
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureUmSetOrderV2CxDTO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureUmTradingService;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelOrderByIdDTO;
+import finance.cryptoCoin.binance.future.pojo.dto.CryptoCoinBinanceFutureCloseAllPositionDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmCancelMultipleOrderDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmSetOrderV2DTO;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderSideType;
@@ -35,6 +38,8 @@ public class CryptoCoinBinanceFutureUmTradingServiceImpl extends CryptoCoinCommo
 	private CryptoCoinBinanceFutureUmCancelMultipleOrderProducer binanceFutureUmCancelMultipleOrderProducer;
 	@Autowired
 	private CryptoCoinBinanceFutureUmCancelOrderByIdProducer binanceFutureUmCancelOrderByIdProducer;
+	@Autowired
+	private CryptoCoinBinanceFutureUmCloseAllPositionProducer binanceFutureUmCloseAllPositionProducer;
 
 	@Override
 	public ModelAndView tradingViewV2() {
@@ -280,4 +285,42 @@ public class CryptoCoinBinanceFutureUmTradingServiceImpl extends CryptoCoinCommo
 		return r;
 	}
 
+	@Override
+	public CommonResult closeAllPosition(CryptoCoinBinanceFutureCloseAllPositionDTO dto) {
+		CommonResult r = new CommonResult();
+		if (dto.getUserId() == null || StringUtils.isBlank(dto.getUserNickname())) {
+			r.failWithMessage("User invalid");
+			return r;
+		}
+		dto.setTotpCode(genTotpCode());
+		binanceFutureUmCloseAllPositionProducer.sendCloseAllPosition(dto);
+		r.setIsSuccess();
+		return r;
+	}
+
+	@Override
+	public CommonResult closeAllPositionForMultipleUser(
+			CryptoCoinBinanceFutureUmCloseAllPositionForMultipleUserDTO dto) {
+		CommonResult r = new CommonResult();
+		if (!checkCryptoCoinInteractionMultipleUserCommonDTO(dto)) {
+			r.failWithMessage("User invalid");
+			return r;
+		}
+		CryptoExchangeType exchangeType = CryptoExchangeType.getType(dto.getExchangeCode());
+		if (exchangeType == null) {
+			r.failWithMessage("Exchange invalid");
+			return r;
+		}
+		for (int i = 0; i < dto.getUserIdList().size(); i++) {
+			CryptoCoinBinanceFutureCloseAllPositionDTO subDTO = new CryptoCoinBinanceFutureCloseAllPositionDTO();
+			subDTO.setExchangeCode(dto.getExchangeCode());
+			subDTO.setPositionSideCode(dto.getPositionSideCode());
+			subDTO.setTotpCode(genTotpCode());
+			subDTO.setUserId(dto.getUserIdList().get(i));
+			subDTO.setUserNickname(dto.getUserNicknameList().get(i));
+			closeAllPosition(subDTO);
+		}
+		r.setIsSuccess();
+		return r;
+	}
 }

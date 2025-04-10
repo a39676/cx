@@ -139,14 +139,16 @@
               <button id="resetOrderSetting">ResetOrderSetting</button>
             </td>
           </tr>
-          <tr>
-            <td colspan="999">
-              <c:forEach items="${tradingSymbolList}" var="symbol" varStatus="loop">
-                <button class="symbolButton btn btn-sm btn-secondary" symbol="${symbol}USD_PERP">${symbol}USD_PERP</button>
-              </c:forEach>
-            </td>
-          </tr>
         </table>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <c:forEach items="${tradingSymbolList}" var="symbol" varStatus="loop">
+          <button class="symbolButton btn btn-sm btn-secondary" symbol="${symbol}USDT">${symbol}USDT
+          </button>
+        </c:forEach>
       </div>
     </div>
 

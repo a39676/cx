@@ -12,10 +12,12 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.trading.pojo.constant.CryptoCoinTradingUrl;
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureCmCancelMultipleOrderMultipleUserDTO;
+import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureUmCloseAllPositionForMultipleUserDTO;
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureUmSetOrderForMultipleUserDTO;
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureUmSetOrderV2CxDTO;
 import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureUmTradingService;
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelOrderByIdDTO;
+import finance.cryptoCoin.binance.future.pojo.dto.CryptoCoinBinanceFutureCloseAllPositionDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmCancelMultipleOrderDTO;
 
 @Controller
@@ -62,4 +64,16 @@ public class CryptoCoinFutureUmTradingV2Controller {
 		return umTradingService.cancleOrderById(dto);
 	}
 
+	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_UM_CLOSE_ALL_POSITION)
+	@ResponseBody
+	public CommonResult closeAllPosition(@RequestBody CryptoCoinBinanceFutureCloseAllPositionDTO dto) {
+		return umTradingService.closeAllPosition(dto);
+	}
+
+	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_UM_CLOSE_ALL_POSITION_MULTIPLE_USER)
+	@ResponseBody
+	public CommonResult closeAllPositionForMultipleUser(
+			@RequestBody CryptoCoinBinanceFutureUmCloseAllPositionForMultipleUserDTO dto) {
+		return umTradingService.closeAllPositionForMultipleUser(dto);
+	}
 }

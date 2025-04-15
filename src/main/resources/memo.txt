@@ -1,7 +1,4 @@
 crypto coin
-	一键平仓
-		全部平仓
-		只平空单 / 多单
 	Future UM
 		双向平仓 未完成
 

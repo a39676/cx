@@ -136,6 +136,11 @@
               </div>
             </td>
             <td>
+              <button id="resetOrderSetting">ResetOrderSetting</button>
+            </td>
+            <td>
+            </td>
+            <td>
               <div class="btn-group">
                 <button id="binanceFutureUmCloseAllPosition" class="btn btn-sm btn-primary">
                   CloseAssPosition<br>
@@ -145,9 +150,6 @@
                   多用户
                 </button>
               </div>
-            </td>
-            <td>
-              <button id="resetOrderSetting">ResetOrderSetting</button>
             </td>
           </tr>
         </table>

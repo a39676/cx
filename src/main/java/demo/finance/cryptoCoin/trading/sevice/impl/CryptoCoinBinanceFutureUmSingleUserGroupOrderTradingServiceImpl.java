@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -434,6 +435,7 @@ public class CryptoCoinBinanceFutureUmSingleUserGroupOrderTradingServiceImpl ext
 				}
 			}
 			v.addObject("dataList", r.getPositionList());
+			Collections.sort(r.getPositionList());
 			List<CryptoCoinBinanceFutureUmPositionDetailDTO> summaryList = new ArrayList<>();
 			summaryList.add(summary);
 			summaryList.add(longSummary);

@@ -4,6 +4,9 @@ crypto coin
 		只平空单 / 多单
 	Future UM
 		双向平仓 未完成
+	Future CM
+		pisition list
+			summary 计算异常
 
 	CryptoCoinForceOrderDataServiceImpl.receiveNewForceOrderFutureUmDataMessage
 		SQL update to "insert or update"

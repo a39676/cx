@@ -558,9 +558,13 @@ public class CryptoCoinBinanceFutureUmSingleUserGroupOrderTradingServiceImpl ext
 					} else if (BinanceOrderSideType.SELL.equals(dataVO.getSide())
 							&& BinancePositionSideType.LONG.equals(dataVO.getPositionSide())) {
 						dataVO.setOrderTypeInSimpleWord("平多");
+						dataVO.setOrigQty(dataVO.getOrigQty().negate());
+						dataVO.setExecutedQty(dataVO.getExecutedQty().negate());
 					} else if (BinanceOrderSideType.SELL.equals(dataVO.getSide())
 							&& BinancePositionSideType.SHORT.equals(dataVO.getPositionSide())) {
 						dataVO.setOrderTypeInSimpleWord("开空");
+						dataVO.setOrigQty(dataVO.getOrigQty().negate());
+						dataVO.setExecutedQty(dataVO.getExecutedQty().negate());
 					} else {
 						dataVO.setOrderTypeInSimpleWord(
 								dataVO.getSide().getName() + "," + dataVO.getPositionSide().getName());

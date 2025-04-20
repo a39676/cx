@@ -1,3 +1,5 @@
+Valkey replace Redis
+
 crypto coin
 	Future UM
 		双向平仓 未完成

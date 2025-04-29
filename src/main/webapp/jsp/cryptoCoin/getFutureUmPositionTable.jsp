@@ -176,6 +176,7 @@
       $("#symbol").val($(this).attr("symbol"));
       $("#orderType").val("2").change();
       $("#orderRepeatCounting").val("");
+      $("#orderAmount").val("");
 
       var sourcePositionSide = $(this).attr("positionSide");
 

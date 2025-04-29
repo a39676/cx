@@ -18,6 +18,7 @@ import demo.finance.common.service.impl.FinanceCommonService;
 import demo.finance.cryptoCoin.common.pojo.dto.CryptoCoinUserKeysCxDTO;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionMultipleUserCommonDTO;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionOrderCommonDTO;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinUserKeysDTO;
 import finance.cryptoCoin.common.pojo.dto.CryptoCoinUserSymbolRateDTO;
 import finance.cryptoCoin.common.pojo.type.CryptoExchangeType;
@@ -564,21 +565,34 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 		}
 	}
 
-	protected BigDecimal umOrderFixQuantityByUserSetting(Integer localUserId, String userNickname,
-			BigDecimal sourceQuantity) {
+	protected CryptoCoinInteractionOrderCommonDTO umOrderFixQuantityOrOrderAmountByUserSetting(Integer localUserId,
+			String userNickname, CryptoCoinInteractionOrderCommonDTO dto) {
 		CryptoCoinUserKeysCxDTO userMetaData = optionService.getUserMetaDataMap().get(localUserId);
+		CryptoCoinInteractionOrderCommonDTO result = new CryptoCoinInteractionOrderCommonDTO();
 		if (userMetaData == null) {
-			return BigDecimal.ZERO;
+			return result;
 		}
 
 		BigDecimal quantityRate = userMetaData.getFutureUmRateSetting();
 		if (quantityRate == null) {
-			return BigDecimal.ZERO;
+			return result;
 		}
 
-		/* Handle scale by receiver */
-//		BigDecimal outputQuantity = sourceQuantity.multiply(quantityRate).setScale(0, RoundingMode.FLOOR);
-		BigDecimal outputQuantity = sourceQuantity.multiply(quantityRate);
-		return outputQuantity;
+		if (dto.getOrderAmount() != null) {
+//			send order by amount
+			BigDecimal targetAmount = dto.getOrderAmount().multiply(quantityRate);
+			if (dto.getPrice() != null) {
+				result.setQuantity(
+						targetAmount.divide(dto.getPrice(), SCALE_FOR_PRICE_CALCULATE, RoundingMode.HALF_UP));
+			} else {
+				result.setOrderAmount(targetAmount);
+			}
+		} else {
+//			send order by quantity
+			/* Handle scale by receiver */
+			result.setQuantity(dto.getQuantity().multiply(quantityRate));
+		}
+
+		return result;
 	}
 }

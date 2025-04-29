@@ -10,8 +10,6 @@ import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionMultipleUserCommo
 
 public class CryptoCoinBinanceFutureUmSetOrderForMultipleUserDTO extends CryptoCoinInteractionMultipleUserCommonDTO {
 
-	private String symbol;
-	private BigDecimal quantity;
 	/** {@link BinanceOrderSideType} */
 	private Integer orderSideCode;
 	/** {@link BinancePositionSideType} */
@@ -22,22 +20,6 @@ public class CryptoCoinBinanceFutureUmSetOrderForMultipleUserDTO extends CryptoC
 	private Integer timeInForceCode = BinanceTimeInForceType.GTC.getCode();
 	private BigDecimal price;
 	private Integer orderRepeatCounting;
-
-	public String getSymbol() {
-		return symbol;
-	}
-
-	public void setSymbol(String symbol) {
-		this.symbol = symbol;
-	}
-
-	public BigDecimal getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(BigDecimal quantity) {
-		this.quantity = quantity;
-	}
 
 	public Integer getOrderSideCode() {
 		return orderSideCode;
@@ -90,10 +72,9 @@ public class CryptoCoinBinanceFutureUmSetOrderForMultipleUserDTO extends CryptoC
 	@Override
 	public String toString() {
 		return "CryptoCoinBinanceFutureUmSetOrderForMultipleUserDTO [symbol=" + symbol + ", quantity=" + quantity
-				+ ", orderSideCode=" + orderSideCode + ", positionSideCode=" + positionSideCode + ", orderTypeCode="
-				+ orderTypeCode + ", timeInForceCode=" + timeInForceCode + ", price=" + price + ", orderRepeatCounting="
-				+ orderRepeatCounting + ", userIdList=" + userIdList + ", userNicknameList=" + userNicknameList
-				+ ", totpCode=" + totpCode + ", exchangeCode=" + exchangeCode + "]";
+				+ ", orderAmount=" + orderAmount + ", orderSideCode=" + orderSideCode + ", positionSideCode="
+				+ positionSideCode + ", orderTypeCode=" + orderTypeCode + ", timeInForceCode=" + timeInForceCode
+				+ ", price=" + price + ", orderRepeatCounting=" + orderRepeatCounting + "]";
 	}
 
 }

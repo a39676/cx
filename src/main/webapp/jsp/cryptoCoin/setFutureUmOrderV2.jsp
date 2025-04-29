@@ -48,6 +48,7 @@
             </td>
             <td>
               <label>quantity[数量(个)]</label><br>
+              <label>amount[金额(USDT)]</label><br>
               <label>repeat(重复次数)</label>
             </td>
             <td>
@@ -72,6 +73,7 @@
             </td>
             <td>
               <input type="number" name="" id="quantity" placeholder="quantity"><br>
+              <input type="number" name="" id="orderAmount" placeholder="orderAmount"><br>
               <input type="number" name="" id="orderRepeatCounting" placeholder="orderRepeatCounting" 
               style="color:red;font-weight:bold;">
             </td>
@@ -220,6 +222,7 @@
 
       var symbol = $("#symbol").val();
       var quantity = $("#quantity").val();
+      var orderAmount = $("#orderAmount").val();
       var orderRepeatCounting = $("#orderRepeatCounting").val();
       var price = $("#price").val();
       var orderSideCode = $('#orderSide').find(":selected").val();
@@ -235,6 +238,7 @@
       var jsonOutput = {
         symbol:symbol,
         quantity:quantity,
+        orderAmount:orderAmount,
         orderRepeatCounting: orderRepeatCounting,
         orderSideCode:orderSideCode,
         positionSideCode:positionSideCode,
@@ -286,6 +290,7 @@
       var quantity = $("#quantity").val();
       var orderRepeatCounting = $("#orderRepeatCounting").val();
       var price = $("#price").val();
+      var orderAmount = $("#orderAmount").val();
       var orderSideCode = $('#orderSide').find(":selected").val();
       var positionSideCode = $('#positionSide').find(":selected").val();
       var orderTypeCode = $('#orderType').find(":selected").val();
@@ -301,6 +306,7 @@
       var jsonOutput = {
         symbol:symbol,
         quantity:quantity,
+        orderAmount:orderAmount,
         orderRepeatCounting:orderRepeatCounting,
         price:price,
         orderSideCode:orderSideCode,
@@ -310,7 +316,7 @@
         userIdList:userIdList,
         userNicknameList:userNicknameList,
       };
-      
+
       $("#msg").text("sending");
       $.ajax({
         type : "POST",
@@ -693,6 +699,7 @@
     $(".symbolButton").click(function () {
       $("#symbol").val($(this).attr("symbol"));
       $("#quantity").val("");
+      $("#orderAmount").val("");
       $("#orderRepeatCounting").val("");
       $("#price").val("");
     });
@@ -749,6 +756,7 @@
       $("#orderType").val("1").change();
       $("#symbol").val("");
       $("#quantity").val("");
+      $("#orderAmount").val("");
       $("#orderRepeatCounting").val("");
       $("#price").val("");
     })

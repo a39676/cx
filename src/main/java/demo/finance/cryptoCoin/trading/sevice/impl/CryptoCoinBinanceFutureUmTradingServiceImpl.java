@@ -26,6 +26,7 @@ import finance.cryptoCoin.binance.pojo.type.BinanceOrderSideType;
 import finance.cryptoCoin.binance.pojo.type.BinanceOrderTypeType;
 import finance.cryptoCoin.binance.pojo.type.BinancePositionSideType;
 import finance.cryptoCoin.binance.pojo.type.BinanceTimeInForceType;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionOrderCommonDTO;
 import finance.cryptoCoin.common.pojo.type.CryptoExchangeType;
 
 @Service
@@ -76,8 +77,13 @@ public class CryptoCoinBinanceFutureUmTradingServiceImpl extends CryptoCoinCommo
 			r.failWithMessage("Symbol invalid");
 			return r;
 		}
-		if (dto.getQuantity() == null || dto.getQuantity().doubleValue() < 0) {
-			r.failWithMessage("Quantity invalid");
+		if (dto.getQuantity() == null && dto.getOrderAmount() == null) {
+			r.failWithMessage("Quantity or order amount invalid (Both null)");
+			return r;
+		}
+		if ((dto.getQuantity() != null && dto.getQuantity().doubleValue() < 0)
+				|| (dto.getOrderAmount() != null && dto.getOrderAmount().doubleValue() < 0)) {
+			r.failWithMessage("Quantity or order amount invalid (Less than 0)");
 			return r;
 		}
 		if (BinanceOrderSideType.getType(dto.getOrderSideCode()) == null) {
@@ -131,8 +137,13 @@ public class CryptoCoinBinanceFutureUmTradingServiceImpl extends CryptoCoinCommo
 			r.failWithMessage("Symbol invalid");
 			return r;
 		}
-		if (dto.getQuantity() == null || dto.getQuantity().compareTo(BigDecimal.ZERO) < 0) {
-			r.failWithMessage("Quantity invalid");
+		if (dto.getQuantity() == null && dto.getOrderAmount() == null) {
+			r.failWithMessage("Quantity or order amount invalid (Both null)");
+			return r;
+		}
+		if ((dto.getQuantity() != null && dto.getQuantity().doubleValue() < 0)
+				|| (dto.getOrderAmount() != null && dto.getOrderAmount().doubleValue() < 0)) {
+			r.failWithMessage("Quantity or order amount invalid (Less than 0)");
 			return r;
 		}
 
@@ -167,6 +178,12 @@ public class CryptoCoinBinanceFutureUmTradingServiceImpl extends CryptoCoinCommo
 			dto.setPrice(null);
 		}
 
+		if (BinanceOrderTypeType.LIMIT.equals(orderType) && (dto.getPrice() == null)
+				|| dto.getPrice().doubleValue() < 0) {
+			r.failWithMessage("Price invalid (Null or less than 0)");
+			return r;
+		}
+
 		CryptoCoinBinanceFutureUmSetOrderV2DTO singleUserDTO = new CryptoCoinBinanceFutureUmSetOrderV2DTO();
 		singleUserDTO.setExchangeCode(dto.getExchangeCode());
 		singleUserDTO.setOrderSideCode(dto.getOrderSideCode());
@@ -176,12 +193,14 @@ public class CryptoCoinBinanceFutureUmTradingServiceImpl extends CryptoCoinCommo
 		singleUserDTO.setPrice(dto.getPrice());
 		singleUserDTO.setSymbol(dto.getSymbol());
 		for (int i = 0; i < dto.getUserIdList().size(); i++) {
-			BigDecimal fixedQuantity = umOrderFixQuantityByUserSetting(dto.getUserIdList().get(i),
-					dto.getUserNicknameList().get(i), dto.getQuantity());
-			if (fixedQuantity.equals(BigDecimal.ZERO)) {
+			CryptoCoinInteractionOrderCommonDTO fixedAmountDTO = umOrderFixQuantityOrOrderAmountByUserSetting(
+					dto.getUserIdList().get(i), dto.getUserNicknameList().get(i), dto);
+			if (fixedAmountDTO.getOrderAmount() == null && fixedAmountDTO.getQuantity() == null) {
 				continue;
 			}
-			singleUserDTO.setQuantity(fixedQuantity);
+			// May order by LIMIT
+			singleUserDTO.setOrderAmount(fixedAmountDTO.getOrderAmount());
+			singleUserDTO.setQuantity(fixedAmountDTO.getQuantity());
 
 			singleUserDTO.setUserId(dto.getUserIdList().get(i));
 			singleUserDTO.setUserNickname(dto.getUserNicknameList().get(i));

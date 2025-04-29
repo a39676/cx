@@ -9,7 +9,6 @@ import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionMultipleUserCommo
 
 public class CryptoCoinSpotSetOrderForMultipleUserDTO extends CryptoCoinInteractionMultipleUserCommonDTO {
 
-	private String symbol;
 	/** {@link BinanceOrderSideType} */
 	private Integer sideCode;
 	/** {@link BinanceOrderTypeType} */
@@ -18,14 +17,6 @@ public class CryptoCoinSpotSetOrderForMultipleUserDTO extends CryptoCoinInteract
 	private Integer timeInForceCode = BinanceTimeInForceType.GTC.getCode();
 	private BigDecimal price;
 	private BigDecimal quantity;
-
-	public String getSymbol() {
-		return symbol;
-	}
-
-	public void setSymbol(String symbol) {
-		this.symbol = symbol;
-	}
 
 	public Integer getSideCode() {
 		return sideCode;

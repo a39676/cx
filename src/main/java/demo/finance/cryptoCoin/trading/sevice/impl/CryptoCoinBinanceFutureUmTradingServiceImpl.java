@@ -178,8 +178,8 @@ public class CryptoCoinBinanceFutureUmTradingServiceImpl extends CryptoCoinCommo
 			dto.setPrice(null);
 		}
 
-		if (BinanceOrderTypeType.LIMIT.equals(orderType) && (dto.getPrice() == null)
-				|| dto.getPrice().doubleValue() < 0) {
+		if (BinanceOrderTypeType.LIMIT.equals(orderType)
+				&& (dto.getPrice() == null || dto.getPrice().doubleValue() < 0)) {
 			r.failWithMessage("Price invalid (Null or less than 0)");
 			return r;
 		}

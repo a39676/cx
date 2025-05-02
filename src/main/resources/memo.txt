@@ -2,6 +2,8 @@ Valkey replace Redis
 
 crypto coin
 	Future UM
+		新建本地价格监控
+			需要播放音效
 		双向平仓 未完成
 	Future CM
 		pisition list

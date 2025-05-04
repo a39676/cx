@@ -177,6 +177,7 @@
       $("#orderType").val("2").change();
       $("#orderRepeatCounting").val("");
       $("#orderAmount").val("");
+      $("#orderAmount").focus();
 
       var sourcePositionSide = $(this).attr("positionSide");
 

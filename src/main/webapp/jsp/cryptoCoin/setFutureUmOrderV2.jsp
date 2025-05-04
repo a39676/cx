@@ -47,8 +47,8 @@
               <label>Symbol(标的)</label>
             </td>
             <td>
-              <label>quantity[数量(个)]</label><br>
               <label>amount[金额(USDT)]</label><br>
+              <label>quantity[数量(个)]</label><br>
               <label>repeat(重复次数)</label>
             </td>
             <td>
@@ -72,8 +72,8 @@
               <input type="text" name="" placeholder="symbol" id="symbol">
             </td>
             <td>
-              <input type="number" name="" id="quantity" placeholder="quantity"><br>
               <input type="number" name="" id="orderAmount" placeholder="orderAmount"><br>
+              <input type="number" name="" id="quantity" placeholder="quantity"><br>
               <input type="number" name="" id="orderRepeatCounting" placeholder="orderRepeatCounting" 
               style="color:red;font-weight:bold;">
             </td>
@@ -702,6 +702,7 @@
       $("#orderAmount").val("");
       $("#orderRepeatCounting").val("");
       $("#price").val("");
+      $("#orderAmount").focus();
     });
   });
 </script>

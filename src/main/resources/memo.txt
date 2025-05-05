@@ -2,6 +2,8 @@ Valkey replace Redis
 
 crypto coin
 	Future UM
+		批量修改品种杠杆倍数至最高
+		
 		最大杠杆监控
 			从低杠杆恢复到正常杠杆范围 >= 20 需要提醒, 提示空单减仓 / 平仓
 		需要设置按组合(兼比例)下单

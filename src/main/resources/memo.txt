@@ -2,6 +2,12 @@ Valkey replace Redis
 
 crypto coin
 	Future UM
+		最大杠杆监控
+			从低杠杆恢复到正常杠杆范围 >= 20 需要提醒, 提示空单减仓 / 平仓
+		需要设置按组合(兼比例)下单
+			下单顺序
+				for(symbol : symbolList)
+					for(user : userList)
 		新建本地价格监控
 			需要播放音效
 		双向平仓 未完成

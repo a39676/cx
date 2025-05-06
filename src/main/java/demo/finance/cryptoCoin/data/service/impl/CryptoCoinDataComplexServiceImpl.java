@@ -604,10 +604,10 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 		final int binanceWatchingL2Leverage = 8;
 		final int binanceWatchingL1Leverage = 10;
 		List<CryptoCoinSymbolMaxLeverageDTO> inputList = result.getList();
-		List<CryptoCoinSymbolLeverage> listInCache = cacheService.getLastLeverageList();
-		if (listInCache == null) {
-			listInCache = new ArrayList<CryptoCoinSymbolLeverage>();
-			cacheService.setLastLeverageList(listInCache);
+		Map<String, CryptoCoinSymbolLeverage> leverageMap = cacheService.getBinanceLastLeverageMap();
+		if (leverageMap == null) {
+			leverageMap = new HashMap<>();
+			cacheService.setBinanceLastLeverageMap(leverageMap);
 		}
 
 		for (int i = 0; i < inputList.size(); i++) {
@@ -617,56 +617,64 @@ public class CryptoCoinDataComplexServiceImpl extends CryptoCoinCommonService im
 					|| optionService.getBinanceFutureUmAlreadyWarningRemoved().contains(symbol)) {
 				continue;
 			}
-			boolean updateFlag = false;
-			CryptoCoinSymbolLeverage dataInCache = findLeverage(inputData.getSymbol(), inputData.getExchangeCode());
+			boolean lowerFlag = false;
+			boolean upperFlag = false;
+			CryptoCoinSymbolLeverage dataInCache = findBinanceLeverage(inputData.getSymbol(),
+					inputData.getExchangeCode());
 			if (dataInCache == null) {
-				updateFlag = true;
+				lowerFlag = true;
 				CryptoCoinSymbolLeverage newData = new CryptoCoinSymbolLeverage();
 				newData.setId(snowFlake.getNextId());
 				newData.setSymbol(inputData.getSymbol());
 				newData.setExchangeCode(inputData.getExchangeCode());
 				newData.setLeverage(inputData.getMaxLeverage());
 				symbolLeverageMapper.insertSelective(newData);
-				cacheService.getLastLeverageList().add(newData);
+				cacheService.getBinanceLastLeverageMap().put(symbol, newData);
 			} else if (inputData.getMaxLeverage() < dataInCache.getLeverage()) {
-				updateFlag = true;
+				lowerFlag = true;
 				dataInCache.setLeverage(inputData.getMaxLeverage());
 				dataInCache.setCreateTime(LocalDateTime.now());
 				dataInCache.setId(snowFlake.getNextId());
 				symbolLeverageMapper.insertSelective(dataInCache);
-				cacheService.getLastLeverageList().add(dataInCache);
+				cacheService.getBinanceLastLeverageMap().put(symbol, dataInCache);
+			} else if (inputData.getMaxLeverage() > dataInCache.getLeverage()) {
+				upperFlag = true;
+				dataInCache.setLeverage(inputData.getMaxLeverage());
+				dataInCache.setCreateTime(LocalDateTime.now());
+				dataInCache.setId(snowFlake.getNextId());
+				symbolLeverageMapper.insertSelective(dataInCache);
+				cacheService.getBinanceLastLeverageMap().put(symbol, dataInCache);
 			}
 
-			if (!updateFlag) {
+			if (!lowerFlag && !upperFlag) {
 				continue;
 			}
+
 			String msg = "Symbol: %s, max leverage: %s, Exchange code: %s";
-			if (inputData.getMaxLeverage() < binanceWatchingL1Leverage) {
+			
+			if (upperFlag) {
 				msg = String.format(msg, inputData.getSymbol(), inputData.getMaxLeverage(), exchangeType.getName());
+				msg += ", upper";
 				telegramService.sendMessageByChatRecordId(TelegramBotType.CCM_NOTICE, msg, TelegramStaticChatID.MY_ID);
-			} else if (inputData.getMaxLeverage() < binanceWatchingL2Leverage) {
+			}
+			
+			if ((inputData.getMaxLeverage() < binanceWatchingL1Leverage) || (inputData.getMaxLeverage() < binanceWatchingL2Leverage) || (inputData.getMaxLeverage() < binanceWarningLeverage)) {
 				msg = String.format(msg, inputData.getSymbol(), inputData.getMaxLeverage(), exchangeType.getName());
-				telegramService.sendMessageByChatRecordId(TelegramBotType.CCM_NOTICE, msg, TelegramStaticChatID.MY_ID);
-			} else if (inputData.getMaxLeverage() < binanceWarningLeverage) {
-				msg = String.format(msg, inputData.getSymbol(), inputData.getMaxLeverage(), exchangeType.getName());
+				msg += ", lower";
 				telegramService.sendMessageByChatRecordId(TelegramBotType.CCM_NOTICE, msg, TelegramStaticChatID.MY_ID);
 			}
 		}
 	}
 
-	private CryptoCoinSymbolLeverage findLeverage(String symbol, Integer exhcnageCode) {
-		List<CryptoCoinSymbolLeverage> list = cacheService.getLastLeverageList();
-		for (CryptoCoinSymbolLeverage dataInCache : list) {
-			if (dataInCache.getSymbol().equals(symbol) && dataInCache.getExchangeCode().equals(exhcnageCode)) {
-				return dataInCache;
-			}
-		}
-		return null;
+	private CryptoCoinSymbolLeverage findBinanceLeverage(String symbol, Integer exhcnageCode) {
+		return cacheService.getBinanceLastLeverageMap().get(symbol);
 	}
 
 	@Override
 	public void loadSymbolMaxLeverageInfoToCache() {
 		List<CryptoCoinSymbolLeverage> list = symbolLeverageMapper.selectLastLeverage();
-		cacheService.setLastLeverageList(list);
+		for (CryptoCoinSymbolLeverage data : list) {
+			cacheService.getBinanceLastLeverageMap().put(data.getSymbol(), data);
+		}
 	}
 }

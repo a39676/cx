@@ -1,7 +1,6 @@
 package demo.finance.cryptoCoin.data.service;
 
 import java.util.List;
-import java.util.Set;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
@@ -21,20 +20,6 @@ public interface CryptoCoinCatalogService {
 
 	CryptoCoinCatalog findLastCatalog();
 
-	List<CryptoCoinCatalogVO> getSubscriptionCatalogVOList();
-
-	void addSubscriptionCatalog(String catalog);
-
-	void removeSubscriptionCatalog(String catalog);
-
-	void removeAllSubscriptionCatalog();
-
 	List<CryptoCoinCatalog> findCatalog(List<String> coinNameList);
-
-	void addSubscriptionCatalog(List<String> catalogList);
-
-	void removeSubscriptionCatalog(List<String> catalogList);
-
-	Set<String> getSubscriptionNameList();
 
 }

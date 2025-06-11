@@ -163,8 +163,6 @@
           bookmarkHtmlInBase64 : bookmarkHtmlInBase64,
         };
 
-        console.log(jsonOutput);
-
         $.ajax({
           type : "POST",
           url : url,

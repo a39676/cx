@@ -1,17 +1,11 @@
 package demo.interaction.bbt.service.impl;
 
-import java.io.File;
-import java.time.LocalDateTime;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.dto.ServiceMsgDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.automationTest.service.impl.AutomationTestConstantService;
 import demo.base.system.service.impl.SystemOptionService;
-import demo.config.customComponent.OptionFilePathConfigurer;
 import demo.finance.cnStockMarket.service.CnStockMarketService;
 import demo.finance.currencyExchangeRate.data.service.CurrencyExchangeRateService;
 import demo.interaction.bbt.service.BbtCommonService;
@@ -19,10 +13,8 @@ import demo.interaction.bbt.service.BbtComplexService;
 import demo.tool.textMessageForward.service.TextMessageForwardService;
 import finance.cnStockMarket.pojo.dto.CnStockMarketDataDTO;
 import finance.currencyExchangeRate.pojo.result.CurrencyExchageRateCollectResult;
-import net.sf.json.JSONObject;
 import tool.pojo.constant.CxBbtInteractionUrl;
 import toolPack.httpHandel.HttpUtil;
-import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class BbtComplexServiceImpl extends BbtCommonService implements BbtComplexService {
@@ -34,9 +26,9 @@ public class BbtComplexServiceImpl extends BbtCommonService implements BbtComple
 	@Autowired
 	private CnStockMarketService cnStockMarketService;
 	@Autowired
-	private SystemOptionService systemOptionService;
+	private BbtCacheService bbtCacheService;
 	@Autowired
-	private AutomationTestConstantService automationTestConstantService;
+	private SystemOptionService systemOptionService;
 
 	@Override
 	public CommonResult textMessageForwarding(ServiceMsgDTO dto) {
@@ -74,41 +66,33 @@ public class BbtComplexServiceImpl extends BbtCommonService implements BbtComple
 	}
 
 	@Override
-	public JSONObject getCryptoCoinOption(BaseStrDTO dto) {
-		String keyInput = dto.getStr();
-		if (!bbtDynamicKey.isCorrectKey(keyInput)) {
-			return new JSONObject();
-		}
-
-		File optionFile = new File(OptionFilePathConfigurer.CRYPTO_COIN_FOR_BBT);
-		if (!optionFile.exists()) {
-			return new JSONObject();
-		}
-		FileUtilCustom fileUtil = new FileUtilCustom();
-		String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.CRYPTO_COIN_FOR_BBT);
-		return JSONObject.fromObject(jsonStr);
+	public CommonResult getBbtIsAlive() {
+		CommonResult r = new CommonResult();
+		r.setSuccess(bbtCacheService.getIsAlive());
+		return r;
 	}
 
 	@Override
-	public void makeSureWorkerClone1Alive() {
-		if (systemOptionService.isDev()) {
-			return;
-		}
-		String url = "https://" + systemOptionService.getWorkerClone_1() + CxBbtInteractionUrl.ROOT
-				+ CxBbtInteractionUrl.WORKER_PING;
+	public void checkBbtIsAlive() {
 		HttpUtil h = new HttpUtil();
-		String response = null;
+		String url = "https://" + systemOptionService.getBbtHost() + CxBbtInteractionUrl.ROOT
+				+ CxBbtInteractionUrl.WORKER_PING;
 		try {
-			response = h.sendGet(url);
-			systemOptionService.setWorkerClone_1IsAlive(response != null && response.contains("pong"));
-			systemOptionService.setWorkerOffLineCounter(0);
-			automationTestConstantService.setBbtLastHeartBeat(LocalDateTime.now());
+			String response = h.sendGet(url);
+			if (response != null && response.contains("pong")) {
+				bbtCacheService.setIsAlive(true);
+				bbtCacheService.setBbtFailedCounting(0);
+			} else {
+				bbtCacheService.setBbtFailedCounting(bbtCacheService.getBbtFailedCounting() + 1);
+				if (bbtCacheService.getBbtFailedCounting() >= bbtCacheService.getBbtMaxFailed()) {
+					bbtCacheService.setIsAlive(false);
+				}
+			}
 		} catch (Exception e) {
-			systemOptionService.setWorkerOffLineCounter(systemOptionService.getWorkerOffLineCounter() + 1);
-			if (systemOptionService.getWorkerOffLineCounter() > systemOptionService.getWorkerMaxOffLineCounter()) {
-				systemOptionService.setWorkerClone_1IsAlive(false);
+			bbtCacheService.setBbtFailedCounting(bbtCacheService.getBbtFailedCounting() + 1);
+			if (bbtCacheService.getBbtFailedCounting() >= bbtCacheService.getBbtMaxFailed()) {
+				bbtCacheService.setIsAlive(false);
 			}
 		}
 	}
-
 }

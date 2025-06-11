@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.finance.cryptoCoin.data.mapper.CryptoCoinComplexToolMapper">
+  <resultMap id="CryptoCoinBtcAndLowIndexGapDTO" type="demo.finance.cryptoCoin.data.pojo.dto.CryptoCoinBtcAndLowIndexGapDTO">
+    <result column="gap" jdbcType="DECIMAL" property="gap" />
+    <result column="start_time" jdbcType="INTEGER" property="startTime" />
+  </resultMap>
+  
+  <select id="selectGaps" resultMap="CryptoCoinBtcAndLowIndexGapDTO">
+    SELECT
+		(btc.end_price - low.end_price) as gap,
+		btc.start_time
+	from
+		(
+		SELECT
+			*
+		from
+			crypto_coin_price_1minute ccpm
+		where
+			coin_type = 0
+			and start_time &gt; #{startTime}
+		) as btc
+	left join (
+		SELECT
+			*
+		from
+			crypto_coin_price_1minute ccpm
+		where
+			coin_type = -2
+			and start_time &gt; #{startTime}
+	) as low
+	on
+		btc.start_time = low.start_time
+	order by
+		btc.start_time
+  </select>
+</mapper>

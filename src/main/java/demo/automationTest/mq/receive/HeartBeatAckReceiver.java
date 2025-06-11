@@ -21,10 +21,6 @@ public class HeartBeatAckReceiver extends AutomationTestCommonService {
 	@RabbitHandler
 	public void process(String messageStr, Channel channel, Message message) throws IOException {
 		HeartBeatType heartBeatType = HeartBeatType.getType(String.valueOf(messageStr));
-		if (HeartBeatType.BBT.equals(heartBeatType)) {
-			constantService.setBbtLastHeartBeat(LocalDateTime.now());
-		} else if (HeartBeatType.WORKER1.equals(heartBeatType)) {
-			constantService.setWorkerLastHeartBeat();
-		}
+		heartBeatService.getHeartBeatMap().put(heartBeatType.getName(), LocalDateTime.now());
 	}
 }

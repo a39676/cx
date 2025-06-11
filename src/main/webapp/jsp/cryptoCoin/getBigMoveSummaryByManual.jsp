@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,101 +17,130 @@
 <body>
 
   ${msg}
-  <div class="row">
-    <div class="col-md-12" id="chart_div">
-      
+  <div>
+    <div id="chartDiv">
+      <%@ include file="./getBigMoveChart.jsp"%>
+    </div>
+  </div>
+
+  <div>
+    <div class="row">
+      <div class="col-md-12">
+        <button id="twelveHours">12 Hours</button>
+        <button id="today">1 Day</button>
+        <button id="twoDays">2 Days</button>
+        <button id="threedDay">3 Days</button>
+        <button id="thisWeek">This week</button>
+        <button id="twoWeeks">Two Weeks</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <label>HourRangeStart</label> 
+        <input type="number" id="bigMoveDataQueryHourRangeStart" style="width: 60px;" 
+          placeholder="bigMoveDataQueryHourRangeStart" value="168">
+        <label>HourRangeEnd</label> 
+        <input type="number" id="bigMoveDataQueryHourRangeEnd" style="width: 60px;" 
+          placeholder="bigMoveDataQueryHourRangeEnd" value="0">
+        <input type="text" id="symbols" style="width: 120px;" 
+          placeholder="BTCUSDT, ETHUSDT">
+        <select id="bigMoveDataVersion">
+          <option value="1">1</option>
+          <option value="2">2</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <button id="updateMainChart">updateMainChart</button>
+        <button id="QueryBigMoveDataTable">BigMoveDataTableQuery</button>
+        <button id="QueryBigMoveDataChart">BigMoveDataChartQuery</button>
+      </div>
+    </div>
+  
+    <div class="row">
+      <div class="col-md-11">
+        <label id="bigMoveDataTableQueryResultMsg"></label>
+      </div>
+    </div>
+  
+    <div class="row">
+      <div class="col-md-11">
+        <div id="bigMoveDataTableQueryResult">
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-11">
+        <label id="bigMoveDataChartResultMsg"></label>
+      </div>
+    </div>
+  
+    <div class="row">
+      <div class="col-md-11">
+        <div id="bigMoveDataChartQueryResult">
+          
+        </div>
+      </div>
     </div>
   </div>
 
   <div class="row">
-    <div class="col-md-6">
-      ${todayBigMoveMsg}
-      <p>0-24h</p>
-      <table>
-        <c:forEach items="${bigMoveIn24H}" var="subData">
-          <tr>
-            <td>
-              ${subData.symbol}_${subData.totalRate}%_${subData.totalCounter}
-              <c:if test = "${subData.totalRate > 0}">
-                🟢
-              </c:if>
-              <c:if test = "${subData.totalRate < 0}">
-                🔴
-              </c:if>
-            </td>
-            <td>${subData.totalRiseRate}%_${subData.riseCounter}</td>
-            <td>${subData.totalFallRate}%_${subData.fallCounter}</td>
-          </tr>
-        </c:forEach>
-      </table>
-    </div>
-
-    <div class="col-md-6">
-      ${yesterdayBigMoveMsg}
-      <p>24-48h</p>
-      <table>
-        <c:forEach items="${bigMoveIn48H}" var="subData">
-          <tr>
-            <td>
-              ${subData.symbol}_${subData.totalRate}%_${subData.totalCounter}
-              <c:if test = "${subData.totalRate > 0}">
-                🟢
-              </c:if>
-              <c:if test = "${subData.totalRate < 0}">
-                🔴
-              </c:if>
-            </td>
-            <td>${subData.totalRiseRate}%_${subData.riseCounter}</td>
-            <td>${subData.totalFallRate}%_${subData.fallCounter}</td>
-          </tr>
-        </c:forEach>
-      </table>
+    <div class="col-md-12">
+      <label> rising: ${risingCrossList} </label><br>
+      <label> falling: ${fallingCrossList} </label>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-md-5">
-      ${lastWeekBigMoveMsg}
-      <p>last week</p>
-      <table>
-        <c:forEach items="${bigMoveInLastWeek}" var="subData">
-          <tr>
-            <td>
-              ${subData.symbol}_${subData.totalRate}%_${subData.totalCounter}
-              <c:if test = "${subData.totalRate > 0}">
-                🟢
-              </c:if>
-              <c:if test = "${subData.totalRate < 0}">
-                🔴
-              </c:if>
-            </td>
-            <td>${subData.totalRiseRate}%_${subData.riseCounter}</td>
-            <td>${subData.totalFallRate}%_${subData.fallCounter}</td>
-          </tr>
-        </c:forEach>
-      </table>
+  <div>
+    <div class="row">
+      <div class="col-md-12">
+        ${todayBigMoveMsg}
+      <p>0-24h: Total:${dataIn24H.total}, Rising:${dataIn24H.risingCounting}, Falling:${dataIn24H.  fallingCounting}</p>
+      </div>
     </div>
-
-    <div class="col-md-2">
-      ${recentBigMoveMsg}
-      <p>recent</p>
-      <table>
-        <c:forEach items="${recentTimeKeyList}" var="settingName">
-          <tr>
-            <td style="background: yellow;">
-              ${settingName}
-            </td>
-          </tr>
-          <c:forEach items="${recentDataMap[settingName]}" var="subData">
-            <%-- <td>${subData}</td> --%>
-            <tr>
-              <td>${subData.symbol}_${subData.rate}%_${subData.redirect}</td>
-            </tr>
-          </c:forEach>
-        </c:forEach>
-      </table>
+  
+    <div class="row">
+      <div class="col-md-11">
+        <div id="dataIn24H" style="height: 200px; overflow: auto;">
+        </div>
+      </div>
+    </div>
+  
+    <div class="row">
+      <div class="col-md-12">
+        ${yesterdayBigMoveMsg}
+      <p>24-48h: Total:${dataIn48H.total}, Rising:${dataIn48H.risingCounting}, Falling:${dataIn48H. fallingCounting}</p>
+      </div>
+    </div>
+  
+    <div class="row">
+      <div class="col-md-11">
+        <div id="dataIn48H" style="height: 200px; overflow: auto;">
+        </div>
+      </div>
+    </div>
+  
+    <div class="row">
+      <div class="col-md-12">
+        ${lastWeekBigMoveMsg}
+      <p>Last week: Total:${dataInLastWeek.total}, Rising:${dataInLastWeek.risingCounting}, Falling:  ${dataInLastWeek.fallingCounting}</p>
+      </div>
+    </div>
+  
+    <div class="row">
+      <div class="col-md-11">
+        <div id="dataInLastWeek" style="height: 200px; overflow: auto;">
+        </div>
+      </div>
     </div>
   </div>
+
+  
+
 
 </body>
 
@@ -121,66 +151,260 @@
 </footer>
 <%@ include file="../baseElementJSP/normalJSPart.jsp"%>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?" async defer></script>
-<script type="text/javascript" src="/static_resources/js/chartJS/gstatic/loader.js"></script>
 <script type="text/javascript">
   $(document).ready(function() {
+    $("#QueryBigMoveDataTable").click(function() {
+      queryBigMoveData();
+    });
 
+    function queryBigMoveData(){
+      var url = "/cryptoCoinData/bigMoveSpotDataTable";
+
+      var bigMoveDataQueryHourRangeStart = $("#bigMoveDataQueryHourRangeStart").val();
+      var bigMoveDataQueryHourRangeEnd = $("#bigMoveDataQueryHourRangeEnd").val();
+      var version = $('#bigMoveDataVersion').find(":selected").val();
+      var symbols = $("#symbols").val();
+      
+
+      var jsonOutput = {
+        hourRangeStart:bigMoveDataQueryHourRangeStart,
+        hourRangeEnd:bigMoveDataQueryHourRangeEnd,
+        symbols:symbols,
+        version:version,
+      };
+      $("#bigMoveDataTableQueryResultMsg").text("Querying");
+      $("#bigMoveDataTableQueryResult").html("");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          $("#bigMoveDataTableQueryResultMsg").text(datas.message + " Total:" + datas.total + ", Rising: " +datas.risingCounting + ", Falling: "+ datas.fallingCounting);
+          if(datas.code != 0){
+            return;
+          }
+          var targetDiv = buildBigMoveDataTable(datas);
+          $("#bigMoveDataTableQueryResult").html(targetDiv);
+        },
+        error: function(datas) {            
+        }
+      });
+    }
+
+    function buildBigMoveDataTable(argument){
+      if(argument.code != 0){
+        return;
+      }
+      var targetDiv = "";
+      targetDiv += '  <table class="table table-striped table-sm">';
+      targetDiv += '    <tr>';
+      targetDiv += '      <td style="text-align: center;">Symbol</td>';
+      targetDiv += '      <td style="text-align: center;">Total Rate</td>';
+      targetDiv += '      <td style="text-align: center;">Total count</td>';
+      targetDiv += '      <td style="text-align: center;">Rising rate</td>';
+      targetDiv += '      <td style="text-align: center;">Rising count</td>';
+      targetDiv += '      <td style="text-align: center;">Falling rate</td>';
+      targetDiv += '      <td style="text-align: center;">Falling count</td>';
+      targetDiv += '    </tr>';
+      for(i=0;i<argument.dataList.length;i++){
+        var subData = argument.dataList[i];
+        targetDiv += '        <tr>';
+        if (subData.totalRate > 0) {
+          targetDiv += '        <td style="text-align: center;" class="table-success">';
+        } else if (subData.totalRate < 0){
+          targetDiv += '        <td style="text-align: center;" class="table-danger">';
+        } else {
+          targetDiv += '        <td style="text-align: center;" class="table-light">';
+        }
+        targetDiv += subData.symbol;
+        targetDiv += '        </td>';
+        targetDiv += '        <td style="text-align: center;">';
+        targetDiv += subData.totalRate;
+        targetDiv += '        </td>';
+        targetDiv += '        <td style="text-align: center;">';
+        targetDiv += subData.totalCounter;
+        targetDiv += '        </td>';
+        targetDiv += '        <td style="text-align: center;" class="table-success">';
+        targetDiv += subData.totalRiseRate;
+        targetDiv += '        </td>';
+        targetDiv += '        <td style="text-align: center;">';
+        targetDiv += subData.riseCounter;
+        targetDiv += '        </td>';
+        targetDiv += '        <td style="text-align: center;" class="table-danger">';
+        targetDiv += subData.totalFallRate;
+        targetDiv += '        </td>';
+        targetDiv += '        <td style="text-align: center;">';
+        targetDiv += subData.fallCounter;
+        targetDiv += '        </td>';
+        targetDiv += '      </tr>';
+      }
+      targetDiv += '  </table>';
+      return targetDiv;
+    }
+
+    function fillDataIn24H() {
+      var targetDiv = buildBigMoveDataTable(${dataIn24H});
+      $("#dataIn24H").html(targetDiv);
+    }
+    fillDataIn24H();
+
+    function fillDataIn48H() {
+      var targetDiv = buildBigMoveDataTable(${dataIn48H});
+      $("#dataIn48H").html(targetDiv);
+    }
+    fillDataIn48H();
+
+    function fillDataInLastWeek() {
+      var targetDiv = buildBigMoveDataTable(${dataInLastWeek});
+      $("#dataInLastWeek").html(targetDiv);
+    }
+    fillDataInLastWeek();
+  });
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("#QueryBigMoveDataChart").click(function() {
+      queryBigMoveDataChart();
+    });
+
+    function queryBigMoveDataChart(){
+      var url = "/cryptoCoinData/bigMoveSpotChartBySymbol";
+
+      var bigMoveDataQueryHourRangeStart = $("#bigMoveDataQueryHourRangeStart").val();
+      var bigMoveDataQueryHourRangeEnd = $("#bigMoveDataQueryHourRangeEnd").val();
+      var version = $('#bigMoveDataVersion').find(":selected").val();
+      var symbols = $("#symbols").val();
+
+      var jsonOutput = {
+        hourRangeStart:bigMoveDataQueryHourRangeStart,
+        hourRangeEnd:bigMoveDataQueryHourRangeEnd,
+        symbols:symbols,
+        version:version,
+      };
+
+
+      $("#bigMoveDataChartResultMsg").text("Querying");
+      $("#bigMoveDataChartQueryResult").html("");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        <%-- dataType: "json", --%>
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          $("#bigMoveDataChartQueryResult").html(datas);
+          $("#bigMoveDataChartResultMsg").text("");
+        },
+        error: function(datas) {            
+        }
+      });
+    }
 
   });
 </script>
 
 <script type="text/javascript">
-  google.charts.load('current', {packages: ['corechart', 'line']});
-  google.charts.setOnLoadCallback(drawAxisTickColors);
+  $(document).ready(function() {
+    $("#twelveHours").click(function () {
+      setHourRange(12, 0);
+    });
+    $("#today").click(function () {
+      setHourRange(24, 0);
+    });
+    $("#twoDays").click(function () {
+      setHourRange(48, 0);
+    });
+    $("#threedDay").click(function () {
+      setHourRange(72, 0);
+    });
+    $("#thisWeek").click(function () {
+      setHourRange(168, 0);
+    });
+    $("#twoWeeks").click(function () {
+      setHourRange(336, 0);
+    });
+    
+    
+    function setHourRange(start, end) {
+      $("#bigMoveDataQueryHourRangeStart").val(start);
+      $("#bigMoveDataQueryHourRangeEnd").val(end);
+    }
+  });
+</script>
 
-  function drawAxisTickColors() {
-    var data = new google.visualization.DataTable();
-    data.addColumn('number', 'X');
-    data.addColumn('number', 'Total');
-    data.addColumn('number', 'Binance');
-    data.addColumn('number', 'GateIO');
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("#updateMainChart").click(function () {
+      updateMainChart();
+    });
 
-    data.addRows([
-      <c:forEach items="${bigMoveDailySummaryData}" var="subData" varStatus="loop">
-        [${loop.index}, ${subData.total}, ${subData.binanceCounting}, ${subData.gateIoCounting}],
-      </c:forEach>
-    ]);
+    function updateMainChart(){
+      var url = "/cryptoCoinData/bigMoveSpotChart";
 
-    var options = {
-      hAxis: {
-        title: 'Title for X',
-        textStyle: {
-          color: '#01579b',
-          fontSize: 20,
-          fontName: 'Arial',
-          bold: true,
-          italic: true
+      var bigMoveDataQueryHourRangeStart = $("#bigMoveDataQueryHourRangeStart").val();
+      var bigMoveDataQueryHourRangeEnd = $("#bigMoveDataQueryHourRangeEnd").val();
+      var version = $('#bigMoveDataVersion').find(":selected").val();
+
+      var jsonOutput = {
+        hourRangeStart:bigMoveDataQueryHourRangeStart,
+        hourRangeEnd:bigMoveDataQueryHourRangeEnd,
+        version:version,
+      };
+      $("#chartDiv").html("");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        <%-- dataType: "json", --%>
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
         },
-        titleTextStyle: {
-          color: '#01579b',
-          fontSize: 16,
-          fontName: 'Arial',
-          bold: false,
-          italic: true
-        }
-      },
-      vAxis: {
-        title: 'Title for Y',
-        textStyle: {
-          color: '#1a237e',
-          fontSize: 24,
-          bold: true
+        success:function(datas){
+          $("#chartDiv").html(datas);
         },
-        titleTextStyle: {
-          color: '#1a237e',
-          fontSize: 24,
-          bold: true
+        error: function(datas) {            
         }
-      },
-      colors: ['#1a237e', '#a52714', '#097138']
-    };
-    var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-    chart.draw(data, options);
-  }
+      });
+    }
+  });
+</script>    
 
+<script type="text/javascript">
+  // keep alive request
+  var intervalId = window.setInterval(function(){
+    $.ajax({
+      type : "GET",
+      async : true,
+      url : "/1jlbdmb",
+      data: "",
+      cache : false,
+      timeout:50000,
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader(csrfHeader, csrfToken);
+      },
+      success:function(datas){
+      },
+      error: function(datas) {
+      }
+    });
+  }, 5000);
 </script>

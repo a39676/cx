@@ -241,11 +241,7 @@ public class UrgeNoticeServiceImpl extends ArticleCommonService implements UrgeN
 	}
 
 	private String getUrgeNoticeStorePrefixPath() {
-		if (isWindows()) {
-			return "d:" + MAIN_FOLDER_PATH + "/urgeNote";
-		} else {
-			return MAIN_FOLDER_PATH + "/urgeNote";
-		}
+		return MAIN_FOLDER_PATH + "/urgeNote";
 	}
 
 	@Override

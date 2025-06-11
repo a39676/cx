@@ -35,10 +35,8 @@ public class SystemOptionService extends CommonService {
 	private Boolean isDebuging = null;
 	private String fakeFTPHome = null;
 	private String homepageAnnouncementStr = null;
-	private String workerClone_1 = null;
-	private Boolean workerClone_1IsAlive = true;
-	private Integer workerOffLineCounter = 0;
-	private Integer workerMaxOffLineCounter = 10;
+	private String bbtHost = null;
+	private String totpSecretKey = null;
 
 	public String encryptId(Long id) {
 		List<String> encryptIdList = encryptId(Arrays.asList(id));
@@ -232,36 +230,20 @@ public class SystemOptionService extends CommonService {
 		this.homepageAnnouncementStr = homepageAnnouncementStr;
 	}
 
-	public String getWorkerClone_1() {
-		return workerClone_1;
+	public String getTotpSecretKey() {
+		return totpSecretKey;
 	}
 
-	public void setWorkerClone_1(String workerClone_1) {
-		this.workerClone_1 = workerClone_1;
+	public void setTotpSecretKey(String totpSecretKey) {
+		this.totpSecretKey = totpSecretKey;
 	}
 
-	public Boolean getWorkerClone_1IsAlive() {
-		return workerClone_1IsAlive;
+	public String getBbtHost() {
+		return bbtHost;
 	}
 
-	public void setWorkerClone_1IsAlive(Boolean workerClone_1IsAlive) {
-		this.workerClone_1IsAlive = workerClone_1IsAlive;
-	}
-
-	public Integer getWorkerOffLineCounter() {
-		return workerOffLineCounter;
-	}
-
-	public void setWorkerOffLineCounter(Integer workerOffLineCounter) {
-		this.workerOffLineCounter = workerOffLineCounter;
-	}
-
-	public Integer getWorkerMaxOffLineCounter() {
-		return workerMaxOffLineCounter;
-	}
-
-	public void setWorkerMaxOffLineCounter(Integer workerMaxOffLineCounter) {
-		this.workerMaxOffLineCounter = workerMaxOffLineCounter;
+	public void setBbtHost(String bbtHost) {
+		this.bbtHost = bbtHost;
 	}
 
 	@Override
@@ -270,10 +252,8 @@ public class SystemOptionService extends CommonService {
 				+ ", emailD=" + emailD + ", emailC=" + emailC + ", maxAttempts=" + maxAttempts + ", normalWebSiteTitle="
 				+ normalWebSiteTitle + ", normalSubheading=" + normalSubheading + ", webSiteTitle2=" + webSiteTitle2
 				+ ", subheading2=" + subheading2 + ", isJobing=" + isJobing + ", isDebuging=" + isDebuging
-				+ ", fakeFTPHome=" + fakeFTPHome + ", homepageAnnouncementStr=" + homepageAnnouncementStr
-				+ ", workerClone_1=" + workerClone_1 + ", workerClone_1IsAlive=" + workerClone_1IsAlive
-				+ ", workerOffLineCounter=" + workerOffLineCounter + ", workerMaxOffLineCounter="
-				+ workerMaxOffLineCounter + "]";
+				+ ", fakeFTPHome=" + fakeFTPHome + ", homepageAnnouncementStr=" + homepageAnnouncementStr + ", bbtHost="
+				+ bbtHost + ", totpSecretKey=" + totpSecretKey + "]";
 	}
 
 	@PostConstruct

@@ -119,7 +119,10 @@ public class ArticleOptionService extends CommonService {
 	}
 
 	public String getArticleBurnStorePrefixPath() {
-		return articleBurnStorePrefixPath;
+		if (articleBurnStorePrefixPath.startsWith(System.getProperty("user.home"))) {
+			return articleBurnStorePrefixPath;
+		}
+		return System.getProperty("user.home") + articleBurnStorePrefixPath;
 	}
 
 	public void setArticleBurnStorePrefixPath(String articleBurnStorePrefixPath) {
@@ -127,7 +130,10 @@ public class ArticleOptionService extends CommonService {
 	}
 
 	public String getArticleStorePrefixPath() {
-		return articleStorePrefixPath;
+		if (articleStorePrefixPath.startsWith(System.getProperty("user.home"))) {
+			return articleStorePrefixPath;
+		}
+		return System.getProperty("user.home") + articleStorePrefixPath;
 	}
 
 	public void setArticleStorePrefixPath(String articleStorePrefixPath) {
@@ -135,7 +141,10 @@ public class ArticleOptionService extends CommonService {
 	}
 
 	public String getArticleImageSavingFolder() {
-		return articleImageSavingFolder;
+		if (articleImageSavingFolder.startsWith(System.getProperty("user.home"))) {
+			return articleImageSavingFolder;
+		}
+		return System.getProperty("user.home") + articleImageSavingFolder;
 	}
 
 	public void setArticleImageSavingFolder(String articleImageSavingFolder) {
@@ -143,7 +152,10 @@ public class ArticleOptionService extends CommonService {
 	}
 
 	public String getArticleSummaryStorePrefixPath() {
-		return articleSummaryStorePrefixPath;
+		if (articleSummaryStorePrefixPath.startsWith(System.getProperty("user.home"))) {
+			return articleSummaryStorePrefixPath;
+		}
+		return System.getProperty("user.home") + articleSummaryStorePrefixPath;
 	}
 
 	public void setArticleSummaryStorePrefixPath(String articleSummaryStorePrefixPath) {
@@ -151,7 +163,10 @@ public class ArticleOptionService extends CommonService {
 	}
 
 	public String getArticleChannelPrefixStorePath() {
-		return articleChannelPrefixStorePath;
+		if (articleChannelPrefixStorePath.startsWith(System.getProperty("user.home"))) {
+			return articleChannelPrefixStorePath;
+		}
+		return System.getProperty("user.home") + articleChannelPrefixStorePath;
 	}
 
 	public void setArticleChannelPrefixStorePath(String articleChannelPrefixStorePath) {

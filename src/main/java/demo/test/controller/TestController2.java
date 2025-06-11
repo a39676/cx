@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.service.CommonService;
 import demo.finance.cryptoCoin.mq.producer.CryptoCoinDailyDataQueryAckProducer;
+import demo.interaction.bbt.service.BbtComplexService;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.dto.TestDTO;
 import demo.test.service.TestService2;
@@ -53,11 +55,27 @@ public class TestController2 extends CommonService {
 		LocalDateTime now = LocalDateTime.now();
 		Date startTime = localDateTimeHandler.localDateTimeToDate(now.minusDays(200).with(LocalTime.MIN));
 		Date endTime = localDateTimeHandler.localDateTimeToDate(now.with(LocalTime.MAX));
-		
+
 		dto.setStartTime(startTime.getTime());
 		dto.setEndTime(endTime.getTime());
-		cryptoCoinDailyDataQueryAckProducer.send(dto);
+		cryptoCoinDailyDataQueryAckProducer.sendCryptoCoinDailyDataQueryForTest(dto);
 		return "Done";
+	}
+
+	@Autowired
+	private BbtComplexService bbtComplexService;
+
+	@GetMapping(value = "/t4")
+	@ResponseBody
+	public String t4() {
+		bbtComplexService.checkBbtIsAlive();
+		return "Done";
+	}
+
+	@GetMapping(value = "/t5")
+	@ResponseBody
+	public CommonResult t5() {
+		return bbtComplexService.getBbtIsAlive();
 	}
 
 }

@@ -135,8 +135,6 @@
           validTime:validTime,
         };
 
-        console.log(jsonOutput);
-
         var resultSpan = document.getElementById("createArticleResult");
         resultSpan.innerHTML = "";
 

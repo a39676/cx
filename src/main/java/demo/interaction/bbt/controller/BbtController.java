@@ -10,12 +10,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.dto.ServiceMsgDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.automationTest.service.impl.AutomationTestConstantService;
 import demo.common.controller.CommonController;
+import demo.common.service.HeartBeatService;
 import demo.interaction.bbt.service.BbtComplexService;
 import finance.cnStockMarket.pojo.dto.CnStockMarketDataDTO;
 import finance.currencyExchangeRate.pojo.result.CurrencyExchageRateCollectResult;
-import net.sf.json.JSONObject;
 import tool.pojo.constant.CxBbtInteractionUrl;
 
 @Controller
@@ -25,7 +24,7 @@ public class BbtController extends CommonController {
 	@Autowired
 	private BbtComplexService bbtComplexService;
 	@Autowired
-	private AutomationTestConstantService automationTestConstantService;
+	private HeartBeatService heartBeatService;
 
 	@PostMapping(value = CxBbtInteractionUrl.TEXT_MESSAGE_FORWARD)
 	@ResponseBody
@@ -42,7 +41,7 @@ public class BbtController extends CommonController {
 	@PostMapping(value = CxBbtInteractionUrl.BBT_HEART_BEAT)
 	@ResponseBody
 	public String bbtHeartBeat(@RequestBody BaseStrDTO dto) {
-		automationTestConstantService.setBbtLastHeartBeat(dto);
+		heartBeatService.setBbtLastHeartBeat(dto);
 		return "Done";
 	}
 
@@ -53,10 +52,9 @@ public class BbtController extends CommonController {
 		return "Done";
 	}
 
-	@PostMapping(value = CxBbtInteractionUrl.GET_CRYPTO_COIN_OPTION)
+	@PostMapping(value = CxBbtInteractionUrl.WORKER_PING)
 	@ResponseBody
-	public JSONObject textMessageForwarding(@RequestBody BaseStrDTO dto) {
-		return bbtComplexService.getCryptoCoinOption(dto);
+	public CommonResult workerPing() {
+		return bbtComplexService.getBbtIsAlive();
 	}
-
 }

@@ -14,6 +14,8 @@ public class CryptoCoinBigMove {
 
     private LocalDateTime eventTime;
 
+    private Integer version;
+
     private LocalDateTime createTime;
 
     public String getSymbol() {
@@ -54,6 +56,14 @@ public class CryptoCoinBigMove {
 
     public void setEventTime(LocalDateTime eventTime) {
         this.eventTime = eventTime;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     public LocalDateTime getCreateTime() {

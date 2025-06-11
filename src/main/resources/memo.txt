@@ -1,6 +1,39 @@
+Valkey replace Redis
+
 crypto coin
+	Future UM
+		需要设置按组合(兼比例)下单
+			下单顺序
+				for(symbol : symbolList)
+					for(user : userList)
+		新建本地价格监控
+			需要播放音效
+		双向平仓 未完成
+	Future CM
+		pisition list
+			summary 计算异常
+
+	CryptoCoinForceOrderDataServiceImpl.receiveNewForceOrderFutureUmDataMessage
+		SQL update to "insert or update"
+			该表没有主键, 目前信息价值有限, 但数据量巨大, 先搁置
+		
 	CryptoCoinPriceCommonDataBO delete field coinType
 	
+	CryptoCoinBinanceSpotTradingController
+		getOrderHistory()
+			因前端技术所限, 临时粗糙实现
+			应使用 POST , 并在页面局部刷新
+			
+	帐号监控
+		资金
+		持仓
+		order
+			open orders
+			order history	
+	big trade line chart X line, 2 more extra element
+	force order summary
+		设置 N 小时 : 多个阶梯提醒
+		
 日历提醒的跳过本次提前提醒异常
 
 ImageInteractionController

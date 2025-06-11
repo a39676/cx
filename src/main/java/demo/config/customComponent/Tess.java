@@ -12,8 +12,7 @@ import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 
 /**
- * 2020-09-15 a copy from ATTool
- * 2020-09-19 modify
+ * 2020-09-15 a copy from ATTool 2020-09-19 modify
  */
 public class Tess {
 
@@ -21,39 +20,40 @@ public class Tess {
 
 	private String getDataPath() {
 		String osName = System.getProperty("os.name");
+//		TODO FIXME 改用相对路径 MAIN_FOLDER_PATH + ____
 		if (osName != null && osName.toLowerCase().contains("linux")) {
 			return "/home/u2/auxiliary/tessdata";
 		} else {
 			return "d:/soft/tessdataInUse";
 		}
 	}
-	
+
 	public ITesseract initITesseract(TessLanguageType languageType) {
 		ITesseract instance = new Tesseract();
 		instance.setDatapath(getDataPath());
-		if(languageType != null) {
+		if (languageType != null) {
 			instance.setLanguage(languageType.getName());
 		}
 		return instance;
 	}
-	
+
 	public ITesseract getITesseractV2(boolean reInit, TessLanguageType languageType) {
 		if (languageType == null) {
 			languageType = TessLanguageType.ENG;
 		}
-		
+
 		ITesseract result = tesseractInstanceMap.get(languageType);
-		if(reInit == true || result == null) {
+		if (reInit == true || result == null) {
 			result = initITesseract(languageType);
 			tesseractInstanceMap.put(languageType, result);
 		}
 		return result;
 	}
-	
+
 	public ITesseract getITesseractV2(TessLanguageType languageType) {
 		return getITesseractV2(false, languageType);
 	}
-	
+
 	public ITesseract getITesseractV2() {
 		return getITesseractV2(false, TessLanguageType.ENG);
 	}
@@ -61,7 +61,7 @@ public class Tess {
 	public String ocr(String imgPath) {
 		return ocr(imgPath, TessLanguageType.ENG);
 	}
-	
+
 	public String ocr(String imgPath, TessLanguageType languageType) {
 		File imageFile = new File(imgPath);
 		String result = null;

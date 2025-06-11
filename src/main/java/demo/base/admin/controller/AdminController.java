@@ -97,7 +97,9 @@ public class AdminController extends CommonController {
 	
 	@GetMapping(value = AdminUrlConstant.manager)
 	public ModelAndView manager() {
-		return new ModelAndView(AdminView.manager);
+		ModelAndView view = new ModelAndView(AdminView.manager);
+		view.addObject("title", "z3 manager");
+		return view;
 	}
 
 	@GetMapping(value = AdminUrlConstant.updateAccountMarker)

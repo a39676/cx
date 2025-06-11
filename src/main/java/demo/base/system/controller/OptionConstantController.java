@@ -18,6 +18,7 @@ import demo.base.system.pojo.constant.BaseUrl;
 import demo.base.system.service.impl.SystemOptionService;
 import demo.finance.cnStockMarket.service.impl.CnStockMarketOptionService;
 import demo.finance.cryptoCoin.common.service.CryptoCoinOptionService;
+import demo.finance.cryptoCoin.data.service.CryptoCoinDataComplexService;
 import demo.finance.currencyExchangeRate.data.service.impl.CurrencyExchangeRateOptionService;
 import demo.interaction.wechat.service.impl.WechatOptionService;
 import demo.interaction.wechatPay.service.impl.WechatPayOptionService;
@@ -51,6 +52,8 @@ public class OptionConstantController {
 	private AutomationTestOptionService automationTestOptionService;
 	@Autowired
 	private CryptoCoinOptionService cryptoCoinOptionService;
+	@Autowired
+	private CryptoCoinDataComplexService cryptoCoinDataComplexService;
 	@Autowired
 	private TelegramOptionService telegramOptionService;
 	@Autowired
@@ -134,6 +137,7 @@ public class OptionConstantController {
 	@ResponseBody
 	public String refreshCryptoCoinOption() {
 		cryptoCoinOptionService.refreshOption();
+		cryptoCoinDataComplexService.loadSymbolMaxLeverageInfoToCache();
 		return "done";
 	}
 
@@ -234,7 +238,6 @@ public class OptionConstantController {
 		promoteOptionService.refreshOption();
 		return "done";
 	}
-	
 
 	@GetMapping(value = "/refreshZulipOption")
 	@ResponseBody
@@ -242,13 +245,12 @@ public class OptionConstantController {
 		zulipOptionService.refreshOption();
 		return "done";
 	}
-	
+
 	@GetMapping(value = "/refreshCnStockMarketOption")
 	@ResponseBody
 	public String cnStockMarketOptionService() {
 		cnStockMarketOptionService.refreshOption();
 		return "done";
 	}
-	
-	
+
 }

@@ -7,6 +7,7 @@
     <result column="time_range" jdbcType="INTEGER" property="timeRange" />
     <result column="time_unit_code" jdbcType="INTEGER" property="timeUnitCode" />
     <result column="event_time" jdbcType="TIMESTAMP" property="eventTime" />
+    <result column="version" jdbcType="INTEGER" property="version" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -68,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    symbol, rate, time_range, time_unit_code, event_time, create_time
+    symbol, rate, time_range, time_unit_code, event_time, version, create_time
   </sql>
   <select id="selectByExample" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigMoveExample" resultMap="BaseResultMap">
     select
@@ -92,11 +93,11 @@
   </delete>
   <insert id="insert" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigMove">
     insert into crypto_coin_big_move (symbol, rate, time_range, 
-      time_unit_code, event_time, create_time
-      )
+      time_unit_code, event_time, version, 
+      create_time)
     values (#{symbol,jdbcType=CHAR}, #{rate,jdbcType=DECIMAL}, #{timeRange,jdbcType=INTEGER}, 
-      #{timeUnitCode,jdbcType=INTEGER}, #{eventTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}
-      )
+      #{timeUnitCode,jdbcType=INTEGER}, #{eventTime,jdbcType=TIMESTAMP}, #{version,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinBigMove">
     insert into crypto_coin_big_move
@@ -115,6 +116,9 @@
       </if>
       <if test="eventTime != null">
         event_time,
+      </if>
+      <if test="version != null">
+        version,
       </if>
       <if test="createTime != null">
         create_time,
@@ -135,6 +139,9 @@
       </if>
       <if test="eventTime != null">
         #{eventTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=INTEGER},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -165,6 +172,9 @@
       <if test="row.eventTime != null">
         event_time = #{row.eventTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="row.version != null">
+        version = #{row.version,jdbcType=INTEGER},
+      </if>
       <if test="row.createTime != null">
         create_time = #{row.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -180,6 +190,7 @@
       time_range = #{row.timeRange,jdbcType=INTEGER},
       time_unit_code = #{row.timeUnitCode,jdbcType=INTEGER},
       event_time = #{row.eventTime,jdbcType=TIMESTAMP},
+      version = #{row.version,jdbcType=INTEGER},
       create_time = #{row.createTime,jdbcType=TIMESTAMP}
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />

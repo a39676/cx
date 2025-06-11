@@ -37,10 +37,12 @@ import demo.base.user.service.impl.CustomAuthenticationSuccessHandler;
 import demo.common.service.CommonService;
 import demo.config.customComponent.CustomAuthenticationProvider;
 import demo.config.customComponent.CustomPasswordEncoder;
-import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinManagerUrl;
+import demo.finance.cryptoCoin.data.pojo.constant.CryptoCoinDataUrl;
 import demo.finance.cryptoCoin.sharing.pojo.constant.CryptoCoinSharingUrl;
+import demo.finance.cryptoCoin.trading.pojo.constant.CryptoCoinTradingUrl;
 import demo.finance.currencyExchangeRate.notice.pojo.constant.CurrencyExchangeRateNoticeUrl;
 import demo.image.pojo.constant.ImageUrl;
+import demo.interaction.ccm.pojo.constant.CcmManageUrl;
 import demo.joy.common.pojo.constant.JoyManagerUrl;
 import demo.joy.common.pojo.constant.JoyUrl;
 import demo.pmemo.pojo.constant.PMemoUrl;
@@ -49,6 +51,7 @@ import demo.pmemo.pojo.constant.UrgeNoticeUrl;
 import demo.test.pojo.constant.TestUrl;
 import demo.tool.other.pojo.constant.ToolUrlConstant;
 import demo.tool.wordHelper.pojo.constant.WordHelperUrl;
+import finance.cryptoCoin.pojo.constant.CryptoCoinBinanceTradingCommonUrl;
 import image.pojo.constant.ImageInteractionUrl;
 import wechatPaySdk.jsApi.pojo.constant.WechatPaySdkUrlConstant;
 import wechatSdk.pojo.constant.WechatSdkUrlConstant;
@@ -103,10 +106,15 @@ public class HttpSecurityConfig extends CommonService {
 				.requestMatchers(ArticleAdminCommentUrlConstant.root + "/**")
 				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN)).requestMatchers("/dba/**")
 				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_DBA))
+<<<<<<< HEAD
 				.requestMatchers(ToolUrlConstant.root + "/**").access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
 				.requestMatchers(CryptoCoinManagerUrl.ROOT + "/**")
 				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
 				.requestMatchers(CurrencyExchangeRateNoticeUrl.ROOT + "/**")
+=======
+				.antMatchers(ToolUrlConstant.root + "/**").access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
+				.antMatchers(CurrencyExchangeRateNoticeUrl.ROOT + "/**")
+>>>>>>> refs/heads/dev_tool
 				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
 				.requestMatchers(PMemoUrl.ROOT + PMemoUrl.SET).access(hasRole(SystemRolesType.ROLE_SUPER_ADMIN))
 				.requestMatchers(UrgeNoticeManagerUrl.ROOT + "/**")
@@ -114,9 +122,27 @@ public class HttpSecurityConfig extends CommonService {
 				.requestMatchers(CryptoCoinSharingUrl.ROOT + CryptoCoinSharingUrl.CALCULATE_DETAIL).permitAll()
 				.requestMatchers(CryptoCoinSharingUrl.ROOT + "/**")
 				.access("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')")
+<<<<<<< HEAD
 				.requestMatchers(AiManagerUrlConstant.ROOT + "/**")
+=======
+				.antMatchers(CcmManageUrl.ROOT + "/**")
+				.access("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_CRYPTO_SHARING_MANAGER')")
+				.antMatchers(AiManagerUrlConstant.ROOT + "/**")
+>>>>>>> refs/heads/dev_tool
 				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+<<<<<<< HEAD
 				.requestMatchers(AiArtMangerUrl.ROOT + "/**")
+=======
+				.antMatchers(CryptoCoinTradingUrl.FUTURE_CM_ROOT + "/**")
+				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+				.antMatchers(CryptoCoinTradingUrl.FUTURE_UM_ROOT + "/**")
+				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+				.antMatchers(CryptoCoinTradingUrl.SPOT_ROOT + "/**")
+				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+				.antMatchers(CryptoCoinDataUrl.ROOT + "/**")
+				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
+				.antMatchers(AiArtMangerUrl.ROOT + "/**")
+>>>>>>> refs/heads/dev_tool
 				.access(hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN, SystemRolesType.ROLE_ADMIN))
 				.requestMatchers(WordHelperUrl.ROOT + "/**")
 				.access(hasAnyRole(SystemRolesType.ROLE_USER_ACTIVE, SystemRolesType.ROLE_STUDENT))
@@ -137,6 +163,7 @@ public class HttpSecurityConfig extends CommonService {
 
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
+<<<<<<< HEAD
 		return (web) -> web.ignoring().requestMatchers("/test/testIgnoring")
 				.requestMatchers(ImageInteractionUrl.ROOT + "/**")
 				.requestMatchers(AiChatFromWechatSdkUrlConstant.ROOT + "/**")
@@ -144,6 +171,14 @@ public class HttpSecurityConfig extends CommonService {
 				.requestMatchers(WechatSdkUrlConstant.ROOT + "/**").requestMatchers(AiChatApiUrlConstant.ROOT + "/**")
 				.requestMatchers(AiArtApiUrlConstant.ROOT + "/**").requestMatchers(ImageUrl.ROOT + "/**")
 				.requestMatchers(UrgeNoticeUrl.ROOT + "/**");
+=======
+		return (web) -> web.ignoring().antMatchers("/test/testIgnoring").antMatchers(ImageInteractionUrl.ROOT + "/**")
+				.antMatchers(AiChatFromWechatSdkUrlConstant.ROOT + "/**")
+				.antMatchers(WechatPaySdkUrlConstant.ROOT + "/**").antMatchers(WechatSdkUrlConstant.ROOT + "/**")
+				.antMatchers(AiChatApiUrlConstant.ROOT + "/**").antMatchers(AiArtApiUrlConstant.ROOT + "/**")
+				.antMatchers(ImageUrl.ROOT + "/**").antMatchers(CxBbtInteractionUrl.ROOT + "/**")
+				.antMatchers(CryptoCoinBinanceTradingCommonUrl.ROOT + "/**");
+>>>>>>> refs/heads/dev_tool
 	}
 
 	@Bean

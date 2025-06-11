@@ -31,7 +31,7 @@ import toolPack.ioHandle.FileUtilCustom;
 @Service
 public class WordHelperServiceImpl extends CommonService implements WordHelperService {
 
-	private String dictionarySavingFolderPathStr = "/home/u2/cx/wordHelper";
+	private String dictionarySavingFolderPathStr = MAIN_FOLDER_PATH + "/wordHelper";
 
 	@Override
 	public ModelAndView wordHelper() {
@@ -318,7 +318,6 @@ public class WordHelperServiceImpl extends CommonService implements WordHelperSe
 		GetWordResult r = beforeGetWords(dto, dictionary);
 		if (r.getCode().equals(String.valueOf(GetWordsResultType.NO_WORDS.getCode()))) {
 			return r;
-
 		}
 
 		List<WordDTO> wordList = new ArrayList<>();
@@ -339,8 +338,13 @@ public class WordHelperServiceImpl extends CommonService implements WordHelperSe
 		Random random = new Random();
 		int randomIndex = 0;
 
+		Integer maxSize = wordCounting;
+		if (maxSize > dictionary.getWordList().size()) {
+			maxSize = dictionary.getWordList().size();
+		}
+
 		Set<WordDTO> wordSet = new HashSet<>();
-		while (wordSet.size() < wordCounting) {
+		while (wordSet.size() < maxSize) {
 			randomIndex = random.nextInt(dictionary.getWordList().size());
 			WordDTO word = dictionary.getWordList().get(randomIndex);
 			wordSet.add(word);
@@ -371,19 +375,19 @@ public class WordHelperServiceImpl extends CommonService implements WordHelperSe
 			String underLine = "﹎";
 			StringBuffer sb = new StringBuffer(dto.getEn());
 			int characterLength = 0;
-			for(int i = 0; i < sb.length(); i++) {
+			for (int i = 0; i < sb.length(); i++) {
 				char tmpChar = sb.charAt(i);
-				if(Character.isLetter(tmpChar)) {
+				if (Character.isLetter(tmpChar)) {
 					characterLength++;
 				}
 			}
-			
+
 			if (characterLength <= 3) {
 				for (int i = 0; i < sb.length(); i++) {
 					sb.setCharAt(i, underLine.charAt(0));
 				}
 			}
-			
+
 			// Keep about 33% characters or at last 3 characters
 			int notReplaceCounting = characterLength / 3;
 			if (notReplaceCounting < 3) {

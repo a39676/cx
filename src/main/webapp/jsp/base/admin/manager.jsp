@@ -80,28 +80,55 @@
       </li>
     </ul> <%-- telegramTool --%>
 
+    <ul class="main-menu visible-on-click" id="CcmTool">
+      <li style="background-color:yellow;">CCM tool</li>
+      <li>
+        <a href="/ccmManage/home" target="_blank">ccmManage</a>
+      </li>
+    </ul> <%-- CcmTool --%>
+
     <ul class="main-menu visible-on-click" id="cryptoCoinTool">
       <li style="background-color:yellow;">CryptoCoinTool</li>
+      <li>
+        <a href="/cryptoCoinData/bigMoveSpot" target="_blank">bigMoveSpot</a>
+      </li>
+      <li>
+        <a href="/cryptoCoinData/bigTradeFutureUmChartBySymbol" target="_blank">
+          bigTradeFutureUmChartBySymbol
+        </a>
+        <a href="/cryptoCoinData/bigTradeFutureUmChartBySymbol?symbol=BTCUSDT" target="_blank">
+          BTCUSDT
+        </a>
+        <a href="/cryptoCoinData/bigTradeFutureUmChartBySymbol?symbol=ETHUSDT" target="_blank">
+          ETHUSDT
+        </a>
+        <a href="/cryptoCoinData/bigTradeFutureUmChartBySymbol?symbol=SOLUSDT" target="_blank">
+          SOLUSDT
+        </a>
+      </li>
+      <li>
+        <a href="/cryptoCoinData/bigTradeDataTable" target="_blank">bigTradeDataTable</a>
+      </li>
+      <li>
+        <a href="/cryptoCoinData/forceOrderFutureUmChartBySymbol" target="_blank">forceOrderFutureUmChartBySymbol</a>
+      </li>
+      <li>
+        <a href="/cryptoTradingFutureCm/futureCmView" target="_blank">trading(future CM)</a>
+      </li>
+      <li>
+        <a href="/cryptoTradingFutureUm/futureUmViewV2" target="_blank">trading(future UM V2)</a>
+      </li>
+      <li>
+        <a href="/cryptoTradingFutureUm/futureUmViewV1" target="_blank">trading(future UM V1)</a>
+      </li>
+      <li>
+        <a href="/cryptoTradingSpot/spotView" target="_blank">trading(Spot)</a>
+      </li>
       <li>
         <a href="/cryptoCoin/insertCryptoCoinNoticeSetting" target="_blank">insertCryptoCoinNoticeSetting</a>
       </li>
       <li>
-        <a href="/cryptoCoinManager/checkDataAPI" target="_blank">checkDataAPI</a>
-      </li>
-      <li>
         <a href="/cryptoCoin/dataCompare/CryptoCoinDailyDataComparetor" target="_blank">CryptoCoinDailyDataComparetor</a>
-      </li>
-      <li>
-        <a href="/cryptoCoinManager/cryptoCoinWebSocketManager" target="_blank">cryptoCoinWebSocketManager</a>
-      </li>
-      <li>
-        <a href="/cryptoCoinManager/getDailyDataWaitingQuerySet" target="_blank">getDailyDataWaitingQuerySet</a>
-      </li>
-      <li>
-        <a href="/cryptoCoinManager/resetDailyDataWaitingQuerySet" target="_blank">resetDailyDataWaitingQuerySet</a>
-      </li>
-      <li>
-        <a href="/cryptoCoinManager/sendAllCryptoCoinDailyDataQueryMsg" target="_blank">sendAllCryptoCoinDailyDataQueryMsg</a>
       </li>
       <li>
         <a href="/cryptoCoinSharingCalculate/home" target="_blank">Sharing manager</a>

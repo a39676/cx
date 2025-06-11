@@ -41,7 +41,7 @@ public abstract class CommonService {
 
 	protected static final Integer NORMAL_PAGE_SIZE = 10;
 	protected static final LocalDateTime BLOG_ARTICLE_START_TIME = LocalDateTime.of(2020, 5, 1, 0, 0, 0);
-	protected static final String MAIN_FOLDER_PATH = "/home/u2/cx";
+	protected static final String MAIN_FOLDER_PATH = System.getProperty("user.home") + "/programOutput/cx";
 
 	protected boolean isWindows() {
 		String os = System.getProperty("os.name");

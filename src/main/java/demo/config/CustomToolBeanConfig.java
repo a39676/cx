@@ -9,6 +9,7 @@ import demo.config.customComponent.SnowFlake;
 import demo.config.customComponent.Tess;
 import finance.common.tool.KLineToolUnit;
 import mail.service.MailToolService;
+import tool.service.TimeBasedOneTimePassword;
 import toolPack.complexTool.ChinaMainLandIdNumGenerator;
 import toolPack.dateTimeHandle.DateHandler;
 import toolPack.dateTimeHandle.LocalDateTimeAdapter;
@@ -118,4 +119,8 @@ public class CustomToolBeanConfig {
 		return new KLineToolUnit();
 	}
 
+	@Bean
+	public TimeBasedOneTimePassword getTimeBasedOneTimePassword() {
+		return new TimeBasedOneTimePassword();
+	}
 }

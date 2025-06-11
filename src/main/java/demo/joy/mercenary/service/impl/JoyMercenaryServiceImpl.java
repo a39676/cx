@@ -21,53 +21,50 @@ import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class JoyMercenaryServiceImpl extends JoyCommonService implements JoyMercenaryService {
-	
+
 	@Autowired
 	private JoyMercenaryStoreMapper mercenaryStoreMapper;
 	@Autowired
 	private JoySkillManagerService skillService;
-	
+
 	private String getMercenaryStoreAttributeSavePath() {
-		if(isLinux()) {
-			return MAIN_FOLDER_PATH + "/joy/mercenary/attribute";
-		} else {
-			return "d:" + MAIN_FOLDER_PATH + "/joy/mercenary/attribute";
-		}
+		return MAIN_FOLDER_PATH + "/joy/mercenary/attribute";
 	}
 
 	@Override
 	public CommonResult createNewMercenaryToStore(CreateNewMercenaryToStoreDTO dto) {
 		CommonResult r = new CommonResult();
-		
-		if(StringUtils.isBlank(dto.getName())) {
+
+		if (StringUtils.isBlank(dto.getName())) {
 			r.addMessage("需要指定基础角色名");
 			return r;
 		}
-		
-		if(dto.getImgId() == null) {
+
+		if (dto.getImgId() == null) {
 			r.addMessage("选图异常");
 			return r;
 		}
-		
+
 		long newMercenaryId = snowFlake.getNextId();
-		
-		if(dto.getSkillIdList() != null && !dto.getSkillIdList().isEmpty()) {
-			if(dto.getSkillCount() < dto.getSkillIdList().size()) {
+
+		if (dto.getSkillIdList() != null && !dto.getSkillIdList().isEmpty()) {
+			if (dto.getSkillCount() < dto.getSkillIdList().size()) {
 				r.addMessage("技能配置过多");
 				return r;
 			}
-			
-			CommonResult setDefaultSkillResult = skillService.setMercenaryDefaultSkill(newMercenaryId, dto.getSkillIdList());
-			if(setDefaultSkillResult.isFail()) {
+
+			CommonResult setDefaultSkillResult = skillService.setMercenaryDefaultSkill(newMercenaryId,
+					dto.getSkillIdList());
+			if (setDefaultSkillResult.isFail()) {
 				return setDefaultSkillResult;
 			}
 		}
-		
+
 		CommonResult saveAttributeResult = saveNewAttribute(newMercenaryId, dto);
-		if(saveAttributeResult.isFail()) {
+		if (saveAttributeResult.isFail()) {
 			return saveAttributeResult;
 		}
-		
+
 		JoyMercenaryStore po = new JoyMercenaryStore();
 		po.setId(newMercenaryId);
 		po.setAttributePath(saveAttributeResult.getMessage());
@@ -76,43 +73,42 @@ public class JoyMercenaryServiceImpl extends JoyCommonService implements JoyMerc
 		po.setMaxSale(dto.getMaxSale());
 		po.setMercenaryName(dto.getName());
 		po.setSkillCount(dto.getSkillCount());
-		
+
 		mercenaryStoreMapper.insertSelective(po);
-		
+
 		r.setIsSuccess();
 		return r;
 	}
-	
+
 	private CommonResult saveNewAttribute(long id, CreateNewMercenaryToStoreDTO dto) {
 		CommonResult r = new CommonResult();
-		
+
 		String mainFolderPath = getMercenaryStoreAttributeSavePath();
 		File mainFolder = new File(mainFolderPath);
-		if(!mainFolder.exists()) {
-			if(!mainFolder.mkdirs()) {
+		if (!mainFolder.exists()) {
+			if (!mainFolder.mkdirs()) {
 				r.addMessage("joy system error");
 				return r;
 			}
 		}
-		
+
 		try {
 			FileUtilCustom ioUtil = new FileUtilCustom();
 			String filePath = mainFolderPath + File.separator + id;
-			
+
 			JoyAttributeBO attrBO = new JoyAttributeBO();
 			BeanUtils.copyProperties(dto, attrBO);
-			
+
 			JSONObject json = JSONObject.fromObject(attrBO);
 			ioUtil.byteToFile(json.toString().getBytes(StandardCharsets.UTF_8), filePath);
-			
+
 			r.successWithMessage(filePath);
 		} catch (Exception e) {
 			r.addMessage("attribute saving error");
 		}
-		
+
 		return r;
-		
+
 	}
-	
-	
+
 }

@@ -2,10 +2,26 @@ package demo.finance.cryptoCoin.data.service;
 
 import org.springframework.web.servlet.ModelAndView;
 
+import demo.finance.cryptoCoin.data.pojo.dto.GetBigMoveSummaryDataDTO;
+import demo.finance.cryptoCoin.data.pojo.result.GetBigMoveSummaryDataResult;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinSymbolMaxLeverageMainDTO;
+
 public interface CryptoCoinDataComplexService {
 
-	void getNewBigMoveDataMessage(String msg);
+	void receiveNewBigMoveSpotDataMessage(String msg);
 
-	ModelAndView getBigMoveSummaryByManual();
+	ModelAndView getBigMoveSpotSummaryView();
+
+	GetBigMoveSummaryDataResult getBigMoveSummaryDataTable(GetBigMoveSummaryDataDTO dto);
+
+	void sendBigMoveDataCrossResult();
+
+	ModelAndView getBigMoveDataChartBySymbol(GetBigMoveSummaryDataDTO dto);
+
+	ModelAndView getBigMoveDataChart(GetBigMoveSummaryDataDTO dto);
+
+	void loadSymbolMaxLeverageInfoToCache();
+
+	void receiveSymbolMaxLeverageInfo(CryptoCoinSymbolMaxLeverageMainDTO result);
 
 }

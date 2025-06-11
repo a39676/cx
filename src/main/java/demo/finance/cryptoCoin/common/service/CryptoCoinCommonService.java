@@ -7,28 +7,44 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.common.service.impl.FinanceCommonService;
+import demo.finance.cryptoCoin.common.pojo.dto.CryptoCoinUserKeysCxDTO;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionMultipleUserCommonDTO;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionOrderCommonDTO;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinUserKeysDTO;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinUserSymbolRateDTO;
+import finance.cryptoCoin.common.pojo.type.CryptoExchangeType;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 import finance.cryptoCoin.pojo.vo.CryptoCoinCatalogVO;
+import tool.service.TimeBasedOneTimePassword;
 
 public abstract class CryptoCoinCommonService extends FinanceCommonService {
 
 	@Autowired
 	protected RedisTemplate<String, Object> redisTemplate;
 	@Autowired
-	protected CryptoCoinConstantService constantService;
-	@Autowired
 	protected CryptoCoinOptionService optionService;
+	@Autowired
+	protected TimeBasedOneTimePassword timeBasedOneTimePassword;
 
 	protected static final CurrencyTypeForCryptoCoin defaultCyrrencyTypeForCryptoCoin = CurrencyTypeForCryptoCoin.USDT;
+	protected static final int SCALE_FOR_PRICE_DISPLAY = 8;
+	protected static final int SCALE_FOR_PRICE_CALCULATE = 12;
+	protected static final int SCALE_FOR_RATE_DISPLAY = 2;
+	protected static final int SCALE_FOR_RATE_CALCULATE = 4;
+	protected static final int BINANCE_BIG_CAP_GROUP_ID = 1;
+	protected static final String DATE_FORMAT_FOR_INDEX_CHART_IN_HOUR = "MM-dd HH:mm";
+	protected static final String DATE_FORMAT_FOR_INDEX_CHART_IN_DAY = "MM-dd";
 
 	protected CryptoCoinPriceCommonDataBO mergerData(CryptoCoinPriceCommonDataBO resultTarget,
 			CryptoCoinPriceCommonDataBO otherData) {
@@ -488,5 +504,95 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 		vo.setPk(systemOptionService.encryptId(po.getId()));
 		vo.setEnShortname(po.getCoinNameEnShort());
 		return vo;
+	}
+
+	protected boolean isValidTotpCode(String code) {
+		if (StringUtils.isBlank(code)) {
+			return false;
+		}
+		String key = systemOptionService.getTotpSecretKey();
+		return timeBasedOneTimePassword.isValid(key, code);
+	}
+
+	protected String genTotpCode() {
+		return timeBasedOneTimePassword.generatorCode(systemOptionService.getTotpSecretKey());
+	}
+
+	public <E extends CryptoCoinInteractionMultipleUserCommonDTO> boolean checkCryptoCoinInteractionMultipleUserCommonDTO(
+			CryptoCoinInteractionMultipleUserCommonDTO dto) {
+		if (dto.getUserIdList() == null || dto.getUserIdList().isEmpty() || dto.getUserNicknameList() == null
+				|| dto.getUserNicknameList().isEmpty() || dto.getExchangeCode() == null) {
+			return false;
+		}
+		if (dto.getUserIdList().size() != dto.getUserNicknameList().size()) {
+			return false;
+		}
+		CryptoExchangeType exchangeType = CryptoExchangeType.getType(dto.getExchangeCode());
+		if (exchangeType == null) {
+			return false;
+		}
+		Map<Integer, CryptoCoinUserKeysCxDTO> userMetaDataMap = optionService.getUserMetaDataMap();
+		for (int i = 0; i < dto.getUserIdList().size(); i++) {
+			Integer id = dto.getUserIdList().get(i);
+			CryptoCoinUserKeysDTO userMetaData = userMetaDataMap.get(id);
+			if (userMetaData == null) {
+				return false;
+			}
+			String nickname = userMetaData.getNickname();
+			if (!dto.getUserNicknameList().get(i).equals(nickname)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	protected BigDecimal cmOrderFixQuantityByUserSetting(Integer localUserId, String userNickname, String symbol,
+			BigDecimal sourceQuantity) {
+		CryptoCoinUserKeysCxDTO userMetaData = optionService.getUserMetaDataMap().get(localUserId);
+		if (userMetaData == null) {
+			return BigDecimal.ZERO;
+		}
+
+		if (userMetaData.getSymbolRateMap() == null || userMetaData.getSymbolRateMap().isEmpty()) {
+			return sourceQuantity;
+		} else {
+			CryptoCoinUserSymbolRateDTO quantityRate = userMetaData.getSymbolRateMap().get(symbol);
+			if (quantityRate == null) {
+				return sourceQuantity;
+			}
+			BigDecimal outputQuantity = sourceQuantity.multiply(quantityRate.getRate()).setScale(0, RoundingMode.FLOOR);
+			return outputQuantity;
+		}
+	}
+
+	protected CryptoCoinInteractionOrderCommonDTO umOrderFixQuantityOrOrderAmountByUserSetting(Integer localUserId,
+			String userNickname, CryptoCoinInteractionOrderCommonDTO dto) {
+		CryptoCoinUserKeysCxDTO userMetaData = optionService.getUserMetaDataMap().get(localUserId);
+		CryptoCoinInteractionOrderCommonDTO result = new CryptoCoinInteractionOrderCommonDTO();
+		if (userMetaData == null) {
+			return result;
+		}
+
+		BigDecimal quantityRate = userMetaData.getFutureUmRateSetting();
+		if (quantityRate == null) {
+			return result;
+		}
+
+		if (dto.getOrderAmount() != null) {
+//			send order by amount
+			BigDecimal targetAmount = dto.getOrderAmount().multiply(quantityRate);
+			if (dto.getPrice() != null) {
+				result.setQuantity(
+						targetAmount.divide(dto.getPrice(), SCALE_FOR_PRICE_CALCULATE, RoundingMode.HALF_UP));
+			} else {
+				result.setOrderAmount(targetAmount);
+			}
+		} else {
+//			send order by quantity
+			/* Handle scale by receiver */
+			result.setQuantity(dto.getQuantity().multiply(quantityRate));
+		}
+
+		return result;
 	}
 }

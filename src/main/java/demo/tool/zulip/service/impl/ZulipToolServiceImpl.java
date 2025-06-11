@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,7 @@ public class ZulipToolServiceImpl extends CommonService implements ZulipToolServ
 			for (int i = 0; i < history.size(); i++) {
 				msg = history.get(i);
 				List<MessageRecipient> recipients = msg.getRecipients();
+				String stream = msg.getStream();
 				if (recipients != null && !recipients.isEmpty()) {
 					for (int j = 0; j < recipients.size(); j++) {
 						recipient = recipients.get(j);
@@ -46,6 +48,12 @@ public class ZulipToolServiceImpl extends CommonService implements ZulipToolServ
 								deleteMsg(z, msg.getId());
 							}
 						}
+					}
+				} else if (StringUtils.isNotBlank(stream)
+						&& zulipOptionService.getTargetStreamList().contains(stream)) {
+					msgTimestamp = LocalDateTime.ofInstant(msg.getTimestamp(), ZoneId.of("UTC+8"));
+					if (msgTimestamp.plusMinutes(zulipOptionService.getMessageLivingMinutes()).isBefore(now)) {
+						deleteMsg(z, msg.getId());
 					}
 				}
 			}
@@ -59,4 +67,5 @@ public class ZulipToolServiceImpl extends CommonService implements ZulipToolServ
 		DeleteMessageApiRequest req = z.messages().deleteMessage(msgId);
 		req.execute();
 	}
+
 }

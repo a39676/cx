@@ -35,12 +35,12 @@ public abstract class EducateCommonService extends CommonService {
 	protected StudentDetailMapper studentDetailMapper;
 	@Autowired
 	protected StudentPointHistoryMapper studentPointHistoryMapper;
-	
+
 	@Autowired
 	private FileUtilCustom ioUtil;
 
 	protected ExerciseFileSaveResult saveExerciseFile(MathExerciseDTO dto) {
-		String storePrefixPath = optionService.getExerciseStorePrefixPath();
+		String storePrefixPath = System.getProperty("user.home") + optionService.getExerciseStorePrefixPath();
 		String fileName = dto.getExerciseID() + "L" + ".txt";
 		String timeFolder = LocalDate.now().toString();
 		File mainFolder = new File(storePrefixPath + "/" + timeFolder);
@@ -68,15 +68,18 @@ public abstract class EducateCommonService extends CommonService {
 		return result;
 	}
 
-	protected <T> List<StudentExerciseHistory> reloadExercise(GradeType gradeType, ExerciseSubjectType subjectType, Long userId) {
+	protected <T> List<StudentExerciseHistory> reloadExercise(GradeType gradeType, ExerciseSubjectType subjectType,
+			Long userId) {
 		StudentExerciseHistoryExample example = new StudentExerciseHistoryExample();
-		example.createCriteria().andGradeTypeEqualTo(gradeType.getCode().longValue()).andSubjectTypeEqualTo(subjectType.getCode().longValue()).andUserIdEqualTo(userId).andCompeletionTimeIsNull();
+		example.createCriteria().andGradeTypeEqualTo(gradeType.getCode().longValue())
+				.andSubjectTypeEqualTo(subjectType.getCode().longValue()).andUserIdEqualTo(userId)
+				.andCompeletionTimeIsNull();
 		return exerciseHistoryMapper.selectByExample(example);
 	}
-	
+
 	protected <T> T buildExerciseFromFile(StudentExerciseHistory exercisePO, Class<T> clazz) {
 		String exerciseJsonStr = ioUtil.getStringFromFile(exercisePO.getFilePath());
 		return buildObjFromJsonCustomization(exerciseJsonStr, clazz);
 	}
-	
+
 }

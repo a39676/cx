@@ -138,6 +138,13 @@
       </li>
     </ul> <%-- cryptoCoin --%>
 
+    <ul class="main-menu visible-on-click" id="wodianTool">
+      <li style="background-color:yellow;">WodianTool</li>
+      <li>
+        <a href="/wodian/summary" target="_blank">wodian</a>
+      </li>
+    </ul> <%-- wodian --%>
+
     <ul class="main-menu visible-on-click" id="Tools">
       <li style="background-color:yellow;">Tools</li>
       <li>

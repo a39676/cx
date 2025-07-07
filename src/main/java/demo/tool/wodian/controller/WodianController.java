@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -13,7 +14,6 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.controller.CommonController;
 import demo.tool.wodian.pojo.dto.CreateWodianContractDTO;
 import demo.tool.wodian.pojo.dto.WodianContractSerachConditionDTO;
-import demo.tool.wodian.pojo.result.WodianContractListResult;
 import demo.tool.wodian.service.WodianService;
 
 @Controller
@@ -29,14 +29,18 @@ public class WodianController extends CommonController {
 	}
 
 	@PostMapping(value = "/getContractListByCondition")
-	@ResponseBody
-	public WodianContractListResult getContractListByCondition(@RequestBody WodianContractSerachConditionDTO dto) {
-		return wodianService.getContractListByCondition(dto);
+	public ModelAndView getContractListByCondition(@RequestBody WodianContractSerachConditionDTO dto) {
+		return wodianService.getContractListViewByCondition(dto);
 	}
 
 	@PostMapping(value = "/createContract")
 	@ResponseBody
 	public CommonResult createContract(@RequestBody CreateWodianContractDTO dto) {
 		return wodianService.createContract(dto);
+	}
+
+	@GetMapping(value = "/client")
+	public ModelAndView getClientInfo(@RequestParam(value = "id") Long id) {
+		return wodianService.getClientInfo(id);
 	}
 }

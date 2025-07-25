@@ -27,15 +27,26 @@
             <td>SPU_SKU_SKC</td>
             <td>创建日期</td>
           </tr>
-          <c:forEach items="${productList}" var="product" varStatus="loop">
+          <c:forEach items="${productModelStatisticsList}" var="productModel" varStatus="loop">
             <tr>
-              <td class="productLine" 
-                productName="${product.nameCn}" 
-                productId="${product.id}">
-                ${product.nameCn}_${product.id}
+              <td class="productModelLine" 
+                productName="${productModel.productName}" 
+                productId="${productModel.productId}" 
+                productModelId="${productModel.modelId}">
+                ${productModel.productName}_${productModel.productId}_${productModel.modelId}
               </td>
-              <td>${product.unitPrice}</td>
-              <td>${product.releaseTime}</td>
+              <td>
+                ${productModel.unitCounting}_${productModel.unitTypeName}
+              </td>
+              <td>
+                ${productModel.purchasePrice}_${productModel.declearedPrice}_${productModel.packingFee}
+              </td>
+              <td>
+                ${productModel.spu}_${productModel.spu}_${productModel.skc}
+              </td>
+              <td>
+                ${productModel.spu}_${productModel.spu}_${productModel.skc}
+              </td>
             </tr>
           </c:forEach>
         </table>

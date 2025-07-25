@@ -37,7 +37,7 @@
             </td>
           </tr>
         </table>
-        <button id="productSearch">ProductSearch</button>
+        <button id="searchProduct">SearchProduct</button>
         <button id="createProduct">CreateProduct</button>
       </div>
     </div>
@@ -97,7 +97,7 @@
 
     <div class="row">
       <div class="col-md-12">
-        <button id="productModelSearch">ProductModelSearch</button>
+        <button id="searchProductModel">SearchProductModel</button>
         <button id="createProductModel">CreateProductModel</button>
         <button id="updateProductModel">UpdateProductModel</button>
       </div>
@@ -120,14 +120,14 @@
 
   $(document).ready(function() {
 
-    $("#productSearch").click( function() {
-      productSearch();
+    $("#searchProduct").click( function() {
+      searchProduct();
     });
 
-    function productSearch(){ 
+    function searchProduct(){ 
       var productName = $("#productName").val();
       
-      var url = "/temuAgent/productSearch";
+      var url = "/temuAgent/searchProduct";
 
       var jsonOutput = {
         productName : productName,
@@ -192,7 +192,39 @@
       });  
     };
 
+    $("#searchProductModel").click( function() {
+      searchProductModel();
+    });
 
+    function searchProductModel(){ 
+      var productId = $("#productID").val();
+      
+      var url = "/temuAgent/searchProductModel";
+
+      var jsonOutput = {
+        productId : productId,
+      };
+
+      $.ajax({  
+        type : "POST",  
+        async : true,
+        url : url, 
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        <%-- dataType: "json", --%>
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          $("#productModelDetailList").html(datas);
+        },  
+        error: function(datas) {  
+          $("#productModelDetailList").html(datas);
+        }  
+      });  
+    };
   
   });
 

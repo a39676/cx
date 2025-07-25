@@ -1,6 +1,6 @@
 package demo.tool.temuAgent.pojo.dto;
 
-public class TemuAgentProductModelDetailSearchDTO extends TemuAgentProductSearchDTO {
+public class TemuAgentProductModelDetailSearchDTO extends TemuAgentSearchProductDTO {
 
 	private Long productModelId;
 

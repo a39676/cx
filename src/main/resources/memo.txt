@@ -2,11 +2,9 @@ Valkey replace Redis
 
 temu agent
 	product model
-		重新拆装
-			统计时
-				需要新增 repackage 字段作为成本统计, 跟踪被 repackage 的 packing fee
-				packing fee 未计算
-				flowType = repackage ---> 成本按负数计
+		重新拆装 repackage
+			旧包装 减少 stocking , 增加 repackage
+			新包装 增加 stocking
 
 crypto coin
 	Future UM

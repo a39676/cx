@@ -12,7 +12,8 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.controller.CommonController;
 import demo.tool.temuAgent.pojo.constant.TemuAgentUrl;
 import demo.tool.temuAgent.pojo.dto.TemuAgentCeateProductDTO;
-import demo.tool.temuAgent.pojo.dto.TemuAgentProductSearchDTO;
+import demo.tool.temuAgent.pojo.dto.TemuAgentProductModelDetailSearchDTO;
+import demo.tool.temuAgent.pojo.dto.TemuAgentSearchProductDTO;
 import demo.tool.temuAgent.service.TemuAgentService;
 
 @Controller
@@ -32,8 +33,13 @@ public class TemuAgentController extends CommonController {
 		return temuAgentService.createProduct(dto);
 	}
 
-	@PostMapping(value = TemuAgentUrl.PRODUCT_SEARCH)
-	public ModelAndView s(@RequestBody TemuAgentProductSearchDTO dto) {
+	@PostMapping(value = TemuAgentUrl.SEARCH_PRODUCT)
+	public ModelAndView searchProductList(@RequestBody TemuAgentSearchProductDTO dto) {
 		return temuAgentService.searchProductList(dto);
+	}
+
+	@PostMapping(value = TemuAgentUrl.SEARCH_PRODUCT_MODEL)
+	public ModelAndView searchProductModelList(@RequestBody TemuAgentProductModelDetailSearchDTO dto) {
+		return temuAgentService.searchProductModelDetail(dto);
 	}
 }

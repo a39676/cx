@@ -1,6 +1,6 @@
 package demo.tool.temuAgent.pojo.dto;
 
-public class TemuAgentProductSearchDTO {
+public class TemuAgentSearchProductDTO {
 
 	private String productName;
 	private Long productId;

@@ -5,6 +5,7 @@ public enum TemuAgentProductFlowType {
 	STOCKING("stocking", 1),
 	INTERNATIONAL_STOCKING("internationalStocking", 2),
 	SELLED("selled", 3),
+	REPACKAGE("repackage", 4),
 	;
 	
 	private String name;

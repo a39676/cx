@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.tool.temuAgent.mapper.TemuAgentProductModelMapper">
+  <resultMap id="BaseResultMap" type="demo.tool.temuAgent.pojo.po.TemuAgentProductModel">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="product_id" jdbcType="BIGINT" property="productId" />
+    <result column="unit_type_code" jdbcType="INTEGER" property="unitTypeCode" />
+    <result column="unit_counting" jdbcType="INTEGER" property="unitCounting" />
+    <result column="spu" jdbcType="VARCHAR" property="spu" />
+    <result column="sku" jdbcType="VARCHAR" property="sku" />
+    <result column="skc" jdbcType="VARCHAR" property="skc" />
+    <result column="purchase_price" jdbcType="DECIMAL" property="purchasePrice" />
+    <result column="decleared_price" jdbcType="DECIMAL" property="declearedPrice" />
+    <result column="packing_fee" jdbcType="DECIMAL" property="packingFee" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, product_id, unit_type_code, unit_counting, spu, sku, skc, purchase_price, decleared_price, 
+    packing_fee, create_time
+  </sql>
+  <select id="selectByExample" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductModelExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from temu_agent_product_model
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from temu_agent_product_model
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from temu_agent_product_model
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductModelExample">
+    delete from temu_agent_product_model
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductModel">
+    insert into temu_agent_product_model (id, product_id, unit_type_code, 
+      unit_counting, spu, sku, 
+      skc, purchase_price, decleared_price, 
+      packing_fee, create_time)
+    values (#{id,jdbcType=BIGINT}, #{productId,jdbcType=BIGINT}, #{unitTypeCode,jdbcType=INTEGER}, 
+      #{unitCounting,jdbcType=INTEGER}, #{spu,jdbcType=VARCHAR}, #{sku,jdbcType=VARCHAR}, 
+      #{skc,jdbcType=VARCHAR}, #{purchasePrice,jdbcType=DECIMAL}, #{declearedPrice,jdbcType=DECIMAL}, 
+      #{packingFee,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductModel">
+    insert into temu_agent_product_model
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="productId != null">
+        product_id,
+      </if>
+      <if test="unitTypeCode != null">
+        unit_type_code,
+      </if>
+      <if test="unitCounting != null">
+        unit_counting,
+      </if>
+      <if test="spu != null">
+        spu,
+      </if>
+      <if test="sku != null">
+        sku,
+      </if>
+      <if test="skc != null">
+        skc,
+      </if>
+      <if test="purchasePrice != null">
+        purchase_price,
+      </if>
+      <if test="declearedPrice != null">
+        decleared_price,
+      </if>
+      <if test="packingFee != null">
+        packing_fee,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="productId != null">
+        #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="unitTypeCode != null">
+        #{unitTypeCode,jdbcType=INTEGER},
+      </if>
+      <if test="unitCounting != null">
+        #{unitCounting,jdbcType=INTEGER},
+      </if>
+      <if test="spu != null">
+        #{spu,jdbcType=VARCHAR},
+      </if>
+      <if test="sku != null">
+        #{sku,jdbcType=VARCHAR},
+      </if>
+      <if test="skc != null">
+        #{skc,jdbcType=VARCHAR},
+      </if>
+      <if test="purchasePrice != null">
+        #{purchasePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="declearedPrice != null">
+        #{declearedPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="packingFee != null">
+        #{packingFee,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductModelExample" resultType="java.lang.Long">
+    select count(*) from temu_agent_product_model
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update temu_agent_product_model
+    <set>
+      <if test="row.id != null">
+        id = #{row.id,jdbcType=BIGINT},
+      </if>
+      <if test="row.productId != null">
+        product_id = #{row.productId,jdbcType=BIGINT},
+      </if>
+      <if test="row.unitTypeCode != null">
+        unit_type_code = #{row.unitTypeCode,jdbcType=INTEGER},
+      </if>
+      <if test="row.unitCounting != null">
+        unit_counting = #{row.unitCounting,jdbcType=INTEGER},
+      </if>
+      <if test="row.spu != null">
+        spu = #{row.spu,jdbcType=VARCHAR},
+      </if>
+      <if test="row.sku != null">
+        sku = #{row.sku,jdbcType=VARCHAR},
+      </if>
+      <if test="row.skc != null">
+        skc = #{row.skc,jdbcType=VARCHAR},
+      </if>
+      <if test="row.purchasePrice != null">
+        purchase_price = #{row.purchasePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="row.declearedPrice != null">
+        decleared_price = #{row.declearedPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="row.packingFee != null">
+        packing_fee = #{row.packingFee,jdbcType=DECIMAL},
+      </if>
+      <if test="row.createTime != null">
+        create_time = #{row.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update temu_agent_product_model
+    set id = #{row.id,jdbcType=BIGINT},
+      product_id = #{row.productId,jdbcType=BIGINT},
+      unit_type_code = #{row.unitTypeCode,jdbcType=INTEGER},
+      unit_counting = #{row.unitCounting,jdbcType=INTEGER},
+      spu = #{row.spu,jdbcType=VARCHAR},
+      sku = #{row.sku,jdbcType=VARCHAR},
+      skc = #{row.skc,jdbcType=VARCHAR},
+      purchase_price = #{row.purchasePrice,jdbcType=DECIMAL},
+      decleared_price = #{row.declearedPrice,jdbcType=DECIMAL},
+      packing_fee = #{row.packingFee,jdbcType=DECIMAL},
+      create_time = #{row.createTime,jdbcType=TIMESTAMP}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductModel">
+    update temu_agent_product_model
+    <set>
+      <if test="productId != null">
+        product_id = #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="unitTypeCode != null">
+        unit_type_code = #{unitTypeCode,jdbcType=INTEGER},
+      </if>
+      <if test="unitCounting != null">
+        unit_counting = #{unitCounting,jdbcType=INTEGER},
+      </if>
+      <if test="spu != null">
+        spu = #{spu,jdbcType=VARCHAR},
+      </if>
+      <if test="sku != null">
+        sku = #{sku,jdbcType=VARCHAR},
+      </if>
+      <if test="skc != null">
+        skc = #{skc,jdbcType=VARCHAR},
+      </if>
+      <if test="purchasePrice != null">
+        purchase_price = #{purchasePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="declearedPrice != null">
+        decleared_price = #{declearedPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="packingFee != null">
+        packing_fee = #{packingFee,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductModel">
+    update temu_agent_product_model
+    set product_id = #{productId,jdbcType=BIGINT},
+      unit_type_code = #{unitTypeCode,jdbcType=INTEGER},
+      unit_counting = #{unitCounting,jdbcType=INTEGER},
+      spu = #{spu,jdbcType=VARCHAR},
+      sku = #{sku,jdbcType=VARCHAR},
+      skc = #{skc,jdbcType=VARCHAR},
+      purchase_price = #{purchasePrice,jdbcType=DECIMAL},
+      decleared_price = #{declearedPrice,jdbcType=DECIMAL},
+      packing_fee = #{packingFee,jdbcType=DECIMAL},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductModelExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from temu_agent_product_model
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

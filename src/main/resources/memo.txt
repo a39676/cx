@@ -1,5 +1,13 @@
 Valkey replace Redis
 
+temu agent
+	product model
+		重新拆装
+			统计时
+				需要新增 repackage 字段作为成本统计, 跟踪被 repackage 的 packing fee
+				packing fee 未计算
+				flowType = repackage ---> 成本按负数计
+
 crypto coin
 	Future UM
 		需要设置按组合(兼比例)下单

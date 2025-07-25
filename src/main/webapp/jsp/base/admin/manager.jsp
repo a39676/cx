@@ -138,6 +138,13 @@
       </li>
     </ul> <%-- cryptoCoin --%>
 
+    <ul class="main-menu visible-on-click" id="temuAgentTool">
+      <li style="background-color:yellow;">TemuAgent</li>
+      <li>
+        <a href="/temuAgent/" target="_blank">TemuAgent</a>
+      </li>
+    </ul> <%-- temuAgent --%>
+
     <ul class="main-menu visible-on-click" id="wodianTool">
       <li style="background-color:yellow;">WodianTool</li>
       <li>

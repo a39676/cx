@@ -1,11 +1,5 @@
 Valkey replace Redis
 
-temu agent
-	product model
-		重新拆装 repackage
-			旧包装 减少 stocking , 增加 repackage
-			新包装 增加 stocking
-
 crypto coin
 	Future UM
 		需要设置按组合(兼比例)下单

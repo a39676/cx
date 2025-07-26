@@ -102,6 +102,10 @@
         <button id="searchProductModel">SearchProductModel</button>
         <button id="createProductModel">CreateProductModel</button>
         <button id="updateProductModel">UpdateProductModel</button>
+        <input type="checkbox" id="stockingGreaterThanZero">
+        <label for="stockingGreaterThanZero">有备货</label>
+        <input type="checkbox" id="internationalStockingGreaterThanZero">
+        <label for="internationalStockingGreaterThanZero">有备货(国际仓)</label>
         <button id="resetProductModelCondition">reset</button><br>
         <input type="number" id="stockingUpdateCounting" name=""  placeholder="stockingUpdateCounting">
         <input type="number" id="sellingPrice" name=""  placeholder="sellingPrice">
@@ -227,11 +231,15 @@
 
     function searchProductModel(){ 
       var productId = $("#productID").val();
+      var stockingGreaterThanZero = $("#stockingGreaterThanZero").is(":checked");
+      var internationalStockingGreaterThanZero = $("#internationalStockingGreaterThanZero").is(":checked");
       
       var url = "/temuAgent/searchProductModel";
 
       var jsonOutput = {
         productId : productId,
+        stockingGreaterThanZero:stockingGreaterThanZero,
+        internationalStockingGreaterThanZero:internationalStockingGreaterThanZero,
       };
 
       $.ajax({  
@@ -241,7 +249,7 @@
         data: JSON.stringify(jsonOutput),
         cache : false,
         contentType: "application/json",
-        <%-- dataType: "json", --%>
+        <%-- dataType: "json",  --%>
         timeout:50000,
         beforeSend: function(xhr) {
           xhr.setRequestHeader(csrfHeader, csrfToken);
@@ -252,7 +260,7 @@
         error: function(datas) {  
           $("#productModelDetailList").html(datas);
         }  
-      });  
+      }); 
     };
 
     $("#createProductModel").click(function () {

@@ -163,7 +163,7 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 		}
 
 		List<TemuAgentProductModelStatisticsVO> productModelStatisticsVoList = queryProductFlowStatisticsVoList(
-				productModelIdList, productMap, productModelMap);
+				productModelIdList, productMap, productModelMap, dto);
 		productModelStatisticsVoList = queryProductSellStatisticsVoList(productModelIdList, productModelMap,
 				productModelStatisticsVoList);
 		for (int i = 0; i < productModelStatisticsVoList.size(); i++) {
@@ -212,11 +212,36 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 	}
 
 	private List<TemuAgentProductModelStatisticsVO> queryProductFlowStatisticsVoList(List<Long> modelIdList,
-			Map<Long, TemuAgentProduct> productMap, Map<Long, TemuAgentProductModel> productModelMap) {
-		List<TemuAgentProductFlowStatistics> flowStatisticsPoList = queryProductFlowStatistics(modelIdList);
+			Map<Long, TemuAgentProduct> productMap, Map<Long, TemuAgentProductModel> productModelMap,
+			TemuAgentProductModelDetailSearchDTO dto) {
+
+		TemuAgentProductFlowStatisticsExample example = new TemuAgentProductFlowStatisticsExample();
+		demo.tool.temuAgent.pojo.po.TemuAgentProductFlowStatisticsExample.Criteria criteria = example.createCriteria();
+		if (modelIdList != null && modelIdList.size() > 0) {
+			criteria.andModelIdIn(modelIdList);
+		}
+		if (dto.getStockingGreaterThanZero()) {
+			criteria.andStockingCountingGreaterThan(0);
+		}
+		if (dto.getInternationalStockingGreaterThanZero()) {
+			criteria.andInternationalStockingCountingGreaterThan(0);
+		}
+		List<TemuAgentProductFlowStatistics> flowStatisticsPoList = productFlowStatisticsMapper
+				.selectByExample(example);
+
 		Map<Long, TemuAgentProductFlowStatistics> flowStatisticsPoMap = new HashMap<>();
 		for (int i = 0; i < flowStatisticsPoList.size(); i++) {
-			flowStatisticsPoMap.put(flowStatisticsPoList.get(i).getModelId(), flowStatisticsPoList.get(i));
+			TemuAgentProductFlowStatistics dataPO = flowStatisticsPoList.get(i);
+			flowStatisticsPoMap.put(dataPO.getModelId(), dataPO);
+		}
+		// TemuAgentProductModelDetailSearchDTO getStockingGreaterThanZero ||
+		// getInternationalStockingGreaterThanZero 需要将无存货数据条目剔出
+		for (int i = 0; i < modelIdList.size(); i++) {
+			Long id = modelIdList.get(i);
+			if (!flowStatisticsPoMap.keySet().contains(id)) {
+				modelIdList.remove(i);
+				i--;
+			}
 		}
 
 		List<TemuAgentProductModelStatisticsVO> voList = new ArrayList<>();
@@ -267,14 +292,6 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 			vo.setTotalCost(totalStockingCost.add(totalPackageFee));
 		}
 		return voList;
-	}
-
-	private List<TemuAgentProductFlowStatistics> queryProductFlowStatistics(List<Long> modelIdList) {
-		TemuAgentProductFlowStatisticsExample example = new TemuAgentProductFlowStatisticsExample();
-		if (modelIdList != null && modelIdList.size() > 0) {
-			example.createCriteria().andModelIdIn(modelIdList);
-		}
-		return productFlowStatisticsMapper.selectByExample(example);
 	}
 
 	private List<TemuAgentProductModelStatisticsVO> queryProductSellStatisticsVoList(List<Long> modelIdList,

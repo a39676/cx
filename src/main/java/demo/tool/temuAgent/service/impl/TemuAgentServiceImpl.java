@@ -551,6 +551,7 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 		flowHistory.setId(snowFlake.getNextId());
 		flowHistory.setModelId(dto.getModelId());
 		flowHistory.setFlowTypeCode(dto.getFlowTypeCode());
+		flowHistory.setFlowCounting(dto.getCounting());
 		productFlowHistoryMapper.insertSelective(flowHistory);
 	}
 }

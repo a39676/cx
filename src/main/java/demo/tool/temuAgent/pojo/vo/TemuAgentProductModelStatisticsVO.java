@@ -8,6 +8,8 @@ public class TemuAgentProductModelStatisticsVO {
 	private Long modelId;
 	private Long productId;
 
+	private BigDecimal unitPrice;
+
 	private Integer unitTypeCode;
 	private String unitTypeName;
 	private Integer unitCounting;
@@ -17,6 +19,7 @@ public class TemuAgentProductModelStatisticsVO {
 	private BigDecimal purchasePrice;
 	private BigDecimal declearedPrice;
 	private BigDecimal packingFee;
+	private LocalDateTime createTime;
 
 	private Integer stockingCounting;
 	private LocalDateTime stockingUpdateTime;
@@ -29,6 +32,8 @@ public class TemuAgentProductModelStatisticsVO {
 
 	private String productName;
 	private BigDecimal totalCost;
+	private BigDecimal totalStockingCost;
+	private BigDecimal totalPackingFeeCost;
 
 	private BigDecimal avgPrice;
 	private BigDecimal highestPrice;
@@ -36,6 +41,7 @@ public class TemuAgentProductModelStatisticsVO {
 	private BigDecimal lastPrice;
 
 	private BigDecimal totalSelledAmount;
+	private String createTimeStr;
 
 	public Long getModelId() {
 		return modelId;
@@ -51,6 +57,14 @@ public class TemuAgentProductModelStatisticsVO {
 
 	public void setProductId(Long productId) {
 		this.productId = productId;
+	}
+
+	public BigDecimal getUnitPrice() {
+		return unitPrice;
+	}
+
+	public void setUnitPrice(BigDecimal unitPrice) {
+		this.unitPrice = unitPrice;
 	}
 
 	public Integer getUnitTypeCode() {
@@ -123,6 +137,14 @@ public class TemuAgentProductModelStatisticsVO {
 
 	public void setPackingFee(BigDecimal packingFee) {
 		this.packingFee = packingFee;
+	}
+
+	public LocalDateTime getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(LocalDateTime createTime) {
+		this.createTime = createTime;
 	}
 
 	public Integer getStockingCounting() {
@@ -205,6 +227,22 @@ public class TemuAgentProductModelStatisticsVO {
 		this.totalCost = totalCost;
 	}
 
+	public BigDecimal getTotalStockingCost() {
+		return totalStockingCost;
+	}
+
+	public void setTotalStockingCost(BigDecimal totalStockingCost) {
+		this.totalStockingCost = totalStockingCost;
+	}
+
+	public BigDecimal getTotalPackingFeeCost() {
+		return totalPackingFeeCost;
+	}
+
+	public void setTotalPackingFeeCost(BigDecimal totalPackingFeeCost) {
+		this.totalPackingFeeCost = totalPackingFeeCost;
+	}
+
 	public BigDecimal getAvgPrice() {
 		return avgPrice;
 	}
@@ -245,19 +283,29 @@ public class TemuAgentProductModelStatisticsVO {
 		this.totalSelledAmount = totalSelledAmount;
 	}
 
+	public String getCreateTimeStr() {
+		return createTimeStr;
+	}
+
+	public void setCreateTimeStr(String createTimeStr) {
+		this.createTimeStr = createTimeStr;
+	}
+
 	@Override
 	public String toString() {
-		return "TemuAgentProductModelStatisticsVO [modelId=" + modelId + ", productId=" + productId + ", unitTypeCode="
-				+ unitTypeCode + ", unitTypeName=" + unitTypeName + ", unitCounting=" + unitCounting + ", spu=" + spu
-				+ ", sku=" + sku + ", skc=" + skc + ", purchasePrice=" + purchasePrice + ", declearedPrice="
-				+ declearedPrice + ", packingFee=" + packingFee + ", stockingCounting=" + stockingCounting
-				+ ", stockingUpdateTime=" + stockingUpdateTime + ", internationalStockingCounting="
-				+ internationalStockingCounting + ", internationalStockingUpdateTime=" + internationalStockingUpdateTime
-				+ ", selledCounting=" + selledCounting + ", selledUpdateTime=" + selledUpdateTime
-				+ ", repackageCounting=" + repackageCounting + ", repackageUdpateTime=" + repackageUdpateTime
-				+ ", productName=" + productName + ", totalCost=" + totalCost + ", avgPrice=" + avgPrice
-				+ ", highestPrice=" + highestPrice + ", lowestPrice=" + lowestPrice + ", lastPrice=" + lastPrice
-				+ ", totalSelledAmount=" + totalSelledAmount + "]";
+		return "TemuAgentProductModelStatisticsVO [modelId=" + modelId + ", productId=" + productId + ", unitPrice="
+				+ unitPrice + ", unitTypeCode=" + unitTypeCode + ", unitTypeName=" + unitTypeName + ", unitCounting="
+				+ unitCounting + ", spu=" + spu + ", sku=" + sku + ", skc=" + skc + ", purchasePrice=" + purchasePrice
+				+ ", declearedPrice=" + declearedPrice + ", packingFee=" + packingFee + ", createTime=" + createTime
+				+ ", stockingCounting=" + stockingCounting + ", stockingUpdateTime=" + stockingUpdateTime
+				+ ", internationalStockingCounting=" + internationalStockingCounting
+				+ ", internationalStockingUpdateTime=" + internationalStockingUpdateTime + ", selledCounting="
+				+ selledCounting + ", selledUpdateTime=" + selledUpdateTime + ", repackageCounting=" + repackageCounting
+				+ ", repackageUdpateTime=" + repackageUdpateTime + ", productName=" + productName + ", totalCost="
+				+ totalCost + ", totalStockingCost=" + totalStockingCost + ", totalPackingFeeCost="
+				+ totalPackingFeeCost + ", avgPrice=" + avgPrice + ", highestPrice=" + highestPrice + ", lowestPrice="
+				+ lowestPrice + ", lastPrice=" + lastPrice + ", totalSelledAmount=" + totalSelledAmount
+				+ ", createTimeStr=" + createTimeStr + "]";
 	}
 
 }

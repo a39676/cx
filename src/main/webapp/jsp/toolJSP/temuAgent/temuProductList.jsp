@@ -13,7 +13,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
-        <label id="msg">${msg}</label>
+        <label id="productMsg">${msg}</label>
       </div>
     </div>
 
@@ -52,9 +52,16 @@
       var productId = $(this).attr("productId");
       $("#productNameInModel").val(productName);
       $("#productID").val(productId);
+      $("#modelID").val("");
+      $("#unitCounting").val("");
+      $("#unitTypeCode").val("").change();
+      $("#declearedPrice").val("");
+      $("#packingFee").val("");
+      $("#spu").val("");
+      $("#sku").val("");
+      $("#skc").val("");
+      $("#releaseDateStrInModel").val("");
     });
-   
-  
   });
 
 </script>

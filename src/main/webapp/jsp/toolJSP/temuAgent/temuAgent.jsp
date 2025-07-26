@@ -39,6 +39,7 @@
         </table>
         <button id="searchProduct">SearchProduct</button>
         <button id="createProduct">CreateProduct</button>
+        <button id="resetProductCondition">reset</button>
       </div>
     </div>
 
@@ -55,7 +56,7 @@
         <table class="table table-striped table-bordered table-hover">
           <tr>
             <td>创建日期</td>
-            <td>货名_ID</td>
+            <td>货名_productID_modelID</td>
             <td>申报价</td>
             <td>数量_计数类型</td>
             <td>打包费</td>
@@ -66,15 +67,16 @@
               <input type="text" name="" id="releaseDateStrInModel" placeholder="创建日期">
             </td>
             <td>
-              <input type="text" name="" id="productNameInModel" placeholder="货名"><br>
-              <input type="text" name="" id="productID" placeholder="货ID" disabled>
+              <input type="text" name="" id="productNameInModel" placeholder="货名" disabled><br>
+              <input type="text" name="" id="productID" placeholder="货ID" disabled><br>
+              <input type="text" name="" id="modelID" placeholder="modelID" disabled>
             </td>
             <td>
               <input type="number" name="" id="declearedPrice" placeholder="申报价"><br>
             </td>
             <td>
               <input type="number" name="" id="unitCounting" placeholder="数量"><br>
-              <select id="merchantsSelectorForNewContract">
+              <select id="unitTypeCode">
                 <option value="">计数类型</option>
                 <c:forEach items="${productModelUnitTypeList}"
                   var="productModelUnitType" varStatus="loop">
@@ -100,6 +102,13 @@
         <button id="searchProductModel">SearchProductModel</button>
         <button id="createProductModel">CreateProductModel</button>
         <button id="updateProductModel">UpdateProductModel</button>
+        <button id="resetProductModelCondition">reset</button><br>
+        <input type="number" id="stockingUpdateCounting" name=""  placeholder="stockingUpdateCounting">
+        <input type="number" id="sellingPrice" name=""  placeholder="sellingPrice">
+        <button id="AddStocking">AddStocking</button>
+        <button id="AddInternationalStocking">AddInternationalStocking</button>
+        <button id="AddSelled">AddSelled</button>
+        <button id="AddRepackage">AddRepackage</button>
       </div>
     </div>
 
@@ -192,6 +201,26 @@
       });  
     };
 
+    $("#resetProductCondition").click(function () {
+      $("#releaseDateStr").val("");
+      $("#productName").val("");
+      $("#unitPrice").val("");
+    });
+
+    $("#resetProductModelCondition").click(function () {
+      $("#releaseDateStrInModel").val("")
+      $("#productNameInModel").val("")
+      $("#productID").val("")
+      $("#modelID").val("")
+      $("#declearedPrice").val("")
+      $("#unitCounting").val("")
+      $("#packingFee").val("")
+      $("#spu").val("")
+      $("#sku").val("")
+      $("#skc").val("")
+      $("#unitTypeCode").val("").change();
+    });
+
     $("#searchProductModel").click( function() {
       searchProductModel();
     });
@@ -225,6 +254,120 @@
         }  
       });  
     };
+
+    $("#createProductModel").click(function () {
+      $("#modelID").val("");
+      var url = "/temuAgent/createProductModel";
+      createOrUpdateProductModel(url);
+    });
+
+    $("#updateProductModel").click(function () {
+      var url = "/temuAgent/updateProductModel";
+      createOrUpdateProductModel(url);
+    });
+
+    function createOrUpdateProductModel(url) {
+      $("#msg").text("");
+      var productID = $("#productID").val();
+      var modelID = $("#modelID").val();
+      var declearedPrice = $("#declearedPrice").val();
+      var unitCounting = $("#unitCounting").val();
+      var packingFee = $("#packingFee").val();
+      var spu = $("#spu").val();
+      var sku = $("#sku").val();
+      var skc = $("#skc").val();
+      var unitTypeCode = $('#unitTypeCode').find(":selected").val();
+
+      <%-- url --%>
+
+      var jsonOutput = {
+        productId:productID,
+        productModelId:modelID,
+        declearedPrice:declearedPrice,
+        unitCounting:unitCounting,
+        packingFee:packingFee,
+        spu:spu,
+        sku:sku,
+        skc:skc,
+        unitTypeCode:unitTypeCode,
+      };
+
+      $.ajax({  
+        type : "POST",  
+        async : true,
+        url : url, 
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          $("#msg").text(datas.message);
+        },  
+        error: function(datas) {  
+          $("#msg").text(datas.message);
+        }  
+      });  
+    }
+
+    $("#AddStocking").click(function () {
+      $("#sellingPrice").val("");
+      productModelAddFlow("/temuAgent/productModelAddStocking", 1);
+    });
+
+    $("#AddInternationalStocking").click(function () {
+      $("#sellingPrice").val("");
+      productModelAddFlow("/temuAgent/productModelAddInternationalStocking", 2);
+    });
+
+    $("#AddSelled").click(function () {
+      productModelAddFlow("/temuAgent/productModelAddSelled", 3);
+    });
+
+    $("#AddRepackage").click(function () {
+      $("#sellingPrice").val("");
+      productModelAddFlow("/temuAgent/productModelAddRepackage", 4);
+    });
+
+
+    function productModelAddFlow(url, flowTypeCode) {
+      $("#msg").text("");
+      var counting = $("#stockingUpdateCounting").val();
+      var price = $("#sellingPrice").val();
+      var modelId = $("#modelID").val();
+      
+      <%-- url --%>
+
+      var jsonOutput = {
+        flowTypeCode:flowTypeCode,
+        modelId:modelId,
+        counting:counting,
+        price:price,
+      };
+
+      $.ajax({  
+        type : "POST",  
+        async : true,
+        url : url, 
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          $("#msg").text(datas.message);
+        },  
+        error: function(datas) {  
+          $("#msg").text(datas.message);
+        }  
+      });  
+    }
   
   });
 

@@ -1,6 +1,7 @@
 package demo.tool.temuAgent.service.impl;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,15 +22,19 @@ import demo.tool.temuAgent.mapper.TemuAgentProductModelMapper;
 import demo.tool.temuAgent.mapper.TemuAgentProductSellHistoryMapper;
 import demo.tool.temuAgent.mapper.TemuAgentProductSellStatisticsMapper;
 import demo.tool.temuAgent.pojo.dto.TemuAgentCeateProductDTO;
+import demo.tool.temuAgent.pojo.dto.TemuAgentCreateOrUpdateProductModelDTO;
+import demo.tool.temuAgent.pojo.dto.TemuAgentProductModelAddFlowDTO;
 import demo.tool.temuAgent.pojo.dto.TemuAgentProductModelDetailSearchDTO;
 import demo.tool.temuAgent.pojo.dto.TemuAgentSearchProductDTO;
 import demo.tool.temuAgent.pojo.po.TemuAgentProduct;
 import demo.tool.temuAgent.pojo.po.TemuAgentProductExample;
 import demo.tool.temuAgent.pojo.po.TemuAgentProductExample.Criteria;
+import demo.tool.temuAgent.pojo.po.TemuAgentProductFlowHistory;
 import demo.tool.temuAgent.pojo.po.TemuAgentProductFlowStatistics;
 import demo.tool.temuAgent.pojo.po.TemuAgentProductFlowStatisticsExample;
 import demo.tool.temuAgent.pojo.po.TemuAgentProductModel;
 import demo.tool.temuAgent.pojo.po.TemuAgentProductModelExample;
+import demo.tool.temuAgent.pojo.po.TemuAgentProductSellHistory;
 import demo.tool.temuAgent.pojo.po.TemuAgentProductSellStatistics;
 import demo.tool.temuAgent.pojo.po.TemuAgentProductSellStatisticsExample;
 import demo.tool.temuAgent.pojo.type.TemuAgentProductFlowType;
@@ -73,7 +78,7 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 			r.setMessage("Unit price error");
 			return r;
 		}
-		LocalDateTime releaseDate = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getReleaseDataStr());
+		LocalDateTime releaseDate = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getReleaseDateStr());
 		if (releaseDate == null) {
 			r.setMessage("Release date error");
 			return r;
@@ -167,15 +172,29 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 			if (model == null) {
 				continue;
 			}
-			BeanUtils.copyProperties(model, vo);
-			TemuAgentProductModelUnitType unitType = TemuAgentProductModelUnitType.getType(model.getUnitTypeCode());
-			if (unitType == null) {
-				vo.setUnitTypeName("Unknow unit type");
-			} else {
-				vo.setUnitTypeName(unitType.getName());
-			}
 		}
 
+		TemuAgentProductModelStatisticsVO voForSummary = new TemuAgentProductModelStatisticsVO();
+		voForSummary.setProductName("Total");
+		voForSummary.setTotalStockingCost(BigDecimal.ZERO);
+		voForSummary.setTotalPackingFeeCost(BigDecimal.ZERO);
+		voForSummary.setTotalSelledAmount(BigDecimal.ZERO);
+		for (int i = 0; i < productModelStatisticsVoList.size(); i++) {
+			TemuAgentProductModelStatisticsVO vo = productModelStatisticsVoList.get(i);
+			if (vo.getTotalStockingCost() != null) {
+				voForSummary.setTotalStockingCost(voForSummary.getTotalStockingCost().add(vo.getTotalStockingCost()));
+			}
+			if (vo.getTotalPackingFeeCost() != null) {
+				voForSummary
+						.setTotalPackingFeeCost(voForSummary.getTotalPackingFeeCost().add(vo.getTotalPackingFeeCost()));
+			}
+			if (vo.getTotalSelledAmount() != null) {
+				voForSummary.setTotalSelledAmount(voForSummary.getTotalSelledAmount().add(vo.getTotalSelledAmount()));
+			}
+		}
+		voForSummary.setTotalCost(voForSummary.getTotalStockingCost().add(voForSummary.getTotalPackingFeeCost()));
+
+		productModelStatisticsVoList.add(voForSummary);
 		v.addObject("productModelStatisticsList", productModelStatisticsVoList);
 		return v;
 	}
@@ -195,28 +214,56 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 	private List<TemuAgentProductModelStatisticsVO> queryProductFlowStatisticsVoList(List<Long> modelIdList,
 			Map<Long, TemuAgentProduct> productMap, Map<Long, TemuAgentProductModel> productModelMap) {
 		List<TemuAgentProductFlowStatistics> flowStatisticsPoList = queryProductFlowStatistics(modelIdList);
-		List<TemuAgentProductModelStatisticsVO> voList = new ArrayList<>();
+		Map<Long, TemuAgentProductFlowStatistics> flowStatisticsPoMap = new HashMap<>();
 		for (int i = 0; i < flowStatisticsPoList.size(); i++) {
-			TemuAgentProductFlowStatistics flowStatisticsPO = flowStatisticsPoList.get(i);
+			flowStatisticsPoMap.put(flowStatisticsPoList.get(i).getModelId(), flowStatisticsPoList.get(i));
+		}
+
+		List<TemuAgentProductModelStatisticsVO> voList = new ArrayList<>();
+		for (int i = 0; i < modelIdList.size(); i++) {
 			TemuAgentProductModelStatisticsVO vo = new TemuAgentProductModelStatisticsVO();
 			voList.add(vo);
-			BeanUtils.copyProperties(flowStatisticsPO, vo);
-			TemuAgentProductModel productModel = productModelMap.get(flowStatisticsPO.getModelId());
+			Long modelId = modelIdList.get(i);
+			TemuAgentProductModel productModel = productModelMap.get(modelId);
 			if (productModel == null) {
 				continue;
 			}
+			BeanUtils.copyProperties(productModel, vo);
+			vo.setModelId(productModel.getId());
+			TemuAgentProductModelUnitType unitType = TemuAgentProductModelUnitType.getType(vo.getUnitTypeCode());
+			if (unitType == null) {
+				vo.setUnitTypeName("Unknow unit type");
+			} else {
+				vo.setUnitTypeName(unitType.getName());
+			}
+			vo.setCreateTimeStr(localDateTimeHandler.dateToStr(vo.getCreateTime()));
+
 			TemuAgentProduct product = productMap.get(productModel.getProductId());
 			if (product == null) {
 				continue;
 			}
 			vo.setProductName(product.getNameCn());
 			vo.setProductId(product.getId());
+			vo.setUnitPrice(product.getUnitPrice());
+
+			TemuAgentProductFlowStatistics flowStatisticsPO = flowStatisticsPoMap.get(modelId);
+			if (flowStatisticsPO == null) {
+				vo.setStockingCounting(0);
+				vo.setInternationalStockingCounting(0);
+				vo.setSelledCounting(0);
+				continue;
+			}
+			BeanUtils.copyProperties(flowStatisticsPO, vo);
+
 			Integer buiedCounting = vo.getStockingCounting() + vo.getInternationalStockingCounting()
 					+ vo.getSelledCounting();
-			BigDecimal totalStockingCost = product.getUnitPrice().multiply(new BigDecimal(buiedCounting));
-			Integer packagedCounting = vo.getSelledCounting() + vo.getInternationalStockingCounting()
+			BigDecimal totalStockingCost = product.getUnitPrice()
+					.multiply(new BigDecimal(buiedCounting).multiply(new BigDecimal(vo.getUnitCounting())));
+			vo.setTotalStockingCost(totalStockingCost);
+			Integer packagedCounting = vo.getStockingCounting() + vo.getInternationalStockingCounting()
 					+ vo.getSelledCounting() + vo.getRepackageCounting();
 			BigDecimal totalPackageFee = productModel.getPackingFee().multiply(new BigDecimal(packagedCounting));
+			vo.setTotalPackingFeeCost(totalPackageFee);
 			vo.setTotalCost(totalStockingCost.add(totalPackageFee));
 		}
 		return voList;
@@ -265,5 +312,245 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 			example.createCriteria().andModelIdIn(modelIdList);
 		}
 		return productSellStatisticsMapper.selectByExample(example);
+	}
+
+	@Override
+	public CommonResult createProductModel(TemuAgentCreateOrUpdateProductModelDTO dto) {
+		CommonResult r = new CommonResult();
+		TemuAgentProductModel po = new TemuAgentProductModel();
+		po.setId(snowFlake.getNextId());
+		try {
+			TemuAgentProduct product = productMapper.selectByPrimaryKey(dto.getProductId());
+			po.setProductId(dto.getProductId());
+			po.setUnitTypeCode(dto.getUnitTypeCode());
+			po.setUnitCounting(dto.getUnitCounting());
+			po.setSpu(dto.getSpu());
+			po.setSku(dto.getSku());
+			po.setSkc(dto.getSkc());
+			po.setPurchasePrice(product.getUnitPrice().multiply(new BigDecimal(dto.getUnitCounting())));
+			po.setDeclearedPrice(dto.getDeclearedPrice());
+			po.setPackingFee(dto.getPackingFee());
+			productModelMapper.insertSelective(po);
+
+			TemuAgentProductFlowStatistics statistics = new TemuAgentProductFlowStatistics();
+			statistics.setModelId(po.getId());
+			productFlowStatisticsMapper.insertSelective(statistics);
+			r.setIsSuccess();
+			r.setMessage(String.valueOf(po.getId()));
+		} catch (Exception e) {
+			r.setMessage(e.getLocalizedMessage());
+		}
+		return r;
+	}
+
+	@Override
+	public CommonResult updateProductModel(TemuAgentCreateOrUpdateProductModelDTO dto) {
+		CommonResult r = new CommonResult();
+		TemuAgentProductModel po = productModelMapper.selectByPrimaryKey(dto.getProductModelId());
+		try {
+			TemuAgentProduct product = productMapper.selectByPrimaryKey(dto.getProductId());
+			po.setProductId(dto.getProductId());
+			po.setUnitTypeCode(dto.getUnitTypeCode());
+			po.setUnitCounting(dto.getUnitCounting());
+			po.setSpu(dto.getSpu());
+			po.setSku(dto.getSku());
+			po.setSkc(dto.getSkc());
+			po.setPurchasePrice(product.getUnitPrice().multiply(new BigDecimal(dto.getUnitCounting())));
+			po.setDeclearedPrice(dto.getDeclearedPrice());
+			po.setPackingFee(dto.getPackingFee());
+			productModelMapper.updateByPrimaryKey(po);
+			r.setIsSuccess();
+			r.setMessage(String.valueOf(po.getId()));
+		} catch (Exception e) {
+			r.setMessage(e.getLocalizedMessage());
+		}
+		return r;
+	}
+
+	@Override
+	public CommonResult productModelAddStocking(TemuAgentProductModelAddFlowDTO dto) {
+		CommonResult r = productModelFlowDtoVarify(dto);
+		if (r.isFail()) {
+			return r;
+		}
+		insertProductModelFlowHistory(dto);
+
+		TemuAgentProductFlowStatistics flowStatistics = productFlowStatisticsMapper
+				.selectByPrimaryKey(dto.getModelId());
+		if (flowStatistics == null) {
+			r.setMessage("Can NOT find statistics data");
+			return r;
+		}
+		LocalDateTime now = LocalDateTime.now();
+		flowStatistics.setStockingCounting(flowStatistics.getStockingCounting() + dto.getCounting());
+		flowStatistics.setStockingUpdateTime(now);
+		flowStatistics.setUpdateTime(now);
+		productFlowStatisticsMapper.updateByPrimaryKeySelective(flowStatistics);
+		r.setIsSuccess();
+		return r;
+	}
+
+	@Override
+	public CommonResult productModelAddInternationalStocking(TemuAgentProductModelAddFlowDTO dto) {
+		CommonResult r = productModelFlowDtoVarify(dto);
+		if (r.isFail()) {
+			return r;
+		}
+		insertProductModelFlowHistory(dto);
+
+		TemuAgentProductFlowStatistics flowStatistics = productFlowStatisticsMapper
+				.selectByPrimaryKey(dto.getModelId());
+		if (flowStatistics == null) {
+			r.setMessage("Can NOT find statistics data");
+			return r;
+		}
+		LocalDateTime now = LocalDateTime.now();
+		flowStatistics.setStockingCounting(flowStatistics.getStockingCounting() - dto.getCounting());
+		flowStatistics.setStockingUpdateTime(now);
+		flowStatistics.setInternationalStockingCounting(
+				flowStatistics.getInternationalStockingCounting() + dto.getCounting());
+		flowStatistics.setInternationalStockingUpdateTime(now);
+		flowStatistics.setUpdateTime(now);
+		productFlowStatisticsMapper.updateByPrimaryKeySelective(flowStatistics);
+		r.setIsSuccess();
+		return r;
+	}
+
+	@Override
+	public CommonResult productModelAddSelled(TemuAgentProductModelAddFlowDTO dto) {
+		CommonResult r = productModelFlowDtoVarify(dto);
+		if (r.isFail()) {
+			return r;
+		}
+		if (dto.getPrice() == null || dto.getPrice().intValue() <= 0) {
+			r.setMessage("Price error");
+			return r;
+		}
+		insertProductModelFlowHistory(dto);
+
+		TemuAgentProductFlowStatistics flowStatistics = productFlowStatisticsMapper
+				.selectByPrimaryKey(dto.getModelId());
+		if (flowStatistics == null) {
+			r.setMessage("Can NOT find statistics data");
+			return r;
+		}
+		LocalDateTime now = LocalDateTime.now();
+		flowStatistics.setInternationalStockingCounting(
+				flowStatistics.getInternationalStockingCounting() - dto.getCounting());
+		flowStatistics.setInternationalStockingUpdateTime(now);
+		flowStatistics.setSelledCounting(flowStatistics.getSelledCounting() + dto.getCounting());
+		flowStatistics.setSelledUpdateTime(now);
+		flowStatistics.setUpdateTime(now);
+		productFlowStatisticsMapper.updateByPrimaryKeySelective(flowStatistics);
+
+		r = productModelAddSelledData(dto);
+		if (r.isFail()) {
+			return r;
+		}
+
+		r.setIsSuccess();
+		return r;
+	}
+
+	private CommonResult productModelAddSelledData(TemuAgentProductModelAddFlowDTO dto) {
+		CommonResult r = new CommonResult();
+		TemuAgentProductSellStatistics po = productSellStatisticsMapper.selectByPrimaryKey(dto.getModelId());
+		boolean newDataFlag = po == null;
+		LocalDateTime now = LocalDateTime.now();
+		if (newDataFlag) {
+			po = new TemuAgentProductSellStatistics();
+			po.setModelId(dto.getModelId());
+			po.setCounting(dto.getCounting());
+			po.setAvgPrice(dto.getPrice());
+			po.setHighestPrice(dto.getPrice());
+			po.setLowestPrice(dto.getPrice());
+			po.setLastPrice(dto.getPrice());
+			po.setUpdateTime(now);
+			po.setCreateTime(now);
+			productSellStatisticsMapper.insertSelective(po);
+		} else {
+			BigDecimal oldSelledAmount = po.getAvgPrice().multiply(new BigDecimal(po.getCounting()));
+			BigDecimal newSelledAmount = dto.getPrice().multiply(new BigDecimal(dto.getCounting()));
+			BigDecimal newAvgPrice = oldSelledAmount.add(newSelledAmount)
+					.divide(new BigDecimal(po.getCounting() + dto.getCounting()), 2, RoundingMode.HALF_UP);
+			po.setAvgPrice(newAvgPrice);
+			po.setCounting(po.getCounting() + dto.getCounting());
+			po.setUpdateTime(now);
+			po.setLastPrice(dto.getPrice());
+			if (po.getHighestPrice().compareTo(dto.getPrice()) > 0) {
+				po.setHighestPrice(dto.getPrice());
+			}
+			if (po.getLowestPrice().compareTo(dto.getPrice()) < 0) {
+				po.setLowestPrice(dto.getPrice());
+			}
+			productSellStatisticsMapper.updateByPrimaryKey(po);
+		}
+
+		TemuAgentProductSellHistory history = new TemuAgentProductSellHistory();
+		history.setId(snowFlake.getNextId());
+		history.setModelId(dto.getModelId());
+		history.setCounting(dto.getCounting());
+		history.setPrice(dto.getPrice());
+		history.setIsReturn(false);
+		productSellHistoryMapper.insertSelective(history);
+
+		r.setIsSuccess();
+		return r;
+	}
+
+	@Override
+	public CommonResult productModelAddRepackage(TemuAgentProductModelAddFlowDTO dto) {
+		CommonResult r = productModelFlowDtoVarify(dto);
+		if (r.isFail()) {
+			return r;
+		}
+		insertProductModelFlowHistory(dto);
+
+		TemuAgentProductFlowStatistics flowStatistics = productFlowStatisticsMapper
+				.selectByPrimaryKey(dto.getModelId());
+		if (flowStatistics == null) {
+			r.setMessage("Can NOT find statistics data");
+			return r;
+		}
+		LocalDateTime now = LocalDateTime.now();
+		flowStatistics.setStockingCounting(flowStatistics.getStockingCounting() - dto.getCounting());
+		flowStatistics.setStockingUpdateTime(now);
+		flowStatistics.setRepackageCounting(flowStatistics.getRepackageCounting() + dto.getCounting());
+		flowStatistics.setRepackageUdpateTime(now);
+		flowStatistics.setUpdateTime(now);
+		productFlowStatisticsMapper.updateByPrimaryKeySelective(flowStatistics);
+		r.setIsSuccess();
+		return r;
+	}
+
+	private CommonResult productModelFlowDtoVarify(TemuAgentProductModelAddFlowDTO dto) {
+		CommonResult r = new CommonResult();
+		if (dto.getModelId() == null) {
+			r.setMessage("Model ID error");
+			return r;
+		}
+		if (dto.getFlowTypeCode() == null) {
+			r.setMessage("Flow type code error");
+			return r;
+		}
+		TemuAgentProductFlowType flowType = TemuAgentProductFlowType.getType(dto.getFlowTypeCode());
+		if (flowType == null) {
+			r.setMessage("Flow type code error");
+			return r;
+		}
+		if (dto.getCounting() == null || dto.getCounting() < 1) {
+			r.setMessage("Counting error");
+			return r;
+		}
+		r.setIsSuccess();
+		return r;
+	}
+
+	private void insertProductModelFlowHistory(TemuAgentProductModelAddFlowDTO dto) {
+		TemuAgentProductFlowHistory flowHistory = new TemuAgentProductFlowHistory();
+		flowHistory.setId(snowFlake.getNextId());
+		flowHistory.setModelId(dto.getModelId());
+		flowHistory.setFlowTypeCode(dto.getFlowTypeCode());
+		productFlowHistoryMapper.insertSelective(flowHistory);
 	}
 }

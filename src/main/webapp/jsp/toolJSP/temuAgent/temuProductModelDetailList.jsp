@@ -13,7 +13,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
-        <label id="msg">${msg}</label>
+        <label id="productModelDetailMsg">${msg}</label>
       </div>
     </div>
 
@@ -24,16 +24,29 @@
             <td>名_productID_modelID</td>
             <td>数量_计数类型</td>
             <td>拿货价_申报价_打包费</td>
-            <td>SPU_SKU_SKC</td>
+            <td>SPU</td>
+            <td>SKU</td>
+            <td>SKC</td>
             <td>创建日期</td>
           </tr>
           <c:forEach items="${productModelStatisticsList}" var="productModel" varStatus="loop">
             <tr>
-              <td class="productModelLine" 
+              <td class="productModelInfoLine" 
                 productName="${productModel.productName}" 
                 productId="${productModel.productId}" 
-                productModelId="${productModel.modelId}">
-                ${productModel.productName}_${productModel.productId}_${productModel.modelId}
+                productModelId="${productModel.modelId}"
+                unitCounting="${productModel.unitCounting}"
+                unitTypeCode="${productModel.unitTypeCode}"
+                declearedPrice="${productModel.declearedPrice}"
+                packingFee="${productModel.packingFee}"
+                spu="${productModel.spu}"
+                sku="${productModel.sku}"
+                skc="${productModel.skc}"
+                createTimeStr="${productModel.createTimeStr}"
+                >
+                ${productModel.productName}<br>
+                ${productModel.productId}<br>
+                ${productModel.modelId}
               </td>
               <td>
                 ${productModel.unitCounting}_${productModel.unitTypeName}
@@ -42,10 +55,70 @@
                 ${productModel.purchasePrice}_${productModel.declearedPrice}_${productModel.packingFee}
               </td>
               <td>
-                ${productModel.spu}_${productModel.spu}_${productModel.skc}
+                ${productModel.spu}
               </td>
               <td>
-                ${productModel.spu}_${productModel.spu}_${productModel.skc}
+                ${productModel.sku}
+              </td>
+              <td>
+                ${productModel.skc}
+              </td>
+              <td>
+                ${productModel.createTimeStr}
+              </td>
+            </tr>
+          </c:forEach>
+        </table>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <table class="table table-striped table-bordered table-hover">
+          <tr>
+            <td>名_productID_modelID</td>
+            <td>数量_计数类型</td>
+            <td>
+              备货_国际仓<br>
+              已售_重打包(数量)
+            </td>
+            <td>投入_回报</td>
+            <td>创建日期</td>
+          </tr>
+          <c:forEach items="${productModelStatisticsList}" var="productModel" varStatus="loop">
+            <tr>
+              <td class="productModelDetailLine" 
+                productName="${productModel.productName}" 
+                productId="${productModel.productId}" 
+                productModelId="${productModel.modelId}">
+                ${productModel.productName}<br>
+                ${productModel.productId}<br>
+                ${productModel.modelId}
+              </td>
+              <td>
+                ${productModel.unitCounting}_${productModel.unitTypeName}
+              </td>
+              <td>
+                ${productModel.stockingCounting}_${productModel.internationalStockingCounting}<br>
+                ${productModel.selledCounting}_${productModel.repackageCounting}
+              </td>
+              <c:choose>
+                <c:when test="${productModel.totalSelledAmount - productModel.totalCost > 0}">
+                  <td class="table-success">
+                </c:when>
+                <c:when test="${productModel.totalSelledAmount - productModel.totalCost < 0}">
+                  <td class="table-danger">
+                </c:when>
+                <c:otherwise>
+                  <td>
+                </c:otherwise>
+              </c:choose>
+                ${productModel.totalCost}(${productModel.totalStockingCost}+${productModel.totalPackingFeeCost})<br>
+                ${productModel.totalSelledAmount}<br>
+                ${productModel.totalSelledAmount - productModel.totalCost }
+              </td>
+              <td>
+                ${productModel.createTimeStr}
               </td>
             </tr>
           </c:forEach>
@@ -60,11 +133,29 @@
 <script type="text/javascript">
 
   $(document).ready(function() {
-    $(".productLine").click(function () {
+    $(".productModelInfoLine").click(function () {
       var productName = $(this).attr("productName");
       var productId = $(this).attr("productId");
-      $("#productName").val(productName);
+      var productModelId = $(this).attr("productModelId");
+      var unitCounting = $(this).attr("unitCounting");
+      var unitTypeCode = $(this).attr("unitTypeCode");
+      var declearedPrice = $(this).attr("declearedPrice");
+      var packingFee = $(this).attr("packingFee");
+      var spu = $(this).attr("spu");
+      var sku = $(this).attr("sku");
+      var skc = $(this).attr("skc");
+      var createTimeStr = $(this).attr("createTimeStr");
+      $("#productNameInModel").val(productName);
       $("#productID").val(productId);
+      $("#modelID").val(productModelId);
+      $("#unitCounting").val(unitCounting);
+      $("#unitTypeCode").val(unitTypeCode).change();
+      $("#declearedPrice").val(declearedPrice);
+      $("#packingFee").val(packingFee);
+      $("#spu").val(spu);
+      $("#sku").val(sku);
+      $("#skc").val(skc);
+      $("#releaseDateStrInModel").val(createTimeStr);
     });
    
   

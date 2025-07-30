@@ -4,6 +4,7 @@ public enum TemuAgentProductModelUnitType {
 	
 	PC("pc", 1),
 	SET("set", 2),
+	PACK("pack", 3),
 	;
 	
 	private String name;

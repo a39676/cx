@@ -9,7 +9,6 @@
     <result column="spu" jdbcType="VARCHAR" property="spu" />
     <result column="sku" jdbcType="VARCHAR" property="sku" />
     <result column="skc" jdbcType="VARCHAR" property="skc" />
-    <result column="purchase_price" jdbcType="DECIMAL" property="purchasePrice" />
     <result column="decleared_price" jdbcType="DECIMAL" property="declearedPrice" />
     <result column="packing_fee" jdbcType="DECIMAL" property="packingFee" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -73,8 +72,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, product_id, unit_type_code, unit_counting, spu, sku, skc, purchase_price, decleared_price, 
-    packing_fee, create_time
+    id, product_id, unit_type_code, unit_counting, spu, sku, skc, decleared_price, packing_fee, 
+    create_time
   </sql>
   <select id="selectByExample" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductModelExample" resultMap="BaseResultMap">
     select
@@ -109,12 +108,12 @@
   <insert id="insert" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductModel">
     insert into temu_agent_product_model (id, product_id, unit_type_code, 
       unit_counting, spu, sku, 
-      skc, purchase_price, decleared_price, 
-      packing_fee, create_time)
+      skc, decleared_price, packing_fee, 
+      create_time)
     values (#{id,jdbcType=BIGINT}, #{productId,jdbcType=BIGINT}, #{unitTypeCode,jdbcType=INTEGER}, 
       #{unitCounting,jdbcType=INTEGER}, #{spu,jdbcType=VARCHAR}, #{sku,jdbcType=VARCHAR}, 
-      #{skc,jdbcType=VARCHAR}, #{purchasePrice,jdbcType=DECIMAL}, #{declearedPrice,jdbcType=DECIMAL}, 
-      #{packingFee,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP})
+      #{skc,jdbcType=VARCHAR}, #{declearedPrice,jdbcType=DECIMAL}, #{packingFee,jdbcType=DECIMAL}, 
+      #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductModel">
     insert into temu_agent_product_model
@@ -139,9 +138,6 @@
       </if>
       <if test="skc != null">
         skc,
-      </if>
-      <if test="purchasePrice != null">
-        purchase_price,
       </if>
       <if test="declearedPrice != null">
         decleared_price,
@@ -174,9 +170,6 @@
       </if>
       <if test="skc != null">
         #{skc,jdbcType=VARCHAR},
-      </if>
-      <if test="purchasePrice != null">
-        #{purchasePrice,jdbcType=DECIMAL},
       </if>
       <if test="declearedPrice != null">
         #{declearedPrice,jdbcType=DECIMAL},
@@ -219,9 +212,6 @@
       <if test="row.skc != null">
         skc = #{row.skc,jdbcType=VARCHAR},
       </if>
-      <if test="row.purchasePrice != null">
-        purchase_price = #{row.purchasePrice,jdbcType=DECIMAL},
-      </if>
       <if test="row.declearedPrice != null">
         decleared_price = #{row.declearedPrice,jdbcType=DECIMAL},
       </if>
@@ -245,7 +235,6 @@
       spu = #{row.spu,jdbcType=VARCHAR},
       sku = #{row.sku,jdbcType=VARCHAR},
       skc = #{row.skc,jdbcType=VARCHAR},
-      purchase_price = #{row.purchasePrice,jdbcType=DECIMAL},
       decleared_price = #{row.declearedPrice,jdbcType=DECIMAL},
       packing_fee = #{row.packingFee,jdbcType=DECIMAL},
       create_time = #{row.createTime,jdbcType=TIMESTAMP}
@@ -274,9 +263,6 @@
       <if test="skc != null">
         skc = #{skc,jdbcType=VARCHAR},
       </if>
-      <if test="purchasePrice != null">
-        purchase_price = #{purchasePrice,jdbcType=DECIMAL},
-      </if>
       <if test="declearedPrice != null">
         decleared_price = #{declearedPrice,jdbcType=DECIMAL},
       </if>
@@ -297,7 +283,6 @@
       spu = #{spu,jdbcType=VARCHAR},
       sku = #{sku,jdbcType=VARCHAR},
       skc = #{skc,jdbcType=VARCHAR},
-      purchase_price = #{purchasePrice,jdbcType=DECIMAL},
       decleared_price = #{declearedPrice,jdbcType=DECIMAL},
       packing_fee = #{packingFee,jdbcType=DECIMAL},
       create_time = #{createTime,jdbcType=TIMESTAMP}

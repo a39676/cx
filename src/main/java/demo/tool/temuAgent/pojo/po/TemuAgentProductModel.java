@@ -18,8 +18,6 @@ public class TemuAgentProductModel {
 
     private String skc;
 
-    private BigDecimal purchasePrice;
-
     private BigDecimal declearedPrice;
 
     private BigDecimal packingFee;
@@ -80,14 +78,6 @@ public class TemuAgentProductModel {
 
     public void setSkc(String skc) {
         this.skc = skc == null ? null : skc.trim();
-    }
-
-    public BigDecimal getPurchasePrice() {
-        return purchasePrice;
-    }
-
-    public void setPurchasePrice(BigDecimal purchasePrice) {
-        this.purchasePrice = purchasePrice;
     }
 
     public BigDecimal getDeclearedPrice() {

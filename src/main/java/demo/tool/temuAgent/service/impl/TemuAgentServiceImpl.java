@@ -15,18 +15,21 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.service.CommonService;
+import demo.tool.temuAgent.mapper.TemuAgentProductBuyAndSellHistoryMapper;
+import demo.tool.temuAgent.mapper.TemuAgentProductBuyAndSellStatisticsMapper;
 import demo.tool.temuAgent.mapper.TemuAgentProductFlowHistoryMapper;
 import demo.tool.temuAgent.mapper.TemuAgentProductFlowStatisticsMapper;
 import demo.tool.temuAgent.mapper.TemuAgentProductMapper;
 import demo.tool.temuAgent.mapper.TemuAgentProductModelMapper;
-import demo.tool.temuAgent.mapper.TemuAgentProductSellHistoryMapper;
-import demo.tool.temuAgent.mapper.TemuAgentProductSellStatisticsMapper;
 import demo.tool.temuAgent.pojo.dto.TemuAgentCeateProductDTO;
 import demo.tool.temuAgent.pojo.dto.TemuAgentCreateOrUpdateProductModelDTO;
 import demo.tool.temuAgent.pojo.dto.TemuAgentProductModelAddFlowDTO;
 import demo.tool.temuAgent.pojo.dto.TemuAgentProductModelDetailSearchDTO;
 import demo.tool.temuAgent.pojo.dto.TemuAgentSearchProductDTO;
 import demo.tool.temuAgent.pojo.po.TemuAgentProduct;
+import demo.tool.temuAgent.pojo.po.TemuAgentProductBuyAndSellHistory;
+import demo.tool.temuAgent.pojo.po.TemuAgentProductBuyAndSellStatistics;
+import demo.tool.temuAgent.pojo.po.TemuAgentProductBuyAndSellStatisticsExample;
 import demo.tool.temuAgent.pojo.po.TemuAgentProductExample;
 import demo.tool.temuAgent.pojo.po.TemuAgentProductExample.Criteria;
 import demo.tool.temuAgent.pojo.po.TemuAgentProductFlowHistory;
@@ -34,9 +37,6 @@ import demo.tool.temuAgent.pojo.po.TemuAgentProductFlowStatistics;
 import demo.tool.temuAgent.pojo.po.TemuAgentProductFlowStatisticsExample;
 import demo.tool.temuAgent.pojo.po.TemuAgentProductModel;
 import demo.tool.temuAgent.pojo.po.TemuAgentProductModelExample;
-import demo.tool.temuAgent.pojo.po.TemuAgentProductSellHistory;
-import demo.tool.temuAgent.pojo.po.TemuAgentProductSellStatistics;
-import demo.tool.temuAgent.pojo.po.TemuAgentProductSellStatisticsExample;
 import demo.tool.temuAgent.pojo.type.TemuAgentProductFlowType;
 import demo.tool.temuAgent.pojo.type.TemuAgentProductModelUnitType;
 import demo.tool.temuAgent.pojo.vo.TemuAgentProductModelStatisticsVO;
@@ -55,9 +55,9 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 	@Autowired
 	private TemuAgentProductFlowHistoryMapper productFlowHistoryMapper;
 	@Autowired
-	private TemuAgentProductSellStatisticsMapper productSellStatisticsMapper;
+	private TemuAgentProductBuyAndSellStatisticsMapper productBuyAndSellStatisticsMapper;
 	@Autowired
-	private TemuAgentProductSellHistoryMapper productSellHistoryMapper;
+	private TemuAgentProductBuyAndSellHistoryMapper productBuyAndSellHistoryMapper;
 
 	@Override
 	public ModelAndView home() {
@@ -72,10 +72,6 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 		CommonResult r = new CommonResult();
 		if (StringUtils.isBlank(dto.getProductName())) {
 			r.setMessage("Product name error");
-			return r;
-		}
-		if (dto.getUnitPrice() == null) {
-			r.setMessage("Unit price error");
 			return r;
 		}
 		LocalDateTime releaseDate = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getReleaseDateStr());
@@ -95,7 +91,6 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 		po.setId(snowFlake.getNextId());
 		po.setReleaseTime(releaseDate);
 		po.setNameCn(dto.getProductName());
-		po.setUnitPrice(dto.getUnitPrice());
 		productMapper.insertSelective(po);
 		r.setIsSuccess();
 		r.setMessage(String.valueOf(po.getId()));
@@ -164,7 +159,7 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 
 		List<TemuAgentProductModelStatisticsVO> productModelStatisticsVoList = queryProductFlowStatisticsVoList(
 				productModelIdList, productMap, productModelMap, dto);
-		productModelStatisticsVoList = queryProductSellStatisticsVoList(productModelIdList, productModelMap,
+		productModelStatisticsVoList = queryProductBuyAndSellStatisticsVoList(productModelIdList,
 				productModelStatisticsVoList);
 		for (int i = 0; i < productModelStatisticsVoList.size(); i++) {
 			TemuAgentProductModelStatisticsVO vo = productModelStatisticsVoList.get(i);
@@ -179,20 +174,21 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 		voForSummary.setTotalStockingCost(BigDecimal.ZERO);
 		voForSummary.setTotalPackingFeeCost(BigDecimal.ZERO);
 		voForSummary.setTotalSelledAmount(BigDecimal.ZERO);
+		voForSummary.setTotalCost(BigDecimal.ZERO);
 		for (int i = 0; i < productModelStatisticsVoList.size(); i++) {
-			TemuAgentProductModelStatisticsVO vo = productModelStatisticsVoList.get(i);
-			if (vo.getTotalStockingCost() != null) {
-				voForSummary.setTotalStockingCost(voForSummary.getTotalStockingCost().add(vo.getTotalStockingCost()));
+			TemuAgentProductModelStatisticsVO tmpVO = productModelStatisticsVoList.get(i);
+			if (tmpVO.getTotalPackingFeeCost() != null) {
+				voForSummary.setTotalPackingFeeCost(
+						voForSummary.getTotalPackingFeeCost().add(tmpVO.getTotalPackingFeeCost()));
 			}
-			if (vo.getTotalPackingFeeCost() != null) {
+			if (tmpVO.getTotalCost() != null) {
+				voForSummary.setTotalCost(voForSummary.getTotalCost().add(tmpVO.getTotalCost()));
+			}
+			if (tmpVO.getTotalSelledAmount() != null) {
 				voForSummary
-						.setTotalPackingFeeCost(voForSummary.getTotalPackingFeeCost().add(vo.getTotalPackingFeeCost()));
-			}
-			if (vo.getTotalSelledAmount() != null) {
-				voForSummary.setTotalSelledAmount(voForSummary.getTotalSelledAmount().add(vo.getTotalSelledAmount()));
+						.setTotalSelledAmount(voForSummary.getTotalSelledAmount().add(tmpVO.getTotalSelledAmount()));
 			}
 		}
-		voForSummary.setTotalCost(voForSummary.getTotalStockingCost().add(voForSummary.getTotalPackingFeeCost()));
 
 		productModelStatisticsVoList.add(voForSummary);
 		v.addObject("productModelStatisticsList", productModelStatisticsVoList);
@@ -269,7 +265,6 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 			}
 			vo.setProductName(product.getNameCn());
 			vo.setProductId(product.getId());
-			vo.setUnitPrice(product.getUnitPrice());
 
 			TemuAgentProductFlowStatistics flowStatisticsPO = flowStatisticsPoMap.get(modelId);
 			if (flowStatisticsPO == null) {
@@ -280,55 +275,64 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 			}
 			BeanUtils.copyProperties(flowStatisticsPO, vo);
 
-			Integer buiedCounting = vo.getStockingCounting() + vo.getInternationalStockingCounting()
-					+ vo.getSelledCounting();
-			BigDecimal totalStockingCost = product.getUnitPrice()
-					.multiply(new BigDecimal(buiedCounting).multiply(new BigDecimal(vo.getUnitCounting())));
-			vo.setTotalStockingCost(totalStockingCost);
 			Integer packagedCounting = vo.getStockingCounting() + vo.getInternationalStockingCounting()
 					+ vo.getSelledCounting() + vo.getRepackageCounting();
 			BigDecimal totalPackageFee = productModel.getPackingFee().multiply(new BigDecimal(packagedCounting));
 			vo.setTotalPackingFeeCost(totalPackageFee);
-			vo.setTotalCost(totalStockingCost.add(totalPackageFee));
 		}
 		return voList;
 	}
 
-	private List<TemuAgentProductModelStatisticsVO> queryProductSellStatisticsVoList(List<Long> modelIdList,
-			Map<Long, TemuAgentProductModel> productModelMap, List<TemuAgentProductModelStatisticsVO> voList) {
-		List<TemuAgentProductSellStatistics> sellStatisticsList = queryProductSellStatistics(modelIdList);
-		Map<Long, TemuAgentProductSellStatistics> sellStatisticsMap = new HashMap<>();
-		for (int i = 0; i < sellStatisticsList.size(); i++) {
-			sellStatisticsMap.put(sellStatisticsList.get(i).getModelId(), sellStatisticsList.get(i));
+	private List<TemuAgentProductModelStatisticsVO> queryProductBuyAndSellStatisticsVoList(List<Long> modelIdList,
+			List<TemuAgentProductModelStatisticsVO> voList) {
+		List<TemuAgentProductBuyAndSellStatistics> buyAndSellStatisticsList = queryProductSellStatistics(modelIdList);
+		Map<Long, TemuAgentProductBuyAndSellStatistics> buyAndSellStatisticsMap = new HashMap<>();
+		for (int i = 0; i < buyAndSellStatisticsList.size(); i++) {
+			buyAndSellStatisticsMap.put(buyAndSellStatisticsList.get(i).getModelId(), buyAndSellStatisticsList.get(i));
 		}
 
 		for (int i = 0; i < voList.size(); i++) {
 			TemuAgentProductModelStatisticsVO vo = voList.get(i);
-			TemuAgentProductSellStatistics statistics = sellStatisticsMap.get(vo.getModelId());
+			TemuAgentProductBuyAndSellStatistics statistics = buyAndSellStatisticsMap.get(vo.getModelId());
 			if (statistics == null) {
-				vo.setAvgPrice(BigDecimal.ZERO);
-				vo.setHighestPrice(BigDecimal.ZERO);
-				vo.setLowestPrice(BigDecimal.ZERO);
-				vo.setLastPrice(BigDecimal.ZERO);
+				vo.setAvgBuyPrice(BigDecimal.ZERO);
+				vo.setHighestBuyPrice(BigDecimal.ZERO);
+				vo.setLowestBuyPrice(BigDecimal.ZERO);
+				vo.setLowestBuyPrice(BigDecimal.ZERO);
+				vo.setLastBuyPrice(BigDecimal.ZERO);
+				vo.setAvgSellPrice(BigDecimal.ZERO);
+				vo.setHighestSellPrice(BigDecimal.ZERO);
+				vo.setLowestSellPrice(BigDecimal.ZERO);
+				vo.setLowestSellPrice(BigDecimal.ZERO);
 				vo.setTotalSelledAmount(BigDecimal.ZERO);
 				continue;
 			}
-			vo.setAvgPrice(statistics.getAvgPrice());
-			vo.setHighestPrice(statistics.getHighestPrice());
-			vo.setLowestPrice(statistics.getLowestPrice());
-			vo.setLastPrice(statistics.getLastPrice());
-			vo.setTotalSelledAmount(statistics.getAvgPrice().multiply(new BigDecimal(statistics.getCounting())));
+			vo.setAvgBuyPrice(statistics.getAvgBuyPrice());
+			vo.setHighestBuyPrice(statistics.getHighestBuyPrice());
+			vo.setLowestBuyPrice(statistics.getLowestBuyPrice());
+			vo.setLastBuyPrice(statistics.getLastBuyPrice());
+			vo.setBoughtCounting(statistics.getBuyCounting());
+			BigDecimal buyCounting = new BigDecimal(statistics.getBuyCounting());
+			BigDecimal totalPackageFee = buyCounting.multiply(vo.getPackingFee());
+			vo.setTotalCost(buyCounting.multiply(statistics.getAvgBuyPrice()).add(totalPackageFee));
+			vo.setAvgSellPrice(statistics.getAvgSellPrice());
+			vo.setHighestSellPrice(statistics.getHighestSellPrice());
+			vo.setLowestSellPrice(statistics.getLowestSellPrice());
+			vo.setLastSellPrice(statistics.getLastSellPrice());
+			vo.setSelledCounting(statistics.getSellCounting());
+			vo.setTotalSelledAmount(
+					statistics.getAvgSellPrice().multiply(new BigDecimal(statistics.getSellCounting())));
 		}
 
 		return voList;
 	}
 
-	private List<TemuAgentProductSellStatistics> queryProductSellStatistics(List<Long> modelIdList) {
-		TemuAgentProductSellStatisticsExample example = new TemuAgentProductSellStatisticsExample();
+	private List<TemuAgentProductBuyAndSellStatistics> queryProductSellStatistics(List<Long> modelIdList) {
+		TemuAgentProductBuyAndSellStatisticsExample example = new TemuAgentProductBuyAndSellStatisticsExample();
 		if (modelIdList != null && modelIdList.size() > 0) {
 			example.createCriteria().andModelIdIn(modelIdList);
 		}
-		return productSellStatisticsMapper.selectByExample(example);
+		return productBuyAndSellStatisticsMapper.selectByExample(example);
 	}
 
 	@Override
@@ -337,14 +341,12 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 		TemuAgentProductModel po = new TemuAgentProductModel();
 		po.setId(snowFlake.getNextId());
 		try {
-			TemuAgentProduct product = productMapper.selectByPrimaryKey(dto.getProductId());
 			po.setProductId(dto.getProductId());
 			po.setUnitTypeCode(dto.getUnitTypeCode());
 			po.setUnitCounting(dto.getUnitCounting());
 			po.setSpu(dto.getSpu());
 			po.setSku(dto.getSku());
 			po.setSkc(dto.getSkc());
-			po.setPurchasePrice(product.getUnitPrice().multiply(new BigDecimal(dto.getUnitCounting())));
 			po.setDeclearedPrice(dto.getDeclearedPrice());
 			po.setPackingFee(dto.getPackingFee());
 			productModelMapper.insertSelective(po);
@@ -365,14 +367,12 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 		CommonResult r = new CommonResult();
 		TemuAgentProductModel po = productModelMapper.selectByPrimaryKey(dto.getProductModelId());
 		try {
-			TemuAgentProduct product = productMapper.selectByPrimaryKey(dto.getProductId());
 			po.setProductId(dto.getProductId());
 			po.setUnitTypeCode(dto.getUnitTypeCode());
 			po.setUnitCounting(dto.getUnitCounting());
 			po.setSpu(dto.getSpu());
 			po.setSku(dto.getSku());
 			po.setSkc(dto.getSkc());
-			po.setPurchasePrice(product.getUnitPrice().multiply(new BigDecimal(dto.getUnitCounting())));
 			po.setDeclearedPrice(dto.getDeclearedPrice());
 			po.setPackingFee(dto.getPackingFee());
 			productModelMapper.updateByPrimaryKey(po);
@@ -390,19 +390,29 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 		if (r.isFail()) {
 			return r;
 		}
-		insertProductModelFlowHistory(dto);
-
+		if (dto.getPrice() == null || dto.getPrice().doubleValue() < 0) {
+			r.setMessage("Price error");
+			return r;
+		}
 		TemuAgentProductFlowStatistics flowStatistics = productFlowStatisticsMapper
 				.selectByPrimaryKey(dto.getModelId());
 		if (flowStatistics == null) {
 			r.setMessage("Can NOT find statistics data");
 			return r;
 		}
+
+		insertProductModelFlowHistory(dto);
+		// TODO
+		// add storehouse data ?
+
 		LocalDateTime now = LocalDateTime.now();
 		flowStatistics.setStockingCounting(flowStatistics.getStockingCounting() + dto.getCounting());
 		flowStatistics.setStockingUpdateTime(now);
 		flowStatistics.setUpdateTime(now);
 		productFlowStatisticsMapper.updateByPrimaryKeySelective(flowStatistics);
+
+		productModelAddBuyOrSelledData(dto);
+
 		r.setIsSuccess();
 		return r;
 	}
@@ -439,11 +449,10 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 		if (r.isFail()) {
 			return r;
 		}
-		if (dto.getPrice() == null || dto.getPrice().intValue() <= 0) {
+		if (dto.getPrice() == null || dto.getPrice().doubleValue() < 0) {
 			r.setMessage("Price error");
 			return r;
 		}
-		insertProductModelFlowHistory(dto);
 
 		TemuAgentProductFlowStatistics flowStatistics = productFlowStatisticsMapper
 				.selectByPrimaryKey(dto.getModelId());
@@ -451,6 +460,9 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 			r.setMessage("Can NOT find statistics data");
 			return r;
 		}
+
+		insertProductModelFlowHistory(dto);
+
 		LocalDateTime now = LocalDateTime.now();
 		flowStatistics.setInternationalStockingCounting(
 				flowStatistics.getInternationalStockingCounting() - dto.getCounting());
@@ -460,7 +472,7 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 		flowStatistics.setUpdateTime(now);
 		productFlowStatisticsMapper.updateByPrimaryKeySelective(flowStatistics);
 
-		r = productModelAddSelledData(dto);
+		r = productModelAddBuyOrSelledData(dto);
 		if (r.isFail()) {
 			return r;
 		}
@@ -469,47 +481,88 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 		return r;
 	}
 
-	private CommonResult productModelAddSelledData(TemuAgentProductModelAddFlowDTO dto) {
+	private CommonResult productModelAddBuyOrSelledData(TemuAgentProductModelAddFlowDTO dto) {
 		CommonResult r = new CommonResult();
-		TemuAgentProductSellStatistics po = productSellStatisticsMapper.selectByPrimaryKey(dto.getModelId());
+		TemuAgentProductBuyAndSellStatistics po = productBuyAndSellStatisticsMapper
+				.selectByPrimaryKey(dto.getModelId());
 		boolean newDataFlag = po == null;
+		TemuAgentProductFlowType flowType = TemuAgentProductFlowType.getType(dto.getFlowTypeCode());
+		boolean buyFlag = TemuAgentProductFlowType.STOCKING.equals(flowType)
+				|| TemuAgentProductFlowType.INTERNATIONAL_STOCKING.equals(flowType);
 		LocalDateTime now = LocalDateTime.now();
 		if (newDataFlag) {
-			po = new TemuAgentProductSellStatistics();
+			po = new TemuAgentProductBuyAndSellStatistics();
 			po.setModelId(dto.getModelId());
-			po.setCounting(dto.getCounting());
-			po.setAvgPrice(dto.getPrice());
-			po.setHighestPrice(dto.getPrice());
-			po.setLowestPrice(dto.getPrice());
-			po.setLastPrice(dto.getPrice());
+			if (buyFlag) {
+				po.setBuyCounting(dto.getCounting());
+				po.setAvgBuyPrice(dto.getPrice());
+				po.setHighestBuyPrice(dto.getPrice());
+				po.setLowestBuyPrice(dto.getPrice());
+				po.setLastBuyPrice(dto.getPrice());
+				po.setSellCounting(0);
+				po.setAvgSellPrice(BigDecimal.ZERO);
+				po.setHighestSellPrice(BigDecimal.ZERO);
+				po.setLowestSellPrice(BigDecimal.ZERO);
+				po.setLastSellPrice(BigDecimal.ZERO);
+			} else {
+				po.setSellCounting(Math.abs(dto.getCounting()));
+				po.setAvgSellPrice(dto.getPrice());
+				po.setHighestSellPrice(dto.getPrice());
+				po.setLowestSellPrice(dto.getPrice());
+				po.setLastSellPrice(dto.getPrice());
+				po.setBuyCounting(0);
+				po.setAvgBuyPrice(BigDecimal.ZERO);
+				po.setHighestBuyPrice(BigDecimal.ZERO);
+				po.setLowestBuyPrice(BigDecimal.ZERO);
+				po.setLastBuyPrice(BigDecimal.ZERO);
+			}
 			po.setUpdateTime(now);
 			po.setCreateTime(now);
-			productSellStatisticsMapper.insertSelective(po);
+			productBuyAndSellStatisticsMapper.insertSelective(po);
 		} else {
-			BigDecimal oldSelledAmount = po.getAvgPrice().multiply(new BigDecimal(po.getCounting()));
-			BigDecimal newSelledAmount = dto.getPrice().multiply(new BigDecimal(dto.getCounting()));
-			BigDecimal newAvgPrice = oldSelledAmount.add(newSelledAmount)
-					.divide(new BigDecimal(po.getCounting() + dto.getCounting()), 2, RoundingMode.HALF_UP);
-			po.setAvgPrice(newAvgPrice);
-			po.setCounting(po.getCounting() + dto.getCounting());
-			po.setUpdateTime(now);
-			po.setLastPrice(dto.getPrice());
-			if (po.getHighestPrice().compareTo(dto.getPrice()) > 0) {
-				po.setHighestPrice(dto.getPrice());
+			Integer counting = Math.abs(dto.getCounting());
+			if (buyFlag) {
+				BigDecimal oldBoughtAmount = po.getAvgBuyPrice().multiply(new BigDecimal(po.getBuyCounting()));
+				BigDecimal newBoughtAmount = dto.getPrice().multiply(new BigDecimal(counting));
+				BigDecimal newBoughtAvgPrice = oldBoughtAmount.add(newBoughtAmount)
+						.divide(new BigDecimal(po.getBuyCounting() + counting), 2, RoundingMode.HALF_UP);
+				po.setAvgBuyPrice(newBoughtAvgPrice);
+				po.setBuyCounting(po.getBuyCounting() + counting);
+				po.setUpdateTime(now);
+				po.setLastBuyPrice(dto.getPrice());
+				if (po.getHighestBuyPrice().compareTo(dto.getPrice()) > 0) {
+					po.setHighestBuyPrice(dto.getPrice());
+				}
+				if (po.getLowestBuyPrice().compareTo(dto.getPrice()) < 0) {
+					po.setLowestBuyPrice(dto.getPrice());
+				}
+			} else {
+				BigDecimal oldSelledAmount = po.getAvgSellPrice().multiply(new BigDecimal(po.getSellCounting()));
+				BigDecimal newSelledAmount = dto.getPrice().multiply(new BigDecimal(counting));
+				BigDecimal newSelledAvgPrice = oldSelledAmount.add(newSelledAmount)
+						.divide(new BigDecimal(po.getSellCounting() + counting), 2, RoundingMode.HALF_UP);
+				po.setAvgSellPrice(newSelledAvgPrice);
+				po.setSellCounting(po.getSellCounting() + counting);
+				po.setUpdateTime(now);
+				po.setLastSellPrice(dto.getPrice());
+				if (po.getHighestSellPrice().compareTo(dto.getPrice()) > 0) {
+					po.setHighestSellPrice(dto.getPrice());
+				}
+				if (po.getLowestSellPrice().compareTo(dto.getPrice()) < 0) {
+					po.setLowestSellPrice(dto.getPrice());
+				}
 			}
-			if (po.getLowestPrice().compareTo(dto.getPrice()) < 0) {
-				po.setLowestPrice(dto.getPrice());
-			}
-			productSellStatisticsMapper.updateByPrimaryKey(po);
+
+			productBuyAndSellStatisticsMapper.updateByPrimaryKey(po);
 		}
 
-		TemuAgentProductSellHistory history = new TemuAgentProductSellHistory();
+		TemuAgentProductBuyAndSellHistory history = new TemuAgentProductBuyAndSellHistory();
 		history.setId(snowFlake.getNextId());
 		history.setModelId(dto.getModelId());
 		history.setCounting(dto.getCounting());
 		history.setPrice(dto.getPrice());
 		history.setIsReturn(false);
-		productSellHistoryMapper.insertSelective(history);
+		productBuyAndSellHistoryMapper.insertSelective(history);
 
 		r.setIsSuccess();
 		return r;
@@ -521,14 +574,15 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 		if (r.isFail()) {
 			return r;
 		}
-		insertProductModelFlowHistory(dto);
-
 		TemuAgentProductFlowStatistics flowStatistics = productFlowStatisticsMapper
 				.selectByPrimaryKey(dto.getModelId());
 		if (flowStatistics == null) {
 			r.setMessage("Can NOT find statistics data");
 			return r;
 		}
+
+		insertProductModelFlowHistory(dto);
+
 		LocalDateTime now = LocalDateTime.now();
 		flowStatistics.setStockingCounting(flowStatistics.getStockingCounting() - dto.getCounting());
 		flowStatistics.setStockingUpdateTime(now);

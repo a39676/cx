@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.tool.temuAgent.mapper.TemuAgentProductBuyAndSellStatisticsMapper">
+  <resultMap id="BaseResultMap" type="demo.tool.temuAgent.pojo.po.TemuAgentProductBuyAndSellStatistics">
+    <id column="model_id" jdbcType="BIGINT" property="modelId" />
+    <result column="buy_counting" jdbcType="INTEGER" property="buyCounting" />
+    <result column="avg_buy_price" jdbcType="DECIMAL" property="avgBuyPrice" />
+    <result column="highest_buy_price" jdbcType="DECIMAL" property="highestBuyPrice" />
+    <result column="lowest_buy_price" jdbcType="DECIMAL" property="lowestBuyPrice" />
+    <result column="last_buy_price" jdbcType="DECIMAL" property="lastBuyPrice" />
+    <result column="sell_counting" jdbcType="INTEGER" property="sellCounting" />
+    <result column="avg_sell_price" jdbcType="DECIMAL" property="avgSellPrice" />
+    <result column="highest_sell_price" jdbcType="DECIMAL" property="highestSellPrice" />
+    <result column="lowest_sell_price" jdbcType="DECIMAL" property="lowestSellPrice" />
+    <result column="last_sell_price" jdbcType="DECIMAL" property="lastSellPrice" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    model_id, buy_counting, avg_buy_price, highest_buy_price, lowest_buy_price, last_buy_price, 
+    sell_counting, avg_sell_price, highest_sell_price, lowest_sell_price, last_sell_price, 
+    update_time, create_time
+  </sql>
+  <select id="selectByExample" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductBuyAndSellStatisticsExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from temu_agent_product_buy_and_sell_statistics
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from temu_agent_product_buy_and_sell_statistics
+    where model_id = #{modelId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from temu_agent_product_buy_and_sell_statistics
+    where model_id = #{modelId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductBuyAndSellStatisticsExample">
+    delete from temu_agent_product_buy_and_sell_statistics
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductBuyAndSellStatistics">
+    insert into temu_agent_product_buy_and_sell_statistics (model_id, buy_counting, avg_buy_price, 
+      highest_buy_price, lowest_buy_price, last_buy_price, 
+      sell_counting, avg_sell_price, highest_sell_price, 
+      lowest_sell_price, last_sell_price, update_time, 
+      create_time)
+    values (#{modelId,jdbcType=BIGINT}, #{buyCounting,jdbcType=INTEGER}, #{avgBuyPrice,jdbcType=DECIMAL}, 
+      #{highestBuyPrice,jdbcType=DECIMAL}, #{lowestBuyPrice,jdbcType=DECIMAL}, #{lastBuyPrice,jdbcType=DECIMAL}, 
+      #{sellCounting,jdbcType=INTEGER}, #{avgSellPrice,jdbcType=DECIMAL}, #{highestSellPrice,jdbcType=DECIMAL}, 
+      #{lowestSellPrice,jdbcType=DECIMAL}, #{lastSellPrice,jdbcType=DECIMAL}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductBuyAndSellStatistics">
+    insert into temu_agent_product_buy_and_sell_statistics
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="modelId != null">
+        model_id,
+      </if>
+      <if test="buyCounting != null">
+        buy_counting,
+      </if>
+      <if test="avgBuyPrice != null">
+        avg_buy_price,
+      </if>
+      <if test="highestBuyPrice != null">
+        highest_buy_price,
+      </if>
+      <if test="lowestBuyPrice != null">
+        lowest_buy_price,
+      </if>
+      <if test="lastBuyPrice != null">
+        last_buy_price,
+      </if>
+      <if test="sellCounting != null">
+        sell_counting,
+      </if>
+      <if test="avgSellPrice != null">
+        avg_sell_price,
+      </if>
+      <if test="highestSellPrice != null">
+        highest_sell_price,
+      </if>
+      <if test="lowestSellPrice != null">
+        lowest_sell_price,
+      </if>
+      <if test="lastSellPrice != null">
+        last_sell_price,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="modelId != null">
+        #{modelId,jdbcType=BIGINT},
+      </if>
+      <if test="buyCounting != null">
+        #{buyCounting,jdbcType=INTEGER},
+      </if>
+      <if test="avgBuyPrice != null">
+        #{avgBuyPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="highestBuyPrice != null">
+        #{highestBuyPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="lowestBuyPrice != null">
+        #{lowestBuyPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="lastBuyPrice != null">
+        #{lastBuyPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="sellCounting != null">
+        #{sellCounting,jdbcType=INTEGER},
+      </if>
+      <if test="avgSellPrice != null">
+        #{avgSellPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="highestSellPrice != null">
+        #{highestSellPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="lowestSellPrice != null">
+        #{lowestSellPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="lastSellPrice != null">
+        #{lastSellPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductBuyAndSellStatisticsExample" resultType="java.lang.Long">
+    select count(*) from temu_agent_product_buy_and_sell_statistics
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update temu_agent_product_buy_and_sell_statistics
+    <set>
+      <if test="row.modelId != null">
+        model_id = #{row.modelId,jdbcType=BIGINT},
+      </if>
+      <if test="row.buyCounting != null">
+        buy_counting = #{row.buyCounting,jdbcType=INTEGER},
+      </if>
+      <if test="row.avgBuyPrice != null">
+        avg_buy_price = #{row.avgBuyPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="row.highestBuyPrice != null">
+        highest_buy_price = #{row.highestBuyPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="row.lowestBuyPrice != null">
+        lowest_buy_price = #{row.lowestBuyPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="row.lastBuyPrice != null">
+        last_buy_price = #{row.lastBuyPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="row.sellCounting != null">
+        sell_counting = #{row.sellCounting,jdbcType=INTEGER},
+      </if>
+      <if test="row.avgSellPrice != null">
+        avg_sell_price = #{row.avgSellPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="row.highestSellPrice != null">
+        highest_sell_price = #{row.highestSellPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="row.lowestSellPrice != null">
+        lowest_sell_price = #{row.lowestSellPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="row.lastSellPrice != null">
+        last_sell_price = #{row.lastSellPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="row.updateTime != null">
+        update_time = #{row.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.createTime != null">
+        create_time = #{row.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update temu_agent_product_buy_and_sell_statistics
+    set model_id = #{row.modelId,jdbcType=BIGINT},
+      buy_counting = #{row.buyCounting,jdbcType=INTEGER},
+      avg_buy_price = #{row.avgBuyPrice,jdbcType=DECIMAL},
+      highest_buy_price = #{row.highestBuyPrice,jdbcType=DECIMAL},
+      lowest_buy_price = #{row.lowestBuyPrice,jdbcType=DECIMAL},
+      last_buy_price = #{row.lastBuyPrice,jdbcType=DECIMAL},
+      sell_counting = #{row.sellCounting,jdbcType=INTEGER},
+      avg_sell_price = #{row.avgSellPrice,jdbcType=DECIMAL},
+      highest_sell_price = #{row.highestSellPrice,jdbcType=DECIMAL},
+      lowest_sell_price = #{row.lowestSellPrice,jdbcType=DECIMAL},
+      last_sell_price = #{row.lastSellPrice,jdbcType=DECIMAL},
+      update_time = #{row.updateTime,jdbcType=TIMESTAMP},
+      create_time = #{row.createTime,jdbcType=TIMESTAMP}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductBuyAndSellStatistics">
+    update temu_agent_product_buy_and_sell_statistics
+    <set>
+      <if test="buyCounting != null">
+        buy_counting = #{buyCounting,jdbcType=INTEGER},
+      </if>
+      <if test="avgBuyPrice != null">
+        avg_buy_price = #{avgBuyPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="highestBuyPrice != null">
+        highest_buy_price = #{highestBuyPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="lowestBuyPrice != null">
+        lowest_buy_price = #{lowestBuyPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="lastBuyPrice != null">
+        last_buy_price = #{lastBuyPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="sellCounting != null">
+        sell_counting = #{sellCounting,jdbcType=INTEGER},
+      </if>
+      <if test="avgSellPrice != null">
+        avg_sell_price = #{avgSellPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="highestSellPrice != null">
+        highest_sell_price = #{highestSellPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="lowestSellPrice != null">
+        lowest_sell_price = #{lowestSellPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="lastSellPrice != null">
+        last_sell_price = #{lastSellPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where model_id = #{modelId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductBuyAndSellStatistics">
+    update temu_agent_product_buy_and_sell_statistics
+    set buy_counting = #{buyCounting,jdbcType=INTEGER},
+      avg_buy_price = #{avgBuyPrice,jdbcType=DECIMAL},
+      highest_buy_price = #{highestBuyPrice,jdbcType=DECIMAL},
+      lowest_buy_price = #{lowestBuyPrice,jdbcType=DECIMAL},
+      last_buy_price = #{lastBuyPrice,jdbcType=DECIMAL},
+      sell_counting = #{sellCounting,jdbcType=INTEGER},
+      avg_sell_price = #{avgSellPrice,jdbcType=DECIMAL},
+      highest_sell_price = #{highestSellPrice,jdbcType=DECIMAL},
+      lowest_sell_price = #{lowestSellPrice,jdbcType=DECIMAL},
+      last_sell_price = #{lastSellPrice,jdbcType=DECIMAL},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where model_id = #{modelId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductBuyAndSellStatisticsExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from temu_agent_product_buy_and_sell_statistics
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

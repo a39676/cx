@@ -5,14 +5,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TemuAgentProductSellHistoryExample {
+public class TemuAgentProductBuyAndSellHistoryExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public TemuAgentProductSellHistoryExample() {
+    public TemuAgentProductBuyAndSellHistoryExample() {
         oredCriteria = new ArrayList<>();
     }
 

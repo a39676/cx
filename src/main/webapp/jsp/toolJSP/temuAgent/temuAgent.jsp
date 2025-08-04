@@ -23,7 +23,6 @@
           <tr>
             <td>创建日期</td>
             <td>货名</td>
-            <td>单价</td>
           </tr>
           <tr>
             <td>
@@ -31,9 +30,6 @@
             </td>
             <td>
               <input type="text" name="" id="productName" placeholder="货名"><br>
-            </td>
-            <td>
-              <input type="number" name="" id="unitPrice" placeholder="单价"><br>
             </td>
           </tr>
         </table>
@@ -108,7 +104,7 @@
         <label for="internationalStockingGreaterThanZero">有备货(国际仓)</label>
         <button id="resetProductModelCondition">reset</button><br>
         <input type="number" id="stockingUpdateCounting" name=""  placeholder="stockingUpdateCounting">
-        <input type="number" id="sellingPrice" name=""  placeholder="sellingPrice">
+        <input type="number" id="price" name=""  placeholder="price">
         <button id="AddStocking">AddStocking</button>
         <button id="AddInternationalStocking">AddInternationalStocking</button>
         <button id="AddSelled">AddSelled</button>
@@ -174,14 +170,12 @@
     function createProduct(){ 
       var releaseDateStr = $("#releaseDateStr").val();
       var productName = $("#productName").val();
-      var unitPrice = $("#unitPrice").val();
       
       var url = "/temuAgent/createProduct";
 
       var jsonOutput = {
         releaseDateStr:releaseDateStr,
         productName:productName,
-        unitPrice:unitPrice,
       };
 
       $.ajax({  
@@ -208,7 +202,6 @@
     $("#resetProductCondition").click(function () {
       $("#releaseDateStr").val("");
       $("#productName").val("");
-      $("#unitPrice").val("");
     });
 
     $("#resetProductModelCondition").click(function () {
@@ -322,12 +315,11 @@
     }
 
     $("#AddStocking").click(function () {
-      $("#sellingPrice").val("");
       productModelAddFlow("/temuAgent/productModelAddStocking", 1);
     });
 
     $("#AddInternationalStocking").click(function () {
-      $("#sellingPrice").val("");
+      $("#price").val("");
       productModelAddFlow("/temuAgent/productModelAddInternationalStocking", 2);
     });
 
@@ -336,7 +328,7 @@
     });
 
     $("#AddRepackage").click(function () {
-      $("#sellingPrice").val("");
+      $("#price").val("");
       productModelAddFlow("/temuAgent/productModelAddRepackage", 4);
     });
 
@@ -344,7 +336,7 @@
     function productModelAddFlow(url, flowTypeCode) {
       $("#msg").text("");
       var counting = $("#stockingUpdateCounting").val();
-      var price = $("#sellingPrice").val();
+      var price = $("#price").val();
       var modelId = $("#modelID").val();
       
       <%-- url --%>

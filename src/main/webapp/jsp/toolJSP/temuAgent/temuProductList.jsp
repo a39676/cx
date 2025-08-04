@@ -32,7 +32,6 @@
                 productId="${product.id}">
                 ${product.nameCn}_${product.id}
               </td>
-              <td>${product.unitPrice}</td>
               <td>${product.releaseTime}</td>
             </tr>
           </c:forEach>

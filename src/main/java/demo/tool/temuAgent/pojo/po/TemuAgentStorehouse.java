@@ -2,12 +2,14 @@ package demo.tool.temuAgent.pojo.po;
 
 import java.time.LocalDateTime;
 
-public class TemuAgentProduct {
+public class TemuAgentStorehouse {
     private Long id;
 
     private String nameCn;
 
-    private LocalDateTime releaseTime;
+    private String address;
+
+    private LocalDateTime updateTime;
 
     private LocalDateTime createTime;
 
@@ -27,12 +29,20 @@ public class TemuAgentProduct {
         this.nameCn = nameCn == null ? null : nameCn.trim();
     }
 
-    public LocalDateTime getReleaseTime() {
-        return releaseTime;
+    public String getAddress() {
+        return address;
     }
 
-    public void setReleaseTime(LocalDateTime releaseTime) {
-        this.releaseTime = releaseTime;
+    public void setAddress(String address) {
+        this.address = address == null ? null : address.trim();
+    }
+
+    public LocalDateTime getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(LocalDateTime updateTime) {
+        this.updateTime = updateTime;
     }
 
     public LocalDateTime getCreateTime() {

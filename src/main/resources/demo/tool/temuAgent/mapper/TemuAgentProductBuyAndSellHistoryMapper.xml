@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="demo.tool.temuAgent.mapper.TemuAgentProductSellStatisticsMapper">
-  <resultMap id="BaseResultMap" type="demo.tool.temuAgent.pojo.po.TemuAgentProductSellStatistics">
-    <id column="model_id" jdbcType="BIGINT" property="modelId" />
+<mapper namespace="demo.tool.temuAgent.mapper.TemuAgentProductBuyAndSellHistoryMapper">
+  <resultMap id="BaseResultMap" type="demo.tool.temuAgent.pojo.po.TemuAgentProductBuyAndSellHistory">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="model_id" jdbcType="BIGINT" property="modelId" />
     <result column="counting" jdbcType="INTEGER" property="counting" />
-    <result column="avg_price" jdbcType="DECIMAL" property="avgPrice" />
-    <result column="highest_price" jdbcType="DECIMAL" property="highestPrice" />
-    <result column="lowest_price" jdbcType="DECIMAL" property="lowestPrice" />
-    <result column="last_price" jdbcType="DECIMAL" property="lastPrice" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="is_return" jdbcType="BIT" property="isReturn" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -70,16 +68,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    model_id, counting, avg_price, highest_price, lowest_price, last_price, update_time, 
-    create_time
+    id, model_id, counting, price, is_return, create_time
   </sql>
-  <select id="selectByExample" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductSellStatisticsExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductBuyAndSellHistoryExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from temu_agent_product_sell_statistics
+    from temu_agent_product_buy_and_sell_history
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -90,111 +87,93 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from temu_agent_product_sell_statistics
-    where model_id = #{modelId,jdbcType=BIGINT}
+    from temu_agent_product_buy_and_sell_history
+    where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from temu_agent_product_sell_statistics
-    where model_id = #{modelId,jdbcType=BIGINT}
+    delete from temu_agent_product_buy_and_sell_history
+    where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductSellStatisticsExample">
-    delete from temu_agent_product_sell_statistics
+  <delete id="deleteByExample" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductBuyAndSellHistoryExample">
+    delete from temu_agent_product_buy_and_sell_history
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductSellStatistics">
-    insert into temu_agent_product_sell_statistics (model_id, counting, avg_price, 
-      highest_price, lowest_price, last_price, 
-      update_time, create_time)
-    values (#{modelId,jdbcType=BIGINT}, #{counting,jdbcType=INTEGER}, #{avgPrice,jdbcType=DECIMAL}, 
-      #{highestPrice,jdbcType=DECIMAL}, #{lowestPrice,jdbcType=DECIMAL}, #{lastPrice,jdbcType=DECIMAL}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
+  <insert id="insert" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductBuyAndSellHistory">
+    insert into temu_agent_product_buy_and_sell_history (id, model_id, counting, 
+      price, is_return, create_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{modelId,jdbcType=BIGINT}, #{counting,jdbcType=INTEGER}, 
+      #{price,jdbcType=DECIMAL}, #{isReturn,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductSellStatistics">
-    insert into temu_agent_product_sell_statistics
+  <insert id="insertSelective" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductBuyAndSellHistory">
+    insert into temu_agent_product_buy_and_sell_history
     <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
       <if test="modelId != null">
         model_id,
       </if>
       <if test="counting != null">
         counting,
       </if>
-      <if test="avgPrice != null">
-        avg_price,
+      <if test="price != null">
+        price,
       </if>
-      <if test="highestPrice != null">
-        highest_price,
-      </if>
-      <if test="lowestPrice != null">
-        lowest_price,
-      </if>
-      <if test="lastPrice != null">
-        last_price,
-      </if>
-      <if test="updateTime != null">
-        update_time,
+      <if test="isReturn != null">
+        is_return,
       </if>
       <if test="createTime != null">
         create_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
       <if test="modelId != null">
         #{modelId,jdbcType=BIGINT},
       </if>
       <if test="counting != null">
         #{counting,jdbcType=INTEGER},
       </if>
-      <if test="avgPrice != null">
-        #{avgPrice,jdbcType=DECIMAL},
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
       </if>
-      <if test="highestPrice != null">
-        #{highestPrice,jdbcType=DECIMAL},
-      </if>
-      <if test="lowestPrice != null">
-        #{lowestPrice,jdbcType=DECIMAL},
-      </if>
-      <if test="lastPrice != null">
-        #{lastPrice,jdbcType=DECIMAL},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
+      <if test="isReturn != null">
+        #{isReturn,jdbcType=BIT},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductSellStatisticsExample" resultType="java.lang.Long">
-    select count(*) from temu_agent_product_sell_statistics
+  <select id="countByExample" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductBuyAndSellHistoryExample" resultType="java.lang.Long">
+    select count(*) from temu_agent_product_buy_and_sell_history
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update temu_agent_product_sell_statistics
+    update temu_agent_product_buy_and_sell_history
     <set>
+      <if test="row.id != null">
+        id = #{row.id,jdbcType=BIGINT},
+      </if>
       <if test="row.modelId != null">
         model_id = #{row.modelId,jdbcType=BIGINT},
       </if>
       <if test="row.counting != null">
         counting = #{row.counting,jdbcType=INTEGER},
       </if>
-      <if test="row.avgPrice != null">
-        avg_price = #{row.avgPrice,jdbcType=DECIMAL},
+      <if test="row.price != null">
+        price = #{row.price,jdbcType=DECIMAL},
       </if>
-      <if test="row.highestPrice != null">
-        highest_price = #{row.highestPrice,jdbcType=DECIMAL},
-      </if>
-      <if test="row.lowestPrice != null">
-        lowest_price = #{row.lowestPrice,jdbcType=DECIMAL},
-      </if>
-      <if test="row.lastPrice != null">
-        last_price = #{row.lastPrice,jdbcType=DECIMAL},
-      </if>
-      <if test="row.updateTime != null">
-        update_time = #{row.updateTime,jdbcType=TIMESTAMP},
+      <if test="row.isReturn != null">
+        is_return = #{row.isReturn,jdbcType=BIT},
       </if>
       <if test="row.createTime != null">
         create_time = #{row.createTime,jdbcType=TIMESTAMP},
@@ -205,64 +184,54 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update temu_agent_product_sell_statistics
-    set model_id = #{row.modelId,jdbcType=BIGINT},
+    update temu_agent_product_buy_and_sell_history
+    set id = #{row.id,jdbcType=BIGINT},
+      model_id = #{row.modelId,jdbcType=BIGINT},
       counting = #{row.counting,jdbcType=INTEGER},
-      avg_price = #{row.avgPrice,jdbcType=DECIMAL},
-      highest_price = #{row.highestPrice,jdbcType=DECIMAL},
-      lowest_price = #{row.lowestPrice,jdbcType=DECIMAL},
-      last_price = #{row.lastPrice,jdbcType=DECIMAL},
-      update_time = #{row.updateTime,jdbcType=TIMESTAMP},
+      price = #{row.price,jdbcType=DECIMAL},
+      is_return = #{row.isReturn,jdbcType=BIT},
       create_time = #{row.createTime,jdbcType=TIMESTAMP}
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductSellStatistics">
-    update temu_agent_product_sell_statistics
+  <update id="updateByPrimaryKeySelective" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductBuyAndSellHistory">
+    update temu_agent_product_buy_and_sell_history
     <set>
+      <if test="modelId != null">
+        model_id = #{modelId,jdbcType=BIGINT},
+      </if>
       <if test="counting != null">
         counting = #{counting,jdbcType=INTEGER},
       </if>
-      <if test="avgPrice != null">
-        avg_price = #{avgPrice,jdbcType=DECIMAL},
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
       </if>
-      <if test="highestPrice != null">
-        highest_price = #{highestPrice,jdbcType=DECIMAL},
-      </if>
-      <if test="lowestPrice != null">
-        lowest_price = #{lowestPrice,jdbcType=DECIMAL},
-      </if>
-      <if test="lastPrice != null">
-        last_price = #{lastPrice,jdbcType=DECIMAL},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      <if test="isReturn != null">
+        is_return = #{isReturn,jdbcType=BIT},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where model_id = #{modelId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductSellStatistics">
-    update temu_agent_product_sell_statistics
-    set counting = #{counting,jdbcType=INTEGER},
-      avg_price = #{avgPrice,jdbcType=DECIMAL},
-      highest_price = #{highestPrice,jdbcType=DECIMAL},
-      lowest_price = #{lowestPrice,jdbcType=DECIMAL},
-      last_price = #{lastPrice,jdbcType=DECIMAL},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
+  <update id="updateByPrimaryKey" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductBuyAndSellHistory">
+    update temu_agent_product_buy_and_sell_history
+    set model_id = #{modelId,jdbcType=BIGINT},
+      counting = #{counting,jdbcType=INTEGER},
+      price = #{price,jdbcType=DECIMAL},
+      is_return = #{isReturn,jdbcType=BIT},
       create_time = #{createTime,jdbcType=TIMESTAMP}
-    where model_id = #{modelId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectByExampleWithRowbounds" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductSellStatisticsExample" resultMap="BaseResultMap">
+  <select id="selectByExampleWithRowbounds" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductBuyAndSellHistoryExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from temu_agent_product_sell_statistics
+    from temu_agent_product_buy_and_sell_history
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>

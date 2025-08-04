@@ -3,7 +3,7 @@ package demo.tool.temuAgent.pojo.po;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class TemuAgentProductSellHistory {
+public class TemuAgentProductBuyAndSellHistory {
     private Long id;
 
     private Long modelId;

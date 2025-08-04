@@ -54,9 +54,9 @@
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="temu_agent_product_flow_statistics">
-        	<property name="tableName" value="temu_agent_product_flow_statistics"></property>
-        	<property name="domainObjectName" value="temu_agent_product_flow_statistics"></property>
+        <table tableName="temu_agent_product_buy_and_sell_history">
+        	<property name="tableName" value="temu_agent_product_buy_and_sell_history"></property>
+        	<property name="domainObjectName" value="temu_agent_product_buy_and_sell_history"></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

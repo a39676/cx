@@ -23,7 +23,7 @@
           <tr>
             <td>名_productID_modelID</td>
             <td>数量_计数类型</td>
-            <td>拿货价_申报价_打包费</td>
+            <td>成本价_申报价_打包费</td>
             <td>SPU</td>
             <td>SKU</td>
             <td>SKC</td>
@@ -52,7 +52,7 @@
                 ${productModel.unitCounting}_${productModel.unitTypeName}
               </td>
               <td>
-                ${productModel.purchasePrice}_${productModel.declearedPrice}_${productModel.packingFee}
+                ${productModel.avgBuyPrice}_${productModel.declearedPrice}_${productModel.packingFee}
               </td>
               <td>
                 ${productModel.spu}
@@ -113,7 +113,7 @@
                   <td>
                 </c:otherwise>
               </c:choose>
-                ${productModel.totalCost}(${productModel.totalStockingCost}+${productModel.totalPackingFeeCost})<br>
+                ${productModel.totalCost}(打包费: ${productModel.totalPackingFeeCost})<br>
                 ${productModel.totalSelledAmount}<br>
                 ${productModel.totalSelledAmount - productModel.totalCost }
               </td>

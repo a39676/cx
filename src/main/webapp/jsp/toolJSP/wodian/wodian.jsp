@@ -132,7 +132,7 @@
     function create(){ 
       var salesmanId = $('#salesmanSelectorForNewContract').find(":selected").val();
       var merchantsId = $('#merchantsSelectorForNewContract').find(":selected").val();
-      var contractCreateTimeStr = $("#startDateStr").val();
+      var contractCreateTimeStr = $("#newContractDate").val();
       var clientName = $("#clientNameForNewContract").val();
       var clientPhoneNumber = $("#clientPhoneForNewContract").val();
       var contractAmount = $("#contractAmountForNewContract").val();

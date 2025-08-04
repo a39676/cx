@@ -4,7 +4,6 @@
   <resultMap id="BaseResultMap" type="demo.tool.temuAgent.pojo.po.TemuAgentProduct">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="name_cn" jdbcType="VARCHAR" property="nameCn" />
-    <result column="unit_price" jdbcType="DECIMAL" property="unitPrice" />
     <result column="release_time" jdbcType="TIMESTAMP" property="releaseTime" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
@@ -67,7 +66,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name_cn, unit_price, release_time, create_time
+    id, name_cn, release_time, create_time
   </sql>
   <select id="selectByExample" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProductExample" resultMap="BaseResultMap">
     select
@@ -100,10 +99,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProduct">
-    insert into temu_agent_product (id, name_cn, unit_price, 
-      release_time, create_time)
-    values (#{id,jdbcType=BIGINT}, #{nameCn,jdbcType=VARCHAR}, #{unitPrice,jdbcType=DECIMAL}, 
-      #{releaseTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
+    insert into temu_agent_product (id, name_cn, release_time, 
+      create_time)
+    values (#{id,jdbcType=BIGINT}, #{nameCn,jdbcType=VARCHAR}, #{releaseTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProduct">
     insert into temu_agent_product
@@ -113,9 +112,6 @@
       </if>
       <if test="nameCn != null">
         name_cn,
-      </if>
-      <if test="unitPrice != null">
-        unit_price,
       </if>
       <if test="releaseTime != null">
         release_time,
@@ -130,9 +126,6 @@
       </if>
       <if test="nameCn != null">
         #{nameCn,jdbcType=VARCHAR},
-      </if>
-      <if test="unitPrice != null">
-        #{unitPrice,jdbcType=DECIMAL},
       </if>
       <if test="releaseTime != null">
         #{releaseTime,jdbcType=TIMESTAMP},
@@ -157,9 +150,6 @@
       <if test="row.nameCn != null">
         name_cn = #{row.nameCn,jdbcType=VARCHAR},
       </if>
-      <if test="row.unitPrice != null">
-        unit_price = #{row.unitPrice,jdbcType=DECIMAL},
-      </if>
       <if test="row.releaseTime != null">
         release_time = #{row.releaseTime,jdbcType=TIMESTAMP},
       </if>
@@ -175,7 +165,6 @@
     update temu_agent_product
     set id = #{row.id,jdbcType=BIGINT},
       name_cn = #{row.nameCn,jdbcType=VARCHAR},
-      unit_price = #{row.unitPrice,jdbcType=DECIMAL},
       release_time = #{row.releaseTime,jdbcType=TIMESTAMP},
       create_time = #{row.createTime,jdbcType=TIMESTAMP}
     <if test="example != null">
@@ -187,9 +176,6 @@
     <set>
       <if test="nameCn != null">
         name_cn = #{nameCn,jdbcType=VARCHAR},
-      </if>
-      <if test="unitPrice != null">
-        unit_price = #{unitPrice,jdbcType=DECIMAL},
       </if>
       <if test="releaseTime != null">
         release_time = #{releaseTime,jdbcType=TIMESTAMP},
@@ -203,7 +189,6 @@
   <update id="updateByPrimaryKey" parameterType="demo.tool.temuAgent.pojo.po.TemuAgentProduct">
     update temu_agent_product
     set name_cn = #{nameCn,jdbcType=VARCHAR},
-      unit_price = #{unitPrice,jdbcType=DECIMAL},
       release_time = #{releaseTime,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}

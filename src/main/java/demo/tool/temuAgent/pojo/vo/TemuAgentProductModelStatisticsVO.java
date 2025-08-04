@@ -8,15 +8,12 @@ public class TemuAgentProductModelStatisticsVO {
 	private Long modelId;
 	private Long productId;
 
-	private BigDecimal unitPrice;
-
 	private Integer unitTypeCode;
 	private String unitTypeName;
 	private Integer unitCounting;
 	private String spu;
 	private String sku;
 	private String skc;
-	private BigDecimal purchasePrice;
 	private BigDecimal declearedPrice;
 	private BigDecimal packingFee;
 	private LocalDateTime createTime;
@@ -25,6 +22,8 @@ public class TemuAgentProductModelStatisticsVO {
 	private LocalDateTime stockingUpdateTime;
 	private Integer internationalStockingCounting;
 	private LocalDateTime internationalStockingUpdateTime;
+	private Integer boughtCounting;
+	private LocalDateTime boughtUpdateTime;
 	private Integer selledCounting;
 	private LocalDateTime selledUpdateTime;
 	private Integer repackageCounting;
@@ -35,10 +34,14 @@ public class TemuAgentProductModelStatisticsVO {
 	private BigDecimal totalStockingCost;
 	private BigDecimal totalPackingFeeCost;
 
-	private BigDecimal avgPrice;
-	private BigDecimal highestPrice;
-	private BigDecimal lowestPrice;
-	private BigDecimal lastPrice;
+	private BigDecimal avgBuyPrice;
+	private BigDecimal highestBuyPrice;
+	private BigDecimal lowestBuyPrice;
+	private BigDecimal lastBuyPrice;
+	private BigDecimal avgSellPrice;
+	private BigDecimal highestSellPrice;
+	private BigDecimal lowestSellPrice;
+	private BigDecimal lastSellPrice;
 
 	private BigDecimal totalSelledAmount;
 	private String createTimeStr;
@@ -57,14 +60,6 @@ public class TemuAgentProductModelStatisticsVO {
 
 	public void setProductId(Long productId) {
 		this.productId = productId;
-	}
-
-	public BigDecimal getUnitPrice() {
-		return unitPrice;
-	}
-
-	public void setUnitPrice(BigDecimal unitPrice) {
-		this.unitPrice = unitPrice;
 	}
 
 	public Integer getUnitTypeCode() {
@@ -113,14 +108,6 @@ public class TemuAgentProductModelStatisticsVO {
 
 	public void setSkc(String skc) {
 		this.skc = skc;
-	}
-
-	public BigDecimal getPurchasePrice() {
-		return purchasePrice;
-	}
-
-	public void setPurchasePrice(BigDecimal purchasePrice) {
-		this.purchasePrice = purchasePrice;
 	}
 
 	public BigDecimal getDeclearedPrice() {
@@ -177,6 +164,22 @@ public class TemuAgentProductModelStatisticsVO {
 
 	public void setInternationalStockingUpdateTime(LocalDateTime internationalStockingUpdateTime) {
 		this.internationalStockingUpdateTime = internationalStockingUpdateTime;
+	}
+
+	public Integer getBoughtCounting() {
+		return boughtCounting;
+	}
+
+	public void setBoughtCounting(Integer boughtCounting) {
+		this.boughtCounting = boughtCounting;
+	}
+
+	public LocalDateTime getBoughtUpdateTime() {
+		return boughtUpdateTime;
+	}
+
+	public void setBoughtUpdateTime(LocalDateTime boughtUpdateTime) {
+		this.boughtUpdateTime = boughtUpdateTime;
 	}
 
 	public Integer getSelledCounting() {
@@ -243,36 +246,68 @@ public class TemuAgentProductModelStatisticsVO {
 		this.totalPackingFeeCost = totalPackingFeeCost;
 	}
 
-	public BigDecimal getAvgPrice() {
-		return avgPrice;
+	public BigDecimal getAvgBuyPrice() {
+		return avgBuyPrice;
 	}
 
-	public void setAvgPrice(BigDecimal avgPrice) {
-		this.avgPrice = avgPrice;
+	public void setAvgBuyPrice(BigDecimal avgBuyPrice) {
+		this.avgBuyPrice = avgBuyPrice;
 	}
 
-	public BigDecimal getHighestPrice() {
-		return highestPrice;
+	public BigDecimal getHighestBuyPrice() {
+		return highestBuyPrice;
 	}
 
-	public void setHighestPrice(BigDecimal highestPrice) {
-		this.highestPrice = highestPrice;
+	public void setHighestBuyPrice(BigDecimal highestBuyPrice) {
+		this.highestBuyPrice = highestBuyPrice;
 	}
 
-	public BigDecimal getLowestPrice() {
-		return lowestPrice;
+	public BigDecimal getLowestBuyPrice() {
+		return lowestBuyPrice;
 	}
 
-	public void setLowestPrice(BigDecimal lowestPrice) {
-		this.lowestPrice = lowestPrice;
+	public BigDecimal getLastBuyPrice() {
+		return lastBuyPrice;
 	}
 
-	public BigDecimal getLastPrice() {
-		return lastPrice;
+	public void setLastBuyPrice(BigDecimal lastBuyPrice) {
+		this.lastBuyPrice = lastBuyPrice;
 	}
 
-	public void setLastPrice(BigDecimal lastPrice) {
-		this.lastPrice = lastPrice;
+	public void setLowestBuyPrice(BigDecimal lowestBuyPrice) {
+		this.lowestBuyPrice = lowestBuyPrice;
+	}
+
+	public BigDecimal getAvgSellPrice() {
+		return avgSellPrice;
+	}
+
+	public void setAvgSellPrice(BigDecimal avgSellPrice) {
+		this.avgSellPrice = avgSellPrice;
+	}
+
+	public BigDecimal getHighestSellPrice() {
+		return highestSellPrice;
+	}
+
+	public void setHighestSellPrice(BigDecimal highestSellPrice) {
+		this.highestSellPrice = highestSellPrice;
+	}
+
+	public BigDecimal getLowestSellPrice() {
+		return lowestSellPrice;
+	}
+
+	public void setLowestSellPrice(BigDecimal lowestSellPrice) {
+		this.lowestSellPrice = lowestSellPrice;
+	}
+
+	public BigDecimal getLastSellPrice() {
+		return lastSellPrice;
+	}
+
+	public void setLastSellPrice(BigDecimal lastSellPrice) {
+		this.lastSellPrice = lastSellPrice;
 	}
 
 	public BigDecimal getTotalSelledAmount() {
@@ -293,19 +328,21 @@ public class TemuAgentProductModelStatisticsVO {
 
 	@Override
 	public String toString() {
-		return "TemuAgentProductModelStatisticsVO [modelId=" + modelId + ", productId=" + productId + ", unitPrice="
-				+ unitPrice + ", unitTypeCode=" + unitTypeCode + ", unitTypeName=" + unitTypeName + ", unitCounting="
-				+ unitCounting + ", spu=" + spu + ", sku=" + sku + ", skc=" + skc + ", purchasePrice=" + purchasePrice
-				+ ", declearedPrice=" + declearedPrice + ", packingFee=" + packingFee + ", createTime=" + createTime
-				+ ", stockingCounting=" + stockingCounting + ", stockingUpdateTime=" + stockingUpdateTime
-				+ ", internationalStockingCounting=" + internationalStockingCounting
-				+ ", internationalStockingUpdateTime=" + internationalStockingUpdateTime + ", selledCounting="
-				+ selledCounting + ", selledUpdateTime=" + selledUpdateTime + ", repackageCounting=" + repackageCounting
+		return "TemuAgentProductModelStatisticsVO [modelId=" + modelId + ", productId=" + productId + ", unitTypeCode="
+				+ unitTypeCode + ", unitTypeName=" + unitTypeName + ", unitCounting=" + unitCounting + ", spu=" + spu
+				+ ", sku=" + sku + ", skc=" + skc + ", declearedPrice=" + declearedPrice + ", packingFee=" + packingFee
+				+ ", createTime=" + createTime + ", stockingCounting=" + stockingCounting + ", stockingUpdateTime="
+				+ stockingUpdateTime + ", internationalStockingCounting=" + internationalStockingCounting
+				+ ", internationalStockingUpdateTime=" + internationalStockingUpdateTime + ", boughtCounting="
+				+ boughtCounting + ", boughtUpdateTime=" + boughtUpdateTime + ", selledCounting=" + selledCounting
+				+ ", selledUpdateTime=" + selledUpdateTime + ", repackageCounting=" + repackageCounting
 				+ ", repackageUdpateTime=" + repackageUdpateTime + ", productName=" + productName + ", totalCost="
 				+ totalCost + ", totalStockingCost=" + totalStockingCost + ", totalPackingFeeCost="
-				+ totalPackingFeeCost + ", avgPrice=" + avgPrice + ", highestPrice=" + highestPrice + ", lowestPrice="
-				+ lowestPrice + ", lastPrice=" + lastPrice + ", totalSelledAmount=" + totalSelledAmount
-				+ ", createTimeStr=" + createTimeStr + "]";
+				+ totalPackingFeeCost + ", avgBuyPrice=" + avgBuyPrice + ", highestBuyPrice=" + highestBuyPrice
+				+ ", lowestBuyPrice=" + lowestBuyPrice + ", lastBuyPrice=" + lastBuyPrice + ", avgSellPrice="
+				+ avgSellPrice + ", highestSellPrice=" + highestSellPrice + ", lowestSellPrice=" + lowestSellPrice
+				+ ", lastSellPrice=" + lastSellPrice + ", totalSelledAmount=" + totalSelledAmount + ", createTimeStr="
+				+ createTimeStr + "]";
 	}
 
 }

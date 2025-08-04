@@ -1,11 +1,8 @@
 package demo.tool.temuAgent.pojo.dto;
 
-import java.math.BigDecimal;
-
 public class TemuAgentCeateProductDTO {
 
 	private String productName;
-	private BigDecimal unitPrice;
 	private String releaseDateStr;
 
 	public String getProductName() {
@@ -14,14 +11,6 @@ public class TemuAgentCeateProductDTO {
 
 	public void setProductName(String productName) {
 		this.productName = productName;
-	}
-
-	public BigDecimal getUnitPrice() {
-		return unitPrice;
-	}
-
-	public void setUnitPrice(BigDecimal unitPrice) {
-		this.unitPrice = unitPrice;
 	}
 
 	public String getReleaseDateStr() {
@@ -34,8 +23,7 @@ public class TemuAgentCeateProductDTO {
 
 	@Override
 	public String toString() {
-		return "TemuAgentCeateProductDTO [productName=" + productName + ", unitPrice=" + unitPrice + ", releaseDateStr="
-				+ releaseDateStr + "]";
+		return "TemuAgentCeateProductDTO [productName=" + productName + ", releaseDateStr=" + releaseDateStr + "]";
 	}
 
 }

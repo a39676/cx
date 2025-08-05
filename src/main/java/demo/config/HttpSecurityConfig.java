@@ -29,7 +29,7 @@ import demo.article.article.pojo.constant.ArticleAdminUrlConstant;
 import demo.article.articleComment.pojo.constant.ArticleAdminCommentUrlConstant;
 import demo.base.admin.pojo.constant.AdminUrlConstant;
 import demo.base.system.pojo.constant.BaseUrl;
-import demo.base.user.pojo.constant.LoginUrlConstant;
+import demo.base.user.pojo.constant.LoginUrl;
 import demo.base.user.pojo.constant.UsersUrl;
 import demo.base.user.pojo.type.OrganzationRolesType;
 import demo.base.user.pojo.type.SystemRolesType;
@@ -88,7 +88,7 @@ public class HttpSecurityConfig extends CommonService {
 //		http.authorizeHttpRequests(authManReqMatR);
 		http.csrf(AbstractHttpConfigurer::disable);
 		http.authorizeHttpRequests(request -> request.requestMatchers("/welcome**").permitAll());
-		http.authorizeHttpRequests(request -> request.requestMatchers(LoginUrlConstant.LOGIN + "/**").permitAll());
+		http.authorizeHttpRequests(request -> request.requestMatchers(LoginUrl.LOGIN + "/**").permitAll());
 		http.authorizeHttpRequests(request -> request.requestMatchers(UsersUrl.root + "/**").permitAll());
 		http.authorizeHttpRequests(request -> request.requestMatchers("/static_resources/**").permitAll());
 		http.authorizeHttpRequests(request -> request.requestMatchers("/tHome/**").permitAll());

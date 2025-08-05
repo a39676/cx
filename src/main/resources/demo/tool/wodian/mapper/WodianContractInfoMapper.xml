@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.tool.wodian.mapper.WodianContractInfoMapper">
+  <resultMap id="BaseResultMap" type="demo.tool.wodian.pojo.po.WodianContractInfo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="client_id" jdbcType="BIGINT" property="clientId" />
+    <result column="salesman_id" jdbcType="BIGINT" property="salesmanId" />
+    <result column="merchants_id" jdbcType="BIGINT" property="merchantsId" />
+    <result column="contract_create_time" jdbcType="TIMESTAMP" property="contractCreateTime" />
+    <result column="contract_amount" jdbcType="DECIMAL" property="contractAmount" />
+    <result column="goldcoin_for_client" jdbcType="DECIMAL" property="goldcoinForClient" />
+    <result column="goldcoin_for_merchants" jdbcType="DECIMAL" property="goldcoinForMerchants" />
+    <result column="integral_for_client" jdbcType="DECIMAL" property="integralForClient" />
+    <result column="integral_for_merchants" jdbcType="DECIMAL" property="integralForMerchants" />
+    <result column="part_counts" jdbcType="INTEGER" property="partCounts" />
+    <result column="version" jdbcType="DECIMAL" property="version" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, client_id, salesman_id, merchants_id, contract_create_time, contract_amount, 
+    goldcoin_for_client, goldcoin_for_merchants, integral_for_client, integral_for_merchants, 
+    part_counts, version, remark, create_time, is_delete
+  </sql>
+  <select id="selectByExample" parameterType="demo.tool.wodian.pojo.po.WodianContractInfoExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from wodian_contract_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from wodian_contract_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from wodian_contract_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.tool.wodian.pojo.po.WodianContractInfoExample">
+    delete from wodian_contract_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="demo.tool.wodian.pojo.po.WodianContractInfo">
+    insert into wodian_contract_info (id, client_id, salesman_id, 
+      merchants_id, contract_create_time, contract_amount, 
+      goldcoin_for_client, goldcoin_for_merchants, 
+      integral_for_client, integral_for_merchants, 
+      part_counts, version, remark, 
+      create_time, is_delete)
+    values (#{id,jdbcType=BIGINT}, #{clientId,jdbcType=BIGINT}, #{salesmanId,jdbcType=BIGINT}, 
+      #{merchantsId,jdbcType=BIGINT}, #{contractCreateTime,jdbcType=TIMESTAMP}, #{contractAmount,jdbcType=DECIMAL}, 
+      #{goldcoinForClient,jdbcType=DECIMAL}, #{goldcoinForMerchants,jdbcType=DECIMAL}, 
+      #{integralForClient,jdbcType=DECIMAL}, #{integralForMerchants,jdbcType=DECIMAL}, 
+      #{partCounts,jdbcType=INTEGER}, #{version,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="demo.tool.wodian.pojo.po.WodianContractInfo">
+    insert into wodian_contract_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="clientId != null">
+        client_id,
+      </if>
+      <if test="salesmanId != null">
+        salesman_id,
+      </if>
+      <if test="merchantsId != null">
+        merchants_id,
+      </if>
+      <if test="contractCreateTime != null">
+        contract_create_time,
+      </if>
+      <if test="contractAmount != null">
+        contract_amount,
+      </if>
+      <if test="goldcoinForClient != null">
+        goldcoin_for_client,
+      </if>
+      <if test="goldcoinForMerchants != null">
+        goldcoin_for_merchants,
+      </if>
+      <if test="integralForClient != null">
+        integral_for_client,
+      </if>
+      <if test="integralForMerchants != null">
+        integral_for_merchants,
+      </if>
+      <if test="partCounts != null">
+        part_counts,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="clientId != null">
+        #{clientId,jdbcType=BIGINT},
+      </if>
+      <if test="salesmanId != null">
+        #{salesmanId,jdbcType=BIGINT},
+      </if>
+      <if test="merchantsId != null">
+        #{merchantsId,jdbcType=BIGINT},
+      </if>
+      <if test="contractCreateTime != null">
+        #{contractCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="contractAmount != null">
+        #{contractAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="goldcoinForClient != null">
+        #{goldcoinForClient,jdbcType=DECIMAL},
+      </if>
+      <if test="goldcoinForMerchants != null">
+        #{goldcoinForMerchants,jdbcType=DECIMAL},
+      </if>
+      <if test="integralForClient != null">
+        #{integralForClient,jdbcType=DECIMAL},
+      </if>
+      <if test="integralForMerchants != null">
+        #{integralForMerchants,jdbcType=DECIMAL},
+      </if>
+      <if test="partCounts != null">
+        #{partCounts,jdbcType=INTEGER},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="demo.tool.wodian.pojo.po.WodianContractInfoExample" resultType="java.lang.Long">
+    select count(*) from wodian_contract_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update wodian_contract_info
+    <set>
+      <if test="row.id != null">
+        id = #{row.id,jdbcType=BIGINT},
+      </if>
+      <if test="row.clientId != null">
+        client_id = #{row.clientId,jdbcType=BIGINT},
+      </if>
+      <if test="row.salesmanId != null">
+        salesman_id = #{row.salesmanId,jdbcType=BIGINT},
+      </if>
+      <if test="row.merchantsId != null">
+        merchants_id = #{row.merchantsId,jdbcType=BIGINT},
+      </if>
+      <if test="row.contractCreateTime != null">
+        contract_create_time = #{row.contractCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.contractAmount != null">
+        contract_amount = #{row.contractAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="row.goldcoinForClient != null">
+        goldcoin_for_client = #{row.goldcoinForClient,jdbcType=DECIMAL},
+      </if>
+      <if test="row.goldcoinForMerchants != null">
+        goldcoin_for_merchants = #{row.goldcoinForMerchants,jdbcType=DECIMAL},
+      </if>
+      <if test="row.integralForClient != null">
+        integral_for_client = #{row.integralForClient,jdbcType=DECIMAL},
+      </if>
+      <if test="row.integralForMerchants != null">
+        integral_for_merchants = #{row.integralForMerchants,jdbcType=DECIMAL},
+      </if>
+      <if test="row.partCounts != null">
+        part_counts = #{row.partCounts,jdbcType=INTEGER},
+      </if>
+      <if test="row.version != null">
+        version = #{row.version,jdbcType=DECIMAL},
+      </if>
+      <if test="row.remark != null">
+        remark = #{row.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createTime != null">
+        create_time = #{row.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.isDelete != null">
+        is_delete = #{row.isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update wodian_contract_info
+    set id = #{row.id,jdbcType=BIGINT},
+      client_id = #{row.clientId,jdbcType=BIGINT},
+      salesman_id = #{row.salesmanId,jdbcType=BIGINT},
+      merchants_id = #{row.merchantsId,jdbcType=BIGINT},
+      contract_create_time = #{row.contractCreateTime,jdbcType=TIMESTAMP},
+      contract_amount = #{row.contractAmount,jdbcType=DECIMAL},
+      goldcoin_for_client = #{row.goldcoinForClient,jdbcType=DECIMAL},
+      goldcoin_for_merchants = #{row.goldcoinForMerchants,jdbcType=DECIMAL},
+      integral_for_client = #{row.integralForClient,jdbcType=DECIMAL},
+      integral_for_merchants = #{row.integralForMerchants,jdbcType=DECIMAL},
+      part_counts = #{row.partCounts,jdbcType=INTEGER},
+      version = #{row.version,jdbcType=DECIMAL},
+      remark = #{row.remark,jdbcType=VARCHAR},
+      create_time = #{row.createTime,jdbcType=TIMESTAMP},
+      is_delete = #{row.isDelete,jdbcType=BIT}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.tool.wodian.pojo.po.WodianContractInfo">
+    update wodian_contract_info
+    <set>
+      <if test="clientId != null">
+        client_id = #{clientId,jdbcType=BIGINT},
+      </if>
+      <if test="salesmanId != null">
+        salesman_id = #{salesmanId,jdbcType=BIGINT},
+      </if>
+      <if test="merchantsId != null">
+        merchants_id = #{merchantsId,jdbcType=BIGINT},
+      </if>
+      <if test="contractCreateTime != null">
+        contract_create_time = #{contractCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="contractAmount != null">
+        contract_amount = #{contractAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="goldcoinForClient != null">
+        goldcoin_for_client = #{goldcoinForClient,jdbcType=DECIMAL},
+      </if>
+      <if test="goldcoinForMerchants != null">
+        goldcoin_for_merchants = #{goldcoinForMerchants,jdbcType=DECIMAL},
+      </if>
+      <if test="integralForClient != null">
+        integral_for_client = #{integralForClient,jdbcType=DECIMAL},
+      </if>
+      <if test="integralForMerchants != null">
+        integral_for_merchants = #{integralForMerchants,jdbcType=DECIMAL},
+      </if>
+      <if test="partCounts != null">
+        part_counts = #{partCounts,jdbcType=INTEGER},
+      </if>
+      <if test="version != null">
+        version = #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="demo.tool.wodian.pojo.po.WodianContractInfo">
+    update wodian_contract_info
+    set client_id = #{clientId,jdbcType=BIGINT},
+      salesman_id = #{salesmanId,jdbcType=BIGINT},
+      merchants_id = #{merchantsId,jdbcType=BIGINT},
+      contract_create_time = #{contractCreateTime,jdbcType=TIMESTAMP},
+      contract_amount = #{contractAmount,jdbcType=DECIMAL},
+      goldcoin_for_client = #{goldcoinForClient,jdbcType=DECIMAL},
+      goldcoin_for_merchants = #{goldcoinForMerchants,jdbcType=DECIMAL},
+      integral_for_client = #{integralForClient,jdbcType=DECIMAL},
+      integral_for_merchants = #{integralForMerchants,jdbcType=DECIMAL},
+      part_counts = #{partCounts,jdbcType=INTEGER},
+      version = #{version,jdbcType=DECIMAL},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      is_delete = #{isDelete,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="demo.tool.wodian.pojo.po.WodianContractInfoExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from wodian_contract_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

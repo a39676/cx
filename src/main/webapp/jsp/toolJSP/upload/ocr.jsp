@@ -27,7 +27,6 @@
       <td><button id="uploadButton">上传</button></td>
     </tr>
   </table>
-</form>
 <div>
   <textarea style="height: 200px; width: 100%;" id="uploadResultMessage"></textarea>
 </div>

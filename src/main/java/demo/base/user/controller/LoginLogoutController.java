@@ -15,7 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.pojo.constant.BaseUrl;
 import demo.base.system.pojo.constant.BaseViewConstant;
-import demo.base.user.pojo.constant.LoginUrlConstant;
+import demo.base.user.pojo.constant.LoginUrl;
 import demo.common.controller.CommonController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,10 +29,10 @@ import net.sf.json.JSONObject;
  * login and logout
  */
 @Controller
-@RequestMapping(value = LoginUrlConstant.LOGIN)
+@RequestMapping(value = LoginUrl.LOGIN)
 public class LoginLogoutController extends CommonController {
 	
-	@GetMapping(value = LoginUrlConstant.LOGIN)
+	@GetMapping(value = LoginUrl.LOGIN)
 	public ModelAndView login(
 		@RequestParam(value = "error", required = false) String error,
 		@RequestParam(value = "logout", required = false) String logout,
@@ -71,17 +71,17 @@ public class LoginLogoutController extends CommonController {
 
 	}
 	
-	@GetMapping(value = LoginUrlConstant.LOGIN_SINGLE)
+	@GetMapping(value = LoginUrl.LOGIN_SINGLE)
 	public ModelAndView loginSingle() {
 		return new ModelAndView(BaseViewConstant.loginSingle);
 	}
 	
-	@GetMapping(value = LoginUrlConstant.LOGIN_FOR_STUDENT)
+	@GetMapping(value = LoginUrl.LOGIN_FOR_STUDENT)
 	public ModelAndView loginForStudent() {
 		return new ModelAndView(BaseViewConstant.LOGIN_V2);
 	}
 	
-	@GetMapping(value = LoginUrlConstant.LOGOUT)
+	@GetMapping(value = LoginUrl.LOGOUT)
 	public void logout (HttpServletRequest request, HttpServletResponse response) {
 	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 	    if (auth != null){    

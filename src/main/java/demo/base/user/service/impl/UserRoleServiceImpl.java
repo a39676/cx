@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.base.user.mapper.UserRolesMapper;
-import demo.base.user.pojo.constant.UserConstant;
+import demo.base.user.pojo.constant.UserUrl;
 import demo.base.user.pojo.po.Roles;
 import demo.base.user.pojo.po.UserRoles;
 import demo.base.user.service.UserRoleService;
@@ -26,7 +26,7 @@ public class UserRoleServiceImpl extends CommonService implements UserRoleServic
 		UserRoles po = null;
 		for(Roles r : baseUserRoles) {
 			po = new UserRoles();
-			po.setCreateBy(UserConstant.noneUserId);
+			po.setCreateBy(UserUrl.noneUserId);
 			po.setRoleId(r.getRoleId());
 			po.setUserId(userId);
 			po.setId(snowFlake.getNextId());
@@ -44,7 +44,7 @@ public class UserRoleServiceImpl extends CommonService implements UserRoleServic
 		UserRoles po = null;
 		for(Roles r : baseUserRoles) {
 			po = new UserRoles();
-			po.setCreateBy(UserConstant.noneUserId);
+			po.setCreateBy(UserUrl.noneUserId);
 			po.setRoleId(r.getRoleId());
 			po.setUserId(userId);
 			po.setId(snowFlake.getNextId());
@@ -62,7 +62,7 @@ public class UserRoleServiceImpl extends CommonService implements UserRoleServic
 		UserRoles po = null;
 		for(Roles r : baseUserRoles) {
 			po = new UserRoles();
-			po.setCreateBy(UserConstant.noneUserId);
+			po.setCreateBy(UserUrl.noneUserId);
 			po.setRoleId(r.getRoleId());
 			po.setUserId(userId);
 			po.setId(snowFlake.getNextId());
@@ -80,7 +80,7 @@ public class UserRoleServiceImpl extends CommonService implements UserRoleServic
 		UserRoles po = null;
 		for(Roles r : studentUserRoles) {
 			po = new UserRoles();
-			po.setCreateBy(UserConstant.noneUserId);
+			po.setCreateBy(UserUrl.noneUserId);
 			po.setRoleId(r.getRoleId());
 			po.setUserId(userId);
 			po.setId(snowFlake.getNextId());

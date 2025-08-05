@@ -26,7 +26,7 @@ import demo.article.article.pojo.constant.ArticleAdminUrlConstant;
 import demo.article.articleComment.pojo.constant.ArticleAdminCommentUrlConstant;
 import demo.base.admin.pojo.constant.AdminUrlConstant;
 import demo.base.system.pojo.constant.BaseUrl;
-import demo.base.user.pojo.constant.LoginUrlConstant;
+import demo.base.user.pojo.constant.LoginUrl;
 import demo.base.user.pojo.constant.UsersUrl;
 import demo.base.user.pojo.type.OrganzationRolesType;
 import demo.base.user.pojo.type.SystemRolesType;
@@ -75,7 +75,7 @@ public class HttpSecurityConfig extends CommonService {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/welcome**").permitAll().antMatchers(LoginUrlConstant.LOGIN + "/**")
+		http.authorizeRequests().antMatchers("/welcome**").permitAll().antMatchers(LoginUrl.LOGIN + "/**")
 				.permitAll().antMatchers(UsersUrl.root + "/**").permitAll().antMatchers("/static_resources/**")
 				.permitAll().antMatchers("/tHome/**").permitAll()
 				// used to allow anonymous access

@@ -1,6 +1,6 @@
 package demo.base.user.pojo.constant;
 
-public class LoginUrlConstant {
+public class LoginUrl {
 	
 	public static final String LOGIN = "/login";
 	public static final String LOGIN_SINGLE = "/loginSingle";

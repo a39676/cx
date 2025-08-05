@@ -21,7 +21,7 @@ import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.impl.SystemCommonService;
 import demo.base.user.mapper.UserRegistMapper;
 import demo.base.user.mapper.UsersMapper;
-import demo.base.user.pojo.constant.UserConstant;
+import demo.base.user.pojo.constant.UserUrl;
 import demo.base.user.pojo.constant.UserRegistView;
 import demo.base.user.pojo.dto.ResetFailAttemptDTO;
 import demo.base.user.pojo.dto.StudentRegistDTO;
@@ -105,7 +105,7 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 			ipRegistCount = redisOriginalConnectService.checkFunctionalModuleVisitData(request,
 					SystemRedisKey.userRegistCountingKeyPrefix);
 		}
-		if (ipRegistCount > UserConstant.REGIST_LIMIT_FOR_ONE_IP_ONE_DAY) {
+		if (ipRegistCount > UserUrl.REGIST_LIMIT_FOR_ONE_IP_ONE_DAY) {
 			result.failWithMessage("最近已经注册过了,请不要重复注册");
 			return result;
 		}
@@ -159,7 +159,7 @@ public class UserRegistServiceImpl extends SystemCommonService implements UserRe
 			ipRegistCount = redisOriginalConnectService.checkFunctionalModuleVisitData(request,
 					SystemRedisKey.userRegistCountingKeyPrefix);
 		}
-		if (ipRegistCount > UserConstant.REGIST_LIMIT_FOR_ONE_IP_ONE_DAY) {
+		if (ipRegistCount > UserUrl.REGIST_LIMIT_FOR_ONE_IP_ONE_DAY) {
 			result.failWithMessage("最近已经注册过了,请不要重复注册");
 			return result;
 		}

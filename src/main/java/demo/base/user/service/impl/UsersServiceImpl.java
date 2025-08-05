@@ -18,7 +18,7 @@ import demo.base.user.mapper.UserRolesMapper;
 import demo.base.user.mapper.UsersDetailMapper;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.bo.MyUserPrincipal;
-import demo.base.user.pojo.constant.LoginUrlConstant;
+import demo.base.user.pojo.constant.LoginUrl;
 import demo.base.user.pojo.dto.FindUserByConditionDTO;
 import demo.base.user.pojo.dto.OtherUserInfoDTO;
 import demo.base.user.pojo.dto.ResetFailAttemptDTO;
@@ -284,7 +284,7 @@ public class UsersServiceImpl extends SystemCommonService implements UsersServic
 		ModelAndView view = new ModelAndView("userJSP/userInfo");
 
 		if (!baseUtilCustom.isLoginUser()) {
-			view.setViewName(LoginUrlConstant.LOGIN);
+			view.setViewName(LoginUrl.LOGIN);
 			return view;
 		}
 

@@ -1,6 +1,6 @@
 package demo.base.user.pojo.constant;
 
-public class UserConstant {
+public class UserUrl {
 
 	/** 
 	 * 2019-06-27 

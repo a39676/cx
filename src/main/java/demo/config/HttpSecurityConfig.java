@@ -103,58 +103,58 @@ public class HttpSecurityConfig extends CommonService {
 //		.tokenRepository(persistentTokenRepository()).tokenValiditySeconds(3600).and().authorizeRequests().and()
 
 		http.authorizeHttpRequests(request -> request.requestMatchers(BaseUrl.SHUTDOWN + "/**")
-				.hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName()));
+				.hasAnyAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName()));
 		http.authorizeHttpRequests(request -> request.requestMatchers(BaseUrl.OPTION_CONSTANT + "/**")
-				.hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName()));
+				.hasAnyAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName()));
 		http.authorizeHttpRequests(request -> request.requestMatchers(TestUrl.root + "/**")
-				.hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName()));
+				.hasAnyAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName()));
 		http.authorizeHttpRequests(request -> request.requestMatchers("/holder/**")
-				.hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_USER.getName()));
+				.hasAnyAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_USER.getName()));
 		http.authorizeHttpRequests(
-				request -> request.requestMatchers("/accountInfo/**").hasAnyRole(SystemRolesType.ROLE_USER.getName()));
+				request -> request.requestMatchers("/accountInfo/**").hasAnyAuthority(SystemRolesType.ROLE_USER.getName()));
 		http.authorizeHttpRequests(request -> request.requestMatchers(AdminUrlConstant.root + "/**")
-				.hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName()));
+				.hasAnyAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName()));
 		http.authorizeHttpRequests(request -> request.requestMatchers(ArticleAdminUrlConstant.root + "/**")
-				.hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName()));
+				.hasAnyAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName()));
 		http.authorizeHttpRequests(request -> request.requestMatchers(ArticleAdminCommentUrlConstant.root + "/**")
-				.hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName()));
+				.hasAnyAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName()));
 		http.authorizeHttpRequests(request -> request.requestMatchers("/dba/**")
-				.hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_DBA.getName()));
+				.hasAnyAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_DBA.getName()));
 		http.authorizeHttpRequests(request -> request.requestMatchers(ToolUrlConstant.root + "/**")
-				.hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName()));
+				.hasAnyAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName()));
 		http.authorizeHttpRequests(request -> request.requestMatchers(CurrencyExchangeRateNoticeUrl.ROOT + "/**")
-				.hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_ADMIN.getName()));
+				.hasAnyAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_ADMIN.getName()));
 		http.authorizeHttpRequests(request -> request.requestMatchers(PMemoUrl.ROOT + "/**")
-				.hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName()));
+				.hasAnyAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName()));
 		http.authorizeHttpRequests(request -> request.requestMatchers(UrgeNoticeManagerUrl.ROOT + "/**")
-				.hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_ADMIN.getName()));
+				.hasAnyAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_ADMIN.getName()));
 		http.authorizeHttpRequests(request -> request
 				.requestMatchers(CryptoCoinSharingUrl.ROOT + CryptoCoinSharingUrl.CALCULATE_DETAIL).permitAll());
-		http.authorizeHttpRequests(request -> request.requestMatchers(CryptoCoinSharingUrl.ROOT + "/**").hasAnyRole(
+		http.authorizeHttpRequests(request -> request.requestMatchers(CryptoCoinSharingUrl.ROOT + "/**").hasAnyAuthority(
 				SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_ADMIN.getName(),
 				SystemRolesType.ROLE_CRYPTO_SHARING_MANAGER.getName()));
-		http.authorizeHttpRequests(request -> request.requestMatchers(CcmManageUrl.ROOT + "/**").hasAnyRole(
+		http.authorizeHttpRequests(request -> request.requestMatchers(CcmManageUrl.ROOT + "/**").hasAnyAuthority(
 				SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_ADMIN.getName(),
 				SystemRolesType.ROLE_CRYPTO_SHARING_MANAGER.getName()));
 		http.authorizeHttpRequests(request -> request.requestMatchers(AiManagerUrlConstant.ROOT + "/**")
-				.hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_ADMIN.getName()));
+				.hasAnyAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_ADMIN.getName()));
 		http.authorizeHttpRequests(request -> request.requestMatchers(CryptoCoinTradingUrl.FUTURE_CM_ROOT + "/**")
-				.hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_ADMIN.getName()));
+				.hasAnyAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_ADMIN.getName()));
 		http.authorizeHttpRequests(request -> request.requestMatchers(CryptoCoinTradingUrl.FUTURE_UM_ROOT + "/**")
-				.hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_ADMIN.getName()));
+				.hasAnyAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_ADMIN.getName()));
 		http.authorizeHttpRequests(request -> request.requestMatchers(CryptoCoinTradingUrl.SPOT_ROOT + "/**")
-				.hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_ADMIN.getName()));
+				.hasAnyAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_ADMIN.getName()));
 		http.authorizeHttpRequests(request -> request.requestMatchers(CryptoCoinDataUrl.ROOT + "/**")
-				.hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_ADMIN.getName()));
+				.hasAnyAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_ADMIN.getName()));
 		http.authorizeHttpRequests(request -> request.requestMatchers(AiArtMangerUrl.ROOT + "/**")
-				.hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_ADMIN.getName()));
+				.hasAnyAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_ADMIN.getName()));
 		http.authorizeHttpRequests(request -> request.requestMatchers(WordHelperUrl.ROOT + "/**")
-				.hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_ADMIN.getName()));
+				.hasAnyAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_ADMIN.getName()));
 //		joy URL start
 		http.authorizeHttpRequests(request -> request.requestMatchers(JoyUrl.ROOT + "/**")
-				.hasAnyRole(SystemRolesType.ROLE_USER_ACTIVE.getName()));
+				.hasAnyAuthority(SystemRolesType.ROLE_USER_ACTIVE.getName()));
 		http.authorizeHttpRequests(request -> request.requestMatchers(JoyManagerUrl.ROOT + "/**")
-				.hasAnyRole(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_ADMIN.getName()));
+				.hasAnyAuthority(SystemRolesType.ROLE_SUPER_ADMIN.getName(), SystemRolesType.ROLE_ADMIN.getName()));
 //		joy URL end
 
 		http.authorizeHttpRequests(request -> request.requestMatchers("/**").authenticated());

@@ -10,7 +10,6 @@ import demo.config.customComponent.OptionFilePathConfigurer;
 @Configuration
 public class Config {
 
-
 	@Bean
 	public PropertySourcesPlaceholderConfigurer getSystemConfig() {
 		PropertySourcesPlaceholderConfigurer properties = new PropertySourcesPlaceholderConfigurer();

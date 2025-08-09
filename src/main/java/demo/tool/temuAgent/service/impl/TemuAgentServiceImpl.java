@@ -530,10 +530,10 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 				po.setBuyCounting(po.getBuyCounting() + counting);
 				po.setUpdateTime(now);
 				po.setLastBuyPrice(dto.getPrice());
-				if (po.getHighestBuyPrice().compareTo(dto.getPrice()) > 0) {
+				if (dto.getPrice().compareTo(po.getHighestBuyPrice()) > 0) {
 					po.setHighestBuyPrice(dto.getPrice());
 				}
-				if (po.getLowestBuyPrice().compareTo(dto.getPrice()) < 0) {
+				if (dto.getPrice().compareTo(po.getLowestBuyPrice()) < 0) {
 					po.setLowestBuyPrice(dto.getPrice());
 				}
 			} else {
@@ -545,10 +545,10 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 				po.setSellCounting(po.getSellCounting() + counting);
 				po.setUpdateTime(now);
 				po.setLastSellPrice(dto.getPrice());
-				if (po.getHighestSellPrice().compareTo(dto.getPrice()) > 0) {
+				if (dto.getPrice().compareTo(po.getHighestSellPrice()) > 0) {
 					po.setHighestSellPrice(dto.getPrice());
 				}
-				if (po.getLowestSellPrice().compareTo(dto.getPrice()) < 0) {
+				if (dto.getPrice().compareTo(po.getLowestSellPrice()) < 0) {
 					po.setLowestSellPrice(dto.getPrice());
 				}
 			}

@@ -54,7 +54,7 @@ public class WodianServiceImpl extends CommonService implements WodianService {
 	@Override
 	public ModelAndView summaryView() {
 		ModelAndView v = new ModelAndView("toolJSP/wodian/wodian");
-		v.addObject("title", "wodian");
+		v.addObject("title", "Wodian");
 		v.addObject("salesmanList", getAllSalesmanList());
 		v.addObject("merchantsList", getAllMerchantsList());
 		return v;

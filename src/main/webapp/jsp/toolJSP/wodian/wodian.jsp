@@ -36,6 +36,7 @@
         <input type="text" name="" id="clientName" placeholder="客户名称(模糊)">
         <input type="text" name="" id="clientPhoneNumber" placeholder="客户手机号(模糊)">
         <button id="search">Search</button>
+        <button id="resetSearch">Reset</button>
       </div>
     </div>
 
@@ -56,7 +57,7 @@
         <input type="text" name="" id="newContractDate" placeholder="日期">
         <input type="text" name="" id="clientNameForNewContract" placeholder="客户">
         <input type="text" name="" id="clientPhoneForNewContract" placeholder="手机号">
-        <input type="number" name="" id="contractAmountForNewContract" placeholder="金额">
+        <input type="number" name="" id="contractAmountForNewContract" placeholder="金额"><br>
         <input type="number" name="" id="goldCoinForClientForNewContract" placeholder="金币(客)">
         <input type="number" name="" id="goleCoinForMerchantsForNewContract" placeholder="金币(商家)">
         <input type="number" name="" id="integralForClientForNewContract" placeholder="积分(客)">
@@ -69,6 +70,7 @@
     <div class="row">
       <div class="col-md-12">
         <button id="create">Create</button>
+        <button id="resetCreate">Reset</button>
       </div>
     </div>
 
@@ -131,6 +133,15 @@
       });  
     };
 
+    $("#resetSearch").click(function () {
+      $('#salesmanSelector').val("").change();
+      $('#merchantsSelector').val("").change();
+      $("#startDateStr").val("");
+      $("#endDateStr").val("");
+      $("#clientName").val("");
+      $("#clientPhoneNumber").val("");
+    })
+
     $("#create").click( function() {
       create();
     });
@@ -186,6 +197,21 @@
         }  
       });  
     };
+
+    $("#resetCreate").click(function() {
+      $('#salesmanSelectorForNewContract').val("").change();
+      $('#merchantsSelectorForNewContract').val("").change();
+      $("#newContractDate").val("");
+      $("#clientNameForNewContract").val("");
+      $("#clientPhoneForNewContract").val("");
+      $("#contractAmountForNewContract").val("");
+      $("#goldCoinForClientForNewContract").val("");
+      $("#goleCoinForMerchantsForNewContract").val("");
+      $("#integralForClientForNewContract").val("");
+      $("#integralForMerchantsForNewContract").val("");
+      $("#partCountsForNewContract").val("");
+      $("#renmarkForNewContract").val("");
+    });
   
   });
 

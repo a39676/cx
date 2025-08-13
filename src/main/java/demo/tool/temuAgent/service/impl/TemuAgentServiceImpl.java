@@ -62,6 +62,7 @@ public class TemuAgentServiceImpl extends CommonService implements TemuAgentServ
 	@Override
 	public ModelAndView home() {
 		ModelAndView v = new ModelAndView("toolJSP/temuAgent/temuAgent");
+		v.addObject("title", "TemuAgent");
 		v.addObject("productFlowTypeList", TemuAgentProductFlowType.values());
 		v.addObject("productModelUnitTypeList", TemuAgentProductModelUnitType.values());
 		return v;

@@ -3,7 +3,7 @@ package demo.tool.wodian.pojo.vo;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class WodianContractInfoVO {
+public class WodianContractInfoVO implements Comparable<WodianContractInfoVO> {
 
 	private Long id;
 	private Long clientId;
@@ -161,4 +161,17 @@ public class WodianContractInfoVO {
 				+ ", partCounts=" + partCounts + ", remark=" + remark + "]";
 	}
 
+	@Override
+	public int compareTo(WodianContractInfoVO o) {
+		return compareWithContractCreateTime(o);
+	}
+
+	private int compareWithContractCreateTime(WodianContractInfoVO o) {
+		if (this.contractCreateTime.isBefore(o.contractCreateTime)) {
+			return -1;
+		} else if (this.contractCreateTime.isEqual(o.contractCreateTime)) {
+			return 0;
+		}
+		return 1;
+	}
 }

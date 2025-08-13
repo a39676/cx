@@ -7,6 +7,8 @@ public class WodianContractSerachConditionDTO {
 	private String startDateStr;
 	private String endDateStr;
 	private Integer version;
+	private String clientName;
+	private String clientPhoneNumber;
 
 	public Long getSalesmanId() {
 		return salesmanId;
@@ -48,10 +50,27 @@ public class WodianContractSerachConditionDTO {
 		this.version = version;
 	}
 
+	public String getClientName() {
+		return clientName;
+	}
+
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
+	}
+
+	public String getClientPhoneNumber() {
+		return clientPhoneNumber;
+	}
+
+	public void setClientPhoneNumber(String clientPhoneNumber) {
+		this.clientPhoneNumber = clientPhoneNumber;
+	}
+
 	@Override
 	public String toString() {
 		return "WodianContractSerachConditionDTO [salesmanId=" + salesmanId + ", merchantsId=" + merchantsId
-				+ ", startDateStr=" + startDateStr + ", endDateStr=" + endDateStr + ", version=" + version + "]";
+				+ ", startDateStr=" + startDateStr + ", endDateStr=" + endDateStr + ", version=" + version
+				+ ", clientName=" + clientName + ", clientPhoneNumber=" + clientPhoneNumber + "]";
 	}
 
 }

@@ -3,12 +3,14 @@ package demo.tool.wodian.service.impl;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
@@ -76,21 +78,43 @@ public class WodianServiceImpl extends CommonService implements WodianService {
 		List<WodianContractInfoVO> voList = new ArrayList<>();
 
 		WodianContractInfoExample example = new WodianContractInfoExample();
-		Criteria criteria = example.createCriteria();
-		criteria.andVersionEqualTo(defaultVersion);
+		Criteria contractCriteria = example.createCriteria();
+		contractCriteria.andVersionEqualTo(defaultVersion);
 		LocalDateTime startTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getStartDateStr());
 		LocalDateTime endTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getEndDateStr());
 		if (startTime != null) {
-			criteria.andContractCreateTimeGreaterThanOrEqualTo(startTime);
+			contractCriteria.andContractCreateTimeGreaterThanOrEqualTo(startTime);
 		}
 		if (endTime != null) {
-			criteria.andContractCreateTimeLessThanOrEqualTo(endTime);
+			contractCriteria.andContractCreateTimeLessThanOrEqualTo(endTime);
 		}
 		if (dto.getSalesmanId() != null) {
-			criteria.andSalesmanIdEqualTo(dto.getSalesmanId());
+			contractCriteria.andSalesmanIdEqualTo(dto.getSalesmanId());
 		}
 		if (dto.getMerchantsId() != null) {
-			criteria.andMerchantsIdEqualTo(dto.getMerchantsId());
+			contractCriteria.andMerchantsIdEqualTo(dto.getMerchantsId());
+		}
+		if (!StringUtils.isAllBlank(dto.getClientName(), dto.getClientPhoneNumber())) {
+			WodianClientInfoExample clientInfoExample = new WodianClientInfoExample();
+			demo.tool.wodian.pojo.po.WodianClientInfoExample.Criteria clientCriteria = clientInfoExample
+					.createCriteria();
+			if (StringUtils.isNotBlank(dto.getClientName())) {
+				clientCriteria.andNameLike("%" + dto.getClientName() + "%");
+			}
+			if (StringUtils.isNotBlank(dto.getClientPhoneNumber())) {
+				clientCriteria.andPhoneLike("%" + dto.getClientPhoneNumber() + "%");
+			}
+			List<WodianClientInfo> clientPoList = clientInfoMapper.selectByExample(clientInfoExample);
+			if (clientPoList == null || clientPoList.size() < 1) {
+				r.setContractList(voList);
+				r.setIsSuccess();
+				return r;
+			}
+			List<Long> clientIdList = new ArrayList<>();
+			for (int i = 0; i < clientPoList.size(); i++) {
+				clientIdList.add(clientPoList.get(i).getId());
+			}
+			contractCriteria.andClientIdIn(clientIdList);
 		}
 		List<WodianContractInfo> poList = contractInfoMapper.selectByExample(example);
 		Map<Long, WodianMerchantsInfo> allMerchantsMap = getAllMerchantsMap();
@@ -136,6 +160,8 @@ public class WodianServiceImpl extends CommonService implements WodianService {
 			vo.setRemark(po.getRemark());
 			voList.add(vo);
 		}
+
+		Collections.sort(voList);
 
 		r.setContractList(voList);
 		r.setIsSuccess();

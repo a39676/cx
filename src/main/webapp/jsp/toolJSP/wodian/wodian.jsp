@@ -33,6 +33,8 @@
         </select>
         <input type="text" name="" id="startDateStr" placeholder="开始日期">
         <input type="text" name="" id="endDateStr" placeholder="结束日期">
+        <input type="text" name="" id="clientName" placeholder="客户名称(模糊)">
+        <input type="text" name="" id="clientPhoneNumber" placeholder="客户手机号(模糊)">
         <button id="search">Search</button>
       </div>
     </div>
@@ -94,6 +96,8 @@
       var merchantsId = $('#merchantsSelector').find(":selected").val();
       var startDateStr = $("#startDateStr").val();
       var endDateStr = $("#endDateStr").val();
+      var clientName = $("#clientName").val();
+      var clientPhoneNumber = $("#clientPhoneNumber").val();
       
       var url = "/wodian/getContractListByCondition";
 
@@ -102,6 +106,8 @@
         merchantsId : merchantsId,
         startDateStr : startDateStr,
         endDateStr : endDateStr,
+        clientName : clientName,
+        clientPhoneNumber : clientPhoneNumber,
       };
 
       $.ajax({  

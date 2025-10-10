@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.tool.taobao.mapper.TaobaoProductSourceMapper">
+  <resultMap id="BaseResultMap" type="demo.tool.taobao.pojo.po.TaobaoProductSource">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="commodity_id" jdbcType="BIGINT" property="commodityId" />
+    <result column="source_id" jdbcType="BIGINT" property="sourceId" />
+    <result column="commodity_name" jdbcType="CHAR" property="commodityName" />
+    <result column="remark" jdbcType="CHAR" property="remark" />
+    <result column="include_postage" jdbcType="BIT" property="includePostage" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, commodity_id, source_id, commodity_name, remark, include_postage, create_time
+  </sql>
+  <select id="selectByExample" parameterType="demo.tool.taobao.pojo.po.TaobaoProductSourceExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from taobao_product_source
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from taobao_product_source
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from taobao_product_source
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.tool.taobao.pojo.po.TaobaoProductSourceExample">
+    delete from taobao_product_source
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="demo.tool.taobao.pojo.po.TaobaoProductSource">
+    insert into taobao_product_source (id, commodity_id, source_id, 
+      commodity_name, remark, include_postage, 
+      create_time)
+    values (#{id,jdbcType=BIGINT}, #{commodityId,jdbcType=BIGINT}, #{sourceId,jdbcType=BIGINT}, 
+      #{commodityName,jdbcType=CHAR}, #{remark,jdbcType=CHAR}, #{includePostage,jdbcType=BIT}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="demo.tool.taobao.pojo.po.TaobaoProductSource">
+    insert into taobao_product_source
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="commodityId != null">
+        commodity_id,
+      </if>
+      <if test="sourceId != null">
+        source_id,
+      </if>
+      <if test="commodityName != null">
+        commodity_name,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="includePostage != null">
+        include_postage,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="commodityId != null">
+        #{commodityId,jdbcType=BIGINT},
+      </if>
+      <if test="sourceId != null">
+        #{sourceId,jdbcType=BIGINT},
+      </if>
+      <if test="commodityName != null">
+        #{commodityName,jdbcType=CHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=CHAR},
+      </if>
+      <if test="includePostage != null">
+        #{includePostage,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="demo.tool.taobao.pojo.po.TaobaoProductSourceExample" resultType="java.lang.Long">
+    select count(*) from taobao_product_source
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update taobao_product_source
+    <set>
+      <if test="row.id != null">
+        id = #{row.id,jdbcType=BIGINT},
+      </if>
+      <if test="row.commodityId != null">
+        commodity_id = #{row.commodityId,jdbcType=BIGINT},
+      </if>
+      <if test="row.sourceId != null">
+        source_id = #{row.sourceId,jdbcType=BIGINT},
+      </if>
+      <if test="row.commodityName != null">
+        commodity_name = #{row.commodityName,jdbcType=CHAR},
+      </if>
+      <if test="row.remark != null">
+        remark = #{row.remark,jdbcType=CHAR},
+      </if>
+      <if test="row.includePostage != null">
+        include_postage = #{row.includePostage,jdbcType=BIT},
+      </if>
+      <if test="row.createTime != null">
+        create_time = #{row.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update taobao_product_source
+    set id = #{row.id,jdbcType=BIGINT},
+      commodity_id = #{row.commodityId,jdbcType=BIGINT},
+      source_id = #{row.sourceId,jdbcType=BIGINT},
+      commodity_name = #{row.commodityName,jdbcType=CHAR},
+      remark = #{row.remark,jdbcType=CHAR},
+      include_postage = #{row.includePostage,jdbcType=BIT},
+      create_time = #{row.createTime,jdbcType=TIMESTAMP}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.tool.taobao.pojo.po.TaobaoProductSource">
+    update taobao_product_source
+    <set>
+      <if test="commodityId != null">
+        commodity_id = #{commodityId,jdbcType=BIGINT},
+      </if>
+      <if test="sourceId != null">
+        source_id = #{sourceId,jdbcType=BIGINT},
+      </if>
+      <if test="commodityName != null">
+        commodity_name = #{commodityName,jdbcType=CHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=CHAR},
+      </if>
+      <if test="includePostage != null">
+        include_postage = #{includePostage,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="demo.tool.taobao.pojo.po.TaobaoProductSource">
+    update taobao_product_source
+    set commodity_id = #{commodityId,jdbcType=BIGINT},
+      source_id = #{sourceId,jdbcType=BIGINT},
+      commodity_name = #{commodityName,jdbcType=CHAR},
+      remark = #{remark,jdbcType=CHAR},
+      include_postage = #{includePostage,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="demo.tool.taobao.pojo.po.TaobaoProductSourceExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from taobao_product_source
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

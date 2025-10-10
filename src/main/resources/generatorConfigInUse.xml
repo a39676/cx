@@ -21,9 +21,9 @@
         <!--数据库链接URL，用户名、密码 -->
         <jdbcConnection  
         	driverClass="com.mysql.cj.jdbc.Driver" 
-        	connectionURL="jdbc:mysql://localhost:3306/financeclear?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC" 
-        	userId="user"
-        	password="pwd">
+        	connectionURL="jdbc:mysql://localhost:14306/financeclear?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC" 
+        	userId="root"
+        	password="some*Not*1">
         </jdbcConnection> 
            
         <javaTypeResolver>    
@@ -34,7 +34,7 @@
         </javaTypeResolver>  
           
         <!-- 生成模型的包名和位置-->    
-        <javaModelGenerator targetPackage="demo.tool.temuAgent.pojo.po" targetProject="cx">    
+        <javaModelGenerator targetPackage="demo.tool.taobao.pojo.po" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
             <property name="trimStrings" value="true"/> 
             <!-- for MyBatis3 / MyBatis3Simple
@@ -45,18 +45,18 @@
         </javaModelGenerator>    
         
         <!-- 生成映射文件的包名和位置-->    
-        <sqlMapGenerator targetPackage="demo.tool.temuAgent.mapper" targetProject="cx">    
+        <sqlMapGenerator targetPackage="demo.tool.taobao.mapper" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
         </sqlMapGenerator>    
         
         <!-- 生成DAO的包名和位置-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.tool.temuAgent.mapper" targetProject="cx">    
+        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.tool.taobao.mapper" targetProject="cx">    
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="temu_agent_product_buy_and_sell_history">
-        	<property name="tableName" value="temu_agent_product_buy_and_sell_history"></property>
-        	<property name="domainObjectName" value="temu_agent_product_buy_and_sell_history"></property>
+        <table tableName="taobao_product_source">
+        	<property name="tableName" value="taobao_product_source"></property>
+        	<property name="domainObjectName" value="taobao_product_source"></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

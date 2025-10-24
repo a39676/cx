@@ -1,6 +1,5 @@
 package demo.tool.taobao.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -22,7 +21,7 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 
 	@Autowired
 	private TaobaoProductSourceMapper mapper;
-	
+
 	@Override
 	public ModelAndView taobaoProductSource() {
 		ModelAndView view = new ModelAndView("toolJSP/taobaoProductSource/taobaoProductSource");
@@ -37,10 +36,13 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		po.setCommodityId(dto.getCommodityId().longValue());
 		po.setSourceId(dto.getSourceId().longValue());
 		po.setCommodityName(dto.getCommodityName());
+		po.setCommodityImgName(dto.getCommodityImgName());
+		po.setIncludePostage(dto.getIncludePostage());
 		po.setRemark(dto.getRemark());
 		try {
 			int i = mapper.insertSelective(po);
 			if (i > 0) {
+				r.setMessage("Insert " + dto.getCommodityName() + ", done");
 				r.setIsSuccess();
 			} else {
 				r.setMessage("Insert failed");
@@ -52,7 +54,8 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 	}
 
 	@Override
-	public List<TaobaoProductSource> search(AddTaobaoProductSourceDTO dto) {
+	public ModelAndView search(AddTaobaoProductSourceDTO dto) {
+		ModelAndView v = new ModelAndView("toolJSP/taobaoProductSource/taobaoProductList");
 		TaobaoProductSourceExample example = new TaobaoProductSourceExample();
 		Criteria criteria = example.createCriteria();
 		if (dto.getCommodityId() != null) {
@@ -69,8 +72,9 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		}
 		List<TaobaoProductSource> list = mapper.selectByExample(example);
 		if (list == null) {
-			list = new ArrayList<>();
+			return v;
 		}
-		return list;
+		v.addObject("productList", list);
+		return v;
 	}
 }

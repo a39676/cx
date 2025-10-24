@@ -11,9 +11,11 @@ public class TaobaoProductSource {
 
     private String commodityName;
 
-    private String remark;
+    private String commodityImgName;
 
     private Boolean includePostage;
+
+    private String remark;
 
     private LocalDateTime createTime;
 
@@ -49,12 +51,12 @@ public class TaobaoProductSource {
         this.commodityName = commodityName == null ? null : commodityName.trim();
     }
 
-    public String getRemark() {
-        return remark;
+    public String getCommodityImgName() {
+        return commodityImgName;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark == null ? null : remark.trim();
+    public void setCommodityImgName(String commodityImgName) {
+        this.commodityImgName = commodityImgName == null ? null : commodityImgName.trim();
     }
 
     public Boolean getIncludePostage() {
@@ -63,6 +65,14 @@ public class TaobaoProductSource {
 
     public void setIncludePostage(Boolean includePostage) {
         this.includePostage = includePostage;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
     }
 
     public LocalDateTime getCreateTime() {

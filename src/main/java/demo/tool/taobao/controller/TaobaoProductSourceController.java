@@ -1,7 +1,5 @@
 package demo.tool.taobao.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.tool.taobao.pojo.dto.AddTaobaoProductSourceDTO;
-import demo.tool.taobao.pojo.po.TaobaoProductSource;
 import demo.tool.taobao.service.TaobaoProductSourceService;
 
 @Controller
@@ -36,7 +33,7 @@ public class TaobaoProductSourceController {
 
 	@PostMapping(value = "/search")
 	@ResponseBody
-	public List<TaobaoProductSource> search(@RequestBody AddTaobaoProductSourceDTO dto) {
+	public ModelAndView search(@RequestBody AddTaobaoProductSourceDTO dto) {
 		return service.search(dto);
 	}
 }

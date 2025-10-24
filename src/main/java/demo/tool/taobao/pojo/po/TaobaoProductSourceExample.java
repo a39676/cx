@@ -355,6 +355,136 @@ public class TaobaoProductSourceExample {
             return (Criteria) this;
         }
 
+        public Criteria andCommodityImgNameIsNull() {
+            addCriterion("commodity_img_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityImgNameIsNotNull() {
+            addCriterion("commodity_img_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityImgNameEqualTo(String value) {
+            addCriterion("commodity_img_name =", value, "commodityImgName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityImgNameNotEqualTo(String value) {
+            addCriterion("commodity_img_name <>", value, "commodityImgName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityImgNameGreaterThan(String value) {
+            addCriterion("commodity_img_name >", value, "commodityImgName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityImgNameGreaterThanOrEqualTo(String value) {
+            addCriterion("commodity_img_name >=", value, "commodityImgName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityImgNameLessThan(String value) {
+            addCriterion("commodity_img_name <", value, "commodityImgName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityImgNameLessThanOrEqualTo(String value) {
+            addCriterion("commodity_img_name <=", value, "commodityImgName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityImgNameLike(String value) {
+            addCriterion("commodity_img_name like", value, "commodityImgName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityImgNameNotLike(String value) {
+            addCriterion("commodity_img_name not like", value, "commodityImgName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityImgNameIn(List<String> values) {
+            addCriterion("commodity_img_name in", values, "commodityImgName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityImgNameNotIn(List<String> values) {
+            addCriterion("commodity_img_name not in", values, "commodityImgName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityImgNameBetween(String value1, String value2) {
+            addCriterion("commodity_img_name between", value1, value2, "commodityImgName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityImgNameNotBetween(String value1, String value2) {
+            addCriterion("commodity_img_name not between", value1, value2, "commodityImgName");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncludePostageIsNull() {
+            addCriterion("include_postage is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncludePostageIsNotNull() {
+            addCriterion("include_postage is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncludePostageEqualTo(Boolean value) {
+            addCriterion("include_postage =", value, "includePostage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncludePostageNotEqualTo(Boolean value) {
+            addCriterion("include_postage <>", value, "includePostage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncludePostageGreaterThan(Boolean value) {
+            addCriterion("include_postage >", value, "includePostage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncludePostageGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("include_postage >=", value, "includePostage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncludePostageLessThan(Boolean value) {
+            addCriterion("include_postage <", value, "includePostage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncludePostageLessThanOrEqualTo(Boolean value) {
+            addCriterion("include_postage <=", value, "includePostage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncludePostageIn(List<Boolean> values) {
+            addCriterion("include_postage in", values, "includePostage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncludePostageNotIn(List<Boolean> values) {
+            addCriterion("include_postage not in", values, "includePostage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncludePostageBetween(Boolean value1, Boolean value2) {
+            addCriterion("include_postage between", value1, value2, "includePostage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncludePostageNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("include_postage not between", value1, value2, "includePostage");
+            return (Criteria) this;
+        }
+
         public Criteria andRemarkIsNull() {
             addCriterion("remark is null");
             return (Criteria) this;
@@ -422,66 +552,6 @@ public class TaobaoProductSourceExample {
 
         public Criteria andRemarkNotBetween(String value1, String value2) {
             addCriterion("remark not between", value1, value2, "remark");
-            return (Criteria) this;
-        }
-
-        public Criteria andIncludePostageIsNull() {
-            addCriterion("include_postage is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andIncludePostageIsNotNull() {
-            addCriterion("include_postage is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andIncludePostageEqualTo(Boolean value) {
-            addCriterion("include_postage =", value, "includePostage");
-            return (Criteria) this;
-        }
-
-        public Criteria andIncludePostageNotEqualTo(Boolean value) {
-            addCriterion("include_postage <>", value, "includePostage");
-            return (Criteria) this;
-        }
-
-        public Criteria andIncludePostageGreaterThan(Boolean value) {
-            addCriterion("include_postage >", value, "includePostage");
-            return (Criteria) this;
-        }
-
-        public Criteria andIncludePostageGreaterThanOrEqualTo(Boolean value) {
-            addCriterion("include_postage >=", value, "includePostage");
-            return (Criteria) this;
-        }
-
-        public Criteria andIncludePostageLessThan(Boolean value) {
-            addCriterion("include_postage <", value, "includePostage");
-            return (Criteria) this;
-        }
-
-        public Criteria andIncludePostageLessThanOrEqualTo(Boolean value) {
-            addCriterion("include_postage <=", value, "includePostage");
-            return (Criteria) this;
-        }
-
-        public Criteria andIncludePostageIn(List<Boolean> values) {
-            addCriterion("include_postage in", values, "includePostage");
-            return (Criteria) this;
-        }
-
-        public Criteria andIncludePostageNotIn(List<Boolean> values) {
-            addCriterion("include_postage not in", values, "includePostage");
-            return (Criteria) this;
-        }
-
-        public Criteria andIncludePostageBetween(Boolean value1, Boolean value2) {
-            addCriterion("include_postage between", value1, value2, "includePostage");
-            return (Criteria) this;
-        }
-
-        public Criteria andIncludePostageNotBetween(Boolean value1, Boolean value2) {
-            addCriterion("include_postage not between", value1, value2, "includePostage");
             return (Criteria) this;
         }
 

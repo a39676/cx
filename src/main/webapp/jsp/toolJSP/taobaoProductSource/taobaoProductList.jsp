@@ -41,13 +41,13 @@
               </td>
               <td>
                 <label>${product.commodityId}</label><br>
-                <a href="https://item.taobao.com/item.htm?ft=t&id=${product.commodityId}">
-                  https://item.taobao.com/item.htm?ft=t&id=${product.commodityId}
+                <a href="https://item.taobao.com/item.html?id=${product.commodityId}" target="_blank">
+                  https://item.taobao.com/item.htm?id=${product.commodityId}
                 </a>
               </td>
               <td>
                 <label>${product.sourceId}</label><br>
-                <a href="https://detail.1688.com/offer/${product.sourceId}.html">
+                <a href="https://detail.1688.com/offer/${product.sourceId}.html" target="_blank">
                   https://detail.1688.com/offer/${product.sourceId}.html
                 </a>
               </td>

@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.tool.taobao.pojo.dto.AddTaobaoProductSourceDTO;
+import demo.tool.taobao.pojo.dto.TaobaoProductSourceAddDTO;
+import demo.tool.taobao.pojo.dto.TaobaoProductSourceSearchDTO;
 import demo.tool.taobao.service.TaobaoProductSourceService;
 
 @Controller
@@ -27,13 +28,13 @@ public class TaobaoProductSourceController {
 
 	@PostMapping(value = "/add")
 	@ResponseBody
-	public CommonResult add(@RequestBody AddTaobaoProductSourceDTO dto) {
+	public CommonResult add(@RequestBody TaobaoProductSourceAddDTO dto) {
 		return service.insert(dto);
 	}
 
 	@PostMapping(value = "/search")
 	@ResponseBody
-	public ModelAndView search(@RequestBody AddTaobaoProductSourceDTO dto) {
+	public ModelAndView search(@RequestBody TaobaoProductSourceSearchDTO dto) {
 		return service.search(dto);
 	}
 }

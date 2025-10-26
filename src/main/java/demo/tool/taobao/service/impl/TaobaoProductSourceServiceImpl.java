@@ -1,5 +1,6 @@
 package demo.tool.taobao.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,7 +13,8 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.service.CommonService;
 import demo.tool.taobao.mapper.TaobaoProductSourceMapper;
-import demo.tool.taobao.pojo.dto.AddTaobaoProductSourceDTO;
+import demo.tool.taobao.pojo.dto.TaobaoProductSourceAddDTO;
+import demo.tool.taobao.pojo.dto.TaobaoProductSourceSearchDTO;
 import demo.tool.taobao.pojo.po.TaobaoProductSource;
 import demo.tool.taobao.pojo.po.TaobaoProductSourceExample;
 import demo.tool.taobao.pojo.po.TaobaoProductSourceExample.Criteria;
@@ -33,7 +35,7 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 	}
 
 	@Override
-	public CommonResult insert(AddTaobaoProductSourceDTO dto) {
+	public CommonResult insert(TaobaoProductSourceAddDTO dto) {
 		CommonResult r = new CommonResult();
 		TaobaoProductSource po = new TaobaoProductSource();
 		po.setId(snowFlake.getNextId());
@@ -58,15 +60,35 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 	}
 
 	@Override
-	public ModelAndView search(AddTaobaoProductSourceDTO dto) {
+	public ModelAndView search(TaobaoProductSourceSearchDTO dto) {
 		ModelAndView v = new ModelAndView("toolJSP/taobaoProductSource/taobaoProductList");
 		TaobaoProductSourceExample example = new TaobaoProductSourceExample();
 		Criteria criteria = example.createCriteria();
-		if (dto.getCommodityId() != null) {
-			criteria.andCommodityIdEqualTo(dto.getCommodityId().longValue());
+		if (StringUtils.isNotBlank(dto.getCommodityIdListStr())) {
+			String[] idStrArray = dto.getCommodityIdListStr().replaceAll(" ", "").split(",");
+			List<Long> idList = new ArrayList<>();
+			for (String idStr : idStrArray) {
+				try {
+					idList.add(Long.parseLong(idStr));
+				} catch (Exception e) {
+				}
+			}
+			if (idList.size() > 0) {
+				criteria.andCommodityIdIn(idList);
+			}
 		}
-		if (dto.getSourceId() != null) {
-			criteria.andSourceIdEqualTo(dto.getSourceId().longValue());
+		if (StringUtils.isNotBlank(dto.getSourceIdIdListStr())) {
+			String[] idStrArray = dto.getSourceIdIdListStr().replaceAll(" ", "").split(",");
+			List<Long> idList = new ArrayList<>();
+			for (String idStr : idStrArray) {
+				try {
+					idList.add(Long.parseLong(idStr));
+				} catch (Exception e) {
+				}
+			}
+			if (idList.size() > 0) {
+				criteria.andSourceIdIn(idList);
+			}
 		}
 		if (StringUtils.isNotBlank(dto.getCommodityName())) {
 			criteria.andCommodityNameLike("%" + dto.getCommodityName() + "%");
@@ -100,7 +122,7 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		}
 		return list;
 	}
-	
+
 	@Override
 	public List<TaobaoProductSource> getNewProductList() {
 		List<Long> newProductIdList = optionService.getNewProductIdList();

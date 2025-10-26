@@ -5,14 +5,15 @@ import java.util.List;
 import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.tool.taobao.pojo.dto.AddTaobaoProductSourceDTO;
+import demo.tool.taobao.pojo.dto.TaobaoProductSourceAddDTO;
+import demo.tool.taobao.pojo.dto.TaobaoProductSourceSearchDTO;
 import demo.tool.taobao.pojo.po.TaobaoProductSource;
 
 public interface TaobaoProductSourceService {
 
-	CommonResult insert(AddTaobaoProductSourceDTO dto);
+	CommonResult insert(TaobaoProductSourceAddDTO dto);
 
-	ModelAndView search(AddTaobaoProductSourceDTO dto);
+	ModelAndView search(TaobaoProductSourceSearchDTO dto);
 
 	ModelAndView taobaoProductSource();
 

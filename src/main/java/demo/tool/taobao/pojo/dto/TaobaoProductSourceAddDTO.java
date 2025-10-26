@@ -3,7 +3,7 @@ package demo.tool.taobao.pojo.dto;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-public class AddTaobaoProductSourceDTO {
+public class TaobaoProductSourceAddDTO {
 
 	private BigInteger commodityId;
 	private BigDecimal sourceId;

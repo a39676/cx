@@ -88,8 +88,8 @@
 
       var jsonOutput = {
         commodityName : commodityName,
-        commodityId : commodityId,
-        sourceId : sourceId,
+        commodityIdListStr : commodityId,
+        sourceIdIdListStr : sourceId,
         commodityImgName : commodityImgName,
         includePostage : includePostage,
         remark : remark,

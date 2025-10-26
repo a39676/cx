@@ -23,6 +23,9 @@ public class TaobaoProductSourceOptionService extends CommonService {
 	private List<Long> newProductIdList;
 	private List<Long> promotProductIdList;
 	private Integer minNewProductIdListSize;
+	private List<Long> randomProductIdList;
+	private Integer randomProductIdListRefreshGapInMinute = 30;
+	private LocalDateTime randomProductIdListLastUpdateTime = null;
 
 	@PostConstruct
 	public void refreshOption() {
@@ -76,11 +79,37 @@ public class TaobaoProductSourceOptionService extends CommonService {
 		this.minNewProductIdListSize = minNewProductIdListSize;
 	}
 
+	public List<Long> getRandomProductIdList() {
+		return randomProductIdList;
+	}
+
+	public void setRandomProductIdList(List<Long> randomProductIdList) {
+		this.randomProductIdList = randomProductIdList;
+	}
+
+	public Integer getRandomProductIdListRefreshGapInMinute() {
+		return randomProductIdListRefreshGapInMinute;
+	}
+
+	public void setRandomProductIdListRefreshGapInMinute(Integer randomProductIdListRefreshGapInMinute) {
+		this.randomProductIdListRefreshGapInMinute = randomProductIdListRefreshGapInMinute;
+	}
+
+	public LocalDateTime getRandomProductIdListLastUpdateTime() {
+		return randomProductIdListLastUpdateTime;
+	}
+
+	public void setRandomProductIdListLastUpdateTime(LocalDateTime randomProductIdListLastUpdateTime) {
+		this.randomProductIdListLastUpdateTime = randomProductIdListLastUpdateTime;
+	}
+
 	@Override
 	public String toString() {
 		return "TaobaoProductSourceOptionService [hotSaleIdList=" + hotSaleIdList + ", newProductIdList="
 				+ newProductIdList + ", promotProductIdList=" + promotProductIdList + ", minNewProductIdListSize="
-				+ minNewProductIdListSize + "]";
+				+ minNewProductIdListSize + ", randomProductIdList=" + randomProductIdList
+				+ ", randomProductIdListRefreshGapInMinute=" + randomProductIdListRefreshGapInMinute
+				+ ", randomProductIdListLastUpdateTime=" + randomProductIdListLastUpdateTime + "]";
 	}
 
 }

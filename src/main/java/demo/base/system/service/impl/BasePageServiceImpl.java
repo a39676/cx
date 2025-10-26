@@ -135,6 +135,8 @@ public class BasePageServiceImpl extends SystemCommonService implements BasePage
 		view.addObject("taobaoHotSaleList", taobaoProductSourceHotSaleList);
 		List<TaobaoProductSource> taobaoProductSourceNewProductList = taobaoProductSourceService.getNewProductList();
 		view.addObject("taobaoNewProductList", taobaoProductSourceNewProductList);
+		List<TaobaoProductSource> taobaoProductSourceRandomProductList = taobaoProductSourceService.getRandomProductList(5);
+		view.addObject("taobaoRandomProductList", taobaoProductSourceRandomProductList);
 		
 		return view;
 	}

@@ -1,9 +1,9 @@
 package demo.tool.taobao.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,18 +108,8 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 	public List<TaobaoProductSource> getHotSaleList() {
 		List<Long> hotSaleIdList = optionService.getHotSaleIdList();
 		TaobaoProductSourceExample example = new TaobaoProductSourceExample();
-		example.createCriteria().andCommodityIdIn(hotSaleIdList);
+		example.createCriteria().andIdIn(hotSaleIdList);
 		List<TaobaoProductSource> list = mapper.selectByExample(example);
-		// 因数据表中储存方式(一个tb链接对应多个货源时, 有多条数据, 所以需要"去重")
-		Set<Long> commodityIdSet = new HashSet<>();
-		for (int i = 0; i < list.size(); i++) {
-			TaobaoProductSource po = list.get(i);
-			if (commodityIdSet.contains(po.getCommodityId())) {
-				list.remove(i);
-				continue;
-			}
-			commodityIdSet.add(po.getCommodityId());
-		}
 		return list;
 	}
 
@@ -127,18 +117,40 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 	public List<TaobaoProductSource> getNewProductList() {
 		List<Long> newProductIdList = optionService.getNewProductIdList();
 		TaobaoProductSourceExample example = new TaobaoProductSourceExample();
-		example.createCriteria().andCommodityIdIn(newProductIdList);
+		example.createCriteria().andIdIn(newProductIdList);
 		List<TaobaoProductSource> list = mapper.selectByExample(example);
-		// 因数据表中储存方式(一个tb链接对应多个货源时, 有多条数据, 所以需要"去重")
-		Set<Long> commodityIdSet = new HashSet<>();
-		for (int i = 0; i < list.size(); i++) {
-			TaobaoProductSource po = list.get(i);
-			if (commodityIdSet.contains(po.getCommodityId())) {
-				list.remove(i);
-				continue;
-			}
-			commodityIdSet.add(po.getCommodityId());
+		return list;
+	}
+
+	@Override
+	public List<TaobaoProductSource> getRandomProductList(Integer size) {
+		List<Long> productIdList = new ArrayList<>();
+		List<TaobaoProductSource> list = new ArrayList<>();
+		TaobaoProductSourceExample example = new TaobaoProductSourceExample();
+		LocalDateTime lastUpdateTime = optionService.getRandomProductIdListLastUpdateTime();
+		LocalDateTime now = LocalDateTime.now();
+		if (lastUpdateTime != null
+				&& lastUpdateTime.plusMinutes(optionService.getRandomProductIdListRefreshGapInMinute()).isAfter(now)) {
+			productIdList = optionService.getRandomProductIdList();
+			example = new TaobaoProductSourceExample();
+			example.createCriteria().andIdIn(productIdList);
+			list = mapper.selectByExample(example);
+			return list;
 		}
+		example = new TaobaoProductSourceExample();
+		example.createCriteria();
+		example.setOrderByClause(" id desc limit 200");
+		list = mapper.selectByExample(example);
+		List<Long> randomIdList = new ArrayList<>();
+		for (int i = 0; i < optionService.getMinNewProductIdListSize(); i++) {
+			int randomIndex = ThreadLocalRandom.current().nextInt(0, list.size() - 1);
+			randomIdList.add(list.remove(randomIndex).getId());
+		}
+		optionService.setRandomProductIdList(randomIdList);
+		example = new TaobaoProductSourceExample();
+		example.createCriteria().andIdIn(randomIdList);
+		list = mapper.selectByExample(example);
+		optionService.setRandomProductIdListLastUpdateTime(now);
 		return list;
 	}
 }

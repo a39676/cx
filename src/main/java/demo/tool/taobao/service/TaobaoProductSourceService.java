@@ -21,4 +21,6 @@ public interface TaobaoProductSourceService {
 
 	List<TaobaoProductSource> getNewProductList();
 
+	List<TaobaoProductSource> getRandomProductList(Integer size);
+
 }

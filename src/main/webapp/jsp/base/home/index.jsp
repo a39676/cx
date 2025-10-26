@@ -108,7 +108,7 @@
           <button class="btn btn-sm btn-warning" id="createNewArticle"><b>Create new</b></button>
           <div class="row"><hr style="color: rgba(55, 66, 250,1.0)"></div>
         </sec:authorize>
-        <div class="btn-group-vertical" id="articleChannels"></div>
+        <div class="btn-group-vertical" id="articleChannels"></div><br>
         <c:forEach items="${taobaoHotSaleList}" var="product" varStatus="loop">
           <a href="https://item.taobao.com/item.html?id=${product.commodityId}" target="_blank">
             <img src='https://gw.alicdn.com/imgextra/${product.commodityImgName}_160x160xz_.webp' style='width: 80px;'><br>
@@ -145,6 +145,12 @@
         <%-- <span style="color: rgb(255, 156, 0); background-color: rgb(255, 255, 255);">Donate 打赏</span> --%>
         <%-- <img src="${donateImgUrl}" alt="" style="width:100px; height:100px;"> --%>
         <c:forEach items="${taobaoNewProductList}" var="product" varStatus="loop">
+          <a href="https://item.taobao.com/item.html?id=${product.commodityId}" target="_blank">
+            <img src='https://gw.alicdn.com/imgextra/${product.commodityImgName}_160x160xz_.webp' style='width: 80px;'><br>
+            <label style="font-size: smaller;">${product.commodityName}</label>
+          </a><br>
+        </c:forEach>
+        <c:forEach items="${taobaoRandomProductList}" var="product" varStatus="loop">
           <a href="https://item.taobao.com/item.html?id=${product.commodityId}" target="_blank">
             <img src='https://gw.alicdn.com/imgextra/${product.commodityImgName}_160x160xz_.webp' style='width: 80px;'><br>
             <label style="font-size: smaller;">${product.commodityName}</label>

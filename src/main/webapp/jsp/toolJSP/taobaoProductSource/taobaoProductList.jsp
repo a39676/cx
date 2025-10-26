@@ -37,7 +37,7 @@
                 <label>${product.commodityName}</label><br>
               </td>
               <td>
-                <img src='https://gw.alicdn.com/imgextra/${product.commodityImgName}.jpg_160x160xz_.webp' style='width: 80px;'>
+                <img src='https://gw.alicdn.com/imgextra/${product.commodityImgName}_160x160xz_.webp' style='width: 80px;'>
               </td>
               <td>
                 <label>${product.commodityId}</label><br>

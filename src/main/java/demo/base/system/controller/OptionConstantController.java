@@ -31,6 +31,7 @@ import demo.thirdPartyAPI.openAI.service.impl.OpenAiOptionService;
 import demo.tool.educate.service.impl.EducateOptionService;
 import demo.tool.mail.service.impl.MailOptionService;
 import demo.tool.service.impl.ToolOptionService;
+import demo.tool.taobao.service.impl.TaobaoProductSourceOptionService;
 import demo.tool.textMessageForward.telegram.service.impl.TelegramOptionService;
 import demo.tool.zulip.service.impl.ZulipOptionService;
 
@@ -90,6 +91,8 @@ public class OptionConstantController {
 	private ZulipOptionService zulipOptionService;
 	@Autowired
 	private CnStockMarketOptionService cnStockMarketOptionService;
+	@Autowired
+	private TaobaoProductSourceOptionService taobaoProductSourceOptionService;
 
 	@GetMapping(value = "/refreshSystemOption")
 	@ResponseBody
@@ -250,6 +253,13 @@ public class OptionConstantController {
 	@ResponseBody
 	public String cnStockMarketOptionService() {
 		cnStockMarketOptionService.refreshOption();
+		return "done";
+	}
+
+	@GetMapping(value = "/refreshTaobaoProductSourceOptionService")
+	@ResponseBody
+	public String taobaoProductSourceOptionService() {
+		taobaoProductSourceOptionService.refreshOption();
 		return "done";
 	}
 

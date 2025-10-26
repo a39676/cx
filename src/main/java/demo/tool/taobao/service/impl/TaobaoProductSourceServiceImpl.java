@@ -1,6 +1,8 @@
 package demo.tool.taobao.service.impl;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ import demo.tool.taobao.service.TaobaoProductSourceService;
 @Service
 public class TaobaoProductSourceServiceImpl extends CommonService implements TaobaoProductSourceService {
 
+	@Autowired
+	private TaobaoProductSourceOptionService optionService;
 	@Autowired
 	private TaobaoProductSourceMapper mapper;
 
@@ -76,5 +80,43 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		}
 		v.addObject("productList", list);
 		return v;
+	}
+
+	@Override
+	public List<TaobaoProductSource> getHotSaleList() {
+		List<Long> hotSaleIdList = optionService.getHotSaleIdList();
+		TaobaoProductSourceExample example = new TaobaoProductSourceExample();
+		example.createCriteria().andCommodityIdIn(hotSaleIdList);
+		List<TaobaoProductSource> list = mapper.selectByExample(example);
+		// 因数据表中储存方式(一个tb链接对应多个货源时, 有多条数据, 所以需要"去重")
+		Set<Long> commodityIdSet = new HashSet<>();
+		for (int i = 0; i < list.size(); i++) {
+			TaobaoProductSource po = list.get(i);
+			if (commodityIdSet.contains(po.getCommodityId())) {
+				list.remove(i);
+				continue;
+			}
+			commodityIdSet.add(po.getCommodityId());
+		}
+		return list;
+	}
+	
+	@Override
+	public List<TaobaoProductSource> getNewProductList() {
+		List<Long> newProductIdList = optionService.getNewProductIdList();
+		TaobaoProductSourceExample example = new TaobaoProductSourceExample();
+		example.createCriteria().andCommodityIdIn(newProductIdList);
+		List<TaobaoProductSource> list = mapper.selectByExample(example);
+		// 因数据表中储存方式(一个tb链接对应多个货源时, 有多条数据, 所以需要"去重")
+		Set<Long> commodityIdSet = new HashSet<>();
+		for (int i = 0; i < list.size(); i++) {
+			TaobaoProductSource po = list.get(i);
+			if (commodityIdSet.contains(po.getCommodityId())) {
+				list.remove(i);
+				continue;
+			}
+			commodityIdSet.add(po.getCommodityId());
+		}
+		return list;
 	}
 }

@@ -256,6 +256,13 @@
       </li>
     </ul><!-- zulip -->
 
+    <ul class="main-menu visible-on-click" id="taobaoProductSource">
+      <li style="background-color:yellow;">taobaoProductSource</li>
+      <li>
+        <a href="/taobaoProductSource/" target="_blank">taobaoProductSource</a>
+      </li>
+    </ul><!-- taobaoProductSource -->
+
   </div>
 
   <script type="text/javascript">

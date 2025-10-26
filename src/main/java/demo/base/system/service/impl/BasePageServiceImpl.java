@@ -16,12 +16,16 @@ import demo.base.system.pojo.constant.BlogViewConstant;
 import demo.base.system.pojo.result.HostnameType;
 import demo.base.system.service.BasePageService;
 import demo.base.user.pojo.type.SystemRolesType;
+import demo.tool.taobao.pojo.po.TaobaoProductSource;
+import demo.tool.taobao.service.TaobaoProductSourceService;
 
 @Service
 public class BasePageServiceImpl extends SystemCommonService implements BasePageService {
 	
 	@Autowired
 	private ArticleOptionService articleOptionService;
+	@Autowired
+	private TaobaoProductSourceService taobaoProductSourceService;
 
 	@Override
 	public ModelAndView baseRootHandlerCleanBlog(String vcode, HttpServletRequest request) {
@@ -126,7 +130,11 @@ public class BasePageServiceImpl extends SystemCommonService implements BasePage
 		view.addObject("subheading", systemOptionService.getNormalSubheading());
 		Long visitCount = visitDataService.getVisitCount();
 		view.addObject("visitCount", visitCount);
-		view.addObject("donateImgUrl", articleOptionService.getDonateImgUrl());
+//		view.addObject("donateImgUrl", articleOptionService.getDonateImgUrl());
+		List<TaobaoProductSource> taobaoProductSourceHotSaleList = taobaoProductSourceService.getHotSaleList();
+		view.addObject("taobaoHotSaleList", taobaoProductSourceHotSaleList);
+		List<TaobaoProductSource> taobaoProductSourceNewProductList = taobaoProductSourceService.getNewProductList();
+		view.addObject("taobaoNewProductList", taobaoProductSourceNewProductList);
 		
 		return view;
 	}

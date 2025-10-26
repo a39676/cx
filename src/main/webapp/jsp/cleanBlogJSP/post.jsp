@@ -81,12 +81,16 @@
       </div>
 
       <div class="row">
-        <div class="col-md-3">
-        </div>
-        <div class="col-md-9">
-          <span style="color: rgb(255, 156, 0); background-color: rgb(255, 255, 255);">Donate 打赏</span>
-          <img src="${donateImgUrl}" alt="" style="width:100px; height:100px;">
-        </div>
+        <%-- <span style="color: rgb(255, 156, 0); background-color: rgb(255, 255, 255);">Donate 打赏</span> --%>
+        <%-- <img src="${donateImgUrl}" alt="" style="width:100px; height:100px;"> --%>
+        <c:forEach items="${taobaoHotSaleList}" var="product" varStatus="loop">
+          <div class="col-md-2">
+          <a href="https://item.taobao.com/item.html?id=${product.commodityId}" target="_blank">
+            <img src='https://gw.alicdn.com/imgextra/${product.commodityImgName}_160x160xz_.webp' style='width:80px;'><br>
+            <label style="font-size: smaller;">${product.commodityName}</label>
+          </a>
+          </div>
+        </c:forEach>
       </div>
 
       <hr>

@@ -57,6 +57,8 @@ import demo.article.article.service.ArticleViewService;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.user.controller.UsersController;
 import demo.base.user.pojo.bo.MyUserPrincipal;
+import demo.tool.taobao.pojo.po.TaobaoProductSource;
+import demo.tool.taobao.service.TaobaoProductSourceService;
 import toolPack.dateTimeHandle.DateTimeUtilCommon;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -85,6 +87,8 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 
 	@Autowired
 	private FileUtilCustom ioUtil;
+	@Autowired
+	private TaobaoProductSourceService taobaoProductSourceService;
 
 	@Override
 	public ModelAndView buildCreatingArticleLongView(CreatingArticleParam controllerParam) {
@@ -372,6 +376,9 @@ public class ArticleServiceImpl extends ArticleCommonService implements ArticleS
 		if (result.isSuccess()) {
 			insertArticleVisitData(request, result.getArticleId());
 		}
+		
+		List<TaobaoProductSource> taobaoProductSourceHotSaleList = taobaoProductSourceService.getHotSaleList();
+		view.addObject("taobaoHotSaleList", taobaoProductSourceHotSaleList);
 
 		return view;
 	}

@@ -128,11 +128,17 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 			example.setOrderByClause(" id desc limit 15");
 			List<TaobaoProductSource> list = mapper.selectByExample(example);
 			Set<Long> commodityIdSet = new HashSet<>();
+			List<Long> newProductIdList = new ArrayList<>();
 			for (int i = 0; commodityIdSet.size() < optionService.getMinNewProductIdListSize(); i++) {
+				TaobaoProductSource product = list.get(i);
+				if (commodityIdSet.contains(product.getCommodityId())) {
+					continue;
+				}
 				commodityIdSet.add(list.get(i).getCommodityId());
+				newProductIdList.add(product.getId());
 			}
 			optionService.getNewProductIdList().clear();
-			optionService.getNewProductIdList().addAll(commodityIdSet);
+			optionService.getNewProductIdList().addAll(newProductIdList);
 		}
 		List<Long> newProductIdList = optionService.getNewProductIdList();
 		TaobaoProductSourceExample example = new TaobaoProductSourceExample();

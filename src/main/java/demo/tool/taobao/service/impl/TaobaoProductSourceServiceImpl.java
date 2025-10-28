@@ -2,7 +2,9 @@ package demo.tool.taobao.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.commons.lang3.StringUtils;
@@ -115,6 +117,23 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 
 	@Override
 	public List<TaobaoProductSource> getNewProductList() {
+		LocalDateTime lastUpdateTime = optionService.getNewProductIdListLastUpdateTime();
+		LocalDateTime now = LocalDateTime.now();
+		if (lastUpdateTime == null
+				|| lastUpdateTime.plusMinutes(optionService.getNewProductIdListRefreshGapInMinute()).isBefore(now)) {
+			TaobaoProductSourceExample example = new TaobaoProductSourceExample();
+			example.createCriteria();
+			// 2025/10/28 基于目前数据结构(链接ID:来源ID 1:1), 当某一链接对应多个来源时, 再去重会造成列表缩小, 所以 limit
+			// 数值需要相对放大, 暂取15
+			example.setOrderByClause(" id desc limit 15");
+			List<TaobaoProductSource> list = mapper.selectByExample(example);
+			Set<Long> commodityIdSet = new HashSet<>();
+			for (int i = 0; commodityIdSet.size() < optionService.getMinNewProductIdListSize(); i++) {
+				commodityIdSet.add(list.get(i).getCommodityId());
+			}
+			optionService.getNewProductIdList().clear();
+			optionService.getNewProductIdList().addAll(commodityIdSet);
+		}
 		List<Long> newProductIdList = optionService.getNewProductIdList();
 		TaobaoProductSourceExample example = new TaobaoProductSourceExample();
 		example.createCriteria().andIdIn(newProductIdList);

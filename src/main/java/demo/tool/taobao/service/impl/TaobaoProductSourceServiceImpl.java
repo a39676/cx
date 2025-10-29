@@ -33,6 +33,7 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 	@Override
 	public ModelAndView taobaoProductSource() {
 		ModelAndView view = new ModelAndView("toolJSP/taobaoProductSource/taobaoProductSource");
+		view.addObject("title", "TaobaoProduct");
 		return view;
 	}
 

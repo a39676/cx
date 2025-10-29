@@ -139,6 +139,7 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 			}
 			optionService.getNewProductIdList().clear();
 			optionService.getNewProductIdList().addAll(newProductIdList);
+			optionService.setNewProductIdListLastUpdateTime(now);
 		}
 		List<Long> newProductIdList = optionService.getNewProductIdList();
 		TaobaoProductSourceExample example = new TaobaoProductSourceExample();

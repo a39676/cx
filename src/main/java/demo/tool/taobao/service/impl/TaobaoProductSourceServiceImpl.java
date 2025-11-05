@@ -47,6 +47,7 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		po.setCommodityName(dto.getCommodityName());
 		po.setCommodityImgName(dto.getCommodityImgName());
 		po.setIncludePostage(dto.getIncludePostage());
+		po.setIsAvailable(true);
 		po.setRemark(dto.getRemark());
 		try {
 			int i = mapper.insertSelective(po);
@@ -111,7 +112,7 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 	public List<TaobaoProductSource> getHotSaleList() {
 		List<Long> hotSaleIdList = optionService.getHotSaleIdList();
 		TaobaoProductSourceExample example = new TaobaoProductSourceExample();
-		example.createCriteria().andIdIn(hotSaleIdList);
+		example.createCriteria().andIdIn(hotSaleIdList).andIsAvailableEqualTo(true);
 		List<TaobaoProductSource> list = mapper.selectByExample(example);
 		return list;
 	}
@@ -144,7 +145,7 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		}
 		List<Long> newProductIdList = optionService.getNewProductIdList();
 		TaobaoProductSourceExample example = new TaobaoProductSourceExample();
-		example.createCriteria().andIdIn(newProductIdList);
+		example.createCriteria().andIdIn(newProductIdList).andIsAvailableEqualTo(true);
 		List<TaobaoProductSource> list = mapper.selectByExample(example);
 		return list;
 	}
@@ -160,7 +161,7 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 				&& lastUpdateTime.plusMinutes(optionService.getRandomProductIdListRefreshGapInMinute()).isAfter(now)) {
 			productIdList = optionService.getRandomProductIdList();
 			example = new TaobaoProductSourceExample();
-			example.createCriteria().andIdIn(productIdList);
+			example.createCriteria().andIdIn(productIdList).andIsAvailableEqualTo(true);
 			list = mapper.selectByExample(example);
 			return list;
 		}

@@ -485,6 +485,66 @@ public class TaobaoProductSourceExample {
             return (Criteria) this;
         }
 
+        public Criteria andIsAvailableIsNull() {
+            addCriterion("is_available is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAvailableIsNotNull() {
+            addCriterion("is_available is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAvailableEqualTo(Boolean value) {
+            addCriterion("is_available =", value, "isAvailable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAvailableNotEqualTo(Boolean value) {
+            addCriterion("is_available <>", value, "isAvailable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAvailableGreaterThan(Boolean value) {
+            addCriterion("is_available >", value, "isAvailable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAvailableGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_available >=", value, "isAvailable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAvailableLessThan(Boolean value) {
+            addCriterion("is_available <", value, "isAvailable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAvailableLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_available <=", value, "isAvailable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAvailableIn(List<Boolean> values) {
+            addCriterion("is_available in", values, "isAvailable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAvailableNotIn(List<Boolean> values) {
+            addCriterion("is_available not in", values, "isAvailable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAvailableBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_available between", value1, value2, "isAvailable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAvailableNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_available not between", value1, value2, "isAvailable");
+            return (Criteria) this;
+        }
+
         public Criteria andRemarkIsNull() {
             addCriterion("remark is null");
             return (Criteria) this;

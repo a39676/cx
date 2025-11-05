@@ -15,6 +15,8 @@ public class TaobaoProductSource {
 
     private Boolean includePostage;
 
+    private Boolean isAvailable;
+
     private String remark;
 
     private LocalDateTime createTime;
@@ -65,6 +67,14 @@ public class TaobaoProductSource {
 
     public void setIncludePostage(Boolean includePostage) {
         this.includePostage = includePostage;
+    }
+
+    public Boolean getIsAvailable() {
+        return isAvailable;
+    }
+
+    public void setIsAvailable(Boolean isAvailable) {
+        this.isAvailable = isAvailable;
     }
 
     public String getRemark() {

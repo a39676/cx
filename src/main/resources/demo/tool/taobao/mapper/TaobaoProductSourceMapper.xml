@@ -8,6 +8,7 @@
     <result column="commodity_name" jdbcType="CHAR" property="commodityName" />
     <result column="commodity_img_name" jdbcType="CHAR" property="commodityImgName" />
     <result column="include_postage" jdbcType="BIT" property="includePostage" />
+    <result column="is_available" jdbcType="BIT" property="isAvailable" />
     <result column="remark" jdbcType="CHAR" property="remark" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
@@ -71,7 +72,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, commodity_id, source_id, commodity_name, commodity_img_name, include_postage, 
-    remark, create_time
+    is_available, remark, create_time
   </sql>
   <select id="selectByExample" parameterType="demo.tool.taobao.pojo.po.TaobaoProductSourceExample" resultMap="BaseResultMap">
     select
@@ -106,10 +107,12 @@
   <insert id="insert" parameterType="demo.tool.taobao.pojo.po.TaobaoProductSource">
     insert into taobao_product_source (id, commodity_id, source_id, 
       commodity_name, commodity_img_name, include_postage, 
-      remark, create_time)
+      is_available, remark, create_time
+      )
     values (#{id,jdbcType=BIGINT}, #{commodityId,jdbcType=BIGINT}, #{sourceId,jdbcType=BIGINT}, 
       #{commodityName,jdbcType=CHAR}, #{commodityImgName,jdbcType=CHAR}, #{includePostage,jdbcType=BIT}, 
-      #{remark,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP})
+      #{isAvailable,jdbcType=BIT}, #{remark,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="demo.tool.taobao.pojo.po.TaobaoProductSource">
     insert into taobao_product_source
@@ -131,6 +134,9 @@
       </if>
       <if test="includePostage != null">
         include_postage,
+      </if>
+      <if test="isAvailable != null">
+        is_available,
       </if>
       <if test="remark != null">
         remark,
@@ -157,6 +163,9 @@
       </if>
       <if test="includePostage != null">
         #{includePostage,jdbcType=BIT},
+      </if>
+      <if test="isAvailable != null">
+        #{isAvailable,jdbcType=BIT},
       </if>
       <if test="remark != null">
         #{remark,jdbcType=CHAR},
@@ -193,6 +202,9 @@
       <if test="row.includePostage != null">
         include_postage = #{row.includePostage,jdbcType=BIT},
       </if>
+      <if test="row.isAvailable != null">
+        is_available = #{row.isAvailable,jdbcType=BIT},
+      </if>
       <if test="row.remark != null">
         remark = #{row.remark,jdbcType=CHAR},
       </if>
@@ -212,6 +224,7 @@
       commodity_name = #{row.commodityName,jdbcType=CHAR},
       commodity_img_name = #{row.commodityImgName,jdbcType=CHAR},
       include_postage = #{row.includePostage,jdbcType=BIT},
+      is_available = #{row.isAvailable,jdbcType=BIT},
       remark = #{row.remark,jdbcType=CHAR},
       create_time = #{row.createTime,jdbcType=TIMESTAMP}
     <if test="example != null">
@@ -236,6 +249,9 @@
       <if test="includePostage != null">
         include_postage = #{includePostage,jdbcType=BIT},
       </if>
+      <if test="isAvailable != null">
+        is_available = #{isAvailable,jdbcType=BIT},
+      </if>
       <if test="remark != null">
         remark = #{remark,jdbcType=CHAR},
       </if>
@@ -252,6 +268,7 @@
       commodity_name = #{commodityName,jdbcType=CHAR},
       commodity_img_name = #{commodityImgName,jdbcType=CHAR},
       include_postage = #{includePostage,jdbcType=BIT},
+      is_available = #{isAvailable,jdbcType=BIT},
       remark = #{remark,jdbcType=CHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}

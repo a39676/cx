@@ -14,14 +14,16 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-          <a class="nav-link" id="homePage" href="/">首页</a>
+          <a class="nav-link" id="homePage" href="/">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/aboutMe">关于我/联系方式</a>
+          <a class="nav-link" href="/aboutMe">關於我/About ME</a>
         </li>
+        <%-- 
         <li class="nav-item" id="autoTestDemo">
           <a class="nav-link" href="/atDemo/index">自动化测试示例</a>
         </li>
+         --%>
         <sec:authorize access="!hasRole('ROLE_USER')">
           <li class="nav-item" name="login">
             <a class="nav-link" href="#" id="loginTag">[登录]</a>

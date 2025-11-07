@@ -55,7 +55,7 @@
             <a class="nav-link" href="/">Home</a>
           </li>
           <li class="nav-item active font-weight-bold">
-            <a class="nav-link" href="/aboutMe">关于我/联系方式</a>
+            <a class="nav-link" href="/aboutMe">關於我/About ME</a>
           </li>
           <li class="nav-item active font-weight-bold" id="autoTestDemo">
           </li>

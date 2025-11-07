@@ -27,6 +27,7 @@
             <td>来源ID</td>
             <td>是否包邮</td>
             <td>备注</td>
+            <td>是否上架</td>
           </tr>
           <c:forEach items="${productList}" var="product" varStatus="loop">
             <tr class="productLine" 
@@ -35,6 +36,7 @@
               <td>
                 <label>${product.id}</label><br>
                 <label>${product.commodityName}</label><br>
+                <label>${product.commodityNameEn}</label><br>
               </td>
               <td>
                 <img src='https://gw.alicdn.com/imgextra/${product.commodityImgName}_160x160xz_.webp' style='width: 80px;'>
@@ -56,6 +58,9 @@
               </td>
               <td>
                 ${product.remark}
+              </td>
+              <td>
+                ${product.isAvailable}
               </td>
             </tr>
           </c:forEach>

@@ -31,6 +31,7 @@
           <tr>
             <td>
               <input type="text" name="" id="commodityName" placeholder="货名">
+              <input type="text" name="" id="commodityNameEn" placeholder="货名EN">
             </td>
             <td>
               <input type="text" name="" id="commodityId" placeholder="挂链ID"><br>
@@ -78,6 +79,7 @@
 
     function searchProduct(){ 
       var commodityName = $("#commodityName").val();
+      var commodityNameEn = $("#commodityNameEn").val();
       var commodityId = $("#commodityId").val();
       var sourceId = $("#sourceId").val();
       var commodityImgName = $("#commodityImgName").val();
@@ -88,6 +90,7 @@
 
       var jsonOutput = {
         commodityName : commodityName,
+        commodityNameEn : commodityNameEn,
         commodityIdListStr : commodityId,
         sourceIdIdListStr : sourceId,
         commodityImgName : commodityImgName,

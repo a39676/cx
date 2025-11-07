@@ -162,6 +162,7 @@ public class BasePageServiceImpl extends SystemCommonService implements BasePage
 				v = new ModelAndView(BlogViewConstant.ABOUT_ZHANG);
 				v.addObject("email", systemOptionService.getEmailD());
 				v.addObject("headerImg", BaseStaticResourcesUrl.IMG_YELLOW_GRASS_LAND);
+				v.addObject("subheading", systemOptionService.getNormalSubheading());
 			} else if (HostnameType.dtro.equals(hostnameType)) {
 				v = new ModelAndView(BlogViewConstant.ABOUT_ZHANG);
 				v.addObject("email", systemOptionService.getEmailC());

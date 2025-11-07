@@ -22,8 +22,8 @@
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="page-heading">
-            <h1>关于我</h1>
-            <span class="subheading">码海无涯,回头是岸</span>
+            <h1>關於我 / About ME</h1>
+            <span class="subheading">${subheading}</span>
           </div>
         </div>
       </div>
@@ -34,8 +34,9 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
-        <p>本站建设中, 还没有灵魂, 希望能收集您宝贵的意见!</p>
-        <p>欢迎联系 ${email} </p>
+        <p>願各位心中有愛，眼裏有光</p>
+        <p>May everyone have love in their hearts and light in their eyes.</p>
+        <p>E-mail: ${email} </p>
       </div>
     </div>
   </div>

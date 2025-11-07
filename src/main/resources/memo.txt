@@ -1,6 +1,3 @@
-taobao product source
-	需要增加唉 是否在售 flag ?
-
 temu
 	需要增加仓库表
 		model --- 仓库 --- 数量

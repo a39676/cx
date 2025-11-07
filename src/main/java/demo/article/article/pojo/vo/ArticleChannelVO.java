@@ -1,6 +1,7 @@
 package demo.article.article.pojo.vo;
 
 import java.util.List;
+import java.util.Objects;
 
 import demo.article.article.pojo.dto.ArticleChannelKeyHostnameIdDTO;
 
@@ -78,6 +79,29 @@ public class ArticleChannelVO implements Comparable<ArticleChannelVO> {
 
 	public void setChannelIdKeyHostnameId(List<ArticleChannelKeyHostnameIdDTO> channelIdKeyHostnameId) {
 		this.channelIdKeyHostnameId = channelIdKeyHostnameId;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(channelId, channelIdKeyHostnameId, channelImage, channelName, channelType, channelTypeName,
+				isDelete, weights);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ArticleChannelVO other = (ArticleChannelVO) obj;
+		return Objects.equals(channelId, other.channelId)
+				&& Objects.equals(channelIdKeyHostnameId, other.channelIdKeyHostnameId)
+				&& Objects.equals(channelImage, other.channelImage) && Objects.equals(channelName, other.channelName)
+				&& Objects.equals(channelType, other.channelType)
+				&& Objects.equals(channelTypeName, other.channelTypeName) && isDelete == other.isDelete
+				&& Objects.equals(weights, other.weights);
 	}
 
 	@Override

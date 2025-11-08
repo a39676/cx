@@ -355,6 +355,76 @@ public class TaobaoProductSourceExample {
             return (Criteria) this;
         }
 
+        public Criteria andCommodityNameEnIsNull() {
+            addCriterion("commodity_name_en is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameEnIsNotNull() {
+            addCriterion("commodity_name_en is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameEnEqualTo(String value) {
+            addCriterion("commodity_name_en =", value, "commodityNameEn");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameEnNotEqualTo(String value) {
+            addCriterion("commodity_name_en <>", value, "commodityNameEn");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameEnGreaterThan(String value) {
+            addCriterion("commodity_name_en >", value, "commodityNameEn");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameEnGreaterThanOrEqualTo(String value) {
+            addCriterion("commodity_name_en >=", value, "commodityNameEn");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameEnLessThan(String value) {
+            addCriterion("commodity_name_en <", value, "commodityNameEn");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameEnLessThanOrEqualTo(String value) {
+            addCriterion("commodity_name_en <=", value, "commodityNameEn");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameEnLike(String value) {
+            addCriterion("commodity_name_en like", value, "commodityNameEn");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameEnNotLike(String value) {
+            addCriterion("commodity_name_en not like", value, "commodityNameEn");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameEnIn(List<String> values) {
+            addCriterion("commodity_name_en in", values, "commodityNameEn");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameEnNotIn(List<String> values) {
+            addCriterion("commodity_name_en not in", values, "commodityNameEn");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameEnBetween(String value1, String value2) {
+            addCriterion("commodity_name_en between", value1, value2, "commodityNameEn");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameEnNotBetween(String value1, String value2) {
+            addCriterion("commodity_name_en not between", value1, value2, "commodityNameEn");
+            return (Criteria) this;
+        }
+
         public Criteria andCommodityImgNameIsNull() {
             addCriterion("commodity_img_name is null");
             return (Criteria) this;

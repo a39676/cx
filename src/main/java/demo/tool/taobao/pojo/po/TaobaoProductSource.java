@@ -11,6 +11,8 @@ public class TaobaoProductSource {
 
     private String commodityName;
 
+    private String commodityNameEn;
+
     private String commodityImgName;
 
     private Boolean includePostage;
@@ -51,6 +53,14 @@ public class TaobaoProductSource {
 
     public void setCommodityName(String commodityName) {
         this.commodityName = commodityName == null ? null : commodityName.trim();
+    }
+
+    public String getCommodityNameEn() {
+        return commodityNameEn;
+    }
+
+    public void setCommodityNameEn(String commodityNameEn) {
+        this.commodityNameEn = commodityNameEn == null ? null : commodityNameEn.trim();
     }
 
     public String getCommodityImgName() {

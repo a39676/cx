@@ -6,6 +6,7 @@
     <result column="commodity_id" jdbcType="BIGINT" property="commodityId" />
     <result column="source_id" jdbcType="BIGINT" property="sourceId" />
     <result column="commodity_name" jdbcType="CHAR" property="commodityName" />
+    <result column="commodity_name_en" jdbcType="CHAR" property="commodityNameEn" />
     <result column="commodity_img_name" jdbcType="CHAR" property="commodityImgName" />
     <result column="include_postage" jdbcType="BIT" property="includePostage" />
     <result column="is_available" jdbcType="BIT" property="isAvailable" />
@@ -71,8 +72,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, commodity_id, source_id, commodity_name, commodity_img_name, include_postage, 
-    is_available, remark, create_time
+    id, commodity_id, source_id, commodity_name, commodity_name_en, commodity_img_name, 
+    include_postage, is_available, remark, create_time
   </sql>
   <select id="selectByExample" parameterType="demo.tool.taobao.pojo.po.TaobaoProductSourceExample" resultMap="BaseResultMap">
     select
@@ -106,13 +107,13 @@
   </delete>
   <insert id="insert" parameterType="demo.tool.taobao.pojo.po.TaobaoProductSource">
     insert into taobao_product_source (id, commodity_id, source_id, 
-      commodity_name, commodity_img_name, include_postage, 
-      is_available, remark, create_time
-      )
+      commodity_name, commodity_name_en, commodity_img_name, 
+      include_postage, is_available, remark, 
+      create_time)
     values (#{id,jdbcType=BIGINT}, #{commodityId,jdbcType=BIGINT}, #{sourceId,jdbcType=BIGINT}, 
-      #{commodityName,jdbcType=CHAR}, #{commodityImgName,jdbcType=CHAR}, #{includePostage,jdbcType=BIT}, 
-      #{isAvailable,jdbcType=BIT}, #{remark,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}
-      )
+      #{commodityName,jdbcType=CHAR}, #{commodityNameEn,jdbcType=CHAR}, #{commodityImgName,jdbcType=CHAR}, 
+      #{includePostage,jdbcType=BIT}, #{isAvailable,jdbcType=BIT}, #{remark,jdbcType=CHAR}, 
+      #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="demo.tool.taobao.pojo.po.TaobaoProductSource">
     insert into taobao_product_source
@@ -128,6 +129,9 @@
       </if>
       <if test="commodityName != null">
         commodity_name,
+      </if>
+      <if test="commodityNameEn != null">
+        commodity_name_en,
       </if>
       <if test="commodityImgName != null">
         commodity_img_name,
@@ -157,6 +161,9 @@
       </if>
       <if test="commodityName != null">
         #{commodityName,jdbcType=CHAR},
+      </if>
+      <if test="commodityNameEn != null">
+        #{commodityNameEn,jdbcType=CHAR},
       </if>
       <if test="commodityImgName != null">
         #{commodityImgName,jdbcType=CHAR},
@@ -196,6 +203,9 @@
       <if test="row.commodityName != null">
         commodity_name = #{row.commodityName,jdbcType=CHAR},
       </if>
+      <if test="row.commodityNameEn != null">
+        commodity_name_en = #{row.commodityNameEn,jdbcType=CHAR},
+      </if>
       <if test="row.commodityImgName != null">
         commodity_img_name = #{row.commodityImgName,jdbcType=CHAR},
       </if>
@@ -222,6 +232,7 @@
       commodity_id = #{row.commodityId,jdbcType=BIGINT},
       source_id = #{row.sourceId,jdbcType=BIGINT},
       commodity_name = #{row.commodityName,jdbcType=CHAR},
+      commodity_name_en = #{row.commodityNameEn,jdbcType=CHAR},
       commodity_img_name = #{row.commodityImgName,jdbcType=CHAR},
       include_postage = #{row.includePostage,jdbcType=BIT},
       is_available = #{row.isAvailable,jdbcType=BIT},
@@ -242,6 +253,9 @@
       </if>
       <if test="commodityName != null">
         commodity_name = #{commodityName,jdbcType=CHAR},
+      </if>
+      <if test="commodityNameEn != null">
+        commodity_name_en = #{commodityNameEn,jdbcType=CHAR},
       </if>
       <if test="commodityImgName != null">
         commodity_img_name = #{commodityImgName,jdbcType=CHAR},
@@ -266,6 +280,7 @@
     set commodity_id = #{commodityId,jdbcType=BIGINT},
       source_id = #{sourceId,jdbcType=BIGINT},
       commodity_name = #{commodityName,jdbcType=CHAR},
+      commodity_name_en = #{commodityNameEn,jdbcType=CHAR},
       commodity_img_name = #{commodityImgName,jdbcType=CHAR},
       include_postage = #{includePostage,jdbcType=BIT},
       is_available = #{isAvailable,jdbcType=BIT},

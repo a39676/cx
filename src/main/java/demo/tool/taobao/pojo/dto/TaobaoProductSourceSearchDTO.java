@@ -5,6 +5,7 @@ public class TaobaoProductSourceSearchDTO {
 	private String commodityIdListStr;
 	private String sourceIdIdListStr;
 	private String commodityName;
+	private String commodityNameEn;
 	private String commodityImgName;
 	private Boolean includePostage = false;
 	private String remark;
@@ -31,6 +32,14 @@ public class TaobaoProductSourceSearchDTO {
 
 	public void setCommodityName(String commodityName) {
 		this.commodityName = commodityName;
+	}
+
+	public String getCommodityNameEn() {
+		return commodityNameEn;
+	}
+
+	public void setCommodityNameEn(String commodityNameEn) {
+		this.commodityNameEn = commodityNameEn;
 	}
 
 	public String getCommodityImgName() {
@@ -60,8 +69,9 @@ public class TaobaoProductSourceSearchDTO {
 	@Override
 	public String toString() {
 		return "TaobaoProductSourceSearchDTO [commodityIdListStr=" + commodityIdListStr + ", sourceIdIdListStr="
-				+ sourceIdIdListStr + ", commodityName=" + commodityName + ", commodityImgName=" + commodityImgName
-				+ ", includePostage=" + includePostage + ", remark=" + remark + "]";
+				+ sourceIdIdListStr + ", commodityName=" + commodityName + ", commodityNameEn=" + commodityNameEn
+				+ ", commodityImgName=" + commodityImgName + ", includePostage=" + includePostage + ", remark=" + remark
+				+ "]";
 	}
 
 }

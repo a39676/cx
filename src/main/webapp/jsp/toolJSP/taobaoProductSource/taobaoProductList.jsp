@@ -53,15 +53,39 @@
                   https://detail.1688.com/offer/${product.sourceId}.html
                 </a>
               </td>
-              <td>
-                ${product.includePostage}
-              </td>
+              <c:choose>
+                <c:when test="${product.includePostage == false}">
+                  <td class="table-success">
+                    ${product.includePostage}
+                  </td>
+                </c:when>
+                <c:when test="${product.includePostage == true}">
+                  <td class="table-danger">
+                    ${product.includePostage}
+                  </td>
+                </c:when>
+                <c:otherwise>
+                  <td>${product.includePostage}</td>
+                </c:otherwise>
+              </c:choose>
               <td>
                 ${product.remark}
               </td>
-              <td>
-                ${product.isAvailable}
-              </td>
+              <c:choose>
+                <c:when test="${product.isAvailable == true}">
+                  <td class="table-success">
+                    ${product.isAvailable}
+                  </td>
+                </c:when>
+                <c:when test="${product.isAvailable == false}">
+                  <td class="table-danger">
+                    ${product.isAvailable}
+                  </td>
+                </c:when>
+                <c:otherwise>
+                  <td>${product.isAvailable}</td>
+                </c:otherwise>
+              </c:choose>
             </tr>
           </c:forEach>
         </table>

@@ -125,6 +125,7 @@
 
     function createProduct(){
       var commodityName = $("#commodityName").val();
+      var commodityNameEn = $("#commodityNameEn").val();
       var commodityId = $("#commodityId").val();
       var sourceId = $("#sourceId").val();
       var commodityImgName = $("#commodityImgName").val();
@@ -136,6 +137,7 @@
 
       var jsonOutput = {
         commodityName : commodityName,
+        commodityNameEn : commodityNameEn,
         commodityId : commodityId,
         sourceId : sourceId,
         commodityImgName : commodityImgName,
@@ -166,6 +168,7 @@
 
     $("#resetProductCondition").click(function () {
       $("#commodityName").val("");
+      $("#commodityNameEn").val("");
       $("#commodityId").val("");
       $("#sourceId").val("");
       $("#commodityImgName").val("");

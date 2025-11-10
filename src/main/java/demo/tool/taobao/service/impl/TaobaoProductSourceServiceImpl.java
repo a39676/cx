@@ -45,6 +45,7 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		po.setCommodityId(dto.getCommodityId().longValue());
 		po.setSourceId(dto.getSourceId().longValue());
 		po.setCommodityName(dto.getCommodityName());
+		po.setCommodityNameEn(dto.getCommodityNameEn());
 		po.setCommodityImgName(dto.getCommodityImgName());
 		po.setIncludePostage(dto.getIncludePostage());
 		po.setIsAvailable(true);

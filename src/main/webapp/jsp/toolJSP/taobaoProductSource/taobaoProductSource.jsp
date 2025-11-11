@@ -74,6 +74,7 @@
   $(document).ready(function() {
 
     $("#searchProduct").click( function() {
+      $("#productList").html("Loading");
       searchProduct();
     });
 
@@ -120,6 +121,7 @@
     };
 
     $("#createProduct").click( function() {
+      $("#msg").html("Loading");
       createProduct();
     });
 

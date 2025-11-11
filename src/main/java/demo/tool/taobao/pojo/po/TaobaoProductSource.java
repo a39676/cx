@@ -11,6 +11,8 @@ public class TaobaoProductSource {
 
     private String commodityName;
 
+    private String commodityNameZhTw;
+
     private String commodityNameEn;
 
     private String commodityImgName;
@@ -53,6 +55,14 @@ public class TaobaoProductSource {
 
     public void setCommodityName(String commodityName) {
         this.commodityName = commodityName == null ? null : commodityName.trim();
+    }
+
+    public String getCommodityNameZhTw() {
+        return commodityNameZhTw;
+    }
+
+    public void setCommodityNameZhTw(String commodityNameZhTw) {
+        this.commodityNameZhTw = commodityNameZhTw == null ? null : commodityNameZhTw.trim();
     }
 
     public String getCommodityNameEn() {

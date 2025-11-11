@@ -355,6 +355,76 @@ public class TaobaoProductSourceExample {
             return (Criteria) this;
         }
 
+        public Criteria andCommodityNameZhTwIsNull() {
+            addCriterion("commodity_name_zh_tw is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameZhTwIsNotNull() {
+            addCriterion("commodity_name_zh_tw is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameZhTwEqualTo(String value) {
+            addCriterion("commodity_name_zh_tw =", value, "commodityNameZhTw");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameZhTwNotEqualTo(String value) {
+            addCriterion("commodity_name_zh_tw <>", value, "commodityNameZhTw");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameZhTwGreaterThan(String value) {
+            addCriterion("commodity_name_zh_tw >", value, "commodityNameZhTw");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameZhTwGreaterThanOrEqualTo(String value) {
+            addCriterion("commodity_name_zh_tw >=", value, "commodityNameZhTw");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameZhTwLessThan(String value) {
+            addCriterion("commodity_name_zh_tw <", value, "commodityNameZhTw");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameZhTwLessThanOrEqualTo(String value) {
+            addCriterion("commodity_name_zh_tw <=", value, "commodityNameZhTw");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameZhTwLike(String value) {
+            addCriterion("commodity_name_zh_tw like", value, "commodityNameZhTw");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameZhTwNotLike(String value) {
+            addCriterion("commodity_name_zh_tw not like", value, "commodityNameZhTw");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameZhTwIn(List<String> values) {
+            addCriterion("commodity_name_zh_tw in", values, "commodityNameZhTw");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameZhTwNotIn(List<String> values) {
+            addCriterion("commodity_name_zh_tw not in", values, "commodityNameZhTw");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameZhTwBetween(String value1, String value2) {
+            addCriterion("commodity_name_zh_tw between", value1, value2, "commodityNameZhTw");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityNameZhTwNotBetween(String value1, String value2) {
+            addCriterion("commodity_name_zh_tw not between", value1, value2, "commodityNameZhTw");
+            return (Criteria) this;
+        }
+
         public Criteria andCommodityNameEnIsNull() {
             addCriterion("commodity_name_en is null");
             return (Criteria) this;

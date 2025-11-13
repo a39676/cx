@@ -34,9 +34,10 @@
                 productName="${product.commodityName}" 
                 productId="${product.id}">
               <td>
-                <label>${product.id}</label><br>
-                <label>${product.commodityName}</label><br>
-                <label>${product.commodityNameEn}</label><br>
+                <label class="label label-default">${product.id}</label><br>
+                <label class="label label-default">${product.commodityName}</label><br>
+                <label class="label label-default">${product.commodityNameZhTw}</label><br>
+                <label class="label label-default">${product.commodityNameEn}</label><br>
               </td>
               <td>
                 <img src='https://gw.alicdn.com/imgextra/${product.commodityImgName}_160x160xz_.webp' style='width: 80px;'>

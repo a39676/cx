@@ -87,7 +87,9 @@
           <div class="col-md-2">
           <a href="https://item.taobao.com/item.html?id=${product.commodityId}" target="_blank">
             <img src='https://gw.alicdn.com/imgextra/${product.commodityImgName}_160x160xz_.webp' style='width:80px;'><br>
-            <label style="font-size: smaller;">${product.commodityName}</label>
+            <label style="font-size: 11px;">${product.commodityName}</label><br>
+            <label style="font-size: 11px;">${product.commodityNameZhTw}</label><br>
+            <label style="font-size: 11px;">${product.commodityNameEn}</label>
           </a>
           </div>
         </c:forEach>

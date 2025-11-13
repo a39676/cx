@@ -30,7 +30,8 @@
           </tr>
           <tr>
             <td>
-              <input type="text" name="" id="commodityName" placeholder="货名">
+              <input type="text" name="" id="commodityName" placeholder="货名"><br>
+              <input type="text" name="" id="commodityNameZhTw" placeholder="貨名"><br>
               <input type="text" name="" id="commodityNameEn" placeholder="货名EN">
             </td>
             <td>
@@ -72,7 +73,6 @@
 <script type="text/javascript">
 
   $(document).ready(function() {
-
     $("#searchProduct").click( function() {
       $("#productList").html("Loading");
       searchProduct();
@@ -80,6 +80,7 @@
 
     function searchProduct(){ 
       var commodityName = $("#commodityName").val();
+      var commodityNameZhTw = $("#commodityNameZhTw").val();
       var commodityNameEn = $("#commodityNameEn").val();
       var commodityId = $("#commodityId").val();
       var sourceId = $("#sourceId").val();
@@ -91,6 +92,7 @@
 
       var jsonOutput = {
         commodityName : commodityName,
+        commodityNameZhTw : commodityNameZhTw,
         commodityNameEn : commodityNameEn,
         commodityIdListStr : commodityId,
         sourceIdIdListStr : sourceId,
@@ -127,6 +129,7 @@
 
     function createProduct(){
       var commodityName = $("#commodityName").val();
+      var commodityNameZhTw = $("#commodityNameZhTw").val();
       var commodityNameEn = $("#commodityNameEn").val();
       var commodityId = $("#commodityId").val();
       var sourceId = $("#sourceId").val();
@@ -139,6 +142,7 @@
 
       var jsonOutput = {
         commodityName : commodityName,
+        commodityNameZhTw : commodityNameZhTw,
         commodityNameEn : commodityNameEn,
         commodityId : commodityId,
         sourceId : sourceId,
@@ -170,12 +174,14 @@
 
     $("#resetProductCondition").click(function () {
       $("#commodityName").val("");
+      $("#commodityNameZhTw").val("");
       $("#commodityNameEn").val("");
       $("#commodityId").val("");
       $("#sourceId").val("");
       $("#commodityImgName").val("");
       $("#includePostage").prop("checked", false);
       $("#remark").val("");
+      $("#msg").html("");
     });
   
   });

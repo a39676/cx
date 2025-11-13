@@ -45,6 +45,7 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		po.setCommodityId(dto.getCommodityId().longValue());
 		po.setSourceId(dto.getSourceId().longValue());
 		po.setCommodityName(dto.getCommodityName());
+		po.setCommodityNameZhTw(dto.getCommodityNameZhTw());
 		po.setCommodityNameEn(dto.getCommodityNameEn());
 		po.setCommodityImgName(dto.getCommodityImgName());
 		po.setIncludePostage(dto.getIncludePostage());
@@ -97,6 +98,12 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		}
 		if (StringUtils.isNotBlank(dto.getCommodityName())) {
 			criteria.andCommodityNameLike("%" + dto.getCommodityName() + "%");
+		}
+		if (StringUtils.isNotBlank(dto.getCommodityNameZhTw())) {
+			criteria.andCommodityNameZhTwLike("%" + dto.getCommodityNameZhTw() + "%");
+		}
+		if (StringUtils.isNotBlank(dto.getCommodityNameEn())) {
+			criteria.andCommodityNameEnLike("%" + dto.getCommodityNameEn() + "%");
 		}
 		if (StringUtils.isNotBlank(dto.getRemark())) {
 			criteria.andRemarkLike("%" + dto.getRemark() + "%");
@@ -182,4 +189,5 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		optionService.setRandomProductIdListLastUpdateTime(now);
 		return list;
 	}
+
 }

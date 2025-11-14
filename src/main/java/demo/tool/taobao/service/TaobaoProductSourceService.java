@@ -23,4 +23,6 @@ public interface TaobaoProductSourceService {
 
 	List<TaobaoProductSource> getRandomProductList(Integer size);
 
+	void whenLinkClick(String commodityId);
+
 }

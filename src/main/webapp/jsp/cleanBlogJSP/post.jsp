@@ -85,7 +85,8 @@
         <%-- <img src="${donateImgUrl}" alt="" style="width:100px; height:100px;"> --%>
         <c:forEach items="${taobaoHotSaleList}" var="product" varStatus="loop">
           <div class="col-md-2">
-          <a href="https://item.taobao.com/item.html?id=${product.commodityId}" target="_blank">
+          <a href="https://item.taobao.com/item.html?id=${product.commodityId}" target="_blank" class="taobaoLink"  
+          tid="${product.commodityId}">
             <img src='https://gw.alicdn.com/imgextra/${product.commodityImgName}_160x160xz_.webp' style='width:80px;'><br>
             <label style="font-size: 11px;">${product.commodityName}</label><br>
             <label style="font-size: 11px;">${product.commodityNameZhTw}</label><br>
@@ -204,6 +205,38 @@
   </sec:authorize>
 
   <script type="text/javascript">
+    $(document).ready(function() {
+      $(".taobaoLink").click(function () {
+        var tid = $(this).attr("tid");
+        whenTaobaoLinkClicked(tid);
+      });
+
+      function whenTaobaoLinkClicked(tid) {
+        var url = "/taobaoProductSource/whenClick";
+
+        var jsonOutput = {
+          str : tid,
+        }
+
+        $.ajax({  
+          type : "POST",  
+          async : true,
+          url : url, 
+          data: JSON.stringify(jsonOutput),
+          cache : false,
+          contentType: "application/json",
+          dataType: "json",
+          timeout:50000,
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+          },
+          success:function(datas){
+          },  
+          error: function(datas) {  
+          }  
+        });  
+      }
+    })
   </script>
 
 </body>

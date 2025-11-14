@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.tool.taobao.pojo.dto.TaobaoProductSourceAddDTO;
 import demo.tool.taobao.pojo.dto.TaobaoProductSourceSearchDTO;
@@ -36,5 +37,11 @@ public class TaobaoProductSourceController {
 	@ResponseBody
 	public ModelAndView search(@RequestBody TaobaoProductSourceSearchDTO dto) {
 		return service.search(dto);
+	}
+
+	@PostMapping(value = "/whenClick")
+	@ResponseBody
+	public void whenClick(@RequestBody BaseStrDTO dto) {
+		service.whenLinkClick(dto.getStr());
 	}
 }

@@ -1,6 +1,9 @@
-temu
-	需要增加仓库表
-		model --- 仓库 --- 数量
+taobao product source
+	数据表 结构 更改 ??
+		挂链表 负责主要内容
+		另附加
+			关系表
+			来源表
 
 wodian
 	client info

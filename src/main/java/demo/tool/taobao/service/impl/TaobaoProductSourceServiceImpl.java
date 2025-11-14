@@ -21,6 +21,9 @@ import demo.tool.taobao.pojo.po.TaobaoProductSource;
 import demo.tool.taobao.pojo.po.TaobaoProductSourceExample;
 import demo.tool.taobao.pojo.po.TaobaoProductSourceExample.Criteria;
 import demo.tool.taobao.service.TaobaoProductSourceService;
+import demo.tool.textMessageForward.telegram.service.TelegramService;
+import telegram.pojo.constant.TelegramStaticChatID;
+import telegram.pojo.type.TelegramBotType;
 
 @Service
 public class TaobaoProductSourceServiceImpl extends CommonService implements TaobaoProductSourceService {
@@ -29,6 +32,8 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 	private TaobaoProductSourceOptionService optionService;
 	@Autowired
 	private TaobaoProductSourceMapper mapper;
+	@Autowired
+	private TelegramService telegramService;
 
 	@Override
 	public ModelAndView taobaoProductSource() {
@@ -190,4 +195,19 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		return list;
 	}
 
+	@Override
+	public void whenLinkClick(String commodityId) {
+		String msg = "Click link, commodity ID: " + commodityId;
+		try {
+			Long commodityIdNum = Long.parseLong(commodityId);
+			TaobaoProductSourceExample example = new TaobaoProductSourceExample();
+			example.createCriteria().andCommodityIdEqualTo(commodityIdNum);
+			List<TaobaoProductSource> poList = mapper.selectByExample(example);
+			TaobaoProductSource po = poList.get(0);
+			msg += ", name: " + po.getCommodityName() + ", include postage: " + po.getIncludePostage()
+					+ ", is available: " + po.getIsAvailable();
+		} catch (Exception e) {
+		}
+		telegramService.sendMessageByChatRecordId(TelegramBotType.CX_MESSAGE, msg, TelegramStaticChatID.MY_ID);
+	}
 }

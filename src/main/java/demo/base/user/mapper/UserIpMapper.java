@@ -23,5 +23,5 @@ public interface UserIpMapper {
 
     int updateByExample(@Param("record") UserIp record, @Param("example") UserIpExample example);
 
-	void batchInsert(List<UserIp> poList);
+	void batchInsert(@Param("poList") List<UserIp> poList);
 }

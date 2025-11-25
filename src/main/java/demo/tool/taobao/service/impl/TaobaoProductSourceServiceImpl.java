@@ -165,21 +165,21 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 
 	@Override
 	public List<TaobaoProductSource> getRandomProductList(Integer size) {
-		List<Long> productIdList = new ArrayList<>();
+		List<Long> randomProductIdList = new ArrayList<>();
 		List<TaobaoProductSource> list = new ArrayList<>();
 		TaobaoProductSourceExample example = new TaobaoProductSourceExample();
 		LocalDateTime lastUpdateTime = optionService.getRandomProductIdListLastUpdateTime();
 		LocalDateTime now = LocalDateTime.now();
 		if (lastUpdateTime != null
 				&& lastUpdateTime.plusMinutes(optionService.getRandomProductIdListRefreshGapInMinute()).isAfter(now)) {
-			productIdList = optionService.getRandomProductIdList();
+			randomProductIdList = optionService.getRandomProductIdList();
 			example = new TaobaoProductSourceExample();
-			example.createCriteria().andIdIn(productIdList).andIsAvailableEqualTo(true);
+			example.createCriteria().andIdIn(randomProductIdList).andIsAvailableEqualTo(true);
 			list = mapper.selectByExample(example);
 			return list;
 		}
 		example = new TaobaoProductSourceExample();
-		example.createCriteria();
+		example.createCriteria().andIsAvailableEqualTo(true);
 		example.setOrderByClause(" id desc limit 200");
 		list = mapper.selectByExample(example);
 		List<Long> randomIdList = new ArrayList<>();

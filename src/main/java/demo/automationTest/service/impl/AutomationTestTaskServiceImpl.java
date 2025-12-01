@@ -26,8 +26,7 @@ public class AutomationTestTaskServiceImpl extends CommonTaskService {
 	@Autowired
 	private HeartBeatService heartBeatService;
 
-//	@Scheduled(fixedDelay = 1000L * 120)
-//	TODO 20251126 stop heart beat check
+	@Scheduled(fixedDelay = 1000L * 120)
 	public void checkHeartBeat() {
 		LocalDateTime heartBeatTime = null;
 		for (HeartBeatType heartBeatType : HeartBeatType.values()) {

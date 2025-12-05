@@ -130,7 +130,7 @@
                 <h4>
                   <img style="width: 30px;" 
                     src="https://img.alicdn.com/imgextra/jz3_3/2220549273009/O1CN01qMBrRm1Y6As4p6HPF_!!2220549273009.png_320x320q75.jpg_.webp">
-                    欢迎光临我的淘宝小店___
+                    歡迎光臨我的淘寶小店
                 </h4>
               </a>
             </div>

@@ -124,6 +124,14 @@
       <%-- post title table --%>
       <div class="col-md-8 mx-auto">
         <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12 mx-auto">
+              <a href="${taobaoShopLink}" target="_blank" class="taobaoLink" tid="0">
+                <h4>___欢迎光临我的淘宝小店___</h4>
+              </a>
+            </div>
+          </div>
+          
           <div class="row" id="blogArea" markTime="" loadingFlag="" articleChannel="" keyword="">
             <div class="col-md-12 mx-auto">
               <table id="blogRowArea" class="table table-hover table-bordered table-striped table-light">

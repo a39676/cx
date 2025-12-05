@@ -44,4 +44,5 @@ public class TaobaoProductSourceController {
 	public void whenClick(@RequestBody BaseStrDTO dto) {
 		service.whenLinkClick(dto.getStr());
 	}
+
 }

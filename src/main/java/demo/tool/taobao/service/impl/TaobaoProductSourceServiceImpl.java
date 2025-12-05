@@ -210,4 +210,5 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		}
 		telegramService.sendMessageByChatRecordId(TelegramBotType.CX_MESSAGE, msg, TelegramStaticChatID.MY_ID);
 	}
+
 }

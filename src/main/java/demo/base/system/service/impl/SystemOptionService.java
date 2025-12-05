@@ -38,6 +38,7 @@ public class SystemOptionService extends CommonService {
 	private String homepageAnnouncementStr = null;
 	private String bbtHost = null;
 	private String totpSecretKey = null;
+	private String taobaoShopLink = null;
 
 	public String encryptId(Long id) {
 		List<String> encryptIdList = encryptId(Arrays.asList(id));
@@ -239,6 +240,14 @@ public class SystemOptionService extends CommonService {
 		this.totpSecretKey = totpSecretKey;
 	}
 
+	public String getTaobaoShopLink() {
+		return taobaoShopLink;
+	}
+
+	public void setTaobaoShopLink(String taobaoShopLink) {
+		this.taobaoShopLink = taobaoShopLink;
+	}
+
 	public String getBbtHost() {
 		return bbtHost;
 	}
@@ -254,7 +263,7 @@ public class SystemOptionService extends CommonService {
 				+ normalWebSiteTitle + ", normalSubheading=" + normalSubheading + ", webSiteTitle2=" + webSiteTitle2
 				+ ", subheading2=" + subheading2 + ", isJobing=" + isJobing + ", isDebuging=" + isDebuging
 				+ ", fakeFTPHome=" + fakeFTPHome + ", homepageAnnouncementStr=" + homepageAnnouncementStr + ", bbtHost="
-				+ bbtHost + ", totpSecretKey=" + totpSecretKey + "]";
+				+ bbtHost + ", totpSecretKey=" + totpSecretKey + ", taobaoShopLink=" + taobaoShopLink + "]";
 	}
 
 	@PostConstruct

@@ -93,6 +93,15 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		return String.valueOf(linkStr.subSequence(start, end + 3));
 	}
 
+	@SuppressWarnings("unused")
+	private Long getSourceIdFromLink(String linkStr) {
+		String startStr = "offer/";
+		String endStr = ".html";
+		int start = linkStr.indexOf(startStr) + endStr.length() + 1;
+		int end = linkStr.indexOf(endStr);
+		return Long.parseLong(String.valueOf(linkStr.subSequence(start, end)));
+	}
+
 	@Override
 	public ModelAndView search(TaobaoProductSourceSearchDTO dto) {
 		ModelAndView v = new ModelAndView("toolJSP/taobaoProductSource/taobaoProductList");

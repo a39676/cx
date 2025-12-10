@@ -52,7 +52,7 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		po.setCommodityName(dto.getCommodityName());
 		po.setCommodityNameZhTw(dto.getCommodityNameZhTw());
 		po.setCommodityNameEn(dto.getCommodityNameEn());
-		po.setCommodityImgName(dto.getCommodityImgName());
+		po.setCommodityImgName(getImageNameFromLink(dto.getCommodityImgName()));
 		po.setIncludePostage(dto.getIncludePostage());
 		po.setIsAvailable(true);
 		po.setRemark(dto.getRemark());
@@ -68,6 +68,29 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 			r.setMessage(e.getLocalizedMessage());
 		}
 		return r;
+	}
+
+	private String getImageNameFromLink(String linkStr) {
+		int end = -1;
+		int jpgIndex = linkStr.indexOf("jpg");
+		if (jpgIndex > 0) {
+			end = jpgIndex;
+		}
+
+		int pngIndex = linkStr.indexOf("png");
+		if (pngIndex > 0 && pngIndex < end) {
+			end = pngIndex;
+		}
+
+		int bmpIndex = linkStr.indexOf("bmp");
+		if (bmpIndex > 0 && bmpIndex < end) {
+			end = bmpIndex;
+		}
+
+		String startStr = "O1CN";
+		int start = linkStr.indexOf(startStr);
+
+		return String.valueOf(linkStr.subSequence(start, end + 3));
 	}
 
 	@Override

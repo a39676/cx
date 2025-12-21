@@ -17,6 +17,7 @@ import demo.common.service.CommonService;
 import demo.tool.taobao.mapper.TaobaoProductSourceMapper;
 import demo.tool.taobao.pojo.dto.TaobaoProductSourceAddDTO;
 import demo.tool.taobao.pojo.dto.TaobaoProductSourceSearchDTO;
+import demo.tool.taobao.pojo.dto.TaobaoProductSourceUpdateDTO;
 import demo.tool.taobao.pojo.po.TaobaoProductSource;
 import demo.tool.taobao.pojo.po.TaobaoProductSourceExample;
 import demo.tool.taobao.pojo.po.TaobaoProductSourceExample.Criteria;
@@ -67,6 +68,37 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		} catch (Exception e) {
 			r.setMessage(e.getLocalizedMessage());
 		}
+		return r;
+	}
+
+	@Override
+	public CommonResult update(TaobaoProductSourceUpdateDTO dto) {
+		CommonResult r = new CommonResult();
+		Long id = null;
+		try {
+			id = Long.parseLong(dto.getIdStr());
+		} catch (Exception e) {
+			r.setMessage("ID error");
+			return r;
+		}
+		if (dto.getIncludePostage() == null && dto.getIsAvailable() == null) {
+			r.setMessage("Null param");
+			return r;
+		}
+		TaobaoProductSource po = mapper.selectByPrimaryKey(id);
+		if (po == null) {
+			r.setMessage("Null data");
+			return r;
+		}
+		if (dto.getIsAvailable() != null) {
+			po.setIsAvailable(dto.getIsAvailable());
+		}
+		if (dto.getIncludePostage() != null) {
+			po.setIncludePostage(dto.getIncludePostage());
+		}
+		mapper.updateByPrimaryKeySelective(po);
+		r.setMessage("Updated, " + po.getCommodityName());
+		r.setIsSuccess();
 		return r;
 	}
 

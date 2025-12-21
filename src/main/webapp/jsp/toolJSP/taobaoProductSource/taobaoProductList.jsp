@@ -26,8 +26,8 @@
             <td>挂链ID</td>
             <td>来源ID</td>
             <td>是否包邮</td>
-            <td>备注</td>
             <td>是否上架</td>
+            <td>备注</td>
           </tr>
           <c:forEach items="${productList}" var="product" varStatus="loop">
             <tr class="productLine" 
@@ -57,36 +57,80 @@
               <c:choose>
                 <c:when test="${product.includePostage == false}">
                   <td class="table-success">
-                    ${product.includePostage}
+                    ${product.includePostage}<br>
+                    <button class="setIncludePostage" 
+                      includePostage="1" 
+                      productId="${product.id}">
+                      setIncludePostage
+                    </button>
                   </td>
                 </c:when>
                 <c:when test="${product.includePostage == true}">
                   <td class="table-danger">
-                    ${product.includePostage}
+                    ${product.includePostage}<br>
+                    <button class="setIncludePostage" 
+                      includePostage="0" 
+                      productId="${product.id}">
+                      setNotIncludePostage
+                    </button>
                   </td>
                 </c:when>
                 <c:otherwise>
-                  <td>${product.includePostage}</td>
+                  <td>
+                    ${product.includePostage}<br>
+                    <button class="setIncludePostage" 
+                      includePostage="0" 
+                      productId="${product.id}">
+                      setNotIncludePostage
+                    </button>
+                    <button class="setIncludePostage" 
+                      includePostage="1" 
+                      productId="${product.id}">
+                      setIncludePostage
+                    </button>
+                  </td>
+                </c:otherwise>
+              </c:choose>
+              <c:choose>
+                <c:when test="${product.isAvailable == true}">
+                  <td class="table-success">
+                    ${product.isAvailable}<br>
+                    <button class="setAvailable" 
+                      available="0" 
+                      productId="${product.id}">
+                      setUnavailable
+                    </button>
+                  </td>
+                </c:when>
+                <c:when test="${product.isAvailable == false}">
+                  <td class="table-danger">
+                    ${product.isAvailable}<br>
+                    <button class="setAvailable" 
+                      available="1" 
+                      productId="${product.id}">
+                      setAvailable
+                    </button>
+                  </td>
+                </c:when>
+                <c:otherwise>
+                  <td>
+                    ${product.isAvailable}<br>
+                    <button class="setAvailable" 
+                      available="0" 
+                      productId="${product.id}">
+                      setUnavailable
+                    </button>
+                    <button class="setAvailable" 
+                      available="1" 
+                      productId="${product.id}">
+                      setAvailable
+                    </button>
+                  </td>
                 </c:otherwise>
               </c:choose>
               <td>
                 ${product.remark}
               </td>
-              <c:choose>
-                <c:when test="${product.isAvailable == true}">
-                  <td class="table-success">
-                    ${product.isAvailable}
-                  </td>
-                </c:when>
-                <c:when test="${product.isAvailable == false}">
-                  <td class="table-danger">
-                    ${product.isAvailable}
-                  </td>
-                </c:when>
-                <c:otherwise>
-                  <td>${product.isAvailable}</td>
-                </c:otherwise>
-              </c:choose>
             </tr>
           </c:forEach>
         </table>
@@ -100,6 +144,76 @@
 <script type="text/javascript">
 
   $(document).ready(function() {
+
+    $(".setAvailable").click(function () {
+      var productId = $(this).attr("productId");
+      var available = true;
+      if($(this).attr("available") == "0"){
+        available = false;
+      }
+
+      var url = "/taobaoProductSource/update";
+
+      var jsonOutput = {
+        idStr : productId,
+        isAvailable : available,
+      };
+
+      $.ajax({  
+        type : "POST",  
+        async : true,
+        url : url, 
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          $("#msg").html(datas.message);
+        },  
+        error: function(datas) {  
+          $("#msg").html(datas.message);
+        }  
+      });  
+    });
+
+    $(".setIncludePostage").click(function () {
+      var productId = $(this).attr("productId");
+      var includePostage = true;
+      if($(this).attr("includePostage") == "0"){
+        includePostage = false;
+      }
+
+      var url = "/taobaoProductSource/update";
+
+      var jsonOutput = {
+        idStr : productId,
+        includePostage : includePostage,
+      };
+
+      $.ajax({  
+        type : "POST",  
+        async : true,
+        url : url, 
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          $("#msg").html(datas.message);
+        },  
+        error: function(datas) {  
+          $("#msg").html(datas.message);
+        }  
+      });  
+    });
     
   });
 

@@ -7,6 +7,7 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.tool.taobao.pojo.dto.TaobaoProductSourceAddDTO;
 import demo.tool.taobao.pojo.dto.TaobaoProductSourceSearchDTO;
+import demo.tool.taobao.pojo.dto.TaobaoProductSourceUpdateDTO;
 import demo.tool.taobao.pojo.po.TaobaoProductSource;
 
 public interface TaobaoProductSourceService {
@@ -24,5 +25,7 @@ public interface TaobaoProductSourceService {
 	List<TaobaoProductSource> getRandomProductList(Integer size);
 
 	void whenLinkClick(String commodityId);
+
+	CommonResult update(TaobaoProductSourceUpdateDTO dto);
 
 }

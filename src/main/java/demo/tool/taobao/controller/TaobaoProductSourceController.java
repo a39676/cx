@@ -13,6 +13,7 @@ import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.tool.taobao.pojo.dto.TaobaoProductSourceAddDTO;
 import demo.tool.taobao.pojo.dto.TaobaoProductSourceSearchDTO;
+import demo.tool.taobao.pojo.dto.TaobaoProductSourceUpdateDTO;
 import demo.tool.taobao.service.TaobaoProductSourceService;
 
 @Controller
@@ -31,6 +32,12 @@ public class TaobaoProductSourceController {
 	@ResponseBody
 	public CommonResult add(@RequestBody TaobaoProductSourceAddDTO dto) {
 		return service.insert(dto);
+	}
+
+	@PostMapping(value = "/update")
+	@ResponseBody
+	public CommonResult update(@RequestBody TaobaoProductSourceUpdateDTO dto) {
+		return service.update(dto);
 	}
 
 	@PostMapping(value = "/search")

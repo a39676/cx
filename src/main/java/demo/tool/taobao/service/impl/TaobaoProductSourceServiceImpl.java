@@ -138,7 +138,7 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 	public ModelAndView search(TaobaoProductSourceSearchDTO dto) {
 		ModelAndView v = new ModelAndView("toolJSP/taobaoProductSource/taobaoProductList");
 		TaobaoProductSourceExample example = new TaobaoProductSourceExample();
-		Criteria criteria = example.createCriteria();
+		Criteria criteria = example.createCriteria().andIsDeleteEqualTo(false);
 		if (StringUtils.isNotBlank(dto.getCommodityIdListStr())) {
 			String[] idStrArray = dto.getCommodityIdListStr().replaceAll(" ", "").split(",");
 			List<Long> idList = new ArrayList<>();
@@ -189,7 +189,7 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 	public List<TaobaoProductSource> getHotSaleList() {
 		List<Long> hotSaleIdList = optionService.getHotSaleIdList();
 		TaobaoProductSourceExample example = new TaobaoProductSourceExample();
-		example.createCriteria().andIdIn(hotSaleIdList).andIsAvailableEqualTo(true);
+		example.createCriteria().andIdIn(hotSaleIdList).andIsAvailableEqualTo(true).andIsDeleteEqualTo(false);
 		List<TaobaoProductSource> list = mapper.selectByExample(example);
 		return list;
 	}
@@ -201,7 +201,7 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		if (lastUpdateTime == null
 				|| lastUpdateTime.plusMinutes(optionService.getNewProductIdListRefreshGapInMinute()).isBefore(now)) {
 			TaobaoProductSourceExample example = new TaobaoProductSourceExample();
-			example.createCriteria();
+			example.createCriteria().andIsDeleteEqualTo(false);
 			// 2025/10/28 基于目前数据结构(链接ID:来源ID 1:1), 当某一链接对应多个来源时, 再去重会造成列表缩小, 所以 limit
 			// 数值需要相对放大, 暂取15
 			example.setOrderByClause(" id desc limit 15");
@@ -238,7 +238,7 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 				&& lastUpdateTime.plusMinutes(optionService.getRandomProductIdListRefreshGapInMinute()).isAfter(now)) {
 			randomProductIdList = optionService.getRandomProductIdList();
 			example = new TaobaoProductSourceExample();
-			example.createCriteria().andIdIn(randomProductIdList).andIsAvailableEqualTo(true);
+			example.createCriteria().andIdIn(randomProductIdList).andIsAvailableEqualTo(true).andIsDeleteEqualTo(false);
 			list = mapper.selectByExample(example);
 			return list;
 		}

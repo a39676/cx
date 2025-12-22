@@ -13,6 +13,7 @@
     <result column="is_available" jdbcType="BIT" property="isAvailable" />
     <result column="remark" jdbcType="CHAR" property="remark" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -74,7 +75,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, commodity_id, source_id, commodity_name, commodity_name_zh_tw, commodity_name_en, 
-    commodity_img_name, include_postage, is_available, remark, create_time
+    commodity_img_name, include_postage, is_available, remark, create_time, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.tool.taobao.pojo.po.TaobaoProductSourceExample" resultMap="BaseResultMap">
     select
@@ -110,11 +111,13 @@
     insert into taobao_product_source (id, commodity_id, source_id, 
       commodity_name, commodity_name_zh_tw, commodity_name_en, 
       commodity_img_name, include_postage, is_available, 
-      remark, create_time)
+      remark, create_time, is_delete
+      )
     values (#{id,jdbcType=BIGINT}, #{commodityId,jdbcType=BIGINT}, #{sourceId,jdbcType=BIGINT}, 
       #{commodityName,jdbcType=CHAR}, #{commodityNameZhTw,jdbcType=CHAR}, #{commodityNameEn,jdbcType=CHAR}, 
       #{commodityImgName,jdbcType=CHAR}, #{includePostage,jdbcType=BIT}, #{isAvailable,jdbcType=BIT}, 
-      #{remark,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP})
+      #{remark,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="demo.tool.taobao.pojo.po.TaobaoProductSource">
     insert into taobao_product_source
@@ -152,6 +155,9 @@
       <if test="createTime != null">
         create_time,
       </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -186,6 +192,9 @@
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -231,6 +240,9 @@
       <if test="row.createTime != null">
         create_time = #{row.createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="row.isDelete != null">
+        is_delete = #{row.isDelete,jdbcType=BIT},
+      </if>
     </set>
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -248,7 +260,8 @@
       include_postage = #{row.includePostage,jdbcType=BIT},
       is_available = #{row.isAvailable,jdbcType=BIT},
       remark = #{row.remark,jdbcType=CHAR},
-      create_time = #{row.createTime,jdbcType=TIMESTAMP}
+      create_time = #{row.createTime,jdbcType=TIMESTAMP},
+      is_delete = #{row.isDelete,jdbcType=BIT}
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -286,6 +299,9 @@
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -300,7 +316,8 @@
       include_postage = #{includePostage,jdbcType=BIT},
       is_available = #{isAvailable,jdbcType=BIT},
       remark = #{remark,jdbcType=CHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      is_delete = #{isDelete,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByExampleWithRowbounds" parameterType="demo.tool.taobao.pojo.po.TaobaoProductSourceExample" resultMap="BaseResultMap">

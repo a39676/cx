@@ -25,6 +25,8 @@ public class TaobaoProductSource {
 
     private LocalDateTime createTime;
 
+    private Boolean isDelete;
+
     public Long getId() {
         return id;
     }
@@ -111,5 +113,13 @@ public class TaobaoProductSource {
 
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
+    }
+
+    public Boolean getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(Boolean isDelete) {
+        this.isDelete = isDelete;
     }
 }

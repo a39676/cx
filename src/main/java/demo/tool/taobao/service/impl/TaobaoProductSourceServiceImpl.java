@@ -201,7 +201,7 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		if (lastUpdateTime == null
 				|| lastUpdateTime.plusMinutes(optionService.getNewProductIdListRefreshGapInMinute()).isBefore(now)) {
 			TaobaoProductSourceExample example = new TaobaoProductSourceExample();
-			example.createCriteria().andIsDeleteEqualTo(false);
+			example.createCriteria().andIsAvailableEqualTo(true).andIsDeleteEqualTo(false);
 			// 2025/10/28 基于目前数据结构(链接ID:来源ID 1:1), 当某一链接对应多个来源时, 再去重会造成列表缩小, 所以 limit
 			// 数值需要相对放大, 暂取15
 			example.setOrderByClause(" id desc limit 15");

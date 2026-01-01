@@ -243,7 +243,7 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 			return list;
 		}
 		example = new TaobaoProductSourceExample();
-		example.createCriteria().andIsAvailableEqualTo(true);
+		example.createCriteria().andIsAvailableEqualTo(true).andIsDeleteEqualTo(false);
 		example.setOrderByClause(" id desc limit 200");
 		list = mapper.selectByExample(example);
 		List<Long> randomIdList = new ArrayList<>();

@@ -110,12 +110,12 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		}
 
 		int pngIndex = linkStr.indexOf("png");
-		if (pngIndex > 0 && pngIndex < end) {
+		if (pngIndex > 0 && end < 0) {
 			end = pngIndex;
 		}
 
 		int bmpIndex = linkStr.indexOf("bmp");
-		if (bmpIndex > 0 && bmpIndex < end) {
+		if (bmpIndex > 0 && end < 0) {
 			end = bmpIndex;
 		}
 

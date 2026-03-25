@@ -287,9 +287,8 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		TaobaoProductSourceExample example = new TaobaoProductSourceExample();
 		example.createCriteria().andIdGreaterThan(0L);
 		List<TaobaoProductSource> list = mapper.selectByExample(example);
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < list.size(); i++) {
 			TaobaoProductSource ele = list.get(i);
-//			ZhConverterUtil.toTraditional(original);
 			ele.setCommodityNameZhTw(ZhConverterUtil.toTraditional(ele.getCommodityName()));
 			mapper.updateByPrimaryKeySelective(ele);
 		}

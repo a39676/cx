@@ -28,6 +28,4 @@ public interface TaobaoProductSourceService {
 
 	CommonResult update(TaobaoProductSourceUpdateDTO dto);
 
-	void updateForOnce();
-
 }

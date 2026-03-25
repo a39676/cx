@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.github.houbb.opencc4j.util.ZhConverterUtil;
+
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.service.CommonService;
 import demo.tool.taobao.mapper.TaobaoProductSourceMapper;
@@ -51,7 +53,11 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		po.setCommodityId(dto.getCommodityId().longValue());
 		po.setSourceId(dto.getSourceId().longValue());
 		po.setCommodityName(dto.getCommodityName());
-		po.setCommodityNameZhTw(dto.getCommodityNameZhTw());
+		if (StringUtils.isNotBlank(dto.getCommodityNameZhTw())) {
+			po.setCommodityNameZhTw(dto.getCommodityNameZhTw());
+		} else {
+			po.setCommodityNameZhTw(ZhConverterUtil.toTraditional(dto.getCommodityName()));
+		}
 		po.setCommodityNameEn(dto.getCommodityNameEn());
 		po.setCommodityImgName(getImageNameFromLink(dto.getCommodityImgName()));
 		po.setIncludePostage(dto.getIncludePostage());
@@ -275,4 +281,17 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		telegramService.sendMessageByChatRecordId(TelegramBotType.CX_MESSAGE, msg, TelegramStaticChatID.MY_ID);
 	}
 
+	@Override
+	public void updateForOnce() {
+		// TODO 一次性功能
+		TaobaoProductSourceExample example = new TaobaoProductSourceExample();
+		example.createCriteria().andIdGreaterThan(0L);
+		List<TaobaoProductSource> list = mapper.selectByExample(example);
+		for (int i = 0; i < 10; i++) {
+			TaobaoProductSource ele = list.get(i);
+//			ZhConverterUtil.toTraditional(original);
+			ele.setCommodityNameZhTw(ZhConverterUtil.toTraditional(ele.getCommodityName()));
+			mapper.updateByPrimaryKeySelective(ele);
+		}
+	}
 }

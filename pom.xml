@@ -328,7 +328,14 @@
 			<artifactId>binance-connector-java</artifactId>
 			<version>3.2.0</version>
 		</dependency>
-
+		
+		<!-- 简繁互换 -->
+		<dependency>
+			<groupId>com.github.houbb</groupId>
+			<artifactId>opencc4j</artifactId>
+			<version>1.14.0</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>com.demo</groupId>
 			<artifactId>ToolPacks</artifactId>

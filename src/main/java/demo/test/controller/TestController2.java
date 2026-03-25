@@ -21,6 +21,7 @@ import demo.interaction.bbt.service.BbtComplexService;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.dto.TestDTO;
 import demo.test.service.TestService2;
+import demo.tool.taobao.service.TaobaoProductSourceService;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
 import finance.cryptoCoin.pojo.type.CryptoCoinDataSourceType;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
@@ -76,6 +77,20 @@ public class TestController2 extends CommonService {
 	@ResponseBody
 	public CommonResult t5() {
 		return bbtComplexService.getBbtIsAlive();
+	}
+
+	@Autowired
+	private TaobaoProductSourceService taobaoProductSourceService;
+
+	@GetMapping(value = "/t6")
+	@ResponseBody
+	public CommonResult t6() {
+		CommonResult r = new CommonResult();
+		
+		taobaoProductSourceService.updateForOnce();
+		
+		r.setIsSuccess();
+		return r;
 	}
 
 }

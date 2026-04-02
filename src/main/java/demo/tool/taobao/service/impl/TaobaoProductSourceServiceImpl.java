@@ -2,12 +2,15 @@ package demo.tool.taobao.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,12 +20,16 @@ import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.service.CommonService;
 import demo.tool.taobao.mapper.TaobaoProductSourceMapper;
+import demo.tool.taobao.mapper.TaobaoUpstreamSupplierMapper;
 import demo.tool.taobao.pojo.dto.TaobaoProductSourceAddDTO;
 import demo.tool.taobao.pojo.dto.TaobaoProductSourceSearchDTO;
 import demo.tool.taobao.pojo.dto.TaobaoProductSourceUpdateDTO;
 import demo.tool.taobao.pojo.po.TaobaoProductSource;
 import demo.tool.taobao.pojo.po.TaobaoProductSourceExample;
 import demo.tool.taobao.pojo.po.TaobaoProductSourceExample.Criteria;
+import demo.tool.taobao.pojo.po.TaobaoUpstreamSupplier;
+import demo.tool.taobao.pojo.po.TaobaoUpstreamSupplierExample;
+import demo.tool.taobao.pojo.vo.TaobaoProductSourceVO;
 import demo.tool.taobao.service.TaobaoProductSourceService;
 import demo.tool.textMessageForward.telegram.service.TelegramService;
 import telegram.pojo.constant.TelegramStaticChatID;
@@ -36,12 +43,18 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 	@Autowired
 	private TaobaoProductSourceMapper mapper;
 	@Autowired
+	private TaobaoUpstreamSupplierMapper supplierMapper;
+	@Autowired
 	private TelegramService telegramService;
 
 	@Override
 	public ModelAndView taobaoProductSource() {
 		ModelAndView view = new ModelAndView("toolJSP/taobaoProductSource/taobaoProductSource");
 		view.addObject("title", "TaobaoProduct");
+		TaobaoUpstreamSupplierExample example = new TaobaoUpstreamSupplierExample();
+		example.createCriteria().andIsDeleteEqualTo(false);
+		List<TaobaoUpstreamSupplier> supplierList = supplierMapper.selectByExample(example);
+		view.addObject("supplierList", supplierList);
 		return view;
 	}
 
@@ -52,6 +65,7 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		po.setId(snowFlake.getNextId());
 		po.setCommodityId(dto.getCommodityId().longValue());
 		po.setSourceId(dto.getSourceId().longValue());
+		po.setMerchantId(dto.getMerchantID().longValue());
 		po.setCommodityName(dto.getCommodityName());
 		if (StringUtils.isNotBlank(dto.getCommodityNameZhTw())) {
 			po.setCommodityNameZhTw(dto.getCommodityNameZhTw());
@@ -171,6 +185,9 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 				criteria.andSourceIdIn(idList);
 			}
 		}
+		if (dto.getMerchantID() != null) {
+			criteria.andMerchantIdEqualTo(dto.getMerchantID().longValue());
+		}
 		if (StringUtils.isNotBlank(dto.getCommodityName())) {
 			criteria.andCommodityNameLike("%" + dto.getCommodityName() + "%");
 		}
@@ -183,11 +200,34 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		if (StringUtils.isNotBlank(dto.getRemark())) {
 			criteria.andRemarkLike("%" + dto.getRemark() + "%");
 		}
-		List<TaobaoProductSource> list = mapper.selectByExample(example);
-		if (list == null) {
-			return v;
+		List<TaobaoProductSource> productSourcePoList = mapper.selectByExample(example);
+		Set<Long> supplierIdSet = new HashSet<>();
+		for (TaobaoProductSource productSource : productSourcePoList) {
+			supplierIdSet.add(productSource.getMerchantId());
 		}
-		v.addObject("productList", list);
+		List<Long> supplierIdList = new ArrayList<>();
+		supplierIdList.addAll(supplierIdSet);
+
+		TaobaoUpstreamSupplierExample supplierExample = new TaobaoUpstreamSupplierExample();
+		supplierExample.createCriteria().andIdIn(supplierIdList);
+		List<TaobaoUpstreamSupplier> supplierList = supplierMapper.selectByExample(supplierExample);
+		Map<Long, String> supplierMap = new HashMap<>();
+		for (TaobaoUpstreamSupplier supplier : supplierList) {
+			supplierMap.put(supplier.getId(), supplier.getCommodityName());
+		}
+
+		List<TaobaoProductSourceVO> voList = new ArrayList<>();
+		for (int i = 0; i < productSourcePoList.size(); i++) {
+			TaobaoProductSource productSource = productSourcePoList.get(i);
+			TaobaoProductSourceVO vo = new TaobaoProductSourceVO();
+			BeanUtils.copyProperties(productSource, vo);
+			if (vo.getMerchantId() != null) {
+				vo.setSupplierName(supplierMap.get(vo.getMerchantId()));
+			}
+			voList.add(vo);
+		}
+
+		v.addObject("productList", voList);
 		return v;
 	}
 

@@ -9,6 +9,8 @@ public class TaobaoProductSource {
 
     private Long sourceId;
 
+    private Long merchantId;
+
     private String commodityName;
 
     private String commodityNameZhTw;
@@ -49,6 +51,14 @@ public class TaobaoProductSource {
 
     public void setSourceId(Long sourceId) {
         this.sourceId = sourceId;
+    }
+
+    public Long getMerchantId() {
+        return merchantId;
+    }
+
+    public void setMerchantId(Long merchantId) {
+        this.merchantId = merchantId;
     }
 
     public String getCommodityName() {

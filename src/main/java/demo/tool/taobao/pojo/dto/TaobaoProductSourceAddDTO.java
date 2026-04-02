@@ -7,6 +7,7 @@ public class TaobaoProductSourceAddDTO {
 
 	private BigInteger commodityId;
 	private BigDecimal sourceId;
+	private BigInteger merchantID;
 	private String commodityName;
 	private String commodityNameZhTw;
 	private String commodityNameEn;
@@ -28,6 +29,14 @@ public class TaobaoProductSourceAddDTO {
 
 	public void setSourceId(BigDecimal sourceId) {
 		this.sourceId = sourceId;
+	}
+
+	public BigInteger getMerchantID() {
+		return merchantID;
+	}
+
+	public void setMerchantID(BigInteger merchantID) {
+		this.merchantID = merchantID;
 	}
 
 	public String getCommodityName() {
@@ -80,10 +89,10 @@ public class TaobaoProductSourceAddDTO {
 
 	@Override
 	public String toString() {
-		return "TaobaoProductSourceAddDTO [commodityId=" + commodityId + ", sourceId=" + sourceId + ", commodityName="
-				+ commodityName + ", commodityNameZhTw=" + commodityNameZhTw + ", commodityNameEn=" + commodityNameEn
-				+ ", commodityImgName=" + commodityImgName + ", includePostage=" + includePostage + ", remark=" + remark
-				+ "]";
+		return "TaobaoProductSourceAddDTO [commodityId=" + commodityId + ", sourceId=" + sourceId + ", merchantID="
+				+ merchantID + ", commodityName=" + commodityName + ", commodityNameZhTw=" + commodityNameZhTw
+				+ ", commodityNameEn=" + commodityNameEn + ", commodityImgName=" + commodityImgName
+				+ ", includePostage=" + includePostage + ", remark=" + remark + "]";
 	}
 
 }

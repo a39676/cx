@@ -1,9 +1,12 @@
 package demo.tool.taobao.pojo.dto;
 
+import java.math.BigInteger;
+
 public class TaobaoProductSourceSearchDTO {
 
 	private String commodityIdListStr;
 	private String sourceIdIdListStr;
+	private BigInteger merchantID;
 	private String commodityName;
 	private String commodityNameZhTw;
 	private String commodityNameEn;
@@ -25,6 +28,14 @@ public class TaobaoProductSourceSearchDTO {
 
 	public void setSourceIdIdListStr(String sourceIdIdListStr) {
 		this.sourceIdIdListStr = sourceIdIdListStr;
+	}
+
+	public BigInteger getMerchantID() {
+		return merchantID;
+	}
+
+	public void setMerchantID(BigInteger merchantID) {
+		this.merchantID = merchantID;
 	}
 
 	public String getCommodityName() {
@@ -78,9 +89,10 @@ public class TaobaoProductSourceSearchDTO {
 	@Override
 	public String toString() {
 		return "TaobaoProductSourceSearchDTO [commodityIdListStr=" + commodityIdListStr + ", sourceIdIdListStr="
-				+ sourceIdIdListStr + ", commodityName=" + commodityName + ", commodityNameZhTw=" + commodityNameZhTw
-				+ ", commodityNameEn=" + commodityNameEn + ", commodityImgName=" + commodityImgName
-				+ ", includePostage=" + includePostage + ", remark=" + remark + "]";
+				+ sourceIdIdListStr + ", merchantID=" + merchantID + ", commodityName=" + commodityName
+				+ ", commodityNameZhTw=" + commodityNameZhTw + ", commodityNameEn=" + commodityNameEn
+				+ ", commodityImgName=" + commodityImgName + ", includePostage=" + includePostage + ", remark=" + remark
+				+ "]";
 	}
 
 }

@@ -50,6 +50,7 @@
               </td>
               <td>
                 <label>${product.sourceId}</label><br>
+                <label>${product.supplierName}</label><br>
                 <a href="https://detail.1688.com/offer/${product.sourceId}.html" target="_blank">
                   https://detail.1688.com/offer/${product.sourceId}.html
                 </a>

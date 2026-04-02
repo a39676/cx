@@ -24,6 +24,7 @@
             <td>货名</td>
             <td>挂链ID</td>
             <td>来源ID</td>
+            <td>供应商</td>
             <td>首图</td>
             <td>是否包邮</td>
             <td>备注</td>
@@ -35,10 +36,18 @@
               <input type="text" name="" id="commodityNameEn" placeholder="货名EN">
             </td>
             <td>
-              <input type="text" name="" id="commodityId" placeholder="挂链ID"><br>
+              <input type="text" name="" id="commodityId" placeholder="挂链ID">
             </td>
             <td>
-              <input type="text" name="" id="sourceId" placeholder="来源ID"><br>
+              <input type="text" name="" id="sourceId" placeholder="来源ID">
+            </td>
+            <td>
+              <select id="merchantID">
+                <option value=""></option>
+                <c:forEach items="${supplierList}" var="supplier" varStatus="loop">
+                  <option value="${supplier.id}">${supplier.commodityName}</option>
+                </c:forEach>
+              </select>
             </td>
             <td>
               <input type="text" name="" id="commodityImgName" placeholder="首图(仅图片名称部分)"><br>
@@ -83,6 +92,7 @@
       var commodityNameZhTw = $("#commodityNameZhTw").val();
       var commodityNameEn = $("#commodityNameEn").val();
       var commodityId = $("#commodityId").val();
+      var merchantID = $("#merchantID").find(":selected").val();
       var sourceId = $("#sourceId").val();
       var commodityImgName = $("#commodityImgName").val();
       var includePostage = $("#includePostage").is(":checked");
@@ -96,6 +106,7 @@
         commodityNameEn : commodityNameEn,
         commodityIdListStr : commodityId,
         sourceIdIdListStr : sourceId,
+        merchantID : merchantID,
         commodityImgName : commodityImgName,
         includePostage : includePostage,
         remark : remark,
@@ -133,6 +144,7 @@
       var commodityNameEn = $("#commodityNameEn").val();
       var commodityId = $("#commodityId").val();
       var sourceId = $("#sourceId").val();
+      var merchantID = $("#merchantID").find(":selected").val();
       var commodityImgName = $("#commodityImgName").val();
       var includePostage = $("#includePostage").is(":checked");
       var remark = $("#remark").val();
@@ -145,6 +157,7 @@
         commodityNameZhTw : commodityNameZhTw,
         commodityNameEn : commodityNameEn,
         commodityId : commodityId,
+        merchantID : merchantID,
         sourceId : sourceId,
         commodityImgName : commodityImgName,
         includePostage : includePostage,
@@ -178,6 +191,7 @@
       $("#commodityNameEn").val("");
       $("#commodityId").val("");
       $("#sourceId").val("");
+      $("#merchantID").val("").change();
       $("#commodityImgName").val("");
       $("#includePostage").prop("checked", false);
       $("#remark").val("");

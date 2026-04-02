@@ -5,6 +5,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="commodity_id" jdbcType="BIGINT" property="commodityId" />
     <result column="source_id" jdbcType="BIGINT" property="sourceId" />
+    <result column="merchant_id" jdbcType="BIGINT" property="merchantId" />
     <result column="commodity_name" jdbcType="CHAR" property="commodityName" />
     <result column="commodity_name_zh_tw" jdbcType="CHAR" property="commodityNameZhTw" />
     <result column="commodity_name_en" jdbcType="CHAR" property="commodityNameEn" />
@@ -74,7 +75,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, commodity_id, source_id, commodity_name, commodity_name_zh_tw, commodity_name_en, 
+    id, commodity_id, source_id, merchant_id, commodity_name, commodity_name_zh_tw, commodity_name_en, 
     commodity_img_name, include_postage, is_available, remark, create_time, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.tool.taobao.pojo.po.TaobaoProductSourceExample" resultMap="BaseResultMap">
@@ -109,15 +110,15 @@
   </delete>
   <insert id="insert" parameterType="demo.tool.taobao.pojo.po.TaobaoProductSource">
     insert into taobao_product_source (id, commodity_id, source_id, 
-      commodity_name, commodity_name_zh_tw, commodity_name_en, 
-      commodity_img_name, include_postage, is_available, 
-      remark, create_time, is_delete
-      )
+      merchant_id, commodity_name, commodity_name_zh_tw, 
+      commodity_name_en, commodity_img_name, include_postage, 
+      is_available, remark, create_time, 
+      is_delete)
     values (#{id,jdbcType=BIGINT}, #{commodityId,jdbcType=BIGINT}, #{sourceId,jdbcType=BIGINT}, 
-      #{commodityName,jdbcType=CHAR}, #{commodityNameZhTw,jdbcType=CHAR}, #{commodityNameEn,jdbcType=CHAR}, 
-      #{commodityImgName,jdbcType=CHAR}, #{includePostage,jdbcType=BIT}, #{isAvailable,jdbcType=BIT}, 
-      #{remark,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
-      )
+      #{merchantId,jdbcType=BIGINT}, #{commodityName,jdbcType=CHAR}, #{commodityNameZhTw,jdbcType=CHAR}, 
+      #{commodityNameEn,jdbcType=CHAR}, #{commodityImgName,jdbcType=CHAR}, #{includePostage,jdbcType=BIT}, 
+      #{isAvailable,jdbcType=BIT}, #{remark,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{isDelete,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="demo.tool.taobao.pojo.po.TaobaoProductSource">
     insert into taobao_product_source
@@ -130,6 +131,9 @@
       </if>
       <if test="sourceId != null">
         source_id,
+      </if>
+      <if test="merchantId != null">
+        merchant_id,
       </if>
       <if test="commodityName != null">
         commodity_name,
@@ -168,6 +172,9 @@
       </if>
       <if test="sourceId != null">
         #{sourceId,jdbcType=BIGINT},
+      </if>
+      <if test="merchantId != null">
+        #{merchantId,jdbcType=BIGINT},
       </if>
       <if test="commodityName != null">
         #{commodityName,jdbcType=CHAR},
@@ -216,6 +223,9 @@
       <if test="row.sourceId != null">
         source_id = #{row.sourceId,jdbcType=BIGINT},
       </if>
+      <if test="row.merchantId != null">
+        merchant_id = #{row.merchantId,jdbcType=BIGINT},
+      </if>
       <if test="row.commodityName != null">
         commodity_name = #{row.commodityName,jdbcType=CHAR},
       </if>
@@ -253,6 +263,7 @@
     set id = #{row.id,jdbcType=BIGINT},
       commodity_id = #{row.commodityId,jdbcType=BIGINT},
       source_id = #{row.sourceId,jdbcType=BIGINT},
+      merchant_id = #{row.merchantId,jdbcType=BIGINT},
       commodity_name = #{row.commodityName,jdbcType=CHAR},
       commodity_name_zh_tw = #{row.commodityNameZhTw,jdbcType=CHAR},
       commodity_name_en = #{row.commodityNameEn,jdbcType=CHAR},
@@ -274,6 +285,9 @@
       </if>
       <if test="sourceId != null">
         source_id = #{sourceId,jdbcType=BIGINT},
+      </if>
+      <if test="merchantId != null">
+        merchant_id = #{merchantId,jdbcType=BIGINT},
       </if>
       <if test="commodityName != null">
         commodity_name = #{commodityName,jdbcType=CHAR},
@@ -309,6 +323,7 @@
     update taobao_product_source
     set commodity_id = #{commodityId,jdbcType=BIGINT},
       source_id = #{sourceId,jdbcType=BIGINT},
+      merchant_id = #{merchantId,jdbcType=BIGINT},
       commodity_name = #{commodityName,jdbcType=CHAR},
       commodity_name_zh_tw = #{commodityNameZhTw,jdbcType=CHAR},
       commodity_name_en = #{commodityNameEn,jdbcType=CHAR},

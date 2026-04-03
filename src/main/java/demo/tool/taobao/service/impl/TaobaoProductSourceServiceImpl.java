@@ -186,7 +186,12 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 			}
 		}
 		if (dto.getMerchantID() != null) {
-			criteria.andMerchantIdEqualTo(dto.getMerchantID().longValue());
+			Long notSpecified = -9L;
+			if (notSpecified.equals(dto.getMerchantID().longValue())) {
+				criteria.andMerchantIdIsNull();
+			} else {
+				criteria.andMerchantIdEqualTo(dto.getMerchantID().longValue());
+			}
 		}
 		if (StringUtils.isNotBlank(dto.getCommodityName())) {
 			criteria.andCommodityNameLike("%" + dto.getCommodityName() + "%");
@@ -201,9 +206,22 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 			criteria.andRemarkLike("%" + dto.getRemark() + "%");
 		}
 		List<TaobaoProductSource> productSourcePoList = mapper.selectByExample(example);
+
+		List<TaobaoProductSourceVO> voList = new ArrayList<>();
+		for (int i = 0; i < productSourcePoList.size(); i++) {
+			TaobaoProductSource productSource = productSourcePoList.get(i);
+			TaobaoProductSourceVO vo = new TaobaoProductSourceVO();
+			BeanUtils.copyProperties(productSource, vo);
+			voList.add(vo);
+		}
+
 		Set<Long> supplierIdSet = new HashSet<>();
 		for (TaobaoProductSource productSource : productSourcePoList) {
 			supplierIdSet.add(productSource.getMerchantId());
+		}
+		if (supplierIdSet.size() < 1) {
+			v.addObject("productList", voList);
+			return v;
 		}
 		List<Long> supplierIdList = new ArrayList<>();
 		supplierIdList.addAll(supplierIdSet);
@@ -216,15 +234,11 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 			supplierMap.put(supplier.getId(), supplier.getCommodityName());
 		}
 
-		List<TaobaoProductSourceVO> voList = new ArrayList<>();
-		for (int i = 0; i < productSourcePoList.size(); i++) {
-			TaobaoProductSource productSource = productSourcePoList.get(i);
-			TaobaoProductSourceVO vo = new TaobaoProductSourceVO();
-			BeanUtils.copyProperties(productSource, vo);
+		for (int i = 0; i < voList.size(); i++) {
+			TaobaoProductSourceVO vo = voList.get(i);
 			if (vo.getMerchantId() != null) {
 				vo.setSupplierName(supplierMap.get(vo.getMerchantId()));
 			}
-			voList.add(vo);
 		}
 
 		v.addObject("productList", voList);

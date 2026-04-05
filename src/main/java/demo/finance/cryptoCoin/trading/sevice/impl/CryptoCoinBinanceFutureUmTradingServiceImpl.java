@@ -1,6 +1,8 @@
 package demo.finance.cryptoCoin.trading.sevice.impl;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +50,9 @@ public class CryptoCoinBinanceFutureUmTradingServiceImpl extends CryptoCoinCommo
 		v.addObject("title", "Future UM(Binance) V2");
 		v.addObject("userList", optionService.getUserMetaData());
 		v.addObject("exchangeList", CryptoExchangeType.values());
-		v.addObject("tradingSymbolList", optionService.getTradingSymbolList());
+		List<String> tradingSymbolList = optionService.getTradingSymbolList();
+		Collections.sort(tradingSymbolList);
+		v.addObject("tradingSymbolList", tradingSymbolList);
 		return v;
 	}
 

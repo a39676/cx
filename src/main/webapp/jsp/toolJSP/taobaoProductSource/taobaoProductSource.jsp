@@ -47,7 +47,7 @@
                 <c:forEach items="${supplierList}" var="supplier" varStatus="loop">
                   <option value="${supplier.id}">${supplier.commodityName}</option>
                 </c:forEach>
-                <option value="-9">未指定</option>
+                <option value="-99999">未指定</option>
               </select>
             </td>
             <td>

@@ -47,6 +47,8 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 	@Autowired
 	private TelegramService telegramService;
 
+	private static final Integer NOT_SPECIFIED_SUPPLIER_ID = -99999;
+
 	@Override
 	public ModelAndView taobaoProductSource() {
 		ModelAndView view = new ModelAndView("toolJSP/taobaoProductSource/taobaoProductSource");
@@ -65,7 +67,11 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		po.setId(snowFlake.getNextId());
 		po.setCommodityId(dto.getCommodityId().longValue());
 		po.setSourceId(dto.getSourceId().longValue());
-		po.setMerchantId(dto.getMerchantID().longValue());
+		if (dto.getMerchantID() == null || NOT_SPECIFIED_SUPPLIER_ID.equals(dto.getMerchantID().intValue())) {
+			po.setMerchantId(null);
+		} else {
+			po.setMerchantId(dto.getMerchantID().longValue());
+		}
 		po.setCommodityName(dto.getCommodityName());
 		if (StringUtils.isNotBlank(dto.getCommodityNameZhTw())) {
 			po.setCommodityNameZhTw(dto.getCommodityNameZhTw());
@@ -186,8 +192,7 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 			}
 		}
 		if (dto.getMerchantID() != null) {
-			Long notSpecified = -9L;
-			if (notSpecified.equals(dto.getMerchantID().longValue())) {
+			if (NOT_SPECIFIED_SUPPLIER_ID.equals(dto.getMerchantID().intValue())) {
 				criteria.andMerchantIdIsNull();
 			} else {
 				criteria.andMerchantIdEqualTo(dto.getMerchantID().longValue());

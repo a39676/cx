@@ -163,6 +163,7 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 	@Override
 	public ModelAndView search(TaobaoProductSourceSearchDTO dto) {
 		ModelAndView v = new ModelAndView("toolJSP/taobaoProductSource/taobaoProductList");
+		List<TaobaoProductSourceVO> voList = new ArrayList<>();
 		TaobaoProductSourceExample example = new TaobaoProductSourceExample();
 		Criteria criteria = example.createCriteria().andIsDeleteEqualTo(false);
 		if (StringUtils.isNotBlank(dto.getCommodityIdListStr())) {
@@ -191,13 +192,28 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 				criteria.andSourceIdIn(idList);
 			}
 		}
-		if (dto.getMerchantID() != null) {
+		if (StringUtils.isNotBlank(dto.getMerchantName())) {
+			TaobaoUpstreamSupplierExample supplierExample = new TaobaoUpstreamSupplierExample();
+			supplierExample.createCriteria().andIsDeleteEqualTo(false)
+					.andCommodityNameLike("%" + dto.getMerchantName() + "%");
+			List<TaobaoUpstreamSupplier> supplierList = supplierMapper.selectByExample(supplierExample);
+			if (supplierList == null || supplierList.size() < 1) {
+				v.addObject("productList", voList);
+				return v;
+			}
+			List<Long> supplierIdList = new ArrayList<>();
+			for (TaobaoUpstreamSupplier supplier : supplierList) {
+				supplierIdList.add(supplier.getId());
+			}
+			criteria.andMerchantIdIn(supplierIdList);
+		} else if (dto.getMerchantID() != null) {
 			if (NOT_SPECIFIED_SUPPLIER_ID.equals(dto.getMerchantID().intValue())) {
 				criteria.andMerchantIdIsNull();
 			} else {
 				criteria.andMerchantIdEqualTo(dto.getMerchantID().longValue());
 			}
 		}
+
 		if (StringUtils.isNotBlank(dto.getCommodityName())) {
 			criteria.andCommodityNameLike("%" + dto.getCommodityName() + "%");
 		}
@@ -212,7 +228,6 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		}
 		List<TaobaoProductSource> productSourcePoList = mapper.selectByExample(example);
 
-		List<TaobaoProductSourceVO> voList = new ArrayList<>();
 		for (int i = 0; i < productSourcePoList.size(); i++) {
 			TaobaoProductSource productSource = productSourcePoList.get(i);
 			TaobaoProductSourceVO vo = new TaobaoProductSourceVO();

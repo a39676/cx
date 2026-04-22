@@ -7,6 +7,7 @@ public class TaobaoProductSourceSearchDTO {
 	private String commodityIdListStr;
 	private String sourceIdIdListStr;
 	private BigInteger merchantID;
+	private String merchantName;
 	private String commodityName;
 	private String commodityNameZhTw;
 	private String commodityNameEn;
@@ -36,6 +37,14 @@ public class TaobaoProductSourceSearchDTO {
 
 	public void setMerchantID(BigInteger merchantID) {
 		this.merchantID = merchantID;
+	}
+
+	public String getMerchantName() {
+		return merchantName;
+	}
+
+	public void setMerchantName(String merchantName) {
+		this.merchantName = merchantName;
 	}
 
 	public String getCommodityName() {
@@ -89,10 +98,10 @@ public class TaobaoProductSourceSearchDTO {
 	@Override
 	public String toString() {
 		return "TaobaoProductSourceSearchDTO [commodityIdListStr=" + commodityIdListStr + ", sourceIdIdListStr="
-				+ sourceIdIdListStr + ", merchantID=" + merchantID + ", commodityName=" + commodityName
-				+ ", commodityNameZhTw=" + commodityNameZhTw + ", commodityNameEn=" + commodityNameEn
-				+ ", commodityImgName=" + commodityImgName + ", includePostage=" + includePostage + ", remark=" + remark
-				+ "]";
+				+ sourceIdIdListStr + ", merchantID=" + merchantID + ", merchantName=" + merchantName
+				+ ", commodityName=" + commodityName + ", commodityNameZhTw=" + commodityNameZhTw + ", commodityNameEn="
+				+ commodityNameEn + ", commodityImgName=" + commodityImgName + ", includePostage=" + includePostage
+				+ ", remark=" + remark + "]";
 	}
 
 }

@@ -49,6 +49,7 @@
                 </c:forEach>
                 <option value="-99999">未指定</option>
               </select>
+              <input type="text" name="" id="merchantName" placeholder="商户名">
             </td>
             <td>
               <input type="text" name="" id="commodityImgName" placeholder="首图(仅图片名称部分)"><br>
@@ -94,6 +95,7 @@
       var commodityNameEn = $("#commodityNameEn").val();
       var commodityId = $("#commodityId").val();
       var merchantID = $("#merchantID").find(":selected").val();
+      var merchantName = $("#merchantName").val();
       var sourceId = $("#sourceId").val();
       var commodityImgName = $("#commodityImgName").val();
       var includePostage = $("#includePostage").is(":checked");
@@ -108,6 +110,7 @@
         commodityIdListStr : commodityId,
         sourceIdIdListStr : sourceId,
         merchantID : merchantID,
+        merchantName : merchantName,
         commodityImgName : commodityImgName,
         includePostage : includePostage,
         remark : remark,

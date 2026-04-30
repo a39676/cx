@@ -180,6 +180,9 @@
             <label>queryOrdersHistory</label><br>
             <label>获取挂单历史</label>
           </button>
+          <button id="binanceChangeToMaxLeverage" class="btn btn-sm btn-secondary">
+            <label>binanceChangeToMaxLeverage</label><br>
+          </button>
         </div>
       </div>
     </div>
@@ -476,6 +479,46 @@
         exchangeCode:selectedExchangeCode,
         startTime:startTime,
         endTime:endTime,
+      };
+
+      $("#msg").text("sending");
+      $("#queryOrdersResult").html("");
+      $.ajax({
+        type : "POST",
+        async : true,
+        url : url,
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        <%-- dataType: "json", --%>
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          $("#queryOrdersResult").html(datas);
+          $("#msg").text("");
+        },
+        error: function(datas) {
+          $("#msg").text(datas.message);
+        }
+      });
+    }
+
+    $("#binanceChangeToMaxLeverage").click(function() {
+      binanceChangeToMaxLeverage();
+    });
+
+    function binanceChangeToMaxLeverage(){
+      var url = "/cryptoTradingFutureUm/binanceFutureUmChangeToMaxLeverageMultipleUser";
+
+      var symbol = $("#symbol").val();
+      var selectedExchange = $('#exchangeSelector').find(":selected");
+      var selectedExchangeCode = selectedExchange.val();
+      
+      var jsonOutput = {
+        symbol:symbol,
+        exchangeCode:selectedExchangeCode,
       };
 
       $("#msg").text("sending");

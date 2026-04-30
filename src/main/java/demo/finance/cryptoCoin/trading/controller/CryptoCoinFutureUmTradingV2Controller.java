@@ -19,6 +19,7 @@ import demo.finance.cryptoCoin.trading.sevice.CryptoCoinBinanceFutureUmTradingSe
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelOrderByIdDTO;
 import finance.cryptoCoin.binance.future.pojo.dto.CryptoCoinBinanceFutureCloseAllPositionDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmCancelMultipleOrderDTO;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionOrderCommonDTO;
 
 @Controller
 @RequestMapping(value = CryptoCoinTradingUrl.FUTURE_UM_ROOT)
@@ -75,5 +76,11 @@ public class CryptoCoinFutureUmTradingV2Controller {
 	public CommonResult closeAllPositionForMultipleUser(
 			@RequestBody CryptoCoinBinanceFutureUmCloseAllPositionForMultipleUserDTO dto) {
 		return umTradingService.closeAllPositionForMultipleUser(dto);
+	}
+
+	@PostMapping(value = CryptoCoinTradingUrl.BINANCE_FUTURE_UM_CHANGE_TO_MAX_LEVERAGE_MULTIPLE_USER)
+	@ResponseBody
+	public CommonResult changeToMaxLeverage(@RequestBody CryptoCoinInteractionOrderCommonDTO dto) {
+		return umTradingService.changeToMaxLeverage(dto);
 	}
 }

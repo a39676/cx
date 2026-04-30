@@ -13,6 +13,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceFutureUmCancelMultipleOrderProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceFutureUmCancelOrderByIdProducer;
+import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceFutureUmChangeToMaxLeverageProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceFutureUmCloseAllPositionProducer;
 import demo.finance.cryptoCoin.trading.mq.producer.CryptoCoinBinanceUmFutureOrderProducer;
 import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureCmCancelMultipleOrderMultipleUserDTO;
@@ -43,6 +44,8 @@ public class CryptoCoinBinanceFutureUmTradingServiceImpl extends CryptoCoinCommo
 	private CryptoCoinBinanceFutureUmCancelOrderByIdProducer binanceFutureUmCancelOrderByIdProducer;
 	@Autowired
 	private CryptoCoinBinanceFutureUmCloseAllPositionProducer binanceFutureUmCloseAllPositionProducer;
+	@Autowired
+	private CryptoCoinBinanceFutureUmChangeToMaxLeverageProducer binanceFutureUmChangeToMaxLeverageProducer;
 
 	@Override
 	public ModelAndView tradingViewV2() {
@@ -343,6 +346,28 @@ public class CryptoCoinBinanceFutureUmTradingServiceImpl extends CryptoCoinCommo
 			subDTO.setUserNickname(dto.getUserNicknameList().get(i));
 			closeAllPosition(subDTO);
 		}
+		r.setIsSuccess();
+		return r;
+	}
+
+	@Override
+	public CommonResult changeToMaxLeverage(CryptoCoinInteractionOrderCommonDTO dto) {
+		CommonResult r = new CommonResult();
+		CryptoExchangeType exchangeType = CryptoExchangeType.getType(dto.getExchangeCode());
+		if (exchangeType == null) {
+			r.failWithMessage("Exchange invalid");
+			return r;
+		}
+		if (CryptoExchangeType.BINANCE != exchangeType) {
+			r.failWithMessage("Only for Binance");
+			return r;
+		}
+		if (StringUtils.isBlank(dto.getSymbol())) {
+			r.failWithMessage("Symbol invalid");
+			return r;
+		}
+		dto.setTotpCode(genTotpCode());
+		binanceFutureUmChangeToMaxLeverageProducer.sendChangeToMaxLeverage(dto);
 		r.setIsSuccess();
 		return r;
 	}

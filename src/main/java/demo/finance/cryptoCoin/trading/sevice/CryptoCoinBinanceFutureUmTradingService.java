@@ -10,6 +10,7 @@ import demo.finance.cryptoCoin.trading.pojo.dto.CryptoCoinBinanceFutureUmSetOrde
 import finance.cryptoCoin.binance.future.cm.pojo.dto.CryptoCoinBinanceFutureCmCancelOrderByIdDTO;
 import finance.cryptoCoin.binance.future.pojo.dto.CryptoCoinBinanceFutureCloseAllPositionDTO;
 import finance.cryptoCoin.binance.future.um.pojo.dto.CryptoCoinBinanceFutureUmCancelMultipleOrderDTO;
+import finance.cryptoCoin.common.pojo.dto.CryptoCoinInteractionOrderCommonDTO;
 
 public interface CryptoCoinBinanceFutureUmTradingService {
 
@@ -28,5 +29,7 @@ public interface CryptoCoinBinanceFutureUmTradingService {
 	CommonResult closeAllPosition(CryptoCoinBinanceFutureCloseAllPositionDTO dto);
 
 	CommonResult closeAllPositionForMultipleUser(CryptoCoinBinanceFutureUmCloseAllPositionForMultipleUserDTO dto);
+
+	CommonResult changeToMaxLeverage(CryptoCoinInteractionOrderCommonDTO dto);
 
 }

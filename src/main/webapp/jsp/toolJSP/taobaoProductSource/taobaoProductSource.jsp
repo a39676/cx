@@ -56,7 +56,6 @@
             </td>
             <td>
               <input type="checkbox" id="includePostage">
-              <label for="includePostage">是否包邮</label>
             </td>
             <td>
               <input type="text" name="" id="remark" placeholder="备注"><br>

@@ -26,6 +26,7 @@ public class CryptoCoinTradingUrl {
 	public static final String BINANCE_FUTURE_UM_CANCEL_ORDER_BY_ID = "/binanceFutureUmCancelOrderByID";
 	public static final String BINANCE_FUTURE_UM_CLOSE_ALL_POSITION = "/binanceFutureUmCloseAllPosition";
 	public static final String BINANCE_FUTURE_UM_CLOSE_ALL_POSITION_MULTIPLE_USER = "/binanceFutureUmCloseAllPositionMultipleUser";
+	public static final String BINANCE_FUTURE_UM_CHANGE_TO_MAX_LEVERAGE_MULTIPLE_USER = "/binanceFutureUmChangeToMaxLeverageMultipleUser";
 
 	public static final String SPOT_SEND_ORDER = "/spotSendOrder";
 	public static final String SPOT_SEND_ORDER_MULTIPLE = "/spotSendOrderMultipleUser";

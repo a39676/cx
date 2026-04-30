@@ -20,7 +20,6 @@ import demo.finance.common.service.impl.FinanceCommonService;
 import demo.finance.currencyExchangeRate.data.mapper.CurrencyExchangeRate1dayMapper;
 import demo.finance.currencyExchangeRate.data.pojo.po.CurrencyExchangeRate1day;
 import demo.finance.currencyExchangeRate.data.pojo.po.CurrencyExchangeRate1dayExample;
-import demo.finance.currencyExchangeRate.data.pojo.result.FilterDataResult;
 import demo.finance.currencyExchangeRate.notice.mapper.CurrencyExchangeRateNoticeMapper;
 import demo.finance.currencyExchangeRate.notice.pojo.dto.InsertCurrencyExchangeRateNoticeSettingDTO;
 import demo.finance.currencyExchangeRate.notice.pojo.po.CurrencyExchangeRateNotice;
@@ -31,6 +30,7 @@ import demo.finance.currencyExchangeRate.notice.service.CurrencyExchangeRateNoti
 import demo.tool.textMessageForward.telegram.pojo.po.TelegramChatId;
 import demo.tool.textMessageForward.telegram.pojo.vo.TelegramChatIdVO;
 import demo.tool.textMessageForward.telegram.service.TelegramService;
+import finance.currencyExchangeRate.pojo.result.FilterDataResult;
 import telegram.pojo.type.TelegramBotType;
 
 @Service

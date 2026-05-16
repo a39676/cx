@@ -266,24 +266,43 @@
   </div>
 
   <script type="text/javascript">
-    // keep alive request
-    var intervalId = window.setInterval(function(){
-      $.ajax({
-        type : "GET",
-        async : true,
-        url : "/1jlbdmb",
-        data: "",
-        cache : false,
-        timeout:50000,
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader(csrfHeader, csrfToken);
-        },
-        success:function(datas){
-        },
-        error: function(datas) {
-        }
-      });
-    }, 5000);
+    const TARGET_URL = '/1jlbdmb'; 
+    const INTERVAL_TIME = 3000; // 检查间隔时间：毫秒
+    const MAX_FAILURES = 3; // 最大连续失败次数
+
+    let failureCount = 0; // 当前连续失败计数器
+    let timerId = null; // 用于存储定时器ID
+
+    function startPolling() {
+        $.ajax({
+          url: TARGET_URL,
+          type: 'GET', // 根据你的接口换成 POST 或 GET
+          success: function(response) {
+            failureCount = 0; 
+            scheduleNext();
+          },
+          error: function(xhr, status, error) {
+            failureCount++;
+            console.warn(`Connect failed (${failureCount}/${MAX_FAILURES}):`, error);
+            
+            if (failureCount >= MAX_FAILURES) {
+                console.error('已连续失败 3 次，停止定时任务！');
+                clearTimeout(timerId); // 明确清除定时器
+                return; 
+            }
+            
+            scheduleNext();
+          }
+         });
+    }
+
+    function scheduleNext() {
+      // 启动定时器，30秒后再次执行 startPolling
+      timerId = setTimeout(startPolling, INTERVAL_TIME);
+    }
+
+    // 首次触发任务
+    startPolling();
   </script>
 </body>
 

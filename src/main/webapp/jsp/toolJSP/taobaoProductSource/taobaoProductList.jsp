@@ -47,7 +47,7 @@
                 <a href="https://item.taobao.com/item.html?id=${product.commodityId}" target="_blank">
                   淘宝
                 </a><br>
-                <a href="https://item.upload.taobao.com/sell/v2/publish.htm?itemId=${product.sourceId}&fromAIPublish=true" target="_blank">
+                <a href="https://upload.taobao.com/auction/publish/edit.htm?item_num_id=${product.commodityId}&auto=false&itemId=${product.commodityId}" target="_blank">
                   千牛编辑
                 </a>
               </td>

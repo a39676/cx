@@ -45,14 +45,17 @@
               <td>
                 <label>${product.commodityId}</label><br>
                 <a href="https://item.taobao.com/item.html?id=${product.commodityId}" target="_blank">
-                  https://item.taobao.com/item.htm?id=${product.commodityId}
+                  淘宝
+                </a><br>
+                <a href="https://item.upload.taobao.com/sell/v2/publish.htm?itemId=${product.sourceId}&fromAIPublish=true" target="_blank">
+                  千牛编辑
                 </a>
               </td>
               <td>
                 <label>${product.sourceId}</label><br>
                 <label>${product.supplierName}</label><br>
                 <a href="https://detail.1688.com/offer/${product.sourceId}.html" target="_blank">
-                  https://detail.1688.com/offer/${product.sourceId}.html
+                  1688
                 </a>
               </td>
               <c:choose>

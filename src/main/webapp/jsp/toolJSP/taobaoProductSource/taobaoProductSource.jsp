@@ -43,7 +43,7 @@
             </td>
             <td>
               <select id="merchantID">
-                <option value=""></option>
+                <option value="">Null</option>
                 <c:forEach items="${supplierList}" var="supplier" varStatus="loop">
                   <option value="${supplier.id}">${supplier.commodityName}</option>
                 </c:forEach>
@@ -81,9 +81,17 @@
 </body>
 <footer>
 <%@ include file="../../baseElementJSP/normalJSPart.jsp" %>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script type="text/javascript">
 
   $(document).ready(function() {
+
+    $('#merchantID').select2({
+      <%-- placeholder: '请选择城市', --%>
+      allowClear: true
+    });
+
     $("#searchProduct").click( function() {
       $("#productList").html("Loading");
       searchProduct();

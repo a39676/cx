@@ -28,4 +28,6 @@ public interface TaobaoProductSourceService {
 
 	CommonResult update(TaobaoProductSourceUpdateDTO dto);
 
+	ModelAndView priceCalculate();
+
 }

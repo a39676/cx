@@ -21,10 +21,15 @@
       <div class="col-md-12">
         <table class="table table-striped table-bordered table-hover">
           <tr>
-            <td>ID 货名</td>
+            <td>
+              <label>ID</label>
+              <label>挂链ID</label>
+              <label>来源ID</label>
+              <label>货名</label>
+            </td>
             <td>首图</td>
-            <td>挂链ID</td>
-            <td>来源ID</td>
+            <td>Links</td>
+            <td>供应商</td>
             <td>是否包邮</td>
             <td>是否上架</td>
             <td>备注</td>
@@ -35,6 +40,8 @@
                 productId="${product.id}">
               <td>
                 <label class="label label-default">${product.id}</label><br>
+                <label class="label label-default">${product.commodityId}</label><br>
+                <label class="label label-default">${product.sourceId}</label><br>
                 <label class="label label-default">${product.commodityName}</label><br>
                 <label class="label label-default">${product.commodityNameZhTw}</label><br>
                 <label class="label label-default">${product.commodityNameEn}</label><br>
@@ -43,20 +50,18 @@
                 <img src='https://gw.alicdn.com/imgextra/${product.commodityImgName}_160x160xz_.webp' style='width: 80px;'>
               </td>
               <td>
-                <label>${product.commodityId}</label><br>
                 <a href="https://item.taobao.com/item.html?id=${product.commodityId}" target="_blank">
                   淘宝
                 </a><br>
                 <a href="https://upload.taobao.com/auction/publish/edit.htm?item_num_id=${product.commodityId}&auto=false&itemId=${product.commodityId}" target="_blank">
                   千牛编辑
-                </a>
-              </td>
-              <td>
-                <label>${product.sourceId}</label><br>
-                <label>${product.supplierName}</label><br>
+                </a><br>
                 <a href="https://detail.1688.com/offer/${product.sourceId}.html" target="_blank">
                   1688
                 </a>
+              </td>
+              <td>
+                <label>${product.supplierName}</label><br>
               </td>
               <c:choose>
                 <c:when test="${product.includePostage == false}">

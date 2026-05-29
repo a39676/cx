@@ -65,6 +65,7 @@
         <button id="searchProduct">SearchProduct</button>
         <button id="createProduct">CreateProduct</button>
         <button id="resetProductCondition">reset</button>
+        <a href="/taobaoProductSource/priceCalculate">价格计算参考</a>
       </div>
     </div>
 

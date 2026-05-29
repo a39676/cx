@@ -59,6 +59,12 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		view.addObject("supplierList", supplierList);
 		return view;
 	}
+	
+	@Override
+	public ModelAndView priceCalculate() {
+		ModelAndView view = new ModelAndView("toolJSP/taobaoProductSource/priceCalculate");
+		return view;
+	}
 
 	@Override
 	public CommonResult insert(TaobaoProductSourceAddDTO dto) {

@@ -27,6 +27,11 @@ public class TaobaoProductSourceController {
 	public ModelAndView taobaoProductSource() {
 		return service.taobaoProductSource();
 	}
+	
+	@GetMapping(value = "/priceCalculate")
+	public ModelAndView priceCalculate() {
+		return service.priceCalculate();
+	}
 
 	@PostMapping(value = "/add")
 	@ResponseBody

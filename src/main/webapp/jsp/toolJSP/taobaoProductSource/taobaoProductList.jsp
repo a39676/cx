@@ -22,10 +22,7 @@
         <table class="table table-striped table-bordered table-hover">
           <tr>
             <td>
-              <label>ID</label>
-              <label>挂链ID</label>
-              <label>来源ID</label>
-              <label>货名</label>
+              <label>ID,挂链ID,来源ID,货名</label>
             </td>
             <td>首图</td>
             <td>Links</td>
@@ -39,12 +36,12 @@
                 productName="${product.commodityName}" 
                 productId="${product.id}">
               <td>
-                <label class="label label-default">${product.id}</label><br>
-                <label class="label label-default">${product.commodityId}</label><br>
-                <label class="label label-default">${product.sourceId}</label><br>
-                <label class="label label-default">${product.commodityName}</label><br>
-                <label class="label label-default">${product.commodityNameZhTw}</label><br>
-                <label class="label label-default">${product.commodityNameEn}</label><br>
+                <label class="label label-default" onclick="copyText(this)">${product.id}</label><br>
+                <label class="label label-default" onclick="copyText(this)">${product.commodityId}</label><br>
+                <label class="label label-default" onclick="copyText(this)">${product.sourceId}</label><br>
+                <label class="label label-default" onclick="copyText(this)">${product.commodityName}</label><br>
+                <label class="label label-default" onclick="copyText(this)">${product.commodityNameZhTw}</label><br>
+                <label class="label label-default" onclick="copyText(this)">${product.commodityNameEn}</label><br>
               </td>
               <td>
                 <img src='https://gw.alicdn.com/imgextra/${product.commodityImgName}_160x160xz_.webp' style='width: 80px;'>
@@ -226,6 +223,14 @@
     
   });
 
+</script>
+<script>
+  function copyText(element) {
+    // element 就是当前被点击的那个按钮对象
+    const text = element.innerText; 
+    
+    navigator.clipboard.writeText(text).then(() => {});
+  }
 </script>
 </footer>
 </html>

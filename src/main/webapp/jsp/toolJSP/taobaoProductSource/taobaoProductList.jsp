@@ -8,6 +8,34 @@
 <html>
 <head>
 <%@ include file="../../baseElementJSP/normalHeader.jsp" %>
+<style>
+  /* ---------------- 气泡核心样式 ---------------- */
+  .copy-bubble {
+    position: fixed;         /* 相对于浏览器窗口定位 */
+    background-color: rgba(0, 0, 0, 0.7); /* 半透明黑色背景 */
+    color: #fff;             /* 白色字体 */
+    padding: 6px 12px;       /* 内边距 */
+    border-radius: 4px;      /* 圆角 */
+    font-size: 14px;
+    pointer-events: none;    /* 防止气泡干扰鼠标的后续点击 */
+    z-index: 9999;           /* 确保气泡显示在最上层 */
+    white-space: nowrap;     /* 防止文字换行 */            
+    /* 绑定动画：持续1.5秒，缓动效果，结束后停留在最后一帧 */
+    animation: floatUpFade 1.5s ease-out forwards;
+  }
+  /* 动画效果：向上飘移 30px，同时透明度从 1 变为 0 */
+  @keyframes floatUpFade {
+    0% {
+      opacity: 1;
+      transform: translate(-50%, -100%) translateY(0);
+    }
+    100% {
+      opacity: 0;
+      /* 用 transform 让气泡水平居中于鼠标，并向上飘动 */
+      transform: translate(-50%, -100%) translateY(-30px);
+    }
+  }
+</style>
 </head>
 <body>
   <div class="container-fluid">
@@ -36,12 +64,12 @@
                 productName="${product.commodityName}" 
                 productId="${product.id}">
               <td>
-                <label class="label label-default" onclick="copyText(this)">${product.id}</label><br>
-                <label class="label label-default" onclick="copyText(this)">${product.commodityId}</label><br>
-                <label class="label label-default" onclick="copyText(this)">${product.sourceId}</label><br>
-                <label class="label label-default" onclick="copyText(this)">${product.commodityName}</label><br>
-                <label class="label label-default" onclick="copyText(this)">${product.commodityNameZhTw}</label><br>
-                <label class="label label-default" onclick="copyText(this)">${product.commodityNameEn}</label><br>
+                <label class="label label-default" onclick="copyText(this, event)">${product.id}</label><br>
+                <label class="label label-default" onclick="copyText(this, event)">${product.commodityId}</label><br>
+                <label class="label label-default" onclick="copyText(this, event)">${product.sourceId}</label><br>
+                <label class="label label-default" onclick="copyText(this, event)">${product.commodityName}</label><br>
+                <label class="label label-default" onclick="copyText(this, event)">${product.commodityNameZhTw}</label><br>
+                <label class="label label-default" onclick="copyText(this, event)">${product.commodityNameEn}</label><br>
               </td>
               <td>
                 <img src='https://gw.alicdn.com/imgextra/${product.commodityImgName}_160x160xz_.webp' style='width: 80px;'>
@@ -225,11 +253,35 @@
 
 </script>
 <script>
-  function copyText(element) {
-    // element 就是当前被点击的那个按钮对象
-    const text = element.innerText; 
-    
-    navigator.clipboard.writeText(text).then(() => {});
+  function copyText(element, event) {
+    // 1. 获取文本并复制到剪贴板
+    const text = element.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      // 2. 复制成功后，调用创建气泡的函数
+      createBubble(event, text + ", ✓ 复制成功");
+    }).catch(err => {
+      createBubble(event, "❌ 复制失败");
+    });
+  }
+
+  function createBubble(event, message) {
+    // 1. 动态创建一个 div 作为气泡
+    const bubble = document.createElement('div');
+    bubble.className = 'copy-bubble';
+    bubble.innerText = message;
+
+    // 2. 计算气泡位置（设置为鼠标当前点击的坐标）
+    // event.clientX 和 clientY 是鼠标相对于可视窗口的坐标
+    bubble.style.left = event.clientX + 'px';
+    bubble.style.top = event.clientY + 'px';
+
+    // 3. 将气泡插入到页面中
+    document.body.appendChild(bubble);
+
+    // 4. 1.5秒后（与CSS动画时间一致），将气泡从页面中彻底移除，释放内存
+    setTimeout(() => {
+      bubble.remove();
+    }, 1500);
   }
 </script>
 </footer>

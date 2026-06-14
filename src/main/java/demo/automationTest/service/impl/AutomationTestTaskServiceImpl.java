@@ -30,8 +30,10 @@ public class AutomationTestTaskServiceImpl extends CommonTaskService {
 	public void checkHeartBeat() {
 		LocalDateTime heartBeatTime = null;
 		for (HeartBeatType heartBeatType : HeartBeatType.values()) {
-			if (HeartBeatType.BBT.equals(heartBeatType) || HeartBeatType.WORKER1.equals(heartBeatType)) {
+			if (HeartBeatType.BBT.equals(heartBeatType) || HeartBeatType.WORKER1.equals(heartBeatType)
+					|| HeartBeatType.MONITOR.equals(heartBeatType)) {
 //				TODO 2026 03 暂停 BBT 心跳检测
+//				TODO 2026 06 暂停 CCM 心跳检测
 				continue;
 			}
 			heartBeatTime = heartBeatService.getHeartBeatMap().get(heartBeatType.getName());

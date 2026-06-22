@@ -88,7 +88,6 @@
   $(document).ready(function() {
 
     $('#merchantID').select2({
-      <%-- placeholder: '请选择城市', --%>
       allowClear: true
     });
 
@@ -203,7 +202,11 @@
       $("#commodityNameEn").val("");
       $("#commodityId").val("");
       $("#sourceId").val("");
-      $("#merchantID").val("").change();
+      <%-- $("#merchantID").val("").change(); --%>
+      // 获取第一个选项的 value
+      var firstOptionValue = $('#merchantID option:eq(0)').val();
+      // 设置选中值并触发 Select2 视图更新
+      $('#merchantID').val(firstOptionValue).trigger('change.select2');
       $("#commodityImgName").val("");
       $("#includePostage").prop("checked", false);
       $("#remark").val("");

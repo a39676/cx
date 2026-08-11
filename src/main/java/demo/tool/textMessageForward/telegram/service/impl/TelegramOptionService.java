@@ -19,8 +19,9 @@ import toolPack.ioHandle.FileUtilCustom;
 @Service
 public class TelegramOptionService extends CommonService {
 
-
 	private Map<String, TelegramConstantBO> telegramConstantMap = new HashMap<>();
+	private Map<Integer, Long> botCodeMsgIdMap = new HashMap<>();
+	private Long targetGroupId;
 
 	public Map<String, TelegramConstantBO> getTelegramConstantMap() {
 		return telegramConstantMap;
@@ -29,9 +30,25 @@ public class TelegramOptionService extends CommonService {
 	public void setTelegramConstantMap(Map<String, TelegramConstantBO> telegramConstantMap) {
 		this.telegramConstantMap = telegramConstantMap;
 	}
-	
+
 	public void putTelegramConstantMap(String key, TelegramConstantBO constant) {
 		telegramConstantMap.put(key, constant);
+	}
+
+	public Map<Integer, Long> getBotCodeMsgIdMap() {
+		return botCodeMsgIdMap;
+	}
+
+	public void setBotCodeMsgIdMap(Map<Integer, Long> botCodeMsgIdMap) {
+		this.botCodeMsgIdMap = botCodeMsgIdMap;
+	}
+
+	public Long getTargetGroupId() {
+		return targetGroupId;
+	}
+
+	public void setTargetGroupId(Long targetGroupId) {
+		this.targetGroupId = targetGroupId;
 	}
 
 	@PostConstruct

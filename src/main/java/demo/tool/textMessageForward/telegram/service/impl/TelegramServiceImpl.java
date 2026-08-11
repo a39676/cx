@@ -41,7 +41,7 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 	@Autowired
 	private TelegramOptionService telegramOptionService;
 
-	private String botIDReady(String botIDKey) {
+	private String botIdReady(String botIDKey) {
 		if (StringUtils.isBlank(botIDKey)) {
 			botIDKey = TelegramBotType.CX_MESSAGE.getName();
 		}
@@ -51,10 +51,10 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 			return botConstant.getConstantvalue();
 		}
 
-		return botIDReset(botIDKey);
+		return botIdReset(botIDKey);
 	}
 
-	private String botIDReset(String botIDKey) {
+	private String botIdReset(String botIDKey) {
 		String bot1ID = null;
 
 		TelegramConstantExample example = new TelegramConstantExample();
@@ -131,7 +131,7 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 		if (botType == null) {
 			botType = TelegramBotType.CX_MESSAGE;
 		}
-		String botID = botIDReady(botType.getName());
+		String botID = botIdReady(botType.getName());
 		if (StringUtils.isBlank(botID)) {
 			r.failWithMessage("please set bot ID");
 			return r;
@@ -215,7 +215,7 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 		}
 
 		String urlModel = "https://api.telegram.org/bot%s/getUpdates?offset=%d";
-		String botID = botIDReady(botIDKey);
+		String botID = botIdReady(botIDKey);
 		String url = String.format(urlModel, botID, lastUpdateMsgId);
 
 		HttpUtil httpUtil = new HttpUtil();
@@ -243,7 +243,7 @@ public class TelegramServiceImpl extends ToolCommonService implements TelegramSe
 		}
 
 		String urlModel = "https://api.telegram.org/bot%s/setWebhook?url=%s&secret_token=%s";
-		String botID = botIDReady(botIDKey);
+		String botID = botIdReady(botIDKey);
 		String url = String.format(urlModel, botID, webhookUrl, secretToken);
 
 		HttpUtil httpUtil = new HttpUtil();

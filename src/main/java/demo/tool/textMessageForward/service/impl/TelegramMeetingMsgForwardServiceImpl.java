@@ -30,14 +30,14 @@ public class TelegramMeetingMsgForwardServiceImpl extends CommonService implemen
 			lastMsgId = optionService.getBotCodeMsgIdMap().get(TelegramBotType.ARK_ASSISTANT_2.getCode());
 		}
 		TelegramGetUpdatesDTO updateMsg = telegramService.getUpdateMessage(TelegramBotType.ARK_ASSISTANT_2.getName(),
-				lastMsgId);
+				9L);
 		List<TelegramUpdateMessageDTO> resultList = updateMsg.getResult();
 		if (resultList == null || resultList.size() < 1) {
 			return;
 		}
 		for (int i = 0; i < resultList.size(); i++) {
 			TelegramUpdateMessageDTO msg = resultList.get(i);
-			if (lastMsgId.equals(msg.getUpdate_id())) {
+			if (msg.getUpdate_id() <= lastMsgId) {
 				continue;
 			}
 			try {

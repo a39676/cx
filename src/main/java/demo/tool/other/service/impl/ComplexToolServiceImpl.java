@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 import auxiliaryCommon.pojo.type.HeartBeatType;
 import demo.common.service.ToolCommonService;
@@ -37,5 +38,11 @@ public class ComplexToolServiceImpl extends ToolCommonService implements Complex
 	@Override
 	public Long decryptPK(String pk) {
 		return systemOptionService.decryptPrivateKey(pk);
+	}
+
+	@Override
+	public ModelAndView compoundInterest() {
+		ModelAndView view = new ModelAndView("toolJSP/publicTool/compound_interest");
+		return view;
 	}
 }

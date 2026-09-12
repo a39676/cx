@@ -9,6 +9,7 @@ import demo.tool.taobao.pojo.dto.TaobaoProductSourceAddDTO;
 import demo.tool.taobao.pojo.dto.TaobaoProductSourceSearchDTO;
 import demo.tool.taobao.pojo.dto.TaobaoProductSourceUpdateDTO;
 import demo.tool.taobao.pojo.po.TaobaoProductSource;
+import demo.tool.taobao.pojo.result.TaobaoGetHotSaleListResult;
 
 public interface TaobaoProductSourceService {
 
@@ -29,5 +30,7 @@ public interface TaobaoProductSourceService {
 	CommonResult update(TaobaoProductSourceUpdateDTO dto);
 
 	ModelAndView priceCalculate();
+
+	TaobaoGetHotSaleListResult getHotSaleListResult();
 
 }

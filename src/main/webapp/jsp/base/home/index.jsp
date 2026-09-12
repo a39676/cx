@@ -61,6 +61,9 @@
           </li>
           <li class="nav-item active font-weight-bold" id="articleBurn">
           </li>
+          <li class="nav-item active font-weight-bold" id="compoundInterest">
+            <a class="nav-link" href="/tmpTool/compoundInterest">复利计算器</a>
+          </li>
           <li class="nav-item active font-weight-bold">
             <a class="nav-link" target="_blank" href="/publicTool/qrcode/">QR Code 生成/解码</a>
           </li>

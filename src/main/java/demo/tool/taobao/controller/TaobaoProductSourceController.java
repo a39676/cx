@@ -14,6 +14,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.tool.taobao.pojo.dto.TaobaoProductSourceAddDTO;
 import demo.tool.taobao.pojo.dto.TaobaoProductSourceSearchDTO;
 import demo.tool.taobao.pojo.dto.TaobaoProductSourceUpdateDTO;
+import demo.tool.taobao.pojo.result.TaobaoGetHotSaleListResult;
 import demo.tool.taobao.service.TaobaoProductSourceService;
 
 @Controller
@@ -27,7 +28,7 @@ public class TaobaoProductSourceController {
 	public ModelAndView taobaoProductSource() {
 		return service.taobaoProductSource();
 	}
-	
+
 	@GetMapping(value = "/priceCalculate")
 	public ModelAndView priceCalculate() {
 		return service.priceCalculate();
@@ -57,4 +58,9 @@ public class TaobaoProductSourceController {
 		service.whenLinkClick(dto.getStr());
 	}
 
+	@GetMapping(value = "/getHotSaleList")
+	@ResponseBody
+	public TaobaoGetHotSaleListResult getHotSaleListResult() {
+		return service.getHotSaleListResult();
+	}
 }

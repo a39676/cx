@@ -29,6 +29,7 @@ import demo.tool.taobao.pojo.po.TaobaoProductSourceExample;
 import demo.tool.taobao.pojo.po.TaobaoProductSourceExample.Criteria;
 import demo.tool.taobao.pojo.po.TaobaoUpstreamSupplier;
 import demo.tool.taobao.pojo.po.TaobaoUpstreamSupplierExample;
+import demo.tool.taobao.pojo.result.TaobaoGetHotSaleListResult;
 import demo.tool.taobao.pojo.vo.TaobaoProductSourceVO;
 import demo.tool.taobao.service.TaobaoProductSourceService;
 import demo.tool.textMessageForward.telegram.service.TelegramService;
@@ -59,7 +60,7 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		view.addObject("supplierList", supplierList);
 		return view;
 	}
-	
+
 	@Override
 	public ModelAndView priceCalculate() {
 		ModelAndView view = new ModelAndView("toolJSP/taobaoProductSource/priceCalculate");
@@ -278,6 +279,18 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		example.createCriteria().andIdIn(hotSaleIdList).andIsAvailableEqualTo(true).andIsDeleteEqualTo(false);
 		List<TaobaoProductSource> list = mapper.selectByExample(example);
 		return list;
+	}
+
+	@Override
+	public TaobaoGetHotSaleListResult getHotSaleListResult() {
+		TaobaoGetHotSaleListResult r = new TaobaoGetHotSaleListResult();
+		List<Long> hotSaleIdList = optionService.getHotSaleIdList();
+		TaobaoProductSourceExample example = new TaobaoProductSourceExample();
+		example.createCriteria().andIdIn(hotSaleIdList).andIsAvailableEqualTo(true).andIsDeleteEqualTo(false);
+		List<TaobaoProductSource> list = mapper.selectByExample(example);
+		r.setProductSourceList(list);
+		r.setIsSuccess();
+		return r;
 	}
 
 	@Override

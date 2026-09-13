@@ -70,6 +70,16 @@
     </div>
 
     <div class="row">
+      <div class="col-md-6">
+        <textarea id="orderInput" rows="3" cols="80"></textarea>
+        <button id="orderSort">trans</button>
+      </div>
+      <div class="col-md-6">
+        <textarea id="orderOutput" rows="3" cols="80"></textarea>
+      </div>
+    </div>
+
+    <div class="row">
       <div class="col-md-12">
         <div id="productList">
           
@@ -212,6 +222,55 @@
       $("#remark").val("");
       $("#msg").html("");
     });
+
+    $("#orderSort").click(function () {
+      var orderRawData = $("#orderInput").val();
+      orderSort(orderRawData);
+    })
+
+    function orderSort(rawData) {
+      // 1. 解析文本并提取商品列表
+      const lines = rawData.split('\n');
+      const items = [];
+      let currentItem = {};
+      
+      for (let line of lines) {
+        const parts = line.split('：');
+        if (parts.length < 2) continue;
+        const key = parts[0].trim();
+        const value = parts.slice(1).join('：').trim();    
+        if (key === '商品标题') {
+          if (Object.keys(currentItem).length > 0) {
+            items.push(currentItem);
+          }
+          currentItem = { 商品标题: value };
+        } else if (key === '商品数量') {
+          currentItem.商品数量 = Number(value);
+        } else if (key === '商品ID') {
+          currentItem.商品ID = value;
+        } else if (key === '商品规格sku') {
+          currentItem.商品规格sku = value;
+        }
+      }
+  
+      if (Object.keys(currentItem).length > 0) {
+        items.push(currentItem);
+      }
+
+      // 2. 先按“商品ID”排序，再按“商品规格sku”排序
+      items.sort((a, b) => {
+        // 优先比较商品ID
+        if (a.商品ID !== b.商品ID) {
+          return a.商品ID.localeCompare(b.商品ID, 'en', { numeric: true });
+        }
+        // 商品ID相同时，比较商品规格sku
+        return a.商品规格sku.localeCompare(b.商品规格sku);
+      });
+      
+      // 3. 转换为规范的 JSON 格式
+      const jsonResult = JSON.stringify(items, null, 4);
+      $("#orderOutput").val(jsonResult);
+    }
   
   });
 </script>

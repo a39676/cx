@@ -14,7 +14,7 @@
    
     <div class="row">
       <div class="col-md-6">
-        <textarea id="orderHtmlInput" cols="80" rows="10">
+        <textarea id="orderHtmlInput" cols="80" rows="10" placeholder="order edit">
         </textarea>
         <input type="number" name="" id="rate" value="2">
       </div>
@@ -32,7 +32,7 @@
 
     <div class="row">
       <div class="col-md-6">
-        <textarea id="menuHtmlInput" cols="80" rows="10">
+        <textarea id="menuHtmlInput" cols="80" rows="10" placeholder="menu element collect">
         </textarea>
       </div>
       <div class="col-md-6">

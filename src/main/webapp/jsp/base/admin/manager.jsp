@@ -266,7 +266,7 @@
     <ul class="main-menu visible-on-click" id="meituanHtmlEdit">
       <li style="background-color:yellow;">meituanHtmlEdit</li>
       <li>
-        <a href="/meituanHtmlTool/" target="_blank">meituanHtmlEdit</a>
+        <a href="/tmpTool/meituanHtmlTool/" target="_blank">meituanHtmlEdit</a>
       </li>
     </ul><!-- meituanHtmlEdit -->
 

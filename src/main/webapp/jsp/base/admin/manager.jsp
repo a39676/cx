@@ -263,6 +263,13 @@
       </li>
     </ul><!-- taobaoProductSource -->
 
+    <ul class="main-menu visible-on-click" id="meituanHtmlEdit">
+      <li style="background-color:yellow;">meituanHtmlEdit</li>
+      <li>
+        <a href="/meituanHtmlTool/" target="_blank">meituanHtmlEdit</a>
+      </li>
+    </ul><!-- meituanHtmlEdit -->
+
   </div>
 
   <script type="text/javascript">

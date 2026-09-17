@@ -45,4 +45,5 @@ public class ComplexToolServiceImpl extends ToolCommonService implements Complex
 		ModelAndView view = new ModelAndView("toolJSP/publicTool/compound_interest");
 		return view;
 	}
+
 }

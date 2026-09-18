@@ -59,6 +59,7 @@ public class MeituanHtmlEditServiceImpl extends CommonService implements Meituan
 //		System.out.println("修改后 HTML:\n" + doc.body().html());
 		r.setHtmlStr(doc.body().html());
 		r.setTotalPrice(total);
+		r.setPriceList(newPriceList);
 		r.setIsSuccess();
 
 		return r;

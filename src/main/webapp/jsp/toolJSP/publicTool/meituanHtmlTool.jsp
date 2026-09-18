@@ -13,13 +13,19 @@
   <div class="container-fluid">
    
     <div class="row">
-      <div class="col-md-6">
-        <textarea id="orderHtmlInput" cols="80" rows="10" placeholder="order edit">
+      <div class="col-md-3">
+        <textarea id="orderHtmlInput" cols="30" rows="10" placeholder="order edit">
         </textarea>
         <input type="number" name="" id="rate" value="2">
       </div>
-      <div class="col-md-6">
-        <textarea id="orderHtmlOutput" cols="80" rows="10">
+      <div class="col-md-8">
+        <textarea id="orderHtmlOutput" class="clickToCopy" cols="80" rows="10">
+        </textarea>
+      </div>
+      <div class="col-md-1">
+        <textarea id="orderPriceList" class="clickToCopy" cols="10" rows="3">
+        </textarea>
+        <textarea id="orderTotalPrice" class="clickToCopy" cols="10" rows="3">
         </textarea>
       </div>
     </div>
@@ -36,7 +42,7 @@
         </textarea>
       </div>
       <div class="col-md-6">
-        <textarea id="menuHtmlOutput" cols="80" rows="10">
+        <textarea id="menuHtmlOutput" class="clickToCopy" cols="80" rows="10">
         </textarea>
       </div>
     </div>
@@ -86,6 +92,8 @@
         },
         success:function(datas){
           $("#orderHtmlOutput").val(datas.htmlStr);
+          $("#orderPriceList").val(datas.priceList);
+          $("#orderTotalPrice").val(datas.totalPrice);
         },  
         error: function(datas) {  
           $("#orderHtmlOutput").val(datas);
@@ -165,22 +173,8 @@
   // 首次触发任务
   startPolling();
 
-  // 点击 #orderHtmlOutput 复制内容到剪贴板
-  $("#orderHtmlOutput").click(function() {
-    var content = $(this).val();
-    // 判断内容是否为空，且不是正在加载的提示
-    if (content && content.trim() !== "" && content !== "Loading") {
-      navigator.clipboard.writeText(content).then(function() {
-        // 复制成功提示（可根据需求自行修改或去掉）
-        console.log("内容已成功复制到剪贴板");
-      }).catch(function(err) {
-        console.error("复制到剪贴板失败: ", err);
-      });
-    }
-  });
-
-  // 点击 #menuHtmlOutput 复制内容到剪贴板
-  $("#menuHtmlOutput").click(function() {
+  // 点击 class = clickToCopy 复制内容到剪贴板
+  $(".clickToCopy").click(function() {
     var content = $(this).val();
     // 判断内容是否为空，且不是正在加载的提示
     if (content && content.trim() !== "" && content !== "Loading") {

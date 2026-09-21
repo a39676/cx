@@ -54,7 +54,7 @@ public class TaobaoOfferFromDownstreamBuyerRecordServiceImpl extends CommonServi
 	@Override
 	public ModelAndView offerRecordView() {
 		ModelAndView view = new ModelAndView("toolJSP/taobao/taobaoOfferRecord");
-		view.addObject("title", "TaobaoProduct");
+		view.addObject("title", "TaobaoOfferRecord");
 		TaobaoUpstreamSupplierExample supplierExample = new TaobaoUpstreamSupplierExample();
 		supplierExample.createCriteria().andIsDeleteEqualTo(false);
 		List<TaobaoUpstreamSupplier> supplierList = supplierMapper.selectByExample(supplierExample);

@@ -89,7 +89,7 @@
       var orderFromBuyerInput = $("#orderFromBuyerInput").val();
       var internationalDialingCodeSelectorVal = $("#internationalDialingCodeSelector").find(":selected").val();
       
-      var url = "/taobao/offer/add";
+      var url = "/taobao/offer/addFromDwonstreamBuyer";
 
       var jsonOutput = {
         offerRawText : orderFromBuyerInput,

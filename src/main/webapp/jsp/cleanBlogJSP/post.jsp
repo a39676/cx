@@ -212,7 +212,7 @@
       });
 
       function whenTaobaoLinkClicked(tid) {
-        var url = "/taobaoProductSource/whenClick";
+        var url = "/taobao/productSource/whenClick";
 
         var jsonOutput = {
           str : tid,

@@ -6,4 +6,6 @@ public interface GeographicalService {
 
 	GeographicalArea findGeographical(Long geographicalId);
 
+	GeographicalArea findGeographical(String name);
+
 }

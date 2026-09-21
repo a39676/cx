@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
@@ -24,6 +25,7 @@ import finance.cryptoCoin.pojo.dto.CryptoCoinForceOrderNoticeSettingDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinSymbolStreamDetailDTO;
 import toolPack.ioHandle.FileUtilCustom;
 
+@Scope("singleton")
 @Service
 public class CryptoCoinOptionService extends CommonService {
 

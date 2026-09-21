@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
@@ -16,6 +17,7 @@ import demo.common.service.CommonService;
 import demo.config.customComponent.OptionFilePathConfigurer;
 import toolPack.ioHandle.FileUtilCustom;
 
+@Scope("singleton")
 @Service
 public class TaobaoProductSourceOptionService extends CommonService {
 

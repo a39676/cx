@@ -4,8 +4,10 @@
   "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">  
   
 <generatorConfiguration>    
-	<!-- 数据库驱动-->    
-    <classPathEntry  location="D:/jar/sql/mysql-connector-java-8.0.17.jar"/>    
+	<!-- 数据库驱动(pom.xml中无声明对应驱动时,需在此显式声明) -->
+	<!-- 
+    <classPathEntry  location="${user.home}/.m2/repository/com/mysql/mysql-connector-j/9.4.0/mysql-connector-j-9.4.0.jar"/>
+     -->    
     <context id="DB2Tables"  targetRuntime="MyBatis3">
     
         <!-- 生成 mapper 中添加 limit 用法 -->
@@ -19,6 +21,7 @@
         </commentGenerator>
         
         <!--数据库链接URL，用户名、密码 -->
+        <!-- 留意更改端口,用户名,密码 -->
         <jdbcConnection  
         	driverClass="com.mysql.cj.jdbc.Driver" 
         	connectionURL="jdbc:mysql://localhost:3306/financeclear?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC" 
@@ -54,9 +57,9 @@
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="taobao_product_source">
-        	<property name="tableName" value="taobao_product_source"></property>
-        	<property name="domainObjectName" value="taobao_product_source"></property>
+        <table tableName="taobao_offer_to_supplier">
+        	<property name="tableName" value="taobao_offer_to_supplier"></property>
+        	<property name="domainObjectName" value="taobao_offer_to_supplier"></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

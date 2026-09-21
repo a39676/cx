@@ -52,7 +52,7 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 
 	@Override
 	public ModelAndView taobaoProductSource() {
-		ModelAndView view = new ModelAndView("toolJSP/taobaoProductSource/taobaoProductSource");
+		ModelAndView view = new ModelAndView("toolJSP/taobao/taobaoProductSource");
 		view.addObject("title", "TaobaoProduct");
 		TaobaoUpstreamSupplierExample example = new TaobaoUpstreamSupplierExample();
 		example.createCriteria().andIsDeleteEqualTo(false);
@@ -63,7 +63,7 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 
 	@Override
 	public ModelAndView priceCalculate() {
-		ModelAndView view = new ModelAndView("toolJSP/taobaoProductSource/priceCalculate");
+		ModelAndView view = new ModelAndView("toolJSP/taobao/priceCalculate");
 		return view;
 	}
 
@@ -169,7 +169,7 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 
 	@Override
 	public ModelAndView search(TaobaoProductSourceSearchDTO dto) {
-		ModelAndView v = new ModelAndView("toolJSP/taobaoProductSource/taobaoProductList");
+		ModelAndView v = new ModelAndView("toolJSP/taobao/taobaoProductList");
 		List<TaobaoProductSourceVO> voList = new ArrayList<>();
 		TaobaoProductSourceExample example = new TaobaoProductSourceExample();
 		Criteria criteria = example.createCriteria().andIsDeleteEqualTo(false);

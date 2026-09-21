@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.tool.taobao.mapper.TaobaoOfferFromDownstreamBuyerMapper">
+  <resultMap id="BaseResultMap" type="demo.tool.taobao.pojo.po.TaobaoOfferFromDownstreamBuyer">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="id_outsource" jdbcType="BIGINT" property="idOutsource" />
+    <result column="amount" jdbcType="DECIMAL" property="amount" />
+    <result column="address" jdbcType="CHAR" property="address" />
+    <result column="phone" jdbcType="CHAR" property="phone" />
+    <result column="nickname" jdbcType="CHAR" property="nickname" />
+    <result column="package_receiver_name" jdbcType="CHAR" property="packageReceiverName" />
+    <result column="region_id_1" jdbcType="INTEGER" property="regionId1" />
+    <result column="region_id_2" jdbcType="INTEGER" property="regionId2" />
+    <result column="after_transit_region_id" jdbcType="INTEGER" property="afterTransitRegionId" />
+    <result column="remark" jdbcType="CHAR" property="remark" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, id_outsource, amount, address, phone, nickname, package_receiver_name, region_id_1, 
+    region_id_2, after_transit_region_id, remark, create_time, is_delete
+  </sql>
+  <select id="selectByExample" parameterType="demo.tool.taobao.pojo.po.TaobaoOfferFromDownstreamBuyerExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from taobao_offer_from_downstream_buyer
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from taobao_offer_from_downstream_buyer
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from taobao_offer_from_downstream_buyer
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.tool.taobao.pojo.po.TaobaoOfferFromDownstreamBuyerExample">
+    delete from taobao_offer_from_downstream_buyer
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="demo.tool.taobao.pojo.po.TaobaoOfferFromDownstreamBuyer">
+    insert into taobao_offer_from_downstream_buyer (id, id_outsource, amount, 
+      address, phone, nickname, package_receiver_name, 
+      region_id_1, region_id_2, after_transit_region_id, 
+      remark, create_time, is_delete
+      )
+    values (#{id,jdbcType=BIGINT}, #{idOutsource,jdbcType=BIGINT}, #{amount,jdbcType=DECIMAL}, 
+      #{address,jdbcType=CHAR}, #{phone,jdbcType=CHAR}, #{nickname,jdbcType=CHAR}, #{packageReceiverName,jdbcType=CHAR}, 
+      #{regionId1,jdbcType=INTEGER}, #{regionId2,jdbcType=INTEGER}, #{afterTransitRegionId,jdbcType=INTEGER}, 
+      #{remark,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="demo.tool.taobao.pojo.po.TaobaoOfferFromDownstreamBuyer">
+    insert into taobao_offer_from_downstream_buyer
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="idOutsource != null">
+        id_outsource,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="nickname != null">
+        nickname,
+      </if>
+      <if test="packageReceiverName != null">
+        package_receiver_name,
+      </if>
+      <if test="regionId1 != null">
+        region_id_1,
+      </if>
+      <if test="regionId2 != null">
+        region_id_2,
+      </if>
+      <if test="afterTransitRegionId != null">
+        after_transit_region_id,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="idOutsource != null">
+        #{idOutsource,jdbcType=BIGINT},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=CHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=CHAR},
+      </if>
+      <if test="nickname != null">
+        #{nickname,jdbcType=CHAR},
+      </if>
+      <if test="packageReceiverName != null">
+        #{packageReceiverName,jdbcType=CHAR},
+      </if>
+      <if test="regionId1 != null">
+        #{regionId1,jdbcType=INTEGER},
+      </if>
+      <if test="regionId2 != null">
+        #{regionId2,jdbcType=INTEGER},
+      </if>
+      <if test="afterTransitRegionId != null">
+        #{afterTransitRegionId,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="demo.tool.taobao.pojo.po.TaobaoOfferFromDownstreamBuyerExample" resultType="java.lang.Long">
+    select count(*) from taobao_offer_from_downstream_buyer
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update taobao_offer_from_downstream_buyer
+    <set>
+      <if test="row.id != null">
+        id = #{row.id,jdbcType=BIGINT},
+      </if>
+      <if test="row.idOutsource != null">
+        id_outsource = #{row.idOutsource,jdbcType=BIGINT},
+      </if>
+      <if test="row.amount != null">
+        amount = #{row.amount,jdbcType=DECIMAL},
+      </if>
+      <if test="row.address != null">
+        address = #{row.address,jdbcType=CHAR},
+      </if>
+      <if test="row.phone != null">
+        phone = #{row.phone,jdbcType=CHAR},
+      </if>
+      <if test="row.nickname != null">
+        nickname = #{row.nickname,jdbcType=CHAR},
+      </if>
+      <if test="row.packageReceiverName != null">
+        package_receiver_name = #{row.packageReceiverName,jdbcType=CHAR},
+      </if>
+      <if test="row.regionId1 != null">
+        region_id_1 = #{row.regionId1,jdbcType=INTEGER},
+      </if>
+      <if test="row.regionId2 != null">
+        region_id_2 = #{row.regionId2,jdbcType=INTEGER},
+      </if>
+      <if test="row.afterTransitRegionId != null">
+        after_transit_region_id = #{row.afterTransitRegionId,jdbcType=INTEGER},
+      </if>
+      <if test="row.remark != null">
+        remark = #{row.remark,jdbcType=CHAR},
+      </if>
+      <if test="row.createTime != null">
+        create_time = #{row.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.isDelete != null">
+        is_delete = #{row.isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update taobao_offer_from_downstream_buyer
+    set id = #{row.id,jdbcType=BIGINT},
+      id_outsource = #{row.idOutsource,jdbcType=BIGINT},
+      amount = #{row.amount,jdbcType=DECIMAL},
+      address = #{row.address,jdbcType=CHAR},
+      phone = #{row.phone,jdbcType=CHAR},
+      nickname = #{row.nickname,jdbcType=CHAR},
+      package_receiver_name = #{row.packageReceiverName,jdbcType=CHAR},
+      region_id_1 = #{row.regionId1,jdbcType=INTEGER},
+      region_id_2 = #{row.regionId2,jdbcType=INTEGER},
+      after_transit_region_id = #{row.afterTransitRegionId,jdbcType=INTEGER},
+      remark = #{row.remark,jdbcType=CHAR},
+      create_time = #{row.createTime,jdbcType=TIMESTAMP},
+      is_delete = #{row.isDelete,jdbcType=BIT}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.tool.taobao.pojo.po.TaobaoOfferFromDownstreamBuyer">
+    update taobao_offer_from_downstream_buyer
+    <set>
+      <if test="idOutsource != null">
+        id_outsource = #{idOutsource,jdbcType=BIGINT},
+      </if>
+      <if test="amount != null">
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=CHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=CHAR},
+      </if>
+      <if test="nickname != null">
+        nickname = #{nickname,jdbcType=CHAR},
+      </if>
+      <if test="packageReceiverName != null">
+        package_receiver_name = #{packageReceiverName,jdbcType=CHAR},
+      </if>
+      <if test="regionId1 != null">
+        region_id_1 = #{regionId1,jdbcType=INTEGER},
+      </if>
+      <if test="regionId2 != null">
+        region_id_2 = #{regionId2,jdbcType=INTEGER},
+      </if>
+      <if test="afterTransitRegionId != null">
+        after_transit_region_id = #{afterTransitRegionId,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="demo.tool.taobao.pojo.po.TaobaoOfferFromDownstreamBuyer">
+    update taobao_offer_from_downstream_buyer
+    set id_outsource = #{idOutsource,jdbcType=BIGINT},
+      amount = #{amount,jdbcType=DECIMAL},
+      address = #{address,jdbcType=CHAR},
+      phone = #{phone,jdbcType=CHAR},
+      nickname = #{nickname,jdbcType=CHAR},
+      package_receiver_name = #{packageReceiverName,jdbcType=CHAR},
+      region_id_1 = #{regionId1,jdbcType=INTEGER},
+      region_id_2 = #{regionId2,jdbcType=INTEGER},
+      after_transit_region_id = #{afterTransitRegionId,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=CHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      is_delete = #{isDelete,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="demo.tool.taobao.pojo.po.TaobaoOfferFromDownstreamBuyerExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from taobao_offer_from_downstream_buyer
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

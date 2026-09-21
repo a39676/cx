@@ -410,7 +410,7 @@
     ];
 
     function getHotSaleList(){ 
-        fetch('/taobaoProductSource/getHotSaleList', {
+        fetch('/taobao/productSource/getHotSaleList', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json; charset=UTF-8'

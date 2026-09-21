@@ -186,7 +186,7 @@
         available = false;
       }
 
-      var url = "/taobaoProductSource/update";
+      var url = "/taobao/productSource/update";
 
       var jsonOutput = {
         idStr : productId,
@@ -221,7 +221,7 @@
         includePostage = false;
       }
 
-      var url = "/taobaoProductSource/update";
+      var url = "/taobao/productSource/update";
 
       var jsonOutput = {
         idStr : productId,

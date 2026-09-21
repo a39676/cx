@@ -259,7 +259,10 @@
     <ul class="main-menu visible-on-click" id="taobaoProductSource">
       <li style="background-color:yellow;">taobaoProductSource</li>
       <li>
-        <a href="/taobaoProductSource/" target="_blank">taobaoProductSource</a>
+        <a href="/taobao/productSource/" target="_blank">taobaoProductSource</a>
+      </li>
+      <li>
+        <a href="/taobao/offer/" target="_blank">taobaoOfferRecord</a>
       </li>
     </ul><!-- taobaoProductSource -->
 

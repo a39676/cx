@@ -33,6 +33,7 @@ import demo.tool.taobao.pojo.po.TaobaoOfferFromDownstreamBuyer;
 import demo.tool.taobao.pojo.po.TaobaoOfferToSupplier;
 import demo.tool.taobao.pojo.po.TaobaoUpstreamSupplier;
 import demo.tool.taobao.pojo.po.TaobaoUpstreamSupplierExample;
+import demo.tool.taobao.pojo.result.TaobaoAddOfferFromDownstreamBuyerResult;
 import demo.tool.taobao.service.TaobaoOfferFromDownstreamBuyerRecordService;
 import net.sf.json.JSONObject;
 
@@ -68,8 +69,9 @@ public class TaobaoOfferFromDownstreamBuyerRecordServiceImpl extends CommonServi
 	}
 
 	@Override
-	public CommonResult addNewOfferFromDownstreamBuyer(TaobaoAddOfferFromDownstreamBuyerDTO dto) {
-		CommonResult r = new CommonResult();
+	public TaobaoAddOfferFromDownstreamBuyerResult addNewOfferFromDownstreamBuyer(
+			TaobaoAddOfferFromDownstreamBuyerDTO dto) {
+		TaobaoAddOfferFromDownstreamBuyerResult r = new TaobaoAddOfferFromDownstreamBuyerResult();
 		JSONObject json = downstreamBuyerOfferStrToJson(dto.getOfferRawText());
 		if (json == null || json.keySet().size() < 1) {
 			r.setMessage("Offer raw text format error");
@@ -135,6 +137,8 @@ public class TaobaoOfferFromDownstreamBuyerRecordServiceImpl extends CommonServi
 		po.setRemark(bo.getRemark());
 		offerFromDownstreamBuyerMapper.insertSelective(po);
 
+		r.setBuyerOrderID(bo.getIdOutsource());
+		r.setReceiverFullInfo(bo.getPackageReceiverName() + ", " + bo.getPhone() + ", " + bo.getAddressInfo());
 		r.setIsSuccess();
 		return r;
 	}

@@ -5,12 +5,13 @@ import org.springframework.web.servlet.ModelAndView;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.tool.taobao.pojo.dto.TaobaoAddOfferFromDownstreamBuyerDTO;
 import demo.tool.taobao.pojo.dto.TaobaoAddOfferToSupplierDTO;
+import demo.tool.taobao.pojo.result.TaobaoAddOfferFromDownstreamBuyerResult;
 
 public interface TaobaoOfferFromDownstreamBuyerRecordService {
 
 	ModelAndView offerRecordView();
 
-	CommonResult addNewOfferFromDownstreamBuyer(TaobaoAddOfferFromDownstreamBuyerDTO dto);
+	TaobaoAddOfferFromDownstreamBuyerResult addNewOfferFromDownstreamBuyer(TaobaoAddOfferFromDownstreamBuyerDTO dto);
 
 	CommonResult addNewOfferToSupplier(TaobaoAddOfferToSupplierDTO dto);
 

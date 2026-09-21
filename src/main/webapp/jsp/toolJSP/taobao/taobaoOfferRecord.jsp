@@ -42,6 +42,7 @@
             </option>
           </c:forEach>
         </select>
+        <input type="text" name="" class="clickToCopy" id="receiverFullInfo">
         <details>
           <summary style="cursor: pointer; color: #0066cc; user-select: none;">
             点击展开/折叠详细内容
@@ -94,7 +95,6 @@
       var jsonOutput = {
         offerRawText : orderFromBuyerInput,
         internationalNum : internationalDialingCodeSelectorVal,
-        <%-- remark : remark, --%>
       };
 
       $.ajax({  
@@ -111,6 +111,8 @@
         },
         success:function(datas){
           $("#msg").html(datas.message);
+          $("#sourceBuyerOrderId").val(datas.buyerOrderID);
+          $("#receiverFullInfo").val(datas.receiverFullInfo)
         },  
         error: function(datas) {  
           $("#msg").html(datas.message);
@@ -209,6 +211,20 @@
       const jsonResult = JSON.stringify(items, null, 4);
       $("#orderSortOutput").val(jsonResult);
     }
+
+    // 点击 class = clickToCopy 复制内容到剪贴板
+    $(".clickToCopy").click(function() {
+      var content = $(this).val();
+      // 判断内容是否为空，且不是正在加载的提示
+      if (content && content.trim() !== "" && content !== "Loading") {
+        navigator.clipboard.writeText(content).then(function() {
+          // 复制成功提示（可根据需求自行修改或去掉）
+          console.log("内容已成功复制到剪贴板");
+        }).catch(function(err) {
+          console.error("复制到剪贴板失败: ", err);
+        });
+      }
+    });
   
   });
 </script>

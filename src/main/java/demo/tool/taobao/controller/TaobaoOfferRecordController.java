@@ -29,13 +29,13 @@ public class TaobaoOfferRecordController {
 
 	@PostMapping(value = TaobaoUrlConstant.OFFER_ADD_FROM_DOWNSTREAM_BUYER)
 	@ResponseBody
-	public CommonResult priceCalculate(@RequestBody TaobaoAddOfferFromDownstreamBuyerDTO dto) {
+	public CommonResult addNewOfferFromDownstreamBuyer(@RequestBody TaobaoAddOfferFromDownstreamBuyerDTO dto) {
 		return service.addNewOfferFromDownstreamBuyer(dto);
 	}
 
 	@PostMapping(value = TaobaoUrlConstant.OFFER_ADD_TO_SUPPLIER)
 	@ResponseBody
-	public CommonResult priceCalculate(@RequestBody TaobaoAddOfferToSupplierDTO dto) {
+	public CommonResult addNewOfferToSupplier(@RequestBody TaobaoAddOfferToSupplierDTO dto) {
 		return service.addNewOfferToSupplier(dto);
 	}
 }

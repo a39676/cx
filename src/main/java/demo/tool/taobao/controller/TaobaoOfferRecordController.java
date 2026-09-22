@@ -13,14 +13,16 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.tool.taobao.pojo.constant.TaobaoUrlConstant;
 import demo.tool.taobao.pojo.dto.TaobaoAddOfferFromDownstreamBuyerDTO;
 import demo.tool.taobao.pojo.dto.TaobaoAddOfferToSupplierDTO;
-import demo.tool.taobao.service.TaobaoOfferFromDownstreamBuyerRecordService;
+import demo.tool.taobao.pojo.dto.TaobaoOfferStatisticsQueryDTO;
+import demo.tool.taobao.pojo.result.TaobaoOfferStatisticsResult;
+import demo.tool.taobao.service.TaobaoOfferRecordService;
 
 @Controller
 @RequestMapping(value = TaobaoUrlConstant.ROOT + TaobaoUrlConstant.OFFER)
 public class TaobaoOfferRecordController {
 
 	@Autowired
-	private TaobaoOfferFromDownstreamBuyerRecordService service;
+	private TaobaoOfferRecordService service;
 
 	@GetMapping(value = "/")
 	public ModelAndView taobaoProductSource() {
@@ -37,5 +39,11 @@ public class TaobaoOfferRecordController {
 	@ResponseBody
 	public CommonResult addNewOfferToSupplier(@RequestBody TaobaoAddOfferToSupplierDTO dto) {
 		return service.addNewOfferToSupplier(dto);
+	}
+
+	@PostMapping(value = TaobaoUrlConstant.OFFER_STATISTICS)
+	@ResponseBody
+	public TaobaoOfferStatisticsResult taobaoOfferStatistics(@RequestBody TaobaoOfferStatisticsQueryDTO queryDTO) {
+		return service.taobaoOfferStatistics(queryDTO);
 	}
 }

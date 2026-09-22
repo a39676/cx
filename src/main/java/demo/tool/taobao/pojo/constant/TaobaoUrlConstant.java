@@ -15,4 +15,5 @@ public class TaobaoUrlConstant {
 	public static final String OFFER = "/offer";
 	public static final String OFFER_ADD_FROM_DOWNSTREAM_BUYER = "/addFromDwonstreamBuyer";
 	public static final String OFFER_ADD_TO_SUPPLIER = "/addToSupplier";
+	public static final String OFFER_STATISTICS = "/statistics";
 }

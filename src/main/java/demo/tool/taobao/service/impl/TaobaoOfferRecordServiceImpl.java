@@ -3,9 +3,12 @@ package demo.tool.taobao.service.impl;
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,17 +32,24 @@ import demo.tool.taobao.mapper.TaobaoUpstreamSupplierMapper;
 import demo.tool.taobao.pojo.bo.TaobaoAddOfferFromDownstreamBuyerBO;
 import demo.tool.taobao.pojo.dto.TaobaoAddOfferFromDownstreamBuyerDTO;
 import demo.tool.taobao.pojo.dto.TaobaoAddOfferToSupplierDTO;
+import demo.tool.taobao.pojo.dto.TaobaoOfferStatisticsQueryDTO;
 import demo.tool.taobao.pojo.po.TaobaoOfferFromDownstreamBuyer;
+import demo.tool.taobao.pojo.po.TaobaoOfferFromDownstreamBuyerExample;
+import demo.tool.taobao.pojo.po.TaobaoOfferFromDownstreamBuyerExample.Criteria;
 import demo.tool.taobao.pojo.po.TaobaoOfferToSupplier;
+import demo.tool.taobao.pojo.po.TaobaoOfferToSupplierExample;
 import demo.tool.taobao.pojo.po.TaobaoUpstreamSupplier;
 import demo.tool.taobao.pojo.po.TaobaoUpstreamSupplierExample;
 import demo.tool.taobao.pojo.result.TaobaoAddOfferFromDownstreamBuyerResult;
-import demo.tool.taobao.service.TaobaoOfferFromDownstreamBuyerRecordService;
+import demo.tool.taobao.pojo.result.TaobaoOfferStatisticsResult;
+import demo.tool.taobao.pojo.vo.TaobaoOfferFromDownstreamBuyerVO;
+import demo.tool.taobao.pojo.vo.TaobaoOfferStatisticsRowVO;
+import demo.tool.taobao.pojo.vo.TaobaoOfferToSupplierVO;
+import demo.tool.taobao.service.TaobaoOfferRecordService;
 import net.sf.json.JSONObject;
 
 @Service
-public class TaobaoOfferFromDownstreamBuyerRecordServiceImpl extends CommonService
-		implements TaobaoOfferFromDownstreamBuyerRecordService {
+public class TaobaoOfferRecordServiceImpl extends CommonService implements TaobaoOfferRecordService {
 
 	@Autowired
 	private TaobaoOfferFromDownstreamBuyerMapper offerFromDownstreamBuyerMapper;
@@ -239,5 +249,138 @@ public class TaobaoOfferFromDownstreamBuyerRecordServiceImpl extends CommonServi
 
 		r.setIsSuccess();
 		return r;
+	}
+
+	@Override
+	public TaobaoOfferStatisticsResult taobaoOfferStatistics(TaobaoOfferStatisticsQueryDTO dto) {
+		TaobaoOfferStatisticsResult r = new TaobaoOfferStatisticsResult();
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime startTime = null;
+		LocalDateTime endTime = null;
+		try {
+			startTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getStartTimeStr());
+		} catch (Exception e) {
+		}
+		if (startTime == null) {
+			startTime = now.minusMonths(1L).withHour(0).withMinute(0).withSecond(0).withNano(0);
+		}
+		try {
+			endTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getEndTimeStr());
+			endTime = endTime.plusDays(1L).withHour(0).withMinute(0).withSecond(0).withNano(0);
+		} catch (Exception e) {
+			endTime = now.plusDays(1L).withHour(0).withMinute(0).withSecond(0).withNano(0);
+		}
+		TaobaoOfferFromDownstreamBuyerExample buyerOrderExample = new TaobaoOfferFromDownstreamBuyerExample();
+		Criteria criteria = buyerOrderExample.createCriteria();
+		criteria.andCreateTimeGreaterThanOrEqualTo(startTime).andCreateTimeLessThan(endTime);
+		if (StringUtils.isNotBlank(dto.getBuyerOrderId())) {
+			try {
+				Long buyerOrderId = Long.parseLong(dto.getBuyerOrderId());
+				criteria.andIdOutsourceEqualTo(buyerOrderId);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		List<TaobaoOfferFromDownstreamBuyer> buyerOrderList = offerFromDownstreamBuyerMapper
+				.selectByExample(buyerOrderExample);
+		if (buyerOrderList == null || buyerOrderList.size() < 1) {
+			r.setMessage("Can NOT find any data");
+			return r;
+		}
+
+		List<Long> buyerOrderIdList = new ArrayList<>();
+		Map<Long, TaobaoOfferFromDownstreamBuyer> buyerOrderMap = new HashMap<>();
+		for (int i = 0; i < buyerOrderList.size(); i++) {
+			buyerOrderIdList.add(buyerOrderList.get(i).getIdOutsource());
+			buyerOrderMap.put(buyerOrderList.get(i).getIdOutsource(), buyerOrderList.get(i));
+		}
+
+		TaobaoOfferToSupplierExample supplierOrderExample = new TaobaoOfferToSupplierExample();
+		supplierOrderExample.createCriteria().andDownstreamBuyerOfferIdIn(buyerOrderIdList);
+		List<TaobaoOfferToSupplier> supplierOrderList = offerToSupplierMapper.selectByExample(supplierOrderExample);
+		Map<Long, List<TaobaoOfferToSupplier>> supplierOrderMap = new HashMap<>();
+		for (int i = 0; i < supplierOrderList.size(); i++) {
+			TaobaoOfferToSupplier supplierOrder = supplierOrderList.get(i);
+			if (!supplierOrderMap.containsKey(supplierOrder.getDownstreamBuyerOfferId())) {
+				List<TaobaoOfferToSupplier> orderList = new ArrayList<>();
+				orderList.add(supplierOrder);
+				supplierOrderMap.put(supplierOrder.getDownstreamBuyerOfferId(), orderList);
+			} else {
+				supplierOrderMap.get(supplierOrder.getDownstreamBuyerOfferId()).add(supplierOrder);
+			}
+		}
+
+		List<TaobaoOfferStatisticsRowVO> statisticsList = new ArrayList<>();
+		BigDecimal totalBuyerOrderAmount = BigDecimal.ZERO;
+		BigDecimal totalSupplierOrderAmount = BigDecimal.ZERO;
+		BigDecimal totalProfit = BigDecimal.ZERO;
+		for (int i = 0; i < buyerOrderList.size(); i++) {
+			TaobaoOfferFromDownstreamBuyer buyerOrder = buyerOrderList.get(i);
+			TaobaoOfferStatisticsRowVO rowVO = new TaobaoOfferStatisticsRowVO();
+			TaobaoOfferFromDownstreamBuyerVO buyerOrderVO = buyerOrderPoToVo(buyerOrder);
+			rowVO.setBuyerOrderVO(buyerOrderVO);
+			List<TaobaoOfferToSupplierVO> supplierOrderVoList = new ArrayList<>();
+			List<TaobaoOfferToSupplier> subSupplierOrderList = supplierOrderMap.get(buyerOrder.getIdOutsource());
+			BigDecimal supplierOrderAmountTotal = BigDecimal.ZERO;
+			if (subSupplierOrderList != null && subSupplierOrderList.size() > 0) {
+				for (int j = 0; j < subSupplierOrderList.size(); j++) {
+					TaobaoOfferToSupplier supplierOrder = subSupplierOrderList.get(j);
+					supplierOrderVoList.add(supplierOrderPoToVo(supplierOrder));
+					supplierOrderAmountTotal = supplierOrderAmountTotal.add(supplierOrder.getAmount());
+				}
+				rowVO.setSupplierOrderVoList(supplierOrderVoList);
+			}
+			rowVO.setProfit(buyerOrder.getAmount().subtract(supplierOrderAmountTotal));
+			statisticsList.add(rowVO);
+
+			totalBuyerOrderAmount = totalBuyerOrderAmount.add(buyerOrder.getAmount());
+			totalSupplierOrderAmount = totalSupplierOrderAmount.add(supplierOrderAmountTotal);
+		}
+		totalProfit = totalBuyerOrderAmount.subtract(totalSupplierOrderAmount);
+		r.setTotalBuyerOrderAmount(totalBuyerOrderAmount);
+		r.setTotalSupplierOrderAmount(totalSupplierOrderAmount);
+		r.setTotalProfit(totalProfit);
+		r.setStatisticsList(statisticsList);
+		r.setIsSuccess();
+		return r;
+	}
+
+	private TaobaoOfferFromDownstreamBuyerVO buyerOrderPoToVo(TaobaoOfferFromDownstreamBuyer po) {
+		TaobaoOfferFromDownstreamBuyerVO vo = new TaobaoOfferFromDownstreamBuyerVO();
+		vo.setAddress(po.getAddress());
+		if (po.getAfterTransitRegionId() != null) {
+			InternationalDialingCodeExample internationalDialingCodeExample = new InternationalDialingCodeExample();
+			internationalDialingCodeExample.createCriteria().andCodeEqualTo(po.getAfterTransitRegionId());
+			List<InternationalDialingCode> internationalDialingCodeList = internationalDialingCodeMapper
+					.selectByExample(internationalDialingCodeExample);
+
+			vo.setAfterTransitRegionID(po.getAfterTransitRegionId());
+			if (internationalDialingCodeList != null && internationalDialingCodeList.size() > 0) {
+				vo.setAfterTransitRegionName(internationalDialingCodeList.get(0).getAreaName());
+			}
+		}
+		vo.setAmount(po.getAmount());
+		vo.setCreateTimeStr(localDateTimeHandler.dateToStr(po.getCreateTime()));
+		vo.setNickname(po.getNickname());
+		vo.setOrderID(String.valueOf(po.getIdOutsource()));
+		vo.setPackageReceiverName(po.getPackageReceiverName());
+		vo.setPhone(po.getPhone());
+		vo.setRemark(po.getRemark());
+		return vo;
+	}
+
+	private TaobaoOfferToSupplierVO supplierOrderPoToVo(TaobaoOfferToSupplier po) {
+		TaobaoOfferToSupplierVO vo = new TaobaoOfferToSupplierVO();
+		vo.setAmount(po.getAmount());
+		vo.setOrderID(String.valueOf(po.getSupplierOfferId()));
+		vo.setRemark(po.getRemark());
+		vo.setSupplierID(String.valueOf(po.getMerchantId()));
+		TaobaoUpstreamSupplier supplier = supplierMapper.selectByPrimaryKey(po.getMerchantId());
+		if (supplier != null) {
+			vo.setSupplierName(supplier.getCommodityName());
+		} else {
+			vo.setSupplierName("Unname/NotExists");
+		}
+		return vo;
 	}
 }

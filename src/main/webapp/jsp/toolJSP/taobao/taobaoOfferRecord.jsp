@@ -70,6 +70,41 @@
         <button id="supplierOrderInput">新增供应订单</button>
       </div>
     </div>
+
+  <hr>
+  <div class="row">
+    <div class="col-md-12">
+      <h3>订单利润统计查询</h3>
+      <div class="form-inline">
+        <input type="text" id="queryBuyerOrderId" class="form-control" placeholder="输入 buyerOrderId">
+        <input type="datetime-local" id="queryStartTime" class="form-control" placeholder="开始时间">
+        <input type="datetime-local" id="queryEndTime" class="form-control" placeholder="结束时间">
+        <button id="queryStatisticsBtn" class="btn btn-primary">查询统计</button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="row" style="margin-top: 20px;">
+    <div class="col-md-12">
+      <table class="table table-bordered" id="statisticsTable">
+        <thead>
+          <tr>
+            <th>买家订单</th>
+            <th>供应商订单</th>
+            <th>利润</th>
+          </tr>
+        </thead>
+        <tbody id="statisticsTableTbody">
+          <tr>
+            <td rowspan="">
+              
+            </td>
+          </tr>
+          <!-- 动态渲染数据 -->
+        </tbody>
+      </table>
+    </div>
+  </div>
     
   </div>
 </body>
@@ -80,6 +115,10 @@
 <script type="text/javascript">
 
   $(document).ready(function() {
+
+    $('#merchantID').select2({
+      allowClear: true
+    });
 
     $("#buyerOrderInput").click( function() {
       $("#msg").html("Loading");
@@ -162,6 +201,122 @@
         }  
       });  
     };
+
+    $("#queryStatisticsBtn").click(function () {
+      queryOfferStatistics();
+    });
+
+    function queryOfferStatistics(){
+      $("#msg").html("Loading statistics...");
+
+      var url = "/taobao/offer/statistics";
+
+      var jsonOutput = {
+        buyerOrderId: $("#queryBuyerOrderId").val(),
+        startTimeStr: $("#queryStartTime").val(),
+        endTimeStr: $("#queryEndTime").val()
+      };
+
+      $.ajax({  
+        type : "POST",  
+        async : true,
+        url : url, 
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          $("#msg").html(datas.message);
+          var tbody = $("#statisticsTableTbody");
+          tbody.empty();
+
+          var rowList = datas.statisticsList;
+
+          var htmlStr = "";
+          for (let i = 0; i < rowList.length; i++) {
+            htmlStr += "<tr>";
+            var supplierOrderListSize = 1;
+            var row = rowList[i];
+            if(row.supplierOrderVoList != null){
+              supplierOrderListSize = row.supplierOrderVoList.length;
+            }
+            var buyerOrder = row.buyerOrderVO;
+            htmlStr += "<td>";
+            htmlStr += buyerOrder.orderID + ", amount: " + buyerOrder.amount + "<br>";
+            htmlStr += buyerOrder.nickname + "<br>" 
+            htmlStr += buyerOrder.packageReceiverName + " " + buyerOrder.phone;
+            htmlStr += buyerOrder.address + "<br>";
+            if(buyerOrder.afterTransitRegionID != null){
+              htmlStr += buyerOrder.afterTransitRegionID + " " + buyerOrder.afterTransitRegionName + "<br>";
+            }
+            htmlStr += buyerOrder.createTimeStr + "<br>";
+            if(buyerOrder.remark != null) {
+              htmlStr += buyerOrder.remark + "<br>";
+            }
+            htmlStr += "</td>";
+            if(row.supplierOrderVoList != null){
+              var supplierOrderVoList = row.supplierOrderVoList;
+              htmlStr += "<td>";
+              htmlStr += "<table><thead>";
+              htmlStr += "<tr>";
+              htmlStr += "<th>订单ID</th>";
+              htmlStr += "<th>金额</th>";
+              htmlStr += "<th>供应商</th>";
+              htmlStr += "<th>备注</th>";
+              htmlStr += "</tr>";
+              htmlStr += "</thead><tbody>";
+              for (let j = 0; j < supplierOrderVoList.length; j++) {
+                var supplierOrder = supplierOrderVoList[j];
+                htmlStr += "<tr>";
+                htmlStr += "<td>";
+                htmlStr += supplierOrder.orderID;
+                htmlStr += "</td>";
+                htmlStr += "<td>";
+                htmlStr += supplierOrder.amount;
+                htmlStr += "</td>";
+                htmlStr += "<td>";
+                htmlStr += supplierOrder.supplierName;
+                htmlStr += "</td>";
+                htmlStr += "<td>";
+                htmlStr += supplierOrder.remark;
+                htmlStr += "</td>";
+                htmlStr += "</tr>";
+              }
+              htmlStr += "</tbody></table>"
+              htmlStr += "</td>";
+            } else {
+              htmlStr += "<td>";
+              htmlStr += "No data";
+              htmlStr += "</td>";
+            }
+            htmlStr += "<td>";
+            htmlStr += row.profit;
+            htmlStr += "</td>";
+            htmlStr += "</tr>";
+          }
+          htmlStr += "<tr>";
+          htmlStr += "<td>";
+          htmlStr += datas.totalBuyerOrderAmount;
+          htmlStr += "</td>";
+          htmlStr += "<td>";
+          htmlStr += datas.totalSupplierOrderAmount;
+          htmlStr += "</td>";
+          htmlStr += "<td>";
+          htmlStr += datas.totalProfit;
+          htmlStr += "</td>";
+          htmlStr += "</tr>";
+          tbody.html(htmlStr);
+        },  
+        error: function(datas) {  
+          $("#msg").html(datas.message);
+        }  
+      });  
+    };
+
 
     $("#orderSort").click(function () {
       var orderRawData = $("#orderSortInput").val();

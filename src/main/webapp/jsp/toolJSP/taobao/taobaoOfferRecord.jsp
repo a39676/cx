@@ -438,5 +438,21 @@
   // 首次触发任务
   startPolling();
 </script>
+<script>
+  // 1. 获取当前日期
+  const now = new Date();
+  
+  // 2. 将月份减 1
+  now.setMonth(now.getMonth() - 1);
+  
+  // 3. 格式化为 YYYY-MM-DD 格式
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const formattedDate = `${year}-${month}-${day}`;
+  
+  // 4. 赋值给输入框
+  document.getElementById('queryStartTime').value = formattedDate;
+</script>
 </footer>
 </html>

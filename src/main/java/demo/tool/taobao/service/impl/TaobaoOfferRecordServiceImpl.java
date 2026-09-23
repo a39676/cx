@@ -132,6 +132,16 @@ public class TaobaoOfferRecordServiceImpl extends CommonService implements Taoba
 		String cityStr = addressInfo.substring(0, spaceIndex);
 		addressInfo = addressInfo.substring(spaceIndex + 1);
 		GeographicalArea city = geographicalService.findGeographical(cityStr);
+		if (city == null) {
+			cityStr = addressInfo.substring(0, spaceIndex);
+			addressInfo = addressInfo.substring(spaceIndex + 1);
+			city = geographicalService.findGeographical(cityStr);
+		}
+		if (city == null) {
+			city = new GeographicalArea();
+			city.setAreaName("Unknow");
+			city.setId(-1L);
+		}
 
 		TaobaoOfferFromDownstreamBuyer po = new TaobaoOfferFromDownstreamBuyer();
 		po.setId(snowFlake.getNextId());

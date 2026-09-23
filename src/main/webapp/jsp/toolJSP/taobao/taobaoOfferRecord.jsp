@@ -251,11 +251,12 @@
             htmlStr += buyerOrder.packageReceiverName + " " + buyerOrder.phone;
             htmlStr += buyerOrder.address + "<br>";
             if(buyerOrder.afterTransitRegionID != null){
-              htmlStr += buyerOrder.afterTransitRegionID + " " + buyerOrder.afterTransitRegionName + "<br>";
+              htmlStr += '<span style="background-color: #cfe2ff; border-radius: 4px; padding: 2px 6px; display: inline-block;">' + buyerOrder.afterTransitRegionID + " " + buyerOrder.afterTransitRegionName + "</span><br>";
             }
             htmlStr += buyerOrder.createTimeStr + "<br>";
+            // buyerOrder.remark 赋圆角 绿色背景
             if(buyerOrder.remark != null) {
-              htmlStr += buyerOrder.remark + "<br>";
+              htmlStr += '<span style="background-color: #d1e7dd; border-radius: 4px; padding: 2px 6px; display:inline-block;">' + buyerOrder.remark + '</span><br>';
             }
             htmlStr += "</td>";
             if(row.supplierOrderVoList != null){
@@ -282,7 +283,10 @@
                 htmlStr += supplierOrder.supplierName;
                 htmlStr += "</td>";
                 htmlStr += "<td>";
-                htmlStr += supplierOrder.remark;
+                // supplierOrder.remark 赋圆角 绿色背景
+                if(supplierOrder.remark != null) {
+                  htmlStr += '<span style="background-color: #d1e7dd; border-radius: 4px; padding: 2px 6px; display: inline-block;">' + supplierOrder.remark + '</span>';
+                }
                 htmlStr += "</td>";
                 htmlStr += "</tr>";
               }
@@ -294,7 +298,11 @@
               htmlStr += "</td>";
             }
             htmlStr += "<td>";
-            htmlStr += row.profit;
+            if (row.profit < 0) {
+              htmlStr += '<span style="color: red; font-weight: bold;">' + row.profit + '</span>';
+            } else {
+              htmlStr += row.profit;
+            }
             htmlStr += "</td>";
             htmlStr += "</tr>";
           }

@@ -69,6 +69,7 @@
           <option value="-99999">未指定</option>
         </select>
         <button id="supplierOrderInput">新增供应订单</button>
+        <button id="createRandomSupplierOrderID">生成随机供应订单ID</button>
       </div>
     </div>
 
@@ -78,7 +79,7 @@
       <h3>订单利润统计查询</h3>
       <div class="form-inline">
         <input type="text" id="queryBuyerOrderId" class="form-control" placeholder="输入 buyerOrderId">
-        <input type="date" id="queryStartTime" class="form-control">
+        <input type="date" id="queryStartTime" class="form-control" value="${startDate}">
         <input type="date" id="queryEndTime" class="form-control">
         <button id="queryStatisticsBtn" class="btn btn-primary">查询统计</button>
       </div>
@@ -208,6 +209,38 @@
         },
         success:function(datas){
           $("#msg").html(datas.message);
+        },  
+        error: function(datas) {  
+          $("#msg").html(datas.message);
+        }  
+      });  
+    };
+
+    $("#createRandomSupplierOrderID").click( function() {
+      $("#msg").html("Loading");
+      createRandomSupplierOrderID();
+    });
+
+    function createRandomSupplierOrderID(){
+      var url = "/publicTool/randomID";
+
+      <%-- var jsonOutput = {}; --%>
+
+      $.ajax({
+        type : "GET",  
+        async : true,
+        url : url, 
+        <%-- data: JSON.stringify(jsonOutput), --%>
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          $("#msg").html(datas.message);
+          $("#supplierOrderId").val(datas.message);
         },  
         error: function(datas) {  
           $("#msg").html(datas.message);
@@ -402,7 +435,7 @@
         });
       }
     });
-  
+
   });
 </script>
 <script type="text/javascript">
@@ -439,20 +472,7 @@
   startPolling();
 </script>
 <script>
-  // 1. 获取当前日期
-  const now = new Date();
   
-  // 2. 将月份减 1
-  now.setMonth(now.getMonth() - 1);
-  
-  // 3. 格式化为 YYYY-MM-DD 格式
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  const formattedDate = `${year}-${month}-${day}`;
-  
-  // 4. 赋值给输入框
-  document.getElementById('queryStartTime').value = formattedDate;
 </script>
 </footer>
 </html>

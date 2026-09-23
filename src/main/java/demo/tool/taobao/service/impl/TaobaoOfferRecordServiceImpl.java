@@ -77,6 +77,7 @@ public class TaobaoOfferRecordServiceImpl extends CommonService implements Taoba
 		List<InternationalDialingCode> internationalDialingCodeList = internationalDialingCodeMapper
 				.selectByExample(internationalDialingCodeExample);
 		view.addObject("internationalDialingCodeList", internationalDialingCodeList);
+		view.addObject("startDate", localDateTimeHandler.dateToStr(LocalDateTime.now().minusMonths(1L), "yyyy-MM-dd"));
 		return view;
 	}
 

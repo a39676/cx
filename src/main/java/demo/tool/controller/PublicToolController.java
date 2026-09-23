@@ -14,6 +14,7 @@ import autoTest.testEvent.scheduleClawing.searchingDemo.pojo.dto.UnderWayMonthTe
 import autoTest.testEvent.scheduleClawing.searchingDemo.pojo.dto.UnderWayTrainProjectDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.common.controller.CommonController;
+import demo.config.customComponent.SnowFlake;
 import demo.tool.bbtOrder.hsbc.pojo.vo.RandomIdDataVO;
 import demo.tool.bbtOrder.hsbc.service.HsbcService;
 import demo.tool.bbtOrder.underWayMonthTest.service.UnderWayService;
@@ -23,52 +24,64 @@ import demo.tool.bbtOrder.underWayMonthTest.service.UnderWayService;
 public class PublicToolController extends CommonController {
 
 	@Autowired
+	private SnowFlake snowFlake;
+
+	@Autowired
 	private HsbcService hsbcService;
-	
+
 	@Autowired
 	private UnderWayService underWayService;
-	
+
 	@GetMapping(value = "/hsbc/hsbcWechatPreregist_")
 	public ModelAndView hsbcWechatPreregistView() {
 		return hsbcService.hsbcWechatPreregistView();
 	}
-	
+
 	@PostMapping(value = "/hsbc/getRandomIdData")
 	@ResponseBody
 	public RandomIdDataVO getRandomIdData() {
 		return hsbcService.getRandomIdData();
 	}
-	
+
 	@PostMapping(value = "/hsbc/hsbcWechatPreregist")
 	@ResponseBody
 	public CommonResult hsbcWechatPreregist(@RequestBody HsbcWechatPreregistDTO dto) {
 		return hsbcService.hsbcWechatPreregist(dto);
 	}
-	
+
 	@PostMapping(value = "/hsbc/getReportSummaryPage")
 	public ModelAndView getReportSummaryPage(@RequestBody HsbcWechatPreregistDTO dto) {
 		return hsbcService.getReportSummaryPage(dto);
 	}
-	
+
 	@GetMapping(value = "/freeYourTime/monthTest")
 	public ModelAndView monthTestView() {
 		return underWayService.monthTestView();
 	}
-	
+
 	@PostMapping(value = "/freeYourTime/addMonthTest")
 	@ResponseBody
 	public CommonResult monthTest(@RequestBody UnderWayMonthTestDTO dto) {
 		return underWayService.monthTest(dto);
 	}
-	
+
 	@GetMapping(value = "/freeYourTime/trainProject")
 	public ModelAndView trainProjectView() {
 		return underWayService.trainProject();
 	}
-	
+
 	@PostMapping(value = "/freeYourTime/trainProject")
 	@ResponseBody
 	public CommonResult trainProject(@RequestBody UnderWayTrainProjectDTO dto) {
 		return underWayService.trainProject(dto);
+	}
+
+	@GetMapping(value = "/randomID")
+	@ResponseBody
+	public CommonResult getRandomId() {
+		CommonResult r = new CommonResult();
+		r.setMessage(String.valueOf(snowFlake.getNextId()));
+		r.setIsSuccess();
+		return r;
 	}
 }

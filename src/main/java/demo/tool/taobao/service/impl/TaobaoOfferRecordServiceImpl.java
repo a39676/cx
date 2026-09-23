@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +47,7 @@ import demo.tool.taobao.pojo.vo.TaobaoOfferFromDownstreamBuyerVO;
 import demo.tool.taobao.pojo.vo.TaobaoOfferStatisticsRowVO;
 import demo.tool.taobao.pojo.vo.TaobaoOfferToSupplierVO;
 import demo.tool.taobao.service.TaobaoOfferRecordService;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Service
@@ -86,6 +88,12 @@ public class TaobaoOfferRecordServiceImpl extends CommonService implements Taoba
 		if (json == null || json.keySet().size() < 1) {
 			r.setMessage("Offer raw text format error");
 			return r;
+		}
+		r.setOrderJsonStr(json.toString());
+		JSONArray productJsonArray = json.getJSONArray("商品列表");
+		r.setProductCommdityIdSet(new HashSet<>());
+		for (int i = 0; i < productJsonArray.size(); i++) {
+			r.getProductCommdityIdSet().add(productJsonArray.getJSONObject(i).getString("商品ID"));
 		}
 
 		TaobaoAddOfferFromDownstreamBuyerBO bo = new TaobaoAddOfferFromDownstreamBuyerBO();

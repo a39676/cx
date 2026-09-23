@@ -25,7 +25,7 @@
         <button id="orderSort">sort</button>
       </div>
       <div class="col-md-6">
-        <textarea id="orderSortOutput" rows="3" cols="80" placeholder="订单排序输出"></textarea>
+        <textarea id="orderSortOutput" rows="3" cols="80" placeholder="订单排序输出" class="clickToCopy"></textarea>
       </div>
     </div>
 
@@ -42,7 +42,8 @@
             </option>
           </c:forEach>
         </select>
-        <input type="text" name="" class="clickToCopy" id="receiverFullInfo">
+        <input type="text" name="" class="clickToCopy" id="receiverFullInfo" placeholder="收件地址">
+        <input type="text" name="" id="commdityIdList" placeholder="商品ID串">
         <details>
           <summary style="cursor: pointer; color: #0066cc; user-select: none;">
             点击展开/折叠详细内容
@@ -77,8 +78,8 @@
       <h3>订单利润统计查询</h3>
       <div class="form-inline">
         <input type="text" id="queryBuyerOrderId" class="form-control" placeholder="输入 buyerOrderId">
-        <input type="datetime-local" id="queryStartTime" class="form-control" placeholder="开始时间">
-        <input type="datetime-local" id="queryEndTime" class="form-control" placeholder="结束时间">
+        <input type="date" id="queryStartTime" class="form-control">
+        <input type="date" id="queryEndTime" class="form-control">
         <button id="queryStatisticsBtn" class="btn btn-primary">查询统计</button>
       </div>
     </div>
@@ -120,6 +121,16 @@
       allowClear: true
     });
 
+    $("#commdityIdList").click(function() {
+      var content = $(this).val();
+      if (content && content.trim() !== "" && content !== "Loading") {
+        // 拼接目标跳转链接
+        var targetUrl = "/taobao/productSource/?commodityId=" + encodeURIComponent(content.trim());
+        // 使用 window.open 在新标签页打开
+        window.open(targetUrl, '_blank');
+      }
+    });
+
     $("#buyerOrderInput").click( function() {
       $("#msg").html("Loading");
       orderFromBuyerInput();
@@ -152,6 +163,8 @@
           $("#msg").html(datas.message);
           $("#sourceBuyerOrderId").val(datas.buyerOrderID);
           $("#receiverFullInfo").val(datas.receiverFullInfo)
+          $("#orderSortOutput").val(datas.orderJsonStr);
+          $("#commdityIdList").val(datas.productCommdityIdSet);
         },  
         error: function(datas) {  
           $("#msg").html(datas.message);
@@ -246,9 +259,10 @@
             }
             var buyerOrder = row.buyerOrderVO;
             htmlStr += "<td>";
-            htmlStr += buyerOrder.orderID + ", amount: " + buyerOrder.amount + "<br>";
+            htmlStr += buyerOrder.orderID + "<br>"
+            htmlStr += "amount: " + buyerOrder.amount + "<br>";
             htmlStr += buyerOrder.nickname + "<br>" 
-            htmlStr += buyerOrder.packageReceiverName + " " + buyerOrder.phone;
+            htmlStr += buyerOrder.packageReceiverName + " " + buyerOrder.phone + "<br>";
             htmlStr += buyerOrder.address + "<br>";
             if(buyerOrder.afterTransitRegionID != null){
               htmlStr += '<span style="background-color: #cfe2ff; border-radius: 4px; padding: 2px 6px; display: inline-block;">' + buyerOrder.afterTransitRegionID + " " + buyerOrder.afterTransitRegionName + "</span><br>";

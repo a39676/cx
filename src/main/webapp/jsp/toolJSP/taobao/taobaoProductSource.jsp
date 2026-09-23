@@ -91,6 +91,13 @@
       allowClear: true
     });
 
+    // 自动获取 URL 中的 commodityId 参数并填入输入框
+    const urlParams = new URLSearchParams(window.location.search);
+    const commodityIdVal = urlParams.get('commodityId');
+    if (commodityIdVal) {
+      $("#commodityId").val(commodityIdVal);
+    }
+
     $("#searchProduct").click( function() {
       $("#productList").html("Loading");
       searchProduct();

@@ -14,6 +14,7 @@ import demo.tool.taobao.pojo.constant.TaobaoUrlConstant;
 import demo.tool.taobao.pojo.dto.TaobaoAddOfferFromDownstreamBuyerDTO;
 import demo.tool.taobao.pojo.dto.TaobaoAddOfferToSupplierDTO;
 import demo.tool.taobao.pojo.dto.TaobaoOfferStatisticsQueryDTO;
+import demo.tool.taobao.pojo.result.TaobaoAddOfferFromDownstreamBuyerResult;
 import demo.tool.taobao.pojo.result.TaobaoOfferStatisticsResult;
 import demo.tool.taobao.service.TaobaoOfferRecordService;
 
@@ -31,7 +32,7 @@ public class TaobaoOfferRecordController {
 
 	@PostMapping(value = TaobaoUrlConstant.OFFER_ADD_FROM_DOWNSTREAM_BUYER)
 	@ResponseBody
-	public CommonResult addNewOfferFromDownstreamBuyer(@RequestBody TaobaoAddOfferFromDownstreamBuyerDTO dto) {
+	public TaobaoAddOfferFromDownstreamBuyerResult addNewOfferFromDownstreamBuyer(@RequestBody TaobaoAddOfferFromDownstreamBuyerDTO dto) {
 		return service.addNewOfferFromDownstreamBuyer(dto);
 	}
 

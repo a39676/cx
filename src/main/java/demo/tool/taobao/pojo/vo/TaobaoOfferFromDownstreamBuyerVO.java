@@ -1,6 +1,7 @@
 package demo.tool.taobao.pojo.vo;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public class TaobaoOfferFromDownstreamBuyerVO {
 
@@ -12,6 +13,7 @@ public class TaobaoOfferFromDownstreamBuyerVO {
 	private String address;
 	private String afterTransitRegionName;
 	private Integer afterTransitRegionID;
+	private LocalDateTime createTime;
 	private String createTimeStr;
 	private String remark;
 
@@ -79,6 +81,14 @@ public class TaobaoOfferFromDownstreamBuyerVO {
 		this.afterTransitRegionID = afterTransitRegionID;
 	}
 
+	public LocalDateTime getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(LocalDateTime createTime) {
+		this.createTime = createTime;
+	}
+
 	public String getCreateTimeStr() {
 		return createTimeStr;
 	}
@@ -100,7 +110,8 @@ public class TaobaoOfferFromDownstreamBuyerVO {
 		return "TaobaoOfferFromDownstreamBuyerVO [orderID=" + orderID + ", amount=" + amount + ", phone=" + phone
 				+ ", nickname=" + nickname + ", packageReceiverName=" + packageReceiverName + ", address=" + address
 				+ ", afterTransitRegionName=" + afterTransitRegionName + ", afterTransitRegionID="
-				+ afterTransitRegionID + ", createTimeStr=" + createTimeStr + ", remark=" + remark + "]";
+				+ afterTransitRegionID + ", createTime=" + createTime + ", createTimeStr=" + createTimeStr + ", remark="
+				+ remark + "]";
 	}
 
 }

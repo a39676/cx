@@ -350,6 +350,10 @@ public class TaobaoOfferRecordServiceImpl extends CommonService implements Taoba
 		r.setTotalBuyerOrderAmount(totalBuyerOrderAmount);
 		r.setTotalSupplierOrderAmount(totalSupplierOrderAmount);
 		r.setTotalProfit(totalProfit);
+		statisticsList.sort(
+				Comparator.comparing(vo -> vo.getBuyerOrderVO() != null ? vo.getBuyerOrderVO().getCreateTime() : null,
+						Comparator.nullsLast(Comparator.naturalOrder()) // 空值排在最后；若想排在最前可换成 nullsFirst
+				));
 		r.setStatisticsList(statisticsList);
 		r.setIsSuccess();
 		return r;

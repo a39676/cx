@@ -9,6 +9,8 @@
     <result column="phone" jdbcType="CHAR" property="phone" />
     <result column="nickname" jdbcType="CHAR" property="nickname" />
     <result column="package_receiver_name" jdbcType="CHAR" property="packageReceiverName" />
+    <result column="order_create_time" jdbcType="TIMESTAMP" property="orderCreateTime" />
+    <result column="order_payment_time" jdbcType="TIMESTAMP" property="orderPaymentTime" />
     <result column="region_id_1" jdbcType="INTEGER" property="regionId1" />
     <result column="region_id_2" jdbcType="INTEGER" property="regionId2" />
     <result column="after_transit_region_id" jdbcType="INTEGER" property="afterTransitRegionId" />
@@ -75,8 +77,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, id_outsource, amount, address, phone, nickname, package_receiver_name, region_id_1, 
-    region_id_2, after_transit_region_id, remark, create_time, is_delete
+    id, id_outsource, amount, address, phone, nickname, package_receiver_name, order_create_time, 
+    order_payment_time, region_id_1, region_id_2, after_transit_region_id, remark, create_time, 
+    is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.tool.taobao.pojo.po.TaobaoOfferFromDownstreamBuyerExample" resultMap="BaseResultMap">
     select
@@ -111,11 +114,13 @@
   <insert id="insert" parameterType="demo.tool.taobao.pojo.po.TaobaoOfferFromDownstreamBuyer">
     insert into taobao_offer_from_downstream_buyer (id, id_outsource, amount, 
       address, phone, nickname, package_receiver_name, 
+      order_create_time, order_payment_time, 
       region_id_1, region_id_2, after_transit_region_id, 
       remark, create_time, is_delete
       )
     values (#{id,jdbcType=BIGINT}, #{idOutsource,jdbcType=BIGINT}, #{amount,jdbcType=DECIMAL}, 
       #{address,jdbcType=CHAR}, #{phone,jdbcType=CHAR}, #{nickname,jdbcType=CHAR}, #{packageReceiverName,jdbcType=CHAR}, 
+      #{orderCreateTime,jdbcType=TIMESTAMP}, #{orderPaymentTime,jdbcType=TIMESTAMP}, 
       #{regionId1,jdbcType=INTEGER}, #{regionId2,jdbcType=INTEGER}, #{afterTransitRegionId,jdbcType=INTEGER}, 
       #{remark,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
       )
@@ -143,6 +148,12 @@
       </if>
       <if test="packageReceiverName != null">
         package_receiver_name,
+      </if>
+      <if test="orderCreateTime != null">
+        order_create_time,
+      </if>
+      <if test="orderPaymentTime != null">
+        order_payment_time,
       </if>
       <if test="regionId1 != null">
         region_id_1,
@@ -184,6 +195,12 @@
       </if>
       <if test="packageReceiverName != null">
         #{packageReceiverName,jdbcType=CHAR},
+      </if>
+      <if test="orderCreateTime != null">
+        #{orderCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderPaymentTime != null">
+        #{orderPaymentTime,jdbcType=TIMESTAMP},
       </if>
       <if test="regionId1 != null">
         #{regionId1,jdbcType=INTEGER},
@@ -235,6 +252,12 @@
       <if test="row.packageReceiverName != null">
         package_receiver_name = #{row.packageReceiverName,jdbcType=CHAR},
       </if>
+      <if test="row.orderCreateTime != null">
+        order_create_time = #{row.orderCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.orderPaymentTime != null">
+        order_payment_time = #{row.orderPaymentTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="row.regionId1 != null">
         region_id_1 = #{row.regionId1,jdbcType=INTEGER},
       </if>
@@ -267,6 +290,8 @@
       phone = #{row.phone,jdbcType=CHAR},
       nickname = #{row.nickname,jdbcType=CHAR},
       package_receiver_name = #{row.packageReceiverName,jdbcType=CHAR},
+      order_create_time = #{row.orderCreateTime,jdbcType=TIMESTAMP},
+      order_payment_time = #{row.orderPaymentTime,jdbcType=TIMESTAMP},
       region_id_1 = #{row.regionId1,jdbcType=INTEGER},
       region_id_2 = #{row.regionId2,jdbcType=INTEGER},
       after_transit_region_id = #{row.afterTransitRegionId,jdbcType=INTEGER},
@@ -298,6 +323,12 @@
       <if test="packageReceiverName != null">
         package_receiver_name = #{packageReceiverName,jdbcType=CHAR},
       </if>
+      <if test="orderCreateTime != null">
+        order_create_time = #{orderCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderPaymentTime != null">
+        order_payment_time = #{orderPaymentTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="regionId1 != null">
         region_id_1 = #{regionId1,jdbcType=INTEGER},
       </if>
@@ -327,6 +358,8 @@
       phone = #{phone,jdbcType=CHAR},
       nickname = #{nickname,jdbcType=CHAR},
       package_receiver_name = #{packageReceiverName,jdbcType=CHAR},
+      order_create_time = #{orderCreateTime,jdbcType=TIMESTAMP},
+      order_payment_time = #{orderPaymentTime,jdbcType=TIMESTAMP},
       region_id_1 = #{regionId1,jdbcType=INTEGER},
       region_id_2 = #{regionId2,jdbcType=INTEGER},
       after_transit_region_id = #{afterTransitRegionId,jdbcType=INTEGER},

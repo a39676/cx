@@ -1,6 +1,7 @@
 package demo.tool.taobao.pojo.bo;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public class TaobaoAddOfferFromDownstreamBuyerBO {
 
@@ -12,6 +13,8 @@ public class TaobaoAddOfferFromDownstreamBuyerBO {
 	private String packageReceiverName;
 	private String phone;
 	private String remark;
+	private LocalDateTime orderCreateTime;
+	private LocalDateTime paymentTime;
 
 	public Long getIdOutsource() {
 		return idOutsource;
@@ -77,12 +80,29 @@ public class TaobaoAddOfferFromDownstreamBuyerBO {
 		this.remark = remark;
 	}
 
+	public LocalDateTime getOrderCreateTime() {
+		return orderCreateTime;
+	}
+
+	public void setOrderCreateTime(LocalDateTime orderCreateTime) {
+		this.orderCreateTime = orderCreateTime;
+	}
+
+	public LocalDateTime getPaymentTime() {
+		return paymentTime;
+	}
+
+	public void setPaymentTime(LocalDateTime paymentTime) {
+		this.paymentTime = paymentTime;
+	}
+
 	@Override
 	public String toString() {
 		return "TaobaoAddOfferFromDownstreamBuyerBO [idOutsource=" + idOutsource + ", amount=" + amount
 				+ ", addressInfo=" + addressInfo + ", afterTransitRegionId=" + afterTransitRegionId
 				+ ", buyerWangWangName=" + buyerWangWangName + ", packageReceiverName=" + packageReceiverName
-				+ ", phone=" + phone + ", remark=" + remark + "]";
+				+ ", phone=" + phone + ", remark=" + remark + ", orderCreateTime=" + orderCreateTime + ", paymentTime="
+				+ paymentTime + "]";
 	}
 
 }

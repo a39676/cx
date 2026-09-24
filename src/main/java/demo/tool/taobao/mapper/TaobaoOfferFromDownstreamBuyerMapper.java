@@ -7,8 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
 public interface TaobaoOfferFromDownstreamBuyerMapper {
-	
-	long countByExample(TaobaoOfferFromDownstreamBuyerExample example);
+    long countByExample(TaobaoOfferFromDownstreamBuyerExample example);
 
     int deleteByExample(TaobaoOfferFromDownstreamBuyerExample example);
 

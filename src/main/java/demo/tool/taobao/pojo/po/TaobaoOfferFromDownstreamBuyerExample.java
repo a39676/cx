@@ -566,6 +566,126 @@ public class TaobaoOfferFromDownstreamBuyerExample {
             return (Criteria) this;
         }
 
+        public Criteria andOrderCreateTimeIsNull() {
+            addCriterion("order_create_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderCreateTimeIsNotNull() {
+            addCriterion("order_create_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderCreateTimeEqualTo(LocalDateTime value) {
+            addCriterion("order_create_time =", value, "orderCreateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderCreateTimeNotEqualTo(LocalDateTime value) {
+            addCriterion("order_create_time <>", value, "orderCreateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderCreateTimeGreaterThan(LocalDateTime value) {
+            addCriterion("order_create_time >", value, "orderCreateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderCreateTimeGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("order_create_time >=", value, "orderCreateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderCreateTimeLessThan(LocalDateTime value) {
+            addCriterion("order_create_time <", value, "orderCreateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderCreateTimeLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("order_create_time <=", value, "orderCreateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderCreateTimeIn(List<LocalDateTime> values) {
+            addCriterion("order_create_time in", values, "orderCreateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderCreateTimeNotIn(List<LocalDateTime> values) {
+            addCriterion("order_create_time not in", values, "orderCreateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderCreateTimeBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("order_create_time between", value1, value2, "orderCreateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderCreateTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("order_create_time not between", value1, value2, "orderCreateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderPaymentTimeIsNull() {
+            addCriterion("order_payment_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderPaymentTimeIsNotNull() {
+            addCriterion("order_payment_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderPaymentTimeEqualTo(LocalDateTime value) {
+            addCriterion("order_payment_time =", value, "orderPaymentTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderPaymentTimeNotEqualTo(LocalDateTime value) {
+            addCriterion("order_payment_time <>", value, "orderPaymentTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderPaymentTimeGreaterThan(LocalDateTime value) {
+            addCriterion("order_payment_time >", value, "orderPaymentTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderPaymentTimeGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("order_payment_time >=", value, "orderPaymentTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderPaymentTimeLessThan(LocalDateTime value) {
+            addCriterion("order_payment_time <", value, "orderPaymentTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderPaymentTimeLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("order_payment_time <=", value, "orderPaymentTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderPaymentTimeIn(List<LocalDateTime> values) {
+            addCriterion("order_payment_time in", values, "orderPaymentTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderPaymentTimeNotIn(List<LocalDateTime> values) {
+            addCriterion("order_payment_time not in", values, "orderPaymentTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderPaymentTimeBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("order_payment_time between", value1, value2, "orderPaymentTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderPaymentTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("order_payment_time not between", value1, value2, "orderPaymentTime");
+            return (Criteria) this;
+        }
+
         public Criteria andRegionId1IsNull() {
             addCriterion("region_id_1 is null");
             return (Criteria) this;

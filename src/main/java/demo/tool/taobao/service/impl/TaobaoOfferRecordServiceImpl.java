@@ -106,6 +106,8 @@ public class TaobaoOfferRecordServiceImpl extends CommonService implements Taoba
 			bo.setIdOutsource(Long.parseLong(json.getString("订单编号")));
 			bo.setPackageReceiverName(json.getString("收货姓名"));
 			bo.setPhone(json.getString("收货电话"));
+			bo.setOrderCreateTime(localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(json.getString("下单时间")));
+			bo.setPaymentTime(localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(json.getString("付款时间")));
 			if (json.containsKey("买家备注")) {
 				bo.setRemark(json.getString("买家备注"));
 			}
@@ -160,6 +162,8 @@ public class TaobaoOfferRecordServiceImpl extends CommonService implements Taoba
 		po.setPhone(bo.getPhone());
 		po.setNickname(bo.getBuyerWangWangName());
 		po.setPackageReceiverName(bo.getPackageReceiverName());
+		po.setOrderCreateTime(bo.getOrderCreateTime());
+		po.setOrderPaymentTime(bo.getPaymentTime());
 		po.setRegionId1(province.getId().intValue());
 		po.setRegionId2(city.getId().intValue());
 		po.setAfterTransitRegionId(bo.getAfterTransitRegionId());
@@ -211,7 +215,7 @@ public class TaobaoOfferRecordServiceImpl extends CommonService implements Taoba
 				switch (key) {
 				case "商品总数量" -> root.put(key, Integer.parseInt(value));
 				case "订单总付款" -> root.put(key, Double.parseDouble(value));
-				case "订单编号", "付款时间", "买家旺旺", "收货姓名", "收货电话", "收货地址", "买家备注" -> root.put(key, value);
+				case "订单编号", "下单时间", "付款时间", "买家旺旺", "收货姓名", "收货电话", "收货地址", "买家备注" -> root.put(key, value);
 
 				case "商品标题" -> {
 					currentItem = mapper.createObjectNode();

@@ -57,9 +57,9 @@
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="taobao_offer_to_supplier">
-        	<property name="tableName" value="taobao_offer_to_supplier"></property>
-        	<property name="domainObjectName" value="taobao_offer_to_supplier"></property>
+        <table tableName="taobao_offer_from_downstream_buyer">
+        	<property name="tableName" value="taobao_offer_from_downstream_buyer"></property>
+        	<property name="domainObjectName" value="taobao_offer_from_downstream_buyer"></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

@@ -18,6 +18,10 @@ public class TaobaoOfferFromDownstreamBuyer {
 
     private String packageReceiverName;
 
+    private LocalDateTime orderCreateTime;
+
+    private LocalDateTime orderPaymentTime;
+
     private Integer regionId1;
 
     private Integer regionId2;
@@ -84,6 +88,22 @@ public class TaobaoOfferFromDownstreamBuyer {
 
     public void setPackageReceiverName(String packageReceiverName) {
         this.packageReceiverName = packageReceiverName == null ? null : packageReceiverName.trim();
+    }
+
+    public LocalDateTime getOrderCreateTime() {
+        return orderCreateTime;
+    }
+
+    public void setOrderCreateTime(LocalDateTime orderCreateTime) {
+        this.orderCreateTime = orderCreateTime;
+    }
+
+    public LocalDateTime getOrderPaymentTime() {
+        return orderPaymentTime;
+    }
+
+    public void setOrderPaymentTime(LocalDateTime orderPaymentTime) {
+        this.orderPaymentTime = orderPaymentTime;
     }
 
     public Integer getRegionId1() {

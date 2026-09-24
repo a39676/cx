@@ -422,6 +422,14 @@
       $("#orderSortOutput").val(jsonResult);
     }
 
+    // 点击 details 内部的内容时，将其折叠隐藏
+    $("details p").click(function(e) {
+      // 阻止事件冒泡，避免点击时触发其他默认行为
+      e.stopPropagation();
+      // 找到最近的 details 元素并关闭它
+      $(this).closest("details").removeAttr("open");
+    });
+
     // 点击 class = clickToCopy 复制内容到剪贴板
     $(".clickToCopy").click(function() {
       var content = $(this).val();

@@ -103,7 +103,7 @@ public class TaobaoOfferRecordServiceImpl extends CommonService implements Taoba
 			bo.setAfterTransitRegionId(dto.getInternationalNum());
 			bo.setAmount(new BigDecimal(json.getString("订单总付款")));
 			bo.setBuyerWangWangName(json.getString("买家旺旺"));
-			bo.setIdOutsource(json.getLong("订单编号"));
+			bo.setIdOutsource(Long.parseLong(json.getString("订单编号")));
 			bo.setPackageReceiverName(json.getString("收货姓名"));
 			bo.setPhone(json.getString("收货电话"));
 			if (json.containsKey("买家备注")) {

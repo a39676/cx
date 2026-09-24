@@ -292,7 +292,7 @@
             }
             var buyerOrder = row.buyerOrderVO;
             htmlStr += "<td>";
-            htmlStr += buyerOrder.orderID + "<br>"
+            htmlStr += "<a href='https://qn.taobao.com/home.htm/trade-platform/tp/detail?bizOrderId="+buyerOrder.orderID+"' target='_blank'>"+buyerOrder.orderID+"</a><br>";
             htmlStr += "amount: " + buyerOrder.amount + "<br>";
             htmlStr += buyerOrder.nickname + "<br>" 
             htmlStr += buyerOrder.packageReceiverName + " " + buyerOrder.phone + "<br>";
@@ -321,7 +321,7 @@
                 var supplierOrder = supplierOrderVoList[j];
                 htmlStr += "<tr>";
                 htmlStr += "<td>";
-                htmlStr += supplierOrder.orderID;
+                htmlStr += "<a href='https://air.1688.com/app/ctf-page/trade-order-detail/index.html?order_id="+supplierOrder.orderID+"' target='_blank'>"+supplierOrder.orderID+"</a>";
                 htmlStr += "</td>";
                 htmlStr += "<td>";
                 htmlStr += supplierOrder.amount;

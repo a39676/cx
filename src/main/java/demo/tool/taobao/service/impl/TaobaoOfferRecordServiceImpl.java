@@ -295,7 +295,7 @@ public class TaobaoOfferRecordServiceImpl extends CommonService implements Taoba
 		}
 		TaobaoOfferFromDownstreamBuyerExample buyerOrderExample = new TaobaoOfferFromDownstreamBuyerExample();
 		Criteria criteria = buyerOrderExample.createCriteria();
-		criteria.andCreateTimeGreaterThanOrEqualTo(startTime).andCreateTimeLessThan(endTime);
+		criteria.andCreateTimeGreaterThanOrEqualTo(startTime).andCreateTimeLessThan(endTime).andIsDeleteEqualTo(false);
 		if (StringUtils.isNotBlank(dto.getBuyerOrderId())) {
 			try {
 				Long buyerOrderId = Long.parseLong(dto.getBuyerOrderId());

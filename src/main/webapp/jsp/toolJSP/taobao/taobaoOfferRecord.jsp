@@ -300,7 +300,8 @@
             if(buyerOrder.afterTransitRegionID != null){
               htmlStr += '<span style="background-color: #cfe2ff; border-radius: 4px; padding: 2px 6px; display: inline-block;">' + buyerOrder.afterTransitRegionID + " " + buyerOrder.afterTransitRegionName + "</span><br>";
             }
-            htmlStr += buyerOrder.createTimeStr + "<br>";
+            htmlStr += "create time: " + buyerOrder.orderCreateTimeStr + "<br>";
+            htmlStr += "payment time" + buyerOrder.orderPaymentTimeStr + "<br>";
             // buyerOrder.remark 赋圆角 绿色背景
             if(buyerOrder.remark != null) {
               htmlStr += '<span style="background-color: #d1e7dd; border-radius: 4px; padding: 2px 6px; display:inline-block;">' + buyerOrder.remark + '</span><br>';

@@ -13,8 +13,10 @@ public class TaobaoOfferFromDownstreamBuyerVO {
 	private String address;
 	private String afterTransitRegionName;
 	private Integer afterTransitRegionID;
-	private LocalDateTime createTime;
-	private String createTimeStr;
+	private LocalDateTime orderCreateTime;
+	private String orderCreateTimeStr;
+	private LocalDateTime orderPaymentTime;
+	private String orderPaymentTimeStr;
 	private String remark;
 
 	public String getOrderID() {
@@ -81,20 +83,36 @@ public class TaobaoOfferFromDownstreamBuyerVO {
 		this.afterTransitRegionID = afterTransitRegionID;
 	}
 
-	public LocalDateTime getCreateTime() {
-		return createTime;
+	public LocalDateTime getOrderCreateTime() {
+		return orderCreateTime;
 	}
 
-	public void setCreateTime(LocalDateTime createTime) {
-		this.createTime = createTime;
+	public void setOrderCreateTime(LocalDateTime orderCreateTime) {
+		this.orderCreateTime = orderCreateTime;
 	}
 
-	public String getCreateTimeStr() {
-		return createTimeStr;
+	public String getOrderCreateTimeStr() {
+		return orderCreateTimeStr;
 	}
 
-	public void setCreateTimeStr(String createTimeStr) {
-		this.createTimeStr = createTimeStr;
+	public void setOrderCreateTimeStr(String orderCreateTimeStr) {
+		this.orderCreateTimeStr = orderCreateTimeStr;
+	}
+
+	public LocalDateTime getOrderPaymentTime() {
+		return orderPaymentTime;
+	}
+
+	public void setOrderPaymentTime(LocalDateTime orderPaymentTime) {
+		this.orderPaymentTime = orderPaymentTime;
+	}
+
+	public String getOrderPaymentTimeStr() {
+		return orderPaymentTimeStr;
+	}
+
+	public void setOrderPaymentTimeStr(String orderPaymentTimeStr) {
+		this.orderPaymentTimeStr = orderPaymentTimeStr;
 	}
 
 	public String getRemark() {
@@ -110,8 +128,9 @@ public class TaobaoOfferFromDownstreamBuyerVO {
 		return "TaobaoOfferFromDownstreamBuyerVO [orderID=" + orderID + ", amount=" + amount + ", phone=" + phone
 				+ ", nickname=" + nickname + ", packageReceiverName=" + packageReceiverName + ", address=" + address
 				+ ", afterTransitRegionName=" + afterTransitRegionName + ", afterTransitRegionID="
-				+ afterTransitRegionID + ", createTime=" + createTime + ", createTimeStr=" + createTimeStr + ", remark="
-				+ remark + "]";
+				+ afterTransitRegionID + ", orderCreateTime=" + orderCreateTime + ", orderCreateTimeStr="
+				+ orderCreateTimeStr + ", orderPaymentTime=" + orderPaymentTime + ", orderPaymentTimeStr="
+				+ orderPaymentTimeStr + ", remark=" + remark + "]";
 	}
 
 }

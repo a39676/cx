@@ -96,6 +96,7 @@
     const commodityIdVal = urlParams.get('commodityId');
     if (commodityIdVal) {
       $("#commodityId").val(commodityIdVal);
+      searchProduct();
     }
 
     $("#searchProduct").click( function() {

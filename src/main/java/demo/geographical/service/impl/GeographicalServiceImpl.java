@@ -42,6 +42,7 @@ public class GeographicalServiceImpl extends CommonService implements Geographic
 		}
 		name = name.replaceAll("省", "");
 		name = name.replaceAll("市", "");
+		name = name.replaceAll("壮族自治区", "");
 		GeographicalAreaExample example = new GeographicalAreaExample();
 		example.createCriteria().andAreaNameEqualTo(name);
 		List<GeographicalArea> list = geoMapper.selectByExample(example);

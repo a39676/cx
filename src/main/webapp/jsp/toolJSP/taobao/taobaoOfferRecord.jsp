@@ -18,6 +18,7 @@
     </div>
 
     <hr>
+    <img alt="Copy SVG Vector Icon" style="width: 15px; height: 15px; max-width: 100%; object-fit: contain; display: block; cursor: pointer;" src="/static_resources/svgIcon/copy-svgrepo-com.svg" >
 
     <div class="row">
       <div class="col-md-6">
@@ -292,7 +293,7 @@
             }
             var buyerOrder = row.buyerOrderVO;
             htmlStr += "<td>";
-            htmlStr += "<a href='https://qn.taobao.com/home.htm/trade-platform/tp/detail?bizOrderId="+buyerOrder.orderID+"' target='_blank'>"+buyerOrder.orderID+"</a><br>";
+            htmlStr += "<a href='https://qn.taobao.com/home.htm/trade-platform/tp/detail?bizOrderId="+buyerOrder.orderID+"' target='_blank'>"+buyerOrder.orderID+"</a><img alt='Copy SVG Vector Icon' style='width: 15px; height: 15px; max-width: 100%; object-fit: contain; display: block; cursor: pointer;' src='/static_resources/svgIcon/copy-svgrepo-com.svg' value='"+buyerOrder.orderID+"' class='clickToCopy'><br>";
             htmlStr += "amount: " + buyerOrder.amount + "<br>";
             htmlStr += buyerOrder.nickname + "<br>" 
             htmlStr += buyerOrder.packageReceiverName + " " + buyerOrder.phone + "<br>";
@@ -322,7 +323,7 @@
                 var supplierOrder = supplierOrderVoList[j];
                 htmlStr += "<tr>";
                 htmlStr += "<td>";
-                htmlStr += "<a href='https://air.1688.com/app/ctf-page/trade-order-detail/index.html?order_id="+supplierOrder.orderID+"' target='_blank'>"+supplierOrder.orderID+"</a>";
+                htmlStr += "<a href='https://air.1688.com/app/ctf-page/trade-order-detail/index.html?order_id="+supplierOrder.orderID+"' target='_blank'>"+supplierOrder.orderID+"</a><img alt='Copy SVG Vector Icon' style='width: 15px; height: 15px; max-width: 100%; object-fit: contain; display: block; cursor: pointer;' src='/static_resources/svgIcon/copy-svgrepo-com.svg' value='"+supplierOrder.orderID+"' class='clickToCopy'>";
                 htmlStr += "</td>";
                 htmlStr += "<td>";
                 htmlStr += supplierOrder.amount;
@@ -431,20 +432,36 @@
       $(this).closest("details").removeAttr("open");
     });
 
-    // 点击 class = clickToCopy 复制内容到剪贴板
+    <%-- // 点击 class = clickToCopy 复制内容到剪贴板
     $(".clickToCopy").click(function() {
       var content = $(this).val();
+      console.log(content);
       // 判断内容是否为空，且不是正在加载的提示
       if (content && content.trim() !== "" && content !== "Loading") {
         navigator.clipboard.writeText(content).then(function() {
-          // 复制成功提示（可根据需求自行修改或去掉）
-          console.log("内容已成功复制到剪贴板");
         }).catch(function(err) {
           console.error("复制到剪贴板失败: ", err);
         });
       }
-    });
+    }); --%>
 
+  });
+
+  $(document).on("click", ".clickToCopy", function() {
+    var content = $(this).val();
+    if (content.trim().length < 1) {
+      content = $(this).text();
+    }
+    if (content.trim().length < 1) {
+      content = $(this).attr("value");
+    }
+    if (content && content.trim() !== "") {
+      navigator.clipboard.writeText(content.trim()).then(function() {
+        $("#msg").html("复制成功: " + content.trim());
+      }).catch(function(err) {
+        console.error("复制到剪贴板失败: ", err);
+      });
+    }
   });
 </script>
 <script type="text/javascript">

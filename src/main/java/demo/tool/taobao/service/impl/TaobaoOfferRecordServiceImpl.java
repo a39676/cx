@@ -388,7 +388,9 @@ public class TaobaoOfferRecordServiceImpl extends CommonService implements Taoba
 			}
 		}
 		vo.setAmount(po.getAmount());
+		vo.setOrderCreateTime(po.getOrderCreateTime());
 		vo.setOrderCreateTimeStr(localDateTimeHandler.dateToStr(po.getOrderCreateTime()));
+		vo.setOrderPaymentTime(po.getOrderPaymentTime());
 		vo.setOrderPaymentTimeStr(localDateTimeHandler.dateToStr(po.getOrderPaymentTime()));
 		vo.setNickname(po.getNickname());
 		vo.setOrderID(String.valueOf(po.getIdOutsource()));

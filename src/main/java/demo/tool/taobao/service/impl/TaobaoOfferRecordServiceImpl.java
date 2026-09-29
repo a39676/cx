@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +72,9 @@ public class TaobaoOfferRecordServiceImpl extends CommonService implements Taoba
 		TaobaoUpstreamSupplierExample supplierExample = new TaobaoUpstreamSupplierExample();
 		supplierExample.createCriteria().andIsDeleteEqualTo(false);
 		List<TaobaoUpstreamSupplier> supplierList = supplierMapper.selectByExample(supplierExample);
+		supplierList = supplierList.stream().sorted(
+				Comparator.comparing(TaobaoUpstreamSupplier::getHeat, Comparator.nullsLast(Comparator.reverseOrder())))
+				.collect(Collectors.toList());
 		view.addObject("supplierList", supplierList);
 		InternationalDialingCodeExample internationalDialingCodeExample = new InternationalDialingCodeExample();
 		internationalDialingCodeExample.createCriteria().andIdGreaterThan(0);
@@ -269,6 +273,12 @@ public class TaobaoOfferRecordServiceImpl extends CommonService implements Taoba
 			po.setMerchantId(merchant.getId());
 		}
 		offerToSupplierMapper.insertSelective(po);
+
+		TaobaoUpstreamSupplier supplier = supplierMapper.selectByPrimaryKey(dto.getMerchantID());
+		if (supplier != null) {
+			supplier.setHeat(supplier.getHeat() + 1);
+			supplierMapper.updateByPrimaryKeySelective(supplier);
+		}
 
 		r.setIsSuccess();
 		return r;

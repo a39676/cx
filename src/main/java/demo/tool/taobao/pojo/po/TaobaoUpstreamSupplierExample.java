@@ -295,6 +295,66 @@ public class TaobaoUpstreamSupplierExample {
             return (Criteria) this;
         }
 
+        public Criteria andHeatIsNull() {
+            addCriterion("heat is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHeatIsNotNull() {
+            addCriterion("heat is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHeatEqualTo(Integer value) {
+            addCriterion("heat =", value, "heat");
+            return (Criteria) this;
+        }
+
+        public Criteria andHeatNotEqualTo(Integer value) {
+            addCriterion("heat <>", value, "heat");
+            return (Criteria) this;
+        }
+
+        public Criteria andHeatGreaterThan(Integer value) {
+            addCriterion("heat >", value, "heat");
+            return (Criteria) this;
+        }
+
+        public Criteria andHeatGreaterThanOrEqualTo(Integer value) {
+            addCriterion("heat >=", value, "heat");
+            return (Criteria) this;
+        }
+
+        public Criteria andHeatLessThan(Integer value) {
+            addCriterion("heat <", value, "heat");
+            return (Criteria) this;
+        }
+
+        public Criteria andHeatLessThanOrEqualTo(Integer value) {
+            addCriterion("heat <=", value, "heat");
+            return (Criteria) this;
+        }
+
+        public Criteria andHeatIn(List<Integer> values) {
+            addCriterion("heat in", values, "heat");
+            return (Criteria) this;
+        }
+
+        public Criteria andHeatNotIn(List<Integer> values) {
+            addCriterion("heat not in", values, "heat");
+            return (Criteria) this;
+        }
+
+        public Criteria andHeatBetween(Integer value1, Integer value2) {
+            addCriterion("heat between", value1, value2, "heat");
+            return (Criteria) this;
+        }
+
+        public Criteria andHeatNotBetween(Integer value1, Integer value2) {
+            addCriterion("heat not between", value1, value2, "heat");
+            return (Criteria) this;
+        }
+
         public Criteria andRemarkIsNull() {
             addCriterion("remark is null");
             return (Criteria) this;

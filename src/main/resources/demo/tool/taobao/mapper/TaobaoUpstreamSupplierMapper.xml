@@ -5,6 +5,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="commodity_name" jdbcType="CHAR" property="commodityName" />
     <result column="connect_id" jdbcType="BIGINT" property="connectId" />
+    <result column="heat" jdbcType="INTEGER" property="heat" />
     <result column="remark" jdbcType="CHAR" property="remark" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
@@ -68,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, commodity_name, connect_id, remark, create_time, is_delete
+    id, commodity_name, connect_id, heat, remark, create_time, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.tool.taobao.pojo.po.TaobaoUpstreamSupplierExample" resultMap="BaseResultMap">
     select
@@ -102,11 +103,11 @@
   </delete>
   <insert id="insert" parameterType="demo.tool.taobao.pojo.po.TaobaoUpstreamSupplier">
     insert into taobao_upstream_supplier (id, commodity_name, connect_id, 
-      remark, create_time, is_delete
-      )
+      heat, remark, create_time, 
+      is_delete)
     values (#{id,jdbcType=BIGINT}, #{commodityName,jdbcType=CHAR}, #{connectId,jdbcType=BIGINT}, 
-      #{remark,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
-      )
+      #{heat,jdbcType=INTEGER}, #{remark,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{isDelete,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="demo.tool.taobao.pojo.po.TaobaoUpstreamSupplier">
     insert into taobao_upstream_supplier
@@ -119,6 +120,9 @@
       </if>
       <if test="connectId != null">
         connect_id,
+      </if>
+      <if test="heat != null">
+        heat,
       </if>
       <if test="remark != null">
         remark,
@@ -139,6 +143,9 @@
       </if>
       <if test="connectId != null">
         #{connectId,jdbcType=BIGINT},
+      </if>
+      <if test="heat != null">
+        #{heat,jdbcType=INTEGER},
       </if>
       <if test="remark != null">
         #{remark,jdbcType=CHAR},
@@ -169,6 +176,9 @@
       <if test="row.connectId != null">
         connect_id = #{row.connectId,jdbcType=BIGINT},
       </if>
+      <if test="row.heat != null">
+        heat = #{row.heat,jdbcType=INTEGER},
+      </if>
       <if test="row.remark != null">
         remark = #{row.remark,jdbcType=CHAR},
       </if>
@@ -188,6 +198,7 @@
     set id = #{row.id,jdbcType=BIGINT},
       commodity_name = #{row.commodityName,jdbcType=CHAR},
       connect_id = #{row.connectId,jdbcType=BIGINT},
+      heat = #{row.heat,jdbcType=INTEGER},
       remark = #{row.remark,jdbcType=CHAR},
       create_time = #{row.createTime,jdbcType=TIMESTAMP},
       is_delete = #{row.isDelete,jdbcType=BIT}
@@ -203,6 +214,9 @@
       </if>
       <if test="connectId != null">
         connect_id = #{connectId,jdbcType=BIGINT},
+      </if>
+      <if test="heat != null">
+        heat = #{heat,jdbcType=INTEGER},
       </if>
       <if test="remark != null">
         remark = #{remark,jdbcType=CHAR},
@@ -220,6 +234,7 @@
     update taobao_upstream_supplier
     set commodity_name = #{commodityName,jdbcType=CHAR},
       connect_id = #{connectId,jdbcType=BIGINT},
+      heat = #{heat,jdbcType=INTEGER},
       remark = #{remark,jdbcType=CHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       is_delete = #{isDelete,jdbcType=BIT}

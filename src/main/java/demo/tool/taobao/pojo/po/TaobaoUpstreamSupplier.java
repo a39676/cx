@@ -9,6 +9,8 @@ public class TaobaoUpstreamSupplier {
 
     private Long connectId;
 
+    private Integer heat;
+
     private String remark;
 
     private LocalDateTime createTime;
@@ -37,6 +39,14 @@ public class TaobaoUpstreamSupplier {
 
     public void setConnectId(Long connectId) {
         this.connectId = connectId;
+    }
+
+    public Integer getHeat() {
+        return heat;
+    }
+
+    public void setHeat(Integer heat) {
+        this.heat = heat;
     }
 
     public String getRemark() {

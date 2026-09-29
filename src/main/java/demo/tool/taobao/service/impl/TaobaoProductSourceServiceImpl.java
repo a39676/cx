@@ -2,12 +2,14 @@ package demo.tool.taobao.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -57,6 +59,9 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		TaobaoUpstreamSupplierExample example = new TaobaoUpstreamSupplierExample();
 		example.createCriteria().andIsDeleteEqualTo(false);
 		List<TaobaoUpstreamSupplier> supplierList = supplierMapper.selectByExample(example);
+		supplierList = supplierList.stream().sorted(
+				Comparator.comparing(TaobaoUpstreamSupplier::getHeat, Comparator.nullsLast(Comparator.reverseOrder())))
+				.collect(Collectors.toList());
 		view.addObject("supplierList", supplierList);
 		return view;
 	}
@@ -101,6 +106,10 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 		} catch (Exception e) {
 			r.setMessage(e.getLocalizedMessage());
 		}
+
+		TaobaoUpstreamSupplier supplier = supplierMapper.selectByPrimaryKey(dto.getMerchantID().longValue());
+		supplier.setHeat(supplier.getHeat() + 1);
+		supplierMapper.updateByPrimaryKeySelective(supplier);
 		return r;
 	}
 
@@ -208,6 +217,8 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 				v.addObject("productList", voList);
 				return v;
 			}
+			supplierList = supplierList.stream().sorted(Comparator.comparing(TaobaoUpstreamSupplier::getHeat,
+					Comparator.nullsLast(Comparator.reverseOrder()))).collect(Collectors.toList());
 			List<Long> supplierIdList = new ArrayList<>();
 			for (TaobaoUpstreamSupplier supplier : supplierList) {
 				supplierIdList.add(supplier.getId());

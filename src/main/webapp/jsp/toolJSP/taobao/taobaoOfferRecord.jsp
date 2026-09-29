@@ -18,7 +18,6 @@
     </div>
 
     <hr>
-    <img alt="Copy SVG Vector Icon" style="width: 15px; height: 15px; max-width: 100%; object-fit: contain; display: block; cursor: pointer;" src="/static_resources/svgIcon/copy-svgrepo-com.svg" >
 
     <div class="row">
       <div class="col-md-6">

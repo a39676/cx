@@ -6,6 +6,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.tool.taobao.pojo.dto.TaobaoAddOfferFromDownstreamBuyerDTO;
 import demo.tool.taobao.pojo.dto.TaobaoAddOfferToSupplierDTO;
 import demo.tool.taobao.pojo.dto.TaobaoOfferStatisticsQueryDTO;
+import demo.tool.taobao.pojo.dto.TaobaoRefundOrderFromDownstreamBuyerDTO;
 import demo.tool.taobao.pojo.result.TaobaoAddOfferFromDownstreamBuyerResult;
 import demo.tool.taobao.pojo.result.TaobaoOfferStatisticsResult;
 
@@ -18,5 +19,7 @@ public interface TaobaoOfferRecordService {
 	CommonResult addNewOfferToSupplier(TaobaoAddOfferToSupplierDTO dto);
 
 	TaobaoOfferStatisticsResult taobaoOfferStatistics(TaobaoOfferStatisticsQueryDTO dto);
+
+	CommonResult refundOrderFromDownstreamBuyer(TaobaoRefundOrderFromDownstreamBuyerDTO dto);
 
 }

@@ -283,10 +283,10 @@
           var rowList = datas.statisticsList;
 
           var htmlStr = "";
-          for (let i = 0; i < rowList.length; i++) {
+          for (let rowIndex = 0; rowIndex < rowList.length; rowIndex++) {
             htmlStr += "<tr>";
             var supplierOrderListSize = 1;
-            var row = rowList[i];
+            var row = rowList[rowIndex];
             if(row.supplierOrderVoList != null){
               supplierOrderListSize = row.supplierOrderVoList.length;
             }
@@ -318,8 +318,8 @@
               htmlStr += "<th>备注</th>";
               htmlStr += "</tr>";
               htmlStr += "</thead><tbody>";
-              for (let j = 0; j < supplierOrderVoList.length; j++) {
-                var supplierOrder = supplierOrderVoList[j];
+              for (let supplierOrderIndex = 0; supplierOrderIndex < supplierOrderVoList.length; supplierOrderIndex++) {
+                var supplierOrder = supplierOrderVoList[supplierOrderIndex];
                 htmlStr += "<tr>";
                 htmlStr += "<td>";
                 htmlStr += "<a href='https://air.1688.com/app/ctf-page/trade-order-detail/index.html?order_id="+supplierOrder.orderID+"' target='_blank'>"+supplierOrder.orderID+"</a><img alt='Copy SVG Vector Icon' style='width: 15px; height: 15px; max-width: 100%; object-fit: contain; display: block; cursor: pointer;' src='/static_resources/svgIcon/copy-svgrepo-com.svg' value='"+supplierOrder.orderID+"' class='clickToCopy'>";

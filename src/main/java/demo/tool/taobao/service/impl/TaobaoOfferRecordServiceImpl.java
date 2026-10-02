@@ -30,16 +30,20 @@ import demo.geographical.pojo.po.InternationalDialingCodeExample;
 import demo.geographical.service.GeographicalService;
 import demo.tool.taobao.mapper.TaobaoOfferFromDownstreamBuyerMapper;
 import demo.tool.taobao.mapper.TaobaoOfferToSupplierMapper;
+import demo.tool.taobao.mapper.TaobaoRefundOrderFromDownstreamBuyerMapper;
 import demo.tool.taobao.mapper.TaobaoUpstreamSupplierMapper;
 import demo.tool.taobao.pojo.bo.TaobaoAddOfferFromDownstreamBuyerBO;
 import demo.tool.taobao.pojo.dto.TaobaoAddOfferFromDownstreamBuyerDTO;
 import demo.tool.taobao.pojo.dto.TaobaoAddOfferToSupplierDTO;
 import demo.tool.taobao.pojo.dto.TaobaoOfferStatisticsQueryDTO;
+import demo.tool.taobao.pojo.dto.TaobaoRefundOrderFromDownstreamBuyerDTO;
 import demo.tool.taobao.pojo.po.TaobaoOfferFromDownstreamBuyer;
 import demo.tool.taobao.pojo.po.TaobaoOfferFromDownstreamBuyerExample;
 import demo.tool.taobao.pojo.po.TaobaoOfferFromDownstreamBuyerExample.Criteria;
 import demo.tool.taobao.pojo.po.TaobaoOfferToSupplier;
 import demo.tool.taobao.pojo.po.TaobaoOfferToSupplierExample;
+import demo.tool.taobao.pojo.po.TaobaoRefundOrderFromDownstreamBuyer;
+import demo.tool.taobao.pojo.po.TaobaoRefundOrderFromDownstreamBuyerExample;
 import demo.tool.taobao.pojo.po.TaobaoUpstreamSupplier;
 import demo.tool.taobao.pojo.po.TaobaoUpstreamSupplierExample;
 import demo.tool.taobao.pojo.result.TaobaoAddOfferFromDownstreamBuyerResult;
@@ -47,6 +51,7 @@ import demo.tool.taobao.pojo.result.TaobaoOfferStatisticsResult;
 import demo.tool.taobao.pojo.vo.TaobaoOfferFromDownstreamBuyerVO;
 import demo.tool.taobao.pojo.vo.TaobaoOfferStatisticsRowVO;
 import demo.tool.taobao.pojo.vo.TaobaoOfferToSupplierVO;
+import demo.tool.taobao.pojo.vo.TaobaoRefundSubOrderVO;
 import demo.tool.taobao.service.TaobaoOfferRecordService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -64,6 +69,8 @@ public class TaobaoOfferRecordServiceImpl extends CommonService implements Taoba
 	private InternationalDialingCodeMapper internationalDialingCodeMapper;
 	@Autowired
 	private TaobaoOfferToSupplierMapper offerToSupplierMapper;
+	@Autowired
+	private TaobaoRefundOrderFromDownstreamBuyerMapper refundOrderFromDownstreamBuyerMapper;
 
 	@Override
 	public ModelAndView offerRecordView() {
@@ -329,55 +336,45 @@ public class TaobaoOfferRecordServiceImpl extends CommonService implements Taoba
 			buyerOrderMap.put(buyerOrderList.get(i).getIdOutsource(), buyerOrderList.get(i));
 		}
 
-		TaobaoOfferToSupplierExample supplierOrderExample = new TaobaoOfferToSupplierExample();
-		supplierOrderExample.createCriteria().andDownstreamBuyerOfferIdIn(buyerOrderIdList);
-		List<TaobaoOfferToSupplier> supplierOrderList = offerToSupplierMapper.selectByExample(supplierOrderExample);
-		Map<Long, List<TaobaoOfferToSupplier>> supplierOrderMap = new HashMap<>();
-		for (int i = 0; i < supplierOrderList.size(); i++) {
-			TaobaoOfferToSupplier supplierOrder = supplierOrderList.get(i);
-			if (!supplierOrderMap.containsKey(supplierOrder.getDownstreamBuyerOfferId())) {
-				List<TaobaoOfferToSupplier> orderList = new ArrayList<>();
-				orderList.add(supplierOrder);
-				supplierOrderMap.put(supplierOrder.getDownstreamBuyerOfferId(), orderList);
-			} else {
-				supplierOrderMap.get(supplierOrder.getDownstreamBuyerOfferId()).add(supplierOrder);
-			}
-		}
-
 		List<TaobaoOfferStatisticsRowVO> statisticsList = new ArrayList<>();
-		BigDecimal totalBuyerOrderAmount = BigDecimal.ZERO;
-		BigDecimal totalSupplierOrderAmount = BigDecimal.ZERO;
-		BigDecimal totalProfit = BigDecimal.ZERO;
-		for (int i = 0; i < buyerOrderList.size(); i++) {
-			TaobaoOfferFromDownstreamBuyer buyerOrder = buyerOrderList.get(i);
+
+		for (int buyerOrderIndex = 0; buyerOrderIndex < buyerOrderList.size(); buyerOrderIndex++) {
+			TaobaoOfferFromDownstreamBuyer buyerOrder = buyerOrderList.get(buyerOrderIndex);
 			TaobaoOfferStatisticsRowVO rowVO = new TaobaoOfferStatisticsRowVO();
 			TaobaoOfferFromDownstreamBuyerVO buyerOrderVO = buyerOrderPoToVo(buyerOrder);
 			rowVO.setBuyerOrderVO(buyerOrderVO);
-			List<TaobaoOfferToSupplierVO> supplierOrderVoList = new ArrayList<>();
-			List<TaobaoOfferToSupplier> subSupplierOrderList = supplierOrderMap.get(buyerOrder.getIdOutsource());
-			BigDecimal supplierOrderAmountTotal = BigDecimal.ZERO;
-			if (subSupplierOrderList != null && subSupplierOrderList.size() > 0) {
-				for (int j = 0; j < subSupplierOrderList.size(); j++) {
-					TaobaoOfferToSupplier supplierOrder = subSupplierOrderList.get(j);
-					supplierOrderVoList.add(supplierOrderPoToVo(supplierOrder));
-					supplierOrderAmountTotal = supplierOrderAmountTotal.add(supplierOrder.getAmount());
-				}
-				rowVO.setSupplierOrderVoList(supplierOrderVoList);
-			}
-			rowVO.setProfit(buyerOrder.getAmount().subtract(supplierOrderAmountTotal));
 			statisticsList.add(rowVO);
-
-			totalBuyerOrderAmount = totalBuyerOrderAmount.add(buyerOrder.getAmount());
-			totalSupplierOrderAmount = totalSupplierOrderAmount.add(supplierOrderAmountTotal);
 		}
-		totalProfit = totalBuyerOrderAmount.subtract(totalSupplierOrderAmount);
-		r.setTotalBuyerOrderAmount(totalBuyerOrderAmount);
-		r.setTotalSupplierOrderAmount(totalSupplierOrderAmount);
-		r.setTotalProfit(totalProfit);
+
+		// 填入供应商订单数据
+		statisticsList = fillSupplierOrders(statisticsList, buyerOrderIdList);
+		// 填入下游买家退款订单数据
+		statisticsList = fillRefundOrders(statisticsList, buyerOrderIdList);
+
+		// 最后再计算, 未补充退款订单金额数据
+		BigDecimal totalBuyerOrderAmount = BigDecimal.ZERO;
+		BigDecimal totalSupplierOrderAmount = BigDecimal.ZERO;
+		BigDecimal totalProfit = BigDecimal.ZERO;
+		BigDecimal totalDownstreamBuyerRefundAmount = BigDecimal.ZERO;
+		for (int i = 0; i < statisticsList.size(); i++) {
+			TaobaoOfferStatisticsRowVO rowVO = statisticsList.get(i);
+			totalBuyerOrderAmount = totalBuyerOrderAmount.add(rowVO.getBuyerOrderVO().getAmount());
+			totalSupplierOrderAmount = totalSupplierOrderAmount.add(rowVO.getTotalSupplierOrderAmount());
+			totalDownstreamBuyerRefundAmount = totalDownstreamBuyerRefundAmount.add(rowVO.getTotalRefundAmount());
+			totalProfit = totalBuyerOrderAmount.subtract(totalSupplierOrderAmount).subtract(rowVO.getTotalRefundAmount());
+		}
+
+		// 按付款时间排序
 		statisticsList.sort(Comparator.comparing(
 				vo -> vo.getBuyerOrderVO() != null ? vo.getBuyerOrderVO().getOrderPaymentTime() : null,
 				Comparator.nullsLast(Comparator.naturalOrder()) // 空值排在最后；若想排在最前可换成 nullsFirst
 		));
+
+		r.setTotalBuyerOrderAmount(totalBuyerOrderAmount);
+		r.setTotalBuyerRefundOrderAmount(totalDownstreamBuyerRefundAmount);
+		r.setTotalSupplierOrderAmount(totalSupplierOrderAmount);
+		r.setTotalProfit(totalProfit);
+
 		r.setStatisticsList(statisticsList);
 		r.setIsSuccess();
 		return r;
@@ -403,7 +400,7 @@ public class TaobaoOfferRecordServiceImpl extends CommonService implements Taoba
 		vo.setOrderPaymentTime(po.getOrderPaymentTime());
 		vo.setOrderPaymentTimeStr(localDateTimeHandler.dateToStr(po.getOrderPaymentTime()));
 		vo.setNickname(po.getNickname());
-		vo.setOrderID(String.valueOf(po.getIdOutsource()));
+		vo.setOrderID(po.getIdOutsource());
 		vo.setPackageReceiverName(po.getPackageReceiverName());
 		vo.setPhone(po.getPhone());
 		vo.setRemark(po.getRemark());
@@ -423,5 +420,129 @@ public class TaobaoOfferRecordServiceImpl extends CommonService implements Taoba
 			vo.setSupplierName("Unname/NotExists");
 		}
 		return vo;
+	}
+
+	@Override
+	public CommonResult refundOrderFromDownstreamBuyer(TaobaoRefundOrderFromDownstreamBuyerDTO dto) {
+		CommonResult r = new CommonResult();
+		Long sourceOrderId = dto.getSourceOrderId();
+		TaobaoOfferFromDownstreamBuyer buyerOrder = offerFromDownstreamBuyerMapper.selectByPrimaryKey(sourceOrderId);
+		if (dto.getRefundOrderId() == null) {
+			r.setMessage("Refund order id error");
+			return r;
+		}
+		if (buyerOrder == null || buyerOrder.getAmount() == null) {
+			r.setMessage("Can NOT found source");
+			return r;
+		}
+		if (dto.getAmount() == null || dto.getAmount().compareTo(BigDecimal.ZERO) > 0
+				|| dto.getAmount().compareTo(buyerOrder.getAmount()) > 0) {
+			r.setMessage("Refund amount error");
+			return r;
+		}
+		LocalDateTime refundDateTime = localDateTimeHandler
+				.stringToLocalDateTimeUnkonwFormat(dto.getRefundDateTimeStr());
+		// 2026-10-02 未实现从页面传退款日期, 且重要性不高, 一般误差可以接受, 故允许暂时使用本地时间
+		if (refundDateTime == null) {
+			refundDateTime = LocalDateTime.now();
+		}
+		TaobaoRefundOrderFromDownstreamBuyer refundOrder = new TaobaoRefundOrderFromDownstreamBuyer();
+		refundOrder.setId(snowFlake.getNextId());
+		refundOrder.setAmount(dto.getAmount());
+		refundOrder.setRefundOrderId(dto.getRefundOrderId());
+		refundOrder.setSourceOrderId(dto.getSourceOrderId());
+		refundOrder.setRefundCreateTime(refundDateTime);
+		refundOrder.setRegionId1(buyerOrder.getRegionId1());
+		refundOrder.setRegionId2(buyerOrder.getRegionId2());
+		if (StringUtils.isNotBlank(dto.getRemark())) {
+			refundOrder.setRemark(dto.getRemark());
+		}
+		refundOrderFromDownstreamBuyerMapper.insertSelective(refundOrder);
+		r.setIsSuccess();
+		return r;
+	}
+
+	private List<TaobaoOfferStatisticsRowVO> fillSupplierOrders(List<TaobaoOfferStatisticsRowVO> statisticsList,
+			List<Long> buyerOrderIdList) {
+		TaobaoOfferToSupplierExample supplierOrderExample = new TaobaoOfferToSupplierExample();
+		supplierOrderExample.createCriteria().andDownstreamBuyerOfferIdIn(buyerOrderIdList).andIsDeleteEqualTo(false);
+		List<TaobaoOfferToSupplier> supplierOrderList = offerToSupplierMapper.selectByExample(supplierOrderExample);
+		Map<Long, List<TaobaoOfferToSupplier>> supplierOrderMap = new HashMap<>();
+		for (int i = 0; i < supplierOrderList.size(); i++) {
+			TaobaoOfferToSupplier supplierOrder = supplierOrderList.get(i);
+			if (!supplierOrderMap.containsKey(supplierOrder.getDownstreamBuyerOfferId())) {
+				List<TaobaoOfferToSupplier> orderList = new ArrayList<>();
+				orderList.add(supplierOrder);
+				supplierOrderMap.put(supplierOrder.getDownstreamBuyerOfferId(), orderList);
+			} else {
+				supplierOrderMap.get(supplierOrder.getDownstreamBuyerOfferId()).add(supplierOrder);
+			}
+		}
+
+		for (int statisticsRowIndex = 0; statisticsRowIndex < statisticsList.size(); statisticsRowIndex++) {
+			TaobaoOfferStatisticsRowVO rowVO = statisticsList.get(statisticsRowIndex);
+			List<TaobaoOfferToSupplierVO> supplierOrderVoList = new ArrayList<>();
+			List<TaobaoOfferToSupplier> subSupplierOrderList = supplierOrderMap
+					.get(rowVO.getBuyerOrderVO().getOrderID());
+			BigDecimal supplierOrderAmountTotal = BigDecimal.ZERO;
+			if (subSupplierOrderList != null && subSupplierOrderList.size() > 0) {
+				for (int supplierOrderIndex = 0; supplierOrderIndex < subSupplierOrderList
+						.size(); supplierOrderIndex++) {
+					TaobaoOfferToSupplier supplierOrder = subSupplierOrderList.get(supplierOrderIndex);
+					supplierOrderVoList.add(supplierOrderPoToVo(supplierOrder));
+					supplierOrderAmountTotal = supplierOrderAmountTotal.add(supplierOrder.getAmount());
+				}
+				rowVO.setSupplierOrderVoList(supplierOrderVoList);
+			}
+			rowVO.setTotalSupplierOrderAmount(supplierOrderAmountTotal);
+		}
+		return statisticsList;
+	}
+
+	private TaobaoRefundSubOrderVO refundOrderFromDownstreamBuyerToVo(TaobaoRefundOrderFromDownstreamBuyer po) {
+		TaobaoRefundSubOrderVO vo = new TaobaoRefundSubOrderVO();
+		vo.setAmount(po.getAmount());
+		vo.setOrderIdFromDownstreamBuyer(po.getSourceOrderId());
+		vo.setRefundOrderId(po.getRefundOrderId());
+		vo.setRefundOrderDateTime(po.getRefundCreateTime());
+		vo.setRefundOrderDateTimeStr(localDateTimeHandler.dateToStr(po.getRefundCreateTime()));
+		return vo;
+	}
+
+	private List<TaobaoOfferStatisticsRowVO> fillRefundOrders(List<TaobaoOfferStatisticsRowVO> statisticsList,
+			List<Long> buyerOrderIdList) {
+		TaobaoRefundOrderFromDownstreamBuyerExample refundOrderExample = new TaobaoRefundOrderFromDownstreamBuyerExample();
+		refundOrderExample.createCriteria().andSourceOrderIdIn(buyerOrderIdList).andIsDeleteEqualTo(false);
+		List<TaobaoRefundOrderFromDownstreamBuyer> refundOrderList = refundOrderFromDownstreamBuyerMapper
+				.selectByExample(refundOrderExample);
+		Map<Long, List<TaobaoRefundOrderFromDownstreamBuyer>> refundOrderMap = new HashMap<>();
+		for (int i = 0; i < refundOrderList.size(); i++) {
+			TaobaoRefundOrderFromDownstreamBuyer refundOrder = refundOrderList.get(i);
+			if (!refundOrderMap.containsKey(refundOrder.getSourceOrderId())) {
+				List<TaobaoRefundOrderFromDownstreamBuyer> orderList = new ArrayList<>();
+				orderList.add(refundOrder);
+				refundOrderMap.put(refundOrder.getSourceOrderId(), orderList);
+			} else {
+				refundOrderMap.get(refundOrder.getSourceOrderId()).add(refundOrder);
+			}
+		}
+
+		for (int statisticsRowIndex = 0; statisticsRowIndex < statisticsList.size(); statisticsRowIndex++) {
+			TaobaoOfferStatisticsRowVO rowVO = statisticsList.get(statisticsRowIndex);
+			List<TaobaoRefundSubOrderVO> refundOrderVoList = new ArrayList<>();
+			List<TaobaoRefundOrderFromDownstreamBuyer> subRefundOrderList = refundOrderMap
+					.get(rowVO.getBuyerOrderVO().getOrderID());
+			BigDecimal refundOrderAmountTotal = BigDecimal.ZERO;
+			if (subRefundOrderList != null && subRefundOrderList.size() > 0) {
+				for (int supplierOrderIndex = 0; supplierOrderIndex < subRefundOrderList.size(); supplierOrderIndex++) {
+					TaobaoRefundOrderFromDownstreamBuyer refundOrder = subRefundOrderList.get(supplierOrderIndex);
+					refundOrderVoList.add(refundOrderFromDownstreamBuyerToVo(refundOrder));
+					refundOrderAmountTotal = refundOrderAmountTotal.add(refundOrder.getAmount());
+				}
+				rowVO.setRefundOrderList(refundOrderVoList);
+			}
+			rowVO.setTotalRefundAmount(refundOrderAmountTotal);
+		}
+		return statisticsList;
 	}
 }

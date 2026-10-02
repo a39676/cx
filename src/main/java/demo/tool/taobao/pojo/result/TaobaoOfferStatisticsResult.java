@@ -10,6 +10,7 @@ public class TaobaoOfferStatisticsResult extends CommonResult {
 
 	private List<TaobaoOfferStatisticsRowVO> statisticsList;
 	private BigDecimal totalBuyerOrderAmount;
+	private BigDecimal totalBuyerRefundOrderAmount;
 	private BigDecimal totalSupplierOrderAmount;
 	private BigDecimal totalProfit;
 
@@ -27,6 +28,14 @@ public class TaobaoOfferStatisticsResult extends CommonResult {
 
 	public void setTotalBuyerOrderAmount(BigDecimal totalBuyerOrderAmount) {
 		this.totalBuyerOrderAmount = totalBuyerOrderAmount;
+	}
+
+	public BigDecimal getTotalBuyerRefundOrderAmount() {
+		return totalBuyerRefundOrderAmount;
+	}
+
+	public void setTotalBuyerRefundOrderAmount(BigDecimal totalBuyerRefundOrderAmount) {
+		this.totalBuyerRefundOrderAmount = totalBuyerRefundOrderAmount;
 	}
 
 	public BigDecimal getTotalSupplierOrderAmount() {
@@ -48,8 +57,8 @@ public class TaobaoOfferStatisticsResult extends CommonResult {
 	@Override
 	public String toString() {
 		return "TaobaoOfferStatisticsResult [statisticsList=" + statisticsList + ", totalBuyerOrderAmount="
-				+ totalBuyerOrderAmount + ", totalSupplierOrderAmount=" + totalSupplierOrderAmount + ", totalProfit="
-				+ totalProfit + "]";
+				+ totalBuyerOrderAmount + ", totalBuyerRefundOrderAmount=" + totalBuyerRefundOrderAmount
+				+ ", totalSupplierOrderAmount=" + totalSupplierOrderAmount + ", totalProfit=" + totalProfit + "]";
 	}
 
 }

@@ -57,9 +57,9 @@
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="taobao_upstream_supplier">
-        	<property name="tableName" value="taobao_upstream_supplier"></property>
-        	<property name="domainObjectName" value="taobao_upstream_supplier"></property>
+        <table tableName="taobao_refund_order_from_downstream_buyer">
+        	<property name="tableName" value="taobao_refund_order_from_downstream_buyer"></property>
+        	<property name="domainObjectName" value="taobao_refund_order_from_downstream_buyer"></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

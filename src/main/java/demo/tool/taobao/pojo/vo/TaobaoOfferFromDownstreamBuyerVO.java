@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 public class TaobaoOfferFromDownstreamBuyerVO {
 
-	private String orderID;
+	private Long orderID;
 	private BigDecimal amount;
 	private String phone;
 	private String nickname;
@@ -19,11 +19,11 @@ public class TaobaoOfferFromDownstreamBuyerVO {
 	private String orderPaymentTimeStr;
 	private String remark;
 
-	public String getOrderID() {
+	public Long getOrderID() {
 		return orderID;
 	}
 
-	public void setOrderID(String orderID) {
+	public void setOrderID(Long orderID) {
 		this.orderID = orderID;
 	}
 

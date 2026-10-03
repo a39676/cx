@@ -10,6 +10,7 @@ public class TaobaoRefundSubOrderVO {
 	private BigDecimal amount;
 	private LocalDateTime refundOrderDateTime;
 	private String refundOrderDateTimeStr;
+	private String remark;
 
 	public Long getOrderIdFromDownstreamBuyer() {
 		return orderIdFromDownstreamBuyer;
@@ -51,11 +52,19 @@ public class TaobaoRefundSubOrderVO {
 		this.refundOrderDateTimeStr = refundOrderDateTimeStr;
 	}
 
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
 	@Override
 	public String toString() {
-		return "TaobaoRefundOrderVO [orderIdFromDownstreamBuyer=" + orderIdFromDownstreamBuyer + ", refundOrderId="
+		return "TaobaoRefundSubOrderVO [orderIdFromDownstreamBuyer=" + orderIdFromDownstreamBuyer + ", refundOrderId="
 				+ refundOrderId + ", amount=" + amount + ", refundOrderDateTime=" + refundOrderDateTime
-				+ ", refundOrderDateTimeStr=" + refundOrderDateTimeStr + "]";
+				+ ", refundOrderDateTimeStr=" + refundOrderDateTimeStr + ", remark=" + remark + "]";
 	}
 
 }

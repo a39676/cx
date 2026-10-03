@@ -92,6 +92,7 @@
         <thead>
           <tr>
             <th>买家订单</th>
+            <th>退款订单</th>
             <th>供应商订单</th>
             <th>利润</th>
           </tr>
@@ -312,6 +313,44 @@
               htmlStr += '<span style="background-color: #d1e7dd; border-radius: 4px; padding: 2px 6px; display:inline-block;">' + buyerOrder.remark + '</span><br>';
             }
             htmlStr += "</td>";
+            if(row.refundOrderList != null){
+              var refundOrderList = row.refundOrderList;
+              htmlStr += "<td>";
+              htmlStr += "<table><thead>";
+              htmlStr += "<tr>";
+              htmlStr += "<th>退款ID</th>";
+              htmlStr += "<th>金额</th>";
+              htmlStr += "<th>退款时间</th>";
+              htmlStr += "<th>备注</th>";
+              htmlStr += "</tr>";
+              htmlStr += "</thead><tbody>";
+              for (let refundOrderIndex = 0; refundOrderIndex < refundOrderList.length; refundOrderIndex++) {
+                var refundOrder = refundOrderList[refundOrderIndex];
+                htmlStr += "<tr>";
+                htmlStr += "<td>";
+                htmlStr += "<a href='https://myseller.taobao.com/home.htm/trade-platform/refund-list/detail?disputeId="+refundOrder.refundOrderId+"' target='_blank'>"+refundOrder.refundOrderId+"</a>";
+                htmlStr += "</td>";
+                htmlStr += "<td>";
+                htmlStr += refundOrder.amount;
+                htmlStr += "</td>";
+                htmlStr += "<td>";
+                htmlStr += refundOrder.refundOrderDateTimeStr;
+                htmlStr += "</td>";
+                htmlStr += "<td>";
+                // refundOrder.remark 赋圆角 绿色背景
+                if(refundOrder.remark != null) {
+                  htmlStr += '<span style="background-color: #d1e7dd; border-radius: 4px; padding: 2px 6px; display: inline-block;">' + refundOrder.remark + '</span>';
+                }
+                htmlStr += "</td>";
+                htmlStr += "</tr>";
+              }
+              htmlStr += "</tbody></table>"
+              htmlStr += "</td>";
+            } else {
+              htmlStr += "<td>";
+              htmlStr += "No refund data";
+              htmlStr += "</td>";
+            }
             if(row.supplierOrderVoList != null){
               var supplierOrderVoList = row.supplierOrderVoList;
               htmlStr += "<td>";
@@ -351,7 +390,7 @@
               htmlStr += "</td>";
             } else {
               htmlStr += "<td>";
-              htmlStr += "No data";
+              htmlStr += "No supplier data";
               htmlStr += "</td>";
             }
             htmlStr += "<td>";
@@ -366,6 +405,9 @@
           htmlStr += "<tr>";
           htmlStr += "<td>";
           htmlStr += datas.totalBuyerOrderAmount;
+          htmlStr += "</td>";
+          htmlStr += "<td>";
+          htmlStr += datas.totalBuyerRefundOrderAmount;
           htmlStr += "</td>";
           htmlStr += "<td>";
           htmlStr += datas.totalSupplierOrderAmount;

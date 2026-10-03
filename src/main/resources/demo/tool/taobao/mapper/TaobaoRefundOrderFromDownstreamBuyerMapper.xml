@@ -3,6 +3,7 @@
 <mapper namespace="demo.tool.taobao.mapper.TaobaoRefundOrderFromDownstreamBuyerMapper">
   <resultMap id="BaseResultMap" type="demo.tool.taobao.pojo.po.TaobaoRefundOrderFromDownstreamBuyer">
     <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="refund_order_id" jdbcType="BIGINT" property="refundOrderId" />
     <result column="source_order_id" jdbcType="BIGINT" property="sourceOrderId" />
     <result column="amount" jdbcType="DECIMAL" property="amount" />
     <result column="refund_create_time" jdbcType="TIMESTAMP" property="refundCreateTime" />
@@ -72,8 +73,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, source_order_id, amount, refund_create_time, region_id_1, region_id_2, after_transit_region_id, 
-    remark, create_time, is_delete
+    id, refund_order_id, source_order_id, amount, refund_create_time, region_id_1, region_id_2, 
+    after_transit_region_id, remark, create_time, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.tool.taobao.pojo.po.TaobaoRefundOrderFromDownstreamBuyerExample" resultMap="BaseResultMap">
     select
@@ -106,20 +107,23 @@
     </if>
   </delete>
   <insert id="insert" parameterType="demo.tool.taobao.pojo.po.TaobaoRefundOrderFromDownstreamBuyer">
-    insert into taobao_refund_order_from_downstream_buyer (id, source_order_id, amount, 
-      refund_create_time, region_id_1, region_id_2, 
-      after_transit_region_id, remark, create_time, 
-      is_delete)
-    values (#{id,jdbcType=BIGINT}, #{sourceOrderId,jdbcType=BIGINT}, #{amount,jdbcType=DECIMAL}, 
-      #{refundCreateTime,jdbcType=TIMESTAMP}, #{regionId1,jdbcType=INTEGER}, #{regionId2,jdbcType=INTEGER}, 
-      #{afterTransitRegionId,jdbcType=INTEGER}, #{remark,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{isDelete,jdbcType=BIT})
+    insert into taobao_refund_order_from_downstream_buyer (id, refund_order_id, source_order_id, 
+      amount, refund_create_time, region_id_1, 
+      region_id_2, after_transit_region_id, remark, 
+      create_time, is_delete)
+    values (#{id,jdbcType=BIGINT}, #{refundOrderId,jdbcType=BIGINT}, #{sourceOrderId,jdbcType=BIGINT}, 
+      #{amount,jdbcType=DECIMAL}, #{refundCreateTime,jdbcType=TIMESTAMP}, #{regionId1,jdbcType=INTEGER}, 
+      #{regionId2,jdbcType=INTEGER}, #{afterTransitRegionId,jdbcType=INTEGER}, #{remark,jdbcType=CHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="demo.tool.taobao.pojo.po.TaobaoRefundOrderFromDownstreamBuyer">
     insert into taobao_refund_order_from_downstream_buyer
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
+      </if>
+      <if test="refundOrderId != null">
+        refund_order_id,
       </if>
       <if test="sourceOrderId != null">
         source_order_id,
@@ -152,6 +156,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=BIGINT},
+      </if>
+      <if test="refundOrderId != null">
+        #{refundOrderId,jdbcType=BIGINT},
       </if>
       <if test="sourceOrderId != null">
         #{sourceOrderId,jdbcType=BIGINT},
@@ -194,6 +201,9 @@
       <if test="row.id != null">
         id = #{row.id,jdbcType=BIGINT},
       </if>
+      <if test="row.refundOrderId != null">
+        refund_order_id = #{row.refundOrderId,jdbcType=BIGINT},
+      </if>
       <if test="row.sourceOrderId != null">
         source_order_id = #{row.sourceOrderId,jdbcType=BIGINT},
       </if>
@@ -229,6 +239,7 @@
   <update id="updateByExample" parameterType="map">
     update taobao_refund_order_from_downstream_buyer
     set id = #{row.id,jdbcType=BIGINT},
+      refund_order_id = #{row.refundOrderId,jdbcType=BIGINT},
       source_order_id = #{row.sourceOrderId,jdbcType=BIGINT},
       amount = #{row.amount,jdbcType=DECIMAL},
       refund_create_time = #{row.refundCreateTime,jdbcType=TIMESTAMP},
@@ -245,6 +256,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="demo.tool.taobao.pojo.po.TaobaoRefundOrderFromDownstreamBuyer">
     update taobao_refund_order_from_downstream_buyer
     <set>
+      <if test="refundOrderId != null">
+        refund_order_id = #{refundOrderId,jdbcType=BIGINT},
+      </if>
       <if test="sourceOrderId != null">
         source_order_id = #{sourceOrderId,jdbcType=BIGINT},
       </if>
@@ -277,7 +291,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="demo.tool.taobao.pojo.po.TaobaoRefundOrderFromDownstreamBuyer">
     update taobao_refund_order_from_downstream_buyer
-    set source_order_id = #{sourceOrderId,jdbcType=BIGINT},
+    set refund_order_id = #{refundOrderId,jdbcType=BIGINT},
+      source_order_id = #{sourceOrderId,jdbcType=BIGINT},
       amount = #{amount,jdbcType=DECIMAL},
       refund_create_time = #{refundCreateTime,jdbcType=TIMESTAMP},
       region_id_1 = #{regionId1,jdbcType=INTEGER},

@@ -538,8 +538,8 @@ public class TaobaoOfferRecordServiceImpl extends CommonService implements Taoba
 					.get(rowVO.getBuyerOrderVO().getOrderID());
 			BigDecimal refundOrderAmountTotal = BigDecimal.ZERO;
 			if (subRefundOrderList != null && subRefundOrderList.size() > 0) {
-				for (int supplierOrderIndex = 0; supplierOrderIndex < subRefundOrderList.size(); supplierOrderIndex++) {
-					TaobaoRefundOrderFromDownstreamBuyer refundOrder = subRefundOrderList.get(supplierOrderIndex);
+				for (int refundOrderIndex = 0; refundOrderIndex < subRefundOrderList.size(); refundOrderIndex++) {
+					TaobaoRefundOrderFromDownstreamBuyer refundOrder = subRefundOrderList.get(refundOrderIndex);
 					refundOrderVoList.add(refundOrderFromDownstreamBuyerToVo(refundOrder));
 					refundOrderAmountTotal = refundOrderAmountTotal.add(refundOrder.getAmount());
 				}

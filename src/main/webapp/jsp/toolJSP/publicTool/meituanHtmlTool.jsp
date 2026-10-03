@@ -92,7 +92,7 @@
         },
         success:function(datas){
           $("#orderHtmlOutput").val(datas.htmlStr);
-          $("#orderPriceList").val(datas.priceList);
+          $("#orderPriceList").val(datas.priceListStr);
           $("#orderTotalPrice").val(datas.totalPrice);
         },  
         error: function(datas) {  

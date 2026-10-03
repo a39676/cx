@@ -55,11 +55,16 @@ public class MeituanHtmlEditServiceImpl extends CommonService implements Meituan
 			// 如果内部需要插入包含标签的内容，可用 price.html("<span>￥35.00</span>");
 		}
 
+		String priceListStr = "";
+		for (BigDecimal price : newPriceList) {
+			priceListStr = priceListStr + "," + String.valueOf(price);
+		}
 		// 3. 打印修改后的完整 HTML
 //		System.out.println("修改后 HTML:\n" + doc.body().html());
 		r.setHtmlStr(doc.body().html());
 		r.setTotalPrice(total);
 		r.setPriceList(newPriceList);
+		r.setPriceListStr(priceListStr);
 		r.setIsSuccess();
 
 		return r;

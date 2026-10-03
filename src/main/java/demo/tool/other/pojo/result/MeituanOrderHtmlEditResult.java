@@ -11,6 +11,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 public class MeituanOrderHtmlEditResult extends CommonResult {
 
 	private List<BigDecimal> priceList;
+	private String priceListStr;
 	private BigDecimal totalPrice;
 	private String htmlStr;
 
@@ -20,6 +21,14 @@ public class MeituanOrderHtmlEditResult extends CommonResult {
 
 	public void setPriceList(List<BigDecimal> priceList) {
 		this.priceList = priceList;
+	}
+
+	public String getPriceListStr() {
+		return priceListStr;
+	}
+
+	public void setPriceListStr(String priceListStr) {
+		this.priceListStr = priceListStr;
 	}
 
 	public BigDecimal getTotalPrice() {
@@ -40,8 +49,8 @@ public class MeituanOrderHtmlEditResult extends CommonResult {
 
 	@Override
 	public String toString() {
-		return "MeituanOrderHtmlEditResult [priceList=" + priceList + ", totalPrice=" + totalPrice + ", htmlStr="
-				+ htmlStr + "]";
+		return "MeituanOrderHtmlEditResult [priceList=" + priceList + ", priceListStr=" + priceListStr + ", totalPrice="
+				+ totalPrice + ", htmlStr=" + htmlStr + "]";
 	}
 
 }

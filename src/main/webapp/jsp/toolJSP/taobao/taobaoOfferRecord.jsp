@@ -70,6 +70,11 @@
         </select>
         <button id="supplierOrderInput">新增供应订单</button>
         <button id="createRandomSupplierOrderID">生成随机供应订单ID</button>
+        <hr>
+        <textarea id="buyerRefundOrderId" rows="2" cols="20" placeholder="买家退款订单ID"></textarea>
+        <input type="number" id="buyerRefundOrderAmount" placeholder="买家退款订单总价">
+        <input type="text" id="buyerRefundOrderRemark" placeholder="买家退款订单备注">
+        <button id="buyerRefundOrderInput">新增买家退款订单</button>
       </div>
     </div>
 
@@ -132,6 +137,49 @@
         window.open(targetUrl, '_blank');
       }
     });
+
+
+    $("#buyerRefundOrderInput").click( function() {
+      $("#msg").html("Loading buyerRefundOrderInput");
+      buyerRefundOrderInput();
+    });
+
+    function buyerRefundOrderInput(){
+      var buyerRefundOrderId = $("#buyerRefundOrderId").val();
+      var sourceOrderId = $("#sourceBuyerOrderId").val();
+      var buyerRefundOrderAmount = $("#buyerRefundOrderAmount").val();
+      var buyerRefundOrderRemark = $("#buyerRefundOrderRemark").val();
+      
+      
+      var url = "/taobao/offer/addRefundOrderFromDwonstreamBuyer";
+
+      var jsonOutput = {
+        refundOrderId : buyerRefundOrderId,
+        sourceOrderId : sourceOrderId,
+        amount : buyerRefundOrderAmount,
+        remark : buyerRefundOrderRemark,
+      };
+
+      $.ajax({  
+        type : "POST",  
+        async : true,
+        url : url, 
+        data: JSON.stringify(jsonOutput),
+        cache : false,
+        contentType: "application/json",
+        dataType: "json",
+        timeout:50000,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success:function(datas){
+          $("#msg").html(datas.message);
+        },  
+        error: function(datas) {  
+          $("#msg").html(datas.message);
+        }  
+      });  
+    };
 
     $("#buyerOrderInput").click( function() {
       $("#msg").html("Loading");

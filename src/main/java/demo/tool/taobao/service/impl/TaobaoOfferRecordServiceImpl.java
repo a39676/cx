@@ -428,8 +428,16 @@ public class TaobaoOfferRecordServiceImpl extends CommonService implements Taoba
 	@Override
 	public CommonResult refundOrderFromDownstreamBuyer(TaobaoRefundOrderFromDownstreamBuyerDTO dto) {
 		CommonResult r = new CommonResult();
+		if (dto.getAmount() == null || dto.getRefundOrderId() == null || dto.getSourceOrderId() == null) {
+			r.setMessage("Parameter null exception");
+			return r;
+		}
 		Long sourceOrderId = dto.getSourceOrderId();
-		TaobaoOfferFromDownstreamBuyer buyerOrder = offerFromDownstreamBuyerMapper.selectByPrimaryKey(sourceOrderId);
+		TaobaoOfferFromDownstreamBuyerExample buyerOrderExample = new TaobaoOfferFromDownstreamBuyerExample();
+		buyerOrderExample.createCriteria().andIdOutsourceEqualTo(sourceOrderId);
+		List<TaobaoOfferFromDownstreamBuyer> buyerOrderIdList = offerFromDownstreamBuyerMapper
+				.selectByExample(buyerOrderExample);
+		TaobaoOfferFromDownstreamBuyer buyerOrder = buyerOrderIdList.get(0);
 		if (dto.getRefundOrderId() == null) {
 			r.setMessage("Refund order id error");
 			return r;
@@ -438,17 +446,21 @@ public class TaobaoOfferRecordServiceImpl extends CommonService implements Taoba
 			r.setMessage("Can NOT found source");
 			return r;
 		}
-		if (dto.getAmount() == null || dto.getAmount().compareTo(BigDecimal.ZERO) > 0
+		if (dto.getAmount() == null || dto.getAmount().compareTo(BigDecimal.ZERO) < 0
 				|| dto.getAmount().compareTo(buyerOrder.getAmount()) > 0) {
 			r.setMessage("Refund amount error");
 			return r;
 		}
-		LocalDateTime refundDateTime = localDateTimeHandler
-				.stringToLocalDateTimeUnkonwFormat(dto.getRefundDateTimeStr());
+
 		// 2026-10-02 未实现从页面传退款日期, 且重要性不高, 一般误差可以接受, 故允许暂时使用本地时间
+		LocalDateTime refundDateTime = null;
+		if (StringUtils.isNotBlank(dto.getRefundDateTimeStr())) {
+			refundDateTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(dto.getRefundDateTimeStr());
+		}
 		if (refundDateTime == null) {
 			refundDateTime = LocalDateTime.now();
 		}
+
 		TaobaoRefundOrderFromDownstreamBuyer refundOrder = new TaobaoRefundOrderFromDownstreamBuyer();
 		refundOrder.setId(snowFlake.getNextId());
 		refundOrder.setAmount(dto.getAmount());
@@ -457,6 +469,9 @@ public class TaobaoOfferRecordServiceImpl extends CommonService implements Taoba
 		refundOrder.setRefundCreateTime(refundDateTime);
 		refundOrder.setRegionId1(buyerOrder.getRegionId1());
 		refundOrder.setRegionId2(buyerOrder.getRegionId2());
+		if (buyerOrder.getAfterTransitRegionId() != null) {
+			refundOrder.setAfterTransitRegionId(buyerOrder.getAfterTransitRegionId());
+		}
 		if (StringUtils.isNotBlank(dto.getRemark())) {
 			refundOrder.setRemark(dto.getRemark());
 		}

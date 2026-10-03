@@ -292,7 +292,12 @@
             }
             var buyerOrder = row.buyerOrderVO;
             htmlStr += "<td>";
-            htmlStr += "<a href='https://qn.taobao.com/home.htm/trade-platform/tp/detail?bizOrderId="+buyerOrder.orderID+"' target='_blank'>"+buyerOrder.orderID+"</a><img alt='Copy SVG Vector Icon' style='width: 15px; height: 15px; max-width: 100%; object-fit: contain; display: block; cursor: pointer;' src='/static_resources/svgIcon/copy-svgrepo-com.svg' value='"+buyerOrder.orderID+"' class='clickToCopy'><br>";
+            htmlStr += "<div style='display: flex; align-items: center; gap: 5px;'>";
+            htmlStr += "<a href='https://qn.taobao.com/home.htm/trade-platform/tp/detail?bizOrderId="+buyerOrder.orderID+"' target='_blank'>"+buyerOrder.orderID+"</a>";
+            htmlStr += "<img alt='Copy SVG Vector Icon' style='width: 25px; height: 25px; max-width: 100%; object-fit: contain; display: block; cursor: pointer;' src='/static_resources/svgIcon/copy-svgrepo-com.svg' value='"+buyerOrder.orderID+"' class='clickToCopy'>";
+            htmlStr += "<img alt='Copy SVG Vector Icon' style='width: 25px; height: 25px; max-width: 100%; object-fit: contain; display: block; cursor: pointer;' src='/static_resources/svgIcon/arrow-forward-all-svgrepo-com.svg' value='"+buyerOrder.orderID+"' class='pasteToSourceBuyerOrderId'>";
+            htmlStr += "</div>";
+            htmlStr += "<br>";
             htmlStr += "amount: " + buyerOrder.amount + "<br>";
             htmlStr += buyerOrder.nickname + "<br>" 
             htmlStr += buyerOrder.packageReceiverName + " " + buyerOrder.phone + "<br>";
@@ -322,7 +327,11 @@
                 var supplierOrder = supplierOrderVoList[supplierOrderIndex];
                 htmlStr += "<tr>";
                 htmlStr += "<td>";
-                htmlStr += "<a href='https://air.1688.com/app/ctf-page/trade-order-detail/index.html?order_id="+supplierOrder.orderID+"' target='_blank'>"+supplierOrder.orderID+"</a><img alt='Copy SVG Vector Icon' style='width: 15px; height: 15px; max-width: 100%; object-fit: contain; display: block; cursor: pointer;' src='/static_resources/svgIcon/copy-svgrepo-com.svg' value='"+supplierOrder.orderID+"' class='clickToCopy'>";
+                htmlStr += "<a href='https://air.1688.com/app/ctf-page/trade-order-detail/index.html?order_id="+supplierOrder.orderID+"' target='_blank'>"+supplierOrder.orderID+"</a>";
+                htmlStr += "<div style='display: flex; align-items: center; gap: 5px;'>";
+                htmlStr += "<img alt='Copy SVG Vector Icon' style='width: 25px; height: 25px; max-width: 100%; object-fit: contain; display: block; cursor: pointer;' src='/static_resources/svgIcon/copy-svgrepo-com.svg' value='"+supplierOrder.orderID+"' class='clickToCopy'>";
+                htmlStr += "<img alt='Copy SVG Vector Icon' style='width: 25px; height: 25px; max-width: 100%; object-fit: contain; display: block; cursor: pointer;' src='/static_resources/svgIcon/arrow-forward-all-svgrepo-com.svg' value='"+supplierOrder.orderID+"' class='pasteToSupplierOrderId'>";
+                htmlStr += "</div>";
                 htmlStr += "</td>";
                 htmlStr += "<td>";
                 htmlStr += supplierOrder.amount;
@@ -444,6 +453,31 @@
       }
     }); --%>
 
+  });
+
+  $(document).on("click", ".pasteToSourceBuyerOrderId", function() {
+    var content = $(this).val();
+    if (content.trim().length < 1) {
+      content = $(this).text();
+    }
+    if (content.trim().length < 1) {
+      content = $(this).attr("value");
+    }
+    if (content && content.trim() !== "") {
+      $("#sourceBuyerOrderId").val(content);
+    }
+  });
+  $(document).on("click", ".pasteToSupplierOrderId", function() {
+    var content = $(this).val();
+    if (content.trim().length < 1) {
+      content = $(this).text();
+    }
+    if (content.trim().length < 1) {
+      content = $(this).attr("value");
+    }
+    if (content && content.trim() !== "") {
+      $("#supplierOrderId").val(content);
+    }
   });
 
   $(document).on("click", ".clickToCopy", function() {

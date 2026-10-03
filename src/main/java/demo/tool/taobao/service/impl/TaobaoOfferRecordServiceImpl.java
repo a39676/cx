@@ -358,6 +358,7 @@ public class TaobaoOfferRecordServiceImpl extends CommonService implements Taoba
 		BigDecimal totalDownstreamBuyerRefundAmount = BigDecimal.ZERO;
 		for (int i = 0; i < statisticsList.size(); i++) {
 			TaobaoOfferStatisticsRowVO rowVO = statisticsList.get(i);
+			rowVO.setProfit(rowVO.getBuyerOrderVO().getAmount().subtract(rowVO.getTotalRefundAmount()).subtract(rowVO.getTotalSupplierOrderAmount()));
 			totalBuyerOrderAmount = totalBuyerOrderAmount.add(rowVO.getBuyerOrderVO().getAmount());
 			totalSupplierOrderAmount = totalSupplierOrderAmount.add(rowVO.getTotalSupplierOrderAmount());
 			totalDownstreamBuyerRefundAmount = totalDownstreamBuyerRefundAmount.add(rowVO.getTotalRefundAmount());

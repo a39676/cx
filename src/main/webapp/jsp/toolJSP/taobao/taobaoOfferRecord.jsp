@@ -90,6 +90,14 @@
       </div>
     </div>
   </div>
+
+  <!-- 每日收益曲线图容器 -->
+  <div class="row" style="margin-top: 30px;">
+    <div class="col-md-12">
+      <h3>每日收益曲线图</h3>
+      <div id="dailyProfitChart" style="width: 100%; height: 400px;"></div>
+    </div>
+  </div>
   
   <div class="row" style="margin-top: 20px;">
     <div class="col-md-12">
@@ -120,6 +128,7 @@
 <%@ include file="../../baseElementJSP/normalJSPart.jsp" %>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="/static_resources/js/echarts/echarts_5_4_3.min.js"></script>
 <script type="text/javascript">
 
   $(document).ready(function() {
@@ -465,6 +474,48 @@
           htmlStr += "</td>";
           htmlStr += "</tr>";
           tbody.html(htmlStr);
+
+          // ==================== 渲染每日收益曲线图 ====================
+          var dailyList = datas.dailyStatisticsList || [];
+          var dates = [];
+          var profits = [];
+
+          // 遍历后端返回的每日统计数据（假设字段名为 statisticsDateStr / statisticsDate 和 profit，请根据 TaobaoOfferDailyStatisticsVO 的实际属性调整）
+          for (let i = 0; i < dailyList.length; i++) {
+            var daily = dailyList[i];
+            dates.push(daily.statisticsDateStr);     // 假设日期字段为 dateStr
+            profits.push(daily.profit);    // 假设利润字段为 profit
+          }
+
+          // 初始化 ECharts 实例
+          var chartDom = document.getElementById('dailyProfitChart');
+          var myChart = echarts.init(chartDom);
+          var option = {
+            tooltip: {
+              trigger: 'axis'
+            },
+            xAxis: {
+              type: 'category',
+              data: dates
+            },
+            yAxis: {
+              type: 'value',
+              name: '利润'
+            },
+            series: [{
+              data: profits,
+              type: 'line',
+              smooth: true,
+              itemStyle: {
+                color: '#337ab7'
+              },
+              areaStyle: {
+                opacity: 0.2
+              }
+            }]
+          };
+          myChart.setOption(option, true); // 第二个参数 true 表示不合并，每次查询重新刷新图表
+          // ==============================================================
         },  
         error: function(datas) {  
           $("#msg").html(datas.message);

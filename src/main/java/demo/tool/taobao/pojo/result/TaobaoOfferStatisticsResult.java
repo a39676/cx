@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.tool.taobao.pojo.vo.TaobaoOfferDailyStatisticsVO;
 import demo.tool.taobao.pojo.vo.TaobaoOfferStatisticsRowVO;
 
 public class TaobaoOfferStatisticsResult extends CommonResult {
@@ -13,6 +14,7 @@ public class TaobaoOfferStatisticsResult extends CommonResult {
 	private BigDecimal totalBuyerRefundOrderAmount;
 	private BigDecimal totalSupplierOrderAmount;
 	private BigDecimal totalProfit;
+	private List<TaobaoOfferDailyStatisticsVO> dailyStatisticsList;
 
 	public List<TaobaoOfferStatisticsRowVO> getStatisticsList() {
 		return statisticsList;
@@ -54,11 +56,20 @@ public class TaobaoOfferStatisticsResult extends CommonResult {
 		this.totalProfit = totalProfit;
 	}
 
+	public List<TaobaoOfferDailyStatisticsVO> getDailyStatisticsList() {
+		return dailyStatisticsList;
+	}
+
+	public void setDailyStatisticsList(List<TaobaoOfferDailyStatisticsVO> dailyStatisticsList) {
+		this.dailyStatisticsList = dailyStatisticsList;
+	}
+
 	@Override
 	public String toString() {
 		return "TaobaoOfferStatisticsResult [statisticsList=" + statisticsList + ", totalBuyerOrderAmount="
 				+ totalBuyerOrderAmount + ", totalBuyerRefundOrderAmount=" + totalBuyerRefundOrderAmount
-				+ ", totalSupplierOrderAmount=" + totalSupplierOrderAmount + ", totalProfit=" + totalProfit + "]";
+				+ ", totalSupplierOrderAmount=" + totalSupplierOrderAmount + ", totalProfit=" + totalProfit
+				+ ", dailyStatisticsList=" + dailyStatisticsList + "]";
 	}
 
 }

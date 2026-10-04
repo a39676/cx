@@ -372,13 +372,62 @@ public class TaobaoOfferRecordServiceImpl extends CommonService implements Taoba
 				vo -> vo.getBuyerOrderVO() != null ? vo.getBuyerOrderVO().getOrderPaymentTime() : null,
 				Comparator.nullsLast(Comparator.naturalOrder()) // 空值排在最后；若想排在最前可换成 nullsFirst
 		));
+		r.setStatisticsList(statisticsList);
+
+		// ==================== 新增：按日统计盈利逻辑 ====================
+		Map<java.time.LocalDate, List<TaobaoOfferStatisticsRowVO>> dailyGroupMap = statisticsList.stream()
+				.filter(row -> row.getBuyerOrderVO() != null && row.getBuyerOrderVO().getOrderPaymentTime() != null)
+				.collect(Collectors.groupingBy(row -> row.getBuyerOrderVO().getOrderPaymentTime().toLocalDate()));
+
+		List<demo.tool.taobao.pojo.vo.TaobaoOfferDailyStatisticsVO> dailyStatisticsList = new ArrayList<>();
+
+		for (Map.Entry<java.time.LocalDate, List<TaobaoOfferStatisticsRowVO>> entry : dailyGroupMap.entrySet()) {
+			java.time.LocalDate date = entry.getKey();
+			List<TaobaoOfferStatisticsRowVO> dayRows = entry.getValue();
+
+			BigDecimal dayBuyerAmount = BigDecimal.ZERO;
+			BigDecimal daySupplierAmount = BigDecimal.ZERO;
+			BigDecimal dayRefundAmount = BigDecimal.ZERO;
+			BigDecimal dayProfit = BigDecimal.ZERO;
+
+			for (TaobaoOfferStatisticsRowVO row : dayRows) {
+				if (row.getBuyerOrderVO().getAmount() != null) {
+					dayBuyerAmount = dayBuyerAmount.add(row.getBuyerOrderVO().getAmount());
+				}
+				if (row.getTotalSupplierOrderAmount() != null) {
+					daySupplierAmount = daySupplierAmount.add(row.getTotalSupplierOrderAmount());
+				}
+				if (row.getTotalRefundAmount() != null) {
+					dayRefundAmount = dayRefundAmount.add(row.getTotalRefundAmount());
+				}
+				if (row.getProfit() != null) {
+					dayProfit = dayProfit.add(row.getProfit());
+				}
+			}
+
+			demo.tool.taobao.pojo.vo.TaobaoOfferDailyStatisticsVO dailyVO = new demo.tool.taobao.pojo.vo.TaobaoOfferDailyStatisticsVO();
+			dailyVO.setStatisticsDate(date);
+			dailyVO.setStatisticsDateStr(localDateTimeHandler.dateToStr(date.atTime(0, 0)));
+			dailyVO.setBuyerOrderAmount(dayBuyerAmount);
+			dailyVO.setSupplierOrderAmount(daySupplierAmount);
+			dailyVO.setRefundOrderAmount(dayRefundAmount);
+			dailyVO.setProfit(dayProfit);
+
+			dailyStatisticsList.add(dailyVO);
+		}
+
+		// 按照日期先后进行排序
+		dailyStatisticsList
+				.sort(Comparator.comparing(demo.tool.taobao.pojo.vo.TaobaoOfferDailyStatisticsVO::getStatisticsDate));
+
+		// 将按日统计结果放入返回对象中
+		r.setDailyStatisticsList(dailyStatisticsList);
 
 		r.setTotalBuyerOrderAmount(totalBuyerOrderAmount);
 		r.setTotalBuyerRefundOrderAmount(totalDownstreamBuyerRefundAmount);
 		r.setTotalSupplierOrderAmount(totalSupplierOrderAmount);
 		r.setTotalProfit(totalProfit);
 
-		r.setStatisticsList(statisticsList);
 		r.setIsSuccess();
 		return r;
 	}

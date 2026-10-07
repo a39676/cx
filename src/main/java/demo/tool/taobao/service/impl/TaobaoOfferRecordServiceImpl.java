@@ -374,46 +374,57 @@ public class TaobaoOfferRecordServiceImpl extends CommonService implements Taoba
 		));
 		r.setStatisticsList(statisticsList);
 
-		// ==================== 新增：按日统计盈利逻辑 ====================
+		// ==================== 修改后：按日统计盈利逻辑（含无数据补0） ====================
+		List<demo.tool.taobao.pojo.vo.TaobaoOfferDailyStatisticsVO> dailyStatisticsList = new ArrayList<>();
+
+		// 1. 先按日分组已有数据
 		Map<java.time.LocalDate, List<TaobaoOfferStatisticsRowVO>> dailyGroupMap = statisticsList.stream()
 				.filter(row -> row.getBuyerOrderVO() != null && row.getBuyerOrderVO().getOrderPaymentTime() != null)
 				.collect(Collectors.groupingBy(row -> row.getBuyerOrderVO().getOrderPaymentTime().toLocalDate()));
 
-		List<demo.tool.taobao.pojo.vo.TaobaoOfferDailyStatisticsVO> dailyStatisticsList = new ArrayList<>();
+		// 2. 以查询的起始日期(startTime)到结束日期(endTime)按天连续循环，确保每一天都被遍历到
+		java.time.LocalDate currentDay = startTime.toLocalDate();
+		java.time.LocalDate endDay = endTime.toLocalDate(); // 注意 endTime 在前面逻辑中已经加了 1
+															// 天，这里如果希望包含最后一天，可根据实际需要调整，通常用isBefore或isEqual控制
 
-		for (Map.Entry<java.time.LocalDate, List<TaobaoOfferStatisticsRowVO>> entry : dailyGroupMap.entrySet()) {
-			java.time.LocalDate date = entry.getKey();
-			List<TaobaoOfferStatisticsRowVO> dayRows = entry.getValue();
+		while (!currentDay.isAfter(endDay.minusDays(1L))) { // 循环直到结束日期的前一天
+			List<TaobaoOfferStatisticsRowVO> dayRows = dailyGroupMap.get(currentDay);
 
 			BigDecimal dayBuyerAmount = BigDecimal.ZERO;
 			BigDecimal daySupplierAmount = BigDecimal.ZERO;
 			BigDecimal dayRefundAmount = BigDecimal.ZERO;
 			BigDecimal dayProfit = BigDecimal.ZERO;
 
-			for (TaobaoOfferStatisticsRowVO row : dayRows) {
-				if (row.getBuyerOrderVO().getAmount() != null) {
-					dayBuyerAmount = dayBuyerAmount.add(row.getBuyerOrderVO().getAmount());
-				}
-				if (row.getTotalSupplierOrderAmount() != null) {
-					daySupplierAmount = daySupplierAmount.add(row.getTotalSupplierOrderAmount());
-				}
-				if (row.getTotalRefundAmount() != null) {
-					dayRefundAmount = dayRefundAmount.add(row.getTotalRefundAmount());
-				}
-				if (row.getProfit() != null) {
-					dayProfit = dayProfit.add(row.getProfit());
+			if (dayRows != null && !dayRows.isEmpty()) {
+				for (TaobaoOfferStatisticsRowVO row : dayRows) {
+					if (row.getBuyerOrderVO().getAmount() != null) {
+						dayBuyerAmount = dayBuyerAmount.add(row.getBuyerOrderVO().getAmount());
+					}
+					if (row.getTotalSupplierOrderAmount() != null) {
+						daySupplierAmount = daySupplierAmount.add(row.getTotalSupplierOrderAmount());
+					}
+					if (row.getTotalRefundAmount() != null) {
+						dayRefundAmount = dayRefundAmount.add(row.getTotalRefundAmount());
+					}
+					if (row.getProfit() != null) {
+						dayProfit = dayProfit.add(row.getProfit());
+					}
 				}
 			}
 
+			// 无论当天是否有数据，都构建一个 VO 对象（无数据时各项金额与盈利均为 0）
 			demo.tool.taobao.pojo.vo.TaobaoOfferDailyStatisticsVO dailyVO = new demo.tool.taobao.pojo.vo.TaobaoOfferDailyStatisticsVO();
-			dailyVO.setStatisticsDate(date);
-			dailyVO.setStatisticsDateStr(localDateTimeHandler.dateToStr(date.atTime(0, 0)));
+			dailyVO.setStatisticsDate(currentDay);
+			dailyVO.setStatisticsDateStr(localDateTimeHandler.dateToStr(currentDay.atTime(0, 0)));
 			dailyVO.setBuyerOrderAmount(dayBuyerAmount);
 			dailyVO.setSupplierOrderAmount(daySupplierAmount);
 			dailyVO.setRefundOrderAmount(dayRefundAmount);
 			dailyVO.setProfit(dayProfit);
 
 			dailyStatisticsList.add(dailyVO);
+
+			// 天数自增
+			currentDay = currentDay.plusDays(1L);
 		}
 
 		// 按照日期先后进行排序

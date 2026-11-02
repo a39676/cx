@@ -84,7 +84,7 @@ public class TaobaoOfferRecordServiceImpl extends CommonService implements Taoba
 				.collect(Collectors.toList());
 		view.addObject("supplierList", supplierList);
 		InternationalDialingCodeExample internationalDialingCodeExample = new InternationalDialingCodeExample();
-		internationalDialingCodeExample.createCriteria().andIdGreaterThan(0);
+		internationalDialingCodeExample.createCriteria().andIdIsNotNull();
 		List<InternationalDialingCode> internationalDialingCodeList = internationalDialingCodeMapper
 				.selectByExample(internationalDialingCodeExample);
 		view.addObject("internationalDialingCodeList", internationalDialingCodeList);

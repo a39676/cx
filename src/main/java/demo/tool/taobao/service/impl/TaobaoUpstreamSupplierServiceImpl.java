@@ -34,14 +34,17 @@ public class TaobaoUpstreamSupplierServiceImpl extends CommonService implements 
 				minHeat = supplier.getHeat();
 			}
 		}
-		// 削减时, 保证不将最低热度削至0, 至少为1
-		minHeat = minHeat - 1;
+
 		for (int i = 0; i < supplierList.size(); i++) {
 			supplier = supplierList.get(i);
-			if (supplier.getHeat() > minHeat) {
+			if (supplier.getHeat() == 0) {
+				continue;
+			} else if (supplier.getHeat() - minHeat > 0) {
 				supplier.setHeat(supplier.getHeat() - minHeat);
-				mapper.updateByPrimaryKeySelective(supplier);
+			} else {
+				supplier.setHeat(0);
 			}
+			mapper.updateByPrimaryKeySelective(supplier);
 		}
 		CommonResult r = new CommonResult();
 		r.setIsSuccess();

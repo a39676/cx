@@ -44,6 +44,7 @@
         </select>
         <input type="text" name="" class="clickToCopy" id="receiverFullInfo" placeholder="收件地址">
         <input type="text" name="" id="commdityIdList" placeholder="商品ID串">
+        <input type="text" name="" class="clickToCopy" value="不带货单 谢谢" readonly>
         <details>
           <summary style="cursor: pointer; color: #0066cc; user-select: none;">
             点击展开/折叠详细内容

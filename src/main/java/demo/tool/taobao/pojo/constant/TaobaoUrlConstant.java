@@ -19,4 +19,5 @@ public class TaobaoUrlConstant {
 	public static final String OFFER_STATISTICS = "/statistics";
 	
 	public static final String COMPLEX_TOOL = "/complexTool";
+	public static final String GET_SELLING_SOURCE_PRODUCT_ID = "/getSellingSourceProductId";
 }

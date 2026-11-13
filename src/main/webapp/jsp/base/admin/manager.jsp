@@ -264,6 +264,9 @@
       <li>
         <a href="/taobao/offer/" target="_blank">taobaoOfferRecord</a>
       </li>
+      <li>
+        <a href="/taobao/complexTool/getSellingSourceProductId" target="_blank">getSellingSourceProductId</a>
+      </li>
     </ul><!-- taobaoProductSource -->
 
     <ul class="main-menu visible-on-click" id="meituanHtmlEdit">

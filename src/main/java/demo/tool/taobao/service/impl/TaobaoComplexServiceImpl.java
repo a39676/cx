@@ -1,7 +1,9 @@
 package demo.tool.taobao.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,9 +44,11 @@ public class TaobaoComplexServiceImpl extends CommonService implements TaobaoCom
 		example.createCriteria().andIsDeleteEqualTo(false).andIsAvailableEqualTo(true);
 		List<TaobaoProductSource> list = productSourceMapper.selectByExample(example);
 		List<Long> sourceIdList = new ArrayList<>();
+		Set<Long> sourceIdSet = new HashSet<>();
 		for (TaobaoProductSource source : list) {
-			sourceIdList.add(source.getSourceId());
+			sourceIdSet.add(source.getSourceId());
 		}
+		sourceIdList.addAll(sourceIdSet);
 		CommonResult r = new CommonResult();
 		r.setMessage(String.valueOf(sourceIdList));
 		r.setIsSuccess();

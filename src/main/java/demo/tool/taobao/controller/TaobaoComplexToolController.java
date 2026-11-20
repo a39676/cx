@@ -17,7 +17,7 @@ public class TaobaoComplexToolController {
 	private TaobaoComplexService service;
 
 	@GetMapping(value = TaobaoUrlConstant.GET_SELLING_SOURCE_PRODUCT_ID)
-	public CommonResult priceCalculate() {
+	public CommonResult getSellingSourceProductId() {
 		return service.getSellingSourceProductId();
 	}
 

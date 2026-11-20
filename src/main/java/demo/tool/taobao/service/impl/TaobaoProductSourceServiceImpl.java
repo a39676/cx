@@ -107,9 +107,11 @@ public class TaobaoProductSourceServiceImpl extends CommonService implements Tao
 			r.setMessage(e.getLocalizedMessage());
 		}
 
-		TaobaoUpstreamSupplier supplier = supplierMapper.selectByPrimaryKey(dto.getMerchantID().longValue());
-		supplier.setHeat(supplier.getHeat() + 1);
-		supplierMapper.updateByPrimaryKeySelective(supplier);
+		if (dto.getMerchantID() != null) {
+			TaobaoUpstreamSupplier supplier = supplierMapper.selectByPrimaryKey(dto.getMerchantID().longValue());
+			supplier.setHeat(supplier.getHeat() + 1);
+			supplierMapper.updateByPrimaryKeySelective(supplier);
+		}
 		return r;
 	}
 

@@ -155,7 +155,7 @@ public class ExerciseServiceMathG3_1Impl extends ExerciseMathCommonService imple
 		String moduleStr = "跑道长%d米，同学们跑接力，每组%d人，每人跑一个往返，每组要跑（　 ）米。";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int trackBase = t.nextInt(1, 10 + 1);
@@ -183,7 +183,7 @@ public class ExerciseServiceMathG3_1Impl extends ExerciseMathCommonService imple
 		dynamicKeyWord.add(new String[] { "顶", "帽子", "橙", "紫", "黑" });
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int i1 = t.nextInt(30, 40 + 1);
@@ -221,7 +221,7 @@ public class ExerciseServiceMathG3_1Impl extends ExerciseMathCommonService imple
 		String moduleStr = "1个正方形被分成%d个相等的长方形，每个长方形的周长是%d厘米，正方形的周长是多少厘米？ ";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int rectangleCount = t.nextInt(3, 7 + 1);
@@ -247,7 +247,7 @@ public class ExerciseServiceMathG3_1Impl extends ExerciseMathCommonService imple
 		dynamicKeyWord.add(new String[] { "舅舅" });
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int mingAge = t.nextInt(7, 12 + 1);
@@ -277,7 +277,7 @@ public class ExerciseServiceMathG3_1Impl extends ExerciseMathCommonService imple
 		dynamicKeyWord.add(new String[] { "冬瓜" });
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int netWeight = t.nextInt(56, 100 + 1);
@@ -309,7 +309,7 @@ public class ExerciseServiceMathG3_1Impl extends ExerciseMathCommonService imple
 		dynamicKeyWord.add(new String[] { "支", "固体胶", "浆糊" });
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int item2Price = t.nextInt(13, 100 + 1);
@@ -338,7 +338,7 @@ public class ExerciseServiceMathG3_1Impl extends ExerciseMathCommonService imple
 		String moduleStr = "两个数的和是%d，小玲在抄题时，将其中一个加数个位上0丢掉了，结果算出是%d，这两个数分别是____和____。";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int i1 = t.nextInt(13, 100 + 1);

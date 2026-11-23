@@ -328,7 +328,7 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		dynamicKeyWord.add(new String[] { "家电店", "吸尘器", "台" });
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int num1 = t.nextInt(MIN_ADDITION_NUM, MAX_ADDITION_NUM + 1);
@@ -363,7 +363,7 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		dynamicKeyWord.add(new String[] { "妈妈", "表妹", "+" });
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
@@ -407,7 +407,7 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		dynamicKeyWord.add(new String[] { "兰花", "盆", "金银花", "盆" });
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
@@ -449,7 +449,7 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		dynamicKeyWord.add(new String[] { "条", "绿色丝带", "白色丝带", "彩色丝带", "丝带", "组合", "王阿姨" });
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
@@ -516,7 +516,7 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		String moduleStr = "一场篮球赛分为上半场和下半场, A班上半场得了%d分, 全场总分是%d分, %s,<br>" + "B班的全场总分是%d分,<br>" + "(1)B班下半场得了多少分";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
@@ -549,7 +549,7 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		String moduleStr = "现在时间是";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
@@ -580,7 +580,7 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		String moduleStr = "?÷%d=%d......__，__里最大可以填";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
@@ -598,7 +598,7 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		String moduleStr = "?÷__=%d...%d，当__里填最小的数时，?等于( )";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
@@ -623,7 +623,7 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		dynamicKeyWord.add("水管");
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
@@ -659,7 +659,7 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		dynamicKeyWord.add(new String[] { "何", "套", "乐高", "玩偶" });
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
@@ -698,7 +698,7 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		dynamicKeyWord.add(new String[] { "小丽", "小星", "插", "花", "扎" });
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
@@ -744,7 +744,7 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		List<String> keyWord = new ArrayList<>(Arrays.asList("万", "千", "百", "十", "个"));
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
@@ -815,7 +815,7 @@ public class ExerciseServiceMathG2_2Impl extends ExerciseMathCommonService imple
 		String objName = keyWords[4];
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		int total = 3;
 		int randomMultiplication = t.nextInt(6, 12);

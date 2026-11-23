@@ -152,7 +152,7 @@ public class ExerciseServiceMathG4_2Impl extends ExerciseMathCommonService imple
 		String moduleStr = "在一个三角形中，∠1＝%d°，∠2＝%d°，∠3＝（ ）<br>" + "在一个等腰三角形中，一个底角是%d°，顶角是（ ）。";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int c1 = t.nextInt(1, 178 + 1);

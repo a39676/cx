@@ -153,7 +153,7 @@ public class ExerciseServiceMathG4_1Impl extends ExerciseMathCommonService imple
 		String moduleStr = " 两个数的积是%d，如果一个因数不变，另一个因数缩小%d倍，则积是(    )。";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int l1 = t.nextInt(3, 9 + 1);
@@ -173,7 +173,7 @@ public class ExerciseServiceMathG4_1Impl extends ExerciseMathCommonService imple
 		String moduleStr = "在A÷%d=%d……B中，余数B最大可取(     )，这时被除数A是(     )。";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int l1 = t.nextInt(11, 19 + 1);
@@ -192,7 +192,7 @@ public class ExerciseServiceMathG4_1Impl extends ExerciseMathCommonService imple
 		String moduleStr = "如图，已知∠1＝%d°，<br>" + "∠2＝（    ），<br>" + "∠3＝（   ）。";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 		q.addImgUrlList("/image/getImage/?imgPK=GgF2AtKXoNbMF7SGEXUt%2BbG5vzDVyNE%2FyxNy3ntkHO0%3D");
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
@@ -212,7 +212,7 @@ public class ExerciseServiceMathG4_1Impl extends ExerciseMathCommonService imple
 		String moduleStr = "某校开展节约用电活动，前%d个月共节约用电%d度。照这样计算，一年（12月）能节约用电多少度？";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int powerCounter = t.nextInt(120, 220 + 1);
@@ -228,7 +228,7 @@ public class ExerciseServiceMathG4_1Impl extends ExerciseMathCommonService imple
 		String moduleStr = "小东做乘法计算时，把其中一个因数%d看成了%d，<br>" + "结果得到的积比正确的积%s了%d。正确的积应该是(         )。";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int i1 = t.nextInt(25, 99 + 1);
@@ -260,7 +260,7 @@ public class ExerciseServiceMathG4_1Impl extends ExerciseMathCommonService imple
 				+ " 汽车下山时平均每小时行驶多少千米?";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 		int speedForClimbing = t.nextInt(40, 80 + 1);

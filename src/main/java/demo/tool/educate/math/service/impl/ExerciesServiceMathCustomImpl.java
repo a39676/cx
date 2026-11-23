@@ -72,7 +72,7 @@ public class ExerciesServiceMathCustomImpl extends ExerciseMathCommonService imp
 		String moduleStr = "求以下數字的最大公約數, %d, %d, %d";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 
@@ -123,7 +123,7 @@ public class ExerciesServiceMathCustomImpl extends ExerciseMathCommonService imp
 		String moduleStr = "求以下數字的最小公倍數, %d, %d, %d";
 
 		MathQuestionBaseDTO q = new MathQuestionBaseDTO();
-		q.setMathQuestionType(MathQuestionType.WORD_PROBLEM);
+		q.setMathQuestionType(MathQuestionType.WORD_QUESTION);
 
 		ThreadLocalRandom t = ThreadLocalRandom.current();
 

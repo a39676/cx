@@ -18,6 +18,7 @@ import demo.tool.educate.math.service.ExerciseServiceMathG3_1;
 import demo.tool.educate.math.service.ExerciseServiceMathG3_2;
 import demo.tool.educate.math.service.ExerciseServiceMathG4_1;
 import demo.tool.educate.math.service.ExerciseServiceMathG4_2;
+import demo.tool.educate.math.service.ExerciseServiceMathG5_1;
 import demo.tool.educate.pojo.constant.EducateUrl;
 import demo.tool.educate.pojo.type.ExerciseSubjectType;
 import demo.tool.educate.pojo.type.GradeType;
@@ -42,6 +43,8 @@ public class ExerciseQuestionController extends CommonController {
 	private ExerciseServiceMathG4_1 g4_1_math;
 	@Autowired
 	private ExerciseServiceMathG4_2 g4_2_math;
+	@Autowired
+	private ExerciseServiceMathG5_1 g5_1_math;
 	@Autowired
 	private ExerciesServiceMathCustom gCustom_math;
 
@@ -116,7 +119,15 @@ public class ExerciseQuestionController extends CommonController {
 			} else if (ExerciseSubjectType.ENGLISH.equals(subjectType)) {
 
 			}
-		} else if(GradeType.GRADE_CUSTOM.equals(gradeType)) {
+		} else if (GradeType.GRADE_5_1.equals(gradeType)) {
+			if (ExerciseSubjectType.CHINESE.equals(subjectType)) {
+
+			} else if (ExerciseSubjectType.MATH.equals(subjectType)) {
+				return g5_1_math.getExercise();
+			} else if (ExerciseSubjectType.ENGLISH.equals(subjectType)) {
+
+			}
+		} else if (GradeType.GRADE_CUSTOM.equals(gradeType)) {
 			if (ExerciseSubjectType.CHINESE.equals(subjectType)) {
 
 			} else if (ExerciseSubjectType.MATH.equals(subjectType)) {
